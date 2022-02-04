@@ -55,7 +55,7 @@ jobs:
       - name: Run Linter
         run: npm run lint
   test:
-    name: Lint & Run Unit Tests
+    name: Run Unit Tests
     needs: prepare_dependencies
     runs-on: ubuntu-latest
     steps:
