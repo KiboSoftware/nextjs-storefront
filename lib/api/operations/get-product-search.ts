@@ -2,7 +2,7 @@ import { fetcher } from '@/lib/api/util'
 import type { NextApiRequest, NextApiResponse } from 'next'
 import { searchProductsQuery } from '@/lib/gql/queries/product-search'
 
-function getFacetValueFilter(categoryCode: any, filters = []) {
+function getFacetValueFilter(categoryCode: any, filters: Array<string> = []) {
   let facetValueFilter = ''
   if (categoryCode) {
     facetValueFilter = `categoryCode:${categoryCode},`
@@ -33,8 +33,8 @@ const buildProductSearchVars = ({
   }
   const facetFilterList = Object.keys(filters)
     .filter((k) => filters[k].length)
-    .reduce((accum, k) => {
-      return [...accum, ...filters[k].map((facetValue) => `Tenant~${k}:${facetValue}`)]
+    .reduce((accum: Array<string>, k: string) => {
+      return [...accum, ...filters[k].map((facetValue: string) => `Tenant~${k}:${facetValue}`)]
     }, [])
 
   const facetValueFilter = getFacetValueFilter(categoryCode, facetFilterList)

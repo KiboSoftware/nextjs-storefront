@@ -19,7 +19,7 @@ export async function getStaticProps(context: GetStaticPropsContext) {
   }
 }
 export async function getStaticPaths({ locales }: GetStaticPathsContext) {
-  return { paths: ['/product/MS-JKT-001', '/product/MS-CYCL-004'], fallback: true }
+  return { paths: ['/product/BackP_001'], fallback: true }
 }
 // // This gets called on every request
 // export async function getServerSideProps(context: GetServerSidePropsContext) {

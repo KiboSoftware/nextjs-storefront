@@ -6,12 +6,12 @@ import Link from 'next/link'
 
 const selectProducts = (items: any = []): Array<any> => {
   return items.map((product: any) => {
-    const imageUrl = product.content.productImages[0]?.imageUrl
+    const imageUrl = product.content?.productImages[0]?.imageUrl
     return {
       productCode: product.productCode,
-      name: product.content.productName,
+      name: product.content?.productName,
       imageUrl: imageUrl ? `https:${imageUrl}` : null,
-      price: product.price.price,
+      price: product.price?.price,
     }
   })
 }
@@ -22,7 +22,7 @@ const ProductList = (props: any) => {
     <div>
       <Grid container spacing={8}>
         {products.map((item: any, ind: number) => (
-          <Link href={`/product/${item.productCode}`}>
+          <Link key={ind} href={`/product/${item.productCode}`}>
             <Grid item lg={3} sm={6} xs={12} key={ind}>
               <Card>
                 <FlexBox justifyContent="center" mb={6}>
