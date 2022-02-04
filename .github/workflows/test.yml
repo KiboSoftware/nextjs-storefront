@@ -1,4 +1,4 @@
-name: Test
+name: Tests
 
 on:
   push:
@@ -53,5 +53,5 @@ jobs:
           path: '**/node_modules'
           key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
 
-      - name: Test Storefront
+      - name: Run Unit Tests
         run: npm run test
