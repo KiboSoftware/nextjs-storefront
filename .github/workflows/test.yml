@@ -53,8 +53,5 @@ jobs:
           path: '**/node_modules'
           key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
 
-      - name: Build Storefront
-        run: npm run build
-
       - name: Test Storefront
         run: npm run test
