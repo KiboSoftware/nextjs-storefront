@@ -10,7 +10,7 @@ module.exports = {
     ;[].push.apply(config.resolve.plugins, [
       new TsconfigPathsPlugin({ extensions: config.resolve.extensions }),
     ])
-
+    console.log(config.module.rules[12])
     config.resolve.alias['@emotion/styled'] = resolve('../node_modules/@emotion/styled')
     return config
   },
@@ -20,7 +20,6 @@ module.exports = {
     '@storybook/addon-essentials',
     'storybook-addon-material-ui5',
     '@storybook/addon-docs',
-    'storybook-addon-next',
   ],
   framework: '@storybook/react',
 }
