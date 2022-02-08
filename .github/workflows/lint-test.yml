@@ -1,4 +1,4 @@
-name: Test
+name: Lint & Unit Test
 
 on:
   push:
@@ -29,13 +29,12 @@ jobs:
         uses: actions/cache@v2
         with:
           path: '**/node_modules'
-          key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
+          key: ${{ runner.os }}-package-${{ hashFiles('**/package-lock.json') }}
 
       - name: Install dependencies
         run: npm ci
-
-  test:
-    name: Test Application
+  lint:
+    name: Run Linter
     needs: prepare_dependencies
     runs-on: ubuntu-latest
     steps:
@@ -51,7 +50,28 @@ jobs:
         uses: actions/cache@v2
         with:
           path: '**/node_modules'
-          key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
+          key: ${{ runner.os }}-package-${{ hashFiles('**/package-lock.json') }}
 
-      - name: Test Storefront
+      - name: Run Linter
+        run: npm run lint
+  test:
+    name: Run Unit Tests
+    needs: prepare_dependencies
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Setup node
+        uses: actions/setup-node@v1
+        with:
+          node-version: '14'
+
+      - name: Get cached dependencies
+        uses: actions/cache@v2
+        with:
+          path: '**/node_modules'
+          key: ${{ runner.os }}-package-${{ hashFiles('**/package-lock.json') }}
+
+      - name: Run Unit Tests
         run: npm run test
