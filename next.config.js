@@ -1,14 +1,8 @@
 /** @type {import('next').NextConfig} */
+const { i18n } = require('./next-i18next.config')
 module.exports = {
   reactStrictMode: true,
-  i18n: {
-    // These are all the locales you want to support in
-    // your application
-    locales: ['en-US', 'fr', 'nl-NL'],
-    // This is the default locale you want to be used when visiting
-    // a non-locale prefixed path e.g. `/hello`
-    defaultLocale: 'en-US',
-  },
+  i18n,
   images: {
     domains: [
       'd1slj7rdbjyb5l.cloudfront.net',
