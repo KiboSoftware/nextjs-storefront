@@ -23,7 +23,7 @@ jobs:
       - name: Setup node
         uses: actions/setup-node@v1
         with:
-          node-version: '14'
+          node-version: '16'
 
       - name: Get cached dependencies
         uses: actions/cache@v2
@@ -44,7 +44,7 @@ jobs:
       - name: Setup node
         uses: actions/setup-node@v1
         with:
-          node-version: '14'
+          node-version: '16'
 
       - name: Get cached dependencies
         uses: actions/cache@v2
@@ -65,7 +65,7 @@ jobs:
       - name: Setup node
         uses: actions/setup-node@v1
         with:
-          node-version: '14'
+          node-version: '16'
 
       - name: Get cached dependencies
         uses: actions/cache@v2
