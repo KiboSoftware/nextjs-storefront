@@ -12,7 +12,12 @@ import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
   const { locale } = context
-  return { props: { cart: {}, ...(await serverSideTranslations(locale, ['common', 'cart-page'])) } }
+  return {
+    props: {
+      cart: {},
+      ...(await serverSideTranslations(locale as string, ['common', 'cart-page'])),
+    },
+  }
 }
 
 const CartPage: NextPage = (props: any) => {

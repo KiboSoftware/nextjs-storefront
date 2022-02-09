@@ -16,7 +16,10 @@ export async function getStaticProps(context: GetStaticPropsContext) {
   const product = await getProduct(productCode)
   const { locale } = context
   return {
-    props: { product, ...(await serverSideTranslations(locale, ['common', 'product-page'])) },
+    props: {
+      product,
+      ...(await serverSideTranslations(locale as string, ['common', 'product-page'])),
+    },
     revalidate: 60,
   }
 }
