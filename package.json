@@ -9,6 +9,7 @@
     "generate-types": "graphql-codegen",
     "storybook": "start-storybook -p 6006",
     "build-storybook": "build-storybook",
+    "validate-types": "tsc --noEmit --declaration",
     "test": "jest",
     "test-watch": "jest --watch",
     "prettier:format": "prettier --write .",
