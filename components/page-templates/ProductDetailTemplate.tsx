@@ -7,7 +7,6 @@ import React, { useCallback, useState } from 'react'
 import FlexBox from '@/components/FlexBox'
 
 const ProductDetailTemplate = ({ product }: any) => {
-  console.log(product.content)
   const productName = product?.content?.productName
   const price = product?.price?.price
   const imageUrl = `https://` + (product?.content?.productImages[0]?.imageUrl || '')

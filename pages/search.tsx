@@ -9,15 +9,24 @@ import { useQuery } from 'react-query'
 import { ProductListingTemplate } from '@/components/page-templates'
 import { productSearch } from '@/lib/api/operations/'
 import { useRouter } from 'next/router'
+import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
+import { useTranslation } from 'next-i18next'
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
   const response = await productSearch(context.query)
-  return { props: { results: response?.data?.products || [] } }
+  const { locale } = context
+  return {
+    props: {
+      results: response?.data?.products || [],
+      ...(await serverSideTranslations(locale, ['common'])),
+    },
+  }
 }
 
 const SearchPage: NextPage = (props: any) => {
   const router = useRouter()
   const query = router.asPath.split('?')[1]
+  const { t } = useTranslation('common')
 
   const performSearch = async () => {
     const response = await fetch(`/api/search?${query}`)
@@ -28,7 +37,7 @@ const SearchPage: NextPage = (props: any) => {
   const { data } = useQuery('searchResults', performSearch, { initialData: props.results || [] })
   return (
     <>
-      <h1>Search</h1>
+      <h1>{t('search')}</h1>
       <ProductListingTemplate {...data} />
     </>
   )

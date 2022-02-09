@@ -8,13 +8,15 @@ import type {
 import getProduct from '@/lib/api/operations/get-product'
 import { ProductDetailTemplate } from '@/components/page-templates'
 import { useRouter } from 'next/router'
+import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
 
 export async function getStaticProps(context: GetStaticPropsContext) {
   const { params } = context
   const { productCode } = params as any
   const product = await getProduct(productCode)
+  const { locale } = context
   return {
-    props: { product }, // will be passed to the page component as props
+    props: { product, ...(await serverSideTranslations(locale, ['common', 'product-page'])) },
     revalidate: 60,
   }
 }

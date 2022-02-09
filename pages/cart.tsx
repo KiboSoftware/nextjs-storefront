@@ -8,9 +8,11 @@ import type {
 import { useQuery } from 'react-query'
 import { useRouter } from 'next/router'
 import { CartTemplate } from '@/components/page-templates'
+import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
 
-export async function getServerSideProps(context: any) {
-  return { props: { cart: {} } }
+export async function getServerSideProps(context: GetServerSidePropsContext) {
+  const { locale } = context
+  return { props: { cart: {}, ...(await serverSideTranslations(locale, ['common', 'cart-page'])) } }
 }
 
 const CartPage: NextPage = (props: any) => {

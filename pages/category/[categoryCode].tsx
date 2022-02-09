@@ -10,10 +10,18 @@ import { useQuery } from 'react-query'
 import { ProductListingTemplate } from '@/components/page-templates'
 import { productSearch } from '@/lib/api/operations'
 import { useRouter } from 'next/router'
+import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
 
-export async function getServerSideProps(context: any) {
+export async function getServerSideProps(context: GetServerSidePropsContext) {
+  const { locale } = context
   const response = await productSearch(context.query)
-  return { props: { results: response?.data?.products || [] } }
+
+  return {
+    props: {
+      results: response?.data?.products || [],
+      ...(await serverSideTranslations(locale, ['common'])),
+    },
+  }
 }
 
 const CategoryPage: NextPage = (props: any) => {
