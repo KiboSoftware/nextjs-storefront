@@ -5,16 +5,30 @@ import Price from './Price'
 export default {
   title: 'Common/Price',
   component: Price,
+  argTypes: {
+    size: { control: 'select' },
+    fontWeight: { control: 'radio' },
+  },
 } as ComponentMeta<typeof Price>
 
 const Template: ComponentStory<typeof Price> = (args) => <Price {...args} />
 
-export const common = Template.bind({})
+export const priceOnly = Template.bind({})
 // More on args: https://storybook.js.org/docs/react/writing-stories/args
-common.args = {
+priceOnly.args = {
+  price: '$120.00',
+}
+
+export const withSalePrice = Template.bind({})
+withSalePrice.args = {
   price: '$120.00',
   salePrice: '$60.00',
-  priceRange: '',
-  size: 'medium',
-  fontWeight: 'bold',
+}
+
+export const withPriceRange = Template.bind({})
+withPriceRange.args = {
+  priceRange: {
+    upper: '$120.00',
+    lower: '$90.00',
+  },
 }

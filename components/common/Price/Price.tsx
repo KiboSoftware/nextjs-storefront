@@ -19,9 +19,12 @@ const Price = ({
   size = 'medium',
   fontWeight = 'normal',
 }: {
-  price: string
+  price?: string
   salePrice?: string
-  priceRange?: string
+  priceRange?: {
+    upper: string
+    lower: string
+  }
   size?: 'small' | 'medium' | 'large'
   fontWeight?: 'bold' | 'normal'
 }) => {
@@ -39,34 +42,47 @@ const Price = ({
   return (
     <>
       <Box display="flex" gap="10px" alignItems="center">
-        <PriceTypography
-          variant="body1"
-          fontWeight={fontWeight}
-          color={salePrice ? 'error' : 'text.primary'}
-          fontSize={salePrice ? getSaleFontSize(size) : size}
-          {...(salePrice && {
-            sx: {
-              '&:before': {
-                content: "''",
-                display: 'block',
-                width: '100%',
-                borderTopWidth: '1px',
-                borderTopStyle: 'solid',
-                borderTopColor: 'error.main',
-                height: '10px',
-                position: 'absolute',
-                bottom: 0,
-                left: 0,
-                transform: 'rotate(-20deg)',
-              },
-            },
-          })}
-        >
-          {price}
-        </PriceTypography>
-        {salePrice && (
+        {!priceRange ? (
+          <>
+            <PriceTypography
+              variant="body1"
+              fontWeight={fontWeight}
+              color={salePrice ? 'error' : 'text.primary'}
+              fontSize={salePrice ? getSaleFontSize(size) : size}
+              {...(salePrice && {
+                sx: {
+                  '&:before': {
+                    content: "''",
+                    display: 'block',
+                    width: '100%',
+                    borderTopWidth: '1px',
+                    borderTopStyle: 'solid',
+                    borderTopColor: 'error.main',
+                    height: '10px',
+                    position: 'absolute',
+                    bottom: 0,
+                    left: 0,
+                    transform: 'rotate(-20deg)',
+                  },
+                },
+              })}
+            >
+              {price}
+            </PriceTypography>
+            {salePrice && (
+              <Typography
+                variant="body1"
+                color="text.primary"
+                fontSize={size}
+                fontWeight={fontWeight}
+              >
+                {salePrice}
+              </Typography>
+            )}
+          </>
+        ) : (
           <Typography variant="body1" color="text.primary" fontSize={size} fontWeight={fontWeight}>
-            {salePrice}
+            {priceRange.lower} - {priceRange.upper}
           </Typography>
         )}
       </Box>
