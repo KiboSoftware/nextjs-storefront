@@ -16,7 +16,13 @@ export const grey = {
 // Create a theme instance.
 const theme = createTheme({
   typography: {
-    fontFamily: 'sans-serif',
+    fontFamily: 'Roboto',
+    h1: {
+      fontSize: '1.75rem',
+      '@media (max-width:600px)': {
+        fontSize: '1.25rem',
+      },
+    },
   },
   palette: {
     primary: {
