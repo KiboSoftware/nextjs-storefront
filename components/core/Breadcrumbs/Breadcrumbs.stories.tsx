@@ -3,7 +3,7 @@ import { ComponentStory, ComponentMeta } from '@storybook/react'
 import KiboBreadcrumbs from './Breadcrumbs'
 // More on default export: https://storybook.js.org/docs/react/writing-stories/introduction#default-export
 export default {
-  title: 'Common/Breadcrumbs',
+  title: 'Core/Breadcrumbs',
   component: KiboBreadcrumbs,
 } as ComponentMeta<typeof KiboBreadcrumbs>
 
@@ -22,4 +22,5 @@ common.args = {
       link: '/cart',
     },
   ],
+  separator: '|',
 }
