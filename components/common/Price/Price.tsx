@@ -17,7 +17,7 @@ const Price = ({
   salePrice,
   priceRange,
   size = 'medium',
-  fontWeight = 'normal',
+  fontWeight = 'bold',
 }: {
   price?: string
   salePrice?: string
