@@ -23,10 +23,15 @@ export default function KiboBreadcrumbs({
           return (
             <Link
               underline="hover"
-              variant="body2"
+              variant="caption"
               color="text.primary"
               href={item.link}
               key={index}
+              sx={{
+                typography: {
+                  sm: 'body2',
+                },
+              }}
             >
               {item.text}
             </Link>
