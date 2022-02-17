@@ -6,7 +6,7 @@ export type Breadcrumb = {
   text: string
   link: string
 }
-interface IBreadcrumbsProps {
+interface BreadcrumbsProps {
   breadcrumbs: Breadcrumb[]
   separator?: string
 }
@@ -15,7 +15,7 @@ export default function KiboBreadcrumbs({
   breadcrumbs,
   separator = '|',
   ...rest
-}: IBreadcrumbsProps) {
+}: BreadcrumbsProps) {
   return (
     <div role="presentation">
       <Breadcrumbs aria-label="breadcrumb" separator={separator} {...rest}>
