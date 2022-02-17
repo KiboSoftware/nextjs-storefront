@@ -63,7 +63,7 @@ const Price = ({
             <Typography
               variant="body1"
               fontWeight={fontWeight}
-              color={salePrice ? 'common.black' : 'text.primary'}
+              color={salePrice ? 'error' : 'text.primary'}
               fontSize={salePrice ? getSaleFontSize(size) : size}
               {...(salePrice && {
                 sx: {
