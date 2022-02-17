@@ -1,16 +1,43 @@
-import { useTheme } from '@emotion/react'
-import styled from '@emotion/styled'
-import { Button, Typography, Box } from '@mui/material'
+import { Typography, Box } from '@mui/material'
 
 // Typography fontSize
 // small = 13px
 // medium = 16px
 // large = 18px
 
-const PriceTypography = styled(Typography)({
-  textDecoration: 'none',
-  position: 'relative',
-})
+const classes = {
+  price: {
+    textDecoration: 'none',
+    position: 'relative',
+  },
+  oldPrice: {
+    ':before': {
+      content: "''",
+      display: 'block',
+      width: '100%',
+      borderTopWidth: '1px',
+      borderTopStyle: 'solid',
+      borderTopColor: 'error.main',
+      height: '10px',
+      position: 'absolute',
+      bottom: 0,
+      left: 0,
+      transform: 'rotate(-20deg)',
+    },
+  },
+}
+
+interface IPriceRange {
+  upper: string
+  lower: string
+}
+interface IPriceProps {
+  price?: string
+  salePrice?: string
+  priceRange?: IPriceRange
+  size?: 'small' | 'medium' | 'large'
+  fontWeight?: 'bold' | 'normal'
+}
 
 const Price = ({
   price,
@@ -18,25 +45,14 @@ const Price = ({
   priceRange,
   size = 'medium',
   fontWeight = 'bold',
-}: {
-  price?: string
-  salePrice?: string
-  priceRange?: {
-    upper: string
-    lower: string
-  }
-  size?: 'small' | 'medium' | 'large'
-  fontWeight?: 'bold' | 'normal'
-}) => {
-  const theme = useTheme()
-
-  const getSaleFontSize = (sizeinput: 'small' | 'medium' | 'large'): string => {
+}: IPriceProps) => {
+  const getSaleFontSize = (sizeInput: 'small' | 'medium' | 'large'): string => {
     const sizes = {
       small: '0.75rem',
       medium: 'small',
       large: 'medium',
     }
-    return sizes[sizeinput]
+    return sizes[sizeInput]
   }
 
   return (
@@ -44,44 +60,40 @@ const Price = ({
       <Box display="flex" gap="10px" alignItems="center">
         {!priceRange ? (
           <>
-            <PriceTypography
+            <Typography
               variant="body1"
               fontWeight={fontWeight}
-              color={salePrice ? 'error' : 'text.primary'}
+              color={salePrice ? 'common.black' : 'text.primary'}
               fontSize={salePrice ? getSaleFontSize(size) : size}
               {...(salePrice && {
                 sx: {
-                  '&:before': {
-                    content: "''",
-                    display: 'block',
-                    width: '100%',
-                    borderTopWidth: '1px',
-                    borderTopStyle: 'solid',
-                    borderTopColor: 'error.main',
-                    height: '10px',
-                    position: 'absolute',
-                    bottom: 0,
-                    left: 0,
-                    transform: 'rotate(-20deg)',
-                  },
+                  ...classes.price,
+                  ...classes.oldPrice,
                 },
               })}
             >
               {price}
-            </PriceTypography>
+            </Typography>
             {salePrice && (
               <Typography
                 variant="body1"
                 color="text.primary"
                 fontSize={size}
                 fontWeight={fontWeight}
+                sx={classes.price}
               >
                 {salePrice}
               </Typography>
             )}
           </>
         ) : (
-          <Typography variant="body1" color="text.primary" fontSize={size} fontWeight={fontWeight}>
+          <Typography
+            variant="body1"
+            color="text.primary"
+            fontSize={size}
+            fontWeight={fontWeight}
+            sx={classes.price}
+          >
             {priceRange.lower} - {priceRange.upper}
           </Typography>
         )}
