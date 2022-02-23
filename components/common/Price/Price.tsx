@@ -1,4 +1,5 @@
 import { Typography, Box } from '@mui/material'
+import { Variant } from '@mui/material/styles/createTypography'
 
 // Typography fontSize
 // small = 13px
@@ -46,25 +47,25 @@ const Price = ({
   size = 'medium',
   fontWeight = 'bold',
 }: IPriceProps) => {
-  const getSaleFontSize = (sizeInput: 'small' | 'medium' | 'large'): string => {
+  const getVariant = (): Variant => {
     const sizes = {
-      small: '0.75rem',
-      medium: 'small',
-      large: 'medium',
+      small: 'body2',
+      medium: 'body1',
+      large: 'h5',
     }
-    return sizes[sizeInput]
+    return sizes[size] as Variant
   }
 
   return (
     <>
-      <Box display="flex" gap="10px" alignItems="center">
+      <Box display="flex" gap="0.625rem" alignItems="center">
         {!priceRange ? (
           <>
             <Typography
-              variant="body1"
+              variant={getVariant()}
               fontWeight={fontWeight}
+              gutterBottom
               color={salePrice ? 'error' : 'text.primary'}
-              fontSize={salePrice ? getSaleFontSize(size) : size}
               {...(salePrice && {
                 sx: {
                   ...classes.price,
@@ -76,11 +77,11 @@ const Price = ({
             </Typography>
             {salePrice && (
               <Typography
-                variant="body1"
+                variant={getVariant()}
                 color="text.primary"
-                fontSize={size}
                 fontWeight={fontWeight}
                 sx={classes.price}
+                gutterBottom
               >
                 {salePrice}
               </Typography>
@@ -88,11 +89,11 @@ const Price = ({
           </>
         ) : (
           <Typography
-            variant="body1"
+            variant={getVariant()}
             color="text.primary"
-            fontSize={size}
             fontWeight={fontWeight}
             sx={classes.price}
+            gutterBottom
           >
             {priceRange.lower} - {priceRange.upper}
           </Typography>
