@@ -51,7 +51,7 @@ const Price = ({
     const sizes = {
       small: 'body2',
       medium: 'body1',
-      large: 'h3',
+      large: 'title',
     }
     return sizes[size] as Variant
   }
