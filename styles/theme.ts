@@ -1,23 +1,4 @@
-import React from 'react'
 import { createTheme, responsiveFontSizes } from '@mui/material/styles'
-
-declare module '@mui/material/styles' {
-  interface TypographyVariants {
-    title: React.CSSProperties
-  }
-
-  // allow configuration using `createTheme`
-  interface TypographyVariantsOptions {
-    title?: React.CSSProperties
-  }
-}
-
-// Update the Typography's variant prop options
-declare module '@mui/material/Typography' {
-  interface TypographyPropsVariantOverrides {
-    title: true
-  }
-}
 
 export const grey = {
   900: '#2B2B2B',
@@ -64,8 +45,8 @@ const theme = createTheme({
     button: {
       fontSize: '1.125rem', // 18px
     },
-    title: {
-      fontSize: '1.125rem',
+    subtitle1: {
+      fontSize: '1.125rem', // 18px
     },
   },
   palette: {
