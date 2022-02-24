@@ -1,59 +1,74 @@
 import React from 'react'
-
-import { Card, Box } from '@mui/material'
-import { styled } from '@mui/material/styles'
-import Image from 'next/image'
-import Link from 'next/link'
-
+import { Card, Link as MuiLink, Typography, Rating, CardMedia, CardActionArea } from '@mui/material'
 import FlexBox from '@/components/FlexBox'
+import Price from '@/components/common/Price/Price'
+import StarIcon from '@mui/icons-material/StarRounded'
+import DefaultImage from '@/public/product_placeholder.svg'
 
 export interface ProductCardProps {
-  price: string
-  salePrice: string
-  link: string
-  productCode: string
   title: string
-  rating: string
-  image: string
-  imageWidth: string
-  imageHeight: string
-  imageLayout: string
-  isInWishlist: boolean
-  isInCart: boolean
+  image?: string
+  price?: string
+  salePrice?: string
+  link?: string
+  productCode?: string
+  rating?: number
+  imageWidth?: string
+  imageHeight?: string
+  imageLayout?: string
+  isInWishlist?: boolean
+  isInCart?: boolean
 }
-const ImageWrap = styled(Box)(() => ({
-  position: 'relative',
-  display: 'inline-block',
-  textAlign: 'center',
-}))
 
 const ProductCard = (props: ProductCardProps) => {
-  const { price, title, link, image } = props
+  const {
+    price,
+    title,
+    link,
+    image = DefaultImage,
+    salePrice,
+    rating = 0,
+    imageHeight = 140,
+    imageWidth,
+  } = props
   return (
     <Card
       sx={{
-        padding: '10px',
+        padding: '0.625rem',
+        maxWidth: {
+          xs: '172px',
+          md: '202px',
+        },
+        boxShadow: 'none',
       }}
     >
-      <Box>
-        <Link href={link}>
-          <a>
-            <ImageWrap>
-              <Image src={image} width={260} height={260} />
-            </ImageWrap>
-          </a>
-        </Link>
-      </Box>
-      <FlexBox>
-        <Box flex="1 1 0" minWidth="0px" mr={1}>
-          <Link href={link}>
-            <a>
-              <h3>{title}</h3>
-              <h6>{price}</h6>
-            </a>
-          </Link>
-        </Box>
-      </FlexBox>
+      <MuiLink href={link} underline="none">
+        <CardActionArea>
+          <CardMedia
+            component="img"
+            width={imageWidth}
+            height={imageHeight}
+            image={image}
+            alt="product image"
+            sx={{ objectFit: 'contain' }}
+          />
+          <FlexBox flexDirection="column" ml={2} mb={2}>
+            <Typography variant="body1" gutterBottom color="text.primary">
+              {title}
+            </Typography>
+            <Price price={price} salePrice={salePrice} size="small" />
+            <Rating
+              name="read-only"
+              value={rating}
+              precision={0.5}
+              readOnly
+              size="small"
+              icon={<StarIcon color="primary" />}
+              emptyIcon={<StarIcon />}
+            />
+          </FlexBox>
+        </CardActionArea>
+      </MuiLink>
     </Card>
   )
 }

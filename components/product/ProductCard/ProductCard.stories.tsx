@@ -18,15 +18,26 @@ const Template: ComponentStory<typeof ProductCard> = (args) => <ProductCard {...
 
 export const Common = Template.bind({})
 Common.args = {
-  image: `https://cdn-tp3.mozu.com/24645-37138/cms/37138/files/42d958c7-94d3-46be-812a-488601cf0c04?max=155&_mzcb=_1618890579000`,
+  image: `https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR-FMCFLCcOwFxZ3FNt8RKne3iqrwqY8OOnCw&usqp=CAU`,
   link: '/product/test-123',
-  price: '$9.99',
+  price: '$19.99',
+  salePrice: '$8.99',
   title: 'This is a product',
 }
 
+export const NoImage = Template.bind({})
+// More on args: https://storybook.js.org/docs/react/writing-stories/args
+NoImage.args = {
+  link: '/product/test-123',
+  price: '$19.99',
+  salePrice: '$8.99',
+  title: 'This is a No image product',
+}
+
 export const AddToCard = Template.bind({})
-Common.args = {
-  image: `https://cdn-tp3.mozu.com/24645-37138/cms/37138/files/42d958c7-94d3-46be-812a-488601cf0c04?max=155&_mzcb=_1618890579000`,
+// More on args: https://storybook.js.org/docs/react/writing-stories/args
+AddToCard.args = {
+  image: `https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR-FMCFLCcOwFxZ3FNt8RKne3iqrwqY8OOnCw&usqp=CAU`,
   link: '/product/test-123',
   price: '$9.99',
   title: 'This is a product',
