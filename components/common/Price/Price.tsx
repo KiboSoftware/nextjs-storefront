@@ -6,7 +6,7 @@ import { Variant } from '@mui/material/styles/createTypography'
 // medium = 16px
 // large = 18px
 
-const classes = {
+const styles = {
   price: {
     textDecoration: 'none',
     position: 'relative',
@@ -28,14 +28,14 @@ const classes = {
   },
 }
 
-interface IPriceRange {
+interface PriceRange {
   upper: string
   lower: string
 }
-interface IPriceProps {
+interface PriceProps {
   price?: string
   salePrice?: string
-  priceRange?: IPriceRange
+  priceRange?: PriceRange
   size?: 'small' | 'medium' | 'large'
   fontWeight?: 'bold' | 'normal'
 }
@@ -46,12 +46,12 @@ const Price = ({
   priceRange,
   size = 'medium',
   fontWeight = 'bold',
-}: IPriceProps) => {
+}: PriceProps) => {
   const getVariant = (): Variant => {
     const sizes = {
       small: 'body2',
       medium: 'body1',
-      large: 'h5',
+      large: 'h3',
     }
     return sizes[size] as Variant
   }
@@ -68,8 +68,8 @@ const Price = ({
               color={salePrice ? 'error' : 'text.primary'}
               {...(salePrice && {
                 sx: {
-                  ...classes.price,
-                  ...classes.oldPrice,
+                  ...styles.price,
+                  ...styles.oldPrice,
                 },
               })}
             >
@@ -80,7 +80,7 @@ const Price = ({
                 variant={getVariant()}
                 color="text.primary"
                 fontWeight={fontWeight}
-                sx={classes.price}
+                sx={styles.price}
                 gutterBottom
               >
                 {salePrice}
@@ -92,7 +92,7 @@ const Price = ({
             variant={getVariant()}
             color="text.primary"
             fontWeight={fontWeight}
-            sx={classes.price}
+            sx={styles.price}
             gutterBottom
           >
             {priceRange.lower} - {priceRange.upper}
