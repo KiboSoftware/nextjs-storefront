@@ -1,8 +1,30 @@
+import React from 'react'
 import { createTheme, responsiveFontSizes } from '@mui/material/styles'
 
+// TODO
+// declare module '@mui/material/styles' {
+//   interface TypographyVariants {
+//     poster: React.CSSProperties
+//   }
+
+//   // allow configuration using `createTheme`
+//   interface TypographyVariantsOptions {
+//     poster?: React.CSSProperties
+//   }
+// }
+
+// // Update the Typography's variant prop options
+// declare module '@mui/material/Typography' {
+//   interface TypographyPropsVariantOverrides {
+//     poster: true
+//     h3: false
+//   }
+// }
+
 export const grey = {
+  900: '#2B2B2B',
   // Fill Form Label Text, information text
-  600: '#7C7C7',
+  600: '#7C7C7C',
   // Thin borders, placeholder text
   500: '#C7C7C7',
   // Header Accent Color, page separator bar
@@ -16,12 +38,30 @@ export const grey = {
 // Create a theme instance.
 const theme = createTheme({
   typography: {
-    fontFamily: 'Roboto',
+    fontFamily: 'Roboto, sans-serif',
     h1: {
       fontSize: '1.75rem',
       '@media (max-width:600px)': {
+        fontSize: '1.5rem',
+      },
+    },
+    h2: {
+      fontSize: '1.5rem',
+      '@media (max-width:600px)': {
         fontSize: '1.25rem',
       },
+    },
+    h3: {
+      fontSize: '1.25rem',
+      '@media (max-width:600px)': {
+        fontSize: '1rem',
+      },
+    },
+    h4: {
+      fontSize: '1rem',
+    },
+    h5: {
+      fontSize: '0.875rem',
     },
   },
   palette: {
@@ -32,7 +72,8 @@ const theme = createTheme({
       main: '#c0e3df',
     },
     text: {
-      primary: '#2B2B2B',
+      primary: grey[900],
+      secondary: grey[600],
     },
     success: {
       main: '#17514b',
@@ -54,7 +95,7 @@ const theme = createTheme({
           },
         },
         containedSecondary: {
-          backgroundColor: '#fafafa',
+          backgroundColor: grey[50],
         },
       },
     },
