@@ -12,6 +12,10 @@ module.exports = {
     ])
     console.log(config.module.rules[12])
     config.resolve.alias['@emotion/styled'] = resolve('../node_modules/@emotion/styled')
+    config.resolve.alias = {
+      ...config.resolve.alias,
+      'next-i18next': 'react-i18next',
+    }
     return config
   },
   stories: ['../components/**/*.stories.mdx', '../components/**/*.stories.@(js|jsx|ts|tsx)'],
