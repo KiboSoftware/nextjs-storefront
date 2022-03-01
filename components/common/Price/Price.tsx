@@ -1,10 +1,16 @@
 import { Typography, Box } from '@mui/material'
-import { Variant } from '@mui/material/styles/createTypography'
 
-// Typography fontSize
-// small = 13px
-// medium = 16px
-// large = 18px
+interface PriceRange {
+  upper: string
+  lower: string
+}
+interface PriceProps {
+  price?: string
+  salePrice?: string
+  priceRange?: PriceRange
+  variant?: 'body2' | 'body1' | 'subtitle1'
+  fontWeight?: 'bold' | 'normal'
+}
 
 const styles = {
   price: {
@@ -28,56 +34,43 @@ const styles = {
   },
 }
 
-interface PriceRange {
-  upper: string
-  lower: string
-}
-interface PriceProps {
-  price?: string
-  salePrice?: string
-  priceRange?: PriceRange
-  size?: 'small' | 'medium' | 'large'
-  fontWeight?: 'bold' | 'normal'
-}
-
 const Price = ({
   price,
   salePrice,
   priceRange,
-  size = 'medium',
+  variant = 'body1',
   fontWeight = 'bold',
 }: PriceProps) => {
-  const getVariant = (): Variant => {
-    const sizes = {
-      small: 'body2',
-      medium: 'body1',
-      large: 'subtitle1',
-    }
-    return sizes[size] as Variant
-  }
-
   return (
     <>
       <Box display="flex" gap="0.625rem" alignItems="center">
-        {!priceRange ? (
+        {priceRange ? (
+          <Typography
+            variant={variant}
+            color="text.primary"
+            fontWeight={fontWeight}
+            sx={styles.price}
+            gutterBottom
+          >
+            {priceRange.lower} - {priceRange.upper}
+          </Typography>
+        ) : (
           <>
             <Typography
-              variant={getVariant()}
+              variant={variant}
               fontWeight={fontWeight}
               gutterBottom
               color={salePrice ? 'error' : 'text.primary'}
-              {...(salePrice && {
-                sx: {
-                  ...styles.price,
-                  ...styles.oldPrice,
-                },
-              })}
+              sx={{
+                ...styles.price,
+                ...(salePrice && styles.oldPrice),
+              }}
             >
               {price}
             </Typography>
             {salePrice && (
               <Typography
-                variant={getVariant()}
+                variant={variant}
                 color="text.primary"
                 fontWeight={fontWeight}
                 sx={styles.price}
@@ -87,16 +80,6 @@ const Price = ({
               </Typography>
             )}
           </>
-        ) : (
-          <Typography
-            variant={getVariant()}
-            color="text.primary"
-            fontWeight={fontWeight}
-            sx={styles.price}
-            gutterBottom
-          >
-            {priceRange.lower} - {priceRange.upper}
-          </Typography>
         )}
       </Box>
     </>

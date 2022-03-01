@@ -1,13 +1,28 @@
 import React from 'react'
-import { Card, Link as MuiLink, Typography, Rating, CardMedia, CardActionArea } from '@mui/material'
-import FlexBox from '@/components/FlexBox'
-import Price from '@/components/common/Price/Price'
+
+import {
+  Card,
+  Link as MuiLink,
+  Typography,
+  Rating,
+  CardMedia,
+  CardActionArea,
+  Box,
+  Stack,
+  Skeleton,
+} from '@mui/material'
 import StarIcon from '@mui/icons-material/StarRounded'
 import DefaultImage from '@/public/product_placeholder.svg'
 
+import Price from '@/components/common/Price/Price'
+// TODO
+// import { useTranslation } from 'next-i18next'
+
 export interface ProductCardProps {
   title: string
-  image?: string
+  imageUrl?: string
+  placeholderImageUrl?: string
+  imageAltText?: string
   price?: string
   salePrice?: string
   link?: string
@@ -18,45 +33,66 @@ export interface ProductCardProps {
   imageLayout?: string
   isInWishlist?: boolean
   isInCart?: boolean
+  isLoading?: boolean
+}
+
+const styles = {
+  cardRoot: {
+    padding: '0.625rem',
+    maxWidth: {
+      xs: '172px',
+      lg: '202px',
+    },
+    boxShadow: 'none',
+  },
+}
+
+const ProductCardSkeleton = () => {
+  return (
+    <Stack spacing={1} sx={styles.cardRoot}>
+      <Skeleton variant="rectangular" height={100} />
+      <Skeleton variant="rectangular" height={20} />
+      <Skeleton variant="rectangular" width={60} height={20} />
+      <Skeleton variant="rectangular" height={20} />
+    </Stack>
+  )
 }
 
 const ProductCard = (props: ProductCardProps) => {
+  // TODO
+  // const { t } = useTranslation('product-page')
   const {
     price,
     title,
     link,
-    image = DefaultImage,
+    imageUrl,
+    placeholderImageUrl = DefaultImage,
     salePrice,
     rating = 0,
     imageHeight = 140,
     imageWidth,
+    imageAltText = 'product-image-alt',
+    isLoading = true,
   } = props
-  return (
-    <Card
-      sx={{
-        padding: '0.625rem',
-        maxWidth: {
-          xs: '172px',
-          md: '202px',
-        },
-        boxShadow: 'none',
-      }}
-    >
+  return isLoading ? (
+    <ProductCardSkeleton />
+  ) : (
+    <Card sx={styles.cardRoot}>
       <MuiLink href={link} underline="none">
         <CardActionArea>
           <CardMedia
             component="img"
             width={imageWidth}
             height={imageHeight}
-            image={image}
-            alt="product image"
+            image={imageUrl || placeholderImageUrl}
+            alt={imageAltText}
             sx={{ objectFit: 'contain' }}
           />
-          <FlexBox flexDirection="column" ml={2} mb={2}>
+          <Box flexDirection="column" m={2} mt={0}>
             <Typography variant="body1" gutterBottom color="text.primary">
               {title}
             </Typography>
-            <Price price={price} salePrice={salePrice} size="small" />
+            <Price price={price} salePrice={salePrice} variant="body1" />
             <Rating
               name="read-only"
               value={rating}
@@ -66,7 +102,7 @@ const ProductCard = (props: ProductCardProps) => {
               icon={<StarIcon color="primary" />}
               emptyIcon={<StarIcon />}
             />
-          </FlexBox>
+          </Box>
         </CardActionArea>
       </MuiLink>
     </Card>
