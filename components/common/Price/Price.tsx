@@ -41,44 +41,48 @@ const Price = ({
   variant = 'body1',
   fontWeight = 'bold',
 }: PriceProps) => {
+  // common Price Text component
+  const PriceTypography = ({
+    children,
+    color,
+    sx,
+  }: {
+    children: any
+    color?: string
+    sx?: Object
+  }) => {
+    return (
+      <Typography
+        variant={variant}
+        fontWeight={fontWeight}
+        color={color || 'text.primary'}
+        sx={sx}
+        gutterBottom
+      >
+        {children}
+      </Typography>
+    )
+  }
+
   return (
     <>
       <Box display="flex" gap="0.625rem" alignItems="center">
         {priceRange ? (
-          <Typography
-            variant={variant}
-            color="text.primary"
-            fontWeight={fontWeight}
-            sx={styles.price}
-            gutterBottom
-          >
+          <PriceTypography>
             {priceRange.lower} - {priceRange.upper}
-          </Typography>
+          </PriceTypography>
         ) : (
           <>
-            <Typography
-              variant={variant}
-              fontWeight={fontWeight}
-              gutterBottom
-              color={salePrice ? 'error' : 'text.primary'}
+            <PriceTypography
+              {...(salePrice && { color: 'error' })}
               sx={{
                 ...styles.price,
                 ...(salePrice && styles.oldPrice),
               }}
             >
               {price}
-            </Typography>
-            {salePrice && (
-              <Typography
-                variant={variant}
-                color="text.primary"
-                fontWeight={fontWeight}
-                sx={styles.price}
-                gutterBottom
-              >
-                {salePrice}
-              </Typography>
-            )}
+            </PriceTypography>
+            {salePrice && <PriceTypography>{salePrice}</PriceTypography>}
           </>
         )}
       </Box>
