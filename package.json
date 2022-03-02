@@ -7,7 +7,7 @@
     "start": "next start",
     "lint": "next lint",
     "generate-types": "graphql-codegen",
-    "storybook": "start-storybook -p 6006",
+    "storybook": "start-storybook -p 6006 -s ./public",
     "build-storybook": "build-storybook",
     "validate-types": "tsc --noEmit --declaration",
     "test": "jest",
