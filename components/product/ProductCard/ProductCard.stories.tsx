@@ -3,15 +3,10 @@ import React from 'react'
 import { ComponentStory, ComponentMeta } from '@storybook/react'
 
 import ProductCard from './ProductCard'
-
-import type { ProductCardProps } from './ProductCard'
-
+// More on default export: https://storybook.js.org/docs/react/writing-stories/introduction#default-export
 export default {
   title: 'Product/ProductCard',
   component: ProductCard,
-  argTypes: {
-    backgroundColor: { control: 'color' },
-  },
 } as ComponentMeta<typeof ProductCard>
 
 const Template: ComponentStory<typeof ProductCard> = (args) => <ProductCard {...args} />

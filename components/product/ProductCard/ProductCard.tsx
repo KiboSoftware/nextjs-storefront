@@ -15,8 +15,6 @@ import StarIcon from '@mui/icons-material/StarRounded'
 import DefaultImage from '@/public/product_placeholder.svg'
 
 import Price from '@/components/common/Price/Price'
-// TODO
-// import { useTranslation } from 'next-i18next'
 
 export interface ProductCardProps {
   title: string
@@ -59,8 +57,6 @@ const ProductCardSkeleton = () => {
 }
 
 const ProductCard = (props: ProductCardProps) => {
-  // TODO
-  // const { t } = useTranslation('product-page')
   const {
     price,
     title,
@@ -72,41 +68,42 @@ const ProductCard = (props: ProductCardProps) => {
     imageHeight = 140,
     imageWidth,
     imageAltText = 'product-image-alt',
-    isLoading = true,
+    isLoading = false,
   } = props
-  return isLoading ? (
-    <ProductCardSkeleton />
-  ) : (
-    <Card sx={styles.cardRoot}>
-      <MuiLink href={link} underline="none">
-        <CardActionArea>
-          <CardMedia
-            component="img"
-            width={imageWidth}
-            height={imageHeight}
-            image={imageUrl || placeholderImageUrl}
-            alt={imageAltText}
-            sx={{ objectFit: 'contain' }}
-          />
-          <Box flexDirection="column" m={2} mt={0}>
-            <Typography variant="body1" gutterBottom color="text.primary">
-              {title}
-            </Typography>
-            <Price price={price} salePrice={salePrice} variant="body1" />
-            <Rating
-              name="read-only"
-              value={rating}
-              precision={0.5}
-              readOnly
-              size="small"
-              icon={<StarIcon color="primary" />}
-              emptyIcon={<StarIcon />}
+
+  if (isLoading) return <ProductCardSkeleton />
+  else
+    return (
+      <Card sx={styles.cardRoot}>
+        <MuiLink href={link} underline="none">
+          <CardActionArea>
+            <CardMedia
+              component="img"
+              width={imageWidth}
+              height={imageHeight}
+              image={imageUrl || placeholderImageUrl}
+              alt={imageAltText}
+              sx={{ objectFit: 'contain' }}
             />
-          </Box>
-        </CardActionArea>
-      </MuiLink>
-    </Card>
-  )
+            <Box flexDirection="column" m={2} mt={0}>
+              <Typography variant="body1" gutterBottom color="text.primary">
+                {title}
+              </Typography>
+              <Price price={price} salePrice={salePrice} variant="body1" />
+              <Rating
+                name="read-only"
+                value={rating}
+                precision={0.5}
+                readOnly
+                size="small"
+                icon={<StarIcon color="primary" />}
+                emptyIcon={<StarIcon />}
+              />
+            </Box>
+          </CardActionArea>
+        </MuiLink>
+      </Card>
+    )
 }
 
 export default ProductCard

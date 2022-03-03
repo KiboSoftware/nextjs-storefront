@@ -50,19 +50,17 @@ const Price = ({
     children: any
     color?: string
     sx?: Object
-  }) => {
-    return (
-      <Typography
-        variant={variant}
-        fontWeight={fontWeight}
-        color={color || 'text.primary'}
-        sx={sx}
-        gutterBottom
-      >
-        {children}
-      </Typography>
-    )
-  }
+  }) => (
+    <Typography
+      variant={variant}
+      fontWeight={fontWeight}
+      color={color || 'text.primary'}
+      sx={sx}
+      gutterBottom
+    >
+      {children}
+    </Typography>
+  )
 
   return (
     <>
