@@ -18,8 +18,6 @@ import Price from '@/components/common/Price/Price'
 import DefaultImage from '@/public/product_placeholder.svg'
 
 import Price from '@/components/common/Price/Price'
-// TODO
-// import { useTranslation } from 'next-i18next'
 
 export interface ProductCardProps {
   title: string
@@ -61,8 +59,6 @@ const ProductCardSkeleton = () => {
 }
 
 const ProductCard = (props: ProductCardProps) => {
-  // TODO
-  // const { t } = useTranslation('product-page')
   const {
     price,
     title,
