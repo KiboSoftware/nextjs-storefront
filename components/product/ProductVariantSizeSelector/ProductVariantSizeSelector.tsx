@@ -9,8 +9,8 @@ interface SizeSelectorProps {
 
 interface SizeVariantContainerProps {
   value: string
-  isSelected?: boolean | undefined | null
-  isEnabled?: boolean | undefined | null
+  isSelected?: boolean | null
+  isEnabled?: boolean | null
   selectOption: (value: string) => {}
 }
 
