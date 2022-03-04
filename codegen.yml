@@ -1,7 +1,7 @@
 overwrite: true
-schema: "https://t17194-s21127.dev10.kubedevext.kibo-dev.com/graphql"
+schema: 'https://t17194-s21127.dev10.kubedevext.kibo-dev.com/graphql'
 documents: 'test.graphql'
 generates:
-  types.ts:
+  lib/gql/types.ts:
     plugins:
-      - "@graphql-codegen/typescript"
+      - '@graphql-codegen/typescript'
