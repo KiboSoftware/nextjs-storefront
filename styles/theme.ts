@@ -14,8 +14,8 @@ export const grey = {
   50: '#FAFAFA',
 }
 
-// Create a theme instance.
-const theme = createTheme({
+// Create a base theme instance and define the basic design options
+let theme = createTheme({
   typography: {
     fontFamily: 'Roboto, sans-serif',
     h1: {
@@ -47,6 +47,9 @@ const theme = createTheme({
     },
     subtitle1: {
       fontSize: '1.125rem', // 18px
+    },
+    body2: {
+      fontSize: '0.875rem', // 12px
     },
   },
   palette: {
@@ -86,5 +89,20 @@ const theme = createTheme({
     },
   },
 })
-
+// compose theme (place theme options that depend on the base theme here)
+theme = createTheme(theme, {
+  components: {
+    MuiSvgIcon: {
+      styleOverrides: {
+        root: {
+          color: grey[900],
+          fontSize: '1.25rem',
+          [theme.breakpoints.up('md')]: {
+            fontSize: '1.75rem',
+          },
+        },
+      },
+    },
+  },
+})
 export default responsiveFontSizes(theme)
