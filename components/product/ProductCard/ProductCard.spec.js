@@ -1,5 +1,7 @@
 import React from 'react'
-import { render } from '@testing-library/react'
+
+import { render, screen } from '@testing-library/react'
+
 import ProductCard from './ProductCard'
 
 it('Renders Product Card', () => {
@@ -9,7 +11,7 @@ it('Renders Product Card', () => {
     price: '$9.99',
     title: 'This is a product',
   }
-  const { getByText } = render(<ProductCard {...props} />)
+  render(<ProductCard {...props} />)
 
-  expect(getByText(props.price)).toBeTruthy()
+  expect(screen.getByText(props.price)).toBeInTheDocument()
 })

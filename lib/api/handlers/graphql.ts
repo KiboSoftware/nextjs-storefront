@@ -1,5 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
+
 import { fetcher } from '../util'
+
 export default async function graphQLHandler(req: NextApiRequest, res: NextApiResponse) {
   try {
     const { query, variables } = req.body

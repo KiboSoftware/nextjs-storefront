@@ -1,9 +1,11 @@
 import * as React from 'react'
+
 // eslint-disable-next-line @next/next/no-document-import-in-page
-import Document, { Html, Head, Main, NextScript } from 'next/document'
 import createEmotionServer from '@emotion/server/create-instance'
-import theme from '../styles/theme'
+import Document, { Html, Head, Main, NextScript } from 'next/document'
+
 import createEmotionCache from '../lib/createEmotionCache'
+import theme from '../styles/theme'
 
 export default class MyDocument extends Document {
   render() {
@@ -52,7 +54,7 @@ MyDocument.getInitialProps = async (ctx) => {
   // 3. app.render
   // 4. page.render
 
-  const originalRenderPage = ctx.renderPage
+  const view = ctx.renderPage
 
   // You can consider sharing the same emotion cache between all the SSR requests to speed up performance.
   // However, be aware that it can have global side effects.
@@ -60,7 +62,7 @@ MyDocument.getInitialProps = async (ctx) => {
   const { extractCriticalToChunks } = createEmotionServer(cache)
 
   ctx.renderPage = () =>
-    originalRenderPage({
+    view({
       // eslint-disable-next-line react/display-name
       enhanceApp: (App: any) => (props) => <App emotionCache={cache} {...props} />,
     })

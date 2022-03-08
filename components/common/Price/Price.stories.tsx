@@ -1,7 +1,9 @@
 import React from 'react'
+
 import { ComponentStory, ComponentMeta } from '@storybook/react'
+
 import Price from './Price'
-// More on default export: https://storybook.js.org/docs/react/writing-stories/introduction#default-export
+
 export default {
   title: 'Common/Price',
   component: Price,
@@ -14,7 +16,6 @@ export default {
 const Template: ComponentStory<typeof Price> = (args) => <Price {...args} />
 
 export const priceOnly = Template.bind({})
-// More on args: https://storybook.js.org/docs/react/writing-stories/args
 priceOnly.args = {
   price: '$120.00',
 }

@@ -5,12 +5,13 @@ import type {
   InferGetStaticPropsType,
   GetServerSidePropsContext,
 } from 'next'
+import { useTranslation } from 'next-i18next'
+import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
+import { useRouter } from 'next/router'
 import { useQuery } from 'react-query'
+
 import { ProductListingTemplate } from '@/components/page-templates'
 import { productSearch } from '@/lib/api/operations/'
-import { useRouter } from 'next/router'
-import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
-import { useTranslation } from 'next-i18next'
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
   const response = await productSearch(context.query)

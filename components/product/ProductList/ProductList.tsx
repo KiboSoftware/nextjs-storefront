@@ -1,8 +1,10 @@
-import FlexBox from 'components/FlexBox'
-import { Grid, Pagination, Card } from '@mui/material'
 import React from 'react'
+
+import { Grid, Pagination, Card } from '@mui/material'
 import Image from 'next/image'
 import Link from 'next/link'
+
+import FlexBox from 'components/FlexBox'
 
 const selectProducts = (items: any = []): Array<any> => {
   return items.map((product: any) => {

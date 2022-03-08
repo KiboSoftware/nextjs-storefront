@@ -5,10 +5,11 @@ import type {
   InferGetStaticPropsType,
   GetServerSidePropsContext,
 } from 'next'
-import { useQuery } from 'react-query'
-import { useRouter } from 'next/router'
-import { CartTemplate } from '@/components/page-templates'
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
+import { useRouter } from 'next/router'
+import { useQuery } from 'react-query'
+
+import { CartTemplate } from '@/components/page-templates'
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
   const { locale } = context

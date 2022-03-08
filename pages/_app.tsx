@@ -1,14 +1,16 @@
 import * as React from 'react'
-import Head from 'next/head'
-import { AppProps } from 'next/app'
-import { ThemeProvider } from '@mui/material/styles'
-import CssBaseline from '@mui/material/CssBaseline'
+
 import { CacheProvider, EmotionCache } from '@emotion/react'
-import theme from '../styles/theme'
-import createEmotionCache from '../lib/createEmotionCache'
-import TopBar from '../components/TopBar'
-import { Hydrate, QueryClient, QueryClientProvider } from 'react-query'
+import CssBaseline from '@mui/material/CssBaseline'
+import { ThemeProvider } from '@mui/material/styles'
 import { appWithTranslation } from 'next-i18next'
+import { AppProps } from 'next/app'
+import Head from 'next/head'
+import { Hydrate, QueryClient, QueryClientProvider } from 'react-query'
+
+import TopBar from '../components/TopBar'
+import createEmotionCache from '../lib/createEmotionCache'
+import theme from '../styles/theme'
 
 // Client-side cache, shared for the whole session of the user in the browser.
 const clientSideEmotionCache = createEmotionCache()
