@@ -1,5 +1,7 @@
 import React from 'react'
 
+import Link from 'next/link'
+
 import {
   Card,
   Link as MuiLink,
@@ -15,19 +17,19 @@ import StarIcon from '@mui/icons-material/StarRounded'
 import DefaultImage from '@/public/product_placeholder.svg'
 
 import Price from '@/components/common/Price/Price'
+import KiboImage from '@/components/common/KiboImage/KiboImage'
 
 export interface ProductCardProps {
   title: string
+  link: string
   imageUrl?: string
   placeholderImageUrl?: string
   imageAltText?: string
   price?: string
   salePrice?: string
-  link?: string
   productCode?: string
   rating?: number
-  imageWidth?: string
-  imageHeight?: string
+  imageHeight?: number
   imageLayout?: string
   isInWishlist?: boolean
   isInCart?: boolean
@@ -37,9 +39,9 @@ export interface ProductCardProps {
 const styles = {
   cardRoot: {
     padding: '0.625rem',
-    maxWidth: {
-      xs: '172px',
-      lg: '202px',
+    width: {
+      xs: 172,
+      md: 202,
     },
     boxShadow: 'none',
   },
@@ -47,7 +49,7 @@ const styles = {
 
 const ProductCardSkeleton = () => {
   return (
-    <Stack spacing={1} sx={styles.cardRoot}>
+    <Stack spacing={1} sx={styles.cardRoot} data-testid="product-card-skeleton">
       <Skeleton variant="rectangular" height={100} />
       <Skeleton variant="rectangular" height={20} />
       <Skeleton variant="rectangular" width={60} height={20} />
@@ -66,7 +68,6 @@ const ProductCard = (props: ProductCardProps) => {
     salePrice,
     rating = 0,
     imageHeight = 140,
-    imageWidth,
     imageAltText = 'product-image-alt',
     isLoading = false,
   } = props
@@ -74,17 +75,18 @@ const ProductCard = (props: ProductCardProps) => {
   if (isLoading) return <ProductCardSkeleton />
   else
     return (
-      <Card sx={styles.cardRoot}>
-        <MuiLink href={link} underline="none">
+      <Link href={link} passHref data-testid="product-card-link">
+        <Card sx={styles.cardRoot} data-testid="product-card">
           <CardActionArea>
-            <CardMedia
-              component="img"
-              width={imageWidth}
-              height={imageHeight}
-              image={imageUrl || placeholderImageUrl}
-              alt={imageAltText}
-              sx={{ objectFit: 'contain' }}
-            />
+            <CardMedia sx={{ width: '100%', height: imageHeight, position: 'relative' }}>
+              <KiboImage
+                src={imageUrl || placeholderImageUrl}
+                alt={imageUrl ? imageAltText : 'no-image-alt'}
+                layout="fill"
+                objectFit="contain"
+                data-testid="product-image"
+              />
+            </CardMedia>
             <Box flexDirection="column" m={2} mt={0}>
               <Typography variant="body1" gutterBottom color="text.primary">
                 {title}
@@ -96,13 +98,14 @@ const ProductCard = (props: ProductCardProps) => {
                 precision={0.5}
                 readOnly
                 size="small"
-                icon={<StarIcon color="primary" />}
-                emptyIcon={<StarIcon />}
+                icon={<StarIcon color="primary" data-testid="filled-rating" />}
+                emptyIcon={<StarIcon data-testid="empty-rating" />}
+                data-testid="product-rating"
               />
             </Box>
           </CardActionArea>
-        </MuiLink>
-      </Card>
+        </Card>
+      </Link>
     )
 }
 

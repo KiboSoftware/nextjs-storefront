@@ -1,18 +1,53 @@
 import React from 'react'
 
 import { render, screen } from '@testing-library/react'
-
 import '@testing-library/jest-dom'
-import ProductCard from './ProductCard'
 
-it('Renders Product Card', () => {
-  const props = {
-    image: `https://cdn-tp3.mozu.com/24645-37138/cms/37138/files/42d958c7-94d3-46be-812a-488601cf0c04?max=155&_mzcb=_1618890579000`,
-    link: '/product/test-123',
-    price: '$9.99',
-    title: 'This is a product',
-  }
-  render(<ProductCard {...props} />)
+import { composeStories } from '@storybook/testing-react'
 
-  expect(screen.getByText(props.price)).toBeInTheDocument()
+import * as stories from './ProductCard.stories' // import all stories from the stories file
+
+const { Default, WithSalePrice, WithRating, NoImage, LoadingProductCard } = composeStories(stories)
+
+describe('Product Card Component', () => {
+  it('Renders Default Product Card', () => {
+    render(<Default {...Default.args} />)
+    const title = screen.getByText(Default.args.title)
+    const price = screen.getByText(Default.args.price)
+    const image = screen.getByTestId('product-image')
+    const rating = screen.getByTestId('product-rating')
+    const emptyRating = screen.getAllByTestId('empty-rating')
+
+    expect(title).toBeVisible()
+    expect(price).toBeVisible()
+    expect(image).toHaveAttribute('alt', 'product-image-alt')
+    expect(rating).toBeVisible()
+    expect(emptyRating).toHaveLength(10)
+  })
+
+  it('Renders WithSalePrice Product Card', () => {
+    render(<WithSalePrice {...WithSalePrice.args} />)
+    const salePrice = screen.getByText(WithSalePrice.args.salePrice)
+    expect(salePrice).toBeVisible()
+  })
+
+  it('Renders WithRating Product Card', () => {
+    render(<WithRating {...WithRating.args} />)
+    const filledRating = screen.getAllByTestId('filled-rating')
+
+    expect(filledRating).toHaveLength(WithRating.args.rating * 2)
+  })
+
+  it('Renders No Image Product Card', () => {
+    render(<NoImage {...NoImage.args} />)
+    const image = screen.getByTestId('product-image')
+    expect(image).toHaveAttribute('alt', 'no-image-alt')
+  })
+
+  it('Renders Product Card skeleton', () => {
+    render(<LoadingProductCard {...LoadingProductCard.args} />)
+    const skeleton = screen.getByTestId('product-card-skeleton')
+
+    expect(skeleton).toBeVisible()
+  })
 })
