@@ -46,10 +46,12 @@ const Price = ({
     children,
     color,
     sx,
+    testid,
   }: {
     children: any
     color?: string
     sx?: Object
+    testid?: string
   }) => (
     <Typography
       variant={variant}
@@ -57,6 +59,7 @@ const Price = ({
       color={color || 'text.primary'}
       sx={sx}
       gutterBottom
+      data-testid={testid}
     >
       {children}
     </Typography>
@@ -66,7 +69,7 @@ const Price = ({
     <>
       <Box display="flex" gap="0.625rem" alignItems="center">
         {priceRange ? (
-          <PriceTypography>
+          <PriceTypography testid="price-range-text">
             {priceRange.lower} - {priceRange.upper}
           </PriceTypography>
         ) : (

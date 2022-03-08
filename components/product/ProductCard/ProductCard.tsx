@@ -4,7 +4,6 @@ import Link from 'next/link'
 
 import {
   Card,
-  Link as MuiLink,
   Typography,
   Rating,
   CardMedia,

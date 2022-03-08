@@ -15,19 +15,20 @@ export default {
 
 const Template: ComponentStory<typeof Price> = (args) => <Price {...args} />
 
-export const priceOnly = Template.bind({})
-priceOnly.args = {
+export const PriceOnly = Template.bind({})
+// More on args: https://storybook.js.org/docs/react/writing-stories/args
+PriceOnly.args = {
   price: '$120.00',
 }
 
-export const withSalePrice = Template.bind({})
-withSalePrice.args = {
+export const WithSalePrice = Template.bind({})
+WithSalePrice.args = {
   price: '$120.00',
   salePrice: '$60.00',
 }
 
-export const withPriceRange = Template.bind({})
-withPriceRange.args = {
+export const WithPriceRange = Template.bind({})
+WithPriceRange.args = {
   priceRange: {
     upper: '$120.00',
     lower: '$90.00',
