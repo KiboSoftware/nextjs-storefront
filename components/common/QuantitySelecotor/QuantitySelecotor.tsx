@@ -2,7 +2,7 @@ import React from 'react'
 
 import AddIcon from '@mui/icons-material/Add'
 import RemoveIcon from '@mui/icons-material/Remove'
-import { Box, Stack, TextField, IconButton } from '@mui/material'
+import { Stack, TextField, IconButton } from '@mui/material'
 import { useTranslation } from 'next-i18next'
 
 // Interface
@@ -17,11 +17,13 @@ interface QuantityInputProps {
 }
 
 // MUI
-const sx = {
-  border: 1,
-  borderColor: 'text.primary',
-  height: 25,
-  width: 25,
+const styles = {
+  iconButton: {
+    border: 1,
+    borderColor: 'text.primary',
+    height: 25,
+    width: 25,
+  },
 }
 
 const QuantityTextField = ({ quantity }: QuantityInputProps) => (
@@ -52,14 +54,21 @@ const QuantitySelecotor = (props: QuantitySelecotorProps) => {
       <IconButton
         onClick={onDecrease}
         disabled={quantity === 1 ? true : false}
-        sx={{ ...sx }}
+        sx={{ ...styles.iconButton }}
         aria-label={t('decrease')}
         component="span"
       >
         <RemoveIcon fontSize="small" />
       </IconButton>
+
       <QuantityTextField quantity={quantity} />
-      <IconButton onClick={onIncrease} sx={{ ...sx }} aria-label={t('increase')} component="span">
+
+      <IconButton
+        onClick={onIncrease}
+        sx={{ ...styles.iconButton }}
+        aria-label={t('increase')}
+        component="span"
+      >
         <AddIcon fontSize="small" />
       </IconButton>
     </Stack>

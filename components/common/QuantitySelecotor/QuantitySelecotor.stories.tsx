@@ -8,7 +8,7 @@ import QuantitySelecotor from './QuantitySelecotor'
 export default {
   component: QuantitySelecotor,
   title: 'Common/QuantitySelecotor',
-}
+} as ComponentMeta<typeof QuantitySelecotor>
 
 const Template: ComponentStory<typeof QuantitySelecotor> = (args) => {
   const [quantity, setQuantity] = useState(args.quantity || 1)
