@@ -1,17 +1,25 @@
 import React from 'react'
 
+import { composeStories } from '@storybook/testing-react'
+
 import '@testing-library/jest-dom'
 import { render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 
 import QuantitySelecotor from './QuantitySelecotor'
+import * as stories from './QuantitySelecotor.stories'
+
+// import StoryBook stories
+const { Default } = composeStories(stories)
 
 describe('[components] - QuantitySelector', () => {
   test('should render component', () => {
     // arrange
-    const onIncrease = jest.fn()
-    const onDecrease = jest.fn()
-    render(<QuantitySelecotor quantity={1} onIncrease={onIncrease} onDecrease={onDecrease} />)
+    const onIncreaseMock = jest.fn()
+    const onDecreaseMock = jest.fn()
+    render(
+      <QuantitySelecotor quantity={1} onIncrease={onIncreaseMock} onDecrease={onDecreaseMock} />
+    )
 
     // act
     const input = screen.getByRole('textbox')
@@ -26,57 +34,63 @@ describe('[components] - QuantitySelector', () => {
 
   test('should have initial default Quantity = 1', () => {
     // arrange
-    const onIncrease = jest.fn()
-    const onDecrease = jest.fn()
-    render(<QuantitySelecotor onIncrease={onIncrease} onDecrease={onDecrease} />)
+    const onIncreaseMock = jest.fn()
+    const onDecreaseMock = jest.fn()
+    render(<QuantitySelecotor onIncrease={onIncreaseMock} onDecrease={onDecreaseMock} />)
 
     // act
     const input = screen.getByRole('textbox') as HTMLInputElement
 
     // assert
-    expect(input.value).toBe('1')
+    expect(input).toHaveValue('1')
   })
 
   test('should disable decrease button(-), when Quantity = 1 ', () => {
     // arrange
-    const onIncrease = jest.fn()
-    const onDecrease = jest.fn()
-    render(<QuantitySelecotor quantity={1} onIncrease={onIncrease} onDecrease={onDecrease} />)
+    const onIncreaseMock = jest.fn()
+    const onDecreaseMock = jest.fn()
+    render(
+      <QuantitySelecotor quantity={1} onIncrease={onIncreaseMock} onDecrease={onDecreaseMock} />
+    )
 
     // act
     const input = screen.getByRole('textbox') as HTMLInputElement
     const decreaseButton = screen.getByRole('button', { name: 'decrease' })
 
     // assert
-    expect(input.value).toBe('1')
+    expect(input).toHaveValue('1')
     expect(decreaseButton).toHaveAttribute('aria-disabled', 'true')
   })
 
-  test('should increase Quantity on Increase(+) button click', async () => {
+  test('should call onIncrease action, on Increase(+) button click', async () => {
     // arrange
-    const onIncrease = jest.fn()
-    const onDecrease = jest.fn()
-    render(<QuantitySelecotor quantity={1} onIncrease={onIncrease} onDecrease={onDecrease} />)
+    const onIncreaseMock = jest.fn()
+    const onDecreaseMock = jest.fn()
+    render(
+      <QuantitySelecotor quantity={1} onIncrease={onIncreaseMock} onDecrease={onDecreaseMock} />
+    )
 
     // act
     const increaseButton = screen.getByRole('button', { name: 'increase' })
     userEvent.click(increaseButton)
 
     // assert
-    expect(onIncrease).toHaveBeenCalledTimes(1)
+    expect(onIncreaseMock).toHaveBeenCalledTimes(1)
   })
 
-  test('should decrease Quantity on Decrease(-) button click (when Quantity > 1)', () => {
+  test('should onDecrease action on Decrease(-) button click (when Quantity > 1)', () => {
     // arrange
-    const onIncrease = jest.fn()
-    const onDecrease = jest.fn()
-    render(<QuantitySelecotor quantity={2} onIncrease={onIncrease} onDecrease={onDecrease} />)
+    const onIncreaseMock = jest.fn()
+    const onDecreaseMock = jest.fn()
+    render(
+      <QuantitySelecotor quantity={2} onIncrease={onIncreaseMock} onDecrease={onDecreaseMock} />
+    )
 
     // act
     const decreaseButton = screen.getByRole('button', { name: 'decrease' })
     userEvent.click(decreaseButton)
 
     // assert
-    expect(onDecrease).toHaveBeenCalledTimes(1)
+    expect(onDecreaseMock).toHaveBeenCalledTimes(1)
   })
 })

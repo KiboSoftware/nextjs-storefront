@@ -1,11 +1,9 @@
 import React from 'react'
 
-import { useTranslation } from 'next-i18next'
-
-import { Box, Stack, TextField, IconButton } from '@mui/material'
 import AddIcon from '@mui/icons-material/Add'
 import RemoveIcon from '@mui/icons-material/Remove'
-import { SocialDistance } from '@mui/icons-material'
+import { Box, Stack, TextField, IconButton } from '@mui/material'
+import { useTranslation } from 'next-i18next'
 
 // Interface
 interface QuantitySelecotorProps {
