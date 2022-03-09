@@ -10,7 +10,7 @@ import * as stories from './ProductCard.stories' // import all stories from the 
 const { Default, WithSalePrice, WithRating, NoImage, LoadingProductCard } = composeStories(stories)
 
 describe('Product Card Component', () => {
-  it('Renders Default Product Card', () => {
+  it('should render Default Product Card', () => {
     render(<Default {...Default.args} />)
     const title = screen.getByText(Default.args.title)
     const price = screen.getByText(Default.args.price)
@@ -25,26 +25,26 @@ describe('Product Card Component', () => {
     expect(emptyRating).toHaveLength(10)
   })
 
-  it('Renders WithSalePrice Product Card', () => {
+  it('should render WithSalePrice Product Card', () => {
     render(<WithSalePrice {...WithSalePrice.args} />)
     const salePrice = screen.getByText(WithSalePrice.args.salePrice)
     expect(salePrice).toBeVisible()
   })
 
-  it('Renders WithRating Product Card', () => {
+  it('should render WithRating Product Card', () => {
     render(<WithRating {...WithRating.args} />)
     const filledRating = screen.getAllByTestId('filled-rating')
 
     expect(filledRating).toHaveLength(WithRating.args.rating * 2)
   })
 
-  it('Renders No Image Product Card', () => {
+  it('should render No Image Product Card', () => {
     render(<NoImage {...NoImage.args} />)
     const image = screen.getByTestId('product-image')
     expect(image).toHaveAttribute('alt', 'no-image-alt')
   })
 
-  it('Renders Product Card skeleton', () => {
+  it('should render Product Card skeleton', () => {
     render(<LoadingProductCard {...LoadingProductCard.args} />)
     const skeleton = screen.getByTestId('product-card-skeleton')
 

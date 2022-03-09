@@ -10,14 +10,14 @@ import theme from '../../../styles/theme'
 const { PriceOnly, WithSalePrice, WithPriceRange } = composeStories(stories)
 
 describe('Product Card Component', () => {
-  it('Renders Price component', () => {
+  it('should render Price component', () => {
     render(<PriceOnly {...PriceOnly.args} />)
     const price = screen.getByText(PriceOnly.args.price)
 
     expect(price).toBeVisible()
   })
 
-  it('Renders Price component with salePrice', () => {
+  it('should render Price component with salePrice', () => {
     render(<WithSalePrice {...WithSalePrice.args} />)
     const price = screen.getByText(WithSalePrice.args.price)
     const salePrice = screen.getByText(WithSalePrice.args.price)
@@ -27,7 +27,7 @@ describe('Product Card Component', () => {
     expect(salePrice).toBeVisible()
   })
 
-  it('Renders Price component with WithPriceRange', () => {
+  it('should render Price component with WithPriceRange', () => {
     render(<WithPriceRange {...WithPriceRange.args} />)
     const priceRange = screen.getByTestId('price-range-text')
 
