@@ -7,10 +7,6 @@ import { render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 
 import QuantitySelecotor from './QuantitySelecotor'
-import * as stories from './QuantitySelecotor.stories'
-
-// import StoryBook stories
-const { Default } = composeStories(stories)
 
 describe('[components] - QuantitySelector', () => {
   test('should render component', () => {
@@ -27,9 +23,9 @@ describe('[components] - QuantitySelector', () => {
     const increaseButton = screen.getByRole('button', { name: 'increase' })
 
     // assert
-    expect(input).toBeInTheDocument()
-    expect(decreaseButton).toBeInTheDocument()
-    expect(increaseButton).toBeInTheDocument()
+    expect(input).toBeVisible()
+    expect(decreaseButton).toBeVisible()
+    expect(increaseButton).toBeVisible()
   })
 
   test('should have initial default Quantity = 1', () => {
