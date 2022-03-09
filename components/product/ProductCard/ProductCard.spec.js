@@ -9,7 +9,7 @@ import * as stories from './ProductCard.stories' // import all stories from the 
 
 const { Default, WithSalePrice, WithRating, NoImage, LoadingProductCard } = composeStories(stories)
 
-describe('Product Card Component', () => {
+describe('[components] Product Card Component', () => {
   it('should render Default Product Card', () => {
     render(<Default {...Default.args} />)
     const title = screen.getByText(Default.args.title)

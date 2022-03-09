@@ -7,9 +7,10 @@ import { composeStories } from '@storybook/testing-react'
 
 import * as stories from './Price.stories' // import all stories from the stories file
 import theme from '../../../styles/theme'
+
 const { PriceOnly, WithSalePrice, WithPriceRange } = composeStories(stories)
 
-describe('Product Card Component', () => {
+describe('[components] Product Card Component', () => {
   it('should render Price component', () => {
     render(<PriceOnly {...PriceOnly.args} />)
     const price = screen.getByText(PriceOnly.args.price)
@@ -29,7 +30,9 @@ describe('Product Card Component', () => {
 
   it('should render Price component with WithPriceRange', () => {
     render(<WithPriceRange {...WithPriceRange.args} />)
-    const priceRange = screen.getByTestId('price-range-text')
+    const priceRange = screen.getByText(
+      `${WithPriceRange.args.priceRange.lower} - ${WithPriceRange.args.priceRange.upper}`
+    )
 
     expect(priceRange).toBeVisible()
   })
