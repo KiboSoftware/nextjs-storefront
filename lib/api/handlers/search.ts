@@ -1,6 +1,7 @@
+import { productSearch } from '../operations'
+
 import type { NextApiRequest, NextApiResponse } from 'next'
 
-import { productSearch } from '../operations'
 export default async function searchHandler(req: NextApiRequest, res: NextApiResponse) {
   try {
     // get variables

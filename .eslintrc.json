@@ -14,12 +14,28 @@
     "import/order": [
       "error",
       {
-        "groups": ["builtin", "external", "internal"],
+        "groups": [
+          ["builtin", "external"],
+          ["internal", "parent", "sibling"],
+          ["index", "object", "type"]
+        ],
         "pathGroups": [
           {
             "pattern": "react",
             "group": "external",
             "position": "before"
+          },
+          {
+            "pattern": "@/components/**",
+            "group": "internal"
+          },
+          {
+            "pattern": "@/lib/**",
+            "group": "internal"
+          },
+          {
+            "pattern": "@/types/**",
+            "group": "type"
           }
         ],
         "pathGroupsExcludedImportTypes": ["react"],

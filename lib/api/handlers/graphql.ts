@@ -1,6 +1,6 @@
-import type { NextApiRequest, NextApiResponse } from 'next'
-
 import { fetcher } from '../util'
+
+import type { NextApiRequest, NextApiResponse } from 'next'
 
 export default async function graphQLHandler(req: NextApiRequest, res: NextApiResponse) {
   try {

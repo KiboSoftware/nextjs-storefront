@@ -3,6 +3,7 @@ import React from 'react'
 import { ComponentStory, ComponentMeta } from '@storybook/react'
 
 import ProductCard from './ProductCard'
+
 import type { ProductCardProps } from './ProductCard'
 
 export default {

@@ -2,9 +2,8 @@ import React from 'react'
 
 import { ComponentStory, ComponentMeta } from '@storybook/react'
 
-import Logo from '@/public/kibo_logo.png'
-
 import KiboLogo from './KiboLogo'
+import Logo from '@/public/kibo_logo.png'
 
 export default {
   title: 'Common/KiboLogo',
