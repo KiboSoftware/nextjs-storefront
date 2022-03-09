@@ -36,8 +36,8 @@ const Template: ComponentStory<typeof ProductVariantSizeSelector> = (args) => (
   <ProductVariantSizeSelector {...args} />
 )
 
-export const Common = Template.bind({})
+export const Default = Template.bind({})
 // More on args: https://storybook.js.org/docs/react/writing-stories/args
-Common.args = {
+Default.args = {
   productOption,
 }

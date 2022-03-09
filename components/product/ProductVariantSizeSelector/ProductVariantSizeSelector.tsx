@@ -7,11 +7,11 @@ interface SizeSelectorProps {
   selectOption: (attributeFQN?: string | null, value?: string) => {}
 }
 
-interface SizeVariantContainerProps {
+interface SizeOptionsProps {
   value: string
   isSelected?: boolean | null
   isEnabled?: boolean | null
-  selectOption: (value: string) => {}
+  selectOption: (value: string) => void
 }
 
 const styles = {
@@ -27,28 +27,38 @@ const styles = {
     borderStyle: 'solid',
     cursor: 'pointer',
   },
+  selected: {
+    backgroundColor: 'text.primary',
+    color: 'common.white',
+  },
+  disabled: {
+    borderColor: 'text.secondary',
+    color: 'text.secondary',
+    opacity: 0.3,
+    cursor: 'default',
+  },
 }
 
-const SizeVariantContainer = ({
+const getTestId = (isSelected: boolean | null, isEnabled: boolean | null) => {
+  if (isSelected) return `size-options-selected`
+  if (!isEnabled) return `size-options-disabled`
+  return `size-options`
+}
+
+const SizeOptions = ({
   value,
   isSelected = false,
   isEnabled = true,
   selectOption,
-}: SizeVariantContainerProps) => (
+}: SizeOptionsProps) => (
   <Box
     sx={{
       ...styles.sizeContainer,
-      ...(isSelected && {
-        backgroundColor: 'text.primary',
-        color: 'common.white',
-      }),
-      ...(!isEnabled && {
-        borderColor: 'text.secondary',
-        color: 'text.secondary',
-        opacity: 0.3,
-      }),
+      ...(isSelected && styles.selected),
+      ...(!isEnabled && styles.disabled),
     }}
     onClick={() => selectOption(value)}
+    data-testid={getTestId(isSelected, isEnabled)}
   >
     {value}
   </Box>
@@ -56,9 +66,9 @@ const SizeVariantContainer = ({
 
 const ProductVariantSizeSelector = ({ productOption, selectOption }: SizeSelectorProps) => {
   return (
-    <Box width="100%" display="flex" flexWrap="wrap">
+    <Box width="100%" display="flex" flexWrap="wrap" data-testid="product-variant-size-selector">
       {productOption?.values?.map((option, i) => (
-        <SizeVariantContainer
+        <SizeOptions
           key={i}
           value={option?.value}
           isSelected={option?.isSelected}
