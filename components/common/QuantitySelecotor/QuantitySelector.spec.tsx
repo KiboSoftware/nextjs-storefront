@@ -1,7 +1,5 @@
 import React from 'react'
 
-import { composeStories } from '@storybook/testing-react'
-
 import '@testing-library/jest-dom'
 import { render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
@@ -9,7 +7,7 @@ import userEvent from '@testing-library/user-event'
 import QuantitySelecotor from './QuantitySelecotor'
 
 describe('[components] - QuantitySelector', () => {
-  test('should render component', () => {
+  it('should render component', () => {
     // arrange
     const onIncreaseMock = jest.fn()
     const onDecreaseMock = jest.fn()
@@ -28,7 +26,7 @@ describe('[components] - QuantitySelector', () => {
     expect(increaseButton).toBeVisible()
   })
 
-  test('should have initial default Quantity = 1', () => {
+  it('should have initial default Quantity = 1', () => {
     // arrange
     const onIncreaseMock = jest.fn()
     const onDecreaseMock = jest.fn()
@@ -41,7 +39,7 @@ describe('[components] - QuantitySelector', () => {
     expect(input).toHaveValue('1')
   })
 
-  test('should disable decrease button(-), when Quantity = 1 ', () => {
+  it('should disable decrease button(-), when Quantity = 1 ', () => {
     // arrange
     const onIncreaseMock = jest.fn()
     const onDecreaseMock = jest.fn()
@@ -58,7 +56,7 @@ describe('[components] - QuantitySelector', () => {
     expect(decreaseButton).toHaveAttribute('aria-disabled', 'true')
   })
 
-  test('should call onIncrease action, on Increase(+) button click', async () => {
+  it('should call onIncrease action, on Increase(+) button click', async () => {
     // arrange
     const onIncreaseMock = jest.fn()
     const onDecreaseMock = jest.fn()
@@ -74,7 +72,7 @@ describe('[components] - QuantitySelector', () => {
     expect(onIncreaseMock).toHaveBeenCalledTimes(1)
   })
 
-  test('should onDecrease action on Decrease(-) button click (when Quantity > 1)', () => {
+  it('should onDecrease action on Decrease(-) button click (when Quantity > 1)', () => {
     // arrange
     const onIncreaseMock = jest.fn()
     const onDecreaseMock = jest.fn()
