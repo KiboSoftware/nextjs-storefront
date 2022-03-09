@@ -9,7 +9,7 @@ import theme from '../../../styles/theme'
 const { Default } = composeStories(stories)
 
 describe('Product variant size selector component', () => {
-  it('Renders Default Product variant size selector', () => {
+  it('should render Default Product variant size selector', () => {
     const selectOption = jest.fn()
     render(<Default {...Default.args} selectOption={selectOption} />)
     const sizeSelector = screen.getByTestId('product-variant-size-selector')
