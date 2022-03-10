@@ -10,30 +10,46 @@ import theme from '../../../styles/theme'
 
 const { PriceOnly, WithSalePrice, WithPriceRange } = composeStories(stories)
 
-describe('[components] Product Card Component', () => {
-  it('should render Price component', () => {
-    render(<PriceOnly {...PriceOnly.args} />)
-    const price = screen.getByText(PriceOnly.args.price)
+describe('[components] Price Component', () => {
+  describe('when price is available', () => {
+    it('should render price text', () => {
+      render(<PriceOnly {...PriceOnly.args} />)
 
-    expect(price).toBeVisible()
+      const price = screen.getByText(PriceOnly.args.price)
+
+      expect(price).toBeVisible()
+    })
   })
 
-  it('should render Price component with salePrice', () => {
-    render(<WithSalePrice {...WithSalePrice.args} />)
-    const price = screen.getByText(WithSalePrice.args.price)
-    const salePrice = screen.getByText(WithSalePrice.args.price)
+  describe('when sale price is available', () => {
+    it('should render price text', () => {
+      render(<WithSalePrice {...WithSalePrice.args} />)
 
-    expect(price).toBeVisible()
-    expect(price).toHaveStyle(`color: ${theme.palette.error.main}`)
-    expect(salePrice).toBeVisible()
+      const price = screen.getByText(WithSalePrice.args.price)
+
+      expect(price).toBeVisible()
+
+      expect(price).toHaveStyle(`color: ${theme.palette.error.main}`)
+    })
+
+    it('should render sale price text', () => {
+      render(<WithSalePrice {...WithSalePrice.args} />)
+
+      const salePrice = screen.getByText(WithSalePrice.args.salePrice)
+
+      expect(salePrice).toBeVisible()
+      expect(salePrice).toHaveStyle(`color: ${theme.palette.text.primary}`)
+    })
   })
 
-  it('should render Price component with WithPriceRange', () => {
-    render(<WithPriceRange {...WithPriceRange.args} />)
-    const priceRange = screen.getByText(
-      `${WithPriceRange.args.priceRange.lower} - ${WithPriceRange.args.priceRange.upper}`
-    )
+  describe('when price range is available', () => {
+    it('should render price range text', () => {
+      render(<WithPriceRange {...WithPriceRange.args} />)
+      const priceRange = screen.getByText(
+        `${WithPriceRange.args.priceRange.lower} - ${WithPriceRange.args.priceRange.upper}`
+      )
 
-    expect(priceRange).toBeVisible()
+      expect(priceRange).toBeVisible()
+    })
   })
 })
