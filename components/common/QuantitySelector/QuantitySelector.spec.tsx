@@ -4,7 +4,7 @@ import '@testing-library/jest-dom'
 import { render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 
-import QuantitySelecotor from './QuantitySelecotor'
+import QuantitySelector from './QuantitySelector'
 
 describe('[components] - QuantitySelector', () => {
   const setup = (defaultQuantity = 1) => {
@@ -12,7 +12,7 @@ describe('[components] - QuantitySelector', () => {
     const onDecreaseMock = jest.fn()
 
     render(
-      <QuantitySelecotor
+      <QuantitySelector
         quantity={defaultQuantity}
         onIncrease={onIncreaseMock}
         onDecrease={onDecreaseMock}
