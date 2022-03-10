@@ -39,12 +39,6 @@ const styles = {
   },
 }
 
-const getTestId = (isSelected: boolean | null, isEnabled: boolean | null) => {
-  if (isSelected) return `size-options-selected`
-  if (!isEnabled) return `size-options-disabled`
-  return `size-options`
-}
-
 const ProductVariantSizeSelector = ({ attributeFQN, values, selectOption }: SizeSelectorProps) => {
   const SizeOptions = ({ value, isSelected = false, isEnabled = true }: SizeOptionsProps) => (
     <Box
@@ -54,7 +48,7 @@ const ProductVariantSizeSelector = ({ attributeFQN, values, selectOption }: Size
         ...(!isEnabled && styles.disabled),
       }}
       {...(isEnabled && { onClick: () => selectOption(attributeFQN, value) })}
-      data-testid={getTestId(isSelected, isEnabled)}
+      data-testid="size-options"
     >
       {value}
     </Box>

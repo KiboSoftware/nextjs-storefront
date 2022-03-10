@@ -36,43 +36,47 @@ describe('Product variant size selector component', () => {
   it('should have text.primary background color for the selected options', () => {
     setup()
 
-    const selectedOptions = screen.getAllByTestId('size-options-selected')
+    const selectedOption = screen.getByText('7')
 
-    selectedOptions.map((option) => {
-      expect(option).toHaveStyle(`background-color: ${theme.palette.text.primary}`)
-    })
+    expect(selectedOption).toHaveStyle(`background-color: ${theme.palette.text.primary}`)
   })
 
   it('should have opacity 0.3 for the disabled options', () => {
     setup()
 
-    const disabledOptions = screen.getAllByTestId('size-options-disabled')
+    const disabledOption = screen.getByText('7.5')
 
-    disabledOptions.map((option) => {
-      expect(option).toHaveStyle(`opacity: 0.3`)
-    })
+    expect(disabledOption).toHaveStyle(`opacity: 0.3`)
   })
 
-  it('should call selectOption method', () => {
+  it('should call selectOption method if value is selected', () => {
     const { selectOption } = setup()
 
-    const sizeOptions = screen.getAllByTestId(/size-options/)
+    const option = screen.getByText('7')
 
-    userEvent.click(sizeOptions[0])
+    userEvent.click(option)
 
     expect(selectOption).toHaveBeenCalled()
-    expect(selectOption).toHaveBeenCalledWith(
-      Default.args.attributeFQN,
-      Default.args.values[0].value
-    )
+    expect(selectOption).toHaveBeenCalledWith(Default.args.attributeFQN, '7')
+  })
+
+  it('should call selectOption method if value if neither selected nor disabled ', () => {
+    const { selectOption } = setup()
+
+    const option = screen.getByText('8')
+
+    userEvent.click(option)
+
+    expect(selectOption).toHaveBeenCalled()
+    expect(selectOption).toHaveBeenCalledWith(Default.args.attributeFQN, '8')
   })
 
   it('should not call selectOption method if option is disabled', () => {
     const { selectOption } = setup()
 
-    const sizeOptions = screen.getAllByTestId('size-options-disabled')
+    const disabledOption = screen.getByText('7.5')
 
-    userEvent.click(sizeOptions[0])
+    userEvent.click(disabledOption)
 
     expect(selectOption).toHaveBeenCalledTimes(0)
   })
