@@ -1,6 +1,8 @@
 import vercelFetch from '@vercel/fetch'
-import { getGraphqlUrl } from './config-helpers'
+
 import { apiAuthClient } from './api-auth-client'
+import { getGraphqlUrl } from './config-helpers'
+
 const fetch = vercelFetch()
 
 const fetcher = async ({ query, variables }: any) => {

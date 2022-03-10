@@ -1,6 +1,7 @@
 import { fetcher } from '@/lib/api/util'
-import type { NextApiRequest, NextApiResponse } from 'next'
 import { searchProductsQuery } from '@/lib/gql/queries/product-search'
+
+import type { NextApiRequest, NextApiResponse } from 'next'
 
 function getFacetValueFilter(categoryCode: any, filters: Array<string> = []) {
   let facetValueFilter = ''

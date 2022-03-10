@@ -1,3 +1,9 @@
+import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
+import { useRouter } from 'next/router'
+
+import { ProductDetailTemplate } from '@/components/page-templates'
+import getProduct from '@/lib/api/operations/get-product'
+
 import type {
   NextPage,
   GetStaticPathsContext,
@@ -5,10 +11,6 @@ import type {
   InferGetStaticPropsType,
   GetServerSidePropsContext,
 } from 'next'
-import getProduct from '@/lib/api/operations/get-product'
-import { ProductDetailTemplate } from '@/components/page-templates'
-import { useRouter } from 'next/router'
-import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
 
 export async function getStaticProps(context: GetStaticPropsContext) {
   const { params } = context

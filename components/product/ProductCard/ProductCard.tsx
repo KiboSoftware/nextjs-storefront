@@ -1,9 +1,11 @@
 import React from 'react'
+
 import { Card, Box } from '@mui/material'
-import FlexBox from '@/components/FlexBox'
 import { styled } from '@mui/material/styles'
-import Link from 'next/link'
 import Image from 'next/image'
+import Link from 'next/link'
+
+import FlexBox from '@/components/FlexBox'
 
 export interface ProductCardProps {
   price: string

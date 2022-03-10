@@ -1,6 +1,7 @@
 import { APIAuthClient, AppAuthTicket, ShopperAuthClient } from '@kibocommerce/graphql-client'
-import { getApiConfig } from './config-helpers'
 import vercelFetch from '@vercel/fetch'
+
+import { getApiConfig } from './config-helpers'
 
 const fetch = vercelFetch()
 let authTicket: AppAuthTicket | undefined

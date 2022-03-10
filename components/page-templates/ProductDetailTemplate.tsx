@@ -1,9 +1,11 @@
+import React, { useCallback, useState } from 'react'
+
 import Add from '@mui/icons-material/Add'
 import { Box, Grid, Rating, Button, Radio, RadioGroup, FormControlLabel } from '@mui/material'
-import Link from 'next/link'
 import Image from 'next/image'
+import Link from 'next/link'
 import { useRouter } from 'next/router'
-import React, { useCallback, useState } from 'react'
+
 import FlexBox from '@/components/FlexBox'
 
 const ProductDetailTemplate = ({ product }: any) => {
