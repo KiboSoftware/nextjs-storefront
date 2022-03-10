@@ -3,7 +3,7 @@ import { Box } from '@mui/system'
 import { ProductOption } from '@/lib/gql/types'
 
 interface SizeSelectorProps {
-  productOption: ProductOption
+  sizeOptions: ProductOption
   selectOption: (attributeFQN?: string | null, value?: string) => {}
 }
 
@@ -11,7 +11,6 @@ interface SizeOptionsProps {
   value: string
   isSelected?: boolean | null
   isEnabled?: boolean | null
-  selectOption: (value: string) => void
 }
 
 const styles = {
@@ -45,35 +44,29 @@ const getTestId = (isSelected: boolean | null, isEnabled: boolean | null) => {
   return `size-options`
 }
 
-const SizeOptions = ({
-  value,
-  isSelected = false,
-  isEnabled = true,
-  selectOption,
-}: SizeOptionsProps) => (
-  <Box
-    sx={{
-      ...styles.sizeContainer,
-      ...(isSelected && styles.selected),
-      ...(!isEnabled && styles.disabled),
-    }}
-    onClick={() => selectOption(value)}
-    data-testid={getTestId(isSelected, isEnabled)}
-  >
-    {value}
-  </Box>
-)
+const ProductVariantSizeSelector = ({ sizeOptions, selectOption }: SizeSelectorProps) => {
+  const SizeOptions = ({ value, isSelected = false, isEnabled = true }: SizeOptionsProps) => (
+    <Box
+      sx={{
+        ...styles.sizeContainer,
+        ...(isSelected && styles.selected),
+        ...(!isEnabled && styles.disabled),
+      }}
+      {...(isEnabled && { onClick: () => selectOption(sizeOptions.attributeFQN, value) })}
+      data-testid={getTestId(isSelected, isEnabled)}
+    >
+      {value}
+    </Box>
+  )
 
-const ProductVariantSizeSelector = ({ productOption, selectOption }: SizeSelectorProps) => {
   return (
     <Box width="100%" display="flex" flexWrap="wrap" data-testid="product-variant-size-selector">
-      {productOption?.values?.map((option, i) => (
+      {sizeOptions?.values?.map((option, i) => (
         <SizeOptions
           key={i}
           value={option?.value}
           isSelected={option?.isSelected}
           isEnabled={option?.isEnabled}
-          selectOption={(value) => selectOption(productOption?.attributeFQN, value)}
         />
       ))}
     </Box>

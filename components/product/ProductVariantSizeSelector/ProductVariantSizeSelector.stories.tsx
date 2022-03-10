@@ -5,7 +5,7 @@ import { ComponentStory, ComponentMeta } from '@storybook/react'
 import ProductVariantSizeSelector from './ProductVariantSizeSelector'
 import { ProductOption } from '@/lib/gql/types'
 
-const productOption: ProductOption = {
+const sizeOptions: ProductOption = {
   attributeFQN: 'test-attributeFQN',
   values: [
     {
@@ -39,5 +39,5 @@ const Template: ComponentStory<typeof ProductVariantSizeSelector> = (args) => (
 export const Default = Template.bind({})
 // More on args: https://storybook.js.org/docs/react/writing-stories/args
 Default.args = {
-  productOption,
+  sizeOptions,
 }
