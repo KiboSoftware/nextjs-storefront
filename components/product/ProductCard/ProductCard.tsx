@@ -1,7 +1,6 @@
 import React from 'react'
 
-import Link from 'next/link'
-
+import StarIcon from '@mui/icons-material/StarRounded'
 import {
   Card,
   Typography,
@@ -12,11 +11,11 @@ import {
   Stack,
   Skeleton,
 } from '@mui/material'
-import StarIcon from '@mui/icons-material/StarRounded'
-import DefaultImage from '@/public/product_placeholder.svg'
+import Link from 'next/link'
 
-import Price from '@/components/common/Price/Price'
 import KiboImage from '@/components/common/KiboImage/KiboImage'
+import Price from '@/components/common/Price/Price'
+import DefaultImage from '@/public/product_placeholder.svg'
 
 export interface ProductCardProps {
   title: string

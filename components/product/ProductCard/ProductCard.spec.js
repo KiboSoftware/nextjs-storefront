@@ -1,9 +1,8 @@
 import React from 'react'
 
+import { composeStories } from '@storybook/testing-react'
 import { render, screen } from '@testing-library/react'
 import '@testing-library/jest-dom'
-
-import { composeStories } from '@storybook/testing-react'
 
 import * as stories from './ProductCard.stories' // import all stories from the stories file
 
@@ -11,36 +10,46 @@ const { Default, WithSalePrice, WithRating, NoImage, LoadingProductCard } = comp
 
 describe('[components] Product Card Component', () => {
   describe('Default Product Card', () => {
-    beforeEach(() => {
-      render(<Default {...Default.args} />)
-    })
+    const setup = () => render(<Default {...Default.args} />)
 
     it('should render title', () => {
+      setup()
+
       const title = screen.getByText(Default.args.title)
 
       expect(title).toBeVisible()
     })
 
     it('should render price', () => {
+      setup()
+
       const price = screen.getByText(Default.args.price)
 
       expect(price).toBeVisible()
     })
 
     it('should render product image', () => {
+      setup()
+
       const image = screen.getByTestId('product-image')
 
       expect(image).toHaveAttribute('alt', 'product-image-alt')
     })
 
     it('should render rating component', () => {
+      setup()
+
       const rating = screen.getByTestId('product-rating')
+
       expect(rating).toBeVisible()
     })
 
     describe('when not providing rating prop', () => {
       it('should show empty rating', () => {
+        setup()
+
         const emptyRating = screen.getAllByTestId('empty-rating')
+
         expect(emptyRating).toHaveLength(10)
       })
     })
