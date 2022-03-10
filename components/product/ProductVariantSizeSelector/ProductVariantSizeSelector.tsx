@@ -1,10 +1,11 @@
 import { Box } from '@mui/system'
 
-import { ProductOption } from '@/lib/gql/types'
+import { ProductOption, ProductOptionValue } from '@/lib/gql/types'
 
 interface SizeSelectorProps {
-  sizeOptions: ProductOption
-  selectOption: (attributeFQN?: string | null, value?: string) => {}
+  attributeFQN: string
+  values: ProductOptionValue[]
+  selectOption: (attributeFQN?: string | null, value?: string) => void
 }
 
 interface SizeOptionsProps {
@@ -44,7 +45,7 @@ const getTestId = (isSelected: boolean | null, isEnabled: boolean | null) => {
   return `size-options`
 }
 
-const ProductVariantSizeSelector = ({ sizeOptions, selectOption }: SizeSelectorProps) => {
+const ProductVariantSizeSelector = ({ attributeFQN, values, selectOption }: SizeSelectorProps) => {
   const SizeOptions = ({ value, isSelected = false, isEnabled = true }: SizeOptionsProps) => (
     <Box
       sx={{
@@ -52,7 +53,7 @@ const ProductVariantSizeSelector = ({ sizeOptions, selectOption }: SizeSelectorP
         ...(isSelected && styles.selected),
         ...(!isEnabled && styles.disabled),
       }}
-      {...(isEnabled && { onClick: () => selectOption(sizeOptions.attributeFQN, value) })}
+      {...(isEnabled && { onClick: () => selectOption(attributeFQN, value) })}
       data-testid={getTestId(isSelected, isEnabled)}
     >
       {value}
@@ -61,7 +62,7 @@ const ProductVariantSizeSelector = ({ sizeOptions, selectOption }: SizeSelectorP
 
   return (
     <Box width="100%" display="flex" flexWrap="wrap" data-testid="product-variant-size-selector">
-      {sizeOptions?.values?.map((option, i) => (
+      {values?.map((option, i) => (
         <SizeOptions
           key={i}
           value={option?.value}

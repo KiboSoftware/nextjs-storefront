@@ -30,7 +30,7 @@ describe('Product variant size selector component', () => {
 
     const sizeOptions = screen.getAllByTestId(/size-options/)
 
-    expect(sizeOptions).toHaveLength(Default.args.sizeOptions.values.length)
+    expect(sizeOptions).toHaveLength(Default.args.values.length)
   })
 
   it('should have text.primary background color for the selected options', () => {
@@ -55,19 +55,23 @@ describe('Product variant size selector component', () => {
 
   it('should call selectOption method', () => {
     const { selectOption } = setup()
+
     const sizeOptions = screen.getAllByTestId(/size-options/)
+
     userEvent.click(sizeOptions[0])
 
     expect(selectOption).toHaveBeenCalled()
     expect(selectOption).toHaveBeenCalledWith(
-      Default.args.sizeOptions.attributeFQN,
-      Default.args.sizeOptions.values[0].value
+      Default.args.attributeFQN,
+      Default.args.values[0].value
     )
   })
 
   it('should not call selectOption method if option is disabled', () => {
     const { selectOption } = setup()
+
     const sizeOptions = screen.getAllByTestId('size-options-disabled')
+
     userEvent.click(sizeOptions[0])
 
     expect(selectOption).toHaveBeenCalledTimes(0)
