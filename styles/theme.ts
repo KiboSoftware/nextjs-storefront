@@ -1,25 +1,4 @@
-import React from 'react'
 import { createTheme, responsiveFontSizes } from '@mui/material/styles'
-
-// TODO
-// declare module '@mui/material/styles' {
-//   interface TypographyVariants {
-//     poster: React.CSSProperties
-//   }
-
-//   // allow configuration using `createTheme`
-//   interface TypographyVariantsOptions {
-//     poster?: React.CSSProperties
-//   }
-// }
-
-// // Update the Typography's variant prop options
-// declare module '@mui/material/Typography' {
-//   interface TypographyPropsVariantOverrides {
-//     poster: true
-//     h3: false
-//   }
-// }
 
 export const grey = {
   900: '#2B2B2B',
@@ -40,28 +19,34 @@ const theme = createTheme({
   typography: {
     fontFamily: 'Roboto, sans-serif',
     h1: {
-      fontSize: '1.75rem',
+      fontSize: '1.75rem', // 28px
       '@media (max-width:600px)': {
-        fontSize: '1.5rem',
+        fontSize: '1.5rem', // 24px
       },
     },
     h2: {
-      fontSize: '1.5rem',
+      fontSize: '1.5rem', // 24px
       '@media (max-width:600px)': {
-        fontSize: '1.25rem',
+        fontSize: '1.25rem', // 20px
       },
     },
     h3: {
-      fontSize: '1.25rem',
+      fontSize: '1.25rem', // 20px
       '@media (max-width:600px)': {
-        fontSize: '1rem',
+        fontSize: '1rem', // 16px
       },
     },
     h4: {
-      fontSize: '1rem',
+      fontSize: '1rem', // 16px
     },
     h5: {
-      fontSize: '0.875rem',
+      fontSize: '0.875rem', // 14px
+    },
+    button: {
+      fontSize: '1.125rem', // 18px
+    },
+    subtitle1: {
+      fontSize: '1.125rem', // 18px
     },
   },
   palette: {

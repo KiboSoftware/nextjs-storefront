@@ -1,61 +1,110 @@
 import React from 'react'
 
-import { Card, Box } from '@mui/material'
-import { styled } from '@mui/material/styles'
-import Image from 'next/image'
+import StarIcon from '@mui/icons-material/StarRounded'
+import {
+  Card,
+  Typography,
+  Rating,
+  CardMedia,
+  CardActionArea,
+  Box,
+  Stack,
+  Skeleton,
+} from '@mui/material'
 import Link from 'next/link'
 
-import FlexBox from '@/components/FlexBox'
+import KiboImage from '@/components/common/KiboImage/KiboImage'
+import Price from '@/components/common/Price/Price'
+import DefaultImage from '@/public/product_placeholder.svg'
 
 export interface ProductCardProps {
-  price: string
-  salePrice: string
-  link: string
-  productCode: string
   title: string
-  rating: string
-  image: string
-  imageWidth: string
-  imageHeight: string
-  imageLayout: string
-  isInWishlist: boolean
-  isInCart: boolean
+  link: string
+  imageUrl?: string
+  placeholderImageUrl?: string
+  imageAltText?: string
+  price?: string
+  salePrice?: string
+  productCode?: string
+  rating?: number
+  imageHeight?: number
+  imageLayout?: string
+  isInWishlist?: boolean
+  isInCart?: boolean
+  isLoading?: boolean
 }
-const ImageWrap = styled(Box)(() => ({
-  position: 'relative',
-  display: 'inline-block',
-  textAlign: 'center',
-}))
+
+const styles = {
+  cardRoot: {
+    padding: '0.625rem',
+    width: {
+      xs: 172,
+      md: 202,
+    },
+    boxShadow: 'none',
+  },
+}
+
+const ProductCardSkeleton = () => {
+  return (
+    <Stack spacing={1} sx={styles.cardRoot} data-testid="product-card-skeleton">
+      <Skeleton variant="rectangular" height={100} />
+      <Skeleton variant="rectangular" height={20} />
+      <Skeleton variant="rectangular" width={60} height={20} />
+      <Skeleton variant="rectangular" height={20} />
+    </Stack>
+  )
+}
 
 const ProductCard = (props: ProductCardProps) => {
-  const { price, title, link, image } = props
-  return (
-    <Card
-      sx={{
-        padding: '10px',
-      }}
-    >
-      <Box>
-        <Link href={link}>
-          <a>
-            <ImageWrap>
-              <Image src={image} width={260} height={260} />
-            </ImageWrap>
-          </a>
-        </Link>
-      </Box>
-      <FlexBox>
-        <Box flex="1 1 0" minWidth="0px" mr={1}>
-          <Link href={link}>
-            <a>
-              <h3>{title}</h3>
-              <h6>{price}</h6>
-            </a>
-          </Link>
-        </Box>
-      </FlexBox>
-    </Card>
-  )
+  const {
+    price,
+    title,
+    link,
+    imageUrl,
+    placeholderImageUrl = DefaultImage,
+    salePrice,
+    rating = 0,
+    imageHeight = 140,
+    imageAltText = 'product-image-alt',
+    isLoading = false,
+  } = props
+
+  if (isLoading) return <ProductCardSkeleton />
+  else
+    return (
+      <Link href={link} passHref data-testid="product-card-link">
+        <Card sx={styles.cardRoot} data-testid="product-card">
+          <CardActionArea>
+            <CardMedia sx={{ width: '100%', height: imageHeight, position: 'relative' }}>
+              <KiboImage
+                src={imageUrl || placeholderImageUrl}
+                alt={imageUrl ? imageAltText : 'no-image-alt'}
+                layout="fill"
+                objectFit="contain"
+                data-testid="product-image"
+              />
+            </CardMedia>
+            <Box flexDirection="column" m={2} mt={0}>
+              <Typography variant="body1" gutterBottom color="text.primary">
+                {title}
+              </Typography>
+              <Price price={price} salePrice={salePrice} variant="body1" />
+              <Rating
+                name="read-only"
+                value={rating}
+                precision={0.5}
+                readOnly
+                size="small"
+                icon={<StarIcon color="primary" data-testid="filled-rating" />}
+                emptyIcon={<StarIcon data-testid="empty-rating" />}
+                data-testid="product-rating"
+              />
+            </Box>
+          </CardActionArea>
+        </Card>
+      </Link>
+    )
 }
 
 export default ProductCard

@@ -20,7 +20,7 @@ const ProductDetailTemplate = ({ product }: any) => {
         <Grid item md={6} xs={12} alignItems="center">
           <Box>
             <FlexBox justifyContent="center" mb={6}>
-              <Image width={300} height={300} src={imageUrl} />
+              <Image width={300} height={300} src={imageUrl} alt="image" />
             </FlexBox>
           </Box>
         </Grid>
