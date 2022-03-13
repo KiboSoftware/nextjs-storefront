@@ -3,9 +3,9 @@ import React from 'react'
 import { ComponentStory, ComponentMeta } from '@storybook/react'
 
 import ProductVariantSizeSelector from './ProductVariantSizeSelector'
-import { ProductOption } from '@/lib/gql/types'
+import { ProductOptionValue } from '@/lib/gql/types'
 
-const values = [
+const values: ProductOptionValue[] = [
   {
     attributeValueId: 1,
     value: '7',
@@ -23,7 +23,9 @@ const values = [
   { attributeValueId: 1, value: '10' },
 ]
 
-const selectOption = (attributeFQN?: string | null, value?: string) => {}
+const selectOption = (attributeFQN?: string | null, value?: string) => {
+  console.log(attributeFQN, value)
+}
 
 export default {
   title: 'Product/Product Variant Size Selector',

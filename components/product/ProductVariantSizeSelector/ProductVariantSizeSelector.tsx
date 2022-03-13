@@ -1,6 +1,6 @@
 import { Box } from '@mui/system'
 
-import { ProductOption, ProductOptionValue } from '@/lib/gql/types'
+import { ProductOptionValue } from '@/lib/gql/types'
 
 interface SizeSelectorProps {
   attributeFQN: string
