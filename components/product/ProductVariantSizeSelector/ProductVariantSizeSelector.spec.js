@@ -8,12 +8,12 @@ import * as stories from './ProductVariantSizeSelector.stories' // import all st
 
 const { Default } = composeStories(stories)
 
-describe('Product variant size selector component', () => {
+describe('[component] ProductVariantSizeSelector component', () => {
   const setup = () => {
-    const selectOption = jest.fn()
-    render(<Default {...Default.args} selectOption={selectOption} />)
+    const selectOptionMock = jest.fn()
+    render(<Default {...Default.args} selectOption={selectOptionMock} />)
     return {
-      selectOption,
+      selectOptionMock,
     }
   }
 
@@ -28,7 +28,7 @@ describe('Product variant size selector component', () => {
   it('should contain the number of sizes passed from prop as values', () => {
     setup()
 
-    const sizeOptions = screen.getAllByTestId(/size-options/)
+    const sizeOptions = screen.getAllByTestId(/size-options/i)
 
     expect(sizeOptions).toHaveLength(Default.args.values.length)
   })
@@ -49,35 +49,24 @@ describe('Product variant size selector component', () => {
     expect(disabledOption).toHaveStyle(`opacity: 0.3`)
   })
 
-  it('should call selectOption method if value is selected', () => {
-    const { selectOption } = setup()
-
-    const option = screen.getByText('7')
-
-    userEvent.click(option)
-
-    expect(selectOption).toHaveBeenCalled()
-    expect(selectOption).toHaveBeenCalledWith(Default.args.attributeFQN, '7')
-  })
-
-  it('should call selectOption method if value if neither selected nor disabled ', () => {
-    const { selectOption } = setup()
+  it('should call selectOption method only when size-option is enabled and not selected', () => {
+    const { selectOptionMock } = setup()
 
     const option = screen.getByText('8')
 
     userEvent.click(option)
 
-    expect(selectOption).toHaveBeenCalled()
-    expect(selectOption).toHaveBeenCalledWith(Default.args.attributeFQN, '8')
+    expect(selectOptionMock).toHaveBeenCalled()
+    expect(selectOptionMock).toHaveBeenCalledWith(Default.args.attributeFQN, '8')
   })
 
-  it('should not call selectOption method if option is disabled', () => {
-    const { selectOption } = setup()
+  it('should not call selectOption method when option is disabled', () => {
+    const { selectOptionMock } = setup()
 
     const disabledOption = screen.getByText('7.5')
 
     userEvent.click(disabledOption)
 
-    expect(selectOption).toHaveBeenCalledTimes(0)
+    expect(selectOptionMock).toHaveBeenCalledTimes(0)
   })
 })

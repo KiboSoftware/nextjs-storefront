@@ -2,16 +2,15 @@ import { Box } from '@mui/system'
 
 import { ProductOptionValue } from '@/lib/gql/types'
 
-interface SizeSelectorProps {
+interface ProductVariantSizeSelectorProps {
   attributeFQN: string
   values: ProductOptionValue[]
-  selectOption: (attributeFQN?: string | null, value?: string) => void
+  selectOption: (attributeFQN?: string, value?: string) => void
 }
 
-interface SizeOptionsProps {
-  value: string
-  isSelected?: boolean | null
-  isEnabled?: boolean | null
+interface SizeOptionsProps extends ProductOptionValue {
+  attributeFQN?: string
+  handleSizeSelection: (attributeFQN?: string, value?: string) => void
 }
 
 const styles = {
@@ -39,29 +38,42 @@ const styles = {
   },
 }
 
-const ProductVariantSizeSelector = ({ attributeFQN, values, selectOption }: SizeSelectorProps) => {
-  const SizeOptions = ({ value, isSelected = false, isEnabled = true }: SizeOptionsProps) => (
-    <Box
-      sx={{
-        ...styles.sizeContainer,
-        ...(isSelected && styles.selected),
-        ...(!isEnabled && styles.disabled),
-      }}
-      {...(isEnabled && { onClick: () => selectOption(attributeFQN, value) })}
-      data-testid="size-options"
-    >
-      {value}
-    </Box>
-  )
+const SizeOptions = ({
+  attributeFQN,
+  value,
+  isSelected = false,
+  isEnabled = true,
+  handleSizeSelection,
+}: SizeOptionsProps) => (
+  <Box
+    sx={{
+      ...styles.sizeContainer,
+      ...(isSelected && styles.selected),
+      ...(!isEnabled && styles.disabled),
+    }}
+    {...(isEnabled && { onClick: () => handleSizeSelection(attributeFQN, value) })}
+    data-testid="size-options"
+  >
+    {value}
+  </Box>
+)
 
+const ProductVariantSizeSelector = ({
+  attributeFQN,
+  values,
+  selectOption,
+}: ProductVariantSizeSelectorProps) => {
   return (
     <Box width="100%" display="flex" flexWrap="wrap" data-testid="product-variant-size-selector">
       {values?.map((option, i) => (
         <SizeOptions
           key={i}
+          attributeValueId={i}
+          attributeFQN={attributeFQN}
           value={option?.value}
           isSelected={option?.isSelected}
           isEnabled={option?.isEnabled}
+          handleSizeSelection={selectOption}
         />
       ))}
     </Box>

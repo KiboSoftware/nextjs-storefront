@@ -23,10 +23,6 @@ const values: ProductOptionValue[] = [
   { attributeValueId: 1, value: '10' },
 ]
 
-const selectOption = (attributeFQN?: string | null, value?: string) => {
-  console.log(attributeFQN, value)
-}
-
 export default {
   title: 'Product/Product Variant Size Selector',
   component: ProductVariantSizeSelector,
@@ -41,5 +37,4 @@ export const Default = Template.bind({})
 Default.args = {
   attributeFQN: 'test-attributeFQN',
   values,
-  selectOption,
 }
