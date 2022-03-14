@@ -1,6 +1,7 @@
+import type { MouseEventHandler } from 'react'
+
 import { Typography, Badge, Box } from '@mui/material'
 import { styled } from '@mui/material/styles'
-import type { MouseEventHandler } from 'react'
 
 interface HeaderActionProps {
   title?: string

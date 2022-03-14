@@ -17,8 +17,6 @@ import KiboImage from '@/components/common/KiboImage/KiboImage'
 import Price from '@/components/common/Price/Price'
 import DefaultImage from '@/public/product_placeholder.svg'
 
-import Price from '@/components/common/Price/Price'
-
 export interface ProductCardProps {
   title: string
   link: string
