@@ -26,7 +26,7 @@ describe('[components] - FacetList', () => {
     // assert
     const count =
       Default.args?.facetList?.filter(
-        (facet) => facet?.facetType === 'Value' || facet?.facetType === 'RangeQuery'
+        (item) => item?.facetType === 'Value' || item?.facetType === 'RangeQuery'
       ).length || 0
 
     expect(facet).toHaveLength(count)

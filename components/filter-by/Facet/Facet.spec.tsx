@@ -30,7 +30,7 @@ describe('[components] - FacetItem', () => {
     const label = screen.getByText(Default.args?.label || '')
     const search = screen.getByTestId('search-component')
     const facetItem = screen.getByTestId('facet-item-list-component')
-    const viewMore = screen.getByText(/view more/i, { selector: 'button' })
+    const viewMore = screen.getByText(/view-more/i, { selector: 'button' })
 
     // assert
     expect(accordian).toBeInTheDocument()
@@ -61,7 +61,7 @@ describe('[components] - FacetItem', () => {
     setup(Default.args?.values?.slice(0, 1))
 
     // act
-    const viewMore = screen.queryByText(/view more/i, { selector: 'button' })
+    const viewMore = screen.queryByText(/view-more/i, { selector: 'button' })
 
     // assert
     expect(viewMore).not.toBeInTheDocument()
@@ -72,7 +72,7 @@ describe('[components] - FacetItem', () => {
     setup()
 
     // act
-    const viewMore = screen.getByText(/view more/i, { selector: 'button' })
+    const viewMore = screen.getByText(/view-more/i, { selector: 'button' })
 
     // assert
     expect(viewMore).toBeInTheDocument()
@@ -83,23 +83,23 @@ describe('[components] - FacetItem', () => {
     setup()
 
     // act
-    let viewMore = screen.queryByText(/view more/i, { selector: 'button' })
-    let viewLess = screen.queryByText(/view less/i, { selector: 'button' })
+    let viewMore = screen.queryByText(/view-more/i, { selector: 'button' })
+    let viewLess = screen.queryByText(/view-less/i, { selector: 'button' })
 
     // assert
     expect(viewMore).toBeInTheDocument()
     expect(viewLess).not.toBeInTheDocument()
 
     if (viewMore) await userEvent.click(viewMore)
-    viewMore = screen.queryByText(/view more/i, { selector: 'button' })
-    viewLess = screen.queryByText(/view less/i, { selector: 'button' })
+    viewMore = screen.queryByText(/view-more/i, { selector: 'button' })
+    viewLess = screen.queryByText(/view-less/i, { selector: 'button' })
 
     expect(viewMore).not.toBeInTheDocument()
     expect(viewLess).toBeInTheDocument()
 
     if (viewLess) await userEvent.click(viewLess)
-    viewMore = screen.getByText(/view more/i, { selector: 'button' })
-    viewLess = screen.queryByText(/view less/i, { selector: 'button' })
+    viewMore = screen.getByText(/view-more/i, { selector: 'button' })
+    viewLess = screen.queryByText(/view-less/i, { selector: 'button' })
 
     expect(viewMore).toBeInTheDocument()
     expect(viewLess).not.toBeInTheDocument()
