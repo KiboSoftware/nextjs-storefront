@@ -4,7 +4,9 @@
     "next/core-web-vitals",
     "prettier",
     "plugin:testing-library/react",
-    "plugin:jest-dom/recommended"
+    "plugin:jest-dom/recommended",
+    "plugin:@typescript-eslint/eslint-recommended",
+    "plugin:@typescript-eslint/recommended"
   ],
   "rules": {
     "@emotion/jsx-import": "error",
@@ -30,12 +32,12 @@
             "group": "internal"
           },
           {
-            "pattern": "@/lib/**",
-            "group": "internal"
+            "pattern": "@/lib/gql/types",
+            "group": "type"
           },
           {
-            "pattern": "@/types/**",
-            "group": "type"
+            "pattern": "@/lib/**",
+            "group": "internal"
           }
         ],
         "pathGroupsExcludedImportTypes": ["react"],
