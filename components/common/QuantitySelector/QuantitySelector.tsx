@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { FC } from 'react'
 
 import AddIcon from '@mui/icons-material/Add'
 import RemoveIcon from '@mui/icons-material/Remove'
@@ -45,7 +45,7 @@ const QuantityTextField = ({ quantity }: QuantityInputProps) => (
 )
 
 // Component
-const QuantitySelecotor = (props: QuantitySelecotorProps) => {
+const QuantitySelecotor: FC<QuantitySelecotorProps> = (props) => {
   const { quantity = 1, onIncrease, onDecrease } = props
   const { t } = useTranslation('common')
 

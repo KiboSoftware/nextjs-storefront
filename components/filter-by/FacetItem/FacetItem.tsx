@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, FC } from 'react'
 
 import { Checkbox, Stack, FormControlLabel, FormLabel } from '@mui/material'
 import { Theme } from '@mui/material/styles'
@@ -24,7 +24,7 @@ const style = {
 }
 
 // Component
-function FacetItem(props: FacetItemProps) {
+const FacetItem: FC<FacetItemProps> = (props) => {
   const { filterValue, label: facetItemLabel, count = 0 } = props
 
   const router = useRouter()

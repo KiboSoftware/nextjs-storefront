@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { FC } from 'react'
 
 import { Stack } from '@mui/material'
 
@@ -12,7 +12,7 @@ interface FacetItemListProps {
 }
 
 // Component
-function FacetItemList(props: FacetItemListProps) {
+const FacetItemList: FC<FacetItemListProps> = (props) => {
   const { itemList = [] } = props
 
   return (

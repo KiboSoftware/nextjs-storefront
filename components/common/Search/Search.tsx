@@ -1,4 +1,4 @@
-import React, { RefObject } from 'react'
+import React, { RefObject, FC } from 'react'
 
 import CloseIcon from '@mui/icons-material/Close'
 import SearchIcon from '@mui/icons-material/Search'
@@ -33,7 +33,7 @@ const style = {
 }
 
 // Component
-function Search(props: SearchProps) {
+const Search: FC<SearchProps> = (props) => {
   const { facetName, searchTerm, onSearch, childInputRef, showClearButton = false } = props
   const placeholder = `Search ${facetName}`
 
