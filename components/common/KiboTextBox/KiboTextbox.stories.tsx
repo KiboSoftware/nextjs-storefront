@@ -27,16 +27,16 @@ Required.args = {
   required: true,
 }
 
-export const Error = Template.bind({})
+export const WithError = Template.bind({})
 
-Error.args = {
+WithError.args = {
   label: 'Error',
   error: true,
 }
 
-export const ErrorDescription = Template.bind({})
+export const WithErrorDescription = Template.bind({})
 
-ErrorDescription.args = {
+WithErrorDescription.args = {
   label: 'Error Description',
   error: true,
   helperText: 'This field is required',

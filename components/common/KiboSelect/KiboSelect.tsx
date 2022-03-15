@@ -47,7 +47,11 @@ export default function KiboSelect({
         </MenuItem>
         {children}
       </Select>
-      {error && <FormHelperText error={error}>{errorHelperText}</FormHelperText>}
+      {error && (
+        <FormHelperText error={error} data-testid="helper-text">
+          {errorHelperText}
+        </FormHelperText>
+      )}
     </FormControl>
   )
 }

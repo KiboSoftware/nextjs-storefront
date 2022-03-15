@@ -56,7 +56,7 @@ export default function KiboTextBox({
       </InputLabel>
       <KiboInput id="kibo-input" error={error} defaultValue={value} {...rest} />
       {error && (
-        <FormHelperText id="helper-text" error>
+        <FormHelperText id="helper-text" error data-testid="helper-text">
           {helperText}
         </FormHelperText>
       )}

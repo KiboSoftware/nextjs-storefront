@@ -25,15 +25,15 @@ WithCustomPlaceholder.args = {
   placeholder: 'Select your option',
 }
 
-export const Error = Template.bind({})
+export const WithError = Template.bind({})
 
-Error.args = {
+WithError.args = {
   error: true,
 }
 
-export const ErrorDescription = Template.bind({})
+export const WithErrorDescription = Template.bind({})
 
-ErrorDescription.args = {
+WithErrorDescription.args = {
   error: true,
   errorHelperText: 'The value is not valid',
 }
