@@ -7,9 +7,9 @@ interface HeaderActionProps {
   title?: string
   subtitle?: string
   icon: any
-  mobileIconColor: string
+  mobileIconColor?: string
   onClick: MouseEventHandler<HTMLDivElement>
-  badgeContent: string | number
+  badgeContent?: string | number
 }
 const StyledBadge = styled(Badge)(() => ({
   '& .MuiBadge-badge': {
@@ -19,6 +19,10 @@ const StyledBadge = styled(Badge)(() => ({
     padding: '0 2px',
   },
 }))
+
+const styles = {
+  hoverOver: { '&:hover': { textDecoration: 'underline', cursor: 'pointer' } },
+}
 
 const HeaderAction = (props: HeaderActionProps) => {
   const { title, subtitle, onClick, badgeContent, mobileIconColor = 'white' } = props
@@ -47,7 +51,7 @@ const HeaderAction = (props: HeaderActionProps) => {
           component="span"
           fontWeight="bold"
           color="text.primary"
-          sx={{ display: 'block', '&:hover': { textDecoration: 'underline', cursor: 'pointer' } }}
+          sx={{ display: 'block', ...styles.hoverOver }}
         >
           {title}
         </Typography>

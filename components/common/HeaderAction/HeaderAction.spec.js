@@ -19,12 +19,12 @@ describe('[component] - HeaderAction', () => {
   })
 
   it('should call headerAction when clicked', () => {
-    const headerActionMock = jest.fn()
-    render(<Location onClick={headerActionMock} />)
+    const handleClick = jest.fn()
+    render(<Location onClick={handleClick} />)
 
     const element = screen.getByText(Location.args.title)
     element.click()
 
-    expect(headerActionMock).toHaveBeenCalled()
+    expect(handleClick).toHaveBeenCalled()
   })
 })
