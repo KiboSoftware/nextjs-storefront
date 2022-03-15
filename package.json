@@ -10,7 +10,7 @@
     "storybook": "start-storybook -p 6006 -s ./public",
     "build-storybook": "build-storybook",
     "validate-types": "tsc --noEmit --declaration",
-    "test": "jest",
+    "test": "jest --coverage --testResultsProcessor=jest-sonar-reporter",
     "test-watch": "jest --watch",
     "prettier:format": "prettier --write .",
     "prepare": "husky install"
@@ -60,6 +60,7 @@
     "graphql-codegen": "^0.4.0",
     "husky": "^7.0.4",
     "jest": "^27.4.7",
+    "jest-sonar-reporter": "^2.0.0",
     "prettier": "^2.5.0",
     "pretty-quick": "^3.1.3",
     "storybook-addon-material-ui5": "^1.0.0",
