@@ -28,16 +28,3 @@ WithErrorDescription.args = {
   error: true,
   errorHelperText: 'value not valid',
 }
-
-export const WithError = Template.bind({})
-WithError.args = {
-  listOptions: values,
-  error: true,
-}
-
-export const WithErrorDescription = Template.bind({})
-WithErrorDescription.args = {
-  listOptions: values,
-  error: true,
-  errorHelperText: 'value not valid',
-}
