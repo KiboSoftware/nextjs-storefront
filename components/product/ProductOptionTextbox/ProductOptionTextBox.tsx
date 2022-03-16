@@ -1,7 +1,7 @@
 import { Box } from '@mui/system'
 
 import KiboTextBox from '@/components/common/KiboTextBox/KiboTextBox'
-import { ProductOption } from '@/lib/gql/types'
+import type { ProductOption } from '@/lib/gql/types'
 
 interface ProductOptionTextBoxProps {
   textBoxOptions: ProductOption[]

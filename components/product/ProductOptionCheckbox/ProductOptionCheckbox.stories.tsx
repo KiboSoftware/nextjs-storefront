@@ -3,7 +3,7 @@ import React from 'react'
 import { ComponentStory, ComponentMeta } from '@storybook/react'
 
 import ProductOptionCheckbox from './ProductOptionCheckbox'
-import { ProductOption } from '@/lib/gql/types'
+import type { ProductOption } from '@/lib/gql/types'
 
 const values: ProductOption[] = [
   {

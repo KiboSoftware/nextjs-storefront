@@ -1,7 +1,7 @@
 import { Checkbox, FormControlLabel, FormGroup, MenuItem } from '@mui/material'
 import { Box } from '@mui/system'
 
-import { ProductOption } from '@/lib/gql/types'
+import type { ProductOption } from '@/lib/gql/types'
 
 interface ProductOptionCheckboxProps {
   yesNoOptions: ProductOption[]

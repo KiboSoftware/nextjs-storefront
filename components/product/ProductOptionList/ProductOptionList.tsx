@@ -2,7 +2,7 @@ import { MenuItem } from '@mui/material'
 import { Box } from '@mui/system'
 
 import KiboSelect from '@/components/common/KiboSelect/KiboSelect'
-import { ProductOption } from '@/lib/gql/types'
+import type { ProductOption } from '@/lib/gql/types'
 
 interface ProductOptionListProps {
   listOptions: ProductOption[]
