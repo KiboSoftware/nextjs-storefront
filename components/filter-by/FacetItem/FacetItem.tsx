@@ -4,7 +4,7 @@ import { Checkbox, Stack, FormControlLabel, FormLabel } from '@mui/material'
 import { Theme } from '@mui/material/styles'
 import { useRouter } from 'next/router'
 
-import { FacetValue } from '@/lib/gql/types'
+import type { FacetValue } from '@/lib/gql/types'
 
 // Interface
 interface FacetItemProps extends FacetValue {

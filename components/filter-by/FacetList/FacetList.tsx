@@ -4,7 +4,7 @@ import { Stack } from '@mui/material'
 
 import Facet from '../Facet/Facet'
 
-import { Facet as FacetType } from '@/lib/gql/types'
+import type { Facet as FacetType } from '@/lib/gql/types'
 
 // Interface
 interface FacetListProps {
