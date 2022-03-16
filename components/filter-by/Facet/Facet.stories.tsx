@@ -32,6 +32,7 @@ const values = [
   { value: '13', label: 'Item 13', count: 130, isDisplayed: true },
 ]
 Default.args = {
+  numberOfItemsToShow: 6,
   label: 'Brand',
   values,
 }

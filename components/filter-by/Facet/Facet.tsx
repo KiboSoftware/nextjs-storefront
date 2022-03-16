@@ -8,13 +8,15 @@ import { Theme } from '@mui/material/styles'
 import { Box } from '@mui/system'
 import { useTranslation } from 'next-i18next'
 
-import Search from '../../common/Search/Search'
+import SearchBar from '../../common/SearchBar/SearchBar'
 import FacetItemList from '../FacetItemList/FacetItemList'
 
 import { Facet as FacetType, FacetValue, Maybe } from '@/lib/gql/types'
 
 // Interface
-export type FacetProps = FacetType
+interface FacetProps extends FacetType {
+  numberOfItemsToShow: number
+}
 
 // MUI
 const style = {
@@ -30,17 +32,16 @@ const style = {
 }
 
 // Component
-const Facet: FC<FacetProps> = (props) => {
-  const { label, values = [] } = props
+const Facet = (props: FacetProps) => {
+  const { numberOfItemsToShow = 6, label, values = [] } = props
 
   const { t } = useTranslation('common')
   const viewMore = t('view-more')
   const viewLess = t('view-less')
 
   const childInputRef = useRef<HTMLInputElement | undefined>(null)
-  const defaultNoOfItemsToShow = 6
   const valuesLength = values?.length || 0
-  const isVisible = valuesLength > defaultNoOfItemsToShow
+  const isVisible = valuesLength > numberOfItemsToShow
 
   const [searchTerm, setSearchTerm] = useState<string>('')
   const [isButtonVisible, setIsButtonVisible] = useState<boolean>(isVisible)
@@ -68,15 +69,15 @@ const Facet: FC<FacetProps> = (props) => {
 
   useEffect(() => {
     const filtered = values?.filter((item) => item?.label?.toLowerCase().includes(searchTerm)) || []
-    const noOfItemsToShow = buttonText === viewMore ? defaultNoOfItemsToShow : valuesLength
+    const noOfItemsToShow = buttonText === viewMore ? numberOfItemsToShow : valuesLength
     const sliced = filtered?.slice(0, noOfItemsToShow) || []
     setFilteredValues([...sliced])
 
     const state = searchTerm
-      ? filtered.length > defaultNoOfItemsToShow
-      : valuesLength > defaultNoOfItemsToShow
+      ? filtered.length > numberOfItemsToShow
+      : valuesLength > numberOfItemsToShow
     setIsButtonVisible(state)
-  }, [viewMore, values, valuesLength, searchTerm, buttonText])
+  }, [viewMore, values, valuesLength, searchTerm, buttonText, numberOfItemsToShow])
 
   return (
     <Accordion
@@ -97,8 +98,8 @@ const Facet: FC<FacetProps> = (props) => {
       </AccordionSummary>
 
       <AccordionDetails data-testid="accordian-details" sx={{ ...style.accordionDetails }}>
-        <Search
-          facetName={label || ''}
+        <SearchBar
+          placeHolder={'Search ' + label}
           searchTerm={searchTerm}
           onSearch={handleSearch}
           childInputRef={childInputRef}

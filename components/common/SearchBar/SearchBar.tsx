@@ -10,7 +10,7 @@ import { useTranslation } from 'next-i18next'
 
 // Interface
 interface SearchProps {
-  facetName: string
+  placeHolder?: string
   searchTerm: string
   onSearch: (searchText: string) => void
   showClearButton: boolean
@@ -33,9 +33,14 @@ const style = {
 }
 
 // Component
-const Search: FC<SearchProps> = (props) => {
-  const { facetName, searchTerm, onSearch, childInputRef, showClearButton = false } = props
-  const placeholder = `Search ${facetName}`
+const SearchBar = (props: SearchProps) => {
+  const {
+    placeHolder = 'Search',
+    searchTerm,
+    onSearch,
+    childInputRef,
+    showClearButton = false,
+  } = props
 
   const { t } = useTranslation('common')
   const searchIconAriaLabel = t('search-icon')
@@ -61,7 +66,7 @@ const Search: FC<SearchProps> = (props) => {
         name="searchInput"
         inputRef={childInputRef}
         value={searchTerm}
-        placeholder={placeholder}
+        placeholder={placeHolder}
         onChange={handleSearch}
         size="small"
         sx={{ ...style.inputBase }}
@@ -85,4 +90,4 @@ const Search: FC<SearchProps> = (props) => {
   )
 }
 
-export default Search
+export default SearchBar

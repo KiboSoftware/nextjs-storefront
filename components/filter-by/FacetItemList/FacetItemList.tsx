@@ -12,7 +12,7 @@ interface FacetItemListProps {
 }
 
 // Component
-const FacetItemList: FC<FacetItemListProps> = (props) => {
+const FacetItemList = (props: FacetItemListProps) => {
   const { itemList = [] } = props
 
   return (

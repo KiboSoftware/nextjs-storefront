@@ -2,24 +2,24 @@ import React from 'react'
 
 import { ComponentStory, ComponentMeta } from '@storybook/react'
 
-import Search from './Search'
+import SearchBar from './SearchBar'
 
 // Common
 export default {
-  title: 'Common/Search',
-  component: Search,
-} as ComponentMeta<typeof Search>
+  title: 'Common/SearchBar',
+  component: SearchBar,
+} as ComponentMeta<typeof SearchBar>
 
-const Template: ComponentStory<typeof Search> = (args) => <Search {...args} />
+const Template: ComponentStory<typeof SearchBar> = (args) => <SearchBar {...args} />
 
 // Default
 export const Default = Template.bind({})
 Default.args = {
+  placeHolder: 'Search Brand',
   searchTerm: '',
   onSearch: () => {
-    /*parent will handle search*/
+    /*parent will handle SearchBar*/
   },
-  facetName: 'Brand',
   childInputRef: undefined,
   showClearButton: false,
 }

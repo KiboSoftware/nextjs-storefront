@@ -24,7 +24,7 @@ const style = {
 }
 
 // Component
-const FacetItem: FC<FacetItemProps> = (props) => {
+const FacetItem = (props: FacetItemProps) => {
   const { filterValue, label: facetItemLabel, count = 0 } = props
 
   const router = useRouter()

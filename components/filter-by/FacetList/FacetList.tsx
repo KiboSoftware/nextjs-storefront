@@ -12,7 +12,7 @@ interface FacetListProps {
 }
 
 // Component
-const FacetList: FC<FacetListProps> = (props) => {
+const FacetList = (props: FacetListProps) => {
   const { facetList = [] } = props
 
   return (
@@ -20,7 +20,7 @@ const FacetList: FC<FacetListProps> = (props) => {
       {facetList
         .filter((facet) => facet?.facetType === 'Value' || facet?.facetType === 'RangeQuery')
         .map((facet, index) => (
-          <Facet key={index} label={facet.label} values={facet.values} />
+          <Facet key={index} numberOfItemsToShow={6} label={facet.label} values={facet.values} />
         ))}
     </Stack>
   )

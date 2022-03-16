@@ -4,9 +4,9 @@ import '@testing-library/jest-dom'
 import { render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 
-import Search from './Search'
+import SearchBar from './SearchBar'
 
-describe('[components] - Search', () => {
+describe('[components] - SearchBar', () => {
   const userEnteredText = 'T'
 
   const setup = (showClearButton = false) => {
@@ -17,8 +17,8 @@ describe('[components] - Search', () => {
       handleSearch = jest.fn((v) => setSearchTerm(v))
 
       return (
-        <Search
-          facetName="Brand"
+        <SearchBar
+          placeHolder="Search Brand"
           searchTerm={searchTerm}
           onSearch={handleSearch}
           showClearButton={showClearButton}
@@ -44,7 +44,7 @@ describe('[components] - Search', () => {
     // assert
     expect(input).toBeVisible()
     expect(clearButton).not.toBeInTheDocument()
-    expect(input).toHaveAttribute('placeholder', 'Search Brand')
+    expect(input).toHaveAttribute('placeHolder', 'Search Brand')
   })
 
   it('should call onSeach handler and show user entered text on every caracter input', async () => {
