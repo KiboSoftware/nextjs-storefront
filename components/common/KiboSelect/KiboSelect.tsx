@@ -4,6 +4,7 @@ import FormHelperText from '@mui/material/FormHelperText'
 import Select from '@mui/material/Select'
 
 interface KiboSelectProps {
+  name: string
   value?: string
   errorHelperText?: string
   error?: boolean
@@ -24,6 +25,7 @@ const MenuProps = {
 }
 
 export default function KiboSelect({
+  name = 'kibo-select',
   value = '',
   errorHelperText = '',
   error = false,
@@ -36,11 +38,13 @@ export default function KiboSelect({
       <Select
         displayEmpty
         defaultValue={value}
+        name={name}
         onChange={(event) => handleChange(event.target.value as string)}
         input={<OutlinedInput />}
         MenuProps={MenuProps}
-        inputProps={{ 'aria-label': 'Without label' }}
+        inputProps={{ 'aria-label': 'kibo-select', 'data-testid': 'kibo-select' }}
         error={error}
+        data-testid="kibo-select"
       >
         <MenuItem value={''} disabled hidden>
           {placeholder}

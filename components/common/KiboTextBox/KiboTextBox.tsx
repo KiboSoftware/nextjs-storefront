@@ -13,6 +13,7 @@ interface KiboTextBoxProps {
   error?: boolean
   helperText?: string
   children?: any
+  handleChange: (value: string) => void
   [x: string]: any
 }
 
@@ -46,6 +47,7 @@ export default function KiboTextBox({
   required = false,
   error = false,
   helperText = '',
+  handleChange,
   children,
   ...rest
 }: KiboTextBoxProps) {
@@ -54,7 +56,13 @@ export default function KiboTextBox({
       <InputLabel shrink htmlFor="kibo-input">
         {label}
       </InputLabel>
-      <KiboInput id="kibo-input" error={error} defaultValue={value} {...rest} />
+      <KiboInput
+        id="kibo-input"
+        error={error}
+        defaultValue={value}
+        onChange={(e) => handleChange(e.target.value)}
+        {...rest}
+      />
       {error && (
         <FormHelperText id="helper-text" error data-testid="helper-text">
           {helperText}

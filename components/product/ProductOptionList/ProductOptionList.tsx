@@ -28,6 +28,7 @@ export default function ProductOptionList({
         return (
           <KiboSelect
             key={option?.attributeDetail?.name}
+            name={option?.attributeDetail?.name as string}
             error={error}
             errorHelperText={errorHelperText}
             handleChange={handleChange}

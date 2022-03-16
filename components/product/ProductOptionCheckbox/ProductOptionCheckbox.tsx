@@ -1,14 +1,45 @@
+import { Checkbox, FormControlLabel, FormGroup, MenuItem } from '@mui/material'
 import { Box } from '@mui/system'
 
-interface KiboLogoProps {
-  logo: string | StaticImageData // URL or File
-  alt: string
+import { ProductOption } from '@/lib/gql/types'
+
+interface ProductOptionCheckboxProps {
+  yesNoOptions: ProductOption[]
+  label: any
+  checked?: boolean
+  row?: boolean
+  handleChange: (checked: boolean) => void
 }
 
-export default function ProductOptionCheckbox({ logo, alt }: KiboLogoProps) {
+export default function ProductOptionCheckbox({
+  yesNoOptions,
+  label = '',
+  checked = false,
+  row,
+  handleChange,
+}: ProductOptionCheckboxProps) {
   return (
-    <Box width={'100%'}>
-      {/* <KiboImage src={logo} alt={alt} width={'100%'} height={'100%'} /> */}
+    <Box display={'flex'} flexDirection={row ? 'row' : 'column'} gap={1}>
+      <FormGroup>
+        {yesNoOptions.map((option: ProductOption) => {
+          return (
+            <FormControlLabel
+              key={option?.attributeDetail?.name}
+              defaultChecked={checked}
+              control={
+                <Checkbox
+                  defaultChecked={checked}
+                  inputProps={{
+                    defaultChecked: checked,
+                  }}
+                  onChange={(e, checked) => handleChange(checked)}
+                />
+              }
+              label={label}
+            />
+          )
+        })}
+      </FormGroup>
     </Box>
   )
 }

@@ -13,8 +13,8 @@ export default {
 
 const Template: ComponentStory<typeof KiboSelect> = (args) => (
   <KiboSelect {...args}>
-    <MenuItem value="1">Option1</MenuItem>
-    <MenuItem value="2">Option2</MenuItem>
+    <MenuItem value="1">Option 1</MenuItem>
+    <MenuItem value="2">Option 2</MenuItem>
   </KiboSelect>
 )
 export const Default = Template.bind({})
