@@ -1,32 +1,23 @@
-import { Box } from '@mui/system'
-
 import KiboTextBox from '@/components/common/KiboTextBox/KiboTextBox'
 import type { ProductOption } from '@/lib/gql/types'
 
 interface ProductOptionTextBoxProps {
-  textBoxOptions: ProductOption[]
-  handleChange: (value: string) => void
-  row?: boolean
+  option: ProductOption
+  onChange: (value: string) => void
 }
 
 export default function ProductOptionTextBox({
-  textBoxOptions,
-  row,
-  handleChange,
+  option,
+  onChange,
+  ...rest
 }: ProductOptionTextBoxProps) {
   return (
-    <Box display={'flex'} flexDirection={row ? 'row' : 'column'} gap={1}>
-      {textBoxOptions.map((option: ProductOption) => {
-        return (
-          <KiboTextBox
-            key={option?.attributeDetail?.name}
-            label={option?.attributeDetail?.name}
-            value={option!.values![0]!.shopperEnteredValue}
-            name={option.attributeFQN}
-            handleChange={handleChange}
-          />
-        )
-      })}
-    </Box>
+    <KiboTextBox
+      label={option?.attributeDetail?.name as string}
+      name={option.attributeFQN}
+      value={option!.values![0]!.shopperEnteredValue}
+      onChange={onChange}
+      {...rest}
+    />
   )
 }

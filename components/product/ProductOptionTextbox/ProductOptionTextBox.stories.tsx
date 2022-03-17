@@ -1,40 +1,12 @@
 import React from 'react'
 
+import { Box } from '@mui/system'
 import { ComponentStory, ComponentMeta } from '@storybook/react'
 
 import ProductOptionTextBox from './ProductOptionTextBox'
-import type { ProductOption } from '@/lib/gql/types'
+import { options } from '@/__mocks__/productOptionTextBoxMock'
 
-const values: ProductOption[] = [
-  {
-    attributeFQN: 'Tenant~optional-mount',
-    attributeDetail: {
-      dataTypeSequence: 13,
-      name: 'Optional Mount',
-    },
-    values: [
-      {
-        value: 'MS-CAM-004',
-        attributeValueId: 125,
-        shopperEnteredValue: null,
-      },
-    ],
-  },
-  {
-    attributeFQN: 'Tenant~size',
-    attributeDetail: {
-      dataTypeSequence: 13,
-      name: 'Size',
-    },
-    values: [
-      {
-        value: 'L',
-        attributeValueId: 125,
-        shopperEnteredValue: 'Large',
-      },
-    ],
-  },
-]
+const onChangeMock = () => {}
 
 export default {
   title: 'Product/Product Option TextBox',
@@ -43,10 +15,11 @@ export default {
 } as ComponentMeta<typeof ProductOptionTextBox>
 
 const Template: ComponentStory<typeof ProductOptionTextBox> = (args) => (
-  <ProductOptionTextBox {...args} />
+  <Box display={'flex'} flexDirection="column" gap={2}>
+    {options.map((option) => (
+      <ProductOptionTextBox key={option?.attributeFQN} option={option} onChange={onChangeMock} />
+    ))}
+  </Box>
 )
 
 export const Default = Template.bind({})
-Default.args = {
-  textBoxOptions: values,
-}

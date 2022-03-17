@@ -1,19 +1,16 @@
 import * as React from 'react'
 
-import FormControl from '@mui/material/FormControl'
-import FormHelperText from '@mui/material/FormHelperText'
-import InputBase from '@mui/material/InputBase'
-import InputLabel from '@mui/material/InputLabel'
+import { FormControl, FormHelperText, InputBase, InputLabel } from '@mui/material'
 import { alpha, styled } from '@mui/material/styles'
 
 interface KiboTextBoxProps {
-  label?: string | null
+  label?: string
   value?: string
   required?: boolean
   error?: boolean
   helperText?: string
   children?: any
-  handleChange: (value: string) => void
+  onChange: (value: string) => void
   [x: string]: any
 }
 
@@ -25,7 +22,7 @@ const KiboInput = styled(InputBase)(({ theme, error }) => ({
     borderRadius: 4,
     position: 'relative',
     backgroundColor: theme.palette.mode === 'light' ? '#fcfcfb' : '#2b2b2b',
-    padding: '10.5px 12px',
+    padding: '5.5px 12px',
     borderColor: error ? theme.palette.error.main : theme.palette.text.secondary,
     borderWidth: '1px',
     borderStyle: 'solid',
@@ -40,27 +37,29 @@ const KiboInput = styled(InputBase)(({ theme, error }) => ({
   },
 }))
 
-export default function KiboTextBox({
+const KiboTextBox = ({
   label,
   value,
   selectOptions,
   required = false,
   error = false,
   helperText = '',
-  handleChange,
+  onChange,
   children,
   ...rest
-}: KiboTextBoxProps) {
+}: KiboTextBoxProps) => {
   return (
     <FormControl variant="standard" error={error} required={required} {...rest} fullWidth>
-      <InputLabel shrink htmlFor="kibo-input">
-        {label}
-      </InputLabel>
+      {label && (
+        <InputLabel shrink htmlFor="kibo-input">
+          {label}
+        </InputLabel>
+      )}
       <KiboInput
         id="kibo-input"
         error={error}
         defaultValue={value}
-        onChange={(e) => handleChange(e.target.value)}
+        onChange={(e) => onChange(e.target.value)}
         {...rest}
       />
       {error && (
@@ -71,3 +70,5 @@ export default function KiboTextBox({
     </FormControl>
   )
 }
+
+export default KiboTextBox
