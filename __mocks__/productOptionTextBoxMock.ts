@@ -1,6 +1,6 @@
 import { ProductOption } from '@/lib/gql/types'
 
-export const options: ProductOption[] = [
+export const productOptionTextBoxMock: ProductOption[] = [
   {
     attributeFQN: 'Tenant~optional-mount',
     attributeDetail: {

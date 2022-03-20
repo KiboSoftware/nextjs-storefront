@@ -10,7 +10,7 @@ interface KiboTextBoxProps {
   error?: boolean
   helperText?: string
   children?: any
-  onChange: (value: string) => void
+  onChange: (name: string, value: string) => void
   [x: string]: any
 }
 
@@ -22,7 +22,7 @@ const KiboInput = styled(InputBase)(({ theme, error }) => ({
     borderRadius: 4,
     position: 'relative',
     backgroundColor: theme.palette.mode === 'light' ? '#fcfcfb' : '#2b2b2b',
-    padding: '5.5px 12px',
+    padding: '4.5px 12px',
     borderColor: error ? theme.palette.error.main : theme.palette.text.secondary,
     borderWidth: '1px',
     borderStyle: 'solid',
@@ -40,7 +40,6 @@ const KiboInput = styled(InputBase)(({ theme, error }) => ({
 const KiboTextBox = ({
   label,
   value,
-  selectOptions,
   required = false,
   error = false,
   helperText = '',
@@ -57,9 +56,10 @@ const KiboTextBox = ({
       )}
       <KiboInput
         id="kibo-input"
+        size="small"
         error={error}
         defaultValue={value}
-        onChange={(e) => onChange(e.target.value)}
+        onChange={(e) => onChange(e.target.name, e.target.value)}
         {...rest}
       />
       {error && (

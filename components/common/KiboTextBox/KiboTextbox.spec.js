@@ -43,7 +43,6 @@ describe('[component] KiboTextbox component', () => {
 
     userEvent.type(input, 'Test')
 
-    expect(onChangeMock).toHaveBeenCalled()
-    expect(onChangeMock).toHaveBeenCalledWith('Test')
+    expect(onChangeMock).toHaveBeenCalledTimes(4)
   })
 })

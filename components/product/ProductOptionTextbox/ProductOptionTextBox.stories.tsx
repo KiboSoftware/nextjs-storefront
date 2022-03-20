@@ -3,8 +3,8 @@ import React from 'react'
 import { Box } from '@mui/system'
 import { ComponentStory, ComponentMeta } from '@storybook/react'
 
+import { productOptionTextBoxMock } from '../../../__mocks__/productOptionTextBoxMock'
 import ProductOptionTextBox from './ProductOptionTextBox'
-import { options } from '@/__mocks__/productOptionTextBoxMock'
 
 const onChangeMock = () => {}
 
@@ -16,7 +16,7 @@ export default {
 
 const Template: ComponentStory<typeof ProductOptionTextBox> = (args) => (
   <Box display={'flex'} flexDirection="column" gap={2}>
-    {options.map((option) => (
+    {productOptionTextBoxMock.map((option) => (
       <ProductOptionTextBox key={option?.attributeFQN} option={option} onChange={onChangeMock} />
     ))}
   </Box>
