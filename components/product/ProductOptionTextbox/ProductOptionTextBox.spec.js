@@ -4,7 +4,6 @@ import { render, screen } from '@testing-library/react'
 import '@testing-library/jest-dom'
 import { productOptionTextBoxMock } from '../../../__mocks__/productOptionTextBoxMock'
 import * as stories from './ProductOptionTextBox.stories' // import all stories from the stories file
-import { options } from '@/__mocks__/productOptionTextBoxMock'
 
 const { Default } = composeStories(stories)
 
