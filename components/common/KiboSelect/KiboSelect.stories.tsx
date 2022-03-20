@@ -18,6 +18,9 @@ const Template: ComponentStory<typeof KiboSelect> = (args) => (
   </KiboSelect>
 )
 export const Default = Template.bind({})
+Default.args = {
+  name: 'kibo-select',
+}
 
 export const WithCustomPlaceholder = Template.bind({})
 
@@ -35,7 +38,7 @@ export const WithErrorDescription = Template.bind({})
 
 WithErrorDescription.args = {
   error: true,
-  errorHelperText: 'The value is not valid',
+  helperText: 'The value is not valid',
 }
 
 export const withValue = Template.bind({})

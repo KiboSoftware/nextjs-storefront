@@ -1,26 +1,41 @@
 import { composeStories } from '@storybook/testing-react'
-import { render, screen } from '@testing-library/react'
+import { fireEvent, render, screen, within } from '@testing-library/react'
 import '@testing-library/jest-dom'
+import userEvent from '@testing-library/user-event'
 
 import * as stories from './KiboSelect.stories' // import all stories from the stories file
 
-const { WithCustomPlaceholder, WithErrorDescription } = composeStories(stories)
+const { WithCustomPlaceholder, Default, WithErrorDescription } = composeStories(stories)
 
 describe('[component] KiboSelect component', () => {
-  describe('with custom placeholder', () => {
-    it('should render the component', () => {
-      render(<WithCustomPlaceholder {...WithCustomPlaceholder.args} />)
-      const select = screen.getByText(WithCustomPlaceholder.args.placeholder)
+  it('should render the component', () => {
+    render(<WithCustomPlaceholder {...WithCustomPlaceholder.args} />)
+    const select = screen.getByRole('button')
 
-      expect(select).toBeVisible()
-    })
+    expect(select).toBeVisible()
+    expect(select).toHaveTextContent(WithCustomPlaceholder.args.placeholder)
   })
-  describe('with error descriptioon', () => {
-    it('should render the component', () => {
-      render(<WithErrorDescription {...WithErrorDescription.args} />)
-      const helperText = screen.getByTestId('helper-text')
 
-      expect(helperText).toBeVisible()
-    })
+  it('should display the error description if passed when error is true', () => {
+    render(<WithErrorDescription {...WithErrorDescription.args} />)
+    const errorhelperText = screen.getByTestId('helper-text')
+
+    expect(errorhelperText).toBeVisible()
+  })
+
+  it('should display the error description if passed when error is true', () => {
+    const onChangeMock = jest.fn()
+    render(<Default {...Default.args} onChange={onChangeMock} />)
+    const selectButton = screen.getByRole('button')
+
+    fireEvent.mouseDown(selectButton)
+
+    const listbox = within(screen.getByRole('listbox'))
+
+    fireEvent.click(listbox.getByText(/option 2/i))
+
+    expect(selectButton).toHaveTextContent(/option 2/i)
+    expect(onChangeMock).toBeCalled()
+    expect(onChangeMock).toBeCalledWith('kibo-select', '2')
   })
 })

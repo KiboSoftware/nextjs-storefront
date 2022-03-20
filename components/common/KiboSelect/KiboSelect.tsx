@@ -4,13 +4,13 @@ import FormHelperText from '@mui/material/FormHelperText'
 import Select from '@mui/material/Select'
 
 interface KiboSelectProps {
-  name: string
+  name?: string
   value?: string
-  errorHelperText?: string
+  helperText?: string
   error?: boolean
   placeholder?: string
   children: any
-  handleChange: (value: string) => void
+  onChange: (name: string, value: string) => void
 }
 
 const ITEM_HEIGHT = 48
@@ -27,33 +27,36 @@ const MenuProps = {
 export default function KiboSelect({
   name = 'kibo-select',
   value = '',
-  errorHelperText = '',
+  helperText = '',
   error = false,
   placeholder = 'Select option',
   children,
-  handleChange,
+  onChange,
+  ...rest
 }: KiboSelectProps) {
   return (
-    <FormControl sx={{ m: 1, minWidth: 120 }} fullWidth variant="outlined">
+    <FormControl sx={{ minWidth: 120 }} size="small" fullWidth variant="outlined">
       <Select
+        size="small"
         displayEmpty
-        defaultValue={value}
         name={name}
-        onChange={(event) => handleChange(event.target.value as string)}
-        input={<OutlinedInput />}
+        defaultValue={value}
+        onChange={(event) => onChange(event.target.name, event.target.value as string)}
+        input={<OutlinedInput size="small" />}
         MenuProps={MenuProps}
-        inputProps={{ 'aria-label': 'kibo-select', 'data-testid': 'kibo-select' }}
         error={error}
-        data-testid="kibo-select"
+        sx={{ height: '34px' }}
+        inputProps={{ 'aria-hidden': false }}
+        {...rest}
       >
-        <MenuItem value={''} disabled hidden>
+        <MenuItem value={''} disabled sx={{ display: 'none' }}>
           {placeholder}
         </MenuItem>
         {children}
       </Select>
       {error && (
-        <FormHelperText error={error} data-testid="helper-text">
-          {errorHelperText}
+        <FormHelperText error={error} data-testid="helper-text" sx={{ margin: '3px 0' }}>
+          {helperText}
         </FormHelperText>
       )}
     </FormControl>

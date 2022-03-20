@@ -2,47 +2,41 @@ import { MenuItem } from '@mui/material'
 import { Box } from '@mui/system'
 
 import KiboSelect from '@/components/common/KiboSelect/KiboSelect'
-import type { ProductOption } from '@/lib/gql/types'
+import type { ProductOptionValue } from '@/lib/gql/types'
 
 interface ProductOptionListProps {
-  listOptions: ProductOption[]
+  optionValues: ProductOptionValue[]
+  name?: string
+  value?: string
   error?: boolean
   errorHelperText?: string
-  value: string
   row?: boolean
   placeholder?: string
-  handleChange: (value: string) => void
+  onChange: (value: string) => void
 }
 
 export default function ProductOptionList({
-  listOptions,
+  optionValues,
+  name,
+  value,
   error = false,
   errorHelperText = '',
-  value,
-  row,
-  handleChange,
+  onChange,
 }: ProductOptionListProps) {
   return (
-    <Box display={'flex'} flexDirection={row ? 'row' : 'column'} gap={1}>
-      {listOptions.map((option: ProductOption) => {
-        return (
-          <KiboSelect
-            key={option?.attributeDetail?.name}
-            name={option?.attributeDetail?.name as string}
-            error={error}
-            errorHelperText={errorHelperText}
-            handleChange={handleChange}
-            value={value}
-            placeholder="Select product option"
-          >
-            {option.values?.map((optionVal) => (
-              <MenuItem key={optionVal?.value} value={optionVal?.value}>
-                {optionVal?.stringValue}
-              </MenuItem>
-            ))}
-          </KiboSelect>
-        )
-      })}
-    </Box>
+    <KiboSelect
+      name={name}
+      error={error}
+      helperText={errorHelperText}
+      onChange={onChange}
+      value={value}
+      placeholder="Select product option"
+    >
+      {optionValues.map((optionVal) => (
+        <MenuItem key={optionVal?.value} value={optionVal?.value}>
+          {optionVal?.stringValue}
+        </MenuItem>
+      ))}
+    </KiboSelect>
   )
 }
