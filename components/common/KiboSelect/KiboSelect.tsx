@@ -24,7 +24,7 @@ const MenuProps = {
   },
 }
 
-export default function KiboSelect({
+const KiboSelect = ({
   name = 'kibo-select',
   value = '',
   helperText = '',
@@ -33,7 +33,7 @@ export default function KiboSelect({
   children,
   onChange,
   ...rest
-}: KiboSelectProps) {
+}: KiboSelectProps) => {
   return (
     <FormControl sx={{ minWidth: 120 }} size="small" fullWidth variant="outlined">
       <Select
@@ -62,3 +62,5 @@ export default function KiboSelect({
     </FormControl>
   )
 }
+
+export default KiboSelect

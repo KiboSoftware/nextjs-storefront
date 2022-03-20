@@ -10,11 +10,11 @@ interface ProductOptionCheckboxProps {
   onChange: (checked: boolean) => void
 }
 
-export default function ProductOptionCheckbox({
+const ProductOptionCheckbox = ({
   label = '',
   checked = false,
   onChange,
-}: ProductOptionCheckboxProps) {
+}: ProductOptionCheckboxProps) => {
   return (
     <FormControlLabel
       defaultChecked={checked}
@@ -32,3 +32,5 @@ export default function ProductOptionCheckbox({
     />
   )
 }
+
+export default ProductOptionCheckbox

@@ -6,11 +6,7 @@ interface ProductOptionTextBoxProps {
   onChange: (value: string) => void
 }
 
-export default function ProductOptionTextBox({
-  option,
-  onChange,
-  ...rest
-}: ProductOptionTextBoxProps) {
+const ProductOptionTextBox = ({ option, onChange, ...rest }: ProductOptionTextBoxProps) => {
   return (
     <KiboTextBox
       label={option?.attributeDetail?.name as string}
@@ -21,3 +17,5 @@ export default function ProductOptionTextBox({
     />
   )
 }
+
+export default ProductOptionTextBox

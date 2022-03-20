@@ -15,14 +15,14 @@ interface ProductOptionListProps {
   onChange: (value: string) => void
 }
 
-export default function ProductOptionList({
+const ProductOptionList = ({
   optionValues,
   name,
   value,
   error = false,
   errorHelperText = '',
   onChange,
-}: ProductOptionListProps) {
+}: ProductOptionListProps) => {
   return (
     <KiboSelect
       name={name}
@@ -40,3 +40,5 @@ export default function ProductOptionList({
     </KiboSelect>
   )
 }
+
+export default ProductOptionList
