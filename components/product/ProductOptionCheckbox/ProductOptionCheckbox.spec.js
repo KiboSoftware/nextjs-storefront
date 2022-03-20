@@ -9,14 +9,22 @@ const { Common } = composeStories(stories)
 
 describe('[component] ProductOptionCheckbox component', () => {
   it('should render checkbox option', () => {
+<<<<<<< HEAD
     render(<Common {...Common.args} />)
+=======
+    render(<Default {...Default.args} />)
+>>>>>>> 92a6e11 (feat(checkbox): resolving PR comments and UT fixes)
     const checkbox = screen.getByTestId('kibo-checkbox')
 
     expect(checkbox).toBeVisible()
   })
 
   it('should render checkbox label', () => {
+<<<<<<< HEAD
     render(<Common {...Common.args} />)
+=======
+    render(<Default {...Default.args} />)
+>>>>>>> 92a6e11 (feat(checkbox): resolving PR comments and UT fixes)
     const checkbox = screen.getByText(/include warranty/i)
 
     expect(checkbox).toBeVisible()
@@ -24,7 +32,7 @@ describe('[component] ProductOptionCheckbox component', () => {
 
   it('should check/uncheck the checkbox', () => {
     const onChangeMock = jest.fn()
-    render(<Common {...Common.args} onChange={onChangeMock} />)
+    render(<Default {...Default.args} onChange={onChangeMock} />)
     const checkbox = within(screen.getByTestId('kibo-checkbox')).getByRole('checkbox')
 
     expect(checkbox).not.toBeChecked()
