@@ -11,7 +11,7 @@ export default {
   args: {
     optionValues: productOptionListValuesMock,
   },
-  argTypes: { handleChange: { action: 'handleChange' } },
+  argTypes: { onChange: { action: 'onChange' } },
 } as ComponentMeta<typeof ProductOptionList>
 
 const Template: ComponentStory<typeof ProductOptionList> = (args) => <ProductOptionList {...args} />

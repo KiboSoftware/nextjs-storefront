@@ -8,7 +8,7 @@ import KiboSelect from './KiboSelect'
 export default {
   title: 'Common/KiboSelect',
   component: KiboSelect,
-  argTypes: { handleChange: { action: 'handleChange' } },
+  argTypes: { onChange: { action: 'onChange' } },
 } as ComponentMeta<typeof KiboSelect>
 
 const Template: ComponentStory<typeof KiboSelect> = (args) => (

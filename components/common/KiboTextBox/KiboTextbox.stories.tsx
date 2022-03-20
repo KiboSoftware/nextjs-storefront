@@ -7,6 +7,7 @@ import KiboTextBox from './KiboTextBox'
 export default {
   title: 'Common/KiboTextbox',
   component: KiboTextBox,
+  argTypes: { onChange: { action: 'onChange' } },
 } as ComponentMeta<typeof KiboTextBox>
 
 const Template: ComponentStory<typeof KiboTextBox> = (args) => <KiboTextBox {...args} />

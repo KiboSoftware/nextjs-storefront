@@ -1,5 +1,5 @@
 import { composeStories } from '@storybook/testing-react'
-import { render, screen } from '@testing-library/react'
+import { fireEvent, render, screen, within } from '@testing-library/react'
 import '@testing-library/jest-dom'
 import '@testing-library/jest-dom/extend-expect'
 import userEvent from '@testing-library/user-event'
@@ -9,25 +9,30 @@ import * as stories from './ProductOptionCheckbox.stories' // import all stories
 const { Default } = composeStories(stories)
 
 describe('[component] ProductOptionCheckbox component', () => {
-  describe('Default component', () => {
-    it('should render checkbox option', () => {
-      const handleChangeMock = jest.fn()
-      render(<Default {...Default.args} handleChange={handleChangeMock} />)
-      const checkboxOptionLabel = screen.getByText(/is optional mount/i)
+  it('should render checkbox option', () => {
+    render(<Default {...Default.args} />)
+    const checkbox = screen.getByTestId('kibo-checkbox')
 
-      expect(checkboxOptionLabel).toBeVisible()
-    })
+    expect(checkbox).toBeVisible()
+  })
 
-    it('should check/uncheck the checkbox', () => {
-      const handleChangeMock = jest.fn()
-      render(<Default {...Default.args} handleChange={handleChangeMock} />)
-      const checkbox = screen.getByRole('checkbox')
+  it('should render checkbox label', () => {
+    render(<Default {...Default.args} />)
+    const checkbox = screen.getByText(/include warranty/i)
 
-      expect(checkbox).toBeChecked()
+    expect(checkbox).toBeVisible()
+  })
 
-      userEvent.click(checkbox)
+  it('should check/uncheck the checkbox', () => {
+    const onChangeMock = jest.fn()
+    render(<Default {...Default.args} onChange={onChangeMock} />)
+    const checkbox = within(screen.getByTestId('kibo-checkbox')).getByRole('checkbox')
 
-      expect(checkbox).not.toBeChecked()
-    })
+    expect(checkbox).not.toBeChecked()
+
+    fireEvent.click(checkbox)
+
+    expect(checkbox).toBeChecked()
+    expect(onChangeMock).toBeCalled()
   })
 })

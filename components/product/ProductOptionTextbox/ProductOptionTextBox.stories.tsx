@@ -11,7 +11,7 @@ const onChangeMock = () => {}
 export default {
   title: 'Product/Product Option TextBox',
   component: ProductOptionTextBox,
-  argTypes: { selectOption: { action: 'selectOption' } },
+  argTypes: { onChange: { action: 'onChange' } },
 } as ComponentMeta<typeof ProductOptionTextBox>
 
 const Template: ComponentStory<typeof ProductOptionTextBox> = (args) => (
