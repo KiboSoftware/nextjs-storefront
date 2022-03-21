@@ -1,8 +1,10 @@
-import React, { useEffect, useState, FC } from 'react'
+import React, { useEffect, useState } from 'react'
 
 import { Checkbox, Stack, FormControlLabel, FormLabel } from '@mui/material'
 import { Theme } from '@mui/material/styles'
 import { useRouter } from 'next/router'
+
+import { useUpdateRoutes } from '@/hooks/useUpdateRoutes'
 
 import type { FacetValue } from '@/lib/gql/types'
 
@@ -29,18 +31,13 @@ const FacetItem = (props: FacetItemProps) => {
 
   const router = useRouter()
   const [checked, setChecked] = useState<boolean>(false)
+  const [updateRoute] = useUpdateRoutes()
 
-  // URL params will be used by PLP page
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const isChecked = event.target.checked
-    let filters = router?.query?.filters || ''
-    if (typeof filters !== 'string') return
+    const action = isChecked ? 'add' : 'remove'
 
-    filters = isChecked ? filters + `${filterValue},` : filters.replace(`${filterValue},`, '')
-    router?.push({
-      pathname: router.pathname,
-      query: { filters: filters },
-    })
+    updateRoute(filterValue, action)
     setChecked(isChecked)
   }
 

@@ -1,4 +1,4 @@
-import React, { RefObject, FC } from 'react'
+import React, { RefObject } from 'react'
 
 import CloseIcon from '@mui/icons-material/Close'
 import SearchIcon from '@mui/icons-material/Search'
