@@ -4,7 +4,7 @@ import { Checkbox, Stack, FormControlLabel, FormLabel } from '@mui/material'
 import { Theme } from '@mui/material/styles'
 import { useRouter } from 'next/router'
 
-import { useUpdateRoutes } from '@/hooks/useUpdateRoutes'
+import { useUpdateRoutes } from '../../../hooks/useUpdateRoutes'
 
 import type { FacetValue } from '@/lib/gql/types'
 
