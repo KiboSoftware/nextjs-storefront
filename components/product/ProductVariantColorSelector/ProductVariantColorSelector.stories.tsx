@@ -1,6 +1,5 @@
 import React from 'react'
 
-import { blue } from '@mui/material/colors'
 import { ComponentStory, ComponentMeta } from '@storybook/react'
 
 import Color from './ProductVariantColorSelector'
@@ -16,7 +15,6 @@ export default {
 const Template: ComponentStory<typeof Color> = (args) => <Color {...args} />
 
 export const Common = Template.bind({})
-
 Common.args = {
   colors: ['red', 'blue', 'pink', 'yellow'],
 }

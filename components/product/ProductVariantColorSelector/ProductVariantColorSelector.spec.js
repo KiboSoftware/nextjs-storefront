@@ -3,8 +3,7 @@ import { render, screen } from '@testing-library/react'
 import '@testing-library/jest-dom'
 import userEvent from '@testing-library/user-event'
 
-import theme from '../../../styles/theme'
-import ProductVariantColorSelectorStories, * as stories from './ProductVariantColorSelector.stories' // import all stories from the stories file
+import * as stories from './ProductVariantColorSelector.stories'
 
 const { Common, NoColor } = composeStories(stories)
 
@@ -39,17 +38,23 @@ describe('[component] ProductVariantColorSelector component', () => {
     expect(colorSelector).toBeEmptyDOMElement()
   })
 
-  it('should render a color and call onChange when clicked', () => {
+  it('should render a color ', () => {
     const { onChangeMock } = setup()
     const colorOptions = screen.getAllByTestId(/color-options/i)
     expect(colorOptions[0]).toHaveStyle('background-color: red')
   })
 
-  it('should render a color and call onChange when clicked', () => {
+  it('should call onChange when clicked color option', () => {
     const { onChangeMock } = setup()
     const colorOptions = screen.getAllByTestId(/color-options/i)
 
     userEvent.click(colorOptions[0])
     expect(onChangeMock).toHaveBeenCalled()
+  })
+
+  it('should contain the number of colors passed from prop as values', () => {
+    const { onChangeMock } = setup()
+    const colorOptions = screen.getAllByTestId(/color-options/i)
+    expect(colorOptions).toHaveLength(Common.args.colors.length)
   })
 })
