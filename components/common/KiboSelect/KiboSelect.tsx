@@ -45,13 +45,13 @@ const KiboSelect = (props: KiboSelectProps) => {
         size="small"
         displayEmpty
         name={name}
-        defaultValue={value}
-        onChange={(event) => onChange(event.target.name, event.target.value as string)}
-        input={<OutlinedInput size="small" />}
-        MenuProps={MenuProps}
         error={error}
+        defaultValue={value}
+        MenuProps={MenuProps}
         sx={{ height: '34px' }}
         inputProps={{ 'aria-hidden': false }}
+        input={<OutlinedInput size="small" />}
+        onChange={(event) => onChange(event.target.name, event.target.value as string)}
         {...rest}
       >
         <MenuItem value={''} disabled sx={{ display: 'none' }}>

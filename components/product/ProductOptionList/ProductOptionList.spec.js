@@ -13,7 +13,6 @@ describe('[component] ProductOptionList component', () => {
     const productOptionList = screen.getByRole('button')
 
     expect(productOptionList).toBeVisible()
-    expect(productOptionList).toHaveTextContent('Select product option')
   })
 
   it('should call onChange method if value is changed', () => {
