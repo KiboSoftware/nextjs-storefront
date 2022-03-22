@@ -1,20 +1,12 @@
-import { Checkbox, FormControlLabel, FormGroup, MenuItem } from '@mui/material'
-import { Box } from '@mui/system'
-
-import type { ProductOption } from '@/lib/gql/types'
-
+import { Checkbox, FormControlLabel } from '@mui/material'
 interface ProductOptionCheckboxProps {
-  label: any
+  label: string
   checked?: boolean
-  row?: boolean
   onChange: (checked: boolean) => void
 }
 
-const ProductOptionCheckbox = ({
-  label = '',
-  checked = false,
-  onChange,
-}: ProductOptionCheckboxProps) => {
+const ProductOptionCheckbox = (props: ProductOptionCheckboxProps) => {
+  const { label = '', checked = false, onChange } = props
   return (
     <FormControlLabel
       defaultChecked={checked}

@@ -6,7 +6,7 @@ import userEvent from '@testing-library/user-event'
 import theme from '../../../styles/theme'
 import * as stories from './KiboTextbox.stories' // import all stories from the stories file
 
-const { WithLabel, Required, WithError, WithErrorDescription } = composeStories(stories)
+const { WithLabel, WithPlaceholder, WithError, WithErrorDescription } = composeStories(stories)
 
 describe('[component] KiboTextbox component', () => {
   it('should render the component', () => {
@@ -18,20 +18,26 @@ describe('[component] KiboTextbox component', () => {
     expect(input).toBeVisible()
   })
 
+  it('should render the component with placeholder', () => {
+    render(<WithPlaceholder {...WithPlaceholder.args} />)
+    const input = screen.getByPlaceholderText(WithPlaceholder.args.placeholder)
+
+    expect(input).toBeVisible()
+  })
+
   it('should render the component with error when props error is true', () => {
     render(<WithError {...WithError.args} />)
     const input = screen.getByLabelText(WithError.args.label)
 
-    expect(input).toHaveStyle(`border-color: ${theme.palette.error.main}`)
+    expect(input).toHaveAttribute('aria-invalid', 'true')
   })
 
   it('should render the error helper text when props error is true and helperText is passed', () => {
     render(<WithErrorDescription {...WithErrorDescription.args} />)
-    const input = screen.getByLabelText(WithErrorDescription.args.label)
-    const helperText = screen.getByTestId('helper-text')
+    const helperText = screen.getByText(WithErrorDescription.args.helperText)
 
-    expect(input).toHaveStyle(`border-color: ${theme.palette.error.main}`)
     expect(helperText).toBeVisible()
+    expect(helperText).toHaveAttribute('aria-errormessage', WithErrorDescription.args.helperText)
   })
 
   it('should call onChange method when user input data', () => {

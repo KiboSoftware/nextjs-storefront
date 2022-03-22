@@ -21,6 +21,11 @@ WithLabel.args = {
 
 export const WithoutLabel = Template.bind({})
 
+export const WithPlaceholder = Template.bind({})
+WithPlaceholder.args = {
+  placeholder: 'Custom placeholder',
+}
+
 export const Required = Template.bind({})
 
 Required.args = {

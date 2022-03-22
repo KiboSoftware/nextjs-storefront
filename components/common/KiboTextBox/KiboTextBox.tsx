@@ -9,6 +9,7 @@ interface KiboTextBoxProps {
   required?: boolean
   error?: boolean
   helperText?: string
+  placeholder?: string
   children?: any
   onChange: (name: string, value: string) => void
   [x: string]: any
@@ -43,6 +44,7 @@ const KiboTextBox = ({
   required = false,
   error = false,
   helperText = '',
+  placeholder,
   onChange,
   children,
   ...rest
@@ -58,12 +60,16 @@ const KiboTextBox = ({
         id="kibo-input"
         size="small"
         error={error}
+        inputProps={{
+          'aria-invalid': error,
+        }}
         defaultValue={value}
+        placeholder={placeholder}
         onChange={(e) => onChange(e.target.name, e.target.value)}
         {...rest}
       />
       {error && (
-        <FormHelperText id="helper-text" error data-testid="helper-text">
+        <FormHelperText id="helper-text" error aria-errormessage={helperText}>
           {helperText}
         </FormHelperText>
       )}

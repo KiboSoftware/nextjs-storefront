@@ -1,5 +1,5 @@
 import { MenuItem } from '@mui/material'
-import { Box } from '@mui/system'
+import { useTranslation } from 'next-i18next'
 
 import KiboSelect from '@/components/common/KiboSelect/KiboSelect'
 import type { ProductOptionValue } from '@/lib/gql/types'
@@ -15,14 +15,10 @@ interface ProductOptionListProps {
   onChange: (value: string) => void
 }
 
-const ProductOptionList = ({
-  optionValues,
-  name,
-  value,
-  error = false,
-  errorHelperText = '',
-  onChange,
-}: ProductOptionListProps) => {
+const ProductOptionList = (props: ProductOptionListProps) => {
+  const { optionValues, name, value, error = false, errorHelperText = '', onChange } = props
+  const { t } = useTranslation('common')
+
   return (
     <KiboSelect
       name={name}
@@ -30,7 +26,7 @@ const ProductOptionList = ({
       helperText={errorHelperText}
       onChange={onChange}
       value={value}
-      placeholder="Select product option"
+      placeholder={t('select-product-option')}
     >
       {optionValues.map((optionVal) => (
         <MenuItem key={optionVal?.value} value={optionVal?.value}>

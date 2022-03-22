@@ -2,6 +2,7 @@ import { MenuItem, OutlinedInput } from '@mui/material'
 import FormControl from '@mui/material/FormControl'
 import FormHelperText from '@mui/material/FormHelperText'
 import Select from '@mui/material/Select'
+import { useTranslation } from 'next-i18next'
 
 interface KiboSelectProps {
   name?: string
@@ -24,16 +25,20 @@ const MenuProps = {
   },
 }
 
-const KiboSelect = ({
-  name = 'kibo-select',
-  value = '',
-  helperText = '',
-  error = false,
-  placeholder = 'Select option',
-  children,
-  onChange,
-  ...rest
-}: KiboSelectProps) => {
+const KiboSelect = (props: KiboSelectProps) => {
+  const { t } = useTranslation('common')
+
+  const {
+    name = 'kibo-select',
+    value = '',
+    helperText = '',
+    error = false,
+    placeholder = t('select-option'),
+    children,
+    onChange,
+    ...rest
+  } = props
+
   return (
     <FormControl sx={{ minWidth: 120 }} size="small" fullWidth variant="outlined">
       <Select
