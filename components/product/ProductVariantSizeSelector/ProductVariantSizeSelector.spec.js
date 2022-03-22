@@ -33,22 +33,6 @@ describe('[component] ProductVariantSizeSelector component', () => {
     expect(sizeOptions).toHaveLength(Default.args.values.length)
   })
 
-  it('should have text.primary background color for the selected options', () => {
-    setup()
-
-    const selectedOption = screen.getByText('7')
-
-    expect(selectedOption).toHaveStyle(`background-color: ${theme.palette.text.primary}`)
-  })
-
-  it('should have opacity 0.3 for the disabled options', () => {
-    setup()
-
-    const disabledOption = screen.getByText('7.5')
-
-    expect(disabledOption).toHaveStyle(`opacity: 0.3`)
-  })
-
   it('should call selectOption method only when size-option is enabled and not selected', () => {
     const { selectOptionMock } = setup()
 
@@ -64,6 +48,16 @@ describe('[component] ProductVariantSizeSelector component', () => {
     const { selectOptionMock } = setup()
 
     const disabledOption = screen.getByText('7.5')
+
+    userEvent.click(disabledOption)
+
+    expect(selectOptionMock).toHaveBeenCalledTimes(0)
+  })
+
+  it('should not call selectOption method when option is selected', () => {
+    const { selectOptionMock } = setup()
+
+    const disabledOption = screen.getByText('7')
 
     userEvent.click(disabledOption)
 

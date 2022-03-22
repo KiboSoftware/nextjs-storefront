@@ -29,6 +29,7 @@ const styles = {
   selected: {
     backgroundColor: 'text.primary',
     color: 'common.white',
+    cursor: 'default',
   },
   disabled: {
     borderColor: 'text.secondary',
@@ -38,25 +39,22 @@ const styles = {
   },
 }
 
-const SizeOptions = ({
-  attributeFQN,
-  value,
-  isSelected = false,
-  isEnabled = true,
-  handleSizeSelection,
-}: SizeOptionsProps) => (
-  <Box
-    sx={{
-      ...styles.sizeContainer,
-      ...(isSelected && styles.selected),
-      ...(!isEnabled && styles.disabled),
-    }}
-    {...(isEnabled && { onClick: () => handleSizeSelection(attributeFQN, value) })}
-    data-testid="size-options"
-  >
-    {value}
-  </Box>
-)
+const SizeOptions = (props: SizeOptionsProps) => {
+  const { attributeFQN, value, isSelected = false, isEnabled = true, handleSizeSelection } = props
+  return (
+    <Box
+      sx={{
+        ...styles.sizeContainer,
+        ...(isSelected && styles.selected),
+        ...(!isEnabled && styles.disabled),
+      }}
+      {...(isEnabled && !isSelected && { onClick: () => handleSizeSelection(attributeFQN, value) })}
+      data-testid="size-options"
+    >
+      {value}
+    </Box>
+  )
+}
 
 const ProductVariantSizeSelector = ({
   attributeFQN,
