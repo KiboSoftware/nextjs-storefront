@@ -1,7 +1,5 @@
 import { MenuItem, OutlinedInput } from '@mui/material'
-import FormControl from '@mui/material/FormControl'
-import FormHelperText from '@mui/material/FormHelperText'
-import Select from '@mui/material/Select'
+import { FormControl, FormHelperText, Select } from '@mui/material'
 import { useTranslation } from 'next-i18next'
 
 interface KiboSelectProps {
