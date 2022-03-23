@@ -23,7 +23,7 @@ const FacetItemList = (props: FacetItemListProps) => {
           <FacetItem
             key={index}
             filterValue={item?.filterValue || ''}
-            label={item?.label}
+            label={item?.label || ''}
             count={item?.count || 0}
           />
         ))}

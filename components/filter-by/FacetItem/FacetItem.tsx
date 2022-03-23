@@ -6,11 +6,11 @@ import { useRouter } from 'next/router'
 
 import { useUpdateRoutes } from '../../../hooks/useUpdateRoutes'
 
-import type { FacetValue } from '@/lib/gql/types'
-
 // Interface
-interface FacetItemProps extends FacetValue {
+interface FacetItemProps {
   filterValue: string
+  label: string
+  count: number
 }
 
 // MUI

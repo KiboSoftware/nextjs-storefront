@@ -9,11 +9,11 @@ export const useUpdateRoutes = () => {
 
     const newRoute = params.length
       ? {
-          pathname: router.pathname,
+          pathname: router?.pathname,
           query: { filters: params },
         }
       : {
-          pathname: router.pathname,
+          pathname: router?.pathname,
         }
 
     router?.push(newRoute)

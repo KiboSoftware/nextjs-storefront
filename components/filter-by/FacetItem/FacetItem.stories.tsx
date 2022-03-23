@@ -18,5 +18,4 @@ Default.args = {
   filterValue: 'Tenant~color:grey',
   label: 'Nike',
   count: 132,
-  isDisplayed: true,
 }
