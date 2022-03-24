@@ -42,7 +42,7 @@ const ImageGallery = ({ images, title, isZoomed = false }: ImageGalleryProps) =>
   })
 
   // handle if vertical slider arrow should be visible or not
-  const [showArrow, setUpArrowVisibility] = useState({
+  const [showArrow, setArrowVisibility] = useState({
     up: false,
     down: images?.length > 4,
   })
@@ -82,7 +82,7 @@ const ImageGallery = ({ images, title, isZoomed = false }: ImageGalleryProps) =>
       behavior: 'smooth',
     })
 
-    setUpArrowVisibility(
+    setArrowVisibility(
       isDirectionUp
         ? {
             up: scrollableDiv!.scrollTop > 136,
