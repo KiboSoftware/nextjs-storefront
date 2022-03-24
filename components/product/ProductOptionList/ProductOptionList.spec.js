@@ -9,7 +9,7 @@ const { Common } = composeStories(stories)
 
 describe('[component] ProductOptionList component', () => {
   it('should render the component', () => {
-    render(<Default {...Default.args} />)
+    render(<Common {...Common.args} />)
     const productOptionList = screen.getByRole('button')
 
     expect(productOptionList).toBeVisible()
@@ -18,7 +18,7 @@ describe('[component] ProductOptionList component', () => {
   it('should call onChange method if value is changed', () => {
     const onChangeMock = jest.fn()
     const mockOption = productOptionListValuesMock[0]
-    render(<Default {...Default.args} onChange={onChangeMock} />)
+    render(<Common {...Common.args} onChange={onChangeMock} />)
     const productOptionList = screen.getByRole('button')
 
     fireEvent.mouseDown(productOptionList)

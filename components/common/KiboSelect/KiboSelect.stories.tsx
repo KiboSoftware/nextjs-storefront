@@ -17,8 +17,8 @@ const Template: ComponentStory<typeof KiboSelect> = (args) => (
     <MenuItem value="2">Option 2</MenuItem>
   </KiboSelect>
 )
-export const Default = Template.bind({})
-Default.args = {
+export const Common = Template.bind({})
+Common.args = {
   name: 'kibo-select',
 }
 
