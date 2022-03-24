@@ -1,4 +1,5 @@
 import KiboTextBox from '@/components/common/KiboTextBox/KiboTextBox'
+
 import type { ProductOption } from '@/lib/gql/types'
 
 interface ProductOptionTextBoxProps {

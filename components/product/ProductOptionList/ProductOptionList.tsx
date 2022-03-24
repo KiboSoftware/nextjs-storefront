@@ -2,6 +2,7 @@ import { MenuItem } from '@mui/material'
 import { useTranslation } from 'next-i18next'
 
 import KiboSelect from '@/components/common/KiboSelect/KiboSelect'
+
 import type { ProductOptionValue } from '@/lib/gql/types'
 
 interface ProductOptionListProps {
