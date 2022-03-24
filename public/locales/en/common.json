@@ -29,5 +29,10 @@
   "use-current-location": "Use Current Location",
   "increase": "increase",
   "decrease": "decrease",
-  "select-option": "Select option"
+  "select-option": "Select option",
+  "search-icon": "Search Icon",
+  "search-input": "Search Input",
+  "clear-search": "Clear Search",
+  "view-more": "View More",
+  "view-less": "View Less"
 }

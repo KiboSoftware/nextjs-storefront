@@ -49,7 +49,7 @@ const Price = ({
   }: {
     children: any
     color?: string
-    sx?: Object
+    sx?: any
   }) => (
     <Typography
       variant={variant}
