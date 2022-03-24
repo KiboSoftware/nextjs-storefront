@@ -12,10 +12,18 @@ export default {
 
 const Template: ComponentStory<typeof FacetItem> = (args) => <FacetItem {...args} />
 
-// Default
-export const Default = Template.bind({})
-Default.args = {
+// Common
+export const Common = Template.bind({})
+Common.args = {
   filterValue: 'Tenant~color:grey',
   label: 'Nike',
   count: 132,
+  isApplied: false,
+}
+
+// Selected
+export const Selected = Template.bind({})
+Selected.args = {
+  ...Common.args,
+  isApplied: true,
 }

@@ -12,8 +12,8 @@ export default {
 
 const Template: ComponentStory<typeof FacetItemList> = (args) => <FacetItemList {...args} />
 
-// Default
-export const Default = Template.bind({})
+// Common
+export const Common = Template.bind({})
 
 const itemList = [
   {
@@ -53,6 +53,6 @@ const itemList = [
     childrenFacetValues: null,
   },
 ]
-Default.args = {
+Common.args = {
   itemList,
 }

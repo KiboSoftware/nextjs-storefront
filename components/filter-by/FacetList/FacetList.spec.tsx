@@ -6,14 +6,14 @@ import { render, screen } from '@testing-library/react'
 
 import * as stories from './FacetList.stories'
 
-const { Default } = composeStories(stories)
+const { Common } = composeStories(stories)
 
 const facetMock = () => <div data-testid="facet" />
 jest.mock('../Facet/Facet', () => facetMock)
 
 describe('[components] - FacetList', () => {
   const setup = () => {
-    render(<Default {...Default.args} />)
+    render(<Common {...Common.args} />)
   }
 
   it('should render component', () => {
@@ -25,7 +25,7 @@ describe('[components] - FacetList', () => {
 
     // assert
     const count =
-      Default.args?.facetList?.filter(
+      Common.args?.facetList?.filter(
         (item) => item?.facetType === 'Value' || item?.facetType === 'RangeQuery'
       ).length || 0
 

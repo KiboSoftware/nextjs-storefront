@@ -4,7 +4,7 @@ import { ComponentStory, ComponentMeta } from '@storybook/react'
 
 import FacetList from './FacetList'
 
-// Common
+// default
 export default {
   title: 'Filter-By/FacetList',
   component: FacetList,
@@ -12,8 +12,8 @@ export default {
 
 const Template: ComponentStory<typeof FacetList> = (args) => <FacetList {...args} />
 
-// Default
-export const Default = Template.bind({})
+// Common
+export const Common = Template.bind({})
 
 const facetList = [
   {
@@ -318,6 +318,6 @@ const facetList = [
     ],
   },
 ]
-Default.args = {
+Common.args = {
   facetList,
 }

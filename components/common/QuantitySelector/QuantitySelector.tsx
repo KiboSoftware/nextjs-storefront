@@ -45,7 +45,7 @@ const QuantityTextField = ({ quantity }: QuantityInputProps) => (
 )
 
 // Component
-const QuantitySelecotor: FC<QuantitySelecotorProps> = (props) => {
+const QuantitySelecotor = (props: QuantitySelecotorProps) => {
   const { quantity = 1, onIncrease, onDecrease } = props
   const { t } = useTranslation('common')
 

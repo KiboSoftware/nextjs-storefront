@@ -6,11 +6,11 @@ import { render, screen } from '@testing-library/react'
 
 import * as stories from './FacetItem.stories'
 
-const { Default } = composeStories(stories)
+const { Common } = composeStories(stories)
 
 describe('[components] - FacetItem', () => {
   const setup = () => {
-    render(<Default {...Default.args} />)
+    render(<Common {...Common.args} />)
   }
 
   it('should render component', () => {

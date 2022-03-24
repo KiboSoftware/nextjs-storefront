@@ -11,6 +11,7 @@ interface FacetItemProps {
   filterValue: string
   label: string
   count: number
+  isApplied: boolean
 }
 
 // MUI
@@ -27,10 +28,10 @@ const style = {
 
 // Component
 const FacetItem = (props: FacetItemProps) => {
-  const { filterValue, label: facetItemLabel, count = 0 } = props
+  const { filterValue, label: facetItemLabel, count = 0, isApplied = false } = props
 
   const router = useRouter()
-  const [checked, setChecked] = useState<boolean>(false)
+  const [checked, setChecked] = useState<boolean>(isApplied)
   const [updateRoute] = useUpdateRoutes()
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {

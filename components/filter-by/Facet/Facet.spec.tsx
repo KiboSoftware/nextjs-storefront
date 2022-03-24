@@ -7,7 +7,7 @@ import userEvent from '@testing-library/user-event'
 
 import * as stories from './Facet.stories'
 
-const { Default } = composeStories(stories)
+const { Common } = composeStories(stories)
 
 const searchMock = () => <div data-testid="search-component" />
 const facetItemListMock = () => <div data-testid="facet-item-list-component" />
@@ -15,10 +15,10 @@ jest.mock('../../common/SearchBar/SearchBar', () => searchMock)
 jest.mock('../FacetItemList/FacetItemList', () => facetItemListMock)
 
 describe('[components] - FacetItem', () => {
-  const setup = (values = Default.args?.values || []) => {
-    const label = Default.args?.label || ''
+  const setup = (values = Common.args?.values || []) => {
+    const label = Common.args?.label || ''
 
-    render(<Default label={label} values={values} />)
+    render(<Common label={label} values={values} />)
   }
 
   it('should render component', () => {
@@ -27,7 +27,7 @@ describe('[components] - FacetItem', () => {
 
     // act
     const accordian = screen.getByTestId('accordian')
-    const label = screen.getByText(Default.args?.label || '')
+    const label = screen.getByText(Common.args?.label || '')
     const search = screen.getByTestId('search-component')
     const facetItem = screen.getByTestId('facet-item-list-component')
     const viewMore = screen.getByText(/view-more/i, { selector: 'button' })
@@ -58,7 +58,7 @@ describe('[components] - FacetItem', () => {
 
   it('should hide "View More" when number of items < 6', () => {
     // arrange
-    setup(Default.args?.values?.slice(0, 1))
+    setup(Common.args?.values?.slice(0, 1))
 
     // act
     const viewMore = screen.queryByText(/view-more/i, { selector: 'button' })

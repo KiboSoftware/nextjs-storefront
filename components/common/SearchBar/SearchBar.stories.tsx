@@ -13,8 +13,8 @@ export default {
 const Template: ComponentStory<typeof SearchBar> = (args) => <SearchBar {...args} />
 
 // Default
-export const Default = Template.bind({})
-Default.args = {
+export const Common = Template.bind({})
+Common.args = {
   placeHolder: 'Search Brand',
   searchTerm: '',
   onSearch: () => {
@@ -27,6 +27,6 @@ Default.args = {
 // WithCancelButton
 export const WithCancelButton = Template.bind({})
 WithCancelButton.args = {
-  ...Default.args,
+  ...Common.args,
   showClearButton: true,
 }

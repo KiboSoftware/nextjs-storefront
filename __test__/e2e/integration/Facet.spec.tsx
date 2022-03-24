@@ -5,11 +5,11 @@ import userEvent from '@testing-library/user-event'
 
 import * as stories from '../../../components/filter-by/Facet/Facet.stories'
 
-const { Default } = composeStories(stories)
+const { Common } = composeStories(stories)
 
 describe('[components] - Facet integration', () => {
   const setup = () => {
-    render(<Default {...Default.args} />)
+    render(<Common {...Common.args} />)
   }
 
   it('should filter facet items when user enters search term', () => {
@@ -19,7 +19,7 @@ describe('[components] - Facet integration', () => {
 
     // arrange
     const searchTerm = 'item'
-    const items = Default.args?.values || []
+    const items = Common.args?.values || []
     const count = items.filter((item) => item?.label?.toLowerCase().includes(searchTerm)).length
 
     const viewMore = screen.getByText(/view-more/i, { selector: 'button' })

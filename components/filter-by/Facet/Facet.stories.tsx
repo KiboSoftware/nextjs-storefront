@@ -12,8 +12,8 @@ export default {
 
 const Template: ComponentStory<typeof Facet> = (args) => <Facet {...args} />
 
-// Default
-export const Default = Template.bind({})
+// Common
+export const Common = Template.bind({})
 
 const values = [
   { value: 'nike', label: 'Nike', count: 132, isDisplayed: true },
@@ -31,7 +31,7 @@ const values = [
   { value: '12', label: 'Item 12', count: 120, isDisplayed: true },
   { value: '13', label: 'Item 13', count: 130, isDisplayed: true },
 ]
-Default.args = {
+Common.args = {
   numberOfItemsToShow: 6,
   label: 'Brand',
   values,

@@ -25,6 +25,7 @@ const FacetItemList = (props: FacetItemListProps) => {
             filterValue={item?.filterValue || ''}
             label={item?.label || ''}
             count={item?.count || 0}
+            isApplied={item?.isApplied || false}
           />
         ))}
     </Stack>
