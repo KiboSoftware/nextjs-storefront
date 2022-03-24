@@ -21,26 +21,26 @@ const styles = {
   productVariantColor: {
     width: '1.938rem',
     height: '1.938rem',
-    marginRight: 2.3,
+    marginRight: 3,
     borderRadius: 0,
     display: 'flex',
     justifyContent: 'center',
     alignItems: 'center',
     cursor: 'pointer',
     elevation: 0,
-    borderColor: 'common.white',
-    borderWidth: '4px',
+    borderColor: '#DCDCDC',
+    borderWidth: '1px',
     borderStyle: 'solid',
   },
   selected: {
     outlineColor: 'common.black',
     outlineWidth: '1px',
     outlineStyle: 'solid',
+    outlineOffset: 4,
     elevation: 2,
     cursor: 'default',
   },
   disabled: {
-    opacity: 0.1,
     cursor: 'default',
   },
 }
@@ -61,7 +61,7 @@ const ColorOptions = (props: ColorOptionsProps) => {
     ></Chip>
   )
 
-  return isEnabled ? <>{chipCustom}</> : <Tooltip title="disabled">{chipCustom}</Tooltip>
+  return isEnabled ? <>{chipCustom}</> : <Tooltip title="Not available !">{chipCustom}</Tooltip>
 }
 
 const KiboColorPicker = ({ attributeFQN, values, onChange }: ProductVariantColorSelectorProps) => {
