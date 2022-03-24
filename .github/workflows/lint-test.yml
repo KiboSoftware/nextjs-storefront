@@ -74,7 +74,7 @@ jobs:
           key: ${{ runner.os }}-package-${{ hashFiles('**/package-lock.json') }}
 
       - name: Run Unit Tests
-        run: npm run test
+        run: npm run test-report-coverage
 
       - name: SonarCloud Scan
         uses: SonarSource/sonarcloud-github-action@master

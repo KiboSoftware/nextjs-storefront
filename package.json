@@ -10,7 +10,8 @@
     "storybook": "start-storybook -p 6006 -s ./public",
     "build-storybook": "build-storybook",
     "validate-types": "tsc --noEmit --declaration",
-    "test": "jest --coverage --testResultsProcessor=jest-sonar-reporter",
+    "test": "jest",
+    "test-report-coverage": "jest --coverage --testResultsProcessor=jest-sonar-reporter",
     "test-watch": "jest --watch",
     "prettier:format": "prettier --write .",
     "prepare": "husky install"
