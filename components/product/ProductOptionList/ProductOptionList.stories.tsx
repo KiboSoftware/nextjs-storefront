@@ -16,7 +16,7 @@ export default {
 
 const Template: ComponentStory<typeof ProductOptionList> = (args) => <ProductOptionList {...args} />
 
-export const Default = Template.bind({})
+export const Common = Template.bind({})
 
 export const WithError = Template.bind({})
 WithError.args = {

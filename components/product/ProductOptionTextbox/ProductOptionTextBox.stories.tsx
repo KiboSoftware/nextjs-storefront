@@ -22,4 +22,4 @@ const Template: ComponentStory<typeof ProductOptionTextBox> = (args) => (
   </Box>
 )
 
-export const Default = Template.bind({})
+export const Common = Template.bind({})

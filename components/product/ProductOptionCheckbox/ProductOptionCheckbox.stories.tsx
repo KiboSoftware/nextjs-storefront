@@ -14,7 +14,7 @@ const Template: ComponentStory<typeof ProductOptionCheckbox> = (args) => (
   <ProductOptionCheckbox {...args} />
 )
 
-export const Default = Template.bind({})
-Default.args = {
+export const Common = Template.bind({})
+Common.args = {
   label: 'Include Warranty',
 }

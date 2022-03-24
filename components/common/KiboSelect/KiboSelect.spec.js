@@ -1,11 +1,10 @@
 import { composeStories } from '@storybook/testing-react'
 import { fireEvent, render, screen, within } from '@testing-library/react'
 import '@testing-library/jest-dom'
-import userEvent from '@testing-library/user-event'
 
 import * as stories from './KiboSelect.stories' // import all stories from the stories file
 
-const { WithCustomPlaceholder, Default, WithErrorDescription } = composeStories(stories)
+const { WithCustomPlaceholder, Common, WithErrorDescription } = composeStories(stories)
 
 describe('[component] KiboSelect component', () => {
   it('should render the component', () => {
@@ -25,7 +24,7 @@ describe('[component] KiboSelect component', () => {
 
   it('should display the error description if passed when error is true', () => {
     const onChangeMock = jest.fn()
-    render(<Default {...Default.args} onChange={onChangeMock} />)
+    render(<Common {...Common.args} onChange={onChangeMock} />)
     const selectButton = screen.getByRole('button')
 
     fireEvent.mouseDown(selectButton)

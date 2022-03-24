@@ -5,10 +5,10 @@ import '@testing-library/jest-dom'
 import { productOptionTextBoxMock } from '../../../__mocks__/productOptionTextBoxMock'
 import * as stories from './ProductOptionTextBox.stories' // import all stories from the stories file
 
-const { Default } = composeStories(stories)
+const { Common } = composeStories(stories)
 
 const setup = () => {
-  render(<Default {...Default.args} />)
+  render(<Common {...Common.args} />)
 }
 
 describe('[component] ProductOptionTextBox component', () => {
