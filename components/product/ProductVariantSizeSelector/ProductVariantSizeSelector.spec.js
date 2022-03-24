@@ -3,15 +3,14 @@ import { render, screen } from '@testing-library/react'
 import '@testing-library/jest-dom'
 import userEvent from '@testing-library/user-event'
 
-import theme from '../../../styles/theme'
 import * as stories from './ProductVariantSizeSelector.stories' // import all stories from the stories file
 
-const { Default } = composeStories(stories)
+const { Common } = composeStories(stories)
 
 describe('[component] ProductVariantSizeSelector component', () => {
   const setup = () => {
     const selectOptionMock = jest.fn()
-    render(<Default {...Default.args} selectOption={selectOptionMock} />)
+    render(<Common {...Common.args} selectOption={selectOptionMock} />)
     return {
       selectOptionMock,
     }
@@ -30,7 +29,7 @@ describe('[component] ProductVariantSizeSelector component', () => {
 
     const sizeOptions = screen.getAllByTestId(/size-options/i)
 
-    expect(sizeOptions).toHaveLength(Default.args.values.length)
+    expect(sizeOptions).toHaveLength(Common.args.values.length)
   })
 
   it('should call selectOption method only when size-option is enabled and not selected', () => {
@@ -41,7 +40,7 @@ describe('[component] ProductVariantSizeSelector component', () => {
     userEvent.click(option)
 
     expect(selectOptionMock).toHaveBeenCalled()
-    expect(selectOptionMock).toHaveBeenCalledWith(Default.args.attributeFQN, '8')
+    expect(selectOptionMock).toHaveBeenCalledWith(Common.args.attributeFQN, '8')
   })
 
   it('should not call selectOption method when option is disabled', () => {
