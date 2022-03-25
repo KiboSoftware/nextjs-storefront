@@ -1,7 +1,7 @@
-import React, { useRef } from 'react'
+import React from 'react'
 
 import { composeStories } from '@storybook/testing-react'
-import { fireEvent, render, screen, waitFor } from '@testing-library/react'
+import { render, screen } from '@testing-library/react'
 import '@testing-library/jest-dom'
 import userEvent from '@testing-library/user-event'
 
@@ -37,7 +37,7 @@ describe('[component] ImageGallery component', () => {
     it('should render the selected image', () => {
       setupGallery()
 
-      const selectedImage = screen.getByAltText(/selected-image/)
+      const selectedImage = screen.getByTestId(/selected-image/)
 
       expect(selectedImage).toBeVisible()
     })

@@ -16,11 +16,16 @@ import { TransformWrapper, TransformComponent } from 'react-zoom-pan-pinch'
 
 import KiboImage from '@/components/common/KiboImage/KiboImage'
 import { swipedetect } from '@/lib/helpers/swipeDetect'
+import DefaultImage from '@/public/product_placeholder.svg'
+
+import { ProductImage } from '@/lib/gql/types'
 
 interface ImageGalleryProps {
-  images: string[]
+  images: ProductImage[]
   title: string
-  isZoomed: boolean
+  isZoomed?: boolean
+  initialThumbnailDisplayCount?: number
+  placeholderImageUrl?: string
 }
 
 const styles = {
@@ -35,7 +40,13 @@ const styles = {
   },
 }
 
-const ImageGallery = ({ images, title, isZoomed = false }: ImageGalleryProps) => {
+const ImageGallery = ({
+  images,
+  title,
+  isZoomed = false,
+  initialThumbnailDisplayCount = 4,
+  placeholderImageUrl = DefaultImage,
+}: ImageGalleryProps) => {
   const [selectedImage, setSelectedImage] = useState({
     image: images[0],
     index: 0,
@@ -44,7 +55,7 @@ const ImageGallery = ({ images, title, isZoomed = false }: ImageGalleryProps) =>
   // handle if vertical slider arrow should be visible or not
   const [showArrow, setArrowVisibility] = useState({
     up: false,
-    down: images?.length > 4,
+    down: images?.length > initialThumbnailDisplayCount,
   })
 
   const scrollContainerRef = useRef<HTMLDivElement | null>(null)
@@ -95,6 +106,8 @@ const ImageGallery = ({ images, title, isZoomed = false }: ImageGalleryProps) =>
     )
   }
 
+  const maxHeight = initialThumbnailDisplayCount * 119 + initialThumbnailDisplayCount * 12 + 60
+
   return (
     <Box id="swipe" component={'div'} onTouchStartCapture={handleSwipe}>
       {/* Title section */}
@@ -111,7 +124,7 @@ const ImageGallery = ({ images, title, isZoomed = false }: ImageGalleryProps) =>
       </Box>
 
       {/* Gallary Section start */}
-      <Stack direction="row" spacing={{ xs: 0, md: 2 }} maxHeight={600}>
+      <Stack direction="row" spacing={{ xs: 0, md: 2 }} maxHeight={maxHeight}>
         {/* Vertical slider secton start */}
         <Box
           width="10%"
@@ -143,16 +156,16 @@ const ImageGallery = ({ images, title, isZoomed = false }: ImageGalleryProps) =>
               className="scrolling-div"
               ref={scrollContainerRef}
               sx={{
-                maxHeight: 536,
+                maxHeight: maxHeight,
                 width: '100%',
                 overflowY: 'auto',
                 '::-webkit-scrollbar': { width: '5px' },
               }}
             >
-              {images.map((image, i) => {
+              {images?.map((image, i) => {
                 return (
                   <Box
-                    key={i}
+                    key={image?.altText}
                     component="div"
                     width={119}
                     minHeight={119}
@@ -163,7 +176,7 @@ const ImageGallery = ({ images, title, isZoomed = false }: ImageGalleryProps) =>
                       borderColor: 'grey.600',
                       cursor: 'pointer',
                     }}
-                    aria-label={`kibo-image-thumbnail-${i}`}
+                    aria-label={image?.altText || ''}
                     aria-selected={i === selectedImage.index}
                     onClick={() =>
                       setSelectedImage({
@@ -173,8 +186,8 @@ const ImageGallery = ({ images, title, isZoomed = false }: ImageGalleryProps) =>
                     }
                   >
                     <KiboImage
-                      src={image}
-                      alt={`kibo-image-thumbnail-${i}`}
+                      src={image?.imageUrl as string}
+                      alt={image?.altText as string}
                       layout="fill"
                       objectFit="contain"
                     />
@@ -199,20 +212,22 @@ const ImageGallery = ({ images, title, isZoomed = false }: ImageGalleryProps) =>
         {/* Vertical slider secton end */}
 
         {/* Selected Image secton start */}
-        <Box display={isZoomed ? 'flex' : 'none'} alignItems="center">
-          <IconButton
-            aria-label="previous"
-            disabled={selectedImage.index < 1}
-            onClick={() =>
-              setSelectedImage({
-                image: images[selectedImage.index - 1],
-                index: selectedImage.index - 1,
-              })
-            }
-          >
-            <ArrowBackIos />
-          </IconButton>
-        </Box>
+        {images.length > 1 && (
+          <Box display={isZoomed ? 'flex' : 'none'} alignItems="center">
+            <IconButton
+              aria-label="previous"
+              disabled={selectedImage.index < 1}
+              onClick={() =>
+                setSelectedImage({
+                  image: images[selectedImage.index - 1],
+                  index: selectedImage.index - 1,
+                })
+              }
+            >
+              <ArrowBackIos />
+            </IconButton>
+          </Box>
+        )}
         <Box
           height={596}
           position="relative"
@@ -223,7 +238,7 @@ const ImageGallery = ({ images, title, isZoomed = false }: ImageGalleryProps) =>
           justifyContent="flex-start"
         >
           <TransformWrapper>
-            {({ zoomIn, zoomOut, resetTransform, ...rest }) => (
+            {({ zoomIn, zoomOut, resetTransform }) => (
               <>
                 <Box
                   justifyContent="flex-end"
@@ -264,10 +279,11 @@ const ImageGallery = ({ images, title, isZoomed = false }: ImageGalleryProps) =>
                     position="relative"
                   >
                     <KiboImage
-                      src={selectedImage.image}
-                      alt="selected-image"
+                      src={(selectedImage.image?.imageUrl as string) || placeholderImageUrl}
+                      alt={selectedImage.image?.altText as string}
                       layout="fill"
                       objectFit="contain"
+                      data-testid="selected-image"
                     />
                   </Box>
                 </TransformComponent>
@@ -275,20 +291,22 @@ const ImageGallery = ({ images, title, isZoomed = false }: ImageGalleryProps) =>
             )}
           </TransformWrapper>
         </Box>
-        <Box display={isZoomed ? 'flex' : 'none'} alignItems="center">
-          <IconButton
-            aria-label="next"
-            disabled={selectedImage.index == images.length - 1}
-            onClick={() =>
-              setSelectedImage({
-                image: images[selectedImage.index + 1],
-                index: selectedImage.index + 1,
-              })
-            }
-          >
-            <ArrowForwardIos />
-          </IconButton>
-        </Box>
+        {images.length > 1 && (
+          <Box display={isZoomed ? 'flex' : 'none'} alignItems="center">
+            <IconButton
+              aria-label="next"
+              disabled={selectedImage.index == images.length - 1}
+              onClick={() =>
+                setSelectedImage({
+                  image: images[selectedImage.index + 1],
+                  index: selectedImage.index + 1,
+                })
+              }
+            >
+              <ArrowForwardIos />
+            </IconButton>
+          </Box>
+        )}
         {/* Selected Image secton end */}
       </Stack>
       {/* Gallary Section start */}
