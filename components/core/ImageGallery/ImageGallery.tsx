@@ -58,7 +58,7 @@ const ImageGallery = ({
     down: images?.length > initialThumbnailDisplayCount,
   })
 
-  const scrollContainerRef = useRef<HTMLDivElement | null>(null)
+  const scrollContainerRef = useRef<HTMLDivElement>()
 
   // Mobile: handle touch swipe
   const handleSwipe = () => {
@@ -80,8 +80,10 @@ const ImageGallery = ({
     })
   }
 
-  const isScrollAtBottom = (element: any) => {
-    return element.scrollHeight - (element.scrollTop + element.clientHeight) < 136
+  const isScrollAtBottom = (element?: HTMLElement) => {
+    if (element) {
+      return element.scrollHeight - (element.scrollTop + element.clientHeight) < 136
+    }
   }
 
   // Desktop: handle vertical slider scrolling
@@ -96,6 +98,7 @@ const ImageGallery = ({
     setArrowVisibility(
       isDirectionUp
         ? {
+            // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
             up: scrollableDiv!.scrollTop > 136,
             down: true,
           }
@@ -159,7 +162,7 @@ const ImageGallery = ({
                 maxHeight: maxHeight,
                 width: '100%',
                 overflowY: 'auto',
-                '::-webkit-scrollbar': { width: '5px' },
+                '::-webkit-scrollbar': { width: '0px' },
               }}
             >
               {images?.map((image, i) => {
@@ -180,7 +183,7 @@ const ImageGallery = ({
                     aria-selected={i === selectedImage.index}
                     onClick={() =>
                       setSelectedImage({
-                        image: images[i],
+                        image: image,
                         index: i,
                       })
                     }
@@ -229,9 +232,12 @@ const ImageGallery = ({
           </Box>
         )}
         <Box
-          height={596}
           position="relative"
-          sx={{ border: { xs: 'none', md: '1px solid #ccc' }, width: { xs: '100%', md: '90%' } }}
+          sx={{
+            border: { xs: 'none', md: '1px solid #ccc' },
+            width: { xs: '100%', md: '90%' },
+            height: { xs: '40vh', md: 596 },
+          }}
           display="flex"
           flexDirection={'column'}
           alignItems={'center'}
@@ -331,7 +337,7 @@ const ImageGallery = ({
             }}
             onClick={() =>
               setSelectedImage({
-                image: images[i],
+                image: dot,
                 index: i,
               })
             }
