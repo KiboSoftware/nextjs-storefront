@@ -3,6 +3,7 @@ import React from 'react'
 import { ComponentStory, ComponentMeta } from '@storybook/react'
 
 import ColorSelector from './ColorSelector'
+
 import { ProductOptionValue } from '@/lib/gql/types'
 const values: ProductOptionValue[] = [
   {
