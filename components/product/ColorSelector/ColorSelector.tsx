@@ -21,7 +21,6 @@ const styles = {
   productVariantColor: {
     width: '1.938rem',
     height: '1.938rem',
-    marginRight: 3,
     borderRadius: 0,
     display: 'flex',
     justifyContent: 'center',
@@ -66,7 +65,7 @@ const ColorOptions = (props: ColorOptionsProps) => {
 
 const KiboColorPicker = ({ attributeFQN, values, onChange }: ProductVariantColorSelectorProps) => {
   return (
-    <Box display="flex" flexWrap="wrap" data-testid="color-selector">
+    <Box display="flex" flexWrap="wrap" gap={2} data-testid="color-selector">
       {values?.map((option, index) => (
         <ColorOptions
           key={index}
