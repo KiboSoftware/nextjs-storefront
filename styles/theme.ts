@@ -101,9 +101,9 @@ theme = createTheme(theme, {
         root: {
           color: grey[900],
           fontSize: '1.25rem',
-          [theme.breakpoints.up('md')]: {
-            fontSize: '1.75rem',
-          },
+          // [theme.breakpoints.up('md')]: {
+          //   fontSize: '1.75rem',
+          // },
         },
       },
     },

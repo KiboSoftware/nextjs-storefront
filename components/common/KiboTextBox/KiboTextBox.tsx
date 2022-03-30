@@ -1,17 +1,21 @@
-import * as React from 'react'
+import { forwardRef, useImperativeHandle, useRef } from 'react'
 
 import { FormControl, FormHelperText, InputBase, InputLabel } from '@mui/material'
 import { alpha, styled } from '@mui/material/styles'
 
-export interface KiboTextBoxProps {
+interface KiboTextBoxHandler {
+  setFocus: () => void
+}
+interface KiboTextBoxProps {
   label?: string
   value?: string
   required?: boolean
   error?: boolean
   helperText?: string
   placeholder?: string
-  children?: React.ReactNode
-  onChange: (name: string, value: string) => void
+  onChange: () => void
+
+  /* eslint-disable  @typescript-eslint/no-explicit-any */
   [x: string]: any
 }
 
@@ -38,16 +42,29 @@ const KiboInput = styled(InputBase)(({ theme, error }) => ({
   },
 }))
 
-const KiboTextBox = ({
-  label,
-  value,
-  required = false,
-  error = false,
-  helperText = '',
-  placeholder,
-  onChange,
-  ...rest
-}: KiboTextBoxProps) => {
+const KiboTextBox = forwardRef<KiboTextBoxHandler, KiboTextBoxProps>((props, ref) => {
+  const {
+    label,
+    value,
+    required = false,
+    error = false,
+    helperText = '',
+    placeholder,
+    onChange,
+    onKeyDown,
+    ...rest
+  } = props
+  const inputref = useRef<HTMLInputElement | null>(null)
+
+  const setFocus = () => {
+    if (!inputref.current) return
+    inputref.current.focus()
+  }
+
+  useImperativeHandle(ref, () => ({
+    setFocus,
+  }))
+
   return (
     <FormControl variant="standard" error={error} required={required} {...rest} fullWidth>
       <InputLabel shrink htmlFor="kibo-input">
@@ -62,18 +79,18 @@ const KiboTextBox = ({
         }}
         defaultValue={value}
         placeholder={placeholder}
-        onChange={(e) => onChange(e.target.name, e.target.value)}
+        onChange={onChange}
+        onKeyDown={onKeyDown}
+        inputRef={inputref}
         {...rest}
       />
-      <FormHelperText
-        id="helper-text"
-        error={error}
-        {...(error && { 'aria-errormessage': helperText })}
-      >
-        {error ? helperText : ''}
+
+      <FormHelperText id="helper-text" error aria-errormessage={helperText}>
+        {error ? helperText : ' '}
       </FormHelperText>
     </FormControl>
   )
-}
+})
 
+KiboTextBox.displayName = 'KiboTextBox'
 export default KiboTextBox

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 
-import { Checkbox, Stack, FormControlLabel, FormLabel } from '@mui/material'
+import { Checkbox, Stack, FormControlLabel, FormLabel, SxProps } from '@mui/material'
 import { Theme } from '@mui/material/styles'
 import { useRouter } from 'next/router'
 
@@ -20,7 +20,7 @@ const style = {
   formControlLabel: {
     width: '100%',
     fontSize: (theme: Theme) => theme.typography.body2,
-  },
+  } as SxProps<Theme> | undefined,
   formLabel: {
     typography: 'body2',
   },

@@ -2,7 +2,14 @@ import React, { useState, useEffect, useRef } from 'react'
 
 import AddIcon from '@mui/icons-material/Add'
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore'
-import { Accordion, AccordionDetails, AccordionSummary, Button, Typography } from '@mui/material'
+import {
+  Accordion,
+  AccordionDetails,
+  AccordionSummary,
+  Button,
+  SxProps,
+  Typography,
+} from '@mui/material'
 import { grey } from '@mui/material/colors'
 import { Theme } from '@mui/material/styles'
 import { Box } from '@mui/system'
@@ -28,7 +35,9 @@ const style = {
   accordionDetails: {
     pt: 0,
   },
-  button: { textTransform: 'capitalize', fontSize: (theme: Theme) => theme.typography.body2 },
+  button: { textTransform: 'capitalize', fontSize: (theme: Theme) => theme.typography.body2 } as
+    | SxProps<Theme>
+    | undefined,
 }
 
 // Component

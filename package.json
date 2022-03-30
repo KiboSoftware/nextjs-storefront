@@ -21,6 +21,7 @@
     "@emotion/server": "^11.4.0",
     "@emotion/styled": "^11.6.0",
     "@graphql-codegen/cli": "^2.3.0",
+    "@hookform/resolvers": "^2.8.8",
     "@kibocommerce/graphql-client": "^1.0.3-beta.9",
     "@mui/icons-material": "^5.4.4",
     "@mui/material": "^5.2.2",
@@ -28,8 +29,10 @@
     "next-i18next": "^10.2.0",
     "react": "17.0.2",
     "react-dom": "17.0.2",
+    "react-hook-form": "^7.28.1",
     "react-query": "^3.34.0",
-    "sharp": "^0.30.0"
+    "sharp": "^0.30.0",
+    "yup": "^0.32.11"
   },
   "devDependencies": {
     "@babel/core": "^7.16.12",
