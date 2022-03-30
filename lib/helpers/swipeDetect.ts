@@ -1,13 +1,13 @@
-export function swipedetect(gestureZone, callback) {
+export function swipeDetect(gestureZone: HTMLElement, callback: (dir: string) => void) {
   let touchstartX = 0
   let touchstartY = 0
   let touchendX = 0
   let touchendY = 0
-  let getGesture = callback
+  const getGesture = callback
 
   gestureZone?.addEventListener(
     'touchstart',
-    function (event) {
+    (event) => {
       touchstartX = event.changedTouches[0].screenX
       touchstartY = event.changedTouches[0].screenY
     },
@@ -16,9 +16,10 @@ export function swipedetect(gestureZone, callback) {
 
   gestureZone?.addEventListener(
     'touchend',
-    function (event) {
+    (event) => {
       touchendX = event.changedTouches[0].screenX
       touchendY = event.changedTouches[0].screenY
+
       getGesture(handleGesture())
     },
     false
@@ -43,6 +44,6 @@ export function swipedetect(gestureZone, callback) {
       return 'up'
     }
 
-    return ''
+    return 'wrong'
   }
 }

@@ -15,7 +15,7 @@ import { Box } from '@mui/system'
 import { TransformWrapper, TransformComponent } from 'react-zoom-pan-pinch'
 
 import KiboImage from '@/components/common/KiboImage/KiboImage'
-import { swipedetect } from '@/lib/helpers/swipeDetect'
+import { swipeDetect } from '@/lib/helpers/swipeDetect'
 import DefaultImage from '@/public/product_placeholder.svg'
 
 import { ProductImage } from '@/lib/gql/types'
@@ -63,21 +63,23 @@ const ImageGallery = ({
   // Mobile: handle touch swipe
   const handleSwipe = () => {
     const gestureZone = document.getElementById('swipe')
-    swipedetect(gestureZone, (dir: string) => {
-      if (dir === 'left') {
-        selectedImage.index !== images.length - 1 &&
-          setSelectedImage({
-            image: images[selectedImage.index + 1],
-            index: selectedImage.index + 1,
-          })
-      } else if (dir === 'right') {
-        selectedImage.index > 0 &&
-          setSelectedImage({
-            image: images[selectedImage.index - 1],
-            index: selectedImage.index - 1,
-          })
-      }
-    })
+    if (gestureZone) {
+      swipeDetect(gestureZone, (dir: string) => {
+        if (dir === 'left') {
+          selectedImage.index !== images.length - 1 &&
+            setSelectedImage({
+              image: images[selectedImage.index + 1],
+              index: selectedImage.index + 1,
+            })
+        } else if (dir === 'right') {
+          selectedImage.index > 0 &&
+            setSelectedImage({
+              image: images[selectedImage.index - 1],
+              index: selectedImage.index - 1,
+            })
+        }
+      })
+    }
   }
 
   const isScrollAtBottom = (element?: HTMLElement) => {
