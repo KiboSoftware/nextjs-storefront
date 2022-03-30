@@ -63,7 +63,7 @@ const ColorOptions = (props: ColorOptionsProps) => {
   return isEnabled ? <>{chipCustom}</> : <Tooltip title="Not available !">{chipCustom}</Tooltip>
 }
 
-const KiboColorPicker = ({ attributeFQN, values, onChange }: ProductVariantColorSelectorProps) => {
+const ColorSelector = ({ attributeFQN, values, onChange }: ProductVariantColorSelectorProps) => {
   return (
     <Box display="flex" flexWrap="wrap" gap={2} data-testid="color-selector">
       {values?.map((option, index) => (
@@ -81,4 +81,4 @@ const KiboColorPicker = ({ attributeFQN, values, onChange }: ProductVariantColor
   )
 }
 
-export default KiboColorPicker
+export default ColorSelector
