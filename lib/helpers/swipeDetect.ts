@@ -44,6 +44,6 @@ export function swipeDetect(gestureZone: HTMLElement, callback: (dir: string) =>
       return 'up'
     }
 
-    return 'wrong'
+    return ''
   }
 }

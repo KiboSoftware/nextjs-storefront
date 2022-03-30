@@ -52,6 +52,24 @@ describe('[component] ImageGallery component', () => {
       expect(downArrowButton).toBeVisible()
     })
 
+    it('should call handleVerticalSlider if clicked on downArrowButton', async () => {
+      setupGallery()
+
+      Element.prototype.scrollBy = jest.fn()
+
+      const downArrowButton = screen.getByRole('button', {
+        name: /down/i,
+      })
+
+      userEvent.click(downArrowButton)
+
+      const upArrowButton = await screen.findByRole('button', {
+        name: /up/i,
+      })
+
+      expect(upArrowButton).toBeVisible()
+    })
+
     it('should change the selected thumbnail on click', () => {
       setupGallery()
 
@@ -100,7 +118,7 @@ describe('[component] ImageGallery component', () => {
       expect(thumbnails[0]).toHaveAttribute('aria-selected', 'true')
     })
 
-    it('should render zoom controls', () => {
+    it('should render zoom controls and call the respective functions', () => {
       setupZoomedGallery()
 
       const reset = screen.getByRole('button', {

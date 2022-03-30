@@ -62,7 +62,7 @@ const ImageGallery = ({
 
   // Mobile: handle touch swipe
   const handleSwipe = () => {
-    const gestureZone = document.getElementById('swipe')
+    const gestureZone = document.getElementById('gestureZone')
     if (gestureZone) {
       swipeDetect(gestureZone, (dir: string) => {
         if (dir === 'left') {
@@ -114,7 +114,12 @@ const ImageGallery = ({
   const maxHeight = initialThumbnailDisplayCount * 119 + initialThumbnailDisplayCount * 12 + 60
 
   return (
-    <Box id="swipe" component={'div'} onTouchStartCapture={handleSwipe}>
+    <Box
+      id="gestureZone"
+      component={'div'}
+      onTouchStartCapture={handleSwipe}
+      data-testid="gestureZone"
+    >
       {/* Title section */}
       <Box
         display={isZoomed ? 'flex' : 'none'}
@@ -146,7 +151,7 @@ const ImageGallery = ({
               <Box textAlign={'center'}>
                 <IconButton
                   aria-label="up"
-                  sx={{ visibility: showArrow.up ? 'visible' : 'hidden' }}
+                  // sx={{ visibility: showArrow.up ? 'visible' : 'hidden' }}
                   onClick={() => handleVerticalSlider(true)}
                   size="large"
                 >
