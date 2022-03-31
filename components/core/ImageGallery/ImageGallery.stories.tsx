@@ -11,14 +11,14 @@ export default {
   args: imageGalleryData,
 } as ComponentMeta<typeof ImageGallery>
 
-const Template: ComponentStory<typeof ImageGallery> = (args) => <ImageGallery {...args} />
+const Template: ComponentStory<typeof ImageGallery> = (args: any) => <ImageGallery {...args} />
 
 export const Gallery = Template.bind({})
 
 export const CustomMaximumThumbnailCount = Template.bind({})
 
 CustomMaximumThumbnailCount.args = {
-  initialThumbnailDisplayCount: 3,
+  thumbnailDisplayCount: 3,
 }
 
 export const OneImage = Template.bind({})

@@ -12,6 +12,7 @@ import {
 } from '@mui/icons-material'
 import { IconButton, Stack, Typography } from '@mui/material'
 import { Box } from '@mui/system'
+import { useTranslation } from 'next-i18next'
 import { TransformWrapper, TransformComponent } from 'react-zoom-pan-pinch'
 
 import KiboImage from '@/components/common/KiboImage/KiboImage'
@@ -24,9 +25,12 @@ interface ImageGalleryProps {
   images: ProductImage[]
   title: string
   isZoomed?: boolean
-  initialThumbnailDisplayCount?: number
+  thumbnailDisplayCount?: number
   placeholderImageUrl?: string
 }
+
+const NumberOfPxToScroll = 136
+const ThumbnailDimensionInPx = 119
 
 const styles = {
   dots: {
@@ -40,51 +44,50 @@ const styles = {
   },
 }
 
-const ImageGallery = ({
-  images,
-  title,
-  isZoomed = false,
-  initialThumbnailDisplayCount = 4,
-  placeholderImageUrl = DefaultImage,
-}: ImageGalleryProps) => {
+const ImageGallery = (props: ImageGalleryProps) => {
+  const {
+    images,
+    title,
+    isZoomed = false,
+    thumbnailDisplayCount = 4,
+    placeholderImageUrl = DefaultImage,
+  } = props
+
+  const { t } = useTranslation('common')
+
   const [selectedImage, setSelectedImage] = useState({
-    image: images[0],
-    index: 0,
+    selectedIndex: 0,
   })
 
   // handle if vertical slider arrow should be visible or not
   const [showArrow, setArrowVisibility] = useState({
     up: false,
-    down: images?.length > initialThumbnailDisplayCount,
+    down: images?.length > thumbnailDisplayCount,
   })
 
-  const scrollContainerRef = useRef<HTMLDivElement>()
+  const scrollContainerRef = useRef<HTMLDivElement | null>(null)
 
   // Mobile: handle touch swipe
   const handleSwipe = () => {
     const gestureZone = document.getElementById('gestureZone')
     if (gestureZone) {
       swipeDetect(gestureZone, (dir: string) => {
-        if (dir === 'left') {
-          selectedImage.index !== images.length - 1 &&
-            setSelectedImage({
-              image: images[selectedImage.index + 1],
-              index: selectedImage.index + 1,
-            })
-        } else if (dir === 'right') {
-          selectedImage.index > 0 &&
-            setSelectedImage({
-              image: images[selectedImage.index - 1],
-              index: selectedImage.index - 1,
-            })
+        if (dir === 'left' && selectedImage.selectedIndex !== images.length - 1) {
+          setSelectedImage({
+            selectedIndex: selectedImage.selectedIndex + 1,
+          })
+        } else if (dir === 'right' && selectedImage.selectedIndex > 0) {
+          setSelectedImage({
+            selectedIndex: selectedImage.selectedIndex - 1,
+          })
         }
       })
     }
   }
 
-  const isScrollAtBottom = (element?: HTMLElement) => {
+  const isScrollAtBottom = (element?: HTMLElement | null) => {
     if (element) {
-      return element.scrollHeight - (element.scrollTop + element.clientHeight) < 136
+      return element.scrollHeight - (element.scrollTop + element.clientHeight) < NumberOfPxToScroll
     }
   }
 
@@ -93,7 +96,7 @@ const ImageGallery = ({
     const scrollableDiv = scrollContainerRef.current
 
     scrollableDiv?.scrollBy({
-      top: isDirectionUp ? -136 : 136,
+      top: isDirectionUp ? -NumberOfPxToScroll : NumberOfPxToScroll,
       behavior: 'smooth',
     })
 
@@ -101,7 +104,7 @@ const ImageGallery = ({
       isDirectionUp
         ? {
             // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-            up: scrollableDiv!.scrollTop > 136,
+            up: scrollableDiv!.scrollTop > NumberOfPxToScroll,
             down: true,
           }
         : {
@@ -111,7 +114,7 @@ const ImageGallery = ({
     )
   }
 
-  const maxHeight = initialThumbnailDisplayCount * 119 + initialThumbnailDisplayCount * 12 + 60
+  const maxHeight = thumbnailDisplayCount * ThumbnailDimensionInPx + thumbnailDisplayCount * 12 + 60
 
   return (
     <Box
@@ -138,7 +141,7 @@ const ImageGallery = ({
         {/* Vertical slider secton start */}
         <Box
           width="10%"
-          minWidth={119}
+          minWidth={ThumbnailDimensionInPx}
           sx={{
             display: {
               xs: 'none',
@@ -149,12 +152,7 @@ const ImageGallery = ({
           <Stack spacing={1}>
             {showArrow.up && (
               <Box textAlign={'center'}>
-                <IconButton
-                  aria-label="up"
-                  // sx={{ visibility: showArrow.up ? 'visible' : 'hidden' }}
-                  onClick={() => handleVerticalSlider(true)}
-                  size="large"
-                >
+                <IconButton aria-label="up" onClick={() => handleVerticalSlider(true)} size="large">
                   <KeyboardArrowUp fontSize="large" />
                 </IconButton>
               </Box>
@@ -177,21 +175,20 @@ const ImageGallery = ({
                   <Box
                     key={image?.altText}
                     component="div"
-                    width={119}
-                    minHeight={119}
+                    width={ThumbnailDimensionInPx}
+                    minHeight={ThumbnailDimensionInPx}
                     position="relative"
                     sx={{
-                      borderWidth: i === selectedImage.index ? 3 : 1,
+                      borderWidth: i === selectedImage.selectedIndex ? 3 : 1,
                       borderStyle: 'solid',
                       borderColor: 'grey.600',
                       cursor: 'pointer',
                     }}
                     aria-label={image?.altText || ''}
-                    aria-selected={i === selectedImage.index}
+                    aria-selected={i === selectedImage.selectedIndex}
                     onClick={() =>
                       setSelectedImage({
-                        image: image,
-                        index: i,
+                        selectedIndex: i,
                       })
                     }
                   >
@@ -226,11 +223,10 @@ const ImageGallery = ({
           <Box display={isZoomed ? 'flex' : 'none'} alignItems="center">
             <IconButton
               aria-label="previous"
-              disabled={selectedImage.index < 1}
+              disabled={selectedImage.selectedIndex < 1}
               onClick={() =>
                 setSelectedImage({
-                  image: images[selectedImage.index - 1],
-                  index: selectedImage.index - 1,
+                  selectedIndex: selectedImage.selectedIndex - 1,
                 })
               }
             >
@@ -292,11 +288,14 @@ const ImageGallery = ({
                     position="relative"
                   >
                     <KiboImage
-                      src={(selectedImage.image?.imageUrl as string) || placeholderImageUrl}
-                      alt={selectedImage.image?.altText as string}
+                      src={
+                        (images[selectedImage.selectedIndex]?.imageUrl as string) ||
+                        placeholderImageUrl
+                      }
+                      alt={images[selectedImage.selectedIndex]?.altText as string}
                       layout="fill"
                       objectFit="contain"
-                      data-testid="selected-image"
+                      data-testid={`selected-image`}
                     />
                   </Box>
                 </TransformComponent>
@@ -308,11 +307,10 @@ const ImageGallery = ({
           <Box display={isZoomed ? 'flex' : 'none'} alignItems="center">
             <IconButton
               aria-label="next"
-              disabled={selectedImage.index == images.length - 1}
+              disabled={selectedImage.selectedIndex == images.length - 1}
               onClick={() =>
                 setSelectedImage({
-                  image: images[selectedImage.index + 1],
-                  index: selectedImage.index + 1,
+                  selectedIndex: selectedImage.selectedIndex + 1,
                 })
               }
             >
@@ -340,12 +338,11 @@ const ImageGallery = ({
             key={i}
             sx={{
               ...styles.dots,
-              backgroundColor: i === selectedImage.index ? 'text.primary' : 'grey.500',
+              backgroundColor: i === selectedImage.selectedIndex ? 'text.primary' : 'grey.500',
             }}
             onClick={() =>
               setSelectedImage({
-                image: dot,
-                index: i,
+                selectedIndex: i,
               })
             }
           ></Box>
@@ -365,7 +362,7 @@ const ImageGallery = ({
         }}
       >
         <Box sx={{ backgroundColor: 'text.primary', color: 'common.white', padding: '5% 10%' }}>
-          <Typography variant="body1">Pinch Image to Zoom</Typography>
+          <Typography variant="body1">{t('pinch-image-to-zoom')}</Typography>
         </Box>
       </Box>
     </Box>

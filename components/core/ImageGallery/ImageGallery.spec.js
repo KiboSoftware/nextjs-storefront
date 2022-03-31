@@ -4,6 +4,7 @@ import { composeStories } from '@storybook/testing-react'
 import { render, screen } from '@testing-library/react'
 import '@testing-library/jest-dom'
 import userEvent from '@testing-library/user-event'
+import { act } from 'react-dom/test-utils'
 
 import { imageGalleryData } from '../../../__mocks__/imageGalleryDataMock'
 import * as stories from './ImageGallery.stories'
@@ -16,6 +17,57 @@ const setupGallery = () => {
 
 const setupZoomedGallery = () => {
   render(<Zoomed {...Zoomed.args} />)
+}
+
+const setUpTouchElement = () => {
+  Element.prototype.getBoundingClientRect = jest.fn(() => {
+    return {
+      width: 300,
+      height: 300,
+      top: 0,
+      left: 0,
+      bottom: 0,
+      right: 0,
+    }
+  })
+}
+
+const createTouchStartEvent = (value) => {
+  return new TouchEvent('touchstart', {
+    changedTouches: [value],
+  })
+}
+
+const createTouchEndEvent = (value) => {
+  return new TouchEvent('touchend', {
+    changedTouches: [value],
+  })
+}
+
+const setUpLeftSwipe = () => {
+  return {
+    touchStartEvent: createTouchStartEvent({
+      screenX: 210,
+      screenY: 248,
+    }),
+    touchEndEvent: createTouchEndEvent({
+      screenX: 118,
+      screenY: 254,
+    }),
+  }
+}
+
+const setUpRightSwipe = () => {
+  return {
+    touchStartEvent: createTouchStartEvent({
+      screenX: 80,
+      screenY: 280,
+    }),
+    touchEndEvent: createTouchEndEvent({
+      screenX: 200,
+      screenY: 287,
+    }),
+  }
 }
 
 describe('[component] ImageGallery component', () => {
@@ -37,7 +89,7 @@ describe('[component] ImageGallery component', () => {
     it('should render the selected image', () => {
       setupGallery()
 
-      const selectedImage = screen.getByTestId(/selected-image/)
+      const selectedImage = screen.getByTestId(/selected-image/i)
 
       expect(selectedImage).toBeVisible()
     })
@@ -86,6 +138,39 @@ describe('[component] ImageGallery component', () => {
         if (i === 1) expect(thumbnail).toHaveAttribute('aria-selected', 'true')
         else expect(thumbnail).toHaveAttribute('aria-selected', 'false')
       })
+    })
+
+    it('should call handleSwipe method on touch swipe', () => {
+      setupGallery()
+      setUpTouchElement()
+
+      let initialImage = screen.getByTestId(/selected-image/)
+
+      expect(initialImage).toHaveAttribute('alt', Gallery.args.images[0].altText)
+
+      const element = screen.getByTestId('gestureZone')
+
+      // testing left swipe
+      const { touchStartEvent: leftStart, touchEndEvent: leftEnd } = setUpLeftSwipe()
+
+      act(() => {
+        element.dispatchEvent(leftStart)
+        element.dispatchEvent(leftEnd)
+      })
+
+      initialImage = screen.getByTestId(/selected-image/)
+      expect(initialImage).toHaveAttribute('alt', Gallery.args.images[1].altText)
+
+      // testing right swipe
+      const { touchStartEvent: rightStart, touchEndEvent: rightEnd } = setUpRightSwipe()
+
+      act(() => {
+        element.dispatchEvent(rightStart)
+        element.dispatchEvent(rightEnd)
+      })
+
+      initialImage = screen.getByTestId(/selected-image/)
+      expect(initialImage).toHaveAttribute('alt', Gallery.args.images[0].altText)
     })
   })
 

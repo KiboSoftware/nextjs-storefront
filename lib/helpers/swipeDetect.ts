@@ -1,4 +1,4 @@
-export function swipeDetect(gestureZone: HTMLElement, callback: (dir: string) => void) {
+export const swipeDetect = (gestureZone: HTMLElement, callback: (dir: string) => void) => {
   let touchstartX = 0
   let touchstartY = 0
   let touchendX = 0
@@ -25,7 +25,7 @@ export function swipeDetect(gestureZone: HTMLElement, callback: (dir: string) =>
     false
   )
 
-  function handleGesture() {
+  const handleGesture = () => {
     const { width, height } = gestureZone.getBoundingClientRect()
 
     const ratio_horizontal = (touchendX - touchstartX) / width
