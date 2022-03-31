@@ -73,13 +73,9 @@ const ImageGallery = (props: ImageGalleryProps) => {
     if (gestureZone) {
       swipeDetect(gestureZone, (dir: string) => {
         if (dir === 'left' && selectedImage.selectedIndex !== images.length - 1) {
-          setSelectedImage({
-            selectedIndex: selectedImage.selectedIndex + 1,
-          })
+          setSelectedImage({ selectedIndex: selectedImage.selectedIndex + 1 })
         } else if (dir === 'right' && selectedImage.selectedIndex > 0) {
-          setSelectedImage({
-            selectedIndex: selectedImage.selectedIndex - 1,
-          })
+          setSelectedImage({ selectedIndex: selectedImage.selectedIndex - 1 })
         }
       })
     }
@@ -186,11 +182,7 @@ const ImageGallery = (props: ImageGalleryProps) => {
                     }}
                     aria-label={image?.altText || ''}
                     aria-selected={i === selectedImage.selectedIndex}
-                    onClick={() =>
-                      setSelectedImage({
-                        selectedIndex: i,
-                      })
-                    }
+                    onClick={() => setSelectedImage({ selectedIndex: i })}
                   >
                     <KiboImage
                       src={image?.imageUrl as string}
@@ -224,11 +216,7 @@ const ImageGallery = (props: ImageGalleryProps) => {
             <IconButton
               aria-label="previous"
               disabled={selectedImage.selectedIndex < 1}
-              onClick={() =>
-                setSelectedImage({
-                  selectedIndex: selectedImage.selectedIndex - 1,
-                })
-              }
+              onClick={() => setSelectedImage({ selectedIndex: selectedImage.selectedIndex - 1 })}
             >
               <ArrowBackIos />
             </IconButton>
@@ -308,11 +296,7 @@ const ImageGallery = (props: ImageGalleryProps) => {
             <IconButton
               aria-label="next"
               disabled={selectedImage.selectedIndex == images.length - 1}
-              onClick={() =>
-                setSelectedImage({
-                  selectedIndex: selectedImage.selectedIndex + 1,
-                })
-              }
+              onClick={() => setSelectedImage({ selectedIndex: selectedImage.selectedIndex + 1 })}
             >
               <ArrowForwardIos />
             </IconButton>
@@ -333,18 +317,14 @@ const ImageGallery = (props: ImageGalleryProps) => {
           justifyContent: 'center',
         }}
       >
-        {images.map((dot, i) => (
+        {images.map((_, i) => (
           <Box
             key={i}
             sx={{
               ...styles.dots,
               backgroundColor: i === selectedImage.selectedIndex ? 'text.primary' : 'grey.500',
             }}
-            onClick={() =>
-              setSelectedImage({
-                selectedIndex: i,
-              })
-            }
+            onClick={() => setSelectedImage({ selectedIndex: i })}
           ></Box>
         ))}
       </Box>
