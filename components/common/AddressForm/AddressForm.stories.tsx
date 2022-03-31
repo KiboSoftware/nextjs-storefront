@@ -8,18 +8,32 @@ import AddressForm, { Data, Contact } from './AddressForm'
 export default {
   component: AddressForm,
   title: 'Common/AddressForm',
+  argTypes: { onSave: { action: 'clicked' } },
 } as ComponentMeta<typeof AddressForm>
 
 const Template: ComponentStory<typeof AddressForm> = (args) => {
   type AddressFormHandler = ElementRef<typeof AddressForm>
   const ref = useRef<AddressFormHandler | null>(null)
+
+  const countries = ['US', 'AT', 'DE', 'NL']
+  const saveAddressLabel = 'Save shipping address'
   const handleSave = (data: Data) => console.log('data: ', data)
   const handleClick = () => {
     if (!ref.current) return
     ref.current.listener()
   }
 
-  const props = args ? args : { isUserLoggedIn: false, onSave: handleSave, ref: ref }
+  const props = args
+    ? args
+    : {
+        contact: undefined,
+        countries: countries,
+        isUserLoggedIn: false,
+        saveAddressLabel: saveAddressLabel,
+        onSave: handleSave,
+        ref: ref,
+      }
+
   return (
     <div>
       <AddressForm {...props} />

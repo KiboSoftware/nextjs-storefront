@@ -26,24 +26,26 @@ import * as yup from 'yup'
 
 import KiboTextField from '../KiboTextBox/KiboTextBox'
 
+import type { Maybe, Scalars } from '@/lib/gql/types'
+
 // Interface
 export interface Contact {
-  id?: number
-  firstName: string
-  lastNameOrSurname: string
-  middleNameOrInitial?: string
-  email?: string
+  id?: Maybe<Scalars['Int']>
+  firstName: Maybe<Scalars['String']>
+  lastNameOrSurname: Maybe<Scalars['String']>
+  middleNameOrInitial?: Maybe<Scalars['String']>
+  email?: Maybe<Scalars['String']>
   address: {
-    address1: string
-    address2: string
-    address3?: string
-    address4?: string
-    addressType?: string
-    cityOrTown: string
-    countryCode: string
-    isValidated?: boolean
-    postalOrZipCode: string
-    stateOrProvince: string
+    address1: Maybe<Scalars['String']>
+    address2: Maybe<Scalars['String']>
+    address3?: Maybe<Scalars['String']>
+    address4?: Maybe<Scalars['String']>
+    addressType?: Maybe<Scalars['String']>
+    cityOrTown: Maybe<Scalars['String']>
+    countryCode: Maybe<Scalars['String']>
+    isValidated?: Maybe<Scalars['Boolean']>
+    postalOrZipCode: Maybe<Scalars['String']>
+    stateOrProvince: Maybe<Scalars['String']>
   }
   phoneNumbers: {
     home: string
@@ -54,19 +56,19 @@ export interface Contact {
 export interface Data {
   isFormValid: boolean
   contact: Contact
-  saveShippingAddress: boolean
+  saveAddress: boolean
 }
-
+interface AddressFormProps {
+  contact?: Contact
+  countries: string[]
+  isUserLoggedIn: boolean
+  saveAddressLabel?: string
+  onSave: (data: Data) => void
+}
 interface AddressFormHandler {
   listener: () => void
 }
-
 type KiboTextFieldHandler = ElementRef<typeof KiboTextField>
-interface AddressFormProps {
-  contact?: Contact
-  isUserLoggedIn: boolean
-  onSave: (data: Data) => void
-}
 
 // Component
 const schema = yup.object().shape({
@@ -86,10 +88,9 @@ const schema = yup.object().shape({
 })
 
 const AddressForm = forwardRef<AddressFormHandler, AddressFormProps>((props, ref) => {
-  const { contact, isUserLoggedIn, onSave } = props
+  const { contact, countries = [], isUserLoggedIn = false, saveAddressLabel, onSave } = props
 
   // Define Variables and States
-  const countries = ['US', 'AT', 'DE', 'NL']
   const {
     getValues,
     formState: { errors, isValid },
@@ -103,8 +104,8 @@ const AddressForm = forwardRef<AddressFormHandler, AddressFormProps>((props, ref
     shouldFocusError: true,
   })
 
-  // Declare you custom hooks, functions, event handlers
-  const [saveShippingAddress, setSaveShippingAddress] = useState(false)
+  // Declare custom hooks, functions, event handlers
+  const [saveAddress, setSaveAddress] = useState<boolean>(false)
   const firstNameRef = useRef<KiboTextFieldHandler | null>(null)
   const { t }: { t: any } = useTranslation('common')
 
@@ -127,7 +128,7 @@ const AddressForm = forwardRef<AddressFormHandler, AddressFormProps>((props, ref
     const data = {
       isFormValid: isValid,
       contact: getValues(),
-      saveShippingAddress,
+      saveAddress,
     }
 
     onSave(data)
@@ -355,10 +356,8 @@ const AddressForm = forwardRef<AddressFormHandler, AddressFormProps>((props, ref
         {isUserLoggedIn && (
           <Grid item md={12}>
             <FormControlLabel
-              control={
-                <Checkbox onChange={() => setSaveShippingAddress((prevState) => !prevState)} />
-              }
-              label={t('save-shipping-address')}
+              control={<Checkbox onChange={() => setSaveAddress((prevState) => !prevState)} />}
+              label={saveAddressLabel as string}
             />
           </Grid>
         )}
