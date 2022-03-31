@@ -51,11 +51,9 @@ const KiboTextBox = ({
 }: KiboTextBoxProps) => {
   return (
     <FormControl variant="standard" error={error} required={required} {...rest} fullWidth>
-      {label && (
-        <InputLabel shrink htmlFor="kibo-input">
-          {label}
-        </InputLabel>
-      )}
+      <InputLabel shrink htmlFor="kibo-input">
+        {label}
+      </InputLabel>
       <KiboInput
         id="kibo-input"
         size="small"
@@ -70,7 +68,7 @@ const KiboTextBox = ({
       />
       {error && (
         <FormHelperText id="helper-text" error aria-errormessage={helperText}>
-          {helperText}
+          {error ? helperText : ''}
         </FormHelperText>
       )}
     </FormControl>

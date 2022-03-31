@@ -11,7 +11,7 @@ export default {
   argTypes: { onChange: { action: 'onChange' } },
 } as ComponentMeta<typeof KiboSelect>
 
-const Template: ComponentStory<typeof KiboSelect> = (args) => (
+const Template: ComponentStory<typeof KiboSelect> = (args: any) => (
   <KiboSelect {...args}>
     <MenuItem value="1">Option 1</MenuItem>
     <MenuItem value="2">Option 2</MenuItem>

@@ -10,7 +10,7 @@ export default {
   argTypes: { onChange: { action: 'onChange' } },
 } as ComponentMeta<typeof KiboTextBox>
 
-const Template: ComponentStory<typeof KiboTextBox> = (args) => <KiboTextBox {...args} />
+const Template: ComponentStory<typeof KiboTextBox> = (args: any) => <KiboTextBox {...args} />
 
 export const WithLabel = Template.bind({})
 

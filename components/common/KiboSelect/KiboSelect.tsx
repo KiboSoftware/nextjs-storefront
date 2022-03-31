@@ -1,4 +1,4 @@
-import { MenuItem, OutlinedInput } from '@mui/material'
+import { InputLabel, MenuItem, OutlinedInput } from '@mui/material'
 import { FormControl, FormHelperText, Select } from '@mui/material'
 import { useTranslation } from 'next-i18next'
 
@@ -8,6 +8,7 @@ interface KiboSelectProps {
   helperText?: string
   error?: boolean
   placeholder?: string
+  label?: string
   children: any
   onChange: (name: string, value: string) => void
 }
@@ -32,13 +33,17 @@ const KiboSelect = (props: KiboSelectProps) => {
     helperText = '',
     error = false,
     placeholder = t('select-option'),
+    label,
     children,
     onChange,
     ...rest
   } = props
 
   return (
-    <FormControl sx={{ minWidth: 120 }} size="small" fullWidth variant="outlined">
+    <FormControl sx={{ minWidth: 120, marginTop: 3 }} size="small" fullWidth variant="outlined">
+      <InputLabel shrink htmlFor="kibo-input" sx={{ top: -18, left: -13 }}>
+        {label}
+      </InputLabel>
       <Select
         size="small"
         displayEmpty
@@ -57,11 +62,9 @@ const KiboSelect = (props: KiboSelectProps) => {
         </MenuItem>
         {children}
       </Select>
-      {error && (
-        <FormHelperText error={error} data-testid="helper-text" sx={{ margin: '3px 0' }}>
-          {helperText}
-        </FormHelperText>
-      )}
+      <FormHelperText error={error} data-testid="helper-text" sx={{ margin: '3px 0' }}>
+        {error ? helperText : ''}
+      </FormHelperText>
     </FormControl>
   )
 }
