@@ -22,7 +22,7 @@ describe('[component] KiboSelect component', () => {
     expect(errorhelperText).toBeVisible()
   })
 
-  it('should display the error description if passed when error is true', () => {
+  it('should call onChange method if option selected ', () => {
     const onChangeMock = jest.fn()
     render(<Common {...Common.args} onChange={onChangeMock} />)
     const selectButton = screen.getByRole('button')
@@ -34,7 +34,6 @@ describe('[component] KiboSelect component', () => {
     fireEvent.click(listbox.getByText(/option 2/i))
 
     expect(selectButton).toHaveTextContent(/option 2/i)
-    expect(onChangeMock).toBeCalled()
     expect(onChangeMock).toBeCalledWith('kibo-select', '2')
   })
 })

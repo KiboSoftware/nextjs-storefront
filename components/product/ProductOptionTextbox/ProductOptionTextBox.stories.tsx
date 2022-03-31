@@ -12,7 +12,7 @@ export default {
   argTypes: { onChange: { action: 'onChange' } },
 } as ComponentMeta<typeof ProductOptionTextBox>
 
-const Template: ComponentStory<typeof ProductOptionTextBox> = (args) => {
+const Template: ComponentStory<typeof ProductOptionTextBox> = (args: any) => {
   const { onChange } = args
   return (
     <Box display={'flex'} flexDirection="column" gap={2}>

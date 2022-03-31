@@ -50,17 +50,4 @@ describe('[component] KiboTextbox component', () => {
 
     expect(onChangeMock).toHaveBeenCalledTimes(4)
   })
-
-  it('should call handleChange method when user input data', () => {
-    const handleChange = jest.fn()
-    render(<WithLabel {...WithLabel.args} handleChange={handleChange} />)
-    const input = screen.getByRole('textbox', {
-      name: WithLabel.args.label,
-    })
-
-    userEvent.type(input, 'Test')
-
-    expect(onChangeMock).toHaveBeenCalled()
-    expect(onChangeMock).toHaveBeenCalledWith('Test')
-  })
 })
