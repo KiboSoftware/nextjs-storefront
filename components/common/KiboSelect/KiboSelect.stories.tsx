@@ -22,6 +22,12 @@ Common.args = {
   name: 'kibo-select',
 }
 
+export const WithLabel = Template.bind({})
+
+WithLabel.args = {
+  label: 'Select your option',
+}
+
 export const WithCustomPlaceholder = Template.bind({})
 
 WithCustomPlaceholder.args = {

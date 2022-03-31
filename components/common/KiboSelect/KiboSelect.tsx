@@ -32,7 +32,7 @@ const KiboSelect = (props: KiboSelectProps) => {
     value = '',
     helperText = '',
     error = false,
-    placeholder = t('select-option'),
+    placeholder,
     label,
     children,
     onChange,
