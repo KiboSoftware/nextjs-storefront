@@ -1,19 +1,16 @@
-import { forwardRef, useImperativeHandle, useRef } from 'react'
+import React from 'react'
 
 import { FormControl, FormHelperText, InputBase, InputLabel } from '@mui/material'
 import { alpha, styled } from '@mui/material/styles'
 
-interface KiboTextBoxHandler {
-  setFocus: () => void
-}
 interface KiboTextBoxProps {
   label?: string
-  value?: string
+  value?: string | null
   required?: boolean
   error?: boolean
   helperText?: string
   placeholder?: string
-  onChange: () => void
+  onChange: (name: string, value: string) => void
 
   /* eslint-disable  @typescript-eslint/no-explicit-any */
   [x: string]: any
@@ -42,7 +39,7 @@ const KiboInput = styled(InputBase)(({ theme, error }) => ({
   },
 }))
 
-const KiboTextBox = forwardRef<KiboTextBoxHandler, KiboTextBoxProps>((props, ref) => {
+const KiboTextBox = (props: KiboTextBoxProps) => {
   const {
     label,
     value,
@@ -54,16 +51,6 @@ const KiboTextBox = forwardRef<KiboTextBoxHandler, KiboTextBoxProps>((props, ref
     onKeyDown,
     ...rest
   } = props
-  const inputref = useRef<HTMLInputElement | null>(null)
-
-  const setFocus = () => {
-    if (!inputref.current) return
-    inputref.current.focus()
-  }
-
-  useImperativeHandle(ref, () => ({
-    setFocus,
-  }))
 
   return (
     <FormControl variant="standard" error={error} required={required} {...rest} fullWidth>
@@ -79,9 +66,8 @@ const KiboTextBox = forwardRef<KiboTextBoxHandler, KiboTextBoxProps>((props, ref
         }}
         defaultValue={value}
         placeholder={placeholder}
-        onChange={onChange}
+        onChange={(e) => onChange(e.target.name, e.target.value)}
         onKeyDown={onKeyDown}
-        inputRef={inputref}
         {...rest}
       />
 
@@ -90,7 +76,6 @@ const KiboTextBox = forwardRef<KiboTextBoxHandler, KiboTextBoxProps>((props, ref
       </FormHelperText>
     </FormControl>
   )
-})
+}
 
-KiboTextBox.displayName = 'KiboTextBox'
 export default KiboTextBox

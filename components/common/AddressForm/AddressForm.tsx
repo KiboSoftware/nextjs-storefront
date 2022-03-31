@@ -1,13 +1,5 @@
 /* eslint-disable  @typescript-eslint/no-explicit-any */
-import React, {
-  useState,
-  useEffect,
-  useRef,
-  forwardRef,
-  useImperativeHandle,
-  ElementRef,
-  ChangeEvent,
-} from 'react'
+import React, { useState, forwardRef, useImperativeHandle } from 'react'
 
 import { yupResolver } from '@hookform/resolvers/yup'
 import {
@@ -68,7 +60,6 @@ interface AddressFormProps {
 interface AddressFormHandler {
   listener: () => void
 }
-type KiboTextFieldHandler = ElementRef<typeof KiboTextField>
 
 // Component
 const schema = yup.object().shape({
@@ -106,13 +97,7 @@ const AddressForm = forwardRef<AddressFormHandler, AddressFormProps>((props, ref
 
   // Declare custom hooks, functions, event handlers
   const [saveAddress, setSaveAddress] = useState<boolean>(false)
-  const firstNameRef = useRef<KiboTextFieldHandler | null>(null)
   const { t }: { t: any } = useTranslation('common')
-
-  const setFocus = () => {
-    if (!firstNameRef.current) return
-    firstNameRef.current.setFocus()
-  }
 
   const generateSelectOptions = () =>
     countries.map((country) => {
@@ -144,10 +129,6 @@ const AddressForm = forwardRef<AddressFormHandler, AddressFormProps>((props, ref
   }
 
   // Declare your useEffects, useCallback, etc
-  useEffect(() => {
-    setFocus()
-  }, [])
-
   useImperativeHandle(ref, () => ({
     listener,
   }))
@@ -170,14 +151,13 @@ const AddressForm = forwardRef<AddressFormHandler, AddressFormProps>((props, ref
             render={({ field }) => (
               <KiboTextField
                 {...field}
+                ref={null}
                 label={t('first-name')}
                 error={!!errors?.firstName}
                 helperText={errors?.firstName?.message}
-                onChange={(e: ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) =>
-                  field.onChange(e.target.value)
-                }
+                onChange={(name, value) => field.onChange(value)}
                 onKeyDown={handleEnter}
-                ref={firstNameRef}
+                autoFocus={true}
               />
             )}
           />
@@ -191,12 +171,11 @@ const AddressForm = forwardRef<AddressFormHandler, AddressFormProps>((props, ref
             render={({ field }) => (
               <KiboTextField
                 {...field}
+                ref={null}
                 label={t('last-name-or-sur-name')}
                 error={!!errors?.lastNameOrSurname}
                 helperText={errors?.lastNameOrSurname?.message}
-                onChange={(e: ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) =>
-                  field.onChange(e.target.value)
-                }
+                onChange={(name, value) => field.onChange(value)}
                 onKeyDown={handleEnter}
               />
             )}
@@ -211,12 +190,11 @@ const AddressForm = forwardRef<AddressFormHandler, AddressFormProps>((props, ref
             render={({ field }) => (
               <KiboTextField
                 {...field}
+                ref={null}
                 label={t('address1')}
                 error={!!errors?.address?.address1}
                 helperText={errors?.address?.address1?.message}
-                onChange={(e: ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) =>
-                  field.onChange(e.target.value)
-                }
+                onChange={(name, value) => field.onChange(value)}
                 onKeyDown={handleEnter}
               />
             )}
@@ -231,12 +209,11 @@ const AddressForm = forwardRef<AddressFormHandler, AddressFormProps>((props, ref
             render={({ field }) => (
               <KiboTextField
                 {...field}
+                ref={null}
                 label={t('address2')}
                 error={!!errors?.address?.address2}
                 helperText={errors?.address?.address2?.message}
-                onChange={(e: ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) =>
-                  field.onChange(e.target.value)
-                }
+                onChange={(name, value) => field.onChange(value)}
                 onKeyDown={handleEnter}
               />
             )}
@@ -251,12 +228,11 @@ const AddressForm = forwardRef<AddressFormHandler, AddressFormProps>((props, ref
             render={({ field }) => (
               <KiboTextField
                 {...field}
+                ref={null}
                 label={t('city-or-town')}
                 error={!!errors?.address?.cityOrTown}
                 helperText={errors?.address?.cityOrTown?.message}
-                onChange={(e: ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) =>
-                  field.onChange(e.target.value)
-                }
+                onChange={(name, value) => field.onChange(value)}
                 onKeyDown={handleEnter}
               />
             )}
@@ -271,12 +247,11 @@ const AddressForm = forwardRef<AddressFormHandler, AddressFormProps>((props, ref
             render={({ field }) => (
               <KiboTextField
                 {...field}
+                ref={null}
                 label={t('state-or-province')}
                 error={!!errors?.address?.stateOrProvince}
                 helperText={errors?.address?.stateOrProvince?.message}
-                onChange={(e: ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) =>
-                  field.onChange(e.target.value)
-                }
+                onChange={(name, value) => field.onChange(value)}
                 onKeyDown={handleEnter}
               />
             )}
@@ -291,12 +266,11 @@ const AddressForm = forwardRef<AddressFormHandler, AddressFormProps>((props, ref
             render={({ field }) => (
               <KiboTextField
                 {...field}
+                ref={null}
                 label={t('postal-or-zip-code')}
                 error={!!errors?.address?.postalOrZipCode}
                 helperText={errors?.address?.postalOrZipCode?.message}
-                onChange={(e: ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) =>
-                  field.onChange(e.target.value)
-                }
+                onChange={(name, value) => field.onChange(value)}
                 onKeyDown={handleEnter}
               />
             )}
@@ -341,12 +315,11 @@ const AddressForm = forwardRef<AddressFormHandler, AddressFormProps>((props, ref
             render={({ field }) => (
               <KiboTextField
                 {...field}
+                ref={null}
                 label={t('phone-number-home')}
                 error={!!errors?.phoneNumbers?.home}
                 helperText={errors?.phoneNumbers?.home?.message}
-                onChange={(e: ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) =>
-                  field.onChange(e.target.value)
-                }
+                onChange={(name, value) => field.onChange(value)}
                 onKeyDown={handleEnter}
               />
             )}
