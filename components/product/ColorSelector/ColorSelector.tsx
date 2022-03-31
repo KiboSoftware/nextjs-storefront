@@ -66,9 +66,9 @@ const ColorOptions = (props: ColorOptionsProps) => {
 const ColorSelector = ({ attributeFQN, values, onChange }: ProductVariantColorSelectorProps) => {
   return (
     <Box display="flex" flexWrap="wrap" gap={2} data-testid="color-selector">
-      {values?.map((option, index) => (
+      {values?.map((option) => (
         <ColorOptions
-          key={index}
+          key={option.attributeValueId}
           attributeValueId={option.attributeValueId}
           attributeFQN={attributeFQN}
           value={option?.value}
