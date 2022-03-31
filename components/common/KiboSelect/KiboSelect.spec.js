@@ -17,9 +17,10 @@ describe('[component] KiboSelect component', () => {
 
   it('should display the error description if passed when error is true', () => {
     render(<WithErrorDescription {...WithErrorDescription.args} />)
-    const errorhelperText = screen.getByTestId('helper-text')
+    const helperText = screen.getByText(WithErrorDescription.args.helperText)
 
-    expect(errorhelperText).toBeVisible()
+    expect(helperText).toBeVisible()
+    expect(helperText).toHaveAttribute('aria-errormessage', WithErrorDescription.args.helperText)
   })
 
   it('should call onChange method if option selected ', () => {

@@ -9,7 +9,7 @@ interface KiboSelectProps {
   error?: boolean
   placeholder?: string
   label?: string
-  children: any
+  children: React.ReactNode
   onChange: (name: string, value: string) => void
 }
 
@@ -62,7 +62,11 @@ const KiboSelect = (props: KiboSelectProps) => {
         </MenuItem>
         {children}
       </Select>
-      <FormHelperText error={error} data-testid="helper-text" sx={{ margin: '3px 0' }}>
+      <FormHelperText
+        error={error}
+        {...(error && { 'aria-errormessage': helperText })}
+        sx={{ margin: '3px 0' }}
+      >
         {error ? helperText : ''}
       </FormHelperText>
     </FormControl>

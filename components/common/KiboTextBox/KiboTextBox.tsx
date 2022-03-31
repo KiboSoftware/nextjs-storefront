@@ -10,7 +10,7 @@ interface KiboTextBoxProps {
   error?: boolean
   helperText?: string
   placeholder?: string
-  children?: any
+  children?: React.ReactNode
   onChange: (name: string, value: string) => void
   [x: string]: any
 }
@@ -66,11 +66,13 @@ const KiboTextBox = ({
         onChange={(e) => onChange(e.target.name, e.target.value)}
         {...rest}
       />
-      {error && (
-        <FormHelperText id="helper-text" error aria-errormessage={helperText}>
-          {error ? helperText : ''}
-        </FormHelperText>
-      )}
+      <FormHelperText
+        id="helper-text"
+        error={error}
+        {...(error && { 'aria-errormessage': helperText })}
+      >
+        {error ? helperText : ''}
+      </FormHelperText>
     </FormControl>
   )
 }
