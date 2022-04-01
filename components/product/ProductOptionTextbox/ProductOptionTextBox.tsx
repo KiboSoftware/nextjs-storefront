@@ -2,7 +2,7 @@ import KiboTextBox from '@/components/common/KiboTextBox/KiboTextBox'
 
 import type { ProductOption } from '@/lib/gql/types'
 
-interface ProductOptionTextBoxProps {
+export interface ProductOptionTextBoxProps {
   option: ProductOption
   onChange: (value: string) => void
 }

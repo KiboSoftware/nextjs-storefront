@@ -3,7 +3,7 @@ import React from 'react'
 import { MenuItem } from '@mui/material'
 import { ComponentStory, ComponentMeta } from '@storybook/react'
 
-import KiboSelect from './KiboSelect'
+import KiboSelect, { KiboSelectProps } from './KiboSelect'
 
 export default {
   title: 'Common/KiboSelect',
@@ -11,7 +11,7 @@ export default {
   argTypes: { onChange: { action: 'onChange' } },
 } as ComponentMeta<typeof KiboSelect>
 
-const Template: ComponentStory<typeof KiboSelect> = (args: any) => (
+const Template: ComponentStory<typeof KiboSelect> = (args: KiboSelectProps) => (
   <KiboSelect {...args}>
     <MenuItem value="1">Option 1</MenuItem>
     <MenuItem value="2">Option 2</MenuItem>

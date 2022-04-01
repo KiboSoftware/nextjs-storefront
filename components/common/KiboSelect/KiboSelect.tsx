@@ -1,8 +1,6 @@
 import { InputLabel, MenuItem, OutlinedInput } from '@mui/material'
 import { FormControl, FormHelperText, Select } from '@mui/material'
-import { useTranslation } from 'next-i18next'
-
-interface KiboSelectProps {
+export interface KiboSelectProps {
   name?: string
   value?: string
   helperText?: string
@@ -25,8 +23,6 @@ const MenuProps = {
 }
 
 const KiboSelect = (props: KiboSelectProps) => {
-  const { t } = useTranslation('common')
-
   const {
     name = 'kibo-select',
     value = '',

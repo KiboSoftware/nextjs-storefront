@@ -1,5 +1,5 @@
 import { Checkbox, FormControlLabel } from '@mui/material'
-interface ProductOptionCheckboxProps {
+export interface ProductOptionCheckboxProps {
   label: string
   checked?: boolean
   onChange: (checked: boolean) => void
