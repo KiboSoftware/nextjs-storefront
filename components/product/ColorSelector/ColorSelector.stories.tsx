@@ -12,19 +12,19 @@ const values: ProductOptionValue[] = [
     isSelected: true,
   },
   {
-    attributeValueId: 1,
+    attributeValueId: 2,
     value: 'ingido',
     isEnabled: false,
   },
   {
-    attributeValueId: 2,
+    attributeValueId: 3,
     value: 'blue',
   },
-  { attributeValueId: 3, value: 'green' },
-  { attributeValueId: 4, value: 'yellow', isEnabled: false },
-  { attributeValueId: 5, value: 'orange', isSelected: false },
-  { attributeValueId: 5, value: 'red', isSelected: false, isEnabled: true },
-  { attributeValueId: 5, value: 'white', isSelected: false, isEnabled: true },
+  { attributeValueId: 4, value: 'green' },
+  { attributeValueId: 5, value: 'yellow', isEnabled: false },
+  { attributeValueId: 6, value: 'orange', isSelected: false },
+  { attributeValueId: 7, value: 'red', isSelected: false, isEnabled: true },
+  { attributeValueId: 8, value: 'white', isSelected: false, isEnabled: true },
 ]
 
 export default {

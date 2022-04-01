@@ -1,12 +1,12 @@
 import React from 'react'
 
-import Box from '@mui/material/Box'
-import Chip from '@mui/material/Chip'
-import Tooltip from '@mui/material/Tooltip'
+import { Box, Chip, Tooltip } from '@mui/material'
+import { grey } from '@mui/material/colors'
+import { useTranslation } from 'next-i18next'
 
 import { ProductOptionValue } from '@/lib/gql/types'
 
-interface ProductVariantColorSelectorProps {
+interface ColorSelectorProps {
   attributeFQN: string
   values: ProductOptionValue[]
   onChange: (attributeFQN?: string, value?: string) => void
@@ -14,7 +14,7 @@ interface ProductVariantColorSelectorProps {
 
 interface ColorOptionsProps extends ProductOptionValue {
   attributeFQN?: string
-  handleColorSelection: (attributeFQN?: string, value?: string) => void
+  onColorSelection: (attributeFQN?: string, value?: string) => void
 }
 
 const styles = {
@@ -27,7 +27,7 @@ const styles = {
     alignItems: 'center',
     cursor: 'pointer',
     elevation: 0,
-    borderColor: '#DCDCDC',
+    borderColor: `${grey[300]}`,
     borderWidth: '1px',
     borderStyle: 'solid',
   },
@@ -45,7 +45,8 @@ const styles = {
 }
 
 const ColorOptions = (props: ColorOptionsProps) => {
-  const { attributeFQN, value, isSelected = false, isEnabled = true, handleColorSelection } = props
+  const { attributeFQN, value, isSelected = false, isEnabled = true, onColorSelection } = props
+  const { t } = useTranslation('common')
   const chipCustom = (
     <Chip
       sx={{
@@ -54,16 +55,19 @@ const ColorOptions = (props: ColorOptionsProps) => {
         ...(!isEnabled && styles.disabled),
         backgroundColor: `${value}`,
       }}
-      {...(!isSelected &&
-        isEnabled && { onClick: () => handleColorSelection(attributeFQN, value) })}
+      {...(!isSelected && isEnabled && { onClick: () => onColorSelection(attributeFQN, value) })}
       data-testid={`colorvalue-${value}`}
     ></Chip>
   )
 
-  return isEnabled ? <>{chipCustom}</> : <Tooltip title="Not available !">{chipCustom}</Tooltip>
+  return isEnabled ? (
+    <>{chipCustom}</>
+  ) : (
+    <Tooltip title={t('not-available !') || ''}>{chipCustom}</Tooltip>
+  )
 }
 
-const ColorSelector = ({ attributeFQN, values, onChange }: ProductVariantColorSelectorProps) => {
+const ColorSelector = ({ attributeFQN, values, onChange }: ColorSelectorProps) => {
   return (
     <Box display="flex" flexWrap="wrap" gap={2} data-testid="color-selector">
       {values?.map((option) => (
@@ -74,7 +78,7 @@ const ColorSelector = ({ attributeFQN, values, onChange }: ProductVariantColorSe
           value={option?.value}
           isSelected={option?.isSelected}
           isEnabled={option?.isEnabled}
-          handleColorSelection={onChange}
+          onColorSelection={onChange}
         />
       ))}
     </Box>
