@@ -2,20 +2,13 @@
 import React, { useState, forwardRef, useImperativeHandle } from 'react'
 
 import { yupResolver } from '@hookform/resolvers/yup'
-import {
-  TextField,
-  Box,
-  Grid,
-  FormControlLabel,
-  Checkbox,
-  InputLabel,
-  FormHelperText,
-} from '@mui/material'
+import { Box, Grid, FormControlLabel, Checkbox } from '@mui/material'
 import MenuItem from '@mui/material/MenuItem'
 import { useTranslation } from 'next-i18next'
 import { useForm, Controller } from 'react-hook-form'
 import * as yup from 'yup'
 
+import KiboSelect from '../KiboSelect/KiboSelect'
 import KiboTextField from '../KiboTextBox/KiboTextBox'
 
 import type { Maybe, Scalars } from '@/lib/gql/types'
@@ -157,7 +150,7 @@ const AddressForm = forwardRef<AddressFormHandler, AddressFormProps>((props, ref
                 label={t('first-name')}
                 error={!!errors?.firstName}
                 helperText={errors?.firstName?.message}
-                onChange={(name, value) => field.onChange(value)}
+                onChange={(_name, value) => field.onChange(value)}
                 onKeyDown={handleEnter}
                 autoFocus={true}
                 required={true}
@@ -178,7 +171,7 @@ const AddressForm = forwardRef<AddressFormHandler, AddressFormProps>((props, ref
                 label={t('last-name-or-sur-name')}
                 error={!!errors?.lastNameOrSurname}
                 helperText={errors?.lastNameOrSurname?.message}
-                onChange={(name, value) => field.onChange(value)}
+                onChange={(_name, value) => field.onChange(value)}
                 onKeyDown={handleEnter}
                 required={true}
               />
@@ -198,7 +191,7 @@ const AddressForm = forwardRef<AddressFormHandler, AddressFormProps>((props, ref
                 label={t('address1')}
                 error={!!errors?.address?.address1}
                 helperText={errors?.address?.address1?.message}
-                onChange={(name, value) => field.onChange(value)}
+                onChange={(_name, value) => field.onChange(value)}
                 onKeyDown={handleEnter}
                 required={true}
               />
@@ -218,7 +211,7 @@ const AddressForm = forwardRef<AddressFormHandler, AddressFormProps>((props, ref
                 label={t('address2')}
                 error={!!errors?.address?.address2}
                 helperText={errors?.address?.address2?.message}
-                onChange={(name, value) => field.onChange(value)}
+                onChange={(_name, value) => field.onChange(value)}
                 onKeyDown={handleEnter}
               />
             )}
@@ -237,7 +230,7 @@ const AddressForm = forwardRef<AddressFormHandler, AddressFormProps>((props, ref
                 label={t('city-or-town')}
                 error={!!errors?.address?.cityOrTown}
                 helperText={errors?.address?.cityOrTown?.message}
-                onChange={(name, value) => field.onChange(value)}
+                onChange={(_name, value) => field.onChange(value)}
                 onKeyDown={handleEnter}
                 required={true}
               />
@@ -257,7 +250,7 @@ const AddressForm = forwardRef<AddressFormHandler, AddressFormProps>((props, ref
                 label={t('state-or-province')}
                 error={!!errors?.address?.stateOrProvince}
                 helperText={errors?.address?.stateOrProvince?.message}
-                onChange={(name, value) => field.onChange(value)}
+                onChange={(_name, value) => field.onChange(value)}
                 onKeyDown={handleEnter}
                 required={true}
               />
@@ -277,7 +270,7 @@ const AddressForm = forwardRef<AddressFormHandler, AddressFormProps>((props, ref
                 label={t('postal-or-zip-code')}
                 error={!!errors?.address?.postalOrZipCode}
                 helperText={errors?.address?.postalOrZipCode?.message}
-                onChange={(name, value) => field.onChange(value)}
+                onChange={(_name, value) => field.onChange(value)}
                 onKeyDown={handleEnter}
                 required={true}
               />
@@ -290,27 +283,16 @@ const AddressForm = forwardRef<AddressFormHandler, AddressFormProps>((props, ref
             name="address.countryCode"
             control={control}
             defaultValue={contact?.address?.countryCode}
-            render={({ field: { onChange, value = '' } }) => (
+            render={({ field }) => (
               <div>
-                {/* TODO: Replce below code block with KiboSelect (once its ready) */}
-                <InputLabel sx={{ mb: 1, typography: 'caption' }} htmlFor="countryCode">
-                  {t('country-code')}
-                </InputLabel>
-                <TextField
-                  select
-                  id="countryCode"
+                <KiboSelect
                   name="country-code"
-                  onChange={onChange}
-                  value={value}
-                  sx={{ width: '100%' }}
-                  size="small"
-                  required={true}
+                  error={!!errors?.address?.countryCode}
+                  helperText={errors?.address?.countryCode?.message}
+                  onChange={(_name, value) => field.onChange(value)}
                 >
                   {generateSelectOptions()}
-                </TextField>
-                <FormHelperText id="helper-text" error>
-                  {errors?.address?.countryCode ? errors?.address?.countryCode?.message : ' '}
-                </FormHelperText>
+                </KiboSelect>
               </div>
             )}
           />
@@ -328,7 +310,7 @@ const AddressForm = forwardRef<AddressFormHandler, AddressFormProps>((props, ref
                 label={t('phone-number-home')}
                 error={!!errors?.phoneNumbers?.home}
                 helperText={errors?.phoneNumbers?.home?.message}
-                onChange={(name, value) => field.onChange(value)}
+                onChange={(_name, value) => field.onChange(value)}
                 onKeyDown={handleEnter}
                 required={true}
               />

@@ -26,6 +26,7 @@ describe('[components] - AddressForm integration', () => {
     const stateOrProvince = screen.getByRole('textbox', { name: /state-or-province/i })
     const postalOrZipCode = screen.getByRole('textbox', { name: /postal-or-zip-code/i })
     const phoneNumberHome = screen.getByRole('textbox', { name: /phone-number/i })
+    const countryCode = screen.getByRole('textbox', { name: /country-code/i })
 
     // assert
     expect(firstName).toBeVisible()
@@ -36,7 +37,7 @@ describe('[components] - AddressForm integration', () => {
     expect(stateOrProvince).toBeVisible()
     expect(postalOrZipCode).toBeVisible()
     expect(phoneNumberHome).toBeVisible()
-    //TODO: Test countryCode
+    expect(countryCode).toBeVisible()
   })
 
   describe('should show user entered values', () => {
@@ -150,10 +151,6 @@ describe('[components] - AddressForm integration', () => {
 
       // assert
       expect(phoneNumberHome).toHaveValue(contact.phoneNumbers.home)
-    })
-
-    it('countryCode', async () => {
-      // TODO:
     })
   })
 
@@ -311,7 +308,19 @@ describe('[components] - AddressForm integration', () => {
     })
 
     it('countryCode', async () => {
-      // TODO:
+      // arrange
+      setup()
+
+      // act
+      const countryCode = screen.getByRole('textbox', { name: /country-code/i })
+      await act(async () => {
+        userEvent.type(countryCode, 'US')
+        userEvent.clear(countryCode)
+      })
+      const validationMessage = screen.getByText(/this field is required/i)
+
+      // assert
+      expect(validationMessage).toBeVisible()
     })
   })
 })
