@@ -12,44 +12,28 @@ export default {
 } as ComponentMeta<typeof AddressForm>
 
 const Template: ComponentStory<typeof AddressForm> = (args) => {
-  type AddressFormHandler = ElementRef<typeof AddressForm>
-  const ref = useRef<AddressFormHandler | null>(null)
-
-  const countries = ['US', 'AT', 'DE', 'NL']
-  const saveAddressLabel = 'Save shipping address'
-  const handleSave = (data: Data) => console.log('data: ', data)
-  const handleClick = () => {
-    if (!ref.current) return
-    ref.current.listener()
-  }
-
-  const props = args
-    ? args
-    : {
-        contact: undefined,
-        countries: countries,
-        isUserLoggedIn: false,
-        saveAddressLabel: saveAddressLabel,
-        onSave: handleSave,
-        ref: ref,
-      }
-
   return (
     <div>
-      <AddressForm {...props} />
-      <Button variant="contained" onClick={handleClick}>
-        Save
-      </Button>
+      <AddressForm {...args} />
     </div>
   )
 }
 
 // Default
 export const Common = Template.bind({})
+Common.args = {
+  contact: undefined,
+  countries: ['US', 'AT', 'DE', 'NL'],
+  isUserLoggedIn: false,
+  saveAddressLabel: 'Save shipping address',
+  onSave: (data: Data) => console.log('called handleSave(data) : ', data),
+  ref: undefined,
+}
 
 // With LoggedIn User
 export const ForLoggedInUser = Template.bind({})
 ForLoggedInUser.args = {
+  ...Common.args,
   isUserLoggedIn: true,
 }
 
@@ -71,5 +55,6 @@ const contact: Contact = {
 }
 export const WithProps = Template.bind({})
 WithProps.args = {
+  ...Common.args,
   contact,
 }

@@ -137,7 +137,9 @@ const AddressForm = forwardRef<AddressFormHandler, AddressFormProps>((props, ref
     <Box
       component="form"
       sx={{
-        '& > :not(style)': { m: 1, maxWidth: '872px', width: '100%' },
+        m: 1,
+        maxWidth: '872px',
+        width: '100%',
       }}
       noValidate
       autoComplete="off"
@@ -158,6 +160,7 @@ const AddressForm = forwardRef<AddressFormHandler, AddressFormProps>((props, ref
                 onChange={(name, value) => field.onChange(value)}
                 onKeyDown={handleEnter}
                 autoFocus={true}
+                required={true}
               />
             )}
           />
@@ -177,6 +180,7 @@ const AddressForm = forwardRef<AddressFormHandler, AddressFormProps>((props, ref
                 helperText={errors?.lastNameOrSurname?.message}
                 onChange={(name, value) => field.onChange(value)}
                 onKeyDown={handleEnter}
+                required={true}
               />
             )}
           />
@@ -196,6 +200,7 @@ const AddressForm = forwardRef<AddressFormHandler, AddressFormProps>((props, ref
                 helperText={errors?.address?.address1?.message}
                 onChange={(name, value) => field.onChange(value)}
                 onKeyDown={handleEnter}
+                required={true}
               />
             )}
           />
@@ -224,7 +229,7 @@ const AddressForm = forwardRef<AddressFormHandler, AddressFormProps>((props, ref
           <Controller
             name="address.cityOrTown"
             control={control}
-            defaultValue={contact?.address?.address2}
+            defaultValue={contact?.address?.cityOrTown}
             render={({ field }) => (
               <KiboTextField
                 {...field}
@@ -234,6 +239,7 @@ const AddressForm = forwardRef<AddressFormHandler, AddressFormProps>((props, ref
                 helperText={errors?.address?.cityOrTown?.message}
                 onChange={(name, value) => field.onChange(value)}
                 onKeyDown={handleEnter}
+                required={true}
               />
             )}
           />
@@ -243,7 +249,7 @@ const AddressForm = forwardRef<AddressFormHandler, AddressFormProps>((props, ref
           <Controller
             name="address.stateOrProvince"
             control={control}
-            defaultValue={contact?.address?.address2}
+            defaultValue={contact?.address?.stateOrProvince}
             render={({ field }) => (
               <KiboTextField
                 {...field}
@@ -253,6 +259,7 @@ const AddressForm = forwardRef<AddressFormHandler, AddressFormProps>((props, ref
                 helperText={errors?.address?.stateOrProvince?.message}
                 onChange={(name, value) => field.onChange(value)}
                 onKeyDown={handleEnter}
+                required={true}
               />
             )}
           />
@@ -262,7 +269,7 @@ const AddressForm = forwardRef<AddressFormHandler, AddressFormProps>((props, ref
           <Controller
             name="address.postalOrZipCode"
             control={control}
-            defaultValue={contact?.address?.address2}
+            defaultValue={contact?.address?.postalOrZipCode}
             render={({ field }) => (
               <KiboTextField
                 {...field}
@@ -272,6 +279,7 @@ const AddressForm = forwardRef<AddressFormHandler, AddressFormProps>((props, ref
                 helperText={errors?.address?.postalOrZipCode?.message}
                 onChange={(name, value) => field.onChange(value)}
                 onKeyDown={handleEnter}
+                required={true}
               />
             )}
           />
@@ -296,6 +304,7 @@ const AddressForm = forwardRef<AddressFormHandler, AddressFormProps>((props, ref
                   value={value}
                   sx={{ width: '100%' }}
                   size="small"
+                  required={true}
                 >
                   {generateSelectOptions()}
                 </TextField>
@@ -321,6 +330,7 @@ const AddressForm = forwardRef<AddressFormHandler, AddressFormProps>((props, ref
                 helperText={errors?.phoneNumbers?.home?.message}
                 onChange={(name, value) => field.onChange(value)}
                 onKeyDown={handleEnter}
+                required={true}
               />
             )}
           />
