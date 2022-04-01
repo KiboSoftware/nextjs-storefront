@@ -100,7 +100,7 @@ const AddressForm = forwardRef<AddressFormHandler, AddressFormProps>((props, ref
   const { t }: { t: any } = useTranslation('common')
 
   const generateSelectOptions = () =>
-    countries.map((country) => {
+    countries?.map((country) => {
       return (
         <MenuItem key={country} value={country}>
           {country}
