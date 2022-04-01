@@ -18,7 +18,7 @@ const ProductOptionCheckbox = (props: ProductOptionCheckboxProps) => {
             'aria-label': label,
           }}
           data-testid={`kibo-checkbox`}
-          onChange={(e, checked) => onChange(checked)}
+          onChange={(_, checked) => onChange(checked)}
         />
       }
     />
