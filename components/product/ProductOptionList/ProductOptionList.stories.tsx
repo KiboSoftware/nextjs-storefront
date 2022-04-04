@@ -3,7 +3,7 @@ import React from 'react'
 import { ComponentStory, ComponentMeta } from '@storybook/react'
 
 import { productOptionListValuesMock } from '../../../__mocks__/productOptionListMock'
-import ProductOptionList from './ProductOptionList'
+import ProductOptionList, { ProductOptionListProps } from './ProductOptionList'
 
 export default {
   title: 'Product/Product Option List',
@@ -14,7 +14,9 @@ export default {
   argTypes: { onChange: { action: 'onChange' } },
 } as ComponentMeta<typeof ProductOptionList>
 
-const Template: ComponentStory<typeof ProductOptionList> = (args) => <ProductOptionList {...args} />
+const Template: ComponentStory<typeof ProductOptionList> = (args: ProductOptionListProps) => (
+  <ProductOptionList {...args} />
+)
 
 export const Common = Template.bind({})
 

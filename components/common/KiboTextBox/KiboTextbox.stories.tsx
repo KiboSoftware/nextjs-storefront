@@ -2,7 +2,7 @@ import React from 'react'
 
 import { ComponentStory, ComponentMeta } from '@storybook/react'
 
-import KiboTextBox from './KiboTextBox'
+import KiboTextBox, { KiboTextBoxProps } from './KiboTextBox'
 
 export default {
   title: 'Common/KiboTextbox',
@@ -10,7 +10,9 @@ export default {
   argTypes: { onChange: { action: 'onChange' } },
 } as ComponentMeta<typeof KiboTextBox>
 
-const Template: ComponentStory<typeof KiboTextBox> = (args) => <KiboTextBox {...args} />
+const Template: ComponentStory<typeof KiboTextBox> = (args: KiboTextBoxProps) => (
+  <KiboTextBox {...args} />
+)
 
 export const WithLabel = Template.bind({})
 

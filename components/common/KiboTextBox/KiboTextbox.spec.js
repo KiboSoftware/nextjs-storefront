@@ -31,7 +31,7 @@ describe('[component] KiboTextbox component', () => {
     expect(input).toHaveAttribute('aria-invalid', 'true')
   })
 
-  it('should render the error helper text when props error is true and helperText is passed', () => {
+  it('should render the error helper text when props error is true', () => {
     render(<WithErrorDescription {...WithErrorDescription.args} />)
     const helperText = screen.getByText(WithErrorDescription.args.helperText)
 

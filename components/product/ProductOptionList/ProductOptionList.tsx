@@ -5,7 +5,7 @@ import KiboSelect from '@/components/common/KiboSelect/KiboSelect'
 
 import type { ProductOptionValue } from '@/lib/gql/types'
 
-interface ProductOptionListProps {
+export interface ProductOptionListProps {
   optionValues: ProductOptionValue[]
   name?: string
   value?: string

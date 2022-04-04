@@ -4,7 +4,7 @@ import { Box } from '@mui/system'
 import { ComponentStory, ComponentMeta } from '@storybook/react'
 
 import { productOptionTextBoxMock } from '../../../__mocks__/productOptionTextBoxMock'
-import ProductOptionTextBox from './ProductOptionTextBox'
+import ProductOptionTextBox, { ProductOptionTextBoxProps } from './ProductOptionTextBox'
 
 export default {
   title: 'Product/Product Option TextBox',
@@ -12,7 +12,7 @@ export default {
   argTypes: { onChange: { action: 'onChange' } },
 } as ComponentMeta<typeof ProductOptionTextBox>
 
-const Template: ComponentStory<typeof ProductOptionTextBox> = (args) => {
+const Template: ComponentStory<typeof ProductOptionTextBox> = (args: ProductOptionTextBoxProps) => {
   const { onChange } = args
   return (
     <Box display={'flex'} flexDirection="column" gap={2}>

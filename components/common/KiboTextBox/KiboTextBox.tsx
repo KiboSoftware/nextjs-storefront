@@ -3,14 +3,14 @@ import * as React from 'react'
 import { FormControl, FormHelperText, InputBase, InputLabel } from '@mui/material'
 import { alpha, styled } from '@mui/material/styles'
 
-interface KiboTextBoxProps {
+export interface KiboTextBoxProps {
   label?: string
   value?: string
   required?: boolean
   error?: boolean
   helperText?: string
   placeholder?: string
-  children?: any
+  children?: React.ReactNode
   onChange: (name: string, value: string) => void
   [x: string]: any
 }
@@ -46,16 +46,13 @@ const KiboTextBox = ({
   helperText = '',
   placeholder,
   onChange,
-  children,
   ...rest
 }: KiboTextBoxProps) => {
   return (
     <FormControl variant="standard" error={error} required={required} {...rest} fullWidth>
-      {label && (
-        <InputLabel shrink htmlFor="kibo-input">
-          {label}
-        </InputLabel>
-      )}
+      <InputLabel shrink htmlFor="kibo-input">
+        {label}
+      </InputLabel>
       <KiboInput
         id="kibo-input"
         size="small"
@@ -68,11 +65,13 @@ const KiboTextBox = ({
         onChange={(e) => onChange(e.target.name, e.target.value)}
         {...rest}
       />
-      {error && (
-        <FormHelperText id="helper-text" error aria-errormessage={helperText}>
-          {helperText}
-        </FormHelperText>
-      )}
+      <FormHelperText
+        id="helper-text"
+        error={error}
+        {...(error && { 'aria-errormessage': helperText })}
+      >
+        {error ? helperText : ''}
+      </FormHelperText>
     </FormControl>
   )
 }
