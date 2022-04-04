@@ -66,7 +66,7 @@ const Facet = (props: FacetProps) => {
   }
 
   const handleAccordionChange = (
-    event: React.SyntheticEvent<Element, Event>,
+    _event: React.SyntheticEvent<Element, Event>,
     expanded: boolean
   ) => {
     if (!expanded) return
