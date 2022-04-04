@@ -6,8 +6,11 @@ import * as stories from './AddressForm.stories'
 
 const { Common } = composeStories(stories)
 
-const KiboTextBoxMock = () => <input data-testid="text-box-mock" />
+const onChangMock = jest.fn()
+
+const KiboTextBoxMock = () => <input data-testid="text-box-mock" onChange={onChangMock} />
 jest.mock('../KiboTextBox/KiboTextBox', () => KiboTextBoxMock)
+
 describe('[components] - AddressForm', () => {
   const setup = () => {
     render(<Common {...Common.args} />)
@@ -29,10 +32,13 @@ describe('[components] - AddressForm', () => {
     setup()
 
     // act
-    const textBoxList = screen.getAllByTestId('text-box-mock')
+    const textBoxList = screen.getAllByRole('textbox')
+
     userEvent.type(textBoxList[0], 'Shane')
+    userEvent.type(textBoxList[0], '{enter}')
 
     // assert
     expect(textBoxList[0]).toHaveValue('Shane')
+    expect(onChangMock).toHaveBeenCalled()
   })
 })

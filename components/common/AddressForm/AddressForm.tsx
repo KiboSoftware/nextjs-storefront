@@ -112,15 +112,6 @@ const AddressForm = forwardRef<AddressFormHandler, AddressFormProps>((props, ref
     onSave(data)
   }
 
-  const handleEnter = (event: any) => {
-    if (event.key.toLowerCase() === 'enter') {
-      const form = event.target.form
-      const index = [...form].indexOf(event.target)
-      form.elements[index + 1].focus()
-      event.preventDefault()
-    }
-  }
-
   // Declare your useEffects, useCallback, etc
   useImperativeHandle(ref, () => ({
     listener,
@@ -151,7 +142,6 @@ const AddressForm = forwardRef<AddressFormHandler, AddressFormProps>((props, ref
                 error={!!errors?.firstName}
                 helperText={errors?.firstName?.message}
                 onChange={(_name, value) => field.onChange(value)}
-                onKeyDown={handleEnter}
                 autoFocus={true}
                 required={true}
               />
@@ -172,7 +162,6 @@ const AddressForm = forwardRef<AddressFormHandler, AddressFormProps>((props, ref
                 error={!!errors?.lastNameOrSurname}
                 helperText={errors?.lastNameOrSurname?.message}
                 onChange={(_name, value) => field.onChange(value)}
-                onKeyDown={handleEnter}
                 required={true}
               />
             )}
@@ -192,7 +181,6 @@ const AddressForm = forwardRef<AddressFormHandler, AddressFormProps>((props, ref
                 error={!!errors?.address?.address1}
                 helperText={errors?.address?.address1?.message}
                 onChange={(_name, value) => field.onChange(value)}
-                onKeyDown={handleEnter}
                 required={true}
               />
             )}
@@ -212,7 +200,6 @@ const AddressForm = forwardRef<AddressFormHandler, AddressFormProps>((props, ref
                 error={!!errors?.address?.address2}
                 helperText={errors?.address?.address2?.message}
                 onChange={(_name, value) => field.onChange(value)}
-                onKeyDown={handleEnter}
               />
             )}
           />
@@ -231,7 +218,6 @@ const AddressForm = forwardRef<AddressFormHandler, AddressFormProps>((props, ref
                 error={!!errors?.address?.cityOrTown}
                 helperText={errors?.address?.cityOrTown?.message}
                 onChange={(_name, value) => field.onChange(value)}
-                onKeyDown={handleEnter}
                 required={true}
               />
             )}
@@ -251,7 +237,6 @@ const AddressForm = forwardRef<AddressFormHandler, AddressFormProps>((props, ref
                 error={!!errors?.address?.stateOrProvince}
                 helperText={errors?.address?.stateOrProvince?.message}
                 onChange={(_name, value) => field.onChange(value)}
-                onKeyDown={handleEnter}
                 required={true}
               />
             )}
@@ -271,7 +256,6 @@ const AddressForm = forwardRef<AddressFormHandler, AddressFormProps>((props, ref
                 error={!!errors?.address?.postalOrZipCode}
                 helperText={errors?.address?.postalOrZipCode?.message}
                 onChange={(_name, value) => field.onChange(value)}
-                onKeyDown={handleEnter}
                 required={true}
               />
             )}
@@ -311,7 +295,6 @@ const AddressForm = forwardRef<AddressFormHandler, AddressFormProps>((props, ref
                 error={!!errors?.phoneNumbers?.home}
                 helperText={errors?.phoneNumbers?.home?.message}
                 onChange={(_name, value) => field.onChange(value)}
-                onKeyDown={handleEnter}
                 required={true}
               />
             )}
