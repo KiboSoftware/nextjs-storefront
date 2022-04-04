@@ -32,7 +32,7 @@ interface ModalTitleProps {
   id: string
   children?: React.ReactNode
   classes?: object
-  sx?: Object
+  sx?: object
   showCloseButton?: boolean
   onClose?: () => void
 }
@@ -41,14 +41,14 @@ interface ModalContentProps {
   children?: React.ReactNode
   classes?: object
   dividers?: boolean
-  sx?: Object
+  sx?: object
 }
 
 interface ModalActionsProps {
   children?: React.ReactNode
   classes?: object
   disableSpacing?: boolean
-  sx?: Object
+  sx?: object
 }
 
 // MUI

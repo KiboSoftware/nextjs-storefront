@@ -16,105 +16,107 @@ interface CartDetailsProps {
   total: string
 }
 
-const title = (t: any) => (
-  <Box display="flex" alignItems="center">
-    <CheckCircleIcon
-      sx={{
-        color: 'primary.main',
-      }}
-    />
-    <Box ml={1} sx={{ display: { sm: 'none', md: 'block' } }}>
-      <Typography
-        variant="body2"
-        component="span"
-        fontWeight="bold"
-        fontSize="1.5rem"
-        color="text.primary"
-        sx={{ display: 'block' }}
-      >
-        {t('add-to-cart')}
-      </Typography>
+const Title = () => {
+  const { t } = useTranslation('common')
+  return (
+    <Box display="flex" alignItems="center">
+      <CheckCircleIcon
+        sx={{
+          color: 'primary.main',
+        }}
+      />
+      <Box ml={1} sx={{ display: { sm: 'none', md: 'block' } }}>
+        <Typography
+          variant="body2"
+          component="span"
+          fontWeight="bold"
+          fontSize="1.5rem"
+          color="text.primary"
+          sx={{ display: 'block' }}
+        >
+          {t('add-to-cart')}
+        </Typography>
+      </Box>
+      <Divider />
     </Box>
-    <Divider />
-  </Box>
-)
+  )
+}
 
-const content = (
-  t: any,
-  fullfillmentOption: string,
-  subtotal: string,
-  tax: string,
-  total: string
-) => (
-  <Box sx={{ maxWidth: '518px', width: '100%', minWidth: '320px' }}>
-    <Box>
-      <Typography gutterBottom>Product Component</Typography>
-    </Box>
-    <Divider />
-    <Box sx={{ padding: '0 7px' }}>
-      <Box sx={{ display: 'flex', padding: '9px 0' }}>
-        <Typography variant="body2" component="span" color="text.primary" sx={{ flex: '50%' }}>
-          {t('cart-sub-total', { quantity: 2 })}
-        </Typography>
-        <Typography
-          variant="body2"
-          component="span"
-          color="text.primary"
-          align="right"
-          sx={{ flex: '50%' }}
-        >
-          ${subtotal}
-        </Typography>
-      </Box>
-      <Box sx={{ display: 'flex', padding: '9px 0' }}>
-        <Typography variant="body2" component="span" color="text.primary" sx={{ flex: '50%' }}>
-          {t('standard-shopping')}
-        </Typography>
-        <Typography
-          variant="body2"
-          component="span"
-          color="text.primary"
-          align="right"
-          sx={{ flex: '50%' }}
-        >
-          {fullfillmentOption}
-        </Typography>
-      </Box>
-      <Box sx={{ display: 'flex', padding: '9px 0' }}>
-        <Typography variant="body2" component="span" color="text.primary" sx={{ flex: '50%' }}>
-          {t('estimated-tax')} <InfoIcon sx={{ width: '11px', height: '11px' }} />
-        </Typography>
-        <Typography
-          variant="body2"
-          component="span"
-          color="text.primary"
-          align="right"
-          sx={{ flex: '50%' }}
-        >
-          ${tax}
-        </Typography>
-      </Box>
-    </Box>
-    <Divider sx={{ margin: '0 7px' }} />
-    <Box sx={{ padding: '19px 7px 4px 7px', display: 'flex' }}>
-      <Typography variant="body2" component="span" fontWeight="bold" color="text.primary">
-        {t('total')}
-      </Typography>
-      <Typography
-        variant="body2"
-        component="span"
-        fontWeight="bold"
-        color="text.primary"
-        align="right"
-        sx={{ flex: '0 100%' }}
-      >
-        ${total}
-      </Typography>
-    </Box>
-  </Box>
-)
+const Content = (fullfillmentOption: string, subtotal: string, tax: string, total: string) => {
+  const { t } = useTranslation('common')
 
-const Actions = (t: any) => {
+  return (
+    <Box sx={{ maxWidth: '518px', width: '100%', minWidth: '320px' }}>
+      <Box>
+        <Typography gutterBottom>Product Component</Typography>
+      </Box>
+      <Divider />
+      <Box sx={{ padding: '0 7px' }}>
+        <Box sx={{ display: 'flex', padding: '9px 0' }}>
+          <Typography variant="body2" component="span" color="text.primary" sx={{ flex: '50%' }}>
+            {t('cart-sub-total', { quantity: 2 })}
+          </Typography>
+          <Typography
+            variant="body2"
+            component="span"
+            color="text.primary"
+            align="right"
+            sx={{ flex: '50%' }}
+          >
+            ${subtotal}
+          </Typography>
+        </Box>
+        <Box sx={{ display: 'flex', padding: '9px 0' }}>
+          <Typography variant="body2" component="span" color="text.primary" sx={{ flex: '50%' }}>
+            {t('standard-shopping')}
+          </Typography>
+          <Typography
+            variant="body2"
+            component="span"
+            color="text.primary"
+            align="right"
+            sx={{ flex: '50%' }}
+          >
+            {fullfillmentOption}
+          </Typography>
+        </Box>
+        <Box sx={{ display: 'flex', padding: '9px 0' }}>
+          <Typography variant="body2" component="span" color="text.primary" sx={{ flex: '50%' }}>
+            {t('estimated-tax')} <InfoIcon sx={{ width: '11px', height: '11px' }} />
+          </Typography>
+          <Typography
+            variant="body2"
+            component="span"
+            color="text.primary"
+            align="right"
+            sx={{ flex: '50%' }}
+          >
+            ${tax}
+          </Typography>
+        </Box>
+      </Box>
+      <Divider sx={{ margin: '0 7px' }} />
+      <Box sx={{ padding: '19px 7px 4px 7px', display: 'flex' }}>
+        <Typography variant="body2" component="span" fontWeight="bold" color="text.primary">
+          {t('total')}
+        </Typography>
+        <Typography
+          variant="body2"
+          component="span"
+          fontWeight="bold"
+          color="text.primary"
+          align="right"
+          sx={{ flex: '0 100%' }}
+        >
+          ${total}
+        </Typography>
+      </Box>
+    </Box>
+  )
+}
+
+const Actions = () => {
+  const { t } = useTranslation('common')
   const router = useRouter()
   const handleGoToCart = (e: any) => {
     e.preventDefault()
@@ -155,14 +157,12 @@ const Actions = (t: any) => {
 
 // Component
 const AddToCart = ({ fullfillmentOption, subtotal, tax, total }: CartDetailsProps) => {
-  const { t } = useTranslation('common')
-
   const ModalArgs = {
     open: true,
-    title: title(t),
-    content: content(t, fullfillmentOption, subtotal, tax, total),
+    title: Title(),
+    content: Content(fullfillmentOption, subtotal, tax, total),
     dividers: false,
-    actions: Actions(t),
+    actions: Actions(),
   }
 
   return <Modal {...ModalArgs} />
