@@ -80,6 +80,7 @@ const Facet = (props: FacetProps) => {
     const filtered = values?.filter((item) => item?.label?.toLowerCase().includes(searchTerm)) || []
     const noOfItemsToShow = buttonText === viewMore ? numberOfItemsToShow : valuesLength
     const sliced = filtered?.slice(0, noOfItemsToShow) || []
+
     setFilteredValues([...sliced])
 
     const state = searchTerm
