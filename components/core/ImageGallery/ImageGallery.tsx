@@ -169,7 +169,7 @@ const ImageGallery = (props: ImageGalleryProps) => {
               {images?.map((image, i) => {
                 return (
                   <Box
-                    key={image?.altText}
+                    key={image?.imageUrl}
                     component="div"
                     width={ThumbnailDimensionInPx}
                     minHeight={ThumbnailDimensionInPx}
