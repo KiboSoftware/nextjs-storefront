@@ -118,11 +118,11 @@ const Content = (fullfillmentOption: string, subtotal: string, tax: string, tota
 const Actions = () => {
   const { t } = useTranslation('common')
   const router = useRouter()
-  const handleGoToCart = (e: any) => {
+  const handleGoToCart = (e: React.SyntheticEvent<Element, Event>) => {
     e.preventDefault()
     router.push('/cart')
   }
-  const handleContinueShopping = (e: any) => {
+  const handleContinueShopping = (e: React.SyntheticEvent<Element, Event>) => {
     e.preventDefault()
     router.push('product/MS-JKT-001')
   }
