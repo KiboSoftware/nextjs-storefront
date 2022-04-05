@@ -62,7 +62,7 @@ const schema = yup.object().shape({
     address1: yup.string().required('This field is required'),
     address2: yup.string().required('This field is required'),
     cityOrTown: yup.string().required('This field is required'),
-    stateOrProvince: yup.string().required('This fieldate is required'),
+    stateOrProvince: yup.string().required('This field is required'),
     postalOrZipCode: yup.string().required('This field is required'),
     countryCode: yup.string().required('This field is required'),
   }),
@@ -271,6 +271,7 @@ const AddressForm = forwardRef<AddressFormHandler, AddressFormProps>((props, ref
               <div>
                 <KiboSelect
                   name="country-code"
+                  label={t('country-code')}
                   error={!!errors?.address?.countryCode}
                   helperText={errors?.address?.countryCode?.message}
                   onChange={(_name, value) => field.onChange(value)}

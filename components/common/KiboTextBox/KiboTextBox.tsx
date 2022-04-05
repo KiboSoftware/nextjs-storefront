@@ -3,7 +3,7 @@ import React from 'react'
 import { FormControl, FormHelperText, InputBase, InputLabel } from '@mui/material'
 import { alpha, styled } from '@mui/material/styles'
 
-interface KiboTextBoxProps {
+export interface KiboTextBoxProps {
   label?: string
   value?: string | null
   required?: boolean
