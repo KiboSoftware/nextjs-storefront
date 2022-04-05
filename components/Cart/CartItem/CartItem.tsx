@@ -98,12 +98,6 @@ const CartItem = (props: CartItemProps) => {
 
           <Box sx={{ ...styles.icon }}>
             <IconButton
-              sx={{
-                padding: {
-                  xs: '0.25rem 0',
-                  lg: '0.5rem 1rem',
-                },
-              }}
               size="large"
               edge="start"
               color="inherit"
