@@ -7,12 +7,14 @@ import QuantitySelector from './QuantitySelector'
 
 describe('[components] - QuantitySelector', () => {
   const setup = (defaultQuantity = 1) => {
+    const label = ''
     const onIncreaseMock = jest.fn()
     const onDecreaseMock = jest.fn()
 
     render(
       <QuantitySelector
         quantity={defaultQuantity}
+        label={label}
         onIncrease={onIncreaseMock}
         onDecrease={onDecreaseMock}
       />
@@ -86,5 +88,23 @@ describe('[components] - QuantitySelector', () => {
 
     // assert
     expect(onDecreaseMock).toHaveBeenCalledTimes(1)
+  })
+
+  it('should display qty label', () => {
+    const labelText = 'Qty'
+    const onIncreaseMock = jest.fn()
+    const onDecreaseMock = jest.fn()
+
+    render(
+      <QuantitySelector
+        quantity={1}
+        label={labelText}
+        onIncrease={onIncreaseMock}
+        onDecrease={onDecreaseMock}
+      />
+    )
+    const label = screen.getByTestId('label')
+
+    expect(label).toBeVisible()
   })
 })

@@ -49,4 +49,9 @@
   "phone-number-home": "Phone number",
   "save-shipping-address": "Save shipping address",
   "pinch-image-to-zoom": "Pinch Image to Zoom"
+  "qty": "Qty: ",
+  "price-heading": "Price: ",
+  "details": "Details ",
+  "ship": "Ship to Home",
+  "pickup": "Pickup in Store "
 }

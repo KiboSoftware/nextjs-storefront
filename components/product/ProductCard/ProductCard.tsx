@@ -23,8 +23,8 @@ export interface ProductCardProps {
   imageUrl?: string
   placeholderImageUrl?: string
   imageAltText?: string
-  price?: string
-  salePrice?: string
+  price?: number
+  salePrice?: number
   productCode?: string
   rating?: number
   imageHeight?: number

@@ -2,14 +2,15 @@ import React from 'react'
 
 import AddIcon from '@mui/icons-material/Add'
 import RemoveIcon from '@mui/icons-material/Remove'
-import { Stack, TextField, IconButton } from '@mui/material'
+import { Stack, TextField, IconButton, Typography } from '@mui/material'
 import { useTranslation } from 'next-i18next'
 
 // Interface
-interface QuantitySelecotorProps {
+interface QuantitySelectorProps {
   quantity?: number
-  onIncrease: () => void
-  onDecrease: () => void
+  label?: string
+  onIncrease?: () => void
+  onDecrease?: () => void
 }
 
 interface QuantityInputProps {
@@ -45,12 +46,16 @@ const QuantityTextField = ({ quantity }: QuantityInputProps) => (
 )
 
 // Component
-const QuantitySelecotor = (props: QuantitySelecotorProps) => {
-  const { quantity = 1, onIncrease, onDecrease } = props
+const QuantitySelector = (props: QuantitySelectorProps) => {
+  const { quantity = 1, label, onIncrease, onDecrease } = props
   const { t } = useTranslation('common')
 
   return (
     <Stack direction="row" justifyContent="center" alignItems="center" spacing={1.5}>
+      <Typography variant="body2" component="span" sx={{ pr: 1 }} data-testid="label">
+        {label}
+      </Typography>
+
       <IconButton
         onClick={onDecrease}
         disabled={quantity === 1 ? true : false}
@@ -75,4 +80,4 @@ const QuantitySelecotor = (props: QuantitySelecotorProps) => {
   )
 }
 
-export default QuantitySelecotor
+export default QuantitySelector
