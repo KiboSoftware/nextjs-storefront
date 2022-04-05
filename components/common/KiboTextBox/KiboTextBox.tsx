@@ -1,17 +1,18 @@
-import * as React from 'react'
+import React from 'react'
 
 import { FormControl, FormHelperText, InputBase, InputLabel } from '@mui/material'
 import { alpha, styled } from '@mui/material/styles'
 
 export interface KiboTextBoxProps {
   label?: string
-  value?: string
+  value?: string | null
   required?: boolean
   error?: boolean
   helperText?: string
   placeholder?: string
-  children?: React.ReactNode
   onChange: (name: string, value: string) => void
+
+  /* eslint-disable  @typescript-eslint/no-explicit-any */
   [x: string]: any
 }
 
@@ -38,16 +39,19 @@ const KiboInput = styled(InputBase)(({ theme, error }) => ({
   },
 }))
 
-const KiboTextBox = ({
-  label,
-  value,
-  required = false,
-  error = false,
-  helperText = '',
-  placeholder,
-  onChange,
-  ...rest
-}: KiboTextBoxProps) => {
+const KiboTextBox = (props: KiboTextBoxProps) => {
+  const {
+    label,
+    value,
+    required = false,
+    error = false,
+    helperText = '',
+    placeholder,
+    onChange,
+    onKeyDown,
+    ...rest
+  } = props
+
   return (
     <FormControl variant="standard" error={error} required={required} {...rest} fullWidth>
       <InputLabel shrink htmlFor="kibo-input">
@@ -63,14 +67,12 @@ const KiboTextBox = ({
         defaultValue={value}
         placeholder={placeholder}
         onChange={(e) => onChange(e.target.name, e.target.value)}
+        onKeyDown={onKeyDown}
         {...rest}
       />
-      <FormHelperText
-        id="helper-text"
-        error={error}
-        {...(error && { 'aria-errormessage': helperText })}
-      >
-        {error ? helperText : ''}
+
+      <FormHelperText id="helper-text" error aria-errormessage={helperText}>
+        {error ? helperText : ' '}
       </FormHelperText>
     </FormControl>
   )
