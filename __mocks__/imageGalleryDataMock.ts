@@ -10,7 +10,7 @@ export const imageGalleryData = {
     {
       altText: 'kibo-image-thumbnail-2',
       imageUrl:
-        'https://imgs.search.brave.com/RAmhTjil4_aHgyd1hxn2toPRMXmKjPiEUfGD6-qtQAw/rs:fit:1200:1200:1/g:ce/aHR0cDovL2Muc2hs/ZC5uZXQvcnB4L2kv/cy9pL3NwaW4vLTEy/Mi9wcm9kXzEyMTgz/ODUyMTEyPz9oZWk9/NjQmd2lkPTY0JnFs/dD01MA',
+        'https://imgs.search.brave.com/RAmhTjil_aHgyd1hxn2toPRMXmKjPiEUfGD6-qtQAw/rs:fit:1200:1200:1/g:ce/aHR0cDovL2Muc2hs/ZC5uZXQvcnB4L2kv/cy9pL3NwaW4vLTEy/Mi9wcm9kXzEyMTgz/ODUyMTEyPz9oZWk9/NjQmd2lkPTY0JnFs/dD01MA',
     },
     {
       altText: 'kibo-image-thumbnail-3',
