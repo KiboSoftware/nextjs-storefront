@@ -30,10 +30,11 @@ const Template: ComponentStory<typeof QuantitySelector> = (args) => {
 export const Default = Template.bind({})
 Default.args = {
   quantity: 1,
+  maxQuantity: 5,
 }
 
 export const withQtyLabel = Template.bind({})
 withQtyLabel.args = {
-  quantity: 1,
+  ...Default.args,
   label: 'Qty:',
 }

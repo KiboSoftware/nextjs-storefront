@@ -1,6 +1,6 @@
 import CartItem from '../CartItem/CartItem'
 
-import { CartItem as CartItemType } from '@/lib/gql/types'
+import type { CartItem as CartItemType } from '@/lib/gql/types'
 
 interface CartItemListProps {
   cartItems: CartItemType[]

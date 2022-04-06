@@ -41,7 +41,7 @@ describe('[component] - ProductItem', () => {
   it('should render product item options', () => {
     setup()
 
-    const productItemOptions = screen.getAllByTestId('productOptions')
+    const productItemOptions = screen.getAllByTestId('productOption')
     const items = Common.args?.options || []
 
     const count = items.length || 0
@@ -58,7 +58,7 @@ describe('[component] - ProductItem with Price Label', () => {
     setup()
 
     const productDetails = screen.getByTestId('productDetails')
-    const priceElement = screen.getByText(/price-heading/i)
+    const priceElement = screen.getByText(/price/i)
 
     expect(productDetails).toBeVisible()
     expect(priceElement).toBeInTheDocument()

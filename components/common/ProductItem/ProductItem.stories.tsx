@@ -8,7 +8,7 @@ import QuantitySelector from '../QuantitySelector/QuantitySelector'
 import ProductItem from './ProductItem'
 import DefaultImage from '@/public/product_placeholder.svg'
 
-import { CartItem, CrProductOption } from '@/lib/gql/types'
+import type { CartItem, CrProductOption } from '@/lib/gql/types'
 
 export default {
   title: 'Common/ProductItem',
@@ -81,26 +81,14 @@ const TemplateWithPriceLabel: ComponentStory<typeof ProductItem> = (args) => (
 export const Common = Template.bind({})
 Common.args = {
   image: cartItem.product?.imageUrl || DefaultImage,
-  name: cartItem.product?.name as string,
+  name: cartItem.product?.name || '',
   options: cartItem.product?.options as Array<CrProductOption>,
 }
 
 // Item Details with Price Label
 export const WithPriceLabel = TemplateWithPriceLabel.bind({})
 WithPriceLabel.args = {
-  image: cartItem.product?.imageUrl || DefaultImage,
-  name: cartItem.product?.name as string,
-  options: cartItem.product?.options as Array<CrProductOption>,
-  price: cartItem.product?.price?.price as number,
-  salePrice: cartItem.product?.price?.salePrice as number,
+  ...Common.args,
+  price: cartItem.product?.price?.price || 0,
+  salePrice: cartItem.product?.price?.salePrice || 0,
 }
-
-// Item with Quantity Selector
-// export const withQuantitySelector = Template.bind({})
-// withQuantitySelector.args = {
-//   image: cartItem.product?.imageUrl || DefaultImage,
-//   name: cartItem.product?.name || '',
-//   options: cartItem.product?.options || [],
-//   price: cartItem.product?.price?.price || 0,
-//   salePrice: cartItem.product?.price?.salePrice || 0,
-// }

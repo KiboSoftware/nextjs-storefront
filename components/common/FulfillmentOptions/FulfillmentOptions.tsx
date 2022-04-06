@@ -2,7 +2,6 @@ import { Box, FormControlLabel, Radio, RadioGroup } from '@mui/material'
 import { useTranslation } from 'next-i18next'
 
 const FulfillmentOptions = () => {
-  // TODO: Full implementation will do on Fulfillment Option ticket
   const { t } = useTranslation('common')
   const ship = t('ship')
   const pickup = t('pickup')

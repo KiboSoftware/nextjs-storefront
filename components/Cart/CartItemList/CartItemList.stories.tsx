@@ -4,7 +4,7 @@ import { ComponentStory, ComponentMeta } from '@storybook/react'
 
 import CartItemList from './CartItemList'
 
-import { CartItem as CartItemType } from '@/lib/gql/types'
+import type { CartItem as CartItemType } from '@/lib/gql/types'
 
 const cartItems: Array<CartItemType> = [
   {

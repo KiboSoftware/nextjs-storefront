@@ -9,6 +9,7 @@ import { useTranslation } from 'next-i18next'
 interface QuantitySelectorProps {
   quantity?: number
   label?: string
+  maxQuantity?: number
   onIncrease?: () => void
   onDecrease?: () => void
 }
@@ -47,7 +48,7 @@ const QuantityTextField = ({ quantity }: QuantityInputProps) => (
 
 // Component
 const QuantitySelector = (props: QuantitySelectorProps) => {
-  const { quantity = 1, label, onIncrease, onDecrease } = props
+  const { quantity = 1, label, maxQuantity, onIncrease, onDecrease } = props
   const { t } = useTranslation('common')
 
   return (
@@ -70,6 +71,7 @@ const QuantitySelector = (props: QuantitySelectorProps) => {
 
       <IconButton
         onClick={onIncrease}
+        disabled={maxQuantity === quantity ? true : false}
         sx={{ ...styles.iconButton }}
         aria-label={t('increase')}
         component="span"

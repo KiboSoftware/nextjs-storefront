@@ -4,15 +4,11 @@ import { ComponentStory, ComponentMeta } from '@storybook/react'
 
 import CartItem from './CartItem'
 
-import { CartItem as CartItemType } from '@/lib/gql/types'
+import type { CartItem as CartItemType } from '@/lib/gql/types'
 
 export default {
   title: 'Cart/CartItem',
   component: CartItem,
-
-  argTypes: {
-    backgroundColor: { control: 'color' },
-  },
 } as ComponentMeta<typeof CartItem>
 
 const cartItem: CartItemType = {

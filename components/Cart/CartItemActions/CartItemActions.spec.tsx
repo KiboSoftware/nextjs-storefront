@@ -18,7 +18,7 @@ describe('[components] - CartItemActions', () => {
 
     const cardActions = screen.getByRole('cardActions')
 
-    expect(cardActions).toBeInTheDocument()
+    expect(cardActions).toBeVisible()
   })
 
   it('should render Edit link', () => {
@@ -26,7 +26,7 @@ describe('[components] - CartItemActions', () => {
 
     const editLink = screen.getByText('edit')
 
-    expect(editLink).toBeInTheDocument()
+    expect(editLink).toBeVisible()
   })
 
   it('should render save-for-later link', () => {
@@ -34,7 +34,7 @@ describe('[components] - CartItemActions', () => {
 
     const editLink = screen.getByText('save-for-later')
 
-    expect(editLink).toBeInTheDocument()
+    expect(editLink).toBeVisible()
   })
 
   it('should render add-to-favorites link', () => {
@@ -42,6 +42,6 @@ describe('[components] - CartItemActions', () => {
 
     const editLink = screen.getByText('add-to-favorites')
 
-    expect(editLink).toBeInTheDocument()
+    expect(editLink).toBeVisible()
   })
 })

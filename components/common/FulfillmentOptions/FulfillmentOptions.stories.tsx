@@ -7,10 +7,6 @@ import FulfillmentOptions from './FulfillmentOptions'
 export default {
   title: 'Common/FulfillmentOptions',
   component: FulfillmentOptions,
-
-  argTypes: {
-    backgroundColor: { control: 'color' },
-  },
 } as ComponentMeta<typeof FulfillmentOptions>
 
 const Template: ComponentStory<typeof FulfillmentOptions> = () => <FulfillmentOptions />

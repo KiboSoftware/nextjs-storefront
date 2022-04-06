@@ -1,7 +1,7 @@
 import React from 'react'
 
-import { ExpandMore } from '@mui/icons-material'
-import ExpandMoreIcon from '@mui/icons-material/ExpandMore'
+import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown'
+import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp'
 import {
   Typography,
   Box,
@@ -15,18 +15,16 @@ import {
 import { useTranslation } from 'next-i18next'
 
 import Price from '../Price/Price'
+import ProductOptions from '@/components/product/ProductOptions/ProductOptions'
+import DefaultImage from '@/public/product_placeholder.svg'
 
-import { CrProductOption } from '@/lib/gql/types'
-
-interface ProductItem {
+import type { CrProductOption } from '@/lib/gql/types'
+interface ProductItemProps {
   image: string
   name: string
   options: CrProductOption[]
   price?: number
   salePrice?: number
-  quantitySelector?: React.ReactNode
-  content?: React.ReactNode
-  dividers?: boolean
   children?: React.ReactNode
 }
 
@@ -42,82 +40,18 @@ const styles = {
     },
   },
   image: {
+    maxHeight: 150,
+    height: 'auto',
     objectFit: 'contain',
   },
 }
 
-const ProductOptionsTypography = ({
-  option,
-  variant = 'body2',
-  fontWeight = 'bold',
-}: {
-  option: CrProductOption
-  variant?: 'body2' | 'body1' | 'subtitle1'
-  fontWeight?: 'bold' | 'normal'
-}) => (
-  <Box data-testid="productOptions">
-    <Typography variant={variant} fontWeight={fontWeight} sx={{ pr: 1 }} component="span">
-      {option.name}:
-    </Typography>
-    <Typography variant={variant} component="span">
-      {option.value}
-    </Typography>
-  </Box>
-)
-
-const ProductDetails = ({
-  options,
-  price,
-  salePrice,
-}: {
-  options: CrProductOption[]
-  price?: number
-  salePrice?: number
-}) => {
-  const { t } = useTranslation('common')
-
-  const theme = useTheme()
-
-  const mdScreen = useMediaQuery(theme.breakpoints.up('lg'))
-
-  const [expanded, setExpanded] = React.useState(true)
-
-  const handleExpandClick = () => {
-    setExpanded(!expanded)
-  }
-
-  return (
-    <Box data-testid="productDetails">
-      <Hidden only="lg">
-        <Box>
-          <Typography variant="body2" component="span" sx={{ pr: 1 }}>
-            {t('details')}
-          </Typography>
-          <ExpandMore onClick={handleExpandClick} aria-expanded={expanded}>
-            <ExpandMoreIcon />
-          </ExpandMore>
-        </Box>
-      </Hidden>
-
-      <Collapse in={mdScreen ? true : expanded} timeout="auto" unmountOnExit>
-        {options.map((option: CrProductOption, index: number) => (
-          <ProductOptionsTypography key={index} option={option}></ProductOptionsTypography>
-        ))}
-        {(price || salePrice) && (
-          <Box sx={{ display: 'inline-flex' }}>
-            <Typography variant="body2" fontWeight="bold" component="span" sx={{ pr: 1 }}>
-              {t('price-heading')}
-            </Typography>
-            <Price variant="body2" fontWeight="normal" price={price} salePrice={salePrice} />
-          </Box>
-        )}
-      </Collapse>
-    </Box>
-  )
-}
-
-const ProductItem = (props: ProductItem) => {
+const ProductItem = (props: ProductItemProps) => {
   const { image, name, options, price, salePrice, children } = props
+  const { t } = useTranslation('common')
+  const theme = useTheme()
+  const mdScreen = useMediaQuery(theme.breakpoints.up('lg'))
+  const [expanded, setExpanded] = React.useState(true)
 
   return (
     <>
@@ -125,9 +59,7 @@ const ProductItem = (props: ProductItem) => {
         <Box sx={{ ...styles.imageContainer }}>
           <CardMedia
             component="img"
-            width={'100%'}
-            height={'100%'}
-            image={image}
+            image={image || DefaultImage}
             alt={name}
             sx={{ ...styles.image }}
           />
@@ -138,8 +70,52 @@ const ProductItem = (props: ProductItem) => {
             <Typography variant="h4" data-testid="productName">
               {name}
             </Typography>
+
             {children}
-            <ProductDetails options={options} price={price} salePrice={salePrice} />
+
+            <Box data-testid="productDetails">
+              <Hidden only="lg">
+                <Box
+                  display="flex"
+                  alignItems="center"
+                  width="fit-content"
+                  sx={{ cursor: 'pointer' }}
+                  pb={1}
+                  onClick={() => setExpanded(!expanded)}
+                >
+                  <Typography variant="body2" align="left" sx={{ mr: 1 }}>
+                    Details
+                  </Typography>
+                  {expanded ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
+                </Box>
+                {/* <Box>
+                  <Typography variant="body2" component="span" sx={{ pr: 1 }}>
+                    {t('details')}
+                  </Typography>
+                  <ExpandMore onClick={handleExpandClick} aria-expanded={expanded}>
+                    <ExpandMoreIcon />
+                  </ExpandMore>
+                </Box> */}
+              </Hidden>
+
+              <Collapse in={mdScreen ? true : expanded} timeout="auto" unmountOnExit>
+                <ProductOptions options={options} />
+
+                {(price || salePrice) && (
+                  <Box sx={{ display: 'inline-flex' }}>
+                    <Typography variant="body2" fontWeight="bold" component="span" sx={{ pr: 1 }}>
+                      {t('price')}:
+                    </Typography>
+                    <Price
+                      variant="body2"
+                      fontWeight="normal"
+                      price={price}
+                      salePrice={salePrice}
+                    />
+                  </Box>
+                )}
+              </Collapse>
+            </Box>
           </CardContent>
         </Box>
       </Box>

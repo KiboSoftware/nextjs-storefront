@@ -5,13 +5,12 @@ import { Box, Card, Divider, Hidden, IconButton, useMediaQuery, useTheme } from 
 import { grey } from '@mui/material/colors'
 import { useTranslation } from 'next-i18next'
 
-import CartItemActions from '../CartItemActions/CartItemActions'
+import CartItemActions from '@/components/Cart/CartItemActions/CartItemActions'
 import FulfillmentOptions from '@/components/common/FulfillmentOptions/FulfillmentOptions'
 import ProductItem from '@/components/common/ProductItem/ProductItem'
 import QuantitySelector from '@/components/common/QuantitySelector/QuantitySelector'
-import DefaultImage from '@/public/product_placeholder.svg'
 
-import { CartItem as CartItemType, CrProductOption } from '@/lib/gql/types'
+import type { CartItem as CartItemType, CrProductOption } from '@/lib/gql/types'
 
 const styles = {
   card: {
@@ -49,7 +48,7 @@ interface CartItemProps {
 }
 
 const onDelete = () => {
-  // TODO: Handle Delete Item
+  // Handle Delete Item
 }
 
 const CartItem = (props: CartItemProps) => {
@@ -69,17 +68,21 @@ const CartItem = (props: CartItemProps) => {
           <Box sx={{ ...styles.cartItemContainer }}>
             <Box sx={{ ...styles.subcontainer }}>
               <ProductItem
-                image={cartItem.product?.imageUrl || DefaultImage}
-                name={cartItem.product?.name as string}
+                image={cartItem.product?.imageUrl || ''}
+                name={cartItem.product?.name || ''}
                 options={cartItem.product?.options as Array<CrProductOption>}
-                price={cartItem.product?.price?.price as number}
+                price={cartItem.product?.price?.price || 0}
               >
                 <Box sx={{ py: '0.5rem' }}>
                   <QuantitySelector
                     quantity={quantity}
                     label={t('qty')}
-                    onIncrease={() => cartItem.quantity > quantity && setQuantity(quantity + 1)}
-                    onDecrease={() => setQuantity(quantity - 1)}
+                    maxQuantity={cartItem.quantity}
+                    onIncrease={() =>
+                      cartItem.quantity > quantity &&
+                      setQuantity((itemQuantity) => itemQuantity + 1)
+                    }
+                    onDecrease={() => setQuantity((itemQuantity) => itemQuantity - 1)}
                   />
                 </Box>
               </ProductItem>
