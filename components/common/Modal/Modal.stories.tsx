@@ -11,28 +11,14 @@ export default {
   title: 'Common/Modal',
 } as ComponentMeta<typeof Modal>
 
-// export function useCustomHook() {
-//   const [{ open }, updateArgs] = useArgs()
-//   const handleClose = () => updateArgs({ open: !open })
-
-//   return [handleClose]
-// }
-
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 const Template: ComponentStory<typeof Modal> = ({ onClose, ...args }) => {
   const [{ open }, updateArgs] = useArgs()
   const handleClose = () => updateArgs({ open: !open })
-  // const [handleClose] = useCustomHook()
 
   return <Modal onClose={handleClose} {...args} />
 }
 
-// const Template: ComponentStory<typeof Modal> = ({ onClose, ...args }, context) => {
-//   const { open, updateArgs } = context
-//   const handleClose = () => updateArgs({ open: !open })
-
-//   return <Modal onClose={handleClose} {...args} />
-// }
 // Common
 export const Common = Template.bind({})
 
@@ -50,11 +36,3 @@ Common.args = {
   isCenteredModal: true,
   customMaxWidth: '',
 }
-
-// Common.decorators = [
-//   (Story) => {
-//     const [{ open }, updateArgs] = useArgs()
-
-//     return <Story open={open} updateArgs={updateArgs} />
-//   },
-// ]

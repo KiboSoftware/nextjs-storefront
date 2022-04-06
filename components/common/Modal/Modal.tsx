@@ -55,21 +55,6 @@ interface ModalActionsProps {
 }
 
 // MUI
-// const StyledDialog = styled(Dialog)(({ theme }) => ({
-//   '& .MuiDialogContent-root': {
-//     padding: theme.spacing(2),
-//   },
-//   '& .MuiDialogActions-root': {
-//     padding: theme.spacing(1),
-//   },
-//   '& .MuiDialog-paper': {
-//     margin: 0,
-//     width: '100%',
-//     borderRadius: 0,
-//     maxWidth: '518px',
-//   },
-// }))
-
 const StyledDialog = styled(Dialog)(({ theme }: { theme?: Theme }) => ({
   '& .MuiDialogContent-root': {
     padding: theme?.spacing(2),
