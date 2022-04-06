@@ -1,37 +1,46 @@
-import React from 'react'
+import React, { MouseEvent, useState } from 'react'
 
 import MoreVertIcon from '@mui/icons-material/MoreVert'
-import IconButton from '@mui/material/IconButton'
-import Menu from '@mui/material/Menu'
-import MenuItem from '@mui/material/MenuItem'
-
-const ITEM_HEIGHT = 48
+import { IconButton, Menu, MenuItem } from '@mui/material'
+import { useTranslation } from 'next-i18next'
 
 interface CartEditActionProps {
   options: string[]
-  onClick: (option: string) => void
+  onMenuItemSelection: (option: string) => void
 }
 
-export default function CartEditAction(props: CartEditActionProps) {
-  const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null)
+const styles = {
+  menuItemStyle: {
+    typography: {
+      sm: 'body2',
+    },
+    padding: '0.5rem 1rem',
+  },
+}
+
+const CartEditAction = (props: CartEditActionProps) => {
+  const { options, onMenuItemSelection } = props
+  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null)
   const open = Boolean(anchorEl)
-  const handleClick = (event: React.MouseEvent<HTMLElement>) => {
+  const { t } = useTranslation('common')
+
+  const handleClick = (event: MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget)
   }
-  const { options, onClick } = props
+
   const handleClose = () => {
     setAnchorEl(null)
   }
 
   const handleMenuItemClick = (option: string) => {
-    onClick(option)
+    onMenuItemSelection(option)
     handleClose()
   }
 
   return (
     <div>
       <IconButton
-        aria-label="more"
+        aria-label={t('more')}
         id="long-button"
         aria-controls={open ? 'long-menu' : undefined}
         aria-expanded={open ? 'true' : undefined}
@@ -50,8 +59,7 @@ export default function CartEditAction(props: CartEditActionProps) {
         onClose={handleClose}
         PaperProps={{
           style: {
-            maxHeight: ITEM_HEIGHT * 4.5,
-            width: '20ch',
+            width: '12.063rem',
           },
         }}
         anchorOrigin={{
@@ -67,11 +75,7 @@ export default function CartEditAction(props: CartEditActionProps) {
           <MenuItem
             key={option}
             onClick={() => handleMenuItemClick(option)}
-            sx={{
-              typography: {
-                sm: 'body2',
-              },
-            }}
+            sx={{ ...styles.menuItemStyle }}
           >
             {option}
           </MenuItem>
@@ -80,3 +84,5 @@ export default function CartEditAction(props: CartEditActionProps) {
     </div>
   )
 }
+
+export default CartEditAction

@@ -3,15 +3,15 @@ import React from 'react'
 import { Box } from '@mui/material'
 import { ComponentStory, ComponentMeta } from '@storybook/react'
 
-import CartEditActionMobile from './CartEditActionMobile'
+import CartEditAction from './CartEditAction'
 
 export default {
   title: 'Common/Cart/Cart Edit Action',
-  component: CartEditActionMobile,
-  argTypes: { onClick: { action: 'clicked' } },
-} as ComponentMeta<typeof CartEditActionMobile>
+  component: CartEditAction,
+  argTypes: { onMenuItemSelection: { action: 'clicked' } },
+} as ComponentMeta<typeof CartEditAction>
 
-const Template: ComponentStory<typeof CartEditActionMobile> = (args) => (
+const Template: ComponentStory<typeof CartEditAction> = (args) => (
   <Box
     height={'100%'}
     width={'100%'}
@@ -19,7 +19,7 @@ const Template: ComponentStory<typeof CartEditActionMobile> = (args) => (
     justifyContent={'center'}
     alignItems={'center'}
   >
-    <CartEditActionMobile {...args} />
+    <CartEditAction {...args} />
   </Box>
 )
 
