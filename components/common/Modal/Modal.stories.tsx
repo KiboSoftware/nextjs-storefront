@@ -11,12 +11,11 @@ export default {
   title: 'Common/Modal',
 } as ComponentMeta<typeof Modal>
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-const Template: ComponentStory<typeof Modal> = ({ onClose, ...args }) => {
+const Template: ComponentStory<typeof Modal> = ({ ...args }) => {
   const [{ open }, updateArgs] = useArgs()
   const handleClose = () => updateArgs({ open: !open })
 
-  return <Modal onClose={handleClose} {...args} />
+  return <Modal {...args} onClose={handleClose} />
 }
 
 // Common

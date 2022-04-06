@@ -11,11 +11,11 @@ export default {
 } as ComponentMeta<typeof AddToCart>
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-const Template: ComponentStory<typeof AddToCart> = ({ onClose, ...args }) => {
+const Template: ComponentStory<typeof AddToCart> = ({ ...args }) => {
   const [{ open }, updateArgs] = useArgs()
   const handleClose = () => updateArgs({ open: !open })
 
-  return <AddToCart onClose={handleClose} {...args} />
+  return <AddToCart {...args} onClose={handleClose} />
 }
 
 // Common
