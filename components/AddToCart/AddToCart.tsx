@@ -14,6 +14,9 @@ interface CartDetailsProps {
   subtotal: string
   tax: string
   total: string
+  open: boolean
+  isCenteredModal: boolean
+  onClose: () => void
 }
 
 const Title = () => {
@@ -25,12 +28,12 @@ const Title = () => {
           color: 'primary.main',
         }}
       />
-      <Box ml={1} sx={{ display: { sm: 'none', md: 'block' } }}>
+      <Box ml={1}>
         <Typography
           variant="body2"
           component="span"
           fontWeight="bold"
-          fontSize="1.5rem"
+          fontSize="20px"
           color="text.primary"
           sx={{ display: 'block' }}
         >
@@ -46,7 +49,7 @@ const Content = (fullfillmentOption: string, subtotal: string, tax: string, tota
   const { t } = useTranslation('common')
 
   return (
-    <Box sx={{ maxWidth: '518px', width: '100%', minWidth: '320px' }}>
+    <Box sx={{ width: '100%' }}>
       <Box>
         <Typography gutterBottom>Product Component</Typography>
       </Box>
@@ -137,7 +140,7 @@ const Actions = () => {
         padding: '0 2% 4% 2%',
       }}
     >
-      <Button variant="contained" sx={{ width: '100%' }} onClick={handleGoToCart}>
+      <Button variant="contained" sx={{ width: '100%', fontSize: '18px' }} onClick={handleGoToCart}>
         {t('go-to-cart')}
       </Button>
       <Button
@@ -146,6 +149,7 @@ const Actions = () => {
           color: `${grey[500]}`,
           background: `${grey[50]}`,
           borderColor: `${grey[500]}`,
+          fontSize: '18px',
         }}
         onClick={handleContinueShopping}
       >
@@ -156,13 +160,24 @@ const Actions = () => {
 }
 
 // Component
-const AddToCart = ({ fullfillmentOption, subtotal, tax, total }: CartDetailsProps) => {
+const AddToCart = ({
+  fullfillmentOption,
+  subtotal,
+  tax,
+  total,
+  open,
+  isCenteredModal,
+  onClose,
+}: CartDetailsProps) => {
   const ModalArgs = {
-    open: true,
+    open: open,
     title: Title(),
     content: Content(fullfillmentOption, subtotal, tax, total),
     dividers: false,
     actions: Actions(),
+    isCenteredModal: isCenteredModal,
+    customMaxWidth: '518px',
+    onClose: onClose,
   }
 
   return <Modal {...ModalArgs} />

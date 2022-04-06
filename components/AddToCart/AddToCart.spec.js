@@ -7,9 +7,21 @@ import * as stories from './AddToCart.stories' // import all stories from the st
 
 const { Common } = composeStories(stories)
 
+const onClose = jest.fn()
+
+jest.mock('@storybook/client-api', () => {
+  return {
+    useArgs: jest.fn(() => {
+      const open = true
+      const updateArgs = jest.fn()
+      return [{ open }, updateArgs]
+    }),
+  }
+})
+
 describe('[components] Add To Cart Component', () => {
   describe('Default Add To Cart', () => {
-    const setup = () => render(<Common {...Common.args} />)
+    const setup = () => render(<Common onClose={onClose} {...Common.args} />)
 
     it('should render fullfillmentOption', () => {
       setup()

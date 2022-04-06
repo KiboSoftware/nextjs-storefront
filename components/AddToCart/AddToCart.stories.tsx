@@ -1,5 +1,6 @@
 import React from 'react'
 
+import { useArgs } from '@storybook/client-api'
 import { ComponentStory, ComponentMeta } from '@storybook/react'
 
 import AddToCart from './AddToCart'
@@ -9,7 +10,13 @@ export default {
   component: AddToCart,
 } as ComponentMeta<typeof AddToCart>
 
-const Template: ComponentStory<typeof AddToCart> = (args) => <AddToCart {...args} />
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+const Template: ComponentStory<typeof AddToCart> = ({ onClose, ...args }) => {
+  const [{ open }, updateArgs] = useArgs()
+  const handleClose = () => updateArgs({ open: !open })
+
+  return <AddToCart onClose={handleClose} {...args} />
+}
 
 // Common
 export const Common = Template.bind({})
@@ -18,4 +25,6 @@ Common.args = {
   subtotal: '219.99',
   tax: '13.73',
   total: '233.72',
+  open: true,
+  isCenteredModal: false,
 }

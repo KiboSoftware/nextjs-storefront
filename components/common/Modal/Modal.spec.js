@@ -7,9 +7,21 @@ import * as stories from './Modal.stories' // import all stories from the storie
 
 const { Common } = composeStories(stories)
 
+const onClose = jest.fn()
+
+jest.mock('@storybook/client-api', () => {
+  return {
+    useArgs: jest.fn(() => {
+      const open = true
+      const updateArgs = jest.fn()
+      return [{ open }, updateArgs]
+    }),
+  }
+})
+
 describe('[components] Modal Component', () => {
   describe('Default Modal', () => {
-    const setup = () => render(<Common {...Common.args} />)
+    const setup = () => render(<Common onClose={onClose} {...Common.args} />)
 
     it('should render modal open', () => {
       setup()

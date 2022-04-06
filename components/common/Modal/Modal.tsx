@@ -2,16 +2,16 @@ import React from 'react'
 
 import CloseIcon from '@mui/icons-material/Close'
 import {
-  Button,
   Dialog,
   DialogTitle,
   DialogContent,
   DialogActions,
   IconButton,
   styled,
-} from '@mui/material'
+  Theme,
+} from '@mui/material' // Interface
+import { makeStyles } from '@mui/styles'
 
-// Interface
 interface ModalProps {
   open: boolean
   title?: React.ReactNode
@@ -26,6 +26,9 @@ interface ModalProps {
   actionsClasses?: object
   actionsSX?: object
   disableSpacing?: boolean
+  isCenteredModal?: boolean
+  customMaxWidth: string
+  onClose: () => void
 }
 
 interface ModalTitleProps {
@@ -52,14 +55,43 @@ interface ModalActionsProps {
 }
 
 // MUI
-const StyledDialog = styled(Dialog)(({ theme }) => ({
+// const StyledDialog = styled(Dialog)(({ theme }) => ({
+//   '& .MuiDialogContent-root': {
+//     padding: theme.spacing(2),
+//   },
+//   '& .MuiDialogActions-root': {
+//     padding: theme.spacing(1),
+//   },
+//   '& .MuiDialog-paper': {
+//     margin: 0,
+//     width: '100%',
+//     borderRadius: 0,
+//     maxWidth: '518px',
+//   },
+// }))
+
+const StyledDialog = styled(Dialog)(({ theme }: { theme?: Theme }) => ({
   '& .MuiDialogContent-root': {
-    padding: theme.spacing(2),
+    padding: theme?.spacing(2),
   },
   '& .MuiDialogActions-root': {
-    padding: theme.spacing(1),
+    padding: theme?.spacing(1),
+  },
+  '& .MuiDialog-paper': {
+    margin: 0,
+    width: '100%',
+    borderRadius: 0,
   },
 }))
+
+const useStyles = makeStyles({
+  topScrollPaper: {
+    alignItems: 'flex-start',
+  },
+  topPaperScrollBody: {
+    verticalAlign: 'top',
+  },
+})
 
 const ModalTitle = (props: ModalTitleProps) => {
   const { children, onClose, showCloseButton, sx, ...other } = props
@@ -73,12 +105,13 @@ const ModalTitle = (props: ModalTitleProps) => {
           onClick={onClose}
           sx={{
             position: 'absolute',
-            right: 8,
-            top: 8,
-            color: (theme) => theme.palette.grey[500],
+            right: 10,
+            top: 10,
           }}
         >
-          <CloseIcon />
+          <CloseIcon
+            sx={{ width: '20px', height: '20px', color: (theme) => theme.palette.grey[600] }}
+          />
         </IconButton>
       ) : null}
     </DialogTitle>
@@ -125,25 +158,38 @@ const Modal = ({
   actionsClasses,
   actionsSX,
   disableSpacing,
+  isCenteredModal,
+  customMaxWidth,
+  onClose,
 }: ModalProps) => {
-  const [isOpen, setOpen] = React.useState(open)
-
-  const handleClickOpen = () => {
-    setOpen(true)
-  }
-  const handleClose = () => {
-    setOpen(false)
-  }
+  const classes = useStyles()
 
   return (
     <>
-      <Button variant="outlined" onClick={handleClickOpen}>
-        Open dialog
-      </Button>
-      <StyledDialog onClose={handleClose} aria-labelledby="customized-dialog-title" open={isOpen}>
+      <StyledDialog
+        onClose={onClose}
+        aria-labelledby="customized-dialog-title"
+        open={open}
+        classes={{
+          ...(isCenteredModal === false && {
+            scrollPaper: classes.topScrollPaper,
+            paperScrollBody: classes.topPaperScrollBody,
+          }),
+        }}
+        sx={{
+          ...(isCenteredModal === false && {
+            top: '55px',
+          }),
+          '& .MuiDialog-paper': {
+            ...(customMaxWidth && {
+              maxWidth: customMaxWidth,
+            }),
+          },
+        }}
+      >
         <ModalTitle
           id="customized-dialog-title"
-          onClose={handleClose}
+          onClose={onClose}
           classes={titleClasses}
           showCloseButton={showCloseButton}
           sx={titleSX}
@@ -159,6 +205,11 @@ const Modal = ({
       </StyledDialog>
     </>
   )
+}
+
+Modal.defaultProps = {
+  isCenteredModal: true,
+  customMaxWidth: '',
 }
 
 export default Modal
