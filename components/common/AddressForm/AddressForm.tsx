@@ -38,7 +38,7 @@ export interface Contact {
     work?: string
   }
 }
-export interface Data {
+export interface Address {
   isFormValid: boolean
   contact: Contact
   saveAddress: boolean
@@ -48,7 +48,7 @@ interface AddressFormProps {
   countries: string[]
   isUserLoggedIn: boolean
   saveAddressLabel?: string
-  onSave: (data: Data) => void
+  onSave: (data: Address) => void
 }
 interface AddressFormHandler {
   listener: () => void
