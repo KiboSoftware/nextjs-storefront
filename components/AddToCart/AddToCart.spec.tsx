@@ -3,30 +3,19 @@ import React from 'react'
 import { composeStories } from '@storybook/testing-react'
 import { render, screen } from '@testing-library/react'
 
+import { onClose } from '../common/Modal/Modal.common.mocks'
 import * as stories from './AddToCart.stories' // import all stories from the stories file
 
 const { Common } = composeStories(stories)
 
-const onClose = jest.fn()
-
-jest.mock('@storybook/client-api', () => {
-  return {
-    useArgs: jest.fn(() => {
-      const open = true
-      const updateArgs = jest.fn()
-      return [{ open }, updateArgs]
-    }),
-  }
-})
-
 describe('[components] Add To Cart Component', () => {
   describe('Default Add To Cart', () => {
-    const setup = () => render(<Common onClose={onClose} {...Common.args} />)
+    const setup = () => render(<Common {...Common.args} onClose={onClose} />)
 
     it('should render fullfillmentOption', () => {
       setup()
 
-      const fullfillmentOption = screen.getByText(Common.args.fullfillmentOption)
+      const fullfillmentOption = screen.getByText(Common.args?.fullfillmentOption)
 
       expect(fullfillmentOption).toBeVisible()
     })
@@ -34,7 +23,7 @@ describe('[components] Add To Cart Component', () => {
     it('should render subtotal', () => {
       setup()
 
-      const subtotal = screen.getByText(`$${Common.args.subtotal}`)
+      const subtotal = screen.getByText(`$${Common?.args?.subtotal}`)
 
       expect(subtotal).toBeVisible()
     })
@@ -42,7 +31,7 @@ describe('[components] Add To Cart Component', () => {
     it('should render tax', () => {
       setup()
 
-      const tax = screen.getByText(`$${Common.args.tax}`)
+      const tax = screen.getByText(`$${Common?.args?.tax}`)
 
       expect(tax).toBeVisible()
     })
@@ -50,7 +39,7 @@ describe('[components] Add To Cart Component', () => {
     it('should render total', () => {
       setup()
 
-      const total = screen.getByText(`$${Common.args.total}`)
+      const total = screen.getByText(`$${Common?.args?.total}`)
 
       expect(total).toBeVisible()
     })

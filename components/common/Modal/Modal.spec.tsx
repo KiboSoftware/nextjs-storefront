@@ -3,30 +3,19 @@ import React from 'react'
 import { composeStories } from '@storybook/testing-react'
 import { render, screen } from '@testing-library/react'
 
+import { onClose } from './Modal.common.mocks'
 import * as stories from './Modal.stories' // import all stories from the stories file
 
 const { Common } = composeStories(stories)
 
-const onClose = jest.fn()
-
-jest.mock('@storybook/client-api', () => {
-  return {
-    useArgs: jest.fn(() => {
-      const open = true
-      const updateArgs = jest.fn()
-      return [{ open }, updateArgs]
-    }),
-  }
-})
-
 describe('[components] Modal Component', () => {
   describe('Default Modal', () => {
-    const setup = () => render(<Common onClose={onClose} {...Common.args} />)
+    const setup = () => render(<Common {...Common.args} onClose={onClose} />)
 
     it('should render modal open', () => {
       setup()
 
-      expect(Common.args.open).toBeTruthy()
+      expect(Common?.args?.open).toBeTruthy()
     })
 
     it('should render title', () => {
@@ -48,7 +37,7 @@ describe('[components] Modal Component', () => {
     it('should render dividers', () => {
       setup()
 
-      expect(Common.args.dividers).toBeTruthy()
+      expect(Common?.args?.dividers).toBeTruthy()
     })
 
     it('should render actions', () => {
