@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { ReactNode } from 'react'
 
 import CloseIcon from '@mui/icons-material/Close'
 import {
@@ -10,19 +10,19 @@ import {
   styled,
   Theme,
 } from '@mui/material' // Interface
+import { grey } from '@mui/material/colors'
 import { makeStyles } from '@mui/styles'
-
 interface ModalProps {
   open: boolean
-  title?: React.ReactNode
+  title?: ReactNode
   titleClasses?: object
   titleSX?: object
   showCloseButton?: boolean
-  content?: React.ReactNode
+  content?: ReactNode
   contentClasses?: object
   contentSX?: object
   dividers?: boolean
-  actions?: React.ReactNode
+  actions?: ReactNode
   actionsClasses?: object
   actionsSX?: object
   disableSpacing?: boolean
@@ -33,7 +33,7 @@ interface ModalProps {
 
 interface ModalTitleProps {
   id: string
-  children?: React.ReactNode
+  children?: ReactNode
   classes?: object
   sx?: object
   showCloseButton?: boolean
@@ -41,14 +41,14 @@ interface ModalTitleProps {
 }
 
 interface ModalContentProps {
-  children?: React.ReactNode
+  children?: ReactNode
   classes?: object
   dividers?: boolean
   sx?: object
 }
 
 interface ModalActionsProps {
-  children?: React.ReactNode
+  children?: ReactNode
   classes?: object
   disableSpacing?: boolean
   sx?: object
@@ -94,9 +94,7 @@ const ModalTitle = (props: ModalTitleProps) => {
             top: 10,
           }}
         >
-          <CloseIcon
-            sx={{ width: '20px', height: '20px', color: (theme) => theme.palette.grey[600] }}
-          />
+          <CloseIcon sx={{ width: '20px', height: '20px', color: grey[600] }} />
         </IconButton>
       ) : null}
     </DialogTitle>

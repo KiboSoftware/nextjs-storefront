@@ -15,7 +15,7 @@ describe('[components] Add To Cart Component', () => {
     it('should render fullfillmentOption', () => {
       setup()
 
-      const fullfillmentOption = screen.getByText(Common.args?.fullfillmentOption)
+      const fullfillmentOption = screen.getByText(`${Common.args?.fullfillmentOption}`)
 
       expect(fullfillmentOption).toBeVisible()
     })
@@ -23,7 +23,7 @@ describe('[components] Add To Cart Component', () => {
     it('should render subtotal', () => {
       setup()
 
-      const subtotal = screen.getByText(`$${Common?.args?.subtotal}`)
+      const subtotal = screen.getByText(`$${Common.args?.subtotal}`)
 
       expect(subtotal).toBeVisible()
     })
@@ -31,7 +31,7 @@ describe('[components] Add To Cart Component', () => {
     it('should render tax', () => {
       setup()
 
-      const tax = screen.getByText(`$${Common?.args?.tax}`)
+      const tax = screen.getByText(`$${Common.args?.tax}`)
 
       expect(tax).toBeVisible()
     })
@@ -39,7 +39,7 @@ describe('[components] Add To Cart Component', () => {
     it('should render total', () => {
       setup()
 
-      const total = screen.getByText(`$${Common?.args?.total}`)
+      const total = screen.getByText(`$${Common.args?.total}`)
 
       expect(total).toBeVisible()
     })

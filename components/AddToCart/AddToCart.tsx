@@ -146,9 +146,9 @@ const Actions = () => {
       <Button
         variant="outlined"
         sx={{
-          color: `${grey[500]}`,
-          background: `${grey[50]}`,
-          borderColor: `${grey[500]}`,
+          color: grey[500],
+          background: grey[50],
+          borderColor: grey[500],
           fontSize: '18px',
         }}
         onClick={handleContinueShopping}
