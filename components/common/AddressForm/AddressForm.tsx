@@ -1,4 +1,5 @@
 /* eslint-disable  @typescript-eslint/no-explicit-any */
+/* eslint-disable  jsx-a11y/no-autofocus */
 import React, { useState, forwardRef, useImperativeHandle } from 'react'
 
 import { yupResolver } from '@hookform/resolvers/yup'
