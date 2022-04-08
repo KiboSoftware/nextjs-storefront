@@ -61,64 +61,57 @@ const ProductItem = (props: ProductItemProps) => {
   const [expanded, setExpanded] = React.useState(true)
 
   return (
-    <>
-      <Box sx={{ display: 'flex', pb: 2, pr: 1, gap: '3%', flex: 1 }}>
-        <Box sx={{ ...styles.imageContainer }}>
-          <CardMedia
-            component="img"
-            image={image || DefaultImage}
-            alt={name}
-            sx={{ ...styles.image }}
-          />
-        </Box>
-
-        <Box sx={{ display: 'flex', flexDirection: 'column', flex: 1, marginRight: '1rem' }}>
-          <CardContent sx={{ py: 0, px: 1 }}>
-            <Typography variant="h4" data-testid="productName">
-              {name}
-            </Typography>
-
-            {children}
-
-            <Box data-testid="productDetails">
-              <Hidden only="lg">
-                <Box
-                  display="flex"
-                  alignItems="center"
-                  width="fit-content"
-                  sx={{ cursor: 'pointer' }}
-                  pb={1}
-                  onClick={() => setExpanded(!expanded)}
-                >
-                  <Typography variant="body2" align="left" sx={{ mr: 1 }}>
-                    Details
-                  </Typography>
-                  {expanded ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
-                </Box>
-              </Hidden>
-
-              <Collapse in={mdScreen ? true : expanded} timeout="auto" unmountOnExit>
-                <ProductOptionList options={options} />
-
-                {(price || salePrice) && (
-                  <Box sx={{ display: 'inline-flex' }}>
-                    <Typography variant="body2" fontWeight="bold" component="span" sx={{ pr: 1 }}>
-                      {t('price')}:
-                    </Typography>
-                    <Price
-                      variant="body2"
-                      fontWeight="normal"
-                      price={price}
-                      salePrice={salePrice}
-                    />
-                  </Box>
-                )}
-              </Collapse>
-            </Box>
-          </CardContent>
-        </Box>
+    <Box sx={{ display: 'flex', pb: 2, pr: 1, gap: '3%', flex: 1 }}>
+      <Box sx={{ ...styles.imageContainer }}>
+        <CardMedia
+          component="img"
+          image={image || DefaultImage}
+          alt={name}
+          sx={{ ...styles.image }}
+        />
       </Box>
-    </>
+
+      <Box sx={{ display: 'flex', flexDirection: 'column', flex: 1, marginRight: '1rem' }}>
+        <CardContent sx={{ py: 0, px: 1 }}>
+          <Typography variant="h4" data-testid="productName">
+            {name}
+          </Typography>
+
+          {children}
+
+          <Box data-testid="productDetails">
+            <Hidden only="lg">
+              <Box
+                display="flex"
+                alignItems="center"
+                width="fit-content"
+                sx={{ cursor: 'pointer' }}
+                pb={1}
+                onClick={() => setExpanded(!expanded)}
+              >
+                <Typography variant="body2" align="left" sx={{ mr: 1 }}>
+                  Details
+                </Typography>
+                {expanded ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
+              </Box>
+            </Hidden>
+
+            <Collapse in={mdScreen ? true : expanded} timeout="auto" unmountOnExit>
+              <ProductOptionList options={options} />
+
+              {(price || salePrice) && (
+                <Box sx={{ display: 'inline-flex' }}>
+                  <Typography variant="body2" fontWeight="bold" component="span" sx={{ pr: 1 }}>
+                    {t('price')}:
+                  </Typography>
+                  <Price variant="body2" fontWeight="normal" price={price} salePrice={salePrice} />
+                </Box>
+              )}
+            </Collapse>
+          </Box>
+        </CardContent>
+      </Box>
+    </Box>
   )
 }
 
