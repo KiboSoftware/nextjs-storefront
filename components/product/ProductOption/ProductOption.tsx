@@ -2,7 +2,7 @@ import React from 'react'
 
 import { Typography, Box } from '@mui/material'
 
-import { CrProductOption } from '@/lib/gql/types'
+import type { CrProductOption } from '@/lib/gql/types'
 
 interface ProductOptionProps {
   option: CrProductOption

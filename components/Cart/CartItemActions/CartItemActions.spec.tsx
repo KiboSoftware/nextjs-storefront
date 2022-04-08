@@ -17,31 +17,13 @@ describe('[components] - CartItemActions', () => {
     setup()
 
     const cardActions = screen.getByRole('cardActions')
+    const editLink = screen.getByText('edit')
+    const saveLink = screen.getByText('save-for-later')
+    const addLink = screen.getByText('add-to-favorites')
 
     expect(cardActions).toBeVisible()
-  })
-
-  it('should render Edit link', () => {
-    setup()
-
-    const editLink = screen.getByText('edit')
-
     expect(editLink).toBeVisible()
-  })
-
-  it('should render save-for-later link', () => {
-    setup()
-
-    const editLink = screen.getByText('save-for-later')
-
-    expect(editLink).toBeVisible()
-  })
-
-  it('should render add-to-favorites link', () => {
-    setup()
-
-    const editLink = screen.getByText('add-to-favorites')
-
-    expect(editLink).toBeVisible()
+    expect(saveLink).toBeVisible()
+    expect(addLink).toBeVisible()
   })
 })

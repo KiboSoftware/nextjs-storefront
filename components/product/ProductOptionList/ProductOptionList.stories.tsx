@@ -2,31 +2,38 @@ import React from 'react'
 
 import { ComponentStory, ComponentMeta } from '@storybook/react'
 
-import { productOptionListValuesMock } from '../../../__mocks__/productOptionListMock'
-import ProductOptionList, { ProductOptionListProps } from './ProductOptionList'
+import ProductOptionList from './ProductOptionList'
+
+import type { CrProductOption } from '@/lib/gql/types'
 
 export default {
-  title: 'Product/Product Option List',
+  title: 'Product/ProductOptionList',
   component: ProductOptionList,
-  args: {
-    optionValues: productOptionListValuesMock,
-  },
-  argTypes: { onChange: { action: 'onChange' } },
 } as ComponentMeta<typeof ProductOptionList>
 
-const Template: ComponentStory<typeof ProductOptionList> = (args: ProductOptionListProps) => (
-  <ProductOptionList {...args} />
-)
+const options: CrProductOption[] = [
+  {
+    attributeFQN: 'Tenant~color',
+    name: 'Color',
+    value: 'Blue',
+  },
+  {
+    attributeFQN: 'Tenant~size',
+    name: 'Size',
+    value: 'Large',
+  },
+  {
+    attributeFQN: 'Tenant~material',
+    name: 'Material',
+    value: 'Plastic',
+  },
+]
 
+// Default Line Item
+const Template: ComponentStory<typeof ProductOptionList> = (args) => <ProductOptionList {...args} />
+
+// Shopping cart: Show Price below the product name
 export const Common = Template.bind({})
-
-export const WithError = Template.bind({})
-WithError.args = {
-  error: true,
-}
-
-export const WithErrorDescription = Template.bind({})
-WithErrorDescription.args = {
-  error: true,
-  errorHelperText: 'value not valid',
+Common.args = {
+  options,
 }

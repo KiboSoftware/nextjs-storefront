@@ -1,12 +1,23 @@
 import { useState } from 'react'
 
 import DeleteIcon from '@mui/icons-material/Delete'
-import { Box, Card, Divider, Hidden, IconButton, useMediaQuery, useTheme } from '@mui/material'
+import {
+  Box,
+  Card,
+  Divider,
+  Hidden,
+  IconButton,
+  SxProps,
+  Theme,
+  useMediaQuery,
+  useTheme,
+} from '@mui/material'
 import { grey } from '@mui/material/colors'
 import { useTranslation } from 'next-i18next'
 
 import CartItemActions from '@/components/Cart/CartItemActions/CartItemActions'
 import FulfillmentOptions from '@/components/common/FulfillmentOptions/FulfillmentOptions'
+import Price from '@/components/common/Price/Price'
 import ProductItem from '@/components/common/ProductItem/ProductItem'
 import QuantitySelector from '@/components/common/QuantitySelector/QuantitySelector'
 
@@ -14,10 +25,14 @@ import type { CartItem as CartItemType, CrProductOption } from '@/lib/gql/types'
 
 const styles = {
   card: {
-    marginBottom: '1.5rem',
+    marginBottom: {
+      xs: 0,
+      sm: 0,
+      md: '1.5rem',
+    },
     border: {
       xs: 'none',
-      lg: `2px solid ${grey[200]}`,
+      md: `2px solid ${grey[200]}`,
     },
     boxShadow: 'none',
   },
@@ -25,7 +40,7 @@ const styles = {
     display: 'flex',
     flexDirection: {
       xs: 'column',
-      lg: 'row',
+      md: 'row',
     },
     padding: '1rem 0.5rem',
     justifyContent: 'space-around',
@@ -38,9 +53,19 @@ const styles = {
     alignItems: 'flex-start',
     margin: '0',
     position: 'absolute',
-    top: 0,
-    right: 0,
-  },
+    top: {
+      xs: 0,
+      sm: '2%',
+      md: '5%',
+      lg: '6%',
+    },
+    right: {
+      xs: 0,
+      sm: 0,
+      md: '1%',
+      lg: '1%',
+    },
+  } as SxProps<Theme>,
 }
 
 interface CartItemProps {
@@ -57,13 +82,14 @@ const CartItem = (props: CartItemProps) => {
   const { t } = useTranslation('common')
   const theme = useTheme()
 
-  const orientationVertical = useMediaQuery(theme.breakpoints.up('md'))
+  const orientationVertical = useMediaQuery(theme.breakpoints.between('xs', 'md'))
+  console.log('orientationVertical', orientationVertical)
 
   const [quantity, setQuantity] = useState<number>(1)
 
   return (
     <>
-      <Card sx={{ ...styles.card }}>
+      <Card sx={{ ...styles.card }} role="group">
         <Box sx={{ position: 'relative' }}>
           <Box sx={{ ...styles.cartItemContainer }}>
             <Box sx={{ ...styles.subcontainer }}>
@@ -71,28 +97,36 @@ const CartItem = (props: CartItemProps) => {
                 image={cartItem.product?.imageUrl || ''}
                 name={cartItem.product?.name || ''}
                 options={cartItem.product?.options as Array<CrProductOption>}
-                price={cartItem.product?.price?.price || 0}
               >
+                <Box>
+                  <Price
+                    variant="body2"
+                    fontWeight="bold"
+                    price={cartItem.product?.price?.price || 0}
+                    salePrice={cartItem.product?.price?.salePrice || undefined}
+                  />
+                </Box>
                 <Box sx={{ py: '0.5rem' }}>
                   <QuantitySelector
                     quantity={quantity}
                     label={t('qty')}
                     maxQuantity={cartItem.quantity}
-                    onIncrease={() =>
-                      cartItem.quantity > quantity &&
-                      setQuantity((itemQuantity) => itemQuantity + 1)
-                    }
+                    onIncrease={() => setQuantity((itemQuantity) => itemQuantity + 1)}
                     onDecrease={() => setQuantity((itemQuantity) => itemQuantity - 1)}
                   />
                 </Box>
               </ProductItem>
 
-              <Hidden only="xs">
+              <Box sx={{ display: { xs: 'none', sm: 'none', md: 'block' } }}>
                 <CartItemActions />
-              </Hidden>
+              </Box>
             </Box>
 
-            <Divider orientation={orientationVertical ? 'vertical' : 'horizontal'} flexItem />
+            <Divider
+              orientation={orientationVertical ? 'vertical' : 'horizontal'}
+              sx={orientationVertical ? { borderTopWidth: '1px ' } : { borderLeftWidth: '1px' }}
+              flexItem
+            />
 
             <Box sx={{ ...styles.subcontainer }}>
               <FulfillmentOptions />
@@ -113,9 +147,9 @@ const CartItem = (props: CartItemProps) => {
           </Box>
         </Box>
       </Card>
-      <Hidden only="lg">
-        <Divider orientation="horizontal" flexItem sx={{ margin: '0 -4%' }} />
-      </Hidden>
+      <Box sx={{ display: { xs: 'block', sm: 'block', md: 'none' } }}>
+        <Divider orientation="horizontal" flexItem sx={{ margin: '0 -16px' }} />
+      </Box>
     </>
   )
 }

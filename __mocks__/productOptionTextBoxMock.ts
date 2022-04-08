@@ -1,4 +1,4 @@
-import { ProductOption } from '@/lib/gql/types'
+import type { ProductOption } from '@/lib/gql/types'
 
 export const productOptionTextBoxMock: ProductOption[] = [
   {

@@ -52,9 +52,9 @@ const QuantitySelector = (props: QuantitySelectorProps) => {
   const { t } = useTranslation('common')
 
   return (
-    <Stack direction="row" justifyContent="center" alignItems="center" spacing={1.5}>
+    <Stack direction="row" justifyContent="flec-start" alignItems="center" spacing={1.5}>
       <Typography variant="body2" component="span" sx={{ pr: 1 }} data-testid="label">
-        {label}
+        {label}:
       </Typography>
 
       <IconButton

@@ -3,9 +3,9 @@ import React from 'react'
 import { Box } from '@mui/material'
 import { ComponentStory, ComponentMeta } from '@storybook/react'
 
-import Price from '../Price/Price'
-import QuantitySelector from '../QuantitySelector/QuantitySelector'
 import ProductItem from './ProductItem'
+import Price from '@/components/common/Price/Price'
+import QuantitySelector from '@/components/common/QuantitySelector/QuantitySelector'
 import DefaultImage from '@/public/product_placeholder.svg'
 
 import type { CartItem, CrProductOption } from '@/lib/gql/types'

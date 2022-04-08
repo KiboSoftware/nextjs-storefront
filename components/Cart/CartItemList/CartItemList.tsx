@@ -1,4 +1,4 @@
-import CartItem from '../CartItem/CartItem'
+import CartItem from '@/components/Cart/CartItem/CartItem'
 
 import type { CartItem as CartItemType } from '@/lib/gql/types'
 

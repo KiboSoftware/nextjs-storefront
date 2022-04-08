@@ -1,40 +1,22 @@
-import { MenuItem } from '@mui/material'
-import { useTranslation } from 'next-i18next'
+import React from 'react'
 
-import KiboSelect from '@/components/common/KiboSelect/KiboSelect'
+import ProductOption from '../ProductOption/ProductOption'
 
-import type { ProductOptionValue } from '@/lib/gql/types'
+import type { CrProductOption } from '@/lib/gql/types'
 
-export interface ProductOptionListProps {
-  optionValues: ProductOptionValue[]
-  name?: string
-  value?: string
-  error?: boolean
-  errorHelperText?: string
-  row?: boolean
-  placeholder?: string
-  onChange: (value: string) => void
+interface ProductOptionListProps {
+  options: CrProductOption[]
 }
 
 const ProductOptionList = (props: ProductOptionListProps) => {
-  const { optionValues, name, value, error = false, errorHelperText = '', onChange } = props
-  const { t } = useTranslation('product-page')
+  const { options = [] } = props
 
   return (
-    <KiboSelect
-      name={name}
-      error={error}
-      helperText={errorHelperText}
-      onChange={onChange}
-      value={value}
-      placeholder={t('select-product-option')}
-    >
-      {optionValues.map((optionVal) => (
-        <MenuItem key={optionVal?.value} value={optionVal?.value}>
-          {optionVal?.stringValue}
-        </MenuItem>
+    <>
+      {options.map((option: CrProductOption, index: number) => (
+        <ProductOption key={index} option={option} />
       ))}
-    </KiboSelect>
+    </>
   )
 }
 

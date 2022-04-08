@@ -14,8 +14,8 @@ import {
 } from '@mui/material'
 import { useTranslation } from 'next-i18next'
 
-import Price from '../Price/Price'
-import ProductOptions from '@/components/product/ProductOptions/ProductOptions'
+import Price from '@/components/common/Price/Price'
+import ProductOptionList from '@/components/product/ProductOptionList/ProductOptionList'
 import DefaultImage from '@/public/product_placeholder.svg'
 
 import type { CrProductOption } from '@/lib/gql/types'
@@ -30,18 +30,25 @@ interface ProductItemProps {
 
 const styles = {
   imageContainer: {
-    height: {
-      xs: 130,
-      lg: 150,
+    maxHeight: {
+      xs: 100,
+      sm: 130,
+      md: 150,
+    },
+    maxWidth: {
+      xs: 100,
+      sm: 130,
+      md: 150,
     },
     width: {
-      xs: 130,
-      lg: 150,
+      xs: '20%',
+      sm: '20%',
+      md: '25%',
     },
   },
   image: {
-    maxHeight: 150,
-    height: 'auto',
+    width: '100%',
+    height: '100%',
     objectFit: 'contain',
   },
 }
@@ -50,12 +57,12 @@ const ProductItem = (props: ProductItemProps) => {
   const { image, name, options, price, salePrice, children } = props
   const { t } = useTranslation('common')
   const theme = useTheme()
-  const mdScreen = useMediaQuery(theme.breakpoints.up('lg'))
+  const mdScreen = useMediaQuery(theme.breakpoints.up('md'))
   const [expanded, setExpanded] = React.useState(true)
 
   return (
     <>
-      <Box sx={{ display: 'flex', pb: 2, pr: 1 }}>
+      <Box sx={{ display: 'flex', pb: 2, pr: 1, gap: '3%', flex: 1 }}>
         <Box sx={{ ...styles.imageContainer }}>
           <CardMedia
             component="img"
@@ -65,7 +72,7 @@ const ProductItem = (props: ProductItemProps) => {
           />
         </Box>
 
-        <Box sx={{ display: 'flex', flexDirection: 'column' }}>
+        <Box sx={{ display: 'flex', flexDirection: 'column', flex: 1, marginRight: '1rem' }}>
           <CardContent sx={{ py: 0, px: 1 }}>
             <Typography variant="h4" data-testid="productName">
               {name}
@@ -88,18 +95,10 @@ const ProductItem = (props: ProductItemProps) => {
                   </Typography>
                   {expanded ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
                 </Box>
-                {/* <Box>
-                  <Typography variant="body2" component="span" sx={{ pr: 1 }}>
-                    {t('details')}
-                  </Typography>
-                  <ExpandMore onClick={handleExpandClick} aria-expanded={expanded}>
-                    <ExpandMoreIcon />
-                  </ExpandMore>
-                </Box> */}
               </Hidden>
 
               <Collapse in={mdScreen ? true : expanded} timeout="auto" unmountOnExit>
-                <ProductOptions options={options} />
+                <ProductOptionList options={options} />
 
                 {(price || salePrice) && (
                   <Box sx={{ display: 'inline-flex' }}>

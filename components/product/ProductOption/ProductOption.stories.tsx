@@ -4,15 +4,11 @@ import { ComponentStory, ComponentMeta } from '@storybook/react'
 
 import ProductOption from './ProductOption'
 
-import { CrProductOption } from '@/lib/gql/types'
+import type { CrProductOption } from '@/lib/gql/types'
 
 export default {
   title: 'Product/ProductOption',
   component: ProductOption,
-  argTypes: {
-    size: { control: 'select' },
-    fontWeight: { control: 'radio' },
-  },
 } as ComponentMeta<typeof ProductOption>
 
 const productOption: CrProductOption = {
