@@ -15,18 +15,22 @@ describe('[component] - CartEditAction', () => {
     return { onMenuItemSelectionMock }
   }
 
-  it('should render button', () => {
+  it('should render component', () => {
     setup()
     const buttonElement = screen.getByRole('button')
+
     expect(buttonElement).toBeVisible()
   })
 
-  it('should render menu item list when user clicks on icon button', () => {
+  it('should show popover menu when user clicks on icon button', () => {
     setup()
+
     const buttonElement = screen.getByRole('button')
     userEvent.click(buttonElement)
+
     const items = screen.getAllByRole('menuitem')
     const menuItems = items.map((item) => item.textContent)
+
     expect(menuItems).toStrictEqual(CartAction.args.options)
   })
 
@@ -51,6 +55,7 @@ describe('[component] - CartEditAction', () => {
 
     const menuItem = menuItems[0]
     userEvent.click(menuItem)
+
     expect(menu).not.toBeVisible()
   })
 })
