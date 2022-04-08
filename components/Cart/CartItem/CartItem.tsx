@@ -83,8 +83,6 @@ const CartItem = (props: CartItemProps) => {
   const theme = useTheme()
 
   const orientationVertical = useMediaQuery(theme.breakpoints.between('xs', 'md'))
-  console.log('orientationVertical', orientationVertical)
-
   const [quantity, setQuantity] = useState<number>(1)
 
   return (

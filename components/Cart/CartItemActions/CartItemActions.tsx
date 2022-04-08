@@ -21,27 +21,25 @@ const CartItemActions = () => {
   const { t } = useTranslation('cart-page')
 
   return (
-    <>
-      <Box sx={styles.linkContainer}>
-        <CardActions sx={styles.cardAction} role="cardActions">
-          <Link href="#" passHref>
-            <MuiLink underline="none" variant="body2" color="text.primary" sx={styles.link}>
-              {t('edit')}
-            </MuiLink>
-          </Link>
-          <Link href="#" passHref>
-            <MuiLink underline="none" variant="body2" color="text.primary" sx={styles.link}>
-              {t('save-for-later')}
-            </MuiLink>
-          </Link>
-          <Link href="#" passHref>
-            <MuiLink underline="none" variant="body2" color="text.primary" sx={styles.link}>
-              {t('add-to-favorites')}
-            </MuiLink>
-          </Link>
-        </CardActions>
-      </Box>
-    </>
+    <Box sx={styles.linkContainer}>
+      <CardActions sx={styles.cardAction} role="cardActions">
+        <Link href="#" passHref>
+          <MuiLink underline="none" variant="body2" color="text.primary" sx={styles.link}>
+            {t('edit')}
+          </MuiLink>
+        </Link>
+        <Link href="#" passHref>
+          <MuiLink underline="none" variant="body2" color="text.primary" sx={styles.link}>
+            {t('save-for-later')}
+          </MuiLink>
+        </Link>
+        <Link href="#" passHref>
+          <MuiLink underline="none" variant="body2" color="text.primary" sx={styles.link}>
+            {t('add-to-favorites')}
+          </MuiLink>
+        </Link>
+      </CardActions>
+    </Box>
   )
 }
 

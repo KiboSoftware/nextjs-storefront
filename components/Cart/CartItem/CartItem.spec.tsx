@@ -49,4 +49,10 @@ describe('[components] - CartItem', () => {
     expect(fulfillmentOptions).toBeVisible()
     expect(cartItem).toBeVisible()
   })
+
+  it('should render dividers', () => {
+    setup()
+    const separator = screen.getAllByRole('separator')
+    expect(separator).toHaveLength(2)
+  })
 })

@@ -7,8 +7,8 @@ import * as stories from './ProductItem.stories'
 
 const { Common, WithPriceLabel } = composeStories(stories)
 
-// const priceMock = () => <div data-testid="price-component" />
-// jest.mock('@/components/common/Price/Price', () => priceMock)
+const priceMock = () => <div data-testid="price-component" />
+jest.mock('@/components/common/Price/Price', () => priceMock)
 const productOptionListMock = () => <div data-testid="product-option-list-component" />
 jest.mock('@/components/product/ProductOptionList/ProductOptionList', () => productOptionListMock)
 
@@ -37,9 +37,11 @@ describe('[component] - ProductItem', () => {
 
     // act
     const productOptionList = screen.getByTestId('product-option-list-component')
+    const price = screen.getByTestId('price-component')
 
     // // assert
     expect(productOptionList).toBeVisible()
+    expect(price).toBeVisible()
   })
 })
 
@@ -53,10 +55,8 @@ describe('[component] - ProductItem with Price Label', () => {
 
     const productDetails = screen.getByTestId('productDetails')
     const priceElement = screen.getByText(/price/i)
-    const price = screen.getByText(WithPriceLabel?.args?.price || 0)
 
     expect(productDetails).toBeVisible()
-    expect(priceElement).toBeInTheDocument()
-    expect(price).toBeVisible()
+    expect(priceElement).toBeVisible()
   })
 })
