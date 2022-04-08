@@ -2,7 +2,7 @@ import React from 'react'
 
 import { ComponentStory, ComponentMeta } from '@storybook/react'
 
-import AddressForm, { Data, Contact } from './AddressForm'
+import AddressForm, { Address, Contact } from './AddressForm'
 
 export default {
   component: AddressForm,
@@ -25,7 +25,7 @@ Common.args = {
   countries: ['US', 'AT', 'DE', 'NL'],
   isUserLoggedIn: false,
   saveAddressLabel: 'Save shipping address',
-  onSave: (data: Data) => console.log('called handleSave(data) : ', data),
+  onSave: (data: Address) => console.log('called handleSave(data) : ', data),
   ref: undefined,
 }
 

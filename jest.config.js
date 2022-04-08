@@ -29,7 +29,6 @@ module.exports = {
   testPathIgnorePatterns: [
     '<rootDir>/node_modules/',
     '<rootDir>/.next/',
-    '<rootDir>/__test__/e2e/',
     '<rootDir>/__test__/integration/',
   ],
   testEnvironment: 'jsdom',
