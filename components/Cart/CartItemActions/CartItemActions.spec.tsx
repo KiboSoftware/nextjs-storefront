@@ -16,12 +16,10 @@ describe('[components] - CartItemActions', () => {
   it('should render component', () => {
     setup()
 
-    const cardActions = screen.getByRole('cardActions')
     const editLink = screen.getByText('edit')
     const saveLink = screen.getByText('save-for-later')
     const addLink = screen.getByText('add-to-favorites')
 
-    expect(cardActions).toBeVisible()
     expect(editLink).toBeVisible()
     expect(saveLink).toBeVisible()
     expect(addLink).toBeVisible()

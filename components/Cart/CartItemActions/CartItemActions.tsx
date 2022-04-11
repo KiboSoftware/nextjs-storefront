@@ -22,7 +22,7 @@ const CartItemActions = () => {
 
   return (
     <Box sx={styles.linkContainer}>
-      <CardActions sx={styles.cardAction} role="cardActions">
+      <CardActions sx={styles.cardAction}>
         <Link href="#" passHref>
           <MuiLink underline="none" variant="body2" color="text.primary" sx={styles.link}>
             {t('edit')}

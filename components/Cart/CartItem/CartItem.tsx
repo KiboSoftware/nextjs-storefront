@@ -69,6 +69,7 @@ const styles = {
 
 interface CartItemProps {
   cartItem: CartItemType
+  onQuantityUpdate: (quantity: number) => void
 }
 
 const onDelete = () => {
@@ -76,13 +77,18 @@ const onDelete = () => {
 }
 
 const CartItem = (props: CartItemProps) => {
-  const { cartItem } = props
+  const { cartItem, onQuantityUpdate } = props
 
   const { t } = useTranslation('common')
   const theme = useTheme()
 
   const orientationVertical = useMediaQuery(theme.breakpoints.between('xs', 'md'))
-  const [quantity, setQuantity] = useState<number>(1)
+  const [quantity, setQuantity] = useState<number>(cartItem.quantity || 1)
+
+  const updateQuantity = (value: number) => {
+    onQuantityUpdate(quantity + value)
+    setQuantity(quantity + value) // Need to remove locale state once implemented the mutation
+  }
 
   return (
     <>
@@ -108,8 +114,8 @@ const CartItem = (props: CartItemProps) => {
                     quantity={quantity}
                     label={t('qty')}
                     maxQuantity={cartItem.quantity}
-                    onIncrease={() => setQuantity((itemQuantity) => itemQuantity + 1)}
-                    onDecrease={() => setQuantity((itemQuantity) => itemQuantity - 1)}
+                    onIncrease={() => updateQuantity(1)}
+                    onDecrease={() => updateQuantity(-1)}
                   />
                 </Box>
               </ProductItem>

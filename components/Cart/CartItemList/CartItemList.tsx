@@ -9,10 +9,14 @@ interface CartItemListProps {
 const CartItemList = (props: CartItemListProps) => {
   const { cartItems } = props
 
+  const handleQuanityUpdate = (quantity: number) => {
+    console.log(quantity)
+  }
+
   return (
     <>
       {cartItems.map((item: CartItemType, index: number) => (
-        <CartItem key={index} cartItem={item}></CartItem>
+        <CartItem key={index} cartItem={item} onQuantityUpdate={handleQuanityUpdate}></CartItem>
       ))}
     </>
   )
