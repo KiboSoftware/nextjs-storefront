@@ -6,7 +6,6 @@ import type { CrProductOption } from '@/lib/gql/types'
 
 interface ProductOptionProps {
   option: CrProductOption
-  key?: number
 }
 
 const ProductOption = (prop: ProductOptionProps) => {
