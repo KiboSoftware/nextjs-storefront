@@ -1,7 +1,9 @@
 /** @format */
 
 import React from 'react'
+
 import { ComponentStory, ComponentMeta } from '@storybook/react'
+
 import OrderSummary from './OrderSummary'
 
 export default {
