@@ -2,7 +2,7 @@
 
 import React from "react";
 import { ComponentStory, ComponentMeta } from "@storybook/react";
-import OrderSummary from "./Order";
+import OrderSummary from "./OrderSummary";
 export default {
   title: "Common/OrderSummary",
   component: OrderSummary,

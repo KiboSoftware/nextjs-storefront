@@ -10,7 +10,6 @@ import {
   Divider,
 } from "@mui/material";
 import InfoIcon from "@mui/icons-material/Info";
-import { useState } from "react";
 interface OrderTotalProps {
   subTotal?: string;
   standardShipping?: string;
@@ -41,7 +40,6 @@ const OrderSummary = (props: OrderTotalProps) => {
     orderTotal,
     name,
     boxStyle,
-    style2,
     standardShippingAmount,
     estTaxamt,
     estOrderTotal,
