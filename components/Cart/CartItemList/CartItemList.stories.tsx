@@ -8,7 +8,7 @@ import type { CartItem as CartItemType } from '@/lib/gql/types'
 
 const cartItems: Array<CartItemType> = [
   {
-    id: '1beef214158842d7a305ae68009d4d4c',
+    id: '1beef214158842d7a305ae68009d4d4c1',
     fulfillmentMethod: 'Ship',
     product: {
       productCode: 'MS-BTL-002',
@@ -32,7 +32,7 @@ const cartItems: Array<CartItemType> = [
         salePrice: null,
       },
     },
-    quantity: 1,
+    quantity: 5,
   },
   {
     id: '1beef214158842d7a305ae68009d4d4c',
@@ -40,7 +40,7 @@ const cartItems: Array<CartItemType> = [
     product: {
       productCode: 'MS-BTL-002',
       fulfillmentTypesSupported: ['DirectShip'],
-      name: 'SoftBottle Water Bottle 2',
+      name: 'Water Bottle 1',
       description:
         'The taste-free Platypus Platy bottle with screw cap is an excellent option for bringing water on your backcountry adventures.<br>',
       imageUrl:
@@ -49,7 +49,7 @@ const cartItems: Array<CartItemType> = [
         {
           attributeFQN: 'Tenant~size',
           name: 'Size',
-          value: '12',
+          value: '3',
         },
       ],
       properties: [],

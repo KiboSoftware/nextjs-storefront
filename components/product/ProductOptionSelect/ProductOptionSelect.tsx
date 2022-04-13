@@ -27,6 +27,7 @@ const ProductOptionSelect = (props: ProductOptionSelectProps) => {
       helperText={errorHelperText}
       onChange={onChange}
       value={value}
+      label={t('select-product-option')}
       placeholder={t('select-product-option')}
     >
       {optionValues.map((optionVal) => (

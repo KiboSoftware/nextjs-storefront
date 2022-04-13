@@ -4,7 +4,7 @@ import '@testing-library/jest-dom'
 import { composeStories } from '@storybook/testing-react'
 import { render, screen } from '@testing-library/react'
 
-import * as stories from '@/components/Cart/CartItemList/CartItemList.stories'
+import * as stories from '../../../../../components/cart/CartItemList/CartItemList.stories'
 
 const { Common } = composeStories(stories)
 

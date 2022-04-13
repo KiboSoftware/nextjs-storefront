@@ -1,6 +1,4 @@
-import React from 'react'
-
-import ProductOption from '../ProductOption/ProductOption'
+import ProductOption from '@/components/product/ProductOption/ProductOption'
 
 import type { CrProductOption } from '@/lib/gql/types'
 

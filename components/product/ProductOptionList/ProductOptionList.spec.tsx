@@ -15,7 +15,7 @@ describe('[component] - ProductOptionList', () => {
     render(<Common {...Common.args} />)
   }
 
-  it('should render product item options component', () => {
+  it('should render component', () => {
     setup()
 
     const productItemOptions = screen.getAllByTestId('product-option-component')

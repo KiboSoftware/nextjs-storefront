@@ -37,7 +37,7 @@ const KiboSelect = (props: KiboSelectProps) => {
 
   return (
     <FormControl sx={{ minWidth: 120, marginTop: 3 }} size="small" fullWidth variant="outlined">
-      <InputLabel shrink htmlFor="kibo-input" sx={{ top: -18, left: -13 }}>
+      <InputLabel shrink htmlFor={name} sx={{ top: -18, left: -13 }}>
         {label}
       </InputLabel>
       <Select

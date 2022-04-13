@@ -3,6 +3,7 @@ import React from 'react'
 import '@testing-library/jest-dom'
 import { composeStories } from '@storybook/testing-react'
 import { render, screen } from '@testing-library/react'
+import userEvent from '@testing-library/user-event'
 
 import * as stories from './CartItem.stories'
 
@@ -19,40 +20,33 @@ jest.mock('@/components/common/QuantitySelector/QuantitySelector', () => quantit
 
 describe('[components] - CartItem', () => {
   const setup = () => {
-    render(<Common {...Common.args} />)
+    const onDeleteMock = jest.fn()
+    render(<Common {...Common.args} onCartItemDelete={onDeleteMock} />)
+    return {
+      onDeleteMock,
+    }
   }
 
-  it('should render cart item component', () => {
+  it('should render component', () => {
     // arrange
-    setup()
-
-    // act
-    const card = screen.getByRole('group')
-    const deleteButton = screen.getByRole('button', { name: 'item-delete' })
-
-    // // assert
-    expect(card).toBeVisible()
-    expect(deleteButton).toBeEnabled()
-  })
-
-  it('should render mock components', () => {
-    // arrange
-    setup()
+    const { onDeleteMock } = setup()
 
     // act
     const cartItemAction = screen.getByTestId('cart-item-actions-component')
     const fulfillmentOptions = screen.getByTestId('fulfillment-options-component')
     const cartItem = screen.getByTestId('cart-item-component')
+    const card = screen.getByRole('group')
+    const deleteButton = screen.getByRole('button', { name: 'item-delete' })
+    userEvent.click(deleteButton)
+    const separator = screen.getAllByRole('separator')
 
-    // // assert
+    // assert
     expect(cartItemAction).toBeVisible()
     expect(fulfillmentOptions).toBeVisible()
     expect(cartItem).toBeVisible()
-  })
-
-  it('should render dividers', () => {
-    setup()
-    const separator = screen.getAllByRole('separator')
+    expect(card).toBeVisible()
+    expect(deleteButton).toBeEnabled()
+    expect(onDeleteMock).toHaveBeenCalledTimes(1)
     expect(separator).toHaveLength(2)
   })
 })

@@ -1,5 +1,3 @@
-import React from 'react'
-
 import { Typography, Box } from '@mui/material'
 
 import type { CrProductOption } from '@/lib/gql/types'

@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 
 import DeleteIcon from '@mui/icons-material/Delete'
 import {
@@ -14,7 +14,7 @@ import {
 import { grey } from '@mui/material/colors'
 import { useTranslation } from 'next-i18next'
 
-import CartItemActions from '@/components/Cart/CartItemActions/CartItemActions'
+import CartItemActions from '@/components/cart/CartItemActions/CartItemActions'
 import FulfillmentOptions from '@/components/common/FulfillmentOptions/FulfillmentOptions'
 import Price from '@/components/common/Price/Price'
 import ProductItem from '@/components/common/ProductItem/ProductItem'
@@ -69,26 +69,33 @@ const styles = {
 
 interface CartItemProps {
   cartItem: CartItemType
-  onQuantityUpdate: (quantity: number) => void
-}
-
-const onDelete = () => {
-  // Handle Delete Item
+  maxQuantity: number
+  onQuantityUpdate: (cartItemId: string, quantity: number) => void
+  onCartItemDelete: (cartItemId: string) => void
 }
 
 const CartItem = (props: CartItemProps) => {
-  const { cartItem, onQuantityUpdate } = props
+  const { cartItem, maxQuantity, onQuantityUpdate, onCartItemDelete } = props
 
   const { t } = useTranslation('common')
   const theme = useTheme()
 
   const orientationVertical = useMediaQuery(theme.breakpoints.between('xs', 'md'))
-  const [quantity, setQuantity] = useState<number>(cartItem.quantity || 1)
 
-  const updateQuantity = (value: number) => {
-    onQuantityUpdate(quantity + value)
-    setQuantity(quantity + value) // Need to remove locale state once implemented the mutation
+  const onDelete = (cartItemId: string) => {
+    onCartItemDelete(cartItemId)
   }
+
+  const [quantity, setQuantity] = useState<number>(cartItem.quantity || 1)
+  const updateQuantity = (cartItem: CartItemType, quantity: number) => {
+    onQuantityUpdate(cartItem.id || '', cartItem.quantity + quantity)
+    // console.log(cartItem.quantity)
+    setQuantity(cartItem.quantity)
+  }
+
+  // useEffect(() => {
+  //   setQuantity(cartItem.quantity)
+  // }, [cartItem.quantity])
 
   return (
     <>
@@ -113,9 +120,9 @@ const CartItem = (props: CartItemProps) => {
                   <QuantitySelector
                     quantity={quantity}
                     label={t('qty')}
-                    maxQuantity={cartItem.quantity}
-                    onIncrease={() => updateQuantity(1)}
-                    onDecrease={() => updateQuantity(-1)}
+                    maxQuantity={maxQuantity}
+                    onIncrease={() => updateQuantity(cartItem, 1)}
+                    onDecrease={() => updateQuantity(cartItem, -1)}
                   />
                 </Box>
               </ProductItem>
@@ -143,7 +150,7 @@ const CartItem = (props: CartItemProps) => {
               color="inherit"
               aria-label="item-delete"
               name="item-delete"
-              onClick={onDelete}
+              onClick={() => onDelete(cartItem.id || '')}
             >
               <DeleteIcon />
             </IconButton>

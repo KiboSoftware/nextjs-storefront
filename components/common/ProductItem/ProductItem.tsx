@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { ReactNode, useState } from 'react'
 
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown'
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp'
@@ -25,7 +25,7 @@ interface ProductItemProps {
   options: CrProductOption[]
   price?: number
   salePrice?: number
-  children?: React.ReactNode
+  children?: ReactNode
 }
 
 const styles = {
@@ -58,7 +58,7 @@ const ProductItem = (props: ProductItemProps) => {
   const { t } = useTranslation('common')
   const theme = useTheme()
   const mdScreen = useMediaQuery(theme.breakpoints.up('md'))
-  const [expanded, setExpanded] = React.useState(true)
+  const [expanded, setExpanded] = useState<boolean>(true)
 
   return (
     <Box sx={{ display: 'flex', pb: 2, pr: 1, gap: '3%', flex: 1 }}>

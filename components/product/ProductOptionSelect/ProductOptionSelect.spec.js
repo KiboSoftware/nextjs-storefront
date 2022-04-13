@@ -1,5 +1,5 @@
 import { composeStories } from '@storybook/testing-react'
-import { fireEvent, render, screen, within } from '@testing-library/react'
+import { render, screen, within, fireEvent } from '@testing-library/react'
 
 import '@testing-library/jest-dom'
 import { productOptionSelectValuesMock } from '../../../__mocks__/productOptionSelectMock'

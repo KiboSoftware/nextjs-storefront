@@ -16,17 +16,14 @@ describe('[component] - ProductOption', () => {
     setup()
 
     const productOption = screen.getByTestId('productOption')
-
-    expect(productOption).toBeVisible()
-  })
-
-  it('should render product option', () => {
-    setup()
-
     const option = Common.args?.option
     const value = option?.value || ''
-    const optionName = screen.getByText(value)
+    const optionValue = screen.getByText(value)
+    const name = option?.value || ''
+    const optionName = screen.getByText(name)
 
+    expect(productOption).toBeVisible()
+    expect(optionValue).toBeVisible()
     expect(optionName).toBeVisible()
   })
 })
