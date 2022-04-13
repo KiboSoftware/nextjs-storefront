@@ -66,9 +66,9 @@ const cartItems: Array<CartItemType> = [
 export default {
   title: 'cart/CartItemList',
   component: CartItemList,
-
   argTypes: {
-    backgroundColor: { control: 'color' },
+    onCartItemQuantityUpdate: { action: 'onCartItemQuantityUpdate: ' },
+    onCartItemDelete: { action: 'onCartItemDelete: ' },
   },
 } as ComponentMeta<typeof CartItemList>
 

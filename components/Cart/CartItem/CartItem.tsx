@@ -1,5 +1,3 @@
-import { useState } from 'react'
-
 import DeleteIcon from '@mui/icons-material/Delete'
 import {
   Box,
@@ -69,7 +67,7 @@ const styles = {
 
 interface CartItemProps {
   cartItem: CartItemType
-  maxQuantity: number
+  maxQuantity: number | undefined
   onQuantityUpdate: (cartItemId: string, quantity: number) => void
   onCartItemDelete: (cartItemId: string) => void
 }
@@ -77,25 +75,13 @@ interface CartItemProps {
 const CartItem = (props: CartItemProps) => {
   const { cartItem, maxQuantity, onQuantityUpdate, onCartItemDelete } = props
 
-  const { t } = useTranslation('common')
   const theme = useTheme()
 
+  const { t } = useTranslation('common')
   const orientationVertical = useMediaQuery(theme.breakpoints.between('xs', 'md'))
 
-  const onDelete = (cartItemId: string) => {
-    onCartItemDelete(cartItemId)
-  }
-
-  const [quantity, setQuantity] = useState<number>(cartItem.quantity || 1)
-  const updateQuantity = (cartItem: CartItemType, quantity: number) => {
-    onQuantityUpdate(cartItem.id || '', cartItem.quantity + quantity)
-    // console.log(cartItem.quantity)
-    setQuantity(cartItem.quantity)
-  }
-
-  // useEffect(() => {
-  //   setQuantity(cartItem.quantity)
-  // }, [cartItem.quantity])
+  const onDelete = (cartItemId: string) => onCartItemDelete(cartItemId)
+  const updateQuantity = (quantity: number) => onQuantityUpdate(cartItem.id || '', quantity)
 
   return (
     <>
@@ -118,11 +104,11 @@ const CartItem = (props: CartItemProps) => {
                 </Box>
                 <Box sx={{ py: '0.5rem' }}>
                   <QuantitySelector
-                    quantity={quantity}
+                    quantity={cartItem.quantity}
                     label={t('qty')}
                     maxQuantity={maxQuantity}
-                    onIncrease={() => updateQuantity(cartItem, 1)}
-                    onDecrease={() => updateQuantity(cartItem, -1)}
+                    onIncrease={() => updateQuantity(cartItem.quantity + 1)}
+                    onDecrease={() => updateQuantity(cartItem.quantity - 1)}
                   />
                 </Box>
               </ProductItem>
