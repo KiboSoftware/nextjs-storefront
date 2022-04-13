@@ -7,7 +7,7 @@ import CartItem from './CartItem'
 import type { CartItem as CartItemType } from '@/lib/gql/types'
 
 export default {
-  title: 'Cart/CartItem',
+  title: 'cart/CartItem',
   component: CartItem,
   argTypes: { onQuantityUpdate: { action: 'clicked' } },
 } as ComponentMeta<typeof CartItem>

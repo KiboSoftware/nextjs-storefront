@@ -64,7 +64,7 @@ const cartItems: Array<CartItemType> = [
 ]
 
 export default {
-  title: 'Cart/CartItemList',
+  title: 'cart/CartItemList',
   component: CartItemList,
 
   argTypes: {

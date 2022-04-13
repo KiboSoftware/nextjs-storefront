@@ -5,7 +5,7 @@ import { ComponentStory, ComponentMeta } from '@storybook/react'
 import CartItemActions from './CartItemActions'
 
 export default {
-  title: 'Cart/CartItemActions',
+  title: 'cart/CartItemActions',
   component: CartItemActions,
 
   argTypes: {

@@ -10,7 +10,7 @@ import * as stories from './CartItem.stories'
 const { Common } = composeStories(stories)
 
 const cartItemActionsMock = () => <div data-testid="cart-item-actions-component" />
-jest.mock('@/components/Cart/CartItemActions/CartItemActions', () => cartItemActionsMock)
+jest.mock('@/components/cart/CartItemActions/CartItemActions', () => cartItemActionsMock)
 const fulfillmentOptionsMock = () => <div data-testid="fulfillment-options-component" />
 jest.mock('@/components/common/FulfillmentOptions/FulfillmentOptions', () => fulfillmentOptionsMock)
 const productItemMock = () => <div data-testid="cart-item-component" />
