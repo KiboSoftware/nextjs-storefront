@@ -1,29 +1,24 @@
 import React from 'react'
 
 import { Button, Typography } from '@mui/material'
-import { useArgs } from '@storybook/client-api'
 import { ComponentStory, ComponentMeta } from '@storybook/react'
 
-import Modal from './Modal'
+import KiboDialog from './KiboDialog'
 
 export default {
-  component: Modal,
-  title: 'Common/Modal',
-} as ComponentMeta<typeof Modal>
+  component: KiboDialog,
+  title: 'Common/KiboDialog',
+  argTypes: { onClose: { action: 'onClose' } },
+} as ComponentMeta<typeof KiboDialog>
 
-const Template: ComponentStory<typeof Modal> = ({ ...args }) => {
-  const [{ open }, updateArgs] = useArgs()
-  const handleClose = () => updateArgs({ open: !open })
-
-  return <Modal {...args} onClose={handleClose} />
-}
+const Template: ComponentStory<typeof KiboDialog> = ({ ...args }) => <KiboDialog {...args} />
 
 // Common
 export const Common = Template.bind({})
 
 Common.args = {
-  open: true,
-  title: 'Custom Modal Title',
+  isOpen: true,
+  title: 'Dialog Title',
   content: (
     <Typography gutterBottom>
       Cras mattis consectetur purus sit amet fermentum. Cras justo odio, dapibus ac facilisis in,
@@ -32,6 +27,6 @@ Common.args = {
   ),
   dividers: true,
   actions: <Button>Save</Button>,
-  isCenteredModal: true,
+  isCenteredDialog: true,
   customMaxWidth: '',
 }
