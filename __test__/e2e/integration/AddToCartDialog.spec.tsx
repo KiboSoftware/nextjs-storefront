@@ -42,9 +42,7 @@ describe('[components] Add To Cart Dialog integration', () => {
       name: /close/i,
     })
     const fullfillmentOption = screen.getByText(`${Common.args?.fullfillmentOption}`)
-    const subtotal = screen.getByText(`${Common.args?.subtotal}`)
-    const tax = screen.getByText(`${Common.args?.tax}`)
-    const total = screen.getByText(`${Common.args?.total}`)
+    const taxSubTotalTotal = screen.getAllByText(/currency/i)
     const goToCartButton = screen.getByRole('button', {
       name: /go-to-cart/i,
     })
@@ -56,9 +54,7 @@ describe('[components] Add To Cart Dialog integration', () => {
     expect(title).toBeVisible()
     expect(closeIconButton).toBeVisible()
     expect(fullfillmentOption).toBeVisible()
-    expect(subtotal).toBeVisible()
-    expect(tax).toBeVisible()
-    expect(total).toBeVisible()
+    expect(taxSubTotalTotal).toHaveLength(3)
     expect(goToCartButton).toBeVisible()
     expect(continueShoppingButton).toBeVisible()
   })

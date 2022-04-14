@@ -59,5 +59,6 @@
   "all-departments": "All Departments",
   "cart-sub-total": "Cart Subtotal ({{quantity}} items)",
   "estimated-tax": "Estimated Tax",
-  "standard-shopping": "Standard Shipping"
+  "standard-shopping": "Standard Shipping",
+  "currency": "{{val, currency(USD)}}"
 }

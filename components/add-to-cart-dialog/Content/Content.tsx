@@ -34,7 +34,7 @@ const Content = (props: CartContentProps) => {
             align="right"
             sx={{ flex: '50%' }}
           >
-            {subtotal}
+            {t('currency', { val: subtotal })}
           </Typography>
         </Box>
         <Box sx={{ display: 'flex', padding: '9px 0' }}>
@@ -62,7 +62,7 @@ const Content = (props: CartContentProps) => {
             align="right"
             sx={{ flex: '50%' }}
           >
-            {tax}
+            {t('currency', { val: tax })}
           </Typography>
         </Box>
       </Box>
@@ -79,7 +79,7 @@ const Content = (props: CartContentProps) => {
           align="right"
           sx={{ flex: '0 100%' }}
         >
-          {total}
+          {t('currency', { val: total })}
         </Typography>
       </Box>
     </Box>
