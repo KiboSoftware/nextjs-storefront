@@ -98,8 +98,12 @@ const CartItem = (props: CartItemProps) => {
                   <Price
                     variant="body2"
                     fontWeight="bold"
-                    price={cartItem.product?.price?.price || 0}
-                    salePrice={cartItem.product?.price?.salePrice || undefined}
+                    price={'$' + (cartItem.product?.price?.price || 0).toString()}
+                    salePrice={
+                      (cartItem.product?.price?.salePrice &&
+                        cartItem.product?.price?.salePrice.toString()) ||
+                      undefined
+                    }
                   />
                 </Box>
                 <Box sx={{ py: '0.5rem' }}>

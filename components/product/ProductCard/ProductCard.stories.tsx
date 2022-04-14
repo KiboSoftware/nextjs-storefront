@@ -16,7 +16,7 @@ export const Default = Template.bind({})
 Default.args = {
   imageUrl: `https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR-FMCFLCcOwFxZ3FNt8RKne3iqrwqY8OOnCw&usqp=CAU`,
   link: '/product/test-123',
-  price: 19.98,
+  price: '$19.98',
   title: 'This is a product',
 }
 
@@ -25,8 +25,8 @@ export const WithSalePrice = Template.bind({})
 WithSalePrice.args = {
   imageUrl: `https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR-FMCFLCcOwFxZ3FNt8RKne3iqrwqY8OOnCw&usqp=CAU`,
   link: '/product/test-123',
-  price: 19.98,
-  salePrice: 8.99,
+  price: '$19.98',
+  salePrice: '$8.99',
   title: 'This is a product',
 }
 
@@ -35,7 +35,7 @@ export const WithRating = Template.bind({})
 WithRating.args = {
   imageUrl: `https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR-FMCFLCcOwFxZ3FNt8RKne3iqrwqY8OOnCw&usqp=CAU`,
   link: '/product/test-123',
-  price: 19.98,
+  price: '$19.98',
   title: 'This is a product',
   rating: 3.5,
 }
@@ -44,7 +44,7 @@ export const NoImage = Template.bind({})
 // More on args: https://storybook.js.org/docs/react/writing-stories/args
 NoImage.args = {
   link: '/product/test-123',
-  price: 19.99,
+  price: '$19.99',
   title: 'This is a No image product',
 }
 
@@ -53,6 +53,6 @@ export const LoadingProductCard = Template.bind({})
 LoadingProductCard.args = {
   link: '/product/test-123',
   title: 'This is a No image product',
-  price: 19.99,
+  price: '$19.99',
   isLoading: true,
 }

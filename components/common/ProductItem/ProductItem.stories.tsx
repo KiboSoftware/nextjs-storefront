@@ -59,8 +59,11 @@ const Template: ComponentStory<typeof ProductItem> = (args) => (
       <Price
         variant="body2"
         fontWeight="bold"
-        price={cartItem.product?.price?.price || 0}
-        salePrice={cartItem.product?.price?.salePrice || undefined}
+        price={'$' + (cartItem.product?.price?.price || 0).toString()}
+        salePrice={
+          (cartItem.product?.price?.salePrice && cartItem.product?.price?.salePrice.toString()) ||
+          undefined
+        }
       />
     </Box>
     <Box sx={{ py: '0.5rem' }}>
@@ -89,6 +92,6 @@ Common.args = {
 export const WithPriceLabel = TemplateWithPriceLabel.bind({})
 WithPriceLabel.args = {
   ...Common.args,
-  price: cartItem.product?.price?.price || 0,
-  salePrice: cartItem.product?.price?.salePrice || 0,
+  price: '$' + (cartItem.product?.price?.price || 0).toString(),
+  salePrice: '$' + (cartItem.product?.price?.salePrice || 0).toString(),
 }

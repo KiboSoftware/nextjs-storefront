@@ -23,8 +23,8 @@ interface ProductItemProps {
   image: string
   name: string
   options: CrProductOption[]
-  price?: number
-  salePrice?: number
+  price?: string
+  salePrice?: string
   children?: ReactNode
 }
 

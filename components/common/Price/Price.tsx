@@ -5,8 +5,8 @@ interface PriceRange {
   lower: string
 }
 interface PriceProps {
-  price?: number
-  salePrice?: number
+  price?: string
+  salePrice?: string
   priceRange?: PriceRange
   variant?: 'body2' | 'body1' | 'subtitle1'
   fontWeight?: 'bold' | 'normal'
