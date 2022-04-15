@@ -30,21 +30,9 @@ interface ProductItemProps {
 
 const styles = {
   imageContainer: {
-    maxHeight: {
-      xs: 100,
-      sm: 130,
-      md: 150,
-    },
-    maxWidth: {
-      xs: 100,
-      sm: 130,
-      md: 150,
-    },
-    width: {
-      xs: '20%',
-      sm: '20%',
-      md: '25%',
-    },
+    maxHeight: 300,
+    maxWidth: 300,
+    width: '45%',
   },
   image: {
     width: '100%',

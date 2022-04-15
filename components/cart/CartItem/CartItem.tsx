@@ -22,6 +22,7 @@ import type { CartItem as CartItemType, CrProductOption } from '@/lib/gql/types'
 
 const styles = {
   card: {
+    maxWidth: '54.5rem',
     marginBottom: {
       xs: 0,
       sm: 0,
