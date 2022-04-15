@@ -18,15 +18,15 @@ export const Common = Template.bind({})
 
 Common.args = {
   isOpen: true,
-  title: 'Dialog Title',
-  content: (
+  Title: 'Dialog Title',
+  Content: (
     <Typography gutterBottom>
       Cras mattis consectetur purus sit amet fermentum. Cras justo odio, dapibus ac facilisis in,
       egestas eget quam. Morbi leo risus, porta ac consectetur ac, vestibulum at eros.
     </Typography>
   ),
   dividers: true,
-  actions: <Button>Save</Button>,
+  Actions: <Button>Save</Button>,
   isCenteredDialog: true,
   customMaxWidth: '',
 }

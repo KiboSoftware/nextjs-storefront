@@ -52,10 +52,10 @@ const AddToCart = (props: CartDetailsProps) => {
 
   const DialogArgs = {
     isOpen: isDialogOpen,
-    title: <Title />,
-    content: <Content {...contentArgs} />,
+    Title: <Title />,
+    Content: <Content {...contentArgs} />,
     dividers: false,
-    actions: <Actions onAddToCart={handleAddToCart} onContinueShopping={handleContinueShopping} />,
+    Actions: <Actions onAddToCart={handleAddToCart} onContinueShopping={handleContinueShopping} />,
     isCenteredDialog: isCenteredDialog,
     customMaxWidth: '518px',
     onClose: onClose,

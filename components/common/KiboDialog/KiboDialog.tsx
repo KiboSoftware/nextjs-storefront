@@ -14,11 +14,11 @@ import { grey } from '@mui/material/colors'
 
 export interface KiboDialogProps {
   isOpen: boolean
-  title?: ReactNode
+  Title?: ReactNode
   showCloseIconButton?: boolean
-  content: ReactNode
+  Content: ReactNode
   dividers?: boolean
-  actions?: ReactNode
+  Actions?: ReactNode
   isCenteredDialog?: boolean
   customMaxWidth: string
   onClose: () => void
@@ -65,11 +65,11 @@ const StyledDialog = styled(Dialog, {
 const KiboDialog = (props: KiboDialogProps) => {
   const {
     isOpen = false,
-    title,
+    Title,
     showCloseIconButton = true,
-    content,
+    Content,
     dividers,
-    actions,
+    Actions,
     isCenteredDialog = true,
     customMaxWidth = '',
     onClose,
@@ -88,9 +88,9 @@ const KiboDialog = (props: KiboDialogProps) => {
       isCenteredDialog={isCenteredDialog}
       data-test-id="kibo-dialog"
     >
-      {title != '' ? (
+      {Title != '' ? (
         <DialogTitle id="kibo-dialog-title" sx={titleSX}>
-          {title}
+          {Title}
           {showCloseIconButton ? (
             <IconButton aria-label="close" onClick={onClose} sx={{ ...iconButtonStyle }}>
               <CloseIcon sx={{ ...closeIconStyle }} />
@@ -100,8 +100,8 @@ const KiboDialog = (props: KiboDialogProps) => {
       ) : (
         ''
       )}
-      <DialogContent dividers={dividers}>{content}</DialogContent>
-      {actions != '' ? <DialogActions>{actions}</DialogActions> : ''}
+      <DialogContent dividers={dividers}>{Content}</DialogContent>
+      {Actions != '' ? <DialogActions>{Actions}</DialogActions> : ''}
     </StyledDialog>
   )
 }

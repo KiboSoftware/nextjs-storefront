@@ -13,14 +13,14 @@ const kiboTitleMock = () => <div data-testid="title-component" />
 const kiboContentMock = () => <div data-testid="content-component" />
 const kiboActionsMock = () => <div data-testid="actions-component" />
 const KiboDialogMock = (props: KiboDialogProps) => {
-  const { title, content, actions } = props
+  const { Title, Content, Actions } = props
   return (
     <div data-testid="kibo-dialog">
-      {title}
+      {Title}
       <br />
-      {content}
+      {Content}
       <br />
-      {actions}
+      {Actions}
       <br />
     </div>
   )
