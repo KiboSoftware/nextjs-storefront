@@ -11,33 +11,15 @@ import * as stories from './OrderSummary.stories' // import all stories from the
 const { Checkout, Shipping } = composeStories(stories)
 
 describe('checkout Component', () => {
-  it('should render checkout text', () => {
-    render(<Checkout {...Checkout.args} />)
-    const checkout = screen.getByText(Checkout.args.name)
-    expect(checkout).toBeVisible()
-  })
-
-  it('should render checkout cartTotal', () => {
-    render(<Checkout {...Checkout.args} />)
-    const checkout = screen.getByText(Checkout.args.cartTotal)
-    expect(checkout).toBeVisible()
-  })
-
   it('should render checkout standardShippingAmount', () => {
     render(<Checkout {...Checkout.args} />)
     const checkout = screen.getByText(Checkout.args.standardShippingAmount)
     expect(checkout).toBeVisible()
   })
 
-  it('should render checkout estTaxamt', () => {
+  it('should render checkout estimatedTaxAmout', () => {
     render(<Checkout {...Checkout.args} />)
-    const checkout = screen.getByText(Checkout.args.estTaxamt)
-    expect(checkout).toBeVisible()
-  })
-
-  it('should render checkout estTax', () => {
-    render(<Checkout {...Checkout.args} />)
-    const checkout = screen.getByText(Checkout.args.estTax)
+    const checkout = screen.getByText(Checkout.args.estimatedTaxAmout)
     expect(checkout).toBeVisible()
   })
 
@@ -49,13 +31,14 @@ describe('checkout Component', () => {
 
   it('should render checkout subTotal', () => {
     render(<Checkout {...Checkout.args} />)
-    const checkout = screen.getByText(Checkout.args.essubTotaltTax)
+    const checkout = screen.getByText(Checkout.args.subTotal)
     expect(checkout).toBeVisible()
   })
 
-  it('should render checkout estOrderTotal', () => {
-    render(<Checkout {...Checkout.args} />)
-    const checkout = screen.getByText(Checkout.args.estOrderTotal)
-    expect(checkout).toBeVisible()
+  it('should render shipping button', () => {
+    render(<Shipping {...Shipping.args} />)
+    const shipping = screen.getByText('Go to Shipping')
+    expect(shipping).toBeVisible()
   })
 })
+
