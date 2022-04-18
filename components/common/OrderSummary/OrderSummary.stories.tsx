@@ -17,27 +17,18 @@ const Template: ComponentStory<typeof OrderSummary> = (args) => <OrderSummary {.
 
 export const Checkout = Template.bind({})
 Checkout.args = {
-  name: 'Order Summary',
-  type: 'orderSummary',
-  cartTotal: 'Cart Subtotal (3 items)',
-  standardShipping: 'Standard Shipping',
   standardShippingAmount: 'Free',
-  estTax: 'Tax',
-  estTaxamt: '$13.73',
+  estimatedTaxAmout: '$13.73',
   orderTotal: '$233.72',
   subTotal: '$219.99',
-  estOrderTotal: 'Order Total',
+  numberOfItems: '3 items',
 }
 export const Shipping = Template.bind({})
 Shipping.args = {
-  name: 'Order Summary',
   type: 'orderShipping',
-  cartTotal: 'Cart Subtotal (3 items)',
-  standardShipping: 'Standard Shipping',
   standardShippingAmount: 'Free',
-  estTax: 'Tax',
-  estTaxamt: '$13.73',
+  estimatedTaxAmout: '$13.73',
   orderTotal: '$233.72',
   subTotal: '$219.99',
-  estOrderTotal: 'Order Total',
+  numberOfItems: '3 items',
 }

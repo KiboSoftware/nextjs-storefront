@@ -3,58 +3,35 @@
 import InfoIcon from '@mui/icons-material/Info'
 import { Card, Typography, Box, Button, CardActionArea, CardContent, Divider } from '@mui/material'
 
+import theme, { grey } from '../../../styles/theme'
+
 interface OrderTotalProps {
   subTotal?: string
-  standardShipping?: string
-  estTax?: string
   orderTotal?: string
-  name: string
-  cartTotal: string
-  fontWeight?: 'bold' | 'regular'
-  boxStyle: any
-  style2: any
   standardShippingAmount: string
-  estTaxamt: string
-  estOrderTotal: string
-  checkOutButtonStyle: any
-  headerStyle: any
-  estStyle: any
-  backButtonStyle: any
-  shippingButtonStyle: any
+  estimatedTaxAmout: string
   type: string
+  numberOfItems: string
 }
 
 const styles = {
   boxStyle: {
-    fontFamily: 'Roboto-Regular',
-    fontSize: '14px',
-    lineHeight: '17px',
+    lineHeight: '1.063rem',
     display: 'flex',
     justifyContent: 'space-between',
-  },
-  estStyle: {
-    fontFamily: 'Roboto-Regular',
-    fontSize: '14px',
-    lineHeight: '17px',
-    display: 'flex',
-    justifyContent: 'space-between',
-    fontWeight: 'bold',
   },
   headerStyle: {
-    color: ' #2B2B2B',
-    fontSize: '20px',
-    lineHeight: '24px',
+    color: theme.palette.text.primary,
+    lineHeight: '	1.5rem',
     textAlign: 'left',
-    fontWeight: 'bold',
   },
   checkOutButtonStyle: {
-    borderradius: '4px',
+    borderradius: '0.25rem',
     width: '376px',
     height: '42px',
   },
   shippingButtonStyle: {
-    // backgroundcolor: "#2EA195",
-    borderradius: '4px',
+    borderradius: '0.25rem',
     margin: '10px',
     width: '376px',
     height: '42px',
@@ -62,83 +39,88 @@ const styles = {
   backButtonStyle: {
     color: 'black',
     backgroundColor: 'white',
-    borderradius: '4px',
+    borderradius: '0.25rem',
     width: '376px',
     height: '42px',
   },
 }
 
 const OrderSummary = (props: OrderTotalProps) => {
-  const {
-    subTotal,
-    standardShipping,
-    cartTotal,
-    estTax,
-    orderTotal,
-    name,
-    standardShippingAmount,
-    estTaxamt,
-    estOrderTotal,
-    type,
-  } = props
-  return (
-    <>
-      <Card sx={{ bgcolor: '#F7F7F7', width: '428px', height: '391px' }}>
-        <CardActionArea>
-          <CardContent>
-            <Typography sx={styles.headerStyle}>{name}</Typography>
-          </CardContent>
-          <Divider />
-          <CardContent>
-            <Box sx={styles.boxStyle}>
-              <Typography>{cartTotal}</Typography>
-              <Typography> {subTotal}</Typography>
-            </Box>
-            <br />
-            <Box sx={styles.boxStyle}>
-              <Typography>{standardShipping}</Typography>
-              <Typography>{standardShippingAmount}</Typography>
-            </Box>
-            <br />
-            <Box sx={styles.boxStyle}>
-              <Typography>
-                {estTax} <InfoIcon sx={{ width: '11px', height: '11px' }} />{' '}
-              </Typography>
-              <Typography>{estTaxamt}</Typography>
-            </Box>
-            <br />
-            <Divider variant="middle" />
+  const { subTotal, numberOfItems, estimatedTaxAmout, standardShippingAmount, orderTotal, type } =
+    props
+  const SHIPPING = 'Go to Shipping'
+  const BACK = 'Go Back'
+  const CHECKOUT = 'Go to Checkout'
+  const NAME = 'Order Summary'
+  const CART_TOTAL = 'Cart Subtotal'
+  const STANDARD_SHIPPING = 'Standard Shipping'
+  const ESTIMATED_TAX = 'Tax'
+  const ORDER_TOTAL = 'Order Total'
 
-            <br />
-            <Box sx={styles.estStyle}>
-              <Typography sx={{ fontWeight: 'Bold' }}>{estOrderTotal}</Typography>
-              <Typography sx={{ fontWeight: 'Bold' }}>{orderTotal}</Typography>
-            </Box>
-          </CardContent>
-          <CardContent>
-            <Box textAlign="center">
-              {type === 'orderSummary' && (
-                <>
-                  <Button variant="contained" sx={styles.checkOutButtonStyle}>
-                    Go to Checkout
-                  </Button>
-                </>
-              )}
-              {type === 'orderShipping' && (
-                <>
-                  <Button variant="contained" sx={styles.shippingButtonStyle} disabled>
-                    Go to Shipping
-                  </Button>
-                  <Button variant="contained" sx={styles.backButtonStyle}>
-                    Go Back
-                  </Button>
-                </>
-              )}
-            </Box>
-          </CardContent>
-        </CardActionArea>
-      </Card>
-    </>
+  return (
+    <Card sx={{ bgcolor: grey[100], width: '26.75rem' }}>
+      <CardActionArea>
+        <CardContent>
+          <Box sx={styles.headerStyle}>
+            <Typography sx={{ fontSize: theme.typography.h3, fontWeight: 'Bold' }}>
+              {NAME}
+            </Typography>
+          </Box>
+        </CardContent>
+        <Divider />
+        <CardContent>
+          <Box sx={styles.boxStyle}>
+            <Typography sx={{ fontSize: theme.typography.h5 }}>
+              {CART_TOTAL} of ({numberOfItems})
+            </Typography>
+            <Typography sx={{ fontSize: theme.typography.h5 }}> {subTotal}</Typography>
+          </Box>
+          <br />
+          <Box sx={styles.boxStyle}>
+            <Typography sx={{ fontSize: theme.typography.h5 }}>{STANDARD_SHIPPING}</Typography>
+            <Typography sx={{ fontSize: theme.typography.h5 }}>{standardShippingAmount}</Typography>
+          </Box>
+          <br />
+          <Box sx={styles.boxStyle}>
+            <Typography sx={{ fontSize: theme.typography.h5 }}>
+              {ESTIMATED_TAX}
+              <InfoIcon sx={{ width: '0.6875rem', height: '0.6875rem' }} />
+            </Typography>
+            <Typography sx={{ fontSize: theme.typography.h5 }}>{estimatedTaxAmout}</Typography>
+          </Box>
+          <br />
+          <Divider variant="middle" />
+
+          <br />
+          <Box sx={styles.boxStyle}>
+            <Typography sx={{ fontSize: theme.typography.h5, fontWeight: 'Bold' }}>
+              {ORDER_TOTAL}
+            </Typography>
+            <Typography sx={{ fontSize: theme.typography.h5, fontWeight: 'Bold' }}>
+              {orderTotal}
+            </Typography>
+          </Box>
+        </CardContent>
+        <CardContent>
+          <Box textAlign="center">
+            <Button
+              variant="contained"
+              sx={
+                type === 'orderShipping' ? styles.shippingButtonStyle : styles.checkOutButtonStyle
+              }
+              disabled={type === 'orderShipping' ? true : false}
+            >
+              {type === 'orderShipping' ? SHIPPING : CHECKOUT}
+            </Button>
+            {type === 'orderShipping' && (
+              <Button variant="contained" sx={styles.backButtonStyle}>
+                {BACK}
+              </Button>
+            )}
+          </Box>
+        </CardContent>
+      </CardActionArea>
+    </Card>
   )
 }
 export default OrderSummary
