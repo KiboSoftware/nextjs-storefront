@@ -6,7 +6,7 @@ import { ComponentStory, ComponentMeta } from '@storybook/react'
 import CartItemActionsMobile from './CartItemActionsMobile'
 
 export default {
-  title: 'Cart/CartItemActionsMobile',
+  title: 'cart/CartItemActionsMobile',
   component: CartItemActionsMobile,
   argTypes: { onMenuItemSelection: { action: 'clicked' } },
 } as ComponentMeta<typeof CartItemActionsMobile>
