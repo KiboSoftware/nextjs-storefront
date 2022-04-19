@@ -45,10 +45,13 @@ const cartItem: CartItemType = {
   quantity: 6,
 }
 
+const actions = ['Edit', 'Save For Later', 'Add to Favorites']
+
 const Template: ComponentStory<typeof CartItem> = (args) => <CartItem {...args} />
 
 export const Common = Template.bind({})
 
 Common.args = {
   cartItem,
+  actions,
 }

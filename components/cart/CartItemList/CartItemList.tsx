@@ -6,15 +6,18 @@ interface CartItemListProps {
   cartItems: CartItemType[]
   onCartItemQuantityUpdate: (cartItemId: string, quantity: number) => void
   onCartItemDelete: (cartItemId: string) => void
+  onCartItemActionSelection: () => void
 }
 
 const CartItemList = (props: CartItemListProps) => {
-  const { cartItems, onCartItemQuantityUpdate, onCartItemDelete } = props
+  const { cartItems, onCartItemQuantityUpdate, onCartItemDelete, onCartItemActionSelection } = props
 
   const handleQuantityUpdate = (cartItemId: string, quantity: number) =>
     onCartItemQuantityUpdate(cartItemId, quantity)
 
   const handleCartItemDelete = (cartItemId: string) => onCartItemDelete(cartItemId)
+
+  const handleCartItemActionSelection = () => onCartItemActionSelection()
 
   return (
     <>
@@ -25,6 +28,7 @@ const CartItemList = (props: CartItemListProps) => {
           maxQuantity={undefined}
           onQuantityUpdate={handleQuantityUpdate}
           onCartItemDelete={handleCartItemDelete}
+          onCartItemActionSelection={handleCartItemActionSelection}
         />
       ))}
     </>

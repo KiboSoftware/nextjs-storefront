@@ -32,6 +32,8 @@ describe('[components] - CartItem Integration', () => {
     userEvent.click(increaseButton)
     const decreaseButton = screen.getByRole('button', { name: 'decrease' })
     userEvent.click(decreaseButton)
+    const actionsIcon = screen.getByRole('button', { name: 'more' })
+    userEvent.click(actionsIcon)
 
     // // assert
     expect(img).toBeInTheDocument()
@@ -39,6 +41,7 @@ describe('[components] - CartItem Integration', () => {
     expect(productName).toBeInTheDocument()
     expect(increaseButton).toBeEnabled()
     expect(decreaseButton).toBeEnabled()
+    expect(actionsIcon).toBeEnabled()
     expect(onQuantityUpdateMock).toHaveBeenCalledTimes(2)
   })
 })

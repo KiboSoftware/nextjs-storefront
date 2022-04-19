@@ -13,6 +13,7 @@ import { grey } from '@mui/material/colors'
 import { useTranslation } from 'next-i18next'
 
 import CartItemActions from '@/components/cart/CartItemActions/CartItemActions'
+import CartItemActionsMobile from '@/components/cart/CartItemActionsMobile/CartItemActionsMobile'
 import FulfillmentOptions from '@/components/common/FulfillmentOptions/FulfillmentOptions'
 import Price from '@/components/common/Price/Price'
 import ProductItem from '@/components/common/ProductItem/ProductItem'
@@ -51,6 +52,7 @@ const styles = {
     alignItems: 'flex-start',
     margin: '0',
     position: 'absolute',
+    padding: 1,
     top: {
       xs: 0,
       sm: '2%',
@@ -69,12 +71,21 @@ const styles = {
 interface CartItemProps {
   cartItem: CartItemType
   maxQuantity: number | undefined
+  actions?: Array<string>
   onQuantityUpdate: (cartItemId: string, quantity: number) => void
   onCartItemDelete: (cartItemId: string) => void
+  onCartItemActionSelection: () => void
 }
 
 const CartItem = (props: CartItemProps) => {
-  const { cartItem, maxQuantity, onQuantityUpdate, onCartItemDelete } = props
+  const {
+    cartItem,
+    maxQuantity,
+    actions,
+    onQuantityUpdate,
+    onCartItemDelete,
+    onCartItemActionSelection,
+  } = props
 
   const theme = useTheme()
 
@@ -83,6 +94,7 @@ const CartItem = (props: CartItemProps) => {
 
   const onDelete = (cartItemId: string) => onCartItemDelete(cartItemId)
   const updateQuantity = (quantity: number) => onQuantityUpdate(cartItem.id || '', quantity)
+  const onActionSelection = () => onCartItemActionSelection()
 
   return (
     <>
@@ -135,10 +147,13 @@ const CartItem = (props: CartItemProps) => {
           </Box>
 
           <Box sx={{ ...styles.icon }}>
+            <Box sx={{ display: { xs: 'block', sm: 'block', md: 'none' } }}>
+              <CartItemActionsMobile
+                actions={actions || []}
+                onMenuItemSelection={() => onActionSelection()}
+              />
+            </Box>
             <IconButton
-              size="large"
-              edge="start"
-              color="inherit"
               aria-label="item-delete"
               name="item-delete"
               onClick={() => onDelete(cartItem.id || '')}

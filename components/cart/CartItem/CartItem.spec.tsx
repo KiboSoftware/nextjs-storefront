@@ -17,6 +17,11 @@ const productItemMock = () => <div data-testid="cart-item-component" />
 jest.mock('@/components/common/ProductItem/ProductItem', () => productItemMock)
 const quantitySelectorMock = () => <div data-testid="quantity-selector-component" />
 jest.mock('@/components/common/QuantitySelector/QuantitySelector', () => quantitySelectorMock)
+const cartItemActionsMobileMock = () => <div data-testid="cart-item-actions-mobile-component" />
+jest.mock(
+  '@/components/cart/CartItemActionsMobile/CartItemActionsMobile',
+  () => cartItemActionsMobileMock
+)
 
 describe('[components] - CartItem', () => {
   const setup = () => {
@@ -35,6 +40,7 @@ describe('[components] - CartItem', () => {
     const cartItemAction = screen.getByTestId('cart-item-actions-component')
     const fulfillmentOptions = screen.getByTestId('fulfillment-options-component')
     const cartItem = screen.getByTestId('cart-item-component')
+    const cartItemActionMobile = screen.getByTestId('cart-item-actions-mobile-component')
     const card = screen.getByRole('group')
     const deleteButton = screen.getByRole('button', { name: 'item-delete' })
     userEvent.click(deleteButton)
@@ -44,6 +50,7 @@ describe('[components] - CartItem', () => {
     expect(cartItemAction).toBeVisible()
     expect(fulfillmentOptions).toBeVisible()
     expect(cartItem).toBeVisible()
+    expect(cartItemActionMobile).toBeVisible()
     expect(card).toBeVisible()
     expect(deleteButton).toBeEnabled()
     expect(onDeleteMock).toHaveBeenCalledTimes(1)
