@@ -24,43 +24,39 @@ export interface KiboDialogProps {
   onClose: () => void
 }
 
+interface StyledDialogProps {
+  theme?: Theme
+  customMaxWidth?: string
+  isCenteredDialog: boolean
+}
+
 const StyledDialog = styled(Dialog, {
   shouldForwardProp: (prop) => prop !== 'customMaxWidth' && prop !== 'isCenteredDialog',
-})(
-  ({
-    theme,
-    customMaxWidth,
-    isCenteredDialog,
-  }: {
-    theme?: Theme
-    customMaxWidth?: string
-    isCenteredDialog: boolean
-  }) => ({
-    '& .MuiDialogContent-root': {
-      padding: theme?.spacing(2),
-    },
-    '& .MuiDialogActions-root': {
-      padding: theme?.spacing(1),
-    },
-    '& .MuiDialog-paper': {
-      margin: 0,
-      width: '100%',
-      borderRadius: 0,
-      ...(customMaxWidth && {
-        maxWidth: customMaxWidth,
-      }),
-    },
-    ...(isCenteredDialog === false && {
-      top: '55px',
-      '& .MuiDialog-scrollPaper': {
-        alignItems: 'flex-start',
-      },
-      '& .MuiDialog-paperScrollBody': {
-        verticalAlign: 'top',
-      },
+})(({ theme, customMaxWidth, isCenteredDialog }: StyledDialogProps) => ({
+  '& .MuiDialogContent-root': {
+    padding: theme?.spacing(2),
+  },
+  '& .MuiDialogActions-root': {
+    padding: theme?.spacing(1),
+  },
+  '& .MuiDialog-paper': {
+    margin: 0,
+    width: '100%',
+    borderRadius: 0,
+    ...(customMaxWidth && {
+      maxWidth: customMaxWidth,
     }),
-  })
-)
+  },
+  ...(isCenteredDialog === false && {
+    top: '55px',
+    '& .MuiDialog-scrollPaper': {
+      alignItems: 'flex-start',
+    },
+    '& .MuiDialog-paperScrollBody': {
+      verticalAlign: 'top',
+    },
+  }),
+}))
 
 const KiboDialog = (props: KiboDialogProps) => {
   const {
