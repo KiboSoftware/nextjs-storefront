@@ -19,7 +19,7 @@ interface CartDetailsProps {
 }
 
 // Component
-const AddToCart = (props: CartDetailsProps) => {
+const AddToCartDialog = (props: CartDetailsProps) => {
   const {
     fullfillmentOption,
     quantity,
@@ -63,4 +63,4 @@ const AddToCart = (props: CartDetailsProps) => {
 
   return <KiboDialog {...DialogArgs} />
 }
-export default AddToCart
+export default AddToCartDialog

@@ -88,17 +88,15 @@ const KiboDialog = (props: KiboDialogProps) => {
       isCenteredDialog={isCenteredDialog}
       data-test-id="kibo-dialog"
     >
-      {Title != '' ? (
+      {!!Title && (
         <DialogTitle id="kibo-dialog-title" sx={titleSX}>
           {Title}
-          {showCloseIconButton ? (
+          {showCloseIconButton && (
             <IconButton aria-label="close" onClick={onClose} sx={{ ...iconButtonStyle }}>
               <CloseIcon sx={{ ...closeIconStyle }} />
             </IconButton>
-          ) : null}
+          )}
         </DialogTitle>
-      ) : (
-        ''
       )}
       <DialogContent dividers={dividers}>{Content}</DialogContent>
       {Actions != '' ? <DialogActions>{Actions}</DialogActions> : ''}

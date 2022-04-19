@@ -116,7 +116,7 @@ describe('[components] Add To Cart Dialog integration', () => {
     expect(goToCartButton).not.toBeVisible()
   })
 
-  it('should close dialog when user clicks on "Continue Shopping" button', async () => {
+  it('should close dialog when user clicks on "Continue Shopping" button', () => {
     setup({
       fullfillmentOption: 'free',
       quantity: 2,
@@ -135,7 +135,7 @@ describe('[components] Add To Cart Dialog integration', () => {
     expect(dialog).toBeVisible()
     expect(continueShoppingButton).toBeVisible()
 
-    await userEvent.click(continueShoppingButton)
+    userEvent.click(continueShoppingButton)
 
     expect(continueShoppingButton).not.toBeVisible()
   })

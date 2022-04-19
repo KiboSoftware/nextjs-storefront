@@ -1,4 +1,4 @@
-import React, { SyntheticEvent } from 'react'
+import React from 'react'
 
 import CheckCircleIcon from '@mui/icons-material/CheckCircle'
 import { Typography, Box, Divider } from '@mui/material'
