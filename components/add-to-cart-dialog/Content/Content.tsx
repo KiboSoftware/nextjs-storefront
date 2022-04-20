@@ -1,16 +1,47 @@
 import React from 'react'
 
 import InfoIcon from '@mui/icons-material/Info'
-import { Typography, Box, Divider } from '@mui/material'
+import { Typography, Box, Divider, styled, Theme } from '@mui/material'
 import { useTranslation } from 'next-i18next'
 
 interface CartContentProps {
   fullfillmentOption: string
   quantity: number
-  subtotal: number
-  tax: number
-  total: number
+  subtotal: string
+  tax: string
+  total: string
 }
+
+interface StyledThemeProps {
+  theme?: Theme
+}
+
+const StyledPriceSection = styled(Box)(() => ({
+  padding: '0 0.438rem',
+}))
+
+const StyledPriceRow = styled(Box)(() => ({
+  display: 'flex',
+  padding: '0.563rem 0',
+}))
+
+const StyledPriceTotalRow = styled(Box)(() => ({
+  display: 'flex',
+  padding: '1.188rem 0.438rem 0.25rem 0.438rem',
+}))
+
+const StyledPriceLabel = styled(Typography)(({ theme }: StyledThemeProps) => ({
+  flex: '50%',
+  color: theme?.palette.text.primary,
+}))
+
+const StyledPriceData = styled(Typography)(({ theme }: StyledThemeProps) => ({
+  width: '1.25rem',
+  height: '1.25rem',
+  textAlign: 'right',
+  flex: '50%',
+  color: theme?.palette.text.primary,
+}))
 
 const Content = (props: CartContentProps) => {
   const { fullfillmentOption, quantity, subtotal, tax, total } = props
@@ -22,66 +53,33 @@ const Content = (props: CartContentProps) => {
         <Typography gutterBottom>Product Component</Typography>
       </Box>
       <Divider />
-      <Box sx={{ padding: '0 7px' }}>
-        <Box sx={{ display: 'flex', padding: '9px 0' }}>
-          <Typography variant="body2" component="span" color="text.primary" sx={{ flex: '50%' }}>
+      <StyledPriceSection>
+        <StyledPriceRow>
+          <StyledPriceLabel variant="body2">
             {t('cart-sub-total', { quantity: quantity })}
-          </Typography>
-          <Typography
-            variant="body2"
-            component="span"
-            color="text.primary"
-            align="right"
-            sx={{ flex: '50%' }}
-          >
-            {t('currency', { val: subtotal })}
-          </Typography>
-        </Box>
-        <Box sx={{ display: 'flex', padding: '9px 0' }}>
-          <Typography variant="body2" component="span" color="text.primary" sx={{ flex: '50%' }}>
-            {t('standard-shopping')}
-          </Typography>
-          <Typography
-            variant="body2"
-            component="span"
-            color="text.primary"
-            align="right"
-            sx={{ flex: '50%' }}
-          >
-            {fullfillmentOption}
-          </Typography>
-        </Box>
-        <Box sx={{ display: 'flex', padding: '9px 0' }}>
-          <Typography variant="body2" component="span" color="text.primary" sx={{ flex: '50%' }}>
-            {t('estimated-tax')} <InfoIcon sx={{ width: '11px', height: '11px' }} />
-          </Typography>
-          <Typography
-            variant="body2"
-            component="span"
-            color="text.primary"
-            align="right"
-            sx={{ flex: '50%' }}
-          >
-            {t('currency', { val: tax })}
-          </Typography>
-        </Box>
-      </Box>
-      <Divider sx={{ margin: '0 7px' }} />
-      <Box sx={{ padding: '19px 7px 4px 7px', display: 'flex' }}>
-        <Typography variant="body2" component="span" fontWeight="bold" color="text.primary">
+          </StyledPriceLabel>
+          <StyledPriceData variant="body2">{t('currency', { val: subtotal })}</StyledPriceData>
+        </StyledPriceRow>
+        <StyledPriceRow>
+          <StyledPriceLabel variant="body2">{t('standard-shopping')}</StyledPriceLabel>
+          <StyledPriceData variant="body2">{fullfillmentOption}</StyledPriceData>
+        </StyledPriceRow>
+        <StyledPriceRow>
+          <StyledPriceLabel variant="body2">
+            {t('estimated-tax')} <InfoIcon sx={{ width: '0.688rem', height: '0.688rem' }} />
+          </StyledPriceLabel>
+          <StyledPriceData variant="body2">{t('currency', { val: tax })}</StyledPriceData>
+        </StyledPriceRow>
+      </StyledPriceSection>
+      <Divider sx={{ margin: '0 0.438rem' }} />
+      <StyledPriceTotalRow>
+        <StyledPriceLabel variant="body2" fontWeight="bold">
           {t('total')}
-        </Typography>
-        <Typography
-          variant="body2"
-          component="span"
-          fontWeight="bold"
-          color="text.primary"
-          align="right"
-          sx={{ flex: '0 100%' }}
-        >
+        </StyledPriceLabel>
+        <StyledPriceData variant="body2" fontWeight="bold">
           {t('currency', { val: total })}
-        </Typography>
-      </Box>
+        </StyledPriceData>
+      </StyledPriceTotalRow>
     </Box>
   )
 }

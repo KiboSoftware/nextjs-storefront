@@ -16,7 +16,7 @@ export const Common = Template.bind({})
 Common.args = {
   fullfillmentOption: 'free',
   quantity: 2,
-  subtotal: 219.99,
-  tax: 13.73,
-  total: 233.72,
+  subtotal: '219.99',
+  tax: '13.73',
+  total: '233.72',
 }

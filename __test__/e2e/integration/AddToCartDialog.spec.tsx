@@ -15,9 +15,9 @@ const onCloseMock = jest.fn()
 interface CartDetailsProps {
   fullfillmentOption: string
   quantity: number
-  subtotal: number
-  tax: number
-  total: number
+  subtotal: string
+  tax: string
+  total: string
   isOpen: boolean
   isCenteredDialog: boolean
 }
@@ -29,9 +29,9 @@ describe('[components] Add To Cart Dialog integration', () => {
     setup({
       fullfillmentOption: 'free',
       quantity: 2,
-      subtotal: 219.99,
-      tax: 13.73,
-      total: 233.72,
+      subtotal: '219.99',
+      tax: '13.73',
+      total: '233.72',
       isOpen: true,
       isCenteredDialog: false,
     })
@@ -63,9 +63,9 @@ describe('[components] Add To Cart Dialog integration', () => {
     setup({
       fullfillmentOption: 'free',
       quantity: 2,
-      subtotal: 219.99,
-      tax: 13.73,
-      total: 233.72,
+      subtotal: '219.99',
+      tax: '13.73',
+      total: '233.72',
       isOpen: true,
       isCenteredDialog: false,
     })
@@ -85,9 +85,9 @@ describe('[components] Add To Cart Dialog integration', () => {
     setup({
       fullfillmentOption: 'free',
       quantity: 2,
-      subtotal: 219.99,
-      tax: 13.73,
-      total: 233.72,
+      subtotal: '219.99',
+      tax: '13.73',
+      total: '233.72',
       isOpen: true,
       isCenteredDialog: false,
     })
@@ -120,9 +120,9 @@ describe('[components] Add To Cart Dialog integration', () => {
     setup({
       fullfillmentOption: 'free',
       quantity: 2,
-      subtotal: 219.99,
-      tax: 13.73,
-      total: 233.72,
+      subtotal: '219.99',
+      tax: '13.73',
+      total: '233.72',
       isOpen: true,
       isCenteredDialog: false,
     })

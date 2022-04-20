@@ -8,12 +8,12 @@ import * as stories from './Actions.stories' // import all stories from the stor
 
 const { Common } = composeStories(stories)
 
-const onAddToCartMock = jest.fn()
+const onGoToCartMock = jest.fn()
 const onContinueShoppingMock = jest.fn()
 
 describe('[components] Add To Cart Dialog', () => {
   const setup = () =>
-    render(<Common onAddToCart={onAddToCartMock} onContinueShopping={onContinueShoppingMock} />)
+    render(<Common onGoToCart={onGoToCartMock} onContinueShopping={onContinueShoppingMock} />)
 
   it('should render component', async () => {
     setup()
@@ -31,7 +31,7 @@ describe('[components] Add To Cart Dialog', () => {
     expect(continueShoppingButton).toBeVisible()
   })
 
-  it('should call onAddToCart handler when user clicks on "Add To Cart" button', () => {
+  it('should call onGoToCart handler when user clicks on "Go To Cart" button', () => {
     setup()
 
     const goToCartButton = screen.getByRole('button', {
@@ -40,7 +40,7 @@ describe('[components] Add To Cart Dialog', () => {
     userEvent.click(goToCartButton)
 
     expect(goToCartButton).toBeVisible()
-    expect(onAddToCartMock).toHaveBeenCalled()
+    expect(onGoToCartMock).toHaveBeenCalled()
   })
 
   it('should call onContinueShopping habdler when user clicks on "Continue Shopping" button', () => {

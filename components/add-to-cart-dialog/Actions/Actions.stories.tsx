@@ -15,6 +15,6 @@ const Template: ComponentStory<typeof Actions> = ({ ...args }) => <Actions {...a
 export const Common = Template.bind({})
 
 Common.args = {
-  onAddToCart: () => 'add to cart clicked',
+  onGoToCart: () => 'go to cart clicked',
   onContinueShopping: () => 'continue shopping clicked',
 }

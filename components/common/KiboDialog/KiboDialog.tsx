@@ -10,8 +10,6 @@ import {
   styled,
   Theme,
 } from '@mui/material'
-import { grey } from '@mui/material/colors'
-
 export interface KiboDialogProps {
   isOpen: boolean
   Title?: ReactNode
@@ -28,6 +26,9 @@ interface StyledDialogProps {
   theme?: Theme
   customMaxWidth?: string
   isCenteredDialog: boolean
+}
+interface StyledCloseIconProps {
+  theme?: Theme
 }
 
 const StyledDialog = styled(Dialog, {
@@ -48,7 +49,7 @@ const StyledDialog = styled(Dialog, {
     }),
   },
   ...(isCenteredDialog === false && {
-    top: '55px',
+    top: '3.438rem',
     '& .MuiDialog-scrollPaper': {
       alignItems: 'flex-start',
     },
@@ -56,6 +57,23 @@ const StyledDialog = styled(Dialog, {
       verticalAlign: 'top',
     },
   }),
+}))
+
+const StyledDialogTitle = styled(DialogTitle)(() => ({
+  margin: 0,
+  padding: '1rem',
+}))
+
+const StyledIconButton = styled(IconButton)(() => ({
+  position: 'absolute',
+  right: '0.625rem',
+  top: '0.625rem',
+}))
+
+const StyledCloseIcon = styled(CloseIcon)(({ theme }: StyledCloseIconProps) => ({
+  width: '1.25rem',
+  height: '1.25rem',
+  color: theme?.palette.grey[500],
 }))
 
 const KiboDialog = (props: KiboDialogProps) => {
@@ -71,10 +89,6 @@ const KiboDialog = (props: KiboDialogProps) => {
     onClose,
   } = props
 
-  const titleSX = { m: 0, p: 2 }
-  const iconButtonStyle = { position: 'absolute', right: 10, top: 10 }
-  const closeIconStyle = { width: '20px', height: '20px', color: grey[600] }
-
   return (
     <StyledDialog
       onClose={onClose}
@@ -85,14 +99,14 @@ const KiboDialog = (props: KiboDialogProps) => {
       data-test-id="kibo-dialog"
     >
       {!!Title && (
-        <DialogTitle id="kibo-dialog-title" sx={titleSX}>
+        <StyledDialogTitle id="kibo-dialog-title">
           {Title}
           {showCloseIconButton && (
-            <IconButton aria-label="close" onClick={onClose} sx={{ ...iconButtonStyle }}>
-              <CloseIcon sx={{ ...closeIconStyle }} />
-            </IconButton>
+            <StyledIconButton aria-label="close" onClick={onClose}>
+              <StyledCloseIcon />
+            </StyledIconButton>
           )}
-        </DialogTitle>
+        </StyledDialogTitle>
       )}
       <DialogContent dividers={dividers}>{Content}</DialogContent>
       {Actions != '' ? <DialogActions>{Actions}</DialogActions> : ''}

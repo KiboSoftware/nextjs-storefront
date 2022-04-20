@@ -10,9 +10,9 @@ import KiboDialog from '@/components/common/KiboDialog/KiboDialog'
 interface CartDetailsProps {
   fullfillmentOption: string
   quantity: number
-  subtotal: number
-  tax: number
-  total: number
+  subtotal: string
+  tax: string
+  total: string
   isOpen: boolean
   isCenteredDialog: boolean
   onClose: () => void
@@ -42,7 +42,7 @@ const AddToCartDialog = (props: CartDetailsProps) => {
   const [isDialogOpen, setIsDialogOpen] = useState<boolean>(isOpen)
   const router = useRouter()
 
-  const handleAddToCart = () => {
+  const handleGoToCart = () => {
     setIsDialogOpen(false)
     router.push('/cart')
   }
@@ -55,9 +55,9 @@ const AddToCartDialog = (props: CartDetailsProps) => {
     Title: <Title />,
     Content: <Content {...contentArgs} />,
     dividers: false,
-    Actions: <Actions onAddToCart={handleAddToCart} onContinueShopping={handleContinueShopping} />,
+    Actions: <Actions onGoToCart={handleGoToCart} onContinueShopping={handleContinueShopping} />,
     isCenteredDialog: isCenteredDialog,
-    customMaxWidth: '518px',
+    customMaxWidth: '32.375rem',
     onClose: onClose,
   }
 

@@ -1,32 +1,35 @@
 import React from 'react'
 
 import CheckCircleIcon from '@mui/icons-material/CheckCircle'
-import { Typography, Box, Divider } from '@mui/material'
+import { Typography, Box, styled, Theme } from '@mui/material'
 import { useTranslation } from 'next-i18next'
+interface StyledThemeProps {
+  theme?: Theme
+}
+
+const StyledTitleComponent = styled(Box)(() => ({
+  display: 'flex',
+  alignItems: 'center',
+}))
+
+const StyledCheckCircleIcon = styled(CheckCircleIcon)(({ theme }: StyledThemeProps) => ({
+  color: theme?.palette.primary.main,
+}))
+
+const StyledTitle = styled(Typography)(({ theme }: StyledThemeProps) => ({
+  fontWeight: 'bold',
+  display: 'block',
+  marginLeft: '1rem',
+  color: theme?.palette.text.primary,
+}))
 
 const Title = () => {
   const { t } = useTranslation('common')
   return (
-    <Box display="flex" alignItems="center" data-testid="title-component">
-      <CheckCircleIcon
-        sx={{
-          color: 'primary.main',
-        }}
-      />
-      <Box ml={1}>
-        <Typography
-          variant="body2"
-          component="span"
-          fontWeight="bold"
-          fontSize="20px"
-          color="text.primary"
-          sx={{ display: 'block' }}
-        >
-          {t('add-to-cart')}
-        </Typography>
-      </Box>
-      <Divider />
-    </Box>
+    <StyledTitleComponent data-testid="title-component">
+      <StyledCheckCircleIcon />
+      <StyledTitle variant="h3">{t('add-to-cart')}</StyledTitle>
+    </StyledTitleComponent>
   )
 }
 

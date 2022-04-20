@@ -14,9 +14,9 @@ describe('[components] Add To Cart Dialog', () => {
     setup({
       fullfillmentOption: 'free',
       quantity: 2,
-      subtotal: 219.99,
-      tax: 13.73,
-      total: 233.72,
+      subtotal: '219.99',
+      tax: '13.73',
+      total: '233.72',
     })
 
     const component = screen.getByTestId('content-component')
