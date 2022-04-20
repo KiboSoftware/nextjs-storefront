@@ -7,7 +7,7 @@ import HamburgerMenu from './index'
 export default {
   title: 'Layout/Hamburger Menu',
   component: HamburgerMenu,
-  argTypes: { setDrawerState: { action: 'onClick' } },
+  argTypes: { setIsDrawerOpen: { action: 'onClick' } },
   parameters: {
     viewport: {
       defaultViewport: 'iphone12promax',

@@ -25,7 +25,6 @@ const HamburgerMenu = (props: HamburgerMenuProps) => {
     ) {
       return
     }
-
     setIsDrawerOpen(open)
   }
 
@@ -52,8 +51,8 @@ const HamburgerMenu = (props: HamburgerMenuProps) => {
         <Box maxHeight={'60%'} sx={{ overflowY: 'auto', width: '100%', flex: 1 }}>
           <CategoryNestedNavigation
             categoryTree={categoryTreeDataMock.categoriesTree.items}
-            onCategoryClick={() => null}
             onCloseMenu={toggleDrawer}
+            onCategoryClick={() => toggleDrawer(false)}
           >
             <Box width="100%">
               <HeaderAction
@@ -63,7 +62,6 @@ const HamburgerMenu = (props: HamburgerMenuProps) => {
                 mobileIconColor="black"
                 iconFontSize="large"
                 showTitleInMobile={true}
-                onClick={() => null}
               />
             </Box>
           </CategoryNestedNavigation>

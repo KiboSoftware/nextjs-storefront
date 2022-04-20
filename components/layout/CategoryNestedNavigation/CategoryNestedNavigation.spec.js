@@ -23,9 +23,9 @@ const setup = () => {
 
 describe('[component] CategroyNestedNavigation component', () => {
   it('should render the category-list', () => {
-    render(<Common {...Common.args} />)
-    const categoryList = screen.getByRole('list')
-    const headerText = screen.getByText(/All Departments/i)
+    const { categoryList } = setup()
+
+    const headerText = screen.getByText(/allDepartments/i)
     const backLinkText = screen.getByText(/Back/i)
 
     expect(categoryList).toBeVisible()
@@ -50,9 +50,9 @@ describe('[component] CategroyNestedNavigation component', () => {
     // Getting all the visible categories
     const allVisibleCategories = Common.args.categoryTree.filter((cat) => cat.isDisplayed)
 
-    userEvent.click(listItems.getByText(/Camping/i))
+    userEvent.click(screen.getByText(/Camping/i))
 
-    expect(listItems.getByText(/Tents/i)).toBeVisible()
+    expect(screen.getByText(/Tents/i)).toBeVisible()
 
     // Getting all the visible children categories after clicking Camping
     let visibleCategoriesCount = allVisibleCategories[0].childrenCategories.length
@@ -71,9 +71,9 @@ describe('[component] CategroyNestedNavigation component', () => {
   })
 
   it('should call onCategoryClickMock if childrenCategories are empty', () => {
-    const { listItems, onCategoryClickMock } = setup()
+    const { onCategoryClickMock } = setup()
 
-    userEvent.click(listItems.getByText(/Pets/i))
+    userEvent.click(screen.getByText(/Pets/i))
 
     expect(onCategoryClickMock).toBeCalled()
   })
