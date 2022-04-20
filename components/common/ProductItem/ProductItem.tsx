@@ -55,7 +55,6 @@ const ProductLabel = (props: { label: string }) => (
 
 const ProductItem = (props: ProductItemProps) => {
   const { image, name, options, price, salePrice, qty, children } = props
-
   const { t } = useTranslation('common')
   const theme = useTheme()
   const mdScreen = useMediaQuery(theme.breakpoints.up('md'))
