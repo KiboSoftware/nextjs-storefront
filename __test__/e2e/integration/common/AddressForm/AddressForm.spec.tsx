@@ -26,7 +26,7 @@ describe('[components] - AddressForm integration', () => {
     const stateOrProvince = screen.getByRole('textbox', { name: /state-or-province/i })
     const postalOrZipCode = screen.getByRole('textbox', { name: /postal-or-zip-code/i })
     const phoneNumberHome = screen.getByRole('textbox', { name: /phone-number/i })
-    const countryCode = screen.getByRole('textbox', { name: /country-code/i })
+    const countryCode = screen.getByRole('button')
 
     // assert
     expect(firstName).toBeVisible()
@@ -300,22 +300,6 @@ describe('[components] - AddressForm integration', () => {
       await act(async () => {
         userEvent.type(phoneNumberHome, contact.phoneNumbers.home)
         userEvent.clear(phoneNumberHome)
-      })
-      const validationMessage = screen.getByText(/this field is required/i)
-
-      // assert
-      expect(validationMessage).toBeVisible()
-    })
-
-    it('countryCode', async () => {
-      // arrange
-      setup()
-
-      // act
-      const countryCode = screen.getByRole('textbox', { name: /country-code/i })
-      await act(async () => {
-        userEvent.type(countryCode, 'US')
-        userEvent.clear(countryCode)
       })
       const validationMessage = screen.getByText(/this field is required/i)
 

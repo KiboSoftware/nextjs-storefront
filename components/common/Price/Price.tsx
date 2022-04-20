@@ -1,4 +1,4 @@
-import { Typography, Box } from '@mui/material'
+import { Typography, Box, SxProps, Theme } from '@mui/material'
 
 interface PriceRange {
   upper: string
@@ -47,9 +47,9 @@ const Price = ({
     color,
     sx,
   }: {
-    children: any
+    children: React.ReactNode
     color?: string
-    sx?: any
+    sx?: SxProps<Theme>
   }) => (
     <Typography
       variant={variant}

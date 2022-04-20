@@ -1,6 +1,6 @@
-import { ProductOptionValue } from '@/lib/gql/types'
+import type { ProductOptionValue } from '@/lib/gql/types'
 
-export const productOptionListValuesMock: ProductOptionValue[] = [
+export const productOptionSelectValuesMock: ProductOptionValue[] = [
   {
     value: '125',
     attributeValueId: 125,

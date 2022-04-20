@@ -4,11 +4,11 @@ import { composeStories } from '@storybook/testing-react'
 import { render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 
-import * as stories from './CartEditAction.stories' // import all stories from the stories file
+import * as stories from './CartItemActionsMobile.stories' // import all stories from the stories file
 
 const { CartAction } = composeStories(stories)
 
-describe('[component] - CartEditAction', () => {
+describe('[component] - CartItemActionsMobile', () => {
   const setup = () => {
     const onMenuItemSelectionMock = jest.fn()
     render(<CartAction onMenuItemSelection={onMenuItemSelectionMock} />)
@@ -31,7 +31,7 @@ describe('[component] - CartEditAction', () => {
     const items = screen.getAllByRole('menuitem')
     const menuItems = items.map((item) => item.textContent)
 
-    expect(menuItems).toStrictEqual(CartAction.args.options)
+    expect(menuItems).toStrictEqual(CartAction?.args?.actions)
   })
 
   it('should call onMenuItemClick function when user selects any menu item', () => {

@@ -2,14 +2,16 @@ import React from 'react'
 
 import AddIcon from '@mui/icons-material/Add'
 import RemoveIcon from '@mui/icons-material/Remove'
-import { Stack, TextField, IconButton } from '@mui/material'
+import { Stack, TextField, IconButton, Typography } from '@mui/material'
 import { useTranslation } from 'next-i18next'
 
 // Interface
-interface QuantitySelecotorProps {
+interface QuantitySelectorProps {
   quantity?: number
-  onIncrease: () => void
-  onDecrease: () => void
+  label?: string
+  maxQuantity?: number
+  onIncrease?: () => void
+  onDecrease?: () => void
 }
 
 interface QuantityInputProps {
@@ -21,8 +23,8 @@ const styles = {
   iconButton: {
     border: 1,
     borderColor: 'text.primary',
-    height: 25,
-    width: 25,
+    height: 22,
+    width: 22,
   },
 }
 
@@ -45,12 +47,16 @@ const QuantityTextField = ({ quantity }: QuantityInputProps) => (
 )
 
 // Component
-const QuantitySelecotor = (props: QuantitySelecotorProps) => {
-  const { quantity = 1, onIncrease, onDecrease } = props
+const QuantitySelector = (props: QuantitySelectorProps) => {
+  const { quantity = 1, label, maxQuantity, onIncrease, onDecrease } = props
   const { t } = useTranslation('common')
 
   return (
-    <Stack direction="row" justifyContent="center" alignItems="center" spacing={1.5}>
+    <Stack direction="row" justifyContent="flec-start" alignItems="center" spacing={1.2}>
+      <Typography variant="body2" component="span" sx={{ pr: '0.5rem' }} data-testid="label">
+        {label}:
+      </Typography>
+
       <IconButton
         onClick={onDecrease}
         disabled={quantity === 1 ? true : false}
@@ -65,6 +71,7 @@ const QuantitySelecotor = (props: QuantitySelecotorProps) => {
 
       <IconButton
         onClick={onIncrease}
+        disabled={maxQuantity === quantity ? true : false}
         sx={{ ...styles.iconButton }}
         aria-label={t('increase')}
         component="span"
@@ -75,4 +82,4 @@ const QuantitySelecotor = (props: QuantitySelecotorProps) => {
   )
 }
 
-export default QuantitySelecotor
+export default QuantitySelector

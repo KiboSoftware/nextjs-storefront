@@ -4,8 +4,8 @@ import MoreVertIcon from '@mui/icons-material/MoreVert'
 import { IconButton, Menu, MenuItem } from '@mui/material'
 import { useTranslation } from 'next-i18next'
 
-interface CartEditActionProps {
-  options: string[]
+interface CartItemActionsMobileProps {
+  actions: string[]
   onMenuItemSelection: (option: string) => void
 }
 
@@ -18,8 +18,8 @@ const styles = {
   },
 }
 
-const CartEditAction = (props: CartEditActionProps) => {
-  const { options, onMenuItemSelection } = props
+const CartItemActionsMobile = (props: CartItemActionsMobileProps) => {
+  const { actions, onMenuItemSelection } = props
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null)
   const open = Boolean(anchorEl)
   const { t } = useTranslation('common')
@@ -38,7 +38,7 @@ const CartEditAction = (props: CartEditActionProps) => {
   }
 
   return (
-    <div>
+    <>
       <IconButton
         aria-label={t('more')}
         id="long-button"
@@ -71,18 +71,18 @@ const CartEditAction = (props: CartEditActionProps) => {
           horizontal: 'right',
         }}
       >
-        {options.map((option) => (
+        {actions.map((action) => (
           <MenuItem
-            key={option}
-            onClick={() => handleMenuItemClick(option)}
+            key={action}
+            onClick={() => handleMenuItemClick(action)}
             sx={{ ...styles.menuItemStyle }}
           >
-            {option}
+            {action}
           </MenuItem>
         ))}
       </Menu>
-    </div>
+    </>
   )
 }
 
-export default CartEditAction
+export default CartItemActionsMobile
