@@ -41,7 +41,11 @@ const ProductItemList = (props: ProductItemListProps) => {
       data-testid="product-item-stack"
     >
       {items.map((item: ProductItemProps, index) => (
-        <ProductItem {...item} key={item.name + '-' + index}></ProductItem>
+        <ProductItem
+          {...item}
+          key={item.name + '-' + index}
+          data-testid="product-item"
+        ></ProductItem>
       ))}
     </Stack>
   )

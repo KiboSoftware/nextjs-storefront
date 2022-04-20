@@ -217,7 +217,7 @@ const items: CrOrderItem[] = [
   },
 ]
 
-const argsWithoutPriceLabel = items.map((item) => {
+const argsWithoutLabel = items.map((item) => {
   return {
     image: item.product?.imageUrl || DefaultImage,
     name: item.product?.name || '',
@@ -225,7 +225,7 @@ const argsWithoutPriceLabel = items.map((item) => {
   }
 })
 
-const argsWithPriceLabel = items.map((item) => {
+const argsWithLabel = items.map((item) => {
   return {
     image: item.product?.imageUrl || DefaultImage,
     name: item.product?.name || '',
@@ -248,15 +248,11 @@ const Template: ComponentStory<typeof ProductItemList> = (args) => <ProductItemL
 // Show Price below the product name
 export const Common = Template.bind({})
 Common.args = {
-  items: [...argsWithoutPriceLabel],
+  items: [...argsWithoutLabel],
 }
 
-const TemplateWithPriceLabel: ComponentStory<typeof ProductItemList> = (args) => (
-  <ProductItemList {...args}></ProductItemList>
-)
-
 // Show Price below the product name
-export const WithPriceLabel = TemplateWithPriceLabel.bind({})
-WithPriceLabel.args = {
-  items: [...argsWithPriceLabel],
+export const WithLabel = Template.bind({})
+WithLabel.args = {
+  items: [...argsWithLabel],
 }
