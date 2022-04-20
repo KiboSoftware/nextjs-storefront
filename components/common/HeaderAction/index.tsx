@@ -1,6 +1,6 @@
 import type { MouseEventHandler } from 'react'
 
-import { Typography, Badge, Box } from '@mui/material'
+import { Typography, Badge, Box, Theme } from '@mui/material'
 import { styled } from '@mui/material/styles'
 
 interface HeaderActionProps {
@@ -10,6 +10,8 @@ interface HeaderActionProps {
   mobileIconColor?: string
   onClick?: MouseEventHandler<HTMLDivElement>
   badgeContent?: string | number
+  showTitleInMobile?: boolean
+  iconFontSize?: 'small' | 'medium' | 'large'
 }
 const StyledBadge = styled(Badge)(() => ({
   '& .MuiBadge-badge': {
@@ -25,7 +27,15 @@ const styles = {
 }
 
 const HeaderAction = (props: HeaderActionProps) => {
-  const { title, subtitle, onClick, badgeContent, mobileIconColor = 'white' } = props
+  const {
+    title,
+    subtitle,
+    onClick,
+    badgeContent,
+    mobileIconColor = 'white',
+    showTitleInMobile = false,
+    iconFontSize = 'medium',
+  } = props
   const Icon = props.icon
   return (
     <Box
@@ -44,14 +54,16 @@ const HeaderAction = (props: HeaderActionProps) => {
         badgeContent={badgeContent}
       >
         <Icon
-          sx={(theme: any) => ({
+          fontSize={iconFontSize}
+          sx={(theme: Theme) => ({
+            color: 'grey.900',
             [theme.breakpoints.down('md')]: {
               color: mobileIconColor,
             },
           })}
         ></Icon>
       </StyledBadge>
-      <Box ml={1} sx={{ display: { sm: 'none', md: 'block' } }}>
+      <Box ml={1} sx={{ display: { xs: showTitleInMobile ? 'block' : 'none', md: 'block' } }}>
         <Typography
           variant="body2"
           component="span"

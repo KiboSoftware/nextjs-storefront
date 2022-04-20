@@ -54,5 +54,8 @@
   "ship": "Ship to Home",
   "pickup": "Pickup in Store ",
   "find-a-store": "Find a store",
-  "view-all": "View all"
+  "view-all": "View all",
+  "apply": "Apply",
+  "promoInputPlaceholder": "Enter promo code",
+  "allDepartments": "All Departments"
 }
