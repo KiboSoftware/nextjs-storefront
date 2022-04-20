@@ -1,18 +1,6 @@
-import React, { ReactNode, useState } from 'react'
+import React, { ReactNode } from 'react'
 
-import {
-  Typography,
-  Box,
-  CardMedia,
-  CardContent,
-  Collapse,
-  useMediaQuery,
-  Hidden,
-  useTheme,
-  Stack,
-  Divider,
-} from '@mui/material'
-import { useTranslation } from 'next-i18next'
+import { Stack, Divider } from '@mui/material'
 
 import ProductItem from '@/components/common/ProductItem/ProductItem'
 
