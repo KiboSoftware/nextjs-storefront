@@ -155,9 +155,14 @@ const CategoryNestedNavigation = ({
         <ListItemText primary={subHeader.label} sx={{ ...styles.listHeader }} />
       </ListItem>
       <Divider />
-      {activeCategory?.map((category: PrCategory, index: number) => {
+      {activeCategory?.map((category: PrCategory) => {
         return (
-          <Slide key={index} direction="right" in={true}>
+          <Slide
+            key={category.categoryId}
+            direction="right"
+            in={Boolean(activeCategory.length)}
+            appear={true}
+          >
             <Box>
               <ListItemButton onClick={() => handleCatgeoryClick(category)}>
                 <ListItemText primary={category?.content?.name} sx={{ ...styles.listContent }} />
