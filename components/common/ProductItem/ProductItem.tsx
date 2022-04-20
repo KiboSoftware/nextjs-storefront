@@ -24,6 +24,7 @@ interface ProductItemProps {
   options: CrProductOption[]
   price?: string
   salePrice?: string
+  qty?: number
   children?: ReactNode
 }
 
@@ -41,7 +42,7 @@ const styles = {
 }
 
 const ProductItem = (props: ProductItemProps) => {
-  const { image, name, options, price, salePrice, children } = props
+  const { image, name, options, price, salePrice, qty, children } = props
   const { t } = useTranslation('common')
   const theme = useTheme()
   const mdScreen = useMediaQuery(theme.breakpoints.up('md'))
@@ -85,6 +86,13 @@ const ProductItem = (props: ProductItemProps) => {
             <Collapse in={mdScreen ? true : expanded} timeout="auto" unmountOnExit>
               <ProductOptionList options={options} />
 
+              {qty && (
+                <Box>
+                  <Typography variant="body2" fontWeight="bold" component="span" sx={{ pr: 1 }}>
+                    {t('qty')}: {qty}
+                  </Typography>
+                </Box>
+              )}
               {(price || salePrice) && (
                 <Box sx={{ display: 'inline-flex' }}>
                   <Typography variant="body2" fontWeight="bold" component="span" sx={{ pr: 1 }}>
