@@ -42,14 +42,18 @@ let theme = createTheme({
     h5: {
       fontSize: '0.875rem', // 14px
     },
-    button: {
-      fontSize: '1.125rem', // 18px
-    },
+
     subtitle1: {
       fontSize: '1.125rem', // 18px
     },
+    subtitle2: {
+      fontSize: '1rem', // 16px
+    },
+    body1: {
+      fontSize: '1', // 16px
+    },
     body2: {
-      fontSize: '0.875rem', // 12px
+      fontSize: '0.875rem', // 14px
     },
   },
   palette: {
@@ -97,9 +101,6 @@ theme = createTheme(theme, {
         root: {
           color: grey[900],
           fontSize: '1.25rem',
-          [theme.breakpoints.up('md')]: {
-            fontSize: '1.75rem',
-          },
         },
       },
     },

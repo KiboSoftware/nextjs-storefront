@@ -16,11 +16,25 @@ const Template: ComponentStory<typeof QuantitySelector> = (args) => {
   const onDecrease = () => setQuantity((q) => q - 1)
   const onIncrease = () => setQuantity((q) => q + 1)
 
-  return <QuantitySelector quantity={quantity} onDecrease={onDecrease} onIncrease={onIncrease} />
+  return (
+    <QuantitySelector
+      quantity={quantity}
+      label={args.label}
+      onDecrease={onDecrease}
+      onIncrease={onIncrease}
+    />
+  )
 }
 
 // Default
 export const Default = Template.bind({})
 Default.args = {
   quantity: 1,
+  maxQuantity: 5,
+}
+
+export const withQtyLabel = Template.bind({})
+withQtyLabel.args = {
+  ...Default.args,
+  label: 'Qty:',
 }

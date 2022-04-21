@@ -3,6 +3,7 @@ import React from 'react'
 import { ComponentStory, ComponentMeta } from '@storybook/react'
 
 import ProductVariantSizeSelector from './ProductVariantSizeSelector'
+
 import { ProductOptionValue } from '@/lib/gql/types'
 
 const values: ProductOptionValue[] = [
@@ -33,8 +34,8 @@ const Template: ComponentStory<typeof ProductVariantSizeSelector> = (args) => (
   <ProductVariantSizeSelector {...args} />
 )
 
-export const Default = Template.bind({})
-Default.args = {
+export const Common = Template.bind({})
+Common.args = {
   attributeFQN: 'test-attributeFQN',
   values,
 }
