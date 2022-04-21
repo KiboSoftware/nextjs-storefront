@@ -2,8 +2,8 @@ import React from 'react'
 
 import { ComponentStory, ComponentMeta } from '@storybook/react'
 
+import { orderItems } from '../../../__mocks__/productItemListMockData'
 import ProductItemList from './ProductItemList'
-import { orderItems } from '@/__mocks__/productItemListMockData'
 import DefaultImage from '@/public/product_placeholder.svg'
 
 import type { CrProductOption } from '@/lib/gql/types'

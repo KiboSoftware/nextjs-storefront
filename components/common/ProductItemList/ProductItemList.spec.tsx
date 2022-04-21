@@ -3,8 +3,8 @@ import React, { ReactNode } from 'react'
 import { composeStories } from '@storybook/testing-react'
 import { render, screen } from '@testing-library/react'
 
+import { orderItems } from '../../../__mocks__/productItemListMockData'
 import * as stories from './ProductItemList.stories'
-import { orderItems } from '@/__mocks__/productItemListMockData'
 import DefaultImage from '@/public/product_placeholder.svg'
 
 import type { CrProductOption } from '@/lib/gql/types'
