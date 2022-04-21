@@ -2,30 +2,8 @@ import React from 'react'
 
 import { ComponentStory, ComponentMeta } from '@storybook/react'
 
-import { orderItems } from '../../../__mocks__/productItemListMockData'
+import { argsWithoutLabel, argsWithLabel } from '../../../__mocks__/productItemListMockData'
 import ProductItemList from './ProductItemList'
-import DefaultImage from '@/public/product_placeholder.svg'
-
-import type { CrProductOption } from '@/lib/gql/types'
-
-const argsWithoutLabel = orderItems.map((item) => {
-  return {
-    image: item.product?.imageUrl || DefaultImage,
-    name: item.product?.name || '',
-    options: item.product?.options as Array<CrProductOption>,
-  }
-})
-
-const argsWithLabel = orderItems.map((item) => {
-  return {
-    image: item.product?.imageUrl || DefaultImage,
-    name: item.product?.name || '',
-    options: item.product?.options as Array<CrProductOption>,
-    qty: item?.quantity || 0,
-    price: '$' + (item.product?.price?.price || 0).toString(),
-    salePrice: '$' + (item.product?.price?.salePrice || 0).toString(),
-  }
-})
 
 export default {
   title: 'Common/ProductItemList',

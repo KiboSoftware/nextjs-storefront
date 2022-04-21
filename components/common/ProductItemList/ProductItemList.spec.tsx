@@ -3,9 +3,8 @@ import React, { ReactNode } from 'react'
 import { composeStories } from '@storybook/testing-react'
 import { render, screen } from '@testing-library/react'
 
-import { orderItems } from '../../../__mocks__/productItemListMockData'
+import { argsWithoutLabel, argsWithLabel } from '../../../__mocks__/productItemListMockData'
 import * as stories from './ProductItemList.stories'
-import DefaultImage from '@/public/product_placeholder.svg'
 
 import type { CrProductOption } from '@/lib/gql/types'
 
@@ -23,24 +22,6 @@ interface ProductItemListProps {
   qty?: number
   children?: ReactNode
 }
-
-const argsWithoutLabel = orderItems.map((item) => {
-  return {
-    image: item.product?.imageUrl || DefaultImage,
-    name: item.product?.name || '',
-    options: item.product?.options as Array<CrProductOption>,
-  }
-})
-
-const argsWithLabel = orderItems.map((item) => {
-  return {
-    image: item.product?.imageUrl || DefaultImage,
-    name: item.product?.name || '',
-    options: item.product?.options as Array<CrProductOption>,
-    price: '$' + (item.product?.price?.price || 0).toString(),
-    salePrice: '$' + (item.product?.price?.salePrice || 0).toString(),
-  }
-})
 
 describe('[component] - ProductItemList', () => {
   const setup = (params: { items: ProductItemListProps[] }) => {

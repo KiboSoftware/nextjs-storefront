@@ -1,4 +1,6 @@
-import type { CrOrderItem } from '@/lib/gql/types'
+import DefaultImage from '@/public/product_placeholder.svg'
+
+import type { CrProductOption, CrOrderItem } from '@/lib/gql/types'
 
 export const orderItems: CrOrderItem[] = [
   {
@@ -220,3 +222,21 @@ export const orderItems: CrOrderItem[] = [
     },
   },
 ]
+
+export const argsWithoutLabel = orderItems.map((item) => {
+  return {
+    image: item.product?.imageUrl || DefaultImage,
+    name: item.product?.name || '',
+    options: item.product?.options as Array<CrProductOption>,
+  }
+})
+
+export const argsWithLabel = orderItems.map((item) => {
+  return {
+    image: item.product?.imageUrl || DefaultImage,
+    name: item.product?.name || '',
+    options: item.product?.options as Array<CrProductOption>,
+    price: '$' + (item.product?.price?.price || 0).toString(),
+    salePrice: '$' + (item.product?.price?.salePrice || 0).toString(),
+  }
+})
