@@ -1,4 +1,4 @@
-import * as React from 'react'
+import { useState, useEffect } from 'react'
 
 import AccountCircleIcon from '@mui/icons-material/AccountCircle'
 import { Box, List, ListItem, ListItemText, SwipeableDrawer } from '@mui/material'
@@ -9,31 +9,29 @@ import HeaderAction from '@/components/common/HeaderAction'
 
 interface HamburgerMenuProps {
   isDrawerOpen: boolean
-  marginTop: number | string
+  marginTop?: number | string
   setIsDrawerOpen: (isDrawerOpen: boolean) => void
 }
 
 const HamburgerMenu = (props: HamburgerMenuProps) => {
   const { isDrawerOpen, marginTop = 7, setIsDrawerOpen } = props
+  const [isOpen, setIsOpen] = useState(false)
 
-  const toggleDrawer = (open: boolean) => (event: React.KeyboardEvent | React.MouseEvent) => {
-    if (
-      event &&
-      event.type === 'keydown' &&
-      ((event as React.KeyboardEvent).key === 'Tab' ||
-        (event as React.KeyboardEvent).key === 'Shift')
-    ) {
-      return
-    }
+  const toggleDrawer = (open: boolean) => {
+    setIsOpen(open)
     setIsDrawerOpen(open)
   }
+
+  useEffect(() => {
+    setIsOpen(isDrawerOpen)
+  }, [isDrawerOpen])
 
   return (
     <SwipeableDrawer
       anchor={'left'}
-      open={isDrawerOpen}
-      onClose={toggleDrawer(false)}
-      onOpen={toggleDrawer(true)}
+      open={isOpen}
+      onClose={() => toggleDrawer(false)}
+      onOpen={() => toggleDrawer(true)}
       data-testid="hamburger-menu"
     >
       <Box
@@ -48,7 +46,7 @@ const HamburgerMenu = (props: HamburgerMenuProps) => {
         }}
         role="presentation"
       >
-        <Box maxHeight={'60%'} sx={{ overflowY: 'auto', width: '100%', flex: 1 }}>
+        <Box maxHeight={'60%'} sx={{ overflowY: 'auto', width: '100%', flex: 1, pt: 2 }}>
           <CategoryNestedNavigation
             categoryTree={categoryTreeDataMock.categoriesTree.items}
             onCloseMenu={toggleDrawer}

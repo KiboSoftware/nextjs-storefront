@@ -22,7 +22,7 @@ import { PrCategory } from '@/lib/gql/types'
 interface CategoryNestedNavigationProps {
   categoryTree: PrCategory[]
   onCategoryClick: (category: PrCategory) => void
-  onCloseMenu: (isOpen: boolean) => React.ReactEventHandler
+  onCloseMenu: (isOpen: boolean) => void
   children?: React.ReactNode
 }
 
