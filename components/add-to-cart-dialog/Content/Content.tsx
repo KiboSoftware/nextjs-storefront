@@ -4,12 +4,11 @@ import InfoIcon from '@mui/icons-material/Info'
 import { Typography, Box, Divider, styled, Theme } from '@mui/material'
 import { useTranslation } from 'next-i18next'
 
+import ProductItem from '@/components/common/ProductItem/ProductItem'
+
+import type { CartItem as CartItemType, CrProductOption } from '@/lib/gql/types'
 interface CartContentProps {
-  fullfillmentOption: string
-  quantity: number
-  subtotal: string
-  tax: string
-  total: string
+  cartItem: CartItemType
 }
 
 interface StyledThemeProps {
@@ -44,13 +43,23 @@ const StyledPriceData = styled(Typography)(({ theme }: StyledThemeProps) => ({
 }))
 
 const Content = (props: CartContentProps) => {
-  const { fullfillmentOption, quantity, subtotal, tax, total } = props
+  const { cartItem } = props
+  const { fulfillmentMethod, quantity, subtotal, itemTaxTotal, total } = cartItem
   const { t } = useTranslation('common')
 
   return (
     <Box sx={{ width: '100%' }} data-testid="content-component">
       <Box>
-        <Typography gutterBottom>Product Component</Typography>
+        <ProductItem
+          image={cartItem.product?.imageUrl || ''}
+          name={cartItem.product?.name || ''}
+          options={cartItem.product?.options as Array<CrProductOption>}
+          price={(cartItem.product?.price?.price || 0).toString()}
+          salePrice={
+            (cartItem.product?.price?.salePrice && cartItem.product?.price?.salePrice.toString()) ||
+            undefined
+          }
+        />
       </Box>
       <Divider />
       <StyledPriceSection>
@@ -62,13 +71,13 @@ const Content = (props: CartContentProps) => {
         </StyledPriceRow>
         <StyledPriceRow>
           <StyledPriceLabel variant="body2">{t('standard-shopping')}</StyledPriceLabel>
-          <StyledPriceData variant="body2">{fullfillmentOption}</StyledPriceData>
+          <StyledPriceData variant="body2">{fulfillmentMethod}</StyledPriceData>
         </StyledPriceRow>
         <StyledPriceRow>
           <StyledPriceLabel variant="body2">
             {t('estimated-tax')} <InfoIcon sx={{ width: '0.688rem', height: '0.688rem' }} />
           </StyledPriceLabel>
-          <StyledPriceData variant="body2">{t('currency', { val: tax })}</StyledPriceData>
+          <StyledPriceData variant="body2">{t('currency', { val: itemTaxTotal })}</StyledPriceData>
         </StyledPriceRow>
       </StyledPriceSection>
       <Divider sx={{ margin: '0 0.438rem' }} />

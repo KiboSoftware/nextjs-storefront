@@ -29,10 +29,8 @@ describe('[component] - ProductItem with Price Label', () => {
   it('should render component with price label inside details', () => {
     setup()
 
-    const price = screen.getByText(WithPriceLabel?.args?.price || '')
-    const salePrice = screen.getByText(WithPriceLabel?.args?.salePrice || '')
+    const priceSalePrice = screen.getAllByText(/currency/i)
 
-    expect(price).toBeVisible()
-    expect(salePrice).toBeVisible()
+    expect(priceSalePrice).toHaveLength(2)
   })
 })

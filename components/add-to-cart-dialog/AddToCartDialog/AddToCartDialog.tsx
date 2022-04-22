@@ -7,12 +7,10 @@ import Content from '../Content/Content'
 import Title from '../Title/Title'
 import KiboDialog from '@/components/common/KiboDialog/KiboDialog'
 
+import type { CartItem as CartItemType } from '@/lib/gql/types'
+
 interface CartDetailsProps {
-  fullfillmentOption: string
-  quantity: number
-  subtotal: string
-  tax: string
-  total: string
+  cartItem: CartItemType
   isOpen: boolean
   isCenteredDialog: boolean
   onClose: () => void
@@ -20,23 +18,10 @@ interface CartDetailsProps {
 
 // Component
 const AddToCartDialog = (props: CartDetailsProps) => {
-  const {
-    fullfillmentOption,
-    quantity,
-    subtotal,
-    tax,
-    total,
-    isOpen = false,
-    isCenteredDialog,
-    onClose,
-  } = props
+  const { cartItem, isOpen = false, isCenteredDialog, onClose } = props
 
   const contentArgs = {
-    fullfillmentOption,
-    quantity,
-    subtotal,
-    tax,
-    total,
+    cartItem,
   }
 
   const [isDialogOpen, setIsDialogOpen] = useState<boolean>(isOpen)
@@ -54,7 +39,8 @@ const AddToCartDialog = (props: CartDetailsProps) => {
     isOpen: isDialogOpen,
     Title: <Title />,
     Content: <Content {...contentArgs} />,
-    dividers: false,
+    showContentTopDivider: true,
+    showContentBottomDivider: false,
     Actions: <Actions onGoToCart={handleGoToCart} onContinueShopping={handleContinueShopping} />,
     isCenteredDialog: isCenteredDialog,
     customMaxWidth: '32.375rem',

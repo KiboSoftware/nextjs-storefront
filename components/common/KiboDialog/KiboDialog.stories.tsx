@@ -25,7 +25,6 @@ Common.args = {
       egestas eget quam. Morbi leo risus, porta ac consectetur ac, vestibulum at eros.
     </Typography>
   ),
-  dividers: true,
   Actions: <Button>Save</Button>,
   isCenteredDialog: true,
   customMaxWidth: '',

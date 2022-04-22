@@ -5,21 +5,55 @@ import { render, screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { RouterContext } from 'next/dist/shared/lib/router-context'
 
-import { createMockRouter } from '../../utils/createMockRouter'
+import { createMockRouter } from '../../../../utils/createMockRouter'
 import * as stories from '@/components/add-to-cart-dialog/AddToCartDialog/AddToCartDialog.stories' // import all stories from the stories file
+
+import type { CartItem as CartItemType } from '@/lib/gql/types'
 
 const { Common } = composeStories(stories)
 
 const onCloseMock = jest.fn()
 
 interface CartDetailsProps {
-  fullfillmentOption: string
-  quantity: number
-  subtotal: string
-  tax: string
-  total: string
+  cartItem: CartItemType
   isOpen: boolean
   isCenteredDialog: boolean
+}
+
+const cartItem: CartItemType = {
+  id: '1beef214158842d7a305ae68009d4d4c',
+  fulfillmentMethod: 'Ship',
+  product: {
+    productCode: 'MS-BTL-002',
+    fulfillmentTypesSupported: ['DirectShip'],
+    name: 'SoftBottle Water Bottle',
+    description:
+      'The taste-free Platypus Platy bottle with screw cap is an excellent option for bringing water on your backcountry adventures.<br>',
+    imageUrl:
+      '//d1slj7rdbjyb5l.cloudfront.net/17194-21127/cms/21127/files/c186f113-6150-40a2-a210-1684f25f273b',
+    options: [
+      {
+        attributeFQN: 'Tenant~color',
+        name: 'Color',
+        value: 'Blue',
+      },
+      {
+        attributeFQN: 'Tenant~size',
+        name: 'Size',
+        value: 'Large',
+      },
+    ],
+    properties: [],
+    sku: null,
+    price: {
+      price: 15,
+      salePrice: null,
+    },
+  },
+  quantity: 6,
+  subtotal: 219.99,
+  itemTaxTotal: 13.73,
+  total: 233.72,
 }
 
 describe('[components] Add To Cart Dialog integration', () => {
@@ -27,21 +61,21 @@ describe('[components] Add To Cart Dialog integration', () => {
 
   it('should render component', async () => {
     setup({
-      fullfillmentOption: 'free',
-      quantity: 2,
-      subtotal: '219.99',
-      tax: '13.73',
-      total: '233.72',
+      cartItem,
       isOpen: true,
       isCenteredDialog: false,
     })
+
+    const item = Common.args?.cartItem
+    const name = item?.product?.name || ''
 
     const component = screen.getByRole('dialog')
     const title = screen.getByText(/add-to-cart/i)
     const closeIconButton = screen.getByRole('button', {
       name: /close/i,
     })
-    const fullfillmentOption = screen.getByText(`${Common.args?.fullfillmentOption}`)
+    const productName = screen.getByText(name)
+    const fulfillmentMethod = screen.getByText(`${item?.fulfillmentMethod}`)
     const taxSubTotalTotal = screen.getAllByText(/currency/i)
     const goToCartButton = screen.getByRole('button', {
       name: /go-to-cart/i,
@@ -53,19 +87,16 @@ describe('[components] Add To Cart Dialog integration', () => {
     expect(component).toBeVisible()
     expect(title).toBeVisible()
     expect(closeIconButton).toBeVisible()
-    expect(fullfillmentOption).toBeVisible()
-    expect(taxSubTotalTotal).toHaveLength(3)
+    expect(productName).toBeInTheDocument()
+    expect(fulfillmentMethod).toBeVisible()
+    expect(taxSubTotalTotal).toHaveLength(4)
     expect(goToCartButton).toBeVisible()
     expect(continueShoppingButton).toBeVisible()
   })
 
   it('should close dialog when user clicks on closeIcon button', () => {
     setup({
-      fullfillmentOption: 'free',
-      quantity: 2,
-      subtotal: '219.99',
-      tax: '13.73',
-      total: '233.72',
+      cartItem,
       isOpen: true,
       isCenteredDialog: false,
     })
@@ -83,11 +114,7 @@ describe('[components] Add To Cart Dialog integration', () => {
 
   it('should redirect to /cart page when user clicks on "Add To Cart" button', async () => {
     setup({
-      fullfillmentOption: 'free',
-      quantity: 2,
-      subtotal: '219.99',
-      tax: '13.73',
-      total: '233.72',
+      cartItem,
       isOpen: true,
       isCenteredDialog: false,
     })
@@ -118,11 +145,7 @@ describe('[components] Add To Cart Dialog integration', () => {
 
   it('should close dialog when user clicks on "Continue Shopping" button', () => {
     setup({
-      fullfillmentOption: 'free',
-      quantity: 2,
-      subtotal: '219.99',
-      tax: '13.73',
-      total: '233.72',
+      cartItem,
       isOpen: true,
       isCenteredDialog: false,
     })

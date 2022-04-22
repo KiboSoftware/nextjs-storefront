@@ -9,16 +9,19 @@ import {
   IconButton,
   styled,
   Theme,
+  Divider,
 } from '@mui/material'
+
 export interface KiboDialogProps {
   isOpen: boolean
   Title?: ReactNode
   showCloseIconButton?: boolean
   Content: ReactNode
-  dividers?: boolean
   Actions?: ReactNode
   isCenteredDialog?: boolean
   customMaxWidth: string
+  showContentTopDivider?: boolean
+  showContentBottomDivider?: boolean
   onClose: () => void
 }
 
@@ -82,10 +85,11 @@ const KiboDialog = (props: KiboDialogProps) => {
     Title,
     showCloseIconButton = true,
     Content,
-    dividers,
     Actions,
     isCenteredDialog = true,
     customMaxWidth = '',
+    showContentTopDivider = true,
+    showContentBottomDivider = true,
     onClose,
   } = props
 
@@ -108,7 +112,9 @@ const KiboDialog = (props: KiboDialogProps) => {
           )}
         </StyledDialogTitle>
       )}
-      <DialogContent dividers={dividers}>{Content}</DialogContent>
+      {showContentTopDivider && <Divider />}
+      <DialogContent>{Content}</DialogContent>
+      {showContentBottomDivider && <Divider />}
       {Actions != '' ? <DialogActions>{Actions}</DialogActions> : ''}
     </StyledDialog>
   )
