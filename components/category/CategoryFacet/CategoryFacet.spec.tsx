@@ -12,13 +12,15 @@ describe('[component] - CategoryFacet', () => {
   const setup = () => {
     const onCategoryChildrenSelectionMock = jest.fn()
     const goBackToPreviousRouteMock = jest.fn()
+    const handleViewMoreMock = jest.fn()
     render(
       <CategoryFacets
         onCategoryChildrenSelection={onCategoryChildrenSelectionMock}
         goBackToPreviousRoute={goBackToPreviousRouteMock}
+        handleViewMoreClick={handleViewMoreMock}
       />
     )
-    return { onCategoryChildrenSelectionMock, goBackToPreviousRouteMock }
+    return { onCategoryChildrenSelectionMock, goBackToPreviousRouteMock, handleViewMoreMock }
   }
 
   it('should render component', () => {
@@ -41,9 +43,19 @@ describe('[component] - CategoryFacet', () => {
   it('should call back button', () => {
     const { goBackToPreviousRouteMock } = setup()
 
-    const backButton = screen.getByRole('button')
+    const backButton = screen.getByText(/back/, { selector: 'button' })
     userEvent.click(backButton)
 
     expect(goBackToPreviousRouteMock).toHaveBeenCalled()
+  })
+
+  it('should call view more button', () => {
+    const { handleViewMoreMock } = setup()
+
+    const backButton = screen.getByText(/view-more/, { selector: 'button' })
+    userEvent.click(backButton)
+
+    expect(handleViewMoreMock).toHaveBeenCalled()
+    expect(backButton).not.toBeInTheDocument()
   })
 })
