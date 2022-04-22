@@ -16,7 +16,7 @@ const Template: ComponentStory<typeof Content> = ({ ...args }) => <Content {...a
 // Common
 export const Common = Template.bind({})
 
-const cartItem: CartItemType = {
+export const cartItem: CartItemType = {
   id: '1beef214158842d7a305ae68009d4d4c',
   fulfillmentMethod: 'Ship',
   product: {
