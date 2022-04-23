@@ -4,7 +4,7 @@ import AccountCircleIcon from '@mui/icons-material/AccountCircle'
 import { Box, List, ListItem, ListItemText, SwipeableDrawer } from '@mui/material'
 
 import { categoryTreeDataMock } from '../../../__mocks__/categoryTreeDataMock'
-import CategoryNestedNavigation from '../CategoryNestedNavigation'
+import CategoryNestedNavigation from '../CategoryNestedNavigation/CategoryNestedNavigation'
 import HeaderAction from '@/components/common/HeaderAction'
 
 interface HamburgerMenuProps {

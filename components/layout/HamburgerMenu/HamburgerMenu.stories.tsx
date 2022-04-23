@@ -2,7 +2,7 @@ import React from 'react'
 
 import { ComponentStory, ComponentMeta } from '@storybook/react'
 
-import HamburgerMenu from './index'
+import HamburgerMenu from './HamburgerMenu'
 
 export default {
   title: 'Layout/Hamburger Menu',

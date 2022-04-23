@@ -3,8 +3,7 @@ import React from 'react'
 import { ComponentStory, ComponentMeta } from '@storybook/react'
 
 import { categoryTreeDataMock } from '../../../__mocks__/categoryTreeDataMock'
-
-import CategoryNestedNavigation from './index'
+import CategoryNestedNavigation from './CategoryNestedNavigation'
 
 export default {
   title: 'Layout/Catgeory Navigation',
