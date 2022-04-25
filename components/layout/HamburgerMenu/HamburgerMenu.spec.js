@@ -13,7 +13,7 @@ describe('[component] HamburgerMenu component', () => {
     render(<Common {...Common.args} />)
     const menu = screen.getAllByRole('button')
 
-    expect(menu.length).toBe(16)
+    expect(menu.length).toBe(12)
   })
 
   it('should not render all the list-items if isDrawerOpen props is false', () => {
