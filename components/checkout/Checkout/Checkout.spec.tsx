@@ -14,10 +14,10 @@ const PaymentMock = () => <div ref={undefined} data-testid="payment-mock" />
 const ReviewMock = () => <div ref={undefined} data-testid="review-mock" />
 
 jest.mock('../KiboStepper/KiboStepper', () => KiboStepperMock)
-jest.mock('../details/details', () => DetailsMock)
-jest.mock('../shipping/shipping', () => ShippingMock)
-jest.mock('../payment/payment', () => PaymentMock)
-jest.mock('../review/review', () => ReviewMock)
+jest.mock('../Details/Details', () => DetailsMock)
+jest.mock('../Shipping/Shipping', () => ShippingMock)
+jest.mock('../Payment/Payment', () => PaymentMock)
+jest.mock('../Review/Review', () => ReviewMock)
 
 const { Common } = composeStories(stories)
 
