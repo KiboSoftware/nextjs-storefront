@@ -8,6 +8,7 @@ import SearchIcon from '@mui/icons-material/Search'
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart'
 import { Typography, Toolbar, Link, Grid, Collapse, Box, AppBar } from '@mui/material'
 import { styled } from '@mui/material/styles'
+import { useTranslation } from 'next-i18next'
 
 import HeaderAction from '@/components/common/HeaderAction/HeaderAction'
 import KiboLogo from '@/components/common/KiboLogo/KiboLogo'
@@ -27,8 +28,8 @@ const StyledToolbarNav = styled(Toolbar)(() => ({
 
 interface KiboHeaderProps {
   navLinks: {
-    href: string
-    name: string
+    link: string
+    text: string
   }[]
   sticky?: boolean
   children?: React.ReactNode
@@ -40,6 +41,7 @@ export default function KiboHeader(props: KiboHeaderProps) {
     viewSearchPortal: false,
     viewHamburgerMenu: false,
   })
+  const { t } = useTranslation('common')
 
   // Should be included after code merge with Hamburger Menu ticket
   // const handleHamburgerMenu = (value: boolean) => {
@@ -101,11 +103,11 @@ export default function KiboHeader(props: KiboHeaderProps) {
               }}
             >
               <StyledToolbarNav>
-                {navLinks?.map((link, index) => {
+                {navLinks?.map((nav, index) => {
                   return (
                     <Box key={index}>
-                      <Link href={link.href} underline="none" color="common.white">
-                        <Typography variant="body2"> {link.name}</Typography>
+                      <Link href={nav.link} underline="none" color="common.white">
+                        <Typography variant="body2"> {nav.text}</Typography>
                       </Link>
                     </Box>
                   )
@@ -199,7 +201,11 @@ export default function KiboHeader(props: KiboHeaderProps) {
                     marginLeft: 'auto',
                   }}
                 >
-                  <HeaderAction title="Find a Store" subtitle="View All" icon={FmdGoodIcon} />
+                  <HeaderAction
+                    title={t('find-a-store')}
+                    subtitle={t('view-all')}
+                    icon={FmdGoodIcon}
+                  />
                 </Box>
                 <Box
                   sx={{
@@ -208,7 +214,11 @@ export default function KiboHeader(props: KiboHeaderProps) {
                     marginLeft: 'auto',
                   }}
                 >
-                  <HeaderAction title="My Account" subtitle="Login" icon={AccountCircleIcon} />
+                  <HeaderAction
+                    title={t('my-account')}
+                    subtitle={t('log-in')}
+                    icon={AccountCircleIcon}
+                  />
                 </Box>
                 <Box
                   sx={{
@@ -216,7 +226,7 @@ export default function KiboHeader(props: KiboHeaderProps) {
                     marginLeft: 'auto',
                   }}
                 >
-                  <HeaderAction subtitle="Cart" icon={ShoppingCartIcon} badgeContent={3} />
+                  <HeaderAction subtitle={t('cart')} icon={ShoppingCartIcon} badgeContent={3} />
                 </Box>
               </StyledToolbar>
             </Box>
@@ -267,6 +277,7 @@ export default function KiboHeader(props: KiboHeaderProps) {
         {/* Should be <HamburgerMenu
           isDrawerOpen={headerState.viewHamburgerMenu}
           setIsDrawerOpen={handleHamburgerMenu}
+          navLinks={navLinks}
         /> after code merge with hamburger menu ticket*/}
         {children}
       </Grid>

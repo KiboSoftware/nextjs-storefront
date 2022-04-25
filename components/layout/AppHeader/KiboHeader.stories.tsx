@@ -37,20 +37,20 @@ export const Common = Template.bind({})
 Common.args = {
   navLinks: [
     {
-      href: '#',
-      name: 'Order Status',
+      link: '#',
+      text: 'Order Status',
     },
     {
-      href: '#',
-      name: 'Wishlist',
+      link: '#',
+      text: 'Wishlist',
     },
     {
-      href: '#',
-      name: 'Nav Link 2',
+      link: '#',
+      text: 'Nav Link 2',
     },
     {
-      href: '#',
-      name: 'Nav Link 3',
+      link: '#',
+      text: 'Nav Link 3',
     },
   ],
 }
@@ -63,24 +63,7 @@ Mobile.parameters = {
 }
 
 Mobile.args = {
-  navLinks: [
-    {
-      href: '#',
-      name: 'Order Status',
-    },
-    {
-      href: '#',
-      name: 'Wishlist',
-    },
-    {
-      href: '#',
-      name: 'Nav Link 2',
-    },
-    {
-      href: '#',
-      name: 'Nav Link 3',
-    },
-  ],
+  ...Common.args,
 }
 
 export const Sticky = Template.bind({})
