@@ -5,10 +5,9 @@ import React from 'react'
 import { composeStories } from '@storybook/testing-react'
 import { render, screen } from '@testing-library/react'
 
-// import theme from '../../../styles/theme'
 import * as stories from './OrderSummary.stories' // import all stories from the stories file
 
-const { Checkout, Shipping } = composeStories(stories)
+const { Checkout } = composeStories(stories)
 
 describe('checkout Component', () => {
   it('should render checkout standardShippingAmount', () => {
@@ -34,11 +33,4 @@ describe('checkout Component', () => {
     const checkout = screen.getByText(Checkout.args.subTotal)
     expect(checkout).toBeVisible()
   })
-
-  it('should render shipping button', () => {
-    render(<Shipping {...Shipping.args} />)
-    const shipping = screen.getByText('Go to Shipping')
-    expect(shipping).toBeVisible()
-  })
 })
-
