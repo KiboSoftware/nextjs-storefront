@@ -8,7 +8,7 @@ interface HeaderActionProps {
   subtitle?: string
   icon: any
   mobileIconColor?: string
-  onClick: MouseEventHandler<HTMLDivElement>
+  onClick?: MouseEventHandler<HTMLDivElement>
   badgeContent?: string | number
 }
 const StyledBadge = styled(Badge)(() => ({
@@ -28,7 +28,13 @@ const HeaderAction = (props: HeaderActionProps) => {
   const { title, subtitle, onClick, badgeContent, mobileIconColor = 'white' } = props
   const Icon = props.icon
   return (
-    <Box display="flex" alignItems="center" onClick={onClick}>
+    <Box
+      display="flex"
+      alignItems="center"
+      marginX={2}
+      sx={{ cursor: 'pointer' }}
+      onClick={onClick}
+    >
       <StyledBadge
         anchorOrigin={{
           vertical: 'top',
