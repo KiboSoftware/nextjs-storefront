@@ -34,10 +34,10 @@ describe('[component] KiboHeader component', () => {
     render(<Common {...Common.args} />)
 
     expect(screen.getByTestId('FmdGoodIcon')).toBeVisible()
-    expect(screen.getByText(/find a store/i)).toBeVisible()
+    expect(screen.getByText(/find-a-store/i)).toBeVisible()
 
     expect(screen.getByTestId('AccountCircleIcon')).toBeVisible()
-    expect(screen.getByText(/my account/i)).toBeVisible()
+    expect(screen.getByText(/my-account/i)).toBeVisible()
 
     expect(screen.getByTestId('ShoppingCartIcon')).toBeVisible()
     expect(screen.getByText(/cart/i)).toBeVisible()
