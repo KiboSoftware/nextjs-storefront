@@ -5,7 +5,7 @@ import LocationOnIcon from '@mui/icons-material/LocationOn'
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart'
 import { ComponentStory, ComponentMeta } from '@storybook/react'
 
-import HeaderAction from './index'
+import HeaderAction from './HeaderAction'
 
 // More on default export: https://storybook.js.org/docs/react/writing-stories/introduction#default-export
 export default {

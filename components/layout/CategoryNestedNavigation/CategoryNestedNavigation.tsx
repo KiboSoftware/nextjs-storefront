@@ -17,6 +17,8 @@ import {
 } from '@mui/material'
 import { useTranslation } from 'next-i18next'
 
+import { findParentNode } from '@/lib/helpers/findParentNode'
+
 import { PrCategory } from '@/lib/gql/types'
 
 interface CategoryNestedNavigationProps {
@@ -56,7 +58,7 @@ const CategoryNestedNavigation = ({
   const initialSubHeader = {
     backLink: t('back'),
     categoryCode: null,
-    label: t('allDepartments'),
+    label: t('all-departments'),
   }
 
   const [subHeader, setSubHeader] = useState<{
@@ -68,24 +70,6 @@ const CategoryNestedNavigation = ({
   const reset = () => {
     setActiveCategory(allCategories)
     setSubHeader(initialSubHeader)
-  }
-
-  const findParent = (
-    items: PrCategory[],
-    categoryCode?: string | null,
-    parent: PrCategory | null = null
-  ): PrCategory | null | undefined => {
-    /* looping through all the categories to find the provided categoryCode.
-      If a match is found and it's the root label, return null else return the immediate parent.
-      findParent will be called recursively */
-    for (const item of items) {
-      const res: PrCategory | null | undefined =
-        item.categoryCode === categoryCode
-          ? parent
-          : item.childrenCategories &&
-            findParent(item.childrenCategories as PrCategory[], categoryCode, item)
-      if (res || res === null) return res
-    }
   }
 
   const handleCatgeoryClick = (clickedCategory: PrCategory) => {
@@ -107,7 +91,7 @@ const CategoryNestedNavigation = ({
   }
 
   const handleBackClick = () => {
-    const previousCategory = findParent(allCategories, subHeader.categoryCode)
+    const previousCategory = findParentNode(allCategories, subHeader.categoryCode)
     if (previousCategory === null) {
       reset()
     } else if (!previousCategory) {

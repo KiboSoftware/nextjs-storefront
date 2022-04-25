@@ -25,7 +25,7 @@ describe('[component] CategroyNestedNavigation component', () => {
   it('should render the category-list', () => {
     const { categoryList } = setup()
 
-    const headerText = screen.getByText(/allDepartments/i)
+    const headerText = screen.getByText(/all-departments/i)
     const backLinkText = screen.getByText(/Back/i)
 
     expect(categoryList).toBeVisible()

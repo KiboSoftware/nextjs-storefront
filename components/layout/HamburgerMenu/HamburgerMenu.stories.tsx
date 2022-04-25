@@ -21,4 +21,22 @@ export const Common = Template.bind({})
 Common.args = {
   isDrawerOpen: true,
   marginTop: 0,
+  navLinks: [
+    {
+      text: 'Order Status',
+      link: '#',
+    },
+    {
+      text: 'Wishlist',
+      link: '#',
+    },
+    {
+      text: 'Nav link 3',
+      link: '#',
+    },
+    {
+      text: 'Nav link 4',
+      link: '#',
+    },
+  ],
 }

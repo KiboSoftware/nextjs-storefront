@@ -2,19 +2,25 @@ import { useState, useEffect } from 'react'
 
 import AccountCircleIcon from '@mui/icons-material/AccountCircle'
 import { Box, List, ListItem, ListItemText, SwipeableDrawer } from '@mui/material'
+import Link from 'next/link'
 
 import { categoryTreeDataMock } from '../../../__mocks__/categoryTreeDataMock'
 import CategoryNestedNavigation from '../CategoryNestedNavigation/CategoryNestedNavigation'
-import HeaderAction from '@/components/common/HeaderAction'
+import HeaderAction from '@/components/common/HeaderAction/HeaderAction'
 
+interface NavLinkProps {
+  text: string
+  link: string
+}
 interface HamburgerMenuProps {
   isDrawerOpen: boolean
+  navLinks?: NavLinkProps[]
   marginTop?: number | string
   setIsDrawerOpen: (isDrawerOpen: boolean) => void
 }
 
 const HamburgerMenu = (props: HamburgerMenuProps) => {
-  const { isDrawerOpen, marginTop = 7, setIsDrawerOpen } = props
+  const { isDrawerOpen, marginTop = 7, setIsDrawerOpen, navLinks } = props
   const [isOpen, setIsOpen] = useState(false)
 
   const toggleDrawer = (open: boolean) => {
@@ -66,10 +72,12 @@ const HamburgerMenu = (props: HamburgerMenuProps) => {
         </Box>
         <Box height={19} sx={{ backgroundColor: 'grey.300' }}></Box>
         <List sx={{ width: '100%', maxHeight: '40%', overflowY: 'auto' }}>
-          {['Order Status', 'Wishlist', 'Nav Link 3', 'Nav Link 4'].map((text) => (
-            <ListItem button key={text}>
-              <ListItemText primary={text} />
-            </ListItem>
+          {navLinks?.map((nav) => (
+            <Link key={nav.text} href={nav.link} passHref>
+              <ListItem button>
+                <ListItemText primary={nav.text} />
+              </ListItem>
+            </Link>
           ))}
         </List>
       </Box>
