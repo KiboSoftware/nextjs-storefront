@@ -4,11 +4,11 @@ import userEvent from '@testing-library/user-event'
 
 import '@testing-library/jest-dom'
 
-import * as stories from './AppHeader.stories' // import all stories from the stories file
+import * as stories from './KiboHeader.stories' // import all stories from the stories file
 
 const { Common, Mobile } = composeStories(stories)
 
-describe('[component] AppHeader component', () => {
+describe('[component] KiboHeader component', () => {
   it('should render the component', () => {
     render(<Common {...Common.args} />)
 

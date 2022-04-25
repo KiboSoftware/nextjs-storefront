@@ -1,1 +1,1 @@
-export { default as AppHeader } from './AppHeader/AppHeader'
+export { default as KiboHeader } from './AppHeader/KiboHeader'

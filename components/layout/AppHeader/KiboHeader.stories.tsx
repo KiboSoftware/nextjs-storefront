@@ -3,20 +3,20 @@ import React from 'react'
 import { Box, Container } from '@mui/material'
 import { ComponentStory, ComponentMeta } from '@storybook/react'
 
-import AppHeader from './AppHeader'
+import KiboHeader from './KiboHeader'
 
 export default {
   title: 'Layout/App Header',
-  component: AppHeader,
+  component: KiboHeader,
   argTypes: { onCategoryClick: { action: 'onClick' }, onCloseMenu: { action: 'onClick' } },
   parameters: {
     layout: 'fullscreen',
   },
-} as ComponentMeta<typeof AppHeader>
+} as ComponentMeta<typeof KiboHeader>
 
-const Template: ComponentStory<typeof AppHeader> = (args) => (
+const Template: ComponentStory<typeof KiboHeader> = (args) => (
   <>
-    <AppHeader {...args}>
+    <KiboHeader {...args}>
       <Container>
         <Box sx={{ my: 2 }}>
           {[...new Array(121)]
@@ -29,7 +29,7 @@ Praesent commodo cursus magna, vel scelerisque nisl consectetur et.`
             .join('\n')}
         </Box>
       </Container>
-    </AppHeader>
+    </KiboHeader>
   </>
 )
 
