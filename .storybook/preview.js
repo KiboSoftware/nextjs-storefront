@@ -3,8 +3,6 @@ import { I18nextProvider } from 'react-i18next'
 import * as NextImage from 'next/image'
 import { INITIAL_VIEWPORTS } from '@storybook/addon-viewport'
 
-import { INITIAL_VIEWPORTS } from '@storybook/addon-viewport'
-
 import i18n from './i18n'
 import storefrontTheme from '../styles/theme'
 

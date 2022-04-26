@@ -34,15 +34,14 @@ const HeaderAction = (props: HeaderActionProps) => {
     badgeContent,
     mobileIconColor = 'white',
     showTitleInMobile = false,
-    iconFontSize = 'medium',
+    iconFontSize = 'large',
   } = props
   const Icon = props.icon
   return (
     <Box
       display="flex"
       alignItems="center"
-      marginX={2}
-      sx={{ cursor: 'pointer' }}
+      sx={{ cursor: 'pointer', marginX: 2 }}
       onClick={onClick}
     >
       <StyledBadge

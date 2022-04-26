@@ -4,15 +4,17 @@ import AccountCircleIcon from '@mui/icons-material/AccountCircle'
 import { Box, List, ListItem, ListItemText, SwipeableDrawer } from '@mui/material'
 import Link from 'next/link'
 
-import { categoryTreeDataMock } from '../../../__mocks__/categoryTreeDataMock'
-import CategoryNestedNavigation from '../CategoryNestedNavigation/CategoryNestedNavigation'
 import HeaderAction from '@/components/common/HeaderAction/HeaderAction'
+import { CategoryNestedNavigation } from '@/components/layout'
+
+import { PrCategory } from '@/lib/gql/types'
 
 interface NavLinkProps {
   text: string
   link: string
 }
 interface HamburgerMenuProps {
+  categoryTree: PrCategory[]
   isDrawerOpen: boolean
   navLinks?: NavLinkProps[]
   marginTop?: number | string
@@ -20,7 +22,7 @@ interface HamburgerMenuProps {
 }
 
 const HamburgerMenu = (props: HamburgerMenuProps) => {
-  const { isDrawerOpen, marginTop = 7, setIsDrawerOpen, navLinks } = props
+  const { categoryTree, isDrawerOpen, marginTop = 7, setIsDrawerOpen, navLinks } = props
   const [isOpen, setIsOpen] = useState(false)
 
   const toggleDrawer = (open: boolean) => {
@@ -54,7 +56,7 @@ const HamburgerMenu = (props: HamburgerMenuProps) => {
       >
         <Box maxHeight={'60%'} sx={{ overflowY: 'auto', width: '100%', flex: 1, pt: 2 }}>
           <CategoryNestedNavigation
-            categoryTree={categoryTreeDataMock.categoriesTree.items}
+            categoryTree={categoryTree}
             onCloseMenu={toggleDrawer}
             onCategoryClick={() => toggleDrawer(false)}
           >

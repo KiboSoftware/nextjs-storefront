@@ -1,3 +1,3 @@
 export { default as KiboHeader } from './AppHeader/KiboHeader'
-export * as HamburgerMenu from './HamburgerMenu/HamburgerMenu'
-export * as CategoryNestedNavigation from './CategoryNestedNavigation/CategoryNestedNavigation'
+export { default as HamburgerMenu } from './HamburgerMenu/HamburgerMenu'
+export { default as CategoryNestedNavigation } from './CategoryNestedNavigation/CategoryNestedNavigation'

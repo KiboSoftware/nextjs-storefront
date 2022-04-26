@@ -6,13 +6,25 @@ import FmdGoodIcon from '@mui/icons-material/FmdGood'
 import MenuIcon from '@mui/icons-material/Menu'
 import SearchIcon from '@mui/icons-material/Search'
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart'
-import { Typography, Toolbar, Link, Grid, Collapse, Box, AppBar } from '@mui/material'
+import {
+  Typography,
+  Toolbar,
+  Link,
+  Grid,
+  Collapse,
+  Box,
+  AppBar,
+  useMediaQuery,
+  useTheme,
+} from '@mui/material'
 import { styled } from '@mui/material/styles'
 import { useTranslation } from 'next-i18next'
 
+import { categoryTreeDataMock } from '@/__mocks__/categoryTreeDataMock'
 import HeaderAction from '@/components/common/HeaderAction/HeaderAction'
 import KiboLogo from '@/components/common/KiboLogo/KiboLogo'
 import SearchBar from '@/components/common/SearchBar/SearchBar'
+import { HamburgerMenu } from '@/components/layout'
 
 const StyledToolbar = styled(Toolbar)(() => ({
   alignItems: 'center',
@@ -43,13 +55,15 @@ export default function KiboHeader(props: KiboHeaderProps) {
   })
   const { t } = useTranslation('common')
 
-  // Should be included after code merge with Hamburger Menu ticket
-  // const handleHamburgerMenu = (value: boolean) => {
-  //   setHeaderState({
-  //     ...headerState,
-  //     viewHamburgerMenu: value,
-  //   })
-  // }
+  const theme = useTheme()
+  const isMobileViewport = useMediaQuery(theme.breakpoints.down('md'))
+
+  const handleHamburgerMenu = (value: boolean) => {
+    setHeaderState({
+      ...headerState,
+      viewHamburgerMenu: value,
+    })
+  }
 
   const handleSearch = () => {
     return ''
@@ -60,7 +74,7 @@ export default function KiboHeader(props: KiboHeaderProps) {
       <Grid item xs={12} lg={12}>
         <AppBar
           position={sticky ? 'sticky' : 'static'}
-          color="transparent"
+          color="primary"
           data-testid="kibo header"
           sx={{
             height: {
@@ -119,18 +133,20 @@ export default function KiboHeader(props: KiboHeaderProps) {
             <Box
               sx={{
                 boxShadow: 'none',
-                borderWidth: 1,
-                borderStyle: 'solid',
+                borderWidth: { xs: 0, md: 1 },
+                borderStyle: { xs: 'none', md: 'solid' },
                 borderColor: 'grey.300',
                 backgroundColor: 'common.white',
               }}
             >
               <StyledToolbar
                 sx={{
-                  justifyContent: 'space-between',
+                  display: 'flex',
+                  justifyContent: 'space-evenly',
                   backgroundColor: { xs: 'common.black', md: 'common.white' },
                   position: 'relative',
                   overflow: 'hidden',
+                  paddingInline: 0,
                   height: {
                     xs: 55,
                     md: 68,
@@ -144,7 +160,6 @@ export default function KiboHeader(props: KiboHeaderProps) {
                       xs: 'flex',
                       md: 'none',
                     },
-                    marginLeft: 'auto',
                   }}
                 >
                   <KiboLogo />
@@ -157,6 +172,7 @@ export default function KiboHeader(props: KiboHeaderProps) {
                 >
                   <HeaderAction
                     icon={headerState.viewHamburgerMenu ? CloseIcon : MenuIcon}
+                    {...(isMobileViewport && { iconFontSize: 'medium' })}
                     onClick={() =>
                       setHeaderState({
                         viewHamburgerMenu: !headerState.viewHamburgerMenu,
@@ -169,7 +185,6 @@ export default function KiboHeader(props: KiboHeaderProps) {
                   sx={{
                     display: { xs: 'inline-flex', md: 'none' },
                     order: { xs: 2 },
-                    marginLeft: 'auto',
                   }}
                   onClick={() =>
                     setHeaderState({
@@ -179,7 +194,10 @@ export default function KiboHeader(props: KiboHeaderProps) {
                   }
                   data-testid="mobile-searchIcon-container"
                 >
-                  <HeaderAction icon={SearchIcon} />
+                  <HeaderAction
+                    icon={SearchIcon}
+                    {...(isMobileViewport && { iconFontSize: 'medium' })}
+                  />
                 </Box>
                 <Box
                   flex={1}
@@ -189,7 +207,7 @@ export default function KiboHeader(props: KiboHeaderProps) {
                       md: 'inline-flex',
                     },
                     order: { md: 1 },
-                    pl: { md: '10%' },
+                    pl: { xs: 0, md: '10%' },
                     maxWidth: 650,
                   }}
                 >
@@ -198,35 +216,39 @@ export default function KiboHeader(props: KiboHeaderProps) {
                 <Box
                   sx={{
                     order: { xs: 4, md: 2 },
-                    marginLeft: 'auto',
                   }}
                 >
                   <HeaderAction
                     title={t('find-a-store')}
                     subtitle={t('view-all')}
                     icon={FmdGoodIcon}
+                    {...(isMobileViewport && { iconFontSize: 'medium' })}
                   />
                 </Box>
                 <Box
                   sx={{
                     display: { xs: 'none', md: 'inline-flex' },
                     order: { md: 4 },
-                    marginLeft: 'auto',
                   }}
                 >
                   <HeaderAction
                     title={t('my-account')}
                     subtitle={t('log-in')}
                     icon={AccountCircleIcon}
+                    {...(isMobileViewport && { iconFontSize: 'medium' })}
                   />
                 </Box>
                 <Box
                   sx={{
                     order: { xs: 5 },
-                    marginLeft: 'auto',
                   }}
                 >
-                  <HeaderAction subtitle={t('cart')} icon={ShoppingCartIcon} badgeContent={3} />
+                  <HeaderAction
+                    subtitle={t('cart')}
+                    icon={ShoppingCartIcon}
+                    badgeContent={3}
+                    {...(isMobileViewport && { iconFontSize: 'medium' })}
+                  />
                 </Box>
               </StyledToolbar>
             </Box>
@@ -274,11 +296,12 @@ export default function KiboHeader(props: KiboHeaderProps) {
             </Collapse>
           </Box>
         </AppBar>
-        {/* Should be <HamburgerMenu
+        <HamburgerMenu
+          categoryTree={categoryTreeDataMock.categoriesTree.items}
           isDrawerOpen={headerState.viewHamburgerMenu}
           setIsDrawerOpen={handleHamburgerMenu}
           navLinks={navLinks}
-        /> after code merge with hamburger menu ticket*/}
+        />
         {children}
       </Grid>
     </Grid>

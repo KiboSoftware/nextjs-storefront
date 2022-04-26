@@ -3,6 +3,7 @@ import React from 'react'
 import { ComponentStory, ComponentMeta } from '@storybook/react'
 
 import HamburgerMenu from './HamburgerMenu'
+import { categoryTreeDataMock } from '@/__mocks__/categoryTreeDataMock'
 
 export default {
   title: 'Layout/Hamburger Menu',
@@ -19,6 +20,7 @@ const Template: ComponentStory<typeof HamburgerMenu> = (args) => <HamburgerMenu 
 
 export const Common = Template.bind({})
 Common.args = {
+  categoryTree: categoryTreeDataMock.categoriesTree.items,
   isDrawerOpen: true,
   marginTop: 0,
   navLinks: [
