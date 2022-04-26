@@ -55,8 +55,8 @@ export default function KiboHeader(props: KiboHeaderProps) {
   })
   const { t } = useTranslation('common')
 
-  const theme = useTheme()
-  const isMobileViewport = useMediaQuery(theme.breakpoints.down('md'))
+  const kiboTheme = useTheme()
+  const isMobileViewport = useMediaQuery(kiboTheme.breakpoints.down('md'))
 
   const handleHamburgerMenu = (value: boolean) => {
     setHeaderState({
