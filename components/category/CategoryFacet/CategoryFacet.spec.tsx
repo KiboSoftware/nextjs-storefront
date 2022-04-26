@@ -6,7 +6,7 @@ import userEvent from '@testing-library/user-event'
 
 import * as stories from './CategoryFacet.stories' // import all stories from the stories file
 
-const { CategoryFacets } = composeStories(stories)
+const { CategoryFacetDesktop } = composeStories(stories)
 
 describe('[component] - CategoryFacet', () => {
   const setup = () => {
@@ -14,7 +14,7 @@ describe('[component] - CategoryFacet', () => {
     const goBackToPreviousRouteMock = jest.fn()
     const handleViewMoreMock = jest.fn()
     render(
-      <CategoryFacets
+      <CategoryFacetDesktop
         onCategoryChildrenSelection={onCategoryChildrenSelectionMock}
         goBackToPreviousRoute={goBackToPreviousRouteMock}
         handleViewMoreClick={handleViewMoreMock}

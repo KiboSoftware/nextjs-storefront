@@ -21,8 +21,9 @@ interface CategoryFacetData {
 }
 
 interface CategoryFacetProps {
+  initialItemsToShow: number
   categoryFacet: CategoryFacetData
-  onCategoryChildrenSelection: (option: string) => void
+  onCategoryChildrenSelection: (category?: Maybe<string>) => void
   goBackToPreviousRoute: () => void
   handleViewMoreClick: () => void
 }
@@ -62,16 +63,20 @@ const styles = {
   },
   viewMore: {
     textTransform: 'capitalize',
-    color: '#2b2b2b',
+    color: 'grey.900',
     pl: 0,
   },
 }
 
 const CategoryFacet = (props: CategoryFacetProps) => {
-  const { t } = useTranslation('category-page')
-  const { categoryFacet, onCategoryChildrenSelection, goBackToPreviousRoute, handleViewMoreClick } =
-    props
-  const initialItemsToShow = 5
+  const { t } = useTranslation('common')
+  const {
+    initialItemsToShow,
+    categoryFacet,
+    onCategoryChildrenSelection,
+    goBackToPreviousRoute,
+    handleViewMoreClick,
+  } = props
   const valuesLength = categoryFacet.children.length
   const isVisible = valuesLength > initialItemsToShow
 
@@ -79,7 +84,7 @@ const CategoryFacet = (props: CategoryFacetProps) => {
   const [filteredValues, setFilteredValues] = useState<Maybe<FacetValue>[]>([])
 
   const handleCategoryLink = (categoryCode?: Maybe<string>) => {
-    onCategoryChildrenSelection(`/c/${categoryCode}`)
+    onCategoryChildrenSelection(categoryCode)
   }
 
   const handleViewMore = () => {

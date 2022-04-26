@@ -8,7 +8,6 @@ export default {
   title: 'category/CategoryFacet',
   component: CategoryFacet,
   argTypes: {
-    backgroundColor: { control: 'color' },
     onCategoryChildrenSelection: { action: 'clicked' },
     goBackToPreviousRoute: { action: 'go to Previous route' },
     handleViewMoreClick: { action: 'handle View more' },
@@ -17,7 +16,7 @@ export default {
 
 const Template: ComponentStory<typeof CategoryFacet> = (args) => <CategoryFacet {...args} />
 
-export const CategoryFacets = Template.bind({})
+export const CategoryFacetDesktop = Template.bind({})
 
 const categoryFacet = {
   header: 'Apparel',
@@ -81,6 +80,7 @@ const categoryFacet = {
   ],
 }
 
-CategoryFacets.args = {
+CategoryFacetDesktop.args = {
+  initialItemsToShow: 5,
   categoryFacet,
 }
