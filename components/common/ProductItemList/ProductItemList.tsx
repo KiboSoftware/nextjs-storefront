@@ -15,7 +15,7 @@ interface ProductItemProps {
   children?: ReactNode
 }
 
-type ProductItemListProps = {
+export type ProductItemListProps = {
   items: ProductItemProps[]
 }
 
