@@ -102,7 +102,7 @@ const KiboDialog = (props: KiboDialogProps) => {
       isCenteredDialog={isCenteredDialog}
       data-test-id="kibo-dialog"
     >
-      {!!Title && (
+      {Title && (
         <StyledDialogTitle id="kibo-dialog-title">
           {Title}
           {showCloseIconButton && (
