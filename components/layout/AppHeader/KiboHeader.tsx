@@ -20,7 +20,7 @@ import {
 import { styled } from '@mui/material/styles'
 import { useTranslation } from 'next-i18next'
 
-import { categoryTreeDataMock } from '@/__mocks__/categoryTreeDataMock'
+import { categoryTreeDataMock } from '../../../__mocks__/categoryTreeDataMock'
 import HeaderAction from '@/components/common/HeaderAction/HeaderAction'
 import KiboLogo from '@/components/common/KiboLogo/KiboLogo'
 import SearchBar from '@/components/common/SearchBar/SearchBar'
