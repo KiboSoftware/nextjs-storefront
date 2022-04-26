@@ -1,22 +1,20 @@
-import React, { RefObject } from 'react'
+import React, { ChangeEvent, RefObject } from 'react'
 
 import CloseIcon from '@mui/icons-material/Close'
 import SearchIcon from '@mui/icons-material/Search'
-import Divider from '@mui/material/Divider'
 import IconButton from '@mui/material/IconButton'
 import InputBase from '@mui/material/InputBase'
 import Paper from '@mui/material/Paper'
 import { useTranslation } from 'next-i18next'
-
 // Interface
 interface SearchProps {
   placeHolder?: string
   searchTerm: string
-  onSearch: (searchText: string) => void
+  onSearch: (searchText: string, event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => void
   showClearButton: boolean
   childInputRef?: RefObject<HTMLInputElement | undefined>
+  InputProps?: any
 }
-
 // MUI
 const style = {
   paper: {
@@ -24,14 +22,14 @@ const style = {
     display: 'flex',
     alignItems: 'center',
     maxWidth: { sm: '100%', lg: 651 },
+    borderRadius: 0,
   },
   inputBase: {
-    ml: 1,
+    // ml: 1,
     flex: 1,
   },
   divider: { height: 20, m: 0.5 },
 }
-
 // Component
 const SearchBar = (props: SearchProps) => {
   const {
@@ -40,28 +38,25 @@ const SearchBar = (props: SearchProps) => {
     onSearch,
     childInputRef,
     showClearButton = false,
+    InputProps,
+    ...rest
   } = props
-
   const { t } = useTranslation('common')
   const searchIconAriaLabel = t('search-icon')
   const searchInputAriaLabel = t('search-input')
   const clearSearchAriaLabel = t('clear-search')
-
   const handleSearch = (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    onSearch(event.target.value)
+    onSearch(event.target.value, event)
   }
-
-  const handleClear = () => {
-    onSearch('')
+  const handleClear = (
+    event:
+      | React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+      | React.MouseEvent<HTMLButtonElement, MouseEvent>
+  ) => {
+    onSearch('', event as React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>)
   }
-
   return (
     <Paper component="form" variant="outlined" sx={{ ...style.paper }}>
-      <IconButton size="small" aria-label={searchIconAriaLabel}>
-        <SearchIcon fontSize="small" />
-      </IconButton>
-      <Divider sx={{ ...style.divider }} orientation="vertical" />
-
       <InputBase
         name="searchInput"
         inputRef={childInputRef}
@@ -71,23 +66,29 @@ const SearchBar = (props: SearchProps) => {
         size="small"
         sx={{ ...style.inputBase }}
         inputProps={{ 'aria-label': searchInputAriaLabel }}
+        {...InputProps}
+        autoComplete="off"
+        startAdornment={
+          <IconButton size="small" aria-label={searchIconAriaLabel}>
+            <SearchIcon fontSize="small" />
+          </IconButton>
+        }
+        {...(showClearButton && {
+          endAdornment: (
+            <IconButton
+              name="clearButton"
+              size="small"
+              onClick={handleClear}
+              disabled={searchTerm.length === 0}
+              aria-label={clearSearchAriaLabel}
+            >
+              <CloseIcon fontSize="small" />
+            </IconButton>
+          ),
+        })}
+        {...rest}
       />
-
-      <Divider sx={{ ...style.divider }} orientation="vertical" />
-
-      {showClearButton && (
-        <IconButton
-          name="clearButton"
-          size="small"
-          onClick={handleClear}
-          disabled={searchTerm.length === 0}
-          aria-label={clearSearchAriaLabel}
-        >
-          <CloseIcon fontSize="small" />
-        </IconButton>
-      )}
     </Paper>
   )
 }
-
 export default SearchBar
