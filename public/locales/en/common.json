@@ -52,5 +52,7 @@
   "qty": "Qty",
   "details": "Details",
   "ship": "Ship to Home",
-  "pickup": "Pickup in Store "
+  "pickup": "Pickup in Store ",
+  "find-a-store": "Find a store",
+  "view-all": "View all"
 }
