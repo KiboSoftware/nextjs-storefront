@@ -124,59 +124,6 @@ const searchSuggestionResult: SearchSuggestionResult = {
         },
         {
           suggestion: {
-            productCode: 'MS-EYE-003',
-            productImageUrls: [
-              '//d1slj7rdbjyb5l.cloudfront.net/17194-21127/cms/21127/files/bd79642e-3405-4b47-a381-246c60bcbc13',
-            ],
-            productName: 'Oakley Half Jacket 2.0',
-            productTypeId: 12,
-            content: {
-              productName: 'Oakley Half Jacket 2.0',
-              productImages: [
-                {
-                  imageUrl:
-                    '//d1slj7rdbjyb5l.cloudfront.net/17194-21127/cms/21127/files/bd79642e-3405-4b47-a381-246c60bcbc13',
-                },
-              ],
-            },
-          },
-        },
-        {
-          suggestion: {
-            productCode: 'MS-JKT-011',
-            productImageUrls: [
-              '//d1slj7rdbjyb5l.cloudfront.net/17194-21127/cms/21127/files/b2f1b5f6-2a32-4acf-a8b6-eb3939e69f85',
-              '//d1slj7rdbjyb5l.cloudfront.net/17194-21127/cms/21127/files/39472852-e304-4502-affb-cee73114f986',
-              '//d1slj7rdbjyb5l.cloudfront.net/17194-21127/cms/21127/files/b819905b-76ee-4e65-8fa2-8e64f880f4f3',
-              '//d1slj7rdbjyb5l.cloudfront.net/17194-21127/cms/21127/files/b1ee38a4-7fde-4f48-ab7d-580d2e02b591',
-            ],
-            productName: 'Sidewinder SV Shell Jacket',
-            productTypeId: 5,
-            content: {
-              productName: 'Sidewinder SV Shell Jacket',
-              productImages: [
-                {
-                  imageUrl:
-                    '//d1slj7rdbjyb5l.cloudfront.net/17194-21127/cms/21127/files/b2f1b5f6-2a32-4acf-a8b6-eb3939e69f85',
-                },
-                {
-                  imageUrl:
-                    '//d1slj7rdbjyb5l.cloudfront.net/17194-21127/cms/21127/files/39472852-e304-4502-affb-cee73114f986',
-                },
-                {
-                  imageUrl:
-                    '//d1slj7rdbjyb5l.cloudfront.net/17194-21127/cms/21127/files/b819905b-76ee-4e65-8fa2-8e64f880f4f3',
-                },
-                {
-                  imageUrl:
-                    '//d1slj7rdbjyb5l.cloudfront.net/17194-21127/cms/21127/files/b1ee38a4-7fde-4f48-ab7d-580d2e02b591',
-                },
-              ],
-            },
-          },
-        },
-        {
-          suggestion: {
             productCode: 'MS-JKT-007',
             productImageUrls: [
               '//d1slj7rdbjyb5l.cloudfront.net/17194-21127/cms/21127/files/7a5e0370-5e11-40c6-94da-2045165006c8',
