@@ -18,7 +18,7 @@ import ProductOptionList from '@/components/product/ProductOptionList/ProductOpt
 import DefaultImage from '@/public/product_placeholder.svg'
 
 import type { CrProductOption } from '@/lib/gql/types'
-interface ProductItemProps {
+export interface ProductItemProps {
   image: string
   name: string
   options: CrProductOption[]
@@ -43,10 +43,24 @@ const styles = {
 
 const ProductItem = (props: ProductItemProps) => {
   const { image, name, options, price, salePrice, qty, children } = props
+
   const { t } = useTranslation('common')
   const theme = useTheme()
   const mdScreen = useMediaQuery(theme.breakpoints.up('md'))
+
   const [expanded, setExpanded] = useState<boolean>(true)
+
+  const ProductLabel = (props: { label: string }) => (
+    <Typography
+      variant="body2"
+      fontWeight="bold"
+      component="span"
+      sx={{ pr: 1 }}
+      data-testid="productLabel"
+    >
+      {`${props.label}:`}
+    </Typography>
+  )
 
   return (
     <Box sx={{ display: 'flex', pb: 2, pr: 1, gap: '3%', flex: 1 }}>
@@ -88,16 +102,12 @@ const ProductItem = (props: ProductItemProps) => {
 
               {qty && (
                 <Box>
-                  <Typography variant="body2" fontWeight="bold" component="span" sx={{ pr: 1 }}>
-                    {t('qty')}: {qty}
-                  </Typography>
+                  <ProductLabel label={t('qty')} /> {qty}
                 </Box>
               )}
               {(price || salePrice) && (
                 <Box sx={{ display: 'inline-flex' }}>
-                  <Typography variant="body2" fontWeight="bold" component="span" sx={{ pr: 1 }}>
-                    {t('price')}:
-                  </Typography>
+                  <ProductLabel label={t('price')} />
                   <Price variant="body2" fontWeight="normal" price={price} salePrice={salePrice} />
                 </Box>
               )}

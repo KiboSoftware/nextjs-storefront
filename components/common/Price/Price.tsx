@@ -64,7 +64,7 @@ const Price = ({
 
   return (
     <>
-      <Box display="flex" gap="0.625rem" alignItems="center" data-testid="kibo-price-component">
+      <Box display="flex" gap="0.625rem" alignItems="center">
         {priceRange ? (
           <PriceTypography>
             {priceRange.lower} - {priceRange.upper}
