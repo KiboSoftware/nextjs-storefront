@@ -1,4 +1,4 @@
-import React, { ChangeEvent, RefObject } from 'react'
+import React, { RefObject } from 'react'
 
 import CloseIcon from '@mui/icons-material/Close'
 import SearchIcon from '@mui/icons-material/Search'
@@ -10,7 +10,7 @@ import { useTranslation } from 'next-i18next'
 interface SearchProps {
   placeHolder?: string
   searchTerm: string
-  onSearch: (searchText: string, event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => void
+  onSearch: (searchText: string) => void
   showClearButton: boolean
   childInputRef?: RefObject<HTMLInputElement | undefined>
   InputProps?: any
@@ -46,14 +46,10 @@ const SearchBar = (props: SearchProps) => {
   const searchInputAriaLabel = t('search-input')
   const clearSearchAriaLabel = t('clear-search')
   const handleSearch = (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    onSearch(event.target.value, event)
+    onSearch(event.target.value)
   }
-  const handleClear = (
-    event:
-      | React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-      | React.MouseEvent<HTMLButtonElement, MouseEvent>
-  ) => {
-    onSearch('', event as React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>)
+  const handleClear = () => {
+    onSearch('')
   }
   return (
     <Paper component="form" variant="outlined" sx={{ ...style.paper }}>
