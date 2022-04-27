@@ -114,7 +114,7 @@ const SearchSuggestions = (props: SearchSuggestionsProps) => {
     searchTerm ? handleOpen() : handleClose()
 
     if (searchTerm) {
-      debouncedSearchTerm
+      debouncedSearchTerm()
     }
   }, [debouncedSearchTerm, searchTerm])
 
