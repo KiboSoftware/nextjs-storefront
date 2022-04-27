@@ -82,6 +82,8 @@ let theme = createTheme({
     MuiButton: {
       styleOverrides: {
         root: {
+          textTransform: 'capitalize',
+
           '&:hover': {
             boxShadow: 'none',
           },
@@ -94,16 +96,5 @@ let theme = createTheme({
   },
 })
 // compose theme (place theme options that depend on the base theme here)
-theme = createTheme(theme, {
-  components: {
-    MuiSvgIcon: {
-      styleOverrides: {
-        root: {
-          color: grey[900],
-          fontSize: '1.25rem',
-        },
-      },
-    },
-  },
-})
+theme = createTheme(theme)
 export default responsiveFontSizes(theme)
