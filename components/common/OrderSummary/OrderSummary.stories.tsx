@@ -66,21 +66,20 @@ Checkout.args = {
   nameLabel: 'Order Summary',
   cartTotalLabel: 'Cart Subtotal',
   standardShippingLabel: 'Standard Shipping',
-  EstimatedTaxLabel: 'Tax',
-  OrderTotalLabel: 'Order Total',
+  estimatedTaxLabel: 'Tax',
+  orderTotalLabel: 'Order Total',
 }
 export const Shipping = ShippingTemplate.bind({})
 Shipping.args = {
-  type: 'orderShipping',
   standardShippingAmount: 'Free',
   estimatedTaxAmout: '$13.73',
   orderTotal: '$233.72',
   subTotal: '$219.99',
   numberOfItems: '3 items',
-  shippinglabel: 'Go to Shipping',
+  shippingLabel: 'Go to Shipping',
   nameLabel: 'Order Summary',
   cartTotalLabel: 'Cart Subtotal',
   standardShippingLabel: 'Standard Shipping',
-  EstimatedTaxLabel: 'Tax',
-  OrderTotalLabel: 'Order Total',
+  estimatedTaxLabel: 'Tax',
+  orderTotalLabel: 'Order Total',
 }
