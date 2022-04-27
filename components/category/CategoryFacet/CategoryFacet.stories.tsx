@@ -9,8 +9,7 @@ export default {
   component: CategoryFacet,
   argTypes: {
     onCategoryChildrenSelection: { action: 'clicked' },
-    goBackToPreviousRoute: { action: 'go to Previous route' },
-    handleViewMoreClick: { action: 'handle View more' },
+    onBackButtonClick: { action: 'go to Previous route' },
   },
 } as ComponentMeta<typeof CategoryFacet>
 

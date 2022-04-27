@@ -5,7 +5,7 @@ import ChevronLeftIcon from '@mui/icons-material/ChevronLeft'
 import { Box, Button, FormLabel, Link, Link as MuiLink, Typography } from '@mui/material'
 import { useTranslation } from 'next-i18next'
 
-import type { FacetValue, Maybe } from '@/lib/gql/types'
+import type { FacetValue } from '@/lib/gql/types'
 
 interface CategoryFacetChildren {
   label: string
@@ -23,9 +23,8 @@ interface CategoryFacetData {
 interface CategoryFacetProps {
   initialItemsToShow: number
   categoryFacet: CategoryFacetData
-  onCategoryChildrenSelection: (category?: Maybe<string>) => void
-  goBackToPreviousRoute: () => void
-  handleViewMoreClick: () => void
+  onCategoryChildrenSelection: (categoryCode: string | undefined | null) => void
+  onBackButtonClick: () => void
 }
 
 const styles = {
@@ -71,34 +70,31 @@ const styles = {
 const CategoryFacet = (props: CategoryFacetProps) => {
   const { t } = useTranslation('common')
   const {
-    initialItemsToShow,
+    initialItemsToShow = 5,
     categoryFacet,
     onCategoryChildrenSelection,
-    goBackToPreviousRoute,
-    handleViewMoreClick,
+    onBackButtonClick,
   } = props
-  const valuesLength = categoryFacet.children.length
-  const isVisible = valuesLength > initialItemsToShow
+  const childrenLength = categoryFacet.children.length
+  const isViewMoreVisible = childrenLength > initialItemsToShow
 
-  const [isButtonVisible, setIsButtonVisible] = useState<boolean>(isVisible)
-  const [filteredValues, setFilteredValues] = useState<Maybe<FacetValue>[]>([])
+  const [isViewMoreButtonVisible, setIsViewMoreButtonVisible] = useState<boolean>(isViewMoreVisible)
+  const [filteredValues, setFilteredValues] = useState<FacetValue[]>([])
 
-  const handleCategoryLink = (categoryCode?: Maybe<string>) => {
+  const handleCategoryLink = (categoryCode: string | undefined | null) => {
     onCategoryChildrenSelection(categoryCode)
   }
 
   const handleViewMore = () => {
-    setIsButtonVisible(!isButtonVisible)
-    handleViewMoreClick()
+    setIsViewMoreButtonVisible(!isViewMoreButtonVisible)
   }
 
   useEffect(() => {
-    const noOfItemsToShow = isButtonVisible ? initialItemsToShow : valuesLength
-    const filtered = categoryFacet.children
-    const sliced = filtered?.slice(0, noOfItemsToShow) || []
+    const noOfItemsToShow = isViewMoreButtonVisible ? initialItemsToShow : childrenLength
+    const sliced = categoryFacet.children?.slice(0, noOfItemsToShow) || []
 
     setFilteredValues([...sliced])
-  }, [isButtonVisible])
+  }, [isViewMoreButtonVisible])
 
   return (
     <Box sx={styles.linkContainer}>
@@ -106,27 +102,21 @@ const CategoryFacet = (props: CategoryFacetProps) => {
         {categoryFacet.header}
       </Typography>
       <Box sx={styles.childrenCategories}>
-        {filteredValues.map((child) => {
-          return (
-            <Link
-              key={child?.value}
-              onClick={() => handleCategoryLink(child?.value)}
-              sx={{ ...styles.childrenLink }}
-            >
-              <MuiLink underline="none" variant="body2" color="text.primary" sx={styles.link}>
-                {child?.label}
-                <FormLabel
-                  data-testid="count"
-                  aria-label="facet-item-label"
-                  sx={{ ...styles.formLabel }}
-                >
-                  ({child?.count})
-                </FormLabel>
-              </MuiLink>
-            </Link>
-          )
-        })}
-        {isButtonVisible && (
+        {filteredValues.map((child) => (
+          <Link
+            key={child.value}
+            onClick={() => handleCategoryLink(child.value)}
+            sx={{ ...styles.childrenLink }}
+          >
+            <MuiLink underline="none" variant="body2" color="text.primary" sx={styles.link}>
+              {child?.label}
+              <FormLabel data-testid="count" aria-label={t('count')} sx={{ ...styles.formLabel }}>
+                ({child?.count})
+              </FormLabel>
+            </MuiLink>
+          </Link>
+        ))}
+        {isViewMoreButtonVisible && (
           <Button
             variant="text"
             size="small"
@@ -139,7 +129,12 @@ const CategoryFacet = (props: CategoryFacetProps) => {
             {t('view-more')}
           </Button>
         )}
-        <Link component="button" onClick={goBackToPreviousRoute} sx={{ ...styles.backButton }}>
+        <Link
+          component="button"
+          aria-label={t('back')}
+          onClick={onBackButtonClick}
+          sx={{ ...styles.backButton }}
+        >
           <ChevronLeftIcon />
           {t('back')}
         </Link>

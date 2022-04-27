@@ -11,26 +11,30 @@ const { CategoryFacetDesktop } = composeStories(stories)
 describe('[component] - CategoryFacet', () => {
   const setup = () => {
     const onCategoryChildrenSelectionMock = jest.fn()
-    const goBackToPreviousRouteMock = jest.fn()
-    const handleViewMoreMock = jest.fn()
+    const onBackButtonClickMock = jest.fn()
     render(
       <CategoryFacetDesktop
         onCategoryChildrenSelection={onCategoryChildrenSelectionMock}
-        goBackToPreviousRoute={goBackToPreviousRouteMock}
-        handleViewMoreClick={handleViewMoreMock}
+        onBackButtonClick={onBackButtonClickMock}
       />
     )
-    return { onCategoryChildrenSelectionMock, goBackToPreviousRouteMock, handleViewMoreMock }
+    return { onCategoryChildrenSelectionMock, onBackButtonClickMock }
   }
 
   it('should render component', () => {
     setup()
     const heading = screen.getByRole('heading')
+    const backButton = screen.getByText(/back/, { selector: 'button' })
+    const viewMoreButton = screen.getByText(/view-more/, { selector: 'button' })
+    const childrenCategories = screen.getAllByTestId('count')
 
     expect(heading).toBeVisible()
+    expect(backButton).toBeInTheDocument()
+    expect(childrenCategories.length).toEqual(5)
+    expect(viewMoreButton).toBeInTheDocument()
   })
 
-  it('should call children categories', () => {
+  it('should call onCategoryChildSelection when user selects specific category', () => {
     const { onCategoryChildrenSelectionMock } = setup()
 
     const childrenCategories = screen.getAllByTestId('count')
@@ -40,22 +44,23 @@ describe('[component] - CategoryFacet', () => {
     expect(onCategoryChildrenSelectionMock).toHaveBeenCalled()
   })
 
-  it('should call back button', () => {
-    const { goBackToPreviousRouteMock } = setup()
+  it('should call onBackButtonClick when user clicks on Back button', () => {
+    const { onBackButtonClickMock } = setup()
 
     const backButton = screen.getByText(/back/, { selector: 'button' })
     userEvent.click(backButton)
 
-    expect(goBackToPreviousRouteMock).toHaveBeenCalled()
+    expect(onBackButtonClickMock).toHaveBeenCalled()
   })
 
-  it('should call view more button', () => {
-    const { handleViewMoreMock } = setup()
+  it('should display all the children when user clicks on View More button', () => {
+    setup()
+    const viewMoreButton = screen.getByText(/view-more/, { selector: 'button' })
+    userEvent.click(viewMoreButton)
 
-    const backButton = screen.getByText(/view-more/, { selector: 'button' })
-    userEvent.click(backButton)
+    const childrenCategoriesAfterClick = screen.getAllByTestId('count')
 
-    expect(handleViewMoreMock).toHaveBeenCalled()
-    expect(backButton).not.toBeInTheDocument()
+    expect(viewMoreButton).not.toBeInTheDocument()
+    expect(childrenCategoriesAfterClick.length).toEqual(8)
   })
 })
