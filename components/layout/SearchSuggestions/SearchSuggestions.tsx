@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 
 import {
   Backdrop,
@@ -16,9 +16,11 @@ import {
 } from '@mui/material'
 import { useTranslation } from 'next-i18next'
 
+import { useUpdateRoutes } from '../../../hooks/useUpdateRoutes'
 import SearchBar from '@/components/common/SearchBar/SearchBar'
 
 import type { SearchSuggestionResult } from '@/lib/gql/types'
+
 const style = {
   paper: {
     borderRadius: 0,
@@ -26,6 +28,7 @@ const style = {
     zIndex: 1400,
     width: '100%',
     maxWidth: { xs: '100%', md: 661 },
+    marginTop: { xs: 1, md: 0.25 },
   } as SxProps<Theme> | undefined,
   list: {
     p: 2,
@@ -44,44 +47,76 @@ const style = {
   } as SxProps<Theme> | undefined,
 }
 
-interface searchSuggestionProps {
-  suggestionSearch: SearchSuggestionResult
-  gap?: number
-  isSuggestionOpen: boolean
-  setIsSuggestionOpen: (IsSuggestionOpen: boolean) => void
+interface SearchSuggestionsProps {
+  searchSuggestionResult: SearchSuggestionResult
 }
 
-const SearchSuggestions = (props: searchSuggestionProps) => {
+interface ListItemProps {
+  heading?: string
+  code?: string
+  name?: string
+}
+
+const ListItemTitle = (props: ListItemProps) => {
+  const { heading } = props
   const { t } = useTranslation('common')
-  const { suggestionSearch, gap, isSuggestionOpen, setIsSuggestionOpen } = props
-  const [open, setOpen] = React.useState(false)
-  const [searchTerm, setSearchTerm] = React.useState('')
-  const handleOpen = () => {
-    setOpen(true)
-    setIsSuggestionOpen(open)
-  }
-  const handleClose = () => setOpen(false)
-  const handleSearch = (value: string) => {
-    value ? handleOpen() : handleClose()
-    setSearchTerm(value)
+
+  return (
+    <ListItem key="Suggestions" sx={{ ...style.listItem }}>
+      <Typography fontWeight={600} variant="subtitle1">
+        {t(heading as string)}
+      </Typography>
+    </ListItem>
+  )
+}
+
+const ListItemContent = (props: ListItemProps) => {
+  const { code, name } = props
+  const [updateRoute] = useUpdateRoutes()
+
+  const handleClick = () => {
+    updateRoute(code as string, 'add')
   }
 
-  const productSuggestionGroup = suggestionSearch?.suggestionGroups?.find(
-    (sg) => sg?.name === 'Pages'
+  return (
+    <ListItem button key={code} onClick={handleClick}>
+      <ListItemText primary={name} sx={{ ...style.listItemText }} />
+    </ListItem>
   )
-  const categorySuggestionGroup = suggestionSearch?.suggestionGroups?.find(
-    (sg) => sg?.name === 'Categories'
-  )
+}
+
+const SearchSuggestions = (props: SearchSuggestionsProps) => {
+  const { searchSuggestionResult } = props
+
+  const [open, setOpen] = useState<boolean>(false)
+  const [searchTerm, setSearchTerm] = useState<string>('')
+
+  const handleOpen = () => setOpen(true)
+  const handleClose = () => setOpen(false)
+  const handleSearch = (userEnteredValue: string) => setSearchTerm(userEnteredValue)
+
+  const getSuggestionGroup = (title: string) =>
+    searchSuggestionResult?.suggestionGroups?.find((sg) => sg?.name === title)
+  const productSuggestionGroup = getSuggestionGroup('Pages')
+  const categorySuggestionGroup = getSuggestionGroup('Categories')
+
+  const useDebounce = (value: string, delay: number) => {
+    const handler = setTimeout(() => {
+      // ToBe: api call
+    }, delay)
+    return () => {
+      clearTimeout(handler)
+    }
+  }
+  const debouncedSearchTerm = useDebounce(searchTerm, 500)
 
   useEffect(() => {
-    setOpen(isSuggestionOpen)
-    const delayDebounceFn = setTimeout(() => {
-      if (searchTerm) {
-        // ToBe: api call to fetch searchResults
-      }
-    }, 2000)
-    return () => clearTimeout(delayDebounceFn)
-  }, [isSuggestionOpen, searchTerm])
+    searchTerm ? handleOpen() : handleClose()
+
+    if (searchTerm) {
+      debouncedSearchTerm
+    }
+  }, [debouncedSearchTerm, searchTerm])
 
   return (
     <Stack>
@@ -89,45 +124,29 @@ const SearchSuggestions = (props: searchSuggestionProps) => {
         <SearchBar searchTerm={searchTerm} onSearch={handleSearch} showClearButton />
       </Box>
       <Collapse in={open} timeout="auto" unmountOnExit>
-        <Paper sx={{ marginTop: gap, ...style.paper }}>
+        <Paper sx={{ ...style.paper }}>
           <List sx={{ ...style.list }} role="group">
-            <ListItem key="Suggestions" sx={{ ...style.listItem }}>
-              <Typography fontWeight={600} variant="subtitle1">
-                {t('suggestions')}
-              </Typography>
-            </ListItem>
+            <ListItemTitle heading="suggestions" />
             {productSuggestionGroup?.suggestions?.map((product) => (
-              <ListItem
-                button
+              <ListItemContent
                 key={product?.suggestion?.productCode}
-                onClick={() => handleSearch(product?.suggestion?.productName)}
-              >
-                <ListItemText
-                  primary={product?.suggestion?.productName}
-                  sx={{ ...style.listItemText }}
-                />
-              </ListItem>
+                name={product?.suggestion?.productName}
+              />
             ))}
           </List>
           <Divider />
           <List sx={{ ...style.list }} role="group">
-            <ListItem key="Suggestions" sx={{ ...style.listItem }}>
-              <Typography fontWeight={600} variant="subtitle1">
-                {t('categories')}
-              </Typography>
-            </ListItem>
+            <ListItemTitle heading="categories" />
             {categorySuggestionGroup?.suggestions?.map((product) => (
-              <ListItem button key={product?.suggestion?.categoryCode}>
-                <ListItemText
-                  primary={product?.suggestion?.content?.name}
-                  sx={{ ...style.listItemText }}
-                />
-              </ListItem>
+              <ListItemContent
+                key={product?.suggestion?.categoryCode}
+                name={product?.suggestion?.content?.name}
+              />
             ))}
           </List>
         </Paper>
       </Collapse>
-      <Backdrop open={open} onClick={handleClose}></Backdrop>
+      <Backdrop open={open} onClick={handleClose} data-testid="backdrop"></Backdrop>
     </Stack>
   )
 }

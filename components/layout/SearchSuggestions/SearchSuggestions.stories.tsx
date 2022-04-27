@@ -6,7 +6,7 @@ import SearchSuggestions from './SearchSuggestions'
 
 import { SearchSuggestionResult } from '@/lib/gql/types'
 
-const suggestionSearch: SearchSuggestionResult = {
+const searchSuggestionResult: SearchSuggestionResult = {
   suggestionGroups: [
     {
       name: 'Pages',
@@ -253,6 +253,5 @@ const Template: ComponentStory<typeof SearchSuggestions> = (args) => <SearchSugg
 // Default
 export const Common = Template.bind({})
 Common.args = {
-  suggestionSearch,
-  gap: 0.25,
+  searchSuggestionResult,
 }
