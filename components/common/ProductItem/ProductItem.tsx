@@ -62,18 +62,6 @@ const ProductItem = (props: ProductItemProps) => {
 
   const [expanded, setExpanded] = useState<boolean>(true)
 
-  const ProductLabel = (props: { label: string }) => (
-    <Typography
-      variant="body2"
-      fontWeight="bold"
-      component="span"
-      sx={{ pr: 1 }}
-      data-testid="productLabel"
-    >
-      {`${props.label}:`}
-    </Typography>
-  )
-
   return (
     <Box sx={{ display: 'flex', pb: 2, pr: 1, gap: '3%', flex: 1 }}>
       <Box sx={{ ...styles.imageContainer }}>
