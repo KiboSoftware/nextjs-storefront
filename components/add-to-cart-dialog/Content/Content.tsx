@@ -54,9 +54,10 @@ const Content = (props: CartContentProps) => {
           image={cartItem.product?.imageUrl || ''}
           name={cartItem.product?.name || ''}
           options={cartItem.product?.options as Array<CrProductOption>}
-          price={(cartItem.product?.price?.price || 0).toString()}
+          price={t('currency', { val: (cartItem.product?.price?.price || 0).toString() })}
           salePrice={
-            (cartItem.product?.price?.salePrice && cartItem.product?.price?.salePrice.toString()) ||
+            (cartItem.product?.price?.salePrice &&
+              t('currency', { val: cartItem.product?.price?.salePrice.toString() })) ||
             undefined
           }
         />

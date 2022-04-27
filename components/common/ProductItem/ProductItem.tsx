@@ -90,12 +90,7 @@ const ProductItem = (props: ProductItemProps) => {
                   <Typography variant="body2" fontWeight="bold" component="span" sx={{ pr: 1 }}>
                     {t('price')}:
                   </Typography>
-                  <Price
-                    variant="body2"
-                    fontWeight="normal"
-                    price={t('currency', { val: price })}
-                    {...(salePrice && { salePrice: t('currency', { val: salePrice }) })}
-                  />
+                  <Price variant="body2" fontWeight="normal" price={price} salePrice={salePrice} />
                 </Box>
               )}
             </Collapse>

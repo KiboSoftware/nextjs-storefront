@@ -2,7 +2,7 @@ import React from 'react'
 
 import { ComponentStory, ComponentMeta } from '@storybook/react'
 
-import { cartItem } from '../Content/Content.stories'
+import { cartItemMock } from '../../../__mocks__/cartItemMock'
 import AddToCartDialog from './AddToCartDialog'
 
 export default {
@@ -19,7 +19,7 @@ const Template: ComponentStory<typeof AddToCartDialog> = ({ ...args }) => (
 export const Common = Template.bind({})
 
 Common.args = {
-  cartItem,
+  cartItem: cartItemMock,
   isOpen: true,
   isCenteredDialog: false,
 }

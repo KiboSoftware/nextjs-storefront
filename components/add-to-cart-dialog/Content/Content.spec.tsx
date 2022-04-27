@@ -6,13 +6,12 @@ import { render, screen } from '@testing-library/react'
 import * as stories from './Content.stories' // import all stories from the stories file
 
 const { Common } = composeStories(stories)
-const { cartItem } = stories
 
 describe('[components] Add To Cart Dialog', () => {
-  const setup = (params = {}) => render(<Common {...params} />)
+  const setup = () => render(<Common {...Common.args} />)
 
   it('should render component', () => {
-    setup(cartItem)
+    setup()
 
     const component = screen.getByTestId('content-component')
 

@@ -7,29 +7,16 @@ import { RouterContext } from 'next/dist/shared/lib/router-context'
 
 import { createMockRouter } from '../../../../utils/createMockRouter'
 import * as stories from '@/components/add-to-cart-dialog/AddToCartDialog/AddToCartDialog.stories' // import all stories from the stories file
-import { cartItem } from '@/components/add-to-cart-dialog/Content/Content.stories'
-
-import type { CartItem as CartItemType } from '@/lib/gql/types'
 
 const { Common } = composeStories(stories)
 
 const onCloseMock = jest.fn()
 
-interface CartDetailsProps {
-  cartItem: CartItemType
-  isOpen: boolean
-  isCenteredDialog: boolean
-}
-
 describe('[components] Add To Cart Dialog integration', () => {
-  const setup = (params: CartDetailsProps) => render(<Common {...params} onClose={onCloseMock} />)
+  const setup = () => render(<Common {...Common.args} onClose={onCloseMock} />)
 
   it('should render component', async () => {
-    setup({
-      cartItem,
-      isOpen: true,
-      isCenteredDialog: false,
-    })
+    setup()
 
     const item = Common.args?.cartItem
     const name = item?.product?.name || ''
@@ -60,11 +47,7 @@ describe('[components] Add To Cart Dialog integration', () => {
   })
 
   it('should close dialog when user clicks on closeIcon button', () => {
-    setup({
-      cartItem,
-      isOpen: true,
-      isCenteredDialog: false,
-    })
+    setup()
 
     const dialog = screen.getByRole('dialog')
     const closeIconButton = screen.getByRole('button', {
@@ -78,11 +61,7 @@ describe('[components] Add To Cart Dialog integration', () => {
   })
 
   it('should redirect to /cart page when user clicks on "Add To Cart" button', async () => {
-    setup({
-      cartItem,
-      isOpen: true,
-      isCenteredDialog: false,
-    })
+    setup()
 
     const router = createMockRouter()
 
@@ -109,11 +88,7 @@ describe('[components] Add To Cart Dialog integration', () => {
   })
 
   it('should close dialog when user clicks on "Continue Shopping" button', () => {
-    setup({
-      cartItem,
-      isOpen: true,
-      isCenteredDialog: false,
-    })
+    setup()
 
     const dialog = screen.getByRole('dialog')
     const continueShoppingButton = screen.getByRole('button', {
