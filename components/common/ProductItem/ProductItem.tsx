@@ -41,6 +41,18 @@ const styles = {
   },
 }
 
+const ProductLabel = (props: { label: string }) => (
+  <Typography
+    variant="body2"
+    fontWeight="bold"
+    component="span"
+    sx={{ pr: 1 }}
+    data-testid="productLabel"
+  >
+    {`${props.label}:`}
+  </Typography>
+)
+
 const ProductItem = (props: ProductItemProps) => {
   const { image, name, options, price, salePrice, qty, children } = props
 
@@ -49,18 +61,6 @@ const ProductItem = (props: ProductItemProps) => {
   const mdScreen = useMediaQuery(theme.breakpoints.up('md'))
 
   const [expanded, setExpanded] = useState<boolean>(true)
-
-  const ProductLabel = (props: { label: string }) => (
-    <Typography
-      variant="body2"
-      fontWeight="bold"
-      component="span"
-      sx={{ pr: 1 }}
-      data-testid="productLabel"
-    >
-      {`${props.label}:`}
-    </Typography>
-  )
 
   return (
     <Box sx={{ display: 'flex', pb: 2, pr: 1, gap: '3%', flex: 1 }}>

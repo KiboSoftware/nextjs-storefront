@@ -236,6 +236,7 @@ export const argsWithLabel = orderItems.map((item) => {
     image: item.product?.imageUrl || DefaultImage,
     name: item.product?.name || '',
     options: item.product?.options as Array<CrProductOption>,
+    qty: item.quantity,
     price: '$' + (item.product?.price?.price || 0).toString(),
     salePrice: '$' + (item.product?.price?.salePrice || 0).toString(),
   }
