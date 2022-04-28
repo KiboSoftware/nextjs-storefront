@@ -62,27 +62,35 @@ const Price = ({
     </Typography>
   )
 
+  const PriceRangeTypography = () => {
+    return (
+      <>
+        <PriceTypography
+          {...(salePrice && { color: 'error' })}
+          sx={{
+            ...styles.price,
+            ...(salePrice && styles.oldPrice),
+          }}
+        >
+          {price}
+        </PriceTypography>
+        {salePrice && <PriceTypography>{salePrice}</PriceTypography>}
+      </>
+    )
+  }
+
+  const PriceOnlyTypography = () => {
+    return (
+      <PriceTypography>
+        {priceRange?.lower} - {priceRange?.upper}
+      </PriceTypography>
+    )
+  }
+
   return (
     <>
       <Box display="flex" gap="0.625rem" alignItems="center">
-        {priceRange ? (
-          <PriceTypography>
-            {priceRange.lower} - {priceRange.upper}
-          </PriceTypography>
-        ) : (
-          <>
-            <PriceTypography
-              {...(salePrice && { color: 'error' })}
-              sx={{
-                ...styles.price,
-                ...(salePrice && styles.oldPrice),
-              }}
-            >
-              {price}
-            </PriceTypography>
-            {salePrice && <PriceTypography>{salePrice}</PriceTypography>}
-          </>
-        )}
+        {priceRange ? <PriceOnlyTypography /> : <PriceRangeTypography />}
       </Box>
     </>
   )
