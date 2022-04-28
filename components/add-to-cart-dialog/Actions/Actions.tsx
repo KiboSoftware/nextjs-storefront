@@ -26,7 +26,7 @@ const StyledGoToCartButton = styled(Button)(({ theme }: StyledButtonProps) => ({
 }))
 
 const StyledContinueShoppingButton = styled(Button)(({ theme }: StyledButtonProps) => ({
-  color: theme?.palette.grey[500],
+  color: theme?.palette.grey[900],
   backgroundColor: theme?.palette.grey[50],
   borderColor: theme?.palette.grey[500],
   fontSize: theme?.typography.subtitle1.fontSize,
