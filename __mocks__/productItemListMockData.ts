@@ -289,27 +289,13 @@ export const argsWithLabel = orderItems.map((item) => {
 export const shipItems = checkout.items
   .filter((item) => item.fulfillmentMethod === 'Ship')
   .map((item) => {
-    return {
-      image: item.product?.imageUrl || DefaultImage,
-      name: item.product?.name || '',
-      options: item.product?.options as Array<CrProductOption>,
-      qty: item.quantity,
-      price: '$' + (item.product?.price?.price || 0).toString(),
-      salePrice: '$' + (item.product?.price?.salePrice || 0).toString(),
-    }
+    return getProductDetails(item)
   })
 
 export const pickupItems = checkout.items
   .filter((item) => item.fulfillmentMethod === 'Pickup')
   .map((item) => {
-    return {
-      image: item.product?.imageUrl || DefaultImage,
-      name: item.product?.name || '',
-      options: item.product?.options as Array<CrProductOption>,
-      qty: item.quantity,
-      price: '$' + (item.product?.price?.price || 0).toString(),
-      salePrice: '$' + (item.product?.price?.salePrice || 0).toString(),
-    }
+    return getProductDetails(item)
   })
 export const getShippingRates = {
   orderShipmentMethods: [
@@ -324,4 +310,15 @@ export const getShippingRates = {
       price: 15,
     },
   ],
+}
+
+const getProductDetails = (item: CrOrderItem) => {
+  return {
+    image: item.product?.imageUrl || DefaultImage,
+    name: item.product?.name || '',
+    options: item.product?.options as Array<CrProductOption>,
+    qty: item.quantity,
+    price: '$' + (item.product?.price?.price || 0).toString(),
+    salePrice: '$' + (item.product?.price?.salePrice || 0).toString(),
+  }
 }
