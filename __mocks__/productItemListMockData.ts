@@ -267,25 +267,6 @@ export const checkout = {
 
 export const orderItems: CrOrderItem[] = checkout.items
 
-export const argsWithoutLabel = orderItems.map((item) => {
-  return {
-    image: item.product?.imageUrl || DefaultImage,
-    name: item.product?.name || '',
-    options: item.product?.options as Array<CrProductOption>,
-  }
-})
-
-export const argsWithLabel = orderItems.map((item) => {
-  return {
-    image: item.product?.imageUrl || DefaultImage,
-    name: item.product?.name || '',
-    options: item.product?.options as Array<CrProductOption>,
-    qty: item.quantity,
-    price: '$' + (item.product?.price?.price || 0).toString(),
-    salePrice: '$' + (item.product?.price?.salePrice || 0).toString(),
-  }
-})
-
 const getProductDetails = (item: CrOrderItem) => {
   return {
     image: item.product?.imageUrl || DefaultImage,
@@ -296,6 +277,22 @@ const getProductDetails = (item: CrOrderItem) => {
     salePrice: '$' + (item.product?.price?.salePrice || 0).toString(),
   }
 }
+
+const getProductDetailsWithoutLabel = (item: CrOrderItem) => {
+  return {
+    image: item.product?.imageUrl || DefaultImage,
+    name: item.product?.name || '',
+    options: item.product?.options as Array<CrProductOption>,
+  }
+}
+
+export const argsWithoutLabel = orderItems.map((item) => {
+  return getProductDetailsWithoutLabel(item)
+})
+
+export const argsWithLabel = orderItems.map((item) => {
+  return getProductDetails(item)
+})
 
 export const shipItems = checkout.items
   .filter((item) => item.fulfillmentMethod === 'Ship')
@@ -308,6 +305,7 @@ export const pickupItems = checkout.items
   .map((item) => {
     return getProductDetails(item)
   })
+
 export const getShippingRates = {
   orderShipmentMethods: [
     {
