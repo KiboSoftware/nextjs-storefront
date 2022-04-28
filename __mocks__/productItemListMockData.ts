@@ -286,6 +286,17 @@ export const argsWithLabel = orderItems.map((item) => {
   }
 })
 
+const getProductDetails = (item: CrOrderItem) => {
+  return {
+    image: item.product?.imageUrl || DefaultImage,
+    name: item.product?.name || '',
+    options: item.product?.options as Array<CrProductOption>,
+    qty: item.quantity,
+    price: '$' + (item.product?.price?.price || 0).toString(),
+    salePrice: '$' + (item.product?.price?.salePrice || 0).toString(),
+  }
+}
+
 export const shipItems = checkout.items
   .filter((item) => item.fulfillmentMethod === 'Ship')
   .map((item) => {
@@ -310,15 +321,4 @@ export const getShippingRates = {
       price: 15,
     },
   ],
-}
-
-const getProductDetails = (item: CrOrderItem) => {
-  return {
-    image: item.product?.imageUrl || DefaultImage,
-    name: item.product?.name || '',
-    options: item.product?.options as Array<CrProductOption>,
-    qty: item.quantity,
-    price: '$' + (item.product?.price?.price || 0).toString(),
-    salePrice: '$' + (item.product?.price?.salePrice || 0).toString(),
-  }
 }
