@@ -2,33 +2,14 @@ import React, { ReactNode, Children } from 'react'
 
 import { Box, Stack, Step, Stepper, Typography, Slider, StepButton } from '@mui/material'
 
-import StepperContext, {
-  UserEnteredDetails,
-  UserEnteredShipping,
-  UserEnteredPayment,
-} from '@/components/checkout/Context/Context'
-
 interface StepperProps {
   steps: string[]
   children: ReactNode
   activeStep: number
-
-  setUserEnteredDetails: (userEnteredDetails: UserEnteredDetails) => void
-  setUserEnteredShipping: (userEnteredShipping: UserEnteredShipping) => void
-  setUserEnteredPayment: (userEnteredPayment: UserEnteredPayment) => void
 }
 
 const KiboStepper = (props: StepperProps) => {
-  const {
-    steps,
-    children,
-    activeStep,
-    setUserEnteredDetails,
-    setUserEnteredShipping,
-    setUserEnteredPayment,
-  } = props
-
-  const contextValue = { setUserEnteredDetails, setUserEnteredShipping, setUserEnteredPayment }
+  const { steps, children, activeStep } = props
 
   const totalSteps = () => {
     return steps.length
@@ -61,10 +42,7 @@ const KiboStepper = (props: StepperProps) => {
         </Box>
       </Box>
 
-      <StepperContext.Provider value={contextValue}>
-        {Children.toArray(children)[activeStep]}
-      </StepperContext.Provider>
-      <Box></Box>
+      {Children.toArray(children)[activeStep]}
     </Stack>
   )
 }

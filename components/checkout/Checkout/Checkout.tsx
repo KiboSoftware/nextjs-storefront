@@ -3,12 +3,7 @@ import React, { useState, useRef, ElementRef, useEffect } from 'react'
 import { Box, Stack, Button, Typography } from '@mui/material'
 import { useTranslation } from 'next-i18next'
 
-import {
-  UserEnteredDetails,
-  UserEnteredShipping,
-  UserEnteredPayment,
-} from '@/components/checkout/Context/Context'
-import Details from '@/components/checkout/Details/Details'
+import Details, { PersonalDetails } from '@/components/checkout/Details/Details'
 import KiboStepper from '@/components/checkout/KiboStepper/KiboStepper'
 import Payment from '@/components/checkout/Payment/Payment'
 import Review from '@/components/checkout/Review/Review'
@@ -30,9 +25,6 @@ const Checkout = () => {
 
   // State
   const [activeStep, setActiveStep] = useState<number>(0)
-  const [userEnteredDetails, setUserEnteredDetails] = useState<UserEnteredDetails | null>(null)
-  const [userEnteredShipping, setUserEnteredShipping] = useState<UserEnteredShipping | null>(null)
-  const [userEnteredPayment, setUserEnteredPayment] = useState<UserEnteredPayment | null>(null)
 
   // Handlers
   const activeStepName = steps[activeStep]
@@ -47,32 +39,21 @@ const Checkout = () => {
     if (activeStepName === (t('payment') as string))
       paymentRef.current && paymentRef.current.validateForm()
   }
-  const isFormValid = () => {
-    let isValid = false
 
-    if (activeStepName === (t('details') as string))
-      isValid = userEnteredDetails?.isFormValid || false
-    if (activeStepName === (t('shipping') as string))
-      isValid = userEnteredShipping?.isFormValid || false
-    if (activeStepName === (t('payment') as string))
-      isValid = userEnteredPayment?.isFormValid || false
+  // Call Mutations
+  const handlePerosnalDetails = async (personalDetails: PersonalDetails) => {
+    const { firstName, lastName, email } = personalDetails
 
-    return isValid
+    setActiveStep(activeStep + 1)
   }
 
-  // Fetch data
-  const detailsFromAPI = {
-    // query fetch
+  const personalDetails = {
     email: '',
-    showAccountFields: false,
     firstName: '',
     lastName: '',
     password: '',
+    showAccountFields: false,
   }
-
-  useEffect(() => {
-    if (isFormValid()) setActiveStep(activeStep + 1)
-  }, [userEnteredDetails, userEnteredShipping, userEnteredPayment]) // Mutation save
 
   return (
     <Stack direction="row" gap={3}>
@@ -80,15 +61,12 @@ const Checkout = () => {
         <Typography variant="h1" component="div" gutterBottom>
           {t('checkout', { numberOfItems: 3 })}
         </Typography>
-
-        <KiboStepper
-          steps={steps}
-          activeStep={activeStep}
-          setUserEnteredDetails={setUserEnteredDetails}
-          setUserEnteredShipping={setUserEnteredShipping}
-          setUserEnteredPayment={setUserEnteredPayment}
-        >
-          <Details detailsFromAPI={detailsFromAPI} ref={detailsRef} />
+        <KiboStepper steps={steps} activeStep={activeStep}>
+          <Details
+            personalDetails={personalDetails}
+            ref={detailsRef}
+            onPersonalDetailsSave={handlePerosnalDetails}
+          />
           <Shipping shippingFromAPI={null} ref={shippingRef} />
           <Payment paymentFromAPI={null} ref={paymentRef} />
           <Review />

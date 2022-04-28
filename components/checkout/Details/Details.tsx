@@ -1,5 +1,5 @@
 /* eslint-disable  jsx-a11y/no-autofocus */
-import React, { useContext, forwardRef, useImperativeHandle, useRef, ElementRef } from 'react'
+import React, { forwardRef, useImperativeHandle, useRef, ElementRef } from 'react'
 
 import { yupResolver } from '@hookform/resolvers/yup'
 import AccessTimeIcon from '@mui/icons-material/AccessTime'
@@ -23,18 +23,19 @@ import { useTranslation } from 'next-i18next'
 import { useForm, Controller } from 'react-hook-form'
 import * as yup from 'yup'
 
-import StepperContext, { UserEnteredDetails } from '@/components/checkout/Context/Context'
 import KiboTextBox from '@/components/common/KiboTextBox/KiboTextBox'
 import PasswordValidation from '@/components/common/PasswordValidation/PasswordValidation'
 
+export interface PersonalDetails {
+  email: string
+  showAccountFields?: boolean
+  firstName: string
+  lastName: string
+  password: string
+}
 interface DetailsProps {
-  detailsFromAPI: {
-    email: string
-    showAccountFields: boolean
-    firstName?: string
-    lastName?: string
-    password?: string
-  }
+  personalDetails: PersonalDetails
+  onPersonalDetailsSave: (personalDetails: PersonalDetails) => void
 }
 
 interface DetailsHandler {
@@ -55,9 +56,8 @@ const buttonStyle = {
 } as SxProps<Theme> | undefined
 
 const Details = forwardRef<DetailsHandler, DetailsProps>((props, ref) => {
-  const { detailsFromAPI } = props
+  const { personalDetails, onPersonalDetailsSave } = props
   const passwordValidationRef = useRef<PasswordValidationHandler | null>(null)
-  const { setUserEnteredDetails } = useContext(StepperContext)
 
   const { t } = useTranslation('common')
 
@@ -87,7 +87,7 @@ const Details = forwardRef<DetailsHandler, DetailsProps>((props, ref) => {
   } = useForm({
     mode: 'onChange',
     reValidateMode: 'onChange',
-    defaultValues: detailsFromAPI ? detailsFromAPI : undefined,
+    defaultValues: personalDetails ? personalDetails : undefined,
     resolver: yupResolver(schema),
     shouldFocusError: true,
   })
@@ -97,16 +97,20 @@ const Details = forwardRef<DetailsHandler, DetailsProps>((props, ref) => {
 
   const validateForm = () => {
     trigger()
-    const data: UserEnteredDetails = {
-      isFormValid: isValid,
-      details: getValues(),
-    }
 
     let isPasswordValid = true
     if (showAccountFields === 'true')
       isPasswordValid = passwordValidationRef.current?.validatePassword() as boolean
 
-    if (data.isFormValid && isPasswordValid) setUserEnteredDetails({ ...data })
+    if (isValid && isPasswordValid) {
+      const { email, firstName, lastName, password } = getValues()
+      onPersonalDetailsSave({
+        email: email,
+        firstName: firstName || '',
+        lastName: lastName || '',
+        password: password || '',
+      })
+    }
   }
 
   useImperativeHandle(ref, () => ({
@@ -132,7 +136,7 @@ const Details = forwardRef<DetailsHandler, DetailsProps>((props, ref) => {
         <Controller
           name="email"
           control={control}
-          defaultValue={detailsFromAPI?.email}
+          defaultValue={personalDetails?.email}
           render={({ field }) => (
             <KiboTextBox
               name="email"
@@ -181,7 +185,7 @@ const Details = forwardRef<DetailsHandler, DetailsProps>((props, ref) => {
           <Controller
             name="showAccountFields"
             control={control}
-            defaultValue={detailsFromAPI?.showAccountFields}
+            defaultValue={personalDetails?.showAccountFields}
             render={({ field }) => (
               <FormControlLabel
                 control={
@@ -206,7 +210,7 @@ const Details = forwardRef<DetailsHandler, DetailsProps>((props, ref) => {
           <Controller
             name="firstName"
             control={control}
-            defaultValue={detailsFromAPI?.firstName}
+            defaultValue={personalDetails?.firstName}
             render={({ field }) => (
               <KiboTextBox
                 value={field.value}
@@ -222,7 +226,7 @@ const Details = forwardRef<DetailsHandler, DetailsProps>((props, ref) => {
           <Controller
             name="lastName"
             control={control}
-            defaultValue={detailsFromAPI?.lastName}
+            defaultValue={personalDetails?.lastName}
             render={({ field }) => (
               <KiboTextBox
                 value={field.value}
@@ -238,7 +242,7 @@ const Details = forwardRef<DetailsHandler, DetailsProps>((props, ref) => {
           <Controller
             name="password"
             control={control}
-            defaultValue={detailsFromAPI?.password}
+            defaultValue={personalDetails?.password}
             render={({ field }) => (
               <KiboTextBox
                 value={field.value}

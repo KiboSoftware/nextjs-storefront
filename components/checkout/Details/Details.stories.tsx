@@ -16,7 +16,7 @@ const Template: ComponentStory<typeof Details> = (args) => <Details {...args} />
 export const Common = Template.bind({})
 Common.args = {
   ref: undefined,
-  detailsFromAPI: {
+  personalDetails: {
     email: '',
     showAccountFields: false,
     firstName: '',

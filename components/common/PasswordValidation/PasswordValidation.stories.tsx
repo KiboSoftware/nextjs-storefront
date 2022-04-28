@@ -16,6 +16,3 @@ const Template: ComponentStory<typeof PasswordValidation> = (args) => (
 
 // Default
 export const Common = Template.bind({})
-Common.args = {
-  password: 'Sus@',
-}
