@@ -4,7 +4,7 @@ interface ShippingHandler {
   validateForm: () => void
 }
 
-const Shipping = forwardRef<ShippingHandler, any>((props, ref) => {
+const Shipping = forwardRef<ShippingHandler, any>((_props, ref) => {
   const validateForm = () => {
     console.log('validating Shipping form')
   }

@@ -14,8 +14,8 @@ export interface UseLoadFromCart {
 }
 
 const getOrCreateCheckout = async (checkoutId?: string | null, cartId?: string | null) => {
-  if (checkoutId) return await getData(checkoutId)
-  if (cartId) return await getData(cartId)
+  if (checkoutId) return getData(checkoutId)
+  if (cartId) return getData(cartId)
 }
 
 export const useLoadCheckout = (checkoutId: string): UseLoadCheckout => {
@@ -32,7 +32,7 @@ export const useLoadFromCart = (cartId: string): UseLoadFromCart => {
   return { data, isLoading }
 }
 
-function getData(checkoutId: string): Order {
+function getData(_checkoutId: string): Order {
   return {
     amountAvailableForRefund: 0,
     amountRefunded: 0,

@@ -1,6 +1,4 @@
-import { useMutation, UseMutationResult } from 'react-query'
-
-import { querykeys } from '../react-query/queryKeys'
+import { useMutation } from 'react-query'
 
 import { OrderInput } from '@/lib/gql/types'
 
@@ -11,7 +9,7 @@ export interface PersonalInfo {
   orderInput: OrderInput
 }
 
-const setPersonalInfo = async (personalInfo: PersonalInfo) => {
+const setPersonalInfo = async (_personalInfo: PersonalInfo) => {
   // call the mutation
 }
 

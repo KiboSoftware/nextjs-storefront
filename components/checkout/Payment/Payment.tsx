@@ -4,7 +4,7 @@ interface PaymentHandler {
   validateForm: () => void
 }
 
-const Payment = forwardRef<PaymentHandler, any>((props, ref) => {
+const Payment = forwardRef<PaymentHandler, any>((_props, ref) => {
   const validateForm = () => {
     console.log('validating Payment form')
   }
