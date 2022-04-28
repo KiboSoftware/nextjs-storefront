@@ -1,18 +1,11 @@
-import React, { ReactNode, useState } from 'react'
+import React, { ReactNode, SyntheticEvent, useState } from 'react'
 
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown'
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp'
-import {
-  Typography,
-  Box,
-  CardMedia,
-  CardContent,
-  Collapse,
-  useMediaQuery,
-  useTheme,
-} from '@mui/material'
+import { Typography, Box, CardContent, Collapse, useMediaQuery, useTheme } from '@mui/material'
 import { useTranslation } from 'next-i18next'
 
+import KiboImage from '@/components/common/KiboImage/KiboImage'
 import Price from '@/components/common/Price/Price'
 import ProductOptionList from '@/components/product/ProductOptionList/ProductOptionList'
 import DefaultImage from '@/public/product_placeholder.svg'
@@ -61,15 +54,24 @@ const ProductItem = (props: ProductItemProps) => {
   const mdScreen = useMediaQuery(theme.breakpoints.up('md'))
 
   const [expanded, setExpanded] = useState<boolean>(true)
-
+  const onImageError = (
+    event: SyntheticEvent<HTMLImageElement, Event> & {
+      target: HTMLImageElement
+    }
+  ) => {
+    const { target } = event
+    target.src = DefaultImage
+  }
   return (
     <Box sx={{ display: 'flex', pb: 2, pr: 1, gap: '3%', flex: 1 }}>
       <Box sx={{ ...styles.imageContainer }}>
-        <CardMedia
-          component="img"
-          image={image || DefaultImage}
+        <KiboImage
+          src={image || DefaultImage}
+          height={200}
+          width={200}
           alt={name}
-          sx={{ ...styles.image }}
+          objectFit="contain"
+          onError={onImageError}
         />
       </Box>
 
@@ -83,20 +85,23 @@ const ProductItem = (props: ProductItemProps) => {
 
           <Box data-testid="productDetails">
             <Box sx={{ display: { xs: 'block', sm: 'block', md: 'none' } }}>
-              <Box
-                display="flex"
-                alignItems="center"
-                width="fit-content"
-                sx={{ cursor: 'pointer', pb: 0.125 }}
-                onClick={() => setExpanded(!expanded)}
-              >
-                <Typography variant="body2" align="left" sx={{ mr: 1 }}>
-                  {t('details')}
-                </Typography>
-
-                {expanded ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
-              </Box>
+              {(options.length > 0 || price || qty) && (
+                <Box
+                  display="flex"
+                  alignItems="center"
+                  width="fit-content"
+                  sx={{ cursor: 'pointer' }}
+                  pb={0.125}
+                  onClick={() => setExpanded(!expanded)}
+                >
+                  <Typography variant="body2" align="left" sx={{ mr: 1 }}>
+                    {t('details')}
+                  </Typography>
+                  {expanded ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
+                </Box>
+              )}
             </Box>
+
             <Collapse in={mdScreen ? true : expanded} timeout="auto" unmountOnExit>
               <ProductOptionList options={options} />
 
