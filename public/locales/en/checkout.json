@@ -27,5 +27,11 @@
   "go-to-payment": "Go to Payment",
   "review-order": "Review Order",
   "go-back": "Go Back",
-  "this-field-is-required": "This field is required"
+  "this-field-is-required": "This field is required",
+  "payment-method": "Payment Method",
+  "ending": "Ending:",
+  "exp": "Exp:",
+  "billing-address": "Billing Address",
+  "apartment": "Apt. ",
+  "payment-information": "Payment Information"
 }
