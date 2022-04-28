@@ -2,7 +2,7 @@ import React from 'react'
 
 import '@testing-library/jest-dom'
 import { composeStories } from '@storybook/testing-react'
-import { render, screen, waitFor } from '@testing-library/react'
+import { render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 
 import * as stories from '../../../../../components/layout/SearchSuggestions/SearchSuggestions.stories'
@@ -31,7 +31,7 @@ describe('[components] - SearchSuggestions Integration', () => {
 
     const input = screen.getByRole('textbox', { name: 'search-input' })
     expect(input).toHaveValue('')
-    await userEvent.type(input, userEnteredText)
+    userEvent.type(input, userEnteredText)
     expect(input).toHaveValue(userEnteredText)
   })
 
@@ -39,7 +39,7 @@ describe('[components] - SearchSuggestions Integration', () => {
     setup()
 
     const input = screen.getByRole('textbox', { name: 'search-input' })
-    await userEvent.type(input, userEnteredText)
+    userEvent.type(input, userEnteredText)
     expect(input).toHaveValue(userEnteredText)
 
     expect(screen.getByText('suggestions')).toBeVisible()
@@ -54,7 +54,7 @@ describe('[components] - SearchSuggestions Integration', () => {
     setup()
 
     const input = screen.getByRole('textbox', { name: 'search-input' })
-    await userEvent.type(input, userEnteredText)
+    userEvent.type(input, userEnteredText)
     const backdrop = screen.getByTestId('backdrop')
     expect(backdrop).toBeVisible()
   })
@@ -65,10 +65,10 @@ describe('[components] - SearchSuggestions Integration', () => {
     const input = screen.getByRole('textbox', { name: 'search-input' })
     const clearButton = screen.getByRole('button', { name: 'clear-search' })
 
-    await userEvent.type(input, userEnteredText)
+    userEvent.type(input, userEnteredText)
     expect(input).toHaveValue(userEnteredText)
     expect(clearButton).toBeEnabled()
-    await userEvent.click(clearButton)
+    userEvent.click(clearButton)
 
     expect(input).toHaveValue('')
   })

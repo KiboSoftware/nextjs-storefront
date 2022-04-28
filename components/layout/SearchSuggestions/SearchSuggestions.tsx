@@ -100,7 +100,7 @@ const SearchSuggestions = (props: SearchSuggestionsProps) => {
   const productSuggestionGroup = getSuggestionGroup('Pages')
   const categorySuggestionGroup = getSuggestionGroup('Categories')
 
-  const useDebounce = (value: string, delay: number) => {
+  const useDebounce = (_value: string, delay: number) => {
     const handler = setTimeout(() => {
       // ToBe: api call
     }, delay)
