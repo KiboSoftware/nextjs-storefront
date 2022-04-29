@@ -56,5 +56,9 @@
   "find-a-store": "Find a store",
   "view-all": "View all",
   "apply": "Apply",
-  "all-departments": "All Departments"
+  "all-departments": "All Departments",
+  "cart-sub-total": "Cart Subtotal ({{quantity}} items)",
+  "estimated-tax": "Estimated Tax",
+  "standard-shopping": "Standard Shipping",
+  "currency": "{{val, currency(USD)}}"
 }
