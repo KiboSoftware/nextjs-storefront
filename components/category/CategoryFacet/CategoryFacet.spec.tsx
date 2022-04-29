@@ -10,41 +10,55 @@ import * as stories from './CategoryFacet.stories' // import all stories from th
 const { CategoryFacetDesktop } = composeStories(stories)
 
 describe('[component] - CategoryFacet', () => {
-  const setup = () => {
+  const setup = (categoryFacetMock = CategoryFacetDesktop.args?.categoryFacet) => {
     const onCategoryChildrenSelectionMock = jest.fn()
     const onBackButtonClickMock = jest.fn()
     render(
       <CategoryFacetDesktop
-        {...CategoryFacetDesktop.args}
+        categoryFacet={categoryFacetMock}
         onCategoryChildrenSelection={onCategoryChildrenSelectionMock}
         onBackButtonClick={onBackButtonClickMock}
       />
     )
-    return { onCategoryChildrenSelectionMock, onBackButtonClickMock }
+    return { onCategoryChildrenSelectionMock, onBackButtonClickMock, categoryFacetMock }
   }
 
   it('should render component', () => {
-    setup()
+    const { categoryFacetMock } = setup({
+      header: CategoryFacetDesktop.args?.categoryFacet?.header || '',
+      childrenCategories:
+        CategoryFacetDesktop.args?.categoryFacet?.childrenCategories?.slice(0, 2) || [],
+    })
+
+    const firstChildrenCategoryFromMock =
+      CategoryFacetDesktop?.args?.categoryFacet?.childrenCategories[0]?.label || ''
+    const secondChildrenCategoryFromMock =
+      CategoryFacetDesktop?.args?.categoryFacet?.childrenCategories[1]?.label || ''
+
     const heading = screen.getByRole('heading')
     const backButton = screen.getByRole('button', { name: /back/ })
-    const viewMoreButton = screen.getByRole('button', { name: /view-more/ })
-    const childrenCategory = screen.getByText(/jackets/i)
+    const firstChildrenCategory = screen.getByText(firstChildrenCategoryFromMock)
+    const secondChildrenCategory = screen.getByText(secondChildrenCategoryFromMock)
     const childrenCategories = screen.getAllByTestId('count')
 
     expect(heading).toBeVisible()
     expect(backButton).toBeInTheDocument()
-    expect(childrenCategory).toBeInTheDocument()
-    expect(childrenCategories.length).toEqual(CategoryFacetDesktop.args?.initialItemsToShow)
-    expect(viewMoreButton).toBeInTheDocument()
+    expect(firstChildrenCategory).toBeInTheDocument()
+    expect(secondChildrenCategory).toBeInTheDocument()
+    expect(childrenCategories.length).toEqual(categoryFacetMock?.childrenCategories.length)
   })
 
   it('should call onCategoryChildSelection when user selects specific category', () => {
     const { onCategoryChildrenSelectionMock } = setup()
 
-    const category = screen.getByText(/jackets/i)
+    const childrenCategorylabel =
+      CategoryFacetDesktop?.args?.categoryFacet?.childrenCategories[0]?.label || ''
+    const childrenCategoryCode =
+      CategoryFacetDesktop?.args?.categoryFacet?.childrenCategories[0]?.value || ''
+    const category = screen.getByText(childrenCategorylabel)
     userEvent.click(category)
 
-    expect(onCategoryChildrenSelectionMock).toHaveBeenCalledWith('53')
+    expect(onCategoryChildrenSelectionMock).toHaveBeenCalledWith(childrenCategoryCode)
   })
 
   it('should call onBackButtonClick when user clicks on Back button', () => {
@@ -70,7 +84,7 @@ describe('[component] - CategoryFacet', () => {
       CategoryFacetDesktop.args?.initialItemsToShow
     )
     expect(childrenCategoriesAfterClick.length).toEqual(
-      CategoryFacetDesktop.args?.categoryFacet?.childrenCategories.length
+      CategoryFacetDesktop.args?.categoryFacet?.childrenCategories?.length
     )
   })
 })
