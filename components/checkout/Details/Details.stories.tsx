@@ -20,7 +20,20 @@ Common.args = {
     email: '',
     showAccountFields: false,
     firstName: '',
-    lastName: '',
+    lastNameOrSurname: '',
+    password: '',
+  },
+}
+
+// With account fields
+export const withAccountCreation = Template.bind({})
+withAccountCreation.args = {
+  ref: undefined,
+  personalDetails: {
+    email: '',
+    showAccountFields: true,
+    firstName: '',
+    lastNameOrSurname: '',
     password: '',
   },
 }

@@ -30,7 +30,7 @@ export interface PersonalDetails {
   email: string
   showAccountFields?: boolean
   firstName: string
-  lastName: string
+  lastNameOrSurname: string
   password: string
 }
 interface DetailsProps {
@@ -68,7 +68,7 @@ const Details = forwardRef<DetailsHandler, DetailsProps>((props, ref) => {
       is: true,
       then: yup.string().required('This field is required'),
     }),
-    lastName: yup.string().when('showAccountFields', {
+    lastNameOrSurname: yup.string().when('showAccountFields', {
       is: true,
       then: yup.string().required('This field is required'),
     }),
@@ -85,8 +85,8 @@ const Details = forwardRef<DetailsHandler, DetailsProps>((props, ref) => {
     control,
     watch,
   } = useForm({
-    mode: 'onChange',
-    reValidateMode: 'onChange',
+    mode: 'onBlur',
+    reValidateMode: 'onBlur',
     defaultValues: personalDetails ? personalDetails : undefined,
     resolver: yupResolver(schema),
     shouldFocusError: true,
@@ -103,11 +103,11 @@ const Details = forwardRef<DetailsHandler, DetailsProps>((props, ref) => {
       isPasswordValid = passwordValidationRef.current?.validatePassword() as boolean
 
     if (isValid && isPasswordValid) {
-      const { email, firstName, lastName, password } = getValues()
+      const { email, firstName, lastNameOrSurname, password } = getValues()
       onPersonalDetailsSave({
         email: email,
         firstName: firstName || '',
-        lastName: lastName || '',
+        lastNameOrSurname: lastNameOrSurname || '',
         password: password || '',
       })
     }
@@ -145,6 +145,7 @@ const Details = forwardRef<DetailsHandler, DetailsProps>((props, ref) => {
               required
               autoFocus={true}
               sx={{ ...commonStyle }}
+              onBlur={field.onBlur}
               onChange={(_name, value) => field.onChange(value)}
               error={!!errors?.email}
               helperText={errors?.email?.message}
@@ -199,7 +200,7 @@ const Details = forwardRef<DetailsHandler, DetailsProps>((props, ref) => {
                     onChange={(_name, value) => field.onChange(value)}
                   />
                 }
-                label={t('i-want-to-create-an-account') as string}
+                label={t('i-want-to-create-an-account').toString()}
               />
             )}
           />
@@ -217,6 +218,7 @@ const Details = forwardRef<DetailsHandler, DetailsProps>((props, ref) => {
                 label={t('first-name')}
                 required
                 sx={{ ...commonStyle }}
+                onBlur={field.onBlur}
                 onChange={(_name, value) => field.onChange(value)}
                 error={!!errors?.firstName}
                 helperText={errors?.firstName?.message}
@@ -224,18 +226,19 @@ const Details = forwardRef<DetailsHandler, DetailsProps>((props, ref) => {
             )}
           />
           <Controller
-            name="lastName"
+            name="lastNameOrSurname"
             control={control}
-            defaultValue={personalDetails?.lastName}
+            defaultValue={personalDetails?.lastNameOrSurname}
             render={({ field }) => (
               <KiboTextBox
                 value={field.value}
                 label={t('last-name')}
                 required
                 sx={{ ...commonStyle }}
+                onBlur={field.onBlur}
                 onChange={(_name, value) => field.onChange(value)}
-                error={!!errors?.lastName}
-                helperText={errors?.lastName?.message}
+                error={!!errors?.lastNameOrSurname}
+                helperText={errors?.lastNameOrSurname?.message}
               />
             )}
           />
@@ -249,6 +252,7 @@ const Details = forwardRef<DetailsHandler, DetailsProps>((props, ref) => {
                 label={t('password')}
                 required
                 sx={{ ...commonStyle }}
+                onBlur={field.onBlur}
                 onChange={(_name, value) => field.onChange(value)}
                 error={!!errors?.password}
                 helperText={errors?.password?.message}

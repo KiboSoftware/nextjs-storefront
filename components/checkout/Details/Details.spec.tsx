@@ -3,16 +3,16 @@
 import React from 'react'
 
 import { composeStories } from '@storybook/testing-react'
-import { render, screen, act } from '@testing-library/react'
+import { render, screen, act, fireEvent } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 
 import * as stories from './Details.stories'
 
-const { Common } = composeStories(stories)
+const { Common, withAccountCreation } = composeStories(stories)
 
 describe('[components] Details', () => {
-  const setup = () => {
-    render(<Common {...Common.args} />)
+  const setup = (args = Common.args) => {
+    render(<Common {...args} />)
   }
 
   it('should render component', () => {
@@ -103,74 +103,11 @@ describe('[components] Details', () => {
     const emailInput = screen.getByRole('textbox', { name: /your-email/i })
 
     await act(async () => {
-      userEvent.type(emailInput, 'a')
-      userEvent.clear(emailInput)
+      emailInput.focus()
+      fireEvent.blur(emailInput, { target: { value: '' } })
     })
 
     emailError = screen.getByText(/this field is required/i)
     expect(emailError).toBeVisible()
-  })
-  it('firstName should display error text user enters text and clears it out ', async () => {
-    setup()
-
-    const iWantToCreateAccount = screen.getByRole('checkbox', { name: /showaccountfields/i })
-    await act(async () => {
-      userEvent.click(iWantToCreateAccount)
-    })
-
-    let firstNameError = screen.queryByText(/this field is required/i)
-    expect(firstNameError).not.toBeInTheDocument()
-
-    const firstNameInput = screen.getByRole('textbox', { name: /first-name/i })
-
-    await act(async () => {
-      userEvent.type(firstNameInput, 'a')
-      userEvent.clear(firstNameInput)
-    })
-
-    firstNameError = screen.getByText(/this field is required/i)
-    expect(firstNameError).toBeVisible()
-  })
-  it('lastName should display error text user enters text and clears it out ', async () => {
-    setup()
-
-    const iWantToCreateAccount = screen.getByRole('checkbox', { name: /showaccountfields/i })
-    await act(async () => {
-      userEvent.click(iWantToCreateAccount)
-    })
-
-    let lastNameError = screen.queryByText(/this field is required/i)
-    expect(lastNameError).not.toBeInTheDocument()
-
-    const lastNameInput = screen.getByRole('textbox', { name: /last-name/i })
-
-    await act(async () => {
-      userEvent.type(lastNameInput, 'a')
-      userEvent.clear(lastNameInput)
-    })
-
-    lastNameError = screen.getByText(/this field is required/i)
-    expect(lastNameError).toBeVisible()
-  })
-  it('password should display error text user enters text and clears it out ', async () => {
-    setup()
-
-    const iWantToCreateAccount = screen.getByRole('checkbox', { name: /showaccountfields/i })
-    await act(async () => {
-      userEvent.click(iWantToCreateAccount)
-    })
-
-    let passwordError = screen.queryByText(/this field is required/i)
-    expect(passwordError).not.toBeInTheDocument()
-
-    const passwordInput = screen.getByRole('textbox', { name: /password/i })
-
-    await act(async () => {
-      userEvent.type(passwordInput, 'a')
-      userEvent.clear(passwordInput)
-    })
-
-    passwordError = screen.getByText(/this field is required/i)
-    expect(passwordError).toBeVisible()
   })
 })

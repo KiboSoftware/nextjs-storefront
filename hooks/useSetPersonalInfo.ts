@@ -5,7 +5,7 @@ import { OrderInput } from '@/lib/gql/types'
 export interface PersonalInfo {
   orderId: string
   updateMode: string
-  version: string
+  version?: string
   orderInput: OrderInput
 }
 

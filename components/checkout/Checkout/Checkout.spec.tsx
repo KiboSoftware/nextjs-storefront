@@ -1,8 +1,9 @@
 import React, { ReactNode } from 'react'
 
 import { composeStories } from '@storybook/testing-react'
-import { render, screen } from '@testing-library/react'
+import { screen } from '@testing-library/react'
 
+import { renderWithQueryClient } from '../../../test-utils'
 import * as stories from './Checkout.stories'
 
 const KiboStepperMock = ({ children }: { children: ReactNode }) => (
@@ -23,7 +24,7 @@ const { Common } = composeStories(stories)
 
 describe('[components] Checkout', () => {
   const setup = () => {
-    render(<Common {...Common.args} />)
+    renderWithQueryClient(<Common {...Common.args} />)
   }
 
   it('should render component', () => {

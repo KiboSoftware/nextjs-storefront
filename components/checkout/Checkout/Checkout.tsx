@@ -3,6 +3,7 @@ import React, { useState, useRef, ElementRef } from 'react'
 import { Box, Stack, Button, Typography } from '@mui/material'
 import { useTranslation } from 'next-i18next'
 
+import { useLoadCheckout, useLoadFromCart, useSetPersonalInfo, PersonalInfo } from '../../../hooks'
 import Details, { PersonalDetails } from '@/components/checkout/Details/Details'
 import KiboStepper from '@/components/checkout/KiboStepper/KiboStepper'
 import Payment from '@/components/checkout/Payment/Payment'
@@ -25,6 +26,13 @@ const Checkout = () => {
 
   // State
   const [activeStep, setActiveStep] = useState<number>(0)
+  const [checkoutId, _setCheckoutId] = useState<string>('0')
+  const [cartId, _setCartId] = useState<string>('0')
+
+  // useCustomHooks
+  const { data: checkoutInfo, isLoading: _isLoadCheckoutLoading } = useLoadCheckout(checkoutId)
+  const { data: _cartInfo, isLoading: _isLoadFromCartLoading } = useLoadFromCart(cartId)
+  const { setPersonalInfoMutation } = useSetPersonalInfo()
 
   // Handlers
   const activeStepName = steps[activeStep]
@@ -32,27 +40,53 @@ const Checkout = () => {
     setActiveStep(activeStep - 1)
   }
   const handleNext = () => {
-    if (activeStepName === (t('details') as string))
+    if (activeStepName === t('details').toString())
       detailsRef.current && detailsRef.current.validateForm()
-    if (activeStepName === (t('shipping') as string))
+    if (activeStepName === t('shipping').toString())
       shippingRef.current && shippingRef.current.validateForm()
-    if (activeStepName === (t('payment') as string))
+    if (activeStepName === t('payment').toString())
       paymentRef.current && paymentRef.current.validateForm()
   }
 
   // Call Mutations
   const handlePerosnalDetails = async (personalDetails: PersonalDetails) => {
-    const { firstName, lastName, email } = personalDetails
+    const { firstName, lastNameOrSurname, email } = personalDetails
+    const personalInfo: PersonalInfo = {
+      orderId: checkoutInfo?.id as string,
+      updateMode: 'ApplyToOriginal',
+      orderInput: {
+        ...checkoutInfo,
+        email,
+        amountAvailableForRefund: checkoutInfo?.amountAvailableForRefund as number,
+        amountRefunded: checkoutInfo?.amountRefunded as number,
+        amountRemainingForPayment: checkoutInfo?.amountRemainingForPayment as number,
+        totalCollected: checkoutInfo?.totalCollected as number,
+        fulfillmentInfo: {
+          ...checkoutInfo?.fulfillmentInfo,
+          fulfillmentContact: {
+            ...checkoutInfo?.fulfillmentInfo?.fulfillmentContact,
+            email,
+            firstName,
+            lastNameOrSurname,
+          },
+        },
+      },
+    }
 
+    await setPersonalInfoMutation.mutate(personalInfo)
     setActiveStep(activeStep + 1)
   }
 
+  // Call Queries
+  const fulfillmentInfo = checkoutInfo?.fulfillmentInfo
+  const fulfillmentContact = fulfillmentInfo && fulfillmentInfo?.fulfillmentContact
+
   const personalDetails = {
-    email: '',
-    firstName: '',
-    lastName: '',
-    password: '',
+    email: (fulfillmentContact && fulfillmentContact.email) || '',
     showAccountFields: false,
+    firstName: (fulfillmentContact && fulfillmentContact.firstName) || '',
+    lastNameOrSurname: (fulfillmentContact && fulfillmentContact.lastNameOrSurname) || '',
+    password: '',
   }
 
   return (
@@ -73,7 +107,7 @@ const Checkout = () => {
         </KiboStepper>
       </Stack>
 
-      {/* TODO: Below code will be replaced with OrderSymmery component */}
+      {/* Below code will be replaced with OrderSymmery component */}
       <Box>
         {activeStep < buttonLabels.length && (
           <Stack direction="row" gap={5}>

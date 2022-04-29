@@ -46,6 +46,7 @@ const PasswordValidation = forwardRef<PasswordValidationHandle, PasswordValidati
           <CheckCircleIcon
             fontSize="small"
             color={isHavingAtLeastEightCharacters ? 'primary' : 'error'}
+            data-testId="isHavingAtLeastEightCharacters"
           />
           {t('at-least-eight-characters-long')}
         </Stack>

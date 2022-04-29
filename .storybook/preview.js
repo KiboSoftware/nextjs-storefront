@@ -6,6 +6,9 @@ import { INITIAL_VIEWPORTS } from '@storybook/addon-viewport'
 import i18n from './i18n'
 import storefrontTheme from '../styles/theme'
 
+import { QueryClientProvider } from 'react-query'
+import { queryClient } from '../react-query/queryClient'
+
 const OriginalNextImage = NextImage.default
 
 Object.defineProperty(NextImage, 'default', {
@@ -15,7 +18,11 @@ Object.defineProperty(NextImage, 'default', {
 
 export const decorators = [
   muiTheme([storefrontTheme]),
-  (storyFn) => <I18nextProvider i18n={i18n}>{storyFn()}</I18nextProvider>,
+  (storyFn) => (
+    <QueryClientProvider client={queryClient}>
+      <I18nextProvider i18n={i18n}>{storyFn()}</I18nextProvider>{' '}
+    </QueryClientProvider>
+  ),
 ]
 
 export const parameters = {
