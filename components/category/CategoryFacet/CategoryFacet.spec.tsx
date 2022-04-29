@@ -1,5 +1,6 @@
 import React from 'react'
 
+import '@testing-library/jest-dom'
 import { composeStories } from '@storybook/testing-react'
 import { render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
@@ -14,6 +15,7 @@ describe('[component] - CategoryFacet', () => {
     const onBackButtonClickMock = jest.fn()
     render(
       <CategoryFacetDesktop
+        {...CategoryFacetDesktop.args}
         onCategoryChildrenSelection={onCategoryChildrenSelectionMock}
         onBackButtonClick={onBackButtonClickMock}
       />
@@ -24,30 +26,31 @@ describe('[component] - CategoryFacet', () => {
   it('should render component', () => {
     setup()
     const heading = screen.getByRole('heading')
-    const backButton = screen.getByText(/back/, { selector: 'button' })
-    const viewMoreButton = screen.getByText(/view-more/, { selector: 'button' })
+    const backButton = screen.getByRole('button', { name: /back/ })
+    const viewMoreButton = screen.getByRole('button', { name: /view-more/ })
+    const childrenCategory = screen.getByText(/jackets/i)
     const childrenCategories = screen.getAllByTestId('count')
 
     expect(heading).toBeVisible()
     expect(backButton).toBeInTheDocument()
-    expect(childrenCategories.length).toEqual(5)
+    expect(childrenCategory).toBeInTheDocument()
+    expect(childrenCategories.length).toEqual(CategoryFacetDesktop.args?.initialItemsToShow)
     expect(viewMoreButton).toBeInTheDocument()
   })
 
   it('should call onCategoryChildSelection when user selects specific category', () => {
     const { onCategoryChildrenSelectionMock } = setup()
 
-    const childrenCategories = screen.getAllByTestId('count')
-    const category = childrenCategories[0]
+    const category = screen.getByText(/jackets/i)
     userEvent.click(category)
 
-    expect(onCategoryChildrenSelectionMock).toHaveBeenCalled()
+    expect(onCategoryChildrenSelectionMock).toHaveBeenCalledWith('53')
   })
 
   it('should call onBackButtonClick when user clicks on Back button', () => {
     const { onBackButtonClickMock } = setup()
 
-    const backButton = screen.getByText(/back/, { selector: 'button' })
+    const backButton = screen.getByRole('button', { name: /back/ })
     userEvent.click(backButton)
 
     expect(onBackButtonClickMock).toHaveBeenCalled()
@@ -55,12 +58,19 @@ describe('[component] - CategoryFacet', () => {
 
   it('should display all the children when user clicks on View More button', () => {
     setup()
-    const viewMoreButton = screen.getByText(/view-more/, { selector: 'button' })
+
+    const childrenCategoriesBeforeClick = screen.getAllByTestId('count')
+    const viewMoreButton = screen.getByRole('button', { name: /view-more/ })
     userEvent.click(viewMoreButton)
 
     const childrenCategoriesAfterClick = screen.getAllByTestId('count')
 
     expect(viewMoreButton).not.toBeInTheDocument()
-    expect(childrenCategoriesAfterClick.length).toEqual(8)
+    expect(childrenCategoriesBeforeClick.length).toEqual(
+      CategoryFacetDesktop.args?.initialItemsToShow
+    )
+    expect(childrenCategoriesAfterClick.length).toEqual(
+      CategoryFacetDesktop.args?.categoryFacet?.childrenCategories.length
+    )
   })
 })

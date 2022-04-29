@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 
 import AddIcon from '@mui/icons-material/Add'
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft'
-import { Box, Button, FormLabel, Link, Link as MuiLink, Typography } from '@mui/material'
+import { Box, Button, FormLabel, Link, Typography } from '@mui/material'
 import { useTranslation } from 'next-i18next'
 
 import type { FacetValue } from '@/lib/gql/types'
@@ -17,13 +17,13 @@ interface CategoryFacetChildren {
 
 interface CategoryFacetData {
   header: string
-  children: CategoryFacetChildren[]
+  childrenCategories: CategoryFacetChildren[]
 }
 
 interface CategoryFacetProps {
   initialItemsToShow: number
   categoryFacet: CategoryFacetData
-  onCategoryChildrenSelection: (categoryCode: string | undefined | null) => void
+  onCategoryChildrenSelection: (categoryCode: string) => void
   onBackButtonClick: () => void
 }
 
@@ -44,10 +44,12 @@ const styles = {
     justifyContent: 'space-between',
     width: '100%',
     padding: '0.5rem 0.5rem 0.5rem 0',
+    cursor: 'pointer',
   },
   formLabel: {
     typography: 'body2',
     color: 'grey.900',
+    cursor: 'pointer',
   },
   backButton: {
     textDecoration: 'underline',
@@ -68,20 +70,20 @@ const styles = {
 }
 
 const CategoryFacet = (props: CategoryFacetProps) => {
-  const { t } = useTranslation('common')
   const {
     initialItemsToShow = 5,
     categoryFacet,
     onCategoryChildrenSelection,
     onBackButtonClick,
   } = props
-  const childrenLength = categoryFacet.children.length
+  const { t } = useTranslation('common')
+  const childrenLength = categoryFacet.childrenCategories.length
   const isViewMoreVisible = childrenLength > initialItemsToShow
 
   const [isViewMoreButtonVisible, setIsViewMoreButtonVisible] = useState<boolean>(isViewMoreVisible)
   const [filteredValues, setFilteredValues] = useState<FacetValue[]>([])
 
-  const handleCategoryLink = (categoryCode: string | undefined | null) => {
+  const handleCategoryLink = (categoryCode: string) => {
     onCategoryChildrenSelection(categoryCode)
   }
 
@@ -91,7 +93,7 @@ const CategoryFacet = (props: CategoryFacetProps) => {
 
   useEffect(() => {
     const noOfItemsToShow = isViewMoreButtonVisible ? initialItemsToShow : childrenLength
-    const sliced = categoryFacet.children?.slice(0, noOfItemsToShow) || []
+    const sliced = categoryFacet.childrenCategories?.slice(0, noOfItemsToShow) || []
 
     setFilteredValues([...sliced])
   }, [isViewMoreButtonVisible])
@@ -105,15 +107,16 @@ const CategoryFacet = (props: CategoryFacetProps) => {
         {filteredValues.map((child) => (
           <Link
             key={child.value}
-            onClick={() => handleCategoryLink(child.value)}
-            sx={{ ...styles.childrenLink }}
+            underline="none"
+            variant="body2"
+            color="text.primary"
+            sx={styles.link}
+            onClick={() => handleCategoryLink(child.value as string)}
           >
-            <MuiLink underline="none" variant="body2" color="text.primary" sx={styles.link}>
-              {child?.label}
-              <FormLabel data-testid="count" aria-label={t('count')} sx={{ ...styles.formLabel }}>
-                ({child?.count})
-              </FormLabel>
-            </MuiLink>
+            {child?.label}
+            <FormLabel data-testid="count" aria-label={t('count')} sx={{ ...styles.formLabel }}>
+              ({child?.count})
+            </FormLabel>
           </Link>
         ))}
         {isViewMoreButtonVisible && (
