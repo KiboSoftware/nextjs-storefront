@@ -23,7 +23,6 @@ interface BillingAddressDetailsViewProps {
 
 const BillingAddressDetailsView = (props: BillingAddressDetailsViewProps) => {
   const { title, radio = false } = props
-  const { t } = useTranslation('checkout')
 
   return (
     <Box maxWidth={168}>
