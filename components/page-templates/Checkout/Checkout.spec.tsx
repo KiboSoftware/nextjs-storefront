@@ -3,7 +3,7 @@ import React, { ReactNode } from 'react'
 import { composeStories } from '@storybook/testing-react'
 import { screen } from '@testing-library/react'
 
-import { renderWithQueryClient } from '../../../test-utils'
+import { renderWithQueryClient } from '../../../__test__/utils/renderWithQueryClient'
 import * as stories from './Checkout.stories'
 
 const KiboStepperMock = ({ children }: { children: ReactNode }) => (

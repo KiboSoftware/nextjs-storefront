@@ -4,8 +4,8 @@ import { composeStories } from '@storybook/testing-react'
 import { screen, act } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 
-import * as stories from '../../../../../components/checkout/Checkout/Checkout.stories'
-import { renderWithQueryClient } from '../../../../../test-utils'
+import * as stories from '../../../../../components/page-templates/Checkout/Checkout.stories'
+import { renderWithQueryClient } from '../../../../utils/renderWithQueryClient'
 
 const { Common } = composeStories(stories)
 

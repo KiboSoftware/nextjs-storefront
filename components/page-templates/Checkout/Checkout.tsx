@@ -49,8 +49,8 @@ const Checkout = () => {
   }
 
   // Call Mutations
-  const handlePerosnalDetails = (personalDetails: PersonalDetails) => {
-    const { firstName, lastNameOrSurname, email } = personalDetails
+  const handlePerosnalDetails = (userEnteredPersonalDetails: PersonalDetails) => {
+    const { firstName, lastNameOrSurname, email } = userEnteredPersonalDetails
     const personalInfo: PersonalInfo = {
       orderId: checkoutInfo?.id as string,
       updateMode: 'ApplyToOriginal',
