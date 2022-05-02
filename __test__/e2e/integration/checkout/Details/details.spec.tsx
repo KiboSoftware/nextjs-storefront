@@ -94,22 +94,22 @@ describe('[components] Details', () => {
     expect(passwordInput).toBeVisible()
   })
 
-  //   it('email should display required field error when user focus out (blur event) the email field', async () => {
-  //     setup()
+  it('email should display required field error when user focus out (blur event) the email field', async () => {
+    setup()
 
-  //     let emailError = screen.queryByText(/this field is required/i)
-  //     expect(emailError).not.toBeInTheDocument()
+    let emailError = screen.queryByText(/this field is required/i)
+    expect(emailError).not.toBeInTheDocument()
 
-  //     const emailInput = screen.getByRole('textbox', { name: /your-email/i })
+    const emailInput = screen.getByRole('textbox', { name: /your-email/i })
 
-  //     await act(async () => {
-  //       emailInput.focus()
-  //       fireEvent.blur(emailInput, { target: { value: '' } })
-  //     })
+    await act(async () => {
+      emailInput.focus()
+      fireEvent.blur(emailInput, { target: { value: '' } })
+    })
 
-  //     emailError = screen.getByText(/this field is required/i)
-  //     expect(emailError).toBeVisible()
-  //   })
+    emailError = screen.getByText(/this field is required/i)
+    expect(emailError).toBeVisible()
+  })
 
   it('first name should display required field error when user focus out (blur event) the first name field', async () => {
     setup()

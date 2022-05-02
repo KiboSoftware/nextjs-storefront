@@ -36,9 +36,23 @@ describe('[components] Checkout integration', () => {
   it('should activate next step(shipping) when user enters valid input and clicks on "Go to Shipping" button', async () => {
     setup()
 
+    const email = 'Test@gmail.cm'
+    const firstName = 'FirstName'
+    const lastName = 'LastName'
+    const password = 'TestSecret@1'
+
     const details: HTMLElement | null = screen.getByTestId('checkout-details')
-    const emailInput = screen.getByRole('textbox', { name: /your-email/i })
     const shipping = screen.queryByTestId('checkout-shipping')
+
+    const iWantToCreateAccount = screen.getByRole('checkbox', { name: /showaccountfields/i })
+    await act(async () => {
+      userEvent.click(iWantToCreateAccount)
+    })
+
+    const emailInput = screen.getByRole('textbox', { name: /your-email/i })
+    const firstNameInput = screen.getByRole('textbox', { name: /first-name/i })
+    const lastNameInput = screen.getByRole('textbox', { name: /last-name/i })
+    const passwordInput = screen.getByRole('textbox', { name: /password/i })
 
     expect(details).toBeVisible()
     expect(shipping).not.toBeInTheDocument()
@@ -47,10 +61,23 @@ describe('[components] Checkout integration', () => {
 
     await act(async () => {
       userEvent.clear(emailInput)
-      userEvent.type(emailInput, 'test@gmail.com')
+      userEvent.type(emailInput, email)
+
+      userEvent.clear(firstNameInput)
+      userEvent.type(firstNameInput, firstName)
+
+      userEvent.clear(lastNameInput)
+      userEvent.type(lastNameInput, lastName)
+
+      userEvent.clear(passwordInput)
+      userEvent.type(passwordInput, password)
+
       userEvent.click(nextButton)
     })
 
-    expect(emailInput).toHaveValue('test@gmail.com')
+    expect(emailInput).toHaveValue(email)
+    expect(firstNameInput).toHaveValue(firstName)
+    expect(lastNameInput).toHaveValue(lastName)
+    expect(passwordInput).toHaveValue(password)
   })
 })
