@@ -1,4 +1,4 @@
-import React, { ReactNode } from 'react'
+import React from 'react'
 
 import { composeStories } from '@storybook/testing-react'
 import { screen, act } from '@testing-library/react'

@@ -34,6 +34,7 @@ export interface PersonalDetails {
   password: string
 }
 interface DetailsProps {
+  setAutoFocus?: boolean
   personalDetails: PersonalDetails
   onPersonalDetailsSave: (personalDetails: PersonalDetails) => void
 }
@@ -56,7 +57,7 @@ const buttonStyle = {
 } as SxProps<Theme> | undefined
 
 const Details = forwardRef<DetailsHandler, DetailsProps>((props, ref) => {
-  const { personalDetails, onPersonalDetailsSave } = props
+  const { setAutoFocus = true, personalDetails, onPersonalDetailsSave } = props
   const passwordValidationRef = useRef<PasswordValidationHandler | null>(null)
 
   const { t } = useTranslation('common')
@@ -144,7 +145,7 @@ const Details = forwardRef<DetailsHandler, DetailsProps>((props, ref) => {
               value={field.value}
               label={t('your-email')}
               required
-              autoFocus={true}
+              autoFocus={setAutoFocus}
               sx={{ ...commonStyle }}
               onBlur={field.onBlur}
               onChange={(_name, value) => field.onChange(value)}
