@@ -49,7 +49,7 @@ const Checkout = () => {
   }
 
   // Call Mutations
-  const handlePerosnalDetails = async (personalDetails: PersonalDetails) => {
+  const handlePerosnalDetails = (personalDetails: PersonalDetails) => {
     const { firstName, lastNameOrSurname, email } = personalDetails
     const personalInfo: PersonalInfo = {
       orderId: checkoutInfo?.id as string,
@@ -73,7 +73,7 @@ const Checkout = () => {
       },
     }
 
-    await setPersonalInfoMutation.mutate(personalInfo)
+    setPersonalInfoMutation.mutate(personalInfo)
     setActiveStep(activeStep + 1)
   }
 

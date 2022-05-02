@@ -46,7 +46,7 @@ const PasswordValidation = forwardRef<PasswordValidationHandle, PasswordValidati
           <CheckCircleIcon
             fontSize="small"
             color={isHavingAtLeastEightCharacters ? 'primary' : 'error'}
-            data-testId="isHavingAtLeastEightCharacters"
+            data-testid="isHavingAtLeastEightCharacters"
           />
           {t('at-least-eight-characters-long')}
         </Stack>
@@ -54,6 +54,7 @@ const PasswordValidation = forwardRef<PasswordValidationHandle, PasswordValidati
           <CheckCircleIcon
             fontSize="small"
             color={isHavingAtLeastOneNumber ? 'primary' : 'error'}
+            data-testid="isHavingAtLeastOneNumber"
           />
           {t('at-least-one-number')}
         </Stack>
@@ -61,6 +62,7 @@ const PasswordValidation = forwardRef<PasswordValidationHandle, PasswordValidati
           <CheckCircleIcon
             fontSize="small"
             color={isHavingAtLeastOneCapitalLetter ? 'primary' : 'error'}
+            data-testid="isHavingAtLeastOneCapitalLetter"
           />
           {t('at-least-one-capital-letter')}
         </Stack>
@@ -68,6 +70,7 @@ const PasswordValidation = forwardRef<PasswordValidationHandle, PasswordValidati
           <CheckCircleIcon
             fontSize="small"
             color={isHavingAtLeastOneSpecialCharacter ? 'primary' : 'error'}
+            data-testid="isHavingAtLeastOneSpecialCharacter"
           />
           {t('at-least-one-special-character')}
         </Stack>

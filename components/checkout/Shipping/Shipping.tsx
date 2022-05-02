@@ -13,7 +13,7 @@ const Shipping = forwardRef<ShippingHandler, any>((_props, ref) => {
   }))
 
   return (
-    <div>
+    <div data-testid="checkout-shipping">
       <b>Shipping</b>
     </div>
   )

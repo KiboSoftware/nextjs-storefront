@@ -22,7 +22,7 @@ const KiboStepper = (props: StepperProps) => {
   return (
     <Stack sx={{ width: '100%', maxWidth: '872px' }} gap={3}>
       <Box sx={{ width: '100%' }}>
-        <Stepper nonLinear activeStep={activeStep} connector={null}>
+        <Stepper nonLinear activeStep={activeStep} connector={null} data-testid="kibo-stepper">
           {steps.map((label, index) => (
             <Step key={label} sx={{ flex: 1 }}>
               <StepButton icon={<></>}>

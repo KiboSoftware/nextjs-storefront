@@ -92,13 +92,14 @@ const Details = forwardRef<DetailsHandler, DetailsProps>((props, ref) => {
     shouldFocusError: true,
   })
 
-  const password = watch(['password']).join('')
+  const useEnteredPassword = watch(['password']).join('')
   const showAccountFields = watch(['showAccountFields']).join('')
 
   const validateForm = () => {
     trigger()
 
     let isPasswordValid = true
+
     if (showAccountFields === 'true')
       isPasswordValid = passwordValidationRef.current?.validatePassword() as boolean
 
@@ -118,7 +119,7 @@ const Details = forwardRef<DetailsHandler, DetailsProps>((props, ref) => {
   }))
 
   return (
-    <Stack gap={2}>
+    <Stack gap={2} data-testid="checkout-details">
       <Button
         variant="contained"
         color="primary"
@@ -260,7 +261,7 @@ const Details = forwardRef<DetailsHandler, DetailsProps>((props, ref) => {
             )}
           />
 
-          <PasswordValidation ref={passwordValidationRef} password={password} />
+          <PasswordValidation ref={passwordValidationRef} password={useEnteredPassword} />
         </FormControl>
       )}
     </Stack>

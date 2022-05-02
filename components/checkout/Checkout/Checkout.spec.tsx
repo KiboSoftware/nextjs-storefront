@@ -9,10 +9,10 @@ import * as stories from './Checkout.stories'
 const KiboStepperMock = ({ children }: { children: ReactNode }) => (
   <div data-testid="kibo-stepper-mock">{children}</div>
 )
-const DetailsMock = () => <div data-testid="details-mock" />
-const ShippingMock = () => <div ref={undefined} data-testid="shipping-mock" />
-const PaymentMock = () => <div ref={undefined} data-testid="payment-mock" />
-const ReviewMock = () => <div ref={undefined} data-testid="review-mock" />
+const DetailsMock = () => <div data-testid="checkout-details-mock" />
+const ShippingMock = () => <div ref={undefined} data-testid="checkout-shipping-mock" />
+const PaymentMock = () => <div ref={undefined} data-testid="checkout-payment-mock" />
+const ReviewMock = () => <div ref={undefined} data-testid="checkout-review-mock" />
 
 jest.mock('../KiboStepper/KiboStepper', () => KiboStepperMock)
 jest.mock('../Details/Details', () => DetailsMock)
@@ -31,15 +31,22 @@ describe('[components] Checkout', () => {
     setup()
 
     const kiboStepper = screen.getByTestId('kibo-stepper-mock')
-    const details = screen.getByTestId('details-mock')
-    const shipping = screen.getByTestId('shipping-mock')
-    const payment = screen.getByTestId('payment-mock')
-    const review = screen.getByTestId('review-mock')
+    const details = screen.getByTestId('checkout-details-mock')
+    const shipping = screen.getByTestId('checkout-shipping-mock')
+    const payment = screen.getByTestId('checkout-payment-mock')
+    const review = screen.getByTestId('checkout-review-mock')
+
+    const nextButton = screen.getByRole('button', { name: /go-to-shipping/i })
+    const backButton = screen.getByRole('button', { name: /back/i })
 
     expect(kiboStepper).toBeVisible()
     expect(details).toBeVisible()
     expect(shipping).toBeVisible()
     expect(payment).toBeVisible()
     expect(review).toBeVisible()
+
+    expect(nextButton).toBeVisible()
+    expect(backButton).toBeVisible()
+    expect(backButton).toBeDisabled()
   })
 })
