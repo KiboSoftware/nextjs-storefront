@@ -13,12 +13,12 @@ const KiboStepperMock = ({ children }: { children: ReactNode }) => (
 
 // Mock
 const hooksMock = {
-  useLoadCheckout: () => ({
+  useLoadCheckout: (_checkoutId: string) => ({
     data: mockCheckout,
     isLoading: false,
     isSuccess: true,
   }),
-  useLoadFromCart: () => ({
+  useLoadFromCart: (_cartId: string) => ({
     data: mockCheckout,
     isLoading: false,
     isSuccess: true,
