@@ -8,6 +8,7 @@ import Details from './Details'
 export default {
   title: 'Checkout/Details',
   component: Details,
+  argTypes: { onPersonalDetailsSave: { action: 'clicked' } },
 } as ComponentMeta<typeof Details>
 
 const Template: ComponentStory<typeof Details> = (args) => <Details {...args} />
@@ -16,6 +17,7 @@ const Template: ComponentStory<typeof Details> = (args) => <Details {...args} />
 export const Common = Template.bind({})
 Common.args = {
   ref: undefined,
+  setAutoFocus: false,
   personalDetails: {
     email: '',
     showAccountFields: false,
@@ -23,17 +25,24 @@ Common.args = {
     lastNameOrSurname: '',
     password: '',
   },
+  onPersonalDetailsSave: () => {
+    /*parent will handle onPersonalDetailsSave*/
+  },
 }
 
 // With account fields
 export const withAccountCreation = Template.bind({})
 withAccountCreation.args = {
   ref: undefined,
+  setAutoFocus: false,
   personalDetails: {
     email: '',
     showAccountFields: true,
     firstName: '',
     lastNameOrSurname: '',
     password: '',
+  },
+  onPersonalDetailsSave: () => {
+    /*parent will handle onPersonalDetailsSave*/
   },
 }

@@ -10,10 +10,17 @@ const queryClientHandler = (error: unknown) => {
   console.error(`id: ${id}, title: ${title}, status: ${status}`)
 }
 
-export const queryClient = new QueryClient({
-  defaultOptions: {
-    queries: {
-      onError: queryClientHandler,
+export const generateQueryClient = (): QueryClient => {
+  return new QueryClient({
+    defaultOptions: {
+      queries: {
+        onError: queryClientHandler,
+      },
+      mutations: {
+        onError: queryClientHandler,
+      },
     },
-  },
-})
+  })
+}
+
+export const queryClient = generateQueryClient()

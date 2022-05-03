@@ -8,7 +8,7 @@ import userEvent from '@testing-library/user-event'
 
 import * as stories from '../../../../../components/checkout/Details/Details.stories'
 
-const { Common, withAccountCreation } = composeStories(stories)
+const { Common } = composeStories(stories)
 
 describe('[components] Details', () => {
   const setup = (args = Common.args) => {
