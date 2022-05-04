@@ -30,6 +30,8 @@ module.exports = {
     '<rootDir>/node_modules/',
     '<rootDir>/.next/',
     '<rootDir>/__test__/integration/',
+    '<rootDir>/__test__/utils/',
+    '<rootDir>/react-query/',
   ],
   testEnvironment: 'jsdom',
   transform: {
