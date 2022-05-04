@@ -13,10 +13,6 @@ import type { CartItem, CrProductOption } from '@/lib/gql/types'
 export default {
   title: 'Common/ProductItem',
   component: ProductItem,
-  argTypes: {
-    size: { control: 'select' },
-    fontWeight: { control: 'radio' },
-  },
 } as ComponentMeta<typeof ProductItem>
 
 const cartItem: CartItem = {
@@ -108,4 +104,15 @@ export const WithoutDetailOption = TemplateWithQtyLabel.bind({})
 Common.args.options = []
 WithoutDetailOption.args = {
   ...Common.args,
+}
+
+export const WithChageStoreOption = TemplateWithQtyLabel.bind({})
+WithChageStoreOption.args = {
+  ...WithQtyLabel.args,
+  isPickupItem: true,
+  itemPurchaseLocation: 'Down Store',
+  estimatedPickupDate: 'Mon 12/20',
+  handleStoreLocatorClick: () => {
+    console.log('change store clicked')
+  },
 }

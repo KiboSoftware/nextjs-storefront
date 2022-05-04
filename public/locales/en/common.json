@@ -78,5 +78,8 @@
   "i-want-to-create-an-account": "I want to create an account",
 
   "go-to-shipping": "Go to Shipping",
-  "go-back": "Go Back"
+  "go-back": "Go Back",
+
+  "estimated-pickup": "Est. Pickup ",
+  "change-store": "Change Store"
 }
