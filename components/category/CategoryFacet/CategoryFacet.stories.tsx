@@ -2,7 +2,7 @@ import React from 'react'
 
 import { ComponentStory, ComponentMeta } from '@storybook/react'
 
-import { categoryFacet } from '../../../__mocks__/categoryFacetDataMock'
+import { categoryFacet } from '../../../__mocks__/stories/categoryFacetDataMock'
 import CategoryFacet from './CategoryFacet'
 
 export default {

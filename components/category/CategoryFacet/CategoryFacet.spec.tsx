@@ -10,42 +10,37 @@ import * as stories from './CategoryFacet.stories' // import all stories from th
 const { CategoryFacetDesktop } = composeStories(stories)
 
 describe('[component] - CategoryFacet', () => {
-  const setup = (categoryFacetMock = CategoryFacetDesktop.args?.categoryFacet) => {
+  const setup = () => {
     const onCategoryChildrenSelectionMock = jest.fn()
     const onBackButtonClickMock = jest.fn()
     render(
       <CategoryFacetDesktop
-        categoryFacet={categoryFacetMock}
         onCategoryChildrenSelection={onCategoryChildrenSelectionMock}
         onBackButtonClick={onBackButtonClickMock}
       />
     )
-    return { onCategoryChildrenSelectionMock, onBackButtonClickMock, categoryFacetMock }
+    return { onCategoryChildrenSelectionMock, onBackButtonClickMock }
   }
 
   it('should render component', () => {
-    const { categoryFacetMock } = setup({
-      header: CategoryFacetDesktop.args?.categoryFacet?.header || '',
-      childrenCategories:
-        CategoryFacetDesktop.args?.categoryFacet?.childrenCategories?.slice(0, 2) || [],
-    })
-
-    const firstChildrenCategoryFromMock =
-      CategoryFacetDesktop?.args?.categoryFacet?.childrenCategories[0]?.label || ''
-    const secondChildrenCategoryFromMock =
-      CategoryFacetDesktop?.args?.categoryFacet?.childrenCategories[1]?.label || ''
+    setup()
 
     const heading = screen.getByRole('heading')
     const backButton = screen.getByRole('button', { name: /back/ })
-    const firstChildrenCategory = screen.getByText(firstChildrenCategoryFromMock)
-    const secondChildrenCategory = screen.getByText(secondChildrenCategoryFromMock)
-    const childrenCategories = screen.getAllByTestId('count')
 
+    const childrenCategoriesLabels =
+      CategoryFacetDesktop?.args?.categoryFacet?.childrenCategories.map(
+        (category) => category.label
+      ) || []
+
+    const childrenCategoriesLabelsRegex = new RegExp(childrenCategoriesLabels.join('|'), 'gi')
+    const childrenCategoriesLabelsList = screen.getAllByText(childrenCategoriesLabelsRegex)
+
+    expect(childrenCategoriesLabelsList).toHaveLength(
+      CategoryFacetDesktop.args?.initialItemsToShow || 0
+    )
     expect(heading).toBeVisible()
     expect(backButton).toBeInTheDocument()
-    expect(firstChildrenCategory).toBeInTheDocument()
-    expect(secondChildrenCategory).toBeInTheDocument()
-    expect(childrenCategories.length).toEqual(categoryFacetMock?.childrenCategories.length)
   })
 
   it('should call onCategoryChildSelection when user selects specific category', () => {
