@@ -10,6 +10,7 @@ export type ProductItemListProps = {
 
 const ProductItemList = (props: ProductItemListProps) => {
   const { items } = props
+
   return (
     <Stack
       direction="column"

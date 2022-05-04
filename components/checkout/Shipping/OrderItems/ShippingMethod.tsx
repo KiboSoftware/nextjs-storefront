@@ -1,6 +1,7 @@
 import { ReactNode } from 'react'
 
 import { Typography, Box, MenuItem, Divider } from '@mui/material'
+import { useTranslation } from 'next-i18next'
 
 import KiboSelect from '@/components/common/KiboSelect/KiboSelect'
 import ProductItemList from '@/components/common/ProductItemList/ProductItemList'
@@ -25,22 +26,21 @@ export type ShippingMethodProps = {
 
 const ShippingMethod = (props: ShippingMethodProps) => {
   const { shipItems, pickupItems, orderShipmentMethods, onChange } = props
+  const { t } = useTranslation('common')
 
   const styles = {
     shippingType: {
-      variant: 'body2',
+      variant: 'subtitle1',
       component: 'span',
       fontWeight: '600',
-      fontSize: 18,
       color: 'text.primary',
-      fontFamily: 'theme.typography.fontFamily',
     },
   }
 
   const ShipItemList = () => (
     <Box data-testid="ship-items">
-      <Typography sx={styles.shippingType} px={2}>
-        Shipping to Home
+      <Typography sx={styles.shippingType} px={2} data-testid="ship-title">
+        {t('ship')}
       </Typography>
       <Box px={2}>
         <KiboSelect
@@ -48,7 +48,6 @@ const ShippingMethod = (props: ShippingMethodProps) => {
           onChange={onChange}
           placeholder="Select Shipping Option"
         >
-          <MenuItem value="">Select Shipping Option</MenuItem>
           {orderShipmentMethods?.map((item: ShippingRate) => {
             return (
               <MenuItem key={item.shippingMethodCode} value={`${item.shippingMethodCode}`}>
@@ -68,11 +67,11 @@ const ShippingMethod = (props: ShippingMethodProps) => {
     <Box data-testid="pickup-items">
       <Divider orientation="horizontal" flexItem />
       <Box pt={2} pb={3}>
-        <Typography sx={styles.shippingType} px={2}>
-          Pick up in Store
+        <Typography sx={styles.shippingType} px={2} data-testid="pickup-title">
+          {t('pickup')}
         </Typography>
       </Box>
-      <Box px={2}>
+      <Box>
         <ProductItemList items={pickupItems} />
       </Box>
     </Box>

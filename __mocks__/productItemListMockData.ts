@@ -49,6 +49,8 @@ export const checkout = {
       total: 49,
       subtotal: 49,
       discountTotal: 0,
+      expectedDeliveryDate: 'Mon 12/20',
+      purchaseLocation: 'TriptiShop',
       quantity: 7,
       product: {
         productCode: 'MS-BTL-004',
@@ -267,6 +269,10 @@ export const checkout = {
 
 export const orderItems: CrOrderItem[] = checkout.items
 
+const getExpectedDeliveryDate = (item: CrOrderItem) => {
+  return item.expectedDeliveryDate ? item.expectedDeliveryDate : ''
+}
+
 const getProductDetails = (item: CrOrderItem) => {
   return {
     image: item.product?.imageUrl || DefaultImage,
@@ -303,7 +309,12 @@ export const shipItems = checkout.items
 export const pickupItems = checkout.items
   .filter((item) => item.fulfillmentMethod === 'Pickup')
   .map((item) => {
-    return getProductDetails(item)
+    return {
+      ...getProductDetails(item),
+      isPickupItem: true,
+      estimatedPickupDate: getExpectedDeliveryDate(item),
+      itemPurchaseLocation: item.purchaseLocation,
+    }
   })
 
 export const getShippingRates = {

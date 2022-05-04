@@ -112,15 +112,6 @@ const ImageGallery = (props: ImageGalleryProps) => {
 
   const maxHeight = thumbnailDisplayCount * ThumbnailDimensionInPx + thumbnailDisplayCount * 12 + 60
 
-  const onImageError = (
-    event: SyntheticEvent<HTMLImageElement, Event> & {
-      target: HTMLImageElement
-    }
-  ) => {
-    const { target } = event
-    target.src = placeholderImageUrl
-  }
-
   return (
     <Box
       id="gestureZone"
@@ -198,7 +189,6 @@ const ImageGallery = (props: ImageGalleryProps) => {
                       alt={image?.altText as string}
                       layout="fill"
                       objectFit="contain"
-                      onError={onImageError}
                     />
                   </Box>
                 )
@@ -294,7 +284,6 @@ const ImageGallery = (props: ImageGalleryProps) => {
                       layout="fill"
                       objectFit="contain"
                       data-testid={`selected-image`}
-                      onError={onImageError}
                     />
                   </Box>
                 </TransformComponent>

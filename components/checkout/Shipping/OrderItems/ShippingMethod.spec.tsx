@@ -44,8 +44,8 @@ describe('[component] - ShippingMethod', () => {
   it('should render component', () => {
     setup()
     const shippingMethod = screen.getByTestId('shipping-method')
-    const shipItemTitle = screen.getByText(/Shipping to Home/i)
-    const pickupItemTitle = screen.getByText(/Pick up in Store/i)
+    const shipItemTitle = screen.getByTestId('ship-title')
+    const pickupItemTitle = screen.getByTestId('pickup-title')
     const kiboSelect = screen.getByTestId('kibo-select-component')
     const productItems = screen.getAllByTestId('product-item-component')
 
@@ -65,10 +65,10 @@ describe('[component] - ShippingMethod', () => {
     }
     setup(params)
 
-    const shipItemTitle = screen.getByText(/Shipping to Home/i)
+    const shipItemTitle = screen.getByTestId('ship-title')
     expect(shipItemTitle).toBeInTheDocument()
 
-    const pickupItemTitle = screen.queryByText(/Pick up in Store/i)
+    const pickupItemTitle = screen.queryByTestId('pickup-title')
     expect(pickupItemTitle).not.toBeInTheDocument()
   })
 
@@ -81,10 +81,10 @@ describe('[component] - ShippingMethod', () => {
     }
     setup(params)
 
-    const shipItemTitle = screen.queryByText(/Shipping to Home/i)
+    const shipItemTitle = screen.queryByTestId('ship-title')
     expect(shipItemTitle).not.toBeInTheDocument()
 
-    const pickupItemTitle = screen.getByText(/Pick up in Store/i)
+    const pickupItemTitle = screen.getByTestId('pickup-title')
     expect(pickupItemTitle).toBeInTheDocument()
   })
 
@@ -97,10 +97,10 @@ describe('[component] - ShippingMethod', () => {
     }
     setup(params)
 
-    const shipItemTitle = screen.queryByText(/Shipping to Home/i)
+    const shipItemTitle = screen.getByTestId('ship-title')
     expect(shipItemTitle).toBeInTheDocument()
 
-    const pickupItemTitle = screen.getByText(/Pick up in Store/i)
+    const pickupItemTitle = screen.getByTestId('pickup-title')
     expect(pickupItemTitle).toBeInTheDocument()
   })
 })

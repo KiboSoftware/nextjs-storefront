@@ -11,6 +11,9 @@ export default {
   title: 'checkout/checkout/Shipping/OrderItems',
   component: ShippingMethod,
   argTypes: { onChange: { action: 'onChange' } },
+  parameters: {
+    layout: 'fullscreen',
+  },
 } as ComponentMeta<typeof ShippingMethod>
 
 // Default Line Item

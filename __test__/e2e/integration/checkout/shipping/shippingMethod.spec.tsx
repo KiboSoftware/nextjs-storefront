@@ -43,13 +43,13 @@ describe('[component] - ShippingMethod', () => {
     const shippingMethod = screen.getByTestId('shipping-method')
     expect(shippingMethod).toBeInTheDocument()
 
-    const shipItemTitle = screen.getByText(/Shipping to Home/i)
+    const shipItemTitle = screen.getByTestId('ship-title')
     expect(shipItemTitle).toBeInTheDocument()
 
-    const pickupItemTitle = screen.getByText(/Pick up in Store/i)
+    const pickupItemTitle = screen.queryByTestId('pickup-title')
     expect(pickupItemTitle).toBeInTheDocument()
 
-    const kiboSelectBtn = screen.getByRole('button')
+    const kiboSelectBtn = screen.getByRole('button', { name: 'Select Shipping Option' })
     expect(kiboSelectBtn).toBeInTheDocument()
     expect(kiboSelectBtn).toHaveTextContent('Select Shipping Option')
   })
@@ -94,7 +94,7 @@ describe('[component] - ShippingMethod', () => {
     }
 
     setup(params)
-    const kiboSelectBtn = screen.queryByRole('button')
+    const kiboSelectBtn = screen.queryByRole('button', { name: 'Select Shipping Option' })
     expect(kiboSelectBtn).not.toBeInTheDocument()
   })
 

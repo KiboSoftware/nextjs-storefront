@@ -21,71 +21,31 @@ describe('[component] - ProductItem', () => {
     setup()
 
     const productDetails = screen.getByTestId('productDetails')
-    const qtyElement = screen.getByText(/Qty/i)
+    const qty = screen.getByText(/Qty/i)
     const name = screen.getByRole('heading')
     const image = screen.getByRole('img')
-
-    expect(productDetails).toBeVisible()
-    expect(qtyElement).toBeInTheDocument()
-    expect(name).toBeVisible()
-    expect(image).toHaveAttribute('alt', Common.args?.name)
-  })
-
-  it('should render mock component', () => {
-    // arrange
-    setup()
-
-    // act
     const productOptionList = screen.getByTestId('product-option-list-component')
     const price = screen.getByTestId('price-component')
 
-    // // assert
+    expect(productDetails).toBeVisible()
+    expect(qty).toBeInTheDocument()
+    expect(name).toBeVisible()
+    expect(image).toHaveAttribute('alt', Common.args?.name)
     expect(productOptionList).toBeVisible()
     expect(price).toBeVisible()
   })
-})
 
-describe('[component] - ProductItem with Price Label', () => {
-  const setup = () => {
-    render(<WithPriceLabel {...WithPriceLabel.args} />)
-  }
+  describe('[component] - ProductItem without any label', () => {
+    const setup = () => {
+      render(<WithoutDetailOption {...WithoutDetailOption.args} />)
+    }
 
-  it('should render component with price label inside details when price is provided', () => {
-    setup()
+    it('should not show details when no product label(price,qty) or options is present', () => {
+      setup()
 
-    const productDetails = screen.getByTestId('productDetails')
-    const priceElement = screen.getByText(/price/i)
+      const detailsElement = screen.queryByText(/details/i)
 
-    expect(productDetails).toBeVisible()
-    expect(priceElement).toBeVisible()
-  })
-})
-
-describe('[component] - ProductItem with Qty Label', () => {
-  const setup = () => {
-    render(<WithQtyLabel {...WithQtyLabel.args} />)
-  }
-
-  it('should render component with Qty label inside details when qty is provided', () => {
-    setup()
-
-    const productDetails = screen.getAllByTestId('productLabel')
-    const qtyElement = screen.getByText(/qty/i)
-
-    expect(productDetails).toHaveLength(2)
-    expect(qtyElement).toBeVisible()
-  })
-})
-describe('[component] - ProductItem without any label', () => {
-  const setup = () => {
-    render(<WithoutDetailOption {...WithoutDetailOption.args} />)
-  }
-
-  it('should not show details when no product label or oprions is present', () => {
-    setup()
-
-    const detailsElement = screen.queryByText(/details/i)
-
-    expect(detailsElement).not.toBeInTheDocument()
+      expect(detailsElement).not.toBeInTheDocument()
+    })
   })
 })

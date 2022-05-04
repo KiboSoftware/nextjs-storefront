@@ -80,5 +80,8 @@
   "go-to-shipping": "Go to Shipping",
   "go-back": "Go Back",
   "suggestions": "Suggestions",
-  "categories": "Categories"
+  "categories": "Categories",
+
+  "estimated-pickup": "Est. Pickup ",
+  "change-store": "Change Store"
 }
