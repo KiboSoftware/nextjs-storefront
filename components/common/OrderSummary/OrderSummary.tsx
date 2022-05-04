@@ -3,7 +3,7 @@
 import InfoIcon from '@mui/icons-material/Info'
 import { Card, Typography, Box, CardActionArea, CardContent, Divider } from '@mui/material'
 
-interface OrderTotalProps {
+interface OrderSummaryProps {
   subTotal?: string
   orderTotal?: string
   standardShippingAmount: string
@@ -27,12 +27,12 @@ const styles = {
     justifyContent: 'space-between',
   },
   headerStyle: {
-    lineHeight: '	1.5rem',
+    lineHeight: '1.5rem',
     textAlign: 'left',
   },
 }
 
-const OrderSummary = (props: OrderTotalProps) => {
+const OrderSummary = (props: OrderSummaryProps) => {
   const {
     subTotal,
     numberOfItems,
@@ -42,10 +42,17 @@ const OrderSummary = (props: OrderTotalProps) => {
     nameLabel,
     cartTotalLabel,
     standardShippingLabel,
-    estimatedTaxLabel: estimatedTaxLabel,
-    orderTotalLabel: orderTotalLabel,
+    estimatedTaxLabel,
+    orderTotalLabel,
   } = props
 
+  const Typo = ({ props }: any) => {
+    return (
+      <>
+        <Typography sx={{ fontSize: (theme: any) => theme.typography.h5 }}>{props}</Typography>
+      </>
+    )
+  }
   return (
     <Card sx={{ bgcolor: 'grey.100', maxWidth: '26.75rem', width: '100%' }}>
       <CardActionArea>
@@ -54,8 +61,8 @@ const OrderSummary = (props: OrderTotalProps) => {
             <Typography
               sx={{
                 fontSize: (theme: any) => theme.typography.h3,
-                color: (theme: any) => theme.palette.text.primary,
-                fontWeight: 'Bold',
+                color: 'text.primary',
+                fontWeight: 'bold',
               }}
             >
               {nameLabel}
@@ -68,39 +75,30 @@ const OrderSummary = (props: OrderTotalProps) => {
             <Typography sx={{ fontSize: (theme: any) => theme.typography.h5 }}>
               {cartTotalLabel} of ({numberOfItems})
             </Typography>
-            <Typography sx={{ fontSize: (theme: any) => theme.typography.h5 }}>
-              {' '}
-              {subTotal}
-            </Typography>
+            <Typo props={subTotal} />
           </Box>
           <br />
           <Box sx={styles.boxStyle}>
-            <Typography sx={{ fontSize: (theme: any) => theme.typography.h5 }}>
-              {standardShippingLabel}
-            </Typography>
-            <Typography sx={{ fontSize: (theme: any) => theme.typography.h5 }}>
-              {standardShippingAmount}
-            </Typography>
+            <Typo props={standardShippingLabel} />
+            <Typo props={standardShippingAmount} />
           </Box>
           <br />
           <Box sx={styles.boxStyle}>
             <Typography sx={{ fontSize: (theme: any) => theme.typography.h5 }}>
               {estimatedTaxLabel}
-              <InfoIcon sx={{ width: '0.6875rem', height: '0.6875rem' }} />
+              <InfoIcon sx={{ fontSize: (theme: any) => theme.typography.h5 }} />
             </Typography>
-            <Typography sx={{ fontSize: (theme: any) => theme.typography.h5 }}>
-              {estimatedTaxAmout}
-            </Typography>
+            <Typo props={estimatedTaxAmout} />
           </Box>
           <br />
           <Divider variant="middle" />
 
           <br />
           <Box sx={styles.boxStyle}>
-            <Typography sx={{ fontSize: (theme: any) => theme.typography.h5, fontWeight: 'Bold' }}>
+            <Typography sx={{ fontSize: (theme: any) => theme.typography.h5, fontWeight: 'bold' }}>
               {orderTotalLabel}
             </Typography>
-            <Typography sx={{ fontSize: (theme: any) => theme.typography.h5, fontWeight: 'Bold' }}>
+            <Typography sx={{ fontSize: (theme: any) => theme.typography.h5, fontWeight: 'bold' }}>
               {orderTotal}
             </Typography>
           </Box>

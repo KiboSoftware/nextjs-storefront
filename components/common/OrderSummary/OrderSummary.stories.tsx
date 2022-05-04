@@ -30,7 +30,6 @@ const styles = {
 
 export default {
   title: 'Common/OrderSummary',
-  component: OrderSummary,
   argTypes: {
     backgroundColor: { control: 'color' },
   },
