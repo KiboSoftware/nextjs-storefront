@@ -18,6 +18,7 @@ import { useTranslation } from 'next-i18next'
 
 import { useUpdateRoutes } from '../../../hooks/useUpdateRoutes'
 import SearchBar from '@/components/common/SearchBar/SearchBar'
+import { useDebounce } from '@/hooks/useDebounce/useDebounce'
 
 import type { SearchSuggestionResult } from '@/lib/gql/types'
 
@@ -100,23 +101,16 @@ const SearchSuggestions = (props: SearchSuggestionsProps) => {
   const productSuggestionGroup = getSuggestionGroup('Pages')
   const categorySuggestionGroup = getSuggestionGroup('Categories')
 
-  const useDebounce = (_value: string, delay: number) => {
-    const handler = setTimeout(() => {
-      // ToBe: api call
-    }, delay)
-    return () => {
-      clearTimeout(handler)
-    }
-  }
   const debouncedSearchTerm = useDebounce(searchTerm, 500)
 
   useEffect(() => {
+    // Handle open close based on API response and use debouncedSearchTerm as searchSuggestionResult once react query done
     searchTerm ? handleOpen() : handleClose()
 
     if (searchTerm) {
-      debouncedSearchTerm()
+      // ToBe: fetch API here
     }
-  }, [debouncedSearchTerm, searchTerm])
+  }, [debouncedSearchTerm])
 
   return (
     <Stack>
