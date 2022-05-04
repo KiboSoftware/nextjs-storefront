@@ -23,8 +23,8 @@ const hooksMock = {
     isLoading: false,
     isSuccess: true,
   }),
-  useSetPersonalInfo: () => ({
-    setPersonalInfoMutation: {
+  useUpdatePersonalInfo: () => ({
+    useUpdatePersonalInfo: {
       mutate: jest.fn(),
       isLoading: false,
       isSuccess: true,

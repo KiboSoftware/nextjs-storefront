@@ -1,2 +1,2 @@
 export * from './useLoadCheckout/useLoadCheckout'
-export * from './useSetPersonalInfo/useSetPersonalInfo'
+export * from './useUpdatePersonalInfo/useUpdatePersonalInfo'

@@ -3,7 +3,12 @@ import React, { useState, useRef, ElementRef } from 'react'
 import { Box, Stack, Button, Typography } from '@mui/material'
 import { useTranslation } from 'next-i18next'
 
-import { useLoadCheckout, useLoadFromCart, useSetPersonalInfo, PersonalInfo } from '../../../hooks'
+import {
+  useLoadCheckout,
+  useLoadFromCart,
+  useUpdatePersonalInfo,
+  PersonalInfo,
+} from '../../../hooks'
 import Details, { PersonalDetails } from '@/components/checkout/Details/Details'
 import KiboStepper from '@/components/checkout/KiboStepper/KiboStepper'
 import Payment from '@/components/checkout/Payment/Payment'
@@ -32,7 +37,7 @@ const Checkout = () => {
   // useCustomHooks
   const { data: checkoutInfo, isLoading: _isLoadCheckoutLoading } = useLoadCheckout(checkoutId)
   const { data: _cartInfo, isLoading: _isLoadFromCartLoading } = useLoadFromCart(cartId)
-  const { setPersonalInfoMutation } = useSetPersonalInfo()
+  const updatePersonalInfoMutation = useUpdatePersonalInfo()
 
   // Handlers
   const activeStepName = steps[activeStep]
@@ -73,8 +78,11 @@ const Checkout = () => {
       },
     }
 
-    setPersonalInfoMutation.mutate(personalInfo)
-    setActiveStep(activeStep + 1)
+    updatePersonalInfoMutation.mutate(personalInfo, {
+      onSuccess: () => {
+        setActiveStep(activeStep + 1)
+      },
+    })
   }
 
   // Call Queries
@@ -90,7 +98,7 @@ const Checkout = () => {
   }
 
   return (
-    <Stack direction="row" gap={3}>
+    <Stack direction={{ xs: 'column', md: 'row' }} gap={3}>
       <Stack sx={{ width: '100%', maxWidth: '872px' }} gap={3}>
         <Typography variant="h1" component="div" gutterBottom>
           {t('checkout', { numberOfItems: 3 })}
