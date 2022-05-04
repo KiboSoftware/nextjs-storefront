@@ -16,11 +16,13 @@ import {
   AppBar,
   useMediaQuery,
   useTheme,
+  Backdrop,
 } from '@mui/material'
 import { styled } from '@mui/material/styles'
 import { useTranslation } from 'next-i18next'
 
 import { categoryTreeDataMock } from '../../../__mocks__/stories/categoryTreeDataMock'
+import MegaMenu from '../MegaMenu/MegaMenu'
 import HeaderAction from '@/components/common/HeaderAction/HeaderAction'
 import KiboLogo from '@/components/common/KiboLogo/KiboLogo'
 import SearchBar from '@/components/common/SearchBar/SearchBar'
@@ -29,6 +31,9 @@ import { HamburgerMenu } from '@/components/layout'
 const StyledToolbar = styled(Toolbar)(() => ({
   alignItems: 'center',
   display: 'flex',
+  '& .MuiToolbar-root': {
+    minHeight: { xs: 55 },
+  },
 }))
 
 const StyledToolbarNav = styled(Toolbar)(() => ({
@@ -53,6 +58,8 @@ export default function KiboHeader(props: KiboHeaderProps) {
     viewSearchPortal: false,
     viewHamburgerMenu: false,
   })
+  const [isBackdropOpen, setIsBackdropOpen] = useState(false)
+
   const { t } = useTranslation('common')
 
   const kiboTheme = useTheme()
@@ -71,15 +78,22 @@ export default function KiboHeader(props: KiboHeaderProps) {
 
   return (
     <Grid container>
-      <Grid item xs={12} lg={12}>
+      <Grid
+        item
+        xs={12}
+        lg={12}
+        position={sticky ? 'sticky' : 'static'}
+        sx={{ top: 0, zIndex: 1300 }}
+      >
         <AppBar
-          position={sticky ? 'sticky' : 'static'}
           color="primary"
           data-testid="kibo header"
           sx={{
+            boxShadow: 'none',
+            backgroundColor: 'transparent',
             height: {
               xs: 55,
-              md: 183,
+              md: 124,
             },
           }}
         >
@@ -148,6 +162,10 @@ export default function KiboHeader(props: KiboHeaderProps) {
                   overflow: 'hidden',
                   paddingInline: 0,
                   height: {
+                    xs: 55,
+                    md: 68,
+                  },
+                  minHeight: {
                     xs: 55,
                     md: 68,
                   },
@@ -253,16 +271,6 @@ export default function KiboHeader(props: KiboHeaderProps) {
               </StyledToolbar>
             </Box>
 
-            {/* Megamenu section */}
-            <Box
-              sx={{
-                display: { xs: 'none', md: 'flex' },
-                height: 59,
-                backgroundColor: 'common.white',
-              }}
-              data-testid="megamenu-container"
-            ></Box>
-
             {/* Mobile searchbar section */}
             <Collapse in={headerState.viewSearchPortal}>
               <Box
@@ -302,6 +310,20 @@ export default function KiboHeader(props: KiboHeaderProps) {
           setIsDrawerOpen={handleHamburgerMenu}
           navLinks={navLinks}
         />
+      </Grid>
+      <Grid
+        item
+        xs={12}
+        sx={{ display: { xs: 'none', md: 'block' }, top: { xs: 55, md: 124 } }}
+        position={sticky ? 'sticky' : 'static'}
+      >
+        <Backdrop open={isBackdropOpen} />
+        <MegaMenu
+          categoryTree={categoryTreeDataMock.categoriesTree.items}
+          setIsBackdropOpen={setIsBackdropOpen}
+        />
+      </Grid>
+      <Grid item xs={12} sx={{ marginTop: { xs: '3rem', md: '8rem' } }}>
         {children}
       </Grid>
     </Grid>

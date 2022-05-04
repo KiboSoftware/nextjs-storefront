@@ -1,7 +1,6 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 
 import {
-  Backdrop,
   Box,
   Divider,
   List,
@@ -9,9 +8,11 @@ import {
   ListItemText,
   Stack,
   Typography,
+  Toolbar,
 } from '@mui/material'
 import { usePopupState, bindHover, bindPopover } from 'material-ui-popup-state/hooks'
 import HoverPopover from 'material-ui-popup-state/HoverPopover'
+import { useTranslation } from 'next-i18next'
 
 import KiboImage from '@/components/common/KiboImage/KiboImage'
 import DefaultImage from '@/public/product_placeholder.svg'
@@ -20,70 +21,66 @@ import { PrCategory } from '@/lib/gql/types'
 
 interface MegaMenuProps {
   categoryTree: PrCategory[]
-  onPopupOpen: (isOpen: boolean) => void
+  setIsBackdropOpen: (isOpen: boolean) => void
 }
 
 interface MenuItemProps {
   category: PrCategory
-  onPopupOpen: (isOpen: boolean) => void
+  setIsBackdropOpen: (isOpen: boolean) => void
 }
 
 const MegaMenu = (props: MegaMenuProps) => {
-  const { categoryTree } = props
+  const { categoryTree, setIsBackdropOpen } = props
   const [allCategories] = useState<PrCategory[]>(categoryTree?.filter((item) => item.isDisplayed))
-
-  const [open, setOpen] = useState<boolean>(false)
-  const handlePopupOpen = (isOpen: boolean) => isOpen && setOpen(isOpen)
-  const handlePopupClose = () => setOpen(false)
 
   return (
     <>
-      <Box
-        display={'flex'}
-        gap={3}
-        height="100%"
+      <Toolbar
         sx={{
-          height: 59,
-          // display: { xs: 'none', md: 'flex' },
-          alignItems: 'center',
+          backgroundColor: 'common.white',
+          position: 'relative',
+          overflow: 'hidden',
+          minHeight: 59,
+          display: 'flex',
           borderBottomWidth: 1,
           borderBottomStyle: 'solid',
           borderBottomColor: 'grey.300',
           paddingInline: 2,
-          background: 'white',
           flexWrap: 'wrap',
-          position: 'relative',
-          zIndex: 1500,
+          gap: 3,
         }}
       >
         {allCategories?.map((category) => (
           <MegaMenuItem
             key={category.categoryCode}
             category={category}
-            onPopupOpen={handlePopupOpen}
+            setIsBackdropOpen={setIsBackdropOpen}
           />
         ))}
-      </Box>
-      <Backdrop open={open} onClick={handlePopupClose} data-testid="backdrop"></Backdrop>
+      </Toolbar>
     </>
   )
 }
 export default MegaMenu
 
 export const MegaMenuItem = (props: MenuItemProps) => {
-  const { category, onPopupOpen } = props
+  const { category, setIsBackdropOpen } = props
   const childrenCategories = category.childrenCategories as PrCategory[]
+
+  const { t } = useTranslation('common')
+
   const popupState = usePopupState({
     variant: 'popover',
     popupId: 'megaMenu',
   })
 
-  if (popupState.isOpen) {
-    onPopupOpen(popupState.isOpen)
-  }
+  useEffect(() => {
+    childrenCategories.length && setIsBackdropOpen(popupState.isOpen)
+  }, [childrenCategories.length, popupState.isOpen, setIsBackdropOpen])
+
   return (
     <>
-      <Box {...bindHover(popupState)} role="group">
+      <Box {...bindHover(popupState)} role="group" color="grey.900">
         <ListItem id="menuItem" sx={{ paddingInline: 1, cursor: 'pointer' }}>
           <ListItemText primary={category.content?.name} />
         </ListItem>
@@ -92,11 +89,14 @@ export const MegaMenuItem = (props: MenuItemProps) => {
             {...bindPopover(popupState)}
             PaperProps={{
               sx: {
-                width: '90%',
+                width: '92.5%',
                 minHeight: 100,
-                marginTop: 1,
+                marginTop: 1.1,
                 paddingInline: 3,
                 borderRadius: 0,
+                boxShadow: 'none',
+                borderTop: '1px solid',
+                borderTopColor: 'grey.300',
               },
             }}
             anchorOrigin={{
@@ -120,15 +120,15 @@ export const MegaMenuItem = (props: MenuItemProps) => {
                   )
                 })}
               </Box>
-              <Divider orientation="vertical" />
-              <Box flex={1}>
+              <Divider orientation="vertical" sx={{ minHeight: '20rem', height: '20rem' }} />
+              <Box flex={1} px={4}>
                 <Box width={'100%'}>
                   <Typography variant="subtitle2" pt={2} fontWeight="bold">
-                    Advertisment
+                    {t('advertisment')}
                   </Typography>
                   <KiboImage
                     src={DefaultImage}
-                    alt={'Advertisment'}
+                    alt={t('advertisment')}
                     width={'100%'}
                     height={'100%'}
                   />
@@ -148,6 +148,8 @@ export const MegaMenuChildren = ({
   title: string
   categoryChildren: PrCategory[]
 }) => {
+  const { t } = useTranslation('common')
+
   return (
     <Stack alignItems={'flex-start'}>
       <List dense>
@@ -158,7 +160,7 @@ export const MegaMenuChildren = ({
           />
         </ListItem>
         <ListItem sx={{ cursor: 'pointer' }}>
-          <ListItemText primary={'Shop All'} primaryTypographyProps={{ variant: 'subtitle2' }} />
+          <ListItemText primary={t('shop-all')} primaryTypographyProps={{ variant: 'subtitle2' }} />
         </ListItem>
         {categoryChildren?.map((cat) => (
           <ListItem key={cat.categoryId} sx={{ cursor: 'pointer' }}>
