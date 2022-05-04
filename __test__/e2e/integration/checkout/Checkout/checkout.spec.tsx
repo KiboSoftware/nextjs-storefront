@@ -4,10 +4,32 @@ import { composeStories } from '@storybook/testing-react'
 import { screen, act } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 
+import { mockCheckout } from '../../../../../__mocks__/msw/mockData'
 import * as stories from '../../../../../components/page-templates/Checkout/Checkout.stories'
 import { renderWithQueryClient } from '../../../../utils/renderWithQueryClient'
 
 const { Common } = composeStories(stories)
+
+const hooksMock = {
+  useLoadCheckout: (_checkoutId: string) => ({
+    data: mockCheckout,
+    isLoading: false,
+    isSuccess: true,
+  }),
+  useLoadFromCart: (_cartId: string) => ({
+    data: mockCheckout,
+    isLoading: false,
+    isSuccess: true,
+  }),
+  useUpdatePersonalInfo: () => ({
+    useUpdatePersonalInfo: {
+      mutate: jest.fn(),
+      isLoading: false,
+      isSuccess: true,
+    },
+  }),
+}
+jest.mock('../../../../../hooks', () => hooksMock)
 
 describe('[components] Checkout integration', () => {
   const setup = () => {
