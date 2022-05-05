@@ -1,19 +1,12 @@
 import { useQuery } from 'react-query'
 import { request, gql } from 'graphql-request'
+import { categoryTreeQuery } from '@/lib/gql/queries'
 
 const fetchCategoryTree = async () => {
   const response = await request(
     '/api/graphql',
     gql`
-      query {
-        categoriesTree {
-          items {
-            content {
-              name
-            }
-          }
-        }
-      }
+      ${categoryTreeQuery}
     `
   )
   return response?.categoriesTree
