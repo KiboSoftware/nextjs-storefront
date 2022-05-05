@@ -4,7 +4,7 @@ import { composeStories } from '@storybook/testing-react'
 import { screen, act } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 
-import { mockCheckout } from '../../../../../__mocks__/msw/mockData'
+import { orderMock } from '../../../../../__mocks__/stories/orderMock'
 import * as stories from '../../../../../components/page-templates/Checkout/Checkout.stories'
 import { renderWithQueryClient } from '../../../../utils/renderWithQueryClient'
 
@@ -12,12 +12,12 @@ const { Common } = composeStories(stories)
 
 const hooksMock = {
   useLoadCheckout: (_checkoutId: string) => ({
-    data: mockCheckout,
+    data: orderMock,
     isLoading: false,
     isSuccess: true,
   }),
   useLoadFromCart: (_cartId: string) => ({
-    data: mockCheckout,
+    data: orderMock,
     isLoading: false,
     isSuccess: true,
   }),

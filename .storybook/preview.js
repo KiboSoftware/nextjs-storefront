@@ -7,7 +7,7 @@ import i18n from './i18n'
 import storefrontTheme from '../styles/theme'
 
 import { QueryClientProvider } from 'react-query'
-import { queryClient } from '../react-query/queryClient'
+import { queryClient } from '../lib/react-query/queryClient'
 
 const OriginalNextImage = NextImage.default
 

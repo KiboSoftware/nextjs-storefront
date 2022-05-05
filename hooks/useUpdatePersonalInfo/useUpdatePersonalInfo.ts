@@ -1,9 +1,8 @@
-import { useMutation } from 'react-query'
-import { useQueryClient } from 'react-query'
+import { useMutation, useQueryClient } from 'react-query'
 
-import { mockCheckout } from '../../__mocks__/msw/mockData'
+import { orderMock } from '../../__mocks__/stories/orderMock'
 import { OrderInput } from '../../lib/gql/types'
-import { querykeys } from '../../react-query/queryKeys'
+import { querykeys } from '../../lib/react-query/queryKeys'
 export interface PersonalInfo {
   orderId: string
   updateMode: string
@@ -12,7 +11,7 @@ export interface PersonalInfo {
 }
 
 const updatePersonalInfo = async (_personalInfo: PersonalInfo) => {
-  return mockCheckout
+  return orderMock
 }
 
 export const useUpdatePersonalInfo = () => {

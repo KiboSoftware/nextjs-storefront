@@ -3,7 +3,7 @@ import { ReactElement } from 'react'
 import { render, RenderResult } from '@testing-library/react'
 import { QueryClient, QueryClientProvider, setLogger } from 'react-query'
 
-import { generateQueryClient } from '../../react-query/queryClient'
+import { generateQueryClient } from '../../lib/react-query/queryClient'
 
 setLogger({
   log: console.log,

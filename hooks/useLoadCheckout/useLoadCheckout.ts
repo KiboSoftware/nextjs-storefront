@@ -1,7 +1,7 @@
 import { useQuery } from 'react-query'
 
-import { mockCheckout } from '../../__mocks__/msw/mockData'
-import { querykeys } from '../../react-query/queryKeys'
+import { orderMock } from '../../__mocks__/stories/orderMock'
+import { querykeys } from '../../lib/react-query/queryKeys'
 
 import type { Order } from '@/lib/gql/types'
 export interface UseLoadCheckout {
@@ -16,8 +16,8 @@ export interface UseLoadFromCart {
 }
 
 const getOrCreateCheckout = async (checkoutId?: string | null, cartId?: string | null) => {
-  if (checkoutId) return mockCheckout
-  if (cartId) return mockCheckout
+  if (checkoutId) return orderMock
+  if (cartId) return orderMock
 }
 
 export const useLoadCheckout = (checkoutId: string): UseLoadCheckout => {

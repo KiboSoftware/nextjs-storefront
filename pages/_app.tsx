@@ -10,7 +10,7 @@ import { Hydrate, QueryClientProvider } from 'react-query'
 
 import TopBar from '../components/TopBar'
 import createEmotionCache from '../lib/createEmotionCache'
-import { queryClient } from '../react-query/queryClient'
+import { generateQueryClient } from '../lib/react-query/queryClient'
 import theme from '../styles/theme'
 // Client-side cache, shared for the whole session of the user in the browser.
 const clientSideEmotionCache = createEmotionCache()
@@ -21,6 +21,7 @@ interface KiboAppProps extends AppProps {
 
 const App = (props: KiboAppProps) => {
   const { Component, emotionCache = clientSideEmotionCache, pageProps } = props
+  const [queryClient] = React.useState(() => generateQueryClient())
 
   return (
     <CacheProvider value={emotionCache}>

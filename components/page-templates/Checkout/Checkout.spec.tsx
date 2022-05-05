@@ -3,7 +3,7 @@ import React, { ReactNode } from 'react'
 import { composeStories } from '@storybook/testing-react'
 import { screen } from '@testing-library/react'
 
-import { mockCheckout } from '../../../__mocks__/msw/mockData'
+import { orderMock } from '../../../__mocks__/stories/orderMock'
 import { renderWithQueryClient } from '../../../__test__/utils/renderWithQueryClient'
 import * as stories from './Checkout.stories'
 
@@ -14,12 +14,12 @@ const KiboStepperMock = ({ children }: { children: ReactNode }) => (
 // Mock
 const hooksMock = {
   useLoadCheckout: (_checkoutId: string) => ({
-    data: mockCheckout,
+    data: orderMock,
     isLoading: false,
     isSuccess: true,
   }),
   useLoadFromCart: (_cartId: string) => ({
-    data: mockCheckout,
+    data: orderMock,
     isLoading: false,
     isSuccess: true,
   }),

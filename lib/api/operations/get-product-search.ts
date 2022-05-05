@@ -1,5 +1,5 @@
 import { fetcher } from '@/lib/api/util'
-import { searchProductsQuery } from '@/lib/gql/queries/product-search'
+import { searchProductsQuery } from '@/lib/gql/queries'
 
 import type { NextApiRequest, NextApiResponse } from 'next'
 

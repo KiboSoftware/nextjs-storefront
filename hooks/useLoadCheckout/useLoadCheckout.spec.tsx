@@ -1,6 +1,6 @@
 import { renderHook } from '@testing-library/react-hooks'
 
-import { mockCheckout } from '../../__mocks__/msw/mockData'
+import { orderMock } from '../../__mocks__/stories/orderMock'
 import { createQueryClientWrapper } from '../../__test__/utils/renderWithQueryClient'
 import { useLoadCheckout, useLoadFromCart } from '../useLoadCheckout/useLoadCheckout'
 
@@ -12,7 +12,7 @@ describe('[hooks] useLoadCheckout', () => {
 
     await waitFor(() => result.current.isSuccess)
 
-    expect(result.current.data).toBe(mockCheckout)
+    expect(result.current.data).toBe(orderMock)
   })
 
   it('should use useLoadFromCart', async () => {
@@ -22,6 +22,6 @@ describe('[hooks] useLoadCheckout', () => {
 
     await waitFor(() => result.current.isSuccess)
 
-    expect(result.current.data).toBe(mockCheckout)
+    expect(result.current.data).toBe(orderMock)
   })
 })

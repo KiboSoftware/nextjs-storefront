@@ -1,6 +1,6 @@
 import { searchResults } from '@/lib/gql/fragments'
 
-export const searchProductsQuery = /* GraphQL */ `
+const searchProductsQuery = /* GraphQL */ `
   query ProductSearch(
     $query: String
     $startIndex: Int
@@ -24,3 +24,5 @@ export const searchProductsQuery = /* GraphQL */ `
   }
   ${searchResults}
 `
+
+export default searchProductsQuery

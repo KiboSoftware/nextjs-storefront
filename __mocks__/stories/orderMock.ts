@@ -1,5 +1,4 @@
-/** CHECKOUT ************************************************************************* */
-export const mockCheckout = {
+export const orderMock = {
   amountAvailableForRefund: 0,
   amountRefunded: 0,
   amountRemainingForPayment: 3764.75,

@@ -5,11 +5,11 @@ import { render, screen } from '@testing-library/react'
 
 import * as stories from './KiboStepper.stories'
 
-const { Common } = composeStories(stories)
+const { Details } = composeStories(stories)
 
 describe('[components] KiboStepper', () => {
   const setup = () => {
-    render(<Common {...Common.args} />)
+    render(<Details {...Details.args} />)
   }
 
   it('should render component', () => {

@@ -1,6 +1,6 @@
 import { renderHook } from '@testing-library/react-hooks'
 
-import { mockCheckout } from '../../__mocks__/msw/mockData'
+import { orderMock } from '../../__mocks__/stories/orderMock'
 import { createQueryClientWrapper } from '../../__test__/utils/renderWithQueryClient'
 import { useUpdatePersonalInfo } from '../useUpdatePersonalInfo/useUpdatePersonalInfo'
 
@@ -9,7 +9,7 @@ describe('[hooks] useUpdatePersonalInfo', () => {
     const personalInfo = {
       orderId: 'OrderId-1',
       updateMode: '',
-      orderInput: mockCheckout,
+      orderInput: orderMock,
     }
 
     renderHook(
@@ -17,7 +17,7 @@ describe('[hooks] useUpdatePersonalInfo', () => {
         const updatePersonalInfoMutation = useUpdatePersonalInfo()
         const response = await updatePersonalInfoMutation.mutateAsync(personalInfo)
 
-        expect(response).toBe(mockCheckout)
+        expect(response).toBe(orderMock)
       },
       {
         wrapper: createQueryClientWrapper(),
