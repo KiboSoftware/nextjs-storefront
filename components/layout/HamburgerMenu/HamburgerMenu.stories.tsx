@@ -2,7 +2,7 @@ import React from 'react'
 
 import { ComponentStory, ComponentMeta } from '@storybook/react'
 
-import { categoryTreeDataMock } from '../../../__mocks__/categoryTreeDataMock'
+import { categoryTreeDataMock } from '../../../__mocks__/stories/categoryTreeDataMock'
 import HamburgerMenu from './HamburgerMenu'
 
 export default {

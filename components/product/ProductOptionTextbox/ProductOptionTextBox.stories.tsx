@@ -3,7 +3,7 @@ import React from 'react'
 import { Box } from '@mui/system'
 import { ComponentStory, ComponentMeta } from '@storybook/react'
 
-import { productOptionTextBoxMock } from '../../../__mocks__/productOptionTextBoxMock'
+import { productOptionTextBoxMock } from '../../../__mocks__/stories/productOptionTextBoxMock'
 import ProductOptionTextBox, { ProductOptionTextBoxProps } from './ProductOptionTextBox'
 
 export default {

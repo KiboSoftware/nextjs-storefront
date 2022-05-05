@@ -2,7 +2,7 @@ import React from 'react'
 
 import { ComponentStory, ComponentMeta } from '@storybook/react'
 
-import { cartItemMock } from '../../../__mocks__/cartItemMock'
+import { cartItemMock } from '../../../__mocks__/stories/cartItemMock'
 import Content from './Content'
 
 export default {

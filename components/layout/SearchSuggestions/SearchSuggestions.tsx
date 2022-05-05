@@ -101,16 +101,16 @@ const SearchSuggestions = (props: SearchSuggestionsProps) => {
   const productSuggestionGroup = getSuggestionGroup('Pages')
   const categorySuggestionGroup = getSuggestionGroup('Categories')
 
-  const debouncedSearchTerm = useDebounce(searchTerm, 500)
+  const debouncedSearchResult = useDebounce(searchTerm, 500)
 
   useEffect(() => {
-    // Handle open close based on API response and use debouncedSearchTerm as searchSuggestionResult once react query done
+    // Handle open close based on API response and use debouncedSearchResult as searchSuggestionResult once react query done
     searchTerm ? handleOpen() : handleClose()
 
     if (searchTerm) {
       // ToBe: fetch API here
     }
-  }, [debouncedSearchTerm])
+  }, [debouncedSearchResult])
 
   return (
     <Stack>

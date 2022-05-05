@@ -13,7 +13,7 @@ interface SearchProps {
   onSearch: (searchText: string) => void
   showClearButton: boolean
   childInputRef?: RefObject<HTMLInputElement | undefined>
-  InputProps?: any
+  inputProps?: any
 }
 // MUI
 const style = {
@@ -38,7 +38,7 @@ const SearchBar = (props: SearchProps) => {
     onSearch,
     childInputRef,
     showClearButton = false,
-    InputProps,
+    inputProps,
     ...rest
   } = props
   const { t } = useTranslation('common')
@@ -62,7 +62,7 @@ const SearchBar = (props: SearchProps) => {
         size="small"
         sx={{ ...style.inputBase }}
         inputProps={{ 'aria-label': searchInputAriaLabel }}
-        {...InputProps}
+        {...inputProps}
         autoComplete="off"
         startAdornment={
           <IconButton size="small" aria-label={searchIconAriaLabel}>

@@ -2,7 +2,7 @@ import { composeStories } from '@storybook/testing-react'
 import { render, screen } from '@testing-library/react'
 
 import '@testing-library/jest-dom'
-import { productOptionTextBoxMock } from '../../../__mocks__/productOptionTextBoxMock'
+import { productOptionTextBoxMock } from '../../../__mocks__/stories/productOptionTextBoxMock'
 import * as stories from './ProductOptionTextBox.stories' // import all stories from the stories file
 
 const { Common } = composeStories(stories)
