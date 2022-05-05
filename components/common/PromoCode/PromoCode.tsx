@@ -17,7 +17,7 @@ const PromoCode = ({ promoEnable }: any) => {
     setPromoActive(true)
     const temp = promo
     setPromocode(temp)
-    // promotext.current.value = null
+    promotext.current.value = null
   }
   const handleClose = () => {
     setPromoActive(false)
@@ -26,6 +26,7 @@ const PromoCode = ({ promoEnable }: any) => {
     <>
       <Box>
         <TextField
+          id="promoText"
           inputRef={promotext}
           onChange={handleOnchange}
           sx={{ mx: '1rem', width: '17rem' }}
