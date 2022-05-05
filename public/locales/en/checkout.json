@@ -1,9 +1,9 @@
 {
   "checkout": "Checkout ({{numberOfItems}} items)",
-  "details": "Details",
-  "shipping": "Shipping",
-  "payment": "Payment",
-  "review": "Review",
+  "details": "Details step",
+  "shipping": "Shipping step",
+  "payment": "Payment step",
+  "review": "Review step",
   "password-requirements": "Password Requirements",
   "at-least-eight-characters-long": "at least 8 characters long",
   "at-least-one-number": "at least one number",
