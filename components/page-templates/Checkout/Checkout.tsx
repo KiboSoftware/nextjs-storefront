@@ -15,6 +15,8 @@ import Payment from '@/components/checkout/Payment/Payment'
 import Review from '@/components/checkout/Review/Review'
 import Shipping from '@/components/checkout/Shipping/Shipping'
 
+import { OrderInput } from '@/lib/gql/types'
+
 const Checkout = () => {
   const { t } = useTranslation('checkout')
 
@@ -55,26 +57,13 @@ const Checkout = () => {
 
   // Refactor: Build Payload (separate out the logic) and call updatePersonalInfoMutation hook
   const handlePerosnalDetails = (userEnteredPersonalDetails: PersonalDetails) => {
-    const { firstName, lastNameOrSurname, email } = userEnteredPersonalDetails
+    const { email } = userEnteredPersonalDetails
     const personalInfo: PersonalInfo = {
       orderId: checkoutInfo?.id as string,
       updateMode: 'ApplyToOriginal',
       orderInput: {
-        ...checkoutInfo,
+        ...(checkoutInfo as OrderInput),
         email,
-        amountAvailableForRefund: checkoutInfo?.amountAvailableForRefund as number,
-        amountRefunded: checkoutInfo?.amountRefunded as number,
-        amountRemainingForPayment: checkoutInfo?.amountRemainingForPayment as number,
-        totalCollected: checkoutInfo?.totalCollected as number,
-        fulfillmentInfo: {
-          ...checkoutInfo?.fulfillmentInfo,
-          fulfillmentContact: {
-            ...checkoutInfo?.fulfillmentInfo?.fulfillmentContact,
-            email,
-            firstName,
-            lastNameOrSurname,
-          },
-        },
       },
     }
 
