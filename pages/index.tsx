@@ -4,7 +4,8 @@ import Image from 'next/image'
 import Buton from '../components/buton'
 import styles from '../styles/Home.module.css'
 import AddToCart from '@/components/common/AddToCart/AddToCart'
-
+import { useQueryClient } from 'react-query'
+import useCategoryTree from '@/hooks/useCategoryTree/useCategoryTree'
 import type {
   NextPage,
   GetStaticPathsContext,
@@ -12,6 +13,29 @@ import type {
   InferGetStaticPropsType,
   GetServerSidePropsContext,
 } from 'next'
+
+const CatTest = () => {
+  const queryClient = useQueryClient()
+  const { status, data, error, isFetching } = useCategoryTree()
+  return (
+    <div>
+      <p>{status}</p>
+      {isFetching ? (
+        'Loading...'
+      ) : (
+        <>
+          {
+            <ul>
+              {data.items.map((i: any) => (
+                <li>{i.content.name}</li>
+              ))}
+            </ul>
+          }
+        </>
+      )}
+    </div>
+  )
+}
 
 const Home: NextPage = () => {
   return (
@@ -26,11 +50,13 @@ const Home: NextPage = () => {
         <h1 className={styles.title}>
           Welcome to <a href="https://nextjs.org">Next.js!</a>
         </h1>
-        <AddToCart />
+        <AddToCart onClick={console.log} />
         <p className={styles.description}>
           Get started by editing <code className={styles.code}>pages/index.tsx</code>
         </p>
-
+        <p>
+          Test <CatTest />
+        </p>
         <div className={styles.grid}>
           <a href="https://nextjs.org/docs" className={styles.card}>
             <h2>Documentation &rarr;</h2>

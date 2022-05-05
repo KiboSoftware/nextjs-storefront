@@ -1,5 +1,5 @@
 import { productInfo } from './product'
-
+export { categoryInfo } from './categoryFragment'
 export const searchFacets = `
 fragment searchFacets on Facet {
     label
