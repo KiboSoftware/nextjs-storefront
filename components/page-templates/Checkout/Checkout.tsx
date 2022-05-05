@@ -53,7 +53,7 @@ const Checkout = () => {
       paymentRef.current && paymentRef.current.validateForm()
   }
 
-  // TODO: Build Payload (separate out the logic) and call updatePersonalInfoMutation hook
+  // Refactor: Build Payload (separate out the logic) and call updatePersonalInfoMutation hook
   const handlePerosnalDetails = (userEnteredPersonalDetails: PersonalDetails) => {
     const { firstName, lastNameOrSurname, email } = userEnteredPersonalDetails
     const personalInfo: PersonalInfo = {

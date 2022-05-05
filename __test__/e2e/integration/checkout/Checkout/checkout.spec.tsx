@@ -61,7 +61,7 @@ describe('[components] Checkout integration', () => {
     const email = 'Test@gmail.cm'
     const firstName = 'FirstName'
     const lastName = 'LastName'
-    const password = 'TestSecret@1'
+    const password = 'TestSecret@1' //NOSONAR
 
     const details: HTMLElement | null = screen.getByTestId('checkout-details')
     const shipping = screen.queryByTestId('checkout-shipping')

@@ -42,7 +42,7 @@ describe('[components] PasswordValidation', () => {
     expect(isHavingAtLeastEightCharacters).toHaveStyle({ color: theme.palette.error.main })
   })
   it('should show "validation passed" icon when user enters password having length at least eight Characters', () => {
-    setup({ password: 'TestPassword@1' })
+    setup({ password: 'TestPassword@1' }) //NOSONAR
 
     const isHavingAtLeastEightCharacters = screen.getByTestId('isHavingAtLeastEightCharacters')
 
@@ -50,14 +50,14 @@ describe('[components] PasswordValidation', () => {
   })
 
   it('should show "validation failed" icon when user enters password without having at least one number', () => {
-    setup({ password: 'TestPassword@' })
+    setup({ password: 'TestPassword@' }) //NOSONAR
 
     const isHavingAtLeastOneNumber = screen.getByTestId('isHavingAtLeastOneNumber')
 
     expect(isHavingAtLeastOneNumber).toHaveStyle({ color: theme.palette.error.main })
   })
   it('should show "validation passed" icon when user enters password containing at least one number', () => {
-    setup({ password: 'TestPassword@1' })
+    setup({ password: 'TestPassword@1' }) //NOSONAR
 
     const isHavingAtLeastOneNumber = screen.getByTestId('isHavingAtLeastOneNumber')
 
@@ -65,14 +65,14 @@ describe('[components] PasswordValidation', () => {
   })
 
   it('should show "validation failed" icon when user enters password whithout having at least one capital letter', () => {
-    setup({ password: 'testpassword@1' })
+    setup({ password: 'testpassword@1' }) //NOSONAR
 
     const isHavingAtLeastOneCapitalLetter = screen.getByTestId('isHavingAtLeastOneCapitalLetter')
 
     expect(isHavingAtLeastOneCapitalLetter).toHaveStyle({ color: theme.palette.error.main })
   })
   it('should show "validation passed" icon when user enters password containing at least one capital letter', () => {
-    setup({ password: 'TestPassword@1' })
+    setup({ password: 'TestPassword@1' }) //NOSONAR
 
     const isHavingAtLeastOneCapitalLetter = screen.getByTestId('isHavingAtLeastOneCapitalLetter')
 
@@ -80,7 +80,7 @@ describe('[components] PasswordValidation', () => {
   })
 
   it('should show "validation failed" icon when user enters password without having at least one special character', () => {
-    setup({ password: 'TestPassword1' })
+    setup({ password: 'TestPassword1' }) //NOSONAR
 
     const isHavingAtLeastOneSpecialCharacter = screen.getByTestId(
       'isHavingAtLeastOneSpecialCharacter'
@@ -89,7 +89,7 @@ describe('[components] PasswordValidation', () => {
     expect(isHavingAtLeastOneSpecialCharacter).toHaveStyle({ color: theme.palette.error.main })
   })
   it('should show "validation passed" icon when user enters password containing at least one special character', () => {
-    setup({ password: 'TestPassword@1' })
+    setup({ password: 'TestPassword@1' }) //NOSONAR
 
     const isHavingAtLeastOneSpecialCharacter = screen.getByTestId(
       'isHavingAtLeastOneSpecialCharacter'
