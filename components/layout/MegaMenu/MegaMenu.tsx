@@ -62,6 +62,7 @@ const MegaMenu = (props: MegaMenuProps) => {
           flexWrap: 'wrap',
           gap: 3,
         }}
+        data-testid="megamenu-container"
       >
         {allCategories?.map((category) => (
           <MegaMenuItem

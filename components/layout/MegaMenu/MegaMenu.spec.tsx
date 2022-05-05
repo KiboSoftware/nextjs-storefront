@@ -27,19 +27,46 @@ describe('[components] - MegaMenu', () => {
     expect(menuItems).toHaveLength(categoryTreeCount)
   })
 
-  it('should display menu item on hover on category', () => {
+  it('should display category names', () => {
     setup()
 
-    const categoryTree = Common.args?.categoryTree || []
+    const categoryTree = Common.args?.categoryTree?.filter((c) => c.isDisplayed === true) || []
+    categoryTree.map((cat) => {
+      const name = screen.getByText(`${cat.content?.name}`)
+      expect(name).toBeVisible()
+    })
+  })
+
+  it('should display children category titles on the modal while hovering on category', () => {
+    setup()
+
+    const categoryTree = Common.args?.categoryTree?.filter((c) => c.isDisplayed === true) || []
     const menuItems = screen.getAllByRole('group')
     userEvent.hover(menuItems[0])
 
     expect(setIsBackdropOpenMock).toBeCalled()
-    categoryTree
-      .filter((c) => c.isDisplayed === true)
-      .map((cat) => {
-        const name = screen.getByText(`${cat.content?.name}`)
-        expect(name).toBeVisible()
-      })
+    categoryTree[0].childrenCategories?.map((cat) => {
+      const name = screen.getByText(`${cat?.content?.name}`)
+      expect(name).toBeVisible()
+    })
+
+    const advertisment = screen.getByText('advertisment')
+    const shopAll = screen.getAllByText('shop-all')
+    expect(advertisment).toBeVisible()
+    expect(shopAll).toHaveLength(categoryTree[0].childrenCategories?.length || 0)
+  })
+
+  it('should display sub-categories along with shop all option on the modal', () => {
+    setup()
+
+    const categoryTree = Common.args?.categoryTree?.filter((c) => c.isDisplayed === true) || []
+    const childrenCategories = categoryTree[0] || []
+    const menuItems = screen.getAllByRole('group')
+    userEvent.hover(menuItems[0])
+
+    childrenCategories?.childrenCategories?.map((cat) => {
+      const name = screen.getByText(`${cat?.content?.name}`)
+      expect(name).toBeVisible()
+    })
   })
 })

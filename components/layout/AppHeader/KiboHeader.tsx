@@ -317,7 +317,7 @@ export default function KiboHeader(props: KiboHeaderProps) {
         sx={{ display: { xs: 'none', md: 'block' }, top: { xs: 55, md: 124 } }}
         position={sticky ? 'sticky' : 'relative'}
       >
-        <Backdrop open={isBackdropOpen} />
+        <Backdrop open={isBackdropOpen} data-testid="backdrop" />
         <MegaMenu
           categoryTree={categoryTreeDataMock.categoriesTree.items}
           setIsBackdropOpen={setIsBackdropOpen}
