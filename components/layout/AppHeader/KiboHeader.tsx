@@ -82,7 +82,7 @@ export default function KiboHeader(props: KiboHeaderProps) {
         item
         xs={12}
         lg={12}
-        position={sticky ? 'sticky' : 'static'}
+        position={sticky ? 'sticky' : 'relative'}
         sx={{ top: 0, zIndex: 1300 }}
       >
         <AppBar
@@ -315,7 +315,7 @@ export default function KiboHeader(props: KiboHeaderProps) {
         item
         xs={12}
         sx={{ display: { xs: 'none', md: 'block' }, top: { xs: 55, md: 124 } }}
-        position={sticky ? 'sticky' : 'static'}
+        position={sticky ? 'sticky' : 'relative'}
       >
         <Backdrop open={isBackdropOpen} />
         <MegaMenu

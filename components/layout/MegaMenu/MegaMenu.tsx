@@ -19,6 +19,19 @@ import DefaultImage from '@/public/product_placeholder.svg'
 
 import { PrCategory } from '@/lib/gql/types'
 
+const style = {
+  listItem: {
+    paddingInline: 1,
+    paddingTop: 2.25,
+    paddingBottom: 1.25,
+    cursor: 'pointer',
+    borderBottom: '4px solid transparent',
+    '&:hover': {
+      borderBottom: '4px solid',
+      borderBottomColor: 'primary.main',
+    },
+  },
+}
 interface MegaMenuProps {
   categoryTree: PrCategory[]
   setIsBackdropOpen: (isOpen: boolean) => void
@@ -81,7 +94,7 @@ export const MegaMenuItem = (props: MenuItemProps) => {
   return (
     <>
       <Box {...bindHover(popupState)} role="group" color="grey.900">
-        <ListItem id="menuItem" sx={{ paddingInline: 1, cursor: 'pointer' }}>
+        <ListItem id="menuItem" sx={{ ...style.listItem }}>
           <ListItemText primary={category.content?.name} />
         </ListItem>
         {childrenCategories.length ? (
