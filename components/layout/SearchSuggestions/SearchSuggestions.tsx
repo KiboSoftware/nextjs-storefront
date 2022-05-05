@@ -16,9 +16,8 @@ import {
 } from '@mui/material'
 import { useTranslation } from 'next-i18next'
 
-import { useUpdateRoutes } from '../../../hooks/useUpdateRoutes'
+import { useDebounce, useUpdateRoutes } from '../../../hooks'
 import SearchBar from '@/components/common/SearchBar/SearchBar'
-import { useDebounce } from '@/hooks/useDebounce/useDebounce'
 
 import type { SearchSuggestionResult } from '@/lib/gql/types'
 
