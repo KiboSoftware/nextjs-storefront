@@ -4,7 +4,6 @@ import { composeStories } from '@storybook/testing-react'
 import { screen, act } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 
-import { orderMock } from '../../../../../__mocks__/stories/orderMock'
 import * as stories from '../../../../../components/page-templates/Checkout/Checkout.stories'
 import { renderWithQueryClient } from '../../../../utils/renderWithQueryClient'
 

@@ -4,7 +4,7 @@ interface PaymentHandler {
   validateForm: () => void
 }
 
-const Payment = forwardRef<PaymentHandler, any>((_props, ref) => {
+const PaymentStep = forwardRef<PaymentHandler, any>((_props, ref) => {
   const validateForm = () => {
     console.log('validating Payment form')
   }
@@ -19,5 +19,5 @@ const Payment = forwardRef<PaymentHandler, any>((_props, ref) => {
   )
 })
 
-export default Payment
-Payment.displayName = 'Payment'
+export default PaymentStep
+PaymentStep.displayName = 'PaymentStep'

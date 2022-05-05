@@ -2,15 +2,15 @@ import React from 'react'
 
 import { ComponentStory, ComponentMeta } from '@storybook/react'
 
-import Review from './Review'
+import ReviewStep from './ReviewStep'
 
 // Common
 export default {
-  title: 'Checkout/Review',
-  component: Review,
-} as ComponentMeta<typeof Review>
+  title: 'Checkout/ReviewStep',
+  component: ReviewStep,
+} as ComponentMeta<typeof ReviewStep>
 
-const Template: ComponentStory<typeof Review> = () => <Review />
+const Template: ComponentStory<typeof ReviewStep> = () => <ReviewStep />
 
 // Default
 export const Common = Template.bind({})

@@ -1,7 +1,7 @@
 import React from 'react'
 
-const Review = () => {
+const ReviewStep = () => {
   return <b>Review</b>
 }
 
-export default Review
+export default ReviewStep

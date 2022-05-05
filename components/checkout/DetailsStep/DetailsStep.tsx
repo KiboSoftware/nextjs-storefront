@@ -56,7 +56,7 @@ const buttonStyle = {
   fontSize: (theme: Theme) => theme.typography.subtitle1,
 } as SxProps<Theme> | undefined
 
-const Details = forwardRef<DetailsHandler, DetailsProps>((props, ref) => {
+const DetailsStep = forwardRef<DetailsHandler, DetailsProps>((props, ref) => {
   const { setAutoFocus = true, personalDetails, onPersonalDetailsSave } = props
   const passwordValidationRef = useRef<PasswordValidationHandler | null>(null)
 
@@ -269,5 +269,5 @@ const Details = forwardRef<DetailsHandler, DetailsProps>((props, ref) => {
   )
 })
 
-export default Details
-Details.displayName = 'Details'
+export default DetailsStep
+DetailsStep.displayName = 'DetailsStep'

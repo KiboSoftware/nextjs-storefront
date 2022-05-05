@@ -4,7 +4,7 @@ interface ShippingHandler {
   validateForm: () => void
 }
 
-const Shipping = forwardRef<ShippingHandler, any>((_props, ref) => {
+const ShippingStep = forwardRef<ShippingHandler, any>((_props, ref) => {
   const validateForm = () => {
     console.log('validating Shipping form')
   }
@@ -19,5 +19,5 @@ const Shipping = forwardRef<ShippingHandler, any>((_props, ref) => {
   )
 })
 
-export default Shipping
-Shipping.displayName = 'Shipping'
+export default ShippingStep
+ShippingStep.displayName = 'ShippingStep'

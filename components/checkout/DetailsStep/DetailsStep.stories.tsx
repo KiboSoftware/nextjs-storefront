@@ -2,16 +2,16 @@ import React from 'react'
 
 import { ComponentStory, ComponentMeta } from '@storybook/react'
 
-import Details from './Details'
+import DetailsStep from './DetailsStep'
 
 // Common
 export default {
-  title: 'Checkout/Details',
-  component: Details,
+  title: 'Checkout/DetailsStep',
+  component: DetailsStep,
   argTypes: { onPersonalDetailsSave: { action: 'clicked' } },
-} as ComponentMeta<typeof Details>
+} as ComponentMeta<typeof DetailsStep>
 
-const Template: ComponentStory<typeof Details> = (args) => <Details {...args} />
+const Template: ComponentStory<typeof DetailsStep> = (args) => <DetailsStep {...args} />
 
 // Default
 export const Common = Template.bind({})

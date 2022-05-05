@@ -10,16 +10,16 @@ import * as stories from './Checkout.stories'
 const KiboStepperMock = ({ children }: { children: ReactNode }) => (
   <div data-testid="kibo-stepper-mock">{children}</div>
 )
-const DetailsMock = () => <div data-testid="checkout-details-mock" />
-const ShippingMock = () => <div ref={undefined} data-testid="checkout-shipping-mock" />
-const PaymentMock = () => <div ref={undefined} data-testid="checkout-payment-mock" />
-const ReviewMock = () => <div ref={undefined} data-testid="checkout-review-mock" />
+const DetailsStepMock = () => <div data-testid="checkout-details-mock" />
+const ShippingStepMock = () => <div ref={undefined} data-testid="checkout-shipping-mock" />
+const PaymentStepMock = () => <div ref={undefined} data-testid="checkout-payment-mock" />
+const ReviewStepMock = () => <div ref={undefined} data-testid="checkout-review-mock" />
 
 jest.mock('../../checkout/KiboStepper/KiboStepper', () => KiboStepperMock)
-jest.mock('../../checkout/Details/Details', () => DetailsMock)
-jest.mock('../../checkout/Shipping/Shipping', () => ShippingMock)
-jest.mock('../../checkout/Payment/Payment', () => PaymentMock)
-jest.mock('../../checkout/Review/Review', () => ReviewMock)
+jest.mock('../../checkout/DetailsStep/DetailsStep', () => DetailsStepMock)
+jest.mock('../../checkout/ShippingStep/ShippingStep', () => ShippingStepMock)
+jest.mock('../../checkout/PaymentStep/PaymentStep', () => PaymentStepMock)
+jest.mock('../../checkout/ReviewStep/ReviewStep', () => ReviewStepMock)
 
 jest.mock('../../../hooks', () => ({
   useLoadCheckout: jest.fn(() => ({})),

@@ -9,11 +9,11 @@ import {
   useUpdatePersonalInfo,
   PersonalInfo,
 } from '../../../hooks'
-import Details, { PersonalDetails } from '@/components/checkout/Details/Details'
+import DetailsStep, { PersonalDetails } from '@/components/checkout/DetailsStep/DetailsStep'
 import KiboStepper from '@/components/checkout/KiboStepper/KiboStepper'
-import Payment from '@/components/checkout/Payment/Payment'
-import Review from '@/components/checkout/Review/Review'
-import Shipping from '@/components/checkout/Shipping/Shipping'
+import PaymentStep from '@/components/checkout/PaymentStep/PaymentStep'
+import ReviewStep from '@/components/checkout/ReviewStep/ReviewStep'
+import ShippingStep from '@/components/checkout/ShippingStep/ShippingStep'
 
 import { OrderInput } from '@/lib/gql/types'
 
@@ -24,9 +24,9 @@ const Checkout = () => {
   const steps = [t('details'), t('shipping'), t('payment'), t('review')]
 
   // Define Refs
-  type DetailsFormHanlder = ElementRef<typeof Details>
-  type ShippingFormHanlder = ElementRef<typeof Shipping>
-  type PaymentFormHandler = ElementRef<typeof Payment>
+  type DetailsFormHanlder = ElementRef<typeof DetailsStep>
+  type ShippingFormHanlder = ElementRef<typeof ShippingStep>
+  type PaymentFormHandler = ElementRef<typeof PaymentStep>
   const detailsRef = useRef<DetailsFormHanlder | null>(null)
   const shippingRef = useRef<ShippingFormHanlder | null>(null)
   const paymentRef = useRef<PaymentFormHandler | null>(null)
@@ -93,14 +93,14 @@ const Checkout = () => {
           {t('checkout', { numberOfItems: 3 })}
         </Typography>
         <KiboStepper steps={steps} activeStep={activeStep}>
-          <Details
+          <DetailsStep
             personalDetails={personalDetails}
             ref={detailsRef}
             onPersonalDetailsSave={handlePerosnalDetails}
           />
-          <Shipping shippingFromAPI={null} ref={shippingRef} />
-          <Payment paymentFromAPI={null} ref={paymentRef} />
-          <Review />
+          <ShippingStep shippingFromAPI={null} ref={shippingRef} />
+          <PaymentStep paymentFromAPI={null} ref={paymentRef} />
+          <ReviewStep />
         </KiboStepper>
       </Stack>
 

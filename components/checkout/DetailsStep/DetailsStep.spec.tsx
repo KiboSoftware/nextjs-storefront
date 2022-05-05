@@ -6,7 +6,7 @@ import { composeStories } from '@storybook/testing-react'
 import { render, screen, act } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 
-import * as stories from './Details.stories'
+import * as stories from './DetailsStep.stories'
 
 const { Common } = composeStories(stories)
 

@@ -3,11 +3,11 @@ import React from 'react'
 import { composeStories } from '@storybook/testing-react'
 import { render, screen } from '@testing-library/react'
 
-import * as stories from './Review.stories'
+import * as stories from './PaymentStep.stories'
 
 const { Common } = composeStories(stories)
 
-describe('[components] Review', () => {
+describe('[components] PaymentStep', () => {
   const setup = () => {
     render(<Common {...Common.args} />)
   }
@@ -15,8 +15,8 @@ describe('[components] Review', () => {
   it('should render component', () => {
     setup()
 
-    const ReviewComponent = screen.getByText(/Review/i)
+    const paymentComponent = screen.getByText(/payment/i)
 
-    expect(ReviewComponent).toBeVisible()
+    expect(paymentComponent).toBeVisible()
   })
 })
