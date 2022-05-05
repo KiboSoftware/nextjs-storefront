@@ -10,26 +10,11 @@ import { renderWithQueryClient } from '../../../../utils/renderWithQueryClient'
 
 const { Common } = composeStories(stories)
 
-const hooksMock = {
-  useLoadCheckout: (_checkoutId: string) => ({
-    data: orderMock,
-    isLoading: false,
-    isSuccess: true,
-  }),
-  useLoadFromCart: (_cartId: string) => ({
-    data: orderMock,
-    isLoading: false,
-    isSuccess: true,
-  }),
-  useUpdatePersonalInfo: () => ({
-    useUpdatePersonalInfo: {
-      mutate: jest.fn(),
-      isLoading: false,
-      isSuccess: true,
-    },
-  }),
-}
-jest.mock('../../../../../hooks', () => hooksMock)
+jest.mock('../../../../../hooks', () => ({
+  useLoadCheckout: jest.fn(() => ({})),
+  useLoadFromCart: jest.fn(() => ({})),
+  useUpdatePersonalInfo: jest.fn(() => ({})),
+}))
 
 describe('[components] Checkout integration', () => {
   const setup = () => {
