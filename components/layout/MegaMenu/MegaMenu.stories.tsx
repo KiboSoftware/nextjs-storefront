@@ -16,7 +16,7 @@ export const Common = Template.bind({})
 
 Common.args = {
   categoryTree: categoryTreeDataMock.categoriesTree.items,
-  setIsBackdropOpen: () => {
-    null
+  setIsBackdropOpen: (isOpen) => {
+    return isOpen
   },
 }

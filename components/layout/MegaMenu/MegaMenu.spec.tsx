@@ -31,7 +31,7 @@ describe('[components] - MegaMenu', () => {
     setup()
 
     const categoryTree = Common.args?.categoryTree?.filter((c) => c.isDisplayed === true) || []
-    categoryTree.map((cat) => {
+    categoryTree.forEach((cat) => {
       const name = screen.getByText(`${cat.content?.name}`)
       expect(name).toBeVisible()
     })
