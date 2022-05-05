@@ -1,5 +1,9 @@
 {
-  "checkout": "<b>Checkout</b> ({{numberOfItems}} items)",
+  "checkout": "Checkout ({{numberOfItems}} items)",
+  "details": "Details",
+  "shipping": "Shipping",
+  "payment": "Payment",
+  "review": "Review",
   "password-requirements": "Password Requirements",
   "at-least-eight-characters-long": "at least 8 characters long",
   "at-least-one-number": "at least one number",
@@ -16,7 +20,9 @@
   "full-rewards-program-benefits": "Full Rewards Program Benefits",
   "manage-your-wishlist": "Manage your wishlist",
   "i-want-to-create-an-account": "I want to create an account",
-
+  "first-name": "First name",
+  "last-name-or-sur-name": "Last name",
+  "password": "Password",
   "go-to-shipping": "Go to Shipping",
   "go-to-payment": "Go to Payment",
   "review-order": "Review Order",

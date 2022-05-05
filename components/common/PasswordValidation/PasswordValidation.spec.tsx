@@ -35,7 +35,7 @@ describe('[components] PasswordValidation', () => {
   })
 
   it('should show "validation failed" icon when user enters password having length lesss than eight Characters', () => {
-    setup({ password: 'Test@12' })
+    setup({ password: 'Test@12' }) //NOSONAR
 
     const isHavingAtLeastEightCharacters = screen.getByTestId('isHavingAtLeastEightCharacters')
 

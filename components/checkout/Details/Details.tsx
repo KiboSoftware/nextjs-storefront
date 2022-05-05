@@ -60,7 +60,7 @@ const Details = forwardRef<DetailsHandler, DetailsProps>((props, ref) => {
   const { setAutoFocus = true, personalDetails, onPersonalDetailsSave } = props
   const passwordValidationRef = useRef<PasswordValidationHandler | null>(null)
 
-  const { t } = useTranslation('common')
+  const { t } = useTranslation('checkout')
 
   const schema = yup.object().shape({
     email: yup.string().email().required('This field is required'),
@@ -234,7 +234,7 @@ const Details = forwardRef<DetailsHandler, DetailsProps>((props, ref) => {
             render={({ field }) => (
               <KiboTextBox
                 value={field.value}
-                label={t('last-name')}
+                label={t('last-name-or-sur-name')}
                 required
                 sx={{ ...commonStyle }}
                 onBlur={field.onBlur}

@@ -14,7 +14,7 @@ interface PasswordValidationHandle {
 const PasswordValidation = forwardRef<PasswordValidationHandle, PasswordValidationProps>(
   (props, ref) => {
     const { password = '' } = props
-    const { t } = useTranslation('common')
+    const { t } = useTranslation('checkout')
 
     const isHavingAtLeastEightCharacters = password.toString().length >= 8
     const isHavingAtLeastOneNumber = /\d/.test(password)

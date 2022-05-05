@@ -16,7 +16,7 @@ import Review from '@/components/checkout/Review/Review'
 import Shipping from '@/components/checkout/Shipping/Shipping'
 
 const Checkout = () => {
-  const { t } = useTranslation('common')
+  const { t } = useTranslation('checkout')
 
   const buttonLabels = [t('go-to-shipping'), t('go-to-payment'), t('review-order')]
   const steps = [t('details'), t('shipping'), t('payment'), t('review')]

@@ -73,7 +73,7 @@ describe('[components] Checkout integration', () => {
 
     const emailInput = screen.getByRole('textbox', { name: /your-email/i })
     const firstNameInput = screen.getByRole('textbox', { name: /first-name/i })
-    const lastNameInput = screen.getByRole('textbox', { name: /last-name/i })
+    const lastNameInput = screen.getByRole('textbox', { name: /last-name-or-sur-name/i })
     const passwordInput = screen.getByRole('textbox', { name: /password/i })
 
     expect(details).toBeVisible()
