@@ -21,23 +21,31 @@ export type ShippingMethodProps = {
   shipItems: ProductItemProps[]
   pickupItems: ProductItemProps[]
   orderShipmentMethods: ShippingRate[]
-  onChange: (name: string, value: string) => void
+  onShippingMethodChange: (name: string, value: string) => void
+}
+export type ShipItemListProps = {
+  shipItems: ProductItemProps[]
+  orderShipmentMethods: ShippingRate[]
+  onShippingMethodChange: (name: string, value: string) => void
+}
+export type PickupItemListProps = {
+  pickupItems: ProductItemProps[]
 }
 
-const ShippingMethod = (props: ShippingMethodProps) => {
-  const { shipItems, pickupItems, orderShipmentMethods, onChange } = props
+const styles = {
+  shippingType: {
+    variant: 'subtitle1',
+    component: 'span',
+    fontWeight: '600',
+    color: 'text.primary',
+  },
+}
+
+const ShipItemList = (shipProps: ShipItemListProps) => {
+  const { onShippingMethodChange, orderShipmentMethods, shipItems } = shipProps
   const { t } = useTranslation('common')
 
-  const styles = {
-    shippingType: {
-      variant: 'subtitle1',
-      component: 'span',
-      fontWeight: '600',
-      color: 'text.primary',
-    },
-  }
-
-  const ShipItemList = () => (
+  return (
     <Box data-testid="ship-items">
       <Typography sx={styles.shippingType} px={2} data-testid="ship-title">
         {t('ship')}
@@ -45,7 +53,7 @@ const ShippingMethod = (props: ShippingMethodProps) => {
       <Box px={2}>
         <KiboSelect
           name="shippingMethodCode"
-          onChange={onChange}
+          onChange={onShippingMethodChange}
           placeholder="Select Shipping Option"
         >
           {orderShipmentMethods?.map((item: ShippingRate) => {
@@ -62,8 +70,13 @@ const ShippingMethod = (props: ShippingMethodProps) => {
       </Box>
     </Box>
   )
+}
 
-  const PickupItemList = () => (
+const PickupItemList = (pickupProps: PickupItemListProps) => {
+  const { pickupItems } = pickupProps
+  const { t } = useTranslation('common')
+
+  return (
     <Box data-testid="pickup-items">
       <Divider orientation="horizontal" flexItem />
       <Box pt={2} pb={3}>
@@ -76,13 +89,24 @@ const ShippingMethod = (props: ShippingMethodProps) => {
       </Box>
     </Box>
   )
+}
 
-  // shipping to Home and pick up in store
+const ShippingMethod = (props: ShippingMethodProps) => {
+  const { shipItems, pickupItems, orderShipmentMethods, onShippingMethodChange } = props
+
   return (
     <Box data-testid="shipping-method">
-      {shipItems?.length ? <ShipItemList /> : ''}
+      {shipItems?.length ? (
+        <ShipItemList
+          onShippingMethodChange={onShippingMethodChange}
+          orderShipmentMethods={orderShipmentMethods}
+          shipItems={shipItems}
+        />
+      ) : (
+        ''
+      )}
 
-      {pickupItems?.length ? <PickupItemList /> : ''}
+      {pickupItems?.length ? <PickupItemList pickupItems={pickupItems} /> : ''}
     </Box>
   )
 }

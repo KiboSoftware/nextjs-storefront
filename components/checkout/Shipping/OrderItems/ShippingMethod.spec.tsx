@@ -29,6 +29,7 @@ interface ShippingMethodProps {
 }
 
 const { Common } = composeStories(stories)
+const onChangeMock = jest.fn()
 
 const KiboSelectMock = () => <div data-testid="kibo-select-component" />
 jest.mock('@/components/common/KiboSelect/KiboSelect', () => KiboSelectMock)
@@ -38,7 +39,7 @@ jest.mock('@/components/common/ProductItem/ProductItem', () => productItemMock)
 describe('[component] - ShippingMethod', () => {
   const setup = (params?: ShippingMethodProps) => {
     const props = params ? params : Common.args
-    render(<Common {...props} />)
+    render(<Common {...props} onShippingMethodChange={onChangeMock} />)
   }
 
   it('should render component', () => {
