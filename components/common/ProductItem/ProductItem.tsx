@@ -89,6 +89,7 @@ const ProductItem = (props: ProductItemProps) => {
             width={200}
             alt={name}
             objectFit="contain"
+            errorimage={DefaultImage}
           />
         </Box>
 

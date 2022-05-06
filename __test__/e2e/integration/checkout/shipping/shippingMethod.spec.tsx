@@ -35,7 +35,7 @@ const onChangeMock = jest.fn()
 describe('[component] - ShippingMethod', () => {
   const setup = (params?: ShippingMethodProps) => {
     const props = params ? params : Common.args
-    render(<Common {...props} onChange={onChangeMock} />)
+    render(<Common {...props} onShippingMethodChange={onChangeMock} />)
   }
 
   it('should render component', () => {
