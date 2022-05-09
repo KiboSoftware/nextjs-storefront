@@ -5,7 +5,7 @@ import { render, screen } from '@testing-library/react'
 
 import * as stories from './ProductItem.stories'
 
-const { Common, WithPriceLabel, WithQtyLabel, WithoutDetailOption } = composeStories(stories)
+const { Common, WithoutDetailOption } = composeStories(stories)
 
 const priceMock = () => <div data-testid="price-component" />
 jest.mock('@/components/common/Price/Price', () => priceMock)
@@ -36,12 +36,8 @@ describe('[component] - ProductItem', () => {
   })
 
   describe('[component] - ProductItem without any label', () => {
-    const setup = () => {
-      render(<WithoutDetailOption {...WithoutDetailOption.args} />)
-    }
-
     it('should not show details when no product label(price,qty) or options is present', () => {
-      setup()
+      render(<WithoutDetailOption {...WithoutDetailOption.args} />)
 
       const detailsElement = screen.queryByText(/details/i)
 
