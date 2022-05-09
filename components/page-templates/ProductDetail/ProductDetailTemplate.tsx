@@ -289,6 +289,7 @@ const ProductDetailTemplate = (props: ProductDetailTemplateProps) => {
 
 export default ProductDetailTemplate
 
+// Should be replaced by Tripti's Ticket: ICKY-581
 const ProductSpec = (props: { properties: ProductProperties[] }) => {
   const [expanded, setExpanded] = React.useState(true)
 
