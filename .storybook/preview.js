@@ -6,6 +6,9 @@ import { initialize, mswDecorator } from 'msw-storybook-addon'
 
 import i18n from './i18n'
 import storefrontTheme from '../styles/theme'
+import { setConfig } from 'next/config'
+import { publicRuntimeConfig } from '../next.config'
+setConfig({ publicRuntimeConfig })
 
 import { QueryClientProvider } from 'react-query'
 import { queryClient } from '../lib/react-query/queryClient'

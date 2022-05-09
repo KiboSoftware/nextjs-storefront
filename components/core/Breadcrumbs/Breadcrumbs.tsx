@@ -3,12 +3,10 @@ import React from 'react'
 import { Link } from '@mui/material'
 import Breadcrumbs from '@mui/material/Breadcrumbs'
 
-export type Breadcrumb = {
-  text: string
-  link: string
-}
+import { BreadcrumbsListReturnType, BreadCrumb as BreadCrumbType } from '@/lib/types'
+
 interface BreadcrumbsProps {
-  breadcrumbs: Breadcrumb[]
+  breadcrumbs: BreadcrumbsListReturnType
   separator?: string
 }
 
@@ -20,13 +18,13 @@ export default function KiboBreadcrumbs({
   return (
     <div role="presentation">
       <Breadcrumbs aria-label="breadcrumb" separator={separator} {...rest}>
-        {breadcrumbs?.map((item: Breadcrumb, index) => {
+        {breadcrumbs?.map((item: BreadCrumbType, index) => {
           return (
             <Link
               underline="hover"
               variant="caption"
               color="text.primary"
-              href={item.link}
+              href={item.link as string}
               key={index}
               sx={{
                 typography: {

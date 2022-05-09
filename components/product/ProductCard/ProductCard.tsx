@@ -36,10 +36,10 @@ export interface ProductCardProps {
 
 const styles = {
   cardRoot: {
-    padding: '1rem 1.5rem',
+    padding: '0.625rem',
     backgroundColor: 'transparent',
-    maxWidth: {
-      xs: 149,
+    width: {
+      xs: 172,
       md: 202,
     },
     boxShadow: 'none',
@@ -86,7 +86,7 @@ const ProductCard = (props: ProductCardProps) => {
                 data-testid="product-image"
               />
             </CardMedia>
-            <Box flexDirection="column" m={1} mt={1}>
+            <Box flexDirection="column" m={2} mt={1}>
               <Typography variant="body1" gutterBottom color="text.primary">
                 {title}
               </Typography>

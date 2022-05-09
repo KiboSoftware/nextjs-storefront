@@ -13,12 +13,22 @@ export interface ProductOptionSelectProps {
   errorHelperText?: string
   row?: boolean
   placeholder?: string
+  label?: string
   onChange: (value: string) => void
 }
 
 const ProductOptionSelect = (props: ProductOptionSelectProps) => {
-  const { optionValues, name, value, error = false, errorHelperText = '', onChange } = props
   const { t } = useTranslation('product')
+  const {
+    optionValues,
+    name = t('select-product-option'),
+    value,
+    error = false,
+    errorHelperText = '',
+    label = t('select-product-option'),
+    placeholder = t('select-product-option'),
+    onChange,
+  } = props
 
   return (
     <KiboSelect
@@ -27,12 +37,12 @@ const ProductOptionSelect = (props: ProductOptionSelectProps) => {
       helperText={errorHelperText}
       onChange={onChange}
       value={value}
-      label={t('select-product-option')}
-      placeholder={t('select-product-option')}
+      label={label}
+      placeholder={placeholder}
     >
       {optionValues.map((optionVal) => (
         <MenuItem key={optionVal?.value} value={optionVal?.value}>
-          {optionVal?.stringValue}
+          {optionVal.stringValue || optionVal.value}
         </MenuItem>
       ))}
     </KiboSelect>

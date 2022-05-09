@@ -17,7 +17,7 @@ import {
 } from '@mui/material'
 import { useTranslation } from 'next-i18next'
 
-import { findParentNode } from '@/lib/helpers/findParentNode'
+import { findParentNode } from '@/lib/helpers'
 
 import { PrCategory } from '@/lib/gql/types'
 

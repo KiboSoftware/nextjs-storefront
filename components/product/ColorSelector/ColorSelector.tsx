@@ -54,6 +54,9 @@ const ColorOptions = (props: ColorOptionsProps) => {
         ...(isSelected && styles.selected),
         ...(!isEnabled && styles.disabled),
         backgroundColor: `${value}`,
+        '&:hover': {
+          backgroundColor: `${value}`,
+        },
       }}
       {...(!isSelected && isEnabled && { onClick: () => onColorSelection(attributeFQN, value) })}
       data-testid={`colorvalue-${value}`}
@@ -72,7 +75,7 @@ const ColorSelector = ({ attributeFQN, values, onChange }: ColorSelectorProps) =
     <Box display="flex" flexWrap="wrap" gap={2} data-testid="color-selector">
       {values?.map((option) => (
         <ColorOptions
-          key={option.attributeValueId}
+          key={option.value}
           attributeValueId={option.attributeValueId}
           attributeFQN={attributeFQN}
           value={option?.value}

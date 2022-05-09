@@ -11,6 +11,11 @@ module.exports = {
       'cdn-tp3.mozu.com',
       'cdn-tp4.mozu.com',
       'cdn-sb.mozu.com',
+      'imgs.search.brave.com',
     ],
+  },
+  publicRuntimeConfig: {
+    colorAttributeFQN: 'Tenant~Color',
+    sizeAttributeFQN: 'Tenant~Size',
   },
 }

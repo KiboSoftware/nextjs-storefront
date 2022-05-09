@@ -28,6 +28,6 @@ describe('[component] ProductOptionSelect component', () => {
     fireEvent.click(listbox.getByText(mockOption.stringValue))
 
     expect(ProductOptionSelect).toHaveTextContent(mockOption.stringValue)
-    expect(onChangeMock).toBeCalledWith('kibo-select', mockOption.value)
+    expect(onChangeMock).toBeCalledWith('select-product-option', mockOption.value)
   })
 })
