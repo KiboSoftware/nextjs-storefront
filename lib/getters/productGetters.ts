@@ -1,14 +1,6 @@
 import getConfig from 'next/config'
 
-import {
-  Maybe,
-  Product,
-  ProductImage,
-  ProductOption,
-  ProductOptionValue,
-  ProductPriceRange,
-  ProductProperty,
-} from '../gql/types'
+import { Product, ProductOption, ProductPriceRange, ProductProperty } from '../gql/types'
 import { buildBreadcrumbs, validateProductVariations } from '../helpers'
 import { ProductCustom, BreadcrumbsListReturnType } from '../types'
 
