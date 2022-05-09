@@ -84,7 +84,7 @@ const ProductCard = (props: ProductCardProps) => {
                 layout="fill"
                 objectFit="contain"
                 data-testid="product-image"
-                errorimage={placeholderImageUrl}
+                errorImage={placeholderImageUrl}
               />
             </CardMedia>
             <Box flexDirection="column" m={1} mt={1}>

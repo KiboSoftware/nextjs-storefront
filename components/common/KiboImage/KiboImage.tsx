@@ -1,8 +1,14 @@
 import { SyntheticEvent } from 'react'
 
+import { SvgIconComponent } from '@mui/icons-material'
 import Image, { ImageProps } from 'next/image'
 
 import DefaultImage from '@/public/product_placeholder.svg'
+
+interface KiboImageProps extends ImageProps {
+  errorImage?: ImageData | SvgIconComponent
+}
+
 const errorImage = { image: DefaultImage }
 const onImageError = (
   event: SyntheticEvent<HTMLImageElement, Event> & {
@@ -13,8 +19,8 @@ const onImageError = (
   target.src = errorImage.image
 }
 
-const KiboImage = (props: ImageProps) => {
-  errorImage.image = props.errorimage
+const KiboImage = (props: KiboImageProps) => {
+  errorImage.image = props.errorImage
   return <Image {...props} alt={props.alt} onError={onImageError} />
 }
 
