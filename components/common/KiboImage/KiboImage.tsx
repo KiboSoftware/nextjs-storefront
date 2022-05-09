@@ -10,6 +10,7 @@ interface KiboImageProps extends ImageProps {
 }
 
 const errorImage = { image: DefaultImage }
+
 const onImageError = (
   event: SyntheticEvent<HTMLImageElement, Event> & {
     target: HTMLImageElement
