@@ -21,7 +21,7 @@ interface CategoryFacetData {
 }
 
 interface CategoryFacetProps {
-  initialItemsToShow: number
+  initialItemsToShow?: number
   categoryFacet: CategoryFacetData
   onCategoryChildrenSelection: (categoryCode: string) => void
   onBackButtonClick: () => void
@@ -29,12 +29,11 @@ interface CategoryFacetProps {
 
 const styles = {
   linkContainer: {
-    pl: 1,
-    pb: 0,
     display: {
       xs: 'none',
       md: 'block',
     },
+    borderBottom: '1px solid #c7c7c7',
   },
   childrenCategories: {
     pl: '0.438rem',
@@ -100,7 +99,7 @@ const CategoryFacet = (props: CategoryFacetProps) => {
 
   return (
     <Box sx={styles.linkContainer}>
-      <Typography variant="subtitle1" sx={{ color: 'grey.900' }}>
+      <Typography variant="subtitle1" sx={{ color: 'grey.900', marginTop: '0.5rem' }}>
         {categoryFacet.header}
       </Typography>
       <Box sx={styles.childrenCategories}>

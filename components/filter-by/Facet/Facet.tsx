@@ -28,16 +28,24 @@ interface FacetProps extends FacetType {
 // MUI
 const style = {
   accordion: {
-    border: `1px solid ${grey[200]}`,
+    ':before': {
+      backgroundColor: '#c7c7c7',
+      opacity: 1,
+    },
+    borderBottom: `1px solid #c7c7c7`,
     boxShadow: 0,
+    borderRadius: 0,
   },
 
   accordionDetails: {
     pt: 0,
+    p: { md: 0 },
   },
-  button: { textTransform: 'capitalize', fontSize: (theme: Theme) => theme.typography.body2 } as
-    | SxProps<Theme>
-    | undefined,
+  button: {
+    textTransform: 'capitalize',
+    color: 'grey.900',
+    fontSize: (theme: Theme) => theme.typography.body2,
+  } as SxProps<Theme> | undefined,
 }
 
 // Component
@@ -101,6 +109,11 @@ const Facet = (props: FacetProps) => {
         expandIcon={<ExpandMoreIcon />}
         aria-controls="panel1bh-content"
         id="panel1bh-header"
+        sx={{
+          padding: {
+            md: '0',
+          },
+        }}
       >
         <Typography variant="h4" sx={{ fontWeight: 'bold' }}>
           {label}

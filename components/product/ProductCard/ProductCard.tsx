@@ -18,7 +18,7 @@ import Price from '@/components/common/Price/Price'
 import DefaultImage from '@/public/product_placeholder.svg'
 
 export interface ProductCardProps {
-  title: string
+  title?: string
   link: string
   imageUrl?: string
   placeholderImageUrl?: string
@@ -36,9 +36,10 @@ export interface ProductCardProps {
 
 const styles = {
   cardRoot: {
-    padding: '0.625rem',
-    width: {
-      xs: 172,
+    padding: '1rem 1.5rem',
+    backgroundColor: 'transparent',
+    maxWidth: {
+      xs: 149,
       md: 202,
     },
     boxShadow: 'none',
@@ -48,10 +49,10 @@ const styles = {
 const ProductCardSkeleton = () => {
   return (
     <Stack spacing={1} sx={styles.cardRoot} data-testid="product-card-skeleton">
-      <Skeleton variant="rectangular" height={100} />
+      <Skeleton variant="rectangular" height={108} />
       <Skeleton variant="rectangular" height={20} />
       <Skeleton variant="rectangular" width={60} height={20} />
-      <Skeleton variant="rectangular" height={20} />
+      <Skeleton variant="rectangular" width={87} height={20} />
     </Stack>
   )
 }
@@ -85,7 +86,7 @@ const ProductCard = (props: ProductCardProps) => {
                 data-testid="product-image"
               />
             </CardMedia>
-            <Box flexDirection="column" m={2} mt={0}>
+            <Box flexDirection="column" m={1} mt={1}>
               <Typography variant="body1" gutterBottom color="text.primary">
                 {title}
               </Typography>
