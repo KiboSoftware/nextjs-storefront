@@ -82,10 +82,17 @@ export const ProductDataMock = {
       attributeDetail: {
         name: 'Rating',
       },
+<<<<<<< HEAD
       isHidden: true,
       values: [
         {
           value: 3,
+=======
+      isHidden: false,
+      values: [
+        {
+          value: 5,
+>>>>>>> 56fbd7e (feat: PDP Structure)
           stringValue: null,
         },
       ],
@@ -95,7 +102,11 @@ export const ProductDataMock = {
       attributeDetail: {
         name: 'Product Upsells',
       },
+<<<<<<< HEAD
       isHidden: true,
+=======
+      isHidden: false,
+>>>>>>> 56fbd7e (feat: PDP Structure)
       values: [
         {
           value: 'BOT1',
@@ -133,7 +144,11 @@ export const ProductDataMock = {
       attributeDetail: {
         name: 'isRecommended',
       },
+<<<<<<< HEAD
       isHidden: true,
+=======
+      isHidden: false,
+>>>>>>> 56fbd7e (feat: PDP Structure)
       values: [
         {
           value: 'Military',
@@ -150,7 +165,11 @@ export const ProductDataMock = {
       attributeDetail: {
         name: 'Brand',
       },
+<<<<<<< HEAD
       isHidden: true,
+=======
+      isHidden: false,
+>>>>>>> 56fbd7e (feat: PDP Structure)
       values: [
         {
           value: 'Diamondback',
@@ -176,7 +195,11 @@ export const ProductDataMock = {
       attributeDetail: {
         name: 'video-url',
       },
+<<<<<<< HEAD
       isHidden: true,
+=======
+      isHidden: false,
+>>>>>>> 56fbd7e (feat: PDP Structure)
       values: [
         {
           value: 'https://www.youtube.com/watch?v=iz7wtTO7roQ',
@@ -189,7 +212,11 @@ export const ProductDataMock = {
       attributeDetail: {
         name: null,
       },
+<<<<<<< HEAD
       isHidden: true,
+=======
+      isHidden: false,
+>>>>>>> 56fbd7e (feat: PDP Structure)
       values: [
         {
           value: 'red',
