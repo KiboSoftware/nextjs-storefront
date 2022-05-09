@@ -10,7 +10,6 @@ import {
   SxProps,
   Typography,
 } from '@mui/material'
-import { grey } from '@mui/material/colors'
 import { Theme } from '@mui/material/styles'
 import { Box } from '@mui/system'
 import { useTranslation } from 'next-i18next'
