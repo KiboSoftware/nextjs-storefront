@@ -190,23 +190,23 @@ const ProductListingTemplate = (props: CategoryProps) => {
         <KiboBreadcrumbs breadcrumbs={breadCrumbsList} />
       </Box>
       {!isFilterBy && (
-        <Box sx={{ ...styles.navBar }}>
-          <Box sx={{ ...styles.navBarMain }}>
-            {!isLoading && (
-              <Typography variant="h1" sx={{ fontWeight: 'bold', color: 'grey.900' }}>
-                {categoryFacet.header}
-              </Typography>
-            )}
-            {isLoading && (
-              <Skeleton
-                variant="rectangular"
-                sx={{
-                  height: { md: '1.75rem', xs: '1.5rem' },
-                  width: { md: '15.625rem', xs: '10.75rem' },
-                }}
-              />
-            )}
-            {!isFilterBy && (
+        <Box>
+          <Box sx={{ ...styles.navBar }}>
+            <Box sx={{ ...styles.navBarMain }}>
+              {!isLoading && (
+                <Typography variant="h1" sx={{ fontWeight: 'bold', color: 'grey.900' }}>
+                  {categoryFacet.header}
+                </Typography>
+              )}
+              {isLoading && (
+                <Skeleton
+                  variant="rectangular"
+                  sx={{
+                    height: { md: '1.75rem', xs: '1.5rem' },
+                    width: { md: '15.625rem', xs: '10.75rem' },
+                  }}
+                />
+              )}
               <Box sx={{ ...styles.navBarSort }}>
                 {!isLoading && <Box sx={{ ...styles.navBarLabel }}>{t('sort-by')}</Box>}
                 {isLoading && (
@@ -254,26 +254,90 @@ const ProductListingTemplate = (props: CategoryProps) => {
                   {isLoading && <Skeleton variant="rectangular" height={36} />}
                 </Box>
               </Box>
-            )}
-            {!isLoading && (
-              <Box sx={{ ...styles.navBarView }}>
-                <Box
-                  component="span"
-                  sx={{ marginRight: '1rem', typography: 'body1', color: 'grey.900' }}
-                >
-                  {t('view')}
+              {!isLoading && (
+                <Box sx={{ ...styles.navBarView }}>
+                  <Box
+                    component="span"
+                    sx={{ marginRight: '1rem', typography: 'body1', color: 'grey.900' }}
+                  >
+                    {t('view')}
+                  </Box>
+                  <AppsIcon sx={{ fontSize: '2rem', marginRight: '1rem' }} />
+                  <ListIcon sx={{ fontSize: '2.4rem' }} />
                 </Box>
-                <AppsIcon sx={{ fontSize: '2rem', marginRight: '1rem' }} />
-                <ListIcon sx={{ fontSize: '2.4rem' }} />
-              </Box>
-            )}
-            {isLoading && (
-              <Box sx={{ ...styles.navBarView }}>
-                <Skeleton sx={{ marginRight: '1rem' }} height={19} width={34} />
-                <Skeleton sx={{ marginRight: '1rem' }} height={40} width={32} />
-                <Skeleton height={40} width={32} />
-              </Box>
-            )}
+              )}
+              {isLoading && (
+                <Box sx={{ ...styles.navBarView }}>
+                  <Skeleton sx={{ marginRight: '1rem' }} height={19} width={34} />
+                  <Skeleton sx={{ marginRight: '1rem' }} height={40} width={32} />
+                  <Skeleton height={40} width={32} />
+                </Box>
+              )}
+            </Box>
+          </Box>
+          <Box sx={{ ...styles.mainSection }}>
+            <Box sx={{ ...styles.sideBar }}>
+              <CategoryFacet
+                categoryFacet={categoryFacet}
+                onBackButtonClick={onBackButtonClick}
+                onCategoryChildrenSelection={onCategoryChildrenSelection}
+              />
+              <CategoryFilterBy
+                title="Filter By"
+                facetList={facetList}
+                onFilterByClick={handleFilterBy}
+              />
+            </Box>
+            <Box>
+              {!isLoading && (
+                <Grid container sx={{ flexWrap: 'wrap' }}>
+                  {productToShow.map((product, index) => {
+                    return (
+                      <Grid key={product?.link || index} item lg={3} md={4} sm={4} xs={6}>
+                        <ProductCard
+                          imageUrl={product?.imageUrl}
+                          link={product?.link}
+                          price={product?.price}
+                          title={product?.title}
+                        />
+                      </Grid>
+                    )
+                  })}
+                </Grid>
+              )}
+              {isLoading && (
+                <Grid container sx={{ flexWrap: 'wrap' }}>
+                  {Array.from(Array(16)).map((_, ind) => {
+                    return (
+                      <Grid key={ind} item lg={3} md={4} sm={4} xs={6}>
+                        <ProductCard isLoading={isLoading} link="/" />
+                      </Grid>
+                    )
+                  })}
+                </Grid>
+              )}
+              {!isLoading && isShowMoreButtonVisible && (
+                <Box>
+                  <Box>
+                    <Box sx={{ ...styles.productResults, color: 'grey.600', typography: 'body2' }}>
+                      Showing {initialProductsToShow} out of {products.length} items
+                    </Box>
+                  </Box>
+                  <Box>
+                    <Box sx={{ ...styles.productResults }}>
+                      <Button
+                        sx={{ ...styles.showMoreButton }}
+                        variant="contained"
+                        onClick={() => showMoreProducts()}
+                        color="inherit"
+                      >
+                        {t('show-more')}
+                      </Button>
+                    </Box>
+                  </Box>
+                </Box>
+              )}
+            </Box>
           </Box>
         </Box>
       )}
@@ -293,72 +357,6 @@ const ProductListingTemplate = (props: CategoryProps) => {
             isLoading={isLoading}
             onFilterByClick={handleFilterBy}
           />
-        </Box>
-      )}
-      {!isFilterBy && (
-        <Box sx={{ ...styles.mainSection }}>
-          <Box sx={{ ...styles.sideBar }}>
-            <CategoryFacet
-              categoryFacet={categoryFacet}
-              onBackButtonClick={onBackButtonClick}
-              onCategoryChildrenSelection={onCategoryChildrenSelection}
-            />
-            <CategoryFilterBy
-              title="Filter By"
-              facetList={facetList}
-              onFilterByClick={handleFilterBy}
-            />
-          </Box>
-          <Box>
-            {!isLoading && (
-              <Grid container sx={{ flexWrap: 'wrap' }}>
-                {productToShow.map((product, index) => {
-                  return (
-                    <Grid key={product?.link || index} item lg={3} md={4} sm={4} xs={6}>
-                      <ProductCard
-                        imageUrl={product?.imageUrl}
-                        link={product?.link}
-                        price={product?.price}
-                        title={product?.title}
-                      />
-                    </Grid>
-                  )
-                })}
-              </Grid>
-            )}
-            {isLoading && (
-              <Grid container sx={{ flexWrap: 'wrap' }}>
-                {Array.from(Array(16)).map((_, ind) => {
-                  return (
-                    <Grid key={ind} item lg={3} md={4} sm={4} xs={6}>
-                      <ProductCard isLoading={isLoading} link="/" />
-                    </Grid>
-                  )
-                })}
-              </Grid>
-            )}
-            {!isLoading && isShowMoreButtonVisible && (
-              <Box>
-                <Box>
-                  <Box sx={{ ...styles.productResults, color: 'grey.600', typography: 'body2' }}>
-                    Showing {initialProductsToShow} out of {products.length} items
-                  </Box>
-                </Box>
-                <Box>
-                  <Box sx={{ ...styles.productResults }}>
-                    <Button
-                      sx={{ ...styles.showMoreButton }}
-                      variant="contained"
-                      onClick={() => showMoreProducts()}
-                      color="inherit"
-                    >
-                      {t('show-more')}
-                    </Button>
-                  </Box>
-                </Box>
-              </Box>
-            )}
-          </Box>
         </Box>
       )}
     </>
