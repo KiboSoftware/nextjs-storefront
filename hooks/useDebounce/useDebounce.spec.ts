@@ -1,21 +1,45 @@
-import { useState } from 'react'
-
+import { act } from '@testing-library/react'
 import { renderHook } from '@testing-library/react-hooks'
 
+import { useDebounce } from './useDebounce'
+
 describe('[hooks] useDebounce', () => {
-  it('should use useDebounce', async () => {
-    let data
-    const userEnteredText = 'Test'
+  beforeAll(() => {
+    jest.useFakeTimers()
+  })
 
-    const { result, waitFor } = renderHook(() => {
-      const [searchTerm, setSearchTerm] = useState(userEnteredText)
-      jest.fn((v) => setSearchTerm(v))
+  afterEach(() => {
+    jest.clearAllTimers()
+  })
 
-      data = searchTerm
+  afterAll(() => {
+    jest.useRealTimers()
+  })
+
+  it('should be defined', () => {
+    expect(useDebounce).toBeDefined()
+  })
+
+  it('should return last value if calling debouncing sequencially within 500ms', async () => {
+    const { result, rerender } = renderHook(({ value, delay }) => useDebounce(value, delay), {
+      initialProps: { value: 'Test 1', delay: 500 },
     })
 
-    await waitFor(() => result.current)
+    rerender({ value: 'Test 2', delay: 500 })
+    rerender({ value: 'Test 3', delay: 500 })
+    act(() => jest.advanceTimersByTime(500))
+    expect(result.current).toBe('Test 3')
+  })
 
-    expect(data).toBe(userEnteredText)
+  it('should return actual value if calling debouncing in every 500ms', async () => {
+    const { result, rerender } = renderHook(({ value, delay }) => useDebounce(value, delay), {
+      initialProps: { value: 'Test 1', delay: 500 },
+    })
+
+    act(() => jest.advanceTimersByTime(500))
+    expect(result.current).toBe('Test 1')
+    rerender({ value: 'Test 2', delay: 500 })
+    act(() => jest.advanceTimersByTime(500))
+    expect(result.current).toBe('Test 2')
   })
 })

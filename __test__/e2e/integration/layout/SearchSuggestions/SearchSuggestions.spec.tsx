@@ -43,9 +43,11 @@ describe('[components] - SearchSuggestions Integration', () => {
     userEvent.type(input, userEnteredText)
     expect(input).toHaveValue(userEnteredText)
 
+    const suggestionModal = await screen.findByRole('contentinfo')
     const suggestions = await screen.findByText('suggestions')
     const categories = await screen.findByText('categories')
     const separator = await screen.findByRole('separator')
+    expect(suggestionModal).toBeVisible()
     expect(suggestions).toBeVisible()
     expect(categories).toBeVisible()
     expect(separator).toBeInTheDocument()
@@ -79,5 +81,29 @@ describe('[components] - SearchSuggestions Integration', () => {
     userEvent.click(clearButton)
 
     expect(input).toHaveValue('')
+  })
+
+  it('should close search suggestion when user clears the search', async () => {
+    setup()
+
+    const input = screen.getByRole('textbox', { name: 'search-input' })
+    userEvent.type(input, '')
+
+    const suggestionModal = await screen.findByRole('contentinfo')
+    expect(suggestionModal).not.toBeVisible()
+  })
+
+  it('should close search suggestion when user clicks on backdrop', async () => {
+    setup()
+
+    const input = screen.getByRole('textbox', { name: 'search-input' })
+    const backdrop = await screen.findByTestId('backdrop')
+    userEvent.type(input, userEnteredText)
+
+    expect(input).toHaveValue(userEnteredText)
+    userEvent.click(backdrop)
+
+    const suggestionModal = await screen.findByRole('contentinfo')
+    expect(suggestionModal).not.toBeVisible()
   })
 })

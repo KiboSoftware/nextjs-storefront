@@ -103,7 +103,7 @@ const SearchSuggestions = (props: SearchSuggestionsProps) => {
   const debouncedSearchResult = useDebounce(searchTerm, 500)
 
   useEffect(() => {
-    // Handle open close based on API response and use debouncedSearchResult as searchSuggestionResult once react query done
+    // Handle open close based on API response and use debouncedSearchResult as searchSuggestionResult and remove the prop once react query done
     searchTerm ? handleOpen() : handleClose()
 
     if (searchTerm) {
@@ -116,7 +116,7 @@ const SearchSuggestions = (props: SearchSuggestionsProps) => {
       <Box sx={{ zIndex: 1400 }}>
         <SearchBar searchTerm={searchTerm} onSearch={handleSearch} showClearButton />
       </Box>
-      <Collapse in={open} timeout="auto" unmountOnExit>
+      <Collapse in={open} timeout="auto" unmountOnExit role="contentinfo">
         <Paper sx={{ ...style.paper }}>
           <List sx={{ ...style.list }} role="group">
             <ListItemTitle heading="suggestions" />
