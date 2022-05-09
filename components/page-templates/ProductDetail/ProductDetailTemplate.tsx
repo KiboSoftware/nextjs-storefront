@@ -221,45 +221,63 @@ const ProductDetailTemplate = (props: ProductDetailTemplateProps) => {
         </Grid>
 
         {/* This section is hardcoded for now */}
-        <Grid item xs={12} sx={{ backgroundColor: 'grey.100', p: 5, marginY: 2 }}>
+        <Grid item xs={12} sx={{ backgroundColor: 'grey.100', p: { xs: 1, md: 5 }, marginY: 2 }}>
           <Typography variant="h2" gutterBottom>
             {t('product-recommendations')}
           </Typography>
-          <Box display="flex" gap={2} flexWrap="wrap">
+          <Box
+            display="flex"
+            sx={{ gap: { xs: 0, md: 4 }, maxWidth: { xs: '100vh', md: '100%' }, overflowX: 'auto' }}
+          >
             {Array.from(new Array(5)).map((each, i) => {
               return (
-                <ProductCard
-                  key={i}
-                  link="/product"
-                  title={'Nike Runner'}
-                  price={'$60.00'}
-                  rating={4}
-                  imageUrl={
-                    'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR-FMCFLCcOwFxZ3FNt8RKne3iqrwqY8OOnCw&usqp=CAU'
-                  }
-                />
+                <Grid item xs={6} md={2} key={i}>
+                  <ProductCard
+                    key={i}
+                    link="/product"
+                    title={'Nike Runner'}
+                    price={'$60.00'}
+                    rating={4}
+                    imageUrl={
+                      'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR-FMCFLCcOwFxZ3FNt8RKne3iqrwqY8OOnCw&usqp=CAU'
+                    }
+                  />
+                </Grid>
               )
             })}
           </Box>
         </Grid>
 
-        <Grid item xs={12} sx={{ backgroundColor: 'grey.100', p: 5, marginY: 2 }}>
+        <Grid
+          container
+          item
+          xs={12}
+          sx={{
+            backgroundColor: 'grey.100',
+            p: { xs: 1, md: 5 },
+            marginY: 2,
+          }}
+        >
           <Typography variant="h2" gutterBottom>
             {t('customers-also-bought')}
           </Typography>
-          <Box display="flex" flexWrap="wrap" gap={2}>
+          <Box
+            display="flex"
+            sx={{ gap: { xs: 0, md: 4 }, maxWidth: { xs: '100vh', md: '100%' }, overflowX: 'auto' }}
+          >
             {Array.from(new Array(5)).map((each, i) => {
               return (
-                <ProductCard
-                  key={i}
-                  link="/product"
-                  title={'Nike Runner'}
-                  price={'$60.00'}
-                  rating={4}
-                  imageUrl={
-                    'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR-FMCFLCcOwFxZ3FNt8RKne3iqrwqY8OOnCw&usqp=CAU'
-                  }
-                />
+                <Grid item xs={6} md={2} key={i}>
+                  <ProductCard
+                    link="/product"
+                    title={'Nike Runner'}
+                    price={'$60.00'}
+                    rating={4}
+                    imageUrl={
+                      'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR-FMCFLCcOwFxZ3FNt8RKne3iqrwqY8OOnCw&usqp=CAU'
+                    }
+                  />
+                </Grid>
               )
             })}
           </Box>
