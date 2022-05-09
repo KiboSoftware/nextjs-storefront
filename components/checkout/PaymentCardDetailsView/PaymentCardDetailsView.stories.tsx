@@ -16,7 +16,7 @@ const Template: ComponentStory<typeof PaymentCardDetailsView> = (args) => (
 export const Common = Template.bind({})
 
 Common.args = {
-  title: 'Payment Method',
+  withoutRadioTitle: 'Payment Method',
   cardLastFourDigits: '1234',
   expireMonth: 4,
   expireYear: 2026,
@@ -28,4 +28,5 @@ export const Radio = Template.bind({})
 Radio.args = {
   ...Common.args,
   radio: true,
+  radioGroupTitle: 'Your Default Payment method',
 }

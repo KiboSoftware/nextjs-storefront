@@ -3,8 +3,7 @@ import React from 'react'
 import { Box, Typography } from '@mui/material'
 import { useTranslation } from 'next-i18next'
 
-import BillingAddressDetailsView from '../BillingAddressDetailsView/BillingAddressDetailsView'
-import PaymentCardDetailsView from '../PaymentCardDetailsView/PaymentCardDetailsView'
+import { AddressDetailsView, PaymentCardDetailsView } from '@/components/checkout'
 
 import { Card, CrAddress } from '@/lib/gql/types'
 
@@ -39,18 +38,18 @@ const SavedPaymentMethodView = (props: SavedPaymentMethodViewProps) => {
       </Typography>
       <Box display="flex" gap={6} pt={2}>
         <PaymentCardDetailsView
-          title={t('payment-method')}
+          withoutRadioTitle={t('payment-method')}
           cardLastFourDigits={cardLastFourDigits}
           expireMonth={expireMonth}
           expireYear={expireYear}
         />
-        <BillingAddressDetailsView
-          title={t('billing-address')}
-          apartment={apartment}
-          streetAddress={streetAddress}
-          city={city}
-          state={zipCode}
-          zipCode={state}
+        <AddressDetailsView
+          withoutRadioTitle={t('billing-address')}
+          address2={apartment}
+          address1={streetAddress}
+          cityOrTown={city}
+          stateOrProvince={zipCode}
+          postalOrZipCode={state}
         />
       </Box>
     </Box>

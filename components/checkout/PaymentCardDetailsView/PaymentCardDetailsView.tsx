@@ -1,21 +1,13 @@
 import React from 'react'
 
-import {
-  Box,
-  FormControl,
-  FormControlLabel,
-  FormLabel,
-  Radio,
-  RadioGroup,
-  Typography,
-} from '@mui/material'
-import { useTranslation } from 'next-i18next'
+import { Box } from '@mui/material'
 
-import VISA from '@/assets/visa.svg'
-import KiboImage from '@/components/common/KiboImage/KiboImage'
+import KiboRadio from '@/components/common/KiboRadio/KiboRadio'
+import PaymentCard from '@/components/common/PaymentCard/PaymentCard'
 
 interface PaymentCardDetailsViewProps {
-  title?: string
+  radioGroupTitle?: string
+  withoutRadioTitle?: string
   cardLastFourDigits?: string
   expireMonth?: number
   expireYear?: number
@@ -23,66 +15,55 @@ interface PaymentCardDetailsViewProps {
 }
 
 const PaymentCardDetailsView = (props: PaymentCardDetailsViewProps) => {
-  const { title, radio = false } = props
+  const {
+    radioGroupTitle,
+    withoutRadioTitle,
+    radio = false,
+    cardLastFourDigits,
+    expireMonth,
+    expireYear,
+  } = props
+  const radioOptions = [
+    {
+      value: cardLastFourDigits as string,
+      label: (
+        <PaymentCard
+          cardLastFourDigits={cardLastFourDigits}
+          expireMonth={expireMonth}
+          expireYear={expireYear}
+          radio={radio}
+        />
+      ),
+    },
+  ]
+
+  const [selectedRadio, setSelectedRadio] = React.useState('')
+
+  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setSelectedRadio((event.target as HTMLInputElement).value)
+  }
+
   return (
-    <Box maxWidth={168} data-testid="payment-card-details-view">
-      {radio ? (
-        <>
-          <FormControl>
-            <FormLabel
-              id="demo-radio-buttons-group-label"
-              sx={{ fontSize: 'subtitle2', color: 'text.primary' }}
-            >
-              {title}
-            </FormLabel>
-            <RadioGroup aria-labelledby="payment-details-radio" name="radio-buttons-group">
-              <FormControlLabel
-                value=""
-                control={<Radio />}
-                label={<PaymentDetails details={props} />}
-              />
-            </RadioGroup>
-          </FormControl>
-        </>
-      ) : (
-        <PaymentDetails details={props} />
+    <Box maxWidth={'fit-content'} data-testid="payment-card-details-view">
+      {radio && (
+        <KiboRadio
+          title={radioGroupTitle}
+          radioOptions={radioOptions}
+          onChange={handleChange}
+          selected={selectedRadio}
+        />
+      )}
+      {!radio && (
+        <PaymentCard
+          title={withoutRadioTitle}
+          radio={radio}
+          cardLastFourDigits={cardLastFourDigits}
+          expireMonth={expireMonth}
+          expireYear={expireYear}
+        />
       )}
     </Box>
   )
 }
 
 export default PaymentCardDetailsView
-
-const PaymentDetails = (props: { details: PaymentCardDetailsViewProps }) => {
-  const { title, cardLastFourDigits, expireMonth, expireYear, radio } = props.details
-  const { t } = useTranslation('checkout')
-
-  return (
-    <>
-      {!radio && <Typography variant="subtitle2">{title}</Typography>}
-      <Box display="flex" justifyContent={'space-between'} pt={1} gap={3}>
-        <Box minWidth={32}>
-          <KiboImage src={VISA} alt="visa" width={32} height={24} />
-        </Box>
-        <Box>
-          <Box display="flex">
-            <Typography variant="body1" sx={{ pr: 1 }} component="span">
-              {t('ending')}
-            </Typography>
-            <Typography variant="body1" component="span">
-              {cardLastFourDigits}
-            </Typography>
-          </Box>
-          <Box display="flex">
-            <Typography variant="body1" sx={{ pr: 1 }} component="span">
-              {t('exp')}
-            </Typography>
-            <Typography variant="body1" component="span">
-              {expireMonth}/{expireYear}
-            </Typography>
-          </Box>
-        </Box>
-      </Box>
-    </>
-  )
-}

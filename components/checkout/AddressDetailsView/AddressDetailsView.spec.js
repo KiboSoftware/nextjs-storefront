@@ -3,11 +3,11 @@ import React from 'react'
 import { composeStories } from '@storybook/testing-react'
 import { render } from '@testing-library/react'
 
-import * as stories from './PaymentCardDetailsView.stories' // import all stories from the stories file
+import * as stories from './AddressDetailsView.stories' // import all stories from the stories file
 
 const { Common, Radio } = composeStories(stories)
 
-describe('[component] - PaymentCardDetailsView', () => {
+describe('[component] - AddressDetailsView', () => {
   it('should render the component', () => {
     const { asFragment } = render(<Common {...Common.args} />)
 
