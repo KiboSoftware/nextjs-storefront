@@ -10,9 +10,8 @@ const getName = (product: ProductCustom) => product?.content?.productName
 const getProductId = (product: ProductCustom): string => product?.productCode || ''
 
 const getRating = (product: ProductCustom) => {
-  const attr = product?.properties?.find(
-    (property) => property?.attributeFQN === ratingAttrFQN
-  )?.values
+  const attr = product?.properties?.find((property) => property?.attributeFQN === ratingAttrFQN)
+    ?.values
   return attr?.[0]?.value
 }
 
