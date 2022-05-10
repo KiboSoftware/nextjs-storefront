@@ -1,9 +1,7 @@
 /** @format */
 
-import { useState, useRef } from 'react'
-
 import CancelOutlinedIcon from '@mui/icons-material/CancelOutlined'
-import { Typography, Box, Button, TextField } from '@mui/material'
+import { Typography, Box } from '@mui/material'
 
 const PromoBadge = ({ promocode }: any) => {
   return (

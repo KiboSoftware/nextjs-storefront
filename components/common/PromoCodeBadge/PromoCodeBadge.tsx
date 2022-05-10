@@ -13,7 +13,7 @@ const PromoCodeBadge = ({ promoEnable }: any) => {
   const handleOnchange = (e: any) => {
     setPromo(e?.target?.value)
   }
-  const handleOnclick = (e: any) => {
+  const handleOnclick = () => {
     setPromoActive(true)
     const temp = promo
     setPromocode(temp)
