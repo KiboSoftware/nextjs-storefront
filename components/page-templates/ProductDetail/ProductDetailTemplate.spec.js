@@ -10,37 +10,31 @@ const { Common } = composeStories(stories)
 afterEach(cleanup)
 
 const ColorSelectorMock = () => <div data-testid="color-selector-mock" />
-jest.mock('@/components/product/ColorSelector/ColorSelector', () => ColorSelectorMock)
+jest.mock('../../product/ColorSelector/ColorSelector', () => ColorSelectorMock)
 
 const ProductVariantSizeSelectorMock = () => <div data-testid="size-selector-mock" />
 jest.mock(
-  '@/components/product/ProductVariantSizeSelector/ProductVariantSizeSelector',
+  '../../product/ProductVariantSizeSelector/ProductVariantSizeSelector',
   () => ProductVariantSizeSelectorMock
 )
 
 const ProductOptionCheckboxMock = () => <div data-testid="product-option-checkbox-mock" />
 jest.mock(
-  '@/components/product/ProductOptionCheckbox/ProductOptionCheckbox',
+  '../../product/ProductOptionCheckbox/ProductOptionCheckbox',
   () => ProductOptionCheckboxMock
 )
 
 const ProductOptionSelectMock = () => <div data-testid="product-option-select-mock" />
-jest.mock(
-  '@/components/product/ProductOptionSelect/ProductOptionSelect',
-  () => ProductOptionSelectMock
-)
+jest.mock('../../product/ProductOptionSelect/ProductOptionSelect', () => ProductOptionSelectMock)
 
 const ProductOptionTextBoxMock = () => <div data-testid="product-option-textbox-mock" />
-jest.mock(
-  '@/components/product/ProductOptionTextbox/ProductOptionTextbox',
-  () => ProductOptionTextBoxMock
-)
+jest.mock('../../product/ProductOptionTextbox/ProductOptionTextbox', () => ProductOptionTextBoxMock)
 
 const QuantitySelectorMock = () => <div data-testid="quantity-selector-mock" />
-jest.mock('@/components/common/QuantitySelector/QuantitySelector', () => QuantitySelectorMock)
+jest.mock('../../common/QuantitySelector/QuantitySelector', () => QuantitySelectorMock)
 
 const FulfillmentOptionsMock = () => <div data-testid="fulfillment-options-mock" />
-jest.mock('@/components/common/FulfillmentOptions/FulfillmentOptions', () => FulfillmentOptionsMock)
+jest.mock('../../common/FulfillmentOptions/FulfillmentOptions', () => FulfillmentOptionsMock)
 
 describe('[component] Product Detail Template component', () => {
   it('should render the Breadcrumb component', () => {
