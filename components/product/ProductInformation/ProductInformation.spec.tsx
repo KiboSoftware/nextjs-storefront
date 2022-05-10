@@ -1,7 +1,7 @@
 import React from 'react'
 
 import { composeStories } from '@storybook/testing-react'
-import { cleanup, render, screen } from '@testing-library/react'
+import { render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 
 import * as stories from './ProductInformation.stories'
@@ -12,8 +12,6 @@ describe('[component] - ProductInformation', () => {
   const setup = () => {
     render(<Common {...Common.args} />)
   }
-
-  afterEach(cleanup)
 
   it('should render component', () => {
     setup()
@@ -26,7 +24,7 @@ describe('[component] - ProductInformation', () => {
     expect(accordian).toHaveAttribute('aria-expanded', 'false')
   })
 
-  it('should expand prodect spec on clicking on accordian', () => {
+  it('should expand product spec section while opening the accordian', () => {
     setup()
 
     const accordian = screen.getByTestId('accordian')
