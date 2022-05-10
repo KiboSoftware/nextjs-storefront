@@ -68,15 +68,13 @@ describe('[component] Product Detail Template component', () => {
     expect(price).toBeVisible()
   })
 
-  // it('should render the Product short description', () => {
-  //   render(<Common {...Common.args} />)
+  it('should render the Product short description', () => {
+    render(<Common {...Common.args} />)
 
-  //   const desc = screen.getByText(
-  //     new RegExp(Common.args.product.content.productShortDescription)
-  //   )
+    const desc = screen.getByTestId('short-description')
 
-  //   expect(desc).toBeVisible()
-  // })
+    expect(desc).toBeVisible()
+  })
 
   it('should render the Product rating', () => {
     render(<Common {...Common.args} />)
