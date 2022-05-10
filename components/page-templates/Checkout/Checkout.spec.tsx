@@ -3,7 +3,6 @@ import React, { ReactNode } from 'react'
 import { composeStories } from '@storybook/testing-react'
 import { screen } from '@testing-library/react'
 
-import { orderMock } from '../../../__mocks__/stories/orderMock'
 import { renderWithQueryClient } from '../../../__test__/utils/renderWithQueryClient'
 import * as stories from './Checkout.stories'
 

@@ -93,7 +93,6 @@ const DetailsStep = forwardRef<DetailsHandler, DetailsProps>((props, ref) => {
     trigger,
     control,
     watch,
-    handleSubmit,
   } = useForm({
     mode: 'onBlur',
     reValidateMode: 'onBlur',
