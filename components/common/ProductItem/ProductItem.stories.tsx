@@ -67,7 +67,7 @@ const Template: ComponentStory<typeof ProductItem> = (args) => (
       />
     </Box>
     <Box sx={{ py: '0.5rem' }}>
-      <QuantitySelector quantity={cartItem.quantity} label="Qty: "></QuantitySelector>
+      <QuantitySelector quantity={cartItem.quantity} label="Qty"></QuantitySelector>
     </Box>
   </ProductItem>
 )
@@ -75,12 +75,11 @@ const Template: ComponentStory<typeof ProductItem> = (args) => (
 const TemplateWithPriceLabel: ComponentStory<typeof ProductItem> = (args) => (
   <ProductItem {...args}>
     <Box sx={{ py: '0.5rem' }}>
-      <QuantitySelector quantity={cartItem.quantity} label="Qty: "></QuantitySelector>
+      <QuantitySelector quantity={cartItem.quantity} label="Qty"></QuantitySelector>
     </Box>
   </ProductItem>
 )
 
-// Shopping cart: Show Price below the product name
 export const Common = Template.bind({})
 Common.args = {
   image: cartItem.product?.imageUrl || DefaultImage,
@@ -88,10 +87,25 @@ Common.args = {
   options: cartItem.product?.options as Array<CrProductOption>,
 }
 
-// Item Details with Price Label
 export const WithPriceLabel = TemplateWithPriceLabel.bind({})
 WithPriceLabel.args = {
   ...Common.args,
   price: '$' + (cartItem.product?.price?.price || 0).toString(),
   salePrice: '$' + (cartItem.product?.price?.salePrice || 0).toString(),
+}
+
+const TemplateWithQtyLabel: ComponentStory<typeof ProductItem> = (args) => <ProductItem {...args} />
+
+export const WithQtyLabel = TemplateWithQtyLabel.bind({})
+WithQtyLabel.args = {
+  ...Common.args,
+  qty: cartItem?.quantity,
+  price: '$' + (cartItem.product?.price?.price || 0).toString(),
+  salePrice: '$' + (cartItem.product?.price?.salePrice || 0).toString(),
+}
+
+export const WithoutDetailOption = TemplateWithQtyLabel.bind({})
+Common.args.options = []
+WithoutDetailOption.args = {
+  ...Common.args,
 }
