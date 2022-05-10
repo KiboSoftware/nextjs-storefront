@@ -84,7 +84,7 @@ export const ProductDataMock = {
       isHidden: false,
       values: [
         {
-          value: 5,
+          value: 3,
           stringValue: null,
         },
       ],

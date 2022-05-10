@@ -3,10 +3,10 @@ import React from 'react'
 import { Link } from '@mui/material'
 import Breadcrumbs from '@mui/material/Breadcrumbs'
 
-import { BreadcrumbsListReturnType, BreadCrumb as BreadCrumbType } from '@/lib/types'
+import { BreadCrumb as BreadCrumbType } from '@/lib/types'
 
 interface BreadcrumbsProps {
-  breadcrumbs: BreadcrumbsListReturnType
+  breadcrumbs: BreadCrumbType[]
   separator?: string
 }
 

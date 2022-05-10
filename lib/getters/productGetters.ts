@@ -2,7 +2,7 @@ import getConfig from 'next/config'
 
 import { Product, ProductOption, ProductPriceRange, ProductProperty } from '../gql/types'
 import { buildBreadcrumbs, validateProductVariations } from '../helpers'
-import { ProductCustom, BreadcrumbsListReturnType } from '../types'
+import { ProductCustom, BreadCrumb } from '../types'
 
 const ratingAttrFQN = `tenant~rating`
 const getName = (product: ProductCustom) => product?.content?.productName
@@ -50,7 +50,7 @@ const handleProtocolRelativeUrl = (url: string) => {
   return url
 }
 
-const getBreadcrumbs = (product: ProductCustom): BreadcrumbsListReturnType => {
+const getBreadcrumbs = (product: ProductCustom): BreadCrumb[] => {
   const homeCrumb = [{ text: 'Home', link: '/' }]
   if (!product?.categories?.[0]) {
     return homeCrumb
@@ -82,10 +82,7 @@ const getOptionSelectedValue = (option: ProductOption) => {
 export const getOptionName = (option: ProductOption): string => option?.attributeDetail?.name || ''
 export const getOptions = (product: Product) => product?.options
 
-const getSelectedFullfillmentOption = (product: ProductCustom) => {
-  const selectedFullfillmentOption = product?.fulfillmentMethod
-  return selectedFullfillmentOption
-}
+const getSelectedFullfillmentOption = (product: ProductCustom) => product?.fulfillmentMethod
 
 const getSegregatedOptions = (product: ProductCustom) => {
   const options = product?.options
@@ -118,15 +115,13 @@ const getSegregatedOptions = (product: ProductCustom) => {
     (option) => option?.attributeDetail?.inputType?.toLowerCase() === 'textbox'
   )
 
-  const productOptions = {
+  return {
     colourOptions,
     sizeOptions,
     selectOptions,
     yesNoOptions,
     textBoxOptions,
   }
-
-  return productOptions
 }
 
 const validateAddToCart = (product: ProductCustom): boolean =>
@@ -135,7 +130,7 @@ const validateAddToCart = (product: ProductCustom): boolean =>
 const getVariationProductCodeOrProductCode = (product: ProductCustom): string => {
   if (!product) return ''
   return product.variationProductCode
-    ? (product.variationProductCode as string)
+    ? product.variationProductCode
     : (product.productCode as string)
 }
 

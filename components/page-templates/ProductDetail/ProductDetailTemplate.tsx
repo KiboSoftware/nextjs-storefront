@@ -21,7 +21,7 @@ import { useTranslation } from 'next-i18next'
 import FulfillmentOptions from '@/components/common/FulfillmentOptions/FulfillmentOptions'
 import Price from '@/components/common/Price/Price'
 import QuantitySelector from '@/components/common/QuantitySelector/QuantitySelector'
-import Breadcrumbs from '@/components/core/Breadcrumbs/Breadcrumbs'
+import KiboBreadcrumbs from '@/components/core/Breadcrumbs/KiboBreadcrumbs'
 import ImageGallery from '@/components/core/ImageGallery/ImageGallery'
 import ColorSelector from '@/components/product/ColorSelector/ColorSelector'
 import ProductCard from '@/components/product/ProductCard/ProductCard'
@@ -77,7 +77,7 @@ const ProductDetailTemplate = (props: ProductDetailTemplateProps) => {
     <>
       <Grid container>
         <Grid item xs={12} alignItems="center" sx={{ paddingBlock: 4 }}>
-          <Breadcrumbs breadcrumbs={breadcrumbList} />
+          <KiboBreadcrumbs breadcrumbs={breadcrumbList} />
         </Grid>
         <Grid item xs={12} md={6} sx={{ pb: { xs: 3, md: 0 } }}>
           <ImageGallery images={productGallery as ProductImage[]} title={''} />
@@ -104,16 +104,17 @@ const ProductDetailTemplate = (props: ProductDetailTemplateProps) => {
             ></Typography>
           </Box>
 
-          <Rating
-            name="read-only"
-            value={productRating}
-            precision={0.5}
-            readOnly
-            size="small"
-            icon={<StarIcon color="primary" data-testid="filled-rating" />}
-            emptyIcon={<StarIcon data-testid="empty-rating" />}
-            data-testid="product-rating"
-          />
+          <Box data-testid="product-rating">
+            <Rating
+              name="read-only"
+              value={productRating}
+              precision={0.5}
+              readOnly
+              size="small"
+              icon={<StarIcon color="primary" />}
+              emptyIcon={<StarIcon />}
+            />
+          </Box>
 
           <Box paddingX={1} paddingY={3} display={optionsVisibility.color ? 'block' : 'none'}>
             <ColorSelector
@@ -229,7 +230,7 @@ const ProductDetailTemplate = (props: ProductDetailTemplateProps) => {
             display="flex"
             sx={{ gap: { xs: 0, md: 4 }, maxWidth: { xs: '100vh', md: '100%' }, overflowX: 'auto' }}
           >
-            {Array.from(new Array(5)).map((each, i) => {
+            {Array.from(new Array(5)).map((_each, i) => {
               return (
                 <Grid item xs={6} md={2} key={i}>
                   <ProductCard
@@ -265,7 +266,7 @@ const ProductDetailTemplate = (props: ProductDetailTemplateProps) => {
             display="flex"
             sx={{ gap: { xs: 0, md: 4 }, maxWidth: { xs: '100vh', md: '100%' }, overflowX: 'auto' }}
           >
-            {Array.from(new Array(5)).map((each, i) => {
+            {Array.from(new Array(5)).map((_each, i) => {
               return (
                 <Grid item xs={6} md={2} key={i}>
                   <ProductCard
@@ -322,9 +323,9 @@ const ProductSpec = (props: { properties: ProductProperties[] }) => {
       <Divider />
       <Collapse in={expanded} timeout="auto" unmountOnExit>
         <CardContent>
-          {props?.properties.map((option: ProductProperties, index: number) => {
+          {props?.properties.map((option: ProductProperties) => {
             return (
-              <Box data-testid="productOption" key={index}>
+              <Box data-testid="productOption" key={option.name}>
                 <Typography variant="body2" fontWeight="bold" sx={{ pr: 1 }} component="span">
                   {option.name}:
                 </Typography>

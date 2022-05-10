@@ -5,32 +5,32 @@ export const imageGalleryData = {
     {
       altText: 'kibo-image-thumbnail-1',
       imageUrl:
-        'https://imgs.search.brave.com/xcGjA2DBp8pxtYWKKHXQUlMMJTpniR8GmVFnhCMme4Y/rs:fit:850:995:1/g:ce/aHR0cHM6Ly9uMy5z/ZGxjZG4uY29tL2lt/Z3MvYS85L2QvVHJl/bmRmdWxsLUJsYWNr/LVNwb3J0cy1TaG9l/cy1TREw5NzUyNTAy/NzgtMS1mMDU4YS5q/cGc',
+        '//cdn-sb.mozu.com/30294-50525/cms/50525/files/d2249f22-a56f-42fe-be08-702801c97e4e',
     },
     {
       altText: 'kibo-image-thumbnail-2',
       imageUrl:
-        'https://imgs.search.brave.com/RAmhTjil_aHgyd1hxn2toPRMXmKjPiEUfGD6-qtQAw/rs:fit:1200:1200:1/g:ce/aHR0cDovL2Muc2hs/ZC5uZXQvcnB4L2kv/cy9pL3NwaW4vLTEy/Mi9wcm9kXzEyMTgz/ODUyMTEyPz9oZWk9/NjQmd2lkPTY0JnFs/dD01MA',
+        '//cdn-sb.mozu.com/30294-50525/cms/50525/files/af946329-d91b-4e41-a21e-4825179c4219',
     },
     {
       altText: 'kibo-image-thumbnail-3',
       imageUrl:
-        'https://imgs.search.brave.com/bVU1HBqOjUhTU231hZ3TeOJmkaH1PEdK1S8X1PZgcRQ/rs:fit:850:995:1/g:ce/aHR0cHM6Ly9uMS5z/ZGxjZG4uY29tL2lt/Z3MvYS96L3ovUHVt/YS1CbGFjay1TcG9y/dC1TaG9lcy1TREww/ODg5MzE4MjktMS05/YWY1My5KUEc',
+        '//cdn-sb.mozu.com/30294-50525/cms/50525/files/4d6a6222-6eb9-4f6c-bc0a-08e0d81d9454',
     },
     {
       altText: 'kibo-image-thumbnail-4',
       imageUrl:
-        'https://imgs.search.brave.com/r4yr2NmMHL7qEPjueW04rqIW8CpOWs7bkuTsRx0nNJk/rs:fit:750:504:1/g:ce/aHR0cHM6Ly9pbWFn/ZS5tYWRlLWluLWNo/aW5hLmNvbS8yZjBq/MDBldlVhbXR3cU1N/YkovTmV3LUZhc2hp/b24tU3BvcnQtU2hv/ZXMtSEswUzA0Mi0x/LS5qcGc',
+        '//cdn-sb.mozu.com/30294-50525/cms/50525/files/6deee665-8462-4076-b9b4-f2fc4f1a78e1',
     },
     {
       altText: 'kibo-image-thumbnail-5',
       imageUrl:
-        'https://imgs.search.brave.com/wuyFu_Yhq4XcPmfTkIM3y8f_JfQdBaofOm3BkOCICy0/rs:fit:1027:1027:1/g:ce/aHR0cHM6Ly93d3cu/a2hlbG1hcnQuY29t/L0NyaWNrZXQvem9v/bWVyX0ltYWdlL0xB/X1JOXzAwMDJfbGFy/Z2VfMi5qcGc',
+        '//cdn-sb.mozu.com/30294-50525/cms/50525/files/29d52512-18f2-4ea3-a64e-50a436fb9a9c',
     },
     {
       altText: 'kibo-image-thumbnail-6',
       imageUrl:
-        'https://imgs.search.brave.com/pgUvZv1bG-aixa0D3ztD5lSiVJUw0GXEQXiLYHWMpK8/rs:fit:1200:1200:1/g:ce/aHR0cHM6Ly9zN2Qy/LnNjZW5lNy5jb20v/aXMvaW1hZ2UvR29s/ZkdhbGF4eS9GQTEy/RkpTUE9SVFNMRVNC/TFU',
+        '//cdn-sb.mozu.com/30294-50525/cms/50525/files/16fb57de-9f71-49b4-9055-754f7ed77401',
     },
   ] as ProductImage[],
   title: 'Brooks Mens Levitate',

@@ -1,10 +1,7 @@
 import type { PrCategory } from '../gql/types'
-import type { BreadcrumbsListReturnType } from '../types'
+import type { BreadCrumb } from '../types'
 
-const buildBreadcrumbsList = (
-  rootCat: PrCategory,
-  bc: BreadcrumbsListReturnType
-): BreadcrumbsListReturnType => {
+const buildBreadcrumbsList = (rootCat: PrCategory, bc: BreadCrumb[]): BreadCrumb[] => {
   const newBc = [
     ...bc,
     {
@@ -12,11 +9,7 @@ const buildBreadcrumbsList = (
       link: `${rootCat.categoryCode}`,
     },
   ]
-  const result = rootCat.parentCategory
-    ? buildBreadcrumbsList(rootCat.parentCategory, newBc)
-    : newBc
-
-  return result
+  return rootCat.parentCategory ? buildBreadcrumbsList(rootCat.parentCategory, newBc) : newBc
 }
 
 export const buildBreadcrumbs = (rootCat: PrCategory) => buildBreadcrumbsList(rootCat, []).reverse()
