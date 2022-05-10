@@ -25,8 +25,6 @@ const getPrice = (product: ProductCustom): { regular: number; special: number } 
   }
 }
 
-const getSalePrice = (product: ProductCustom): number => product?.price?.salePrice || 0
-
 const getPriceRange = (product: ProductCustom): ProductPriceRange =>
   product?.priceRange as ProductPriceRange
 
@@ -39,7 +37,7 @@ const getDescription = (product: ProductCustom): string =>
 const getShortDescription = (product: ProductCustom): string =>
   product?.content?.productShortDescription || ''
 
-const getSFProductGallery = (product: ProductCustom) => {
+const getProductGallery = (product: ProductCustom) => {
   return product?.content?.productImages
 }
 
@@ -139,11 +137,10 @@ export const productGetters = {
   getRating,
   getProductTotalReviews,
   getPrice,
-  getSalePrice,
   getPriceRange,
   getDescription,
   getShortDescription,
-  getSFProductGallery,
+  getProductGallery,
   getBreadcrumbs,
   getProperties,
   getOptionSelectedValue,

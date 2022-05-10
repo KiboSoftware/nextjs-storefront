@@ -59,7 +59,7 @@ const ProductDetailTemplate = (props: ProductDetailTemplateProps) => {
   const productRating = productGetters.getRating(product)
   const description = productGetters.getDescription(product)
   const shortDescription = productGetters.getShortDescription(product)
-  const productGallery = productGetters.getSFProductGallery(product)
+  const productGallery = productGetters.getProductGallery(product)
 
   const productOptions = productGetters.getSegregatedOptions(product)
   const optionsVisibility = {

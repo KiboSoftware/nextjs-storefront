@@ -1,5 +1,6 @@
 export const ProductDataMock = {
   fulfillmentTypesSupported: ['DirectShip', 'InStorePickup'],
+  fulfillmentMethod: 'Ship',
   productCode: 'BIKE3',
   productUsage: 'Configurable',
   isPackagedStandAlone: false,
@@ -81,7 +82,7 @@ export const ProductDataMock = {
       attributeDetail: {
         name: 'Rating',
       },
-      isHidden: false,
+      isHidden: true,
       values: [
         {
           value: 3,
@@ -94,7 +95,7 @@ export const ProductDataMock = {
       attributeDetail: {
         name: 'Product Upsells',
       },
-      isHidden: false,
+      isHidden: true,
       values: [
         {
           value: 'BOT1',
@@ -132,7 +133,7 @@ export const ProductDataMock = {
       attributeDetail: {
         name: 'isRecommended',
       },
-      isHidden: false,
+      isHidden: true,
       values: [
         {
           value: 'Military',
@@ -149,7 +150,7 @@ export const ProductDataMock = {
       attributeDetail: {
         name: 'Brand',
       },
-      isHidden: false,
+      isHidden: true,
       values: [
         {
           value: 'Diamondback',
@@ -175,7 +176,7 @@ export const ProductDataMock = {
       attributeDetail: {
         name: 'video-url',
       },
-      isHidden: false,
+      isHidden: true,
       values: [
         {
           value: 'https://www.youtube.com/watch?v=iz7wtTO7roQ',
@@ -188,7 +189,7 @@ export const ProductDataMock = {
       attributeDetail: {
         name: null,
       },
-      isHidden: false,
+      isHidden: true,
       values: [
         {
           value: 'red',
