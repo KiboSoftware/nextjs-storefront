@@ -116,7 +116,6 @@ const DetailsStep = forwardRef<DetailsHandler, DetailsProps>((props, ref) => {
   const isFormValid = (): boolean => isValid
 
   const saveData = () => {
-    console.log(`isFormValid: ${isFormValid()}, isPasswordValid: ${isPasswordValid()}`)
     if (isFormValid() && isPasswordValid()) {
       const { email, firstName, lastNameOrSurname, password } = getValues()
       onPersonalDetailsSave({

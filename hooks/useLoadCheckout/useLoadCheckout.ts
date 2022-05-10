@@ -1,7 +1,9 @@
+import { request, gql } from 'graphql-request'
 import { useQuery } from 'react-query'
 
 import { orderMock } from '../../__mocks__/stories/orderMock'
 import { querykeys } from '../../lib/react-query/queryKeys'
+import { getCheckoutQuery, getOrCreateCheckoutFromCartMutation } from '@/lib/gql/queries'
 
 import type { Order } from '@/lib/gql/types'
 export interface UseLoadCheckout {
@@ -16,8 +18,26 @@ export interface UseLoadFromCart {
 }
 
 const getOrCreateCheckout = async (checkoutId?: string | null, cartId?: string | null) => {
-  if (checkoutId) return orderMock
-  if (cartId) return orderMock
+  let response
+
+  if (checkoutId) {
+    response = await request({
+      url: '/api/graphql',
+      document: getCheckoutQuery,
+      variables: { checkoutId },
+    })
+  }
+
+  if (cartId) {
+    response = await request({
+      url: '/api/graphql',
+      document: getOrCreateCheckoutFromCartMutation,
+      variables: { cartId },
+    })
+
+    console.log(`${checkoutId ? 'checkoutId' : 'cartId'} response: ${JSON.stringify(response)}`)
+    return response?.data?.checkout
+  }
 }
 
 export const useLoadCheckout = (checkoutId: string): UseLoadCheckout => {

@@ -33,8 +33,9 @@ const Checkout = () => {
 
   // State
   const [activeStep, setActiveStep] = useState<number>(0)
-  const [checkoutId, _setCheckoutId] = useState<string>('0')
-  const [cartId, _setCartId] = useState<string>('0')
+  // ToBe: state initial valies are just testing purpose later remove it
+  const [checkoutId, _setCheckoutId] = useState<string>('137a979305c65d00010800230000678b')
+  const [cartId, _setCartId] = useState<string>('137a94b6402be000013718d80000678b')
 
   // useCustomHooks
   const { data: checkoutInfo, isLoading: _isLoadCheckoutLoading } = useLoadCheckout(checkoutId)

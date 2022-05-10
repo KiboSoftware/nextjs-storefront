@@ -2,6 +2,7 @@ import { muiTheme } from 'storybook-addon-material-ui5'
 import { I18nextProvider } from 'react-i18next'
 import * as NextImage from 'next/image'
 import { INITIAL_VIEWPORTS } from '@storybook/addon-viewport'
+import { initialize, mswDecorator } from 'msw-storybook-addon'
 
 import i18n from './i18n'
 import storefrontTheme from '../styles/theme'
@@ -10,6 +11,9 @@ import { QueryClientProvider } from 'react-query'
 import { queryClient } from '../lib/react-query/queryClient'
 
 const OriginalNextImage = NextImage.default
+
+// Initialize MSW
+initialize()
 
 Object.defineProperty(NextImage, 'default', {
   configurable: true,
@@ -23,6 +27,7 @@ export const decorators = [
       <I18nextProvider i18n={i18n}>{storyFn()}</I18nextProvider>{' '}
     </QueryClientProvider>
   ),
+  mswDecorator,
 ]
 
 export const parameters = {
