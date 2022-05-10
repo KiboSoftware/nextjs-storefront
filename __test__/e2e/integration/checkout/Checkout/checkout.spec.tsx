@@ -12,7 +12,11 @@ const { Common } = composeStories(stories)
 jest.mock('../../../../../hooks', () => ({
   useLoadCheckout: jest.fn(() => ({})),
   useLoadFromCart: jest.fn(() => ({})),
-  useUpdatePersonalInfo: jest.fn(() => ({})),
+  useUpdatePersonalInfo: () => ({
+    mutateAsync: () => Promise.resolve(true),
+    isLoading: false,
+    isSuccess: true,
+  }),
 }))
 
 describe('[components] Checkout integration', () => {
@@ -42,48 +46,36 @@ describe('[components] Checkout integration', () => {
   it('should activate next step(shipping) when user enters valid input and clicks on "Go to Shipping" button', async () => {
     setup()
 
-    const email = 'Test@gmail.cm'
-    const firstName = 'FirstName'
-    const lastName = 'LastName'
-    const password = 'TestSecret@1' //NOSONAR
+    const email = 'Test@gmail.com'
 
-    const details: HTMLElement | null = screen.getByTestId('checkout-details')
-    const shipping = screen.queryByTestId('checkout-shipping')
+    // Verify that detailsStep are visible and shippingStep are not visible
+    let detailsStep: HTMLElement | null = screen.getByTestId('checkout-details')
+    let shippingStep = screen.queryByTestId('checkout-shipping')
 
-    const iWantToCreateAccount = screen.getByRole('checkbox', { name: /showaccountfields/i })
-    await act(async () => {
-      userEvent.click(iWantToCreateAccount)
-    })
+    expect(detailsStep).toBeVisible()
+    expect(shippingStep).not.toBeInTheDocument()
 
+    // Enter valid details
     const emailInput = screen.getByRole('textbox', { name: /your-email/i })
-    const firstNameInput = screen.getByRole('textbox', { name: /first-name/i })
-    const lastNameInput = screen.getByRole('textbox', { name: /last-name-or-sur-name/i })
-    const passwordInput = screen.getByRole('textbox', { name: /password/i })
-
-    expect(details).toBeVisible()
-    expect(shipping).not.toBeInTheDocument()
-
-    const nextButton = screen.getByRole('button', { name: /go-to-shipping/i })
 
     await act(async () => {
       userEvent.clear(emailInput)
       userEvent.type(emailInput, email)
-
-      userEvent.clear(firstNameInput)
-      userEvent.type(firstNameInput, firstName)
-
-      userEvent.clear(lastNameInput)
-      userEvent.type(lastNameInput, lastName)
-
-      userEvent.clear(passwordInput)
-      userEvent.type(passwordInput, password)
-
-      userEvent.click(nextButton)
     })
 
     expect(emailInput).toHaveValue(email)
-    expect(firstNameInput).toHaveValue(firstName)
-    expect(lastNameInput).toHaveValue(lastName)
-    expect(passwordInput).toHaveValue(password)
+
+    // Click on "Go to Shipping" button
+    const nextButton = screen.getByRole('button', { name: /go-to-shipping/i })
+    await act(async () => {
+      userEvent.click(nextButton)
+    })
+
+    // Verify that detailsStep are not visible and shippingStep are visible
+    detailsStep = screen.queryByTestId('checkout-details')
+    shippingStep = screen.getByTestId('checkout-shipping')
+
+    expect(detailsStep).not.toBeInTheDocument()
+    expect(shippingStep).toBeVisible()
   })
 })

@@ -56,7 +56,7 @@ const Checkout = () => {
   }
 
   // Refactor: Build Payload (separate out the logic) and call updatePersonalInfoMutation hook
-  const handlePerosnalDetails = (userEnteredPersonalDetails: PersonalDetails) => {
+  const handlePerosnalDetails = async (userEnteredPersonalDetails: PersonalDetails) => {
     const { email } = userEnteredPersonalDetails
     const personalInfo: PersonalInfo = {
       orderId: checkoutInfo?.id as string,
@@ -67,11 +67,14 @@ const Checkout = () => {
       },
     }
 
-    updatePersonalInfoMutation.mutate(personalInfo, {
-      onSuccess: () => {
-        setActiveStep(activeStep + 1)
-      },
-    })
+    try {
+      await updatePersonalInfoMutation.mutateAsync(personalInfo)
+      setActiveStep(activeStep + 1)
+    } catch (error) {
+      console.log(`error: ${error}`)
+    } finally {
+      console.log('done')
+    }
   }
 
   // Call Queries
