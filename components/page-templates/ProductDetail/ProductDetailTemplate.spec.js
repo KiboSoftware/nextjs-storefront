@@ -36,9 +36,14 @@ jest.mock('../../common/QuantitySelector/QuantitySelector', () => QuantitySelect
 const FulfillmentOptionsMock = () => <div data-testid="fulfillment-options-mock" />
 jest.mock('../../common/FulfillmentOptions/FulfillmentOptions', () => FulfillmentOptionsMock)
 
+const setUp = () => {
+  render(<Common {...Common.args} />)
+}
+
 describe('[component] Product Detail Template component', () => {
   it('should render the Breadcrumb component', () => {
-    render(<Common {...Common.args} />)
+    setUp()
+
     const breadcrumbList = screen.getByRole('list')
 
     const breadcrumbLinks = within(breadcrumbList).getAllByRole('link')
@@ -47,7 +52,7 @@ describe('[component] Product Detail Template component', () => {
   })
 
   it('should render the Product name', () => {
-    render(<Common {...Common.args} />)
+    setUp()
 
     const name = screen.getByRole('heading', {
       name: new RegExp(Common.args.product.content.productName),
@@ -57,7 +62,7 @@ describe('[component] Product Detail Template component', () => {
   })
 
   it('should render the Product price', () => {
-    render(<Common {...Common.args} />)
+    setUp()
 
     const { t } = useTranslation('common')
 
@@ -69,7 +74,7 @@ describe('[component] Product Detail Template component', () => {
   })
 
   it('should render the Product short description', () => {
-    render(<Common {...Common.args} />)
+    setUp()
 
     const desc = screen.getByTestId('short-description')
 
@@ -77,7 +82,7 @@ describe('[component] Product Detail Template component', () => {
   })
 
   it('should render the Product rating', () => {
-    render(<Common {...Common.args} />)
+    setUp()
 
     const rating = screen.getAllByTestId('StarRoundedIcon')
 
@@ -85,43 +90,59 @@ describe('[component] Product Detail Template component', () => {
   })
 
   it('should render the ColorSelector component', () => {
-    render(<Common {...Common.args} />)
+    setUp()
 
-    expect(screen.getByTestId('color-selector-mock')).toBeVisible()
+    const ColorSelector = screen.getByTestId('color-selector-mock')
+
+    expect(ColorSelector).toBeVisible()
   })
 
   it('should render the ProductVariantSizeSelector', () => {
-    render(<Common {...Common.args} />)
+    setUp()
 
-    expect(screen.getByTestId('size-selector-mock')).toBeVisible()
+    const SizeSelector = screen.getByTestId('size-selector-mock')
+
+    expect(SizeSelector).toBeVisible()
   })
 
   it('should render the ProductOptionSelect component', () => {
-    render(<Common {...Common.args} />)
+    setUp()
 
-    expect(screen.getByTestId('product-option-select-mock')).toBeVisible()
+    const ProductOptionSelect = screen.getByTestId('product-option-select-mock')
+    expect(ProductOptionSelect).toBeVisible()
   })
 
   it('should render the ProductOptionCheckbox component', () => {
-    render(<Common {...Common.args} />)
+    setUp()
 
-    expect(screen.getByTestId('product-option-checkbox-mock')).toBeVisible()
+    const ProductOptionCheckbox = screen.getByTestId('product-option-checkbox-mock')
+    expect(ProductOptionCheckbox).toBeVisible()
+  })
+
+  it('should render the ProductOptionTextbox component', () => {
+    setUp()
+
+    const ProductOptionTextBox = screen.getByTestId('product-option-textbox-mock')
+    expect(ProductOptionTextBox).toBeVisible()
   })
 
   it('should render the QuantitySelector component', () => {
-    render(<Common {...Common.args} />)
+    setUp()
 
-    expect(screen.getByTestId('quantity-selector-mock')).toBeVisible()
+    const QuantitySelector = screen.getByTestId('quantity-selector-mock')
+    expect(QuantitySelector).toBeVisible()
   })
 
   it('should render the FulfillmentOptions component', () => {
-    render(<Common {...Common.args} />)
+    setUp()
 
-    expect(screen.getByTestId('fulfillment-options-mock')).toBeVisible()
+    const FulfillmentOptions = screen.getByTestId('fulfillment-options-mock')
+    expect(FulfillmentOptions).toBeVisible()
   })
 
   it('should render the Add to Cart Button', () => {
-    render(<Common {...Common.args} />)
+    setUp()
+
     const { t } = useTranslation('common')
 
     expect(
@@ -132,7 +153,8 @@ describe('[component] Product Detail Template component', () => {
   })
 
   it('should render the Add to Wishlist Button', () => {
-    render(<Common {...Common.args} />)
+    setUp()
+
     const { t } = useTranslation('common')
 
     expect(
@@ -143,7 +165,8 @@ describe('[component] Product Detail Template component', () => {
   })
 
   it('should render the 1 click checkout Button', () => {
-    render(<Common {...Common.args} />)
+    setUp()
+
     const { t } = useTranslation('common')
 
     expect(

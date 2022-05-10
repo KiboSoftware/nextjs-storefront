@@ -24,10 +24,10 @@ import QuantitySelector from '@/components/common/QuantitySelector/QuantitySelec
 import KiboBreadcrumbs from '@/components/core/Breadcrumbs/KiboBreadcrumbs'
 import ImageGallery from '@/components/core/ImageGallery/ImageGallery'
 import ColorSelector from '@/components/product/ColorSelector/ColorSelector'
-import ProductCard from '@/components/product/ProductCard/ProductCard'
 import ProductOptionCheckbox from '@/components/product/ProductOptionCheckbox/ProductOptionCheckbox'
 import ProductOptionSelect from '@/components/product/ProductOptionSelect/ProductOptionSelect'
 import ProductOptionTextBox from '@/components/product/ProductOptionTextBox/ProductOptionTextBox'
+import ProductRecommendations from '@/components/product/ProductRecommendations/ProductRecommendations'
 import ProductVariantSizeSelector from '@/components/product/ProductVariantSizeSelector/ProductVariantSizeSelector'
 import { productGetters } from '@/lib/getters'
 import type { ProductCustom } from '@/lib/types'
@@ -226,73 +226,12 @@ const ProductDetailTemplate = (props: ProductDetailTemplateProps) => {
         </Grid>
 
         {/* This section is hardcoded for now */}
-        <Grid item xs={12} sx={{ backgroundColor: 'grey.100', p: { xs: 1, md: 5 }, marginY: 2 }}>
-          <Typography variant="h2" gutterBottom>
-            {t('product-recommendations')}
-          </Typography>
-          <Box
-            display="flex"
-            sx={{ gap: { xs: 0, md: 4 }, maxWidth: { xs: '100vh', md: '100%' }, overflowX: 'auto' }}
-          >
-            {Array.from(new Array(5)).map((_each, i) => {
-              return (
-                <Grid item xs={6} md={2} key={i}>
-                  <ProductCard
-                    key={i}
-                    link="/product"
-                    title={'Nike Runner'}
-                    price={'$60.00'}
-                    rating={4}
-                    imageUrl={
-                      'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR-FMCFLCcOwFxZ3FNt8RKne3iqrwqY8OOnCw&usqp=CAU'
-                    }
-                  />
-                </Grid>
-              )
-            })}
-          </Box>
-        </Grid>
-
-        <Grid
-          container
-          item
-          xs={12}
-          sx={{
-            backgroundColor: 'grey.100',
-            p: { xs: 1, md: 5 },
-            marginY: 2,
-          }}
-        >
-          <Typography variant="h2" gutterBottom>
-            {t('customers-also-bought')}
-          </Typography>
-          <Box
-            display="flex"
-            sx={{ gap: { xs: 0, md: 4 }, maxWidth: { xs: '100vh', md: '100%' }, overflowX: 'auto' }}
-          >
-            {Array.from(new Array(5)).map((_each, i) => {
-              return (
-                <Grid item xs={6} md={2} key={i}>
-                  <ProductCard
-                    link="/product"
-                    title={'Nike Runner'}
-                    price={'$60.00'}
-                    rating={4}
-                    imageUrl={
-                      'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR-FMCFLCcOwFxZ3FNt8RKne3iqrwqY8OOnCw&usqp=CAU'
-                    }
-                  />
-                </Grid>
-              )
-            })}
-          </Box>
-        </Grid>
+        <ProductRecommendations title={t('product-recommendations')} />
+        <ProductRecommendations title={t('customers-also-bought')} />
       </Grid>
     </>
   )
 }
-
-export default ProductDetailTemplate
 
 // Should be replaced by Tripti's Ticket: ICKY-581
 const ProductSpec = (props: { properties: ProductProperties[] }) => {
@@ -344,3 +283,5 @@ const ProductSpec = (props: { properties: ProductProperties[] }) => {
     </Card>
   )
 }
+
+export default ProductDetailTemplate

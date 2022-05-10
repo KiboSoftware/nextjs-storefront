@@ -11,9 +11,9 @@ export default {
 
 const Template: ComponentStory<typeof ProductCard> = (args) => <ProductCard {...args} />
 
-export const Default = Template.bind({})
+export const Common = Template.bind({})
 // More on args: https://storybook.js.org/docs/react/writing-stories/args
-Default.args = {
+Common.args = {
   imageUrl: `https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR-FMCFLCcOwFxZ3FNt8RKne3iqrwqY8OOnCw&usqp=CAU`,
   link: '/product/test-123',
   price: '$19.98',
