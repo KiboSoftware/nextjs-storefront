@@ -10,20 +10,17 @@ import OrderSummary from './OrderSummary'
 const styles = {
   checkOutButtonStyle: {
     borderradius: '0.25rem',
-    width: '376px',
     height: '42px',
   },
   shippingButtonStyle: {
     borderradius: '0.25rem',
-    margin: '10px',
-    width: '376px',
+    marginBottom: '10px',
     height: '42px',
   },
   backButtonStyle: {
     color: 'black',
     backgroundColor: 'white',
     borderradius: '0.25rem',
-    width: '376px',
     height: '42px',
   },
 }
@@ -36,7 +33,7 @@ export default {
 } as ComponentMeta<typeof OrderSummary>
 const CheckoutTemplate: ComponentStory<typeof OrderSummary> = (args) => (
   <OrderSummary {...args}>
-    <Button variant="contained" sx={styles.checkOutButtonStyle}>
+    <Button variant="contained" sx={styles.checkOutButtonStyle} fullWidth>
       Go To Checkout
     </Button>
   </OrderSummary>
@@ -44,10 +41,10 @@ const CheckoutTemplate: ComponentStory<typeof OrderSummary> = (args) => (
 
 const ShippingTemplate: ComponentStory<typeof OrderSummary> = (args) => (
   <OrderSummary {...args}>
-    <Button variant="contained" sx={styles.shippingButtonStyle}>
+    <Button variant="contained" sx={styles.shippingButtonStyle} fullWidth>
       Go To Shipping
     </Button>
-    <Button variant="contained" sx={styles.backButtonStyle}>
+    <Button variant="contained" sx={styles.backButtonStyle} fullWidth>
       Go back
     </Button>
   </OrderSummary>

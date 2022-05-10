@@ -2,6 +2,7 @@
 
 import InfoIcon from '@mui/icons-material/Info'
 import { Card, Typography, Box, CardActionArea, CardContent, Divider } from '@mui/material'
+import { useTranslation } from 'next-i18next'
 
 interface OrderSummaryProps {
   subTotal?: string
@@ -46,13 +47,8 @@ const OrderSummary = (props: OrderSummaryProps) => {
     orderTotalLabel,
   } = props
 
-  const Typo = ({ props }: any) => {
-    return (
-      <>
-        <Typography sx={{ fontSize: (theme: any) => theme.typography.h5 }}>{props}</Typography>
-      </>
-    )
-  }
+  const { t } = useTranslation('common')
+
   return (
     <Card sx={{ bgcolor: 'grey.100', maxWidth: '26.75rem', width: '100%' }}>
       <CardActionArea>
@@ -72,39 +68,39 @@ const OrderSummary = (props: OrderSummaryProps) => {
         <Divider />
         <CardContent>
           <Box sx={styles.boxStyle}>
-            <Typography sx={{ fontSize: (theme: any) => theme.typography.h5 }}>
-              {cartTotalLabel} of ({numberOfItems})
+            <Typography variant="h5">
+              {t('cart-total', { cartTotalLabel: cartTotalLabel, numberOfItems: numberOfItems })}
             </Typography>
-            <Typo props={subTotal} />
+            <Typography variant="h5">{subTotal}</Typography>
           </Box>
           <br />
           <Box sx={styles.boxStyle}>
-            <Typo props={standardShippingLabel} />
-            <Typo props={standardShippingAmount} />
+            <Typography variant="h5">{standardShippingLabel}</Typography>
+            <Typography variant="h5">{standardShippingAmount}</Typography>
           </Box>
           <br />
           <Box sx={styles.boxStyle}>
-            <Typography sx={{ fontSize: (theme: any) => theme.typography.h5 }}>
+            <Typography variant="h5">
               {estimatedTaxLabel}
               <InfoIcon sx={{ fontSize: (theme: any) => theme.typography.h5 }} />
             </Typography>
-            <Typo props={estimatedTaxAmout} />
+            <Typography variant="h5">{estimatedTaxAmout}</Typography>
           </Box>
           <br />
           <Divider variant="middle" />
 
           <br />
           <Box sx={styles.boxStyle}>
-            <Typography sx={{ fontSize: (theme: any) => theme.typography.h5, fontWeight: 'bold' }}>
+            <Typography variant="h5" sx={{ fontWeight: 'bold' }}>
               {orderTotalLabel}
             </Typography>
-            <Typography sx={{ fontSize: (theme: any) => theme.typography.h5, fontWeight: 'bold' }}>
+            <Typography variant="h5" sx={{ fontWeight: 'bold' }}>
               {orderTotal}
             </Typography>
           </Box>
         </CardContent>
         <CardContent>
-          <Box textAlign="center">{props.children}</Box>
+          <Box textAlign="center" >{props.children}</Box>
         </CardContent>
       </CardActionArea>
     </Card>
