@@ -28,7 +28,7 @@ const ProductOptionSelectMock = () => <div data-testid="product-option-select-mo
 jest.mock('../../product/ProductOptionSelect/ProductOptionSelect', () => ProductOptionSelectMock)
 
 const ProductOptionTextBoxMock = () => <div data-testid="product-option-textbox-mock" />
-jest.mock('../../product/ProductOptionTextbox/ProductOptionTextbox', () => ProductOptionTextBoxMock)
+jest.mock('../../product/ProductOptionTextBox/ProductOptionTextBox', () => ProductOptionTextBoxMock)
 
 const QuantitySelectorMock = () => <div data-testid="quantity-selector-mock" />
 jest.mock('../../common/QuantitySelector/QuantitySelector', () => QuantitySelectorMock)
