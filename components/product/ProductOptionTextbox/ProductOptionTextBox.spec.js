@@ -3,7 +3,6 @@ import { render, screen } from '@testing-library/react'
 import '@testing-library/jest-dom'
 import userEvent from '@testing-library/user-event'
 
-import { productOptionTextBoxMock } from '../../../__mocks__/stories/productOptionTextBoxMock'
 import * as stories from './ProductOptionTextBox.stories' // import all stories from the stories file
 
 const { Common } = composeStories(stories)
@@ -18,19 +17,19 @@ const setup = () => {
 }
 
 describe('[component] ProductOptionTextBox component', () => {
-  it('should render all the options', () => {
+  it('should render option', () => {
     setup()
-    const textbox = screen.getAllByTestId('kibo-textbox-component')
-    expect(textbox).toHaveLength(productOptionTextBoxMock.length)
+    const textbox = screen.getByTestId('kibo-textbox-component')
+    expect(textbox).toBeInTheDocument()
   })
 
   it('should show user entered value', () => {
     setup()
 
-    const textBoxList = screen.getAllByRole('textbox')
-    userEvent.type(textBoxList[0], 'Test')
+    const textbox = screen.getByRole('textbox')
+    userEvent.type(textbox, 'Test')
 
-    expect(textBoxList[0]).toHaveValue('Test')
-    expect(onChangMock).toHaveBeenCalled()
+    expect(textbox).toHaveValue('Test')
+    expect(onChangMock).toHaveBeenCalledTimes(4)
   })
 })

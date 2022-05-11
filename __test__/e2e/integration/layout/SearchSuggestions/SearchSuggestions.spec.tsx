@@ -2,18 +2,24 @@ import React from 'react'
 
 import '@testing-library/jest-dom'
 import { composeStories } from '@storybook/testing-react'
-import { render, screen } from '@testing-library/react'
+import { render, screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 
+import { searchSuggestionResult } from '../../../../../__mocks__/stories/searchSuggestionResultMock'
 import * as stories from '../../../../../components/layout/SearchSuggestions/SearchSuggestions.stories'
 
 const { Common } = composeStories(stories)
 
 describe('[components] - SearchSuggestions Integration', () => {
   const userEnteredText = 'T'
+  const searchSuggestions = searchSuggestionResult
 
   const setup = () => {
-    render(<Common {...Common.args} />)
+    render(<Common />)
+
+    return {
+      searchSuggestions,
+    }
   }
 
   it('should render component', async () => {
@@ -52,7 +58,7 @@ describe('[components] - SearchSuggestions Integration', () => {
     expect(categories).toBeVisible()
     expect(separator).toBeInTheDocument()
 
-    const count = Common.args?.searchSuggestionResult?.suggestionGroups?.length || 0
+    const count = searchSuggestions.suggestionGroups?.length || 0
     expect(screen.getAllByRole('group')).toHaveLength(count)
   })
 
@@ -69,7 +75,7 @@ describe('[components] - SearchSuggestions Integration', () => {
     expect(backdrop).toBeVisible()
   })
 
-  it('should clear the search input when user clicks on cross button', async () => {
+  it('should clear the search input and close the search suggestion when user clicks on cross button', async () => {
     setup()
 
     const input = screen.getByRole('textbox', { name: 'search-input' })
@@ -81,16 +87,21 @@ describe('[components] - SearchSuggestions Integration', () => {
     userEvent.click(clearButton)
 
     expect(input).toHaveValue('')
+    await waitFor(() => expect(screen.queryByRole('contentinfo')).not.toBeInTheDocument())
   })
 
-  it('should close search suggestion when user clears the search', async () => {
+  it('should close search suggestion when user clears the search text', async () => {
     setup()
 
     const input = screen.getByRole('textbox', { name: 'search-input' })
-    userEvent.type(input, '')
+    userEvent.type(input, userEnteredText)
 
     const suggestionModal = await screen.findByRole('contentinfo')
-    expect(suggestionModal).not.toBeVisible()
+    expect(suggestionModal).toBeVisible()
+
+    userEvent.clear(input)
+    expect(input).toHaveValue('')
+    await waitFor(() => expect(screen.queryByRole('contentinfo')).not.toBeInTheDocument())
   })
 
   it('should close search suggestion when user clicks on backdrop', async () => {
@@ -102,8 +113,6 @@ describe('[components] - SearchSuggestions Integration', () => {
 
     expect(input).toHaveValue(userEnteredText)
     userEvent.click(backdrop)
-
-    const suggestionModal = await screen.findByRole('contentinfo')
-    expect(suggestionModal).not.toBeVisible()
+    await waitFor(() => expect(screen.queryByRole('contentinfo')).not.toBeInTheDocument())
   })
 })

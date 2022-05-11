@@ -1,5 +1,3 @@
-import React from 'react'
-
 import { QueryClient } from 'react-query'
 
 const queryClientHandler = (error: unknown) => {

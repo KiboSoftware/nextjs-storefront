@@ -1,25 +1,11 @@
 import React, { useEffect, useState } from 'react'
 
-import {
-  Backdrop,
-  Box,
-  Collapse,
-  Divider,
-  List,
-  ListItem,
-  ListItemText,
-  Paper,
-  Stack,
-  SxProps,
-  Theme,
-  Typography,
-} from '@mui/material'
-import { useTranslation } from 'next-i18next'
+import { Backdrop, Box, Collapse, Divider, List, Paper, Stack, SxProps, Theme } from '@mui/material'
 
-import { useDebounce, useUpdateRoutes } from '../../../hooks'
+import { useDebounce, useSearchSuggestions } from '../../../hooks'
+import Content from '../Content/Content'
+import Title from '../Title/Title'
 import SearchBar from '@/components/common/SearchBar/SearchBar'
-
-import type { SearchSuggestionResult } from '@/lib/gql/types'
 
 const style = {
   paper: {
@@ -33,60 +19,10 @@ const style = {
   list: {
     p: 2,
   },
-  listItem: {
-    '&:focus': {
-      backgroundColor: 'transparent',
-    },
-    '&:hover': {
-      backgroundColor: 'transparent',
-    },
-  },
-  listItemText: {
-    fontSize: (theme: Theme) => theme.typography.body2,
-    margin: 0,
-  } as SxProps<Theme> | undefined,
 }
 
-interface SearchSuggestionsProps {
-  searchSuggestionResult: SearchSuggestionResult
-}
-
-interface ListItemProps {
-  heading?: string
-  code?: string
-  name?: string
-}
-
-const ListItemTitle = (props: ListItemProps) => {
-  const { heading } = props
-  const { t } = useTranslation('common')
-
-  return (
-    <ListItem key="Suggestions" sx={{ ...style.listItem }}>
-      <Typography fontWeight={600} variant="subtitle1">
-        {t(heading as string)}
-      </Typography>
-    </ListItem>
-  )
-}
-
-const ListItemContent = (props: ListItemProps) => {
-  const { code, name } = props
-  const [updateRoute] = useUpdateRoutes()
-
-  const handleClick = () => {
-    updateRoute(code as string, 'add')
-  }
-
-  return (
-    <ListItem button key={code} onClick={handleClick}>
-      <ListItemText primary={name} sx={{ ...style.listItemText }} />
-    </ListItem>
-  )
-}
-
-const SearchSuggestions = (props: SearchSuggestionsProps) => {
-  const { searchSuggestionResult } = props
+const SearchSuggestions = () => {
+  const { data: searchSuggestionResult } = useSearchSuggestions()
 
   const [open, setOpen] = useState<boolean>(false)
   const [searchTerm, setSearchTerm] = useState<string>('')
@@ -100,10 +36,11 @@ const SearchSuggestions = (props: SearchSuggestionsProps) => {
   const productSuggestionGroup = getSuggestionGroup('Pages')
   const categorySuggestionGroup = getSuggestionGroup('Categories')
 
+  // ToBe: use debouncedSearchResult as searchSuggestionResult once mutation gets implemented
   const debouncedSearchResult = useDebounce(searchTerm, 500)
 
   useEffect(() => {
-    // Handle open close based on API response and use debouncedSearchResult as searchSuggestionResult and remove the prop once react query done
+    // ToBe: Handle open close based on API response
     searchTerm ? handleOpen() : handleClose()
 
     if (searchTerm) {
@@ -119,9 +56,9 @@ const SearchSuggestions = (props: SearchSuggestionsProps) => {
       <Collapse in={open} timeout="auto" unmountOnExit role="contentinfo">
         <Paper sx={{ ...style.paper }}>
           <List sx={{ ...style.list }} role="group">
-            <ListItemTitle heading="suggestions" />
+            <Title heading="suggestions" />
             {productSuggestionGroup?.suggestions?.map((product) => (
-              <ListItemContent
+              <Content
                 key={product?.suggestion?.productCode}
                 name={product?.suggestion?.productName}
               />
@@ -129,9 +66,9 @@ const SearchSuggestions = (props: SearchSuggestionsProps) => {
           </List>
           <Divider />
           <List sx={{ ...style.list }} role="group">
-            <ListItemTitle heading="categories" />
+            <Title heading="categories" />
             {categorySuggestionGroup?.suggestions?.map((product) => (
-              <ListItemContent
+              <Content
                 key={product?.suggestion?.categoryCode}
                 name={product?.suggestion?.content?.name}
               />
