@@ -1,22 +1,28 @@
 import React from 'react'
 
 import { composeStories } from '@storybook/testing-react'
-import { render } from '@testing-library/react'
+import { render, screen } from '@testing-library/react'
 
 import * as stories from './PaymentCardDetailsView.stories' // import all stories from the stories file
 
 const { Common, Radio } = composeStories(stories)
 
-describe('[component] - PaymentCardDetailsView', () => {
-  it('should render the component', () => {
-    const { asFragment } = render(<Common {...Common.args} />)
+const PaymentCardMock = () => <div data-testid="payment-card-mock" />
+jest.mock('@/components/common/PaymentCard/PaymentCard', () => PaymentCardMock)
 
-    expect(asFragment(<Common {...Common.args} />)).toMatchSnapshot()
+const KiboRadioMock = () => <div data-testid="kibo-radio-mock" />
+jest.mock('@/components/common/KiboRadio/KiboRadio', () => KiboRadioMock)
+
+describe('[component] - PaymentCardDetailsView', () => {
+  it('should render component if radio is false', () => {
+    render(<Common {...Common.args} />)
+
+    expect(screen.getByTestId('payment-card-mock')).toBeVisible()
   })
 
-  it('should render as radio button if radio prop is true', () => {
-    const { asFragment } = render(<Radio {...Common.args} />)
+  it('should render radio button if radio prop is true', () => {
+    render(<Radio {...Radio.args} />)
 
-    expect(asFragment(<Radio {...Common.args} />)).toMatchSnapshot()
+    expect(screen.getByTestId('kibo-radio-mock')).toBeVisible()
   })
 })

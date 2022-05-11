@@ -18,5 +18,6 @@ Common.args = {
   cardLastFourDigits: '1234',
   expireMonth: 4,
   expireYear: 2026,
+  cardType: 'VISA',
   radio: false,
 }

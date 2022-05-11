@@ -9,11 +9,12 @@ interface PaymentCardDetailsViewProps {
   cardLastFourDigits?: string
   expireMonth?: number
   expireYear?: number
+  cardType?: string
   radio?: boolean
 }
 
 const PaymentCard = (props: PaymentCardDetailsViewProps) => {
-  const { title, cardLastFourDigits, expireMonth, expireYear } = props
+  const { title, cardLastFourDigits, expireMonth, expireYear, cardType } = props
   const { t } = useTranslation('checkout')
 
   return (
@@ -25,7 +26,7 @@ const PaymentCard = (props: PaymentCardDetailsViewProps) => {
       )}
       <Box display="flex" pt={1} gap={3}>
         <Box minWidth={32}>
-          <KiboImage src={VISA} alt="visa" width={32} height={24} />
+          <KiboImage src={VISA} alt={cardType} width={32} height={24} />
         </Box>
         <Box>
           <Box display="flex">

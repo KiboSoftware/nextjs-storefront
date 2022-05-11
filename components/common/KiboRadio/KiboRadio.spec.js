@@ -10,9 +10,12 @@ const { Common } = composeStories(stories)
 
 describe('[component] - KiboRadio', () => {
   it('should render the component', () => {
-    const { asFragment } = render(<Common {...Common.args} />)
+    render(<Common {...Common.args} />)
 
-    expect(asFragment(<Common {...Common.args} />)).toMatchSnapshot()
+    const radioLabels = screen.getAllByRole('radio')
+
+    expect(radioLabels.length).toBe(3)
+    expect(screen.getByText(Common.args.title)).toBeVisible()
   })
 
   it('should call onChange if other options are clicked', () => {
