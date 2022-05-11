@@ -7,22 +7,22 @@ import * as stories from './PaymentCardDetailsView.stories' // import all storie
 
 const { Common, Radio } = composeStories(stories)
 
-const PaymentCardMock = () => <div data-testid="payment-card-mock" />
-jest.mock('@/components/common/PaymentCard/PaymentCard', () => PaymentCardMock)
-
 const KiboRadioMock = () => <div data-testid="kibo-radio-mock" />
 jest.mock('@/components/common/KiboRadio/KiboRadio', () => KiboRadioMock)
 
+const PaymentCardMock = () => <div data-testid="payment-card-mock" />
+jest.mock('@/components/common/PaymentCard/PaymentCard', () => PaymentCardMock)
+
 describe('[component] - PaymentCardDetailsView', () => {
-  it('should render component if radio is false', () => {
-    render(<Common {...Common.args} />)
-
-    expect(screen.getByTestId('payment-card-mock')).toBeVisible()
-  })
-
   it('should render radio button if radio prop is true', () => {
     render(<Radio {...Radio.args} />)
 
     expect(screen.getByTestId('kibo-radio-mock')).toBeVisible()
+  })
+
+  it('should render component if radio is false', () => {
+    render(<Common {...Common.args} />)
+
+    expect(screen.getByTestId('payment-card-mock')).toBeVisible()
   })
 })
