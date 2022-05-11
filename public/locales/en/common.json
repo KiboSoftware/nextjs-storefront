@@ -61,5 +61,6 @@
   "estimated-tax": "Estimated Tax",
   "standard-shopping": "Standard Shipping",
   "currency": "{{val, currency(USD)}}",
-  "count": "count"
+  "count": "count",
+  "cart-total":"{{cartTotalLabel}} of ({{numberOfItems}})"
 }

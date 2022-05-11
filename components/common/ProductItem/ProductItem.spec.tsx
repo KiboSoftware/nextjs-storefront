@@ -5,7 +5,7 @@ import { render, screen } from '@testing-library/react'
 
 import * as stories from './ProductItem.stories'
 
-const { Common, WithPriceLabel } = composeStories(stories)
+const { Common, WithPriceLabel, WithQtyLabel } = composeStories(stories)
 
 const priceMock = () => <div data-testid="price-component" />
 jest.mock('@/components/common/Price/Price', () => priceMock)
@@ -50,7 +50,7 @@ describe('[component] - ProductItem with Price Label', () => {
     render(<WithPriceLabel {...WithPriceLabel.args} />)
   }
 
-  it('should render component with price label inside details', () => {
+  it('should render component with price label inside details when price is provided', () => {
     setup()
 
     const productDetails = screen.getByTestId('productDetails')
@@ -58,5 +58,21 @@ describe('[component] - ProductItem with Price Label', () => {
 
     expect(productDetails).toBeVisible()
     expect(priceElement).toBeVisible()
+  })
+})
+
+describe('[component] - ProductItem with Qty Label', () => {
+  const setup = () => {
+    render(<WithQtyLabel {...WithQtyLabel.args} />)
+  }
+
+  it('should render component with Qty label inside details when qty is provided', () => {
+    setup()
+
+    const productDetails = screen.getAllByTestId('productLabel')
+    const qtyElement = screen.getByText(/qty/i)
+
+    expect(productDetails).toHaveLength(2)
+    expect(qtyElement).toBeVisible()
   })
 })

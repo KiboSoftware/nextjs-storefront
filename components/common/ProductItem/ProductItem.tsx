@@ -18,19 +18,20 @@ import ProductOptionList from '@/components/product/ProductOptionList/ProductOpt
 import DefaultImage from '@/public/product_placeholder.svg'
 
 import type { CrProductOption } from '@/lib/gql/types'
-interface ProductItemProps {
+export interface ProductItemProps {
   image: string
   name: string
   options: CrProductOption[]
   price?: string
   salePrice?: string
+  qty?: number
   children?: ReactNode
 }
 
 const styles = {
   imageContainer: {
-    maxHeight: 200,
-    maxWidth: 200,
+    maxHeight: 150,
+    maxWidth: 150,
     width: '45%',
   },
   image: {
@@ -40,11 +41,25 @@ const styles = {
   },
 }
 
+const ProductLabel = (props: { label: string }) => (
+  <Typography
+    variant="body2"
+    fontWeight="bold"
+    component="span"
+    sx={{ pr: 1 }}
+    data-testid="productLabel"
+  >
+    {`${props.label}:`}
+  </Typography>
+)
+
 const ProductItem = (props: ProductItemProps) => {
-  const { image, name, options, price, salePrice, children } = props
+  const { image, name, options, price, salePrice, qty, children } = props
+
   const { t } = useTranslation('common')
   const theme = useTheme()
   const mdScreen = useMediaQuery(theme.breakpoints.up('md'))
+
   const [expanded, setExpanded] = useState<boolean>(true)
 
   return (
@@ -85,11 +100,14 @@ const ProductItem = (props: ProductItemProps) => {
             <Collapse in={mdScreen ? true : expanded} timeout="auto" unmountOnExit>
               <ProductOptionList options={options} />
 
+              {qty && (
+                <Box>
+                  <ProductLabel label={t('qty')} /> {qty}
+                </Box>
+              )}
               {(price || salePrice) && (
                 <Box sx={{ display: 'inline-flex' }}>
-                  <Typography variant="body2" fontWeight="bold" component="span" sx={{ pr: 1 }}>
-                    {t('price')}:
-                  </Typography>
+                  <ProductLabel label={t('price')} />
                   <Price variant="body2" fontWeight="normal" price={price} salePrice={salePrice} />
                 </Box>
               )}
