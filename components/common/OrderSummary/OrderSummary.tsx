@@ -1,7 +1,7 @@
 /** @format */
 
 import InfoIcon from '@mui/icons-material/Info'
-import { Card, Typography, Box, CardActionArea, CardContent, Divider } from '@mui/material'
+import { Card, Typography, Box, CardContent, Divider } from '@mui/material'
 import { useTranslation } from 'next-i18next'
 
 interface OrderSummaryProps {
