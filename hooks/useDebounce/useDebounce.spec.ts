@@ -1,3 +1,5 @@
+import { useState } from 'react'
+
 import { act } from '@testing-library/react'
 import { renderHook } from '@testing-library/react-hooks'
 
@@ -18,6 +20,22 @@ describe('[hooks] useDebounce', () => {
 
   it('should be defined', () => {
     expect(useDebounce).toBeDefined()
+  })
+
+  it('should use useDebounce', async () => {
+    let data
+    const userEnteredText = 'Test'
+
+    const { result, waitFor } = renderHook(() => {
+      const [searchTerm, setSearchTerm] = useState(userEnteredText)
+      jest.fn((v) => setSearchTerm(v))
+
+      data = searchTerm
+    })
+
+    await waitFor(() => result.current)
+
+    expect(data).toBe(userEnteredText)
   })
 
   it('should return last value if calling debouncing sequencially within 500ms', async () => {
