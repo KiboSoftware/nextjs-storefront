@@ -11,6 +11,7 @@ module.exports = {
       'cdn-tp3.mozu.com',
       'cdn-tp4.mozu.com',
       'cdn-sb.mozu.com',
+      'encrypted-tbn0.gstatic.com',
     ],
   },
   publicRuntimeConfig: {

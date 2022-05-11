@@ -31,10 +31,10 @@ import ProductRecommendations from '@/components/product/ProductRecommendations/
 import ProductVariantSizeSelector from '@/components/product/ProductVariantSizeSelector/ProductVariantSizeSelector'
 import { productGetters } from '@/lib/getters'
 import type { ProductCustom } from '@/lib/types'
+import { ProductProperties } from '@/lib/types/ProductProperties'
 
 import type {
   AttributeDetail,
-  Maybe,
   ProductImage,
   ProductOption,
   ProductOptionValue,
@@ -42,11 +42,6 @@ import type {
 
 interface ProductDetailTemplateProps {
   product: ProductCustom
-}
-
-interface ProductProperties {
-  name: Maybe<string> | undefined
-  value: string | undefined
 }
 
 const ProductDetailTemplate = (props: ProductDetailTemplateProps) => {
@@ -220,9 +215,11 @@ const ProductDetailTemplate = (props: ProductDetailTemplateProps) => {
               }}
             ></Typography>
           </Box>
-          <Box paddingY={3}>
-            <ProductSpec properties={properties} />
-          </Box>
+          {properties?.length && (
+            <Box paddingY={3}>
+              <ProductSpec properties={properties} />
+            </Box>
+          )}
         </Grid>
 
         {/* This section is hardcoded for now */}
@@ -266,7 +263,7 @@ const ProductSpec = (props: { properties: ProductProperties[] }) => {
       <Divider />
       <Collapse in={expanded} timeout="auto" unmountOnExit>
         <CardContent>
-          {props?.properties.map((option: ProductProperties) => {
+          {props?.properties?.map((option: ProductProperties) => {
             return (
               <Box data-testid="productOption" key={option.name}>
                 <Typography variant="body2" fontWeight="bold" sx={{ pr: 1 }} component="span">
