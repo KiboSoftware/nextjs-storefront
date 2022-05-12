@@ -179,6 +179,7 @@ describe('[components] - AddressForm integration', () => {
   })
 
   describe('should display validation message', () => {
+    const emptyInput = { target: { value: '' } }
     it('firstName', async () => {
       // arrange
       setup()
@@ -186,14 +187,8 @@ describe('[components] - AddressForm integration', () => {
       // act
       const firstName = screen.getByRole('textbox', { name: /first-name/i })
       await act(async () => {
-        // userEvent.type(firstName, contact.firstName as string)
-        // userEvent.clear(firstName)
-        // userEvent.tab()
-        // firstName.focus()
-        // fireEvent.blur(firstName)
-
         firstName.focus()
-        fireEvent.blur(firstName, { target: { value: '' } })
+        fireEvent.blur(firstName, emptyInput)
       })
 
       const validationMessage = screen.getByText(/this field is required/i)
@@ -210,7 +205,7 @@ describe('[components] - AddressForm integration', () => {
       const lastNameOrSurname = screen.getByRole('textbox', { name: /last-name/i })
       await act(async () => {
         lastNameOrSurname.focus()
-        fireEvent.blur(lastNameOrSurname, { target: { value: '' } })
+        fireEvent.blur(lastNameOrSurname, emptyInput)
       })
       const validationMessage = screen.getByText(/this field is required/i)
 
@@ -226,7 +221,7 @@ describe('[components] - AddressForm integration', () => {
       const address1 = screen.getByRole('textbox', { name: /address1/i })
       await act(async () => {
         address1.focus()
-        fireEvent.blur(address1, { target: { value: '' } })
+        fireEvent.blur(address1, emptyInput)
       })
       const validationMessage = screen.getByText(/this field is required/i)
 
@@ -242,7 +237,7 @@ describe('[components] - AddressForm integration', () => {
       const address2 = screen.getByRole('textbox', { name: /address2/i })
       await act(async () => {
         address2.focus()
-        fireEvent.blur(address2, { target: { value: '' } })
+        fireEvent.blur(address2, emptyInput)
       })
       const validationMessage = screen.getByText(/this field is required/i)
 
@@ -258,7 +253,7 @@ describe('[components] - AddressForm integration', () => {
       const cityOrTown = screen.getByRole('textbox', { name: /city/i })
       await act(async () => {
         cityOrTown.focus()
-        fireEvent.blur(cityOrTown, { target: { value: '' } })
+        fireEvent.blur(cityOrTown, emptyInput)
       })
       const validationMessage = screen.getByText(/this field is required/i)
 
@@ -274,7 +269,7 @@ describe('[components] - AddressForm integration', () => {
       const stateOrProvince = screen.getByRole('textbox', { name: /state-or-province/i })
       await act(async () => {
         stateOrProvince.focus()
-        fireEvent.blur(stateOrProvince, { target: { value: '' } })
+        fireEvent.blur(stateOrProvince, emptyInput)
       })
       const validationMessage = screen.getByText(/this field is required/i)
 
@@ -290,7 +285,7 @@ describe('[components] - AddressForm integration', () => {
       const postalOrZipCode = screen.getByRole('textbox', { name: /postal-or-zip-code/i })
       await act(async () => {
         postalOrZipCode.focus()
-        fireEvent.blur(postalOrZipCode, { target: { value: '' } })
+        fireEvent.blur(postalOrZipCode, emptyInput)
       })
       const validationMessage = screen.getByText(/this field is required/i)
 
@@ -306,7 +301,7 @@ describe('[components] - AddressForm integration', () => {
       const phoneNumberHome = screen.getByRole('textbox', { name: /phone-number/i })
       await act(async () => {
         phoneNumberHome.focus()
-        fireEvent.blur(phoneNumberHome, { target: { value: '' } })
+        fireEvent.blur(phoneNumberHome, emptyInput)
       })
       const validationMessage = screen.getByText(/this field is required/i)
 
