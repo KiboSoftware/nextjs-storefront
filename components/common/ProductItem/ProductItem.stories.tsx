@@ -13,6 +13,7 @@ import type { CartItem, CrProductOption } from '@/lib/gql/types'
 export default {
   title: 'Common/ProductItem',
   component: ProductItem,
+  argTypes: { onClickStoreLocator: { action: 'clicked' } },
 } as ComponentMeta<typeof ProductItem>
 
 const cartItem: CartItem = {

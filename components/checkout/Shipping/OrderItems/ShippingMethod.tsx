@@ -1,27 +1,18 @@
-import { ReactNode } from 'react'
-
 import { Typography, Box, MenuItem, Divider } from '@mui/material'
 import { useTranslation } from 'next-i18next'
 
 import KiboSelect from '@/components/common/KiboSelect/KiboSelect'
+import { ProductItemProps } from '@/components/common/ProductItem/ProductItem'
 import ProductItemList from '@/components/common/ProductItemList/ProductItemList'
 
-import type { CrProductOption, ShippingRate } from '@/lib/gql/types'
-
-interface ProductItemProps {
-  image: string
-  name: string
-  options: CrProductOption[]
-  price?: string
-  salePrice?: string
-  children?: ReactNode
-}
+import type { ShippingRate } from '@/lib/gql/types'
 
 export type ShippingMethodProps = {
   shipItems: ProductItemProps[]
   pickupItems: ProductItemProps[]
   orderShipmentMethods: ShippingRate[]
   onShippingMethodChange: (name: string, value: string) => void
+  onClickStoreLocator?: () => void
 }
 export type ShipItemListProps = {
   shipItems: ProductItemProps[]
@@ -30,6 +21,7 @@ export type ShipItemListProps = {
 }
 export type PickupItemListProps = {
   pickupItems: ProductItemProps[]
+  clickChageStore?: () => void
 }
 
 const styles = {
@@ -73,7 +65,7 @@ const ShipItemList = (shipProps: ShipItemListProps) => {
 }
 
 const PickupItemList = (pickupProps: PickupItemListProps) => {
-  const { pickupItems } = pickupProps
+  const { pickupItems, clickChageStore } = pickupProps
   const { t } = useTranslation('common')
 
   return (
@@ -85,14 +77,20 @@ const PickupItemList = (pickupProps: PickupItemListProps) => {
         </Typography>
       </Box>
       <Box>
-        <ProductItemList items={pickupItems} />
+        <ProductItemList items={pickupItems} clickChageStore={clickChageStore} />
       </Box>
     </Box>
   )
 }
 
 const ShippingMethod = (props: ShippingMethodProps) => {
-  const { shipItems, pickupItems, orderShipmentMethods, onShippingMethodChange } = props
+  const {
+    shipItems,
+    pickupItems,
+    orderShipmentMethods,
+    onShippingMethodChange,
+    onClickStoreLocator,
+  } = props
 
   return (
     <Box data-testid="shipping-method">
@@ -106,7 +104,11 @@ const ShippingMethod = (props: ShippingMethodProps) => {
         ''
       )}
 
-      {pickupItems?.length ? <PickupItemList pickupItems={pickupItems} /> : ''}
+      {pickupItems?.length ? (
+        <PickupItemList pickupItems={pickupItems} clickChageStore={onClickStoreLocator} />
+      ) : (
+        ''
+      )}
     </Box>
   )
 }
