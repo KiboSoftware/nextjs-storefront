@@ -6,10 +6,11 @@ import ProductItem, { ProductItemProps } from '@/components/common/ProductItem/P
 
 export type ProductItemListProps = {
   items: ProductItemProps[]
+  clickChageStore?: () => void
 }
 
 const ProductItemList = (props: ProductItemListProps) => {
-  const { items } = props
+  const { items, clickChageStore } = props
 
   return (
     <Stack
@@ -21,6 +22,7 @@ const ProductItemList = (props: ProductItemListProps) => {
       {items?.map((item: ProductItemProps, index) => (
         <ProductItem
           {...item}
+          onClickStoreLocator={clickChageStore}
           key={`${item.name}-${index}`}
           data-testid="product-item"
         ></ProductItem>

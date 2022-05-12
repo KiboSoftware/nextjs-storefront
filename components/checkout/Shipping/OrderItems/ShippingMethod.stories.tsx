@@ -10,7 +10,7 @@ import ShippingMethod from './ShippingMethod'
 export default {
   title: 'checkout/checkout/Shipping/OrderItems',
   component: ShippingMethod,
-  argTypes: { onChange: { action: 'onChange' } },
+  argTypes: { onChange: { action: 'onChange' }, onClickStoreLocator: { action: 'clicked' } },
   parameters: {
     layout: 'fullscreen',
   },
@@ -27,4 +27,7 @@ Common.args = {
   shipItems: shipItems,
   pickupItems: pickupItems,
   orderShipmentMethods: getShippingRates.orderShipmentMethods,
+  onClickStoreLocator: () => {
+    console.log('change/select store clicked..')
+  },
 }
