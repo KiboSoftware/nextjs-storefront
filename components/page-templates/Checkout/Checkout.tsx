@@ -3,12 +3,7 @@ import React, { useState, useRef, ElementRef } from 'react'
 import { Box, Stack, Button, Typography } from '@mui/material'
 import { useTranslation } from 'next-i18next'
 
-import {
-  useLoadCheckout,
-  useLoadFromCart,
-  useUpdatePersonalInfo,
-  PersonalInfo,
-} from '../../../hooks'
+import { useCheckout, useUpdatePersonalInfo, PersonalInfo } from '../../../hooks'
 import DetailsStep, { PersonalDetails } from '@/components/checkout/DetailsStep/DetailsStep'
 import KiboStepper from '@/components/checkout/KiboStepper/KiboStepper'
 import PaymentStep from '@/components/checkout/PaymentStep/PaymentStep'
@@ -38,8 +33,11 @@ const Checkout = () => {
   const [cartId, _setCartId] = useState<string>('137a94b6402be000013718d80000678b')
 
   // useCustomHooks
-  const { data: checkoutInfo, isLoading: _isLoadCheckoutLoading } = useLoadCheckout(checkoutId)
-  const { data: _cartInfo, isLoading: _isLoadFromCartLoading } = useLoadFromCart(cartId)
+  const { data: checkoutInfo, isLoading: _isCheckoutLoading } = useCheckout({
+    cartId,
+    checkoutId,
+  })
+
   const updatePersonalInfoMutation = useUpdatePersonalInfo()
 
   // Handlers
@@ -118,7 +116,7 @@ const Checkout = () => {
               onClick={handleBack}
               style={{ textTransform: 'none' }}
             >
-              Back
+              {t('back')}
             </Button>
             <Button
               variant="contained"

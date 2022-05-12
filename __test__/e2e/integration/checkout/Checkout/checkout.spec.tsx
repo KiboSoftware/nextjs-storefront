@@ -10,8 +10,7 @@ import { renderWithQueryClient } from '../../../../utils/renderWithQueryClient'
 const { Common } = composeStories(stories)
 
 jest.mock('../../../../../hooks', () => ({
-  useLoadCheckout: jest.fn(() => ({})),
-  useLoadFromCart: jest.fn(() => ({})),
+  useCheckout: jest.fn(() => ({})),
   useUpdatePersonalInfo: () => ({
     mutateAsync: () => Promise.resolve(true),
     isLoading: false,

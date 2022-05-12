@@ -7,7 +7,7 @@ const queryClientHandler = (error: unknown) => {
   const title = error instanceof Error ? error.message : 'Unable to connect server'
   const status = 'error'
 
-  console.error(`id: ${id}, title: ${title}, status: ${status}`)
+  console.log(`id: ${id}, title: ${title}, status: ${status}`)
 }
 
 export const generateQueryClient = (): QueryClient => {
