@@ -30,7 +30,7 @@ export interface ProductItemProps {
   isPickupItem?: boolean
   estimatedPickupDate?: string
   itemPurchaseLocation?: string
-  handleStoreLocatorClick?: () => void
+  onClickStoreLocator?: () => void
   children?: ReactNode
 }
 
@@ -53,7 +53,7 @@ const ProductLabel = (props: { label: string }) => (
     fontWeight="bold"
     component="span"
     sx={{ pr: 1 }}
-    data-testid="productLabel"
+    data-testid={'product-' + props.label}
   >
     {`${props.label}:`}
   </Typography>
@@ -70,7 +70,7 @@ const ProductItem = (props: ProductItemProps) => {
     isPickupItem,
     estimatedPickupDate,
     itemPurchaseLocation,
-    handleStoreLocatorClick,
+    onClickStoreLocator,
     children,
   } = props
 
@@ -89,7 +89,7 @@ const ProductItem = (props: ProductItemProps) => {
             width={200}
             alt={name}
             objectFit="contain"
-            errorImage={DefaultImage}
+            errorimage={DefaultImage}
           />
         </Box>
 
@@ -141,7 +141,11 @@ const ProductItem = (props: ProductItemProps) => {
                 )}
               </Collapse>
               {isPickupItem && estimatedPickupDate && (
-                <Box sx={{ display: 'inline-flex' }} color={theme.palette.primary.main}>
+                <Box
+                  sx={{ display: 'inline-flex' }}
+                  color={theme.palette.primary.main}
+                  data-testid="pickup-info"
+                >
                   <Typography variant="body2" fontWeight="bold">
                     {t('estimated-pickup')}: {estimatedPickupDate}
                   </Typography>
@@ -164,9 +168,10 @@ const ProductItem = (props: ProductItemProps) => {
           <Box px={2}>
             <Link
               component="button"
+              data-testid="change-store"
               variant="caption"
               color="text.primary"
-              onClick={() => handleStoreLocatorClick}
+              onClick={onClickStoreLocator}
             >
               {itemPurchaseLocation ? t('change-store') : t('select-store')}
             </Link>

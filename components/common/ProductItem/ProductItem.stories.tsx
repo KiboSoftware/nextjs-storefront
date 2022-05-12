@@ -112,7 +112,7 @@ WithChageStoreOption.args = {
   isPickupItem: true,
   itemPurchaseLocation: 'Down Store',
   estimatedPickupDate: 'Mon 12/20',
-  handleStoreLocatorClick: () => {
+  onClickStoreLocator: () => {
     console.log('change store clicked')
   },
 }

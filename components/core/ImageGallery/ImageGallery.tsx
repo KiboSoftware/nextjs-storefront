@@ -189,7 +189,7 @@ const ImageGallery = (props: ImageGalleryProps) => {
                       alt={image?.altText as string}
                       layout="fill"
                       objectFit="contain"
-                      errorImage={placeholderImageUrl}
+                      errorimage={placeholderImageUrl}
                     />
                   </Box>
                 )
