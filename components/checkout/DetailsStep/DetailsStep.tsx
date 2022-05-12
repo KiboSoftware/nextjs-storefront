@@ -63,29 +63,33 @@ const buttonStyle = {
   fontSize: (theme: Theme) => theme.typography.subtitle1,
 } as SxProps<Theme> | undefined
 
+const useDetailsSchema = () => {
+  const { t } = useTranslation('checkout')
+
+  return yup.object().shape({
+    email: yup.string().email().required(t('this-field-is-required')),
+    showAccountFields: yup.boolean(),
+    firstName: yup.string().when('showAccountFields', {
+      is: true,
+      then: yup.string().required(t('this-field-is-required')),
+    }),
+    lastNameOrSurname: yup.string().when('showAccountFields', {
+      is: true,
+      then: yup.string().required(t('this-field-is-required')),
+    }),
+    password: yup.string().when('showAccountFields', {
+      is: true,
+      then: yup.string().required(t('this-field-is-required')),
+    }),
+  })
+}
+
 const DetailsStep = forwardRef<DetailsHandler, DetailsProps>((props, ref) => {
   const { setAutoFocus = true, personalDetails, onPersonalDetailsSave } = props
   const passwordValidationRef = useRef<PasswordValidationHandler | null>(null)
   const [isGoToShippingClicked, setIsGoToShippingClicked] = useState<boolean>(false)
 
   const { t } = useTranslation('checkout')
-
-  const schema = yup.object().shape({
-    email: yup.string().email().required('This field is required'),
-    showAccountFields: yup.boolean(),
-    firstName: yup.string().when('showAccountFields', {
-      is: true,
-      then: yup.string().required('This field is required'),
-    }),
-    lastNameOrSurname: yup.string().when('showAccountFields', {
-      is: true,
-      then: yup.string().required('This field is required'),
-    }),
-    password: yup.string().when('showAccountFields', {
-      is: true,
-      then: yup.string().required('This field is required'),
-    }),
-  })
 
   const {
     getValues,
@@ -97,7 +101,7 @@ const DetailsStep = forwardRef<DetailsHandler, DetailsProps>((props, ref) => {
     mode: 'onBlur',
     reValidateMode: 'onBlur',
     defaultValues: personalDetails ? personalDetails : undefined,
-    resolver: yupResolver(schema),
+    resolver: yupResolver(useDetailsSchema()),
     shouldFocusError: true,
   })
 
@@ -274,6 +278,8 @@ const DetailsStep = forwardRef<DetailsHandler, DetailsProps>((props, ref) => {
                 onChange={(_name, value) => field.onChange(value)}
                 error={!!errors?.password}
                 helperText={errors?.password?.message}
+                type="password"
+                placeholder="password"
               />
             )}
           />

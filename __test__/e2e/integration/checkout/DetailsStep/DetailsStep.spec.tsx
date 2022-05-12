@@ -85,7 +85,7 @@ describe('[components] Details', () => {
     firstNameInput = screen.getByRole('textbox', { name: /first-name/i })
     lastNameLabel = screen.getByText(/last-name/i)
     lastNameInput = screen.getByRole('textbox', { name: /last-name/i })
-    passwordInput = screen.getByRole('textbox', { name: /password/i })
+    passwordInput = screen.getByPlaceholderText('password')
 
     expect(firstNameLabel).toBeVisible()
     expect(firstNameInput).toBeVisible()
@@ -107,7 +107,7 @@ describe('[components] Details', () => {
       fireEvent.blur(emailInput, { target: { value: '' } })
     })
 
-    emailError = screen.getByText(/this field is required/i)
+    emailError = screen.getByText(/this-field-is-required/i)
     expect(emailError).toBeVisible()
   })
 
@@ -128,7 +128,7 @@ describe('[components] Details', () => {
       fireEvent.blur(firstNameInput, { target: { value: '' } })
     })
 
-    firstNameError = screen.queryByText(/this field is required/i)
+    firstNameError = screen.queryByText(/this-field-is-required/i)
     expect(firstNameError).toBeVisible()
   })
 
@@ -149,7 +149,7 @@ describe('[components] Details', () => {
       fireEvent.blur(lastNameInput, { target: { value: '' } })
     })
 
-    lastNameError = screen.queryByText(/this field is required/i)
+    lastNameError = screen.queryByText(/this-field-is-required/i)
     expect(lastNameError).toBeVisible()
   })
 
@@ -164,13 +164,13 @@ describe('[components] Details', () => {
       userEvent.click(iWantToCreateAccount)
     })
 
-    const passwordInput = screen.getByRole('textbox', { name: /password/i })
+    const passwordInput = screen.getByPlaceholderText('password')
     await act(async () => {
       passwordInput.focus()
       fireEvent.blur(passwordInput, { target: { value: '' } })
     })
 
-    passwordError = screen.queryByText(/this field is required/i)
+    passwordError = screen.queryByText(/this-field-is-required/i)
     expect(passwordError).toBeVisible()
   })
 })
