@@ -75,11 +75,7 @@ const ProductDetailTemplate = (props: ProductDetailTemplateProps) => {
             })}
           />
 
-          <Box
-            paddingY={1}
-            display={shortDescription ? 'block' : 'none'}
-            data-testid="short-description"
-          >
+          <Box paddingY={1} display={shortDescription ? 'block' : 'none'}>
             <Typography
               variant="body2"
               gutterBottom
