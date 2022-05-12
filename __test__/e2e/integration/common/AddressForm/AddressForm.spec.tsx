@@ -1,5 +1,5 @@
 import { composeStories } from '@storybook/testing-react'
-import { render, screen, act } from '@testing-library/react'
+import { render, screen, act, fireEvent } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 
 import type { Contact } from '@/components/common/AddressForm//AddressForm'
@@ -186,9 +186,16 @@ describe('[components] - AddressForm integration', () => {
       // act
       const firstName = screen.getByRole('textbox', { name: /first-name/i })
       await act(async () => {
-        userEvent.type(firstName, contact.firstName as string)
-        userEvent.clear(firstName)
+        // userEvent.type(firstName, contact.firstName as string)
+        // userEvent.clear(firstName)
+        // userEvent.tab()
+        // firstName.focus()
+        // fireEvent.blur(firstName)
+
+        firstName.focus()
+        fireEvent.blur(firstName, { target: { value: '' } })
       })
+
       const validationMessage = screen.getByText(/this field is required/i)
 
       // assert
@@ -202,8 +209,8 @@ describe('[components] - AddressForm integration', () => {
       // act
       const lastNameOrSurname = screen.getByRole('textbox', { name: /last-name/i })
       await act(async () => {
-        userEvent.type(lastNameOrSurname, contact.lastNameOrSurname as string)
-        userEvent.clear(lastNameOrSurname)
+        lastNameOrSurname.focus()
+        fireEvent.blur(lastNameOrSurname, { target: { value: '' } })
       })
       const validationMessage = screen.getByText(/this field is required/i)
 
@@ -218,8 +225,8 @@ describe('[components] - AddressForm integration', () => {
       // act
       const address1 = screen.getByRole('textbox', { name: /address1/i })
       await act(async () => {
-        userEvent.type(address1, contact.address.address1 as string)
-        userEvent.clear(address1)
+        address1.focus()
+        fireEvent.blur(address1, { target: { value: '' } })
       })
       const validationMessage = screen.getByText(/this field is required/i)
 
@@ -234,8 +241,8 @@ describe('[components] - AddressForm integration', () => {
       // act
       const address2 = screen.getByRole('textbox', { name: /address2/i })
       await act(async () => {
-        userEvent.type(address2, contact.address.address2 as string)
-        userEvent.clear(address2)
+        address2.focus()
+        fireEvent.blur(address2, { target: { value: '' } })
       })
       const validationMessage = screen.getByText(/this field is required/i)
 
@@ -250,8 +257,8 @@ describe('[components] - AddressForm integration', () => {
       // act
       const cityOrTown = screen.getByRole('textbox', { name: /city/i })
       await act(async () => {
-        userEvent.type(cityOrTown, contact.address.cityOrTown as string)
-        userEvent.clear(cityOrTown)
+        cityOrTown.focus()
+        fireEvent.blur(cityOrTown, { target: { value: '' } })
       })
       const validationMessage = screen.getByText(/this field is required/i)
 
@@ -266,8 +273,8 @@ describe('[components] - AddressForm integration', () => {
       // act
       const stateOrProvince = screen.getByRole('textbox', { name: /state-or-province/i })
       await act(async () => {
-        userEvent.type(stateOrProvince, contact.address.stateOrProvince as string)
-        userEvent.clear(stateOrProvince)
+        stateOrProvince.focus()
+        fireEvent.blur(stateOrProvince, { target: { value: '' } })
       })
       const validationMessage = screen.getByText(/this field is required/i)
 
@@ -282,8 +289,8 @@ describe('[components] - AddressForm integration', () => {
       // act
       const postalOrZipCode = screen.getByRole('textbox', { name: /postal-or-zip-code/i })
       await act(async () => {
-        userEvent.type(postalOrZipCode, contact.address.postalOrZipCode as string)
-        userEvent.clear(postalOrZipCode)
+        postalOrZipCode.focus()
+        fireEvent.blur(postalOrZipCode, { target: { value: '' } })
       })
       const validationMessage = screen.getByText(/this field is required/i)
 
@@ -298,8 +305,8 @@ describe('[components] - AddressForm integration', () => {
       // act
       const phoneNumberHome = screen.getByRole('textbox', { name: /phone-number/i })
       await act(async () => {
-        userEvent.type(phoneNumberHome, contact.phoneNumbers.home)
-        userEvent.clear(phoneNumberHome)
+        phoneNumberHome.focus()
+        fireEvent.blur(phoneNumberHome, { target: { value: '' } })
       })
       const validationMessage = screen.getByText(/this field is required/i)
 

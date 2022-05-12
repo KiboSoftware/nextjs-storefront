@@ -17,6 +17,12 @@ module.exports = {
   publicRuntimeConfig: {
     colorAttributeFQN: 'Tenant~Color',
     sizeAttributeFQN: 'Tenant~Size',
+    paymentTypes: [
+      {
+        id: 'creditcard',
+        name: 'Credit / Debit Card',
+      },
+    ],
   },
   serverRuntimeConfig: {
     revalidate: 60,

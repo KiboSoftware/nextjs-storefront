@@ -9,6 +9,7 @@ export interface KiboSelectProps {
   label?: string
   children: React.ReactNode
   onChange: (name: string, value: string) => void
+  onBlur?: (name: string, value: string) => void
 }
 
 const ITEM_HEIGHT = 48
@@ -32,6 +33,7 @@ const KiboSelect = (props: KiboSelectProps) => {
     label,
     children,
     onChange,
+    onBlur,
     ...rest
   } = props
 
@@ -58,6 +60,7 @@ const KiboSelect = (props: KiboSelectProps) => {
         inputProps={{ 'aria-hidden': false }}
         input={<OutlinedInput size="small" />}
         onChange={(event) => onChange(event.target.name, event.target.value as string)}
+        onBlur={(event) => onChange(event.target.name, event.target.value as string)}
         {...rest}
       >
         <MenuItem value={''} disabled sx={{ display: 'none' }}>

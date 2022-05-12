@@ -82,8 +82,8 @@ const AddressForm = forwardRef<AddressFormHandler, AddressFormProps>((props, ref
     trigger,
     control,
   } = useForm({
-    mode: 'onChange',
-    reValidateMode: 'onChange',
+    mode: 'onBlur',
+    reValidateMode: 'onBlur',
     defaultValues: contact ? contact : undefined,
     resolver: yupResolver(schema),
     shouldFocusError: true,
@@ -142,7 +142,7 @@ const AddressForm = forwardRef<AddressFormHandler, AddressFormProps>((props, ref
                 label={t('first-name')}
                 error={!!errors?.firstName}
                 helperText={errors?.firstName?.message}
-                onChange={(_name, value) => field.onChange(value)}
+                onBlur={field.onBlur}
                 autoFocus={true}
                 required={true}
               />
@@ -162,7 +162,7 @@ const AddressForm = forwardRef<AddressFormHandler, AddressFormProps>((props, ref
                 label={t('last-name-or-sur-name')}
                 error={!!errors?.lastNameOrSurname}
                 helperText={errors?.lastNameOrSurname?.message}
-                onChange={(_name, value) => field.onChange(value)}
+                onBlur={field.onBlur}
                 required={true}
               />
             )}
@@ -181,7 +181,7 @@ const AddressForm = forwardRef<AddressFormHandler, AddressFormProps>((props, ref
                 label={t('address1')}
                 error={!!errors?.address?.address1}
                 helperText={errors?.address?.address1?.message}
-                onChange={(_name, value) => field.onChange(value)}
+                onBlur={field.onBlur}
                 required={true}
               />
             )}
@@ -200,7 +200,7 @@ const AddressForm = forwardRef<AddressFormHandler, AddressFormProps>((props, ref
                 label={t('address2')}
                 error={!!errors?.address?.address2}
                 helperText={errors?.address?.address2?.message}
-                onChange={(_name, value) => field.onChange(value)}
+                onBlur={field.onBlur}
               />
             )}
           />
@@ -218,7 +218,7 @@ const AddressForm = forwardRef<AddressFormHandler, AddressFormProps>((props, ref
                 label={t('city-or-town')}
                 error={!!errors?.address?.cityOrTown}
                 helperText={errors?.address?.cityOrTown?.message}
-                onChange={(_name, value) => field.onChange(value)}
+                onBlur={field.onBlur}
                 required={true}
               />
             )}
@@ -237,7 +237,7 @@ const AddressForm = forwardRef<AddressFormHandler, AddressFormProps>((props, ref
                 label={t('state-or-province')}
                 error={!!errors?.address?.stateOrProvince}
                 helperText={errors?.address?.stateOrProvince?.message}
-                onChange={(_name, value) => field.onChange(value)}
+                onBlur={field.onBlur}
                 required={true}
               />
             )}
@@ -256,7 +256,7 @@ const AddressForm = forwardRef<AddressFormHandler, AddressFormProps>((props, ref
                 label={t('postal-or-zip-code')}
                 error={!!errors?.address?.postalOrZipCode}
                 helperText={errors?.address?.postalOrZipCode?.message}
-                onChange={(_name, value) => field.onChange(value)}
+                onBlur={field.onBlur}
                 required={true}
               />
             )}
@@ -275,7 +275,8 @@ const AddressForm = forwardRef<AddressFormHandler, AddressFormProps>((props, ref
                   label={t('country-code')}
                   error={!!errors?.address?.countryCode}
                   helperText={errors?.address?.countryCode?.message}
-                  onChange={(_name, value) => field.onChange(value)}
+                  onChange={field.onChange}
+                  onBlur={field.onBlur}
                 >
                   {generateSelectOptions()}
                 </KiboSelect>
@@ -296,7 +297,7 @@ const AddressForm = forwardRef<AddressFormHandler, AddressFormProps>((props, ref
                 label={t('phone-number-home')}
                 error={!!errors?.phoneNumbers?.home}
                 helperText={errors?.phoneNumbers?.home?.message}
-                onChange={(_name, value) => field.onChange(value)}
+                onBlur={field.onBlur}
                 required={true}
               />
             )}
