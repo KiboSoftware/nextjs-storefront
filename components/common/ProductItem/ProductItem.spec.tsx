@@ -55,12 +55,10 @@ describe('[component] - ProductItem', () => {
     expect(onClickStoreLocatorMock).toHaveBeenCalled()
   })
 
-  describe('when ProductItem has no label', () => {
-    it('should not show details when no label(price,qty) or options is present', () => {
-      render(<WithoutDetailOption {...WithoutDetailOption.args} />)
+  it('should not show details when no label(price,qty) or options is present', () => {
+    render(<WithoutDetailOption {...WithoutDetailOption.args} />)
 
-      const detailsElement = screen.queryByText(/details/i)
-      expect(detailsElement).not.toBeInTheDocument()
-    })
+    const detailsElement = screen.queryByText(/details/i)
+    expect(detailsElement).not.toBeInTheDocument()
   })
 })
