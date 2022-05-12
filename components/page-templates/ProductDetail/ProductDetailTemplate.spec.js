@@ -78,7 +78,7 @@ describe('[component] Product Detail Template component', () => {
 
     const desc = screen.getByTestId('short-description')
 
-    expect(desc).toBeVisible()
+    expect(desc.innerHTML).toBe(Common.args.product.content.productShortDescription)
   })
 
   it('should render the Product rating', () => {
