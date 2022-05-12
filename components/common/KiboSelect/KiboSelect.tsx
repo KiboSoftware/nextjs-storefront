@@ -60,7 +60,7 @@ const KiboSelect = (props: KiboSelectProps) => {
         inputProps={{ 'aria-hidden': false }}
         input={<OutlinedInput size="small" />}
         onChange={(event) => onChange(event.target.name, event.target.value as string)}
-        onBlur={(event) => onChange(event.target.name, event.target.value as string)}
+        onBlur={(event) => onBlur && onBlur(event.target.name, event.target.value as string)}
         {...rest}
       >
         <MenuItem value={''} disabled sx={{ display: 'none' }}>
