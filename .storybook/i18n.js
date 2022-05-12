@@ -10,7 +10,7 @@ i18n.use(initReactI18next).init({
   },
 })
 
-const localeAssets = ['common', 'cart-page', 'product-page', 'checkout']
+const localeAssets = ['common', 'cart', 'product']
 for (const asset of localeAssets) {
   i18n.addResourceBundle('en', asset, require(`../public/locales/en/${asset}.json`))
 }

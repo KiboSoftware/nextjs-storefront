@@ -18,7 +18,7 @@ export interface ProductOptionSelectProps {
 
 const ProductOptionSelect = (props: ProductOptionSelectProps) => {
   const { optionValues, name, value, error = false, errorHelperText = '', onChange } = props
-  const { t } = useTranslation('product-page')
+  const { t } = useTranslation('product')
 
   return (
     <KiboSelect

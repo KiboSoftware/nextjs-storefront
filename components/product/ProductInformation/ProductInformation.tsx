@@ -1,3 +1,5 @@
+import { SyntheticEvent } from 'react'
+
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore'
 import {
   Typography,
@@ -9,7 +11,9 @@ import {
 } from '@mui/material'
 import { useTranslation } from 'next-i18next'
 
-import type { Maybe } from '@/lib/gql/types'
+import ProductOption from '../ProductOption/ProductOption'
+
+import type { CrProductOption } from '@/lib/gql/types'
 
 const StyledAccordion = styled(Accordion)(({ theme }) => ({
   '&.MuiAccordion-root': {
@@ -19,9 +23,10 @@ const StyledAccordion = styled(Accordion)(({ theme }) => ({
     backgroundColor: theme?.palette.grey[100],
     borderRadius: '0',
     boxShadow: 'none',
-    width: '23.15rem',
+    maxWidth: '23.15rem',
   },
   '& .MuiAccordionSummary-root': {
+    minHeight: '3rem !important',
     height: '3rem',
   },
   '& .MuiAccordionDetails-root': {
@@ -33,29 +38,21 @@ const StyledAccordion = styled(Accordion)(({ theme }) => ({
 
 interface ProductInformationProps {
   productFullDescription: string | undefined
-  properties: ProductProperties[]
-}
-
-interface ProductProperties {
-  name: Maybe<string> | undefined
-  value: string | undefined
+  properties: CrProductOption[]
 }
 
 const ProductInformation = (props: ProductInformationProps) => {
-  const { properties, productFullDescription } = props
+  const { properties = [], productFullDescription } = props
 
-  const { t } = useTranslation('product-page')
+  const { t } = useTranslation('product')
 
-  const handleAccordionChange = (
-    _event: React.SyntheticEvent<Element, Event>,
-    expanded: boolean
-  ) => {
+  const handleAccordionChange = (_event: SyntheticEvent<Element, Event>, expanded: boolean) => {
     if (!expanded) return
   }
 
   return (
-    <Box>
-      <Typography fontWeight={700} variant="h3" pb={1}>
+    <>
+      <Typography variant="h3" fontWeight={700} pb={1}>
         {t('product-information')}
       </Typography>
       <Typography
@@ -72,21 +69,16 @@ const ProductInformation = (props: ProductInformationProps) => {
           </Typography>
         </AccordionSummary>
         <AccordionDetails>
-          {properties.map((option: ProductProperties, index: number) => {
+          {properties?.map((option: CrProductOption) => {
             return (
-              <Box data-testid="productOption" key={index} pt={1}>
-                <Typography variant="body2" component="span">
-                  {option.name}:&nbsp;
-                </Typography>
-                <Typography variant="body2" component="span">
-                  {option.value}
-                </Typography>
+              <Box key={option?.value} pt={1}>
+                <ProductOption option={option} />
               </Box>
             )
           })}
         </AccordionDetails>
       </StyledAccordion>
-    </Box>
+    </>
   )
 }
 

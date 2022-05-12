@@ -8,6 +8,9 @@ import * as stories from './ProductInformation.stories'
 
 const { Common } = composeStories(stories)
 
+const productOptionMock = () => <div data-testid="product-option-component" />
+jest.mock('@/components/product/ProductOption/ProductOption', () => productOptionMock)
+
 describe('[component] - ProductInformation', () => {
   const setup = () => {
     render(<Common {...Common.args} />)
@@ -15,28 +18,36 @@ describe('[component] - ProductInformation', () => {
 
   it('should render component', () => {
     setup()
-
+    const content = screen.getByTestId('product-content')
     expect(screen.getByText('product-information')).toBeVisible()
-    expect(screen.getByTestId('product-content')).toBeVisible()
+    expect(content.innerHTML).toBe(Common.args?.productFullDescription)
     expect(screen.getByText('product-specs')).toBeVisible()
 
     const accordian = screen.getByTestId('accordian')
     expect(accordian).toHaveAttribute('aria-expanded', 'false')
+
+    const productItemOptions = screen.getAllByTestId('product-option-component')
+    const items = Common.args?.properties || []
+    const count = items.length || 0
+    expect(productItemOptions).toHaveLength(count)
   })
 
-  it('should expand product spec section while opening the accordian', () => {
+  it('should open product spec accordion when user clicks on accordion header', () => {
+    setup()
+
+    const accordian = screen.getByTestId('accordian')
+    expect(accordian).toHaveAttribute('aria-expanded', 'false')
+    userEvent.click(accordian)
+    expect(accordian).toHaveAttribute('aria-expanded', 'true')
+  })
+
+  it('should close accordion when accordion is already open and the user clicks on accordion header', () => {
     setup()
 
     const accordian = screen.getByTestId('accordian')
     userEvent.click(accordian)
     expect(accordian).toHaveAttribute('aria-expanded', 'true')
-
-    Common.args?.properties?.map((option) => {
-      const name = screen.getByText(`${option.name}:`)
-      expect(name).toBeVisible()
-
-      const value = screen.getByText(`${option.value}`)
-      expect(value).toBeVisible()
-    })
+    userEvent.click(accordian)
+    expect(accordian).toHaveAttribute('aria-expanded', 'false')
   })
 })

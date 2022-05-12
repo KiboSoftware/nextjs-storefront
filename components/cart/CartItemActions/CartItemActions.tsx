@@ -18,7 +18,7 @@ const styles = {
 }
 
 const CartItemActions = () => {
-  const { t } = useTranslation('cart-page')
+  const { t } = useTranslation('cart')
 
   return (
     <Box sx={styles.linkContainer}>

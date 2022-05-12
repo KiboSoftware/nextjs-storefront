@@ -20,7 +20,7 @@ export async function getStaticProps(context: GetStaticPropsContext) {
   return {
     props: {
       product,
-      ...(await serverSideTranslations(locale as string, ['common', 'product-page'])),
+      ...(await serverSideTranslations(locale as string, ['common', 'product'])),
     },
     revalidate: 60,
   }
