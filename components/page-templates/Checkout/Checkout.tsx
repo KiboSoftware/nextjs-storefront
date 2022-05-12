@@ -1,6 +1,7 @@
 import React, { useState, useRef, ElementRef } from 'react'
 
-import { Box, Stack, Button, Typography } from '@mui/material'
+import { Box, Stack, Button, Typography, SxProps } from '@mui/material'
+import { Theme } from '@mui/material/styles'
 import { useTranslation } from 'next-i18next'
 
 import { useCheckout, useUpdatePersonalInfo, PersonalInfo } from '../../../hooks'
@@ -9,8 +10,14 @@ import KiboStepper from '@/components/checkout/KiboStepper/KiboStepper'
 import PaymentStep from '@/components/checkout/PaymentStep/PaymentStep'
 import ReviewStep from '@/components/checkout/ReviewStep/ReviewStep'
 import ShippingStep from '@/components/checkout/ShippingStep/ShippingStep'
+import OrderSummary from '@/components/common/OrderSummary/OrderSummary'
 
-import { OrderInput } from '@/lib/gql/types'
+import type { OrderInput } from '@/lib/gql/types'
+
+const buttonStyle = {
+  height: '42px',
+  fontSize: (theme: Theme) => theme.typography.subtitle1,
+} as SxProps<Theme> | undefined
 
 const Checkout = () => {
   const { t } = useTranslation('checkout')
@@ -88,6 +95,22 @@ const Checkout = () => {
     password: '',
   }
 
+  const orderSummeryArgs = {
+    standardShippingAmount: 'Free',
+    estimatedTaxAmout: '$13.73',
+    orderTotal: '$233.72',
+    subTotal: '$219.99',
+    numberOfItems: '3 items',
+    backLabel: 'Go Back',
+    checkoutLabel: 'Go to Checkout',
+    nameLabel: 'Order Summary',
+    cartTotalLabel: 'Cart Subtotal',
+    standardShippingLabel: 'Standard Shipping',
+    estimatedTaxLabel: 'Tax',
+    orderTotalLabel: 'Order Total',
+    shippingLabel: 'Go to Shipping',
+  }
+
   return (
     <Stack direction={{ xs: 'column', md: 'row' }} gap={3}>
       <Stack sx={{ width: '100%', maxWidth: '872px' }} gap={3}>
@@ -106,28 +129,31 @@ const Checkout = () => {
         </KiboStepper>
       </Stack>
 
-      {/* Below code will be replaced with OrderSymmery component */}
-      <Box>
-        {activeStep < buttonLabels.length && (
-          <Stack direction="row" gap={5}>
-            <Button
-              variant="contained"
-              disabled={activeStep === 0}
-              onClick={handleBack}
-              style={{ textTransform: 'none' }}
-            >
-              {t('back')}
-            </Button>
-            <Button
-              variant="contained"
-              disabled={activeStep === steps.length - 1}
-              onClick={handleNext}
-              style={{ textTransform: 'none' }}
-            >
-              {buttonLabels[activeStep]}
-            </Button>
-          </Stack>
-        )}
+      <Box sx={{ width: '100%', maxWidth: 428, height: 448 }}>
+        <OrderSummary {...orderSummeryArgs}>
+          {activeStep < buttonLabels.length && (
+            <Stack direction="column" gap={2}>
+              <Button
+                variant="contained"
+                sx={{ ...buttonStyle }}
+                fullWidth
+                onClick={handleNext}
+                disabled={activeStep === steps.length - 1}
+              >
+                {buttonLabels[activeStep]}
+              </Button>
+              <Button
+                variant="contained"
+                sx={{ ...buttonStyle }}
+                fullWidth
+                onClick={handleBack}
+                disabled={activeStep === 0}
+              >
+                {t('go-back')}
+              </Button>
+            </Stack>
+          )}
+        </OrderSummary>
       </Box>
     </Stack>
   )
