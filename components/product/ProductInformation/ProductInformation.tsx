@@ -1,17 +1,8 @@
-import { SyntheticEvent } from 'react'
-
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore'
-import {
-  Typography,
-  Box,
-  Accordion,
-  AccordionSummary,
-  AccordionDetails,
-  styled,
-} from '@mui/material'
+import { Typography, Accordion, AccordionSummary, AccordionDetails, styled } from '@mui/material'
 import { useTranslation } from 'next-i18next'
 
-import ProductOption from '../ProductOption/ProductOption'
+import ProductOptionList from '../ProductOptionList/ProductOptionList'
 
 import type { CrProductOption } from '@/lib/gql/types'
 
@@ -26,8 +17,8 @@ const StyledAccordion = styled(Accordion)(({ theme }) => ({
     maxWidth: '23.15rem',
   },
   '& .MuiAccordionSummary-root': {
-    minHeight: '3rem !important',
-    height: '3rem',
+    minHeight: '2.5rem !important',
+    height: '2.5rem',
   },
   '& .MuiAccordionDetails-root': {
     borderTopWidth: '1px',
@@ -38,17 +29,13 @@ const StyledAccordion = styled(Accordion)(({ theme }) => ({
 
 interface ProductInformationProps {
   productFullDescription: string | undefined
-  properties: CrProductOption[]
+  options: CrProductOption[]
 }
 
 const ProductInformation = (props: ProductInformationProps) => {
-  const { properties = [], productFullDescription } = props
+  const { options = [], productFullDescription } = props
 
   const { t } = useTranslation('product')
-
-  const handleAccordionChange = (_event: SyntheticEvent<Element, Event>, expanded: boolean) => {
-    if (!expanded) return
-  }
 
   return (
     <>
@@ -62,20 +49,14 @@ const ProductInformation = (props: ProductInformationProps) => {
         }}
         data-testid="product-content"
       />
-      <StyledAccordion onChange={handleAccordionChange}>
+      <StyledAccordion>
         <AccordionSummary data-testid="accordian" expandIcon={<ExpandMoreIcon />}>
           <Typography variant="subtitle2" fontWeight={700}>
             {t('product-specs')}
           </Typography>
         </AccordionSummary>
         <AccordionDetails>
-          {properties?.map((option: CrProductOption) => {
-            return (
-              <Box key={option?.value} pt={1}>
-                <ProductOption option={option} />
-              </Box>
-            )
-          })}
+          <ProductOptionList options={options} />
         </AccordionDetails>
       </StyledAccordion>
     </>

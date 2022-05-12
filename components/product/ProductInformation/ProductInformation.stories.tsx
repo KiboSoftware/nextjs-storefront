@@ -9,7 +9,7 @@ import type { CrProductOption } from '@/lib/gql/types'
 const productFullDescription =
   'a Sleek and subtle, these Smith Parallel polarized interchangeable sunglasses allow unobstructed peripheral vision—ideal for trail running, cycling or a day on the boat.&nbsp;\n<div><ul><li><span style="font-size: 12px;">Polarized lenses reduce 99% of visible glare from water, snow, sand and pavement for increased visual acuity and decreased eye strain&nbsp;</span><br></li><li><span style="font-size: 12px;">Each frame includes 1 set of polarized lenses (tint depends on frame color) and 2 additional sets of lenses for a total of 3 sets of lenses&nbsp;</span><br></li><li><span style="font-size: 12px;">Brown frames feature polarized brown lenses that block reflected glare while providing increased depth perception and reducing eye strain&nbsp;</span><br></li><li><span style="font-size: 12px;">Black frames feature polarized gray lenses that block reflected glare while preserving natural colors in order to provide true color definition&nbsp;</span><br></li></ul></div>'
 
-const properties: CrProductOption[] = [
+const options: CrProductOption[] = [
   {
     attributeFQN: 'Tenant~Availability',
     name: 'Availability',
@@ -49,5 +49,5 @@ const Template: ComponentStory<typeof ProductInformation> = (args) => (
 export const Common = Template.bind({})
 Common.args = {
   productFullDescription: productFullDescription,
-  properties,
+  options,
 }

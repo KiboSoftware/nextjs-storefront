@@ -23,5 +23,4 @@ const Template: ComponentStory<typeof ProductOption> = (args) => <ProductOption 
 export const Common = Template.bind({})
 Common.args = {
   option: productOption,
-  fontWeight: 'bold',
 }

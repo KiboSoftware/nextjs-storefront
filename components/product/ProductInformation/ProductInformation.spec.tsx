@@ -8,8 +8,8 @@ import * as stories from './ProductInformation.stories'
 
 const { Common } = composeStories(stories)
 
-const productOptionMock = () => <div data-testid="product-option-component" />
-jest.mock('@/components/product/ProductOption/ProductOption', () => productOptionMock)
+const productOptionMock = () => <div data-testid="product-option-list-component" />
+jest.mock('@/components/product/ProductOptionList/ProductOptionList', () => productOptionMock)
 
 describe('[component] - ProductInformation', () => {
   const setup = () => {
@@ -26,10 +26,8 @@ describe('[component] - ProductInformation', () => {
     const accordian = screen.getByTestId('accordian')
     expect(accordian).toHaveAttribute('aria-expanded', 'false')
 
-    const productItemOptions = screen.getAllByTestId('product-option-component')
-    const items = Common.args?.properties || []
-    const count = items.length || 0
-    expect(productItemOptions).toHaveLength(count)
+    const productItemOptions = screen.getByTestId('product-option-list-component')
+    expect(productItemOptions).not.toBeVisible()
   })
 
   it('should open product spec accordion when user clicks on accordion header', () => {
@@ -39,6 +37,8 @@ describe('[component] - ProductInformation', () => {
     expect(accordian).toHaveAttribute('aria-expanded', 'false')
     userEvent.click(accordian)
     expect(accordian).toHaveAttribute('aria-expanded', 'true')
+    const productItemOptions = screen.getByTestId('product-option-list-component')
+    expect(productItemOptions).toBeVisible()
   })
 
   it('should close accordion when accordion is already open and the user clicks on accordion header', () => {

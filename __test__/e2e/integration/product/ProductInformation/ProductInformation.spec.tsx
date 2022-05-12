@@ -22,11 +22,11 @@ describe('[component] - ProductInformation Integration', () => {
     expect(accordian).toHaveAttribute('aria-expanded', 'true')
 
     const productItem = screen.getAllByTestId('productOption')
-    const count = Common.args?.properties?.length || 0
+    const count = Common.args?.options?.length || 0
 
     expect(productItem).toHaveLength(count)
 
-    Common.args?.properties?.map((option) => {
+    Common.args?.options?.map((option) => {
       const name = screen.getByText(`${option.name}:`)
       expect(name).toBeVisible()
 
