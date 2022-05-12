@@ -6,7 +6,7 @@ import Image, { ImageProps } from 'next/image'
 import DefaultImage from '@/public/product_placeholder.svg'
 
 interface KiboImageProps extends ImageProps {
-  errorImage?: ImageData | SvgIconComponent
+  errorimage?: ImageData | SvgIconComponent
 }
 
 const errorImage = { image: DefaultImage }
@@ -21,7 +21,7 @@ const onImageError = (
 }
 
 const KiboImage = (props: KiboImageProps) => {
-  errorImage.image = props.errorImage
+  errorImage.image = props.errorimage
   return <Image {...props} alt={props.alt} onError={onImageError} />
 }
 
