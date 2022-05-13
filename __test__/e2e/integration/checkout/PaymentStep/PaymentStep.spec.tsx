@@ -9,6 +9,7 @@ const { Common } = composeStories(stories)
 
 describe('[components] PaymentStep', () => {
   const setup = () => render(<Common {...Common.args} />)
+  const emptyInput = { target: { value: '' } }
 
   it('should render component', () => {
     setup()
@@ -41,7 +42,6 @@ describe('[components] PaymentStep', () => {
   })
 
   describe('should validate card component', () => {
-    const emptyInput = { target: { value: '' } }
     it('should validate selceted payment method ', () => {
       setup()
 
@@ -52,7 +52,7 @@ describe('[components] PaymentStep', () => {
       expect(creditCard).toBeChecked()
     })
 
-    it('Required cardNumber', async () => {
+    it('Should required cardNumber', async () => {
       setup()
 
       const creditCard = screen.getByRole('radio', {
@@ -72,7 +72,7 @@ describe('[components] PaymentStep', () => {
       expect(validationMessage).toBeVisible()
     })
 
-    it('Required expiryDate', async () => {
+    it('Should required expiryDate', async () => {
       setup()
 
       const creditCard = screen.getByRole('radio', {
@@ -92,7 +92,7 @@ describe('[components] PaymentStep', () => {
       expect(validationMessage).toBeVisible()
     })
 
-    it('Required Security Code(CVV)', async () => {
+    it('Should required Security Code(CVV)', async () => {
       setup()
 
       const creditCard = screen.getByRole('radio', {
@@ -108,6 +108,137 @@ describe('[components] PaymentStep', () => {
       })
 
       const validationMessage = screen.getByText(/security-code-required/i)
+      // assert
+      expect(validationMessage).toBeVisible()
+    })
+  })
+
+  describe('should display billing address validation message', () => {
+    it('Should required firstName', async () => {
+      // arrange
+      setup()
+
+      // act
+      const firstName = screen.getByRole('textbox', { name: /first-name/i })
+      await act(async () => {
+        firstName.focus()
+        fireEvent.blur(firstName, emptyInput)
+      })
+
+      const validationMessage = screen.getByText(/this field is required/i)
+
+      // assert
+      expect(validationMessage).toBeVisible()
+    })
+
+    it('Should required lastNameOrSurname', async () => {
+      // arrange
+      setup()
+
+      // act
+      const lastNameOrSurname = screen.getByRole('textbox', { name: /last-name/i })
+      await act(async () => {
+        lastNameOrSurname.focus()
+        fireEvent.blur(lastNameOrSurname, emptyInput)
+      })
+      const validationMessage = screen.getByText(/this field is required/i)
+
+      // assert
+      expect(validationMessage).toBeVisible()
+    })
+
+    it('Should required address1', async () => {
+      // arrange
+      setup()
+
+      // act
+      const address1 = screen.getByRole('textbox', { name: /address1/i })
+      await act(async () => {
+        address1.focus()
+        fireEvent.blur(address1, emptyInput)
+      })
+      const validationMessage = screen.getByText(/this field is required/i)
+
+      // assert
+      expect(validationMessage).toBeVisible()
+    })
+
+    it('Should required address2', async () => {
+      // arrange
+      setup()
+
+      // act
+      const address2 = screen.getByRole('textbox', { name: /address2/i })
+      await act(async () => {
+        address2.focus()
+        fireEvent.blur(address2, emptyInput)
+      })
+      const validationMessage = screen.getByText(/this field is required/i)
+
+      // assert
+      expect(validationMessage).toBeVisible()
+    })
+
+    it('Should required cityOrTown', async () => {
+      // arrange
+      setup()
+
+      // act
+      const cityOrTown = screen.getByRole('textbox', { name: /city/i })
+      await act(async () => {
+        cityOrTown.focus()
+        fireEvent.blur(cityOrTown, emptyInput)
+      })
+      const validationMessage = screen.getByText(/this field is required/i)
+
+      // assert
+      expect(validationMessage).toBeVisible()
+    })
+
+    it('Should required stateOrProvince', async () => {
+      // arrange
+      setup()
+
+      // act
+      const stateOrProvince = screen.getByRole('textbox', { name: /state-or-province/i })
+      await act(async () => {
+        stateOrProvince.focus()
+        fireEvent.blur(stateOrProvince, emptyInput)
+      })
+      const validationMessage = screen.getByText(/this field is required/i)
+
+      // assert
+      expect(validationMessage).toBeVisible()
+    })
+
+    it('Should required postalOrZipCode', async () => {
+      // arrange
+      setup()
+
+      // act
+      const postalOrZipCode = screen.getByRole('textbox', { name: /postal-or-zip-code/i })
+      await act(async () => {
+        postalOrZipCode.focus()
+        fireEvent.blur(postalOrZipCode, emptyInput)
+      })
+      const validationMessage = screen.getByText(/this field is required/i)
+
+      // assert
+      expect(validationMessage).toBeVisible()
+    })
+
+    it('Should required phoneNumbers.home', async () => {
+      // arrange
+      setup()
+
+      // act
+      const phoneNumberHome = screen.getByRole('textbox', { name: /phone-number/i })
+      await act(async () => {
+        phoneNumberHome.focus()
+        fireEvent.blur(phoneNumberHome, emptyInput)
+      })
+      const validationMessage = screen.getByText(/this field is required/i)
+
       // assert
       expect(validationMessage).toBeVisible()
     })
