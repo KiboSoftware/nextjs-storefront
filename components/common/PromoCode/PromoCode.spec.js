@@ -7,18 +7,21 @@ import { render, screen } from '@testing-library/react'
 
 import * as stories from './PromoCode.stories' // import all stories from the stories file
 
-const { PromocodeComponent: PromoCodeComponent } = composeStories(stories)
+const { PromocodeComponent } = composeStories(stories)
 
 describe('PromoCode Component', () => {
   it('should render PromoCode button text', () => {
-    render(<PromoCodeComponent />)
-    const PromoCode = screen.getByText('Apply')
-    expect(PromoCode).toBeVisible()
+    render(<PromocodeComponent {...PromocodeComponent.args} />)
+    const PromoCodeApply = screen.getByRole('button', {
+      name: /apply/i,
+    })
+    expect(PromoCodeApply).toBeVisible()
   })
 
   it('should render PromoCode inputfield text', () => {
-    render(<PromoCodeComponent />)
-    const PromoCode = screen.getAllByText('Enter Promo code')
-    expect(PromoCode).toBe(PromoCode)
+    render(<PromocodeComponent {...PromocodeComponent.args} />)
+    const PromoCode = screen.getByRole('textbox')
+
+    expect(PromoCode).toBeVisible()
   })
 })

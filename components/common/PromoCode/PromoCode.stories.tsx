@@ -13,5 +13,5 @@ const Template: ComponentStory<typeof PromoCode> = (args) => <PromoCode {...args
 export const PromocodeComponent = Template.bind({})
 
 PromocodeComponent.args = {
-  promoEnable: true,
+  isEnabled: true,
 }

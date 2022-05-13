@@ -62,5 +62,6 @@
   "standard-shopping": "Standard Shipping",
   "currency": "{{val, currency(USD)}}",
   "count": "count",
-  "cart-total":"{{cartTotalLabel}} of ({{numberOfItems}})"
+  "cart-total":"{{cartTotalLabel}} of ({{numberOfItems}})",
+  "promo-code": "Enter Promo code"
 }

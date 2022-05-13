@@ -12,13 +12,13 @@ export default {
 const Template: ComponentStory<typeof PromoCodeBadge> = (args) => <PromoCodeBadge {...args} />
 const BadgeTemplate: ComponentStory<typeof PromoCodeBadge> = (args) => <PromoBadge {...args} />
 
-export const PromocodeBadge = Template.bind({})
-export const PromocodeComponent = BadgeTemplate.bind({})
+export const PromocodeBadgeComponent = Template.bind({})
+export const PromocodeBadge = BadgeTemplate.bind({})
 
-PromocodeBadge.args = {
-  promoEnable: false,
+PromocodeBadgeComponent.args = {
+  isEnabled: false,
 }
 
-PromocodeComponent.args = {
-  promocode: 'SAVE50',
+PromocodeBadge.args = {
+  promoCode: 'SAVE50',
 }

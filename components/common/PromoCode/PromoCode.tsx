@@ -2,51 +2,41 @@
 
 import { useState, useRef } from 'react'
 
-import CancelOutlinedIcon from '@mui/icons-material/CancelOutlined'
-import { Typography, Box, Button, TextField } from '@mui/material'
+import { Box, Button } from '@mui/material'
+import { useTranslation } from 'next-i18next'
 
-const PromoCode = ({ promoEnable }: any) => {
-  const promotext = useRef()
-  const [promo, setPromo] = useState('')
-  const [promoActive, setPromoActive] = useState(false)
-  const [promocode, setPromocode] = useState('')
+import KiboTextBox from '../KiboTextBox/KiboTextBox'
+
+const styles = {
+  textBoxStyle: {
+    minWidth: '4rem',
+    maxWidth: '17rem',
+    mr: '0.5rem',
+  },
+  buttonStyle: { width: '5rem', height: '2.20rem', marginTop: '1.5rem' },
+}
+const PromoCode = ({ isEnabled }: any) => {
+  const promoRef = useRef()
+  const [, setPromo] = useState('')
+
+  const handleOnChange = (_name: any, value: any) => {
+    setPromo(value)
+  }
+  const { t } = useTranslation('common')
 
   return (
     <>
       <Box>
-        <TextField
-          inputRef={promotext}
-          sx={{ mx: '1rem', width: '17rem' }}
-          size="small"
-          label="Enter Promo code"
-          variant="outlined"
+        <KiboTextBox
+          inputRef={promoRef}
+          onChange={handleOnChange}
+          sx={styles.textBoxStyle}
+          placeholder={t('promo-code')}
         />
-        <Button disabled={promoEnable} sx={{ width: '6rem', height: '2.5rem' }} variant="contained">
-          Apply
+        <Button disabled={isEnabled} sx={styles.buttonStyle} variant="contained">
+          {t('apply')}
         </Button>
       </Box>
-      {promo?.length > 0 && promoActive && (
-        <Box
-          sx={{
-            display: 'inline-block',
-            mx: '1rem',
-            mt: '0.2rem',
-            backgroundColor: '#DCDCDC',
-            justifyContent: 'center',
-          }}
-        >
-          <Typography sx={{ mx: '1rem', textAlign: 'left' }}>
-            {promocode}
-            <CancelOutlinedIcon
-              sx={{
-                cursor: 'pointer',
-                mt: '0.1rem',
-              }}
-              fontSize="inherit"
-            />
-          </Typography>
-        </Box>
-      )}
     </>
   )
 }

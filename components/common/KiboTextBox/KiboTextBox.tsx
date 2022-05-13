@@ -49,6 +49,7 @@ const KiboTextBox = (props: KiboTextBoxProps) => {
     placeholder,
     onChange,
     onKeyDown,
+    inputRef,
     ...rest
   } = props
 
@@ -58,6 +59,8 @@ const KiboTextBox = (props: KiboTextBoxProps) => {
         {label}
       </InputLabel>
       <KiboInput
+      inputRef={inputRef}
+        // inputRef={inputRef}
         id="kibo-input"
         size="small"
         error={error}
