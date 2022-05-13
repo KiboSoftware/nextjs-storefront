@@ -14,6 +14,3 @@ const Template: ComponentStory<typeof PaymentStep> = () => <PaymentStep />
 
 // Default
 export const Common = Template.bind({})
-Common.args = {
-  ref: undefined,
-}

@@ -16,7 +16,6 @@ const Template: ComponentStory<typeof DetailsStep> = (args) => <DetailsStep {...
 // Default
 export const Common = Template.bind({})
 Common.args = {
-  ref: undefined,
   setAutoFocus: false,
   personalDetails: {
     email: '',
@@ -33,7 +32,6 @@ Common.args = {
 // With account fields
 export const withAccountCreation = Template.bind({})
 withAccountCreation.args = {
-  ref: undefined,
   setAutoFocus: false,
   personalDetails: {
     email: '',

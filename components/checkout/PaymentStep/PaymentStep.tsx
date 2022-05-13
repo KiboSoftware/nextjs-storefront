@@ -1,23 +1,11 @@
-import React, { forwardRef, useImperativeHandle } from 'react'
+import React from 'react'
 
-interface PaymentHandler {
-  validateForm: () => void
-}
-
-const PaymentStep = forwardRef<PaymentHandler, any>((_props, ref) => {
-  const validateForm = () => {
-    console.log('validating Payment form')
-  }
-  useImperativeHandle(ref, () => ({
-    validateForm,
-  }))
-
+const PaymentStep = () => {
   return (
     <div>
       <b>Payment</b>
     </div>
   )
-})
+}
 
 export default PaymentStep
-PaymentStep.displayName = 'PaymentStep'

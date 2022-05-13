@@ -1,12 +1,5 @@
 /* eslint-disable  jsx-a11y/no-autofocus */
-import React, {
-  forwardRef,
-  useImperativeHandle,
-  useRef,
-  ElementRef,
-  useEffect,
-  useState,
-} from 'react'
+import React, { useEffect, useState } from 'react'
 
 import { yupResolver } from '@hookform/resolvers/yup'
 import AccessTimeIcon from '@mui/icons-material/AccessTime'
@@ -32,6 +25,8 @@ import * as yup from 'yup'
 
 import KiboTextBox from '@/components/common/KiboTextBox/KiboTextBox'
 import PasswordValidation from '@/components/common/PasswordValidation/PasswordValidation'
+import { eventBus, events } from '@/lib/event-bus/event-bus'
+import { isPasswordValid } from '@/lib/helpers/validations/validations'
 
 export interface PersonalDetails {
   email: string
@@ -45,12 +40,6 @@ interface DetailsProps {
   personalDetails: PersonalDetails
   onPersonalDetailsSave: (personalDetails: PersonalDetails) => void
 }
-
-interface DetailsHandler {
-  validateForm: () => void
-}
-
-type PasswordValidationHandler = ElementRef<typeof PasswordValidation>
 
 const commonStyle = {
   width: '100%',
@@ -84,9 +73,8 @@ const useDetailsSchema = () => {
   })
 }
 
-const DetailsStep = forwardRef<DetailsHandler, DetailsProps>((props, ref) => {
+const DetailsStep = (props: DetailsProps) => {
   const { setAutoFocus = true, personalDetails, onPersonalDetailsSave } = props
-  const passwordValidationRef = useRef<PasswordValidationHandler | null>(null)
   const [isGoToShippingClicked, setIsGoToShippingClicked] = useState<boolean>(false)
 
   const { t } = useTranslation('checkout')
@@ -108,19 +96,13 @@ const DetailsStep = forwardRef<DetailsHandler, DetailsProps>((props, ref) => {
   const useEnteredPassword = watch(['password']).join('')
   const showAccountFields = watch(['showAccountFields']).join('')
 
-  useImperativeHandle(ref, () => ({
-    validateForm,
-  }))
-
-  const isPasswordValid = (): boolean =>
-    showAccountFields === 'true'
-      ? (passwordValidationRef.current?.validatePassword() as boolean)
-      : true
+  const isUserPasswordValid = () =>
+    showAccountFields === 'true' ? isPasswordValid(useEnteredPassword) : true
 
   const isFormValid = (): boolean => isValid
 
   const saveData = () => {
-    if (isFormValid() && isPasswordValid()) {
+    if (isFormValid() && isUserPasswordValid()) {
       const { email, firstName, lastNameOrSurname, password } = getValues()
       onPersonalDetailsSave({
         email: email,
@@ -135,6 +117,14 @@ const DetailsStep = forwardRef<DetailsHandler, DetailsProps>((props, ref) => {
     setIsGoToShippingClicked(true)
     await trigger()
   }
+
+  useEffect(() => {
+    eventBus.on(events.CHECKOUT_VALIDATE_DETAILS_STEP, validateForm)
+
+    return () => {
+      eventBus.remove(events.CHECKOUT_VALIDATE_DETAILS_STEP, validateForm)
+    }
+  }, [])
 
   useEffect(() => {
     if (isGoToShippingClicked) saveData()
@@ -284,12 +274,11 @@ const DetailsStep = forwardRef<DetailsHandler, DetailsProps>((props, ref) => {
             )}
           />
 
-          <PasswordValidation ref={passwordValidationRef} password={useEnteredPassword} />
+          <PasswordValidation password={useEnteredPassword} />
         </FormControl>
       )}
     </Stack>
   )
-})
+}
 
 export default DetailsStep
-DetailsStep.displayName = 'DetailsStep'

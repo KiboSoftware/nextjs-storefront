@@ -1,4 +1,4 @@
-import React, { useState, useRef, ElementRef } from 'react'
+import React, { useState } from 'react'
 
 import { Box, Stack, Button, Typography, SxProps } from '@mui/material'
 import { Theme } from '@mui/material/styles'
@@ -11,6 +11,7 @@ import PaymentStep from '@/components/checkout/PaymentStep/PaymentStep'
 import ReviewStep from '@/components/checkout/ReviewStep/ReviewStep'
 import ShippingStep from '@/components/checkout/ShippingStep/ShippingStep'
 import OrderSummary from '@/components/common/OrderSummary/OrderSummary'
+import { eventBus, events } from '@/lib/event-bus/event-bus'
 
 import type { OrderInput } from '@/lib/gql/types'
 
@@ -25,16 +26,9 @@ const Checkout = () => {
   const buttonLabels = [t('go-to-shipping'), t('go-to-payment'), t('review-order')]
   const steps = [t('details'), t('shipping'), t('payment'), t('review')]
 
-  // Define Refs
-  type DetailsFormHanlder = ElementRef<typeof DetailsStep>
-  type ShippingFormHanlder = ElementRef<typeof ShippingStep>
-  type PaymentFormHandler = ElementRef<typeof PaymentStep>
-  const detailsRef = useRef<DetailsFormHanlder | null>(null)
-  const shippingRef = useRef<ShippingFormHanlder | null>(null)
-  const paymentRef = useRef<PaymentFormHandler | null>(null)
-
   // State
   const [activeStep, setActiveStep] = useState<number>(0)
+
   // ToBe: state initial valies are just testing purpose later remove it
   const [checkoutId, _setCheckoutId] = useState<string>('137a979305c65d00010800230000678b')
   const [cartId, _setCartId] = useState<string>('137a94b6402be000013718d80000678b')
@@ -49,16 +43,18 @@ const Checkout = () => {
 
   // Handlers
   const activeStepName = steps[activeStep]
+
   const handleBack = () => {
     setActiveStep(activeStep - 1)
   }
+
   const handleNext = () => {
     if (activeStepName === t('details').toString())
-      detailsRef.current && detailsRef.current.validateForm()
+      eventBus.dispatch(events.CHECKOUT_VALIDATE_DETAILS_STEP, {})
     if (activeStepName === t('shipping').toString())
-      shippingRef.current && shippingRef.current.validateForm()
+      eventBus.dispatch(events.CHECKOUT_VALIDATE_PAYMENT_STEP, {})
     if (activeStepName === t('payment').toString())
-      paymentRef.current && paymentRef.current.validateForm()
+      eventBus.dispatch(events.CHECKOUT_VALIDATE_SHIPPING_STEP, {})
   }
 
   // Refactor: Build Payload (separate out the logic) and call updatePersonalInfoMutation hook
@@ -120,11 +116,10 @@ const Checkout = () => {
         <KiboStepper steps={steps} activeStep={activeStep}>
           <DetailsStep
             personalDetails={personalDetails}
-            ref={detailsRef}
             onPersonalDetailsSave={handlePerosnalDetails}
           />
-          <ShippingStep shippingFromAPI={null} ref={shippingRef} />
-          <PaymentStep paymentFromAPI={null} ref={paymentRef} />
+          <ShippingStep />
+          <PaymentStep />
           <ReviewStep />
         </KiboStepper>
       </Stack>

@@ -14,6 +14,3 @@ const Template: ComponentStory<typeof ShippingStep> = () => <ShippingStep />
 
 // Default
 export const Common = Template.bind({})
-Common.args = {
-  ref: undefined,
-}
