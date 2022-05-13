@@ -14,7 +14,10 @@ const KiboTextBoxMock = () => (
   <input data-testid="text-box-mock" onChange={onChangMock} onBlur={onBlurMock} />
 )
 jest.mock('../../../common/KiboTextBox/KiboTextBox', () => KiboTextBoxMock)
-
+jest.mock('React', () => ({
+  ...jest.requireActual('React'),
+  useEffect: jest.fn(),
+}))
 describe('[components] CardDetailsForm', () => {
   const setup = () => render(<Common {...Common.args} />)
 
