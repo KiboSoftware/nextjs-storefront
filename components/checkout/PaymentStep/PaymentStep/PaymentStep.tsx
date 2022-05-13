@@ -78,17 +78,17 @@ const PaymentStep = (props: PaymentStepProps) => {
     isSavePaymentMethod: false,
   })
 
-  const handleCardData = async (cardData: CardDetailsProps) => {
-    await setPaymentDetails(Object.assign(paymentDetails, cardData))
+  const handleCardData = (cardData: CardDetailsProps) => {
+    setPaymentDetails(Object.assign(paymentDetails, cardData))
   }
 
-  const handleSavePaymentMethod = async () => {
-    await setPaymentDetails(
+  const handleSavePaymentMethod = () => {
+    setPaymentDetails(
       Object.assign(paymentDetails, { isSavePaymentMethod: !paymentDetails.isSavePaymentMethod })
     )
   }
 
-  const handleSavePayment = async () => {
+  const handleSavePayment = () => {
     addressRef.current && addressRef.current.listener()
     onSaveCardPayment(paymentDetails)
   }
