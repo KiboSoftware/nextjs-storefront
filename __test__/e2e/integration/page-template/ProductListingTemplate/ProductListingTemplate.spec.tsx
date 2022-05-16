@@ -23,7 +23,7 @@ describe('[component] - Category', () => {
   }
 
   it('should call handleSortingSelection function after user click on sorting', () => {
-    const { onSortingSelection } = setup()
+    setup()
 
     const selectButton = screen.getByRole('button', { name: /best-match/i })
 
@@ -39,7 +39,7 @@ describe('[component] - Category', () => {
   })
 
   it('should call back button after user click on back button', () => {
-    const { onBackButtonClickMock } = setup()
+    setup()
     const backButton = screen.getByRole('button', { name: /back/i })
 
     userEvent.click(backButton)

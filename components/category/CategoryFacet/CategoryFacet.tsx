@@ -90,7 +90,6 @@ const CategoryFacet = (props: CategoryFacetProps) => {
   const childrenLength = categoryFacet.childrenCategories.length
   const isViewMoreVisible = childrenLength > initialItemsToShow
 
-  const [isViewMoreButtonVisible, setIsViewMoreButtonVisible] = useState<boolean>(isViewMoreVisible)
   const [buttonText, setButtonText] = useState<string>(viewMore)
   const [filteredValues, setFilteredValues] = useState<FacetValue[]>([])
 
@@ -99,7 +98,6 @@ const CategoryFacet = (props: CategoryFacetProps) => {
   }
 
   const handleViewMore = () => {
-    // setIsViewMoreButtonVisible(!isViewMoreButtonVisible)
     setButtonText(() => (buttonText === viewMore ? viewLess : viewMore))
   }
 
@@ -108,7 +106,7 @@ const CategoryFacet = (props: CategoryFacetProps) => {
     const sliced = categoryFacet.childrenCategories?.slice(0, noOfItemsToShow) || []
 
     setFilteredValues([...sliced])
-  }, [isViewMoreButtonVisible, viewMore, buttonText])
+  }, [isViewMoreVisible, viewMore, buttonText])
 
   return (
     <Box sx={styles.linkContainer}>
@@ -131,7 +129,7 @@ const CategoryFacet = (props: CategoryFacetProps) => {
             </FormLabel>
           </Link>
         ))}
-        {isViewMoreButtonVisible && (
+        {isViewMoreVisible && (
           <Button
             variant="text"
             size="small"

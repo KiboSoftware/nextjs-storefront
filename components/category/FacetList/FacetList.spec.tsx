@@ -38,7 +38,7 @@ describe('[components] - FacetList', () => {
   })
 
   it('should call handleClose callback function when user clicks on close icon button', () => {
-    const { onFilterByCloseMock } = setup()
+    setup()
 
     const crossIcon = screen.getByTestId(/closeicon/i)
     userEvent.click(crossIcon)
