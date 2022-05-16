@@ -31,7 +31,7 @@ const PromoCodeBadge = () => {
   const [promoCode, setPromoCode] = useState('')
   const [isEnabled, setIsEnabled] = useState(true)
 
-  const handleOnChange = (name: any, value: any) => {
+  const handleOnChange = (_name: any, value: any) => {
     setPromo(value)
   }
   const { t } = useTranslation('common')

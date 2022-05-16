@@ -4,7 +4,7 @@ import React from 'react'
 
 import '@testing-library/jest-dom/extend-expect'
 import { composeStories } from '@storybook/testing-react'
-import { render, screen } from '@testing-library/react'
+import { fireEvent, render, screen } from '@testing-library/react'
 
 import * as stories from './PromoCodeBadge.stories' // import all stories from the stories file
 
@@ -36,5 +36,13 @@ describe('PromoCode Component', () => {
     render(<PromocodeBadgeComponent />)
     const ApplyButton = screen.getByTestId('promo-button')
     expect(ApplyButton).toHaveClass('Mui-disabled')
+  })
+
+  it('should enable button', () => {
+    render(<PromocodeBadgeComponent {...PromocodeBadgeComponent.args} />)
+    const PromoCode = screen.getByRole('textbox')
+    fireEvent.change(PromoCode, { target: { value: 'SAVE50' } })
+    const ApplyButton = screen.getByTestId('promo-button')
+    expect(ApplyButton).not.toHaveClass('Mui-disabled')
   })
 })
