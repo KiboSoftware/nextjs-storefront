@@ -131,7 +131,13 @@ const PaymentStep = (props: PaymentStepProps) => {
 
       {isUserLoggedIn && (
         <StyledFormControlLabel
-          control={<Checkbox onChange={handleSavePaymentMethod} />}
+          control={
+            <Checkbox
+              onChange={handleSavePaymentMethod}
+              data-testid="save-payment"
+              value={'save-payment'}
+            />
+          }
           label={`${t('save-payment-method')}`}
         />
       )}

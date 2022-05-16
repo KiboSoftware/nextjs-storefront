@@ -1,13 +1,14 @@
 import React from 'react'
 
 import { composeStories } from '@storybook/testing-react'
-import { render, screen } from '@testing-library/react'
+import { render, screen, fireEvent } from '@testing-library/react'
 
 import * as stories from './PaymentStep.stories' // import all stories from the stories file
 
 const { Common } = composeStories(stories)
 
 const onBlurMock = jest.fn()
+const onHandleSavePaymentMethodMock = jest.fn()
 
 const KiboTextBoxMock = () => <input data-testid="text-box-mock" onBlur={onBlurMock} />
 jest.mock('../../../common/KiboTextBox/KiboTextBox', () => KiboTextBoxMock)
@@ -36,5 +37,17 @@ describe('[components] PaymentStep', () => {
     expect(billingAddressHeading).toBeInTheDocument()
     expect(textBoxList).toHaveLength(8)
     expect(saveBillingAddress).toBeInTheDocument()
+  })
+
+  it('should default unchecked saved payment if logged in', () => {
+    setup()
+
+    const savePaymentMethod = screen.getByTestId('save-payment')
+    savePaymentMethod.focus()
+    fireEvent.change(savePaymentMethod, {
+      target: { onChange: onHandleSavePaymentMethodMock() },
+    })
+
+    expect(onHandleSavePaymentMethodMock).toBeCalled()
   })
 })
