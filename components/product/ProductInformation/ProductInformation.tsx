@@ -1,5 +1,12 @@
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore'
-import { Typography, Accordion, AccordionSummary, AccordionDetails, styled } from '@mui/material'
+import {
+  Box,
+  Typography,
+  Accordion,
+  AccordionSummary,
+  AccordionDetails,
+  styled,
+} from '@mui/material'
 import { useTranslation } from 'next-i18next'
 
 import ProductOptionList from '../ProductOptionList/ProductOptionList'
@@ -42,8 +49,8 @@ const ProductInformation = (props: ProductInformationProps) => {
       <Typography variant="h3" fontWeight={700} pb={1}>
         {t('product-information')}
       </Typography>
-      <Typography
-        variant="body2"
+      <Box
+        sx={{ fontSize: (theme) => theme.typography.body2 }}
         dangerouslySetInnerHTML={{
           __html: productFullDescription as string,
         }}
