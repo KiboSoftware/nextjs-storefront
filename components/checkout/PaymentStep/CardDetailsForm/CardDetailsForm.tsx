@@ -9,6 +9,10 @@ import { useTranslation } from 'next-i18next'
 import { useForm, Controller } from 'react-hook-form'
 import * as yup from 'yup'
 
+import {
+  cardData,
+  getCardData,
+} from '../../../../lib/components/checkout/PaymentStep/CardDetailsForm'
 import KiboTextBox from '../../../common/KiboTextBox/KiboTextBox'
 
 interface Card {
@@ -34,7 +38,7 @@ const StyledCardDiv = styled('div')(() => ({
   paddingLeft: '0.5rem',
 }))
 
-const useCardSchema = () => {
+export const useCardSchema = () => {
   const { t } = useTranslation('common')
   return yup.object({
     cardNumber: yup
@@ -87,34 +91,12 @@ const CardDetailsForm = (props: CardDetailsFormProps) => {
   })
 
   useEffect(() => {
-    const cardData = {
-      card: {
-        cardNumber: '',
-        expiryDate: '',
-        cvv: '',
-        cardType: '',
-        expireMonth: '',
-        expireYear: '',
-      },
-      paymentType: 'creditcard',
-    }
+    let updatedCardData = cardData
     if (isValid) {
       const { cardNumber, expiryDate, cvv } = getValues()
-      if (cardNumber) {
-        cardData.card.cardNumber = cardNumber
-        const ccardType = creditCardType(cardNumber)
-        cardData.card.cardType = ccardType.length ? ccardType[0].type.toUpperCase() : ''
-      }
-
-      if (expiryDate) {
-        cardData.card.expiryDate = expiryDate
-        const expiryMonthYear = expiryDate?.split('/')
-        cardData.card.expireMonth = expiryMonthYear[0]
-        cardData.card.expireYear = expiryMonthYear[1]
-      }
-      cardData.card.cvv = cvv
+      updatedCardData = getCardData({ cardNumber, expiryDate, cvv })
     }
-    onCardData({ ...cardData, isCardDetailsValidated: isValid })
+    onCardData({ ...updatedCardData, isCardDetailsValidated: isValid })
   }, [isValid, errors, getValues, onCardData])
 
   return (
