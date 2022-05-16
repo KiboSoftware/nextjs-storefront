@@ -9,7 +9,7 @@ export default {
   title: 'Common/PromoCodeBadge',
 } as ComponentMeta<typeof PromoCodeBadge>
 
-const Template: ComponentStory<typeof PromoCodeBadge> = (args) => <PromoCodeBadge />
+const Template: ComponentStory<typeof PromoCodeBadge> = () => <PromoCodeBadge />
 const BadgeTemplate: ComponentStory<typeof PromoCodeBadge> = (args) => <PromoBadge {...args} />
 
 export const PromocodeBadgeComponent = Template.bind({})

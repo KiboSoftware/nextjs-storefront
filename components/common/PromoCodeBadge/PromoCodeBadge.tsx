@@ -25,7 +25,7 @@ const styles = {
 }
 
 const PromoCodeBadge = () => {
-  const promoRef = useRef()
+  const promoRef = useRef<any>()
   const [promo, setPromo] = useState('')
   const [promoActive, setPromoActive] = useState(false)
   const [promoCode, setPromoCode] = useState('')
