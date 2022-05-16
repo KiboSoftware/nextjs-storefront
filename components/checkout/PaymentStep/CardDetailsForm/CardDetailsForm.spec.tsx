@@ -77,8 +77,8 @@ describe('[components] CardDetailsForm', () => {
 
       const textBoxList = screen.getAllByRole('textbox')
       const expiryDate = textBoxList[1]
-      userEvent.type(expiryDate, '03/2023')
       expiryDate.focus()
+      userEvent.type(expiryDate, '03/2023')
 
       expect(onChangeMock).toHaveBeenCalled()
     })
@@ -87,8 +87,8 @@ describe('[components] CardDetailsForm', () => {
 
       const textBoxList = screen.getAllByRole('textbox')
       const securityCode = textBoxList[2]
-      userEvent.type(securityCode, '123')
       securityCode.focus()
+      userEvent.type(securityCode, '123')
 
       // assert
       expect(onChangeMock).toHaveBeenCalled()
