@@ -27,6 +27,8 @@ import KiboTextBox from '@/components/common/KiboTextBox/KiboTextBox'
 import PasswordValidation from '@/components/common/PasswordValidation/PasswordValidation'
 import { eventBus, events } from '@/lib/event-bus/event-bus'
 import { isPasswordValid } from '@/lib/helpers/validations/validations'
+import { OrderInput } from '@/lib/gql/types'
+import { PersonalInfo, useUpdatePersonalInfo } from '@/hooks'
 
 export interface PersonalDetails {
   email: string
@@ -38,7 +40,9 @@ export interface PersonalDetails {
 interface DetailsProps {
   setAutoFocus?: boolean
   personalDetails: PersonalDetails
-  onPersonalDetailsSave: (personalDetails: PersonalDetails) => void
+  stepperStatus: string
+  checkout: any
+  onCompleteCallback: (action: any) => void
 }
 
 const commonStyle = {
@@ -74,17 +78,23 @@ const useDetailsSchema = () => {
 }
 
 const DetailsStep = (props: DetailsProps) => {
-  const { setAutoFocus = true, personalDetails, onPersonalDetailsSave } = props
-  const [isGoToShippingClicked, setIsGoToShippingClicked] = useState<boolean>(false)
-
+  const {
+    setAutoFocus = true,
+    personalDetails,
+    stepperStatus,
+    onCompleteCallback,
+    checkout,
+  } = props
   const { t } = useTranslation('checkout')
 
+  const updatePersonalInfo = useUpdatePersonalInfo()
+
   const {
-    getValues,
-    formState: { errors, isValid },
-    trigger,
+    formState: { errors, isValid, isDirty },
+    handleSubmit,
     control,
     watch,
+    getValues,
   } = useForm({
     mode: 'onBlur',
     reValidateMode: 'onBlur',
@@ -96,39 +106,44 @@ const DetailsStep = (props: DetailsProps) => {
   const useEnteredPassword = watch(['password']).join('')
   const showAccountFields = watch(['showAccountFields']).join('')
 
-  const isUserPasswordValid = () =>
-    showAccountFields === 'true' ? isPasswordValid(useEnteredPassword) : true
-
-  const isFormValid = (): boolean => isValid
-
-  const saveData = () => {
-    if (isFormValid() && isUserPasswordValid()) {
-      const { email, firstName, lastNameOrSurname, password } = getValues()
-      onPersonalDetailsSave({
-        email: email,
-        firstName: firstName || '',
-        lastNameOrSurname: lastNameOrSurname || '',
-        password: password || '',
-      })
+  const createAccount = async (formData: any) => {}
+  const updateCheckout = async (formData: any) => {
+    const { email } = formData
+    const personalInfo: PersonalInfo = {
+      orderId: checkout?.id as string,
+      updateMode: 'ApplyToOriginal',
+      orderInput: {
+        ...(checkout as OrderInput),
+        email,
+      },
+    }
+    await updatePersonalInfo.mutateAsync(personalInfo)
+  }
+  // if form is valid, onSubmit callback
+  const onValid = async (formData: any, e: any) => {
+    try {
+      await updateCheckout(formData)
+      if (formData?.showAccountFields) {
+        await createAccount(formData)
+      }
+      onCompleteCallback({ type: 'COMPLETE' })
+    } catch (error) {
+      onCompleteCallback({ type: 'INCOMPLETE' })
+      console.error(error)
     }
   }
-
-  const validateForm = async () => {
-    setIsGoToShippingClicked(true)
-    await trigger()
+  // form is invalid, notify parent form is incomplete
+  const onInvalidForm = (errors: any, e: any) => {
+    onCompleteCallback({ type: 'INCOMPLETE' })
   }
-
+  // when parent tries to validate step, va
   useEffect(() => {
-    eventBus.on(events.CHECKOUT_VALIDATE_DETAILS_STEP, validateForm)
-
-    return () => {
-      eventBus.remove(events.CHECKOUT_VALIDATE_DETAILS_STEP, validateForm)
+    if (stepperStatus === 'VALIDATE') {
+      // if the data is already valid and the form is not dirty
+      // we should probably just callback here ?
+      handleSubmit(onValid, onInvalidForm)()
     }
-  }, [])
-
-  useEffect(() => {
-    if (isGoToShippingClicked) saveData()
-  }, [errors, isValid])
+  }, [stepperStatus, onCompleteCallback])
 
   return (
     <Stack gap={2} data-testid="checkout-details">

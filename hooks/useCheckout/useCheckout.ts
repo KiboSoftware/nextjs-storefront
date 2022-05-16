@@ -25,12 +25,17 @@ const getOrCreateCheckout = async (cartId?: string | null, checkoutId?: string |
   return response?.checkout
 }
 
-export const useCheckout = ({ cartId, checkoutId }: UseCheckout): UseCheckoutResponse => {
+export const useCheckout = (
+  { cartId, checkoutId }: UseCheckout,
+  initialData?: any
+): UseCheckoutResponse => {
   const {
     data = [],
     isLoading,
     isSuccess,
-  } = useQuery([querykeys.LOAD_CHECKOUT, cartId], () => getOrCreateCheckout(cartId, checkoutId))
+  } = useQuery([querykeys.LOAD_CHECKOUT], () => getOrCreateCheckout(cartId, checkoutId), {
+    initialData,
+  })
 
   return { data, isLoading, isSuccess }
 }
