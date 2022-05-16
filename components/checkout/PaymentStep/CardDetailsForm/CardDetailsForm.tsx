@@ -4,7 +4,6 @@ import { yupResolver } from '@hookform/resolvers/yup'
 import CreditCardIcon from '@mui/icons-material/CreditCard'
 import HelpIcon from '@mui/icons-material/Help'
 import { styled, FormControl } from '@mui/material'
-import creditCardType from 'credit-card-type'
 import { useTranslation } from 'next-i18next'
 import { useForm, Controller } from 'react-hook-form'
 import * as yup from 'yup'
@@ -12,6 +11,8 @@ import * as yup from 'yup'
 import {
   cardData,
   getCardData,
+  validateExpiryDate,
+  getCardType,
 } from '../../../../lib/components/checkout/PaymentStep/CardDetailsForm'
 import KiboTextBox from '../../../common/KiboTextBox/KiboTextBox'
 
@@ -37,26 +38,6 @@ const StyledCardDiv = styled('div')(() => ({
   maxWidth: '26.313rem',
   paddingLeft: '0.5rem',
 }))
-
-const validateExpiryDate = (validExpiryDate: string | undefined) => {
-  if (validExpiryDate != undefined) {
-    const monthYear = validExpiryDate.split('/')
-    const month = parseInt(monthYear[0])
-    const year = parseInt(monthYear[1])
-    const currentDate = new Date()
-    const someDay = new Date()
-    someDay.setFullYear(year, month, 1)
-    return someDay >= currentDate
-  }
-  return false
-}
-
-const getCardType = (cardNumber: string | undefined) => {
-  if (cardNumber != undefined) {
-    return creditCardType(cardNumber).length !== 0
-  }
-  return false
-}
 
 export const useCardSchema = () => {
   const { t } = useTranslation('common')

@@ -11,7 +11,11 @@ const onChangeMock = jest.fn()
 const onBlurMock = jest.fn()
 
 const KiboTextBoxMock = () => (
-  <input data-testid="text-box-mock" onChange={onChangeMock} onBlur={onBlurMock} />
+  <input
+    data-testid="text-box-mock"
+    onChange={(value) => onChangeMock(value)}
+    onBlur={onBlurMock}
+  />
 )
 jest.mock('../../../common/KiboTextBox/KiboTextBox', () => KiboTextBoxMock)
 

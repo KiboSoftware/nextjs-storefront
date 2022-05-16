@@ -34,3 +34,23 @@ export const getCardData = (props: CardDataParams) => {
 
   return cardData
 }
+
+export const validateExpiryDate = (validExpiryDate: string | undefined) => {
+  if (validExpiryDate != undefined) {
+    const monthYear = validExpiryDate.split('/')
+    const month = parseInt(monthYear[0])
+    const year = parseInt(monthYear[1])
+    const currentDate = new Date()
+    const someDay = new Date()
+    someDay.setFullYear(year, month, 1)
+    return someDay >= currentDate
+  }
+  return false
+}
+
+export const getCardType = (cardNumber: string | undefined) => {
+  if (cardNumber != undefined) {
+    return creditCardType(cardNumber).length !== 0
+  }
+  return false
+}
