@@ -101,7 +101,7 @@ const CardDetailsForm = (props: CardDetailsFormProps) => {
 
   return (
     <StyledCardDiv data-testid="card-details">
-      <FormControl>
+      <FormControl sx={{ width: '100%' }}>
         <Controller
           name="cardNumber"
           control={control}

@@ -2,15 +2,16 @@ import React from 'react'
 
 import { composeStories } from '@storybook/testing-react'
 import { render, screen, fireEvent, waitFor } from '@testing-library/react'
+import userEvent from '@testing-library/user-event'
 
 import * as stories from './CardDetailsForm.stories' // import all stories from the stories file
 const { Common } = composeStories(stories)
 
-const onChangMock = jest.fn()
+const onChangeMock = jest.fn()
 const onBlurMock = jest.fn()
 
 const KiboTextBoxMock = () => (
-  <input data-testid="text-box-mock" onChange={onChangMock} onBlur={onBlurMock} />
+  <input data-testid="text-box-mock" onChange={onChangeMock} onBlur={onBlurMock} />
 )
 jest.mock('../../../common/KiboTextBox/KiboTextBox', () => KiboTextBoxMock)
 
@@ -57,6 +58,40 @@ describe('[components] CardDetailsForm', () => {
       fireEvent.blur(securityCode)
 
       expect(onBlurMock).toHaveBeenCalled()
+    })
+  })
+
+  describe('should onChange call on card component inputs', () => {
+    it('Should onChange call on cardNumber', async () => {
+      setup()
+
+      const textBoxList = screen.getAllByRole('textbox')
+      const cardNumber = textBoxList[0]
+      userEvent.type(cardNumber, '4111111111111111')
+      cardNumber.focus()
+
+      expect(onChangeMock).toHaveBeenCalled()
+    })
+    it('Should onChange call on cardNumber', async () => {
+      setup()
+
+      const textBoxList = screen.getAllByRole('textbox')
+      const expiryDate = textBoxList[1]
+      userEvent.type(expiryDate, '03/2023')
+      expiryDate.focus()
+
+      expect(onChangeMock).toHaveBeenCalled()
+    })
+    it('Should onChange call on Security Code(CVV)', async () => {
+      setup()
+
+      const textBoxList = screen.getAllByRole('textbox')
+      const securityCode = textBoxList[2]
+      userEvent.type(securityCode, '123')
+      securityCode.focus()
+
+      // assert
+      expect(onChangeMock).toHaveBeenCalled()
     })
   })
 
