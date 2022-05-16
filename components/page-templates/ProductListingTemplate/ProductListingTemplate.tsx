@@ -7,9 +7,7 @@ import { Grid, MenuItem, Typography, Box, Button, SxProps, Skeleton } from '@mui
 import { Theme } from '@mui/material/styles'
 import { useTranslation } from 'next-i18next'
 
-import CategoryFacet from '@/components/category/CategoryFacet/CategoryFacet'
-import CategoryFilterBy from '@/components/category/CategoryFilterBy/CategoryFilterBy'
-import CategoryFilterByMobile from '@/components/category/CategoryFilterByMobile/CategoryFilterByMobile'
+import { CategoryFacet, CategoryFilterByMobile, FacetList } from '@/components/category'
 import KiboSelect from '@/components/common/KiboSelect/KiboSelect'
 import KiboBreadcrumbs, { Breadcrumb } from '@/components/core/Breadcrumbs/Breadcrumbs'
 import ProductCard, { ProductCardProps } from '@/components/product/ProductCard/ProductCard'
@@ -37,14 +35,14 @@ interface CategoryProps {
   breadCrumbsList: Breadcrumb[]
   facetList: FacetType[]
   products: ProductCardProps[]
-  sortingValues: SortingValues[]
+  sortingValues?: SortingValues[]
   categoryFacet: CategoryFacetData
-  totalResults: string
+  totalResults: number
   initialProductsToShow: number
   isLoading: boolean
-  onChange: (value: string) => void
-  onCategoryChildrenSelection: (categoryCode: string) => void
-  onBackButtonClick: () => void
+  handleSortingSelection: (value: string) => void
+  handleCategoryChildrenSelection: (categoryCode: string) => void
+  handleBackButtonClick: () => void
 }
 
 const styles = {
@@ -56,8 +54,12 @@ const styles = {
     },
   },
   navBar: {
-    borderTop: '1px solid #c7c7c7',
-    borderBottom: '1px solid #c7c7c7',
+    borderTopWidth: '1px',
+    borderTopStyle: 'solid',
+    borderTopColor: 'grey.500',
+    borderBottomWidth: '1px',
+    borderBottomStyle: 'solid',
+    borderBottomColor: 'grey.500',
     display: 'flex',
     flexWwrap: 'wrap',
     postion: 'relative',
@@ -111,13 +113,15 @@ const styles = {
       md: 'block',
       xs: 'none',
     },
-    borderRight: '1px solid #c7c7c7',
+    borderRightWidth: '1px',
+    borderRightStyle: 'solid',
+    borderRightColor: 'grey.500',
     padding: '0 1.5625rem',
     minWidth: {
       md: '13%',
       xs: 'auto',
     },
-  },
+  } as SxProps<Theme> | undefined,
   productGrid: {
     display: 'flex',
     flexWrap: 'wrap',
@@ -130,13 +134,6 @@ const styles = {
     width: '100%',
     height: '2.188rem',
   },
-  navBarMainMobile: {
-    display: 'flex',
-    justifyContent: 'space-between',
-    flexDirection: 'row',
-    alignItems: 'center',
-    padding: '0 1rem 1rem',
-  },
   showMoreButton: {
     width: { md: '23.5rem', xs: '12.5rem' },
   },
@@ -144,6 +141,29 @@ const styles = {
     display: 'flex',
     justifyContent: 'center',
     margin: '1rem 0',
+  },
+  categoryFacetHeader: {
+    fontWeight: 'bold',
+    color: 'grey.900',
+  },
+  categoryFacetHeaderLoading: {
+    height: { md: '2.25rem', xs: '1.5rem' },
+    width: { md: '15.625rem', xs: '10.75rem' },
+  },
+  sorting: {
+    minWidth: { md: '11.875rem', xs: '9.313rem' },
+    marginTop: { xs: '0.5rem', md: '0' },
+  },
+  filterBy: {
+    minWidth: { md: '11.875rem', xs: '9.313rem' },
+    display: { md: 'none' },
+    marginTop: { xs: '0.5rem', md: '0' },
+  },
+  filterByMobile: {
+    display: {
+      md: 'none',
+      xs: 'block',
+    },
   },
 }
 
@@ -157,24 +177,20 @@ const ProductListingTemplate = (props: CategoryProps) => {
     categoryFacet,
     totalResults,
     isLoading,
-    onChange,
-    onBackButtonClick,
-    onCategoryChildrenSelection,
+    handleSortingSelection,
+    handleBackButtonClick,
+    handleCategoryChildrenSelection,
     initialProductsToShow = 16,
   } = props
   const isShowMoreVisible = products.length > initialProductsToShow
-  const [isFilterBy, setFilterBy] = useState<boolean>(false)
+  const [showFilterBy, setFilterBy] = useState<boolean>(false)
   const [isShowMoreButtonVisible, setShowMoreButtonVisible] = useState<boolean>(isShowMoreVisible)
-  const [productToShow, setProductsToShow] = useState<ProductCardProps[]>([]) // Setting the initial product count to 16 for skeleton loading
+  const [productToShows, setProductsToShow] = useState<ProductCardProps[]>([]) // Setting the initial product count to 16 for skeleton loading
 
-  const { t } = useTranslation('common')
+  const { t } = useTranslation(['category-page', 'common'])
 
-  const handleFilterBy = () => {
-    setFilterBy(!isFilterBy)
-  }
-  const showMoreProducts = () => {
-    setShowMoreButtonVisible(!isShowMoreButtonVisible)
-  }
+  const handleFilterBy = () => setFilterBy(!showFilterBy)
+  const showMoreProducts = () => setShowMoreButtonVisible(!isShowMoreButtonVisible)
 
   useEffect(() => {
     const noOfItemsToShow = isShowMoreButtonVisible ? initialProductsToShow : products.length
@@ -189,27 +205,21 @@ const ProductListingTemplate = (props: CategoryProps) => {
       <Box sx={{ ...styles.breadcrumbsClass }}>
         <KiboBreadcrumbs breadcrumbs={breadCrumbsList} />
       </Box>
-      {!isFilterBy && (
+      {!showFilterBy && (
         <Box>
           <Box sx={{ ...styles.navBar }}>
             <Box sx={{ ...styles.navBarMain }}>
-              {!isLoading && (
-                <Typography variant="h1" sx={{ fontWeight: 'bold', color: 'grey.900' }}>
+              {!isLoading ? (
+                <Typography variant="h1" sx={{ ...styles.categoryFacetHeader }}>
                   {categoryFacet.header}
                 </Typography>
-              )}
-              {isLoading && (
-                <Skeleton
-                  variant="rectangular"
-                  sx={{
-                    height: { md: '1.75rem', xs: '1.5rem' },
-                    width: { md: '15.625rem', xs: '10.75rem' },
-                  }}
-                />
+              ) : (
+                <Skeleton variant="rectangular" sx={{ ...styles.categoryFacetHeaderLoading }} />
               )}
               <Box sx={{ ...styles.navBarSort }}>
-                {!isLoading && <Box sx={{ ...styles.navBarLabel }}>{t('sort-by')}</Box>}
-                {isLoading && (
+                {!isLoading ? (
+                  <Box sx={{ ...styles.navBarLabel }}>{t('common:sort-by')}</Box>
+                ) : (
                   <Skeleton
                     variant="rectangular"
                     height={18}
@@ -217,58 +227,45 @@ const ProductListingTemplate = (props: CategoryProps) => {
                     sx={{ ...styles.navBarLabel }}
                   />
                 )}
-                <Box
-                  sx={{
-                    minWidth: { md: '11.875rem', xs: '9.313rem' },
-                    marginTop: { xs: '0.5rem', md: '0' },
-                  }}
-                >
-                  {!isLoading && (
-                    <KiboSelect placeholder={t('best-match')} onChange={onChange}>
-                      {sortingValues.map((sortingVal) => (
+                <Box sx={{ ...styles.sorting }}>
+                  {!isLoading ? (
+                    <KiboSelect placeholder={t('best-match')} onChange={handleSortingSelection}>
+                      {sortingValues?.map((sortingVal) => (
                         <MenuItem key={sortingVal?.id} value={sortingVal?.value}>
                           {sortingVal?.value}
                         </MenuItem>
                       ))}
                     </KiboSelect>
+                  ) : (
+                    <Skeleton variant="rectangular" height={36} />
                   )}
-                  {isLoading && <Skeleton variant="rectangular" height={36} />}
                 </Box>
-                <Box
-                  sx={{
-                    minWidth: { md: '11.875rem', xs: '9.313rem' },
-                    display: { md: 'none' },
-                    marginTop: { xs: '0.5rem', md: '0' },
-                  }}
-                >
-                  {!isLoading && (
+                <Box sx={{ ...styles.filterBy }}>
+                  {!isLoading ? (
                     <Button
                       variant="outlined"
                       endIcon={<AddIcon fontSize="small" />}
                       sx={{ ...styles.filterByButton }}
                       onClick={handleFilterBy}
                     >
-                      {t('filter-by')}
+                      {t('common:filter-by')}
                     </Button>
+                  ) : (
+                    <Skeleton variant="rectangular" height={36} />
                   )}
-                  {isLoading && <Skeleton variant="rectangular" height={36} />}
                 </Box>
               </Box>
-              {!isLoading && (
+              {!isLoading ? (
                 <Box sx={{ ...styles.navBarView }}>
-                  <Box
-                    component="span"
-                    sx={{ marginRight: '1rem', typography: 'body1', color: 'grey.900' }}
-                  >
+                  <Typography variant="body1" color="text.primary" sx={{ marginRight: '1rem' }}>
                     {t('view')}
-                  </Box>
+                  </Typography>
                   <AppsIcon sx={{ fontSize: '2rem', marginRight: '1rem' }} />
                   <ListIcon sx={{ fontSize: '2.4rem' }} />
                 </Box>
-              )}
-              {isLoading && (
+              ) : (
                 <Box sx={{ ...styles.navBarView }}>
-                  <Skeleton sx={{ marginRight: '1rem' }} height={19} width={34} />
+                  <Skeleton sx={{ marginRight: '1rem' }} height={24} width={34} />
                   <Skeleton sx={{ marginRight: '1rem' }} height={40} width={32} />
                   <Skeleton height={40} width={32} />
                 </Box>
@@ -279,33 +276,30 @@ const ProductListingTemplate = (props: CategoryProps) => {
             <Box sx={{ ...styles.sideBar }}>
               <CategoryFacet
                 categoryFacet={categoryFacet}
-                onBackButtonClick={onBackButtonClick}
-                onCategoryChildrenSelection={onCategoryChildrenSelection}
+                onBackButtonClick={handleBackButtonClick}
+                onCategoryChildrenSelection={handleCategoryChildrenSelection}
               />
-              <CategoryFilterBy
-                title="Filter By"
-                facetList={facetList}
-                onFilterByClick={handleFilterBy}
-              />
+              <FacetList facetList={facetList} onFilterByClose={handleFilterBy} />
             </Box>
             <Box>
-              {!isLoading && (
+              {!isLoading ? (
                 <Grid container sx={{ flexWrap: 'wrap' }}>
-                  {productToShow.map((product, index) => {
+                  {productToShows.map((product) => {
                     return (
-                      <Grid key={product?.link || index} item lg={3} md={4} sm={4} xs={6}>
+                      <Grid key={product?.link} item lg={3} md={4} sm={4} xs={6}>
                         <ProductCard
                           imageUrl={product?.imageUrl}
                           link={product?.link}
                           price={product?.price}
                           title={product?.title}
+                          salePrice={product?.salePrice}
+                          rating={product?.rating}
                         />
                       </Grid>
                     )
                   })}
                 </Grid>
-              )}
-              {isLoading && (
+              ) : (
                 <Grid container sx={{ flexWrap: 'wrap' }}>
                   {Array.from(Array(16)).map((_, ind) => {
                     return (
@@ -320,7 +314,10 @@ const ProductListingTemplate = (props: CategoryProps) => {
                 <Box>
                   <Box>
                     <Box sx={{ ...styles.productResults, color: 'grey.600', typography: 'body2' }}>
-                      Showing {initialProductsToShow} out of {products.length} items
+                      {t('products-to-show', {
+                        m: `${initialProductsToShow}`,
+                        n: `${products.length}`,
+                      })}
                     </Box>
                   </Box>
                   <Box>
@@ -341,21 +338,14 @@ const ProductListingTemplate = (props: CategoryProps) => {
           </Box>
         </Box>
       )}
-      {isFilterBy && (
-        <Box
-          sx={{
-            display: {
-              md: 'none',
-              xs: 'block',
-            },
-          }}
-        >
+      {showFilterBy && (
+        <Box sx={{ ...styles.filterByMobile }}>
           <CategoryFilterByMobile
             facetList={facetList}
             header={categoryFacet.header}
             totalResults={totalResults}
             isLoading={isLoading}
-            onFilterByClick={handleFilterBy}
+            onFilterByClose={handleFilterBy}
           />
         </Box>
       )}

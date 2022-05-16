@@ -2,7 +2,7 @@ import React from 'react'
 
 import { Stack } from '@mui/material'
 
-import FacetItem from '../FacetItem/FacetItem'
+import { FacetItem } from '@/components/category'
 
 import type { FacetValue, Maybe } from '@/lib/gql/types'
 

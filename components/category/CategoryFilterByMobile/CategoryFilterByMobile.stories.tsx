@@ -22,5 +22,11 @@ export const Common = Template.bind({})
 Common.args = {
   facetList,
   header: 'Apparel',
-  totalResults: '650',
+  totalResults: 650,
+}
+
+export const CategoryFilterByMobileSkeleton = Template.bind({})
+CategoryFilterByMobileSkeleton.args = {
+  isLoading: true,
+  facetList,
 }

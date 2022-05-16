@@ -5,6 +5,8 @@ export const products = [
     link: '/product/SHOE11',
     price: '$85.00',
     title: 'Izumi Bike Shoes',
+    salePrice: '$70.00',
+    rating: 4,
   },
   {
     imageUrl: `${imageBaseURL}49454f7d-6cc7-4382-a90b-2b539455899e`,
@@ -41,18 +43,21 @@ export const products = [
     link: '/product/TOP13',
     price: '$125.98',
     title: 'North Face Wind Breaker',
+    rating: 3,
   },
   {
     imageUrl: `${imageBaseURL}0795ec7e-2bf1-45ac-bc7b-f19820ca1844`,
     link: '/product/SHOE1',
     price: '$59.00',
     title: 'Boreal Climbin Shoes',
+    rating: 5,
   },
   {
     imageUrl: `${imageBaseURL}eea768aa-065b-4cf2-9af1-e0d492f21875`,
     link: '/product/TOP14',
     price: '$130.00',
     title: 'North Face Thermal Jacket',
+    rating: 2,
   },
   {
     imageUrl: `${imageBaseURL}2f81532c-0c60-4a86-9fd7-4e7ab5c0e9dd`,
@@ -83,6 +88,7 @@ export const products = [
     link: '/product/BCKPCK3',
     price: '$160.98',
     title: 'Osprey Exos 58',
+    rating: 4,
   },
   {
     imageUrl: `${imageBaseURL}eada5a6f-1610-44f4-85b5-22d516059027`,

@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from 'react'
 
 import AddIcon from '@mui/icons-material/Add'
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore'
+import RemoveIcon from '@mui/icons-material/Remove'
 import {
   Accordion,
   AccordionDetails,
@@ -15,7 +16,7 @@ import { Box } from '@mui/system'
 import { useTranslation } from 'next-i18next'
 
 import SearchBar from '../../common/SearchBar/SearchBar'
-import FacetItemList from '../FacetItemList/FacetItemList'
+import { FacetItemList } from '@/components/category'
 
 import type { Facet as FacetType, FacetValue, Maybe } from '@/lib/gql/types'
 
@@ -28,10 +29,12 @@ interface FacetProps extends FacetType {
 const style = {
   accordion: {
     ':before': {
-      backgroundColor: '#c7c7c7',
+      backgroundColor: 'grey.500',
       opacity: 1,
     },
-    borderBottom: `1px solid #c7c7c7`,
+    borderBottomWidth: '1px',
+    borderBottomStyle: 'solid',
+    borderBottomColor: 'grey.500',
     boxShadow: 0,
     borderRadius: 0,
   },
@@ -42,7 +45,7 @@ const style = {
   },
   button: {
     textTransform: 'capitalize',
-    color: 'grey.900',
+    color: 'text.primary',
     fontSize: (theme: Theme) => theme.typography.body2,
   } as SxProps<Theme> | undefined,
 }
@@ -139,7 +142,13 @@ const Facet = (props: FacetProps) => {
             name="View More"
             aria-label={buttonText}
             sx={{ ...style.button }}
-            startIcon={<AddIcon fontSize="small" />}
+            startIcon={
+              buttonText === viewMore ? (
+                <AddIcon fontSize="small" />
+              ) : (
+                <RemoveIcon fontSize="small" />
+              )
+            }
             onClick={() => handleButtonText()}
           >
             {buttonText}

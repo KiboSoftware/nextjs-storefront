@@ -54,9 +54,9 @@ export default {
   title: 'Page Templates/category',
   component: ProductListingTemplate,
   argTypes: {
-    onChange: { action: 'onChange' },
-    onCategoryChildrenSelection: { action: 'clicked' },
-    onBackButtonClick: { action: 'go to Previous route' },
+    handleSortingSelection: { action: 'onChange' },
+    handleCategoryChildrenSelection: { action: 'clicked' },
+    handleBackButtonClick: { action: 'go to Previous route' },
   },
   parameters: {
     layout: 'fullscreen',
@@ -76,7 +76,7 @@ Category.args = {
   products,
   sortingValues,
   categoryFacet,
-  totalResults: '149',
+  totalResults: 149,
   initialProductsToShow: 16,
   isLoading: false,
 }

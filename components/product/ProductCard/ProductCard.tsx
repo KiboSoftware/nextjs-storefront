@@ -49,10 +49,10 @@ const styles = {
 const ProductCardSkeleton = () => {
   return (
     <Stack spacing={1} sx={styles.cardRoot} data-testid="product-card-skeleton">
-      <Skeleton variant="rectangular" height={108} />
+      <Skeleton variant="rectangular" height={150} />
       <Skeleton variant="rectangular" height={20} />
       <Skeleton variant="rectangular" width={60} height={20} />
-      <Skeleton variant="rectangular" width={87} height={20} />
+      <Skeleton variant="rectangular" width={95} height={20} />
     </Stack>
   )
 }

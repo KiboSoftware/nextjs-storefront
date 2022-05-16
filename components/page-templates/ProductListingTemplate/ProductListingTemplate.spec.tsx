@@ -12,11 +12,9 @@ const { Category } = composeStories(stories)
 const KiboBreadcrumbsMock = () => <div data-testid="breadcrumb-component" />
 const ProductCardMock = () => <div data-testid="product-card-component" />
 const CategoryFacetMock = () => <div data-testid="category-facet-component" />
-const CategoryFilterByMock = () => <div data-testid="category-filterby-component" />
 const CategoryFilterByMobileMock = () => <div data-testid="category-filterby-mobile-component" />
 
 jest.mock('../../category/CategoryFacet/CategoryFacet', () => CategoryFacetMock)
-jest.mock('../../category/CategoryFilterBy/CategoryFilterBy', () => CategoryFilterByMock)
 jest.mock(
   '../../category/CategoryFilterByMobile/CategoryFilterByMobile',
   () => CategoryFilterByMobileMock
@@ -35,14 +33,12 @@ describe('[component] - Category', () => {
     const breadCrumbComponent = screen.getByTestId('breadcrumb-component')
     const productCardComponent = screen.getAllByTestId('product-card-component')
     const categoryFacetComponent = screen.getByTestId('category-facet-component')
-    const categoryFilterByComponent = screen.getByTestId('category-filterby-component')
     const header = screen.getByRole('heading', { level: 1 })
     const showMoreButton = screen.getByRole('button', { name: /show-more/i })
 
     expect(breadCrumbComponent).toBeInTheDocument()
     expect(productCardComponent.length).toEqual(Category.args?.initialProductsToShow)
     expect(categoryFacetComponent).toBeInTheDocument()
-    expect(categoryFilterByComponent).toBeInTheDocument()
     expect(header).toHaveTextContent(Category.args?.categoryFacet?.header || '')
     expect(showMoreButton).toBeVisible()
   })
