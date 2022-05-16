@@ -38,6 +38,26 @@ const StyledCardDiv = styled('div')(() => ({
   paddingLeft: '0.5rem',
 }))
 
+const validateExpiryDate = (validExpiryDate: string | undefined) => {
+  if (validExpiryDate != undefined) {
+    const monthYear = validExpiryDate.split('/')
+    const month = parseInt(monthYear[0])
+    const year = parseInt(monthYear[1])
+    const currentDate = new Date()
+    const someDay = new Date()
+    someDay.setFullYear(year, month, 1)
+    return someDay >= currentDate
+  }
+  return false
+}
+
+const getCardType = (cardNumber: string | undefined) => {
+  if (cardNumber != undefined) {
+    return creditCardType(cardNumber).length !== 0
+  }
+  return false
+}
+
 export const useCardSchema = () => {
   const { t } = useTranslation('common')
   return yup.object({
@@ -45,28 +65,12 @@ export const useCardSchema = () => {
       .string()
       .required(t('card-number-required'))
       .matches(/^\d{15,16}$/g, t('invalid-card-number'))
-      .test('card-type', t('invalid-card-number'), (value) => {
-        if (value != undefined) {
-          return creditCardType(value).length !== 0
-        }
-        return false
-      }),
+      .test('card-type', t('invalid-card-number'), (value) => getCardType(value)),
     expiryDate: yup
       .string()
       .required(t('expiry-date-required'))
       .matches(/^(0?[1-9]|1[012])[/-]\d{4}$/g, t('invalid-expiry-date-format'))
-      .test('expiry-date', t('invalid-expiry-date'), (value) => {
-        if (value != undefined) {
-          const monthYear = value.split('/')
-          const month = parseInt(monthYear[0])
-          const year = parseInt(monthYear[1])
-          const currentDate = new Date()
-          const someDay = new Date()
-          someDay.setFullYear(year, month, 1)
-          return someDay >= currentDate
-        }
-        return false
-      }),
+      .test('expiry-date', t('invalid-expiry-date'), (value) => validateExpiryDate(value)),
     cvv: yup
       .string()
       .required(t('security-code-required'))
