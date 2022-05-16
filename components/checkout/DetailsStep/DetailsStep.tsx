@@ -25,8 +25,10 @@ import * as yup from 'yup'
 
 import KiboTextBox from '@/components/common/KiboTextBox/KiboTextBox'
 import PasswordValidation from '@/components/common/PasswordValidation/PasswordValidation'
-import { eventBus, events } from '@/lib/event-bus/event-bus'
+import { PersonalInfo, useUpdatePersonalInfo } from '@/hooks'
 import { isPasswordValid } from '@/lib/helpers/validations/validations'
+
+import { OrderInput } from '@/lib/gql/types'
 
 export interface PersonalDetails {
   email: string
@@ -37,8 +39,9 @@ export interface PersonalDetails {
 }
 interface DetailsProps {
   setAutoFocus?: boolean
-  personalDetails: PersonalDetails
-  onPersonalDetailsSave: (personalDetails: PersonalDetails) => void
+  stepperStatus: string
+  checkout: any
+  onCompleteCallback: (action: any) => void
 }
 
 const commonStyle = {
@@ -74,17 +77,28 @@ const useDetailsSchema = () => {
 }
 
 const DetailsStep = (props: DetailsProps) => {
-  const { setAutoFocus = true, personalDetails, onPersonalDetailsSave } = props
+  const { setAutoFocus = true, stepperStatus, onCompleteCallback, checkout } = props
   const [isGoToShippingClicked, setIsGoToShippingClicked] = useState<boolean>(false)
 
   const { t } = useTranslation('checkout')
+  const updatePersonalInfoMutation = useUpdatePersonalInfo()
+
+  const fulfillmentInfo = checkout?.fulfillmentInfo
+  const fulfillmentContact = fulfillmentInfo && fulfillmentInfo?.fulfillmentContact
+  const personalDetails = {
+    email: (fulfillmentContact && fulfillmentContact.email) || '',
+    showAccountFields: false,
+    firstName: (fulfillmentContact && fulfillmentContact.firstName) || '',
+    lastNameOrSurname: (fulfillmentContact && fulfillmentContact.lastNameOrSurname) || '',
+    password: '',
+  }
 
   const {
-    getValues,
-    formState: { errors, isValid },
-    trigger,
+    formState: { errors },
+    handleSubmit,
     control,
     watch,
+    getValues,
   } = useForm({
     mode: 'onBlur',
     reValidateMode: 'onBlur',
@@ -93,42 +107,53 @@ const DetailsStep = (props: DetailsProps) => {
     shouldFocusError: true,
   })
 
-  const useEnteredPassword = watch(['password']).join('')
   const showAccountFields = watch(['showAccountFields']).join('')
+  const userEnteredPassword = watch(['password']).join('')
+  const isUserEnteredPasswordValid = () => {
+    return showAccountFields === 'true' ? isPasswordValid(userEnteredPassword) : true
+  }
 
-  const isUserPasswordValid = () =>
-    showAccountFields === 'true' ? isPasswordValid(useEnteredPassword) : true
+  const createAccount = async (formData: PersonalDetails) => {
+    console.log(`createAccount: ${JSON.stringify(formData)}`)
+  }
 
-  const isFormValid = (): boolean => isValid
+  const updateCheckout = async (formData: PersonalDetails) => {
+    const { email } = formData
+    const personalInfo: PersonalInfo = {
+      orderId: checkout?.id as string,
+      updateMode: 'ApplyToOriginal',
+      orderInput: {
+        ...(checkout as OrderInput),
+        email,
+      },
+    }
+    await updatePersonalInfoMutation.mutateAsync(personalInfo)
+  }
 
-  const saveData = () => {
-    if (isFormValid() && isUserPasswordValid()) {
-      const { email, firstName, lastNameOrSurname, password } = getValues()
-      onPersonalDetailsSave({
-        email: email,
-        firstName: firstName || '',
-        lastNameOrSurname: lastNameOrSurname || '',
-        password: password || '',
-      })
+  // if form is valid, onSubmit callback
+  const onValid = async (formData: PersonalDetails, e: any) => {
+    try {
+      await updateCheckout(formData)
+      if (formData?.showAccountFields) {
+        await createAccount(formData)
+      }
+      onCompleteCallback({ type: 'COMPLETE' })
+    } catch (error) {
+      onCompleteCallback({ type: 'INCOMPLETE' })
+      console.error(error)
     }
   }
 
-  const validateForm = async () => {
-    setIsGoToShippingClicked(true)
-    await trigger()
+  // form is invalid, notify parent form is incomplete
+  const onInvalidForm = (errors?: any, e?: any) => {
+    onCompleteCallback({ type: 'INCOMPLETE' })
   }
 
   useEffect(() => {
-    eventBus.on(events.CHECKOUT_VALIDATE_DETAILS_STEP, validateForm)
-
-    return () => {
-      eventBus.remove(events.CHECKOUT_VALIDATE_DETAILS_STEP, validateForm)
+    if (stepperStatus === 'VALIDATE') {
+      isUserEnteredPasswordValid() ? handleSubmit(onValid, onInvalidForm)() : onInvalidForm()
     }
-  }, [])
-
-  useEffect(() => {
-    if (isGoToShippingClicked) saveData()
-  }, [errors, isValid])
+  }, [stepperStatus, onCompleteCallback])
 
   return (
     <Stack gap={2} data-testid="checkout-details">
@@ -274,7 +299,7 @@ const DetailsStep = (props: DetailsProps) => {
             )}
           />
 
-          <PasswordValidation password={useEnteredPassword} />
+          <PasswordValidation password={userEnteredPassword} />
         </FormControl>
       )}
     </Stack>

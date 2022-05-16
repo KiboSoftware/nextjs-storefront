@@ -14,3 +14,6 @@ const Template: ComponentStory<typeof Checkout> = () => <Checkout />
 
 // Default
 export const Common = Template.bind({})
+Common.args = {
+  Checkout: {},
+}

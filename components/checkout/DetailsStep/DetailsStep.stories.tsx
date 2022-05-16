@@ -17,30 +17,16 @@ const Template: ComponentStory<typeof DetailsStep> = (args) => <DetailsStep {...
 export const Common = Template.bind({})
 Common.args = {
   setAutoFocus: false,
-  personalDetails: {
-    email: '',
-    showAccountFields: false,
-    firstName: '',
-    lastNameOrSurname: '',
-    password: '',
-  },
-  onPersonalDetailsSave: () => {
-    /*parent will handle onPersonalDetailsSave*/
-  },
+  stepperStatus: 'INVALID',
+  onCompleteCallback: () => console.log('called onCompleteCallback : '),
+  checkout: {},
 }
 
 // With account fields
 export const withAccountCreation = Template.bind({})
 withAccountCreation.args = {
   setAutoFocus: false,
-  personalDetails: {
-    email: '',
-    showAccountFields: true,
-    firstName: '',
-    lastNameOrSurname: '',
-    password: '',
-  },
-  onPersonalDetailsSave: () => {
-    /*parent will handle onPersonalDetailsSave*/
-  },
+  stepperStatus: 'INVALID',
+  onCompleteCallback: () => console.log('called onCompleteCallback : '),
+  checkout: {},
 }

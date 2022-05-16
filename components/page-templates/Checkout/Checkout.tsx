@@ -11,16 +11,15 @@ import PaymentStep from '@/components/checkout/PaymentStep/PaymentStep'
 import ReviewStep from '@/components/checkout/ReviewStep/ReviewStep'
 import ShippingStep from '@/components/checkout/ShippingStep/ShippingStep'
 import OrderSummary from '@/components/common/OrderSummary/OrderSummary'
-import { eventBus, events } from '@/lib/event-bus/event-bus'
-
-import type { OrderInput } from '@/lib/gql/types'
 
 const buttonStyle = {
   height: '42px',
   fontSize: (theme: Theme) => theme.typography.subtitle1,
 } as SxProps<Theme> | undefined
 
-const Checkout = () => {
+const Checkout = (props: any) => {
+  const { checkout } = props
+
   const { t } = useTranslation('checkout')
 
   const buttonLabels = [t('go-to-shipping'), t('go-to-payment'), t('review-order')]
@@ -28,54 +27,24 @@ const Checkout = () => {
 
   // State
   const [activeStep, setActiveStep] = useState<number>(0)
+  const [activeStepStatus, setActiveStepStatus] = useState<string>('INCOMPLETE')
 
-  // ToBe: state initial valies are just testing purpose later remove it
-  const [checkoutId, _setCheckoutId] = useState<string>('137a979305c65d00010800230000678b')
-  const [cartId, _setCartId] = useState<string>('137a94b6402be000013718d80000678b')
-
-  // useCustomHooks
   const { data: checkoutInfo, isLoading: _isCheckoutLoading } = useCheckout({
-    cartId,
-    checkoutId,
+    checkoutId: '137a979305c65d00010800230000678b',
   })
-
-  const updatePersonalInfoMutation = useUpdatePersonalInfo()
-
-  // Handlers
-  const activeStepName = steps[activeStep]
 
   const handleBack = () => {
     setActiveStep(activeStep - 1)
   }
 
   const handleNext = () => {
-    if (activeStepName === t('details').toString())
-      eventBus.dispatch(events.CHECKOUT_VALIDATE_DETAILS_STEP, {})
-    if (activeStepName === t('shipping').toString())
-      eventBus.dispatch(events.CHECKOUT_VALIDATE_PAYMENT_STEP, {})
-    if (activeStepName === t('payment').toString())
-      eventBus.dispatch(events.CHECKOUT_VALIDATE_SHIPPING_STEP, {})
+    setActiveStepStatus('VALIDATE')
   }
 
-  // Refactor: Build Payload (separate out the logic) and call updatePersonalInfoMutation hook
-  const handlePerosnalDetails = async (userEnteredPersonalDetails: PersonalDetails) => {
-    const { email } = userEnteredPersonalDetails
-    const personalInfo: PersonalInfo = {
-      orderId: checkoutInfo?.id as string,
-      updateMode: 'ApplyToOriginal',
-      orderInput: {
-        ...(checkoutInfo as OrderInput),
-        email,
-      },
-    }
-
-    try {
-      await updatePersonalInfoMutation.mutateAsync(personalInfo)
+  const completeStepCallback = (action: any) => {
+    setActiveStepStatus('INCOMPLETE')
+    if (action.type === 'COMPLETE') {
       setActiveStep(activeStep + 1)
-    } catch (error) {
-      console.log(`error: ${error}`)
-    } finally {
-      console.log('done')
     }
   }
 
@@ -83,20 +52,12 @@ const Checkout = () => {
   const fulfillmentInfo = checkoutInfo?.fulfillmentInfo
   const fulfillmentContact = fulfillmentInfo && fulfillmentInfo?.fulfillmentContact
 
-  const personalDetails = {
-    email: (fulfillmentContact && fulfillmentContact.email) || '',
-    showAccountFields: false,
-    firstName: (fulfillmentContact && fulfillmentContact.firstName) || '',
-    lastNameOrSurname: (fulfillmentContact && fulfillmentContact.lastNameOrSurname) || '',
-    password: '',
-  }
-
   const orderSummeryArgs = {
     standardShippingAmount: 'Free',
-    estimatedTaxAmout: '$13.73',
-    orderTotal: '$233.72',
-    subTotal: '$219.99',
-    numberOfItems: '3 items',
+    estimatedTaxAmout: `${checkoutInfo?.taxTotal}`,
+    orderTotal: `${checkoutInfo?.total}`,
+    subTotal: `${checkoutInfo?.subtotal}`,
+    numberOfItems: `${checkoutInfo?.items?.length} items`,
     backLabel: 'Go Back',
     checkoutLabel: 'Go to Checkout',
     nameLabel: 'Order Summary',
@@ -115,8 +76,9 @@ const Checkout = () => {
         </Typography>
         <KiboStepper steps={steps} activeStep={activeStep}>
           <DetailsStep
-            personalDetails={personalDetails}
-            onPersonalDetailsSave={handlePerosnalDetails}
+            checkout={checkout}
+            stepperStatus={activeStepStatus}
+            onCompleteCallback={completeStepCallback}
           />
           <ShippingStep />
           <PaymentStep />
