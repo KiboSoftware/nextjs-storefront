@@ -17,7 +17,7 @@ const ReviewStepMock = () => <div ref={undefined} data-testid="checkout-review-m
 jest.mock('../../checkout/KiboStepper/KiboStepper', () => KiboStepperMock)
 jest.mock('../../checkout/DetailsStep/DetailsStep', () => DetailsStepMock)
 jest.mock('../../checkout/ShippingStep/ShippingStep', () => ShippingStepMock)
-jest.mock('../../checkout/PaymentStep/PaymentStep', () => PaymentStepMock)
+jest.mock('../../checkout/PaymentStep/PaymentStep/PaymentStep', () => PaymentStepMock)
 jest.mock('../../checkout/ReviewStep/ReviewStep', () => ReviewStepMock)
 
 jest.mock('../../../hooks', () => ({
