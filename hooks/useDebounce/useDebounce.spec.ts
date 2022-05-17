@@ -45,7 +45,9 @@ describe('[hooks] useDebounce', () => {
 
     rerender({ value: 'Test 2', delay: 500 })
     rerender({ value: 'Test 3', delay: 500 })
-    act(() => jest.advanceTimersByTime(500))
+    act(() => {
+      jest.advanceTimersByTime(500)
+    })
     expect(result.current).toBe('Test 3')
   })
 
@@ -54,10 +56,14 @@ describe('[hooks] useDebounce', () => {
       initialProps: { value: 'Test 1', delay: 500 },
     })
 
-    act(() => jest.advanceTimersByTime(500))
+    act(() => {
+      jest.advanceTimersByTime(500)
+    })
     expect(result.current).toBe('Test 1')
     rerender({ value: 'Test 2', delay: 500 })
-    act(() => jest.advanceTimersByTime(500))
+    act(() => {
+      jest.advanceTimersByTime(500)
+    })
     expect(result.current).toBe('Test 2')
   })
 })
