@@ -2,7 +2,7 @@ import React from 'react'
 
 import '@testing-library/jest-dom'
 import { composeStories } from '@storybook/testing-react'
-import { render, screen } from '@testing-library/react'
+import { render, screen, within, fireEvent } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 
 import * as stories from './ProductListingTemplate.stories' // import all stories from the stories file
@@ -31,31 +31,46 @@ describe('[component] - Category', () => {
     setup()
 
     const breadCrumbComponent = screen.getByTestId('breadcrumb-component')
-    const productCardComponent = screen.getAllByTestId('product-card-component')
-    const categoryFacetComponent = screen.getByTestId('category-facet-component')
     const header = screen.getByRole('heading', { level: 1 })
+    const viewText = screen.getAllByText(/view/i)
+    const sortByText = screen.getByText(/sort-by/i)
+    const categoryFacetComponent = screen.getByTestId('category-facet-component')
+    const productCardComponent = screen.getAllByTestId('product-card-component')
     const showMoreButton = screen.getByRole('button', { name: /show-more/i })
+    const sortingValues = Category?.args?.sortingValues?.map((sort) => sort.value) || []
+
+    const sortingValuesRegex = new RegExp(sortingValues.join('|'), 'i')
+    const selectButton = screen.getByRole('button', { name: /best-match/i })
+
+    fireEvent.mouseDown(selectButton)
+    const listbox = within(screen.getByRole('listbox'))
+    const listValues = listbox.getAllByText(sortingValuesRegex)
 
     expect(breadCrumbComponent).toBeInTheDocument()
-    expect(productCardComponent.length).toEqual(Category.args?.initialProductsToShow)
-    expect(categoryFacetComponent).toBeInTheDocument()
     expect(header).toHaveTextContent(Category.args?.categoryFacet?.header || '')
+    expect(viewText[0]).toBeVisible()
+    expect(sortByText).toBeVisible()
+    expect(categoryFacetComponent).toBeInTheDocument()
+    expect(productCardComponent.length).toEqual(Category.args?.initialProductsToShow)
     expect(showMoreButton).toBeVisible()
+    expect(listValues.map((list) => list.textContent)).toEqual(sortingValues)
   })
 
-  it('should show all the product after user click on show more button', () => {
+  it('should show all the product when user clicks on show more button', () => {
     setup()
 
     const productCardComponentBeforeClick = screen.getAllByTestId('product-card-component')
+
+    expect(productCardComponentBeforeClick.length).toEqual(Category.args?.initialProductsToShow)
+
     const showMoreButton = screen.getByRole('button', { name: /show-more/i })
     userEvent.click(showMoreButton)
     const productCardComponentAfterClick = screen.getAllByTestId('product-card-component')
 
-    expect(productCardComponentBeforeClick.length).toEqual(Category.args?.initialProductsToShow)
     expect(productCardComponentAfterClick.length).toEqual(Category.args?.products?.length)
   })
 
-  it('should hide filter by button after user click on filter By button', () => {
+  it('should hide filter by button when user clicks on filter By button', () => {
     setup()
 
     const filterByButton = screen.getByRole('button', { name: /filter-by/i })

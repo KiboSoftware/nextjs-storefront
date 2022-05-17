@@ -54,9 +54,9 @@ export default {
   title: 'Page Templates/category',
   component: ProductListingTemplate,
   argTypes: {
-    handleSortingSelection: { action: 'onChange' },
-    handleCategoryChildrenSelection: { action: 'clicked' },
-    handleBackButtonClick: { action: 'go to Previous route' },
+    onSortingSelection: { action: 'onChange' },
+    onCategoryChildrenSelection: { action: 'clicked' },
+    onBackButtonClick: { action: 'go to Previous route' },
   },
   parameters: {
     layout: 'fullscreen',

@@ -19,14 +19,24 @@ const Template: ComponentStory<typeof CategoryFilterByMobile> = (args) => (
 )
 
 export const Common = Template.bind({})
+Common.parameters = {
+  viewport: {
+    defaultViewport: 'iphone12promax',
+  },
+}
 Common.args = {
   facetList,
   header: 'Apparel',
   totalResults: 650,
 }
 
-export const CategoryFilterByMobileSkeleton = Template.bind({})
-CategoryFilterByMobileSkeleton.args = {
+export const SkeletonLoading = Template.bind({})
+SkeletonLoading.parameters = {
+  viewport: {
+    defaultViewport: 'iphone12promax',
+  },
+}
+SkeletonLoading.args = {
   isLoading: true,
   facetList,
 }
