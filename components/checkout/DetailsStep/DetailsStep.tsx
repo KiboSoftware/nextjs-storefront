@@ -1,5 +1,5 @@
 /* eslint-disable  jsx-a11y/no-autofocus */
-import React, { useEffect, useState } from 'react'
+import React, { useEffect } from 'react'
 
 import { yupResolver } from '@hookform/resolvers/yup'
 import AccessTimeIcon from '@mui/icons-material/AccessTime'
@@ -23,11 +23,12 @@ import { useTranslation } from 'next-i18next'
 import { useForm, Controller } from 'react-hook-form'
 import * as yup from 'yup'
 
+import { PersonalInfo, useUpdatePersonalInfo } from '../../../hooks'
 import KiboTextBox from '@/components/common/KiboTextBox/KiboTextBox'
 import PasswordValidation from '@/components/common/PasswordValidation/PasswordValidation'
-import { PersonalInfo, useUpdatePersonalInfo } from '@/hooks'
 import { isPasswordValid } from '@/lib/helpers/validations/validations'
 
+import type { Order } from '@/lib/gql/types'
 import { OrderInput } from '@/lib/gql/types'
 
 export interface PersonalDetails {
@@ -37,11 +38,15 @@ export interface PersonalDetails {
   lastNameOrSurname: string
   password: string
 }
+
+export interface Action {
+  type: 'COMPLETE' | 'INCOMPLETE' | 'VALIDATE'
+}
 interface DetailsProps {
   setAutoFocus?: boolean
   stepperStatus: string
-  checkout: any
-  onCompleteCallback: (action: any) => void
+  checkout: Order | undefined
+  onCompleteCallback: (action: Action) => void
 }
 
 const commonStyle = {
@@ -78,7 +83,6 @@ const useDetailsSchema = () => {
 
 const DetailsStep = (props: DetailsProps) => {
   const { setAutoFocus = true, stepperStatus, onCompleteCallback, checkout } = props
-  const [isGoToShippingClicked, setIsGoToShippingClicked] = useState<boolean>(false)
 
   const { t } = useTranslation('checkout')
   const updatePersonalInfoMutation = useUpdatePersonalInfo()
@@ -131,7 +135,7 @@ const DetailsStep = (props: DetailsProps) => {
   }
 
   // if form is valid, onSubmit callback
-  const onValid = async (formData: PersonalDetails, e: any) => {
+  const onValid = async (formData: PersonalDetails, _e: any) => {
     try {
       await updateCheckout(formData)
       if (formData?.showAccountFields) {
@@ -145,7 +149,7 @@ const DetailsStep = (props: DetailsProps) => {
   }
 
   // form is invalid, notify parent form is incomplete
-  const onInvalidForm = (errors?: any, e?: any) => {
+  const onInvalidForm = (_errors?: any, _e?: any) => {
     onCompleteCallback({ type: 'INCOMPLETE' })
   }
 

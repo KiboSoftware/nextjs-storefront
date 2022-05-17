@@ -4,20 +4,26 @@ import { Box, Stack, Button, Typography, SxProps } from '@mui/material'
 import { Theme } from '@mui/material/styles'
 import { useTranslation } from 'next-i18next'
 
-import { useCheckout, useUpdatePersonalInfo, PersonalInfo } from '../../../hooks'
-import DetailsStep, { PersonalDetails } from '@/components/checkout/DetailsStep/DetailsStep'
+import { useCheckout } from '../../../hooks'
+import DetailsStep, { Action } from '@/components/checkout/DetailsStep/DetailsStep'
 import KiboStepper from '@/components/checkout/KiboStepper/KiboStepper'
 import PaymentStep from '@/components/checkout/PaymentStep/PaymentStep'
 import ReviewStep from '@/components/checkout/ReviewStep/ReviewStep'
 import ShippingStep from '@/components/checkout/ShippingStep/ShippingStep'
 import OrderSummary from '@/components/common/OrderSummary/OrderSummary'
 
+import type { Order } from '@/lib/gql/types'
+
+interface CheckoutProps {
+  checkout: Order
+}
+
 const buttonStyle = {
   height: '42px',
   fontSize: (theme: Theme) => theme.typography.subtitle1,
 } as SxProps<Theme> | undefined
 
-const Checkout = (props: any) => {
+const Checkout = (props: CheckoutProps) => {
   const { checkout } = props
 
   const { t } = useTranslation('checkout')
@@ -41,16 +47,12 @@ const Checkout = (props: any) => {
     setActiveStepStatus('VALIDATE')
   }
 
-  const completeStepCallback = (action: any) => {
+  const completeStepCallback = (action: Action) => {
     setActiveStepStatus('INCOMPLETE')
     if (action.type === 'COMPLETE') {
       setActiveStep(activeStep + 1)
     }
   }
-
-  // Call Queries
-  const fulfillmentInfo = checkoutInfo?.fulfillmentInfo
-  const fulfillmentContact = fulfillmentInfo && fulfillmentInfo?.fulfillmentContact
 
   const orderSummeryArgs = {
     standardShippingAmount: 'Free',
