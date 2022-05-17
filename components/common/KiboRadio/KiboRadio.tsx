@@ -1,4 +1,4 @@
-import React, { JSXElementConstructor, ReactElement } from 'react'
+import React, { JSXElementConstructor, ReactElement, useState } from 'react'
 
 import { FormControl, FormLabel, RadioGroup, FormControlLabel, Radio } from '@mui/material'
 
@@ -9,11 +9,19 @@ interface KiboRadioProps {
     label: string | number | ReactElement<any, string | JSXElementConstructor<any>>
     value: string
   }[]
-  onChange: (event: React.ChangeEvent<HTMLInputElement>) => void
+  onChange?: (value: string) => void
 }
 
 export const KiboRadio = (props: KiboRadioProps) => {
-  const { title, radioOptions, selected, onChange } = props
+  const { title, radioOptions, selected = '', onChange } = props
+
+  const [selectedRadio, setSelectedRadio] = useState(selected)
+
+  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setSelectedRadio((event.target as HTMLInputElement).value)
+    onChange && onChange((event.target as HTMLInputElement).value as string)
+  }
+
   return (
     <FormControl>
       <FormLabel
@@ -25,8 +33,8 @@ export const KiboRadio = (props: KiboRadioProps) => {
       <RadioGroup
         aria-labelledby="payment-details-radio"
         name="radio-buttons-group"
-        value={selected}
-        onChange={onChange}
+        value={selectedRadio}
+        onChange={handleChange}
       >
         {radioOptions.map((radio) => {
           return (

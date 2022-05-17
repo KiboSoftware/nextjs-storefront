@@ -14,13 +14,13 @@ const KiboRadioMock = () => <div data-testid="kibo-radio-mock" />
 jest.mock('@/components/common/KiboRadio/KiboRadio', () => KiboRadioMock)
 
 describe('[component] - AddressDetailsView', () => {
-  it('should render the component if radio is false', () => {
+  it('should render the component without radio when radio prop is false', () => {
     render(<Common {...Common.args} />)
 
     expect(screen.getByTestId('address-card-mock')).toBeVisible()
   })
 
-  it('should render as radio button if radio prop is true', () => {
+  it('should render the component with radio button when radio prop is true', () => {
     render(<Radio {...Radio.args} />)
 
     expect(screen.getByTestId('kibo-radio-mock')).toBeVisible()

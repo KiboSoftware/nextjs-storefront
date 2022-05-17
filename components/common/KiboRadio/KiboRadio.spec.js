@@ -18,7 +18,7 @@ describe('[component] - KiboRadio', () => {
     expect(screen.getByText(Common.args.title)).toBeVisible()
   })
 
-  it('should call onChange if other options are clicked', () => {
+  it('should call onChange when other options are clicked', () => {
     const onChangeMock = jest.fn()
     render(<Common {...Common.args} onChange={onChangeMock} />)
     const radio = screen.getByRole('radio', {

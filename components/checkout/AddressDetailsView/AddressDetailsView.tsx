@@ -25,17 +25,21 @@ const AddressDetailsView = (props: AddressDetailsViewProps) => {
     postalOrZipCode,
   } = props
 
+  const addressCardProps = {
+    address1: address1,
+    address2: address2,
+    cityOrTown: cityOrTown,
+    stateOrProvince: stateOrProvince,
+    postalOrZipCode: postalOrZipCode,
+  }
+
   const radioOptions = [
     {
       value: `${address1},${address2},${cityOrTown},${stateOrProvince},${postalOrZipCode}`,
       label: (
         <AddressCard
-          title="Primary" // check if primary address
-          address1={address1}
-          address2={address2}
-          cityOrTown={cityOrTown}
-          stateOrProvince={stateOrProvince}
-          postalOrZipCode={postalOrZipCode}
+          title="Primary" // check if primary address,
+          {...addressCardProps}
         />
       ),
     },
@@ -43,8 +47,8 @@ const AddressDetailsView = (props: AddressDetailsViewProps) => {
 
   const [selectedRadio, setSelectedRadio] = React.useState('')
 
-  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setSelectedRadio((event.target as HTMLInputElement).value)
+  const handleChange = (value: string) => {
+    setSelectedRadio(value)
   }
 
   return (
@@ -58,17 +62,7 @@ const AddressDetailsView = (props: AddressDetailsViewProps) => {
         />
       )}
 
-      {!radio && (
-        <AddressCard
-          title={withoutRadioTitle}
-          radio={radio}
-          address1={address1}
-          address2={address2}
-          cityOrTown={cityOrTown}
-          stateOrProvince={stateOrProvince}
-          postalOrZipCode={postalOrZipCode}
-        />
-      )}
+      {!radio && <AddressCard title={withoutRadioTitle} {...addressCardProps} />}
     </Box>
   )
 }

@@ -23,24 +23,24 @@ const PaymentCardDetailsView = (props: PaymentCardDetailsViewProps) => {
     expireMonth,
     expireYear,
   } = props
+
+  const paymentCardProps = {
+    cardLastFourDigits: cardLastFourDigits,
+    expireMonth: expireMonth,
+    expireYear: expireYear,
+  }
+
   const radioOptions = [
     {
       value: cardLastFourDigits as string,
-      label: (
-        <PaymentCard
-          cardLastFourDigits={cardLastFourDigits}
-          expireMonth={expireMonth}
-          expireYear={expireYear}
-          radio={radio}
-        />
-      ),
+      label: <PaymentCard {...paymentCardProps} />,
     },
   ]
 
   const [selectedRadio, setSelectedRadio] = React.useState('')
 
-  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setSelectedRadio((event.target as HTMLInputElement).value)
+  const handleChange = (value: string) => {
+    setSelectedRadio(value)
   }
 
   return (
@@ -53,15 +53,7 @@ const PaymentCardDetailsView = (props: PaymentCardDetailsViewProps) => {
           selected={selectedRadio}
         />
       )}
-      {!radio && (
-        <PaymentCard
-          title={withoutRadioTitle}
-          radio={radio}
-          cardLastFourDigits={cardLastFourDigits}
-          expireMonth={expireMonth}
-          expireYear={expireYear}
-        />
-      )}
+      {!radio && <PaymentCard title={withoutRadioTitle} {...paymentCardProps} />}
     </Box>
   )
 }
