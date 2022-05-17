@@ -2,7 +2,6 @@ import React from 'react'
 
 import { ComponentStory, ComponentMeta } from '@storybook/react'
 
-import { orderMock } from '../../../__mocks__/stories/orderMock'
 import DetailsStep from './DetailsStep'
 
 // Common
