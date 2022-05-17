@@ -6,6 +6,7 @@ module.exports = {
     'lib/helpers/**/*.{js,jsx,ts,tsx}',
     '!**/*.d.ts',
     '!**/node_modules/**',
+    'hooks/**/*.{js,jsx,ts,tsx}',
   ],
   moduleNameMapper: {
     // Handle CSS imports (with CSS modules)
@@ -30,6 +31,8 @@ module.exports = {
     '<rootDir>/node_modules/',
     '<rootDir>/.next/',
     '<rootDir>/__test__/integration/',
+    '<rootDir>/__test__/utils/',
+    '<rootDir>/react-query/',
   ],
   testEnvironment: 'jsdom',
   transform: {

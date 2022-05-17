@@ -4,7 +4,7 @@ import { Checkbox, Stack, FormControlLabel, FormLabel, SxProps } from '@mui/mate
 import { Theme } from '@mui/material/styles'
 import { useRouter } from 'next/router'
 
-import { useUpdateRoutes } from '../../../hooks/useUpdateRoutes'
+import { useUpdateRoutes } from '../../../hooks'
 
 // Interface
 interface FacetItemProps {

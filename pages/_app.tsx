@@ -6,12 +6,12 @@ import { ThemeProvider } from '@mui/material/styles'
 import { appWithTranslation } from 'next-i18next'
 import { AppProps } from 'next/app'
 import Head from 'next/head'
-import { Hydrate, QueryClient, QueryClientProvider } from 'react-query'
+import { Hydrate, QueryClientProvider } from 'react-query'
 
 import TopBar from '../components/TopBar'
 import createEmotionCache from '../lib/createEmotionCache'
+import { generateQueryClient } from '../lib/react-query/queryClient'
 import theme from '../styles/theme'
-
 // Client-side cache, shared for the whole session of the user in the browser.
 const clientSideEmotionCache = createEmotionCache()
 
@@ -21,7 +21,7 @@ interface KiboAppProps extends AppProps {
 
 const App = (props: KiboAppProps) => {
   const { Component, emotionCache = clientSideEmotionCache, pageProps } = props
-  const [queryClient] = React.useState(() => new QueryClient())
+  const [queryClient] = React.useState(() => generateQueryClient())
 
   return (
     <CacheProvider value={emotionCache}>

@@ -58,11 +58,12 @@ const KiboTextBox = (props: KiboTextBoxProps) => {
         {label}
       </InputLabel>
       <KiboInput
-        id="kibo-input"
+        id={label}
         size="small"
         error={error}
         inputProps={{
           'aria-invalid': error,
+          'aria-label': label,
         }}
         defaultValue={value}
         placeholder={placeholder}
