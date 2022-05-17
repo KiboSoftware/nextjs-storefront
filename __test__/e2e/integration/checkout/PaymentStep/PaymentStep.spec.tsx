@@ -114,133 +114,18 @@ describe('[components] PaymentStep', () => {
   })
 
   describe('should display billing address validation message', () => {
-    it('Should required firstName', async () => {
+    it('Should display required message onBlur of inputs', async () => {
       // arrange
       setup()
-
-      // act
-      const firstName = screen.getByRole('textbox', { name: /first-name/i })
+      const allInputs = screen.getAllByRole('textbox')
       await act(async () => {
-        firstName.focus()
-        fireEvent.blur(firstName, emptyInput)
+        allInputs.forEach((input) => {
+          input.focus()
+          fireEvent.blur(input, emptyInput)
+        })
       })
-
-      const validationMessage = screen.getByText(/this field is required/i)
-
-      // assert
-      expect(validationMessage).toBeVisible()
-    })
-
-    it('Should required lastNameOrSurname', async () => {
-      // arrange
-      setup()
-
-      // act
-      const lastNameOrSurname = screen.getByRole('textbox', { name: /last-name/i })
-      await act(async () => {
-        lastNameOrSurname.focus()
-        fireEvent.blur(lastNameOrSurname, emptyInput)
-      })
-      const validationMessage = screen.getByText(/this field is required/i)
-
-      // assert
-      expect(validationMessage).toBeVisible()
-    })
-
-    it('Should required address1', async () => {
-      // arrange
-      setup()
-
-      // act
-      const address1 = screen.getByRole('textbox', { name: /address1/i })
-      await act(async () => {
-        address1.focus()
-        fireEvent.blur(address1, emptyInput)
-      })
-      const validationMessage = screen.getByText(/this field is required/i)
-
-      // assert
-      expect(validationMessage).toBeVisible()
-    })
-
-    it('Should required address2', async () => {
-      // arrange
-      setup()
-
-      // act
-      const address2 = screen.getByRole('textbox', { name: /address2/i })
-      await act(async () => {
-        address2.focus()
-        fireEvent.blur(address2, emptyInput)
-      })
-      const validationMessage = screen.getByText(/this field is required/i)
-
-      // assert
-      expect(validationMessage).toBeVisible()
-    })
-
-    it('Should required cityOrTown', async () => {
-      // arrange
-      setup()
-
-      // act
-      const cityOrTown = screen.getByRole('textbox', { name: /city/i })
-      await act(async () => {
-        cityOrTown.focus()
-        fireEvent.blur(cityOrTown, emptyInput)
-      })
-      const validationMessage = screen.getByText(/this field is required/i)
-
-      // assert
-      expect(validationMessage).toBeVisible()
-    })
-
-    it('Should required stateOrProvince', async () => {
-      // arrange
-      setup()
-
-      // act
-      const stateOrProvince = screen.getByRole('textbox', { name: /state-or-province/i })
-      await act(async () => {
-        stateOrProvince.focus()
-        fireEvent.blur(stateOrProvince, emptyInput)
-      })
-      const validationMessage = screen.getByText(/this field is required/i)
-
-      // assert
-      expect(validationMessage).toBeVisible()
-    })
-
-    it('Should required postalOrZipCode', async () => {
-      // arrange
-      setup()
-
-      // act
-      const postalOrZipCode = screen.getByRole('textbox', { name: /postal-or-zip-code/i })
-      await act(async () => {
-        postalOrZipCode.focus()
-        fireEvent.blur(postalOrZipCode, emptyInput)
-      })
-      const validationMessage = screen.getByText(/this field is required/i)
-
-      // assert
-      expect(validationMessage).toBeVisible()
-    })
-
-    it('Should required phoneNumbers.home', async () => {
-      // arrange
-      setup()
-
-      // act
-      const phoneNumberHome = screen.getByRole('textbox', { name: /phone-number/i })
-      await act(async () => {
-        phoneNumberHome.focus()
-        fireEvent.blur(phoneNumberHome, emptyInput)
-      })
-      const validationMessage = screen.getByText(/this field is required/i)
-
-      // assert
-      expect(validationMessage).toBeVisible()
+      const validationMessage = screen.getAllByText(/this field is required/i)
+      expect(validationMessage).toHaveLength(8)
     })
   })
 })
