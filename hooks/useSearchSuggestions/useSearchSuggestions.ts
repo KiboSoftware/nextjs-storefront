@@ -3,13 +3,6 @@ import { useQuery } from 'react-query'
 import { searchSuggestionResult } from '../../__mocks__/stories/searchSuggestionResultMock'
 
 import type { SearchSuggestionResult } from '@/lib/gql/types'
-
-export interface PaymentTypeData {
-  id: string
-
-  name: string
-}
-
 export interface SearchSuggestionResultType {
   data: SearchSuggestionResult
 
