@@ -1,4 +1,5 @@
-export const orderMock = {
+import type { Order } from '@/lib/gql/types'
+export const orderMock: Order = {
   amountAvailableForRefund: 0,
   amountRefunded: 0,
   amountRemainingForPayment: 3764.75,

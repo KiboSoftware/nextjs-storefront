@@ -97,17 +97,18 @@ describe('[components] Details', () => {
   it('email should display required field error when user focus out (blur event) the email field', async () => {
     setup()
 
-    let emailError = screen.queryByText(/this field is required/i)
+    let emailError = screen.queryByText(/this\-field\-is\-required/i)
     expect(emailError).not.toBeInTheDocument()
 
     const emailInput = screen.getByRole('textbox', { name: /your-email/i })
 
+    console.log('---------------------', emailInput)
     await act(async () => {
       emailInput.focus()
       fireEvent.blur(emailInput, { target: { value: '' } })
     })
 
-    emailError = screen.getByText(/this-field-is-required/i)
+    emailError = screen.getByText(/this\-field\-is\-required/i)
     expect(emailError).toBeVisible()
   })
 

@@ -2,6 +2,7 @@ import React from 'react'
 
 import { ComponentStory, ComponentMeta } from '@storybook/react'
 
+import { orderMock } from '../../../__mocks__/stories/orderMock'
 import DetailsStep from './DetailsStep'
 
 // Common
@@ -18,8 +19,8 @@ export const Common = Template.bind({})
 Common.args = {
   setAutoFocus: false,
   stepperStatus: 'INVALID',
+  checkout: undefined,
   onCompleteCallback: () => console.log('called onCompleteCallback : '),
-  checkout: {},
 }
 
 // With account fields
@@ -28,5 +29,5 @@ withAccountCreation.args = {
   setAutoFocus: false,
   stepperStatus: 'INVALID',
   onCompleteCallback: () => console.log('called onCompleteCallback : '),
-  checkout: {},
+  checkout: undefined,
 }
