@@ -9,7 +9,6 @@ import { useForm, Controller } from 'react-hook-form'
 import * as yup from 'yup'
 
 import {
-  cardData,
   getCardData,
   validateExpiryDate,
   getCardType,
@@ -76,12 +75,9 @@ const CardDetailsForm = (props: CardDetailsFormProps) => {
   })
 
   useEffect(() => {
-    let updatedCardData = cardData
-    if (isValid) {
-      const { cardNumber, expiryDate, cvv } = getValues()
-      updatedCardData = getCardData({ cardNumber, expiryDate, cvv })
-    }
-    onCardData({ ...updatedCardData, isCardDetailsValidated: isValid })
+    const { cardNumber, expiryDate, cvv } = getValues()
+    const cardData = getCardData({ isValid, cardNumber, expiryDate, cvv })
+    onCardData({ ...cardData, isCardDetailsValidated: isValid })
   }, [isValid, errors, getValues, onCardData])
 
   return (
