@@ -6,9 +6,12 @@ import { useTranslation } from 'next-i18next'
 
 import DetailsStep, { Action } from '@/components/checkout/DetailsStep/DetailsStep'
 import KiboStepper from '@/components/checkout/KiboStepper/KiboStepper'
-import PaymentStep from '@/components/checkout/PaymentStep/PaymentStep'
+import PaymentStep, {
+  CardPaymentDetails,
+} from '@/components/checkout/PaymentStep/PaymentStep/PaymentStep'
 import ReviewStep from '@/components/checkout/ReviewStep/ReviewStep'
 import ShippingStep from '@/components/checkout/ShippingStep/ShippingStep'
+import { Address } from '@/components/common/AddressForm/AddressForm'
 import OrderSummary from '@/components/common/OrderSummary/OrderSummary'
 
 import type { Order } from '@/lib/gql/types'
@@ -65,6 +68,16 @@ const Checkout = (props: CheckoutProps) => {
     shippingLabel: 'Go to Shipping',
   }
 
+  const handleBillingAddress = (data: Address) => console.log('called handleSave(data) : ', data)
+  const handleCardPayment = (data: CardPaymentDetails) =>
+    console.log('called handleSaveCardPayment(data) : ', data)
+
+  const paymentStepParams = {
+    countries: ['US', 'AT', 'DE', 'NL'],
+    isUserLoggedIn: true,
+    saveAddressLabel: 'Save billing address',
+  }
+
   return (
     <Stack direction={{ xs: 'column', md: 'row' }} gap={3}>
       <Stack sx={{ width: '100%', maxWidth: '872px' }} gap={3}>
@@ -78,7 +91,11 @@ const Checkout = (props: CheckoutProps) => {
             onCompleteCallback={completeStepCallback}
           />
           <ShippingStep />
-          <PaymentStep />
+          <PaymentStep
+            {...paymentStepParams}
+            onSave={handleBillingAddress}
+            onSaveCardPayment={handleCardPayment}
+          />
           <ReviewStep />
         </KiboStepper>
       </Stack>
