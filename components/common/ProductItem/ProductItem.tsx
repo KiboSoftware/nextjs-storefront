@@ -42,6 +42,7 @@ const styles = {
     maxWidth: 150,
     width: '45%',
   },
+
   image: {
     width: '100%',
     height: '100%',
