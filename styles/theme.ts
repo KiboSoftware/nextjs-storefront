@@ -90,6 +90,23 @@ let theme = createTheme({
         },
         containedSecondary: {
           backgroundColor: grey[50],
+          borderColor: grey[500],
+          borderWidth: 1,
+          borderStyle: 'solid',
+          boxShadow: 'none',
+          '&:hover': {
+            backgroundColor: grey[300],
+          },
+        },
+        containedInherit: {
+          backgroundColor: '#000',
+          borderWidth: 1,
+          borderStyle: 'solid',
+          boxShadow: 'none',
+          color: '#fff',
+          '&:hover': {
+            backgroundColor: grey[900],
+          },
         },
       },
     },

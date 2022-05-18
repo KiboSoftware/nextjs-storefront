@@ -1,21 +1,4 @@
-import React from 'react'
-
-import { ComponentStory, ComponentMeta } from '@storybook/react'
-
-import FacetList from './FacetList'
-
-// default
-export default {
-  title: 'Filter-By/FacetList',
-  component: FacetList,
-} as ComponentMeta<typeof FacetList>
-
-const Template: ComponentStory<typeof FacetList> = (args) => <FacetList {...args} />
-
-// Common
-export const Common = Template.bind({})
-
-const facetList = [
+export const facetList = [
   {
     label: 'Category',
     facetType: 'Hierarchy',
@@ -112,42 +95,6 @@ const facetList = [
     facetType: 'Value',
     field: 'Tenant~color',
     values: [
-      {
-        label: 'Black',
-        value: 'black',
-        filterValue: 'Tenant~color:black',
-        isDisplayed: true,
-        count: 8,
-        isApplied: false,
-        childrenFacetValues: null,
-      },
-      {
-        label: 'Blue',
-        value: 'blue',
-        filterValue: 'Tenant~color:blue',
-        isDisplayed: true,
-        count: 5,
-        isApplied: false,
-        childrenFacetValues: null,
-      },
-      {
-        label: 'Green',
-        value: 'green',
-        filterValue: 'Tenant~color:green',
-        isDisplayed: true,
-        count: 2,
-        isApplied: false,
-        childrenFacetValues: null,
-      },
-      {
-        label: 'Grey',
-        value: 'grey',
-        filterValue: 'Tenant~color:grey',
-        isDisplayed: true,
-        count: 4,
-        isApplied: false,
-        childrenFacetValues: null,
-      },
       {
         label: 'Orange',
         value: 'orange',
@@ -318,6 +265,3 @@ const facetList = [
     ],
   },
 ]
-Common.args = {
-  facetList,
-}

@@ -36,10 +36,17 @@ const KiboSelect = (props: KiboSelectProps) => {
   } = props
 
   return (
-    <FormControl sx={{ minWidth: 120, marginTop: 3 }} size="small" fullWidth variant="outlined">
-      <InputLabel shrink htmlFor={name} sx={{ top: -18, left: -13 }}>
-        {label}
-      </InputLabel>
+    <FormControl
+      sx={{ minWidth: 120, marginTop: label ? 3 : 0 }}
+      size="small"
+      fullWidth
+      variant="outlined"
+    >
+      {label && (
+        <InputLabel shrink htmlFor={name} sx={{ top: -18, left: -13 }}>
+          {label}
+        </InputLabel>
+      )}
       <Select
         size="small"
         displayEmpty
@@ -58,13 +65,15 @@ const KiboSelect = (props: KiboSelectProps) => {
         </MenuItem>
         {children}
       </Select>
-      <FormHelperText
-        error={error}
-        {...(error && { 'aria-errormessage': helperText })}
-        sx={{ margin: '3px 0' }}
-      >
-        {error ? helperText : ''}
-      </FormHelperText>
+      {error && (
+        <FormHelperText
+          error={error}
+          {...(error && { 'aria-errormessage': helperText })}
+          sx={{ margin: '3px 0' }}
+        >
+          {error ? helperText : ''}
+        </FormHelperText>
+      )}
     </FormControl>
   )
 }

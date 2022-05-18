@@ -2,7 +2,9 @@ import React, { useEffect, useState } from 'react'
 
 import AddIcon from '@mui/icons-material/Add'
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft'
-import { Box, Button, FormLabel, Link, Typography } from '@mui/material'
+import RemoveIcon from '@mui/icons-material/Remove'
+import { Box, Button, FormLabel, Link, Typography, SxProps } from '@mui/material'
+import { Theme } from '@mui/material/styles'
 import { useTranslation } from 'next-i18next'
 
 import type { FacetValue } from '@/lib/gql/types'
@@ -21,7 +23,7 @@ interface CategoryFacetData {
 }
 
 interface CategoryFacetProps {
-  initialItemsToShow: number
+  initialItemsToShow?: number
   categoryFacet: CategoryFacetData
   onCategoryChildrenSelection: (categoryCode: string) => void
   onBackButtonClick: () => void
@@ -29,12 +31,17 @@ interface CategoryFacetProps {
 
 const styles = {
   linkContainer: {
-    pl: 1,
-    pb: 0,
     display: {
       xs: 'none',
       md: 'block',
     },
+    borderBottomWidth: '1px',
+    borderBottomStyle: 'solid',
+    borderBottomColor: 'grey.500',
+  } as SxProps<Theme> | undefined,
+  header: {
+    color: 'text.primary',
+    marginTop: '0.5rem',
   },
   childrenCategories: {
     pl: '0.438rem',
@@ -48,12 +55,12 @@ const styles = {
   },
   formLabel: {
     typography: 'body2',
-    color: 'grey.900',
+    color: 'text.primary',
     cursor: 'pointer',
   },
   backButton: {
     textDecoration: 'underline',
-    color: 'grey.900',
+    color: 'text.primary',
     display: 'flex',
     alignItems: 'center',
     padding: '0.5rem 0',
@@ -64,7 +71,7 @@ const styles = {
   },
   viewMore: {
     textTransform: 'capitalize',
-    color: 'grey.900',
+    color: 'text.primary',
     pl: 0,
   },
 }
@@ -76,11 +83,14 @@ const CategoryFacet = (props: CategoryFacetProps) => {
     onCategoryChildrenSelection,
     onBackButtonClick,
   } = props
-  const { t } = useTranslation('common')
+  const { t } = useTranslation(['product', 'common'])
+  const viewMore = t('common:view-more')
+  const viewLess = t('common:view-less')
+
   const childrenLength = categoryFacet.childrenCategories.length
   const isViewMoreVisible = childrenLength > initialItemsToShow
 
-  const [isViewMoreButtonVisible, setIsViewMoreButtonVisible] = useState<boolean>(isViewMoreVisible)
+  const [buttonText, setButtonText] = useState<string>(viewMore)
   const [filteredValues, setFilteredValues] = useState<FacetValue[]>([])
 
   const handleCategoryLink = (categoryCode: string) => {
@@ -88,19 +98,19 @@ const CategoryFacet = (props: CategoryFacetProps) => {
   }
 
   const handleViewMore = () => {
-    setIsViewMoreButtonVisible(!isViewMoreButtonVisible)
+    setButtonText(() => (buttonText === viewMore ? viewLess : viewMore))
   }
 
   useEffect(() => {
-    const noOfItemsToShow = isViewMoreButtonVisible ? initialItemsToShow : childrenLength
+    const noOfItemsToShow = buttonText === viewMore ? initialItemsToShow : childrenLength
     const sliced = categoryFacet.childrenCategories?.slice(0, noOfItemsToShow) || []
 
     setFilteredValues([...sliced])
-  }, [isViewMoreButtonVisible])
+  }, [isViewMoreVisible, viewMore, buttonText])
 
   return (
     <Box sx={styles.linkContainer}>
-      <Typography variant="subtitle1" sx={{ color: 'grey.900' }}>
+      <Typography variant="subtitle1" sx={{ ...styles.header }}>
         {categoryFacet.header}
       </Typography>
       <Box sx={styles.childrenCategories}>
@@ -119,17 +129,23 @@ const CategoryFacet = (props: CategoryFacetProps) => {
             </FormLabel>
           </Link>
         ))}
-        {isViewMoreButtonVisible && (
+        {isViewMoreVisible && (
           <Button
             variant="text"
             size="small"
             name="View More"
-            aria-label={t('view-more')}
+            aria-label={buttonText}
             sx={{ ...styles.viewMore }}
-            startIcon={<AddIcon fontSize="small" />}
+            startIcon={
+              buttonText === viewMore ? (
+                <AddIcon fontSize="small" />
+              ) : (
+                <RemoveIcon fontSize="small" />
+              )
+            }
             onClick={() => handleViewMore()}
           >
-            {t('view-more')}
+            {buttonText}
           </Button>
         )}
         <Link
@@ -139,7 +155,7 @@ const CategoryFacet = (props: CategoryFacetProps) => {
           sx={{ ...styles.backButton }}
         >
           <ChevronLeftIcon />
-          {t('back')}
+          {t('common:back')}
         </Link>
       </Box>
     </Box>

@@ -90,14 +90,14 @@ describe('[components] - FacetItem', () => {
     expect(viewMore).toBeInTheDocument()
     expect(viewLess).not.toBeInTheDocument()
 
-    if (viewMore) await userEvent.click(viewMore)
+    if (viewMore) userEvent.click(viewMore)
     viewMore = screen.queryByText(/view-more/i, { selector: 'button' })
     viewLess = screen.queryByText(/view-less/i, { selector: 'button' })
 
     expect(viewMore).not.toBeInTheDocument()
     expect(viewLess).toBeInTheDocument()
 
-    if (viewLess) await userEvent.click(viewLess)
+    if (viewLess) userEvent.click(viewLess)
     viewMore = screen.getByText(/view-more/i, { selector: 'button' })
     viewLess = screen.queryByText(/view-less/i, { selector: 'button' })
 

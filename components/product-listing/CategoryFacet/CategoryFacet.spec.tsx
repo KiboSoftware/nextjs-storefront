@@ -26,14 +26,14 @@ describe('[component] - CategoryFacet', () => {
     setup()
 
     const heading = screen.getByRole('heading')
-    const backButton = screen.getByRole('button', { name: /back/ })
+    const backButton = screen.getByRole('button', { name: /back/i })
 
     const childrenCategoriesLabels =
       CategoryFacetDesktop?.args?.categoryFacet?.childrenCategories.map(
         (category) => category.label
       ) || []
 
-    const childrenCategoriesLabelsRegex = new RegExp(childrenCategoriesLabels.join('|'), 'gi')
+    const childrenCategoriesLabelsRegex = new RegExp(childrenCategoriesLabels.join('|'), 'i')
     const childrenCategoriesLabelsList = screen.getAllByText(childrenCategoriesLabelsRegex)
 
     expect(childrenCategoriesLabelsList).toHaveLength(
@@ -59,7 +59,7 @@ describe('[component] - CategoryFacet', () => {
   it('should call onBackButtonClick when user clicks on Back button', () => {
     const { onBackButtonClickMock } = setup()
 
-    const backButton = screen.getByRole('button', { name: /back/ })
+    const backButton = screen.getByRole('button', { name: /back/i })
     userEvent.click(backButton)
 
     expect(onBackButtonClickMock).toHaveBeenCalled()
@@ -68,18 +68,40 @@ describe('[component] - CategoryFacet', () => {
   it('should display all the children when user clicks on View More button', () => {
     setup()
 
-    const childrenCategoriesBeforeClick = screen.getAllByTestId('count')
-    const viewMoreButton = screen.getByRole('button', { name: /view-more/ })
-    userEvent.click(viewMoreButton)
+    const childrenCategoriesLabelsBeforeClick =
+      CategoryFacetDesktop?.args?.categoryFacet?.childrenCategories.map(
+        (category) => category.label
+      ) || []
 
-    const childrenCategoriesAfterClick = screen.getAllByTestId('count')
-
-    expect(viewMoreButton).not.toBeInTheDocument()
-    expect(childrenCategoriesBeforeClick.length).toEqual(
-      CategoryFacetDesktop.args?.initialItemsToShow
+    const childrenCategoriesLabelsRegexBeforeClick = new RegExp(
+      childrenCategoriesLabelsBeforeClick.join('|'),
+      'i'
     )
-    expect(childrenCategoriesAfterClick.length).toEqual(
-      CategoryFacetDesktop.args?.categoryFacet?.childrenCategories?.length
+    const childrenCategoriesLabelsListBeforeClick = screen.getAllByText(
+      childrenCategoriesLabelsRegexBeforeClick
+    )
+
+    expect(childrenCategoriesLabelsListBeforeClick).toHaveLength(
+      CategoryFacetDesktop.args?.initialItemsToShow || 0
+    )
+
+    const viewMoreButton = screen.getByRole('button', { name: /view-more/i })
+    userEvent.click(viewMoreButton)
+    const childrenCategoriesLabelsAfterClick =
+      CategoryFacetDesktop?.args?.categoryFacet?.childrenCategories.map(
+        (category) => category.label
+      ) || []
+
+    const childrenCategoriesLabelsRegexAfterClick = new RegExp(
+      childrenCategoriesLabelsAfterClick.join('|'),
+      'i'
+    )
+    const childrenCategoriesLabelsListAfterClick = screen.getAllByText(
+      childrenCategoriesLabelsRegexAfterClick
+    )
+
+    expect(childrenCategoriesLabelsListAfterClick).toHaveLength(
+      CategoryFacetDesktop.args?.categoryFacet?.childrenCategories.length || 0
     )
   })
 })

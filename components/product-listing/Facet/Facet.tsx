@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from 'react'
 
 import AddIcon from '@mui/icons-material/Add'
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore'
+import RemoveIcon from '@mui/icons-material/Remove'
 import {
   Accordion,
   AccordionDetails,
@@ -10,13 +11,12 @@ import {
   SxProps,
   Typography,
 } from '@mui/material'
-import { grey } from '@mui/material/colors'
 import { Theme } from '@mui/material/styles'
 import { Box } from '@mui/system'
 import { useTranslation } from 'next-i18next'
 
 import SearchBar from '../../common/SearchBar/SearchBar'
-import FacetItemList from '../FacetItemList/FacetItemList'
+import { FacetItemList } from '@/components/product-listing'
 
 import type { Facet as FacetType, FacetValue, Maybe } from '@/lib/gql/types'
 
@@ -28,16 +28,26 @@ interface FacetProps extends FacetType {
 // MUI
 const style = {
   accordion: {
-    border: `1px solid ${grey[200]}`,
+    ':before': {
+      backgroundColor: 'grey.500',
+      opacity: 1,
+    },
+    borderBottomWidth: '1px',
+    borderBottomStyle: 'solid',
+    borderBottomColor: 'grey.500',
     boxShadow: 0,
+    borderRadius: 0,
   },
 
   accordionDetails: {
     pt: 0,
+    p: { md: 0 },
   },
-  button: { textTransform: 'capitalize', fontSize: (theme: Theme) => theme.typography.body2 } as
-    | SxProps<Theme>
-    | undefined,
+  button: {
+    textTransform: 'capitalize',
+    color: 'text.primary',
+    fontSize: (theme: Theme) => theme.typography.body2,
+  } as SxProps<Theme> | undefined,
 }
 
 // Component
@@ -101,6 +111,11 @@ const Facet = (props: FacetProps) => {
         expandIcon={<ExpandMoreIcon />}
         aria-controls="panel1bh-content"
         id="panel1bh-header"
+        sx={{
+          padding: {
+            md: '0',
+          },
+        }}
       >
         <Typography variant="h4" sx={{ fontWeight: 'bold' }}>
           {label}
@@ -127,7 +142,13 @@ const Facet = (props: FacetProps) => {
             name="View More"
             aria-label={buttonText}
             sx={{ ...style.button }}
-            startIcon={<AddIcon fontSize="small" />}
+            startIcon={
+              buttonText === viewMore ? (
+                <AddIcon fontSize="small" />
+              ) : (
+                <RemoveIcon fontSize="small" />
+              )
+            }
             onClick={() => handleButtonText()}
           >
             {buttonText}
