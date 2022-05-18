@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react'
 import AddIcon from '@mui/icons-material/Add'
 import AppsIcon from '@mui/icons-material/Apps'
 import ListIcon from '@mui/icons-material/List'
-import { Grid, MenuItem, Typography, Box, Button, SxProps, Skeleton, Stack } from '@mui/material'
+import { Grid, MenuItem, Typography, Box, Button, SxProps, Skeleton } from '@mui/material'
 import { Theme } from '@mui/material/styles'
 import { useTranslation } from 'next-i18next'
 
@@ -31,7 +31,7 @@ interface CategoryFacetData {
   header: string
   childrenCategories: CategoryFacetChildren[]
 }
-interface ProductListingTemplate {
+interface ProductListingTemplateProps {
   breadCrumbsList: Breadcrumb[]
   facetList: FacetType[]
   products: ProductCardProps[]
@@ -168,7 +168,7 @@ const styles = {
 }
 
 // Component
-const ProductListingTemplate = (props: ProductListingTemplate) => {
+const ProductListingTemplate = (props: ProductListingTemplateProps) => {
   const {
     breadCrumbsList,
     facetList,
