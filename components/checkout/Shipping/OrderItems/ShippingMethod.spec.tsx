@@ -13,7 +13,7 @@ import { ShippingMethodProps } from '@/components/checkout/Shipping/OrderItems/S
 
 const { Common } = composeStories(stories)
 
-const onChangeMock = jest.fn()
+const onShippingMethodChangeMock = jest.fn()
 const onClickStoreLocatorMock = jest.fn()
 
 const KiboSelectMock = () => <div data-testid="kibo-select-component" />
@@ -28,7 +28,7 @@ describe('[component] - ShippingMethod', () => {
     render(
       <Common
         {...props}
-        onShippingMethodChange={onChangeMock}
+        onShippingMethodChange={onShippingMethodChangeMock}
         onClickStoreLocator={onClickStoreLocatorMock}
       />
     )
@@ -54,7 +54,7 @@ describe('[component] - ShippingMethod', () => {
       shipItems: shipItems,
       pickupItems: [],
       orderShipmentMethods: getShippingRates.orderShipmentMethods,
-      onChange: (name: string, value: string) => ({ name, value }),
+      onShippingMethodChange: (name: string, value: string) => ({ name, value }),
     }
     setup(params)
 
@@ -70,7 +70,7 @@ describe('[component] - ShippingMethod', () => {
       shipItems: [],
       pickupItems: pickupItems,
       orderShipmentMethods: getShippingRates.orderShipmentMethods,
-      onChange: (name: string, value: string) => ({ name, value }),
+      onShippingMethodChange: (name: string, value: string) => ({ name, value }),
     }
     setup(params)
 
@@ -86,7 +86,7 @@ describe('[component] - ShippingMethod', () => {
       shipItems: shipItems,
       pickupItems: pickupItems,
       orderShipmentMethods: getShippingRates.orderShipmentMethods,
-      onChange: (name: string, value: string) => ({ name, value }),
+      onShippingMethodChange: (name: string, value: string) => ({ name, value }),
     }
     setup(params)
 
