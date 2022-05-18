@@ -19,7 +19,7 @@ export const KiboRadio = (props: KiboRadioProps) => {
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSelectedRadio((event.target as HTMLInputElement).value)
-    onChange && onChange(event.target.value as string)
+    onChange && onChange(event.target.value)
   }
 
   return (
