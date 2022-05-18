@@ -19,7 +19,7 @@ describe('[components] - AddressForm integration', () => {
 
     // act
     const firstName = screen.getByRole('textbox', { name: /first-name/i })
-    const lastNameOrSurname = screen.getByRole('textbox', { name: /last-name/i })
+    const lastNameOrSurname = screen.getByRole('textbox', { name: /last-name-or-sur-name/i })
     const address1 = screen.getByRole('textbox', { name: /address1/i })
     const address2 = screen.getByRole('textbox', { name: /address2/i })
     const cityOrTown = screen.getByRole('textbox', { name: /city/i })
@@ -60,7 +60,7 @@ describe('[components] - AddressForm integration', () => {
       setup()
 
       // act
-      const lastNameOrSurname = screen.getByRole('textbox', { name: /last-name/i })
+      const lastNameOrSurname = screen.getByRole('textbox', { name: /last-name-or-sur-name/i })
       await act(async () => {
         userEvent.type(lastNameOrSurname, contact.lastNameOrSurname as string)
       })

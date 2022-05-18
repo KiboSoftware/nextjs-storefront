@@ -1,6 +1,5 @@
 {
   "checkout": "Checkout ({{numberOfItems}} items)",
-  "details": "Details",
   "shipping": "Shipping",
   "payment": "Payment",
   "review": "Review",
@@ -34,5 +33,20 @@
   "exp": "Exp:",
   "billing-address": "Billing Address",
   "apartment": "Apt. ",
-  "payment-information": "Payment Information"
+  "payment-information": "Payment Information",
+  "credit-debit-card": "Credit / Debit Card",
+  "card-number": "Card number",
+  "card-number-required": "Credit card number is required",
+  "invalid-card-number": "Invalid credit card number",
+  "expiry-date": "Exp. Date MM/YYYY",
+  "expiry-date-placeholder": "MM/YYYY",
+  "expiry-date-required": "Expiration date is required",
+  "invalid-expiry-date": "Invalid expiration date",
+  "invalid-expiry-date-format": "Provide Expiration Date as MM/YYYY",
+  "security-code": "Security code",
+  "security-code-placeholder": "XXX",
+  "security-code-required": "CVV is required",
+  "invalid-security-code": "Invalid CVV",
+  "save-payment-method": "Save payment method",
+  "copy-shipping-address": "Billing address same as shipping"
 }

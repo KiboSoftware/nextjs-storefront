@@ -21,7 +21,6 @@ Common.args = {
   countries: ['US', 'AT', 'DE', 'NL'],
   isUserLoggedIn: true,
   saveAddressLabel: 'Save billing address',
-  onSave: (data: Address) => console.log('called handleSave(data) : ', data),
-  onSaveCardPayment: (data: CardPaymentDetails) =>
-    console.log('called handleSaveCardPayment(data) : ', data),
+  onSave: (data: Address) => data,
+  onSaveCardPayment: (data: CardPaymentDetails) => data,
 }

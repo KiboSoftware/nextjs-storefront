@@ -112,20 +112,4 @@ describe('[components] PaymentStep', () => {
       expect(validationMessage).toBeVisible()
     })
   })
-
-  describe('should display billing address validation message', () => {
-    it('Should display required message onBlur of inputs', async () => {
-      // arrange
-      setup()
-      const allInputs = screen.getAllByRole('textbox')
-      await act(async () => {
-        allInputs.forEach((input) => {
-          input.focus()
-          fireEvent.blur(input, emptyInput)
-        })
-      })
-      const validationMessage = screen.getAllByText(/this field is required/i)
-      expect(validationMessage).toHaveLength(8)
-    })
-  })
 })

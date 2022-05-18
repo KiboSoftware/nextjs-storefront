@@ -29,7 +29,7 @@ export interface CardDetailsProps {
   isCardDetailsValidated: boolean
 }
 export interface CardDetailsFormProps {
-  onCardData: (cardData: CardDetailsProps) => void
+  onSaveCardData: (cardData: CardDetailsProps) => void
 }
 
 const StyledCardDiv = styled('div')(() => ({
@@ -39,7 +39,7 @@ const StyledCardDiv = styled('div')(() => ({
 }))
 
 export const useCardSchema = () => {
-  const { t } = useTranslation('common')
+  const { t } = useTranslation('checkout')
   return yup.object({
     cardNumber: yup
       .string()
@@ -58,8 +58,8 @@ export const useCardSchema = () => {
   })
 }
 const CardDetailsForm = (props: CardDetailsFormProps) => {
-  const { onCardData } = props
-  const { t } = useTranslation('common')
+  const { onSaveCardData } = props
+  const { t } = useTranslation('checkout')
   const cardSchema = useCardSchema()
 
   const {
@@ -77,8 +77,8 @@ const CardDetailsForm = (props: CardDetailsFormProps) => {
   useEffect(() => {
     const { cardNumber, expiryDate, cvv } = getValues()
     const cardData = getCardData({ isValid, cardNumber, expiryDate, cvv })
-    onCardData({ ...cardData, isCardDetailsValidated: isValid })
-  }, [isValid, errors, getValues, onCardData])
+    onSaveCardData({ ...cardData, isCardDetailsValidated: isValid })
+  }, [isValid, errors, getValues, onSaveCardData])
 
   return (
     <StyledCardDiv data-testid="card-details">

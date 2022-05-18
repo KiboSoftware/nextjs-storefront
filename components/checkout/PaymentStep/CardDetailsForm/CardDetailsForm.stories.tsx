@@ -15,6 +15,5 @@ const Template: ComponentStory<typeof CardDetailsForm> = (args) => <CardDetailsF
 export const Common = Template.bind({})
 
 Common.args = {
-  onCardData: (cardDetails: CardDetailsProps) =>
-    console.log('called handleSave(data) : ', cardDetails),
+  onSaveCardData: (cardDetails: CardDetailsProps) => cardDetails,
 }

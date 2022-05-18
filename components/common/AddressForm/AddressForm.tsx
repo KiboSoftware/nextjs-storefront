@@ -91,7 +91,7 @@ const AddressForm = forwardRef<AddressFormHandler, AddressFormProps>((props, ref
 
   // Declare custom hooks, functions, event handlers
   const [saveAddress, setSaveAddress] = useState<boolean>(false)
-  const { t }: { t: any } = useTranslation('common')
+  const { t } = useTranslation('checkout')
 
   const generateSelectOptions = () =>
     countries?.map((country) => {
@@ -160,7 +160,7 @@ const AddressForm = forwardRef<AddressFormHandler, AddressFormProps>((props, ref
               <KiboTextField
                 {...field}
                 ref={null}
-                label={t('last-name')}
+                label={t('last-name-or-sur-name')}
                 error={!!errors?.lastNameOrSurname}
                 helperText={errors?.lastNameOrSurname?.message}
                 onChange={(_name, value) => field.onChange(value)}

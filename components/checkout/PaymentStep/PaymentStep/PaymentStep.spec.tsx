@@ -10,8 +10,11 @@ const { Common } = composeStories(stories)
 const onBlurMock = jest.fn()
 const onHandleSavePaymentMethodMock = jest.fn()
 
+const CardDetailsFormMock = () => <div data-testid="card-details" />
 const KiboTextBoxMock = () => <input data-testid="text-box-mock" onBlur={onBlurMock} />
+
 jest.mock('../../../common/KiboTextBox/KiboTextBox', () => KiboTextBoxMock)
+jest.mock('../CardDetailsForm/CardDetailsForm', () => CardDetailsFormMock)
 
 describe('[components] PaymentStep', () => {
   const setup = () => render(<Common {...Common.args} />)

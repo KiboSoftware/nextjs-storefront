@@ -9,6 +9,7 @@ import {
   Radio,
   FormControl,
   RadioGroup,
+  Typography,
 } from '@mui/material'
 import { useTranslation } from 'next-i18next'
 
@@ -30,9 +31,10 @@ interface PaymentStepProps {
   onSaveCardPayment: (data: CardPaymentDetails) => void
 }
 
-const StyledHeadings = styled('h2')(() => ({
+const StyledHeadings = styled(Typography)(() => ({
   width: '100%',
   paddingLeft: '0.5rem',
+  fontWeight: 'bold',
 }))
 
 const StyledFormControlLabel = styled(FormControlLabel)(() => ({
@@ -58,7 +60,7 @@ const radioStyle = {
 // Component
 const PaymentStep = (props: PaymentStepProps) => {
   const { isUserLoggedIn = false, onSaveCardPayment } = props
-  const { t } = useTranslation('common')
+  const { t } = useTranslation('checkout')
   const { loadPaymentTypes } = usePaymentTypes()
   const paymentMethods = loadPaymentTypes()
   type AddressFormHanlder = ElementRef<typeof AddressForm>
@@ -102,8 +104,9 @@ const PaymentStep = (props: PaymentStepProps) => {
 
   return (
     <Stack>
-      <StyledHeadings>{t('payment-method')}</StyledHeadings>
-
+      <StyledHeadings variant="h2" sx={{ paddingBottom: '1.625rem' }}>
+        {t('payment-method')}
+      </StyledHeadings>
       <FormControl>
         <RadioGroup
           aria-labelledby="payment-types-radio"
@@ -126,7 +129,7 @@ const PaymentStep = (props: PaymentStepProps) => {
         </RadioGroup>
       </FormControl>
       {paymentDetails?.paymentType === 'creditcard' && (
-        <CardDetailsForm onCardData={handleCardData} />
+        <CardDetailsForm onSaveCardData={handleCardData} />
       )}
 
       {isUserLoggedIn && (
@@ -141,7 +144,9 @@ const PaymentStep = (props: PaymentStepProps) => {
           label={`${t('save-payment-method')}`}
         />
       )}
-      <StyledHeadings>{t('billing-address')}</StyledHeadings>
+      <StyledHeadings variant="h2" sx={{ paddingTop: '3.125rem' }}>
+        {t('billing-address')}
+      </StyledHeadings>
       <StyledFormControlLabel control={<Checkbox />} label={`${t('copy-shipping-address')}`} />
       <AddressForm {...props} ref={addressRef} />
       <Button variant="contained" onClick={handleSavePayment}>
