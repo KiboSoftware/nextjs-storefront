@@ -83,7 +83,7 @@ const CategoryFacet = (props: CategoryFacetProps) => {
     onCategoryChildrenSelection,
     onBackButtonClick,
   } = props
-  const { t } = useTranslation(['category', 'common'])
+  const { t } = useTranslation(['product', 'common'])
   const viewMore = t('common:view-more')
   const viewLess = t('common:view-less')
 

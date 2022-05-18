@@ -68,7 +68,7 @@ const styles = {
 const CategoryFilterByMobile = (props: CategoryFilterByMobileProps) => {
   const { facetList, totalResults, header, onFilterByClose, isLoading } = props
 
-  const { t } = useTranslation(['category', 'common'])
+  const { t } = useTranslation(['product', 'common'])
 
   const headerPart = (
     <>

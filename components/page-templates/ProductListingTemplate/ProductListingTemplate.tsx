@@ -187,7 +187,7 @@ const ProductListingTemplate = (props: ProductListingTemplateProps) => {
   const [isShowMoreButtonVisible, setShowMoreButtonVisible] = useState<boolean>(isShowMoreVisible)
   const [productToShows, setProductsToShow] = useState<ProductCardProps[]>([]) // Setting the initial product count to 16 for skeleton loading
 
-  const { t } = useTranslation(['category', 'common'])
+  const { t } = useTranslation(['product', 'common'])
 
   const handleFilterBy = () => setFilterBy(!showFilterBy)
   const showMoreProducts = () => setShowMoreButtonVisible(!isShowMoreButtonVisible)
