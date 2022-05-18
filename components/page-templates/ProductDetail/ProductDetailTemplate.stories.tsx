@@ -7,7 +7,7 @@ import ProductDetailTemplate from './ProductDetailTemplate'
 import { ProductCustom } from '@/lib/types'
 
 export default {
-  title: 'Page Template/Product Detail',
+  title: 'Page Templates/Product Detail',
   component: ProductDetailTemplate,
 } as ComponentMeta<typeof ProductDetailTemplate>
 
