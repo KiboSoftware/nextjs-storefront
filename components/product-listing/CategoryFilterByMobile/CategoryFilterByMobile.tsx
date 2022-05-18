@@ -3,7 +3,7 @@ import React from 'react'
 import { Box, Button, Skeleton, Typography } from '@mui/material'
 import { useTranslation } from 'next-i18next'
 
-import { FacetList } from '@/components/category'
+import { FacetList } from '@/components/product-listing'
 
 import type { Facet as FacetType } from '@/lib/gql/types'
 

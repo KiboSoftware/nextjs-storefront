@@ -6,7 +6,7 @@ import { facetList } from '../../../__mocks__/stories/facetListMock'
 import CategoryFilterByMobile from './CategoryFilterByMobile'
 
 export default {
-  title: 'category/CategoryFilterByMobile',
+  title: 'product-listing/CategoryFilterByMobile',
   component: CategoryFilterByMobile,
   argTypes: { onChange: { action: 'onChange' } },
   parameters: {

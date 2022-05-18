@@ -7,9 +7,9 @@ import { Grid, MenuItem, Typography, Box, Button, SxProps, Skeleton } from '@mui
 import { Theme } from '@mui/material/styles'
 import { useTranslation } from 'next-i18next'
 
-import { CategoryFacet, CategoryFilterByMobile, FacetList } from '@/components/category'
 import KiboSelect from '@/components/common/KiboSelect/KiboSelect'
 import KiboBreadcrumbs, { Breadcrumb } from '@/components/core/Breadcrumbs/Breadcrumbs'
+import { CategoryFacet, CategoryFilterByMobile, FacetList } from '@/components/product-listing'
 import ProductCard, { ProductCardProps } from '@/components/product/ProductCard/ProductCard'
 
 import type { Facet as FacetType } from '@/lib/gql/types'

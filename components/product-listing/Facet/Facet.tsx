@@ -16,7 +16,7 @@ import { Box } from '@mui/system'
 import { useTranslation } from 'next-i18next'
 
 import SearchBar from '../../common/SearchBar/SearchBar'
-import { FacetItemList } from '@/components/category'
+import { FacetItemList } from '@/components/product-listing'
 
 import type { Facet as FacetType, FacetValue, Maybe } from '@/lib/gql/types'
 

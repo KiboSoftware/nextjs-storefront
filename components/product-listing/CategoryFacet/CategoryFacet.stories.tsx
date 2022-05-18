@@ -6,7 +6,7 @@ import { categoryFacet } from '../../../__mocks__/stories/categoryFacetDataMock'
 import CategoryFacet from './CategoryFacet'
 
 export default {
-  title: 'category/CategoryFacet',
+  title: 'product-listing/CategoryFacet',
   component: CategoryFacet,
   argTypes: {
     onCategoryChildrenSelection: { action: 'clicked' },

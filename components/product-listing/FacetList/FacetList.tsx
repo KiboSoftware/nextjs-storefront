@@ -4,7 +4,7 @@ import CloseIcon from '@mui/icons-material/Close'
 import { Stack, Box, Typography, useMediaQuery, useTheme } from '@mui/material'
 import { useTranslation } from 'next-i18next'
 
-import { Facet } from '@/components/category'
+import { Facet } from '@/components/product-listing'
 
 import type { Facet as FacetType } from '@/lib/gql/types'
 

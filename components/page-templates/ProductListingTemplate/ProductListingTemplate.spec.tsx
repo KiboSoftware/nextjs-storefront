@@ -14,9 +14,9 @@ const ProductCardMock = () => <div data-testid="product-card-component" />
 const CategoryFacetMock = () => <div data-testid="category-facet-component" />
 const CategoryFilterByMobileMock = () => <div data-testid="category-filterby-mobile-component" />
 
-jest.mock('../../category/CategoryFacet/CategoryFacet', () => CategoryFacetMock)
+jest.mock('../../product-listing/CategoryFacet/CategoryFacet', () => CategoryFacetMock)
 jest.mock(
-  '../../category/CategoryFilterByMobile/CategoryFilterByMobile',
+  '../../product-listing/CategoryFilterByMobile/CategoryFilterByMobile',
   () => CategoryFilterByMobileMock
 )
 jest.mock('../../core/Breadcrumbs/Breadcrumbs', () => KiboBreadcrumbsMock)

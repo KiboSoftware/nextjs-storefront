@@ -6,7 +6,7 @@ import FacetItemList from './FacetItemList'
 
 // Common
 export default {
-  title: 'Category/FacetItemList',
+  title: 'product-listing/FacetItemList',
   component: FacetItemList,
 } as ComponentMeta<typeof FacetItemList>
 
