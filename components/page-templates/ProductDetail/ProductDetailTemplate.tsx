@@ -30,8 +30,7 @@ import ProductOptionTextBox from '@/components/product/ProductOptionTextBox/Prod
 import ProductRecommendations from '@/components/product/ProductRecommendations/ProductRecommendations'
 import ProductVariantSizeSelector from '@/components/product/ProductVariantSizeSelector/ProductVariantSizeSelector'
 import { productGetters } from '@/lib/getters'
-import type { ProductCustom } from '@/lib/types'
-import { ProductProperties } from '@/lib/types/ProductProperties'
+import type { ProductProperties, ProductCustom } from '@/lib/types'
 
 import type {
   AttributeDetail,
