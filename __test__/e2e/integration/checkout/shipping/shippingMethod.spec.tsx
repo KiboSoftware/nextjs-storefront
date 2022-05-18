@@ -1,4 +1,4 @@
-import React, { ReactNode } from 'react'
+import React from 'react'
 
 import { composeStories } from '@storybook/testing-react'
 import { fireEvent, render, screen, within } from '@testing-library/react'
@@ -9,33 +9,23 @@ import {
   pickupItems,
   getShippingRates,
 } from '../../../../../__mocks__/productItemListMockData'
+import { ShippingMethodProps } from '@/components/checkout/Shipping/OrderItems/ShippingMethod'
 import * as stories from '@/components/checkout/Shipping/OrderItems/ShippingMethod.stories'
-
-import type { CrProductOption, ShippingRate } from '@/lib/gql/types'
-
-interface ProductItemProps {
-  image: string
-  name: string
-  options: CrProductOption[]
-  price?: string
-  salePrice?: string
-  children?: ReactNode
-}
-
-interface ShippingMethodProps {
-  shipItems: ProductItemProps[]
-  pickupItems: ProductItemProps[]
-  orderShipmentMethods: ShippingRate[]
-  onChange: (name: string, value: string) => void
-}
 
 const { Common } = composeStories(stories)
 const onChangeMock = jest.fn()
+const onClickStoreLocatorMock = jest.fn()
 
 describe('[component] - ShippingMethod', () => {
   const setup = (params?: ShippingMethodProps) => {
     const props = params ? params : Common.args
-    render(<Common {...props} onShippingMethodChange={onChangeMock} />)
+    render(
+      <Common
+        {...props}
+        onShippingMethodChange={onChangeMock}
+        onClickStoreLocator={onClickStoreLocatorMock}
+      />
+    )
   }
 
   it('should render component', () => {
@@ -69,7 +59,7 @@ describe('[component] - ShippingMethod', () => {
       shipItems: shipItems,
       pickupItems: [],
       orderShipmentMethods: getShippingRates.orderShipmentMethods,
-      onChange: (name: string, value: string) => ({ name, value }),
+      onShippingMethodChange: (name: string, value: string) => ({ name, value }),
     }
 
     setup(params)
@@ -111,5 +101,18 @@ describe('[component] - ShippingMethod', () => {
     const headings = screen.getAllByRole('heading')
     expect(products.length).toBe(3)
     expect(headings.length).toBe(3)
+  })
+
+  it('should call onClickStoreLocatorMock when click onClickStoreLocator for pickupitems only', () => {
+    const params = {
+      shipItems: shipItems,
+      pickupItems: pickupItems,
+      orderShipmentMethods: getShippingRates.orderShipmentMethods,
+      onChange: (name: string, value: string) => ({ name, value }),
+    }
+    setup(params)
+    const changeStore = screen.getByTestId('change-store-MS-BTL-004')
+    userEvent.click(changeStore)
+    expect(onClickStoreLocatorMock).toHaveBeenCalled()
   })
 })

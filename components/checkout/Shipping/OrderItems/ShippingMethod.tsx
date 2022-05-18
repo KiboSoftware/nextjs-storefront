@@ -21,7 +21,7 @@ export type ShipItemListProps = {
 }
 export type PickupItemListProps = {
   pickupItems: ProductItemProps[]
-  clickChageStore?: () => void
+  onClickChangeStore?: () => void
 }
 
 const styles = {
@@ -65,7 +65,7 @@ const ShipItemList = (shipProps: ShipItemListProps) => {
 }
 
 const PickupItemList = (pickupProps: PickupItemListProps) => {
-  const { pickupItems, clickChageStore } = pickupProps
+  const { pickupItems, onClickChangeStore } = pickupProps
   const { t } = useTranslation('common')
 
   return (
@@ -77,7 +77,7 @@ const PickupItemList = (pickupProps: PickupItemListProps) => {
         </Typography>
       </Box>
       <Box>
-        <ProductItemList items={pickupItems} clickChageStore={clickChageStore} />
+        <ProductItemList items={pickupItems} onClickChangeStore={onClickChangeStore} />
       </Box>
     </Box>
   )
@@ -105,7 +105,7 @@ const ShippingMethod = (props: ShippingMethodProps) => {
       )}
 
       {pickupItems?.length ? (
-        <PickupItemList pickupItems={pickupItems} clickChageStore={onClickStoreLocator} />
+        <PickupItemList pickupItems={pickupItems} onClickChangeStore={onClickStoreLocator} />
       ) : (
         ''
       )}

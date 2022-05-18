@@ -11,8 +11,10 @@ const { Common, WithoutDetailOption, WithPriceLabel, WithChageStoreOption } =
 
 const priceMock = () => <div data-testid="price-component" />
 jest.mock('@/components/common/Price/Price', () => priceMock)
+
 const productOptionListMock = () => <div data-testid="product-option-list-component" />
 jest.mock('@/components/product/ProductOptionList/ProductOptionList', () => productOptionListMock)
+
 const onClickStoreLocatorMock = jest.fn()
 
 describe('[component] - ProductItem', () => {
@@ -49,7 +51,7 @@ describe('[component] - ProductItem', () => {
         onClickStoreLocator={onClickStoreLocatorMock}
       />
     )
-    const changeStore = screen.getByTestId('change-store')
+    const changeStore = screen.getByTestId('change-store-MS-BTL-002')
 
     userEvent.click(changeStore)
     expect(onClickStoreLocatorMock).toHaveBeenCalled()

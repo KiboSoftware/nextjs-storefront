@@ -21,6 +21,8 @@ import DefaultImage from '@/public/product_placeholder.svg'
 
 import type { CrProductOption } from '@/lib/gql/types'
 export interface ProductItemProps {
+  id: string
+  productCode: string
   image: string
   name: string
   options: CrProductOption[]
@@ -61,6 +63,8 @@ const ProductLabel = (props: { label: string }) => (
 
 const ProductItem = (props: ProductItemProps) => {
   const {
+    id,
+    productCode,
     image,
     name,
     options,
@@ -80,7 +84,7 @@ const ProductItem = (props: ProductItemProps) => {
   const [expanded, setExpanded] = useState<boolean>(true)
 
   return (
-    <Box>
+    <Box key={id}>
       <Box sx={{ display: 'flex', pb: 2, pr: 1, gap: '3%', flex: 1 }}>
         <Box sx={{ ...styles.imageContainer }}>
           <KiboImage
@@ -168,7 +172,7 @@ const ProductItem = (props: ProductItemProps) => {
           <Box px={2}>
             <Link
               component="button"
-              data-testid="change-store"
+              data-testid={'change-store-' + productCode}
               variant="caption"
               color="text.primary"
               onClick={onClickStoreLocator}

@@ -275,6 +275,8 @@ const getExpectedDeliveryDate = (item: CrOrderItem) => {
 
 const getProductDetails = (item: CrOrderItem) => {
   return {
+    id: item.id,
+    productCode: item?.product?.productCode,
     image: item.product?.imageUrl || DefaultImage,
     name: item.product?.name || '',
     options: item.product?.options as Array<CrProductOption>,
@@ -286,6 +288,8 @@ const getProductDetails = (item: CrOrderItem) => {
 
 const getProductDetailsWithoutLabel = (item: CrOrderItem) => {
   return {
+    id: item.id,
+    productCode: item?.product?.productCode,
     image: item.product?.imageUrl || DefaultImage,
     name: item.product?.name || '',
     options: item.product?.options as Array<CrProductOption>,
