@@ -30,6 +30,10 @@ interface PaymentStepProps {
   onSave: (data: Address) => void
   onSaveCardPayment: (data: CardPaymentDetails) => void
 }
+interface PaymentTypeProps {
+  id: string
+  name: string
+}
 
 const StyledHeadings = styled(Typography)(() => ({
   width: '100%',
@@ -115,7 +119,7 @@ const PaymentStep = (props: PaymentStepProps) => {
           onChange={handlePaymentMethod}
           data-testid="payment-types"
         >
-          {paymentMethods.map((paymentMethod) => {
+          {paymentMethods.map((paymentMethod: PaymentTypeProps) => {
             return (
               <FormControlLabel
                 key={paymentMethod.id}

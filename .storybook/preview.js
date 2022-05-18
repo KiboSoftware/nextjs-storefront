@@ -14,6 +14,10 @@ import { publicRuntimeConfig } from '../next.config'
 import storefrontTheme from '../styles/theme'
 import i18n from './i18n'
 
+import { setConfig } from 'next/config'
+import { publicRuntimeConfig } from '../next.config'
+setConfig({ publicRuntimeConfig })
+
 const OriginalNextImage = NextImage.default
 
 Object.defineProperty(NextImage, 'default', {
