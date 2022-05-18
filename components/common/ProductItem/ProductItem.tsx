@@ -19,10 +19,10 @@ import Price from '@/components/common/Price/Price'
 import ProductOptionList from '@/components/product/ProductOptionList/ProductOptionList'
 import DefaultImage from '@/public/product_placeholder.svg'
 
-import type { CrProductOption } from '@/lib/gql/types'
+import type { CrProductOption, Maybe } from '@/lib/gql/types'
 export interface ProductItemProps {
-  id: string
-  productCode: string
+  id?: Maybe<string>
+  productCode?: Maybe<string>
   image: string
   name: string
   options: CrProductOption[]

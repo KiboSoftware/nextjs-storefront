@@ -80,7 +80,7 @@ describe('[component] - ShippingMethod', () => {
       shipItems: [],
       pickupItems: pickupItems,
       orderShipmentMethods: getShippingRates.orderShipmentMethods,
-      onChange: (name: string, value: string) => ({ name, value }),
+      onShippingMethodChange: (name: string, value: string) => ({ name, value }),
     }
 
     setup(params)
@@ -93,7 +93,7 @@ describe('[component] - ShippingMethod', () => {
       shipItems: shipItems,
       pickupItems: pickupItems,
       orderShipmentMethods: getShippingRates.orderShipmentMethods,
-      onChange: (name: string, value: string) => ({ name, value }),
+      onShippingMethodChange: (name: string, value: string) => ({ name, value }),
     }
 
     setup(params)
@@ -108,7 +108,7 @@ describe('[component] - ShippingMethod', () => {
       shipItems: shipItems,
       pickupItems: pickupItems,
       orderShipmentMethods: getShippingRates.orderShipmentMethods,
-      onChange: (name: string, value: string) => ({ name, value }),
+      onShippingMethodChange: (name: string, value: string) => ({ name, value }),
     }
     setup(params)
     const changeStore = screen.getByTestId('change-store-MS-BTL-004')
