@@ -1,4 +1,4 @@
-import React, { ReactNode } from 'react'
+import React from 'react'
 
 import { composeStories } from '@storybook/testing-react'
 import { render, screen } from '@testing-library/react'
@@ -9,37 +9,29 @@ import {
   getShippingRates,
 } from '../../../../__mocks__/productItemListMockData'
 import * as stories from './ShippingMethod.stories'
-
-import type { CrProductOption, ShippingRate } from '@/lib/gql/types'
-
-interface ProductItemProps {
-  image: string
-  name: string
-  options: CrProductOption[]
-  price?: string
-  salePrice?: string
-  children?: ReactNode
-}
-
-interface ShippingMethodProps {
-  shipItems: ProductItemProps[]
-  pickupItems: ProductItemProps[]
-  orderShipmentMethods: ShippingRate[]
-  onChange: (name: string, value: string) => void
-}
+import { ShippingMethodProps } from '@/components/checkout/Shipping/OrderItems/ShippingMethod'
 
 const { Common } = composeStories(stories)
+
 const onChangeMock = jest.fn()
+const onClickStoreLocatorMock = jest.fn()
 
 const KiboSelectMock = () => <div data-testid="kibo-select-component" />
 jest.mock('@/components/common/KiboSelect/KiboSelect', () => KiboSelectMock)
+
 const productItemMock = () => <div data-testid="product-item-component" />
 jest.mock('@/components/common/ProductItem/ProductItem', () => productItemMock)
 
 describe('[component] - ShippingMethod', () => {
   const setup = (params?: ShippingMethodProps) => {
     const props = params ? params : Common.args
-    render(<Common {...props} onShippingMethodChange={onChangeMock} />)
+    render(
+      <Common
+        {...props}
+        onShippingMethodChange={onChangeMock}
+        onClickStoreLocator={onClickStoreLocatorMock}
+      />
+    )
   }
 
   it('should render component', () => {

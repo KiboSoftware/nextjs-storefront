@@ -79,6 +79,8 @@ const TemplateWithPriceLabel: ComponentStory<typeof ProductItem> = (args) => (
 
 export const Common = Template.bind({})
 Common.args = {
+  id: cartItem?.id,
+  productCode: cartItem?.product?.productCode,
   image: cartItem.product?.imageUrl || DefaultImage,
   name: cartItem.product?.name || '',
   options: cartItem.product?.options as Array<CrProductOption>,
