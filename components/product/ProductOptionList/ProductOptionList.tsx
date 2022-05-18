@@ -11,8 +11,8 @@ const ProductOptionList = (props: ProductOptionListProps) => {
 
   return (
     <>
-      {options.map((option: CrProductOption, index: number) => (
-        <ProductOption key={index} option={option} />
+      {options.map((option: CrProductOption) => (
+        <ProductOption key={option.value} option={option} />
       ))}
     </>
   )

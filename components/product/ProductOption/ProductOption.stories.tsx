@@ -20,7 +20,6 @@ const productOption: CrProductOption = {
 // Default Line Item
 const Template: ComponentStory<typeof ProductOption> = (args) => <ProductOption {...args} />
 
-// Shopping cart: Show Price below the product name
 export const Common = Template.bind({})
 Common.args = {
   option: productOption,
