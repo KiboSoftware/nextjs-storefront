@@ -5,14 +5,11 @@ import { composeStories } from '@storybook/testing-react'
 import { render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 
-import * as stories from './MegaMenu.stories'
+import * as stories from '../../../../../components/layout/MegaMenu/MegaMenu.stories'
 
 const { Common } = composeStories(stories)
 
-const megaMenuItemMock = () => <div data-testid="mega-menu-item-component" />
-jest.mock('@/components/layout/MegaMenuItem/MegaMenuItem', () => megaMenuItemMock)
-
-describe('[components] - MegaMenu', () => {
+describe('[components] - MegaMenu Integration', () => {
   const setIsBackdropOpenMock = jest.fn((isOpen) => {
     return isOpen
   })
@@ -33,7 +30,7 @@ describe('[components] - MegaMenu', () => {
     expect(menuItems).toHaveLength(categoryTree.length)
   })
 
-  it('should display menu items and advertisment while hovering on category', () => {
+  it('should display menu items and advertisment while hovering on category', async () => {
     setup()
 
     const category = Common.args?.categoryTree?.filter((c) => c.isDisplayed === true) || []
@@ -41,7 +38,12 @@ describe('[components] - MegaMenu', () => {
     const menuItems = screen.getAllByRole('group')
     userEvent.hover(menuItems[0])
 
-    const megaMenuItems = screen.getAllByTestId('mega-menu-item-component')
-    expect(megaMenuItems).toHaveLength(childrenCategories.length)
+    childrenCategories.map((cat) => {
+      const name = screen.getByText(cat?.content?.name || '')
+      expect(name).toBeVisible()
+    })
+
+    const advertisment = screen.getByText('advertisment')
+    expect(advertisment).toBeVisible()
   })
 })
