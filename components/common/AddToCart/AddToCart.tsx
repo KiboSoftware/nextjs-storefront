@@ -7,7 +7,7 @@ const AddToCart = (props: any) => {
   return (
     <>
       <Button color="primary">Test</Button>
-      <StyledButton color="primary">AddToCart</StyledButton>
+      <StyledButton color="primary">AddToCartt</StyledButton>
     </>
   )
 }
