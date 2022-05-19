@@ -1,23 +1,31 @@
 import React, { useState, useEffect } from 'react'
 
-import {
-  Box,
-  Divider,
-  List,
-  ListItem,
-  ListItemText,
-  Stack,
-  Typography,
-  Toolbar,
-} from '@mui/material'
+import { Box, Divider, ListItem, ListItemText, Typography, Toolbar, styled } from '@mui/material'
 import { usePopupState, bindHover, bindPopover } from 'material-ui-popup-state/hooks'
 import HoverPopover from 'material-ui-popup-state/HoverPopover'
 import { useTranslation } from 'next-i18next'
 
+import MegaMenuItem from '../MegaMenuItem/MegaMenuItem'
 import KiboImage from '@/components/common/KiboImage/KiboImage'
 import DefaultImage from '@/public/product_placeholder.svg'
 
 import { PrCategory } from '@/lib/gql/types'
+
+const StyledToolbar = styled(Toolbar)(({ theme }) => ({
+  '&.MuiToolbar-root': {
+    backgroundColor: theme.palette.common.white,
+    position: 'relative',
+    overflow: 'hidden',
+    minHeight: 59,
+    display: 'flex',
+    borderBottomWidth: 1,
+    borderBottomStyle: 'solid',
+    borderBottomColor: theme.palette.grey[300],
+    paddingInline: 2,
+    flexWrap: 'wrap',
+    gap: 3,
+  },
+}))
 
 const style = {
   listItem: {
@@ -26,10 +34,21 @@ const style = {
     paddingBottom: 1.25,
     cursor: 'pointer',
     borderBottom: '4px solid transparent',
-    '&:hover': {
+    '&.Mui-selected': {
       borderBottom: '4px solid',
       borderBottomColor: 'primary.main',
+      background: 'transparent',
     },
+  },
+  popoverPaper: {
+    width: '92.5%',
+    minHeight: 100,
+    marginTop: 1.1,
+    paddingInline: 3,
+    borderRadius: 0,
+    boxShadow: 'none',
+    borderTop: '1px solid',
+    borderTopColor: 'grey.300',
   },
 }
 interface MegaMenuProps {
@@ -37,55 +56,22 @@ interface MegaMenuProps {
   setIsBackdropOpen: (isOpen: boolean) => void
 }
 
-interface MenuItemProps {
+interface MegaMenuCategoryProps {
   category: PrCategory
   setIsBackdropOpen: (isOpen: boolean) => void
+  activeCategory: string
+  setActiveCategory: (activeCategory: string) => void
 }
 
-const MegaMenu = (props: MegaMenuProps) => {
-  const { categoryTree, setIsBackdropOpen } = props
-  const [allCategories] = useState<PrCategory[]>(categoryTree?.filter((item) => item.isDisplayed))
-
-  return (
-    <>
-      <Toolbar
-        sx={{
-          backgroundColor: 'common.white',
-          position: 'relative',
-          overflow: 'hidden',
-          minHeight: 59,
-          display: 'flex',
-          borderBottomWidth: 1,
-          borderBottomStyle: 'solid',
-          borderBottomColor: 'grey.300',
-          paddingInline: 2,
-          flexWrap: 'wrap',
-          gap: 3,
-        }}
-        data-testid="megamenu-container"
-      >
-        {allCategories?.map((category) => (
-          <MegaMenuItem
-            key={category.categoryCode}
-            category={category}
-            setIsBackdropOpen={setIsBackdropOpen}
-          />
-        ))}
-      </Toolbar>
-    </>
-  )
-}
-export default MegaMenu
-
-export const MegaMenuItem = (props: MenuItemProps) => {
-  const { category, setIsBackdropOpen } = props
+const MegaMenuCategory = (props: MegaMenuCategoryProps) => {
+  const { category, setIsBackdropOpen, activeCategory, setActiveCategory } = props
   const childrenCategories = category.childrenCategories as PrCategory[]
 
   const { t } = useTranslation('common')
 
   const popupState = usePopupState({
     variant: 'popover',
-    popupId: 'megaMenu',
+    popupId: category.content?.name,
   })
 
   useEffect(() => {
@@ -95,24 +81,18 @@ export const MegaMenuItem = (props: MenuItemProps) => {
   return (
     <>
       <Box {...bindHover(popupState)} role="group" color="grey.900">
-        <ListItem id="menuItem" sx={{ ...style.listItem }}>
+        <ListItem
+          id="menuCategory"
+          sx={{ ...style.listItem }}
+          onMouseOver={() => setActiveCategory(category.content?.name || '')}
+          selected={popupState.isOpen && category.content?.name === activeCategory}
+        >
           <ListItemText primary={category.content?.name} />
         </ListItem>
         {childrenCategories.length ? (
           <HoverPopover
             {...bindPopover(popupState)}
-            PaperProps={{
-              sx: {
-                width: '92.5%',
-                minHeight: 100,
-                marginTop: 1.1,
-                paddingInline: 3,
-                borderRadius: 0,
-                boxShadow: 'none',
-                borderTop: '1px solid',
-                borderTopColor: 'grey.300',
-              },
-            }}
+            PaperProps={{ sx: { ...style.popoverPaper } }}
             anchorOrigin={{
               vertical: 'bottom',
               horizontal: 'center',
@@ -126,10 +106,11 @@ export const MegaMenuItem = (props: MenuItemProps) => {
               <Box display="flex" flex={3} flexWrap={'wrap'}>
                 {childrenCategories?.map((cat) => {
                   return (
-                    <MegaMenuChildren
+                    <MegaMenuItem
                       key={cat?.categoryCode}
                       title={cat?.content?.name as string}
                       categoryChildren={cat?.childrenCategories as PrCategory[]}
+                      categoryCode={cat?.categoryCode as string}
                     />
                   )
                 })}
@@ -155,36 +136,31 @@ export const MegaMenuItem = (props: MenuItemProps) => {
     </>
   )
 }
-export const MegaMenuChildren = ({
-  title,
-  categoryChildren,
-}: {
-  title: string
-  categoryChildren: PrCategory[]
-}) => {
-  const { t } = useTranslation('common')
+
+const MegaMenu = (props: MegaMenuProps) => {
+  const { categoryTree, setIsBackdropOpen } = props
+  const [allCategories] = useState<PrCategory[]>(categoryTree?.filter((item) => item.isDisplayed))
+
+  const [activeCategory, setActiveCategory] = useState('')
+
+  useEffect(() => {
+    document.getElementById('menuCategory')
+  }, [activeCategory])
 
   return (
-    <Stack alignItems={'flex-start'}>
-      <List dense>
-        <ListItem>
-          <ListItemText
-            primary={title}
-            primaryTypographyProps={{ variant: 'subtitle2', fontWeight: 'bold' }}
+    <>
+      <StyledToolbar data-testid="megamenu-container">
+        {allCategories?.map((category) => (
+          <MegaMenuCategory
+            key={category.categoryCode}
+            category={category}
+            setIsBackdropOpen={setIsBackdropOpen}
+            activeCategory={activeCategory}
+            setActiveCategory={setActiveCategory}
           />
-        </ListItem>
-        <ListItem sx={{ cursor: 'pointer' }}>
-          <ListItemText primary={t('shop-all')} primaryTypographyProps={{ variant: 'subtitle2' }} />
-        </ListItem>
-        {categoryChildren?.map((cat) => (
-          <ListItem key={cat.categoryId} sx={{ cursor: 'pointer' }}>
-            <ListItemText
-              primary={cat?.content?.name}
-              primaryTypographyProps={{ variant: 'subtitle2' }}
-            />
-          </ListItem>
         ))}
-      </List>
-    </Stack>
+      </StyledToolbar>
+    </>
   )
 }
+export default MegaMenu

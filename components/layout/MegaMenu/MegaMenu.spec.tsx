@@ -9,6 +9,9 @@ import * as stories from './MegaMenu.stories'
 
 const { Common } = composeStories(stories)
 
+const megaMenuItemMock = () => <div data-testid="mega-menu-item-component" />
+jest.mock('@/components/layout/MegaMenuItem/MegaMenuItem', () => megaMenuItemMock)
+
 describe('[components] - MegaMenu', () => {
   const setIsBackdropOpenMock = jest.fn((isOpen) => {
     return isOpen
@@ -20,53 +23,28 @@ describe('[components] - MegaMenu', () => {
   it('should render component', () => {
     setup()
 
-    const categoryTree = Common.args?.categoryTree || []
-    const categoryTreeCount = categoryTree?.filter((c) => c.isDisplayed).length || 0
-    const menuItems = screen.getAllByRole('group')
-
-    expect(menuItems).toHaveLength(categoryTreeCount)
-  })
-
-  it('should display category names', () => {
-    setup()
-
     const categoryTree = Common.args?.categoryTree?.filter((c) => c.isDisplayed === true) || []
     categoryTree.forEach((cat) => {
       const name = screen.getByText(`${cat.content?.name}`)
       expect(name).toBeVisible()
     })
+
+    const menuItems = screen.getAllByRole('group')
+    expect(menuItems).toHaveLength(categoryTree.length)
   })
 
-  it('should display children category titles on the modal while hovering on category', () => {
+  it('should display menu items and advertisment while hovering on category', () => {
     setup()
 
-    const categoryTree = Common.args?.categoryTree?.filter((c) => c.isDisplayed === true) || []
+    const category = Common.args?.categoryTree?.filter((c) => c.isDisplayed === true) || []
+    const childrenCategories = category[0]?.childrenCategories || []
     const menuItems = screen.getAllByRole('group')
     userEvent.hover(menuItems[0])
 
-    expect(setIsBackdropOpenMock).toBeCalled()
-    categoryTree[0].childrenCategories?.map((cat) => {
-      const name = screen.getByText(`${cat?.content?.name}`)
-      expect(name).toBeVisible()
-    })
+    const megaMenuItems = screen.getAllByTestId('mega-menu-item-component')
+    expect(megaMenuItems).toHaveLength(childrenCategories.length)
 
     const advertisment = screen.getByText('advertisment')
-    const shopAll = screen.getAllByText('shop-all')
     expect(advertisment).toBeVisible()
-    expect(shopAll).toHaveLength(categoryTree[0].childrenCategories?.length || 0)
-  })
-
-  it('should display sub-categories along with shop all option on the modal', () => {
-    setup()
-
-    const categoryTree = Common.args?.categoryTree?.filter((c) => c.isDisplayed === true) || []
-    const childrenCategories = categoryTree[0] || []
-    const menuItems = screen.getAllByRole('group')
-    userEvent.hover(menuItems[0])
-
-    childrenCategories?.childrenCategories?.map((cat) => {
-      const name = screen.getByText(`${cat?.content?.name}`)
-      expect(name).toBeVisible()
-    })
   })
 })

@@ -8,7 +8,7 @@ export const categoryTreeDataMock = {
         updateDate: '',
         categoryId: 1,
         categoryCode: 'M',
-        isDisplayed: null,
+        isDisplayed: true,
         content: {
           name: 'Men',
           slug: 'mens',
@@ -141,7 +141,7 @@ export const categoryTreeDataMock = {
         updateDate: '',
         categoryId: 2,
         categoryCode: '27',
-        isDisplayed: true,
+        isDisplayed: null,
         content: {
           name: 'Camping',
           slug: 'camping',
