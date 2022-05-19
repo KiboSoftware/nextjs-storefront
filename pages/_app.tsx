@@ -1,4 +1,4 @@
-import * as React from 'react'
+import React, { useState } from 'react'
 
 import { CacheProvider, EmotionCache } from '@emotion/react'
 import { Container } from '@mui/material'
@@ -13,20 +13,23 @@ import createEmotionCache from '../lib/createEmotionCache'
 import { generateQueryClient } from '../lib/react-query/queryClient'
 import theme from '../styles/theme'
 import { KiboHeader } from '@/components/layout'
+
+import type { CategoryCollection, Maybe, PrCategory } from '@/lib/gql/types'
 // Client-side cache, shared for the whole session of the user in the browser.
 const clientSideEmotionCache = createEmotionCache()
 
 interface KiboAppProps extends AppProps {
   emotionCache?: EmotionCache
-  onInitialData?: any
 }
 
 const App = (props: KiboAppProps) => {
-  const { Component, emotionCache = clientSideEmotionCache, pageProps, onInitialData } = props
-  const [queryClient] = React.useState(() => generateQueryClient())
+  const { Component, emotionCache = clientSideEmotionCache, pageProps } = props
+  const [categoriesTree, onLoadCategories] = useState<Maybe<PrCategory>[]>([])
+  const [queryClient] = useState(() => generateQueryClient())
 
-  const handleInitialData = (value: any) => {
-    console.log('app', value)
+  const handleLoadCategoriesTree = (categories: CategoryCollection) => {
+    const categoriesItems = (categories && categories.items) || []
+    onLoadCategories(categoriesItems)
   }
 
   return (
@@ -59,9 +62,10 @@ const App = (props: KiboAppProps) => {
                   text: 'Nav Link 3',
                 },
               ]}
+              categoriesTree={categoriesTree || []}
             />
             <Container maxWidth={'lg'}>
-              <Component {...pageProps} onInitialData={handleInitialData} />
+              <Component {...pageProps} onLoadCategoriesTree={handleLoadCategoriesTree} />
             </Container>
           </Hydrate>
         </QueryClientProvider>
