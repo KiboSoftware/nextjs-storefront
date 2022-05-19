@@ -1,5 +1,5 @@
-import { setGlobalConfig } from '@storybook/testing-react'
 import { loadEnvConfig } from '@next/env'
+import { setGlobalConfig } from '@storybook/testing-react'
 
 import * as globalStorybookConfig from './.storybook/preview'
 import '@testing-library/jest-dom'

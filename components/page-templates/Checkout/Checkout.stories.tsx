@@ -16,5 +16,5 @@ const Template: ComponentStory<typeof Checkout> = (args) => <Checkout {...args} 
 // Default
 export const Common = Template.bind({})
 Common.args = {
-  checkout: orderMock,
+  checkout: undefined,
 }

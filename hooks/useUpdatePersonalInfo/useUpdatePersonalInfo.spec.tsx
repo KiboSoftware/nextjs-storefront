@@ -9,7 +9,7 @@ describe('[hooks] useUpdatePersonalInfo', () => {
     const personalInfo = {
       orderId: 'OrderId-1',
       updateMode: '',
-      orderInput: orderMock,
+      orderInput: orderMock.checkout,
     }
 
     renderHook(

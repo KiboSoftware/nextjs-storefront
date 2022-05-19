@@ -2,8 +2,8 @@ import { request } from 'graphql-request'
 import { useQuery } from 'react-query'
 
 import { makeGraphQLClient } from '@/lib/gql/client'
-import { querykeys } from '@/lib/react-query/queryKeys'
 import { getCheckoutQuery, getOrCreateCheckoutFromCartMutation } from '@/lib/gql/queries'
+import { querykeys } from '@/lib/react-query/queryKeys'
 
 import type { Order } from '@/lib/gql/types'
 interface UseCheckout {
@@ -18,6 +18,7 @@ export interface UseCheckoutResponse {
 
 const getOrCreateCheckout = async (cartId?: string | null, checkoutId?: string | null) => {
   const client = makeGraphQLClient()
+
   const response = await client.request({
     document: checkoutId ? getCheckoutQuery : getOrCreateCheckoutFromCartMutation,
     variables: checkoutId ? { checkoutId } : { cartId },
