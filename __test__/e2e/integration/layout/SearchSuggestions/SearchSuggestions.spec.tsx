@@ -4,18 +4,25 @@ import '@testing-library/jest-dom'
 import { composeStories } from '@storybook/testing-react'
 import { render, screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
+import { RouterContext } from 'next/dist/shared/lib/router-context'
 
 import { searchSuggestionResult } from '../../../../../__mocks__/stories/searchSuggestionResultMock'
 import * as stories from '../../../../../components/layout/SearchSuggestions/SearchSuggestions.stories'
+import { createMockRouter } from './../../../../utils/createMockRouter'
 
 const { Common } = composeStories(stories)
 
 describe('[components] - SearchSuggestions Integration', () => {
+  const router = createMockRouter()
   const userEnteredText = 'T'
   const searchSuggestions = searchSuggestionResult
 
   const setup = () => {
-    render(<Common />)
+    render(
+      <RouterContext.Provider value={router}>
+        <Common />
+      </RouterContext.Provider>
+    )
 
     return {
       searchSuggestions,
@@ -114,5 +121,25 @@ describe('[components] - SearchSuggestions Integration', () => {
     expect(input).toHaveValue(userEnteredText)
     userEvent.click(backdrop)
     await waitFor(() => expect(screen.queryByRole('contentinfo')).not.toBeInTheDocument())
+  })
+
+  it('should route to another page when user clicks on item', async () => {
+    setup()
+
+    const input = screen.getByRole('textbox', { name: 'search-input' })
+    userEvent.type(input, userEnteredText)
+    expect(input).toHaveValue(userEnteredText)
+
+    const suggestionGroups =
+      searchSuggestions.suggestionGroups?.filter((sg) => sg?.name === 'categories') || []
+    suggestionGroups[0]?.suggestions?.map(async (s) => {
+      expect(screen.getByText(s?.suggestion?.productName)).toBeVisible()
+
+      const button = await screen.findByRole('button')
+      expect(button).toBeEnabled()
+      userEvent.click(button)
+
+      expect(router.push).toHaveBeenCalledWith('/product' + s?.suggestion.categoryCode)
+    })
   })
 })

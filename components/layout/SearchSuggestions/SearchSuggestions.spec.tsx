@@ -10,10 +10,6 @@ const { Common } = composeStories(stories)
 
 const searchBarMock = () => <input data-testid="search-bar-component" name="searchInput" />
 jest.mock('../../common/SearchBar/SearchBar', () => searchBarMock)
-const listItemContentMock = () => <div data-testid="content-component" />
-jest.mock('@/components/layout/Content/Content', () => listItemContentMock)
-const listItemTitleMock = () => <div data-testid="title-component" />
-jest.mock('@/components/layout/Title/Title', () => listItemTitleMock)
 jest.mock('../../../hooks', () => ({
   useDebounce: jest.fn(() => ''),
   useSearchSuggestions: jest.fn(() => ''),
@@ -28,9 +24,11 @@ describe('[components] - SearchSuggestions', () => {
     setup()
 
     const searchBar = screen.getByTestId('search-bar-component')
-    expect(searchBar).toBeVisible()
+    const backdrop = screen.getByTestId('backdrop')
+    const contentinfo = screen.queryByRole('contentinfo')
 
-    expect(screen.queryByTestId('content-component')).not.toBeInTheDocument()
-    expect(screen.queryByTestId('title-component')).not.toBeInTheDocument()
+    expect(searchBar).toBeVisible()
+    expect(backdrop).not.toBeVisible()
+    expect(contentinfo).not.toBeInTheDocument()
   })
 })

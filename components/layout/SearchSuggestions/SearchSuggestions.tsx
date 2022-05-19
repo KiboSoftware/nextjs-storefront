@@ -1,10 +1,23 @@
 import React, { useEffect, useState } from 'react'
 
-import { Backdrop, Box, Collapse, Divider, List, Paper, Stack, SxProps, Theme } from '@mui/material'
+import {
+  Backdrop,
+  Box,
+  Collapse,
+  Divider,
+  List,
+  ListItem,
+  ListItemText,
+  Paper,
+  Stack,
+  SxProps,
+  Theme,
+  Typography,
+} from '@mui/material'
+import { useTranslation } from 'next-i18next'
+import { useRouter } from 'next/router'
 
 import { useDebounce, useSearchSuggestions } from '../../../hooks'
-import Content from '../Content/Content'
-import Title from '../Title/Title'
 import SearchBar from '@/components/common/SearchBar/SearchBar'
 
 const style = {
@@ -19,6 +32,52 @@ const style = {
   list: {
     p: 2,
   },
+  listItem: {
+    '&:focus': {
+      backgroundColor: 'transparent',
+    },
+    '&:hover': {
+      backgroundColor: 'transparent',
+    },
+  },
+  listItemText: {
+    fontSize: (theme: Theme) => theme.typography.body2,
+    margin: 0,
+  } as SxProps<Theme> | undefined,
+}
+
+interface ListItemProps {
+  heading?: string
+  code?: string
+  name?: string
+}
+
+const Title = (props: ListItemProps) => {
+  const { heading } = props
+  const { t } = useTranslation('common')
+
+  return (
+    <ListItem key="Suggestions" sx={{ ...style.listItem }}>
+      <Typography fontWeight={600} variant="subtitle1">
+        {t(heading as string)}
+      </Typography>
+    </ListItem>
+  )
+}
+
+const Content = (props: ListItemProps) => {
+  const { code, name } = props
+  const router = useRouter()
+
+  const handleClick = () => {
+    router.push('/product/' + code)
+  }
+
+  return (
+    <ListItem button key={code} onClick={handleClick}>
+      <ListItemText primary={name} sx={{ ...style.listItemText }} />
+    </ListItem>
+  )
 }
 
 const SearchSuggestions = () => {
