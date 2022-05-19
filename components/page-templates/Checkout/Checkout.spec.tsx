@@ -10,9 +10,9 @@ const KiboStepperMock = ({ children }: { children: ReactNode }) => (
   <div data-testid="kibo-stepper-mock">{children}</div>
 )
 const DetailsStepMock = () => <div data-testid="checkout-details-mock" />
-const ShippingStepMock = () => <div ref={undefined} data-testid="checkout-shipping-mock" />
-const PaymentStepMock = () => <div ref={undefined} data-testid="checkout-payment-mock" />
-const ReviewStepMock = () => <div ref={undefined} data-testid="checkout-review-mock" />
+const ShippingStepMock = () => <div data-testid="checkout-shipping-mock" />
+const PaymentStepMock = () => <div data-testid="checkout-payment-mock" />
+const ReviewStepMock = () => <div data-testid="checkout-review-mock" />
 
 jest.mock('../../checkout/KiboStepper/KiboStepper', () => KiboStepperMock)
 jest.mock('../../checkout/DetailsStep/DetailsStep', () => DetailsStepMock)

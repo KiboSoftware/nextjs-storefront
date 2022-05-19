@@ -1,11 +1,10 @@
-import React, { useState, useRef, ElementRef, ChangeEvent } from 'react'
+import React, { useState, useEffect, ChangeEvent } from 'react'
 
 import {
   Stack,
   Checkbox,
   FormControlLabel,
   styled,
-  Button,
   Radio,
   FormControl,
   RadioGroup,
@@ -14,20 +13,28 @@ import {
 import { useTranslation } from 'next-i18next'
 
 import { usePaymentTypes } from '../../../../hooks/usePaymentTypes'
+import { Action } from '../../DetailsStep/DetailsStep'
 import CardDetailsForm, {
   CardDetailsProps,
 } from '@/components/checkout/PaymentStep/CardDetailsForm/CardDetailsForm'
 import AddressForm, { Address, Contact } from '@/components/common/AddressForm/AddressForm'
 
+import type { Order } from '@/lib/gql/types'
+
 export interface CardPaymentDetails extends CardDetailsProps {
   isSavePaymentMethod: boolean
 }
+
 interface PaymentStepProps {
+  setAutoFocus?: boolean
+  stepperStatus: string
+  checkout: Order | undefined
+  onCompleteCallback: (action: Action) => void
   contact?: Contact
   countries: string[]
   isUserLoggedIn: boolean
   saveAddressLabel?: string
-  onSave: (data: Address) => void
+  onSaveAddress: (data: Address) => void
   onSaveCardPayment: (data: CardPaymentDetails) => void
 }
 interface PaymentTypeProps {
@@ -63,13 +70,10 @@ const radioStyle = {
 
 // Component
 const PaymentStep = (props: PaymentStepProps) => {
-  const { isUserLoggedIn = false, onSaveCardPayment } = props
+  const { isUserLoggedIn = false, onCompleteCallback } = props
   const { t } = useTranslation('checkout')
   const { loadPaymentTypes } = usePaymentTypes()
   const paymentMethods = loadPaymentTypes()
-  type AddressFormHanlder = ElementRef<typeof AddressForm>
-  const addressRef = useRef<AddressFormHanlder | null>(null)
-
   const [paymentDetails, setPaymentDetails] = useState({
     card: {
       cardNumber: '',
@@ -84,6 +88,25 @@ const PaymentStep = (props: PaymentStepProps) => {
     isSavePaymentMethod: false,
   })
 
+  const [billingAddress, setBillingAddress] = useState({
+    contact: {
+      firstName: '',
+      lastNameOrSurname: '',
+      address: {
+        address1: '',
+        address2: '',
+        cityOrTown: '',
+        stateOrProvince: '',
+        postalOrZipCode: '',
+        countryCode: '',
+      },
+      phoneNumbers: {
+        home: '',
+      },
+    },
+    saveAddress: false,
+  })
+
   const handleCardData = (cardData: CardDetailsProps) => {
     setPaymentDetails(Object.assign(paymentDetails, cardData))
   }
@@ -94,17 +117,33 @@ const PaymentStep = (props: PaymentStepProps) => {
     )
   }
 
-  const handleSavePayment = () => {
-    addressRef.current && addressRef.current.listener()
-    onSaveCardPayment(paymentDetails)
-  }
-
   const handlePaymentMethod = (event: ChangeEvent<HTMLInputElement>) => {
     setPaymentDetails({
       ...paymentDetails,
       ['paymentType']: event.target.value,
     })
   }
+
+  const handleSaveAddress = (addressData: Address) => {
+    setBillingAddress(addressData)
+  }
+
+  const createPaymentData = () => {
+    return {
+      address: { ...billingAddress?.contact },
+      cardInput: { ...paymentDetails },
+    }
+  }
+
+  const validatePaymentStep = () =>
+    billingAddress.contact.firstName != '' && paymentDetails.isCardDetailsValidated
+
+  useEffect(() => {
+    if (validatePaymentStep()) {
+      createPaymentData()
+      onCompleteCallback({ type: 'COMPLETE' })
+    }
+  }, [billingAddress, paymentDetails])
 
   return (
     <Stack>
@@ -133,7 +172,7 @@ const PaymentStep = (props: PaymentStepProps) => {
         </RadioGroup>
       </FormControl>
       {paymentDetails?.paymentType === 'creditcard' && (
-        <CardDetailsForm onSaveCardData={handleCardData} />
+        <CardDetailsForm {...props} onSaveCardData={handleCardData} />
       )}
 
       {isUserLoggedIn && (
@@ -152,10 +191,7 @@ const PaymentStep = (props: PaymentStepProps) => {
         {t('billing-address')}
       </StyledHeadings>
       <StyledFormControlLabel control={<Checkbox />} label={`${t('copy-shipping-address')}`} />
-      <AddressForm {...props} ref={addressRef} />
-      <Button variant="contained" onClick={handleSavePayment}>
-        Save
-      </Button>
+      <AddressForm {...props} onSaveAddress={handleSaveAddress} />
     </Stack>
   )
 }

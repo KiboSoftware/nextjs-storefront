@@ -7,7 +7,7 @@ import AddressForm, { Address, Contact } from './AddressForm'
 export default {
   component: AddressForm,
   title: 'Common/AddressForm',
-  argTypes: { onSave: { action: 'clicked' } },
+  argTypes: { onSaveAddress: { action: 'clicked' } },
 } as ComponentMeta<typeof AddressForm>
 
 const Template: ComponentStory<typeof AddressForm> = (args) => {
@@ -25,8 +25,7 @@ Common.args = {
   countries: ['US', 'AT', 'DE', 'NL'],
   isUserLoggedIn: false,
   saveAddressLabel: 'Save shipping address',
-  onSave: (data: Address) => console.log('called handleSave(data) : ', data),
-  ref: undefined,
+  onSaveAddress: (data: Address) => console.log('called handleSave(data) : ', data),
 }
 
 // With LoggedIn User

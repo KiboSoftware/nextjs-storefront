@@ -8,7 +8,7 @@ import { Address } from '@/components/common/AddressForm/AddressForm'
 export default {
   title: 'checkout/PaymentStep',
   component: PaymentStep,
-  argTypes: { onSave: { action: 'clicked' }, onSaveCardPayment: { action: 'clicked' } },
+  argTypes: { onSaveAddress: { action: 'clicked' }, onSaveCardPayment: { action: 'clicked' } },
 } as ComponentMeta<typeof PaymentStep>
 
 const Template: ComponentStory<typeof PaymentStep> = (args) => <PaymentStep {...args} />
@@ -21,6 +21,6 @@ Common.args = {
   countries: ['US', 'AT', 'DE', 'NL'],
   isUserLoggedIn: true,
   saveAddressLabel: 'Save billing address',
-  onSave: (data: Address) => data,
+  onSaveAddress: (data: Address) => console.log('###Address###', data),
   onSaveCardPayment: (data: CardPaymentDetails) => data,
 }

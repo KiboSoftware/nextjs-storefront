@@ -90,10 +90,17 @@ const Checkout = (props: CheckoutProps) => {
             stepperStatus={activeStepStatus}
             onCompleteCallback={completeStepCallback}
           />
-          <ShippingStep />
+          <ShippingStep
+            checkout={checkout}
+            stepperStatus={activeStepStatus}
+            onCompleteCallback={completeStepCallback}
+          />
           <PaymentStep
+            checkout={checkout}
+            stepperStatus={activeStepStatus}
+            onCompleteCallback={completeStepCallback}
             {...paymentStepParams}
-            onSave={handleBillingAddress}
+            onSaveAddress={handleBillingAddress}
             onSaveCardPayment={handleCardPayment}
           />
           <ReviewStep />

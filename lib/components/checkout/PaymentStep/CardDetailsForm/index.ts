@@ -12,28 +12,25 @@ const cardData = {
   paymentType: 'creditcard',
 }
 
-interface CardDataParams {
-  isValid: boolean
+export interface CardProps {
   cardNumber: string
   expiryDate: string
   cvv: string
 }
 
-export const getCardData = (props: CardDataParams) => {
-  const { isValid, cardNumber, expiryDate, cvv } = props
+export const getCardData = (props: CardProps) => {
+  const { cardNumber, expiryDate, cvv } = props
 
-  if (isValid) {
-    cardData.card.cardNumber = cardNumber
-    const ccardType = creditCardType(cardNumber)
-    cardData.card.cardType = ccardType.length ? ccardType[0].type.toUpperCase() : ''
+  cardData.card.cardNumber = cardNumber
+  const ccardType = creditCardType(cardNumber)
+  cardData.card.cardType = ccardType.length ? ccardType[0].type.toUpperCase() : ''
 
-    cardData.card.expiryDate = expiryDate
-    const expiryMonthYear = expiryDate?.split('/')
-    cardData.card.expireMonth = expiryMonthYear[0]
-    cardData.card.expireYear = expiryMonthYear[1]
+  cardData.card.expiryDate = expiryDate
+  const expiryMonthYear = expiryDate?.split('/')
+  cardData.card.expireMonth = expiryMonthYear[0]
+  cardData.card.expireYear = expiryMonthYear[1]
 
-    cardData.card.cvv = cvv
-  }
+  cardData.card.cvv = cvv
   return cardData
 }
 

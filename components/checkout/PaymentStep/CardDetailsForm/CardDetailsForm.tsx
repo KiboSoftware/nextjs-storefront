@@ -13,6 +13,7 @@ import {
   validateExpiryDate,
   getCardType,
 } from '../../../../lib/components/checkout/PaymentStep/CardDetailsForm'
+import { Action } from '../../../checkout/DetailsStep/DetailsStep'
 import KiboTextBox from '../../../common/KiboTextBox/KiboTextBox'
 
 interface Card {
@@ -28,8 +29,12 @@ export interface CardDetailsProps {
   paymentType: string
   isCardDetailsValidated: boolean
 }
+
 export interface CardDetailsFormProps {
   onSaveCardData: (cardData: CardDetailsProps) => void
+  setAutoFocus?: boolean
+  stepperStatus: string
+  onCompleteCallback: (action: Action) => void
 }
 
 const StyledCardDiv = styled('div')(() => ({
@@ -58,14 +63,14 @@ export const useCardSchema = () => {
   })
 }
 const CardDetailsForm = (props: CardDetailsFormProps) => {
-  const { onSaveCardData } = props
+  const { onSaveCardData, stepperStatus, onCompleteCallback } = props
   const { t } = useTranslation('checkout')
   const cardSchema = useCardSchema()
 
   const {
-    getValues,
     formState: { errors, isValid },
     control,
+    handleSubmit,
   } = useForm({
     mode: 'onBlur',
     reValidateMode: 'onBlur',
@@ -74,11 +79,22 @@ const CardDetailsForm = (props: CardDetailsFormProps) => {
     shouldFocusError: true,
   })
 
+  const onValid = async (formData: any) => {
+    const cardData = getCardData(formData)
+    const saveCardData = { ...cardData, isCardDetailsValidated: isValid }
+    onSaveCardData(saveCardData)
+  }
+
+  // form is invalid, notify parent form is incomplete
+  const onInvalidForm = () => {
+    onCompleteCallback({ type: 'INCOMPLETE' })
+  }
   useEffect(() => {
-    const { cardNumber, expiryDate, cvv } = getValues()
-    const cardData = getCardData({ isValid, cardNumber, expiryDate, cvv })
-    onSaveCardData({ ...cardData, isCardDetailsValidated: isValid })
-  }, [isValid, errors, getValues, onSaveCardData])
+    // if form is valid, onSubmit callback
+    if (stepperStatus === 'VALIDATE') {
+      isValid ? handleSubmit(onValid, onInvalidForm)() : onInvalidForm()
+    }
+  }, [stepperStatus])
 
   return (
     <StyledCardDiv data-testid="card-details">

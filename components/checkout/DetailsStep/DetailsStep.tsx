@@ -102,6 +102,7 @@ const DetailsStep = (props: DetailsProps) => {
     handleSubmit,
     control,
     watch,
+    trigger,
     getValues,
   } = useForm({
     mode: 'onBlur',
@@ -155,6 +156,7 @@ const DetailsStep = (props: DetailsProps) => {
   }
 
   useEffect(() => {
+    trigger()
     if (stepperStatus === 'VALIDATE') {
       isUserEnteredPasswordValid() ? handleSubmit(onValid, onInvalidForm)() : onInvalidForm()
     }
