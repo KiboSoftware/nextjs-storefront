@@ -1,6 +1,7 @@
 import * as React from 'react'
 
 import { CacheProvider, EmotionCache } from '@emotion/react'
+import { Container } from '@mui/material'
 import CssBaseline from '@mui/material/CssBaseline'
 import { ThemeProvider } from '@mui/material/styles'
 import { appWithTranslation } from 'next-i18next'
@@ -35,7 +36,9 @@ const App = (props: KiboAppProps) => {
         <QueryClientProvider client={queryClient}>
           <Hydrate state={pageProps.dehydratedState}>
             <TopBar />
-            <Component {...pageProps} />
+            <Container maxWidth={'lg'}>
+              <Component {...pageProps} />
+            </Container>
           </Hydrate>
         </QueryClientProvider>
       </ThemeProvider>

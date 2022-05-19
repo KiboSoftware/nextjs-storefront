@@ -73,7 +73,7 @@ const ImageGallery = (props: ImageGalleryProps) => {
     const gestureZone = document.getElementById('gestureZone')
     if (gestureZone) {
       swipeDetect(gestureZone, (dir: string) => {
-        if (dir === 'left' && selectedImage.selectedIndex !== images.length - 1) {
+        if (dir === 'left' && selectedImage.selectedIndex !== images?.length - 1) {
           setSelectedImage({ selectedIndex: selectedImage.selectedIndex + 1 })
         } else if (dir === 'right' && selectedImage.selectedIndex > 0) {
           setSelectedImage({ selectedIndex: selectedImage.selectedIndex - 1 })
@@ -134,7 +134,7 @@ const ImageGallery = (props: ImageGalleryProps) => {
       </Box>
 
       {/* Gallary Section start */}
-      <Stack direction="row" spacing={{ xs: 0, md: images.length ? 2 : 0 }} maxHeight={maxHeight}>
+      <Stack direction="row" spacing={{ xs: 0, md: images?.length ? 2 : 0 }} maxHeight={maxHeight}>
         {/* Vertical slider secton start */}
         <Box
           width="10%"
@@ -142,7 +142,7 @@ const ImageGallery = (props: ImageGalleryProps) => {
           sx={{
             display: {
               xs: 'none',
-              md: images.length ? 'flex' : 'none',
+              md: images?.length ? 'flex' : 'none',
             },
           }}
         >
@@ -216,7 +216,7 @@ const ImageGallery = (props: ImageGalleryProps) => {
         {/* Vertical slider secton end */}
 
         {/* Selected Image secton start */}
-        {images.length > 1 && (
+        {images?.length > 1 && (
           <Box display={isZoomed ? 'flex' : 'none'} alignItems="center">
             <IconButton
               aria-label="previous"
@@ -297,11 +297,11 @@ const ImageGallery = (props: ImageGalleryProps) => {
             )}
           </TransformWrapper>
         </Box>
-        {images.length > 1 && (
+        {images?.length > 1 && (
           <Box display={isZoomed ? 'flex' : 'none'} alignItems="center">
             <IconButton
               aria-label="next"
-              disabled={selectedImage.selectedIndex == images.length - 1}
+              disabled={selectedImage.selectedIndex == images?.length - 1}
               onClick={() => setSelectedImage({ selectedIndex: selectedImage.selectedIndex + 1 })}
             >
               <ArrowForwardIos />
@@ -323,7 +323,7 @@ const ImageGallery = (props: ImageGalleryProps) => {
           justifyContent: 'center',
         }}
       >
-        {images.map((_, i) => (
+        {images?.map((_, i) => (
           <Box
             key={i}
             sx={{
