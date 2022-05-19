@@ -4,17 +4,16 @@ import type { ProductOption } from '@/lib/gql/types'
 
 export interface ProductOptionTextBoxProps {
   option: ProductOption
-  onChange: (value: string) => void
+  onChange: (name: string, value: string) => void
 }
 
-const ProductOptionTextBox = ({ option, onChange, ...rest }: ProductOptionTextBoxProps) => {
+const ProductOptionTextBox = ({ option, onChange }: ProductOptionTextBoxProps) => {
   return (
     <KiboTextBox
       label={option?.attributeDetail?.name as string}
       name={option.attributeFQN}
-      value={option!.values![0]!.shopperEnteredValue}
+      value={option?.values?.[0]?.shopperEnteredValue}
       onChange={onChange}
-      {...rest}
     />
   )
 }

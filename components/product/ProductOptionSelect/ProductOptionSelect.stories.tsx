@@ -2,7 +2,7 @@ import React from 'react'
 
 import { ComponentStory, ComponentMeta } from '@storybook/react'
 
-import { productOptionSelectValuesMock } from '../../../__mocks__/productOptionSelectMock'
+import { productOptionSelectValuesMock } from '../../../__mocks__/stories/productOptionSelectMock'
 import ProductOptionSelect, { ProductOptionSelectProps } from './ProductOptionSelect'
 
 export default {

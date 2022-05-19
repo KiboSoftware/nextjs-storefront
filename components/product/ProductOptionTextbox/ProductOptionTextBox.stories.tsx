@@ -3,7 +3,7 @@ import React from 'react'
 import { Box } from '@mui/system'
 import { ComponentStory, ComponentMeta } from '@storybook/react'
 
-import { productOptionTextBoxMock } from '../../../__mocks__/productOptionTextBoxMock'
+import { productOptionTextBoxMock } from '../../../__mocks__/stories/productOptionTextBoxMock'
 import ProductOptionTextBox, { ProductOptionTextBoxProps } from './ProductOptionTextBox'
 
 export default {
@@ -16,9 +16,11 @@ const Template: ComponentStory<typeof ProductOptionTextBox> = (args: ProductOpti
   const { onChange } = args
   return (
     <Box display={'flex'} flexDirection="column" gap={2}>
-      {productOptionTextBoxMock.map((option) => (
-        <ProductOptionTextBox key={option?.attributeFQN} option={option} onChange={onChange} />
-      ))}
+      <ProductOptionTextBox
+        key={productOptionTextBoxMock[0]?.attributeFQN}
+        option={productOptionTextBoxMock[0]}
+        onChange={onChange}
+      />
     </Box>
   )
 }
