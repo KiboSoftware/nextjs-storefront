@@ -12,9 +12,6 @@ import { queryClient } from '../lib/react-query/queryClient'
 
 const OriginalNextImage = NextImage.default
 
-// Initialize MSW
-initialize()
-
 Object.defineProperty(NextImage, 'default', {
   configurable: true,
   value: (props) => <OriginalNextImage {...props} unoptimized />,
@@ -27,8 +24,13 @@ export const decorators = [
       <I18nextProvider i18n={i18n}>{storyFn()}</I18nextProvider>{' '}
     </QueryClientProvider>
   ),
-  mswDecorator,
 ]
+
+// Initialize MSW
+if (process.env.NODE_ENV !== 'test') {
+  initialize()
+  decorators.push(mswDecorator)
+}
 
 export const parameters = {
   actions: { argTypesRegex: '^on[A-Z].*' },
