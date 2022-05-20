@@ -16,7 +16,7 @@ const Template: ComponentStory<typeof ShippingStep> = (args) => <ShippingStep {.
 export const Common = Template.bind({})
 Common.args = {
   setAutoFocus: false,
-  stepperStatus: 'INVALID',
+  stepperStatus: 'VALIDATE',
   checkout: undefined,
   onCompleteCallback: () => console.log('called onCompleteCallback on shipping: '),
 }

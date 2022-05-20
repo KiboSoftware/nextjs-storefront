@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 
 import { composeStories } from '@storybook/testing-react'
 import { render, screen } from '@testing-library/react'
@@ -18,5 +18,12 @@ describe('[components] ShippingStep', () => {
     const ShippingComponent = screen.getByText(/Shipping/i)
 
     expect(ShippingComponent).toBeVisible()
+  })
+
+  it('should stepperStatus validate', () => {
+    setup()
+    const stepperStatus = 'VALIDATE'
+
+    expect(stepperStatus).toBe('VALIDATE')
   })
 })

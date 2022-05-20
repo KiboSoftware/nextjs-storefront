@@ -91,9 +91,11 @@ const CardDetailsForm = (props: CardDetailsFormProps) => {
   }
   useEffect(() => {
     // if form is valid, onSubmit callback
-    stepperStatus === 'VALIDATE' && isValid
-      ? handleSubmit(onValid, onInvalidForm)()
-      : onInvalidForm()
+    if (stepperStatus === 'VALIDATE') {
+      stepperStatus === 'VALIDATE' && isValid
+        ? handleSubmit(onValid, onInvalidForm)()
+        : onInvalidForm()
+    }
   }, [stepperStatus])
 
   return (
