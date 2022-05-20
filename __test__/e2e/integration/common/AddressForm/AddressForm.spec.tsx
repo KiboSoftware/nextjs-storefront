@@ -48,7 +48,7 @@ describe('[components] - AddressForm integration', () => {
       // act
       const firstName = screen.getByRole('textbox', { name: /first-name/i })
       await act(async () => {
-        userEvent.type(firstName, contact.firstName as string)
+        userEvent.type(firstName, contact.firstName)
       })
 
       // assert
@@ -62,7 +62,7 @@ describe('[components] - AddressForm integration', () => {
       // act
       const lastNameOrSurname = screen.getByRole('textbox', { name: /last-name-or-sur-name/i })
       await act(async () => {
-        userEvent.type(lastNameOrSurname, contact.lastNameOrSurname as string)
+        userEvent.type(lastNameOrSurname, contact.lastNameOrSurname)
       })
 
       // assert
@@ -76,7 +76,7 @@ describe('[components] - AddressForm integration', () => {
       // act
       const address1 = screen.getByRole('textbox', { name: /address1/i })
       await act(async () => {
-        userEvent.type(address1, contact.address.address1 as string)
+        userEvent.type(address1, contact.address.address1)
       })
 
       // assert
@@ -90,7 +90,7 @@ describe('[components] - AddressForm integration', () => {
       // act
       const address2 = screen.getByRole('textbox', { name: /address2/i })
       await act(async () => {
-        userEvent.type(address2, contact.address.address2 as string)
+        userEvent.type(address2, contact.address.address2)
       })
 
       // assert
@@ -104,7 +104,7 @@ describe('[components] - AddressForm integration', () => {
       // act
       const cityOrTown = screen.getByRole('textbox', { name: /city/i })
       await act(async () => {
-        userEvent.type(cityOrTown, contact.address.cityOrTown as string)
+        userEvent.type(cityOrTown, contact.address.cityOrTown)
       })
 
       // assert
@@ -118,7 +118,7 @@ describe('[components] - AddressForm integration', () => {
       // act
       const stateOrProvince = screen.getByRole('textbox', { name: /state-or-province/i })
       await act(async () => {
-        userEvent.type(stateOrProvince, contact.address.stateOrProvince as string)
+        userEvent.type(stateOrProvince, contact.address.stateOrProvince)
       })
 
       // assert
@@ -132,7 +132,7 @@ describe('[components] - AddressForm integration', () => {
       // act
       const postalOrZipCode = screen.getByRole('textbox', { name: /postal-or-zip-code/i })
       await act(async () => {
-        userEvent.type(postalOrZipCode, contact.address.postalOrZipCode as string)
+        userEvent.type(postalOrZipCode, contact.address.postalOrZipCode)
       })
 
       // assert

@@ -6,9 +6,16 @@ import * as stories from './AddressForm.stories'
 
 const { Common } = composeStories(stories)
 
+const onChangeMock = jest.fn()
 const onBlurMock = jest.fn()
 
-const KiboTextBoxMock = () => <input data-testid="text-box-mock" onBlur={onBlurMock} />
+const KiboTextBoxMock = () => (
+  <input
+    data-testid="text-box-mock"
+    onChange={(value) => onChangeMock(value)}
+    onBlur={onBlurMock}
+  />
+)
 jest.mock('../KiboTextBox/KiboTextBox', () => KiboTextBoxMock)
 
 describe('[components] - AddressForm', () => {
