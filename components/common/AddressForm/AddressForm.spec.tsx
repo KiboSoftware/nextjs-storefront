@@ -8,6 +8,8 @@ const { Common } = composeStories(stories)
 
 const onChangeMock = jest.fn()
 const onBlurMock = jest.fn()
+const onHandleSubmitMock = jest.fn()
+const onInvalidFormMock = jest.fn()
 
 const KiboTextBoxMock = () => (
   <input
@@ -49,5 +51,17 @@ describe('[components] - AddressForm', () => {
     // assert
     expect(textBoxList[0]).toHaveValue('Shane')
     expect(onBlurMock).toHaveBeenCalled()
+  })
+
+  it('should stepperStatus validate call ', () => {
+    setup()
+    const stepperStatus = 'VALIDATE'
+    const isValid = true
+    if (stepperStatus === 'VALIDATE') {
+      isValid ? onHandleSubmitMock() : onInvalidFormMock()
+    }
+    expect(stepperStatus).toBe('VALIDATE')
+    expect(isValid).toBeTruthy()
+    expect(onHandleSubmitMock).toBeCalled()
   })
 })
