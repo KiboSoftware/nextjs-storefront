@@ -24,26 +24,26 @@ const styles = {
   buttonStyle: { width: '5rem', height: '2.20rem', marginTop: '1.5rem' },
 }
 
-const PromoCodeBadge = () => {
+export const PromoCodeBadge = (props: any) => {
   const promoRef = useRef<any>()
   const [promo, setPromo] = useState<string>('')
   const [promoActive, setPromoActive] = useState(false)
-  const [couponList, setCouponList] = useState<any>([])
   const [isEnabled, setIsEnabled] = useState(true)
 
   const handleOnChange = (_name: any, value: any) => {
     setPromo(value)
   }
   const { t } = useTranslation('common')
+  const { onApplyCouponCode, onRemoveCouponCode, couponList } = props
 
-  const handleOnClick = () => {
+  const handleApplyCouponCode = () => {
     setPromoActive(true)
-    setCouponList((e: any) => [...e, promo])
+    onApplyCouponCode(promo)
     setPromo('')
     promoRef.current.value = null
   }
-  const handleClose = (e: any) => {
-    setCouponList((coupon: any) => coupon.filter((item: any) => item !== e))
+  const handleRemoveCouponCode = (item: any) => {
+    onRemoveCouponCode(item)
     if (couponList.length === 0) {
       setPromoActive(false)
     }
@@ -67,7 +67,7 @@ const PromoCodeBadge = () => {
         />
         <Button
           disabled={isEnabled}
-          onClick={handleOnClick}
+          onClick={handleApplyCouponCode}
           sx={styles.buttonStyle}
           variant="contained"
           data-testid="promo-button"
@@ -88,9 +88,9 @@ const PromoCodeBadge = () => {
                         cursor: 'pointer',
                         fontSize: '1rem',
                         ml: '0.5rem',
-                        mt:'0.25rem'
+                        mt: '0.25rem',
                       }}
-                      onClick={() => handleClose(e)}
+                      onClick={() => handleRemoveCouponCode(e)}
                     />
                   </Typography>
                 </Stack>
@@ -102,4 +102,23 @@ const PromoCodeBadge = () => {
     </>
   )
 }
-export default PromoCodeBadge
+
+export const PromoCodeBadgeMain = () => {
+  const [couponList, setCouponList] = useState<any>([])
+  const onRemoveCouponCode = (list: any) => {
+    setCouponList((coupon: any) => coupon.filter((item: any) => item !== list))
+  }
+  const onApplyCouponCode = (promo: any) => {
+    setCouponList((e: any) => [...e, promo])
+  }
+  return (
+    <>
+      <PromoCodeBadge
+        onApplyCouponCode={onApplyCouponCode}
+        onRemoveCouponCode={onRemoveCouponCode}
+        setCouponList={setCouponList}
+        couponList={couponList}
+      />
+    </>
+  )
+}
