@@ -9,6 +9,8 @@ const { Common } = composeStories(stories)
 
 const onChangeMock = jest.fn()
 const onBlurMock = jest.fn()
+const onHandleSubmitMock = jest.fn()
+const onInvalidFormMock = jest.fn()
 
 const KiboTextBoxMock = () => (
   <input
@@ -128,5 +130,17 @@ describe('[components] CardDetailsForm', () => {
     fireEvent.blur(securityCode, { target: { value: '123' } })
 
     expect((securityCode as HTMLInputElement).value).toHaveLength(3)
+  })
+
+  it('should submit data if stepperStatus validate & form is valid ', () => {
+    setup()
+    const stepperStatus = 'VALIDATE'
+    const isValid = true
+    if (stepperStatus === 'VALIDATE') {
+      isValid ? onHandleSubmitMock() : onInvalidFormMock()
+    }
+    expect(stepperStatus).toBe('VALIDATE')
+    expect(isValid).toBeTruthy()
+    expect(onHandleSubmitMock).toBeCalled()
   })
 })

@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React from 'react'
 
 import { composeStories } from '@storybook/testing-react'
 import { render, screen } from '@testing-library/react'
