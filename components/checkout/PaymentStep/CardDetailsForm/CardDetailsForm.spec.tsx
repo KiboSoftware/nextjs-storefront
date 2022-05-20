@@ -34,6 +34,42 @@ describe('[components] CardDetailsForm', () => {
     expect(textBoxList).toHaveLength(3)
   })
 
+  describe('should onChange call on card component inputs', () => {
+    it('Should onChange call on cardNumber', async () => {
+      setup()
+
+      const textBoxList = screen.getAllByRole('textbox')
+      const cardNumber = textBoxList[0]
+      userEvent.type(cardNumber, '4111111111111111')
+      cardNumber.focus()
+
+      expect(onChangeMock).toHaveBeenCalled()
+    })
+    it('Should onChange call on cardNumber', async () => {
+      setup()
+
+      const textBoxList = screen.getAllByRole('textbox')
+      const expiryDate = textBoxList[1]
+
+      userEvent.type(expiryDate, '03/2023')
+      expiryDate.focus()
+
+      expect(onChangeMock).toHaveBeenCalled()
+    })
+    it('Should onChange call on Security Code(CVV)', async () => {
+      setup()
+
+      const textBoxList = screen.getAllByRole('textbox')
+      const securityCode = textBoxList[2]
+
+      userEvent.type(securityCode, '123')
+      securityCode.focus()
+
+      // assert
+      expect(onChangeMock).toHaveBeenCalled()
+    })
+  })
+
   describe('should onBlur call on card component inputs', () => {
     it('Should onBlur call on cardNumber', async () => {
       setup()
@@ -64,40 +100,6 @@ describe('[components] CardDetailsForm', () => {
       fireEvent.blur(securityCode)
 
       expect(onBlurMock).toHaveBeenCalled()
-    })
-  })
-
-  describe('should onChange call on card component inputs', () => {
-    it('Should onChange call on cardNumber', async () => {
-      setup()
-
-      const textBoxList = screen.getAllByRole('textbox')
-      const cardNumber = textBoxList[0]
-      userEvent.type(cardNumber, '4111111111111111')
-      cardNumber.focus()
-
-      expect(onChangeMock).toHaveBeenCalled()
-    })
-    it('Should onChange call on cardNumber', async () => {
-      setup()
-
-      const textBoxList = screen.getAllByRole('textbox')
-      const expiryDate = textBoxList[1]
-      expiryDate.focus()
-      userEvent.type(expiryDate, '03/2023')
-
-      expect(onChangeMock).toHaveBeenCalled()
-    })
-    it('Should onChange call on Security Code(CVV)', async () => {
-      setup()
-
-      const textBoxList = screen.getAllByRole('textbox')
-      const securityCode = textBoxList[2]
-      securityCode.focus()
-      userEvent.type(securityCode, '123')
-
-      // assert
-      expect(onChangeMock).toHaveBeenCalled()
     })
   })
 

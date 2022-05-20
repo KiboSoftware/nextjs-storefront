@@ -69,8 +69,7 @@ const Checkout = (props: CheckoutProps) => {
   }
 
   const handleBillingAddress = (data: Address) => console.log('called handleSave(data) : ', data)
-  const handleCardPayment = (data: CardPaymentDetails) =>
-    console.log('called handleSaveCardPayment(data) : ', data)
+  const handleCardPayment = (data: CardPaymentDetails) => data
 
   const paymentStepParams = {
     countries: ['US', 'AT', 'DE', 'NL'],
