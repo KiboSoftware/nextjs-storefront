@@ -9,7 +9,7 @@ import KiboTextBox from '../KiboTextBox/KiboTextBox'
 
 const styles = {
   textBoxStyle: {
-    minWidth: '4rem',
+    minWidth: '10rem',
     maxWidth: '17rem',
     mr: '0.5rem',
   },
@@ -26,7 +26,7 @@ const PromoCode = ({ isEnabled }: any) => {
 
   return (
     <>
-      <Box>
+      <Box sx={{ display: 'flex' }}>
         <KiboTextBox
           inputRef={promoRef}
           onChange={handleOnChange}

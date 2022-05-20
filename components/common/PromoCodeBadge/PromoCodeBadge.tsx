@@ -11,8 +11,8 @@ import KiboTextBox from '../KiboTextBox/KiboTextBox'
 const styles = {
   boxStyle: {
     display: 'inline-block',
-    mx: '1rem',
-    mt: '0.2rem',
+    mx: '0.5rem',
+    mt: '0.25rem',
     backgroundColor: '#DCDCDC',
     justifyContent: 'center',
   },
@@ -26,9 +26,9 @@ const styles = {
 
 const PromoCodeBadge = () => {
   const promoRef = useRef<any>()
-  const [promo, setPromo] = useState('')
+  const [promo, setPromo] = useState<string>('')
   const [promoActive, setPromoActive] = useState(false)
-  const [promoCode, setPromoCode] = useState('')
+  const [couponList, setCouponList] = useState<any>([])
   const [isEnabled, setIsEnabled] = useState(true)
 
   const handleOnChange = (_name: any, value: any) => {
@@ -38,11 +38,15 @@ const PromoCodeBadge = () => {
 
   const handleOnClick = () => {
     setPromoActive(true)
-    setPromoCode(promo)
+    setCouponList((e: any) => [...e, promo])
+    setPromo('')
     promoRef.current.value = null
   }
-  const handleClose = () => {
-    setPromoActive(false)
+  const handleClose = (e: any) => {
+    setCouponList((coupon: any) => coupon.filter((item: any) => item !== e))
+    if (couponList.length === 0) {
+      setPromoActive(false)
+    }
   }
   useEffect(() => {
     if (promo?.length > 0) {
@@ -71,23 +75,29 @@ const PromoCodeBadge = () => {
           {t('apply')}
         </Button>
       </Box>
-      {promo?.length > 0 && promoActive && (
-        <Box sx={styles.boxStyle}>
-          <Stack direction="row" spacing={3} alignItems="center">
-            <Typography sx={{ mx: '1rem', textAlign: 'left' }}>
-              {promoCode}
-              <CancelOutlinedIcon
-                sx={{
-                  cursor: 'pointer',
-                  position: 'relative',
-                  ml: '0.5rem',
-                }}
-                fontSize="inherit"
-                onClick={handleClose}
-              />
-            </Typography>
-          </Stack>
-        </Box>
+      {promoActive && (
+        <>
+          {couponList?.map((e: any) => (
+            <>
+              <Box sx={styles.boxStyle}>
+                <Stack direction="row" spacing={3} alignItems="center">
+                  <Typography sx={{ mx: '0.5rem' }}>
+                    {e}
+                    <CancelOutlinedIcon
+                      sx={{
+                        cursor: 'pointer',
+                        fontSize: '1rem',
+                        ml: '0.5rem',
+                        mt:'0.25rem'
+                      }}
+                      onClick={() => handleClose(e)}
+                    />
+                  </Typography>
+                </Stack>
+              </Box>
+            </>
+          ))}
+        </>
       )}
     </>
   )

@@ -6,8 +6,8 @@ import { Typography, Box, Stack } from '@mui/material'
 const styles = {
   boxStyle: {
     display: 'inline-block',
-    mx: '1rem',
-    mt: '0.2rem',
+    mx: '0.5rem',
+    mt: '0.25rem',
     backgroundColor: '#DCDCDC',
     justifyContent: 'center',
   },
@@ -18,15 +18,15 @@ const PromoBadge = ({ promoCode }: any) => {
     <>
       <Box sx={styles.boxStyle}>
         <Stack direction="row" spacing={3} alignItems="center">
-          <Typography sx={{ mx: '1rem', textAlign: 'left' }}>
+          <Typography sx={{ mx: '0.5rem' }}>
             {promoCode}
             <CancelOutlinedIcon
               sx={{
                 cursor: 'pointer',
-                position: 'relative',
+                fontSize: '1rem',
                 ml: '0.5rem',
+                mt: '0.25rem',
               }}
-              fontSize="inherit"
             />
           </Typography>
         </Stack>

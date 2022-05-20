@@ -32,12 +32,6 @@ describe('PromoCode Component', () => {
     expect(PromoCode).toBeVisible()
   })
 
-  it('should disable button', () => {
-    render(<PromocodeBadgeComponent />)
-    const ApplyButton = screen.getByTestId('promo-button')
-    expect(ApplyButton).toHaveClass('Mui-disabled')
-  })
-
   it('should enable button', () => {
     render(<PromocodeBadgeComponent {...PromocodeBadgeComponent.args} />)
     const PromoCode = screen.getByRole('textbox')
