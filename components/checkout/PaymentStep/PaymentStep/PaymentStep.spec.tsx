@@ -53,4 +53,12 @@ describe('[components] PaymentStep', () => {
 
     expect(onHandleSavePaymentMethodMock).toBeCalled()
   })
+
+  it('should default unchecked saved payment if logged in', () => {
+    render(<Common {...Common.args} isUserLoggedIn={false} />)
+
+    const savePaymentMethod = screen.queryByTestId('save-payment')
+
+    expect(savePaymentMethod).not.toBeInTheDocument()
+  })
 })

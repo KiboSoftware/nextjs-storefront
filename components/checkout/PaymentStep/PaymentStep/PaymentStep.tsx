@@ -135,11 +135,8 @@ const PaymentStep = (props: PaymentStepProps) => {
     }
   }
 
-  const validatePaymentStep = () =>
-    billingAddress.contact.firstName != '' && paymentDetails.isCardDetailsValidated
-
   useEffect(() => {
-    if (validatePaymentStep()) {
+    if (billingAddress.contact.firstName != '' && paymentDetails.isCardDetailsValidated) {
       createPaymentData()
       onCompleteCallback({ type: 'COMPLETE' })
     }
