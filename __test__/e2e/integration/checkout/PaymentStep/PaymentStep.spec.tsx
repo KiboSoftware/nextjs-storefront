@@ -112,4 +112,12 @@ describe('[components] PaymentStep', () => {
       expect(validationMessage).toBeVisible()
     })
   })
+
+  it('should save payment not to be visible if user not logged in', () => {
+    render(<Common {...Common.args} isUserLoggedIn={false} />)
+
+    const savePaymentMethod = screen.queryByTestId('save-payment')
+
+    expect(savePaymentMethod).not.toBeInTheDocument()
+  })
 })
