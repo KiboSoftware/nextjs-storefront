@@ -13,7 +13,7 @@ describe('[hooks] useCheckout', () => {
 
     await waitFor(() => result.current.isSuccess)
 
-    expect(result.current.data).toEqual(orderMock.checkout)
+    expect(result.current.data).toStrictEqual(orderMock.checkout)
   })
   it('should return checkout details when user provides valid checkoutId', async () => {
     const checkoutId = '137a979305c65d00010800230000678b'
@@ -21,6 +21,6 @@ describe('[hooks] useCheckout', () => {
       wrapper: createQueryClientWrapper(),
     })
     await waitFor(() => result.current.isSuccess)
-    expect(result.current.data).toEqual(orderMock.checkout)
+    expect(result.current.data).toStrictEqual(orderMock.checkout)
   })
 })

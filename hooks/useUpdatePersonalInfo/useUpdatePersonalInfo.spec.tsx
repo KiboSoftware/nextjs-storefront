@@ -17,7 +17,7 @@ describe('[hooks] useUpdatePersonalInfo', () => {
         const updatePersonalInfoMutation = useUpdatePersonalInfo()
         const response = await updatePersonalInfoMutation.mutateAsync(personalInfo)
 
-        expect(response).toBe(orderMock)
+        expect(response).toStrictEqual(orderMock.checkout)
       },
       {
         wrapper: createQueryClientWrapper(),
