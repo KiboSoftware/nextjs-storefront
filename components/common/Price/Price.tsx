@@ -11,6 +11,11 @@ interface PriceProps {
   variant?: 'body2' | 'body1' | 'subtitle1'
   fontWeight?: 'bold' | 'normal'
 }
+interface TextPriceProps {
+  children: React.ReactNode
+  color?: string
+  sx?: SxProps<Theme>
+}
 
 const styles = {
   price: {
@@ -34,55 +39,53 @@ const styles = {
   },
 }
 
-const Price = ({
-  price,
-  salePrice,
-  priceRange,
-  variant = 'body1',
-  fontWeight = 'bold',
-}: PriceProps) => {
+const Price = (props: PriceProps) => {
+  const { price, salePrice, priceRange, variant = 'body1', fontWeight = 'bold' } = props
   // common Price Text component
-  const PriceTypography = ({
-    children,
-    color,
-    sx,
-  }: {
-    children: React.ReactNode
-    color?: string
-    sx?: SxProps<Theme>
-  }) => (
-    <Typography
-      variant={variant}
-      fontWeight={fontWeight}
-      color={color || 'text.primary'}
-      sx={sx}
-      gutterBottom
-    >
-      {children}
-    </Typography>
-  )
+  const PriceTypography = (priceProps: TextPriceProps) => {
+    const { children, color, sx } = priceProps
+    return (
+      <Typography
+        variant={variant}
+        fontWeight={fontWeight}
+        color={color || 'text.primary'}
+        sx={sx}
+        gutterBottom
+      >
+        {children}
+      </Typography>
+    )
+  }
+
+  const PriceRangeTypography = () => {
+    return (
+      <>
+        <PriceTypography
+          {...(salePrice && { color: 'error' })}
+          sx={{
+            ...styles.price,
+            ...(salePrice && styles.oldPrice),
+          }}
+        >
+          {price}
+        </PriceTypography>
+        {salePrice && <PriceTypography>{salePrice}</PriceTypography>}
+      </>
+    )
+  }
+
+  const PriceOnlyTypography = () => {
+    return (
+      <PriceTypography>
+        {priceRange?.lower} - {priceRange?.upper}
+      </PriceTypography>
+    )
+  }
 
   return (
     <>
       <Box display="flex" gap="0.625rem" alignItems="center">
-        {priceRange ? (
-          <PriceTypography>
-            {priceRange.lower} - {priceRange.upper}
-          </PriceTypography>
-        ) : (
-          <>
-            <PriceTypography
-              {...(salePrice && { color: 'error' })}
-              sx={{
-                ...styles.price,
-                ...(salePrice && styles.oldPrice),
-              }}
-            >
-              {price}
-            </PriceTypography>
-            {salePrice && <PriceTypography>{salePrice}</PriceTypography>}
-          </>
-        )}
+        {priceRange ? <PriceOnlyTypography /> : <PriceRangeTypography />}
       </Box>
     </>
   )

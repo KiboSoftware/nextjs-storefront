@@ -5,11 +5,13 @@ import { Stack, Divider } from '@mui/material'
 import ProductItem, { ProductItemProps } from '@/components/common/ProductItem/ProductItem'
 
 export type ProductItemListProps = {
-  items: ProductItemProps[]
+  items?: ProductItemProps[]
+  onClickChangeStore?: () => void
 }
 
 const ProductItemList = (props: ProductItemListProps) => {
-  const { items } = props
+  const { items, onClickChangeStore } = props
+
   return (
     <Stack
       direction="column"
@@ -20,6 +22,7 @@ const ProductItemList = (props: ProductItemListProps) => {
       {items?.map((item: ProductItemProps, index) => (
         <ProductItem
           {...item}
+          onClickStoreLocator={onClickChangeStore}
           key={`${item.name}-${index}`}
           data-testid="product-item"
         ></ProductItem>

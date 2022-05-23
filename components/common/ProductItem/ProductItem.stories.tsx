@@ -13,10 +13,7 @@ import type { CartItem, CrProductOption } from '@/lib/gql/types'
 export default {
   title: 'Common/ProductItem',
   component: ProductItem,
-  argTypes: {
-    size: { control: 'select' },
-    fontWeight: { control: 'radio' },
-  },
+  argTypes: { onClickStoreLocator: { action: 'clicked' } },
 } as ComponentMeta<typeof ProductItem>
 
 const cartItem: CartItem = {
@@ -82,6 +79,8 @@ const TemplateWithPriceLabel: ComponentStory<typeof ProductItem> = (args) => (
 
 export const Common = Template.bind({})
 Common.args = {
+  id: cartItem?.id,
+  productCode: cartItem?.product?.productCode,
   image: cartItem.product?.imageUrl || DefaultImage,
   name: cartItem.product?.name || '',
   options: cartItem.product?.options as Array<CrProductOption>,
@@ -108,4 +107,15 @@ export const WithoutDetailOption = TemplateWithQtyLabel.bind({})
 Common.args.options = []
 WithoutDetailOption.args = {
   ...Common.args,
+}
+
+export const WithChageStoreOption = TemplateWithQtyLabel.bind({})
+WithChageStoreOption.args = {
+  ...WithQtyLabel.args,
+  isPickupItem: true,
+  itemPurchaseLocation: 'Down Store',
+  estimatedPickupDate: 'Mon 12/20',
+  onClickStoreLocator: () => {
+    console.log('change store clicked')
+  },
 }
