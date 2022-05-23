@@ -64,4 +64,33 @@ describe('[components] - AddressForm', () => {
     expect(isValid).toBeTruthy()
     expect(onHandleSubmitMock).toBeCalled()
   })
+
+  it('should call the onSubmit function', async () => {
+    setup()
+
+    const textBoxList = screen.getAllByRole('textbox')
+    const firstName = textBoxList[0] as HTMLInputElement
+    const lastName = textBoxList[1] as HTMLInputElement
+    const address1 = textBoxList[2] as HTMLInputElement
+    const address2 = textBoxList[3] as HTMLInputElement
+    const cityOrTown = textBoxList[4] as HTMLInputElement
+    const stateOrProvince = textBoxList[5] as HTMLInputElement
+    const zipCode = textBoxList[6] as HTMLInputElement
+    const country = textBoxList[7] as HTMLInputElement
+    const phoneNumberHome = textBoxList[8] as HTMLInputElement
+
+    fireEvent.change(firstName, { target: { value: 'John' } })
+    fireEvent.change(lastName, { target: { value: 'Doe' } })
+    fireEvent.change(address1, { target: { value: 'street' } })
+    fireEvent.change(address2, { target: { value: 'apartment' } })
+    fireEvent.change(cityOrTown, { target: { value: 'city' } })
+    fireEvent.change(stateOrProvince, { target: { value: 'state' } })
+    fireEvent.change(zipCode, { target: { value: '123456' } })
+    fireEvent.change(country, { target: { value: 'US' } })
+    fireEvent.change(phoneNumberHome, { target: { value: '1234567891' } })
+
+    render(<Common {...Common.args} stepperStatus={'VALIDATE'} />)
+
+    expect(onHandleSubmitMock).toHaveBeenCalled()
+  })
 })

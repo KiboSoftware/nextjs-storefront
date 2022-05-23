@@ -22,7 +22,7 @@ const Template: ComponentStory<typeof AddressForm> = (args) => {
 export const Common = Template.bind({})
 Common.args = {
   setAutoFocus: true,
-  stepperStatus: 'VALIDATE',
+  stepperStatus: 'INCOMPLETE',
   checkout: undefined,
   onCompleteCallback: (action) => action,
   contact: undefined,
