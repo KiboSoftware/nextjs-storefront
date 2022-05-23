@@ -109,8 +109,8 @@ const CardDetailsForm = (props: CardDetailsFormProps) => {
               value={field.value}
               label={t('card-number')}
               required={true}
-              onBlur={field.onBlur}
               onChange={(_name, value) => field.onChange(value)}
+              onBlur={field.onBlur}
               error={!!errors?.cardNumber}
               helperText={errors?.cardNumber?.message}
               icon={CreditCardIcon}
@@ -126,8 +126,8 @@ const CardDetailsForm = (props: CardDetailsFormProps) => {
               label={t('expiry-date')}
               placeholder={t('expiry-date-placeholder')}
               required={true}
-              onBlur={field.onBlur}
               onChange={(_name, value) => field.onChange(value)}
+              onBlur={field.onBlur}
               error={!!errors?.expiryDate}
               helperText={errors?.expiryDate?.message}
             />
@@ -143,8 +143,8 @@ const CardDetailsForm = (props: CardDetailsFormProps) => {
               label={t('security-code')}
               placeholder={t('security-code-placeholder')}
               required={true}
-              onBlur={field.onBlur}
               onChange={(_name, value) => field.onChange(value)}
+              onBlur={field.onBlur}
               error={!!errors?.cvv}
               helperText={errors?.cvv?.message}
               icon={HelpIcon}
