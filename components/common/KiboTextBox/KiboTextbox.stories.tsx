@@ -1,5 +1,6 @@
 import React from 'react'
 
+import VisibilityIcon from '@mui/icons-material/Visibility'
 import { ComponentStory, ComponentMeta } from '@storybook/react'
 
 import KiboTextBox, { KiboTextBoxProps } from './KiboTextBox'
@@ -7,7 +8,7 @@ import KiboTextBox, { KiboTextBoxProps } from './KiboTextBox'
 export default {
   title: 'Common/KiboTextbox',
   component: KiboTextBox,
-  argTypes: { onChange: { action: 'onChange' } },
+  argTypes: { onChange: { action: 'onChange' }, onIconClick: { action: 'onClick' } },
 } as ComponentMeta<typeof KiboTextBox>
 
 const Template: ComponentStory<typeof KiboTextBox> = (args: KiboTextBoxProps) => (
@@ -48,4 +49,11 @@ WithErrorDescription.args = {
   label: 'Error Description',
   error: true,
   helperText: 'This field is required',
+}
+
+export const WithIcon = Template.bind({})
+
+WithIcon.args = {
+  label: 'Password visibility',
+  icon: <VisibilityIcon />,
 }
