@@ -35,12 +35,6 @@ const Checkout = (props: CheckoutProps) => {
   const [activeStep, setActiveStep] = useState<number>(0)
   const [activeStepStatus, setActiveStepStatus] = useState<string>('INCOMPLETE')
 
-  // tobe: remove below code later
-  const { data: checkoutInfo, isLoading: _isCheckoutLoading } = useCheckout({
-    cartId: '138bb6253e492600018cec820000678b',
-    checkoutId: undefined,
-  })
-
   const handleBack = () => {
     setActiveStep(activeStep - 1)
   }
@@ -58,10 +52,10 @@ const Checkout = (props: CheckoutProps) => {
 
   const orderSummeryArgs = {
     standardShippingAmount: 'Free',
-    estimatedTaxAmout: `${checkoutInfo?.taxTotal}`,
-    orderTotal: `${checkoutInfo?.total}`,
-    subTotal: `${checkoutInfo?.subtotal}`,
-    numberOfItems: `${checkoutInfo?.items?.length} items`,
+    estimatedTaxAmout: `${checkout?.taxTotal}`,
+    orderTotal: `${checkout?.total}`,
+    subTotal: `${checkout?.subtotal}`,
+    numberOfItems: `${checkout?.items?.length} items`,
     backLabel: 'Go Back',
     checkoutLabel: 'Go to Checkout',
     nameLabel: 'Order Summary',
@@ -80,7 +74,7 @@ const Checkout = (props: CheckoutProps) => {
         </Typography>
         <KiboStepper steps={steps} activeStep={activeStep}>
           <DetailsStep
-            checkout={checkoutInfo}
+            checkout={checkout}
             stepperStatus={activeStepStatus}
             onCompleteCallback={completeStepCallback}
           />

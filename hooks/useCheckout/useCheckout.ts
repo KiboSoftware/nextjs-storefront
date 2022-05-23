@@ -6,8 +6,8 @@ import { checkoutKeys } from '@/lib/react-query/queryKeys'
 
 import type { Order } from '@/lib/gql/types'
 interface UseCheckout {
-  cartId?: string | undefined
-  checkoutId?: string | undefined
+  cartId?: string
+  checkoutId?: string
 }
 export interface UseCheckoutResponse {
   data: Order | undefined
