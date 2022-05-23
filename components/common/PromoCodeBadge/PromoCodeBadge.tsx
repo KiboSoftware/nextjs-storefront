@@ -11,10 +11,10 @@ import KiboTextBox from '../KiboTextBox/KiboTextBox'
 const styles = {
   boxStyle: {
     display: 'inline-block',
-    mx: '0.5rem',
-    mt: '0.25rem',
+    mr: '0.5rem',
+    mt: '0.5rem',
+    px: '0.5rem',
     backgroundColor: '#DCDCDC',
-    justifyContent: 'center',
   },
   textBoxStyle: {
     minWidth: '10rem',
@@ -79,20 +79,16 @@ export const PromoCodeBadge = (props: any) => {
         <>
           {couponList?.map((e: any) => (
             <>
-              <Box sx={styles.boxStyle}>
-                <Stack direction="row" spacing={3} alignItems="center">
-                  <Typography sx={{ mx: '0.5rem' }}>
-                    {e}
-                    <CancelOutlinedIcon
-                      sx={{
-                        cursor: 'pointer',
-                        fontSize: '1rem',
-                        ml: '0.5rem',
-                        mt: '0.25rem',
-                      }}
-                      onClick={() => handleRemoveCouponCode(e)}
-                    />
-                  </Typography>
+              <Box component="div" sx={styles.boxStyle}>
+                <Stack direction="row" spacing={1.5} alignItems="center">
+                  <Typography sx={{ textAlign: 'left' }}>{e}</Typography>
+                  <CancelOutlinedIcon
+                    sx={{
+                      cursor: 'pointer',
+                      fontSize: '1rem',
+                    }}
+                    onClick={() => handleRemoveCouponCode(e)}
+                  />
                 </Stack>
               </Box>
             </>
