@@ -16,7 +16,8 @@ import { useTranslation } from 'next-i18next'
 import { TransformWrapper, TransformComponent } from 'react-zoom-pan-pinch'
 
 import KiboImage from '@/components/common/KiboImage/KiboImage'
-import { swipeDetect } from '@/lib/helpers/swipeDetect'
+import { productGetters } from '@/lib/getters'
+import { swipeDetect } from '@/lib/helpers'
 import DefaultImage from '@/public/product_placeholder.svg'
 
 import { ProductImage } from '@/lib/gql/types'
@@ -133,7 +134,7 @@ const ImageGallery = (props: ImageGalleryProps) => {
       </Box>
 
       {/* Gallary Section start */}
-      <Stack direction="row" spacing={{ xs: 0, md: 2 }} maxHeight={maxHeight}>
+      <Stack direction="row" spacing={{ xs: 0, md: images.length ? 2 : 0 }} maxHeight={maxHeight}>
         {/* Vertical slider secton start */}
         <Box
           width="10%"
@@ -141,7 +142,7 @@ const ImageGallery = (props: ImageGalleryProps) => {
           sx={{
             display: {
               xs: 'none',
-              md: 'flex',
+              md: images.length ? 'flex' : 'none',
             },
           }}
         >
@@ -185,7 +186,10 @@ const ImageGallery = (props: ImageGalleryProps) => {
                     onClick={() => setSelectedImage({ selectedIndex: i })}
                   >
                     <KiboImage
-                      src={(image?.imageUrl as string) || placeholderImageUrl}
+                      src={
+                        productGetters.handleProtocolRelativeUrl(image?.imageUrl as string) ||
+                        placeholderImageUrl
+                      }
                       alt={image?.altText as string}
                       layout="fill"
                       objectFit="contain"
@@ -278,8 +282,9 @@ const ImageGallery = (props: ImageGalleryProps) => {
                   >
                     <KiboImage
                       src={
-                        (images[selectedImage.selectedIndex]?.imageUrl as string) ||
-                        placeholderImageUrl
+                        productGetters.handleProtocolRelativeUrl(
+                          images[selectedImage.selectedIndex]?.imageUrl as string
+                        ) || placeholderImageUrl
                       }
                       alt={images[selectedImage.selectedIndex]?.altText as string}
                       layout="fill"

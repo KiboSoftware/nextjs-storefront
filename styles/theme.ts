@@ -20,12 +20,14 @@ let theme = createTheme({
     fontFamily: 'Roboto, sans-serif',
     h1: {
       fontSize: '1.75rem', // 28px
+      fontWeight: 'bold',
       '@media (max-width:600px)': {
         fontSize: '1.5rem', // 24px
       },
     },
     h2: {
       fontSize: '1.5rem', // 24px
+      fontWeight: 'bold',
       '@media (max-width:600px)': {
         fontSize: '1.25rem', // 20px
       },
