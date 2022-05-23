@@ -39,4 +39,16 @@ describe('PromoCode Component', () => {
     const ApplyButton = screen.getByTestId('promo-button')
     expect(ApplyButton).not.toHaveClass('Mui-disabled')
   })
+
+  it('should render remove button', () => {
+    render(<PromocodeBadgeComponent {...PromocodeBadgeComponent.args} />)
+    const removeButton = screen.getByRole('button')
+    expect(removeButton).toBeVisible()
+  })
+
+  it('should render ApplyPromocode button', () => {
+    render(<PromocodeBadgeComponent {...PromocodeBadgeComponent.args} />)
+    const ApplyPromocode = screen.getByTestId('promo-button')
+    expect(ApplyPromocode).toBeVisible()
+  })
 })

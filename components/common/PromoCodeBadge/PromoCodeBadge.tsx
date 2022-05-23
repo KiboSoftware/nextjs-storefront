@@ -2,8 +2,8 @@
 
 import { useState, useRef, useEffect } from 'react'
 
-import CancelOutlinedIcon from '@mui/icons-material/CancelOutlined'
-import { Typography, Box, Button, Stack } from '@mui/material'
+import CloseIcon from '@mui/icons-material/Close'
+import { Typography, Box, Button, Stack, IconButton } from '@mui/material'
 import { useTranslation } from 'next-i18next'
 
 import KiboTextBox from '../KiboTextBox/KiboTextBox'
@@ -82,13 +82,15 @@ export const PromoCodeBadge = (props: any) => {
               <Box component="div" sx={styles.boxStyle}>
                 <Stack direction="row" spacing={1.5} alignItems="center">
                   <Typography sx={{ textAlign: 'left' }}>{e}</Typography>
-                  <CancelOutlinedIcon
-                    sx={{
-                      cursor: 'pointer',
-                      fontSize: '1rem',
-                    }}
-                    onClick={() => handleRemoveCouponCode(e)}
-                  />
+                  <IconButton>
+                    <CloseIcon
+                      sx={{
+                        cursor: 'pointer',
+                        fontSize: '1rem',
+                      }}
+                      onClick={() => handleRemoveCouponCode(e)}
+                    />
+                  </IconButton>
                 </Stack>
               </Box>
             </>
