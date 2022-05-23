@@ -72,32 +72,31 @@ describe('[components] CardDetailsForm', () => {
       setup()
 
       const textBoxList = screen.getAllByRole('textbox')
-      const cardNumber = textBoxList[0]
+      const cardNumber = textBoxList[0] as HTMLInputElement
       userEvent.type(cardNumber, '4111111111111111')
       cardNumber.focus()
-
-      expect(onChangeMock).toHaveBeenCalled()
+      expect(cardNumber.value).toEqual('4111111111111111')
     })
     it('Should onChange call on cardNumber', async () => {
       setup()
 
       const textBoxList = screen.getAllByRole('textbox')
-      const expiryDate = textBoxList[1]
+      const expiryDate = textBoxList[1] as HTMLInputElement
       expiryDate.focus()
       userEvent.type(expiryDate, '03/2023')
 
-      expect(onChangeMock).toHaveBeenCalled()
+      expect(expiryDate.value).toEqual('03/2023')
     })
     it('Should onChange call on Security Code(CVV)', async () => {
       setup()
 
       const textBoxList = screen.getAllByRole('textbox')
-      const securityCode = textBoxList[2]
+      const securityCode = textBoxList[2] as HTMLInputElement
       securityCode.focus()
       userEvent.type(securityCode, '123')
 
       // assert
-      expect(onChangeMock).toHaveBeenCalled()
+      expect(securityCode.value).toEqual('123')
     })
   })
 
