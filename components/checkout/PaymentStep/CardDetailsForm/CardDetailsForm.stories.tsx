@@ -16,4 +16,6 @@ export const Common = Template.bind({})
 
 Common.args = {
   onSaveCardData: (cardDetails: CardDetailsProps) => cardDetails,
+  stepperStatus: 'INCOMPLETE',
+  onCompleteCallback: () => console.log('called onCompleteCallback : '),
 }
