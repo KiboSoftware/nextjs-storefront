@@ -2,7 +2,7 @@ import { graphql } from 'msw'
 
 import { orderMock } from '../stories/orderMock'
 
-export const handlers = [
+export const checkoutHanlders = [
   // useLoadCheckout
   graphql.query('getCheckout', (_req, res, ctx) => {
     return res(ctx.data(orderMock))
@@ -18,3 +18,5 @@ export const handlers = [
     return res(ctx.data(orderMock))
   }),
 ]
+
+export const handlers = [...checkoutHanlders]

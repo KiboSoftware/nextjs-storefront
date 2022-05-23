@@ -1,17 +1,18 @@
 import { muiTheme } from 'storybook-addon-material-ui5'
-import { I18nextProvider } from 'react-i18next'
-import * as NextImage from 'next/image'
 import { INITIAL_VIEWPORTS } from '@storybook/addon-viewport'
 import { initialize, mswDecorator } from 'msw-storybook-addon'
-
-import i18n from './i18n'
-import storefrontTheme from '../styles/theme'
 import { setConfig } from 'next/config'
-import { publicRuntimeConfig } from '../next.config'
+import * as NextImage from 'next/image'
+import { I18nextProvider } from 'react-i18next'
 setConfig({ publicRuntimeConfig })
 
 import { QueryClientProvider } from 'react-query'
+
+import * as handlers from '../__mocks__/msw/handlers'
 import { queryClient } from '../lib/react-query/queryClient'
+import { publicRuntimeConfig } from '../next.config'
+import storefrontTheme from '../styles/theme'
+import i18n from './i18n'
 
 const OriginalNextImage = NextImage.default
 
@@ -45,5 +46,11 @@ export const parameters = {
   },
   viewport: {
     viewports: INITIAL_VIEWPORTS,
+  },
+
+  msw: {
+    handlers: {
+      checkout: [...handlers.checkoutHanlders],
+    },
   },
 }
