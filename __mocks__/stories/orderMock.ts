@@ -1,11 +1,11 @@
 import type { Order } from '@/lib/gql/types'
 export const orderMock: { checkout: Order } = {
   checkout: {
+    id: '1366c6ef4decfa00013b9b2b000045a4',
     amountAvailableForRefund: 0,
     amountRefunded: 0,
     amountRemainingForPayment: 3764.75,
     totalCollected: 0,
-    id: '1366c6ef4decfa00013b9b2b000045a4',
     email: 'chandra@email.com',
     total: 3764.75,
     shippingTotal: 15,

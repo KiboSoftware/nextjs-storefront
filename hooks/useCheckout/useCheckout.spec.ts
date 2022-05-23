@@ -11,7 +11,9 @@ describe('[hooks] useCheckout', () => {
     const { result, waitFor } = renderHook(() => useCheckout({ cartId }), {
       wrapper: createQueryClientWrapper(),
     })
+
     await waitFor(() => result.current.isSuccess)
+
     expect(result.current.data).toEqual(orderMock.checkout)
   })
   it('should return checkout details when user provides valid checkoutId', async () => {

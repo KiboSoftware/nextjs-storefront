@@ -35,6 +35,7 @@ const Checkout = (props: CheckoutProps) => {
   const [activeStep, setActiveStep] = useState<number>(0)
   const [activeStepStatus, setActiveStepStatus] = useState<string>('INCOMPLETE')
 
+  // tobe: remove below code later
   const { data: checkoutInfo, isLoading: _isCheckoutLoading } = useCheckout({
     checkoutId: '137a979305c65d00010800230000678b',
   })
@@ -78,7 +79,7 @@ const Checkout = (props: CheckoutProps) => {
         </Typography>
         <KiboStepper steps={steps} activeStep={activeStep}>
           <DetailsStep
-            checkout={checkout}
+            checkout={checkoutInfo}
             stepperStatus={activeStepStatus}
             onCompleteCallback={completeStepCallback}
           />

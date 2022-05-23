@@ -1,8 +1,10 @@
 import { useMutation, useQueryClient } from 'react-query'
 
-import { orderMock } from '../../__mocks__/stories/orderMock'
 import { OrderInput } from '../../lib/gql/types'
-import { querykeys } from '../../lib/react-query/queryKeys'
+import { checkoutKeys } from '../../lib/react-query/queryKeys'
+import { makeGraphQLClient } from '@/lib/gql/client'
+import { updateOrder } from '@/lib/gql/mutations/checkout/update-order'
+
 export interface PersonalInfo {
   orderId: string
   updateMode: string
@@ -10,8 +12,15 @@ export interface PersonalInfo {
   orderInput: OrderInput
 }
 
-const updatePersonalInfo = async (_personalInfo: PersonalInfo) => {
-  return orderMock
+const updatePersonalInfo = async (personalInfo: PersonalInfo) => {
+  const client = makeGraphQLClient()
+
+  const response = await client.request({
+    document: updateOrder,
+    variables: personalInfo,
+  })
+
+  return response?.checkout
 }
 
 export const useUpdatePersonalInfo = () => {
@@ -19,7 +28,7 @@ export const useUpdatePersonalInfo = () => {
 
   return useMutation(updatePersonalInfo, {
     onSuccess: () => {
-      queryClient.invalidateQueries([querykeys.LOAD_CHECKOUT])
+      queryClient.removeQueries([checkoutKeys.detail])
     },
   })
 }

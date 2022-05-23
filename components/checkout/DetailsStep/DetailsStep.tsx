@@ -163,7 +163,7 @@ const DetailsStep = (props: DetailsProps) => {
     <Stack gap={2} data-testid="checkout-details">
       <Button
         variant="contained"
-        color="primary"
+        color="inherit"
         sx={{ ...buttonStyle }}
         style={{ textTransform: 'none' }}
       >
