@@ -97,8 +97,6 @@ const DetailsStep = (props: DetailsProps) => {
     password: '',
   }
 
-  console.log('------------personalDetails----------', JSON.stringify(personalDetails))
-
   const {
     formState: { errors },
     handleSubmit,
