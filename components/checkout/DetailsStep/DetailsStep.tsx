@@ -97,6 +97,8 @@ const DetailsStep = (props: DetailsProps) => {
     password: '',
   }
 
+  console.log('------------personalDetails----------', JSON.stringify(personalDetails))
+
   const {
     formState: { errors },
     handleSubmit,
@@ -123,6 +125,7 @@ const DetailsStep = (props: DetailsProps) => {
 
   const updateCheckout = async (formData: PersonalDetails) => {
     const { email } = formData
+
     const personalInfo: PersonalInfo = {
       orderId: checkout?.id as string,
       updateMode: 'ApplyToOriginal',

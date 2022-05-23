@@ -32,7 +32,14 @@ export const decorators = [
 
 // Initialize MSW
 if (process.env.NODE_ENV !== 'test') {
-  initialize()
+  initialize({
+    onUnhandledRequest: ({ method, url }) => {
+      console.error(`Unhandled ${method} request to ${url}.
+        This exception has been only logged in the console, however, it's strongly recommended to resolve this error as you don't want unmocked data in Storybook stories.
+        If you wish to mock an error response, please refer to this guide: https://mswjs.io/docs/recipes/mocking-error-responses
+      `)
+    },
+  })
   decorators.push(mswDecorator)
 }
 

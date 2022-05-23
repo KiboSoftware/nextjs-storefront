@@ -37,7 +37,8 @@ const Checkout = (props: CheckoutProps) => {
 
   // tobe: remove below code later
   const { data: checkoutInfo, isLoading: _isCheckoutLoading } = useCheckout({
-    checkoutId: '137a979305c65d00010800230000678b',
+    cartId: '138bb6253e492600018cec820000678b',
+    checkoutId: undefined,
   })
 
   const handleBack = () => {

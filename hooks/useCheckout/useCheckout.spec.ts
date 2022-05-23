@@ -1,5 +1,4 @@
 import { renderHook } from '@testing-library/react-hooks'
-import { QueryClient, QueryClientProvider, setLogger } from 'react-query'
 
 import { orderMock } from '../../__mocks__/stories/orderMock'
 import { createQueryClientWrapper } from '../../__test__/utils/renderWithQueryClient'
