@@ -87,5 +87,8 @@
   "change-store": "Change Store",
   
   "shop-all": "Shop All",
-  "advertisment": "Advertisment"
+  "advertisment": "Advertisment",
+  "registerNow": "Register Now",
+  "loginToYourAccount": "or Login to Your Account",
+  "createAnAccount": "Create an Account"
 }
