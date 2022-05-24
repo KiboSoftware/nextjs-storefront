@@ -15,6 +15,7 @@ export interface KiboTextBoxProps {
   onIconClick?: () => void
 
   /* eslint-disable  @typescript-eslint/no-explicit-any */
+  sx?: any
   [x: string]: any
 }
 
@@ -56,6 +57,7 @@ const KiboTextBox = (props: KiboTextBoxProps) => {
     onKeyDown,
     onIconClick,
     icon,
+    sx,
     ...rest
   } = props
 
@@ -70,6 +72,7 @@ const KiboTextBox = (props: KiboTextBoxProps) => {
           borderWidth: '1px',
           borderStyle: 'solid',
           borderRadius: 1,
+          ...sx,
         }}
         id={label}
         size="small"
