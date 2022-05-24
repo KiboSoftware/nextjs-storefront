@@ -123,7 +123,7 @@ const AddressForm = (props: AddressFormProps) => {
   useEffect(() => {
     // if form is valid, onSubmit callback
     if (stepperStatus === 'VALIDATE') {
-      isValid ? handleSubmit(onValid, onInvalidForm)() : onInvalidForm()
+      handleSubmit(onValid, onInvalidForm)()
     }
   }, [stepperStatus])
 
