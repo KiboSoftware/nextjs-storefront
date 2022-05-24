@@ -9,13 +9,13 @@ const { Common } = composeStories(stories)
 
 const onCloseMock = jest.fn()
 
-const kiboTitleMock = () => <div data-testid="title-component" />
-const kiboContentMock = () => <div data-testid="content-component" />
-const kiboActionsMock = () => <div data-testid="actions-component" />
-const KiboDialogMock = (props: KiboDialogProps) => {
+const RegisterAccountTitleMock = () => <div data-testid="register-account-title-component" />
+const RegisterAccountContentMock = () => <div data-testid="register-account-content-component" />
+const RegisterAccountActionsMock = () => <div data-testid="register-account-actions-component" />
+const RegisterAccountModalMock = (props: KiboDialogProps) => {
   const { Title, Content, Actions } = props
   return (
-    <div data-testid="kibo-dialog">
+    <div data-testid="register-account-modal">
       {Title}
       <br />
       {Content}
@@ -26,10 +26,10 @@ const KiboDialogMock = (props: KiboDialogProps) => {
   )
 }
 
-jest.mock('../Title/Title', () => kiboTitleMock)
-jest.mock('../Content/Content', () => kiboContentMock)
-jest.mock('../Actions/Actions', () => kiboActionsMock)
-jest.mock('../../../common/KiboDialog/KiboDialog', () => KiboDialogMock)
+jest.mock('../Title/Title', () => RegisterAccountTitleMock)
+jest.mock('../Content/Content', () => RegisterAccountContentMock)
+jest.mock('../Actions/Actions', () => RegisterAccountActionsMock)
+jest.mock('../../../common/KiboDialog/KiboDialog', () => RegisterAccountModalMock)
 
 describe('[components] Register Account Modal', () => {
   const setup = (params = {}) => render(<Common {...params} onClose={onCloseMock} />)
@@ -39,14 +39,14 @@ describe('[components] Register Account Modal', () => {
       isOpen: true,
     })
 
-    const kiboDialog = screen.getByTestId('kibo-dialog')
-    const titleComponent = screen.getByTestId('title-component')
-    const contentComponent = screen.getByTestId('content-component')
-    const actionsComponent = screen.getByTestId('actions-component')
+    const registerAccountDialog = screen.getByTestId('register-account-modal')
+    const registerAccountTitleComponent = screen.getByTestId('register-account-title-component')
+    const registerAccountContentComponent = screen.getByTestId('register-account-content-component')
+    const registerAccountActionsComponent = screen.getByTestId('register-account-actions-component')
 
-    expect(kiboDialog).toBeInTheDocument()
-    expect(titleComponent).toBeInTheDocument()
-    expect(contentComponent).toBeInTheDocument()
-    expect(actionsComponent).toBeInTheDocument()
+    expect(registerAccountDialog).toBeInTheDocument()
+    expect(registerAccountTitleComponent).toBeInTheDocument()
+    expect(registerAccountContentComponent).toBeInTheDocument()
+    expect(registerAccountActionsComponent).toBeInTheDocument()
   })
 })
