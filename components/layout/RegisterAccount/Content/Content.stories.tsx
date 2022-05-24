@@ -9,6 +9,6 @@ export default {
   component: Content,
 } as ComponentMeta<typeof Content>
 
-const Template: ComponentStory<typeof Content> = (args) => <Content />
+const Template: ComponentStory<typeof Content> = () => <Content />
 
 export const Common = Template.bind({})

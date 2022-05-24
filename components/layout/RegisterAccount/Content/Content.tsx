@@ -52,11 +52,10 @@ const Content = () => {
   }
 
   const {
-    formState: { errors },
+    formState: { errors, isValid },
     handleSubmit,
     control,
     watch,
-    getValues,
   } = useForm({
     mode: 'onBlur',
     reValidateMode: 'onBlur',
@@ -161,7 +160,12 @@ const Content = () => {
           )}
         />
         {showPasswordValidation && <PasswordValidation password={userEnteredPassword} />}
-        <Button variant="contained" color="primary" onClick={() => handleSubmit(createAccount)()}>
+        <Button
+          variant="contained"
+          color="primary"
+          onClick={() => handleSubmit(createAccount)()}
+          disabled={!(isUserEnteredPasswordValid() && isValid)}
+        >
           {t('common:createAnAccount')}
         </Button>
       </FormControl>
