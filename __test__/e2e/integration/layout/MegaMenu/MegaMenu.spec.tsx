@@ -10,25 +10,9 @@ import * as stories from '../../../../../components/layout/MegaMenu/MegaMenu.sto
 const { Common } = composeStories(stories)
 
 describe('[components] - MegaMenu Integration', () => {
-  const setIsBackdropOpenMock = jest.fn((isOpen) => {
-    return isOpen
-  })
-
   const setup = () => {
-    render(<Common {...Common.args} setIsBackdropOpen={setIsBackdropOpenMock} />)
+    render(<Common {...Common.args} />)
   }
-  it('should render component', () => {
-    setup()
-
-    const categoryTree = Common.args?.categoryTree?.filter((c) => c.isDisplayed === true) || []
-    categoryTree.forEach((cat) => {
-      const name = screen.getByText(`${cat.content?.name}`)
-      expect(name).toBeVisible()
-    })
-
-    const menuItems = screen.getAllByRole('group')
-    expect(menuItems).toHaveLength(categoryTree.length)
-  })
 
   it('should display menu items and advertisment while hovering on category', async () => {
     setup()
@@ -38,7 +22,7 @@ describe('[components] - MegaMenu Integration', () => {
     const menuItems = screen.getAllByRole('group')
     userEvent.hover(menuItems[0])
 
-    childrenCategories.map((cat) => {
+    childrenCategories.forEach((cat) => {
       const name = screen.getByText(cat?.content?.name || '')
       expect(name).toBeVisible()
     })

@@ -30,7 +30,12 @@ const MegaMenuItem = (props: MegaMenuItemProps) => {
             primaryTypographyProps={{ variant: 'subtitle2', fontWeight: 'bold' }}
           />
         </ListItem>
-        <ListItem button sx={{ cursor: 'pointer' }} onClick={() => handleClick(categoryCode || '')}>
+        <ListItem
+          button
+          sx={{ cursor: 'pointer' }}
+          onClick={() => handleClick(categoryCode || '')}
+          data-testid="shopAllLink"
+        >
           <ListItemText primary={t('shop-all')} primaryTypographyProps={{ variant: 'subtitle2' }} />
         </ListItem>
         {categoryChildren?.map((cat) => (
