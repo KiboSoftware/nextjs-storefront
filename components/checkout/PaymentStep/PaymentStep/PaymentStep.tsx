@@ -12,12 +12,12 @@ import {
 } from '@mui/material'
 import { useTranslation } from 'next-i18next'
 
+import { usePaymentTypes } from '../../../../hooks/usePaymentTypes/usePaymentTypes'
 import { Action } from '../../DetailsStep/DetailsStep'
 import CardDetailsForm, {
   CardDetailsProps,
 } from '@/components/checkout/PaymentStep/CardDetailsForm/CardDetailsForm'
 import AddressForm, { Address, Contact } from '@/components/common/AddressForm/AddressForm'
-import { usePaymentTypes } from '@/hooks/usePaymentTypes'
 
 import type { Order } from '@/lib/gql/types'
 
