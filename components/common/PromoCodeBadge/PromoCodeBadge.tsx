@@ -6,8 +6,12 @@ import CloseIcon from '@mui/icons-material/Close'
 import { Typography, Box, Button, Stack, IconButton } from '@mui/material'
 import { useTranslation } from 'next-i18next'
 
-import KiboTextBox from '../KiboTextBox/KiboTextBox'
-
+import KiboTextBox from '@/components/common/KiboTextBox/KiboTextBox'
+export interface PromocodeBadgeProps {
+  onApplyCouponCode: (promo: string) => void
+  onRemoveCouponCode: (promo: string) => void
+  couponList: any
+}
 const styles = {
   boxStyle: {
     display: 'inline-block',
@@ -24,29 +28,24 @@ const styles = {
   buttonStyle: { width: '5rem', height: '2.20rem', marginTop: '1.5rem' },
 }
 
-export const PromoCodeBadge = (props: any) => {
+export const PromoCodeBadge = (props: PromocodeBadgeProps) => {
+  const { onApplyCouponCode, onRemoveCouponCode, couponList } = props
   const promoRef = useRef<any>()
   const [promo, setPromo] = useState<string>('')
-  const [promoActive, setPromoActive] = useState(false)
   const [isEnabled, setIsEnabled] = useState(true)
 
-  const handleOnChange = (_name: any, value: any) => {
+  const handleOnChange = (_name: any, value: string) => {
     setPromo(value)
   }
   const { t } = useTranslation('common')
-  const { onApplyCouponCode, onRemoveCouponCode, couponList } = props
 
   const handleApplyCouponCode = () => {
-    setPromoActive(true)
     onApplyCouponCode(promo)
     setPromo('')
     promoRef.current.value = null
   }
   const handleRemoveCouponCode = (item: any) => {
     onRemoveCouponCode(item)
-    if (couponList.length === 0) {
-      setPromoActive(false)
-    }
   }
   useEffect(() => {
     if (promo?.length > 0) {
@@ -60,10 +59,11 @@ export const PromoCodeBadge = (props: any) => {
       <Box sx={{ display: 'flex' }}>
         <KiboTextBox
           inputRef={promoRef}
+          // value={promo}
           onChange={handleOnChange}
           sx={styles.textBoxStyle}
           placeholder={t('promo-code')}
-          data-testid="enter-promo"
+          data-testid="promo-input"
         />
         <Button
           disabled={isEnabled}
@@ -75,28 +75,24 @@ export const PromoCodeBadge = (props: any) => {
           {t('apply')}
         </Button>
       </Box>
-      {promoActive && (
+      {couponList?.map((coupon: string[]) => (
         <>
-          {couponList?.map((e: any) => (
-            <>
-              <Box component="div" sx={styles.boxStyle}>
-                <Stack direction="row" spacing={1.5} alignItems="center">
-                  <Typography sx={{ textAlign: 'left' }}>{e}</Typography>
-                  <IconButton>
-                    <CloseIcon
-                      sx={{
-                        cursor: 'pointer',
-                        fontSize: '1rem',
-                      }}
-                      onClick={() => handleRemoveCouponCode(e)}
-                    />
-                  </IconButton>
-                </Stack>
-              </Box>
-            </>
-          ))}
+          <Box data-testid="promotype" component="div" sx={styles.boxStyle}>
+            <Stack direction="row" spacing={0.5} alignItems="center">
+              <Typography sx={{ textAlign: 'left' }}>{coupon}</Typography>
+              <IconButton>
+                <CloseIcon
+                  sx={{
+                    cursor: 'pointer',
+                    fontSize: '1rem',
+                  }}
+                  onClick={() => handleRemoveCouponCode(coupon)}
+                />
+              </IconButton>
+            </Stack>
+          </Box>
         </>
-      )}
+      ))}
     </>
   )
 }
@@ -106,7 +102,7 @@ export const PromoCodeBadgeMain = () => {
   const onRemoveCouponCode = (list: any) => {
     setCouponList((coupon: any) => coupon.filter((item: any) => item !== list))
   }
-  const onApplyCouponCode = (promo: any) => {
+  const onApplyCouponCode = (promo: string) => {
     setCouponList((e: any) => [...e, promo])
   }
   return (
@@ -114,7 +110,6 @@ export const PromoCodeBadgeMain = () => {
       <PromoCodeBadge
         onApplyCouponCode={onApplyCouponCode}
         onRemoveCouponCode={onRemoveCouponCode}
-        setCouponList={setCouponList}
         couponList={couponList}
       />
     </>

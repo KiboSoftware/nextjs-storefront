@@ -9,15 +9,11 @@ export default {
   title: 'Common/PromoCodeBadge',
 } as ComponentMeta<typeof PromoCodeBadge>
 
-const Template: ComponentStory<typeof PromoCodeBadge> = (args) => <PromoCodeBadgeMain {...args} />
-const BadgeTemplate: ComponentStory<typeof PromoCodeBadge> = (args) => <PromoBadge {...args} />
+const Template: ComponentStory<typeof PromoCodeBadge> = () => <PromoCodeBadgeMain />
+const BadgeTemplate: ComponentStory<typeof PromoBadge> = (args) => <PromoBadge {...args} />
 
 export const PromocodeBadgeComponent = Template.bind({})
 export const PromocodeBadge = BadgeTemplate.bind({})
-
-PromocodeBadgeComponent.args = {
-  isEnabled: false,
-}
 
 PromocodeBadge.args = {
   promoCode: 'SAVE50',

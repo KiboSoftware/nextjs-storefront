@@ -8,10 +8,6 @@ export default {
   title: 'Common/PromoCode',
 } as ComponentMeta<typeof PromoCode>
 
-const Template: ComponentStory<typeof PromoCode> = (args) => <PromoCode {...args} />
+const Template: ComponentStory<typeof PromoCode> = () => <PromoCode />
 
 export const PromocodeComponent = Template.bind({})
-
-PromocodeComponent.args = {
-  isEnabled: true,
-}

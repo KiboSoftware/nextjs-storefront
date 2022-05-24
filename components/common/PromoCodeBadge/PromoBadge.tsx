@@ -1,8 +1,10 @@
 /** @format */
 
-import CancelOutlinedIcon from '@mui/icons-material/CancelOutlined'
-import { Typography, Box, Stack } from '@mui/material'
-
+import CloseIcon from '@mui/icons-material/Close'
+import { Typography, Box, Stack, IconButton } from '@mui/material'
+export interface PromoBadgeProps {
+  promoCode: string
+}
 const styles = {
   boxStyle: {
     display: 'inline-block',
@@ -13,20 +15,23 @@ const styles = {
   },
 }
 
-const PromoBadge = ({ promoCode }: any) => {
+const PromoBadge = (props: PromoBadgeProps) => {
+  const { promoCode } = props
   return (
     <>
-      <Box component="div" sx={styles.boxStyle}>
-        <Stack direction="row" spacing={1.5} alignItems="center">
-          <Typography sx={{ textAlign: 'left' }}>{promoCode}</Typography>
-          <CancelOutlinedIcon
-            sx={{
-              cursor: 'pointer',
-              fontSize: '1rem',
-            }}
-          />
-        </Stack>
-      </Box>
+       <Box component="div" sx={styles.boxStyle}>
+            <Stack direction="row" spacing={0.5} alignItems="center">
+              <Typography sx={{ textAlign: 'left' }}>{promoCode}</Typography>
+              <IconButton>
+                <CloseIcon
+                  sx={{
+                    cursor: 'pointer',
+                    fontSize: '1rem',
+                  }}
+                />
+              </IconButton>
+            </Stack>
+          </Box>
     </>
   )
 }

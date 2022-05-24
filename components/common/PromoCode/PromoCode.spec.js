@@ -11,7 +11,7 @@ const { PromocodeComponent } = composeStories(stories)
 
 describe('PromoCode Component', () => {
   it('should render PromoCode button text', () => {
-    render(<PromocodeComponent {...PromocodeComponent.args} />)
+    render(<PromocodeComponent />)
     const PromoCodeApply = screen.getByRole('button', {
       name: /apply/i,
     })
@@ -19,7 +19,7 @@ describe('PromoCode Component', () => {
   })
 
   it('should render PromoCode inputfield text', () => {
-    render(<PromocodeComponent {...PromocodeComponent.args} />)
+    render(<PromocodeComponent />)
     const PromoCode = screen.getByRole('textbox')
 
     expect(PromoCode).toBeVisible()
