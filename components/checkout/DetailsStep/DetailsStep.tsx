@@ -102,7 +102,6 @@ const DetailsStep = (props: DetailsProps) => {
     handleSubmit,
     control,
     watch,
-    trigger,
     getValues,
   } = useForm({
     mode: 'onBlur',
@@ -143,7 +142,12 @@ const DetailsStep = (props: DetailsProps) => {
       if (formData?.showAccountFields) {
         await createAccount(formData)
       }
-      onCompleteCallback({ type: 'COMPLETE' })
+
+      if (isUserEnteredPasswordValid()) {
+        onCompleteCallback({ type: 'COMPLETE' })
+      } else {
+        onCompleteCallback({ type: 'INCOMPLETE' })
+      }
     } catch (error) {
       onCompleteCallback({ type: 'INCOMPLETE' })
       console.error(error)
@@ -156,11 +160,10 @@ const DetailsStep = (props: DetailsProps) => {
   }
 
   useEffect(() => {
-    trigger()
     if (stepperStatus === 'VALIDATE') {
-      isUserEnteredPasswordValid() ? handleSubmit(onValid, onInvalidForm)() : onInvalidForm()
+      handleSubmit(onValid, onInvalidForm)()
     }
-  }, [stepperStatus, onCompleteCallback])
+  }, [stepperStatus])
 
   return (
     <Stack gap={2} data-testid="checkout-details">
