@@ -10,8 +10,8 @@ export interface KiboTextBoxProps {
   error?: boolean
   helperText?: string
   placeholder?: string
-  onChange: (name: string, value: string) => void
   icon?: React.ReactNode
+  onChange: (name: string, value: string) => void
   onIconClick?: () => void
 
   /* eslint-disable  @typescript-eslint/no-explicit-any */
@@ -53,11 +53,11 @@ const KiboTextBox = (props: KiboTextBoxProps) => {
     error = false,
     helperText = '',
     placeholder,
-    onChange,
     onKeyDown,
-    onIconClick,
     icon,
     sx,
+    onChange,
+    onIconClick,
     ...rest
   } = props
 
