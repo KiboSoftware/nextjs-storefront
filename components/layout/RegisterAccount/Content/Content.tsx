@@ -1,3 +1,4 @@
+/* eslint-disable  jsx-a11y/no-autofocus */
 import React, { useState } from 'react'
 
 import { yupResolver } from '@hookform/resolvers/yup'
@@ -18,6 +19,10 @@ export interface RegisterAccountDetails {
   password: string
 }
 
+interface ContentProps {
+  setAutoFocus?: boolean
+}
+
 const styles = {
   contentBox: {
     padding: '0.875rem',
@@ -27,13 +32,14 @@ const styles = {
   },
 }
 
-const Content = () => {
-  const [showPassword, setShowPassword] = useState(false)
+const Content = (props: ContentProps) => {
+  const { setAutoFocus = true } = props
+  const [showPassword, setShowPassword] = useState<boolean>(false)
+  const [showPasswordValidation, setShowPassowordValidation] = useState<boolean>(false)
+  const { t } = useTranslation(['checkout', 'common'])
+
   const handleClickShowPassword = () => setShowPassword(!showPassword)
   const handleMouseDownPassword = () => setShowPassword(!showPassword)
-  const [showPasswordValidation, setPassowordValidation] = useState(false)
-
-  const { t } = useTranslation(['checkout', 'common'])
 
   const useDetailsSchema = () => {
     return yup.object().shape({
@@ -85,6 +91,7 @@ const Content = () => {
               value={field.value}
               label={t('email')}
               required
+              autoFocus={setAutoFocus}
               sx={{ ...styles.formInput }}
               onBlur={field.onBlur}
               onChange={(_name, value) => field.onChange(value)}
@@ -139,7 +146,7 @@ const Content = () => {
               sx={{ ...styles.formInput }}
               onBlur={field.onBlur}
               onChange={(_name, value) => {
-                setPassowordValidation(true)
+                setShowPassowordValidation(true)
                 field.onChange(value)
               }}
               error={!!errors?.password}
@@ -159,14 +166,16 @@ const Content = () => {
             />
           )}
         />
+
         {showPasswordValidation && <PasswordValidation password={userEnteredPassword} />}
+
         <Button
           variant="contained"
           color="primary"
           onClick={() => handleSubmit(createAccount)()}
           disabled={!(isUserEnteredPasswordValid() && isValid)}
         >
-          {t('common:createAnAccount')}
+          {t('common:create-an-account')}
         </Button>
       </FormControl>
     </Box>

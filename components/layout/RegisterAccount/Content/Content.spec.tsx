@@ -24,13 +24,14 @@ describe('[components] Register Account(Content)', () => {
     const firstNameInput = screen.getAllByTestId(/text-box-mock/i)[1]
     const lastNameInput = screen.getAllByTestId(/text-box-mock/i)[2]
     const passwordInput = screen.getAllByTestId(/text-box-mock/i)[3]
-    const createAccountButton = screen.getByRole('button', { name: /common:createAnAccount/i })
+    const createAccountButton = screen.getByRole('button', { name: /common:create-an-account/i })
 
     expect(emailInput).toBeVisible()
     expect(firstNameInput).toBeVisible()
     expect(lastNameInput).toBeVisible()
     expect(passwordInput).toBeVisible()
     expect(createAccountButton).toBeVisible()
+    expect(createAccountButton).toBeDisabled()
   })
 
   it('should show user entered values', async () => {
