@@ -11,9 +11,7 @@ const { Common } = composeStories(stories)
 
 const onCloseMock = jest.fn()
 
-// const RegisterAccountTitleMock = () => <div data-testid="register-account-title-component" />
 const RegisterAccountContentMock = () => <div data-testid="register-account-content-component" />
-// const RegisterAccountActionsMock = () => <div data-testid="register-account-actions-component" />
 const RegisterAccountDialogMock = (props: KiboDialogProps) => {
   const { Title, Content, Actions } = props
   return (
@@ -28,9 +26,7 @@ const RegisterAccountDialogMock = (props: KiboDialogProps) => {
   )
 }
 
-// jest.mock('../Title/Title', () => RegisterAccountTitleMock)
 jest.mock('../Content/Content', () => RegisterAccountContentMock)
-// jest.mock('../Actions/Actions', () => RegisterAccountActionsMock)
 jest.mock('../../../common/KiboDialog/KiboDialog', () => RegisterAccountDialogMock)
 
 describe('[components] Register Account Dialog', () => {
@@ -50,10 +46,8 @@ describe('[components] Register Account Dialog', () => {
     })
 
     const registerAccountDialog = screen.getByTestId('register-account-dialog')
-    // const registerAccountTitleComponent = screen.getByTestId('register-account-title-component')
     const registerAccountTitle = screen.getByText(/register-now/i)
     const registerAccountContentComponent = screen.getByTestId('register-account-content-component')
-    // const registerAccountActionsComponent = screen.getByTestId('register-account-actions-component')
     const loginToYourAccountLink = screen.getByText(/login-to-your-account/i)
 
     userEvent.click(loginToYourAccountLink)
@@ -63,6 +57,5 @@ describe('[components] Register Account Dialog', () => {
     expect(registerAccountContentComponent).toBeVisible()
     expect(loginToYourAccountLink).toBeVisible()
     expect(onLoginToYourAccountMock).toHaveBeenCalled()
-    // expect(registerAccountActionsComponent).toBeInTheDocument()
   })
 })
