@@ -8,22 +8,20 @@ import * as stories from './Content.stories' // import all stories from the stor
 
 const { Common } = composeStories(stories)
 
-const onChangMock = jest.fn()
-const KiboTextBoxMock = () => <input data-testid="text-box-mock" onChange={onChangMock} />
-const PasswordValidationMock = () => <div data-testid="password-validation-component" />
-jest.mock('../../../common/KiboTextBox/KiboTextBox', () => KiboTextBoxMock)
-jest.mock('../../../common/PasswordValidation/PasswordValidation', () => PasswordValidationMock)
-
 describe('[components] Register Account(Content)', () => {
-  const setup = (args = Common.args) => render(<Common {...args} />)
+  const setup = (args = Common.args) => {
+    const onRegisterToYourAccountMock = jest.fn()
+    render(<Common {...args} onRegisterToYourAccount={onRegisterToYourAccountMock} />)
+    return { onRegisterToYourAccountMock }
+  }
 
   it('should render component', () => {
     setup()
 
-    const emailInput = screen.getAllByTestId(/text-box-mock/i)[0]
-    const firstNameInput = screen.getAllByTestId(/text-box-mock/i)[1]
-    const lastNameInput = screen.getAllByTestId(/text-box-mock/i)[2]
-    const passwordInput = screen.getAllByTestId(/text-box-mock/i)[3]
+    const emailInput = screen.getAllByRole('textbox')[0]
+    const firstNameInput = screen.getAllByRole('textbox')[1]
+    const lastNameInput = screen.getAllByRole('textbox')[2]
+    const passwordInput = screen.getByRole('button', { name: /toggle password visibility/i })
     const createAccountButton = screen.getByRole('button', { name: /common:create-an-account/i })
 
     expect(emailInput).toBeVisible()
@@ -32,20 +30,5 @@ describe('[components] Register Account(Content)', () => {
     expect(passwordInput).toBeVisible()
     expect(createAccountButton).toBeVisible()
     expect(createAccountButton).toBeDisabled()
-  })
-
-  it('should show user entered values', async () => {
-    setup()
-    const email = screen.getAllByRole('textbox')[0]
-    const firstName = screen.getAllByRole('textbox')[1]
-    const lastName = screen.getAllByRole('textbox')[2]
-    const passwordInput = screen.getAllByRole('textbox')[3]
-
-    userEvent.type(email, 'a')
-    userEvent.type(firstName, 'b')
-    userEvent.type(lastName, 'c')
-    userEvent.type(passwordInput, 'd')
-
-    expect(onChangMock).toHaveBeenCalledTimes(4)
   })
 })

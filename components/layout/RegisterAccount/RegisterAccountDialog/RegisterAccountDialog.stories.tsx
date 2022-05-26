@@ -8,7 +8,8 @@ export default {
   title: 'Layout/Register Account/Dialog',
   component: RegisterAccountDialog,
   argTypes: {
-    onLoginToYourAccount: { action: 'Login Dialog Open' },
+    onLoginToYourAccountDialogToggle: { action: 'Login Dialog Open' },
+    onRegisterToYourAccount: { action: 'register form data' },
   },
 } as ComponentMeta<typeof RegisterAccountDialog>
 
@@ -21,4 +22,5 @@ export const Common = Template.bind({})
 Common.args = {
   isOpen: true,
   isCenteredDialog: false,
+  setAutoFocus: false,
 }

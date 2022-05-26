@@ -36,7 +36,7 @@ describe('[components] Register Account Dialog', () => {
       <Common
         {...params}
         onDialogClose={onCloseMock}
-        onLoginToYourAccount={onLoginToYourAccountMock}
+        onLoginToYourAccountDialogToggle={onLoginToYourAccountMock}
       />
     )
 

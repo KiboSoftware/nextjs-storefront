@@ -21,6 +21,7 @@ export interface RegisterAccountDetails {
 
 interface ContentProps {
   setAutoFocus?: boolean
+  onRegisterToYourAccount: (formData: RegisterAccountDetails) => void
 }
 
 const styles = {
@@ -33,13 +34,14 @@ const styles = {
 }
 
 const Content = (props: ContentProps) => {
-  const { setAutoFocus = true } = props
+  const { setAutoFocus = true, onRegisterToYourAccount } = props
   const [showPassword, setShowPassword] = useState<boolean>(false)
   const [showPasswordValidation, setShowPassowordValidation] = useState<boolean>(false)
   const { t } = useTranslation(['checkout', 'common'])
 
   const handleClickShowPassword = () => setShowPassword(!showPassword)
   const handleMouseDownPassword = () => setShowPassword(!showPassword)
+  console.log('focus', setAutoFocus)
 
   const useDetailsSchema = () => {
     return yup.object().shape({
@@ -58,33 +60,43 @@ const Content = (props: ContentProps) => {
   }
 
   const {
-    formState: { errors, isValid },
+    formState: { errors },
     handleSubmit,
     control,
     watch,
   } = useForm({
     mode: 'onBlur',
     reValidateMode: 'onBlur',
-    defaultValues: registerAccountDetails ? registerAccountDetails : undefined,
+    defaultValues: registerAccountDetails,
     resolver: yupResolver(useDetailsSchema()),
     shouldFocusError: true,
   })
+  const userEnteredFirstName = watch(['firstName']).join('')
+  const userEnteredLastName = watch(['lastNameOrSurname']).join('')
+  const userEnteredEmailName = watch(['email']).join('')
   const userEnteredPassword = watch(['password']).join('')
-  const isUserEnteredPasswordValid = () => {
-    return isPasswordValid(userEnteredPassword)
+
+  const isCreateAccountButtonDisabled = () => {
+    return (
+      userEnteredEmailName !== '' &&
+      userEnteredFirstName !== '' &&
+      userEnteredLastName !== '' &&
+      isPasswordValid(userEnteredPassword)
+    )
   }
 
-  const createAccount = async (formData: RegisterAccountDetails) => {
-    console.log(`createAccount: ${JSON.stringify(formData)}`)
+  const handleCreateAccount = async (registerAccountFormData: RegisterAccountDetails) => {
+    console.log(`createAccount: ${JSON.stringify(registerAccountFormData)}`)
+    onRegisterToYourAccount(registerAccountFormData)
   }
 
   return (
     <Box sx={{ ...styles.contentBox }}>
+      {setAutoFocus}
       <FormControl sx={{ width: '100%' }}>
         <Controller
           name="email"
           control={control}
-          defaultValue={registerAccountDetails?.email}
           render={({ field }) => (
             <KiboTextBox
               name="email"
@@ -103,7 +115,6 @@ const Content = (props: ContentProps) => {
         <Controller
           name="firstName"
           control={control}
-          defaultValue={registerAccountDetails?.firstName}
           render={({ field }) => (
             <KiboTextBox
               value={field.value}
@@ -120,7 +131,6 @@ const Content = (props: ContentProps) => {
         <Controller
           name="lastNameOrSurname"
           control={control}
-          defaultValue={registerAccountDetails?.lastNameOrSurname}
           render={({ field }) => (
             <KiboTextBox
               value={field.value}
@@ -137,7 +147,6 @@ const Content = (props: ContentProps) => {
         <Controller
           name="password"
           control={control}
-          defaultValue={registerAccountDetails?.password}
           render={({ field }) => (
             <KiboTextBox
               value={field.value}
@@ -167,13 +176,17 @@ const Content = (props: ContentProps) => {
           )}
         />
 
-        {showPasswordValidation && <PasswordValidation password={userEnteredPassword} />}
+        {showPasswordValidation && (
+          <Box sx={{ marginBottom: '2rem' }}>
+            <PasswordValidation password={userEnteredPassword} />
+          </Box>
+        )}
 
         <Button
           variant="contained"
           color="primary"
-          onClick={() => handleSubmit(createAccount)()}
-          disabled={!(isUserEnteredPasswordValid() && isValid)}
+          onClick={() => handleSubmit(handleCreateAccount)()}
+          disabled={!isCreateAccountButtonDisabled()}
         >
           {t('common:create-an-account')}
         </Button>

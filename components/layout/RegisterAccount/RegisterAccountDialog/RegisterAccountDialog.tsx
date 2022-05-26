@@ -4,13 +4,17 @@ import { Typography, Box, styled, Theme, useTheme, useMediaQuery, Stack, Link } 
 import { useTranslation } from 'next-i18next'
 
 import KiboDialog from '@/components/common/KiboDialog/KiboDialog'
-import Content from '@/components/layout/RegisterAccount/Content/Content'
+import Content, {
+  RegisterAccountDetails,
+} from '@/components/layout/RegisterAccount/Content/Content'
 
 interface RegisterAccountDialogProps {
   isOpen: boolean
   isCenteredDialog: boolean
+  setAutoFocus?: boolean
   onDialogClose: () => void
-  onLoginToYourAccount: () => void
+  onLoginToYourAccountDialogToggle: () => void
+  onRegisterToYourAccount: (data: RegisterAccountDetails) => void
 }
 
 interface StyledThemeProps {
@@ -39,7 +43,14 @@ const StyledTitle = styled(Typography)(({ theme }: StyledThemeProps) => ({
 }))
 
 const RegisterAccountDialog = (props: RegisterAccountDialogProps) => {
-  const { isOpen = false, isCenteredDialog, onDialogClose, onLoginToYourAccount } = props
+  const {
+    isOpen = false,
+    setAutoFocus = true,
+    isCenteredDialog,
+    onDialogClose,
+    onLoginToYourAccountDialogToggle,
+    onRegisterToYourAccount,
+  } = props
   const { t } = useTranslation('common')
   const theme = useTheme()
   const mdScreen = useMediaQuery(theme.breakpoints.up('md'))
@@ -56,7 +67,7 @@ const RegisterAccountDialog = (props: RegisterAccountDialogProps) => {
         component="button"
         variant="body1"
         aria-label={t('login-to-your-account')}
-        onClick={onLoginToYourAccount}
+        onClick={onLoginToYourAccountDialogToggle}
         sx={{ textDecoration: 'underline', color: 'text.primary' }}
       >
         {t('login-to-your-account')}
@@ -67,7 +78,9 @@ const RegisterAccountDialog = (props: RegisterAccountDialogProps) => {
   const DialogArgs = {
     isOpen,
     Title,
-    Content: <Content />,
+    Content: (
+      <Content setAutoFocus={setAutoFocus} onRegisterToYourAccount={onRegisterToYourAccount} />
+    ),
     showContentTopDivider: true,
     showContentBottomDivider: true,
     Actions,
