@@ -52,8 +52,8 @@
   "invalid-expiry-date-format": "Provide Expiration Date as MM/YYYY",
   "security-code": "Security code",
   "security-code-placeholder": "XXX",
-  "security-code-required": "CVV is required",
-  "invalid-security-code": "Invalid CVV",
+  "cvv-is-required": "CVV is required",
+  "invalid-cvv": "Invalid CVV",
   "save-payment-method": "Save payment method",
   "billing-address-same-as-shipping": "Billing address same as shipping"
 }

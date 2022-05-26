@@ -107,7 +107,7 @@ describe('[components] PaymentStep', () => {
         fireEvent.blur(securityCode, emptyInput)
       })
 
-      const validationMessage = screen.getByText(/security-code-required/i)
+      const validationMessage = screen.getByText(/cvv-is-required/i)
       // assert
       expect(validationMessage).toBeVisible()
     })

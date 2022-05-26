@@ -58,8 +58,8 @@ const useCardSchema = () => {
       .test('expiry-date', t('invalid-expiry-date'), (value) => validateExpiryDate(value)),
     cvv: yup
       .string()
-      .required(t('security-code-required'))
-      .matches(/^\d{3,4}$/g, t('invalid-security-code')),
+      .required(t('cvv-is-required'))
+      .matches(/^\d{3,4}$/g, t('invalid-cvv')),
   })
 }
 const CardDetailsForm = (props: CardDetailsFormProps) => {
