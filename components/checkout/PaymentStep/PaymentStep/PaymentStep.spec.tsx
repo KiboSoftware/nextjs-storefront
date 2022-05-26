@@ -48,6 +48,20 @@ describe('[components] PaymentStep', () => {
     expect(billingAddressHeading).toBeInTheDocument()
   })
 
+  it('should display card details when user selects Credit/Debit Card as payment', () => {
+    setup()
+
+    const cardPaymentType = screen.getByRole('radio', {
+      name: /credit \/ debit card/i,
+    })
+    cardPaymentType.focus()
+    fireEvent.change(cardPaymentType, {
+      target: { onChange: onHandlePaymentMethod() },
+    })
+
+    expect(onHandlePaymentMethod).toBeCalled()
+  })
+
   it('should default unchecked saved payment if logged in', () => {
     setup()
 
