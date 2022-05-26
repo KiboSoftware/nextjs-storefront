@@ -10,11 +10,13 @@ const { Common } = composeStories(stories)
 const onBlurMock = jest.fn()
 const onHandleSavePaymentMethodMock = jest.fn()
 
+const AddressFormMock = () => <div />
 const CardDetailsFormMock = () => <div data-testid="card-details" />
 const KiboTextBoxMock = () => <input data-testid="text-box-mock" onBlur={onBlurMock} />
 
 jest.mock('../../../common/KiboTextBox/KiboTextBox', () => KiboTextBoxMock)
 jest.mock('../CardDetailsForm/CardDetailsForm', () => CardDetailsFormMock)
+jest.mock('../../../common/AddressForm/AddressForm', () => AddressFormMock)
 
 describe('[components] PaymentStep', () => {
   const setup = () => render(<Common {...Common.args} />)
@@ -30,16 +32,10 @@ describe('[components] PaymentStep', () => {
     const billingAddressHeading = screen.getByRole('heading', {
       name: /billing-address/i,
     })
-    const textBoxList = screen.getAllByTestId('text-box-mock')
-    const saveBillingAddress = screen.getByRole('checkbox', {
-      name: /save billing address/i,
-    })
 
     expect(savePaymentMethod).toBeInTheDocument()
     expect(copyShippingAddress).toBeInTheDocument()
     expect(billingAddressHeading).toBeInTheDocument()
-    expect(textBoxList).toHaveLength(8)
-    expect(saveBillingAddress).toBeInTheDocument()
   })
 
   it('should default unchecked saved payment if logged in', () => {

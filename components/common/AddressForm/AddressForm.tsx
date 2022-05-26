@@ -9,9 +9,10 @@ import { useTranslation } from 'next-i18next'
 import { useForm, Controller } from 'react-hook-form'
 import * as yup from 'yup'
 
-import { Action } from '../../checkout/DetailsStep/DetailsStep'
-import KiboSelect from '../KiboSelect/KiboSelect'
-import KiboTextField from '../KiboTextBox/KiboTextBox'
+import { type Action } from '@/components/checkout'
+import KiboSelect from '@/components/common/KiboSelect/KiboSelect'
+import KiboTextField from '@/components/common/KiboTextBox/KiboTextBox'
+import { StepStates } from '@/lib/constants'
 
 import type { Order } from '@/lib/gql/types'
 
@@ -49,10 +50,11 @@ interface AddressFormProps {
   countries: string[]
   isUserLoggedIn: boolean
   saveAddressLabel?: string
-  onSaveAddress: (data: Address) => void
   setAutoFocus?: boolean
   stepperStatus: string
   checkout: Order | undefined
+  onSaveAddress: (data: Address) => void
+
   onCompleteCallback: (action: Action) => void
 }
 
@@ -79,9 +81,9 @@ const AddressForm = (props: AddressFormProps) => {
     countries = [],
     isUserLoggedIn = false,
     saveAddressLabel,
-    onSaveAddress,
     setAutoFocus = true,
     stepperStatus,
+    onSaveAddress,
     onCompleteCallback,
   } = props
 
@@ -117,12 +119,12 @@ const AddressForm = (props: AddressFormProps) => {
 
   // form is invalid, notify parent form is incomplete
   const onInvalidForm = () => {
-    onCompleteCallback({ type: 'INCOMPLETE' })
+    onCompleteCallback({ type: StepStates.INCOMPLETE })
   }
 
   useEffect(() => {
     // if form is valid, onSubmit callback
-    if (stepperStatus === 'VALIDATE') {
+    if (stepperStatus === StepStates.VALIDATE) {
       handleSubmit(onValid, onInvalidForm)()
     }
   }, [stepperStatus])

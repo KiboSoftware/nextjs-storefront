@@ -12,32 +12,30 @@ import {
 } from '@mui/material'
 import { useTranslation } from 'next-i18next'
 
-import { Action } from '../../DetailsStep/DetailsStep'
-import CardDetailsForm, {
-  CardDetailsProps,
-} from '@/components/checkout/PaymentStep/CardDetailsForm/CardDetailsForm'
+import { type Action } from '@/components/checkout'
+import { CardDetailsForm, CardData } from '@/components/checkout'
 import AddressForm, { Address, Contact } from '@/components/common/AddressForm/AddressForm'
 import { usePaymentTypes } from '@/hooks/usePaymentTypes/usePaymentTypes'
+import { StepStates } from '@/lib/constants'
 
 import type { Order } from '@/lib/gql/types'
 
-export interface CardPaymentDetails extends CardDetailsProps {
+export interface CardPaymentDetails extends CardData {
   isSavePaymentMethod: boolean
 }
 
 interface PaymentStepProps {
-  setAutoFocus?: boolean
   stepperStatus: string
   checkout: Order | undefined
-  onCompleteCallback: (action: Action) => void
   contact?: Contact
   countries: string[]
   isUserLoggedIn: boolean
   saveAddressLabel?: string
   onSaveAddress: (data: Address) => void
   onSaveCardPayment: (data: CardPaymentDetails) => void
+  onCompleteCallback: (action: Action) => void
 }
-interface PaymentTypeProps {
+interface PaymentMethod {
   id: string
   name: string
 }
@@ -68,64 +66,71 @@ const radioStyle = {
   },
 }
 
+const cardPaymentData = {
+  card: {
+    cardNumber: '',
+    expiryDate: '',
+    cvv: '',
+    cardType: '',
+    expireMonth: '',
+    expireYear: '',
+  },
+  paymentType: '',
+  isCardDetailsValidated: false,
+  isSavePaymentMethod: false,
+}
+
+const address = {
+  contact: {
+    firstName: '',
+    lastNameOrSurname: '',
+    address: {
+      address1: '',
+      address2: '',
+      cityOrTown: '',
+      stateOrProvince: '',
+      postalOrZipCode: '',
+      countryCode: '',
+    },
+    phoneNumbers: {
+      home: '',
+    },
+  },
+  saveAddress: false,
+}
 // Component
 const PaymentStep = (props: PaymentStepProps) => {
-  const { isUserLoggedIn = false, onCompleteCallback } = props
+  const { isUserLoggedIn = false, stepperStatus, onCompleteCallback } = props
   const { t } = useTranslation('checkout')
   const { loadPaymentTypes } = usePaymentTypes()
   const paymentMethods = loadPaymentTypes()
-  const [paymentDetails, setPaymentDetails] = useState({
-    card: {
-      cardNumber: '',
-      expiryDate: '',
-      cvv: '',
-      cardType: '',
-      expireMonth: '',
-      expireYear: '',
-    },
-    paymentType: '',
-    isCardDetailsValidated: false,
-    isSavePaymentMethod: false,
-  })
+  const [paymentDetails, setPaymentDetails] = useState(cardPaymentData)
 
-  const [billingAddress, setBillingAddress] = useState({
-    contact: {
-      firstName: '',
-      lastNameOrSurname: '',
-      address: {
-        address1: '',
-        address2: '',
-        cityOrTown: '',
-        stateOrProvince: '',
-        postalOrZipCode: '',
-        countryCode: '',
-      },
-      phoneNumbers: {
-        home: '',
-      },
-    },
-    saveAddress: false,
-  })
+  const [billingAddress, setBillingAddress] = useState(address)
 
-  const handleCardData = (cardData: CardDetailsProps) => {
-    setPaymentDetails(Object.assign(paymentDetails, cardData))
+  const handleCardData = (cardData: CardData) => {
+    setPaymentDetails({
+      ...paymentDetails,
+      ...cardData,
+    })
   }
 
   const handleSavePaymentMethod = () => {
-    setPaymentDetails(
-      Object.assign(paymentDetails, { isSavePaymentMethod: !paymentDetails.isSavePaymentMethod })
-    )
+    setPaymentDetails({
+      ...paymentDetails,
+      isSavePaymentMethod: !paymentDetails.isSavePaymentMethod,
+    })
   }
 
   const handlePaymentMethod = (event: ChangeEvent<HTMLInputElement>) => {
     setPaymentDetails({
       ...paymentDetails,
-      ['paymentType']: event.target.value,
+      paymentType: event.target.value,
     })
   }
 
-  const handleSaveAddress = (addressData: Address) => {
-    setBillingAddress(addressData)
+  const handleSaveAddress = (address: Address) => {
+    setBillingAddress(address)
   }
 
   const createPaymentData = () => {
@@ -137,8 +142,8 @@ const PaymentStep = (props: PaymentStepProps) => {
 
   useEffect(() => {
     if (billingAddress.contact.firstName != '' && paymentDetails.isCardDetailsValidated) {
-      createPaymentData()
-      onCompleteCallback({ type: 'COMPLETE' })
+      createPaymentData() // to be implement save payment data & billing address
+      onCompleteCallback({ type: StepStates.COMPLETE })
     }
   }, [billingAddress, paymentDetails])
 
@@ -155,7 +160,7 @@ const PaymentStep = (props: PaymentStepProps) => {
           onChange={handlePaymentMethod}
           data-testid="payment-types"
         >
-          {paymentMethods.map((paymentMethod: PaymentTypeProps) => {
+          {paymentMethods.map((paymentMethod: PaymentMethod) => {
             return (
               <FormControlLabel
                 key={paymentMethod.id}
@@ -169,7 +174,11 @@ const PaymentStep = (props: PaymentStepProps) => {
         </RadioGroup>
       </FormControl>
       {paymentDetails?.paymentType === 'creditcard' && (
-        <CardDetailsForm {...props} onSaveCardData={handleCardData} />
+        <CardDetailsForm
+          stepperStatus={stepperStatus}
+          onSaveCardData={handleCardData}
+          onCompleteCallback={onCompleteCallback}
+        />
       )}
 
       {isUserLoggedIn && (

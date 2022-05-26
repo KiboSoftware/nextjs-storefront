@@ -8,13 +8,14 @@ import { useTranslation } from 'next-i18next'
 import { useForm, Controller } from 'react-hook-form'
 import * as yup from 'yup'
 
+import { type Action } from '@/components/checkout'
+import KiboTextBox from '@/components/common/KiboTextBox/KiboTextBox'
 import {
-  getCardData,
+  prepareCardDataParams,
   validateExpiryDate,
   getCardType,
-} from '../../../../lib/components/checkout/PaymentStep/CardDetailsForm'
-import { Action } from '../../../checkout/DetailsStep/DetailsStep'
-import KiboTextBox from '../../../common/KiboTextBox/KiboTextBox'
+} from '@/lib/components/checkout/PaymentStep/CardDetailsForm'
+import { StepStates } from '@/lib/constants'
 
 interface Card {
   cardNumber: string
@@ -24,16 +25,15 @@ interface Card {
   expireMonth: string
   expireYear: string
 }
-export interface CardDetailsProps {
+export interface CardData {
   card: Card
   paymentType: string
   isCardDetailsValidated: boolean
 }
 
 export interface CardDetailsFormProps {
-  onSaveCardData: (cardData: CardDetailsProps) => void
-  setAutoFocus?: boolean
   stepperStatus: string
+  onSaveCardData: (cardData: CardData) => void
   onCompleteCallback: (action: Action) => void
 }
 
@@ -63,7 +63,7 @@ export const useCardSchema = () => {
   })
 }
 const CardDetailsForm = (props: CardDetailsFormProps) => {
-  const { onSaveCardData, stepperStatus, onCompleteCallback } = props
+  const { stepperStatus, onSaveCardData, onCompleteCallback } = props
   const { t } = useTranslation('checkout')
   const cardSchema = useCardSchema()
 
@@ -80,18 +80,18 @@ const CardDetailsForm = (props: CardDetailsFormProps) => {
   })
 
   const onValid = async (formData: any) => {
-    const cardData = getCardData(formData)
+    const cardData = prepareCardDataParams(formData)
     const saveCardData = { ...cardData, isCardDetailsValidated: isValid }
     onSaveCardData(saveCardData)
   }
 
   // form is invalid, notify parent form is incomplete
   const onInvalidForm = () => {
-    onCompleteCallback({ type: 'INCOMPLETE' })
+    onCompleteCallback({ type: StepStates.INCOMPLETE })
   }
   useEffect(() => {
     // if form is valid, onSubmit callback
-    if (stepperStatus === 'VALIDATE') {
+    if (stepperStatus === StepStates.VALIDATE) {
       handleSubmit(onValid, onInvalidForm)()
     }
   }, [stepperStatus])

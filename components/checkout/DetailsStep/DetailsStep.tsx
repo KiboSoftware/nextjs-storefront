@@ -26,6 +26,7 @@ import * as yup from 'yup'
 import { CheckoutDetails, useUpdateCheckout } from '../../../hooks'
 import KiboTextBox from '@/components/common/KiboTextBox/KiboTextBox'
 import PasswordValidation from '@/components/common/PasswordValidation/PasswordValidation'
+import { StepStates } from '@/lib/constants'
 import { isPasswordValid } from '@/lib/helpers/validations/validations'
 
 import type { Order } from '@/lib/gql/types'
@@ -40,7 +41,7 @@ export interface PersonalDetails {
 }
 
 export interface Action {
-  type: 'COMPLETE' | 'INCOMPLETE' | 'VALIDATE'
+  type: StepStates.COMPLETE | StepStates.INCOMPLETE | StepStates.VALIDATE
 }
 interface DetailsProps {
   setAutoFocus?: boolean
@@ -143,21 +144,21 @@ const DetailsStep = (props: DetailsProps) => {
         await createAccount(formData)
       }
 
-      const isFormValid = isUserEnteredPasswordValid() ? 'COMPLETE' : 'INCOMPLETE'
+      const isFormValid = isUserEnteredPasswordValid() ? StepStates.COMPLETE : StepStates.INCOMPLETE
       onCompleteCallback({ type: isFormValid })
     } catch (error) {
-      onCompleteCallback({ type: 'INCOMPLETE' })
+      onCompleteCallback({ type: StepStates.INCOMPLETE })
       console.error(error)
     }
   }
 
   // form is invalid, notify parent form is incomplete
   const onInvalidForm = (_errors?: any, _e?: any) => {
-    onCompleteCallback({ type: 'INCOMPLETE' })
+    onCompleteCallback({ type: StepStates.INCOMPLETE })
   }
 
   useEffect(() => {
-    if (stepperStatus === 'VALIDATE') {
+    if (stepperStatus === StepStates.VALIDATE) {
       handleSubmit(onValid, onInvalidForm)()
     }
   }, [stepperStatus])

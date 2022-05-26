@@ -2,7 +2,7 @@ import React from 'react'
 
 import { ComponentStory, ComponentMeta } from '@storybook/react'
 
-import CardDetailsForm, { CardDetailsProps } from './CardDetailsForm'
+import CardDetailsForm, { CardData } from './CardDetailsForm'
 
 export default {
   component: CardDetailsForm,
@@ -15,7 +15,7 @@ const Template: ComponentStory<typeof CardDetailsForm> = (args) => <CardDetailsF
 export const Common = Template.bind({})
 
 Common.args = {
-  onSaveCardData: (cardDetails: CardDetailsProps) => cardDetails,
+  onSaveCardData: (cardData: CardData) => cardData,
   stepperStatus: 'INCOMPLETE',
   onCompleteCallback: () => console.log('called onCompleteCallback : '),
 }

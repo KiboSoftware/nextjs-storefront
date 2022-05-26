@@ -4,18 +4,21 @@ import { Box, Stack, Button, Typography, SxProps } from '@mui/material'
 import { Theme } from '@mui/material/styles'
 import { useTranslation } from 'next-i18next'
 
-import DetailsStep, { Action } from '@/components/checkout/DetailsStep/DetailsStep'
-import KiboStepper from '@/components/checkout/KiboStepper/KiboStepper'
-import PaymentStep, {
-  CardPaymentDetails,
-} from '@/components/checkout/PaymentStep/PaymentStep/PaymentStep'
-import ReviewStep from '@/components/checkout/ReviewStep/ReviewStep'
-import ShippingStep from '@/components/checkout/ShippingStep/ShippingStep'
+import { useCheckout } from '../../../hooks'
+import {
+  DetailsStep,
+  KiboStepper,
+  ReviewStep,
+  ShippingStep,
+  PaymentStep,
+  type Action,
+  type CardPaymentDetails,
+} from '@/components/checkout'
 import { Address } from '@/components/common/AddressForm/AddressForm'
 import OrderSummary from '@/components/common/OrderSummary/OrderSummary'
+import { StepStates } from '@/lib/constants'
 
 import type { Order } from '@/lib/gql/types'
-
 interface CheckoutProps {
   checkout: Order
 }
@@ -35,19 +38,19 @@ const Checkout = (props: CheckoutProps) => {
 
   // State
   const [activeStep, setActiveStep] = useState<number>(0)
-  const [activeStepStatus, setActiveStepStatus] = useState<string>('INCOMPLETE')
+  const [activeStepStatus, setActiveStepStatus] = useState<string>(StepStates.INCOMPLETE)
 
   const handleBack = () => {
     setActiveStep(activeStep - 1)
   }
 
   const handleNext = () => {
-    setActiveStepStatus('VALIDATE')
+    setActiveStepStatus(StepStates.VALIDATE)
   }
 
   const completeStepCallback = (action: Action) => {
-    setActiveStepStatus('INCOMPLETE')
-    if (action.type === 'COMPLETE') {
+    setActiveStepStatus(StepStates.INCOMPLETE)
+    if (action.type === StepStates.COMPLETE) {
       setActiveStep(activeStep + 1)
     }
   }
@@ -97,8 +100,8 @@ const Checkout = (props: CheckoutProps) => {
           <PaymentStep
             checkout={checkout}
             stepperStatus={activeStepStatus}
-            onCompleteCallback={completeStepCallback}
             {...paymentStepParams}
+            onCompleteCallback={completeStepCallback}
             onSaveAddress={handleBillingAddress}
             onSaveCardPayment={handleCardPayment}
           />

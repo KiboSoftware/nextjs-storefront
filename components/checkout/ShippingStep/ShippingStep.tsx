@@ -1,9 +1,9 @@
 import React, { useEffect } from 'react'
 
-import { Action } from '../DetailsStep/DetailsStep'
+import { type Action } from '@/components/checkout'
+import { StepStates } from '@/lib/constants'
 
 import type { Order } from '@/lib/gql/types'
-
 interface ShippingProps {
   setAutoFocus?: boolean
   stepperStatus: string
@@ -16,9 +16,8 @@ const ShippingStep = (props: ShippingProps) => {
 
   useEffect(() => {
     // if form is valid, onSubmit callback
-
-    if (stepperStatus === 'VALIDATE') {
-      onCompleteCallback({ type: 'COMPLETE' })
+    if (stepperStatus === StepStates.VALIDATE) {
+      onCompleteCallback({ type: StepStates.COMPLETE })
     }
   }, [stepperStatus])
   return (
