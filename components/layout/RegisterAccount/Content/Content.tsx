@@ -39,10 +39,6 @@ const Content = (props: ContentProps) => {
   const [showPasswordValidation, setShowPassowordValidation] = useState<boolean>(false)
   const { t } = useTranslation(['checkout', 'common'])
 
-  const handleClickShowPassword = () => setShowPassword(!showPassword)
-  const handleMouseDownPassword = () => setShowPassword(!showPassword)
-  console.log('focus', setAutoFocus)
-
   const useDetailsSchema = () => {
     return yup.object().shape({
       email: yup.string().email().required(t('this-field-is-required')),
@@ -73,12 +69,12 @@ const Content = (props: ContentProps) => {
   })
   const userEnteredFirstName = watch(['firstName']).join('')
   const userEnteredLastName = watch(['lastNameOrSurname']).join('')
-  const userEnteredEmailName = watch(['email']).join('')
+  const userEnteredEmail = watch(['email']).join('')
   const userEnteredPassword = watch(['password']).join('')
 
   const isCreateAccountButtonDisabled = () => {
     return (
-      userEnteredEmailName !== '' &&
+      userEnteredEmail !== '' &&
       userEnteredFirstName !== '' &&
       userEnteredLastName !== '' &&
       isPasswordValid(userEnteredPassword)
@@ -161,17 +157,8 @@ const Content = (props: ContentProps) => {
               error={!!errors?.password}
               helperText={errors?.password?.message}
               type={showPassword ? 'text' : 'password'}
-              endAdornment={
-                <InputAdornment position="end">
-                  <IconButton
-                    aria-label="toggle password visibility"
-                    onClick={handleClickShowPassword}
-                    onMouseDown={handleMouseDownPassword}
-                  >
-                    {showPassword ? <Visibility /> : <VisibilityOff />}
-                  </IconButton>
-                </InputAdornment>
-              }
+              icon={showPassword ? <Visibility /> : <VisibilityOff />}
+              onIconClick={() => setShowPassword(!showPassword)}
             />
           )}
         />

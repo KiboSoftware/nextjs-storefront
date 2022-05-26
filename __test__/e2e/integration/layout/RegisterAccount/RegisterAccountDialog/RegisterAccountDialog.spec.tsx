@@ -6,43 +6,58 @@ import { composeStories } from '@storybook/testing-react'
 import { render, screen, act, fireEvent } from '@testing-library/react'
 
 import * as stories from '@/components/layout/RegisterAccount/RegisterAccountDialog/RegisterAccountDialog.stories'
+import userEvent from '@testing-library/user-event'
 
 const { Common } = composeStories(stories)
 
 describe('[components] Register Account Dialog', () => {
+  const onDialogCloseMock = jest.fn()
   const setup = (args = Common.args) => {
-    render(<Common {...args} />)
+    render(<Common {...args} onDialogClose={onDialogCloseMock} />)
+    return { onDialogCloseMock }
   }
 
   it('should render component', () => {
     setup()
-    const RegisterAccountFormEmailLabel = screen.getByText(/email/i)
-    const RegisterAccountFormEmailInput = screen.getByRole('textbox', { name: /email/i })
+    const registerAccountFormEmailLabel = screen.getByText(/email/i)
+    const registerAccountFormEmailInput = screen.getByRole('textbox', { name: /email/i })
 
-    const RegisterAccountFormFirstNameLabel = screen.queryByText(/first-name/i)
-    const RegisterAccountFormFirstNameInput = screen.queryByRole('textbox', { name: /first-name/i })
-    const RegisterAccountFormLastNameLabel = screen.queryByText(/last-name/i)
-    const RegisterAccountFormLastNameInput = screen.queryByRole('textbox', { name: /last-name/i })
-    const RegisterAccountFormPasswordLabel = screen.queryByText(/password/i)
-    const RegisterAccountFormPasswordInput = screen.queryByRole('button', {
-      name: /toggle password visibility/i,
-    })
+    const registerAccountFormFirstNameLabel = screen.queryByText(/first-name/i)
+    const registerAccountFormFirstNameInput = screen.queryByRole('textbox', { name: /first-name/i })
+    const registerAccountFormLastNameLabel = screen.queryByText(/last-name/i)
+    const registerAccountFormLastNameInput = screen.queryByRole('textbox', { name: /last-name/i })
+    const registerAccountFormPasswordLabel = screen.queryByText(/password/i)
+    const registerAccountFormPasswordInput = screen.getByLabelText(/password/i)
 
     const createAccountButton = screen.getByRole('button', { name: /common:create-an-account/i })
 
-    expect(RegisterAccountFormEmailLabel).toBeVisible()
-    expect(RegisterAccountFormEmailInput).toBeVisible()
+    expect(registerAccountFormEmailLabel).toBeVisible()
+    expect(registerAccountFormEmailInput).toBeVisible()
 
-    expect(RegisterAccountFormFirstNameLabel).toBeInTheDocument()
-    expect(RegisterAccountFormFirstNameInput).toBeInTheDocument()
+    expect(registerAccountFormFirstNameLabel).toBeInTheDocument()
+    expect(registerAccountFormFirstNameInput).toBeInTheDocument()
 
-    expect(RegisterAccountFormLastNameLabel).toBeInTheDocument()
-    expect(RegisterAccountFormLastNameInput).toBeInTheDocument()
+    expect(registerAccountFormLastNameLabel).toBeInTheDocument()
+    expect(registerAccountFormLastNameInput).toBeInTheDocument()
 
-    expect(RegisterAccountFormPasswordLabel).toBeInTheDocument()
-    expect(RegisterAccountFormPasswordInput).toBeInTheDocument()
+    expect(registerAccountFormPasswordLabel).toBeInTheDocument()
+    expect(registerAccountFormPasswordInput).toBeInTheDocument()
 
     expect(createAccountButton).toBeInTheDocument()
+  })
+
+  it('should close register account dialog when user clicks on closeIcon button', () => {
+    const { onDialogCloseMock } = setup()
+
+    const registerAccountDialog = screen.getByRole('dialog')
+    const closeIconButton = screen.getByRole('button', {
+      name: /close/i,
+    })
+    userEvent.click(closeIconButton)
+
+    expect(registerAccountDialog).toBeVisible()
+    expect(closeIconButton).toBeVisible()
+    expect(onDialogCloseMock).toHaveBeenCalled()
   })
 
   it('email should display required field error when user focus out (blur event) the email field', async () => {
@@ -68,10 +83,10 @@ describe('[components] Register Account Dialog', () => {
     let firstNameError = screen.queryByText(/this field is required/i)
     expect(firstNameError).not.toBeInTheDocument()
 
-    const RegisterAccountFormFirstNameInput = screen.getByRole('textbox', { name: /first-name/i })
+    const registerAccountFormFirstNameInput = screen.getByRole('textbox', { name: /first-name/i })
     await act(async () => {
-      RegisterAccountFormFirstNameInput.focus()
-      fireEvent.blur(RegisterAccountFormFirstNameInput, { target: { value: '' } })
+      registerAccountFormFirstNameInput.focus()
+      fireEvent.blur(registerAccountFormFirstNameInput, { target: { value: '' } })
     })
 
     firstNameError = screen.queryByText(/this-field-is-required/i)
@@ -84,10 +99,10 @@ describe('[components] Register Account Dialog', () => {
     let lastNameError = screen.queryByText(/this field is required/i)
     expect(lastNameError).not.toBeInTheDocument()
 
-    const RegisterAccountFormLastNameInput = screen.getByRole('textbox', { name: /last-name/i })
+    const registerAccountFormLastNameInput = screen.getByRole('textbox', { name: /last-name/i })
     await act(async () => {
-      RegisterAccountFormLastNameInput.focus()
-      fireEvent.blur(RegisterAccountFormLastNameInput, { target: { value: '' } })
+      registerAccountFormLastNameInput.focus()
+      fireEvent.blur(registerAccountFormLastNameInput, { target: { value: '' } })
     })
 
     lastNameError = screen.queryByText(/this-field-is-required/i)
@@ -100,12 +115,10 @@ describe('[components] Register Account Dialog', () => {
     let RegisterAccountFormPasswordError = screen.queryByText(/this field is required/i)
     expect(RegisterAccountFormPasswordError).not.toBeInTheDocument()
 
-    const RegisterAccountFormPasswordInput = screen.getByRole('button', {
-      name: /toggle password visibility/i,
-    })
+    const registerAccountFormPasswordInput = screen.getByLabelText(/password/i)
     await act(async () => {
-      RegisterAccountFormPasswordInput.focus()
-      fireEvent.blur(RegisterAccountFormPasswordInput, { target: { value: '' } })
+      registerAccountFormPasswordInput.focus()
+      fireEvent.blur(registerAccountFormPasswordInput, { target: { value: '' } })
     })
 
     RegisterAccountFormPasswordError = screen.queryByText(/this-field-is-required/i)

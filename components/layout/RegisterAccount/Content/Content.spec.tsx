@@ -1,27 +1,22 @@
 import React from 'react'
 
 import { composeStories } from '@storybook/testing-react'
-import { render, screen } from '@testing-library/react'
-import userEvent from '@testing-library/user-event'
+import { fireEvent, render, screen, act } from '@testing-library/react'
 
 import * as stories from './Content.stories' // import all stories from the stories file
 
 const { Common } = composeStories(stories)
 
 describe('[components] Register Account(Content)', () => {
-  const setup = (args = Common.args) => {
-    const onRegisterToYourAccountMock = jest.fn()
-    render(<Common {...args} onRegisterToYourAccount={onRegisterToYourAccountMock} />)
-    return { onRegisterToYourAccountMock }
-  }
+  const setup = (args = Common.args) => render(<Common {...args} />)
 
   it('should render component', () => {
     setup()
 
-    const emailInput = screen.getAllByRole('textbox')[0]
-    const firstNameInput = screen.getAllByRole('textbox')[1]
-    const lastNameInput = screen.getAllByRole('textbox')[2]
-    const passwordInput = screen.getByRole('button', { name: /toggle password visibility/i })
+    const emailInput = screen.getByRole('textbox', { name: /email/i })
+    const firstNameInput = screen.getByRole('textbox', { name: /first-name/i })
+    const lastNameInput = screen.getByRole('textbox', { name: /last-name/i })
+    const passwordInput = screen.getByLabelText(/password/i)
     const createAccountButton = screen.getByRole('button', { name: /common:create-an-account/i })
 
     expect(emailInput).toBeVisible()
@@ -30,5 +25,22 @@ describe('[components] Register Account(Content)', () => {
     expect(passwordInput).toBeVisible()
     expect(createAccountButton).toBeVisible()
     expect(createAccountButton).toBeDisabled()
+  })
+
+  it('should create new account when user click on createAccount button', async () => {
+    setup()
+
+    const emailInput = screen.getByRole('textbox', { name: /email/i })
+    const registerAccountFormFirstNameInput = screen.getByRole('textbox', { name: /first-name/i })
+    const registerAccountFormLastNameInput = screen.getByRole('textbox', { name: /last-name/i })
+    const registerAccountFormPasswordInput = screen.getByLabelText(/password/i)
+    const createAccountButton = screen.getByRole('button', { name: /common:create-an-account/i })
+
+    fireEvent.change(emailInput, { target: { value: 'example@example.com' } })
+    fireEvent.change(registerAccountFormFirstNameInput, { target: { value: 'Example' } })
+    fireEvent.change(registerAccountFormLastNameInput, { target: { value: 'Example' } })
+    fireEvent.change(registerAccountFormPasswordInput, { target: { value: 'Example@1234' } })
+
+    expect(createAccountButton).toBeEnabled()
   })
 })
