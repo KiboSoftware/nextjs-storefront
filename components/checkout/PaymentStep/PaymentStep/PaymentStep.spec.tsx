@@ -9,6 +9,7 @@ const { Common } = composeStories(stories)
 
 const onBlurMock = jest.fn()
 const onHandleSavePaymentMethodMock = jest.fn()
+const onHandlePaymentMethod = jest.fn()
 
 const AddressFormMock = () => <div />
 const CardDetailsFormMock = () => <div data-testid="card-details" />
@@ -23,18 +24,27 @@ describe('[components] PaymentStep', () => {
 
   it('should render component', () => {
     setup()
+
+    const paymentHeading = screen.getByRole('heading', {
+      name: /payment-method/i,
+    })
+    const cardPaymentMethod = screen.getByRole('radio', {
+      name: /credit \/ debit card/i,
+    })
     const savePaymentMethod = screen.getByRole('checkbox', {
       name: /save-payment-method/i,
-    })
-    const copyShippingAddress = screen.getByRole('checkbox', {
-      name: /billing-address-same-as-shipping/i,
     })
     const billingAddressHeading = screen.getByRole('heading', {
       name: /billing-address/i,
     })
+    const billingAddressSameAsShipping = screen.getByRole('checkbox', {
+      name: /billing-address-same-as-shipping/i,
+    })
 
+    expect(paymentHeading).toBeInTheDocument()
+    expect(cardPaymentMethod).toBeInTheDocument()
     expect(savePaymentMethod).toBeInTheDocument()
-    expect(copyShippingAddress).toBeInTheDocument()
+    expect(billingAddressSameAsShipping).toBeInTheDocument()
     expect(billingAddressHeading).toBeInTheDocument()
   })
 
