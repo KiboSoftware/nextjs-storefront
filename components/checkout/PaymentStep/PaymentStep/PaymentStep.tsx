@@ -79,7 +79,7 @@ const cardPaymentData = {
   isSavePaymentMethod: false,
 }
 
-const address = {
+const addressData = {
   contact: {
     firstName: '',
     lastNameOrSurname: '',
@@ -105,7 +105,7 @@ const PaymentStep = (props: PaymentStepProps) => {
   const paymentMethods = loadPaymentTypes()
   const [paymentDetails, setPaymentDetails] = useState(cardPaymentData)
 
-  const [billingAddress, setBillingAddress] = useState(address)
+  const [billingAddress, setBillingAddress] = useState(addressData)
 
   const handleCardData = (cardData: CardData) => {
     setPaymentDetails({
@@ -128,8 +128,8 @@ const PaymentStep = (props: PaymentStepProps) => {
     })
   }
 
-  const handleSaveAddress = (addressParams: Address) => {
-    setBillingAddress(addressParams)
+  const handleSaveAddress = (address: Address) => {
+    setBillingAddress(address)
   }
 
   const createPaymentData = () => {
