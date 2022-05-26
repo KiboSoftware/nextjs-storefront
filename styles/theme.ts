@@ -52,7 +52,7 @@ let theme = createTheme({
       fontSize: '1rem', // 16px
     },
     body1: {
-      fontSize: '1', // 16px
+      fontSize: '1rem', // 16px
     },
     body2: {
       fontSize: '0.875rem', // 14px

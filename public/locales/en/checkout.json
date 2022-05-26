@@ -34,5 +34,6 @@
   "exp": "Exp:",
   "billing-address": "Billing Address",
   "apartment": "Apt. ",
-  "payment-information": "Payment Information"
+  "payment-information": "Payment Information",
+  "email": "Email"
 }
