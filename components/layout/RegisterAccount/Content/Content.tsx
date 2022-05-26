@@ -3,7 +3,7 @@ import React, { useState } from 'react'
 
 import { yupResolver } from '@hookform/resolvers/yup'
 import { Visibility, VisibilityOff } from '@mui/icons-material'
-import { Box, FormControl, Button, InputAdornment, IconButton } from '@mui/material'
+import { Box, FormControl, Button } from '@mui/material'
 import { useTranslation } from 'next-i18next'
 import { useForm, Controller } from 'react-hook-form'
 import * as yup from 'yup'

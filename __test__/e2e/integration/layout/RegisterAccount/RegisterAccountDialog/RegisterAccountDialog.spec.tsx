@@ -47,7 +47,7 @@ describe('[components] Register Account Dialog', () => {
   })
 
   it('should close register account dialog when user clicks on closeIcon button', () => {
-    const { onDialogCloseMock } = setup()
+    setup()
 
     const registerAccountDialog = screen.getByRole('dialog')
     const closeIconButton = screen.getByRole('button', {
