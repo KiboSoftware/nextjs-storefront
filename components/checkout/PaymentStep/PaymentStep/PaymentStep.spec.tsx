@@ -27,7 +27,7 @@ describe('[components] PaymentStep', () => {
       name: /save-payment-method/i,
     })
     const copyShippingAddress = screen.getByRole('checkbox', {
-      name: /copy-shipping-address/i,
+      name: /billing-address-same-as-shipping/i,
     })
     const billingAddressHeading = screen.getByRole('heading', {
       name: /billing-address/i,

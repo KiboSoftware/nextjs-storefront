@@ -55,5 +55,5 @@
   "security-code-required": "CVV is required",
   "invalid-security-code": "Invalid CVV",
   "save-payment-method": "Save payment method",
-  "copy-shipping-address": "Billing address same as shipping"
+  "billing-address-same-as-shipping": "Billing address same as shipping"
 }

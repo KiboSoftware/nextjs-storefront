@@ -43,7 +43,7 @@ const StyledCardDiv = styled('div')(() => ({
   paddingLeft: '0.5rem',
 }))
 
-export const useCardSchema = () => {
+const useCardSchema = () => {
   const { t } = useTranslation('checkout')
   return yup.object({
     cardNumber: yup

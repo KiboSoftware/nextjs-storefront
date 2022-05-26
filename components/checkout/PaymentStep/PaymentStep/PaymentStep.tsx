@@ -12,8 +12,7 @@ import {
 } from '@mui/material'
 import { useTranslation } from 'next-i18next'
 
-import { type Action } from '@/components/checkout'
-import { CardDetailsForm, CardData } from '@/components/checkout'
+import { CardDetailsForm, type Action, type CardData } from '@/components/checkout'
 import AddressForm, { Address, Contact } from '@/components/common/AddressForm/AddressForm'
 import { usePaymentTypes } from '@/hooks/usePaymentTypes/usePaymentTypes'
 import { StepStates } from '@/lib/constants'
@@ -129,8 +128,8 @@ const PaymentStep = (props: PaymentStepProps) => {
     })
   }
 
-  const handleSaveAddress = (address: Address) => {
-    setBillingAddress(address)
+  const handleSaveAddress = (addressParams: Address) => {
+    setBillingAddress(addressParams)
   }
 
   const createPaymentData = () => {
@@ -196,7 +195,10 @@ const PaymentStep = (props: PaymentStepProps) => {
       <StyledHeadings variant="h2" sx={{ paddingTop: '3.125rem' }}>
         {t('billing-address')}
       </StyledHeadings>
-      <StyledFormControlLabel control={<Checkbox />} label={`${t('copy-shipping-address')}`} />
+      <StyledFormControlLabel
+        control={<Checkbox />}
+        label={`${t('billing-address-same-as-shipping')}`}
+      />
       <AddressForm {...props} onSaveAddress={handleSaveAddress} />
     </Stack>
   )

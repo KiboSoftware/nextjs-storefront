@@ -27,7 +27,7 @@ describe('[components] PaymentStep', () => {
     })
     expect(savePaymentMethod).toBeInTheDocument()
     const copyShippingAddress = screen.getByRole('checkbox', {
-      name: /copy-shipping-address/i,
+      name: /billing-address-same-as-shipping/i,
     })
     expect(copyShippingAddress).toBeInTheDocument()
     const billingAddressHeading = screen.getByRole('heading', {
