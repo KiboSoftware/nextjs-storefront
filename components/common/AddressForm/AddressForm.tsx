@@ -6,6 +6,7 @@ import { yupResolver } from '@hookform/resolvers/yup'
 import { Box, Grid, FormControlLabel, Checkbox } from '@mui/material'
 import MenuItem from '@mui/material/MenuItem'
 import { useTranslation } from 'next-i18next'
+import getConfig from 'next/config'
 import { useForm, Controller } from 'react-hook-form'
 import * as yup from 'yup'
 
@@ -47,7 +48,7 @@ export interface Address {
 }
 interface AddressFormProps {
   contact?: Contact
-  countries: string[]
+  countries?: string[]
   isUserLoggedIn: boolean
   saveAddressLabel?: string
   setAutoFocus?: boolean
@@ -76,9 +77,11 @@ const schema = yup.object().shape({
 })
 
 const AddressForm = (props: AddressFormProps) => {
+  const { publicRuntimeConfig } = getConfig()
+
   const {
     contact,
-    countries = [],
+    countries = publicRuntimeConfig.countries,
     isUserLoggedIn = false,
     saveAddressLabel,
     setAutoFocus = true,
@@ -105,7 +108,7 @@ const AddressForm = (props: AddressFormProps) => {
   const { t } = useTranslation('checkout')
 
   const generateSelectOptions = () =>
-    countries?.map((country) => {
+    countries?.map((country: string) => {
       return (
         <MenuItem key={country} value={country}>
           {country}

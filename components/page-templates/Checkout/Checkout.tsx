@@ -12,9 +12,7 @@ import {
   ShippingStep,
   PaymentStep,
   type Action,
-  type CardPaymentDetails,
 } from '@/components/checkout'
-import { Address } from '@/components/common/AddressForm/AddressForm'
 import OrderSummary from '@/components/common/OrderSummary/OrderSummary'
 import { StepStates } from '@/lib/constants'
 
@@ -71,13 +69,8 @@ const Checkout = (props: CheckoutProps) => {
     shippingLabel: 'Go to Shipping',
   }
 
-  const handleBillingAddress = (data: Address) => console.log('called handleSave(data) : ', data)
-  const handleCardPayment = (data: CardPaymentDetails) => data
-
   const paymentStepParams = {
-    countries: ['US', 'AT', 'DE', 'NL'],
     isUserLoggedIn: true,
-    saveAddressLabel: 'Save billing address',
   }
 
   return (
@@ -102,8 +95,6 @@ const Checkout = (props: CheckoutProps) => {
             stepperStatus={activeStepStatus}
             {...paymentStepParams}
             onCompleteCallback={completeStepCallback}
-            onSaveAddress={handleBillingAddress}
-            onSaveCardPayment={handleCardPayment}
           />
           <ReviewStep />
         </KiboStepper>

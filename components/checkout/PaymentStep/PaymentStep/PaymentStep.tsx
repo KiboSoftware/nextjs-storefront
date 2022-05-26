@@ -27,11 +27,7 @@ interface PaymentStepProps {
   stepperStatus: string
   checkout: Order | undefined
   contact?: Contact
-  countries: string[]
   isUserLoggedIn: boolean
-  saveAddressLabel?: string
-  onSaveAddress: (data: Address) => void
-  onSaveCardPayment: (data: CardPaymentDetails) => void
   onCompleteCallback: (action: Action) => void
 }
 interface PaymentMethod {
@@ -103,7 +99,7 @@ const PaymentStep = (props: PaymentStepProps) => {
   const { t } = useTranslation('checkout')
   const { loadPaymentTypes } = usePaymentTypes()
   const paymentMethods = loadPaymentTypes()
-  const [paymentDetails, setPaymentDetails] = useState(cardPaymentData)
+  const [paymentDetails, setPaymentDetails] = useState<CardPaymentDetails>(cardPaymentData)
 
   const [billingAddress, setBillingAddress] = useState(addressData)
 
@@ -199,7 +195,11 @@ const PaymentStep = (props: PaymentStepProps) => {
         control={<Checkbox />}
         label={`${t('billing-address-same-as-shipping')}`}
       />
-      <AddressForm {...props} onSaveAddress={handleSaveAddress} />
+      <AddressForm
+        {...props}
+        saveAddressLabel={t('save-billing-address')}
+        onSaveAddress={handleSaveAddress}
+      />
     </Stack>
   )
 }

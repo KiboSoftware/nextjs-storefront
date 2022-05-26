@@ -26,7 +26,6 @@ Common.args = {
   checkout: undefined,
   onCompleteCallback: (action) => action,
   contact: undefined,
-  countries: ['US', 'AT', 'DE', 'NL'],
   isUserLoggedIn: false,
   saveAddressLabel: 'Save shipping address',
   onSaveAddress: (data: Address) => console.log('called handleSave(data) : ', data),

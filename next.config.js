@@ -23,6 +23,7 @@ module.exports = {
         name: 'Credit / Debit Card',
       },
     ],
+    countries: ['US', 'AT', 'DE', 'NL'],
   },
   serverRuntimeConfig: {
     revalidate: 60,

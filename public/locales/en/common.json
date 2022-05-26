@@ -105,5 +105,6 @@
   "payment-method": "Payment Method",
   "save-payment-method": "Save payment method",
   "billing-address": "Billing Address",
-  "billing-address-same-as-shipping": "Billing address same as shipping"
+  "billing-address-same-as-shipping": "Billing address same as shipping",
+  "save-billing-address": "Save billing address"
 }

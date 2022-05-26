@@ -36,7 +36,7 @@ describe('[components] PaymentStep', () => {
     expect(billingAddressHeading).toBeInTheDocument()
 
     const saveBillingAddress = screen.getByRole('checkbox', {
-      name: /save billing address/i,
+      name: /save-billing-address/i,
     })
     expect(saveBillingAddress).toBeInTheDocument()
   })
