@@ -101,7 +101,7 @@ const PaymentStep = (props: PaymentStepProps) => {
   const paymentMethods = loadPaymentTypes()
   const [paymentDetails, setPaymentDetails] = useState<CardPaymentDetails>(cardPaymentData)
 
-  const [billingAddress, setBillingAddress] = useState(addressData)
+  const [billingAddress, setBillingAddress] = useState<Address>(addressData)
 
   const handleCardData = (cardData: CardData) => {
     setPaymentDetails({
