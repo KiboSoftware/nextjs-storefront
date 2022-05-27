@@ -21,12 +21,12 @@ export async function getStaticProps(context: GetStaticPropsContext) {
       product,
       ...(await serverSideTranslations(locale as string, ['common', 'product'], nextI18NextConfig)),
     },
-    revalidate: serverRuntimeConfig.revalidate || 60,
+    revalidate: serverRuntimeConfig.revalidate,
   }
 }
 export async function getStaticPaths() {
   const { serverRuntimeConfig } = getConfig()
-  const searchResponse = await search({ pageSize: serverRuntimeConfig.pageSize || 100 })
+  const searchResponse = await search({ pageSize: serverRuntimeConfig.pageSize })
   const { items } = searchResponse.data.products
   const paths: string[] = []
   items.length &&

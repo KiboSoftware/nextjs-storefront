@@ -1,5 +1,10 @@
 import '@testing-library/jest-dom'
-import { getStaticPaths, getStaticProps } from './[productCode]'
+import { render, screen } from '@testing-library/react'
+import * as nextRouter from 'next/router'
+
+import ProductDetailPage, { getStaticPaths, getStaticProps } from './[productCode]'
+
+nextRouter.useRouter = jest.fn()
 
 jest.mock('next/config', () => () => ({
   serverRuntimeConfig: {
@@ -16,7 +21,14 @@ jest.mock('@/lib/api/util', () => ({
           productCode: 'mocked-product',
         },
         products: {
-          items: [],
+          items: [
+            {
+              productCode: 'mocked-productCode-1',
+            },
+            {
+              productCode: 'mocked-productCode-2',
+            },
+          ],
         },
       },
     })
@@ -34,6 +46,12 @@ jest.mock('next-i18next/serverSideTranslations', () => ({
     })
   }),
 }))
+
+const ProductDetailTemplateMock = () => <div data-testid="productDetailTemplate-mock" />
+jest.mock(
+  '../../components/page-templates/ProductDetail/ProductDetailTemplate.tsx',
+  () => ProductDetailTemplateMock
+)
 
 describe('[page] Product Details Page', () => {
   it('should run getStaticProps method', () => {
@@ -62,6 +80,24 @@ describe('[page] Product Details Page', () => {
 
   it('should run getStaticPaths method', () => {
     const response = getStaticPaths()
-    expect(response).resolves.toStrictEqual({ paths: [], fallback: true })
+    expect(response).resolves.toStrictEqual({
+      paths: [`/product/mocked-productCode-1`, `/product/mocked-productCode-2`],
+      fallback: true,
+    })
+  })
+
+  it('should render the ProductDetail page template if isFallback is false', () => {
+    nextRouter.useRouter.mockImplementation(() => ({ isFallback: false }))
+    render(<ProductDetailPage />)
+
+    const productDetailTemplate = screen.getByTestId('productDetailTemplate-mock')
+    expect(productDetailTemplate).toBeVisible()
+  })
+
+  it('should render the Fallback page if isFallback is true', () => {
+    nextRouter.useRouter.mockImplementation(() => ({ isFallback: true }))
+    render(<ProductDetailPage />)
+
+    expect(screen.getByText(/Fallback/)).toBeVisible()
   })
 })
