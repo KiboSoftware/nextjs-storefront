@@ -25,8 +25,8 @@ describe('[components] - MegaMenuItem', () => {
   it('should render component', () => {
     setup()
 
-    const title = screen.getAllByText(`${Common.args?.title}`)
-    expect(title[0]).toBeVisible()
+    const title = screen.getByText(`${Common.args?.title}`)
+    expect(title).toBeVisible()
 
     const categoryChildren = Common.args?.categoryChildren
     categoryChildren?.map((cat) => {
@@ -50,9 +50,9 @@ describe('[components] - MegaMenuItem', () => {
     setup()
     const categoryChildren = Common.args?.categoryChildren
     categoryChildren?.map((cat) => {
-      const button = screen.getAllByRole('button')
-      expect(button[0]).toBeEnabled()
-      userEvent.click(button[0])
+      const button = screen.getByRole('button')
+      expect(button).toBeEnabled()
+      userEvent.click(button)
       expect(router.push).toHaveBeenCalledWith('/product/' + cat?.categoryCode)
     })
   })
