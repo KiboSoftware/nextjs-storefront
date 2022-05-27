@@ -8,6 +8,7 @@ module.exports = {
     '!**/*.d.ts',
     '!**/node_modules/**',
     'hooks/**/*.{js,jsx,ts,tsx}',
+    'pages/**/*.{js,jsx,ts,tsx}',
   ],
   moduleNameMapper: {
     // Handle CSS imports (with CSS modules)

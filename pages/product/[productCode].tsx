@@ -10,10 +10,9 @@ import { productGetters } from '@/lib/getters'
 import type { NextPage, GetStaticPropsContext } from 'next'
 
 export async function getStaticProps(context: GetStaticPropsContext) {
-  const { params } = context
+  const { params, locale } = context
   const { productCode } = params as any
   const product = await getProduct(productCode)
-  const { locale } = context
   return {
     props: {
       product,
