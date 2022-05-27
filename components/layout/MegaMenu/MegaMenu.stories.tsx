@@ -2,8 +2,8 @@ import React from 'react'
 
 import { ComponentStory, ComponentMeta } from '@storybook/react'
 
-import { categoryTreeDataMock } from '../../../__mocks__/stories/categoryTreeDataMock'
 import MegaMenu from './MegaMenu'
+import { categoryTreeDataMock } from '@/__mocks__/stories/categoryTreeDataMock'
 
 export default {
   title: 'Layout/MegaMenu',
@@ -15,8 +15,8 @@ const Template: ComponentStory<typeof MegaMenu> = (args) => <MegaMenu {...args} 
 export const Common = Template.bind({})
 
 Common.args = {
-  categoryTree: categoryTreeDataMock.categoriesTree.items,
-  setIsBackdropOpen: (isOpen) => {
+  categoryTree: categoryTreeDataMock.categoriesTree.items?.filter((item) => item.isDisplayed),
+  onBackdropToggle: (isOpen) => {
     return isOpen
   },
 }

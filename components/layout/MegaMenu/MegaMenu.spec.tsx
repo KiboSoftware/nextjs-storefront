@@ -18,7 +18,7 @@ describe('[components] - MegaMenu', () => {
   })
 
   const setup = () => {
-    render(<Common {...Common.args} setIsBackdropOpen={setIsBackdropOpenMock} />)
+    render(<Common {...Common.args} onBackdropToggle={setIsBackdropOpenMock} />)
   }
   it('should render component', () => {
     setup()

@@ -6,8 +6,8 @@ import { render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { RouterContext } from 'next/dist/shared/lib/router-context'
 
-import { createMockRouter } from '../../../__test__/utils/createMockRouter'
 import * as stories from './MegaMenuItem.stories'
+import { createMockRouter } from '@/__test__/utils/createMockRouter'
 
 const { Common } = composeStories(stories)
 
@@ -36,6 +36,10 @@ describe('[components] - MegaMenuItem', () => {
 
     const shopAll = screen.getByText('shop-all')
     expect(shopAll).toBeVisible()
+  })
+
+  it('should route to another page when user clicks on shop all', async () => {
+    setup()
     const button = screen.getByTestId('shopAllLink')
     expect(button).toBeEnabled()
     userEvent.click(button)
