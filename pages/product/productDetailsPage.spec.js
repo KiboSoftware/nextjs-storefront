@@ -1,6 +1,13 @@
 import '@testing-library/jest-dom'
 import { getStaticPaths, getStaticProps } from './[productCode]'
 
+jest.mock('next/config', () => () => ({
+  serverRuntimeConfig: {
+    revalidate: 60,
+    pageSize: 100,
+  },
+}))
+
 jest.mock('@/lib/api/util', () => ({
   fetcher: jest.fn(() => {
     return Promise.resolve({

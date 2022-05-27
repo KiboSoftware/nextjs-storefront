@@ -1,4 +1,5 @@
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
+import getConfig from 'next/config'
 import { useRouter } from 'next/router'
 
 import nextI18NextConfig from '../../next-i18next.config'
@@ -12,17 +13,20 @@ import type { NextPage, GetStaticPropsContext } from 'next'
 export async function getStaticProps(context: GetStaticPropsContext) {
   const { params, locale } = context
   const { productCode } = params as any
+  const { serverRuntimeConfig } = getConfig()
+
   const product = await getProduct(productCode)
   return {
     props: {
       product,
       ...(await serverSideTranslations(locale as string, ['common', 'product'], nextI18NextConfig)),
     },
-    revalidate: 60,
+    revalidate: serverRuntimeConfig.revalidate || 60,
   }
 }
 export async function getStaticPaths() {
-  const searchResponse = await search({ pageSize: 100 })
+  const { serverRuntimeConfig } = getConfig()
+  const searchResponse = await search({ pageSize: serverRuntimeConfig.pageSize || 100 })
   const { items } = searchResponse.data.products
   const paths: string[] = []
   items.length &&
