@@ -20,7 +20,6 @@ export async function getStaticProps(context: GetStaticPropsContext) {
 
   const product = await getProduct(productCode)
   const categoryTree = await getCategoryTree()
-
   return {
     props: {
       product,
