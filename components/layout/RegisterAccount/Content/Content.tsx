@@ -12,7 +12,7 @@ import KiboTextBox from '@/components/common/KiboTextBox/KiboTextBox'
 import PasswordValidation from '@/components/common/PasswordValidation/PasswordValidation'
 import { isPasswordValid } from '@/lib/helpers/validations/validations'
 
-export interface RegisterAccountDetails {
+export interface RegisterAccountFormData {
   email: string
   firstName: string
   lastNameOrSurname: string
@@ -21,7 +21,7 @@ export interface RegisterAccountDetails {
 
 interface ContentProps {
   setAutoFocus?: boolean
-  onRegisterToYourAccount: (formData: RegisterAccountDetails) => void
+  onRegisterToYourAccount: (formData: RegisterAccountFormData) => void
 }
 
 const styles = {
@@ -44,11 +44,16 @@ const Content = (props: ContentProps) => {
       email: yup.string().email().required(t('this-field-is-required')),
       firstName: yup.string().required(t('this-field-is-required')),
       lastNameOrSurname: yup.string().required(t('this-field-is-required')),
-      password: yup.string().required(t('this-field-is-required')),
+      password: yup
+        .string()
+        .required(t('this-field-is-required'))
+        .test((value = '') => {
+          return isPasswordValid(value)
+        }),
     })
   }
 
-  const registerAccountDetails = {
+  const registerAccountFormData = {
     email: '',
     firstName: '',
     lastNameOrSurname: '',
@@ -56,32 +61,20 @@ const Content = (props: ContentProps) => {
   }
 
   const {
-    formState: { errors },
+    formState: { errors, isValid },
     handleSubmit,
     control,
     watch,
   } = useForm({
-    mode: 'onBlur',
+    mode: 'all',
     reValidateMode: 'onBlur',
-    defaultValues: registerAccountDetails,
+    defaultValues: registerAccountFormData,
     resolver: yupResolver(useDetailsSchema()),
     shouldFocusError: true,
   })
-  const userEnteredFirstName = watch(['firstName']).join('')
-  const userEnteredLastName = watch(['lastNameOrSurname']).join('')
-  const userEnteredEmail = watch(['email']).join('')
   const userEnteredPassword = watch(['password']).join('')
 
-  const isCreateAccountButtonDisabled = () => {
-    return (
-      userEnteredEmail !== '' &&
-      userEnteredFirstName !== '' &&
-      userEnteredLastName !== '' &&
-      isPasswordValid(userEnteredPassword)
-    )
-  }
-
-  const handleCreateAccount = async (registerAccountFormData: RegisterAccountDetails) => {
+  const handleCreateAccount = async (registerAccountFormData: RegisterAccountFormData) => {
     console.log(`createAccount: ${JSON.stringify(registerAccountFormData)}`)
     onRegisterToYourAccount(registerAccountFormData)
   }
@@ -173,7 +166,7 @@ const Content = (props: ContentProps) => {
           variant="contained"
           color="primary"
           onClick={() => handleSubmit(handleCreateAccount)()}
-          disabled={!isCreateAccountButtonDisabled()}
+          disabled={!isValid}
         >
           {t('common:create-an-account')}
         </Button>

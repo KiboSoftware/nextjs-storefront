@@ -1,14 +1,19 @@
 import React from 'react'
 
 import { composeStories } from '@storybook/testing-react'
-import { fireEvent, render, screen } from '@testing-library/react'
+import { fireEvent, render, screen, waitFor } from '@testing-library/react'
+import userEvent from '@testing-library/user-event'
 
 import * as stories from './Content.stories' // import all stories from the stories file
 
 const { Common } = composeStories(stories)
 
 describe('[components] Register Account(Content)', () => {
-  const setup = (args = Common.args) => render(<Common {...args} />)
+  const setup = (args = Common.args) => {
+    const onRegisterToYourAccountMock = jest.fn()
+    render(<Common {...args} onRegisterToYourAccount={onRegisterToYourAccountMock} />)
+    return { onRegisterToYourAccountMock }
+  }
 
   it('should render component', () => {
     setup()
@@ -28,7 +33,7 @@ describe('[components] Register Account(Content)', () => {
   })
 
   it('should create new account when user click on createAccount button', async () => {
-    setup()
+    const { onRegisterToYourAccountMock } = setup()
 
     const emailInput = screen.getByRole('textbox', { name: /email/i })
     const registerAccountFormFirstNameInput = screen.getByRole('textbox', { name: /first-name/i })
@@ -41,6 +46,8 @@ describe('[components] Register Account(Content)', () => {
     fireEvent.change(registerAccountFormLastNameInput, { target: { value: 'Example' } })
     fireEvent.change(registerAccountFormPasswordInput, { target: { value: 'Example@1234' } })
 
-    expect(createAccountButton).toBeEnabled()
+    await waitFor(() => expect(createAccountButton).toBeEnabled())
+    userEvent.click(createAccountButton)
+    await waitFor(() => expect(onRegisterToYourAccountMock).toHaveBeenCalled())
   })
 })
