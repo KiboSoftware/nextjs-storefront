@@ -20,6 +20,7 @@ const clientSideEmotionCache = createEmotionCache()
 
 interface KiboAppProps extends AppProps {
   emotionCache?: EmotionCache
+  onInitialData?: any
 }
 
 const App = (props: KiboAppProps) => {
@@ -30,6 +31,10 @@ const App = (props: KiboAppProps) => {
   const handleLoadCategoriesTree = (categories: CategoryCollection) => {
     const categoriesItems = (categories && categories.items) || []
     onLoadCategories(categoriesItems)
+  }
+
+  const handleInitialData = (value: any) => {
+    console.log('app', value)
   }
 
   return (
