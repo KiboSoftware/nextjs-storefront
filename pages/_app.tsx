@@ -9,10 +9,10 @@ import { AppProps } from 'next/app'
 import Head from 'next/head'
 import { Hydrate, QueryClientProvider } from 'react-query'
 
-import TopBar from '../components/TopBar'
 import createEmotionCache from '../lib/createEmotionCache'
 import { generateQueryClient } from '../lib/react-query/queryClient'
 import theme from '../styles/theme'
+import { KiboHeader } from '@/components/layout'
 // Client-side cache, shared for the whole session of the user in the browser.
 const clientSideEmotionCache = createEmotionCache()
 
@@ -35,7 +35,26 @@ const App = (props: KiboAppProps) => {
         <CssBaseline />
         <QueryClientProvider client={queryClient}>
           <Hydrate state={pageProps.dehydratedState}>
-            <TopBar />
+            <KiboHeader
+              navLinks={[
+                {
+                  link: '#',
+                  text: 'Order Status',
+                },
+                {
+                  link: '#',
+                  text: 'Wishlist',
+                },
+                {
+                  link: '#',
+                  text: 'Nav Link 2',
+                },
+                {
+                  link: '#',
+                  text: 'Nav Link 3',
+                },
+              ]}
+            />
             <Container maxWidth={'lg'}>
               <Component {...pageProps} />
             </Container>
