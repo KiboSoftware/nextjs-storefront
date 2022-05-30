@@ -5,7 +5,7 @@ import { useTranslation } from 'next-i18next'
 
 import KiboDialog from '@/components/common/KiboDialog/KiboDialog'
 import Content, {
-  RegisterAccountFormData,
+  RegisterAccountInputData,
 } from '@/components/layout/RegisterAccount/Content/Content'
 
 interface RegisterAccountDialogProps {
@@ -14,7 +14,7 @@ interface RegisterAccountDialogProps {
   setAutoFocus?: boolean
   onDialogClose: () => void
   onLoginToYourAccountDialogToggle: () => void
-  onRegisterToYourAccount: (data: RegisterAccountFormData) => void
+  onRegisterToYourAccount: (data: RegisterAccountInputData) => void
 }
 
 interface StyledThemeProps {

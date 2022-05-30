@@ -12,7 +12,7 @@ import KiboTextBox from '@/components/common/KiboTextBox/KiboTextBox'
 import PasswordValidation from '@/components/common/PasswordValidation/PasswordValidation'
 import { isPasswordValid } from '@/lib/helpers/validations/validations'
 
-export interface RegisterAccountFormData {
+export interface RegisterAccountInputData {
   email: string
   firstName: string
   lastNameOrSurname: string
@@ -21,7 +21,7 @@ export interface RegisterAccountFormData {
 
 interface ContentProps {
   setAutoFocus?: boolean
-  onRegisterToYourAccount: (formData: RegisterAccountFormData) => void
+  onRegisterToYourAccount: (formData: RegisterAccountInputData) => void
 }
 
 const styles = {
@@ -74,7 +74,7 @@ const Content = (props: ContentProps) => {
   })
   const userEnteredPassword = watch(['password']).join('')
 
-  const handleCreateAccount = async (registerAccountFormData: RegisterAccountFormData) => {
+  const handleCreateAccount = async (registerAccountFormData: RegisterAccountInputData) => {
     console.log(`createAccount: ${JSON.stringify(registerAccountFormData)}`)
     onRegisterToYourAccount(registerAccountFormData)
   }
