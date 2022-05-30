@@ -6,7 +6,6 @@ import { composeStories } from '@storybook/testing-react'
 import { render, screen, act, fireEvent } from '@testing-library/react'
 
 import * as stories from '@/components/layout/RegisterAccount/RegisterAccountDialog/RegisterAccountDialog.stories'
-import userEvent from '@testing-library/user-event'
 
 const { Common } = composeStories(stories)
 
@@ -44,20 +43,6 @@ describe('[components] Register Account Dialog', () => {
     expect(registerAccountFormPasswordInput).toBeInTheDocument()
 
     expect(createAccountButton).toBeInTheDocument()
-  })
-
-  it('should close register account dialog when user clicks on closeIcon button', () => {
-    setup()
-
-    const registerAccountDialog = screen.getByRole('dialog')
-    const closeIconButton = screen.getByRole('button', {
-      name: /close/i,
-    })
-    userEvent.click(closeIconButton)
-
-    expect(registerAccountDialog).toBeVisible()
-    expect(closeIconButton).toBeVisible()
-    expect(onDialogCloseMock).toHaveBeenCalled()
   })
 
   it('email should display required field error when user focus out (blur event) the email field', async () => {
