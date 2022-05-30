@@ -21,10 +21,10 @@ import {
 import { styled } from '@mui/material/styles'
 import { useTranslation } from 'next-i18next'
 
+import SearchSuggestions from '../SearchSuggestions/SearchSuggestions'
 import { categoryTreeDataMock } from '@/__mocks__/stories/categoryTreeDataMock'
 import HeaderAction from '@/components/common/HeaderAction/HeaderAction'
 import KiboLogo from '@/components/common/KiboLogo/KiboLogo'
-import SearchBar from '@/components/common/SearchBar/SearchBar'
 import { HamburgerMenu } from '@/components/layout'
 import MegaMenu from '@/components/layout/MegaMenu/MegaMenu'
 
@@ -36,7 +36,7 @@ const StyledToolbar = styled(Toolbar)(() => ({
   },
 }))
 
-const StyledToolbarNav = styled(Toolbar)(() => ({
+const StyledToolbarNav = styled(Box)(() => ({
   display: 'flex',
   alignItems: 'center',
   justifyContent: 'flex-end',
@@ -61,7 +61,6 @@ export default function KiboHeader(props: KiboHeaderProps) {
   const [isBackdropOpen, setIsBackdropOpen] = useState<boolean>(false)
 
   const { t } = useTranslation('common')
-
   const kiboTheme = useTheme()
   const isMobileViewport = useMediaQuery(kiboTheme.breakpoints.down('md'))
 
@@ -73,7 +72,6 @@ export default function KiboHeader(props: KiboHeaderProps) {
       viewHamburgerMenu: value,
     })
   }
-
   const handleSearch = () => {
     return ''
   }
@@ -116,7 +114,6 @@ export default function KiboHeader(props: KiboHeaderProps) {
             >
               <KiboLogo />
             </Box>
-
             {/* Header Navigation */}
             <Box
               sx={{
@@ -124,6 +121,7 @@ export default function KiboHeader(props: KiboHeaderProps) {
                 backgroundColor: 'common.black',
                 height: 56,
                 justifyContent: 'flex-end',
+                paddingInline: 2,
               }}
             >
               <StyledToolbarNav>
@@ -138,28 +136,29 @@ export default function KiboHeader(props: KiboHeaderProps) {
                 })}
               </StyledToolbarNav>
             </Box>
-
             {/* Header actions */}
             <Box
               sx={{
+                display: 'flex',
+                justifyContent: 'space-around',
+                alignItems: 'center',
+                backgroundColor: { xs: 'common.black', md: 'common.white' },
                 boxShadow: 'none',
                 borderWidth: { xs: 0, md: 1 },
                 borderStyle: { xs: 'none', md: 'solid' },
                 borderColor: 'grey.300',
-                backgroundColor: 'common.white',
+                height: {
+                  xs: 55,
+                  md: 68,
+                },
               }}
             >
-              <StyledToolbar
+              <Box
                 sx={{
-                  display: 'flex',
-                  justifyContent: 'space-evenly',
-                  backgroundColor: { xs: 'common.black', md: 'common.white' },
-                  position: 'relative',
-                  overflow: 'hidden',
-                  paddingInline: 0,
-                  height: {
-                    xs: 55,
-                    md: 68,
+                  order: { xs: 3, md: 0 },
+                  display: {
+                    xs: 'flex',
+                    md: 'none',
                   },
                   minHeight: {
                     xs: 55,
@@ -167,106 +166,118 @@ export default function KiboHeader(props: KiboHeaderProps) {
                   },
                 }}
               >
-                <Box
-                  sx={{
-                    order: { xs: 3, md: 0 },
-                    display: {
-                      xs: 'flex',
-                      md: 'none',
-                    },
-                  }}
-                >
-                  <KiboLogo />
-                </Box>
-                <Box
-                  sx={{
-                    display: { xs: 'inline-flex', md: 'none' },
-                    order: { xs: 1 },
-                  }}
-                >
-                  <HeaderAction
-                    icon={headerState.viewHamburgerMenu ? CloseIcon : MenuIcon}
-                    {...(isMobileViewport && { iconFontSize: 'medium' })}
-                    onClick={() =>
-                      setHeaderState({
-                        viewHamburgerMenu: !headerState.viewHamburgerMenu,
-                        viewSearchPortal: false,
-                      })
-                    }
-                  />
-                </Box>
-                <Box
-                  sx={{
-                    display: { xs: 'inline-flex', md: 'none' },
-                    order: { xs: 2 },
-                  }}
+                <KiboLogo />
+              </Box>
+              <Box
+                sx={{
+                  display: { xs: 'inline-flex', md: 'none' },
+                  order: { xs: 1 },
+                }}
+              >
+                <HeaderAction
+                  icon={headerState.viewHamburgerMenu ? CloseIcon : MenuIcon}
+                  {...(isMobileViewport && { iconFontSize: 'medium' })}
                   onClick={() =>
                     setHeaderState({
-                      viewSearchPortal: !headerState.viewSearchPortal,
-                      viewHamburgerMenu: false,
+                      viewHamburgerMenu: !headerState.viewHamburgerMenu,
+                      viewSearchPortal: false,
                     })
                   }
-                  data-testid="mobile-searchIcon-container"
-                >
-                  <HeaderAction
-                    icon={SearchIcon}
-                    {...(isMobileViewport && { iconFontSize: 'medium' })}
-                  />
-                </Box>
-                <Box
-                  flex={1}
-                  sx={{
-                    display: {
-                      xs: 'none',
-                      md: 'inline-flex',
-                    },
-                    order: { md: 1 },
-                    pl: { xs: 0, md: '10%' },
-                    maxWidth: 650,
-                  }}
-                >
-                  <SearchBar searchTerm="" onSearch={handleSearch} showClearButton />
-                </Box>
-                <Box
-                  sx={{
-                    order: { xs: 4, md: 2 },
-                  }}
-                >
-                  <HeaderAction
-                    title={t('find-a-store')}
-                    subtitle={t('view-all')}
-                    icon={FmdGoodIcon}
-                    {...(isMobileViewport && { iconFontSize: 'medium' })}
-                  />
-                </Box>
-                <Box
-                  sx={{
-                    display: { xs: 'none', md: 'inline-flex' },
-                    order: { md: 4 },
-                  }}
-                >
-                  <HeaderAction
-                    title={t('my-account')}
-                    subtitle={t('log-in')}
-                    icon={AccountCircleIcon}
-                    {...(isMobileViewport && { iconFontSize: 'medium' })}
-                  />
-                </Box>
-                <Box
-                  sx={{
-                    order: { xs: 5 },
-                  }}
-                >
-                  <HeaderAction
-                    subtitle={t('cart')}
-                    icon={ShoppingCartIcon}
-                    badgeContent={3}
-                    {...(isMobileViewport && { iconFontSize: 'medium' })}
-                  />
-                </Box>
-              </StyledToolbar>
+                />
+              </Box>
+              <Box
+                sx={{
+                  display: { xs: 'inline-flex', md: 'none' },
+                  order: { xs: 2 },
+                }}
+                onClick={() =>
+                  setHeaderState({
+                    viewSearchPortal: !headerState.viewSearchPortal,
+                    viewHamburgerMenu: false,
+                  })
+                }
+                data-testid="mobile-searchIcon-container"
+              >
+                <HeaderAction
+                  icon={SearchIcon}
+                  {...(isMobileViewport && { iconFontSize: 'medium' })}
+                />
+              </Box>
+              {/* <Box
+                flex={1}
+                sx={{
+                  display: {
+                    xs: 'none',
+                    md: 'block',
+                  },
+                  order: { md: 1 },
+                  pl: { xs: 0, md: '10%' },
+                }}
+              >
+                <SearchSuggestions />
+              </Box> */}
+              <Box
+                sx={{
+                  flex: 1,
+                  display: { xs: 'none', md: 'inline-block' },
+                  order: { md: 1 },
+                  pl: { xs: 0, md: 14 },
+                  pt: 4,
+                  alignItems: 'center',
+                  height: '100%',
+                }}
+                data-testid="Search-container"
+              >
+                <SearchSuggestions />
+              </Box>
+              <Box
+                sx={{
+                  order: { xs: 4, md: 2 },
+                  ml: { xs: 0, md: 'auto' },
+                }}
+              >
+                <HeaderAction
+                  title={t('find-a-store')}
+                  subtitle={t('view-all')}
+                  icon={FmdGoodIcon}
+                  {...(isMobileViewport && { iconFontSize: 'medium' })}
+                />
+              </Box>
+              <Box
+                sx={{
+                  display: { xs: 'none', md: 'inline-flex' },
+                  order: { md: 4 },
+                }}
+              >
+                <HeaderAction
+                  title={t('my-account')}
+                  subtitle={t('log-in')}
+                  icon={AccountCircleIcon}
+                  {...(isMobileViewport && { iconFontSize: 'medium' })}
+                />
+              </Box>
+              <Box
+                sx={{
+                  order: { xs: 5 },
+                }}
+              >
+                <HeaderAction
+                  subtitle={t('cart')}
+                  icon={ShoppingCartIcon}
+                  badgeContent={3}
+                  {...(isMobileViewport && { iconFontSize: 'medium' })}
+                />
+              </Box>
             </Box>
-
+            {/* Megamenu section */}
+            <Box
+              sx={{
+                display: { xs: 'none', md: 'flex' },
+                height: 59,
+                backgroundColor: 'common.white',
+              }}
+              data-testid="megamenu-container"
+            ></Box>
             {/* Mobile searchbar section */}
             <Collapse in={headerState.viewSearchPortal}>
               <Box
@@ -294,7 +305,7 @@ export default function KiboHeader(props: KiboHeaderProps) {
                   }}
                   data-testid="searchbar-container"
                 >
-                  <SearchBar searchTerm="" onSearch={handleSearch} showClearButton />
+                  <SearchSuggestions />
                 </StyledToolbar>
               </Box>
             </Collapse>
