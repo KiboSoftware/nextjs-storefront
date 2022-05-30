@@ -1,9 +1,12 @@
+import { useEffect } from 'react'
+
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
 import getConfig from 'next/config'
 import { useRouter } from 'next/router'
 
 import nextI18NextConfig from '../../next-i18next.config'
 import { ProductDetailTemplate } from '@/components/page-templates'
+import getCategoryTree from '@/lib/api/operations/get-category-tree'
 import getProduct from '@/lib/api/operations/get-product'
 import search from '@/lib/api/operations/get-product-search'
 import { productGetters } from '@/lib/getters'
@@ -16,9 +19,12 @@ export async function getStaticProps(context: GetStaticPropsContext) {
   const { serverRuntimeConfig } = getConfig()
 
   const product = await getProduct(productCode)
+  const categoryTree = await getCategoryTree()
+
   return {
     props: {
       product,
+      categoryTree,
       ...(await serverSideTranslations(locale as string, ['common', 'product'], nextI18NextConfig)),
     },
     revalidate: serverRuntimeConfig.revalidate,
@@ -34,8 +40,11 @@ export async function getStaticPaths() {
   return { paths, fallback: true }
 }
 
-const ProductDetailPage: NextPage = ({ product }: any) => {
+const ProductDetailPage: NextPage = ({ product, categoryTree, onInitialData }: any) => {
   const { isFallback } = useRouter()
+  useEffect(() => {
+    onInitialData(categoryTree)
+  }, [categoryTree, onInitialData])
 
   if (isFallback) {
     return <>Fallback</>

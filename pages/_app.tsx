@@ -18,11 +18,16 @@ const clientSideEmotionCache = createEmotionCache()
 
 interface KiboAppProps extends AppProps {
   emotionCache?: EmotionCache
+  onInitialData?: any
 }
 
 const App = (props: KiboAppProps) => {
-  const { Component, emotionCache = clientSideEmotionCache, pageProps } = props
+  const { Component, emotionCache = clientSideEmotionCache, pageProps, onInitialData } = props
   const [queryClient] = React.useState(() => generateQueryClient())
+
+  const handleInitialData = (value: any) => {
+    console.log('app', value)
+  }
 
   return (
     <CacheProvider value={emotionCache}>
@@ -56,7 +61,7 @@ const App = (props: KiboAppProps) => {
               ]}
             />
             <Container maxWidth={'lg'}>
-              <Component {...pageProps} />
+              <Component {...pageProps} onInitialData={handleInitialData} />
             </Container>
           </Hydrate>
         </QueryClientProvider>
