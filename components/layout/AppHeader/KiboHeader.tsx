@@ -165,96 +165,106 @@ export default function KiboHeader(props: KiboHeaderProps) {
                   },
                 }}
               >
-                <KiboLogo />
-              </Box>
-              <Box
-                sx={{
-                  display: { xs: 'inline-flex', md: 'none' },
-                  order: { xs: 1 },
-                }}
-              >
-                <HeaderAction
-                  icon={headerState.viewHamburgerMenu ? CloseIcon : MenuIcon}
-                  {...(isMobileViewport && { iconFontSize: 'medium' })}
+                <Box
+                  sx={{
+                    order: { xs: 3, md: 0 },
+                    display: {
+                      xs: 'flex',
+                      md: 'none',
+                    },
+                  }}
+                >
+                  <KiboLogo />
+                </Box>
+                <Box
+                  sx={{
+                    display: { xs: 'inline-flex', md: 'none' },
+                    order: { xs: 1 },
+                  }}
+                >
+                  <HeaderAction
+                    icon={headerState.viewHamburgerMenu ? CloseIcon : MenuIcon}
+                    {...(isMobileViewport && { iconFontSize: 'medium' })}
+                    onClick={() =>
+                      setHeaderState({
+                        viewHamburgerMenu: !headerState.viewHamburgerMenu,
+                        viewSearchPortal: false,
+                      })
+                    }
+                  />
+                </Box>
+                <Box
+                  sx={{
+                    display: { xs: 'inline-flex', md: 'none' },
+                    order: { xs: 2 },
+                  }}
                   onClick={() =>
                     setHeaderState({
-                      viewHamburgerMenu: !headerState.viewHamburgerMenu,
-                      viewSearchPortal: false,
+                      viewSearchPortal: !headerState.viewSearchPortal,
+                      viewHamburgerMenu: false,
                     })
                   }
-                />
-              </Box>
-              <Box
-                sx={{
-                  display: { xs: 'inline-flex', md: 'none' },
-                  order: { xs: 2 },
-                }}
-                onClick={() =>
-                  setHeaderState({
-                    viewSearchPortal: !headerState.viewSearchPortal,
-                    viewHamburgerMenu: false,
-                  })
-                }
-                data-testid="mobile-searchIcon-container"
-              >
-                <HeaderAction
-                  icon={SearchIcon}
-                  {...(isMobileViewport && { iconFontSize: 'medium' })}
-                />
-              </Box>
+                  data-testid="mobile-searchIcon-container"
+                >
+                  <HeaderAction
+                    icon={SearchIcon}
+                    {...(isMobileViewport && { iconFontSize: 'medium' })}
+                  />
+                </Box>
 
-              <Box
-                sx={{
-                  flex: 1,
-                  display: { xs: 'none', md: 'inline-block' },
-                  order: { md: 1 },
-                  // pl: { xs: 0, md: 14 },
-                  // pt: 4,
-                  alignItems: 'center',
-                  boxSizing: 'content-box',
-                  pl: { sm: 14, lg: 10, xl: 0 },
-                }}
-                data-testid="Search-container"
-              >
-                <SearchSuggestions />
-              </Box>
-              <Box
-                sx={{
-                  order: { xs: 4, md: 2 },
-                  ml: { xs: 0, md: 'auto' },
-                }}
-              >
-                <HeaderAction
-                  title={t('find-a-store')}
-                  subtitle={t('view-all')}
-                  icon={FmdGoodIcon}
-                  {...(isMobileViewport && { iconFontSize: 'medium' })}
-                />
-              </Box>
-              <Box
-                sx={{
-                  display: { xs: 'none', md: 'inline-flex' },
-                  order: { md: 4 },
-                }}
-              >
-                <HeaderAction
-                  title={t('my-account')}
-                  subtitle={t('log-in')}
-                  icon={AccountCircleIcon}
-                  {...(isMobileViewport && { iconFontSize: 'medium' })}
-                />
-              </Box>
-              <Box
-                sx={{
-                  order: { xs: 5 },
-                }}
-              >
-                <HeaderAction
-                  subtitle={t('cart')}
-                  icon={ShoppingCartIcon}
-                  badgeContent={3}
-                  {...(isMobileViewport && { iconFontSize: 'medium' })}
-                />
+                <Box
+                  sx={{
+                    flex: 1,
+                    display: { xs: 'none', md: 'inline-block' },
+                    order: { md: 1 },
+                    // pl: { xs: 0, md: 14 },
+                    // pt: 4,
+                    alignItems: 'center',
+                    boxSizing: 'content-box',
+                    pl: { sm: 14, lg: 10, xl: 0 },
+                  }}
+                  data-testid="Search-container"
+                >
+                  <SearchSuggestions />
+                </Box>
+                <Box
+                  sx={{
+                    order: { xs: 4, md: 2 },
+                    ml: { xs: 0, md: 'auto' },
+                  }}
+                >
+                  <HeaderAction
+                    title={t('find-a-store')}
+                    subtitle={t('view-all')}
+                    icon={FmdGoodIcon}
+                    {...(isMobileViewport && { iconFontSize: 'medium' })}
+                  />
+                </Box>
+                <Box
+                  sx={{
+                    display: { xs: 'none', md: 'inline-flex' },
+                    order: { md: 4 },
+                  }}
+                >
+                  <HeaderAction
+                    title={t('my-account')}
+                    subtitle={t('log-in')}
+                    icon={AccountCircleIcon}
+                    {...(isMobileViewport && { iconFontSize: 'medium' })}
+                  />
+                </Box>
+                <Box
+                  sx={{
+                    order: { xs: 5 },
+                  }}
+                >
+                  <HeaderAction
+                    subtitle={t('cart')}
+                    icon={ShoppingCartIcon}
+                    badgeContent={3}
+                    {...(isMobileViewport && { iconFontSize: 'medium' })}
+                  />
+                </Box>
               </Box>
             </Container>
             {/* Megamenu section */}
