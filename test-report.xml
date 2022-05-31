@@ -1,385 +1,389 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <testExecutions version="1">
-  <file path="C:\Users\Chandradeepta.Laha\Desktop\NextJS-Storefront\nextjs-storefront\components\checkout\DetailsStep\DetailsStep.spec.tsx">
-    <testCase name="[components] Details should render component" duration="1629"/>
-    <testCase name="[components] Details should render firstName, lastName and password when user selects &quot;I want to create account&quot;" duration="540"/>
+  <file path="C:\Kibo-repo\nextjs-storefront\__test__\e2e\integration\checkout\DetailsStep\DetailsStep.spec.tsx">
+    <testCase name="[components] Details should render component" duration="1162"/>
+    <testCase name="[components] Details should render firstName, lastName and password when user selects &quot;I want to create account&quot;" duration="980"/>
+    <testCase name="[components] Details email should display required field error when user focus out (blur event) the email field" duration="322"/>
+    <testCase name="[components] Details first name should display required field error when user focus out (blur event) the first name field" duration="588"/>
+    <testCase name="[components] Details last name should display required field error when user focus out (blur event) the last name field" duration="656"/>
+    <testCase name="[components] Details password should display required field error when user focus out (blur event) the password field" duration="475"/>
   </file>
-  <file path="C:\Users\Chandradeepta.Laha\Desktop\NextJS-Storefront\nextjs-storefront\components\product\ProductInformation\ProductInformation.spec.tsx">
-    <testCase name="[component] - ProductInformation should render component" duration="985"/>
-    <testCase name="[component] - ProductInformation should open product spec accordion when user clicks on accordion header" duration="437"/>
-    <testCase name="[component] - ProductInformation should close accordion when accordion is already open and the user clicks on accordion header" duration="354"/>
+  <file path="C:\Kibo-repo\nextjs-storefront\__test__\e2e\integration\layout\SearchSuggestions\SearchSuggestions.spec.tsx">
+    <testCase name="[components] - SearchSuggestions Integration should render component" duration="582"/>
+    <testCase name="[components] - SearchSuggestions Integration should display user entered text on search bar input" duration="211"/>
+    <testCase name="[components] - SearchSuggestions Integration should display search suggestion when user entered the text on search bar" duration="1271"/>
+    <testCase name="[components] - SearchSuggestions Integration should display backdrop when search suggustion opens" duration="941"/>
+    <testCase name="[components] - SearchSuggestions Integration should clear the search input and close the search suggestion when user clicks on cross button" duration="438"/>
+    <testCase name="[components] - SearchSuggestions Integration should close search suggestion when user clears the search text" duration="1706"/>
+    <testCase name="[components] - SearchSuggestions Integration should close search suggestion when user clicks on backdrop" duration="359"/>
+    <testCase name="[components] - SearchSuggestions Integration should route to another page when user clicks on item" duration="232"/>
   </file>
-  <file path="C:\Users\Chandradeepta.Laha\Desktop\NextJS-Storefront\nextjs-storefront\__test__\e2e\integration\product\ProductInformation\ProductInformation.spec.tsx">
-    <testCase name="[component] - ProductInformation Integration should render component" duration="2174"/>
+  <file path="C:\Kibo-repo\nextjs-storefront\__test__\e2e\integration\checkout\Checkout\checkout.spec.tsx">
+    <testCase name="[components] Checkout integration should render component" duration="3577"/>
+    <testCase name="[components] Checkout integration should activate next step(shipping) when user enters valid input and clicks on &quot;Go to Shipping&quot; button" duration="2736"/>
   </file>
-  <file path="C:\Users\Chandradeepta.Laha\Desktop\NextJS-Storefront\nextjs-storefront\components\common\AddressForm\AddressForm.spec.tsx">
-    <testCase name="[components] - AddressForm should render component" duration="656"/>
-    <testCase name="[components] - AddressForm should show user entered value" duration="1019"/>
+  <file path="C:\Kibo-repo\nextjs-storefront\components\page-templates\ProductListingTemplate\ProductListingTemplate.spec.tsx">
+    <testCase name="[component] - Category should render component" duration="5086"/>
+    <testCase name="[component] - Category should show all the product when user clicks on show more button" duration="2766"/>
+    <testCase name="[component] - Category should hide filter by button when user clicks on filter By button" duration="2168"/>
   </file>
-  <file path="C:\Users\Chandradeepta.Laha\Desktop\NextJS-Storefront\nextjs-storefront\components\cart\CartItemActionsMobile\CartItemActionsMobile.spec.tsx">
-    <testCase name="[component] - CartItemActionsMobile should render component" duration="485"/>
-    <testCase name="[component] - CartItemActionsMobile should show popover menu when user clicks on icon button" duration="668"/>
-    <testCase name="[component] - CartItemActionsMobile should call onMenuItemClick function when user selects any menu item" duration="399"/>
-    <testCase name="[component] - CartItemActionsMobile should hide popover menu when user selects menu item" duration="506"/>
+  <file path="C:\Kibo-repo\nextjs-storefront\components\common\PromoCodeBadge\PromocodeBadge.spec.js">
+    <testCase name="PromoCode Component should render PromoCode text" duration="754"/>
+    <testCase name="PromoCode Component should render PromoCode apply button" duration="145"/>
+    <testCase name="PromoCode Component should render promocode badge" duration="115"/>
+    <testCase name="PromoCode Component should enable button" duration="202"/>
+    <testCase name="PromoCode Component should render remove button" duration="130"/>
+    <testCase name="PromoCode Component should render ApplyPromocode button" duration="108"/>
+    <testCase name="PromoCode Component Test the Apply Button is visible" duration="135"/>
+    <testCase name="PromoCode Component Test the promocode textBox is visible" duration="231"/>
+    <testCase name="PromoCode Component Test the Apply Button is disable at default" duration="68"/>
+    <testCase name="PromoCode Component should enable Apply button when a user enters Promo code" duration="226"/>
+    <testCase name="PromoCode Component should clear the textbox when user enters promocode and apply it" duration="294"/>
+    <testCase name="PromoCode Component should disable Apply button when a user enters Promo code and apply it" duration="143"/>
+    <testCase name="PromoCode Component should display promocode when a user enter and apply it" duration="369"/>
   </file>
-  <file path="C:\Users\Chandradeepta.Laha\Desktop\NextJS-Storefront\nextjs-storefront\components\product\ProductCard\ProductCard.spec.js">
-    <testCase name="[components] Product Card Component Common Product Card should render title" duration="707"/>
-    <testCase name="[components] Product Card Component Common Product Card should render price" duration="224"/>
-    <testCase name="[components] Product Card Component Common Product Card should render product image" duration="176"/>
-    <testCase name="[components] Product Card Component Common Product Card should render rating component" duration="227"/>
-    <testCase name="[components] Product Card Component Common Product Card when not providing rating prop should show empty rating" duration="156"/>
-    <testCase name="[components] Product Card Component Sale Price Product Card should render sale price text" duration="234"/>
-    <testCase name="[components] Product Card Component Rating Product Card should render rating component with provided rating value" duration="172"/>
-    <testCase name="[components] Product Card Component No Image Product Card should render Common Image placeholder" duration="150"/>
-    <testCase name="[components] Product Card Component Product Card Skeleton should render Product Card skeleton" duration="95"/>
+  <file path="C:\Kibo-repo\nextjs-storefront\__test__\e2e\integration\checkout\shipping\shippingMethod.spec.tsx">
+    <testCase name="[component] - ShippingMethod should render component" duration="984"/>
+    <testCase name="[component] - ShippingMethod should render ship items and pickup items " duration="399"/>
+    <testCase name="[component] - ShippingMethod should have shippingMethods only for shipping to home items" duration="865"/>
+    <testCase name="[component] - ShippingMethod should not have shippingMethods options if no shipping items are there" duration="113"/>
+    <testCase name="[component] - ShippingMethod should have products when order items are there" duration="940"/>
+    <testCase name="[component] - ShippingMethod should call onClickStoreLocatorMock when click onClickStoreLocator for pickupitems only" duration="367"/>
   </file>
-  <file path="C:\Users\Chandradeepta.Laha\Desktop\NextJS-Storefront\nextjs-storefront\components\common\ProductItem\ProductItem.spec.tsx">
-    <testCase name="[component] - ProductItem should render component" duration="840"/>
-    <testCase name="[component] - ProductItem should render mock component" duration="255"/>
-    <testCase name="[component] - ProductItem with Price Label should render component with price label inside details when price is provided" duration="328"/>
-    <testCase name="[component] - ProductItem with Qty Label should render component with Qty label inside details when qty is provided" duration="188"/>
+  <file path="C:\Kibo-repo\nextjs-storefront\components\layout\AppHeader\KiboHeader.spec.js">
+    <testCase name="[component] KiboHeader component should render the component" duration="927"/>
+    <testCase name="[component] KiboHeader component should render the navlinks" duration="747"/>
+    <testCase name="[component] KiboHeader component should render the logo" duration="440"/>
+    <testCase name="[component] KiboHeader component should render header actions" duration="1035"/>
+    <testCase name="[component] KiboHeader component should render the searchbox" duration="523"/>
+    <testCase name="[component] KiboHeader component should render the megamenu section" duration="296"/>
+    <testCase name="[component] KiboHeader component should render the hamburger icon in mobile viewport" duration="384"/>
+    <testCase name="[component] KiboHeader component should render the searchbox after clicking search icon in mobile viewport" duration="736"/>
   </file>
-  <file path="C:\Users\Chandradeepta.Laha\Desktop\NextJS-Storefront\nextjs-storefront\components\checkout\KiboStepper\KiboStepper.spec.tsx">
-    <testCase name="[components] KiboStepper should render component" duration="1578"/>
+  <file path="C:\Kibo-repo\nextjs-storefront\__test__\e2e\integration\common\AddressForm\AddressForm.spec.tsx">
+    <testCase name="[components] - AddressForm integration should render component" duration="3371"/>
+    <testCase name="[components] - AddressForm integration should show user entered values firstName" duration="879"/>
+    <testCase name="[components] - AddressForm integration should show user entered values lastNameOrSurname" duration="715"/>
+    <testCase name="[components] - AddressForm integration should show user entered values address1" duration="750"/>
+    <testCase name="[components] - AddressForm integration should show user entered values address2" duration="823"/>
+    <testCase name="[components] - AddressForm integration should show user entered values cityOrTown" duration="829"/>
+    <testCase name="[components] - AddressForm integration should show user entered values stateOrProvince" duration="667"/>
+    <testCase name="[components] - AddressForm integration should show user entered values postalOrZipCode" duration="822"/>
+    <testCase name="[components] - AddressForm integration should show user entered values phoneNumbers.home" duration="776"/>
+    <testCase name="[components] - AddressForm integration save shipping address (checkbox) should not render when isUserLoggedIn = false" duration="258"/>
+    <testCase name="[components] - AddressForm integration save shipping address (checkbox) should only  when isUserLoggedIn = true" duration="460"/>
+    <testCase name="[components] - AddressForm integration should display validation message firstName" duration="1075"/>
+    <testCase name="[components] - AddressForm integration should display validation message lastNameOrSurname" duration="1018"/>
+    <testCase name="[components] - AddressForm integration should display validation message address1" duration="1137"/>
+    <testCase name="[components] - AddressForm integration should display validation message address2" duration="951"/>
+    <testCase name="[components] - AddressForm integration should display validation message cityOrTown" duration="921"/>
+    <testCase name="[components] - AddressForm integration should display validation message stateOrProvince" duration="883"/>
+    <testCase name="[components] - AddressForm integration should display validation message postalOrZipCode" duration="1030"/>
+    <testCase name="[components] - AddressForm integration should display validation message phoneNumbers.home" duration="976"/>
   </file>
-  <file path="C:\Users\Chandradeepta.Laha\Desktop\NextJS-Storefront\nextjs-storefront\__test__\e2e\integration\common\AddressForm\AddressForm.spec.tsx">
-    <testCase name="[components] - AddressForm integration should render component" duration="5239"/>
-    <testCase name="[components] - AddressForm integration should show user entered values firstName" duration="1275"/>
-    <testCase name="[components] - AddressForm integration should show user entered values lastNameOrSurname" duration="991"/>
-    <testCase name="[components] - AddressForm integration should show user entered values address1" duration="990"/>
-    <testCase name="[components] - AddressForm integration should show user entered values address2" duration="1169"/>
-    <testCase name="[components] - AddressForm integration should show user entered values cityOrTown" duration="1160"/>
-    <testCase name="[components] - AddressForm integration should show user entered values stateOrProvince" duration="1092"/>
-    <testCase name="[components] - AddressForm integration should show user entered values postalOrZipCode" duration="1049"/>
-    <testCase name="[components] - AddressForm integration should show user entered values phoneNumbers.home" duration="956"/>
-    <testCase name="[components] - AddressForm integration save shipping address (checkbox) should not render when isUserLoggedIn = false" duration="445"/>
-    <testCase name="[components] - AddressForm integration save shipping address (checkbox) should only  when isUserLoggedIn = true" duration="653"/>
-    <testCase name="[components] - AddressForm integration should display validation message firstName" duration="1434"/>
-    <testCase name="[components] - AddressForm integration should display validation message lastNameOrSurname" duration="1287"/>
-    <testCase name="[components] - AddressForm integration should display validation message address1" duration="1220"/>
-    <testCase name="[components] - AddressForm integration should display validation message address2" duration="1260"/>
-    <testCase name="[components] - AddressForm integration should display validation message cityOrTown" duration="1284"/>
-    <testCase name="[components] - AddressForm integration should display validation message stateOrProvince" duration="1251"/>
-    <testCase name="[components] - AddressForm integration should display validation message postalOrZipCode" duration="1297"/>
-    <testCase name="[components] - AddressForm integration should display validation message phoneNumbers.home" duration="1115"/>
+  <file path="C:\Kibo-repo\nextjs-storefront\__test__\e2e\integration\add-to-cart-dialog\AddToCartDialog\AddToCartDialog.spec.tsx">
+    <testCase name="[components] Add To Cart Dialog integration should render component" duration="1460"/>
+    <testCase name="[components] Add To Cart Dialog integration should close dialog when user clicks on closeIcon button" duration="816"/>
+    <testCase name="[components] Add To Cart Dialog integration should redirect to /cart page when user clicks on &quot;Add To Cart&quot; button" duration="1178"/>
+    <testCase name="[components] Add To Cart Dialog integration should close dialog when user clicks on &quot;Continue Shopping&quot; button" duration="725"/>
   </file>
-  <file path="C:\Users\Chandradeepta.Laha\Desktop\NextJS-Storefront\nextjs-storefront\__test__\e2e\integration\checkout\Checkout\checkout.spec.tsx">
-    <testCase name="[components] Checkout integration should render component" duration="5120"/>
-    <testCase name="[components] Checkout integration should activate next step(shipping) when user enters valid input and clicks on &quot;Go to Shipping&quot; button" duration="3748"/>
+  <file path="C:\Kibo-repo\nextjs-storefront\components\product-listing\CategoryFilterByMobile\CategoryFilterByMobile.spec.tsx">
+    <testCase name="[component] - CategoryFilterByMobile should render component" duration="3494"/>
   </file>
-  <file path="C:\Users\Chandradeepta.Laha\Desktop\NextJS-Storefront\nextjs-storefront\components\layout\AppHeader\KiboHeader.spec.js">
-    <testCase name="[component] KiboHeader component should render the component" duration="1182"/>
-    <testCase name="[component] KiboHeader component should render the navlinks" duration="901"/>
-    <testCase name="[component] KiboHeader component should render the logo" duration="452"/>
-    <testCase name="[component] KiboHeader component should render header actions" duration="1231"/>
-    <testCase name="[component] KiboHeader component should render the searchbox" duration="971"/>
-    <testCase name="[component] KiboHeader component should render the megamenu section" duration="383"/>
-    <testCase name="[component] KiboHeader component should render the hamburger icon in mobile viewport" duration="485"/>
-    <testCase name="[component] KiboHeader component should render the searchbox after clicking search icon in mobile viewport" duration="1056"/>
+  <file path="C:\Kibo-repo\nextjs-storefront\components\layout\HamburgerMenu\HamburgerMenu.spec.js">
+    <testCase name="[component] HamburgerMenu component should render all the list-items if isDrawerOpen props is true" duration="1419"/>
+    <testCase name="[component] HamburgerMenu component should not render all the list-items if isDrawerOpen props is false" duration="28"/>
+    <testCase name="[component] HamburgerMenu component should render Login button/ My Profile section" duration="824"/>
   </file>
-  <file path="C:\Users\Chandradeepta.Laha\Desktop\NextJS-Storefront\nextjs-storefront\__test__\e2e\integration\checkout\DetailsStep\DetailsStep.spec.tsx">
-    <testCase name="[components] Details should render component" duration="1653"/>
-    <testCase name="[components] Details should render firstName, lastName and password when user selects &quot;I want to create account&quot;" duration="1440"/>
-    <testCase name="[components] Details email should display required field error when user focus out (blur event) the email field" duration="615"/>
-    <testCase name="[components] Details first name should display required field error when user focus out (blur event) the first name field" duration="939"/>
-    <testCase name="[components] Details last name should display required field error when user focus out (blur event) the last name field" duration="848"/>
-    <testCase name="[components] Details password should display required field error when user focus out (blur event) the password field" duration="898"/>
+  <file path="C:\Kibo-repo\nextjs-storefront\components\layout\CategoryNestedNavigation\CategoryNestedNavigation.spec.js">
+    <testCase name="[component] CategroyNestedNavigation component should render the category-list" duration="912"/>
+    <testCase name="[component] CategroyNestedNavigation component should render only the category-list items where list property isDisplayed is true" duration="700"/>
+    <testCase name="[component] CategroyNestedNavigation component should render childrenCategories on click if present and render the previous categories on back click" duration="1581"/>
+    <testCase name="[component] CategroyNestedNavigation component should call onCategoryClickMock if childrenCategories are empty" duration="348"/>
   </file>
-  <file path="C:\Users\Chandradeepta.Laha\Desktop\NextJS-Storefront\nextjs-storefront\components\layout\CategoryNestedNavigation\CategoryNestedNavigation.spec.js">
-    <testCase name="[component] CategroyNestedNavigation component should render the category-list" duration="1454"/>
-    <testCase name="[component] CategroyNestedNavigation component should render only the category-list items where list property isDisplayed is true" duration="1163"/>
-    <testCase name="[component] CategroyNestedNavigation component should render childrenCategories on click if present and render the previous categories on back click" duration="2559"/>
-    <testCase name="[component] CategroyNestedNavigation component should call onCategoryClickMock if childrenCategories are empty" duration="876"/>
+  <file path="C:\Kibo-repo\nextjs-storefront\components\checkout\DetailsStep\DetailsStep.spec.tsx">
+    <testCase name="[components] Details should render component" duration="707"/>
+    <testCase name="[components] Details should render firstName, lastName and password when user selects &quot;I want to create account&quot;" duration="360"/>
   </file>
-  <file path="C:\Users\Chandradeepta.Laha\Desktop\NextJS-Storefront\nextjs-storefront\__test__\e2e\integration\add-to-cart-dialog\AddToCartDialog\AddToCartDialog.spec.tsx">
-    <testCase name="[components] Add To Cart Dialog integration should render component" duration="2611"/>
-    <testCase name="[components] Add To Cart Dialog integration should close dialog when user clicks on closeIcon button" duration="789"/>
-    <testCase name="[components] Add To Cart Dialog integration should redirect to /cart page when user clicks on &quot;Add To Cart&quot; button" duration="1590"/>
-    <testCase name="[components] Add To Cart Dialog integration should close dialog when user clicks on &quot;Continue Shopping&quot; button" duration="735"/>
+  <file path="C:\Kibo-repo\nextjs-storefront\components\page-templates\Checkout\Checkout.spec.tsx">
+    <testCase name="[components] Checkout should render component" duration="754"/>
   </file>
-  <file path="C:\Users\Chandradeepta.Laha\Desktop\NextJS-Storefront\nextjs-storefront\components\product-listing\CategoryFilterByMobile\CategoryFilterByMobile.spec.tsx">
-    <testCase name="[component] - CategoryFilterByMobile should render component" duration="4168"/>
+  <file path="C:\Kibo-repo\nextjs-storefront\components\product\ProductCard\ProductCard.spec.js">
+    <testCase name="[components] Product Card Component Default Product Card should render title" duration="364"/>
+    <testCase name="[components] Product Card Component Default Product Card should render price" duration="187"/>
+    <testCase name="[components] Product Card Component Default Product Card should render product image" duration="90"/>
+    <testCase name="[components] Product Card Component Default Product Card should render rating component" duration="146"/>
+    <testCase name="[components] Product Card Component Default Product Card when not providing rating prop should show empty rating" duration="104"/>
+    <testCase name="[components] Product Card Component Sale Price Product Card should render sale price text" duration="177"/>
+    <testCase name="[components] Product Card Component Rating Product Card should render rating component with provided rating value" duration="98"/>
+    <testCase name="[components] Product Card Component No Image Product Card should render default Image placeholder" duration="101"/>
+    <testCase name="[components] Product Card Component Product Card Skeleton should render Product Card skeleton" duration="47"/>
   </file>
-  <file path="C:\Users\Chandradeepta.Laha\Desktop\NextJS-Storefront\nextjs-storefront\components\layout\HamburgerMenu\HamburgerMenu.spec.js">
-    <testCase name="[component] HamburgerMenu component should render all the list-items if isDrawerOpen props is true" duration="1607"/>
-    <testCase name="[component] HamburgerMenu component should not render all the list-items if isDrawerOpen props is false" duration="49"/>
-    <testCase name="[component] HamburgerMenu component should render Login button/ My Profile section" duration="957"/>
+  <file path="C:\Kibo-repo\nextjs-storefront\__test__\e2e\integration\cart\CartItem\CartItem.spec.tsx">
+    <testCase name="[components] - CartItem Integration should render component" duration="2183"/>
   </file>
-  <file path="C:\Users\Chandradeepta.Laha\Desktop\NextJS-Storefront\nextjs-storefront\components\product-listing\Facet\Facet.spec.tsx">
-    <testCase name="[components] - FacetItem should render component" duration="509"/>
-    <testCase name="[components] - FacetItem should expand accordian when user clicks on summery and shrinks again when user clicks again" duration="361"/>
-    <testCase name="[components] - FacetItem should hide &quot;View More&quot; when number of items &lt; 6" duration="62"/>
-    <testCase name="[components] - FacetItem should show &quot;View More&quot; when number of items &gt; 6" duration="78"/>
-    <testCase name="[components] - FacetItem should show &quot;View Less&quot; when user clicks on &quot;View More&quot; and &quot;View More&quot; when clicks again" duration="476"/>
+  <file path="C:\Kibo-repo\nextjs-storefront\__test__\e2e\integration\filter-by\Facet\Facet.spec.tsx">
+    <testCase name="[components] - Facet integration should filter facet items when user enters search term" duration="1604"/>
   </file>
-  <file path="C:\Users\Chandradeepta.Laha\Desktop\NextJS-Storefront\nextjs-storefront\components\cart\CartItem\CartItem.spec.tsx">
-    <testCase name="[components] - CartItem should render component" duration="1058"/>
+  <file path="C:\Kibo-repo\nextjs-storefront\__test__\e2e\integration\product\ProductInformation\ProductInformation.spec.tsx">
+    <testCase name="[component] - ProductInformation Integration should render component" duration="1084"/>
   </file>
-  <file path="C:\Users\Chandradeepta.Laha\Desktop\NextJS-Storefront\nextjs-storefront\components\core\ImageGallery\ImageGallery.spec.js">
-    <testCase name="[component] ImageGallery component Gallery without Zoom should not render title" duration="1090"/>
-    <testCase name="[component] ImageGallery component Gallery without Zoom should render all the images provided by props" duration="406"/>
-    <testCase name="[component] ImageGallery component Gallery without Zoom should render the selected image" duration="427"/>
-    <testCase name="[component] ImageGallery component Gallery without Zoom should render the downArrowButton for thumbnails when thumnail count &gt; 4" duration="494"/>
-    <testCase name="[component] ImageGallery component Gallery without Zoom should call handleVerticalSlider if clicked on downArrowButton" duration="1029"/>
-    <testCase name="[component] ImageGallery component Gallery without Zoom should change the selected thumbnail on click" duration="433"/>
-    <testCase name="[component] ImageGallery component Gallery without Zoom should call handleSwipe method on touch swipe" duration="625"/>
-    <testCase name="[component] ImageGallery component Zoomed Gallery should render title" duration="299"/>
-    <testCase name="[component] ImageGallery component Zoomed Gallery should change the selected thumbnail on left/right arrow click" duration="735"/>
-    <testCase name="[component] ImageGallery component Zoomed Gallery should render zoom controls and call the respective functions" duration="784"/>
+  <file path="C:\Kibo-repo\nextjs-storefront\components\common\AddressForm\AddressForm.spec.tsx">
+    <testCase name="[components] - AddressForm should render component" duration="403"/>
+    <testCase name="[components] - AddressForm should show user entered value" duration="571"/>
   </file>
-  <file path="C:\Users\Chandradeepta.Laha\Desktop\NextJS-Storefront\nextjs-storefront\components\common\KiboDialog\KiboDialog.spec.tsx">
-    <testCase name="[components] Dialog Component should not render component by default" duration="143"/>
-    <testCase name="[components] Dialog Component should open modal, when isOpen = true" duration="755"/>
-    <testCase name="[components] Dialog Component should close modal, when user clicks on close icon" duration="458"/>
+  <file path="C:\Kibo-repo\nextjs-storefront\components\product-listing\FacetList\FacetList.spec.tsx">
+    <testCase name="[components] - FacetList should render component" duration="196"/>
+    <testCase name="[components] - FacetList should call handleClose callback function when user clicks on close icon button" duration="138"/>
   </file>
-  <file path="C:\Users\Chandradeepta.Laha\Desktop\NextJS-Storefront\nextjs-storefront\__test__\e2e\integration\filter-by\Facet\Facet.spec.tsx">
-    <testCase name="[components] - Facet integration should filter facet items when user enters search term" duration="2467"/>
+  <file path="C:\Kibo-repo\nextjs-storefront\components\cart\CartItem\CartItem.spec.tsx">
+    <testCase name="[components] - CartItem should render component" duration="703"/>
   </file>
-  <file path="C:\Users\Chandradeepta.Laha\Desktop\NextJS-Storefront\nextjs-storefront\components\product-listing\CategoryFacet\CategoryFacet.spec.tsx">
-    <testCase name="[component] - CategoryFacet should render component" duration="651"/>
-    <testCase name="[component] - CategoryFacet should call onCategoryChildSelection when user selects specific category" duration="153"/>
-    <testCase name="[component] - CategoryFacet should call onBackButtonClick when user clicks on Back button" duration="213"/>
-    <testCase name="[component] - CategoryFacet should display all the children when user clicks on View More button" duration="413"/>
+  <file path="C:\Kibo-repo\nextjs-storefront\components\common\KiboSelect\KiboSelect.spec.js">
+    <testCase name="[component] KiboSelect component should render the component" duration="364"/>
+    <testCase name="[component] KiboSelect component should display the error description if passed when error is true" duration="158"/>
+    <testCase name="[component] KiboSelect component should call onChange method if option selected " duration="474"/>
   </file>
-  <file path="C:\Users\Chandradeepta.Laha\Desktop\NextJS-Storefront\nextjs-storefront\components\common\KiboTextBox\KiboTextbox.spec.js">
-    <testCase name="[component] KiboTextbox component should render the component" duration="548"/>
-    <testCase name="[component] KiboTextbox component should render the component with placeholder" duration="125"/>
-    <testCase name="[component] KiboTextbox component should render the component with error when props error is true" duration="102"/>
-    <testCase name="[component] KiboTextbox component should render the error helper text when props error is true" duration="84"/>
-    <testCase name="[component] KiboTextbox component should call onChange method when user input data" duration="253"/>
+  <file path="C:\Kibo-repo\nextjs-storefront\components\core\ImageGallery\ImageGallery.spec.js">
+    <testCase name="[component] ImageGallery component Gallery without Zoom should not render title" duration="708"/>
+    <testCase name="[component] ImageGallery component Gallery without Zoom should render all the images provided by props" duration="200"/>
+    <testCase name="[component] ImageGallery component Gallery without Zoom should render the selected image" duration="301"/>
+    <testCase name="[component] ImageGallery component Gallery without Zoom should render the downArrowButton for thumbnails when thumnail count &gt; 4" duration="358"/>
+    <testCase name="[component] ImageGallery component Gallery without Zoom should call handleVerticalSlider if clicked on downArrowButton" duration="646"/>
+    <testCase name="[component] ImageGallery component Gallery without Zoom should change the selected thumbnail on click" duration="248"/>
+    <testCase name="[component] ImageGallery component Gallery without Zoom should call handleSwipe method on touch swipe" duration="288"/>
+    <testCase name="[component] ImageGallery component Zoomed Gallery should render title" duration="207"/>
+    <testCase name="[component] ImageGallery component Zoomed Gallery should change the selected thumbnail on left/right arrow click" duration="505"/>
+    <testCase name="[component] ImageGallery component Zoomed Gallery should render zoom controls and call the respective functions" duration="691"/>
   </file>
-  <file path="C:\Users\Chandradeepta.Laha\Desktop\NextJS-Storefront\nextjs-storefront\components\common\KiboRadio\KiboRadio.spec.js">
-    <testCase name="[component] - KiboRadio should render the component" duration="563"/>
-    <testCase name="[component] - KiboRadio should call onChange when other options are clicked" duration="796"/>
+  <file path="C:\Kibo-repo\nextjs-storefront\components\common\OrderSummary\OrderSummary.spec.js">
+    <testCase name="checkout Component should render checkout standardShippingAmount" duration="282"/>
+    <testCase name="checkout Component should render checkout estimatedTaxAmout" duration="80"/>
+    <testCase name="checkout Component should render checkout orderTotal" duration="105"/>
+    <testCase name="checkout Component should render checkout subTotal" duration="73"/>
   </file>
-  <file path="C:\Users\Chandradeepta.Laha\Desktop\NextJS-Storefront\nextjs-storefront\__test__\e2e\integration\cart\CartItem\CartItem.spec.tsx">
-    <testCase name="[components] - CartItem Integration should render component" duration="2870"/>
+  <file path="C:\Kibo-repo\nextjs-storefront\components\product-listing\Facet\Facet.spec.tsx">
+    <testCase name="[components] - FacetItem should render component" duration="277"/>
+    <testCase name="[components] - FacetItem should expand accordian when user clicks on summery and shrinks again when user clicks again" duration="190"/>
+    <testCase name="[components] - FacetItem should hide &quot;View More&quot; when number of items &lt; 6" duration="42"/>
+    <testCase name="[components] - FacetItem should show &quot;View More&quot; when number of items &gt; 6" duration="53"/>
+    <testCase name="[components] - FacetItem should show &quot;View Less&quot; when user clicks on &quot;View More&quot; and &quot;View More&quot; when clicks again" duration="290"/>
   </file>
-  <file path="C:\Users\Chandradeepta.Laha\Desktop\NextJS-Storefront\nextjs-storefront\components\product\ColorSelector\ColorSelector.spec.js">
-    <testCase name="[component] ColorSelector component should render the component" duration="767"/>
-    <testCase name="[component] ColorSelector component should contain the number of colors passed from prop as values" duration="134"/>
-    <testCase name="[component] ColorSelector component should call selectOption method only when color-option is enabled and not selected" duration="180"/>
-    <testCase name="[component] ColorSelector component should not call selectOption method when option is disabled" duration="125"/>
-    <testCase name="[component] ColorSelector component should not call selectOption method when option is selected" duration="118"/>
+  <file path="C:\Kibo-repo\nextjs-storefront\__test__\e2e\integration\common\ProductItem\ProductItem.spec.tsx">
+    <testCase name="[component] - ProductItem Integration should render component" duration="450"/>
+    <testCase name="[component] - ProductItem with Price Label should render component with price label inside details" duration="382"/>
   </file>
-  <file path="C:\Users\Chandradeepta.Laha\Desktop\NextJS-Storefront\nextjs-storefront\components\add-to-cart-dialog\Actions\Actions.spec.tsx">
-    <testCase name="[components] Add To Cart Dialog should render component" duration="502"/>
-    <testCase name="[components] Add To Cart Dialog should call onGoToCart handler when user clicks on &quot;Go To Cart&quot; button" duration="251"/>
-    <testCase name="[components] Add To Cart Dialog should call onContinueShopping habdler when user clicks on &quot;Continue Shopping&quot; button" duration="220"/>
+  <file path="C:\Kibo-repo\nextjs-storefront\components\common\ProductItem\ProductItem.spec.tsx">
+    <testCase name="[component] - ProductItem should render component" duration="778"/>
+    <testCase name="[component] - ProductItem should call onClickStoreLocatorMock when click onClickStoreLocator" duration="157"/>
+    <testCase name="[component] - ProductItem should not show details when no label(price,qty) or options is present" duration="68"/>
   </file>
-  <file path="C:\Users\Chandradeepta.Laha\Desktop\NextJS-Storefront\nextjs-storefront\components\add-to-cart-dialog\Content\Content.spec.tsx">
-    <testCase name="[components] Add To Cart Dialog should render component" duration="466"/>
+  <file path="C:\Kibo-repo\nextjs-storefront\components\common\QuantitySelector\QuantitySelector.spec.tsx">
+    <testCase name="[components] - QuantitySelector should render component" duration="513"/>
+    <testCase name="[components] - QuantitySelector should have initial default Quantity = 1" duration="85"/>
+    <testCase name="[components] - QuantitySelector should disable decrease button(-) when Quantity = 1 " duration="127"/>
+    <testCase name="[components] - QuantitySelector should call onIncrease action when user clicks on Increase(+) button" duration="161"/>
+    <testCase name="[components] - QuantitySelector should call onDecrease action when user clicks on Decrease(-) button and Quantity &gt; 1" duration="180"/>
+    <testCase name="[components] - QuantitySelector should display qty label" duration="60"/>
   </file>
-  <file path="C:\Users\Chandradeepta.Laha\Desktop\NextJS-Storefront\nextjs-storefront\components\common\QuantitySelector\QuantitySelector.spec.tsx">
-    <testCase name="[components] - QuantitySelector should render component" duration="708"/>
-    <testCase name="[components] - QuantitySelector should have initial default Quantity = 1" duration="168"/>
-    <testCase name="[components] - QuantitySelector should disable decrease button(-) when Quantity = 1 " duration="225"/>
-    <testCase name="[components] - QuantitySelector should call onIncrease action when user clicks on Increase(+) button" duration="226"/>
-    <testCase name="[components] - QuantitySelector should call onDecrease action when user clicks on Decrease(-) button and Quantity &gt; 1" duration="318"/>
-    <testCase name="[components] - QuantitySelector should display qty label" duration="75"/>
+  <file path="C:\Kibo-repo\nextjs-storefront\components\common\KiboRadio\KiboRadio.spec.js">
+    <testCase name="[component] - KiboRadio should render the component" duration="541"/>
+    <testCase name="[component] - KiboRadio should call onChange when other options are clicked" duration="580"/>
   </file>
-  <file path="C:\Users\Chandradeepta.Laha\Desktop\NextJS-Storefront\nextjs-storefront\components\common\OrderSummary\OrderSummary.spec.js">
-    <testCase name="checkout Component should render checkout standardShippingAmount" duration="573"/>
-    <testCase name="checkout Component should render checkout estimatedTaxAmout" duration="143"/>
-    <testCase name="checkout Component should render checkout orderTotal" duration="186"/>
-    <testCase name="checkout Component should render checkout subTotal" duration="117"/>
+  <file path="C:\Kibo-repo\nextjs-storefront\components\cart\CartItemActionsMobile\CartItemActionsMobile.spec.tsx">
+    <testCase name="[component] - CartItemActionsMobile should render component" duration="238"/>
+    <testCase name="[component] - CartItemActionsMobile should show popover menu when user clicks on icon button" duration="344"/>
+    <testCase name="[component] - CartItemActionsMobile should call onMenuItemClick function when user selects any menu item" duration="279"/>
+    <testCase name="[component] - CartItemActionsMobile should hide popover menu when user selects menu item" duration="392"/>
   </file>
-  <file path="C:\Users\Chandradeepta.Laha\Desktop\NextJS-Storefront\nextjs-storefront\__test__\e2e\integration\page-template\ProductListingTemplate\ProductListingTemplate.spec.tsx">
-    <testCase name="[component] - Category should call onSortingSelection function when user clicks on sorting" duration="19818"/>
-    <testCase name="[component] - Category should call to previous route when user clicks on back button" duration="19632"/>
-    <testCase name="[component] - Category should display all the products when user clicks on Show more button" duration="19767"/>
-  </file>
-  <file path="C:\Users\Chandradeepta.Laha\Desktop\NextJS-Storefront\nextjs-storefront\components\common\KiboSelect\KiboSelect.spec.js">
-    <testCase name="[component] KiboSelect component should render the component" duration="498"/>
-    <testCase name="[component] KiboSelect component should display the error description if passed when error is true" duration="150"/>
-    <testCase name="[component] KiboSelect component should call onChange method if option selected " duration="579"/>
-  </file>
-  <file path="C:\Users\Chandradeepta.Laha\Desktop\NextJS-Storefront\nextjs-storefront\components\product-listing\FacetList\FacetList.spec.tsx">
-    <testCase name="[components] - FacetList should render component" duration="235"/>
-    <testCase name="[components] - FacetList should call handleClose callback function when user clicks on close icon button" duration="101"/>
-  </file>
-  <file path="C:\Users\Chandradeepta.Laha\Desktop\NextJS-Storefront\nextjs-storefront\components\common\PasswordValidation\PasswordValidation.spec.tsx">
-    <testCase name="[components] PasswordValidation should render component" duration="296"/>
+  <file path="C:\Kibo-repo\nextjs-storefront\components\common\PasswordValidation\PasswordValidation.spec.tsx">
+    <testCase name="[components] PasswordValidation should render component" duration="368"/>
     <testCase name="[components] PasswordValidation should show &quot;validation failed&quot; icon when user enters password having length lesss than eight Characters" duration="60"/>
-    <testCase name="[components] PasswordValidation should show &quot;validation passed&quot; icon when user enters password having length at least eight Characters" duration="52"/>
-    <testCase name="[components] PasswordValidation should show &quot;validation failed&quot; icon when user enters password without having at least one number" duration="55"/>
-    <testCase name="[components] PasswordValidation should show &quot;validation passed&quot; icon when user enters password containing at least one number" duration="48"/>
-    <testCase name="[components] PasswordValidation should show &quot;validation failed&quot; icon when user enters password whithout having at least one capital letter" duration="47"/>
-    <testCase name="[components] PasswordValidation should show &quot;validation passed&quot; icon when user enters password containing at least one capital letter" duration="54"/>
-    <testCase name="[components] PasswordValidation should show &quot;validation failed&quot; icon when user enters password without having at least one special character" duration="37"/>
-    <testCase name="[components] PasswordValidation should show &quot;validation passed&quot; icon when user enters password containing at least one special character" duration="47"/>
+    <testCase name="[components] PasswordValidation should show &quot;validation passed&quot; icon when user enters password having length at least eight Characters" duration="37"/>
+    <testCase name="[components] PasswordValidation should show &quot;validation failed&quot; icon when user enters password without having at least one number" duration="37"/>
+    <testCase name="[components] PasswordValidation should show &quot;validation passed&quot; icon when user enters password containing at least one number" duration="62"/>
+    <testCase name="[components] PasswordValidation should show &quot;validation failed&quot; icon when user enters password whithout having at least one capital letter" duration="49"/>
+    <testCase name="[components] PasswordValidation should show &quot;validation passed&quot; icon when user enters password containing at least one capital letter" duration="61"/>
+    <testCase name="[components] PasswordValidation should show &quot;validation failed&quot; icon when user enters password without having at least one special character" duration="56"/>
+    <testCase name="[components] PasswordValidation should show &quot;validation passed&quot; icon when user enters password containing at least one special character" duration="57"/>
   </file>
-  <file path="C:\Users\Chandradeepta.Laha\Desktop\NextJS-Storefront\nextjs-storefront\__test__\e2e\integration\cart\CartItemList\CartItemList.spec.tsx">
-    <testCase name="[components] - CartItemList Integration should render component" duration="1438"/>
+  <file path="C:\Kibo-repo\nextjs-storefront\__test__\e2e\integration\cart\CartItemList\CartItemList.spec.tsx">
+    <testCase name="[components] - CartItemList Integration should render component" duration="1316"/>
   </file>
-  <file path="C:\Users\Chandradeepta.Laha\Desktop\NextJS-Storefront\nextjs-storefront\components\product\ProductOptionSelect\ProductOptionSelect.spec.js">
-    <testCase name="[component] ProductOptionSelect component should render the component" duration="508"/>
-    <testCase name="[component] ProductOptionSelect component should call onChange method if value is changed" duration="687"/>
+  <file path="C:\Kibo-repo\nextjs-storefront\components\common\KiboDialog\KiboDialog.spec.tsx">
+    <testCase name="[components] Dialog Component should not render component by default" duration="102"/>
+    <testCase name="[components] Dialog Component should open modal, when isOpen = true" duration="896"/>
+    <testCase name="[components] Dialog Component should close modal, when user clicks on close icon" duration="379"/>
   </file>
-  <file path="C:\Users\Chandradeepta.Laha\Desktop\NextJS-Storefront\nextjs-storefront\components\common\SearchBar\SearchBar.spec.tsx">
-    <testCase name="[components] - SearchBar should render component" duration="556"/>
-    <testCase name="[components] - SearchBar should call onSeach handler and show user entered text on every caracter input" duration="288"/>
-    <testCase name="[components] - SearchBar [components] - clear button should not be visible by default" duration="113"/>
-    <testCase name="[components] - SearchBar [components] - clear button should be visible when showClearButton = true" duration="134"/>
-    <testCase name="[components] - SearchBar [components] - clear button should be only enable when there is text to clear" duration="243"/>
-    <testCase name="[components] - SearchBar [components] - clear button should clear the search when user clicks on it" duration="370"/>
+  <file path="C:\Kibo-repo\nextjs-storefront\components\checkout\KiboStepper\KiboStepper.spec.tsx">
+    <testCase name="[components] KiboStepper should render component" duration="1321"/>
   </file>
-  <file path="C:\Users\Chandradeepta.Laha\Desktop\NextJS-Storefront\nextjs-storefront\__test__\e2e\integration\common\ProductItem\ProductItem.spec.tsx">
-    <testCase name="[component] - ProductItem Integration should render component" duration="595"/>
-    <testCase name="[component] - ProductItem with Price Label should render component with price label inside details" duration="1002"/>
+  <file path="C:\Kibo-repo\nextjs-storefront\components\common\KiboTextBox\KiboTextbox.spec.js">
+    <testCase name="[component] KiboTextbox component should render the component" duration="331"/>
+    <testCase name="[component] KiboTextbox component should render the component with placeholder" duration="113"/>
+    <testCase name="[component] KiboTextbox component should render the component with error when props error is true" duration="61"/>
+    <testCase name="[component] KiboTextbox component should render the error helper text when props error is true" duration="63"/>
+    <testCase name="[component] KiboTextbox component should call onChange method when user input data" duration="183"/>
   </file>
-  <file path="C:\Users\Chandradeepta.Laha\Desktop\NextJS-Storefront\nextjs-storefront\components\page-templates\Checkout\Checkout.spec.tsx">
-    <testCase name="[components] Checkout should render component" duration="949"/>
+  <file path="C:\Kibo-repo\nextjs-storefront\components\add-to-cart-dialog\Content\Content.spec.tsx">
+    <testCase name="[components] Add To Cart Dialog should render component" duration="303"/>
   </file>
-  <file path="C:\Users\Chandradeepta.Laha\Desktop\NextJS-Storefront\nextjs-storefront\components\common\ProductItemList\ProductItemList.spec.tsx">
-    <testCase name="[component] - ProductItemList should render component with label" duration="167"/>
+  <file path="C:\Kibo-repo\nextjs-storefront\components\common\HeaderAction\HeaderAction.spec.js">
+    <testCase name="[component] - HeaderAction should render title" duration="206"/>
+    <testCase name="[component] - HeaderAction should render subtitle" duration="83"/>
+    <testCase name="[component] - HeaderAction should call headerAction when clicked" duration="53"/>
   </file>
-  <file path="C:\Users\Chandradeepta.Laha\Desktop\NextJS-Storefront\nextjs-storefront\components\common\PaymentCard\PaymentCard.spec.js">
-    <testCase name="[component] - PaymentCard should display the payment card details" duration="427"/>
+  <file path="C:\Kibo-repo\nextjs-storefront\components\product-listing\CategoryFacet\CategoryFacet.spec.tsx">
+    <testCase name="[component] - CategoryFacet should render component" duration="436"/>
+    <testCase name="[component] - CategoryFacet should call onCategoryChildSelection when user selects specific category" duration="133"/>
+    <testCase name="[component] - CategoryFacet should call onBackButtonClick when user clicks on Back button" duration="181"/>
+    <testCase name="[component] - CategoryFacet should display all the children when user clicks on View More button" duration="269"/>
   </file>
-  <file path="C:\Users\Chandradeepta.Laha\Desktop\NextJS-Storefront\nextjs-storefront\components\cart\CartItemActions\CartItemActions.spec.tsx">
-    <testCase name="[components] - CartItemActions should render component" duration="399"/>
+  <file path="C:\Kibo-repo\nextjs-storefront\components\add-to-cart-dialog\Title\Title.spec.tsx">
+    <testCase name="[components] Add To Cart Dialog should render component" duration="165"/>
   </file>
-  <file path="C:\Users\Chandradeepta.Laha\Desktop\NextJS-Storefront\nextjs-storefront\components\common\Price\Price.spec.js">
-    <testCase name="[components] Price Component when price is available should render price text" duration="180"/>
-    <testCase name="[components] Price Component when sale price is available should render price text" duration="86"/>
-    <testCase name="[components] Price Component when sale price is available should render sale price text" duration="91"/>
-    <testCase name="[components] Price Component when price range is available should render price range text" duration="42"/>
+  <file path="C:\Kibo-repo\nextjs-storefront\components\product\ProductInformation\ProductInformation.spec.tsx">
+    <testCase name="[component] - ProductInformation should render component" duration="471"/>
+    <testCase name="[component] - ProductInformation should open product spec accordion when user clicks on accordion header" duration="298"/>
+    <testCase name="[component] - ProductInformation should close accordion when accordion is already open and the user clicks on accordion header" duration="157"/>
   </file>
-  <file path="C:\Users\Chandradeepta.Laha\Desktop\NextJS-Storefront\nextjs-storefront\components\common\HeaderAction\HeaderAction.spec.js">
-    <testCase name="[component] - HeaderAction should render title" duration="257"/>
-    <testCase name="[component] - HeaderAction should render subtitle" duration="82"/>
-    <testCase name="[component] - HeaderAction should call headerAction when clicked" duration="67"/>
+  <file path="C:\Kibo-repo\nextjs-storefront\components\product\ProductOptionSelect\ProductOptionSelect.spec.js">
+    <testCase name="[component] ProductOptionSelect component should render the component" duration="420"/>
+    <testCase name="[component] ProductOptionSelect component should call onChange method if value is changed" duration="569"/>
   </file>
-  <file path="C:\Users\Chandradeepta.Laha\Desktop\NextJS-Storefront\nextjs-storefront\components\product-listing\FacetItem\FacetItem.spec.tsx">
-    <testCase name="[components] - FacetItem should render component" duration="620"/>
+  <file path="C:\Kibo-repo\nextjs-storefront\components\common\SearchBar\SearchBar.spec.tsx">
+    <testCase name="[components] - SearchBar should render component" duration="391"/>
+    <testCase name="[components] - SearchBar should call onSeach handler and show user entered text on every caracter input" duration="191"/>
+    <testCase name="[components] - SearchBar [components] - clear button should not be visible by default" duration="38"/>
+    <testCase name="[components] - SearchBar [components] - clear button should be visible when showClearButton = true" duration="123"/>
+    <testCase name="[components] - SearchBar [components] - clear button should be only enable when there is text to clear" duration="164"/>
+    <testCase name="[components] - SearchBar [components] - clear button should clear the search when user clicks on it" duration="311"/>
   </file>
-  <file path="C:\Users\Chandradeepta.Laha\Desktop\NextJS-Storefront\nextjs-storefront\components\common\AddressCard\AddressCard.spec.js">
-    <testCase name="[component] - AddressCard should display the address" duration="322"/>
+  <file path="C:\Kibo-repo\nextjs-storefront\components\layout\SearchSuggestions\SearchSuggestions.spec.tsx">
+    <testCase name="[components] - SearchSuggestions should render component" duration="164"/>
   </file>
-  <file path="C:\Users\Chandradeepta.Laha\Desktop\NextJS-Storefront\nextjs-storefront\components\product\ProductOptionTextBox\ProductOptionTextBox.spec.js">
-    <testCase name="[component] ProductOptionTextBox component should render all the options" duration="554"/>
+  <file path="C:\Kibo-repo\nextjs-storefront\components\cart\CartItemActions\CartItemActions.spec.tsx">
+    <testCase name="[components] - CartItemActions should render component" duration="266"/>
   </file>
-  <file path="C:\Users\Chandradeepta.Laha\Desktop\NextJS-Storefront\nextjs-storefront\components\common\FulfillmentOptions\FulfillmentOptions.spec.js">
-    <testCase name="[components] Fulfillment Options Component should render component" duration="390"/>
+  <file path="C:\Kibo-repo\nextjs-storefront\__test__\e2e\integration\page-template\ProductListingTemplate\ProductListingTemplate.spec.tsx">
+    <testCase name="[component] - Category should call onSortingSelection function when user clicks on sorting" duration="15678"/>
+    <testCase name="[component] - Category should call to previous route when user clicks on back button" duration="14708"/>
+    <testCase name="[component] - Category should display all the products when user clicks on Show more button" duration="14706"/>
   </file>
-  <file path="C:\Users\Chandradeepta.Laha\Desktop\NextJS-Storefront\nextjs-storefront\components\add-to-cart-dialog\Title\Title.spec.tsx">
-    <testCase name="[components] Add To Cart Dialog should render component" duration="215"/>
+  <file path="C:\Kibo-repo\nextjs-storefront\components\checkout\AddressDetailsView\AddressDetailsView.spec.js">
+    <testCase name="[component] - AddressDetailsView should render the component without radio when radio prop is false" duration="116"/>
+    <testCase name="[component] - AddressDetailsView should render the component with radio button when radio prop is true" duration="33"/>
   </file>
-  <file path="C:\Users\Chandradeepta.Laha\Desktop\NextJS-Storefront\nextjs-storefront\components\checkout\SavedPaymentMethodView\SavedPaymentMethodView.spec.js">
-    <testCase name="[component] - SavedPaymentMethodView should render the component" duration="379"/>
+  <file path="C:\Kibo-repo\nextjs-storefront\components\product\ColorSelector\ColorSelector.spec.js">
+    <testCase name="[component] ColorSelector component should render the component" duration="592"/>
+    <testCase name="[component] ColorSelector component should contain the number of colors passed from prop as values" duration="117"/>
+    <testCase name="[component] ColorSelector component should call selectOption method only when color-option is enabled and not selected" duration="123"/>
+    <testCase name="[component] ColorSelector component should not call selectOption method when option is disabled" duration="87"/>
+    <testCase name="[component] ColorSelector component should not call selectOption method when option is selected" duration="79"/>
   </file>
-  <file path="C:\Users\Chandradeepta.Laha\Desktop\NextJS-Storefront\nextjs-storefront\components\product\ProductOptionCheckbox\ProductOptionCheckbox.spec.js">
-    <testCase name="[component] ProductOptionCheckbox component should render checkbox option" duration="269"/>
-    <testCase name="[component] ProductOptionCheckbox component should render checkbox label" duration="72"/>
-    <testCase name="[component] ProductOptionCheckbox component should check/uncheck the checkbox" duration="149"/>
+  <file path="C:\Kibo-repo\nextjs-storefront\components\add-to-cart-dialog\Actions\Actions.spec.tsx">
+    <testCase name="[components] Add To Cart Dialog should render component" duration="449"/>
+    <testCase name="[components] Add To Cart Dialog should call onGoToCart handler when user clicks on &quot;Go To Cart&quot; button" duration="211"/>
+    <testCase name="[components] Add To Cart Dialog should call onContinueShopping habdler when user clicks on &quot;Continue Shopping&quot; button" duration="161"/>
   </file>
-  <file path="C:\Users\Chandradeepta.Laha\Desktop\NextJS-Storefront\nextjs-storefront\components\checkout\AddressDetailsView\AddressDetailsView.spec.js">
-    <testCase name="[component] - AddressDetailsView should render the component without radio when radio prop is false" duration="176"/>
-    <testCase name="[component] - AddressDetailsView should render the component with radio button when radio prop is true" duration="44"/>
+  <file path="C:\Kibo-repo\nextjs-storefront\components\checkout\SavedPaymentMethodView\SavedPaymentMethodView.spec.js">
+    <testCase name="[component] - SavedPaymentMethodView should render the component" duration="180"/>
   </file>
-  <file path="C:\Users\Chandradeepta.Laha\Desktop\NextJS-Storefront\nextjs-storefront\components\page-templates\ProductDetail\ProductDetailTemplate.spec.js">
-    <testCase name="[component] Product Detail Template component should render the Breadcrumb component" duration="4395"/>
-    <testCase name="[component] Product Detail Template component should render the Product name" duration="1958"/>
-    <testCase name="[component] Product Detail Template component should render the Product price" duration="1564"/>
-    <testCase name="[component] Product Detail Template component should render the Product short description" duration="1264"/>
-    <testCase name="[component] Product Detail Template component should render the Product rating" duration="1243"/>
-    <testCase name="[component] Product Detail Template component should render the ColorSelector component" duration="1168"/>
-    <testCase name="[component] Product Detail Template component should render the ProductVariantSizeSelector" duration="1157"/>
-    <testCase name="[component] Product Detail Template component should render the ProductOptionSelect component" duration="1184"/>
-    <testCase name="[component] Product Detail Template component should render the ProductOptionCheckbox component" duration="1059"/>
-    <testCase name="[component] Product Detail Template component should render the ProductOptionTextbox component" duration="1080"/>
-    <testCase name="[component] Product Detail Template component should render the QuantitySelector component" duration="1120"/>
-    <testCase name="[component] Product Detail Template component should render the FulfillmentOptions component" duration="1501"/>
-    <testCase name="[component] Product Detail Template component should render the Add to Cart Button" duration="6849"/>
-    <testCase name="[component] Product Detail Template component should render the Add to Wishlist Button" duration="7004"/>
-    <testCase name="[component] Product Detail Template component should render the 1 click checkout Button" duration="6865"/>
+  <file path="C:\Kibo-repo\nextjs-storefront\components\common\FulfillmentOptions\FulfillmentOptions.spec.js">
+    <testCase name="[components] Fulfillment Options Component should render component" duration="308"/>
   </file>
-  <file path="C:\Users\Chandradeepta.Laha\Desktop\NextJS-Storefront\nextjs-storefront\components\checkout\PaymentCardDetailsView\PaymentCardDetailsView.spec.js">
-    <testCase name="[component] - PaymentCardDetailsView should render radio button if radio prop is true" duration="238"/>
-    <testCase name="[component] - PaymentCardDetailsView should render component if radio is false" duration="66"/>
+  <file path="C:\Kibo-repo\nextjs-storefront\__test__\e2e\integration\product\ProductOptionList\ProductOptionList.spec.tsx">
+    <testCase name="[component] - ProductOptionList Integration should render component" duration="250"/>
   </file>
-  <file path="C:\Users\Chandradeepta.Laha\Desktop\NextJS-Storefront\nextjs-storefront\components\product\ProductRecommendations\ProductRecommendations.spec.js">
-    <testCase name="[component] ProductOptionCheckbox component should render the title" duration="262"/>
-    <testCase name="[component] ProductOptionCheckbox component should render the product cards" duration="67"/>
+  <file path="C:\Kibo-repo\nextjs-storefront\components\product\ProductOption\ProductOption.spec.tsx">
+    <testCase name="[component] - ProductOption should render component" duration="162"/>
   </file>
-  <file path="C:\Users\Chandradeepta.Laha\Desktop\NextJS-Storefront\nextjs-storefront\lib\getters\__tests__\productGetters.spec.js">
-    <testCase name="[getters] productGetters should return the product name" duration="7"/>
-    <testCase name="[getters] productGetters should return the product rating" duration="2"/>
-    <testCase name="[getters] productGetters should return the product total reviews" duration="1"/>
-    <testCase name="[getters] productGetters should return the product price" duration="3"/>
-    <testCase name="[getters] productGetters should return the product price range" duration="2"/>
-    <testCase name="[getters] productGetters should return the product description" duration="1"/>
-    <testCase name="[getters] productGetters should return the product short description" duration="2"/>
-    <testCase name="[getters] productGetters should return the product Gallery" duration="1"/>
-    <testCase name="[getters] productGetters should return the product breadcrumbs" duration="7"/>
-    <testCase name="[getters] productGetters should return the product properties" duration="3"/>
-    <testCase name="[getters] productGetters should return the product selected option value" duration="1"/>
-    <testCase name="[getters] productGetters should return the product option name" duration="4"/>
-    <testCase name="[getters] productGetters should return the product options" duration="2"/>
-    <testCase name="[getters] productGetters should return the product segregated options" duration="3"/>
-    <testCase name="[getters] productGetters should return the product fulfillment method" duration="1"/>
-    <testCase name="[getters] productGetters should return if the product is validated to add to cart" duration="3"/>
-    <testCase name="[getters] productGetters should return url added with protocol if not provided" duration="1"/>
+  <file path="C:\Kibo-repo\nextjs-storefront\components\product-listing\FacetItem\FacetItem.spec.tsx">
+    <testCase name="[components] - FacetItem should render component" duration="289"/>
   </file>
-  <file path="C:\Users\Chandradeepta.Laha\Desktop\NextJS-Storefront\nextjs-storefront\components\product\ProductOption\ProductOption.spec.tsx">
-    <testCase name="[component] - ProductOption should render component" duration="205"/>
+  <file path="C:\Kibo-repo\nextjs-storefront\components\product-listing\FacetItemList\FacetItemList.spec.tsx">
+    <testCase name="[components] - FacetItemList should render component" duration="102"/>
   </file>
-  <file path="C:\Users\Chandradeepta.Laha\Desktop\NextJS-Storefront\nextjs-storefront\components\add-to-cart-dialog\AddToCartDialog\AddToCartDialog.spec.tsx">
-    <testCase name="[components] Add To Cart Dialog should render component" duration="136"/>
+  <file path="C:\Kibo-repo\nextjs-storefront\components\product\ProductOptionCheckbox\ProductOptionCheckbox.spec.js">
+    <testCase name="[component] ProductOptionCheckbox component should render checkbox option" duration="245"/>
+    <testCase name="[component] ProductOptionCheckbox component should render checkbox label" duration="80"/>
+    <testCase name="[component] ProductOptionCheckbox component should check/uncheck the checkbox" duration="95"/>
   </file>
-  <file path="C:\Users\Chandradeepta.Laha\Desktop\NextJS-Storefront\nextjs-storefront\components\cart\CartItemList\CartItemList.spec.tsx">
-    <testCase name="[components] - CartItemList should render component" duration="105"/>
+  <file path="C:\Kibo-repo\nextjs-storefront\components\product\ProductVariantSizeSelector\ProductVariantSizeSelector.spec.js">
+    <testCase name="[component] ProductVariantSizeSelector component should render the component" duration="135"/>
+    <testCase name="[component] ProductVariantSizeSelector component should contain the number of sizes passed from prop as values" duration="33"/>
+    <testCase name="[component] ProductVariantSizeSelector component should call selectOption method only when size-option is enabled and not selected" duration="81"/>
+    <testCase name="[component] ProductVariantSizeSelector component should not call selectOption method when option is disabled" duration="43"/>
+    <testCase name="[component] ProductVariantSizeSelector component should not call selectOption method when option is selected" duration="43"/>
   </file>
-  <file path="C:\Users\Chandradeepta.Laha\Desktop\NextJS-Storefront\nextjs-storefront\components\product\ProductOptionList\ProductOptionList.spec.tsx">
-    <testCase name="[component] - ProductOptionList should render component" duration="114"/>
+  <file path="C:\Kibo-repo\nextjs-storefront\components\common\AddressCard\AddressCard.spec.js">
+    <testCase name="[component] - AddressCard should display the address" duration="209"/>
   </file>
-  <file path="C:\Users\Chandradeepta.Laha\Desktop\NextJS-Storefront\nextjs-storefront\components\product-listing\FacetItemList\FacetItemList.spec.tsx">
-    <testCase name="[components] - FacetItemList should render component" duration="133"/>
+  <file path="C:\Kibo-repo\nextjs-storefront\components\common\ProductItemList\ProductItemList.spec.tsx">
+    <testCase name="[component] - ProductItemList should render component with label" duration="130"/>
   </file>
-  <file path="C:\Users\Chandradeepta.Laha\Desktop\NextJS-Storefront\nextjs-storefront\components\product\ProductVariantSizeSelector\ProductVariantSizeSelector.spec.js">
-    <testCase name="[component] ProductVariantSizeSelector component should render the component" duration="304"/>
-    <testCase name="[component] ProductVariantSizeSelector component should contain the number of sizes passed from prop as values" duration="48"/>
-    <testCase name="[component] ProductVariantSizeSelector component should call selectOption method only when size-option is enabled and not selected" duration="154"/>
-    <testCase name="[component] ProductVariantSizeSelector component should not call selectOption method when option is disabled" duration="95"/>
-    <testCase name="[component] ProductVariantSizeSelector component should not call selectOption method when option is selected" duration="82"/>
+  <file path="C:\Kibo-repo\nextjs-storefront\components\common\Price\Price.spec.js">
+    <testCase name="[components] Price Component when price is available should render price text" duration="111"/>
+    <testCase name="[components] Price Component when sale price is available should render price text" duration="56"/>
+    <testCase name="[components] Price Component when sale price is available should render sale price text" duration="57"/>
+    <testCase name="[components] Price Component when price range is available should render price range text" duration="35"/>
   </file>
-  <file path="C:\Users\Chandradeepta.Laha\Desktop\NextJS-Storefront\nextjs-storefront\components\checkout\PaymentStep\PaymentStep.spec.tsx">
-    <testCase name="[components] PaymentStep should render component" duration="160"/>
+  <file path="C:\Kibo-repo\nextjs-storefront\components\common\PaymentCard\PaymentCard.spec.js">
+    <testCase name="[component] - PaymentCard should display the payment card details" duration="236"/>
   </file>
-  <file path="C:\Users\Chandradeepta.Laha\Desktop\NextJS-Storefront\nextjs-storefront\__test__\e2e\integration\product\ProductOptionList\ProductOptionList.spec.tsx">
-    <testCase name="[component] - ProductOptionList Integration should render component" duration="276"/>
+  <file path="C:\Kibo-repo\nextjs-storefront\components\checkout\Shipping\OrderItems\ShippingMethod.spec.tsx">
+    <testCase name="[component] - ShippingMethod should render component" duration="133"/>
+    <testCase name="[component] - ShippingMethod should render only shipItems when only shipItems are present" duration="27"/>
+    <testCase name="[component] - ShippingMethod should render only pickupItems when only pickupItems are there" duration="25"/>
+    <testCase name="[component] - ShippingMethod should render both shipItems and pickupItems when both are there" duration="46"/>
   </file>
-  <file path="C:\Users\Chandradeepta.Laha\Desktop\NextJS-Storefront\nextjs-storefront\components\checkout\ShippingStep\ShippingStep.spec.tsx">
-    <testCase name="[components] ShippingStep should render component" duration="171"/>
+  <file path="C:\Kibo-repo\nextjs-storefront\components\checkout\PaymentCardDetailsView\PaymentCardDetailsView.spec.js">
+    <testCase name="[component] - PaymentCardDetailsView should render radio button if radio prop is true" duration="137"/>
+    <testCase name="[component] - PaymentCardDetailsView should render component if radio is false" duration="53"/>
   </file>
-  <file path="C:\Users\Chandradeepta.Laha\Desktop\NextJS-Storefront\nextjs-storefront\components\checkout\ReviewStep\ReviewStep.spec.tsx">
-    <testCase name="[components] PaymentStep should render component" duration="192"/>
+  <file path="C:\Kibo-repo\nextjs-storefront\hooks\useUpdatePersonalInfo\useUpdatePersonalInfo.spec.tsx">
+    <testCase name="[hooks] useUpdatePersonalInfo should use useUpdatePersonalInfo" duration="109"/>
   </file>
-  <file path="C:\Users\Chandradeepta.Laha\Desktop\NextJS-Storefront\nextjs-storefront\hooks\useUpdatePersonalInfo\useUpdatePersonalInfo.spec.tsx">
-    <testCase name="[hooks] useUpdatePersonalInfo should use useUpdatePersonalInfo" duration="122"/>
+  <file path="C:\Kibo-repo\nextjs-storefront\components\add-to-cart-dialog\AddToCartDialog\AddToCartDialog.spec.tsx">
+    <testCase name="[components] Add To Cart Dialog should render component" duration="96"/>
   </file>
-  <file path="C:\Users\Chandradeepta.Laha\Desktop\NextJS-Storefront\nextjs-storefront\lib\helpers\__tests__\swipeDetect.spec.js">
-    <testCase name="[helpers] swipeDetect should detect left swipe" duration="23"/>
-    <testCase name="[helpers] swipeDetect should detect right swipe" duration="4"/>
-    <testCase name="[helpers] swipeDetect should detect no swipe" duration="9"/>
+  <file path="C:\Kibo-repo\nextjs-storefront\components\product\ProductOptionList\ProductOptionList.spec.tsx">
+    <testCase name="[component] - ProductOptionList should render component" duration="92"/>
   </file>
-  <file path="C:\Users\Chandradeepta.Laha\Desktop\NextJS-Storefront\nextjs-storefront\lib\helpers\__tests__\validateProductVariations.spec.js">
-    <testCase name="[helpers] validateProductVariations function should return true if options are not present and the product is purchasable" duration="6"/>
-    <testCase name="[helpers] validateProductVariations function should return false if the product is configurable and options are not selected" duration="4"/>
-    <testCase name="[helpers] validateProductVariations function should return true if the product is configured and all options are selected" duration="2"/>
+  <file path="C:\Kibo-repo\nextjs-storefront\components\cart\CartItemList\CartItemList.spec.tsx">
+    <testCase name="[components] - CartItemList should render component" duration="86"/>
   </file>
-  <file path="C:\Users\Chandradeepta.Laha\Desktop\NextJS-Storefront\nextjs-storefront\lib\helpers\__tests__\findParentNode.spec.js">
-    <testCase name="[helpers] findParentNode function should return parent node if parent node is present and that&apos;s not root node" duration="10"/>
-    <testCase name="[helpers] findParentNode function should return null if parent Node is root node" duration="1"/>
-    <testCase name="[helpers] findParentNode function should return undefined if searchable categoryCode is null" duration="2"/>
+  <file path="C:\Kibo-repo\nextjs-storefront\hooks\useDebounce\useDebounce.spec.ts">
+    <testCase name="[hooks] useDebounce should be defined" duration="6"/>
+    <testCase name="[hooks] useDebounce should use useDebounce" duration="47"/>
+    <testCase name="[hooks] useDebounce should return last value if calling debouncing sequencially within 500ms" duration="23"/>
+    <testCase name="[hooks] useDebounce should return actual value if calling debouncing in every 500ms" duration="12"/>
   </file>
-  <file path="C:\Users\Chandradeepta.Laha\Desktop\NextJS-Storefront\nextjs-storefront\lib\helpers\__tests__\buildBreadcrumbs.spec.js">
-    <testCase name="[helpers] buildBreadcrumbs function should return the breadcrumbs" duration="6"/>
+  <file path="C:\Kibo-repo\nextjs-storefront\components\product\ProductOptionTextbox\ProductOptionTextBox.spec.js">
+    <testCase name="[component] ProductOptionTextBox component should render option" duration="99"/>
+    <testCase name="[component] ProductOptionTextBox component should show user entered value" duration="118"/>
   </file>
-  <file path="C:\Users\Chandradeepta.Laha\Desktop\NextJS-Storefront\nextjs-storefront\components\page-templates\ProductListingTemplate\ProductListingTemplate.spec.tsx">
-    <testCase name="[component] - Category should render component" duration="2941"/>
-    <testCase name="[component] - Category should show all the product when user clicks on show more button" duration="1693"/>
-    <testCase name="[component] - Category should hide filter by button when user clicks on filter By button" duration="1520"/>
+  <file path="C:\Kibo-repo\nextjs-storefront\components\checkout\PaymentStep\PaymentStep.spec.tsx">
+    <testCase name="[components] PaymentStep should render component" duration="108"/>
+  </file>
+  <file path="C:\Kibo-repo\nextjs-storefront\lib\gql\client\client.spec.js">
+    <testCase name="[lib] - GraphQL Client should create a new graphql client using .env for endpoint" duration="6"/>
+    <testCase name="[lib] - GraphQL Client should create a new graphql client using endpoint as parameter" duration="2"/>
+  </file>
+  <file path="C:\Kibo-repo\nextjs-storefront\lib\helpers\findParentNode.spec.js">
+    <testCase name="findParentNode function should return parent node if parent node is present and that&apos;s not root node" duration="6"/>
+    <testCase name="findParentNode function should return null if parent Node is root node" duration="1"/>
+    <testCase name="findParentNode function should return undefined if searchable categoryCode is null" duration="1"/>
+  </file>
+  <file path="C:\Kibo-repo\nextjs-storefront\lib\helpers\swipeDetect.spec.js">
+    <testCase name="swipeDetect should detect left swipe" duration="8"/>
+    <testCase name="swipeDetect should detect right swipe" duration="2"/>
+    <testCase name="swipeDetect should detect no swipe" duration="3"/>
+  </file>
+  <file path="C:\Kibo-repo\nextjs-storefront\components\checkout\ShippingStep\ShippingStep.spec.tsx">
+    <testCase name="[components] ShippingStep should render component" duration="84"/>
+  </file>
+  <file path="C:\Kibo-repo\nextjs-storefront\components\checkout\ReviewStep\ReviewStep.spec.tsx">
+    <testCase name="[components] PaymentStep should render component" duration="75"/>
   </file>
 </testExecutions>
