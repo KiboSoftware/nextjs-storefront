@@ -1,3 +1,4 @@
+/* eslint-disable  jsx-a11y/no-autofocus */
 import React, { SyntheticEvent, useState } from 'react'
 
 import { yupResolver } from '@hookform/resolvers/yup'
@@ -16,13 +17,24 @@ import { useTranslation } from 'next-i18next'
 import { useForm, Controller } from 'react-hook-form'
 import * as yup from 'yup'
 
-import KiboTextBox from '@/components/common/KiboTextBox/KiboTextBox'
+import { KiboTextBox } from '@/components/common'
 
-export interface loginInputs {
+export interface LoginInputs {
   email: string
   password: string
   isRememberMe?: boolean
 }
+
+export type LoginData = {
+  formData: LoginInputs
+  isRememberMe: boolean
+}
+
+export interface LoginContentProps {
+  onLogin: (data: LoginData) => void
+  onForgotPasswordClick: () => void
+}
+
 const styles = {
   contentBox: {
     padding: '0.875rem',
@@ -32,57 +44,54 @@ const styles = {
   },
 }
 
-export type loginData = {
-  formData: loginInputs
-  isRememberMe: boolean
-}
+const LoginContent = (props: LoginContentProps) => {
+  const { onLogin, onForgotPasswordClick } = props
 
-export interface KiboLoginContentProps {
-  onClickLogin: (data: loginData) => void
-  onClickForgotPassword: () => void
-}
+  const [showPassword, setShowPassword] = useState<boolean>(false)
+  const [isRememberMe, setIsRememberMe] = useState<boolean>(false)
 
-const KiboLoginContent = (props: KiboLoginContentProps) => {
-  const { onClickLogin, onClickForgotPassword } = props
-  const [showPassword, setShowPassword] = useState(false)
-  const [isRememberMe, setIsRememberMe] = useState(false)
   const handleClickShowPassword = () => setShowPassword(!showPassword)
   const handleMouseDownPassword = () => setShowPassword(!showPassword)
-  const { t } = useTranslation(['checkout', 'common'])
-
-  const useLoginInputSchema = () => {
-    return yup.object().shape({
-      email: yup.string().email().required(t('this-field-is-required')),
-      password: yup.string().required(t('this-field-is-required')),
-    })
-  }
 
   const loginInputs = {
     email: '',
     password: '',
   }
+
+  const { t } = useTranslation(['checkout', 'common'])
+
+  const useLoginInputSchema = () => {
+    return yup.object().shape({
+      email: yup
+        .string()
+        .email(t('common:email-must-be-a-valid-email'))
+        .required(t('this-field-is-required')),
+      password: yup.string().required(t('this-field-is-required')),
+    })
+  }
+
   const {
     formState: { errors, isValid },
     handleSubmit,
     control,
   } = useForm({
-    mode: 'onChange',
-    reValidateMode: 'onChange',
-    defaultValues: loginInputs ? loginInputs : undefined,
+    mode: 'all',
+    reValidateMode: 'onBlur',
+    defaultValues: loginInputs,
     resolver: yupResolver(useLoginInputSchema()),
     shouldFocusError: true,
   })
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const handleLogin = async (formData: loginInputs, e: any) => {
+  const handleLogin = async (formData: LoginInputs, e: any) => {
     e.preventDefault()
     const inputData = { formData, isRememberMe }
-    onClickLogin(inputData)
+    onLogin(inputData)
   }
 
   const handleForgotPassword = (e: SyntheticEvent<Element, Event>) => {
     e.preventDefault()
-    onClickForgotPassword()
+    onForgotPasswordClick()
   }
 
   return (
@@ -103,6 +112,7 @@ const KiboLoginContent = (props: KiboLoginContentProps) => {
               onChange={(_name, value) => field.onChange(value)}
               error={!!errors?.email}
               helperText={errors?.email?.message}
+              autoFocus={true}
             />
           )}
         />
@@ -168,4 +178,4 @@ const KiboLoginContent = (props: KiboLoginContentProps) => {
   )
 }
 
-export default KiboLoginContent
+export default LoginContent
