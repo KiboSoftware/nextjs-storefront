@@ -27,7 +27,7 @@ describe('[component] HamburgerMenu component', () => {
     render(<Common {...Common.args} setIsDrawerOpen={setIsDrawerOpenMock} />)
 
     expect(screen.getByTestId('AccountCircleIcon')).toBeVisible()
-    expect(screen.getByText(/My Account/i)).toBeVisible()
+    expect(screen.getByText(/my-account/i)).toBeVisible()
 
     userEvent.keyboard('{esc}')
     expect(setIsDrawerOpenMock).toBeCalled()

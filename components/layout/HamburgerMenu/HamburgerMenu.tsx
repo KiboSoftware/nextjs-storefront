@@ -1,7 +1,8 @@
 import { useState, useEffect } from 'react'
 
 import AccountCircleIcon from '@mui/icons-material/AccountCircle'
-import { Box, List, ListItem, ListItemText, SwipeableDrawer } from '@mui/material'
+import { Box, Divider, List, ListItem, ListItemText, SwipeableDrawer } from '@mui/material'
+import { useTranslation } from 'next-i18next'
 import Link from 'next/link'
 
 import HeaderAction from '@/components/common/HeaderAction/HeaderAction'
@@ -24,6 +25,7 @@ interface HamburgerMenuProps {
 const HamburgerMenu = (props: HamburgerMenuProps) => {
   const { categoryTree, isDrawerOpen, marginTop = 7, setIsDrawerOpen, navLinks } = props
   const [isOpen, setIsOpen] = useState(false)
+  const { t } = useTranslation('common')
 
   const toggleDrawer = (open: boolean) => {
     setIsOpen(open)
@@ -62,8 +64,8 @@ const HamburgerMenu = (props: HamburgerMenuProps) => {
           >
             <Box width="100%">
               <HeaderAction
-                title="My Account"
-                subtitle="Login"
+                title={t('my-account')}
+                subtitle={t('log-in')}
                 icon={AccountCircleIcon}
                 mobileIconColor="black"
                 iconFontSize="large"
@@ -73,13 +75,16 @@ const HamburgerMenu = (props: HamburgerMenuProps) => {
           </CategoryNestedNavigation>
         </Box>
         <Box height={19} sx={{ backgroundColor: 'grey.300' }}></Box>
-        <List sx={{ width: '100%', maxHeight: '40%', overflowY: 'auto' }}>
+        <List sx={{ width: '100%', maxHeight: '40%', overflowY: 'auto', pt: 0 }}>
           {navLinks?.map((nav) => (
-            <Link key={nav.text} href={nav.link} passHref>
-              <ListItem button>
-                <ListItemText primary={nav.text} />
-              </ListItem>
-            </Link>
+            <Box key={nav.text}>
+              <Link href={nav.link} passHref>
+                <ListItem button sx={{ paddingInline: 4 }}>
+                  <ListItemText primary={nav.text} />
+                </ListItem>
+              </Link>
+              <Divider />
+            </Box>
           ))}
         </List>
       </Box>

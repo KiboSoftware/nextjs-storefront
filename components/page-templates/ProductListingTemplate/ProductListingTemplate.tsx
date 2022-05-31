@@ -8,9 +8,10 @@ import { Theme } from '@mui/material/styles'
 import { useTranslation } from 'next-i18next'
 
 import KiboSelect from '@/components/common/KiboSelect/KiboSelect'
-import KiboBreadcrumbs, { Breadcrumb } from '@/components/core/Breadcrumbs/Breadcrumbs'
+import KiboBreadcrumbs from '@/components/core/Breadcrumbs/KiboBreadcrumbs'
 import { CategoryFacet, CategoryFilterByMobile, FacetList } from '@/components/product-listing'
 import ProductCard, { ProductCardProps } from '@/components/product/ProductCard/ProductCard'
+import type { BreadCrumb as BreadCrumbType } from '@/lib/types'
 
 import type { Facet as FacetType } from '@/lib/gql/types'
 
@@ -32,7 +33,7 @@ interface CategoryFacetData {
   childrenCategories: CategoryFacetChildren[]
 }
 interface ProductListingTemplateProps {
-  breadCrumbsList: Breadcrumb[]
+  breadCrumbsList: BreadCrumbType[]
   facetList: FacetType[]
   products: ProductCardProps[]
   sortingValues?: SortingValues[]
@@ -198,7 +199,7 @@ const ProductListingTemplate = (props: ProductListingTemplateProps) => {
       const sliced = products.slice(0, noOfItemsToShow)
       setProductsToShow([...sliced])
     }
-  }, [isShowMoreButtonVisible])
+  }, [initialProductsToShow, isShowMoreButtonVisible, products])
 
   return (
     <>

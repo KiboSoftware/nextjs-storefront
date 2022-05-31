@@ -5,7 +5,8 @@ import userEvent from '@testing-library/user-event'
 
 import * as stories from './KiboTextbox.stories' // import all stories from the stories file
 
-const { WithLabel, WithPlaceholder, WithError, WithErrorDescription } = composeStories(stories)
+const { WithLabel, WithPlaceholder, WithError, WithErrorDescription, WithIcon } =
+  composeStories(stories)
 
 describe('[component] KiboTextbox component', () => {
   it('should render the component', () => {
@@ -49,5 +50,16 @@ describe('[component] KiboTextbox component', () => {
     userEvent.type(input, 'Test')
 
     expect(onChangeMock).toHaveBeenCalledTimes(4)
+  })
+
+  it('should render endAdornment icon when icon is provided and should call onIconClick when icon is clicked', () => {
+    const onIconClickMock = jest.fn()
+    render(<WithIcon {...WithIcon.args} onIconClick={onIconClickMock} />)
+    const icon = screen.getByRole('button')
+
+    userEvent.click(icon)
+
+    expect(icon).toBeVisible()
+    expect(onIconClickMock).toHaveBeenCalled()
   })
 })

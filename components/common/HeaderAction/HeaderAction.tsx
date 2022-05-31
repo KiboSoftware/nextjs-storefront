@@ -41,7 +41,7 @@ const HeaderAction = (props: HeaderActionProps) => {
     <Box
       display="flex"
       alignItems="center"
-      sx={{ cursor: 'pointer', marginX: 2 }}
+      sx={{ cursor: 'pointer', marginX: 1 }}
       onClick={onClick}
     >
       <StyledBadge

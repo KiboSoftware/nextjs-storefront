@@ -2,7 +2,7 @@ import React from 'react'
 
 import { ComponentStory, ComponentMeta } from '@storybook/react'
 
-import KiboBreadcrumbs from './Breadcrumbs'
+import KiboBreadcrumbs from './KiboBreadcrumbs'
 
 const breadcrumbList = [
   {

@@ -4,6 +4,7 @@ module.exports = {
   collectCoverageFrom: [
     'components/**/*.{js,jsx,ts,tsx}',
     'lib/helpers/**/*.{js,jsx,ts,tsx}',
+    'lib/getters/**/*.{js,jsx,ts,tsx}',
     '!**/*.d.ts',
     '!**/node_modules/**',
     'hooks/**/*.{js,jsx,ts,tsx}',
@@ -24,6 +25,10 @@ module.exports = {
     '^@/components/(.*)$': '<rootDir>/components/$1',
     // Handle Lib aliases
     '^@/lib/(.*)$': '<rootDir>/lib/$1',
+    // Handle mock aliases
+    '^@/__mocks__/(.*)$': '<rootDir>/__mocks__/$1',
+    // Handle test aliases
+    '^@/__test__/(.*)$': '<rootDir>/__test__/$1',
   },
   // Add more setup options before each test is run
   // setupFilesAfterEnv: ['<rootDir>/jest.setup.js'],

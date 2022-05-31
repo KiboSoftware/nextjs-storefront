@@ -19,7 +19,7 @@ jest.mock(
   '../../product-listing/CategoryFilterByMobile/CategoryFilterByMobile',
   () => CategoryFilterByMobileMock
 )
-jest.mock('../../core/Breadcrumbs/Breadcrumbs', () => KiboBreadcrumbsMock)
+jest.mock('../../core/Breadcrumbs/KiboBreadcrumbs', () => KiboBreadcrumbsMock)
 jest.mock('../../product/ProductCard/ProductCard', () => ProductCardMock)
 
 describe('[component] - Category', () => {
