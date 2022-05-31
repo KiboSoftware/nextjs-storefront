@@ -12,7 +12,7 @@ const { Common } = composeStories(stories)
 describe('[components] Register Account Dialog', () => {
   const onDialogCloseMock = jest.fn()
   const setup = (args = Common.args) => {
-    render(<Common {...args} onDialogClose={onDialogCloseMock} />)
+    render(<Common {...args} setAutoFocus={false} onDialogClose={onDialogCloseMock} />)
     return { onDialogCloseMock }
   }
 

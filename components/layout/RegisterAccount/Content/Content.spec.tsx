@@ -8,11 +8,21 @@ import * as stories from './Content.stories' // import all stories from the stor
 
 const { Common } = composeStories(stories)
 
+const PasswordValidationMock = () => <div data-testid="password-validation-component" />
+const formDataMock = {
+  email: 'example@example.com',
+  firstName: 'Example',
+  lastNameOrSurname: 'Example',
+  password: 'Example@1234',
+}
+
+jest.mock('@/components/common/PasswordValidation/PasswordValidation', () => PasswordValidationMock)
+
 describe('[components] Register Account(Content)', () => {
-  const setup = (args = Common.args) => {
-    const onRegisterToYourAccountMock = jest.fn()
-    render(<Common {...args} onRegisterToYourAccount={onRegisterToYourAccountMock} />)
-    return { onRegisterToYourAccountMock }
+  const setup = () => {
+    const onRegisterNowMock = jest.fn()
+    render(<Common setAutoFocus={false} onRegisterNow={onRegisterNowMock} />)
+    return { onRegisterNowMock }
   }
 
   it('should render component', () => {
@@ -33,7 +43,7 @@ describe('[components] Register Account(Content)', () => {
   })
 
   it('should create new account when user click on createAccount button', async () => {
-    const { onRegisterToYourAccountMock } = setup()
+    const { onRegisterNowMock } = setup()
 
     const emailInput = screen.getByRole('textbox', { name: /email/i })
     const registerAccountFormFirstNameInput = screen.getByRole('textbox', { name: /first-name/i })
@@ -48,6 +58,17 @@ describe('[components] Register Account(Content)', () => {
 
     await waitFor(() => expect(createAccountButton).toBeEnabled())
     userEvent.click(createAccountButton)
-    await waitFor(() => expect(onRegisterToYourAccountMock).toHaveBeenCalled())
+    await waitFor(() => expect(onRegisterNowMock).toHaveBeenCalled())
+    await waitFor(() => expect(onRegisterNowMock).toHaveBeenCalledWith(formDataMock))
+  })
+
+  it('should display password validations component when user make password filed dirty', async () => {
+    setup()
+
+    const registerAccountFormPasswordInput = screen.getByLabelText(/password/i)
+
+    fireEvent.change(registerAccountFormPasswordInput, { target: { value: 'Example@1234' } })
+    const passwordValidation = screen.getByTestId('password-validation-component')
+    await waitFor(() => expect(passwordValidation).toBeInTheDocument())
   })
 })

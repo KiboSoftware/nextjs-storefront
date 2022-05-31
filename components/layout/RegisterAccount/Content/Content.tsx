@@ -21,7 +21,7 @@ export interface RegisterAccountInputData {
 
 interface ContentProps {
   setAutoFocus?: boolean
-  onRegisterToYourAccount: (formData: RegisterAccountInputData) => void
+  onRegisterNow: (formData: RegisterAccountInputData) => void
 }
 
 const styles = {
@@ -34,9 +34,8 @@ const styles = {
 }
 
 const Content = (props: ContentProps) => {
-  const { setAutoFocus = true, onRegisterToYourAccount } = props
+  const { setAutoFocus = true, onRegisterNow } = props
   const [showPassword, setShowPassword] = useState<boolean>(false)
-  const [showPasswordValidation, setShowPassowordValidation] = useState<boolean>(false)
   const { t } = useTranslation(['checkout', 'common'])
 
   const useDetailsSchema = () => {
@@ -74,14 +73,13 @@ const Content = (props: ContentProps) => {
   })
   const userEnteredPassword = watch(['password']).join('')
 
-  const handleCreateAccount = async (registerAccountFormData: RegisterAccountInputData) => {
-    console.log(`createAccount: ${JSON.stringify(registerAccountFormData)}`)
-    onRegisterToYourAccount(registerAccountFormData)
+  const handleCreateAccount = async (registerAccountData: RegisterAccountInputData) => {
+    console.log(`createAccount: ${JSON.stringify(registerAccountData)}`)
+    onRegisterNow(registerAccountData)
   }
 
   return (
     <Box sx={{ ...styles.contentBox }}>
-      {setAutoFocus}
       <FormControl sx={{ width: '100%' }}>
         <Controller
           name="email"
@@ -144,7 +142,6 @@ const Content = (props: ContentProps) => {
               sx={{ ...styles.formInput }}
               onBlur={field.onBlur}
               onChange={(_name, value) => {
-                setShowPassowordValidation(true)
                 field.onChange(value)
               }}
               error={!!errors?.password}
@@ -156,7 +153,7 @@ const Content = (props: ContentProps) => {
           )}
         />
 
-        {showPasswordValidation && (
+        {userEnteredPassword && (
           <Box sx={{ marginBottom: '2rem' }}>
             <PasswordValidation password={userEnteredPassword} />
           </Box>

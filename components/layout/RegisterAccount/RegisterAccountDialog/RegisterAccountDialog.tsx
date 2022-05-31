@@ -10,11 +10,11 @@ import Content, {
 
 interface RegisterAccountDialogProps {
   isOpen: boolean
-  isCenteredDialog: boolean
+  isDialogCentered: boolean
   setAutoFocus?: boolean
   onDialogClose: () => void
   onLoginToYourAccountDialogToggle: () => void
-  onRegisterToYourAccount: (data: RegisterAccountInputData) => void
+  onRegisterNow: (data: RegisterAccountInputData) => void
 }
 
 interface StyledThemeProps {
@@ -41,15 +41,16 @@ const StyledTitle = styled(Typography)(({ theme }: StyledThemeProps) => ({
   marginLeft: '0.75rem',
   color: theme?.palette.text.primary,
 }))
+const customMaxWidth = '32.375rem'
 
 const RegisterAccountDialog = (props: RegisterAccountDialogProps) => {
   const {
     isOpen = false,
-    setAutoFocus = true,
-    isCenteredDialog,
+    setAutoFocus,
+    isDialogCentered,
     onDialogClose,
     onLoginToYourAccountDialogToggle,
-    onRegisterToYourAccount,
+    onRegisterNow,
   } = props
   const { t } = useTranslation('common')
   const theme = useTheme()
@@ -78,18 +79,24 @@ const RegisterAccountDialog = (props: RegisterAccountDialogProps) => {
   const DialogArgs = {
     isOpen,
     Title,
-    Content: (
-      <Content setAutoFocus={setAutoFocus} onRegisterToYourAccount={onRegisterToYourAccount} />
-    ),
-    showContentTopDivider: true,
-    showContentBottomDivider: true,
+    Content: <Content setAutoFocus={setAutoFocus} onRegisterNow={onRegisterNow} />,
     Actions,
-    isCenteredDialog: isCenteredDialog,
-    customMaxWidth: '32.375rem',
+    isDialogCentered: isDialogCentered,
+    customMaxWidth: customMaxWidth,
     onClose: onDialogClose,
   }
 
-  return <KiboDialog {...DialogArgs} />
+  return (
+    <KiboDialog
+      isOpen={isOpen}
+      Title={Title}
+      Content={<Content setAutoFocus={setAutoFocus} onRegisterNow={onRegisterNow} />}
+      Actions={Actions}
+      isDialogCentered={isDialogCentered}
+      customMaxWidth={customMaxWidth}
+      onClose={onDialogClose}
+    />
+  )
 }
 
 export default RegisterAccountDialog
