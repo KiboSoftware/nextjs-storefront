@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { ReactNode, useState } from 'react'
 
 import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos'
 import ArrowForwardIcon from '@mui/icons-material/ArrowForwardIos'
@@ -23,9 +23,9 @@ import { PrCategory } from '@/lib/gql/types'
 
 interface CategoryNestedNavigationProps {
   categoryTree: PrCategory[]
+  children?: ReactNode
   onCategoryClick: (category: PrCategory) => void
   onCloseMenu: (isOpen: boolean) => void
-  children?: React.ReactNode
 }
 
 const styles = {
@@ -43,13 +43,9 @@ const styles = {
   },
 }
 
-const CategoryNestedNavigation = ({
-  categoryTree,
-  onCategoryClick,
-  onCloseMenu,
-  children,
-}: CategoryNestedNavigationProps) => {
-  const [allCategories] = useState<PrCategory[]>(categoryTree?.filter((item) => item.isDisplayed))
+const CategoryNestedNavigation = (props: CategoryNestedNavigationProps) => {
+  const { categoryTree, children, onCategoryClick, onCloseMenu } = props
+  const [allCategories] = useState<PrCategory[]>(categoryTree)
 
   const [activeCategory, setActiveCategory] = useState<PrCategory[] | undefined>(allCategories)
 
@@ -112,11 +108,11 @@ const CategoryNestedNavigation = ({
       aria-labelledby="category-nested-list"
       role="list"
       subheader={
-        <Box display="flex" alignItems="center" p={1}>
+        <Box display="flex" alignItems="center" pl={4} pr={2} py={1}>
           <IconButton size="small" aria-label="back-arrow-button" onClick={handleBackClick}>
             <ArrowBackIosIcon sx={{ ...styles.smallIcon }} />
           </IconButton>
-          <ListSubheader component="div" sx={{ flex: 1 }}>
+          <ListSubheader component="div" sx={{ flex: 1, paddingX: 1 }}>
             {subHeader.backLink}
           </ListSubheader>
           <IconButton
@@ -135,7 +131,7 @@ const CategoryNestedNavigation = ({
           <ListItemText primary={children} />
         </ListItemButton>
       )}
-      <ListItem>
+      <ListItem sx={{ paddingInline: 4 }}>
         <ListItemText primary={subHeader.label} sx={{ ...styles.listHeader }} />
       </ListItem>
       <Divider />
@@ -148,7 +144,10 @@ const CategoryNestedNavigation = ({
             appear={true}
           >
             <Box>
-              <ListItemButton onClick={() => handleCatgeoryClick(category)}>
+              <ListItemButton
+                onClick={() => handleCatgeoryClick(category)}
+                sx={{ paddingInline: 4 }}
+              >
                 <ListItemText primary={category?.content?.name} sx={{ ...styles.listContent }} />
                 {category?.childrenCategories?.length ? (
                   <ArrowForwardIcon fontSize="small" />

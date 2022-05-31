@@ -2,8 +2,8 @@ import React from 'react'
 
 import { ComponentStory, ComponentMeta } from '@storybook/react'
 
-import { categoryTreeDataMock } from '../../../__mocks__/stories/categoryTreeDataMock'
 import CategoryNestedNavigation from './CategoryNestedNavigation'
+import { categoryTreeDataMock } from '@/__mocks__/stories/categoryTreeDataMock'
 
 export default {
   title: 'Layout/Catgeory Navigation',
@@ -22,5 +22,5 @@ const Template: ComponentStory<typeof CategoryNestedNavigation> = (args) => (
 
 export const Common = Template.bind({})
 Common.args = {
-  categoryTree: categoryTreeDataMock.categoriesTree.items,
+  categoryTree: categoryTreeDataMock.categoriesTree.items?.filter((item) => item.isDisplayed),
 }
