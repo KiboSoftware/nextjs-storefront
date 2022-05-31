@@ -1,6 +1,6 @@
 /** @format */
 
-import { useState, useRef, useEffect } from 'react'
+import { useState, useRef } from 'react'
 
 import CloseIcon from '@mui/icons-material/Close'
 import { Typography, Box, Button, Stack, IconButton } from '@mui/material'
@@ -11,6 +11,7 @@ export interface PromocodeBadgeProps {
   onApplyCouponCode: (promo: string) => void
   onRemoveCouponCode: (promo: string) => void
   couponList: any
+  errorPromo: string
 }
 const styles = {
   boxStyle: {
@@ -29,10 +30,11 @@ const styles = {
 }
 
 export const PromoCodeBadge = (props: PromocodeBadgeProps) => {
-  const { onApplyCouponCode, onRemoveCouponCode, couponList } = props
-  const promoRef = useRef<any>()
+  const { onApplyCouponCode, onRemoveCouponCode, couponList, errorPromo } = props
+
   const [promo, setPromo] = useState<string>('')
-  const [isEnabled, setIsEnabled] = useState(true)
+  const [promoerr, setpromoerr] = useState(false)
+  const promoRef = useRef<any>()
 
   const handleOnChange = (_name: any, value: string) => {
     setPromo(value)
@@ -40,33 +42,38 @@ export const PromoCodeBadge = (props: PromocodeBadgeProps) => {
   const { t } = useTranslation('common')
 
   const handleApplyCouponCode = () => {
-    onApplyCouponCode(promo)
-    setPromo('')
-    promoRef.current.value = null
+    const Coupon = (element: string) => element === promo
+    if (couponList?.some(Coupon)) {
+    } else {
+      if (promo === errorPromo) {
+        setpromoerr(true)
+        promoRef.current.value = null
+      } else {
+        setpromoerr(false)
+        onApplyCouponCode(promo)
+        setPromo('')
+        promoRef.current.value = null
+      }
+    }
   }
   const handleRemoveCouponCode = (item: any) => {
     onRemoveCouponCode(item)
   }
-  useEffect(() => {
-    if (promo?.length > 0) {
-      setIsEnabled(false)
-    } else {
-      setIsEnabled(true)
-    }
-  }, [promo])
+
   return (
     <>
       <Box sx={{ display: 'flex' }}>
         <KiboTextBox
           inputRef={promoRef}
-          // value={promo}
           onChange={handleOnChange}
           sx={styles.textBoxStyle}
           placeholder={t('promo-code')}
           data-testid="promo-input"
+          helperText="Oops, this code is not valid. Please try again."
+          error={promoerr}
         />
         <Button
-          disabled={isEnabled}
+          disabled={promo?.length > 0 ? false : true}
           onClick={handleApplyCouponCode}
           sx={styles.buttonStyle}
           variant="contained"
@@ -93,25 +100,6 @@ export const PromoCodeBadge = (props: PromocodeBadgeProps) => {
           </Box>
         </>
       ))}
-    </>
-  )
-}
-
-export const PromoCodeBadgeMain = () => {
-  const [couponList, setCouponList] = useState<any>([])
-  const onRemoveCouponCode = (list: any) => {
-    setCouponList((coupon: any) => coupon.filter((item: any) => item !== list))
-  }
-  const onApplyCouponCode = (promo: string) => {
-    setCouponList((e: any) => [...e, promo])
-  }
-  return (
-    <>
-      <PromoCodeBadge
-        onApplyCouponCode={onApplyCouponCode}
-        onRemoveCouponCode={onRemoveCouponCode}
-        couponList={couponList}
-      />
     </>
   )
 }
