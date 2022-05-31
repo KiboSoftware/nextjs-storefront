@@ -76,16 +76,6 @@ const RegisterAccountDialog = (props: RegisterAccountDialogProps) => {
     </StyledActionsComponent>
   )
 
-  const DialogArgs = {
-    isOpen,
-    Title,
-    Content: <Content setAutoFocus={setAutoFocus} onRegisterNow={onRegisterNow} />,
-    Actions,
-    isDialogCentered: isDialogCentered,
-    customMaxWidth: customMaxWidth,
-    onClose: onDialogClose,
-  }
-
   return (
     <KiboDialog
       isOpen={isOpen}

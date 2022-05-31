@@ -13,7 +13,7 @@ const formDataMock = {
   email: 'example@example.com',
   firstName: 'Example',
   lastNameOrSurname: 'Example',
-  password: 'Example@1234',
+  password: 'Example@1234', //NOSONAR
 }
 
 jest.mock('@/components/common/PasswordValidation/PasswordValidation', () => PasswordValidationMock)
