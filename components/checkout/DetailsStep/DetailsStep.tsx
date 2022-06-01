@@ -23,7 +23,7 @@ import { useTranslation } from 'next-i18next'
 import { useForm, Controller } from 'react-hook-form'
 import * as yup from 'yup'
 
-import { PersonalInfo, useUpdateCheckout } from '../../../hooks'
+import { CheckoutDetails, useUpdateCheckout } from '../../../hooks'
 import KiboTextBox from '@/components/common/KiboTextBox/KiboTextBox'
 import PasswordValidation from '@/components/common/PasswordValidation/PasswordValidation'
 import { isPasswordValid } from '@/lib/helpers/validations/validations'
@@ -124,7 +124,7 @@ const DetailsStep = (props: DetailsProps) => {
   const updateCheckout = async (formData: PersonalDetails) => {
     const { email } = formData
 
-    const personalInfo: PersonalInfo = {
+    const checkoutDetails: CheckoutDetails = {
       orderId: checkout?.id as string,
       updateMode: 'ApplyToOriginal',
       orderInput: {
@@ -132,7 +132,7 @@ const DetailsStep = (props: DetailsProps) => {
         email,
       },
     }
-    await updateCheckoutMutation.mutateAsync(personalInfo)
+    await updateCheckoutMutation.mutateAsync(checkoutDetails)
   }
 
   // if form is valid, onSubmit callback
