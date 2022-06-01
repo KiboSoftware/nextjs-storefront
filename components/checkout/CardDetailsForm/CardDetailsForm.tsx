@@ -106,7 +106,7 @@ const CardDetailsForm = (props: CardDetailsFormProps) => {
               onBlur={field.onBlur}
               error={!!errors?.cardNumber}
               helperText={errors?.cardNumber?.message}
-              icon={CreditCardIcon}
+              icon={<CreditCardIcon />}
             />
           )}
         />
@@ -140,7 +140,7 @@ const CardDetailsForm = (props: CardDetailsFormProps) => {
               onBlur={field.onBlur}
               error={!!errors?.cvv}
               helperText={errors?.cvv?.message}
-              icon={HelpIcon}
+              icon={<HelpIcon />}
             />
           )}
         />
