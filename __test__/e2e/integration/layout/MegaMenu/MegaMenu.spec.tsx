@@ -17,7 +17,7 @@ describe('[components] - MegaMenu Integration', () => {
   it('should display menu items and advertisment while hovering on category', async () => {
     setup()
 
-    const category = Common.args?.categoryTree?.filter((c) => c.isDisplayed === true) || []
+    const category = Common.args?.categoryTree?.filter((c) => c?.isDisplayed === true) || []
     const childrenCategories = category[0]?.childrenCategories || []
     const menuItems = screen.getAllByRole('group')
     userEvent.hover(menuItems[0])

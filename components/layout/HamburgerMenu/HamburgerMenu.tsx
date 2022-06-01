@@ -4,18 +4,19 @@ import { AccountCircle } from '@mui/icons-material'
 import { Box, Divider, List, ListItem, ListItemText, SwipeableDrawer } from '@mui/material'
 import { useTranslation } from 'next-i18next'
 import Link from 'next/link'
+import { useRouter } from 'next/router'
 
 import HeaderAction from '@/components/common/HeaderAction/HeaderAction'
 import { CategoryNestedNavigation } from '@/components/layout'
 
-import { PrCategory } from '@/lib/gql/types'
+import type { Maybe, PrCategory } from '@/lib/gql/types'
 
 interface NavLinkProps {
   text: string
   link: string
 }
 interface HamburgerMenuProps {
-  categoryTree: PrCategory[]
+  categoryTree: Maybe<PrCategory>[]
   isDrawerOpen: boolean
   navLinks?: NavLinkProps[]
   marginTop?: number | string
@@ -26,10 +27,16 @@ const HamburgerMenu = (props: HamburgerMenuProps) => {
   const { categoryTree, isDrawerOpen, marginTop = 7, setIsDrawerOpen, navLinks } = props
   const [isOpen, setIsOpen] = useState(false)
   const { t } = useTranslation('common')
+  const router = useRouter()
 
   const toggleDrawer = (open: boolean) => {
     setIsOpen(open)
     setIsDrawerOpen(open)
+  }
+
+  const handleCategoryClick = (categoryCode: string) => {
+    toggleDrawer(false)
+    router.push('/product/' + categoryCode)
   }
 
   useEffect(() => {
@@ -60,7 +67,7 @@ const HamburgerMenu = (props: HamburgerMenuProps) => {
           <CategoryNestedNavigation
             categoryTree={categoryTree}
             onCloseMenu={toggleDrawer}
-            onCategoryClick={() => toggleDrawer(false)}
+            onCategoryClick={handleCategoryClick}
           >
             <Box width="100%">
               <HeaderAction

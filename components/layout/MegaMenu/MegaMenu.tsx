@@ -9,14 +9,14 @@ import KiboImage from '@/components/common/KiboImage/KiboImage'
 import MegaMenuItem from '@/components/layout/MegaMenuItem/MegaMenuItem'
 import DefaultImage from '@/public/product_placeholder.svg'
 
-import { PrCategory } from '@/lib/gql/types'
+import type { Maybe, PrCategory } from '@/lib/gql/types'
 interface MegaMenuProps {
-  categoryTree: PrCategory[]
+  categoryTree: Maybe<PrCategory>[]
   onBackdropToggle: (isOpen: boolean) => void
 }
 
 interface MegaMenuCategoryProps {
-  category: PrCategory
+  category: Maybe<PrCategory>
   activeCategory: string
   onBackdropToggle: (isOpen: boolean) => void
   setActiveCategory: (activeCategory: string) => void
@@ -69,13 +69,13 @@ const style = {
 
 const MegaMenuCategory = (props: MegaMenuCategoryProps) => {
   const { category, onBackdropToggle, activeCategory, setActiveCategory } = props
-  const childrenCategories = category.childrenCategories as PrCategory[]
+  const childrenCategories = category?.childrenCategories as PrCategory[]
 
   const { t } = useTranslation('common')
 
   const popupState = usePopupState({
     variant: 'popover',
-    popupId: category.content?.name,
+    popupId: category?.content?.name,
   })
 
   useEffect(() => {
@@ -86,10 +86,10 @@ const MegaMenuCategory = (props: MegaMenuCategoryProps) => {
     <Box {...bindHover(popupState)} role="group" color="grey.900">
       <ListItem
         sx={{ ...style.listItem }}
-        onMouseOver={() => setActiveCategory(category.categoryCode || '')}
-        selected={popupState.isOpen && category.categoryCode === activeCategory}
+        onMouseOver={() => setActiveCategory(category?.categoryCode || '')}
+        selected={popupState.isOpen && category?.categoryCode === activeCategory}
       >
-        <ListItemText primary={category.content?.name} />
+        <ListItemText primary={category?.content?.name} />
       </ListItem>
       {childrenCategories.length > 0 && (
         <HoverPopover
@@ -147,7 +147,7 @@ const MegaMenu = (props: MegaMenuProps) => {
     <StyledToolbar data-testid="megamenu-container">
       {categoryTree?.map((category) => (
         <MegaMenuCategory
-          key={category.categoryCode}
+          key={category?.categoryCode}
           category={category}
           onBackdropToggle={onBackdropToggle}
           activeCategory={activeCategory}

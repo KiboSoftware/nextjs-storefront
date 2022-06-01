@@ -11,6 +11,7 @@ import getProduct from '@/lib/api/operations/get-product'
 import search from '@/lib/api/operations/get-product-search'
 import { productGetters } from '@/lib/getters'
 
+import { CategoryCollection } from '@/lib/gql/types'
 import type { NextPage, GetStaticPropsContext } from 'next'
 
 export async function getStaticProps(context: GetStaticPropsContext) {
@@ -19,11 +20,11 @@ export async function getStaticProps(context: GetStaticPropsContext) {
   const { serverRuntimeConfig } = getConfig()
 
   const product = await getProduct(productCode)
-  const categoryTree = await getCategoryTree()
+  const categoriesTree: CategoryCollection = await getCategoryTree()
   return {
     props: {
       product,
-      categoryTree,
+      categoriesTree,
       ...(await serverSideTranslations(locale as string, ['common', 'product'], nextI18NextConfig)),
     },
     revalidate: serverRuntimeConfig.revalidate,
@@ -39,11 +40,11 @@ export async function getStaticPaths() {
   return { paths, fallback: true }
 }
 
-const ProductDetailPage: NextPage = ({ product, categoryTree, onInitialData }: any) => {
+const ProductDetailPage: NextPage = ({ product, categoriesTree, onLoadCategoriesTree }: any) => {
   const { isFallback } = useRouter()
   useEffect(() => {
-    onInitialData(categoryTree)
-  }, [categoryTree, onInitialData])
+    onLoadCategoriesTree(categoriesTree)
+  }, [categoriesTree, onLoadCategoriesTree])
 
   if (isFallback) {
     return <>Fallback</>
