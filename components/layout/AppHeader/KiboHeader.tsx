@@ -152,16 +152,13 @@ export default function KiboHeader(props: KiboHeaderProps) {
                   alignItems: 'center',
                   backgroundColor: { xs: 'common.black', md: 'common.white' },
                   boxShadow: 'none',
-                  // borderWidth: { xs: 0, md: 1 },
-                  // borderStyle: { xs: 'none', md: 'solid' },
-                  // borderColor: 'grey.300',
                   height: {
                     xs: 55,
                     md: 68,
                   },
                   minHeight: {
                     xs: 55,
-                    md: 68,
+                    md: 67,
                   },
                 }}
               >
@@ -267,19 +264,6 @@ export default function KiboHeader(props: KiboHeaderProps) {
                 </Box>
               </Box>
             </Container>
-            {/* Megamenu section */}
-            <Box
-              sx={{
-                display: { xs: 'none', md: 'flex' },
-                height: 59,
-                backgroundColor: 'common.white',
-                borderWidth: { xs: 0, md: 1 },
-                borderStyle: { xs: 'none', md: 'solid' },
-                borderColor: 'grey.300',
-              }}
-              data-testid="megamenu-container"
-            ></Box>
-            {/* Mobile searchbar section */}
             <Collapse in={headerState.viewSearchPortal}>
               <Box
                 position="static"
@@ -322,13 +306,13 @@ export default function KiboHeader(props: KiboHeaderProps) {
       <Grid
         item
         xs={12}
-        sx={{ display: { xs: 'none', md: 'block' }, top: { xs: 55, md: 124 } }}
+        sx={{ display: { xs: 'none', md: 'block' } }}
         position={sticky ? 'sticky' : 'relative'}
       >
         <Backdrop open={isBackdropOpen} data-testid="backdrop" />
         <MegaMenu categoryTree={categories} onBackdropToggle={setIsBackdropOpen} />
       </Grid>
-      <Grid item xs={12} sx={{ marginTop: { xs: '3rem', md: '8rem' } }}>
+      <Grid item xs={12}>
         {children}
       </Grid>
     </Grid>
