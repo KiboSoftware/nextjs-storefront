@@ -13,7 +13,7 @@ export const checkoutHanlders = [
     return res(ctx.data(orderMock))
   }),
 
-  // useUpdatePersonalInfo
+  // useCheckout
   graphql.mutation('updatePersonalDetails', (_req, res, ctx) => {
     return res(ctx.data(orderMock))
   }),

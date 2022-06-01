@@ -5,28 +5,28 @@ import { checkoutKeys } from '../../lib/react-query/queryKeys'
 import { makeGraphQLClient } from '@/lib/gql/client'
 import { updateOrder } from '@/lib/gql/mutations/checkout/update-order'
 
-export interface PersonalInfo {
+export interface CheckoutDetails {
   orderId: string
   updateMode: string
   version?: string
   orderInput: OrderInput
 }
 
-const updatePersonalInfo = async (personalInfo: PersonalInfo) => {
+const updateCheckout = async (checkoutDetails: CheckoutDetails) => {
   const client = makeGraphQLClient()
 
   const response = await client.request({
     document: updateOrder,
-    variables: personalInfo,
+    variables: checkoutDetails,
   })
 
   return response?.checkout
 }
 
-export const useUpdatePersonalInfo = () => {
+export const useUpdateCheckout = () => {
   const queryClient = useQueryClient()
 
-  return useMutation(updatePersonalInfo, {
+  return useMutation(updateCheckout, {
     onSuccess: () => {
       queryClient.removeQueries([checkoutKeys.detail])
     },

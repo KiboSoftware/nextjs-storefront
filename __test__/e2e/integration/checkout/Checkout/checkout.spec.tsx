@@ -11,7 +11,7 @@ const { Common } = composeStories(stories)
 
 jest.mock('../../../../../hooks', () => ({
   useCheckout: jest.fn(() => ({})),
-  useUpdatePersonalInfo: () => ({
+  useUpdateCheckout: () => ({
     mutateAsync: () => Promise.resolve(true),
     isLoading: false,
     isSuccess: true,

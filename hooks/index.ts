@@ -1,5 +1,5 @@
 export * from './useCheckout/useCheckout'
-export * from './useUpdatePersonalInfo/useUpdatePersonalInfo'
+export * from './useUpdateCheckout/useUpdateCheckout'
 export * from './useDebounce/useDebounce'
 export * from './useUpdateRoutes/useUpdateRoutes'
 export * from './useSearchSuggestions/useSearchSuggestions'
