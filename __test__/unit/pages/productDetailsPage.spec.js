@@ -2,7 +2,10 @@ import '@testing-library/jest-dom'
 import { render, screen } from '@testing-library/react'
 import * as nextRouter from 'next/router'
 
-import ProductDetailPage, { getStaticPaths, getStaticProps } from './[productCode]'
+import ProductDetailPage, {
+  getStaticPaths,
+  getStaticProps,
+} from '../../../pages/product/[productCode]'
 
 nextRouter.useRouter = jest.fn()
 
@@ -49,7 +52,7 @@ jest.mock('next-i18next/serverSideTranslations', () => ({
 
 const ProductDetailTemplateMock = () => <div data-testid="productDetailTemplate-mock" />
 jest.mock(
-  '../../components/page-templates/ProductDetail/ProductDetailTemplate.tsx',
+  '@/components/page-templates/ProductDetail/ProductDetailTemplate.tsx',
   () => ProductDetailTemplateMock
 )
 
