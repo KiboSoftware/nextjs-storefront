@@ -1,9 +1,8 @@
-import { request } from 'graphql-request'
 import { useQuery } from 'react-query'
 
 import { makeGraphQLClient } from '@/lib/gql/client'
-import { querykeys } from '@/lib/react-query/queryKeys'
 import { getCheckoutQuery, getOrCreateCheckoutFromCartMutation } from '@/lib/gql/queries'
+import { checkoutKeys } from '@/lib/react-query/queryKeys'
 
 import type { Order } from '@/lib/gql/types'
 interface UseCheckout {
@@ -18,6 +17,7 @@ export interface UseCheckoutResponse {
 
 const getOrCreateCheckout = async (cartId?: string | null, checkoutId?: string | null) => {
   const client = makeGraphQLClient()
+
   const response = await client.request({
     document: checkoutId ? getCheckoutQuery : getOrCreateCheckoutFromCartMutation,
     variables: checkoutId ? { checkoutId } : { cartId },
@@ -27,11 +27,13 @@ const getOrCreateCheckout = async (cartId?: string | null, checkoutId?: string |
 }
 
 export const useCheckout = ({ cartId, checkoutId }: UseCheckout): UseCheckoutResponse => {
+  const id = (cartId ? cartId : checkoutId) as string
+
   const {
     data = [],
     isLoading,
     isSuccess,
-  } = useQuery([querykeys.LOAD_CHECKOUT, cartId], () => getOrCreateCheckout(cartId, checkoutId))
+  } = useQuery(checkoutKeys.detail(id), () => getOrCreateCheckout(cartId, checkoutId))
 
   return { data, isLoading, isSuccess }
 }

@@ -102,7 +102,6 @@ describe('[components] Details', () => {
 
     const emailInput = screen.getByRole('textbox', { name: /your-email/i })
 
-    console.log('---------------------', emailInput)
     await act(async () => {
       emailInput.focus()
       fireEvent.blur(emailInput, { target: { value: '' } })

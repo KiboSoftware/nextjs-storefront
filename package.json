@@ -7,7 +7,7 @@
     "start": "next start",
     "lint": "next lint",
     "generate-types": "graphql-codegen",
-    "storybook": "start-storybook -p 6006 -s ./public",
+    "storybook": "start-storybook -p 3000 -s ./public",
     "build-storybook": "build-storybook",
     "validate-types": "tsc --noEmit --declaration",
     "test": "jest",
@@ -82,5 +82,8 @@
     "tsconfig-paths-webpack-plugin": "^3.5.2",
     "typescript": "4.5.2",
     "webpack-merge": "^5.8.0"
+  },
+  "msw": {
+    "workerDirectory": "public"
   }
 }

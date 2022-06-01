@@ -46,6 +46,10 @@ export const baseCheckoutFragment = /* GraphQL */ `
   fragment baseCheckoutFragment on Order {
     id
     email
+    totalCollected
+    amountAvailableForRefund
+    amountRemainingForPayment
+    amountRefunded
     total
     shippingTotal
     discountTotal
