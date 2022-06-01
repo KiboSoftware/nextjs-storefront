@@ -4,7 +4,6 @@ import { Box, Stack, Button, Typography, SxProps } from '@mui/material'
 import { Theme } from '@mui/material/styles'
 import { useTranslation } from 'next-i18next'
 
-import { useCheckout } from '../../../hooks'
 import DetailsStep, { Action } from '@/components/checkout/DetailsStep/DetailsStep'
 import KiboStepper from '@/components/checkout/KiboStepper/KiboStepper'
 import PaymentStep from '@/components/checkout/PaymentStep/PaymentStep'
