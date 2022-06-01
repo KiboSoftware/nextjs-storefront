@@ -18,4 +18,8 @@ module.exports = {
     colorAttributeFQN: 'Tenant~Color',
     sizeAttributeFQN: 'Tenant~Size',
   },
+  serverRuntimeConfig: {
+    revalidate: 60,
+    pageSize: 100,
+  },
 }

@@ -1,51 +1,50 @@
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
+import getConfig from 'next/config'
 import { useRouter } from 'next/router'
 
+import nextI18NextConfig from '../../next-i18next.config'
 import { ProductDetailTemplate } from '@/components/page-templates'
 import getProduct from '@/lib/api/operations/get-product'
+import search from '@/lib/api/operations/get-product-search'
+import { productGetters } from '@/lib/getters'
 
-import type {
-  NextPage,
-  GetStaticPathsContext,
-  GetStaticPropsContext,
-  InferGetStaticPropsType,
-  GetServerSidePropsContext,
-} from 'next'
+import type { NextPage, GetStaticPropsContext } from 'next'
 
 export async function getStaticProps(context: GetStaticPropsContext) {
-  const { params } = context
+  const { params, locale } = context
   const { productCode } = params as any
+  const { serverRuntimeConfig } = getConfig()
+
   const product = await getProduct(productCode)
-  const { locale } = context
   return {
     props: {
       product,
-      ...(await serverSideTranslations(locale as string, ['common', 'product'])),
+      ...(await serverSideTranslations(locale as string, ['common', 'product'], nextI18NextConfig)),
     },
-    revalidate: 60,
+    revalidate: serverRuntimeConfig.revalidate,
   }
 }
-export async function getStaticPaths({ locales }: GetStaticPathsContext) {
-  return { paths: ['/product/BackP_001'], fallback: true }
+export async function getStaticPaths() {
+  const { serverRuntimeConfig } = getConfig()
+  const searchResponse = await search({ pageSize: serverRuntimeConfig.pageSize })
+  const { items } = searchResponse.data.products
+  const paths: string[] = []
+  items.length &&
+    items?.map((item: { productCode: string }) => paths.push(`/product/${item.productCode}`))
+  return { paths, fallback: true }
 }
-// // This gets called on every request
-// export async function getServerSideProps(context: GetServerSidePropsContext) {
-//   const product = await getProduct('MS-BTL-002');
-//   return {
-//     props: { product }, // will be passed to the page component as props
-//   };
-// }
 
 const ProductDetailPage: NextPage = ({ product }: any) => {
-  const name = product?.content?.productName || 'no name'
   const { isFallback } = useRouter()
 
   if (isFallback) {
     return <>Fallback</>
   }
+
+  const breadcrumbs = product ? productGetters.getBreadcrumbs(product) : []
   return (
     <>
-      <ProductDetailTemplate product={product} />
+      <ProductDetailTemplate product={product} breadcrumbs={breadcrumbs} />
     </>
   )
 }

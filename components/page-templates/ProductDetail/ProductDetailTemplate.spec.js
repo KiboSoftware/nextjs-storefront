@@ -48,7 +48,7 @@ describe('[component] Product Detail Template component', () => {
 
     const breadcrumbLinks = within(breadcrumbList).getAllByRole('link')
 
-    expect(breadcrumbLinks.length).toBe(3)
+    expect(breadcrumbLinks.length).toBe(1)
   })
 
   it('should render the Product name', () => {
