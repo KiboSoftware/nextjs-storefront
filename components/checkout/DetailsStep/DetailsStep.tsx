@@ -144,8 +144,9 @@ const DetailsStep = (props: DetailsProps) => {
         await createAccount(formData)
       }
 
-      const isFormValid = isUserEnteredPasswordValid() ? StepStates.COMPLETE : StepStates.INCOMPLETE
-      onCompleteCallback({ type: isFormValid })
+      onCompleteCallback({
+        type: isUserEnteredPasswordValid() ? StepStates.COMPLETE : StepStates.INCOMPLETE,
+      })
     } catch (error) {
       onCompleteCallback({ type: StepStates.INCOMPLETE })
       console.error(error)
