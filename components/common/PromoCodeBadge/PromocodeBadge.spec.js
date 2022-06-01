@@ -120,4 +120,21 @@ describe('PromoCode Component', () => {
     await userEvent.click(PromoCodebutton)
     expect(screen.getByTestId('promotype')).toBeInTheDocument('SAVE50')
   })
+
+  it('should able to add multiple promo code', async () => {
+    setup()
+    const input = screen.getByRole('textbox')
+    const PromoCodebutton = screen.getByRole('button', { name: /apply/i })
+    await userEvent.type(input, userEnteredText)
+    expect(input).toHaveValue(userEnteredText)
+
+    await userEvent.click(PromoCodebutton)
+    expect(screen.getByTestId('promotype')).toBeInTheDocument('SAVE50')
+
+    await userEvent.type(input, userEnteredText)
+    expect(input).toHaveValue(userEnteredText)
+
+    await userEvent.click(PromoCodebutton)
+    expect(screen.getByTestId('promotype')).toBeInTheDocument('SAVE60')
+  })
 })

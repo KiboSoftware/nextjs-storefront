@@ -62,7 +62,7 @@ export const PromoCodeBadge = (props: PromocodeBadgeProps) => {
 
   return (
     <>
-      <Box sx={{ display: 'flex' }}>
+      <Box sx={{ display: 'flex', maxWidth: '20rem' }}>
         <KiboTextBox
           inputRef={promoRef}
           onChange={handleOnChange}
