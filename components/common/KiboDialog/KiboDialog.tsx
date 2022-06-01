@@ -18,7 +18,7 @@ export interface KiboDialogProps {
   showCloseIconButton?: boolean
   Content: ReactNode
   Actions?: ReactNode
-  isCenteredDialog?: boolean
+  isDialogCentered?: boolean
   customMaxWidth: string
   showContentTopDivider?: boolean
   showContentBottomDivider?: boolean
@@ -28,15 +28,15 @@ export interface KiboDialogProps {
 interface StyledDialogProps {
   theme?: Theme
   customMaxWidth?: string
-  isCenteredDialog: boolean
+  isDialogCentered: boolean
 }
 interface StyledCloseIconProps {
   theme?: Theme
 }
 
 const StyledDialog = styled(Dialog, {
-  shouldForwardProp: (prop) => prop !== 'customMaxWidth' && prop !== 'isCenteredDialog',
-})(({ theme, customMaxWidth, isCenteredDialog }: StyledDialogProps) => ({
+  shouldForwardProp: (prop) => prop !== 'customMaxWidth' && prop !== 'isDialogCentered',
+})(({ theme, customMaxWidth, isDialogCentered }: StyledDialogProps) => ({
   '& .MuiDialogContent-root': {
     padding: theme?.spacing(2),
   },
@@ -51,7 +51,7 @@ const StyledDialog = styled(Dialog, {
       maxWidth: customMaxWidth,
     }),
   },
-  ...(isCenteredDialog === false && {
+  ...(isDialogCentered === false && {
     top: '3.438rem',
     '& .MuiDialog-scrollPaper': {
       alignItems: 'flex-start',
@@ -86,7 +86,7 @@ const KiboDialog = (props: KiboDialogProps) => {
     showCloseIconButton = true,
     Content,
     Actions,
-    isCenteredDialog = true,
+    isDialogCentered = true,
     customMaxWidth = '',
     showContentTopDivider = true,
     showContentBottomDivider = true,
@@ -99,7 +99,7 @@ const KiboDialog = (props: KiboDialogProps) => {
       aria-labelledby="kibo-dialog-title"
       open={isOpen}
       customMaxWidth={customMaxWidth}
-      isCenteredDialog={isCenteredDialog}
+      isDialogCentered={isDialogCentered}
       data-test-id="kibo-dialog"
     >
       {Title && (

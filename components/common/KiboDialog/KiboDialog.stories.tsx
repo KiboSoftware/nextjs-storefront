@@ -26,6 +26,6 @@ Common.args = {
     </Typography>
   ),
   Actions: <Button>Save</Button>,
-  isCenteredDialog: true,
+  isDialogCentered: true,
   customMaxWidth: '',
 }
