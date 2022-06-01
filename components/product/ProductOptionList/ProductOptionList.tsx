@@ -12,7 +12,7 @@ const ProductOptionList = (props: ProductOptionListProps) => {
   return (
     <>
       {options.map((option: CrProductOption) => (
-        <ProductOption key={option.value} option={option} />
+        <ProductOption key={option.stringValue} option={option} />
       ))}
     </>
   )

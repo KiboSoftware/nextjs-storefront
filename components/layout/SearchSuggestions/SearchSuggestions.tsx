@@ -103,9 +103,12 @@ const SearchSuggestions = () => {
     searchTerm ? handleOpen() : handleClose()
 
     if (searchTerm) {
+      // const { data: searchSuggestionResult } = useSearchSuggestions(searchTerm)
       // ToBe: fetch API here
     }
   }, [debouncedSearchResult])
+
+  console.log('search tearm', searchTerm)
 
   return (
     <Stack>

@@ -1,7 +1,7 @@
-import { PrCategory } from '../gql/types'
+import type { Maybe, PrCategory } from '../gql/types'
 
 export const findParentNode = (
-  items: PrCategory[],
+  items: Maybe<PrCategory>[],
   categoryCode?: string | null,
   parent: PrCategory | null = null
 ): PrCategory | null | undefined => {
@@ -10,10 +10,10 @@ export const findParentNode = (
       findParent will be called recursively */
   for (const item of items) {
     const res: PrCategory | null | undefined =
-      item.categoryCode === categoryCode
+      item?.categoryCode === categoryCode
         ? parent
-        : item.childrenCategories &&
-          findParentNode(item.childrenCategories as PrCategory[], categoryCode, item)
+        : item?.childrenCategories &&
+          findParentNode(item?.childrenCategories as PrCategory[], categoryCode, item)
     if (res || res === null) return res
   }
 }
