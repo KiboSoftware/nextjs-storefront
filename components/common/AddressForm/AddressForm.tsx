@@ -52,7 +52,6 @@ interface AddressFormProps {
   isUserLoggedIn: boolean
   saveAddressLabel?: string
   setAutoFocus?: boolean
-  stepperStatus: string
   checkout: Order | undefined
   onSaveAddress: (data: Address) => void
 
@@ -85,7 +84,6 @@ const AddressForm = (props: AddressFormProps) => {
     isUserLoggedIn = false,
     saveAddressLabel,
     setAutoFocus = true,
-    stepperStatus,
     onSaveAddress,
     onCompleteCallback,
   } = props
@@ -93,7 +91,7 @@ const AddressForm = (props: AddressFormProps) => {
   // Define Variables and States
   const {
     control,
-    formState: { errors },
+    formState: { errors, isValid },
     handleSubmit,
   } = useForm({
     mode: 'onBlur',
@@ -127,10 +125,10 @@ const AddressForm = (props: AddressFormProps) => {
 
   useEffect(() => {
     // if form is valid, onSubmit callback
-    if (stepperStatus === StepStates.VALIDATE) {
+    if (isValid) {
       handleSubmit(onValid, onInvalidForm)()
     }
-  }, [stepperStatus])
+  }, [isValid])
 
   return (
     <Box

@@ -3,7 +3,7 @@ import React from 'react'
 import { composeStories } from '@storybook/testing-react'
 import { render, screen, act, fireEvent } from '@testing-library/react'
 
-import * as stories from '@/components/checkout/PaymentStep/PaymentStep/PaymentStep.stories'
+import * as stories from '@/components/checkout/PaymentStep/PaymentStep.stories'
 
 const { Common } = composeStories(stories)
 

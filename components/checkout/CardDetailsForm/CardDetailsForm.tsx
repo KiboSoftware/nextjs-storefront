@@ -10,12 +10,8 @@ import * as yup from 'yup'
 
 import { type Action } from '@/components/checkout'
 import KiboTextBox from '@/components/common/KiboTextBox/KiboTextBox'
-import {
-  prepareCardDataParams,
-  validateExpiryDate,
-  getCardType,
-} from '@/lib/components/checkout/PaymentStep/CardDetailsForm'
 import { StepStates } from '@/lib/constants'
+import { prepareCardDataParams, validateExpiryDate, getCardType } from '@/lib/helpers/credit-card'
 
 interface Card {
   cardNumber: string
@@ -32,7 +28,6 @@ export interface CardData {
 }
 
 export interface CardDetailsFormProps {
-  stepperStatus: string
   onSaveCardData: (cardData: CardData) => void
   onCompleteCallback: (action: Action) => void
 }
@@ -63,7 +58,7 @@ const useCardSchema = () => {
   })
 }
 const CardDetailsForm = (props: CardDetailsFormProps) => {
-  const { stepperStatus, onSaveCardData, onCompleteCallback } = props
+  const { onSaveCardData, onCompleteCallback } = props
   const { t } = useTranslation('checkout')
   const cardSchema = useCardSchema()
 
@@ -91,10 +86,10 @@ const CardDetailsForm = (props: CardDetailsFormProps) => {
   }
   useEffect(() => {
     // if form is valid, onSubmit callback
-    if (stepperStatus === StepStates.VALIDATE) {
+    if (isValid) {
       handleSubmit(onValid, onInvalidForm)()
     }
-  }, [stepperStatus])
+  }, [isValid])
 
   return (
     <StyledCardDiv data-testid="card-details">

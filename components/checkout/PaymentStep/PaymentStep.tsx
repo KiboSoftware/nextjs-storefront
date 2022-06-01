@@ -136,11 +136,14 @@ const PaymentStep = (props: PaymentStepProps) => {
   }
 
   useEffect(() => {
-    if (billingAddress.contact.firstName != '' && paymentDetails.isCardDetailsValidated) {
-      createPaymentData() // to be implement save payment data & billing address
-      onCompleteCallback({ type: StepStates.COMPLETE })
+    if (stepperStatus === StepStates.VALIDATE) {
+      if (billingAddress.contact.firstName != '' && paymentDetails.isCardDetailsValidated) {
+        createPaymentData() // to be implement save payment data & billing address
+        onCompleteCallback({ type: StepStates.COMPLETE })
+      }
+      onCompleteCallback({ type: StepStates.INCOMPLETE })
     }
-  }, [billingAddress, paymentDetails])
+  }, [stepperStatus])
 
   return (
     <Stack>
@@ -169,11 +172,7 @@ const PaymentStep = (props: PaymentStepProps) => {
         </RadioGroup>
       </FormControl>
       {paymentDetails?.paymentType === 'creditcard' && (
-        <CardDetailsForm
-          stepperStatus={stepperStatus}
-          onSaveCardData={handleCardData}
-          onCompleteCallback={onCompleteCallback}
-        />
+        <CardDetailsForm onSaveCardData={handleCardData} onCompleteCallback={onCompleteCallback} />
       )}
 
       {isUserLoggedIn && (

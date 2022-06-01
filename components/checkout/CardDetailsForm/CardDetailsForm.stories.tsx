@@ -15,7 +15,6 @@ const Template: ComponentStory<typeof CardDetailsForm> = (args) => <CardDetailsF
 export const Common = Template.bind({})
 
 Common.args = {
-  stepperStatus: 'INCOMPLETE',
   onSaveCardData: (cardData: CardData) => cardData,
   onCompleteCallback: () => console.log('called onCompleteCallback : '),
 }

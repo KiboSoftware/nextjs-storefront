@@ -3,7 +3,7 @@ import React from 'react'
 import { composeStories } from '@storybook/testing-react'
 import { render, screen, fireEvent } from '@testing-library/react'
 
-import * as stories from './PaymentStep.stories' // import all stories from the stories file
+import * as stories from '../PaymentStep/PaymentStep.stories' // import all stories from the stories file
 
 const { Common } = composeStories(stories)
 
@@ -15,9 +15,9 @@ const AddressFormMock = () => <div />
 const CardDetailsFormMock = () => <div data-testid="card-details" />
 const KiboTextBoxMock = () => <input data-testid="text-box-mock" onBlur={onBlurMock} />
 
-jest.mock('../../../common/KiboTextBox/KiboTextBox', () => KiboTextBoxMock)
+jest.mock('../../common/KiboTextBox/KiboTextBox', () => KiboTextBoxMock)
 jest.mock('../CardDetailsForm/CardDetailsForm', () => CardDetailsFormMock)
-jest.mock('../../../common/AddressForm/AddressForm', () => AddressFormMock)
+jest.mock('../../common/AddressForm/AddressForm', () => AddressFormMock)
 
 describe('[components] PaymentStep', () => {
   const setup = () => render(<Common {...Common.args} />)

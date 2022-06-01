@@ -5,11 +5,11 @@ export { default as DetailsStep, type Action } from '@/components/checkout/Detai
 export {
   default as CardDetailsForm,
   type CardData,
-} from '@/components/checkout/PaymentStep/CardDetailsForm/CardDetailsForm'
+} from '@/components/checkout/CardDetailsForm/CardDetailsForm'
 export {
   default as PaymentStep,
   type CardPaymentDetails,
-} from '@/components/checkout/PaymentStep/PaymentStep/PaymentStep'
+} from '@/components/checkout/PaymentStep/PaymentStep'
 export { default as KiboStepper } from '@/components/checkout/KiboStepper/KiboStepper'
 export { default as ReviewStep } from '@/components/checkout/ReviewStep/ReviewStep'
 export { default as ShippingStep } from '@/components/checkout/ShippingStep/ShippingStep'

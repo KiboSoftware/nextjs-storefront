@@ -89,7 +89,7 @@ describe('[components] - AddressForm', () => {
     fireEvent.change(country, { target: { value: 'US' } })
     fireEvent.change(phoneNumberHome, { target: { value: '1234567891' } })
 
-    render(<Common {...Common.args} stepperStatus={'VALIDATE'} />)
+    render(<Common {...Common.args} />)
 
     expect(onHandleSubmitMock).toHaveBeenCalled()
   })
