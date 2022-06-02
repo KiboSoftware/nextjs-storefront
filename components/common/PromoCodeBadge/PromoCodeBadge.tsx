@@ -36,7 +36,7 @@ export const PromoCodeBadge = (props: PromocodeBadgeProps) => {
   const [promoerr, setpromoerr] = useState(false)
   const promoRef = useRef<any>()
 
-  const handleOnChange = (_name: any, value: string) => {
+  const handleChange = (_name: any, value: string) => {
     setPromo(value)
   }
   const { t } = useTranslation('common')
@@ -62,10 +62,10 @@ export const PromoCodeBadge = (props: PromocodeBadgeProps) => {
 
   return (
     <>
-      <Box sx={{ display: 'flex', maxWidth: '20rem' }}>
+      <Stack direction="row" sx={{ maxWidth: '20rem' }}>
         <KiboTextBox
           inputRef={promoRef}
-          onChange={handleOnChange}
+          onChange={handleChange}
           sx={styles.textBoxStyle}
           placeholder={t('promo-code')}
           data-testid="promo-input"
@@ -81,7 +81,7 @@ export const PromoCodeBadge = (props: PromocodeBadgeProps) => {
         >
           {t('apply')}
         </Button>
-      </Box>
+      </Stack>
       {couponList?.map((coupon: string[]) => (
         <>
           <Box data-testid="promotype" component="div" sx={styles.boxStyle}>
