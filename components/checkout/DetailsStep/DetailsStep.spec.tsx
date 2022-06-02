@@ -9,7 +9,13 @@ import userEvent from '@testing-library/user-event'
 import * as stories from './DetailsStep.stories'
 
 const { Common } = composeStories(stories)
+const onCompleteCallbackMock = jest.fn()
+const onValidMock: jest.Mock = jest.fn()
+const onInvalidFormMock: jest.Mock = jest.fn()
+const onHandleSubmitMock: jest.Mock = jest.fn()
 
+onValidMock.mockImplementation(onCompleteCallbackMock({ type: 'COMPLETE' }))
+onInvalidFormMock.mockImplementation(onCompleteCallbackMock({ type: 'INCOMPLETE' }))
 const onChangMock = jest.fn()
 const KiboTextBoxMock = () => <input data-testid="text-box-mock" onChange={onChangMock} />
 jest.mock('../../common/KiboTextBox/KiboTextBox', () => KiboTextBoxMock)
@@ -58,5 +64,24 @@ describe('[components] Details', () => {
 
     const textBoxList = screen.getAllByTestId(/text-box-mock/i)
     expect(textBoxList).toHaveLength(4)
+  })
+
+  it('should call onCompleteCallback when form validate', async () => {
+    setup({ onCompleteCallback: onCompleteCallbackMock })
+
+    const email = 'test@email.com'
+
+    const textBoxList = screen.getAllByTestId(/text-box-mock/i)
+    const emailInput = textBoxList[0] as HTMLInputElement
+
+    await act(async () => {
+      userEvent.clear(emailInput)
+      userEvent.type(emailInput, email)
+    })
+
+    onHandleSubmitMock.mockImplementation(onValidMock)()
+
+    expect(emailInput).toHaveValue(email)
+    expect(onCompleteCallbackMock).toBeCalled()
   })
 })

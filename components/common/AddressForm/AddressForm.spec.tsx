@@ -93,13 +93,4 @@ describe('[components] - AddressForm', () => {
 
     expect(onHandleSubmitMock).toHaveBeenCalled()
   })
-  it('should not render when isUserLoggedIn = false', () => {
-    // arrange
-    render(<Common {...Common.args} isUserLoggedIn={false} />)
-    // act
-    const saveShippingAddress = screen.queryByRole('checkbox')
-
-    // asert
-    expect(saveShippingAddress).not.toBeInTheDocument()
-  })
 })
