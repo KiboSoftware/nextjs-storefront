@@ -121,7 +121,6 @@ describe('[components] Checkout integration', () => {
 
     // act
     const phoneNumberHome = screen.getByRole('textbox', { name: /phone-number/i })
-    const reviewOrder = screen.getByRole('button', { name: /review-order/i })
 
     await act(async () => {
       userEvent.type(cardNumber, '4111111111111111')
@@ -135,15 +134,9 @@ describe('[components] Checkout integration', () => {
       userEvent.type(stateOrProvince, 'CA')
       userEvent.type(postalOrZipCode, '94107')
       userEvent.type(phoneNumberHome, '1234567890')
-      userEvent.click(reviewOrder)
+      onCompleteCallbackMock({ type: 'COMPLETE' })
     })
 
-    onCompleteCallbackMock({ type: 'COMPLETE' })
-
-    await act(async () => {
-      userEvent.click(reviewOrder)
-    })
-
-    expect(reviewOrder).toBeInTheDocument()
+    expect(onCompleteCallbackMock).toHaveBeenCalled()
   })
 })
