@@ -140,28 +140,4 @@ describe('[components] Checkout integration', () => {
 
     expect(onCompleteCallbackMock).toHaveBeenCalled()
   })
-
-  it('should call onCompleteCallback when user enters valid inputs', async () => {
-    renderWithQueryClient(<Common {...Common.args} initialStep={2} />)
-
-    const creditCard = screen.getByRole('radio', {
-      name: /credit \/ debit card/i,
-    })
-
-    await act(async () => {
-      fireEvent.click(creditCard)
-    })
-
-    const cardNumber = screen.getByRole('textbox', {
-      name: /card-number/i,
-    })
-
-    await act(async () => {
-      userEvent.type(cardNumber, '41111111')
-
-      onCompleteCallbackMock({ type: 'INCOMPLETE' })
-    })
-
-    expect(onCompleteCallbackMock).toHaveBeenCalled()
-  })
 })
