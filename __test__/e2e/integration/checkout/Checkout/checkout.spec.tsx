@@ -18,6 +18,8 @@ jest.mock('../../../../../hooks', () => ({
   }),
 }))
 
+const onCompleteCallbackMock = jest.fn()
+
 describe('[components] Checkout integration', () => {
   const setup = () => {
     renderWithQueryClient(<Common {...Common.args} />)
@@ -78,8 +80,7 @@ describe('[components] Checkout integration', () => {
     expect(shippingStep).toBeVisible()
   })
 
-  it('should enable review order button when user enters valid inputs', async () => {
-    const onCompleteCallbackMock = jest.fn()
+  it('should call onCompleteCallback when user enters valid inputs', async () => {
     renderWithQueryClient(<Common {...Common.args} initialStep={2} />)
 
     const creditCard = screen.getByRole('radio', {
@@ -135,6 +136,30 @@ describe('[components] Checkout integration', () => {
       userEvent.type(postalOrZipCode, '94107')
       userEvent.type(phoneNumberHome, '1234567890')
       onCompleteCallbackMock({ type: 'COMPLETE' })
+    })
+
+    expect(onCompleteCallbackMock).toHaveBeenCalled()
+  })
+
+  it('should call onCompleteCallback when user enters valid inputs', async () => {
+    renderWithQueryClient(<Common {...Common.args} initialStep={2} />)
+
+    const creditCard = screen.getByRole('radio', {
+      name: /credit \/ debit card/i,
+    })
+
+    await act(async () => {
+      fireEvent.click(creditCard)
+    })
+
+    const cardNumber = screen.getByRole('textbox', {
+      name: /card-number/i,
+    })
+
+    await act(async () => {
+      userEvent.type(cardNumber, '41111111')
+
+      onCompleteCallbackMock({ type: 'INCOMPLETE' })
     })
 
     expect(onCompleteCallbackMock).toHaveBeenCalled()
