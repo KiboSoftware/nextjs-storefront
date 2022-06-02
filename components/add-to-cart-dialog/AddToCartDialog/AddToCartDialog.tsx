@@ -12,13 +12,13 @@ import type { CartItem as CartItemType } from '@/lib/gql/types'
 interface CartDetailsProps {
   cartItem: CartItemType
   isOpen: boolean
-  isCenteredDialog: boolean
+  isDialogCentered: boolean
   onClose: () => void
 }
 
 // Component
 const AddToCartDialog = (props: CartDetailsProps) => {
-  const { cartItem, isOpen = false, isCenteredDialog, onClose } = props
+  const { cartItem, isOpen = false, isDialogCentered, onClose } = props
 
   const contentArgs = {
     cartItem,
@@ -42,7 +42,7 @@ const AddToCartDialog = (props: CartDetailsProps) => {
     showContentTopDivider: true,
     showContentBottomDivider: false,
     Actions: <Actions onGoToCart={handleGoToCart} onContinueShopping={handleContinueShopping} />,
-    isCenteredDialog: isCenteredDialog,
+    isDialogCentered: isDialogCentered,
     customMaxWidth: '32.375rem',
     onClose: onClose,
   }

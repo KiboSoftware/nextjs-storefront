@@ -4,7 +4,6 @@ import { Box, Stack, Button, Typography, SxProps } from '@mui/material'
 import { Theme } from '@mui/material/styles'
 import { useTranslation } from 'next-i18next'
 
-import { useCheckout } from '../../../hooks'
 import DetailsStep, { Action } from '@/components/checkout/DetailsStep/DetailsStep'
 import KiboStepper from '@/components/checkout/KiboStepper/KiboStepper'
 import PaymentStep from '@/components/checkout/PaymentStep/PaymentStep'
@@ -35,10 +34,6 @@ const Checkout = (props: CheckoutProps) => {
   const [activeStep, setActiveStep] = useState<number>(0)
   const [activeStepStatus, setActiveStepStatus] = useState<string>('INCOMPLETE')
 
-  const { data: checkoutInfo, isLoading: _isCheckoutLoading } = useCheckout({
-    checkoutId: '137a979305c65d00010800230000678b',
-  })
-
   const handleBack = () => {
     setActiveStep(activeStep - 1)
   }
@@ -56,10 +51,10 @@ const Checkout = (props: CheckoutProps) => {
 
   const orderSummeryArgs = {
     standardShippingAmount: 'Free',
-    estimatedTaxAmout: `${checkoutInfo?.taxTotal}`,
-    orderTotal: `${checkoutInfo?.total}`,
-    subTotal: `${checkoutInfo?.subtotal}`,
-    numberOfItems: `${checkoutInfo?.items?.length} items`,
+    estimatedTaxAmout: `${checkout?.taxTotal}`,
+    orderTotal: `${checkout?.total}`,
+    subTotal: `${checkout?.subtotal}`,
+    numberOfItems: `${checkout?.items?.length} items`,
     backLabel: 'Go Back',
     checkoutLabel: 'Go to Checkout',
     nameLabel: 'Order Summary',

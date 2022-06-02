@@ -23,7 +23,7 @@ import { useTranslation } from 'next-i18next'
 import { useForm, Controller } from 'react-hook-form'
 import * as yup from 'yup'
 
-import { PersonalInfo, useUpdatePersonalInfo } from '../../../hooks'
+import { CheckoutDetails, useUpdateCheckout } from '../../../hooks'
 import KiboTextBox from '@/components/common/KiboTextBox/KiboTextBox'
 import PasswordValidation from '@/components/common/PasswordValidation/PasswordValidation'
 import { isPasswordValid } from '@/lib/helpers/validations/validations'
@@ -85,7 +85,7 @@ const DetailsStep = (props: DetailsProps) => {
   const { setAutoFocus = true, stepperStatus, onCompleteCallback, checkout } = props
 
   const { t } = useTranslation('checkout')
-  const updatePersonalInfoMutation = useUpdatePersonalInfo()
+  const updateCheckoutMutation = useUpdateCheckout()
 
   const fulfillmentInfo = checkout?.fulfillmentInfo
   const fulfillmentContact = fulfillmentInfo && fulfillmentInfo?.fulfillmentContact
@@ -123,7 +123,8 @@ const DetailsStep = (props: DetailsProps) => {
 
   const updateCheckout = async (formData: PersonalDetails) => {
     const { email } = formData
-    const personalInfo: PersonalInfo = {
+
+    const checkoutDetails: CheckoutDetails = {
       orderId: checkout?.id as string,
       updateMode: 'ApplyToOriginal',
       orderInput: {
@@ -131,7 +132,7 @@ const DetailsStep = (props: DetailsProps) => {
         email,
       },
     }
-    await updatePersonalInfoMutation.mutateAsync(personalInfo)
+    await updateCheckoutMutation.mutateAsync(checkoutDetails)
   }
 
   // if form is valid, onSubmit callback
@@ -163,7 +164,7 @@ const DetailsStep = (props: DetailsProps) => {
     <Stack gap={2} data-testid="checkout-details">
       <Button
         variant="contained"
-        color="primary"
+        color="inherit"
         sx={{ ...buttonStyle }}
         style={{ textTransform: 'none' }}
       >

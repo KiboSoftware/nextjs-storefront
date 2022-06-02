@@ -17,7 +17,7 @@ import ProductOptionTextBox from '@/components/product/ProductOptionTextBox/Prod
 import ProductRecommendations from '@/components/product/ProductRecommendations/ProductRecommendations'
 import ProductVariantSizeSelector from '@/components/product/ProductVariantSizeSelector/ProductVariantSizeSelector'
 import { productGetters } from '@/lib/getters'
-import type { ProductProperties, ProductCustom } from '@/lib/types'
+import type { ProductProperties, ProductCustom, BreadCrumb } from '@/lib/types'
 
 import type {
   AttributeDetail,
@@ -28,13 +28,13 @@ import type {
 
 interface ProductDetailTemplateProps {
   product: ProductCustom
+  breadcrumbs: BreadCrumb[]
 }
 
 const ProductDetailTemplate = (props: ProductDetailTemplateProps) => {
-  const { product } = props
-  const { t } = useTranslation(['product-page', 'common'])
+  const { product, breadcrumbs } = props
+  const { t } = useTranslation(['product', 'common'])
 
-  const breadcrumbList = productGetters.getBreadcrumbs(product)
   const productName = productGetters.getName(product)
   const productPrice = productGetters.getPrice(product)
   const productRating = productGetters.getRating(product)
@@ -58,7 +58,7 @@ const ProductDetailTemplate = (props: ProductDetailTemplateProps) => {
     <>
       <Grid container>
         <Grid item xs={12} alignItems="center" sx={{ paddingBlock: 4 }}>
-          <KiboBreadcrumbs breadcrumbs={breadcrumbList} />
+          <KiboBreadcrumbs breadcrumbs={breadcrumbs} />
         </Grid>
         <Grid item xs={12} md={6} sx={{ pb: { xs: 3, md: 0 } }}>
           <ImageGallery images={productGallery as ProductImage[]} title={''} />
@@ -76,14 +76,12 @@ const ProductDetailTemplate = (props: ProductDetailTemplateProps) => {
           />
 
           <Box paddingY={1} display={shortDescription ? 'block' : 'none'}>
-            <Typography
-              variant="body2"
-              gutterBottom
+            <Box
               data-testid="short-description"
               dangerouslySetInnerHTML={{
                 __html: shortDescription,
               }}
-            ></Typography>
+            />
           </Box>
 
           <Box data-testid="product-rating">

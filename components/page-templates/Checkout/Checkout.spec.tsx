@@ -22,7 +22,7 @@ jest.mock('../../checkout/ReviewStep/ReviewStep', () => ReviewStepMock)
 
 jest.mock('../../../hooks', () => ({
   useCheckout: jest.fn(() => ({})),
-  useUpdatePersonalInfo: jest.fn(() => ({})),
+  useUpdateCheckout: jest.fn(() => ({})),
 }))
 
 const { Common } = composeStories(stories)

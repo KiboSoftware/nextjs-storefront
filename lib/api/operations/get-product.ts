@@ -1,27 +1,10 @@
 import { fetcher } from '@/lib/api/util'
-
-const query = /* GraphQL */ `
-  query getProduct($productCode: String!) {
-    product(productCode: $productCode) {
-      content {
-        productName
-        productFullDescription
-        productImages {
-          imageUrl
-        }
-      }
-      price {
-        price
-        salePrice
-      }
-    }
-  }
-`
+import { getProductQuery } from '@/lib/gql/queries/get-product'
 
 export default async function getProduct(productCode: any) {
   const variables = {
     productCode,
   }
-  const response = await fetcher({ query, variables })
+  const response = await fetcher({ query: getProductQuery, variables })
   return response.data?.product
 }

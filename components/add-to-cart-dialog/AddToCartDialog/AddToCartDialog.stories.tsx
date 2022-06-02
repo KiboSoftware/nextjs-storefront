@@ -21,5 +21,5 @@ export const Common = Template.bind({})
 Common.args = {
   cartItem: cartItemMock,
   isOpen: true,
-  isCenteredDialog: false,
+  isDialogCentered: false,
 }

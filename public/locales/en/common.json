@@ -87,7 +87,10 @@
   "change-store": "Change Store",
 
   "promo-code": "Enter Promo code",
-  
+
   "shop-all": "Shop All",
-  "advertisment": "Advertisment"
+  "advertisment": "Advertisment",
+  "register-now": "Register Now",
+  "login-to-your-account": "or Login to Your Account",
+  "create-an-account": "Create an Account"
 }
