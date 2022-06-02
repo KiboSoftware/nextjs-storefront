@@ -1,7 +1,7 @@
 import React from 'react'
 
 import { composeStories } from '@storybook/testing-react'
-import { screen, act } from '@testing-library/react'
+import { screen, act, fireEvent } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 
 import * as stories from '../../../../../components/page-templates/Checkout/Checkout.stories'
@@ -76,5 +76,74 @@ describe('[components] Checkout integration', () => {
 
     expect(detailsStep).not.toBeInTheDocument()
     expect(shippingStep).toBeVisible()
+  })
+
+  it('should enable review order button when user enters valid inputs', async () => {
+    const onCompleteCallbackMock = jest.fn()
+    renderWithQueryClient(<Common {...Common.args} initialStep={2} />)
+
+    const creditCard = screen.getByRole('radio', {
+      name: /credit \/ debit card/i,
+    })
+
+    await act(async () => {
+      fireEvent.click(creditCard)
+    })
+
+    const cardNumber = screen.getByRole('textbox', {
+      name: /card-number/i,
+    })
+
+    const expiryDate = screen.getByPlaceholderText(/expiry-date-placeholder/i)
+
+    const securityCode = screen.getByPlaceholderText(/security-code-placeholder/i)
+
+    // act
+    const firstName = screen.getByRole('textbox', { name: /first-name/i })
+
+    // act
+    const lastNameOrSurname = screen.getByRole('textbox', { name: /last-name-or-sur-name/i })
+
+    // act
+    const address1 = screen.getByRole('textbox', { name: /address1/i })
+
+    // act
+    const address2 = screen.getByRole('textbox', { name: /address2/i })
+
+    // act
+    const cityOrTown = screen.getByRole('textbox', { name: /city/i })
+
+    // act
+    const stateOrProvince = screen.getByRole('textbox', { name: /state-or-province/i })
+
+    // act
+    const postalOrZipCode = screen.getByRole('textbox', { name: /postal-or-zip-code/i })
+
+    // act
+    const phoneNumberHome = screen.getByRole('textbox', { name: /phone-number/i })
+    const reviewOrder = screen.getByRole('button', { name: /review-order/i })
+
+    await act(async () => {
+      userEvent.type(cardNumber, '4111111111111111')
+      userEvent.type(expiryDate, '03/2024')
+      userEvent.type(securityCode, '123')
+      userEvent.type(firstName, 'John')
+      userEvent.type(lastNameOrSurname, 'Doe')
+      userEvent.type(address1, '123 Main St')
+      userEvent.type(address2, 'Apt 1')
+      userEvent.type(cityOrTown, 'San Francisco')
+      userEvent.type(stateOrProvince, 'CA')
+      userEvent.type(postalOrZipCode, '94107')
+      userEvent.type(phoneNumberHome, '1234567890')
+      userEvent.click(reviewOrder)
+    })
+
+    onCompleteCallbackMock({ type: 'COMPLETE' })
+
+    await act(async () => {
+      userEvent.click(reviewOrder)
+    })
+
+    expect(reviewOrder).toBeInTheDocument()
   })
 })

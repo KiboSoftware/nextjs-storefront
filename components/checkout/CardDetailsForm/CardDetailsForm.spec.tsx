@@ -88,7 +88,7 @@ describe('[components] CardDetailsForm', () => {
     fireEvent.change(expiryDate, { target: { value: '02/2023' } })
     fireEvent.change(securityCode, { target: { value: '123' } })
 
-    render(<Common {...Common.args} stepperStatus={'VALIDATE'} />)
+    render(<Common {...Common.args} />)
 
     expect(onHandleSubmitMock).toHaveBeenCalled()
   })

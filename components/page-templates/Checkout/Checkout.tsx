@@ -18,6 +18,7 @@ import { StepStates } from '@/lib/constants'
 import type { Order } from '@/lib/gql/types'
 interface CheckoutProps {
   checkout: Order
+  initialStep?: number
 }
 
 const buttonStyle = {
@@ -26,7 +27,7 @@ const buttonStyle = {
 } as SxProps<Theme> | undefined
 
 const Checkout = (props: CheckoutProps) => {
-  const { checkout } = props
+  const { checkout, initialStep = 0 } = props
 
   const { t } = useTranslation('checkout')
 
@@ -34,7 +35,7 @@ const Checkout = (props: CheckoutProps) => {
   const steps = [t('details'), t('shipping'), t('payment'), t('review')]
 
   // State
-  const [activeStep, setActiveStep] = useState<number>(0)
+  const [activeStep, setActiveStep] = useState<number>(initialStep)
   const [activeStepStatus, setActiveStepStatus] = useState<string>(StepStates.INCOMPLETE)
 
   const handleBack = () => {
