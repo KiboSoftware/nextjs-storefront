@@ -102,8 +102,7 @@ const PaymentStep = (props: PaymentStepProps) => {
   const [paymentDetails, setPaymentDetails] = useState<CardPaymentDetails>(cardPaymentData)
 
   const [billingAddress, setBillingAddress] = useState<Address>(addressData)
-  const [validateAddressForm, setValidateAddressForm] = useState<boolean>(false)
-  const [validateCardDetailsForm, setValidateCardDetailsForm] = useState<boolean>(false)
+  const [validateForm, setValidateForm] = useState<boolean>(false)
 
   const handleCardData = (cardData: CardData) => {
     setPaymentDetails({
@@ -139,20 +138,16 @@ const PaymentStep = (props: PaymentStepProps) => {
 
   useEffect(() => {
     if (stepperStatus === FormStates.VALIDATE) {
-      if (billingAddress.contact.firstName != '' && paymentDetails.isCardDetailsValidated) {
-        createPaymentData() // to be implement save payment data & billing address
-        onCompleteCallback({ type: FormStates.COMPLETE })
-        setValidateAddressForm(false)
-        setValidateCardDetailsForm(false)
-      }
-      onCompleteCallback({ type: FormStates.INCOMPLETE })
-
-      if (billingAddress.contact.firstName === '') setValidateAddressForm(true)
-
-      if (!paymentDetails.isCardDetailsValidated && paymentDetails.paymentType != '')
-        setValidateCardDetailsForm(true)
+      setValidateForm(true)
     }
   }, [stepperStatus])
+
+  useEffect(() => {
+    if (billingAddress.contact.firstName != '' && paymentDetails.isCardDetailsValidated) {
+      createPaymentData() // to be implement save payment data & billing address
+      onCompleteCallback({ type: FormStates.COMPLETE })
+    }
+  }, [billingAddress, paymentDetails])
 
   return (
     <Stack>
@@ -182,9 +177,10 @@ const PaymentStep = (props: PaymentStepProps) => {
       </FormControl>
       {paymentDetails?.paymentType === 'creditcard' && (
         <CardDetailsForm
-          validateForm={validateCardDetailsForm}
+          validateForm={validateForm}
           onSaveCardData={handleCardData}
           onCompleteCallback={onCompleteCallback}
+          setValidateForm={setValidateForm}
         />
       )}
 
@@ -211,7 +207,8 @@ const PaymentStep = (props: PaymentStepProps) => {
         {...props}
         saveAddressLabel={t('save-billing-address')}
         onSaveAddress={handleSaveAddress}
-        validateForm={validateAddressForm}
+        validateForm={validateForm}
+        setValidateForm={setValidateForm}
       />
     </Stack>
   )

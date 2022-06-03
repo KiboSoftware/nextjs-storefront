@@ -55,8 +55,8 @@ interface AddressFormProps {
   checkout: Order | undefined
   validateForm: boolean
   onSaveAddress: (data: Address) => void
-
   onCompleteCallback: (action: Action) => void
+  setValidateForm: (isValidForm: boolean) => void
 }
 
 // Component
@@ -88,6 +88,7 @@ const AddressForm = (props: AddressFormProps) => {
     validateForm = false,
     onSaveAddress,
     onCompleteCallback,
+    setValidateForm,
   } = props
 
   // Define Variables and States
@@ -123,6 +124,7 @@ const AddressForm = (props: AddressFormProps) => {
   // form is invalid, notify parent form is incomplete
   const onInvalidForm = () => {
     onCompleteCallback({ type: FormStates.INCOMPLETE })
+    setValidateForm(false)
   }
 
   useEffect(() => {

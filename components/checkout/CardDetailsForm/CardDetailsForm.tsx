@@ -31,6 +31,7 @@ export interface CardDetailsFormProps {
   validateForm: boolean
   onSaveCardData: (cardData: CardData) => void
   onCompleteCallback: (action: Action) => void
+  setValidateForm: (isValidForm: boolean) => void
 }
 
 const StyledCardDiv = styled('div')(() => ({
@@ -59,7 +60,12 @@ const useCardSchema = () => {
   })
 }
 const CardDetailsForm = (props: CardDetailsFormProps) => {
-  const { validateForm = false, onSaveCardData, onCompleteCallback } = props
+  const {
+    validateForm = false,
+    onSaveCardData,
+    onCompleteCallback,
+    setValidateForm
+  } = props
   const { t } = useTranslation('checkout')
   const cardSchema = useCardSchema()
 
@@ -84,6 +90,7 @@ const CardDetailsForm = (props: CardDetailsFormProps) => {
   // form is invalid, notify parent form is incomplete
   const onInvalidForm = () => {
     onCompleteCallback({ type: FormStates.INCOMPLETE })
+    setValidateForm(false)
   }
   useEffect(() => {
     // if form is valid, onSubmit callback
