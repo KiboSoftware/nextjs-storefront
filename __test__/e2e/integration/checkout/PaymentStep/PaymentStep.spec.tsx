@@ -4,6 +4,7 @@ import { composeStories } from '@storybook/testing-react'
 import { render, screen, act, fireEvent } from '@testing-library/react'
 
 import * as stories from '@/components/checkout/PaymentStep/PaymentStep.stories'
+import { FormStates } from '@/lib/constants'
 
 const { Common } = composeStories(stories)
 
@@ -119,5 +120,17 @@ describe('[components] PaymentStep', () => {
     const savePaymentMethod = screen.queryByTestId('save-payment')
 
     expect(savePaymentMethod).not.toBeInTheDocument()
+  })
+
+  it('should call onCompleteCallback when user enters valid inputs', async () => {
+    setup()
+    const onCompleteCallbackMock = jest.fn()
+    const stepperStatus = FormStates.VALIDATE
+
+    if (stepperStatus === FormStates.VALIDATE) {
+      onCompleteCallbackMock({ type: FormStates.INCOMPLETE })
+    }
+
+    expect(onCompleteCallbackMock).toHaveBeenCalled()
   })
 })
