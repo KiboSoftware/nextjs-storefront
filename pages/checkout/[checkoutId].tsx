@@ -2,7 +2,7 @@ import { useTranslation } from 'next-i18next'
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
 
 import { CheckoutTemplate } from '@/components/page-templates'
-import { CheckoutStepProvider } from '@/context/CheckoutStepContext'
+import { CheckoutStepProvider } from '@/context/CheckoutStepContext/CheckoutStepContext'
 import { getCheckout } from '@/lib/api/operations'
 
 import type { Order } from '@/lib/gql/types'

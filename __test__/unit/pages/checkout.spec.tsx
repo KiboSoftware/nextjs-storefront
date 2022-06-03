@@ -3,7 +3,7 @@ import { useTranslation } from 'next-i18next'
 import { render, screen } from '@testing-library/react'
 
 import CheckoutPage, { getServerSideProps } from '@/pages/checkout/[checkoutId]'
-import { CheckoutStepProvider } from '@/context/CheckoutStepContext'
+import { CheckoutStepProvider } from '@/context/CheckoutStepContext/CheckoutStepContext'
 import * as operations from '@/lib/api/operations'
 
 import type { Order } from '@/lib/gql/types'
