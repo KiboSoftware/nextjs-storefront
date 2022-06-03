@@ -19,19 +19,19 @@ const PromoBadge = (props: PromoBadgeProps) => {
   const { promoCode } = props
   return (
     <>
-       <Box component="div" sx={styles.boxStyle}>
-            <Stack direction="row" spacing={0.5} alignItems="center">
-              <Typography sx={{ textAlign: 'left' }}>{promoCode}</Typography>
-              <IconButton>
-                <CloseIcon
-                  sx={{
-                    cursor: 'pointer',
-                    fontSize: '1rem',
-                  }}
-                />
-              </IconButton>
-            </Stack>
-          </Box>
+      <Box component="div" sx={styles.boxStyle}>
+        <Stack direction="row" spacing={0.5} alignItems="center">
+          <Typography sx={{ textAlign: 'left' }}>{promoCode}</Typography>
+          <IconButton>
+            <CloseIcon
+              sx={{
+                cursor: 'pointer',
+                fontSize: '1rem',
+              }}
+            />
+          </IconButton>
+        </Stack>
+      </Box>
     </>
   )
 }

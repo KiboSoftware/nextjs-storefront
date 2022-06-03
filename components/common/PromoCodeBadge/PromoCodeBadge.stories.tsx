@@ -10,13 +10,13 @@ export default {
 } as ComponentMeta<typeof PromoCodeBadge>
 
 const Template: ComponentStory<typeof PromoCodeBadge> = (args) => {
-  const { errorPromo } = args
-  const [couponList, setCouponList] = useState<any>([])
+  const { promoError, helpText } = args
+  const [promoList, setPromoList] = useState<any>([])
   const onRemoveCouponCode = (list: any) => {
-    setCouponList((coupon: any) => coupon.filter((item: any) => item !== list))
+    setPromoList((coupon: any) => coupon.filter((item: any) => item !== list))
   }
   const onApplyCouponCode = (promo: any) => {
-    setCouponList((e: any) => [...e, promo])
+    setPromoList((e: any) => [...e, promo])
   }
 
   return (
@@ -24,8 +24,9 @@ const Template: ComponentStory<typeof PromoCodeBadge> = (args) => {
       <PromoCodeBadge
         onApplyCouponCode={onApplyCouponCode}
         onRemoveCouponCode={onRemoveCouponCode}
-        couponList={couponList}
-        errorPromo={errorPromo}
+        promoList={promoList}
+        promoError={promoError}
+        helpText={helpText}
       />
     </>
   )
@@ -33,12 +34,14 @@ const Template: ComponentStory<typeof PromoCodeBadge> = (args) => {
 const BadgeTemplate: ComponentStory<typeof PromoBadge> = (args) => <PromoBadge {...args} />
 
 export const PromocodeBadgeComponent = Template.bind({})
+export const PromocodeErrorComponent = Template.bind({})
 export const PromocodeBadge = BadgeTemplate.bind({})
-
-PromocodeBadgeComponent.args = {
-  errorPromo: '100%OFFEVERYTHING',
-}
 
 PromocodeBadge.args = {
   promoCode: 'SAVE50',
+}
+
+PromocodeErrorComponent.args = {
+  promoError: true,
+  helpText: 'Oops, this code is not valid. Please try again.',
 }

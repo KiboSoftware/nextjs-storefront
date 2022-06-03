@@ -10,8 +10,9 @@ import KiboTextBox from '@/components/common/KiboTextBox/KiboTextBox'
 export interface PromocodeBadgeProps {
   onApplyCouponCode: (promo: string) => void
   onRemoveCouponCode: (promo: string) => void
-  couponList: any
-  errorPromo: string
+  promoList: any
+  promoError: boolean
+  helpText?: string
 }
 const styles = {
   boxStyle: {
@@ -30,12 +31,15 @@ const styles = {
 }
 
 export const PromoCodeBadge = (props: PromocodeBadgeProps) => {
-  const { onApplyCouponCode, onRemoveCouponCode, couponList, errorPromo } = props
-
+  const {
+    onApplyCouponCode,
+    onRemoveCouponCode,
+    promoList: couponList,
+    promoError,
+    helpText,
+  } = props
   const [promo, setPromo] = useState<string>('')
-  const [promoerr, setpromoerr] = useState(false)
   const promoRef = useRef<any>()
-
   const handleChange = (_name: any, value: string) => {
     setPromo(value)
   }
@@ -44,12 +48,11 @@ export const PromoCodeBadge = (props: PromocodeBadgeProps) => {
   const handleApplyCouponCode = () => {
     const Coupon = (element: string) => element === promo
     if (couponList?.some(Coupon)) {
+      console.log('Coupon already applied')
     } else {
-      if (promo === errorPromo) {
-        setpromoerr(true)
+      if (promoError) {
         promoRef.current.value = null
       } else {
-        setpromoerr(false)
         onApplyCouponCode(promo)
         setPromo('')
         promoRef.current.value = null
@@ -69,8 +72,8 @@ export const PromoCodeBadge = (props: PromocodeBadgeProps) => {
           sx={styles.textBoxStyle}
           placeholder={t('promo-code')}
           data-testid="promo-input"
-          helperText="Oops, this code is not valid. Please try again."
-          error={promoerr}
+          helperText={helpText}
+          error={promoError}
         />
         <Button
           disabled={promo?.length > 0 ? false : true}
