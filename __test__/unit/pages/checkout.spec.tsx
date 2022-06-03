@@ -19,7 +19,7 @@ jest.mock('@/components/page-templates/Checkout/Checkout', () => ({
   __esModule: true,
   default: () => <div data-testid="checkout-template-mock" />,
 }))
-jest.mock('@/context/CheckoutStepContext', () => ({
+jest.mock('@/context/CheckoutStepContext/CheckoutStepContext', () => ({
   CheckoutStepProvider: ({ children }: any) => (
     <div data-testid="checkout-step-provider-mock">{children}</div>
   ),
