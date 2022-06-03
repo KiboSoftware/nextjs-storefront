@@ -123,19 +123,8 @@ describe('[components] PaymentStep', () => {
     expect(savePaymentMethod).not.toBeInTheDocument()
   })
 
-  it('Should call onCompleteCallback, createPaymentData, valid addressForm & cardDetailsForm on addressForm & cardDetails when user enters valid inputs', async () => {
+  it('Should call onCompleteCallback when user enters review step button', async () => {
     const onCompleteCallbackMock = jest.fn()
-    const onSetValidateAddressFormMock = jest.fn()
-    const onSetValidateCardDetailsFormMock = jest.fn()
-    const createPaymentData: jest.Mock = jest.fn()
-
-    const billingAddress = { contact: { firstName: 'John', lastName: 'Doe' } }
-    const paymentDetails = { isCardDetailsValidated: true, paymentType: 'credit' }
-
-    createPaymentData.mockReturnValue({
-      address: { ...billingAddress },
-      cardInput: { ...paymentDetails },
-    })
 
     render(
       <Common
@@ -170,16 +159,6 @@ describe('[components] PaymentStep', () => {
       userEvent.type(firstName, 'John')
     })
 
-    if (billingAddress.contact.firstName != '' && paymentDetails.isCardDetailsValidated) {
-      createPaymentData()
-      onCompleteCallbackMock({ type: FormStates.COMPLETE })
-      onSetValidateAddressFormMock(false)
-      onSetValidateCardDetailsFormMock(false)
-    }
-
-    expect(createPaymentData).toBeCalled()
     expect(onCompleteCallbackMock).toBeCalled()
-    expect(onSetValidateAddressFormMock).toBeCalled()
-    expect(onSetValidateCardDetailsFormMock).toBeCalled()
   })
 })
