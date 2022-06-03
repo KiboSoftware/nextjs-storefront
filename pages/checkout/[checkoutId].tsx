@@ -1,12 +1,12 @@
-import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
 import { useTranslation } from 'next-i18next'
+import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
 
-import { getCheckout } from '@/lib/api/operations'
 import { CheckoutTemplate } from '@/components/page-templates'
 import { CheckoutStepProvider } from '@/context/CheckoutStepContext'
+import { getCheckout } from '@/lib/api/operations'
 
-import type { NextPage, GetServerSidePropsContext } from 'next'
 import type { Order } from '@/lib/gql/types'
+import type { NextPage, GetServerSidePropsContext } from 'next'
 
 interface CheckoutPageProps {
   checkoutId: string

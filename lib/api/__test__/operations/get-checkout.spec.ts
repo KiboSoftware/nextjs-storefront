@@ -1,6 +1,6 @@
+import { getCheckout } from '@/lib/api/operations'
 import * as util from '@/lib/api/util'
 import { getCheckoutQuery } from '@/lib/gql/queries'
-import { getCheckout } from '@/lib/api/operations'
 
 const mockUtil = util as any
 jest.mock('@/lib/api/util', () => ({
