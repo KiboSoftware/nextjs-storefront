@@ -13,7 +13,7 @@ import * as yup from 'yup'
 import { type Action } from '@/components/checkout'
 import KiboSelect from '@/components/common/KiboSelect/KiboSelect'
 import KiboTextField from '@/components/common/KiboTextBox/KiboTextBox'
-import { StepStates } from '@/lib/constants'
+import { FormStates } from '@/lib/constants'
 
 import type { Order } from '@/lib/gql/types'
 
@@ -53,6 +53,7 @@ interface AddressFormProps {
   saveAddressLabel?: string
   setAutoFocus?: boolean
   checkout: Order | undefined
+  validateForm: boolean
   onSaveAddress: (data: Address) => void
 
   onCompleteCallback: (action: Action) => void
@@ -84,6 +85,7 @@ const AddressForm = (props: AddressFormProps) => {
     isUserLoggedIn = false,
     saveAddressLabel,
     setAutoFocus = true,
+    validateForm = false,
     onSaveAddress,
     onCompleteCallback,
   } = props
@@ -91,7 +93,7 @@ const AddressForm = (props: AddressFormProps) => {
   // Define Variables and States
   const {
     control,
-    formState: { errors, isValid },
+    formState: { errors },
     handleSubmit,
   } = useForm({
     mode: 'onBlur',
@@ -120,15 +122,15 @@ const AddressForm = (props: AddressFormProps) => {
 
   // form is invalid, notify parent form is incomplete
   const onInvalidForm = () => {
-    onCompleteCallback({ type: StepStates.INCOMPLETE })
+    onCompleteCallback({ type: FormStates.INCOMPLETE })
   }
 
   useEffect(() => {
     // if form is valid, onSubmit callback
-    if (isValid) {
+    if (validateForm) {
       handleSubmit(onValid, onInvalidForm)()
     }
-  }, [isValid])
+  }, [validateForm])
 
   return (
     <Box

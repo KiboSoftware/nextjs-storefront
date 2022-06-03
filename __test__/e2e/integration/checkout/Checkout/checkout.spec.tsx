@@ -18,8 +18,6 @@ jest.mock('../../../../../hooks', () => ({
   }),
 }))
 
-const onCompleteCallbackMock = jest.fn()
-
 describe('[components] Checkout integration', () => {
   const setup = () => {
     renderWithQueryClient(<Common {...Common.args} />)
@@ -81,6 +79,8 @@ describe('[components] Checkout integration', () => {
   })
 
   it('should call onCompleteCallback when user enters valid inputs', async () => {
+    const onCompleteCallbackMock = jest.fn()
+
     renderWithQueryClient(<Common {...Common.args} initialStep={2} />)
 
     const creditCard = screen.getByRole('radio', {

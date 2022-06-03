@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react'
 
 import { type Action } from '@/components/checkout'
-import { StepStates } from '@/lib/constants'
+import { FormStates } from '@/lib/constants'
 
 import type { Order } from '@/lib/gql/types'
 interface ShippingProps {
@@ -16,8 +16,8 @@ const ShippingStep = (props: ShippingProps) => {
 
   useEffect(() => {
     // if form is valid, onSubmit callback
-    if (stepperStatus === StepStates.VALIDATE) {
-      onCompleteCallback({ type: StepStates.COMPLETE })
+    if (stepperStatus === FormStates.VALIDATE) {
+      onCompleteCallback({ type: FormStates.COMPLETE })
     }
   }, [stepperStatus])
   return (

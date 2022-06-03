@@ -10,7 +10,7 @@ import * as yup from 'yup'
 
 import { type Action } from '@/components/checkout'
 import KiboTextBox from '@/components/common/KiboTextBox/KiboTextBox'
-import { StepStates } from '@/lib/constants'
+import { FormStates } from '@/lib/constants'
 import { prepareCardDataParams, validateExpiryDate, getCardType } from '@/lib/helpers/credit-card'
 
 interface Card {
@@ -28,6 +28,7 @@ export interface CardData {
 }
 
 export interface CardDetailsFormProps {
+  validateForm: boolean
   onSaveCardData: (cardData: CardData) => void
   onCompleteCallback: (action: Action) => void
 }
@@ -58,7 +59,7 @@ const useCardSchema = () => {
   })
 }
 const CardDetailsForm = (props: CardDetailsFormProps) => {
-  const { onSaveCardData, onCompleteCallback } = props
+  const { validateForm = false, onSaveCardData, onCompleteCallback } = props
   const { t } = useTranslation('checkout')
   const cardSchema = useCardSchema()
 
@@ -82,14 +83,14 @@ const CardDetailsForm = (props: CardDetailsFormProps) => {
 
   // form is invalid, notify parent form is incomplete
   const onInvalidForm = () => {
-    onCompleteCallback({ type: StepStates.INCOMPLETE })
+    onCompleteCallback({ type: FormStates.INCOMPLETE })
   }
   useEffect(() => {
     // if form is valid, onSubmit callback
-    if (isValid) {
+    if (validateForm) {
       handleSubmit(onValid, onInvalidForm)()
     }
-  }, [isValid])
+  }, [validateForm])
 
   return (
     <StyledCardDiv data-testid="card-details">

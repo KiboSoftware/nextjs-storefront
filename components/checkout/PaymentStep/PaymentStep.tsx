@@ -15,7 +15,7 @@ import { useTranslation } from 'next-i18next'
 import { CardDetailsForm, type Action, type CardData } from '@/components/checkout'
 import AddressForm, { Address, Contact } from '@/components/common/AddressForm/AddressForm'
 import { usePaymentTypes } from '@/hooks/usePaymentTypes/usePaymentTypes'
-import { StepStates } from '@/lib/constants'
+import { FormStates } from '@/lib/constants'
 
 import type { Order } from '@/lib/gql/types'
 
@@ -102,6 +102,8 @@ const PaymentStep = (props: PaymentStepProps) => {
   const [paymentDetails, setPaymentDetails] = useState<CardPaymentDetails>(cardPaymentData)
 
   const [billingAddress, setBillingAddress] = useState<Address>(addressData)
+  const [validateAddressForm, setValidateAddressForm] = useState<boolean>(false)
+  const [validateCardDetailsForm, setValidateCardDetailsForm] = useState<boolean>(false)
 
   const handleCardData = (cardData: CardData) => {
     setPaymentDetails({
@@ -136,12 +138,19 @@ const PaymentStep = (props: PaymentStepProps) => {
   }
 
   useEffect(() => {
-    if (stepperStatus === StepStates.VALIDATE) {
+    if (stepperStatus === FormStates.VALIDATE) {
       if (billingAddress.contact.firstName != '' && paymentDetails.isCardDetailsValidated) {
         createPaymentData() // to be implement save payment data & billing address
-        onCompleteCallback({ type: StepStates.COMPLETE })
+        onCompleteCallback({ type: FormStates.COMPLETE })
+        setValidateAddressForm(false)
+        setValidateCardDetailsForm(false)
       }
-      onCompleteCallback({ type: StepStates.INCOMPLETE })
+      onCompleteCallback({ type: FormStates.INCOMPLETE })
+
+      if (billingAddress.contact.firstName === '') setValidateAddressForm(true)
+
+      if (!paymentDetails.isCardDetailsValidated && paymentDetails.paymentType != '')
+        setValidateCardDetailsForm(true)
     }
   }, [stepperStatus])
 
@@ -172,7 +181,11 @@ const PaymentStep = (props: PaymentStepProps) => {
         </RadioGroup>
       </FormControl>
       {paymentDetails?.paymentType === 'creditcard' && (
-        <CardDetailsForm onSaveCardData={handleCardData} onCompleteCallback={onCompleteCallback} />
+        <CardDetailsForm
+          validateForm={validateCardDetailsForm}
+          onSaveCardData={handleCardData}
+          onCompleteCallback={onCompleteCallback}
+        />
       )}
 
       {isUserLoggedIn && (
@@ -198,6 +211,7 @@ const PaymentStep = (props: PaymentStepProps) => {
         {...props}
         saveAddressLabel={t('save-billing-address')}
         onSaveAddress={handleSaveAddress}
+        validateForm={validateAddressForm}
       />
     </Stack>
   )

@@ -13,7 +13,7 @@ import {
   type Action,
 } from '@/components/checkout'
 import OrderSummary from '@/components/common/OrderSummary/OrderSummary'
-import { StepStates } from '@/lib/constants'
+import { FormStates } from '@/lib/constants'
 
 import type { Order } from '@/lib/gql/types'
 interface CheckoutProps {
@@ -36,19 +36,19 @@ const Checkout = (props: CheckoutProps) => {
 
   // State
   const [activeStep, setActiveStep] = useState<number>(initialStep)
-  const [activeStepStatus, setActiveStepStatus] = useState<string>(StepStates.INCOMPLETE)
+  const [activeStepStatus, setActiveStepStatus] = useState<string>(FormStates.INCOMPLETE)
 
   const handleBack = () => {
     setActiveStep(activeStep - 1)
   }
 
   const handleNext = () => {
-    setActiveStepStatus(StepStates.VALIDATE)
+    setActiveStepStatus(FormStates.VALIDATE)
   }
 
   const completeStepCallback = (action: Action) => {
-    setActiveStepStatus(StepStates.INCOMPLETE)
-    if (action.type === StepStates.COMPLETE) {
+    setActiveStepStatus(FormStates.INCOMPLETE)
+    if (action.type === FormStates.COMPLETE) {
       setActiveStep(activeStep + 1)
     }
   }
