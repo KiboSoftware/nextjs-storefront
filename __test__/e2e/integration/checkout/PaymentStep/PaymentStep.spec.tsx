@@ -5,6 +5,7 @@ import { render, screen, act, fireEvent } from '@testing-library/react'
 
 import * as stories from '@/components/checkout/PaymentStep/PaymentStep.stories'
 import { FormStates } from '@/lib/constants'
+import userEvent from '@testing-library/user-event'
 
 const { Common } = composeStories(stories)
 
@@ -123,14 +124,41 @@ describe('[components] PaymentStep', () => {
   })
 
   it('should call onCompleteCallback when user enters valid inputs', async () => {
-    setup()
     const onCompleteCallbackMock = jest.fn()
-    const stepperStatus = FormStates.VALIDATE
 
-    if (stepperStatus === FormStates.VALIDATE) {
-      onCompleteCallbackMock({ type: FormStates.INCOMPLETE })
-    }
+    render(
+      <Common
+        {...Common.args}
+        onCompleteCallback={onCompleteCallbackMock}
+        stepperStatus={FormStates.VALIDATE}
+      />
+    )
 
-    expect(onCompleteCallbackMock).toHaveBeenCalled()
+    const creditCard = screen.getByRole('radio', {
+      name: /credit \/ debit card/i,
+    })
+
+    await act(async () => {
+      fireEvent.click(creditCard)
+    })
+
+    const cardNumber = screen.getByRole('textbox', {
+      name: /card-number/i,
+    })
+
+    const expiryDate = screen.getByPlaceholderText(/expiry-date-placeholder/i)
+
+    const securityCode = screen.getByPlaceholderText(/security-code-placeholder/i)
+
+    const firstName = screen.getByRole('textbox', { name: /first-name/i })
+
+    await act(async () => {
+      userEvent.type(cardNumber, '4111111111111111')
+      userEvent.type(expiryDate, '03/2024')
+      userEvent.type(securityCode, '123')
+      userEvent.type(firstName, 'John')
+    })
+
+    expect(onCompleteCallbackMock).toBeCalled()
   })
 })
