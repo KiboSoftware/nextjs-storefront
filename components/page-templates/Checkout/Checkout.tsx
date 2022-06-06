@@ -29,10 +29,10 @@ const buttonStyle = {
 const Checkout = (props: CheckoutProps) => {
   const { checkout, initialStep = 0 } = props
 
-  const { t } = useTranslation('checkout')
+  const { t } = useTranslation(['checkout', 'common'])
 
   const buttonLabels = [t('go-to-shipping'), t('go-to-payment'), t('review-order')]
-  const steps = [t('details'), t('shipping'), t('payment'), t('review')]
+  const steps = [t('common:details'), t('shipping'), t('payment'), t('review')]
 
   // State
   const [activeStep, setActiveStep] = useState<number>(initialStep)
