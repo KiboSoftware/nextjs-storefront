@@ -1,6 +1,9 @@
 /** @type {import('next').NextConfig} */
+const withPWA = require('next-pwa')
+
 const { i18n } = require('./next-i18next.config')
-module.exports = {
+
+module.exports = withPWA({
   reactStrictMode: true,
   i18n,
   images: {
@@ -22,4 +25,10 @@ module.exports = {
     revalidate: 60,
     pageSize: 100,
   },
-}
+  pwa: {
+    dest: 'public',
+    register: true,
+    skipWaiting: true,
+    disable: process.env.NODE_ENV === 'development',
+  },
+})
