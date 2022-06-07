@@ -2,9 +2,10 @@ import React from 'react'
 
 import '@testing-library/jest-dom'
 import { composeStories } from '@storybook/testing-react'
-import { render, screen } from '@testing-library/react'
+import { screen } from '@testing-library/react'
 
 import * as stories from './SearchSuggestions.stories'
+import { renderWithQueryClient } from '@/__test__/utils/renderWithQueryClient'
 
 const { Common } = composeStories(stories)
 
@@ -17,7 +18,7 @@ jest.mock('@/hooks', () => ({
 
 describe('[components] - SearchSuggestions', () => {
   const setup = () => {
-    render(<Common />)
+    renderWithQueryClient(<Common />)
   }
 
   it('should render component', async () => {

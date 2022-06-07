@@ -81,8 +81,6 @@ const Content = (props: ListItemProps) => {
 }
 
 const SearchSuggestions = () => {
-  const { data: searchSuggestionResult } = useSearchSuggestions()
-
   const [open, setOpen] = useState<boolean>(false)
   const [searchTerm, setSearchTerm] = useState<string>('')
 
@@ -90,25 +88,19 @@ const SearchSuggestions = () => {
   const handleClose = () => setOpen(false)
   const handleSearch = (userEnteredValue: string) => setSearchTerm(userEnteredValue)
 
-  const getSuggestionGroup = (title: string) =>
-    searchSuggestionResult?.suggestionGroups?.find((sg) => sg?.name === title)
-  const productSuggestionGroup = getSuggestionGroup('Pages')
-  const categorySuggestionGroup = getSuggestionGroup('Categories')
+  const searchSuggestionResult = useSearchSuggestions(useDebounce(searchTerm, 2000))
 
-  // ToBe: use debouncedSearchResult as searchSuggestionResult once mutation gets implemented
-  const debouncedSearchResult = useDebounce(searchTerm, 500)
+  let productSuggestionGroup, categorySuggestionGroup
+  if (searchSuggestionResult.data) {
+    const getSuggestionGroup = (title: string) =>
+      searchSuggestionResult.data?.suggestionGroups?.find((sg) => sg?.name === title)
+    productSuggestionGroup = getSuggestionGroup('Pages')
+    categorySuggestionGroup = getSuggestionGroup('Categories')
+  }
 
   useEffect(() => {
-    // ToBe: Handle open close based on API response
     searchTerm ? handleOpen() : handleClose()
-
-    if (searchTerm) {
-      // const { data: searchSuggestionResult } = useSearchSuggestions(searchTerm)
-      // ToBe: fetch API here
-    }
-  }, [debouncedSearchResult])
-
-  console.log('search tearm', searchTerm)
+  }, [searchTerm])
 
   return (
     <Stack>
