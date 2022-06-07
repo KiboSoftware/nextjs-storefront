@@ -1,19 +1,36 @@
+import { useEffect } from 'react'
+
+import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
 import Head from 'next/head'
 import Image from 'next/image'
 
-import Buton from '../components/buton'
+import nextI18NextConfig from '../next-i18next.config'
 import styles from '../styles/Home.module.css'
 import AddToCart from '@/components/common/AddToCart/AddToCart'
+import getCategoryTree from '@/lib/api/operations/get-category-tree'
 
-import type {
-  NextPage,
-  GetStaticPathsContext,
-  GetStaticPropsContext,
-  InferGetStaticPropsType,
-  GetServerSidePropsContext,
-} from 'next'
+import type { CategoryCollection } from '@/lib/gql/types'
+import type { NextPage, GetStaticPropsContext } from 'next'
 
-const Home: NextPage = () => {
+export async function getStaticProps(context: GetStaticPropsContext) {
+  const { locale } = context
+  const categoriesTree: CategoryCollection = await getCategoryTree()
+
+  return {
+    props: {
+      categoriesTree,
+      ...(await serverSideTranslations(locale as string, ['common'], nextI18NextConfig)),
+    },
+  }
+}
+
+const Home: NextPage = (props: any) => {
+  const { categoriesTree, onLoadCategoriesTree } = props
+
+  useEffect(() => {
+    onLoadCategoriesTree(categoriesTree)
+  }, [categoriesTree, onLoadCategoriesTree])
+
   return (
     <div className={styles.container}>
       <Head>

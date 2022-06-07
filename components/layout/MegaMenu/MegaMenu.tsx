@@ -1,6 +1,15 @@
 import React, { useState, useEffect } from 'react'
 
-import { Box, Divider, ListItem, ListItemText, Typography, Toolbar, styled } from '@mui/material'
+import {
+  Box,
+  Divider,
+  ListItem,
+  ListItemText,
+  Typography,
+  Toolbar,
+  styled,
+  Container,
+} from '@mui/material'
 import { usePopupState, bindHover, bindPopover } from 'material-ui-popup-state/hooks'
 import HoverPopover from 'material-ui-popup-state/HoverPopover'
 import { useTranslation } from 'next-i18next'
@@ -35,7 +44,7 @@ const StyledToolbar = styled(Toolbar)(({ theme }) => ({
     borderTopWidth: 1,
     borderTopStyle: 'solid',
     borderTopColor: theme.palette.grey[300],
-    paddingInline: 26,
+    paddingInline: 0,
     flexWrap: 'wrap',
     gap: '4%',
   },
@@ -59,11 +68,13 @@ const style = {
   },
   popoverPaper: {
     width: '96.5vw',
-    minHeight: 100,
+    height: '25rem',
     borderRadius: 0,
     boxShadow: 'none',
     borderTop: '1px solid',
     borderTopColor: 'grey.300',
+    position: 'relative',
+    overflowY: 'scroll',
   },
 }
 
@@ -145,15 +156,17 @@ const MegaMenu = (props: MegaMenuProps) => {
 
   return (
     <StyledToolbar data-testid="megamenu-container">
-      {categoryTree?.map((category) => (
-        <MegaMenuCategory
-          key={category?.categoryCode}
-          category={category}
-          onBackdropToggle={onBackdropToggle}
-          activeCategory={activeCategory}
-          setActiveCategory={setActiveCategory}
-        />
-      ))}
+      <Container maxWidth="xl" sx={{ display: 'flex', gap: '4%' }}>
+        {categoryTree?.map((category) => (
+          <MegaMenuCategory
+            key={category?.categoryCode}
+            category={category}
+            onBackdropToggle={onBackdropToggle}
+            activeCategory={activeCategory}
+            setActiveCategory={setActiveCategory}
+          />
+        ))}
+      </Container>
     </StyledToolbar>
   )
 }

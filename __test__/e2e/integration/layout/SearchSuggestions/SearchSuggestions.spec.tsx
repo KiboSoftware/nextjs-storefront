@@ -2,13 +2,14 @@ import React from 'react'
 
 import '@testing-library/jest-dom'
 import { composeStories } from '@storybook/testing-react'
-import { render, screen, waitFor } from '@testing-library/react'
+import { screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { RouterContext } from 'next/dist/shared/lib/router-context'
 
-import { searchSuggestionResult } from '../../../../../__mocks__/stories/searchSuggestionResultMock'
-import * as stories from '../../../../../components/layout/SearchSuggestions/SearchSuggestions.stories'
-import { createMockRouter } from './../../../../utils/createMockRouter'
+import { searchSuggestionResult } from '@/__mocks__/stories/searchSuggestionResultMock'
+import { createMockRouter } from '@/__test__/utils/createMockRouter'
+import { renderWithQueryClient } from '@/__test__/utils/renderWithQueryClient'
+import * as stories from '@/components/layout/SearchSuggestions/SearchSuggestions.stories'
 
 const { Common } = composeStories(stories)
 
@@ -18,7 +19,7 @@ describe('[components] - SearchSuggestions Integration', () => {
   const searchSuggestions = searchSuggestionResult
 
   const setup = () => {
-    render(
+    renderWithQueryClient(
       <RouterContext.Provider value={router}>
         <Common />
       </RouterContext.Provider>

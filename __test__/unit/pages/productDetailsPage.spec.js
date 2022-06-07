@@ -57,6 +57,8 @@ jest.mock(
 )
 
 describe('[page] Product Details Page', () => {
+  const onLoadCategoriesTreeMock = jest.fn()
+
   it('should run getStaticProps method', () => {
     const context = {
       params: {
@@ -91,7 +93,7 @@ describe('[page] Product Details Page', () => {
 
   it('should render the ProductDetail page template if isFallback is false', () => {
     nextRouter.useRouter.mockImplementation(() => ({ isFallback: false }))
-    render(<ProductDetailPage />)
+    render(<ProductDetailPage onLoadCategoriesTree={onLoadCategoriesTreeMock} />)
 
     const productDetailTemplate = screen.getByTestId('productDetailTemplate-mock')
     expect(productDetailTemplate).toBeVisible()
@@ -99,7 +101,7 @@ describe('[page] Product Details Page', () => {
 
   it('should render the Fallback page if isFallback is true', () => {
     nextRouter.useRouter.mockImplementation(() => ({ isFallback: true }))
-    render(<ProductDetailPage />)
+    render(<ProductDetailPage onLoadCategoriesTree={onLoadCategoriesTreeMock} />)
 
     expect(screen.getByText(/Fallback/)).toBeVisible()
   })
