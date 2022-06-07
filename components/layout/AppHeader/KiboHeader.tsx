@@ -29,6 +29,7 @@ import { HamburgerMenu } from '@/components/layout'
 import MegaMenu from '@/components/layout/MegaMenu/MegaMenu'
 import { useCategoryTree } from '@/hooks'
 import type { NavigationLink } from '@/lib/types'
+import { useAuthContext } from '@/pages/contexts/AuthContext'
 
 import type { Maybe, PrCategory } from '@/lib/gql/types'
 
@@ -196,6 +197,11 @@ const TopHeader = ({ navLinks }: { navLinks: NavigationLink[] }) => {
 const HeaderActions = (props: HeaderActionsProps) => {
   const { headerState, setHeaderState, isMobileViewport } = props
   const { t } = useTranslation('common')
+  const { toggleLoginDialog, isAuthenticated, user } = useAuthContext()
+
+  const openLoginModal = () => {
+    toggleLoginDialog()
+  }
 
   return (
     <Container maxWidth="xl" sx={headerActionsStyles.container}>
@@ -247,9 +253,10 @@ const HeaderActions = (props: HeaderActionsProps) => {
         <Box sx={headerActionsStyles.myAccountIconWrapper}>
           <HeaderAction
             title={t('my-account')}
-            subtitle={t('log-in')}
+            subtitle={isAuthenticated ? `Hi, ${user?.firstName}` : t('log-in')}
             icon={AccountCircleIcon}
             {...(isMobileViewport && { iconFontSize: 'medium' })}
+            onClick={openLoginModal}
           />
         </Box>
         <Box sx={headerActionsStyles.cartIconWrapper}>

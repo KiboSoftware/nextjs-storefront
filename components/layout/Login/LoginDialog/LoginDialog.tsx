@@ -5,12 +5,11 @@ import { useTranslation } from 'next-i18next'
 
 import KiboDialog from '@/components/common/KiboDialog/KiboDialog'
 import LoginContent, { LoginData } from '@/components/layout/Login/LoginContent/LoginContent'
-
+import { useUser } from '@/hooks'
 export interface LoginDialogProps {
   isOpen?: boolean
-  customMaxWidth: string | number
+  customMaxWidth?: string | number
   onClose: () => void
-  onLogin: (data: LoginData) => void
   onForgotPassword: () => void
   onRegisterNow: () => void
 }
@@ -53,12 +52,23 @@ const KiboLoginFooter = (props: KiboLoginFooterProps) => {
 }
 
 const LoginDialog = (props: LoginDialogProps) => {
-  const { isOpen = false, onClose, onLogin, onForgotPassword, onRegisterNow } = props
+  const { isOpen = false, onClose, onForgotPassword, onRegisterNow } = props
 
   const { t } = useTranslation(['common'])
+  const { loginUserMutation } = useUser()
 
   const onRegisterClick = () => {
     onRegisterNow()
+  }
+
+  const login = async (params: LoginData) => {
+    console.log('login params : ', params)
+    const userCredentials = {
+      username: params.formData.email,
+      password: params.formData.password,
+    }
+
+    await loginUserMutation.mutateAsync(userCredentials)
   }
 
   return (
@@ -69,7 +79,7 @@ const LoginDialog = (props: LoginDialogProps) => {
           {t('log-in')}
         </Typography>
       }
-      Content={<LoginContent onLogin={onLogin} onForgotPasswordClick={onForgotPassword} />}
+      Content={<LoginContent onLogin={login} onForgotPasswordClick={onForgotPassword} />}
       Actions={<KiboLoginFooter onRegisterNow={onRegisterClick} />}
       customMaxWidth="32.375rem"
       onClose={onClose}

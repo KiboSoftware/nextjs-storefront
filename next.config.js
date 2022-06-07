@@ -35,6 +35,7 @@ module.exports = {
       ],
     },
     ratingAttrFQN: `tenant~rating`,
+    userCookieKey: process.env.KIBO_USER_COOKIE_KEY || 'kibo_at',
   },
   serverRuntimeConfig: {
     revalidate: 60,
