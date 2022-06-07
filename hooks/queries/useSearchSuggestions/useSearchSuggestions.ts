@@ -25,9 +25,13 @@ export const useSearchSuggestions = (searchTerm: string): SearchSuggestionResult
     data = {},
     isLoading,
     isSuccess,
-  } = useQuery(searchKeys.suggestions(searchTerm), () => getSearchSuggestionResult(searchTerm), {
-    refetchOnWindowFocus: false,
-  })
+  } = useQuery(
+    searchKeys.suggestions(searchTerm),
+    () => (searchTerm ? getSearchSuggestionResult(searchTerm) : {}),
+    {
+      refetchOnWindowFocus: false,
+    }
+  )
 
   return { data, isLoading, isSuccess }
 }
