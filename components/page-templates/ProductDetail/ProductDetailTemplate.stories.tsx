@@ -4,7 +4,7 @@ import { ComponentStory, ComponentMeta } from '@storybook/react'
 
 import { ProductDataMock } from '../../../__mocks__/stories/ProductDataMock'
 import ProductDetailTemplate from './ProductDetailTemplate'
-import { ProductCustom } from '@/lib/types'
+import type { ProductCustom } from '@/lib/types'
 
 export default {
   title: 'Page Templates/Product Detail',

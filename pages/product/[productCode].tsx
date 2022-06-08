@@ -11,7 +11,7 @@ import getProduct from '@/lib/api/operations/get-product'
 import search from '@/lib/api/operations/get-product-search'
 import { productGetters } from '@/lib/getters'
 
-import { CategoryCollection } from '@/lib/gql/types'
+import type { CategoryCollection } from '@/lib/gql/types'
 import type { NextPage, GetStaticPropsContext } from 'next'
 
 export async function getStaticProps(context: GetStaticPropsContext) {
