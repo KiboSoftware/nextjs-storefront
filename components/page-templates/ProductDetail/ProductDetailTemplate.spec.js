@@ -36,6 +36,15 @@ jest.mock('../../common/QuantitySelector/QuantitySelector', () => QuantitySelect
 const FulfillmentOptionsMock = () => <div data-testid="fulfillment-options-mock" />
 jest.mock('../../common/FulfillmentOptions/FulfillmentOptions', () => FulfillmentOptionsMock)
 
+const mockProduct = Common.args.product
+jest.mock('@/hooks', () => ({
+  useProductDetailTemplate: jest.fn(() => {
+    return {
+      currentProduct: mockProduct,
+    }
+  }),
+}))
+
 const setUp = () => {
   render(<Common {...Common.args} />)
 }

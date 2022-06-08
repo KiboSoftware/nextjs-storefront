@@ -10,6 +10,7 @@ export default {
   component: ProductOptionSelect,
   args: {
     optionValues: productOptionSelectValuesMock,
+    attributeFQN: 'test-attributeFQN',
   },
   argTypes: { onChange: { action: 'onChange' } },
 } as ComponentMeta<typeof ProductOptionSelect>

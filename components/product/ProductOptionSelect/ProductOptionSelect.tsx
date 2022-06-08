@@ -14,7 +14,8 @@ export interface ProductOptionSelectProps {
   row?: boolean
   placeholder?: string
   label?: string
-  onChange: (value: string) => void
+  attributeFQN: string
+  onChange: (attributeFQN: string, value: string) => void
 }
 
 const ProductOptionSelect = (props: ProductOptionSelectProps) => {
@@ -27,6 +28,7 @@ const ProductOptionSelect = (props: ProductOptionSelectProps) => {
     errorHelperText = '',
     label = t('select-product-option'),
     placeholder = t('select-product-option'),
+    attributeFQN,
     onChange,
   } = props
 
@@ -35,7 +37,7 @@ const ProductOptionSelect = (props: ProductOptionSelectProps) => {
       name={name}
       error={error}
       helperText={errorHelperText}
-      onChange={onChange}
+      onChange={(_, value) => onChange(attributeFQN, value)}
       value={value}
       label={label}
       placeholder={placeholder}

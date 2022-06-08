@@ -16,6 +16,7 @@ import ProductOptionSelect from '@/components/product/ProductOptionSelect/Produc
 import ProductOptionTextBox from '@/components/product/ProductOptionTextBox/ProductOptionTextBox'
 import ProductRecommendations from '@/components/product/ProductRecommendations/ProductRecommendations'
 import ProductVariantSizeSelector from '@/components/product/ProductVariantSizeSelector/ProductVariantSizeSelector'
+import { useProductDetailTemplate } from '@/hooks'
 import { productGetters } from '@/lib/getters'
 import type { ProductProperties, ProductCustom, BreadCrumb } from '@/lib/types'
 
@@ -35,14 +36,18 @@ const ProductDetailTemplate = (props: ProductDetailTemplateProps) => {
   const { product, breadcrumbs } = props
   const { t } = useTranslation(['product', 'common'])
 
-  const productName = productGetters.getName(product)
-  const productPrice = productGetters.getPrice(product)
-  const productRating = productGetters.getRating(product)
-  const description = productGetters.getDescription(product)
-  const shortDescription = productGetters.getShortDescription(product)
-  const productGallery = productGetters.getProductGallery(product)
+  // Data hook
+  const { currentProduct, selectProductOption } = useProductDetailTemplate({ product })
 
-  const productOptions = productGetters.getSegregatedOptions(product)
+  // Getters
+  const productName = productGetters.getName(currentProduct)
+  const productPrice = productGetters.getPrice(currentProduct)
+  const productRating = productGetters.getRating(currentProduct)
+  const description = productGetters.getDescription(currentProduct)
+  const shortDescription = productGetters.getShortDescription(currentProduct)
+  const productGallery = productGetters.getProductGallery(currentProduct)
+
+  const productOptions = productGetters.getSegregatedOptions(currentProduct)
   const optionsVisibility = {
     color: productOptions && productOptions.colourOptions && productOptions.colourOptions.values,
     size: productOptions && productOptions.sizeOptions && productOptions.sizeOptions.values,
@@ -51,8 +56,8 @@ const ProductDetailTemplate = (props: ProductDetailTemplateProps) => {
     textbox: productOptions && productOptions.textBoxOptions.length,
   }
 
-  const properties = productGetters.getProperties(product) as ProductProperties[]
-  const isValidForAddToCart = productGetters.validateAddToCart(product)
+  const properties = productGetters.getProperties(currentProduct) as ProductProperties[]
+  const isValidForAddToCart = productGetters.validateAddToCart(currentProduct)
 
   return (
     <>
@@ -98,17 +103,17 @@ const ProductDetailTemplate = (props: ProductDetailTemplateProps) => {
 
           <Box paddingX={1} paddingY={3} display={optionsVisibility.color ? 'block' : 'none'}>
             <ColorSelector
-              attributeFQN="tenant~color"
+              attributeFQN={productOptions?.colourOptions?.attributeFQN as string}
               values={productOptions?.colourOptions?.values as ProductOptionValue[]}
-              onChange={() => null}
+              onChange={selectProductOption}
             />
           </Box>
 
           <Box paddingY={1} display={optionsVisibility.size ? 'block' : 'none'}>
             <ProductVariantSizeSelector
               values={productOptions?.sizeOptions?.values as ProductOptionValue[]}
-              attributeFQN="tenant~size"
-              selectOption={() => null}
+              attributeFQN={productOptions?.sizeOptions?.attributeFQN as string}
+              onChange={selectProductOption}
             />
           </Box>
 
@@ -120,7 +125,8 @@ const ProductDetailTemplate = (props: ProductDetailTemplateProps) => {
                   optionValues={option?.values as ProductOptionValue[]}
                   value={productGetters.getOptionSelectedValue(option as ProductOption)}
                   label={productGetters.getOptionName(option as ProductOption)}
-                  onChange={() => null}
+                  attributeFQN={option?.attributeFQN as string}
+                  onChange={selectProductOption}
                 />
               )
             })}
@@ -133,10 +139,11 @@ const ProductDetailTemplate = (props: ProductDetailTemplateProps) => {
                 <ProductOptionCheckbox
                   key={attributeDetail.name}
                   label={attributeDetail.name as string}
+                  attributeFQN={option?.attributeFQN as string}
                   checked={
                     productGetters.getOptionSelectedValue(option as ProductOption) ? true : false
                   }
-                  onChange={() => null}
+                  onChange={selectProductOption}
                 />
               )
             })}
@@ -148,7 +155,7 @@ const ProductDetailTemplate = (props: ProductDetailTemplateProps) => {
                 <ProductOptionTextBox
                   key={option?.attributeDetail?.name}
                   option={option as ProductOption}
-                  onChange={() => null}
+                  onChange={selectProductOption}
                 />
               )
             })}

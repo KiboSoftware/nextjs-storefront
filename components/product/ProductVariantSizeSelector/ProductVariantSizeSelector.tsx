@@ -5,12 +5,12 @@ import { ProductOptionValue } from '@/lib/gql/types'
 interface ProductVariantSizeSelectorProps {
   attributeFQN: string
   values: ProductOptionValue[]
-  selectOption: (attributeFQN?: string, value?: string) => void
+  onChange: (attributeFQN: string, value: string) => void
 }
 
 interface SizeOptionsProps extends ProductOptionValue {
-  attributeFQN?: string
-  handleSizeSelection: (attributeFQN?: string, value?: string) => void
+  attributeFQN: string
+  handleSizeSelection: (attributeFQN: string, value: string) => void
 }
 
 const styles = {
@@ -59,7 +59,7 @@ const SizeOptions = (props: SizeOptionsProps) => {
 const ProductVariantSizeSelector = ({
   attributeFQN,
   values,
-  selectOption,
+  onChange,
 }: ProductVariantSizeSelectorProps) => {
   return (
     <Box width="100%" display="flex" flexWrap="wrap" data-testid="product-variant-size-selector">
@@ -71,7 +71,7 @@ const ProductVariantSizeSelector = ({
           value={option?.value}
           isSelected={option?.isSelected}
           isEnabled={option?.isEnabled}
-          handleSizeSelection={selectOption}
+          handleSizeSelection={onChange}
         />
       ))}
     </Box>

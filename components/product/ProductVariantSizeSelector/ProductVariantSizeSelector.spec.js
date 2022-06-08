@@ -9,10 +9,10 @@ const { Common } = composeStories(stories)
 
 describe('[component] ProductVariantSizeSelector component', () => {
   const setup = () => {
-    const selectOptionMock = jest.fn()
-    render(<Common {...Common.args} selectOption={selectOptionMock} />)
+    const onChangeMock = jest.fn()
+    render(<Common {...Common.args} onChange={onChangeMock} />)
     return {
-      selectOptionMock,
+      onChangeMock,
     }
   }
 
@@ -33,33 +33,33 @@ describe('[component] ProductVariantSizeSelector component', () => {
   })
 
   it('should call selectOption method only when size-option is enabled and not selected', () => {
-    const { selectOptionMock } = setup()
+    const { onChangeMock } = setup()
 
     const option = screen.getByText('8')
 
     userEvent.click(option)
 
-    expect(selectOptionMock).toHaveBeenCalled()
-    expect(selectOptionMock).toHaveBeenCalledWith(Common.args.attributeFQN, '8')
+    expect(onChangeMock).toHaveBeenCalled()
+    expect(onChangeMock).toHaveBeenCalledWith(Common.args.attributeFQN, '8')
   })
 
   it('should not call selectOption method when option is disabled', () => {
-    const { selectOptionMock } = setup()
+    const { onChangeMock } = setup()
 
     const disabledOption = screen.getByText('7.5')
 
     userEvent.click(disabledOption)
 
-    expect(selectOptionMock).toHaveBeenCalledTimes(0)
+    expect(onChangeMock).toHaveBeenCalledTimes(0)
   })
 
   it('should not call selectOption method when option is selected', () => {
-    const { selectOptionMock } = setup()
+    const { onChangeMock } = setup()
 
     const disabledOption = screen.getByText('7')
 
     userEvent.click(disabledOption)
 
-    expect(selectOptionMock).toHaveBeenCalledTimes(0)
+    expect(onChangeMock).toHaveBeenCalledTimes(0)
   })
 })

@@ -9,12 +9,12 @@ import { ProductOptionValue } from '@/lib/gql/types'
 interface ColorSelectorProps {
   attributeFQN: string
   values: ProductOptionValue[]
-  onChange: (attributeFQN?: string, value?: string) => void
+  onChange: (attributeFQN: string, value: string) => void
 }
 
 interface ColorOptionsProps extends ProductOptionValue {
-  attributeFQN?: string
-  onColorSelection: (attributeFQN?: string, value?: string) => void
+  attributeFQN: string
+  onColorSelection: (attributeFQN: string, value: string) => void
 }
 
 const styles = {

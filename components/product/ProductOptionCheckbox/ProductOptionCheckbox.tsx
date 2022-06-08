@@ -2,11 +2,12 @@ import { Checkbox, FormControlLabel } from '@mui/material'
 export interface ProductOptionCheckboxProps {
   label: string
   checked?: boolean
-  onChange: (checked: boolean) => void
+  attributeFQN: string
+  onChange: (attributeFQN: string, value: string, checked?: boolean) => void
 }
 
 const ProductOptionCheckbox = (props: ProductOptionCheckboxProps) => {
-  const { label = '', checked = false, onChange } = props
+  const { label = '', checked = false, attributeFQN, onChange } = props
   return (
     <FormControlLabel
       defaultChecked={checked}
@@ -18,7 +19,7 @@ const ProductOptionCheckbox = (props: ProductOptionCheckboxProps) => {
             'aria-label': label,
           }}
           data-testid={`kibo-checkbox`}
-          onChange={(_, checked) => onChange(checked)}
+          onChange={(_, checked) => onChange(attributeFQN, '', checked)}
         />
       }
     />

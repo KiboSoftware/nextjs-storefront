@@ -54,6 +54,7 @@ const ProductInformation = (props: ProductInformationProps) => {
         dangerouslySetInnerHTML={{
           __html: productFullDescription as string,
         }}
+        py={2}
         data-testid="product-content"
       />
       <StyledAccordion>
