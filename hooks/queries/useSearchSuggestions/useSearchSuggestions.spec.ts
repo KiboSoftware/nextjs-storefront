@@ -11,9 +11,6 @@ describe('[hooks] useSearchSuggestions', () => {
     })
 
     await waitFor(() => result.current.isSuccess)
-
-    expect(result.current.data.suggestionGroups?.length).toEqual(
-      searchSuggestionResult.suggestionGroups?.length
-    )
+    expect(result.current.data).toEqual(searchSuggestionResult)
   })
 })

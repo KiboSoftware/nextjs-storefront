@@ -24,12 +24,12 @@ interface KiboAppProps extends AppProps {
 
 const App = (props: KiboAppProps) => {
   const { Component, emotionCache = clientSideEmotionCache, pageProps } = props
-  const [categoriesTree, onLoadCategories] = useState<Maybe<PrCategory>[]>([])
+  const [categoriesTree, setCategoriesTree] = useState<Maybe<PrCategory>[]>([])
   const [queryClient] = useState(() => generateQueryClient())
 
   const handleLoadCategoriesTree = (categories: CategoryCollection) => {
     const categoriesItems = (categories && categories.items) || []
-    onLoadCategories(categoriesItems)
+    setCategoriesTree(categoriesItems)
   }
 
   return (

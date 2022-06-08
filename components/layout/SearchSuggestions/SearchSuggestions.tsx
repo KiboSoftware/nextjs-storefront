@@ -15,7 +15,7 @@ import {
   Typography,
 } from '@mui/material'
 import { useTranslation } from 'next-i18next'
-import { useRouter } from 'next/router'
+import Link from 'next/link'
 
 import SearchBar from '@/components/common/SearchBar/SearchBar'
 import { useDebounce, useSearchSuggestions } from '@/hooks'
@@ -50,6 +50,7 @@ interface ListItemProps {
   heading?: string
   code?: string
   name?: string
+  path?: string
 }
 
 const Title = (props: ListItemProps) => {
@@ -66,17 +67,14 @@ const Title = (props: ListItemProps) => {
 }
 
 const Content = (props: ListItemProps) => {
-  const { code, name } = props
-  const router = useRouter()
-
-  const handleClick = () => {
-    router.push('/product/' + code)
-  }
+  const { code, name, path = '' } = props
 
   return (
-    <ListItem button key={code} onClick={handleClick}>
-      <ListItemText primary={name} sx={{ ...style.listItemText }} />
-    </ListItem>
+    <Link href={path + code} passHref>
+      <ListItem button key={code}>
+        <ListItemText primary={name} sx={{ ...style.listItemText }} />
+      </ListItem>
+    </Link>
   )
 }
 
@@ -114,7 +112,9 @@ const SearchSuggestions = () => {
             {productSuggestionGroup?.suggestions?.map((product) => (
               <Content
                 key={product?.suggestion?.productCode}
+                code={product?.suggestion?.productCode}
                 name={product?.suggestion?.productName}
+                path={'/product/'}
               />
             ))}
           </List>
@@ -124,7 +124,9 @@ const SearchSuggestions = () => {
             {categorySuggestionGroup?.suggestions?.map((product) => (
               <Content
                 key={product?.suggestion?.categoryCode}
+                code={product?.suggestion?.categoryCode}
                 name={product?.suggestion?.content?.name}
+                path={'/category/'}
               />
             ))}
           </List>

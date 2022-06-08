@@ -295,3 +295,7 @@ export const searchSuggestionResult: SearchSuggestionResult = {
     },
   ],
 }
+
+export const searchSuggestionMock = {
+  suggestionSearch: searchSuggestionResult,
+}
