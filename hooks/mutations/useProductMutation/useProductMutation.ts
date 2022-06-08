@@ -27,8 +27,6 @@ const configureProduct = async (configureProductDetails: ConfigureProductDetails
     variables,
   })
 
-  console.log('response', response)
-
   return response.configureProduct
 }
 
