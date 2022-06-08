@@ -23,6 +23,13 @@ jest.mock('@/lib/api/util', () => ({
         product: {
           productCode: 'mocked-product',
         },
+        categoriesTree: {
+          items: [
+            {
+              categoryCode: 'moked-category',
+            },
+          ],
+        },
         products: {
           items: [
             {

@@ -57,7 +57,8 @@ export const parameters = {
 
   msw: {
     handlers: {
-      checkout: [...handlers.checkoutHanlders],
+      checkout: [...handlers.checkoutHandlers],
+      searchSuggestions: [...handlers.searchSuggestionHandlers],
     },
   },
 }

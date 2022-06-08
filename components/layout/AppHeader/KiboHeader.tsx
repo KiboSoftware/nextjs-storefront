@@ -223,16 +223,13 @@ export default function KiboHeader(props: KiboHeaderProps) {
   const [isBackdropOpen, setIsBackdropOpen] = useState<boolean>(false)
   const kiboTheme = useTheme()
   const isMobileViewport = useMediaQuery(kiboTheme.breakpoints.down('md'))
-  const categories = categoryTreeDataMock.categoriesTree.items?.filter((item) => item.isDisplayed)
   const handleHamburgerMenu = (value: boolean) => {
     setHeaderState({
       ...headerState,
       viewHamburgerMenu: value,
     })
   }
-  const handleSearch = () => {
-    return ''
-  }
+
   return (
     <Grid container>
       <Grid
