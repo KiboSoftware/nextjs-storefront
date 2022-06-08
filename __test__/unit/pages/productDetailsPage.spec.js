@@ -73,6 +73,13 @@ describe('[page] Product Details Page', () => {
         product: {
           productCode: 'mocked-product',
         },
+        categoriesTree: {
+          items: [
+            {
+              categoryCode: 'moked-category',
+            },
+          ],
+        },
         _nextI18Next: {
           initialI18nStore: { 'mock-locale': [{}], en: [{}] },
           initialLocale: 'mock-locale',
