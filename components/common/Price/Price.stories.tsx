@@ -30,7 +30,13 @@ WithSalePrice.args = {
 export const WithPriceRange = Template.bind({})
 WithPriceRange.args = {
   priceRange: {
-    upper: '$120.00',
-    lower: '$90.00',
+    upper: {
+      price: 220.0,
+      salePrice: 160.0,
+    },
+    lower: {
+      price: 120.0,
+      salePrice: 60.0,
+    },
   },
 }

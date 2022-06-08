@@ -40,8 +40,10 @@ const ProductDetailTemplate = (props: ProductDetailTemplateProps) => {
   const { currentProduct, selectProductOption } = useProductDetailTemplate({ product })
 
   // Getters
+  console.log('currentProduct', currentProduct)
   const productName = productGetters.getName(currentProduct)
   const productPrice = productGetters.getPrice(currentProduct)
+  const productPriceRange = productGetters.getPriceRange(currentProduct)
   const productRating = productGetters.getRating(currentProduct)
   const description = productGetters.getDescription(currentProduct)
   const shortDescription = productGetters.getShortDescription(currentProduct)
@@ -78,6 +80,7 @@ const ProductDetailTemplate = (props: ProductDetailTemplateProps) => {
             {...(productPrice.special && {
               salePrice: t<string>('common:currency', { val: productPrice.special }),
             })}
+            priceRange={productPriceRange}
           />
 
           <Box paddingY={1} display={shortDescription ? 'block' : 'none'}>

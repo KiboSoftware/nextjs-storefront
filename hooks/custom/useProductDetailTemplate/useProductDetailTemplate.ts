@@ -42,7 +42,7 @@ export const useProductDetailTemplate = (props: UseProductDetailTemplateProps) =
 
     // Remove the unchecked options from the array
     shopperEnteredValues = [
-      ...shopperEnteredValues.filter((item) => item.shopperEnteredValue !== false),
+      ...shopperEnteredValues.filter((item) => item.shopperEnteredValue != false),
     ]
 
     return shopperEnteredValues

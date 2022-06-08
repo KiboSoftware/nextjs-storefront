@@ -11,7 +11,8 @@ export interface KiboTextBoxProps {
   helperText?: string
   placeholder?: string
   icon?: React.ReactNode
-  onChange: (name: string, value: string) => void
+  onChange?: (name: string, value: string) => void
+  onBlur?: (name: string, value: string) => void
   onIconClick?: () => void
 
   /* eslint-disable  @typescript-eslint/no-explicit-any */
@@ -56,6 +57,7 @@ const KiboTextBox = (props: KiboTextBoxProps) => {
     icon,
     sx,
     onChange,
+    onBlur,
     onIconClick,
     ...rest
   } = props
@@ -81,7 +83,8 @@ const KiboTextBox = (props: KiboTextBoxProps) => {
           'aria-label': label,
         }}
         placeholder={placeholder}
-        onChange={(e) => onChange(e.target.name, e.target.value)}
+        onChange={(e) => onChange && onChange(e.target.name, e.target.value)}
+        onBlur={(e) => onBlur && onBlur(e.target.name, e.target.value)}
         onKeyDown={onKeyDown}
         {...(icon && {
           endAdornment: (

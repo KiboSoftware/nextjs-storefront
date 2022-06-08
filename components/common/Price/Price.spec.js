@@ -43,9 +43,7 @@ describe('[components] Price Component', () => {
   describe('when price range is available', () => {
     it('should render price range text', () => {
       render(<WithPriceRange {...WithPriceRange.args} />)
-      const priceRange = screen.getByText(
-        `${WithPriceRange.args.priceRange.lower} - ${WithPriceRange.args.priceRange.upper}`
-      )
+      const priceRange = screen.getByTestId('price-range')
 
       expect(priceRange).toBeVisible()
     })

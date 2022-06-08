@@ -1,18 +1,17 @@
 import { Typography, Box, SxProps, Theme } from '@mui/material'
+import { useTranslation } from 'next-i18next'
 
-interface PriceRange {
-  upper: string
-  lower: string
-}
+import { ProductPriceRange } from '@/lib/gql/types'
+
 interface PriceProps {
   price?: string
   salePrice?: string
-  priceRange?: PriceRange
+  priceRange?: ProductPriceRange
   variant?: 'body2' | 'body1' | 'subtitle1'
   fontWeight?: 'bold' | 'normal'
 }
-interface TextPriceProps {
-  children: React.ReactNode
+interface TextPriceProps extends PriceProps {
+  children?: React.ReactNode
   color?: string
   sx?: SxProps<Theme>
 }
@@ -39,53 +38,66 @@ const styles = {
   },
 }
 
-const Price = (props: PriceProps) => {
-  const { price, salePrice, priceRange, variant = 'body1', fontWeight = 'bold' } = props
-  // common Price Text component
-  const PriceTypography = (priceProps: TextPriceProps) => {
-    const { children, color, sx } = priceProps
-    return (
-      <Typography
-        variant={variant}
-        fontWeight={fontWeight}
-        color={color || 'text.primary'}
-        sx={sx}
-        gutterBottom
-      >
-        {children}
-      </Typography>
-    )
-  }
+const PriceTypography = (priceProps: TextPriceProps) => {
+  const { children, color, sx, variant = 'body1', fontWeight = 'bold' } = priceProps
+  return (
+    <Typography variant={variant} fontWeight={fontWeight} color={color || 'text.primary'} sx={sx}>
+      {children}
+    </Typography>
+  )
+}
 
-  const PriceRangeTypography = () => {
-    return (
-      <>
-        <PriceTypography
-          {...(salePrice && { color: 'error' })}
-          sx={{
-            ...styles.price,
-            ...(salePrice && styles.oldPrice),
-          }}
-        >
-          {price}
-        </PriceTypography>
-        {salePrice && <PriceTypography>{salePrice}</PriceTypography>}
-      </>
-    )
-  }
-
-  const PriceOnlyTypography = () => {
-    return (
-      <PriceTypography>
-        {priceRange?.lower} - {priceRange?.upper}
-      </PriceTypography>
-    )
-  }
+const SalePriceTypography = (priceProps: TextPriceProps) => {
+  const { price, salePrice } = priceProps
 
   return (
     <>
-      <Box display="inline-flex" gap="0.625rem" alignItems="center">
-        {priceRange ? <PriceOnlyTypography /> : <PriceRangeTypography />}
+      <PriceTypography
+        {...(salePrice && { color: 'error' })}
+        sx={{
+          ...styles.price,
+          ...(salePrice && styles.oldPrice),
+        }}
+      >
+        {price}
+      </PriceTypography>
+      {salePrice && <PriceTypography>{salePrice}</PriceTypography>}
+    </>
+  )
+}
+
+const PriceRangeTypography = ({ priceRange }: { priceRange: ProductPriceRange }) => {
+  const { t } = useTranslation('common')
+  const { lower, upper } = priceRange
+
+  return (
+    <Box display="flex" alignItems="center" gap={1} data-testid="price-range">
+      <Price
+        price={t<string>('currency', { val: lower?.price })}
+        {...(lower?.salePrice && { salePrice: t<string>('currency', { val: lower?.salePrice }) })}
+      />
+      <Typography variant="body2">-</Typography>
+      <Price
+        price={t<string>('common:currency', { val: upper?.price })}
+        {...(upper?.salePrice && {
+          salePrice: t<string>('common:currency', { val: upper?.salePrice }),
+        })}
+      />
+    </Box>
+  )
+}
+
+const Price = (props: PriceProps) => {
+  const { price, salePrice, priceRange, ...rest } = props
+
+  return (
+    <>
+      <Box display="flex" gap="0.625rem" alignItems="center">
+        {priceRange ? (
+          <PriceRangeTypography priceRange={priceRange} />
+        ) : (
+          <SalePriceTypography price={price} salePrice={salePrice} {...rest} />
+        )}
       </Box>
     </>
   )
