@@ -1,6 +1,5 @@
-import { useMutation, useQueryClient } from 'react-query'
+import { useMutation } from 'react-query'
 
-// import { checkoutKeys } from '../../lib/react-query/queryKeys'
 import { makeGraphQLClient } from '@/lib/gql/client'
 import { configureProductMutation } from '@/lib/gql/mutations'
 import { ConfigureOption } from '@/lib/types'

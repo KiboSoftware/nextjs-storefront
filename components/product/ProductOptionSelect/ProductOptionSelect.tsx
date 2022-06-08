@@ -37,7 +37,7 @@ const ProductOptionSelect = (props: ProductOptionSelectProps) => {
       name={name}
       error={error}
       helperText={errorHelperText}
-      onChange={(_, value) => onChange(attributeFQN, value)}
+      onChange={(_, selectedValue) => onChange(attributeFQN, selectedValue)}
       value={value}
       label={label}
       placeholder={placeholder}

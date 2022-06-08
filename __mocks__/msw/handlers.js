@@ -26,8 +26,9 @@ export const checkoutHandlers = [
   graphql.mutation('updatePersonalDetails', (_req, res, ctx) => {
     return res(ctx.data(orderMock))
   }),
+]
 
-  // useProductMutation: configureProduct
+export const productHandlers = [
   graphql.mutation('configureProduct', (_req, res, ctx) => {
     return res(ctx.data(configuredProductDataMock))
   }),
@@ -63,4 +64,5 @@ export const handlers = [
   ...searchSuggestionHandlers,
   ...categoryHandlers,
   ...userHandlers,
+  ...productHandlers
 ]
