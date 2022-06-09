@@ -19,5 +19,9 @@ const Template: ComponentStory<typeof FacetList> = (args) => <FacetList {...args
 export const Common = Template.bind({})
 
 Common.args = {
+<<<<<<< HEAD
   facetList: productSearchDataMock?.facets as Facet[],
+=======
+  facetList: productSearchDataMock?.facets,
+>>>>>>> 25022de (feat(plp): Integrate NextJS Category Page and Route)
 }
