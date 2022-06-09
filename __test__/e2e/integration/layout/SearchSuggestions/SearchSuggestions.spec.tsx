@@ -130,9 +130,6 @@ describe('[components] - SearchSuggestions Integration', () => {
       expect(screen.getByText(s?.suggestion?.productName)).toBeVisible()
 
       const button = await screen.findByRole('button')
-      expect(button).toBeEnabled()
-      userEvent.click(button)
-
       expect(button).toHaveAttribute('href', '/product' + s?.suggestion.categoryCode)
     })
   })

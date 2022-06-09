@@ -137,7 +137,9 @@ const HeaderActions = (props: HeaderActionsProps) => {
     <Container maxWidth="xl" sx={headerActionsStyles.container}>
       <Box sx={headerActionsStyles.wrapper}>
         <Box position="relative" sx={headerActionsStyles.logoWrapper}>
-          <KiboLogo />
+          <Link href="/">
+            <KiboLogo />
+          </Link>
         </Box>
         {/* Hamburger Menu */}
         <Box sx={headerActionsStyles.hamburgerWrapper}>
@@ -313,6 +315,7 @@ export default function KiboHeader(props: KiboHeaderProps) {
         xs={12}
         sx={{
           display: { xs: 'none', md: 'block' },
+          border: 'none',
           borderBottomWidth: 1,
           borderBottomStyle: 'solid',
           borderBottomColor: 'grey.300',
