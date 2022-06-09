@@ -27,7 +27,7 @@ Common.parameters = {
 Common.args = {
   facetList: productSearchDataMock?.facets,
   header: 'Apparel',
-  totalResults: 650,
+  totalResults: 651,
 }
 
 export const SkeletonLoading = Template.bind({})
