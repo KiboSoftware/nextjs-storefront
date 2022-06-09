@@ -51,6 +51,7 @@ interface ListItemProps {
   code?: string
   name?: string
   path?: string
+  closeSearchSuggestion?: () => void
 }
 
 const Title = (props: ListItemProps) => {
@@ -67,11 +68,11 @@ const Title = (props: ListItemProps) => {
 }
 
 const Content = (props: ListItemProps) => {
-  const { code, name, path = '' } = props
+  const { code, name, path = '', closeSearchSuggestion } = props
 
   return (
     <Link href={path + code} passHref>
-      <ListItem button key={code}>
+      <ListItem button key={code} onClick={closeSearchSuggestion}>
         <ListItemText primary={name} sx={{ ...style.listItemText }} />
       </ListItem>
     </Link>
@@ -115,6 +116,7 @@ const SearchSuggestions = () => {
                 code={product?.suggestion?.productCode}
                 name={product?.suggestion?.productName}
                 path={'/product/'}
+                closeSearchSuggestion={handleClose}
               />
             ))}
           </List>

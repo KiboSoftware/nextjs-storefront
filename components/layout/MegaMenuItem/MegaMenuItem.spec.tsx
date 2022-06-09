@@ -32,11 +32,8 @@ describe('[components] - MegaMenuItem', () => {
 
   it('should route to another page when user clicks on shop all', async () => {
     setup()
-    const button = screen.getByTestId('shopAllLink')
-    expect(button).toBeEnabled()
-    userEvent.click(button)
-
-    expect(button).toHaveAttribute('href', '/category/' + Common.args?.categoryCode)
+    const link = screen.getByTestId('shopAllLink')
+    expect(link).toHaveAttribute('href', '/category/' + Common.args?.categoryCode)
   })
 
   it('should route to another page when user clicks on item', async () => {
@@ -44,8 +41,6 @@ describe('[components] - MegaMenuItem', () => {
     const categoryChildren = Common.args?.categoryChildren
     categoryChildren?.map((cat) => {
       const button = screen.getByRole('button')
-      expect(button).toBeEnabled()
-      userEvent.click(button)
       expect(button).toHaveAttribute('href', '/category/' + cat?.categoryCode)
     })
   })
