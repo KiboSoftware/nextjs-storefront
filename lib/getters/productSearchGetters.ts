@@ -16,7 +16,7 @@ const getCategoryFacet = (
 
   // Searching categories by facetName i.e. : CategoryCode
   const facet = getFacetByName(productSearchResult, facetName)
-  const parent = facet?.values?.find((facet) => categoryCode === facet?.value)
+  const parent = facet?.values?.find((f) => categoryCode === f?.value)
   const header = parent?.label as string
   const childrenCategories = parent?.childrenFacetValues as FacetValue[]
   return { header, childrenCategories }

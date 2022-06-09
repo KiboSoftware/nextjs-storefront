@@ -10,7 +10,7 @@ function addParent(category: PrCategory, newParent: PrCategory): void {
 
 let targetCategory: PrCategory
 export const selectCategoryFromTree = (
-  categoryTree: Array<PrCategory> = [],
+  categoryTree: Array<PrCategory>,
   categoryCode: string
 ): PrCategory => {
   const findCategoryById = (category: Maybe<PrCategory>, code: string) => {
