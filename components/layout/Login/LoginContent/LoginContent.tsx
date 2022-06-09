@@ -3,7 +3,21 @@ import React, { SyntheticEvent, useState } from 'react'
 
 import { yupResolver } from '@hookform/resolvers/yup'
 import { Visibility, VisibilityOff } from '@mui/icons-material'
+<<<<<<< HEAD
 import { Box, FormControl, Button, Link, Checkbox, FormControlLabel } from '@mui/material'
+=======
+import {
+  Box,
+  FormControl,
+  Button,
+  InputAdornment,
+  IconButton,
+  Link,
+  Checkbox,
+  FormControlLabel,
+  Typography,
+} from '@mui/material'
+>>>>>>> 8eb7bf1 (resolve PR review changes)
 import { useTranslation } from 'next-i18next'
 import { useForm, Controller } from 'react-hook-form'
 import * as yup from 'yup'
@@ -24,6 +38,7 @@ export type LoginData = {
 export interface LoginContentProps {
   onLogin: (data: LoginData) => void
   onForgotPasswordClick: () => void
+  errorMessage: string
 }
 
 const styles = {
@@ -36,7 +51,7 @@ const styles = {
 }
 
 const LoginContent = (props: LoginContentProps) => {
-  const { onLogin, onForgotPasswordClick } = props
+  const { onLogin, onForgotPasswordClick, errorMessage } = props
 
   const [showPassword, setShowPassword] = useState<boolean>(false)
   const [isRememberMe, setIsRememberMe] = useState<boolean>(false)
@@ -137,6 +152,11 @@ const LoginContent = (props: LoginContentProps) => {
           label="Remember Me"
           labelPlacement="end"
         />
+        {errorMessage && (
+          <Typography color="error" justifyContent="center" display="flex">
+            {errorMessage}
+          </Typography>
+        )}
         <Button
           variant="contained"
           color="primary"

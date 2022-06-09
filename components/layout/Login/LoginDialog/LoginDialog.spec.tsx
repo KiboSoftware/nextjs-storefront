@@ -9,13 +9,11 @@ import * as stories from './LoginDialog.stories' // import all stories from the 
 
 const { Common } = composeStories(stories)
 
-const onRegisterNowMock = jest.fn()
 const LoginContentMock = () => <input data-testid="kibo-login-cotent" />
 jest.mock('../LoginContent/LoginContent', () => LoginContentMock)
 
 describe('[components] (LoginDialog)', () => {
-  const setup = (args = Common.args) =>
-    render(<Common {...args} onRegisterNow={onRegisterNowMock} />)
+  const setup = (args = Common.args) => render(<Common {...args} />)
 
   it('should render component', async () => {
     setup()
@@ -33,6 +31,5 @@ describe('[components] (LoginDialog)', () => {
     await act(async () => {
       userEvent.click(registerNowLink)
     })
-    expect(onRegisterNowMock).toBeCalled()
   })
 })

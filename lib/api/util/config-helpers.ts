@@ -19,25 +19,3 @@ export const isShopperAuthExpired = (userAuthTicket: UserAuthTicket) => {
   const { accessTokenExpiration } = userAuthTicket
   return new Date(accessTokenExpiration).getTime() < Date.now()
 }
-
-const decode = (encodedStr: string) => Buffer.from(encodedStr, 'base64').toString('ascii')
-const encode = (value: string) => Buffer.from(value).toString('base64')
-
-export const decodeParseCookieValue = (cookieValue: string | undefined) => {
-  try {
-    if (!cookieValue) {
-      return
-    }
-    return JSON.parse(decode(cookieValue))
-  } catch (error) {
-    console.warn(`Unable to parse cookie`, error)
-  }
-}
-export const prepareSetCookieValue = (cookie: any): string => {
-  try {
-    return encode(JSON.stringify(cookie))
-  } catch (error) {
-    console.warn(`Unable to stringify / encode cookie`, error)
-    return ''
-  }
-}

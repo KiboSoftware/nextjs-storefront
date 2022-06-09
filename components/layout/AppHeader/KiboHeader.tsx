@@ -29,9 +29,10 @@ import { HamburgerMenu } from '@/components/layout'
 import MegaMenu from '@/components/layout/MegaMenu/MegaMenu'
 import { useCategoryTree } from '@/hooks'
 import type { NavigationLink } from '@/lib/types'
-import { useAuthContext } from '@/pages/contexts/AuthContext'
 
 import type { Maybe, PrCategory } from '@/lib/gql/types'
+
+import { useAuthContext } from '@/pages/contexts/AuthContext'
 
 interface KiboHeaderProps {
   navLinks: NavigationLink[]

@@ -15,7 +15,7 @@ export default {
   },
 } as ComponentMeta<typeof LoginDialog>
 
-const Template: ComponentStory<typeof LoginDialog> = (args) => <LoginDialog {...args} />
+const Template: ComponentStory<typeof LoginDialog> = (args) => <LoginDialog />
 
 export const Common = Template.bind({})
 

@@ -2,19 +2,22 @@ import React from 'react'
 
 import { Stack, Typography, Link, styled } from '@mui/material'
 import { useTranslation } from 'next-i18next'
+import getConfig from 'next/config'
 
 import KiboDialog from '@/components/common/KiboDialog/KiboDialog'
 import LoginContent, { LoginData } from '@/components/layout/Login/LoginContent/LoginContent'
-import { useUser } from '@/hooks'
+import { useAuthContext } from '@/contexts/AuthContext'
+import { useUserMutations } from '@/hooks'
+import { storeClientCookie } from '@/lib/helpers/cookieHelper'
+
 export interface LoginDialogProps {
   isOpen?: boolean
-  customMaxWidth?: string | number
   onClose: () => void
   onForgotPassword: () => void
   onRegisterNow: () => void
 }
 
-export interface KiboLoginFooterProps {
+export interface LoginFooterProps {
   onRegisterNow: () => void
 }
 
@@ -34,7 +37,7 @@ const styles = {
   },
 }
 
-const KiboLoginFooter = (props: KiboLoginFooterProps) => {
+const LoginFooter = (props: LoginFooterProps) => {
   const { onRegisterNow } = props
 
   const { t } = useTranslation(['common'])
@@ -51,38 +54,59 @@ const KiboLoginFooter = (props: KiboLoginFooterProps) => {
   )
 }
 
-const LoginDialog = (props: LoginDialogProps) => {
-  const { isOpen = false, onClose, onForgotPassword, onRegisterNow } = props
-
+const LoginDialog = () => {
   const { t } = useTranslation(['common'])
-  const { loginUserMutation } = useUser()
+  const { loginUserMutation } = useUserMutations()
+  const { isLoginDialogOpen = false, toggleLoginDialog, setUser, authError = '' } = useAuthContext()
+  const { publicRuntimeConfig } = getConfig()
+  const authCookieName = publicRuntimeConfig.userCookieKey.toLowerCase()
 
   const onRegisterClick = () => {
-    onRegisterNow()
+    // do your stuff
+  }
+  const onForgotPassword = () => {
+    // do your stuff
   }
 
   const login = async (params: LoginData) => {
-    console.log('login params : ', params)
     const userCredentials = {
-      username: params.formData.email,
-      password: params.formData.password,
+      username: params?.formData?.email,
+      password: params?.formData?.password,
     }
 
-    await loginUserMutation.mutateAsync(userCredentials)
+    const data = await loginUserMutation.mutateAsync(userCredentials)
+    const account = data?.account
+    // set cookie
+    const cookie = {
+      accessToken: account?.accessToken,
+      accessTokenExpiration: account?.accessTokenExpiration,
+      refreshToken: account?.refreshToken,
+      refreshTokenExpiration: account?.refreshTokenExpiration,
+      userId: account?.userId,
+    }
+    storeClientCookie(authCookieName, cookie)
+    setUser(account.customerAccount)
+    toggleLoginDialog()
   }
 
   return (
     <KiboDialog
-      isOpen={isOpen}
+      isOpen={isLoginDialogOpen}
       Title={
         <Typography {...styles.loginTitle} data-testid="login-header">
           {t('log-in')}
         </Typography>
       }
-      Content={<LoginContent onLogin={login} onForgotPasswordClick={onForgotPassword} />}
-      Actions={<KiboLoginFooter onRegisterNow={onRegisterClick} />}
+      Content={
+        <LoginContent
+          onLogin={login}
+          onForgotPasswordClick={onForgotPassword}
+          errorMessage={authError}
+        />
+      }
+      Actions={<LoginFooter onRegisterNow={onRegisterClick} />}
       customMaxWidth="32.375rem"
-      onClose={onClose}
+      onClose={toggleLoginDialog}
     />
   )
 }

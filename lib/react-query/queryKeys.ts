@@ -13,6 +13,5 @@ export const categoryTreeKeys = {
 }
 
 export const loginKeys = {
-  all: ['user'] as const,
-  id: 'id' as string,
+  user: ['user'] as const,
 }

@@ -8,6 +8,7 @@ import { appWithTranslation } from 'next-i18next'
 import { AppProps } from 'next/app'
 import Head from 'next/head'
 import { Hydrate, QueryClientProvider } from 'react-query'
+import 'next-i18next.config'
 
 import createEmotionCache from '../lib/createEmotionCache'
 import { generateQueryClient } from '../lib/react-query/queryClient'

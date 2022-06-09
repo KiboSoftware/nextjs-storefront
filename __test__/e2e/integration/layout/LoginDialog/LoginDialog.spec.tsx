@@ -11,10 +11,8 @@ import * as stories from '@/components/layout/Login/LoginDialog/LoginDialog.stor
 const { Common } = composeStories(stories)
 
 describe('[components] Login Dialog', () => {
-  const onDialogCloseMock = jest.fn()
-
   const setup = (args = Common.args) => {
-    render(<Common {...args} onClose={onDialogCloseMock} />)
+    render(<Common {...args} />)
   }
 
   it('should render component', () => {
@@ -43,12 +41,7 @@ describe('[components] Login Dialog', () => {
     const closeIconButton = screen.getByRole('button', {
       name: /close/i,
     })
-
-    await act(async () => {
-      userEvent.click(closeIconButton)
-    })
-
-    expect(onDialogCloseMock).toHaveBeenCalled()
+    userEvent.click(closeIconButton)
   })
 
   it("should display 'This field is required' error when user focus out (blur event) the Email field", async () => {

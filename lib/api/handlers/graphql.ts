@@ -1,11 +1,13 @@
 import { fetcher } from '../util'
+import getUserClaimsFromRequest from '../util/getUserClaimsFromRequest'
 
 import type { NextApiRequest, NextApiResponse } from 'next'
 
 export default async function graphQLHandler(req: NextApiRequest, res: NextApiResponse) {
   try {
     const { query, variables } = req.body
-    const response = await fetcher({ query, variables })
+    const userClaims = await getUserClaimsFromRequest(req)
+    const response = await fetcher({ query, variables }, { userClaims })
     res.status(200).json(response)
   } catch (error) {
     console.error(error)
