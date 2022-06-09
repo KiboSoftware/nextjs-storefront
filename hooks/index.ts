@@ -1,6 +1,8 @@
-export * from './queries/useCheckout/useCheckout'
-export * from './mutations/useUpdateCheckout/useUpdateCheckout'
 export * from './custom/useDebounce/useDebounce'
 export * from './custom/useUpdateRoutes/useUpdateRoutes'
+export * from './custom/usePaymentTypes/usePaymentTypes'
+
+export * from './queries/useCheckout/useCheckout'
 export * from './queries/useSearchSuggestions/useSearchSuggestions'
-export * from './usePaymentTypes/usePaymentTypes'
+
+export * from './mutations/useUpdateCheckout/useUpdateCheckout'
