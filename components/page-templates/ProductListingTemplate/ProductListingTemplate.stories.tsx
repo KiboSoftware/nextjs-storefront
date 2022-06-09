@@ -3,9 +3,9 @@ import React from 'react'
 import { ComponentStory, ComponentMeta } from '@storybook/react'
 
 import { categoryFacet } from '../../../__mocks__/stories/categoryFacetDataMock'
-import { products } from '../../../__mocks__/stories/categoryPageProductsDataMock'
-import { facetList } from '../../../__mocks__/stories/facetListMock'
+import { productSearchDataMock } from '../../../__mocks__/stories/productSearchDataMock'
 import ProductListingTemplate from './ProductListingTemplate'
+import { ProductCustom } from '@/lib/types'
 
 const breadcrumbs = [
   {
@@ -55,8 +55,6 @@ export default {
   component: ProductListingTemplate,
   argTypes: {
     onSortingSelection: { action: 'onChange' },
-    onCategoryChildrenSelection: { action: 'clicked' },
-    onBackButtonClick: { action: 'go to Previous route' },
   },
   parameters: {
     layout: 'fullscreen',
@@ -72,8 +70,8 @@ export const CategorySkeleton = Template.bind({})
 
 Category.args = {
   breadCrumbsList: breadcrumbs,
-  facetList,
-  products,
+  facetList: productSearchDataMock?.facets,
+  products: productSearchDataMock?.items as ProductCustom[],
   sortingValues,
   categoryFacet,
   totalResults: 149,
@@ -83,7 +81,7 @@ Category.args = {
 
 CategorySkeleton.args = {
   breadCrumbsList: breadcrumbs,
-  facetList,
+  facetList: productSearchDataMock?.facets,
   products: [],
   sortingValues,
   categoryFacet,

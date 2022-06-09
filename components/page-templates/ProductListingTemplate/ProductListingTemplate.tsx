@@ -10,8 +10,10 @@ import { useTranslation } from 'next-i18next'
 import KiboSelect from '@/components/common/KiboSelect/KiboSelect'
 import KiboBreadcrumbs from '@/components/core/Breadcrumbs/KiboBreadcrumbs'
 import { CategoryFacet, CategoryFilterByMobile, FacetList } from '@/components/product-listing'
-import ProductCard, { ProductCardProps } from '@/components/product/ProductCard/ProductCard'
-import type { BreadCrumb as BreadCrumbType } from '@/lib/types'
+import { CategoryFacetData } from '@/components/product-listing/CategoryFacet/CategoryFacet'
+import ProductCard from '@/components/product/ProductCard/ProductCard'
+import { productGetters } from '@/lib/getters'
+import type { BreadCrumb as BreadCrumbType, ProductCustom } from '@/lib/types'
 
 import type { Facet as FacetType } from '@/lib/gql/types'
 
@@ -20,30 +22,17 @@ interface SortingValues {
   id: string
   selected: boolean
 }
-interface CategoryFacetChildren {
-  label: string
-  count: number
-  value: string
-  filterValue: string
-  isDisplayed: boolean
-}
 
-interface CategoryFacetData {
-  header: string
-  childrenCategories: CategoryFacetChildren[]
-}
 interface ProductListingTemplateProps {
   breadCrumbsList: BreadCrumbType[]
-  facetList: FacetType[]
-  products: ProductCardProps[]
+  facetList?: FacetType[]
+  products?: ProductCustom[]
   sortingValues?: SortingValues[]
   categoryFacet: CategoryFacetData
   totalResults: number
-  initialProductsToShow: number
-  isLoading: boolean
+  initialProductsToShow?: number
+  isLoading?: boolean
   onSortingSelection: (value: string) => void
-  onCategoryChildrenSelection: (categoryCode: string) => void
-  onBackButtonClick: () => void
 }
 
 const styles = {
@@ -118,8 +107,8 @@ const styles = {
     borderRightStyle: 'solid',
     borderRightColor: 'grey.500',
     padding: '0 1.5625rem',
-    minWidth: {
-      md: '13%',
+    maxWidth: {
+      md: '17%',
       xs: 'auto',
     },
   } as SxProps<Theme> | undefined,
@@ -173,20 +162,18 @@ const ProductListingTemplate = (props: ProductListingTemplateProps) => {
   const {
     breadCrumbsList,
     facetList,
-    products,
+    products = [],
     sortingValues,
     categoryFacet,
     totalResults,
     isLoading,
     onSortingSelection,
-    onBackButtonClick,
-    onCategoryChildrenSelection,
     initialProductsToShow = 16,
   } = props
-  const isShowMoreVisible = products.length > initialProductsToShow
+  const isShowMoreVisible = products?.length > initialProductsToShow
   const [showFilterBy, setFilterBy] = useState<boolean>(false)
   const [isShowMoreButtonVisible, setShowMoreButtonVisible] = useState<boolean>(isShowMoreVisible)
-  const [productToShows, setProductsToShow] = useState<ProductCardProps[]>([]) // Setting the initial product count to 16 for skeleton loading
+  const [productToShows, setProductsToShow] = useState<ProductCustom[]>([]) // Setting the initial product count to 16 for skeleton loading
 
   const { t } = useTranslation(['product', 'common'])
 
@@ -194,8 +181,8 @@ const ProductListingTemplate = (props: ProductListingTemplateProps) => {
   const showMoreProducts = () => setShowMoreButtonVisible(!isShowMoreButtonVisible)
 
   useEffect(() => {
-    const noOfItemsToShow = isShowMoreButtonVisible ? initialProductsToShow : products.length
-    if (products.length) {
+    const noOfItemsToShow = isShowMoreButtonVisible ? initialProductsToShow : products?.length
+    if (products?.length) {
       const sliced = products.slice(0, noOfItemsToShow)
       setProductsToShow([...sliced])
     }
@@ -277,26 +264,39 @@ const ProductListingTemplate = (props: ProductListingTemplateProps) => {
           </Box>
           <Box sx={{ ...styles.mainSection }}>
             <Box sx={{ ...styles.sideBar }}>
-              <CategoryFacet
-                categoryFacet={categoryFacet}
-                onBackButtonClick={onBackButtonClick}
-                onCategoryChildrenSelection={onCategoryChildrenSelection}
-              />
+              {(categoryFacet.header || categoryFacet?.childrenCategories?.length) && (
+                <CategoryFacet categoryFacet={categoryFacet} breadcrumbs={breadCrumbsList} />
+              )}
               <FacetList facetList={facetList} onFilterByClose={handleFilterBy} />
             </Box>
-            <Box>
+            <Box sx={{ width: '100%' }}>
               {!isLoading ? (
                 <Grid container sx={{ flexWrap: 'wrap' }}>
                   {productToShows.map((product) => {
                     return (
-                      <Grid key={product?.link} item lg={3} md={4} sm={4} xs={6}>
+                      <Grid
+                        key={productGetters.getProductId(product)}
+                        item
+                        lg={3}
+                        md={4}
+                        sm={4}
+                        xs={6}
+                      >
                         <ProductCard
-                          imageUrl={product?.imageUrl}
-                          link={product?.link}
-                          price={product?.price}
-                          title={product?.title}
-                          salePrice={product?.salePrice}
-                          rating={product?.rating}
+                          imageUrl={productGetters.handleProtocolRelativeUrl(
+                            productGetters.getCoverImage(product)
+                          )}
+                          link={`/product/${product.productCode}`}
+                          price={t<string>('common:currency', {
+                            val: productGetters.getPrice(product).regular,
+                          })}
+                          {...(productGetters.getPrice(product).special && {
+                            salePrice: t<string>('common:currency', {
+                              val: productGetters.getPrice(product).special,
+                            }),
+                          })}
+                          title={productGetters.getName(product) || ''}
+                          rating={productGetters.getRating(product)}
                         />
                       </Grid>
                     )
@@ -319,7 +319,7 @@ const ProductListingTemplate = (props: ProductListingTemplateProps) => {
                   <Box sx={{ ...styles.productResults, color: 'grey.600', typography: 'body2' }}>
                     {t('products-to-show', {
                       m: `${initialProductsToShow}`,
-                      n: `${products.length}`,
+                      n: `${products?.length}`,
                     })}
                   </Box>
                   <Box sx={{ ...styles.productResults }}>

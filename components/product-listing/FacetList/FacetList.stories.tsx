@@ -2,7 +2,7 @@ import React from 'react'
 
 import { ComponentStory, ComponentMeta } from '@storybook/react'
 
-import { facetList } from '../../../__mocks__/stories/facetListMock'
+import { productSearchDataMock } from '../../../__mocks__/stories/productSearchDataMock'
 import FacetList from './FacetList'
 
 // default
@@ -17,5 +17,5 @@ const Template: ComponentStory<typeof FacetList> = (args) => <FacetList {...args
 export const Common = Template.bind({})
 
 Common.args = {
-  facetList,
+  facetList: productSearchDataMock?.facets,
 }

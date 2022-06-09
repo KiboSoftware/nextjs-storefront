@@ -6,20 +6,15 @@ import { render, screen, fireEvent, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 
 import * as stories from '@/components/page-templates/ProductListingTemplate/ProductListingTemplate.stories' // import all stories from the stories file
+import { productGetters } from '@/lib/getters'
 
 const { Category } = composeStories(stories)
 
 describe('[component] - Category', () => {
   const onSortingSelectionMock = jest.fn()
-  const onBackButtonClickMock = jest.fn()
   const setup = () => {
-    render(
-      <Category
-        onSortingSelection={onSortingSelectionMock}
-        onBackButtonClick={onBackButtonClickMock}
-      />
-    )
-    return { onSortingSelectionMock, onBackButtonClickMock }
+    render(<Category onSortingSelection={onSortingSelectionMock} />)
+    return { onSortingSelectionMock }
   }
 
   it('should call onSortingSelection function when user clicks on sorting', () => {
@@ -37,19 +32,11 @@ describe('[component] - Category', () => {
     expect(onSortingSelectionMock).toBeCalledWith('kibo-select', sortingValues[0].value)
   })
 
-  it('should call to previous route when user clicks on back button', () => {
-    setup()
-    const backButton = screen.getByRole('button', { name: /back/i })
-
-    userEvent.click(backButton)
-
-    expect(onBackButtonClickMock).toHaveBeenCalled()
-  })
-
   it('should display all the products when user clicks on Show more button', () => {
     setup()
 
-    const productsBeforeClick = Category?.args?.products?.map((product) => product.title) || []
+    const productsBeforeClick =
+      Category?.args?.products?.map((product) => productGetters.getName(product)) || []
 
     const productsRegexBeforeClick = new RegExp(productsBeforeClick.join('|'), 'i')
     const productsListBeforeClick = screen.getAllByText(productsRegexBeforeClick)
@@ -58,7 +45,8 @@ describe('[component] - Category', () => {
 
     const showMoreButton = screen.getByRole('button', { name: /show-more/i })
     userEvent.click(showMoreButton)
-    const productsAfterClick = Category?.args?.products?.map((product) => product.title) || []
+    const productsAfterClick =
+      Category?.args?.products?.map((product) => productGetters.getName(product)) || []
 
     const productsRegexAfterClick = new RegExp(productsAfterClick.join('|'), 'i')
     const productsListAfterClick = screen.getAllByText(productsRegexAfterClick)

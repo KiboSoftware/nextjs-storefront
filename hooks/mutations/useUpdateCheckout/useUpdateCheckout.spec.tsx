@@ -1,7 +1,7 @@
 import { renderHook } from '@testing-library/react-hooks'
 
-import { orderMock } from '../../__mocks__/stories/orderMock'
-import { createQueryClientWrapper } from '../../__test__/utils/renderWithQueryClient'
+import { orderMock } from '../../../__mocks__/stories/orderMock'
+import { createQueryClientWrapper } from '../../../__test__/utils/renderWithQueryClient'
 import { useUpdateCheckout } from './useUpdateCheckout'
 
 describe('[hooks] useUpdateCheckout', () => {

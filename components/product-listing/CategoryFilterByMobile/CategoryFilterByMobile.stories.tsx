@@ -2,7 +2,7 @@ import React from 'react'
 
 import { ComponentStory, ComponentMeta } from '@storybook/react'
 
-import { facetList } from '../../../__mocks__/stories/facetListMock'
+import { productSearchDataMock } from '../../../__mocks__/stories/productSearchDataMock'
 import CategoryFilterByMobile from './CategoryFilterByMobile'
 
 export default {
@@ -25,7 +25,7 @@ Common.parameters = {
   },
 }
 Common.args = {
-  facetList,
+  facetList: productSearchDataMock?.facets,
   header: 'Apparel',
   totalResults: 650,
 }
@@ -38,5 +38,5 @@ SkeletonLoading.parameters = {
 }
 SkeletonLoading.args = {
   isLoading: true,
-  facetList,
+  facetList: productSearchDataMock?.facets,
 }

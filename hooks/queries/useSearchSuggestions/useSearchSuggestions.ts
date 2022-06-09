@@ -1,6 +1,6 @@
 import { useQuery } from 'react-query'
 
-import { searchSuggestionResult } from '../../__mocks__/stories/searchSuggestionResultMock'
+import { searchSuggestionResult } from '../../../__mocks__/stories/searchSuggestionResultMock'
 
 import type { SearchSuggestionResult } from '@/lib/gql/types'
 export interface SearchSuggestionResultType {
