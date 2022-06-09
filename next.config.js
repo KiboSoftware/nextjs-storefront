@@ -24,6 +24,7 @@ module.exports = {
       },
     ],
     countries: ['US', 'AT', 'DE', 'NL'],
+    debounceTimeout: '1000',
   },
   serverRuntimeConfig: {
     revalidate: 60,
