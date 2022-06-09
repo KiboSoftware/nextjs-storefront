@@ -8,6 +8,10 @@ import { createQueryClientWrapper } from '@/__test__/utils/renderWithQueryClient
 import CategoryPage, { getServerSideProps } from '@/pages/category/[categoryCode]'
 
 const mockCategoryTreeData = categoryTreeDataMock
+import * as nextRouter from 'next/router'
+
+nextRouter.useRouter = jest.fn()
+const imageBaseURL = 'https://cdn-sb.mozu.com/30294-50525/cms/50525/files/'
 jest.mock('@/lib/api/util', () => ({
   fetcher: jest.fn(() => {
     return Promise.resolve({

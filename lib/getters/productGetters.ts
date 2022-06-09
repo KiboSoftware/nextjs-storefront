@@ -10,8 +10,9 @@ const getName = (product: ProductCustom) => product?.content?.productName
 const getProductId = (product: ProductCustom): string => product?.productCode || ''
 
 const getRating = (product: ProductCustom) => {
-  const attr = product?.properties?.find((property) => property?.attributeFQN === ratingAttrFQN)
-    ?.values
+  const attr = product?.properties?.find(
+    (property) => property?.attributeFQN === ratingAttrFQN
+  )?.values
   return attr?.[0]?.value
 }
 
@@ -54,7 +55,7 @@ const getBreadcrumbs = (product: ProductCustom): BreadCrumb[] => {
   }
   const productCrumbs = buildBreadcrumbs(product?.categories[0]).map((b) => ({
     ...b,
-    link: `/c/${b.link}`,
+    link: `/category/${b.link}`,
   }))
 
   return [...homeCrumb, ...productCrumbs]

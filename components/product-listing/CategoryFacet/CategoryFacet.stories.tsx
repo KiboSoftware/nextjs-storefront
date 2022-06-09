@@ -8,10 +8,6 @@ import CategoryFacet from './CategoryFacet'
 export default {
   title: 'product-listing/CategoryFacet',
   component: CategoryFacet,
-  argTypes: {
-    onCategoryChildrenSelection: { action: 'clicked' },
-    onBackButtonClick: { action: 'go to Previous route' },
-  },
 } as ComponentMeta<typeof CategoryFacet>
 
 const Template: ComponentStory<typeof CategoryFacet> = (args) => <CategoryFacet {...args} />
@@ -21,4 +17,14 @@ export const CategoryFacetDesktop = Template.bind({})
 CategoryFacetDesktop.args = {
   initialItemsToShow: 5,
   categoryFacet,
+  breadcrumbs: [
+    {
+      text: 'Home',
+      link: '/',
+    },
+    {
+      text: 'Jacket',
+      link: '/categoryCode/40',
+    },
+  ],
 }
