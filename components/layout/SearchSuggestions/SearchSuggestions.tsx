@@ -15,6 +15,7 @@ import {
   Typography,
 } from '@mui/material'
 import { useTranslation } from 'next-i18next'
+import getConfig from 'next/config'
 import Link from 'next/link'
 
 import SearchBar from '@/components/common/SearchBar/SearchBar'
@@ -83,11 +84,14 @@ const SearchSuggestions = () => {
   const [open, setOpen] = useState<boolean>(false)
   const [searchTerm, setSearchTerm] = useState<string>('')
 
+  const { publicRuntimeConfig } = getConfig()
   const handleOpen = () => setOpen(true)
   const handleClose = () => setOpen(false)
   const handleSearch = (userEnteredValue: string) => setSearchTerm(userEnteredValue)
 
-  const searchSuggestionResult = useSearchSuggestions(useDebounce(searchTerm, 2000))
+  const searchSuggestionResult = useSearchSuggestions(
+    useDebounce(searchTerm, publicRuntimeConfig.debounceTimeout)
+  )
 
   let productSuggestionGroup, categorySuggestionGroup
   if (searchSuggestionResult.data) {
