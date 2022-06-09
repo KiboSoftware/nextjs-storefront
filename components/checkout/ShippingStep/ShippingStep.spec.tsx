@@ -19,4 +19,11 @@ describe('[components] ShippingStep', () => {
 
     expect(ShippingComponent).toBeVisible()
   })
+
+  it('should stepperStatus validate', () => {
+    setup()
+    const stepperStatus = 'VALIDATE'
+
+    expect(stepperStatus).toBe('VALIDATE')
+  })
 })

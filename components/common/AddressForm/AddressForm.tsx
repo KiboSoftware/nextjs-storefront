@@ -1,37 +1,40 @@
 /* eslint-disable  @typescript-eslint/no-explicit-any */
 /* eslint-disable  jsx-a11y/no-autofocus */
-import React, { useState, forwardRef, useImperativeHandle } from 'react'
+import React, { useState, useEffect } from 'react'
 
 import { yupResolver } from '@hookform/resolvers/yup'
 import { Box, Grid, FormControlLabel, Checkbox } from '@mui/material'
 import MenuItem from '@mui/material/MenuItem'
 import { useTranslation } from 'next-i18next'
+import getConfig from 'next/config'
 import { useForm, Controller } from 'react-hook-form'
 import * as yup from 'yup'
 
-import KiboSelect from '../KiboSelect/KiboSelect'
-import KiboTextField from '../KiboTextBox/KiboTextBox'
+import { type Action } from '@/components/checkout'
+import KiboSelect from '@/components/common/KiboSelect/KiboSelect'
+import KiboTextField from '@/components/common/KiboTextBox/KiboTextBox'
+import { FormStates } from '@/lib/constants'
 
-import type { Maybe, Scalars } from '@/lib/gql/types'
+import type { Order } from '@/lib/gql/types'
 
 // Interface
 export interface Contact {
-  id?: Maybe<Scalars['Int']>
-  firstName: Maybe<Scalars['String']>
-  lastNameOrSurname: Maybe<Scalars['String']>
-  middleNameOrInitial?: Maybe<Scalars['String']>
-  email?: Maybe<Scalars['String']>
+  id?: number
+  firstName: string
+  lastNameOrSurname: string
+  middleNameOrInitial?: string
+  email?: string
   address: {
-    address1: Maybe<Scalars['String']>
-    address2: Maybe<Scalars['String']>
-    address3?: Maybe<Scalars['String']>
-    address4?: Maybe<Scalars['String']>
-    addressType?: Maybe<Scalars['String']>
-    cityOrTown: Maybe<Scalars['String']>
-    countryCode: Maybe<Scalars['String']>
-    isValidated?: Maybe<Scalars['Boolean']>
-    postalOrZipCode: Maybe<Scalars['String']>
-    stateOrProvince: Maybe<Scalars['String']>
+    address1: string
+    address2: string
+    address3?: string
+    address4?: string
+    addressType?: string
+    cityOrTown: string
+    countryCode: string
+    isValidated?: boolean
+    postalOrZipCode: string
+    stateOrProvince: string
   }
   phoneNumbers: {
     home: string
@@ -40,19 +43,20 @@ export interface Contact {
   }
 }
 export interface Address {
-  isFormValid: boolean
   contact: Contact
   saveAddress: boolean
 }
 interface AddressFormProps {
   contact?: Contact
-  countries: string[]
+  countries?: string[]
   isUserLoggedIn: boolean
   saveAddressLabel?: string
-  onSave: (data: Address) => void
-}
-interface AddressFormHandler {
-  listener: () => void
+  setAutoFocus?: boolean
+  checkout: Order | undefined
+  validateForm: boolean
+  onSaveAddress: (data: Address) => void
+  onCompleteCallback: (action: Action) => void
+  setValidateForm: (isValidForm: boolean) => void
 }
 
 // Component
@@ -72,18 +76,29 @@ const schema = yup.object().shape({
   }),
 })
 
-const AddressForm = forwardRef<AddressFormHandler, AddressFormProps>((props, ref) => {
-  const { contact, countries = [], isUserLoggedIn = false, saveAddressLabel, onSave } = props
+const AddressForm = (props: AddressFormProps) => {
+  const { publicRuntimeConfig } = getConfig()
+
+  const {
+    contact,
+    countries = publicRuntimeConfig.countries,
+    isUserLoggedIn = false,
+    saveAddressLabel,
+    setAutoFocus = true,
+    validateForm = false,
+    onSaveAddress,
+    onCompleteCallback,
+    setValidateForm,
+  } = props
 
   // Define Variables and States
   const {
-    getValues,
-    formState: { errors, isValid },
-    trigger,
     control,
+    formState: { errors },
+    handleSubmit,
   } = useForm({
-    mode: 'onChange',
-    reValidateMode: 'onChange',
+    mode: 'onBlur',
+    reValidateMode: 'onBlur',
     defaultValues: contact ? contact : undefined,
     resolver: yupResolver(schema),
     shouldFocusError: true,
@@ -91,10 +106,10 @@ const AddressForm = forwardRef<AddressFormHandler, AddressFormProps>((props, ref
 
   // Declare custom hooks, functions, event handlers
   const [saveAddress, setSaveAddress] = useState<boolean>(false)
-  const { t }: { t: any } = useTranslation('common')
+  const { t } = useTranslation('checkout')
 
   const generateSelectOptions = () =>
-    countries?.map((country) => {
+    countries?.map((country: string) => {
       return (
         <MenuItem key={country} value={country}>
           {country}
@@ -102,21 +117,22 @@ const AddressForm = forwardRef<AddressFormHandler, AddressFormProps>((props, ref
       )
     })
 
-  const listener = () => {
-    trigger()
-    const data = {
-      isFormValid: isValid,
-      contact: getValues(),
-      saveAddress,
-    }
-
-    onSave(data)
+  const onValid = async (formData: Contact) => {
+    onSaveAddress({ contact: formData, saveAddress })
   }
 
-  // Declare your useEffects, useCallback, etc
-  useImperativeHandle(ref, () => ({
-    listener,
-  }))
+  // form is invalid, notify parent form is incomplete
+  const onInvalidForm = () => {
+    onCompleteCallback({ type: FormStates.INCOMPLETE })
+    setValidateForm(false)
+  }
+
+  useEffect(() => {
+    // if form is valid, onSubmit callback
+    if (validateForm) {
+      handleSubmit(onValid, onInvalidForm)()
+    }
+  }, [validateForm])
 
   return (
     <Box
@@ -138,12 +154,12 @@ const AddressForm = forwardRef<AddressFormHandler, AddressFormProps>((props, ref
             render={({ field }) => (
               <KiboTextField
                 {...field}
-                ref={null}
                 label={t('first-name')}
                 error={!!errors?.firstName}
                 helperText={errors?.firstName?.message}
                 onChange={(_name, value) => field.onChange(value)}
-                autoFocus={true}
+                onBlur={field.onBlur}
+                autoFocus={setAutoFocus}
                 required={true}
               />
             )}
@@ -158,11 +174,11 @@ const AddressForm = forwardRef<AddressFormHandler, AddressFormProps>((props, ref
             render={({ field }) => (
               <KiboTextField
                 {...field}
-                ref={null}
                 label={t('last-name-or-sur-name')}
                 error={!!errors?.lastNameOrSurname}
                 helperText={errors?.lastNameOrSurname?.message}
                 onChange={(_name, value) => field.onChange(value)}
+                onBlur={field.onBlur}
                 required={true}
               />
             )}
@@ -177,11 +193,11 @@ const AddressForm = forwardRef<AddressFormHandler, AddressFormProps>((props, ref
             render={({ field }) => (
               <KiboTextField
                 {...field}
-                ref={null}
                 label={t('address1')}
                 error={!!errors?.address?.address1}
                 helperText={errors?.address?.address1?.message}
                 onChange={(_name, value) => field.onChange(value)}
+                onBlur={field.onBlur}
                 required={true}
               />
             )}
@@ -196,11 +212,11 @@ const AddressForm = forwardRef<AddressFormHandler, AddressFormProps>((props, ref
             render={({ field }) => (
               <KiboTextField
                 {...field}
-                ref={null}
                 label={t('address2')}
                 error={!!errors?.address?.address2}
                 helperText={errors?.address?.address2?.message}
                 onChange={(_name, value) => field.onChange(value)}
+                onBlur={field.onBlur}
               />
             )}
           />
@@ -214,11 +230,11 @@ const AddressForm = forwardRef<AddressFormHandler, AddressFormProps>((props, ref
             render={({ field }) => (
               <KiboTextField
                 {...field}
-                ref={null}
                 label={t('city-or-town')}
                 error={!!errors?.address?.cityOrTown}
                 helperText={errors?.address?.cityOrTown?.message}
                 onChange={(_name, value) => field.onChange(value)}
+                onBlur={field.onBlur}
                 required={true}
               />
             )}
@@ -233,11 +249,11 @@ const AddressForm = forwardRef<AddressFormHandler, AddressFormProps>((props, ref
             render={({ field }) => (
               <KiboTextField
                 {...field}
-                ref={null}
                 label={t('state-or-province')}
                 error={!!errors?.address?.stateOrProvince}
                 helperText={errors?.address?.stateOrProvince?.message}
                 onChange={(_name, value) => field.onChange(value)}
+                onBlur={field.onBlur}
                 required={true}
               />
             )}
@@ -252,11 +268,11 @@ const AddressForm = forwardRef<AddressFormHandler, AddressFormProps>((props, ref
             render={({ field }) => (
               <KiboTextField
                 {...field}
-                ref={null}
                 label={t('postal-or-zip-code')}
                 error={!!errors?.address?.postalOrZipCode}
                 helperText={errors?.address?.postalOrZipCode?.message}
                 onChange={(_name, value) => field.onChange(value)}
+                onBlur={field.onBlur}
                 required={true}
               />
             )}
@@ -276,6 +292,7 @@ const AddressForm = forwardRef<AddressFormHandler, AddressFormProps>((props, ref
                   error={!!errors?.address?.countryCode}
                   helperText={errors?.address?.countryCode?.message}
                   onChange={(_name, value) => field.onChange(value)}
+                  onBlur={field.onBlur}
                 >
                   {generateSelectOptions()}
                 </KiboSelect>
@@ -292,11 +309,11 @@ const AddressForm = forwardRef<AddressFormHandler, AddressFormProps>((props, ref
             render={({ field }) => (
               <KiboTextField
                 {...field}
-                ref={null}
                 label={t('phone-number-home')}
                 error={!!errors?.phoneNumbers?.home}
                 helperText={errors?.phoneNumbers?.home?.message}
                 onChange={(_name, value) => field.onChange(value)}
+                onBlur={field.onBlur}
                 required={true}
               />
             )}
@@ -314,7 +331,6 @@ const AddressForm = forwardRef<AddressFormHandler, AddressFormProps>((props, ref
       </Grid>
     </Box>
   )
-})
+}
 
-AddressForm.displayName = 'AddressForm'
 export default AddressForm

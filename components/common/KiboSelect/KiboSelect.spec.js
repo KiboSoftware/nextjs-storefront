@@ -37,4 +37,14 @@ describe('[component] KiboSelect component', () => {
     expect(selectButton).toHaveTextContent(/option 2/i)
     expect(onChangeMock).toBeCalledWith('kibo-select', '2')
   })
+
+  it('should call onBlur method if focus out', () => {
+    const onBlurMock = jest.fn()
+    render(<Common {...Common.args} onBlur={onBlurMock} />)
+    const selectButton = screen.getByRole('button')
+
+    fireEvent.blur(selectButton)
+
+    expect(onBlurMock).toBeCalledWith('kibo-select', '')
+  })
 })

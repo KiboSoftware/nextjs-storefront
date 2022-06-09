@@ -1,14 +1,21 @@
 import { composeStories } from '@storybook/testing-react'
-import { render, screen } from '@testing-library/react'
+import { render, screen, fireEvent } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 
 import * as stories from './AddressForm.stories'
 
 const { Common } = composeStories(stories)
 
-const onChangMock = jest.fn()
+const onChangeMock = jest.fn()
+const onBlurMock = jest.fn()
 
-const KiboTextBoxMock = () => <input data-testid="text-box-mock" onChange={onChangMock} />
+const KiboTextBoxMock = () => (
+  <input
+    data-testid="text-box-mock"
+    onChange={(value) => onChangeMock(value)}
+    onBlur={onBlurMock}
+  />
+)
 jest.mock('../KiboTextBox/KiboTextBox', () => KiboTextBoxMock)
 
 describe('[components] - AddressForm', () => {
@@ -36,9 +43,11 @@ describe('[components] - AddressForm', () => {
 
     userEvent.type(textBoxList[0], 'Shane')
     userEvent.type(textBoxList[0], '{enter}')
+    textBoxList[0].focus()
+    fireEvent.blur(textBoxList[0])
 
     // assert
     expect(textBoxList[0]).toHaveValue('Shane')
-    expect(onChangMock).toHaveBeenCalled()
+    expect(onBlurMock).toHaveBeenCalled()
   })
 })
