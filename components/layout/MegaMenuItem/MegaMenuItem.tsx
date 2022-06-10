@@ -1,8 +1,7 @@
 import React from 'react'
 
-import { List, ListItem, ListItemText, Stack } from '@mui/material'
+import { Link, List, ListItem, ListItemText, Stack } from '@mui/material'
 import { useTranslation } from 'next-i18next'
-import Link from 'next/link'
 
 import type { PrCategory, Maybe } from '@/lib/gql/types'
 
@@ -25,8 +24,13 @@ const MegaMenuItem = (props: MegaMenuItemProps) => {
             primaryTypographyProps={{ variant: 'subtitle2', fontWeight: 'bold' }}
           />
         </ListItem>
-        <Link href={'/category/' + categoryCode} passHref>
-          <ListItem button sx={{ cursor: 'pointer' }} data-testid="shopAllLink">
+        <Link
+          href={'/category/' + categoryCode}
+          data-testid="shopAllLink"
+          underline="none"
+          color="grey.900"
+        >
+          <ListItem button sx={{ cursor: 'pointer' }}>
             <ListItemText
               primary={t('shop-all')}
               primaryTypographyProps={{ variant: 'subtitle2' }}
@@ -34,7 +38,12 @@ const MegaMenuItem = (props: MegaMenuItemProps) => {
           </ListItem>
         </Link>
         {categoryChildren?.map((cat) => (
-          <Link href={'/category/' + cat?.categoryCode} passHref key={cat?.categoryId}>
+          <Link
+            href={'/category/' + cat?.categoryCode}
+            key={cat?.categoryId}
+            underline="none"
+            color="grey.900"
+          >
             <ListItem button sx={{ cursor: 'pointer' }}>
               <ListItemText
                 primary={cat?.content?.name}
