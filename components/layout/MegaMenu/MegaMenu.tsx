@@ -15,7 +15,7 @@ import HoverPopover from 'material-ui-popup-state/HoverPopover'
 import { useTranslation } from 'next-i18next'
 
 import KiboImage from '@/components/common/KiboImage/KiboImage'
-import MegaMenuItem from '@/components/layout/MegaMenuItem/MegaMenuItem'
+import { MegaMenuItem } from '@/components/layout'
 import DefaultImage from '@/public/product_placeholder.svg'
 
 import type { Maybe, PrCategory } from '@/lib/gql/types'

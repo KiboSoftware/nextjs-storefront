@@ -18,8 +18,8 @@ import { useTranslation } from 'next-i18next'
 import getConfig from 'next/config'
 import Link from 'next/link'
 
-import { useDebounce, useSearchSuggestions } from '../../../hooks'
 import SearchBar from '@/components/common/SearchBar/SearchBar'
+import { useDebounce, useSearchSuggestions } from '@/hooks'
 
 const style = {
   paper: {

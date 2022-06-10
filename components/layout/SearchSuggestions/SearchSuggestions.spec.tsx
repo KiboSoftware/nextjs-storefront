@@ -10,8 +10,8 @@ import { renderWithQueryClient } from '@/__test__/utils/renderWithQueryClient'
 const { Common } = composeStories(stories)
 
 const searchBarMock = () => <input data-testid="search-bar-component" name="searchInput" />
-jest.mock('../../common/SearchBar/SearchBar', () => searchBarMock)
-jest.mock('../../../hooks', () => ({
+jest.mock('@/components/common/SearchBar/SearchBar', () => searchBarMock)
+jest.mock('@/hooks', () => ({
   useDebounce: jest.fn(() => ''),
   useSearchSuggestions: jest.fn(() => ''),
 }))

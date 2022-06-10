@@ -4,12 +4,12 @@ import { composeStories } from '@storybook/testing-react'
 import { screen, act, fireEvent } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 
-import * as stories from '../../../../../components/page-templates/Checkout/Checkout.stories'
-import { renderWithQueryClient } from '../../../../utils/renderWithQueryClient'
+import { renderWithQueryClient } from '@/__test__/utils/renderWithQueryClient'
+import * as stories from '@/components/page-templates/Checkout/Checkout.stories'
 
 const { Common } = composeStories(stories)
 
-jest.mock('../../../../../hooks', () => ({
+jest.mock('@/hooks', () => ({
   useCheckout: jest.fn(() => ({})),
   useUpdateCheckout: () => ({
     mutateAsync: () => Promise.resolve(true),
