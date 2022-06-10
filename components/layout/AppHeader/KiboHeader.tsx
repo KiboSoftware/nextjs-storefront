@@ -23,7 +23,6 @@ import { styled } from '@mui/material/styles'
 import { useTranslation } from 'next-i18next'
 
 import SearchSuggestions from '../SearchSuggestions/SearchSuggestions'
-import { categoryTreeDataMock } from '@/__mocks__/stories/categoryTreeDataMock'
 import HeaderAction from '@/components/common/HeaderAction/HeaderAction'
 import KiboLogo from '@/components/common/KiboLogo/KiboLogo'
 import { HamburgerMenu } from '@/components/layout'
