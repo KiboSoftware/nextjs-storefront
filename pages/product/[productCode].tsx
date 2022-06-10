@@ -41,12 +41,9 @@ export async function getStaticPaths() {
 }
 
 const ProductDetailPage: NextPage = (props: any) => {
-  const { product, categoriesTree, onLoadCategoriesTree } = props
+  const { product } = props
 
   const { isFallback } = useRouter()
-  useEffect(() => {
-    onLoadCategoriesTree(categoriesTree)
-  }, [categoriesTree, onLoadCategoriesTree])
 
   if (isFallback) {
     return <>Fallback</>

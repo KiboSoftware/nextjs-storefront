@@ -27,8 +27,10 @@ import HeaderAction from '@/components/common/HeaderAction/HeaderAction'
 import KiboLogo from '@/components/common/KiboLogo/KiboLogo'
 import { HamburgerMenu } from '@/components/layout'
 import MegaMenu from '@/components/layout/MegaMenu/MegaMenu'
+import { useCategoryTree } from '@/hooks/queries/useCategoryTree/useCategoryTree'
 
 import type { Maybe, PrCategory } from '@/lib/gql/types'
+
 const StyledToolbarNav = styled(Box)(() => ({
   display: 'flex',
   alignItems: 'center',
@@ -216,7 +218,8 @@ interface KiboHeaderProps {
   children?: ReactNode
 }
 export default function KiboHeader(props: KiboHeaderProps) {
-  const { navLinks, categoriesTree, sticky, children } = props
+  const { navLinks, categoriesTree: initialCategoryTree, sticky, children } = props
+  const { data: categoriesTree } = useCategoryTree(initialCategoryTree)
   const [headerState, setHeaderState] = useState({
     viewSearchPortal: false,
     viewHamburgerMenu: false,
@@ -303,7 +306,7 @@ export default function KiboHeader(props: KiboHeaderProps) {
           </Box>
         </AppBar>
         <HamburgerMenu
-          categoryTree={categoriesTree || []}
+          categoryTree={categoriesTree}
           isDrawerOpen={headerState.viewHamburgerMenu}
           setIsDrawerOpen={handleHamburgerMenu}
           navLinks={navLinks}
@@ -327,7 +330,7 @@ export default function KiboHeader(props: KiboHeaderProps) {
         position={sticky ? 'sticky' : 'relative'}
       >
         <Backdrop open={isBackdropOpen} data-testid="backdrop" />
-        <MegaMenu categoryTree={categoriesTree || []} onBackdropToggle={setIsBackdropOpen} />
+        <MegaMenu categoryTree={categoriesTree} onBackdropToggle={setIsBackdropOpen} />
       </Grid>
       <Grid item xs={12}>
         {children}

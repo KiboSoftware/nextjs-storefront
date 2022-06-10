@@ -24,13 +24,8 @@ interface KiboAppProps extends AppProps {
 
 const App = (props: KiboAppProps) => {
   const { Component, emotionCache = clientSideEmotionCache, pageProps } = props
-  const [categoriesTree, setCategoriesTree] = useState<Maybe<PrCategory>[]>([])
+  // const [categoriesTree, setCategoriesTree] = useState<Maybe<PrCategory>[]>([])
   const [queryClient] = useState(() => generateQueryClient())
-
-  const handleLoadCategoriesTree = (categories: CategoryCollection) => {
-    const categoriesItems = (categories && categories.items) || []
-    setCategoriesTree(categoriesItems)
-  }
 
   return (
     <CacheProvider value={emotionCache}>
@@ -62,10 +57,10 @@ const App = (props: KiboAppProps) => {
                   text: 'Nav Link 3',
                 },
               ]}
-              categoriesTree={categoriesTree || []}
+              categoriesTree={pageProps.categoriesTree || []}
             />
             <Container maxWidth={'lg'}>
-              <Component {...pageProps} onLoadCategoriesTree={handleLoadCategoriesTree} />
+              <Component {...pageProps} />
             </Container>
           </Hydrate>
         </QueryClientProvider>
