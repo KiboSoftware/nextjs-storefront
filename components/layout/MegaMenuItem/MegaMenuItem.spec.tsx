@@ -39,8 +39,8 @@ describe('[components] - MegaMenuItem', () => {
     setup()
     const categoryChildren = Common.args?.categoryChildren
     categoryChildren?.map((cat) => {
-      const button = screen.getByRole('button')
-      expect(button).toHaveAttribute('href', '/category/' + cat?.categoryCode)
+      const link = screen.getByRole('link')
+      expect(link).toHaveAttribute('href', '/category/' + cat?.categoryCode)
     })
   })
 })
