@@ -3,7 +3,6 @@ import React from 'react'
 import '@testing-library/jest-dom'
 import { composeStories } from '@storybook/testing-react'
 import { fireEvent, render, screen } from '@testing-library/react'
-import userEvent from '@testing-library/user-event'
 
 import * as stories from './MegaMenu.stories'
 
@@ -39,7 +38,6 @@ describe('[components] - MegaMenu', () => {
     const category = Common.args?.categoryTree?.filter((c) => c?.isDisplayed === true) || []
     const childrenCategories = category[0]?.childrenCategories || []
     const menuItems = screen.getAllByRole('group')
-    // userEvent.hover(menuItems[0])
     fireEvent.mouseOver(menuItems[0])
 
     const megaMenuItems = screen.getAllByTestId('mega-menu-item-component')
