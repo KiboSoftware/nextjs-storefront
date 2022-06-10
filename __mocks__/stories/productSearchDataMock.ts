@@ -1,4 +1,4 @@
-const imageBaseURL = 'https://cdn-sb.mozu.com/30294-50525/cms/50525/files/'
+const imageBaseURL = '//cdn-sb.mozu.com/30294-50525/cms/50525/files/'
 export const productSearchDataMock = {
   totalCount: 42,
   pageSize: 20,
@@ -804,232 +804,6 @@ export const productSearchDataMock = {
         ],
       },
       options: null,
-    },
-    {
-      productCode: 'BIKE2',
-      productUsage: 'Configurable',
-      isPackagedStandAlone: false,
-      categories: [
-        {
-          categoryCode: '47',
-          categoryId: 22,
-          isDisplayed: true,
-          parentCategory: {
-            categoryId: 4,
-            categoryCode: '30',
-            isDisplayed: true,
-            content: {
-              name: 'Biking',
-              slug: 'biking',
-            },
-          },
-          content: {
-            name: 'Road',
-            slug: 'road',
-          },
-        },
-        {
-          categoryCode: '46',
-          categoryId: 23,
-          isDisplayed: true,
-          parentCategory: null,
-          content: {
-            name: 'New Products!',
-            slug: 'new-products-',
-          },
-        },
-      ],
-      purchasableState: {
-        isPurchasable: true,
-      },
-      price: {
-        price: 1200,
-        salePrice: null,
-      },
-      priceRange: null,
-      properties: [
-        {
-          attributeFQN: 'tenant~product-crosssell',
-          attributeDetail: {
-            name: 'Product Cross-Sells',
-          },
-          isHidden: false,
-          values: [
-            {
-              value: 'BOT1',
-              stringValue: 'BOT1',
-            },
-            {
-              value: 'BIKE1',
-              stringValue: 'BIKE1',
-            },
-            {
-              value: 'PET1',
-              stringValue: 'PET1',
-            },
-          ],
-        },
-        {
-          attributeFQN: 'tenant~popularity',
-          attributeDetail: {
-            name: 'Popularity',
-          },
-          isHidden: false,
-          values: [
-            {
-              value: 5,
-              stringValue: null,
-            },
-          ],
-        },
-        {
-          attributeFQN: 'tenant~rating',
-          attributeDetail: {
-            name: 'Rating',
-          },
-          isHidden: false,
-          values: [
-            {
-              value: 4,
-              stringValue: null,
-            },
-          ],
-        },
-        {
-          attributeFQN: 'tenant~product-upsell',
-          attributeDetail: {
-            name: 'Product Upsells',
-          },
-          isHidden: false,
-          values: [
-            {
-              value: 'BIKE3',
-              stringValue: 'BIKE3',
-            },
-            {
-              value: 'BIKE1',
-              stringValue: 'BIKE1',
-            },
-            {
-              value: 'BCKPCK1',
-              stringValue: 'BCKPCK1',
-            },
-          ],
-        },
-        {
-          attributeFQN: 'tenant~color-filter',
-          attributeDetail: {
-            name: 'color filter',
-          },
-          isHidden: true,
-          values: [
-            {
-              value: 'Brown',
-              stringValue: 'Brown',
-            },
-          ],
-        },
-        {
-          attributeFQN: 'tenant~isrecommended',
-          attributeDetail: {
-            name: 'isRecommended',
-          },
-          isHidden: false,
-          values: [
-            {
-              value: 'Employee',
-              stringValue: 'Employee',
-            },
-            {
-              value: 'Summer',
-              stringValue: 'Summer',
-            },
-          ],
-        },
-        {
-          attributeFQN: 'tenant~brand',
-          attributeDetail: {
-            name: 'Brand',
-          },
-          isHidden: false,
-          values: [
-            {
-              value: 'Adidas',
-              stringValue: 'Adidas',
-            },
-          ],
-        },
-        {
-          attributeFQN: 'tenant~last-call',
-          attributeDetail: {
-            name: 'Last Call',
-          },
-          isHidden: true,
-          values: [
-            {
-              value: true,
-              stringValue: null,
-            },
-          ],
-        },
-        {
-          attributeFQN: 'tenant~video-url',
-          attributeDetail: {
-            name: 'video-url',
-          },
-          isHidden: false,
-          values: [
-            {
-              value: 'https://www.youtube.com/watch?v=iz7wtTO7roQ',
-              stringValue: 'https://www.youtube.com/watch?v=iz7wtTO7roQ',
-            },
-          ],
-        },
-      ],
-      content: {
-        productFullDescription: '<br>',
-        productShortDescription:
-          'This throwback classic will have you riding around town in style. The aluminum-carbon fiber mixed frame is durable and light, so throw on your commuter bag and hit the road',
-        seoFriendlyUrl: 'safari-road',
-        productName: 'Safari Road',
-        productImages: [
-          {
-            imageUrl: `${imageBaseURL}29d52512-18f2-4ea3-a64e-50a436fb9a9c`,
-            imageLabel: null,
-            mediaType: null,
-          },
-          {
-            imageUrl: `${imageBaseURL}16fb57de-9f71-49b4-9055-754f7ed77401`,
-            imageLabel: null,
-            mediaType: null,
-          },
-          {
-            imageUrl: `${imageBaseURL}cbc4fdac-b28e-4eea-8193-4e6a533de5f9`,
-            imageLabel: null,
-            mediaType: null,
-          },
-        ],
-      },
-      options: [
-        {
-          attributeFQN: 'tenant~color',
-          attributeDetail: {
-            name: 'Color',
-            inputType: 'List',
-          },
-          isProductImageGroupSelector: false,
-          isRequired: true,
-          isMultiValue: false,
-          values: [
-            {
-              value: 'Brown',
-              isSelected: true,
-              deltaPrice: null,
-              stringValue: 'Brown',
-            },
-          ],
-        },
-      ],
     },
     {
       productCode: 'SHOE11',
@@ -2040,26 +1814,27 @@ export const productSearchDataMock = {
       ],
     },
     {
-      productCode: 'KAY1',
+      fulfillmentTypesSupported: ['DirectShip', 'InStorePickup'],
+      productCode: 'BIKE2',
       productUsage: 'Configurable',
       isPackagedStandAlone: false,
       categories: [
         {
-          categoryCode: '33',
-          categoryId: 39,
+          categoryCode: '47',
+          categoryId: 22,
           isDisplayed: true,
           parentCategory: {
-            categoryId: 27,
-            categoryCode: '28',
+            categoryId: 4,
+            categoryCode: '30',
             isDisplayed: true,
             content: {
-              name: 'Kayaking',
-              slug: 'kayaking',
+              name: 'Biking',
+              slug: 'biking',
             },
           },
           content: {
-            name: 'Kayaks',
-            slug: 'kayaks',
+            name: 'Road',
+            slug: 'road',
           },
         },
         {
@@ -2074,10 +1849,10 @@ export const productSearchDataMock = {
         },
       ],
       purchasableState: {
-        isPurchasable: false,
+        isPurchasable: true,
       },
       price: {
-        price: 450,
+        price: 1200,
         salePrice: null,
       },
       priceRange: null,
@@ -2090,16 +1865,16 @@ export const productSearchDataMock = {
           isHidden: false,
           values: [
             {
-              value: 'KAY2',
-              stringValue: 'KAY2',
+              value: 'BOT1',
+              stringValue: 'BOT1',
             },
             {
-              value: 'KAY3',
-              stringValue: 'KAY3',
+              value: 'BIKE1',
+              stringValue: 'BIKE1',
             },
             {
-              value: 'PAD2',
-              stringValue: 'PAD2',
+              value: 'PET1',
+              stringValue: 'PET1',
             },
           ],
         },
@@ -2111,7 +1886,7 @@ export const productSearchDataMock = {
           isHidden: false,
           values: [
             {
-              value: 4,
+              value: 5,
               stringValue: null,
             },
           ],
@@ -2137,12 +1912,12 @@ export const productSearchDataMock = {
           isHidden: false,
           values: [
             {
-              value: 'PAD3',
-              stringValue: 'PAD3',
+              value: 'BIKE3',
+              stringValue: 'BIKE3',
             },
             {
-              value: 'PAD1',
-              stringValue: 'PAD1',
+              value: 'BIKE1',
+              stringValue: 'BIKE1',
             },
             {
               value: 'BCKPCK1',
@@ -2158,12 +1933,8 @@ export const productSearchDataMock = {
           isHidden: true,
           values: [
             {
-              value: 'Blue',
-              stringValue: 'Blue',
-            },
-            {
-              value: 'Red',
-              stringValue: 'Red',
+              value: 'Brown',
+              stringValue: 'Brown',
             },
           ],
         },
@@ -2175,8 +1946,8 @@ export const productSearchDataMock = {
           isHidden: false,
           values: [
             {
-              value: 'Kayaker',
-              stringValue: 'Kayaker',
+              value: 'Employee',
+              stringValue: 'Employee',
             },
             {
               value: 'Summer',
@@ -2192,8 +1963,21 @@ export const productSearchDataMock = {
           isHidden: false,
           values: [
             {
-              value: 'North-Face',
-              stringValue: 'North Face',
+              value: 'Adidas',
+              stringValue: 'Adidas',
+            },
+          ],
+        },
+        {
+          attributeFQN: 'tenant~last-call',
+          attributeDetail: {
+            name: 'Last Call',
+          },
+          isHidden: true,
+          values: [
+            {
+              value: true,
+              stringValue: null,
             },
           ],
         },
@@ -2212,21 +1996,29 @@ export const productSearchDataMock = {
         },
       ],
       content: {
-        productFullDescription: null,
+        productFullDescription: '<br>',
         productShortDescription:
-          'Great for rivers and lakes, the Wilderness Pamlico Kayak is sure to get you outside! The anti-flip technology keeps you upright and enjoying the adventure.<div><br></div><div>Great for a valentines date.</div>',
-        seoFriendlyUrl: 'wilderness-pamlico-kayak',
-        productName: 'Wilderness Pamlico Kayak',
+          'This throwback classic will have you riding around town in style. The aluminum-carbon fiber mixed frame is durable and light, so throw on your commuter bag and hit the road',
+        seoFriendlyUrl: 'safari-road',
+        productName: 'Safari Road',
         productImages: [
           {
-            imageUrl: `${imageBaseURL}42ec0d7e-1dff-4da6-ac8b-4ff4fc36b243`,
+            imageUrl: `${imageBaseURL}29d52512-18f2-4ea3-a64e-50a436fb9a9c`,
             imageLabel: null,
             mediaType: null,
+            productImageGroupId: 'default',
           },
           {
-            imageUrl: `${imageBaseURL}9c3d3050-ddfe-45e8-b0ad-f4650a4a3eac`,
+            imageUrl: `${imageBaseURL}16fb57de-9f71-49b4-9055-754f7ed77401`,
             imageLabel: null,
             mediaType: null,
+            productImageGroupId: 'default',
+          },
+          {
+            imageUrl: `${imageBaseURL}cbc4fdac-b28e-4eea-8193-4e6a533de5f9`,
+            imageLabel: null,
+            mediaType: null,
+            productImageGroupId: 'default',
           },
         ],
       },
@@ -2242,22 +2034,24 @@ export const productSearchDataMock = {
           isMultiValue: false,
           values: [
             {
-              value: 'Blue',
-              isSelected: false,
+              value: 'Brown',
+              isSelected: true,
               deltaPrice: null,
-              stringValue: 'Blue',
-            },
-            {
-              value: 'Red',
-              isSelected: false,
-              deltaPrice: null,
-              stringValue: 'Red',
+              stringValue: 'Brown',
             },
           ],
         },
       ],
+      productImageGroups: [],
+      inventoryInfo: {
+        manageStock: false,
+        onlineLocationCode: null,
+        onlineSoftStockAvailable: null,
+        onlineStockAvailable: null,
+      },
     },
     {
+      fulfillmentTypesSupported: ['DirectShip', 'InStorePickup'],
       productCode: 'BIKE1',
       productUsage: 'Configurable',
       isPackagedStandAlone: false,
@@ -2457,31 +2251,37 @@ export const productSearchDataMock = {
             imageUrl: `${imageBaseURL}f0bdd400-d40f-46de-b21c-cbadd0c98d66`,
             imageLabel: null,
             mediaType: null,
+            productImageGroupId: 'default',
           },
           {
             imageUrl: `${imageBaseURL}c2321696-bcc0-40a9-a09a-fcd9eba411d9`,
             imageLabel: null,
             mediaType: null,
+            productImageGroupId: 'default',
           },
           {
             imageUrl: `${imageBaseURL}93141c3e-a988-4893-b22e-854938d104f0`,
             imageLabel: null,
             mediaType: null,
+            productImageGroupId: 'default',
           },
           {
             imageUrl: `${imageBaseURL}8d1bb051-f05d-401f-8259-4d7d53a4a7a2`,
             imageLabel: null,
             mediaType: null,
+            productImageGroupId: 'default',
           },
           {
             imageUrl: `${imageBaseURL}84473e95-64ff-4451-848c-abb772e0832c`,
             imageLabel: null,
             mediaType: null,
+            productImageGroupId: 'default',
           },
           {
             imageUrl: `${imageBaseURL}024de468-ba3f-4963-bdff-1da95100248e`,
             imageLabel: null,
             mediaType: null,
+            productImageGroupId: 'default',
           },
         ],
       },
@@ -2541,1348 +2341,16 @@ export const productSearchDataMock = {
           ],
         },
       ],
+      productImageGroups: [],
+      inventoryInfo: {
+        manageStock: false,
+        onlineLocationCode: null,
+        onlineSoftStockAvailable: null,
+        onlineStockAvailable: null,
+      },
     },
     {
-      productCode: 'TOP16',
-      productUsage: 'Configurable',
-      isPackagedStandAlone: false,
-      categories: [
-        {
-          categoryCode: '34',
-          categoryId: 11,
-          isDisplayed: true,
-          parentCategory: {
-            categoryId: 2,
-            categoryCode: '27',
-            isDisplayed: true,
-            content: {
-              name: 'Camping',
-              slug: 'camping',
-            },
-          },
-          content: {
-            name: 'Jackets',
-            slug: 'jackets',
-          },
-        },
-        {
-          categoryCode: '51',
-          categoryId: 18,
-          isDisplayed: true,
-          parentCategory: {
-            categoryId: 5,
-            categoryCode: '40',
-            isDisplayed: true,
-            content: {
-              name: 'Womens',
-              slug: 'womens',
-            },
-          },
-          content: {
-            name: 'Tops',
-            slug: 'tops',
-          },
-        },
-        {
-          categoryCode: 'MAT',
-          categoryId: 31,
-          isDisplayed: true,
-          parentCategory: {
-            categoryId: 15,
-            categoryCode: 'MA',
-            isDisplayed: true,
-            content: {
-              name: 'Active',
-              slug: 'active',
-            },
-          },
-          content: {
-            name: 'Shirts',
-            slug: 'tops',
-          },
-        },
-        {
-          categoryCode: 'MCT',
-          categoryId: 34,
-          isDisplayed: true,
-          parentCategory: {
-            categoryId: 21,
-            categoryCode: 'MC',
-            isDisplayed: true,
-            content: {
-              name: 'Casual',
-              slug: 'casual',
-            },
-          },
-          content: {
-            name: 'Shirts',
-            slug: 'tops',
-          },
-        },
-        {
-          categoryCode: '46',
-          categoryId: 23,
-          isDisplayed: true,
-          parentCategory: null,
-          content: {
-            name: 'New Products!',
-            slug: 'new-products-',
-          },
-        },
-      ],
-      purchasableState: {
-        isPurchasable: false,
-      },
-      price: {
-        price: 120,
-        salePrice: null,
-      },
-      priceRange: null,
-      properties: [
-        {
-          attributeFQN: 'tenant~product-crosssell',
-          attributeDetail: {
-            name: 'Product Cross-Sells',
-          },
-          isHidden: false,
-          values: [
-            {
-              value: 'BCKPCK3',
-              stringValue: 'BCKPCK3',
-            },
-            {
-              value: 'ACC3',
-              stringValue: 'ACC3',
-            },
-            {
-              value: 'TENT1',
-              stringValue: 'TENT1',
-            },
-            {
-              value: 'TOP13',
-              stringValue: 'TOP13',
-            },
-            {
-              value: 'TOP15',
-              stringValue: 'TOP15',
-            },
-          ],
-        },
-        {
-          attributeFQN: 'tenant~popularity',
-          attributeDetail: {
-            name: 'Popularity',
-          },
-          isHidden: false,
-          values: [
-            {
-              value: 5,
-              stringValue: null,
-            },
-          ],
-        },
-        {
-          attributeFQN: 'tenant~rating',
-          attributeDetail: {
-            name: 'Rating',
-          },
-          isHidden: false,
-          values: [
-            {
-              value: 5,
-              stringValue: null,
-            },
-          ],
-        },
-        {
-          attributeFQN: 'tenant~product-upsell',
-          attributeDetail: {
-            name: 'Product Upsells',
-          },
-          isHidden: false,
-          values: [
-            {
-              value: 'KAY2',
-              stringValue: 'KAY2',
-            },
-            {
-              value: 'PAD1',
-              stringValue: 'PAD1',
-            },
-            {
-              value: 'PET1',
-              stringValue: 'PET1',
-            },
-          ],
-        },
-        {
-          attributeFQN: 'tenant~color-filter',
-          attributeDetail: {
-            name: 'color filter',
-          },
-          isHidden: true,
-          values: [
-            {
-              value: 'White',
-              stringValue: 'White',
-            },
-          ],
-        },
-        {
-          attributeFQN: 'tenant~isrecommended',
-          attributeDetail: {
-            name: 'isRecommended',
-          },
-          isHidden: false,
-          values: [
-            {
-              value: 'Skiier',
-              stringValue: 'Skiier',
-            },
-            {
-              value: 'Winter',
-              stringValue: 'Winter',
-            },
-          ],
-        },
-        {
-          attributeFQN: 'tenant~brand',
-          attributeDetail: {
-            name: 'Brand',
-          },
-          isHidden: false,
-          values: [
-            {
-              value: 'Columbia',
-              stringValue: 'Columbia',
-            },
-          ],
-        },
-        {
-          attributeFQN: 'tenant~material',
-          attributeDetail: {
-            name: 'Material',
-          },
-          isHidden: false,
-          values: [
-            {
-              value: 'Cotton',
-              stringValue: 'Cotton',
-            },
-          ],
-        },
-        {
-          attributeFQN: 'tenant~last-call',
-          attributeDetail: {
-            name: 'Last Call',
-          },
-          isHidden: true,
-          values: [
-            {
-              value: false,
-              stringValue: null,
-            },
-          ],
-        },
-        {
-          attributeFQN: 'tenant~video-url',
-          attributeDetail: {
-            name: 'video-url',
-          },
-          isHidden: true,
-          values: [
-            {
-              value: 'https://www.youtube.com/watch?v=iz7wtTO7roQ',
-              stringValue: 'https://www.youtube.com/watch?v=iz7wtTO7roQ',
-            },
-          ],
-        },
-      ],
-      content: {
-        productFullDescription: '<br>',
-        productShortDescription:
-          'The Columbia Turtlezip insulated jacket keeps you looking and feeling great, combining the solid style of a plaid work shirt over a hoodie with waterproof/breathable protection and warm insulation.',
-        seoFriendlyUrl: 'columbia-turtlezip',
-        productName: 'Columbia Turtlezip',
-        productImages: [
-          {
-            imageUrl: `${imageBaseURL}b7bf07dc-6267-4fe8-a56b-ddae1f1b0726`,
-            imageLabel: null,
-            mediaType: null,
-          },
-        ],
-      },
-      options: [
-        {
-          attributeFQN: 'tenant~color',
-          attributeDetail: {
-            name: 'Color',
-            inputType: 'List',
-          },
-          isProductImageGroupSelector: false,
-          isRequired: true,
-          isMultiValue: false,
-          values: [
-            {
-              value: 'White',
-              isSelected: true,
-              deltaPrice: null,
-              stringValue: 'White',
-            },
-          ],
-        },
-        {
-          attributeFQN: 'tenant~size',
-          attributeDetail: {
-            name: 'Size',
-            inputType: 'List',
-          },
-          isProductImageGroupSelector: false,
-          isRequired: true,
-          isMultiValue: false,
-          values: [
-            {
-              value: 'L',
-              isSelected: false,
-              deltaPrice: null,
-              stringValue: 'L',
-            },
-            {
-              value: 'M',
-              isSelected: false,
-              deltaPrice: null,
-              stringValue: 'M',
-            },
-            {
-              value: 'S',
-              isSelected: false,
-              deltaPrice: null,
-              stringValue: 'S',
-            },
-          ],
-        },
-      ],
-    },
-    {
-      productCode: 'BOT1',
-      productUsage: 'Configurable',
-      isPackagedStandAlone: false,
-      categories: [
-        {
-          categoryCode: '49',
-          categoryId: 19,
-          isDisplayed: true,
-          parentCategory: {
-            categoryId: 5,
-            categoryCode: '40',
-            isDisplayed: true,
-            content: {
-              name: 'Womens',
-              slug: 'womens',
-            },
-          },
-          content: {
-            name: 'Bottoms',
-            slug: 'bottoms',
-          },
-        },
-        {
-          categoryCode: 'MAB',
-          categoryId: 30,
-          isDisplayed: true,
-          parentCategory: {
-            categoryId: 15,
-            categoryCode: 'MA',
-            isDisplayed: true,
-            content: {
-              name: 'Active',
-              slug: 'active',
-            },
-          },
-          content: {
-            name: 'Bottoms',
-            slug: 'bottoms',
-          },
-        },
-        {
-          categoryCode: 'MCB',
-          categoryId: 35,
-          isDisplayed: true,
-          parentCategory: {
-            categoryId: 21,
-            categoryCode: 'MC',
-            isDisplayed: true,
-            content: {
-              name: 'Casual',
-              slug: 'casual',
-            },
-          },
-          content: {
-            name: 'Bottoms',
-            slug: 'bottoms',
-          },
-        },
-        {
-          categoryCode: 'KAB',
-          categoryId: 36,
-          isDisplayed: true,
-          parentCategory: {
-            categoryId: 25,
-            categoryCode: 'KA',
-            isDisplayed: true,
-            content: {
-              name: 'Active',
-              slug: 'active',
-            },
-          },
-          content: {
-            name: 'Bottoms',
-            slug: 'bottoms',
-          },
-        },
-        {
-          categoryCode: 'KCB',
-          categoryId: 48,
-          isDisplayed: true,
-          parentCategory: {
-            categoryId: 26,
-            categoryCode: 'KC',
-            isDisplayed: true,
-            content: {
-              name: 'Casual',
-              slug: 'casual',
-            },
-          },
-          content: {
-            name: 'Bottoms',
-            slug: 'bottoms',
-          },
-        },
-        {
-          categoryCode: '46',
-          categoryId: 23,
-          isDisplayed: true,
-          parentCategory: null,
-          content: {
-            name: 'New Products!',
-            slug: 'new-products-',
-          },
-        },
-      ],
-      purchasableState: {
-        isPurchasable: false,
-      },
-      price: {
-        price: 75,
-        salePrice: null,
-      },
-      priceRange: null,
-      properties: [
-        {
-          attributeFQN: 'tenant~product-crosssell',
-          attributeDetail: {
-            name: 'Product Cross-Sells',
-          },
-          isHidden: false,
-          values: [
-            {
-              value: 'SHOE1',
-              stringValue: 'SHOE1',
-            },
-            {
-              value: 'TOP17',
-              stringValue: 'TOP17',
-            },
-            {
-              value: 'TOP5',
-              stringValue: 'TOP5',
-            },
-          ],
-        },
-        {
-          attributeFQN: 'tenant~product-upsell',
-          attributeDetail: {
-            name: 'Product Upsells',
-          },
-          isHidden: false,
-          values: [
-            {
-              value: 'BCKPCK2',
-              stringValue: 'BCKPCK2',
-            },
-            {
-              value: 'SKI3',
-              stringValue: 'SKI3',
-            },
-            {
-              value: 'TOP15',
-              stringValue: 'TOP15',
-            },
-          ],
-        },
-        {
-          attributeFQN: 'tenant~color-filter',
-          attributeDetail: {
-            name: 'color filter',
-          },
-          isHidden: true,
-          values: [
-            {
-              value: 'Black',
-              stringValue: 'Black',
-            },
-            {
-              value: 'Grey',
-              stringValue: 'Grey',
-            },
-          ],
-        },
-        {
-          attributeFQN: 'tenant~isrecommended',
-          attributeDetail: {
-            name: 'isRecommended',
-          },
-          isHidden: false,
-          values: [
-            {
-              value: 'Employee',
-              stringValue: 'Employee',
-            },
-            {
-              value: 'Kayaker',
-              stringValue: 'Kayaker',
-            },
-            {
-              value: 'Summer',
-              stringValue: 'Summer',
-            },
-          ],
-        },
-        {
-          attributeFQN: 'tenant~brand',
-          attributeDetail: {
-            name: 'Brand',
-          },
-          isHidden: false,
-          values: [
-            {
-              value: 'Nike',
-              stringValue: 'Nike',
-            },
-          ],
-        },
-        {
-          attributeFQN: 'tenant~material',
-          attributeDetail: {
-            name: 'Material',
-          },
-          isHidden: false,
-          values: [
-            {
-              value: 'Cotton',
-              stringValue: 'Cotton',
-            },
-          ],
-        },
-        {
-          attributeFQN: 'tenant~video-url',
-          attributeDetail: {
-            name: 'video-url',
-          },
-          isHidden: false,
-          values: [
-            {
-              value: 'https://www.youtube.com/watch?v=iz7wtTO7roQ',
-              stringValue: 'https://www.youtube.com/watch?v=iz7wtTO7roQ',
-            },
-          ],
-        },
-      ],
-      content: {
-        productFullDescription: null,
-        productShortDescription:
-          'The Zoic Ether Shorts shorts prove that functional can look cool. The relaxed fit micro-fabric keeps you cool and safe from the elements. Throw on a pair and get your ride on!!',
-        seoFriendlyUrl: 'zoic-ether-shorts',
-        productName: 'Zoic Ether Shorts RSF Test',
-        productImages: [
-          {
-            imageUrl: `${imageBaseURL}4c918cd0-02f1-465e-85d1-3a540dd97069`,
-            imageLabel: null,
-            mediaType: null,
-          },
-          {
-            imageUrl: `${imageBaseURL}b497ad3f-0a2e-47b6-92c3-c83be2766c71`,
-            imageLabel: null,
-            mediaType: null,
-          },
-          {
-            imageUrl: `${imageBaseURL}9f9aa80a-ea1d-4d96-b68f-9c0385d4dce4`,
-            imageLabel: null,
-            mediaType: null,
-          },
-          {
-            imageUrl: `${imageBaseURL}94b3b6c1-a072-4dd0-87d5-99325ee2a546`,
-            imageLabel: null,
-            mediaType: null,
-          },
-        ],
-      },
-      options: [
-        {
-          attributeFQN: 'tenant~color',
-          attributeDetail: {
-            name: 'Color',
-            inputType: 'List',
-          },
-          isProductImageGroupSelector: false,
-          isRequired: true,
-          isMultiValue: false,
-          values: [
-            {
-              value: 'Black',
-              isSelected: false,
-              deltaPrice: null,
-              stringValue: 'Black',
-            },
-            {
-              value: 'Grey',
-              isSelected: false,
-              deltaPrice: null,
-              stringValue: 'Grey',
-            },
-          ],
-        },
-        {
-          attributeFQN: 'tenant~size',
-          attributeDetail: {
-            name: 'Size',
-            inputType: 'List',
-          },
-          isProductImageGroupSelector: false,
-          isRequired: true,
-          isMultiValue: false,
-          values: [
-            {
-              value: 'L',
-              isSelected: false,
-              deltaPrice: null,
-              stringValue: 'L',
-            },
-            {
-              value: 'M',
-              isSelected: false,
-              deltaPrice: null,
-              stringValue: 'M',
-            },
-            {
-              value: 'S',
-              isSelected: false,
-              deltaPrice: null,
-              stringValue: 'S',
-            },
-            {
-              value: 'XL',
-              isSelected: false,
-              deltaPrice: null,
-              stringValue: 'XL',
-            },
-            {
-              value: 'XS',
-              isSelected: false,
-              deltaPrice: null,
-              stringValue: 'XS',
-            },
-          ],
-        },
-      ],
-    },
-    {
-      productCode: 'TOP15',
-      productUsage: 'Configurable',
-      isPackagedStandAlone: false,
-      categories: [
-        {
-          categoryCode: '34',
-          categoryId: 11,
-          isDisplayed: true,
-          parentCategory: {
-            categoryId: 2,
-            categoryCode: '27',
-            isDisplayed: true,
-            content: {
-              name: 'Camping',
-              slug: 'camping',
-            },
-          },
-          content: {
-            name: 'Jackets',
-            slug: 'jackets',
-          },
-        },
-        {
-          categoryCode: '51',
-          categoryId: 18,
-          isDisplayed: true,
-          parentCategory: {
-            categoryId: 5,
-            categoryCode: '40',
-            isDisplayed: true,
-            content: {
-              name: 'Womens',
-              slug: 'womens',
-            },
-          },
-          content: {
-            name: 'Tops',
-            slug: 'tops',
-          },
-        },
-        {
-          categoryCode: 'MAT',
-          categoryId: 31,
-          isDisplayed: true,
-          parentCategory: {
-            categoryId: 15,
-            categoryCode: 'MA',
-            isDisplayed: true,
-            content: {
-              name: 'Active',
-              slug: 'active',
-            },
-          },
-          content: {
-            name: 'Shirts',
-            slug: 'tops',
-          },
-        },
-        {
-          categoryCode: 'MCT',
-          categoryId: 34,
-          isDisplayed: true,
-          parentCategory: {
-            categoryId: 21,
-            categoryCode: 'MC',
-            isDisplayed: true,
-            content: {
-              name: 'Casual',
-              slug: 'casual',
-            },
-          },
-          content: {
-            name: 'Shirts',
-            slug: 'tops',
-          },
-        },
-        {
-          categoryCode: '46',
-          categoryId: 23,
-          isDisplayed: true,
-          parentCategory: null,
-          content: {
-            name: 'New Products!',
-            slug: 'new-products-',
-          },
-        },
-      ],
-      purchasableState: {
-        isPurchasable: false,
-      },
-      price: {
-        price: 59,
-        salePrice: null,
-      },
-      priceRange: null,
-      properties: [
-        {
-          attributeFQN: 'tenant~availability',
-          attributeDetail: {
-            name: 'Availability',
-          },
-          isHidden: false,
-          values: [
-            {
-              value: '24hrs',
-              stringValue: 'Usually Ships in 24 Hours',
-            },
-          ],
-        },
-        {
-          attributeFQN: 'tenant~product-crosssell',
-          attributeDetail: {
-            name: 'Product Cross-Sells',
-          },
-          isHidden: false,
-          values: [
-            {
-              value: 'BIKE3',
-              stringValue: 'BIKE3',
-            },
-            {
-              value: 'PAD3',
-              stringValue: 'PAD3',
-            },
-            {
-              value: 'KAY3',
-              stringValue: 'KAY3',
-            },
-            {
-              value: 'TOP16',
-              stringValue: 'TOP16',
-            },
-          ],
-        },
-        {
-          attributeFQN: 'tenant~popularity',
-          attributeDetail: {
-            name: 'Popularity',
-          },
-          isHidden: false,
-          values: [
-            {
-              value: 4,
-              stringValue: null,
-            },
-          ],
-        },
-        {
-          attributeFQN: 'tenant~rating',
-          attributeDetail: {
-            name: 'Rating',
-          },
-          isHidden: false,
-          values: [
-            {
-              value: 3,
-              stringValue: null,
-            },
-          ],
-        },
-        {
-          attributeFQN: 'tenant~product-upsell',
-          attributeDetail: {
-            name: 'Product Upsells',
-          },
-          isHidden: false,
-          values: [
-            {
-              value: 'SHOE12',
-              stringValue: 'SHOE12',
-            },
-            {
-              value: 'TOP16',
-              stringValue: 'TOP16',
-            },
-            {
-              value: 'TOP12',
-              stringValue: 'TOP12',
-            },
-            {
-              value: 'TOP11',
-              stringValue: 'TOP11',
-            },
-          ],
-        },
-        {
-          attributeFQN: 'tenant~color-filter',
-          attributeDetail: {
-            name: 'color filter',
-          },
-          isHidden: true,
-          values: [
-            {
-              value: 'Orange',
-              stringValue: 'Orange',
-            },
-            {
-              value: 'Purple',
-              stringValue: 'Purple',
-            },
-          ],
-        },
-        {
-          attributeFQN: 'tenant~isrecommended',
-          attributeDetail: {
-            name: 'isRecommended',
-          },
-          isHidden: false,
-          values: [
-            {
-              value: 'Skiier',
-              stringValue: 'Skiier',
-            },
-            {
-              value: 'Winter',
-              stringValue: 'Winter',
-            },
-          ],
-        },
-        {
-          attributeFQN: 'tenant~brand',
-          attributeDetail: {
-            name: 'Brand',
-          },
-          isHidden: false,
-          values: [
-            {
-              value: 'Columbia',
-              stringValue: 'Columbia',
-            },
-          ],
-        },
-        {
-          attributeFQN: 'tenant~material',
-          attributeDetail: {
-            name: 'Material',
-          },
-          isHidden: false,
-          values: [
-            {
-              value: 'Cotton',
-              stringValue: 'Cotton',
-            },
-          ],
-        },
-        {
-          attributeFQN: 'tenant~last-call',
-          attributeDetail: {
-            name: 'Last Call',
-          },
-          isHidden: true,
-          values: [
-            {
-              value: false,
-              stringValue: null,
-            },
-          ],
-        },
-        {
-          attributeFQN: 'tenant~video-url',
-          attributeDetail: {
-            name: 'video-url',
-          },
-          isHidden: true,
-          values: [
-            {
-              value: 'https://www.youtube.com/watch?v=iz7wtTO7roQ',
-              stringValue: 'https://www.youtube.com/watch?v=iz7wtTO7roQ',
-            },
-          ],
-        },
-      ],
-      content: {
-        productFullDescription: '<br>',
-        productShortDescription:
-          "With top-of-the-line Pro technology, the full-feature waterproof Arc'teryx Caden shell jacket protects you from harsh weather you'll encounter during your big mountain ski adventures.",
-        seoFriendlyUrl: 'columbia-super-fleece',
-        productName: 'Columbia Super Fleece',
-        productImages: [
-          {
-            imageUrl: `${imageBaseURL}10814a3b-2d83-42ec-a5f3-ea8441711042`,
-            imageLabel: null,
-            mediaType: null,
-          },
-          {
-            imageUrl: `${imageBaseURL}cf4d614f-c821-403e-929f-db081f5133c0`,
-            imageLabel: null,
-            mediaType: null,
-          },
-        ],
-      },
-      options: [
-        {
-          attributeFQN: 'tenant~color',
-          attributeDetail: {
-            name: 'Color',
-            inputType: 'List',
-          },
-          isProductImageGroupSelector: false,
-          isRequired: true,
-          isMultiValue: false,
-          values: [
-            {
-              value: 'Orange',
-              isSelected: false,
-              deltaPrice: null,
-              stringValue: 'Orange',
-            },
-            {
-              value: 'Purple',
-              isSelected: false,
-              deltaPrice: null,
-              stringValue: 'Purple',
-            },
-          ],
-        },
-        {
-          attributeFQN: 'tenant~size',
-          attributeDetail: {
-            name: 'Size',
-            inputType: 'List',
-          },
-          isProductImageGroupSelector: false,
-          isRequired: true,
-          isMultiValue: false,
-          values: [
-            {
-              value: 'L',
-              isSelected: false,
-              deltaPrice: null,
-              stringValue: 'L',
-            },
-            {
-              value: 'M',
-              isSelected: false,
-              deltaPrice: null,
-              stringValue: 'M',
-            },
-            {
-              value: 'S',
-              isSelected: false,
-              deltaPrice: null,
-              stringValue: 'S',
-            },
-          ],
-        },
-      ],
-    },
-    {
-      productCode: 'TOP13',
-      productUsage: 'Configurable',
-      isPackagedStandAlone: false,
-      categories: [
-        {
-          categoryCode: '34',
-          categoryId: 11,
-          isDisplayed: true,
-          parentCategory: {
-            categoryId: 2,
-            categoryCode: '27',
-            isDisplayed: true,
-            content: {
-              name: 'Camping',
-              slug: 'camping',
-            },
-          },
-          content: {
-            name: 'Jackets',
-            slug: 'jackets',
-          },
-        },
-        {
-          categoryCode: '51',
-          categoryId: 18,
-          isDisplayed: true,
-          parentCategory: {
-            categoryId: 5,
-            categoryCode: '40',
-            isDisplayed: true,
-            content: {
-              name: 'Womens',
-              slug: 'womens',
-            },
-          },
-          content: {
-            name: 'Tops',
-            slug: 'tops',
-          },
-        },
-        {
-          categoryCode: '46',
-          categoryId: 23,
-          isDisplayed: true,
-          parentCategory: null,
-          content: {
-            name: 'New Products!',
-            slug: 'new-products-',
-          },
-        },
-      ],
-      purchasableState: {
-        isPurchasable: false,
-      },
-      price: {
-        price: 125,
-        salePrice: null,
-      },
-      priceRange: null,
-      properties: [
-        {
-          attributeFQN: 'tenant~product-crosssell',
-          attributeDetail: {
-            name: 'Product Cross-Sells',
-          },
-          isHidden: false,
-          values: [
-            {
-              value: 'TOP6',
-              stringValue: 'TOP6',
-            },
-            {
-              value: 'TOP5',
-              stringValue: 'TOP5',
-            },
-            {
-              value: 'TOP3',
-              stringValue: 'TOP3',
-            },
-            {
-              value: 'TENT3',
-              stringValue: 'TENT3',
-            },
-            {
-              value: 'TOP11',
-              stringValue: 'TOP11',
-            },
-          ],
-        },
-        {
-          attributeFQN: 'tenant~popularity',
-          attributeDetail: {
-            name: 'Popularity',
-          },
-          isHidden: false,
-          values: [
-            {
-              value: 4,
-              stringValue: null,
-            },
-          ],
-        },
-        {
-          attributeFQN: 'tenant~rating',
-          attributeDetail: {
-            name: 'Rating',
-          },
-          isHidden: false,
-          values: [
-            {
-              value: 3,
-              stringValue: null,
-            },
-          ],
-        },
-        {
-          attributeFQN: 'tenant~product-upsell',
-          attributeDetail: {
-            name: 'Product Upsells',
-          },
-          isHidden: false,
-          values: [
-            {
-              value: 'TOP11',
-              stringValue: 'TOP11',
-            },
-            {
-              value: 'TOP12',
-              stringValue: 'TOP12',
-            },
-            {
-              value: 'TOP14',
-              stringValue: 'TOP14',
-            },
-            {
-              value: 'TOP16',
-              stringValue: 'TOP16',
-            },
-            {
-              value: 'TOP18',
-              stringValue: 'TOP18',
-            },
-          ],
-        },
-        {
-          attributeFQN: 'tenant~color-filter',
-          attributeDetail: {
-            name: 'color filter',
-          },
-          isHidden: true,
-          values: [
-            {
-              value: 'Black',
-              stringValue: 'Black',
-            },
-            {
-              value: 'Blue',
-              stringValue: 'Blue',
-            },
-            {
-              value: 'Pink',
-              stringValue: 'Pink',
-            },
-          ],
-        },
-        {
-          attributeFQN: 'tenant~isrecommended',
-          attributeDetail: {
-            name: 'isRecommended',
-          },
-          isHidden: false,
-          values: [
-            {
-              value: 'Kayaker',
-              stringValue: 'Kayaker',
-            },
-            {
-              value: 'Skiier',
-              stringValue: 'Skiier',
-            },
-            {
-              value: 'Winter',
-              stringValue: 'Winter',
-            },
-          ],
-        },
-        {
-          attributeFQN: 'tenant~brand',
-          attributeDetail: {
-            name: 'Brand',
-          },
-          isHidden: false,
-          values: [
-            {
-              value: 'North-Face',
-              stringValue: 'North Face',
-            },
-          ],
-        },
-        {
-          attributeFQN: 'tenant~material',
-          attributeDetail: {
-            name: 'Material',
-          },
-          isHidden: false,
-          values: [
-            {
-              value: 'Cotton',
-              stringValue: 'Cotton',
-            },
-          ],
-        },
-        {
-          attributeFQN: 'tenant~last-call',
-          attributeDetail: {
-            name: 'Last Call',
-          },
-          isHidden: true,
-          values: [
-            {
-              value: false,
-              stringValue: null,
-            },
-          ],
-        },
-        {
-          attributeFQN: 'tenant~video-url',
-          attributeDetail: {
-            name: 'video-url',
-          },
-          isHidden: true,
-          values: [
-            {
-              value: 'https://www.youtube.com/watch?v=iz7wtTO7roQ',
-              stringValue: 'https://www.youtube.com/watch?v=iz7wtTO7roQ',
-            },
-          ],
-        },
-      ],
-      content: {
-        productFullDescription: '<br>',
-        productShortDescription:
-          "The waterproof North Face Wind Breaker women's jacket will have you looking good and staying warm and dry while flying down the slopes.",
-        seoFriendlyUrl: 'north-face-wind-breaker',
-        productName: 'North Face Wind Breaker',
-        productImages: [
-          {
-            imageUrl: `${imageBaseURL}d1652945-81e7-45d3-99e5-ff4db88f597a`,
-            imageLabel: null,
-            mediaType: null,
-          },
-          {
-            imageUrl: `${imageBaseURL}3c5af144-c906-45e5-a055-8f77032fdf18`,
-            imageLabel: null,
-            mediaType: null,
-          },
-          {
-            imageUrl: `${imageBaseURL}141f234e-d7d0-4852-b82a-fdb009327380`,
-            imageLabel: null,
-            mediaType: null,
-          },
-          {
-            imageUrl: `${imageBaseURL}5af08f5e-5630-4c96-a475-d04fdc3c153e`,
-            imageLabel: null,
-            mediaType: null,
-          },
-          {
-            imageUrl: `${imageBaseURL}8b19ada0-ddc0-424d-beb9-2915cf98e852`,
-            imageLabel: null,
-            mediaType: null,
-          },
-        ],
-      },
-      options: [
-        {
-          attributeFQN: 'tenant~color',
-          attributeDetail: {
-            name: 'Color',
-            inputType: 'List',
-          },
-          isProductImageGroupSelector: false,
-          isRequired: true,
-          isMultiValue: false,
-          values: [
-            {
-              value: 'Black',
-              isSelected: false,
-              deltaPrice: null,
-              stringValue: 'Black',
-            },
-            {
-              value: 'Blue',
-              isSelected: false,
-              deltaPrice: null,
-              stringValue: 'Blue',
-            },
-            {
-              value: 'Pink',
-              isSelected: false,
-              deltaPrice: null,
-              stringValue: 'Pink',
-            },
-          ],
-        },
-        {
-          attributeFQN: 'tenant~size',
-          attributeDetail: {
-            name: 'Size',
-            inputType: 'List',
-          },
-          isProductImageGroupSelector: false,
-          isRequired: true,
-          isMultiValue: false,
-          values: [
-            {
-              value: 'L',
-              isSelected: false,
-              deltaPrice: null,
-              stringValue: 'L',
-            },
-            {
-              value: 'M',
-              isSelected: false,
-              deltaPrice: null,
-              stringValue: 'M',
-            },
-            {
-              value: 'S',
-              isSelected: false,
-              deltaPrice: null,
-              stringValue: 'S',
-            },
-          ],
-        },
-      ],
-    },
-    {
+      fulfillmentTypesSupported: ['DirectShip', 'InStorePickup'],
       productCode: 'BIKE3',
       productUsage: 'Configurable',
       isPackagedStandAlone: false,
@@ -4078,21 +2546,25 @@ export const productSearchDataMock = {
             imageUrl: `${imageBaseURL}d2249f22-a56f-42fe-be08-702801c97e4e`,
             imageLabel: null,
             mediaType: null,
+            productImageGroupId: 'default',
           },
           {
             imageUrl: `${imageBaseURL}af946329-d91b-4e41-a21e-4825179c4219`,
             imageLabel: null,
             mediaType: null,
+            productImageGroupId: 'default',
           },
           {
             imageUrl: `${imageBaseURL}4d6a6222-6eb9-4f6c-bc0a-08e0d81d9454`,
             imageLabel: null,
             mediaType: null,
+            productImageGroupId: 'default',
           },
           {
             imageUrl: `${imageBaseURL}6deee665-8462-4076-b9b4-f2fc4f1a78e1`,
             imageLabel: null,
             mediaType: null,
+            productImageGroupId: 'default',
           },
         ],
       },
@@ -4164,82 +2636,36 @@ export const productSearchDataMock = {
           ],
         },
       ],
+      productImageGroups: [],
+      inventoryInfo: {
+        manageStock: false,
+        onlineLocationCode: null,
+        onlineSoftStockAvailable: null,
+        onlineStockAvailable: null,
+      },
     },
     {
-      productCode: 'TOP14',
+      fulfillmentTypesSupported: ['DirectShip', 'InStorePickup'],
+      productCode: 'KAY1',
       productUsage: 'Configurable',
       isPackagedStandAlone: false,
       categories: [
         {
-          categoryCode: '34',
-          categoryId: 11,
+          categoryCode: '33',
+          categoryId: 39,
           isDisplayed: true,
           parentCategory: {
-            categoryId: 2,
-            categoryCode: '27',
+            categoryId: 27,
+            categoryCode: '28',
             isDisplayed: true,
             content: {
-              name: 'Camping',
-              slug: 'camping',
+              name: 'Kayaking',
+              slug: 'kayaking',
             },
           },
           content: {
-            name: 'Jackets',
-            slug: 'jackets',
-          },
-        },
-        {
-          categoryCode: '51',
-          categoryId: 18,
-          isDisplayed: true,
-          parentCategory: {
-            categoryId: 5,
-            categoryCode: '40',
-            isDisplayed: true,
-            content: {
-              name: 'Womens',
-              slug: 'womens',
-            },
-          },
-          content: {
-            name: 'Tops',
-            slug: 'tops',
-          },
-        },
-        {
-          categoryCode: 'MAT',
-          categoryId: 31,
-          isDisplayed: true,
-          parentCategory: {
-            categoryId: 15,
-            categoryCode: 'MA',
-            isDisplayed: true,
-            content: {
-              name: 'Active',
-              slug: 'active',
-            },
-          },
-          content: {
-            name: 'Shirts',
-            slug: 'tops',
-          },
-        },
-        {
-          categoryCode: 'MCT',
-          categoryId: 34,
-          isDisplayed: true,
-          parentCategory: {
-            categoryId: 21,
-            categoryCode: 'MC',
-            isDisplayed: true,
-            content: {
-              name: 'Casual',
-              slug: 'casual',
-            },
-          },
-          content: {
-            name: 'Shirts',
-            slug: 'tops',
+            name: 'Kayaks',
+            slug: 'kayaks',
           },
         },
         {
@@ -4257,7 +2683,7 @@ export const productSearchDataMock = {
         isPurchasable: false,
       },
       price: {
-        price: 130,
+        price: 450,
         salePrice: null,
       },
       priceRange: null,
@@ -4270,20 +2696,16 @@ export const productSearchDataMock = {
           isHidden: false,
           values: [
             {
-              value: 'ACC1',
-              stringValue: 'ACC1',
+              value: 'KAY2',
+              stringValue: 'KAY2',
             },
             {
-              value: 'ACC2',
-              stringValue: 'ACC2',
+              value: 'KAY3',
+              stringValue: 'KAY3',
             },
             {
-              value: 'ACC3',
-              stringValue: 'ACC3',
-            },
-            {
-              value: 'BIKE2',
-              stringValue: 'BIKE2',
+              value: 'PAD2',
+              stringValue: 'PAD2',
             },
           ],
         },
@@ -4295,7 +2717,7 @@ export const productSearchDataMock = {
           isHidden: false,
           values: [
             {
-              value: 1.5,
+              value: 4,
               stringValue: null,
             },
           ],
@@ -4308,7 +2730,7 @@ export const productSearchDataMock = {
           isHidden: false,
           values: [
             {
-              value: 1.5,
+              value: 4,
               stringValue: null,
             },
           ],
@@ -4321,16 +2743,16 @@ export const productSearchDataMock = {
           isHidden: false,
           values: [
             {
-              value: 'TOP6',
-              stringValue: 'TOP6',
+              value: 'PAD3',
+              stringValue: 'PAD3',
             },
             {
-              value: 'TOP4',
-              stringValue: 'TOP4',
+              value: 'PAD1',
+              stringValue: 'PAD1',
             },
             {
-              value: 'TOP3',
-              stringValue: 'TOP3',
+              value: 'BCKPCK1',
+              stringValue: 'BCKPCK1',
             },
           ],
         },
@@ -4342,8 +2764,12 @@ export const productSearchDataMock = {
           isHidden: true,
           values: [
             {
-              value: 'Black',
-              stringValue: 'Black',
+              value: 'Blue',
+              stringValue: 'Blue',
+            },
+            {
+              value: 'Red',
+              stringValue: 'Red',
             },
           ],
         },
@@ -4355,12 +2781,240 @@ export const productSearchDataMock = {
           isHidden: false,
           values: [
             {
-              value: 'Military',
-              stringValue: 'Military',
+              value: 'Kayaker',
+              stringValue: 'Kayaker',
             },
             {
-              value: 'Skiier',
-              stringValue: 'Skiier',
+              value: 'Summer',
+              stringValue: 'Summer',
+            },
+          ],
+        },
+        {
+          attributeFQN: 'tenant~brand',
+          attributeDetail: {
+            name: 'Brand',
+          },
+          isHidden: false,
+          values: [
+            {
+              value: 'North-Face',
+              stringValue: 'North Face',
+            },
+          ],
+        },
+        {
+          attributeFQN: 'tenant~video-url',
+          attributeDetail: {
+            name: 'video-url',
+          },
+          isHidden: false,
+          values: [
+            {
+              value: 'https://www.youtube.com/watch?v=iz7wtTO7roQ',
+              stringValue: 'https://www.youtube.com/watch?v=iz7wtTO7roQ',
+            },
+          ],
+        },
+      ],
+      content: {
+        productFullDescription: null,
+        productShortDescription:
+          'Great for rivers and lakes, the Wilderness Pamlico Kayak is sure to get you outside! The anti-flip technology keeps you upright and enjoying the adventure.<div><br></div><div>Great for a valentines date.</div>',
+        seoFriendlyUrl: 'wilderness-pamlico-kayak',
+        productName: 'Wilderness Pamlico Kayak',
+        productImages: [
+          {
+            imageUrl: `${imageBaseURL}42ec0d7e-1dff-4da6-ac8b-4ff4fc36b243`,
+            imageLabel: null,
+            mediaType: null,
+            productImageGroupId: 'default',
+          },
+          {
+            imageUrl: `${imageBaseURL}9c3d3050-ddfe-45e8-b0ad-f4650a4a3eac`,
+            imageLabel: null,
+            mediaType: null,
+            productImageGroupId: 'default',
+          },
+        ],
+      },
+      options: [
+        {
+          attributeFQN: 'tenant~color',
+          attributeDetail: {
+            name: 'Color',
+            inputType: 'List',
+          },
+          isProductImageGroupSelector: false,
+          isRequired: true,
+          isMultiValue: false,
+          values: [
+            {
+              value: 'Blue',
+              isSelected: false,
+              deltaPrice: null,
+              stringValue: 'Blue',
+            },
+            {
+              value: 'Red',
+              isSelected: false,
+              deltaPrice: null,
+              stringValue: 'Red',
+            },
+          ],
+        },
+      ],
+      productImageGroups: [],
+      inventoryInfo: {
+        manageStock: false,
+        onlineLocationCode: null,
+        onlineSoftStockAvailable: null,
+        onlineStockAvailable: null,
+      },
+    },
+    {
+      fulfillmentTypesSupported: ['DirectShip'],
+      productCode: 'PAD3',
+      productUsage: 'Standard',
+      isPackagedStandAlone: false,
+      categories: [
+        {
+          categoryCode: '35',
+          categoryId: 37,
+          isDisplayed: true,
+          parentCategory: {
+            categoryId: 27,
+            categoryCode: '28',
+            isDisplayed: true,
+            content: {
+              name: 'Kayaking',
+              slug: 'kayaking',
+            },
+          },
+          content: {
+            name: 'Paddles',
+            slug: 'paddles',
+          },
+        },
+        {
+          categoryCode: '46',
+          categoryId: 23,
+          isDisplayed: true,
+          parentCategory: null,
+          content: {
+            name: 'New Products!',
+            slug: 'new-products-',
+          },
+        },
+      ],
+      purchasableState: {
+        isPurchasable: true,
+      },
+      price: {
+        price: 39,
+        salePrice: null,
+      },
+      priceRange: null,
+      properties: [
+        {
+          attributeFQN: 'tenant~product-crosssell',
+          attributeDetail: {
+            name: 'Product Cross-Sells',
+          },
+          isHidden: false,
+          values: [
+            {
+              value: 'PAD1',
+              stringValue: 'PAD1',
+            },
+            {
+              value: 'PAD2',
+              stringValue: 'PAD2',
+            },
+            {
+              value: 'KAY2',
+              stringValue: 'KAY2',
+            },
+          ],
+        },
+        {
+          attributeFQN: 'tenant~popularity',
+          attributeDetail: {
+            name: 'Popularity',
+          },
+          isHidden: false,
+          values: [
+            {
+              value: 4,
+              stringValue: null,
+            },
+          ],
+        },
+        {
+          attributeFQN: 'tenant~rating',
+          attributeDetail: {
+            name: 'Rating',
+          },
+          isHidden: false,
+          values: [
+            {
+              value: 4,
+              stringValue: null,
+            },
+          ],
+        },
+        {
+          attributeFQN: 'tenant~product-upsell',
+          attributeDetail: {
+            name: 'Product Upsells',
+          },
+          isHidden: false,
+          values: [
+            {
+              value: 'BCKPCK1',
+              stringValue: 'BCKPCK1',
+            },
+            {
+              value: 'PAD1',
+              stringValue: 'PAD1',
+            },
+            {
+              value: 'PAD2',
+              stringValue: 'PAD2',
+            },
+            {
+              value: 'KAY1',
+              stringValue: 'KAY1',
+            },
+          ],
+        },
+        {
+          attributeFQN: 'tenant~color-filter',
+          attributeDetail: {
+            name: 'color filter',
+          },
+          isHidden: true,
+          values: [
+            {
+              value: 'Red',
+              stringValue: 'Red',
+            },
+          ],
+        },
+        {
+          attributeFQN: 'tenant~isrecommended',
+          attributeDetail: {
+            name: 'isRecommended',
+          },
+          isHidden: false,
+          values: [
+            {
+              value: 'Kayaker',
+              stringValue: 'Kayaker',
+            },
+            {
+              value: 'Summer',
+              stringValue: 'Summer',
             },
           ],
         },
@@ -4385,8 +3039,1126 @@ export const productSearchDataMock = {
           isHidden: false,
           values: [
             {
-              value: 'Technifiber',
-              stringValue: 'Technifiber',
+              value: 'Aluminum',
+              stringValue: 'Aluminum',
+            },
+          ],
+        },
+        {
+          attributeFQN: 'tenant~video-url',
+          attributeDetail: {
+            name: 'video-url',
+          },
+          isHidden: false,
+          values: [
+            {
+              value: 'https://www.youtube.com/watch?v=iz7wtTO7roQ',
+              stringValue: 'https://www.youtube.com/watch?v=iz7wtTO7roQ',
+            },
+          ],
+        },
+      ],
+      content: {
+        productFullDescription:
+          '<span style="font-family: Arial, Helvetica, sans; font-size: 11px; line-height: 14px; text-align: justify;">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum</span>​.',
+        productShortDescription:
+          'Made for power and speed, this Werner Powerhouse will have you glide along the water like a majestic swan..',
+        seoFriendlyUrl: 'sleek-paddle',
+        productName: 'Werner Powerhouse Paddle',
+        productImages: [
+          {
+            imageUrl: `${imageBaseURL}246225aa-70f2-4308-a30c-bfe8f111e9d3`,
+            imageLabel: null,
+            mediaType: null,
+            productImageGroupId: 'default',
+          },
+          {
+            imageUrl: `${imageBaseURL}b6efe81d-aa7b-4be2-81e4-9de3570d45c2`,
+            imageLabel: null,
+            mediaType: null,
+            productImageGroupId: 'default',
+          },
+        ],
+      },
+      options: null,
+      productImageGroups: [],
+      inventoryInfo: {
+        manageStock: false,
+        onlineLocationCode: null,
+        onlineSoftStockAvailable: null,
+        onlineStockAvailable: null,
+      },
+    },
+    {
+      fulfillmentTypesSupported: ['DirectShip'],
+      productCode: 'PAD1',
+      productUsage: 'Standard',
+      isPackagedStandAlone: false,
+      categories: [
+        {
+          categoryCode: '35',
+          categoryId: 37,
+          isDisplayed: true,
+          parentCategory: {
+            categoryId: 27,
+            categoryCode: '28',
+            isDisplayed: true,
+            content: {
+              name: 'Kayaking',
+              slug: 'kayaking',
+            },
+          },
+          content: {
+            name: 'Paddles',
+            slug: 'paddles',
+          },
+        },
+        {
+          categoryCode: '46',
+          categoryId: 23,
+          isDisplayed: true,
+          parentCategory: null,
+          content: {
+            name: 'New Products!',
+            slug: 'new-products-',
+          },
+        },
+      ],
+      purchasableState: {
+        isPurchasable: true,
+      },
+      price: {
+        price: 110,
+        salePrice: null,
+      },
+      priceRange: null,
+      properties: [
+        {
+          attributeFQN: 'tenant~product-crosssell',
+          attributeDetail: {
+            name: 'Product Cross-Sells',
+          },
+          isHidden: false,
+          values: [
+            {
+              value: 'BCKPCK1',
+              stringValue: 'BCKPCK1',
+            },
+            {
+              value: 'PAD2',
+              stringValue: 'PAD2',
+            },
+            {
+              value: 'PAD3',
+              stringValue: 'PAD3',
+            },
+          ],
+        },
+        {
+          attributeFQN: 'tenant~popularity',
+          attributeDetail: {
+            name: 'Popularity',
+          },
+          isHidden: false,
+          values: [
+            {
+              value: 2,
+              stringValue: null,
+            },
+          ],
+        },
+        {
+          attributeFQN: 'tenant~rating',
+          attributeDetail: {
+            name: 'Rating',
+          },
+          isHidden: false,
+          values: [
+            {
+              value: 2,
+              stringValue: null,
+            },
+          ],
+        },
+        {
+          attributeFQN: 'tenant~product-upsell',
+          attributeDetail: {
+            name: 'Product Upsells',
+          },
+          isHidden: false,
+          values: [
+            {
+              value: 'PAD3',
+              stringValue: 'PAD3',
+            },
+            {
+              value: 'KAY3',
+              stringValue: 'KAY3',
+            },
+            {
+              value: 'PET5',
+              stringValue: 'PET5',
+            },
+          ],
+        },
+        {
+          attributeFQN: 'tenant~color-filter',
+          attributeDetail: {
+            name: 'color filter',
+          },
+          isHidden: true,
+          values: [
+            {
+              value: 'Yellow',
+              stringValue: 'Yellow',
+            },
+          ],
+        },
+        {
+          attributeFQN: 'tenant~isrecommended',
+          attributeDetail: {
+            name: 'isRecommended',
+          },
+          isHidden: false,
+          values: [
+            {
+              value: 'Employee',
+              stringValue: 'Employee',
+            },
+            {
+              value: 'Kayaker',
+              stringValue: 'Kayaker',
+            },
+            {
+              value: 'Summer',
+              stringValue: 'Summer',
+            },
+          ],
+        },
+        {
+          attributeFQN: 'tenant~brand',
+          attributeDetail: {
+            name: 'Brand',
+          },
+          isHidden: false,
+          values: [
+            {
+              value: 'North-Face',
+              stringValue: 'North Face',
+            },
+          ],
+        },
+        {
+          attributeFQN: 'tenant~material',
+          attributeDetail: {
+            name: 'Material',
+          },
+          isHidden: false,
+          values: [
+            {
+              value: 'Aluminum',
+              stringValue: 'Aluminum',
+            },
+          ],
+        },
+        {
+          attributeFQN: 'tenant~video-url',
+          attributeDetail: {
+            name: 'video-url',
+          },
+          isHidden: false,
+          values: [
+            {
+              value: 'https://www.youtube.com/watch?v=iz7wtTO7roQ',
+              stringValue: 'https://www.youtube.com/watch?v=iz7wtTO7roQ',
+            },
+          ],
+        },
+      ],
+      content: {
+        productFullDescription: null,
+        productShortDescription:
+          'Used by the locals, the Bending Branches Paddle, is a favorite. The comfort grip handle and wide paddle surface is sure to deliver a great kayaking experience...',
+        seoFriendlyUrl: 'bending-branches-paddle',
+        productName: 'Bending Branches Paddle',
+        productImages: [
+          {
+            imageUrl: `${imageBaseURL}11e8d931-886d-4d82-9260-bbfe9fa3e7a4`,
+            imageLabel: null,
+            mediaType: null,
+            productImageGroupId: 'default',
+          },
+          {
+            imageUrl: `${imageBaseURL}4418236d-3786-49f0-a21c-7bd1ff6a6da9`,
+            imageLabel: null,
+            mediaType: null,
+            productImageGroupId: 'default',
+          },
+          {
+            imageUrl: `${imageBaseURL}efbfd120-3b59-4f12-9d7d-df66d3f792a4`,
+            imageLabel: null,
+            mediaType: null,
+            productImageGroupId: 'default',
+          },
+        ],
+      },
+      options: null,
+      productImageGroups: [],
+      inventoryInfo: {
+        manageStock: false,
+        onlineLocationCode: null,
+        onlineSoftStockAvailable: null,
+        onlineStockAvailable: null,
+      },
+    },
+    {
+      fulfillmentTypesSupported: ['DirectShip'],
+      productCode: 'PAD2',
+      productUsage: 'Standard',
+      isPackagedStandAlone: false,
+      categories: [
+        {
+          categoryCode: '35',
+          categoryId: 37,
+          isDisplayed: true,
+          parentCategory: {
+            categoryId: 27,
+            categoryCode: '28',
+            isDisplayed: true,
+            content: {
+              name: 'Kayaking',
+              slug: 'kayaking',
+            },
+          },
+          content: {
+            name: 'Paddles',
+            slug: 'paddles',
+          },
+        },
+        {
+          categoryCode: '46',
+          categoryId: 23,
+          isDisplayed: true,
+          parentCategory: null,
+          content: {
+            name: 'New Products!',
+            slug: 'new-products-',
+          },
+        },
+      ],
+      purchasableState: {
+        isPurchasable: true,
+      },
+      price: {
+        price: 90,
+        salePrice: null,
+      },
+      priceRange: null,
+      properties: [
+        {
+          attributeFQN: 'tenant~product-crosssell',
+          attributeDetail: {
+            name: 'Product Cross-Sells',
+          },
+          isHidden: false,
+          values: [
+            {
+              value: 'KAY1',
+              stringValue: 'KAY1',
+            },
+            {
+              value: 'KAY3',
+              stringValue: 'KAY3',
+            },
+            {
+              value: 'PAD1',
+              stringValue: 'PAD1',
+            },
+            {
+              value: 'PAD3',
+              stringValue: 'PAD3',
+            },
+          ],
+        },
+        {
+          attributeFQN: 'tenant~popularity',
+          attributeDetail: {
+            name: 'Popularity',
+          },
+          isHidden: false,
+          values: [
+            {
+              value: 3,
+              stringValue: null,
+            },
+          ],
+        },
+        {
+          attributeFQN: 'tenant~rating',
+          attributeDetail: {
+            name: 'Rating',
+          },
+          isHidden: false,
+          values: [
+            {
+              value: 3,
+              stringValue: null,
+            },
+          ],
+        },
+        {
+          attributeFQN: 'tenant~product-upsell',
+          attributeDetail: {
+            name: 'Product Upsells',
+          },
+          isHidden: false,
+          values: [
+            {
+              value: 'BCKPCK1',
+              stringValue: 'BCKPCK1',
+            },
+            {
+              value: 'PAD1',
+              stringValue: 'PAD1',
+            },
+            {
+              value: 'KAY2',
+              stringValue: 'KAY2',
+            },
+          ],
+        },
+        {
+          attributeFQN: 'tenant~color-filter',
+          attributeDetail: {
+            name: 'color filter',
+          },
+          isHidden: true,
+          values: [
+            {
+              value: 'Black',
+              stringValue: 'Black',
+            },
+          ],
+        },
+        {
+          attributeFQN: 'tenant~isrecommended',
+          attributeDetail: {
+            name: 'isRecommended',
+          },
+          isHidden: false,
+          values: [
+            {
+              value: 'Kayaker',
+              stringValue: 'Kayaker',
+            },
+            {
+              value: 'Summer',
+              stringValue: 'Summer',
+            },
+          ],
+        },
+        {
+          attributeFQN: 'tenant~brand',
+          attributeDetail: {
+            name: 'Brand',
+          },
+          isHidden: false,
+          values: [
+            {
+              value: 'North-Face',
+              stringValue: 'North Face',
+            },
+          ],
+        },
+        {
+          attributeFQN: 'tenant~material',
+          attributeDetail: {
+            name: 'Material',
+          },
+          isHidden: false,
+          values: [
+            {
+              value: 'Aluminum',
+              stringValue: 'Aluminum',
+            },
+          ],
+        },
+        {
+          attributeFQN: 'tenant~video-url',
+          attributeDetail: {
+            name: 'video-url',
+          },
+          isHidden: false,
+          values: [
+            {
+              value: 'https://www.youtube.com/watch?v=iz7wtTO7roQ',
+              stringValue: 'https://www.youtube.com/watch?v=iz7wtTO7roQ',
+            },
+          ],
+        },
+      ],
+      content: {
+        productFullDescription: null,
+        productShortDescription:
+          'Kayak like a rockstar with the sleek water paddle. This paddle has a non-adjustable shaft, but offers a comfort grip that is unmatched. .',
+        seoFriendlyUrl: 'werner-cyprus-paddle',
+        productName: 'Werner Cyprus Paddle',
+        productImages: [
+          {
+            imageUrl: `${imageBaseURL}7eed692a-a868-4484-99a9-81faa3be6b3e`,
+            imageLabel: null,
+            mediaType: null,
+            productImageGroupId: 'default',
+          },
+          {
+            imageUrl: `${imageBaseURL}c418f996-2bd5-42bb-84b3-f883b3647040`,
+            imageLabel: null,
+            mediaType: null,
+            productImageGroupId: 'default',
+          },
+        ],
+      },
+      options: null,
+      productImageGroups: [],
+      inventoryInfo: {
+        manageStock: false,
+        onlineLocationCode: null,
+        onlineSoftStockAvailable: null,
+        onlineStockAvailable: null,
+      },
+    },
+    {
+      fulfillmentTypesSupported: ['DirectShip'],
+      productCode: 'KAY3',
+      productUsage: 'Standard',
+      isPackagedStandAlone: false,
+      categories: [
+        {
+          categoryCode: '33',
+          categoryId: 39,
+          isDisplayed: true,
+          parentCategory: {
+            categoryId: 27,
+            categoryCode: '28',
+            isDisplayed: true,
+            content: {
+              name: 'Kayaking',
+              slug: 'kayaking',
+            },
+          },
+          content: {
+            name: 'Kayaks',
+            slug: 'kayaks',
+          },
+        },
+        {
+          categoryCode: '46',
+          categoryId: 23,
+          isDisplayed: true,
+          parentCategory: null,
+          content: {
+            name: 'New Products!',
+            slug: 'new-products-',
+          },
+        },
+      ],
+      purchasableState: {
+        isPurchasable: true,
+      },
+      price: {
+        price: 525,
+        salePrice: null,
+      },
+      priceRange: null,
+      properties: [
+        {
+          attributeFQN: 'tenant~product-crosssell',
+          attributeDetail: {
+            name: 'Product Cross-Sells',
+          },
+          isHidden: false,
+          values: [
+            {
+              value: 'PAD3',
+              stringValue: 'PAD3',
+            },
+            {
+              value: 'PAD2',
+              stringValue: 'PAD2',
+            },
+            {
+              value: 'KAY1',
+              stringValue: 'KAY1',
+            },
+          ],
+        },
+        {
+          attributeFQN: 'tenant~popularity',
+          attributeDetail: {
+            name: 'Popularity',
+          },
+          isHidden: false,
+          values: [
+            {
+              value: 1,
+              stringValue: null,
+            },
+          ],
+        },
+        {
+          attributeFQN: 'tenant~rating',
+          attributeDetail: {
+            name: 'Rating',
+          },
+          isHidden: false,
+          values: [
+            {
+              value: 1,
+              stringValue: null,
+            },
+          ],
+        },
+        {
+          attributeFQN: 'tenant~product-upsell',
+          attributeDetail: {
+            name: 'Product Upsells',
+          },
+          isHidden: false,
+          values: [
+            {
+              value: 'BCKPCK1',
+              stringValue: 'BCKPCK1',
+            },
+            {
+              value: 'PAD2',
+              stringValue: 'PAD2',
+            },
+            {
+              value: 'KAY1',
+              stringValue: 'KAY1',
+            },
+          ],
+        },
+        {
+          attributeFQN: 'tenant~color-filter',
+          attributeDetail: {
+            name: 'color filter',
+          },
+          isHidden: true,
+          values: [
+            {
+              value: 'Orange',
+              stringValue: 'Orange',
+            },
+          ],
+        },
+        {
+          attributeFQN: 'tenant~isrecommended',
+          attributeDetail: {
+            name: 'isRecommended',
+          },
+          isHidden: false,
+          values: [
+            {
+              value: 'Kayaker',
+              stringValue: 'Kayaker',
+            },
+            {
+              value: 'Summer',
+              stringValue: 'Summer',
+            },
+          ],
+        },
+        {
+          attributeFQN: 'tenant~brand',
+          attributeDetail: {
+            name: 'Brand',
+          },
+          isHidden: false,
+          values: [
+            {
+              value: 'North-Face',
+              stringValue: 'North Face',
+            },
+          ],
+        },
+        {
+          attributeFQN: 'tenant~color',
+          attributeDetail: {
+            name: 'Color',
+          },
+          isHidden: false,
+          values: [
+            {
+              value: 'Orange',
+              stringValue: 'Orange',
+            },
+          ],
+        },
+        {
+          attributeFQN: 'tenant~video-url',
+          attributeDetail: {
+            name: 'video-url',
+          },
+          isHidden: false,
+          values: [
+            {
+              value: 'https://www.youtube.com/watch?v=iz7wtTO7roQ',
+              stringValue: 'https://www.youtube.com/watch?v=iz7wtTO7roQ',
+            },
+          ],
+        },
+      ],
+      content: {
+        productFullDescription: null,
+        productShortDescription:
+          'Are you looking to take kayaking to the next level? The&nbsp;Advanced Elements Kayak is your next best move - the quick pivot technology can make any white water rafting junkie look like a pro..',
+        seoFriendlyUrl: 'advanced-elements-kayak',
+        productName: 'Advanced Elements Kayak',
+        productImages: [
+          {
+            imageUrl: `${imageBaseURL}b8333a2a-2b11-4d51-922c-9144d2e10452`,
+            imageLabel: null,
+            mediaType: null,
+            productImageGroupId: 'default',
+          },
+          {
+            imageUrl: `${imageBaseURL}9cb7158e-2322-410d-993b-aa84f8870652`,
+            imageLabel: null,
+            mediaType: null,
+            productImageGroupId: 'default',
+          },
+        ],
+      },
+      options: null,
+      productImageGroups: [],
+      inventoryInfo: {
+        manageStock: false,
+        onlineLocationCode: null,
+        onlineSoftStockAvailable: null,
+        onlineStockAvailable: null,
+      },
+    },
+    {
+      fulfillmentTypesSupported: ['DirectShip'],
+      productCode: 'KAY2',
+      productUsage: 'Standard',
+      isPackagedStandAlone: false,
+      categories: [
+        {
+          categoryCode: '33',
+          categoryId: 39,
+          isDisplayed: true,
+          parentCategory: {
+            categoryId: 27,
+            categoryCode: '28',
+            isDisplayed: true,
+            content: {
+              name: 'Kayaking',
+              slug: 'kayaking',
+            },
+          },
+          content: {
+            name: 'Kayaks',
+            slug: 'kayaks',
+          },
+        },
+        {
+          categoryCode: '46',
+          categoryId: 23,
+          isDisplayed: true,
+          parentCategory: null,
+          content: {
+            name: 'New Products!',
+            slug: 'new-products-',
+          },
+        },
+      ],
+      purchasableState: {
+        isPurchasable: true,
+      },
+      price: {
+        price: 610,
+        salePrice: null,
+      },
+      priceRange: null,
+      properties: [
+        {
+          attributeFQN: 'tenant~product-crosssell',
+          attributeDetail: {
+            name: 'Product Cross-Sells',
+          },
+          isHidden: false,
+          values: [
+            {
+              value: 'PAD3',
+              stringValue: 'PAD3',
+            },
+            {
+              value: 'KAY3',
+              stringValue: 'KAY3',
+            },
+            {
+              value: 'KAY1',
+              stringValue: 'KAY1',
+            },
+          ],
+        },
+        {
+          attributeFQN: 'tenant~popularity',
+          attributeDetail: {
+            name: 'Popularity',
+          },
+          isHidden: false,
+          values: [
+            {
+              value: 5,
+              stringValue: null,
+            },
+          ],
+        },
+        {
+          attributeFQN: 'tenant~rating',
+          attributeDetail: {
+            name: 'Rating',
+          },
+          isHidden: false,
+          values: [
+            {
+              value: 5,
+              stringValue: null,
+            },
+          ],
+        },
+        {
+          attributeFQN: 'tenant~product-upsell',
+          attributeDetail: {
+            name: 'Product Upsells',
+          },
+          isHidden: false,
+          values: [
+            {
+              value: 'KAY1',
+              stringValue: 'KAY1',
+            },
+            {
+              value: 'KAY3',
+              stringValue: 'KAY3',
+            },
+            {
+              value: 'PAD1',
+              stringValue: 'PAD1',
+            },
+          ],
+        },
+        {
+          attributeFQN: 'tenant~color-filter',
+          attributeDetail: {
+            name: 'color filter',
+          },
+          isHidden: true,
+          values: [
+            {
+              value: 'Yellow',
+              stringValue: 'Yellow',
+            },
+          ],
+        },
+        {
+          attributeFQN: 'tenant~isrecommended',
+          attributeDetail: {
+            name: 'isRecommended',
+          },
+          isHidden: false,
+          values: [
+            {
+              value: 'Kayaker',
+              stringValue: 'Kayaker',
+            },
+            {
+              value: 'Summer',
+              stringValue: 'Summer',
+            },
+          ],
+        },
+        {
+          attributeFQN: 'tenant~brand',
+          attributeDetail: {
+            name: 'Brand',
+          },
+          isHidden: false,
+          values: [
+            {
+              value: 'North-Face',
+              stringValue: 'North Face',
+            },
+          ],
+        },
+        {
+          attributeFQN: 'tenant~color',
+          attributeDetail: {
+            name: 'Color',
+          },
+          isHidden: false,
+          values: [
+            {
+              value: 'Yellow',
+              stringValue: 'Yellow',
+            },
+          ],
+        },
+        {
+          attributeFQN: 'tenant~video-url',
+          attributeDetail: {
+            name: 'video-url',
+          },
+          isHidden: false,
+          values: [
+            {
+              value: 'https://www.youtube.com/watch?v=iz7wtTO7roQ',
+              stringValue: 'https://www.youtube.com/watch?v=iz7wtTO7roQ',
+            },
+          ],
+        },
+      ],
+      content: {
+        productFullDescription: null,
+        productShortDescription:
+          'The&nbsp;Folbot Folding Kayak is a bundle of fun, literally! Designed to pack neatly into a ready-to-travel case and blow up quickly. The inflatable technology gives you a smooth ride across nearly any water obstacle..',
+        seoFriendlyUrl: 'folbot-folding-kayak',
+        productName: 'Folbot Folding Kayak',
+        productImages: [
+          {
+            imageUrl: `${imageBaseURL}6b060b2e-ade8-4706-84e3-f056988ce14c`,
+            imageLabel: null,
+            mediaType: null,
+            productImageGroupId: 'default',
+          },
+          {
+            imageUrl: `${imageBaseURL}a33e2fb3-001c-464d-80cf-66b6f1217f06`,
+            imageLabel: null,
+            mediaType: null,
+            productImageGroupId: 'default',
+          },
+          {
+            imageUrl: `${imageBaseURL}631669cb-e1e3-4dab-b8e3-336b7a08900a`,
+            imageLabel: null,
+            mediaType: null,
+            productImageGroupId: 'default',
+          },
+        ],
+      },
+      options: null,
+      productImageGroups: [],
+      inventoryInfo: {
+        manageStock: false,
+        onlineLocationCode: null,
+        onlineSoftStockAvailable: null,
+        onlineStockAvailable: null,
+      },
+    },
+    {
+      fulfillmentTypesSupported: ['DirectShip'],
+      productCode: 'TENT3',
+      productUsage: 'Standard',
+      isPackagedStandAlone: false,
+      categories: [
+        {
+          categoryCode: '32',
+          categoryId: 10,
+          isDisplayed: true,
+          parentCategory: {
+            categoryId: 2,
+            categoryCode: '27',
+            isDisplayed: true,
+            content: {
+              name: 'Camping',
+              slug: 'camping',
+            },
+          },
+          content: {
+            name: 'Tents',
+            slug: 'tents',
+          },
+        },
+        {
+          categoryCode: '46',
+          categoryId: 23,
+          isDisplayed: true,
+          parentCategory: null,
+          content: {
+            name: 'New Products!',
+            slug: 'new-products-',
+          },
+        },
+      ],
+      purchasableState: {
+        isPurchasable: true,
+      },
+      price: {
+        price: 255,
+        salePrice: null,
+      },
+      priceRange: null,
+      properties: [
+        {
+          attributeFQN: 'tenant~product-crosssell',
+          attributeDetail: {
+            name: 'Product Cross-Sells',
+          },
+          isHidden: false,
+          values: [
+            {
+              value: 'BCKPCK3',
+              stringValue: 'BCKPCK3',
+            },
+            {
+              value: 'BCKPCK2',
+              stringValue: 'BCKPCK2',
+            },
+            {
+              value: 'BCKPCK1',
+              stringValue: 'BCKPCK1',
+            },
+            {
+              value: 'TOP5',
+              stringValue: 'TOP5',
+            },
+          ],
+        },
+        {
+          attributeFQN: 'tenant~popularity',
+          attributeDetail: {
+            name: 'Popularity',
+          },
+          isHidden: false,
+          values: [
+            {
+              value: 4,
+              stringValue: null,
+            },
+          ],
+        },
+        {
+          attributeFQN: 'tenant~rating',
+          attributeDetail: {
+            name: 'Rating',
+          },
+          isHidden: false,
+          values: [
+            {
+              value: 3,
+              stringValue: null,
+            },
+          ],
+        },
+        {
+          attributeFQN: 'tenant~product-related',
+          attributeDetail: {
+            name: 'Related Products',
+          },
+          isHidden: false,
+          values: [
+            {
+              value: 'KAY3',
+              stringValue: 'KAY3',
+            },
+            {
+              value: 'PET3',
+              stringValue: 'PET3',
+            },
+            {
+              value: 'TENT1',
+              stringValue: 'TENT1',
+            },
+          ],
+        },
+        {
+          attributeFQN: 'tenant~product-upsell',
+          attributeDetail: {
+            name: 'Product Upsells',
+          },
+          isHidden: false,
+          values: [
+            {
+              value: 'BIKE3',
+              stringValue: 'BIKE3',
+            },
+            {
+              value: 'BIKE1',
+              stringValue: 'BIKE1',
+            },
+            {
+              value: 'BCKPCK2',
+              stringValue: 'BCKPCK2',
+            },
+            {
+              value: 'BCKPCK1',
+              stringValue: 'BCKPCK1',
+            },
+          ],
+        },
+        {
+          attributeFQN: 'tenant~color-filter',
+          attributeDetail: {
+            name: 'color filter',
+          },
+          isHidden: true,
+          values: [
+            {
+              value: 'Yellow',
+              stringValue: 'Yellow',
+            },
+          ],
+        },
+        {
+          attributeFQN: 'tenant~isrecommended',
+          attributeDetail: {
+            name: 'isRecommended',
+          },
+          isHidden: false,
+          values: [
+            {
+              value: 'Employee',
+              stringValue: 'Employee',
+            },
+            {
+              value: 'Kayaker',
+              stringValue: 'Kayaker',
+            },
+            {
+              value: 'Military',
+              stringValue: 'Military',
+            },
+            {
+              value: 'Summer',
+              stringValue: 'Summer',
+            },
+          ],
+        },
+        {
+          attributeFQN: 'tenant~brand',
+          attributeDetail: {
+            name: 'Brand',
+          },
+          isHidden: false,
+          values: [
+            {
+              value: 'North-Face',
+              stringValue: 'North Face',
+            },
+          ],
+        },
+        {
+          attributeFQN: 'tenant~color',
+          attributeDetail: {
+            name: 'Color',
+          },
+          isHidden: false,
+          values: [
+            {
+              value: 'Yellow',
+              stringValue: 'Yellow',
             },
           ],
         },
@@ -4398,7 +4170,7 @@ export const productSearchDataMock = {
           isHidden: true,
           values: [
             {
-              value: false,
+              value: true,
               stringValue: null,
             },
           ],
@@ -4408,7 +4180,7 @@ export const productSearchDataMock = {
           attributeDetail: {
             name: 'video-url',
           },
-          isHidden: true,
+          isHidden: false,
           values: [
             {
               value: 'https://www.youtube.com/watch?v=iz7wtTO7roQ',
@@ -4418,71 +4190,43 @@ export const productSearchDataMock = {
         },
       ],
       content: {
-        productFullDescription: '<br>',
+        productFullDescription: '',
         productShortDescription:
-          'Loaded with pockets and featuring waterproof, breathable fabric, the North Face Thermal Jacket jacket offers trusty protection and convenient organization on your adventures in the snow.',
-        seoFriendlyUrl: 'north-face-thermal-jacket',
-        productName: 'North Face Thermal Jacket',
+          'Need something that is a bit more roomy for your camping experience? Try out the&nbsp;Marmot Thor 3 Person Tent, designed to comfortable sleep three people.&nbsp;',
+        seoFriendlyUrl: 'marmot-thor-3-person-tent',
+        productName: 'Marmot Thor 3 Person Tent',
         productImages: [
           {
-            imageUrl: `${imageBaseURL}eea768aa-065b-4cf2-9af1-e0d492f21875`,
+            imageUrl: `${imageBaseURL}71a2fef4-2e6d-4dad-967f-efdbef566629`,
             imageLabel: null,
             mediaType: null,
+            productImageGroupId: 'default',
+          },
+          {
+            imageUrl: `${imageBaseURL}b04cfb8e-c52f-4c90-aa09-323e9576ef33`,
+            imageLabel: null,
+            mediaType: null,
+            productImageGroupId: 'default',
+          },
+          {
+            imageUrl: `${imageBaseURL}3b6eb3a4-e0bb-46f3-8199-a954bd69faa2`,
+            imageLabel: null,
+            mediaType: null,
+            productImageGroupId: 'default',
           },
         ],
       },
-      options: [
-        {
-          attributeFQN: 'tenant~color',
-          attributeDetail: {
-            name: 'Color',
-            inputType: 'List',
-          },
-          isProductImageGroupSelector: false,
-          isRequired: true,
-          isMultiValue: false,
-          values: [
-            {
-              value: 'Black',
-              isSelected: true,
-              deltaPrice: null,
-              stringValue: 'Black',
-            },
-          ],
-        },
-        {
-          attributeFQN: 'tenant~size',
-          attributeDetail: {
-            name: 'Size',
-            inputType: 'List',
-          },
-          isProductImageGroupSelector: false,
-          isRequired: true,
-          isMultiValue: false,
-          values: [
-            {
-              value: 'L',
-              isSelected: false,
-              deltaPrice: null,
-              stringValue: 'L',
-            },
-            {
-              value: 'M',
-              isSelected: false,
-              deltaPrice: null,
-              stringValue: 'M',
-            },
-            {
-              value: 'S',
-              isSelected: false,
-              deltaPrice: null,
-              stringValue: 'S',
-            },
-          ],
-        },
-      ],
+      options: null,
+      productImageGroups: [],
+      inventoryInfo: {
+        manageStock: false,
+        onlineLocationCode: null,
+        onlineSoftStockAvailable: null,
+        onlineStockAvailable: null,
+      },
     },
     {
+      fulfillmentTypesSupported: ['DirectShip', 'InStorePickup'],
       productCode: 'BCKPCK2',
       productUsage: 'Configurable',
       isPackagedStandAlone: false,
@@ -4669,16 +4413,19 @@ export const productSearchDataMock = {
             imageUrl: `${imageBaseURL}2f81532c-0c60-4a86-9fd7-4e7ab5c0e9dd`,
             imageLabel: null,
             mediaType: null,
+            productImageGroupId: 'default',
           },
           {
             imageUrl: `${imageBaseURL}d41eb955-43db-451b-a34f-2fff98523c66`,
             imageLabel: null,
             mediaType: null,
+            productImageGroupId: 'default',
           },
           {
             imageUrl: `${imageBaseURL}c995ad6f-7bf3-46f7-b7d2-4fdcdd7e22df`,
             imageLabel: null,
             mediaType: null,
+            productImageGroupId: 'default',
           },
         ],
       },
@@ -4708,313 +4455,13 @@ export const productSearchDataMock = {
           ],
         },
       ],
-    },
-    {
-      productCode: 'TOP12',
-      productUsage: 'Configurable',
-      isPackagedStandAlone: false,
-      categories: [
-        {
-          categoryCode: '34',
-          categoryId: 11,
-          isDisplayed: true,
-          parentCategory: {
-            categoryId: 2,
-            categoryCode: '27',
-            isDisplayed: true,
-            content: {
-              name: 'Camping',
-              slug: 'camping',
-            },
-          },
-          content: {
-            name: 'Jackets',
-            slug: 'jackets',
-          },
-        },
-        {
-          categoryCode: 'MAT',
-          categoryId: 31,
-          isDisplayed: true,
-          parentCategory: {
-            categoryId: 15,
-            categoryCode: 'MA',
-            isDisplayed: true,
-            content: {
-              name: 'Active',
-              slug: 'active',
-            },
-          },
-          content: {
-            name: 'Shirts',
-            slug: 'tops',
-          },
-        },
-        {
-          categoryCode: 'MCT',
-          categoryId: 34,
-          isDisplayed: true,
-          parentCategory: {
-            categoryId: 21,
-            categoryCode: 'MC',
-            isDisplayed: true,
-            content: {
-              name: 'Casual',
-              slug: 'casual',
-            },
-          },
-          content: {
-            name: 'Shirts',
-            slug: 'tops',
-          },
-        },
-        {
-          categoryCode: '46',
-          categoryId: 23,
-          isDisplayed: true,
-          parentCategory: null,
-          content: {
-            name: 'New Products!',
-            slug: 'new-products-',
-          },
-        },
-      ],
-      purchasableState: {
-        isPurchasable: false,
+      productImageGroups: [],
+      inventoryInfo: {
+        manageStock: false,
+        onlineLocationCode: null,
+        onlineSoftStockAvailable: null,
+        onlineStockAvailable: null,
       },
-      price: {
-        price: 115,
-        salePrice: null,
-      },
-      priceRange: null,
-      properties: [
-        {
-          attributeFQN: 'tenant~product-crosssell',
-          attributeDetail: {
-            name: 'Product Cross-Sells',
-          },
-          isHidden: false,
-          values: [
-            {
-              value: 'BIKE1',
-              stringValue: 'BIKE1',
-            },
-            {
-              value: 'BIKE2',
-              stringValue: 'BIKE2',
-            },
-            {
-              value: 'BIKE3',
-              stringValue: 'BIKE3',
-            },
-            {
-              value: 'BOT1',
-              stringValue: 'BOT1',
-            },
-          ],
-        },
-        {
-          attributeFQN: 'tenant~popularity',
-          attributeDetail: {
-            name: 'Popularity',
-          },
-          isHidden: false,
-          values: [
-            {
-              value: 3,
-              stringValue: null,
-            },
-          ],
-        },
-        {
-          attributeFQN: 'tenant~rating',
-          attributeDetail: {
-            name: 'Rating',
-          },
-          isHidden: false,
-          values: [
-            {
-              value: 1,
-              stringValue: null,
-            },
-          ],
-        },
-        {
-          attributeFQN: 'tenant~product-upsell',
-          attributeDetail: {
-            name: 'Product Upsells',
-          },
-          isHidden: false,
-          values: [
-            {
-              value: 'KAY1',
-              stringValue: 'KAY1',
-            },
-            {
-              value: 'PAD1',
-              stringValue: 'PAD1',
-            },
-            {
-              value: 'PET1',
-              stringValue: 'PET1',
-            },
-            {
-              value: 'PET3',
-              stringValue: 'PET3',
-            },
-          ],
-        },
-        {
-          attributeFQN: 'tenant~color-filter',
-          attributeDetail: {
-            name: 'color filter',
-          },
-          isHidden: true,
-          values: [
-            {
-              value: 'Black',
-              stringValue: 'Black',
-            },
-          ],
-        },
-        {
-          attributeFQN: 'tenant~isrecommended',
-          attributeDetail: {
-            name: 'isRecommended',
-          },
-          isHidden: false,
-          values: [
-            {
-              value: 'Military',
-              stringValue: 'Military',
-            },
-            {
-              value: 'Summer',
-              stringValue: 'Summer',
-            },
-            {
-              value: 'Winter',
-              stringValue: 'Winter',
-            },
-          ],
-        },
-        {
-          attributeFQN: 'tenant~brand',
-          attributeDetail: {
-            name: 'Brand',
-          },
-          isHidden: false,
-          values: [
-            {
-              value: 'North-Face',
-              stringValue: 'North Face',
-            },
-          ],
-        },
-        {
-          attributeFQN: 'tenant~material',
-          attributeDetail: {
-            name: 'Material',
-          },
-          isHidden: false,
-          values: [
-            {
-              value: 'Cotton',
-              stringValue: 'Cotton',
-            },
-          ],
-        },
-        {
-          attributeFQN: 'tenant~last-call',
-          attributeDetail: {
-            name: 'Last Call',
-          },
-          isHidden: true,
-          values: [
-            {
-              value: false,
-              stringValue: null,
-            },
-          ],
-        },
-        {
-          attributeFQN: 'tenant~video-url',
-          attributeDetail: {
-            name: 'video-url',
-          },
-          isHidden: true,
-          values: [
-            {
-              value: 'https://www.youtube.com/watch?v=iz7wtTO7roQ',
-              stringValue: 'https://www.youtube.com/watch?v=iz7wtTO7roQ',
-            },
-          ],
-        },
-      ],
-      content: {
-        productFullDescription: '<br>',
-        productShortDescription:
-          'The North Face Lounging Sweater jacket for men is wind- and water-resistant and highly compressible. This warm jacket can be worn as a mid layer or as outerwear in cold climates.',
-        seoFriendlyUrl: 'north-face-lounging-sweater',
-        productName: 'North Face Lounging Sweater',
-        productImages: [
-          {
-            imageUrl: `${imageBaseURL}0a6ac26f-13c6-4010-90d2-c376cdf08aad`,
-            imageLabel: null,
-            mediaType: null,
-          },
-        ],
-      },
-      options: [
-        {
-          attributeFQN: 'tenant~color',
-          attributeDetail: {
-            name: 'Color',
-            inputType: 'List',
-          },
-          isProductImageGroupSelector: false,
-          isRequired: true,
-          isMultiValue: false,
-          values: [
-            {
-              value: 'Black',
-              isSelected: true,
-              deltaPrice: null,
-              stringValue: 'Black',
-            },
-          ],
-        },
-        {
-          attributeFQN: 'tenant~size',
-          attributeDetail: {
-            name: 'Size',
-            inputType: 'List',
-          },
-          isProductImageGroupSelector: false,
-          isRequired: true,
-          isMultiValue: false,
-          values: [
-            {
-              value: 'L',
-              isSelected: false,
-              deltaPrice: null,
-              stringValue: 'L',
-            },
-            {
-              value: 'M',
-              isSelected: false,
-              deltaPrice: null,
-              stringValue: 'M',
-            },
-            {
-              value: 'S',
-              isSelected: false,
-              deltaPrice: null,
-              stringValue: 'S',
-            },
-          ],
-        },
-      ],
     },
   ],
   facets: [
