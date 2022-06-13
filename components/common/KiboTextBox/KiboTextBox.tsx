@@ -87,7 +87,7 @@ const KiboTextBox = (props: KiboTextBoxProps) => {
         onKeyDown={onKeyDown}
         {...(icon && {
           endAdornment: (
-            <IconButton size="small" onClick={onIconClick}>
+            <IconButton aria-label="toggle icon visibility" size="small" onClick={onIconClick}>
               {icon}
             </IconButton>
           ),
