@@ -23,9 +23,9 @@ import { useTranslation } from 'next-i18next'
 import { useForm, Controller } from 'react-hook-form'
 import * as yup from 'yup'
 
-import { CheckoutDetails, useUpdateCheckout } from '../../../hooks'
 import KiboTextBox from '@/components/common/KiboTextBox/KiboTextBox'
 import PasswordValidation from '@/components/common/PasswordValidation/PasswordValidation'
+import { CheckoutDetails, useUpdateCheckout } from '@/hooks'
 import { FormStates } from '@/lib/constants'
 import { isPasswordValid } from '@/lib/helpers/validations/validations'
 

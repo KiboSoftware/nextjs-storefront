@@ -14,7 +14,7 @@ import { useTranslation } from 'next-i18next'
 
 import { CardDetailsForm, type Action, type CardData } from '@/components/checkout'
 import AddressForm, { Address, Contact } from '@/components/common/AddressForm/AddressForm'
-import { usePaymentTypes } from '@/hooks/usePaymentTypes/usePaymentTypes'
+import { usePaymentTypes } from '@/hooks'
 import { FormStates } from '@/lib/constants'
 
 import type { Order } from '@/lib/gql/types'
