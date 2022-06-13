@@ -44,13 +44,17 @@ describe('[components] PaymentStep', () => {
   })
 
   describe('should validate card component', () => {
-    it('should validate selceted payment method ', () => {
+    it('should validate selceted payment method ', async () => {
       setup()
 
       const creditCard = screen.getByRole('radio', {
         name: /credit \/ debit card/i,
       })
-      fireEvent.click(creditCard)
+
+      await act(async () => {
+        fireEvent.click(creditCard)
+      })
+
       expect(creditCard).toBeChecked()
     })
 
@@ -60,7 +64,11 @@ describe('[components] PaymentStep', () => {
       const creditCard = screen.getByRole('radio', {
         name: /credit \/ debit card/i,
       })
-      fireEvent.click(creditCard)
+
+      await act(async () => {
+        fireEvent.click(creditCard)
+      })
+
       const cardNumber = screen.getByRole('textbox', {
         name: /card-number/i,
       })
@@ -80,7 +88,10 @@ describe('[components] PaymentStep', () => {
       const creditCard = screen.getByRole('radio', {
         name: /credit \/ debit card/i,
       })
-      fireEvent.click(creditCard)
+
+      await act(async () => {
+        fireEvent.click(creditCard)
+      })
 
       const expiryDate = screen.getByPlaceholderText(/expiry-date-placeholder/i)
 
@@ -100,7 +111,10 @@ describe('[components] PaymentStep', () => {
       const creditCard = screen.getByRole('radio', {
         name: /credit \/ debit card/i,
       })
-      fireEvent.click(creditCard)
+
+      await act(async () => {
+        fireEvent.click(creditCard)
+      })
 
       const securityCode = screen.getByPlaceholderText(/security-code-placeholder/i)
       // act

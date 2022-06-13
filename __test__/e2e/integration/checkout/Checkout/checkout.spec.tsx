@@ -1,22 +1,13 @@
 import React from 'react'
 
 import { composeStories } from '@storybook/testing-react'
-import { screen, act, fireEvent } from '@testing-library/react'
+import { screen, act, fireEvent, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 
 import * as stories from '../../../../../components/page-templates/Checkout/Checkout.stories'
 import { renderWithQueryClient } from '../../../../utils/renderWithQueryClient'
 
 const { Common } = composeStories(stories)
-
-jest.mock('../../../../../hooks', () => ({
-  useCheckout: jest.fn(() => ({})),
-  useUpdateCheckout: () => ({
-    mutateAsync: () => Promise.resolve(true),
-    isLoading: false,
-    isSuccess: true,
-  }),
-}))
 
 describe('[components] Checkout integration', () => {
   const setup = () => {
@@ -122,7 +113,6 @@ describe('[components] Checkout integration', () => {
 
     // act
     const phoneNumberHome = screen.getByRole('textbox', { name: /phone-number/i })
-
     await act(async () => {
       userEvent.type(cardNumber, '4111111111111111')
       userEvent.type(expiryDate, '03/2024')
@@ -138,6 +128,6 @@ describe('[components] Checkout integration', () => {
       onCompleteCallbackMock({ type: 'COMPLETE' })
     })
 
-    expect(onCompleteCallbackMock).toHaveBeenCalled()
+    await waitFor(() => expect(onCompleteCallbackMock).toHaveBeenCalled())
   })
 })

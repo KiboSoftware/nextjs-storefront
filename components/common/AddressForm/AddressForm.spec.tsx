@@ -1,5 +1,5 @@
 import { composeStories } from '@storybook/testing-react'
-import { render, screen, fireEvent } from '@testing-library/react'
+import { render, screen, act, fireEvent, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 
 import * as stories from './AddressForm.stories'
@@ -34,7 +34,7 @@ describe('[components] - AddressForm', () => {
     expect(textBoxList).toHaveLength(8)
   })
 
-  it('should show user entered value', () => {
+  it('should show user entered value', async () => {
     //arrange
     setup()
 
@@ -42,12 +42,14 @@ describe('[components] - AddressForm', () => {
     const textBoxList = screen.getAllByRole('textbox')
 
     userEvent.type(textBoxList[0], 'Shane')
-    userEvent.type(textBoxList[0], '{enter}')
+
+    await waitFor(() => expect(textBoxList[0]).toHaveValue('Shane'))
+
     textBoxList[0].focus()
+
     fireEvent.blur(textBoxList[0])
 
     // assert
-    expect(textBoxList[0]).toHaveValue('Shane')
-    expect(onBlurMock).toHaveBeenCalled()
+    await waitFor(() => expect(onBlurMock).toHaveBeenCalled())
   })
 })
