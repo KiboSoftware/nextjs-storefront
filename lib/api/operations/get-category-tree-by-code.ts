@@ -1,5 +1,5 @@
 import { fetcher } from '@/lib/api/util'
-import { categoryTreeQuery } from '@/lib/gql/queries'
+import { getCategoryTreeQuery } from '@/lib/gql/queries'
 
 import { Maybe, PrCategory } from '@/lib/gql/types'
 
@@ -38,7 +38,7 @@ export const selectCategoryFromTree = (
 export default async function search(searchParams: any) {
   try {
     const { categoryCode } = searchParams
-    const response = await fetcher({ query: categoryTreeQuery, variables: { categoryCode } })
+    const response = await fetcher({ query: getCategoryTreeQuery, variables: { categoryCode } })
     const categoryTree = response?.data?.categoriesTree?.items
     if (categoryCode && categoryTree) {
       const category = selectCategoryFromTree(categoryTree, categoryCode)

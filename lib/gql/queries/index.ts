@@ -4,4 +4,4 @@ export { default as getOrCreateCheckoutFromCartMutation } from './checkout/get-o
 export { default as getCheckoutQuery } from './checkout/get-checkout-query'
 export { default as getCategoryTreeQuery } from './get-category-tree'
 
-export { default as categoryTreeQuery } from './get-category-tree'
+export { default as getCategoryTreeQuery } from './get-category-tree'

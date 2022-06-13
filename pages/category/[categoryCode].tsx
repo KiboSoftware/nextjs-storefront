@@ -30,7 +30,7 @@ const CategoryPage: NextPage = (props: any) => {
   const router = useRouter()
 
   const { categoryCode } = router.query
-  const breadcrumbs = facetGetters.getBreadcrumbs(props.categoryTreeResults)
+  const breadcrumbs = facetGetters.getBreadcrumbs(props.categoryTreeByCodeResults)
 
   const sortingValues = [
     {
