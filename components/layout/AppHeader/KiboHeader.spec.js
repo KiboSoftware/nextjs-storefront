@@ -67,7 +67,7 @@ describe('[component] KiboHeader component', () => {
 
   it('should render the searchbox after clicking search icon in mobile viewport', () => {
     render(<Mobile {...Common.args} />)
-    const searchIcon = screen.getByTestId('mobile-searchIcon-container')
+    const searchIcon = screen.getByTestId('mobile-Search-container')
     expect(searchIcon).toBeVisible()
 
     userEvent.click(searchIcon)

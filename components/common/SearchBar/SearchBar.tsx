@@ -1,11 +1,9 @@
 import React, { RefObject } from 'react'
 
-import CloseIcon from '@mui/icons-material/Close'
-import SearchIcon from '@mui/icons-material/Search'
-import IconButton from '@mui/material/IconButton'
-import InputBase from '@mui/material/InputBase'
-import Paper from '@mui/material/Paper'
+import { Search, Close } from '@mui/icons-material'
+import { IconButton, InputBase, Paper } from '@mui/material'
 import { useTranslation } from 'next-i18next'
+
 // Interface
 interface SearchProps {
   placeHolder?: string
@@ -42,7 +40,7 @@ const SearchBar = (props: SearchProps) => {
     ...rest
   } = props
   const { t } = useTranslation('common')
-  const searchIconAriaLabel = t('search-icon')
+  const SearchAriaLabel = t('search-icon')
   const searchInputAriaLabel = t('search-input')
   const clearSearchAriaLabel = t('clear-search')
   const handleSearch = (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
@@ -65,8 +63,8 @@ const SearchBar = (props: SearchProps) => {
         {...inputProps}
         autoComplete="off"
         startAdornment={
-          <IconButton size="small" aria-label={searchIconAriaLabel}>
-            <SearchIcon fontSize="small" />
+          <IconButton size="small" aria-label={SearchAriaLabel}>
+            <Search fontSize="small" />
           </IconButton>
         }
         {...(showClearButton && {
@@ -78,7 +76,7 @@ const SearchBar = (props: SearchProps) => {
               disabled={searchTerm.length === 0}
               aria-label={clearSearchAriaLabel}
             >
-              <CloseIcon fontSize="small" />
+              <Close fontSize="small" />
             </IconButton>
           ),
         })}

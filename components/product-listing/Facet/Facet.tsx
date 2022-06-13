@@ -1,8 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react'
 
-import AddIcon from '@mui/icons-material/Add'
-import ExpandMoreIcon from '@mui/icons-material/ExpandMore'
-import RemoveIcon from '@mui/icons-material/Remove'
+import { Add, ExpandMore, Remove } from '@mui/icons-material'
 import {
   Accordion,
   AccordionDetails,
@@ -108,7 +106,7 @@ const Facet = (props: FacetProps) => {
     >
       <AccordionSummary
         data-testid="accordian-summery"
-        expandIcon={<ExpandMoreIcon />}
+        expandIcon={<ExpandMore />}
         aria-controls="panel1bh-content"
         id="panel1bh-header"
         sx={{
@@ -143,11 +141,7 @@ const Facet = (props: FacetProps) => {
             aria-label={buttonText}
             sx={{ ...style.button }}
             startIcon={
-              buttonText === viewMore ? (
-                <AddIcon fontSize="small" />
-              ) : (
-                <RemoveIcon fontSize="small" />
-              )
+              buttonText === viewMore ? <Add fontSize="small" /> : <Remove fontSize="small" />
             }
             onClick={() => handleButtonText()}
           >

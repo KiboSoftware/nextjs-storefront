@@ -1,6 +1,6 @@
 import React, { MouseEvent, useState } from 'react'
 
-import MoreVertIcon from '@mui/icons-material/MoreVert'
+import { MoreVert } from '@mui/icons-material'
 import { IconButton, Menu, MenuItem } from '@mui/material'
 import { useTranslation } from 'next-i18next'
 
@@ -47,7 +47,7 @@ const CartItemActionsMobile = (props: CartItemActionsMobileProps) => {
         aria-haspopup="true"
         onClick={handleClick}
       >
-        <MoreVertIcon />
+        <MoreVert />
       </IconButton>
       <Menu
         id="long-menu"

@@ -1,6 +1,6 @@
 import React, { ReactNode } from 'react'
 
-import CloseIcon from '@mui/icons-material/Close'
+import { Close } from '@mui/icons-material'
 import {
   Dialog,
   DialogTitle,
@@ -15,7 +15,7 @@ import {
 export interface KiboDialogProps {
   isOpen: boolean
   Title?: ReactNode
-  showCloseIconButton?: boolean
+  showCloseButton?: boolean
   Content: ReactNode
   Actions?: ReactNode
   isDialogCentered?: boolean
@@ -30,7 +30,7 @@ interface StyledDialogProps {
   customMaxWidth?: string
   isDialogCentered: boolean
 }
-interface StyledCloseIconProps {
+interface StyledCloseProps {
   theme?: Theme
 }
 
@@ -73,7 +73,7 @@ const StyledIconButton = styled(IconButton)(() => ({
   top: '0.625rem',
 }))
 
-const StyledCloseIcon = styled(CloseIcon)(({ theme }: StyledCloseIconProps) => ({
+const StyledClose = styled(Close)(({ theme }: StyledCloseProps) => ({
   width: '1.25rem',
   height: '1.25rem',
   color: theme?.palette.grey[500],
@@ -83,7 +83,7 @@ const KiboDialog = (props: KiboDialogProps) => {
   const {
     isOpen = false,
     Title,
-    showCloseIconButton = true,
+    showCloseButton = true,
     Content,
     Actions,
     isDialogCentered = true,
@@ -105,9 +105,9 @@ const KiboDialog = (props: KiboDialogProps) => {
       {Title && (
         <StyledDialogTitle id="kibo-dialog-title">
           {Title}
-          {showCloseIconButton && (
+          {showCloseButton && (
             <StyledIconButton aria-label="close" onClick={onClose}>
-              <StyledCloseIcon />
+              <StyledClose />
             </StyledIconButton>
           )}
         </StyledDialogTitle>
