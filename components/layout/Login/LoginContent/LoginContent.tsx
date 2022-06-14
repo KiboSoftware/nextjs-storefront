@@ -3,16 +3,7 @@ import React, { SyntheticEvent, useState } from 'react'
 
 import { yupResolver } from '@hookform/resolvers/yup'
 import { Visibility, VisibilityOff } from '@mui/icons-material'
-import {
-  Box,
-  FormControl,
-  Button,
-  InputAdornment,
-  IconButton,
-  Link,
-  Checkbox,
-  FormControlLabel,
-} from '@mui/material'
+import { Box, FormControl, Button, Link, Checkbox, FormControlLabel } from '@mui/material'
 import { useTranslation } from 'next-i18next'
 import { useForm, Controller } from 'react-hook-form'
 import * as yup from 'yup'
@@ -51,7 +42,6 @@ const LoginContent = (props: LoginContentProps) => {
   const [isRememberMe, setIsRememberMe] = useState<boolean>(false)
 
   const handleClickShowPassword = () => setShowPassword(!showPassword)
-  const handleMouseDownPassword = () => setShowPassword(!showPassword)
 
   const loginInputs = {
     email: '',
@@ -106,6 +96,7 @@ const LoginContent = (props: LoginContentProps) => {
               name="email"
               value={field.value}
               label={t('email')}
+              ref={null}
               required
               sx={{ ...styles.formInput }}
               onBlur={field.onBlur}
@@ -125,6 +116,7 @@ const LoginContent = (props: LoginContentProps) => {
               name="password"
               value={field.value}
               label={t('password')}
+              ref={null}
               required
               sx={{ ...styles.formInput }}
               onBlur={field.onBlur}
@@ -134,17 +126,8 @@ const LoginContent = (props: LoginContentProps) => {
               error={!!errors?.password}
               helperText={errors?.password?.message}
               type={showPassword ? 'text' : 'password'}
-              endAdornment={
-                <InputAdornment position="end">
-                  <IconButton
-                    aria-label="toggle password visibility"
-                    onClick={handleClickShowPassword}
-                    onMouseDown={handleMouseDownPassword}
-                  >
-                    {showPassword ? <Visibility /> : <VisibilityOff />}
-                  </IconButton>
-                </InputAdornment>
-              }
+              icon={showPassword ? <Visibility /> : <VisibilityOff />}
+              onIconClick={handleClickShowPassword}
             />
           )}
         />

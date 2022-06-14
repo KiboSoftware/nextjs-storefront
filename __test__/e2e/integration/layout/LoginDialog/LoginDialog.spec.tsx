@@ -21,7 +21,7 @@ describe('[components] Login Dialog', () => {
     setup()
     const emailInput = screen.getByRole('textbox', { name: 'email' })
     const passwordInput = screen.getByLabelText('password')
-    const eyeIcon = screen.getByRole('button', { name: 'toggle password visibility' })
+    const eyeIcon = screen.getByRole('button', { name: 'toggle icon visibility' })
     const rememberMeCheckbox = screen.getByRole('checkbox', { name: 'Remember Me' })
     const loginButton = screen.getByRole('button', { name: 'common:log-in' })
     const forgotPasswordLink = screen.getByRole('button', { name: 'common:forgot-password' })
@@ -37,13 +37,16 @@ describe('[components] Login Dialog', () => {
     expect(registerNowLink).toBeVisible()
   })
 
-  it('should call onDialogCloseMock when user clicks onClose', () => {
+  it('should call onDialogCloseMock when user clicks onClose', async () => {
     setup()
 
     const closeIconButton = screen.getByRole('button', {
       name: /close/i,
     })
-    userEvent.click(closeIconButton)
+
+    await act(async () => {
+      userEvent.click(closeIconButton)
+    })
 
     expect(onDialogCloseMock).toHaveBeenCalled()
   })

@@ -1,6 +1,6 @@
 import React from 'react'
 
-import StarIcon from '@mui/icons-material/StarRounded'
+import { StarRounded } from '@mui/icons-material'
 import { Box, Grid, Rating, Button, Typography, Divider } from '@mui/material'
 import { useTranslation } from 'next-i18next'
 
@@ -91,8 +91,8 @@ const ProductDetailTemplate = (props: ProductDetailTemplateProps) => {
               precision={0.5}
               readOnly
               size="small"
-              icon={<StarIcon color="primary" />}
-              emptyIcon={<StarIcon />}
+              icon={<StarRounded color="primary" />}
+              emptyIcon={<StarRounded />}
             />
           </Box>
 

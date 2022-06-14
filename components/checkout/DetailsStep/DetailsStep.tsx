@@ -2,10 +2,7 @@
 import React, { useEffect } from 'react'
 
 import { yupResolver } from '@hookform/resolvers/yup'
-import AccessTimeIcon from '@mui/icons-material/AccessTime'
-import CardGiftcardIcon from '@mui/icons-material/CardGiftcard'
-import EmojiEventsIcon from '@mui/icons-material/EmojiEvents'
-import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder'
+import { AccessTime, CardGiftcard, EmojiEvents, FavoriteBorder } from '@mui/icons-material'
 import {
   Box,
   Stack,
@@ -23,9 +20,9 @@ import { useTranslation } from 'next-i18next'
 import { useForm, Controller } from 'react-hook-form'
 import * as yup from 'yup'
 
-import { CheckoutDetails, useUpdateCheckout } from '../../../hooks'
 import KiboTextBox from '@/components/common/KiboTextBox/KiboTextBox'
 import PasswordValidation from '@/components/common/PasswordValidation/PasswordValidation'
+import { CheckoutDetails, useUpdateCheckout } from '@/hooks'
 import { FormStates } from '@/lib/constants'
 import { isPasswordValid } from '@/lib/helpers/validations/validations'
 
@@ -204,25 +201,25 @@ const DetailsStep = (props: DetailsProps) => {
       <Grid container>
         <Grid item xs={12} md={4}>
           <IconButton aria-label={t('faster-checkout')}>
-            <AccessTimeIcon fontSize="medium" />
+            <AccessTime fontSize="medium" />
           </IconButton>
           {t('faster-checkout')}
         </Grid>
         <Grid item xs={12} md={8}>
           <IconButton aria-label={t('earn-credits-with-every-purchase')}>
-            <EmojiEventsIcon fontSize="medium" />
+            <EmojiEvents fontSize="medium" />
           </IconButton>
           {t('earn-credits-with-every-purchase')}
         </Grid>
         <Grid item xs={12} md={4}>
           <IconButton aria-label={t('full-rewards-program-benifits')}>
-            <CardGiftcardIcon fontSize="medium" />
+            <CardGiftcard fontSize="medium" />
           </IconButton>
           {t('full-rewards-program-benifits')}
         </Grid>
         <Grid item xs={12} md={8}>
           <IconButton aria-label={t('manage-your-wishlist')}>
-            <FavoriteBorderIcon fontSize="medium" />
+            <FavoriteBorder fontSize="medium" />
           </IconButton>
           {t('manage-your-wishlist')}
         </Grid>

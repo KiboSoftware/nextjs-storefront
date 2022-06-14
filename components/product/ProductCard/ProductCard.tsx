@@ -1,6 +1,6 @@
 import React from 'react'
 
-import StarIcon from '@mui/icons-material/StarRounded'
+import { StarRounded } from '@mui/icons-material'
 import {
   Card,
   Typography,
@@ -98,8 +98,8 @@ const ProductCard = (props: ProductCardProps) => {
                 precision={0.5}
                 readOnly
                 size="small"
-                icon={<StarIcon color="primary" data-testid="filled-rating" />}
-                emptyIcon={<StarIcon data-testid="empty-rating" />}
+                icon={<StarRounded color="primary" data-testid="filled-rating" />}
+                emptyIcon={<StarRounded data-testid="empty-rating" />}
                 data-testid="product-rating"
               />
             </Box>

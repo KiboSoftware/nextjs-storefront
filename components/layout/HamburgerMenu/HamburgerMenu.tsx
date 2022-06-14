@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 
-import AccountCircleIcon from '@mui/icons-material/AccountCircle'
+import { AccountCircle } from '@mui/icons-material'
 import { Box, Divider, List, ListItem, ListItemText, SwipeableDrawer } from '@mui/material'
 import { useTranslation } from 'next-i18next'
 import Link from 'next/link'
@@ -66,7 +66,7 @@ const HamburgerMenu = (props: HamburgerMenuProps) => {
               <HeaderAction
                 title={t('my-account')}
                 subtitle={t('log-in')}
-                icon={AccountCircleIcon}
+                icon={AccountCircle}
                 mobileIconColor="black"
                 iconFontSize="large"
                 showTitleInMobile={true}

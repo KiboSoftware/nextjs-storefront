@@ -1,11 +1,6 @@
 import React, { ReactNode, useState } from 'react'
 
-import AccountCircleIcon from '@mui/icons-material/AccountCircle'
-import CloseIcon from '@mui/icons-material/Close'
-import FmdGoodIcon from '@mui/icons-material/FmdGood'
-import MenuIcon from '@mui/icons-material/Menu'
-import SearchIcon from '@mui/icons-material/Search'
-import ShoppingCartIcon from '@mui/icons-material/ShoppingCart'
+import { AccountCircle, Close, FmdGood, Menu, Search, ShoppingCart } from '@mui/icons-material'
 import {
   Typography,
   Toolbar,
@@ -185,7 +180,7 @@ export default function KiboHeader(props: KiboHeaderProps) {
                   }}
                 >
                   <HeaderAction
-                    icon={headerState.viewHamburgerMenu ? CloseIcon : MenuIcon}
+                    icon={headerState.viewHamburgerMenu ? Close : Menu}
                     {...(isMobileViewport && { iconFontSize: 'medium' })}
                     onClick={() =>
                       setHeaderState({
@@ -206,10 +201,10 @@ export default function KiboHeader(props: KiboHeaderProps) {
                       viewHamburgerMenu: false,
                     })
                   }
-                  data-testid="mobile-searchIcon-container"
+                  data-testid="mobile-Search-container"
                 >
                   <HeaderAction
-                    icon={SearchIcon}
+                    icon={Search}
                     {...(isMobileViewport && { iconFontSize: 'medium' })}
                   />
                 </Box>
@@ -235,7 +230,7 @@ export default function KiboHeader(props: KiboHeaderProps) {
                   <HeaderAction
                     title={t('find-a-store')}
                     subtitle={t('view-all')}
-                    icon={FmdGoodIcon}
+                    icon={FmdGood}
                     {...(isMobileViewport && { iconFontSize: 'medium' })}
                   />
                 </Box>
@@ -248,7 +243,7 @@ export default function KiboHeader(props: KiboHeaderProps) {
                   <HeaderAction
                     title={t('my-account')}
                     subtitle={t('log-in')}
-                    icon={AccountCircleIcon}
+                    icon={AccountCircle}
                     {...(isMobileViewport && { iconFontSize: 'medium' })}
                   />
                 </Box>
@@ -259,7 +254,7 @@ export default function KiboHeader(props: KiboHeaderProps) {
                 >
                   <HeaderAction
                     subtitle={t('cart')}
-                    icon={ShoppingCartIcon}
+                    icon={ShoppingCart}
                     badgeContent={3}
                     {...(isMobileViewport && { iconFontSize: 'medium' })}
                   />

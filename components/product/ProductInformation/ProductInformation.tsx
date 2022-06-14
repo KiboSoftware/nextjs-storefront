@@ -1,4 +1,4 @@
-import ExpandMoreIcon from '@mui/icons-material/ExpandMore'
+import { ExpandMore } from '@mui/icons-material'
 import {
   Box,
   Typography,
@@ -57,7 +57,7 @@ const ProductInformation = (props: ProductInformationProps) => {
         data-testid="product-content"
       />
       <StyledAccordion>
-        <AccordionSummary data-testid="accordian" expandIcon={<ExpandMoreIcon />}>
+        <AccordionSummary data-testid="accordian" expandIcon={<ExpandMore />}>
           <Typography variant="subtitle2" fontWeight={700}>
             {t('product-specs')}
           </Typography>

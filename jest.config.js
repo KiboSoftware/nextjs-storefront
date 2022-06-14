@@ -31,7 +31,7 @@ module.exports = {
     // Handle test aliases
     '^@/__test__/(.*)$': '<rootDir>/__test__/$1',
     // Handle hooks aliases
-    '^@/hooks/(.*)$': '<rootDir>/hooks/$1',
+    '^@/hooks(.*)$': '<rootDir>/hooks/$1',
   },
   // Add more setup options before each test is run
   // setupFilesAfterEnv: ['<rootDir>/jest.setup.js'],

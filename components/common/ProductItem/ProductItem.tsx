@@ -1,7 +1,6 @@
 import React, { ReactNode, useState } from 'react'
 
-import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown'
-import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp'
+import { KeyboardArrowDown, KeyboardArrowUp } from '@mui/icons-material'
 import {
   Typography,
   Box,
@@ -120,7 +119,7 @@ const ProductItem = (props: ProductItemProps) => {
                     <Typography variant="body2" align="left" sx={{ mr: 1 }}>
                       {t('details')}
                     </Typography>
-                    {expanded ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
+                    {expanded ? <KeyboardArrowUp /> : <KeyboardArrowDown />}
                   </Box>
                 )}
               </Box>
