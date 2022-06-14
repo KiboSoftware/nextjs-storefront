@@ -24,13 +24,11 @@ jest.mock('@/lib/api/util', () => ({
           ],
           facets: [],
         },
-        categoriesTree: {
-          items: [
-            {
-              categoryCode: 'mocked-category',
-            },
-          ],
-        },
+        categoriesTree: [
+          {
+            categoryCode: 'mocked-category',
+          },
+        ],
       },
     })
   }),
