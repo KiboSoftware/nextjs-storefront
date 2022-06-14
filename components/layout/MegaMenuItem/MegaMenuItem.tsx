@@ -24,33 +24,27 @@ const MegaMenuItem = (props: MegaMenuItemProps) => {
             primaryTypographyProps={{ variant: 'subtitle2', fontWeight: 'bold' }}
           />
         </ListItem>
-        <Link
-          href={'/category/' + categoryCode}
-          data-testid="shopAllLink"
-          underline="none"
-          color="grey.900"
-        >
-          <ListItem button sx={{ cursor: 'pointer' }}>
-            <ListItemText
-              primary={t('shop-all')}
-              primaryTypographyProps={{ variant: 'subtitle2' }}
-            />
-          </ListItem>
-        </Link>
-        {categoryChildren?.map((cat) => (
+        <ListItem button sx={{ cursor: 'pointer' }}>
           <Link
-            href={'/category/' + cat?.categoryCode}
-            key={cat?.categoryId}
+            href={`category/${categoryCode}`}
+            data-testid="shopAllLink"
             underline="none"
             color="grey.900"
           >
-            <ListItem button sx={{ cursor: 'pointer' }}>
-              <ListItemText
-                primary={cat?.content?.name}
-                primaryTypographyProps={{ variant: 'subtitle2' }}
-              />
-            </ListItem>
+            {t('shop-all')}
           </Link>
+        </ListItem>
+        {categoryChildren?.map((cat) => (
+          <ListItem key={cat?.categoryId}>
+            <Link
+              href={`category/${cat?.categoryCode}`}
+              data-testid="categoryLink"
+              underline="none"
+              color="grey.900"
+            >
+              {cat?.content?.name}
+            </Link>
+          </ListItem>
         ))}
       </List>
     </Stack>

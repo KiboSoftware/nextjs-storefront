@@ -1,5 +1,3 @@
-import { useEffect } from 'react'
-
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
 import { useRouter } from 'next/router'
 import { useQuery } from 'react-query'
@@ -26,7 +24,6 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
 }
 
 const CategoryPage: NextPage = (props: any) => {
-  const { categoriesTree, onLoadCategoriesTree } = props
   const router = useRouter()
   const query = router.asPath.split('?')[1]
 
@@ -37,10 +34,6 @@ const CategoryPage: NextPage = (props: any) => {
   }
 
   const { data } = useQuery('searchResults', performSearch, { initialData: props.results || [] })
-
-  useEffect(() => {
-    onLoadCategoriesTree(categoriesTree)
-  }, [categoriesTree, onLoadCategoriesTree])
 
   return (
     <>

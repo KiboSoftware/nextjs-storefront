@@ -1,5 +1,3 @@
-import { useEffect } from 'react'
-
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
 import getConfig from 'next/config'
 import { useRouter } from 'next/router'
@@ -30,6 +28,7 @@ export async function getStaticProps(context: GetStaticPropsContext) {
     revalidate: serverRuntimeConfig.revalidate,
   }
 }
+
 export async function getStaticPaths() {
   const { serverRuntimeConfig } = getConfig()
   const searchResponse = await search({ pageSize: serverRuntimeConfig.pageSize })
@@ -41,12 +40,9 @@ export async function getStaticPaths() {
 }
 
 const ProductDetailPage: NextPage = (props: any) => {
-  const { product, categoriesTree, onLoadCategoriesTree } = props
+  const { product } = props
 
   const { isFallback } = useRouter()
-  useEffect(() => {
-    onLoadCategoriesTree(categoriesTree)
-  }, [categoriesTree, onLoadCategoriesTree])
 
   if (isFallback) {
     return <>Fallback</>

@@ -1,7 +1,7 @@
 import { renderHook } from '@testing-library/react-hooks'
 
 import { useSearchSuggestions } from './useSearchSuggestions'
-import { searchSuggestionResult } from '@/__mocks__/stories/searchSuggestionResultMock'
+import { searchSuggestionResultMock } from '@/__mocks__/stories/searchSuggestionResultMock'
 import { createQueryClientWrapper } from '@/__test__/utils/renderWithQueryClient'
 
 describe('[hooks] useSearchSuggestions', () => {
@@ -11,6 +11,6 @@ describe('[hooks] useSearchSuggestions', () => {
     })
 
     await waitFor(() => result.current.isSuccess)
-    expect(result.current.data).toEqual(searchSuggestionResult)
+    expect(result.current.data).toEqual(searchSuggestionResultMock)
   })
 })

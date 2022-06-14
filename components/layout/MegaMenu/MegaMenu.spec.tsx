@@ -41,6 +41,7 @@ describe('[components] - MegaMenu', () => {
     fireEvent.mouseOver(menuItems[0])
 
     const megaMenuItems = screen.getAllByTestId('mega-menu-item-component')
+    expect(megaMenuItems).toBeInTheDocument()
     expect(megaMenuItems).toHaveLength(childrenCategories.length)
   })
 })

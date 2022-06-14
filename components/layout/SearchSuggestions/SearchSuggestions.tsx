@@ -48,15 +48,13 @@ const style = {
 }
 
 interface ListItemProps {
-  heading?: string
   code?: string
   name?: string
   path?: string
-  closeSearchSuggestion?: () => void
+  onSearchSuggestionClose?: () => void
 }
 
-const Title = (props: ListItemProps) => {
-  const { heading } = props
+const Title = ({ heading }: { heading: string }) => {
   const { t } = useTranslation('common')
 
   return (
@@ -69,11 +67,11 @@ const Title = (props: ListItemProps) => {
 }
 
 const Content = (props: ListItemProps) => {
-  const { code, name, path = '', closeSearchSuggestion } = props
+  const { code, name, path = '', onSearchSuggestionClose } = props
 
   return (
-    <Link href={path + code} passHref>
-      <ListItem button key={code} onClick={closeSearchSuggestion}>
+    <Link href={`${path}${code}`} passHref>
+      <ListItem button key={code} onClick={onSearchSuggestionClose}>
         <ListItemText primary={name} sx={{ ...style.listItemText }} />
       </ListItem>
     </Link>
@@ -81,28 +79,27 @@ const Content = (props: ListItemProps) => {
 }
 
 const SearchSuggestions = () => {
-  const [open, setOpen] = useState<boolean>(false)
+  const [isOpen, setIsOpen] = useState<boolean>(false)
   const [searchTerm, setSearchTerm] = useState<string>('')
 
   const { publicRuntimeConfig } = getConfig()
-  const handleOpen = () => setOpen(true)
-  const handleClose = () => setOpen(false)
+  const handleOpen = () => setIsOpen(true)
+  const handleClose = () => setIsOpen(false)
   const handleSearch = (userEnteredValue: string) => setSearchTerm(userEnteredValue)
 
   const searchSuggestionResult = useSearchSuggestions(
-    useDebounce(searchTerm, publicRuntimeConfig.debounceTimeout)
+    useDebounce(searchTerm.trim(), publicRuntimeConfig.debounceTimeout)
   )
 
-  let productSuggestionGroup, categorySuggestionGroup
-  if (searchSuggestionResult.data) {
-    const getSuggestionGroup = (title: string) =>
-      searchSuggestionResult.data?.suggestionGroups?.find((sg) => sg?.name === title)
-    productSuggestionGroup = getSuggestionGroup('Pages')
-    categorySuggestionGroup = getSuggestionGroup('Categories')
-  }
+  const getSuggestionGroup = (title: string) =>
+    searchSuggestionResult.data
+      ? searchSuggestionResult.data?.suggestionGroups?.find((sg) => sg?.name === title)
+      : null
+  const productSuggestionGroup = getSuggestionGroup('Pages')
+  const categorySuggestionGroup = getSuggestionGroup('Categories')
 
   useEffect(() => {
-    searchTerm ? handleOpen() : handleClose()
+    searchTerm.trim() ? handleOpen() : handleClose()
   }, [searchTerm])
 
   return (
@@ -110,7 +107,7 @@ const SearchSuggestions = () => {
       <Box sx={{ zIndex: 1400 }}>
         <SearchBar searchTerm={searchTerm} onSearch={handleSearch} showClearButton />
       </Box>
-      <Collapse in={open} timeout="auto" unmountOnExit role="contentinfo">
+      <Collapse in={isOpen} timeout="auto" unmountOnExit role="contentinfo">
         <Paper sx={{ ...style.paper }}>
           <List sx={{ ...style.list }} role="group">
             <Title heading="suggestions" />
@@ -120,7 +117,7 @@ const SearchSuggestions = () => {
                 code={product?.suggestion?.productCode}
                 name={product?.suggestion?.productName}
                 path={'/product/'}
-                closeSearchSuggestion={handleClose}
+                onSearchSuggestionClose={handleClose}
               />
             ))}
           </List>
@@ -138,7 +135,7 @@ const SearchSuggestions = () => {
           </List>
         </Paper>
       </Collapse>
-      <Backdrop open={open} onClick={handleClose} data-testid="backdrop"></Backdrop>
+      <Backdrop open={isOpen} onClick={handleClose} data-testid="backdrop"></Backdrop>
     </Stack>
   )
 }

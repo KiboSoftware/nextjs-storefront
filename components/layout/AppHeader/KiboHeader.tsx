@@ -1,4 +1,4 @@
-import React, { ReactNode, useState } from 'react'
+import React, { useState } from 'react'
 
 import AccountCircleIcon from '@mui/icons-material/AccountCircle'
 import CloseIcon from '@mui/icons-material/Close'
@@ -19,7 +19,8 @@ import {
   Backdrop,
   Container,
 } from '@mui/material'
-import { styled } from '@mui/material/styles'
+import { styled, SxProps } from '@mui/material/styles'
+import { Theme } from '@mui/material/styles'
 import { useTranslation } from 'next-i18next'
 
 import SearchSuggestions from '../SearchSuggestions/SearchSuggestions'
@@ -27,59 +28,70 @@ import HeaderAction from '@/components/common/HeaderAction/HeaderAction'
 import KiboLogo from '@/components/common/KiboLogo/KiboLogo'
 import { HamburgerMenu } from '@/components/layout'
 import MegaMenu from '@/components/layout/MegaMenu/MegaMenu'
+import { useCategoryTree } from '@/hooks'
+import type { NavigationLink } from '@/lib/types'
 
 import type { Maybe, PrCategory } from '@/lib/gql/types'
+
+interface KiboHeaderProps {
+  navLinks: NavigationLink[]
+  categoriesTree: Maybe<PrCategory>[]
+  sticky?: boolean
+}
+interface HeaderState {
+  viewHamburgerMenu: boolean
+  viewSearchPortal: boolean
+}
+interface HeaderActionsProps {
+  headerState: HeaderState
+  setHeaderState: (val: HeaderState) => void
+  isMobileViewport: boolean
+}
+
 const StyledToolbarNav = styled(Box)(() => ({
   display: 'flex',
   alignItems: 'center',
   justifyContent: 'flex-end',
   gap: 50,
 }))
-const TopHeader = ({
-  navLinks,
-}: {
-  navLinks: {
-    link: string
-    text: string
-  }[]
-}) => {
-  return (
-    <Box
-      sx={{
-        display: { xs: 'none', md: 'flex' },
-        backgroundColor: 'common.black',
-        height: 56,
-        justifyContent: 'flex-end',
-        paddingInline: 2,
-      }}
-    >
-      <Container
-        maxWidth="xl"
-        sx={{ display: 'flex', justifyContent: 'end', alignItems: 'center' }}
-      >
-        <StyledToolbarNav>
-          {navLinks?.map((nav, index) => {
-            return (
-              <Box key={index}>
-                <Link href={nav.link} underline="none" color="common.white">
-                  <Typography variant="body2"> {nav.text}</Typography>
-                </Link>
-              </Box>
-            )
-          })}
-        </StyledToolbarNav>
-      </Container>
-    </Box>
-  )
+
+const StyledToolbar = styled(Toolbar)(() => ({
+  alignItems: 'center',
+  display: 'flex',
+  backgroundColor: 'grey.300',
+  borderBottomColor: 'red',
+  '& .MuiToolbar-root': {
+    minHeight: { xs: 55 },
+  },
+  '&:before': {
+    content: '""',
+    display: 'block',
+    position: 'absolute',
+    top: 0,
+    left: '31%',
+    width: 10,
+    height: 10,
+    bgcolor: 'grey.300',
+    transform: 'translateY(-50%) rotate(45deg)',
+    zIndex: 0,
+  },
+}))
+
+const TopHeaderStyles = {
+  wrapper: {
+    display: { xs: 'none', md: 'flex' },
+    backgroundColor: 'common.black',
+    height: 56,
+    justifyContent: 'flex-end',
+    paddingInline: 2,
+  },
+  container: {
+    display: 'flex',
+    justifyContent: 'end',
+    alignItems: 'center',
+  },
 }
-interface HeaderActionsProps {
-  headerState: {
-    viewHamburgerMenu: boolean
-    viewSearchPortal: boolean
-  }
-  setHeaderState: (val: any) => void
-  isMobileViewport: boolean
-}
+
 const headerActionsStyles = {
   container: { paddingInline: { xs: 0, md: 3 } },
   wrapper: {
@@ -129,9 +141,63 @@ const headerActionsStyles = {
     order: { xs: 5 },
   },
 }
+
+const KiboHeaderStyles = {
+  appBarContainer: {
+    top: 0,
+    zIndex: (theme: Theme) => theme.zIndex.drawer + 1,
+  },
+  appBarWrapper: {
+    boxShadow: 'none',
+    height: {
+      xs: 55,
+      md: 124,
+    },
+  },
+  topBarWrapper: {
+    flexGrow: 1,
+    position: 'relative',
+    zIndex: (theme: Theme) => theme.zIndex.drawer + 1,
+    height: '100%',
+    backgroundColor: 'grey.300',
+  } as SxProps<Theme> | undefined,
+  megaMenuContainer: {
+    display: { xs: 'none', md: 'block' },
+    borderBottomWidth: 1,
+    borderBottomStyle: 'solid',
+    borderBottomColor: 'grey.300',
+    borderTopWidth: 1,
+    borderTopStyle: 'solid',
+    borderTopColor: 'grey.300',
+    width: '100%',
+    position: 'relative',
+  } as SxProps<Theme> | undefined,
+}
+
+const TopHeader = ({ navLinks }: { navLinks: NavigationLink[] }) => {
+  return (
+    <Box sx={{ ...TopHeaderStyles.wrapper }}>
+      <Container maxWidth="xl" sx={{ ...TopHeaderStyles.container }}>
+        <StyledToolbarNav>
+          {navLinks?.map((nav, index) => {
+            return (
+              <Box key={index}>
+                <Link href={nav.link} underline="none" color="common.white">
+                  <Typography variant="body2"> {nav.text}</Typography>
+                </Link>
+              </Box>
+            )
+          })}
+        </StyledToolbarNav>
+      </Container>
+    </Box>
+  )
+}
+
 const HeaderActions = (props: HeaderActionsProps) => {
   const { headerState, setHeaderState, isMobileViewport } = props
   const { t } = useTranslation('common')
+
   return (
     <Container maxWidth="xl" sx={headerActionsStyles.container}>
       <Box sx={headerActionsStyles.wrapper}>
@@ -158,8 +224,8 @@ const HeaderActions = (props: HeaderActionsProps) => {
           sx={headerActionsStyles.mobileSearchIconWrapper}
           onClick={() =>
             setHeaderState({
-              viewSearchPortal: !headerState.viewSearchPortal,
               viewHamburgerMenu: false,
+              viewSearchPortal: !headerState.viewSearchPortal,
             })
           }
           data-testid="mobile-searchIcon-container"
@@ -199,31 +265,19 @@ const HeaderActions = (props: HeaderActionsProps) => {
     </Container>
   )
 }
-const StyledToolbar = styled(Toolbar)(() => ({
-  alignItems: 'center',
-  display: 'flex',
-  '& .MuiToolbar-root': {
-    minHeight: { xs: 55 },
-  },
-}))
-interface KiboHeaderProps {
-  navLinks: {
-    link: string
-    text: string
-  }[]
-  categoriesTree: Maybe<PrCategory>[]
-  sticky?: boolean
-  children?: ReactNode
-}
+
 export default function KiboHeader(props: KiboHeaderProps) {
-  const { navLinks, categoriesTree, sticky, children } = props
-  const [headerState, setHeaderState] = useState({
+  const { navLinks, categoriesTree: initialCategoryTree, sticky } = props
+  const { data: categoriesTree } = useCategoryTree(initialCategoryTree)
+  const kiboTheme = useTheme()
+  const isMobileViewport = useMediaQuery(kiboTheme.breakpoints.down('md'))
+
+  const [headerState, setHeaderState] = useState<HeaderState>({
     viewSearchPortal: false,
     viewHamburgerMenu: false,
   })
   const [isBackdropOpen, setIsBackdropOpen] = useState<boolean>(false)
-  const kiboTheme = useTheme()
-  const isMobileViewport = useMediaQuery(kiboTheme.breakpoints.down('md'))
+
   const handleHamburgerMenu = (value: boolean) => {
     setHeaderState({
       ...headerState,
@@ -237,30 +291,15 @@ export default function KiboHeader(props: KiboHeaderProps) {
         item
         xs={12}
         position={sticky ? 'sticky' : 'relative'}
-        sx={{ top: 0, zIndex: (theme) => theme.zIndex.drawer + 1 }}
+        sx={{ ...KiboHeaderStyles.appBarContainer }}
       >
         <AppBar
           position={sticky ? 'sticky' : 'static'}
           color="inherit"
           data-testid="kibo header"
-          sx={{
-            boxShadow: 'none',
-            height: {
-              xs: 55,
-              md: 124,
-            },
-            // zIndex: 1300,
-          }}
+          sx={{ ...KiboHeaderStyles.appBarWrapper }}
         >
-          <Box
-            sx={{
-              flexGrow: 1,
-              position: 'relative',
-              zIndex: (theme) => theme.zIndex.drawer + 1,
-              height: '100%',
-              backgroundColor: 'grey.300',
-            }}
-          >
+          <Box sx={{ ...KiboHeaderStyles.topBarWrapper }}>
             {/* Header Navigation */}
             <TopHeader navLinks={navLinks} />
             {/* Header actions */}
@@ -270,32 +309,8 @@ export default function KiboHeader(props: KiboHeaderProps) {
               isMobileViewport={isMobileViewport}
             />
             <Collapse in={headerState.viewSearchPortal}>
-              <Box
-                position="static"
-                sx={{
-                  display: { md: 'none' },
-                }}
-              >
-                <StyledToolbar
-                  sx={{
-                    backgroundColor: 'grey.300',
-                    borderBottomColor: 'red',
-                    display: { xs: 'flex' },
-                    '&:before': {
-                      content: '""',
-                      display: 'block',
-                      position: 'absolute',
-                      top: 0,
-                      left: '31%',
-                      width: 10,
-                      height: 10,
-                      bgcolor: 'grey.300',
-                      transform: 'translateY(-50%) rotate(45deg)',
-                      zIndex: 0,
-                    },
-                  }}
-                  data-testid="searchbar-container"
-                >
+              <Box position="static" sx={{ display: { md: 'none' } }}>
+                <StyledToolbar data-testid="searchbar-container">
                   <SearchSuggestions />
                 </StyledToolbar>
               </Box>
@@ -312,25 +327,11 @@ export default function KiboHeader(props: KiboHeaderProps) {
       <Grid
         item
         xs={12}
-        sx={{
-          display: { xs: 'none', md: 'block' },
-          border: 'none',
-          borderBottomWidth: 1,
-          borderBottomStyle: 'solid',
-          borderBottomColor: 'grey.300',
-          borderTopWidth: 1,
-          borderTopStyle: 'solid',
-          borderTopColor: 'grey.300',
-          width: '100%',
-          position: 'relative',
-        }}
+        sx={{ ...KiboHeaderStyles.megaMenuContainer, border: 'none' }}
         position={sticky ? 'sticky' : 'relative'}
       >
         <Backdrop open={isBackdropOpen} data-testid="backdrop" />
-        <MegaMenu categoryTree={categoriesTree || []} onBackdropToggle={setIsBackdropOpen} />
-      </Grid>
-      <Grid item xs={12}>
-        {children}
+        <MegaMenu categoryTree={categoriesTree} onBackdropToggle={setIsBackdropOpen} />
       </Grid>
     </Grid>
   )

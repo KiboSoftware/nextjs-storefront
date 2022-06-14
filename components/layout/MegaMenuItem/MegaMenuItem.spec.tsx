@@ -23,24 +23,11 @@ describe('[components] - MegaMenuItem', () => {
     categoryChildren?.map((cat) => {
       const name = screen.getByText(`${cat?.content?.name}`)
       expect(name).toBeVisible()
+      expect(name).toHaveAttribute('href', '/category/' + cat?.categoryCode)
     })
 
     const shopAll = screen.getByText('shop-all')
     expect(shopAll).toBeVisible()
-  })
-
-  it('should route to another page when user clicks on shop all', async () => {
-    setup()
-    const link = screen.getByTestId('shopAllLink')
-    expect(link).toHaveAttribute('href', '/category/' + Common.args?.categoryCode)
-  })
-
-  it('should route to another page when user clicks on item', async () => {
-    setup()
-    const categoryChildren = Common.args?.categoryChildren
-    categoryChildren?.map((cat) => {
-      const link = screen.getByRole('link')
-      expect(link).toHaveAttribute('href', '/category/' + cat?.categoryCode)
-    })
+    expect(shopAll).toHaveAttribute('href', '/category/' + Common.args?.categoryCode)
   })
 })

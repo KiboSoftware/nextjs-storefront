@@ -1,6 +1,6 @@
 import { SearchSuggestionResult } from '@/lib/gql/types'
 
-export const searchSuggestionResult: SearchSuggestionResult = {
+export const searchSuggestionResultMock: SearchSuggestionResult = {
   suggestionGroups: [
     {
       name: 'Pages',
@@ -297,5 +297,5 @@ export const searchSuggestionResult: SearchSuggestionResult = {
 }
 
 export const searchSuggestionMock = {
-  suggestionSearch: searchSuggestionResult,
+  suggestionSearch: searchSuggestionResultMock,
 }

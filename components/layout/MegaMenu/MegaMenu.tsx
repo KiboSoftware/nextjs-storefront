@@ -79,7 +79,7 @@ const style = {
 }
 
 const MegaMenuCategory = (props: MegaMenuCategoryProps) => {
-  const { category, onBackdropToggle, activeCategory, setActiveCategory } = props
+  const { category, activeCategory, onBackdropToggle, setActiveCategory } = props
   const childrenCategories = category?.childrenCategories as PrCategory[]
 
   const { t } = useTranslation('common')
@@ -150,7 +150,7 @@ const MegaMenuCategory = (props: MegaMenuCategoryProps) => {
 }
 
 const MegaMenu = (props: MegaMenuProps) => {
-  const { categoryTree, onBackdropToggle } = props
+  const { categoryTree = [], onBackdropToggle } = props
 
   const [activeCategory, setActiveCategory] = useState<string>('')
 

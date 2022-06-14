@@ -24,13 +24,7 @@ export async function getStaticProps(context: GetStaticPropsContext) {
   }
 }
 
-const Home: NextPage = (props: any) => {
-  const { categoriesTree, onLoadCategoriesTree } = props
-
-  useEffect(() => {
-    onLoadCategoriesTree(categoriesTree)
-  }, [categoriesTree, onLoadCategoriesTree])
-
+const Home: NextPage = () => {
   return (
     <div className={styles.container}>
       <Head>

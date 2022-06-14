@@ -43,23 +43,16 @@ const styles = {
 
 const CategoryNestedNavigation = (props: CategoryNestedNavigationProps) => {
   const { categoryTree, children, onCategoryClick, onCloseMenu } = props
-  const [allCategories] = useState<Maybe<PrCategory>[]>(categoryTree)
-
-  const [activeCategory, setActiveCategory] = useState<Maybe<PrCategory>[]>(allCategories)
-
   const { t } = useTranslation('common')
-
   const initialSubHeader = {
     backLink: t('back'),
-    categoryCode: null,
+    categoryCode: '',
     label: t('all-departments'),
   }
 
-  const [subHeader, setSubHeader] = useState<{
-    label: string
-    categoryCode?: string | null
-    backLink?: string
-  }>(initialSubHeader)
+  const [subHeader, setSubHeader] = useState<typeof initialSubHeader>(initialSubHeader)
+  const [allCategories] = useState<Maybe<PrCategory>[]>(categoryTree)
+  const [activeCategory, setActiveCategory] = useState<Maybe<PrCategory>[]>(categoryTree)
 
   const reset = () => {
     setActiveCategory(allCategories)
@@ -77,7 +70,7 @@ const CategoryNestedNavigation = (props: CategoryNestedNavigationProps) => {
       setSubHeader({
         backLink: subHeader.label,
         label: selectedCategory?.content?.name as string,
-        categoryCode: selectedCategory?.categoryCode,
+        categoryCode: selectedCategory?.categoryCode as string,
       })
     } else {
       onCategoryClick(clickedCategory?.categoryCode || '')
@@ -85,17 +78,19 @@ const CategoryNestedNavigation = (props: CategoryNestedNavigationProps) => {
   }
 
   const handleBackClick = () => {
-    const previousCategory = findParentNode(allCategories, subHeader.categoryCode)
-    if (previousCategory === null) {
-      reset()
-    } else if (!previousCategory) {
-      onCloseMenu(false)
-    } else {
+    const previousCategory: Maybe<PrCategory | undefined> = findParentNode(
+      allCategories,
+      subHeader.categoryCode
+    )
+
+    if (previousCategory === null) reset()
+    if (previousCategory === undefined) onCloseMenu(false)
+    if (previousCategory) {
       setActiveCategory(previousCategory?.childrenCategories as PrCategory[])
       setSubHeader({
         backLink: subHeader.label,
         label: previousCategory?.content?.name as string,
-        categoryCode: previousCategory?.categoryCode,
+        categoryCode: previousCategory?.categoryCode as string,
       })
     }
   }
