@@ -42,7 +42,6 @@ describe('[components] - SearchSuggestions Integration', () => {
 
     userEvent.type(input, userEnteredText)
     expect(input).toHaveValue(userEnteredText)
-    expect(screen.queryByRole('contentinfo')).not.toBeInTheDocument()
   })
 
   it('should display search suggestion with href attribute present when user enter the text on search bar', async () => {
@@ -59,20 +58,20 @@ describe('[components] - SearchSuggestions Integration', () => {
     expect(categories).toBeVisible()
 
     const PagesSuggestionGroup =
-      searchSuggestions.suggestionGroups?.filter((sg) => sg?.name === 'Pages') || []
+      searchSuggestions.suggestionGroups?.filter((sg) => sg?.name === 'pages') || []
     PagesSuggestionGroup[0]?.suggestions?.map(async (s) => {
       expect(screen.getByText(s?.suggestion?.productName)).toBeVisible()
       const button = await screen.findByRole('button')
-      expect(button).toHaveAttribute('href', `product/${s?.suggestion.productCode}`)
+      expect(button).toHaveAttribute('href', `/product/${s?.suggestion.productCode}`)
     })
 
     const CategoriesSuggestionGroup =
-      searchSuggestions.suggestionGroups?.filter((sg) => sg?.name === 'Categories') || []
+      searchSuggestions.suggestionGroups?.filter((sg) => sg?.name === 'categories') || []
     CategoriesSuggestionGroup[0]?.suggestions?.map(async (s) => {
       expect(screen.getByText(s?.suggestion?.productName)).toBeVisible()
 
       const button = await screen.findByRole('button')
-      expect(button).toHaveAttribute('href', `category/${s?.suggestion.categoryCode}`)
+      expect(button).toHaveAttribute('href', `/category/${s?.suggestion.categoryCode}`)
     })
   })
 

@@ -23,11 +23,11 @@ describe('[components] - MegaMenuItem', () => {
     categoryChildren?.map((cat) => {
       const name = screen.getByText(`${cat?.content?.name}`)
       expect(name).toBeVisible()
-      expect(name).toHaveAttribute('href', '/category/' + cat?.categoryCode)
+      expect(name).toHaveAttribute('href', 'category/' + cat?.categoryCode)
     })
 
     const shopAll = screen.getByText('shop-all')
     expect(shopAll).toBeVisible()
-    expect(shopAll).toHaveAttribute('href', '/category/' + Common.args?.categoryCode)
+    expect(shopAll).toHaveAttribute('href', 'category/' + Common.args?.categoryCode)
   })
 })

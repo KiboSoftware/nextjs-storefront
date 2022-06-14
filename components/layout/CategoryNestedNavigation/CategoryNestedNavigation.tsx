@@ -78,7 +78,7 @@ const CategoryNestedNavigation = (props: CategoryNestedNavigationProps) => {
   }
 
   const handleBackClick = () => {
-    const previousCategory: Maybe<PrCategory | undefined> = findParentNode(
+    const previousCategory: Maybe<PrCategory | undefined | null> = findParentNode(
       allCategories,
       subHeader.categoryCode
     )

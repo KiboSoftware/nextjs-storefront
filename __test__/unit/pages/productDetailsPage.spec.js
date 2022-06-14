@@ -26,7 +26,7 @@ jest.mock('@/lib/api/util', () => ({
         categoriesTree: {
           items: [
             {
-              categoryCode: 'moked-category',
+              categoryCode: 'mocked-category',
             },
           ],
         },
@@ -83,7 +83,7 @@ describe('[page] Product Details Page', () => {
         categoriesTree: {
           items: [
             {
-              categoryCode: 'moked-category',
+              categoryCode: 'mocked-category',
             },
           ],
         },

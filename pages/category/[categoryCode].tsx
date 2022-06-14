@@ -6,13 +6,13 @@ import { ProductListingTemplate } from '@/components/page-templates'
 import { productSearch } from '@/lib/api/operations'
 import getCategoryTree from '@/lib/api/operations/get-category-tree'
 
-import type { CategoryCollection } from '@/lib/gql/types'
+import type { Maybe, PrCategory } from '@/lib/gql/types'
 import type { NextPage, GetServerSidePropsContext } from 'next'
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
   const { locale } = context
   const response = await productSearch(context.query)
-  const categoriesTree: CategoryCollection = await getCategoryTree()
+  const categoriesTree: Maybe<Maybe<PrCategory>[]> | undefined = await getCategoryTree()
 
   return {
     props: {
