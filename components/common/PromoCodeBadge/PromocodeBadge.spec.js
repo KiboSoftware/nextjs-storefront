@@ -65,12 +65,6 @@ describe('PromoCode Component', () => {
     expect(PromoCodeApply).toBeVisible()
   })
 
-  it('Test the promocode textBox is visible', () => {
-    setup()
-    const PromoCode = screen.getByRole('textbox')
-    expect(PromoCode).toBeVisible()
-  })
-
   it('Test the Apply Button is disable at default', () => {
     setup()
     const ApplyButton = screen.getByTestId('promo-button')
@@ -91,7 +85,6 @@ describe('PromoCode Component', () => {
 
   it('should disable Apply button when a user enters Promo code and apply it', async () => {
     setup()
-    const input = screen.getByRole('textbox')
     const PromoCodebutton = screen.getByRole('button', {
       name: /apply/i,
     })
