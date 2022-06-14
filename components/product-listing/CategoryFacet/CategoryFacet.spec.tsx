@@ -5,12 +5,16 @@ import { composeStories } from '@storybook/testing-react'
 import { render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 
+import { CategoryFacetProps } from './CategoryFacet'
 import * as stories from './CategoryFacet.stories' // import all stories from the stories file
 
 const { CategoryFacetDesktop } = composeStories(stories)
 
 describe('[component] - CategoryFacet', () => {
-  const setup = () => render(<CategoryFacetDesktop />)
+  const setup = (params?: CategoryFacetProps) => {
+    const props = params ? params : CategoryFacetDesktop.args
+    render(<CategoryFacetDesktop {...props} />)
+  }
 
   it('should render component', () => {
     setup()
@@ -72,5 +76,30 @@ describe('[component] - CategoryFacet', () => {
     expect(childrenCategoriesLabelsListAfterClick).toHaveLength(
       CategoryFacetDesktop.args?.categoryFacet?.childrenCategories?.length || 0
     )
+  })
+
+  it('should display heading and back button only when we dont have any childrenCategories', () => {
+    const params = {
+      categoryFacet: {
+        header: 'Jackets',
+      },
+      breadcrumbs: [
+        {
+          text: 'Home',
+          link: '/',
+        },
+        {
+          text: 'Mens',
+          link: '/categoryCode/M',
+        },
+      ],
+    }
+    setup(params)
+
+    const heading = screen.getByRole('heading')
+    const backButton = screen.getByRole('link', { name: /back/i })
+
+    expect(heading).toBeVisible()
+    expect(backButton).toBeInTheDocument()
   })
 })

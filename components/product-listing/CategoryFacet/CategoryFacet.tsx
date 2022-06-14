@@ -13,7 +13,7 @@ export interface CategoryFacetData {
   header?: string
   childrenCategories?: FacetValue[]
 }
-interface CategoryFacetProps {
+export type CategoryFacetProps = {
   initialItemsToShow?: number
   categoryFacet: CategoryFacetData
   breadcrumbs: BreadCrumbType[]
