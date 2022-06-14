@@ -1,8 +1,6 @@
 import React, { useEffect, useState } from 'react'
 
-import AddIcon from '@mui/icons-material/Add'
-import AppsIcon from '@mui/icons-material/Apps'
-import ListIcon from '@mui/icons-material/List'
+import { Add, Apps, List } from '@mui/icons-material'
 import { Grid, MenuItem, Typography, Box, Button, SxProps, Skeleton } from '@mui/material'
 import { Theme } from '@mui/material/styles'
 import { useTranslation } from 'next-i18next'
@@ -246,7 +244,7 @@ const ProductListingTemplate = (props: ProductListingTemplateProps) => {
                   {!isLoading ? (
                     <Button
                       variant="outlined"
-                      endIcon={<AddIcon fontSize="small" />}
+                      endIcon={<Add fontSize="small" />}
                       sx={{ ...styles.filterByButton }}
                       onClick={handleFilterBy}
                     >
@@ -263,8 +261,8 @@ const ProductListingTemplate = (props: ProductListingTemplateProps) => {
                   <Typography variant="body1" color="text.primary" sx={{ marginRight: '1rem' }}>
                     {t('view')}
                   </Typography>
-                  <AppsIcon sx={{ fontSize: '2rem', marginRight: '1rem' }} />
-                  <ListIcon sx={{ fontSize: '2.4rem' }} />
+                  <Apps sx={{ fontSize: '2rem', marginRight: '1rem' }} />
+                  <List sx={{ fontSize: '2.4rem' }} />
                 </Box>
               ) : (
                 <Box sx={{ ...styles.navBarView }}>

@@ -39,3 +39,6 @@ yarn-error.log*
 storybook-static
 .scannerwork
 .test-report
+
+# vscode
+/.vscode/

@@ -1,6 +1,6 @@
 import React from 'react'
 
-import VisibilityIcon from '@mui/icons-material/Visibility'
+import { Visibility } from '@mui/icons-material'
 import { ComponentStory, ComponentMeta } from '@storybook/react'
 
 import KiboTextBox, { KiboTextBoxProps } from './KiboTextBox'
@@ -55,5 +55,5 @@ export const WithIcon = Template.bind({})
 
 WithIcon.args = {
   label: 'Password visibility',
-  icon: <VisibilityIcon />,
+  icon: <Visibility />,
 }

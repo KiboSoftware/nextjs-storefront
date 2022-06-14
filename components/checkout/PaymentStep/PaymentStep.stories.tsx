@@ -4,13 +4,17 @@ import { ComponentStory, ComponentMeta } from '@storybook/react'
 
 import PaymentStep from './PaymentStep'
 
-// Common
 export default {
-  title: 'Checkout/PaymentStep',
+  title: 'checkout/PaymentStep',
   component: PaymentStep,
 } as ComponentMeta<typeof PaymentStep>
 
-const Template: ComponentStory<typeof PaymentStep> = () => <PaymentStep />
+const Template: ComponentStory<typeof PaymentStep> = (args) => <PaymentStep {...args} />
 
-// Default
+// Common
 export const Common = Template.bind({})
+
+Common.args = {
+  contact: undefined,
+  isUserLoggedIn: true,
+}

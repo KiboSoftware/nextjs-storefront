@@ -1,8 +1,6 @@
 import React, { useEffect, useState } from 'react'
 
-import AddIcon from '@mui/icons-material/Add'
-import ChevronLeftIcon from '@mui/icons-material/ChevronLeft'
-import RemoveIcon from '@mui/icons-material/Remove'
+import { Add, ChevronLeft, Remove } from '@mui/icons-material'
 import { Box, Button, FormLabel, Link, Typography, SxProps } from '@mui/material'
 import { Theme } from '@mui/material/styles'
 import { useTranslation } from 'next-i18next'
@@ -137,11 +135,7 @@ const CategoryFacet = (props: CategoryFacetProps) => {
             aria-label={buttonText}
             sx={{ ...styles.viewMore }}
             startIcon={
-              buttonText === viewMore ? (
-                <AddIcon fontSize="small" />
-              ) : (
-                <RemoveIcon fontSize="small" />
-              )
+              buttonText === viewMore ? <Add fontSize="small" /> : <Remove fontSize="small" />
             }
             onClick={() => handleViewMore()}
           >
@@ -154,7 +148,7 @@ const CategoryFacet = (props: CategoryFacetProps) => {
           onClick={onBackButtonClick}
           sx={{ ...styles.backButton }}
         >
-          <ChevronLeftIcon />
+          <ChevronLeft />
           {t('common:back')}
         </Link>
       </Box>

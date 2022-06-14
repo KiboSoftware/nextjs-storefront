@@ -1,8 +1,6 @@
 import React, { ReactNode, useState } from 'react'
 
-import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos'
-import ArrowForwardIcon from '@mui/icons-material/ArrowForwardIos'
-import CloseIcon from '@mui/icons-material/Close'
+import { ArrowBackIos, ArrowForward, Close } from '@mui/icons-material'
 import {
   Box,
   Divider,
@@ -110,7 +108,7 @@ const CategoryNestedNavigation = (props: CategoryNestedNavigationProps) => {
       subheader={
         <Box display="flex" alignItems="center" pl={4} pr={2} py={1}>
           <IconButton size="small" aria-label="back-arrow-button" onClick={handleBackClick}>
-            <ArrowBackIosIcon sx={{ ...styles.smallIcon }} />
+            <ArrowBackIos sx={{ ...styles.smallIcon }} />
           </IconButton>
           <ListSubheader component="div" sx={{ flex: 1, paddingX: 1 }}>
             {subHeader.backLink}
@@ -121,7 +119,7 @@ const CategoryNestedNavigation = (props: CategoryNestedNavigationProps) => {
             sx={{ marginRight: 1 }}
             onClick={() => onCloseMenu(false)}
           >
-            <CloseIcon />
+            <Close />
           </IconButton>
         </Box>
       }
@@ -149,9 +147,7 @@ const CategoryNestedNavigation = (props: CategoryNestedNavigationProps) => {
                 sx={{ paddingInline: 4 }}
               >
                 <ListItemText primary={category?.content?.name} sx={{ ...styles.listContent }} />
-                {category?.childrenCategories?.length ? (
-                  <ArrowForwardIcon fontSize="small" />
-                ) : null}
+                {category?.childrenCategories?.length ? <ArrowForward fontSize="small" /> : null}
               </ListItemButton>
               <Divider />
             </Box>

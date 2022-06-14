@@ -1,7 +1,6 @@
 import React from 'react'
 
-import AddIcon from '@mui/icons-material/Add'
-import RemoveIcon from '@mui/icons-material/Remove'
+import { Add, Remove } from '@mui/icons-material'
 import { Stack, TextField, IconButton, Typography } from '@mui/material'
 import { useTranslation } from 'next-i18next'
 
@@ -64,7 +63,7 @@ const QuantitySelector = (props: QuantitySelectorProps) => {
         aria-label={t('decrease')}
         component="span"
       >
-        <RemoveIcon fontSize="small" />
+        <Remove fontSize="small" />
       </IconButton>
 
       <QuantityTextField quantity={quantity} />
@@ -76,7 +75,7 @@ const QuantitySelector = (props: QuantitySelectorProps) => {
         aria-label={t('increase')}
         component="span"
       >
-        <AddIcon fontSize="small" />
+        <Add fontSize="small" />
       </IconButton>
     </Stack>
   )

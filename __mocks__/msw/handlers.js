@@ -8,6 +8,11 @@ export const checkoutHanlders = [
     return res(ctx.data(orderMock))
   }),
 
+  // useCheckout
+  graphql.query('getOrCreateCheckout', (_req, res, ctx) => {
+    return res(ctx.data(orderMock))
+  }),
+
   // useLoadFromCart
   graphql.mutation('getOrCreateCheckoutFromCart', (_req, res, ctx) => {
     return res(ctx.data(orderMock))

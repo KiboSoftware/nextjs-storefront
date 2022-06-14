@@ -1,6 +1,6 @@
 import React from 'react'
 
-import CloseIcon from '@mui/icons-material/Close'
+import { Close } from '@mui/icons-material'
 import { Stack, Box, Typography, useMediaQuery, useTheme } from '@mui/material'
 import { useTranslation } from 'next-i18next'
 
@@ -24,7 +24,7 @@ const styles = {
     justifyContent: { xs: 'space-between' },
     alignItems: { xs: 'center' },
   },
-  closeIcon: {
+  Close: {
     display: {
       md: 'none',
     },
@@ -54,7 +54,7 @@ const FacetList = (props: FacetListProps) => {
           >
             {t('filter-by')}
           </Typography>
-          <CloseIcon sx={{ ...styles.closeIcon }} onClick={onFilterByClose} />
+          <Close sx={{ ...styles.Close }} onClick={onFilterByClose} />
         </Box>
       </Box>
       <Stack>

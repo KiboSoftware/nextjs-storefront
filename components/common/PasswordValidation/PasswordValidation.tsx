@@ -1,6 +1,6 @@
 import React from 'react'
 
-import CheckCircleIcon from '@mui/icons-material/CheckCircle'
+import { CheckCircle } from '@mui/icons-material'
 import { Stack, Typography } from '@mui/material'
 import { useTranslation } from 'next-i18next'
 
@@ -27,7 +27,7 @@ const PasswordValidation = (props: PasswordValidationProps) => {
       </Typography>
 
       <Stack direction="row" alignItems="center" gap={1}>
-        <CheckCircleIcon
+        <CheckCircle
           fontSize="small"
           color={isHavingAtLeastEightCharacters ? 'primary' : 'error'}
           data-testid="isHavingAtLeastEightCharacters"
@@ -35,7 +35,7 @@ const PasswordValidation = (props: PasswordValidationProps) => {
         {t('at-least-eight-characters-long')}
       </Stack>
       <Stack direction="row" alignItems="center" gap={1}>
-        <CheckCircleIcon
+        <CheckCircle
           fontSize="small"
           color={isHavingAtLeastOneNumber ? 'primary' : 'error'}
           data-testid="isHavingAtLeastOneNumber"
@@ -43,7 +43,7 @@ const PasswordValidation = (props: PasswordValidationProps) => {
         {t('at-least-one-number')}
       </Stack>
       <Stack direction="row" alignItems="center" gap={1}>
-        <CheckCircleIcon
+        <CheckCircle
           fontSize="small"
           color={isHavingAtLeastOneCapitalLetter ? 'primary' : 'error'}
           data-testid="isHavingAtLeastOneCapitalLetter"
@@ -51,7 +51,7 @@ const PasswordValidation = (props: PasswordValidationProps) => {
         {t('at-least-one-capital-letter')}
       </Stack>
       <Stack direction="row" alignItems="center" gap={1}>
-        <CheckCircleIcon
+        <CheckCircle
           fontSize="small"
           color={isHavingAtLeastOneSpecialCharacter ? 'primary' : 'error'}
           data-testid="isHavingAtLeastOneSpecialCharacter"

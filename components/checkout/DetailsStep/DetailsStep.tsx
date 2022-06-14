@@ -2,10 +2,7 @@
 import React, { useEffect } from 'react'
 
 import { yupResolver } from '@hookform/resolvers/yup'
-import AccessTimeIcon from '@mui/icons-material/AccessTime'
-import CardGiftcardIcon from '@mui/icons-material/CardGiftcard'
-import EmojiEventsIcon from '@mui/icons-material/EmojiEvents'
-import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder'
+import { AccessTime, CardGiftcard, EmojiEvents, FavoriteBorder } from '@mui/icons-material'
 import {
   Box,
   Stack,
@@ -23,9 +20,10 @@ import { useTranslation } from 'next-i18next'
 import { useForm, Controller } from 'react-hook-form'
 import * as yup from 'yup'
 
-import { CheckoutDetails, useUpdateCheckout } from '../../../hooks'
 import KiboTextBox from '@/components/common/KiboTextBox/KiboTextBox'
 import PasswordValidation from '@/components/common/PasswordValidation/PasswordValidation'
+import { CheckoutDetails, useUpdateCheckout } from '@/hooks'
+import { FormStates } from '@/lib/constants'
 import { isPasswordValid } from '@/lib/helpers/validations/validations'
 
 import type { Order } from '@/lib/gql/types'
@@ -40,7 +38,7 @@ export interface PersonalDetails {
 }
 
 export interface Action {
-  type: 'COMPLETE' | 'INCOMPLETE' | 'VALIDATE'
+  type: FormStates.COMPLETE | FormStates.INCOMPLETE | FormStates.VALIDATE
 }
 interface DetailsProps {
   setAutoFocus?: boolean
@@ -142,23 +140,26 @@ const DetailsStep = (props: DetailsProps) => {
       if (formData?.showAccountFields) {
         await createAccount(formData)
       }
-      onCompleteCallback({ type: 'COMPLETE' })
+
+      onCompleteCallback({
+        type: isUserEnteredPasswordValid() ? FormStates.COMPLETE : FormStates.INCOMPLETE,
+      })
     } catch (error) {
-      onCompleteCallback({ type: 'INCOMPLETE' })
+      onCompleteCallback({ type: FormStates.INCOMPLETE })
       console.error(error)
     }
   }
 
   // form is invalid, notify parent form is incomplete
   const onInvalidForm = (_errors?: any, _e?: any) => {
-    onCompleteCallback({ type: 'INCOMPLETE' })
+    onCompleteCallback({ type: FormStates.INCOMPLETE })
   }
 
   useEffect(() => {
-    if (stepperStatus === 'VALIDATE') {
-      isUserEnteredPasswordValid() ? handleSubmit(onValid, onInvalidForm)() : onInvalidForm()
+    if (stepperStatus === FormStates.VALIDATE) {
+      handleSubmit(onValid, onInvalidForm)()
     }
-  }, [stepperStatus, onCompleteCallback])
+  }, [stepperStatus])
 
   return (
     <Stack gap={2} data-testid="checkout-details">
@@ -200,25 +201,25 @@ const DetailsStep = (props: DetailsProps) => {
       <Grid container>
         <Grid item xs={12} md={4}>
           <IconButton aria-label={t('faster-checkout')}>
-            <AccessTimeIcon fontSize="medium" />
+            <AccessTime fontSize="medium" />
           </IconButton>
           {t('faster-checkout')}
         </Grid>
         <Grid item xs={12} md={8}>
           <IconButton aria-label={t('earn-credits-with-every-purchase')}>
-            <EmojiEventsIcon fontSize="medium" />
+            <EmojiEvents fontSize="medium" />
           </IconButton>
           {t('earn-credits-with-every-purchase')}
         </Grid>
         <Grid item xs={12} md={4}>
           <IconButton aria-label={t('full-rewards-program-benifits')}>
-            <CardGiftcardIcon fontSize="medium" />
+            <CardGiftcard fontSize="medium" />
           </IconButton>
           {t('full-rewards-program-benifits')}
         </Grid>
         <Grid item xs={12} md={8}>
           <IconButton aria-label={t('manage-your-wishlist')}>
-            <FavoriteBorderIcon fontSize="medium" />
+            <FavoriteBorder fontSize="medium" />
           </IconButton>
           {t('manage-your-wishlist')}
         </Grid>

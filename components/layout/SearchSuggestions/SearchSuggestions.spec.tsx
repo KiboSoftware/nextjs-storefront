@@ -10,7 +10,7 @@ const { Common } = composeStories(stories)
 
 const searchBarMock = () => <input data-testid="search-bar-component" name="searchInput" />
 jest.mock('../../common/SearchBar/SearchBar', () => searchBarMock)
-jest.mock('../../../hooks', () => ({
+jest.mock('@/hooks', () => ({
   useDebounce: jest.fn(() => ''),
   useSearchSuggestions: jest.fn(() => ''),
 }))

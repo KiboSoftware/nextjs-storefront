@@ -1,6 +1,6 @@
 import React from 'react'
 
-import CheckCircleIcon from '@mui/icons-material/CheckCircle'
+import { CheckCircle } from '@mui/icons-material'
 import { Typography, Box, styled, Theme } from '@mui/material'
 import { useTranslation } from 'next-i18next'
 interface StyledThemeProps {
@@ -12,7 +12,7 @@ const StyledTitleComponent = styled(Box)(() => ({
   alignItems: 'center',
 }))
 
-const StyledCheckCircleIcon = styled(CheckCircleIcon)(({ theme }: StyledThemeProps) => ({
+const StyledCheckCircle = styled(CheckCircle)(({ theme }: StyledThemeProps) => ({
   color: theme?.palette.primary.main,
 }))
 
@@ -27,7 +27,7 @@ const Title = () => {
   const { t } = useTranslation('common')
   return (
     <StyledTitleComponent data-testid="title-component">
-      <StyledCheckCircleIcon />
+      <StyledCheckCircle />
       <StyledTitle variant="h3">{t('add-to-cart')}</StyledTitle>
     </StyledTitleComponent>
   )

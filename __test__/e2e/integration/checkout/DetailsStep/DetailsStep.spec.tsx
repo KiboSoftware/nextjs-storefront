@@ -6,7 +6,7 @@ import { composeStories } from '@storybook/testing-react'
 import { render, screen, act, fireEvent } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 
-import * as stories from '../../../../../components/checkout/DetailsStep/DetailsStep.stories'
+import * as stories from '@/components/checkout/DetailsStep/DetailsStep.stories'
 
 const { Common } = composeStories(stories)
 
@@ -111,66 +111,23 @@ describe('[components] Details', () => {
     expect(emailError).toBeVisible()
   })
 
-  it('first name should display required field error when user focus out (blur event) the first name field', async () => {
+  it('Should display required message onBlur of create Account inputs', async () => {
+    // arrange
     setup()
-
-    let firstNameError = screen.queryByText(/this field is required/i)
-    expect(firstNameError).not.toBeInTheDocument()
+    const emptyInput = { target: { value: '' } }
 
     const iWantToCreateAccount = screen.getByRole('checkbox', { name: /showaccountfields/i })
     await act(async () => {
       userEvent.click(iWantToCreateAccount)
     })
-
-    const firstNameInput = screen.getByRole('textbox', { name: /first-name/i })
+    const allInputs = screen.getAllByRole('textbox')
     await act(async () => {
-      firstNameInput.focus()
-      fireEvent.blur(firstNameInput, { target: { value: '' } })
+      allInputs.forEach((input) => {
+        input.focus()
+        fireEvent.blur(input, emptyInput)
+      })
     })
-
-    firstNameError = screen.queryByText(/this-field-is-required/i)
-    expect(firstNameError).toBeVisible()
-  })
-
-  it('last name should display required field error when user focus out (blur event) the last name field', async () => {
-    setup()
-
-    let lastNameError = screen.queryByText(/this field is required/i)
-    expect(lastNameError).not.toBeInTheDocument()
-
-    const iWantToCreateAccount = screen.getByRole('checkbox', { name: /showaccountfields/i })
-    await act(async () => {
-      userEvent.click(iWantToCreateAccount)
-    })
-
-    const lastNameInput = screen.getByRole('textbox', { name: /last-name/i })
-    await act(async () => {
-      lastNameInput.focus()
-      fireEvent.blur(lastNameInput, { target: { value: '' } })
-    })
-
-    lastNameError = screen.queryByText(/this-field-is-required/i)
-    expect(lastNameError).toBeVisible()
-  })
-
-  it('password should display required field error when user focus out (blur event) the password field', async () => {
-    setup()
-
-    let passwordError = screen.queryByText(/this field is required/i)
-    expect(passwordError).not.toBeInTheDocument()
-
-    const iWantToCreateAccount = screen.getByRole('checkbox', { name: /showaccountfields/i })
-    await act(async () => {
-      userEvent.click(iWantToCreateAccount)
-    })
-
-    const passwordInput = screen.getByPlaceholderText('password')
-    await act(async () => {
-      passwordInput.focus()
-      fireEvent.blur(passwordInput, { target: { value: '' } })
-    })
-
-    passwordError = screen.queryByText(/this-field-is-required/i)
-    expect(passwordError).toBeVisible()
+    const validationMessage = screen.getAllByText(/this-field-is-required/i)
+    expect(validationMessage).toHaveLength(3)
   })
 })

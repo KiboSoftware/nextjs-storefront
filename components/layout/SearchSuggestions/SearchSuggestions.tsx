@@ -17,8 +17,8 @@ import {
 import { useTranslation } from 'next-i18next'
 import { useRouter } from 'next/router'
 
-import { useDebounce, useSearchSuggestions } from '../../../hooks'
 import SearchBar from '@/components/common/SearchBar/SearchBar'
+import { useDebounce, useSearchSuggestions } from '@/hooks'
 
 const style = {
   paper: {

@@ -1,6 +1,6 @@
 import React from 'react'
 
-import InfoIcon from '@mui/icons-material/Info'
+import { Info } from '@mui/icons-material'
 import { Typography, Box, Divider, styled, Theme } from '@mui/material'
 import { useTranslation } from 'next-i18next'
 
@@ -76,7 +76,7 @@ const Content = (props: CartContentProps) => {
         </StyledPriceRow>
         <StyledPriceRow>
           <StyledPriceLabel variant="body2">
-            {t('estimated-tax')} <InfoIcon sx={{ width: '0.688rem', height: '0.688rem' }} />
+            {t('estimated-tax')} <Info sx={{ width: '0.688rem', height: '0.688rem' }} />
           </StyledPriceLabel>
           <StyledPriceData variant="body2">{t('currency', { val: itemTaxTotal })}</StyledPriceData>
         </StyledPriceRow>

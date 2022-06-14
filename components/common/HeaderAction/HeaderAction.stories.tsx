@@ -1,8 +1,6 @@
 import React from 'react'
 
-import AccountCircleIcon from '@mui/icons-material/AccountCircle'
-import LocationOnIcon from '@mui/icons-material/LocationOn'
-import ShoppingCartIcon from '@mui/icons-material/ShoppingCart'
+import { AccountCircle, LocationOn, ShoppingCart } from '@mui/icons-material'
 import { ComponentStory, ComponentMeta } from '@storybook/react'
 
 import HeaderAction from './HeaderAction'
@@ -20,7 +18,7 @@ const Template: ComponentStory<typeof HeaderAction> = (args) => <HeaderAction {.
 export const Cart = Template.bind({})
 
 Cart.args = {
-  icon: ShoppingCartIcon,
+  icon: ShoppingCart,
   badgeContent: 1,
   subtitle: 'Cart',
 }
@@ -28,7 +26,7 @@ Cart.args = {
 export const MyAccount = Template.bind({})
 
 MyAccount.args = {
-  icon: AccountCircleIcon,
+  icon: AccountCircle,
   title: 'My Account',
   subtitle: 'Login',
 }
@@ -36,7 +34,7 @@ MyAccount.args = {
 export const Location = Template.bind({})
 
 Location.args = {
-  icon: LocationOnIcon,
+  icon: LocationOn,
   title: 'Find A Store',
   subtitle: 'View All',
 }

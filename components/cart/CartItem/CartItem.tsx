@@ -1,4 +1,4 @@
-import DeleteIcon from '@mui/icons-material/Delete'
+import { Delete } from '@mui/icons-material'
 import {
   Box,
   Card,
@@ -158,7 +158,7 @@ const CartItem = (props: CartItemProps) => {
               name="item-delete"
               onClick={() => onDelete(cartItem.id || '')}
             >
-              <DeleteIcon />
+              <Delete />
             </IconButton>
           </Box>
         </Box>

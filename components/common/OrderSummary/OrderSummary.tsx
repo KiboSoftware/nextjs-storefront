@@ -1,6 +1,6 @@
 /** @format */
 
-import InfoIcon from '@mui/icons-material/Info'
+import { Info } from '@mui/icons-material'
 import { Card, Typography, Box, CardContent, Divider } from '@mui/material'
 import { useTranslation } from 'next-i18next'
 
@@ -75,7 +75,7 @@ const OrderSummary = (props: OrderSummaryProps) => {
         <Box sx={styles.boxStyle}>
           <Typography variant="h5">
             {estimatedTaxLabel}
-            <InfoIcon sx={{ fontSize: (theme: any) => theme.typography.h5 }} />
+            <Info sx={{ fontSize: (theme: any) => theme.typography.h5 }} />
           </Typography>
           <Typography variant="h5">{estimatedTaxAmout}</Typography>
         </Box>

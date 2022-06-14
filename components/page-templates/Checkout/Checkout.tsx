@@ -4,17 +4,21 @@ import { Box, Stack, Button, Typography, SxProps } from '@mui/material'
 import { Theme } from '@mui/material/styles'
 import { useTranslation } from 'next-i18next'
 
-import DetailsStep, { Action } from '@/components/checkout/DetailsStep/DetailsStep'
-import KiboStepper from '@/components/checkout/KiboStepper/KiboStepper'
-import PaymentStep from '@/components/checkout/PaymentStep/PaymentStep'
-import ReviewStep from '@/components/checkout/ReviewStep/ReviewStep'
-import ShippingStep from '@/components/checkout/ShippingStep/ShippingStep'
+import {
+  DetailsStep,
+  KiboStepper,
+  ReviewStep,
+  ShippingStep,
+  PaymentStep,
+  type Action,
+} from '@/components/checkout'
 import OrderSummary from '@/components/common/OrderSummary/OrderSummary'
+import { FormStates } from '@/lib/constants'
 
 import type { Order } from '@/lib/gql/types'
-
 interface CheckoutProps {
   checkout: Order
+  initialStep?: number
 }
 
 const buttonStyle = {
@@ -23,28 +27,28 @@ const buttonStyle = {
 } as SxProps<Theme> | undefined
 
 const Checkout = (props: CheckoutProps) => {
-  const { checkout } = props
+  const { checkout, initialStep = 0 } = props
 
-  const { t } = useTranslation('checkout')
+  const { t } = useTranslation(['checkout', 'common'])
 
   const buttonLabels = [t('go-to-shipping'), t('go-to-payment'), t('review-order')]
-  const steps = [t('details'), t('shipping'), t('payment'), t('review')]
+  const steps = [t('common:details'), t('shipping'), t('payment'), t('review')]
 
   // State
-  const [activeStep, setActiveStep] = useState<number>(0)
-  const [activeStepStatus, setActiveStepStatus] = useState<string>('INCOMPLETE')
+  const [activeStep, setActiveStep] = useState<number>(initialStep)
+  const [activeStepStatus, setActiveStepStatus] = useState<string>(FormStates.INCOMPLETE)
 
   const handleBack = () => {
     setActiveStep(activeStep - 1)
   }
 
   const handleNext = () => {
-    setActiveStepStatus('VALIDATE')
+    setActiveStepStatus(FormStates.VALIDATE)
   }
 
   const completeStepCallback = (action: Action) => {
-    setActiveStepStatus('INCOMPLETE')
-    if (action.type === 'COMPLETE') {
+    setActiveStepStatus(FormStates.INCOMPLETE)
+    if (action.type === FormStates.COMPLETE) {
       setActiveStep(activeStep + 1)
     }
   }
@@ -65,6 +69,10 @@ const Checkout = (props: CheckoutProps) => {
     shippingLabel: 'Go to Shipping',
   }
 
+  const paymentStepParams = {
+    isUserLoggedIn: true,
+  }
+
   return (
     <Stack direction={{ xs: 'column', md: 'row' }} gap={3}>
       <Stack sx={{ width: '100%', maxWidth: '872px' }} gap={3}>
@@ -77,8 +85,17 @@ const Checkout = (props: CheckoutProps) => {
             stepperStatus={activeStepStatus}
             onCompleteCallback={completeStepCallback}
           />
-          <ShippingStep />
-          <PaymentStep />
+          <ShippingStep
+            checkout={checkout}
+            stepperStatus={activeStepStatus}
+            onCompleteCallback={completeStepCallback}
+          />
+          <PaymentStep
+            checkout={checkout}
+            stepperStatus={activeStepStatus}
+            {...paymentStepParams}
+            onCompleteCallback={completeStepCallback}
+          />
           <ReviewStep />
         </KiboStepper>
       </Stack>
