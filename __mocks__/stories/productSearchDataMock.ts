@@ -46,26 +46,7 @@ export const productSearchDataMock = {
           },
         ],
       },
-      options: [
-        {
-          attributeFQN: 'tenant~color',
-          attributeDetail: {
-            name: 'Color',
-            inputType: 'List',
-          },
-          isProductImageGroupSelector: false,
-          isRequired: true,
-          isMultiValue: false,
-          values: [
-            {
-              value: 'Orange',
-              isSelected: false,
-              deltaPrice: null,
-              stringValue: 'Orange',
-            },
-          ],
-        },
-      ],
+      options: null,
     },
     {
       productCode: 'ACC1',
@@ -115,26 +96,6 @@ export const productSearchDataMock = {
           },
         ],
       },
-      options: [
-        {
-          attributeFQN: 'tenant~color',
-          attributeDetail: {
-            name: 'Color',
-            inputType: 'List',
-          },
-          isProductImageGroupSelector: true,
-          isRequired: true,
-          isMultiValue: false,
-          values: [
-            {
-              value: 'Green',
-              isSelected: false,
-              deltaPrice: null,
-              stringValue: 'Green',
-            },
-          ],
-        },
-      ],
     },
     {
       productCode: 'PET2',
@@ -195,26 +156,6 @@ export const productSearchDataMock = {
           },
         ],
       },
-      options: [
-        {
-          attributeFQN: 'tenant~color',
-          attributeDetail: {
-            name: 'Color',
-            inputType: 'List',
-          },
-          isProductImageGroupSelector: false,
-          isRequired: true,
-          isMultiValue: false,
-          values: [
-            {
-              value: 'Black',
-              isSelected: false,
-              deltaPrice: null,
-              stringValue: 'Black',
-            },
-          ],
-        },
-      ],
     },
     {
       productCode: 'TOP3',
@@ -242,26 +183,6 @@ export const productSearchDataMock = {
           },
         ],
       },
-      options: [
-        {
-          attributeFQN: 'tenant~jacket-fit',
-          attributeDetail: {
-            name: 'Jacket Fit',
-            inputType: 'List',
-          },
-          isProductImageGroupSelector: false,
-          isRequired: true,
-          isMultiValue: false,
-          values: [
-            {
-              value: 'Slim',
-              isSelected: true,
-              deltaPrice: null,
-              stringValue: 'Slim',
-            },
-          ],
-        },
-      ],
     },
     {
       productCode: 'TOP17',
@@ -289,26 +210,6 @@ export const productSearchDataMock = {
           },
         ],
       },
-      options: [
-        {
-          attributeFQN: 'tenant~color',
-          attributeDetail: {
-            name: 'Color',
-            inputType: 'List',
-          },
-          isProductImageGroupSelector: false,
-          isRequired: true,
-          isMultiValue: false,
-          values: [
-            {
-              value: 'Green',
-              isSelected: true,
-              deltaPrice: null,
-              stringValue: 'Green',
-            },
-          ],
-        },
-      ],
     },
     {
       fulfillmentTypesSupported: ['DirectShip', 'InStorePickup'],
@@ -338,26 +239,7 @@ export const productSearchDataMock = {
           },
         ],
       },
-      options: [
-        {
-          attributeFQN: 'tenant~color',
-          attributeDetail: {
-            name: 'Color',
-            inputType: 'List',
-          },
-          isProductImageGroupSelector: false,
-          isRequired: true,
-          isMultiValue: false,
-          values: [
-            {
-              value: 'Brown',
-              isSelected: true,
-              deltaPrice: null,
-              stringValue: 'Brown',
-            },
-          ],
-        },
-      ],
+      options: null,
       productImageGroups: [],
       inventoryInfo: {
         manageStock: false,
@@ -394,32 +276,6 @@ export const productSearchDataMock = {
           },
         ],
       },
-      options: [
-        {
-          attributeFQN: 'tenant~color',
-          attributeDetail: {
-            name: 'Color',
-            inputType: 'List',
-          },
-          isProductImageGroupSelector: false,
-          isRequired: true,
-          isMultiValue: false,
-          values: [
-            {
-              value: 'Green',
-              isSelected: false,
-              deltaPrice: null,
-              stringValue: 'Green',
-            },
-            {
-              value: 'Red',
-              isSelected: false,
-              deltaPrice: null,
-              stringValue: 'Red',
-            },
-          ],
-        },
-      ],
       productImageGroups: [],
       inventoryInfo: {
         manageStock: false,
@@ -456,26 +312,6 @@ export const productSearchDataMock = {
           },
         ],
       },
-      options: [
-        {
-          attributeFQN: 'tenant~length-cm',
-          attributeDetail: {
-            name: 'Length (cm)',
-            inputType: 'List',
-          },
-          isProductImageGroupSelector: false,
-          isRequired: true,
-          isMultiValue: false,
-          values: [
-            {
-              value: 150,
-              isSelected: false,
-              deltaPrice: null,
-              stringValue: null,
-            },
-          ],
-        },
-      ],
       productImageGroups: [],
       inventoryInfo: {
         manageStock: false,
@@ -512,26 +348,6 @@ export const productSearchDataMock = {
           },
         ],
       },
-      options: [
-        {
-          attributeFQN: 'tenant~color',
-          attributeDetail: {
-            name: 'Color',
-            inputType: 'List',
-          },
-          isProductImageGroupSelector: false,
-          isRequired: true,
-          isMultiValue: false,
-          values: [
-            {
-              value: 'Blue',
-              isSelected: false,
-              deltaPrice: null,
-              stringValue: 'Blue',
-            },
-          ],
-        },
-      ],
       productImageGroups: [],
       inventoryInfo: {
         manageStock: false,
