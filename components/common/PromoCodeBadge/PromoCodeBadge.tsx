@@ -1,12 +1,14 @@
 /** @format */
 
-import { useState, useRef } from 'react'
+import { useState } from 'react'
 
 import CloseIcon from '@mui/icons-material/Close'
 import { Typography, Box, Button, Stack, IconButton } from '@mui/material'
 import { useTranslation } from 'next-i18next'
+import { Controller, useForm } from 'react-hook-form'
 
 import KiboTextBox from '@/components/common/KiboTextBox/KiboTextBox'
+
 export interface PromocodeBadgeProps {
   onApplyCouponCode: (promo: string) => void
   onRemoveCouponCode: (promo: string) => void
@@ -31,6 +33,8 @@ const styles = {
 }
 
 export const PromoCodeBadge = (props: PromocodeBadgeProps) => {
+  const { control, handleSubmit } = useForm()
+  const { t } = useTranslation('common')
   const {
     onApplyCouponCode,
     onRemoveCouponCode,
@@ -39,24 +43,16 @@ export const PromoCodeBadge = (props: PromocodeBadgeProps) => {
     helpText,
   } = props
   const [promo, setPromo] = useState<string>('')
-  const promoRef = useRef<any>()
   const handleChange = (_name: any, value: string) => {
     setPromo(value)
   }
-  const { t } = useTranslation('common')
 
   const handleApplyCouponCode = () => {
-    const Coupon = (element: string) => element === promo
-    if (couponList?.some(Coupon)) {
-      console.log('Coupon already applied')
-    } else {
-      if (promoError) {
-        promoRef.current.value = null
-      } else {
-        onApplyCouponCode(promo)
-        setPromo('')
-        promoRef.current.value = null
-      }
+    const couponCode = (element: string) => element === promo
+    if (!couponList?.some(couponCode)) {
+      onApplyCouponCode(promo)
+      setPromo('')
+      console.log('promo', promo)
     }
   }
   const handleRemoveCouponCode = (item: any) => {
@@ -65,44 +61,53 @@ export const PromoCodeBadge = (props: PromocodeBadgeProps) => {
 
   return (
     <>
-      <Stack direction="row" sx={{ maxWidth: '20rem' }}>
-        <KiboTextBox
-          inputRef={promoRef}
-          onChange={handleChange}
-          sx={styles.textBoxStyle}
-          placeholder={t('promo-code')}
-          data-testid="promo-input"
-          helperText={helpText}
-          error={promoError}
-        />
-        <Button
-          disabled={promo?.length > 0 ? false : true}
-          onClick={handleApplyCouponCode}
-          sx={styles.buttonStyle}
-          variant="contained"
-          data-testid="promo-button"
-        >
-          {t('apply')}
-        </Button>
-      </Stack>
-      {couponList?.map((coupon: string[]) => (
-        <>
-          <Box data-testid="promotype" component="div" sx={styles.boxStyle}>
-            <Stack direction="row" spacing={0.5} alignItems="center">
-              <Typography sx={{ textAlign: 'left' }}>{coupon}</Typography>
-              <IconButton>
-                <CloseIcon
-                  sx={{
-                    cursor: 'pointer',
-                    fontSize: '1rem',
-                  }}
-                  onClick={() => handleRemoveCouponCode(coupon)}
-                />
-              </IconButton>
-            </Stack>
-          </Box>
-        </>
-      ))}
+      <form onSubmit={handleSubmit(handleApplyCouponCode)}>
+        <Stack direction="row" sx={{ maxWidth: '20rem' }}>
+          <Controller
+            name="promocode"
+            control={control}
+            render={() => (
+              <KiboTextBox
+                name="promocode"
+                value={promo}
+                placeholder={t('promo-code')}
+                sx={styles.textBoxStyle}
+                onChange={handleChange}
+                error={promoError}
+                helperText={helpText}
+                data-testid="promo-input"
+              />
+            )}
+          />
+          <Button
+            disabled={promo?.length > 0 ? false : true}
+            onClick={handleApplyCouponCode}
+            sx={styles.buttonStyle}
+            variant="contained"
+            data-testid="promo-button"
+          >
+            {t('apply')}
+          </Button>
+        </Stack>
+        {couponList?.map((coupon: string[]) => (
+          <>
+            <Box data-testid="promotype" component="div" sx={styles.boxStyle}>
+              <Stack direction="row" spacing={0.5} alignItems="center">
+                <Typography sx={{ textAlign: 'left' }}>{coupon}</Typography>
+                <IconButton>
+                  <CloseIcon
+                    sx={{
+                      cursor: 'pointer',
+                      fontSize: '1rem',
+                    }}
+                    onClick={() => handleRemoveCouponCode(coupon)}
+                  />
+                </IconButton>
+              </Stack>
+            </Box>
+          </>
+        ))}
+      </form>
     </>
   )
 }

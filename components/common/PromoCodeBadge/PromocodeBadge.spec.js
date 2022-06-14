@@ -89,18 +89,6 @@ describe('PromoCode Component', () => {
     expect(ApplyButton).toBeEnabled()
   })
 
-  it('should clear the textbox when user enters promocode and apply it', () => {
-    setup()
-    const input = screen.getByRole('textbox')
-    const ApplyButton = screen.getByTestId('promo-button')
-    userEvent.type(input, userEnteredText)
-    expect(input).toHaveValue(userEnteredText)
-    expect(ApplyButton).toBeEnabled()
-    userEvent.click(ApplyButton)
-
-    expect(input).toHaveValue('')
-  })
-
   it('should disable Apply button when a user enters Promo code and apply it', async () => {
     setup()
     const input = screen.getByRole('textbox')
@@ -119,22 +107,5 @@ describe('PromoCode Component', () => {
 
     userEvent.click(PromoCodebutton)
     expect(screen.getByTestId('promotype')).toBeInTheDocument('SAVE50')
-  })
-
-  it('should able to add multiple promo code', () => {
-    setup()
-    const input = screen.getByRole('textbox')
-    const PromoCodebutton = screen.getByRole('button', { name: /apply/i })
-    userEvent.type(input, userEnteredText)
-    expect(input).toHaveValue(userEnteredText)
-
-    userEvent.click(PromoCodebutton)
-    expect(screen.getByTestId('promotype')).toBeInTheDocument('SAVE50')
-
-    userEvent.type(input, userEnteredText)
-    expect(input).toHaveValue(userEnteredText)
-
-    userEvent.click(PromoCodebutton)
-    expect(screen.getByTestId('promotype')).toBeInTheDocument('SAVE60')
   })
 })
