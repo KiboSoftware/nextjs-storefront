@@ -40,7 +40,6 @@ const ProductDetailTemplate = (props: ProductDetailTemplateProps) => {
   const { currentProduct, selectProductOption } = useProductDetailTemplate({ product })
 
   // Getters
-  console.log('currentProduct', currentProduct)
   const productName = productGetters.getName(currentProduct)
   const productPrice = productGetters.getPrice(currentProduct)
   const productPriceRange = productGetters.getPriceRange(currentProduct)
