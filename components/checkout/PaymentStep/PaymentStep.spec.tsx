@@ -1,7 +1,7 @@
 import React from 'react'
 
 import { composeStories } from '@storybook/testing-react'
-import { render, screen, fireEvent } from '@testing-library/react'
+import { render, screen, fireEvent, act } from '@testing-library/react'
 
 import * as stories from '../PaymentStep/PaymentStep.stories' // import all stories from the stories file
 
@@ -48,13 +48,14 @@ describe('[components] PaymentStep', () => {
     expect(billingAddressHeading).toBeInTheDocument()
   })
 
-  it('should display card details when user selects Credit/Debit Card as payment', () => {
+  it('should display card details when user selects Credit/Debit Card as payment', async () => {
     setup()
 
     const cardPaymentType = screen.getByRole('radio', {
       name: /credit \/ debit card/i,
     })
     cardPaymentType.focus()
+
     fireEvent.change(cardPaymentType, {
       target: { onChange: onHandlePaymentMethod() },
     })
@@ -62,11 +63,12 @@ describe('[components] PaymentStep', () => {
     expect(onHandlePaymentMethod).toBeCalled()
   })
 
-  it('should default unchecked saved payment if logged in', () => {
+  it('should default unchecked saved payment if logged in', async () => {
     setup()
 
     const savePaymentMethod = screen.getByTestId('save-payment')
     savePaymentMethod.focus()
+
     fireEvent.change(savePaymentMethod, {
       target: { onChange: onHandleSavePaymentMethodMock() },
     })

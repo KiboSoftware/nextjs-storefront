@@ -2,20 +2,19 @@ import React from 'react'
 
 import { ComponentStory, ComponentMeta } from '@storybook/react'
 
-import ReviewStep from './ReviewStep'
+import OrderReview from './OrderReview'
 import { orderMock } from '@/__mocks__/stories/orderMock'
 
 // Common
 export default {
-  title: 'Checkout/ReviewStep',
-  component: ReviewStep,
-} as ComponentMeta<typeof ReviewStep>
+  title: 'Checkout/OrderReview',
+  component: OrderReview,
+} as ComponentMeta<typeof OrderReview>
 
-const Template: ComponentStory<typeof ReviewStep> = (args) => <ReviewStep {...args} />
+const Template: ComponentStory<typeof OrderReview> = (args) => <OrderReview {...args} />
 
 // Default
 export const Common = Template.bind({})
 Common.args = {
   checkout: orderMock.checkout,
-  stepperStatus: 'VALIDATE',
 }

@@ -16,26 +16,26 @@ interface StyledThemeProps {
   theme?: Theme
 }
 
-const StyledPriceSection = styled(Box)(() => ({
+export const StyledPriceSection = styled(Box)(() => ({
   padding: '0 0.438rem',
 }))
 
-const StyledPriceRow = styled(Box)(() => ({
+export const StyledPriceRow = styled(Box)(() => ({
   display: 'flex',
   padding: '0.563rem 0',
 }))
 
-const StyledPriceTotalRow = styled(Box)(() => ({
+export const StyledPriceTotalRow = styled(Box)(() => ({
   display: 'flex',
   padding: '1.188rem 0.438rem 0.25rem 0.438rem',
 }))
 
-const StyledPriceLabel = styled(Typography)(({ theme }: StyledThemeProps) => ({
+export const StyledPriceLabel = styled(Typography)(({ theme }: StyledThemeProps) => ({
   flex: '50%',
   color: theme?.palette.text.primary,
 }))
 
-const StyledPriceData = styled(Typography)(({ theme }: StyledThemeProps) => ({
+export const StyledPriceData = styled(Typography)(({ theme }: StyledThemeProps) => ({
   width: '1.25rem',
   height: '1.25rem',
   textAlign: 'right',

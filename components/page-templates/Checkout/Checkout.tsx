@@ -10,9 +10,10 @@ import {
   ReviewStep,
   ShippingStep,
   PaymentStep,
+  OrderReview,
+  OrderSummary,
   type Action,
 } from '@/components/checkout'
-import OrderSummary from '@/components/common/OrderSummary/OrderSummary'
 import { FormStates } from '@/lib/constants'
 
 import type { Order } from '@/lib/gql/types'
@@ -37,6 +38,9 @@ const Checkout = (props: CheckoutProps) => {
   // State
   const [activeStep, setActiveStep] = useState<number>(initialStep)
   const [activeStepStatus, setActiveStepStatus] = useState<string>(FormStates.INCOMPLETE)
+
+  const detailsStepIndex = steps.findIndex((step) => step === t('common:details'))
+  const reviesStepIndex = steps.findIndex((step) => step === t('review'))
 
   const handleBack = () => {
     setActiveStep(activeStep - 1)
@@ -96,36 +100,47 @@ const Checkout = (props: CheckoutProps) => {
             {...paymentStepParams}
             onCompleteCallback={completeStepCallback}
           />
-          <ReviewStep />
+          <ReviewStep
+            checkout={checkout}
+            stepperStatus={activeStepStatus}
+            onCompleteCallback={completeStepCallback}
+            goBack={handleBack}
+          />
         </KiboStepper>
       </Stack>
 
-      <Box sx={{ width: '100%', maxWidth: 428, height: 448 }}>
-        <OrderSummary {...orderSummeryArgs}>
-          {activeStep < buttonLabels.length && (
-            <Stack direction="column" gap={2}>
-              <Button
-                variant="contained"
-                sx={{ ...buttonStyle }}
-                fullWidth
-                onClick={handleNext}
-                disabled={activeStep === steps.length - 1}
-              >
-                {buttonLabels[activeStep]}
-              </Button>
-              <Button
-                variant="contained"
-                sx={{ ...buttonStyle }}
-                fullWidth
-                onClick={handleBack}
-                disabled={activeStep === 0}
-              >
-                {t('go-back')}
-              </Button>
-            </Stack>
-          )}
-        </OrderSummary>
-      </Box>
+      {activeStep != reviesStepIndex && (
+        <Box sx={{ width: '100%', maxWidth: 428, height: 448 }}>
+          <OrderSummary {...orderSummeryArgs}>
+            {activeStep < buttonLabels.length && (
+              <Stack direction="column" gap={2}>
+                <Button
+                  variant="contained"
+                  sx={{ ...buttonStyle }}
+                  fullWidth
+                  onClick={handleNext}
+                  disabled={activeStep === steps.length - 1}
+                >
+                  {buttonLabels[activeStep]}
+                </Button>
+                <Button
+                  variant="contained"
+                  sx={{ ...buttonStyle }}
+                  fullWidth
+                  onClick={handleBack}
+                  disabled={activeStep === detailsStepIndex}
+                >
+                  {t('go-back')}
+                </Button>
+              </Stack>
+            )}
+          </OrderSummary>
+        </Box>
+      )}
+
+      {activeStep === reviesStepIndex && (
+        <OrderReview checkout={checkout} steps={steps} setActiveStep={setActiveStep} />
+      )}
     </Stack>
   )
 }

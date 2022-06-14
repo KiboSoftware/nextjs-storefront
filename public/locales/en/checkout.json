@@ -56,5 +56,14 @@
   "invalid-cvv": "Invalid CVV",
   "save-payment-method": "Save payment method",
   "billing-address-same-as-shipping": "Billing address same as shipping",
-  "save-billing-address": "Save billing address"
+  "save-billing-address": "Save billing address",
+  "terms-conditions": "I agree to Terms and conditions",
+  "order-review": "Order Review",
+  "store-pickup-details": "Store pickup details",
+  "confirm-and-pay": "Confirm and Pay",
+  "order-details": "Order Details",
+  "shipping-to-home": "Shipping to Home",
+  "pickup-in-store": "Pickup in Store",
+  "sub-total": "Subtotal",
+  "shipping-details": "Shipping details"
 }

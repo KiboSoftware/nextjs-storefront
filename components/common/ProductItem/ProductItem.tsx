@@ -95,7 +95,7 @@ const ProductItem = (props: ProductItemProps) => {
 
             <Box data-testid="productDetails">
               <Box sx={{ display: { xs: 'block', sm: 'block', md: 'none' } }}>
-                {(options.length > 0 || price || qty) && (
+                {(options?.length > 0 || price || qty) && (
                   <Box
                     display="flex"
                     alignItems="center"
