@@ -29,6 +29,8 @@
     "@kibocommerce/graphql-client": "^1.0.3-beta.9",
     "@mui/icons-material": "^5.4.4",
     "@mui/material": "^5.8.3",
+    "@testing-library/react-hooks": "^8.0.0",
+    "credit-card-type": "^9.1.0",
     "graphql": "^16.5.0",
     "graphql-request": "^4.2.0",
     "material-ui-popup-state": "^2.0.0",
