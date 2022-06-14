@@ -65,24 +65,6 @@ export const productSearchDataMock = {
             },
           ],
         },
-        {
-          attributeFQN: 'tenant~size',
-          attributeDetail: {
-            name: 'Size',
-            inputType: 'List',
-          },
-          isProductImageGroupSelector: false,
-          isRequired: true,
-          isMultiValue: false,
-          values: [
-            {
-              value: 'L',
-              isSelected: false,
-              deltaPrice: null,
-              stringValue: 'L',
-            },
-          ],
-        },
       ],
     },
     {
@@ -166,21 +148,6 @@ export const productSearchDataMock = {
         salePrice: null,
       },
       priceRange: null,
-      properties: [
-        {
-          attributeFQN: 'tenant~product-crosssell',
-          attributeDetail: {
-            name: 'Product Cross-Sells',
-          },
-          isHidden: false,
-          values: [
-            {
-              value: 'PET1',
-              stringValue: 'PET1',
-            },
-          ],
-        },
-      ],
       content: {
         productFullDescription: '',
         productShortDescription:
@@ -214,21 +181,6 @@ export const productSearchDataMock = {
         salePrice: null,
       },
       priceRange: null,
-      properties: [
-        {
-          attributeFQN: 'tenant~product-crosssell',
-          attributeDetail: {
-            name: 'Product Cross-Sells',
-          },
-          isHidden: false,
-          values: [
-            {
-              value: 'BIKE1',
-              stringValue: 'BIKE1',
-            },
-          ],
-        },
-      ],
       content: {
         productFullDescription: '',
         productShortDescription:
@@ -276,21 +228,6 @@ export const productSearchDataMock = {
         salePrice: null,
       },
       priceRange: null,
-      properties: [
-        {
-          attributeFQN: 'tenant~product-crosssell',
-          attributeDetail: {
-            name: 'Product Cross-Sells',
-          },
-          isHidden: false,
-          values: [
-            {
-              value: 'SHOE11-5',
-              stringValue: 'SHOE11-5',
-            },
-          ],
-        },
-      ],
       content: {
         productFullDescription: '<br>',
         productShortDescription:
@@ -338,21 +275,6 @@ export const productSearchDataMock = {
         salePrice: null,
       },
       priceRange: null,
-      properties: [
-        {
-          attributeFQN: 'tenant~product-crosssell',
-          attributeDetail: {
-            name: 'Product Cross-Sells',
-          },
-          isHidden: false,
-          values: [
-            {
-              value: 'BCKPCK1-2',
-              stringValue: 'BCKPCK1-2',
-            },
-          ],
-        },
-      ],
       content: {
         productFullDescription: '<br>',
         productShortDescription:
@@ -401,21 +323,6 @@ export const productSearchDataMock = {
         salePrice: null,
       },
       priceRange: null,
-      properties: [
-        {
-          attributeFQN: 'tenant~product-crosssell',
-          attributeDetail: {
-            name: 'Product Cross-Sells',
-          },
-          isHidden: false,
-          values: [
-            {
-              value: 'BOT1',
-              stringValue: 'BOT1',
-            },
-          ],
-        },
-      ],
       content: {
         productFullDescription: '<br>',
         productShortDescription:
@@ -472,21 +379,6 @@ export const productSearchDataMock = {
         salePrice: null,
       },
       priceRange: null,
-      properties: [
-        {
-          attributeFQN: 'tenant~product-crosssell',
-          attributeDetail: {
-            name: 'Product Cross-Sells',
-          },
-          isHidden: false,
-          values: [
-            {
-              value: 'BCKPCK1',
-              stringValue: 'BCKPCK1',
-            },
-          ],
-        },
-      ],
       content: {
         productFullDescription: '<br>',
         productShortDescription:
@@ -549,21 +441,6 @@ export const productSearchDataMock = {
         salePrice: null,
       },
       priceRange: null,
-      properties: [
-        {
-          attributeFQN: 'tenant~product-crosssell',
-          attributeDetail: {
-            name: 'Product Cross-Sells',
-          },
-          isHidden: false,
-          values: [
-            {
-              value: 'BIKE1',
-              stringValue: 'BIKE1',
-            },
-          ],
-        },
-      ],
       content: {
         productFullDescription: '<br>',
         productShortDescription:
@@ -620,21 +497,6 @@ export const productSearchDataMock = {
         salePrice: null,
       },
       priceRange: null,
-      properties: [
-        {
-          attributeFQN: 'tenant~product-crosssell',
-          attributeDetail: {
-            name: 'Product Cross-Sells',
-          },
-          isHidden: false,
-          values: [
-            {
-              value: 'KAY2',
-              stringValue: 'KAY2',
-            },
-          ],
-        },
-      ],
       content: {
         productFullDescription: null,
         productShortDescription:
@@ -693,19 +555,6 @@ export const productSearchDataMock = {
       priceRange: null,
       properties: [
         {
-          attributeFQN: 'tenant~product-crosssell',
-          attributeDetail: {
-            name: 'Product Cross-Sells',
-          },
-          isHidden: false,
-          values: [
-            {
-              value: 'PAD1',
-              stringValue: 'PAD1',
-            },
-          ],
-        },
-        {
           attributeFQN: 'tenant~popularity',
           attributeDetail: {
             name: 'Popularity',
@@ -732,44 +581,6 @@ export const productSearchDataMock = {
           ],
         },
         {
-          attributeFQN: 'tenant~product-upsell',
-          attributeDetail: {
-            name: 'Product Upsells',
-          },
-          isHidden: false,
-          values: [
-            {
-              value: 'BCKPCK1',
-              stringValue: 'BCKPCK1',
-            },
-            {
-              value: 'PAD1',
-              stringValue: 'PAD1',
-            },
-            {
-              value: 'PAD2',
-              stringValue: 'PAD2',
-            },
-            {
-              value: 'KAY1',
-              stringValue: 'KAY1',
-            },
-          ],
-        },
-        {
-          attributeFQN: 'tenant~color-filter',
-          attributeDetail: {
-            name: 'color filter',
-          },
-          isHidden: true,
-          values: [
-            {
-              value: 'Red',
-              stringValue: 'Red',
-            },
-          ],
-        },
-        {
           attributeFQN: 'tenant~isrecommended',
           attributeDetail: {
             name: 'isRecommended',
@@ -783,32 +594,6 @@ export const productSearchDataMock = {
             {
               value: 'Summer',
               stringValue: 'Summer',
-            },
-          ],
-        },
-        {
-          attributeFQN: 'tenant~brand',
-          attributeDetail: {
-            name: 'Brand',
-          },
-          isHidden: false,
-          values: [
-            {
-              value: 'North-Face',
-              stringValue: 'North Face',
-            },
-          ],
-        },
-        {
-          attributeFQN: 'tenant~material',
-          attributeDetail: {
-            name: 'Material',
-          },
-          isHidden: false,
-          values: [
-            {
-              value: 'Aluminum',
-              stringValue: 'Aluminum',
             },
           ],
         },
@@ -866,19 +651,6 @@ export const productSearchDataMock = {
       priceRange: null,
       properties: [
         {
-          attributeFQN: 'tenant~product-crosssell',
-          attributeDetail: {
-            name: 'Product Cross-Sells',
-          },
-          isHidden: false,
-          values: [
-            {
-              value: 'BCKPCK1',
-              stringValue: 'BCKPCK1',
-            },
-          ],
-        },
-        {
           attributeFQN: 'tenant~popularity',
           attributeDetail: {
             name: 'Popularity',
@@ -905,27 +677,6 @@ export const productSearchDataMock = {
           ],
         },
         {
-          attributeFQN: 'tenant~product-upsell',
-          attributeDetail: {
-            name: 'Product Upsells',
-          },
-          isHidden: false,
-          values: [
-            {
-              value: 'PAD3',
-              stringValue: 'PAD3',
-            },
-            {
-              value: 'KAY3',
-              stringValue: 'KAY3',
-            },
-            {
-              value: 'PET5',
-              stringValue: 'PET5',
-            },
-          ],
-        },
-        {
           attributeFQN: 'tenant~color-filter',
           attributeDetail: {
             name: 'color filter',
@@ -935,27 +686,6 @@ export const productSearchDataMock = {
             {
               value: 'Yellow',
               stringValue: 'Yellow',
-            },
-          ],
-        },
-        {
-          attributeFQN: 'tenant~isrecommended',
-          attributeDetail: {
-            name: 'isRecommended',
-          },
-          isHidden: false,
-          values: [
-            {
-              value: 'Employee',
-              stringValue: 'Employee',
-            },
-            {
-              value: 'Kayaker',
-              stringValue: 'Kayaker',
-            },
-            {
-              value: 'Summer',
-              stringValue: 'Summer',
             },
           ],
         },
@@ -982,19 +712,6 @@ export const productSearchDataMock = {
             {
               value: 'Aluminum',
               stringValue: 'Aluminum',
-            },
-          ],
-        },
-        {
-          attributeFQN: 'tenant~video-url',
-          attributeDetail: {
-            name: 'video-url',
-          },
-          isHidden: false,
-          values: [
-            {
-              value: 'https://www.youtube.com/watch?v=iz7wtTO7roQ',
-              stringValue: 'https://www.youtube.com/watch?v=iz7wtTO7roQ',
             },
           ],
         },
@@ -1036,21 +753,6 @@ export const productSearchDataMock = {
         salePrice: null,
       },
       priceRange: null,
-      properties: [
-        {
-          attributeFQN: 'tenant~product-crosssell',
-          attributeDetail: {
-            name: 'Product Cross-Sells',
-          },
-          isHidden: false,
-          values: [
-            {
-              value: 'KAY1',
-              stringValue: 'KAY1',
-            },
-          ],
-        },
-      ],
       content: {
         productFullDescription: null,
         productShortDescription:
@@ -1090,19 +792,6 @@ export const productSearchDataMock = {
       priceRange: null,
       properties: [
         {
-          attributeFQN: 'tenant~product-crosssell',
-          attributeDetail: {
-            name: 'Product Cross-Sells',
-          },
-          isHidden: false,
-          values: [
-            {
-              value: 'PAD3',
-              stringValue: 'PAD3',
-            },
-          ],
-        },
-        {
           attributeFQN: 'tenant~popularity',
           attributeDetail: {
             name: 'Popularity',
@@ -1129,27 +818,6 @@ export const productSearchDataMock = {
           ],
         },
         {
-          attributeFQN: 'tenant~product-upsell',
-          attributeDetail: {
-            name: 'Product Upsells',
-          },
-          isHidden: false,
-          values: [
-            {
-              value: 'BCKPCK1',
-              stringValue: 'BCKPCK1',
-            },
-            {
-              value: 'PAD2',
-              stringValue: 'PAD2',
-            },
-            {
-              value: 'KAY1',
-              stringValue: 'KAY1',
-            },
-          ],
-        },
-        {
           attributeFQN: 'tenant~color-filter',
           attributeDetail: {
             name: 'color filter',
@@ -1163,23 +831,6 @@ export const productSearchDataMock = {
           ],
         },
         {
-          attributeFQN: 'tenant~isrecommended',
-          attributeDetail: {
-            name: 'isRecommended',
-          },
-          isHidden: false,
-          values: [
-            {
-              value: 'Kayaker',
-              stringValue: 'Kayaker',
-            },
-            {
-              value: 'Summer',
-              stringValue: 'Summer',
-            },
-          ],
-        },
-        {
           attributeFQN: 'tenant~brand',
           attributeDetail: {
             name: 'Brand',
@@ -1189,32 +840,6 @@ export const productSearchDataMock = {
             {
               value: 'North-Face',
               stringValue: 'North Face',
-            },
-          ],
-        },
-        {
-          attributeFQN: 'tenant~color',
-          attributeDetail: {
-            name: 'Color',
-          },
-          isHidden: false,
-          values: [
-            {
-              value: 'Orange',
-              stringValue: 'Orange',
-            },
-          ],
-        },
-        {
-          attributeFQN: 'tenant~video-url',
-          attributeDetail: {
-            name: 'video-url',
-          },
-          isHidden: false,
-          values: [
-            {
-              value: 'https://www.youtube.com/watch?v=iz7wtTO7roQ',
-              stringValue: 'https://www.youtube.com/watch?v=iz7wtTO7roQ',
             },
           ],
         },
@@ -1256,21 +881,6 @@ export const productSearchDataMock = {
         salePrice: null,
       },
       priceRange: null,
-      properties: [
-        {
-          attributeFQN: 'tenant~product-crosssell',
-          attributeDetail: {
-            name: 'Product Cross-Sells',
-          },
-          isHidden: false,
-          values: [
-            {
-              value: 'PAD3',
-              stringValue: 'PAD3',
-            },
-          ],
-        },
-      ],
       content: {
         productFullDescription: null,
         productShortDescription:
@@ -1308,21 +918,6 @@ export const productSearchDataMock = {
         salePrice: null,
       },
       priceRange: null,
-      properties: [
-        {
-          attributeFQN: 'tenant~product-crosssell',
-          attributeDetail: {
-            name: 'Product Cross-Sells',
-          },
-          isHidden: false,
-          values: [
-            {
-              value: 'BCKPCK3',
-              stringValue: 'BCKPCK3',
-            },
-          ],
-        },
-      ],
       content: {
         productFullDescription: '',
         productShortDescription:
@@ -1360,21 +955,6 @@ export const productSearchDataMock = {
         salePrice: null,
       },
       priceRange: null,
-      properties: [
-        {
-          attributeFQN: 'tenant~product-crosssell',
-          attributeDetail: {
-            name: 'Product Cross-Sells',
-          },
-          isHidden: false,
-          values: [
-            {
-              value: 'BCKPCK3',
-              stringValue: 'BCKPCK3',
-            },
-          ],
-        },
-      ],
       content: {
         productFullDescription: null,
         productShortDescription:
