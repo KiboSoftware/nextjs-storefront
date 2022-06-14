@@ -19,6 +19,7 @@ import { MegaMenuItem } from '@/components/layout'
 import DefaultImage from '@/public/product_placeholder.svg'
 
 import type { Maybe, PrCategory } from '@/lib/gql/types'
+
 interface MegaMenuProps {
   categoryTree: Maybe<PrCategory>[]
   onBackdropToggle: (isOpen: boolean) => void

@@ -79,10 +79,11 @@ const Content = (props: ListItemProps) => {
 }
 
 const SearchSuggestions = () => {
+  const { publicRuntimeConfig } = getConfig()
+
   const [isOpen, setIsOpen] = useState<boolean>(false)
   const [searchTerm, setSearchTerm] = useState<string>('')
 
-  const { publicRuntimeConfig } = getConfig()
   const handleOpen = () => setIsOpen(true)
   const handleClose = () => setIsOpen(false)
   const handleSearch = (userEnteredValue: string) => setSearchTerm(userEnteredValue)

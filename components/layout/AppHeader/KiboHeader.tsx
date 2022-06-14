@@ -59,7 +59,7 @@ const StyledToolbar = styled(Toolbar)(() => ({
   alignItems: 'center',
   display: 'flex',
   backgroundColor: 'grey.300',
-  borderBottomColor: 'red',
+  borderBottomColor: 'grey.300',
   '& .MuiToolbar-root': {
     minHeight: { xs: 55 },
   },

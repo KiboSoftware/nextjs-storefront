@@ -1,11 +1,11 @@
 import { useQuery } from 'react-query'
 
-import { searchSuggestionResult } from '@/__mocks__/stories/searchSuggestionResultMock'
 import { makeGraphQLClient } from '@/lib/gql/client'
 import { getSearchSuggestionsQuery } from '@/lib/gql/queries/get-search-suggestions'
 import { searchKeys } from '@/lib/react-query/queryKeys'
 
 import type { SearchSuggestionResult } from '@/lib/gql/types'
+
 export interface SearchSuggestionResultType {
   data: SearchSuggestionResult
   isLoading: boolean
