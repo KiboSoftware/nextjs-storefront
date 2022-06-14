@@ -62,6 +62,9 @@ describe('[page] Category Page', () => {
     }
 
     const response = await getServerSideProps(context)
+    const mockCategoryTreeByCode = categoryTreeDataMock?.categoriesTree?.items.find(
+      (category) => category.categoryCode === '40'
+    )
     expect(response).toStrictEqual({
       props: {
         results: {
@@ -79,6 +82,9 @@ describe('[page] Category Page', () => {
           facets: [],
         },
         categoriesTree: mockCategoryTreeData.categoriesTree.items,
+        categoryTreeByCodeResults: {
+          categories: [mockCategoryTreeByCode],
+        },
         _nextI18Next: {
           initialI18nStore: { 'mock-locale': [{}], en: [{}] },
           initialLocale: 'mock-locale',
