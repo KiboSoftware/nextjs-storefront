@@ -31,6 +31,7 @@ describe('[component] - CategoryFacet', () => {
     )
     expect(heading).toBeVisible()
     expect(backButton).toBeInTheDocument()
+    expect(backButton).toHaveAttribute('href', '/')
   })
 
   it('should display all the children when user clicks on View More button', () => {
