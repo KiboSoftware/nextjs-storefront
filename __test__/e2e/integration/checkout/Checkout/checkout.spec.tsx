@@ -130,36 +130,4 @@ describe('[components] Checkout integration', () => {
 
     await waitFor(() => expect(onCompleteCallbackMock).toHaveBeenCalled())
   })
-
-  it('should enable confirm and pay button in review step when terms and conditions checkbox checked ', async () => {
-    renderWithQueryClient(<Common {...Common.args} initialStep={3} />)
-
-    const termsConditions = screen.getByRole('checkbox', {
-      name: /termsconditions/i,
-    })
-    termsConditions.focus()
-
-    await act(async () => {
-      fireEvent.change(termsConditions, {
-        target: { checked: true },
-      })
-    })
-
-    expect(termsConditions).toBeChecked()
-  })
-
-  it('should go to previous payment step when go back button click from review step', async () => {
-    renderWithQueryClient(<Common {...Common.args} initialStep={3} />)
-    const reviewComponent = screen.getByTestId(/review-step-component/i)
-    const goBackButton = screen.getByRole('button', {
-      name: /go-back/i,
-    })
-    goBackButton.focus()
-
-    await act(async () => {
-      fireEvent.click(goBackButton)
-    })
-
-    expect(reviewComponent).not.toBeInTheDocument()
-  })
 })
