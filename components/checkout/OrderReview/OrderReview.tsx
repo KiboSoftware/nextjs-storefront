@@ -118,7 +118,6 @@ const OrderReview = (props: OrderReviewProps) => {
           {t('edit')}
         </StyledActions>
       </StyledRow>
-
       {paymentMethods.map((paymentMethod) => (
         <StyledRow
           sx={{ display: 'inline' }}
