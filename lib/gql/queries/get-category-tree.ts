@@ -3,7 +3,7 @@ import { categoryInfo } from '../fragments'
 const getCategoryTreeQuery = /* GraphQL */ `
   ${categoryInfo}
 
-  query {
+  query getCategoryTreeQuery {
     categoriesTree {
       items {
         ...categoryInfo
