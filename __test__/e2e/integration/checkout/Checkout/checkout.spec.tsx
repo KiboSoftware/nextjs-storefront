@@ -63,7 +63,7 @@ describe('[components] Checkout integration', () => {
 
     // Verify that detailsStep are not visible and shippingStep are visible
     detailsStep = screen.queryByTestId('checkout-details')
-    shippingStep = screen.getByTestId('checkout-shipping')
+    shippingStep = await screen.findByTestId('checkout-shipping')
 
     expect(detailsStep).not.toBeInTheDocument()
     expect(shippingStep).toBeVisible()
