@@ -3,9 +3,11 @@ import { render, screen } from '@testing-library/react'
 import { RouterContext } from 'next/dist/shared/lib/router-context'
 
 import { createMockRouter } from '../../utils/createMockRouter'
+import { categoryTreeDataMock } from '@/__mocks__/stories/categoryTreeDataMock'
 import { createQueryClientWrapper } from '@/__test__/utils/renderWithQueryClient'
 import CategoryPage, { getServerSideProps } from '@/pages/category/[categoryCode]'
 
+const mockCategoryTreeData = categoryTreeDataMock
 jest.mock('@/lib/api/util', () => ({
   fetcher: jest.fn(() => {
     return Promise.resolve({
@@ -24,13 +26,7 @@ jest.mock('@/lib/api/util', () => ({
           ],
           facets: [],
         },
-        categoriesTree: {
-          items: [
-            {
-              categoryCode: 'mocked-category',
-            },
-          ],
-        },
+        categoriesTree: { items: mockCategoryTreeData.categoriesTree?.items },
       },
     })
   }),
@@ -80,11 +76,7 @@ describe('[page] Category Page', () => {
           ],
           facets: [],
         },
-        categoriesTree: [
-          {
-            categoryCode: 'mocked-category',
-          },
-        ],
+        categoriesTree: mockCategoryTreeData.categoriesTree.items,
         _nextI18Next: {
           initialI18nStore: { 'mock-locale': [{}], en: [{}] },
           initialLocale: 'mock-locale',
