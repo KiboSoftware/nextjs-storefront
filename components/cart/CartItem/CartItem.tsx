@@ -12,6 +12,7 @@ import {
 import { grey } from '@mui/material/colors'
 import { useTranslation } from 'next-i18next'
 
+import { fulfillmentOptionsMock } from '@/__mocks__/stories/fulfillmentOptionsMock'
 import CartItemActions from '@/components/cart/CartItemActions/CartItemActions'
 import CartItemActionsMobile from '@/components/cart/CartItemActionsMobile/CartItemActionsMobile'
 import FulfillmentOptions from '@/components/common/FulfillmentOptions/FulfillmentOptions'
@@ -145,7 +146,7 @@ const CartItem = (props: CartItemProps) => {
             />
 
             <Box sx={{ ...styles.subcontainer }}>
-              <FulfillmentOptions />
+              <FulfillmentOptions fulfillmentOptions={fulfillmentOptionsMock} />
             </Box>
           </Box>
 
