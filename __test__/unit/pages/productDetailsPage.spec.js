@@ -23,13 +23,11 @@ jest.mock('@/lib/api/util', () => ({
         product: {
           productCode: 'mocked-product',
         },
-        categoriesTree: {
-          items: [
-            {
-              categoryCode: 'mocked-category',
-            },
-          ],
-        },
+        categoriesTree: [
+          {
+            categoryCode: 'mocked-category',
+          },
+        ],
         products: {
           items: [
             {
@@ -64,8 +62,6 @@ jest.mock(
 )
 
 describe('[page] Product Details Page', () => {
-  const onLoadCategoriesTreeMock = jest.fn()
-
   it('should run getStaticProps method', () => {
     const context = {
       params: {
@@ -80,13 +76,11 @@ describe('[page] Product Details Page', () => {
         product: {
           productCode: 'mocked-product',
         },
-        categoriesTree: {
-          items: [
-            {
-              categoryCode: 'mocked-category',
-            },
-          ],
-        },
+        categoriesTree: [
+          {
+            categoryCode: 'mocked-category',
+          },
+        ],
         _nextI18Next: {
           initialI18nStore: { 'mock-locale': [{}], en: [{}] },
           initialLocale: 'mock-locale',
@@ -107,7 +101,7 @@ describe('[page] Product Details Page', () => {
 
   it('should render the ProductDetail page template if isFallback is false', () => {
     nextRouter.useRouter.mockImplementation(() => ({ isFallback: false }))
-    render(<ProductDetailPage onLoadCategoriesTree={onLoadCategoriesTreeMock} />)
+    render(<ProductDetailPage />)
 
     const productDetailTemplate = screen.getByTestId('productDetailTemplate-mock')
     expect(productDetailTemplate).toBeVisible()
@@ -115,7 +109,7 @@ describe('[page] Product Details Page', () => {
 
   it('should render the Fallback page if isFallback is true', () => {
     nextRouter.useRouter.mockImplementation(() => ({ isFallback: true }))
-    render(<ProductDetailPage onLoadCategoriesTree={onLoadCategoriesTreeMock} />)
+    render(<ProductDetailPage />)
 
     expect(screen.getByText(/Fallback/)).toBeVisible()
   })

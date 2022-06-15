@@ -24,11 +24,13 @@ jest.mock('@/lib/api/util', () => ({
           ],
           facets: [],
         },
-        categoriesTree: [
-          {
-            categoryCode: 'mocked-category',
-          },
-        ],
+        categoriesTree: {
+          items: [
+            {
+              categoryCode: 'mocked-category',
+            },
+          ],
+        },
       },
     })
   }),
@@ -94,10 +96,9 @@ describe('[page] Category Page', () => {
 
   it('should render the Category page template', () => {
     const router = createMockRouter()
-    const onLoadCategoriesTree = jest.fn()
     render(
       <RouterContext.Provider value={router}>
-        <CategoryPage onLoadCategoriesTree={onLoadCategoriesTree} />
+        <CategoryPage />
       </RouterContext.Provider>,
       {
         wrapper: createQueryClientWrapper(),
