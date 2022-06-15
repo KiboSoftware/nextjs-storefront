@@ -1,5 +1,3 @@
-import { useState, useEffect } from 'react'
-
 import { AccountCircle } from '@mui/icons-material'
 import { Box, Divider, List, ListItem, ListItemText, SwipeableDrawer } from '@mui/material'
 import { useTranslation } from 'next-i18next'

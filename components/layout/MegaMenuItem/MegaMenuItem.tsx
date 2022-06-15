@@ -35,7 +35,7 @@ const MegaMenuItem = (props: MegaMenuItemProps) => {
           </Link>
         </ListItem>
         {categoryChildren?.map((cat) => (
-          <ListItem key={cat?.categoryId}>
+          <ListItem key={cat?.categoryId} role="group">
             <Link
               href={`category/${cat?.categoryCode}`}
               data-testid="categoryLink"

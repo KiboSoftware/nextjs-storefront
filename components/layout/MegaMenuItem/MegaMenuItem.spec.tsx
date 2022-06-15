@@ -22,6 +22,7 @@ describe('[components] - MegaMenuItem', () => {
     const categoryChildren = Common.args?.categoryChildren
     categoryChildren?.map((cat) => {
       const name = screen.getByText(`${cat?.content?.name}`)
+      expect(screen.getByRole('group')).toBeVisible()
       expect(name).toBeVisible()
       expect(name).toHaveAttribute('href', 'category/' + cat?.categoryCode)
     })

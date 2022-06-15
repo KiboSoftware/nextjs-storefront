@@ -60,7 +60,7 @@ const Title = ({ heading }: { heading: string }) => {
   return (
     <ListItem key="Suggestions" sx={{ ...style.listItem }}>
       <Typography fontWeight={600} variant="subtitle1">
-        {t(heading as string)}
+        {t(heading)}
       </Typography>
     </ListItem>
   )

@@ -19,8 +19,7 @@ import {
   Backdrop,
   Container,
 } from '@mui/material'
-import { styled, SxProps } from '@mui/material/styles'
-import { Theme } from '@mui/material/styles'
+import { styled, SxProps, Theme } from '@mui/material/styles'
 import { useTranslation } from 'next-i18next'
 
 import SearchSuggestions from '../SearchSuggestions/SearchSuggestions'
