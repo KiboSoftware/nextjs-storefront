@@ -44,7 +44,6 @@ describe('Home', () => {
           userConfig: { i18n: [{}] },
         },
       },
-      revalidate: 60,
     })
   })
 
