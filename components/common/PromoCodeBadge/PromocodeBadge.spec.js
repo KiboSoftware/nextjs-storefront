@@ -57,14 +57,6 @@ describe('PromoCode Component', () => {
     expect(ApplyPromocode).toBeVisible()
   })
 
-  it('Test the Apply Button is visible', () => {
-    setup()
-    const PromoCodeApply = screen.getByRole('button', {
-      name: /apply/i,
-    })
-    expect(PromoCodeApply).toBeVisible()
-  })
-
   it('Test the Apply Button is disable at default', () => {
     setup()
     const ApplyButton = screen.getByTestId('promo-button')
