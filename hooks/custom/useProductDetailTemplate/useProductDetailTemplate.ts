@@ -2,7 +2,9 @@ import { useState } from 'react'
 
 import { useProductMutation } from '@/hooks'
 import { productGetters } from '@/lib/getters'
-import { ConfigureOption, ProductCustom } from '@/lib/types'
+import type { ProductCustom } from '@/lib/types'
+
+import type { ConfiguredProduct, ProductOptionSelectionInput } from '@/lib/gql/types'
 
 interface UseProductDetailTemplateProps {
   product: ProductCustom
@@ -11,9 +13,9 @@ interface UseProductDetailTemplateProps {
 export const useProductDetailTemplate = (props: UseProductDetailTemplateProps) => {
   const { product } = props
   const [currentProduct, setCurrentProduct] = useState<ProductCustom>(product)
-  const [updatedShopperEnteredValues, setUpdatedShopperEnteredValues] = useState<ConfigureOption[]>(
-    []
-  )
+  const [updatedShopperEnteredValues, setUpdatedShopperEnteredValues] = useState<
+    ProductOptionSelectionInput[]
+  >([])
 
   const productCode = productGetters.getProductId(currentProduct)
 
@@ -21,7 +23,7 @@ export const useProductDetailTemplate = (props: UseProductDetailTemplateProps) =
   const { configureProduct } = useProductMutation()
 
   // handle product options selection
-  const updateShopperEnteredValues = (option: ConfigureOption) => {
+  const updateShopperEnteredValues = (option: ProductOptionSelectionInput) => {
     let shopperEnteredValues = [...updatedShopperEnteredValues]
     const { attributeFQN, value, shopperEnteredValue } = option
     const itemToBeUpdated = shopperEnteredValues.find((item) => item.attributeFQN === attributeFQN)
@@ -62,13 +64,32 @@ export const useProductDetailTemplate = (props: UseProductDetailTemplateProps) =
     })
 
     try {
-      const configureProductResponse = await configureProduct.mutateAsync({
+      const configureProductResponse: ConfiguredProduct = await configureProduct.mutateAsync({
         productCode,
-        updatedOptions,
+        updatedOptions: updatedOptions.map((option) => {
+          return {
+            attributeFQN: option.attributeFQN,
+            shopperEnteredValue: option.shopperEnteredValue,
+            value: option.value,
+          }
+        }),
       })
 
-      setUpdatedShopperEnteredValues(updatedOptions)
-      setCurrentProduct({ ...currentProduct, ...configureProductResponse })
+      const responseOptions = configureProductResponse.options
+        ?.filter((option) => option?.values?.some((value) => value?.isSelected))
+        .map((option) => {
+          const selected = option?.values?.find((value) => value?.isSelected)
+          return {
+            attributeFQN: option?.attributeFQN,
+            value: selected?.value,
+            shopperEnteredValue: selected?.shopperEnteredValue,
+            isSelected: selected?.isSelected,
+            isEnabled: selected?.isEnabled,
+          }
+        }) as ProductOptionSelectionInput[]
+
+      setUpdatedShopperEnteredValues(responseOptions)
+      setCurrentProduct({ ...currentProduct, options: responseOptions })
     } catch (err) {
       console.error(err)
     }

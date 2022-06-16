@@ -14,6 +14,7 @@ fragment configureProductOptions on ConfiguredProduct {
       isSelected
       deltaPrice
       stringValue
+      shopperEnteredValue
     }
   }
 }

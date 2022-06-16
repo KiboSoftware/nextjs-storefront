@@ -2,10 +2,11 @@ import { useMutation } from 'react-query'
 
 import { makeGraphQLClient } from '@/lib/gql/client'
 import { configureProductMutation } from '@/lib/gql/mutations'
-import { ConfigureOption } from '@/lib/types'
+
+import type { ProductOptionSelectionInput } from '@/lib/gql/types'
 
 export interface ConfigureProductDetails {
-  updatedOptions: ConfigureOption[]
+  updatedOptions: ProductOptionSelectionInput[]
   productCode: string
 }
 

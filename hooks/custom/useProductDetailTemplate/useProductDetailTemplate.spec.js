@@ -1,15 +1,17 @@
 import { renderHook } from '@testing-library/react-hooks'
 import { act } from 'react-dom/test-utils'
 
+import { configuredProductDataMock } from '../../../__mocks__/stories/configuredProductDataMock'
 import { ProductDataMock } from '../../../__mocks__/stories/ProductDataMock'
 import { useProductDetailTemplate } from './useProductDetailTemplate'
 
+const mockConfigureProductOptionsResponse = configuredProductDataMock.configureProduct.options
 jest.mock('@/hooks', () => ({
   useProductMutation: () => ({
     configureProduct: {
       mutateAsync: () =>
         Promise.resolve({
-          configuredProduct: 'configured-product',
+          options: mockConfigureProductOptionsResponse,
         }),
       isLoading: false,
       isSuccess: true,
@@ -37,9 +39,19 @@ describe('[component] Product Detail Template data: useProductDetailTemplate', (
       )
     )
 
+    console.log(result.current)
+
     expect(result.current.currentProduct).toStrictEqual({
-      configuredProduct: 'configured-product',
       ...product,
+      options: [
+        {
+          attributeFQN: 'tenant~size',
+          value: 'Small',
+          shopperEnteredValue: undefined,
+          isSelected: true,
+          isEnabled: undefined,
+        },
+      ],
     })
   })
 })

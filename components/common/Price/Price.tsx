@@ -1,7 +1,7 @@
 import { Typography, Box, SxProps, Theme } from '@mui/material'
 import { useTranslation } from 'next-i18next'
 
-import { ProductPriceRange } from '@/lib/gql/types'
+import type { ProductPriceRange } from '@/lib/gql/types'
 
 interface PriceProps {
   price?: string

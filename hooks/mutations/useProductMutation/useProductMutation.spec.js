@@ -1,8 +1,8 @@
 import { renderHook } from '@testing-library/react-hooks'
 
-import { configuredProductDataMock } from '../../../__mocks__/stories/configuredProductDataMock'
-import { createQueryClientWrapper } from '../../../__test__/utils/renderWithQueryClient'
 import { useProductMutation } from './useProductMutation'
+import { configuredProductDataMock } from '@/__mocks__/stories/configuredProductDataMock'
+import { createQueryClientWrapper } from '@/__test__/utils/renderWithQueryClient'
 
 describe('[hooks] useProductMutation', () => {
   it('should use useProductMutation', async () => {
