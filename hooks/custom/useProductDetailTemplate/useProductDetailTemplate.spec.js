@@ -1,9 +1,9 @@
 import { renderHook } from '@testing-library/react-hooks'
 import { act } from 'react-dom/test-utils'
 
-import { configuredProductDataMock } from '../../../__mocks__/stories/configuredProductDataMock'
-import { ProductDataMock } from '../../../__mocks__/stories/ProductDataMock'
 import { useProductDetailTemplate } from './useProductDetailTemplate'
+import { configuredProductDataMock } from '@/__mocks__/stories/configuredProductDataMock'
+import { ProductDataMock } from '@/__mocks__/stories/ProductDataMock'
 
 const mockConfigureProductOptionsResponse = configuredProductDataMock.configureProduct.options
 jest.mock('@/hooks', () => ({
