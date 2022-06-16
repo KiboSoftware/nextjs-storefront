@@ -26,6 +26,10 @@ module.exports = {
     '^@/components/(.*)$': '<rootDir>/components/$1',
     // Handle Lib aliases
     '^@/lib/(.*)$': '<rootDir>/lib/$1',
+    // Handle contexts aliases
+    '^@/contexts(.*)$': '<rootDir>/contexts/$1',
+    // Handle hooks aliases
+    '^@/hooks(.*)$': '<rootDir>/hooks/$1',
     // Handle mock aliases
     '^@/__mocks__/(.*)$': '<rootDir>/__mocks__/$1',
     // Handle test aliases

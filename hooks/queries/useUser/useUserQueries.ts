@@ -11,17 +11,16 @@ const loadUser = async () => {
     document: getCurrentUser,
     variables: {},
   })
-
   return response
 }
 
-export const useUserQueries = (onSuccess: any, onError: any) => {
-  const loginUserQuery = useQuery(loginKeys.user, loadUser, {
-    onSuccess,
-    onError,
-  })
-
+export const useUserQueries = () => {
+  const { data, isLoading, isSuccess, isError, error } = useQuery(loginKeys.user, loadUser)
   return {
-    loginUserQuery,
+    data,
+    isLoading,
+    isError,
+    error,
+    isSuccess,
   }
 }

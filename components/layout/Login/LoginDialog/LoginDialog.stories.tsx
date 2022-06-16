@@ -3,19 +3,19 @@ import React from 'react'
 import { ComponentStory, ComponentMeta } from '@storybook/react'
 
 import LoginDialog from './LoginDialog'
-
+import { UIStateContext } from '@/contexts'
+const dialogdata = { isLoginDialogOpen: true, toggleLoginDialog: () => null }
 export default {
   component: LoginDialog,
+  argTypes: { action: { onclick: 'toggleLoginDialog' } },
   title: 'Layout/Login/LoginDialog',
-  argTypes: {
-    onClose: { action: 'onClose' },
-    handleLogin: { action: 'login' },
-    handleForgotPassword: { action: 'clickForgotpassword' },
-    onRegisterNow: { action: 'onRegisterNow' },
-  },
 } as ComponentMeta<typeof LoginDialog>
 
-const Template: ComponentStory<typeof LoginDialog> = (args) => <LoginDialog />
+const Template: ComponentStory<typeof LoginDialog> = () => (
+  <UIStateContext.Provider value={dialogdata}>
+    <LoginDialog />
+  </UIStateContext.Provider>
+)
 
 export const Common = Template.bind({})
 
@@ -23,5 +23,4 @@ export const Common = Template.bind({})
 
 Common.args = {
   isOpen: true,
-  customMaxWidth: '32.375rem',
 }

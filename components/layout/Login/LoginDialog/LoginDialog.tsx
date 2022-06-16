@@ -2,19 +2,13 @@ import React from 'react'
 
 import { Stack, Typography, Link, styled } from '@mui/material'
 import { useTranslation } from 'next-i18next'
-import getConfig from 'next/config'
 
 import KiboDialog from '@/components/common/KiboDialog/KiboDialog'
 import LoginContent, { LoginData } from '@/components/layout/Login/LoginContent/LoginContent'
-import { useAuthContext } from '@/contexts/AuthContext'
-import { useUserMutations } from '@/hooks'
-import { storeClientCookie } from '@/lib/helpers/cookieHelper'
+import { useAuthContext, useUIContext } from '@/contexts'
 
 export interface LoginDialogProps {
   isOpen?: boolean
-  onClose: () => void
-  onForgotPassword: () => void
-  onRegisterNow: () => void
 }
 
 export interface LoginFooterProps {
@@ -56,10 +50,8 @@ const LoginFooter = (props: LoginFooterProps) => {
 
 const LoginDialog = () => {
   const { t } = useTranslation(['common'])
-  const { loginUserMutation } = useUserMutations()
-  const { isLoginDialogOpen = false, toggleLoginDialog, setUser, authError = '' } = useAuthContext()
-  const { publicRuntimeConfig } = getConfig()
-  const authCookieName = publicRuntimeConfig.userCookieKey.toLowerCase()
+  const { isLoginDialogOpen, toggleLoginDialog } = useUIContext()
+  const { authError = '', login } = useAuthContext()
 
   const onRegisterClick = () => {
     // do your stuff
@@ -67,26 +59,8 @@ const LoginDialog = () => {
   const onForgotPassword = () => {
     // do your stuff
   }
-
-  const login = async (params: LoginData) => {
-    const userCredentials = {
-      username: params?.formData?.email,
-      password: params?.formData?.password,
-    }
-
-    const data = await loginUserMutation.mutateAsync(userCredentials)
-    const account = data?.account
-    // set cookie
-    const cookie = {
-      accessToken: account?.accessToken,
-      accessTokenExpiration: account?.accessTokenExpiration,
-      refreshToken: account?.refreshToken,
-      refreshTokenExpiration: account?.refreshTokenExpiration,
-      userId: account?.userId,
-    }
-    storeClientCookie(authCookieName, cookie)
-    setUser(account.customerAccount)
-    toggleLoginDialog()
+  const handleLogin = (params: LoginData) => {
+    login(params, toggleLoginDialog)
   }
 
   return (
@@ -99,7 +73,7 @@ const LoginDialog = () => {
       }
       Content={
         <LoginContent
-          onLogin={login}
+          onLogin={handleLogin}
           onForgotPasswordClick={onForgotPassword}
           errorMessage={authError}
         />

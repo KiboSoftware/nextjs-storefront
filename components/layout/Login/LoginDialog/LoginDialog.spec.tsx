@@ -6,14 +6,19 @@ import { act, render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 
 import * as stories from './LoginDialog.stories' // import all stories from the stories file
+import { UIContextProvider } from '@/contexts'
 
 const { Common } = composeStories(stories)
 
 const LoginContentMock = () => <input data-testid="kibo-login-cotent" />
 jest.mock('../LoginContent/LoginContent', () => LoginContentMock)
 
+const renderComponent = () => {
+  return render(<Common {...Common.args} />, { wrapper: UIContextProvider })
+}
+
 describe('[components] (LoginDialog)', () => {
-  const setup = (args = Common.args) => render(<Common {...args} />)
+  const setup = () => renderComponent()
 
   it('should render component', async () => {
     setup()

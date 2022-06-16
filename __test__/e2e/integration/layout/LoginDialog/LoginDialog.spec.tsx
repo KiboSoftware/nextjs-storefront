@@ -1,19 +1,35 @@
 /* eslint-disable  testing-library/no-unnecessary-act */
 
-import React from 'react'
+import React, { ReactNode } from 'react'
 
 import { composeStories } from '@storybook/testing-react'
-import { render, screen, act, fireEvent } from '@testing-library/react'
+import { render, screen, act, fireEvent, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 
 import * as stories from '@/components/layout/Login/LoginDialog/LoginDialog.stories'
+import { UIStateContext, UserContext } from '@/contexts'
 
 const { Common } = composeStories(stories)
+const uiContextValues = { isLoginDialogOpen: true, toggleLoginDialog: jest.fn() }
+const userContextValues = {
+  isAuthenticated: false,
+  login: jest.fn(),
+  setAuthError: jest.fn(),
+  authError: '',
+}
+
+const wrapper = ({ children }: { children: ReactNode }) => (
+  <UIStateContext.Provider value={uiContextValues}>
+    <UserContext.Provider value={userContextValues}>{children}</UserContext.Provider>
+  </UIStateContext.Provider>
+)
+
+const renderComponent = () => {
+  return render(<Common {...Common.args} />, { wrapper })
+}
 
 describe('[components] Login Dialog', () => {
-  const setup = (args = Common.args) => {
-    render(<Common {...args} />)
-  }
+  const setup = () => renderComponent()
 
   it('should render component', () => {
     setup()
@@ -35,13 +51,25 @@ describe('[components] Login Dialog', () => {
     expect(registerNowLink).toBeVisible()
   })
 
-  it('should call onDialogCloseMock when user clicks onClose', async () => {
+  it('should unmusk password when click on eye icon', async () => {
     setup()
 
     const closeIconButton = screen.getByRole('button', {
       name: /close/i,
     })
-    userEvent.click(closeIconButton)
+
+    const eyeIcon = screen.getByRole('button', { name: 'toggle icon visibility' })
+    const passwordInput = screen.getByLabelText('password')
+
+    expect(closeIconButton).toBeInTheDocument()
+    expect(closeIconButton).toBeVisible()
+    expect(passwordInput).toHaveAttribute('type', 'password')
+
+    await act(async () => {
+      userEvent.click(eyeIcon)
+    })
+
+    await waitFor(() => expect(passwordInput).toHaveAttribute('type', 'text'))
   })
 
   it("should display 'This field is required' error when user focus out (blur event) the Email field", async () => {
