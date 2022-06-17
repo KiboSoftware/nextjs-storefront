@@ -17,12 +17,12 @@ import { useTranslation } from 'next-i18next'
 
 import { findParentNode } from '@/lib/helpers'
 
-import { PrCategory } from '@/lib/gql/types'
+import type { Maybe, PrCategory } from '@/lib/gql/types'
 
 interface CategoryNestedNavigationProps {
-  categoryTree: PrCategory[]
+  categoryTree: Maybe<PrCategory>[]
   children?: ReactNode
-  onCategoryClick: (category: PrCategory) => void
+  onCategoryClick: (categoryCode: string) => void
   onCloseMenu: (isOpen: boolean) => void
 }
 
@@ -43,59 +43,53 @@ const styles = {
 
 const CategoryNestedNavigation = (props: CategoryNestedNavigationProps) => {
   const { categoryTree, children, onCategoryClick, onCloseMenu } = props
-  const [allCategories] = useState<PrCategory[]>(categoryTree)
-
-  const [activeCategory, setActiveCategory] = useState<PrCategory[] | undefined>(allCategories)
-
   const { t } = useTranslation('common')
-
   const initialSubHeader = {
     backLink: t('back'),
-    categoryCode: null,
+    categoryCode: '',
     label: t('all-departments'),
   }
 
-  const [subHeader, setSubHeader] = useState<{
-    label: string
-    categoryCode?: string | null
-    backLink?: string
-  }>(initialSubHeader)
+  const [subHeader, setSubHeader] = useState<typeof initialSubHeader>(initialSubHeader)
+  const [activeCategory, setActiveCategory] = useState<Maybe<PrCategory>[]>(categoryTree)
 
   const reset = () => {
-    setActiveCategory(allCategories)
+    setActiveCategory(categoryTree)
     setSubHeader(initialSubHeader)
   }
 
-  const handleCatgeoryClick = (clickedCategory: PrCategory) => {
-    if (clickedCategory.childrenCategories?.length) {
-      const selectedCategory: PrCategory = activeCategory?.find(
-        (category) => category.categoryCode === clickedCategory.categoryCode
-      ) as PrCategory
+  const handleCatgeoryClick = (clickedCategory: Maybe<PrCategory>) => {
+    if (clickedCategory?.childrenCategories?.length) {
+      const selectedCategory: Maybe<PrCategory> = activeCategory?.find(
+        (category) => category?.categoryCode === clickedCategory?.categoryCode
+      ) as Maybe<PrCategory>
 
       setActiveCategory(selectedCategory?.childrenCategories as [])
 
       setSubHeader({
         backLink: subHeader.label,
         label: selectedCategory?.content?.name as string,
-        categoryCode: selectedCategory?.categoryCode,
+        categoryCode: selectedCategory?.categoryCode as string,
       })
     } else {
-      onCategoryClick(clickedCategory)
+      onCategoryClick(clickedCategory?.categoryCode || '')
     }
   }
 
   const handleBackClick = () => {
-    const previousCategory = findParentNode(allCategories, subHeader.categoryCode)
-    if (previousCategory === null) {
-      reset()
-    } else if (!previousCategory) {
-      onCloseMenu(false)
-    } else {
+    const previousCategory: Maybe<PrCategory | undefined | null> = findParentNode(
+      categoryTree,
+      subHeader.categoryCode
+    )
+
+    if (previousCategory === null) reset()
+    if (previousCategory === undefined) onCloseMenu(false)
+    if (previousCategory) {
       setActiveCategory(previousCategory?.childrenCategories as PrCategory[])
       setSubHeader({
         backLink: subHeader.label,
         label: previousCategory?.content?.name as string,
-        categoryCode: previousCategory?.categoryCode,
+        categoryCode: previousCategory?.categoryCode as string,
       })
     }
   }
@@ -133,10 +127,10 @@ const CategoryNestedNavigation = (props: CategoryNestedNavigationProps) => {
         <ListItemText primary={subHeader.label} sx={{ ...styles.listHeader }} />
       </ListItem>
       <Divider />
-      {activeCategory?.map((category: PrCategory) => {
+      {activeCategory?.map((category: Maybe<PrCategory>) => {
         return (
           <Slide
-            key={category.categoryId}
+            key={category?.categoryId}
             direction="right"
             in={Boolean(activeCategory.length)}
             appear={true}

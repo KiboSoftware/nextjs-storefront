@@ -2,27 +2,21 @@ import React from 'react'
 
 import '@testing-library/jest-dom'
 import { composeStories } from '@storybook/testing-react'
-import { render, screen, waitFor } from '@testing-library/react'
+import { screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
-import { RouterContext } from 'next/dist/shared/lib/router-context'
 
-import { searchSuggestionResult } from '../../../../../__mocks__/stories/searchSuggestionResultMock'
-import * as stories from '../../../../../components/layout/SearchSuggestions/SearchSuggestions.stories'
-import { createMockRouter } from './../../../../utils/createMockRouter'
+import { searchSuggestionResultMock } from '@/__mocks__/stories/searchSuggestionResultMock'
+import { renderWithQueryClient } from '@/__test__/utils/renderWithQueryClient'
+import * as stories from '@/components/layout/SearchSuggestions/SearchSuggestions.stories'
 
 const { Common } = composeStories(stories)
 
 describe('[components] - SearchSuggestions Integration', () => {
-  const router = createMockRouter()
   const userEnteredText = 'T'
-  const searchSuggestions = searchSuggestionResult
+  const searchSuggestions = searchSuggestionResultMock
 
   const setup = () => {
-    render(
-      <RouterContext.Provider value={router}>
-        <Common />
-      </RouterContext.Provider>
-    )
+    renderWithQueryClient(<Common />)
 
     return {
       searchSuggestions,
@@ -36,10 +30,11 @@ describe('[components] - SearchSuggestions Integration', () => {
     const backdrop = screen.getByTestId('backdrop')
 
     expect(input).toBeVisible()
+    expect(screen.queryByRole('contentinfo')).not.toBeInTheDocument()
     expect(backdrop).not.toBeVisible()
   })
 
-  it('should display user entered text on search bar input', async () => {
+  it('should display user-entered text in search bar when a user enters it', async () => {
     setup()
 
     const input = screen.getByRole('textbox', { name: 'search-input' })
@@ -49,32 +44,42 @@ describe('[components] - SearchSuggestions Integration', () => {
     expect(input).toHaveValue(userEnteredText)
   })
 
-  it('should display search suggestion when user entered the text on search bar', async () => {
+  it('should display search suggestion with href attribute present when user enter the text on search bar', async () => {
     setup()
 
     const input = screen.getByRole('textbox', { name: 'search-input' })
     userEvent.type(input, userEnteredText)
-    expect(input).toHaveValue(userEnteredText)
 
     const suggestionModal = await screen.findByRole('contentinfo')
     const suggestions = await screen.findByText('suggestions')
     const categories = await screen.findByText('categories')
-    const separator = await screen.findByRole('separator')
     expect(suggestionModal).toBeVisible()
     expect(suggestions).toBeVisible()
     expect(categories).toBeVisible()
-    expect(separator).toBeInTheDocument()
 
-    const count = searchSuggestions.suggestionGroups?.length || 0
-    expect(screen.getAllByRole('group')).toHaveLength(count)
+    const PagesSuggestionGroup =
+      searchSuggestions.suggestionGroups?.filter((sg) => sg?.name === 'pages') || []
+    PagesSuggestionGroup[0]?.suggestions?.map(async (s) => {
+      expect(screen.getByText(s?.suggestion?.productName)).toBeVisible()
+      const button = await screen.findByRole('button')
+      expect(button).toHaveAttribute('href', `/product/${s?.suggestion.productCode}`)
+    })
+
+    const CategoriesSuggestionGroup =
+      searchSuggestions.suggestionGroups?.filter((sg) => sg?.name === 'categories') || []
+    CategoriesSuggestionGroup[0]?.suggestions?.map(async (s) => {
+      expect(screen.getByText(s?.suggestion?.productName)).toBeVisible()
+
+      const button = await screen.findByRole('button')
+      expect(button).toHaveAttribute('href', `/category/${s?.suggestion.categoryCode}`)
+    })
   })
 
-  it('should display backdrop when search suggustion opens', async () => {
+  it('should display backdrop when search suggestion opens', async () => {
     setup()
 
     const input = screen.getByRole('textbox', { name: 'search-input' })
     userEvent.type(input, userEnteredText)
-    expect(input).toHaveValue(userEnteredText)
 
     const suggestions = await screen.findByText('suggestions')
     expect(suggestions).toBeVisible()
@@ -89,7 +94,6 @@ describe('[components] - SearchSuggestions Integration', () => {
     const clearButton = screen.getByRole('button', { name: 'clear-search' })
     userEvent.type(input, userEnteredText)
 
-    expect(input).toHaveValue(userEnteredText)
     expect(clearButton).toBeEnabled()
     userEvent.click(clearButton)
 
@@ -118,28 +122,16 @@ describe('[components] - SearchSuggestions Integration', () => {
     const backdrop = await screen.findByTestId('backdrop')
     userEvent.type(input, userEnteredText)
 
-    expect(input).toHaveValue(userEnteredText)
     userEvent.click(backdrop)
     await waitFor(() => expect(screen.queryByRole('contentinfo')).not.toBeInTheDocument())
   })
 
-  it('should route to another page when user clicks on item', async () => {
+  it('should not open Search suggestion when a user enters white/blank space', async () => {
     setup()
 
     const input = screen.getByRole('textbox', { name: 'search-input' })
-    userEvent.type(input, userEnteredText)
-    expect(input).toHaveValue(userEnteredText)
+    userEvent.type(input, '  ')
 
-    const suggestionGroups =
-      searchSuggestions.suggestionGroups?.filter((sg) => sg?.name === 'categories') || []
-    suggestionGroups[0]?.suggestions?.map(async (s) => {
-      expect(screen.getByText(s?.suggestion?.productName)).toBeVisible()
-
-      const button = await screen.findByRole('button')
-      expect(button).toBeEnabled()
-      userEvent.click(button)
-
-      expect(router.push).toHaveBeenCalledWith('/product' + s?.suggestion.categoryCode)
-    })
+    expect(screen.queryByRole('contentinfo')).not.toBeInTheDocument()
   })
 })

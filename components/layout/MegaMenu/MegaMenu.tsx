@@ -1,22 +1,32 @@
 import React, { useState, useEffect } from 'react'
 
-import { Box, Divider, ListItem, ListItemText, Typography, Toolbar, styled } from '@mui/material'
+import {
+  Box,
+  Divider,
+  ListItem,
+  ListItemText,
+  Typography,
+  Toolbar,
+  styled,
+  Container,
+} from '@mui/material'
 import { usePopupState, bindHover, bindPopover } from 'material-ui-popup-state/hooks'
 import HoverPopover from 'material-ui-popup-state/HoverPopover'
 import { useTranslation } from 'next-i18next'
 
 import KiboImage from '@/components/common/KiboImage/KiboImage'
-import MegaMenuItem from '@/components/layout/MegaMenuItem/MegaMenuItem'
+import { MegaMenuItem } from '@/components/layout'
 import DefaultImage from '@/public/product_placeholder.svg'
 
-import { PrCategory } from '@/lib/gql/types'
+import type { Maybe, PrCategory } from '@/lib/gql/types'
+
 interface MegaMenuProps {
-  categoryTree: PrCategory[]
+  categoryTree: Maybe<PrCategory>[]
   onBackdropToggle: (isOpen: boolean) => void
 }
 
 interface MegaMenuCategoryProps {
-  category: PrCategory
+  category: Maybe<PrCategory>
   activeCategory: string
   onBackdropToggle: (isOpen: boolean) => void
   setActiveCategory: (activeCategory: string) => void
@@ -32,7 +42,10 @@ const StyledToolbar = styled(Toolbar)(({ theme }) => ({
     borderBottomWidth: 1,
     borderBottomStyle: 'solid',
     borderBottomColor: theme.palette.grey[300],
-    paddingInline: 26,
+    borderTopWidth: 1,
+    borderTopStyle: 'solid',
+    borderTopColor: theme.palette.grey[300],
+    paddingInline: 0,
     flexWrap: 'wrap',
     gap: '4%',
   },
@@ -56,23 +69,25 @@ const style = {
   },
   popoverPaper: {
     width: '96.5vw',
-    minHeight: 100,
+    height: '25rem',
     borderRadius: 0,
     boxShadow: 'none',
     borderTop: '1px solid',
     borderTopColor: 'grey.300',
+    position: 'relative',
+    overflowY: 'scroll',
   },
 }
 
 const MegaMenuCategory = (props: MegaMenuCategoryProps) => {
-  const { category, onBackdropToggle, activeCategory, setActiveCategory } = props
-  const childrenCategories = category.childrenCategories as PrCategory[]
+  const { category, activeCategory, onBackdropToggle, setActiveCategory } = props
+  const childrenCategories = category?.childrenCategories as PrCategory[]
 
   const { t } = useTranslation('common')
 
   const popupState = usePopupState({
     variant: 'popover',
-    popupId: category.content?.name,
+    popupId: category?.content?.name,
   })
 
   useEffect(() => {
@@ -83,10 +98,10 @@ const MegaMenuCategory = (props: MegaMenuCategoryProps) => {
     <Box {...bindHover(popupState)} role="group" color="grey.900">
       <ListItem
         sx={{ ...style.listItem }}
-        onMouseOver={() => setActiveCategory(category.categoryCode || '')}
-        selected={popupState.isOpen && category.categoryCode === activeCategory}
+        onMouseOver={() => setActiveCategory(category?.categoryCode || '')}
+        selected={popupState.isOpen && category?.categoryCode === activeCategory}
       >
-        <ListItemText primary={category.content?.name} />
+        <ListItemText primary={category?.content?.name} />
       </ListItem>
       {childrenCategories.length > 0 && (
         <HoverPopover
@@ -136,21 +151,23 @@ const MegaMenuCategory = (props: MegaMenuCategoryProps) => {
 }
 
 const MegaMenu = (props: MegaMenuProps) => {
-  const { categoryTree, onBackdropToggle } = props
+  const { categoryTree = [], onBackdropToggle } = props
 
   const [activeCategory, setActiveCategory] = useState<string>('')
 
   return (
     <StyledToolbar data-testid="megamenu-container">
-      {categoryTree?.map((category) => (
-        <MegaMenuCategory
-          key={category.categoryCode}
-          category={category}
-          onBackdropToggle={onBackdropToggle}
-          activeCategory={activeCategory}
-          setActiveCategory={setActiveCategory}
-        />
-      ))}
+      <Container maxWidth="xl" sx={{ display: 'flex', gap: '4%' }}>
+        {categoryTree?.map((category) => (
+          <MegaMenuCategory
+            key={category?.categoryCode}
+            category={category}
+            onBackdropToggle={onBackdropToggle}
+            activeCategory={activeCategory}
+            setActiveCategory={setActiveCategory}
+          />
+        ))}
+      </Container>
     </StyledToolbar>
   )
 }

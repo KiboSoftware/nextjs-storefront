@@ -6,9 +6,10 @@ import ProductDetailPage, {
   getStaticPaths,
   getStaticProps,
 } from '../../../pages/product/[productCode]'
+import { categoryTreeDataMock } from '@/__mocks__/stories/categoryTreeDataMock'
 
 nextRouter.useRouter = jest.fn()
-
+const mockCategoryTreeData = categoryTreeDataMock
 jest.mock('next/config', () => () => ({
   serverRuntimeConfig: {
     revalidate: 60,
@@ -23,6 +24,7 @@ jest.mock('@/lib/api/util', () => ({
         product: {
           productCode: 'mocked-product',
         },
+        categoriesTree: { items: mockCategoryTreeData.categoriesTree?.items },
         products: {
           items: [
             {
@@ -71,6 +73,7 @@ describe('[page] Product Details Page', () => {
         product: {
           productCode: 'mocked-product',
         },
+        categoriesTree: mockCategoryTreeData.categoriesTree.items,
         _nextI18Next: {
           initialI18nStore: { 'mock-locale': [{}], en: [{}] },
           initialLocale: 'mock-locale',

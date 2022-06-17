@@ -1,8 +1,10 @@
 import { graphql } from 'msw'
 
+import { categoryTreeDataMock } from '../stories/categoryTreeDataMock'
 import { orderMock } from '../stories/orderMock'
+import { searchSuggestionMock } from '../stories/searchSuggestionResultMock'
 
-export const checkoutHanlders = [
+export const checkoutHandlers = [
   // useLoadCheckout
   graphql.query('getCheckout', (_req, res, ctx) => {
     return res(ctx.data(orderMock))
@@ -24,4 +26,18 @@ export const checkoutHanlders = [
   }),
 ]
 
-export const handlers = [...checkoutHanlders]
+export const searchSuggestionHandlers = [
+  // useSearchSuggestions
+  graphql.query('getSearchSuggestions', (_req, res, ctx) => {
+    return res(ctx.data(searchSuggestionMock))
+  }),
+]
+
+export const categoryHandlers = [
+  // useSearchSuggestions
+  graphql.query('getCategoryTreeQuery', (_req, res, ctx) => {
+    return res(ctx.data(categoryTreeDataMock))
+  }),
+]
+
+export const handlers = [...checkoutHandlers, ...searchSuggestionHandlers, ...categoryHandlers]

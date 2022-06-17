@@ -1,8 +1,7 @@
 import React from 'react'
 
-import { List, ListItem, ListItemText, Stack } from '@mui/material'
+import { Link, List, ListItem, ListItemText, Stack } from '@mui/material'
 import { useTranslation } from 'next-i18next'
-import { useRouter } from 'next/router'
 
 import type { PrCategory, Maybe } from '@/lib/gql/types'
 
@@ -15,11 +14,6 @@ interface MegaMenuItemProps {
 const MegaMenuItem = (props: MegaMenuItemProps) => {
   const { title, categoryChildren, categoryCode } = props
   const { t } = useTranslation('common')
-  const router = useRouter()
-
-  const handleClick = (code: string) => {
-    router.push('/product/' + code)
-  }
 
   return (
     <Stack alignItems={'flex-start'}>
@@ -30,25 +24,26 @@ const MegaMenuItem = (props: MegaMenuItemProps) => {
             primaryTypographyProps={{ variant: 'subtitle2', fontWeight: 'bold' }}
           />
         </ListItem>
-        <ListItem
-          button
-          sx={{ cursor: 'pointer' }}
-          onClick={() => handleClick(categoryCode || '')}
-          data-testid="shopAllLink"
-        >
-          <ListItemText primary={t('shop-all')} primaryTypographyProps={{ variant: 'subtitle2' }} />
+        <ListItem button sx={{ cursor: 'pointer' }}>
+          <Link
+            href={`category/${categoryCode}`}
+            data-testid="shopAllLink"
+            underline="none"
+            color="grey.900"
+          >
+            {t('shop-all')}
+          </Link>
         </ListItem>
         {categoryChildren?.map((cat) => (
-          <ListItem
-            button
-            key={cat?.categoryId}
-            sx={{ cursor: 'pointer' }}
-            onClick={() => handleClick(cat?.categoryCode || '')}
-          >
-            <ListItemText
-              primary={cat?.content?.name}
-              primaryTypographyProps={{ variant: 'subtitle2' }}
-            />
+          <ListItem key={cat?.categoryId} role="group">
+            <Link
+              href={`category/${cat?.categoryCode}`}
+              data-testid="categoryLink"
+              underline="none"
+              color="grey.900"
+            >
+              {cat?.content?.name}
+            </Link>
           </ListItem>
         ))}
       </List>

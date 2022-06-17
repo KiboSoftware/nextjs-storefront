@@ -1,26 +1,38 @@
 import { useQuery } from 'react-query'
 
-import { searchSuggestionResult } from '../../../__mocks__/stories/searchSuggestionResultMock'
+import { makeGraphQLClient } from '@/lib/gql/client'
+import { getSearchSuggestionsQuery } from '@/lib/gql/queries/get-search-suggestions'
+import { searchKeys } from '@/lib/react-query/queryKeys'
 
 import type { SearchSuggestionResult } from '@/lib/gql/types'
+
 export interface SearchSuggestionResultType {
   data: SearchSuggestionResult
-
   isLoading: boolean
-
   isSuccess: boolean
 }
 
-const getSearchSuggestionResult = async () => searchSuggestionResult
+const getSearchSuggestionResult = async (searchTerm: string) => {
+  const client = makeGraphQLClient()
+  const response = await client.request({
+    document: getSearchSuggestionsQuery,
+    variables: { query: searchTerm },
+  })
+  return response.suggestionSearch
+}
 
-export const useSearchSuggestions = (): SearchSuggestionResultType => {
+export const useSearchSuggestions = (searchTerm: string): SearchSuggestionResultType => {
   const {
     data = {},
-
     isLoading,
-
     isSuccess,
-  } = useQuery(['LOAD_SEARCH_SUGGESTIONS'], () => getSearchSuggestionResult())
+  } = useQuery(
+    searchKeys.suggestions(searchTerm),
+    () => (searchTerm ? getSearchSuggestionResult(searchTerm) : {}),
+    {
+      refetchOnWindowFocus: false,
+    }
+  )
 
   return { data, isLoading, isSuccess }
 }
