@@ -20,6 +20,7 @@ import Price from '@/components/common/Price/Price'
 import ProductItem from '@/components/common/ProductItem/ProductItem'
 import QuantitySelector from '@/components/common/QuantitySelector/QuantitySelector'
 import { orderGetters } from '@/lib/getters'
+import type { FulfillmentOption } from '@/lib/types'
 
 import type { CartItem as CartItemType } from '@/lib/gql/types'
 
@@ -74,6 +75,7 @@ interface CartItemProps {
   cartItem: CartItemType
   maxQuantity: number | undefined
   actions?: Array<string>
+  fulfillmentOptions: FulfillmentOption[]
   onQuantityUpdate: (cartItemId: string, quantity: number) => void
   onCartItemDelete: (cartItemId: string) => void
   onCartItemActionSelection: () => void
@@ -84,6 +86,7 @@ const CartItem = (props: CartItemProps) => {
     cartItem,
     maxQuantity,
     actions,
+    fulfillmentOptions = [],
     onQuantityUpdate,
     onCartItemDelete,
     onCartItemActionSelection,
@@ -146,7 +149,11 @@ const CartItem = (props: CartItemProps) => {
             />
 
             <Box sx={{ ...styles.subcontainer }}>
-              <FulfillmentOptions fulfillmentOptions={fulfillmentOptionsMock} />
+              <FulfillmentOptions
+                fulfillmentOptions={fulfillmentOptions}
+                onFullfillmentOptionChange={() => null}
+                onStoreSelection={() => null}
+              />
             </Box>
           </Box>
 

@@ -4,7 +4,6 @@ import { StarRounded } from '@mui/icons-material'
 import { Box, Grid, Rating, Button, Typography, Divider } from '@mui/material'
 import { useTranslation } from 'next-i18next'
 
-import { fulfillmentOptionsMock } from '@/__mocks__/stories/fulfillmentOptionsMock'
 import FulfillmentOptions from '@/components/common/FulfillmentOptions/FulfillmentOptions'
 import Price from '@/components/common/Price/Price'
 import QuantitySelector from '@/components/common/QuantitySelector/QuantitySelector'
@@ -121,6 +120,9 @@ const ProductDetailTemplate = (props: ProductDetailTemplateProps) => {
     }
   }
 
+  // purchase location should be passed once implemented
+  const fulfillmentOptions = productGetters.getProductFulfillmentOptions(product, { name: '' })
+
   return (
     <>
       <Grid container>
@@ -235,7 +237,11 @@ const ProductDetailTemplate = (props: ProductDetailTemplateProps) => {
           </Box>
 
           <Box paddingY={1}>
-            <FulfillmentOptions fulfillmentOptions={fulfillmentOptionsMock} />
+            <FulfillmentOptions
+              fulfillmentOptions={fulfillmentOptions}
+              onFullfillmentOptionChange={() => null}
+              onStoreSelection={() => null}
+            />
           </Box>
 
           <Box paddingY={1} display="flex" flexDirection={'column'} gap={2}>

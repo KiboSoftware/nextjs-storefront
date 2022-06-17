@@ -1,4 +1,6 @@
-export const fulfillmentOptionsMock = [
+import { FulfillmentOption } from '@/lib/types'
+
+export const fulfillmentOptionsMock: FulfillmentOption[] = [
   {
     value: 'DirectShip',
     code: 'DS',

@@ -1,24 +1,24 @@
 import { Box, Stack, Typography } from '@mui/material'
 import { useTranslation } from 'next-i18next'
 
-import KiboRadio from '../KiboRadio/KiboRadio'
-import { FulfillmentOption } from '@/lib/types'
+import KiboRadio from '@/components/common/KiboRadio/KiboRadio'
+import type { FulfillmentOption } from '@/lib/types'
 
 interface FulfillmentOptionsProps {
   fulfillmentOptions: FulfillmentOption[]
-  onRadioChange?: () => void
-  onStoreSelectClick?: () => void
+  onFullfillmentOptionChange: () => void
+  onStoreSelection: () => void
 }
 
 interface FulfillmentOptionLabelProps {
-  label?: string
+  label: string
   details?: string
-  cta?: string
-  onStoreSelectClick?: () => void
+  storeActionLabel?: string
+  onStoreSelection: () => void
 }
 
 const FulfillmentOptionLabel = (props: FulfillmentOptionLabelProps) => {
-  const { cta, label, details, onStoreSelectClick } = props
+  const { storeActionLabel, label, details, onStoreSelection } = props
   return (
     <Stack sx={{ pt: 2 }}>
       <Box display="flex" gap={2}>
@@ -27,10 +27,10 @@ const FulfillmentOptionLabel = (props: FulfillmentOptionLabelProps) => {
       </Box>
       <Typography
         variant="caption"
-        onClick={() => onStoreSelectClick && onStoreSelectClick()}
+        onClick={() => onStoreSelection()}
         sx={{ textDecoration: 'underline' }}
       >
-        {cta}
+        {storeActionLabel}
       </Typography>
     </Stack>
   )
@@ -38,18 +38,18 @@ const FulfillmentOptionLabel = (props: FulfillmentOptionLabelProps) => {
 
 const FulfillmentOptions = (props: FulfillmentOptionsProps) => {
   const { t } = useTranslation('common')
-  const { fulfillmentOptions, onRadioChange, onStoreSelectClick } = props
+  const { fulfillmentOptions = [], onFullfillmentOptionChange, onStoreSelection } = props
 
-  const radioOptions = fulfillmentOptions.map((option) => {
+  const radioOptions = fulfillmentOptions?.map((option) => {
     return {
       value: option.shortName as string,
       label: (
         <FulfillmentOptionLabel
-          label={option.label}
-          details={option.details}
-          onStoreSelectClick={onStoreSelectClick}
-          {...(!option.disabled && {
-            cta: option.details ? t('change store') : t('select store'),
+          label={option?.label as string}
+          details={option?.details}
+          onStoreSelection={onStoreSelection}
+          {...(!option?.disabled && {
+            storeActionLabel: option?.details ? t('change-store') : t('select-store'),
           })}
         />
       ),
@@ -57,11 +57,8 @@ const FulfillmentOptions = (props: FulfillmentOptionsProps) => {
   })
 
   return (
-    <Box
-      data-testid="fulfillmentOptions"
-      sx={{ px: '2rem', pt: { xs: '1rem', sm: '1rem', md: 0 } }}
-    >
-      <KiboRadio radioOptions={radioOptions} onChange={onRadioChange} />
+    <Box data-testid="fulfillmentOptions">
+      <KiboRadio radioOptions={radioOptions} onChange={onFullfillmentOptionChange} />
     </Box>
   )
 }

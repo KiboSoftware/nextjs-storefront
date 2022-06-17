@@ -1,4 +1,5 @@
 import CartItem from '@/components/cart/CartItem/CartItem'
+import type { FulfillmentOption } from '@/lib/types'
 
 import type { CartItem as CartItemType } from '@/lib/gql/types'
 
@@ -29,6 +30,7 @@ const CartItemList = (props: CartItemListProps) => {
           onQuantityUpdate={handleQuantityUpdate}
           onCartItemDelete={handleCartItemDelete}
           onCartItemActionSelection={handleCartItemActionSelection}
+          fulfillmentOptions={[]}
         />
       ))}
     </>
