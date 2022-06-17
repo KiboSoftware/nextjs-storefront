@@ -19,7 +19,7 @@ import type { CustomerAccount } from '@/lib/gql/types'
 interface AuthContextType {
   isAuthenticated?: boolean
   user?: CustomerAccount
-  login: (params: LoginData, toggleLoginDialog: () => void) => string
+  login: (params: LoginData, toggleLoginDialog: () => void) => void
   setAuthError: Dispatch<SetStateAction<string>>
   authError?: string
 }
@@ -52,8 +52,8 @@ export const AuthContextProvider = ({ children }: AuthContextProviderProps) => {
             : 'Something Wrong !'
           setAuthError(errorMessage)
         },
-        onSuccess: (data: any) => {
-          const account = data?.account
+        onSuccess: (response: any) => {
+          const account = response?.account
           // set cookie
           const cookie = {
             accessToken: account?.accessToken,
@@ -69,8 +69,6 @@ export const AuthContextProvider = ({ children }: AuthContextProviderProps) => {
       })
     } catch (err: any) {
       throw new Error(err)
-    } finally {
-      return authError
     }
   }
 

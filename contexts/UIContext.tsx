@@ -14,7 +14,7 @@ export const UIContextProvider = ({ children }: UIContextProviderProps) => {
   const [isLoginDialogOpen, setIsLoginDialogOpen] = useState<boolean>(false)
 
   const toggleLoginDialog = () => {
-    setIsLoginDialogOpen((isLoginDialogOpen) => !isLoginDialogOpen)
+    setIsLoginDialogOpen((isOpen) => !isOpen)
   }
 
   const values = {

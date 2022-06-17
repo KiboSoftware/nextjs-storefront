@@ -201,7 +201,7 @@ const HeaderActions = (props: HeaderActionsProps) => {
   const { toggleLoginDialog } = useUIContext()
 
   const openLoginModal = () => {
-    !isAuthenticated ? toggleLoginDialog() : ''
+    if (!isAuthenticated) toggleLoginDialog()
   }
 
   return (
@@ -254,7 +254,7 @@ const HeaderActions = (props: HeaderActionsProps) => {
         <Box sx={headerActionsStyles.myAccountIconWrapper}>
           <HeaderAction
             title={t('my-account')}
-            subtitle={isAuthenticated ? `Hi, ${user?.firstName}` : t('log-in')}
+            subtitle={isAuthenticated ? `${t('hi')}, ${user?.firstName}` : t('log-in')}
             icon={AccountCircleIcon}
             {...(isMobileViewport && { iconFontSize: 'medium' })}
             onClick={openLoginModal}

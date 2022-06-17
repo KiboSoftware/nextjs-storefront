@@ -143,7 +143,7 @@ const LoginContent = (props: LoginContentProps) => {
         <FormControlLabel
           sx={{ pb: 2 }}
           control={<Checkbox onChange={(_, checked) => setIsRememberMe(checked)} />}
-          label="Remember Me"
+          label={t('common:remember-me')}
           labelPlacement="end"
         />
         {errorMessage && (

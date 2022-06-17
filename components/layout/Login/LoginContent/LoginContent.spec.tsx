@@ -26,7 +26,7 @@ describe('[components] (LoginContent)', () => {
     const emailInput = screen.getByRole('textbox', { name: 'email' })
     const passwordInput = screen.getByLabelText('password')
     const eyeIcon = screen.getByRole('button', { name: 'toggle icon visibility' })
-    const rememberMeCheckbox = screen.getByRole('checkbox', { name: 'Remember Me' })
+    const rememberMeCheckbox = screen.getByRole('checkbox', { name: 'common:remember-me' })
     const loginButton = screen.getByRole('button', { name: 'common:log-in' })
     const forgotPasswordLink = screen.getByRole('button', { name: 'common:forgot-password' })
 
