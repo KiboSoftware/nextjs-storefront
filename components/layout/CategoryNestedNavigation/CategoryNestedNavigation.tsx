@@ -51,11 +51,10 @@ const CategoryNestedNavigation = (props: CategoryNestedNavigationProps) => {
   }
 
   const [subHeader, setSubHeader] = useState<typeof initialSubHeader>(initialSubHeader)
-  const [allCategories] = useState<Maybe<PrCategory>[]>(categoryTree)
   const [activeCategory, setActiveCategory] = useState<Maybe<PrCategory>[]>(categoryTree)
 
   const reset = () => {
-    setActiveCategory(allCategories)
+    setActiveCategory(categoryTree)
     setSubHeader(initialSubHeader)
   }
 
@@ -79,7 +78,7 @@ const CategoryNestedNavigation = (props: CategoryNestedNavigationProps) => {
 
   const handleBackClick = () => {
     const previousCategory: Maybe<PrCategory | undefined | null> = findParentNode(
-      allCategories,
+      categoryTree,
       subHeader.categoryCode
     )
 
