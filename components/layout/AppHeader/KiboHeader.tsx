@@ -27,7 +27,7 @@ import HeaderAction from '@/components/common/HeaderAction/HeaderAction'
 import KiboLogo from '@/components/common/KiboLogo/KiboLogo'
 import { HamburgerMenu } from '@/components/layout'
 import MegaMenu from '@/components/layout/MegaMenu/MegaMenu'
-import { useAuthContext } from '@/contexts'
+import { useAuthContext, useUIContext } from '@/contexts'
 import { useCategoryTree } from '@/hooks'
 import type { NavigationLink } from '@/lib/types'
 
@@ -197,10 +197,11 @@ const TopHeader = ({ navLinks }: { navLinks: NavigationLink[] }) => {
 const HeaderActions = (props: HeaderActionsProps) => {
   const { headerState, setHeaderState, isMobileViewport } = props
   const { t } = useTranslation('common')
-  const { toggleLoginDialog, isAuthenticated, user } = useAuthContext()
+  const { isAuthenticated, user } = useAuthContext()
+  const { toggleLoginDialog } = useUIContext()
 
   const openLoginModal = () => {
-    toggleLoginDialog()
+    !isAuthenticated ? toggleLoginDialog() : ''
   }
 
   return (

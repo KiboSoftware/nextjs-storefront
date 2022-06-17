@@ -14,7 +14,8 @@ import createEmotionCache from '../lib/createEmotionCache'
 import { generateQueryClient } from '../lib/react-query/queryClient'
 import theme from '../styles/theme'
 import { KiboHeader } from '@/components/layout'
-import AuthContextProvider from './contexts/AuthContext'
+import LoginDialog from '@/components/layout/Login'
+import { AuthContextProvider, UIContextProvider } from '@/contexts'
 
 // Client-side cache, shared for the whole session of the user in the browser.
 const clientSideEmotionCache = createEmotionCache()
@@ -37,35 +38,38 @@ const App = (props: KiboAppProps) => {
         {/* CssBaseline kickstart an elegant, consistent, and simple baseline to build upon. */}
         <CssBaseline />
         <QueryClientProvider client={queryClient}>
-          <AuthContextProvider>
-            <Hydrate state={pageProps.dehydratedState}>
-              <KiboHeader
-                navLinks={[
-                  {
-                    link: '#',
-                    text: 'Order Status',
-                  },
-                  {
-                    link: '#',
-                    text: 'Wishlist',
-                  },
-                  {
-                    link: '#',
-                    text: 'Nav Link 2',
-                  },
-                  {
-                    link: '#',
-                    text: 'Nav Link 3',
-                  },
-                ]}
-                categoriesTree={pageProps.categoriesTree || []}
-                sticky={true}
-              />
-              <Container maxWidth={'lg'}>
-                <Component {...pageProps} />
-              </Container>
-            </Hydrate>
-          </AuthContextProvider>
+          <UIContextProvider>
+            <AuthContextProvider>
+              <Hydrate state={pageProps.dehydratedState}>
+                <KiboHeader
+                  navLinks={[
+                    {
+                      link: '#',
+                      text: 'Order Status',
+                    },
+                    {
+                      link: '#',
+                      text: 'Wishlist',
+                    },
+                    {
+                      link: '#',
+                      text: 'Nav Link 2',
+                    },
+                    {
+                      link: '#',
+                      text: 'Nav Link 3',
+                    },
+                  ]}
+                  categoriesTree={pageProps.categoriesTree || []}
+                  sticky={true}
+                />
+                <LoginDialog />
+                <Container maxWidth={'lg'}>
+                  <Component {...pageProps} />
+                </Container>
+              </Hydrate>
+            </AuthContextProvider>
+          </UIContextProvider>
         </QueryClientProvider>
       </ThemeProvider>
     </CacheProvider>

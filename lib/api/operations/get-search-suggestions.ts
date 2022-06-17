@@ -6,7 +6,7 @@ export default async function getSearchSuggestions(searchKey: string) {
     const variables = {
       searchKey,
     }
-    const response = await fetcher({ query: getSearchSuggestionsQuery, variables })
+    const response = await fetcher({ query: getSearchSuggestionsQuery, variables }, null)
     return response.data?.suggestionGroups
   } catch (error) {
     console.error(error)
