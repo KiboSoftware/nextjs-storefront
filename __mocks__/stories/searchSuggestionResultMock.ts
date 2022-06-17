@@ -1,4 +1,4 @@
-import type { Query, SearchSuggestionResult } from '@/lib/gql/types'
+import type { SearchSuggestionResult } from '@/lib/gql/types'
 
 export const searchSuggestionResultMock: SearchSuggestionResult = {
   suggestionGroups: [

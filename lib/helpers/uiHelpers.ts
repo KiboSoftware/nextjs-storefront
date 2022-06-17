@@ -1,9 +1,9 @@
-interface uiHelpersReturnType {
+interface uiHelpersType {
   getCatLink: (category?: string) => string
   getProductLink: (productCode?: string) => string
 }
 
-export const uiHelpers = (): uiHelpersReturnType => {
+export const uiHelpers = (): uiHelpersType => {
   const getCatLink = (categoryCode?: string) => {
     return `/category/${categoryCode}`
   }
