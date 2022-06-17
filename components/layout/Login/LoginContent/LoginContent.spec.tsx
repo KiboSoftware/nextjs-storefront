@@ -2,7 +2,7 @@
 import React from 'react'
 
 import { composeStories } from '@storybook/testing-react'
-import { act, render, screen } from '@testing-library/react'
+import { act, fireEvent, render, screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 
 import * as stories from './LoginContent.stories' // import all stories from the stories file
@@ -39,23 +39,18 @@ describe('[components] (LoginContent)', () => {
     expect(forgotPasswordLink).toBeVisible()
   })
 
-  it('should show input values when user enters inputs', async () => {
+  it('should show entered email input ', async () => {
     setup()
-
     const emailInput = screen.getByRole('textbox', { name: 'email' })
+    fireEvent.blur(emailInput, { target: { value: email } })
+    await waitFor(() => expect(emailInput).toHaveValue(email))
+  })
+
+  it('should show entered password input', async () => {
+    setup()
     const passwordInput = screen.getByLabelText('password')
-
-    await act(async () => {
-      userEvent.clear(emailInput)
-      userEvent.type(emailInput, email)
-    })
-    expect(emailInput).toHaveValue('test@gmail.com')
-
-    await act(async () => {
-      userEvent.clear(passwordInput)
-      userEvent.type(passwordInput, 'abc')
-    })
-    expect(passwordInput).toHaveValue('abc')
+    fireEvent.blur(passwordInput, { target: { value: 'abc' } })
+    await waitFor(() => expect(passwordInput).toHaveValue('abc'))
   })
 
   it('should disable login button when user enters invalid inputs ', async () => {
@@ -86,21 +81,15 @@ describe('[components] (LoginContent)', () => {
 
     // valid inputs
     await act(async () => {
-      userEvent.clear(emailInput)
-      userEvent.type(emailInput, email)
+      fireEvent.change(emailInput, { target: { value: 'example@example.com' } })
+      fireEvent.change(passwordInput, { target: { value: 'abc' } })
     })
 
-    await act(async () => {
-      userEvent.clear(passwordInput)
-      userEvent.type(passwordInput, 'abc')
-    })
-
-    expect(loginButton).toBeEnabled()
+    await waitFor(() => expect(loginButton).toBeEnabled())
     await act(async () => {
       userEvent.click(loginButton)
     })
-
-    expect(onLoginMock).toBeCalled()
+    await waitFor(() => expect(onLoginMock).toHaveBeenCalled())
   })
 
   it('should call onForgotPasswordClickMock when click forgotPasswordLink', async () => {

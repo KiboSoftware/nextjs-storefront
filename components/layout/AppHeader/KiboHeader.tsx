@@ -27,12 +27,11 @@ import HeaderAction from '@/components/common/HeaderAction/HeaderAction'
 import KiboLogo from '@/components/common/KiboLogo/KiboLogo'
 import { HamburgerMenu } from '@/components/layout'
 import MegaMenu from '@/components/layout/MegaMenu/MegaMenu'
+import { useAuthContext } from '@/contexts'
 import { useCategoryTree } from '@/hooks'
 import type { NavigationLink } from '@/lib/types'
 
 import type { Maybe, PrCategory } from '@/lib/gql/types'
-
-import { useAuthContext } from '@/pages/contexts/AuthContext'
 
 interface KiboHeaderProps {
   navLinks: NavigationLink[]

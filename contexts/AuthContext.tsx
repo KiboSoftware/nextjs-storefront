@@ -37,7 +37,7 @@ export const AuthContextProvider = ({ children }: AuthContextProviderProps) => {
   const authCookieName = publicRuntimeConfig.userCookieKey.toLowerCase()
   const { mutate } = useUserMutations()
 
-  const login = (params: LoginData, toggleLoginDialog: () => void) => {
+  const login = (params: LoginData, onSuccessCallBack: () => void) => {
     setAuthError('')
     try {
       const userCredentials = {
@@ -64,7 +64,7 @@ export const AuthContextProvider = ({ children }: AuthContextProviderProps) => {
           }
           storeClientCookie(authCookieName, cookie)
           setUser(account.customerAccount)
-          toggleLoginDialog()
+          onSuccessCallBack()
         },
       })
     } catch (err: any) {

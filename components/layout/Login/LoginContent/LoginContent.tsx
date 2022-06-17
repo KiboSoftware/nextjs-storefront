@@ -3,9 +3,6 @@ import React, { SyntheticEvent, useState } from 'react'
 
 import { yupResolver } from '@hookform/resolvers/yup'
 import { Visibility, VisibilityOff } from '@mui/icons-material'
-<<<<<<< HEAD
-import { Box, FormControl, Button, Link, Checkbox, FormControlLabel } from '@mui/material'
-=======
 import {
   Box,
   FormControl,
@@ -15,7 +12,6 @@ import {
   FormControlLabel,
   Typography,
 } from '@mui/material'
->>>>>>> 8eb7bf1 (resolve PR review changes)
 import { useTranslation } from 'next-i18next'
 import { useForm, Controller } from 'react-hook-form'
 import * as yup from 'yup'
