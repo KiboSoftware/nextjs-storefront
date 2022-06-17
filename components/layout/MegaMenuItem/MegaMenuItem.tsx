@@ -26,7 +26,7 @@ const MegaMenuItem = (props: MegaMenuItemProps) => {
         </ListItem>
         <ListItem button sx={{ cursor: 'pointer' }}>
           <Link
-            href={`category/${categoryCode}`}
+            href={`/category/${categoryCode}`}
             data-testid="shopAllLink"
             underline="none"
             color="grey.900"
@@ -37,7 +37,7 @@ const MegaMenuItem = (props: MegaMenuItemProps) => {
         {categoryChildren?.map((cat) => (
           <ListItem key={cat?.categoryId} role="group">
             <Link
-              href={`category/${cat?.categoryCode}`}
+              href={`/category/${cat?.categoryCode}`}
               data-testid="categoryLink"
               underline="none"
               color="grey.900"

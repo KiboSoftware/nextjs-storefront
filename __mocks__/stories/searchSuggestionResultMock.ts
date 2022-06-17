@@ -296,6 +296,6 @@ export const searchSuggestionResultMock: SearchSuggestionResult = {
   ],
 }
 
-export const searchSuggestionMock: Query = {
+export const searchSuggestionMock: { suggestionSearch: SearchSuggestionResult } = {
   suggestionSearch: searchSuggestionResultMock,
 }

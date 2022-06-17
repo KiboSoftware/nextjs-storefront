@@ -20,7 +20,7 @@ const Template: ComponentStory<typeof HamburgerMenu> = (args) => <HamburgerMenu 
 
 export const Common = Template.bind({})
 Common.args = {
-  categoryTree: categoryTreeDataMock.categoriesTree.items?.filter((item) => item.isDisplayed),
+  categoryTree: categoryTreeDataMock.categoriesTree.items?.filter((item) => item?.isDisplayed),
   isDrawerOpen: true,
   marginTop: 0,
   navLinks: [

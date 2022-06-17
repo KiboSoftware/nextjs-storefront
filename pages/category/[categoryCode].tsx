@@ -2,25 +2,24 @@ import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
 import { useRouter } from 'next/router'
 
 import { ProductListingTemplate } from '@/components/page-templates'
-import getCategoryTree from '@/lib/api/operations/get-category-tree'
-
-import type { Maybe, PrCategory } from '@/lib/gql/types'
 import { productSearch, categoryTreeSearchByCode } from '@/lib/api/operations'
+import getCategoryTree from '@/lib/api/operations/get-category-tree'
 import { productSearchGetters, facetGetters } from '@/lib/getters'
 
+import type { Maybe, PrCategory } from '@/lib/gql/types'
 import type { NextPage, GetServerSidePropsContext } from 'next'
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
   const { locale } = context
   const response = await productSearch(context.query)
   const categoriesTree: Maybe<Maybe<PrCategory>[]> | undefined = await getCategoryTree()
-  const categoryTreeResponse = await categoryTreeSearchByCode(context.query)
+  const categoryTreeByCodeResponse = await categoryTreeSearchByCode(context.query)
 
   return {
     props: {
       results: response?.data?.products || [],
       categoriesTree,
-      categoryTreeResults: categoryTreeResponse,
+      categoryTreeByCodeResults: categoryTreeByCodeResponse,
       ...(await serverSideTranslations(locale as string, ['product', 'common'])),
     },
   }

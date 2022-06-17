@@ -6,8 +6,8 @@ import MegaMenuItem from './MegaMenuItem'
 import { categoryTreeDataMock } from '@/__mocks__/stories/categoryTreeDataMock'
 
 const childrenCategories =
-  categoryTreeDataMock.categoriesTree.items.filter((c) => c.isDisplayed === true)[0]
-    .childrenCategories || []
+  categoryTreeDataMock?.categoriesTree?.items?.filter((c) => c?.isDisplayed === true)[0]
+    ?.childrenCategories || []
 
 export default {
   title: 'Layout/MegaMenuItem',

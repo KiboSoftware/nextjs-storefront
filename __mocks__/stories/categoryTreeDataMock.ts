@@ -1,6 +1,6 @@
-import { PrCategory } from '@/lib/gql/types'
+import { CategoryCollection, PrCategory } from '@/lib/gql/types'
 
-export const categoryTreeDataMock = {
+export const categoryTreeDataMock: { categoriesTree: CategoryCollection } = {
   categoriesTree: {
     items: [
       {
@@ -561,5 +561,6 @@ export const categoryTreeDataMock = {
         childrenCategories: [],
       },
     ] as PrCategory[],
+    totalCount: 10,
   },
 }

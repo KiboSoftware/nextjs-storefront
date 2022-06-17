@@ -22,5 +22,5 @@ const Template: ComponentStory<typeof CategoryNestedNavigation> = (args) => (
 
 export const Common = Template.bind({})
 Common.args = {
-  categoryTree: categoryTreeDataMock.categoriesTree.items?.filter((item) => item.isDisplayed),
+  categoryTree: categoryTreeDataMock.categoriesTree.items?.filter((item) => item?.isDisplayed),
 }

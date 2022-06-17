@@ -15,7 +15,7 @@ const Template: ComponentStory<typeof MegaMenu> = (args) => <MegaMenu {...args} 
 export const Common = Template.bind({})
 
 Common.args = {
-  categoryTree: categoryTreeDataMock.categoriesTree.items?.filter((item) => item.isDisplayed),
+  categoryTree: categoryTreeDataMock.categoriesTree.items?.filter((item) => item?.isDisplayed),
   onBackdropToggle: (isOpen) => {
     return isOpen
   },
