@@ -1,4 +1,4 @@
-import { FacetValue, ProductSearchResult } from '../gql/types'
+import type { FacetValue, ProductSearchResult } from '@/lib/gql/types'
 const getProducts = (searchData: ProductSearchResult) => {
   if (!searchData) return []
   return searchData?.items

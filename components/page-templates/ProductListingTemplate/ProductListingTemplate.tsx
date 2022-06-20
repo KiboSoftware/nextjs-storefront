@@ -11,9 +11,10 @@ import { CategoryFacet, CategoryFilterByMobile, FacetList } from '@/components/p
 import { CategoryFacetData } from '@/components/product-listing/CategoryFacet/CategoryFacet'
 import ProductCard from '@/components/product/ProductCard/ProductCard'
 import { productGetters } from '@/lib/getters'
-import type { BreadCrumb as BreadCrumbType, ProductCustom } from '@/lib/types'
+import { uiHelpers } from '@/lib/helpers'
+import type { BreadCrumb as BreadCrumbType } from '@/lib/types'
 
-import type { Facet as FacetType } from '@/lib/gql/types'
+import type { Facet as FacetType, Product } from '@/lib/gql/types'
 
 interface SortingValues {
   value: string
@@ -24,7 +25,7 @@ interface SortingValues {
 interface ProductListingTemplateProps {
   breadCrumbsList: BreadCrumbType[]
   facetList?: FacetType[]
-  products?: ProductCustom[]
+  products?: Product[]
   sortingValues?: SortingValues[]
   categoryFacet: CategoryFacetData
   totalResults: number
@@ -168,10 +169,11 @@ const ProductListingTemplate = (props: ProductListingTemplateProps) => {
     onSortingSelection,
     initialProductsToShow = 16,
   } = props
+  const { getProductLink } = uiHelpers()
   const isShowMoreVisible = products?.length > initialProductsToShow
   const [showFilterBy, setFilterBy] = useState<boolean>(false)
   const [isShowMoreButtonVisible, setShowMoreButtonVisible] = useState<boolean>(isShowMoreVisible)
-  const [productToShows, setProductsToShow] = useState<ProductCustom[]>([]) // Setting the initial product count to 16 for skeleton loading
+  const [productToShows, setProductsToShow] = useState<Product[]>([]) // Setting the initial product count to 16 for skeleton loading
 
   const { t } = useTranslation(['product', 'common'])
 
@@ -284,7 +286,7 @@ const ProductListingTemplate = (props: ProductListingTemplateProps) => {
                           imageUrl={productGetters.handleProtocolRelativeUrl(
                             productGetters.getCoverImage(product)
                           )}
-                          link={`/product/${product.productCode}`}
+                          link={getProductLink(product?.productCode as string)}
                           price={t<string>('common:currency', {
                             val: productGetters.getPrice(product).regular,
                           })}

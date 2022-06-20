@@ -5,8 +5,9 @@ import { composeStories } from '@storybook/testing-react'
 import { render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 
-import { CategoryFacetProps } from './CategoryFacet'
 import * as stories from './CategoryFacet.stories' // import all stories from the stories file
+
+import type { CategoryFacetProps } from './CategoryFacet'
 
 const { CategoryFacetDesktop } = composeStories(stories)
 
@@ -38,7 +39,7 @@ describe('[component] - CategoryFacet', () => {
     expect(backButton).toHaveAttribute('href', '/')
   })
 
-  it('should display all the children when user clicks on View More button', () => {
+  it('should display all the children with href attribute present when user clicks on View More button', () => {
     setup()
 
     const childrenCategoriesLabelsBeforeClick =
@@ -76,6 +77,12 @@ describe('[component] - CategoryFacet', () => {
     expect(childrenCategoriesLabelsListAfterClick).toHaveLength(
       CategoryFacetDesktop.args?.categoryFacet?.childrenCategories?.length || 0
     )
+    childrenCategoriesLabelsListAfterClick?.map((childrenCategory) => {
+      const categoryCode = CategoryFacetDesktop?.args?.categoryFacet?.childrenCategories?.find(
+        (category) => childrenCategory.textContent?.includes(category?.label as string)
+      )?.value
+      expect(childrenCategory).toHaveAttribute('href', `/category/${categoryCode}`)
+    })
   })
 
   it('should display heading and back button only when we dont have any childrenCategories', () => {

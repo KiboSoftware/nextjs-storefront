@@ -5,7 +5,8 @@ import { Box, Button, FormLabel, Link, Typography, SxProps } from '@mui/material
 import { Theme } from '@mui/material/styles'
 import { useTranslation } from 'next-i18next'
 
-import { BreadCrumb as BreadCrumbType } from '@/lib/types'
+import { uiHelpers } from '@/lib/helpers'
+import type { BreadCrumb as BreadCrumbType } from '@/lib/types'
 
 import type { FacetValue, Maybe } from '@/lib/gql/types'
 
@@ -70,6 +71,7 @@ const styles = {
 
 const CategoryFacet = (props: CategoryFacetProps) => {
   const { initialItemsToShow = 5, categoryFacet, breadcrumbs } = props
+  const { getCatLink } = uiHelpers()
   const { t } = useTranslation(['product', 'common'])
   const viewMore = t('common:view-more')
   const viewLess = t('common:view-less')
@@ -104,7 +106,7 @@ const CategoryFacet = (props: CategoryFacetProps) => {
             variant="body2"
             color="text.primary"
             sx={styles.link}
-            href={`/category/${child?.value}`}
+            href={getCatLink(child?.value as string)}
           >
             {child?.label}
             <FormLabel data-testid="count" aria-label={t('count')} sx={{ ...styles.formLabel }}>

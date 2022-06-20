@@ -1,4 +1,6 @@
-export const categoryFacet = {
+import type { CategoryFacetData } from '@/components/product-listing/CategoryFacet/CategoryFacet'
+
+export const categoryFacetDataMock: CategoryFacetData = {
   header: 'Apparel',
   childrenCategories: [
     {

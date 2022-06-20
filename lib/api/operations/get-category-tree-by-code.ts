@@ -1,9 +1,11 @@
+import { ParsedUrlQuery } from 'querystring'
+
 import { fetcher } from '@/lib/api/util'
 import { getCategoryTreeQuery } from '@/lib/gql/queries'
 
-import { Maybe, PrCategory } from '@/lib/gql/types'
+import type { Maybe, PrCategory } from '@/lib/gql/types'
 
-function addParent(category: PrCategory, newParent: PrCategory): void {
+const addParent = (category: PrCategory, newParent: PrCategory): void => {
   if (category.parentCategory) return addParent(category.parentCategory, newParent)
   category.parentCategory = Object.assign({}, newParent)
 }
@@ -11,9 +13,9 @@ function addParent(category: PrCategory, newParent: PrCategory): void {
 let targetCategory: PrCategory
 export const selectCategoryFromTree = (
   categoryTree: Array<PrCategory>,
-  categoryCode: string
+  categoryCode: string | string[]
 ): PrCategory => {
-  const findCategoryById = (category: Maybe<PrCategory>, code: string) => {
+  const findCategoryById = (category: Maybe<PrCategory>, code: string | string[]) => {
     if (category?.categoryCode === code) {
       targetCategory = Object.assign({}, category)
       return true
@@ -35,7 +37,7 @@ export const selectCategoryFromTree = (
   return targetCategory
 }
 
-export default async function search(searchParams: any) {
+export default async function search(searchParams: ParsedUrlQuery) {
   try {
     const { categoryCode } = searchParams
     const response = await fetcher({ query: getCategoryTreeQuery, variables: { categoryCode } })

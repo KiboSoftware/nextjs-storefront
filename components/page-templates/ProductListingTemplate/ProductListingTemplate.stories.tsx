@@ -2,10 +2,12 @@ import React from 'react'
 
 import { ComponentStory, ComponentMeta } from '@storybook/react'
 
-import { categoryFacet } from '../../../__mocks__/stories/categoryFacetDataMock'
-import { productSearchDataMock } from '../../../__mocks__/stories/productSearchDataMock'
 import ProductListingTemplate from './ProductListingTemplate'
-import { ProductCustom } from '@/lib/types'
+import { categoryFacetDataMock } from '@/__mocks__/stories/categoryFacetDataMock'
+import { productSearchDataMock } from '@/__mocks__/stories/productSearchDataMock'
+import type { ProductCustom } from '@/lib/types'
+
+import { Facet } from '@/lib/gql/types'
 
 const breadcrumbs = [
   {
@@ -70,10 +72,10 @@ export const CategorySkeleton = Template.bind({})
 
 Category.args = {
   breadCrumbsList: breadcrumbs,
-  facetList: productSearchDataMock?.facets,
+  facetList: productSearchDataMock?.facets as Facet[],
   products: productSearchDataMock?.items as ProductCustom[],
   sortingValues,
-  categoryFacet,
+  categoryFacet: categoryFacetDataMock,
   totalResults: 149,
   initialProductsToShow: 16,
   isLoading: false,
@@ -81,9 +83,9 @@ Category.args = {
 
 CategorySkeleton.args = {
   breadCrumbsList: breadcrumbs,
-  facetList: productSearchDataMock?.facets,
+  facetList: productSearchDataMock?.facets as Facet[],
   products: [],
   sortingValues,
-  categoryFacet,
+  categoryFacet: categoryFacetDataMock,
   isLoading: true,
 }

@@ -2,8 +2,8 @@ import React from 'react'
 
 import { ComponentStory, ComponentMeta } from '@storybook/react'
 
-import { categoryFacet } from '../../../__mocks__/stories/categoryFacetDataMock'
 import CategoryFacet from './CategoryFacet'
+import { categoryFacetDataMock } from '@/__mocks__/stories/categoryFacetDataMock'
 
 export default {
   title: 'product-listing/CategoryFacet',
@@ -16,7 +16,7 @@ export const CategoryFacetDesktop = Template.bind({})
 
 CategoryFacetDesktop.args = {
   initialItemsToShow: 5,
-  categoryFacet,
+  categoryFacet: categoryFacetDataMock,
   breadcrumbs: [
     {
       text: 'Home',

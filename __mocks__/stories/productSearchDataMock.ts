@@ -1,5 +1,7 @@
+import type { ProductSearchResult } from '@/lib/gql/types'
+
 const imageBaseURL = '//cdn-sb.mozu.com/30294-50525/cms/50525/files/'
-export const productSearchDataMock = {
+export const productSearchDataMock: ProductSearchResult = {
   totalCount: 42,
   pageSize: 20,
   pageCount: 3,
@@ -17,21 +19,6 @@ export const productSearchDataMock = {
         salePrice: null,
       },
       priceRange: null,
-      properties: [
-        {
-          attributeFQN: 'tenant~product-crosssell',
-          attributeDetail: {
-            name: 'Product Cross-Sells',
-          },
-          isHidden: false,
-          values: [
-            {
-              value: 'BOT1',
-              stringValue: 'BOT1',
-            },
-          ],
-        },
-      ],
       content: {
         productFullDescription: '',
         productShortDescription:
@@ -47,6 +34,10 @@ export const productSearchDataMock = {
         ],
       },
       options: null,
+      createDate: null,
+      personalizationScore: 1,
+      score: 1,
+      updateDate: null,
     },
     {
       productCode: 'ACC1',
@@ -71,6 +62,7 @@ export const productSearchDataMock = {
           attributeFQN: 'tenant~availability',
           attributeDetail: {
             name: 'Availability',
+            dataTypeSequence: 12,
           },
           isHidden: false,
           values: [
@@ -96,6 +88,11 @@ export const productSearchDataMock = {
           },
         ],
       },
+      options: null,
+      createDate: null,
+      personalizationScore: 2,
+      score: 2,
+      updateDate: null,
     },
     {
       productCode: 'PET2',
@@ -109,6 +106,22 @@ export const productSearchDataMock = {
         salePrice: null,
       },
       priceRange: null,
+      properties: [
+        {
+          attributeFQN: 'tenant~availability',
+          attributeDetail: {
+            name: 'Availability',
+            dataTypeSequence: 3,
+          },
+          isHidden: false,
+          values: [
+            {
+              value: '24hrs',
+              stringValue: 'Usually Ships in 24 Hours',
+            },
+          ],
+        },
+      ],
       content: {
         productFullDescription: '',
         productShortDescription:
@@ -129,6 +142,10 @@ export const productSearchDataMock = {
         ],
       },
       options: null,
+      createDate: null,
+      personalizationScore: 1,
+      score: 1,
+      updateDate: null,
     },
     {
       productCode: 'SHOE11',
@@ -156,6 +173,11 @@ export const productSearchDataMock = {
           },
         ],
       },
+      options: null,
+      createDate: null,
+      personalizationScore: 1,
+      score: 1,
+      updateDate: null,
     },
     {
       productCode: 'TOP3',
@@ -183,6 +205,11 @@ export const productSearchDataMock = {
           },
         ],
       },
+      options: null,
+      createDate: null,
+      personalizationScore: 1,
+      score: 1,
+      updateDate: null,
     },
     {
       productCode: 'TOP17',
@@ -210,6 +237,11 @@ export const productSearchDataMock = {
           },
         ],
       },
+      options: null,
+      createDate: null,
+      personalizationScore: 1,
+      score: 1,
+      updateDate: null,
     },
     {
       fulfillmentTypesSupported: ['DirectShip', 'InStorePickup'],
@@ -239,7 +271,6 @@ export const productSearchDataMock = {
           },
         ],
       },
-      options: null,
       productImageGroups: [],
       inventoryInfo: {
         manageStock: false,
@@ -247,6 +278,11 @@ export const productSearchDataMock = {
         onlineSoftStockAvailable: null,
         onlineStockAvailable: null,
       },
+      options: null,
+      createDate: null,
+      personalizationScore: 1,
+      score: 1,
+      updateDate: null,
     },
     {
       fulfillmentTypesSupported: ['DirectShip', 'InStorePickup'],
@@ -283,6 +319,11 @@ export const productSearchDataMock = {
         onlineSoftStockAvailable: null,
         onlineStockAvailable: null,
       },
+      options: null,
+      createDate: null,
+      personalizationScore: 1,
+      score: 1,
+      updateDate: null,
     },
     {
       fulfillmentTypesSupported: ['DirectShip', 'InStorePickup'],
@@ -319,6 +360,11 @@ export const productSearchDataMock = {
         onlineSoftStockAvailable: null,
         onlineStockAvailable: null,
       },
+      options: null,
+      createDate: null,
+      personalizationScore: 1,
+      score: 1,
+      updateDate: null,
     },
     {
       fulfillmentTypesSupported: ['DirectShip', 'InStorePickup'],
@@ -355,6 +401,11 @@ export const productSearchDataMock = {
         onlineSoftStockAvailable: null,
         onlineStockAvailable: null,
       },
+      options: null,
+      createDate: null,
+      personalizationScore: 1,
+      score: 1,
+      updateDate: null,
     },
     {
       fulfillmentTypesSupported: ['DirectShip'],
@@ -374,6 +425,7 @@ export const productSearchDataMock = {
           attributeFQN: 'tenant~popularity',
           attributeDetail: {
             name: 'Popularity',
+            dataTypeSequence: 4,
           },
           isHidden: false,
           values: [
@@ -387,6 +439,7 @@ export const productSearchDataMock = {
           attributeFQN: 'tenant~rating',
           attributeDetail: {
             name: 'Rating',
+            dataTypeSequence: 12,
           },
           isHidden: false,
           values: [
@@ -400,6 +453,7 @@ export const productSearchDataMock = {
           attributeFQN: 'tenant~isrecommended',
           attributeDetail: {
             name: 'isRecommended',
+            dataTypeSequence: 8,
           },
           isHidden: false,
           values: [
@@ -417,6 +471,7 @@ export const productSearchDataMock = {
           attributeFQN: 'tenant~video-url',
           attributeDetail: {
             name: 'video-url',
+            dataTypeSequence: 8,
           },
           isHidden: false,
           values: [
@@ -443,7 +498,6 @@ export const productSearchDataMock = {
           },
         ],
       },
-      options: null,
       productImageGroups: [],
       inventoryInfo: {
         manageStock: false,
@@ -451,6 +505,11 @@ export const productSearchDataMock = {
         onlineSoftStockAvailable: null,
         onlineStockAvailable: null,
       },
+      options: null,
+      createDate: null,
+      personalizationScore: 1,
+      score: 1,
+      updateDate: null,
     },
     {
       fulfillmentTypesSupported: ['DirectShip'],
@@ -470,6 +529,7 @@ export const productSearchDataMock = {
           attributeFQN: 'tenant~popularity',
           attributeDetail: {
             name: 'Popularity',
+            dataTypeSequence: 11,
           },
           isHidden: false,
           values: [
@@ -483,6 +543,7 @@ export const productSearchDataMock = {
           attributeFQN: 'tenant~rating',
           attributeDetail: {
             name: 'Rating',
+            dataTypeSequence: 41,
           },
           isHidden: false,
           values: [
@@ -496,6 +557,7 @@ export const productSearchDataMock = {
           attributeFQN: 'tenant~color-filter',
           attributeDetail: {
             name: 'color filter',
+            dataTypeSequence: 10,
           },
           isHidden: true,
           values: [
@@ -509,6 +571,7 @@ export const productSearchDataMock = {
           attributeFQN: 'tenant~brand',
           attributeDetail: {
             name: 'Brand',
+            dataTypeSequence: 63,
           },
           isHidden: false,
           values: [
@@ -522,6 +585,7 @@ export const productSearchDataMock = {
           attributeFQN: 'tenant~material',
           attributeDetail: {
             name: 'Material',
+            dataTypeSequence: 22,
           },
           isHidden: false,
           values: [
@@ -547,7 +611,6 @@ export const productSearchDataMock = {
           },
         ],
       },
-      options: null,
       productImageGroups: [],
       inventoryInfo: {
         manageStock: false,
@@ -555,6 +618,11 @@ export const productSearchDataMock = {
         onlineSoftStockAvailable: null,
         onlineStockAvailable: null,
       },
+      options: null,
+      createDate: null,
+      personalizationScore: 1,
+      score: 1,
+      updateDate: null,
     },
     {
       fulfillmentTypesSupported: ['DirectShip'],
@@ -584,7 +652,6 @@ export const productSearchDataMock = {
           },
         ],
       },
-      options: null,
       productImageGroups: [],
       inventoryInfo: {
         manageStock: false,
@@ -592,6 +659,11 @@ export const productSearchDataMock = {
         onlineSoftStockAvailable: null,
         onlineStockAvailable: null,
       },
+      options: null,
+      createDate: null,
+      personalizationScore: 1,
+      score: 1,
+      updateDate: null,
     },
     {
       fulfillmentTypesSupported: ['DirectShip'],
@@ -611,6 +683,7 @@ export const productSearchDataMock = {
           attributeFQN: 'tenant~popularity',
           attributeDetail: {
             name: 'Popularity',
+            dataTypeSequence: 22,
           },
           isHidden: false,
           values: [
@@ -624,6 +697,7 @@ export const productSearchDataMock = {
           attributeFQN: 'tenant~rating',
           attributeDetail: {
             name: 'Rating',
+            dataTypeSequence: 2,
           },
           isHidden: false,
           values: [
@@ -637,6 +711,7 @@ export const productSearchDataMock = {
           attributeFQN: 'tenant~color-filter',
           attributeDetail: {
             name: 'color filter',
+            dataTypeSequence: 10,
           },
           isHidden: true,
           values: [
@@ -650,6 +725,7 @@ export const productSearchDataMock = {
           attributeFQN: 'tenant~brand',
           attributeDetail: {
             name: 'Brand',
+            dataTypeSequence: 66,
           },
           isHidden: false,
           values: [
@@ -675,7 +751,6 @@ export const productSearchDataMock = {
           },
         ],
       },
-      options: null,
       productImageGroups: [],
       inventoryInfo: {
         manageStock: false,
@@ -683,6 +758,11 @@ export const productSearchDataMock = {
         onlineSoftStockAvailable: null,
         onlineStockAvailable: null,
       },
+      options: null,
+      createDate: null,
+      personalizationScore: 1,
+      score: 1,
+      updateDate: null,
     },
     {
       fulfillmentTypesSupported: ['DirectShip'],
@@ -712,7 +792,6 @@ export const productSearchDataMock = {
           },
         ],
       },
-      options: null,
       productImageGroups: [],
       inventoryInfo: {
         manageStock: false,
@@ -720,6 +799,11 @@ export const productSearchDataMock = {
         onlineSoftStockAvailable: null,
         onlineStockAvailable: null,
       },
+      options: null,
+      createDate: null,
+      personalizationScore: 1,
+      score: 1,
+      updateDate: null,
     },
     {
       fulfillmentTypesSupported: ['DirectShip'],
@@ -749,7 +833,6 @@ export const productSearchDataMock = {
           },
         ],
       },
-      options: null,
       productImageGroups: [],
       inventoryInfo: {
         manageStock: false,
@@ -757,6 +840,11 @@ export const productSearchDataMock = {
         onlineSoftStockAvailable: null,
         onlineStockAvailable: null,
       },
+      options: null,
+      createDate: null,
+      personalizationScore: 1,
+      score: 1,
+      updateDate: null,
     },
     {
       fulfillmentTypesSupported: ['DirectShip', 'InStorePickup'],
@@ -792,18 +880,12 @@ export const productSearchDataMock = {
           attributeDetail: {
             name: 'Color',
             inputType: 'List',
+            dataTypeSequence: 60,
           },
           isProductImageGroupSelector: false,
           isRequired: true,
           isMultiValue: false,
-          values: [
-            {
-              value: 'Red',
-              isSelected: false,
-              deltaPrice: null,
-              stringValue: 'Red',
-            },
-          ],
+          values: [],
         },
       ],
       productImageGroups: [],
@@ -813,6 +895,10 @@ export const productSearchDataMock = {
         onlineSoftStockAvailable: null,
         onlineStockAvailable: null,
       },
+      createDate: null,
+      personalizationScore: 1,
+      score: 1,
+      updateDate: null,
     },
   ],
   facets: [

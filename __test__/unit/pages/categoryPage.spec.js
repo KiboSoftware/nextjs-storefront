@@ -10,25 +10,26 @@ import CategoryPage, { getServerSideProps } from '@/pages/category/[categoryCode
 
 nextRouter.useRouter = jest.fn()
 const mockCategoryTreeData = categoryTreeDataMock
+const mockProductSearchData = {
+  totalCount: 1,
+  pageSize: 20,
+  pageCount: 3,
+  startIndex: 0,
+  items: [
+    {
+      productCode: 'Jacket12',
+      productUsage: 'Configurable',
+      isPackagedStandAlone: false,
+    },
+  ],
+  facets: [],
+}
 
 jest.mock('@/lib/api/util', () => ({
   fetcher: jest.fn(() => {
     return Promise.resolve({
       data: {
-        products: {
-          totalCount: 1,
-          pageSize: 20,
-          pageCount: 3,
-          startIndex: 0,
-          items: [
-            {
-              productCode: 'Jacket12',
-              productUsage: 'Configurable',
-              isPackagedStandAlone: false,
-            },
-          ],
-          facets: [],
-        },
+        products: mockProductSearchData,
         categoriesTree: { items: mockCategoryTreeData.categoriesTree?.items },
       },
     })
@@ -68,22 +69,9 @@ describe('[page] Category Page', () => {
     )
     expect(response).toStrictEqual({
       props: {
-        results: {
-          totalCount: 1,
-          pageSize: 20,
-          pageCount: 3,
-          startIndex: 0,
-          items: [
-            {
-              productCode: 'Jacket12',
-              productUsage: 'Configurable',
-              isPackagedStandAlone: false,
-            },
-          ],
-          facets: [],
-        },
+        results: mockProductSearchData,
         categoriesTree: mockCategoryTreeData.categoriesTree.items,
-        categoryTreeByCodeResults: {
+        category: {
           categories: [mockCategoryTreeByCode],
         },
         _nextI18Next: {
