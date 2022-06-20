@@ -30,7 +30,7 @@ const values: ProductOptionValue[] = [
 export default {
   title: 'Product/ColorSelector',
   component: ColorSelector,
-  argTypes: { onChange: { action: 'onChange' } },
+  argTypes: { onColorChange: { action: 'onColorChange' } },
 } as ComponentMeta<typeof ColorSelector>
 
 const Template: ComponentStory<typeof ColorSelector> = (args) => <ColorSelector {...args} />

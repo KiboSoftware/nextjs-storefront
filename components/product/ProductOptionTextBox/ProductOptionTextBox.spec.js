@@ -1,5 +1,5 @@
 import { composeStories } from '@storybook/testing-react'
-import { render, screen } from '@testing-library/react'
+import { fireEvent, render, screen } from '@testing-library/react'
 import '@testing-library/jest-dom'
 import userEvent from '@testing-library/user-event'
 
@@ -7,9 +7,9 @@ import * as stories from './ProductOptionTextBox.stories' // import all stories 
 
 const { Common } = composeStories(stories)
 
-const onChangMock = jest.fn()
+const onBlurMock = jest.fn()
 
-const kiboTextboxMock = () => <input data-testid="kibo-textbox-component" onChange={onChangMock} />
+const kiboTextboxMock = () => <input data-testid="kibo-textbox-component" onBlur={onBlurMock} />
 jest.mock('@/components/common/KiboTextBox/KiboTextBox', () => kiboTextboxMock)
 
 const setup = () => {
@@ -28,8 +28,9 @@ describe('[component] ProductOptionTextBox component', () => {
 
     const textbox = screen.getByRole('textbox')
     userEvent.type(textbox, 'Test')
+    fireEvent.blur(textbox)
 
     expect(textbox).toHaveValue('Test')
-    expect(onChangMock).toHaveBeenCalledTimes(4)
+    expect(onBlurMock).toHaveBeenCalled()
   })
 })

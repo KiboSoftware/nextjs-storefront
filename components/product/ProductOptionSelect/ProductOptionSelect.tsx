@@ -15,7 +15,7 @@ export interface ProductOptionSelectProps {
   placeholder?: string
   label?: string
   attributeFQN: string
-  onChange: (attributeFQN: string, value: string) => void
+  onDropdownChange: (attributeFQN: string, value: string) => void
 }
 
 const ProductOptionSelect = (props: ProductOptionSelectProps) => {
@@ -29,7 +29,7 @@ const ProductOptionSelect = (props: ProductOptionSelectProps) => {
     label = t('select-product-option'),
     placeholder = t('select-product-option'),
     attributeFQN,
-    onChange,
+    onDropdownChange,
   } = props
 
   return (
@@ -37,13 +37,13 @@ const ProductOptionSelect = (props: ProductOptionSelectProps) => {
       name={name}
       error={error}
       helperText={errorHelperText}
-      onChange={(_, selectedValue) => onChange(attributeFQN, selectedValue)}
+      onChange={(_, selectedValue) => onDropdownChange(attributeFQN, selectedValue)}
       value={value}
       label={label}
       placeholder={placeholder}
     >
       {optionValues.map((optionVal) => (
-        <MenuItem key={optionVal?.value} value={optionVal?.value}>
+        <MenuItem key={optionVal?.value} value={optionVal?.value} disabled={!optionVal?.isEnabled}>
           {optionVal.stringValue || optionVal.value}
         </MenuItem>
       ))}

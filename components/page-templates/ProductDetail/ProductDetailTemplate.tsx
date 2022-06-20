@@ -107,7 +107,7 @@ const ProductDetailTemplate = (props: ProductDetailTemplateProps) => {
             <ColorSelector
               attributeFQN={productOptions?.colourOptions?.attributeFQN as string}
               values={productOptions?.colourOptions?.values as ProductOptionValue[]}
-              onChange={selectProductOption}
+              onColorChange={selectProductOption}
             />
           </Box>
 
@@ -115,7 +115,7 @@ const ProductDetailTemplate = (props: ProductDetailTemplateProps) => {
             <ProductVariantSizeSelector
               values={productOptions?.sizeOptions?.values as ProductOptionValue[]}
               attributeFQN={productOptions?.sizeOptions?.attributeFQN as string}
-              onChange={selectProductOption}
+              onSizeChange={selectProductOption}
             />
           </Box>
 
@@ -128,7 +128,7 @@ const ProductDetailTemplate = (props: ProductDetailTemplateProps) => {
                   value={productGetters.getOptionSelectedValue(option as ProductOption)}
                   label={productGetters.getOptionName(option as ProductOption)}
                   attributeFQN={option?.attributeFQN as string}
-                  onChange={selectProductOption}
+                  onDropdownChange={selectProductOption}
                 />
               )
             })}
@@ -145,7 +145,7 @@ const ProductDetailTemplate = (props: ProductDetailTemplateProps) => {
                   checked={
                     productGetters.getOptionSelectedValue(option as ProductOption) ? true : false
                   }
-                  onChange={selectProductOption}
+                  onCheckboxChange={selectProductOption}
                 />
               )
             })}
@@ -157,7 +157,7 @@ const ProductDetailTemplate = (props: ProductDetailTemplateProps) => {
                 <ProductOptionTextBox
                   key={option?.attributeDetail?.name}
                   option={option as ProductOption}
-                  onChange={selectProductOption}
+                  onBlur={selectProductOption}
                 />
               )
             })}

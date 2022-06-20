@@ -81,6 +81,7 @@ const getOptionSelectedValue = (option: ProductOption) => {
   const result = selectedValue?.value || selectedValue?.stringValue || selectedValue?.isSelected
   return result?.toString()
 }
+
 export const getOptionName = (option: ProductOption): string => option?.attributeDetail?.name || ''
 export const getOptions = (product: Product) => product?.options
 

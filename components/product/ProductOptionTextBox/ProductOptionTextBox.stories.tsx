@@ -13,13 +13,13 @@ export default {
 } as ComponentMeta<typeof ProductOptionTextBox>
 
 const Template: ComponentStory<typeof ProductOptionTextBox> = (args: ProductOptionTextBoxProps) => {
-  const { onChange } = args
+  const { onBlur } = args
   return (
     <Box display={'flex'} flexDirection="column" gap={2}>
       <ProductOptionTextBox
         key={productOptionTextBoxMock[0]?.attributeFQN}
         option={productOptionTextBoxMock[0]}
-        onChange={onChange}
+        onBlur={onBlur}
       />
     </Box>
   )

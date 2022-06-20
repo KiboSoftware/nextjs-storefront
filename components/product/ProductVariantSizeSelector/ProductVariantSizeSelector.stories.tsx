@@ -27,7 +27,7 @@ const values: ProductOptionValue[] = [
 export default {
   title: 'Product/Product Variant Size Selector',
   component: ProductVariantSizeSelector,
-  argTypes: { selectOption: { action: 'selectOption' } },
+  argTypes: { onSizeChange: { action: 'onSizeChange' } },
 } as ComponentMeta<typeof ProductVariantSizeSelector>
 
 const Template: ComponentStory<typeof ProductVariantSizeSelector> = (args) => (

@@ -9,7 +9,7 @@ import { ProductOptionValue } from '@/lib/gql/types'
 interface ColorSelectorProps {
   attributeFQN: string
   values: ProductOptionValue[]
-  onChange: (attributeFQN: string, value: string) => void
+  onColorChange: (attributeFQN: string, value: string) => void
 }
 
 interface ColorOptionsProps extends ProductOptionValue {
@@ -70,7 +70,7 @@ const ColorOptions = (props: ColorOptionsProps) => {
   )
 }
 
-const ColorSelector = ({ attributeFQN, values, onChange }: ColorSelectorProps) => {
+const ColorSelector = ({ attributeFQN, values, onColorChange }: ColorSelectorProps) => {
   return (
     <Box display="flex" flexWrap="wrap" gap={2} data-testid="color-selector">
       {values?.map((option) => (
@@ -81,7 +81,7 @@ const ColorSelector = ({ attributeFQN, values, onChange }: ColorSelectorProps) =
           value={option?.value}
           isSelected={option?.isSelected}
           isEnabled={option?.isEnabled}
-          onColorSelection={onChange}
+          onColorSelection={onColorChange}
         />
       ))}
     </Box>

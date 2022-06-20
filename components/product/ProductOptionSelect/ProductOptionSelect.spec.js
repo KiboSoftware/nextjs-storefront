@@ -16,9 +16,9 @@ describe('[component] ProductOptionSelect component', () => {
   })
 
   it('should call onChange method if value is changed', () => {
-    const onChangeMock = jest.fn()
+    const onDropdownChangeMock = jest.fn()
     const mockOption = productOptionSelectValuesMock[0]
-    render(<Common {...Common.args} onChange={onChangeMock} />)
+    render(<Common {...Common.args} onDropdownChange={onDropdownChangeMock} />)
     const ProductOptionSelect = screen.getByRole('button')
 
     fireEvent.mouseDown(ProductOptionSelect)
@@ -28,6 +28,6 @@ describe('[component] ProductOptionSelect component', () => {
     fireEvent.click(listbox.getByText(mockOption.stringValue))
 
     expect(ProductOptionSelect).toHaveTextContent(mockOption.stringValue)
-    expect(onChangeMock).toBeCalledWith('test-attributeFQN', mockOption.value)
+    expect(onDropdownChangeMock).toBeCalledWith('test-attributeFQN', mockOption.value)
   })
 })

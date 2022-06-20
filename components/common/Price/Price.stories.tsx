@@ -7,10 +7,6 @@ import Price from './Price'
 export default {
   title: 'Common/Price',
   component: Price,
-  argTypes: {
-    size: { control: 'select' },
-    fontWeight: { control: 'radio' },
-  },
 } as ComponentMeta<typeof Price>
 
 const Template: ComponentStory<typeof Price> = (args) => <Price {...args} />

@@ -3,14 +3,16 @@ import { useTranslation } from 'next-i18next'
 
 import type { ProductPriceRange } from '@/lib/gql/types'
 
-interface PriceProps {
+interface SalePriceTypographyProps {
   price?: string
   salePrice?: string
+}
+interface PriceProps extends SalePriceTypographyProps {
   priceRange?: ProductPriceRange
   variant?: 'body2' | 'body1' | 'subtitle1'
   fontWeight?: 'bold' | 'normal'
 }
-interface TextPriceProps extends PriceProps {
+interface PriceTypographyProps extends PriceProps {
   children?: React.ReactNode
   color?: string
   sx?: SxProps<Theme>
@@ -38,8 +40,8 @@ const styles = {
   },
 }
 
-const PriceTypography = (priceProps: TextPriceProps) => {
-  const { children, color, sx, variant = 'body1', fontWeight = 'bold' } = priceProps
+const PriceTypography = (priceTypographyProps: PriceTypographyProps) => {
+  const { children, color, sx, variant = 'body1', fontWeight = 'bold' } = priceTypographyProps
   return (
     <Typography variant={variant} fontWeight={fontWeight} color={color || 'text.primary'} sx={sx}>
       {children}
@@ -47,8 +49,8 @@ const PriceTypography = (priceProps: TextPriceProps) => {
   )
 }
 
-const SalePriceTypography = (priceProps: TextPriceProps) => {
-  const { price, salePrice } = priceProps
+const SalePriceTypography = (salePriceTypographyProps: SalePriceTypographyProps) => {
+  const { price, salePrice } = salePriceTypographyProps
 
   return (
     <>
@@ -91,15 +93,13 @@ const Price = (props: PriceProps) => {
   const { price, salePrice, priceRange, ...rest } = props
 
   return (
-    <>
-      <Box display="flex" gap="0.625rem" alignItems="center">
-        {priceRange ? (
-          <PriceRangeTypography priceRange={priceRange} />
-        ) : (
-          <SalePriceTypography price={price} salePrice={salePrice} {...rest} />
-        )}
-      </Box>
-    </>
+    <Box display="flex" gap="0.625rem" alignItems="center">
+      {priceRange ? (
+        <PriceRangeTypography priceRange={priceRange} />
+      ) : (
+        <SalePriceTypography price={price} salePrice={salePrice} />
+      )}
+    </Box>
   )
 }
 

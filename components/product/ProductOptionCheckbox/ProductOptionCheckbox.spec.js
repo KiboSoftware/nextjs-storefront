@@ -25,8 +25,8 @@ describe('[component] ProductOptionCheckbox component', () => {
   })
 
   it('should check/uncheck the checkbox', () => {
-    const onChangeMock = jest.fn()
-    render(<Common {...Common.args} onChange={onChangeMock} />)
+    const onCheckboxChangeMock = jest.fn()
+    render(<Common {...Common.args} onCheckboxChange={onCheckboxChangeMock} />)
     const checkbox = within(screen.getByTestId('kibo-checkbox')).getByRole('checkbox')
 
     expect(checkbox).not.toBeChecked()
@@ -34,6 +34,6 @@ describe('[component] ProductOptionCheckbox component', () => {
     fireEvent.click(checkbox)
 
     expect(checkbox).toBeChecked()
-    expect(onChangeMock).toBeCalled()
+    expect(onCheckboxChangeMock).toBeCalled()
   })
 })
