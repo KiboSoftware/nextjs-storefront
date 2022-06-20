@@ -1,5 +1,4 @@
 import CartItem from '@/components/cart/CartItem/CartItem'
-import type { FulfillmentOption } from '@/lib/types'
 
 import type { CartItem as CartItemType } from '@/lib/gql/types'
 
