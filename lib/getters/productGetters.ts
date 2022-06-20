@@ -174,7 +174,7 @@ const getProductFulfillmentOptions = (
   purchaseLocation: Location
 ): FulfillmentOption[] => {
   const fullfillmentOptions = publicRuntimeConfig.fullfillmentOptions
-
+  console.log('fulfillment', fullfillmentOptions[0].value)
   return fullfillmentOptions.map((option: FulfillmentOption) => ({
     value: option.value,
     name: option.name,
@@ -188,7 +188,7 @@ const getProductFulfillmentOptions = (
         (type) => type.toLowerCase() === option?.value?.toLowerCase()
       ).length === 0,
     details: (() => {
-      if (option.details === fullfillmentOptions[0].value) return option.details // checking if Directship
+      if (option.value === fullfillmentOptions[0].value) return option.details // checking if Directship
       if (purchaseLocation?.name) return `${option.details}: ${purchaseLocation.name}`
       return ''
     })(),
