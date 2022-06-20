@@ -43,7 +43,13 @@ const styles = {
 const PriceTypography = (priceTypographyProps: PriceTypographyProps) => {
   const { children, color, sx, variant = 'body1', fontWeight = 'bold' } = priceTypographyProps
   return (
-    <Typography variant={variant} fontWeight={fontWeight} color={color || 'text.primary'} sx={sx}>
+    <Typography
+      variant={variant}
+      fontWeight={fontWeight}
+      color={color || 'text.primary'}
+      sx={sx}
+      data-testid="price-text"
+    >
       {children}
     </Typography>
   )

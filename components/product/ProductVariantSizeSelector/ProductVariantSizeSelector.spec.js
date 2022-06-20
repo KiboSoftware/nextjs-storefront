@@ -35,7 +35,9 @@ describe('[component] ProductVariantSizeSelector component', () => {
   it('should call selectOption method only when size-option is enabled and not selected', () => {
     const { onSizeChangeMock } = setup()
 
-    const option = screen.getByText('8')
+    const option = screen.getByText(
+      Common.args.values.filter((value) => value.isEnabled && !value.isSelected)[0].value
+    )
 
     userEvent.click(option)
 
@@ -46,7 +48,9 @@ describe('[component] ProductVariantSizeSelector component', () => {
   it('should not call selectOption method when option is disabled', () => {
     const { onSizeChangeMock } = setup()
 
-    const disabledOption = screen.getByText('7.5')
+    const disabledOption = screen.getByText(
+      Common.args.values.filter((value) => value.isEnabled)[0].value
+    )
 
     userEvent.click(disabledOption)
 
@@ -56,7 +60,9 @@ describe('[component] ProductVariantSizeSelector component', () => {
   it('should not call selectOption method when option is selected', () => {
     const { onSizeChangeMock } = setup()
 
-    const disabledOption = screen.getByText('7')
+    const disabledOption = screen.getByText(
+      Common.args.values.filter((value) => value.isSelected)[0].value
+    )
 
     userEvent.click(disabledOption)
 

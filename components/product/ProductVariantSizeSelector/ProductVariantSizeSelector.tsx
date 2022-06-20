@@ -10,7 +10,7 @@ interface ProductVariantSizeSelectorProps {
 
 interface SizeOptionsProps extends ProductOptionValue {
   attributeFQN: string
-  handleSizeSelection: (attributeFQN: string, value: string) => void
+  onSizeSelection: (attributeFQN: string, value: string) => void
 }
 
 const styles = {
@@ -40,7 +40,7 @@ const styles = {
 }
 
 const SizeOptions = (props: SizeOptionsProps) => {
-  const { attributeFQN, value, isSelected = false, isEnabled = true, handleSizeSelection } = props
+  const { attributeFQN, value, isSelected = false, isEnabled = true, onSizeSelection } = props
   return (
     <Box
       sx={{
@@ -48,7 +48,7 @@ const SizeOptions = (props: SizeOptionsProps) => {
         ...(isSelected && styles.selected),
         ...(!isEnabled && styles.disabled),
       }}
-      {...(isEnabled && !isSelected && { onClick: () => handleSizeSelection(attributeFQN, value) })}
+      {...(isEnabled && !isSelected && { onClick: () => onSizeSelection(attributeFQN, value) })}
       data-testid="size-options"
     >
       {value}
@@ -71,7 +71,7 @@ const ProductVariantSizeSelector = ({
           value={option?.value}
           isSelected={option?.isSelected}
           isEnabled={option?.isEnabled}
-          handleSizeSelection={onSizeChange}
+          onSizeSelection={onSizeChange}
         />
       ))}
     </Box>

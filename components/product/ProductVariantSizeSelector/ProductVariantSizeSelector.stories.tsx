@@ -11,17 +11,18 @@ const values: ProductOptionValue[] = [
     attributeValueId: 1,
     value: '7',
     isSelected: true,
+    isEnabled: true,
   },
   {
     attributeValueId: 1,
     value: '7.5',
     isEnabled: false,
   },
-  { attributeValueId: 1, value: '8' },
-  { attributeValueId: 1, value: '8.5' },
-  { attributeValueId: 1, value: '9' },
-  { attributeValueId: 1, value: '9.5' },
-  { attributeValueId: 1, value: '10' },
+  { attributeValueId: 1, value: '8', isEnabled: true },
+  { attributeValueId: 1, value: '8.5', isEnabled: true },
+  { attributeValueId: 1, value: '9', isEnabled: true },
+  { attributeValueId: 1, value: '9.5', isEnabled: true },
+  { attributeValueId: 1, value: '10', isEnabled: true },
 ]
 
 export default {
