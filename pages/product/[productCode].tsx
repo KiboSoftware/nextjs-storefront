@@ -4,10 +4,12 @@ import { useRouter } from 'next/router'
 
 import nextI18NextConfig from '../../next-i18next.config'
 import { ProductDetailTemplate } from '@/components/page-templates'
+import getCategoryTree from '@/lib/api/operations/get-category-tree'
 import getProduct from '@/lib/api/operations/get-product'
 import search from '@/lib/api/operations/get-product-search'
 import { productGetters } from '@/lib/getters'
 
+import type { CategoryCollection } from '@/lib/gql/types'
 import type { NextPage, GetStaticPropsContext } from 'next'
 
 export async function getStaticProps(context: GetStaticPropsContext) {
@@ -16,14 +18,17 @@ export async function getStaticProps(context: GetStaticPropsContext) {
   const { serverRuntimeConfig } = getConfig()
 
   const product = await getProduct(productCode)
+  const categoriesTree: CategoryCollection = await getCategoryTree()
   return {
     props: {
       product,
+      categoriesTree,
       ...(await serverSideTranslations(locale as string, ['common', 'product'], nextI18NextConfig)),
     },
     revalidate: serverRuntimeConfig.revalidate,
   }
 }
+
 export async function getStaticPaths() {
   const { serverRuntimeConfig } = getConfig()
   const searchResponse = await search({ pageSize: serverRuntimeConfig.pageSize })
@@ -34,7 +39,9 @@ export async function getStaticPaths() {
   return { paths, fallback: true }
 }
 
-const ProductDetailPage: NextPage = ({ product }: any) => {
+const ProductDetailPage: NextPage = (props: any) => {
+  const { product } = props
+
   const { isFallback } = useRouter()
 
   if (isFallback) {

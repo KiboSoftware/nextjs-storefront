@@ -22,6 +22,12 @@ describe('[component] HamburgerMenu component', () => {
     expect(screen.queryByTestId('hamburger-menu')).not.toBeInTheDocument()
   })
 
+  it('should render all the list-items if isDrawerOpen props is true', () => {
+    render(<Common isDrawerOpen={true} />)
+
+    expect(screen.getByTestId('hamburger-menu')).toBeInTheDocument()
+  })
+
   it('should render Login button/ My Profile section', () => {
     const setIsDrawerOpenMock = jest.fn()
     render(<Common {...Common.args} setIsDrawerOpen={setIsDrawerOpenMock} />)

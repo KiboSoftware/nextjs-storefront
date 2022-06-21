@@ -60,7 +60,9 @@
 
   "shop-all": "Shop All",
   "advertisment": "Advertisment",
-  "register-now": "Register Now",
   "login-to-your-account": "or Login to Your Account",
-  "create-an-account": "Create an Account"
+  "create-an-account": "Create an Account",
+
+  "find-a-store": "Find a Store",
+  "view-all": "View All"
 }

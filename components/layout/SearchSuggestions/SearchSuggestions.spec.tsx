@@ -2,14 +2,15 @@ import React from 'react'
 
 import '@testing-library/jest-dom'
 import { composeStories } from '@storybook/testing-react'
-import { render, screen } from '@testing-library/react'
+import { screen } from '@testing-library/react'
 
 import * as stories from './SearchSuggestions.stories'
+import { renderWithQueryClient } from '@/__test__/utils/renderWithQueryClient'
 
 const { Common } = composeStories(stories)
 
 const searchBarMock = () => <input data-testid="search-bar-component" name="searchInput" />
-jest.mock('../../common/SearchBar/SearchBar', () => searchBarMock)
+jest.mock('@/components/common/SearchBar/SearchBar', () => searchBarMock)
 jest.mock('@/hooks', () => ({
   useDebounce: jest.fn(() => ''),
   useSearchSuggestions: jest.fn(() => ''),
@@ -17,7 +18,7 @@ jest.mock('@/hooks', () => ({
 
 describe('[components] - SearchSuggestions', () => {
   const setup = () => {
-    render(<Common />)
+    renderWithQueryClient(<Common />)
   }
 
   it('should render component', async () => {

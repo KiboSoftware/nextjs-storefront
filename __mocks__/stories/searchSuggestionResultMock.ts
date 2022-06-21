@@ -1,44 +1,33 @@
-import { SearchSuggestionResult } from '@/lib/gql/types'
+import type { Query, SearchSuggestionResult } from '@/lib/gql/types'
 
-export const searchSuggestionResult: SearchSuggestionResult = {
+export const searchSuggestionResultMock: SearchSuggestionResult = {
   suggestionGroups: [
     {
       name: 'Pages',
       suggestions: [
         {
           suggestion: {
-            productCode: 'MS-JKT-005',
+            productCode: 'Tent_024',
             productImageUrls: [
-              '//d1slj7rdbjyb5l.cloudfront.net/17194-21127/cms/21127/files/81fbecbf-ab96-4d94-a7d5-71f24a40ac08',
-              '//d1slj7rdbjyb5l.cloudfront.net/17194-21127/cms/21127/files/e6289d12-b588-4775-aa5e-d14d7c6de164',
-              '//d1slj7rdbjyb5l.cloudfront.net/17194-21127/cms/21127/files/72cdaa3a-2272-4743-9b24-f5db3720d8ce',
-              '//d1slj7rdbjyb5l.cloudfront.net/17194-21127/cms/21127/files/77492a74-37c0-4d67-8f8c-1cd62791452e',
-              '//d1slj7rdbjyb5l.cloudfront.net/17194-21127/cms/21127/files/d1955362-a535-40b1-9902-17b352c4d165',
+              '//cdn-sb.mozu.com/26507-41315/cms/41315/files/4f995752-afeb-4850-9bd6-74a2814242e4',
+              '//cdn-sb.mozu.com/26507-41315/cms/41315/files/6f0a2412-40b3-42df-820a-32f57835c4b0',
+              '//cdn-sb.mozu.com/26507-41315/cms/41315/files/ad87ab85-d1af-4280-9469-b89bb907456e',
             ],
-            productName: 'Dynamics Jacket',
-            productTypeId: 5,
+            productName: 'Apex Gear Shed - North Face',
             content: {
-              productName: 'Dynamics Jacket',
+              productName: 'Apex Gear Shed - North Face',
               productImages: [
                 {
                   imageUrl:
-                    '//d1slj7rdbjyb5l.cloudfront.net/17194-21127/cms/21127/files/81fbecbf-ab96-4d94-a7d5-71f24a40ac08',
+                    '//cdn-sb.mozu.com/26507-41315/cms/41315/files/4f995752-afeb-4850-9bd6-74a2814242e4',
                 },
                 {
                   imageUrl:
-                    '//d1slj7rdbjyb5l.cloudfront.net/17194-21127/cms/21127/files/e6289d12-b588-4775-aa5e-d14d7c6de164',
+                    '//cdn-sb.mozu.com/26507-41315/cms/41315/files/6f0a2412-40b3-42df-820a-32f57835c4b0',
                 },
                 {
                   imageUrl:
-                    '//d1slj7rdbjyb5l.cloudfront.net/17194-21127/cms/21127/files/72cdaa3a-2272-4743-9b24-f5db3720d8ce',
-                },
-                {
-                  imageUrl:
-                    '//d1slj7rdbjyb5l.cloudfront.net/17194-21127/cms/21127/files/77492a74-37c0-4d67-8f8c-1cd62791452e',
-                },
-                {
-                  imageUrl:
-                    '//d1slj7rdbjyb5l.cloudfront.net/17194-21127/cms/21127/files/d1955362-a535-40b1-9902-17b352c4d165',
+                    '//cdn-sb.mozu.com/26507-41315/cms/41315/files/ad87ab85-d1af-4280-9469-b89bb907456e',
                 },
               ],
             },
@@ -46,33 +35,29 @@ export const searchSuggestionResult: SearchSuggestionResult = {
         },
         {
           suggestion: {
-            productCode: 'MS-JKT-013',
+            productCode: 'BUNDLE-121',
+            productName: 'Dog Camping Bundle',
+            content: { productName: 'Dog Camping Bundle' },
+          },
+        },
+        {
+          suggestion: {
+            productCode: 'DOG_011',
             productImageUrls: [
-              '//d1slj7rdbjyb5l.cloudfront.net/17194-21127/cms/21127/files/3c91a829-7b51-4542-81e9-2594a49380c4',
-              '//d1slj7rdbjyb5l.cloudfront.net/17194-21127/cms/21127/files/08093d35-e328-4ff6-8e42-ac782876fa07',
-              '//d1slj7rdbjyb5l.cloudfront.net/17194-21127/cms/21127/files/9f6c6b01-44a6-4fd4-89dc-2bbc25126e13',
-              '//d1slj7rdbjyb5l.cloudfront.net/17194-21127/cms/21127/files/245869bb-c8e1-4e3f-b823-0fab69243218',
+              '//cdn-sb.mozu.com/26507-41315/cms/41315/files/c27bb0e0-da30-4ccd-83c5-e8cf4ecd05c0',
+              '//cdn-sb.mozu.com/26507-41315/cms/41315/files/20545490-9abd-448e-8d0a-21f4302167f9',
             ],
-            productName: 'Stingray Shell Jacket',
-            productTypeId: 5,
+            productName: 'Crag Dog Collar',
             content: {
-              productName: 'Stingray Shell Jacket',
+              productName: 'Crag Dog Collar',
               productImages: [
                 {
                   imageUrl:
-                    '//d1slj7rdbjyb5l.cloudfront.net/17194-21127/cms/21127/files/3c91a829-7b51-4542-81e9-2594a49380c4',
+                    '//cdn-sb.mozu.com/26507-41315/cms/41315/files/c27bb0e0-da30-4ccd-83c5-e8cf4ecd05c0',
                 },
                 {
                   imageUrl:
-                    '//d1slj7rdbjyb5l.cloudfront.net/17194-21127/cms/21127/files/08093d35-e328-4ff6-8e42-ac782876fa07',
-                },
-                {
-                  imageUrl:
-                    '//d1slj7rdbjyb5l.cloudfront.net/17194-21127/cms/21127/files/9f6c6b01-44a6-4fd4-89dc-2bbc25126e13',
-                },
-                {
-                  imageUrl:
-                    '//d1slj7rdbjyb5l.cloudfront.net/17194-21127/cms/21127/files/245869bb-c8e1-4e3f-b823-0fab69243218',
+                    '//cdn-sb.mozu.com/26507-41315/cms/41315/files/20545490-9abd-448e-8d0a-21f4302167f9',
                 },
               ],
             },
@@ -80,18 +65,27 @@ export const searchSuggestionResult: SearchSuggestionResult = {
         },
         {
           suggestion: {
-            productCode: 'MS-JKT-014',
+            productCode: 'DOG_010',
             productImageUrls: [
-              '//d1slj7rdbjyb5l.cloudfront.net/17194-21127/cms/21127/files/0c8926f6-3340-4258-8891-adea03004913',
+              '//cdn-sb.mozu.com/26507-41315/cms/41315/files/fcb9b117-4e4e-4866-b328-987fadb2cb10',
+              '//cdn-sb.mozu.com/26507-41315/cms/41315/files/d05c1245-b38c-4007-afc6-59d0ad8e4c61',
+              '//cdn-sb.mozu.com/26507-41315/cms/41315/files/ee9ab56a-40b6-430b-87bc-44163cf387b1',
             ],
-            productName: 'Uproar Insulated Jacket',
-            productTypeId: 5,
+            productName: 'Hoopie Dog Collar',
             content: {
-              productName: 'Uproar Insulated Jacket',
+              productName: 'Hoopie Dog Collar',
               productImages: [
                 {
                   imageUrl:
-                    '//d1slj7rdbjyb5l.cloudfront.net/17194-21127/cms/21127/files/0c8926f6-3340-4258-8891-adea03004913',
+                    '//cdn-sb.mozu.com/26507-41315/cms/41315/files/fcb9b117-4e4e-4866-b328-987fadb2cb10',
+                },
+                {
+                  imageUrl:
+                    '//cdn-sb.mozu.com/26507-41315/cms/41315/files/d05c1245-b38c-4007-afc6-59d0ad8e4c61',
+                },
+                {
+                  imageUrl:
+                    '//cdn-sb.mozu.com/26507-41315/cms/41315/files/ee9ab56a-40b6-430b-87bc-44163cf387b1',
                 },
               ],
             },
@@ -99,18 +93,22 @@ export const searchSuggestionResult: SearchSuggestionResult = {
         },
         {
           suggestion: {
-            productCode: 'MS-JKT-001',
+            productCode: 'DOG_012',
             productImageUrls: [
-              '//d1slj7rdbjyb5l.cloudfront.net/17194-21127/cms/21127/files/3cc200c5-da4e-4970-a489-918eac28c163',
+              '//cdn-sb.mozu.com/26507-41315/cms/41315/files/db28e1aa-8438-4916-beef-d02b64a7f25c',
+              '//cdn-sb.mozu.com/26507-41315/cms/41315/files/94288824-da34-4624-a6d7-402ba37c9428',
             ],
-            productName: 'Brynn Insulated Jacket',
-            productTypeId: 5,
+            productName: 'Chaco Dog Leash',
             content: {
-              productName: 'Brynn Insulated Jacket',
+              productName: 'Chaco Dog Leash',
               productImages: [
                 {
                   imageUrl:
-                    '//d1slj7rdbjyb5l.cloudfront.net/17194-21127/cms/21127/files/3cc200c5-da4e-4970-a489-918eac28c163',
+                    '//cdn-sb.mozu.com/26507-41315/cms/41315/files/db28e1aa-8438-4916-beef-d02b64a7f25c',
+                },
+                {
+                  imageUrl:
+                    '//cdn-sb.mozu.com/26507-41315/cms/41315/files/94288824-da34-4624-a6d7-402ba37c9428',
                 },
               ],
             },
@@ -118,28 +116,159 @@ export const searchSuggestionResult: SearchSuggestionResult = {
         },
         {
           suggestion: {
-            productCode: 'MS-JKT-007',
+            productCode: 'DOG_002',
             productImageUrls: [
-              '//d1slj7rdbjyb5l.cloudfront.net/17194-21127/cms/21127/files/7a5e0370-5e11-40c6-94da-2045165006c8',
-              '//d1slj7rdbjyb5l.cloudfront.net/17194-21127/cms/21127/files/661d18e2-aa2a-4b7b-b172-8687645af9c1',
-              '//d1slj7rdbjyb5l.cloudfront.net/17194-21127/cms/21127/files/ab0a67ba-c8ae-4de6-8257-955a6a2b23cd',
+              '//cdn-sb.mozu.com/26507-41315/cms/41315/files/161f6aa8-87a6-4e27-8599-72492d8d29f4',
+              '//cdn-sb.mozu.com/26507-41315/cms/41315/files/8e281aa3-de29-4c1b-a316-4c911a2882c3',
+              '//cdn-sb.mozu.com/26507-41315/cms/41315/files/24492e10-8eed-4199-bb4a-0a4e858bdc1e',
             ],
-            productName: 'Great Scott Shell Jacket',
-            productTypeId: 5,
+            productName: 'Palisades Dog Pack',
             content: {
-              productName: 'Great Scott Shell Jacket',
+              productName: 'Palisades Dog Pack',
               productImages: [
                 {
                   imageUrl:
-                    '//d1slj7rdbjyb5l.cloudfront.net/17194-21127/cms/21127/files/7a5e0370-5e11-40c6-94da-2045165006c8',
+                    '//cdn-sb.mozu.com/26507-41315/cms/41315/files/161f6aa8-87a6-4e27-8599-72492d8d29f4',
                 },
                 {
                   imageUrl:
-                    '//d1slj7rdbjyb5l.cloudfront.net/17194-21127/cms/21127/files/661d18e2-aa2a-4b7b-b172-8687645af9c1',
+                    '//cdn-sb.mozu.com/26507-41315/cms/41315/files/8e281aa3-de29-4c1b-a316-4c911a2882c3',
                 },
                 {
                   imageUrl:
-                    '//d1slj7rdbjyb5l.cloudfront.net/17194-21127/cms/21127/files/ab0a67ba-c8ae-4de6-8257-955a6a2b23cd',
+                    '//cdn-sb.mozu.com/26507-41315/cms/41315/files/24492e10-8eed-4199-bb4a-0a4e858bdc1e',
+                },
+              ],
+            },
+          },
+        },
+        {
+          suggestion: {
+            productCode: 'DOG_001',
+            productImageUrls: [
+              '//cdn-sb.mozu.com/26507-41315/cms/41315/files/2532a920-fa80-4cec-be75-9e83c9bbce39',
+              '//cdn-sb.mozu.com/26507-41315/cms/41315/files/ced8c244-0701-45f3-895b-44feb832121f',
+              '//cdn-sb.mozu.com/26507-41315/cms/41315/files/35b774c1-2ed7-4c27-9355-5eefaf88e5e4',
+              '//cdn-sb.mozu.com/26507-41315/cms/41315/files/40c7fb8a-a044-4a14-84af-4b429c98311b',
+            ],
+            productName: 'Float Coat Dog PFD',
+            content: {
+              productName: 'Float Coat Dog PFD',
+              productImages: [
+                {
+                  imageUrl:
+                    '//cdn-sb.mozu.com/26507-41315/cms/41315/files/2532a920-fa80-4cec-be75-9e83c9bbce39',
+                },
+                {
+                  imageUrl:
+                    '//cdn-sb.mozu.com/26507-41315/cms/41315/files/ced8c244-0701-45f3-895b-44feb832121f',
+                },
+                {
+                  imageUrl:
+                    '//cdn-sb.mozu.com/26507-41315/cms/41315/files/35b774c1-2ed7-4c27-9355-5eefaf88e5e4',
+                },
+                {
+                  imageUrl:
+                    '//cdn-sb.mozu.com/26507-41315/cms/41315/files/40c7fb8a-a044-4a14-84af-4b429c98311b',
+                },
+              ],
+            },
+          },
+        },
+        {
+          suggestion: {
+            productCode: 'DOG_006',
+            productImageUrls: [
+              '//cdn-sb.mozu.com/26507-41315/cms/41315/files/c0ce4351-0529-4e7e-ae39-d3ef8963ea61',
+              '//cdn-sb.mozu.com/26507-41315/cms/41315/files/3b25d449-0749-48b1-863c-90fa2e50b33b',
+              '//cdn-sb.mozu.com/26507-41315/cms/41315/files/36985b19-8f0a-483b-93a0-e0f401c99cc5',
+            ],
+            productName: 'Quencher Collapsible Dog Bowl',
+            content: {
+              productName: 'Quencher Collapsible Dog Bowl',
+              productImages: [
+                {
+                  imageUrl:
+                    '//cdn-sb.mozu.com/26507-41315/cms/41315/files/c0ce4351-0529-4e7e-ae39-d3ef8963ea61',
+                },
+                {
+                  imageUrl:
+                    '//cdn-sb.mozu.com/26507-41315/cms/41315/files/3b25d449-0749-48b1-863c-90fa2e50b33b',
+                },
+                {
+                  imageUrl:
+                    '//cdn-sb.mozu.com/26507-41315/cms/41315/files/36985b19-8f0a-483b-93a0-e0f401c99cc5',
+                },
+              ],
+            },
+          },
+        },
+        {
+          suggestion: {
+            productCode: 'DOG_003',
+            productImageUrls: [
+              '//cdn-sb.mozu.com/26507-41315/cms/41315/files/2d467258-9144-46cb-a659-fcbb4af9892b',
+              '//cdn-sb.mozu.com/26507-41315/cms/41315/files/c4b174d5-3f5f-44e1-b8af-923724d5e556',
+              '//cdn-sb.mozu.com/26507-41315/cms/41315/files/6463ef6a-b29b-4ce6-9489-d1af9f291be2',
+            ],
+            productName: 'Fetch Camera Mount Dog Harness',
+            content: {
+              productName: 'Fetch Camera Mount Dog Harness',
+              productImages: [
+                {
+                  imageUrl:
+                    '//cdn-sb.mozu.com/26507-41315/cms/41315/files/2d467258-9144-46cb-a659-fcbb4af9892b',
+                },
+                {
+                  imageUrl:
+                    '//cdn-sb.mozu.com/26507-41315/cms/41315/files/c4b174d5-3f5f-44e1-b8af-923724d5e556',
+                },
+                {
+                  imageUrl:
+                    '//cdn-sb.mozu.com/26507-41315/cms/41315/files/6463ef6a-b29b-4ce6-9489-d1af9f291be2',
+                },
+              ],
+            },
+          },
+        },
+        {
+          suggestion: {
+            productCode: 'DOG_005',
+            productImageUrls: [
+              '//cdn-sb.mozu.com/26507-41315/cms/41315/files/f7419def-558a-480b-b6ed-8be95660cc9c',
+              '//cdn-sb.mozu.com/26507-41315/cms/41315/files/479cb413-c124-4bcf-b3de-fd2f7c101549',
+              '//cdn-sb.mozu.com/26507-41315/cms/41315/files/edae0261-45b7-4d8b-a9e5-cdda9736ff7b',
+              '//cdn-sb.mozu.com/26507-41315/cms/41315/files/96dbbaba-10d0-4d41-9cc7-ad753c379b8b',
+              '//cdn-sb.mozu.com/26507-41315/cms/41315/files/f8d158a1-7a51-4f36-8000-bd2dcaa0b375',
+              '//cdn-sb.mozu.com/26507-41315/cms/41315/files/b72dc167-c22b-48b9-bfaf-071df5f0bbf7',
+            ],
+            productName: 'Grip Trex Dog Boots - Set of 4',
+            content: {
+              productName: 'Grip Trex Dog Boots - Set of 4',
+              productImages: [
+                {
+                  imageUrl:
+                    '//cdn-sb.mozu.com/26507-41315/cms/41315/files/f7419def-558a-480b-b6ed-8be95660cc9c',
+                },
+                {
+                  imageUrl:
+                    '//cdn-sb.mozu.com/26507-41315/cms/41315/files/479cb413-c124-4bcf-b3de-fd2f7c101549',
+                },
+                {
+                  imageUrl:
+                    '//cdn-sb.mozu.com/26507-41315/cms/41315/files/edae0261-45b7-4d8b-a9e5-cdda9736ff7b',
+                },
+                {
+                  imageUrl:
+                    '//cdn-sb.mozu.com/26507-41315/cms/41315/files/96dbbaba-10d0-4d41-9cc7-ad753c379b8b',
+                },
+                {
+                  imageUrl:
+                    '//cdn-sb.mozu.com/26507-41315/cms/41315/files/f8d158a1-7a51-4f36-8000-bd2dcaa0b375',
+                },
+                {
+                  imageUrl:
+                    '//cdn-sb.mozu.com/26507-41315/cms/41315/files/b72dc167-c22b-48b9-bfaf-071df5f0bbf7',
                 },
               ],
             },
@@ -154,24 +283,8 @@ export const searchSuggestionResult: SearchSuggestionResult = {
           suggestion: {
             categoryId: 0,
             categoryType: 0,
-            categoryCode: '53',
-            content: {
-              name: 'Jackets',
-            },
-            isDisplayed: true,
-            count: 0,
-            updateDate: '0001-01-01T00:00:00.000Z',
-            shouldSlice: false,
-          },
-        },
-        {
-          suggestion: {
-            categoryId: 0,
-            categoryType: 0,
-            categoryCode: '34',
-            content: {
-              name: 'Ski Jackets',
-            },
+            categoryCode: 'DogGear',
+            content: { name: 'Dog Gear' },
             isDisplayed: true,
             count: 0,
             updateDate: '0001-01-01T00:00:00.000Z',
@@ -181,4 +294,8 @@ export const searchSuggestionResult: SearchSuggestionResult = {
       ],
     },
   ],
+}
+
+export const searchSuggestionMock: Query = {
+  suggestionSearch: searchSuggestionResultMock,
 }

@@ -2,8 +2,8 @@ import React from 'react'
 
 import { ComponentStory, ComponentMeta } from '@storybook/react'
 
-import { categoryTreeDataMock } from '../../../__mocks__/stories/categoryTreeDataMock'
 import MegaMenuItem from './MegaMenuItem'
+import { categoryTreeDataMock } from '@/__mocks__/stories/categoryTreeDataMock'
 
 const childrenCategories =
   categoryTreeDataMock.categoriesTree.items.filter((c) => c.isDisplayed === true)[0]

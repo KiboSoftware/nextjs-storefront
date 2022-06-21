@@ -1,8 +1,8 @@
 import { renderHook } from '@testing-library/react-hooks'
 
-import { orderMock } from '../../../__mocks__/stories/orderMock'
-import { createQueryClientWrapper } from '../../../__test__/utils/renderWithQueryClient'
 import { useCheckout } from './useCheckout'
+import { orderMock } from '@/__mocks__/stories/orderMock'
+import { createQueryClientWrapper } from '@/__test__/utils/renderWithQueryClient'
 
 describe('[hooks] useCheckout', () => {
   it('should return cart details when user provides valid cartId', async () => {
