@@ -1,9 +1,9 @@
 import ProductOption from '@/components/product/ProductOption/ProductOption'
 
-import type { CrProductOption } from '@/lib/gql/types'
+import type { Maybe, CrProductOption } from '@/lib/gql/types'
 
 interface ProductOptionListProps {
-  options: CrProductOption[]
+  options: Maybe<CrProductOption>[]
 }
 
 const ProductOptionList = (props: ProductOptionListProps) => {
@@ -11,8 +11,8 @@ const ProductOptionList = (props: ProductOptionListProps) => {
 
   return (
     <>
-      {options.map((option: CrProductOption) => (
-        <ProductOption key={option.stringValue} option={option} />
+      {options.map((option: Maybe<CrProductOption>) => (
+        <ProductOption key={option?.value} option={option} />
       ))}
     </>
   )

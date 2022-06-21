@@ -20,7 +20,7 @@ const ViewOrderDetails = (props: ViewOrderDetailsProps) => {
   const { order } = props
 
   const orderNumber = orderGetters.getOrderNumber(order)
-  const orderTotal = orderGetters.getOrderTotal(order)
+  const orderTotal = orderGetters.getTotal(order)
   const address = orderGetters.getShippingAddress(order)
 
   const pickupItems = checkoutGetters.getPickupItems(order)

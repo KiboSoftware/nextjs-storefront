@@ -19,7 +19,7 @@ import Price from '@/components/common/Price/Price'
 import ProductItem from '@/components/common/ProductItem/ProductItem'
 import QuantitySelector from '@/components/common/QuantitySelector/QuantitySelector'
 
-import type { CartItem as CartItemType, CrProductOption } from '@/lib/gql/types'
+import type { CartItem as CartItemType } from '@/lib/gql/types'
 
 const styles = {
   card: {
@@ -102,21 +102,15 @@ const CartItem = (props: CartItemProps) => {
         <Box sx={{ position: 'relative' }}>
           <Box sx={{ ...styles.cartItemContainer }}>
             <Box sx={{ ...styles.subcontainer }}>
-              <ProductItem
-                image={cartItem.product?.imageUrl || ''}
-                name={cartItem.product?.name || ''}
-                options={cartItem.product?.options as Array<CrProductOption>}
-              >
+              <ProductItem orderItem={cartItem}>
                 <Box>
                   <Price
                     variant="body2"
                     fontWeight="bold"
-                    price={'$' + (cartItem.product?.price?.price || 0).toString()}
-                    salePrice={
-                      (cartItem.product?.price?.salePrice &&
-                        cartItem.product?.price?.salePrice.toString()) ||
-                      undefined
-                    }
+                    price={t('currency', { val: (cartItem.product?.price?.price || 0).toString() })}
+                    salePrice={t('currency', {
+                      val: (cartItem.product?.price?.salePrice || 0).toString(),
+                    })}
                   />
                 </Box>
                 <Box sx={{ py: '0.5rem' }}>

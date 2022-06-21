@@ -58,7 +58,18 @@ export const orderMock: { checkout: Order } = {
             'Its tapered profile and ergonomic handle make it a joy to hold. Our smooth, threadless spout replicates our Perfect Spout, a first for any steel bottle.',
           imageUrl:
             '//d1slj7rdbjyb5l.cloudfront.net/17194-21127/cms/21127/files/3e90a2f3-01af-4280-93f5-6d35f84f78e5',
-          options: [],
+          options: [
+            {
+              attributeFQN: 'Tenant~color',
+              name: 'Color',
+              value: 'Blue',
+            },
+            {
+              attributeFQN: 'Tenant~size',
+              name: 'Size',
+              value: 'Large',
+            },
+          ],
           properties: [
             {
               attributeFQN: 'tenant~availability',
@@ -125,7 +136,18 @@ export const orderMock: { checkout: Order } = {
           description:
             'Delta representss the art of high style, high performance hydration with its striking, yet simple design and ergonomics',
           imageUrl: null,
-          options: [],
+          options: [
+            {
+              attributeFQN: 'Tenant~color',
+              name: 'Color',
+              value: 'Red',
+            },
+            {
+              attributeFQN: 'Tenant~size',
+              name: 'Size',
+              value: 'Small',
+            },
+          ],
           properties: [
             {
               attributeFQN: 'tenant~availability',
@@ -189,7 +211,18 @@ export const orderMock: { checkout: Order } = {
             '<span style="color: rgb(51, 51, 51); font-family: verdana, sans-serif; line-height: 17px; text-align: left; "><font size="3"><i>The Wi-Fi-enabled Garmin VIRB Elite action camera harnesses the power of GPS allowing video recordings that automatically start and stop with GPS-enabled triggers you set, such as speed or altitude.</i></font></span>',
           imageUrl:
             '//d1slj7rdbjyb5l.cloudfront.net/17194-21127/cms/21127/files/6e0389db-5b78-490d-88b0-28af87528c5b',
-          options: [],
+          options: [
+            {
+              attributeFQN: 'Tenant~size',
+              name: 'Size',
+              value: 'XS',
+            },
+            {
+              attributeFQN: 'Tenant~color',
+              name: 'Color',
+              value: 'Blue',
+            },
+          ],
           properties: [
             {
               attributeFQN: 'tenant~availability',

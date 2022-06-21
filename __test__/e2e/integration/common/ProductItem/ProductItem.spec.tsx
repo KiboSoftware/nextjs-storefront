@@ -5,7 +5,7 @@ import { render, screen } from '@testing-library/react'
 
 import * as stories from '@/components/common/ProductItem/ProductItem.stories'
 
-const { Common, WithPriceLabel } = composeStories(stories)
+const { Common } = composeStories(stories)
 
 describe('[component] - ProductItem Integration', () => {
   const setup = () => {
@@ -15,24 +15,17 @@ describe('[component] - ProductItem Integration', () => {
   it('should render component', () => {
     setup()
 
-    const qty = screen.getByText(/Qty/)
+    const image = screen.getByRole('img')
+    const options = Common.args?.orderItem?.product?.options || []
 
-    expect(qty).toBeVisible()
-  })
-})
+    expect(image).toHaveAttribute('alt', Common.args?.orderItem?.product?.name)
 
-describe('[component] - ProductItem with Price Label', () => {
-  const setup = () => {
-    render(<WithPriceLabel {...WithPriceLabel.args} />)
-  }
-
-  it('should render component with price label inside details', () => {
-    setup()
-
-    const price = screen.getByText(WithPriceLabel?.args?.price || '')
-    const salePrice = screen.getByText(WithPriceLabel?.args?.salePrice || '')
-
-    expect(price).toBeVisible()
-    expect(salePrice).toBeVisible()
+    options?.map((option) => {
+      expect(screen.getByText(`${option?.name}:`)).toBeVisible()
+      expect(screen.getByText(`${option?.value}`)).toBeVisible()
+    })
+    expect(
+      screen.getByText(`$${Common.args?.orderItem?.product?.price?.price || ''}`)
+    ).toBeVisible()
   })
 })

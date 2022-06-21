@@ -5,7 +5,7 @@ import { render, screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { RouterContext } from 'next/dist/shared/lib/router-context'
 
-import { createMockRouter } from '../../../../utils/createMockRouter'
+import { createMockRouter } from '@/__test__/utils/createMockRouter'
 import * as stories from '@/components/add-to-cart-dialog/AddToCartDialog/AddToCartDialog.stories' // import all stories from the stories file
 
 const { Common } = composeStories(stories)
@@ -28,7 +28,7 @@ describe('[components] Add To Cart Dialog integration', () => {
     })
     const productName = screen.getByText(name)
     const fulfillmentMethod = screen.getByText(`${item?.fulfillmentMethod}`)
-    const taxSubTotalTotal = screen.getAllByText(/currency/i)
+    const taxSubTotal = screen.getAllByText(/currency/i)
     const goToCartButton = screen.getByRole('button', {
       name: /go-to-cart/i,
     })
@@ -41,7 +41,7 @@ describe('[components] Add To Cart Dialog integration', () => {
     expect(closeIconButton).toBeVisible()
     expect(productName).toBeInTheDocument()
     expect(fulfillmentMethod).toBeVisible()
-    expect(taxSubTotalTotal).toHaveLength(4)
+    expect(taxSubTotal).toHaveLength(5)
     expect(goToCartButton).toBeVisible()
     expect(continueShoppingButton).toBeVisible()
   })

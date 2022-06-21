@@ -4,13 +4,11 @@ import { composeStories } from '@storybook/testing-react'
 import { fireEvent, render, screen, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 
-import {
-  shipItems,
-  pickupItems,
-  getShippingRates,
-} from '../../../../../__mocks__/productItemListMockData'
+import { getShippingRates } from '@/__mocks__/productItemListMockData'
 import { ShippingMethodProps } from '@/components/checkout/Shipping/OrderItems/ShippingMethod'
 import * as stories from '@/components/checkout/Shipping/OrderItems/ShippingMethod.stories'
+
+import type { Maybe, CrOrderItem } from '@/lib/gql/types'
 
 const { Common } = composeStories(stories)
 const onChangeMock = jest.fn()
@@ -56,7 +54,7 @@ describe('[component] - ShippingMethod', () => {
 
   it('should have shippingMethods only for shipping to home items', async () => {
     const params = {
-      shipItems: shipItems,
+      shipItems: Common.args?.shipItems as Maybe<CrOrderItem>[],
       pickupItems: [],
       orderShipmentMethods: getShippingRates.orderShipmentMethods,
       onShippingMethodChange: (name: string, value: string) => ({ name, value }),
@@ -78,7 +76,7 @@ describe('[component] - ShippingMethod', () => {
   it('should not have shippingMethods options if no shipping items are there', () => {
     const params = {
       shipItems: [],
-      pickupItems: pickupItems,
+      pickupItems: Common.args?.pickupItems as Maybe<CrOrderItem>[],
       orderShipmentMethods: getShippingRates.orderShipmentMethods,
       onShippingMethodChange: (name: string, value: string) => ({ name, value }),
     }
@@ -90,8 +88,8 @@ describe('[component] - ShippingMethod', () => {
 
   it('should have products when order items are there', () => {
     const params = {
-      shipItems: shipItems,
-      pickupItems: pickupItems,
+      shipItems: Common.args?.shipItems as Maybe<CrOrderItem>[],
+      pickupItems: Common.args?.pickupItems as Maybe<CrOrderItem>[],
       orderShipmentMethods: getShippingRates.orderShipmentMethods,
       onShippingMethodChange: (name: string, value: string) => ({ name, value }),
     }
@@ -105,8 +103,8 @@ describe('[component] - ShippingMethod', () => {
 
   it('should call onClickStoreLocatorMock when click onClickStoreLocator for pickupitems only', () => {
     const params = {
-      shipItems: shipItems,
-      pickupItems: pickupItems,
+      shipItems: Common.args?.shipItems as Maybe<CrOrderItem>[],
+      pickupItems: Common.args?.pickupItems as Maybe<CrOrderItem>[],
       orderShipmentMethods: getShippingRates.orderShipmentMethods,
       onShippingMethodChange: (name: string, value: string) => ({ name, value }),
     }

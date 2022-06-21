@@ -16,23 +16,17 @@ import { useTranslation } from 'next-i18next'
 import KiboImage from '@/components/common/KiboImage/KiboImage'
 import Price from '@/components/common/Price/Price'
 import ProductOptionList from '@/components/product/ProductOptionList/ProductOptionList'
+import { checkoutGetters } from '@/lib/getters'
 import DefaultImage from '@/public/product_placeholder.svg'
 
-import type { CrProductOption, Maybe } from '@/lib/gql/types'
+import type { Maybe, CrOrderItem, CartItem } from '@/lib/gql/types'
+
 export interface ProductItemProps {
-  id?: Maybe<string>
-  productCode?: Maybe<string>
-  image: string
-  name: string
-  options: CrProductOption[]
-  price?: string
-  salePrice?: string
-  qty?: number
+  orderItem: Maybe<CrOrderItem> | Maybe<CartItem>
+  expectedDeliveryDate?: string
   isPickupItem?: boolean
-  estimatedPickupDate?: string
-  itemPurchaseLocation?: string
-  onClickStoreLocator?: () => void
   children?: ReactNode
+  onClickStoreLocator?: () => void
 }
 
 const styles = {
@@ -62,23 +56,11 @@ const ProductLabel = (props: { label: string }) => (
 )
 
 const ProductItem = (props: ProductItemProps) => {
-  const {
-    id,
-    productCode,
-    image,
-    name,
-    options,
-    price,
-    salePrice,
-    qty,
-    isPickupItem,
-    estimatedPickupDate,
-    itemPurchaseLocation,
-    onClickStoreLocator,
-    children,
-  } = props
-
+  const { orderItem, expectedDeliveryDate, isPickupItem, onClickStoreLocator, children } = props
   const { t } = useTranslation('common')
+  const { id, productCode, image, name, options, price, salePrice, qty, purchaseLocation } =
+    checkoutGetters.getProductDetails(orderItem)
+
   const theme = useTheme()
   const mdScreen = useMediaQuery(theme.breakpoints.up('md'))
   const [expanded, setExpanded] = useState<boolean>(true)
@@ -107,7 +89,7 @@ const ProductItem = (props: ProductItemProps) => {
 
             <Box data-testid="productDetails">
               <Box sx={{ display: { xs: 'block', sm: 'block', md: 'none' } }}>
-                {(options.length > 0 || price || qty) && (
+                {options.length > 0 && children && (
                   <Box
                     display="flex"
                     alignItems="center"
@@ -127,31 +109,31 @@ const ProductItem = (props: ProductItemProps) => {
               <Collapse in={mdScreen ? true : expanded} timeout="auto" unmountOnExit>
                 <ProductOptionList options={options} />
 
-                {qty && (
+                {qty && !children && (
                   <Box>
                     <ProductLabel label={t('qty')} /> {qty}
                   </Box>
                 )}
-                {(price || salePrice) && (
+                {(price || salePrice) && !children && (
                   <Box sx={{ display: 'inline-flex' }}>
                     <ProductLabel label={t('price')} />
                     <Price
                       variant="body2"
                       fontWeight="normal"
-                      price={price}
-                      salePrice={salePrice}
+                      price={t('currency', { val: price })}
+                      salePrice={t('currency', { val: salePrice })}
                     />
                   </Box>
                 )}
               </Collapse>
-              {isPickupItem && estimatedPickupDate && (
+              {isPickupItem && expectedDeliveryDate && (
                 <Box
                   sx={{ display: 'inline-flex' }}
                   color={theme.palette.primary.main}
                   data-testid="pickup-info"
                 >
                   <Typography variant="body2" fontWeight="bold">
-                    {t('estimated-pickup')}: {estimatedPickupDate}
+                    {t('estimated-pickup')}: {expectedDeliveryDate}
                   </Typography>
                 </Box>
               )}
@@ -166,7 +148,7 @@ const ProductItem = (props: ProductItemProps) => {
               {t('pickup')}:
             </Typography>
             <Typography variant="caption" pl={1}>
-              {itemPurchaseLocation}
+              {purchaseLocation}
             </Typography>
           </Box>
           <Box px={2}>
@@ -177,7 +159,7 @@ const ProductItem = (props: ProductItemProps) => {
               color="text.primary"
               onClick={onClickStoreLocator}
             >
-              {itemPurchaseLocation ? t('change-store') : t('select-store')}
+              {purchaseLocation ? t('change-store') : t('select-store')}
             </Link>
           </Box>
         </>

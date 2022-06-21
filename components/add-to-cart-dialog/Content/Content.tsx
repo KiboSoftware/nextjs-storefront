@@ -6,7 +6,8 @@ import { useTranslation } from 'next-i18next'
 
 import ProductItem from '@/components/common/ProductItem/ProductItem'
 
-import type { CartItem as CartItemType, CrProductOption } from '@/lib/gql/types'
+import type { CartItem as CartItemType } from '@/lib/gql/types'
+
 interface CartContentProps {
   cartItem: CartItemType
 }
@@ -50,17 +51,7 @@ const Content = (props: CartContentProps) => {
   return (
     <Box sx={{ width: '100%' }} data-testid="content-component">
       <Box>
-        <ProductItem
-          image={cartItem.product?.imageUrl || ''}
-          name={cartItem.product?.name || ''}
-          options={cartItem.product?.options as Array<CrProductOption>}
-          price={t('currency', { val: (cartItem.product?.price?.price || 0).toString() })}
-          salePrice={
-            (cartItem.product?.price?.salePrice &&
-              t('currency', { val: cartItem.product?.price?.salePrice.toString() })) ||
-            undefined
-          }
-        />
+        <ProductItem orderItem={cartItem} />
       </Box>
       <Divider />
       <StyledPriceSection>

@@ -3,7 +3,7 @@ import React from 'react'
 import { composeStories } from '@storybook/testing-react'
 import { render, screen } from '@testing-library/react'
 
-import * as stories from '../../../../../components/product/ProductOptionList/ProductOptionList.stories'
+import * as stories from '@/components/product/ProductOptionList/ProductOptionList.stories'
 
 const { Common } = composeStories(stories)
 
@@ -21,10 +21,10 @@ describe('[component] - ProductOptionList Integration', () => {
     expect(productItem).toHaveLength(count)
 
     Common.args?.options?.map((option) => {
-      const name = screen.getByText(`${option.name}:`)
+      const name = screen.getByText(`${option?.name}:`)
       expect(name).toBeVisible()
 
-      const value = screen.getByText(`${option.value}`)
+      const value = screen.getByText(`${option?.value}`)
       expect(value).toBeVisible()
     })
   })

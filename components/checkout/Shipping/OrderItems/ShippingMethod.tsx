@@ -2,25 +2,25 @@ import { Typography, Box, MenuItem, Divider } from '@mui/material'
 import { useTranslation } from 'next-i18next'
 
 import KiboSelect from '@/components/common/KiboSelect/KiboSelect'
-import { ProductItemProps } from '@/components/common/ProductItem/ProductItem'
 import ProductItemList from '@/components/common/ProductItemList/ProductItemList'
+import { orderGetters } from '@/lib/getters'
 
-import type { ShippingRate } from '@/lib/gql/types'
+import type { Maybe, CrOrderItem, ShippingRate } from '@/lib/gql/types'
 
 export type ShippingMethodProps = {
-  shipItems: ProductItemProps[]
-  pickupItems: ProductItemProps[]
+  shipItems: Maybe<CrOrderItem>[]
+  pickupItems: Maybe<CrOrderItem>[]
   orderShipmentMethods: ShippingRate[]
   onShippingMethodChange: (name: string, value: string) => void
   onClickStoreLocator?: () => void
 }
 export type ShipItemListProps = {
-  shipItems: ProductItemProps[]
+  shipItems: Maybe<CrOrderItem>[]
   orderShipmentMethods: ShippingRate[]
   onShippingMethodChange: (name: string, value: string) => void
 }
 export type PickupItemListProps = {
-  pickupItems: ProductItemProps[]
+  pickupItems: Maybe<CrOrderItem>[]
   onClickChangeStore?: () => void
 }
 
@@ -67,6 +67,8 @@ const ShipItemList = (shipProps: ShipItemListProps) => {
 const PickupItemList = (pickupProps: PickupItemListProps) => {
   const { pickupItems, onClickChangeStore } = pickupProps
   const { t } = useTranslation('common')
+  const expectedDeliveryDate = orderGetters.getExpectedDeliveryDate(pickupItems)
+  const isPickupItem = pickupItems.length > 0
 
   return (
     <Box data-testid="pickup-items">
@@ -77,7 +79,12 @@ const PickupItemList = (pickupProps: PickupItemListProps) => {
         </Typography>
       </Box>
       <Box>
-        <ProductItemList items={pickupItems} onClickChangeStore={onClickChangeStore} />
+        <ProductItemList
+          items={pickupItems}
+          isPickupItem={isPickupItem}
+          expectedDeliveryDate={expectedDeliveryDate}
+          onClickChangeStore={onClickChangeStore}
+        />
       </Box>
     </Box>
   )

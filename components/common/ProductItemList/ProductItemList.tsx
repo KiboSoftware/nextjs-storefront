@@ -2,15 +2,19 @@ import React from 'react'
 
 import { Stack, Divider } from '@mui/material'
 
-import ProductItem, { ProductItemProps } from '@/components/common/ProductItem/ProductItem'
+import ProductItem from '@/components/common/ProductItem/ProductItem'
+
+import type { Maybe, CrOrderItem } from '@/lib/gql/types'
 
 export type ProductItemListProps = {
-  items?: ProductItemProps[]
+  items?: Maybe<CrOrderItem>[]
+  expectedDeliveryDate?: string
+  isPickupItem?: boolean
   onClickChangeStore?: () => void
 }
 
 const ProductItemList = (props: ProductItemListProps) => {
-  const { items, onClickChangeStore } = props
+  const { items, expectedDeliveryDate, isPickupItem = false, onClickChangeStore } = props
 
   return (
     <Stack
@@ -19,11 +23,13 @@ const ProductItemList = (props: ProductItemListProps) => {
       spacing={2}
       data-testid="product-item-stack"
     >
-      {items?.map((item: ProductItemProps, index) => (
+      {items?.map((item: Maybe<CrOrderItem>) => (
         <ProductItem
-          {...item}
+          orderItem={item}
+          isPickupItem={isPickupItem}
+          expectedDeliveryDate={expectedDeliveryDate}
           onClickStoreLocator={onClickChangeStore}
-          key={`${item.name}-${index}`}
+          key={item?.id}
           data-testid="product-item"
         ></ProductItem>
       ))}
