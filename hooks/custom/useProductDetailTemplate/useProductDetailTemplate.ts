@@ -76,9 +76,9 @@ export const useProductDetailTemplate = (props: UseProductDetailTemplateProps) =
       })
 
       const responseOptions = configureProductResponse.options
-        ?.filter((option) => option?.values?.some((value) => value?.isSelected))
+        ?.filter((option) => option?.values?.some((val) => val?.isSelected))
         .map((option) => {
-          const selected = option?.values?.find((value) => value?.isSelected)
+          const selected = option?.values?.find((optionVal) => optionVal?.isSelected)
           return {
             attributeFQN: option?.attributeFQN,
             value: selected?.value,

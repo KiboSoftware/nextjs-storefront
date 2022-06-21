@@ -96,7 +96,7 @@ const PriceRangeTypography = ({ priceRange }: { priceRange: ProductPriceRange })
 }
 
 const Price = (props: PriceProps) => {
-  const { price, salePrice, priceRange, ...rest } = props
+  const { price, salePrice, priceRange } = props
 
   return (
     <Box display="flex" gap="0.625rem" alignItems="center">

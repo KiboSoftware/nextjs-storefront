@@ -17,7 +17,7 @@ const Template: ComponentStory<typeof ProductDetailTemplate> = (args) => (
 
 export const Common = Template.bind({})
 Common.args = {
-  product: ProductDataMock as ProductCustom,
+  product: ProductDataMock,
   breadcrumbs: [
     {
       text: 'Home',
@@ -28,7 +28,7 @@ Common.args = {
 
 export const Mobile = Template.bind({})
 Mobile.args = {
-  product: ProductDataMock as ProductCustom,
+  product: ProductDataMock,
 }
 Mobile.parameters = {
   viewport: {
