@@ -17,17 +17,28 @@ import { storeClientCookie } from '@/lib/helpers/cookieHelper'
 import type { CustomerAccount } from '@/lib/gql/types'
 
 interface AuthContextType {
-  isAuthenticated?: boolean
+  isAuthenticated: boolean
   user?: CustomerAccount
-  login: (params: LoginData, toggleLoginDialog: () => void) => void
+  login: (params: LoginData, toggleLoginDialog: () => void) => any
   setAuthError: Dispatch<SetStateAction<string>>
-  authError?: string
+  authError: string
+  setUser: any
 }
 interface AuthContextProviderProps {
   children: ReactNode
 }
 
-export const UserContext = createContext({} as AuthContextType)
+const initialState = {
+  isAuthenticated: false,
+  authError: '',
+  user: { id: 0 },
+  login: () => null,
+  setAuthError: () => '',
+  setUser: () => '',
+}
+
+export const UserContext = createContext(initialState as AuthContextType)
+UserContext.displayName = 'AuthContext'
 
 export const AuthContextProvider = ({ children }: AuthContextProviderProps) => {
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false)
@@ -80,6 +91,7 @@ export const AuthContextProvider = ({ children }: AuthContextProviderProps) => {
     authError,
     setAuthError,
     login,
+    setUser,
   }
 
   useEffect(() => {
