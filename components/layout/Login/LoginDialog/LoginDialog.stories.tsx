@@ -3,7 +3,7 @@ import React from 'react'
 import { ComponentStory, ComponentMeta } from '@storybook/react'
 
 import LoginDialog from './LoginDialog'
-import { UIStateContext } from '@/contexts'
+import { UIStateContext } from '@/context'
 const dialogdata = { isLoginDialogOpen: true, toggleLoginDialog: () => null }
 export default {
   component: LoginDialog,

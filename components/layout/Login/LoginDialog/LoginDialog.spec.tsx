@@ -6,7 +6,7 @@ import { act, render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 
 import * as stories from './LoginDialog.stories' // import all stories from the stories file
-import { UIContextProvider } from '@/contexts'
+import { UIContextProvider } from '@/context'
 
 const { Common } = composeStories(stories)
 

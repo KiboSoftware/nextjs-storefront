@@ -3,6 +3,7 @@
 module.exports = {
   collectCoverageFrom: [
     'components/**/*.{js,jsx,ts,tsx}',
+    'context/**/*.{js,jsx,ts,tsx}',
     'lib/helpers/**/*.{js,jsx,ts,tsx}',
     'lib/getters/**/*.{js,jsx,ts,tsx}',
     '!**/*.d.ts',
@@ -26,8 +27,8 @@ module.exports = {
     '^@/components/(.*)$': '<rootDir>/components/$1',
     // Handle Lib aliases
     '^@/lib/(.*)$': '<rootDir>/lib/$1',
-    // Handle contexts aliases
-    '^@/contexts(.*)$': '<rootDir>/contexts/$1',
+    // Handle context aliases
+    '^@/context(.*)$': '<rootDir>/context/$1',
     // Handle mock aliases
     '^@/__mocks__/(.*)$': '<rootDir>/__mocks__/$1',
     // Handle test aliases

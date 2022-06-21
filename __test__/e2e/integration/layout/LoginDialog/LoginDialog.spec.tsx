@@ -7,7 +7,7 @@ import { render, screen, act, fireEvent, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 
 import * as stories from '@/components/layout/Login/LoginDialog/LoginDialog.stories'
-import { UIStateContext, UserContext } from '@/contexts'
+import { UIStateContext, UserContext } from '@/context'
 
 const { Common } = composeStories(stories)
 const uiContextValues = { isLoginDialogOpen: true, toggleLoginDialog: jest.fn() }

@@ -5,7 +5,7 @@ import { useTranslation } from 'next-i18next'
 
 import KiboDialog from '@/components/common/KiboDialog/KiboDialog'
 import LoginContent, { LoginData } from '@/components/layout/Login/LoginContent/LoginContent'
-import { useAuthContext, useUIContext } from '@/contexts'
+import { useAuthContext, useUIContext } from '@/context'
 
 export interface LoginDialogProps {
   isOpen?: boolean

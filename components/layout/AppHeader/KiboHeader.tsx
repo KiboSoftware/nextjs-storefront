@@ -27,7 +27,7 @@ import HeaderAction from '@/components/common/HeaderAction/HeaderAction'
 import KiboLogo from '@/components/common/KiboLogo/KiboLogo'
 import { HamburgerMenu } from '@/components/layout'
 import MegaMenu from '@/components/layout/MegaMenu/MegaMenu'
-import { useAuthContext, useUIContext } from '@/contexts'
+import { useAuthContext, useUIContext } from '@/context'
 import { useCategoryTree } from '@/hooks'
 import type { NavigationLink } from '@/lib/types'
 
