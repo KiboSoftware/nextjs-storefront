@@ -202,6 +202,20 @@ const getCheckoutDetails = (checkout: Order): CheckoutDetails => {
   }
 }
 
+const getProductDetails = (item: Maybe<CrOrderItem> | Maybe<CartItem>) => {
+  return {
+    id: getProductId(item),
+    productCode: getProductCode(item),
+    image: getProductImage(item),
+    name: getProductName(item),
+    options: getProductOptions(item),
+    qty: getProductQuantity(item),
+    price: getProductPrice(item),
+    salePrice: getProductSalePrice(item),
+    purchaseLocation: getPurchaseLocation(item),
+  }
+}
+
 export const checkoutGetters = {
   getOrderNumber,
   getEmail,
@@ -231,4 +245,5 @@ export const checkoutGetters = {
   getPaymentMethods,
   getOrderSummary,
   getCheckoutDetails,
+  getProductDetails,
 }
