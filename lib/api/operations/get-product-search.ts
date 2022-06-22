@@ -1,52 +1,50 @@
 import { fetcher } from '@/lib/api/util'
 import { searchProductsQuery } from '@/lib/gql/queries'
 
-import type { NextApiRequest, NextApiResponse } from 'next'
+import type { QueryProductSearchArgs } from '@/lib/gql/types'
 
-function getFacetValueFilter(categoryCode: any, filters: Array<string> = []) {
+function getFacetValueFilter(categoryCode: string, filters: Array<string> = []) {
   let facetValueFilter = ''
   if (categoryCode) {
     facetValueFilter = `categoryCode:${categoryCode},`
   }
-  return facetValueFilter + filters.join(',')
+  return facetValueFilter + filters
 }
 
 const buildProductSearchVars = ({
-  categoryCode = null,
+  categoryCode = '',
   pageSize = 30,
-  filters = {},
+  filters = [],
   startIndex = 0,
   sort = '',
   search = '',
+  filter = '',
 }: {
-  categoryCode: null
+  categoryCode: string
   pageSize: number
-  filters: any
+  filters: Array<string>
   startIndex: number
   sort: string
   search: string
-}): any => {
+  filter: string
+}): QueryProductSearchArgs => {
   let facetTemplate = ''
-  let filter = ''
+  let facetHierValue = ''
+  facetTemplate = `categoryCode:${categoryCode || '_root'}`
   if (categoryCode) {
-    facetTemplate = `categoryCode:${categoryCode}`
-    filter = `categoryCode req ${categoryCode}`
+    facetHierValue = `categoryCode:${categoryCode}`
   }
-  const facetFilterList = Object.keys(filters)
-    .filter((k) => filters[k].length)
-    .reduce((accum: Array<string>, k: string) => {
-      return [...accum, ...filters[k].map((facetValue: string) => `Tenant~${k}:${facetValue}`)]
-    }, [])
 
-  const facetValueFilter = getFacetValueFilter(categoryCode, facetFilterList)
+  const facetValueFilter = getFacetValueFilter(categoryCode, filters)
   return {
     query: search,
     startIndex,
     pageSize,
     sortBy: sort,
-    filter: filter,
+    facetHierValue,
     facetTemplate,
     facetValueFilter,
+    filter,
   }
 }
 

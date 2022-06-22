@@ -5,26 +5,19 @@ import { Box, Button, FormLabel, Link, Typography, SxProps } from '@mui/material
 import { Theme } from '@mui/material/styles'
 import { useTranslation } from 'next-i18next'
 
-import type { FacetValue } from '@/lib/gql/types'
+import { uiHelpers } from '@/lib/helpers'
+import type { BreadCrumb as BreadCrumbType } from '@/lib/types'
 
-interface CategoryFacetChildren {
-  label: string
-  count: number
-  value: string
-  filterValue: string
-  isDisplayed: boolean
+import type { FacetValue, Maybe } from '@/lib/gql/types'
+
+export interface CategoryFacetData {
+  header?: string
+  childrenCategories?: FacetValue[]
 }
-
-interface CategoryFacetData {
-  header: string
-  childrenCategories: CategoryFacetChildren[]
-}
-
-interface CategoryFacetProps {
+export type CategoryFacetProps = {
   initialItemsToShow?: number
   categoryFacet: CategoryFacetData
-  onCategoryChildrenSelection: (categoryCode: string) => void
-  onBackButtonClick: () => void
+  breadcrumbs: BreadCrumbType[]
 }
 
 const styles = {
@@ -57,11 +50,13 @@ const styles = {
     cursor: 'pointer',
   },
   backButton: {
+    typography: 'body2',
     textDecoration: 'underline',
     color: 'text.primary',
     display: 'flex',
     alignItems: 'center',
     padding: '0.5rem 0',
+    cursor: 'pointer',
   },
   childrenLink: {
     textDecoration: 'none',
@@ -75,25 +70,17 @@ const styles = {
 }
 
 const CategoryFacet = (props: CategoryFacetProps) => {
-  const {
-    initialItemsToShow = 5,
-    categoryFacet,
-    onCategoryChildrenSelection,
-    onBackButtonClick,
-  } = props
+  const { initialItemsToShow = 5, categoryFacet, breadcrumbs } = props
+  const { getCatLink } = uiHelpers()
   const { t } = useTranslation(['product', 'common'])
   const viewMore = t('common:view-more')
   const viewLess = t('common:view-less')
 
-  const childrenLength = categoryFacet.childrenCategories.length
+  const childrenLength = categoryFacet?.childrenCategories?.length || 0
   const isViewMoreVisible = childrenLength > initialItemsToShow
 
   const [buttonText, setButtonText] = useState<string>(viewMore)
-  const [filteredValues, setFilteredValues] = useState<FacetValue[]>([])
-
-  const handleCategoryLink = (categoryCode: string) => {
-    onCategoryChildrenSelection(categoryCode)
-  }
+  const [filteredValues, setFilteredValues] = useState<Maybe<FacetValue>[]>([])
 
   const handleViewMore = () => {
     setButtonText(() => (buttonText === viewMore ? viewLess : viewMore))
@@ -112,14 +99,14 @@ const CategoryFacet = (props: CategoryFacetProps) => {
         {categoryFacet.header}
       </Typography>
       <Box sx={styles.childrenCategories}>
-        {filteredValues.map((child) => (
+        {filteredValues?.map((child) => (
           <Link
-            key={child.value}
+            key={child?.value}
             underline="none"
             variant="body2"
             color="text.primary"
             sx={styles.link}
-            onClick={() => handleCategoryLink(child.value as string)}
+            href={getCatLink(child?.value as string)}
           >
             {child?.label}
             <FormLabel data-testid="count" aria-label={t('count')} sx={{ ...styles.formLabel }}>
@@ -142,15 +129,16 @@ const CategoryFacet = (props: CategoryFacetProps) => {
             {buttonText}
           </Button>
         )}
-        <Link
-          component="button"
-          aria-label={t('back')}
-          onClick={onBackButtonClick}
-          sx={{ ...styles.backButton }}
-        >
-          <ChevronLeft />
-          {t('common:back')}
-        </Link>
+        {breadcrumbs?.length > 1 && (
+          <Link
+            href={breadcrumbs[breadcrumbs?.length - 2].link || '/'}
+            aria-label={t('common:back')}
+            sx={{ ...styles.backButton }}
+          >
+            <ChevronLeft />
+            {t('common:back')}
+          </Link>
+        )}
       </Box>
     </Box>
   )

@@ -10,7 +10,8 @@ import type { Facet as FacetType } from '@/lib/gql/types'
 
 // Interface
 interface FacetListProps {
-  facetList: FacetType[]
+  facetList?: FacetType[]
+  initialItemsToShow?: number
   onFilterByClose: () => void
 }
 
@@ -35,7 +36,7 @@ const styles = {
 
 // Component
 const FacetList = (props: FacetListProps) => {
-  const { facetList = [], onFilterByClose } = props
+  const { facetList = [], onFilterByClose, initialItemsToShow = 6 } = props
 
   const { t } = useTranslation('common')
   const theme = useTheme()
@@ -61,7 +62,12 @@ const FacetList = (props: FacetListProps) => {
         {facetList
           .filter((facet) => facet?.facetType === 'Value' || facet?.facetType === 'RangeQuery')
           .map((facet, index) => (
-            <Facet key={index} numberOfItemsToShow={6} label={facet.label} values={facet.values} />
+            <Facet
+              key={index}
+              numberOfItemsToShow={initialItemsToShow}
+              label={facet?.label}
+              values={facet?.values}
+            />
           ))}
       </Stack>
     </>

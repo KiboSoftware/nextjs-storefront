@@ -1,42 +1,46 @@
 import getConfig from 'next/config'
 
-import { Product, ProductOption, ProductPriceRange, ProductProperty } from '../gql/types'
-import { buildBreadcrumbs, validateProductVariations } from '../helpers'
-import { ProductCustom, BreadCrumb } from '../types'
+import { buildBreadcrumbs, validateProductVariations } from '@/lib/helpers'
+import { uiHelpers } from '@/lib/helpers'
+import type { ProductCustom, BreadCrumb } from '@/lib/types'
 
-const ratingAttrFQN = `tenant~rating`
-const getName = (product: ProductCustom) => product?.content?.productName
+import type { Product, ProductOption, ProductPriceRange, ProductProperty } from '@/lib/gql/types'
 
-const getProductId = (product: ProductCustom): string => product?.productCode || ''
+const getName = (product: Product | ProductCustom) => product?.content?.productName
 
-const getRating = (product: ProductCustom) => {
-  const attr = product?.properties?.find((property) => property?.attributeFQN === ratingAttrFQN)
-    ?.values
+const getProductId = (product: Product | ProductCustom): string => product?.productCode || ''
+
+const getRating = (product: Product | ProductCustom) => {
+  const { publicRuntimeConfig } = getConfig()
+
+  const attr = product?.properties?.find(
+    (property) => property?.attributeFQN === publicRuntimeConfig.ratingAttrFQN
+  )?.values
   return attr?.[0]?.value
 }
 
 const getProductTotalReviews = (): number => 0
 
-const getPrice = (product: ProductCustom): { regular: number; special: number } => {
+const getPrice = (product: Product | ProductCustom): { regular: number; special: number } => {
   return {
     regular: product?.price?.price as number,
     special: product?.price?.salePrice as number,
   }
 }
 
-const getPriceRange = (product: ProductCustom): ProductPriceRange =>
+const getPriceRange = (product: Product | ProductCustom): ProductPriceRange =>
   product?.priceRange as ProductPriceRange
 
-const getCoverImage = (product: ProductCustom): string =>
+const getCoverImage = (product: Product | ProductCustom): string =>
   product?.content?.productImages?.[0]?.imageUrl || ''
 
-const getDescription = (product: ProductCustom): string =>
+const getDescription = (product: Product | ProductCustom): string =>
   product?.content?.productFullDescription || ''
 
-const getShortDescription = (product: ProductCustom): string =>
+const getShortDescription = (product: Product | ProductCustom): string =>
   product?.content?.productShortDescription || ''
 
-const getProductGallery = (product: ProductCustom) => {
+const getProductGallery = (product: Product | ProductCustom) => {
   return product?.content?.productImages
 }
 
@@ -47,14 +51,15 @@ const handleProtocolRelativeUrl = (url: string) => {
   return url
 }
 
-const getBreadcrumbs = (product: ProductCustom): BreadCrumb[] => {
+const getBreadcrumbs = (product: Product | ProductCustom): BreadCrumb[] => {
   const homeCrumb = [{ text: 'Home', link: '/' }]
+  const { getCatLink } = uiHelpers()
   if (!product?.categories?.[0]) {
     return homeCrumb
   }
   const productCrumbs = buildBreadcrumbs(product?.categories[0]).map((b) => ({
     ...b,
-    link: `/c/${b.link}`,
+    link: getCatLink(b?.link as string),
   }))
 
   return [...homeCrumb, ...productCrumbs]

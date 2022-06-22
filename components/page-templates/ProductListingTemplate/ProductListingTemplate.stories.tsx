@@ -2,10 +2,12 @@ import React from 'react'
 
 import { ComponentStory, ComponentMeta } from '@storybook/react'
 
-import { categoryFacet } from '../../../__mocks__/stories/categoryFacetDataMock'
-import { products } from '../../../__mocks__/stories/categoryPageProductsDataMock'
-import { facetList } from '../../../__mocks__/stories/facetListMock'
 import ProductListingTemplate from './ProductListingTemplate'
+import { categoryFacetDataMock } from '@/__mocks__/stories/categoryFacetDataMock'
+import { productSearchDataMock } from '@/__mocks__/stories/productSearchDataMock'
+import type { ProductCustom } from '@/lib/types'
+
+import { Facet } from '@/lib/gql/types'
 
 const breadcrumbs = [
   {
@@ -55,8 +57,6 @@ export default {
   component: ProductListingTemplate,
   argTypes: {
     onSortingSelection: { action: 'onChange' },
-    onCategoryChildrenSelection: { action: 'clicked' },
-    onBackButtonClick: { action: 'go to Previous route' },
   },
   parameters: {
     layout: 'fullscreen',
@@ -72,10 +72,10 @@ export const CategorySkeleton = Template.bind({})
 
 Category.args = {
   breadCrumbsList: breadcrumbs,
-  facetList,
-  products,
+  facetList: productSearchDataMock?.facets as Facet[],
+  products: productSearchDataMock?.items as ProductCustom[],
   sortingValues,
-  categoryFacet,
+  categoryFacet: categoryFacetDataMock,
   totalResults: 149,
   initialProductsToShow: 16,
   isLoading: false,
@@ -83,9 +83,9 @@ Category.args = {
 
 CategorySkeleton.args = {
   breadCrumbsList: breadcrumbs,
-  facetList,
+  facetList: productSearchDataMock?.facets as Facet[],
   products: [],
   sortingValues,
-  categoryFacet,
+  categoryFacet: categoryFacetDataMock,
   isLoading: true,
 }
