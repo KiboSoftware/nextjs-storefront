@@ -41,7 +41,7 @@ describe('[components] Add To Cart Dialog integration', () => {
     expect(closeIconButton).toBeVisible()
     expect(productName).toBeInTheDocument()
     expect(fulfillmentMethod).toBeVisible()
-    expect(taxSubTotal).toHaveLength(5)
+    expect(taxSubTotal).toHaveLength(4)
     expect(goToCartButton).toBeVisible()
     expect(continueShoppingButton).toBeVisible()
   })
