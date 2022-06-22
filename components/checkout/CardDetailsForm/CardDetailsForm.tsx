@@ -34,7 +34,6 @@ export interface CardDetailsFormProps {
 }
 
 const StyledCardDiv = styled('div')(() => ({
-  width: '100%',
   maxWidth: '26.313rem',
   paddingLeft: '0.5rem',
 }))

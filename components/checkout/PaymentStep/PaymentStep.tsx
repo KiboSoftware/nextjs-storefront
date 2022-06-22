@@ -154,7 +154,7 @@ const PaymentStep = (props: PaymentStepProps) => {
       <StyledHeadings variant="h2" sx={{ paddingBottom: '1.625rem' }}>
         {t('payment-method')}
       </StyledHeadings>
-      <FormControl>
+      <FormControl sx={{ maxWidth: '26.313rem', paddingLeft: '0.5rem' }}>
         <RadioGroup
           aria-labelledby="payment-types-radio"
           name="radio-buttons-group"
