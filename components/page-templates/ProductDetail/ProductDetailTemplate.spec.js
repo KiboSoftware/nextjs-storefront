@@ -5,7 +5,7 @@ import { useTranslation } from 'next-i18next'
 
 import * as stories from './ProductDetailTemplate.stories' // import all stories from the stories file
 
-const { Common } = composeStories(stories)
+const { Common, WithPriceRange } = composeStories(stories)
 
 afterEach(cleanup)
 
@@ -80,6 +80,30 @@ describe('[component] Product Detail Template component', () => {
     )
 
     expect(price).toBeVisible()
+  })
+
+  it('should render the Product price range', () => {
+    render(<WithPriceRange {...WithPriceRange.args} />)
+
+    const { t } = useTranslation('common')
+
+    const upperPrice = screen.getByText(
+      new RegExp(t('currency', { val: WithPriceRange.args.product.priceRange.upper.price }))
+    )
+    const upperSalePrice = screen.getByText(
+      new RegExp(t('currency', { val: WithPriceRange.args.product.priceRange.upper.salePrice }))
+    )
+    const lowerPrice = screen.getByText(
+      new RegExp(t('currency', { val: WithPriceRange.args.product.priceRange.lower.price }))
+    )
+    const lowerSalePrice = screen.getByText(
+      new RegExp(t('currency', { val: WithPriceRange.args.product.priceRange.lower.salePrice }))
+    )
+
+    expect(upperPrice).toBeVisible()
+    expect(upperSalePrice).toBeVisible()
+    expect(lowerPrice).toBeVisible()
+    expect(lowerSalePrice).toBeVisible()
   })
 
   it('should render the Product short description', () => {

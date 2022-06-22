@@ -56,22 +56,22 @@ const ProductDetailTemplate = (props: ProductDetailTemplateProps) => {
   } = productGetters.getProductDetails(currentProduct)
 
   // Cloning the price range object to trnaslate the currency values
-  const handlePriceRangeTranslation = (productPriceRange: ProductPriceRange): PriceRange => {
+  const handlePriceRangeTranslation = (priceRange: ProductPriceRange): PriceRange => {
     return {
       lower: {
-        price: productPriceRange?.lower?.price
-          ? t<string>('common:currency', { val: productPriceRange?.lower?.price })
+        price: priceRange?.lower?.price
+          ? t<string>('common:currency', { val: priceRange?.lower?.price })
           : null,
-        salePrice: productPriceRange?.lower?.salePrice
-          ? t<string>('common:currency', { val: productPriceRange?.lower?.salePrice })
+        salePrice: priceRange?.lower?.salePrice
+          ? t<string>('common:currency', { val: priceRange?.lower?.salePrice })
           : null,
       },
       upper: {
-        price: productPriceRange?.upper?.price
-          ? t<string>('common:currency', { val: productPriceRange?.upper?.price })
+        price: priceRange?.upper?.price
+          ? t<string>('common:currency', { val: priceRange?.upper?.price })
           : null,
-        salePrice: productPriceRange?.upper?.salePrice
-          ? t<string>('common:currency', { val: productPriceRange?.upper?.salePrice })
+        salePrice: priceRange?.upper?.salePrice
+          ? t<string>('common:currency', { val: priceRange?.upper?.salePrice })
           : null,
       },
     }

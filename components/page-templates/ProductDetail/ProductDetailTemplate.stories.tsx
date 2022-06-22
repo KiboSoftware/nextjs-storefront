@@ -25,6 +25,20 @@ Common.args = {
   ],
 }
 
+export const WithPriceRange = Template.bind({})
+WithPriceRange.args = {
+  product: {
+    ...ProductDataMock,
+    priceRange: { lower: { price: 60, salePrice: 20 }, upper: { price: 200, salePrice: 100 } },
+  },
+  breadcrumbs: [
+    {
+      text: 'Home',
+      link: '/',
+    },
+  ],
+}
+
 export const Mobile = Template.bind({})
 Mobile.args = {
   product: ProductDataMock,
