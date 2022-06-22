@@ -11,7 +11,8 @@ const loadUser = async () => {
     document: getCurrentUser,
     variables: {},
   })
-  return response
+
+  return response?.customerAccount
 }
 
 export const useUserQueries = () => {

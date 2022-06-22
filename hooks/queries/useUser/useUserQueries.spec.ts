@@ -11,7 +11,7 @@ describe('[hooks] useUser', () => {
     })
 
     await waitFor(() => {
-      expect(result.current.data.customerAccount).toStrictEqual(userMock.customerAccount)
+      expect(result.current.data).toStrictEqual(userMock.customerAccount)
     })
   })
 })

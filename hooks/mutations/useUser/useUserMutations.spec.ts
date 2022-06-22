@@ -8,7 +8,7 @@ describe('[hooks] useUserMutations', () => {
   it('should use useUserMutations', async () => {
     const userCredentials = {
       username: 'abcd@email.com',
-      password: 'abcd1234',
+      password: '',
     }
 
     renderHook(

@@ -7,10 +7,11 @@ import { loginMutation } from '@/lib/gql/mutations/user/login'
 
 const client = makeGraphQLClient()
 const loginUser = async (customerUserAuthInfoInput: CustomerUserAuthInfoInput) => {
-  return await client.request({
+  const response = await client.request({
     document: loginMutation,
     variables: { loginInput: customerUserAuthInfoInput },
   })
+  return response?.account
 }
 
 export const useUserMutations = () => {

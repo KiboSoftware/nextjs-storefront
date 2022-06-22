@@ -44,7 +44,7 @@ describe('[components] Checkout integration', () => {
     expect(detailsStep).toBeVisible()
 
     // Enter valid details
-    const emailInput = screen.getByRole('textbox', { name: /your-email/i }) as HTMLInputElement
+    const emailInput = screen.getByRole('textbox', { name: /your-email/i })
 
     fireEvent.blur(emailInput, { target: { value: email } })
     await waitFor(() => expect(emailInput).toHaveValue(email))

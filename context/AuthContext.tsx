@@ -34,7 +34,7 @@ const initialState = {
   user: { id: 0 },
   login: () => null,
   setAuthError: () => '',
-  setUser: () => '',
+  setUser: () => null,
 }
 
 export const UserContext = createContext(initialState as AuthContextType)
@@ -63,8 +63,7 @@ export const AuthContextProvider = ({ children }: AuthContextProviderProps) => {
             : 'Something Wrong !'
           setAuthError(errorMessage)
         },
-        onSuccess: (response: any) => {
-          const account = response?.account
+        onSuccess: (account: any) => {
           // set cookie
           const cookie = {
             accessToken: account?.accessToken,
@@ -74,7 +73,7 @@ export const AuthContextProvider = ({ children }: AuthContextProviderProps) => {
             userId: account?.userId,
           }
           storeClientCookie(authCookieName, cookie)
-          setUser(account.customerAccount)
+          setUser(account?.customerAccount)
           onSuccessCallBack()
         },
       })
@@ -83,7 +82,7 @@ export const AuthContextProvider = ({ children }: AuthContextProviderProps) => {
     }
   }
 
-  const { data } = useUserQueries()
+  const { data: customerAccount } = useUserQueries()
 
   const values = {
     isAuthenticated,
@@ -95,10 +94,10 @@ export const AuthContextProvider = ({ children }: AuthContextProviderProps) => {
   }
 
   useEffect(() => {
-    if (data?.customerAccount) {
-      setUser(data.customerAccount)
+    if (customerAccount) {
+      setUser(customerAccount)
     }
-  }, [data])
+  }, [customerAccount])
 
   useEffect(() => {
     setIsAuthenticated(user?.id ? true : false)

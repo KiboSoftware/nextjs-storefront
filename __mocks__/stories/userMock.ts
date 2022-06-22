@@ -13,15 +13,7 @@ export const userMock: { customerAccount: CustomerAccount } = {
 }
 export const loginUserMock: { account: CustomerAuthTicket } = {
   account: {
-    customerAccount: {
-      id: 1074,
-      userId: '3e69cbd5f3694a76916e64451cb76968',
-      firstName: 'Suman',
-      lastName: 'Patro',
-      emailAddress: 'suman@email.com',
-      userName: 'suman@email.com',
-      isAnonymous: false,
-    },
+    ...userMock,
     accessToken:
       'S8k9/qdTXi9359KfnklVehBSuqodqI1buEQ6io903z3yTsfvc9MMqimS8tGbPJn4BLyp/gUaHkvBv8t274I2huPDiw8wIyaxJN0yYOcPMZu2+AviCGnbTYP9FbeWH3NRvf4qngUHx2BYK+j0xbbEcHZ4T7XrfTO/yufenpDGMkVLUxWo+LUrho/dNd3QcLZalZwo8yyZEFx4VH/NU4DcKlMFVrOcTyhk0y9K87IvrmvnD4jxFaJbLn+3og9q1bayn1hG7nwC2XU5OWJWaMwSnF96T4kUqRpqFF2N2SmOiDJHawJl+sKLHn2ZYpPNKEmWyiDEbBi+S9x//6zdT5GCRRAUBT0iXXgN7KdR/epxfaEY372HUxCLUYn/4BQRggGJ7PdA4z+dYrfAA59gVYH2G3/bKzmt8zPvFitgTGKJh/zl0mzMyx8yJoAz/STpoQUn',
     accessTokenExpiration: 1655298784785,
