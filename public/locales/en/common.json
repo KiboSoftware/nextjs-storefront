@@ -62,5 +62,15 @@
   "create-an-account": "Create an Account",
 
   "find-a-store": "Find a Store",
-  "view-all": "View All"
+  "view-all": "View All",
+  "view-order-details": "View Order Details",
+  "shipment-details": "Shipment Details",
+  "pickup-title": "Pickup",
+  "est-pickup": "Est. Pickup: ",
+  "delivered": "Delivered",
+  "order-date": "Order Date",
+  "order-number": "Order Number",
+  "order-total": "Order Total",
+  "item-quantity_one": "({{count}} item)",
+  "item-quantity_other": "({{count}} items)"
 }

@@ -2,7 +2,7 @@ import { format } from 'date-fns'
 
 import { checkoutGetters } from './checkoutGetters'
 
-import { CrOrderItem, Maybe, Order } from '@/lib/gql/types'
+import { CrOrderItem, Maybe, Order, PaymentCard } from '@/lib/gql/types'
 
 const capitalizeWord = (word: Maybe<string> | undefined) =>
   word && word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()
@@ -36,6 +36,27 @@ const getShippedTo = (order: Order) =>
 
 const getShippingAddress = (order: Order) => order?.fulfillmentInfo?.fulfillmentContact
 
+const getBillingAddress = (order: Order) => order?.billingInfo?.billingContact
+
+const getCardLastFourDigits = (card: Maybe<PaymentCard> | undefined) => {
+  const cardNumberLength = card?.cardNumberPartOrMask?.length as number
+  return card?.cardNumberPartOrMask?.slice(cardNumberLength - 4, cardNumberLength)
+}
+
+const getCardExpireMonth = (card: Maybe<PaymentCard> | undefined): number =>
+  card?.expireMonth as number
+
+const getCardExpireYear = (card: Maybe<PaymentCard> | undefined): number =>
+  card?.expireYear as number
+
+const getCardPaymentDetails = (card: Maybe<PaymentCard> | undefined) => {
+  return {
+    cardLastFourDigits: getCardLastFourDigits(card),
+    expireMonth: getCardExpireMonth(card),
+    expireYear: getCardExpireYear(card),
+  }
+}
+
 export const orderGetters = {
   getSubmittedDate,
   getProductNames,
@@ -44,5 +65,10 @@ export const orderGetters = {
   getOrderPayments,
   getShippedTo,
   getShippingAddress,
+  getBillingAddress,
+  getCardLastFourDigits,
+  getCardExpireMonth,
+  getCardExpireYear,
+  getCardPaymentDetails,
   ...checkoutGetters,
 }

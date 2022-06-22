@@ -3,6 +3,7 @@ import React from 'react'
 import { Stack, Divider } from '@mui/material'
 
 import ProductItem from '@/components/common/ProductItem/ProductItem'
+import { orderGetters } from '@/lib/getters'
 
 import type { Maybe, CrOrderItem } from '@/lib/gql/types'
 
@@ -25,7 +26,15 @@ const ProductItemList = (props: ProductItemListProps) => {
     >
       {items?.map((item: Maybe<CrOrderItem>) => (
         <ProductItem
-          orderItem={item}
+          id={orderGetters.getProductId(item)}
+          productCode={orderGetters.getProductCode(item)}
+          image={orderGetters.getProductImage(item)}
+          name={orderGetters.getProductName(item)}
+          options={orderGetters.getProductOptions(item)}
+          price={orderGetters.getProductPrice(item)}
+          salePrice={orderGetters.getProductSalePrice(item)}
+          qty={orderGetters.getProductQuantity(item)}
+          purchaseLocation={orderGetters.getPurchaseLocation(item)}
           isPickupItem={isPickupItem}
           expectedDeliveryDate={expectedDeliveryDate}
           onClickStoreLocator={onClickChangeStore}

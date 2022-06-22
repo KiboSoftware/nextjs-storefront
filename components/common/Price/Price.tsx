@@ -84,7 +84,7 @@ const Price = (props: PriceProps) => {
 
   return (
     <>
-      <Box display="flex" gap="0.625rem" alignItems="center">
+      <Box display="inline-flex" gap="0.625rem" alignItems="center">
         {priceRange ? <PriceOnlyTypography /> : <PriceRangeTypography />}
       </Box>
     </>

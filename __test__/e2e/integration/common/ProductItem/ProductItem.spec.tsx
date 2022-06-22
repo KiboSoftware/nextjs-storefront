@@ -16,16 +16,13 @@ describe('[component] - ProductItem Integration', () => {
     setup()
 
     const image = screen.getByRole('img')
-    const options = Common.args?.orderItem?.product?.options || []
+    const options = Common.args?.options || []
 
-    expect(image).toHaveAttribute('alt', Common.args?.orderItem?.product?.name)
+    expect(image).toHaveAttribute('alt', Common.args?.name)
 
     options?.map((option) => {
       expect(screen.getByText(`${option?.name}:`)).toBeVisible()
       expect(screen.getByText(`${option?.value}`)).toBeVisible()
     })
-    expect(
-      screen.getByText(`$${Common.args?.orderItem?.product?.price?.price || ''}`)
-    ).toBeVisible()
   })
 })

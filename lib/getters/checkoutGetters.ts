@@ -54,20 +54,6 @@ const getProductSalePrice = (item: Maybe<CrOrderItem> | Maybe<CartItem>): string
 const getPurchaseLocation = (item: Maybe<CrOrderItem> | Maybe<CartItem>): string =>
   item?.purchaseLocation || ''
 
-const getProductDetails = (item: Maybe<CrOrderItem> | Maybe<CartItem>) => {
-  return {
-    id: getProductId(item),
-    productCode: getProductCode(item),
-    image: getProductImage(item),
-    name: getProductName(item),
-    options: getProductOptions(item),
-    qty: getProductQuantity(item),
-    price: getProductPrice(item),
-    salePrice: getProductSalePrice(item),
-    purchaseLocation: getPurchaseLocation(item),
-  }
-}
-
 export const checkoutGetters = {
   getOrderNumber,
   getEmail,
@@ -82,5 +68,13 @@ export const checkoutGetters = {
   getPickupItems,
   getShipItems,
   getDeliveryItems,
-  getProductDetails,
+  getProductId,
+  getProductCode,
+  getProductImage,
+  getProductName,
+  getProductOptions,
+  getProductQuantity,
+  getProductPrice,
+  getProductSalePrice,
+  getPurchaseLocation,
 }

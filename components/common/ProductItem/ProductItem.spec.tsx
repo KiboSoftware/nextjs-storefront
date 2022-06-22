@@ -6,7 +6,7 @@ import userEvent from '@testing-library/user-event'
 
 import * as stories from './ProductItem.stories'
 
-const { Common, WithPickupItem } = composeStories(stories)
+const { Common, WithoutDetailOption, WithQtyLabel, WithChageStoreOption } = composeStories(stories)
 
 const imageMock = () => <div data-testid="image-component" />
 jest.mock('@/components/common/KiboImage/KiboImage', () => imageMock)
@@ -26,38 +26,46 @@ describe('[component] - ProductItem', () => {
   it('should render component', () => {
     setup()
 
-    const productOptionList = screen.getByTestId('product-option-list-component')
-    const detailsElement = screen.queryByText(/details/i)
-
     expect(screen.getByText(/Qty/i)).toBeInTheDocument()
     expect(screen.getByRole('heading')).toBeVisible()
-    expect(screen.getByText(`${Common.args?.orderItem?.product?.name}`)).toBeVisible()
+    expect(screen.getByText(`${Common.args?.name}`)).toBeVisible()
     expect(screen.getByTestId('image-component')).toBeVisible()
-    expect(productOptionList).toBeVisible()
+    expect(screen.getByTestId('product-option-list-component')).toBeVisible()
     expect(screen.getByTestId('price-component')).toBeVisible()
-    expect(detailsElement).toBeInTheDocument()
   })
 })
 
-describe('[component] - ProductItem with Pickup Item', () => {
-  const setup = () => {
-    render(<WithPickupItem {...WithPickupItem.args} />)
-  }
+describe('[component] - ProductItem with Price and Pickup Item', () => {
+  it('should render component with price and qty', () => {
+    render(<WithQtyLabel {...WithQtyLabel.args} />)
 
-  it('should render component', () => {
-    setup()
-    expect(screen.getByText(/pickup:/i)).toBeVisible()
-    expect(screen.getByText(/select-store/i)).toBeVisible()
+    const detailsElement = screen.queryByText(/details/i)
+    const price = screen.getByText(WithQtyLabel?.args?.price || '')
+
+    expect(detailsElement).toBeInTheDocument()
     expect(screen.getByText(/Qty/i)).toBeInTheDocument()
-    expect(screen.getByText(`${WithPickupItem.args?.orderItem?.quantity}`)).toBeVisible()
-    const price = screen.getByText(WithPickupItem?.args?.orderItem?.product?.price?.price || '')
+    expect(screen.getByText(`${WithQtyLabel.args?.qty}`)).toBeVisible()
+    expect(price).toBeVisible()
+  })
+
+  it('should render component with change store', () => {
+    render(<WithChageStoreOption {...WithChageStoreOption.args} />)
+
+    const detailsElement = screen.queryByText(/details/i)
+    const price = screen.getByText(WithChageStoreOption?.args?.price || '')
+
+    expect(detailsElement).toBeInTheDocument()
+    expect(screen.getByText(/estimated-pickup:/i)).toBeVisible()
+    expect(screen.getByText(/Qty/i)).toBeInTheDocument()
+    expect(screen.getByText(`${WithChageStoreOption.args?.expectedDeliveryDate}`)).toBeVisible()
+    expect(screen.getByText(`${WithChageStoreOption.args?.qty}`)).toBeVisible()
     expect(price).toBeVisible()
   })
 
   it('should call onClickStoreLocatorMock when click onClickStoreLocator', () => {
     render(
-      <WithPickupItem
-        {...WithPickupItem.args}
+      <WithChageStoreOption
+        {...WithChageStoreOption.args}
         isPickupItem={true}
         onClickStoreLocator={onClickStoreLocatorMock}
       />
@@ -66,5 +74,12 @@ describe('[component] - ProductItem with Pickup Item', () => {
 
     userEvent.click(changeStore)
     expect(onClickStoreLocatorMock).toHaveBeenCalled()
+  })
+
+  it('should not show details when no label(price,qty) or options is present', () => {
+    render(<WithoutDetailOption {...WithoutDetailOption.args} />)
+
+    const detailsElement = screen.queryByText(/details/i)
+    expect(detailsElement).not.toBeInTheDocument()
   })
 })

@@ -18,6 +18,7 @@ import FulfillmentOptions from '@/components/common/FulfillmentOptions/Fulfillme
 import Price from '@/components/common/Price/Price'
 import ProductItem from '@/components/common/ProductItem/ProductItem'
 import QuantitySelector from '@/components/common/QuantitySelector/QuantitySelector'
+import { orderGetters } from '@/lib/getters'
 
 import type { CartItem as CartItemType } from '@/lib/gql/types'
 
@@ -102,14 +103,18 @@ const CartItem = (props: CartItemProps) => {
         <Box sx={{ position: 'relative' }}>
           <Box sx={{ ...styles.cartItemContainer }}>
             <Box sx={{ ...styles.subcontainer }}>
-              <ProductItem orderItem={cartItem}>
+              <ProductItem
+                image={orderGetters.getProductImage(cartItem)}
+                name={orderGetters.getProductName(cartItem)}
+                options={orderGetters.getProductOptions(cartItem)}
+              >
                 <Box>
                   <Price
                     variant="body2"
                     fontWeight="bold"
-                    price={t('currency', { val: (cartItem.product?.price?.price || 0).toString() })}
+                    price={t('currency', { val: orderGetters.getProductPrice(cartItem) })}
                     salePrice={t('currency', {
-                      val: (cartItem.product?.price?.salePrice || 0).toString(),
+                      val: orderGetters.getProductSalePrice(cartItem),
                     })}
                   />
                 </Box>

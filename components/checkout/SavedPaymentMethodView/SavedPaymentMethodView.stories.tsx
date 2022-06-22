@@ -16,11 +16,10 @@ const Template: ComponentStory<typeof SavedPaymentMethodView> = (args) => (
 export const Common = Template.bind({})
 
 Common.args = {
-  customerAccountCards: {
-    cardNumberPart: '***********1111',
+  card: {
+    cardNumberPartOrMask: '***********1111',
     expireMonth: 4,
     expireYear: 2026,
-    contactId: 1029,
   },
   billingAddress: {
     address1: '1234, My Address',

@@ -15,18 +15,25 @@ import { useTranslation } from 'next-i18next'
 
 import KiboImage from '@/components/common/KiboImage/KiboImage'
 import Price from '@/components/common/Price/Price'
+import ProductOption from '@/components/product/ProductOption/ProductOption'
 import ProductOptionList from '@/components/product/ProductOptionList/ProductOptionList'
-import { checkoutGetters } from '@/lib/getters'
 import DefaultImage from '@/public/product_placeholder.svg'
 
-import type { Maybe, CrOrderItem, CartItem } from '@/lib/gql/types'
-
+import type { Maybe, CrProductOption } from '@/lib/gql/types'
 export interface ProductItemProps {
-  orderItem: Maybe<CrOrderItem> | Maybe<CartItem>
-  expectedDeliveryDate?: string
+  id?: Maybe<string>
+  productCode?: Maybe<string>
+  image: string
+  name: string
+  options: Maybe<CrProductOption>[]
+  price?: string
+  salePrice?: string
+  qty?: number
   isPickupItem?: boolean
-  children?: ReactNode
+  expectedDeliveryDate?: string
+  purchaseLocation?: string
   onClickStoreLocator?: () => void
+  children?: ReactNode
 }
 
 const styles = {
@@ -43,24 +50,23 @@ const styles = {
   },
 }
 
-const ProductLabel = (props: { label: string }) => (
-  <Typography
-    variant="body2"
-    fontWeight="bold"
-    component="span"
-    sx={{ pr: 1 }}
-    data-testid={'product-' + props.label}
-  >
-    {`${props.label}:`}
-  </Typography>
-)
-
 const ProductItem = (props: ProductItemProps) => {
-  const { orderItem, expectedDeliveryDate, isPickupItem, onClickStoreLocator, children } = props
+  const {
+    id,
+    productCode,
+    image,
+    name,
+    options,
+    price,
+    salePrice,
+    qty,
+    isPickupItem,
+    expectedDeliveryDate,
+    purchaseLocation,
+    onClickStoreLocator,
+    children,
+  } = props
   const { t } = useTranslation('common')
-  const { id, productCode, image, name, options, price, salePrice, qty, purchaseLocation } =
-    checkoutGetters.getProductDetails(orderItem)
-
   const theme = useTheme()
   const mdScreen = useMediaQuery(theme.breakpoints.up('md'))
   const [expanded, setExpanded] = useState<boolean>(true)
@@ -89,7 +95,7 @@ const ProductItem = (props: ProductItemProps) => {
 
             <Box data-testid="productDetails">
               <Box sx={{ display: { xs: 'block', sm: 'block', md: 'none' } }}>
-                {options.length > 0 && children && (
+                {(options.length > 0 || price || qty) && (
                   <Box
                     display="flex"
                     alignItems="center"
@@ -109,32 +115,31 @@ const ProductItem = (props: ProductItemProps) => {
               <Collapse in={mdScreen ? true : expanded} timeout="auto" unmountOnExit>
                 <ProductOptionList options={options} />
 
-                {qty && !children && (
-                  <Box>
-                    <ProductLabel label={t('qty')} /> {qty}
-                  </Box>
-                )}
-                {(price || salePrice) && !children && (
-                  <Box sx={{ display: 'inline-flex' }}>
-                    <ProductLabel label={t('price')} />
-                    <Price
-                      variant="body2"
-                      fontWeight="normal"
-                      price={t('currency', { val: price })}
-                      salePrice={t('currency', { val: salePrice })}
-                    />
-                  </Box>
+                {qty && <ProductOption option={{ name: t('qty'), value: qty }} variant="body2" />}
+                {(price || salePrice) && (
+                  <ProductOption
+                    option={{
+                      name: t('price'),
+                      value: (
+                        <Price
+                          variant="body2"
+                          fontWeight="normal"
+                          price={t('currency', { val: price })}
+                          salePrice={t('currency', { val: salePrice })}
+                        />
+                      ),
+                    }}
+                    variant="body2"
+                  />
                 )}
               </Collapse>
               {isPickupItem && expectedDeliveryDate && (
-                <Box
-                  sx={{ display: 'inline-flex' }}
-                  color={theme.palette.primary.main}
-                  data-testid="pickup-info"
-                >
-                  <Typography variant="body2" fontWeight="bold">
-                    {t('estimated-pickup')}: {expectedDeliveryDate}
-                  </Typography>
+                <Box color={theme.palette.primary.main} data-testid="pickup-info">
+                  <ProductOption
+                    option={{ name: t('estimated-pickup'), value: expectedDeliveryDate }}
+                    variant="body2"
+                    fontWeight="bold"
+                  />
                 </Box>
               )}
             </Box>
@@ -143,13 +148,11 @@ const ProductItem = (props: ProductItemProps) => {
       </Box>
       {isPickupItem && (
         <>
-          <Box sx={{ display: 'inline-flex' }}>
-            <Typography variant="caption" fontWeight="bold" pl={2}>
-              {t('pickup')}:
-            </Typography>
-            <Typography variant="caption" pl={1}>
-              {purchaseLocation}
-            </Typography>
+          <Box sx={{ display: 'inline-flex' }} px={2}>
+            <ProductOption
+              option={{ name: t('pickup'), value: purchaseLocation }}
+              variant="caption"
+            />
           </Box>
           <Box px={2}>
             <Link
