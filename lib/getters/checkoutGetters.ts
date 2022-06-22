@@ -1,3 +1,5 @@
+import getConfig from 'next/config'
+
 import DefaultImage from '@/public/product_placeholder.svg'
 
 import type { CrOrderItem, CrProductOption, Maybe, Order, CartItem } from '../gql/types'

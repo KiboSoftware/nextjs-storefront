@@ -104,13 +104,13 @@ const Checkout = (props: CheckoutProps) => {
             checkout={checkout}
             stepperStatus={activeStepStatus}
             onCompleteCallback={completeStepCallback}
-            goBack={handleBack}
+            onBackButtonClick={handleBack}
           />
         </KiboStepper>
       </Stack>
 
-      {activeStep != reviesStepIndex && (
-        <Box sx={{ width: '100%', maxWidth: 428, height: 448 }}>
+      <Box sx={{ width: '100%', maxWidth: 428, height: 448, paddingTop: '4.313rem' }}>
+        {activeStep != reviesStepIndex && (
           <OrderSummary {...orderSummeryArgs}>
             {activeStep < buttonLabels.length && (
               <Stack direction="column" gap={2}>
@@ -125,6 +125,7 @@ const Checkout = (props: CheckoutProps) => {
                 </Button>
                 <Button
                   variant="contained"
+                  color="secondary"
                   sx={{ ...buttonStyle }}
                   fullWidth
                   onClick={handleBack}
@@ -135,12 +136,11 @@ const Checkout = (props: CheckoutProps) => {
               </Stack>
             )}
           </OrderSummary>
-        </Box>
-      )}
-
-      {activeStep === reviesStepIndex && (
-        <OrderReview checkout={checkout} steps={steps} setActiveStep={setActiveStep} />
-      )}
+        )}
+        {activeStep === reviesStepIndex && (
+          <OrderReview checkout={checkout} steps={steps} setActiveStep={setActiveStep} />
+        )}
+      </Box>
     </Stack>
   )
 }

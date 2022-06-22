@@ -6,6 +6,9 @@ import { fireEvent, render, screen } from '@testing-library/react'
 import * as stories from '../ReviewStep/ReviewStep.stories'
 const { Common } = composeStories(stories)
 
+const orderPriceMock = () => <div data-testid="order-price-component" />
+jest.mock('@/components/common/OrderPrice/OrderPrice', () => orderPriceMock)
+
 const onHandleAggreeTermsConditions = jest.fn()
 
 describe('[components] ReviewStep', () => {
@@ -26,7 +29,6 @@ describe('[components] ReviewStep', () => {
     const pickupInStoreHeading = screen.getByRole('heading', {
       name: /pickup-in-store/i,
     })
-    const invoiceDetails = screen.getByTestId(/invoice-details/i)
     const termsConditions = screen.getByRole('checkbox', {
       name: /termsconditions/i,
     })
@@ -41,7 +43,6 @@ describe('[components] ReviewStep', () => {
     expect(orderDetailsHeading).toBeVisible()
     expect(shippingToHomeHeading).toBeVisible()
     expect(pickupInStoreHeading).toBeVisible()
-    expect(invoiceDetails).toBeInTheDocument()
     expect(termsConditions).toBeInTheDocument()
     expect(confirmAndPayButton).toBeVisible()
     expect(goBackButton).toBeVisible()

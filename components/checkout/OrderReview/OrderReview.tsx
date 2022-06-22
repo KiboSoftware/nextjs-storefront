@@ -14,30 +14,22 @@ interface OrderReviewProps {
   setActiveStep: (step: number) => void
 }
 
-interface StyledThemeProps {
-  theme?: Theme
-}
-
-export const StyledOrderReview = styled(Box)(({ theme }: StyledThemeProps) => ({
+const StyledOrderReview = styled(Box)(({ theme }: { theme: Theme }) => ({
   backgroundColor: theme?.palette.grey[100],
-  marginTop: '4.313rem',
-  width: '100%',
   maxWidth: '26.75rem',
   padding: '1.375rem',
-  maxHeight: '67.5rem',
-  height: '100%',
 }))
-export const StyledRow = styled(Box)(() => ({
+const StyledRow = styled(Box)(() => ({
   display: 'flex',
   marginBottom: '2.375rem',
 }))
-export const StyledLabel = styled(Typography)(({ theme }: StyledThemeProps) => ({
+const StyledLabel = styled(Typography)(({ theme }: { theme: Theme }) => ({
   flex: '75%',
   color: theme?.palette.text.primary,
   fontWeight: 600,
 }))
 
-export const StyledActions = styled(Link)(({ theme }: StyledThemeProps) => ({
+const StyledActions = styled(Link)(({ theme }: { theme: Theme }) => ({
   textAlign: 'right',
   flex: '25%',
   color: theme?.palette.text.primary,
@@ -48,11 +40,12 @@ export const StyledActions = styled(Link)(({ theme }: StyledThemeProps) => ({
 const OrderReview = (props: OrderReviewProps) => {
   const { checkout, steps, setActiveStep } = props
   const { t } = useTranslation(['checkout', 'common'])
-  const userName = checkoutGetters.getUserName(checkout)
-  const userPhoneHome = checkoutGetters.getPhoneHome(checkout)
-  const shippingAddress = checkoutGetters.getShipppingAddress(checkout)
-  const billingAddress = checkoutGetters.getBillingAddress(checkout)
-  const paymentMethods = checkoutGetters.getPaymentMethods(checkout)
+  const { personalDetails, shippingDetails, billingDetails, paymentMethods } =
+    checkoutGetters.getCheckoutDetails(checkout)
+
+  const { email: userName } = personalDetails
+  const { shippingPhoneHome, shippingAddress } = shippingDetails
+  const { billingAddress } = billingDetails
 
   const handleEditAction = (event: MouseEvent<HTMLElement>) => {
     const redirectStepIndex = steps.findIndex(
@@ -85,7 +78,7 @@ const OrderReview = (props: OrderReviewProps) => {
       </StyledRow>
       <StyledRow sx={{ display: 'inline' }}>
         <Typography variant="body1">{userName} </Typography>
-        <Typography variant="body1">{userPhoneHome}</Typography>
+        <Typography variant="body1">{shippingPhoneHome}</Typography>
       </StyledRow>
 
       <StyledRow sx={{ marginTop: '2.375rem' }}>
@@ -125,6 +118,7 @@ const OrderReview = (props: OrderReviewProps) => {
           {t('edit')}
         </StyledActions>
       </StyledRow>
+
       {paymentMethods.map((paymentMethod) => (
         <StyledRow
           sx={{ display: 'inline' }}

@@ -63,7 +63,7 @@ describe('[components] PaymentStep', () => {
     expect(onHandlePaymentMethod).toBeCalled()
   })
 
-  it('should default unchecked saved payment if logged in', async () => {
+  it('should default unchecked saved payment when logged in', async () => {
     setup()
 
     const savePaymentMethod = screen.getByTestId('save-payment')

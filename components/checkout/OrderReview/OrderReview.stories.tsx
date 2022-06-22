@@ -9,6 +9,7 @@ import { orderMock } from '@/__mocks__/stories/orderMock'
 export default {
   title: 'Checkout/OrderReview',
   component: OrderReview,
+  argTypes: { onHandleEditAction: { action: 'clicked' } },
 } as ComponentMeta<typeof OrderReview>
 
 const Template: ComponentStory<typeof OrderReview> = (args) => <OrderReview {...args} />

@@ -9,6 +9,7 @@ import { orderMock } from '@/__mocks__/stories/orderMock'
 export default {
   title: 'Checkout/ReviewStep',
   component: ReviewStep,
+  argTypes: { onConfirmAndPay: { action: 'clicked' }, onGoBackButton: { action: 'clicked' } },
 } as ComponentMeta<typeof ReviewStep>
 
 const Template: ComponentStory<typeof ReviewStep> = (args) => <ReviewStep {...args} />

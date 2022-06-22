@@ -1,28 +1,21 @@
 import React, { useState } from 'react'
 
-import InfoIcon from '@mui/icons-material/Info'
 import {
   Typography,
   Box,
   Divider,
   Button,
   Stack,
-  styled,
-  useTheme,
   Theme,
+  useTheme,
   Checkbox,
   FormControlLabel,
+  SxProps,
 } from '@mui/material'
 import { useTranslation } from 'next-i18next'
 
-import {
-  StyledPriceSection,
-  StyledPriceRow,
-  StyledPriceLabel,
-  StyledPriceData,
-  StyledPriceTotalRow,
-} from '@/components/add-to-cart-dialog/Content/Content'
 import { type Action } from '@/components/checkout/DetailsStep/DetailsStep'
+import OrderPrice, { OrderPriceProps } from '@/components/common/OrderPrice/OrderPrice'
 import ProductItemList from '@/components/common/ProductItemList/ProductItemList'
 import { FormStates } from '@/lib/constants'
 import { checkoutGetters } from '@/lib/getters'
@@ -33,54 +26,55 @@ interface ReviewStepProps {
   stepperStatus: string
   checkout: Order
   onCompleteCallback: (action: Action) => void
-  goBack: () => void
+  onBackButtonClick: () => void
 }
 
-interface StyledButtonProps {
-  theme?: Theme
-}
-
-const StyledConfirmAndPayButton = styled(Button)(({ theme }: StyledButtonProps) => ({
+const buttonStyle = {
   height: '2.625rem',
-  width: '100%',
   maxWidth: '23.5rem',
-  marginBottom: '0.75rem',
-  fontSize: theme?.typography.subtitle1.fontSize,
-  '&:disabled': {
-    backgroundColor: '#C0E3DF',
+  fontSize: (theme: Theme) => theme.typography.subtitle1,
+} as SxProps<Theme> | undefined
+
+const styles = {
+  confirmAndPayButtonStyle: {
+    ...buttonStyle,
+    marginBottom: '0.75rem',
+    '&:disabled': {
+      backgroundColor: '#C0E3DF',
+    },
   },
-}))
-
-const StyledGoBackButton = styled(Button)(({ theme }: StyledButtonProps) => ({
-  height: '2.625rem',
-  width: '100%',
-  maxWidth: '23.5rem',
-  color: theme?.palette.grey[900],
-  backgroundColor: theme?.palette.grey[50],
-  borderColor: theme?.palette.grey[500],
-  fontSize: theme?.typography.subtitle1.fontSize,
-}))
+  goBackButtonStyle: {
+    ...buttonStyle,
+  },
+}
 
 const ReviewStep = (props: ReviewStepProps) => {
-  const { checkout, stepperStatus, onCompleteCallback, goBack } = props
+  const { checkout, stepperStatus, onCompleteCallback, onBackButtonClick } = props
 
   const { t } = useTranslation(['checkout', 'common'])
   const theme = useTheme()
 
-  const shippingItems = checkoutGetters.getShippingItems(checkout)
-  const pickupItems = checkoutGetters.getPickupItems(checkout)
-  const subTotal = checkoutGetters.getSubTotal(checkout)
-  const shippingTotal = checkoutGetters.getShippingTotal(checkout)
-  const tax = checkoutGetters.getTaxTotal(checkout)
-  const total = checkoutGetters.getTotal(checkout)
+  const { shippingItems, pickupItems, orderSummary } = checkoutGetters.getCheckoutDetails(checkout)
 
-  const [isAggreeWithTermsAndConditions, setAggreeWithTermsAndConditions] = useState<boolean>(false)
+  const { subTotal, shippingTotal, taxTotal, total } = orderSummary
+
+  const orderPriceProps: OrderPriceProps = {
+    subTotalLabel: t('sub-total'),
+    fullfillmentMethodLable: t('shipping'),
+    taxLabel: t('common:estimated-tax'),
+    totalLabel: t('common:total'),
+    subTotal: t('common:currency', { val: subTotal }),
+    fulfillmentMethodCharge: shippingTotal.toString(),
+    tax: t('common:currency', { val: taxTotal }),
+    total: t('common:currency', { val: total }),
+  }
+  const [isAgreeWithTermsAndConditions, setAggreeWithTermsAndConditions] = useState<boolean>(false)
 
   const handleAggreeTermsConditions = (event: React.ChangeEvent<HTMLInputElement>) =>
     setAggreeWithTermsAndConditions(event.target.checked)
 
   const handleComplete = () => {
-    if (stepperStatus === 'VALIDATE') {
+    if (stepperStatus === FormStates.VALIDATE) {
       onCompleteCallback({ type: FormStates.COMPLETE })
     }
   }
@@ -106,10 +100,11 @@ const ReviewStep = (props: ReviewStepProps) => {
             {t('pickup-in-store')}
           </Typography>
           <ProductItemList items={pickupItems} />
-          <Divider />
+          <Divider sx={{ mt: '1.438rem', mb: '1.188rem' }} />
         </Box>
       )}
-      <StyledPriceSection data-testid={'invoice-details'}>
+      <OrderPrice {...orderPriceProps} />
+      {/* <StyledPriceSection data-testid={'invoice-details'}>
         <StyledPriceRow>
           <StyledPriceLabel variant="h4">{t('sub-total')}</StyledPriceLabel>
           <StyledPriceData variant="h4" fontWeight="bold">
@@ -127,7 +122,7 @@ const ReviewStep = (props: ReviewStepProps) => {
             {t('common:estimated-tax')} <InfoIcon sx={{ width: '0.688rem', height: '0.688rem' }} />
           </StyledPriceLabel>
           <StyledPriceData variant="h4" fontWeight="bold">
-            {t('common:currency', { val: tax })}
+            {t('common:currency', { val: taxTotal })}
           </StyledPriceData>
         </StyledPriceRow>
       </StyledPriceSection>
@@ -137,7 +132,7 @@ const ReviewStep = (props: ReviewStepProps) => {
         <StyledPriceData variant="h4" fontWeight="bold">
           {t('common:currency', { val: total })}
         </StyledPriceData>
-      </StyledPriceTotalRow>
+      </StyledPriceTotalRow> */}
       <Box sx={{ mt: '31px', mb: '35px' }}>
         <FormControlLabel
           control={
@@ -155,16 +150,27 @@ const ReviewStep = (props: ReviewStepProps) => {
         />
       </Box>
       <Stack alignItems="left">
-        <StyledConfirmAndPayButton
+        <Button
           variant="contained"
-          disabled={!isAggreeWithTermsAndConditions}
+          color="primary"
+          sx={{
+            ...styles.confirmAndPayButtonStyle,
+          }}
+          disabled={!isAgreeWithTermsAndConditions}
           onClick={handleComplete}
         >
           {t('confirm-and-pay')}
-        </StyledConfirmAndPayButton>
-        <StyledGoBackButton variant="contained" onClick={goBack}>
+        </Button>
+        <Button
+          variant="contained"
+          color="secondary"
+          sx={{
+            ...styles.goBackButtonStyle,
+          }}
+          onClick={onBackButtonClick}
+        >
           {t('go-back')}
-        </StyledGoBackButton>
+        </Button>
       </Stack>
     </Box>
   )
