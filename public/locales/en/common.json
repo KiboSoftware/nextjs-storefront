@@ -72,5 +72,10 @@
   "order-number": "Order Number",
   "order-total": "Order Total",
   "item-quantity_one": "({{count}} item)",
-  "item-quantity_other": "({{count}} items)"
+  "item-quantity_other": "({{count}} items)",
+  "order-summary": "Order Summary",
+  "subtotal": "Subtotal",
+  "shipping": "Shipping",
+  "total-price": "Total Price",
+  "free": "Free"
 }

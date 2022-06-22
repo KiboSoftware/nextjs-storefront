@@ -73,7 +73,7 @@ const ProductItem = (props: ProductItemProps) => {
 
   return (
     <Box key={id}>
-      <Box sx={{ display: 'flex', pb: 2, pr: 1, gap: '3%', flex: 1 }}>
+      <Box sx={{ display: 'flex', pb: 1, pr: 1, gap: '3%', flex: 1 }}>
         <Box sx={{ ...styles.imageContainer }}>
           <KiboImage
             src={image || DefaultImage}

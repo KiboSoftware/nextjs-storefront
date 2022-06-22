@@ -14,6 +14,7 @@ export const orderMock: { checkout: Order } = {
     taxTotal: 0,
     orderNumber: 81,
     orderDiscounts: [],
+    submittedDate: '2021-12-03T14:08:28.838Z',
     billingInfo: null,
     fulfillmentInfo: {
       shippingMethodCode: '691f94b2b57e47239456ada600cdcc9e',
@@ -45,6 +46,7 @@ export const orderMock: { checkout: Order } = {
     },
     items: [
       {
+        expectedDeliveryDate: '2020-03-24T10:22:50.723Z',
         fulfillmentMethod: 'Pickup',
         id: '133ce85f2eb24894bd5eae830106646d',
         total: 49,

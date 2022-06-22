@@ -10,9 +10,9 @@ interface OrderSummaryProps {
   standardShippingAmount: string
   estimatedTaxAmout: string
   numberOfItems: string
-  shippingLabel: string
-  backLabel: string
-  checkoutLabel: string
+  shippingLabel?: string
+  backLabel?: string
+  checkoutLabel?: string
   nameLabel: string
   cartTotalLabel: string
   standardShippingLabel: string

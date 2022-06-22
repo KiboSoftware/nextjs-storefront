@@ -15,6 +15,5 @@ const Template: ComponentStory<typeof ViewOrderDetails> = (args) => <ViewOrderDe
 
 export const Common = Template.bind({})
 Common.args = {
-  // hippingItems
   order: orderMock.checkout,
 }

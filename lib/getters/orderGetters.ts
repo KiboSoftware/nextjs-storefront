@@ -10,13 +10,13 @@ const capitalizeWord = (word: Maybe<string> | undefined) =>
 const getSubmittedDate = (order: Order, withTimestamp?: boolean) =>
   order?.submittedDate
     ? withTimestamp
-      ? format(new Date(order?.submittedDate), 'MMMM dd, yyyy, hh:mm a zzz')
-      : format(new Date(order?.submittedDate), 'MMMM dd, yyyy')
+      ? format(new Date(order?.submittedDate), 'MMMM D, YYYY, hh:mm a zzz')
+      : format(new Date(order?.submittedDate), 'MMMM D, YYYY')
     : order?.submittedDate
 
 const getExpectedDeliveryDate = (items: Maybe<CrOrderItem>[]) => {
   return items[0]?.expectedDeliveryDate
-    ? format(new Date(items[0]?.expectedDeliveryDate), 'EEEE, MMMM dd, yyyy')
+    ? format(new Date(items[0]?.expectedDeliveryDate), 'dddd, MMMM D, YYYY')
     : items[0]?.expectedDeliveryDate
 }
 
