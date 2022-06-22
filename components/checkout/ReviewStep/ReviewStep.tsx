@@ -105,7 +105,6 @@ const ReviewStep = (props: ReviewStepProps) => {
         </Box>
       )}
       <OrderPrice {...orderPriceProps} />
-
       <Box sx={{ mt: '31px', mb: '35px' }}>
         <FormControlLabel
           control={
