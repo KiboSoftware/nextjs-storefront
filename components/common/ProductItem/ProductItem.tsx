@@ -20,6 +20,7 @@ import ProductOptionList from '@/components/product/ProductOptionList/ProductOpt
 import DefaultImage from '@/public/product_placeholder.svg'
 
 import type { Maybe, CrProductOption } from '@/lib/gql/types'
+
 export interface ProductItemProps {
   id?: Maybe<string>
   productCode?: Maybe<string>
@@ -125,7 +126,7 @@ const ProductItem = (props: ProductItemProps) => {
                           variant="body2"
                           fontWeight="normal"
                           price={t('currency', { val: price })}
-                          salePrice={t('currency', { val: salePrice })}
+                          salePrice={salePrice && t('currency', { val: salePrice })}
                         />
                       ),
                     }}

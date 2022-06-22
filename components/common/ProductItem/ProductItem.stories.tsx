@@ -61,7 +61,9 @@ export const WithPriceLabel = TemplateWithPriceLabel.bind({})
 WithPriceLabel.args = {
   ...Common.args,
   price: (orderItem?.product?.price?.price || 0).toString(),
-  salePrice: (orderItem?.product?.price?.salePrice || 0).toString(),
+  salePrice:
+    (orderItem?.product?.price?.salePrice && (orderItem?.product?.price?.salePrice).toString()) ||
+    undefined,
 }
 
 const TemplateWithQtyLabel: ComponentStory<typeof ProductItem> = (args) => <ProductItem {...args} />
@@ -71,7 +73,9 @@ WithQtyLabel.args = {
   ...Common.args,
   qty: orderItem?.quantity,
   price: (orderItem?.product?.price?.price || 0).toString(),
-  salePrice: (orderItem?.product?.price?.salePrice || 0).toString(),
+  salePrice:
+    (orderItem?.product?.price?.salePrice && (orderItem?.product?.price?.salePrice).toString()) ||
+    undefined,
 }
 
 export const WithoutDetailOption = TemplateWithQtyLabel.bind({})

@@ -51,10 +51,10 @@ describe('[components] - ViewOrderDetails Integration', () => {
 
     expect(screen.getByText(/order-summary/i)).toBeVisible()
     expect(screen.getByText(/total-price/i)).toBeVisible()
-    expect(screen.getByText(`${Common.args?.order?.subtotal}`)).toBeVisible()
+    expect(screen.getByText(`$${Common.args?.order?.subtotal}`)).toBeVisible()
     expect(screen.getByText(/shipping/i)).toBeVisible()
-    expect(screen.getByText(`${Common.args?.order?.shippingTotal}`)).toBeVisible()
+    expect(screen.getByText(`$${Common.args?.order?.shippingTotal}`)).toBeVisible()
     expect(screen.getByText(/estimated-tax/i)).toBeVisible()
-    expect(screen.getByText(`${Common.args?.order?.taxTotal}`)).toBeVisible()
+    expect(screen.getByText(`$${Common.args?.order?.taxTotal}`)).toBeVisible()
   })
 })

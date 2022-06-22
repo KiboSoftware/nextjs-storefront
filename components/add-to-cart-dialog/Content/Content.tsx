@@ -56,7 +56,11 @@ const Content = (props: CartContentProps) => {
           name={cartItem.product?.name || ''}
           options={cartItem.product?.options as Array<CrProductOption>}
           price={(cartItem.product?.price?.price || 0).toString()}
-          salePrice={(cartItem.product?.price?.salePrice || 0).toString()}
+          salePrice={
+            (cartItem.product?.price?.salePrice &&
+              (cartItem.product?.price?.salePrice).toString()) ||
+            undefined
+          }
         />
       </Box>
       <Divider />

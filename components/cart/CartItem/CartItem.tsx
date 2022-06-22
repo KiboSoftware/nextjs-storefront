@@ -113,9 +113,13 @@ const CartItem = (props: CartItemProps) => {
                     variant="body2"
                     fontWeight="bold"
                     price={t('currency', { val: orderGetters.getProductPrice(cartItem) })}
-                    salePrice={t('currency', {
-                      val: orderGetters.getProductSalePrice(cartItem),
-                    })}
+                    salePrice={
+                      (cartItem?.product?.price?.salePrice &&
+                        t('currency', {
+                          val: orderGetters.getProductSalePrice(cartItem),
+                        })) ||
+                      undefined
+                    }
                   />
                 </Box>
                 <Box sx={{ py: '0.5rem' }}>
