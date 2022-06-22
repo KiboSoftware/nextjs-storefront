@@ -42,10 +42,10 @@ const ViewOrderDetails = (props: ViewOrderDetailsProps) => {
   const payments = orderGetters.getOrderPayments(order)
 
   const orderSummeryArgs = {
-    standardShippingAmount: `${order?.shippingTotal}`,
-    estimatedTaxAmout: `${order?.taxTotal}`,
-    orderTotal: `${order?.total}`,
-    subTotal: `${order?.subtotal}`,
+    standardShippingAmount: `$${order?.shippingTotal}`,
+    estimatedTaxAmout: `$${order?.taxTotal}`,
+    orderTotal: `$${order?.total}`,
+    subTotal: `$${order?.subtotal}`,
     numberOfItems: `${order?.items?.length} items`,
     nameLabel: t('order-summary'),
     cartTotalLabel: t('subtotal'),

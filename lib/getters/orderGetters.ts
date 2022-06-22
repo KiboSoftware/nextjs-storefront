@@ -7,12 +7,13 @@ import { CrOrderItem, Maybe, Order, PaymentCard } from '@/lib/gql/types'
 const capitalizeWord = (word: Maybe<string> | undefined) =>
   word && word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()
 
-const getSubmittedDate = (order: Order, withTimestamp?: boolean) =>
-  order?.submittedDate
+const getSubmittedDate = (order: Order, withTimestamp?: boolean) => {
+  return order?.submittedDate
     ? withTimestamp
       ? format(new Date(order?.submittedDate), 'MMMM D, YYYY, hh:mm a zzz')
       : format(new Date(order?.submittedDate), 'MMMM D, YYYY')
     : order?.submittedDate
+}
 
 const getExpectedDeliveryDate = (items: Maybe<CrOrderItem>[]) => {
   return items[0]?.expectedDeliveryDate
