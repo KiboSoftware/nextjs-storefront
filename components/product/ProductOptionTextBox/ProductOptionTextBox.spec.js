@@ -7,13 +7,10 @@ import * as stories from './ProductOptionTextBox.stories' // import all stories 
 
 const { Common } = composeStories(stories)
 
-const onBlurMock = jest.fn()
-
-const kiboTextboxMock = () => <input data-testid="kibo-textbox-component" onBlur={onBlurMock} />
-jest.mock('@/components/common/KiboTextBox/KiboTextBox', () => kiboTextboxMock)
-
 const setup = () => {
-  render(<Common {...Common.args} />)
+  const onBlurMock = jest.fn()
+  render(<Common {...Common.args} onBlur={onBlurMock} />)
+  return onBlurMock
 }
 
 describe('[component] ProductOptionTextBox component', () => {
@@ -24,7 +21,7 @@ describe('[component] ProductOptionTextBox component', () => {
   })
 
   it('should show user entered value', () => {
-    setup()
+    const { onBlurMock } = setup()
 
     const textbox = screen.getByRole('textbox')
     userEvent.type(textbox, 'Test')

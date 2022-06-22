@@ -29,6 +29,10 @@ export const WithPriceRange = Template.bind({})
 WithPriceRange.args = {
   product: {
     ...ProductDataMock,
+    price: {
+      price: null,
+      salePrice: null,
+    },
     priceRange: { lower: { price: 60, salePrice: 20 }, upper: { price: 200, salePrice: 100 } },
   },
   breadcrumbs: [
