@@ -11,7 +11,6 @@ import ProductOption from '@/components/product/ProductOption/ProductOption'
 import { orderGetters } from '@/lib/getters'
 
 import type { Order, CrAddress } from '@/lib/gql/types'
-
 interface ViewOrderDetailsProps {
   order: Order
   storePickupAddress?: CrAddress
