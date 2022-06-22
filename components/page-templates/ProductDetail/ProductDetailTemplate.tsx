@@ -18,13 +18,14 @@ import ProductRecommendations from '@/components/product/ProductRecommendations/
 import ProductVariantSizeSelector from '@/components/product/ProductVariantSizeSelector/ProductVariantSizeSelector'
 import { useProductDetailTemplate } from '@/hooks'
 import { productGetters } from '@/lib/getters'
-import type { ProductProperties, ProductCustom, BreadCrumb } from '@/lib/types'
+import type { ProductCustom, BreadCrumb, PriceRange } from '@/lib/types'
 
 import type {
   AttributeDetail,
   ProductImage,
   ProductOption,
   ProductOptionValue,
+  ProductPriceRange,
 } from '@/lib/gql/types'
 
 interface ProductDetailTemplateProps {
@@ -40,25 +41,41 @@ const ProductDetailTemplate = (props: ProductDetailTemplateProps) => {
   const { currentProduct, selectProductOption } = useProductDetailTemplate({ product })
 
   // Getters
-  const productName = productGetters.getName(currentProduct)
-  const productPrice = productGetters.getPrice(currentProduct)
-  const productPriceRange = productGetters.getPriceRange(currentProduct)
-  const productRating = productGetters.getRating(currentProduct)
-  const description = productGetters.getDescription(currentProduct)
-  const shortDescription = productGetters.getShortDescription(currentProduct)
-  const productGallery = productGetters.getProductGallery(currentProduct)
+  const {
+    productName,
+    productPrice,
+    productPriceRange,
+    productRating,
+    description,
+    shortDescription,
+    productGallery,
+    productOptions,
+    optionsVisibility,
+    properties,
+    isValidForAddToCart,
+  } = productGetters.getProductDetails(currentProduct)
 
-  const productOptions = productGetters.getSegregatedOptions(currentProduct)
-  const optionsVisibility = {
-    color: productOptions && productOptions.colourOptions && productOptions.colourOptions.values,
-    size: productOptions && productOptions.sizeOptions && productOptions.sizeOptions.values,
-    select: productOptions && productOptions.selectOptions.length,
-    checkbox: productOptions && productOptions.yesNoOptions.length,
-    textbox: productOptions && productOptions.textBoxOptions.length,
+  // Cloning the price range object to trnaslate the currency values
+  const handlePriceRangeTranslation = (productPriceRange: ProductPriceRange): PriceRange => {
+    return {
+      lower: {
+        price: productPriceRange?.lower?.price
+          ? t<string>('common:currency', { val: productPriceRange?.lower?.price })
+          : null,
+        salePrice: productPriceRange?.lower?.salePrice
+          ? t<string>('common:currency', { val: productPriceRange?.lower?.salePrice })
+          : null,
+      },
+      upper: {
+        price: productPriceRange?.upper?.price
+          ? t<string>('common:currency', { val: productPriceRange?.upper?.price })
+          : null,
+        salePrice: productPriceRange?.upper?.salePrice
+          ? t<string>('common:currency', { val: productPriceRange?.upper?.salePrice })
+          : null,
+      },
+    }
   }
-
-  const properties = productGetters.getProperties(currentProduct) as ProductProperties[]
-  const isValidForAddToCart = productGetters.validateAddToCart(currentProduct)
 
   return (
     <>
@@ -79,7 +96,7 @@ const ProductDetailTemplate = (props: ProductDetailTemplateProps) => {
             {...(productPrice.special && {
               salePrice: t<string>('common:currency', { val: productPrice.special }),
             })}
-            priceRange={productPriceRange}
+            priceRange={productPriceRange && handlePriceRangeTranslation(productPriceRange)}
           />
 
           <Box paddingY={1} display={shortDescription ? 'block' : 'none'}>
