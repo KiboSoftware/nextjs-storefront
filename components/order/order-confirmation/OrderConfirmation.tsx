@@ -52,7 +52,7 @@ const OrderConfirmation = ({ order }: { order: Order }) => {
             <Typography variant="h1">{t('thank-you')}</Typography>
             <Box display="flex" gap={3}>
               <Typography variant="h2" fontWeight={'normal'}>
-                {t('item-quantity', { count: 15 })}
+                {t('item-quantity', { count: order.items?.length })}
               </Typography>
               <Typography variant="h2">{t('currency', { val: orderTotal })}</Typography>
             </Box>

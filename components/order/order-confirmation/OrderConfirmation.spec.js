@@ -21,6 +21,7 @@ describe('[component] - ViewOrderDetails', () => {
     setup()
 
     expect(screen.getByText(/thank-you/i)).toBeVisible()
+    expect(screen.getByText(/currency/i)).toBeVisible()
     expect(screen.getByText(/order-placed-confirmation-text/i)).toBeVisible()
     expect(screen.getByText(/check-email-confirmation-text/i)).toBeVisible()
     expect(screen.getByText(/order-confirmation-to-email-text/i)).toBeVisible()
