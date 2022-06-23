@@ -96,9 +96,13 @@ const CartItem = (props: CartItemProps) => {
   const { t } = useTranslation('common')
   const orientationVertical = useMediaQuery(theme.breakpoints.between('xs', 'md'))
 
-  const onDelete = (cartItemId: string) => onCartItemDelete(cartItemId)
+  const handleDelete = (cartItemId: string) => onCartItemDelete(cartItemId)
   const updateQuantity = (quantity: number) => onQuantityUpdate(cartItem.id || '', quantity)
-  const onActionSelection = () => onCartItemActionSelection()
+  const handleActionSelection = () => onCartItemActionSelection()
+
+  const handleFulfillmentOption = () => {
+    return ''
+  }
 
   return (
     <>
@@ -150,8 +154,8 @@ const CartItem = (props: CartItemProps) => {
             <Box sx={{ ...styles.subcontainer }}>
               <FulfillmentOptions
                 fulfillmentOptions={fulfillmentOptions}
-                onFullfillmentOptionChange={() => null}
-                onStoreSelection={() => null}
+                onFullfillmentOptionChange={handleFulfillmentOption}
+                onStoreSelection={handleFulfillmentOption}
               />
             </Box>
           </Box>
@@ -160,13 +164,13 @@ const CartItem = (props: CartItemProps) => {
             <Box sx={{ display: { xs: 'block', sm: 'block', md: 'none' } }}>
               <CartItemActionsMobile
                 actions={actions || []}
-                onMenuItemSelection={() => onActionSelection()}
+                onMenuItemSelection={handleActionSelection}
               />
             </Box>
             <IconButton
               aria-label="item-delete"
               name="item-delete"
-              onClick={() => onDelete(cartItem.id || '')}
+              onClick={() => handleDelete(cartItem.id || '')}
             >
               <Delete />
             </IconButton>
