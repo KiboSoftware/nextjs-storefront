@@ -16,7 +16,7 @@ describe('[hooks] useUserMutations', () => {
         const { mutateAsync } = useUserMutations()
         const response = await mutateAsync(userCredentials)
 
-        expect(response.account).toStrictEqual(loginUserMock.account)
+        expect(response).toStrictEqual(loginUserMock.account)
       },
       {
         wrapper: createQueryClientWrapper(),
