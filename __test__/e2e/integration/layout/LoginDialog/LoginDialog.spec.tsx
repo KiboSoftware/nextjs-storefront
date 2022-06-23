@@ -16,7 +16,6 @@ const userContextValues = {
   login: jest.fn(),
   setAuthError: jest.fn(),
   authError: '',
-  setUser: jest.fn(),
 }
 
 const wrapper = ({ children }: { children: ReactNode }) => (

@@ -18,11 +18,10 @@ import type { CustomerAccount } from '@/lib/gql/types'
 
 interface AuthContextType {
   isAuthenticated: boolean
-  user?: CustomerAccount
+  user?: CustomerAccount | undefined
   login: (params: LoginData, toggleLoginDialog: () => void) => any
   setAuthError: Dispatch<SetStateAction<string>>
   authError: string
-  setUser: any
 }
 interface AuthContextProviderProps {
   children: ReactNode
@@ -31,10 +30,9 @@ interface AuthContextProviderProps {
 const initialState = {
   isAuthenticated: false,
   authError: '',
-  user: { id: 0 },
+  user: undefined,
   login: () => null,
   setAuthError: () => '',
-  setUser: () => null,
 }
 
 export const UserContext = createContext(initialState as AuthContextType)
@@ -58,7 +56,7 @@ export const AuthContextProvider = ({ children }: AuthContextProviderProps) => {
       mutate(userCredentials, {
         onError: (error: any) => {
           //@TO BE DONE GLOBALLY
-          const errorMessage = error?.response?.errors[0]?.message
+          const errorMessage = error?.response?.errors
             ? error?.response?.errors[0]?.message
             : 'Something Wrong !'
           setAuthError(errorMessage)
@@ -90,7 +88,6 @@ export const AuthContextProvider = ({ children }: AuthContextProviderProps) => {
     authError,
     setAuthError,
     login,
-    setUser,
   }
 
   useEffect(() => {
