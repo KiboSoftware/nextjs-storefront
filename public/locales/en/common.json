@@ -54,7 +54,7 @@
   "standard-shopping": "Standard Shipping",
   "currency": "{{val, currency(USD)}}",
   "count": "count",
-  "cart-total": "{{cartTotalLabel}} of ({{numberOfItems}})",
+  "cart-total": "{{cartTotalLabel}} of {{numberOfItems}}",
   "suggestions": "Suggestions",
   "categories": "Categories",
 
@@ -86,5 +86,11 @@
   "total-price": "Total Price",
   "free": "Free",
   "filter-orders": "Filter Orders",
-  "order-history": "Order History"
+  "order-history": "Order History",
+  "your-order": "Your Order",
+  "thank-you": "Thank You!",
+  "order-details": "Order Details",
+  "order-placed-confirmation-text": "Your order was placed successfully",
+  "check-email-confirmation-text": "Check your email for your order confirmation",
+  "order-confirmation-to-email-text": " We have sent the order confirmation details to"
 }
