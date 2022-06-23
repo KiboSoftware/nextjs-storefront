@@ -31,7 +31,7 @@ const styles = {
 
 const ViewOrderDetails = (props: ViewOrderDetailsProps) => {
   const { order } = props
-  const { t } = useTranslation('common')
+  const { t } = useTranslation(['common', 'checkout'])
 
   const orderNumber = orderGetters.getOrderNumber(order)
   const orderTotal = orderGetters.getTotal(order)
@@ -42,16 +42,16 @@ const ViewOrderDetails = (props: ViewOrderDetailsProps) => {
   const payments = orderGetters.getOrderPayments(order)
 
   const orderSummeryArgs = {
-    standardShippingAmount: `$${order?.shippingTotal}`,
-    estimatedTaxAmout: `$${order?.taxTotal}`,
-    orderTotal: `$${order?.total}`,
-    subTotal: `$${order?.subtotal}`,
-    numberOfItems: `${order?.items?.length} items`,
     nameLabel: t('order-summary'),
     cartTotalLabel: t('subtotal'),
     standardShippingLabel: t('shipping'),
     estimatedTaxLabel: t('estimated-tax'),
     orderTotalLabel: t('total-price'),
+    orderTotal: t('currency', { val: orderTotal }),
+    numberOfItems: t('item-quantity', { count: order.items?.length }),
+    standardShippingAmount: t('currency', { val: orderGetters.getShippingTotal(order) }),
+    estimatedTaxAmout: t('currency', { val: orderGetters.getTaxTotal(order) }),
+    subTotal: t('currency', { val: orderGetters.getSubtotal(order) }),
   }
 
   return (
@@ -72,7 +72,9 @@ const ViewOrderDetails = (props: ViewOrderDetailsProps) => {
           <ProductOption
             option={{
               name: t('order-total'),
-              value: `${t('currency', { val: orderTotal })} ${t('item-quantity', { count: 15 })}`,
+              value: `${t('currency', { val: orderTotal })} ${t('item-quantity', {
+                count: order.items?.length,
+              })}`,
             }}
             variant="body1"
           />
@@ -123,6 +125,9 @@ const ViewOrderDetails = (props: ViewOrderDetailsProps) => {
 
         {/* Payment Information */}
         <Box py={3}>
+          <Typography variant="h3" fontWeight={'bold'}>
+            {t('checkout:payment-information')}
+          </Typography>
           {payments?.map((payment) => (
             <SavedPaymentMethodView
               key={payment?.id}
@@ -131,8 +136,10 @@ const ViewOrderDetails = (props: ViewOrderDetailsProps) => {
             />
           ))}
         </Box>
+      </Grid>
 
-        {/* Order Summary */}
+      {/* Order Summary */}
+      <Grid item xs={12} md={5} sx={{ paddingX: { xs: 0, md: 2 } }}>
         <OrderSummary {...orderSummeryArgs} />
       </Grid>
     </Grid>
