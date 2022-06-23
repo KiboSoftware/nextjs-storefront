@@ -4,7 +4,7 @@ import { composeStories } from '@storybook/testing-react'
 import { fireEvent, render, screen, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 
-import { getShippingRates } from '@/__mocks__/productItemListMockData'
+import { shippingRateMock } from '@/__mocks__/stories/shippingRateMock'
 import { ShippingMethodProps } from '@/components/checkout/Shipping/OrderItems/ShippingMethod'
 import * as stories from '@/components/checkout/Shipping/OrderItems/ShippingMethod.stories'
 
@@ -56,7 +56,7 @@ describe('[component] - ShippingMethod', () => {
     const params = {
       shipItems: Common.args?.shipItems as Maybe<CrOrderItem>[],
       pickupItems: [],
-      orderShipmentMethods: getShippingRates.orderShipmentMethods,
+      orderShipmentMethods: shippingRateMock.orderShipmentMethods,
       onShippingMethodChange: (name: string, value: string) => ({ name, value }),
     }
 
@@ -77,7 +77,7 @@ describe('[component] - ShippingMethod', () => {
     const params = {
       shipItems: [],
       pickupItems: Common.args?.pickupItems as Maybe<CrOrderItem>[],
-      orderShipmentMethods: getShippingRates.orderShipmentMethods,
+      orderShipmentMethods: shippingRateMock.orderShipmentMethods,
       onShippingMethodChange: (name: string, value: string) => ({ name, value }),
     }
 
@@ -90,7 +90,7 @@ describe('[component] - ShippingMethod', () => {
     const params = {
       shipItems: Common.args?.shipItems as Maybe<CrOrderItem>[],
       pickupItems: Common.args?.pickupItems as Maybe<CrOrderItem>[],
-      orderShipmentMethods: getShippingRates.orderShipmentMethods,
+      orderShipmentMethods: shippingRateMock.orderShipmentMethods,
       onShippingMethodChange: (name: string, value: string) => ({ name, value }),
     }
 
@@ -105,7 +105,7 @@ describe('[component] - ShippingMethod', () => {
     const params = {
       shipItems: Common.args?.shipItems as Maybe<CrOrderItem>[],
       pickupItems: Common.args?.pickupItems as Maybe<CrOrderItem>[],
-      orderShipmentMethods: getShippingRates.orderShipmentMethods,
+      orderShipmentMethods: shippingRateMock.orderShipmentMethods,
       onShippingMethodChange: (name: string, value: string) => ({ name, value }),
     }
     setup(params)

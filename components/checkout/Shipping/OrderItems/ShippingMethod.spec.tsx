@@ -4,7 +4,7 @@ import { composeStories } from '@storybook/testing-react'
 import { render, screen } from '@testing-library/react'
 
 import * as stories from './ShippingMethod.stories'
-import { getShippingRates } from '@/__mocks__/productItemListMockData'
+import { shippingRateMock } from '@/__mocks__/stories/shippingRateMock'
 import { ShippingMethodProps } from '@/components/checkout/Shipping/OrderItems/ShippingMethod'
 
 import type { Maybe, CrOrderItem } from '@/lib/gql/types'
@@ -51,7 +51,7 @@ describe('[component] - ShippingMethod', () => {
     const params = {
       shipItems: Common.args?.shipItems as Maybe<CrOrderItem>[],
       pickupItems: [],
-      orderShipmentMethods: getShippingRates.orderShipmentMethods,
+      orderShipmentMethods: shippingRateMock.orderShipmentMethods,
       onShippingMethodChange: (name: string, value: string) => ({ name, value }),
     }
     setup(params)
@@ -67,7 +67,7 @@ describe('[component] - ShippingMethod', () => {
     const params = {
       shipItems: [],
       pickupItems: Common.args?.pickupItems as Maybe<CrOrderItem>[],
-      orderShipmentMethods: getShippingRates.orderShipmentMethods,
+      orderShipmentMethods: shippingRateMock.orderShipmentMethods,
       onShippingMethodChange: (name: string, value: string) => ({ name, value }),
     }
     setup(params)
@@ -83,7 +83,7 @@ describe('[component] - ShippingMethod', () => {
     const params = {
       shipItems: Common.args?.shipItems as Maybe<CrOrderItem>[],
       pickupItems: Common.args?.pickupItems as Maybe<CrOrderItem>[],
-      orderShipmentMethods: getShippingRates.orderShipmentMethods,
+      orderShipmentMethods: shippingRateMock.orderShipmentMethods,
       onShippingMethodChange: (name: string, value: string) => ({ name, value }),
     }
     setup(params)
