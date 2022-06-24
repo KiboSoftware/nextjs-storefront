@@ -47,11 +47,11 @@ describe('[context] - AuthContext', () => {
     )
   }
 
-  it('should render initial context values', async () => {
+  it('should render initial context values', () => {
     setup(<TestComponent />)
     const isLoggedIn = screen.getByTestId('is-logged-in')
     const userFirstName = screen.getByTestId('user-first-name')
-    const authError = await screen.findByTestId('auth-error')
+    const authError = screen.getByTestId('auth-error')
 
     expect(isLoggedIn).toHaveTextContent('false')
     expect(userFirstName).toHaveTextContent('')
@@ -59,7 +59,14 @@ describe('[context] - AuthContext', () => {
   })
 
   describe('when using useAuthContext hook', () => {
-    it('should set isAuthenticated to true when logged in', async () => {
+    beforeEach(() => {
+      jest.clearAllMocks()
+    })
+    afterEach(() => {
+      jest.clearAllMocks()
+    })
+
+    it('should set isAuthenticated to true when successfully logged in', async () => {
       setup(<TestComponent />)
       const loginButton = screen.getByRole('button')
       const storeClientCookieSpy = jest.spyOn(cookieHelper, 'storeClientCookie')
