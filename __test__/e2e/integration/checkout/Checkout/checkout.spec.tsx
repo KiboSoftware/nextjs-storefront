@@ -1,7 +1,7 @@
 import React from 'react'
 
 import { composeStories } from '@storybook/testing-react'
-import { screen, act, fireEvent, waitFor } from '@testing-library/react'
+import { screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 
 import * as stories from '../../../../../components/page-templates/Checkout/Checkout.stories'
@@ -48,10 +48,8 @@ describe('[components] Checkout integration', () => {
     // Enter valid details
     const emailInput = screen.getByRole('textbox', { name: /your-email/i })
 
-    await act(async () => {
-      userEvent.clear(emailInput)
-      userEvent.type(emailInput, email)
-    })
+    userEvent.clear(emailInput)
+    userEvent.type(emailInput, email)
 
     expect(emailInput).toHaveValue(email)
 
@@ -78,9 +76,7 @@ describe('[components] Checkout integration', () => {
       name: /credit \/ debit card/i,
     })
 
-    await act(async () => {
-      fireEvent.click(creditCard)
-    })
+    userEvent.click(creditCard)
 
     const cardNumber = screen.getByRole('textbox', {
       name: /card-number/i,
@@ -113,20 +109,18 @@ describe('[components] Checkout integration', () => {
 
     // act
     const phoneNumberHome = screen.getByRole('textbox', { name: /phone-number/i })
-    await act(async () => {
-      userEvent.type(cardNumber, '4111111111111111')
-      userEvent.type(expiryDate, '03/2024')
-      userEvent.type(securityCode, '123')
-      userEvent.type(firstName, 'John')
-      userEvent.type(lastNameOrSurname, 'Doe')
-      userEvent.type(address1, '123 Main St')
-      userEvent.type(address2, 'Apt 1')
-      userEvent.type(cityOrTown, 'San Francisco')
-      userEvent.type(stateOrProvince, 'CA')
-      userEvent.type(postalOrZipCode, '94107')
-      userEvent.type(phoneNumberHome, '1234567890')
-      onCompleteCallbackMock({ type: 'COMPLETE' })
-    })
+    userEvent.type(cardNumber, '4111111111111111')
+    userEvent.type(expiryDate, '03/2024')
+    userEvent.type(securityCode, '123')
+    userEvent.type(firstName, 'John')
+    userEvent.type(lastNameOrSurname, 'Doe')
+    userEvent.type(address1, '123 Main St')
+    userEvent.type(address2, 'Apt 1')
+    userEvent.type(cityOrTown, 'San Francisco')
+    userEvent.type(stateOrProvince, 'CA')
+    userEvent.type(postalOrZipCode, '94107')
+    userEvent.type(phoneNumberHome, '1234567890')
+    onCompleteCallbackMock({ type: 'COMPLETE' })
 
     await waitFor(() => expect(onCompleteCallbackMock).toHaveBeenCalled())
   })
@@ -139,11 +133,7 @@ describe('[components] Checkout integration', () => {
     })
     termsConditions.focus()
 
-    await act(async () => {
-      fireEvent.change(termsConditions, {
-        target: { checked: true },
-      })
-    })
+    userEvent.click(termsConditions)
 
     expect(termsConditions).toBeChecked()
   })
@@ -156,9 +146,7 @@ describe('[components] Checkout integration', () => {
     })
     goBackButton.focus()
 
-    await act(async () => {
-      userEvent.click(goBackButton)
-    })
+    userEvent.click(goBackButton)
 
     expect(reviewComponent).not.toBeInTheDocument()
   })
