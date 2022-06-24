@@ -19,6 +19,9 @@ const loginInputs = {
 }
 
 describe('[context] - AuthContext', () => {
+  beforeEach(() => {
+    jest.clearAllMocks()
+  })
   afterEach(() => {
     jest.clearAllMocks()
   })
