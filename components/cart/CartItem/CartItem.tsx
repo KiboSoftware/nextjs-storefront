@@ -78,6 +78,7 @@ interface CartItemProps {
   onQuantityUpdate: (cartItemId: string, quantity: number) => void
   onCartItemDelete: (cartItemId: string) => void
   onCartItemActionSelection: () => void
+  onFulfillmentOptionSelection: () => void
 }
 
 const CartItem = (props: CartItemProps) => {
@@ -89,6 +90,7 @@ const CartItem = (props: CartItemProps) => {
     onQuantityUpdate,
     onCartItemDelete,
     onCartItemActionSelection,
+    onFulfillmentOptionSelection,
   } = props
 
   const theme = useTheme()
@@ -100,9 +102,7 @@ const CartItem = (props: CartItemProps) => {
   const updateQuantity = (quantity: number) => onQuantityUpdate(cartItem.id || '', quantity)
   const handleActionSelection = () => onCartItemActionSelection()
 
-  const handleFulfillmentOption = () => {
-    return ''
-  }
+  const handleFulfillmentOption = () => onFulfillmentOptionSelection()
 
   return (
     <>

@@ -7,10 +7,17 @@ interface CartItemListProps {
   onCartItemQuantityUpdate: (cartItemId: string, quantity: number) => void
   onCartItemDelete: (cartItemId: string) => void
   onCartItemActionSelection: () => void
+  onFulfillmentOptionSelection: () => void
 }
 
 const CartItemList = (props: CartItemListProps) => {
-  const { cartItems, onCartItemQuantityUpdate, onCartItemDelete, onCartItemActionSelection } = props
+  const {
+    cartItems,
+    onCartItemQuantityUpdate,
+    onCartItemDelete,
+    onCartItemActionSelection,
+    onFulfillmentOptionSelection,
+  } = props
 
   const handleQuantityUpdate = (cartItemId: string, quantity: number) =>
     onCartItemQuantityUpdate(cartItemId, quantity)
@@ -30,6 +37,7 @@ const CartItemList = (props: CartItemListProps) => {
           onCartItemDelete={handleCartItemDelete}
           onCartItemActionSelection={handleCartItemActionSelection}
           fulfillmentOptions={[]}
+          onFulfillmentOptionSelection={onFulfillmentOptionSelection}
         />
       ))}
     </>

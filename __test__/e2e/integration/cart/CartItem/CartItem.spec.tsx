@@ -13,10 +13,18 @@ describe('[components] - CartItem Integration', () => {
   const setup = () => {
     const user = userEvent.setup()
     const onQuantityUpdateMock = jest.fn()
-    render(<Common {...Common.args} onQuantityUpdate={onQuantityUpdateMock} />)
+    const onFulfillmentOptionSelectionMock = jest.fn()
+    render(
+      <Common
+        {...Common.args}
+        onQuantityUpdate={onQuantityUpdateMock}
+        onFulfillmentOptionSelection={onFulfillmentOptionSelectionMock}
+      />
+    )
     return {
       onQuantityUpdateMock,
       user,
+      onFulfillmentOptionSelectionMock,
     }
   }
 
@@ -45,5 +53,17 @@ describe('[components] - CartItem Integration', () => {
     expect(decreaseButton).toBeEnabled()
     expect(actionsIcon).toBeEnabled()
     expect(onQuantityUpdateMock).toHaveBeenCalledTimes(2)
+  })
+
+  it('should handle fulfillment option selection', () => {
+    const { onFulfillmentOptionSelectionMock } = setup()
+
+    const radio = screen.getByRole('radio', {
+      name: /ship to home/i,
+    })
+
+    userEvent.click(radio)
+
+    expect(onFulfillmentOptionSelectionMock).toBeCalled()
   })
 })
