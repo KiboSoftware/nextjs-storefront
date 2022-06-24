@@ -13,15 +13,15 @@ interface CartContentProps {
 
 const Content = (props: CartContentProps) => {
   const { cartItem } = props
-  const { fulfillmentMethod, quantity, subtotal, itemTaxTotal, total } = cartItem
+  const { shippingTotal, quantity, subtotal, itemTaxTotal, total } = cartItem
   const { t } = useTranslation('common')
   const orderPriceProps: OrderPriceProps = {
     subTotalLabel: t('cart-sub-total', { quantity: quantity }),
-    fullfillmentMethodLable: t('standard-shopping'),
+    shippingTotalLabel: t('standard-shopping'),
     taxLabel: t('estimated-tax'),
     totalLabel: t('total'),
     subTotal: t('currency', { val: subtotal }),
-    fulfillmentMethodCharge: fulfillmentMethod || '',
+    shippingTotal: t('currency', { val: shippingTotal }),
     tax: t('currency', { val: itemTaxTotal }),
     total: t('currency', { val: total }),
   }

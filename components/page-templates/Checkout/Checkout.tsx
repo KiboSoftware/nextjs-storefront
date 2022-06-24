@@ -12,8 +12,8 @@ import {
   PaymentStep,
   OrderReview,
   OrderSummary,
-  type Action,
 } from '@/components/checkout'
+import type { Action } from '@/components/checkout'
 import { FormStates } from '@/lib/constants'
 
 import type { Order } from '@/lib/gql/types'
@@ -40,7 +40,7 @@ const Checkout = (props: CheckoutProps) => {
   const [activeStepStatus, setActiveStepStatus] = useState<string>(FormStates.INCOMPLETE)
 
   const detailsStepIndex = steps.findIndex((step) => step === t('common:details'))
-  const reviesStepIndex = steps.findIndex((step) => step === t('review'))
+  const reviewStepIndex = steps.findIndex((step) => step === t('review'))
 
   const handleBack = () => {
     setActiveStep(activeStep - 1)
@@ -57,7 +57,7 @@ const Checkout = (props: CheckoutProps) => {
     }
   }
 
-  const orderSummeryArgs = {
+  const orderSummaryArgs = {
     standardShippingAmount: 'Free',
     estimatedTaxAmout: `${checkout?.taxTotal}`,
     orderTotal: `${checkout?.total}`,
@@ -110,8 +110,8 @@ const Checkout = (props: CheckoutProps) => {
       </Stack>
 
       <Box sx={{ width: '100%', maxWidth: 428, height: 448, paddingTop: '4.313rem' }}>
-        {activeStep != reviesStepIndex && (
-          <OrderSummary {...orderSummeryArgs}>
+        {activeStep != reviewStepIndex && (
+          <OrderSummary {...orderSummaryArgs}>
             {activeStep < buttonLabels.length && (
               <Stack direction="column" gap={2}>
                 <Button
@@ -137,7 +137,7 @@ const Checkout = (props: CheckoutProps) => {
             )}
           </OrderSummary>
         )}
-        {activeStep === reviesStepIndex && (
+        {activeStep === reviewStepIndex && (
           <OrderReview checkout={checkout} steps={steps} setActiveStep={setActiveStep} />
         )}
       </Box>

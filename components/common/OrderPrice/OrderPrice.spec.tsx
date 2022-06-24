@@ -11,11 +11,12 @@ describe('[components] OrderPrice', () => {
   it('should render component', async () => {
     render(<Common {...Common.args} />)
 
-    expect(screen.getByText(/cart subtotal \(6 items\)/i)).toBeVisible()
-    expect(screen.getByText(/\$219\.99/i)).toBeVisible()
-    expect(screen.getByText(/standard shipping/i)).toBeVisible()
-    expect(screen.getByText(/estimated tax/i)).toBeVisible()
-    expect(screen.getByText(/\$13\.73/i)).toBeVisible()
-    expect(screen.getByText(/\$233\.72/i)).toBeVisible()
+    expect(screen.getByText(Common.args?.subTotal as string)).toBeVisible()
+    expect(screen.getByText(Common.args?.shippingTotalLabel as string)).toBeVisible()
+    expect(screen.getByText(Common.args?.shippingTotal as string)).toBeVisible()
+    expect(screen.getByText(Common.args?.taxLabel as string)).toBeVisible()
+    expect(screen.getByText(Common.args?.tax as string)).toBeVisible()
+    expect(screen.getByText(Common.args?.totalLabel as string)).toBeVisible()
+    expect(screen.getByText(Common.args?.total as string)).toBeVisible()
   })
 })

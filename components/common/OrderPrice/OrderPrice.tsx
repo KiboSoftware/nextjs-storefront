@@ -3,13 +3,14 @@ import React from 'react'
 import { Info } from '@mui/icons-material'
 import { Typography, Box, Divider, styled, Theme } from '@mui/material'
 
+import Price from '@/components/common/Price/Price'
 export interface OrderPriceProps {
   subTotalLabel: string
-  fullfillmentMethodLable: string
+  shippingTotalLabel: string
   taxLabel: string
   totalLabel: string
   subTotal: string
-  fulfillmentMethodCharge: string
+  shippingTotal: string
   tax: string
   total: string
 }
@@ -44,11 +45,11 @@ const StyledPriceData = styled(Typography)(({ theme }: { theme?: Theme }) => ({
 const OrderPrice = (props: OrderPriceProps) => {
   const {
     subTotalLabel,
-    fullfillmentMethodLable,
+    shippingTotalLabel,
     taxLabel,
     totalLabel,
     subTotal,
-    fulfillmentMethodCharge,
+    shippingTotal,
     tax,
     total,
   } = props
@@ -58,17 +59,23 @@ const OrderPrice = (props: OrderPriceProps) => {
       <StyledPriceSection>
         <StyledPriceRow>
           <StyledPriceLabel variant="body2">{subTotalLabel}</StyledPriceLabel>
-          <StyledPriceData variant="body2">{subTotal}</StyledPriceData>
+          <StyledPriceData variant="body2">
+            <Price variant="body2" fontWeight="normal" price={subTotal} />
+          </StyledPriceData>
         </StyledPriceRow>
         <StyledPriceRow>
-          <StyledPriceLabel variant="body2">{fullfillmentMethodLable}</StyledPriceLabel>
-          <StyledPriceData variant="body2">{fulfillmentMethodCharge}</StyledPriceData>
+          <StyledPriceLabel variant="body2">{shippingTotalLabel}</StyledPriceLabel>
+          <StyledPriceData variant="body2">
+            <Price variant="body2" fontWeight="normal" price={shippingTotal} />
+          </StyledPriceData>
         </StyledPriceRow>
         <StyledPriceRow>
           <StyledPriceLabel variant="body2">
             {taxLabel} <Info sx={{ width: '0.688rem', height: '0.688rem' }} />
           </StyledPriceLabel>
-          <StyledPriceData variant="body2">{tax}</StyledPriceData>
+          <StyledPriceData variant="body2">
+            <Price variant="body2" fontWeight="normal" price={tax} />
+          </StyledPriceData>
         </StyledPriceRow>
       </StyledPriceSection>
       <Divider sx={{ margin: '0 0.438rem' }} />
@@ -77,7 +84,8 @@ const OrderPrice = (props: OrderPriceProps) => {
           {totalLabel}
         </StyledPriceLabel>
         <StyledPriceData variant="body2" fontWeight="bold">
-          {total}
+          <Price variant="body2" fontWeight="normal" price={total} />
+          {/* tobe: add sale price for promocode */}
         </StyledPriceData>
       </StyledPriceTotalRow>
     </Box>

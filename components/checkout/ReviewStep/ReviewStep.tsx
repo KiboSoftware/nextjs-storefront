@@ -14,7 +14,7 @@ import {
 } from '@mui/material'
 import { useTranslation } from 'next-i18next'
 
-import { type Action } from '@/components/checkout/DetailsStep/DetailsStep'
+import type { Action } from '@/components/checkout/DetailsStep/DetailsStep'
 import OrderPrice, { OrderPriceProps } from '@/components/common/OrderPrice/OrderPrice'
 import ProductItemList from '@/components/common/ProductItemList/ProductItemList'
 import { FormStates } from '@/lib/constants'
@@ -60,11 +60,11 @@ const ReviewStep = (props: ReviewStepProps) => {
 
   const orderPriceProps: OrderPriceProps = {
     subTotalLabel: t('sub-total'),
-    fullfillmentMethodLable: t('shipping'),
+    shippingTotalLabel: t('shipping'),
     taxLabel: t('common:estimated-tax'),
     totalLabel: t('common:total'),
     subTotal: t('common:currency', { val: subTotal }),
-    fulfillmentMethodCharge: shippingTotal.toString(),
+    shippingTotal: t('common:currency', { val: shippingTotal }),
     tax: t('common:currency', { val: taxTotal }),
     total: t('common:currency', { val: total }),
   }
@@ -104,35 +104,7 @@ const ReviewStep = (props: ReviewStepProps) => {
         </Box>
       )}
       <OrderPrice {...orderPriceProps} />
-      {/* <StyledPriceSection data-testid={'invoice-details'}>
-        <StyledPriceRow>
-          <StyledPriceLabel variant="h4">{t('sub-total')}</StyledPriceLabel>
-          <StyledPriceData variant="h4" fontWeight="bold">
-            {t('common:currency', { val: subTotal })}
-          </StyledPriceData>
-        </StyledPriceRow>
-        <StyledPriceRow>
-          <StyledPriceLabel variant="h4">{t('common:shipping')}</StyledPriceLabel>
-          <StyledPriceData variant="h4" fontWeight="bold">
-            {shippingTotal}
-          </StyledPriceData>
-        </StyledPriceRow>
-        <StyledPriceRow>
-          <StyledPriceLabel variant="h4">
-            {t('common:estimated-tax')} <InfoIcon sx={{ width: '0.688rem', height: '0.688rem' }} />
-          </StyledPriceLabel>
-          <StyledPriceData variant="h4" fontWeight="bold">
-            {t('common:currency', { val: taxTotal })}
-          </StyledPriceData>
-        </StyledPriceRow>
-      </StyledPriceSection>
-      <Divider color={theme.palette.primary.main} sx={{ mt: '1.25rem', mb: '1.375rem' }} />
-      <StyledPriceTotalRow sx={{ paddingTop: 0 }}>
-        <StyledPriceLabel variant="h4">{t('common:total')}</StyledPriceLabel>
-        <StyledPriceData variant="h4" fontWeight="bold">
-          {t('common:currency', { val: total })}
-        </StyledPriceData>
-      </StyledPriceTotalRow> */}
+
       <Box sx={{ mt: '31px', mb: '35px' }}>
         <FormControlLabel
           control={

@@ -12,7 +12,8 @@ import {
 } from '@mui/material'
 import { useTranslation } from 'next-i18next'
 
-import { CardDetailsForm, type Action, type CardData } from '@/components/checkout'
+import { CardDetailsForm } from '@/components/checkout'
+import type { Action, CardData } from '@/components/checkout'
 import AddressForm, { Address, Contact } from '@/components/common/AddressForm/AddressForm'
 import { usePaymentTypes } from '@/hooks'
 import { FormStates } from '@/lib/constants'

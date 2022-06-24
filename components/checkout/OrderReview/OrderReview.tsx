@@ -130,7 +130,7 @@ const OrderReview = (props: OrderReviewProps) => {
         </StyledRow>
       ))}
 
-      {/* to be promocode component */}
+      {/* tobe:  promocode component */}
     </StyledOrderReview>
   )
 }

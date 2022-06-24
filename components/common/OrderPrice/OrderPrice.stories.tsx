@@ -16,11 +16,11 @@ export const Common = Template.bind({})
 
 Common.args = {
   subTotalLabel: 'Cart Subtotal (6 items)',
-  fullfillmentMethodLable: 'Standard Shipping',
+  shippingTotalLabel: 'Standard Shipping',
   taxLabel: 'Estimated Tax',
   totalLabel: 'Total',
   subTotal: '$219.99',
-  fulfillmentMethodCharge: 'free',
+  shippingTotal: '$0',
   tax: '$13.73',
   total: '$233.72',
 }

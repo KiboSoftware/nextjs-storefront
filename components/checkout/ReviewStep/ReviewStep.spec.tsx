@@ -1,15 +1,16 @@
 import React from 'react'
 
 import { composeStories } from '@storybook/testing-react'
-import { fireEvent, render, screen } from '@testing-library/react'
+import { render, screen } from '@testing-library/react'
+import userEvent from '@testing-library/user-event'
 
 import * as stories from '../ReviewStep/ReviewStep.stories'
 const { Common } = composeStories(stories)
 
 const orderPriceMock = () => <div data-testid="order-price-component" />
 jest.mock('@/components/common/OrderPrice/OrderPrice', () => orderPriceMock)
-
-const onHandleAggreeTermsConditions = jest.fn()
+const productItemListMock = () => <div data-testid="product-item-stack" />
+jest.mock('@/components/common/ProductItemList/ProductItemList', () => productItemListMock)
 
 describe('[components] ReviewStep', () => {
   const setup = () => {
@@ -54,11 +55,11 @@ describe('[components] ReviewStep', () => {
     const termsConditions = screen.getByRole('checkbox', {
       name: /termsconditions/i,
     })
-    termsConditions.focus()
-    fireEvent.change(termsConditions, {
-      target: { onChange: onHandleAggreeTermsConditions() },
-    })
+    expect(termsConditions).not.toBeChecked()
 
-    expect(onHandleAggreeTermsConditions).toBeCalled()
+    termsConditions.focus()
+    userEvent.click(termsConditions)
+
+    expect(termsConditions).toBeChecked()
   })
 })
