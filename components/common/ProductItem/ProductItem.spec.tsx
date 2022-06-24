@@ -70,7 +70,9 @@ describe('[component] - ProductItem with Price and Pickup Item', () => {
         onClickStoreLocator={onClickStoreLocatorMock}
       />
     )
-    const changeStore = screen.getByTestId('change-store-MS-BTL-004')
+    const changeStore = WithChageStoreOption.args?.purchaseLocation
+      ? screen.getByText(/change-store/i)
+      : screen.getByText(/select-store/i)
 
     userEvent.click(changeStore)
     expect(onClickStoreLocatorMock).toHaveBeenCalled()

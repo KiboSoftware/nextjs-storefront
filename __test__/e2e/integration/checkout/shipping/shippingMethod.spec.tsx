@@ -109,7 +109,9 @@ describe('[component] - ShippingMethod', () => {
       onShippingMethodChange: (name: string, value: string) => ({ name, value }),
     }
     setup(params)
-    const changeStore = screen.getByTestId('change-store-MS-BTL-004')
+    const changeStore = params?.shipItems[0]?.purchaseLocation
+      ? screen.getByText(/change-store/i)
+      : screen.getByText(/select-store/i)
     userEvent.click(changeStore)
     expect(onClickStoreLocatorMock).toHaveBeenCalled()
   })

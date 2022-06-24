@@ -10,10 +10,11 @@ import ProductItemList from '@/components/common/ProductItemList/ProductItemList
 import ProductOption from '@/components/product/ProductOption/ProductOption'
 import { orderGetters } from '@/lib/getters'
 
-import type { Order } from '@/lib/gql/types'
+import type { Order, CrAddress } from '@/lib/gql/types'
 
 interface ViewOrderDetailsProps {
   order: Order
+  storePickupAddress?: CrAddress
 }
 
 const styles = {
@@ -30,7 +31,7 @@ const styles = {
 }
 
 const ViewOrderDetails = (props: ViewOrderDetailsProps) => {
-  const { order } = props
+  const { order, storePickupAddress } = props
   const { t } = useTranslation(['common', 'checkout'])
 
   const orderNumber = orderGetters.getOrderNumber(order)
@@ -116,7 +117,7 @@ const ViewOrderDetails = (props: ViewOrderDetailsProps) => {
               </Typography>
             </Box>
             <ProductItemList items={pickupItems} />
-            <AddressCard {...(payments && payments[0]?.billingInfo?.billingContact?.address)} />
+            <AddressCard {...storePickupAddress} />
             {/* ToBe: Address details need to be handled based on API GetISPULocations by purchase location code */}
           </Box>
         )}

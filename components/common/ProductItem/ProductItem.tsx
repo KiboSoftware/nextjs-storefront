@@ -54,7 +54,6 @@ const styles = {
 const ProductItem = (props: ProductItemProps) => {
   const {
     id,
-    productCode,
     image,
     name,
     options,
@@ -160,7 +159,6 @@ const ProductItem = (props: ProductItemProps) => {
           <Box px={2}>
             <Link
               component="button"
-              data-testid={'change-store-' + productCode}
               variant="caption"
               color="text.primary"
               onClick={onClickStoreLocator}
