@@ -30,13 +30,17 @@ const OrderHistory = (props: OrderHistoryProps) => {
 
   const { t } = useTranslation('common')
 
-  const handleMyAccountClick = () => {
+  const handleAccountTitleClick = () => {
     onAccountTitleClick()
+  }
+
+  const handleHistoryItemClick = (id: string) => {
+    console.log(`id: `, id)
   }
 
   return (
     <Stack>
-      <Stack sx={styles.wrapIcon} direction="row" gap={2} onClick={handleMyAccountClick}>
+      <Stack sx={styles.wrapIcon} direction="row" gap={2} onClick={handleAccountTitleClick}>
         <ArrowBackIosIcon fontSize="inherit" sx={styles.wrapIcon} />
         <Typography variant="body1">{accountTitle}</Typography>
       </Stack>
@@ -60,7 +64,11 @@ const OrderHistory = (props: OrderHistoryProps) => {
 
       <Stack>
         {items?.map((item, index) => (
-          <OrderHistoryItem key={index} order={item as Order} />
+          <OrderHistoryItem
+            key={index}
+            order={item as Order}
+            onHistoryItemClick={handleHistoryItemClick}
+          />
         ))}
       </Stack>
     </Stack>

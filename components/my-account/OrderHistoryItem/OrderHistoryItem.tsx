@@ -10,6 +10,7 @@ import type { Order } from '@/lib/gql/types'
 
 interface OrderHistoryItemProps {
   order: Order
+  onHistoryItemClick: (id: string) => void
 }
 
 const styles = {
@@ -33,14 +34,23 @@ const styles = {
 }
 
 const OrderHistoryItem = (props: OrderHistoryItemProps) => {
-  const { order } = props
+  const { order, onHistoryItemClick } = props
   const { t } = useTranslation('common')
 
-  const { submittedDate, productNames, orderTotal, orderStatus } =
+  const { id, submittedDate, productNames, orderTotal, orderStatus } =
     orderGetters.getOrderDetails(order)
 
+  const handleHistoryItemClick = (id: string) => {
+    onHistoryItemClick(id)
+  }
+
   return (
-    <Stack sx={styles.stack} direction="row">
+    <Stack
+      sx={styles.stack}
+      direction="row"
+      data-testid="history-item"
+      onClick={() => handleHistoryItemClick(id as string)}
+    >
       <Stack sx={{ width: '95%' }} gap={0.6}>
         <Typography variant="body1" sx={{ fontWeight: 'bold' }}>
           {submittedDate}
