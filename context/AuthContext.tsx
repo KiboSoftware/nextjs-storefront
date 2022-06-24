@@ -18,7 +18,7 @@ import type { CustomerAccount } from '@/lib/gql/types'
 
 interface AuthContextType {
   isAuthenticated: boolean
-  user?: CustomerAccount | undefined
+  user?: CustomerAccount
   login: (params: LoginData, toggleLoginDialog: () => void) => any
   setAuthError: Dispatch<SetStateAction<string>>
   authError: string
