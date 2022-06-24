@@ -2,6 +2,7 @@ import React from 'react'
 
 import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos'
 import { Stack, Typography, Divider } from '@mui/material'
+import { useTranslation } from 'next-i18next'
 
 import { FilterOrders, FilterTiles } from '@/components/common'
 import { OrderHistoryItem } from '@/components/my-account'
@@ -27,6 +28,8 @@ const OrderHistory = (props: OrderHistoryProps) => {
   const { orders, accountTitle, onAccountTitleClick } = props
   const { items = [] } = orders
 
+  const { t } = useTranslation('common')
+
   const handleMyAccountClick = () => {
     onAccountTitleClick()
   }
@@ -39,7 +42,7 @@ const OrderHistory = (props: OrderHistoryProps) => {
       </Stack>
 
       <Stack sx={{ pt: '1.2rem', pb: '1.2rem' }}>
-        <Typography variant="h1">Order History</Typography>
+        <Typography variant="h1">{t('order-history')}</Typography>
       </Stack>
 
       <Stack

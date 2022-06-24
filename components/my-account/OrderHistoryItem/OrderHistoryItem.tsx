@@ -14,6 +14,7 @@ interface OrderHistoryItemProps {
 
 const styles = {
   stack: {
+    // tobe: once Geetanshu's PR will be merged, need to replace border with Divider
     borderBottomColor: 'grey.500',
     borderBottomStyle: 'solid',
     borderBottomWidth: '1px',

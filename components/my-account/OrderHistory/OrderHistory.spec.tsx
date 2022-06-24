@@ -21,13 +21,12 @@ describe('[component] - OrderHistory', () => {
   it('should render component', () => {
     render(<Common {...Common?.args} />)
 
-    // const { orders, accountTitle } = Common?.args
     const orders = Common?.args?.orders as OrderCollection
     const itemsLength = orders.items ? orders.items.length : 0
     const accountTitle = Common?.args?.accountTitle as string
 
     const accountTitleText = screen.getByText(accountTitle)
-    const orderHistoryText = screen.getByText('Order History')
+    const orderHistoryText = screen.getByText('order-history')
     const filterOrders = screen.getByTestId('filter-orders-mock')
     const filterTiles = screen.getByTestId('filter-tiles-mock')
     const orderHistoryItem = screen.getAllByTestId('order-history-mock')
