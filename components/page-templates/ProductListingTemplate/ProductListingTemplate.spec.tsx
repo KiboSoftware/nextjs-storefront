@@ -6,7 +6,6 @@ import { render, screen, within, fireEvent } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 
 import * as stories from './ProductListingTemplate.stories' // import all stories from the stories file
-
 const { Category } = composeStories(stories)
 
 const KiboBreadcrumbsMock = () => <div data-testid="breadcrumb-component" />

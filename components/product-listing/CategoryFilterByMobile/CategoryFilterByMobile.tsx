@@ -8,8 +8,8 @@ import { FacetList } from '@/components/product-listing'
 import type { Facet as FacetType } from '@/lib/gql/types'
 
 interface CategoryFilterByMobileProps {
-  facetList: FacetType[]
-  header: string
+  facetList?: FacetType[]
+  header?: string
   totalResults: number
   isLoading?: boolean
   onFilterByClose: () => void
