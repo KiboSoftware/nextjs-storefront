@@ -3,7 +3,8 @@ import React from 'react'
 import { Box, Divider } from '@mui/material'
 import { useTranslation } from 'next-i18next'
 
-import OrderPrice, { OrderPriceProps } from '@/components/common/OrderPrice/OrderPrice'
+import OrderPrice from '@/components/common/OrderPrice/OrderPrice'
+import type { OrderPriceProps } from '@/components/common/OrderPrice/OrderPrice'
 import ProductItem from '@/components/common/ProductItem/ProductItem'
 
 import type { CartItem, CrProductOption } from '@/lib/gql/types'

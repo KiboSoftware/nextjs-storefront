@@ -65,5 +65,6 @@
   "shipping-to-home": "Shipping to Home",
   "pickup-in-store": "Pickup in Store",
   "sub-total": "Subtotal",
-  "shipping-details": "Shipping details"
+  "shipping-details": "Shipping details",
+  "order-summary": "Order Summary"
 }

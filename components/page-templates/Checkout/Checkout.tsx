@@ -58,19 +58,18 @@ const Checkout = (props: CheckoutProps) => {
   }
 
   const orderSummaryArgs = {
-    standardShippingAmount: 'Free',
-    estimatedTaxAmout: `${checkout?.taxTotal}`,
-    orderTotal: `${checkout?.total}`,
-    subTotal: `${checkout?.subtotal}`,
-    numberOfItems: `${checkout?.items?.length} items`,
-    backLabel: 'Go Back',
+    nameLabel: t('order-summary'),
+    subTotalLabel: `Cart Subtotal of (${checkout?.items?.length} items)`,
+    shippingTotalLabel: 'Standard Shipping',
+    taxLabel: 'Tax',
+    totalLabel: 'Order Total',
+    subTotal: t('common:currency', { val: checkout?.subtotal }),
+    shippingTotal: t('common:currency', { val: 0 }),
+    tax: t('common:currency', { val: checkout?.taxTotal }),
+    total: t('common:currency', { val: checkout?.total }),
     checkoutLabel: 'Go to Checkout',
-    nameLabel: 'Order Summary',
-    cartTotalLabel: 'Cart Subtotal',
-    standardShippingLabel: 'Standard Shipping',
-    estimatedTaxLabel: 'Tax',
-    orderTotalLabel: 'Order Total',
     shippingLabel: 'Go to Shipping',
+    backLabel: 'Go Back',
   }
 
   const paymentStepParams = {

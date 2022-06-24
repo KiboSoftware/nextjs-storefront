@@ -15,7 +15,8 @@ import {
 import { useTranslation } from 'next-i18next'
 
 import type { Action } from '@/components/checkout/DetailsStep/DetailsStep'
-import OrderPrice, { OrderPriceProps } from '@/components/common/OrderPrice/OrderPrice'
+import OrderPrice from '@/components/common/OrderPrice/OrderPrice'
+import type { OrderPriceProps } from '@/components/common/OrderPrice/OrderPrice'
 import ProductItemList from '@/components/common/ProductItemList/ProductItemList'
 import { FormStates } from '@/lib/constants'
 import { checkoutGetters } from '@/lib/getters'

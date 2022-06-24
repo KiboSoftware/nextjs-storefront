@@ -37,7 +37,8 @@ const StyledPriceLabel = styled(Typography)(({ theme }: { theme?: Theme }) => ({
 const StyledPriceData = styled(Typography)(({ theme }: { theme?: Theme }) => ({
   width: '1.25rem',
   height: '1.25rem',
-  textAlign: 'right',
+  display: 'flex',
+  justifyContent: 'flex-end',
   flex: '50%',
   color: theme?.palette.text.primary,
 }))
