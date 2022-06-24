@@ -40,7 +40,6 @@ const OrderSummary = (props: OrderSummaryProps) => {
     nameLabel,
   } = props
 
-  const { t } = useTranslation('common')
   const orderPriceProps: OrderPriceProps = {
     subTotalLabel,
     shippingTotalLabel,

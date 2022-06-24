@@ -4,6 +4,9 @@ import { composeStories } from '@storybook/testing-react'
 import { render, screen } from '@testing-library/react'
 
 import * as stories from '../OrderReview/OrderReview.stories'
+import { checkoutGetters } from '@/lib/getters'
+
+import type { Order } from '@/lib/gql/types'
 
 const { Common } = composeStories(stories)
 
@@ -30,17 +33,36 @@ describe('[components] OrderReview', () => {
     const paymentMethodHeading = screen.getByRole('heading', {
       name: /payment-method/i,
     })
-    const editPersonalDetails = screen.getByTestId(/edit-personal-details/i)
-    const editShippingDetails = screen.getByTestId(/edit-shipping-details/i)
-    const editBillingAddress = screen.getByTestId(/edit-billing-address/i)
-    const editPaymentMethod = screen.getByTestId(/edit-payment-method/i)
+    const editLinks = screen.getAllByText(/edit/i)
 
     expect(reviewComponent).toBeVisible()
     expect(personalDetailsHeading).toBeVisible()
-    expect(editPersonalDetails).toBeVisible()
-    expect(editShippingDetails).toBeVisible()
-    expect(editBillingAddress).toBeVisible()
-    expect(editPaymentMethod).toBeVisible()
     expect(paymentMethodHeading).toBeVisible()
+    expect(editLinks).toHaveLength(4)
+  })
+
+  it('should display the personal details', () => {
+    setup()
+
+    const checkout = Common.args?.checkout as Order
+    const { personalDetails, shippingDetails, paymentMethods } =
+      checkoutGetters.getCheckoutDetails(checkout)
+
+    const { email } = personalDetails
+    const { shippingPhoneHome } = shippingDetails
+
+    const userName = screen.getByText(email as string)
+    const userPhoneHome = screen.getByText(shippingPhoneHome as string)
+
+    const cardType = screen.getByText(paymentMethods[0].cardType as string)
+    const cardNumberPartOrMask = screen.getByText(paymentMethods[0].cardNumberPartOrMask as string)
+    const expiry = screen.getByText(`${paymentMethods[0].expiry} XXX`)
+
+    expect(userName).toBeVisible()
+    expect(userPhoneHome).toBeVisible()
+
+    expect(cardType).toBeVisible()
+    expect(cardNumberPartOrMask).toBeVisible()
+    expect(expiry).toBeVisible()
   })
 })
