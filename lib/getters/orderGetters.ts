@@ -8,11 +8,12 @@ const capitalizeWord = (word: Maybe<string> | undefined) =>
   word && word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()
 
 const getSubmittedDate = (order: Order, withTimestamp?: boolean) => {
-  return order?.submittedDate
-    ? withTimestamp
+  if (order?.submittedDate) {
+    return withTimestamp
       ? format(new Date(order?.submittedDate), 'MMMM D, YYYY, hh:mm a zzz')
       : format(new Date(order?.submittedDate), 'MMMM D, YYYY')
-    : order?.submittedDate
+  }
+  order?.submittedDate
 }
 
 const getExpectedDeliveryDate = (items: Maybe<CrOrderItem>[]) => {

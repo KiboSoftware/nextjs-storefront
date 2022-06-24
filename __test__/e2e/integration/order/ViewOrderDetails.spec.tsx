@@ -30,7 +30,7 @@ describe('[components] - ViewOrderDetails Integration', () => {
     expect(screen.getByText(/order-date/i)).toBeVisible()
     expect(screen.getByText(/order-total/i)).toBeVisible()
     expect(screen.getByText(`${Common.args?.order?.orderNumber}`)).toBeVisible()
-    expect(screen.getByText(orderGetters.getSubmittedDate(order))).toBeVisible()
+    expect(screen.getByText(orderGetters.getSubmittedDate(order) || '')).toBeVisible()
 
     shipItems?.map((item) => {
       expect(screen.getByText(item?.product?.name || '')).toBeVisible()

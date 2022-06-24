@@ -1,1 +1,1 @@
-export { default as ShippingStep } from './view-order-details/ViewOrderDetails'
+export { default as ViewOrderDetails } from './view-order-details/ViewOrderDetails'
