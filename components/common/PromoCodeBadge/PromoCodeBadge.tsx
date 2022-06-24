@@ -11,7 +11,7 @@ import KiboTextBox from '@/components/common/KiboTextBox/KiboTextBox'
 export interface PromocodeBadgeProps {
   onApplyCouponCode: (promo: string) => void
   onRemoveCouponCode: (promo: string) => void
-  promoList: any
+  promoList: string[]
   promoError: boolean
   helpText?: string
 }
@@ -33,13 +33,7 @@ const styles = {
 
 export const PromoCodeBadge = (props: PromocodeBadgeProps) => {
   const { t } = useTranslation('common')
-  const {
-    onApplyCouponCode,
-    onRemoveCouponCode,
-    promoList: couponList,
-    promoError,
-    helpText,
-  } = props
+  const { onApplyCouponCode, onRemoveCouponCode, promoList, promoError, helpText } = props
   const [promo, setPromo] = useState<string>('')
   const handleChange = (_name: any, value: string) => {
     setPromo(value)
@@ -47,7 +41,7 @@ export const PromoCodeBadge = (props: PromocodeBadgeProps) => {
 
   const handleApplyCouponCode = () => {
     const couponCode = (element: string) => element === promo
-    if (!couponList?.some(couponCode)) {
+    if (!promoList?.some(couponCode)) {
       onApplyCouponCode(promo)
       setPromo('')
     }
@@ -79,8 +73,7 @@ export const PromoCodeBadge = (props: PromocodeBadgeProps) => {
           {t('apply')}
         </Button>
       </Stack>
-
-      {couponList?.map((coupon: string[]) => (
+      {promoList?.map((coupon: string) => (
         <>
           <Box data-testid="promotype" component="div" sx={styles.boxStyle}>
             <Stack direction="row" spacing={0.5} alignItems="center">
