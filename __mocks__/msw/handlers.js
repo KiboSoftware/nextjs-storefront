@@ -44,9 +44,9 @@ export const categoryHandlers = [
 export const userHandlers = [
   // useUser
   graphql.query('getUser', (_req, res, ctx) => {
-    return res(ctx.data(userResponseMock))
+    return res(ctx.data(userMock))
   }),
-  // useUser
+  // login
   graphql.mutation('login', (_req, res, ctx) => {
     return res(ctx.data(loginUserMock))
   }),
