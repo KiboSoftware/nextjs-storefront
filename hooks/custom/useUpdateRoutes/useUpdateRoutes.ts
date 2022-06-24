@@ -1,23 +1,46 @@
 import { useRouter } from 'next/router'
 
+const nonFilters = ['page', 'sort', 'phrase', 'itemsPerPage']
 export const useUpdateRoutes = () => {
   const router = useRouter()
 
-  const updateRoute = (queryParam: string, action: 'add' | 'remove') => {
-    let params = (router?.query?.filters as string) || ''
-    params = action === 'add' ? params + `${queryParam},` : params.replace(`${queryParam},`, '')
-
-    const newRoute = params.length
-      ? {
-          pathname: router?.pathname,
-          query: { filters: params },
-        }
-      : {
-          pathname: router?.pathname,
-        }
-
-    router?.push(newRoute)
+  const reduceFilters = (query: Record<string, string>) => (prev: {}, curr: string) => {
+    const makeArray = Array.isArray(query[curr]) || nonFilters.includes(curr)
+    return {
+      ...prev,
+      [curr]: makeArray ? query[curr] : [query[curr]],
+    }
+  }
+  const getFiltersDataFromUrl = (onlyFilters: boolean) => {
+    const { query } = router
+    return Object.keys(query)
+      .filter((f) => (onlyFilters ? !nonFilters.includes(f) : nonFilters.includes(f)))
+      .reduce(reduceFilters(query as Record<string, string>), {})
+  }
+  const changeFilters = (filters: string) => {
+    router.push({
+      pathname: router?.pathname,
+      query: {
+        ...router.query,
+        ...getFiltersDataFromUrl(false),
+        filters,
+      },
+    })
   }
 
-  return [updateRoute]
+  const updateRoute = (queryParam: string) => {
+    const qs = router?.query as { filters: string }
+    const filters = qs?.filters?.split(',') || []
+    const currentIndex = filters.indexOf(queryParam)
+    if (currentIndex > -1) {
+      filters.splice(currentIndex, 1)
+    } else {
+      filters.push(queryParam)
+    }
+    changeFilters(filters.join(','))
+  }
+  return {
+    updateRoute,
+    changeFilters,
+  }
 }

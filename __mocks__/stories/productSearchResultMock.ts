@@ -1,7 +1,7 @@
 import type { ProductSearchResult } from '@/lib/gql/types'
 
 const imageBaseURL = '//cdn-sb.mozu.com/30294-50525/cms/50525/files/'
-export const productSearchDataMock: ProductSearchResult = {
+export const productSearchResultMock: ProductSearchResult = {
   totalCount: 42,
   pageSize: 20,
   pageCount: 3,
@@ -1101,12 +1101,12 @@ export const productSearchDataMock: ProductSearchResult = {
           childrenFacetValues: null,
         },
         {
-          label: 'Teal',
-          value: 'teal',
-          filterValue: 'Tenant~color:teal',
+          label: 'Black',
+          value: 'black',
+          filterValue: 'tenant~color:black',
           isDisplayed: true,
-          count: 1,
-          isApplied: false,
+          count: 3,
+          isApplied: true,
           childrenFacetValues: null,
         },
         {
@@ -1143,6 +1143,15 @@ export const productSearchDataMock: ProductSearchResult = {
           isApplied: false,
           childrenFacetValues: null,
         },
+        {
+          label: '50 to 500',
+          value: 'price:[50 TO 500]',
+          filterValue: 'price:[50 TO 500]',
+          isDisplayed: true,
+          count: 3,
+          isApplied: true,
+          childrenFacetValues: null,
+        },
       ],
     },
     {
@@ -1174,7 +1183,7 @@ export const productSearchDataMock: ProductSearchResult = {
           filterValue: 'Tenant~brand:columbia',
           isDisplayed: true,
           count: 2,
-          isApplied: false,
+          isApplied: true,
           childrenFacetValues: null,
         },
         {
@@ -1196,21 +1205,21 @@ export const productSearchDataMock: ProductSearchResult = {
           childrenFacetValues: null,
         },
         {
-          label: 'Patagonia',
-          value: 'patagonia',
-          filterValue: 'Tenant~brand:patagonia',
+          label: 'Nike',
+          value: 'nike',
+          filterValue: 'tenant~brand:nike',
           isDisplayed: true,
-          count: 2,
-          isApplied: false,
+          count: 1,
+          isApplied: true,
           childrenFacetValues: null,
         },
         {
-          label: 'Salomon',
-          value: 'salomon',
-          filterValue: 'Tenant~brand:salomon',
+          label: 'Adidas',
+          value: 'adidas',
+          filterValue: 'tenant~brand:adidas',
           isDisplayed: true,
           count: 1,
-          isApplied: false,
+          isApplied: true,
           childrenFacetValues: null,
         },
         {

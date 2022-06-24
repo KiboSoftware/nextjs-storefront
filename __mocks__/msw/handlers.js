@@ -3,6 +3,7 @@ import { graphql } from 'msw'
 import { categoryTreeDataMock } from '../stories/categoryTreeDataMock'
 import { orderMock } from '../stories/orderMock'
 import { searchSuggestionMock } from '../stories/searchSuggestionResultMock'
+import { productSearchResultMock } from '../stories/productSearchResultMock'
 
 export const checkoutHandlers = [
   // useLoadCheckout
@@ -40,4 +41,15 @@ export const categoryHandlers = [
   }),
 ]
 
-export const handlers = [...checkoutHandlers, ...searchSuggestionHandlers, ...categoryHandlers]
+export const productSearchHandlers = [
+  // useProductSearch
+  graphql.query('ProductSearch', (_req, res, ctx) => {
+    return res(ctx.data(productSearchResultMock))
+  }),
+]
+export const handlers = [
+  ...checkoutHandlers,
+  ...searchSuggestionHandlers,
+  ...categoryHandlers,
+  ...productSearchHandlers,
+]

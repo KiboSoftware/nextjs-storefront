@@ -1,20 +1,23 @@
 import React, { useEffect, useState } from 'react'
 
 import { Add, Apps, List } from '@mui/icons-material'
-import { Grid, MenuItem, Typography, Box, Button, SxProps, Skeleton } from '@mui/material'
+import { Grid, MenuItem, Typography, Box, Button, SxProps, Skeleton, Link } from '@mui/material'
 import { Theme } from '@mui/material/styles'
 import { useTranslation } from 'next-i18next'
 
+import FilterTiles from '@/components/common/FilterTiles/FilterTiles'
 import KiboSelect from '@/components/common/KiboSelect/KiboSelect'
 import KiboBreadcrumbs from '@/components/core/Breadcrumbs/KiboBreadcrumbs'
+import FullWidthDivider from '@/components/FullWidthDivider'
 import { CategoryFacet, CategoryFilterByMobile, FacetList } from '@/components/product-listing'
 import { CategoryFacetData } from '@/components/product-listing/CategoryFacet/CategoryFacet'
 import ProductCard from '@/components/product/ProductCard/ProductCard'
+import { useUpdateRoutes } from '@/hooks'
 import { productGetters } from '@/lib/getters'
 import { uiHelpers } from '@/lib/helpers'
 import type { BreadCrumb as BreadCrumbType } from '@/lib/types'
 
-import type { Facet as FacetType, Product } from '@/lib/gql/types'
+import type { Facet as FacetType, FacetValue, Product } from '@/lib/gql/types'
 
 interface SortingValues {
   value: string
@@ -31,6 +34,7 @@ interface ProductListingTemplateProps {
   totalResults: number
   initialProductsToShow?: number
   isLoading?: boolean
+  appliedFilters?: FacetValue[]
   onSortingSelection: (value: string) => void
 }
 
@@ -38,17 +42,11 @@ const styles = {
   breadcrumbsClass: {
     margin: '1.5rem 0',
     padding: {
-      md: '0 1.5625rem',
+      md: '0',
       xs: '0 1rem',
     },
   },
   navBar: {
-    borderTopWidth: '1px',
-    borderTopStyle: 'solid',
-    borderTopColor: 'grey.500',
-    borderBottomWidth: '1px',
-    borderBottomStyle: 'solid',
-    borderBottomColor: 'grey.500',
     display: 'flex',
     flexWwrap: 'wrap',
     postion: 'relative',
@@ -65,7 +63,7 @@ const styles = {
       xs: 'flex-start',
     },
     padding: {
-      md: '0.5rem 1.5625rem',
+      md: '0.5rem 0',
       xs: '2% 1rem',
     },
   },
@@ -105,7 +103,7 @@ const styles = {
     borderRightWidth: '1px',
     borderRightStyle: 'solid',
     borderRightColor: 'grey.500',
-    padding: '0 1.5625rem',
+    padding: '0 1.5625rem 0 0',
     maxWidth: {
       md: '17%',
       xs: 'auto',
@@ -122,6 +120,7 @@ const styles = {
     justifyContent: 'space-between',
     width: '100%',
     height: '2.188rem',
+    fontWeight: '400',
   },
   showMoreButton: {
     width: { md: '23.5rem', xs: '12.5rem' },
@@ -154,6 +153,22 @@ const styles = {
       xs: 'block',
     },
   },
+  clearAllButton: {
+    typography: 'body2',
+    textDecoration: 'underline',
+    marginTop: { md: '1.5rem', xs: 0 },
+    marginLeft: { md: 0, xs: '1rem' },
+    color: 'text.primary',
+    cursor: 'pointer',
+    whiteSpace: 'nowrap',
+  },
+  totalResults: {
+    marginTop: '1.5rem',
+    marginRight: '1rem',
+    typography: 'body2',
+    color: 'grey.600',
+    whiteSpace: 'nowrap',
+  },
 }
 
 // Component
@@ -166,10 +181,12 @@ const ProductListingTemplate = (props: ProductListingTemplateProps) => {
     categoryFacet,
     totalResults,
     isLoading,
+    appliedFilters,
     onSortingSelection,
     initialProductsToShow = 16,
   } = props
   const { getProductLink } = uiHelpers()
+  const { changeFilters } = useUpdateRoutes()
   const isShowMoreVisible = products?.length > initialProductsToShow
   const [showFilterBy, setFilterBy] = useState<boolean>(false)
   const [isShowMoreButtonVisible, setShowMoreButtonVisible] = useState<boolean>(isShowMoreVisible)
@@ -179,6 +196,10 @@ const ProductListingTemplate = (props: ProductListingTemplateProps) => {
 
   const handleFilterBy = () => setFilterBy(!showFilterBy)
   const showMoreProducts = () => setShowMoreButtonVisible(!isShowMoreButtonVisible)
+
+  const handleClearAllFilters = () => {
+    changeFilters('')
+  }
 
   useEffect(() => {
     const noOfItemsToShow = isShowMoreButtonVisible ? initialProductsToShow : products?.length
@@ -196,6 +217,7 @@ const ProductListingTemplate = (props: ProductListingTemplateProps) => {
 
       {!showFilterBy && (
         <Box>
+          <FullWidthDivider />
           <Box sx={{ ...styles.navBar }}>
             <Box sx={{ ...styles.navBarMain }}>
               {!isLoading ? (
@@ -218,9 +240,17 @@ const ProductListingTemplate = (props: ProductListingTemplateProps) => {
                 )}
                 <Box sx={{ ...styles.sorting }}>
                   {!isLoading ? (
-                    <KiboSelect placeholder={t('best-match')} onChange={onSortingSelection}>
+                    <KiboSelect
+                      sx={{ typography: 'body2' }}
+                      placeholder={t('best-match')}
+                      onChange={onSortingSelection}
+                    >
                       {sortingValues?.map((sortingVal) => (
-                        <MenuItem key={sortingVal?.id} value={sortingVal?.value}>
+                        <MenuItem
+                          sx={{ typography: 'body2' }}
+                          key={sortingVal?.id}
+                          value={sortingVal?.value}
+                        >
                           {sortingVal?.value}
                         </MenuItem>
                       ))}
@@ -262,14 +292,33 @@ const ProductListingTemplate = (props: ProductListingTemplateProps) => {
               )}
             </Box>
           </Box>
+          <FullWidthDivider />
           <Box sx={{ ...styles.mainSection }}>
             <Box sx={{ ...styles.sideBar }}>
               {(categoryFacet.header || categoryFacet?.childrenCategories?.length) && (
                 <CategoryFacet categoryFacet={categoryFacet} breadcrumbs={breadCrumbsList} />
               )}
-              <FacetList facetList={facetList} onFilterByClose={handleFilterBy} />
+              <FacetList
+                facetList={facetList}
+                onFilterByClose={handleFilterBy}
+                appliedFilters={appliedFilters}
+              />
             </Box>
             <Box sx={{ width: '100%' }}>
+              {!isLoading && appliedFilters && (
+                <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
+                  <Box sx={{ display: 'flex' }}>
+                    <FilterTiles appliedFilters={appliedFilters}>
+                      {appliedFilters.length > 0 && (
+                        <Link sx={{ ...styles.clearAllButton }} onClick={handleClearAllFilters}>
+                          {t('common:clear-all')}
+                        </Link>
+                      )}
+                    </FilterTiles>
+                  </Box>
+                  <Box sx={{ ...styles.totalResults }}>{t('results', { totalResults })}</Box>
+                </Box>
+              )}
               {!isLoading ? (
                 <Grid container sx={{ flexWrap: 'wrap' }}>
                   {productToShows.map((product) => {
@@ -346,6 +395,8 @@ const ProductListingTemplate = (props: ProductListingTemplateProps) => {
             header={categoryFacet.header}
             totalResults={totalResults}
             isLoading={isLoading}
+            appliedFilters={appliedFilters}
+            onClearAllFilters={handleClearAllFilters}
             onFilterByClose={handleFilterBy}
           />
         </Box>

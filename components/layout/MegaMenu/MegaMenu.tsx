@@ -1,21 +1,13 @@
 import React, { useState, useEffect } from 'react'
 
-import {
-  Box,
-  Divider,
-  ListItem,
-  ListItemText,
-  Typography,
-  Toolbar,
-  styled,
-  Container,
-} from '@mui/material'
+import { Box, Divider, ListItem, Typography, Toolbar, styled, Link, Container } from '@mui/material'
 import { usePopupState, bindHover, bindPopover } from 'material-ui-popup-state/hooks'
 import HoverPopover from 'material-ui-popup-state/HoverPopover'
 import { useTranslation } from 'next-i18next'
 
 import KiboImage from '@/components/common/KiboImage/KiboImage'
 import { MegaMenuItem } from '@/components/layout'
+import { uiHelpers } from '@/lib/helpers'
 import DefaultImage from '@/public/product_placeholder.svg'
 
 import type { Maybe, PrCategory } from '@/lib/gql/types'
@@ -85,6 +77,7 @@ const MegaMenuCategory = (props: MegaMenuCategoryProps) => {
 
   const { t } = useTranslation('common')
 
+  const { getCatLink } = uiHelpers()
   const popupState = usePopupState({
     variant: 'popover',
     popupId: category?.content?.name,
@@ -101,7 +94,9 @@ const MegaMenuCategory = (props: MegaMenuCategoryProps) => {
         onMouseOver={() => setActiveCategory(category?.categoryCode || '')}
         selected={popupState.isOpen && category?.categoryCode === activeCategory}
       >
-        <ListItemText primary={category?.content?.name} />
+        <Link href={getCatLink(category?.categoryCode as string)} underline="none" color="grey.900">
+          {category?.content?.name}
+        </Link>
       </ListItem>
       {childrenCategories.length > 0 && (
         <HoverPopover

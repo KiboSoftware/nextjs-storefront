@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 
 import { Add, ChevronLeft, Remove } from '@mui/icons-material'
-import { Box, Button, FormLabel, Link, Typography, SxProps } from '@mui/material'
+import { Box, Button, FormLabel, Link, Typography, SxProps, Divider } from '@mui/material'
 import { Theme } from '@mui/material/styles'
 import { useTranslation } from 'next-i18next'
 
@@ -26,9 +26,6 @@ const styles = {
       xs: 'none',
       md: 'block',
     },
-    borderBottomWidth: '1px',
-    borderBottomStyle: 'solid',
-    borderBottomColor: 'grey.500',
   } as SxProps<Theme> | undefined,
   header: {
     color: 'text.primary',
@@ -73,6 +70,7 @@ const CategoryFacet = (props: CategoryFacetProps) => {
   const { initialItemsToShow = 5, categoryFacet, breadcrumbs } = props
   const { getCatLink } = uiHelpers()
   const { t } = useTranslation(['product', 'common'])
+
   const viewMore = t('common:view-more')
   const viewLess = t('common:view-less')
 
@@ -91,7 +89,7 @@ const CategoryFacet = (props: CategoryFacetProps) => {
     const sliced = categoryFacet.childrenCategories?.slice(0, noOfItemsToShow) || []
 
     setFilteredValues([...sliced])
-  }, [isViewMoreVisible, viewMore, buttonText])
+  }, [isViewMoreVisible, viewMore, buttonText, categoryFacet])
 
   return (
     <Box sx={styles.linkContainer}>
@@ -140,6 +138,7 @@ const CategoryFacet = (props: CategoryFacetProps) => {
           </Link>
         )}
       </Box>
+      <Divider sx={{ borderColor: 'grey.500' }} />
     </Box>
   )
 }

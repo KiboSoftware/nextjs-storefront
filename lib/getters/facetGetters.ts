@@ -2,7 +2,7 @@ import { buildBreadcrumbs } from '@/lib/helpers'
 import { uiHelpers } from '@/lib/helpers'
 import type { BreadCrumb } from '@/lib/types'
 
-import type { PrCategory } from '@/lib/gql/types'
+import type { Facet, PrCategory } from '@/lib/gql/types'
 
 const getBreadcrumbs = (searchData: { categories: PrCategory[] }): BreadCrumb[] => {
   const homeCrumb = [{ text: 'Home', link: '/' }]
@@ -18,6 +18,13 @@ const getBreadcrumbs = (searchData: { categories: PrCategory[] }): BreadCrumb[] 
   return [...homeCrumb, ...categoryCrumbs]
 }
 
+const getSelectedFacets = (facets?: Facet[]) => {
+  if (!facets) return []
+  const selectedFacets = facets?.map((f) => f?.values?.filter((value) => value?.isApplied))
+  return selectedFacets.flat()
+}
+
 export const facetGetters = {
   getBreadcrumbs,
+  getSelectedFacets,
 }

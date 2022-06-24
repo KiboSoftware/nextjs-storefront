@@ -1,25 +1,8 @@
 import { fetcher } from '@/lib/api/util'
 import { searchProductsQuery } from '@/lib/gql/queries'
+import { buildProductSearchInput } from '@/lib/helpers/buildProductSearchInput'
 
-import type { QueryProductSearchArgs } from '@/lib/gql/types'
-
-function getFacetValueFilter(categoryCode: string, filters: Array<string> = []) {
-  let facetValueFilter = ''
-  if (categoryCode) {
-    facetValueFilter = `categoryCode:${categoryCode},`
-  }
-  return facetValueFilter + filters
-}
-
-const buildProductSearchVars = ({
-  categoryCode = '',
-  pageSize = 30,
-  filters = [],
-  startIndex = 0,
-  sort = '',
-  search = '',
-  filter = '',
-}: {
+interface SearchParams {
   categoryCode: string
   pageSize: number
   filters: Array<string>
@@ -27,30 +10,11 @@ const buildProductSearchVars = ({
   sort: string
   search: string
   filter: string
-}): QueryProductSearchArgs => {
-  let facetTemplate = ''
-  let facetHierValue = ''
-  facetTemplate = `categoryCode:${categoryCode || '_root'}`
-  if (categoryCode) {
-    facetHierValue = `categoryCode:${categoryCode}`
-  }
-
-  const facetValueFilter = getFacetValueFilter(categoryCode, filters)
-  return {
-    query: search,
-    startIndex,
-    pageSize,
-    sortBy: sort,
-    facetHierValue,
-    facetTemplate,
-    facetValueFilter,
-    filter,
-  }
 }
 
-export default async function search(searchParams: any) {
+export default async function search(searchParams: SearchParams) {
   try {
-    const variables = buildProductSearchVars(searchParams)
+    const variables = buildProductSearchInput(searchParams)
     return await fetcher({ query: searchProductsQuery, variables })
   } catch (error) {
     console.error(error)

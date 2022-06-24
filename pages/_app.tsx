@@ -58,7 +58,7 @@ const App = (props: KiboAppProps) => {
               categoriesTree={pageProps.categoriesTree || []}
               sticky={true}
             />
-            <Container maxWidth={'lg'}>
+            <Container maxWidth={'xl'}>
               <Component {...pageProps} />
             </Container>
           </Hydrate>
