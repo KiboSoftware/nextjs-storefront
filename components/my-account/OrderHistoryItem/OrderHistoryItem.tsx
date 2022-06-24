@@ -1,9 +1,10 @@
 import React from 'react'
 
-import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos'
+import { ArrowForwardIos } from '@mui/icons-material'
 import { Box, Stack, Typography } from '@mui/material'
 import { useTranslation } from 'next-i18next'
 
+import { Price } from '@/components/common'
 import { orderGetters } from '@/lib/getters'
 
 import type { Order } from '@/lib/gql/types'
@@ -55,19 +56,18 @@ const OrderHistoryItem = (props: OrderHistoryItemProps) => {
         <Typography variant="body1" sx={{ fontWeight: 'bold' }}>
           {submittedDate}
         </Typography>
-        <Typography variant="body1" sx={{ color: 'grey.600' }}>
+        <Typography variant="body1" sx={{ color: 'text.secondary' }}>
           {productNames}
         </Typography>
-        <Typography variant="body1" sx={{ fontWeight: 'bold' }}>
-          {t('currency', { val: orderTotal })}
-        </Typography>
 
-        <Typography variant="body2" sx={{ color: 'grey.600' }}>
+        <Price price={t('currency', { val: orderTotal })} />
+
+        <Typography variant="body2" sx={{ color: 'text.secondary' }}>
           {orderStatus}
         </Typography>
       </Stack>
       <Box sx={styles.box}>
-        <ArrowForwardIosIcon fontSize="inherit" />
+        <ArrowForwardIos fontSize="inherit" />
       </Box>
     </Stack>
   )

@@ -11,6 +11,9 @@ import type { Order } from '@/lib/gql/types'
 
 const { Common } = composeStories(stories)
 
+const priceMock = () => <div data-testid="price-mock" />
+jest.mock('@/components/common/Price/Price', () => priceMock)
+
 describe('[component] - OrderHistoryItem', () => {
   const order = (Common && Common.args && Common.args.order) as Order
   const { id, submittedDate, productNames, orderStatus } = orderGetters.getOrderDetails(order)
@@ -26,7 +29,7 @@ describe('[component] - OrderHistoryItem', () => {
 
     const submittedDateText = screen.getByText(submittedDate)
     const productNamesText = screen.getByText(productNames as string)
-    const orderTotalText = screen.getByText('currency')
+    const orderTotalText = screen.getByTestId('price-mock')
     const orderStatusText = screen.getByText(orderStatus as string)
 
     expect(submittedDateText).toBeVisible()

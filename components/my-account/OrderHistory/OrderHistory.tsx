@@ -1,6 +1,6 @@
 import React from 'react'
 
-import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos'
+import { ArrowBackIos } from '@mui/icons-material'
 import { Stack, Typography, Divider } from '@mui/material'
 import { useTranslation } from 'next-i18next'
 
@@ -41,7 +41,7 @@ const OrderHistory = (props: OrderHistoryProps) => {
   return (
     <Stack>
       <Stack sx={styles.wrapIcon} direction="row" gap={2} onClick={handleAccountTitleClick}>
-        <ArrowBackIosIcon fontSize="inherit" sx={styles.wrapIcon} />
+        <ArrowBackIos fontSize="inherit" sx={styles.wrapIcon} />
         <Typography variant="body1">{accountTitle}</Typography>
       </Stack>
 
