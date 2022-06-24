@@ -84,5 +84,6 @@
   "subtotal": "Subtotal",
   "shipping": "Shipping",
   "total-price": "Total Price",
-  "free": "Free"
+  "free": "Free",
+  "filter-orders": "Filter Orders"
 }
