@@ -2,7 +2,6 @@
 import { ReactNode } from 'react'
 
 import { Card, Typography, Box, CardContent, Divider } from '@mui/material'
-import { useTranslation } from 'next-i18next'
 
 import OrderPrice from '@/components/common/OrderPrice/OrderPrice'
 import type { OrderPriceProps } from '@/components/common/OrderPrice/OrderPrice'
