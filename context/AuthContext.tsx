@@ -48,36 +48,32 @@ export const AuthContextProvider = ({ children }: AuthContextProviderProps) => {
 
   const login = (params: LoginData, onSuccessCallBack: () => void) => {
     setAuthError('')
-    try {
-      const userCredentials = {
-        username: params?.formData?.email,
-        password: params?.formData?.password,
-      }
-      mutate(userCredentials, {
-        onError: (error: any) => {
-          //@TO BE DONE GLOBALLY
-          const errorMessage = error?.response?.errors
-            ? error?.response?.errors[0]?.message
-            : 'Something Wrong !'
-          setAuthError(errorMessage)
-        },
-        onSuccess: (account: any) => {
-          // set cookie
-          const cookie = {
-            accessToken: account?.accessToken,
-            accessTokenExpiration: account?.accessTokenExpiration,
-            refreshToken: account?.refreshToken,
-            refreshTokenExpiration: account?.refreshTokenExpiration,
-            userId: account?.userId,
-          }
-          storeClientCookie(authCookieName, cookie)
-          setUser(account?.customerAccount)
-          onSuccessCallBack()
-        },
-      })
-    } catch (err: any) {
-      throw new Error(err)
+    const userCredentials = {
+      username: params?.formData?.email,
+      password: params?.formData?.password,
     }
+    mutate(userCredentials, {
+      onError: (error: any) => {
+        //@TO BE DONE GLOBALLY
+        const errorMessage = error?.response?.errors
+          ? error?.response?.errors[0]?.message
+          : 'Something Wrong !'
+        setAuthError(errorMessage)
+      },
+      onSuccess: (account: any) => {
+        // set cookie
+        const cookie = {
+          accessToken: account?.accessToken,
+          accessTokenExpiration: account?.accessTokenExpiration,
+          refreshToken: account?.refreshToken,
+          refreshTokenExpiration: account?.refreshTokenExpiration,
+          userId: account?.userId,
+        }
+        storeClientCookie(authCookieName, cookie)
+        setUser(account?.customerAccount)
+        onSuccessCallBack()
+      },
+    })
   }
 
   const { data: customerAccount } = useUserQueries()
