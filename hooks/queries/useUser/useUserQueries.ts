@@ -6,7 +6,7 @@ import { loginKeys } from '@/lib/react-query/queryKeys'
 
 import type { CustomerAccount } from '@/lib/gql/types'
 export interface UserResultType {
-  data: CustomerAccount
+  data?: CustomerAccount
   isLoading: boolean
   isSuccess: boolean
   isError: boolean
