@@ -16,6 +16,7 @@ export const useProductDetailTemplate = (props: UseProductDetailTemplateProps) =
   const [updatedShopperEnteredValues, setUpdatedShopperEnteredValues] = useState<
     ProductOptionSelectionInput[]
   >([])
+  const [quantity, setQuantity] = useState<number>(1)
 
   const productCode = productGetters.getProductId(currentProduct)
 
@@ -83,13 +84,10 @@ export const useProductDetailTemplate = (props: UseProductDetailTemplateProps) =
             attributeFQN: option?.attributeFQN,
             value: selected?.value,
             shopperEnteredValue: selected?.shopperEnteredValue,
-            isSelected: selected?.isSelected,
-            isEnabled: selected?.isEnabled,
           }
         }) as ProductOptionSelectionInput[]
-
       setUpdatedShopperEnteredValues(responseOptions)
-      setCurrentProduct({ ...currentProduct, options: responseOptions })
+      setCurrentProduct({ ...currentProduct, options: configureProductResponse.options })
     } catch (err) {
       console.error(err)
     }
@@ -97,6 +95,8 @@ export const useProductDetailTemplate = (props: UseProductDetailTemplateProps) =
 
   return {
     currentProduct,
+    quantity,
+    setQuantity,
     selectProductOption,
   }
 }

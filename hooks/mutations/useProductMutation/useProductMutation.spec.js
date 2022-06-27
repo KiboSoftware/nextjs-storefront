@@ -1,7 +1,7 @@
 import { renderHook } from '@testing-library/react-hooks'
 
 import { useProductMutation } from './useProductMutation'
-import { configuredProductDataMock } from '@/__mocks__/stories/configuredProductDataMock'
+import { configuredProductMock } from '@/__mocks__/stories/configuredProductMock'
 import { createQueryClientWrapper } from '@/__test__/utils/renderWithQueryClient'
 
 describe('[hooks] useProductMutation', () => {
@@ -20,7 +20,7 @@ describe('[hooks] useProductMutation', () => {
       async () => {
         const { configureProduct } = useProductMutation()
         const response = await configureProduct.mutateAsync(configureProductDetails)
-        expect(response).toStrictEqual(configuredProductDataMock.configureProduct)
+        expect(response).toStrictEqual(configuredProductMock.configureProduct)
       },
       {
         wrapper: createQueryClientWrapper(),

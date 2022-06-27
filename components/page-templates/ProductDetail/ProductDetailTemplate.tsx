@@ -38,7 +38,9 @@ const ProductDetailTemplate = (props: ProductDetailTemplateProps) => {
   const { t } = useTranslation(['product', 'common'])
 
   // Data hook
-  const { currentProduct, selectProductOption } = useProductDetailTemplate({ product })
+  const { currentProduct, quantity, setQuantity, selectProductOption } = useProductDetailTemplate({
+    product,
+  })
 
   // Getters
   const {
@@ -137,10 +139,11 @@ const ProductDetailTemplate = (props: ProductDetailTemplateProps) => {
           </Box>
 
           <Box paddingY={1} display={optionsVisibility.select ? 'block' : 'none'}>
-            {productOptions?.selectOptions.map((option) => {
+            {productOptions?.selectOptions?.map((option) => {
               return (
                 <ProductOptionSelect
                   key={option?.attributeDetail?.name}
+                  name={option?.attributeDetail?.name}
                   optionValues={option?.values as ProductOptionValue[]}
                   value={productGetters.getOptionSelectedValue(option as ProductOption)}
                   label={productGetters.getOptionName(option as ProductOption)}
@@ -181,7 +184,12 @@ const ProductDetailTemplate = (props: ProductDetailTemplateProps) => {
           </Box>
 
           <Box paddingY={1}>
-            <QuantitySelector label="Qty" />
+            <QuantitySelector
+              label="Qty"
+              quantity={quantity}
+              onIncrease={() => setQuantity((prevQuantity) => prevQuantity + 1)}
+              onDecrease={() => setQuantity((prevQuantity) => prevQuantity - 1)}
+            />
           </Box>
 
           <Box paddingY={1}>

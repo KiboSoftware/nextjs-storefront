@@ -49,7 +49,7 @@ const SizeOptions = (props: SizeOptionsProps) => {
         ...(!isEnabled && styles.disabled),
       }}
       {...(isEnabled && !isSelected && { onClick: () => onSizeSelection(attributeFQN, value) })}
-      data-testid="size-options"
+      data-testid={`size-options-${value}-${isSelected ? 'selected' : ''}`}
     >
       {value}
     </Box>

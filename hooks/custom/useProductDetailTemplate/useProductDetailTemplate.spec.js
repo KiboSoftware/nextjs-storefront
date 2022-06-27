@@ -2,10 +2,10 @@ import { renderHook } from '@testing-library/react-hooks'
 import { act } from 'react-dom/test-utils'
 
 import { useProductDetailTemplate } from './useProductDetailTemplate'
-import { configuredProductDataMock } from '@/__mocks__/stories/configuredProductDataMock'
-import { ProductDataMock } from '@/__mocks__/stories/ProductDataMock'
+import { configuredProductMock } from '@/__mocks__/stories/configuredProductMock'
+import { ProductCustomMock } from '@/__mocks__/stories/ProductCustomMock'
 
-const mockConfigureProductOptionsResponse = configuredProductDataMock.configureProduct.options
+const mockConfigureProductOptionsResponse = configuredProductMock.configureProduct.options
 jest.mock('@/hooks', () => ({
   useProductMutation: () => ({
     configureProduct: {
@@ -19,17 +19,25 @@ jest.mock('@/hooks', () => ({
   }),
 }))
 
+const setup = () => {
+  const product = ProductCustomMock
+  const { result } = renderHook(() => useProductDetailTemplate({ product }))
+
+  return {
+    result,
+    product,
+  }
+}
+
 describe('[component] Product Detail Template data: useProductDetailTemplate', () => {
   it('should return currentProduct', () => {
-    const product = ProductDataMock
-    const { result } = renderHook(() => useProductDetailTemplate({ product }))
+    const { result, product } = setup()
 
     expect(result.current.currentProduct).toStrictEqual(product)
   })
 
   it('should run selectProductOption function successfully and return configured product details', async () => {
-    const product = ProductDataMock
-    const { result } = renderHook(() => useProductDetailTemplate({ product }))
+    const { result, product } = setup()
 
     await act(async () =>
       result.current.selectProductOption(
@@ -39,19 +47,19 @@ describe('[component] Product Detail Template data: useProductDetailTemplate', (
       )
     )
 
-    console.log(result.current)
-
     expect(result.current.currentProduct).toStrictEqual({
       ...product,
-      options: [
-        {
-          attributeFQN: 'tenant~size',
-          value: 'Small',
-          shopperEnteredValue: undefined,
-          isSelected: true,
-          isEnabled: undefined,
-        },
-      ],
+      options: mockConfigureProductOptionsResponse,
     })
+  })
+
+  it('should handle product quantity', () => {
+    const { result } = setup()
+
+    act(() => {
+      result.current.setQuantity('3')
+    })
+
+    expect(result.current.quantity).toBe('3')
   })
 })

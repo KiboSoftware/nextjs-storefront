@@ -2,7 +2,7 @@ import React from 'react'
 
 import { ComponentStory, ComponentMeta } from '@storybook/react'
 
-import { ProductDataMock } from '../../../__mocks__/stories/ProductDataMock'
+import { ProductCustomMock } from '../../../__mocks__/stories/ProductCustomMock'
 import ProductDetailTemplate from './ProductDetailTemplate'
 
 export default {
@@ -16,7 +16,7 @@ const Template: ComponentStory<typeof ProductDetailTemplate> = (args) => (
 
 export const Common = Template.bind({})
 Common.args = {
-  product: ProductDataMock,
+  product: ProductCustomMock,
   breadcrumbs: [
     {
       text: 'Home',
@@ -28,7 +28,7 @@ Common.args = {
 export const WithPriceRange = Template.bind({})
 WithPriceRange.args = {
   product: {
-    ...ProductDataMock,
+    ...ProductCustomMock,
     price: {
       price: null,
       salePrice: null,
@@ -45,7 +45,7 @@ WithPriceRange.args = {
 
 export const Mobile = Template.bind({})
 Mobile.args = {
-  product: ProductDataMock,
+  product: ProductCustomMock,
 }
 Mobile.parameters = {
   viewport: {

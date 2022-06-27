@@ -1,7 +1,6 @@
 import { composeStories } from '@storybook/testing-react'
-import { render, within, screen, cleanup } from '@testing-library/react'
+import { render, within, screen, cleanup, waitFor } from '@testing-library/react'
 import '@testing-library/jest-dom'
-import { useTranslation } from 'next-i18next'
 
 import * as stories from './ProductDetailTemplate.stories' // import all stories from the stories file
 
@@ -10,31 +9,43 @@ const { Common, WithPriceRange } = composeStories(stories)
 afterEach(cleanup)
 
 const ColorSelectorMock = () => <div data-testid="color-selector-mock" />
-jest.mock('../../product/ColorSelector/ColorSelector', () => ColorSelectorMock)
+jest.mock('@/components/product/ColorSelector/ColorSelector', () => ColorSelectorMock)
 
 const ProductVariantSizeSelectorMock = () => <div data-testid="size-selector-mock" />
 jest.mock(
-  '../../product/ProductVariantSizeSelector/ProductVariantSizeSelector',
+  '@/components/product/ProductVariantSizeSelector/ProductVariantSizeSelector',
   () => ProductVariantSizeSelectorMock
 )
 
 const ProductOptionCheckboxMock = () => <div data-testid="product-option-checkbox-mock" />
 jest.mock(
-  '../../product/ProductOptionCheckbox/ProductOptionCheckbox',
+  '@/components/product/ProductOptionCheckbox/ProductOptionCheckbox',
   () => ProductOptionCheckboxMock
 )
 
 const ProductOptionSelectMock = () => <div data-testid="product-option-select-mock" />
-jest.mock('../../product/ProductOptionSelect/ProductOptionSelect', () => ProductOptionSelectMock)
+jest.mock(
+  '@/components/product/ProductOptionSelect/ProductOptionSelect',
+  () => ProductOptionSelectMock
+)
 
 const ProductOptionTextBoxMock = () => <div data-testid="product-option-textbox-mock" />
-jest.mock('../../product/ProductOptionTextBox/ProductOptionTextBox', () => ProductOptionTextBoxMock)
+jest.mock(
+  '@/components/product/ProductOptionTextBox/ProductOptionTextBox',
+  () => ProductOptionTextBoxMock
+)
 
 const QuantitySelectorMock = () => <div data-testid="quantity-selector-mock" />
-jest.mock('../../common/QuantitySelector/QuantitySelector', () => QuantitySelectorMock)
+jest.mock('@/components/common/QuantitySelector/QuantitySelector', () => QuantitySelectorMock)
 
 const FulfillmentOptionsMock = () => <div data-testid="fulfillment-options-mock" />
-jest.mock('../../common/FulfillmentOptions/FulfillmentOptions', () => FulfillmentOptionsMock)
+jest.mock('@/components/common/FulfillmentOptions/FulfillmentOptions', () => FulfillmentOptionsMock)
+
+const ProductInformationMock = () => <div data-testid="product-information-mock" />
+jest.mock(
+  '@/components/product/ProductInformation/ProductInformation',
+  () => ProductInformationMock
+)
 
 const mockProduct = Common.args.product
 jest.mock('@/hooks', () => ({
@@ -45,13 +56,13 @@ jest.mock('@/hooks', () => ({
   }),
 }))
 
-const setUp = () => {
+const setup = () => {
   render(<Common {...Common.args} />)
 }
 
 describe('[component] Product Detail Template component', () => {
   it('should render the Breadcrumb component', () => {
-    setUp()
+    setup()
 
     const breadcrumbList = screen.getByRole('list')
 
@@ -61,7 +72,7 @@ describe('[component] Product Detail Template component', () => {
   })
 
   it('should render the Product name', () => {
-    setUp()
+    setup()
 
     const name = screen.getByRole('heading', {
       name: new RegExp(Common.args.product.content.productName),
@@ -71,43 +82,15 @@ describe('[component] Product Detail Template component', () => {
   })
 
   it('should render the Product price', () => {
-    setUp()
+    setup()
 
-    const { t } = useTranslation('common')
-
-    const price = screen.getByText(
-      new RegExp(t('currency', { val: Common.args.product.price.price }))
-    )
+    const price = screen.getByText(/currency/i)
 
     expect(price).toBeVisible()
   })
 
-  it('should render the Product price range', () => {
-    render(<WithPriceRange {...WithPriceRange.args} />)
-
-    const { t } = useTranslation('common')
-
-    const upperPrice = screen.getByText(
-      new RegExp(t('currency', { val: WithPriceRange.args.product.priceRange.upper.price }))
-    )
-    const upperSalePrice = screen.getByText(
-      new RegExp(t('currency', { val: WithPriceRange.args.product.priceRange.upper.salePrice }))
-    )
-    const lowerPrice = screen.getByText(
-      new RegExp(t('currency', { val: WithPriceRange.args.product.priceRange.lower.price }))
-    )
-    const lowerSalePrice = screen.getByText(
-      new RegExp(t('currency', { val: WithPriceRange.args.product.priceRange.lower.salePrice }))
-    )
-
-    expect(upperPrice).toBeVisible()
-    expect(upperSalePrice).toBeVisible()
-    expect(lowerPrice).toBeVisible()
-    expect(lowerSalePrice).toBeVisible()
-  })
-
   it('should render the Product short description', () => {
-    setUp()
+    setup()
 
     const desc = screen.getByTestId('short-description')
 
@@ -115,7 +98,7 @@ describe('[component] Product Detail Template component', () => {
   })
 
   it('should render the Product rating', () => {
-    setUp()
+    setup()
 
     const rating = screen.getAllByTestId('StarRoundedIcon')
 
@@ -123,7 +106,7 @@ describe('[component] Product Detail Template component', () => {
   })
 
   it('should render the ColorSelector component', () => {
-    setUp()
+    setup()
 
     const ColorSelector = screen.getByTestId('color-selector-mock')
 
@@ -131,7 +114,7 @@ describe('[component] Product Detail Template component', () => {
   })
 
   it('should render the ProductVariantSizeSelector', () => {
-    setUp()
+    setup()
 
     const SizeSelector = screen.getByTestId('size-selector-mock')
 
@@ -139,73 +122,73 @@ describe('[component] Product Detail Template component', () => {
   })
 
   it('should render the ProductOptionSelect component', () => {
-    setUp()
+    setup()
 
     const ProductOptionSelect = screen.getByTestId('product-option-select-mock')
     expect(ProductOptionSelect).toBeVisible()
   })
 
   it('should render the ProductOptionCheckbox component', () => {
-    setUp()
+    setup()
 
     const ProductOptionCheckbox = screen.getByTestId('product-option-checkbox-mock')
     expect(ProductOptionCheckbox).toBeVisible()
   })
 
   it('should render the ProductOptionTextbox component', () => {
-    setUp()
+    setup()
 
     const ProductOptionTextBox = screen.getByTestId('product-option-textbox-mock')
     expect(ProductOptionTextBox).toBeVisible()
   })
 
   it('should render the QuantitySelector component', () => {
-    setUp()
+    setup()
 
     const QuantitySelector = screen.getByTestId('quantity-selector-mock')
     expect(QuantitySelector).toBeVisible()
   })
 
   it('should render the FulfillmentOptions component', () => {
-    setUp()
+    setup()
 
     const FulfillmentOptions = screen.getByTestId('fulfillment-options-mock')
     expect(FulfillmentOptions).toBeVisible()
   })
 
   it('should render the Add to Cart Button', () => {
-    setUp()
-
-    const { t } = useTranslation('common')
+    setup()
 
     expect(
       screen.getByRole('button', {
-        name: t('common:add-to-cart'),
+        name: 'common:add-to-cart',
       })
     ).toBeVisible()
   })
 
   it('should render the Add to Wishlist Button', () => {
-    setUp()
-
-    const { t } = useTranslation('common')
+    setup()
 
     expect(
       screen.getByRole('button', {
-        name: t('common:add-to-wishlist'),
+        name: 'common:add-to-wishlist',
       })
     ).toBeVisible()
   })
 
   it('should render the 1 click checkout Button', () => {
-    setUp()
-
-    const { t } = useTranslation('common')
+    setup()
 
     expect(
       screen.getByRole('button', {
-        name: t('common:one-click-checkout'),
+        name: 'common:one-click-checkout',
       })
     ).toBeVisible()
+  })
+
+  it('should render ProductInformation component', () => {
+    setup()
+
+    expect(screen.getByTestId('product-information-mock')).toBeVisible()
   })
 })

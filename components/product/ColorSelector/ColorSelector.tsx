@@ -59,7 +59,7 @@ const ColorOptions = (props: ColorOptionsProps) => {
         },
       }}
       {...(!isSelected && isEnabled && { onClick: () => onColorSelection(attributeFQN, value) })}
-      data-testid={`colorvalue-${value}`}
+      data-testid={`colorvalue-${value}-${isSelected ? 'selected' : ''}`}
     ></Chip>
   )
 

@@ -1,5 +1,6 @@
 import { composeStories } from '@storybook/testing-react'
 import { render, screen, within, fireEvent } from '@testing-library/react'
+import userEvent from '@testing-library/user-event'
 
 import '@testing-library/jest-dom'
 import { productOptionSelectValuesMock } from '../../../__mocks__/stories/productOptionSelectMock'
@@ -25,9 +26,8 @@ describe('[component] ProductOptionSelect component', () => {
 
     const listbox = within(screen.getByRole('listbox'))
 
-    fireEvent.click(listbox.getByText(mockOption.stringValue))
+    userEvent.click(listbox.getByText(mockOption.stringValue))
 
-    expect(ProductOptionSelect).toHaveTextContent(mockOption.stringValue)
     expect(onDropdownChangeMock).toBeCalledWith('test-attributeFQN', mockOption.value)
   })
 })

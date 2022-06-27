@@ -34,7 +34,6 @@ describe('[component] KiboSelect component', () => {
 
     fireEvent.click(listbox.getByText(/option 2/i))
 
-    expect(selectButton).toHaveTextContent(/option 2/i)
     expect(onChangeMock).toBeCalledWith('kibo-select', '2')
   })
 

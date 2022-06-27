@@ -10,16 +10,15 @@ const ProductOptionCheckbox = (props: ProductOptionCheckboxProps) => {
   const { label = '', checked = false, attributeFQN, onCheckboxChange } = props
   return (
     <FormControlLabel
-      defaultChecked={checked}
       label={label}
       control={
         <Checkbox
-          defaultChecked={checked}
+          checked={checked}
           inputProps={{
             'aria-label': label,
           }}
-          data-testid={`kibo-checkbox`}
           onChange={(_, isChecked) => onCheckboxChange(attributeFQN, '', isChecked)}
+          data-testid={`kibo-product-option-checkbox`}
         />
       }
     />

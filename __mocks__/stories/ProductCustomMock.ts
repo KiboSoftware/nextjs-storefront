@@ -1,6 +1,6 @@
 import { ProductCustom } from '@/lib/types'
 
-export const ProductDataMock: ProductCustom = {
+export const ProductCustomMock: ProductCustom = {
   fulfillmentTypesSupported: ['DirectShip', 'InStorePickup'],
   fulfillmentMethod: 'Ship',
   fulfillmentMethodShortName: '',
@@ -274,6 +274,7 @@ export const ProductDataMock: ProductCustom = {
           deltaPrice: null,
           stringValue: 'Orange',
           attributeValueId: 0,
+          isEnabled: true,
         },
         {
           value: 'Purple',
@@ -301,6 +302,7 @@ export const ProductDataMock: ProductCustom = {
           deltaPrice: null,
           stringValue: 'L',
           attributeValueId: 0,
+          isEnabled: true,
         },
         {
           value: 'M',
@@ -308,6 +310,7 @@ export const ProductDataMock: ProductCustom = {
           deltaPrice: null,
           stringValue: 'M',
           attributeValueId: 1,
+          isEnabled: true,
         },
         {
           value: 'S',
@@ -315,6 +318,7 @@ export const ProductDataMock: ProductCustom = {
           deltaPrice: null,
           stringValue: 'S',
           attributeValueId: 2,
+          isEnabled: true,
         },
       ],
     },
@@ -333,21 +337,21 @@ export const ProductDataMock: ProductCustom = {
           value: 150,
           isSelected: false,
           deltaPrice: null,
-          stringValue: null,
+          stringValue: '150',
           attributeValueId: 0,
         },
         {
           value: 154,
           isSelected: false,
           deltaPrice: null,
-          stringValue: null,
+          stringValue: '154',
           attributeValueId: 1,
         },
         {
           value: 156,
           isSelected: false,
           deltaPrice: null,
-          stringValue: null,
+          stringValue: '156',
           attributeValueId: 2,
         },
       ],
@@ -389,6 +393,7 @@ export const ProductDataMock: ProductCustom = {
           deltaPrice: 0,
           stringValue: null,
           attributeValueId: 0,
+          isEnabled: true,
         },
       ],
     },
