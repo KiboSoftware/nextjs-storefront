@@ -6,6 +6,7 @@ import { useTranslation } from 'next-i18next'
 
 import { FilterOrders, FilterTiles } from '@/components/common'
 import { OrderHistoryItem } from '@/components/my-account'
+import { orderGetters } from '@/lib/getters'
 
 import type { OrderCollection, Order } from '@/lib/gql/types'
 
@@ -38,6 +39,19 @@ const OrderHistory = (props: OrderHistoryProps) => {
     console.log(`id: `, id)
   }
 
+  const getOrderDetails = (order: Order) => {
+    const { id, submittedDate, productNames, orderTotal, orderStatus } =
+      orderGetters.getOrderDetails(order)
+
+    return {
+      id,
+      submittedDate,
+      productNames,
+      orderTotal,
+      orderStatus,
+    }
+  }
+
   return (
     <Stack>
       <Stack sx={styles.wrapIcon} direction="row" gap={2} onClick={handleAccountTitleClick}>
@@ -63,10 +77,10 @@ const OrderHistory = (props: OrderHistoryProps) => {
       </Stack>
 
       <Stack>
-        {items?.map((item, index) => (
+        {items?.map((item) => (
           <OrderHistoryItem
-            key={index}
-            order={item as Order}
+            key={item?.id}
+            {...getOrderDetails(item as Order)}
             onHistoryItemClick={handleHistoryItemClick}
           />
         ))}

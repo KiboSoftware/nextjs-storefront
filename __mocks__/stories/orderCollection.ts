@@ -7,7 +7,7 @@ export const orderCollection: { orders: OrderCollection } = {
     totalCount: 1,
     items: [
       {
-        id: '138bc29d057d2700016f0f460000678b',
+        id: '138bc29d057d2700016f0f460000678a',
         amountAvailableForRefund: 0,
         amountRefunded: 0,
         amountRemainingForPayment: 90,
@@ -501,7 +501,7 @@ export const orderCollection: { orders: OrderCollection } = {
         payments: [],
       },
       {
-        id: '138bc29d057d2700016f0f460000678b',
+        id: '138bc29d057d2700016f0f460000678c',
         amountAvailableForRefund: 0,
         amountRefunded: 0,
         amountRemainingForPayment: 90,
@@ -748,7 +748,7 @@ export const orderCollection: { orders: OrderCollection } = {
         payments: [],
       },
       {
-        id: '138bc29d057d2700016f0f460000678b',
+        id: '138bc29d057d2700016f0f460000678d',
         amountAvailableForRefund: 0,
         amountRefunded: 0,
         amountRemainingForPayment: 90,

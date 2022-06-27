@@ -3,9 +3,6 @@ import React from 'react'
 import { ComponentStory, ComponentMeta } from '@storybook/react'
 
 import OrderHistoryItem from './OrderHistoryItem'
-import { orderCollection } from '@/__mocks__/stories/orderCollection'
-
-import type { Order } from '@/lib/gql/types'
 
 // Common
 export default {
@@ -18,8 +15,9 @@ const Template: ComponentStory<typeof OrderHistoryItem> = (args) => <OrderHistor
 // Default
 export const Common = Template.bind({})
 Common.args = {
-  order: (orderCollection &&
-    orderCollection.orders &&
-    orderCollection.orders.items &&
-    orderCollection.orders.items[0]) as Order,
+  id: '1',
+  submittedDate: 'March 16, 2022',
+  productNames: 'Katahdin 50 Pack',
+  orderTotal: 90.0,
+  orderStatus: 'Abandoned',
 }

@@ -5,18 +5,15 @@ import { render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 
 import * as stories from './OrderHistoryItem.stories' // import all stories from the stories file
-import { orderGetters } from '@/lib/getters'
 
-import type { Order } from '@/lib/gql/types'
-
+import type { OrderHistoryItemProps } from './OrderHistoryItem'
 const { Common } = composeStories(stories)
 
 const priceMock = () => <div data-testid="price-mock" />
 jest.mock('@/components/common/Price/Price', () => priceMock)
 
 describe('[component] - OrderHistoryItem', () => {
-  const order = (Common && Common.args && Common.args.order) as Order
-  const { id, submittedDate, productNames, orderStatus } = orderGetters.getOrderDetails(order)
+  const { id, submittedDate, productNames, orderStatus } = Common?.args as OrderHistoryItemProps
 
   const setup = () => {
     const onHistoryItemClickMock = jest.fn()
@@ -27,7 +24,7 @@ describe('[component] - OrderHistoryItem', () => {
   it('should render component', () => {
     setup()
 
-    const submittedDateText = screen.getByText(submittedDate)
+    const submittedDateText = screen.getByText(submittedDate as string)
     const productNamesText = screen.getByText(productNames as string)
     const orderTotalText = screen.getByTestId('price-mock')
     const orderStatusText = screen.getByText(orderStatus as string)

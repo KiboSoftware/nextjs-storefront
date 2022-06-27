@@ -5,12 +5,13 @@ import { Box, Stack, Typography } from '@mui/material'
 import { useTranslation } from 'next-i18next'
 
 import { Price } from '@/components/common'
-import { orderGetters } from '@/lib/getters'
 
-import type { Order } from '@/lib/gql/types'
-
-interface OrderHistoryItemProps {
-  order: Order
+export interface OrderHistoryItemProps {
+  id: string
+  submittedDate: string
+  productNames: string
+  orderTotal: number
+  orderStatus: string
   onHistoryItemClick: (id: string) => void
 }
 
@@ -35,11 +36,8 @@ const styles = {
 }
 
 const OrderHistoryItem = (props: OrderHistoryItemProps) => {
-  const { order, onHistoryItemClick } = props
+  const { id, submittedDate, productNames, orderTotal, orderStatus, onHistoryItemClick } = props
   const { t } = useTranslation('common')
-
-  const { id, submittedDate, productNames, orderTotal, orderStatus } =
-    orderGetters.getOrderDetails(order)
 
   const handleHistoryItemClick = (id: string) => {
     onHistoryItemClick(id)
