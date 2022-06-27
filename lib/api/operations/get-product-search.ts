@@ -51,7 +51,7 @@ const buildProductSearchVars = ({
 export default async function search(searchParams: any) {
   try {
     const variables = buildProductSearchVars(searchParams)
-    return await fetcher({ query: searchProductsQuery, variables })
+    return await fetcher({ query: searchProductsQuery, variables }, null)
   } catch (error) {
     console.error(error)
   }

@@ -5,17 +5,13 @@ import { useTranslation } from 'next-i18next'
 
 import KiboDialog from '@/components/common/KiboDialog/KiboDialog'
 import LoginContent, { LoginData } from '@/components/layout/Login/LoginContent/LoginContent'
+import { useAuthContext, useUIContext } from '@/context'
 
 export interface LoginDialogProps {
   isOpen?: boolean
-  customMaxWidth: string | number
-  onClose: () => void
-  onLogin: (data: LoginData) => void
-  onForgotPassword: () => void
-  onRegisterNow: () => void
 }
 
-export interface KiboLoginFooterProps {
+export interface LoginFooterProps {
   onRegisterNow: () => void
 }
 
@@ -35,7 +31,7 @@ const styles = {
   },
 }
 
-const KiboLoginFooter = (props: KiboLoginFooterProps) => {
+const LoginFooter = (props: LoginFooterProps) => {
   const { onRegisterNow } = props
 
   const { t } = useTranslation(['common'])
@@ -52,27 +48,39 @@ const KiboLoginFooter = (props: KiboLoginFooterProps) => {
   )
 }
 
-const LoginDialog = (props: LoginDialogProps) => {
-  const { isOpen = false, onClose, onLogin, onForgotPassword, onRegisterNow } = props
-
+const LoginDialog = () => {
   const { t } = useTranslation(['common'])
+  const { isLoginDialogOpen, toggleLoginDialog } = useUIContext()
+  const { authError = '', login } = useAuthContext()
 
   const onRegisterClick = () => {
-    onRegisterNow()
+    // do your stuff
+  }
+  const onForgotPassword = () => {
+    // do your stuff
+  }
+  const handleLogin = (params: LoginData) => {
+    login(params, toggleLoginDialog)
   }
 
   return (
     <KiboDialog
-      isOpen={isOpen}
+      isOpen={isLoginDialogOpen}
       Title={
         <Typography {...styles.loginTitle} data-testid="login-header">
           {t('log-in')}
         </Typography>
       }
-      Content={<LoginContent onLogin={onLogin} onForgotPasswordClick={onForgotPassword} />}
-      Actions={<KiboLoginFooter onRegisterNow={onRegisterClick} />}
+      Content={
+        <LoginContent
+          onLogin={handleLogin}
+          onForgotPasswordClick={onForgotPassword}
+          errorMessage={authError}
+        />
+      }
+      Actions={<LoginFooter onRegisterNow={onRegisterClick} />}
       customMaxWidth="32.375rem"
-      onClose={onClose}
+      onClose={toggleLoginDialog}
     />
   )
 }

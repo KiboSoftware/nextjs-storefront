@@ -1,28 +1,42 @@
 /* eslint-disable  testing-library/no-unnecessary-act */
 
-import React from 'react'
+import React, { ReactNode } from 'react'
 
 import { composeStories } from '@storybook/testing-react'
-import { render, screen, act, fireEvent } from '@testing-library/react'
+import { render, screen, act, fireEvent, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 
 import * as stories from '@/components/layout/Login/LoginDialog/LoginDialog.stories'
+import { UIStateContext, UserContext } from '@/context'
 
 const { Common } = composeStories(stories)
+const uiContextValues = { isLoginDialogOpen: true, toggleLoginDialog: jest.fn() }
+const userContextValues = {
+  isAuthenticated: false,
+  login: jest.fn(),
+  setAuthError: jest.fn(),
+  authError: '',
+}
+
+const wrapper = ({ children }: { children: ReactNode }) => (
+  <UIStateContext.Provider value={uiContextValues}>
+    <UserContext.Provider value={userContextValues}>{children}</UserContext.Provider>
+  </UIStateContext.Provider>
+)
+
+const renderComponent = () => {
+  return render(<Common {...Common.args} />, { wrapper })
+}
 
 describe('[components] Login Dialog', () => {
-  const onDialogCloseMock = jest.fn()
-
-  const setup = (args = Common.args) => {
-    render(<Common {...args} onClose={onDialogCloseMock} />)
-  }
+  const setup = () => renderComponent()
 
   it('should render component', () => {
     setup()
     const emailInput = screen.getByRole('textbox', { name: 'email' })
     const passwordInput = screen.getByLabelText('password')
     const eyeIcon = screen.getByRole('button', { name: 'toggle icon visibility' })
-    const rememberMeCheckbox = screen.getByRole('checkbox', { name: 'Remember Me' })
+    const rememberMeCheckbox = screen.getByRole('checkbox', { name: 'common:remember-me' })
     const loginButton = screen.getByRole('button', { name: 'common:log-in' })
     const forgotPasswordLink = screen.getByRole('button', { name: 'common:forgot-password' })
     const registerNowLink = screen.getByRole('button', { name: 'common:register-now' })
@@ -37,18 +51,25 @@ describe('[components] Login Dialog', () => {
     expect(registerNowLink).toBeVisible()
   })
 
-  it('should call onDialogCloseMock when user clicks onClose', async () => {
+  it('should unmusk password when click on eye icon', async () => {
     setup()
 
     const closeIconButton = screen.getByRole('button', {
       name: /close/i,
     })
 
+    const eyeIcon = screen.getByRole('button', { name: 'toggle icon visibility' })
+    const passwordInput = screen.getByLabelText('password')
+
+    expect(closeIconButton).toBeInTheDocument()
+    expect(closeIconButton).toBeVisible()
+    expect(passwordInput).toHaveAttribute('type', 'password')
+
     await act(async () => {
-      userEvent.click(closeIconButton)
+      userEvent.click(eyeIcon)
     })
 
-    expect(onDialogCloseMock).toHaveBeenCalled()
+    await waitFor(() => expect(passwordInput).toHaveAttribute('type', 'text'))
   })
 
   it("should display 'This field is required' error when user focus out (blur event) the Email field", async () => {

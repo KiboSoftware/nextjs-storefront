@@ -3,6 +3,7 @@ import { graphql } from 'msw'
 import { categoryTreeDataMock } from '../stories/categoryTreeDataMock'
 import { orderMock } from '../stories/orderMock'
 import { searchSuggestionMock } from '../stories/searchSuggestionResultMock'
+import { userMock, loginUserMock } from '../stories/userMock'
 
 export const checkoutHandlers = [
   // useLoadCheckout
@@ -40,4 +41,20 @@ export const categoryHandlers = [
   }),
 ]
 
-export const handlers = [...checkoutHandlers, ...searchSuggestionHandlers, ...categoryHandlers]
+export const userHandlers = [
+  // useUser
+  graphql.query('getUser', (_req, res, ctx) => {
+    return res(ctx.data(userMock))
+  }),
+  // login
+  graphql.mutation('login', (_req, res, ctx) => {
+    return res(ctx.data(loginUserMock))
+  }),
+]
+
+export const handlers = [
+  ...checkoutHandlers,
+  ...searchSuggestionHandlers,
+  ...categoryHandlers,
+  ...userHandlers,
+]

@@ -59,6 +59,7 @@ export const parameters = {
     handlers: {
       checkout: [...handlers.checkoutHandlers],
       searchSuggestions: [...handlers.searchSuggestionHandlers],
+      user: [...handlers.userHandlers],
     },
   },
 }

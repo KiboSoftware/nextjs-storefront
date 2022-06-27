@@ -40,7 +40,10 @@ export const selectCategoryFromTree = (
 export default async function search(searchParams: ParsedUrlQuery) {
   try {
     const { categoryCode } = searchParams
-    const response = await fetcher({ query: getCategoryTreeQuery, variables: { categoryCode } })
+    const response = await fetcher(
+      { query: getCategoryTreeQuery, variables: { categoryCode } },
+      null
+    )
     const categoryTree = response?.data?.categoriesTree?.items
     if (categoryCode && categoryTree) {
       const category = selectCategoryFromTree(categoryTree, categoryCode)

@@ -11,3 +11,7 @@ export const searchKeys = {
 export const categoryTreeKeys = {
   all: ['categoryTree'] as const,
 }
+
+export const loginKeys = {
+  user: ['user'] as const,
+}
