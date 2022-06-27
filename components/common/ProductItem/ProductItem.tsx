@@ -15,22 +15,24 @@ import { useTranslation } from 'next-i18next'
 
 import KiboImage from '@/components/common/KiboImage/KiboImage'
 import Price from '@/components/common/Price/Price'
+import ProductOption from '@/components/product/ProductOption/ProductOption'
 import ProductOptionList from '@/components/product/ProductOptionList/ProductOptionList'
 import DefaultImage from '@/public/product_placeholder.svg'
 
-import type { CrProductOption, Maybe } from '@/lib/gql/types'
+import type { Maybe, CrProductOption } from '@/lib/gql/types'
+
 export interface ProductItemProps {
   id?: Maybe<string>
   productCode?: Maybe<string>
   image: string
   name: string
-  options: CrProductOption[]
+  options: Maybe<CrProductOption>[]
   price?: string
   salePrice?: string
   qty?: number
   isPickupItem?: boolean
-  estimatedPickupDate?: string
-  itemPurchaseLocation?: string
+  expectedDeliveryDate?: string
+  purchaseLocation?: string
   onClickStoreLocator?: () => void
   children?: ReactNode
 }
@@ -49,22 +51,9 @@ const styles = {
   },
 }
 
-const ProductLabel = (props: { label: string }) => (
-  <Typography
-    variant="body2"
-    fontWeight="bold"
-    component="span"
-    sx={{ pr: 1 }}
-    data-testid={'product-' + props.label}
-  >
-    {`${props.label}:`}
-  </Typography>
-)
-
 const ProductItem = (props: ProductItemProps) => {
   const {
     id,
-    productCode,
     image,
     name,
     options,
@@ -72,12 +61,11 @@ const ProductItem = (props: ProductItemProps) => {
     salePrice,
     qty,
     isPickupItem,
-    estimatedPickupDate,
-    itemPurchaseLocation,
+    expectedDeliveryDate,
+    purchaseLocation,
     onClickStoreLocator,
     children,
   } = props
-
   const { t } = useTranslation('common')
   const theme = useTheme()
   const mdScreen = useMediaQuery(theme.breakpoints.up('md'))
@@ -85,7 +73,7 @@ const ProductItem = (props: ProductItemProps) => {
 
   return (
     <Box key={id}>
-      <Box sx={{ display: 'flex', pb: 2, pr: 1, gap: '3%', flex: 1 }}>
+      <Box sx={{ display: 'flex', pb: 1, pr: 1, gap: '3%', flex: 1 }}>
         <Box sx={{ ...styles.imageContainer }}>
           <KiboImage
             src={image || DefaultImage}
@@ -127,57 +115,55 @@ const ProductItem = (props: ProductItemProps) => {
               <Collapse in={mdScreen ? true : expanded} timeout="auto" unmountOnExit>
                 <ProductOptionList options={options} />
 
-                {qty && (
-                  <Box>
-                    <ProductLabel label={t('qty')} /> {qty}
-                  </Box>
-                )}
+                {qty && <ProductOption option={{ name: t('qty'), value: qty }} variant="body2" />}
                 {(price || salePrice) && (
-                  <Box sx={{ display: 'inline-flex' }}>
-                    <ProductLabel label={t('price')} />
-                    <Price
-                      variant="body2"
-                      fontWeight="normal"
-                      price={price}
-                      salePrice={salePrice}
-                    />
-                  </Box>
+                  <ProductOption
+                    option={{
+                      name: t('price'),
+                      value: (
+                        <Price
+                          variant="body2"
+                          fontWeight="normal"
+                          price={t('currency', { val: price })}
+                          salePrice={salePrice && t('currency', { val: salePrice })}
+                        />
+                      ),
+                    }}
+                    variant="body2"
+                  />
                 )}
               </Collapse>
-              {isPickupItem && estimatedPickupDate && (
-                <Box
-                  sx={{ display: 'inline-flex' }}
-                  color={theme.palette.primary.main}
-                  data-testid="pickup-info"
-                >
-                  <Typography variant="body2" fontWeight="bold">
-                    {t('estimated-pickup')}: {estimatedPickupDate}
-                  </Typography>
+              {isPickupItem && expectedDeliveryDate && (
+                <Box color={theme.palette.primary.main} data-testid="pickup-info">
+                  <ProductOption
+                    option={{ name: t('estimated-pickup'), value: expectedDeliveryDate }}
+                    variant="body2"
+                    fontWeight="bold"
+                  />
                 </Box>
               )}
             </Box>
           </CardContent>
         </Stack>
       </Box>
+      {/* ToBe: Address part should not be part of this component, need to handle it in separate comp and reuse it here. 
+      Will handle if while developing the multiple address feature */}
       {isPickupItem && (
         <>
-          <Box sx={{ display: 'inline-flex' }}>
-            <Typography variant="caption" fontWeight="bold" pl={2}>
-              {t('pickup')}:
-            </Typography>
-            <Typography variant="caption" pl={1}>
-              {itemPurchaseLocation}
-            </Typography>
+          <Box sx={{ display: 'inline-flex' }} px={2}>
+            <ProductOption
+              option={{ name: t('pickup'), value: purchaseLocation }}
+              variant="caption"
+            />
           </Box>
           <Box px={2}>
             <Link
               component="button"
-              data-testid={'change-store-' + productCode}
               variant="caption"
               color="text.primary"
               onClick={onClickStoreLocator}
             >
-              {itemPurchaseLocation ? t('change-store') : t('select-store')}
+              {purchaseLocation ? t('change-store') : t('select-store')}
             </Link>
           </Box>
         </>

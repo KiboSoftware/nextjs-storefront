@@ -1,20 +1,24 @@
 import { Typography, Box } from '@mui/material'
+import { Variant } from '@mui/material/styles/createTypography'
 
-import type { CrProductOption } from '@/lib/gql/types'
+import type { Maybe, CrProductOption } from '@/lib/gql/types'
+
 interface ProductOptionProps {
-  option: CrProductOption | any
+  option: Maybe<CrProductOption>
+  variant?: Variant
+  fontWeight?: 'bold' | 'normal'
 }
 
 const ProductOption = (prop: ProductOptionProps) => {
-  const { option } = prop
+  const { option, variant = 'body2', fontWeight } = prop
 
   return (
     <Box data-testid="productOption" pt={0.5}>
-      <Typography variant="body2" fontWeight={700} sx={{ pr: 1 }} component="span">
-        {option.name}:
+      <Typography variant={variant} fontWeight={fontWeight || 700} sx={{ pr: 1 }} component="span">
+        {option?.name}:
       </Typography>
-      <Typography variant="body2" component="span">
-        {option.value}
+      <Typography variant={variant} fontWeight={fontWeight || 'normal'} component="span">
+        {option?.value}
       </Typography>
     </Box>
   )

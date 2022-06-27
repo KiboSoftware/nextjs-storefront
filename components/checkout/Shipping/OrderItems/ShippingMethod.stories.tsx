@@ -1,11 +1,8 @@
 import { ComponentStory, ComponentMeta } from '@storybook/react'
 
-import {
-  shipItems,
-  pickupItems,
-  getShippingRates,
-} from '../../../../__mocks__/productItemListMockData'
 import ShippingMethod from './ShippingMethod'
+import { orderMock } from '@/__mocks__/stories/orderMock'
+import { shippingRateMock } from '@/__mocks__/stories/shippingRateMock'
 
 export default {
   title: 'checkout/checkout/Shipping/OrderItems',
@@ -16,6 +13,8 @@ export default {
   },
 } as ComponentMeta<typeof ShippingMethod>
 
+const orderItems = orderMock?.checkout?.items
+
 // Default Line Item
 const Template: ComponentStory<typeof ShippingMethod> = (args) => {
   return <ShippingMethod {...args} />
@@ -24,9 +23,9 @@ const Template: ComponentStory<typeof ShippingMethod> = (args) => {
 export const Common = Template.bind({})
 
 Common.args = {
-  shipItems: shipItems,
-  pickupItems: pickupItems,
-  orderShipmentMethods: getShippingRates.orderShipmentMethods,
+  shipItems: orderItems?.filter((item) => item?.fulfillmentMethod === 'Ship'),
+  pickupItems: orderItems?.filter((item) => item?.fulfillmentMethod === 'Pickup'),
+  orderShipmentMethods: shippingRateMock.orderShipmentMethods,
   onClickStoreLocator: () => {
     console.log('change/select store clicked..')
   },
