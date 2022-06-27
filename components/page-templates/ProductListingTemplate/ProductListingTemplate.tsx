@@ -186,7 +186,7 @@ const ProductListingTemplate = (props: ProductListingTemplateProps) => {
     initialProductsToShow = 16,
   } = props
   const { getProductLink } = uiHelpers()
-  const { changeFilters } = useUpdateRoutes()
+  const { changeFilters, updateRoute } = useUpdateRoutes()
   const isShowMoreVisible = products?.length > initialProductsToShow
   const [showFilterBy, setFilterBy] = useState<boolean>(false)
   const [isShowMoreButtonVisible, setShowMoreButtonVisible] = useState<boolean>(isShowMoreVisible)
@@ -199,6 +199,10 @@ const ProductListingTemplate = (props: ProductListingTemplateProps) => {
 
   const handleClearAllFilters = () => {
     changeFilters('')
+  }
+
+  const handleRemoveSelectedTile = (selectedTile: string) => {
+    updateRoute(selectedTile)
   }
 
   useEffect(() => {
@@ -302,13 +306,17 @@ const ProductListingTemplate = (props: ProductListingTemplateProps) => {
                 facetList={facetList}
                 onFilterByClose={handleFilterBy}
                 appliedFilters={appliedFilters}
+                onRemoveSelectedTile={handleRemoveSelectedTile}
               />
             </Box>
             <Box sx={{ width: '100%' }}>
               {!isLoading && appliedFilters && (
                 <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
                   <Box sx={{ display: 'flex' }}>
-                    <FilterTiles appliedFilters={appliedFilters}>
+                    <FilterTiles
+                      appliedFilters={appliedFilters}
+                      onRemoveSelectedTile={handleRemoveSelectedTile}
+                    >
                       {appliedFilters.length > 0 && (
                         <Link sx={{ ...styles.clearAllButton }} onClick={handleClearAllFilters}>
                           {t('common:clear-all')}
@@ -398,6 +406,7 @@ const ProductListingTemplate = (props: ProductListingTemplateProps) => {
             appliedFilters={appliedFilters}
             onClearAllFilters={handleClearAllFilters}
             onFilterByClose={handleFilterBy}
+            onRemoveSelectedTile={handleRemoveSelectedTile}
           />
         </Box>
       )}

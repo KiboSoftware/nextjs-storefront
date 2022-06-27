@@ -1,7 +1,6 @@
 import getConfig from 'next/config'
 
-import { buildBreadcrumbs, validateProductVariations } from '@/lib/helpers'
-import { uiHelpers } from '@/lib/helpers'
+import { buildBreadcrumbs, validateProductVariations, uiHelpers } from '@/lib/helpers'
 import type { ProductCustom, BreadCrumb } from '@/lib/types'
 
 import type { Product, ProductOption, ProductPriceRange, ProductProperty } from '@/lib/gql/types'

@@ -1,13 +1,12 @@
 import CloseIcon from '@mui/icons-material/Close'
 import { Box, Chip, Stack } from '@mui/material'
 
-import { useUpdateRoutes } from '@/hooks'
-
 import type { FacetValue } from '@/lib/gql/types'
 
 export type FilterTilesProps = {
   appliedFilters?: FacetValue[]
   children?: React.ReactNode
+  onRemoveSelectedTile: (tile: string) => void
 }
 
 const styles = {
@@ -28,11 +27,8 @@ const styles = {
   },
 }
 const FilterTiles = (props: FilterTilesProps) => {
-  const { appliedFilters, children } = props
-  const { updateRoute } = useUpdateRoutes()
-  const removeTile = (tile?: string) => {
-    updateRoute(tile as string)
-  }
+  const { appliedFilters, children, onRemoveSelectedTile } = props
+
   return (
     <>
       <Box component="div" sx={{ margin: '1rem 0 0 1rem' }}>
@@ -49,7 +45,7 @@ const FilterTiles = (props: FilterTilesProps) => {
                 sx={{ ...styles.closeIcon }}
                 label={filter.label}
                 deleteIcon={<CloseIcon />}
-                onDelete={() => removeTile(filter?.filterValue as string)}
+                onDelete={() => onRemoveSelectedTile(filter?.filterValue as string)}
               />
             </Stack>
           ))}

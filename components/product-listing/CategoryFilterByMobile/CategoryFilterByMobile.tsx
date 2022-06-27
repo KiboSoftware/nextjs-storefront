@@ -16,6 +16,7 @@ interface CategoryFilterByMobileProps {
   appliedFilters?: FacetValue[]
   onClearAllFilters: () => void
   onFilterByClose: () => void
+  onRemoveSelectedTile: (tile: string) => void
 }
 
 const styles = {
@@ -77,6 +78,7 @@ const CategoryFilterByMobile = (props: CategoryFilterByMobileProps) => {
     appliedFilters,
     onClearAllFilters,
     onFilterByClose,
+    onRemoveSelectedTile,
     isLoading,
   } = props
 
@@ -108,6 +110,7 @@ const CategoryFilterByMobile = (props: CategoryFilterByMobileProps) => {
           facetList={facetList}
           appliedFilters={appliedFilters}
           onFilterByClose={onFilterByClose}
+          onRemoveSelectedTile={onRemoveSelectedTile}
         />
         <Box sx={{ ...styles.buttons }}>
           <Button

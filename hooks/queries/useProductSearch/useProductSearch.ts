@@ -5,7 +5,7 @@ import { searchProductsQuery } from '@/lib/gql/queries'
 import { buildProductSearchInput } from '@/lib/helpers/buildProductSearchInput'
 
 import type { ProductSearchResult } from '@/lib/gql/types'
-import { CategorySearchParams } from '@/lib/types'
+import type { CategorySearchParams } from '@/lib/types'
 
 export interface UseProductSearchResponse {
   data: ProductSearchResult

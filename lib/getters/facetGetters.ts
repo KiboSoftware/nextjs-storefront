@@ -1,5 +1,4 @@
-import { buildBreadcrumbs } from '@/lib/helpers'
-import { uiHelpers } from '@/lib/helpers'
+import { buildBreadcrumbs, uiHelpers } from '@/lib/helpers'
 import type { BreadCrumb } from '@/lib/types'
 
 import type { Facet, PrCategory } from '@/lib/gql/types'

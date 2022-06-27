@@ -16,6 +16,7 @@ interface FacetListProps {
   initialItemsToShow?: number
   appliedFilters?: FacetValue[]
   onFilterByClose: () => void
+  onRemoveSelectedTile: (tile: string) => void
 }
 
 const styles = {
@@ -39,7 +40,13 @@ const styles = {
 
 // Component
 const FacetList = (props: FacetListProps) => {
-  const { facetList = [], onFilterByClose, appliedFilters, initialItemsToShow = 6 } = props
+  const {
+    facetList = [],
+    onFilterByClose,
+    onRemoveSelectedTile,
+    appliedFilters,
+    initialItemsToShow = 6,
+  } = props
 
   const { t } = useTranslation('common')
   const theme = useTheme()
@@ -58,7 +65,7 @@ const FacetList = (props: FacetListProps) => {
         <Close sx={{ ...styles.Close }} onClick={onFilterByClose} />
       </Box>
       <Box sx={{ display: { md: 'none' } }}>
-        <FilterTiles appliedFilters={appliedFilters} />
+        <FilterTiles appliedFilters={appliedFilters} onRemoveSelectedTile={onRemoveSelectedTile} />
       </Box>
       {mdScreen ? <Divider sx={{ borderColor: 'grey.500' }} /> : <FullWidthDivider />}
       <Stack>
