@@ -3,8 +3,8 @@ import React from 'react'
 import { ComponentStory, ComponentMeta } from '@storybook/react'
 
 import ProductListingTemplate from './ProductListingTemplate'
-import { appliedFiltersMock } from '@/__mocks__/stories/appliedFiltersMock'
 import { categoryFacetDataMock } from '@/__mocks__/stories/categoryFacetDataMock'
+import { facetValueMock } from '@/__mocks__/stories/facetValueMock'
 import { productSearchResultMock } from '@/__mocks__/stories/productSearchResultMock'
 import type { ProductCustom } from '@/lib/types'
 
@@ -80,7 +80,7 @@ Category.args = {
   totalResults: 149,
   initialProductsToShow: 16,
   isLoading: false,
-  appliedFilters: appliedFiltersMock,
+  appliedFilters: facetValueMock,
 }
 
 CategorySkeleton.args = {
@@ -90,5 +90,5 @@ CategorySkeleton.args = {
   sortingValues,
   categoryFacet: categoryFacetDataMock,
   isLoading: true,
-  appliedFilters: appliedFiltersMock,
+  appliedFilters: facetValueMock,
 }

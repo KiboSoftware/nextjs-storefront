@@ -1,13 +1,29 @@
 import * as React from 'react'
 
-import { Divider } from '@mui/material'
+import { Divider, Theme } from '@mui/material'
 import { Box } from '@mui/system'
 
-const FullWidthDivider = () => {
-  // sx= {{width: '100vw',position: 'relative', marginLeft: {md: '-51vw', xs: '-50vw'},left: '50%'}}
+interface FullWidthDividerProps {
+  color?: string
+  [x: string]: any
+}
+
+const FullWidthDivider = (props: FullWidthDividerProps) => {
+  const { color = 'grey.500', ...rest } = props
   return (
     <Box>
-      <Divider sx={{ borderColor: 'grey.500' }} />
+      <Divider
+        {...rest}
+        sx={(theme: Theme) => ({
+          borderColor: color,
+          marginLeft: { md: '-1.5rem', xs: '-1rem' },
+          marginRight: { md: '-1.5rem', xs: '-1rem' },
+          [theme.breakpoints.between('sm', 'md')]: {
+            marginLeft: '-1.5rem',
+            marginRight: '-1.5rem',
+          },
+        })}
+      />
     </Box>
   )
 }

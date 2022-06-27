@@ -1,6 +1,6 @@
 import type { FacetValue } from '@/lib/gql/types'
 
-export const appliedFiltersMock: FacetValue[] = [
+export const facetValueMock: FacetValue[] = [
   {
     label: 'Black',
     value: 'black',
