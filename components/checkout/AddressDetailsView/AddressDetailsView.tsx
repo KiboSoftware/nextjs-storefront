@@ -5,7 +5,7 @@ import { Box } from '@mui/material'
 import AddressCard from '@/components/common/AddressCard/AddressCard'
 import KiboRadio from '@/components/common/KiboRadio/KiboRadio'
 
-import { CrAddress } from '@/lib/gql/types'
+import type { CrAddress } from '@/lib/gql/types'
 
 interface AddressDetailsViewProps extends CrAddress {
   radioGroupTitle?: string

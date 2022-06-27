@@ -8,7 +8,7 @@ import ProductItemList from '@/components/common/ProductItemList'
 import ProductOptionList from '@/components/product/ProductOptionList/ProductOptionList'
 import { orderGetters } from '@/lib/getters'
 
-import { Order } from '@/lib/gql/types'
+import type { Order } from '@/lib/gql/types'
 
 const OrderConfirmation = ({ order }: { order: Order }) => {
   const { t } = useTranslation('common')

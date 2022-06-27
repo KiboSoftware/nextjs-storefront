@@ -1,7 +1,7 @@
 import { Typography, Box } from '@mui/material'
 import { useTranslation } from 'next-i18next'
 
-import { CrAddress } from '@/lib/gql/types'
+import type { CrAddress } from '@/lib/gql/types'
 
 interface AddressProps extends CrAddress {
   title?: string

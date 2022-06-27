@@ -1,4 +1,4 @@
-import { ProductImage } from '@/lib/gql/types'
+import type { ProductImage } from '@/lib/gql/types'
 
 export const imageGalleryData = {
   images: [

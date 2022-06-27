@@ -4,7 +4,7 @@ import { makeGraphQLClient } from '@/lib/gql/client'
 import { updateOrder } from '@/lib/gql/mutations/checkout/update-order'
 import { checkoutKeys } from '@/lib/react-query/queryKeys'
 
-import { OrderInput } from '@/lib/gql/types'
+import type { OrderInput } from '@/lib/gql/types'
 
 export interface CheckoutDetails {
   orderId: string
