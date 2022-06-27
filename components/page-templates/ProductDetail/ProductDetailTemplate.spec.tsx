@@ -1,10 +1,10 @@
 import { composeStories } from '@storybook/testing-react'
-import { render, within, screen, cleanup, waitFor } from '@testing-library/react'
+import { render, within, screen, cleanup } from '@testing-library/react'
 import '@testing-library/jest-dom'
 
 import * as stories from './ProductDetailTemplate.stories' // import all stories from the stories file
 
-const { Common, WithPriceRange } = composeStories(stories)
+const { Common } = composeStories(stories)
 
 afterEach(cleanup)
 
@@ -47,7 +47,7 @@ jest.mock(
   () => ProductInformationMock
 )
 
-const mockProduct = Common.args.product
+const mockProduct = Common?.args?.product
 jest.mock('@/hooks', () => ({
   useProductDetailTemplate: jest.fn(() => {
     return {
@@ -57,7 +57,7 @@ jest.mock('@/hooks', () => ({
 }))
 
 const setup = () => {
-  render(<Common {...Common.args} />)
+  render(<Common {...Common?.args} />)
 }
 
 describe('[component] Product Detail Template component', () => {
@@ -75,7 +75,7 @@ describe('[component] Product Detail Template component', () => {
     setup()
 
     const name = screen.getByRole('heading', {
-      name: new RegExp(Common.args.product.content.productName),
+      name: new RegExp(Common?.args?.product?.content?.productName as string),
     })
 
     expect(name).toBeVisible()
@@ -94,7 +94,7 @@ describe('[component] Product Detail Template component', () => {
 
     const desc = screen.getByTestId('short-description')
 
-    expect(desc.innerHTML).toBe(Common.args.product.content.productShortDescription)
+    expect(desc.innerHTML).toBe(Common?.args?.product?.content?.productShortDescription)
   })
 
   it('should render the Product rating', () => {

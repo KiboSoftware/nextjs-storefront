@@ -21,7 +21,7 @@ describe('[component] - ProductDetailTemplate integration', () => {
   it('should handle quantity selector', () => {
     setup()
 
-    const input = screen.getByRole('textbox', { name: 'quantity' }) as HTMLInputElement
+    const input = screen.getByRole('textbox', { name: 'quantity' })
 
     const increaseButton = screen.getByRole('button', { name: 'increase' })
 
