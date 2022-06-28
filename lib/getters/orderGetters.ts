@@ -4,17 +4,21 @@ import { checkoutGetters } from './checkoutGetters'
 
 import { CrOrderItem, Maybe, Order, PaymentCard } from '@/lib/gql/types'
 
+const getId = (order: Order) => order.id as string
+
+const getOrderNumber = (order: Order) => order?.orderNumber
+
+const getOrderTotal = (order: Order) => order?.total || 0
+
 const capitalizeWord = (word: Maybe<string> | undefined) =>
   word && word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()
 
-const getSubmittedDate = (order: Order, withTimestamp?: boolean): string => {
-  if (order?.submittedDate) {
-    return withTimestamp
-      ? format(new Date(order?.submittedDate), 'MMMM D, YYYY, hh:mm a zzz')
-      : format(new Date(order?.submittedDate), 'MMMM D, YYYY')
-  }
-  return order?.submittedDate || ''
-}
+const getSubmittedDate = (order: Order, withTimestamp?: boolean) =>
+  order?.submittedDate
+    ? withTimestamp
+      ? (format(new Date(order?.submittedDate), 'MMMM dd, yyyy, hh:mm a zzz') as string)
+      : (format(new Date(order?.submittedDate), 'MMMM dd, yyyy') as string)
+    : (order?.submittedDate as string)
 
 const getExpectedDeliveryDate = (items: Maybe<CrOrderItem>[]) => {
   return items[0]?.expectedDeliveryDate
@@ -28,7 +32,7 @@ const getProductNames = (order: Order) => {
   return productNames.join(',')
 }
 
-const getOrderStatus = (order: Order) => order?.status
+const getOrderStatus = (order: Order) => order?.status || ''
 
 const getOrderPayments = (order: Order) => order?.payments
 const getShippedTo = (order: Order) =>
@@ -59,6 +63,30 @@ const getCardPaymentDetails = (card: Maybe<PaymentCard> | undefined) => {
   }
 }
 
+const getOrderDetails = (order: Order) => {
+  const id = getId(order)
+  const orderNumber = getOrderNumber(order)
+  const submittedDate = getSubmittedDate(order)
+  const productNames = getProductNames(order)
+  const orderTotal = getOrderTotal(order)
+  const orderStatus = getOrderStatus(order)
+  const orderPaymets = getOrderPayments(order)
+  const shipTo = getShippedTo(order)
+  const shippingAddress = getShippingAddress(order)
+
+  return {
+    id,
+    orderNumber,
+    submittedDate,
+    productNames,
+    orderTotal,
+    orderStatus,
+    orderPaymets,
+    shipTo,
+    shippingAddress,
+  }
+}
+
 export const orderGetters = {
   getSubmittedDate,
   getProductNames,
@@ -72,5 +100,6 @@ export const orderGetters = {
   getCardExpireMonth,
   getCardExpireYear,
   getCardPaymentDetails,
+  getOrderDetails,
   ...checkoutGetters,
 }
