@@ -59,7 +59,7 @@ const OrderHistory = (props: OrderHistoryProps) => {
         <Typography variant="body1">{accountTitle}</Typography>
       </Stack>
 
-      <Stack sx={{ pt: '1.2rem', pb: '1.2rem' }}>
+      <Stack sx={{ py: '1.2rem' }}>
         <Typography variant="h1">{t('order-history')}</Typography>
       </Stack>
 

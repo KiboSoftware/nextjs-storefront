@@ -51,16 +51,16 @@ const OrderHistoryItem = (props: OrderHistoryItemProps) => {
       onClick={() => handleHistoryItemClick(id as string)}
     >
       <Stack sx={{ width: '95%' }} gap={0.6}>
-        <Typography variant="body1" sx={{ fontWeight: 'bold' }}>
+        <Typography variant="body1" fontWeight="bold">
           {submittedDate}
         </Typography>
-        <Typography variant="body1" sx={{ color: 'text.secondary' }}>
+        <Typography variant="body1" color={'text.secondary'}>
           {productNames}
         </Typography>
 
         <Price price={t('currency', { val: orderTotal })} />
 
-        <Typography variant="body2" sx={{ color: 'text.secondary' }}>
+        <Typography variant="body2" color={'text.secondary'}>
           {orderStatus}
         </Typography>
       </Stack>
