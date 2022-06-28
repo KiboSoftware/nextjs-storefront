@@ -13,9 +13,7 @@ export default {
   },
 } as ComponentMeta<typeof RegisterAccountDialog>
 
-const Template: ComponentStory<typeof RegisterAccountDialog> = (args) => (
-  <RegisterAccountDialog {...args} />
-)
+const Template: ComponentStory<typeof RegisterAccountDialog> = () => <RegisterAccountDialog />
 
 export const Common = Template.bind({})
 

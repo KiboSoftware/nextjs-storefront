@@ -4,7 +4,12 @@ import { ComponentStory, ComponentMeta } from '@storybook/react'
 
 import LoginDialog from './LoginDialog'
 import { UIStateContext } from '@/context'
-const dialogdata = { isLoginDialogOpen: true, toggleLoginDialog: () => null }
+const dialogdata = {
+  isLoginDialogOpen: true,
+  isRegisterDialogOpen: false,
+  toggleLoginDialog: () => null,
+  toggleRegisterDialog: () => null,
+}
 export default {
   component: LoginDialog,
   argTypes: { action: { onclick: 'toggleLoginDialog' } },

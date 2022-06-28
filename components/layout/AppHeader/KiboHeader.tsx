@@ -197,10 +197,11 @@ const TopHeader = ({ navLinks }: { navLinks: NavigationLink[] }) => {
 const HeaderActions = (props: HeaderActionsProps) => {
   const { headerState, setHeaderState, isMobileViewport } = props
   const { t } = useTranslation('common')
-  const { isAuthenticated, user } = useAuthContext()
+  const { isAuthenticated, user, setAuthError } = useAuthContext()
   const { toggleLoginDialog } = useUIContext()
 
   const openLoginModal = () => {
+    setAuthError('')
     if (!isAuthenticated) toggleLoginDialog()
   }
 

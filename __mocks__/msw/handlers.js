@@ -3,9 +3,9 @@ import { graphql } from 'msw'
 import { categoryTreeDataMock } from '../stories/categoryTreeDataMock'
 import { configuredProductMock } from '../stories/configuredProductMock'
 import { orderMock } from '../stories/orderMock'
-import { searchSuggestionMock } from '../stories/searchSuggestionResultMock'
 import { productSearchResultMock } from '../stories/productSearchResultMock'
-import { userMock, loginUserMock } from '../stories/userMock'
+import { searchSuggestionMock } from '../stories/searchSuggestionResultMock'
+import { userMock, loginUserMock, registerUserMock } from '../stories/userMock'
 
 export const checkoutHandlers = [
   // useLoadCheckout
@@ -63,6 +63,10 @@ export const userHandlers = [
   // login
   graphql.mutation('login', (_req, res, ctx) => {
     return res(ctx.data(loginUserMock))
+  }),
+  // create account or registration
+  graphql.mutation('registerUser', (_req, res, ctx) => {
+    return res(ctx.data(registerUserMock))
   }),
 ]
 

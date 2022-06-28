@@ -10,12 +10,19 @@ import * as stories from '@/components/layout/Login/LoginDialog/LoginDialog.stor
 import { UIStateContext, UserContext } from '@/context'
 
 const { Common } = composeStories(stories)
-const uiContextValues = { isLoginDialogOpen: true, toggleLoginDialog: jest.fn() }
+const uiContextValues = {
+  isLoginDialogOpen: true,
+  isRegisterDialogOpen: false,
+  toggleLoginDialog: jest.fn(),
+  toggleRegisterDialog: jest.fn(),
+}
 const userContextValues = {
   isAuthenticated: false,
   login: jest.fn(),
+  createAccount: jest.fn(),
   setAuthError: jest.fn(),
   authError: '',
+  logout: jest.fn(),
 }
 
 const wrapper = ({ children }: { children: ReactNode }) => (
