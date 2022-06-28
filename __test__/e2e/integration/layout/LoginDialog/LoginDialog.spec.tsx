@@ -10,7 +10,7 @@ import * as stories from '@/components/layout/Login/LoginDialog/LoginDialog.stor
 import { UIStateContext, UserContext } from '@/context'
 
 const { Common } = composeStories(stories)
-const uiContextValues = {
+export const uiContextValues = {
   isLoginDialogOpen: true,
   isRegisterDialogOpen: false,
   toggleLoginDialog: jest.fn(),

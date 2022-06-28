@@ -5,17 +5,12 @@ import React, { ReactNode } from 'react'
 import { composeStories } from '@storybook/testing-react'
 import { render, screen, act, fireEvent } from '@testing-library/react'
 
+import { uiContextValues } from '../../LoginDialog/LoginDialog.spec'
 import * as stories from '@/components/layout/RegisterAccount/RegisterAccountDialog/RegisterAccountDialog.stories'
 import { UIStateContext, UserContext } from '@/context'
 
 const { Common } = composeStories(stories)
 
-const uiContextValues = {
-  isLoginDialogOpen: false,
-  isRegisterDialogOpen: true,
-  toggleLoginDialog: jest.fn(),
-  toggleRegisterDialog: jest.fn(),
-}
 const userContextValues = {
   isAuthenticated: false,
   login: jest.fn(),
@@ -24,6 +19,9 @@ const userContextValues = {
   authError: '',
   logout: jest.fn(),
 }
+
+uiContextValues.isLoginDialogOpen = false
+uiContextValues.isRegisterDialogOpen = true
 
 const wrapper = ({ children }: { children: ReactNode }) => (
   <UIStateContext.Provider value={uiContextValues}>
