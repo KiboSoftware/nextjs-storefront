@@ -65,7 +65,7 @@ const ReviewStep = (props: ReviewStepProps) => {
     taxLabel: t('common:estimated-tax'),
     totalLabel: t('common:total'),
     subTotal: t('common:currency', { val: subTotal }),
-    shippingTotal: t('common:currency', { val: shippingTotal }),
+    shippingTotal: shippingTotal ? t('currency', { val: shippingTotal }) : t('free'),
     tax: t('common:currency', { val: taxTotal }),
     total: t('common:currency', { val: total }),
   }

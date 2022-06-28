@@ -64,7 +64,7 @@ const Checkout = (props: CheckoutProps) => {
     taxLabel: 'Tax',
     totalLabel: 'Order Total',
     subTotal: t('common:currency', { val: checkout?.subtotal }),
-    shippingTotal: t('common:currency', { val: 0 }),
+    shippingTotal: t('free'),
     tax: t('common:currency', { val: checkout?.taxTotal }),
     total: t('common:currency', { val: checkout?.total }),
     checkoutLabel: 'Go to Checkout',

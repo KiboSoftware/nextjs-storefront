@@ -20,7 +20,7 @@ Common.args = {
   taxLabel: 'Estimated Tax',
   totalLabel: 'Total',
   subTotal: '$219.99',
-  shippingTotal: '$0',
+  shippingTotal: 'Free',
   tax: '$13.73',
   total: '$233.72',
 }

@@ -15,14 +15,14 @@ interface CartContentProps {
 const Content = (props: CartContentProps) => {
   const { cartItem } = props
   const { shippingTotal, quantity, subtotal, itemTaxTotal, total } = cartItem
-  const { t } = useTranslation('common')
+  const { t } = useTranslation(['checkout', 'common'])
   const orderPriceProps: OrderPriceProps = {
-    subTotalLabel: t('cart-sub-total', { quantity: quantity }),
-    shippingTotalLabel: t('standard-shopping'),
-    taxLabel: t('estimated-tax'),
-    totalLabel: t('total'),
+    subTotalLabel: t('common:cart-sub-total', { quantity: quantity }),
+    shippingTotalLabel: t('common:standard-shopping'),
+    taxLabel: t('common:estimated-tax'),
+    totalLabel: t('common:total'),
     subTotal: t('currency', { val: subtotal }),
-    shippingTotal: t('currency', { val: shippingTotal }),
+    shippingTotal: shippingTotal ? t('currency', { val: shippingTotal }) : t('free'),
     tax: t('currency', { val: itemTaxTotal }),
     total: t('currency', { val: total }),
   }
