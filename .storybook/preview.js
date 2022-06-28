@@ -4,6 +4,7 @@ import { initialize, mswDecorator } from 'msw-storybook-addon'
 import { setConfig } from 'next/config'
 import * as NextImage from 'next/image'
 import { I18nextProvider } from 'react-i18next'
+
 setConfig({ publicRuntimeConfig })
 
 import { QueryClientProvider } from 'react-query'
@@ -41,8 +42,6 @@ if (process.env.NODE_ENV !== 'test') {
     },
   })
   decorators.push(mswDecorator)
-} else {
-  initialize()
 }
 
 export const parameters = {
