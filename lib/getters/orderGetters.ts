@@ -22,7 +22,7 @@ const getSubmittedDate = (order: Order, withTimestamp?: boolean) =>
 
 const getExpectedDeliveryDate = (items: Maybe<CrOrderItem>[]) => {
   return items[0]?.expectedDeliveryDate
-    ? format(new Date(items[0]?.expectedDeliveryDate), 'dddd, MMMM D, YYYY')
+    ? format(new Date(items[0]?.expectedDeliveryDate), 'MMMM dd, yyyy, hh:mm a zzz')
     : items[0]?.expectedDeliveryDate
 }
 
