@@ -41,6 +41,8 @@ if (process.env.NODE_ENV !== 'test') {
     },
   })
   decorators.push(mswDecorator)
+} else {
+  initialize()
 }
 
 export const parameters = {
