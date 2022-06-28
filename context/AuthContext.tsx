@@ -9,10 +9,12 @@ import {
 } from 'react'
 
 import getConfig from 'next/config'
+import { useRouter } from 'next/router'
 
 import { LoginData } from '@/components/layout/Login/LoginContent/LoginContent'
-import { useUserMutations, useUserQueries } from '@/hooks'
-import { storeClientCookie } from '@/lib/helpers/cookieHelper'
+import { RegisterAccountInputData } from '@/components/layout/RegisterAccount/Content/Content'
+import { useUserAccountRegistrationMutations, useUserMutations, useUserQueries } from '@/hooks'
+import { removeClientCookie, storeClientCookie } from '@/lib/helpers/cookieHelper'
 
 import type { CustomerAccount } from '@/lib/gql/types'
 
@@ -20,8 +22,10 @@ interface AuthContextType {
   isAuthenticated: boolean
   user?: CustomerAccount
   login: (params: LoginData, toggleLoginDialog: () => void) => any
+  createAccount: (params: RegisterAccountInputData, toggleRegisterDialog: () => void) => any
   setAuthError: Dispatch<SetStateAction<string>>
   authError: string
+  logout: () => void
 }
 interface AuthContextProviderProps {
   children: ReactNode
@@ -29,10 +33,12 @@ interface AuthContextProviderProps {
 
 const initialState = {
   isAuthenticated: false,
-  authError: '',
   user: undefined,
+  authError: '',
   login: () => null,
+  createAccount: () => null,
   setAuthError: () => '',
+  logout: () => '',
 }
 
 export const UserContext = createContext(initialState as AuthContextType)
@@ -44,8 +50,44 @@ export const AuthContextProvider = ({ children }: AuthContextProviderProps) => {
   const [authError, setAuthError] = useState<string>('')
   const { publicRuntimeConfig } = getConfig()
   const authCookieName = publicRuntimeConfig.userCookieKey.toLowerCase()
-  const { mutate } = useUserMutations()
 
+  const router = useRouter()
+  const { mutate } = useUserMutations()
+  const { mutate: registerUserAccount } = useUserAccountRegistrationMutations()
+
+  // register user
+  const createAccount = (params: RegisterAccountInputData, onSuccessCallBack: () => void) => {
+    try {
+      const createAccountAndLoginMutationVars = {
+        account: {
+          id: 0,
+          userName: params?.email,
+          emailAddress: params?.email,
+          firstName: params?.firstName,
+          lastName: params?.lastNameOrSurname,
+        },
+        password: params?.password,
+      }
+      registerUserAccount(createAccountAndLoginMutationVars, {
+        onError: (error: any) => {
+          //@TO BE DONE GLOBALLY
+          const errorMessage = error?.response?.errors
+            ? error?.response?.errors[0]?.message
+            : 'Something Wrong !'
+          setAuthError(errorMessage)
+        },
+        onSuccess: (account: any) => {
+          // set cookie
+          setCookieAndUser(account)
+          onSuccessCallBack()
+        },
+      })
+    } catch (err: any) {
+      throw new Error(err)
+    }
+  }
+
+  // login user
   const login = (params: LoginData, onSuccessCallBack: () => void) => {
     setAuthError('')
     const userCredentials = {
@@ -61,19 +103,33 @@ export const AuthContextProvider = ({ children }: AuthContextProviderProps) => {
         setAuthError(errorMessage)
       },
       onSuccess: (account: any) => {
-        // set cookie
-        const cookie = {
-          accessToken: account?.accessToken,
-          accessTokenExpiration: account?.accessTokenExpiration,
-          refreshToken: account?.refreshToken,
-          refreshTokenExpiration: account?.refreshTokenExpiration,
-          userId: account?.userId,
-        }
-        storeClientCookie(authCookieName, cookie)
-        setUser(account?.customerAccount)
+        setCookieAndUser(account)
         onSuccessCallBack()
       },
     })
+  }
+
+  // Logout user
+  const logout = async (): Promise<void> => {
+    try {
+      removeClientCookie(authCookieName)
+      router.push('/')
+    } catch (err) {
+      setAuthError('Logout Failed')
+    }
+  }
+
+  const setCookieAndUser = (account: any) => {
+    // set cookie
+    const cookie = {
+      accessToken: account?.accessToken,
+      accessTokenExpiration: account?.accessTokenExpiration,
+      refreshToken: account?.refreshToken,
+      refreshTokenExpiration: account?.refreshTokenExpiration,
+      userId: account?.userId,
+    }
+    storeClientCookie(authCookieName, cookie)
+    setUser(account?.customerAccount)
   }
 
   const { data: customerAccount } = useUserQueries()
@@ -84,6 +140,9 @@ export const AuthContextProvider = ({ children }: AuthContextProviderProps) => {
     authError,
     setAuthError,
     login,
+    createAccount,
+    setUser,
+    logout,
   }
 
   useEffect(() => {

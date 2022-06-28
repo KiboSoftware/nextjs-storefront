@@ -50,11 +50,12 @@ const LoginFooter = (props: LoginFooterProps) => {
 
 const LoginDialog = () => {
   const { t } = useTranslation(['common'])
-  const { isLoginDialogOpen, toggleLoginDialog } = useUIContext()
+  const { isLoginDialogOpen, toggleLoginDialog, toggleRegisterDialog } = useUIContext()
   const { authError = '', login } = useAuthContext()
 
   const onRegisterClick = () => {
-    // do your stuff
+    toggleLoginDialog()
+    toggleRegisterDialog()
   }
   const onForgotPassword = () => {
     // do your stuff

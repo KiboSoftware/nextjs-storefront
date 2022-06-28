@@ -6,10 +6,9 @@ import userEvent from '@testing-library/user-event'
 
 import { KiboDialogProps } from '../../../common/KiboDialog/KiboDialog'
 import * as stories from './RegisterAccountDialog.stories' // import all stories from the stories file
+import { UIContextProvider } from '@/context'
 
 const { Common } = composeStories(stories)
-
-const onCloseMock = jest.fn()
 
 const RegisterAccountContentMock = () => <div data-testid="register-account-content-component" />
 const RegisterAccountDialogMock = (props: KiboDialogProps) => {
@@ -29,26 +28,19 @@ const RegisterAccountDialogMock = (props: KiboDialogProps) => {
 jest.mock('../Content/Content', () => RegisterAccountContentMock)
 jest.mock('../../../common/KiboDialog/KiboDialog', () => RegisterAccountDialogMock)
 
+const renderComponent = () => {
+  return render(<Common {...Common.args} />, { wrapper: UIContextProvider })
+}
+
 describe('[components] Register Account Dialog', () => {
-  const onLoginToYourAccountMock = jest.fn()
-  const setup = (params = {}) => {
+  const setup = () => {
     const user = userEvent.setup()
-    render(
-      <Common
-        {...params}
-        onDialogClose={onCloseMock}
-        onLoginToYourAccountDialogToggle={onLoginToYourAccountMock}
-      />
-    )
-    return {
-      user,
-    }
+    renderComponent()
+    return { user }
   }
 
   it('should render component', async () => {
-    const { user } = setup({
-      isOpen: true,
-    })
+    const { user } = setup()
 
     const registerAccountDialog = screen.getByTestId('register-account-dialog')
     const registerAccountTitle = screen.getByText(/register-now/i)
@@ -61,6 +53,5 @@ describe('[components] Register Account Dialog', () => {
     expect(registerAccountTitle).toBeVisible()
     expect(registerAccountContentComponent).toBeVisible()
     expect(loginToYourAccountLink).toBeVisible()
-    expect(onLoginToYourAccountMock).toHaveBeenCalled()
   })
 })

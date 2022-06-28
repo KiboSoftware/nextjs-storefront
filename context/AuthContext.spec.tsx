@@ -17,6 +17,12 @@ const loginInputs = {
   },
   isRememberMe: false,
 }
+const registerInputs = {
+  email: 'sukanta@email.com',
+  firstName: 'Sunil',
+  lastNameOrSurname: 'Tall',
+  password: '',
+}
 
 describe('[context] - AuthContext', () => {
   beforeEach(() => {
@@ -34,9 +40,12 @@ describe('[context] - AuthContext', () => {
     }
   }
   const TestComponent = () => {
-    const { isAuthenticated, authError, user, login } = useAuthContext()
+    const { isAuthenticated, authError, user, login, createAccount, logout } = useAuthContext()
     const loginUser = () => {
       login(loginInputs, mockOnSuccessCallBack)
+    }
+    const registerUser = () => {
+      createAccount(registerInputs, mockOnSuccessCallBack)
     }
 
     return (
@@ -46,6 +55,12 @@ describe('[context] - AuthContext', () => {
         <div data-testid="user-first-name">{user?.firstName}</div>
         <button name="login-button" onClick={loginUser}>
           Log in
+        </button>
+        <button name="register-button" onClick={registerUser}>
+          Create account
+        </button>
+        <button name="logout-button" onClick={logout}>
+          Logout
         </button>
       </div>
     )
@@ -72,7 +87,7 @@ describe('[context] - AuthContext', () => {
 
     it('should set isAuthenticated to true when successfully logged in', async () => {
       const { user } = setup(<TestComponent />)
-      const loginButton = screen.getByRole('button')
+      const loginButton = screen.getByRole('button', { name: 'Log in' })
       const storeClientCookieSpy = jest.spyOn(cookieHelper, 'storeClientCookie')
       const isLoggedIn = await screen.findByTestId('is-logged-in')
       const userFirstName = screen.getByTestId('user-first-name')
@@ -81,6 +96,21 @@ describe('[context] - AuthContext', () => {
       const authError = await screen.findByTestId('auth-error')
       await waitFor(() => expect(isLoggedIn).toHaveTextContent('true'))
       await waitFor(() => expect(userFirstName).toHaveTextContent('Suman'))
+      await waitFor(() => expect(authError).toHaveTextContent(''))
+      await waitFor(() => expect(storeClientCookieSpy).toHaveBeenCalled())
+      await waitFor(() => expect(mockOnSuccessCallBack).toHaveBeenCalled())
+    })
+    it('should set isAuthenticated to true when successfully create a new account', async () => {
+      const { user } = setup(<TestComponent />)
+      const registerButton = screen.getByRole('button', { name: 'Create account' })
+      const storeClientCookieSpy = jest.spyOn(cookieHelper, 'storeClientCookie')
+      const isLoggedIn = await screen.findByTestId('is-logged-in')
+      const userFirstName = screen.getByTestId('user-first-name')
+
+      user.click(registerButton)
+      const authError = await screen.findByTestId('auth-error')
+      await waitFor(() => expect(isLoggedIn).toHaveTextContent('true'))
+      await waitFor(() => expect(userFirstName).toHaveTextContent('Sunil'))
       await waitFor(() => expect(authError).toHaveTextContent(''))
       await waitFor(() => expect(storeClientCookieSpy).toHaveBeenCalled())
       await waitFor(() => expect(mockOnSuccessCallBack).toHaveBeenCalled())
@@ -96,7 +126,7 @@ describe('[context] - AuthContext', () => {
         })
       )
       const { user } = setup(<TestComponent />)
-      const loginButton = screen.getByRole('button')
+      const loginButton = screen.getByRole('button', { name: 'Log in' })
       const userFirstName = screen.getByTestId('user-first-name')
 
       await user.click(loginButton)
@@ -106,6 +136,38 @@ describe('[context] - AuthContext', () => {
       expect(userFirstName).toHaveTextContent('')
       expect(authError).toHaveTextContent('Something Wrong !')
       expect(mockOnSuccessCallBack).not.toBeCalled()
+    })
+
+    it('should show error when create account fails', async () => {
+      server.resetHandlers(
+        graphql.mutation('registerUser', (_req, res, ctx) => {
+          return res(ctx.status(403))
+        }),
+        graphql.query('getUser', (_req, res, ctx) => {
+          return res(ctx.status(500))
+        })
+      )
+      const { user } = setup(<TestComponent />)
+      const registerButton = screen.getByRole('button', { name: 'Create account' })
+      const userFirstName = screen.getByTestId('user-first-name')
+
+      user.click(registerButton)
+      const isLoggedIn = await screen.findByTestId('is-logged-in')
+      const authError = await screen.findByTestId('auth-error')
+      expect(isLoggedIn).toHaveTextContent('false')
+      expect(userFirstName).toHaveTextContent('')
+      expect(authError).toHaveTextContent('Something Wrong !')
+      expect(mockOnSuccessCallBack).not.toBeCalled()
+    })
+
+    it('should logout when click logout', async () => {
+      const { user } = setup(<TestComponent />)
+      const logoutButton = screen.getByRole('button', { name: 'Logout' })
+      const removeClientCookieSpy = jest.spyOn(cookieHelper, 'removeClientCookie')
+
+      user.click(logoutButton)
+
+      await waitFor(() => expect(removeClientCookieSpy).toHaveBeenCalled())
     })
   })
 })

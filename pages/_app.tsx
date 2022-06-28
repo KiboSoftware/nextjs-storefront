@@ -15,6 +15,7 @@ import { generateQueryClient } from '../lib/react-query/queryClient'
 import theme from '../styles/theme'
 import { KiboHeader } from '@/components/layout'
 import LoginDialog from '@/components/layout/Login'
+import RegisterAccountDialog from '@/components/layout/RegisterAccount/RegisterAccountDialog/RegisterAccountDialog'
 import { AuthContextProvider, UIContextProvider } from '@/context'
 
 // Client-side cache, shared for the whole session of the user in the browser.
