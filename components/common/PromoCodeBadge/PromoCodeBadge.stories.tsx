@@ -3,7 +3,7 @@ import React, { useState } from 'react'
 import { ComponentStory, ComponentMeta } from '@storybook/react'
 
 import PromoBadge from './PromoBadge'
-import { PromoCodeBadge } from './PromoCodeBadge'
+import PromoCodeBadge from './PromoCodeBadge'
 
 export default {
   title: 'Common/PromoCodeBadge',

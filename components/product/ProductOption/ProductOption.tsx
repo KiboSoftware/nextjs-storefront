@@ -4,7 +4,7 @@ import { Variant } from '@mui/material/styles/createTypography'
 import type { Maybe, CrProductOption } from '@/lib/gql/types'
 
 interface ProductOptionProps {
-  option: Maybe<CrProductOption>
+  option: CrProductOption
   variant?: Variant
   fontWeight?: 'bold' | 'normal'
 }

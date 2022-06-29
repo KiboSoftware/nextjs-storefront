@@ -3,8 +3,7 @@ import React from 'react'
 import { Box, Container, Divider, Grid, Stack, Typography } from '@mui/material'
 import { useTranslation } from 'next-i18next'
 
-import OrderSummary from '@/components/common/OrderSummary/OrderSummary'
-import ProductItemList from '@/components/common/ProductItemList'
+import { OrderSummary, ProductItemList } from '@/components/common'
 import ProductOptionList from '@/components/product/ProductOptionList/ProductOptionList'
 import { orderGetters } from '@/lib/getters'
 

@@ -25,7 +25,7 @@ export interface ProductItemProps {
   productCode?: Maybe<string>
   image: string
   name: string
-  options: Maybe<CrProductOption>[]
+  options: CrProductOption[]
   price?: string
   salePrice?: string
   qty?: number
