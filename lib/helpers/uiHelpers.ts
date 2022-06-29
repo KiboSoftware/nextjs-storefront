@@ -1,10 +1,10 @@
 interface UIHelpersType {
-  getCatLink: (category?: string) => string
+  getCategoryLink: (category?: string) => string
   getProductLink: (productCode?: string) => string
 }
 
 export const uiHelpers = (): UIHelpersType => {
-  const getCatLink = (categoryCode?: string) => {
+  const getCategoryLink = (categoryCode?: string) => {
     return `/category/${categoryCode}`
   }
   const getProductLink = (productCode?: string) => {
@@ -12,7 +12,7 @@ export const uiHelpers = (): UIHelpersType => {
   }
 
   return {
-    getCatLink,
+    getCategoryLink,
     getProductLink,
   }
 }

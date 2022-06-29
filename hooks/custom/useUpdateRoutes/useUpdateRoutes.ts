@@ -29,18 +29,21 @@ export const useUpdateRoutes = () => {
   }
 
   const updateRoute = (queryParam: string) => {
-    const qs = router?.query as { filters: string }
-    const filters = qs?.filters?.split(',') || []
-    const currentIndex = filters.indexOf(queryParam)
-    if (currentIndex > -1) {
-      filters.splice(currentIndex, 1)
+    if (!queryParam) {
+      changeFilters('')
     } else {
-      filters.push(queryParam)
+      const qs = router?.query as { filters: string }
+      const filters = qs?.filters?.split(',') || []
+      const currentIndex = filters.indexOf(queryParam)
+      if (currentIndex > -1) {
+        filters.splice(currentIndex, 1)
+      } else {
+        filters.push(queryParam)
+      }
+      changeFilters(filters.join(','))
     }
-    changeFilters(filters.join(','))
   }
   return {
     updateRoute,
-    changeFilters,
   }
 }

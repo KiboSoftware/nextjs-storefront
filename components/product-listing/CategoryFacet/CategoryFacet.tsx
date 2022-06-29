@@ -68,7 +68,7 @@ const styles = {
 
 const CategoryFacet = (props: CategoryFacetProps) => {
   const { initialItemsToShow = 5, categoryFacet, breadcrumbs } = props
-  const { getCatLink } = uiHelpers()
+  const { getCategoryLink } = uiHelpers()
   const { t } = useTranslation(['product', 'common'])
 
   const viewMore = t('common:view-more')
@@ -104,7 +104,7 @@ const CategoryFacet = (props: CategoryFacetProps) => {
             variant="body2"
             color="text.primary"
             sx={styles.link}
-            href={getCatLink(child?.value as string)}
+            href={getCategoryLink(child?.value as string)}
           >
             {child?.label}
             <FormLabel data-testid="count" aria-label={t('count')} sx={{ ...styles.formLabel }}>

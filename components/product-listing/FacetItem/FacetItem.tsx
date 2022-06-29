@@ -22,7 +22,7 @@ const style = {
   } as SxProps<Theme> | undefined,
   formLabel: {
     typography: 'body2',
-    color: 'grey.900',
+    color: 'text.primary',
   },
 }
 

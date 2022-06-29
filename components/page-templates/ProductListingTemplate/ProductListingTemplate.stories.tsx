@@ -54,7 +54,7 @@ const sortingValues = [
 ]
 
 export default {
-  title: 'Page Templates/category',
+  title: 'Page Templates/product-listing',
   component: ProductListingTemplate,
   argTypes: {
     onSortingSelection: { action: 'onChange' },

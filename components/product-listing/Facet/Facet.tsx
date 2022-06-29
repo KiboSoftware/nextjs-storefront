@@ -16,8 +16,7 @@ import { Theme } from '@mui/material/styles'
 import { Box } from '@mui/system'
 import { useTranslation } from 'next-i18next'
 
-import SearchBar from '@/components/common/SearchBar/SearchBar'
-import FullWidthDivider from '@/components/FullWidthDivider'
+import { SearchBar, FullWidthDivider } from '@/components/common'
 import { FacetItemList } from '@/components/product-listing'
 
 import type { Facet as FacetType, FacetValue, Maybe } from '@/lib/gql/types'

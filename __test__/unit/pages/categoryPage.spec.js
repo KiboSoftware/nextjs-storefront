@@ -61,6 +61,7 @@ describe('[page] Category Page', () => {
         categoryCode: '40',
       },
       locale: 'mock-locale',
+      res: { setHeader: jest.fn() },
     }
 
     const response = await getServerSideProps(context)

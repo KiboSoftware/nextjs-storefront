@@ -5,10 +5,8 @@ import { Grid, MenuItem, Typography, Box, Button, SxProps, Skeleton, Link } from
 import { Theme } from '@mui/material/styles'
 import { useTranslation } from 'next-i18next'
 
-import FilterTiles from '@/components/common/FilterTiles/FilterTiles'
-import KiboSelect from '@/components/common/KiboSelect/KiboSelect'
+import { FilterTiles, KiboSelect, FullWidthDivider } from '@/components/common'
 import KiboBreadcrumbs from '@/components/core/Breadcrumbs/KiboBreadcrumbs'
-import FullWidthDivider from '@/components/FullWidthDivider'
 import { CategoryFacet, CategoryFilterByMobile, FacetList } from '@/components/product-listing'
 import { CategoryFacetData } from '@/components/product-listing/CategoryFacet/CategoryFacet'
 import ProductCard from '@/components/product/ProductCard/ProductCard'
@@ -34,7 +32,7 @@ interface ProductListingTemplateProps {
   totalResults: number
   initialProductsToShow?: number
   isLoading?: boolean
-  appliedFilters?: FacetValue[]
+  appliedFilters: FacetValue[]
   onSortingSelection: (value: string) => void
 }
 
@@ -80,7 +78,7 @@ const styles = {
     whiteSpace: 'noWrap',
     marginRight: '1.5rem',
     typography: 'body1',
-    color: 'grey.900',
+    color: 'text.primary',
     display: { md: 'block', xs: 'none' },
   } as SxProps<Theme> | undefined,
   navBarView: {
@@ -132,7 +130,7 @@ const styles = {
   },
   categoryFacetHeader: {
     fontWeight: 'bold',
-    color: 'grey.900',
+    color: 'text.primary',
   },
   categoryFacetHeaderLoading: {
     height: { md: '2.25rem', xs: '1.5rem' },
@@ -157,7 +155,7 @@ const styles = {
     typography: 'body2',
     textDecoration: 'underline',
     marginTop: { md: '1.5rem', xs: 0 },
-    marginLeft: { md: 0, xs: '1rem' },
+    marginLeft: 0,
     color: 'text.primary',
     cursor: 'pointer',
     whiteSpace: 'nowrap',
@@ -186,7 +184,7 @@ const ProductListingTemplate = (props: ProductListingTemplateProps) => {
     initialProductsToShow = 16,
   } = props
   const { getProductLink } = uiHelpers()
-  const { changeFilters, updateRoute } = useUpdateRoutes()
+  const { updateRoute } = useUpdateRoutes()
   const isShowMoreVisible = products?.length > initialProductsToShow
   const [showFilterBy, setFilterBy] = useState<boolean>(false)
   const [isShowMoreButtonVisible, setShowMoreButtonVisible] = useState<boolean>(isShowMoreVisible)
@@ -198,7 +196,7 @@ const ProductListingTemplate = (props: ProductListingTemplateProps) => {
   const showMoreProducts = () => setShowMoreButtonVisible(!isShowMoreButtonVisible)
 
   const handleClearAllFilters = () => {
-    changeFilters('')
+    updateRoute('')
   }
 
   const handleRemoveSelectedTile = (selectedTile: string) => {
@@ -312,7 +310,7 @@ const ProductListingTemplate = (props: ProductListingTemplateProps) => {
             <Box sx={{ width: '100%' }}>
               {!isLoading && appliedFilters && (
                 <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
-                  <Box sx={{ display: 'flex' }}>
+                  <Box sx={{ display: 'flex', margin: '1rem 0 0 1rem' }}>
                     <FilterTiles
                       appliedFilters={appliedFilters}
                       onRemoveSelectedTile={handleRemoveSelectedTile}

@@ -52,13 +52,13 @@ const handleProtocolRelativeUrl = (url: string) => {
 
 const getBreadcrumbs = (product: Product | ProductCustom): BreadCrumb[] => {
   const homeCrumb = [{ text: 'Home', link: '/' }]
-  const { getCatLink } = uiHelpers()
+  const { getCategoryLink } = uiHelpers()
   if (!product?.categories?.[0]) {
     return homeCrumb
   }
   const productCrumbs = buildBreadcrumbs(product?.categories[0]).map((b) => ({
     ...b,
-    link: getCatLink(b?.link as string),
+    link: getCategoryLink(b?.link as string),
   }))
 
   return [...homeCrumb, ...productCrumbs]

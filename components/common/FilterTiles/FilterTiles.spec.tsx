@@ -2,14 +2,16 @@ import React from 'react'
 
 import { composeStories } from '@storybook/testing-react'
 import { render, screen } from '@testing-library/react'
+import userEvent from '@testing-library/user-event'
 
 import * as stories from './FilterTiles.stories' // import all stories from the stories file
 
 const { Tiles } = composeStories(stories)
 
 describe('[components] Fulfillment Options Component', () => {
+  const onRemoveSelectedTileMock = jest.fn()
   const setup = () => {
-    render(<Tiles />)
+    render(<Tiles onRemoveSelectedTile={onRemoveSelectedTileMock} />)
   }
 
   it('should render component', () => {
@@ -19,8 +21,15 @@ describe('[components] Fulfillment Options Component', () => {
 
     const tilesLabelRegex = new RegExp(tilesLabel.join('|'), 'i')
 
-    const tilesLabelss = screen.getAllByText(tilesLabelRegex)
+    const tiles = screen.getAllByText(tilesLabelRegex)
+    expect(tiles).toHaveLength(Tiles?.args?.appliedFilters?.length || 0)
+  })
 
-    expect(tilesLabelss).toHaveLength(Tiles?.args?.appliedFilters?.length || 0)
+  it('should remove filter tile when users clicks on cross icon', () => {
+    setup()
+    const closeIcon = screen.getAllByTestId('CloseIcon')
+
+    userEvent.click(closeIcon[0])
+    expect(onRemoveSelectedTileMock).toHaveBeenCalled()
   })
 })

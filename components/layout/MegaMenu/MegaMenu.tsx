@@ -5,7 +5,7 @@ import { usePopupState, bindHover, bindPopover } from 'material-ui-popup-state/h
 import HoverPopover from 'material-ui-popup-state/HoverPopover'
 import { useTranslation } from 'next-i18next'
 
-import KiboImage from '@/components/common/KiboImage/KiboImage'
+import { KiboImage } from '@/components/common'
 import { MegaMenuItem } from '@/components/layout'
 import { uiHelpers } from '@/lib/helpers'
 import DefaultImage from '@/public/product_placeholder.svg'
@@ -77,7 +77,7 @@ const MegaMenuCategory = (props: MegaMenuCategoryProps) => {
 
   const { t } = useTranslation('common')
 
-  const { getCatLink } = uiHelpers()
+  const { getCategoryLink } = uiHelpers()
   const popupState = usePopupState({
     variant: 'popover',
     popupId: category?.content?.name,
@@ -88,13 +88,17 @@ const MegaMenuCategory = (props: MegaMenuCategoryProps) => {
   }, [childrenCategories.length, popupState.isOpen, onBackdropToggle])
 
   return (
-    <Box {...bindHover(popupState)} role="group" color="grey.900">
+    <Box {...bindHover(popupState)} role="group" color="text.primary">
       <ListItem
         sx={{ ...style.listItem }}
         onMouseOver={() => setActiveCategory(category?.categoryCode || '')}
         selected={popupState.isOpen && category?.categoryCode === activeCategory}
       >
-        <Link href={getCatLink(category?.categoryCode as string)} underline="none" color="grey.900">
+        <Link
+          href={getCategoryLink(category?.categoryCode as string)}
+          underline="none"
+          color="text.primary"
+        >
           {category?.content?.name}
         </Link>
       </ListItem>

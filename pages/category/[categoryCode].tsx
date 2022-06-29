@@ -5,14 +5,14 @@ import getConfig from 'next/config'
 import { useRouter } from 'next/router'
 
 import { ProductListingTemplate } from '@/components/page-templates'
-import { useProductSearch } from '@/hooks/queries/useProductSearch/useProductSearch'
+import { useProductSearch } from '@/hooks'
 import { productSearch, categoryTreeSearchByCode } from '@/lib/api/operations'
 import getCategoryTree from '@/lib/api/operations/get-category-tree'
 import { productSearchGetters, facetGetters } from '@/lib/getters'
 import type { CategorySearchParams } from '@/lib/types'
 
 import type { PrCategory, ProductSearchResult, Facet, Product, FacetValue } from '@/lib/gql/types'
-import type { NextPage, GetServerSidePropsContext } from 'next'
+import type { NextPage, GetServerSidePropsContext, GetServerSideProps } from 'next'
 
 interface CategoryPageType {
   results: ProductSearchResult
@@ -20,11 +20,15 @@ interface CategoryPageType {
   category: { categories: PrCategory[] }
 }
 
-export async function getServerSideProps(context: GetServerSidePropsContext) {
-  const { locale } = context
+export const getServerSideProps: GetServerSideProps = async (
+  context: GetServerSidePropsContext
+) => {
+  const { locale, res } = context
   const response = await productSearch(context.query as unknown as CategorySearchParams)
   const categoriesTree = await getCategoryTree()
   const category = await categoryTreeSearchByCode(context.query)
+
+  res.setHeader('Cache-Control', 'public, s-maxage=10, stale-while-revalidate=59')
 
   return {
     props: {

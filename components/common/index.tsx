@@ -1,1 +1,6 @@
+export { default as FilterTiles } from './FilterTiles/FilterTiles'
+export { default as FullWidthDivider } from './FullWidthDivider/FullWidthDivider'
+export { default as KiboImage } from './KiboImage/KiboImage'
 export { default as KiboTextBox } from './KiboTextBox/KiboTextBox'
+export { default as KiboSelect } from './KiboSelect/KiboSelect'
+export { default as SearchBar } from './SearchBar/SearchBar'

@@ -6,6 +6,7 @@ import { buildProductSearchInput } from '@/lib/helpers/buildProductSearchInput'
 
 import type { ProductSearchResult } from '@/lib/gql/types'
 import type { CategorySearchParams } from '@/lib/types'
+import { productSearchResultKeys } from '@/lib/react-query/queryKeys'
 
 export interface UseProductSearchResponse {
   data: ProductSearchResult
@@ -29,7 +30,7 @@ export const useProductSearch = (
   initialData: ProductSearchResult
 ): UseProductSearchResponse => {
   const { data, isLoading, isSuccess, isFetching } = useQuery(
-    ['productSearch', searchParams],
+    productSearchResultKeys.searchParams(searchParams),
     () => fetchProductSearch(searchParams),
     {
       initialData,

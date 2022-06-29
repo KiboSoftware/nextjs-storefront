@@ -1,3 +1,5 @@
+import type { CategorySearchParams } from '../types'
+
 export const checkoutKeys = {
   all: ['checkout'] as const,
   detail: (id: string) => [...checkoutKeys.all, id] as const,
@@ -14,4 +16,8 @@ export const categoryTreeKeys = {
 
 export const loginKeys = {
   user: ['user'] as const,
+}
+export const productSearchResultKeys = {
+  all: ['productSearch'] as const,
+  searchParams: (params: CategorySearchParams) => [...productSearchResultKeys.all, params] as const,
 }

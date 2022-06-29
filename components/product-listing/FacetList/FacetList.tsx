@@ -4,8 +4,7 @@ import { Close } from '@mui/icons-material'
 import { Stack, Box, Typography, useMediaQuery, useTheme, Divider } from '@mui/material'
 import { useTranslation } from 'next-i18next'
 
-import FilterTiles from '@/components/common/FilterTiles/FilterTiles'
-import FullWidthDivider from '@/components/FullWidthDivider'
+import { FilterTiles, FullWidthDivider } from '@/components/common'
 import { Facet } from '@/components/product-listing'
 
 import type { Facet as FacetType, FacetValue } from '@/lib/gql/types'
@@ -14,7 +13,7 @@ import type { Facet as FacetType, FacetValue } from '@/lib/gql/types'
 interface FacetListProps {
   facetList?: FacetType[]
   initialItemsToShow?: number
-  appliedFilters?: FacetValue[]
+  appliedFilters: FacetValue[]
   onFilterByClose: () => void
   onRemoveSelectedTile: (tile: string) => void
 }
@@ -64,7 +63,7 @@ const FacetList = (props: FacetListProps) => {
         </Typography>
         <Close sx={{ ...styles.Close }} onClick={onFilterByClose} />
       </Box>
-      <Box sx={{ display: { md: 'none' } }}>
+      <Box sx={{ display: { md: 'none' }, margin: '1rem 0 0 1rem' }}>
         <FilterTiles appliedFilters={appliedFilters} onRemoveSelectedTile={onRemoveSelectedTile} />
       </Box>
       {mdScreen ? <Divider sx={{ borderColor: 'grey.500' }} /> : <FullWidthDivider />}

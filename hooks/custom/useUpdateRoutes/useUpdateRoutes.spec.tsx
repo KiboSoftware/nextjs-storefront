@@ -9,7 +9,7 @@ useRouter.mockImplementation(() => ({
 }))
 
 describe('useUpdateRoutes', () => {
-  const { changeFilters, updateRoute } = useUpdateRoutes()
+  const { updateRoute } = useUpdateRoutes()
   it('should add the filter to the url if filter is not present', () => {
     updateRoute('Tenant~color:black')
     expect(push).toHaveBeenCalledWith({
@@ -18,13 +18,13 @@ describe('useUpdateRoutes', () => {
     })
   })
 
-  it('should remove the filter to the url if filter is present', () => {
+  it('should remove the filter from the url if filter is present', () => {
     updateRoute('Tenant~color:red')
     expect(push).toHaveBeenCalled()
   })
 
   it('should remove all the filters', () => {
-    changeFilters('')
+    updateRoute('')
     expect(push).toHaveBeenCalled()
   })
 })

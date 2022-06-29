@@ -3,6 +3,7 @@ export * from './queries/useCheckout/useCheckout'
 export * from './queries/useSearchSuggestions/useSearchSuggestions'
 export * from './queries/useCategoryTree/useCategoryTree'
 export * from './queries/useUser/useUserQueries'
+export * from './queries/useProductSearch/useProductSearch'
 
 // Custom hooks
 export * from './custom/useDebounce/useDebounce'

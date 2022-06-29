@@ -3,7 +3,7 @@ import React from 'react'
 import { Box, Button, Skeleton, Typography } from '@mui/material'
 import { useTranslation } from 'next-i18next'
 
-import FullWidthDivider from '@/components/FullWidthDivider'
+import { FullWidthDivider } from '@/components/common'
 import { FacetList } from '@/components/product-listing'
 
 import type { Facet as FacetType, FacetValue } from '@/lib/gql/types'
@@ -13,7 +13,7 @@ interface CategoryFilterByMobileProps {
   header?: string
   totalResults: number
   isLoading?: boolean
-  appliedFilters?: FacetValue[]
+  appliedFilters: FacetValue[]
   onClearAllFilters: () => void
   onFilterByClose: () => void
   onRemoveSelectedTile: (tile: string) => void

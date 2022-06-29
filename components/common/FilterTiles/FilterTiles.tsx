@@ -4,7 +4,7 @@ import { Box, Chip, Stack } from '@mui/material'
 import type { FacetValue } from '@/lib/gql/types'
 
 export type FilterTilesProps = {
-  appliedFilters?: FacetValue[]
+  appliedFilters: FacetValue[]
   children?: React.ReactNode
   onRemoveSelectedTile: (tile: string) => void
 }
@@ -16,42 +16,39 @@ const styles = {
   },
   closeIcon: {
     '& .MuiChip-deleteIcon': {
-      color: '#2b2b2b',
-      fontSize: '1rem',
+      color: 'text.primary',
+      typography: 'body1',
       marginTop: '1',
     },
-    fontSize: '14px',
+    typography: 'body2',
     borderWidth: '1px',
     borderStyle: 'solid',
-    borderColor: '#2B2B2B',
+    borderColor: 'text.primary',
   },
 }
 const FilterTiles = (props: FilterTilesProps) => {
   const { appliedFilters, children, onRemoveSelectedTile } = props
 
   return (
-    <>
-      <Box component="div" sx={{ margin: '1rem 0 0 1rem' }}>
-        {appliedFilters &&
-          appliedFilters.map((filter) => (
-            <Stack
-              key={filter.filterValue}
-              direction="row"
-              alignItems="center"
-              sx={{ ...styles.filterTiles }}
-            >
-              <Chip
-                variant="outlined"
-                sx={{ ...styles.closeIcon }}
-                label={filter.label}
-                deleteIcon={<CloseIcon />}
-                onDelete={() => onRemoveSelectedTile(filter?.filterValue as string)}
-              />
-            </Stack>
-          ))}
-        <Box sx={{ display: { xs: 'block', md: 'inline' } }}>{children}</Box>
-      </Box>
-    </>
+    <Box component="div">
+      {appliedFilters?.map((filter) => (
+        <Stack
+          key={filter.filterValue}
+          direction="row"
+          alignItems="center"
+          sx={{ ...styles.filterTiles }}
+        >
+          <Chip
+            variant="outlined"
+            sx={{ ...styles.closeIcon }}
+            label={filter.label}
+            deleteIcon={<CloseIcon />}
+            onDelete={() => onRemoveSelectedTile(filter?.filterValue as string)}
+          />
+        </Stack>
+      ))}
+      <Box sx={{ display: { xs: 'block', md: 'inline' } }}>{children}</Box>
+    </Box>
   )
 }
 
