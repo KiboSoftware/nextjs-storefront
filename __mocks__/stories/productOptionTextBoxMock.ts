@@ -12,6 +12,7 @@ export const productOptionTextBoxMock: ProductOption[] = [
         value: 'MS-CAM-004',
         attributeValueId: 125,
         shopperEnteredValue: null,
+        isEnabled: true,
       },
     ],
   },

@@ -10,10 +10,10 @@ const { Common } = composeStories(stories)
 describe('[component] ColorSelector component', () => {
   const setup = (params) => {
     const props = params ? params : Common.args
-    const selectOptionMock = jest.fn()
-    render(<Common {...props} onChange={selectOptionMock} />)
+    const onColorChangeMock = jest.fn()
+    render(<Common {...props} onColorChange={onColorChangeMock} />)
     return {
-      selectOptionMock,
+      onColorChangeMock,
     }
   }
 
@@ -35,35 +35,35 @@ describe('[component] ColorSelector component', () => {
 
   it('should call selectOption method only when color-option is enabled and not selected', () => {
     const arrObj = { values: [{ attributeValueId: 3, value: 'green', isEnabled: true }] }
-    const { selectOptionMock } = setup(arrObj)
+    const { onColorChangeMock } = setup(arrObj)
 
     const option = screen.getByTestId(/colorvalue-green/i)
 
     userEvent.click(option)
 
-    expect(selectOptionMock).toHaveBeenCalled()
-    expect(selectOptionMock).toHaveBeenCalledWith(Common.args.attributeFQN, 'green')
+    expect(onColorChangeMock).toHaveBeenCalled()
+    expect(onColorChangeMock).toHaveBeenCalledWith(Common.args.attributeFQN, 'green')
   })
 
   it('should not call selectOption method when option is disabled', () => {
     const arrObj = { values: [{ attributeValueId: 3, value: 'red', isEnabled: false }] }
-    const { selectOptionMock } = setup(arrObj)
+    const { onColorChangeMock } = setup(arrObj)
 
     const disabledOption = screen.getByTestId(/colorvalue-red/i)
 
     userEvent.click(disabledOption)
 
-    expect(selectOptionMock).toHaveBeenCalledTimes(0)
+    expect(onColorChangeMock).toHaveBeenCalledTimes(0)
   })
 
   it('should not call selectOption method when option is selected', () => {
     const arrObj = { values: [{ attributeValueId: 3, value: 'yellow', isSelected: true }] }
-    const { selectOptionMock } = setup(arrObj)
+    const { onColorChangeMock } = setup(arrObj)
 
     const selectedOption = screen.getByTestId(/colorvalue-yellow/i)
 
     userEvent.click(selectedOption)
 
-    expect(selectOptionMock).toHaveBeenCalledTimes(0)
+    expect(onColorChangeMock).toHaveBeenCalledTimes(0)
   })
 })
