@@ -21,7 +21,7 @@ jest.mock('next-i18next', () => ({
 }))
 
 // Mock the server
-// beforeAll(() => server.listen())
+beforeAll(() => server.listen())
 afterEach(() => server.resetHandlers())
 afterAll(() => server.close())
 
