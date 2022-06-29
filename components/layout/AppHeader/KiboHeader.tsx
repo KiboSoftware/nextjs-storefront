@@ -22,12 +22,14 @@ import {
 import { styled, SxProps, Theme } from '@mui/material/styles'
 import { useTranslation } from 'next-i18next'
 
+import LoginDialog from '../Login'
 import SearchSuggestions from '../SearchSuggestions/SearchSuggestions'
 import HeaderAction from '@/components/common/HeaderAction/HeaderAction'
 import KiboLogo from '@/components/common/KiboLogo/KiboLogo'
 import { HamburgerMenu } from '@/components/layout'
 import MegaMenu from '@/components/layout/MegaMenu/MegaMenu'
-import { useAuthContext, useUIContext } from '@/context'
+import { useAuthContext } from '@/context'
+import { useModalContext } from '@/context/ModalContext'
 import { useCategoryTree } from '@/hooks'
 import type { NavigationLink } from '@/lib/types'
 
@@ -198,11 +200,11 @@ const HeaderActions = (props: HeaderActionsProps) => {
   const { headerState, setHeaderState, isMobileViewport } = props
   const { t } = useTranslation('common')
   const { isAuthenticated, user, setAuthError } = useAuthContext()
-  const { toggleLoginDialog } = useUIContext()
+  const { showModal } = useModalContext()
 
   const openLoginModal = () => {
     setAuthError('')
-    if (!isAuthenticated) toggleLoginDialog()
+    if (!isAuthenticated) showModal({ Component: LoginDialog })
   }
 
   return (

@@ -6,7 +6,7 @@ import userEvent from '@testing-library/user-event'
 
 import { KiboDialogProps } from '../../../common/KiboDialog/KiboDialog'
 import * as stories from './RegisterAccountDialog.stories' // import all stories from the stories file
-import { UIContextProvider } from '@/context'
+import { ModalContextProvider } from '@/context/ModalContext'
 
 const { Common } = composeStories(stories)
 
@@ -29,7 +29,7 @@ jest.mock('../Content/Content', () => RegisterAccountContentMock)
 jest.mock('../../../common/KiboDialog/KiboDialog', () => RegisterAccountDialogMock)
 
 const renderComponent = () => {
-  return render(<Common {...Common.args} />, { wrapper: UIContextProvider })
+  return render(<Common {...Common.args} />, { wrapper: ModalContextProvider })
 }
 
 describe('[components] Register Account Dialog', () => {
