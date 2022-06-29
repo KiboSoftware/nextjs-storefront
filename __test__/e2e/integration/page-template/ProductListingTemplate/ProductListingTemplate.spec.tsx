@@ -17,7 +17,7 @@ describe('[component] - Category Integration', () => {
     return { onSortingSelectionMock }
   }
 
-  it('should call onSortingSelection function when user clicks on sorting', async () => {
+  it('should call onSortingSelection function when user clicks on sorting', () => {
     setup()
 
     const selectButton = screen.getByRole('button', { name: /best-match/i })
@@ -28,9 +28,7 @@ describe('[component] - Category Integration', () => {
 
     userEvent.click(listbox.getByText(sortingValues[0].value))
 
-    await waitFor(() => {
-      expect(onSortingSelectionMock).toBeCalledWith('kibo-select', sortingValues[0].value)
-    })
+    expect(onSortingSelectionMock).toBeCalledWith('kibo-select', sortingValues[0].value)
   })
 
   it('should display all the products when user clicks on Show more button', () => {
@@ -46,6 +44,7 @@ describe('[component] - Category Integration', () => {
 
     const showMoreButton = screen.getByRole('button', { name: /show-more/i })
     userEvent.click(showMoreButton)
+
     const productsAfterClick =
       Category?.args?.products?.map((product) => productGetters.getName(product)) || []
 
