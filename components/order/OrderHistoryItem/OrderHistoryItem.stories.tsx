@@ -6,7 +6,7 @@ import OrderHistoryItem from './OrderHistoryItem'
 
 // Common
 export default {
-  title: 'MyAccount/OrderHistoryItem',
+  title: 'Order/OrderHistoryItem',
   component: OrderHistoryItem,
 } as ComponentMeta<typeof OrderHistoryItem>
 

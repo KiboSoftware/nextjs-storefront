@@ -4,10 +4,11 @@ import { ComponentStory, ComponentMeta } from '@storybook/react'
 
 import OrderHistory from './OrderHistory'
 import { orderCollection } from '@/__mocks__/stories/orderCollection'
+import { orderMock } from '@/__mocks__/stories/orderMock'
 
 // Common
 export default {
-  title: 'MyAccount/OrderHistory',
+  title: 'Order/OrderHistory',
   component: OrderHistory,
   argTypes: {
     onAccountTitleClick: { action: 'onAccountTitleClick' },
@@ -19,6 +20,10 @@ const Template: ComponentStory<typeof OrderHistory> = (args) => <OrderHistory {.
 // Default
 export const Common = Template.bind({})
 Common.args = {
-  orders: orderCollection.orders,
   accountTitle: 'My Account',
+  orders: orderCollection.orders,
+  storePickupAddress:
+    (orderMock.checkout.payments &&
+      orderMock.checkout.payments[0]?.billingInfo?.billingContact?.address) ||
+    undefined,
 }

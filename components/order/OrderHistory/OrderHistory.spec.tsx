@@ -12,10 +12,12 @@ const { Common } = composeStories(stories)
 const FilterOrdersMock = () => <div data-testid="filter-orders-mock" />
 const FilterTilesMock = () => <div data-testid="filter-tiles-mock" />
 const OrderHistoryItemMock = () => <div data-testid="order-history-mock" />
+const ViewOrderDetailsMock = () => <div data-testid="view-order-details-mock" />
 
 jest.mock('@/components/common/FilterOrders/FilterOrders', () => FilterOrdersMock)
 jest.mock('@/components/common/FilterTiles/FilterTiles', () => FilterTilesMock)
-jest.mock('@/components/my-account/OrderHistoryItem/OrderHistoryItem', () => OrderHistoryItemMock)
+jest.mock('@/components/order/OrderHistoryItem/OrderHistoryItem', () => OrderHistoryItemMock)
+jest.mock('@/components/order/view-order-details/ViewOrderDetails', () => ViewOrderDetailsMock)
 
 describe('[component] - OrderHistory', () => {
   it('should render component', () => {
@@ -30,11 +32,13 @@ describe('[component] - OrderHistory', () => {
     const filterOrders = screen.getByTestId('filter-orders-mock')
     const filterTiles = screen.getByTestId('filter-tiles-mock')
     const orderHistoryItem = screen.getAllByTestId('order-history-mock')
+    const viewOrderDetails = screen.queryByTestId('view-order-details-mock')
 
     expect(accountTitleText).toBeVisible()
     expect(orderHistoryText).toBeVisible()
     expect(filterOrders).toBeVisible()
     expect(filterTiles).toBeVisible()
     expect(orderHistoryItem).toHaveLength(itemsLength)
+    expect(viewOrderDetails).not.toBeInTheDocument()
   })
 })
