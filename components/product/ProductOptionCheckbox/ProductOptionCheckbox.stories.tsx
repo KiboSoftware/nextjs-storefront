@@ -7,7 +7,7 @@ import ProductOptionCheckbox, { ProductOptionCheckboxProps } from './ProductOpti
 export default {
   title: 'Product/Product Option Checkbox',
   component: ProductOptionCheckbox,
-  argTypes: { onChange: { action: 'onChange' } },
+  argTypes: { onCheckboxChange: { action: 'onCheckboxChange' } },
 } as ComponentMeta<typeof ProductOptionCheckbox>
 
 const Template: ComponentStory<typeof ProductOptionCheckbox> = (

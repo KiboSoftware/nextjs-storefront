@@ -1,5 +1,6 @@
 import { composeStories } from '@storybook/testing-react'
 import { render, screen, within, fireEvent } from '@testing-library/react'
+import userEvent from '@testing-library/user-event'
 
 import '@testing-library/jest-dom'
 import { productOptionSelectValuesMock } from '../../../__mocks__/stories/productOptionSelectMock'
@@ -16,18 +17,17 @@ describe('[component] ProductOptionSelect component', () => {
   })
 
   it('should call onChange method if value is changed', () => {
-    const onChangeMock = jest.fn()
+    const onDropdownChangeMock = jest.fn()
     const mockOption = productOptionSelectValuesMock[0]
-    render(<Common {...Common.args} onChange={onChangeMock} />)
+    render(<Common {...Common.args} onDropdownChange={onDropdownChangeMock} />)
     const ProductOptionSelect = screen.getByRole('button')
 
     fireEvent.mouseDown(ProductOptionSelect)
 
     const listbox = within(screen.getByRole('listbox'))
 
-    fireEvent.click(listbox.getByText(mockOption.stringValue))
+    userEvent.click(listbox.getByText(mockOption.stringValue))
 
-    expect(ProductOptionSelect).toHaveTextContent(mockOption.stringValue)
-    expect(onChangeMock).toBeCalledWith('select-product-option', mockOption.value)
+    expect(onDropdownChangeMock).toBeCalledWith('test-attributeFQN', mockOption.value)
   })
 })

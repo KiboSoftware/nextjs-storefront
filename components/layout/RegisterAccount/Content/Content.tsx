@@ -74,7 +74,6 @@ const Content = (props: ContentProps) => {
   const userEnteredPassword = watch(['password']).join('')
 
   const handleCreateAccount = async (registerAccountData: RegisterAccountInputData) => {
-    console.log(`createAccount: ${JSON.stringify(registerAccountData)}`)
     onRegisterNow(registerAccountData)
   }
 

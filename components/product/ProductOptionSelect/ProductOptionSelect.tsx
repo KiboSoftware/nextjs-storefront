@@ -3,18 +3,19 @@ import { useTranslation } from 'next-i18next'
 
 import KiboSelect from '@/components/common/KiboSelect/KiboSelect'
 
-import type { ProductOptionValue } from '@/lib/gql/types'
+import type { Maybe, ProductOptionValue } from '@/lib/gql/types'
 
 export interface ProductOptionSelectProps {
   optionValues: ProductOptionValue[]
-  name?: string
+  name?: Maybe<string>
   value?: string
   error?: boolean
   errorHelperText?: string
   row?: boolean
   placeholder?: string
   label?: string
-  onChange: (value: string) => void
+  attributeFQN: string
+  onDropdownChange: (attributeFQN: string, value: string) => void
 }
 
 const ProductOptionSelect = (props: ProductOptionSelectProps) => {
@@ -27,15 +28,16 @@ const ProductOptionSelect = (props: ProductOptionSelectProps) => {
     errorHelperText = '',
     label = t('select-product-option'),
     placeholder = t('select-product-option'),
-    onChange,
+    attributeFQN,
+    onDropdownChange,
   } = props
 
   return (
     <KiboSelect
-      name={name}
+      name={name as string}
       error={error}
       helperText={errorHelperText}
-      onChange={onChange}
+      onChange={(_, selectedValue) => onDropdownChange(attributeFQN, selectedValue)}
       value={value}
       label={label}
       placeholder={placeholder}

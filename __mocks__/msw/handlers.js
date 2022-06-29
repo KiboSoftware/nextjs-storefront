@@ -1,6 +1,7 @@
 import { graphql } from 'msw'
 
 import { categoryTreeDataMock } from '../stories/categoryTreeDataMock'
+import { configuredProductMock } from '../stories/configuredProductMock'
 import { orderMock } from '../stories/orderMock'
 import { searchSuggestionMock } from '../stories/searchSuggestionResultMock'
 import { userMock, loginUserMock } from '../stories/userMock'
@@ -24,6 +25,12 @@ export const checkoutHandlers = [
   // useCheckout
   graphql.mutation('updatePersonalDetails', (_req, res, ctx) => {
     return res(ctx.data(orderMock))
+  }),
+]
+
+export const productHandlers = [
+  graphql.mutation('configureProduct', (_req, res, ctx) => {
+    return res(ctx.data(configuredProductMock))
   }),
 ]
 
@@ -57,4 +64,5 @@ export const handlers = [
   ...searchSuggestionHandlers,
   ...categoryHandlers,
   ...userHandlers,
+  ...productHandlers
 ]

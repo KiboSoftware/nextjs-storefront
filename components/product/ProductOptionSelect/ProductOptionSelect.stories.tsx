@@ -10,8 +10,9 @@ export default {
   component: ProductOptionSelect,
   args: {
     optionValues: productOptionSelectValuesMock,
+    attributeFQN: 'test-attributeFQN',
   },
-  argTypes: { onChange: { action: 'onChange' } },
+  argTypes: { onDropdownChange: { action: 'onDropdownChange' } },
 } as ComponentMeta<typeof ProductOptionSelect>
 
 const Template: ComponentStory<typeof ProductOptionSelect> = (args: ProductOptionSelectProps) => (

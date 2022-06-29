@@ -2,7 +2,7 @@ import getConfig from 'next/config'
 
 import { buildBreadcrumbs, validateProductVariations } from '@/lib/helpers'
 import { uiHelpers } from '@/lib/helpers'
-import type { ProductCustom, BreadCrumb } from '@/lib/types'
+import type { ProductCustom, BreadCrumb, ProductProperties } from '@/lib/types'
 
 import type { Product, ProductOption, ProductPriceRange, ProductProperty } from '@/lib/gql/types'
 
@@ -81,6 +81,7 @@ const getOptionSelectedValue = (option: ProductOption) => {
   const result = selectedValue?.value || selectedValue?.stringValue || selectedValue?.isSelected
   return result?.toString()
 }
+
 export const getOptionName = (option: ProductOption): string => option?.attributeDetail?.name || ''
 export const getOptions = (product: Product) => product?.options
 
@@ -136,6 +137,32 @@ const getVariationProductCodeOrProductCode = (product: ProductCustom): string =>
     : (product.productCode as string)
 }
 
+const getProductDetails = (product: ProductCustom) => {
+  const productOptions = getSegregatedOptions(product)
+
+  return {
+    productName: getName(product),
+    productPrice: getPrice(product),
+    productPriceRange: getPriceRange(product),
+    productRating: getRating(product),
+    description: getDescription(product),
+    shortDescription: getShortDescription(product),
+    productGallery: getProductGallery(product),
+
+    optionsVisibility: {
+      color: productOptions && productOptions.colourOptions && productOptions.colourOptions.values,
+      size: productOptions && productOptions.sizeOptions && productOptions.sizeOptions.values,
+      select: productOptions && productOptions.selectOptions.length,
+      checkbox: productOptions && productOptions.yesNoOptions.length,
+      textbox: productOptions && productOptions.textBoxOptions.length,
+    },
+
+    properties: getProperties(product) as ProductProperties[],
+    isValidForAddToCart: validateAddToCart(product),
+    productOptions,
+  }
+}
+
 export const productGetters = {
   getName,
   getRating,
@@ -157,4 +184,6 @@ export const productGetters = {
   validateAddToCart,
   getVariationProductCodeOrProductCode,
   handleProtocolRelativeUrl,
+  // grouped
+  getProductDetails,
 }

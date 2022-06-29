@@ -7,10 +7,6 @@ import Price from './Price'
 export default {
   title: 'Common/Price',
   component: Price,
-  argTypes: {
-    size: { control: 'select' },
-    fontWeight: { control: 'radio' },
-  },
 } as ComponentMeta<typeof Price>
 
 const Template: ComponentStory<typeof Price> = (args) => <Price {...args} />
@@ -30,7 +26,13 @@ WithSalePrice.args = {
 export const WithPriceRange = Template.bind({})
 WithPriceRange.args = {
   priceRange: {
-    upper: '$120.00',
-    lower: '$90.00',
+    upper: {
+      price: '$220.00',
+      salePrice: '$160.00',
+    },
+    lower: {
+      price: '$120.00',
+      salePrice: '$60.00',
+    },
   },
 }

@@ -1,0 +1,65 @@
+import { renderHook } from '@testing-library/react-hooks'
+import { act } from 'react-dom/test-utils'
+
+import { useProductDetailTemplate } from './useProductDetailTemplate'
+import { configuredProductMock } from '@/__mocks__/stories/configuredProductMock'
+import { ProductCustomMock } from '@/__mocks__/stories/ProductCustomMock'
+
+const mockConfigureProductOptionsResponse = configuredProductMock.configureProduct.options
+jest.mock('@/hooks', () => ({
+  useProductMutation: () => ({
+    configureProduct: {
+      mutateAsync: () =>
+        Promise.resolve({
+          options: mockConfigureProductOptionsResponse,
+        }),
+      isLoading: false,
+      isSuccess: true,
+    },
+  }),
+}))
+
+const setup = () => {
+  const product = ProductCustomMock
+  const { result } = renderHook(() => useProductDetailTemplate({ product }))
+
+  return {
+    result,
+    product,
+  }
+}
+
+describe('[component] Product Detail Template data: useProductDetailTemplate', () => {
+  it('should return currentProduct', () => {
+    const { result, product } = setup()
+
+    expect(result.current.currentProduct).toStrictEqual(product)
+  })
+
+  it('should run selectProductOption function successfully and return configured product details', async () => {
+    const { result, product } = setup()
+
+    await act(async () =>
+      result.current.selectProductOption(
+        'test-attributeFQN',
+        'test-value',
+        'test-shopperEnteredValue'
+      )
+    )
+
+    expect(result.current.currentProduct).toStrictEqual({
+      ...product,
+      options: mockConfigureProductOptionsResponse,
+    })
+  })
+
+  it('should handle product quantity', () => {
+    const { result } = setup()
+
+    act(() => {
+      result.current.setQuantity('3')
+    })
+
+    expect(result.current.quantity).toBe('3')
+  })
+})

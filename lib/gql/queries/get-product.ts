@@ -1,6 +1,6 @@
 /* eslint-disable import/no-named-as-default */
 
-import { productInfo } from '../fragments/product'
+import { productInfo } from '../fragments'
 
 export const getProductQuery = /* GraphQL */ `
   ${productInfo}

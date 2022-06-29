@@ -54,7 +54,7 @@ const KiboSelect = (props: KiboSelectProps) => {
         displayEmpty
         name={name}
         error={error}
-        defaultValue={value}
+        value={value}
         MenuProps={MenuProps}
         sx={{ height: '34px' }}
         inputProps={{ 'aria-hidden': false }}

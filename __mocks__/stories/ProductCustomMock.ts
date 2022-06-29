@@ -1,6 +1,14 @@
-export const ProductDataMock = {
+import { ProductCustom } from '@/lib/types'
+
+export const ProductCustomMock: ProductCustom = {
   fulfillmentTypesSupported: ['DirectShip', 'InStorePickup'],
   fulfillmentMethod: 'Ship',
+  fulfillmentMethodShortName: '',
+  purchaseLocationCode: '',
+  createDate: null,
+  personalizationScore: 0,
+  score: 0,
+  updateDate: null,
   productCode: 'BIKE3',
   productUsage: 'Configurable',
   isPackagedStandAlone: false,
@@ -17,11 +25,13 @@ export const ProductDataMock = {
           name: 'Biking',
           slug: 'biking',
         },
+        updateDate: null,
       },
       content: {
         name: 'Mountain',
         slug: 'mountain',
       },
+      updateDate: null,
     },
     {
       categoryCode: '46',
@@ -32,6 +42,7 @@ export const ProductDataMock = {
         name: 'New Products!',
         slug: 'new-products-',
       },
+      updateDate: null,
     },
   ],
   purchasableState: {
@@ -47,6 +58,7 @@ export const ProductDataMock = {
       attributeFQN: 'tenant~product-crosssell',
       attributeDetail: {
         name: 'Product Cross-Sells',
+        dataTypeSequence: 0,
       },
       isHidden: false,
       values: [
@@ -68,6 +80,7 @@ export const ProductDataMock = {
       attributeFQN: 'tenant~popularity',
       attributeDetail: {
         name: 'Popularity',
+        dataTypeSequence: 0,
       },
       isHidden: false,
       values: [
@@ -81,6 +94,7 @@ export const ProductDataMock = {
       attributeFQN: 'tenant~rating',
       attributeDetail: {
         name: 'Rating',
+        dataTypeSequence: 0,
       },
       isHidden: true,
       values: [
@@ -94,6 +108,7 @@ export const ProductDataMock = {
       attributeFQN: 'tenant~product-upsell',
       attributeDetail: {
         name: 'Product Upsells',
+        dataTypeSequence: 0,
       },
       isHidden: true,
       values: [
@@ -115,6 +130,7 @@ export const ProductDataMock = {
       attributeFQN: 'tenant~color-filter',
       attributeDetail: {
         name: 'color filter',
+        dataTypeSequence: 0,
       },
       isHidden: true,
       values: [
@@ -132,6 +148,7 @@ export const ProductDataMock = {
       attributeFQN: 'tenant~isrecommended',
       attributeDetail: {
         name: 'isRecommended',
+        dataTypeSequence: 0,
       },
       isHidden: true,
       values: [
@@ -149,6 +166,7 @@ export const ProductDataMock = {
       attributeFQN: 'tenant~brand',
       attributeDetail: {
         name: 'Brand',
+        dataTypeSequence: 0,
       },
       isHidden: true,
       values: [
@@ -162,6 +180,7 @@ export const ProductDataMock = {
       attributeFQN: 'tenant~last-call',
       attributeDetail: {
         name: 'Last Call',
+        dataTypeSequence: 0,
       },
       isHidden: true,
       values: [
@@ -175,6 +194,7 @@ export const ProductDataMock = {
       attributeFQN: 'tenant~video-url',
       attributeDetail: {
         name: 'video-url',
+        dataTypeSequence: 0,
       },
       isHidden: true,
       values: [
@@ -188,6 +208,7 @@ export const ProductDataMock = {
       attributeFQN: 'tenant~dynamic-color',
       attributeDetail: {
         name: null,
+        dataTypeSequence: 0,
       },
       isHidden: true,
       values: [
@@ -241,6 +262,7 @@ export const ProductDataMock = {
       attributeDetail: {
         name: 'Color',
         inputType: 'List',
+        dataTypeSequence: 0,
       },
       isProductImageGroupSelector: false,
       isRequired: true,
@@ -251,12 +273,15 @@ export const ProductDataMock = {
           isSelected: false,
           deltaPrice: null,
           stringValue: 'Orange',
+          attributeValueId: 0,
+          isEnabled: true,
         },
         {
           value: 'Purple',
           isSelected: false,
           deltaPrice: null,
           stringValue: 'Purple',
+          attributeValueId: 1,
         },
       ],
     },
@@ -265,6 +290,7 @@ export const ProductDataMock = {
       attributeDetail: {
         name: 'Size',
         inputType: 'List',
+        dataTypeSequence: 0,
       },
       isProductImageGroupSelector: false,
       isRequired: true,
@@ -275,18 +301,24 @@ export const ProductDataMock = {
           isSelected: false,
           deltaPrice: null,
           stringValue: 'L',
+          attributeValueId: 0,
+          isEnabled: true,
         },
         {
           value: 'M',
           isSelected: false,
           deltaPrice: null,
           stringValue: 'M',
+          attributeValueId: 1,
+          isEnabled: true,
         },
         {
           value: 'S',
           isSelected: false,
           deltaPrice: null,
           stringValue: 'S',
+          attributeValueId: 2,
+          isEnabled: true,
         },
       ],
     },
@@ -295,6 +327,7 @@ export const ProductDataMock = {
       attributeDetail: {
         name: 'Length (cm)',
         inputType: 'List',
+        dataTypeSequence: 0,
       },
       isProductImageGroupSelector: false,
       isRequired: true,
@@ -304,19 +337,22 @@ export const ProductDataMock = {
           value: 150,
           isSelected: false,
           deltaPrice: null,
-          stringValue: null,
+          stringValue: '150',
+          attributeValueId: 0,
         },
         {
           value: 154,
           isSelected: false,
           deltaPrice: null,
-          stringValue: null,
+          stringValue: '154',
+          attributeValueId: 1,
         },
         {
           value: 156,
           isSelected: false,
           deltaPrice: null,
-          stringValue: null,
+          stringValue: '156',
+          attributeValueId: 2,
         },
       ],
     },
@@ -325,6 +361,7 @@ export const ProductDataMock = {
       attributeDetail: {
         name: 'Include Warranty',
         inputType: 'YesNo',
+        dataTypeSequence: 0,
       },
       isProductImageGroupSelector: false,
       isRequired: false,
@@ -335,6 +372,7 @@ export const ProductDataMock = {
           isSelected: false,
           deltaPrice: 0,
           stringValue: null,
+          attributeValueId: 0,
         },
       ],
     },
@@ -343,6 +381,7 @@ export const ProductDataMock = {
       attributeDetail: {
         name: 'Vanity Plate Text',
         inputType: 'TextBox',
+        dataTypeSequence: 0,
       },
       isProductImageGroupSelector: false,
       isRequired: false,
@@ -353,6 +392,8 @@ export const ProductDataMock = {
           isSelected: false,
           deltaPrice: 0,
           stringValue: null,
+          attributeValueId: 0,
+          isEnabled: true,
         },
       ],
     },
