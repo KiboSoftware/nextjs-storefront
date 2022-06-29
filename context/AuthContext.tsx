@@ -12,7 +12,7 @@ import getConfig from 'next/config'
 import { useRouter } from 'next/router'
 
 import { LoginData } from '@/components/layout/Login/LoginContent/LoginContent'
-import { RegisterAccountInputData } from '@/components/layout/RegisterAccount/Content/Content'
+import type { RegisterAccountInputData } from '@/components/layout/RegisterAccount/Content/Content'
 import { useUserAccountRegistrationMutations, useUserMutations, useUserQueries } from '@/hooks'
 import { removeClientCookie, storeClientCookie } from '@/lib/helpers/cookieHelper'
 
@@ -21,8 +21,8 @@ import type { CustomerAccount } from '@/lib/gql/types'
 interface AuthContextType {
   isAuthenticated: boolean
   user?: CustomerAccount
-  login: (params: LoginData, toggleLoginDialog: () => void) => any
-  createAccount: (params: RegisterAccountInputData, toggleRegisterDialog: () => void) => any
+  login: (params: LoginData, onSuccessCallBack: () => void) => any
+  createAccount: (params: RegisterAccountInputData, onSuccessCallBack: () => void) => any
   setAuthError: Dispatch<SetStateAction<string>>
   authError: string
   logout: () => void

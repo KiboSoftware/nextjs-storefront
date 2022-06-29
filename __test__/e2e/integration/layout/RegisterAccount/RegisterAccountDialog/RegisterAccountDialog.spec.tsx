@@ -5,9 +5,8 @@ import React, { ReactNode } from 'react'
 import { composeStories } from '@storybook/testing-react'
 import { render, screen, act, fireEvent } from '@testing-library/react'
 
-import { uiContextValues } from '../../LoginDialog/LoginDialog.spec'
 import * as stories from '@/components/layout/RegisterAccount/RegisterAccountDialog/RegisterAccountDialog.stories'
-import { UIStateContext, UserContext } from '@/context'
+import { UserContext } from '@/context'
 
 const { Common } = composeStories(stories)
 
@@ -20,13 +19,8 @@ const userContextValues = {
   logout: jest.fn(),
 }
 
-uiContextValues.isLoginDialogOpen = false
-uiContextValues.isRegisterDialogOpen = true
-
 const wrapper = ({ children }: { children: ReactNode }) => (
-  <UIStateContext.Provider value={uiContextValues}>
-    <UserContext.Provider value={userContextValues}>{children}</UserContext.Provider>
-  </UIStateContext.Provider>
+  <UserContext.Provider value={userContextValues}>{children}</UserContext.Provider>
 )
 
 const renderComponent = () => {

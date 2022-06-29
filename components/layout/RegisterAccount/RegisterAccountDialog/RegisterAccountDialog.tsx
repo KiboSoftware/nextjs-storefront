@@ -3,11 +3,13 @@ import React from 'react'
 import { Typography, Box, styled, Theme, useTheme, useMediaQuery, Stack, Link } from '@mui/material'
 import { useTranslation } from 'next-i18next'
 
+import LoginDialog from '../../Login'
 import KiboDialog from '@/components/common/KiboDialog/KiboDialog'
 import Content, {
   RegisterAccountInputData,
 } from '@/components/layout/RegisterAccount/Content/Content'
-import { useAuthContext, useUIContext } from '@/context'
+import { useAuthContext } from '@/context'
+import { useModalContext } from '@/context/ModalContext'
 
 interface StyledThemeProps {
   theme?: Theme
@@ -40,15 +42,14 @@ const RegisterAccountDialog = () => {
   const theme = useTheme()
   const mdScreen = useMediaQuery(theme.breakpoints.up('md'))
   const { createAccount, authError } = useAuthContext()
-  const { isRegisterDialogOpen, toggleRegisterDialog, toggleLoginDialog } = useUIContext()
+  const { showModal, closeModal } = useModalContext()
 
   const handleUserRegistration = (params: RegisterAccountInputData) => {
-    createAccount(params, toggleRegisterDialog)
+    createAccount(params, closeModal)
   }
 
   const gotoLogin = () => {
-    if (isRegisterDialogOpen) toggleRegisterDialog()
-    toggleLoginDialog()
+    showModal({ Component: LoginDialog })
   }
 
   const Title = (
@@ -73,7 +74,6 @@ const RegisterAccountDialog = () => {
 
   return (
     <KiboDialog
-      isOpen={isRegisterDialogOpen}
       Title={Title}
       Content={
         <Content
@@ -85,7 +85,7 @@ const RegisterAccountDialog = () => {
       Actions={Actions}
       isDialogCentered={true}
       customMaxWidth={customMaxWidth}
-      onClose={toggleRegisterDialog}
+      onClose={closeModal}
     />
   )
 }
