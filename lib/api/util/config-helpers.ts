@@ -1,3 +1,5 @@
+import { UserAuthTicket } from '@kibocommerce/graphql-client'
+
 const protocolRegx = new RegExp(/https?:\/\//)
 const addProtocolToHost = (hostname: string | undefined) =>
   hostname && !hostname.match(protocolRegx) ? `https://${hostname}` : hostname
@@ -11,4 +13,9 @@ export const getApiConfig = () => {
     authHost: process.env.KIBO_AUTH_HOST as string,
     apiHost: process.env.KIBO_API_HOST as string,
   }
+}
+
+export const isShopperAuthExpired = (userAuthTicket: UserAuthTicket) => {
+  const { accessTokenExpiration } = userAuthTicket
+  return new Date(accessTokenExpiration).getTime() < Date.now()
 }

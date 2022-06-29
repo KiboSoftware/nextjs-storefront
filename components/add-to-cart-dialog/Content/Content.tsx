@@ -7,6 +7,7 @@ import { useTranslation } from 'next-i18next'
 import ProductItem from '@/components/common/ProductItem/ProductItem'
 
 import type { CartItem as CartItemType, CrProductOption } from '@/lib/gql/types'
+
 interface CartContentProps {
   cartItem: CartItemType
 }
@@ -54,10 +55,10 @@ const Content = (props: CartContentProps) => {
           image={cartItem.product?.imageUrl || ''}
           name={cartItem.product?.name || ''}
           options={cartItem.product?.options as Array<CrProductOption>}
-          price={t('currency', { val: (cartItem.product?.price?.price || 0).toString() })}
+          price={(cartItem.product?.price?.price || 0).toString()}
           salePrice={
             (cartItem.product?.price?.salePrice &&
-              t('currency', { val: cartItem.product?.price?.salePrice.toString() })) ||
+              (cartItem.product?.price?.salePrice).toString()) ||
             undefined
           }
         />

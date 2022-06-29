@@ -6,9 +6,10 @@ import userEvent from '@testing-library/user-event'
 
 import * as stories from './ProductItem.stories'
 
-const { Common, WithoutDetailOption, WithPriceLabel, WithChageStoreOption } =
-  composeStories(stories)
+const { Common, WithoutDetailOption, WithQtyLabel, WithChageStoreOption } = composeStories(stories)
 
+const imageMock = () => <div data-testid="image-component" />
+jest.mock('@/components/common/KiboImage/KiboImage', () => imageMock)
 const priceMock = () => <div data-testid="price-component" />
 jest.mock('@/components/common/Price/Price', () => priceMock)
 
@@ -19,39 +20,59 @@ const onClickStoreLocatorMock = jest.fn()
 
 describe('[component] - ProductItem', () => {
   const setup = () => {
-    render(<WithPriceLabel {...WithPriceLabel.args} />)
+    render(<Common {...Common.args} />)
   }
 
   it('should render component', () => {
     setup()
 
-    const productDetails = screen.getByTestId('productDetails')
-    const qty = screen.getByText(/Qty/i)
-    const name = screen.getByRole('heading')
-    const image = screen.getByRole('img')
-    const productOptionList = screen.getByTestId('product-option-list-component')
-    const price = screen.getByTestId('price-component')
-    const detailsElement = screen.queryByText(/details/i)
-    const priceLabel = screen.getByTestId('product-price')
+    expect(screen.getByText(/Qty/i)).toBeInTheDocument()
+    expect(screen.getByRole('heading')).toBeVisible()
+    expect(screen.getByText(`${Common.args?.name}`)).toBeVisible()
+    expect(screen.getByTestId('image-component')).toBeVisible()
+    expect(screen.getByTestId('product-option-list-component')).toBeVisible()
+    expect(screen.getByTestId('price-component')).toBeVisible()
+  })
+})
 
-    expect(productDetails).toBeVisible()
-    expect(qty).toBeInTheDocument()
-    expect(name).toBeVisible()
-    expect(image).toHaveAttribute('alt', Common.args?.name)
-    expect(productOptionList).toBeVisible()
-    expect(price).toBeVisible()
-    expect(priceLabel).toBeInTheDocument()
+describe('[component] - ProductItem with Price and Pickup Item', () => {
+  it('should render component with price and qty', () => {
+    render(<WithQtyLabel {...WithQtyLabel.args} />)
+
+    const detailsElement = screen.queryByText(/details/i)
+    const price = screen.getByText(WithQtyLabel?.args?.price || '')
+
     expect(detailsElement).toBeInTheDocument()
+    expect(screen.getByText(/Qty/i)).toBeInTheDocument()
+    expect(screen.getByText(`${WithQtyLabel.args?.qty}`)).toBeVisible()
+    expect(price).toBeVisible()
+  })
+
+  it('should render component with change store', () => {
+    render(<WithChageStoreOption {...WithChageStoreOption.args} />)
+
+    const detailsElement = screen.queryByText(/details/i)
+    const price = screen.getByText(WithChageStoreOption?.args?.price || '')
+
+    expect(detailsElement).toBeInTheDocument()
+    expect(screen.getByText(/estimated-pickup:/i)).toBeVisible()
+    expect(screen.getByText(/Qty/i)).toBeInTheDocument()
+    expect(screen.getByText(`${WithChageStoreOption.args?.expectedDeliveryDate}`)).toBeVisible()
+    expect(screen.getByText(`${WithChageStoreOption.args?.qty}`)).toBeVisible()
+    expect(price).toBeVisible()
   })
 
   it('should call onClickStoreLocatorMock when click onClickStoreLocator', () => {
     render(
       <WithChageStoreOption
         {...WithChageStoreOption.args}
+        isPickupItem={true}
         onClickStoreLocator={onClickStoreLocatorMock}
       />
     )
-    const changeStore = screen.getByTestId('change-store-MS-BTL-002')
+    const changeStore = WithChageStoreOption.args?.purchaseLocation
+      ? screen.getByText(/change-store/i)
+      : screen.getByText(/select-store/i)
 
     userEvent.click(changeStore)
     expect(onClickStoreLocatorMock).toHaveBeenCalled()

@@ -3,13 +3,11 @@ import React from 'react'
 import { composeStories } from '@storybook/testing-react'
 import { render, screen } from '@testing-library/react'
 
-import {
-  shipItems,
-  pickupItems,
-  getShippingRates,
-} from '../../../../__mocks__/productItemListMockData'
 import * as stories from './ShippingMethod.stories'
+import { shippingRateMock } from '@/__mocks__/stories/shippingRateMock'
 import { ShippingMethodProps } from '@/components/checkout/Shipping/OrderItems/ShippingMethod'
+
+import type { Maybe, CrOrderItem } from '@/lib/gql/types'
 
 const { Common } = composeStories(stories)
 
@@ -51,9 +49,9 @@ describe('[component] - ShippingMethod', () => {
 
   it('should render only shipItems when only shipItems are present', () => {
     const params = {
-      shipItems: shipItems,
+      shipItems: Common.args?.shipItems as Maybe<CrOrderItem>[],
       pickupItems: [],
-      orderShipmentMethods: getShippingRates.orderShipmentMethods,
+      orderShipmentMethods: shippingRateMock.orderShipmentMethods,
       onShippingMethodChange: (name: string, value: string) => ({ name, value }),
     }
     setup(params)
@@ -68,8 +66,8 @@ describe('[component] - ShippingMethod', () => {
   it('should render only pickupItems when only pickupItems are there', () => {
     const params = {
       shipItems: [],
-      pickupItems: pickupItems,
-      orderShipmentMethods: getShippingRates.orderShipmentMethods,
+      pickupItems: Common.args?.pickupItems as Maybe<CrOrderItem>[],
+      orderShipmentMethods: shippingRateMock.orderShipmentMethods,
       onShippingMethodChange: (name: string, value: string) => ({ name, value }),
     }
     setup(params)
@@ -83,9 +81,9 @@ describe('[component] - ShippingMethod', () => {
 
   it('should render both shipItems and pickupItems when both are there', () => {
     const params = {
-      shipItems: shipItems,
-      pickupItems: pickupItems,
-      orderShipmentMethods: getShippingRates.orderShipmentMethods,
+      shipItems: Common.args?.shipItems as Maybe<CrOrderItem>[],
+      pickupItems: Common.args?.pickupItems as Maybe<CrOrderItem>[],
+      orderShipmentMethods: shippingRateMock.orderShipmentMethods,
       onShippingMethodChange: (name: string, value: string) => ({ name, value }),
     }
     setup(params)

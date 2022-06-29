@@ -2,15 +2,20 @@ import React from 'react'
 
 import { Stack, Divider } from '@mui/material'
 
-import ProductItem, { ProductItemProps } from '@/components/common/ProductItem/ProductItem'
+import ProductItem from '@/components/common/ProductItem/ProductItem'
+import { orderGetters } from '@/lib/getters'
+
+import type { Maybe, CrOrderItem } from '@/lib/gql/types'
 
 export type ProductItemListProps = {
-  items?: ProductItemProps[]
+  items?: Maybe<CrOrderItem>[]
+  expectedDeliveryDate?: string
+  isPickupItem?: boolean
   onClickChangeStore?: () => void
 }
 
 const ProductItemList = (props: ProductItemListProps) => {
-  const { items, onClickChangeStore } = props
+  const { items, expectedDeliveryDate, isPickupItem = false, onClickChangeStore } = props
 
   return (
     <Stack
@@ -19,11 +24,21 @@ const ProductItemList = (props: ProductItemListProps) => {
       spacing={2}
       data-testid="product-item-stack"
     >
-      {items?.map((item: ProductItemProps, index) => (
+      {items?.map((item: Maybe<CrOrderItem>) => (
         <ProductItem
-          {...item}
+          id={orderGetters.getProductId(item)}
+          productCode={orderGetters.getProductCode(item)}
+          image={orderGetters.getProductImage(item)}
+          name={orderGetters.getProductName(item)}
+          options={orderGetters.getProductOptions(item)}
+          price={orderGetters.getProductPrice(item)}
+          salePrice={orderGetters.getProductSalePrice(item)}
+          qty={orderGetters.getProductQuantity(item)}
+          purchaseLocation={orderGetters.getPurchaseLocation(item)}
+          isPickupItem={isPickupItem}
+          expectedDeliveryDate={expectedDeliveryDate}
           onClickStoreLocator={onClickChangeStore}
-          key={`${item.name}-${index}`}
+          key={item?.id}
           data-testid="product-item"
         ></ProductItem>
       ))}

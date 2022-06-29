@@ -14,6 +14,7 @@ export const orderMock: { checkout: Order } = {
     taxTotal: 0,
     orderNumber: 81,
     orderDiscounts: [],
+    submittedDate: '2021-12-03T14:08:28.838Z',
     billingInfo: null,
     fulfillmentInfo: {
       shippingMethodCode: '691f94b2b57e47239456ada600cdcc9e',
@@ -45,6 +46,7 @@ export const orderMock: { checkout: Order } = {
     },
     items: [
       {
+        expectedDeliveryDate: '2020-03-24T10:22:50.723Z',
         fulfillmentMethod: 'Pickup',
         id: '133ce85f2eb24894bd5eae830106646d',
         total: 49,
@@ -58,7 +60,18 @@ export const orderMock: { checkout: Order } = {
             'Its tapered profile and ergonomic handle make it a joy to hold. Our smooth, threadless spout replicates our Perfect Spout, a first for any steel bottle.',
           imageUrl:
             '//d1slj7rdbjyb5l.cloudfront.net/17194-21127/cms/21127/files/3e90a2f3-01af-4280-93f5-6d35f84f78e5',
-          options: [],
+          options: [
+            {
+              attributeFQN: 'Tenant~color',
+              name: 'Color',
+              value: 'Blue',
+            },
+            {
+              attributeFQN: 'Tenant~size',
+              name: 'Size',
+              value: 'Large',
+            },
+          ],
           properties: [
             {
               attributeFQN: 'tenant~availability',
@@ -125,7 +138,18 @@ export const orderMock: { checkout: Order } = {
           description:
             'Delta representss the art of high style, high performance hydration with its striking, yet simple design and ergonomics',
           imageUrl: null,
-          options: [],
+          options: [
+            {
+              attributeFQN: 'Tenant~color',
+              name: 'Color',
+              value: 'Red',
+            },
+            {
+              attributeFQN: 'Tenant~size',
+              name: 'Size',
+              value: 'Small',
+            },
+          ],
           properties: [
             {
               attributeFQN: 'tenant~availability',
@@ -189,7 +213,18 @@ export const orderMock: { checkout: Order } = {
             '<span style="color: rgb(51, 51, 51); font-family: verdana, sans-serif; line-height: 17px; text-align: left; "><font size="3"><i>The Wi-Fi-enabled Garmin VIRB Elite action camera harnesses the power of GPS allowing video recordings that automatically start and stop with GPS-enabled triggers you set, such as speed or altitude.</i></font></span>',
           imageUrl:
             '//d1slj7rdbjyb5l.cloudfront.net/17194-21127/cms/21127/files/6e0389db-5b78-490d-88b0-28af87528c5b',
-          options: [],
+          options: [
+            {
+              attributeFQN: 'Tenant~size',
+              name: 'Size',
+              value: 'XS',
+            },
+            {
+              attributeFQN: 'Tenant~color',
+              name: 'Color',
+              value: 'Blue',
+            },
+          ],
           properties: [
             {
               attributeFQN: 'tenant~availability',
@@ -252,6 +287,57 @@ export const orderMock: { checkout: Order } = {
         },
       },
     ],
-    payments: [],
+    payments: [
+      {
+        id: '44c7b0bd1ed24c97bf23adf301176865',
+        paymentServiceTransactionId: '4ab45201c58541f9ad45e2ba42a3858b',
+        orderId: '1366c6ef4decfa00013b9b2b000045a4',
+        paymentType: 'CreditCard',
+        paymentWorkflow: 'Mozu',
+        billingInfo: {
+          paymentType: 'CreditCard',
+          billingContact: {
+            email: 'marcus.fenix@cog.com',
+            firstName: 'Marcus',
+            middleNameOrInitial: '',
+            lastNameOrSurname: 'Fenix',
+            phoneNumbers: {
+              home: '1-949-307-5762',
+              mobile: '1-949-307-5762',
+              work: '',
+            },
+            address: {
+              address1: '4861 Sunny Day Drive',
+              address2: '',
+              address3: '',
+              address4: '',
+              cityOrTown: 'Irvine',
+              stateOrProvince: 'CA',
+              postalOrZipCode: '92697',
+              countryCode: 'US',
+              addressType: 'Residential',
+              isValidated: false,
+            },
+          },
+          isSameBillingShippingAddress: false,
+          card: {
+            paymentServiceCardId: '952076ca59454ccb97cf05ee5e9c97c8',
+            isUsedRecurring: false,
+            nameOnCard: 'Marcus Fenix',
+            isCardInfoSaved: false,
+            isTokenized: true,
+            paymentOrCardType: 'VISA',
+            cardNumberPartOrMask: '************1111',
+            expireMonth: 1,
+            expireYear: 2024,
+          },
+        },
+        status: 'Authorized',
+        isRecurring: false,
+        amountCollected: 0,
+        amountCredited: 0,
+        amountRequested: 18.97,
+      },
+    ],
   },
 }

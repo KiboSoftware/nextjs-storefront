@@ -5,6 +5,6 @@ export default async function getProduct(productCode: any) {
   const variables = {
     productCode,
   }
-  const response = await fetcher({ query: getProductQuery, variables })
+  const response = await fetcher({ query: getProductQuery, variables }, null)
   return response.data?.product
 }

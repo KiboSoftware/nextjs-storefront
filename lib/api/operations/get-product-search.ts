@@ -15,7 +15,7 @@ interface SearchParams {
 export default async function search(searchParams: SearchParams) {
   try {
     const variables = buildProductSearchInput(searchParams)
-    return await fetcher({ query: searchProductsQuery, variables })
+    return await fetcher({ query: searchProductsQuery, variables }, null)
   } catch (error) {
     console.error(error)
   }

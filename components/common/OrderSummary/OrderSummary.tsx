@@ -1,7 +1,7 @@
-/** @format */
+import { ReactNode } from 'react'
 
 import { Info } from '@mui/icons-material'
-import { Card, Typography, Box, CardContent, Divider } from '@mui/material'
+import { Card, Typography, Box, CardContent, Divider, Theme } from '@mui/material'
 import { useTranslation } from 'next-i18next'
 
 interface OrderSummaryProps {
@@ -10,15 +10,15 @@ interface OrderSummaryProps {
   standardShippingAmount: string
   estimatedTaxAmout: string
   numberOfItems: string
-  shippingLabel: string
-  backLabel: string
-  checkoutLabel: string
+  shippingLabel?: string
+  backLabel?: string
+  checkoutLabel?: string
   nameLabel: string
   cartTotalLabel: string
   standardShippingLabel: string
   estimatedTaxLabel: string
   orderTotalLabel: string
-  children: any
+  children?: ReactNode
 }
 
 const styles = {
@@ -50,10 +50,10 @@ const OrderSummary = (props: OrderSummaryProps) => {
   const { t } = useTranslation('common')
 
   return (
-    <Card sx={{ bgcolor: 'grey.100', maxWidth: '26.75rem', width: '100%' }}>
+    <Card sx={{ bgcolor: 'grey.100', maxWidth: '26.75rem', width: '100%', boxShadow: 'none' }}>
       <CardContent>
         <Box sx={styles.headerStyle}>
-          <Typography variant="h3" color="text.primary" fontWeight="bold">
+          <Typography variant="h3" color="text.primary" fontWeight="bold" pt={0.5}>
             {nameLabel}
           </Typography>
         </Box>
@@ -75,12 +75,12 @@ const OrderSummary = (props: OrderSummaryProps) => {
         <Box sx={styles.boxStyle}>
           <Typography variant="h5">
             {estimatedTaxLabel}
-            <Info sx={{ fontSize: (theme: any) => theme.typography.h5 }} />
+            <Info sx={{ fontSize: (theme: Theme) => theme.typography.h5 }} />
           </Typography>
           <Typography variant="h5">{estimatedTaxAmout}</Typography>
         </Box>
         <br />
-        <Divider variant="middle" />
+        <Divider />
 
         <br />
         <Box sx={styles.boxStyle}>

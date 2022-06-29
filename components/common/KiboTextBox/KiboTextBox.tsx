@@ -48,7 +48,6 @@ const KiboInput = styled(InputBase)(({ theme, error }) => ({
 const KiboTextBox = (props: KiboTextBoxProps) => {
   const {
     label,
-    value,
     required = false,
     error = false,
     helperText = '',
@@ -81,7 +80,6 @@ const KiboTextBox = (props: KiboTextBoxProps) => {
           'aria-invalid': error,
           'aria-label': label,
         }}
-        defaultValue={value}
         placeholder={placeholder}
         onChange={(e) => onChange(e.target.name, e.target.value)}
         onKeyDown={onKeyDown}
