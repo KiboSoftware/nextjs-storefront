@@ -32,7 +32,7 @@ describe('[components] - OrderConfirmation Integration', () => {
     expect(screen.getByText(/order-date/i)).toBeVisible()
     expect(screen.getByText(new RegExp(submittedDate))).toBeVisible()
     expect(screen.getByText(new RegExp(email))).toBeVisible()
-    expect(screen.getByText(new RegExp(`item-quantity`))).toBeVisible()
+    expect(screen.getByText(/item-quantity/i)).toBeVisible()
 
     shipItems?.map((item) => {
       expect(screen.getByText(item?.product?.name || '')).toBeVisible()

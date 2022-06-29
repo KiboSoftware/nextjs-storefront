@@ -1,7 +1,7 @@
 import { Typography, Box } from '@mui/material'
 import { Variant } from '@mui/material/styles/createTypography'
 
-import type { Maybe, CrProductOption } from '@/lib/gql/types'
+import type { CrProductOption } from '@/lib/gql/types'
 
 interface ProductOptionProps {
   option: CrProductOption
