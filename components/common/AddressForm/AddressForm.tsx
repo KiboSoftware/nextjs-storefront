@@ -10,7 +10,7 @@ import getConfig from 'next/config'
 import { useForm, Controller } from 'react-hook-form'
 import * as yup from 'yup'
 
-import { type Action } from '@/components/checkout'
+import type { Action } from '@/components/checkout'
 import KiboSelect from '@/components/common/KiboSelect/KiboSelect'
 import KiboTextField from '@/components/common/KiboTextBox/KiboTextBox'
 import { FormStates } from '@/lib/constants'
