@@ -11,7 +11,7 @@
     "lint": "next lint",
     "generate-types": "graphql-codegen",
     "storybook": "start-storybook -p 3000 -s ./public",
-    "build-storybook": "build-storybook && cp -rf public/ storybook-static",
+    "build-storybook": "build-storybook",
     "validate-types": "tsc --noEmit --declaration",
     "test": "jest",
     "test-report-coverage": "jest --silent --coverage --testResultsProcessor=jest-sonar-reporter",

@@ -151,7 +151,7 @@ const PaymentStep = (props: PaymentStepProps) => {
   }, [billingAddress, paymentDetails])
 
   return (
-    <Stack>
+    <Stack data-testid="checkout-payment">
       <StyledHeadings variant="h2" sx={{ paddingBottom: '1.625rem' }}>
         {t('payment-method')}
       </StyledHeadings>

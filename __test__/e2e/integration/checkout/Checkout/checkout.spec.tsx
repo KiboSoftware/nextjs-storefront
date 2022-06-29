@@ -130,4 +130,56 @@ describe('[components] Checkout integration', () => {
 
     expect(reviewComponent).not.toBeInTheDocument()
   })
+
+  it('should go to details step when click on edit personal details', async () => {
+    renderWithQueryClient(<Common {...Common.args} initialStep={3} />)
+    const editPersonalDetails = screen.getByTestId(/edit-personal-details/i)
+
+    editPersonalDetails.focus()
+
+    userEvent.click(editPersonalDetails)
+
+    const personalDetailsStep = screen.getByTestId(/checkout-details/i)
+
+    expect(personalDetailsStep).toBeInTheDocument()
+  })
+
+  it('should go to shipping step when click on edit shipping details', async () => {
+    renderWithQueryClient(<Common {...Common.args} initialStep={3} />)
+    const editShippingDetails = screen.getByTestId(/edit-shipping-details/i)
+
+    editShippingDetails.focus()
+
+    userEvent.click(editShippingDetails)
+
+    const shippingStep = screen.getByTestId(/checkout-shipping/i)
+
+    expect(shippingStep).toBeInTheDocument()
+  })
+
+  it('should go to payment step when click on edit billing address', async () => {
+    renderWithQueryClient(<Common {...Common.args} initialStep={3} />)
+    const editBillingDetails = screen.getByTestId(/edit-billing-address/i)
+
+    editBillingDetails.focus()
+
+    userEvent.click(editBillingDetails)
+
+    const paymentStep = screen.getByTestId(/checkout-payment/i)
+
+    expect(paymentStep).toBeInTheDocument()
+  })
+
+  it('should go to payment step when click on edit payment method', async () => {
+    renderWithQueryClient(<Common {...Common.args} initialStep={3} />)
+    const editPaymentMethod = screen.getByTestId(/edit-payment-method/i)
+
+    editPaymentMethod.focus()
+
+    userEvent.click(editPaymentMethod)
+
+    const paymentStep = screen.getByTestId(/checkout-payment/i)
+
+    expect(paymentStep).toBeInTheDocument()
+  })
 })
