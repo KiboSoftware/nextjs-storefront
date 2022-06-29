@@ -113,7 +113,7 @@ describe('[component] - ShippingMethod', () => {
       onShippingMethodChange: (name: string, value: string) => ({ name, value }),
     }
     const { user } = setup(params)
-    const changeStore = params?.shipItems[0]?.purchaseLocation
+    const changeStore = params?.pickupItems[0]?.purchaseLocation
       ? screen.getByText(/change-store/i)
       : screen.getByText(/select-store/i)
     await user.click(changeStore)

@@ -2,7 +2,54 @@ import getConfig from 'next/config'
 
 import DefaultImage from '@/public/product_placeholder.svg'
 
-import type { CrOrderItem, CrProductOption, Maybe, Order, CartItem } from '../gql/types'
+import type {
+  CrProductOption,
+  CrOrderItem,
+  Order,
+  Payment,
+  Maybe,
+  CrAddress,
+  Contact,
+  CartItem,
+} from '@/lib/gql/types'
+
+interface ShippingDetails {
+  shippingPhoneHome: string
+  shippingPhoneMobile: string
+  shippingPhoneWork: string
+  shippingAddress: CrAddress
+}
+
+interface BillingDetails {
+  billingPhoneHome: string
+  billingPhoneMobile: string
+  billingPhoneWork: string
+  billingAddress: CrAddress
+}
+
+interface OrderSummary {
+  shippingTotal: number
+  subTotal: number
+  taxTotal: number
+  total: number
+  totalCollected: number
+}
+interface PaymentMethod {
+  cardType: string
+  cardNumberPartOrMask: string
+  expiry: string
+}
+interface CheckoutDetails {
+  shipItems: Maybe<CrOrderItem>[]
+  pickupItems: Maybe<CrOrderItem>[]
+  orderSummary: OrderSummary
+  personalDetails: Contact
+  shippingDetails: ShippingDetails
+  billingDetails: BillingDetails
+  paymentMethods: PaymentMethod[]
+}
+
+const { publicRuntimeConfig } = getConfig()
 
 const getOrderNumber = (checkout: Order) => checkout?.orderNumber
 const getEmail = (checkout: Order) => checkout?.email
@@ -21,13 +68,19 @@ const getLineItemTotal = (checkout: Order) => {
     : 0
 }
 const getLineItemTaxTotal = (checkout: Order) => (checkout.taxTotal ? checkout.taxTotal : 0)
-const getItemsByFulfillment = (checkout: Order, fulfillmentMethod: string) => {
-  return checkout?.items?.filter((lineItem) => lineItem?.fulfillmentMethod === fulfillmentMethod)
+const getItemsByFulfillment = (
+  checkout: Order,
+  fulfillmentMethod: string
+): Maybe<CrOrderItem>[] => {
+  return (
+    checkout?.items?.filter((lineItem) => lineItem?.fulfillmentMethod === fulfillmentMethod) || []
+  )
 }
-const getPickupItems = (checkout: Order) => {
-  return getItemsByFulfillment(checkout, 'Pickup')
+const getPickupItems = (checkout: Order): Maybe<CrOrderItem>[] => {
+  return getItemsByFulfillment(checkout, publicRuntimeConfig.fullfillmentOptions[1].shortName)
 }
-const getShipItems = (checkout: Order) => getItemsByFulfillment(checkout, 'Ship')
+const getShipItems = (checkout: Order): Maybe<CrOrderItem>[] =>
+  getItemsByFulfillment(checkout, publicRuntimeConfig.fullfillmentOptions[0].shortName)
 const getDeliveryItems = (checkout: Order) => getItemsByFulfillment(checkout, 'Delivery')
 
 const getProductId = (item: Maybe<CrOrderItem> | Maybe<CartItem>): string => item?.id || ''
@@ -55,6 +108,99 @@ const getProductSalePrice = (item: Maybe<CrOrderItem> | Maybe<CartItem>): string
 
 const getPurchaseLocation = (item: Maybe<CrOrderItem> | Maybe<CartItem>): string =>
   item?.purchaseLocation || ''
+// review step changes
+
+const getTotalCollected = (checkout: Order): number => checkout.totalCollected || 0
+//u
+const getShippingEmail = (checkout: Order): string =>
+  checkout.fulfillmentInfo?.fulfillmentContact?.email || ''
+
+const getShippingFirstName = (checkout: Order): string =>
+  checkout.fulfillmentInfo?.fulfillmentContact?.firstName || ''
+const getShippingLastNameOrSurname = (checkout: Order): string =>
+  checkout.fulfillmentInfo?.fulfillmentContact?.lastNameOrSurname || ''
+
+const getShippingPhoneHome = (checkout: Order): string =>
+  checkout?.fulfillmentInfo?.fulfillmentContact?.phoneNumbers?.home || ''
+const getShippingPhoneMobile = (checkout: Order): string =>
+  checkout?.fulfillmentInfo?.fulfillmentContact?.phoneNumbers?.mobile || ''
+const getShippingPhoneWork = (checkout: Order): string =>
+  checkout?.fulfillmentInfo?.fulfillmentContact?.phoneNumbers?.work || ''
+const getShipppingAddress = (checkout: Order) =>
+  checkout.fulfillmentInfo?.fulfillmentContact?.address as CrAddress
+
+const getBillingPhoneHome = (checkout: Order): string =>
+  checkout.billingInfo?.billingContact?.phoneNumbers?.home || ''
+const getBillingPhoneMobile = (checkout: Order): string =>
+  checkout?.billingInfo?.billingContact?.phoneNumbers?.mobile || ''
+const getBillingPhoneWork = (checkout: Order): string =>
+  checkout?.billingInfo?.billingContact?.phoneNumbers?.work || ''
+const getBillingAddress = (checkout: Order) =>
+  checkout.billingInfo?.billingContact?.address as CrAddress
+
+const getPaymentMethods = (checkout: Order) => {
+  const payments: Maybe<Payment>[] = checkout?.payments || []
+
+  if (!payments) return []
+
+  return payments
+    .filter((p: Maybe<Payment>) => p?.billingInfo?.card)
+    .map((item: Maybe<Payment>) => {
+      return {
+        cardType: item?.billingInfo?.card?.paymentOrCardType,
+        cardNumberPartOrMask: item?.billingInfo?.card?.cardNumberPartOrMask,
+        expiry: item?.billingInfo?.card?.expireMonth + ' / ' + item?.billingInfo?.card?.expireYear,
+      }
+    }) as PaymentMethod[]
+}
+
+const getPersonalDetails = (checkout: Order): Contact => {
+  return {
+    email: getShippingEmail(checkout),
+    firstName: getShippingFirstName(checkout),
+    lastNameOrSurname: getShippingLastNameOrSurname(checkout),
+  }
+}
+
+const getShippingDetails = (checkout: Order): ShippingDetails => {
+  return {
+    shippingPhoneHome: getShippingPhoneHome(checkout),
+    shippingPhoneMobile: getShippingPhoneMobile(checkout),
+    shippingPhoneWork: getShippingPhoneWork(checkout),
+    shippingAddress: getShipppingAddress(checkout),
+  }
+}
+
+const getBillingDetails = (checkout: Order): BillingDetails => {
+  return {
+    billingPhoneHome: getBillingPhoneHome(checkout),
+    billingPhoneMobile: getBillingPhoneMobile(checkout),
+    billingPhoneWork: getBillingPhoneWork(checkout),
+    billingAddress: getBillingAddress(checkout),
+  }
+}
+
+const getOrderSummary = (checkout: Order): OrderSummary => {
+  return {
+    shippingTotal: getShippingTotal(checkout),
+    subTotal: getSubtotal(checkout),
+    taxTotal: getTaxTotal(checkout),
+    total: getTotal(checkout),
+    totalCollected: getTotalCollected(checkout),
+  }
+}
+
+const getCheckoutDetails = (checkout: Order): CheckoutDetails => {
+  return {
+    shipItems: getShipItems(checkout),
+    pickupItems: getPickupItems(checkout),
+    orderSummary: getOrderSummary(checkout),
+    personalDetails: getPersonalDetails(checkout),
+    shippingDetails: getShippingDetails(checkout),
+    billingDetails: getBillingDetails(checkout),
+    paymentMethods: getPaymentMethods(checkout),
+  }
+}
 
 export const checkoutGetters = {
   getOrderNumber,
@@ -79,4 +225,10 @@ export const checkoutGetters = {
   getProductPrice,
   getProductSalePrice,
   getPurchaseLocation,
+  getPersonalDetails,
+  getShippingDetails,
+  getBillingDetails,
+  getPaymentMethods,
+  getOrderSummary,
+  getCheckoutDetails,
 }

@@ -40,9 +40,9 @@ describe('[components] ReviewStep', () => {
     setup()
 
     const checkout = Common.args?.checkout as Order
-    const { shippingItems } = checkoutGetters.getCheckoutDetails(checkout)
+    const { shipItems } = checkoutGetters.getCheckoutDetails(checkout)
     const productImage = screen.getByRole('img', {
-      name: shippingItems[0].name,
+      name: shipItems[0]?.product?.name as string,
     })
 
     expect(productImage).toBeVisible()

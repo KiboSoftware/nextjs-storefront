@@ -11,7 +11,7 @@ interface OrderSummaryProps extends OrderPriceProps {
   backLabel?: string
   checkoutLabel?: string
   shippingLabel?: string
-  children: ReactNode
+  children?: ReactNode
 }
 
 const styles = {

@@ -55,7 +55,7 @@ const ReviewStep = (props: ReviewStepProps) => {
   const { t } = useTranslation(['checkout', 'common'])
   const theme = useTheme()
 
-  const { shippingItems, pickupItems, orderSummary } = checkoutGetters.getCheckoutDetails(checkout)
+  const { shipItems, pickupItems, orderSummary } = checkoutGetters.getCheckoutDetails(checkout)
 
   const { subTotal, shippingTotal, taxTotal, total } = orderSummary
 
@@ -86,12 +86,12 @@ const ReviewStep = (props: ReviewStepProps) => {
         {t('order-details')}
       </Typography>
       <Divider color={theme.palette.primary.main} sx={{ mt: '1.688rem', mb: '1.438rem' }} />
-      {shippingItems && shippingItems.length > 0 && (
+      {shipItems && shipItems.length > 0 && (
         <Box>
           <Typography variant="h3" component="h3" sx={{ fontWeight: 'bold' }} color="text.primary">
             {t('shipping-to-home')}
           </Typography>
-          <ProductItemList items={shippingItems} />
+          <ProductItemList items={shipItems} />
           <Divider sx={{ mb: '1.438rem' }} />
         </Box>
       )}
@@ -105,6 +105,7 @@ const ReviewStep = (props: ReviewStepProps) => {
         </Box>
       )}
       <OrderPrice {...orderPriceProps} />
+
       <Box sx={{ mt: '31px', mb: '35px' }}>
         <FormControlLabel
           control={

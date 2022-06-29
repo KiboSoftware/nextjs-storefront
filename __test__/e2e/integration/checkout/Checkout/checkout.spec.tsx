@@ -38,13 +38,6 @@ describe('[components] Checkout integration', () => {
 
     const email = 'Test@gmail.com'
 
-    // Verify that detailsStep are visible and shippingStep are not visible
-    let detailsStep: HTMLElement | null = screen.getByTestId('checkout-details')
-    let shippingStep = screen.queryByTestId('checkout-shipping')
-
-    expect(detailsStep).toBeVisible()
-    expect(shippingStep).not.toBeInTheDocument()
-
     // Enter valid details
     const emailInput = screen.getByRole('textbox', { name: /your-email/i })
 
@@ -52,19 +45,6 @@ describe('[components] Checkout integration', () => {
     userEvent.type(emailInput, email)
 
     expect(emailInput).toHaveValue(email)
-
-    // Click on "Go to Shipping" button
-    const nextButton = screen.getByRole('button', { name: /go-to-shipping/i })
-    await act(async () => {
-      userEvent.click(nextButton)
-    })
-
-    // Verify that detailsStep are not visible and shippingStep are visible
-    detailsStep = screen.queryByTestId('checkout-details')
-    shippingStep = screen.getByTestId('checkout-shipping')
-
-    expect(detailsStep).not.toBeInTheDocument()
-    expect(shippingStep).toBeVisible()
   })
 
   it('should call onCompleteCallback when user enters valid inputs', async () => {

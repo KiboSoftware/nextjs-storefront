@@ -21,10 +21,10 @@ const Content = (props: CartContentProps) => {
     shippingTotalLabel: t('common:standard-shopping'),
     taxLabel: t('common:estimated-tax'),
     totalLabel: t('common:total'),
-    subTotal: t('currency', { val: subtotal }),
-    shippingTotal: shippingTotal ? t('currency', { val: shippingTotal }) : t('free'),
-    tax: t('currency', { val: itemTaxTotal }),
-    total: t('currency', { val: total }),
+    subTotal: t('common:currency', { val: subtotal }),
+    shippingTotal: shippingTotal ? t('common:currency', { val: shippingTotal }) : t('free'),
+    tax: t('common:currency', { val: itemTaxTotal }),
+    total: t('common:currency', { val: total }),
   }
 
   return (

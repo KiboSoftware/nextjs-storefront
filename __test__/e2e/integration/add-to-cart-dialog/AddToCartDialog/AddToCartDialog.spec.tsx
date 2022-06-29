@@ -34,7 +34,6 @@ describe('[components] Add To Cart Dialog integration', () => {
       name: /close/i,
     })
     const productName = screen.getByText(name)
-    const fulfillmentMethod = screen.getByText(`${item?.fulfillmentMethod}`)
     const taxSubTotal = screen.getAllByText(/currency/i)
     const goToCartButton = screen.getByRole('button', {
       name: /go-to-cart/i,
@@ -47,7 +46,6 @@ describe('[components] Add To Cart Dialog integration', () => {
     expect(title).toBeVisible()
     expect(closeIconButton).toBeVisible()
     expect(productName).toBeInTheDocument()
-    expect(fulfillmentMethod).toBeVisible()
     expect(taxSubTotal).toHaveLength(4)
     expect(goToCartButton).toBeVisible()
     expect(continueShoppingButton).toBeVisible()

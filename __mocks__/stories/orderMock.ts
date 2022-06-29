@@ -69,14 +69,13 @@ export const orderMock: { checkout: Order } = {
     },
     items: [
       {
-        expectedDeliveryDate: '2020-03-24T10:22:50.723Z',
         fulfillmentMethod: 'Pickup',
         id: 'd0de5048aad24940ba01ae82009b3215',
         total: 49,
         subtotal: 49,
         discountTotal: 0,
-        expectedDeliveryDate: 'Mon 12/20',
         purchaseLocation: 'TriptiShop',
+        expectedDeliveryDate: '2020-03-24T10:22:50.723Z',
         quantity: 7,
         product: {
           productCode: 'MS-BTL-004',
