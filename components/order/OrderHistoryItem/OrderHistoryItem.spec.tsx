@@ -24,10 +24,10 @@ describe('[component] - OrderHistoryItem', () => {
   it('should render component', () => {
     setup()
 
-    const submittedDateText = screen.getByText(submittedDate as string)
-    const productNamesText = screen.getByText(productNames as string)
+    const submittedDateText = screen.getByText(submittedDate)
+    const productNamesText = screen.getByText(productNames)
     const orderTotalText = screen.getByTestId('price-mock')
-    const orderStatusText = screen.getByText(orderStatus as string)
+    const orderStatusText = screen.getByText(orderStatus)
 
     expect(submittedDateText).toBeVisible()
     expect(productNamesText).toBeVisible()

@@ -2,8 +2,7 @@ import '@testing-library/jest-dom'
 import { render, screen } from '@testing-library/react'
 import { RouterContext } from 'next/dist/shared/lib/router-context'
 
-import { createMockRouter } from '../../utils/createMockRouter'
-import { createQueryClientWrapper } from '@/__test__/utils/renderWithQueryClient'
+import { createMockRouter, createQueryClientWrapper } from '@/__test__/utils'
 import SearchPage, { getServerSideProps } from '@/pages/search'
 
 const mockProductSearchData = {
