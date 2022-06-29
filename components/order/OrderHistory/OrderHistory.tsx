@@ -38,7 +38,7 @@ const OrderHistory = (props: OrderHistoryProps) => {
   }
 
   const handleHistoryItemClick = (id: string) => {
-    const order = items?.find((order) => order?.id === id) as Order
+    const order = items?.find((orderItem) => orderItem?.id === id) as Order
     setSelectedOrder(order)
   }
 

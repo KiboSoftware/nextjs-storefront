@@ -39,7 +39,7 @@ const OrderHistoryItem = (props: OrderHistoryItemProps) => {
   const { id, submittedDate, productNames, orderTotal, orderStatus, onHistoryItemClick } = props
   const { t } = useTranslation('common')
 
-  const handleHistoryItemClick = (id: string) => {
+  const handleHistoryItemClick = () => {
     onHistoryItemClick(id)
   }
 
@@ -48,7 +48,7 @@ const OrderHistoryItem = (props: OrderHistoryItemProps) => {
       sx={styles.stack}
       direction="row"
       data-testid="history-item"
-      onClick={() => handleHistoryItemClick(id as string)}
+      onClick={handleHistoryItemClick}
     >
       <Stack sx={{ width: '95%' }} gap={0.6}>
         <Typography variant="body1" fontWeight="bold">
