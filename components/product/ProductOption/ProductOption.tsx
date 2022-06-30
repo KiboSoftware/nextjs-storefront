@@ -17,9 +17,13 @@ const ProductOption = (prop: ProductOptionProps) => {
       <Typography variant={variant} fontWeight={fontWeight || 700} sx={{ pr: 1 }} component="span">
         {option?.name}:
       </Typography>
-      <Typography variant={variant} fontWeight={fontWeight || 'normal'} component="span">
-        {option?.value}
-      </Typography>
+      {typeof option?.value === 'string' ? (
+        <Typography variant={variant} fontWeight={fontWeight || 'normal'} component="span">
+          {option?.value}
+        </Typography>
+      ) : (
+        option?.value
+      )}
     </Box>
   )
 }

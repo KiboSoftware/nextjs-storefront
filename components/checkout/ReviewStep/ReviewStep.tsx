@@ -60,7 +60,7 @@ const ReviewStep = (props: ReviewStepProps) => {
   const { subTotal, shippingTotal, taxTotal, total } = orderSummary
 
   const orderPriceProps: OrderPriceProps = {
-    subTotalLabel: t('sub-total'),
+    subTotalLabel: t('common:subtotal'),
     shippingTotalLabel: t('shipping'),
     taxLabel: t('common:estimated-tax'),
     totalLabel: t('common:total'),
