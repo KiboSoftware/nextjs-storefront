@@ -4,7 +4,7 @@ interface UIHelpersType {
 }
 
 export const uiHelpers = (): UIHelpersType => {
-  const getCategoryLink = (categoryCode?: string) => {
+  const getCategoryLink = (categoryCode?: string): string => {
     return `/category/${categoryCode}`
   }
   const getProductLink = (productCode?: string) => {
