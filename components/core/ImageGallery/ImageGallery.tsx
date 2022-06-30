@@ -282,11 +282,17 @@ const ImageGallery = (props: ImageGalleryProps) => {
                   >
                     <KiboImage
                       src={
-                        productGetters.handleProtocolRelativeUrl(
-                          images[selectedImage.selectedIndex]?.imageUrl as string
-                        ) || placeholderImageUrl
+                        images?.length
+                          ? productGetters.handleProtocolRelativeUrl(
+                              images[selectedImage.selectedIndex]?.imageUrl as string
+                            )
+                          : placeholderImageUrl
                       }
-                      alt={images[selectedImage.selectedIndex]?.altText as string}
+                      alt={
+                        images?.length
+                          ? (images[selectedImage.selectedIndex]?.altText as string)
+                          : 'placeholder-image'
+                      }
                       layout="fill"
                       objectFit="contain"
                       data-testid={`selected-image`}

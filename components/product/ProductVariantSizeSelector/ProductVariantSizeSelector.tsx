@@ -5,12 +5,12 @@ import { ProductOptionValue } from '@/lib/gql/types'
 interface ProductVariantSizeSelectorProps {
   attributeFQN: string
   values: ProductOptionValue[]
-  selectOption: (attributeFQN?: string, value?: string) => void
+  onSizeChange: (attributeFQN: string, value: string) => void
 }
 
 interface SizeOptionsProps extends ProductOptionValue {
-  attributeFQN?: string
-  handleSizeSelection: (attributeFQN?: string, value?: string) => void
+  attributeFQN: string
+  onSizeSelection: (attributeFQN: string, value: string) => void
 }
 
 const styles = {
@@ -40,7 +40,7 @@ const styles = {
 }
 
 const SizeOptions = (props: SizeOptionsProps) => {
-  const { attributeFQN, value, isSelected = false, isEnabled = true, handleSizeSelection } = props
+  const { attributeFQN, value, isSelected = false, isEnabled = true, onSizeSelection } = props
   return (
     <Box
       sx={{
@@ -48,8 +48,8 @@ const SizeOptions = (props: SizeOptionsProps) => {
         ...(isSelected && styles.selected),
         ...(!isEnabled && styles.disabled),
       }}
-      {...(isEnabled && !isSelected && { onClick: () => handleSizeSelection(attributeFQN, value) })}
-      data-testid="size-options"
+      {...(isEnabled && !isSelected && { onClick: () => onSizeSelection(attributeFQN, value) })}
+      data-testid={`size-options-${value}-${isSelected ? 'selected' : ''}`}
     >
       {value}
     </Box>
@@ -59,7 +59,7 @@ const SizeOptions = (props: SizeOptionsProps) => {
 const ProductVariantSizeSelector = ({
   attributeFQN,
   values,
-  selectOption,
+  onSizeChange,
 }: ProductVariantSizeSelectorProps) => {
   return (
     <Box width="100%" display="flex" flexWrap="wrap" data-testid="product-variant-size-selector">
@@ -71,7 +71,7 @@ const ProductVariantSizeSelector = ({
           value={option?.value}
           isSelected={option?.isSelected}
           isEnabled={option?.isEnabled}
-          handleSizeSelection={selectOption}
+          onSizeSelection={onSizeChange}
         />
       ))}
     </Box>
