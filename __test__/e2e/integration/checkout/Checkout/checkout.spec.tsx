@@ -1,7 +1,7 @@
 import React from 'react'
 
 import { composeStories } from '@storybook/testing-react'
-import { screen, waitFor } from '@testing-library/react'
+import { cleanup, screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 
 import { renderWithQueryClient } from '@/__test__/utils/renderWithQueryClient'
@@ -9,13 +9,21 @@ import * as stories from '@/components/page-templates/Checkout/Checkout.stories'
 
 const { Common } = composeStories(stories)
 
-describe('[components] Checkout integration', () => {
-  const setup = () => {
-    renderWithQueryClient(<Common {...Common.args} />)
+const setup = (initialStep: number) => {
+  const user = userEvent.setup()
+  renderWithQueryClient(<Common {...Common.args} initialStep={initialStep} />)
+  return {
+    user,
   }
+}
 
+afterEach(() => {
+  cleanup()
+})
+
+describe('[components] Checkout integration', () => {
   it('should render component', () => {
-    setup()
+    setup(0)
 
     const kiboStepper = screen.getByTestId('kibo-stepper')
     const details = screen.getByTestId('checkout-details')
@@ -34,29 +42,29 @@ describe('[components] Checkout integration', () => {
   })
 
   it('should activate next step(shipping) when user enters valid input and clicks on "Go to Shipping" button', async () => {
-    setup()
+    const { user } = setup(0)
 
     const email = 'Test@gmail.com'
 
     // Enter valid details
     const emailInput = screen.getByRole('textbox', { name: /your-email/i })
 
-    userEvent.clear(emailInput)
-    userEvent.type(emailInput, email)
+    await user.clear(emailInput)
+    await user.type(emailInput, email)
 
-    expect(emailInput).toHaveValue(email)
+    await waitFor(() => expect(emailInput).toHaveValue(email))
   })
 
   it('should call onCompleteCallback when user enters valid inputs', async () => {
     const onCompleteCallbackMock = jest.fn()
 
-    renderWithQueryClient(<Common {...Common.args} initialStep={2} />)
+    const { user } = setup(2)
 
     const creditCard = screen.getByRole('radio', {
       name: /credit \/ debit card/i,
     })
 
-    userEvent.click(creditCard)
+    await user.click(creditCard)
 
     const cardNumber = screen.getByRole('textbox', {
       name: /card-number/i,
@@ -89,50 +97,51 @@ describe('[components] Checkout integration', () => {
 
     // act
     const phoneNumberHome = screen.getByRole('textbox', { name: /phone-number/i })
-    userEvent.type(cardNumber, '4111111111111111')
-    userEvent.type(expiryDate, '03/2024')
-    userEvent.type(securityCode, '123')
-    userEvent.type(firstName, 'John')
-    userEvent.type(lastNameOrSurname, 'Doe')
-    userEvent.type(address1, '123 Main St')
-    userEvent.type(address2, 'Apt 1')
-    userEvent.type(cityOrTown, 'San Francisco')
-    userEvent.type(stateOrProvince, 'CA')
-    userEvent.type(postalOrZipCode, '94107')
-    userEvent.type(phoneNumberHome, '1234567890')
-    onCompleteCallbackMock({ type: 'COMPLETE' })
+    await user.type(cardNumber, '4111111111111111')
+    await user.type(expiryDate, '03/2024')
+    await user.type(securityCode, '123')
+    await user.type(firstName, 'John')
+    await user.type(lastNameOrSurname, 'Doe')
+    await user.type(address1, '123 Main St')
+    await user.type(address2, 'Apt 1')
+    await user.type(cityOrTown, 'San Francisco')
+    await user.type(stateOrProvince, 'CA')
+    await user.type(postalOrZipCode, '94107')
+    await user.type(phoneNumberHome, '1234567890')
+    await onCompleteCallbackMock({ type: 'COMPLETE' })
 
     await waitFor(() => expect(onCompleteCallbackMock).toHaveBeenCalled())
   })
 
   it('should enable confirm and pay button in review step when terms and conditions checkbox checked ', async () => {
-    renderWithQueryClient(<Common {...Common.args} initialStep={3} />)
+    const { user } = setup(3)
 
     const termsConditions = screen.getByRole('checkbox', {
       name: /termsconditions/i,
     })
     termsConditions.focus()
 
-    userEvent.click(termsConditions)
+    await user.click(termsConditions)
 
-    expect(termsConditions).toBeChecked()
+    await waitFor(() => expect(termsConditions).toBeChecked())
   })
 
   it('should go to previous payment step when go back button click from review step', async () => {
-    renderWithQueryClient(<Common {...Common.args} initialStep={3} />)
+    const { user } = setup(3)
+
     const reviewComponent = screen.getByTestId(/review-step-component/i)
     const goBackButton = screen.getByRole('button', {
       name: /go-back/i,
     })
     goBackButton.focus()
 
-    userEvent.click(goBackButton)
+    await user.click(goBackButton)
 
-    expect(reviewComponent).not.toBeInTheDocument()
+    await waitFor(() => expect(reviewComponent).not.toBeInTheDocument())
   })
 
   it('should go to details step when click on edit personal details', async () => {
-    renderWithQueryClient(<Common {...Common.args} initialStep={3} />)
+    const { user } = setup(3)
 
     let personalDetailsStep = screen.queryByTestId('checkout-details')
 
@@ -141,15 +150,15 @@ describe('[components] Checkout integration', () => {
     const editPersonalDetails = screen.getByTestId(/edit-personal-details/i)
     editPersonalDetails.focus()
 
-    userEvent.click(editPersonalDetails)
+    await user.click(editPersonalDetails)
 
     personalDetailsStep = screen.getByTestId(/checkout-details/i)
 
-    expect(personalDetailsStep).toBeInTheDocument()
+    await waitFor(() => expect(personalDetailsStep).toBeInTheDocument())
   })
 
   it('should go to shipping step when click on edit shipping details', async () => {
-    renderWithQueryClient(<Common {...Common.args} initialStep={3} />)
+    const { user } = setup(3)
 
     let shippingStep = screen.queryByTestId('checkout-shipping')
 
@@ -159,15 +168,15 @@ describe('[components] Checkout integration', () => {
 
     editShippingDetails.focus()
 
-    userEvent.click(editShippingDetails)
+    await user.click(editShippingDetails)
 
     shippingStep = screen.getByTestId(/checkout-shipping/i)
 
-    expect(shippingStep).toBeInTheDocument()
+    await waitFor(() => expect(shippingStep).toBeInTheDocument())
   })
 
   it('should go to payment step when click on edit billing address', async () => {
-    renderWithQueryClient(<Common {...Common.args} initialStep={3} />)
+    const { user } = setup(3)
 
     let paymentStep = screen.queryByTestId('checkout-payment')
 
@@ -177,15 +186,15 @@ describe('[components] Checkout integration', () => {
 
     editBillingDetails.focus()
 
-    userEvent.click(editBillingDetails)
+    await user.click(editBillingDetails)
 
     paymentStep = screen.getByTestId(/checkout-payment/i)
 
-    expect(paymentStep).toBeInTheDocument()
+    await waitFor(() => expect(paymentStep).toBeInTheDocument())
   })
 
   it('should go to payment step when click on edit payment method', async () => {
-    renderWithQueryClient(<Common {...Common.args} initialStep={3} />)
+    const { user } = setup(3)
 
     let paymentStep = screen.queryByTestId('checkout-payment')
 
@@ -195,10 +204,10 @@ describe('[components] Checkout integration', () => {
 
     editPaymentMethod.focus()
 
-    userEvent.click(editPaymentMethod)
+    await user.click(editPaymentMethod)
 
     paymentStep = screen.getByTestId(/checkout-payment/i)
 
-    expect(paymentStep).toBeInTheDocument()
+    await waitFor(() => expect(paymentStep).toBeInTheDocument())
   })
 })

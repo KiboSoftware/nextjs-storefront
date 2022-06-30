@@ -1,7 +1,7 @@
 import React from 'react'
 
 import { composeStories } from '@storybook/testing-react'
-import { render, screen } from '@testing-library/react'
+import { cleanup, render, screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 
 import * as stories from '../ReviewStep/ReviewStep.stories'
@@ -12,11 +12,20 @@ jest.mock('@/components/common/OrderPrice/OrderPrice', () => orderPriceMock)
 const productItemListMock = () => <div data-testid="product-item-stack" />
 jest.mock('@/components/common/ProductItemList/ProductItemList', () => productItemListMock)
 
-describe('[components] ReviewStep', () => {
-  const setup = () => {
-    render(<Common {...Common.args} />)
-  }
+const setup = () => {
+  const user = userEvent.setup()
+  render(<Common {...Common.args} />)
 
+  return {
+    user,
+  }
+}
+
+afterEach(() => {
+  cleanup()
+})
+
+describe('[components] ReviewStep', () => {
   it('should render component', () => {
     setup()
 
@@ -49,8 +58,8 @@ describe('[components] ReviewStep', () => {
     expect(goBackButton).toBeVisible()
   })
 
-  it('should enable confirm and pay button when terms and conditions checkbox checked', () => {
-    setup()
+  it('should enable confirm and pay button when terms and conditions checkbox checked', async () => {
+    const { user } = setup()
 
     const termsConditions = screen.getByRole('checkbox', {
       name: /termsconditions/i,
@@ -58,8 +67,10 @@ describe('[components] ReviewStep', () => {
     expect(termsConditions).not.toBeChecked()
 
     termsConditions.focus()
-    userEvent.click(termsConditions)
+    await user.click(termsConditions)
 
     expect(termsConditions).toBeChecked()
+
+    await waitFor(() => expect(termsConditions).toBeChecked())
   })
 })
