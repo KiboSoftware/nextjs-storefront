@@ -4,10 +4,11 @@ import { ComponentStory, ComponentMeta } from '@storybook/react'
 
 import ProductListingTemplate from './ProductListingTemplate'
 import { categoryFacetDataMock } from '@/__mocks__/stories/categoryFacetDataMock'
-import { productSearchDataMock } from '@/__mocks__/stories/productSearchDataMock'
+import { facetValueMock } from '@/__mocks__/stories/facetValueMock'
+import { productSearchResultMock } from '@/__mocks__/stories/productSearchResultMock'
 import type { ProductCustom } from '@/lib/types'
 
-import { Facet } from '@/lib/gql/types'
+import type { Facet } from '@/lib/gql/types'
 
 const breadcrumbs = [
   {
@@ -53,7 +54,7 @@ const sortingValues = [
 ]
 
 export default {
-  title: 'Page Templates/category',
+  title: 'Page Templates/product-listing',
   component: ProductListingTemplate,
   argTypes: {
     onSortingSelection: { action: 'onChange' },
@@ -72,20 +73,22 @@ export const CategorySkeleton = Template.bind({})
 
 Category.args = {
   breadCrumbsList: breadcrumbs,
-  facetList: productSearchDataMock?.facets as Facet[],
-  products: productSearchDataMock?.items as ProductCustom[],
+  facetList: productSearchResultMock?.facets as Facet[],
+  products: productSearchResultMock?.items as ProductCustom[],
   sortingValues,
   categoryFacet: categoryFacetDataMock,
   totalResults: 149,
   initialProductsToShow: 16,
   isLoading: false,
+  appliedFilters: facetValueMock,
 }
 
 CategorySkeleton.args = {
   breadCrumbsList: breadcrumbs,
-  facetList: productSearchDataMock?.facets as Facet[],
+  facetList: productSearchResultMock?.facets as Facet[],
   products: [],
   sortingValues,
   categoryFacet: categoryFacetDataMock,
   isLoading: true,
+  appliedFilters: facetValueMock,
 }

@@ -4,6 +4,7 @@ import { categoryTreeDataMock } from '../stories/categoryTreeDataMock'
 import { configuredProductMock } from '../stories/configuredProductMock'
 import { orderMock } from '../stories/orderMock'
 import { searchSuggestionMock } from '../stories/searchSuggestionResultMock'
+import { productSearchResultMock } from '../stories/productSearchResultMock'
 import { userMock, loginUserMock } from '../stories/userMock'
 
 export const checkoutHandlers = [
@@ -48,6 +49,12 @@ export const categoryHandlers = [
   }),
 ]
 
+export const productSearchHandlers = [
+  // useProductSearch
+  graphql.query('ProductSearch', (_req, res, ctx) => {
+    return res(ctx.data(productSearchResultMock))
+  }),
+]
 export const userHandlers = [
   // useUser
   graphql.query('getUser', (_req, res, ctx) => {
@@ -63,6 +70,7 @@ export const handlers = [
   ...checkoutHandlers,
   ...searchSuggestionHandlers,
   ...categoryHandlers,
+  ...productSearchHandlers,
   ...userHandlers,
-  ...productHandlers
+  ...productHandlers,
 ]

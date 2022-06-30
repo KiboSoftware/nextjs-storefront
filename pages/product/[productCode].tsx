@@ -8,6 +8,7 @@ import getCategoryTree from '@/lib/api/operations/get-category-tree'
 import getProduct from '@/lib/api/operations/get-product'
 import search from '@/lib/api/operations/get-product-search'
 import { productGetters } from '@/lib/getters'
+import type { CategorySearchParams } from '@/lib/types'
 
 import type { CategoryCollection } from '@/lib/gql/types'
 import type { NextPage, GetStaticPropsContext } from 'next'
@@ -31,7 +32,9 @@ export async function getStaticProps(context: GetStaticPropsContext) {
 
 export async function getStaticPaths() {
   const { serverRuntimeConfig } = getConfig()
-  const searchResponse = await search({ pageSize: serverRuntimeConfig.pageSize })
+  const searchResponse = await search({
+    pageSize: serverRuntimeConfig.pageSize,
+  } as CategorySearchParams)
   const { items } = searchResponse.data.products
   const paths: string[] = []
   items.length &&

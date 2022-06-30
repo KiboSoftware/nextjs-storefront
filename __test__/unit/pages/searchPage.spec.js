@@ -1,15 +1,10 @@
 import '@testing-library/jest-dom'
 import { render, screen } from '@testing-library/react'
-import * as nextRouter from 'next/router'
-
 import { RouterContext } from 'next/dist/shared/lib/router-context'
 
-import { categoryTreeDataMock } from '@/__mocks__/stories/categoryTreeDataMock'
-import { createQueryClientWrapper } from '@/__test__/utils/renderWithQueryClient'
-import CategoryPage, { getServerSideProps } from '@/pages/category/[categoryCode]'
+import { createMockRouter, createQueryClientWrapper } from '@/__test__/utils'
+import SearchPage, { getServerSideProps } from '@/pages/search'
 
-nextRouter.useRouter = jest.fn()
-const mockCategoryTreeData = categoryTreeDataMock
 const mockProductSearchData = {
   totalCount: 1,
   pageSize: 20,
@@ -24,13 +19,11 @@ const mockProductSearchData = {
   ],
   facets: [],
 }
-
 jest.mock('@/lib/api/util', () => ({
   fetcher: jest.fn(() => {
     return Promise.resolve({
       data: {
         products: mockProductSearchData,
-        categoriesTree: { items: mockCategoryTreeData.categoriesTree?.items },
       },
     })
   }),
@@ -54,27 +47,19 @@ jest.mock(
   () => ProductListingTemplateMock
 )
 
-describe('[page] Category Page', () => {
+describe('[page] Search Page', () => {
   it('should run getServerSideProps method', async () => {
     const context = {
       query: {
         categoryCode: '40',
       },
       locale: 'mock-locale',
-      res: { setHeader: jest.fn() },
     }
 
     const response = await getServerSideProps(context)
-    const mockCategoryTreeByCode = categoryTreeDataMock?.categoriesTree?.items.find(
-      (category) => category.categoryCode === '40'
-    )
     expect(response).toStrictEqual({
       props: {
         results: mockProductSearchData,
-        categoriesTree: mockCategoryTreeData.categoriesTree.items,
-        category: {
-          categories: [mockCategoryTreeByCode],
-        },
         _nextI18Next: {
           initialI18nStore: { 'mock-locale': [{}], en: [{}] },
           initialLocale: 'mock-locale',
@@ -84,11 +69,11 @@ describe('[page] Category Page', () => {
     })
   })
 
-  it('should render the Category page template', () => {
-    nextRouter.useRouter.mockImplementation(() => ({ query: { categoryCode: '41' } }))
+  it('should render the Search page template', () => {
+    const router = createMockRouter()
     render(
-      <RouterContext.Provider>
-        <CategoryPage />
+      <RouterContext.Provider value={router}>
+        <SearchPage />
       </RouterContext.Provider>,
       {
         wrapper: createQueryClientWrapper(),

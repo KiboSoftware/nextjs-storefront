@@ -8,7 +8,7 @@ import { FilterOrders, FilterTiles } from '@/components/common'
 import { OrderHistoryItem, ViewOrderDetails } from '@/components/order'
 import { orderGetters } from '@/lib/getters'
 
-import type { OrderCollection, Order, CrAddress } from '@/lib/gql/types'
+import type { OrderCollection, Order, CrAddress, FacetValue } from '@/lib/gql/types'
 
 interface OrderHistoryProps {
   accountTitle: string
@@ -30,6 +30,7 @@ const OrderHistory = (props: OrderHistoryProps) => {
   const { accountTitle, orders, storePickupAddress, onAccountTitleClick } = props
   const { items = [] } = orders
   const [selectedOrder, setSelectedOrder] = useState<Order | undefined>(undefined)
+  const filters: FacetValue[] = []
 
   const { t } = useTranslation('common')
 
@@ -42,6 +43,10 @@ const OrderHistory = (props: OrderHistoryProps) => {
     setSelectedOrder(order)
   }
 
+  const handleRemoveSelectedTile = (tile: string) => {
+    //todo
+    console.log('remove selected filters')
+  }
   const getOrderDetails = (order: Order) => {
     const { id, submittedDate, productNames, orderTotal, orderStatus } =
       orderGetters.getOrderDetails(order)
@@ -72,7 +77,7 @@ const OrderHistory = (props: OrderHistoryProps) => {
           sx={{ display: 'flex', justifyContent: 'space-between', pb: '1.2rem' }}
         >
           {/* tobe: yet to implement */}
-          <FilterTiles />
+          <FilterTiles appliedFilters={filters} onRemoveSelectedTile={handleRemoveSelectedTile} />
           <FilterOrders />
         </Stack>
 

@@ -3,16 +3,20 @@ import React from 'react'
 import { Box, Button, Skeleton, Typography } from '@mui/material'
 import { useTranslation } from 'next-i18next'
 
+import { FullWidthDivider } from '@/components/common'
 import { FacetList } from '@/components/product-listing'
 
-import type { Facet as FacetType } from '@/lib/gql/types'
+import type { Facet as FacetType, FacetValue } from '@/lib/gql/types'
 
 interface CategoryFilterByMobileProps {
   facetList?: FacetType[]
   header?: string
   totalResults: number
   isLoading?: boolean
+  appliedFilters: FacetValue[]
+  onClearAllFilters: () => void
   onFilterByClose: () => void
+  onRemoveSelectedTile: (tile: string) => void
 }
 
 const styles = {
@@ -21,7 +25,7 @@ const styles = {
     justifyContent: 'space-between',
     flexDirection: 'row',
     alignItems: 'center',
-    padding: '0 1rem 1rem',
+    padding: '1rem',
   },
   closeIcon: {
     display: {
@@ -50,6 +54,7 @@ const styles = {
   upperTotal: {
     typography: 'body2',
     color: 'grey.600',
+    whiteSpace: 'nowrap',
   },
   lowerTotal: {
     display: 'flex',
@@ -66,7 +71,16 @@ const styles = {
 
 // Component
 const CategoryFilterByMobile = (props: CategoryFilterByMobileProps) => {
-  const { facetList, totalResults, header, onFilterByClose, isLoading } = props
+  const {
+    facetList,
+    totalResults,
+    header,
+    appliedFilters,
+    onClearAllFilters,
+    onFilterByClose,
+    onRemoveSelectedTile,
+    isLoading,
+  } = props
 
   const { t } = useTranslation(['product', 'common'])
 
@@ -89,16 +103,30 @@ const CategoryFilterByMobile = (props: CategoryFilterByMobileProps) => {
   return (
     <>
       <Box sx={{ display: { md: 'none' } }}>
+        <FullWidthDivider />
         <Box sx={{ ...styles.navBarMainMobile }}>{!isLoading ? headerPart : skeletonPart}</Box>
-        <FacetList facetList={facetList} onFilterByClose={onFilterByClose} />
+        <FullWidthDivider />
+        <FacetList
+          facetList={facetList}
+          appliedFilters={appliedFilters}
+          onFilterByClose={onFilterByClose}
+          onRemoveSelectedTile={onRemoveSelectedTile}
+        />
         <Box sx={{ ...styles.buttons }}>
-          <Button variant="contained" color="secondary" sx={{ ...styles.clearAll }}>
+          <Button
+            variant="contained"
+            color="secondary"
+            sx={{ ...styles.clearAll }}
+            disabled={!appliedFilters?.length}
+            onClick={onClearAllFilters}
+          >
             {t('common:clear-all')}
           </Button>
           <Button
             variant="contained"
             color="primary"
             sx={{ ...styles.viewResults }}
+            disabled={!appliedFilters?.length}
             onClick={onFilterByClose}
           >
             {t('view-results')}

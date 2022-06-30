@@ -5,6 +5,7 @@ import { useQuery } from 'react-query'
 
 import { ProductListingTemplate } from '@/components/page-templates'
 import { productSearch } from '@/lib/api/operations/'
+import type { CategorySearchParams } from '@/lib/types'
 
 import type {
   NextPage,
@@ -15,7 +16,7 @@ import type {
 } from 'next'
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
-  const response = await productSearch(context.query)
+  const response = await productSearch(context.query as unknown as CategorySearchParams)
   const { locale } = context
   return {
     props: {

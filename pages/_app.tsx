@@ -64,7 +64,7 @@ const App = (props: KiboAppProps) => {
                   sticky={true}
                 />
                 <LoginDialog />
-                <Container maxWidth={'lg'}>
+                <Container maxWidth={'xl'}>
                   <Component {...pageProps} />
                 </Container>
               </Hydrate>

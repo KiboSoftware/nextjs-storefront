@@ -6,14 +6,17 @@ import {
   AccordionDetails,
   AccordionSummary,
   Button,
+  Divider,
   SxProps,
   Typography,
+  useMediaQuery,
+  useTheme,
 } from '@mui/material'
 import { Theme } from '@mui/material/styles'
 import { Box } from '@mui/system'
 import { useTranslation } from 'next-i18next'
 
-import SearchBar from '../../common/SearchBar/SearchBar'
+import { SearchBar, FullWidthDivider } from '@/components/common'
 import { FacetItemList } from '@/components/product-listing'
 
 import type { Facet as FacetType, FacetValue, Maybe } from '@/lib/gql/types'
@@ -27,12 +30,8 @@ interface FacetProps extends FacetType {
 const style = {
   accordion: {
     ':before': {
-      backgroundColor: 'grey.500',
-      opacity: 1,
+      backgroundColor: 'transparent',
     },
-    borderBottomWidth: '1px',
-    borderBottomStyle: 'solid',
-    borderBottomColor: 'grey.500',
     boxShadow: 0,
     borderRadius: 0,
   },
@@ -64,6 +63,8 @@ const Facet = (props: FacetProps) => {
   const [isButtonVisible, setIsButtonVisible] = useState<boolean>(isVisible)
   const [buttonText, setButtonText] = useState<string>(viewMore)
   const [filteredValues, setFilteredValues] = useState<Maybe<FacetValue>[]>([])
+  const theme = useTheme()
+  const mdScreen = useMediaQuery(theme.breakpoints.up('md'))
 
   const handleSearch = (searchText: string) => {
     setSearchTerm(searchText.toLowerCase())
@@ -98,58 +99,61 @@ const Facet = (props: FacetProps) => {
   }, [viewMore, values, valuesLength, searchTerm, buttonText, numberOfItemsToShow])
 
   return (
-    <Accordion
-      data-testid="accordian"
-      onChange={handleAccordionChange}
-      disableGutters
-      sx={{ ...style.accordion }}
-    >
-      <AccordionSummary
-        data-testid="accordian-summery"
-        expandIcon={<ExpandMore />}
-        aria-controls="panel1bh-content"
-        id="panel1bh-header"
-        sx={{
-          padding: {
-            md: '0',
-          },
-        }}
+    <>
+      <Accordion
+        data-testid="accordian"
+        onChange={handleAccordionChange}
+        disableGutters
+        sx={{ ...style.accordion }}
       >
-        <Typography variant="h4" sx={{ fontWeight: 'bold' }}>
-          {label}
-        </Typography>
-      </AccordionSummary>
+        <AccordionSummary
+          data-testid="accordian-summery"
+          expandIcon={<ExpandMore />}
+          aria-controls="panel1bh-content"
+          id="panel1bh-header"
+          sx={{
+            padding: {
+              md: '0',
+            },
+          }}
+        >
+          <Typography variant="h4" sx={{ fontWeight: 'bold' }}>
+            {label}
+          </Typography>
+        </AccordionSummary>
 
-      <AccordionDetails data-testid="accordian-details" sx={{ ...style.accordionDetails }}>
-        <SearchBar
-          placeHolder={'Search ' + label}
-          searchTerm={searchTerm}
-          onSearch={handleSearch}
-          childInputRef={childInputRef}
-          showClearButton={true}
-        />
+        <AccordionDetails data-testid="accordian-details" sx={{ ...style.accordionDetails }}>
+          <SearchBar
+            placeHolder={'Search ' + label}
+            searchTerm={searchTerm}
+            onSearch={handleSearch}
+            childInputRef={childInputRef}
+            showClearButton={true}
+          />
 
-        <Box pl={0.5} pr={0.5}>
-          <FacetItemList itemList={filteredValues} />
-        </Box>
+          <Box pl={0.5} pr={0.5}>
+            <FacetItemList itemList={filteredValues} />
+          </Box>
 
-        {isButtonVisible && (
-          <Button
-            variant="text"
-            size="small"
-            name="View More"
-            aria-label={buttonText}
-            sx={{ ...style.button }}
-            startIcon={
-              buttonText === viewMore ? <Add fontSize="small" /> : <Remove fontSize="small" />
-            }
-            onClick={() => handleButtonText()}
-          >
-            {buttonText}
-          </Button>
-        )}
-      </AccordionDetails>
-    </Accordion>
+          {isButtonVisible && (
+            <Button
+              variant="text"
+              size="small"
+              name="View More"
+              aria-label={buttonText}
+              sx={{ ...style.button }}
+              startIcon={
+                buttonText === viewMore ? <Add fontSize="small" /> : <Remove fontSize="small" />
+              }
+              onClick={() => handleButtonText()}
+            >
+              {buttonText}
+            </Button>
+          )}
+        </AccordionDetails>
+      </Accordion>
+      {mdScreen ? <Divider sx={{ borderColor: 'grey.500' }} /> : <FullWidthDivider />}
+    </>
   )
 }
 

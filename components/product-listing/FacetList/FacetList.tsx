@@ -1,18 +1,21 @@
 import React from 'react'
 
 import { Close } from '@mui/icons-material'
-import { Stack, Box, Typography, useMediaQuery, useTheme } from '@mui/material'
+import { Stack, Box, Typography, useMediaQuery, useTheme, Divider } from '@mui/material'
 import { useTranslation } from 'next-i18next'
 
+import { FilterTiles, FullWidthDivider } from '@/components/common'
 import { Facet } from '@/components/product-listing'
 
-import type { Facet as FacetType } from '@/lib/gql/types'
+import type { Facet as FacetType, FacetValue } from '@/lib/gql/types'
 
 // Interface
 interface FacetListProps {
   facetList?: FacetType[]
   initialItemsToShow?: number
+  appliedFilters: FacetValue[]
   onFilterByClose: () => void
+  onRemoveSelectedTile: (tile: string) => void
 }
 
 const styles = {
@@ -36,7 +39,13 @@ const styles = {
 
 // Component
 const FacetList = (props: FacetListProps) => {
-  const { facetList = [], onFilterByClose, initialItemsToShow = 6 } = props
+  const {
+    facetList = [],
+    onFilterByClose,
+    onRemoveSelectedTile,
+    appliedFilters,
+    initialItemsToShow = 6,
+  } = props
 
   const { t } = useTranslation('common')
   const theme = useTheme()
@@ -44,20 +53,20 @@ const FacetList = (props: FacetListProps) => {
 
   return (
     <>
-      <Box
-        sx={{ borderBottomWidth: '1px', borderBottomStyle: 'solid', borderBottomColor: 'grey.500' }}
-      >
-        <Box sx={{ ...styles.filterBy }}>
-          <Typography
-            variant={mdScreen ? 'h3' : 'h2'}
-            color="GrayText.primary"
-            sx={{ fontWeight: 'bold' }}
-          >
-            {t('filter-by')}
-          </Typography>
-          <Close sx={{ ...styles.Close }} onClick={onFilterByClose} />
-        </Box>
+      <Box sx={{ ...styles.filterBy }}>
+        <Typography
+          variant={mdScreen ? 'h3' : 'h2'}
+          color="GrayText.primary"
+          sx={{ fontWeight: 'bold' }}
+        >
+          {t('filter-by')}
+        </Typography>
+        <Close sx={{ ...styles.Close }} onClick={onFilterByClose} />
       </Box>
+      <Box sx={{ display: { md: 'none' }, margin: '1rem 0 0 1rem' }}>
+        <FilterTiles appliedFilters={appliedFilters} onRemoveSelectedTile={onRemoveSelectedTile} />
+      </Box>
+      {mdScreen ? <Divider sx={{ borderColor: 'grey.500' }} /> : <FullWidthDivider />}
       <Stack>
         {facetList
           .filter((facet) => facet?.facetType === 'Value' || facet?.facetType === 'RangeQuery')

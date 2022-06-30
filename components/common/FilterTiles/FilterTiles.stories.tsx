@@ -3,17 +3,17 @@ import React from 'react'
 import { ComponentStory, ComponentMeta } from '@storybook/react'
 
 import FilterTiles from './FilterTiles'
+import { facetValueMock } from '@/__mocks__/stories/facetValueMock'
 
-// Common
 export default {
   title: 'Common/FilterTiles',
   component: FilterTiles,
-  argTypes: {
-    onAccountTitleClick: { action: 'onAccountTitleClick' },
-  },
 } as ComponentMeta<typeof FilterTiles>
 
-const Template: ComponentStory<typeof FilterTiles> = () => <FilterTiles />
+const Template: ComponentStory<typeof FilterTiles> = (args) => <FilterTiles {...args} />
 
-// Default
-export const Common = Template.bind({})
+export const Tiles = Template.bind({})
+
+Tiles.args = {
+  appliedFilters: facetValueMock,
+}

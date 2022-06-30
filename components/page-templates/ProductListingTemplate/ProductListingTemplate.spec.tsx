@@ -44,6 +44,7 @@ describe('[component] - Category', () => {
     fireEvent.mouseDown(selectButton)
     const listbox = within(screen.getByRole('listbox'))
     const listValues = listbox.getAllByText(sortingValuesRegex)
+    const totalResults = screen.getByText(/results/i)
 
     expect(breadCrumbComponent).toBeInTheDocument()
     expect(header).toHaveTextContent(Category.args?.categoryFacet?.header || '')
@@ -53,6 +54,7 @@ describe('[component] - Category', () => {
     expect(productCardComponent.length).toEqual(Category.args?.initialProductsToShow)
     expect(showMoreButton).toBeVisible()
     expect(listValues.map((list) => list.textContent)).toEqual(sortingValues)
+    expect(totalResults).toBeInTheDocument()
   })
 
   it('should show all the product when user clicks on show more button', () => {

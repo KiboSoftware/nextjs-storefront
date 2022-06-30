@@ -1,8 +1,7 @@
-import React, { useEffect, useState } from 'react'
+import React from 'react'
 
 import { Checkbox, Stack, FormControlLabel, FormLabel, SxProps } from '@mui/material'
 import { Theme } from '@mui/material/styles'
-import { useRouter } from 'next/router'
 
 import { useUpdateRoutes } from '@/hooks'
 
@@ -23,31 +22,18 @@ const style = {
   } as SxProps<Theme> | undefined,
   formLabel: {
     typography: 'body2',
-    color: 'grey.900',
+    color: 'text.primary',
   },
 }
 
 // Component
 const FacetItem = (props: FacetItemProps) => {
   const { filterValue, label: facetItemLabel, count = 0, isApplied = false } = props
+  const { updateRoute } = useUpdateRoutes()
 
-  const router = useRouter()
-  const [checked, setChecked] = useState<boolean>(isApplied)
-  const [updateRoute] = useUpdateRoutes()
-
-  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const isChecked = event.target.checked
-    const action = isChecked ? 'add' : 'remove'
-
-    updateRoute(filterValue, action)
-    setChecked(isChecked)
+  const handleChange = () => {
+    updateRoute(filterValue)
   }
-
-  // To mark FacetItem(checkbox) checked on Page reolad/refresh
-  useEffect(() => {
-    const filters = router?.query?.filters || ''
-    if (filters.includes(filterValue)) setChecked(true)
-  }, [filterValue, router?.query?.filters])
 
   return (
     <Stack
@@ -60,7 +46,7 @@ const FacetItem = (props: FacetItemProps) => {
         data-testid="label"
         sx={{ ...style.formControlLabel }}
         label={facetItemLabel ? facetItemLabel : ''}
-        control={<Checkbox size="small" checked={checked} onChange={handleChange} />}
+        control={<Checkbox size="small" checked={isApplied} onChange={handleChange} />}
       />
       <FormLabel data-testid="count" aria-label="facet-item-label" sx={{ ...style.formLabel }}>
         ({count})

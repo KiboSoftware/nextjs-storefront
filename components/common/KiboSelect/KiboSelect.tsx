@@ -1,4 +1,4 @@
-import { InputLabel, MenuItem, OutlinedInput } from '@mui/material'
+import { InputLabel, MenuItem, OutlinedInput, SxProps, Theme } from '@mui/material'
 import { FormControl, FormHelperText, Select } from '@mui/material'
 export interface KiboSelectProps {
   name?: string
@@ -8,6 +8,7 @@ export interface KiboSelectProps {
   placeholder?: string
   label?: string
   children: React.ReactNode
+  sx?: SxProps<Theme>
   onChange: (name: string, value: string) => void
   onBlur?: (name: string, value: string) => void
 }
@@ -34,6 +35,7 @@ const KiboSelect = (props: KiboSelectProps) => {
     children,
     onChange,
     onBlur,
+    sx,
     ...rest
   } = props
 
@@ -56,7 +58,7 @@ const KiboSelect = (props: KiboSelectProps) => {
         error={error}
         value={value}
         MenuProps={MenuProps}
-        sx={{ height: '34px' }}
+        sx={{ height: '34px', ...sx }}
         inputProps={{ 'aria-hidden': false }}
         input={<OutlinedInput size="small" />}
         onChange={(event) => onChange(event.target.name, event.target.value)}
