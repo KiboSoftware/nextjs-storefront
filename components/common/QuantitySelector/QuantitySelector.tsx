@@ -6,7 +6,7 @@ import { useTranslation } from 'next-i18next'
 
 // Interface
 interface QuantitySelectorProps {
-  quantity?: number
+  quantity: number
   label?: string
   maxQuantity?: number
   onIncrease?: () => void
@@ -47,7 +47,7 @@ const QuantityTextField = ({ quantity }: QuantityInputProps) => (
 
 // Component
 const QuantitySelector = (props: QuantitySelectorProps) => {
-  const { quantity = 1, label, maxQuantity, onIncrease, onDecrease } = props
+  const { quantity, label, maxQuantity, onIncrease, onDecrease } = props
   const { t } = useTranslation('common')
 
   return (

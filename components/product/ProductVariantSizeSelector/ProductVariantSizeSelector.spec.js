@@ -10,9 +10,11 @@ const { Common } = composeStories(stories)
 describe('[component] ProductVariantSizeSelector component', () => {
   const setup = () => {
     const onSizeChangeMock = jest.fn()
+    const user = userEvent.setup()
     render(<Common {...Common.args} onSizeChange={onSizeChangeMock} />)
     return {
       onSizeChangeMock,
+      user,
     }
   }
 
@@ -32,39 +34,39 @@ describe('[component] ProductVariantSizeSelector component', () => {
     expect(sizeOptions).toHaveLength(Common.args.values.length)
   })
 
-  it('should call selectOption method only when size-option is enabled and not selected', () => {
-    const { onSizeChangeMock } = setup()
+  it('should call selectOption method only when size-option is enabled and not selected', async () => {
+    const { onSizeChangeMock, user } = setup()
 
     const option = screen.getByText(
       Common.args.values.filter((value) => value.isEnabled && !value.isSelected)[0].value
     )
 
-    userEvent.click(option)
+    await user.click(option)
 
     expect(onSizeChangeMock).toHaveBeenCalled()
     expect(onSizeChangeMock).toHaveBeenCalledWith(Common.args.attributeFQN, '8')
   })
 
-  it('should not call selectOption method when option is disabled', () => {
-    const { onSizeChangeMock } = setup()
+  it('should not call selectOption method when option is disabled', async () => {
+    const { onSizeChangeMock, user } = setup()
 
     const disabledOption = screen.getByText(
       Common.args.values.filter((value) => value.isEnabled)[0].value
     )
 
-    userEvent.click(disabledOption)
+    await user.click(disabledOption)
 
     expect(onSizeChangeMock).toHaveBeenCalledTimes(0)
   })
 
-  it('should not call selectOption method when option is selected', () => {
-    const { onSizeChangeMock } = setup()
+  it('should not call selectOption method when option is selected', async () => {
+    const { onSizeChangeMock, user } = setup()
 
     const disabledOption = screen.getByText(
       Common.args.values.filter((value) => value.isSelected)[0].value
     )
 
-    userEvent.click(disabledOption)
+    await user.click(disabledOption)
 
     expect(onSizeChangeMock).toHaveBeenCalledTimes(0)
   })

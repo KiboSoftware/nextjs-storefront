@@ -15,8 +15,9 @@ jest.mock('../Facet/Facet', () => facetMock)
 describe('[components] - FacetList', () => {
   const onFilterByCloseMock = jest.fn()
   const setup = () => {
+    const user = userEvent.setup()
     render(<Common {...Common.args} onFilterByClose={onFilterByCloseMock} />)
-    return { onFilterByCloseMock }
+    return { onFilterByCloseMock, user }
   }
 
   it('should render component', () => {
@@ -37,11 +38,11 @@ describe('[components] - FacetList', () => {
     expect(title).toBeVisible()
   })
 
-  it('should call handleClose callback function when user clicks on close icon button', () => {
-    setup()
+  it('should call handleClose callback function when user clicks on close icon button', async () => {
+    const { user } = setup()
 
     const crossIcon = screen.getByTestId(/closeicon/i)
-    userEvent.click(crossIcon)
+    await user.click(crossIcon)
 
     expect(onFilterByCloseMock).toHaveBeenCalled()
   })

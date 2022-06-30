@@ -12,7 +12,11 @@ const { Common } = composeStories(stories)
 
 describe('[components] Details', () => {
   const setup = (args = Common.args) => {
+    const user = userEvent.setup()
     render(<Common {...args} />)
+    return {
+      user,
+    }
   }
 
   it('should render component', () => {
@@ -60,7 +64,7 @@ describe('[components] Details', () => {
   })
 
   it('should render firstName, lastName and password when user selects "I want to create account"', async () => {
-    setup()
+    const { user } = setup()
 
     let firstNameLabel = screen.queryByText(/first-name/i)
     let firstNameInput = screen.queryByRole('textbox', { name: /first-name/i })
@@ -78,7 +82,7 @@ describe('[components] Details', () => {
 
     const iWantToCreateAccount = screen.getByRole('checkbox', { name: /showaccountfields/i })
     await act(async () => {
-      userEvent.click(iWantToCreateAccount)
+      await user.click(iWantToCreateAccount)
     })
 
     firstNameLabel = screen.getByText(/first-name/i)
@@ -113,12 +117,12 @@ describe('[components] Details', () => {
 
   it('Should display required message onBlur of create Account inputs', async () => {
     // arrange
-    setup()
+    const { user } = setup()
     const emptyInput = { target: { value: '' } }
 
     const iWantToCreateAccount = screen.getByRole('checkbox', { name: /showaccountfields/i })
     await act(async () => {
-      userEvent.click(iWantToCreateAccount)
+      await user.click(iWantToCreateAccount)
     })
     const allInputs = screen.getAllByRole('textbox')
     await act(async () => {

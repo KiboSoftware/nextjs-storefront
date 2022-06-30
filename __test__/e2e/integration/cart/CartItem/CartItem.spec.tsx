@@ -11,16 +11,18 @@ const { Common } = composeStories(stories)
 
 describe('[components] - CartItem Integration', () => {
   const setup = () => {
+    const user = userEvent.setup()
     const onQuantityUpdateMock = jest.fn()
     render(<Common {...Common.args} onQuantityUpdate={onQuantityUpdateMock} />)
     return {
       onQuantityUpdateMock,
+      user,
     }
   }
 
-  it('should render component', () => {
+  it('should render component', async () => {
     // arrange
-    const { onQuantityUpdateMock } = setup()
+    const { onQuantityUpdateMock, user } = setup()
 
     // act
     const img = screen.getByRole('img')
@@ -29,11 +31,11 @@ describe('[components] - CartItem Integration', () => {
     const productName = screen.getByText(name)
     const fulfillmentOptions = screen.getByTestId('fulfillmentOptions')
     const increaseButton = screen.getByRole('button', { name: 'increase' })
-    userEvent.click(increaseButton)
+    await user.click(increaseButton)
     const decreaseButton = screen.getByRole('button', { name: 'decrease' })
-    userEvent.click(decreaseButton)
+    await user.click(decreaseButton)
     const actionsIcon = screen.getByRole('button', { name: 'more' })
-    userEvent.click(actionsIcon)
+    await user.click(actionsIcon)
 
     // // assert
     expect(img).toBeInTheDocument()

@@ -9,12 +9,17 @@ const { Common } = composeStories(stories)
 
 describe('[components] - Facet integration', () => {
   const setup = () => {
+    const user = userEvent.setup()
     render(<Common {...Common.args} />)
+
+    return {
+      user,
+    }
   }
 
-  it('should filter facet items when user enters search term', () => {
+  it('should filter facet items when user enters search term', async () => {
     // arrange
-    setup()
+    const { user } = setup()
     const input = screen.getByLabelText('search-input')
 
     // arrange
@@ -23,8 +28,8 @@ describe('[components] - Facet integration', () => {
     const count = items.filter((item) => item?.label?.toLowerCase().includes(searchTerm)).length
 
     const viewMore = screen.getByText(/view-more/i, { selector: 'button' })
-    userEvent.type(input, searchTerm)
-    userEvent.click(viewMore)
+    await user.type(input, searchTerm)
+    await user.click(viewMore)
     const filteredItemsCount = screen.queryAllByTestId('label').length
 
     // assert

@@ -17,8 +17,11 @@ jest.mock('../FacetItemList/FacetItemList', () => facetItemListMock)
 describe('[components] - FacetItem', () => {
   const setup = (values = Common.args?.values || []) => {
     const label = Common.args?.label || ''
-
+    const user = userEvent.setup()
     render(<Common label={label} values={values} />)
+    return {
+      user,
+    }
   }
 
   it('should render component', () => {
@@ -40,19 +43,19 @@ describe('[components] - FacetItem', () => {
     expect(viewMore).toBeInTheDocument()
   })
 
-  it('should expand accordian when user clicks on summery and shrinks again when user clicks again', () => {
+  it('should expand accordian when user clicks on summery and shrinks again when user clicks again', async () => {
     // arrange
-    setup()
+    const { user } = setup()
 
     // act
     const accordian = screen.getByTestId('accordian')
 
     // assert
     expect(accordian).not.toHaveAttribute('aria-expanded', false)
-    userEvent.click(accordian)
+    await user.click(accordian)
     expect(accordian).not.toHaveAttribute('aria-expanded', true)
 
-    userEvent.click(accordian)
+    await user.click(accordian)
     expect(accordian).not.toHaveAttribute('aria-expanded', false)
   })
 
@@ -80,7 +83,7 @@ describe('[components] - FacetItem', () => {
 
   it('should show "View Less" when user clicks on "View More" and "View More" when clicks again', async () => {
     // arrange
-    setup()
+    const { user } = setup()
 
     // act
     let viewMore = screen.queryByText(/view-more/i, { selector: 'button' })
@@ -90,14 +93,14 @@ describe('[components] - FacetItem', () => {
     expect(viewMore).toBeInTheDocument()
     expect(viewLess).not.toBeInTheDocument()
 
-    if (viewMore) userEvent.click(viewMore)
+    if (viewMore) await user.click(viewMore)
     viewMore = screen.queryByText(/view-more/i, { selector: 'button' })
     viewLess = screen.queryByText(/view-less/i, { selector: 'button' })
 
     expect(viewMore).not.toBeInTheDocument()
     expect(viewLess).toBeInTheDocument()
 
-    if (viewLess) userEvent.click(viewLess)
+    if (viewLess) await user.click(viewLess)
     viewMore = screen.getByText(/view-more/i, { selector: 'button' })
     viewLess = screen.queryByText(/view-less/i, { selector: 'button' })
 

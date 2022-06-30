@@ -16,10 +16,12 @@ describe('[components] - SearchSuggestions Integration', () => {
   const searchSuggestions = searchSuggestionResultMock
 
   const setup = () => {
+    const user = userEvent.setup()
     renderWithQueryClient(<Common />)
 
     return {
       searchSuggestions,
+      user,
     }
   }
 
@@ -35,20 +37,20 @@ describe('[components] - SearchSuggestions Integration', () => {
   })
 
   it('should display user-entered text in search bar when a user enters it', async () => {
-    setup()
+    const { user } = setup()
 
     const input = screen.getByRole('textbox', { name: 'search-input' })
     expect(input).toHaveValue('')
 
-    userEvent.type(input, userEnteredText)
+    await user.type(input, userEnteredText)
     expect(input).toHaveValue(userEnteredText)
   })
 
   it('should display search suggestion with href attribute present when user enter the text on search bar', async () => {
-    setup()
+    const { user } = setup()
 
     const input = screen.getByRole('textbox', { name: 'search-input' })
-    userEvent.type(input, userEnteredText)
+    await user.type(input, userEnteredText)
 
     const suggestionModal = await screen.findByRole('contentinfo')
     const suggestions = await screen.findByText('suggestions')
@@ -76,10 +78,10 @@ describe('[components] - SearchSuggestions Integration', () => {
   })
 
   it('should display backdrop when search suggestion opens', async () => {
-    setup()
+    const { user } = setup()
 
     const input = screen.getByRole('textbox', { name: 'search-input' })
-    userEvent.type(input, userEnteredText)
+    await user.type(input, userEnteredText)
 
     const suggestions = await screen.findByText('suggestions')
     expect(suggestions).toBeVisible()
@@ -88,49 +90,49 @@ describe('[components] - SearchSuggestions Integration', () => {
   })
 
   it('should clear the search input and close the search suggestion when user clicks on cross button', async () => {
-    setup()
+    const { user } = setup()
 
     const input = screen.getByRole('textbox', { name: 'search-input' })
     const clearButton = screen.getByRole('button', { name: 'clear-search' })
-    userEvent.type(input, userEnteredText)
+    await user.type(input, userEnteredText)
 
     expect(clearButton).toBeEnabled()
-    userEvent.click(clearButton)
+    await user.click(clearButton)
 
     expect(input).toHaveValue('')
     await waitFor(() => expect(screen.queryByRole('contentinfo')).not.toBeInTheDocument())
   })
 
   it('should close search suggestion when user clears the search text', async () => {
-    setup()
+    const { user } = setup()
 
     const input = screen.getByRole('textbox', { name: 'search-input' })
-    userEvent.type(input, userEnteredText)
+    await user.type(input, userEnteredText)
 
     const suggestionModal = await screen.findByRole('contentinfo')
     expect(suggestionModal).toBeVisible()
 
-    userEvent.clear(input)
+    await user.clear(input)
     expect(input).toHaveValue('')
     await waitFor(() => expect(screen.queryByRole('contentinfo')).not.toBeInTheDocument())
   })
 
   it('should close search suggestion when user clicks on backdrop', async () => {
-    setup()
+    const { user } = setup()
 
     const input = screen.getByRole('textbox', { name: 'search-input' })
     const backdrop = await screen.findByTestId('backdrop')
-    userEvent.type(input, userEnteredText)
+    await user.type(input, userEnteredText)
 
-    userEvent.click(backdrop)
+    await user.click(backdrop)
     await waitFor(() => expect(screen.queryByRole('contentinfo')).not.toBeInTheDocument())
   })
 
   it('should not open Search suggestion when a user enters white/blank space', async () => {
-    setup()
+    const { user } = setup()
 
     const input = screen.getByRole('textbox', { name: 'search-input' })
-    userEvent.type(input, '  ')
+    await user.type(input, '  ')
 
     expect(screen.queryByRole('contentinfo')).not.toBeInTheDocument()
   })

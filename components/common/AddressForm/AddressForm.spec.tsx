@@ -20,7 +20,11 @@ jest.mock('../KiboTextBox/KiboTextBox', () => KiboTextBoxMock)
 
 describe('[components] - AddressForm', () => {
   const setup = () => {
+    const user = userEvent.setup()
     render(<Common {...Common.args} />)
+    return {
+      user,
+    }
   }
 
   it('should render component', () => {
@@ -36,12 +40,12 @@ describe('[components] - AddressForm', () => {
 
   it('should show user entered value', async () => {
     //arrange
-    setup()
+    const { user } = setup()
 
     // act
     const textBoxList = screen.getAllByRole('textbox')
 
-    userEvent.type(textBoxList[0], 'Shane')
+    await user.type(textBoxList[0], 'Shane')
 
     await waitFor(() => expect(textBoxList[0]).toHaveValue('Shane'))
 

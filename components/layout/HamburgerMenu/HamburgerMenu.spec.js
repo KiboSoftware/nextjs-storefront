@@ -1,5 +1,5 @@
 import { composeStories } from '@storybook/testing-react'
-import { render, screen } from '@testing-library/react'
+import { render, screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 
 import '@testing-library/jest-dom'
@@ -28,14 +28,16 @@ describe('[component] HamburgerMenu component', () => {
     expect(screen.getByTestId('hamburger-menu')).toBeInTheDocument()
   })
 
-  it('should render Login button/ My Profile section', () => {
+  it('should render Login button/ My Profile section', async () => {
     const setIsDrawerOpenMock = jest.fn()
+    const user = userEvent.setup()
     render(<Common {...Common.args} setIsDrawerOpen={setIsDrawerOpenMock} />)
 
     expect(screen.getByTestId('AccountCircleIcon')).toBeVisible()
     expect(screen.getByText(/my-account/i)).toBeVisible()
 
-    userEvent.keyboard('{esc}')
+    await user.click(screen.getByRole('button', { name: 'back-arrow-button' }))
+
     expect(setIsDrawerOpenMock).toBeCalled()
   })
 })

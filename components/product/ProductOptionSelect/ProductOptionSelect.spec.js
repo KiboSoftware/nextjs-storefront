@@ -16,9 +16,10 @@ describe('[component] ProductOptionSelect component', () => {
     expect(ProductOptionSelect).toBeVisible()
   })
 
-  it('should call onChange method if value is changed', () => {
+  it('should call onChange method if value is changed', async () => {
     const onDropdownChangeMock = jest.fn()
     const mockOption = productOptionSelectValuesMock[0]
+    const user = userEvent.setup()
     render(<Common {...Common.args} onDropdownChange={onDropdownChangeMock} />)
     const ProductOptionSelect = screen.getByRole('button')
 
@@ -26,7 +27,7 @@ describe('[component] ProductOptionSelect component', () => {
 
     const listbox = within(screen.getByRole('listbox'))
 
-    userEvent.click(listbox.getByText(mockOption.stringValue))
+    await user.click(listbox.getByText(mockOption.stringValue))
 
     expect(onDropdownChangeMock).toBeCalledWith('test-attributeFQN', mockOption.value)
   })

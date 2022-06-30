@@ -27,7 +27,11 @@ describe('[context] - AuthContext', () => {
   })
 
   const setup = (ui: any) => {
-    return renderWithQueryClient(<AuthContextProvider>{ui}</AuthContextProvider>)
+    const user = userEvent.setup()
+    renderWithQueryClient(<AuthContextProvider>{ui}</AuthContextProvider>)
+    return {
+      user,
+    }
   }
   const TestComponent = () => {
     const { isAuthenticated, authError, user, login } = useAuthContext()
@@ -67,13 +71,13 @@ describe('[context] - AuthContext', () => {
     })
 
     it('should set isAuthenticated to true when successfully logged in', async () => {
-      setup(<TestComponent />)
+      const { user } = setup(<TestComponent />)
       const loginButton = screen.getByRole('button')
       const storeClientCookieSpy = jest.spyOn(cookieHelper, 'storeClientCookie')
       const isLoggedIn = await screen.findByTestId('is-logged-in')
       const userFirstName = screen.getByTestId('user-first-name')
 
-      userEvent.click(loginButton)
+      await user.click(loginButton)
       const authError = await screen.findByTestId('auth-error')
       await waitFor(() => expect(isLoggedIn).toHaveTextContent('true'))
       await waitFor(() => expect(userFirstName).toHaveTextContent('Suman'))
@@ -91,11 +95,11 @@ describe('[context] - AuthContext', () => {
           return res(ctx.status(500))
         })
       )
-      setup(<TestComponent />)
+      const { user } = setup(<TestComponent />)
       const loginButton = screen.getByRole('button')
       const userFirstName = screen.getByTestId('user-first-name')
 
-      userEvent.click(loginButton)
+      await user.click(loginButton)
       const isLoggedIn = await screen.findByTestId('is-logged-in')
       const authError = await screen.findByTestId('auth-error')
       expect(isLoggedIn).toHaveTextContent('false')

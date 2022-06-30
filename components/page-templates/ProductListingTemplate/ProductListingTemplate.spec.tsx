@@ -23,7 +23,11 @@ jest.mock('../../product/ProductCard/ProductCard', () => ProductCardMock)
 
 describe('[component] - Category', () => {
   const setup = () => {
+    const user = userEvent.setup()
     render(<Category />)
+    return {
+      user,
+    }
   }
 
   it('should render component', () => {
@@ -57,25 +61,25 @@ describe('[component] - Category', () => {
     expect(totalResults).toBeInTheDocument()
   })
 
-  it('should show all the product when user clicks on show more button', () => {
-    setup()
+  it('should show all the product when user clicks on show more button', async () => {
+    const { user } = setup()
 
     const productCardComponentBeforeClick = screen.getAllByTestId('product-card-component')
 
     expect(productCardComponentBeforeClick.length).toEqual(Category.args?.initialProductsToShow)
 
     const showMoreButton = screen.getByRole('button', { name: /show-more/i })
-    userEvent.click(showMoreButton)
+    await user.click(showMoreButton)
     const productCardComponentAfterClick = screen.getAllByTestId('product-card-component')
 
     expect(productCardComponentAfterClick.length).toEqual(Category.args?.products?.length)
   })
 
-  it('should hide filter by button when user clicks on filter By button', () => {
-    setup()
+  it('should hide filter by button when user clicks on filter By button', async () => {
+    const { user } = setup()
 
     const filterByButton = screen.getByRole('button', { name: /filter-by/i })
-    userEvent.click(filterByButton)
+    await user.click(filterByButton)
 
     expect(filterByButton).not.toBeVisible()
   })

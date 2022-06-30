@@ -12,8 +12,13 @@ const onGoToCartMock = jest.fn()
 const onContinueShoppingMock = jest.fn()
 
 describe('[components] Add To Cart Dialog', () => {
-  const setup = () =>
+  const setup = () => {
+    const user = userEvent.setup()
     render(<Common onGoToCart={onGoToCartMock} onContinueShopping={onContinueShoppingMock} />)
+    return {
+      user,
+    }
+  }
 
   it('should render component', async () => {
     setup()
@@ -31,25 +36,26 @@ describe('[components] Add To Cart Dialog', () => {
     expect(continueShoppingButton).toBeVisible()
   })
 
-  it('should call onGoToCart handler when user clicks on "Go To Cart" button', () => {
-    setup()
+  it('should call onGoToCart handler when user clicks on "Go To Cart" button', async () => {
+    const { user } = setup()
 
     const goToCartButton = screen.getByRole('button', {
       name: /go-to-cart/i,
     })
-    userEvent.click(goToCartButton)
+    await user.click(goToCartButton)
 
     expect(goToCartButton).toBeVisible()
     expect(onGoToCartMock).toHaveBeenCalled()
   })
 
-  it('should call onContinueShopping habdler when user clicks on "Continue Shopping" button', () => {
-    setup()
+  it('should call onContinueShopping habdler when user clicks on "Continue Shopping" button', async () => {
+    const { user } = setup()
 
     const continueShoppingButton = screen.getByRole('button', {
       name: /continue-shopping/i,
     })
-    userEvent.click(continueShoppingButton)
+
+    await user.click(continueShoppingButton)
 
     expect(continueShoppingButton).toBeVisible()
     expect(onContinueShoppingMock).toHaveBeenCalled()

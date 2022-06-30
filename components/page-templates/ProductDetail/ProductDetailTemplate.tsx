@@ -187,8 +187,8 @@ const ProductDetailTemplate = (props: ProductDetailTemplateProps) => {
             <QuantitySelector
               label="Qty"
               quantity={quantity}
-              onIncrease={() => setQuantity((prevQuantity) => prevQuantity + 1)}
-              onDecrease={() => setQuantity((prevQuantity) => prevQuantity - 1)}
+              onIncrease={() => setQuantity((prevQuantity) => Number(prevQuantity) + 1)}
+              onDecrease={() => setQuantity((prevQuantity) => Number(prevQuantity) - 1)}
             />
           </Box>
 

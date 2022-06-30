@@ -10,15 +10,17 @@ const { Common } = composeStories(stories)
 
 describe('[component] - ProductInformation Integration', () => {
   const setup = () => {
+    const user = userEvent.setup()
     render(<Common {...Common.args} />)
+    return { user }
   }
 
-  it('should render component', () => {
-    setup()
+  it('should render component', async () => {
+    const { user } = setup()
 
     const accordian = screen.getByTestId('accordian')
     expect(accordian).toHaveAttribute('aria-expanded', 'false')
-    userEvent.click(accordian)
+    await user.click(accordian)
     expect(accordian).toHaveAttribute('aria-expanded', 'true')
 
     const productItem = screen.getAllByTestId('productOption')

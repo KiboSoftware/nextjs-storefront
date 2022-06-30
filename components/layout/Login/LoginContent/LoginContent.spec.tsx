@@ -15,10 +15,15 @@ const onLoginMock = jest.fn()
 describe('[components] (LoginContent)', () => {
   const email = 'test@gmail.com'
 
-  const setup = (args = Common.args) =>
+  const setup = (args = Common.args) => {
+    const user = userEvent.setup()
     render(
       <Common {...args} onLogin={onLoginMock} onForgotPasswordClick={onForgotPasswordClickMock} />
     )
+    return {
+      user,
+    }
+  }
 
   it('should render component', async () => {
     setup()
@@ -54,7 +59,7 @@ describe('[components] (LoginContent)', () => {
   })
 
   it('should disable login button when user enters invalid inputs ', async () => {
-    setup()
+    const { user } = setup()
 
     const emailInput = screen.getByRole('textbox', { name: 'email' })
     const passwordInput = screen.getByLabelText('password')
@@ -64,16 +69,16 @@ describe('[components] (LoginContent)', () => {
 
     // invalid inputs
     await act(async () => {
-      userEvent.clear(emailInput)
-      userEvent.type(emailInput, 'abcd-email')
-      userEvent.clear(passwordInput)
-      userEvent.type(passwordInput, 'abc')
+      await user.clear(emailInput)
+      await user.type(emailInput, 'abcd-email')
+      await user.clear(passwordInput)
+      await user.type(passwordInput, 'abc')
     })
     expect(loginButton).toBeDisabled()
   })
 
   it('should enable login button when user enters valid inputs and  call onLoginMock when user click onLogin ', async () => {
-    setup()
+    const { user } = setup()
 
     const emailInput = screen.getByRole('textbox', { name: 'email' })
     const passwordInput = screen.getByLabelText('password')
@@ -87,16 +92,16 @@ describe('[components] (LoginContent)', () => {
 
     await waitFor(() => expect(loginButton).toBeEnabled())
     await act(async () => {
-      userEvent.click(loginButton)
+      await user.click(loginButton)
     })
     await waitFor(() => expect(onLoginMock).toHaveBeenCalled())
   })
 
   it('should call onForgotPasswordClickMock when click forgotPasswordLink', async () => {
-    setup()
+    const { user } = setup()
     const forgotPasswordLink = screen.getByRole('button', { name: 'common:forgot-password' })
     await act(async () => {
-      userEvent.click(forgotPasswordLink)
+      await user.click(forgotPasswordLink)
     })
     expect(onForgotPasswordClickMock).toBeCalled()
   })

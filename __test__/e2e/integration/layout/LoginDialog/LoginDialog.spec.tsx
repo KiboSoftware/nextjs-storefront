@@ -29,7 +29,14 @@ const renderComponent = () => {
 }
 
 describe('[components] Login Dialog', () => {
-  const setup = () => renderComponent()
+  const setup = () => {
+    const user = userEvent.setup()
+    renderComponent()
+
+    return {
+      user,
+    }
+  }
 
   it('should render component', () => {
     setup()
@@ -52,7 +59,7 @@ describe('[components] Login Dialog', () => {
   })
 
   it('should unmusk password when click on eye icon', async () => {
-    setup()
+    const { user } = setup()
 
     const closeIconButton = screen.getByRole('button', {
       name: /close/i,
@@ -66,14 +73,14 @@ describe('[components] Login Dialog', () => {
     expect(passwordInput).toHaveAttribute('type', 'password')
 
     await act(async () => {
-      userEvent.click(eyeIcon)
+      await user.click(eyeIcon)
     })
 
     await waitFor(() => expect(passwordInput).toHaveAttribute('type', 'text'))
   })
 
   it("should display 'This field is required' error when user focus out (blur event) the Email field", async () => {
-    setup()
+    const { user } = setup()
 
     let emailError = screen.queryByText(/this\-field\-is\-required/i)
     expect(emailError).not.toBeInTheDocument()
@@ -81,7 +88,7 @@ describe('[components] Login Dialog', () => {
     const emailInput = screen.getByRole('textbox', { name: 'email' })
 
     await act(async () => {
-      userEvent.clear(emailInput)
+      await user.clear(emailInput)
       fireEvent.blur(emailInput, { target: { value: '' } })
     })
 
@@ -90,7 +97,7 @@ describe('[components] Login Dialog', () => {
   })
 
   it("should display 'Email must be a valid email' error when user enters invalid email", async () => {
-    setup()
+    const { user } = setup()
 
     let emailError = screen.queryByText(/email\-must\-be\-a\-valid\-email/i)
     expect(emailError).not.toBeInTheDocument()
@@ -98,8 +105,8 @@ describe('[components] Login Dialog', () => {
     const emailInput = screen.getByRole('textbox', { name: 'email' })
 
     await act(async () => {
-      userEvent.clear(emailInput)
-      userEvent.type(emailInput, 'xyz@ds')
+      await user.clear(emailInput)
+      await user.type(emailInput, 'xyz@ds')
     })
 
     emailError = screen.getByText(/email\-must\-be\-a\-valid\-email/i)
@@ -107,14 +114,14 @@ describe('[components] Login Dialog', () => {
   })
 
   it("should display 'This field is required' error when user focus out (blur event) the Password field", async () => {
-    setup()
+    const { user } = setup()
 
     const loginFormPasswordError = screen.queryByText(/this field is required/i)
     expect(loginFormPasswordError).not.toBeInTheDocument()
 
     const loginFormPasswordInput = screen.getByLabelText('password')
     await act(async () => {
-      userEvent.clear(loginFormPasswordInput)
+      await user.clear(loginFormPasswordInput)
       fireEvent.blur(loginFormPasswordInput, { target: { value: '' } })
     })
 

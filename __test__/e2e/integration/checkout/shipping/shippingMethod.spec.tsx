@@ -16,6 +16,7 @@ const onClickStoreLocatorMock = jest.fn()
 
 describe('[component] - ShippingMethod', () => {
   const setup = (params?: ShippingMethodProps) => {
+    const user = userEvent.setup()
     const props = params ? params : Common.args
     render(
       <Common
@@ -24,6 +25,9 @@ describe('[component] - ShippingMethod', () => {
         onClickStoreLocator={onClickStoreLocatorMock}
       />
     )
+    return {
+      user,
+    }
   }
 
   it('should render component', () => {
@@ -60,7 +64,7 @@ describe('[component] - ShippingMethod', () => {
       onShippingMethodChange: (name: string, value: string) => ({ name, value }),
     }
 
-    setup(params)
+    const { user } = setup(params)
     const kiboSelectBtn = screen.getByRole('button')
     expect(kiboSelectBtn).toBeInTheDocument()
     expect(kiboSelectBtn).toBeVisible()
@@ -69,7 +73,7 @@ describe('[component] - ShippingMethod', () => {
     // Locate the corresponding popup (`listbox`) of options.
     const optionsPopupEl = await screen.findByRole('listbox')
     // Click an option in the popup.
-    userEvent.click(within(optionsPopupEl).getByRole('option', { name: 'Flat Rate $15' }))
+    await user.click(within(optionsPopupEl).getByRole('option', { name: 'Flat Rate $15' }))
     expect(onChangeMock).toBeCalled()
   })
 
@@ -101,18 +105,18 @@ describe('[component] - ShippingMethod', () => {
     expect(headings.length).toBe(3)
   })
 
-  it('should call onClickStoreLocatorMock when click onClickStoreLocator for pickupitems only', () => {
+  it('should call onClickStoreLocatorMock when click onClickStoreLocator for pickupitems only', async () => {
     const params = {
       shipItems: Common.args?.shipItems as Maybe<CrOrderItem>[],
       pickupItems: Common.args?.pickupItems as Maybe<CrOrderItem>[],
       orderShipmentMethods: shippingRateMock.orderShipmentMethods,
       onShippingMethodChange: (name: string, value: string) => ({ name, value }),
     }
-    setup(params)
+    const { user } = setup(params)
     const changeStore = params?.shipItems[0]?.purchaseLocation
       ? screen.getByText(/change-store/i)
       : screen.getByText(/select-store/i)
-    userEvent.click(changeStore)
+    await user.click(changeStore)
     expect(onClickStoreLocatorMock).toHaveBeenCalled()
   })
 })
