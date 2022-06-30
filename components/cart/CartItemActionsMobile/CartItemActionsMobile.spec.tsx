@@ -11,8 +11,9 @@ const { CartAction } = composeStories(stories)
 describe('[component] - CartItemActionsMobile', () => {
   const setup = () => {
     const onMenuItemSelectionMock = jest.fn()
+    const user = userEvent.setup()
     render(<CartAction onMenuItemSelection={onMenuItemSelectionMock} />)
-    return { onMenuItemSelectionMock }
+    return { onMenuItemSelectionMock, user }
   }
 
   it('should render component', () => {
@@ -22,11 +23,11 @@ describe('[component] - CartItemActionsMobile', () => {
     expect(buttonElement).toBeVisible()
   })
 
-  it('should show popover menu when user clicks on icon button', () => {
-    setup()
+  it('should show popover menu when user clicks on icon button', async () => {
+    const { user } = setup()
 
     const buttonElement = screen.getByRole('button')
-    userEvent.click(buttonElement)
+    await user.click(buttonElement)
 
     const items = screen.getAllByRole('menuitem')
     const menuItems = items.map((item) => item.textContent)
@@ -34,10 +35,10 @@ describe('[component] - CartItemActionsMobile', () => {
     expect(menuItems).toStrictEqual(CartAction?.args?.actions)
   })
 
-  it('should call onMenuItemClick function when user selects any menu item', () => {
-    const { onMenuItemSelectionMock } = setup()
+  it('should call onMenuItemClick function when user selects any menu item', async () => {
+    const { onMenuItemSelectionMock, user } = setup()
     const buttonElement = screen.getByRole('button')
-    userEvent.click(buttonElement)
+    await user.click(buttonElement)
 
     const items = screen.getAllByRole('menuitem')
     items[0].click()
@@ -46,15 +47,15 @@ describe('[component] - CartItemActionsMobile', () => {
   })
 
   it('should hide popover menu when user selects menu item', async () => {
-    setup()
+    const { user } = setup()
     const buttonElement = screen.getByRole('button')
-    userEvent.click(buttonElement)
+    await user.click(buttonElement)
 
     const menu = screen.getByRole('menu')
     const menuItems = screen.getAllByRole('menuitem')
 
     const menuItem = menuItems[0]
-    userEvent.click(menuItem)
+    await user.click(menuItem)
 
     expect(menu).not.toBeVisible()
   })

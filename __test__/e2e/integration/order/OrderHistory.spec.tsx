@@ -10,6 +10,7 @@ const { Common } = composeStories(stories)
 
 describe('[component] - OrderHistory', () => {
   it('should display ViewOrderDetails component when user clicks on any Order Item', async () => {
+    const user = userEvent.setup()
     render(<Common {...Common?.args} />)
 
     const orderHistoryItem = screen.getAllByTestId('history-item')
@@ -17,7 +18,7 @@ describe('[component] - OrderHistory', () => {
     const viewOrderDetailsBefore = screen.queryByRole('heading', { name: /view-order-details/i })
     expect(viewOrderDetailsBefore).not.toBeInTheDocument()
 
-    userEvent.click(orderHistoryItem[0])
+    await user.click(orderHistoryItem[0])
 
     const viewOrderDetailsAfter = screen.getByRole('heading', { name: /view-order-details/i })
     await waitFor(() => expect(viewOrderDetailsAfter).toBeInTheDocument())

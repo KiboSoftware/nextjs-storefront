@@ -12,7 +12,13 @@ import * as stories from './PromoCodeBadge.stories' // import all stories from t
 const { PromocodeBadgeComponent, PromocodeBadge } = composeStories(stories)
 
 describe('PromoCode Component', () => {
-  const setup = () => render(<PromocodeBadgeComponent {...PromocodeBadgeComponent.args} />)
+  const setup = () => {
+    const user = userEvent.setup()
+    render(<PromocodeBadgeComponent {...PromocodeBadgeComponent.args} />)
+    return {
+      user,
+    }
+  }
   const userEnteredText = 'T'
 
   it('should render PromoCode text', () => {
@@ -36,10 +42,10 @@ describe('PromoCode Component', () => {
     expect(PromoCode).toBeVisible()
   })
 
-  it('should enable button', () => {
-    setup()
+  it('should enable button', async () => {
+    const { user } = setup()
     const PromoCode = screen.getByRole('textbox')
-    userEvent.click(PromoCode, 'SAVE50')
+    await user.click(PromoCode, 'SAVE50')
     expect(PromoCode).toBeInTheDocument('SAVE50')
     const ApplyButton = screen.getByTestId('promo-button')
     expect(ApplyButton).toBeInTheDocument()
@@ -63,13 +69,13 @@ describe('PromoCode Component', () => {
     expect(ApplyButton).toBeDisabled()
   })
 
-  it('should enable Apply button when a user enters Promo code', () => {
-    setup()
+  it('should enable Apply button when a user enters Promo code', async () => {
+    const { user } = setup()
 
     const input = screen.getByRole('textbox')
     const ApplyButton = screen.getByTestId('promo-button')
     expect(ApplyButton).toBeDisabled()
-    userEvent.type(input, userEnteredText)
+    await user.type(input, userEnteredText)
 
     expect(input).toHaveValue(userEnteredText)
     expect(ApplyButton).toBeEnabled()
@@ -83,14 +89,14 @@ describe('PromoCode Component', () => {
     expect(PromoCodebutton).toBeDisabled()
   })
 
-  it('should display promocode when a user enter and apply it', () => {
-    setup()
+  it('should display promocode when a user enter and apply it', async () => {
+    const { user } = setup()
     const input = screen.getByRole('textbox')
     const PromoCodebutton = screen.getByRole('button', { name: /apply/i })
-    userEvent.type(input, userEnteredText)
+    await user.type(input, userEnteredText)
     expect(input).toHaveValue(userEnteredText)
 
-    userEvent.click(PromoCodebutton)
+    await user.click(PromoCodebutton)
     expect(screen.getByTestId('promotype')).toBeInTheDocument('SAVE50')
   })
 })

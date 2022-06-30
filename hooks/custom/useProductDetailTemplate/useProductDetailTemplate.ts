@@ -86,6 +86,7 @@ export const useProductDetailTemplate = (props: UseProductDetailTemplateProps) =
             shopperEnteredValue: selected?.shopperEnteredValue,
           }
         }) as ProductOptionSelectionInput[]
+
       setUpdatedShopperEnteredValues(responseOptions)
       setCurrentProduct({ ...currentProduct, options: configureProductResponse.options })
     } catch (err) {

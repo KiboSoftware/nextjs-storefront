@@ -40,24 +40,26 @@ describe('[component] KiboTextbox component', () => {
     expect(helperText).toHaveAttribute('aria-errormessage', WithErrorDescription.args.helperText)
   })
 
-  it('should call onChange method when user input data', () => {
+  it('should call onChange method when user input data', async () => {
     const onChangeMock = jest.fn()
+    const user = userEvent.setup()
     render(<WithLabel {...WithLabel.args} onChange={onChangeMock} />)
     const input = screen.getByRole('textbox', {
       name: WithLabel.args.label,
     })
 
-    userEvent.type(input, 'Test')
+    await user.type(input, 'Test')
 
     expect(onChangeMock).toHaveBeenCalledTimes(4)
   })
 
-  it('should render endAdornment icon when icon is provided and should call onIconClick when icon is clicked', () => {
+  it('should render endAdornment icon when icon is provided and should call onIconClick when icon is clicked', async () => {
     const onIconClickMock = jest.fn()
+    const user = userEvent.setup()
     render(<WithIcon {...WithIcon.args} onIconClick={onIconClickMock} />)
     const icon = screen.getByRole('button')
 
-    userEvent.click(icon)
+    await user.click(icon)
 
     expect(icon).toBeVisible()
     expect(onIconClickMock).toHaveBeenCalled()

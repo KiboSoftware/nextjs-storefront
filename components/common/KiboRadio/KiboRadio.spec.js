@@ -18,14 +18,15 @@ describe('[component] - KiboRadio', () => {
     expect(screen.getByText(Common.args.title)).toBeVisible()
   })
 
-  it('should call onChange when other options are clicked', () => {
+  it('should call onChange when other options are clicked', async () => {
     const onChangeMock = jest.fn()
+    const user = userEvent.setup()
     render(<Common {...Common.args} onChange={onChangeMock} />)
     const radio = screen.getByRole('radio', {
       name: /radio option 3/i,
     })
 
-    userEvent.click(radio)
+    await user.click(radio)
     expect(onChangeMock).toBeCalled()
   })
 })

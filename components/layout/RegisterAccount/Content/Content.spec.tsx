@@ -21,8 +21,9 @@ jest.mock('@/components/common/PasswordValidation/PasswordValidation', () => Pas
 describe('[components] Register Account(Content)', () => {
   const setup = () => {
     const onRegisterNowMock = jest.fn()
+    const user = userEvent.setup()
     render(<Common setAutoFocus={false} onRegisterNow={onRegisterNowMock} />)
-    return { onRegisterNowMock }
+    return { onRegisterNowMock, user }
   }
 
   it('should render component', () => {
@@ -43,7 +44,7 @@ describe('[components] Register Account(Content)', () => {
   })
 
   it('should create new account when user click on createAccount button', async () => {
-    const { onRegisterNowMock } = setup()
+    const { onRegisterNowMock, user } = setup()
 
     const emailInput = screen.getByRole('textbox', { name: /email/i })
     const registerAccountFormFirstNameInput = screen.getByRole('textbox', { name: /first-name/i })
@@ -57,7 +58,7 @@ describe('[components] Register Account(Content)', () => {
     fireEvent.change(registerAccountFormPasswordInput, { target: { value: 'Example@1234' } })
 
     await waitFor(() => expect(createAccountButton).toBeEnabled())
-    userEvent.click(createAccountButton)
+    await user.click(createAccountButton)
     await waitFor(() => expect(onRegisterNowMock).toHaveBeenCalled())
     await waitFor(() => expect(onRegisterNowMock).toHaveBeenCalledWith(formDataMock))
   })

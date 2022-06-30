@@ -10,7 +10,10 @@ const { Common } = composeStories(stories)
 describe('[components] - AddressForm integration', () => {
   const contact = stories.WithProps.args?.contact as Contact
   const setup = (params = {}) => {
+    const user = userEvent.setup()
     render(<Common {...params} />)
+
+    return { user }
   }
 
   it('should render component', () => {
@@ -43,12 +46,12 @@ describe('[components] - AddressForm integration', () => {
   describe('should show user entered values', () => {
     it('firstName', async () => {
       // arrange
-      setup()
+      const { user } = setup()
 
       // act
       const firstName = screen.getByRole('textbox', { name: /first-name/i })
       await act(async () => {
-        userEvent.type(firstName, contact.firstName)
+        await user.type(firstName, contact.firstName)
       })
 
       // assert
@@ -57,12 +60,12 @@ describe('[components] - AddressForm integration', () => {
 
     it('lastNameOrSurname', async () => {
       // arrange
-      setup()
+      const { user } = setup()
 
       // act
       const lastNameOrSurname = screen.getByRole('textbox', { name: /last-name-or-sur-name/i })
       await act(async () => {
-        userEvent.type(lastNameOrSurname, contact.lastNameOrSurname)
+        await user.type(lastNameOrSurname, contact.lastNameOrSurname)
       })
 
       // assert
@@ -71,12 +74,12 @@ describe('[components] - AddressForm integration', () => {
 
     it('address1', async () => {
       // arrange
-      setup()
+      const { user } = setup()
 
       // act
       const address1 = screen.getByRole('textbox', { name: /address1/i })
       await act(async () => {
-        userEvent.type(address1, contact.address.address1)
+        await user.type(address1, contact.address.address1)
       })
 
       // assert
@@ -85,12 +88,12 @@ describe('[components] - AddressForm integration', () => {
 
     it('address2', async () => {
       // arrange
-      setup()
+      const { user } = setup()
 
       // act
       const address2 = screen.getByRole('textbox', { name: /address2/i })
       await act(async () => {
-        userEvent.type(address2, contact.address.address2)
+        await user.type(address2, contact.address.address2)
       })
 
       // assert
@@ -99,12 +102,12 @@ describe('[components] - AddressForm integration', () => {
 
     it('cityOrTown', async () => {
       // arrange
-      setup()
+      const { user } = setup()
 
       // act
       const cityOrTown = screen.getByRole('textbox', { name: /city/i })
       await act(async () => {
-        userEvent.type(cityOrTown, contact.address.cityOrTown)
+        await user.type(cityOrTown, contact.address.cityOrTown)
       })
 
       // assert
@@ -113,12 +116,12 @@ describe('[components] - AddressForm integration', () => {
 
     it('stateOrProvince', async () => {
       // arrange
-      setup()
+      const { user } = setup()
 
       // act
       const stateOrProvince = screen.getByRole('textbox', { name: /state-or-province/i })
       await act(async () => {
-        userEvent.type(stateOrProvince, contact.address.stateOrProvince)
+        await user.type(stateOrProvince, contact.address.stateOrProvince)
       })
 
       // assert
@@ -127,12 +130,12 @@ describe('[components] - AddressForm integration', () => {
 
     it('postalOrZipCode', async () => {
       // arrange
-      setup()
+      const { user } = setup()
 
       // act
       const postalOrZipCode = screen.getByRole('textbox', { name: /postal-or-zip-code/i })
       await act(async () => {
-        userEvent.type(postalOrZipCode, contact.address.postalOrZipCode)
+        await user.type(postalOrZipCode, contact.address.postalOrZipCode)
       })
 
       // assert
@@ -141,12 +144,12 @@ describe('[components] - AddressForm integration', () => {
 
     it('phoneNumbers.home', async () => {
       // arrange
-      setup()
+      const { user } = setup()
 
       // act
       const phoneNumberHome = screen.getByRole('textbox', { name: /phone-number/i })
       await act(async () => {
-        userEvent.type(phoneNumberHome, contact.phoneNumbers.home)
+        await user.type(phoneNumberHome, contact.phoneNumbers.home)
       })
 
       // assert

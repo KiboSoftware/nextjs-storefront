@@ -11,16 +11,21 @@ const { Common } = composeStories(stories)
 
 describe('[components] - MegaMenu Integration', () => {
   const setup = () => {
+    const user = userEvent.setup()
     render(<Common {...Common.args} />)
+
+    return {
+      user,
+    }
   }
 
   it('should display menu items and advertisment while hovering on category', async () => {
-    setup()
+    const { user } = setup()
 
     const category = Common.args?.categoryTree?.filter((c) => c?.isDisplayed === true) || []
     const childrenCategories = category[0]?.childrenCategories || []
     const menuItems = screen.getAllByRole('group')
-    userEvent.hover(menuItems[0])
+    await user.hover(menuItems[0])
 
     childrenCategories.forEach((cat) => {
       const name = screen.getByText(cat?.content?.name || '')

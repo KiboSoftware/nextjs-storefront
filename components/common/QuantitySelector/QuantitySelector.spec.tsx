@@ -10,7 +10,7 @@ describe('[components] - QuantitySelector', () => {
     const label = ''
     const onIncreaseMock = jest.fn()
     const onDecreaseMock = jest.fn()
-
+    const user = userEvent.setup()
     render(
       <QuantitySelector
         quantity={defaultQuantity}
@@ -23,6 +23,7 @@ describe('[components] - QuantitySelector', () => {
     return {
       onIncreaseMock,
       onDecreaseMock,
+      user,
     }
   }
 
@@ -67,24 +68,24 @@ describe('[components] - QuantitySelector', () => {
 
   it('should call onIncrease action when user clicks on Increase(+) button', async () => {
     // arrange
-    const { onIncreaseMock } = setup()
+    const { onIncreaseMock, user } = setup()
 
     // act
     const increaseButton = screen.getByRole('button', { name: 'increase' })
-    userEvent.click(increaseButton)
+    await user.click(increaseButton)
 
     // assert
     expect(onIncreaseMock).toHaveBeenCalledTimes(1)
   })
 
-  it('should call onDecrease action when user clicks on Decrease(-) button and Quantity > 1', () => {
+  it('should call onDecrease action when user clicks on Decrease(-) button and Quantity > 1', async () => {
     // arrange
     const defaultQuantity = 2
-    const { onDecreaseMock } = setup(defaultQuantity)
+    const { onDecreaseMock, user } = setup(defaultQuantity)
 
     // act
     const decreaseButton = screen.getByRole('button', { name: 'decrease' })
-    userEvent.click(decreaseButton)
+    await user.click(decreaseButton)
 
     // assert
     expect(onDecreaseMock).toHaveBeenCalledTimes(1)

@@ -12,11 +12,19 @@ import * as stories from './ImageGallery.stories'
 const { Gallery, Zoomed } = composeStories(stories)
 
 const setupGallery = () => {
+  const user = userEvent.setup()
   render(<Gallery {...Gallery.args} />)
+  return {
+    user,
+  }
 }
 
 const setupZoomedGallery = () => {
+  const user = userEvent.setup()
   render(<Zoomed {...Zoomed.args} />)
+  return {
+    user,
+  }
 }
 
 const setUpTouchElement = () => {
@@ -105,7 +113,7 @@ describe('[component] ImageGallery component', () => {
     })
 
     it('should call handleVerticalSlider if clicked on downArrowButton', async () => {
-      setupGallery()
+      const { user } = setupGallery()
 
       Element.prototype.scrollBy = jest.fn()
 
@@ -113,7 +121,7 @@ describe('[component] ImageGallery component', () => {
         name: /down/i,
       })
 
-      userEvent.click(downArrowButton)
+      await user.click(downArrowButton)
 
       const upArrowButton = await screen.findByRole('button', {
         name: /up/i,
@@ -122,8 +130,8 @@ describe('[component] ImageGallery component', () => {
       expect(upArrowButton).toBeVisible()
     })
 
-    it('should change the selected thumbnail on click', () => {
-      setupGallery()
+    it('should change the selected thumbnail on click', async () => {
+      const { user } = setupGallery()
 
       const thumbnails = screen.getAllByLabelText(/kibo-image-thumbnail/)
 
@@ -132,7 +140,7 @@ describe('[component] ImageGallery component', () => {
         else expect(thumbnail).toHaveAttribute('aria-selected', 'false')
       })
 
-      userEvent.click(thumbnails[1])
+      await user.click(thumbnails[1])
 
       thumbnails.forEach((thumbnail, i) => {
         if (i === 1) expect(thumbnail).toHaveAttribute('aria-selected', 'true')
@@ -181,8 +189,8 @@ describe('[component] ImageGallery component', () => {
       expect(screen.getByText(Gallery.args.title)).toBeVisible()
     })
 
-    it('should change the selected thumbnail on left/right arrow click', () => {
-      setupZoomedGallery()
+    it('should change the selected thumbnail on left/right arrow click', async () => {
+      const { user } = setupZoomedGallery()
 
       const thumbnails = screen.getAllByLabelText(/kibo-image-thumbnail/)
 
@@ -194,11 +202,11 @@ describe('[component] ImageGallery component', () => {
         name: /next/i,
       })
 
-      userEvent.click(nextButton)
+      await user.click(nextButton)
 
       expect(thumbnails[1]).toHaveAttribute('aria-selected', 'true')
 
-      userEvent.click(previousButton)
+      await user.click(previousButton)
 
       expect(thumbnails[0]).toHaveAttribute('aria-selected', 'true')
     })

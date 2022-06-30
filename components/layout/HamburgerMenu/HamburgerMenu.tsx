@@ -52,6 +52,7 @@ const HamburgerMenu = (props: HamburgerMenuProps) => {
   const router = useRouter()
 
   const toggleDrawer = (open: boolean) => {
+    console.log('toggle clicked ===============')
     setIsDrawerOpen(open)
   }
 

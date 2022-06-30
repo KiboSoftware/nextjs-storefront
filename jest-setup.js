@@ -24,3 +24,5 @@ jest.mock('next-i18next', () => ({
 beforeAll(() => server.listen())
 afterEach(() => server.resetHandlers())
 afterAll(() => server.close())
+
+jest.setTimeout(15000)

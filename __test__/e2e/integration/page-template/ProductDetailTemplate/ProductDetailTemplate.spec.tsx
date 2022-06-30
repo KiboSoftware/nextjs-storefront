@@ -2,7 +2,7 @@ import React from 'react'
 
 import '@testing-library/jest-dom'
 import { composeStories } from '@storybook/testing-react'
-import { render, screen, waitFor, fireEvent, within } from '@testing-library/react'
+import { render, screen, waitFor, fireEvent, within, act, cleanup } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 
 import { ProductCustomMock } from '@/__mocks__/stories/ProductCustomMock'
@@ -14,35 +14,41 @@ const { Common } = composeStories(stories)
 const mockedProduct = ProductCustomMock
 
 const setup = () => {
+  const user = userEvent.setup()
   render(<Common {...Common.args} />)
+
+  return {
+    user,
+  }
 }
 
+afterEach(() => {
+  cleanup()
+})
+
 describe('[component] - ProductDetailTemplate integration', () => {
-  it('should handle quantity selector', () => {
-    setup()
+  it('should handle quantity selector ', async () => {
+    const { user } = setup()
 
     const input = screen.getByRole('textbox', { name: 'quantity' })
-
     const increaseButton = screen.getByRole('button', { name: 'increase' })
 
-    userEvent.click(increaseButton)
+    await act(async () => {
+      await user.click(increaseButton)
+    })
 
-    expect(input).toHaveValue('2')
-
-    const decreaseButton = screen.getByRole('button', { name: 'decrease' })
-
-    userEvent.click(decreaseButton)
-
-    expect(input).toHaveValue('1')
+    await waitFor(() => {
+      expect(input).toHaveValue('2')
+    })
   })
 
-  it('should show all the Product Properties', () => {
-    setup()
+  it('should show all the Product Properties', async () => {
+    const { user } = setup()
 
     const { properties } = productGetters.getProductDetails(mockedProduct)
 
     const accordian = screen.getByTestId('accordian')
-    userEvent.click(accordian)
+    await user.click(accordian)
 
     properties?.map((prop) => {
       expect(screen.getByText(new RegExp(prop.name as string))).toBeVisible()
@@ -51,14 +57,14 @@ describe('[component] - ProductDetailTemplate integration', () => {
   })
 
   it('should handle Color Selector', async () => {
-    setup()
+    const { user } = setup()
 
     const { productOptions } = productGetters.getProductDetails(mockedProduct)
 
     if (productOptions?.colourOptions?.values) {
       const colorOption = productOptions?.colourOptions?.values[0]?.value
       const option = screen.getByTestId(new RegExp(`colorvalue-${colorOption}`))
-      userEvent.click(option)
+      await user.click(option)
 
       await waitFor(() => {
         expect(screen.getByTestId(new RegExp(`colorvalue-${colorOption}-selected`))).toBeVisible()
@@ -67,7 +73,7 @@ describe('[component] - ProductDetailTemplate integration', () => {
   })
 
   it('should handle ProductVariantSizeSelector', async () => {
-    setup()
+    const { user } = setup()
 
     const { productOptions } = productGetters.getProductDetails(mockedProduct)
 
@@ -75,7 +81,7 @@ describe('[component] - ProductDetailTemplate integration', () => {
       productOptions?.sizeOptions?.values && productOptions?.sizeOptions?.values[0]?.value
     )
 
-    userEvent.click(sizeOption)
+    await user.click(sizeOption)
 
     await waitFor(() => {
       expect(screen.getByTestId(new RegExp(`size-options-${sizeOption}-selected`))).toBeVisible()
@@ -83,7 +89,7 @@ describe('[component] - ProductDetailTemplate integration', () => {
   })
 
   it('should handle ProductOptionSelect', async () => {
-    setup()
+    const { user } = setup()
 
     const { productOptions } = productGetters.getProductDetails(mockedProduct)
 
@@ -98,15 +104,14 @@ describe('[component] - ProductDetailTemplate integration', () => {
 
     const listbox = within(screen.getByRole('listbox'))
 
-    userEvent.click(listbox.getByText(mockOption))
-
+    await user.click(listbox.getByText(mockOption))
     await waitFor(() => {
       expect(ProductOptionSelect).toHaveTextContent(mockOption)
     })
-  }, 10000)
+  })
 
   it('should handle ProductOptionTextbox', async () => {
-    setup()
+    const { user } = setup()
 
     const { productOptions } = productGetters.getProductDetails(mockedProduct)
 
@@ -114,16 +119,17 @@ describe('[component] - ProductDetailTemplate integration', () => {
       name: productOptions?.textBoxOptions[0]?.attributeDetail?.name as string,
     })
 
-    userEvent.type(textbox, 'Test')
-    userEvent.tab()
+    await user.type(textbox, 'Test')
+
+    await user.tab()
 
     await waitFor(() => {
       expect(textbox).toHaveValue('Test')
     })
-  }, 10000)
+  })
 
   it('should handle ProductOptionCheckbox', async () => {
-    setup()
+    const { user } = setup()
 
     const checkbox = within(screen.getByTestId('kibo-product-option-checkbox')).getByRole(
       'checkbox'
@@ -131,7 +137,7 @@ describe('[component] - ProductDetailTemplate integration', () => {
 
     expect(checkbox).not.toBeChecked()
 
-    userEvent.click(checkbox)
+    await user.click(checkbox)
 
     await waitFor(() => {
       expect(checkbox).toBeChecked()

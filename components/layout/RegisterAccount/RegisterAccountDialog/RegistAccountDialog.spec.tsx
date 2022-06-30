@@ -31,7 +31,8 @@ jest.mock('../../../common/KiboDialog/KiboDialog', () => RegisterAccountDialogMo
 
 describe('[components] Register Account Dialog', () => {
   const onLoginToYourAccountMock = jest.fn()
-  const setup = (params = {}) =>
+  const setup = (params = {}) => {
+    const user = userEvent.setup()
     render(
       <Common
         {...params}
@@ -39,9 +40,13 @@ describe('[components] Register Account Dialog', () => {
         onLoginToYourAccountDialogToggle={onLoginToYourAccountMock}
       />
     )
+    return {
+      user,
+    }
+  }
 
-  it('should render component', () => {
-    setup({
+  it('should render component', async () => {
+    const { user } = setup({
       isOpen: true,
     })
 
@@ -50,7 +55,7 @@ describe('[components] Register Account Dialog', () => {
     const registerAccountContentComponent = screen.getByTestId('register-account-content-component')
     const loginToYourAccountLink = screen.getByText(/login-to-your-account/i)
 
-    userEvent.click(loginToYourAccountLink)
+    await user.click(loginToYourAccountLink)
 
     expect(registerAccountDialog).toBeVisible()
     expect(registerAccountTitle).toBeVisible()

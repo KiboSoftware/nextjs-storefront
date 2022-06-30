@@ -11,7 +11,11 @@ const { Tiles } = composeStories(stories)
 describe('[components] Fulfillment Options Component', () => {
   const onRemoveSelectedTileMock = jest.fn()
   const setup = () => {
+    const user = userEvent.setup()
     render(<Tiles onRemoveSelectedTile={onRemoveSelectedTileMock} />)
+    return {
+      user,
+    }
   }
 
   it('should render component', () => {
@@ -25,11 +29,11 @@ describe('[components] Fulfillment Options Component', () => {
     expect(tiles).toHaveLength(Tiles?.args?.appliedFilters?.length || 0)
   })
 
-  it('should remove filter tile when users clicks on cross icon', () => {
-    setup()
+  it('should remove filter tile when users clicks on cross icon', async () => {
+    const { user } = setup()
     const closeIcon = screen.getAllByTestId('CloseIcon')
 
-    userEvent.click(closeIcon[0])
+    await user.click(closeIcon[0])
     expect(onRemoveSelectedTileMock).toHaveBeenCalled()
   })
 })
