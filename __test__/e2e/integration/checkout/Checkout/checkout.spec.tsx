@@ -133,52 +133,71 @@ describe('[components] Checkout integration', () => {
 
   it('should go to details step when click on edit personal details', async () => {
     renderWithQueryClient(<Common {...Common.args} initialStep={3} />)
-    const editPersonalDetails = screen.getByTestId(/edit-personal-details/i)
 
+    let personalDetailsStep = screen.queryByTestId('checkout-details')
+
+    expect(personalDetailsStep).not.toBeInTheDocument()
+
+    const editPersonalDetails = screen.getByTestId(/edit-personal-details/i)
     editPersonalDetails.focus()
 
     userEvent.click(editPersonalDetails)
 
-    const personalDetailsStep = screen.getByTestId(/checkout-details/i)
+    personalDetailsStep = screen.getByTestId(/checkout-details/i)
 
     expect(personalDetailsStep).toBeInTheDocument()
   })
 
   it('should go to shipping step when click on edit shipping details', async () => {
     renderWithQueryClient(<Common {...Common.args} initialStep={3} />)
+
+    let shippingStep = screen.queryByTestId('checkout-shipping')
+
+    expect(shippingStep).not.toBeInTheDocument()
+
     const editShippingDetails = screen.getByTestId(/edit-shipping-details/i)
 
     editShippingDetails.focus()
 
     userEvent.click(editShippingDetails)
 
-    const shippingStep = screen.getByTestId(/checkout-shipping/i)
+    shippingStep = screen.getByTestId(/checkout-shipping/i)
 
     expect(shippingStep).toBeInTheDocument()
   })
 
   it('should go to payment step when click on edit billing address', async () => {
     renderWithQueryClient(<Common {...Common.args} initialStep={3} />)
+
+    let paymentStep = screen.queryByTestId('checkout-payment')
+
+    expect(paymentStep).not.toBeInTheDocument()
+
     const editBillingDetails = screen.getByTestId(/edit-billing-address/i)
 
     editBillingDetails.focus()
 
     userEvent.click(editBillingDetails)
 
-    const paymentStep = screen.getByTestId(/checkout-payment/i)
+    paymentStep = screen.getByTestId(/checkout-payment/i)
 
     expect(paymentStep).toBeInTheDocument()
   })
 
   it('should go to payment step when click on edit payment method', async () => {
     renderWithQueryClient(<Common {...Common.args} initialStep={3} />)
+
+    let paymentStep = screen.queryByTestId('checkout-payment')
+
+    expect(paymentStep).not.toBeInTheDocument()
+
     const editPaymentMethod = screen.getByTestId(/edit-payment-method/i)
 
     editPaymentMethod.focus()
 
     userEvent.click(editPaymentMethod)
 
-    const paymentStep = screen.getByTestId(/checkout-payment/i)
+    paymentStep = screen.getByTestId(/checkout-payment/i)
 
     expect(paymentStep).toBeInTheDocument()
   })
