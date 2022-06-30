@@ -8,6 +8,7 @@ import { AuthContextProvider, useAuthContext } from './AuthContext'
 import { server } from '@/__mocks__/msw/server'
 import { renderWithQueryClient } from '@/__test__/utils/renderWithQueryClient'
 import * as cookieHelper from '@/lib/helpers/cookieHelper'
+import { act } from 'react-dom/test-utils'
 
 const mockOnSuccessCallBack = jest.fn()
 const loginInputs = {
@@ -107,7 +108,7 @@ describe('[context] - AuthContext', () => {
       const isLoggedIn = await screen.findByTestId('is-logged-in')
       const userFirstName = screen.getByTestId('user-first-name')
 
-      user.click(registerButton)
+      await user.click(registerButton)
       const authError = await screen.findByTestId('auth-error')
       await waitFor(() => expect(isLoggedIn).toHaveTextContent('true'))
       await waitFor(() => expect(userFirstName).toHaveTextContent('Sunil'))
@@ -150,8 +151,7 @@ describe('[context] - AuthContext', () => {
       const { user } = setup(<TestComponent />)
       const registerButton = screen.getByRole('button', { name: 'Create account' })
       const userFirstName = screen.getByTestId('user-first-name')
-
-      user.click(registerButton)
+      await user.click(registerButton)
       const isLoggedIn = await screen.findByTestId('is-logged-in')
       const authError = await screen.findByTestId('auth-error')
       expect(isLoggedIn).toHaveTextContent('false')
@@ -165,7 +165,7 @@ describe('[context] - AuthContext', () => {
       const logoutButton = screen.getByRole('button', { name: 'Logout' })
       const removeClientCookieSpy = jest.spyOn(cookieHelper, 'removeClientCookie')
 
-      user.click(logoutButton)
+      await user.click(logoutButton)
 
       await waitFor(() => expect(removeClientCookieSpy).toHaveBeenCalled())
     })
