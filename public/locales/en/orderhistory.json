@@ -1,0 +1,11 @@
+{
+  "view-order-status": "View Order Status",
+  "checking-the-status-of-your-order-is-fast-and-simple": "Checking the status of your order is fast and simple!",
+  "simply-enter-your-order-number-and-billing-email-to-track-your-order": "Simply enter your order number and billing email to track your order.",
+  "check-order-status": "Check Order Status",
+  "order-number": "Order Number",
+  "billing-email": "Billing Email",
+  "order-number-is-required": "Order number is required",
+  "billing-email-is-required": "Billing Email is required",
+  "billing-email-must-be-a-valid-email": "Billing Email must be a valid email"
+}
