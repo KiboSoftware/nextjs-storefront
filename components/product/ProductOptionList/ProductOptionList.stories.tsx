@@ -16,16 +16,19 @@ const options: CrProductOption[] = [
     attributeFQN: 'Tenant~color',
     name: 'Color',
     value: 'Blue',
+    stringValue: 'Blue',
   },
   {
     attributeFQN: 'Tenant~size',
     name: 'Size',
     value: 'Large',
+    stringValue: 'Large',
   },
   {
     attributeFQN: 'Tenant~material',
     name: 'Material',
     value: 'Plastic',
+    stringValue: 'Plastic',
   },
 ]
 

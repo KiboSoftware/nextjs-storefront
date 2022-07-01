@@ -10,9 +10,10 @@ import {
   ReviewStep,
   ShippingStep,
   PaymentStep,
-  type Action,
+  OrderReview,
+  OrderSummary,
 } from '@/components/checkout'
-import OrderSummary from '@/components/common/OrderSummary/OrderSummary'
+import type { Action } from '@/components/checkout'
 import { FormStates } from '@/lib/constants'
 
 import type { Order } from '@/lib/gql/types'
@@ -38,6 +39,9 @@ const Checkout = (props: CheckoutProps) => {
   const [activeStep, setActiveStep] = useState<number>(initialStep)
   const [activeStepStatus, setActiveStepStatus] = useState<string>(FormStates.INCOMPLETE)
 
+  const detailsStepIndex = steps.findIndex((step) => step === t('common:details'))
+  const reviewStepIndex = steps.findIndex((step) => step === t('review'))
+
   const handleBack = () => {
     setActiveStep(activeStep - 1)
   }
@@ -53,20 +57,19 @@ const Checkout = (props: CheckoutProps) => {
     }
   }
 
-  const orderSummeryArgs = {
-    standardShippingAmount: 'Free',
-    estimatedTaxAmout: `${checkout?.taxTotal}`,
-    orderTotal: `${checkout?.total}`,
-    subTotal: `${checkout?.subtotal}`,
-    numberOfItems: `${checkout?.items?.length} items`,
-    backLabel: 'Go Back',
+  const orderSummaryArgs = {
+    nameLabel: t('order-summary'),
+    subTotalLabel: `Cart Subtotal of (${checkout?.items?.length} items)`,
+    shippingTotalLabel: 'Standard Shipping',
+    taxLabel: 'Tax',
+    totalLabel: 'Order Total',
+    subTotal: t('common:currency', { val: checkout?.subtotal }),
+    shippingTotal: t('free'),
+    tax: t('common:currency', { val: checkout?.taxTotal }),
+    total: t('common:currency', { val: checkout?.total }),
     checkoutLabel: 'Go to Checkout',
-    nameLabel: 'Order Summary',
-    cartTotalLabel: 'Cart Subtotal',
-    standardShippingLabel: 'Standard Shipping',
-    estimatedTaxLabel: 'Tax',
-    orderTotalLabel: 'Order Total',
     shippingLabel: 'Go to Shipping',
+    backLabel: 'Go Back',
   }
 
   const paymentStepParams = {
@@ -96,35 +99,46 @@ const Checkout = (props: CheckoutProps) => {
             {...paymentStepParams}
             onCompleteCallback={completeStepCallback}
           />
-          <ReviewStep />
+          <ReviewStep
+            checkout={checkout}
+            stepperStatus={activeStepStatus}
+            onCompleteCallback={completeStepCallback}
+            onBackButtonClick={handleBack}
+          />
         </KiboStepper>
       </Stack>
 
-      <Box sx={{ width: '100%', maxWidth: 428, height: 448 }}>
-        <OrderSummary {...orderSummeryArgs}>
-          {activeStep < buttonLabels.length && (
-            <Stack direction="column" gap={2}>
-              <Button
-                variant="contained"
-                sx={{ ...buttonStyle }}
-                fullWidth
-                onClick={handleNext}
-                disabled={activeStep === steps.length - 1}
-              >
-                {buttonLabels[activeStep]}
-              </Button>
-              <Button
-                variant="contained"
-                sx={{ ...buttonStyle }}
-                fullWidth
-                onClick={handleBack}
-                disabled={activeStep === 0}
-              >
-                {t('go-back')}
-              </Button>
-            </Stack>
-          )}
-        </OrderSummary>
+      <Box sx={{ width: '100%', maxWidth: 428, height: 448, paddingTop: '4.313rem' }}>
+        {activeStep != reviewStepIndex && (
+          <OrderSummary {...orderSummaryArgs}>
+            {activeStep < buttonLabels.length && (
+              <Stack direction="column" gap={2}>
+                <Button
+                  variant="contained"
+                  sx={{ ...buttonStyle }}
+                  fullWidth
+                  onClick={handleNext}
+                  disabled={activeStep === steps.length - 1}
+                >
+                  {buttonLabels[activeStep]}
+                </Button>
+                <Button
+                  variant="contained"
+                  color="secondary"
+                  sx={{ ...buttonStyle }}
+                  fullWidth
+                  onClick={handleBack}
+                  disabled={activeStep === detailsStepIndex}
+                >
+                  {t('go-back')}
+                </Button>
+              </Stack>
+            )}
+          </OrderSummary>
+        )}
+        {activeStep === reviewStepIndex && (
+          <OrderReview checkout={checkout} steps={steps} setActiveStep={setActiveStep} />
+        )}
       </Box>
     </Stack>
   )

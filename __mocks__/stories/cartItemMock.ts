@@ -34,4 +34,5 @@ export const cartItemMock: CartItemType = {
   subtotal: 219.99,
   itemTaxTotal: 13.73,
   total: 233.72,
+  shippingTotal: 0,
 }

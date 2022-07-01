@@ -49,7 +49,7 @@
   "pickup": "Pickup in Store ",
   "apply": "Apply",
   "all-departments": "All Departments",
-  "cart-sub-total": "Cart Subtotal ({{quantity}} items)",
+  "cart-sub-total": "Cart Subtotal",
   "estimated-tax": "Estimated Tax",
   "standard-shopping": "Standard Shipping",
   "currency": "{{val, currency(USD)}}",
