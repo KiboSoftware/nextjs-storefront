@@ -41,8 +41,8 @@ const initialState = {
   logout: () => '',
 }
 
-export const UserContext = createContext(initialState as AuthContextType)
-UserContext.displayName = 'AuthContext'
+export const AuthContext = createContext(initialState as AuthContextType)
+AuthContext.displayName = 'AuthContext'
 
 export const AuthContextProvider = ({ children }: AuthContextProviderProps) => {
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false)
@@ -155,11 +155,11 @@ export const AuthContextProvider = ({ children }: AuthContextProviderProps) => {
     setIsAuthenticated(user?.id ? true : false)
   }, [user])
 
-  return <UserContext.Provider value={values}>{children}</UserContext.Provider>
+  return <AuthContext.Provider value={values}>{children}</AuthContext.Provider>
 }
 
 export const useAuthContext = () => {
-  const context = useContext(UserContext)
+  const context = useContext(AuthContext)
   if (context === undefined) throw new Error('useContext must be inside a Provider with a value')
   return context
 }

@@ -6,7 +6,7 @@ import { composeStories } from '@storybook/testing-react'
 import { render, screen, act, fireEvent } from '@testing-library/react'
 
 import * as stories from '@/components/layout/RegisterAccount/RegisterAccountDialog/RegisterAccountDialog.stories'
-import { UserContext } from '@/context'
+import { AuthContext } from '@/context'
 
 const { Common } = composeStories(stories)
 
@@ -20,7 +20,7 @@ const userContextValues = {
 }
 
 const wrapper = ({ children }: { children: ReactNode }) => (
-  <UserContext.Provider value={userContextValues}>{children}</UserContext.Provider>
+  <AuthContext.Provider value={userContextValues}>{children}</AuthContext.Provider>
 )
 
 const renderComponent = () => {

@@ -7,7 +7,7 @@ import { render, screen, act, fireEvent, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 
 import * as stories from '@/components/layout/Login/LoginDialog/LoginDialog.stories'
-import { UserContext } from '@/context'
+import { AuthContext } from '@/context'
 
 const { Common } = composeStories(stories)
 const userContextValues = {
@@ -20,7 +20,7 @@ const userContextValues = {
 }
 
 const wrapper = ({ children }: { children: ReactNode }) => (
-  <UserContext.Provider value={userContextValues}>{children}</UserContext.Provider>
+  <AuthContext.Provider value={userContextValues}>{children}</AuthContext.Provider>
 )
 
 const renderComponent = () => {

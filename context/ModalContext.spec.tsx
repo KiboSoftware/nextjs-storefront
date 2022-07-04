@@ -30,11 +30,15 @@ jest.mock('../components/layout/Login/LoginDialog/LoginDialog', () => LoginDialo
 
 describe('[context] - ModalContext', () => {
   const setup = (ui: any) => {
-    return render(<ModalContextProvider>{ui}</ModalContextProvider>)
+    const user = userEvent.setup()
+    render(<ModalContextProvider>{ui}</ModalContextProvider>)
+    return {
+      user,
+    }
   }
 
   it('should show initial context values', () => {
-    setup(<TestComponent />)
+    const { user } = setup(<TestComponent />)
     const isOpen = screen.getByTestId('is-dialog-open')
     const loginModal = screen.queryByTestId('login-dialog-test')
 
@@ -51,21 +55,17 @@ describe('[context] - ModalContext', () => {
     })
 
     it('should show modal when click showModal', async () => {
-      setup(<TestComponent />)
+      const { user } = setup(<TestComponent />)
       const showModalButton = screen.getByRole('button', { name: 'Show Modal' })
-      await act(async () => {
-        userEvent.click(showModalButton)
-      })
+      await user.click(showModalButton)
       const loginModal = screen.queryByTestId('login-dialog-test')
       await waitFor(() => expect(loginModal).toBeInTheDocument())
     })
 
     it('should close modal when click closeModal', async () => {
-      setup(<TestComponent />)
+      const { user } = setup(<TestComponent />)
       const closeModalButton = screen.getByRole('button', { name: 'Close Modal' })
-      await act(async () => {
-        userEvent.click(closeModalButton)
-      })
+      await user.click(closeModalButton)
       const loginModal = screen.queryByTestId('login-dialog-test')
       await waitFor(() => expect(loginModal).not.toBeInTheDocument())
     })
