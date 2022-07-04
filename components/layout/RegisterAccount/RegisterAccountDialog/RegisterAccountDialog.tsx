@@ -3,19 +3,13 @@ import React from 'react'
 import { Typography, Box, styled, Theme, useTheme, useMediaQuery, Stack, Link } from '@mui/material'
 import { useTranslation } from 'next-i18next'
 
+import LoginDialog from '../../Login'
 import KiboDialog from '@/components/common/KiboDialog/KiboDialog'
 import Content, {
   RegisterAccountInputData,
 } from '@/components/layout/RegisterAccount/Content/Content'
-
-interface RegisterAccountDialogProps {
-  isOpen: boolean
-  isDialogCentered: boolean
-  setAutoFocus?: boolean
-  onDialogClose: () => void
-  onLoginToYourAccountDialogToggle: () => void
-  onRegisterNow: (data: RegisterAccountInputData) => void
-}
+import { useAuthContext } from '@/context'
+import { useModalContext } from '@/context/ModalContext'
 
 interface StyledThemeProps {
   theme?: Theme
@@ -43,18 +37,20 @@ const StyledTitle = styled(Typography)(({ theme }: StyledThemeProps) => ({
 }))
 const customMaxWidth = '32.375rem'
 
-const RegisterAccountDialog = (props: RegisterAccountDialogProps) => {
-  const {
-    isOpen = false,
-    setAutoFocus,
-    isDialogCentered,
-    onDialogClose,
-    onLoginToYourAccountDialogToggle,
-    onRegisterNow,
-  } = props
+const RegisterAccountDialog = () => {
   const { t } = useTranslation('common')
   const theme = useTheme()
   const mdScreen = useMediaQuery(theme.breakpoints.up('md'))
+  const { createAccount, authError } = useAuthContext()
+  const { showModal, closeModal } = useModalContext()
+
+  const handleUserRegistration = (params: RegisterAccountInputData) => {
+    createAccount(params, closeModal)
+  }
+
+  const gotoLogin = () => {
+    showModal({ Component: LoginDialog })
+  }
 
   const Title = (
     <StyledTitleComponent data-testid="title-component">
@@ -68,7 +64,7 @@ const RegisterAccountDialog = (props: RegisterAccountDialogProps) => {
         component="button"
         variant="body1"
         aria-label={t('login-to-your-account')}
-        onClick={onLoginToYourAccountDialogToggle}
+        onClick={gotoLogin}
         sx={{ textDecoration: 'underline', color: 'text.primary' }}
       >
         {t('login-to-your-account')}
@@ -78,13 +74,18 @@ const RegisterAccountDialog = (props: RegisterAccountDialogProps) => {
 
   return (
     <KiboDialog
-      isOpen={isOpen}
       Title={Title}
-      Content={<Content setAutoFocus={setAutoFocus} onRegisterNow={onRegisterNow} />}
+      Content={
+        <Content
+          setAutoFocus={true}
+          onRegisterNow={handleUserRegistration}
+          errorMessage={authError}
+        />
+      }
       Actions={Actions}
-      isDialogCentered={isDialogCentered}
+      isDialogCentered={true}
       customMaxWidth={customMaxWidth}
-      onClose={onDialogClose}
+      onClose={closeModal}
     />
   )
 }
