@@ -28,15 +28,13 @@ const buttonStyle = {
 const useViewOrderStatusSchema = () => {
   const { t } = useTranslation('orderhistory')
 
-  const schema = yup.object().shape({
+  return yup.object().shape({
     orderNumber: yup.string().required(t('order-number-is-required')),
     billingEmail: yup
       .string()
       .email(t('billing-email-must-be-a-valid-email'))
       .required(t('billing-email-is-required')),
   })
-
-  return schema
 }
 
 const ViewOrderStatus = (props: ViewOrderStatusProps) => {

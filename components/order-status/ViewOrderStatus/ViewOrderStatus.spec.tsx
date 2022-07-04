@@ -32,7 +32,7 @@ describe('[component] - ViewOrderStatus', () => {
   }
 
   it('should render component', () => {
-    const { lookupErrorMessage } = setup()
+    setup()
 
     const viewOrderStatusText = screen.getByText(/view-order-status/i)
     const checkingTheStatusOfYourOrderText = screen.getByText(
@@ -54,7 +54,7 @@ describe('[component] - ViewOrderStatus', () => {
   })
 
   it('should display lookupErrorMessage', () => {
-    const { lookupErrorMessage } = setup(WithErrorMeesage.args as ViewOrderStatusProps)
+    setup(WithErrorMeesage.args as ViewOrderStatusProps)
     const lookupMessage = screen.getByText(lookupErrorMessage as string)
     expect(lookupMessage).toBeVisible()
   })
