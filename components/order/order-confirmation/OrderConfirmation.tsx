@@ -4,7 +4,7 @@ import { Box, Container, Divider, Grid, Stack, Typography } from '@mui/material'
 import { useTranslation } from 'next-i18next'
 
 import { OrderSummary, ProductItemList } from '@/components/common'
-import ProductOptionList from '@/components/product/ProductOptionList/ProductOptionList'
+import { ProductOptionList } from '@/components/product'
 import { orderGetters } from '@/lib/getters'
 
 import type { Order } from '@/lib/gql/types'

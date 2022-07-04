@@ -1,6 +1,6 @@
 import { Variant } from '@mui/material/styles/createTypography'
 
-import ProductOption from '@/components/product/ProductOption/ProductOption'
+import { ProductOption } from '@/components/product'
 
 import type { CrProductOption } from '@/lib/gql/types'
 

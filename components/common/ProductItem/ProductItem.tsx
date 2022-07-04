@@ -13,10 +13,8 @@ import {
 } from '@mui/material'
 import { useTranslation } from 'next-i18next'
 
-import KiboImage from '@/components/common/KiboImage/KiboImage'
-import Price from '@/components/common/Price/Price'
-import ProductOption from '@/components/product/ProductOption/ProductOption'
-import ProductOptionList from '@/components/product/ProductOptionList/ProductOptionList'
+import { KiboImage, Price } from '@/components/common'
+import { ProductOption, ProductOptionList } from '@/components/product'
 import DefaultImage from '@/public/product_placeholder.svg'
 
 import type { Maybe, CrProductOption } from '@/lib/gql/types'

@@ -1,6 +1,5 @@
 export { default as AddressCard } from './AddressCard/AddressCard'
 export { default as AddressForm } from './AddressForm/AddressForm'
-export { default as AddToCart } from './AddToCart/AddToCart'
 export { default as FilterOrders } from './FilterOrders/FilterOrders'
 export { default as FilterTiles } from './FilterTiles/FilterTiles'
 export { default as FulfillmentOptions } from './FulfillmentOptions/FulfillmentOptions'
