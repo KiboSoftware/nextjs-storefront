@@ -70,10 +70,10 @@ const OrderConfirmation = ({ order }: { order: Order }) => {
           }}
         >
           <Typography variant="h1" color={'common.white'}>
-            {t('order-placed-confirmation-text')}
+            {t('your-order-was-placed-successfully')}
           </Typography>
           <Typography variant="h3" color={'common.white'} fontWeight={'normal'}>
-            {t('check-email-confirmation-text')}
+            {t('check-your-email-for-your-order-confirmation')}
           </Typography>
         </Stack>
 
@@ -84,7 +84,7 @@ const OrderConfirmation = ({ order }: { order: Order }) => {
             </Box>
             <br />
             <Typography variant="h3" sx={{ display: 'inline' }}>
-              {t('order-confirmation-to-email-text')}
+              {t('we-have-sent-the-order-confirmation-details-to')}
               <Box sx={{ fontWeight: 'bold' }}>{email}</Box>
             </Typography>
           </Container>

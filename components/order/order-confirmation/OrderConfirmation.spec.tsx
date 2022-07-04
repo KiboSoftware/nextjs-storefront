@@ -20,11 +20,15 @@ describe('[component] - ViewOrderDetails', () => {
   it('should render component', () => {
     setup()
 
-    expect(screen.getByText(/thank-you/i)).toBeVisible()
+    expect(
+      screen.getByRole('heading', {
+        name: /thank-you/i,
+      })
+    ).toBeVisible()
     expect(screen.getByText(/currency/i)).toBeVisible()
-    expect(screen.getByText(/order-placed-confirmation-text/i)).toBeVisible()
-    expect(screen.getByText(/check-email-confirmation-text/i)).toBeVisible()
-    expect(screen.getByText(/order-confirmation-to-email-text/i)).toBeVisible()
+    expect(screen.getByText(/your-order-was-placed-successfully/i)).toBeVisible()
+    expect(screen.getByText(/check-your-email-for-your-order-confirmation/i)).toBeVisible()
+    expect(screen.getByText(/we-have-sent-the-order-confirmation-details-to/i)).toBeVisible()
     expect(screen.getByText(/order-details/i)).toBeVisible()
     expect(screen.getByTestId('order-summary-component')).toBeVisible()
     expect(screen.getAllByTestId('product-item-list-component')).toHaveLength(2)
