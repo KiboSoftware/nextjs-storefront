@@ -32,7 +32,6 @@ export const ModalContextProvider = ({ children }: ModalContextProviderProps) =>
   const showModal = (showModalProps: ModalStateType) => {
     setModalState({
       ...showModalProps,
-      props: { isOpen: true, ...showModalProps.props },
     })
   }
 
