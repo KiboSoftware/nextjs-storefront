@@ -56,6 +56,7 @@ const KiboTextBox = (props: KiboTextBoxProps) => {
     onKeyDown,
     icon,
     sx,
+    value,
     onChange,
     onBlur,
     onIconClick,
@@ -75,6 +76,7 @@ const KiboTextBox = (props: KiboTextBoxProps) => {
           borderRadius: 1,
           ...sx,
         }}
+        value={value}
         id={label}
         size="small"
         error={error}
@@ -84,7 +86,9 @@ const KiboTextBox = (props: KiboTextBoxProps) => {
         }}
         placeholder={placeholder}
         onChange={(e) => onChange && onChange(e.target.name, e.target.value)}
-        onBlur={(e) => onBlur && onBlur(e.target.name, e.target.value)}
+        onBlur={(e) => {
+          onBlur && onBlur(e.target.name, e.target.value)
+        }}
         onKeyDown={onKeyDown}
         {...(icon && {
           endAdornment: (

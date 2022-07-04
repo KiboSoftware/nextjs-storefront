@@ -13,3 +13,5 @@ export {
 export { default as KiboStepper } from '@/components/checkout/KiboStepper/KiboStepper'
 export { default as ReviewStep } from '@/components/checkout/ReviewStep/ReviewStep'
 export { default as ShippingStep } from '@/components/checkout/ShippingStep/ShippingStep'
+export { default as OrderReview } from '@/components/checkout/OrderReview/OrderReview'
+export { default as OrderSummary } from '@/components/common/OrderSummary/OrderSummary'

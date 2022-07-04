@@ -1,52 +1,31 @@
 import React from 'react'
 
-import { Info } from '@mui/icons-material'
-import { Typography, Box, Divider, styled, Theme } from '@mui/material'
+import { Box, Divider } from '@mui/material'
 import { useTranslation } from 'next-i18next'
 
+import OrderPrice from '@/components/common/OrderPrice/OrderPrice'
+import type { OrderPriceProps } from '@/components/common/OrderPrice/OrderPrice'
 import ProductItem from '@/components/common/ProductItem/ProductItem'
 
-import type { CartItem as CartItemType, CrProductOption } from '@/lib/gql/types'
-
+import type { CartItem, CrProductOption } from '@/lib/gql/types'
 interface CartContentProps {
-  cartItem: CartItemType
+  cartItem: CartItem
 }
-
-interface StyledThemeProps {
-  theme?: Theme
-}
-
-const StyledPriceSection = styled(Box)(() => ({
-  padding: '0 0.438rem',
-}))
-
-const StyledPriceRow = styled(Box)(() => ({
-  display: 'flex',
-  padding: '0.563rem 0',
-}))
-
-const StyledPriceTotalRow = styled(Box)(() => ({
-  display: 'flex',
-  padding: '1.188rem 0.438rem 0.25rem 0.438rem',
-}))
-
-const StyledPriceLabel = styled(Typography)(({ theme }: StyledThemeProps) => ({
-  flex: '50%',
-  color: theme?.palette.text.primary,
-}))
-
-const StyledPriceData = styled(Typography)(({ theme }: StyledThemeProps) => ({
-  width: '1.25rem',
-  height: '1.25rem',
-  textAlign: 'right',
-  flex: '50%',
-  color: theme?.palette.text.primary,
-}))
 
 const Content = (props: CartContentProps) => {
   const { cartItem } = props
-  const { fulfillmentMethod, quantity, subtotal, itemTaxTotal, total } = cartItem
-  const { t } = useTranslation('common')
+  const { shippingTotal, quantity, subtotal, itemTaxTotal, total } = cartItem
+  const { t } = useTranslation(['checkout', 'common'])
+  const orderPriceProps: OrderPriceProps = {
+    subTotalLabel: `${t('common:cart-sub-total')} ${t('item-quantity', { count: quantity })}`,
+    shippingTotalLabel: t('common:standard-shopping'),
+    taxLabel: t('common:estimated-tax'),
+    totalLabel: t('common:total'),
+    subTotal: t('common:currency', { val: subtotal }),
+    shippingTotal: shippingTotal ? t('common:currency', { val: shippingTotal }) : t('free'),
+    tax: t('common:currency', { val: itemTaxTotal }),
+    total: t('common:currency', { val: total }),
+  }
 
   return (
     <Box sx={{ width: '100%' }} data-testid="content-component">
@@ -64,33 +43,7 @@ const Content = (props: CartContentProps) => {
         />
       </Box>
       <Divider />
-      <StyledPriceSection>
-        <StyledPriceRow>
-          <StyledPriceLabel variant="body2">
-            {t('cart-sub-total', { quantity: quantity })}
-          </StyledPriceLabel>
-          <StyledPriceData variant="body2">{t('currency', { val: subtotal })}</StyledPriceData>
-        </StyledPriceRow>
-        <StyledPriceRow>
-          <StyledPriceLabel variant="body2">{t('standard-shopping')}</StyledPriceLabel>
-          <StyledPriceData variant="body2">{fulfillmentMethod}</StyledPriceData>
-        </StyledPriceRow>
-        <StyledPriceRow>
-          <StyledPriceLabel variant="body2">
-            {t('estimated-tax')} <Info sx={{ width: '0.688rem', height: '0.688rem' }} />
-          </StyledPriceLabel>
-          <StyledPriceData variant="body2">{t('currency', { val: itemTaxTotal })}</StyledPriceData>
-        </StyledPriceRow>
-      </StyledPriceSection>
-      <Divider sx={{ margin: '0 0.438rem' }} />
-      <StyledPriceTotalRow>
-        <StyledPriceLabel variant="body2" fontWeight="bold">
-          {t('total')}
-        </StyledPriceLabel>
-        <StyledPriceData variant="body2" fontWeight="bold">
-          {t('currency', { val: total })}
-        </StyledPriceData>
-      </StyledPriceTotalRow>
+      <OrderPrice {...orderPriceProps} />
     </Box>
   )
 }

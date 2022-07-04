@@ -10,6 +10,7 @@ const { Common } = composeStories(stories)
 
 const setup = () => {
   const onCategoryClickMock = jest.fn()
+  const user = userEvent.setup()
   render(<Common {...Common.args} onCategoryClick={onCategoryClickMock} />)
   const categoryList = screen.getByRole('list')
   const listItems = within(categoryList)
@@ -18,6 +19,7 @@ const setup = () => {
     categoryList,
     listItems,
     onCategoryClickMock,
+    user,
   }
 }
 
@@ -44,13 +46,13 @@ describe('[component] CategroyNestedNavigation component', () => {
     expect(categoryListItems.length - 2).toEqual(visibleCategoriesCount)
   })
 
-  it('should render childrenCategories on click if present and render the previous categories on back click', () => {
-    const { listItems } = setup()
+  it('should render childrenCategories on click if present and render the previous categories on back click', async () => {
+    const { listItems, user } = setup()
 
     // Getting all the visible categories
     const allVisibleCategories = Common.args.categoryTree.filter((cat) => cat.isDisplayed)
 
-    userEvent.click(screen.getByText(/Camping/i))
+    await user.click(screen.getByText(/Camping/i))
 
     expect(screen.getByText(/Tents/i)).toBeVisible()
 
@@ -59,7 +61,7 @@ describe('[component] CategroyNestedNavigation component', () => {
 
     expect(listItems.getAllByRole('button').length - 2).toBe(visibleCategoriesCount)
 
-    userEvent.click(
+    await user.click(
       listItems.getByRole('button', {
         name: /back\-arrow\-button/i,
       })
@@ -70,10 +72,10 @@ describe('[component] CategroyNestedNavigation component', () => {
     expect(listItems.getAllByRole('button').length - 2).toBe(visibleCategoriesCount)
   })
 
-  it('should call onCategoryClickMock if childrenCategories are empty', () => {
-    const { onCategoryClickMock } = setup()
+  it('should call onCategoryClickMock if childrenCategories are empty', async () => {
+    const { onCategoryClickMock, user } = setup()
 
-    userEvent.click(screen.getByText(/Pets/i))
+    await user.click(screen.getByText(/Pets/i))
 
     expect(onCategoryClickMock).toBeCalled()
   })

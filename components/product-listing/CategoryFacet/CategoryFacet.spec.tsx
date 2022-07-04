@@ -14,7 +14,12 @@ const { CategoryFacetDesktop } = composeStories(stories)
 describe('[component] - CategoryFacet', () => {
   const setup = (params?: CategoryFacetProps) => {
     const props = params ? params : CategoryFacetDesktop.args
+    const user = userEvent.setup()
     render(<CategoryFacetDesktop {...props} />)
+
+    return {
+      user,
+    }
   }
 
   it('should render component', () => {
@@ -39,8 +44,8 @@ describe('[component] - CategoryFacet', () => {
     expect(backButton).toHaveAttribute('href', '/')
   })
 
-  it('should display all the children with href attribute present when user clicks on View More button', () => {
-    setup()
+  it('should display all the children with href attribute present when user clicks on View More button', async () => {
+    const { user } = setup()
 
     const childrenCategoriesLabelsBeforeClick =
       CategoryFacetDesktop?.args?.categoryFacet?.childrenCategories?.map(
@@ -60,7 +65,7 @@ describe('[component] - CategoryFacet', () => {
     )
 
     const viewMoreButton = screen.getByRole('button', { name: /view-more/i })
-    userEvent.click(viewMoreButton)
+    await user.click(viewMoreButton)
     const childrenCategoriesLabelsAfterClick =
       CategoryFacetDesktop?.args?.categoryFacet?.childrenCategories?.map(
         (category) => category.label

@@ -35,7 +35,7 @@ const Template: ComponentStory<typeof ProductItem> = (args) => (
       />
     </Box>
     <Box sx={{ py: '0.5rem' }}>
-      <QuantitySelector quantity={orderItem?.quantity} label="Qty"></QuantitySelector>
+      <QuantitySelector quantity={orderItem?.quantity as number} label="Qty"></QuantitySelector>
     </Box>
   </ProductItem>
 )
@@ -43,7 +43,7 @@ const Template: ComponentStory<typeof ProductItem> = (args) => (
 const TemplateWithPriceLabel: ComponentStory<typeof ProductItem> = (args) => (
   <ProductItem {...args}>
     <Box sx={{ py: '0.5rem' }}>
-      <QuantitySelector quantity={orderItem?.quantity} label="Qty"></QuantitySelector>
+      <QuantitySelector quantity={orderItem?.quantity as number} label="Qty"></QuantitySelector>
     </Box>
   </ProductItem>
 )

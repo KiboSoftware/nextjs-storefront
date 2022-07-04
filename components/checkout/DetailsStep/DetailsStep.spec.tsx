@@ -16,7 +16,11 @@ jest.mock('../../common/KiboTextBox/KiboTextBox', () => KiboTextBoxMock)
 
 describe('[components] Details', () => {
   const setup = (args = Common.args) => {
+    const user = userEvent.setup()
     render(<Common {...args} />)
+    return {
+      user,
+    }
   }
 
   it('should render component', () => {
@@ -46,14 +50,14 @@ describe('[components] Details', () => {
   })
 
   it('should render firstName, lastName and password when user selects "I want to create account"', async () => {
-    setup()
+    const { user } = setup()
 
     const emailInput = screen.getByTestId(/text-box-mock/i)
     expect(emailInput).toBeVisible()
 
     const iWantToCreateAccount = screen.getByRole('checkbox', { name: /showaccountfields/i })
     await act(async () => {
-      userEvent.click(iWantToCreateAccount)
+      await user.click(iWantToCreateAccount)
     })
 
     const textBoxList = screen.getAllByTestId(/text-box-mock/i)

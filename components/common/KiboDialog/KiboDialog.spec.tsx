@@ -11,7 +11,13 @@ const { Common } = composeStories(stories)
 const onCloseMock = jest.fn()
 
 describe('[components] Dialog Component', () => {
-  const setup = (params = {}) => render(<Common {...params} onClose={onCloseMock} />)
+  const setup = (params = {}) => {
+    const user = userEvent.setup()
+    render(<Common {...params} onClose={onCloseMock} />)
+    return {
+      user,
+    }
+  }
 
   it('should not render component by default', () => {
     setup({ isOpen: false })
@@ -39,14 +45,14 @@ describe('[components] Dialog Component', () => {
     expect(actions).toBeVisible()
   })
 
-  it('should close modal, when user clicks on close icon', () => {
-    setup({ isOpen: true })
+  it('should close modal, when user clicks on close icon', async () => {
+    const { user } = setup({ isOpen: true })
 
     const dialog = screen.getByRole('dialog')
     const closeIconButton = screen.getByRole('button', {
       name: /close/i,
     })
-    userEvent.click(closeIconButton)
+    await user.click(closeIconButton)
 
     expect(dialog).toBeVisible()
     expect(closeIconButton).toBeVisible()

@@ -17,8 +17,9 @@ describe('[component] - OrderHistoryItem', () => {
 
   const setup = () => {
     const onHistoryItemClickMock = jest.fn()
+    const user = userEvent.setup()
     render(<Common {...Common?.args} onHistoryItemClick={onHistoryItemClickMock} />)
-    return { onHistoryItemClickMock }
+    return { onHistoryItemClickMock, user }
   }
 
   it('should render component', () => {
@@ -35,11 +36,11 @@ describe('[component] - OrderHistoryItem', () => {
     expect(orderStatusText).toBeVisible()
   })
 
-  it('should call onHistoryItemClick callback function when user clicks on HistoryItem', () => {
-    const { onHistoryItemClickMock } = setup()
+  it('should call onHistoryItemClick callback function when user clicks on HistoryItem', async () => {
+    const { onHistoryItemClickMock, user } = setup()
 
     const historyItem = screen.getByTestId('history-item')
-    userEvent.click(historyItem)
+    await user.click(historyItem)
 
     expect(onHistoryItemClickMock).toHaveBeenCalledWith(id)
   })

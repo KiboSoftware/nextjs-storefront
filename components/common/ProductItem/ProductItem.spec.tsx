@@ -62,7 +62,8 @@ describe('[component] - ProductItem with Price and Pickup Item', () => {
     expect(price).toBeVisible()
   })
 
-  it('should call onClickStoreLocatorMock when click onClickStoreLocator', () => {
+  it('should call onClickStoreLocatorMock when click onClickStoreLocator', async () => {
+    const user = userEvent.setup()
     render(
       <WithChageStoreOption
         {...WithChageStoreOption.args}
@@ -74,7 +75,7 @@ describe('[component] - ProductItem with Price and Pickup Item', () => {
       ? screen.getByText(/change-store/i)
       : screen.getByText(/select-store/i)
 
-    userEvent.click(changeStore)
+    await user.click(changeStore)
     expect(onClickStoreLocatorMock).toHaveBeenCalled()
   })
 

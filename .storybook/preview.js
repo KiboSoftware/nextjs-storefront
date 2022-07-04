@@ -4,15 +4,14 @@ import { initialize, mswDecorator } from 'msw-storybook-addon'
 import { setConfig } from 'next/config'
 import * as NextImage from 'next/image'
 import { I18nextProvider } from 'react-i18next'
-setConfig({ publicRuntimeConfig })
-
 import { QueryClientProvider } from 'react-query'
-
 import * as handlers from '../__mocks__/msw/handlers'
 import { queryClient } from '../lib/react-query/queryClient'
 import { publicRuntimeConfig } from '../next.config'
 import storefrontTheme from '../styles/theme'
 import i18n from './i18n'
+
+setConfig({ publicRuntimeConfig })
 
 const OriginalNextImage = NextImage.default
 

@@ -12,11 +12,18 @@ const { Common } = composeStories(stories)
 
 const onCloseMock = jest.fn()
 
-describe('[components] Add To Cart Dialog integration', () => {
-  const setup = () => render(<Common {...Common.args} onClose={onCloseMock} />)
+const setup = () => {
+  const user = userEvent.setup()
+  render(<Common {...Common.args} onClose={onCloseMock} />)
 
+  return {
+    user,
+  }
+}
+
+describe('[components] Add To Cart Dialog integration', () => {
   it('should render component', async () => {
-    setup()
+    const { user } = setup()
 
     const item = Common.args?.cartItem
     const name = item?.product?.name || ''
@@ -27,7 +34,6 @@ describe('[components] Add To Cart Dialog integration', () => {
       name: /close/i,
     })
     const productName = screen.getByText(name)
-    const fulfillmentMethod = screen.getByText(`${item?.fulfillmentMethod}`)
     const taxSubTotal = screen.getAllByText(/currency/i)
     const goToCartButton = screen.getByRole('button', {
       name: /go-to-cart/i,
@@ -40,20 +46,19 @@ describe('[components] Add To Cart Dialog integration', () => {
     expect(title).toBeVisible()
     expect(closeIconButton).toBeVisible()
     expect(productName).toBeInTheDocument()
-    expect(fulfillmentMethod).toBeVisible()
     expect(taxSubTotal).toHaveLength(4)
     expect(goToCartButton).toBeVisible()
     expect(continueShoppingButton).toBeVisible()
   })
 
-  it('should close dialog when user clicks on closeIcon button', () => {
-    setup()
+  it('should close dialog when user clicks on closeIcon button', async () => {
+    const { user } = setup()
 
     const dialog = screen.getByRole('dialog')
     const closeIconButton = screen.getByRole('button', {
       name: /close/i,
     })
-    userEvent.click(closeIconButton)
+    await user.click(closeIconButton)
 
     expect(dialog).toBeVisible()
     expect(closeIconButton).toBeVisible()
@@ -61,7 +66,7 @@ describe('[components] Add To Cart Dialog integration', () => {
   })
 
   it('should redirect to /cart page when user clicks on "Add To Cart" button', async () => {
-    setup()
+    const { user } = setup()
 
     const router = createMockRouter()
 
@@ -79,7 +84,7 @@ describe('[components] Add To Cart Dialog integration', () => {
     expect(dialog).toBeVisible()
     expect(goToCartButton).toBeVisible()
 
-    userEvent.click(goToCartButton)
+    await user.click(goToCartButton)
 
     await waitFor(() => {
       expect(router.push).toHaveBeenCalledWith('/cart')
@@ -87,8 +92,8 @@ describe('[components] Add To Cart Dialog integration', () => {
     expect(goToCartButton).not.toBeVisible()
   })
 
-  it('should close dialog when user clicks on "Continue Shopping" button', () => {
-    setup()
+  it('should close dialog when user clicks on "Continue Shopping" button', async () => {
+    const { user } = setup()
 
     const dialog = screen.getByRole('dialog')
     const continueShoppingButton = screen.getByRole('button', {
@@ -98,7 +103,7 @@ describe('[components] Add To Cart Dialog integration', () => {
     expect(dialog).toBeVisible()
     expect(continueShoppingButton).toBeVisible()
 
-    userEvent.click(continueShoppingButton)
+    await user.click(continueShoppingButton)
 
     expect(continueShoppingButton).not.toBeVisible()
   })

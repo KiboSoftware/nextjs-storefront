@@ -10,7 +10,9 @@ import { FormStates } from '@/lib/constants'
 const { Common } = composeStories(stories)
 
 describe('[components] PaymentStep', () => {
-  const setup = () => render(<Common {...Common.args} />)
+  const setup = () => {
+    render(<Common {...Common.args} />)
+  }
   const emptyInput = { target: { value: '' } }
 
   it('should render component', () => {
@@ -139,6 +141,7 @@ describe('[components] PaymentStep', () => {
 
   it('Should call onCompleteCallback when user enters review step button', async () => {
     const onCompleteCallbackMock = jest.fn()
+    const user = userEvent.setup()
 
     render(
       <Common
@@ -167,10 +170,10 @@ describe('[components] PaymentStep', () => {
     const firstName = screen.getByRole('textbox', { name: /first-name/i })
 
     await act(async () => {
-      userEvent.type(cardNumber, '4111111111111111')
-      userEvent.type(expiryDate, '03/2024')
-      userEvent.type(securityCode, '123')
-      userEvent.type(firstName, 'John')
+      await user.type(cardNumber, '4111111111111111')
+      await user.type(expiryDate, '03/2024')
+      await user.type(securityCode, '123')
+      await user.type(firstName, 'John')
     })
 
     expect(onCompleteCallbackMock).toBeCalled()

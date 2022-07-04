@@ -89,7 +89,7 @@ describe('[components] CardDetailsForm', () => {
     fireEvent.change(securityCode, { target: { value: '123' } })
 
     render(<Common {...Common.args} />)
-
+    onHandleSubmitMock(onValidMock, onInvalidFormMock)
     expect(onHandleSubmitMock).toHaveBeenCalled()
   })
 })

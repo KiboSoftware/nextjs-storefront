@@ -9,7 +9,11 @@ const { Common } = composeStories(stories)
 const mockedOnBlur = jest.fn()
 
 const setup = () => {
+  const user = userEvent.setup()
   render(<Common {...Common.args} onBlur={mockedOnBlur} />)
+  return {
+    user,
+  }
 }
 
 describe('[component] ProductOptionTextBox component', () => {
@@ -21,11 +25,11 @@ describe('[component] ProductOptionTextBox component', () => {
     expect(textbox).toBeInTheDocument()
   })
 
-  it('should show user entered value', () => {
-    setup()
+  it('should show user entered value', async () => {
+    const { user } = setup()
 
     const textbox = screen.getByRole('textbox')
-    userEvent.type(textbox, 'Test')
+    await user.type(textbox, 'Test')
     fireEvent.blur(textbox)
 
     expect(textbox).toHaveValue('Test')

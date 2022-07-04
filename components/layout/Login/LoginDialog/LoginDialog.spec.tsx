@@ -18,10 +18,16 @@ const renderComponent = () => {
 }
 
 describe('[components] (LoginDialog)', () => {
-  const setup = () => renderComponent()
+  const setup = () => {
+    const user = userEvent.setup()
+    renderComponent()
+    return {
+      user,
+    }
+  }
 
   it('should render component', async () => {
-    setup()
+    const { user } = setup()
     const title = screen.getByTestId('login-header')
     const closeIcon = screen.getByRole('button', { name: 'close' })
     const loginContent = screen.getByTestId('kibo-login-cotent')
@@ -34,7 +40,7 @@ describe('[components] (LoginDialog)', () => {
     expect(registerNowLink).toBeVisible()
 
     await act(async () => {
-      userEvent.click(registerNowLink)
+      await user.click(registerNowLink)
     })
   })
 })

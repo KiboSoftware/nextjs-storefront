@@ -1,5 +1,5 @@
 import { composeStories } from '@storybook/testing-react'
-import { render, screen, act, fireEvent, waitFor } from '@testing-library/react'
+import { render, screen, fireEvent, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 
 import * as stories from './AddressForm.stories'
@@ -20,7 +20,11 @@ jest.mock('../KiboTextBox/KiboTextBox', () => KiboTextBoxMock)
 
 describe('[components] - AddressForm', () => {
   const setup = () => {
+    const user = userEvent.setup()
     render(<Common {...Common.args} />)
+    return {
+      user,
+    }
   }
 
   it('should render component', () => {
@@ -36,12 +40,12 @@ describe('[components] - AddressForm', () => {
 
   it('should show user entered value', async () => {
     //arrange
-    setup()
+    const { user } = setup()
 
     // act
     const textBoxList = screen.getAllByRole('textbox')
 
-    userEvent.type(textBoxList[0], 'Shane')
+    await user.type(textBoxList[0], 'Shane')
 
     await waitFor(() => expect(textBoxList[0]).toHaveValue('Shane'))
 

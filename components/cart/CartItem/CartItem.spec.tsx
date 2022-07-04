@@ -25,16 +25,18 @@ jest.mock(
 
 describe('[components] - CartItem', () => {
   const setup = () => {
+    const user = userEvent.setup()
     const onDeleteMock = jest.fn()
     render(<Common {...Common.args} onCartItemDelete={onDeleteMock} />)
     return {
       onDeleteMock,
+      user,
     }
   }
 
-  it('should render component', () => {
+  it('should render component', async () => {
     // arrange
-    const { onDeleteMock } = setup()
+    const { onDeleteMock, user } = setup()
 
     // act
     const cartItemAction = screen.getByTestId('cart-item-actions-component')
@@ -43,7 +45,7 @@ describe('[components] - CartItem', () => {
     const cartItemActionMobile = screen.getByTestId('cart-item-actions-mobile-component')
     const card = screen.getByRole('group')
     const deleteButton = screen.getByRole('button', { name: 'item-delete' })
-    userEvent.click(deleteButton)
+    await user.click(deleteButton)
     const separator = screen.getAllByRole('separator')
 
     // assert
