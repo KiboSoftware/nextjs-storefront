@@ -12,6 +12,7 @@ jest.mock('@/hooks', () => ({
       mutateAsync: () =>
         Promise.resolve({
           options: mockConfigureProductOptionsResponse.options,
+          variationProductCode: mockConfigureProductOptionsResponse.variationProductCode,
           productImages: mockConfigureProductOptionsResponse.productImages,
           purchasableState: mockConfigureProductOptionsResponse.purchasableState,
         }),
@@ -52,6 +53,7 @@ describe('[component] Product Detail Template data: useProductDetailTemplate', (
     expect(result.current.currentProduct).toStrictEqual({
       ...product,
       options: mockConfigureProductOptionsResponse.options,
+      variationProductCode: mockConfigureProductOptionsResponse.variationProductCode,
       content: {
         ...product.content,
         productImages: mockConfigureProductOptionsResponse.productImages,

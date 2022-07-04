@@ -11,7 +11,7 @@ const { Common } = composeStories(stories)
 const onGoToCartMock = jest.fn()
 const onContinueShoppingMock = jest.fn()
 
-describe('[components] Add To Cart Dialog', () => {
+describe('[components] Add To Cart Dialog Actions', () => {
   const setup = () => {
     const user = userEvent.setup()
     render(<Common onGoToCart={onGoToCartMock} onContinueShopping={onContinueShoppingMock} />)

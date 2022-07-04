@@ -92,7 +92,6 @@ const KiboDialog = (props: KiboDialogProps) => {
     showContentBottomDivider = true,
     onClose,
   } = props
-
   return (
     <StyledDialog
       onClose={onClose}

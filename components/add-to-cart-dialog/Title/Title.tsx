@@ -28,7 +28,7 @@ const Title = () => {
   return (
     <StyledTitleComponent data-testid="title-component">
       <StyledCheckCircle />
-      <StyledTitle variant="h3">{t('add-to-cart')}</StyledTitle>
+      <StyledTitle variant="h3">{t('added-to-cart')}</StyledTitle>
     </StyledTitleComponent>
   )
 }

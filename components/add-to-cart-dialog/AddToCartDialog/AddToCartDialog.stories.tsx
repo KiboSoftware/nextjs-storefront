@@ -8,7 +8,7 @@ import AddToCartDialog from './AddToCartDialog'
 export default {
   title: 'Add-To-Cart-Dialog/AddToCartDialog',
   component: AddToCartDialog,
-  argTypes: { onClose: { action: 'onClose' } },
+  argTypes: { closeModal: { action: 'closeModal' } },
 } as ComponentMeta<typeof AddToCartDialog>
 
 const Template: ComponentStory<typeof AddToCartDialog> = ({ ...args }) => (

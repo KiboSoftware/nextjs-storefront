@@ -4,6 +4,7 @@ import { StarRounded } from '@mui/icons-material'
 import { Box, Grid, Rating, Button, Typography, Divider } from '@mui/material'
 import { useTranslation } from 'next-i18next'
 
+import AddToCartDialog from '@/components/add-to-cart-dialog/AddToCartDialog/AddToCartDialog'
 import FulfillmentOptions from '@/components/common/FulfillmentOptions/FulfillmentOptions'
 import Price from '@/components/common/Price/Price'
 import QuantitySelector from '@/components/common/QuantitySelector/QuantitySelector'
@@ -18,7 +19,9 @@ import {
   ProductRecommendations,
   ProductVariantSizeSelector,
 } from '@/components/product'
+import { useModalContext } from '@/context/ModalContext'
 import { useProductDetailTemplate } from '@/hooks'
+import { useCartMutation } from '@/hooks/mutations/useCartMutation/useCartMutation'
 import { productGetters } from '@/lib/getters'
 import type { ProductCustom, BreadCrumb, PriceRange } from '@/lib/types'
 
@@ -38,11 +41,19 @@ interface ProductDetailTemplateProps {
 const ProductDetailTemplate = (props: ProductDetailTemplateProps) => {
   const { product, breadcrumbs } = props
   const { t } = useTranslation(['product', 'common'])
+  const { showModal } = useModalContext()
 
   // Data hook
-  const { currentProduct, quantity, setQuantity, selectProductOption } = useProductDetailTemplate({
+  const {
+    currentProduct,
+    quantity,
+    updatedShopperEnteredValues,
+    setQuantity,
+    selectProductOption,
+  } = useProductDetailTemplate({
     product,
   })
+  const { addToCart } = useCartMutation()
 
   // Getters
   const {
@@ -58,6 +69,28 @@ const ProductDetailTemplate = (props: ProductDetailTemplateProps) => {
     properties,
     isValidForAddToCart,
   } = productGetters.getProductDetails(currentProduct)
+
+  // methods
+  const handleAddToCart = async () => {
+    try {
+      const cartResponse = await addToCart.mutateAsync({
+        product: {
+          ...currentProduct,
+          options: updatedShopperEnteredValues,
+        },
+        quantity,
+      })
+
+      if (cartResponse.id) {
+        showModal({
+          Component: AddToCartDialog,
+          props: {
+            cartItem: cartResponse,
+          },
+        })
+      }
+    } catch (err) {}
+  }
 
   // Cloning the price range object to trnaslate the currency values
   const handlePriceRangeTranslation = (priceRange: ProductPriceRange): PriceRange => {
@@ -203,6 +236,7 @@ const ProductDetailTemplate = (props: ProductDetailTemplateProps) => {
               variant="contained"
               color="primary"
               fullWidth
+              onClick={() => handleAddToCart()}
               {...(!isValidForAddToCart && { disabled: true })}
             >
               {t('common:add-to-cart')}

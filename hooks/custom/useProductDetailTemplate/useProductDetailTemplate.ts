@@ -65,7 +65,12 @@ export const useProductDetailTemplate = (props: UseProductDetailTemplateProps) =
     })
 
     try {
-      const configureProductResponse: ConfiguredProduct = await configureProduct.mutateAsync({
+      const {
+        options,
+        variationProductCode,
+        purchasableState,
+        productImages,
+      }: ConfiguredProduct = await configureProduct.mutateAsync({
         productCode,
         updatedOptions: updatedOptions.map((option) => {
           return {
@@ -76,7 +81,7 @@ export const useProductDetailTemplate = (props: UseProductDetailTemplateProps) =
         }),
       })
 
-      const responseOptions = configureProductResponse.options
+      const responseOptions = options
         ?.filter((option) => option?.values?.some((val) => val?.isSelected))
         .map((option) => {
           const selected = option?.values?.find((optionVal) => optionVal?.isSelected)
@@ -90,11 +95,12 @@ export const useProductDetailTemplate = (props: UseProductDetailTemplateProps) =
       setUpdatedShopperEnteredValues(responseOptions)
       setCurrentProduct({
         ...currentProduct,
-        options: configureProductResponse.options,
-        purchasableState: configureProductResponse.purchasableState,
+        variationProductCode: variationProductCode,
+        options: options,
+        purchasableState: purchasableState,
         content: {
           ...currentProduct.content,
-          productImages: configureProductResponse.productImages,
+          productImages: productImages,
         },
       })
     } catch (err) {
@@ -105,6 +111,7 @@ export const useProductDetailTemplate = (props: UseProductDetailTemplateProps) =
   return {
     currentProduct,
     quantity,
+    updatedShopperEnteredValues,
     setQuantity,
     selectProductOption,
   }

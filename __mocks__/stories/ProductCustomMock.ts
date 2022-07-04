@@ -4,12 +4,13 @@ export const ProductCustomMock: ProductCustom = {
   fulfillmentTypesSupported: ['DirectShip', 'InStorePickup'],
   fulfillmentMethod: 'Ship',
   fulfillmentMethodShortName: '',
-  purchaseLocationCode: '',
+  purchaseLocationCode: 'kw1',
   createDate: null,
   personalizationScore: 0,
   score: 0,
   updateDate: null,
   productCode: 'BIKE3',
+  variationProductCode: 'BIKE3-01',
   productUsage: 'Configurable',
   isPackagedStandAlone: false,
   categories: [
@@ -46,7 +47,7 @@ export const ProductCustomMock: ProductCustom = {
     },
   ],
   purchasableState: {
-    isPurchasable: false,
+    isPurchasable: true,
   },
   price: {
     price: 2300,

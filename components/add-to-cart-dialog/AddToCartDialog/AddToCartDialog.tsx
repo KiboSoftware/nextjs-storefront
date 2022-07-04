@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React from 'react'
 
 import { useRouter } from 'next/router'
 
@@ -13,30 +13,27 @@ interface CartDetailsProps {
   cartItem: CartItemType
   isOpen: boolean
   isDialogCentered: boolean
-  onClose: () => void
+  closeModal: () => void
 }
 
 // Component
 const AddToCartDialog = (props: CartDetailsProps) => {
-  const { cartItem, isOpen = false, isDialogCentered, onClose } = props
-
+  const { cartItem, closeModal, isDialogCentered } = props
   const contentArgs = {
     cartItem,
   }
 
-  const [isDialogOpen, setIsDialogOpen] = useState<boolean>(isOpen)
   const router = useRouter()
 
   const handleGoToCart = () => {
-    setIsDialogOpen(false)
+    closeModal()
     router.push('/cart')
   }
   const handleContinueShopping = () => {
-    setIsDialogOpen(false)
+    closeModal()
   }
 
   const DialogArgs = {
-    isOpen: isDialogOpen,
     Title: <Title />,
     Content: <Content {...contentArgs} />,
     showContentTopDivider: true,
@@ -44,7 +41,7 @@ const AddToCartDialog = (props: CartDetailsProps) => {
     Actions: <Actions onGoToCart={handleGoToCart} onContinueShopping={handleContinueShopping} />,
     isDialogCentered: isDialogCentered,
     customMaxWidth: '32.375rem',
-    onClose: onClose,
+    onClose: () => closeModal(),
   }
 
   return <KiboDialog {...DialogArgs} />
