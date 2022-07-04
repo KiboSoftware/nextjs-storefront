@@ -13,7 +13,7 @@ const ProductOption = (prop: ProductOptionProps) => {
   const { option, variant = 'body2', fontWeight } = prop
 
   return (
-    <Box data-testid="productOption" pt={0.5}>
+    <Box data-testid="productOption" pt={0.5} display="flex" flexWrap="wrap">
       <Typography variant={variant} fontWeight={fontWeight || 700} sx={{ pr: 1 }} component="span">
         {option?.name}:
       </Typography>

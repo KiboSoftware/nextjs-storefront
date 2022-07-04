@@ -39,8 +39,11 @@ export interface ProductItemProps {
 const styles = {
   imageContainer: {
     maxHeight: 150,
-    maxWidth: 150,
-    width: '45%',
+    maxWidth: 120,
+    flex: 1,
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
   },
 
   image: {
@@ -72,7 +75,7 @@ const ProductItem = (props: ProductItemProps) => {
 
   return (
     <Box key={id}>
-      <Box sx={{ display: 'flex', pb: 1, pr: 1, gap: '3%', flex: 1 }}>
+      <Box sx={{ display: 'flex', pb: 1, pr: 1, gap: 2, flex: 1 }}>
         <Box sx={{ ...styles.imageContainer }}>
           <KiboImage
             src={image || DefaultImage}
@@ -84,7 +87,7 @@ const ProductItem = (props: ProductItemProps) => {
           />
         </Box>
 
-        <Stack mr={1}>
+        <Stack mr={1} flex={1}>
           <CardContent sx={{ py: 0, px: 1 }}>
             <Typography variant="h4" data-testid="productName" pb={0.375}>
               {name}

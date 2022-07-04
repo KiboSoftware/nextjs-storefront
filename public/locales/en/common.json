@@ -92,5 +92,6 @@
   "order-details": "Order Details",
   "order-placed-confirmation-text": "Your order was placed successfully",
   "check-email-confirmation-text": "Check your email for your order confirmation",
-  "order-confirmation-to-email-text": "We have sent the order confirmation details to"
+  "order-confirmation-to-email-text": "We have sent the order confirmation details to",
+  "shipping-to-home": "Shipping to Home"
 }

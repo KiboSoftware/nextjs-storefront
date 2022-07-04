@@ -50,7 +50,7 @@ const OrderSummary = (props: OrderSummaryProps) => {
     total,
   }
   return (
-    <Card sx={{ bgcolor: 'grey.100', maxWidth: '26.75rem', width: '100%', boxShadow: 'none' }}>
+    <Card sx={{ bgcolor: 'grey.100', width: '100%', boxShadow: 'none' }}>
       <CardContent>
         <Box sx={styles.headerStyle}>
           <Typography variant="h3" color="text.primary" fontWeight="bold" pt={0.5}>

@@ -22,7 +22,7 @@ const OrderConfirmation = ({ order }: { order: Order }) => {
   const options = [
     {
       name: t('your-order'),
-      value: orderNumber,
+      value: String(orderNumber),
     },
     {
       name: t('order-date'),
@@ -32,15 +32,16 @@ const OrderConfirmation = ({ order }: { order: Order }) => {
 
   const orderSummeryArgs = {
     nameLabel: t('order-summary'),
-    cartTotalLabel: t('subtotal'),
-    standardShippingLabel: t('shipping'),
-    estimatedTaxLabel: t('estimated-tax'),
-    orderTotalLabel: t('total-price'),
-    orderTotal: t('currency', { val: orderTotal }),
-    numberOfItems: t('item-quantity', { count: order.items?.length }),
-    standardShippingAmount: t('currency', { val: orderGetters.getShippingTotal(order) }),
-    estimatedTaxAmout: t('currency', { val: orderGetters.getTaxTotal(order) }),
+    subTotalLabel: `${t('subtotal')} ${t('item-quantity', { count: order.items?.length })}`,
+    shippingTotalLabel: t('shipping'),
+    taxLabel: t('estimated-tax'),
+    totalLabel: t('total-price'),
     subTotal: t('currency', { val: orderGetters.getSubtotal(order) }),
+    shippingTotal: orderGetters.getShippingTotal(order)
+      ? t('currency', { val: orderGetters.getShippingTotal(order) })
+      : t('checkout:free'),
+    tax: t('currency', { val: orderGetters.getTaxTotal(order) }),
+    total: t('currency', { val: orderTotal }),
   }
 
   return (
@@ -79,10 +80,10 @@ const OrderConfirmation = ({ order }: { order: Order }) => {
         <Stack width={'100%'} alignItems="center" gap={3}>
           <Container maxWidth="xs">
             <Box>
-              <ProductOptionList options={options} variant={'h4'} fontWeight={'normal'} />
+              <ProductOptionList options={options} variant={'h3'} fontWeight={'normal'} />
             </Box>
             <br />
-            <Typography variant="h4" sx={{ display: 'inline' }}>
+            <Typography variant="h3" sx={{ display: 'inline' }}>
               {t('order-confirmation-to-email-text')}
               <Box sx={{ fontWeight: 'bold' }}>{email}</Box>
             </Typography>
@@ -98,7 +99,7 @@ const OrderConfirmation = ({ order }: { order: Order }) => {
             {shipItems && shipItems.length && (
               <Box sx={{ paddingBlock: 2 }}>
                 <Typography variant="h3" fontWeight={700} gutterBottom>
-                  {t('ship')}
+                  {t('shipping-to-home')}
                 </Typography>
 
                 <ProductItemList items={shipItems} />
@@ -110,7 +111,7 @@ const OrderConfirmation = ({ order }: { order: Order }) => {
             {pickupItems && pickupItems.length && (
               <Box sx={{ paddingBlock: 2 }}>
                 <Typography variant="h3" fontWeight={700} gutterBottom>
-                  {t('pickup-title')}
+                  {t('pickup')}
                 </Typography>
                 <ProductItemList items={pickupItems} />
               </Box>
@@ -119,7 +120,7 @@ const OrderConfirmation = ({ order }: { order: Order }) => {
         </Stack>
         {/* Order Summary */}
         <Stack width={'100%'} alignItems="center">
-          <Container maxWidth="xs">
+          <Container maxWidth="xs" sx={{ p: 0 }}>
             <OrderSummary {...orderSummeryArgs} />
           </Container>
         </Stack>
