@@ -1,4 +1,4 @@
-import { render, act, screen, waitFor } from '@testing-library/react'
+import { render, screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 
 import { DialogRoot, ModalContextProvider, useModalContext } from './ModalContext'
@@ -38,7 +38,7 @@ describe('[context] - ModalContext', () => {
   }
 
   it('should show initial context values', () => {
-    const { user } = setup(<TestComponent />)
+    setup(<TestComponent />)
     const isOpen = screen.getByTestId('is-dialog-open')
     const loginModal = screen.queryByTestId('login-dialog-test')
 

@@ -97,10 +97,10 @@ export const AuthContextProvider = ({ children }: AuthContextProviderProps) => {
     mutate(userCredentials, {
       onError: (error: any) => {
         //@TO BE DONE GLOBALLY
-        const errorMessage = error?.response?.errors
+        const errMessage = error?.response?.errors
           ? error?.response?.errors[0]?.message
           : 'Something Wrong !'
-        setAuthError(errorMessage)
+        setAuthError(errMessage)
       },
       onSuccess: (account: any) => {
         setCookieAndUser(account)

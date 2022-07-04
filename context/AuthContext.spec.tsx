@@ -8,7 +8,6 @@ import { AuthContextProvider, useAuthContext } from './AuthContext'
 import { server } from '@/__mocks__/msw/server'
 import { renderWithQueryClient } from '@/__test__/utils/renderWithQueryClient'
 import * as cookieHelper from '@/lib/helpers/cookieHelper'
-import { act } from 'react-dom/test-utils'
 
 const mockOnSuccessCallBack = jest.fn()
 const loginInputs = {
