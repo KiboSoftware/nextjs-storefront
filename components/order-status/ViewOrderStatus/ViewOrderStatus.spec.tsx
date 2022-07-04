@@ -2,12 +2,11 @@ import React from 'react'
 
 import { composeStories } from '@storybook/testing-react'
 import { render, screen } from '@testing-library/react'
-import userEvent from '@testing-library/user-event'
 
 import { ViewOrderStatusProps } from './ViewOrderStatus'
 import * as stories from './ViewOrderStatus.stories' // import all stories from the stories file
 
-const { Common } = composeStories(stories)
+const { Common, WithErrorMeesage } = composeStories(stories)
 
 const onChangeMock = jest.fn()
 const onBlurMock = jest.fn()
@@ -21,16 +20,19 @@ const KiboTextBoxMock = () => (
 jest.mock('@/components/common/KiboTextBox/KiboTextBox', () => KiboTextBoxMock)
 
 describe('[component] - ViewOrderStatus', () => {
-  const { lookupErrorMessage } = Common?.args as ViewOrderStatusProps
+  const { lookupErrorMessage } = WithErrorMeesage?.args as ViewOrderStatusProps
 
-  const setup = () => {
+  const setup = (args?: ViewOrderStatusProps) => {
     const onOrderStatusSubmitMock = jest.fn()
-    render(<Common {...Common?.args} onOrderStatusSubmit={onOrderStatusSubmitMock} />)
-    return { onOrderStatusSubmitMock }
+
+    const params = args ? args : Common?.args
+
+    render(<Common {...params} onOrderStatusSubmit={onOrderStatusSubmitMock} />)
+    return { onOrderStatusSubmitMock, lookupErrorMessage }
   }
 
   it('should render component', () => {
-    setup()
+    const { lookupErrorMessage } = setup()
 
     const viewOrderStatusText = screen.getByText(/view-order-status/i)
     const checkingTheStatusOfYourOrderText = screen.getByText(
@@ -39,9 +41,21 @@ describe('[component] - ViewOrderStatus', () => {
     const simplyEnterYourOrderText = screen.getByText(
       /simply-enter-your-order-number-and-billing-email-to-track-your-order/i
     )
+    const textBoxMock = screen.getAllByTestId('text-box-mock')
+    const checkOrderStatusButton = screen.getByRole('button', { name: /check-order-status/i })
+    const lookupMessage = screen.queryByText(lookupErrorMessage as string)
 
     expect(viewOrderStatusText).toBeVisible()
     expect(checkingTheStatusOfYourOrderText).toBeVisible()
     expect(simplyEnterYourOrderText).toBeVisible()
+    expect(textBoxMock).toHaveLength(2)
+    expect(checkOrderStatusButton).toBeDisabled()
+    expect(lookupMessage).not.toBeInTheDocument()
+  })
+
+  it('should display lookupErrorMessage', () => {
+    const { lookupErrorMessage } = setup(WithErrorMeesage.args as ViewOrderStatusProps)
+    const lookupMessage = screen.getByText(lookupErrorMessage as string)
+    expect(lookupMessage).toBeVisible()
   })
 })
