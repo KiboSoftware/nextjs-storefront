@@ -93,6 +93,7 @@ export const useProductDetailTemplate = (props: UseProductDetailTemplateProps) =
         options: configureProductResponse.options,
         purchasableState: configureProductResponse.purchasableState,
         content: {
+          ...currentProduct.content,
           productImages: configureProductResponse.productImages,
         },
       })

@@ -127,7 +127,7 @@ const getSegregatedOptions = (product: ProductCustom) => {
 }
 
 const validateAddToCart = (product: ProductCustom): boolean =>
-  Boolean(product?.purchasableState?.isPurchasable) || Boolean(product.fulfillmentMethod)
+  Boolean(product?.purchasableState?.isPurchasable) && Boolean(product.fulfillmentMethod)
 
 const getVariationProductCodeOrProductCode = (product: ProductCustom): string => {
   if (!product) return ''

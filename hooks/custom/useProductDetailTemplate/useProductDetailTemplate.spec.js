@@ -5,13 +5,15 @@ import { useProductDetailTemplate } from './useProductDetailTemplate'
 import { configuredProductMock } from '@/__mocks__/stories/configuredProductMock'
 import { ProductCustomMock } from '@/__mocks__/stories/ProductCustomMock'
 
-const mockConfigureProductOptionsResponse = configuredProductMock.configureProduct.options
+const mockConfigureProductOptionsResponse = configuredProductMock.configureProduct
 jest.mock('@/hooks', () => ({
   useProductMutation: () => ({
     configureProduct: {
       mutateAsync: () =>
         Promise.resolve({
-          options: mockConfigureProductOptionsResponse,
+          options: mockConfigureProductOptionsResponse.options,
+          productImages: mockConfigureProductOptionsResponse.productImages,
+          purchasableState: mockConfigureProductOptionsResponse.purchasableState,
         }),
       isLoading: false,
       isSuccess: true,
@@ -49,7 +51,12 @@ describe('[component] Product Detail Template data: useProductDetailTemplate', (
 
     expect(result.current.currentProduct).toStrictEqual({
       ...product,
-      options: mockConfigureProductOptionsResponse,
+      options: mockConfigureProductOptionsResponse.options,
+      content: {
+        ...product.content,
+        productImages: mockConfigureProductOptionsResponse.productImages,
+      },
+      purchasableState: mockConfigureProductOptionsResponse.purchasableState,
     })
   })
 
