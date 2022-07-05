@@ -2,11 +2,11 @@ import React from 'react'
 
 import { ComponentStory, ComponentMeta } from '@storybook/react'
 
-import { cartItemMock } from '../../../__mocks__/stories/cartItemMock'
 import Content from './Content'
+import { cartItemMock } from '@/__mocks__/stories/cartItemMock'
 
 export default {
-  title: 'Add-To-Cart-Dialog/Content',
+  title: 'Dialogs/AddToCartDialog/Content',
   component: Content,
 } as ComponentMeta<typeof Content>
 

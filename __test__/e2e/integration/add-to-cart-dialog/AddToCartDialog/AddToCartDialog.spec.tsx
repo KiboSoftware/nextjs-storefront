@@ -6,7 +6,7 @@ import userEvent from '@testing-library/user-event'
 import { RouterContext } from 'next/dist/shared/lib/router-context'
 
 import { createMockRouter } from '@/__test__/utils/createMockRouter'
-import * as stories from '@/components/add-to-cart-dialog/AddToCartDialog/AddToCartDialog.stories' // import all stories from the stories file
+import * as stories from '@/components/dialogs/AddToCartConfirmation/AddToCartDialog/AddToCartDialog.stories' // import all stories from the stories file
 import { DialogRoot, ModalContextProvider, useModalContext } from '@/context'
 
 const { Common } = composeStories(stories)
@@ -57,7 +57,7 @@ describe('[components] Add To Cart Dialog integration', () => {
     const name = item?.product?.name || ''
 
     const component = screen.getByRole('dialog')
-    const title = screen.getByText(/added-to-cart/i)
+    const title = screen.getAllByRole('heading', { name: /added-to-cart/i })[0]
     const closeIconButton = screen.getByRole('button', {
       name: /close/i,
     })

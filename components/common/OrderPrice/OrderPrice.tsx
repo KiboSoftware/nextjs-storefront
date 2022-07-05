@@ -3,7 +3,7 @@ import React from 'react'
 import { Info } from '@mui/icons-material'
 import { Typography, Box, Divider } from '@mui/material'
 
-import Price from '@/components/common/Price/Price'
+import { Price } from '@/components/common'
 export interface OrderPriceProps {
   subTotalLabel: string
   shippingTotalLabel: string

@@ -3,7 +3,7 @@ import React from 'react'
 import { composeStories } from '@storybook/testing-react'
 import { render, screen } from '@testing-library/react'
 
-import { KiboDialogProps } from '../../common/KiboDialog/KiboDialog'
+import { KiboDialogProps } from '../../../common/KiboDialog/KiboDialog'
 import * as stories from './AddToCartDialog.stories' // import all stories from the stories file
 const { Common } = composeStories(stories)
 

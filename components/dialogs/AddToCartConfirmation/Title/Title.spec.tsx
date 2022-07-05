@@ -14,7 +14,7 @@ describe('[components] Add To Cart Dialog Title', () => {
     setup()
 
     const component = screen.getByTestId('title-component')
-    const title = screen.getByText(/added-to-cart/i)
+    const title = screen.getByRole('heading', { name: /added-to-cart/i })
 
     expect(component).toBeInTheDocument()
     expect(title).toBeVisible()

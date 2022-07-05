@@ -4,12 +4,12 @@ import { StarRounded } from '@mui/icons-material'
 import { Box, Grid, Rating, Button, Typography, Divider } from '@mui/material'
 import { useTranslation } from 'next-i18next'
 
-import AddToCartDialog from '@/components/add-to-cart-dialog/AddToCartDialog/AddToCartDialog'
 import FulfillmentOptions from '@/components/common/FulfillmentOptions/FulfillmentOptions'
 import Price from '@/components/common/Price/Price'
 import QuantitySelector from '@/components/common/QuantitySelector/QuantitySelector'
 import KiboBreadcrumbs from '@/components/core/Breadcrumbs/KiboBreadcrumbs'
 import ImageGallery from '@/components/core/ImageGallery/ImageGallery'
+import { AddToCartDialog } from '@/components/dialogs'
 import {
   ColorSelector,
   ProductInformation,

@@ -28,6 +28,6 @@ const addToCart = async ({ product, quantity }: any) => {
 
 export const useCartMutation = () => {
   return {
-    addToCart: useMutation(addToCart),
+    addToCart: useMutation(addToCart), //TODO: invalidate query
   }
 }

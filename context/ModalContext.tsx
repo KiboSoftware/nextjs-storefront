@@ -30,7 +30,6 @@ export const ModalContextProvider = ({ children }: ModalContextProviderProps) =>
   })
 
   const showModal = (showModalProps: ModalStateType) => {
-    console.log('inside show modal', { ...showModalProps })
     setModalState({
       ...showModalProps,
     })

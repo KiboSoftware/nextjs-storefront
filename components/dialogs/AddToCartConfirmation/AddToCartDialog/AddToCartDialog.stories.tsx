@@ -2,11 +2,11 @@ import React from 'react'
 
 import { ComponentStory, ComponentMeta } from '@storybook/react'
 
-import { cartItemMock } from '../../../__mocks__/stories/cartItemMock'
 import AddToCartDialog from './AddToCartDialog'
+import { cartItemMock } from '@/__mocks__/stories/cartItemMock'
 
 export default {
-  title: 'Add-To-Cart-Dialog/AddToCartDialog',
+  title: 'Dialogs/AddToCartDialog/Dialog',
   component: AddToCartDialog,
   argTypes: { closeModal: { action: 'closeModal' } },
 } as ComponentMeta<typeof AddToCartDialog>
@@ -20,6 +20,5 @@ export const Common = Template.bind({})
 
 Common.args = {
   cartItem: cartItemMock,
-  isOpen: true,
   isDialogCentered: false,
 }

@@ -2,16 +2,15 @@ import React from 'react'
 
 import { useRouter } from 'next/router'
 
-import Actions from '../Actions/Actions'
-import Content from '../Content/Content'
-import Title from '../Title/Title'
-import KiboDialog from '@/components/common/KiboDialog/KiboDialog'
+import { KiboDialog } from '@/components/common'
+import Actions from '@/components/dialogs/AddToCartConfirmation/Actions/Actions'
+import Content from '@/components/dialogs/AddToCartConfirmation/Content/Content'
+import Title from '@/components/dialogs/AddToCartConfirmation/Title/Title'
 
 import type { CartItem as CartItemType } from '@/lib/gql/types'
 
 interface CartDetailsProps {
   cartItem: CartItemType
-  isOpen: boolean
   isDialogCentered: boolean
   closeModal: () => void
 }
