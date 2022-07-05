@@ -1,4 +1,4 @@
-import { CategoryCollection, PrCategory } from '@/lib/gql/types'
+import type { CategoryCollection, PrCategory } from '@/lib/gql/types'
 
 export const categoryTreeDataMock: { categoriesTree: CategoryCollection } = {
   categoriesTree: {

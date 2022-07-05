@@ -94,8 +94,8 @@ const getProductImage = (item: Maybe<CrOrderItem> | Maybe<CartItem>): string =>
 const getProductName = (item: Maybe<CrOrderItem> | Maybe<CartItem>): string =>
   item?.product?.name || ''
 
-const getProductOptions = (item: Maybe<CrOrderItem> | Maybe<CartItem>): Maybe<CrProductOption>[] =>
-  item?.product?.options || []
+const getProductOptions = (item: Maybe<CrOrderItem> | Maybe<CartItem>): CrProductOption[] =>
+  (item?.product?.options as CrProductOption[]) || []
 
 const getProductQuantity = (item: Maybe<CrOrderItem> | Maybe<CartItem>): number =>
   item?.quantity || 0

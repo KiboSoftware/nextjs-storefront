@@ -20,7 +20,7 @@ import { productGetters } from '@/lib/getters'
 import { swipeDetect } from '@/lib/helpers'
 import DefaultImage from '@/public/product_placeholder.svg'
 
-import { ProductImage } from '@/lib/gql/types'
+import type { ProductImage } from '@/lib/gql/types'
 
 interface ImageGalleryProps {
   images: ProductImage[]

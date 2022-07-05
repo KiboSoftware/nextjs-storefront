@@ -26,8 +26,7 @@ import { CheckoutDetails, useUpdateCheckout } from '@/hooks'
 import { FormStates } from '@/lib/constants'
 import { isPasswordValid } from '@/lib/helpers/validations/validations'
 
-import type { Order } from '@/lib/gql/types'
-import { OrderInput } from '@/lib/gql/types'
+import type { Order, OrderInput } from '@/lib/gql/types'
 
 export interface PersonalDetails {
   email: string

@@ -1,4 +1,4 @@
-import { ShippingRate } from '@/lib/gql/types'
+import type { ShippingRate } from '@/lib/gql/types'
 
 export const shippingRateMock: { orderShipmentMethods: ShippingRate[] } = {
   orderShipmentMethods: [

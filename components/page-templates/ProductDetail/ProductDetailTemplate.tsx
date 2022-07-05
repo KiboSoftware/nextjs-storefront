@@ -9,13 +9,15 @@ import Price from '@/components/common/Price/Price'
 import QuantitySelector from '@/components/common/QuantitySelector/QuantitySelector'
 import KiboBreadcrumbs from '@/components/core/Breadcrumbs/KiboBreadcrumbs'
 import ImageGallery from '@/components/core/ImageGallery/ImageGallery'
-import ColorSelector from '@/components/product/ColorSelector/ColorSelector'
-import ProductInformation from '@/components/product/ProductInformation/ProductInformation'
-import ProductOptionCheckbox from '@/components/product/ProductOptionCheckbox/ProductOptionCheckbox'
-import ProductOptionSelect from '@/components/product/ProductOptionSelect/ProductOptionSelect'
-import ProductOptionTextBox from '@/components/product/ProductOptionTextBox/ProductOptionTextBox'
-import ProductRecommendations from '@/components/product/ProductRecommendations/ProductRecommendations'
-import ProductVariantSizeSelector from '@/components/product/ProductVariantSizeSelector/ProductVariantSizeSelector'
+import {
+  ColorSelector,
+  ProductInformation,
+  ProductOptionCheckbox,
+  ProductOptionSelect,
+  ProductOptionTextBox,
+  ProductRecommendations,
+  ProductVariantSizeSelector,
+} from '@/components/product'
 import { useProductDetailTemplate } from '@/hooks'
 import { productGetters } from '@/lib/getters'
 import type { ProductCustom, BreadCrumb, PriceRange } from '@/lib/types'

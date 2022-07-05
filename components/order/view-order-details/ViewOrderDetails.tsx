@@ -4,14 +4,11 @@ import { Divider, Grid, Typography, Box } from '@mui/material'
 import { useTranslation } from 'next-i18next'
 
 import { SavedPaymentMethodView } from '@/components/checkout'
-import AddressCard from '@/components/common/AddressCard/AddressCard'
-import OrderSummary from '@/components/common/OrderSummary/OrderSummary'
-import ProductItemList from '@/components/common/ProductItemList/ProductItemList'
-import ProductOption from '@/components/product/ProductOption/ProductOption'
+import { AddressCard, OrderSummary, ProductItemList } from '@/components/common'
+import { ProductOption } from '@/components/product'
 import { orderGetters } from '@/lib/getters'
 
 import type { Order, CrAddress } from '@/lib/gql/types'
-
 interface ViewOrderDetailsProps {
   order: Order
   storePickupAddress?: CrAddress

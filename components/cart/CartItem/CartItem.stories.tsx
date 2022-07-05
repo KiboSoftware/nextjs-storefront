@@ -10,6 +10,9 @@ export default {
   title: 'cart/CartItem',
   component: CartItem,
   argTypes: { onQuantityUpdate: { action: 'clicked' } },
+  parameters: {
+    layout: 'fullscreen',
+  },
 } as ComponentMeta<typeof CartItem>
 
 const cartItem: CartItemType = {
