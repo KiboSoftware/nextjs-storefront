@@ -13,7 +13,7 @@ import {
 } from '@mui/material'
 
 export interface KiboDialogProps {
-  isOpen: boolean
+  isOpen?: boolean
   Title?: ReactNode
   showCloseButton?: boolean
   Content: ReactNode
@@ -81,7 +81,7 @@ const StyledClose = styled(Close)(({ theme }: StyledCloseProps) => ({
 
 const KiboDialog = (props: KiboDialogProps) => {
   const {
-    isOpen = false,
+    isOpen = true,
     Title,
     showCloseButton = true,
     Content,
