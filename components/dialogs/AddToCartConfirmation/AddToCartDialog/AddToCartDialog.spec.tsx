@@ -29,7 +29,7 @@ const KiboDialogMock = (props: KiboDialogProps) => {
 jest.mock('../Title/Title', () => kiboTitleMock)
 jest.mock('../Content/Content', () => kiboContentMock)
 jest.mock('../Actions/Actions', () => kiboActionsMock)
-jest.mock('../../common/KiboDialog/KiboDialog', () => KiboDialogMock)
+jest.mock('@/components/common/KiboDialog/KiboDialog', () => KiboDialogMock)
 
 describe('[components] Add To Cart Dialog', () => {
   const setup = (params = {}) => render(<Common {...params} closeModal={onCloseMock} />)
