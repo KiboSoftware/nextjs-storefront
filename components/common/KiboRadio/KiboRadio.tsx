@@ -1,6 +1,14 @@
 import React, { JSXElementConstructor, ReactElement, useState } from 'react'
 
-import { FormControl, FormLabel, RadioGroup, FormControlLabel, Radio } from '@mui/material'
+import {
+  FormControl,
+  FormLabel,
+  RadioGroup,
+  FormControlLabel,
+  Radio,
+  Theme,
+  SxProps,
+} from '@mui/material'
 
 interface KiboRadioProps {
   title?: string
@@ -9,11 +17,12 @@ interface KiboRadioProps {
     label: string | number | ReactElement<any, string | JSXElementConstructor<any>>
     value: string
   }[]
+  sx?: SxProps<Theme>
   onChange?: (value: string) => void
 }
 
 export const KiboRadio = (props: KiboRadioProps) => {
-  const { title, radioOptions, selected = '', onChange } = props
+  const { title, radioOptions, selected = '', sx, onChange } = props
 
   const [selectedRadio, setSelectedRadio] = useState(selected)
 
@@ -39,6 +48,7 @@ export const KiboRadio = (props: KiboRadioProps) => {
         {radioOptions.map((radio) => {
           return (
             <FormControlLabel
+              sx={sx}
               key={radio.value}
               value={radio.value}
               control={<Radio />}

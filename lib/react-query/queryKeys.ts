@@ -25,3 +25,7 @@ export const productSearchResultKeys = {
 export const cartKeys = {
   all: ['cart'] as const,
 }
+
+export const storeKeys = {
+  all: ['store'] as const,
+}

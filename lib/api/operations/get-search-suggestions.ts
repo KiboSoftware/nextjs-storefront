@@ -1,5 +1,5 @@
 import { fetcher } from '@/lib/api/util'
-import { getSearchSuggestionsQuery } from '@/lib/gql/queries/get-search-suggestions'
+import { getSearchSuggestionsQuery } from '@/lib/gql/queries'
 
 export default async function getSearchSuggestions(searchKey: string) {
   try {

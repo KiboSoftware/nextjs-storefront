@@ -5,6 +5,7 @@ export * from './queries/useCategoryTree/useCategoryTree'
 export * from './queries/useUser/useUserQueries'
 export * from './queries/useProductSearch/useProductSearch'
 export * from './queries/useCart/useCartQueries'
+export * from './queries/useStoreLocations/useStoreLocations'
 
 // Custom hooks
 export * from './custom/useDebounce/useDebounce'

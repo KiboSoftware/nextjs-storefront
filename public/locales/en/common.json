@@ -95,5 +95,16 @@
   "your-order-was-placed-successfully": "Your order was placed successfully",
   "check-your-email-for-your-order-confirmation": "Check your email for your order confirmation",
   "we-have-sent-the-order-confirmation-details-to": "We have sent the order confirmation details to",
-  "shipping-to-home": "Shipping to Home"
+  "shipping-to-home": "Shipping to Home",
+
+  "zip-code": "Zip Code",
+  "my-store": "My Store",
+  "store-info": "Store Info",
+  "get-directions": "Get Directions",
+  "store-hours": "Store Hours",
+  "available-for-pickup": "Available for Pickup",
+  "show-stores-with-availability": "Show Stores with Availability",
+  "find-stores-within-100-miles": "Find Stores within 100 miles",
+  "no-stores-within-100-miles": "No Results - 0 stores within 100 miles",
+  "stores-within-100-miles": "{{seletedStore}} store within 100 miles"
 }

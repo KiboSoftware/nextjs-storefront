@@ -29,8 +29,8 @@ import HeaderAction from '@/components/common/HeaderAction/HeaderAction'
 import KiboLogo from '@/components/common/KiboLogo/KiboLogo'
 import { HamburgerMenu } from '@/components/layout'
 import MegaMenu from '@/components/layout/MegaMenu/MegaMenu'
-import { useAuthContext } from '@/context'
-import { useModalContext } from '@/context/ModalContext'
+import MyStoreDialog from '@/components/store/MyStoreDialog/MyStoreDialog'
+import { useAuthContext, useModalContext } from '@/context'
 import { useCartQueries, useCategoryTree } from '@/hooks'
 import type { NavigationLink } from '@/lib/types'
 
@@ -215,6 +215,10 @@ const HeaderActions = (props: HeaderActionsProps) => {
     router.push('/cart')
   }
 
+  const openStoreLocatorModal = () => {
+    showModal({ Component: MyStoreDialog })
+  }
+
   return (
     <Container maxWidth="xl" sx={headerActionsStyles.container}>
       <Box sx={headerActionsStyles.wrapper}>
@@ -259,6 +263,7 @@ const HeaderActions = (props: HeaderActionsProps) => {
             subtitle={t('view-all')}
             icon={FmdGoodIcon}
             {...(isMobileViewport && { iconFontSize: 'medium' })}
+            onClick={openStoreLocatorModal}
           />
         </Box>
         {/* My account Icon */}
