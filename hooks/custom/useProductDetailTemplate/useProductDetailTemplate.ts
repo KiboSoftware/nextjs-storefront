@@ -88,7 +88,15 @@ export const useProductDetailTemplate = (props: UseProductDetailTemplateProps) =
         }) as ProductOptionSelectionInput[]
 
       setUpdatedShopperEnteredValues(responseOptions)
-      setCurrentProduct({ ...currentProduct, options: configureProductResponse.options })
+      setCurrentProduct({
+        ...currentProduct,
+        options: configureProductResponse.options,
+        purchasableState: configureProductResponse.purchasableState,
+        content: {
+          ...currentProduct.content,
+          productImages: configureProductResponse.productImages,
+        },
+      })
     } catch (err) {
       console.error(err)
     }

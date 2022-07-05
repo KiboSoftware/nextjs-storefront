@@ -1,6 +1,6 @@
 import getConfig from 'next/config'
 
-import { buildBreadcrumbs, validateProductVariations, uiHelpers } from '@/lib/helpers'
+import { buildBreadcrumbs, uiHelpers } from '@/lib/helpers'
 import type { ProductCustom, BreadCrumb, ProductProperties } from '@/lib/types'
 
 import type { Product, ProductOption, ProductPriceRange, ProductProperty } from '@/lib/gql/types'
@@ -127,7 +127,7 @@ const getSegregatedOptions = (product: ProductCustom) => {
 }
 
 const validateAddToCart = (product: ProductCustom): boolean =>
-  validateProductVariations(product) && Boolean(product.fulfillmentMethod)
+  Boolean(product?.purchasableState?.isPurchasable) && Boolean(product.fulfillmentMethod)
 
 const getVariationProductCodeOrProductCode = (product: ProductCustom): string => {
   if (!product) return ''
