@@ -8,6 +8,7 @@ import { KiboDialog } from '@/components/common'
 import { useModalContext } from '@/context/ModalContext'
 import { storeLocationGetters } from '@/lib/getters/storeLocationGetters'
 import { setOrDeleteCookie } from '@/lib/helpers'
+import { LocationCustom } from '@/lib/types'
 
 import type { Maybe, Location } from '@/lib/gql/types'
 
@@ -28,8 +29,8 @@ const MyStoreDialog = (props: MyStoreProps) => {
     showModal({
       Component: StoreLocatorDialog,
       props: {
-        handleSetStore: async (selectedStore: string) => {
-          setOrDeleteCookie(selectedStore)
+        handleSetStore: async (selectedStore: LocationCustom) => {
+          setOrDeleteCookie(selectedStore?.name as string)
           closeModal()
         },
       },

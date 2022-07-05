@@ -17,6 +17,7 @@ import { StoreDetails } from '..'
 import { FullWidthDivider, KiboRadio } from '@/components/common'
 import SearchBar from '@/components/common/SearchBar/SearchBar'
 import { storeLocationGetters } from '@/lib/getters/storeLocationGetters'
+import { LocationCustom } from '@/lib/types'
 
 import type { Maybe, Location } from '@/lib/gql/types'
 
@@ -25,7 +26,7 @@ interface SearchStoreProps {
   searchTerm: string
   initialState: boolean
   selectedStore: string
-  setSelectedStore: (selectedStore: string) => void
+  setSelectedStore: (selectedStore: LocationCustom) => void
   setSearchTerm: (value: string) => void
   onStoreByZipcode: (userEnteredValue: string) => void
   onStoreByCurrentLocation: () => void
@@ -55,7 +56,8 @@ const SearchStore = (props: SearchStoreProps) => {
   })
 
   const handleStoreSelection = (value: string) => {
-    setSelectedStore(value)
+    const selectedLocation = locations.find((location) => location.code === value)
+    setSelectedStore(selectedLocation as LocationCustom)
   }
   return (
     <>

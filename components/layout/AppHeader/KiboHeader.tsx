@@ -30,7 +30,7 @@ import { MegaMenu, HamburgerMenu, SearchSuggestions } from '@/components/layout'
 import { useAuthContext, useModalContext } from '@/context'
 import { useCartQueries, useCategoryTree, usePurchaseLocation } from '@/hooks'
 import { setOrDeleteCookie } from '@/lib/helpers'
-import type { NavigationLink } from '@/lib/types'
+import type { LocationCustom, NavigationLink } from '@/lib/types'
 
 import type { Maybe, PrCategory } from '@/lib/gql/types'
 
@@ -227,8 +227,8 @@ const HeaderActions = (props: HeaderActionsProps) => {
       showModal({
         Component: StoreLocatorDialog,
         props: {
-          handleSetStore: async (selectedStore: string) => {
-            setOrDeleteCookie(selectedStore)
+          handleSetStore: async (selectedStore: LocationCustom) => {
+            setOrDeleteCookie(selectedStore?.name as string)
             closeModal()
           },
         },
