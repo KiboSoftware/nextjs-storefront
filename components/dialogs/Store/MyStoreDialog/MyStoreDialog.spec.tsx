@@ -3,8 +3,9 @@ import React from 'react'
 import { composeStories } from '@storybook/testing-react'
 import { render, screen } from '@testing-library/react'
 
-import { KiboDialogProps } from '../../common/KiboDialog/KiboDialog'
-import * as stories from './MyStoreDialog.stories' // import all stories from the stories file
+import * as stories from './MyStoreDialog.stories'
+import { KiboDialogProps } from '@/components/common/KiboDialog/KiboDialog'
+
 const { Common } = composeStories(stories)
 
 const onCloseMock = jest.fn()

@@ -33,6 +33,10 @@ const StoreLocatorDialog = (props: StoreLocatorProps) => {
     (Object.keys(storeLocations).length > 0 && !isError && (storeLocations as Maybe<Location>[])) ||
     []
 
+  const handleStoreByCurrentLocation = () => {
+    console.log('handleStoreByCurrentLocation')
+  }
+
   useEffect(() => {
     if (searchTerm.trim()) {
       refetch()
@@ -46,7 +50,8 @@ const StoreLocatorDialog = (props: StoreLocatorProps) => {
       <SearchStore
         locations={locations}
         handleSetStore={handleSetStore}
-        onStoreSearchByZipcode={setSearchTerm}
+        onStoreByZipcode={setSearchTerm}
+        onStoreByCurrentLocation={handleStoreByCurrentLocation}
       />
     ),
     showContentTopDivider: true,

@@ -22,16 +22,18 @@ import type { Maybe, Location } from '@/lib/gql/types'
 interface SearchStoreProps {
   locations: Maybe<Location>[]
   handleSetStore: (selectedStore: string) => void
-  onStoreSearchByZipcode: (userEnteredValue: string) => void
+  onStoreByZipcode: (userEnteredValue: string) => void
+  onStoreByCurrentLocation: () => void
 }
 
 const SearchStore = (props: SearchStoreProps) => {
-  const { locations, handleSetStore, onStoreSearchByZipcode } = props
+  const { locations, handleSetStore, onStoreByZipcode, onStoreByCurrentLocation } = props
   const [searchTerm, setSearchTerm] = useState<string>('')
   const { t } = useTranslation('common')
 
   const handleSearch = (userEnteredValue: string) => setSearchTerm(userEnteredValue)
-  const handleStoreSearchByZipcode = () => onStoreSearchByZipcode(searchTerm)
+  const handleStoreByZipcode = () => onStoreByZipcode(searchTerm)
+  const handleStoreByCurrentLocation = () => onStoreByCurrentLocation()
 
   return (
     <Box>
@@ -46,14 +48,20 @@ const SearchStore = (props: SearchStoreProps) => {
               variant="contained"
               name={t('search')}
               aria-label={t('search')}
-              onClick={handleStoreSearchByZipcode}
+              onClick={handleStoreByZipcode}
             >
               {t('search')}
             </Button>
           </Stack>
         </Box>
         <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
-          <Link color="grey.900" sx={{ cursor: 'pointer', pt: 1.5 }} variant={'body2'}>
+          <Link
+            component="button"
+            color="grey.900"
+            sx={{ cursor: 'pointer', pt: 1.5 }}
+            variant={'body2'}
+            onClick={handleStoreByCurrentLocation}
+          >
             {t('use-current-location')}
           </Link>
           <FormGroup>

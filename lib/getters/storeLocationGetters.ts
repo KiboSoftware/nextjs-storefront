@@ -42,7 +42,6 @@ const getHours = (location: Maybe<Location>) => {
 }
 
 const getLocations = (locations: Maybe<Location>[]) => {
-  console.log('getter', locations)
   return locations.length > 0
     ? locations?.map((location: Maybe<Location>) => ({
         code: getCode(location),
