@@ -133,7 +133,7 @@ const CartItem = (props: CartItemProps) => {
                 </Box>
               </ProductItem>
 
-              <Box sx={{ display: { xs: 'none', sm: 'none', md: 'block' } }}>
+              <Box sx={{ display: { xs: 'none', sm: 'none', md: 'block', ml: 1 } }}>
                 <CartItemActions />
               </Box>
             </Box>

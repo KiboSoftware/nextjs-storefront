@@ -9,7 +9,7 @@ import {
 } from '@mui/material'
 import { useTranslation } from 'next-i18next'
 
-import ProductOptionList from '../ProductOptionList/ProductOptionList'
+import { ProductOptionList } from '@/components/product'
 
 import type { CrProductOption } from '@/lib/gql/types'
 

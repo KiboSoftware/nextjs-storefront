@@ -13,20 +13,17 @@ import {
 } from '@mui/material'
 import { useTranslation } from 'next-i18next'
 
-import KiboImage from '@/components/common/KiboImage/KiboImage'
-import Price from '@/components/common/Price/Price'
-import ProductOption from '@/components/product/ProductOption/ProductOption'
-import ProductOptionList from '@/components/product/ProductOptionList/ProductOptionList'
+import { KiboImage, Price } from '@/components/common'
+import { ProductOption, ProductOptionList } from '@/components/product'
 import DefaultImage from '@/public/product_placeholder.svg'
 
 import type { Maybe, CrProductOption } from '@/lib/gql/types'
-
 export interface ProductItemProps {
   id?: Maybe<string>
   productCode?: Maybe<string>
   image: string
   name: string
-  options: Maybe<CrProductOption>[]
+  options: CrProductOption[]
   price?: string
   salePrice?: string
   qty?: number
@@ -40,8 +37,11 @@ export interface ProductItemProps {
 const styles = {
   imageContainer: {
     maxHeight: 150,
-    maxWidth: 150,
-    width: '45%',
+    maxWidth: 120,
+    flex: 1,
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
   },
 
   image: {
@@ -73,7 +73,7 @@ const ProductItem = (props: ProductItemProps) => {
 
   return (
     <Box key={id}>
-      <Box sx={{ display: 'flex', pb: 1, pr: 1, gap: '3%', flex: 1 }}>
+      <Box sx={{ display: 'flex', pb: 1, pr: 1, gap: 2, flex: 1 }}>
         <Box sx={{ ...styles.imageContainer }}>
           <KiboImage
             src={image || DefaultImage}
@@ -85,7 +85,7 @@ const ProductItem = (props: ProductItemProps) => {
           />
         </Box>
 
-        <Stack mr={1}>
+        <Stack mr={1} flex={1}>
           <CardContent sx={{ py: 0, px: 1 }}>
             <Typography variant="h4" data-testid="productName" pb={0.375}>
               {name}

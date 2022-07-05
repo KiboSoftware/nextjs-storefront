@@ -1,4 +1,4 @@
-import { CustomerAccount, CustomerAuthTicket } from '@/lib/gql/types'
+import type { CustomerAccount, CustomerAuthTicket } from '@/lib/gql/types'
 
 export const userResponseMock: CustomerAccount = {
   id: 1074,

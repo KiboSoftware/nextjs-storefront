@@ -4,7 +4,7 @@ import { Box, Chip, Tooltip } from '@mui/material'
 import { grey } from '@mui/material/colors'
 import { useTranslation } from 'next-i18next'
 
-import { ProductOptionValue } from '@/lib/gql/types'
+import type { ProductOptionValue } from '@/lib/gql/types'
 
 interface ColorSelectorProps {
   attributeFQN: string

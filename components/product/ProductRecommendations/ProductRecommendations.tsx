@@ -2,7 +2,7 @@ import React from 'react'
 
 import { Box, Grid, Typography } from '@mui/material'
 
-import ProductCard from '@/components/product/ProductCard/ProductCard'
+import { ProductCard } from '@/components/product'
 import { ProductCustom } from '@/lib/types'
 
 interface ProductRecommendationsProps {
