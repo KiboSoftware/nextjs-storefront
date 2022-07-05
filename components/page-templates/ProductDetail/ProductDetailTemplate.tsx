@@ -123,6 +123,10 @@ const ProductDetailTemplate = (props: ProductDetailTemplateProps) => {
   // purchase location should be passed once implemented
   const fulfillmentOptions = productGetters.getProductFulfillmentOptions(product, { name: '' })
 
+  const handleFulfillmentOptions = () => {
+    return null
+  }
+
   return (
     <>
       <Grid container>
@@ -239,8 +243,8 @@ const ProductDetailTemplate = (props: ProductDetailTemplateProps) => {
           <Box paddingY={1}>
             <FulfillmentOptions
               fulfillmentOptions={fulfillmentOptions}
-              onFullfillmentOptionChange={() => null}
-              onStoreSelection={() => null}
+              onFullfillmentOptionChange={() => handleFulfillmentOptions}
+              onStoreSelection={() => handleFulfillmentOptions}
             />
           </Box>
 
