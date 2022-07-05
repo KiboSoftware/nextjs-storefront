@@ -10,6 +10,7 @@ const { Common } = composeStories(stories)
 
 describe('[components] Fulfillment Options Component', () => {
   const setup = () => {
+    const user = userEvent.setup()
     const mockOnStoreSelectClick = jest.fn()
     const mockOnFullfillmentOptionChange = jest.fn()
     render(
@@ -21,6 +22,7 @@ describe('[components] Fulfillment Options Component', () => {
     )
 
     return {
+      user,
       mockOnStoreSelectClick,
       mockOnFullfillmentOptionChange,
     }
@@ -48,22 +50,22 @@ describe('[components] Fulfillment Options Component', () => {
     expect(selectStoreTexts).toStrictEqual([])
   })
 
-  it('should call onStoreSelection if change store or select store is clicked', () => {
-    const { mockOnStoreSelectClick } = setup()
+  it('should call onStoreSelection if change store or select store is clicked', async () => {
+    const { user, mockOnStoreSelectClick } = setup()
 
-    userEvent.click(screen.getAllByText(/Change-Store/i)[0])
+    await user.click(screen.getAllByText(/Change-Store/i)[0])
 
     expect(mockOnStoreSelectClick).toBeCalled()
   })
 
-  it('should call onFullfillmentOptionChange if radio option selection is changed', () => {
-    const { mockOnFullfillmentOptionChange } = setup()
+  it('should call onFullfillmentOptionChange if radio option selection is changed', async () => {
+    const { user, mockOnFullfillmentOptionChange } = setup()
 
     const radio = screen.getByRole('radio', {
       name: /ship to home/i,
     })
 
-    userEvent.click(radio)
+    await user.click(radio)
 
     expect(mockOnFullfillmentOptionChange).toBeCalled()
   })

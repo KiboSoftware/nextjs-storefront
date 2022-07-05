@@ -55,14 +55,14 @@ describe('[components] - CartItem Integration', () => {
     expect(onQuantityUpdateMock).toHaveBeenCalledTimes(2)
   })
 
-  it('should handle fulfillment option selection', () => {
-    const { onFulfillmentOptionSelectionMock } = setup()
+  it('should handle fulfillment option selection', async () => {
+    const { user, onFulfillmentOptionSelectionMock } = setup()
 
     const radio = screen.getByRole('radio', {
       name: /ship to home/i,
     })
 
-    userEvent.click(radio)
+    await user.click(radio)
 
     expect(onFulfillmentOptionSelectionMock).toBeCalled()
   })
