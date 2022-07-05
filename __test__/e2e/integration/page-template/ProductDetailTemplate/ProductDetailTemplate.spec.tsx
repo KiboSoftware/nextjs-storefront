@@ -2,7 +2,7 @@ import React from 'react'
 
 import '@testing-library/jest-dom'
 import { composeStories } from '@storybook/testing-react'
-import { render, screen, waitFor, fireEvent, within, act, cleanup } from '@testing-library/react'
+import { render, screen, waitFor, fireEvent, within, cleanup } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 
 import { ProductCustomMock } from '@/__mocks__/stories/ProductCustomMock'
