@@ -14,20 +14,22 @@ import {
 } from '@mui/material'
 import { useTranslation } from 'next-i18next'
 
-import ViewStore from '../ViewStore/ViewStore'
+import { ViewStore } from '..'
 import SearchBar from '@/components/common/SearchBar/SearchBar'
 
 import type { Maybe, Location } from '@/lib/gql/types'
 
 interface SearchStoreProps {
   locations: Maybe<Location>[]
+  initialState: boolean
   handleSetStore: (selectedStore: string) => void
   onStoreByZipcode: (userEnteredValue: string) => void
   onStoreByCurrentLocation: () => void
 }
 
 const SearchStore = (props: SearchStoreProps) => {
-  const { locations, handleSetStore, onStoreByZipcode, onStoreByCurrentLocation } = props
+  const { locations, initialState, handleSetStore, onStoreByZipcode, onStoreByCurrentLocation } =
+    props
   const [searchTerm, setSearchTerm] = useState<string>('')
   const { t } = useTranslation('common')
 
@@ -76,13 +78,17 @@ const SearchStore = (props: SearchStoreProps) => {
       </Stack>
       <Divider />
       <Typography variant="body2" py={2} textAlign="center">
-        {t('find-stores-within-100-miles')}
+        {initialState
+          ? t('find-stores-within-100-miles')
+          : locations && locations?.length > 0
+          ? t('stores-within-100-miles', { seletedStore: locations?.length })
+          : t('no-stores-within-100-miles')}
       </Typography>
       <Divider />
+
       <ViewStore
-        spLocations={locations}
-        selectedStore={''}
-        radio={false}
+        spLocations={locations as Maybe<Location>[]}
+        radio={true}
         handleSetStore={handleSetStore}
       />
       <Divider />

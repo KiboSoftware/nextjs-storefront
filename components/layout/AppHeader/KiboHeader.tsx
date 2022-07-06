@@ -27,11 +27,11 @@ import LoginDialog from '../Login'
 import SearchSuggestions from '../SearchSuggestions/SearchSuggestions'
 import HeaderAction from '@/components/common/HeaderAction/HeaderAction'
 import KiboLogo from '@/components/common/KiboLogo/KiboLogo'
-import { MyStoreDialog } from '@/components/dialogs/Store'
+import { MyStoreDialog, StoreLocatorDialog } from '@/components/dialogs/Store'
 import { HamburgerMenu } from '@/components/layout'
 import MegaMenu from '@/components/layout/MegaMenu/MegaMenu'
 import { useAuthContext, useModalContext } from '@/context'
-import { useCartQueries, useCategoryTree } from '@/hooks'
+import { useCartQueries, useCategoryTree, set, usePurchaseLocation } from '@/hooks'
 import type { NavigationLink } from '@/lib/types'
 
 import type { Maybe, PrCategory } from '@/lib/gql/types'
@@ -205,6 +205,8 @@ const HeaderActions = (props: HeaderActionsProps) => {
   const router = useRouter()
   const { data: cart } = useCartQueries({})
   const itemCount = cart?.items?.length || 0
+  const [selectedStore, setSelectedStore] = useState<string>('')
+  // const { refetch, isError, data: storeLocations } = usePurchaseLocation(selectedStore)
 
   const openLoginModal = () => {
     setAuthError('')
@@ -216,7 +218,17 @@ const HeaderActions = (props: HeaderActionsProps) => {
   }
 
   const openStoreLocatorModal = () => {
-    showModal({ Component: MyStoreDialog })
+    showModal({
+      Component: StoreLocatorDialog,
+      props: {
+        handleSetStore: async (selectedStore: string) => {
+          console.log('selectedStore', selectedStore)
+          setSelectedStore(selectedStore)
+          set(selectedStore)
+          //  await refetch()
+        },
+      },
+    })
   }
 
   return (

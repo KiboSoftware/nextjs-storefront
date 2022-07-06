@@ -3,54 +3,59 @@ import React, { useEffect, useState } from 'react'
 import { Box, Button } from '@mui/material'
 import { useTranslation } from 'next-i18next'
 
-import SearchStore from '../SearchStore/SearchStore'
-import { locationCollectionMock } from '@/__mocks__/stories/locationCollectionMock'
+import { SearchStore } from '..'
 import KiboDialog from '@/components/common/KiboDialog/KiboDialog'
 import { useModalContext } from '@/context'
 import { useStoreLocations } from '@/hooks'
+import { useCurrentLocation } from '@/hooks/custom/useCurrentLocation/useCurrentLocation'
 
 import type { Location, Maybe } from '@/lib/gql/types'
 
 interface StoreLocatorProps {
   isOpen: boolean
   isDialogCentered: boolean
-  handleSetStore: () => void
+  handleSetStore: (selectedStore: string) => void
 }
 
 // Component
 const StoreLocatorDialog = (props: StoreLocatorProps) => {
   const { isOpen = true, isDialogCentered, handleSetStore } = props
+  const [zipcode, setZipcode] = useState<string>('')
+
   const { t } = useTranslation()
   const { closeModal } = useModalContext()
-  const [searchTerm, setSearchTerm] = useState<string>('')
+  const { currentLocation, getCurrentLocation } = useCurrentLocation()
   const {
     refetch,
     isError,
-    data: storeLocations,
-  } = useStoreLocations(searchTerm ? { filter: `geo near(${searchTerm},160934)` } : undefined)
+    data: spLocations,
+  } = useStoreLocations(zipcode, currentLocation, '160934')
+  const initialState = !(zipcode && currentLocation) && Object.keys(spLocations).length === 0
 
-  const locations =
-    (Object.keys(storeLocations).length > 0 && !isError && (storeLocations as Maybe<Location>[])) ||
-    []
+  const handleStoreByCurrentLocation = async () => {
+    getCurrentLocation()
+    setZipcode('')
+  }
 
-  const handleStoreByCurrentLocation = () => {
-    console.log('handleStoreByCurrentLocation')
+  const handleSetStoreClick = async () => {
+    console.log('handleSetStoreClick')
   }
 
   useEffect(() => {
-    if (searchTerm.trim()) {
+    if (zipcode.trim() || currentLocation) {
       refetch()
     }
-  }, [refetch, searchTerm])
+  }, [refetch, zipcode, currentLocation])
 
   const DialogArgs = {
     isOpen: isOpen,
     Title: t('select-store'),
     Content: (
       <SearchStore
-        locations={locations}
+        locations={!isError ? (spLocations as Maybe<Location>[]) : []}
+        initialState={initialState}
         handleSetStore={handleSetStore}
-        onStoreByZipcode={setSearchTerm}
+        onStoreByZipcode={setZipcode}
         onStoreByCurrentLocation={handleStoreByCurrentLocation}
       />
     ),
@@ -73,7 +78,7 @@ const StoreLocatorDialog = (props: StoreLocatorProps) => {
         >
           {t('cancel')}
         </Button>
-        <Button sx={{ width: '100%' }} variant="contained" onClick={handleSetStore}>
+        <Button sx={{ width: '100%' }} variant="contained" onClick={handleSetStoreClick}>
           {t('set-store')}
         </Button>
       </Box>

@@ -3,11 +3,11 @@ import React from 'react'
 import { Box, Button } from '@mui/material'
 import { useTranslation } from 'next-i18next'
 
-import StoreLocatorDialog from '../StoreLocatorDialog/StoreLocatorDialog'
-import ViewStore from '../ViewStore/ViewStore'
+import { StoreLocatorDialog, StoreDetails } from '..'
 import { locationCollectionMock } from '@/__mocks__/stories/locationCollectionMock'
 import KiboDialog from '@/components/common/KiboDialog/KiboDialog'
 import { useModalContext } from '@/context/ModalContext'
+import { storeLocationGetters } from '@/lib/getters/storeLocationGetters'
 
 interface MyStoreProps {
   isOpen: boolean
@@ -25,20 +25,14 @@ const MyStoreDialog = (props: MyStoreProps) => {
     showModal({ Component: StoreLocatorDialog })
   }
 
-  console.log(isOpen)
-  const locations = locationCollectionMock.spLocations.items || []
+  const spLocations = locationCollectionMock.spLocations.items || []
+
+  const location = storeLocationGetters.getLocations(spLocations)
 
   const DialogArgs = {
     isOpen: isOpen,
     Title: t('my-store'),
-    Content: (
-      <ViewStore
-        spLocations={locations}
-        selectedStore={''}
-        radio={false}
-        handleSetStore={handleSetStore}
-      />
-    ),
+    Content: <StoreDetails {...location[0]} />,
     showContentTopDivider: true,
     showContentBottomDivider: false,
     Actions: (

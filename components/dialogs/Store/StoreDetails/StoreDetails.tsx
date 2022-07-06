@@ -11,9 +11,9 @@ const StoreDetails = (location: any) => {
   const [expanded, setExpanded] = useState<boolean>(false)
 
   return (
-    <Box py={2}>
+    <Box py={1.5}>
       <Typography variant="h5" fontWeight={600} pb={0.5}>
-        {location?.streetAddress}
+        {location?.name}
       </Typography>
       <Typography variant="body2">{location?.streetAddress}</Typography>
       <Typography variant="body2">{location?.cityStateZip}</Typography>
@@ -49,7 +49,7 @@ const StoreDetails = (location: any) => {
           <Typography variant="body2" fontWeight={600} component="div">
             {t('store-hours')}
           </Typography>
-          {location?.hours.map((hour: any) => (
+          {location?.hours?.map((hour: any) => (
             <Box key={hour.day} py={1} sx={{ display: 'flex', justifyContent: 'space-between' }}>
               <Typography textTransform={'capitalize'} variant="body2">
                 {hour.day}
