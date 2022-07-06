@@ -27,7 +27,7 @@ module.exports = {
     debounceTimeout: '1000',
     productListing: {
       sortOptions: [
-        { value: 'Default', id: '' },
+        { value: 'Best Match', id: '' },
         { value: 'Price: Low to High', id: 'price asc' },
         { value: 'Price: High to Low', id: 'price desc' },
         { value: 'Latest', id: 'createDate desc' },

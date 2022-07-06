@@ -1,7 +1,12 @@
 import { buildBreadcrumbs, uiHelpers } from '@/lib/helpers'
-import type { BreadCrumb } from '@/lib/types'
+import type { BreadCrumb, FacetResultsData } from '@/lib/types'
 
 import type { Facet, PrCategory } from '@/lib/gql/types'
+
+interface SortOptionType {
+  value: string
+  id: string
+}
 
 const getBreadcrumbs = (searchData: { categories: PrCategory[] }): BreadCrumb[] => {
   const homeCrumb = [{ text: 'Home', link: '/' }]
@@ -23,7 +28,19 @@ const getSelectedFacets = (facets?: Facet[]) => {
   return selectedFacets.flat()
 }
 
+const getSortOptions = (searchData: FacetResultsData, sortOptions: SortOptionType[]) => {
+  const options = sortOptions.map((option) => ({
+    ...option,
+    selected: option.id === searchData.input?.sort,
+  }))
+
+  const selected = options.find((option) => option.selected)?.id || ''
+
+  return { options, selected }
+}
+
 export const facetGetters = {
   getBreadcrumbs,
   getSelectedFacets,
+  getSortOptions,
 }

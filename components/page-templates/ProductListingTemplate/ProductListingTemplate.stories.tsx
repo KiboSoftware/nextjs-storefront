@@ -25,33 +25,36 @@ const breadcrumbs = [
   },
 ]
 
-const sortingValues = [
-  {
-    value: 'Default',
-    id: '',
-    selected: false,
-  },
-  {
-    value: 'Price: Low to High',
-    id: 'price asc',
-    selected: false,
-  },
-  {
-    value: 'Price: High to Low',
-    id: 'price desc',
-    selected: false,
-  },
-  {
-    value: 'Latest',
-    id: 'createDate desc',
-    selected: false,
-  },
-  {
-    value: 'Oldest',
-    id: 'createDate asc',
-    selected: false,
-  },
-]
+const sortingValues = {
+  options: [
+    {
+      value: 'Best Match',
+      id: '',
+      selected: false,
+    },
+    {
+      value: 'Price: Low to High',
+      id: 'price asc',
+      selected: false,
+    },
+    {
+      value: 'Price: High to Low',
+      id: 'price desc',
+      selected: false,
+    },
+    {
+      value: 'Latest',
+      id: 'createDate desc',
+      selected: false,
+    },
+    {
+      value: 'Oldest',
+      id: 'createDate asc',
+      selected: false,
+    },
+  ],
+  selected: '',
+}
 
 export default {
   title: 'Page Templates/product-listing',
@@ -77,8 +80,8 @@ Category.args = {
   products: productSearchResultMock?.items as ProductCustom[],
   sortingValues,
   categoryFacet: categoryFacetDataMock,
+  pageSize: 16,
   totalResults: 149,
-  initialProductsToShow: 16,
   isLoading: false,
   appliedFilters: facetValueMock,
 }

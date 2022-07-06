@@ -27,13 +27,14 @@ interface ProductListingTemplateProps {
   breadCrumbsList: BreadCrumbType[]
   facetList?: FacetType[]
   products?: Product[]
-  sortingValues?: SortingValues[]
+  sortingValues?: { options: SortingValues[]; selected: string }
   categoryFacet: CategoryFacetData
   totalResults: number
-  initialProductsToShow?: number
   isLoading?: boolean
   appliedFilters: FacetValue[]
+  pageSize: number
   onSortingSelection: (value: string) => void
+  onChangePagination: () => void
 }
 
 const styles = {
@@ -180,20 +181,17 @@ const ProductListingTemplate = (props: ProductListingTemplateProps) => {
     totalResults,
     isLoading,
     appliedFilters,
+    pageSize,
     onSortingSelection,
-    initialProductsToShow = 16,
+    onChangePagination,
   } = props
   const { getProductLink } = uiHelpers()
   const { updateRoute } = useUpdateRoutes()
-  const isShowMoreVisible = products?.length > initialProductsToShow
   const [showFilterBy, setFilterBy] = useState<boolean>(false)
-  const [isShowMoreButtonVisible, setShowMoreButtonVisible] = useState<boolean>(isShowMoreVisible)
-  const [productToShows, setProductsToShow] = useState<Product[]>([]) // Setting the initial product count to 16 for skeleton loading
 
   const { t } = useTranslation(['product', 'common'])
 
   const handleFilterBy = () => setFilterBy(!showFilterBy)
-  const showMoreProducts = () => setShowMoreButtonVisible(!isShowMoreButtonVisible)
 
   const handleClearAllFilters = () => {
     updateRoute('')
@@ -202,14 +200,6 @@ const ProductListingTemplate = (props: ProductListingTemplateProps) => {
   const handleRemoveSelectedTile = (selectedTile: string) => {
     updateRoute(selectedTile)
   }
-
-  useEffect(() => {
-    const noOfItemsToShow = isShowMoreButtonVisible ? initialProductsToShow : products?.length
-    if (products?.length) {
-      const sliced = products.slice(0, noOfItemsToShow)
-      setProductsToShow([...sliced])
-    }
-  }, [initialProductsToShow, isShowMoreButtonVisible, products])
 
   return (
     <>
@@ -224,7 +214,9 @@ const ProductListingTemplate = (props: ProductListingTemplateProps) => {
             <Box sx={{ ...styles.navBarMain }}>
               {!isLoading ? (
                 <Typography variant="h1" sx={{ ...styles.categoryFacetHeader }}>
-                  {categoryFacet.header}
+                  {categoryFacet.header
+                    ? categoryFacet.header
+                    : breadCrumbsList[breadCrumbsList.length - 1].text}
                 </Typography>
               ) : (
                 <Skeleton variant="rectangular" sx={{ ...styles.categoryFacetHeaderLoading }} />
@@ -244,14 +236,14 @@ const ProductListingTemplate = (props: ProductListingTemplateProps) => {
                   {!isLoading ? (
                     <KiboSelect
                       sx={{ typography: 'body2' }}
-                      placeholder={t('best-match')}
-                      onChange={onSortingSelection}
+                      value={sortingValues?.selected || ''}
+                      onChange={(_name, value) => onSortingSelection(value)}
                     >
-                      {sortingValues?.map((sortingVal) => (
+                      {sortingValues?.options?.map((sortingVal) => (
                         <MenuItem
                           sx={{ typography: 'body2' }}
                           key={sortingVal?.id}
-                          value={sortingVal?.value}
+                          value={sortingVal?.id}
                         >
                           {sortingVal?.value}
                         </MenuItem>
@@ -327,7 +319,7 @@ const ProductListingTemplate = (props: ProductListingTemplateProps) => {
               )}
               {!isLoading ? (
                 <Grid container sx={{ flexWrap: 'wrap' }}>
-                  {productToShows.map((product) => {
+                  {products?.map((product) => {
                     return (
                       <Grid
                         key={productGetters.getProductId(product)}
@@ -338,9 +330,12 @@ const ProductListingTemplate = (props: ProductListingTemplateProps) => {
                         xs={6}
                       >
                         <ProductCard
-                          imageUrl={productGetters.handleProtocolRelativeUrl(
-                            productGetters.getCoverImage(product)
-                          )}
+                          imageUrl={
+                            productGetters.getCoverImage(product) &&
+                            productGetters.handleProtocolRelativeUrl(
+                              productGetters.getCoverImage(product)
+                            )
+                          }
                           link={getProductLink(product?.productCode as string)}
                           price={t<string>('common:currency', {
                             val: productGetters.getPrice(product).regular,
@@ -369,19 +364,20 @@ const ProductListingTemplate = (props: ProductListingTemplateProps) => {
                 </Grid>
               )}
 
-              {!isLoading && isShowMoreButtonVisible && (
+              {!isLoading && pageSize < totalResults && (
                 <Box>
                   <Box sx={{ ...styles.productResults, color: 'grey.600', typography: 'body2' }}>
                     {t('products-to-show', {
-                      m: `${initialProductsToShow}`,
-                      n: `${products?.length}`,
+                      m: `${pageSize}`,
+                      n: `${totalResults}`,
                     })}
                   </Box>
                   <Box sx={{ ...styles.productResults }}>
                     <Button
+                      id="show-more-button"
                       sx={{ ...styles.showMoreButton }}
                       variant="contained"
-                      onClick={() => showMoreProducts()}
+                      onClick={onChangePagination}
                       color="inherit"
                     >
                       {t('show-more')}
