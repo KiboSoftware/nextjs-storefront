@@ -8,6 +8,7 @@ export * from './queries/useCart/useCartQueries'
 export * from './queries/useStoreLocations/useStoreLocations'
 export * from './queries/usePurchaseLocation/usePurchaseLocation'
 export * from './queries/useStoreLocations/useStoreLocations'
+export * from './queries/usePurchaseLocation/usePurchaseLocation'
 
 // Custom hooks
 export * from './custom/useDebounce/useDebounce'

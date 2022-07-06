@@ -11,43 +11,38 @@ import type { Maybe, Location } from '@/lib/gql/types'
 
 interface ViewStoreProps {
   spLocations: Maybe<Location>[]
-  selectedStore: string
+  selectedStore?: string
   radio: boolean
   handleSetStore: (selectedStore: string) => void
 }
 
 const ViewStore = (props: ViewStoreProps) => {
-  const { spLocations, selectedStore, radio } = props
-  const { t } = useTranslation('common')
+  const { spLocations, radio, handleSetStore } = props
   const [selectedRadio, setSelectedRadio] = React.useState('')
 
   const locations = storeLocationGetters.getLocations(spLocations)
+  const radioOptions = locations.map((location) => {
+    return {
+      value: location?.code,
+      label: <StoreDetails {...location} />,
+    }
+  })
 
-  const handleChange = (value: string) => {
+  const handleStoreSelection = (value: string) => {
+    handleSetStore(value)
     setSelectedRadio(value)
   }
-  const radioOptions = [
-    {
-      value: '',
-      label: <StoreDetails {...location} />,
-    },
-  ]
 
   return (
     <Box maxWidth={'fit-content'}>
-      {locations?.map((location) => (
-        <Box key={location?.code}>
-          {radio && (
-            <KiboRadio
-              radioOptions={radioOptions}
-              selected={selectedRadio}
-              sx={{ alignItems: 'flex-start' }}
-              onChange={handleChange}
-            />
-          )}
-          {!radio && <StoreDetails {...location} />}
-        </Box>
-      ))}
+      {radio && (
+        <KiboRadio
+          radioOptions={radioOptions}
+          selected={selectedRadio}
+          sx={{ alignItems: 'flex-start' }}
+          onChange={handleStoreSelection}
+        />
+      )}
     </Box>
   )
 }
