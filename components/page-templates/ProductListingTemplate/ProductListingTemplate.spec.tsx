@@ -71,6 +71,7 @@ describe('[component] - Category', () => {
     expect(showMoreButton).toBeVisible()
     expect(listValues.map((list) => list.textContent)).toEqual(sortingValues)
     expect(totalResults).toBeInTheDocument()
+    expect(itemsCount).toBeInTheDocument()
   })
 
   it('should call onChangePagination when user clicks on show more button', async () => {
