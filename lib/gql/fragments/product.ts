@@ -36,6 +36,7 @@ fragment productContent on Product {
       imageUrl
       imageLabel
       mediaType
+      altText
     }
   }
 }
