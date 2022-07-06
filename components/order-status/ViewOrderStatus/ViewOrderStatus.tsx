@@ -15,7 +15,7 @@ interface FormData {
 }
 
 export interface ViewOrderStatusProps {
-  onOrderStatusSubmit: (data: { [x: string]: string }) => void
+  onOrderStatusSubmit: (data: FormData) => void
   lookupErrorMessage?: string
 }
 
@@ -45,7 +45,7 @@ const ViewOrderStatus = (props: ViewOrderStatusProps) => {
     control,
     formState: { errors, isDirty, isValid },
     handleSubmit,
-  } = useForm({
+  } = useForm<FormData>({
     mode: 'all',
     reValidateMode: 'onChange',
     defaultValues: undefined,
@@ -53,14 +53,7 @@ const ViewOrderStatus = (props: ViewOrderStatusProps) => {
     shouldFocusError: true,
   })
 
-  const onValid = async (formData: { [x: string]: string }) => {
-    console.log(`formData: ${JSON.stringify(formData)}`)
-    onOrderStatusSubmit(formData)
-  }
-
-  const handleSubmitForm = () => {
-    handleSubmit(onValid)()
-  }
+  const onValid = async (formData: FormData) => onOrderStatusSubmit(formData)
 
   return (
     <Stack gap={4}>
@@ -69,63 +62,63 @@ const ViewOrderStatus = (props: ViewOrderStatusProps) => {
 
       <Stack gap={1}>
         <Typography variant="h4" sx={{ fontWeight: 'bold' }}>
-          {t('checking-the-status-of-your-order-is-fast-and-simple')}
+          {t('check-order-status-fast-simple')}
         </Typography>
-        <Typography>
-          {t('simply-enter-your-order-number-and-billing-email-to-track-your-order')}
-        </Typography>
+        <Typography>{t('check-order-status-instruction')}</Typography>
       </Stack>
 
       <Stack>
-        <Stack sx={{ maxWidth: '910px' }} direction={{ xs: 'column', md: 'row' }}>
-          <Controller
-            name="orderNumber"
-            control={control}
-            render={({ field }) => (
-              <KiboTextBox
-                {...field}
-                value={field.value}
-                label={t('order-number')}
-                ref={null}
-                error={!!errors?.orderNumber}
-                helperText={errors?.orderNumber?.message}
-                onChange={(_name, value) => field.onChange(value)}
-                onBlur={field.onBlur}
-                required={true}
-                sx={{ maxWidth: '421px' }}
-              />
-            )}
-          />
+        <form onSubmit={handleSubmit(onValid)}>
+          <Stack sx={{ maxWidth: '910px' }} direction={{ xs: 'column', md: 'row' }}>
+            <Controller
+              name="orderNumber"
+              control={control}
+              render={({ field }) => (
+                <KiboTextBox
+                  {...field}
+                  value={field.value}
+                  label={t('order-number')}
+                  ref={null}
+                  error={!!errors?.orderNumber}
+                  helperText={errors?.orderNumber?.message}
+                  onChange={(_name, value) => field.onChange(value)}
+                  onBlur={field.onBlur}
+                  required={true}
+                  sx={{ maxWidth: '421px' }}
+                />
+              )}
+            />
 
-          <Controller
-            name="billingEmail"
-            control={control}
-            render={({ field }) => (
-              <KiboTextBox
-                {...field}
-                value={field.value}
-                label={t('billing-email')}
-                ref={null}
-                error={!!errors?.billingEmail}
-                helperText={errors?.billingEmail?.message}
-                onChange={(_name, value) => field.onChange(value)}
-                onBlur={field.onBlur}
-                required={true}
-                sx={{ maxWidth: '421px' }}
-              />
-            )}
-          />
-        </Stack>
+            <Controller
+              name="billingEmail"
+              control={control}
+              render={({ field }) => (
+                <KiboTextBox
+                  {...field}
+                  value={field.value}
+                  label={t('billing-email')}
+                  ref={null}
+                  error={!!errors?.billingEmail}
+                  helperText={errors?.billingEmail?.message}
+                  onChange={(_name, value) => field.onChange(value)}
+                  onBlur={field.onBlur}
+                  required={true}
+                  sx={{ maxWidth: '421px' }}
+                />
+              )}
+            />
+          </Stack>
 
-        <Button
-          variant="contained"
-          sx={{ ...buttonStyle }}
-          fullWidth
-          disabled={!isDirty || !isValid}
-          onClick={handleSubmitForm}
-        >
-          {t('check-order-status')}
-        </Button>
+          <Button
+            type="submit"
+            variant="contained"
+            sx={{ ...buttonStyle }}
+            fullWidth
+            disabled={!isDirty || !isValid}
+          >
+            {t('check-order-status')}
+          </Button>
+        </form>
       </Stack>
 
       {lookupErrorMessage && <Box>{lookupErrorMessage}</Box>}

@@ -35,12 +35,8 @@ describe('[component] - ViewOrderStatus', () => {
     setup()
 
     const viewOrderStatusText = screen.getByText(/view-order-status/i)
-    const checkingTheStatusOfYourOrderText = screen.getByText(
-      /checking-the-status-of-your-order-is-fast-and-simple/i
-    )
-    const simplyEnterYourOrderText = screen.getByText(
-      /simply-enter-your-order-number-and-billing-email-to-track-your-order/i
-    )
+    const checkingTheStatusOfYourOrderText = screen.getByText(/check-order-status-fast-simple/i)
+    const simplyEnterYourOrderText = screen.getByText(/check-order-status-instruction/i)
     const textBoxMock = screen.getAllByTestId('text-box-mock')
     const checkOrderStatusButton = screen.getByRole('button', { name: /check-order-status/i })
     const lookupMessage = screen.queryByText(lookupErrorMessage as string)

@@ -17,7 +17,7 @@ describe('[component] - ViewOrderStatus', () => {
     return { user, onOrderStatusSubmitMock }
   }
 
-  it('should display "Order number is required" message when user does not enters Order Number', async () => {
+  it('should display required message when user does not enters Order Number', async () => {
     const { user } = setup()
 
     const orderNumberTextBox = screen.getByRole('textbox', { name: /order-number/i })
@@ -29,7 +29,7 @@ describe('[component] - ViewOrderStatus', () => {
     expect(orderNumberErrorMessage).toBeVisible()
   })
 
-  it('should display "Billing Email is required" message when user does not enters Billing Email', async () => {
+  it('should display required message when user does not enters Billing Email', async () => {
     const { user } = setup()
 
     const billingEmailTextBox = screen.getByRole('textbox', { name: /billing-email/i })
@@ -41,7 +41,7 @@ describe('[component] - ViewOrderStatus', () => {
     expect(billingEmailErrorMessage).toBeVisible()
   })
 
-  it('should display "Billing Email must be a valid email" message when user enters invalid Billing Email', async () => {
+  it('should display invalid message message when user enters invalid Billing Email', async () => {
     const { user } = setup()
 
     const billingEmailTextBox = screen.getByRole('textbox', { name: /billing-email/i })
