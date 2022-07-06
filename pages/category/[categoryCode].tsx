@@ -86,7 +86,7 @@ const CategoryPage: NextPage<CategoryPageType> = (props) => {
 
   useEffect(() => {
     setSearchParams(router.query as unknown as CategorySearchParams)
-    productSearchResult?.pageSize > 16 &&
+    productSearchResult?.pageSize >= 16 &&
       document.getElementById('show-more-button')?.scrollIntoView()
   }, [router.query])
 

@@ -214,7 +214,7 @@ const ProductListingTemplate = (props: ProductListingTemplateProps) => {
             <Box sx={{ ...styles.navBarMain }}>
               {!isLoading ? (
                 <Typography variant="h1" sx={{ ...styles.categoryFacetHeader }}>
-                  {categoryFacet.header && categoryFacet.header}
+                  {categoryFacet && categoryFacet.header && categoryFacet.header}
                   {!categoryFacet.header && breadCrumbsList[breadCrumbsList.length - 1].text}
                 </Typography>
               ) : (
