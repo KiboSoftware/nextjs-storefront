@@ -4,15 +4,23 @@ import { makeGraphQLClient } from '@/lib/gql/client'
 import { addToCartMutation } from '@/lib/gql/mutations'
 import { buildAddToCartInput } from '@/lib/helpers/buildAddToCartInput'
 
-import type { ProductOptionSelectionInput } from '@/lib/gql/types'
+import { ProductOption } from '@/lib/gql/types'
 
-export interface ConfigureProductDetails {
-  updatedOptions: ProductOptionSelectionInput[]
+export interface AddToCartProductInput {
+  options: ProductOption[]
   productCode: string
+  variationProductCode?: string
+  fulfillmentMethod?: string
+  purchaseLocationCode?: string
+}
+interface AddToCartInputParams {
+  product: AddToCartProductInput
+  quantity: number
 }
 
-const addToCart = async ({ product, quantity }: any) => {
+const addToCart = async (props: AddToCartInputParams) => {
   const client = makeGraphQLClient()
+  const { product, quantity } = props
 
   const variables = {
     productToAdd: buildAddToCartInput(product, quantity),

@@ -12,7 +12,18 @@ describe('[helpers] buildAddToCartInput function', () => {
       },
     ]
     const quantity = 2
-    expect(buildAddToCartInput({ ...mockedProduct, options }, quantity)).toStrictEqual({
+    expect(
+      buildAddToCartInput(
+        {
+          options,
+          productCode: mockedProduct.productCode as string,
+          variationProductCode: mockedProduct.variationProductCode as string,
+          fulfillmentMethod: mockedProduct.fulfillmentMethod,
+          purchaseLocationCode: mockedProduct.purchaseLocationCode,
+        },
+        quantity
+      )
+    ).toStrictEqual({
       product: {
         options,
         productCode: mockedProduct.productCode,

@@ -1,7 +1,10 @@
 import { CartItemInput } from '../gql/types'
-import { ProductCustom } from '../types'
+import { AddToCartProductInput } from '@/hooks/mutations/useCartMutation/useCartMutation'
 
-export const buildAddToCartInput = (product: ProductCustom, quantity: number): CartItemInput => {
+export const buildAddToCartInput = (
+  product: AddToCartProductInput,
+  quantity: number
+): CartItemInput => {
   return {
     product: {
       options: product?.options,

@@ -141,6 +141,9 @@ const getProductDetails = (product: ProductCustom) => {
 
   return {
     productName: getName(product),
+    productCode: getProductId(product),
+    variationProductCode: getVariationProductCodeOrProductCode(product),
+    fulfillmentMethod: getSelectedFullfillmentOption(product),
     productPrice: getPrice(product),
     productPriceRange: getPriceRange(product),
     productRating: getRating(product),

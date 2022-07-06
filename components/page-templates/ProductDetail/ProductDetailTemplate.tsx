@@ -58,6 +58,9 @@ const ProductDetailTemplate = (props: ProductDetailTemplateProps) => {
   // Getters
   const {
     productName,
+    productCode,
+    variationProductCode,
+    fulfillmentMethod,
     productPrice,
     productPriceRange,
     productRating,
@@ -75,8 +78,11 @@ const ProductDetailTemplate = (props: ProductDetailTemplateProps) => {
     try {
       const cartResponse = await addToCart.mutateAsync({
         product: {
-          ...currentProduct,
           options: updatedShopperEnteredValues,
+          productCode,
+          variationProductCode,
+          fulfillmentMethod,
+          purchaseLocationCode: '', // need to be handled
         },
         quantity,
       })
@@ -222,8 +228,8 @@ const ProductDetailTemplate = (props: ProductDetailTemplateProps) => {
             <QuantitySelector
               label="Qty"
               quantity={quantity}
-              onIncrease={() => setQuantity((prevQuantity) => Number(prevQuantity) + 1)}
-              onDecrease={() => setQuantity((prevQuantity) => Number(prevQuantity) - 1)}
+              onIncrease={() => setQuantity((prevQuantity: number) => Number(prevQuantity) + 1)}
+              onDecrease={() => setQuantity((prevQuantity: number) => Number(prevQuantity) - 1)}
             />
           </Box>
 
