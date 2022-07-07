@@ -26,6 +26,7 @@ export const cartKeys = {
   all: ['cart'] as const,
 }
 
-export const storeKeys = {
-  all: ['store'] as const,
+export const locationKeys = {
+  locations: ['locations'] as const,
+  purchaseLocation: ['purchaseLocation'] as const,
 }

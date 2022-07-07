@@ -9,6 +9,6 @@ describe('[hooks] useCurrentLocation', () => {
       wrapper: createQueryClientWrapper(),
     })
 
-    expect(result.current.currentLocation).toEqual('')
+    expect(result.current).toEqual('')
   })
 })

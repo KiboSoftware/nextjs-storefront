@@ -16,7 +16,7 @@ const StoreDetails = (location: any) => {
         {location?.name}
       </Typography>
       <Typography variant="body2">{location?.streetAddress}</Typography>
-      <Typography variant="body2">{location?.cityStateZip}</Typography>
+      <Typography variant="body2">{location?.cityState}</Typography>
       <Typography variant="body2" color="primary" fontStyle={'italic'}>
         {t('available-for-pickup')}
       </Typography>
@@ -43,18 +43,22 @@ const StoreDetails = (location: any) => {
             {location.phone}
           </Link>
         </Stack>
-        <AddressCard />
+        <AddressCard {...location.fullAddress} variant="body2" />
 
         <Grid item pt={2}>
           <Typography variant="body2" fontWeight={600} component="div">
             {t('store-hours')}
           </Typography>
           {location?.hours?.map((hour: any) => (
-            <Box key={hour.day} py={1} sx={{ display: 'flex', justifyContent: 'space-between' }}>
-              <Typography textTransform={'capitalize'} variant="body2">
+            <Box
+              key={hour.day}
+              py={1}
+              sx={{ display: 'flex', justifyContent: 'space-between', gap: '10px' }}
+            >
+              <Typography textTransform={'capitalize'} variant="body2" pr={1}>
                 {hour.day}
               </Typography>
-              <Typography variant="body2">{hour.closeTime}</Typography>
+              <Typography variant="body2">{hour.storeTime}</Typography>
             </Box>
           ))}
         </Grid>

@@ -2,4 +2,3 @@ export { default as MyStoreDialog } from '@/components/dialogs/Store/MyStoreDial
 export { default as SearchStore } from '@/components/dialogs/Store/SearchStore/SearchStore'
 export { default as StoreDetails } from '@/components/dialogs/Store/StoreDetails/StoreDetails'
 export { default as StoreLocatorDialog } from '@/components/dialogs/Store/StoreLocatorDialog/StoreLocatorDialog'
-export { default as ViewStore } from '@/components/dialogs/Store/ViewStore/ViewStore'

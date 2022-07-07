@@ -1,4 +1,4 @@
-import type { Location, RegularHours, Hours, Maybe } from '@/lib/gql/types'
+import type { Location, RegularHours, Hours, Maybe, CrAddress } from '@/lib/gql/types'
 
 const getCode = (location: Maybe<Location>): string => {
   return location?.code || ''
@@ -39,9 +39,13 @@ const getHours = (location: Maybe<Location>) => {
       hours.openTime && hours.closeTime ? `${hours.openTime}am - ${hours.closeTime}pm` : ''
     return {
       day: value[0],
-      storeTime,
+      storeTime: storeTime,
     }
   })
+}
+
+const getFullAddress = (location: Maybe<Location>): CrAddress => {
+  return location?.address as CrAddress
 }
 
 const getLocations = (locations: Maybe<Location>[]) => {
@@ -53,11 +57,12 @@ const getLocations = (locations: Maybe<Location>[]) => {
         address1: getAddress1(location),
         address2: getAddress2(location),
         streetAddress: `${getAddress1(location)}, ${getAddress2(location)}`,
-        cityStateZip: `${getCity(location)}, ${getState(location)}, ${getZip(location)}`,
+        cityState: `${getCity(location)}, ${getState(location)}`,
         city: getCity(location),
         state: getState(location),
         zip: getZip(location),
         hours: getHours(location),
+        fullAddress: getFullAddress(location),
       }))
     : []
 }

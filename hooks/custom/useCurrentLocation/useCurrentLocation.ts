@@ -1,23 +1,16 @@
-import { useState } from 'react'
-
-import type { GeoCoords } from '@/lib/types/GeoCoords'
-
 export const useCurrentLocation = () => {
-  const [currentLocation, setCurrentLocation] = useState<GeoCoords>()
-  const [error, setError] = useState(null)
+  // const getCurrentLocation = async () => {
+  //   return navigator.geolocation.getCurrentPosition(handleSuccess, handleError)
+  // }
 
-  const handleSuccess = (currentLocation: { coords: GeoCoords }) => {
-    const { latitude, longitude } = currentLocation.coords
-    setCurrentLocation({ latitude, longitude })
+  const getCurrentLocation = (): Promise<GeolocationCoordinates> => {
+    return new Promise((resolve, reject) =>
+      navigator.geolocation.getCurrentPosition(
+        (position: GeolocationPosition) => resolve(position.coords),
+        (error) => reject(error)
+      )
+    )
   }
 
-  const handleError = (error: any) => {
-    setError(error.message)
-  }
-
-  const getCurrentLocation = () => {
-    navigator.geolocation.getCurrentPosition(handleSuccess, handleError)
-  }
-
-  return { currentLocation, error, getCurrentLocation }
+  return { getCurrentLocation }
 }

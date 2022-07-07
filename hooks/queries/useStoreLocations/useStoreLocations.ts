@@ -2,8 +2,8 @@ import { useQuery } from 'react-query'
 
 import { makeGraphQLClient } from '@/lib/gql/client'
 import { getSpLocationsQuery } from '@/lib/gql/queries'
-import { storeKeys } from '@/lib/react-query/queryKeys'
-import type { GeoCoords } from '@/lib/types/GeoCoords'
+import { locationKeys } from '@/lib/react-query/queryKeys'
+import type { LocationSearchParams } from '@/lib/types'
 
 import type { Maybe, Location } from '@/lib/gql/types'
 
@@ -12,7 +12,6 @@ interface LocationType {
   isLoading: boolean
   isSuccess: boolean
   isError: boolean
-  refetch: any
 }
 
 const getStoreLocations = async (param: { filter: string }) => {
@@ -25,28 +24,15 @@ const getStoreLocations = async (param: { filter: string }) => {
   return response.spLocations.items
 }
 
-export const useStoreLocations = (
-  zipCode: string,
-  currentLocation?: GeoCoords,
-  defaultRange?: string
-): LocationType => {
-  const param = (currentLocation || zipCode) && {
-    filter: `geo near(${
-      zipCode ? `${zipCode}` : `${currentLocation?.latitude},${currentLocation?.longitude}`
-    },${defaultRange})`,
-  }
+export const useStoreLocations = (searchParams: { filter: string }): LocationType => {
   const {
     data = {},
     isLoading,
     isSuccess,
     isError,
-    refetch,
-  } = useQuery(storeKeys.all, () => (param ? getStoreLocations(param) : {}), {
-    enabled: false,
-    cacheTime: 0,
-    staleTime: 0,
-    initialData: undefined,
-  })
+  } = useQuery([...locationKeys.locations, searchParams.filter], () =>
+    searchParams.filter ? getStoreLocations(searchParams) : {}
+  )
 
-  return { data, isLoading, isSuccess, isError, refetch }
+  return { data, isLoading, isSuccess, isError }
 }

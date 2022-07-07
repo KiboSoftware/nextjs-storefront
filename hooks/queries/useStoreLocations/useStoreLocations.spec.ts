@@ -6,12 +6,9 @@ import { createQueryClientWrapper } from '@/__test__/utils/renderWithQueryClient
 
 describe('[hooks] useStoreLocations', () => {
   it('should return search loactions when entered search term', async () => {
-    const { result, waitFor } = renderHook(
-      () => useStoreLocations('zipcode', { latitude: 0, longitude: 0 }),
-      {
-        wrapper: createQueryClientWrapper(),
-      }
-    )
+    const { result, waitFor } = renderHook(() => useStoreLocations({ filter: '' }), {
+      wrapper: createQueryClientWrapper(),
+    })
 
     await waitFor(() => result.current.isSuccess)
     expect(result.current.data).toEqual(searchSuggestionResultMock)

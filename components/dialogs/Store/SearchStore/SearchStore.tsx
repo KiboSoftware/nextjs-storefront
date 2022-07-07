@@ -1,4 +1,4 @@
-import React, { Dispatch, SetStateAction, useState } from 'react'
+import React from 'react'
 
 import {
   Typography,
@@ -14,29 +14,50 @@ import {
 } from '@mui/material'
 import { useTranslation } from 'next-i18next'
 
-import { ViewStore } from '..'
+import { StoreDetails } from '..'
+import { KiboRadio } from '@/components/common'
 import SearchBar from '@/components/common/SearchBar/SearchBar'
+import { storeLocationGetters } from '@/lib/getters/storeLocationGetters'
 
 import type { Maybe, Location } from '@/lib/gql/types'
 
 interface SearchStoreProps {
-  locations: Maybe<Location>[]
+  spLocations: Maybe<Location>[]
+  searchTerm: string
   initialState: boolean
+  setSearchTerm: (value: string) => void
   handleSetStore: (selectedStore: string) => void
   onStoreByZipcode: (userEnteredValue: string) => void
   onStoreByCurrentLocation: () => void
 }
 
 const SearchStore = (props: SearchStoreProps) => {
-  const { locations, initialState, handleSetStore, onStoreByZipcode, onStoreByCurrentLocation } =
-    props
-  const [searchTerm, setSearchTerm] = useState<string>('')
+  const {
+    spLocations,
+    searchTerm,
+    initialState,
+    setSearchTerm,
+    handleSetStore,
+    onStoreByZipcode,
+    onStoreByCurrentLocation,
+  } = props
   const { t } = useTranslation('common')
-
-  const handleSearch = (userEnteredValue: string) => setSearchTerm(userEnteredValue)
   const handleStoreByZipcode = () => onStoreByZipcode(searchTerm)
   const handleStoreByCurrentLocation = () => onStoreByCurrentLocation()
+  const [selectedRadio, setSelectedRadio] = React.useState('')
 
+  const locations = storeLocationGetters.getLocations(spLocations)
+  const radioOptions = locations.map((location) => {
+    return {
+      value: location?.code,
+      label: <StoreDetails {...location} />,
+    }
+  })
+
+  const handleStoreSelection = (value: string) => {
+    handleSetStore(value)
+    setSelectedRadio(value)
+  }
   return (
     <Box>
       <Stack spacing={2} py={1}>
@@ -44,7 +65,7 @@ const SearchStore = (props: SearchStoreProps) => {
           <InputLabel shrink>{t('zip-code')}</InputLabel>
           <Stack direction="row" spacing={2}>
             <Box flex={1}>
-              <SearchBar searchTerm={searchTerm} onSearch={handleSearch} showClearButton />
+              <SearchBar searchTerm={searchTerm} onSearch={setSearchTerm} showClearButton />
             </Box>
             <Button
               variant="contained"
@@ -79,19 +100,25 @@ const SearchStore = (props: SearchStoreProps) => {
       <Divider />
       <Typography variant="body2" py={2} textAlign="center">
         {initialState
-          ? t('find-stores-within-100-miles')
+          ? t('find-stores-within-miles')
           : locations && locations?.length > 0
-          ? t('stores-within-100-miles', { seletedStore: locations?.length })
-          : t('no-stores-within-100-miles')}
+          ? t('stores-within-miles', { seletedStore: locations?.length })
+          : t('no-stores-within-miles')}
       </Typography>
-      <Divider />
-
-      <ViewStore
-        spLocations={locations as Maybe<Location>[]}
-        radio={true}
-        handleSetStore={handleSetStore}
-      />
-      <Divider />
+      {locations.length > 0 && (
+        <Box>
+          <Divider />
+          <Box maxWidth={'fit-content'}>
+            <KiboRadio
+              radioOptions={radioOptions}
+              selected={selectedRadio}
+              sx={{ alignItems: 'flex-start' }}
+              onChange={handleStoreSelection}
+            />
+          </Box>
+          <Divider />
+        </Box>
+      )}
     </Box>
   )
 }

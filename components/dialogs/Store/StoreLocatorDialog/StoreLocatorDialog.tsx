@@ -1,7 +1,8 @@
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 
 import { Box, Button } from '@mui/material'
 import { useTranslation } from 'next-i18next'
+import getConfig from 'next/config'
 
 import { SearchStore } from '..'
 import KiboDialog from '@/components/common/KiboDialog/KiboDialog'
@@ -20,43 +21,49 @@ interface StoreLocatorProps {
 // Component
 const StoreLocatorDialog = (props: StoreLocatorProps) => {
   const { isOpen = true, isDialogCentered, handleSetStore } = props
-  const [zipcode, setZipcode] = useState<string>('')
 
   const { t } = useTranslation()
   const { closeModal } = useModalContext()
-  const { currentLocation, getCurrentLocation } = useCurrentLocation()
-  const {
-    refetch,
-    isError,
-    data: spLocations,
-  } = useStoreLocations(zipcode, currentLocation, '160934')
-  const initialState = !(zipcode && currentLocation) && Object.keys(spLocations).length === 0
+  const { publicRuntimeConfig } = getConfig()
+  const { getCurrentLocation } = useCurrentLocation()
 
-  const handleStoreByCurrentLocation = async () => {
-    getCurrentLocation()
-    setZipcode('')
+  const [searchParams, setSearchParams] = useState<any>({})
+  const [searchTerm, setSearchTerm] = useState<string>('')
+  const { isError, data: locations } = useStoreLocations(searchParams)
+
+  const initialState = Object.keys(searchParams).length === 0
+
+  const handleSearchByCurrentLocation = async () => {
+    const { longitude, latitude } = await getCurrentLocation()
+    const param = {
+      filter: `geo near(${latitude},${longitude})`,
+    }
+    setSearchParams(param)
+    setSearchTerm('')
+  }
+  const handleSearchByInput = (inputValue: string) => {
+    const param = {
+      filter: `geo near(${inputValue},${publicRuntimeConfig.defaultRange})`,
+    }
+    setSearchParams(param)
   }
 
   const handleSetStoreClick = async () => {
     console.log('handleSetStoreClick')
   }
 
-  useEffect(() => {
-    if (zipcode.trim() || currentLocation) {
-      refetch()
-    }
-  }, [refetch, zipcode, currentLocation])
-
   const DialogArgs = {
     isOpen: isOpen,
     Title: t('select-store'),
     Content: (
       <SearchStore
-        locations={!isError ? (spLocations as Maybe<Location>[]) : []}
+        spLocations={!isError ? (locations as Maybe<Location>[]) : []}
+        searchTerm={searchTerm}
+        setSearchTerm={setSearchTerm}
         initialState={initialState}
         handleSetStore={handleSetStore}
-        onStoreByZipcode={setZipcode}
-        onStoreByCurrentLocation={handleStoreByCurrentLocation}
+        onStoreByZipcode={handleSearchByInput}
+        onStoreByCurrentLocation={handleSearchByCurrentLocation}
       />
     ),
     showContentTopDivider: true,

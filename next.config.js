@@ -1,5 +1,7 @@
 /** @type {import('next').NextConfig} */
 const { i18n } = require('./next-i18next.config')
+const LOCATION_COOKIE = 'kibo_purchase_location'
+
 module.exports = {
   reactStrictMode: true,
   i18n,
@@ -58,6 +60,8 @@ module.exports = {
         shortName: 'Pickup',
       },
     ],
+    defaultRange: '160934',
+    storeLocationCookie: LOCATION_COOKIE,
   },
   serverRuntimeConfig: {
     revalidate: 60,

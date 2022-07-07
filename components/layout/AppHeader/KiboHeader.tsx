@@ -206,7 +206,9 @@ const HeaderActions = (props: HeaderActionsProps) => {
   const { data: cart } = useCartQueries({})
   const itemCount = cart?.items?.length || 0
   const [selectedStore, setSelectedStore] = useState<string>('')
-  // const { refetch, isError, data: storeLocations } = usePurchaseLocation(selectedStore)
+
+  const { isError, data: location } = usePurchaseLocation()
+  // console.log('location', location)
 
   const openLoginModal = () => {
     setAuthError('')
@@ -225,7 +227,6 @@ const HeaderActions = (props: HeaderActionsProps) => {
           console.log('selectedStore', selectedStore)
           setSelectedStore(selectedStore)
           set(selectedStore)
-          //  await refetch()
         },
       },
     })
@@ -271,7 +272,7 @@ const HeaderActions = (props: HeaderActionsProps) => {
         {/* Store finder icon */}
         <Box sx={headerActionsStyles.storeFinderWrapper}>
           <HeaderAction
-            title={t('find-a-store')}
+            title={location ? (location.name as string) : t('find-a-store')}
             subtitle={t('view-all')}
             icon={FmdGoodIcon}
             {...(isMobileViewport && { iconFontSize: 'medium' })}

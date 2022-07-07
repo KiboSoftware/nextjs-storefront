@@ -5,7 +5,7 @@ import { createQueryClientWrapper } from '@/__test__/utils/renderWithQueryClient
 
 describe('[hooks] usePurchaseLocation', () => {
   it('should return search loactions when entered search term', async () => {
-    const { result, waitFor } = renderHook(() => usePurchaseLocation(''), {
+    const { result, waitFor } = renderHook(() => usePurchaseLocation(), {
       wrapper: createQueryClientWrapper(),
     })
 
