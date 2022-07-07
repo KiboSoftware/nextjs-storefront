@@ -106,7 +106,7 @@ const CardDetailsForm = (props: CardDetailsFormProps) => {
               onChange={(_name, value) => field.onChange(value)}
               onBlur={field.onBlur}
               error={!!errors?.cardNumber}
-              helperText={errors?.cardNumber?.message}
+              helperText={errors?.cardNumber?.message as unknown as string}
               icon={<CreditCard />}
             />
           )}
@@ -123,7 +123,7 @@ const CardDetailsForm = (props: CardDetailsFormProps) => {
               onChange={(_name, value) => field.onChange(value)}
               onBlur={field.onBlur}
               error={!!errors?.expiryDate}
-              helperText={errors?.expiryDate?.message}
+              helperText={errors?.expiryDate?.message as unknown as string}
             />
           )}
         />
@@ -140,7 +140,7 @@ const CardDetailsForm = (props: CardDetailsFormProps) => {
               onChange={(_name, value) => field.onChange(value)}
               onBlur={field.onBlur}
               error={!!errors?.cvv}
-              helperText={errors?.cvv?.message}
+              helperText={errors?.cvv?.message as unknown as string}
               icon={<Help />}
             />
           )}

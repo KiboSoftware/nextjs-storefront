@@ -9,7 +9,7 @@ describe('[helpers] buildProductSearchInput function', () => {
     const buildProductSearchInputMock = {
       query: '',
       startIndex: 0,
-      pageSize: 30,
+      pageSize: 16,
       sortBy: '',
       facetHierValue: 'categoryCode:30',
       facetTemplate: 'categoryCode:30',

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 
 import { Add, Apps, List } from '@mui/icons-material'
 import { Grid, MenuItem, Typography, Box, Button, SxProps, Skeleton, Link } from '@mui/material'
@@ -23,17 +23,18 @@ interface SortingValues {
   selected: boolean
 }
 
-interface ProductListingTemplateProps {
+export interface ProductListingTemplateProps {
   breadCrumbsList: BreadCrumbType[]
   facetList?: FacetType[]
   products?: Product[]
-  sortingValues?: SortingValues[]
+  sortingValues?: { options: SortingValues[]; selected: string }
   categoryFacet: CategoryFacetData
   totalResults: number
-  initialProductsToShow?: number
   isLoading?: boolean
   appliedFilters: FacetValue[]
-  onSortingSelection: (value: string) => void
+  pageSize: number
+  onSortItemSelection: (value: string) => void
+  onPaginationChange: () => void
 }
 
 const styles = {
@@ -180,20 +181,17 @@ const ProductListingTemplate = (props: ProductListingTemplateProps) => {
     totalResults,
     isLoading,
     appliedFilters,
-    onSortingSelection,
-    initialProductsToShow = 16,
+    pageSize,
+    onSortItemSelection,
+    onPaginationChange,
   } = props
   const { getProductLink } = uiHelpers()
   const { updateRoute } = useUpdateRoutes()
-  const isShowMoreVisible = products?.length > initialProductsToShow
   const [showFilterBy, setFilterBy] = useState<boolean>(false)
-  const [isShowMoreButtonVisible, setShowMoreButtonVisible] = useState<boolean>(isShowMoreVisible)
-  const [productToShows, setProductsToShow] = useState<Product[]>([]) // Setting the initial product count to 16 for skeleton loading
 
   const { t } = useTranslation(['product', 'common'])
 
   const handleFilterBy = () => setFilterBy(!showFilterBy)
-  const showMoreProducts = () => setShowMoreButtonVisible(!isShowMoreButtonVisible)
 
   const handleClearAllFilters = () => {
     updateRoute('')
@@ -202,14 +200,6 @@ const ProductListingTemplate = (props: ProductListingTemplateProps) => {
   const handleRemoveSelectedTile = (selectedTile: string) => {
     updateRoute(selectedTile)
   }
-
-  useEffect(() => {
-    const noOfItemsToShow = isShowMoreButtonVisible ? initialProductsToShow : products?.length
-    if (products?.length) {
-      const sliced = products.slice(0, noOfItemsToShow)
-      setProductsToShow([...sliced])
-    }
-  }, [initialProductsToShow, isShowMoreButtonVisible, products])
 
   return (
     <>
@@ -224,7 +214,8 @@ const ProductListingTemplate = (props: ProductListingTemplateProps) => {
             <Box sx={{ ...styles.navBarMain }}>
               {!isLoading ? (
                 <Typography variant="h1" sx={{ ...styles.categoryFacetHeader }}>
-                  {categoryFacet.header}
+                  {categoryFacet && categoryFacet.header && categoryFacet.header}
+                  {!categoryFacet.header && breadCrumbsList[breadCrumbsList.length - 1].text}
                 </Typography>
               ) : (
                 <Skeleton variant="rectangular" sx={{ ...styles.categoryFacetHeaderLoading }} />
@@ -244,14 +235,14 @@ const ProductListingTemplate = (props: ProductListingTemplateProps) => {
                   {!isLoading ? (
                     <KiboSelect
                       sx={{ typography: 'body2' }}
-                      placeholder={t('best-match')}
-                      onChange={onSortingSelection}
+                      value={sortingValues?.selected}
+                      onChange={(_name, value) => onSortItemSelection(value)}
                     >
-                      {sortingValues?.map((sortingVal) => (
+                      {sortingValues?.options?.map((sortingVal) => (
                         <MenuItem
                           sx={{ typography: 'body2' }}
                           key={sortingVal?.id}
-                          value={sortingVal?.value}
+                          value={sortingVal?.id}
                         >
                           {sortingVal?.value}
                         </MenuItem>
@@ -308,18 +299,16 @@ const ProductListingTemplate = (props: ProductListingTemplateProps) => {
               />
             </Box>
             <Box sx={{ width: '100%' }}>
-              {!isLoading && appliedFilters && (
+              {!isLoading && appliedFilters.length > 0 && (
                 <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
                   <Box sx={{ display: 'flex', margin: '1rem 0 0 1rem' }}>
                     <FilterTiles
                       appliedFilters={appliedFilters}
                       onRemoveSelectedTile={handleRemoveSelectedTile}
                     >
-                      {appliedFilters.length > 0 && (
-                        <Link sx={{ ...styles.clearAllButton }} onClick={handleClearAllFilters}>
-                          {t('common:clear-all')}
-                        </Link>
-                      )}
+                      <Link sx={{ ...styles.clearAllButton }} onClick={handleClearAllFilters}>
+                        {t('common:clear-all')}
+                      </Link>
                     </FilterTiles>
                   </Box>
                   <Box sx={{ ...styles.totalResults }}>{t('results', { totalResults })}</Box>
@@ -327,7 +316,7 @@ const ProductListingTemplate = (props: ProductListingTemplateProps) => {
               )}
               {!isLoading ? (
                 <Grid container sx={{ flexWrap: 'wrap' }}>
-                  {productToShows.map((product) => {
+                  {products?.map((product) => {
                     return (
                       <Grid
                         key={productGetters.getProductId(product)}
@@ -338,9 +327,12 @@ const ProductListingTemplate = (props: ProductListingTemplateProps) => {
                         xs={6}
                       >
                         <ProductCard
-                          imageUrl={productGetters.handleProtocolRelativeUrl(
-                            productGetters.getCoverImage(product)
-                          )}
+                          imageUrl={
+                            productGetters.getCoverImage(product) &&
+                            productGetters.handleProtocolRelativeUrl(
+                              productGetters.getCoverImage(product)
+                            )
+                          }
                           link={getProductLink(product?.productCode as string)}
                           price={t<string>('common:currency', {
                             val: productGetters.getPrice(product).regular,
@@ -350,7 +342,7 @@ const ProductListingTemplate = (props: ProductListingTemplateProps) => {
                               val: productGetters.getPrice(product).special,
                             }),
                           })}
-                          title={productGetters.getName(product) || ''}
+                          title={productGetters.getName(product) as string}
                           rating={productGetters.getRating(product)}
                         />
                       </Grid>
@@ -369,24 +361,27 @@ const ProductListingTemplate = (props: ProductListingTemplateProps) => {
                 </Grid>
               )}
 
-              {!isLoading && isShowMoreButtonVisible && (
+              {!isLoading && (
                 <Box>
                   <Box sx={{ ...styles.productResults, color: 'grey.600', typography: 'body2' }}>
                     {t('products-to-show', {
-                      m: `${initialProductsToShow}`,
-                      n: `${products?.length}`,
+                      m: `${pageSize < totalResults ? pageSize : totalResults}`,
+                      n: `${totalResults}`,
                     })}
                   </Box>
-                  <Box sx={{ ...styles.productResults }}>
-                    <Button
-                      sx={{ ...styles.showMoreButton }}
-                      variant="contained"
-                      onClick={() => showMoreProducts()}
-                      color="inherit"
-                    >
-                      {t('show-more')}
-                    </Button>
-                  </Box>
+                  {pageSize < totalResults && (
+                    <Box sx={{ ...styles.productResults }}>
+                      <Button
+                        id="show-more-button"
+                        sx={{ ...styles.showMoreButton }}
+                        variant="contained"
+                        onClick={onPaginationChange}
+                        color="inherit"
+                      >
+                        {t('show-more')}
+                      </Button>
+                    </Box>
+                  )}
                 </Box>
               )}
             </Box>
@@ -404,6 +399,7 @@ const ProductListingTemplate = (props: ProductListingTemplateProps) => {
             appliedFilters={appliedFilters}
             onClearAllFilters={handleClearAllFilters}
             onFilterByClose={handleFilterBy}
+            breadCrumbsList={breadCrumbsList}
             onRemoveSelectedTile={handleRemoveSelectedTile}
           />
         </Box>

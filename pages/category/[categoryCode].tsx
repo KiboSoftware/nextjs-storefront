@@ -50,19 +50,44 @@ const CategoryPage: NextPage<CategoryPageType> = (props) => {
   )
   const { data: productSearchResult, isFetching } = useProductSearch(searchParams, props.results)
   const breadcrumbs = facetGetters.getBreadcrumbs(props.category)
-  const sortingValues = publicRuntimeConfig.productListing.sortOptions
 
   const facetList = productSearchResult?.facets as Facet[]
   const products = productSearchResult?.items as Product[]
   const categoryFacet = productSearchGetters.getCategoryFacet(productSearchResult, categoryCode)
   const appliedFilters = facetGetters.getSelectedFacets(productSearchResult?.facets as Facet[])
-  const changeSorting = () => {
-    console.log('change sorting called')
+  const sortingValues = facetGetters.getSortOptions(
+    {
+      ...productSearchResult,
+      input: { sort: router.query?.sort as string },
+    },
+    publicRuntimeConfig.productListing.sortOptions
+  )
+
+  const changeSorting = (sort: string) => {
+    router.push({
+      pathname: router?.pathname,
+      query: {
+        ...router.query,
+        sort,
+      },
+    })
+  }
+
+  const changePagination = () => {
+    const pageSize = productSearchResult?.pageSize + publicRuntimeConfig.productListing.pageSize
+    router.push({
+      pathname: router?.pathname,
+      query: {
+        ...router.query,
+        pageSize,
+      },
+    })
   }
 
   useEffect(() => {
     setSearchParams(router.query as unknown as CategorySearchParams)
   }, [router.query])
+
   return (
     <>
       <ProductListingTemplate
@@ -71,10 +96,12 @@ const CategoryPage: NextPage<CategoryPageType> = (props) => {
         sortingValues={sortingValues}
         products={products}
         totalResults={productSearchResult?.totalCount}
+        pageSize={productSearchResult?.pageSize}
         breadCrumbsList={breadcrumbs}
         isLoading={isFetching}
         appliedFilters={appliedFilters as FacetValue[]}
-        onSortingSelection={changeSorting}
+        onSortItemSelection={changeSorting}
+        onPaginationChange={changePagination}
       />
     </>
   )
