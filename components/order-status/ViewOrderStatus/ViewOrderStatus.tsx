@@ -1,13 +1,22 @@
 import React from 'react'
 
 import { yupResolver } from '@hookform/resolvers/yup'
-import { Typography, Divider, Stack, Button, SxProps, Box } from '@mui/material'
+import {
+  Typography,
+  Divider,
+  Stack,
+  Button,
+  SxProps,
+  Box,
+  useMediaQuery,
+  useTheme,
+} from '@mui/material'
 import { Theme } from '@mui/material/styles'
 import { useTranslation } from 'next-i18next'
 import { useForm, Controller } from 'react-hook-form'
 import * as yup from 'yup'
 
-import { KiboTextBox } from '@/components/common'
+import { FullWidthDivider, KiboTextBox } from '@/components/common'
 
 interface FormData {
   orderNumber: string
@@ -41,6 +50,9 @@ const ViewOrderStatus = (props: ViewOrderStatusProps) => {
   const { onOrderStatusSubmit, lookupErrorMessage } = props
   const { t } = useTranslation('orderhistory')
 
+  const theme = useTheme()
+  const mdScreen = useMediaQuery(theme.breakpoints.up('md'))
+
   const {
     control,
     formState: { errors, isDirty, isValid },
@@ -58,7 +70,12 @@ const ViewOrderStatus = (props: ViewOrderStatusProps) => {
   return (
     <Stack gap={4}>
       <Typography variant="h1">{t('view-order-status')}</Typography>
-      <Divider color="primary.main" />
+
+      {mdScreen ? (
+        <Divider sx={{ borderColor: 'primary.main' }} />
+      ) : (
+        <FullWidthDivider color="primary.main" />
+      )}
 
       <Stack gap={1}>
         <Typography variant="h4" sx={{ fontWeight: 'bold' }}>
@@ -76,7 +93,7 @@ const ViewOrderStatus = (props: ViewOrderStatusProps) => {
               render={({ field }) => (
                 <KiboTextBox
                   {...field}
-                  value={field.value}
+                  value={field.value || ''}
                   label={t('order-number')}
                   ref={null}
                   error={!!errors?.orderNumber}
@@ -95,7 +112,7 @@ const ViewOrderStatus = (props: ViewOrderStatusProps) => {
               render={({ field }) => (
                 <KiboTextBox
                   {...field}
-                  value={field.value}
+                  value={field.value || ''}
                   label={t('billing-email')}
                   ref={null}
                   error={!!errors?.billingEmail}
@@ -121,9 +138,9 @@ const ViewOrderStatus = (props: ViewOrderStatusProps) => {
         </form>
       </Stack>
 
-      {lookupErrorMessage && <Box>{lookupErrorMessage}</Box>}
+      {lookupErrorMessage && <Box color="error.main">{lookupErrorMessage}</Box>}
 
-      <Divider />
+      {mdScreen ? <Divider sx={{ borderColor: 'grey.500' }} /> : <FullWidthDivider />}
     </Stack>
   )
 }
