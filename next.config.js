@@ -3,6 +3,9 @@ const { i18n } = require('./next-i18next.config')
 module.exports = {
   reactStrictMode: true,
   i18n,
+  experimental: {
+    scrollRestoration: true,
+  },
   images: {
     domains: [
       'd1slj7rdbjyb5l.cloudfront.net',
@@ -33,6 +36,7 @@ module.exports = {
         { value: 'Latest', id: 'createDate desc' },
         { value: 'Oldest', id: 'createDate asc' },
       ],
+      pageSize: 16,
     },
     ratingAttrFQN: `tenant~rating`,
     userCookieKey: process.env.KIBO_USER_COOKIE_KEY || 'kibo_at',

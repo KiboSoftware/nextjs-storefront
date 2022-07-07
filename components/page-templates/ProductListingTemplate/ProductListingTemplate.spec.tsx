@@ -5,7 +5,9 @@ import { composeStories } from '@storybook/testing-react'
 import { render, screen, within, fireEvent, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 
+import { ProductListingTemplateProps } from './ProductListingTemplate'
 import * as stories from './ProductListingTemplate.stories' // import all stories from the stories file
+import { categoryFacetDataMock } from '@/__mocks__/stories/categoryFacetDataMock'
 const { Category } = composeStories(stories)
 
 const KiboBreadcrumbsMock = () => <div data-testid="breadcrumb-component" />
@@ -24,25 +26,27 @@ jest.mock('../../core/Breadcrumbs/KiboBreadcrumbs', () => KiboBreadcrumbsMock)
 jest.mock('../../product/ProductCard/ProductCard', () => ProductCardMock)
 
 describe('[component] - Category', () => {
-  const setup = () => {
+  const setup = (params?: ProductListingTemplateProps) => {
     const user = userEvent.setup()
-    const onChangePaginationMock = jest.fn()
-    const onSortingSelectionMock = jest.fn()
+    const props = params ? params : Category.args
+    const onPaginationChangeMock = jest.fn()
+    const onSortItemSelectionMock = jest.fn()
     render(
       <Category
-        onChangePagination={onChangePaginationMock}
-        onSortingSelection={onSortingSelectionMock}
+        {...props}
+        onPaginationChange={onPaginationChangeMock}
+        onSortItemSelection={onSortItemSelectionMock}
       />
     )
     return {
       user,
-      onChangePaginationMock,
-      onSortingSelectionMock,
+      onPaginationChangeMock,
+      onSortItemSelectionMock,
     }
   }
 
-  it('should render component', () => {
-    setup()
+  it('should render component', async () => {
+    const { user } = setup()
 
     const breadCrumbComponent = screen.getByTestId('breadcrumb-component')
     const header = screen.getByRole('heading', { level: 1 })
@@ -54,9 +58,9 @@ describe('[component] - Category', () => {
     const sortingValues = Category?.args?.sortingValues?.options?.map((sort) => sort.value) || []
 
     const sortingValuesRegex = new RegExp(sortingValues?.join('|'), 'i')
-    const selectButton = screen.getByRole('button', { name: /Best Match/i })
+    const selectButton = screen.getByRole('button', { name: sortingValues[0] })
 
-    fireEvent.mouseDown(selectButton)
+    await user.click(selectButton)
     const listbox = within(screen.getByRole('listbox'))
     const listValues = listbox.getAllByText(sortingValuesRegex)
     const totalResults = screen.getByText(/results/i)
@@ -74,12 +78,12 @@ describe('[component] - Category', () => {
     expect(itemsCount).toBeInTheDocument()
   })
 
-  it('should call onChangePagination when user clicks on show more button', async () => {
-    const { user, onChangePaginationMock } = setup()
+  it('should call onPaginationChange when user clicks on show more button', async () => {
+    const { user, onPaginationChangeMock } = setup()
 
     const showMoreButton = screen.getByRole('button', { name: /show-more/i })
     await user.click(showMoreButton)
-    expect(onChangePaginationMock).toHaveBeenCalled()
+    expect(onPaginationChangeMock).toHaveBeenCalled()
   })
 
   it('should hide filter by button when user clicks on filter By button', async () => {
@@ -91,18 +95,58 @@ describe('[component] - Category', () => {
     expect(filterByButton).not.toBeVisible()
   })
 
-  it('should call onSortingSelection function when user clicks on sorting', async () => {
-    const { user, onSortingSelectionMock } = setup()
+  it('should call onSortItemSelection function when user clicks on sorting', async () => {
+    const { user, onSortItemSelectionMock } = setup()
 
-    const selectButton = screen.getByRole('button', { name: /Best Match/i })
+    const sortingValuesOptions =
+      Category?.args?.sortingValues?.options?.map((sort) => sort.value) || []
+    const selectButton = screen.getByRole('button', { name: sortingValuesOptions[0] })
 
-    fireEvent.mouseDown(selectButton)
+    await user.click(selectButton)
     const listbox = within(screen.getByRole('listbox'))
     const sortingValues = Category?.args?.sortingValues?.options || []
     await user.click(listbox.getByText(sortingValues[1].value))
 
+    expect(selectButton).toHaveTextContent(sortingValues[0].value)
     await waitFor(() => {
-      expect(onSortingSelectionMock).toHaveBeenCalled()
+      expect(onSortItemSelectionMock).toHaveBeenCalled()
     })
+  })
+
+  it('should show show more button when pageSize is greater than total results', () => {
+    setup()
+
+    const showMoreButton = screen.getByRole('button', { name: /show-more/i })
+    expect(showMoreButton).toBeVisible()
+  })
+
+  it('shoutd hide the show more button when pageSize is greater than or equal to totalResults', () => {
+    const params = {
+      breadCrumbsList: [
+        {
+          text: 'Home',
+          link: '/',
+        },
+        {
+          text: 'Mens',
+          link: '/mens',
+        },
+        {
+          text: 'Pants',
+          link: '/mens/pants',
+        },
+      ],
+      categoryFacet: categoryFacetDataMock,
+      totalResults: 30,
+      appliedFilters: [],
+      pageSize: 30,
+      onSortItemSelection: (value: string) => ({ value }),
+      onPaginationChange: () => ({}),
+    }
+    setup(params)
+
+    const showMoreButton = screen.queryByRole('button', { name: /show-more/i })
+
+    expect(showMoreButton).not.toBeInTheDocument()
   })
 })

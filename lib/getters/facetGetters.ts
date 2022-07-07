@@ -28,10 +28,10 @@ const getSelectedFacets = (facets?: Facet[]) => {
   return selectedFacets.flat()
 }
 
-const getSortOptions = (searchData: FacetResultsData, sortOptions: SortOptionType[]) => {
+const getSortOptions = (facetResultData: FacetResultsData, sortOptions: SortOptionType[]) => {
   const options = sortOptions.map((option) => ({
     ...option,
-    selected: option.id === searchData.input?.sort,
+    selected: option.id === facetResultData.input?.sort,
   }))
 
   const selected = options.find((option) => option.selected)?.id || ''

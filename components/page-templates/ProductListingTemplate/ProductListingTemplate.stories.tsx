@@ -60,7 +60,7 @@ export default {
   title: 'Page Templates/product-listing',
   component: ProductListingTemplate,
   argTypes: {
-    onSortingSelection: { action: 'onChange' },
+    onSortItemSelection: { action: 'onChange' },
   },
   parameters: {
     layout: 'fullscreen',

@@ -23,7 +23,7 @@ interface SortingValues {
   selected: boolean
 }
 
-interface ProductListingTemplateProps {
+export interface ProductListingTemplateProps {
   breadCrumbsList: BreadCrumbType[]
   facetList?: FacetType[]
   products?: Product[]
@@ -33,8 +33,8 @@ interface ProductListingTemplateProps {
   isLoading?: boolean
   appliedFilters: FacetValue[]
   pageSize: number
-  onSortingSelection: (value: string) => void
-  onChangePagination: () => void
+  onSortItemSelection: (value: string) => void
+  onPaginationChange: () => void
 }
 
 const styles = {
@@ -182,8 +182,8 @@ const ProductListingTemplate = (props: ProductListingTemplateProps) => {
     isLoading,
     appliedFilters,
     pageSize,
-    onSortingSelection,
-    onChangePagination,
+    onSortItemSelection,
+    onPaginationChange,
   } = props
   const { getProductLink } = uiHelpers()
   const { updateRoute } = useUpdateRoutes()
@@ -235,8 +235,8 @@ const ProductListingTemplate = (props: ProductListingTemplateProps) => {
                   {!isLoading ? (
                     <KiboSelect
                       sx={{ typography: 'body2' }}
-                      value={sortingValues?.selected || ''}
-                      onChange={(_name, value) => onSortingSelection(value)}
+                      value={sortingValues?.selected}
+                      onChange={(_name, value) => onSortItemSelection(value)}
                     >
                       {sortingValues?.options?.map((sortingVal) => (
                         <MenuItem
@@ -344,7 +344,7 @@ const ProductListingTemplate = (props: ProductListingTemplateProps) => {
                               val: productGetters.getPrice(product).special,
                             }),
                           })}
-                          title={productGetters.getName(product) || ''}
+                          title={productGetters.getName(product) as string}
                           rating={productGetters.getRating(product)}
                         />
                       </Grid>
@@ -363,25 +363,27 @@ const ProductListingTemplate = (props: ProductListingTemplateProps) => {
                 </Grid>
               )}
 
-              {!isLoading && pageSize < totalResults && (
+              {!isLoading && (
                 <Box>
                   <Box sx={{ ...styles.productResults, color: 'grey.600', typography: 'body2' }}>
                     {t('products-to-show', {
-                      m: `${pageSize}`,
+                      m: `${pageSize < totalResults ? pageSize : totalResults}`,
                       n: `${totalResults}`,
                     })}
                   </Box>
-                  <Box sx={{ ...styles.productResults }}>
-                    <Button
-                      id="show-more-button"
-                      sx={{ ...styles.showMoreButton }}
-                      variant="contained"
-                      onClick={onChangePagination}
-                      color="inherit"
-                    >
-                      {t('show-more')}
-                    </Button>
-                  </Box>
+                  {pageSize < totalResults && (
+                    <Box sx={{ ...styles.productResults }}>
+                      <Button
+                        id="show-more-button"
+                        sx={{ ...styles.showMoreButton }}
+                        variant="contained"
+                        onClick={onPaginationChange}
+                        color="inherit"
+                      >
+                        {t('show-more')}
+                      </Button>
+                    </Box>
+                  )}
                 </Box>
               )}
             </Box>

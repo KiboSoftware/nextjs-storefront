@@ -74,7 +74,7 @@ const CategoryPage: NextPage<CategoryPageType> = (props) => {
   }
 
   const changePagination = () => {
-    const pageSize = productSearchResult?.pageSize + 16
+    const pageSize = productSearchResult?.pageSize + publicRuntimeConfig.productListing.pageSize
     router.push({
       pathname: router?.pathname,
       query: {
@@ -86,8 +86,6 @@ const CategoryPage: NextPage<CategoryPageType> = (props) => {
 
   useEffect(() => {
     setSearchParams(router.query as unknown as CategorySearchParams)
-    productSearchResult?.pageSize >= 16 &&
-      document.getElementById('show-more-button')?.scrollIntoView()
   }, [router.query])
 
   return (
@@ -102,8 +100,8 @@ const CategoryPage: NextPage<CategoryPageType> = (props) => {
         breadCrumbsList={breadcrumbs}
         isLoading={isFetching}
         appliedFilters={appliedFilters as FacetValue[]}
-        onSortingSelection={changeSorting}
-        onChangePagination={changePagination}
+        onSortItemSelection={changeSorting}
+        onPaginationChange={changePagination}
       />
     </>
   )
