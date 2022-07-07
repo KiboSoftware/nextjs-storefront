@@ -86,7 +86,7 @@ const CartItem = (props: CartItemProps) => {
     cartItem,
     maxQuantity,
     actions,
-    fulfillmentOptions = [],
+    fulfillmentOptions,
     onQuantityUpdate,
     onCartItemDelete,
     onCartItemActionSelection,
@@ -97,9 +97,8 @@ const CartItem = (props: CartItemProps) => {
 
   const { t } = useTranslation('common')
   const orientationVertical = useMediaQuery(theme.breakpoints.between('xs', 'md'))
-
   const handleDelete = (cartItemId: string) => onCartItemDelete(cartItemId)
-  const updateQuantity = (quantity: number) => onQuantityUpdate(cartItem.id || '', quantity)
+  const updateQuantity = (quantity: number) => onQuantityUpdate(cartItem.id as string, quantity)
   const handleActionSelection = () => onCartItemActionSelection()
 
   const handleFulfillmentOption = () => onFulfillmentOptionSelection()
@@ -121,11 +120,11 @@ const CartItem = (props: CartItemProps) => {
                     fontWeight="bold"
                     price={t('currency', { val: orderGetters.getProductPrice(cartItem) })}
                     salePrice={
-                      (cartItem?.product?.price?.salePrice &&
-                        t('currency', {
-                          val: orderGetters.getProductSalePrice(cartItem),
-                        })) ||
-                      undefined
+                      orderGetters.getProductSalePrice(cartItem)
+                        ? t('currency', {
+                            val: orderGetters.getProductSalePrice(cartItem),
+                          })
+                        : undefined
                     }
                   />
                 </Box>
@@ -170,7 +169,7 @@ const CartItem = (props: CartItemProps) => {
             <IconButton
               aria-label="item-delete"
               name="item-delete"
-              onClick={() => handleDelete(cartItem.id || '')}
+              onClick={() => handleDelete(cartItem.id as string)}
             >
               <Delete />
             </IconButton>

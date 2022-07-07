@@ -174,7 +174,6 @@ const getProductFulfillmentOptions = (
   purchaseLocation: Location
 ): FulfillmentOption[] => {
   const fullfillmentOptions = publicRuntimeConfig.fullfillmentOptions
-  console.log('fulfillment', fullfillmentOptions[0].value)
   return fullfillmentOptions.map((option: FulfillmentOption) => ({
     value: option.value,
     name: option.name,
