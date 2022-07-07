@@ -25,8 +25,8 @@ const AddToCartDialog = (props: CartDetailsProps) => {
   const router = useRouter()
 
   const handleGoToCart = () => {
-    closeModal()
     router.push('/cart')
+    closeModal()
   }
   const handleContinueShopping = () => {
     closeModal()
