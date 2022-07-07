@@ -3,8 +3,8 @@ import React from 'react'
 import { composeStories } from '@storybook/testing-react'
 import { render, screen } from '@testing-library/react'
 
-import { KiboDialogProps } from '../../common/KiboDialog/KiboDialog'
 import * as stories from './AddToCartDialog.stories' // import all stories from the stories file
+import { KiboDialogProps } from '@/components/common/KiboDialog/KiboDialog'
 const { Common } = composeStories(stories)
 
 const onCloseMock = jest.fn()
@@ -29,10 +29,10 @@ const KiboDialogMock = (props: KiboDialogProps) => {
 jest.mock('../Title/Title', () => kiboTitleMock)
 jest.mock('../Content/Content', () => kiboContentMock)
 jest.mock('../Actions/Actions', () => kiboActionsMock)
-jest.mock('../../common/KiboDialog/KiboDialog', () => KiboDialogMock)
+jest.mock('@/components/common/KiboDialog/KiboDialog', () => KiboDialogMock)
 
 describe('[components] Add To Cart Dialog', () => {
-  const setup = (params = {}) => render(<Common {...params} onClose={onCloseMock} />)
+  const setup = (params = {}) => render(<Common {...params} closeModal={onCloseMock} />)
 
   it('should render component', () => {
     setup({

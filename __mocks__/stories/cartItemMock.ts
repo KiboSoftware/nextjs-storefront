@@ -5,6 +5,7 @@ export const cartItemMock: CartItemType = {
   fulfillmentMethod: 'Ship',
   product: {
     productCode: 'MS-BTL-002',
+    variationProductCode: 'MS-BTL-002-8',
     fulfillmentTypesSupported: ['DirectShip'],
     name: 'SoftBottle Water Bottle',
     description:

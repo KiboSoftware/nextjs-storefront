@@ -7,14 +7,14 @@ import * as stories from './Title.stories' // import all stories from the storie
 
 const { Common } = composeStories(stories)
 
-describe('[components] Add To Cart Dialog', () => {
+describe('[components] Add To Cart Dialog Title', () => {
   const setup = () => render(<Common />)
 
   it('should render component', () => {
     setup()
 
     const component = screen.getByTestId('title-component')
-    const title = screen.getByText(/add-to-cart/i)
+    const title = screen.getByRole('heading', { name: /added-to-cart/i })
 
     expect(component).toBeInTheDocument()
     expect(title).toBeVisible()

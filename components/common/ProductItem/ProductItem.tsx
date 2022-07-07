@@ -15,6 +15,7 @@ import { useTranslation } from 'next-i18next'
 
 import { KiboImage, Price } from '@/components/common'
 import { ProductOption, ProductOptionList } from '@/components/product'
+import { productGetters } from '@/lib/getters'
 import DefaultImage from '@/public/product_placeholder.svg'
 
 import type { Maybe, CrProductOption } from '@/lib/gql/types'
@@ -76,7 +77,7 @@ const ProductItem = (props: ProductItemProps) => {
       <Box sx={{ display: 'flex', pb: 1, pr: 1, gap: 2, flex: 1 }}>
         <Box sx={{ ...styles.imageContainer }}>
           <KiboImage
-            src={image || DefaultImage}
+            src={productGetters.handleProtocolRelativeUrl(image) || DefaultImage}
             height={200}
             width={200}
             alt={name}

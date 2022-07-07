@@ -5,7 +5,7 @@ import { ComponentStory, ComponentMeta } from '@storybook/react'
 import Actions from './Actions'
 
 export default {
-  title: 'Add-To-Cart-Dialog/Actions',
+  title: 'Dialogs/AddToCartDialog/Actions',
   component: Actions,
 } as ComponentMeta<typeof Actions>
 

@@ -1,5 +1,6 @@
 import { graphql } from 'msw'
 
+import { cartItemMock } from '../stories/cartItemMock'
 import { categoryTreeDataMock } from '../stories/categoryTreeDataMock'
 import { configuredProductMock } from '../stories/configuredProductMock'
 import { orderMock } from '../stories/orderMock'
@@ -70,6 +71,16 @@ export const userHandlers = [
   }),
 ]
 
+export const cartHandlers = [
+  graphql.mutation('addToCart', (_req, res, ctx) => {
+    return res(
+      ctx.data({
+        addItemToCurrentCart: cartItemMock,
+      })
+    )
+  }),
+]
+
 export const handlers = [
   ...checkoutHandlers,
   ...searchSuggestionHandlers,
@@ -77,4 +88,5 @@ export const handlers = [
   ...productSearchHandlers,
   ...userHandlers,
   ...productHandlers,
+  ...cartHandlers,
 ]

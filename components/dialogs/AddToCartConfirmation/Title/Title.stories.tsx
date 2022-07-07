@@ -5,7 +5,7 @@ import { ComponentStory, ComponentMeta } from '@storybook/react'
 import Title from './Title'
 
 export default {
-  title: 'Add-To-Cart-Dialog/Title',
+  title: 'Dialogs/AddToCartDialog/Title',
   component: Title,
 } as ComponentMeta<typeof Title>
 
