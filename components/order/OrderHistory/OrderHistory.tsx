@@ -4,8 +4,7 @@ import { ArrowBackIos } from '@mui/icons-material'
 import { Stack, Typography, Divider, Box, useMediaQuery, useTheme } from '@mui/material'
 import { useTranslation } from 'next-i18next'
 
-import { FilterOrders, FilterTiles } from '@/components/common'
-import { FullWidthDivider } from '@/components/common'
+import { FilterOrders, FilterTiles, FullWidthDivider } from '@/components/common'
 import { OrderHistoryItem, ViewOrderDetails } from '@/components/order'
 import { orderGetters } from '@/lib/getters'
 

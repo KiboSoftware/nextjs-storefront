@@ -4,8 +4,7 @@ import { ArrowForwardIos } from '@mui/icons-material'
 import { Box, Stack, Typography, useMediaQuery, useTheme, Divider } from '@mui/material'
 import { useTranslation } from 'next-i18next'
 
-import { FullWidthDivider } from '@/components/common'
-import { Price } from '@/components/common'
+import { FullWidthDivider, Price } from '@/components/common'
 
 export interface OrderHistoryItemProps {
   id: string

@@ -16,8 +16,7 @@ import { useTranslation } from 'next-i18next'
 import { useForm, Controller } from 'react-hook-form'
 import * as yup from 'yup'
 
-import { FullWidthDivider } from '@/components/common'
-import { KiboTextBox } from '@/components/common'
+import { FullWidthDivider, KiboTextBox } from '@/components/common'
 
 interface FormData {
   orderNumber: string
