@@ -37,12 +37,12 @@ const getPurchaseLocation = async (param: { filter: string }) => {
     document: getSpLocationsQuery,
     variables: param,
   })
-  return response.data.spLocations.items[0]
+  return response.data?.spLocations?.items[0]
 }
 
 export const usePurchaseLocation = (): LocationType => {
   const cookieValue = getCookie(purchaseLocationCookieName)
-  console.log(cookieValue)
+  // console.log(cookieValue?.toString())
 
   // const locationCookieValue = publicRuntimeConfig.$cookies.get(purchaseLocationCookieName)
 
@@ -57,7 +57,7 @@ export const usePurchaseLocation = (): LocationType => {
     isLoading,
     isSuccess,
     isError,
-  } = useQuery([...locationKeys.purchaseLocation, cookieValue], () =>
+  } = useQuery([...locationKeys.purchaseLocation, param], () =>
     param ? getPurchaseLocation(param) : {}
   )
 
