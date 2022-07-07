@@ -1,9 +1,9 @@
 import CartItem from '@/components/cart/CartItem/CartItem'
 
-import type { CartItem as CartItemType } from '@/lib/gql/types'
+import type { CartItem as CartItemType, Maybe } from '@/lib/gql/types'
 
 interface CartItemListProps {
-  cartItems: CartItemType[]
+  cartItems: Maybe<CartItemType>[]
   onCartItemQuantityUpdate: (cartItemId: string, quantity: number) => void
   onCartItemDelete: (cartItemId: string) => void
   onCartItemActionSelection: () => void
@@ -28,9 +28,9 @@ const CartItemList = (props: CartItemListProps) => {
 
   return (
     <>
-      {cartItems.map((item: CartItemType, index: number) => (
+      {cartItems?.map((item: Maybe<CartItemType>, index: number) => (
         <CartItem
-          key={index}
+          key={'cart-item' + index}
           cartItem={item}
           maxQuantity={undefined}
           onQuantityUpdate={handleQuantityUpdate}

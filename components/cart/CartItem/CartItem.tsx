@@ -18,14 +18,14 @@ import FulfillmentOptions from '@/components/common/FulfillmentOptions/Fulfillme
 import Price from '@/components/common/Price/Price'
 import ProductItem from '@/components/common/ProductItem/ProductItem'
 import QuantitySelector from '@/components/common/QuantitySelector/QuantitySelector'
-import { orderGetters } from '@/lib/getters'
+import { orderGetters, productGetters } from '@/lib/getters'
 import type { FulfillmentOption } from '@/lib/types'
 
-import type { CartItem as CartItemType } from '@/lib/gql/types'
+import type { CartItem as CartItemType, Maybe } from '@/lib/gql/types'
 
 const styles = {
   card: {
-    maxWidth: '54.5rem',
+    maxWidth: '100%',
     marginBottom: {
       xs: 0,
       sm: 0,
@@ -71,7 +71,7 @@ const styles = {
 }
 
 interface CartItemProps {
-  cartItem: CartItemType
+  cartItem: Maybe<CartItemType>
   maxQuantity: number | undefined
   actions?: Array<string>
   fulfillmentOptions: FulfillmentOption[]
@@ -110,7 +110,9 @@ const CartItem = (props: CartItemProps) => {
           <Box sx={{ ...styles.cartItemContainer }}>
             <Box sx={{ ...styles.subcontainer }}>
               <ProductItem
-                image={orderGetters.getProductImage(cartItem)}
+                image={productGetters.handleProtocolRelativeUrl(
+                  orderGetters.getProductImage(cartItem)
+                )}
                 name={orderGetters.getProductName(cartItem)}
                 options={orderGetters.getProductOptions(cartItem)}
               >
@@ -130,11 +132,11 @@ const CartItem = (props: CartItemProps) => {
                 </Box>
                 <Box sx={{ py: '0.5rem' }}>
                   <QuantitySelector
-                    quantity={cartItem.quantity}
+                    quantity={quantity}
                     label={t('qty')}
                     maxQuantity={maxQuantity}
-                    onIncrease={() => updateQuantity(cartItem.quantity + 1)}
-                    onDecrease={() => updateQuantity(cartItem.quantity - 1)}
+                    onIncrease={() => updateQuantity(quantity + 1)}
+                    onDecrease={() => updateQuantity(quantity - 1)}
                   />
                 </Box>
               </ProductItem>

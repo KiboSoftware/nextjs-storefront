@@ -10,11 +10,13 @@ import {
 
 import getConfig from 'next/config'
 import { useRouter } from 'next/router'
+import { useQueryClient } from 'react-query'
 
 import { LoginData } from '@/components/layout/Login/LoginContent/LoginContent'
 import type { RegisterAccountInputData } from '@/components/layout/RegisterAccount/Content/Content'
 import { useUserAccountRegistrationMutations, useUserMutations, useUserQueries } from '@/hooks'
 import { removeClientCookie, storeClientCookie } from '@/lib/helpers/cookieHelper'
+import { cartKeys, loginKeys } from '@/lib/react-query/queryKeys'
 
 import type { CustomerAccount } from '@/lib/gql/types'
 
@@ -54,6 +56,8 @@ export const AuthContextProvider = ({ children }: AuthContextProviderProps) => {
   const router = useRouter()
   const { mutate } = useUserMutations()
   const { mutate: registerUserAccount } = useUserAccountRegistrationMutations()
+
+  const queryClient = useQueryClient()
 
   // register user
   const createAccount = (params: RegisterAccountInputData, onSuccessCallBack: () => void) => {
@@ -113,10 +117,16 @@ export const AuthContextProvider = ({ children }: AuthContextProviderProps) => {
   const logout = async (): Promise<void> => {
     try {
       removeClientCookie(authCookieName)
+      setTimeout(removeAllData, 2000)
       router.push('/')
     } catch (err) {
       setAuthError('Logout Failed')
     }
+  }
+
+  const removeAllData = () => {
+    queryClient.invalidateQueries(cartKeys.all)
+    queryClient.invalidateQueries(loginKeys.user)
   }
 
   const setCookieAndUser = (account: any) => {
