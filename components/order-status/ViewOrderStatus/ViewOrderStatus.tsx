@@ -93,7 +93,7 @@ const ViewOrderStatus = (props: ViewOrderStatusProps) => {
               render={({ field }) => (
                 <KiboTextBox
                   {...field}
-                  value={field.value}
+                  value={field.value || ''}
                   label={t('order-number')}
                   ref={null}
                   error={!!errors?.orderNumber}
@@ -112,7 +112,7 @@ const ViewOrderStatus = (props: ViewOrderStatusProps) => {
               render={({ field }) => (
                 <KiboTextBox
                   {...field}
-                  value={field.value}
+                  value={field.value || ''}
                   label={t('billing-email')}
                   ref={null}
                   error={!!errors?.billingEmail}
