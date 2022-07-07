@@ -1,17 +1,23 @@
 import getConfig from 'next/config'
 
 import { buildBreadcrumbs, uiHelpers } from '@/lib/helpers'
-import type { ProductCustom, BreadCrumb, ProductProperties } from '@/lib/types'
+import type { ProductCustom, BreadCrumb, ProductProperties, FulfillmentOption } from '@/lib/types'
 
-import type { Product, ProductOption, ProductPriceRange, ProductProperty } from '@/lib/gql/types'
+import type {
+  Product,
+  ProductOption,
+  ProductPriceRange,
+  ProductProperty,
+  Location,
+} from '@/lib/gql/types'
+
+const { publicRuntimeConfig } = getConfig()
 
 const getName = (product: Product | ProductCustom) => product?.content?.productName
 
 const getProductId = (product: Product | ProductCustom): string => product?.productCode || ''
 
 const getRating = (product: Product | ProductCustom) => {
-  const { publicRuntimeConfig } = getConfig()
-
   const attr = product?.properties?.find(
     (property) => property?.attributeFQN === publicRuntimeConfig.ratingAttrFQN
   )?.values
@@ -90,7 +96,6 @@ const getSegregatedOptions = (product: ProductCustom) => {
   const options = product?.options
   if (!options) return
 
-  const { publicRuntimeConfig } = getConfig()
   const colorAttributeFQN = publicRuntimeConfig.colorAttributeFQN.toLowerCase()
   const sizeAttributeFQN = publicRuntimeConfig.sizeAttributeFQN.toLowerCase()
 
@@ -164,6 +169,30 @@ const getProductDetails = (product: ProductCustom) => {
     productOptions,
   }
 }
+const getProductFulfillmentOptions = (
+  product: Product,
+  purchaseLocation: Location
+): FulfillmentOption[] => {
+  const fullfillmentOptions = publicRuntimeConfig.fullfillmentOptions
+  return fullfillmentOptions.map((option: FulfillmentOption) => ({
+    value: option.value,
+    name: option.name,
+    code: option.code,
+    label: option.label,
+    fulfillmentLocation: purchaseLocation?.name,
+    required: option.isRequired,
+    shortName: option.shortName,
+    disabled:
+      product?.fulfillmentTypesSupported?.filter(
+        (type) => type.toLowerCase() === option?.value?.toLowerCase()
+      ).length === 0,
+    details: (() => {
+      if (option.value === fullfillmentOptions[0].value) return option.details // checking if Directship
+      if (purchaseLocation?.name) return `${option.details}: ${purchaseLocation.name}`
+      return ''
+    })(),
+  }))
+}
 
 export const productGetters = {
   getName,
@@ -186,6 +215,7 @@ export const productGetters = {
   validateAddToCart,
   getVariationProductCodeOrProductCode,
   handleProtocolRelativeUrl,
+  getProductFulfillmentOptions,
   // grouped
   getProductDetails,
 }

@@ -3,6 +3,7 @@ import React from 'react'
 import { ComponentStory, ComponentMeta } from '@storybook/react'
 
 import CartItem from './CartItem'
+import { fulfillmentOptionsMock } from '@/__mocks__/stories/fulfillmentOptionsMock'
 
 import type { CartItem as CartItemType } from '@/lib/gql/types'
 
@@ -57,4 +58,5 @@ export const Common = Template.bind({})
 Common.args = {
   cartItem,
   actions,
+  fulfillmentOptions: fulfillmentOptionsMock,
 }

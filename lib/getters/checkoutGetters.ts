@@ -104,7 +104,7 @@ const getProductPrice = (item: Maybe<CrOrderItem> | Maybe<CartItem>): string =>
   (item?.product?.price?.price || 0).toString()
 
 const getProductSalePrice = (item: Maybe<CrOrderItem> | Maybe<CartItem>): string | undefined =>
-  (item?.product?.price?.salePrice && (item?.product?.price?.salePrice).toString()) || undefined
+  item?.product?.price?.salePrice ? (item?.product?.price?.salePrice).toString() : undefined
 
 const getPurchaseLocation = (item: Maybe<CrOrderItem> | Maybe<CartItem>): string =>
   item?.purchaseLocation || ''
