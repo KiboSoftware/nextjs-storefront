@@ -17,7 +17,15 @@ const KiboTextBoxMock = () => (
     onBlur={onBlurMock}
   />
 )
+const FullWidthDividerMock = () => <div data-testid="full-width-divider-mock"></div>
+
 jest.mock('@/components/common/KiboTextBox/KiboTextBox', () => KiboTextBoxMock)
+jest.mock('@/components/common/FullWidthDivider/FullWidthDivider', () => FullWidthDividerMock)
+
+jest.mock('@mui/material', () => ({
+  ...jest.requireActual('@mui/material'),
+  useMediaQuery: jest.fn().mockReturnValue(false),
+}))
 
 describe('[component] - ViewOrderStatus', () => {
   const { lookupErrorMessage } = WithErrorMeesage?.args as ViewOrderStatusProps
@@ -38,6 +46,7 @@ describe('[component] - ViewOrderStatus', () => {
     const checkingTheStatusOfYourOrderText = screen.getByText(/check-order-status-fast-simple/i)
     const simplyEnterYourOrderText = screen.getByText(/check-order-status-instruction/i)
     const textBoxMock = screen.getAllByTestId('text-box-mock')
+    const fullWidthDividerMock = screen.getAllByTestId('full-width-divider-mock')
     const checkOrderStatusButton = screen.getByRole('button', { name: /check-order-status/i })
     const lookupMessage = screen.queryByText(lookupErrorMessage as string)
 
@@ -45,6 +54,7 @@ describe('[component] - ViewOrderStatus', () => {
     expect(checkingTheStatusOfYourOrderText).toBeVisible()
     expect(simplyEnterYourOrderText).toBeVisible()
     expect(textBoxMock).toHaveLength(2)
+    expect(fullWidthDividerMock.length).toBeGreaterThan(0)
     expect(checkOrderStatusButton).toBeDisabled()
     expect(lookupMessage).not.toBeInTheDocument()
   })
