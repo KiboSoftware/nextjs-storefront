@@ -299,18 +299,16 @@ const ProductListingTemplate = (props: ProductListingTemplateProps) => {
               />
             </Box>
             <Box sx={{ width: '100%' }}>
-              {!isLoading && appliedFilters && (
+              {!isLoading && appliedFilters.length > 0 && (
                 <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
                   <Box sx={{ display: 'flex', margin: '1rem 0 0 1rem' }}>
                     <FilterTiles
                       appliedFilters={appliedFilters}
                       onRemoveSelectedTile={handleRemoveSelectedTile}
                     >
-                      {appliedFilters.length > 0 && (
-                        <Link sx={{ ...styles.clearAllButton }} onClick={handleClearAllFilters}>
-                          {t('common:clear-all')}
-                        </Link>
-                      )}
+                      <Link sx={{ ...styles.clearAllButton }} onClick={handleClearAllFilters}>
+                        {t('common:clear-all')}
+                      </Link>
                     </FilterTiles>
                   </Box>
                   <Box sx={{ ...styles.totalResults }}>{t('results', { totalResults })}</Box>
@@ -401,6 +399,7 @@ const ProductListingTemplate = (props: ProductListingTemplateProps) => {
             appliedFilters={appliedFilters}
             onClearAllFilters={handleClearAllFilters}
             onFilterByClose={handleFilterBy}
+            breadCrumbsList={breadCrumbsList}
             onRemoveSelectedTile={handleRemoveSelectedTile}
           />
         </Box>
