@@ -138,7 +138,7 @@ const ViewOrderStatus = (props: ViewOrderStatusProps) => {
         </form>
       </Stack>
 
-      {lookupErrorMessage && <Box>{lookupErrorMessage}</Box>}
+      {lookupErrorMessage && <Box color="error.main">{lookupErrorMessage}</Box>}
 
       {mdScreen ? <Divider sx={{ borderColor: 'grey.500' }} /> : <FullWidthDivider />}
     </Stack>
