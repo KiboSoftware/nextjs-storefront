@@ -135,8 +135,8 @@ const CartItem = (props: CartItemProps) => {
                     quantity={quantity}
                     label={t('qty')}
                     maxQuantity={maxQuantity}
-                    onIncrease={() => updateQuantity(quantity + 1)}
-                    onDecrease={() => updateQuantity(quantity - 1)}
+                    onIncrease={() => handleUpdateQuantity(quantity + 1)}
+                    onDecrease={() => handleUpdateQuantity(quantity - 1)}
                   />
                 </Box>
               </ProductItem>

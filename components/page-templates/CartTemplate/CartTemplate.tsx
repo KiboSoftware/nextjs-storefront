@@ -4,10 +4,10 @@ import { Grid, Typography, Box, Stack, Button, useTheme, useMediaQuery } from '@
 import { useTranslation } from 'next-i18next'
 import { useRouter } from 'next/router'
 
-import CartItemList from '@/components/cart/CartItemList/CartItemList'
+import { CartItemList } from '@/components/cart'
 import { FullWidthDivider } from '@/components/common'
+import { PromoCodeBadge } from '@/components/common'
 import OrderSummary from '@/components/common/OrderSummary/OrderSummary'
-import PromoCodeBadge from '@/components/common/PromoCodeBadge/PromoCodeBadge'
 
 import type { Cart } from '@/lib/gql/types'
 
@@ -34,7 +34,6 @@ const styles = {
 
 const CartTemplate = (props: CartTemplateProps) => {
   const { cart } = props
-  console.log('carr : ', cart)
 
   const { t } = useTranslation(['common', 'checkout', 'cart'])
   const theme = useTheme()
@@ -83,7 +82,7 @@ const CartTemplate = (props: CartTemplateProps) => {
     // your code here
   }
   const gotoCheckout = () => {
-    router.push('/cart')
+    router.push('/checkout')
     // your code here
   }
 
@@ -126,7 +125,7 @@ const CartTemplate = (props: CartTemplateProps) => {
               fullWidth
               onClick={gotoCheckout}
             >
-              {t('checkout:go-to-checkout')}
+              {t('common:go-to-checkout')}
             </Button>
           </Stack>
         </OrderSummary>
