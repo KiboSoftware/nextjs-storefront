@@ -11,6 +11,7 @@ const styles = {
     color: '#2b2b2b',
     justifyContent: 'space-between',
     width: '148px',
+    minWidth: '148px',
     height: '2.188rem',
   },
 }
