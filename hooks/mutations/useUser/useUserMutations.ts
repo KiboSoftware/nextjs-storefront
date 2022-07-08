@@ -28,9 +28,6 @@ export const useUserMutations = () => {
     onMutate: () => {
       queryClient.cancelQueries(loginKeys.user)
     },
-    onSuccess: () => {
-      setTimeout(() => queryClient.invalidateQueries(cartKeys.all), 3000)
-    },
     retry: 0,
   })
 

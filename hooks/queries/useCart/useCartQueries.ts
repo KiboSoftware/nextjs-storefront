@@ -21,7 +21,7 @@ const getCurrentCart = async () => {
   return response?.currentCart
 }
 
-export const useCart = (initialData: Cart): UseCartType => {
+export const useCartQueries = (initialData: Cart): UseCartType => {
   try {
     const {
       data = {},

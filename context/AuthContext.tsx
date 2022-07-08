@@ -83,6 +83,7 @@ export const AuthContextProvider = ({ children }: AuthContextProviderProps) => {
         onSuccess: (account: any) => {
           // set cookie
           setCookieAndUser(account)
+          queryClient.invalidateQueries(cartKeys.all)
           onSuccessCallBack()
         },
       })
@@ -108,6 +109,7 @@ export const AuthContextProvider = ({ children }: AuthContextProviderProps) => {
       },
       onSuccess: (account: any) => {
         setCookieAndUser(account)
+        queryClient.invalidateQueries(cartKeys.all)
         onSuccessCallBack()
       },
     })
@@ -117,16 +119,12 @@ export const AuthContextProvider = ({ children }: AuthContextProviderProps) => {
   const logout = async (): Promise<void> => {
     try {
       removeClientCookie(authCookieName)
-      setTimeout(removeAllData, 2000)
       router.push('/')
+      queryClient.removeQueries(cartKeys.all)
+      queryClient.removeQueries(loginKeys.user)
     } catch (err) {
       setAuthError('Logout Failed')
     }
-  }
-
-  const removeAllData = () => {
-    queryClient.invalidateQueries(cartKeys.all)
-    queryClient.invalidateQueries(loginKeys.user)
   }
 
   const setCookieAndUser = (account: any) => {

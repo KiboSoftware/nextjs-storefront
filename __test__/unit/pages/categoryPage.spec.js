@@ -4,6 +4,7 @@ import { RouterContext } from 'next/dist/shared/lib/router-context'
 import * as nextRouter from 'next/router'
 
 import { categoryTreeDataMock } from '@/__mocks__/stories/categoryTreeDataMock'
+import { createMockRouter } from '@/__test__/utils/createMockRouter'
 import { createQueryClientWrapper } from '@/__test__/utils/renderWithQueryClient'
 import CategoryPage, { getServerSideProps } from '@/pages/category/[categoryCode]'
 
@@ -87,8 +88,9 @@ describe('[page] Category Page', () => {
 
   it('should render the Category page template', () => {
     nextRouter.useRouter.mockImplementation(() => ({ query: { categoryCode: '41' } }))
+    const router = createMockRouter()
     render(
-      <RouterContext.Provider>
+      <RouterContext.Provider value={router}>
         <CategoryPage />
       </RouterContext.Provider>,
       {

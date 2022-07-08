@@ -1,5 +1,6 @@
 import getConfig from 'next/config'
 
+import { cartGetters } from './cartGetters'
 import DefaultImage from '@/public/product_placeholder.svg'
 
 import type {
@@ -11,6 +12,7 @@ import type {
   CrAddress,
   Contact,
   CartItem,
+  Cart,
 } from '@/lib/gql/types'
 
 interface ShippingDetails {
@@ -54,11 +56,11 @@ const { publicRuntimeConfig } = getConfig()
 const getOrderNumber = (checkout: Order) => checkout?.orderNumber
 const getEmail = (checkout: Order) => checkout?.email
 const getId = (checkout: Order) => checkout?.id
-const getTotal = (checkout: Order): number => checkout?.total as number
+const getTotal = (checkout: Order | Cart): number => checkout?.total as number
 const getDiscountedTotal = (checkout: Order) => checkout?.orderDiscounts || 0
-const getShippingTotal = (checkout: Order) => checkout?.shippingTotal || 0
-const getTaxTotal = (checkout: Order) => checkout?.taxTotal || 0
-const getSubtotal = (checkout: Order): number => checkout?.subtotal as number
+const getShippingTotal = (checkout: Order | Cart) => checkout?.shippingTotal || 0
+const getTaxTotal = (checkout: Order | Cart) => checkout?.taxTotal || 0
+const getSubtotal = (checkout: Order | Cart): number => checkout?.subtotal as number
 const getLineItemTotal = (checkout: Order) => {
   return checkout?.items
     ? checkout?.items?.reduce((previous, current) => {
@@ -231,4 +233,5 @@ export const checkoutGetters = {
   getPaymentMethods,
   getOrderSummary,
   getCheckoutDetails,
+  ...cartGetters,
 }

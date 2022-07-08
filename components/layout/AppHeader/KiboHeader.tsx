@@ -31,7 +31,7 @@ import { HamburgerMenu } from '@/components/layout'
 import MegaMenu from '@/components/layout/MegaMenu/MegaMenu'
 import { useAuthContext } from '@/context'
 import { useModalContext } from '@/context/ModalContext'
-import { useCart, useCategoryTree } from '@/hooks'
+import { useCartQueries, useCategoryTree } from '@/hooks'
 import type { NavigationLink } from '@/lib/types'
 
 import type { Maybe, PrCategory } from '@/lib/gql/types'
@@ -203,7 +203,7 @@ const HeaderActions = (props: HeaderActionsProps) => {
   const { isAuthenticated, user, setAuthError } = useAuthContext()
   const { showModal } = useModalContext()
   const router = useRouter()
-  const { data: cart } = useCart({})
+  const { data: cart } = useCartQueries({})
   const itemCount = cart?.items?.length || 0
 
   const openLoginModal = () => {

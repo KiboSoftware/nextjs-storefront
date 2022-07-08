@@ -6,7 +6,7 @@ import CartTemplate from './CartTemplate'
 import { cartMock } from '@/__mocks__/stories/cartMock'
 
 export default {
-  title: 'Page Templates/Shopping Cart',
+  title: 'Page Templates/Cart Template',
   component: CartTemplate,
   argTypes: { onChange: { action: 'onChange' } },
   parameters: {

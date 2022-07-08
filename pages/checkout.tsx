@@ -1,6 +1,6 @@
 import { NextPage } from 'next'
 
-const CheckoutPage: NextPage = (props: any) => {
+const CheckoutPage: NextPage = (_props: any) => {
   return (
     <>
       <h1>Checkout</h1>
