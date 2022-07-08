@@ -7,7 +7,7 @@ import { useTranslation } from 'next-i18next'
 import { useForm, Controller } from 'react-hook-form'
 import * as yup from 'yup'
 
-import { type Action } from '@/components/checkout'
+import type { Action } from '@/components/checkout'
 import KiboTextBox from '@/components/common/KiboTextBox/KiboTextBox'
 import { FormStates } from '@/lib/constants'
 import { prepareCardDataParams, validateExpiryDate, getCardType } from '@/lib/helpers/credit-card'

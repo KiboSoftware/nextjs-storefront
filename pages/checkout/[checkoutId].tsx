@@ -14,9 +14,9 @@ interface CheckoutPageProps {
 }
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
-  const { locale, params } = context
+  const { locale, params, req } = context
   const { checkoutId } = params as any
-  const checkout = await getCheckout(checkoutId)
+  const checkout = await getCheckout(checkoutId, req)
 
   if (!checkout) {
     return { notFound: true }
