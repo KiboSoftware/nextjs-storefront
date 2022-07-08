@@ -7,6 +7,6 @@ export default async function getCheckout(checkoutId: string): Promise<Order> {
   const variables = {
     checkoutId,
   }
-  const response = await fetcher({ query, variables })
+  const response = await fetcher({ query, variables }, null)
   return response.data?.checkout
 }
