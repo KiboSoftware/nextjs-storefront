@@ -4,7 +4,7 @@ import { useQuery } from 'react-query'
 
 import { makeGraphQLClient } from '@/lib/gql/client'
 import { getSpLocationsQuery } from '@/lib/gql/queries'
-import { decodeParseCookieValue } from '@/lib/helpers/cookieHelper'
+import { decodeParseCookieValue, prepareSetCookieValue } from '@/lib/helpers/cookieHelper'
 import { locationKeys } from '@/lib/react-query/queryKeys'
 
 import type { Location } from '@/lib/gql/types'
@@ -23,7 +23,7 @@ export const set = (locationCode: string | null) => {
   if (locationCode === null) {
     deleteCookie(purchaseLocationCookieName)
   } else {
-    setCookie(purchaseLocationCookieName, locationCode as string)
+    setCookie(purchaseLocationCookieName, prepareSetCookieValue(locationCode as string))
   }
 }
 
@@ -37,11 +37,12 @@ const getPurchaseLocation = async (param: { filter: string }) => {
 }
 
 export const usePurchaseLocation = (): LocationType => {
-  const cookieValue = decodeParseCookieValue(getCookie(purchaseLocationCookieName) as string)
-
-  const param = cookieValue
+  const locationCookieValue = decodeParseCookieValue(
+    getCookie(purchaseLocationCookieName) as string
+  )
+  const param = locationCookieValue
     ? {
-        filter: `code eq ${cookieValue}`,
+        filter: `code eq ${locationCookieValue}`,
       }
     : undefined
 

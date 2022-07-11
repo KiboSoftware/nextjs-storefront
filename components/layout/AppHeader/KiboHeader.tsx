@@ -47,8 +47,8 @@ interface HeaderState {
 }
 interface HeaderActionsProps {
   headerState: HeaderState
-  setHeaderState: (val: HeaderState) => void
   isMobileViewport: boolean
+  setHeaderState: (val: HeaderState) => void
 }
 
 const StyledToolbarNav = styled(Box)(() => ({
@@ -223,6 +223,9 @@ const HeaderActions = (props: HeaderActionsProps) => {
     location.name &&
       showModal({
         Component: MyStoreDialog,
+        props: {
+          location,
+        },
       })
 
     !location.name &&
@@ -277,8 +280,12 @@ const HeaderActions = (props: HeaderActionsProps) => {
         {/* Store finder icon */}
         <Box sx={headerActionsStyles.storeFinderWrapper}>
           <HeaderAction
-            title={location ? (location.name as string) : t('find-a-store')}
-            subtitle={t('view-all')}
+            title={location?.name ? (location.name as string) : t('find-a-store')}
+            subtitle={
+              location?.address?.cityOrTown && location?.address?.stateOrProvince
+                ? `${location?.address?.cityOrTown}, ${location?.address?.stateOrProvince}`
+                : t('view-all')
+            }
             icon={FmdGoodIcon}
             {...(isMobileViewport && { iconFontSize: 'medium' })}
             onClick={openStoreLocatorModal}

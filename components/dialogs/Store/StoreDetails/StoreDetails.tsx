@@ -5,9 +5,10 @@ import { Typography, Box, Stack, Link, Collapse, Grid } from '@mui/material'
 import { useTranslation } from 'next-i18next'
 
 import AddressCard from '@/components/common/AddressCard/AddressCard'
+import type { LocationCustom, HoursCustom } from '@/lib/types'
 
-const StoreDetails = (location: any) => {
-  const { t } = useTranslation('checkout')
+const StoreDetails = (location: LocationCustom) => {
+  const { t } = useTranslation('common')
   const [expanded, setExpanded] = useState<boolean>(false)
 
   return (
@@ -40,27 +41,28 @@ const StoreDetails = (location: any) => {
             {t('get-directions')}
           </Link>
           <Link href="" variant="body2" color={'text.primary'} fontWeight={600}>
-            {location.phone}
+            {location?.phone}
           </Link>
         </Stack>
-        <AddressCard {...location.fullAddress} variant="body2" />
+        <AddressCard {...location?.fullAddress} variant="body2" />
 
         <Grid item pt={2}>
           <Typography variant="body2" fontWeight={600} component="div">
             {t('store-hours')}
           </Typography>
-          {location?.hours?.map((hour: any) => (
-            <Box
-              key={hour.day}
-              py={1}
-              sx={{ display: 'flex', justifyContent: 'space-between', gap: '10px' }}
-            >
-              <Typography textTransform={'capitalize'} variant="body2" pr={1}>
-                {hour.day}
-              </Typography>
-              <Typography variant="body2">{hour.storeTime}</Typography>
-            </Box>
-          ))}
+          {location &&
+            location?.hours?.map((hour: HoursCustom) => (
+              <Box
+                key={hour.day as string}
+                py={1}
+                sx={{ display: 'flex', justifyContent: 'space-between', gap: '10px' }}
+              >
+                <Typography textTransform={'capitalize'} variant="body2" pr={1}>
+                  {hour?.day}
+                </Typography>
+                <Typography variant="body2">{hour?.storeTime}</Typography>
+              </Box>
+            ))}
         </Grid>
       </Collapse>
     </Box>

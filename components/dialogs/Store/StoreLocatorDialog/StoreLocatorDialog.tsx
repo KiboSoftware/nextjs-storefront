@@ -22,7 +22,7 @@ interface StoreLocatorProps {
 const StoreLocatorDialog = (props: StoreLocatorProps) => {
   const { isOpen = true, isDialogCentered, handleSetStore } = props
 
-  const { t } = useTranslation()
+  const { t } = useTranslation('common')
   const { closeModal } = useModalContext()
   const { publicRuntimeConfig } = getConfig()
   const { getCurrentLocation } = useCurrentLocation()
@@ -65,7 +65,7 @@ const StoreLocatorDialog = (props: StoreLocatorProps) => {
       />
     ),
     showContentTopDivider: true,
-    showContentBottomDivider: false,
+    showContentBottomDivider: true,
     Actions: (
       <Box
         sx={{
@@ -93,7 +93,7 @@ const StoreLocatorDialog = (props: StoreLocatorProps) => {
       </Box>
     ),
     isDialogCentered: isDialogCentered,
-    customMaxWidth: '32.375rem',
+    customMaxWidth: '34.19rem',
     onClose: closeModal,
   }
 

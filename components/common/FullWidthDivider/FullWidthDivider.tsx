@@ -1,7 +1,6 @@
 import * as React from 'react'
 
 import { Divider, Theme } from '@mui/material'
-import { Box } from '@mui/system'
 
 interface FullWidthDividerProps {
   color?: string
@@ -11,7 +10,7 @@ interface FullWidthDividerProps {
 const FullWidthDivider = (props: FullWidthDividerProps) => {
   const { color = 'grey.500', ...rest } = props
   return (
-    <Box>
+    <>
       <Divider
         {...rest}
         sx={(theme: Theme) => ({
@@ -24,7 +23,7 @@ const FullWidthDivider = (props: FullWidthDividerProps) => {
           },
         })}
       />
-    </Box>
+    </>
   )
 }
 

@@ -3,7 +3,6 @@ import React from 'react'
 import {
   Typography,
   Box,
-  Divider,
   InputLabel,
   Button,
   Stack,
@@ -15,7 +14,7 @@ import {
 import { useTranslation } from 'next-i18next'
 
 import { StoreDetails } from '..'
-import { KiboRadio } from '@/components/common'
+import { FullWidthDivider, KiboRadio } from '@/components/common'
 import SearchBar from '@/components/common/SearchBar/SearchBar'
 import { storeLocationGetters } from '@/lib/getters/storeLocationGetters'
 
@@ -35,7 +34,7 @@ interface SearchStoreProps {
 const SearchStore = (props: SearchStoreProps) => {
   const {
     spLocations,
-    searchTerm,
+    searchTerm = '',
     initialState,
     selectedRadio,
     setSearchTerm,
@@ -48,9 +47,9 @@ const SearchStore = (props: SearchStoreProps) => {
   const handleStoreByCurrentLocation = () => onStoreByCurrentLocation()
 
   const locations = storeLocationGetters.getLocations(spLocations)
-  const radioOptions = locations.map((location) => {
+  const radioOptions = locations?.map((location) => {
     return {
-      value: location?.code,
+      value: location?.code || '',
       label: <StoreDetails {...location} />,
     }
   })
@@ -59,7 +58,7 @@ const SearchStore = (props: SearchStoreProps) => {
     setSelectedRadio(value)
   }
   return (
-    <Box>
+    <>
       <Stack spacing={2} py={1}>
         <Box>
           <InputLabel shrink>{t('zip-code')}</InputLabel>
@@ -81,7 +80,7 @@ const SearchStore = (props: SearchStoreProps) => {
           <Link
             component="button"
             color="grey.900"
-            sx={{ cursor: 'pointer', pt: 1.5 }}
+            sx={{ cursor: 'pointer' }}
             variant={'body2'}
             onClick={handleStoreByCurrentLocation}
           >
@@ -97,15 +96,15 @@ const SearchStore = (props: SearchStoreProps) => {
           </FormGroup>
         </Box>
       </Stack>
-      <Divider />
+      <FullWidthDivider />
       <Typography variant="body2" py={2} textAlign="center">
         {initialState
           ? t('find-stores-within-miles')
-          : t('stores-within-miles', { count: locations?.length })}
+          : t('stores-within-miles', { count: locations?.length || 0 })}
       </Typography>
-      {locations.length > 0 && (
+      {locations && locations?.length > 0 && (
         <Box>
-          <Divider />
+          <FullWidthDivider />
           <Box maxWidth={'fit-content'}>
             <KiboRadio
               radioOptions={radioOptions}
@@ -114,10 +113,10 @@ const SearchStore = (props: SearchStoreProps) => {
               onChange={handleStoreSelection}
             />
           </Box>
-          <Divider />
+          <FullWidthDivider />
         </Box>
       )}
-    </Box>
+    </>
   )
 }
 

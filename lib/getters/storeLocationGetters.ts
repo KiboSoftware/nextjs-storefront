@@ -1,3 +1,5 @@
+import type { LocationCustom } from '@/lib/types'
+
 import type { Location, RegularHours, Hours, Maybe, CrAddress } from '@/lib/gql/types'
 
 const getCode = (location: Maybe<Location>): string => {
@@ -36,7 +38,7 @@ const getHours = (location: Maybe<Location>) => {
   return Object.entries(location?.regularHours as RegularHours).map((value: (string | Hours)[]) => {
     const hours = value[1] as Hours
     const storeTime =
-      hours.openTime && hours.closeTime ? `${hours.openTime}am - ${hours.closeTime}pm` : ''
+      hours?.openTime && hours?.closeTime ? `${hours?.openTime}am - ${hours?.closeTime}pm` : ''
     return {
       day: value[0],
       storeTime: storeTime,
@@ -48,27 +50,32 @@ const getFullAddress = (location: Maybe<Location>): CrAddress => {
   return location?.address as CrAddress
 }
 
-const getLocations = (locations: Maybe<Location>[]) => {
+const getLocations = (locations: Maybe<Location>[]): LocationCustom[] => {
   return locations?.length > 0
-    ? locations?.map((location: Maybe<Location>) => ({
-        code: getCode(location),
-        name: getName(location),
-        phone: getPhone(location),
-        address1: getAddress1(location),
-        address2: getAddress2(location),
-        streetAddress: `${getAddress1(location)}, ${getAddress2(location)}`,
-        cityState: `${getCity(location)}, ${getState(location)}`,
-        city: getCity(location),
-        state: getState(location),
-        zip: getZip(location),
-        hours: getHours(location),
-        fullAddress: getFullAddress(location),
-      }))
+    ? locations?.map((location: Maybe<Location>) => getLocation(location))
     : []
+}
+
+const getLocation = (location: Maybe<Location>): LocationCustom => {
+  return {
+    code: getCode(location),
+    name: getName(location),
+    phone: getPhone(location),
+    address1: getAddress1(location),
+    address2: getAddress2(location),
+    streetAddress: `${getAddress1(location)}, ${getAddress2(location)}`,
+    cityState: `${getCity(location)}, ${getState(location)}`,
+    city: getCity(location),
+    state: getState(location),
+    zip: getZip(location),
+    hours: getHours(location),
+    fullAddress: getFullAddress(location),
+  }
 }
 
 export const storeLocationGetters = {
   getLocations,
+  getLocation,
   getCode,
   getName,
   getPhone,

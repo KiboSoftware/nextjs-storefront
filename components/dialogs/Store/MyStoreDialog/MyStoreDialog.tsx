@@ -4,37 +4,44 @@ import { Box, Button } from '@mui/material'
 import { useTranslation } from 'next-i18next'
 
 import { StoreLocatorDialog, StoreDetails } from '..'
-import { locationCollectionMock } from '@/__mocks__/stories/locationCollectionMock'
 import KiboDialog from '@/components/common/KiboDialog/KiboDialog'
 import { useModalContext } from '@/context/ModalContext'
+import { set } from '@/hooks'
 import { storeLocationGetters } from '@/lib/getters/storeLocationGetters'
+
+import type { Maybe, Location } from '@/lib/gql/types'
 
 interface MyStoreProps {
   isOpen: boolean
   isDialogCentered: boolean
-  handleSetStore: () => void
+  location: Maybe<Location>
 }
 
 // Component
 const MyStoreDialog = (props: MyStoreProps) => {
-  const { handleSetStore, isOpen = true, isDialogCentered } = props
-  const { t } = useTranslation()
+  const { isOpen = true, isDialogCentered, location } = props
+  const spLocation = location && storeLocationGetters.getLocation(location)
+  const { t } = useTranslation('common')
   const { showModal, closeModal } = useModalContext()
 
   const openChangeStoreModal = () => {
-    showModal({ Component: StoreLocatorDialog })
+    showModal({
+      Component: StoreLocatorDialog,
+      props: {
+        handleSetStore: async (selectedStore: string) => {
+          set(selectedStore)
+          closeModal()
+        },
+      },
+    })
   }
-
-  const spLocations = locationCollectionMock.spLocations.items || []
-
-  const location = storeLocationGetters.getLocations(spLocations)
 
   const DialogArgs = {
     isOpen: isOpen,
     Title: t('my-store'),
-    Content: <StoreDetails {...location[0]} />,
+    Content: <StoreDetails {...spLocation} />,
     showContentTopDivider: true,
-    showContentBottomDivider: false,
+    showContentBottomDivider: true,
     Actions: (
       <Box
         sx={{
@@ -50,7 +57,7 @@ const MyStoreDialog = (props: MyStoreProps) => {
       </Box>
     ),
     isDialogCentered: isDialogCentered,
-    customMaxWidth: '32.375rem',
+    customMaxWidth: '34.19rem',
     onClose: closeModal,
   }
 
