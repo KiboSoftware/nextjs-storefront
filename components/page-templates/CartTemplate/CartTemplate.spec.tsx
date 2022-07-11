@@ -3,7 +3,6 @@ import React, { ReactNode } from 'react'
 import { composeStories } from '@storybook/testing-react'
 import { render, screen } from '@testing-library/react'
 
-import { renderWithQueryClient } from '../../../__test__/utils/renderWithQueryClient'
 import * as stories from './CartTemplate.stories'
 
 const CartItemListMock = ({ children }: { children: ReactNode }) => (

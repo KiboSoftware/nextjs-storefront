@@ -59,6 +59,11 @@ export const AuthContextProvider = ({ children }: AuthContextProviderProps) => {
 
   const queryClient = useQueryClient()
 
+  const handleOnSuccess = (account: any, onSuccessCallBack: () => void) => {
+    setCookieAndUser(account)
+    queryClient.invalidateQueries(cartKeys.all)
+    onSuccessCallBack()
+  }
   // register user
   const createAccount = (params: RegisterAccountInputData, onSuccessCallBack: () => void) => {
     try {
@@ -81,10 +86,7 @@ export const AuthContextProvider = ({ children }: AuthContextProviderProps) => {
           setAuthError(errorMessage)
         },
         onSuccess: (account: any) => {
-          // set cookie
-          setCookieAndUser(account)
-          queryClient.invalidateQueries(cartKeys.all)
-          onSuccessCallBack()
+          handleOnSuccess(account, onSuccessCallBack)
         },
       })
     } catch (err: any) {
@@ -108,9 +110,7 @@ export const AuthContextProvider = ({ children }: AuthContextProviderProps) => {
         setAuthError(errMessage)
       },
       onSuccess: (account: any) => {
-        setCookieAndUser(account)
-        queryClient.invalidateQueries(cartKeys.all)
-        onSuccessCallBack()
+        handleOnSuccess(account, onSuccessCallBack)
       },
     })
   }
