@@ -46,7 +46,6 @@ const SearchStore = (props: SearchStoreProps) => {
   const { t } = useTranslation('common')
   const handleStoreByZipcode = () => onStoreByZipcode(searchTerm)
   const handleStoreByCurrentLocation = () => onStoreByCurrentLocation()
-  const [selectedRadio, setSelectedRadio] = React.useState('')
 
   const locations = storeLocationGetters.getLocations(spLocations)
   const storeOptions = locations?.map((location) => {
