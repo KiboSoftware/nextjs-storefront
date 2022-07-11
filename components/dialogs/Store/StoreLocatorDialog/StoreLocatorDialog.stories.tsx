@@ -5,7 +5,7 @@ import { ComponentStory, ComponentMeta } from '@storybook/react'
 import StoreLocatorDialog from './StoreLocatorDialog'
 
 export default {
-  title: 'Store/StoreLocatorDialog',
+  title: 'Dialogs/Store/StoreLocatorDialog',
   component: StoreLocatorDialog,
   argTypes: { onClose: { action: 'onClose' } },
 } as ComponentMeta<typeof StoreLocatorDialog>
@@ -20,4 +20,5 @@ export const Common = Template.bind({})
 Common.args = {
   isOpen: true,
   isDialogCentered: false,
+  handleSetStore: (selectedStore) => selectedStore,
 }

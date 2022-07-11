@@ -3,11 +3,14 @@ import React from 'react'
 import { ComponentStory, ComponentMeta } from '@storybook/react'
 
 import SearchStore from './SearchStore'
+import { locationCollectionMock } from '@/__mocks__/stories/locationCollectionMock'
 
 export default {
-  title: 'store/SearchStore',
+  title: 'Dialogs/Store/SearchStore',
   component: SearchStore,
 } as ComponentMeta<typeof SearchStore>
+
+const locationList = locationCollectionMock?.spLocations?.items
 
 const Template: ComponentStory<typeof SearchStore> = ({ ...args }) => <SearchStore {...args} />
 
@@ -15,6 +18,12 @@ const Template: ComponentStory<typeof SearchStore> = ({ ...args }) => <SearchSto
 export const Common = Template.bind({})
 
 Common.args = {
-  selectedRadio: '',
-  setSelectedRadio: () => '',
+  spLocations: locationList || [],
+  searchTerm: '',
+  initialState: true,
+  selectedRadio: 'ALB',
+  setSelectedRadio: () => undefined,
+  setSearchTerm: (value: string) => value,
+  onStoreByZipcode: (userEnteredValue: string) => userEnteredValue,
+  onStoreByCurrentLocation: () => undefined,
 }

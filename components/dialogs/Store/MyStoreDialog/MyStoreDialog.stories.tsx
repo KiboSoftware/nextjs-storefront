@@ -3,9 +3,10 @@ import React from 'react'
 import { ComponentStory, ComponentMeta } from '@storybook/react'
 
 import MyStoreDialog from './MyStoreDialog'
+import { locationCollectionMock } from '@/__mocks__/stories/locationCollectionMock'
 
 export default {
-  title: 'Store/MyStoreDialog',
+  title: 'Dialogs/Store/MyStoreDialog',
   component: MyStoreDialog,
   argTypes: { onClose: { action: 'onClose' } },
 } as ComponentMeta<typeof MyStoreDialog>
@@ -18,4 +19,6 @@ export const Common = Template.bind({})
 Common.args = {
   isOpen: true,
   isDialogCentered: false,
+  location:
+    locationCollectionMock?.spLocations?.items && locationCollectionMock?.spLocations?.items[0],
 }

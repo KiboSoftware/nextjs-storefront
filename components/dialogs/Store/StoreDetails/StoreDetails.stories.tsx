@@ -7,7 +7,7 @@ import { locationCollectionMock } from '@/__mocks__/stories/locationCollectionMo
 import { storeLocationGetters } from '@/lib/getters/storeLocationGetters'
 
 export default {
-  title: 'store/StoreDetails',
+  title: 'Dialogs/Store/StoreDetails',
   component: StoreDetails,
 } as ComponentMeta<typeof StoreDetails>
 
