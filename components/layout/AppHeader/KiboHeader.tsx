@@ -201,15 +201,12 @@ const HeaderActions = (props: HeaderActionsProps) => {
   const { headerState, setHeaderState, isMobileViewport } = props
   const { t } = useTranslation('common')
   const { isAuthenticated, user, setAuthError } = useAuthContext()
-<<<<<<< HEAD
   const { showModal } = useModalContext()
   const router = useRouter()
   const { data: cart } = useCartQueries({})
   const itemCount = cart?.items?.length || 0
   const [selectedStore, setSelectedStore] = useState<string>('')
-=======
   const { showModal, closeModal } = useModalContext()
->>>>>>> 919e42c9 (chore: cleanup)
 
   const { data: location } = usePurchaseLocation()
 
