@@ -3,7 +3,6 @@ import { useQuery } from 'react-query'
 import { makeGraphQLClient } from '@/lib/gql/client'
 import { getSpLocationsQuery } from '@/lib/gql/queries'
 import { locationKeys } from '@/lib/react-query/queryKeys'
-import type { LocationSearchParams } from '@/lib/types'
 
 import type { Maybe, Location } from '@/lib/gql/types'
 
@@ -31,7 +30,7 @@ export const useStoreLocations = (searchParams: { filter: string }): LocationTyp
     isSuccess,
     isError,
   } = useQuery([...locationKeys.locations, searchParams.filter], () =>
-    searchParams.filter ? getStoreLocations(searchParams) : {}
+    Boolean(searchParams.filter) ? getStoreLocations(searchParams) : {}
   )
 
   return { data, isLoading, isSuccess, isError }

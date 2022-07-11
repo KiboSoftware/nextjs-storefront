@@ -27,11 +27,12 @@ const StoreLocatorDialog = (props: StoreLocatorProps) => {
   const { publicRuntimeConfig } = getConfig()
   const { getCurrentLocation } = useCurrentLocation()
 
-  const [searchParams, setSearchParams] = useState<any>({})
+  const [searchParams, setSearchParams] = useState<{ filter: string }>({ filter: '' })
   const [searchTerm, setSearchTerm] = useState<string>('')
+  const [selectedRadio, setSelectedRadio] = React.useState('')
   const { isError, data: locations } = useStoreLocations(searchParams)
 
-  const initialState = Object.keys(searchParams).length === 0
+  const initialState = Boolean(!searchParams.filter)
 
   const handleSearchByCurrentLocation = async () => {
     const { longitude, latitude } = await getCurrentLocation()
@@ -48,10 +49,6 @@ const StoreLocatorDialog = (props: StoreLocatorProps) => {
     setSearchParams(param)
   }
 
-  const handleSetStoreClick = async () => {
-    console.log('handleSetStoreClick')
-  }
-
   const DialogArgs = {
     isOpen: isOpen,
     Title: t('select-store'),
@@ -59,9 +56,10 @@ const StoreLocatorDialog = (props: StoreLocatorProps) => {
       <SearchStore
         spLocations={!isError ? (locations as Maybe<Location>[]) : []}
         searchTerm={searchTerm}
-        setSearchTerm={setSearchTerm}
         initialState={initialState}
-        handleSetStore={handleSetStore}
+        selectedRadio={selectedRadio}
+        setSearchTerm={setSearchTerm}
+        setSelectedRadio={setSelectedRadio}
         onStoreByZipcode={handleSearchByInput}
         onStoreByCurrentLocation={handleSearchByCurrentLocation}
       />
@@ -85,7 +83,11 @@ const StoreLocatorDialog = (props: StoreLocatorProps) => {
         >
           {t('cancel')}
         </Button>
-        <Button sx={{ width: '100%' }} variant="contained" onClick={handleSetStoreClick}>
+        <Button
+          sx={{ width: '100%' }}
+          variant="contained"
+          onClick={() => handleSetStore(selectedRadio)}
+        >
           {t('set-store')}
         </Button>
       </Box>

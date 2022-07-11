@@ -201,14 +201,17 @@ const HeaderActions = (props: HeaderActionsProps) => {
   const { headerState, setHeaderState, isMobileViewport } = props
   const { t } = useTranslation('common')
   const { isAuthenticated, user, setAuthError } = useAuthContext()
+<<<<<<< HEAD
   const { showModal } = useModalContext()
   const router = useRouter()
   const { data: cart } = useCartQueries({})
   const itemCount = cart?.items?.length || 0
   const [selectedStore, setSelectedStore] = useState<string>('')
+=======
+  const { showModal, closeModal } = useModalContext()
+>>>>>>> 919e42c9 (chore: cleanup)
 
-  const { isError, data: location } = usePurchaseLocation()
-  // console.log('location', location)
+  const { data: location } = usePurchaseLocation()
 
   const openLoginModal = () => {
     setAuthError('')
@@ -220,16 +223,21 @@ const HeaderActions = (props: HeaderActionsProps) => {
   }
 
   const openStoreLocatorModal = () => {
-    showModal({
-      Component: StoreLocatorDialog,
-      props: {
-        handleSetStore: async (selectedStore: string) => {
-          console.log('selectedStore', selectedStore)
-          setSelectedStore(selectedStore)
-          set(selectedStore)
+    location.name &&
+      showModal({
+        Component: MyStoreDialog,
+      })
+
+    !location.name &&
+      showModal({
+        Component: StoreLocatorDialog,
+        props: {
+          handleSetStore: async (selectedStore: string) => {
+            set(selectedStore)
+            closeModal()
+          },
         },
-      },
-    })
+      })
   }
 
   return (

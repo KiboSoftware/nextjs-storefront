@@ -15,5 +15,6 @@ const Template: ComponentStory<typeof SearchStore> = ({ ...args }) => <SearchSto
 export const Common = Template.bind({})
 
 Common.args = {
-  handleSetStore: () => '',
+  selectedRadio: '',
+  setSelectedRadio: () => '',
 }

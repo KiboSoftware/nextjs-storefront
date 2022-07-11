@@ -25,8 +25,9 @@ interface SearchStoreProps {
   spLocations: Maybe<Location>[]
   searchTerm: string
   initialState: boolean
+  selectedRadio: string
+  setSelectedRadio: (selectedStore: string) => void
   setSearchTerm: (value: string) => void
-  handleSetStore: (selectedStore: string) => void
   onStoreByZipcode: (userEnteredValue: string) => void
   onStoreByCurrentLocation: () => void
 }
@@ -36,15 +37,15 @@ const SearchStore = (props: SearchStoreProps) => {
     spLocations,
     searchTerm,
     initialState,
+    selectedRadio,
     setSearchTerm,
-    handleSetStore,
+    setSelectedRadio,
     onStoreByZipcode,
     onStoreByCurrentLocation,
   } = props
   const { t } = useTranslation('common')
   const handleStoreByZipcode = () => onStoreByZipcode(searchTerm)
   const handleStoreByCurrentLocation = () => onStoreByCurrentLocation()
-  const [selectedRadio, setSelectedRadio] = React.useState('')
 
   const locations = storeLocationGetters.getLocations(spLocations)
   const radioOptions = locations.map((location) => {
@@ -55,7 +56,6 @@ const SearchStore = (props: SearchStoreProps) => {
   })
 
   const handleStoreSelection = (value: string) => {
-    handleSetStore(value)
     setSelectedRadio(value)
   }
   return (
@@ -101,9 +101,7 @@ const SearchStore = (props: SearchStoreProps) => {
       <Typography variant="body2" py={2} textAlign="center">
         {initialState
           ? t('find-stores-within-miles')
-          : locations && locations?.length > 0
-          ? t('stores-within-miles', { seletedStore: locations?.length })
-          : t('no-stores-within-miles')}
+          : t('stores-within-miles', { count: locations?.length })}
       </Typography>
       {locations.length > 0 && (
         <Box>

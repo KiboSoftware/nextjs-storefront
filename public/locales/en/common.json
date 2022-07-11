@@ -105,7 +105,7 @@
   "available-for-pickup": "Available for Pickup",
   "show-stores-with-availability": "Show Stores with Availability",
   "find-stores-within-miles": "Find Stores within 100 miles",
-  "no-stores-within-miles": "No Results - 0 stores within 100 miles",
-  "stores-within-miles_one": "{{seletedStore}} store within 100 miles",
-  "stores-within-miles_other": "{{seletedStore}} stores within 100 miles"
+  "stores-within-miles_zero": "No Results - 0 stores within 100 miles",
+  "stores-within-miles_one": "{{count}} store within 100 miles",
+  "stores-within-miles_other": "{{count}} stores within 100 miles"
 }

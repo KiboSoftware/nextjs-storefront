@@ -24,10 +24,10 @@ interface KiboRadioProps {
 export const KiboRadio = (props: KiboRadioProps) => {
   const { title, radioOptions, selected = '', sx, onChange } = props
 
-  const [selectedRadio, setSelectedRadio] = useState(selected)
+  // const [selectedRadio, setSelectedRadio] = useState(selected)
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setSelectedRadio((event.target as HTMLInputElement).value)
+    // setSelectedRadio((event.target as HTMLInputElement).value)
     onChange && onChange(event.target.value)
   }
 
@@ -42,7 +42,7 @@ export const KiboRadio = (props: KiboRadioProps) => {
       <RadioGroup
         aria-labelledby="kibo-radio"
         name="radio-buttons-group"
-        value={selectedRadio}
+        value={selected}
         onChange={handleChange}
       >
         {radioOptions.map((radio) => {
