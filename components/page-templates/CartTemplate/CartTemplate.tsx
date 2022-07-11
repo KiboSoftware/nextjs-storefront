@@ -74,7 +74,7 @@ const CartTemplate = (props: CartTemplateProps) => {
   const handleFulfillmentOption = () => {
     // your code here
   }
-  const gotoCheckout = () => {
+  const handleGotoCheckout = () => {
     const checkoutId = null // To be done using react-query hook
     router.push(`/checkout/${checkoutId}`)
     // your code here
@@ -138,11 +138,12 @@ const CartTemplate = (props: CartTemplateProps) => {
             <Button
               disabled={!cartItemCount}
               variant="contained"
+              name="goToCart"
               sx={{ ...styles.checkoutButtonStyle }}
               fullWidth
-              onClick={gotoCheckout}
+              onClick={handleGotoCheckout}
             >
-              {t('common:go-to-checkout')}
+              {t('go-to-checkout')}
             </Button>
           </Stack>
         </OrderSummary>
