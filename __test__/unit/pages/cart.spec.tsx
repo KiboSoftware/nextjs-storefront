@@ -28,7 +28,7 @@ jest.mock('next-i18next/serverSideTranslations', () => ({
   }),
 }))
 
-jest.mock('@/components/page-templates/cartTemplate/cartTemplate', () => ({
+jest.mock('@/components/page-templates/CartTemplate/CartTemplate', () => ({
   __esModule: true,
   default: () => <div data-testid="cart-template-mock" />,
 }))
