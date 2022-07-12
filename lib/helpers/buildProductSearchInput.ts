@@ -12,7 +12,7 @@ function getFacetValueFilter(categoryCode: string, filters: Array<string> = []) 
 
 export const buildProductSearchInput = ({
   categoryCode = '',
-  pageSize = 30,
+  pageSize = 16,
   filters = [],
   startIndex = 0,
   sort = '',
@@ -30,7 +30,7 @@ export const buildProductSearchInput = ({
   return {
     query: search,
     startIndex,
-    pageSize,
+    pageSize: Number(pageSize),
     sortBy: sort,
     facetHierValue,
     facetTemplate,

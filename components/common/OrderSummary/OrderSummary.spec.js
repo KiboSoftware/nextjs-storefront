@@ -9,28 +9,15 @@ import * as stories from './OrderSummary.stories' // import all stories from the
 
 const { Checkout } = composeStories(stories)
 
+const orderPriceMock = () => <div data-testid="order-price-component" />
+jest.mock('@/components/common/OrderPrice/OrderPrice', () => orderPriceMock)
+
 describe('checkout Component', () => {
-  it('should render checkout standardShippingAmount', () => {
+  it('should render order summary heading', () => {
     render(<Checkout {...Checkout.args} />)
-    const checkout = screen.getByText(Checkout.args.standardShippingAmount)
-    expect(checkout).toBeVisible()
-  })
-
-  it('should render checkout estimatedTaxAmout', () => {
-    render(<Checkout {...Checkout.args} />)
-    const checkout = screen.getByText(Checkout.args.estimatedTaxAmout)
-    expect(checkout).toBeVisible()
-  })
-
-  it('should render checkout orderTotal', () => {
-    render(<Checkout {...Checkout.args} />)
-    const checkout = screen.getByText(Checkout.args.orderTotal)
-    expect(checkout).toBeVisible()
-  })
-
-  it('should render checkout subTotal', () => {
-    render(<Checkout {...Checkout.args} />)
-    const checkout = screen.getByText(Checkout.args.subTotal)
-    expect(checkout).toBeVisible()
+    const orderSummaryHeading = screen.getByText(Checkout.args.nameLabel)
+    const orderPriceComponent = screen.getByTestId('order-price-component')
+    expect(orderSummaryHeading).toBeVisible()
+    expect(orderPriceComponent).toBeInTheDocument()
   })
 })

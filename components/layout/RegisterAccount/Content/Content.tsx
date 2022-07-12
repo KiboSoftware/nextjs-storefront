@@ -3,7 +3,7 @@ import React, { useState } from 'react'
 
 import { yupResolver } from '@hookform/resolvers/yup'
 import { Visibility, VisibilityOff } from '@mui/icons-material'
-import { Box, FormControl, Button } from '@mui/material'
+import { Box, FormControl, Button, Typography } from '@mui/material'
 import { useTranslation } from 'next-i18next'
 import { useForm, Controller } from 'react-hook-form'
 import * as yup from 'yup'
@@ -22,6 +22,7 @@ export interface RegisterAccountInputData {
 interface ContentProps {
   setAutoFocus?: boolean
   onRegisterNow: (formData: RegisterAccountInputData) => void
+  errorMessage: string
 }
 
 const styles = {
@@ -34,7 +35,7 @@ const styles = {
 }
 
 const Content = (props: ContentProps) => {
-  const { setAutoFocus = true, onRegisterNow } = props
+  const { setAutoFocus = true, onRegisterNow, errorMessage } = props
   const [showPassword, setShowPassword] = useState<boolean>(false)
   const { t } = useTranslation(['checkout', 'common'])
 
@@ -156,6 +157,11 @@ const Content = (props: ContentProps) => {
           <Box sx={{ marginBottom: '2rem' }}>
             <PasswordValidation password={userEnteredPassword} />
           </Box>
+        )}
+        {errorMessage && (
+          <Typography color="error" justifyContent="center" display="flex">
+            {errorMessage}
+          </Typography>
         )}
 
         <Button

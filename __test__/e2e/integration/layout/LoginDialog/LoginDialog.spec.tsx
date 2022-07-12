@@ -7,21 +7,20 @@ import { render, screen, act, fireEvent, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 
 import * as stories from '@/components/layout/Login/LoginDialog/LoginDialog.stories'
-import { UIStateContext, UserContext } from '@/context'
+import { AuthContext } from '@/context'
 
 const { Common } = composeStories(stories)
-const uiContextValues = { isLoginDialogOpen: true, toggleLoginDialog: jest.fn() }
 const userContextValues = {
   isAuthenticated: false,
   login: jest.fn(),
+  createAccount: jest.fn(),
   setAuthError: jest.fn(),
   authError: '',
+  logout: jest.fn(),
 }
 
 const wrapper = ({ children }: { children: ReactNode }) => (
-  <UIStateContext.Provider value={uiContextValues}>
-    <UserContext.Provider value={userContextValues}>{children}</UserContext.Provider>
-  </UIStateContext.Provider>
+  <AuthContext.Provider value={userContextValues}>{children}</AuthContext.Provider>
 )
 
 const renderComponent = () => {

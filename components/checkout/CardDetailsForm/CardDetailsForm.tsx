@@ -7,7 +7,7 @@ import { useTranslation } from 'next-i18next'
 import { useForm, Controller } from 'react-hook-form'
 import * as yup from 'yup'
 
-import { type Action } from '@/components/checkout'
+import type { Action } from '@/components/checkout'
 import KiboTextBox from '@/components/common/KiboTextBox/KiboTextBox'
 import { FormStates } from '@/lib/constants'
 import { prepareCardDataParams, validateExpiryDate, getCardType } from '@/lib/helpers/credit-card'
@@ -34,7 +34,6 @@ export interface CardDetailsFormProps {
 }
 
 const StyledCardDiv = styled('div')(() => ({
-  width: '100%',
   maxWidth: '26.313rem',
   paddingLeft: '0.5rem',
 }))
@@ -107,7 +106,7 @@ const CardDetailsForm = (props: CardDetailsFormProps) => {
               onChange={(_name, value) => field.onChange(value)}
               onBlur={field.onBlur}
               error={!!errors?.cardNumber}
-              helperText={errors?.cardNumber?.message}
+              helperText={errors?.cardNumber?.message as unknown as string}
               icon={<CreditCard />}
             />
           )}
@@ -124,7 +123,7 @@ const CardDetailsForm = (props: CardDetailsFormProps) => {
               onChange={(_name, value) => field.onChange(value)}
               onBlur={field.onBlur}
               error={!!errors?.expiryDate}
-              helperText={errors?.expiryDate?.message}
+              helperText={errors?.expiryDate?.message as unknown as string}
             />
           )}
         />
@@ -141,7 +140,7 @@ const CardDetailsForm = (props: CardDetailsFormProps) => {
               onChange={(_name, value) => field.onChange(value)}
               onBlur={field.onBlur}
               error={!!errors?.cvv}
-              helperText={errors?.cvv?.message}
+              helperText={errors?.cvv?.message as unknown as string}
               icon={<Help />}
             />
           )}

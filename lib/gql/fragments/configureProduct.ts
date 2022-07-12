@@ -22,6 +22,12 @@ fragment configureProductOptions on ConfiguredProduct {
 export const configureProductInfo = `
 fragment configureProductInfo on ConfiguredProduct {
         productCode
+        variationProductCode
+        productImages {
+          imageUrl
+          altText
+          cmsId
+        }
         purchasableState {
           isPurchasable
         }

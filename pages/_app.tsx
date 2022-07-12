@@ -14,8 +14,7 @@ import createEmotionCache from '../lib/createEmotionCache'
 import { generateQueryClient } from '../lib/react-query/queryClient'
 import theme from '../styles/theme'
 import { KiboHeader } from '@/components/layout'
-import LoginDialog from '@/components/layout/Login'
-import { AuthContextProvider, UIContextProvider } from '@/context'
+import { AuthContextProvider, ModalContextProvider, DialogRoot } from '@/context'
 
 // Client-side cache, shared for the whole session of the user in the browser.
 const clientSideEmotionCache = createEmotionCache()
@@ -38,7 +37,7 @@ const App = (props: KiboAppProps) => {
         {/* CssBaseline kickstart an elegant, consistent, and simple baseline to build upon. */}
         <CssBaseline />
         <QueryClientProvider client={queryClient}>
-          <UIContextProvider>
+          <ModalContextProvider>
             <AuthContextProvider>
               <Hydrate state={pageProps.dehydratedState}>
                 <KiboHeader
@@ -63,13 +62,13 @@ const App = (props: KiboAppProps) => {
                   categoriesTree={pageProps.categoriesTree || []}
                   sticky={true}
                 />
-                <LoginDialog />
+                <DialogRoot />
                 <Container maxWidth={'xl'}>
                   <Component {...pageProps} />
                 </Container>
               </Hydrate>
             </AuthContextProvider>
-          </UIContextProvider>
+          </ModalContextProvider>
         </QueryClientProvider>
       </ThemeProvider>
     </CacheProvider>

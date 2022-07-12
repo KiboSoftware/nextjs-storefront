@@ -1,10 +1,10 @@
 import React, { useState } from 'react'
 
 import { ArrowBackIos } from '@mui/icons-material'
-import { Stack, Typography, Divider, Box } from '@mui/material'
+import { Stack, Typography, Divider, Box, useMediaQuery, useTheme } from '@mui/material'
 import { useTranslation } from 'next-i18next'
 
-import { FilterOrders, FilterTiles } from '@/components/common'
+import { FilterOrders, FilterTiles, FullWidthDivider } from '@/components/common'
 import { OrderHistoryItem, ViewOrderDetails } from '@/components/order'
 import { orderGetters } from '@/lib/getters'
 
@@ -12,6 +12,7 @@ import type { OrderCollection, Order, CrAddress, FacetValue } from '@/lib/gql/ty
 
 interface OrderHistoryProps {
   accountTitle: string
+  filters: FacetValue[]
   orders: OrderCollection
   storePickupAddress?: CrAddress
   onAccountTitleClick: () => void
@@ -27,11 +28,12 @@ const styles = {
 }
 
 const OrderHistory = (props: OrderHistoryProps) => {
-  const { accountTitle, orders, storePickupAddress, onAccountTitleClick } = props
+  const { accountTitle, filters = [], orders, storePickupAddress, onAccountTitleClick } = props
   const { items = [] } = orders
   const [selectedOrder, setSelectedOrder] = useState<Order | undefined>(undefined)
-  const filters: FacetValue[] = []
 
+  const theme = useTheme()
+  const mdScreen = useMediaQuery(theme.breakpoints.up('md'))
   const { t } = useTranslation('common')
 
   const handleAccountTitleClick = () => {
@@ -76,13 +78,16 @@ const OrderHistory = (props: OrderHistoryProps) => {
           direction="row"
           sx={{ display: 'flex', justifyContent: 'space-between', pb: '1.2rem' }}
         >
-          {/* tobe: yet to implement */}
           <FilterTiles appliedFilters={filters} onRemoveSelectedTile={handleRemoveSelectedTile} />
           <FilterOrders />
         </Stack>
 
         <Stack>
-          <Divider sx={{ bgcolor: 'grey.500', borderWidth: '1px' }} />
+          {mdScreen ? (
+            <Divider sx={{ borderColor: 'primary.main' }} />
+          ) : (
+            <FullWidthDivider color="primary.main" />
+          )}
         </Stack>
 
         <Stack>

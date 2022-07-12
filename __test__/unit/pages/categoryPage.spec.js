@@ -1,8 +1,7 @@
 import '@testing-library/jest-dom'
 import { render, screen } from '@testing-library/react'
-import * as nextRouter from 'next/router'
-
 import { RouterContext } from 'next/dist/shared/lib/router-context'
+import * as nextRouter from 'next/router'
 
 import { categoryTreeDataMock } from '@/__mocks__/stories/categoryTreeDataMock'
 import { createQueryClientWrapper } from '@/__test__/utils/renderWithQueryClient'
@@ -53,6 +52,8 @@ jest.mock(
   '@/components/page-templates/ProductListingTemplate/ProductListingTemplate.tsx',
   () => ProductListingTemplateMock
 )
+
+jest.mock('@/lib/api/util/getUserClaimsFromRequest.ts', () => jest.fn(() => null))
 
 describe('[page] Category Page', () => {
   it('should run getServerSideProps method', async () => {

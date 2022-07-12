@@ -10,7 +10,15 @@ import type { OrderHistoryItemProps } from './OrderHistoryItem'
 const { Common } = composeStories(stories)
 
 const priceMock = () => <div data-testid="price-mock" />
+const FullWidthDividerMock = () => <div data-testid="full-width-divider-mock"></div>
+
 jest.mock('@/components/common/Price/Price', () => priceMock)
+jest.mock('@/components/common/FullWidthDivider/FullWidthDivider', () => FullWidthDividerMock)
+
+jest.mock('@mui/material', () => ({
+  ...jest.requireActual('@mui/material'),
+  useMediaQuery: jest.fn().mockReturnValue(false),
+}))
 
 describe('[component] - OrderHistoryItem', () => {
   const { id, submittedDate, productNames, orderStatus } = Common?.args as OrderHistoryItemProps
@@ -29,11 +37,13 @@ describe('[component] - OrderHistoryItem', () => {
     const productNamesText = screen.getByText(productNames)
     const orderTotalText = screen.getByTestId('price-mock')
     const orderStatusText = screen.getByText(orderStatus)
+    const fullWidthDividerMock = screen.getAllByTestId('full-width-divider-mock')
 
     expect(submittedDateText).toBeVisible()
     expect(productNamesText).toBeVisible()
     expect(orderTotalText).toBeVisible()
     expect(orderStatusText).toBeVisible()
+    expect(fullWidthDividerMock.length).toBeGreaterThan(0)
   })
 
   it('should call onHistoryItemClick callback function when user clicks on HistoryItem', async () => {

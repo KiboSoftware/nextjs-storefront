@@ -2,11 +2,12 @@ import React from 'react'
 
 import '@testing-library/jest-dom'
 import { composeStories } from '@storybook/testing-react'
-import { render, screen, waitFor, fireEvent, within, act, cleanup } from '@testing-library/react'
+import { render, screen, waitFor, fireEvent, within, cleanup } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 
 import { ProductCustomMock } from '@/__mocks__/stories/ProductCustomMock'
 import * as stories from '@/components/page-templates/ProductDetail/ProductDetailTemplate.stories' // import all stories from the stories file
+import { DialogRoot, ModalContextProvider } from '@/context'
 import { productGetters } from '@/lib/getters'
 
 const { Common } = composeStories(stories)
@@ -15,7 +16,12 @@ const mockedProduct = ProductCustomMock
 
 const setup = () => {
   const user = userEvent.setup()
-  render(<Common {...Common.args} />)
+  render(
+    <ModalContextProvider>
+      <DialogRoot />
+      <Common {...Common.args} />
+    </ModalContextProvider>
+  )
 
   return {
     user,
@@ -33,9 +39,7 @@ describe('[component] - ProductDetailTemplate integration', () => {
     const input = screen.getByRole('textbox', { name: 'quantity' })
     const increaseButton = screen.getByRole('button', { name: 'increase' })
 
-    await act(async () => {
-      await user.click(increaseButton)
-    })
+    await user.click(increaseButton)
 
     await waitFor(() => {
       expect(input).toHaveValue('2')
@@ -142,5 +146,23 @@ describe('[component] - ProductDetailTemplate integration', () => {
     await waitFor(() => {
       expect(checkbox).toBeChecked()
     })
+  })
+
+  it('should handle adding item to cart', async () => {
+    const { user } = setup()
+
+    const addToCartButton = screen.getByRole('button', {
+      name: /common:add-to-cart/i,
+    })
+
+    await user.click(addToCartButton)
+
+    const view = screen.getByTestId('title-component')
+
+    const dialogHeader = within(view).getByRole('heading', {
+      name: /added-to-cart/i,
+    })
+
+    expect(dialogHeader).toBeVisible()
   })
 })

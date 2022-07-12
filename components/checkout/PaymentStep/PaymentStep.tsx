@@ -12,7 +12,8 @@ import {
 } from '@mui/material'
 import { useTranslation } from 'next-i18next'
 
-import { CardDetailsForm, type Action, type CardData } from '@/components/checkout'
+import { CardDetailsForm } from '@/components/checkout'
+import type { Action, CardData } from '@/components/checkout'
 import AddressForm, { Address, Contact } from '@/components/common/AddressForm/AddressForm'
 import { usePaymentTypes } from '@/hooks'
 import { FormStates } from '@/lib/constants'
@@ -150,11 +151,11 @@ const PaymentStep = (props: PaymentStepProps) => {
   }, [billingAddress, paymentDetails])
 
   return (
-    <Stack>
+    <Stack data-testid="checkout-payment">
       <StyledHeadings variant="h2" sx={{ paddingBottom: '1.625rem' }}>
         {t('payment-method')}
       </StyledHeadings>
-      <FormControl>
+      <FormControl sx={{ maxWidth: '26.313rem', paddingLeft: '0.5rem' }}>
         <RadioGroup
           aria-labelledby="payment-types-radio"
           name="radio-buttons-group"

@@ -3,6 +3,7 @@ import React from 'react'
 import { ComponentStory, ComponentMeta } from '@storybook/react'
 
 import Checkout from './Checkout'
+import { orderMock } from '@/__mocks__/stories/orderMock'
 
 // Common
 export default {
@@ -15,5 +16,5 @@ const Template: ComponentStory<typeof Checkout> = (args) => <Checkout {...args} 
 // Default
 export const Common = Template.bind({})
 Common.args = {
-  checkout: undefined,
+  checkout: orderMock.checkout,
 }

@@ -9,14 +9,19 @@ import Price from '@/components/common/Price/Price'
 import QuantitySelector from '@/components/common/QuantitySelector/QuantitySelector'
 import KiboBreadcrumbs from '@/components/core/Breadcrumbs/KiboBreadcrumbs'
 import ImageGallery from '@/components/core/ImageGallery/ImageGallery'
-import ColorSelector from '@/components/product/ColorSelector/ColorSelector'
-import ProductInformation from '@/components/product/ProductInformation/ProductInformation'
-import ProductOptionCheckbox from '@/components/product/ProductOptionCheckbox/ProductOptionCheckbox'
-import ProductOptionSelect from '@/components/product/ProductOptionSelect/ProductOptionSelect'
-import ProductOptionTextBox from '@/components/product/ProductOptionTextBox/ProductOptionTextBox'
-import ProductRecommendations from '@/components/product/ProductRecommendations/ProductRecommendations'
-import ProductVariantSizeSelector from '@/components/product/ProductVariantSizeSelector/ProductVariantSizeSelector'
+import { AddToCartDialog } from '@/components/dialogs'
+import {
+  ColorSelector,
+  ProductInformation,
+  ProductOptionCheckbox,
+  ProductOptionSelect,
+  ProductOptionTextBox,
+  ProductRecommendations,
+  ProductVariantSizeSelector,
+} from '@/components/product'
+import { useModalContext } from '@/context/ModalContext'
 import { useProductDetailTemplate } from '@/hooks'
+import { useCartMutation } from '@/hooks/mutations/useCartMutation/useCartMutation'
 import { productGetters } from '@/lib/getters'
 import type { ProductCustom, BreadCrumb, PriceRange } from '@/lib/types'
 
@@ -36,15 +41,26 @@ interface ProductDetailTemplateProps {
 const ProductDetailTemplate = (props: ProductDetailTemplateProps) => {
   const { product, breadcrumbs } = props
   const { t } = useTranslation(['product', 'common'])
+  const { showModal } = useModalContext()
 
   // Data hook
-  const { currentProduct, quantity, setQuantity, selectProductOption } = useProductDetailTemplate({
+  const {
+    currentProduct,
+    quantity,
+    updatedShopperEnteredValues,
+    setQuantity,
+    selectProductOption,
+  } = useProductDetailTemplate({
     product,
   })
+  const { addToCart } = useCartMutation()
 
   // Getters
   const {
     productName,
+    productCode,
+    variationProductCode,
+    fulfillmentMethod,
     productPrice,
     productPriceRange,
     productRating,
@@ -56,6 +72,31 @@ const ProductDetailTemplate = (props: ProductDetailTemplateProps) => {
     properties,
     isValidForAddToCart,
   } = productGetters.getProductDetails(currentProduct)
+
+  // methods
+  const handleAddToCart = async () => {
+    try {
+      const cartResponse = await addToCart.mutateAsync({
+        product: {
+          options: updatedShopperEnteredValues,
+          productCode,
+          variationProductCode,
+          fulfillmentMethod,
+          purchaseLocationCode: '', // need to be handled
+        },
+        quantity,
+      })
+
+      if (cartResponse.id) {
+        showModal({
+          Component: AddToCartDialog,
+          props: {
+            cartItem: cartResponse,
+          },
+        })
+      }
+    } catch (err) {}
+  }
 
   // Cloning the price range object to trnaslate the currency values
   const handlePriceRangeTranslation = (priceRange: ProductPriceRange): PriceRange => {
@@ -78,6 +119,9 @@ const ProductDetailTemplate = (props: ProductDetailTemplateProps) => {
       },
     }
   }
+
+  // purchase location should be passed once implemented
+  const fulfillmentOptions = productGetters.getProductFulfillmentOptions(product, { name: '' })
 
   return (
     <>
@@ -187,13 +231,17 @@ const ProductDetailTemplate = (props: ProductDetailTemplateProps) => {
             <QuantitySelector
               label="Qty"
               quantity={quantity}
-              onIncrease={() => setQuantity((prevQuantity) => Number(prevQuantity) + 1)}
-              onDecrease={() => setQuantity((prevQuantity) => Number(prevQuantity) - 1)}
+              onIncrease={() => setQuantity((prevQuantity: number) => Number(prevQuantity) + 1)}
+              onDecrease={() => setQuantity((prevQuantity: number) => Number(prevQuantity) - 1)}
             />
           </Box>
 
           <Box paddingY={1}>
-            <FulfillmentOptions />
+            <FulfillmentOptions
+              fulfillmentOptions={fulfillmentOptions}
+              onFullfillmentOptionChange={() => null}
+              onStoreSelection={() => null}
+            />
           </Box>
 
           <Box paddingY={1} display="flex" flexDirection={'column'} gap={2}>
@@ -201,6 +249,7 @@ const ProductDetailTemplate = (props: ProductDetailTemplateProps) => {
               variant="contained"
               color="primary"
               fullWidth
+              onClick={() => handleAddToCart()}
               {...(!isValidForAddToCart && { disabled: true })}
             >
               {t('common:add-to-cart')}

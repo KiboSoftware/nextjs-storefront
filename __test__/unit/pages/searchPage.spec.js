@@ -47,6 +47,8 @@ jest.mock(
   () => ProductListingTemplateMock
 )
 
+jest.mock('@/lib/api/util/getUserClaimsFromRequest.ts', () => jest.fn(() => null))
+
 describe('[page] Search Page', () => {
   it('should run getServerSideProps method', async () => {
     const context = {

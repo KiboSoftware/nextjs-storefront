@@ -2,7 +2,7 @@ import { format } from 'date-fns'
 
 import { checkoutGetters } from './checkoutGetters'
 
-import { CrOrderItem, Maybe, Order, PaymentCard } from '@/lib/gql/types'
+import type { CrOrderItem, Maybe, Order, PaymentCard } from '@/lib/gql/types'
 
 const getId = (order: Order) => order.id as string
 

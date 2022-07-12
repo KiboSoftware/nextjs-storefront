@@ -27,16 +27,37 @@ module.exports = {
     debounceTimeout: '1000',
     productListing: {
       sortOptions: [
-        { value: 'Default', id: '' },
+        { value: 'Best Match', id: '' },
         { value: 'Price: Low to High', id: 'price asc' },
         { value: 'Price: High to Low', id: 'price desc' },
         { value: 'Latest', id: 'createDate desc' },
         { value: 'Oldest', id: 'createDate asc' },
       ],
+      pageSize: 16,
     },
     ratingAttrFQN: `tenant~rating`,
     userCookieKey: process.env.KIBO_USER_COOKIE_KEY || 'kibo_at',
     maxCookieAge: 5 * 24 * 60 * 60 * 1000, //5 days
+    fullfillmentOptions: [
+      {
+        value: 'DirectShip',
+        code: 'DS',
+        name: 'Direct Ship',
+        label: 'Ship to Home',
+        details: 'Available to Ship',
+        isRequired: false,
+        shortName: 'Ship',
+      },
+      {
+        value: 'InStorePickup',
+        code: 'SP',
+        name: 'In Store Pickup',
+        label: 'Pickup in Store',
+        details: 'Available at',
+        isRequired: false,
+        shortName: 'Pickup',
+      },
+    ],
   },
   serverRuntimeConfig: {
     revalidate: 60,

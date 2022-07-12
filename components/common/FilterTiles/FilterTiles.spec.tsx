@@ -6,6 +6,8 @@ import userEvent from '@testing-library/user-event'
 
 import * as stories from './FilterTiles.stories' // import all stories from the stories file
 
+import type { FacetValue } from '@/lib/gql/types'
+
 const { Tiles } = composeStories(stories)
 
 describe('[components] Fulfillment Options Component', () => {
@@ -21,7 +23,7 @@ describe('[components] Fulfillment Options Component', () => {
   it('should render component', () => {
     setup()
 
-    const tilesLabel = Tiles?.args?.appliedFilters?.map((tile) => tile.label) || []
+    const tilesLabel = Tiles?.args?.appliedFilters?.map((tile: FacetValue) => tile.label) || []
 
     const tilesLabelRegex = new RegExp(tilesLabel.join('|'), 'i')
 

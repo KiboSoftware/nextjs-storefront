@@ -3,6 +3,13 @@ import { ConfiguredProduct } from '@/lib/gql/types'
 export const configuredProductMock: { configureProduct: ConfiguredProduct } = {
   configureProduct: {
     productCode: 'BackP_001',
+    variationProductCode: 'BackP_001-4',
+    productImages: [
+      {
+        imageUrl:
+          '//cdn-sb.mozu.com/26507-41315/cms/41315/files/ff4daef0-999e-4df7-abd2-257ccd8531cf',
+      },
+    ],
     purchasableState: {
       isPurchasable: true,
     },

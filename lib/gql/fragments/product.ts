@@ -36,6 +36,7 @@ fragment productContent on Product {
       imageUrl
       imageLabel
       mediaType
+      altText
     }
   }
 }
@@ -63,6 +64,7 @@ fragment productOptions on Product {
 export const productInfo = `
 fragment productInfo on Product {
         productCode
+        variationProductCode
         productUsage
         isPackagedStandAlone
         categories {
