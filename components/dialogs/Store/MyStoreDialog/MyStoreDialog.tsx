@@ -6,7 +6,7 @@ import { useTranslation } from 'next-i18next'
 import { StoreLocatorDialog, StoreDetails } from '..'
 import KiboDialog from '@/components/common/KiboDialog/KiboDialog'
 import { useModalContext } from '@/context/ModalContext'
-import { set } from '@/hooks'
+import { setPurchaseLocation } from '@/hooks'
 import { storeLocationGetters } from '@/lib/getters/storeLocationGetters'
 
 import type { Maybe, Location } from '@/lib/gql/types'
@@ -29,7 +29,7 @@ const MyStoreDialog = (props: MyStoreProps) => {
       Component: StoreLocatorDialog,
       props: {
         handleSetStore: async (selectedStore: string) => {
-          set(selectedStore)
+          setPurchaseLocation(selectedStore)
           closeModal()
         },
       },

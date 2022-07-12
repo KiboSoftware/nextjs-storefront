@@ -60,7 +60,9 @@ module.exports = {
         shortName: 'Pickup',
       },
     ],
-    defaultRange: '160934',
+    storeLocator: {
+      defaultRange: '160934',
+    },
     storeLocationCookie: LOCATION_COOKIE,
   },
   serverRuntimeConfig: {

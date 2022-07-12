@@ -19,7 +19,7 @@ interface LocationType {
 const { publicRuntimeConfig } = getConfig()
 const purchaseLocationCookieName = publicRuntimeConfig.storeLocationCookie
 
-export const set = (locationCode: string | null) => {
+export const setPurchaseLocation = (locationCode: string | null) => {
   if (locationCode === null) {
     deleteCookie(purchaseLocationCookieName)
   } else {

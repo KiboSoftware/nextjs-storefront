@@ -1,4 +1,4 @@
-import React, { JSXElementConstructor, ReactElement, useState } from 'react'
+import React, { JSXElementConstructor, ReactElement } from 'react'
 
 import {
   FormControl,
@@ -18,17 +18,14 @@ interface KiboRadioProps {
     value: string
   }[]
   sx?: SxProps<Theme>
-  onChange?: (value: string) => void
+  onChange: (value: string) => void
 }
 
 export const KiboRadio = (props: KiboRadioProps) => {
   const { title, radioOptions, selected = '', sx, onChange } = props
 
-  // const [selectedRadio, setSelectedRadio] = useState(selected)
-
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    // setSelectedRadio((event.target as HTMLInputElement).value)
-    onChange && onChange(event.target.value)
+    onChange(event.target.value)
   }
 
   return (

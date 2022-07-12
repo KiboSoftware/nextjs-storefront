@@ -7,8 +7,7 @@ import getConfig from 'next/config'
 import { SearchStore } from '..'
 import KiboDialog from '@/components/common/KiboDialog/KiboDialog'
 import { useModalContext } from '@/context'
-import { useStoreLocations } from '@/hooks'
-import { useCurrentLocation } from '@/hooks/custom/useCurrentLocation/useCurrentLocation'
+import { useStoreLocations, useCurrentLocation } from '@/hooks'
 
 import type { Location, Maybe } from '@/lib/gql/types'
 
@@ -29,7 +28,7 @@ const StoreLocatorDialog = (props: StoreLocatorProps) => {
 
   const [searchParams, setSearchParams] = useState<{ filter: string }>({ filter: '' })
   const [searchTerm, setSearchTerm] = useState<string>('')
-  const [selectedRadio, setSelectedRadio] = React.useState('')
+  const [selectedStore, setSelectedStore] = React.useState('')
   const { isError, data: locations } = useStoreLocations(searchParams)
 
   const initialState = Boolean(!searchParams.filter)
@@ -37,14 +36,14 @@ const StoreLocatorDialog = (props: StoreLocatorProps) => {
   const handleSearchByCurrentLocation = async () => {
     const { longitude, latitude } = await getCurrentLocation()
     const param = {
-      filter: `geo near(${latitude},${longitude})`,
+      filter: `geo near(${latitude},${longitude},${publicRuntimeConfig.storeLocator.defaultRange})`,
     }
     setSearchParams(param)
     setSearchTerm('')
   }
   const handleSearchByInput = (inputValue: string) => {
     const param = {
-      filter: `geo near(${inputValue},${publicRuntimeConfig.defaultRange})`,
+      filter: `geo near(${inputValue},${publicRuntimeConfig.storeLocator.defaultRange})`,
     }
     setSearchParams(param)
   }
@@ -57,9 +56,9 @@ const StoreLocatorDialog = (props: StoreLocatorProps) => {
         spLocations={!isError ? (locations as Maybe<Location>[]) : []}
         searchTerm={searchTerm}
         initialState={initialState}
-        selectedRadio={selectedRadio}
+        selectedStore={selectedStore}
         setSearchTerm={setSearchTerm}
-        setSelectedRadio={setSelectedRadio}
+        setSelectedStore={setSelectedStore}
         onStoreByZipcode={handleSearchByInput}
         onStoreByCurrentLocation={handleSearchByCurrentLocation}
       />
@@ -86,7 +85,7 @@ const StoreLocatorDialog = (props: StoreLocatorProps) => {
         <Button
           sx={{ width: '100%' }}
           variant="contained"
-          onClick={() => handleSetStore(selectedRadio)}
+          onClick={() => handleSetStore(selectedStore)}
         >
           {t('set-store')}
         </Button>

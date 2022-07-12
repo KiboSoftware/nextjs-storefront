@@ -24,8 +24,8 @@ interface SearchStoreProps {
   spLocations: Maybe<Location>[]
   searchTerm: string
   initialState: boolean
-  selectedRadio: string
-  setSelectedRadio: (selectedStore: string) => void
+  selectedStore: string
+  setSelectedStore: (selectedStore: string) => void
   setSearchTerm: (value: string) => void
   onStoreByZipcode: (userEnteredValue: string) => void
   onStoreByCurrentLocation: () => void
@@ -36,9 +36,9 @@ const SearchStore = (props: SearchStoreProps) => {
     spLocations,
     searchTerm = '',
     initialState,
-    selectedRadio,
+    selectedStore,
     setSearchTerm,
-    setSelectedRadio,
+    setSelectedStore,
     onStoreByZipcode,
     onStoreByCurrentLocation,
   } = props
@@ -47,7 +47,7 @@ const SearchStore = (props: SearchStoreProps) => {
   const handleStoreByCurrentLocation = () => onStoreByCurrentLocation()
 
   const locations = storeLocationGetters.getLocations(spLocations)
-  const radioOptions = locations?.map((location) => {
+  const storeOptions = locations?.map((location) => {
     return {
       value: location?.code || '',
       label: <StoreDetails {...location} />,
@@ -55,7 +55,7 @@ const SearchStore = (props: SearchStoreProps) => {
   })
 
   const handleStoreSelection = (value: string) => {
-    setSelectedRadio(value)
+    setSelectedStore(value)
   }
   return (
     <>
@@ -107,8 +107,8 @@ const SearchStore = (props: SearchStoreProps) => {
           <FullWidthDivider />
           <Box maxWidth={'fit-content'}>
             <KiboRadio
-              radioOptions={radioOptions}
-              selected={selectedRadio}
+              radioOptions={storeOptions}
+              selected={selectedStore}
               sx={{ alignItems: 'flex-start' }}
               onChange={handleStoreSelection}
             />

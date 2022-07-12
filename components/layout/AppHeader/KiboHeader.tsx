@@ -31,7 +31,7 @@ import { MyStoreDialog, StoreLocatorDialog } from '@/components/dialogs/Store'
 import { HamburgerMenu } from '@/components/layout'
 import MegaMenu from '@/components/layout/MegaMenu/MegaMenu'
 import { useAuthContext, useModalContext } from '@/context'
-import { useCartQueries, useCategoryTree, set, usePurchaseLocation } from '@/hooks'
+import { useCartQueries, useCategoryTree, setPurchaseLocation, usePurchaseLocation } from '@/hooks'
 import type { NavigationLink } from '@/lib/types'
 
 import type { Maybe, PrCategory } from '@/lib/gql/types'
@@ -201,7 +201,6 @@ const HeaderActions = (props: HeaderActionsProps) => {
   const { headerState, setHeaderState, isMobileViewport } = props
   const { t } = useTranslation('common')
   const { isAuthenticated, user, setAuthError } = useAuthContext()
-  const { showModal } = useModalContext()
   const router = useRouter()
   const { data: cart } = useCartQueries({})
   const itemCount = cart?.items?.length || 0
@@ -220,24 +219,24 @@ const HeaderActions = (props: HeaderActionsProps) => {
   }
 
   const openStoreLocatorModal = () => {
-    location.name &&
+    if (location.name) {
       showModal({
         Component: MyStoreDialog,
         props: {
           location,
         },
       })
-
-    !location.name &&
+    } else {
       showModal({
         Component: StoreLocatorDialog,
         props: {
           handleSetStore: async (selectedStore: string) => {
-            set(selectedStore)
+            setPurchaseLocation(selectedStore)
             closeModal()
           },
         },
       })
+    }
   }
 
   return (
