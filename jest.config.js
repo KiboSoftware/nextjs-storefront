@@ -22,7 +22,6 @@ module.exports = {
     // Handle image imports
     // https://jestjs.io/docs/webpack#handling-static-assets
     '^.+\\.(jpg|jpeg|png|gif|webp|avif|svg)$': `<rootDir>/__mocks__/fileMock.js`,
-
     // Handle module aliases
     '^@/components/(.*)$': '<rootDir>/components/$1',
     // Handle Lib aliases
@@ -37,6 +36,7 @@ module.exports = {
     '^@/hooks(.*)$': '<rootDir>/hooks/$1',
     // Handle pages aliases
     '^@/pages/(.*)$': '<rootDir>/pages/$1',
+    '^@/(.*)$': '<rootDir>/$1',
   },
   // Add more setup options before each test is run
   // setupFilesAfterEnv: ['<rootDir>/jest.setup.js'],

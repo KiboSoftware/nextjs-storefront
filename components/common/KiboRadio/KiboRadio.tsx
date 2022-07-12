@@ -31,7 +31,7 @@ export const KiboRadio = (props: KiboRadioProps) => {
         {title}
       </FormLabel>
       <RadioGroup
-        aria-labelledby="payment-details-radio"
+        aria-labelledby="kibo-radio"
         name="radio-buttons-group"
         value={selectedRadio}
         onChange={handleChange}

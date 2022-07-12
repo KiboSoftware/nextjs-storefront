@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react'
 
-import { type Action } from '@/components/checkout'
+import type { Action } from '@/components/checkout'
 import { FormStates } from '@/lib/constants'
 
 import type { Order } from '@/lib/gql/types'

@@ -5,6 +5,7 @@ import { useTranslation } from 'next-i18next'
 
 import { FullWidthDivider } from '@/components/common'
 import { FacetList } from '@/components/product-listing'
+import type { BreadCrumb as BreadCrumbType } from '@/lib/types'
 
 import type { Facet as FacetType, FacetValue } from '@/lib/gql/types'
 
@@ -14,6 +15,7 @@ interface CategoryFilterByMobileProps {
   totalResults: number
   isLoading?: boolean
   appliedFilters: FacetValue[]
+  breadCrumbsList: BreadCrumbType[]
   onClearAllFilters: () => void
   onFilterByClose: () => void
   onRemoveSelectedTile: (tile: string) => void
@@ -76,6 +78,7 @@ const CategoryFilterByMobile = (props: CategoryFilterByMobileProps) => {
     totalResults,
     header,
     appliedFilters,
+    breadCrumbsList,
     onClearAllFilters,
     onFilterByClose,
     onRemoveSelectedTile,
@@ -87,7 +90,7 @@ const CategoryFilterByMobile = (props: CategoryFilterByMobileProps) => {
   const headerPart = (
     <>
       <Typography variant="h1" sx={{ fontWeight: 'bold' }}>
-        {header}
+        {header ? header : breadCrumbsList[breadCrumbsList.length - 1].text}
       </Typography>
       <Box sx={{ ...styles.upperTotal }}>{t('results', { totalResults })}</Box>
     </>

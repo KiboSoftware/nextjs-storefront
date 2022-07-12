@@ -3,13 +3,11 @@ import React from 'react'
 import { Stack, Typography, Link, styled } from '@mui/material'
 import { useTranslation } from 'next-i18next'
 
+import RegisterAccountDialog from '../../RegisterAccount/RegisterAccountDialog/RegisterAccountDialog'
 import KiboDialog from '@/components/common/KiboDialog/KiboDialog'
 import LoginContent, { LoginData } from '@/components/layout/Login/LoginContent/LoginContent'
-import { useAuthContext, useUIContext } from '@/context'
-
-export interface LoginDialogProps {
-  isOpen?: boolean
-}
+import { useAuthContext } from '@/context'
+import { useModalContext } from '@/context/ModalContext'
 
 export interface LoginFooterProps {
   onRegisterNow: () => void
@@ -50,22 +48,24 @@ const LoginFooter = (props: LoginFooterProps) => {
 
 const LoginDialog = () => {
   const { t } = useTranslation(['common'])
-  const { isLoginDialogOpen, toggleLoginDialog } = useUIContext()
+
   const { authError = '', login } = useAuthContext()
+  const { showModal, closeModal } = useModalContext()
 
   const onRegisterClick = () => {
-    // do your stuff
+    showModal({ Component: RegisterAccountDialog })
   }
+
   const onForgotPassword = () => {
     // do your stuff
   }
+
   const handleLogin = (params: LoginData) => {
-    login(params, toggleLoginDialog)
+    login(params, closeModal)
   }
 
   return (
     <KiboDialog
-      isOpen={isLoginDialogOpen}
       Title={
         <Typography {...styles.loginTitle} data-testid="login-header">
           {t('log-in')}
@@ -80,7 +80,7 @@ const LoginDialog = () => {
       }
       Actions={<LoginFooter onRegisterNow={onRegisterClick} />}
       customMaxWidth="32.375rem"
-      onClose={toggleLoginDialog}
+      onClose={closeModal}
     />
   )
 }

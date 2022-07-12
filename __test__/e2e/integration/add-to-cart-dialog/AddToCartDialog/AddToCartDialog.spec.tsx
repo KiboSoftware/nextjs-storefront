@@ -6,18 +6,43 @@ import userEvent from '@testing-library/user-event'
 import { RouterContext } from 'next/dist/shared/lib/router-context'
 
 import { createMockRouter } from '@/__test__/utils/createMockRouter'
-import * as stories from '@/components/add-to-cart-dialog/AddToCartDialog/AddToCartDialog.stories' // import all stories from the stories file
+import * as stories from '@/components/dialogs/AddToCartConfirmation/AddToCartDialog/AddToCartDialog.stories' // import all stories from the stories file
+import { DialogRoot, ModalContextProvider, useModalContext } from '@/context'
 
 const { Common } = composeStories(stories)
 
-const onCloseMock = jest.fn()
+const TestComponent = () => {
+  const { showModal } = useModalContext()
+
+  const showYourModal = () => {
+    showModal({ Component: Common, props: Common.args })
+  }
+
+  return (
+    <div>
+      <DialogRoot />
+      <button data-testid="show-modal" onClick={showYourModal}>
+        Show Modal
+      </button>
+    </div>
+  )
+}
 
 const setup = () => {
   const user = userEvent.setup()
-  render(<Common {...Common.args} onClose={onCloseMock} />)
+  const router = createMockRouter()
+
+  render(
+    <RouterContext.Provider value={router}>
+      <ModalContextProvider>
+        <TestComponent />
+      </ModalContextProvider>
+    </RouterContext.Provider>
+  )
 
   return {
     user,
+    router,
   }
 }
 
@@ -25,16 +50,18 @@ describe('[components] Add To Cart Dialog integration', () => {
   it('should render component', async () => {
     const { user } = setup()
 
+    const showModalButton = screen.getByRole('button', { name: 'Show Modal' })
+    await user.click(showModalButton)
+
     const item = Common.args?.cartItem
     const name = item?.product?.name || ''
 
     const component = screen.getByRole('dialog')
-    const title = screen.getByText(/add-to-cart/i)
+    const title = screen.getAllByRole('heading', { name: /added-to-cart/i })[0]
     const closeIconButton = screen.getByRole('button', {
       name: /close/i,
     })
     const productName = screen.getByText(name)
-    const fulfillmentMethod = screen.getByText(`${item?.fulfillmentMethod}`)
     const taxSubTotal = screen.getAllByText(/currency/i)
     const goToCartButton = screen.getByRole('button', {
       name: /go-to-cart/i,
@@ -47,7 +74,6 @@ describe('[components] Add To Cart Dialog integration', () => {
     expect(title).toBeVisible()
     expect(closeIconButton).toBeVisible()
     expect(productName).toBeInTheDocument()
-    expect(fulfillmentMethod).toBeVisible()
     expect(taxSubTotal).toHaveLength(4)
     expect(goToCartButton).toBeVisible()
     expect(continueShoppingButton).toBeVisible()
@@ -56,27 +82,24 @@ describe('[components] Add To Cart Dialog integration', () => {
   it('should close dialog when user clicks on closeIcon button', async () => {
     const { user } = setup()
 
+    const showModalButton = screen.getByRole('button', { name: 'Show Modal' })
+    await user.click(showModalButton)
+
     const dialog = screen.getByRole('dialog')
     const closeIconButton = screen.getByRole('button', {
       name: /close/i,
     })
     await user.click(closeIconButton)
 
-    expect(dialog).toBeVisible()
-    expect(closeIconButton).toBeVisible()
-    expect(onCloseMock).toHaveBeenCalled()
+    expect(dialog).not.toBeVisible()
+    expect(closeIconButton).not.toBeVisible()
   })
 
   it('should redirect to /cart page when user clicks on "Add To Cart" button', async () => {
-    const { user } = setup()
+    const { user, router } = setup()
 
-    const router = createMockRouter()
-
-    render(
-      <RouterContext.Provider value={router}>
-        <Common />;
-      </RouterContext.Provider>
-    )
+    const showModalButton = screen.getByRole('button', { name: 'Show Modal' })
+    await user.click(showModalButton)
 
     const dialog = screen.getByRole('dialog')
     const goToCartButton = screen.getByRole('button', {
@@ -91,11 +114,16 @@ describe('[components] Add To Cart Dialog integration', () => {
     await waitFor(() => {
       expect(router.push).toHaveBeenCalledWith('/cart')
     })
+
+    expect(dialog).not.toBeVisible()
     expect(goToCartButton).not.toBeVisible()
   })
 
   it('should close dialog when user clicks on "Continue Shopping" button', async () => {
     const { user } = setup()
+
+    const showModalButton = screen.getByRole('button', { name: 'Show Modal' })
+    await user.click(showModalButton)
 
     const dialog = screen.getByRole('dialog')
     const continueShoppingButton = screen.getByRole('button', {
@@ -107,6 +135,7 @@ describe('[components] Add To Cart Dialog integration', () => {
 
     await user.click(continueShoppingButton)
 
+    expect(dialog).not.toBeVisible()
     expect(continueShoppingButton).not.toBeVisible()
   })
 })

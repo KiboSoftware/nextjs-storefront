@@ -31,7 +31,7 @@ const styles = {
   buttonStyle: { width: '5rem', height: '2.20rem', marginTop: '1.5rem' },
 }
 
-export const PromoCodeBadge = (props: PromocodeBadgeProps) => {
+const PromoCodeBadge = (props: PromocodeBadgeProps) => {
   const { t } = useTranslation('common')
   const { onApplyCouponCode, onRemoveCouponCode, promoList, promoError, helpText } = props
   const [promo, setPromo] = useState<string>('')
@@ -92,3 +92,5 @@ export const PromoCodeBadge = (props: PromocodeBadgeProps) => {
     </>
   )
 }
+
+export default PromoCodeBadge

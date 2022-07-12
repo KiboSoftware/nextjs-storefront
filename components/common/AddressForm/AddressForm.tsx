@@ -140,7 +140,6 @@ const AddressForm = (props: AddressFormProps) => {
       sx={{
         m: 1,
         maxWidth: '872px',
-        width: '100%',
       }}
       noValidate
       autoComplete="off"
@@ -296,6 +295,7 @@ const AddressForm = (props: AddressFormProps) => {
                 <KiboSelect
                   name="country-code"
                   label={t('country-code')}
+                  value={field.value}
                   error={!!errors?.address?.countryCode}
                   helperText={errors?.address?.countryCode?.message}
                   onChange={(_name, value) => field.onChange(value)}

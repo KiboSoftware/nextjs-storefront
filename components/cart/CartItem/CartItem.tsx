@@ -19,6 +19,7 @@ import Price from '@/components/common/Price/Price'
 import ProductItem from '@/components/common/ProductItem/ProductItem'
 import QuantitySelector from '@/components/common/QuantitySelector/QuantitySelector'
 import { orderGetters } from '@/lib/getters'
+import type { FulfillmentOption } from '@/lib/types'
 
 import type { CartItem as CartItemType } from '@/lib/gql/types'
 
@@ -73,9 +74,11 @@ interface CartItemProps {
   cartItem: CartItemType
   maxQuantity: number | undefined
   actions?: Array<string>
+  fulfillmentOptions: FulfillmentOption[]
   onQuantityUpdate: (cartItemId: string, quantity: number) => void
   onCartItemDelete: (cartItemId: string) => void
   onCartItemActionSelection: () => void
+  onFulfillmentOptionSelection: () => void
 }
 
 const CartItem = (props: CartItemProps) => {
@@ -83,19 +86,22 @@ const CartItem = (props: CartItemProps) => {
     cartItem,
     maxQuantity,
     actions,
+    fulfillmentOptions,
     onQuantityUpdate,
     onCartItemDelete,
     onCartItemActionSelection,
+    onFulfillmentOptionSelection,
   } = props
 
   const theme = useTheme()
 
   const { t } = useTranslation('common')
   const orientationVertical = useMediaQuery(theme.breakpoints.between('xs', 'md'))
+  const handleDelete = (cartItemId: string) => onCartItemDelete(cartItemId)
+  const updateQuantity = (quantity: number) => onQuantityUpdate(cartItem.id as string, quantity)
+  const handleActionSelection = () => onCartItemActionSelection()
 
-  const onDelete = (cartItemId: string) => onCartItemDelete(cartItemId)
-  const updateQuantity = (quantity: number) => onQuantityUpdate(cartItem.id || '', quantity)
-  const onActionSelection = () => onCartItemActionSelection()
+  const handleFulfillmentOption = () => onFulfillmentOptionSelection()
 
   return (
     <>
@@ -114,11 +120,11 @@ const CartItem = (props: CartItemProps) => {
                     fontWeight="bold"
                     price={t('currency', { val: orderGetters.getProductPrice(cartItem) })}
                     salePrice={
-                      (cartItem?.product?.price?.salePrice &&
-                        t('currency', {
-                          val: orderGetters.getProductSalePrice(cartItem),
-                        })) ||
-                      undefined
+                      orderGetters.getProductSalePrice(cartItem)
+                        ? t('currency', {
+                            val: orderGetters.getProductSalePrice(cartItem),
+                          })
+                        : undefined
                     }
                   />
                 </Box>
@@ -133,7 +139,7 @@ const CartItem = (props: CartItemProps) => {
                 </Box>
               </ProductItem>
 
-              <Box sx={{ display: { xs: 'none', sm: 'none', md: 'block' } }}>
+              <Box sx={{ display: { xs: 'none', sm: 'none', md: 'block', ml: 1 } }}>
                 <CartItemActions />
               </Box>
             </Box>
@@ -145,7 +151,11 @@ const CartItem = (props: CartItemProps) => {
             />
 
             <Box sx={{ ...styles.subcontainer }}>
-              <FulfillmentOptions />
+              <FulfillmentOptions
+                fulfillmentOptions={fulfillmentOptions}
+                onFullfillmentOptionChange={handleFulfillmentOption}
+                onStoreSelection={handleFulfillmentOption}
+              />
             </Box>
           </Box>
 
@@ -153,13 +163,13 @@ const CartItem = (props: CartItemProps) => {
             <Box sx={{ display: { xs: 'block', sm: 'block', md: 'none' } }}>
               <CartItemActionsMobile
                 actions={actions || []}
-                onMenuItemSelection={() => onActionSelection()}
+                onMenuItemSelection={handleActionSelection}
               />
             </Box>
             <IconButton
               aria-label="item-delete"
               name="item-delete"
-              onClick={() => onDelete(cartItem.id || '')}
+              onClick={() => handleDelete(cartItem.id as string)}
             >
               <Delete />
             </IconButton>

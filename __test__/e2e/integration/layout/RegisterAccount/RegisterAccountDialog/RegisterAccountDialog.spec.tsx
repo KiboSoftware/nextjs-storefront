@@ -1,20 +1,34 @@
 /* eslint-disable  testing-library/no-unnecessary-act */
 
-import React from 'react'
+import React, { ReactNode } from 'react'
 
 import { composeStories } from '@storybook/testing-react'
 import { render, screen, act, fireEvent } from '@testing-library/react'
 
 import * as stories from '@/components/layout/RegisterAccount/RegisterAccountDialog/RegisterAccountDialog.stories'
+import { AuthContext } from '@/context'
 
 const { Common } = composeStories(stories)
 
+const userContextValues = {
+  isAuthenticated: false,
+  login: jest.fn(),
+  createAccount: jest.fn(),
+  setAuthError: jest.fn(),
+  authError: '',
+  logout: jest.fn(),
+}
+
+const wrapper = ({ children }: { children: ReactNode }) => (
+  <AuthContext.Provider value={userContextValues}>{children}</AuthContext.Provider>
+)
+
+const renderComponent = () => {
+  return render(<Common {...Common.args} />, { wrapper })
+}
+
 describe('[components] Register Account Dialog', () => {
-  const onDialogCloseMock = jest.fn()
-  const setup = (args = Common.args) => {
-    render(<Common {...args} setAutoFocus={false} onDialogClose={onDialogCloseMock} />)
-    return { onDialogCloseMock }
-  }
+  const setup = () => renderComponent()
 
   it('should render component', () => {
     setup()
@@ -61,52 +75,22 @@ describe('[components] Register Account Dialog', () => {
     emailError = screen.getByText(/this\-field\-is\-required/i)
     expect(emailError).toBeVisible()
   })
-
-  it('first name should display required field error when user focus out (blur event) the first name field', async () => {
+  it('Should display required message onBlur of create Account inputs', async () => {
+    // arrange
     setup()
+    const emptyInput = { target: { value: '' } }
 
-    let firstNameError = screen.queryByText(/this field is required/i)
-    expect(firstNameError).not.toBeInTheDocument()
-
-    const registerAccountFormFirstNameInput = screen.getByRole('textbox', { name: /first-name/i })
+    const allInputs = screen.getAllByRole('textbox')
+    const passwordInput = screen.getByLabelText(/password/i)
+    allInputs.push(passwordInput)
     await act(async () => {
-      registerAccountFormFirstNameInput.focus()
-      fireEvent.blur(registerAccountFormFirstNameInput, { target: { value: '' } })
+      allInputs.forEach((input) => {
+        input.focus()
+        fireEvent.blur(input, emptyInput)
+      })
     })
 
-    firstNameError = screen.queryByText(/this-field-is-required/i)
-    expect(firstNameError).toBeVisible()
-  })
-
-  it('last name should display required field error when user focus out (blur event) the last name field', async () => {
-    setup()
-
-    let lastNameError = screen.queryByText(/this field is required/i)
-    expect(lastNameError).not.toBeInTheDocument()
-
-    const registerAccountFormLastNameInput = screen.getByRole('textbox', { name: /last-name/i })
-    await act(async () => {
-      registerAccountFormLastNameInput.focus()
-      fireEvent.blur(registerAccountFormLastNameInput, { target: { value: '' } })
-    })
-
-    lastNameError = screen.queryByText(/this-field-is-required/i)
-    expect(lastNameError).toBeVisible()
-  })
-
-  it('password should display required field error when user focus out (blur event) the password field', async () => {
-    setup()
-
-    let RegisterAccountFormPasswordError = screen.queryByText(/this field is required/i)
-    expect(RegisterAccountFormPasswordError).not.toBeInTheDocument()
-
-    const registerAccountFormPasswordInput = screen.getByLabelText(/password/i)
-    await act(async () => {
-      registerAccountFormPasswordInput.focus()
-      fireEvent.blur(registerAccountFormPasswordInput, { target: { value: '' } })
-    })
-
-    RegisterAccountFormPasswordError = screen.queryByText(/this-field-is-required/i)
-    expect(RegisterAccountFormPasswordError).toBeVisible()
+    const validationMessage = screen.getAllByText(/this-field-is-required/i)
+    expect(validationMessage).toHaveLength(4)
   })
 })
