@@ -52,6 +52,12 @@ jest.mock('next-i18next/serverSideTranslations', () => ({
   }),
 }))
 
+jest.mock('@/hooks/queries/usePurchaseLocation/usePurchaseLocation', () => ({
+  usePurchaseLocation: jest.fn(() => {
+    return false
+  }),
+}))
+
 const ProductDetailTemplateMock = () => <div data-testid="productDetailTemplate-mock" />
 jest.mock(
   '@/components/page-templates/ProductDetail/ProductDetailTemplate.tsx',

@@ -31,7 +31,11 @@ import { MyStoreDialog, StoreLocatorDialog } from '@/components/dialogs/Store'
 import { HamburgerMenu } from '@/components/layout'
 import MegaMenu from '@/components/layout/MegaMenu/MegaMenu'
 import { useAuthContext, useModalContext } from '@/context'
-import { useCartQueries, useCategoryTree, setPurchaseLocation, usePurchaseLocation } from '@/hooks'
+import { useCartQueries, useCategoryTree } from '@/hooks'
+import {
+  setPurchaseLocation,
+  usePurchaseLocation,
+} from '@/hooks/queries/usePurchaseLocation/usePurchaseLocation'
 import type { NavigationLink } from '@/lib/types'
 
 import type { Maybe, PrCategory } from '@/lib/gql/types'
