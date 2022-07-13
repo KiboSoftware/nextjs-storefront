@@ -2,7 +2,16 @@
 
 import React from 'react'
 
-import { Button, useMediaQuery, Card, CardContent, Typography, Box } from '@mui/material'
+import {
+  Button,
+  useMediaQuery,
+  Card,
+  CardContent,
+  Typography,
+  Box,
+  useTheme,
+  createTheme,
+} from '@mui/material'
 import Carousel from 'react-material-ui-carousel'
 
 const styles = {
@@ -27,6 +36,7 @@ const styles = {
     opacity: '0.75',
     color: 'common.black',
     justifyContent: 'center',
+    width: { xs: '80%', md: '50%' },
   },
   nameStyle: {
     width: '100%',
@@ -52,6 +62,7 @@ const styles = {
     backgroundColor: 'grey.10',
     color: 'common.white',
     textAlign: 'center',
+    fontSize: { sm: '0.5' },
   },
 }
 
@@ -101,29 +112,19 @@ const KiboHeroCarousel = () => {
 }
 
 function Project({ item }: any) {
-  const mobileView = useMediaQuery('(min-width:600px)')
+  const kiboTheme = useTheme()
+  const mobileView = useMediaQuery(kiboTheme.breakpoints.down('sm'))
 
   return (
     <Card sx={styles.contentStyle} style={{ backgroundImage: `url(${item.href})` }}>
       <CardContent sx={styles.topStyle}>
-        <Typography
-          sx={{ fontWeight: 'bold' }}
-          style={{
-            fontSize: mobileView ? '1rem' : '0.75rem',
-          }}
-        >
+        <Typography variant="h4" sx={{ fontWeight: 'bold' }}>
           {item.title}
         </Typography>
 
         <Box sx={styles.boxStyle}>
-          <Typography
-            style={{
-              fontSize: mobileView ? '1rem' : '0.75rem',
-            }}
-          >
-            {item.body}
-          </Typography>
-          <Typography style={{ fontSize: mobileView ? '1rem' : '0.75rem' }}>
+          <Typography variant="h4">{item.body}</Typography>
+          <Typography variant="h4">
             <a href="#home" style={{ color: 'white' }}>
               {item.link}
             </a>
@@ -137,32 +138,17 @@ function Project({ item }: any) {
           justifyContent: 'center',
         }}
       >
-        <CardContent sx={styles.cardStyle} style={{ width: mobileView ? '50%' : '80%' }}>
-          <Typography
-            sx={styles.nameStyle}
-            style={{
-              fontSize: mobileView ? '2rem' : '1rem',
-            }}
-          >
+        <CardContent sx={styles.cardStyle}>
+          <Typography variant="h2" sx={styles.nameStyle}>
             {item.name}
           </Typography>
-          <Typography
-            sx={styles.subTitleStyle}
-            style={{
-              fontSize: mobileView ? '1.75rem' : '0.75rem',
-            }}
-          >
+          <Typography variant="h1" sx={styles.subTitleStyle}>
             {item.subtitle}
           </Typography>
-          <Typography
-            sx={styles.desStyle}
-            style={{
-              fontSize: mobileView ? '1rem' : '0.5rem',
-            }}
-          >
+          <Typography variant="h4" sx={styles.desStyle}>
             {item.description}
           </Typography>
-          <Button variant="contained" sx={{ fontSize: mobileView ? '1rem' : '0.50rem' }}>
+          <Button variant="contained" sx={{ fontSize: mobileView ? '0.5rem' : '1rem' }}>
             {item.buttonText}
           </Button>
         </CardContent>

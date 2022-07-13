@@ -15,7 +15,7 @@ export const grey = {
   // Home Page background
   30: '#494949',
   // Home Page color
-  10: '#A12E87'
+  10: '#A12E87',
 }
 
 // Create a base theme instance and define the basic design options
@@ -44,6 +44,9 @@ let theme = createTheme({
     },
     h4: {
       fontSize: '1rem', // 16px
+      '@media (max-width:600px)': {
+        fontSize: '0.75rem', // 12px
+      },
     },
     h5: {
       fontSize: '0.875rem', // 14px
@@ -61,6 +64,7 @@ let theme = createTheme({
     body2: {
       fontSize: '0.875rem', // 14px
     },
+   
   },
   palette: {
     primary: {

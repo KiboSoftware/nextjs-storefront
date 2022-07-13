@@ -45,8 +45,8 @@ describe('checkout Component', () => {
     it('should render nav icons', () => {
       setup()
 
-      expect(screen.getByRole('button', { name: 'Next' })).toBeInTheDocument()
-      expect(screen.getByRole('button', { name: 'Previous' })).toBeInTheDocument()
+      expect(screen.getByRole('button', { name: 'Next' })).toBeVisible()
+      expect(screen.getByRole('button', { name: 'Previous' })).toBeVisible()
     })
 
     it('should render text', async () => {
