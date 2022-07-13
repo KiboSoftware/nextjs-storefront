@@ -39,19 +39,21 @@ describe('checkout Component', () => {
 
     it('should render button', () => {
       setup()
-      expect(screen.getByRole('button', { name: 'Shop Holiday Items on Sale' })).toBeTruthy()
+      expect(screen.getByRole('button', { name: 'Shop Holiday Items on Sale' })).toBeInTheDocument()
     })
+
     it('should render nav icons', () => {
       setup()
 
-      expect(screen.getByRole('button', { name: 'Next' })).toBeTruthy()
-      expect(screen.getByRole('button', { name: 'Previous' })).toBeTruthy()
+      expect(screen.getByRole('button', { name: 'Next' })).toBeInTheDocument()
+      expect(screen.getByRole('button', { name: 'Previous' })).toBeInTheDocument()
     })
+
     it('should render text', async () => {
       setup()
       const text = await screen.findAllByText('Save up to 50%')
       console.log('text', text)
-      expect(text[0]).toBeTruthy()
+      expect(text[0]).toBeInTheDocument()
     })
   })
 })
