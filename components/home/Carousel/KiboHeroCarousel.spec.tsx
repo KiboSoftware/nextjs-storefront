@@ -36,5 +36,22 @@ describe('checkout Component', () => {
       expect(body[0]).toBeInTheDocument()
       expect(link[0]).toBeInTheDocument()
     })
+
+    it('should render button', () => {
+      setup()
+      expect(screen.getByRole('button', { name: 'Shop Holiday Items on Sale' })).toBeTruthy()
+    })
+    it('should render nav icons', () => {
+      setup()
+
+      expect(screen.getByRole('button', { name: 'Next' })).toBeTruthy()
+      expect(screen.getByRole('button', { name: 'Previous' })).toBeTruthy()
+    })
+    it('should render text', async () => {
+      setup()
+      const text = await screen.findAllByText('Save up to 50%')
+      console.log('text', text)
+      expect(text[0]).toBeTruthy()
+    })
   })
 })

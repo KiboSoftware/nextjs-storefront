@@ -2,17 +2,14 @@
 
 import React from 'react'
 
-import { Button, useMediaQuery } from '@mui/material'
-import Card from '@mui/material/Card'
-import CardContent from '@mui/material/CardContent'
-import Typography from '@mui/material/Typography'
+import { Button, useMediaQuery, Card, CardContent, Typography, Box } from '@mui/material'
 import Carousel from 'react-material-ui-carousel'
 
 const styles = {
   mainStyle: {
     display: 'flex',
     margin: '20px',
-    color: '#494949',
+    color: 'grey.30',
   },
   contentStyle: {
     display: 'flex',
@@ -26,9 +23,9 @@ const styles = {
     flexDirection: 'column',
     height: '70%',
     marginBottom: '5%',
-    backgroundColor: 'white',
+    backgroundColor: 'common.white',
     opacity: '0.75',
-    color: 'black',
+    color: 'common.black',
     justifyContent: 'center',
   },
   nameStyle: {
@@ -45,9 +42,15 @@ const styles = {
     textAlign: 'center',
     fontWeight: 800,
   },
+  boxStyle: {
+    justifyContent: 'center',
+    display: 'flex',
+    flexDirection: 'row',
+    color: 'common.white',
+  },
   topStyle: {
-    backgroundColor: '#A12E87',
-    color: 'white',
+    backgroundColor: 'grey.10',
+    color: 'common.white',
     textAlign: 'center',
   },
 }
@@ -87,7 +90,7 @@ const heroItems = [
 
 const KiboHeroCarousel = () => {
   return (
-    <div style={{ display: 'flex', margin: '20px', color: '#494949' }}>
+    <div style={styles.mainStyle}>
       <Carousel navButtonsAlwaysVisible={true} swipe={true} sx={{ width: '100%' }}>
         {heroItems.map((item, index) => {
           return <Project item={item} key={index} />
@@ -103,17 +106,29 @@ function Project({ item }: any) {
   return (
     <Card sx={styles.contentStyle} style={{ backgroundImage: `url(${item.href})` }}>
       <CardContent sx={styles.topStyle}>
-        <div data-testid="top-content">
-          <Typography variant="body2" sx={{ fontWeight: 'bold' }}>
-            {item.title}
-          </Typography>
-        </div>
-        <Typography variant="body2">
-          {item.body}
-          <a href="#home" style={{ color: 'white' }}>
-            {item.link}
-          </a>
+        <Typography
+          sx={{ fontWeight: 'bold' }}
+          style={{
+            fontSize: mobileView ? '1rem' : '0.75rem',
+          }}
+        >
+          {item.title}
         </Typography>
+
+        <Box sx={styles.boxStyle}>
+          <Typography
+            style={{
+              fontSize: mobileView ? '1rem' : '0.75rem',
+            }}
+          >
+            {item.body}
+          </Typography>
+          <Typography style={{ fontSize: mobileView ? '1rem' : '0.75rem' }}>
+            <a href="#home" style={{ color: 'white' }}>
+              {item.link}
+            </a>
+          </Typography>
+        </Box>
       </CardContent>
 
       <CardContent

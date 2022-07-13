@@ -12,6 +12,10 @@ export const grey = {
   100: '#F7F7F7',
   // Secondary Button (cancel button)
   50: '#FAFAFA',
+  // Home Page background
+  30: '#494949',
+  // Home Page color
+  10: '#A12E87'
 }
 
 // Create a base theme instance and define the basic design options
