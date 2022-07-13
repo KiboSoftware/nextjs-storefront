@@ -2,7 +2,6 @@ import React from 'react'
 
 import { composeStories } from '@storybook/testing-react'
 import { render, screen } from '@testing-library/react'
-import userEvent from '@testing-library/user-event'
 
 import * as stories from './MyStoreDialog.stories'
 import { ModalContextProvider } from '@/context'
@@ -23,21 +22,13 @@ const renderComponent = () => {
 }
 
 describe('[components] My Store Dialog', () => {
-  const setup = () => {
-    const user = userEvent.setup()
-
-    renderComponent()
-    return {
-      user,
-    }
-  }
+  const setup = () => renderComponent()
 
   it('should render component', async () => {
-    const { user } = setup()
+    setup()
     const title = screen.getByText('my-store')
     const closeIcon = screen.getByRole('button', { name: 'close' })
     const content = screen.getByTestId('store-details-content')
-    const storeLocatorDialog = screen.queryByTestId('store-locator-dialog')
 
     expect(title).toBeVisible()
     expect(closeIcon).toBeVisible()
@@ -45,8 +36,5 @@ describe('[components] My Store Dialog', () => {
 
     const changeStoreLink = screen.getByRole('button', { name: 'change-store' })
     expect(changeStoreLink).toBeVisible()
-
-    await user.click(changeStoreLink)
-    expect(storeLocatorDialog).toBeInTheDocument()
   })
 })

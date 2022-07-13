@@ -96,7 +96,7 @@ describe('[components] Store Locator Dialog integration', () => {
       const radio = screen.getByRole('radio', {
         name: /Albuquerque/i,
       })
-      expect(radio).toBeVisible()
+      expect(radio).toBeInTheDocument()
     })
   })
 
