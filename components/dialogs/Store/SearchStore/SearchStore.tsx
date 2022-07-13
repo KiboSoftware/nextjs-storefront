@@ -91,7 +91,7 @@ const SearchStore = (props: SearchStoreProps) => {
               color="grey.900"
               componentsProps={{ typography: { variant: 'body2' } }}
               control={<Checkbox />}
-              label={t('show-stores-with-availability') as string}
+              label={t('show-stores-with-availability')}
             />
           </FormGroup>
         </Box>

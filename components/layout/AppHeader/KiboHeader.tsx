@@ -283,7 +283,7 @@ const HeaderActions = (props: HeaderActionsProps) => {
         {/* Store finder icon */}
         <Box sx={headerActionsStyles.storeFinderWrapper}>
           <HeaderAction
-            title={location?.name ? (location.name as string) : t('find-a-store')}
+            title={location?.name ? location.name : t('find-a-store')}
             subtitle={
               location?.address?.cityOrTown && location?.address?.stateOrProvince
                 ? `${location?.address?.cityOrTown}, ${location?.address?.stateOrProvince}`

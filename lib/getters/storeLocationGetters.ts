@@ -1,6 +1,6 @@
 import type { LocationCustom } from '@/lib/types'
 
-import type { Location, RegularHours, Hours, Maybe, CrAddress } from '@/lib/gql/types'
+import type { Location, Hours, Maybe, CrAddress } from '@/lib/gql/types'
 
 const getCode = (location: Maybe<Location>): string => {
   return location?.code || ''
@@ -37,7 +37,7 @@ const getZip = (location: Maybe<Location>): string => {
 const getHours = (location: Maybe<Location>) => {
   return (
     location?.regularHours &&
-    Object.entries(location?.regularHours as RegularHours).map((value: (string | Hours)[]) => {
+    Object.entries(location?.regularHours).map((value: (string | Hours)[]) => {
       const hours = value[1] as Hours
       const storeTime =
         hours?.openTime && hours?.closeTime ? `${hours?.openTime}am - ${hours?.closeTime}pm` : ''

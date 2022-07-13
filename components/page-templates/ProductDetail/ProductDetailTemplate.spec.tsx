@@ -54,6 +54,11 @@ jest.mock('@/hooks', () => ({
       currentProduct: mockProduct,
     }
   }),
+  useCartMutation: jest.fn(() => {
+    return {
+      addToCart: mockProduct,
+    }
+  }),
 }))
 
 const setup = () => {

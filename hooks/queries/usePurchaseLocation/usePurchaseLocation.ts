@@ -23,7 +23,7 @@ export const setPurchaseLocation = (locationCode: string | null) => {
   if (locationCode === null) {
     deleteCookie(purchaseLocationCookieName)
   } else {
-    setCookie(purchaseLocationCookieName, prepareSetCookieValue(locationCode as string))
+    setCookie(purchaseLocationCookieName, prepareSetCookieValue(locationCode))
   }
 }
 
