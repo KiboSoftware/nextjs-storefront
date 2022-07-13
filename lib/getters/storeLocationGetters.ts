@@ -35,15 +35,18 @@ const getZip = (location: Maybe<Location>): string => {
 }
 
 const getHours = (location: Maybe<Location>) => {
-  return Object.entries(location?.regularHours as RegularHours).map((value: (string | Hours)[]) => {
-    const hours = value[1] as Hours
-    const storeTime =
-      hours?.openTime && hours?.closeTime ? `${hours?.openTime}am - ${hours?.closeTime}pm` : ''
-    return {
-      day: value[0],
-      storeTime: storeTime,
-    }
-  })
+  return (
+    location?.regularHours &&
+    Object.entries(location?.regularHours as RegularHours).map((value: (string | Hours)[]) => {
+      const hours = value[1] as Hours
+      const storeTime =
+        hours?.openTime && hours?.closeTime ? `${hours?.openTime}am - ${hours?.closeTime}pm` : ''
+      return {
+        day: value[0],
+        storeTime: storeTime,
+      }
+    })
+  )
 }
 
 const getFullAddress = (location: Maybe<Location>): CrAddress => {
@@ -85,4 +88,5 @@ export const storeLocationGetters = {
   getState,
   getZip,
   getHours,
+  getFullAddress,
 }

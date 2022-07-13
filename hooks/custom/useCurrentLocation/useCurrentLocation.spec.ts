@@ -1,14 +1,28 @@
-import { renderHook } from '@testing-library/react-hooks'
-
 import { useCurrentLocation } from './useCurrentLocation'
-import { createQueryClientWrapper } from '@/__test__/utils/renderWithQueryClient'
+
+const mockGeolocation = {
+  getCurrentPosition: jest.fn().mockImplementation((success) =>
+    Promise.resolve(
+      success({
+        coords: {
+          latitude: 10,
+          longitude: 10,
+        },
+      })
+    )
+  ),
+}
+
+Object.defineProperty(global.navigator, 'geolocation', {
+  value: mockGeolocation,
+})
 
 describe('[hooks] useCurrentLocation', () => {
-  it('should return search loactions when entered search term', async () => {
-    const { result } = renderHook(() => useCurrentLocation(), {
-      wrapper: createQueryClientWrapper(),
-    })
+  const { getCurrentLocation } = useCurrentLocation()
 
-    expect(result.current).toEqual('')
+  it('should return geo location coordinates', async () => {
+    const { longitude, latitude } = await getCurrentLocation()
+    expect(longitude).toBe(10)
+    expect(latitude).toBe(10)
   })
 })

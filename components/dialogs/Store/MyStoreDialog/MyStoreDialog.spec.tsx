@@ -37,6 +37,7 @@ describe('[components] My Store Dialog', () => {
     const title = screen.getByText('my-store')
     const closeIcon = screen.getByRole('button', { name: 'close' })
     const content = screen.getByTestId('store-details-content')
+    const storeLocatorDialog = screen.queryByTestId('store-locator-dialog')
 
     expect(title).toBeVisible()
     expect(closeIcon).toBeVisible()
@@ -46,7 +47,6 @@ describe('[components] My Store Dialog', () => {
     expect(changeStoreLink).toBeVisible()
 
     await user.click(changeStoreLink)
-    // const dialog = await screen.findByTestId('store-locator-dialog')
-    // expect(dialog).toBeVisible()
+    expect(storeLocatorDialog).toBeInTheDocument()
   })
 })

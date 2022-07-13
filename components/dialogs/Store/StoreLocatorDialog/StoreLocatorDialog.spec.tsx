@@ -4,50 +4,28 @@ import { composeStories } from '@storybook/testing-react'
 import { render, screen } from '@testing-library/react'
 
 import * as stories from './StoreLocatorDialog.stories'
-import { KiboDialogProps } from '@/components/common/KiboDialog/KiboDialog'
+import { ModalContextProvider } from '@/context'
 
 const { Common } = composeStories(stories)
 
-const onCloseMock = jest.fn()
+const searchStoreMock = () => <div data-testid="search-store-content" />
+jest.mock('../SearchStore/SearchStore', () => searchStoreMock)
 
-const kiboTitleMock = () => <div data-testid="title-component" />
-const kiboContentMock = () => <div data-testid="content-component" />
-const kiboActionsMock = () => <div data-testid="actions-component" />
-const KiboDialogMock = (props: KiboDialogProps) => {
-  const { Title, Content, Actions } = props
-  return (
-    <div data-testid="kibo-dialog">
-      {Title}
-      <br />
-      {Content}
-      <br />
-      {Actions}
-      <br />
-    </div>
-  )
+const renderComponent = () => {
+  return render(<Common {...Common.args} />, { wrapper: ModalContextProvider })
 }
 
-// jest.mock('../Title/Title', () => kiboTitleMock)
-// jest.mock('../Content/Content', () => kiboContentMock)
-// jest.mock('../Actions/Actions', () => kiboActionsMock)
-jest.mock('../../common/KiboDialog/KiboDialog', () => KiboDialogMock)
-
 describe('[components] Store Locator Dialog', () => {
-  const setup = (params = {}) => render(<Common {...params} />)
+  const setup = () => renderComponent()
 
-  it('should render component', () => {
-    setup({
-      isOpen: true,
-    })
+  it('should render component', async () => {
+    setup()
 
-    const kiboDialog = screen.getByTestId('kibo-dialog')
-    // const titleComponent = screen.getByTestId('title-component')
-    // const contentComponent = screen.getByTestId('content-component')
-    // const actionsComponent = screen.getByTestId('actions-component')
+    expect(screen.getByText('select-store')).toBeVisible()
+    expect(screen.getByRole('button', { name: 'close' })).toBeVisible()
+    expect(screen.getByTestId('search-store-content')).toBeVisible()
 
-    expect(kiboDialog).toBeInTheDocument()
-    // expect(titleComponent).toBeInTheDocument()
-    // expect(contentComponent).toBeInTheDocument()
-    // expect(actionsComponent).toBeInTheDocument()
+    const setStoreLink = screen.getByRole('button', { name: 'set-store' })
+    expect(setStoreLink).toBeVisible()
   })
 })

@@ -15,6 +15,6 @@ export type LocationCustom = {
   city?: string
   state?: string
   zip?: string
-  hours?: HoursCustom[]
+  hours?: HoursCustom[] | null
   fullAddress?: CrAddress
 }

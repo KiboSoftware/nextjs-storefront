@@ -23,6 +23,7 @@ const StoreDetails = (location: LocationCustom) => {
       </Typography>
 
       <Box
+        data-testid="collapsible"
         display="flex"
         alignItems="center"
         width="fit-content"
@@ -37,10 +38,10 @@ const StoreDetails = (location: LocationCustom) => {
       </Box>
       <Collapse in={expanded} timeout="auto" unmountOnExit>
         <Stack direction="row" spacing={2}>
-          <Link href="" variant="body2" color={'text.primary'} fontWeight={600}>
+          <Link href="#" variant="body2" color={'text.primary'} fontWeight={600}>
             {t('get-directions')}
           </Link>
-          <Link href="" variant="body2" color={'text.primary'} fontWeight={600}>
+          <Link href="#" variant="body2" color={'text.primary'} fontWeight={600}>
             {location?.phone}
           </Link>
         </Stack>
