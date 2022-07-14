@@ -21,6 +21,7 @@ import {
 } from '@mui/material'
 import { styled, SxProps, Theme } from '@mui/material/styles'
 import { useTranslation } from 'next-i18next'
+import { useRouter } from 'next/router'
 
 import LoginDialog from '../Login'
 import SearchSuggestions from '../SearchSuggestions/SearchSuggestions'
@@ -30,7 +31,7 @@ import { HamburgerMenu } from '@/components/layout'
 import MegaMenu from '@/components/layout/MegaMenu/MegaMenu'
 import { useAuthContext } from '@/context'
 import { useModalContext } from '@/context/ModalContext'
-import { useCategoryTree } from '@/hooks'
+import { useCartQueries, useCategoryTree } from '@/hooks'
 import type { NavigationLink } from '@/lib/types'
 
 import type { Maybe, PrCategory } from '@/lib/gql/types'
@@ -201,10 +202,17 @@ const HeaderActions = (props: HeaderActionsProps) => {
   const { t } = useTranslation('common')
   const { isAuthenticated, user, setAuthError } = useAuthContext()
   const { showModal } = useModalContext()
+  const router = useRouter()
+  const { data: cart } = useCartQueries({})
+  const itemCount = cart?.items?.length || 0
 
   const openLoginModal = () => {
     setAuthError('')
     if (!isAuthenticated) showModal({ Component: LoginDialog })
+  }
+
+  const gotoCart = () => {
+    router.push('/cart')
   }
 
   return (
@@ -267,8 +275,9 @@ const HeaderActions = (props: HeaderActionsProps) => {
           <HeaderAction
             subtitle={t('cart')}
             icon={ShoppingCartIcon}
-            badgeContent={3}
+            badgeContent={itemCount}
             {...(isMobileViewport && { iconFontSize: 'medium' })}
+            onClick={gotoCart}
           />
         </Box>
       </Box>

@@ -4,6 +4,7 @@ export * from './queries/useSearchSuggestions/useSearchSuggestions'
 export * from './queries/useCategoryTree/useCategoryTree'
 export * from './queries/useUser/useUserQueries'
 export * from './queries/useProductSearch/useProductSearch'
+export * from './queries/useCart/useCartQueries'
 
 // Custom hooks
 export * from './custom/useDebounce/useDebounce'

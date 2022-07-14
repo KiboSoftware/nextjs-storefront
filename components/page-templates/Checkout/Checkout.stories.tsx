@@ -7,8 +7,11 @@ import { orderMock } from '@/__mocks__/stories/orderMock'
 
 // Common
 export default {
-  title: 'Checkout/Checkout',
+  title: 'Page Templates/Checkout',
   component: Checkout,
+  parameters: {
+    layout: 'fullscreen',
+  },
 } as ComponentMeta<typeof Checkout>
 
 const Template: ComponentStory<typeof Checkout> = (args) => <Checkout {...args} />

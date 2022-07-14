@@ -5,6 +5,7 @@ import React from 'react'
 import { Button } from '@mui/material'
 import { ComponentStory, ComponentMeta } from '@storybook/react'
 
+import PromoCodeBadge from '../PromoCodeBadge/PromoCodeBadge'
 import OrderSummary from './OrderSummary'
 
 const styles = {
@@ -77,4 +78,32 @@ Shipping.args = {
   tax: '$13.73',
   total: '$234.72',
   shippingLabel: 'Go to Shipping',
+}
+
+// WithPromo
+export const WithPromoCodeCheckout = CheckoutTemplate.bind({})
+
+WithPromoCodeCheckout.args = {
+  ...Checkout.args,
+  promoComponent: (
+    <PromoCodeBadge
+      onApplyCouponCode={() => ''}
+      onRemoveCouponCode={() => ''}
+      promoList={[]}
+      promoError={false}
+    />
+  ),
+}
+export const WithPromoCodeShipping = ShippingTemplate.bind({})
+
+WithPromoCodeShipping.args = {
+  ...Shipping.args,
+  promoComponent: (
+    <PromoCodeBadge
+      onApplyCouponCode={() => ''}
+      onRemoveCouponCode={() => ''}
+      promoList={[]}
+      promoError={false}
+    />
+  ),
 }

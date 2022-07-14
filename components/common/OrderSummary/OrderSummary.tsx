@@ -3,8 +3,8 @@ import { ReactNode } from 'react'
 
 import { Card, Typography, Box, CardContent, Divider } from '@mui/material'
 
-import OrderPrice from '@/components/common/OrderPrice/OrderPrice'
-import type { OrderPriceProps } from '@/components/common/OrderPrice/OrderPrice'
+import { OrderPriceProps } from '../OrderPrice/OrderPrice'
+import { OrderPrice } from '@/components/common'
 
 interface OrderSummaryProps extends OrderPriceProps {
   nameLabel: string
@@ -37,6 +37,7 @@ const OrderSummary = (props: OrderSummaryProps) => {
     tax,
     total,
     nameLabel,
+    promoComponent,
   } = props
 
   const orderPriceProps: OrderPriceProps = {
@@ -48,9 +49,10 @@ const OrderSummary = (props: OrderSummaryProps) => {
     shippingTotal,
     tax,
     total,
+    promoComponent,
   }
   return (
-    <Card sx={{ bgcolor: 'grey.100', width: '100%', boxShadow: 'none' }}>
+    <Card sx={{ bgcolor: 'grey.100' }}>
       <CardContent>
         <Box sx={styles.headerStyle}>
           <Typography variant="h3" color="text.primary" fontWeight="bold" pt={0.5}>
