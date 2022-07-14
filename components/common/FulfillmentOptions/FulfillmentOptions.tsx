@@ -1,5 +1,6 @@
 import { Box, Stack, Typography } from '@mui/material'
 import { useTranslation } from 'next-i18next'
+import getConfig from 'next/config'
 
 import KiboRadio from '@/components/common/KiboRadio/KiboRadio'
 import { FormStates } from '@/lib/constants'

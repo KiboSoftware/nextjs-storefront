@@ -16,6 +16,11 @@ interface SelectedFulfillmentOption {
   location?: LocationCustom
 }
 
+interface SelectedFulfillmentOption {
+  method: string
+  location?: LocationCustom
+}
+
 export const useProductDetailTemplate = (props: UseProductDetailTemplateProps) => {
   const { product, purchaseLocation } = props
   const [currentProduct, setCurrentProduct] = useState<ProductCustom>(product)
@@ -23,11 +28,12 @@ export const useProductDetailTemplate = (props: UseProductDetailTemplateProps) =
     ProductOptionSelectionInput[]
   >([])
   const [quantity, setQuantity] = useState<number>(1)
-  const [selectedFulfillmentOption, setSelectedFulfillmentOption] =
-    useState<SelectedFulfillmentOption>({
-      method: '',
-      location: {},
-    })
+  const [selectedFulfillmentOption, setSelectedFulfillmentOption] = useState<
+    SelectedFulfillmentOption
+  >({
+    method: '',
+    location: {},
+  })
 
   useEffect(() => {
     setSelectedFulfillmentOption({
@@ -85,17 +91,21 @@ export const useProductDetailTemplate = (props: UseProductDetailTemplateProps) =
     })
 
     try {
-      const { options, variationProductCode, purchasableState, productImages }: ConfiguredProduct =
-        await configureProduct.mutateAsync({
-          productCode,
-          updatedOptions: updatedOptions.map((option) => {
-            return {
-              attributeFQN: option.attributeFQN,
-              shopperEnteredValue: option.shopperEnteredValue,
-              value: option.value,
-            }
-          }),
-        })
+      const {
+        options,
+        variationProductCode,
+        purchasableState,
+        productImages,
+      }: ConfiguredProduct = await configureProduct.mutateAsync({
+        productCode,
+        updatedOptions: updatedOptions.map((option) => {
+          return {
+            attributeFQN: option.attributeFQN,
+            shopperEnteredValue: option.shopperEnteredValue,
+            value: option.value,
+          }
+        }),
+      })
 
       const responseOptions = options
         ?.filter((option) => option?.values?.some((val) => val?.isSelected))
