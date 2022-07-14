@@ -32,7 +32,6 @@ const TestComponent = () => {
 
 const setup = () => {
   const user = userEvent.setup()
-
   render(
     <ModalContextProvider>
       <TestComponent />
@@ -41,7 +40,6 @@ const setup = () => {
       wrapper: createQueryClientWrapper(),
     }
   )
-
   return {
     user,
   }
@@ -52,7 +50,6 @@ describe('[components] My Store Dialog integration', () => {
 
     const showModalButton = screen.getByRole('button', { name: 'Show Modal' })
     await user.click(showModalButton)
-
     const location = storeLocationGetters.getLocation(Common.args?.location as Maybe<Location>)
 
     expect(screen.getByText(location?.name || '')).toBeVisible()
@@ -62,12 +59,11 @@ describe('[components] My Store Dialog integration', () => {
     expect(screen.getByText(/store-info/i)).toBeVisible()
   })
 
-  it('should close dialog when user clicks on closeIcon button', async () => {
+  it('should close dialog when user clicks on close icon button', async () => {
     const { user } = setup()
 
     const showModalButton = screen.getByRole('button', { name: 'Show Modal' })
     await user.click(showModalButton)
-
     const dialog = screen.getByRole('dialog')
     const closeIconButton = screen.getByRole('button', {
       name: /close/i,
@@ -83,7 +79,6 @@ describe('[components] My Store Dialog integration', () => {
 
     const showModalButton = screen.getByRole('button', { name: 'Show Modal' })
     await user.click(showModalButton)
-
     const dialog = screen.getByRole('dialog')
     const changeStoreButton = screen.getByRole('button', {
       name: /change-store/i,
@@ -91,9 +86,7 @@ describe('[components] My Store Dialog integration', () => {
 
     expect(dialog).toBeVisible()
     expect(changeStoreButton).toBeVisible()
-
     await user.click(changeStoreButton)
-
     await waitFor(() => {
       expect(screen.getByText(/select-store/i)).toBeVisible()
     })
