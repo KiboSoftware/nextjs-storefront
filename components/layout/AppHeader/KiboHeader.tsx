@@ -24,18 +24,12 @@ import { useTranslation } from 'next-i18next'
 import { useRouter } from 'next/router'
 
 import LoginDialog from '../Login'
-import SearchSuggestions from '../SearchSuggestions/SearchSuggestions'
-import HeaderAction from '@/components/common/HeaderAction/HeaderAction'
-import KiboLogo from '@/components/common/KiboLogo/KiboLogo'
+import { HeaderAction, KiboLogo } from '@/components/common'
 import { MyStoreDialog, StoreLocatorDialog } from '@/components/dialogs/Store'
-import { HamburgerMenu } from '@/components/layout'
-import MegaMenu from '@/components/layout/MegaMenu/MegaMenu'
+import { MegaMenu, HamburgerMenu, SearchSuggestions } from '@/components/layout'
 import { useAuthContext, useModalContext } from '@/context'
-import { useCartQueries, useCategoryTree } from '@/hooks'
-import {
-  setPurchaseLocation,
-  usePurchaseLocation,
-} from '@/hooks/queries/usePurchaseLocation/usePurchaseLocation'
+import { useCartQueries, useCategoryTree, usePurchaseLocation } from '@/hooks'
+import { setOrDeleteCookie } from '@/lib/helpers'
 import type { NavigationLink } from '@/lib/types'
 
 import type { Maybe, PrCategory } from '@/lib/gql/types'
@@ -208,7 +202,6 @@ const HeaderActions = (props: HeaderActionsProps) => {
   const router = useRouter()
   const { data: cart } = useCartQueries({})
   const itemCount = cart?.items?.length || 0
-  const [selectedStore, setSelectedStore] = useState<string>('')
   const { showModal, closeModal } = useModalContext()
 
   const { data: location } = usePurchaseLocation()
@@ -235,7 +228,7 @@ const HeaderActions = (props: HeaderActionsProps) => {
         Component: StoreLocatorDialog,
         props: {
           handleSetStore: async (selectedStore: string) => {
-            setPurchaseLocation(selectedStore)
+            setOrDeleteCookie(selectedStore)
             closeModal()
           },
         },

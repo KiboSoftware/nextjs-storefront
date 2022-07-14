@@ -1,10 +1,10 @@
-import { deleteCookie, getCookie, setCookie } from 'cookies-next'
+import { getCookie } from 'cookies-next'
 import getConfig from 'next/config'
 import { useQuery } from 'react-query'
 
 import { makeGraphQLClient } from '@/lib/gql/client'
 import { getSpLocationsQuery } from '@/lib/gql/queries'
-import { decodeParseCookieValue, prepareSetCookieValue } from '@/lib/helpers/cookieHelper'
+import { decodeParseCookieValue } from '@/lib/helpers'
 import { locationKeys } from '@/lib/react-query/queryKeys'
 
 import type { Location } from '@/lib/gql/types'
@@ -18,14 +18,6 @@ interface LocationType {
 
 const { publicRuntimeConfig } = getConfig()
 const purchaseLocationCookieName = publicRuntimeConfig.storeLocationCookie
-
-export const setPurchaseLocation = (locationCode: string | null) => {
-  if (locationCode === null) {
-    deleteCookie(purchaseLocationCookieName)
-  } else {
-    setCookie(purchaseLocationCookieName, prepareSetCookieValue(locationCode))
-  }
-}
 
 const getPurchaseLocation = async (param: { filter: string }) => {
   const client = makeGraphQLClient()
@@ -51,9 +43,7 @@ export const usePurchaseLocation = (): LocationType => {
     isLoading,
     isSuccess,
     isError,
-  } = useQuery([...locationKeys.purchaseLocation, param], () =>
-    param ? getPurchaseLocation(param) : {}
-  )
+  } = useQuery(locationKeys.locationsParams(param), () => (param ? getPurchaseLocation(param) : {}))
 
   return { data, isLoading, isSuccess, isError }
 }
