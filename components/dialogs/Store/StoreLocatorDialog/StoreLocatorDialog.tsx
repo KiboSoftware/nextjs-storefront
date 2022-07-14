@@ -5,7 +5,7 @@ import { useTranslation } from 'next-i18next'
 import getConfig from 'next/config'
 
 import { SearchStore } from '..'
-import KiboDialog from '@/components/common/KiboDialog/KiboDialog'
+import { KiboDialog } from '@/components/common'
 import { useModalContext } from '@/context'
 import { useStoreLocations, useCurrentLocation } from '@/hooks'
 import { LocationCustom } from '@/lib/types'

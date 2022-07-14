@@ -131,8 +131,22 @@ const getSegregatedOptions = (product: ProductCustom) => {
   }
 }
 
-const validateAddToCart = (product: ProductCustom): boolean =>
-  Boolean(product?.purchasableState?.isPurchasable) && Boolean(product.fulfillmentMethod)
+const validateAddToCart = (product: ProductCustom): boolean => {
+  const shipFulfillment = publicRuntimeConfig.fullfillmentOptions[0].shortName
+  const pickupFulfillment = publicRuntimeConfig.fullfillmentOptions[1].shortName
+
+  if (product.fulfillmentMethod === shipFulfillment) {
+    return Boolean(product?.purchasableState?.isPurchasable)
+  }
+  if (product.fulfillmentMethod === pickupFulfillment) {
+    return (
+      Boolean(product?.purchasableState?.isPurchasable) &&
+      Boolean(product.fulfillmentMethod) &&
+      Boolean(product.purchaseLocationCode)
+    )
+  }
+  return false
+}
 
 const getVariationProductCodeOrProductCode = (product: ProductCustom): string => {
   if (!product) return ''

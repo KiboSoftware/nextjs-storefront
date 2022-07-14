@@ -10,6 +10,7 @@ import QuantitySelector from '@/components/common/QuantitySelector/QuantitySelec
 import KiboBreadcrumbs from '@/components/core/Breadcrumbs/KiboBreadcrumbs'
 import ImageGallery from '@/components/core/ImageGallery/ImageGallery'
 import { AddToCartDialog } from '@/components/dialogs'
+import { StoreLocatorDialog } from '@/components/dialogs/Store'
 import {
   ColorSelector,
   ProductInformation,
@@ -21,8 +22,11 @@ import {
 } from '@/components/product'
 import { useModalContext } from '@/context/ModalContext'
 import { useCartMutation, useProductDetailTemplate } from '@/hooks'
+import { useProductDetailTemplate, usePurchaseLocation } from '@/hooks'
+import { useCartMutation } from '@/hooks/mutations/useCartMutation/useCartMutation'
 import { productGetters } from '@/lib/getters'
-import type { ProductCustom, BreadCrumb, PriceRange } from '@/lib/types'
+import { storeLocationGetters } from '@/lib/getters/storeLocationGetters'
+import type { ProductCustom, BreadCrumb, PriceRange, LocationCustom } from '@/lib/types'
 
 import type {
   AttributeDetail,
@@ -40,19 +44,22 @@ interface ProductDetailTemplateProps {
 const ProductDetailTemplate = (props: ProductDetailTemplateProps) => {
   const { product, breadcrumbs } = props
   const { t } = useTranslation(['product', 'common'])
-  const { showModal } = useModalContext()
+  const { showModal, closeModal } = useModalContext()
+  const { addToCart } = useCartMutation()
+  const { data: purchaseLocation } = usePurchaseLocation()
 
   // Data hook
   const {
     currentProduct,
     quantity,
     updatedShopperEnteredValues,
+    selectedFulfillmentOption,
     setQuantity,
     selectProductOption,
+    setSelectedFulfillmentOption,
   } = useProductDetailTemplate({
     product,
   })
-  const { addToCart } = useCartMutation()
 
   // Getters
   const {
@@ -70,18 +77,25 @@ const ProductDetailTemplate = (props: ProductDetailTemplateProps) => {
     optionsVisibility,
     properties,
     isValidForAddToCart,
-  } = productGetters.getProductDetails(currentProduct)
+  } = productGetters.getProductDetails({
+    ...currentProduct,
+    fulfillmentMethod: selectedFulfillmentOption.method,
+    purchaseLocationCode: selectedFulfillmentOption.location?.code as string,
+  })
+  const fulfillmentOptions = productGetters.getProductFulfillmentOptions(product, {
+    name: selectedFulfillmentOption.location?.name,
+  })
 
   // methods
   const handleAddToCart = async () => {
     try {
       const cartResponse = await addToCart.mutateAsync({
         product: {
-          options: updatedShopperEnteredValues,
           productCode,
           variationProductCode,
           fulfillmentMethod,
-          purchaseLocationCode: '', // need to be handled
+          options: updatedShopperEnteredValues,
+          purchaseLocationCode: selectedFulfillmentOption.location?.code,
         },
         quantity,
       })
@@ -95,6 +109,28 @@ const ProductDetailTemplate = (props: ProductDetailTemplateProps) => {
         })
       }
     } catch (err) {}
+  }
+
+  const handleFulfillmentOptionChange = (value: string) => {
+    setSelectedFulfillmentOption({
+      method: value,
+      location: value === 'Pickup' ? storeLocationGetters.getLocation(purchaseLocation) : undefined,
+    })
+  }
+
+  const handleProductPickupLocation = () => {
+    showModal({
+      Component: StoreLocatorDialog,
+      props: {
+        handleSetStore: async (selectedStore: LocationCustom) => {
+          setSelectedFulfillmentOption({
+            method: 'Pickup',
+            location: selectedStore,
+          })
+          closeModal()
+        },
+      },
+    })
   }
 
   // Cloning the price range object to trnaslate the currency values
@@ -118,9 +154,6 @@ const ProductDetailTemplate = (props: ProductDetailTemplateProps) => {
       },
     }
   }
-
-  // purchase location should be passed once implemented
-  const fulfillmentOptions = productGetters.getProductFulfillmentOptions(product, { name: '' })
 
   return (
     <>
@@ -238,8 +271,9 @@ const ProductDetailTemplate = (props: ProductDetailTemplateProps) => {
           <Box paddingY={1}>
             <FulfillmentOptions
               fulfillmentOptions={fulfillmentOptions}
-              onFullfillmentOptionChange={() => null}
-              onStoreSelection={() => null}
+              selected={selectedFulfillmentOption.method}
+              onFullfillmentOptionChange={(value: string) => handleFulfillmentOptionChange(value)}
+              onStoreSetOrUpdate={() => handleProductPickupLocation()} // change store: Open storelocator modal. Should not change global store.
             />
           </Box>
 

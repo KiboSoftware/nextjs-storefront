@@ -148,8 +148,16 @@ describe('[component] - ProductDetailTemplate integration', () => {
     })
   })
 
-  it('should handle adding item to cart', async () => {
+  it('should handle fulfillment option and adding item to cart', async () => {
     const { user } = setup()
+
+    const shipRadio = screen.getByRole('radio', {
+      name: /ship to home/i,
+    })
+
+    await user.click(shipRadio)
+
+    expect(shipRadio).toBeChecked()
 
     const addToCartButton = screen.getByRole('button', {
       name: /common:add-to-cart/i,
@@ -165,4 +173,16 @@ describe('[component] - ProductDetailTemplate integration', () => {
 
     expect(dialogHeader).toBeVisible()
   })
+
+  // it('should handle Fulfillment Options', async () => {
+  //   const { user } = setup()
+
+  //   const shipRadio = screen.getByRole('radio', {
+  //     name: /ship to home available to ship change store/i,
+  //   })
+
+  //   await user.click(shipRadio)
+
+  //   expect(shipRadio).toBeChecked()
+  // })
 })

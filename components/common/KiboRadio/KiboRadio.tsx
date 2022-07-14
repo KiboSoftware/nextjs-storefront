@@ -45,7 +45,7 @@ export const KiboRadio = (props: KiboRadioProps) => {
         {radioOptions.map((radio) => {
           return (
             <FormControlLabel
-              sx={sx}
+              sx={{ width: 'fit-content', ...sx }}
               key={radio.value}
               value={radio.value}
               control={<Radio />}

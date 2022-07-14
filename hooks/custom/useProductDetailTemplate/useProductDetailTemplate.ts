@@ -2,12 +2,17 @@ import { useState } from 'react'
 
 import { useProductMutation } from '@/hooks'
 import { productGetters } from '@/lib/getters'
-import type { ProductCustom } from '@/lib/types'
+import type { LocationCustom, ProductCustom } from '@/lib/types'
 
 import type { ConfiguredProduct, ProductOptionSelectionInput } from '@/lib/gql/types'
 
 interface UseProductDetailTemplateProps {
   product: ProductCustom
+}
+
+interface SelectedFulfillmentOption {
+  method: string
+  location?: LocationCustom
 }
 
 export const useProductDetailTemplate = (props: UseProductDetailTemplateProps) => {
@@ -17,6 +22,11 @@ export const useProductDetailTemplate = (props: UseProductDetailTemplateProps) =
     ProductOptionSelectionInput[]
   >([])
   const [quantity, setQuantity] = useState<number>(1)
+  const [selectedFulfillmentOption, setSelectedFulfillmentOption] =
+    useState<SelectedFulfillmentOption>({
+      method: '',
+      location: {},
+    })
 
   const productCode = productGetters.getProductId(currentProduct)
 
@@ -65,21 +75,17 @@ export const useProductDetailTemplate = (props: UseProductDetailTemplateProps) =
     })
 
     try {
-      const {
-        options,
-        variationProductCode,
-        purchasableState,
-        productImages,
-      }: ConfiguredProduct = await configureProduct.mutateAsync({
-        productCode,
-        updatedOptions: updatedOptions.map((option) => {
-          return {
-            attributeFQN: option.attributeFQN,
-            shopperEnteredValue: option.shopperEnteredValue,
-            value: option.value,
-          }
-        }),
-      })
+      const { options, variationProductCode, purchasableState, productImages }: ConfiguredProduct =
+        await configureProduct.mutateAsync({
+          productCode,
+          updatedOptions: updatedOptions.map((option) => {
+            return {
+              attributeFQN: option.attributeFQN,
+              shopperEnteredValue: option.shopperEnteredValue,
+              value: option.value,
+            }
+          }),
+        })
 
       const responseOptions = options
         ?.filter((option) => option?.values?.some((val) => val?.isSelected))
@@ -112,7 +118,9 @@ export const useProductDetailTemplate = (props: UseProductDetailTemplateProps) =
     currentProduct,
     quantity,
     updatedShopperEnteredValues,
+    selectedFulfillmentOption,
     setQuantity,
     selectProductOption,
+    setSelectedFulfillmentOption,
   }
 }
