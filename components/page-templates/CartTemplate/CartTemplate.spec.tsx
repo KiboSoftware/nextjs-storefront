@@ -15,7 +15,8 @@ jest.mock('../../common/OrderSummary/OrderSummary', () => OrderSummaryMock)
 
 jest.mock('@/hooks', () => ({
   useCheckout: jest.fn(() => ({})),
-  useUpdateCheckout: jest.fn(() => ({})),
+  useCheckoutMutation: jest.fn(() => ({})),
+  useCartQueries: jest.fn(() => ({})),
 }))
 
 const { Common } = composeStories(stories)

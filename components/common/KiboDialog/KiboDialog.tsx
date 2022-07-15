@@ -10,10 +10,12 @@ import {
   styled,
   Theme,
   Typography,
+  useMediaQuery,
 } from '@mui/material'
 import { Container } from '@mui/system'
 
 import FullWidthDivider from '../FullWidthDivider/FullWidthDivider'
+import theme from '@/styles/theme'
 
 export interface KiboDialogProps {
   isOpen?: boolean
@@ -93,19 +95,21 @@ const KiboDialog = (props: KiboDialogProps) => {
     showCloseButton = true,
     Content,
     Actions,
-    isDialogCentered = true,
     customMaxWidth = '',
     showContentTopDivider = true,
     showContentBottomDivider = true,
     onClose,
   } = props
+
+  const mdScreen = useMediaQuery(theme.breakpoints.up('md'))
+
   return (
     <StyledDialog
       onClose={onClose}
       aria-labelledby="kibo-dialog-title"
       open={isOpen}
       customMaxWidth={customMaxWidth}
-      isDialogCentered={isDialogCentered}
+      isDialogCentered={mdScreen ? true : false}
       data-test-id="kibo-dialog"
     >
       <Container maxWidth={'xl'}>

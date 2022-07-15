@@ -1,5 +1,5 @@
 // Query hooks
-export * from './queries/useCheckout/useCheckout'
+export * from './queries/useCheckoutQueries/useCheckoutQueries'
 export * from './queries/useSearchSuggestions/useSearchSuggestions'
 export * from './queries/useCategoryTree/useCategoryTree'
 export * from './queries/useUser/useUserQueries'
@@ -22,6 +22,7 @@ export * from './custom/useCurrentLocation/useCurrentLocation'
 export * from './mutations/useUpdateCheckout/useUpdateCheckoutPersonalInfo/useUpdateCheckoutPersonalInfo'
 export * from './mutations/useUpdateCheckout/useUpdateCheckoutShippingInfo/useUpdateCheckoutShippingInfo'
 export * from './mutations/useUser/useUserMutations'
-export * from './mutations/useProductMutation/useProductMutation'
 export * from './mutations/useUser/useUserAccountRegistrationMutations'
 export * from './mutations/useCartMutation/useCartMutation'
+
+export * from './mutations/useProductMutation/useProductMutation'
