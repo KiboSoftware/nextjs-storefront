@@ -1,6 +1,6 @@
 import { useRouter } from 'next/router'
 
-const nonFilters = ['page', 'sort', 'phrase', 'itemsPerPage']
+const nonFilters = ['page', 'sort', 'search', 'itemsPerPage']
 export const useUpdateRoutes = () => {
   const router = useRouter()
 

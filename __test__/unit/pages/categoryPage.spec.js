@@ -4,8 +4,7 @@ import { RouterContext } from 'next/dist/shared/lib/router-context'
 import * as nextRouter from 'next/router'
 
 import { categoryTreeDataMock } from '@/__mocks__/stories/categoryTreeDataMock'
-import { createMockRouter } from '@/__test__/utils/createMockRouter'
-import { createQueryClientWrapper } from '@/__test__/utils/renderWithQueryClient'
+import { createMockRouter, createQueryClientWrapper } from '@/__test__/utils'
 import CategoryPage, { getServerSideProps } from '@/pages/category/[categoryCode]'
 
 nextRouter.useRouter = jest.fn()

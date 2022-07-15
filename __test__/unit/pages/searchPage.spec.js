@@ -1,10 +1,14 @@
 import '@testing-library/jest-dom'
 import { render, screen } from '@testing-library/react'
 import { RouterContext } from 'next/dist/shared/lib/router-context'
+import * as nextRouter from 'next/router'
 
+import { categoryTreeDataMock } from '@/__mocks__/stories/categoryTreeDataMock'
 import { createMockRouter, createQueryClientWrapper } from '@/__test__/utils'
 import SearchPage, { getServerSideProps } from '@/pages/search'
 
+nextRouter.useRouter = jest.fn()
+const mockCategoryTreeData = categoryTreeDataMock
 const mockProductSearchData = {
   totalCount: 1,
   pageSize: 20,
@@ -24,6 +28,7 @@ jest.mock('@/lib/api/util', () => ({
     return Promise.resolve({
       data: {
         products: mockProductSearchData,
+        categoriesTree: { items: mockCategoryTreeData.categoriesTree?.items },
       },
     })
   }),
@@ -53,15 +58,21 @@ describe('[page] Search Page', () => {
   it('should run getServerSideProps method', async () => {
     const context = {
       query: {
-        categoryCode: '40',
+        search: 'jacket',
       },
       locale: 'mock-locale',
+      res: { setHeader: jest.fn() },
     }
 
     const response = await getServerSideProps(context)
+
     expect(response).toStrictEqual({
       props: {
         results: mockProductSearchData,
+        categoriesTree: mockCategoryTreeData.categoriesTree.items,
+        category: {
+          categories: mockCategoryTreeData.categoriesTree.items,
+        },
         _nextI18Next: {
           initialI18nStore: { 'mock-locale': [{}], en: [{}] },
           initialLocale: 'mock-locale',
@@ -72,6 +83,7 @@ describe('[page] Search Page', () => {
   })
 
   it('should render the Search page template', () => {
+    nextRouter.useRouter.mockImplementation(() => ({ asPath: '/search?search=jacket' }))
     const router = createMockRouter()
     render(
       <RouterContext.Provider value={router}>

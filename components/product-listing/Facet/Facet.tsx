@@ -129,6 +129,7 @@ const Facet = (props: FacetProps) => {
             onSearch={handleSearch}
             childInputRef={childInputRef}
             showClearButton={true}
+            onKeyEnter={() => null}
           />
 
           <Box pl={0.5} pr={0.5}>

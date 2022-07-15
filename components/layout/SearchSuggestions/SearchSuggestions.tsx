@@ -17,6 +17,7 @@ import {
 import { useTranslation } from 'next-i18next'
 import getConfig from 'next/config'
 import Link from 'next/link'
+import { useRouter } from 'next/router'
 
 import SearchBar from '@/components/common/SearchBar/SearchBar'
 import { useDebounce, useSearchSuggestions } from '@/hooks'
@@ -80,6 +81,7 @@ const Content = (props: ListItemProps) => {
 
 const SearchSuggestions = () => {
   const { publicRuntimeConfig } = getConfig()
+  const router = useRouter()
 
   const [isOpen, setIsOpen] = useState<boolean>(false)
   const [searchTerm, setSearchTerm] = useState<string>('')
@@ -87,6 +89,10 @@ const SearchSuggestions = () => {
   const handleOpen = () => setIsOpen(true)
   const handleClose = () => setIsOpen(false)
   const handleSearch = (userEnteredValue: string) => setSearchTerm(userEnteredValue)
+  const handleEnterSearch = (value: string) => {
+    router.push({ pathname: '/search', query: { search: value } })
+    handleClose()
+  }
 
   const searchSuggestionResult = useSearchSuggestions(
     useDebounce(searchTerm.trim(), publicRuntimeConfig.debounceTimeout)
@@ -106,7 +112,12 @@ const SearchSuggestions = () => {
   return (
     <Stack>
       <Box sx={{ zIndex: 1400 }}>
-        <SearchBar searchTerm={searchTerm} onSearch={handleSearch} showClearButton />
+        <SearchBar
+          searchTerm={searchTerm}
+          onSearch={handleSearch}
+          onKeyEnter={handleEnterSearch}
+          showClearButton
+        />
       </Box>
       <Collapse in={isOpen} timeout="auto" unmountOnExit role="contentinfo">
         <Paper sx={{ ...style.paper }}>

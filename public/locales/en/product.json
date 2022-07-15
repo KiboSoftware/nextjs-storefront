@@ -12,5 +12,6 @@
   "view-results": "View Results",
   "results": "{{totalResults}} Results",
   "product-recommendations": "Product Recommendations",
-  "customers-also-bought": "Customers Also Bought"
+  "customers-also-bought": "Customers Also Bought",
+  "search-results": "{{m}} Results for {{n}}"
 }

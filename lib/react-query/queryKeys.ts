@@ -19,7 +19,8 @@ export const loginKeys = {
 }
 export const productSearchResultKeys = {
   all: ['productSearch'] as const,
-  searchParams: (params: CategorySearchParams) => [...productSearchResultKeys.all, params] as const,
+  searchParams: (params: CategorySearchParams | string) =>
+    [...productSearchResultKeys.all, params] as const,
 }
 
 export const cartKeys = {

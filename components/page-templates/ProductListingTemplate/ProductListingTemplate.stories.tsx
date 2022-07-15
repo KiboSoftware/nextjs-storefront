@@ -76,6 +76,7 @@ export const CategorySkeleton = Template.bind({})
 
 Category.args = {
   breadCrumbsList: breadcrumbs,
+  productListingHeader: 'Apparel',
   facetList: productSearchResultMock?.facets as Facet[],
   products: productSearchResultMock?.items as ProductCustom[],
   sortingValues,
