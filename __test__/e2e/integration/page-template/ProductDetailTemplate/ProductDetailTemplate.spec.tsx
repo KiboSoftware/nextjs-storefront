@@ -173,16 +173,4 @@ describe('[component] - ProductDetailTemplate integration', () => {
 
     expect(dialogHeader).toBeVisible()
   })
-
-  // it('should handle Fulfillment Options', async () => {
-  //   const { user } = setup()
-
-  //   const shipRadio = screen.getByRole('radio', {
-  //     name: /ship to home available to ship change store/i,
-  //   })
-
-  //   await user.click(shipRadio)
-
-  //   expect(shipRadio).toBeChecked()
-  // })
 })
