@@ -82,7 +82,7 @@ const StyledIconButton = styled(IconButton)(() => ({
   top: '0.625rem',
 }))
 
-const StyledClose = styled(Close)(({ theme }: StyledCloseProps) => ({
+const StyledClose = styled(Close)(() => ({
   width: '1.25rem',
   height: '1.25rem',
   color: theme?.palette.grey[500],
