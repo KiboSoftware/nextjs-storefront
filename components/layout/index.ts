@@ -4,3 +4,4 @@ export { default as CategoryNestedNavigation } from './CategoryNestedNavigation/
 export { default as Login } from './Login'
 export { default as MegaMenu } from './MegaMenu/MegaMenu'
 export { default as MegaMenuItem } from './MegaMenuItem/MegaMenuItem'
+export { default as SearchSuggestions } from './SearchSuggestions/SearchSuggestions'

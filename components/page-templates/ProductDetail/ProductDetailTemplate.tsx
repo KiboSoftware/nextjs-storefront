@@ -20,8 +20,7 @@ import {
   ProductVariantSizeSelector,
 } from '@/components/product'
 import { useModalContext } from '@/context/ModalContext'
-import { useProductDetailTemplate } from '@/hooks'
-import { useCartMutation } from '@/hooks/mutations/useCartMutation/useCartMutation'
+import { useCartMutation, useProductDetailTemplate } from '@/hooks'
 import { productGetters } from '@/lib/getters'
 import type { ProductCustom, BreadCrumb, PriceRange } from '@/lib/types'
 

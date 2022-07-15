@@ -1,4 +1,5 @@
 import { Typography, Box } from '@mui/material'
+import { Variant } from '@mui/material/styles/createTypography'
 import { useTranslation } from 'next-i18next'
 
 import type { CrAddress } from '@/lib/gql/types'
@@ -6,10 +7,19 @@ import type { CrAddress } from '@/lib/gql/types'
 interface AddressProps extends CrAddress {
   title?: string
   radio?: boolean
+  variant?: Variant
 }
 
 const AddressCard = (props: AddressProps) => {
-  const { title, address1, address2, cityOrTown, stateOrProvince, postalOrZipCode } = props
+  const {
+    title,
+    address1,
+    address2,
+    cityOrTown,
+    stateOrProvince,
+    postalOrZipCode,
+    variant = 'body1',
+  } = props
   const { t } = useTranslation('checkout')
 
   return (
@@ -21,19 +31,19 @@ const AddressCard = (props: AddressProps) => {
       )}
 
       <Box pt={1}>
-        <Typography variant="body1">{address1}</Typography>
-        <Typography variant="body1">
+        <Typography variant={variant}>{address1}</Typography>
+        <Typography variant={variant}>
           {t('apartment')}
           {address2}
         </Typography>
         <Box display="flex">
-          <Typography variant="body1" sx={{ '&::after': { content: "','" } }}>
+          <Typography variant={variant} sx={{ '&::after': { content: "','", pr: 0.5 } }}>
             {cityOrTown}
           </Typography>
-          <Typography variant="body1" sx={{ '&::after': { content: "','" } }}>
+          <Typography variant={variant} sx={{ '&::after': { content: "', '", pr: 0.5 } }}>
             {stateOrProvince}
           </Typography>
-          <Typography variant="body1">{postalOrZipCode}</Typography>
+          <Typography variant={variant}>{postalOrZipCode}</Typography>
         </Box>
       </Box>
     </>
