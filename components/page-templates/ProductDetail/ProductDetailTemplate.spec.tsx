@@ -51,19 +51,19 @@ jest.mock(
   () => ProductInformationMock
 )
 
-const mockProduct = Common?.args?.product
-jest.mock('@/hooks', () => ({
-  useProductDetailTemplate: jest.fn(() => {
-    return {
-      currentProduct: mockProduct,
-    }
-  }),
-  useCartMutation: jest.fn(() => {
-    return {
-      addToCart: mockProduct,
-    }
-  }),
-}))
+// const mockProduct = Common?.args?.product
+// jest.mock('@/hooks', () => ({
+//   useProductDetailTemplate: jest.fn(() => {
+//     return {
+//       currentProduct: mockProduct,
+//     }
+//   }),
+//   useCartMutation: jest.fn(() => {
+//     return {
+//       addToCart: mockProduct,
+//     }
+//   }),
+// }))
 
 const setup = () => {
   renderHook(() => {
