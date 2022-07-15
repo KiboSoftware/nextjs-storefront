@@ -11,6 +11,12 @@ import * as stories from '@/components/layout/SearchSuggestions/SearchSuggestion
 
 const { Common } = composeStories(stories)
 
+const useRouter = jest.spyOn(require('next/router'), 'useRouter')
+const push = jest.fn()
+useRouter.mockImplementation(() => ({
+  push,
+}))
+
 describe('[components] - SearchSuggestions Integration', () => {
   const userEnteredText = 'T'
   const searchSuggestions = searchSuggestionResultMock
@@ -133,6 +139,16 @@ describe('[components] - SearchSuggestions Integration', () => {
 
     const input = screen.getByRole('textbox', { name: 'search-input' })
     await user.type(input, '  ')
+
+    expect(screen.queryByRole('contentinfo')).not.toBeInTheDocument()
+  })
+
+  it('should close the Search suggestion when a user press enter', async () => {
+    const { user } = setup()
+
+    const input = screen.getByRole('textbox', { name: 'search-input' })
+    await user.type(input, 'T')
+    await user.type(input, '{enter}')
 
     expect(screen.queryByRole('contentinfo')).not.toBeInTheDocument()
   })
