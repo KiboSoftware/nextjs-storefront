@@ -26,32 +26,32 @@ export const locationCollectionMock: { spLocations: LocationCollection } = {
         },
         regularHours: {
           monday: {
-            openTime: '9:00am',
-            closeTime: '9:00pm',
+            openTime: '9:00',
+            closeTime: '9:00',
           },
           tuesday: {
-            openTime: '9:00am',
-            closeTime: '9:00pm',
+            openTime: '9:00',
+            closeTime: '9:00',
           },
           wednesday: {
-            openTime: '9:00am',
-            closeTime: '9:00pm',
+            openTime: '9:00',
+            closeTime: '9:00',
           },
           thursday: {
-            openTime: '9:00am',
-            closeTime: '9:00pm',
+            openTime: '9:00',
+            closeTime: '9:00',
           },
           friday: {
-            openTime: '9:00am',
-            closeTime: '9:00pm',
+            openTime: '9:00',
+            closeTime: '9:00',
           },
           saturday: {
-            openTime: '9:00am',
-            closeTime: '9:00pm',
+            openTime: '9:00',
+            closeTime: '9:00',
           },
           sunday: {
-            openTime: '9:00am',
-            closeTime: '9:00pm',
+            openTime: '9:00',
+            closeTime: '9:00',
           },
         },
         geo: {
