@@ -1,4 +1,4 @@
-import { Box, Divider } from '@mui/material'
+import { Box } from '@mui/material'
 
 import CartItem from '@/components/cart/CartItem/CartItem'
 import { FullWidthDivider } from '@/components/common'

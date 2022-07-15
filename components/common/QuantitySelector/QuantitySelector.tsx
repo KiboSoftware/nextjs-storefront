@@ -39,7 +39,7 @@ const QuantityTextField = ({ quantity, handleCustomQuantity }: QuantityInputProp
   const handleChangeQuantityOnBlur = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const newQuantity = Number(e.target.value)
 
-    if (newQuantity != NaN && newQuantity > 0 && newQuantity !== quantity) {
+    if (!Number.isNaN(newQuantity) && newQuantity > 0 && newQuantity !== quantity) {
       handleCustomQuantity(Number(itemQuantity))
     } else setItemQuantity(quantity)
   }
