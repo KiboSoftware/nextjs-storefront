@@ -45,12 +45,7 @@ const FulfillmentOptions = (props: FulfillmentOptionsProps) => {
   const { publicRuntimeConfig } = getConfig()
   const shipFulfillment = publicRuntimeConfig.fullfillmentOptions[0].shortName
 
-  const {
-    fulfillmentOptions = [],
-    selected,
-    onFullfillmentOptionChange,
-    onStoreSetOrUpdate,
-  } = props
+  const { fulfillmentOptions, selected, onFullfillmentOptionChange, onStoreSetOrUpdate } = props
 
   const radioOptions = fulfillmentOptions?.map((option) => {
     return {
