@@ -43,7 +43,9 @@ export const usePurchaseLocation = (): LocationType => {
     isLoading,
     isSuccess,
     isError,
-  } = useQuery(locationKeys.locationsParams(param), () => (param ? getPurchaseLocation(param) : {}))
+  } = useQuery(locationKeys.purchaseLocationParams(param), () =>
+    param ? getPurchaseLocation(param) : {}
+  )
 
   return { data, isLoading, isSuccess, isError }
 }
