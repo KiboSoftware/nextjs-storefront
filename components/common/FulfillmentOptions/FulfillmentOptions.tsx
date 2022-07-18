@@ -1,6 +1,5 @@
 import { Box, Stack, Typography } from '@mui/material'
 import { useTranslation } from 'next-i18next'
-import getConfig from 'next/config'
 
 import KiboRadio from '@/components/common/KiboRadio/KiboRadio'
 import type { FulfillmentOption } from '@/lib/types'
@@ -42,8 +41,6 @@ const FulfillmentOptionLabel = (props: FulfillmentOptionLabelProps) => {
 
 const FulfillmentOptions = (props: FulfillmentOptionsProps) => {
   const { t } = useTranslation('common')
-  const { publicRuntimeConfig } = getConfig()
-  const shipFulfillment = publicRuntimeConfig.fullfillmentOptions[0].shortName
 
   const { fulfillmentOptions, selected, onFullfillmentOptionChange, onStoreSetOrUpdate } = props
 
@@ -56,7 +53,7 @@ const FulfillmentOptions = (props: FulfillmentOptionsProps) => {
           details={option?.details}
           onStoreSelection={onStoreSetOrUpdate}
           {...(!option?.disabled &&
-            option.shortName !== shipFulfillment && {
+            option.shortName !== 'Ship' && {
               storeActionLabel: option?.details ? t('change-store') : t('select-store'),
             })}
         />

@@ -40,10 +40,6 @@ export const prepareSetCookieValue = (cookie: UserAuthTicket | string): string =
   }
 }
 
-export const setOrDeleteCookie = (cookieValue: string | null) => {
-  if (cookieValue === null) {
-    deleteCookie(purchaseLocationCookieName)
-  } else {
-    setCookie(purchaseLocationCookieName, prepareSetCookieValue(cookieValue))
-  }
+export const setPurchaseLocationCookie = (cookieValue: string) => {
+  setCookie(purchaseLocationCookieName, prepareSetCookieValue(cookieValue))
 }

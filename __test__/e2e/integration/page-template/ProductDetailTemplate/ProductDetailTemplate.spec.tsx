@@ -148,7 +148,7 @@ describe('[component] - ProductDetailTemplate integration', () => {
     })
   })
 
-  it('should handle fulfillment option and adding item to cart', async () => {
+  it('should add ship to home item to cart', async () => {
     const { user } = setup()
 
     const shipRadio = screen.getByRole('radio', {
@@ -172,5 +172,23 @@ describe('[component] - ProductDetailTemplate integration', () => {
     })
 
     expect(dialogHeader).toBeVisible()
+  })
+
+  it('should not add pickup item to cart if pickup location is not set', async () => {
+    const { user } = setup()
+
+    const pickupRadio = screen.getByRole('radio', {
+      name: /Pickup in store/i,
+    })
+
+    await user.click(pickupRadio)
+
+    expect(pickupRadio).toBeChecked()
+
+    const addToCartButton = screen.getByRole('button', {
+      name: /common:add-to-cart/i,
+    })
+
+    expect(addToCartButton).toBeDisabled()
   })
 })

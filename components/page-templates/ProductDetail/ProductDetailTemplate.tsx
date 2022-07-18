@@ -10,7 +10,7 @@ import QuantitySelector from '@/components/common/QuantitySelector/QuantitySelec
 import KiboBreadcrumbs from '@/components/core/Breadcrumbs/KiboBreadcrumbs'
 import ImageGallery from '@/components/core/ImageGallery/ImageGallery'
 import { AddToCartDialog } from '@/components/dialogs'
-import { StoreLocatorDialog } from '@/components/dialogs/Store'
+import { StoreLocatorDialog } from '@/components/dialogs'
 import {
   ColorSelector,
   ProductInformation,
@@ -57,6 +57,7 @@ const ProductDetailTemplate = (props: ProductDetailTemplateProps) => {
     setSelectedFulfillmentOption,
   } = useProductDetailTemplate({
     product,
+    purchaseLocation,
   })
 
   // Getters

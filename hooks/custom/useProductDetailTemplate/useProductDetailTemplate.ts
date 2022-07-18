@@ -4,10 +4,11 @@ import { useProductMutation } from '@/hooks'
 import { productGetters } from '@/lib/getters'
 import type { LocationCustom, ProductCustom } from '@/lib/types'
 
-import type { ConfiguredProduct, ProductOptionSelectionInput } from '@/lib/gql/types'
+import type { ConfiguredProduct, Location, ProductOptionSelectionInput } from '@/lib/gql/types'
 
 interface UseProductDetailTemplateProps {
   product: ProductCustom
+  purchaseLocation: Location
 }
 
 interface SelectedFulfillmentOption {
@@ -16,7 +17,7 @@ interface SelectedFulfillmentOption {
 }
 
 export const useProductDetailTemplate = (props: UseProductDetailTemplateProps) => {
-  const { product } = props
+  const { product, purchaseLocation } = props
   const [currentProduct, setCurrentProduct] = useState<ProductCustom>(product)
   const [updatedShopperEnteredValues, setUpdatedShopperEnteredValues] = useState<
     ProductOptionSelectionInput[]
@@ -25,7 +26,9 @@ export const useProductDetailTemplate = (props: UseProductDetailTemplateProps) =
   const [selectedFulfillmentOption, setSelectedFulfillmentOption] =
     useState<SelectedFulfillmentOption>({
       method: '',
-      location: {},
+      location: {
+        name: purchaseLocation?.name as string,
+      },
     })
 
   const productCode = productGetters.getProductId(currentProduct)
