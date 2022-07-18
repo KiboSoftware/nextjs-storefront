@@ -2,6 +2,7 @@ import { Box, Stack, Typography } from '@mui/material'
 import { useTranslation } from 'next-i18next'
 
 import KiboRadio from '@/components/common/KiboRadio/KiboRadio'
+import { FormStates } from '@/lib/constants'
 import type { FulfillmentOption } from '@/lib/types'
 
 interface FulfillmentOptionsProps {
@@ -53,7 +54,7 @@ const FulfillmentOptions = (props: FulfillmentOptionsProps) => {
           details={option?.details}
           onStoreSelection={onStoreSetOrUpdate}
           {...(!option?.disabled &&
-            option.shortName !== 'Ship' && {
+            option.shortName !== FormStates.SHIP && {
               storeActionLabel: option?.details ? t('change-store') : t('select-store'),
             })}
         />

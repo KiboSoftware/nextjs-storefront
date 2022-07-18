@@ -5,6 +5,7 @@ import { composeStories } from '@storybook/testing-react'
 import { render, screen } from '@testing-library/react'
 
 import * as stories from '@/components/order/view-order-details/ViewOrderDetails.stories'
+import { FormStates } from '@/lib/constants'
 import { orderGetters } from '@/lib/getters'
 
 import type { Order } from '@/lib/gql/types'
@@ -21,9 +22,10 @@ describe('[components] - ViewOrderDetails Integration', () => {
 
     const order = Common.args?.order as Order
     const shipItems =
-      Common.args?.order?.items?.filter((item) => item?.fulfillmentMethod === 'Ship') || []
+      Common.args?.order?.items?.filter((item) => item?.fulfillmentMethod === FormStates.SHIP) || []
     const pickupItems =
-      Common.args?.order?.items?.filter((item) => item?.fulfillmentMethod === 'Pickup') || []
+      Common.args?.order?.items?.filter((item) => item?.fulfillmentMethod === FormStates.PICKUP) ||
+      []
     const payments = Common.args?.order?.payments || []
 
     expect(screen.getByText(/order-number/i)).toBeVisible()

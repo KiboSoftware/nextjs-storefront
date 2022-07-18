@@ -13,9 +13,9 @@ import {
 } from '@mui/material'
 import { useTranslation } from 'next-i18next'
 
-import { StoreDetails } from '..'
 import { FullWidthDivider, KiboRadio } from '@/components/common'
 import SearchBar from '@/components/common/SearchBar/SearchBar'
+import { StoreDetails } from '@/components/dialogs'
 import { storeLocationGetters } from '@/lib/getters/storeLocationGetters'
 import { LocationCustom } from '@/lib/types'
 

@@ -1,5 +1,6 @@
 import getConfig from 'next/config'
 
+import { FormStates } from '../constants'
 import { buildBreadcrumbs, uiHelpers } from '@/lib/helpers'
 import type { ProductCustom, BreadCrumb, ProductProperties, FulfillmentOption } from '@/lib/types'
 
@@ -132,13 +133,10 @@ const getSegregatedOptions = (product: ProductCustom) => {
 }
 
 const validateAddToCart = (product: ProductCustom): boolean => {
-  const shipFulfillment = publicRuntimeConfig.fullfillmentOptions[0].shortName
-  const pickupFulfillment = publicRuntimeConfig.fullfillmentOptions[1].shortName
-
-  if (product.fulfillmentMethod === shipFulfillment) {
+  if (product.fulfillmentMethod === FormStates.SHIP) {
     return Boolean(product?.purchasableState?.isPurchasable)
   }
-  if (product.fulfillmentMethod === pickupFulfillment) {
+  if (product.fulfillmentMethod === FormStates.PICKUP) {
     return (
       Boolean(product?.purchasableState?.isPurchasable) &&
       Boolean(product.fulfillmentMethod) &&
@@ -201,7 +199,7 @@ const getProductFulfillmentOptions = (
         (type) => type.toLowerCase() === option?.value?.toLowerCase()
       ).length === 0,
     details: (() => {
-      if (option.value === fullfillmentOptions[0].value) return option.details // checking if Directship
+      if (option.value === FormStates.SHIP) return option.details // checking if Directship
       if (purchaseLocation?.name) return `${option.details}: ${purchaseLocation.name}`
       return ''
     })(),
