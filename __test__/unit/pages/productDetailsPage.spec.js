@@ -19,6 +19,9 @@ jest.mock('next/config', () => () => ({
     revalidate: 60,
     pageSize: 100,
   },
+  publicRuntimeConfig: {
+    maxCookieAge: 10,
+  },
 }))
 
 jest.mock('@/lib/api/util', () => ({

@@ -12,6 +12,7 @@ import * as yup from 'yup'
 
 import KiboSelect from '@/components/common/KiboSelect/KiboSelect'
 import KiboTextField from '@/components/common/KiboTextBox/KiboTextBox'
+import { useCheckoutStepContext } from '@/context'
 
 import type { Order } from '@/lib/gql/types'
 
@@ -88,6 +89,8 @@ const AddressForm = (props: AddressFormProps) => {
     onFormStatusChange,
     setValidateForm,
   } = props
+
+  const { setStepStatusIncomplete } = useCheckoutStepContext()
 
   // Define Variables and States
   const {
