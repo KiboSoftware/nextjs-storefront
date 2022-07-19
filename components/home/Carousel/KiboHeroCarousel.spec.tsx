@@ -1,5 +1,3 @@
-/** @format */
-
 import React from 'react'
 
 import { composeStories } from '@storybook/testing-react'
@@ -21,20 +19,8 @@ describe('checkout Component', () => {
 
     it('should render component', () => {
       setup()
-
-      const subtitle = screen.getAllByText(/Save up to 50%/i)
-      const text = screen.getAllByText(/Check Off Your List Event/i)
-      const description = screen.getAllByText(/Shop early to get your holiday gifts on time./i)
-      const buttonText = screen.getAllByText(/Shop Holiday Items on Sale/i)
-      const body = screen.getAllByText(/Ends Midnight/i)
-      const link = screen.getAllByText(/Shop Sale/i)
-
-      expect(subtitle[0]).toBeInTheDocument()
-      expect(text[0]).toBeInTheDocument()
-      expect(description[0]).toBeInTheDocument()
-      expect(buttonText[0]).toBeInTheDocument()
-      expect(body[0]).toBeInTheDocument()
-      expect(link[0]).toBeInTheDocument()
+      const title = screen.getAllByText(/Save up to 50%/i)
+      expect(title[0]).toBeInTheDocument()
     })
 
     it('should render button', () => {
@@ -42,17 +28,19 @@ describe('checkout Component', () => {
       expect(screen.getByRole('button', { name: 'Shop Holiday Items on Sale' })).toBeInTheDocument()
     })
 
-    it('should render nav icons', () => {
+    it('should move to next slide', () => {
       setup()
-
       expect(screen.getByRole('button', { name: 'Next' })).toBeVisible()
+    })
+
+    it('should move to previous slide', () => {
+      setup()
       expect(screen.getByRole('button', { name: 'Previous' })).toBeVisible()
     })
 
-    it('should render text', async () => {
+    it('should  redirect on button click', async () => {
       setup()
       const text = await screen.findAllByText('Save up to 50%')
-      console.log('text', text)
       expect(text[0]).toBeInTheDocument()
     })
   })

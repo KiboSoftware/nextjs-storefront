@@ -3,6 +3,8 @@ import { createTheme, responsiveFontSizes } from '@mui/material/styles'
 export const grey = {
   900: '#2B2B2B',
   // Fill Form Label Text, information text
+  700: '#494949',
+  // Home Page background
   600: '#7C7C7C',
   // Thin borders, placeholder text
   500: '#C7C7C7',
@@ -12,10 +14,11 @@ export const grey = {
   100: '#F7F7F7',
   // Secondary Button (cancel button)
   50: '#FAFAFA',
-  // Home Page background
-  30: '#494949',
+}
+
+export const purple = {
   // Home Page color
-  10: '#A12E87',
+  500: '#A12E87',
 }
 
 // Create a base theme instance and define the basic design options
@@ -44,9 +47,6 @@ let theme = createTheme({
     },
     h4: {
       fontSize: '1rem', // 16px
-      '@media (max-width:600px)': {
-        fontSize: '0.75rem', // 12px
-      },
     },
     h5: {
       fontSize: '0.875rem', // 14px
@@ -64,7 +64,6 @@ let theme = createTheme({
     body2: {
       fontSize: '0.875rem', // 14px
     },
-   
   },
   palette: {
     primary: {
@@ -87,6 +86,7 @@ let theme = createTheme({
       main: '#e42d00',
     },
     grey: { ...grey },
+    purple: { ...purple },
   },
   components: {
     MuiButton: {
