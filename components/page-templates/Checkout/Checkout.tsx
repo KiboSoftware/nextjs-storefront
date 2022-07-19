@@ -40,8 +40,13 @@ const Checkout = (props: CheckoutProps) => {
     initialCheckout,
   })
 
-  const { activeStep, stepStatus, steps, setStepBack, setStepStatusSubmit } =
-    useCheckoutStepContext()
+  const {
+    activeStep,
+    stepStatus,
+    steps,
+    setStepBack,
+    setStepStatusSubmit,
+  } = useCheckoutStepContext()
 
   const buttonLabels = [t('go-to-shipping'), t('go-to-payment'), t('review-order')]
 
