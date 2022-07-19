@@ -24,9 +24,6 @@ const KiboStepper = (props: StepperProps) => {
   return (
     <Stack sx={{ maxWidth: '872px' }} gap={3}>
       <Box>
-        <h1>
-          stepStatus: {stepStatus}, activeStep: {activeStep}
-        </h1>
         <Stepper nonLinear activeStep={activeStep} connector={null} data-testid="kibo-stepper">
           {steps.map((label: string, index: number) => (
             <Step key={label} sx={{ flex: 1, padding: 0 }}>
