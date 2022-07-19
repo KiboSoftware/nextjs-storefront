@@ -32,7 +32,8 @@ interface CartItemProps {
   onQuantityUpdate: (cartItemId: string, quantity: number) => void
   onCartItemDelete: (cartItemId: string) => void
   onCartItemActionSelection: () => void
-  onFulfillmentOptionSelection: () => void
+  onFulfillmentOptionChange: (fulfillmentMethod: string, cartItemId: string) => void
+  onProductPickupLocation: (cartItemId: string) => void
 }
 
 const styles = {
@@ -91,21 +92,20 @@ const CartItem = (props: CartItemProps) => {
     onQuantityUpdate,
     onCartItemDelete,
     onCartItemActionSelection,
-    onFulfillmentOptionSelection,
+    onFulfillmentOptionChange,
+    onProductPickupLocation,
   } = props
 
   const theme = useTheme()
-
   const { t } = useTranslation('common')
   const orientationVertical = useMediaQuery(theme.breakpoints.between('xs', 'md'))
+  const cartItemQuantity = cartItem?.quantity || 1
   const { getProductLink } = uiHelpers()
 
-  const handleFulfillmentOption = () => onFulfillmentOptionSelection()
   const handleDelete = (cartItemId: string) => onCartItemDelete(cartItemId)
   const hadleQuantityUpdate = (quantity: number) =>
     onQuantityUpdate(cartItem?.id as string, quantity)
   const handleActionSelection = () => onCartItemActionSelection()
-  const cartItemQuantity = cartItem?.quantity || 1
 
   return (
     <>
@@ -161,9 +161,11 @@ const CartItem = (props: CartItemProps) => {
             <Box sx={{ ...styles.subcontainer }}>
               <FulfillmentOptions
                 fulfillmentOptions={fulfillmentOptions}
-                selected=""
-                onFullfillmentOptionChange={handleFulfillmentOption}
-                onStoreSetOrUpdate={handleFulfillmentOption}
+                selected={cartItem?.fulfillmentMethod || ''}
+                onFullfillmentOptionChange={(fulfillmentMethod: string) =>
+                  onFulfillmentOptionChange(fulfillmentMethod, cartItem?.id as string)
+                }
+                onStoreSetOrUpdate={() => onProductPickupLocation(cartItem?.id as string)} // change store: Open storelocator modal. Should not change global store.
               />
             </Box>
           </Box>

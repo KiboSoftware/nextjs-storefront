@@ -4,12 +4,13 @@ import { makeGraphQLClient } from '@/lib/gql/client'
 import {
   addToCartMutation,
   updateCartItemQuantityMutation,
+  updateCartItemMutation,
   deleteCartItemMutation,
 } from '@/lib/gql/mutations'
 import { buildAddToCartInput } from '@/lib/helpers/buildAddToCartInput'
 import { cartKeys } from '@/lib/react-query/queryKeys'
 
-import type { CartItem, ProductOption } from '@/lib/gql/types'
+import type { CartItemInput, CartItem, ProductOption } from '@/lib/gql/types'
 
 export interface AddToCartProductInput {
   options: ProductOption[]
@@ -28,6 +29,11 @@ interface UpdateCartItemQuantityParams {
 }
 interface RemoveCartItemParams {
   cartItemId: string
+}
+
+interface UpdateCartItemParams {
+  cartItemId: string
+  cartItemInput: CartItemInput
 }
 
 const addToCart = async (props: AddToCartInputParams) => {
@@ -73,6 +79,23 @@ const removeCartItem = async (params: RemoveCartItemParams) => {
   })
 
   return response?.deleteCartItemMutation
+}
+
+const updateCartItem = async (props: UpdateCartItemParams) => {
+  const client = makeGraphQLClient()
+  const { cartItemId, cartItemInput } = props
+
+  const variables = {
+    cartItemId,
+    cartItemInput,
+  }
+
+  const response = await client.request({
+    document: updateCartItemMutation,
+    variables,
+  })
+
+  return response?.updateCurrentCartItem
 }
 
 export const useCartMutation = () => {
@@ -124,6 +147,12 @@ export const useCartMutation = () => {
         queryClient.setQueryData(cartKeys.all, context?.previousCart)
       },
       onSettled: () => {
+        queryClient.invalidateQueries(cartKeys.all)
+      },
+    }),
+
+    updateCartItem: useMutation(updateCartItem, {
+      onSuccess: () => {
         queryClient.invalidateQueries(cartKeys.all)
       },
     }),

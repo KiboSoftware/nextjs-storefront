@@ -2,24 +2,33 @@ import { Box } from '@mui/material'
 
 import CartItem from '@/components/cart/CartItem/CartItem'
 import { FullWidthDivider } from '@/components/common'
+import { FormStates } from '@/lib/constants'
+import { cartGetters } from '@/lib/getters/cartGetters'
+import { FulfillmentOption } from '@/lib/types'
 
-import type { CartItem as CartItemType, Maybe } from '@/lib/gql/types'
+import type { CartItem as CartItemType, Location, Maybe, Product } from '@/lib/gql/types'
 
 interface CartItemListProps {
   cartItems: Maybe<CartItemType>[]
+  fulfillmentLocations: Location[]
+  purchaseLocation: Location
   onCartItemQuantityUpdate: (cartItemId: string, quantity: number) => void
   onCartItemDelete: (cartItemId: string) => void
   onCartItemActionSelection: () => void
-  onFulfillmentOptionSelection: () => void
+  onFulfillmentOptionSelection: (fulfillmentMethod: string, cartItemId: string) => void
+  onProductPickupLocation: (cartItemId: string) => void
 }
 
 const CartItemList = (props: CartItemListProps) => {
   const {
     cartItems,
+    fulfillmentLocations = [],
+    purchaseLocation,
     onCartItemQuantityUpdate,
     onCartItemDelete,
     onCartItemActionSelection,
     onFulfillmentOptionSelection,
+    onProductPickupLocation,
   } = props
 
   const handleQuantityUpdate = (cartItemId: string, quantity: number) =>
@@ -28,6 +37,19 @@ const CartItemList = (props: CartItemListProps) => {
   const handleCartItemDelete = (cartItemId: string) => onCartItemDelete(cartItemId)
 
   const handleCartItemActionSelection = () => onCartItemActionSelection()
+
+  const handleSupportedFulfillmentOptions = (
+    cartItem: Maybe<CartItemType>
+  ): FulfillmentOption[] => {
+    const location =
+      cartItem?.fulfillmentLocationCode && cartItem?.fulfillmentMethod === FormStates.PICKUP
+        ? cartGetters.getCartItemFulfillmentLocation(cartItem, fulfillmentLocations)
+        : purchaseLocation
+    return cartGetters.getProductFulfillmentOptions(
+      cartItem?.product as Product,
+      location as Location
+    )
+  }
 
   return (
     <>
@@ -40,8 +62,9 @@ const CartItemList = (props: CartItemListProps) => {
             onQuantityUpdate={handleQuantityUpdate}
             onCartItemDelete={handleCartItemDelete}
             onCartItemActionSelection={handleCartItemActionSelection}
-            fulfillmentOptions={[]}
-            onFulfillmentOptionSelection={onFulfillmentOptionSelection}
+            fulfillmentOptions={handleSupportedFulfillmentOptions(item)}
+            onFulfillmentOptionChange={onFulfillmentOptionSelection}
+            onProductPickupLocation={onProductPickupLocation}
           />
           <Box sx={{ display: { xs: 'block', sm: 'block', md: 'none' } }}>
             <FullWidthDivider />

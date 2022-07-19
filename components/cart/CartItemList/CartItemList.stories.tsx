@@ -3,8 +3,9 @@ import React from 'react'
 import { ComponentStory, ComponentMeta } from '@storybook/react'
 
 import CartItemList from './CartItemList'
+import { locationCollectionMock } from '@/__mocks__/stories/locationCollectionMock'
 
-import type { CartItem as CartItemType } from '@/lib/gql/types'
+import type { CartItem as CartItemType, Location } from '@/lib/gql/types'
 
 const cartItems: Array<CartItemType> = [
   {
@@ -72,10 +73,14 @@ export default {
   },
 } as ComponentMeta<typeof CartItemList>
 
+const locationList = locationCollectionMock?.spLocations?.items || []
+
 const Template: ComponentStory<typeof CartItemList> = (args) => <CartItemList {...args} />
 
 export const Common = Template.bind({})
 
 Common.args = {
   cartItems,
+  fulfillmentLocations: locationList as Location[],
+  purchaseLocation: locationList[0] as Location,
 }

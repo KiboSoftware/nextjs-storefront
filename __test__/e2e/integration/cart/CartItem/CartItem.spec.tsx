@@ -18,7 +18,7 @@ describe('[components] - CartItem Integration', () => {
       <Common
         {...Common.args}
         onQuantityUpdate={onQuantityUpdateMock}
-        onFulfillmentOptionSelection={onFulfillmentOptionSelectionMock}
+        onFulfillmentOptionChange={onFulfillmentOptionSelectionMock}
       />
     )
     return {
