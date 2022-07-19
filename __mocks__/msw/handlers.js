@@ -1,5 +1,6 @@
 import { graphql } from 'msw'
 
+import { orderMock, shippingRateMock } from '../stories'
 import { cartItemMock } from '../stories/cartItemMock'
 import { cartMock } from '../stories/cartMock'
 import { categoryTreeDataMock } from '../stories/categoryTreeDataMock'
@@ -11,25 +12,35 @@ import { searchSuggestionMock } from '../stories/searchSuggestionResultMock'
 import { userMock, loginUserMock, registerUserMock } from '../stories/userMock'
 
 export const checkoutHandlers = [
-  // useLoadCheckout
   graphql.query('getCheckout', (_req, res, ctx) => {
     return res(ctx.data(orderMock))
   }),
 
-  // useCheckout
   graphql.query('getOrCreateCheckout', (_req, res, ctx) => {
     return res(ctx.data(orderMock))
   }),
 
-  // useLoadFromCart
   graphql.mutation('getOrCreateCheckoutFromCart', (_req, res, ctx) => {
     return res(ctx.data(orderMock))
   }),
 
-  // useCheckout
+  // Details Step
   graphql.mutation('updatePersonalDetails', (_req, res, ctx) => {
     return res(ctx.data(orderMock))
   }),
+
+  // Shipping Step
+  graphql.mutation('setShippingInformation', (_req, res, ctx) => {
+    return res(ctx.data({ updateOrderFulfillmentInfo: orderMock.fulfillmentInfo }))
+  }),
+
+  graphql.query('getShippingRates', (_req, res, ctx) => {
+    return res(ctx.data(shippingRateMock))
+  }),
+
+  // Payment Step
+
+  // Order Reivew Sep
 ]
 
 export const productHandlers = [

@@ -12,7 +12,7 @@ import type { Maybe, CrOrderItem } from '@/lib/gql/types'
 const { Common } = composeStories(stories)
 
 const onShippingMethodChangeMock = jest.fn()
-const onClickStoreLocatorMock = jest.fn()
+const onStoreLocatorClickMock = jest.fn()
 
 const KiboSelectMock = () => <div data-testid="kibo-select-component" />
 jest.mock('@/components/common/KiboSelect/KiboSelect', () => KiboSelectMock)
@@ -27,7 +27,7 @@ describe('[component] - ShippingMethod', () => {
       <Common
         {...props}
         onShippingMethodChange={onShippingMethodChangeMock}
-        onClickStoreLocator={onClickStoreLocatorMock}
+        onStoreLocatorClick={onStoreLocatorClickMock}
       />
     )
   }

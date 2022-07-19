@@ -138,44 +138,4 @@ describe('[components] PaymentStep', () => {
 
     expect(savePaymentMethod).not.toBeInTheDocument()
   })
-
-  it('Should call onCompleteCallback when user enters review step button', async () => {
-    const onCompleteCallbackMock = jest.fn()
-    const user = userEvent.setup()
-
-    render(
-      <Common
-        {...Common.args}
-        onCompleteCallback={onCompleteCallbackMock}
-        stepperStatus={FormStates.VALIDATE}
-      />
-    )
-
-    const creditCard = screen.getByRole('radio', {
-      name: /credit \/ debit card/i,
-    })
-
-    await act(async () => {
-      fireEvent.click(creditCard)
-    })
-
-    const cardNumber = screen.getByRole('textbox', {
-      name: /card-number/i,
-    })
-
-    const expiryDate = screen.getByPlaceholderText(/expiry-date-placeholder/i)
-
-    const securityCode = screen.getByPlaceholderText(/security-code-placeholder/i)
-
-    const firstName = screen.getByRole('textbox', { name: /first-name/i })
-
-    await act(async () => {
-      await user.type(cardNumber, '4111111111111111')
-      await user.type(expiryDate, '03/2024')
-      await user.type(securityCode, '123')
-      await user.type(firstName, 'John')
-    })
-
-    expect(onCompleteCallbackMock).toBeCalled()
-  })
 })

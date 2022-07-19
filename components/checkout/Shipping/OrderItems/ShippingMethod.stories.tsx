@@ -5,9 +5,9 @@ import { orderMock } from '@/__mocks__/stories/orderMock'
 import { shippingRateMock } from '@/__mocks__/stories/shippingRateMock'
 
 export default {
-  title: 'checkout/checkout/Shipping/OrderItems',
+  title: 'checkout/ShippingMethod',
   component: ShippingMethod,
-  argTypes: { onChange: { action: 'onChange' }, onClickStoreLocator: { action: 'clicked' } },
+  argTypes: { onChange: { action: 'onChange' }, onStoreLocatorClick: { action: 'clicked' } },
   parameters: {
     layout: 'fullscreen',
   },
@@ -26,7 +26,7 @@ Common.args = {
   shipItems: orderItems?.filter((item) => item?.fulfillmentMethod === 'Ship'),
   pickupItems: orderItems?.filter((item) => item?.fulfillmentMethod === 'Pickup'),
   orderShipmentMethods: shippingRateMock.orderShipmentMethods,
-  onClickStoreLocator: () => {
+  onStoreLocatorClick: () => {
     console.log('change/select store clicked..')
   },
 }

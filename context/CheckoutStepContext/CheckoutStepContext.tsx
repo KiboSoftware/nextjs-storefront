@@ -1,4 +1,12 @@
-import React, { useCallback, useMemo, useReducer, useContext, createContext } from 'react'
+import React, {
+  useCallback,
+  useMemo,
+  useReducer,
+  useContext,
+  createContext,
+  useEffect,
+  useRef,
+} from 'react'
 
 export type State = {
   activeStep: number
@@ -14,10 +22,16 @@ type Action = {
   activeStep?: number
 }
 
+export const STEP_STATUS = {
+  SUBMIT: 'SUBMIT',
+  COMPLETE: 'COMPLETE',
+  INCOMPLETE: 'INCOMPLETE',
+}
+
 const initialState: State = {
   activeStep: 0,
   steps: [],
-  stepStatus: '',
+  stepStatus: STEP_STATUS.INCOMPLETE,
 }
 
 export const CheckoutStepContext = createContext<CheckoutStepContextType>(initialState)
@@ -31,56 +45,54 @@ const checkoutStepReducer = (state: State, action: Action): State => {
         ...state,
         stepStatus: action.status as string,
       }
+
     case 'SET_ACTIVE_STEP':
       return {
         ...state,
         activeStep: action.activeStep as number,
+        stepStatus: STEP_STATUS.INCOMPLETE,
       }
     default:
       return state
   }
 }
 
-export const STEP_STATUS = {
-  SUBMIT: 'SUBMIT',
-  COMPLETE: 'COMPLETE',
-  INCOMPLETE: 'INCOMPLETE',
-}
 interface CheckoutStepProviderProps {
+  initialActiveStep?: number
   steps?: string[]
   children: any
 }
 export const CheckoutStepProvider = (props: CheckoutStepProviderProps) => {
-  const { steps: stepsProp, ...otherProps } = props
+  const { initialActiveStep = 0, steps: stepsProp, ...otherProps } = props
   const [state, dispatch] = useReducer(
     checkoutStepReducer,
-    stepsProp ? { ...initialState, steps: stepsProp } : initialState
+    stepsProp ? { ...initialState, steps: stepsProp, activeStep: initialActiveStep } : initialState
   )
 
   const activeStep = useMemo(() => state.activeStep, [state.activeStep])
   const stepStatus = useMemo(() => state.stepStatus, [state.stepStatus])
   const steps = useMemo(() => state.steps, [state.steps])
 
-  const setStepStatusSubmit = useCallback(
-    () => dispatch({ type: 'SET_STEP_STATUS', status: STEP_STATUS.SUBMIT }),
-    [dispatch]
-  )
-  const setStepStatusComplete = useCallback(
-    () => dispatch({ type: 'SET_STEP_STATUS', status: STEP_STATUS.COMPLETE }),
-    [dispatch]
-  )
-  const setStepStatusIncomplete = useCallback(
-    () => dispatch({ type: 'SET_STEP_STATUS', status: STEP_STATUS.INCOMPLETE }),
-    [dispatch]
-  )
-  const setStepNext = useCallback(
-    () => dispatch({ type: 'SET_ACTIVE_STEP', activeStep: activeStep + 1 }),
-    [dispatch]
-  )
-  const setStepBack = useCallback(
-    () => dispatch({ type: 'SET_ACTIVE_STEP', activeStep: activeStep - 1 }),
-    [dispatch]
-  )
+  const stateRef = useRef(state)
+  useEffect(() => {
+    stateRef.current = state
+  }, [state])
+
+  const setStepStatusSubmit = () =>
+    dispatch({ type: 'SET_STEP_STATUS', status: STEP_STATUS.SUBMIT })
+
+  const setStepStatusComplete = () =>
+    dispatch({ type: 'SET_STEP_STATUS', status: STEP_STATUS.COMPLETE })
+
+  const setStepStatusIncomplete = () =>
+    dispatch({ type: 'SET_STEP_STATUS', status: STEP_STATUS.INCOMPLETE })
+
+  const setStepNext = () => dispatch({ type: 'SET_ACTIVE_STEP', activeStep: activeStep + 1 })
+
+  const setStepBack = () => dispatch({ type: 'SET_ACTIVE_STEP', activeStep: activeStep - 1 })
+
+  const setActiveStep = (stepIndex: number) =>
+    dispatch({ type: 'SET_ACTIVE_STEP', activeStep: stepIndex })
 
   const value = useMemo(
     () => ({
@@ -92,6 +104,7 @@ export const CheckoutStepProvider = (props: CheckoutStepProviderProps) => {
       setStepStatusComplete,
       setStepStatusIncomplete,
       setStepStatusSubmit,
+      setActiveStep,
     }),
     [
       activeStep,
@@ -102,6 +115,7 @@ export const CheckoutStepProvider = (props: CheckoutStepProviderProps) => {
       setStepStatusIncomplete,
       setStepStatusComplete,
       setStepStatusSubmit,
+      setActiveStep,
     ]
   )
 

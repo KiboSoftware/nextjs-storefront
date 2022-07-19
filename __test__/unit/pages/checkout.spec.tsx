@@ -1,6 +1,7 @@
 import { render, screen } from '@testing-library/react'
 import { useTranslation } from 'next-i18next'
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
+import * as nextRouter from 'next/router'
 
 import { CheckoutStepProvider } from '@/context/CheckoutStepContext/CheckoutStepContext'
 import * as operations from '@/lib/api/operations'
@@ -9,6 +10,13 @@ import CheckoutPage, { getServerSideProps } from '@/pages/checkout/[checkoutId]'
 import type { Order } from '@/lib/gql/types'
 
 const mockOperations = operations as { getCheckout(checkoutId: string, req: any): Promise<Order> }
+jest.mock('next/router', () => ({
+  useRouter() {
+    return {
+      query: { checkoutId: '13cbf88a39c9fb00010137fd0000678b' },
+    }
+  },
+}))
 
 jest.mock('@/lib/api/operations', () => ({
   __esModule: true,

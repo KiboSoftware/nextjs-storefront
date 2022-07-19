@@ -13,7 +13,7 @@ import * as yup from 'yup'
 import type { Action } from '@/components/checkout'
 import KiboSelect from '@/components/common/KiboSelect/KiboSelect'
 import KiboTextField from '@/components/common/KiboTextBox/KiboTextBox'
-import { FormStates } from '@/lib/constants'
+import { useCheckoutStepContext } from '@/context'
 
 import type { Order } from '@/lib/gql/types'
 
@@ -47,7 +47,7 @@ export interface Address {
   saveAddress: boolean
 }
 interface AddressFormProps {
-  contact?: Contact
+  contact: Contact
   countries?: string[]
   isUserLoggedIn: boolean
   saveAddressLabel?: string
@@ -55,7 +55,6 @@ interface AddressFormProps {
   checkout: Order | undefined
   validateForm: boolean
   onSaveAddress: (data: Address) => void
-  onCompleteCallback: (action: Action) => void
   setValidateForm: (isValidForm: boolean) => void
 }
 
@@ -87,9 +86,10 @@ const AddressForm = (props: AddressFormProps) => {
     setAutoFocus = true,
     validateForm = false,
     onSaveAddress,
-    onCompleteCallback,
     setValidateForm,
   } = props
+
+  const { setStepStatusIncomplete } = useCheckoutStepContext()
 
   // Define Variables and States
   const {
@@ -123,7 +123,7 @@ const AddressForm = (props: AddressFormProps) => {
 
   // form is invalid, notify parent form is incomplete
   const onInvalidForm = () => {
-    onCompleteCallback({ type: FormStates.INCOMPLETE })
+    setStepStatusIncomplete()
     setValidateForm(false)
   }
 
@@ -153,6 +153,7 @@ const AddressForm = (props: AddressFormProps) => {
             render={({ field }) => (
               <KiboTextField
                 {...field}
+                value={field.value || ''}
                 label={t('first-name')}
                 ref={null}
                 error={!!errors?.firstName}
@@ -174,6 +175,7 @@ const AddressForm = (props: AddressFormProps) => {
             render={({ field }) => (
               <KiboTextField
                 {...field}
+                value={field.value || ''}
                 label={t('last-name-or-sur-name')}
                 ref={null}
                 error={!!errors?.lastNameOrSurname}
@@ -194,6 +196,7 @@ const AddressForm = (props: AddressFormProps) => {
             render={({ field }) => (
               <KiboTextField
                 {...field}
+                value={field.value || ''}
                 label={t('address1')}
                 ref={null}
                 error={!!errors?.address?.address1}
@@ -214,6 +217,7 @@ const AddressForm = (props: AddressFormProps) => {
             render={({ field }) => (
               <KiboTextField
                 {...field}
+                value={field.value || ''}
                 label={t('address2')}
                 ref={null}
                 error={!!errors?.address?.address2}
@@ -233,6 +237,7 @@ const AddressForm = (props: AddressFormProps) => {
             render={({ field }) => (
               <KiboTextField
                 {...field}
+                value={field.value || ''}
                 label={t('city-or-town')}
                 ref={null}
                 error={!!errors?.address?.cityOrTown}
@@ -253,6 +258,7 @@ const AddressForm = (props: AddressFormProps) => {
             render={({ field }) => (
               <KiboTextField
                 {...field}
+                value={field.value || ''}
                 label={t('state-or-province')}
                 ref={null}
                 error={!!errors?.address?.stateOrProvince}
@@ -273,6 +279,7 @@ const AddressForm = (props: AddressFormProps) => {
             render={({ field }) => (
               <KiboTextField
                 {...field}
+                value={field.value || ''}
                 label={t('postal-or-zip-code')}
                 ref={null}
                 error={!!errors?.address?.postalOrZipCode}
@@ -316,6 +323,7 @@ const AddressForm = (props: AddressFormProps) => {
             render={({ field }) => (
               <KiboTextField
                 {...field}
+                value={field.value || ''}
                 label={t('phone-number-home')}
                 ref={null}
                 error={!!errors?.phoneNumbers?.home}

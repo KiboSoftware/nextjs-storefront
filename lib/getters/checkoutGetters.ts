@@ -121,6 +121,8 @@ const getShippingFirstName = (checkout: Order): string =>
   checkout.fulfillmentInfo?.fulfillmentContact?.firstName || ''
 const getShippingLastNameOrSurname = (checkout: Order): string =>
   checkout.fulfillmentInfo?.fulfillmentContact?.lastNameOrSurname || ''
+const getShippingMiddleNameOrInitial = (checkout: Order): string =>
+  checkout?.fulfillmentInfo?.fulfillmentContact?.middleNameOrInitial || ''
 
 const getShippingPhoneHome = (checkout: Order): string =>
   checkout?.fulfillmentInfo?.fulfillmentContact?.phoneNumbers?.home || ''
