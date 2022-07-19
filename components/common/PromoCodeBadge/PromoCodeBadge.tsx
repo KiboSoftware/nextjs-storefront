@@ -11,7 +11,7 @@ import KiboTextBox from '@/components/common/KiboTextBox/KiboTextBox'
 export interface PromocodeBadgeProps {
   onApplyCouponCode: (promo: string) => void
   onRemoveCouponCode: (promo: string) => void
-  promoList: string[]
+  promoList?: string[] | null
   promoError: boolean
   helpText?: string
 }
@@ -19,13 +19,11 @@ const styles = {
   boxStyle: {
     display: 'inline-block',
     mr: '0.5rem',
-    mt: '0.5rem',
     px: '0.5rem',
     backgroundColor: '#DCDCDC',
   },
   textBoxStyle: {
     minWidth: '10rem',
-    maxWidth: '17rem',
     mr: '0.5rem',
   },
   buttonStyle: { width: '5rem', height: '2.20rem', marginTop: '1.5rem' },
@@ -52,7 +50,7 @@ const PromoCodeBadge = (props: PromocodeBadgeProps) => {
 
   return (
     <>
-      <Stack direction="row" sx={{ maxWidth: '20rem' }}>
+      <Stack direction="row">
         <KiboTextBox
           name="promocode"
           value={promo}

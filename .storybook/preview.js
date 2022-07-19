@@ -59,6 +59,8 @@ export const parameters = {
       checkout: [...handlers.checkoutHandlers],
       searchSuggestions: [...handlers.searchSuggestionHandlers],
       user: [...handlers.userHandlers],
+      cart: [...handlers.cartHandlers],
+      store: [...handlers.storeHandlers],
     },
   },
 }

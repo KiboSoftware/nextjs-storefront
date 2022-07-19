@@ -1,9 +1,11 @@
+import { Box, Divider } from '@mui/material'
+
 import CartItem from '@/components/cart/CartItem/CartItem'
 
-import type { CartItem as CartItemType } from '@/lib/gql/types'
+import type { CartItem as CartItemType, Maybe } from '@/lib/gql/types'
 
 interface CartItemListProps {
-  cartItems: CartItemType[]
+  cartItems: Maybe<CartItemType>[]
   onCartItemQuantityUpdate: (cartItemId: string, quantity: number) => void
   onCartItemDelete: (cartItemId: string) => void
   onCartItemActionSelection: () => void
@@ -28,17 +30,22 @@ const CartItemList = (props: CartItemListProps) => {
 
   return (
     <>
-      {cartItems.map((item: CartItemType, index: number) => (
-        <CartItem
-          key={index}
-          cartItem={item}
-          maxQuantity={undefined}
-          onQuantityUpdate={handleQuantityUpdate}
-          onCartItemDelete={handleCartItemDelete}
-          onCartItemActionSelection={handleCartItemActionSelection}
-          fulfillmentOptions={[]}
-          onFulfillmentOptionSelection={onFulfillmentOptionSelection}
-        />
+      {cartItems?.map((item: Maybe<CartItemType>, index: number) => (
+        <>
+          <CartItem
+            key={`${item?.id}-${index}`}
+            cartItem={item}
+            maxQuantity={undefined}
+            onQuantityUpdate={handleQuantityUpdate}
+            onCartItemDelete={handleCartItemDelete}
+            onCartItemActionSelection={handleCartItemActionSelection}
+            fulfillmentOptions={[]}
+            onFulfillmentOptionSelection={onFulfillmentOptionSelection}
+          />
+          <Box sx={{ display: { xs: 'block', sm: 'block', md: 'none' } }}>
+            <Divider />
+          </Box>
+        </>
       ))}
     </>
   )

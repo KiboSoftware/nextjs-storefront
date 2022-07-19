@@ -1,5 +1,5 @@
 import { fetcher } from '@/lib/api/util'
-import { getProductQuery } from '@/lib/gql/queries/get-product'
+import { getProductQuery } from '@/lib/gql/queries'
 
 export default async function getProduct(productCode: any) {
   const variables = {

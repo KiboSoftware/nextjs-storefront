@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { ReactNode } from 'react'
 
 import { Info } from '@mui/icons-material'
 import { Typography, Box, Divider } from '@mui/material'
@@ -13,6 +13,7 @@ export interface OrderPriceProps {
   shippingTotal: string
   tax: string
   total: string
+  promoComponent?: ReactNode
 }
 
 const styles = {
@@ -33,6 +34,7 @@ const OrderPrice = (props: OrderPriceProps) => {
     shippingTotal,
     tax,
     total,
+    promoComponent,
   } = props
 
   return (
@@ -58,6 +60,7 @@ const OrderPrice = (props: OrderPriceProps) => {
         </Box>
       </Box>
       <Divider sx={{ margin: '0 0.438rem' }} />
+      {promoComponent && <Box>{promoComponent}</Box>}
       <Box sx={{ ...styles.priceTotalRow }}>
         <Typography sx={{ ...styles.priceLabel }} variant="body1" fontWeight="bold">
           {totalLabel}

@@ -2,7 +2,7 @@
 
 import { productInfo } from '../fragments'
 
-export const getProductQuery = /* GraphQL */ `
+const getProductQuery = /* GraphQL */ `
   ${productInfo}
 
   query product($productCode: String!) {
@@ -11,3 +11,4 @@ export const getProductQuery = /* GraphQL */ `
     }
   }
 `
+export default getProductQuery

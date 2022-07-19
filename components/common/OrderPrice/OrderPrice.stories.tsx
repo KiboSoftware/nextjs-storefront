@@ -2,6 +2,7 @@ import React from 'react'
 
 import { ComponentStory, ComponentMeta } from '@storybook/react'
 
+import PromoCodeBadge from '../PromoCodeBadge/PromoCodeBadge'
 import OrderPrice from './OrderPrice'
 
 export default {
@@ -23,4 +24,18 @@ Common.args = {
   shippingTotal: 'Free',
   tax: '$13.73',
   total: '$233.72',
+}
+// WithPromo
+export const WithPromoCode = Template.bind({})
+
+WithPromoCode.args = {
+  ...Common.args,
+  promoComponent: (
+    <PromoCodeBadge
+      onApplyCouponCode={() => ''}
+      onRemoveCouponCode={() => ''}
+      promoList={[]}
+      promoError={false}
+    />
+  ),
 }

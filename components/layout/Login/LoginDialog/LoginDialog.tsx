@@ -22,13 +22,6 @@ const StyledActionsComponent = styled(Stack)(() => ({
   marginTop: '1.438rem',
 }))
 
-const styles = {
-  loginTitle: {
-    marginLeft: '1rem',
-    color: 'text.secendary',
-  },
-}
-
 const LoginFooter = (props: LoginFooterProps) => {
   const { onRegisterNow } = props
 
@@ -66,11 +59,7 @@ const LoginDialog = () => {
 
   return (
     <KiboDialog
-      Title={
-        <Typography {...styles.loginTitle} data-testid="login-header">
-          {t('log-in')}
-        </Typography>
-      }
+      Title={t('log-in')}
       Content={
         <LoginContent
           onLogin={handleLogin}

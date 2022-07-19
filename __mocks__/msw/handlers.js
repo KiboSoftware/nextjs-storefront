@@ -1,8 +1,10 @@
 import { graphql } from 'msw'
 
 import { cartItemMock } from '../stories/cartItemMock'
+import { cartMock } from '../stories/cartMock'
 import { categoryTreeDataMock } from '../stories/categoryTreeDataMock'
 import { configuredProductMock } from '../stories/configuredProductMock'
+import { locationCollectionMock } from '../stories/locationCollectionMock'
 import { orderMock } from '../stories/orderMock'
 import { productSearchResultMock } from '../stories/productSearchResultMock'
 import { searchSuggestionMock } from '../stories/searchSuggestionResultMock'
@@ -72,12 +74,22 @@ export const userHandlers = [
 ]
 
 export const cartHandlers = [
+  graphql.query('cart', (_req, res, ctx) => {
+    return res(ctx.data(cartMock))
+  }),
+
   graphql.mutation('addToCart', (_req, res, ctx) => {
     return res(
       ctx.data({
         addItemToCurrentCart: cartItemMock,
       })
     )
+  }),
+]
+
+export const storeHandlers = [
+  graphql.query('GetISPULocations', (_req, res, ctx) => {
+    return res(ctx.data(locationCollectionMock))
   }),
 ]
 
@@ -89,4 +101,5 @@ export const handlers = [
   ...userHandlers,
   ...productHandlers,
   ...cartHandlers,
+  ...storeHandlers,
 ]
