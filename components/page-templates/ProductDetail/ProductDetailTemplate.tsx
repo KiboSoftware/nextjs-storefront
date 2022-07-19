@@ -9,8 +9,7 @@ import Price from '@/components/common/Price/Price'
 import QuantitySelector from '@/components/common/QuantitySelector/QuantitySelector'
 import KiboBreadcrumbs from '@/components/core/Breadcrumbs/KiboBreadcrumbs'
 import ImageGallery from '@/components/core/ImageGallery/ImageGallery'
-import { AddToCartDialog } from '@/components/dialogs'
-import { StoreLocatorDialog } from '@/components/dialogs'
+import { AddToCartDialog, StoreLocatorDialog } from '@/components/dialogs'
 import {
   ColorSelector,
   ProductInformation,

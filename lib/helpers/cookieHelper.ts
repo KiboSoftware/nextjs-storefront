@@ -1,4 +1,4 @@
-import { deleteCookie, setCookie } from 'cookies-next'
+import { setCookie } from 'cookies-next'
 import getConfig from 'next/config'
 
 import type { UserAuthTicket } from '@kibocommerce/graphql-client'
