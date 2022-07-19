@@ -1,6 +1,8 @@
-import React from 'react'
+import React, { MouseEvent } from 'react'
 
 import { StarRounded } from '@mui/icons-material'
+import FavoriteBorderRoundedIcon from '@mui/icons-material/FavoriteBorderRounded'
+import FavoriteRoundedIcon from '@mui/icons-material/FavoriteRounded'
 import { Box, Grid, Rating, Button, Typography, Divider } from '@mui/material'
 import { useTranslation } from 'next-i18next'
 
@@ -9,7 +11,8 @@ import Price from '@/components/common/Price/Price'
 import QuantitySelector from '@/components/common/QuantitySelector/QuantitySelector'
 import KiboBreadcrumbs from '@/components/core/Breadcrumbs/KiboBreadcrumbs'
 import ImageGallery from '@/components/core/ImageGallery/ImageGallery'
-import { AddToCartDialog, StoreLocatorDialog } from '@/components/dialogs'
+import { AddToCartDialog, StoreLocatorDialog, WishlistPopover } from '@/components/dialogs'
+import LoginDialog from '@/components/layout/LoginDialog'
 import {
   ColorSelector,
   ProductInformation,
@@ -19,9 +22,17 @@ import {
   ProductRecommendations,
   ProductVariantSizeSelector,
 } from '@/components/product'
+import { useAuthContext } from '@/context'
 import { useModalContext } from '@/context/ModalContext'
-import { useProductDetailTemplate, usePurchaseLocation, useCartMutation } from '@/hooks'
-import { productGetters } from '@/lib/getters'
+import {
+  useProductDetailTemplate,
+  usePurchaseLocation,
+  useCartMutation,
+  useUserQueries,
+  useWishlistQueries,
+  useWishlistMutation,
+} from '@/hooks'
+import { productGetters, wishlistGetters } from '@/lib/getters'
 import type { ProductCustom, BreadCrumb, PriceRange, LocationCustom } from '@/lib/types'
 
 import type {
@@ -43,6 +54,10 @@ const ProductDetailTemplate = (props: ProductDetailTemplateProps) => {
   const { showModal, closeModal } = useModalContext()
   const { addToCart } = useCartMutation()
   const { data: purchaseLocation } = usePurchaseLocation()
+  const { data: customerAccount } = useUserQueries()
+  const { data: currentWishlist } = useWishlistQueries()
+  const { addToWishlist, removeWishlistItem } = useWishlistMutation()
+  const { isAuthenticated } = useAuthContext()
 
   // Data hook
   const {
@@ -81,6 +96,14 @@ const ProductDetailTemplate = (props: ProductDetailTemplateProps) => {
   })
   const fulfillmentOptions = productGetters.getProductFulfillmentOptions(product, {
     name: selectedFulfillmentOption.location?.name,
+  })
+
+  const isProductInWishlist = wishlistGetters.isInWishlist({
+    product: {
+      productCode,
+      variationProductCode,
+    },
+    currentWishlist,
   })
 
   // methods
@@ -150,6 +173,53 @@ const ProductDetailTemplate = (props: ProductDetailTemplateProps) => {
           : null,
       },
     }
+  }
+
+  const handleWishList = async (event: MouseEvent<HTMLElement>) => {
+    try {
+      const wislistButton = event.currentTarget
+      const variables = {
+        product: {
+          productCode,
+          isPackagedStandAlone: product?.isPackagedStandAlone || true,
+          variationProductCode,
+          options: updatedShopperEnteredValues,
+        },
+        currentWishlist,
+      }
+      if (isAuthenticated) {
+        if (!isProductInWishlist) {
+          const addToWishlistResponse = await addToWishlist.mutateAsync({
+            ...variables,
+            customerAccountId: customerAccount?.id as number,
+          })
+
+          if (addToWishlistResponse.id) {
+            showModal({
+              Component: WishlistPopover,
+              props: {
+                isInWishlist: true,
+                target: wislistButton,
+              },
+            })
+          }
+        } else {
+          const removeWishlistItemResponse = await removeWishlistItem.mutateAsync(variables)
+
+          if (removeWishlistItemResponse) {
+            showModal({
+              Component: WishlistPopover,
+              props: {
+                isInWishlist: false,
+                target: wislistButton,
+              },
+            })
+          }
+        }
+      } else {
+        showModal({ Component: LoginDialog })
+      }
+    } catch (err) {}
   }
 
   return (
@@ -285,7 +355,19 @@ const ProductDetailTemplate = (props: ProductDetailTemplateProps) => {
               {t('common:add-to-cart')}
             </Button>
             <Box display="flex" gap={3}>
-              <Button variant="contained" color="secondary" fullWidth>
+              <Button
+                variant="contained"
+                color="secondary"
+                fullWidth
+                onClick={handleWishList}
+                sx={{ padding: '0.375rem 0.5rem' }}
+              >
+                {isProductInWishlist ? (
+                  <FavoriteRoundedIcon sx={{ color: '#BB2500', marginRight: '14px' }} />
+                ) : (
+                  <FavoriteBorderRoundedIcon sx={{ color: '#cdcdcd', marginRight: '14px' }} />
+                )}
+
                 {t('common:add-to-wishlist')}
               </Button>
               <Button variant="contained" color="inherit" fullWidth>

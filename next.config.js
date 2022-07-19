@@ -64,6 +64,7 @@ module.exports = {
       defaultRange: '160934',
     },
     storeLocationCookie: LOCATION_COOKIE,
+    defaultWishlistName: 'default-wishlist',
   },
   serverRuntimeConfig: {
     revalidate: 60,
