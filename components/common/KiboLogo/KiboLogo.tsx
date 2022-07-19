@@ -1,4 +1,5 @@
 import { Box } from '@mui/system'
+import { StaticImageData } from 'next/image'
 
 import KiboImage from '../KiboImage/KiboImage'
 import Logo from '@/public/kibo_logo.png'
