@@ -199,7 +199,7 @@ const getProductFulfillmentOptions = (
         (type) => type.toLowerCase() === option?.value?.toLowerCase()
       ).length === 0,
     details: (() => {
-      if (option.value === FormStates.SHIP) return option.details // checking if Directship
+      if (option.shortName === FormStates.SHIP) return option.details // checking if Directship
       if (purchaseLocation?.name) return `${option.details}: ${purchaseLocation.name}`
       return ''
     })(),
