@@ -10,6 +10,7 @@ import { queryClient } from '../lib/react-query/queryClient'
 import { publicRuntimeConfig } from '../next.config'
 import storefrontTheme from '../styles/theme'
 import i18n from './i18n'
+import { RouterContext } from 'next/dist/shared/lib/router-context' // next 12
 
 setConfig({ publicRuntimeConfig })
 
@@ -50,6 +51,7 @@ export const parameters = {
       date: /Date$/,
     },
   },
+
   viewport: {
     viewports: INITIAL_VIEWPORTS,
   },
@@ -62,5 +64,9 @@ export const parameters = {
       cart: [...handlers.cartHandlers],
       store: [...handlers.storeHandlers],
     },
+  },
+
+  nextRouter: {
+    Provider: RouterContext.Provider,
   },
 }
