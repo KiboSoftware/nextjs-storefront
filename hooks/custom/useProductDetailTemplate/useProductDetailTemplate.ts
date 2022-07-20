@@ -38,6 +38,12 @@ export const useProductDetailTemplate = (props: UseProductDetailTemplateProps) =
   useEffect(() => {
     setSelectedFulfillmentOption({
       method: '',
+      location: {},
+    })
+
+  useEffect(() => {
+    setSelectedFulfillmentOption({
+      method: '',
       location: {
         name: purchaseLocation?.name as string,
       },
