@@ -14,8 +14,8 @@ const getOrCreateCheckout = async (cartId?: string | null) => {
   return response?.checkout
 }
 
-export const useCheckoutMutation = () => {
+export const useCreateFromCartMutation = () => {
   return {
-    checkout: useMutation(getOrCreateCheckout),
+    createFromCart: useMutation(getOrCreateCheckout),
   }
 }

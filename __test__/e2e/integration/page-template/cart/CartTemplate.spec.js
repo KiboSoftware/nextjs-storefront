@@ -8,7 +8,6 @@ import { RouterContext } from 'next/dist/shared/lib/router-context'
 import { createMockRouter } from '@/__test__/utils/createMockRouter'
 import { renderWithQueryClient } from '@/__test__/utils/renderWithQueryClient'
 import * as stories from '@/components/page-templates/CartTemplate/CartTemplate.stories'
-
 const { Common } = composeStories(stories)
 
 const setup = (params) => {
@@ -26,11 +25,11 @@ const setup = (params) => {
   }
 }
 
-afterEach(() => {
-  cleanup()
-})
-
 describe('[components] CartTemplate integration', () => {
+  afterEach(() => {
+    cleanup
+  })
+
   it('should render component', async () => {
     const props = { ...Common.args }
     setup(props)

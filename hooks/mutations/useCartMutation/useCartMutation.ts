@@ -46,19 +46,23 @@ const addToCart = async (props: AddToCartInputParams) => {
   return response?.addItemToCurrentCart
 }
 const updateCartItemQuantity = async (params: UpdateCartItemQuantityParams) => {
-  const client = makeGraphQLClient()
-  const { cartItemId, quantity } = params
+  try {
+    const client = makeGraphQLClient()
+    const { cartItemId, quantity } = params
 
-  const variables = {
-    itemId: cartItemId,
-    quantity,
+    const variables = {
+      itemId: cartItemId,
+      quantity,
+    }
+    const response = await client.request({
+      document: updateCartItemQuantityMutation,
+      variables,
+    })
+
+    return response?.updateCartItemQuantity
+  } catch (err) {
+    console.error(err)
   }
-  const response = await client.request({
-    document: updateCartItemQuantityMutation,
-    variables,
-  })
-
-  return response?.updateCartItemQuantity
 }
 const removeCartItem = async (params: RemoveCartItemParams) => {
   const client = makeGraphQLClient()
@@ -83,11 +87,13 @@ export const useCartMutation = () => {
         queryClient.invalidateQueries(cartKeys.all)
       },
     }),
+
     updateCartItemQuantity: useMutation(updateCartItemQuantity, {
       onSuccess: () => {
         queryClient.invalidateQueries(cartKeys.all)
       },
     }),
+
     removeCartItem: useMutation(removeCartItem, {
       onSuccess: () => {
         queryClient.invalidateQueries(cartKeys.all)

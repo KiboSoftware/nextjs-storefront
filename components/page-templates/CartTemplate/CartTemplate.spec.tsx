@@ -15,7 +15,7 @@ jest.mock('../../common/OrderSummary/OrderSummary', () => OrderSummaryMock)
 
 jest.mock('@/hooks', () => ({
   useCheckout: jest.fn(() => ({})),
-  useCheckoutMutation: jest.fn(() => ({})),
+  useCreateFromCartMutation: jest.fn(() => ({})),
   useCartMutation: jest.fn(() => ({})),
   useCartQueries: jest.fn(() => ({})),
 }))

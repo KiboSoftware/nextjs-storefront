@@ -32,10 +32,6 @@ const styles = {
 const QuantityTextField = ({ quantity, handleCustomQuantity }: QuantityInputProps) => {
   const [itemQuantity, setItemQuantity] = useState<number | string>(quantity)
 
-  const handleChangeQuantityOnChange = (e: ChangeEvent<HTMLInputElement>) => {
-    setItemQuantity(e.target.value)
-  }
-
   const handleChangeQuantityOnBlur = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const newQuantity = Number(e.target.value)
 
@@ -51,7 +47,7 @@ const QuantityTextField = ({ quantity, handleCustomQuantity }: QuantityInputProp
   return (
     <TextField
       name="quantity"
-      onChange={handleChangeQuantityOnChange}
+      onChange={(e) => setItemQuantity(e.target.value)}
       onBlur={handleChangeQuantityOnBlur}
       value={itemQuantity}
       inputProps={{

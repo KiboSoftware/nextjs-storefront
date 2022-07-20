@@ -15,7 +15,7 @@ import { useRouter } from 'next/router'
 
 import { CartItemList } from '@/components/cart'
 import { PromoCodeBadge, OrderSummary } from '@/components/common'
-import { useCartQueries, useCheckoutMutation, useCartMutation } from '@/hooks'
+import { useCartQueries, useCreateFromCartMutation, useCartMutation } from '@/hooks'
 import { checkoutGetters } from '@/lib/getters'
 
 import type { Cart } from '@/lib/gql/types'
@@ -48,7 +48,7 @@ const CartTemplate = (props: CartTemplateProps) => {
   const theme = useTheme()
   const isMobileViewport = useMediaQuery(theme.breakpoints.down('md'))
   const router = useRouter()
-  const { checkout } = useCheckoutMutation()
+  const { createFromCart } = useCreateFromCartMutation()
   const { updateCartItemQuantity, removeCartItem } = useCartMutation()
 
   const cartItemCount = checkoutGetters.getCartItemCount(cart)
@@ -83,9 +83,9 @@ const CartTemplate = (props: CartTemplateProps) => {
   }
   const handleGotoCheckout = async () => {
     try {
-      const checkoutResponse = await checkout.mutateAsync(cart?.id)
-      if (checkoutResponse?.id) {
-        router.push(`/checkout/${checkoutResponse.id}`)
+      const createFromCartResponse = await createFromCart.mutateAsync(cart?.id)
+      if (createFromCartResponse?.id) {
+        router.push(`/checkout/${createFromCartResponse.id}`)
       }
       return false
     } catch (err) {
