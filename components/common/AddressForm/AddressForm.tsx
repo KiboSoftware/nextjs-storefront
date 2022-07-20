@@ -90,8 +90,6 @@ const AddressForm = (props: AddressFormProps) => {
     setValidateForm,
   } = props
 
-  const { setStepStatusIncomplete } = useCheckoutStepContext()
-
   // Define Variables and States
   const {
     control,
