@@ -27,7 +27,7 @@ interface ShippingProps {
 const ShippingStep = (props: ShippingProps) => {
   const { checkout } = props
 
-  const contact = checkout?.fulfillmentInfo?.fulfillmentContact as Contact
+  const contactProp = checkout?.fulfillmentInfo?.fulfillmentContact as Contact
 
   const orderItems = checkout?.items
   const shipItems = orderItems?.filter((item) => item?.fulfillmentMethod === 'Ship')
@@ -46,7 +46,7 @@ const ShippingStep = (props: ShippingProps) => {
   }
 
   const handleSaveAddress = async ({ contact }: { contact: Contact }) => {
-    const params = buildCheckoutShippingParams({ checkout, contact })
+    const params = buildCheckoutShippingParams({ checkout, contact: contact })
 
     try {
       await updateShippingInfo(params)
@@ -96,7 +96,7 @@ const ShippingStep = (props: ShippingProps) => {
       </Typography>
 
       <AddressForm
-        contact={contact}
+        contact={contactProp}
         isUserLoggedIn={false}
         saveAddressLabel={t('save-shipping-address')}
         setAutoFocus={true}
