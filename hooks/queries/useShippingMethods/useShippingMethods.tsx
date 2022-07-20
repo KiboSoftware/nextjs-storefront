@@ -23,12 +23,21 @@ const loadShippingMethods = async (checkoutId: string) => {
   return response?.orderShipmentMethods
 }
 
-export const useShippingMethods = (checkoutId: string): UseShippingMethodsResponse => {
+export const useShippingMethods = (
+  checkoutId: string | null | undefined
+): UseShippingMethodsResponse => {
   const {
     data = [],
     isLoading,
     isSuccess,
-  } = useQuery(shippingMethodKeys.detail(checkoutId), () => loadShippingMethods(checkoutId))
+  } = useQuery(
+    shippingMethodKeys.detail(checkoutId as string),
+    () => loadShippingMethods(checkoutId as string),
+    {
+      cacheTime: 0,
+      enabled: !!checkoutId,
+    }
+  )
 
   return { data, isLoading, isSuccess }
 }

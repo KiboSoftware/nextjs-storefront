@@ -10,7 +10,7 @@ import { queryClient } from '../lib/react-query/queryClient'
 import { publicRuntimeConfig } from '../next.config'
 import storefrontTheme from '../styles/theme'
 import i18n from './i18n'
-import { RouterContext } from 'next/dist/shared/lib/router-context' // next 12
+import { RouterContext } from 'next/dist/shared/lib/router-context'
 
 setConfig({ publicRuntimeConfig })
 

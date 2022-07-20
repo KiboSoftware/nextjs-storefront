@@ -33,12 +33,14 @@ const ShippingStep = (props: ShippingProps) => {
   const pickupItems = checkoutGetters.getPickupItems(checkout)
 
   const [validateForm, setValidateForm] = useState<boolean>(false)
+  const [checkoutId, setCheckoutId] = useState<string | null | undefined>(undefined)
+
   const { t } = useTranslation('checkout')
 
   const { stepStatus, setStepNext, setStepStatusComplete, setStepStatusIncomplete } =
     useCheckoutStepContext()
   const updateCheckoutShippingInfo = useUpdateCheckoutShippingInfo()
-  const { data: shippingMethods } = useShippingMethods(checkout.id as string)
+  const { data: shippingMethods } = useShippingMethods(checkoutId)
   const handleAddressValidationAndSave = () => setValidateForm(true)
 
   const updateShippingInfo = async (params: ShippingParams) => {
@@ -50,6 +52,7 @@ const ShippingStep = (props: ShippingProps) => {
 
     try {
       await updateShippingInfo(params)
+      setCheckoutId(checkout?.id)
     } catch (error) {
       console.error(error)
     }
