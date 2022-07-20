@@ -5,9 +5,9 @@ import { makeGraphQLClient } from '@/lib/gql/client'
 import { createWishlistMutation, createWishlistItemMutation } from '@/lib/gql/mutations'
 import { buildAddToWishlistItemInput } from '@/lib/helpers/buildAddToWishlistInput'
 import { wishlistKeys } from '@/lib/react-query/queryKeys'
-import { WishlistProductInput } from '@/lib/types'
+import type { WishlistProductInput } from '@/lib/types'
 
-import { Maybe, Wishlist } from '@/lib/gql/types'
+import type { Maybe, Wishlist } from '@/lib/gql/types'
 
 interface WishlistItemInputParams {
   product: WishlistProductInput
