@@ -111,8 +111,8 @@ const ProductDetailTemplate = (props: ProductDetailTemplateProps) => {
 
   const handleFulfillmentOptionChange = (value: string) => {
     setSelectedFulfillmentOption({
+      ...selectedFulfillmentOption,
       method: value,
-      location: value === 'Pickup' ? storeLocationGetters.getLocation(purchaseLocation) : undefined,
     })
   }
 

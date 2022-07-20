@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 
 import { useProductMutation } from '@/hooks'
 import { productGetters } from '@/lib/getters'
@@ -26,10 +26,17 @@ export const useProductDetailTemplate = (props: UseProductDetailTemplateProps) =
   const [selectedFulfillmentOption, setSelectedFulfillmentOption] =
     useState<SelectedFulfillmentOption>({
       method: '',
+      location: {},
+    })
+
+  useEffect(() => {
+    setSelectedFulfillmentOption({
+      method: '',
       location: {
         name: purchaseLocation?.name as string,
       },
     })
+  }, [purchaseLocation])
 
   const productCode = productGetters.getProductId(currentProduct)
 
