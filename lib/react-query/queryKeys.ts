@@ -26,3 +26,13 @@ export const productSearchResultKeys = {
 export const cartKeys = {
   all: ['cart'] as const,
 }
+
+export const locationKeys = {
+  locations: ['locations'] as const,
+  locationsParams: (params: { filter: string } | undefined) =>
+    [...locationKeys.locations, params] as const,
+
+  purchaseLocation: ['purchaseLocation'] as const,
+  purchaseLocationParams: (params: { filter: string } | undefined) =>
+    [...locationKeys.purchaseLocation, params] as const,
+}

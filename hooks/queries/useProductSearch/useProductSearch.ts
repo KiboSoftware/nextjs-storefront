@@ -3,10 +3,10 @@ import { useQuery } from 'react-query'
 import { makeGraphQLClient } from '@/lib/gql/client'
 import { searchProductsQuery } from '@/lib/gql/queries'
 import { buildProductSearchInput } from '@/lib/helpers/buildProductSearchInput'
+import { productSearchResultKeys } from '@/lib/react-query/queryKeys'
+import type { CategorySearchParams } from '@/lib/types'
 
 import type { ProductSearchResult } from '@/lib/gql/types'
-import type { CategorySearchParams } from '@/lib/types'
-import { productSearchResultKeys } from '@/lib/react-query/queryKeys'
 
 export interface UseProductSearchResponse {
   data: ProductSearchResult

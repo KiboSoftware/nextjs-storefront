@@ -11,6 +11,9 @@ import { categoryTreeDataMock } from '@/__mocks__/stories/categoryTreeDataMock'
 nextRouter.useRouter = jest.fn()
 const mockCategoryTreeData = categoryTreeDataMock
 jest.mock('next/config', () => () => ({
+  publicRuntimeConfig: {
+    maxCookieAge: 10,
+  },
   serverRuntimeConfig: {
     revalidate: 60,
     pageSize: 100,

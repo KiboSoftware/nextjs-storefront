@@ -60,6 +60,7 @@ export const parameters = {
       searchSuggestions: [...handlers.searchSuggestionHandlers],
       user: [...handlers.userHandlers],
       cart: [...handlers.cartHandlers],
+      store: [...handlers.storeHandlers],
     },
   },
 }

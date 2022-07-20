@@ -28,7 +28,7 @@ describe('[components] (LoginDialog)', () => {
 
   it('should render component', async () => {
     const { user } = setup()
-    const title = screen.getByTestId('login-header')
+    const title = screen.getByText('log-in')
     const closeIcon = screen.getByRole('button', { name: 'close' })
     const loginContent = screen.getByTestId('kibo-login-cotent')
 
