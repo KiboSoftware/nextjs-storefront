@@ -3,6 +3,7 @@ import { useEffect, useState } from 'react'
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
 import getConfig from 'next/config'
 import { useRouter } from 'next/router'
+import nextI18NextConfig from '@/next-i18next.config'
 
 import { ProductListingTemplate } from '@/components/page-templates'
 import { useProductSearch } from '@/hooks'
@@ -35,7 +36,7 @@ export const getServerSideProps: GetServerSideProps = async (
       results: response?.data?.products || [],
       categoriesTree,
       category,
-      ...(await serverSideTranslations(locale as string, ['product', 'common'])),
+      ...(await serverSideTranslations(locale as string, ['product', 'common'], nextI18NextConfig)),
     },
   }
 }
