@@ -98,6 +98,10 @@ const ShippingStep = (props: ShippingProps) => {
   }
 
   useEffect(() => {
+    if (!validateForm) setStepStatusIncomplete()
+  }, [validateForm])
+
+  useEffect(() => {
     if (stepStatus === STEP_STATUS.SUBMIT) {
       setStepStatusComplete()
       setStepNext()
