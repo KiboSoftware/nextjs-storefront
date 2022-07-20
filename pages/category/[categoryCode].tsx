@@ -4,12 +4,12 @@ import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
 import getConfig from 'next/config'
 import { useRouter } from 'next/router'
 
+import nextI18NextConfig from '../../next-i18next.config'
 import { ProductListingTemplate } from '@/components/page-templates'
 import { useProductSearch } from '@/hooks'
 import { productSearch, categoryTreeSearchByCode } from '@/lib/api/operations'
 import getCategoryTree from '@/lib/api/operations/get-category-tree'
 import { productSearchGetters, facetGetters } from '@/lib/getters'
-import nextI18NextConfig from '@/next-i18next.config'
 import type { CategorySearchParams } from '@/lib/types'
 
 import type { PrCategory, ProductSearchResult, Facet, Product, FacetValue } from '@/lib/gql/types'
