@@ -187,38 +187,28 @@ const ProductDetailTemplate = (props: ProductDetailTemplateProps) => {
         },
         currentWishlist,
       }
-      if (isAuthenticated) {
-        if (!isProductInWishlist) {
-          const addToWishlistResponse = await addToWishlist.mutateAsync({
-            ...variables,
-            customerAccountId: customerAccount?.id as number,
-          })
 
-          if (addToWishlistResponse.id) {
-            showModal({
-              Component: WishlistPopover,
-              props: {
-                isInWishlist: true,
-                target: wislistButton,
-              },
-            })
-          }
-        } else {
-          const removeWishlistItemResponse = await removeWishlistItem.mutateAsync(variables)
-
-          if (removeWishlistItemResponse) {
-            showModal({
-              Component: WishlistPopover,
-              props: {
-                isInWishlist: false,
-                target: wislistButton,
-              },
-            })
-          }
-        }
-      } else {
+      if (!isAuthenticated) {
         showModal({ Component: LoginDialog })
+        return
       }
+
+      if (!isProductInWishlist) {
+        await addToWishlist.mutateAsync({
+          ...variables,
+          customerAccountId: customerAccount?.id as number,
+        })
+      } else {
+        await removeWishlistItem.mutateAsync(variables)
+      }
+
+      showModal({
+        Component: WishlistPopover,
+        props: {
+          isInWishlist: !isProductInWishlist,
+          target: wislistButton,
+        },
+      })
     } catch (err) {}
   }
 
