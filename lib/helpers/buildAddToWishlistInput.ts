@@ -1,5 +1,5 @@
 import { MutationCreateWishlistItemArgs } from '../gql/types'
-import { WishlistProductInput } from '@/hooks/mutations/useWishlistMutation/useWishlistMutation'
+import { WishlistProductInput } from '@/hooks'
 
 export const buildAddToWishlistItemInput = (
   product: WishlistProductInput,

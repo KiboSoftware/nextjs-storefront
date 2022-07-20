@@ -30,7 +30,8 @@ import {
   useCartMutation,
   useUserQueries,
   useWishlistQueries,
-  useWishlistMutation,
+  useAddToWishlistMutation,
+  useRemoveWishlistItemMutation,
 } from '@/hooks'
 import { productGetters, wishlistGetters } from '@/lib/getters'
 import type { ProductCustom, BreadCrumb, PriceRange, LocationCustom } from '@/lib/types'
@@ -56,7 +57,8 @@ const ProductDetailTemplate = (props: ProductDetailTemplateProps) => {
   const { data: purchaseLocation } = usePurchaseLocation()
   const { data: customerAccount } = useUserQueries()
   const { data: currentWishlist } = useWishlistQueries()
-  const { addToWishlist, removeWishlistItem } = useWishlistMutation()
+  const { addToWishlist } = useAddToWishlistMutation()
+  const { removeWishlistItem } = useRemoveWishlistItemMutation()
   const { isAuthenticated } = useAuthContext()
 
   // Data hook
