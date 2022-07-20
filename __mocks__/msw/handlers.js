@@ -24,13 +24,13 @@ export const checkoutHandlers = [
   }),
 
   // Details Step
-  graphql.mutation('updatePersonalDetails', (_req, res, ctx) => {
+  graphql.mutation('setPersonalInfo', (_req, res, ctx) => {
     return res(ctx.data(orderMock))
   }),
 
   // Shipping Step
   graphql.mutation('setShippingInformation', (_req, res, ctx) => {
-    return res(ctx.data({ updateOrderFulfillmentInfo: orderMock.fulfillmentInfo }))
+    return res(ctx.data({ updateOrderFulfillmentInfo: orderMock.checkout.fulfillmentInfo }))
   }),
 
   graphql.query('getShippingRates', (_req, res, ctx) => {
