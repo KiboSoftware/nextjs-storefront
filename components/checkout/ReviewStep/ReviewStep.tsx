@@ -14,12 +14,10 @@ import {
 } from '@mui/material'
 import { useTranslation } from 'next-i18next'
 
-import type { Action } from '@/components/checkout/DetailsStep/DetailsStep'
 import OrderPrice from '@/components/common/OrderPrice/OrderPrice'
 import type { OrderPriceProps } from '@/components/common/OrderPrice/OrderPrice'
 import ProductItemList from '@/components/common/ProductItemList/ProductItemList'
 import { useCheckoutStepContext, STEP_STATUS } from '@/context'
-import { FormStates } from '@/lib/constants'
 import { checkoutGetters } from '@/lib/getters'
 
 import type { Order } from '@/lib/gql/types'

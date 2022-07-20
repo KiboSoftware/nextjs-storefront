@@ -2,10 +2,8 @@ import React from 'react'
 
 import { composeStories } from '@storybook/testing-react'
 import { render, screen, act, fireEvent } from '@testing-library/react'
-import userEvent from '@testing-library/user-event'
 
 import * as stories from '@/components/checkout/PaymentStep/PaymentStep.stories'
-import { FormStates } from '@/lib/constants'
 
 const { Common } = composeStories(stories)
 

@@ -33,7 +33,6 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
 
 const CheckoutPage: NextPage<CheckoutPageProps> = (props) => {
   const { t } = useTranslation(['checkout', 'common'])
-  // const steps = [t('details'), t('shipping'), t('payment'), t('review')]
   const steps = [t('common:details'), t('shipping'), t('payment'), t('review')]
 
   return (

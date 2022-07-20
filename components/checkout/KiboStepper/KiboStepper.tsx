@@ -11,7 +11,7 @@ interface StepperProps {
 const KiboStepper = (props: StepperProps) => {
   const { children } = props
 
-  const { activeStep, stepStatus, steps } = useCheckoutStepContext()
+  const { activeStep, steps } = useCheckoutStepContext()
 
   const totalSteps = () => {
     return steps.length

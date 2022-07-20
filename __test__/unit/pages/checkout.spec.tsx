@@ -1,9 +1,5 @@
 import { render, screen } from '@testing-library/react'
-import { useTranslation } from 'next-i18next'
-import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
-import * as nextRouter from 'next/router'
 
-import { CheckoutStepProvider } from '@/context/CheckoutStepContext/CheckoutStepContext'
 import * as operations from '@/lib/api/operations'
 import CheckoutPage, { getServerSideProps } from '@/pages/checkout/[checkoutId]'
 

@@ -9,10 +9,9 @@ import { AddressForm } from '@/components/common'
 import type { Contact } from '@/components/common/AddressForm/AddressForm'
 import { useCheckoutStepContext, STEP_STATUS } from '@/context'
 import { useUpdateCheckoutShippingInfo, useShippingMethods } from '@/hooks'
-import { checkoutGetters } from '@/lib/getters'
 import { buildCheckoutShippingParams, ShippingParams } from '@/lib/helpers'
 
-import type { Order, CrOrderItem, Maybe } from '@/lib/gql/types'
+import type { Order, CrOrderItem } from '@/lib/gql/types'
 
 const buttonStyle = {
   width: '100%',

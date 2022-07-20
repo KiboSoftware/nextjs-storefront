@@ -16,7 +16,7 @@ export interface Params {
 export const buildCheckoutShippingParams = (params: Params): ShippingParams => {
   const { checkout, contact, email, shippingMethodCode, shippingMethodName } = params
 
-  const order = {
+  return {
     orderId: checkout.id,
 
     fulfillmentInfoInput: {
@@ -34,6 +34,4 @@ export const buildCheckoutShippingParams = (params: Params): ShippingParams => {
         : checkout?.fulfillmentInfo?.shippingMethodName,
     } as FulfillmentInfoInput,
   } as ShippingParams
-
-  return order
 }

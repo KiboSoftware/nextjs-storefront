@@ -39,7 +39,7 @@ export const checkoutHandlers = [
 
   // Payment Step
 
-  // Order Reivew Sep
+  // Order Reivew Step
 ]
 
 export const productHandlers = [
