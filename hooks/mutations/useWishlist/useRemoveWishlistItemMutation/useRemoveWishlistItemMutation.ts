@@ -3,15 +3,9 @@ import { useMutation, useQueryClient } from 'react-query'
 import { makeGraphQLClient } from '@/lib/gql/client'
 import { deleteWishlistItemMutation } from '@/lib/gql/mutations'
 import { wishlistKeys } from '@/lib/react-query/queryKeys'
+import { WishlistProductInput } from '@/lib/types'
 
-import { Maybe, ProductOption, Wishlist } from '@/lib/gql/types'
-
-interface WishlistProductInput {
-  options: ProductOption[]
-  productCode: string
-  isPackagedStandAlone: boolean
-  variationProductCode?: string
-}
+import { Maybe, Wishlist } from '@/lib/gql/types'
 
 interface RemoveWishlistItemInputParams {
   product: WishlistProductInput

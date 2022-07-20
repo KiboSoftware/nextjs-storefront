@@ -17,5 +17,4 @@ const Template: ComponentStory<typeof WishlistPopover> = ({ ...args }) => (
 export const Common = Template.bind({})
 Common.args = {
   isInWishlist: true,
-  target: null,
 }

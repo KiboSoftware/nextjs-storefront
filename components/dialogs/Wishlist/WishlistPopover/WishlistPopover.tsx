@@ -7,7 +7,6 @@ import { useTranslation } from 'next-i18next'
 import { useRouter } from 'next/router'
 interface WishlistPopoverProps {
   isInWishlist: boolean
-  target: null | HTMLElement
 }
 
 const styles = {
@@ -44,16 +43,14 @@ const styles = {
 }
 
 const WishlistPopover = (props: WishlistPopoverProps) => {
-  const { isInWishlist, target } = props
+  const { isInWishlist } = props
   const { t } = useTranslation('common')
   const router = useRouter()
   const theme = useTheme()
   const mdScreen = useMediaQuery(theme.breakpoints.up('md'))
-  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(target)
-  const [isOpen, setIsOpen] = useState<boolean>(Boolean(anchorEl))
+  const [isOpen, setIsOpen] = useState<boolean>(false)
 
   const handleClose = () => {
-    setAnchorEl(null)
     setIsOpen(false)
   }
 

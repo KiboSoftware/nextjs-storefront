@@ -1,4 +1,4 @@
-import React, { MouseEvent } from 'react'
+import React from 'react'
 
 import { StarRounded } from '@mui/icons-material'
 import FavoriteBorderRoundedIcon from '@mui/icons-material/FavoriteBorderRounded'
@@ -177,9 +177,8 @@ const ProductDetailTemplate = (props: ProductDetailTemplateProps) => {
     }
   }
 
-  const handleWishList = async (event: MouseEvent<HTMLElement>) => {
+  const handleWishList = async () => {
     try {
-      const wislistButton = event.currentTarget
       const variables = {
         product: {
           productCode,
@@ -208,7 +207,6 @@ const ProductDetailTemplate = (props: ProductDetailTemplateProps) => {
         Component: WishlistPopover,
         props: {
           isInWishlist: !isProductInWishlist,
-          target: wislistButton,
         },
       })
     } catch (err) {}
