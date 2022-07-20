@@ -92,7 +92,7 @@ const CategoryFilterByMobile = (props: CategoryFilterByMobileProps) => {
       <Typography variant="h1" sx={{ fontWeight: 'bold' }}>
         {header ? header : breadCrumbsList[breadCrumbsList.length - 1].text}
       </Typography>
-      <Box sx={{ ...styles.upperTotal }}>{t('results', { totalResults })}</Box>
+      <Box sx={{ ...styles.upperTotal }}>{t('results', { count: totalResults })}</Box>
     </>
   )
 
@@ -137,7 +137,7 @@ const CategoryFilterByMobile = (props: CategoryFilterByMobileProps) => {
         </Box>
         <Box sx={{ ...styles.lowerTotal }}>
           {isLoading && <Skeleton variant="rectangular" height={23} width={74} />}
-          {!isLoading && <Box>{t('results', { totalResults })}</Box>}
+          {!isLoading && <Box>{t('results', { count: totalResults })}</Box>}
         </Box>
       </Box>
     </>

@@ -4,37 +4,30 @@ import { useTranslation } from 'next-i18next'
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
 import getConfig from 'next/config'
 import { useRouter } from 'next/router'
-import { useQuery } from 'react-query'
 
 import { ProductListingTemplate } from '@/components/page-templates'
-import { categoryTreeSearchByCode, productSearch, getCategoryTree } from '@/lib/api/operations'
+import { useProductSearch } from '@/hooks'
+import { productSearch } from '@/lib/api/operations'
 import { facetGetters, productSearchGetters } from '@/lib/getters'
-import { productSearchResultKeys } from '@/lib/react-query/queryKeys'
 import type { CategorySearchParams } from '@/lib/types'
 
-import type { Facet, FacetValue, PrCategory, Product, ProductSearchResult } from '@/lib/gql/types'
+import type { Facet, FacetValue, Product, ProductSearchResult } from '@/lib/gql/types'
 import type { NextPage, GetServerSidePropsContext, GetServerSideProps } from 'next'
 
 interface SearchPageType {
   results: ProductSearchResult
-  categoriesTree?: PrCategory[]
-  category: { categories: PrCategory[] }
 }
 
 export const getServerSideProps: GetServerSideProps = async (
   context: GetServerSidePropsContext
 ) => {
   const response = await productSearch(context.query as unknown as CategorySearchParams)
-  const categoriesTree = await getCategoryTree()
-  const category = await categoryTreeSearchByCode(context.query)
   const { locale, res } = context
 
   res.setHeader('Cache-Control', 'public, s-maxage=10, stale-while-revalidate=59')
   return {
     props: {
       results: response?.data?.products || [],
-      categoriesTree,
-      category,
       ...(await serverSideTranslations(locale as string, ['product', 'common'])),
     },
   }
@@ -45,23 +38,17 @@ const SearchPage: NextPage<SearchPageType> = (props) => {
   const router = useRouter()
   const { publicRuntimeConfig } = getConfig()
 
-  const [searchParams, setSearchParams] = useState<string>(router.asPath.split('?')[1])
-
-  const performSearch = async () => {
-    const response = await fetch(`/api/search?${searchParams}`)
-    const responseData = await response.json()
-    return responseData.results
-  }
-  const { data: searchPageResults, isFetching } = useQuery(
-    productSearchResultKeys.searchParams(searchParams),
-    performSearch,
-    { initialData: props.results || [], refetchOnWindowFocus: false }
+  const [searchParams, setSearchParams] = useState<CategorySearchParams>(
+    router.query as unknown as CategorySearchParams
   )
-  const breadcrumbs = facetGetters.getBreadcrumbs(props.category)
+
+  const { data: searchPageResults, isFetching } = useProductSearch(searchParams, props.results)
+
+  const breadcrumbs = [{ text: 'Home', link: '/' }]
   const searchPageHeading = router?.query?.search
     ? t('search-results', {
         m: `${searchPageResults?.totalCount}`,
-        n: `'${router?.query?.search}'`,
+        n: `"${router?.query?.search}"`,
       })
     : breadcrumbs[breadcrumbs.length - 1].text
 
@@ -78,29 +65,37 @@ const SearchPage: NextPage<SearchPageType> = (props) => {
   const categoryFacet = productSearchGetters.getCategoryFacet(searchPageResults, '')
 
   const changeSorting = (sort: string) => {
-    router.push({
-      pathname: router?.pathname,
-      query: {
-        ...router.query,
-        sort,
+    router.push(
+      {
+        pathname: router?.pathname,
+        query: {
+          ...router.query,
+          sort,
+        },
       },
-    })
+      undefined,
+      { scroll: false }
+    )
   }
 
   const changePagination = () => {
     const pageSize = searchPageResults?.pageSize + publicRuntimeConfig.productListing.pageSize
-    router.push({
-      pathname: router?.pathname,
-      query: {
-        ...router.query,
-        pageSize,
+    router.push(
+      {
+        pathname: router?.pathname,
+        query: {
+          ...router.query,
+          pageSize,
+        },
       },
-    })
+      undefined,
+      { scroll: false }
+    )
   }
 
   useEffect(() => {
-    setSearchParams(router.asPath.split('?')[1])
-  }, [router.asPath.split('?')[1]])
+    setSearchParams(router.query as unknown as CategorySearchParams)
+  }, [router.query])
   return (
     <>
       <ProductListingTemplate

@@ -18,14 +18,18 @@ export const useUpdateRoutes = () => {
       .reduce(reduceFilters(query as Record<string, string>), {})
   }
   const changeFilters = (filters: string) => {
-    router.push({
-      pathname: router?.pathname,
-      query: {
-        ...router.query,
-        ...getFiltersDataFromUrl(false),
-        filters,
+    router.push(
+      {
+        pathname: router?.pathname,
+        query: {
+          ...router.query,
+          ...getFiltersDataFromUrl(false),
+          filters,
+        },
       },
-    })
+      undefined,
+      { scroll: false }
+    )
   }
 
   const updateRoute = (queryParam: string) => {

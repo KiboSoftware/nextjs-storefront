@@ -150,6 +150,7 @@ describe('[components] - SearchSuggestions Integration', () => {
     await user.type(input, 'T')
     await user.type(input, '{enter}')
 
+    expect(push).toHaveBeenCalledWith({ pathname: '/search', query: { search: 'T' } })
     expect(screen.queryByRole('contentinfo')).not.toBeInTheDocument()
   })
 })

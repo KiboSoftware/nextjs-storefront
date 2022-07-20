@@ -9,7 +9,7 @@ interface SearchProps {
   placeHolder?: string
   searchTerm: string
   onSearch: (searchText: string) => void
-  onKeyEnter: (searchText: string) => void
+  onKeyEnter?: (searchText: string) => void
   showClearButton: boolean
   childInputRef?: RefObject<HTMLInputElement | undefined>
   inputProps?: any
@@ -62,7 +62,7 @@ const SearchBar = (props: SearchProps) => {
         onKeyPress={(e) => {
           if (e.key === 'Enter') {
             e.preventDefault()
-            onKeyEnter(searchTerm)
+            onKeyEnter?.(searchTerm)
           }
         }}
         size="small"

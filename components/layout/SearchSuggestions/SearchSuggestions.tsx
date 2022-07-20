@@ -48,6 +48,11 @@ const style = {
   } as SxProps<Theme> | undefined,
 }
 
+interface SearchSuggestionsProps {
+  onEnterSearch?: () => void
+  isViewSearchPortal?: boolean
+}
+
 interface ListItemProps {
   code?: string
   name?: string
@@ -79,7 +84,8 @@ const Content = (props: ListItemProps) => {
   )
 }
 
-const SearchSuggestions = () => {
+const SearchSuggestions = (props: SearchSuggestionsProps) => {
+  const { onEnterSearch, isViewSearchPortal } = props
   const { publicRuntimeConfig } = getConfig()
   const router = useRouter()
 
@@ -91,6 +97,7 @@ const SearchSuggestions = () => {
   const handleSearch = (userEnteredValue: string) => setSearchTerm(userEnteredValue)
   const handleEnterSearch = (value: string) => {
     router.push({ pathname: '/search', query: { search: value } })
+    if (isViewSearchPortal) onEnterSearch?.()
     handleClose()
   }
 

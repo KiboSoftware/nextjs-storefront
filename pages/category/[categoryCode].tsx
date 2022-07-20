@@ -67,24 +67,32 @@ const CategoryPage: NextPage<CategoryPageType> = (props) => {
   )
 
   const changeSorting = (sort: string) => {
-    router.push({
-      pathname: router?.pathname,
-      query: {
-        ...router.query,
-        sort,
+    router.push(
+      {
+        pathname: router?.pathname,
+        query: {
+          ...router.query,
+          sort,
+        },
       },
-    })
+      undefined,
+      { scroll: false }
+    )
   }
 
   const changePagination = () => {
     const pageSize = productSearchResult?.pageSize + publicRuntimeConfig.productListing.pageSize
-    router.push({
-      pathname: router?.pathname,
-      query: {
-        ...router.query,
-        pageSize,
+    router.push(
+      {
+        pathname: router?.pathname,
+        query: {
+          ...router.query,
+          pageSize,
+        },
       },
-    })
+      undefined,
+      { scroll: false }
+    )
   }
 
   useEffect(() => {

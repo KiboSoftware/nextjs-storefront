@@ -289,7 +289,9 @@ const ProductListingTemplate = (props: ProductListingTemplateProps) => {
           <FullWidthDivider />
           <Box sx={{ ...styles.mainSection }}>
             <Box sx={{ ...styles.sideBar }}>
-              {(categoryFacet.header || categoryFacet?.childrenCategories?.length) && (
+              {(categoryFacet.header ||
+                (categoryFacet?.childrenCategories &&
+                  categoryFacet?.childrenCategories?.length > 0)) && (
                 <CategoryFacet categoryFacet={categoryFacet} breadcrumbs={breadCrumbsList} />
               )}
               <FacetList
@@ -314,7 +316,7 @@ const ProductListingTemplate = (props: ProductListingTemplateProps) => {
                       </FilterTiles>
                     )}
                   </Box>
-                  <Box sx={{ ...styles.totalResults }}>{t('results', { totalResults })}</Box>
+                  <Box sx={{ ...styles.totalResults }}>{t('results', { count: totalResults })}</Box>
                 </Box>
               )}
               {!isLoading ? (
