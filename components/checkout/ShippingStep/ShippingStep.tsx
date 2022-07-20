@@ -9,6 +9,7 @@ import { AddressForm } from '@/components/common'
 import type { Contact } from '@/components/common/AddressForm/AddressForm'
 import { useCheckoutStepContext, STEP_STATUS } from '@/context'
 import { useUpdateCheckoutShippingInfo, useShippingMethods } from '@/hooks'
+import { checkoutGetters } from '@/lib/getters'
 import { buildCheckoutShippingParams, ShippingParams } from '@/lib/helpers'
 
 import type { Order, CrOrderItem } from '@/lib/gql/types'
@@ -27,16 +28,15 @@ interface ShippingProps {
 const ShippingStep = (props: ShippingProps) => {
   const { checkout } = props
 
-  const contactProp = checkout?.fulfillmentInfo?.fulfillmentContact as Contact
-
-  const orderItems = checkout?.items
-  const shipItems = orderItems?.filter((item) => item?.fulfillmentMethod === 'Ship')
-  const pickupItems = orderItems?.filter((item) => item?.fulfillmentMethod === 'Pickup')
+  const contactProp = checkoutGetters.getShippingContact(checkout) as Contact
+  const shipItems = checkoutGetters.getShipItems(checkout)
+  const pickupItems = checkoutGetters.getPickupItems(checkout)
 
   const [validateForm, setValidateForm] = useState<boolean>(false)
   const { t } = useTranslation('checkout')
-  const { stepStatus, setStepNext, setStepStatusComplete } = useCheckoutStepContext()
 
+  const { stepStatus, setStepNext, setStepStatusComplete, setStepStatusIncomplete } =
+    useCheckoutStepContext()
   const updateCheckoutShippingInfo = useUpdateCheckoutShippingInfo()
   const { data: shippingMethods } = useShippingMethods(checkout.id as string)
   const handleAddressValidationAndSave = () => setValidateForm(true)
@@ -81,6 +81,10 @@ const ShippingStep = (props: ShippingProps) => {
   const handleStoreLocatorClick = () => {
     /**/
   }
+
+  useEffect(() => {
+    if (!validateForm) setStepStatusIncomplete()
+  }, [validateForm])
 
   useEffect(() => {
     if (stepStatus === STEP_STATUS.SUBMIT) {

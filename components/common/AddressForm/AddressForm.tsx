@@ -57,7 +57,6 @@ interface AddressFormProps {
   setValidateForm: (isValidForm: boolean) => void
 }
 
-// Component
 const schema = yup.object().shape({
   firstName: yup.string().required('This field is required'),
   lastNameOrSurname: yup.string().required('This field is required'),
@@ -74,6 +73,7 @@ const schema = yup.object().shape({
   }),
 })
 
+// Component
 const AddressForm = (props: AddressFormProps) => {
   const { publicRuntimeConfig } = getConfig()
 
@@ -88,8 +88,6 @@ const AddressForm = (props: AddressFormProps) => {
     setValidateForm,
   } = props
 
-  const { setStepStatusIncomplete } = useCheckoutStepContext()
-
   // Define Variables and States
   const {
     control,
@@ -103,7 +101,6 @@ const AddressForm = (props: AddressFormProps) => {
     shouldFocusError: true,
   })
 
-  // Declare custom hooks, functions, event handlers
   const [saveAddress, setSaveAddress] = useState<boolean>(false)
   const { t } = useTranslation('checkout')
 
@@ -120,17 +117,10 @@ const AddressForm = (props: AddressFormProps) => {
     onSaveAddress({ contact: formData, saveAddress })
   }
 
-  // form is invalid, notify parent form is incomplete
-  const onInvalidForm = () => {
-    setStepStatusIncomplete()
-    setValidateForm(false)
-  }
+  const onInvalidForm = () => setValidateForm(false)
 
   useEffect(() => {
-    // if form is valid, onSubmit callback
-    if (validateForm) {
-      handleSubmit(onValid, onInvalidForm)()
-    }
+    if (validateForm) handleSubmit(onValid, onInvalidForm)()
   }, [validateForm])
 
   return (

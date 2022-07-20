@@ -102,7 +102,8 @@ const PaymentStep = (props: PaymentStepProps) => {
   const [paymentDetails, setPaymentDetails] = useState<CardPaymentDetails>(cardPaymentData)
   const [billingAddress, setBillingAddress] = useState<Address>(addressData)
   const [validateForm, setValidateForm] = useState<boolean>(false)
-  const { stepStatus, setStepNext, setStepStatusComplete } = useCheckoutStepContext()
+  const { stepStatus, setStepNext, setStepStatusComplete, setStepStatusIncomplete } =
+    useCheckoutStepContext()
 
   const handleCardData = (cardData: CardData) => {
     setPaymentDetails({
@@ -135,6 +136,10 @@ const PaymentStep = (props: PaymentStepProps) => {
       cardInput: { ...paymentDetails },
     }
   }
+
+  useEffect(() => {
+    if (!validateForm) setStepStatusIncomplete()
+  }, [validateForm])
 
   useEffect(() => {
     if (stepStatus === STEP_STATUS.SUBMIT) {
