@@ -26,10 +26,17 @@ export const useProductDetailTemplate = (props: UseProductDetailTemplateProps) =
   const [selectedFulfillmentOption, setSelectedFulfillmentOption] =
     useState<SelectedFulfillmentOption>({
       method: '',
+      location: {},
+    })
+
+  useEffect(() => {
+    setSelectedFulfillmentOption({
+      method: '',
       location: {
         name: purchaseLocation?.name as string,
       },
     })
+  }, [purchaseLocation])
 
   useEffect(() => {
     if (purchaseLocation?.name !== selectedFulfillmentOption?.location?.name) {
