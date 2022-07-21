@@ -4,12 +4,17 @@ import { composeStories } from '@storybook/testing-react'
 import { render, screen, act, fireEvent } from '@testing-library/react'
 
 import * as stories from '@/components/checkout/PaymentStep/PaymentStep.stories'
+import { CheckoutStepProvider } from '@/context'
 
 const { Common } = composeStories(stories)
 
 describe('[components] PaymentStep', () => {
   const setup = () => {
-    render(<Common {...Common.args} />)
+    render(
+      <CheckoutStepProvider steps={['details', 'shipping', 'payment', 'review']}>
+        <Common {...Common.args} />
+      </CheckoutStepProvider>
+    )
   }
   const emptyInput = { target: { value: '' } }
 
@@ -130,7 +135,11 @@ describe('[components] PaymentStep', () => {
   })
 
   it('should save payment not to be visible if user not logged in', () => {
-    render(<Common {...Common.args} isUserLoggedIn={false} />)
+    render(
+      <CheckoutStepProvider steps={['details', 'shipping', 'payment', 'review']}>
+        <Common {...Common.args} isUserLoggedIn={false} />
+      </CheckoutStepProvider>
+    )
 
     const savePaymentMethod = screen.queryByTestId('save-payment')
 

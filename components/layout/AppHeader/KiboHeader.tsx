@@ -25,7 +25,6 @@ import { useRouter } from 'next/router'
 
 import { HeaderAction, KiboLogo } from '@/components/common'
 import { MyStoreDialog, StoreLocatorDialog } from '@/components/dialogs'
-import { MyStoreDialog, StoreLocatorDialog } from '@/components/dialogs/Store'
 import { MegaMenu, HamburgerMenu, SearchSuggestions, LoginDialog } from '@/components/layout'
 import { useAuthContext, useModalContext } from '@/context'
 import { useCartQueries, useCategoryTree, usePurchaseLocation } from '@/hooks'

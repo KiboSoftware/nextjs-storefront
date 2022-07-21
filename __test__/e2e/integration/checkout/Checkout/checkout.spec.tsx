@@ -73,9 +73,7 @@ describe('[components] Checkout integration', () => {
       })
 
       await user.click(goToShipiingButton)
-      const shippingComponent = screen.getByRole('heading', {
-        name: /shipping/i,
-      })
+      const shippingComponent = await screen.findByTestId('checkout-shipping')
 
       expect(shippingComponent).toBeVisible()
     })
@@ -91,9 +89,9 @@ describe('[components] Checkout integration', () => {
 
       await user.click(goToPamentButton)
 
-      const paymentStep = screen.getByTestId('checkout-payment')
+      const paymentStep = await screen.findByTestId('checkout-payment')
 
-      expect(paymentStep).toBeInTheDocument()
+      expect(paymentStep).toBeVisible()
     })
 
     it('should enable Details Step when user clicks on Go Back button', async () => {
@@ -105,9 +103,9 @@ describe('[components] Checkout integration', () => {
 
       await user.click(goBackButton)
 
-      const detailsStep = screen.getByTestId('checkout-details')
+      const detailsStep = await screen.findByTestId('checkout-details')
 
-      expect(detailsStep).toBeInTheDocument()
+      expect(detailsStep).toBeVisible()
     })
 
     it('should able to save Shipping Address when user clicks on Save Shipping Address button', async () => {
@@ -142,7 +140,7 @@ describe('[components] Checkout integration', () => {
       await user.click(saveShippingAddressButton)
       const rate = `${shippingRateMock.orderShipmentMethods[0].shippingMethodName} $${shippingRateMock.orderShipmentMethods[0].price}`
 
-      const button = screen.getByRole('button', { name: 'Select Shipping Option' })
+      const button = await screen.findByRole('button', { name: 'Select Shipping Option' })
       fireEvent.mouseDown(button)
       const options = within(screen.getByRole('listbox'))
       const option = options.getByText(rate)
@@ -161,9 +159,9 @@ describe('[components] Checkout integration', () => {
 
       await user.click(goBackButton)
 
-      const shippingStep = screen.getByTestId('checkout-shipping')
+      const shippingStep = await screen.findByTestId('checkout-shipping')
 
-      expect(shippingStep).toBeInTheDocument()
+      expect(shippingStep).toBeVisible()
     })
   })
 
@@ -191,7 +189,7 @@ describe('[components] Checkout integration', () => {
 
       await user.click(goBackButton)
 
-      await waitFor(() => expect(reviewComponent).not.toBeInTheDocument())
+      await waitFor(() => expect(reviewComponent).not.toBeVisible())
     })
 
     it('should go to details step when click on edit personal details', async () => {
@@ -204,7 +202,7 @@ describe('[components] Checkout integration', () => {
       await user.click(editPersonalDetails)
 
       personalDetailsStep = screen.getByTestId(/checkout-details/i)
-      await waitFor(() => expect(personalDetailsStep).toBeInTheDocument())
+      await waitFor(() => expect(personalDetailsStep).toBeVisible())
     })
 
     it('should go to shipping step when click on edit shipping details', async () => {
@@ -217,7 +215,7 @@ describe('[components] Checkout integration', () => {
       await user.click(editShippingDetails)
 
       shippingStep = screen.getByTestId(/checkout-shipping/i)
-      await waitFor(() => expect(shippingStep).toBeInTheDocument())
+      await waitFor(() => expect(shippingStep).toBeVisible())
     })
 
     it('should go to payment step when click on edit billing address', async () => {
@@ -230,7 +228,7 @@ describe('[components] Checkout integration', () => {
       await user.click(editBillingDetails)
 
       paymentStep = screen.getByTestId(/checkout-payment/i)
-      await waitFor(() => expect(paymentStep).toBeInTheDocument())
+      await waitFor(() => expect(paymentStep).toBeVisible())
     })
 
     it('should go to payment step when click on edit payment method', async () => {
@@ -243,7 +241,7 @@ describe('[components] Checkout integration', () => {
       await user.click(editPaymentMethod)
 
       paymentStep = screen.getByTestId(/checkout-payment/i)
-      await waitFor(() => expect(paymentStep).toBeInTheDocument())
+      await waitFor(() => expect(paymentStep).toBeVisible())
     })
   })
 })
