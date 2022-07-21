@@ -115,6 +115,7 @@ const AddressForm = (props: AddressFormProps) => {
 
   const onValid = async (formData: Contact) => {
     onSaveAddress({ contact: formData, saveAddress })
+    setValidateForm(false)
   }
 
   const onInvalidForm = () => setValidateForm(false)

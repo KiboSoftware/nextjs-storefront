@@ -29,11 +29,17 @@ const buttonStyle = {
 } as SxProps<Theme> | undefined
 
 const Checkout = (props: CheckoutProps) => {
+  const { checkout: initialCheckout } = props
+
   const { t } = useTranslation(['checkout'])
   const router = useRouter()
 
   const { checkoutId } = router.query
-  const { data: checkout } = useCheckout({ cartId: undefined, checkoutId: checkoutId as string })
+  const { data: checkout } = useCheckout({
+    cartId: undefined,
+    checkoutId: checkoutId as string,
+    initialCheckout,
+  })
 
   const { activeStep, steps, setStepBack, setStepStatusSubmit } = useCheckoutStepContext()
 
