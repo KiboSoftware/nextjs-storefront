@@ -6,6 +6,7 @@ import userEvent from '@testing-library/user-event'
 import QuantitySelector from './QuantitySelector'
 
 describe('[components] - QuantitySelector', () => {
+  const onUpdateCustomQuantityMock = jest.fn()
   const setup = (defaultQuantity = 1) => {
     const label = ''
     const onIncreaseMock = jest.fn()
@@ -17,6 +18,7 @@ describe('[components] - QuantitySelector', () => {
         label={label}
         onIncrease={onIncreaseMock}
         onDecrease={onDecreaseMock}
+        onUpdateCustomQuantity={onUpdateCustomQuantityMock}
       />
     )
 
@@ -107,5 +109,15 @@ describe('[components] - QuantitySelector', () => {
     const label = screen.getByTestId('label')
 
     expect(label).toBeVisible()
+  })
+
+  it('should call updateCustomQuantity when valid(number) custom quantity inputs', async () => {
+    const { user } = setup()
+
+    const input = screen.getByRole('textbox') as HTMLInputElement
+    await user.type(input, '4')
+    await user.tab()
+
+    expect(onUpdateCustomQuantityMock).toHaveBeenCalled()
   })
 })

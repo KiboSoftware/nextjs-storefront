@@ -11,7 +11,7 @@ interface QuantitySelectorProps {
   maxQuantity?: number
   onIncrease?: () => void
   onDecrease?: () => void
-  updateCustomQuantity?: (quantity: number) => void
+  onUpdateCustomQuantity?: (quantity: number) => void
 }
 
 interface QuantityInputProps {
@@ -72,7 +72,7 @@ const QuantityTextField = ({ quantity, handleCustomQuantity }: QuantityInputProp
 
 // Component
 const QuantitySelector = (props: QuantitySelectorProps) => {
-  const { quantity, label, maxQuantity, onIncrease, onDecrease, updateCustomQuantity } = props
+  const { quantity, label, maxQuantity, onIncrease, onDecrease, onUpdateCustomQuantity } = props
   const { t } = useTranslation('common')
 
   return (
@@ -91,7 +91,7 @@ const QuantitySelector = (props: QuantitySelectorProps) => {
         <Remove fontSize="small" />
       </IconButton>
 
-      <QuantityTextField quantity={quantity} handleCustomQuantity={updateCustomQuantity} />
+      <QuantityTextField quantity={quantity} handleCustomQuantity={onUpdateCustomQuantity} />
 
       <IconButton
         onClick={onIncrease}
