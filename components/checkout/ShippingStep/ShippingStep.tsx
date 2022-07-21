@@ -60,6 +60,7 @@ const ShippingStep = (props: ShippingProps) => {
     try {
       await updateShippingInfo(params)
       setCheckoutId(checkout?.id)
+      setStepStatusIncomplete()
     } catch (error) {
       console.error(error)
     }
