@@ -9,7 +9,7 @@ import {
 import { buildAddToCartInput } from '@/lib/helpers/buildAddToCartInput'
 import { cartKeys } from '@/lib/react-query/queryKeys'
 
-import { ProductOption } from '@/lib/gql/types'
+import { CartItem, ProductOption } from '@/lib/gql/types'
 
 export interface AddToCartProductInput {
   options: ProductOption[]
@@ -46,23 +46,19 @@ const addToCart = async (props: AddToCartInputParams) => {
   return response?.addItemToCurrentCart
 }
 const updateCartItemQuantity = async (params: UpdateCartItemQuantityParams) => {
-  try {
-    const client = makeGraphQLClient()
-    const { cartItemId, quantity } = params
+  const client = makeGraphQLClient()
+  const { cartItemId, quantity } = params
 
-    const variables = {
-      itemId: cartItemId,
-      quantity,
-    }
-    const response = await client.request({
-      document: updateCartItemQuantityMutation,
-      variables,
-    })
-
-    return response?.updateCartItemQuantity
-  } catch (err) {
-    console.error(err)
+  const variables = {
+    itemId: cartItemId,
+    quantity,
   }
+  const response = await client.request({
+    document: updateCartItemQuantityMutation,
+    variables,
+  })
+
+  return response?.updateCartItemQuantity
 }
 const removeCartItem = async (params: RemoveCartItemParams) => {
   const client = makeGraphQLClient()
@@ -89,13 +85,45 @@ export const useCartMutation = () => {
     }),
 
     updateCartItemQuantity: useMutation(updateCartItemQuantity, {
-      onSuccess: () => {
+      // When mutate is called:
+      onMutate: async (updateCartItem) => {
+        await queryClient.cancelQueries()
+
+        const previousCart: any = queryClient.getQueryData(cartKeys.all)
+        const cart = { ...previousCart }
+        const cartItem = cart?.items?.find(
+          (item: CartItem) => item.id === updateCartItem.cartItemId
+        )
+
+        if (cartItem?.id) cartItem.quantity = updateCartItem.quantity
+        queryClient.setQueryData(cartKeys.all, cart)
+
+        return { previousCart }
+      },
+      onError: (err, newTodo, context: any) => {
+        queryClient.setQueryData(cartKeys.all, context?.previousCart)
+      },
+      onSettled: () => {
         queryClient.invalidateQueries(cartKeys.all)
       },
     }),
 
     removeCartItem: useMutation(removeCartItem, {
-      onSuccess: () => {
+      onMutate: async (deleteCartItem) => {
+        await queryClient.cancelQueries()
+
+        const previousCart: any = queryClient.getQueryData(cartKeys.all)
+        const newCart = previousCart?.items?.filter(
+          (item: CartItem) => item.id !== deleteCartItem.cartItemId
+        )
+        queryClient.setQueryData(cartKeys.all, newCart)
+
+        return { previousCart }
+      },
+      onError: (err, newTodo, context: any) => {
+        queryClient.setQueryData(cartKeys.all, context?.previousCart)
+      },
+      onSettled: () => {
         queryClient.invalidateQueries(cartKeys.all)
       },
     }),

@@ -1,4 +1,3 @@
-import { cleanup } from '@testing-library/react'
 import { renderHook } from '@testing-library/react-hooks'
 
 import { useCartMutation } from './useCartMutation'
@@ -28,7 +27,6 @@ describe('[hooks] useCartMutation', () => {
   })
   afterEach(() => {
     jest.clearAllMocks()
-    cleanup()
   })
 
   it('should use useCartMutation when addToCart', () => {
@@ -47,7 +45,7 @@ describe('[hooks] useCartMutation', () => {
     )
   })
 
-  it('should use useCartMutation when updateCartItemQuantity', () => {
+  it('should use useCartMutation when updateCartItemQuantity', async () => {
     renderHook(
       async () => {
         const { updateCartItemQuantity } = useCartMutation()
