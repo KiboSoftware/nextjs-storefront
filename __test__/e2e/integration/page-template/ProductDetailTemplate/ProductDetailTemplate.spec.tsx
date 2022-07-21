@@ -28,10 +28,6 @@ const setup = () => {
   }
 }
 
-afterEach(() => {
-  cleanup()
-})
-
 describe('[component] - ProductDetailTemplate integration', () => {
   it('should handle quantity selector ', async () => {
     const { user } = setup()
