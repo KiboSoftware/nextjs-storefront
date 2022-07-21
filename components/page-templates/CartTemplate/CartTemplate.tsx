@@ -24,7 +24,7 @@ import {
   useStoreLocations,
   usePurchaseLocation,
 } from '@/hooks'
-import { FormStates } from '@/lib/constants'
+import { FormStates, FulfillmentOptions } from '@/lib/constants'
 import { checkoutGetters } from '@/lib/getters'
 import { LocationCustom } from '@/lib/types'
 
@@ -105,8 +105,8 @@ const CartTemplate = (props: CartTemplateProps) => {
     cartItemId: string
   ) => {
     const locatioCode =
-      fulfillmentMethod === FormStates.PICKUP ? (purchaseLocation.code as string) : ''
-    if (fulfillmentMethod === FormStates.PICKUP && !locatioCode) {
+      fulfillmentMethod === FulfillmentOptions.PICKUP ? (purchaseLocation.code as string) : ''
+    if (fulfillmentMethod === FulfillmentOptions.PICKUP && !locatioCode) {
       handleProductPickupLocation(cartItemId)
     } else {
       mutateCartItem(cartItemId, fulfillmentMethod, locatioCode)
@@ -118,7 +118,7 @@ const CartTemplate = (props: CartTemplateProps) => {
       Component: StoreLocatorDialog,
       props: {
         handleSetStore: async (selectedStore: LocationCustom) => {
-          mutateCartItem(cartItemId, FormStates.PICKUP, selectedStore?.code)
+          mutateCartItem(cartItemId, FulfillmentOptions.PICKUP, selectedStore?.code)
           closeModal()
         },
       },
@@ -130,15 +130,19 @@ const CartTemplate = (props: CartTemplateProps) => {
     fulfillmentMethod: string,
     locationCode = ''
   ) => {
-    const cartItem = cartItems.find((cart) => cart?.id === cartItemId)
-    await updateCartItem.mutateAsync({
-      cartItemInput: {
-        ...(cartItem as CartItemInput),
-        fulfillmentMethod,
-        fulfillmentLocationCode: locationCode,
-      },
-      cartItemId: cartItemId,
-    })
+    try {
+      const cartItem = cartItems.find((cart) => cart?.id === cartItemId)
+      await updateCartItem.mutateAsync({
+        cartItemInput: {
+          ...(cartItem as CartItemInput),
+          fulfillmentMethod,
+          fulfillmentLocationCode: locationCode,
+        },
+        cartItemId: cartItemId,
+      })
+    } catch (err) {
+      console.log(err)
+    }
   }
 
   const handleGotoCheckout = async () => {
@@ -197,7 +201,9 @@ const CartTemplate = (props: CartTemplateProps) => {
       <Grid item xs={12} md={8} sx={{ paddingRight: { md: 2 } }}>
         <CartItemList
           cartItems={cartItems}
-          fulfillmentLocations={Object.keys(locations).length ? (locations as Location[]) : []}
+          fulfillmentLocations={
+            locations && Object.keys(locations).length ? (locations as Location[]) : []
+          }
           purchaseLocation={purchaseLocation}
           onCartItemQuantityUpdate={handleItemQuantity}
           onCartItemDelete={handleDeleteItem}

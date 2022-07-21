@@ -4,6 +4,8 @@ import { composeStories } from '@storybook/testing-react'
 import { render, screen } from '@testing-library/react'
 
 import * as stories from './CartTemplate.stories'
+import { cartItemMock } from '@/__mocks__/stories/cartItemMock'
+import { locationCollectionMock } from '@/__mocks__/stories/locationCollectionMock'
 
 const CartItemListMock = ({ children }: { children: ReactNode }) => (
   <div data-testid="cart-item-list-mock">{children}</div>
@@ -13,11 +15,22 @@ const OrderSummaryMock = () => <div data-testid="order-summary-mock" />
 jest.mock('../../cart/CartItemList/CartItemList', () => CartItemListMock)
 jest.mock('../../common/OrderSummary/OrderSummary', () => OrderSummaryMock)
 
+const mockCartItemResponse = cartItemMock
+const mockLocationsResponse = locationCollectionMock.spLocations
 jest.mock('@/hooks', () => ({
   useCheckout: jest.fn(() => ({})),
   useCreateFromCartMutation: jest.fn(() => ({})),
-  useCartMutation: jest.fn(() => ({})),
   useCartQueries: jest.fn(() => ({})),
+  useUpdateCheckout: jest.fn(() => ({})),
+  useStoreLocations: jest.fn(() => ({ mockLocationsResponse })),
+  usePurchaseLocation: jest.fn(() => ({})),
+  useCartMutation: jest.fn(() => ({
+    updateCurrentCartItem: {
+      mutateAsync: () => Promise.resolve({ mockCartItemResponse }),
+      isLoading: false,
+      isSuccess: true,
+    },
+  })),
 }))
 
 const { Common } = composeStories(stories)

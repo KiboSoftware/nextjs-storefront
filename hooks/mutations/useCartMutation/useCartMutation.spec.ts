@@ -1,8 +1,11 @@
+import { waitFor } from '@testing-library/react'
 import { renderHook } from '@testing-library/react-hooks'
 
 import { useCartMutation } from './useCartMutation'
 import { cartItemMock } from '@/__mocks__/stories/cartItemMock'
 import { createQueryClientWrapper } from '@/__test__/utils/renderWithQueryClient'
+
+import type { CartItemInput } from '@/lib/gql/types'
 
 const productInput = {
   options: [
@@ -33,11 +36,30 @@ describe('[hooks] useCartMutation', () => {
     renderHook(
       async () => {
         const { addToCart } = useCartMutation()
-        const response = await addToCart.mutateAsync({
+        const addResponse = await addToCart.mutateAsync({
           product: productInput,
           quantity: 6,
         })
-        expect(response).toStrictEqual(cartItemMock)
+
+        expect(addResponse).toStrictEqual(cartItemMock)
+      },
+      {
+        wrapper: createQueryClientWrapper(),
+      }
+    )
+  })
+
+  it('should use useCartMutation for updateCartItem', async () => {
+    renderHook(
+      async () => {
+        const { updateCartItem } = useCartMutation()
+
+        const updateResponse = await updateCartItem.mutateAsync({
+          cartItemId: '1beef214158842d7a305ae68009d4d4c',
+          cartItemInput: cartItemMock as CartItemInput,
+        })
+
+        await waitFor(() => expect(updateResponse).toStrictEqual(cartItemMock))
       },
       {
         wrapper: createQueryClientWrapper(),

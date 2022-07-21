@@ -2,7 +2,7 @@ import { Box } from '@mui/material'
 
 import CartItem from '@/components/cart/CartItem/CartItem'
 import { FullWidthDivider } from '@/components/common'
-import { FormStates } from '@/lib/constants'
+import { FulfillmentOptions } from '@/lib/constants'
 import { cartGetters } from '@/lib/getters/cartGetters'
 import { FulfillmentOption } from '@/lib/types'
 
@@ -42,7 +42,7 @@ const CartItemList = (props: CartItemListProps) => {
     cartItem: Maybe<CartItemType>
   ): FulfillmentOption[] => {
     const location =
-      cartItem?.fulfillmentLocationCode && cartItem?.fulfillmentMethod === FormStates.PICKUP
+      cartItem?.fulfillmentLocationCode && cartItem?.fulfillmentMethod === FulfillmentOptions.PICKUP
         ? cartGetters.getCartItemFulfillmentLocation(cartItem, fulfillmentLocations)
         : purchaseLocation
     return cartGetters.getProductFulfillmentOptions(

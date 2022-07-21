@@ -109,6 +109,14 @@ export const cartHandlers = [
     return res(
       ctx.data({
         deleteCartItemMutation: true,
+        })
+    )
+  }),
+
+  graphql.mutation('updateCurrentCartItem', (_req, res, ctx) => {
+    return res(
+      ctx.data({
+        updateCurrentCartItem: cartItemMock,
       })
     )
   }),
