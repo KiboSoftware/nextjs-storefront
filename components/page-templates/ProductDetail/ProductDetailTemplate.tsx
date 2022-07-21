@@ -22,7 +22,6 @@ import {
 import { useModalContext } from '@/context/ModalContext'
 import { useProductDetailTemplate, usePurchaseLocation, useCartMutation } from '@/hooks'
 import { productGetters } from '@/lib/getters'
-import { storeLocationGetters } from '@/lib/getters/storeLocationGetters'
 import type { ProductCustom, BreadCrumb, PriceRange, LocationCustom } from '@/lib/types'
 
 import type {

@@ -42,6 +42,13 @@ describe('checkout Component', () => {
       expect(screen.getByRole('button', { name: 'Shop Holiday Items on Sale' })).toBeInTheDocument()
     })
 
+    it('should render product image', () => {
+      setup()
+
+      const image = screen.getAllByTestId('product-image')
+      expect(image[0]).toHaveAttribute('alt', 'image Alt text')
+    })
+
     it('should move to next slide', () => {
       setup()
       expect(screen.getByRole('button', { name: 'Next' })).toBeVisible()
