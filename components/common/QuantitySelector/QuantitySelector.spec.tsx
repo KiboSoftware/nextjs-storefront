@@ -114,7 +114,7 @@ describe('[components] - QuantitySelector', () => {
   it('should call updateCustomQuantity when valid(number) custom quantity inputs', async () => {
     const { user } = setup()
 
-    const input = screen.getByRole('textbox') as HTMLInputElement
+    const input = screen.getByRole('textbox')
     await user.type(input, '4')
     await user.tab()
 

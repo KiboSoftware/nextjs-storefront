@@ -100,7 +100,7 @@ export const useCartMutation = () => {
 
         return { previousCart }
       },
-      onError: (err, newTodo, context: any) => {
+      onError: (_err, _newCart, context: any) => {
         queryClient.setQueryData(cartKeys.all, context?.previousCart)
       },
       onSettled: () => {
@@ -120,7 +120,7 @@ export const useCartMutation = () => {
 
         return { previousCart }
       },
-      onError: (err, newTodo, context: any) => {
+      onError: (_err, _newCart, context: any) => {
         queryClient.setQueryData(cartKeys.all, context?.previousCart)
       },
       onSettled: () => {
