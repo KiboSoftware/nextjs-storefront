@@ -29,6 +29,7 @@ export const productSearchResultKeys = {
 
 export const cartKeys = {
   all: ['cart'] as const,
+  updateCartItem: (params: string) => [...cartKeys.all, params] as const,
 }
 
 export const locationKeys = {

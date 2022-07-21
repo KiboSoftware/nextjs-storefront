@@ -74,7 +74,9 @@ const CartTemplate = (props: CartTemplateProps) => {
     (cartItems.length &&
       cartItems
         .filter((item) => item?.fulfillmentMethod === 'Pickup')
-        .map((item) => `code eq ${item?.fulfillmentLocationCode}`)
+        .map((item) => item?.fulfillmentLocationCode)
+        .filter((value, index, self) => self.indexOf(value) === index)
+        .map((code) => `code eq ${code}`)
         .join(' or ')) ||
     ''
   const { data: locations } = useStoreLocations({ filter: locationCodes })
@@ -104,12 +106,12 @@ const CartTemplate = (props: CartTemplateProps) => {
     fulfillmentMethod: string,
     cartItemId: string
   ) => {
-    const locatioCode =
+    const locationCode =
       fulfillmentMethod === FulfillmentOptions.PICKUP ? (purchaseLocation.code as string) : ''
-    if (fulfillmentMethod === FulfillmentOptions.PICKUP && !locatioCode) {
+    if (fulfillmentMethod === FulfillmentOptions.PICKUP && !locationCode) {
       handleProductPickupLocation(cartItemId)
     } else {
-      mutateCartItem(cartItemId, fulfillmentMethod, locatioCode)
+      mutateCartItem(cartItemId, fulfillmentMethod, locationCode)
     }
   }
 

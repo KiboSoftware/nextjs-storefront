@@ -152,8 +152,23 @@ export const useCartMutation = () => {
     }),
 
     updateCartItem: useMutation(updateCartItem, {
-      onSuccess: () => {
-        queryClient.invalidateQueries(cartKeys.all)
+      onMutate: async (currentData) => {
+        await queryClient.cancelQueries(cartKeys.updateCartItem(currentData.cartItemId))
+        const previousData = queryClient.getQueryData(
+          cartKeys.updateCartItem(currentData.cartItemId)
+        )
+        queryClient.setQueryData(cartKeys.updateCartItem(currentData.cartItemId), currentData)
+        return { previousData, currentData }
+      },
+      onError: (error, _currentData, context: any) => {
+        console.log(error)
+        queryClient.setQueryData(
+          cartKeys.updateCartItem(context?.cartItemId),
+          context?.previousData
+        ) // rollback logic
+      },
+      onSettled: (currentData) => {
+        queryClient.invalidateQueries(cartKeys.updateCartItem(currentData.cartItemId)) // refetch the query data
       },
     }),
   }
