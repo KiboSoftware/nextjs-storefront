@@ -84,7 +84,7 @@ describe('[components] CartTemplate integration', () => {
     await waitFor(() => expect(deletedCartItem).not.toBeInTheDocument())
   })
 
-  it('should add ship to home item to cart', async () => {
+  it('should selected ship to home item into the cart', async () => {
     const { user } = setup()
     const shipRadio = screen.getAllByRole('radio', {
       name: /ship to home/i,
@@ -94,7 +94,7 @@ describe('[components] CartTemplate integration', () => {
     expect(shipRadio[0]).toBeChecked()
   })
 
-  it('should add pickup item to cart', async () => {
+  it('should selected pickup item into the cart', async () => {
     const { user } = setup()
     const pickupRadio = screen.getAllByRole('radio', {
       name: /Pickup in store/i,

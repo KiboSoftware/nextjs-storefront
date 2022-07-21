@@ -1,5 +1,6 @@
 import getConfig from 'next/config'
 
+import { FulfillmentOptions } from '../constants'
 import { Maybe, Cart, CartItem, Location, Product } from '../gql/types'
 import { FulfillmentOption } from '../types'
 
@@ -39,7 +40,7 @@ const getProductFulfillmentOptions = (
         (type) => type.toLowerCase() === option?.value?.toLowerCase()
       ).length === 0,
     details: (() => {
-      if (option.value === fullfillmentOptions[0].value) return option.details // checking if Directship
+      if (option.shortName === FulfillmentOptions.SHIP) return option.details // checking if Directship
       if (location?.name) return `${option.details}: ${location.name}`
       return ''
     })(),
