@@ -8,7 +8,7 @@ import * as stories from './KiboHeroCarousel.stories'
 const { Common } = composeStories(stories)
 
 describe('checkout Component', () => {
-  const setup = () => render(<Common />)
+  const setup = () => render(<Common {...Common.args} />)
 
   describe('checkout', () => {
     it('should render next', () => {
@@ -21,6 +21,20 @@ describe('checkout Component', () => {
       setup()
       const title = screen.getAllByText(/Save up to 50%/i)
       expect(title[0]).toBeInTheDocument()
+    })
+
+    it('should render component', () => {
+      setup()
+
+      const Subtitle = screen.getAllByText(Common?.args?.carouselItem[0].subtitle)
+      const description = screen.getAllByText(Common?.args?.carouselItem[0].description)
+      const buttonText = screen.getAllByText(Common?.args?.carouselItem[0].buttonText)
+      const link = screen.getAllByText(Common?.args?.topProps.link)
+
+      expect(Subtitle[0]).toBeInTheDocument()
+      expect(description[0]).toBeInTheDocument()
+      expect(buttonText[0]).toBeInTheDocument()
+      expect(link[0]).toBeInTheDocument()
     })
 
     it('should render button', () => {

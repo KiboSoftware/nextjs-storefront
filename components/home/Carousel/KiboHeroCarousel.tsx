@@ -29,8 +29,11 @@ export interface ItemProps {
   color?: string
   component?: string
   topProps: TopProps
+  withcard: WithCardProps
 }
-
+interface WithCardProps {
+  withcard: boolean
+}
 interface TopProps {
   name?: string
   body?: string
@@ -41,12 +44,12 @@ type HeroItemProps = {
   [key: string]: any
 }
 
-const KiboHeroCarousel = ({ carouselItem, topProps }: HeroItemProps) => {
+const KiboHeroCarousel = ({ carouselItem, topProps, withcard }: HeroItemProps) => {
   return (
     <MainStyle>
       <Carousel navButtonsAlwaysVisible={true} swipe={true} sx={{ width: '100%' }}>
         {carouselItem?.map((item?: ItemProps, index?: any) => {
-          return <HeroItem props={item} topProps={topProps} key={index} />
+          return <HeroItem props={item} topProps={topProps} withcard={withcard} key={index} />
         })}
       </Carousel>
     </MainStyle>
@@ -108,7 +111,7 @@ const MainStyle = styled('div')({
   color: 'grey.700',
 })
 
-function HeroItem({ props, topProps }: HeroItemProps) {
+function HeroItem({ props, topProps, withcard }: HeroItemProps) {
   const kiboTheme = useTheme()
   const mobileView = useMediaQuery(kiboTheme.breakpoints.down('sm'))
   const {
@@ -127,20 +130,22 @@ function HeroItem({ props, topProps }: HeroItemProps) {
 
   return (
     <Card sx={styles.contentStyle}>
-      <CardContent sx={styles.topStyle}>
-        <Typography sx={{ fontSize: mobileView ? '0.75rem' : '1rem', fontWeight: 'bold' }}>
-          {name}
-        </Typography>
-
-        <Box sx={styles.boxStyle}>
-          <Typography sx={{ fontSize: mobileView ? '0.75rem' : '1rem' }}>{body}</Typography>
-          <Typography sx={{ fontSize: mobileView ? '0.75rem' : '1rem' }}>
-            <Link href="/" sx={{ color: 'white' }}>
-              {link}
-            </Link>
+      {withcard && (
+        <CardContent sx={styles.topStyle}>
+          <Typography sx={{ fontSize: mobileView ? '0.75rem' : '1rem', fontWeight: 'bold' }}>
+            {name}
           </Typography>
-        </Box>
-      </CardContent>
+
+          <Box sx={styles.boxStyle}>
+            <Typography sx={{ fontSize: mobileView ? '0.75rem' : '1rem' }}>{body}</Typography>
+            <Typography sx={{ fontSize: mobileView ? '0.75rem' : '1rem' }}>
+              <Link href="/" sx={{ color: 'white' }}>
+                {link}
+              </Link>
+            </Typography>
+          </Box>
+        </CardContent>
+      )}
       <CardMedia sx={{ width: '100%', height: '100%', position: 'relative' }}>
         <KiboImage
           src={mobileView ? mobileImageUrl : imageUrl}

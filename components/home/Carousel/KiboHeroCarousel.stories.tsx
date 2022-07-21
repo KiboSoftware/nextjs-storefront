@@ -12,6 +12,9 @@ export default {
 const Template: ComponentStory<typeof KiboHeroCarousel> = (args) => <KiboHeroCarousel {...args} />
 
 export const Common = Template.bind({})
+
+export const withoutTopBar = Template.bind({})
+
 const heroItems = [
   {
     imageUrl: 'https://cdn-sb.mozu.com/26507-m1/cms/files/655bb09f-e5f2-4027-8cf6-76d0363172d1',
@@ -52,4 +55,11 @@ const topItems = {
 Common.args = {
   carouselItem: heroItems,
   topProps: topItems,
+  withcard: true,
+}
+
+withoutTopBar.args = {
+  carouselItem: heroItems,
+  topProps: topItems,
+  withcard: false,
 }
