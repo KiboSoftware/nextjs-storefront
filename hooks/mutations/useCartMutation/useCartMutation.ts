@@ -10,7 +10,7 @@ import {
 import { buildAddToCartInput } from '@/lib/helpers/buildAddToCartInput'
 import { cartKeys } from '@/lib/react-query/queryKeys'
 
-import type { CartItemInput, CartItem, ProductOption } from '@/lib/gql/types'
+import type { Cart, CartItem, CartItemInput, Maybe, ProductOption } from '@/lib/gql/types'
 
 export interface AddToCartProductInput {
   options: ProductOption[]
@@ -152,23 +152,25 @@ export const useCartMutation = () => {
     }),
 
     updateCartItem: useMutation(updateCartItem, {
-      onMutate: async (currentData) => {
-        await queryClient.cancelQueries(cartKeys.updateCartItem(currentData.cartItemId))
-        const previousData = queryClient.getQueryData(
-          cartKeys.updateCartItem(currentData.cartItemId)
+      onMutate: async (updateCartItem) => {
+        await queryClient.cancelQueries()
+        const previousCart: Cart | undefined = queryClient.getQueryData(cartKeys.all)
+        const cart = { ...previousCart }
+        const cartItem = cart?.items?.find(
+          (item: Maybe<CartItem>) => item?.id === updateCartItem?.cartItemId
         )
-        queryClient.setQueryData(cartKeys.updateCartItem(currentData.cartItemId), currentData)
-        return { previousData, currentData }
+        if (cartItem?.id) {
+          cartItem.fulfillmentMethod = updateCartItem.cartItemInput.fulfillmentMethod
+          cartItem.fulfillmentLocationCode = updateCartItem.cartItemInput.fulfillmentLocationCode
+        }
+        queryClient.setQueryData(cartKeys.all, cart)
+        return { previousCart }
       },
-      onError: (error, _currentData, context: any) => {
-        console.log(error)
-        queryClient.setQueryData(
-          cartKeys.updateCartItem(context?.cartItemId),
-          context?.previousData
-        ) // rollback logic
+      onError: (_err, _cart, context: any) => {
+        queryClient.setQueryData(cartKeys.all, context?.previousCart)
       },
-      onSettled: (currentData) => {
-        queryClient.invalidateQueries(cartKeys.updateCartItem(currentData.cartItemId)) // refetch the query data
+      onSettled: () => {
+        queryClient.invalidateQueries(cartKeys.all)
       },
     }),
   }
