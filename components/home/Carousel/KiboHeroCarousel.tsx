@@ -149,7 +149,7 @@ function HeroItem({ props, topProps, withcard }: HeroItemProps) {
       <CardMedia sx={{ width: '100%', height: '100%', position: 'relative' }}>
         <KiboImage
           src={mobileView ? mobileImageUrl : imageUrl}
-          alt={imageUrl ? imageAlt : 'no-image-alt'}
+          alt={imageUrl ? imageAlt : 'product-image-alt'}
           layout="fill"
           objectFit="cover"
           data-testid="product-image"
