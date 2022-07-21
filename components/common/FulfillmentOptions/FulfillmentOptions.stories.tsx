@@ -8,6 +8,10 @@ import { fulfillmentOptionsMock } from '@/__mocks__/stories/fulfillmentOptionsMo
 export default {
   title: 'Common/FulfillmentOptions',
   component: FulfillmentOptions,
+  argTypes: {
+    onFullfillmentOptionChange: { action: 'clicked' },
+    onStoreSetOrUpdate: { action: 'clicked' },
+  },
 } as ComponentMeta<typeof FulfillmentOptions>
 
 const Template: ComponentStory<typeof FulfillmentOptions> = ({ ...args }) => (
@@ -18,4 +22,5 @@ export const Common = Template.bind({})
 
 Common.args = {
   fulfillmentOptions: fulfillmentOptionsMock,
+  selected: 'Pickup',
 }

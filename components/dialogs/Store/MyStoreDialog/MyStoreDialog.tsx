@@ -3,11 +3,12 @@ import React from 'react'
 import { Box, Button } from '@mui/material'
 import { useTranslation } from 'next-i18next'
 
-import { StoreLocatorDialog, StoreDetails } from '..'
 import { KiboDialog } from '@/components/common'
+import { StoreLocatorDialog, StoreDetails } from '@/components/dialogs'
 import { useModalContext } from '@/context/ModalContext'
 import { storeLocationGetters } from '@/lib/getters/storeLocationGetters'
-import { setOrDeleteCookie } from '@/lib/helpers'
+import { setPurchaseLocationCookie } from '@/lib/helpers'
+import { LocationCustom } from '@/lib/types'
 
 import type { Maybe, Location } from '@/lib/gql/types'
 
@@ -28,8 +29,8 @@ const MyStoreDialog = (props: MyStoreProps) => {
     showModal({
       Component: StoreLocatorDialog,
       props: {
-        handleSetStore: async (selectedStore: string) => {
-          setOrDeleteCookie(selectedStore)
+        handleSetStore: async (selectedStore: LocationCustom) => {
+          setPurchaseLocationCookie(selectedStore?.code as string)
           closeModal()
         },
       },
