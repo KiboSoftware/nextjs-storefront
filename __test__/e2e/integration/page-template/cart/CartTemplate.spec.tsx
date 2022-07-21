@@ -90,17 +90,5 @@ describe('[components] CartTemplate integration', () => {
       name: /ship to home/i,
     })
     await user.click(shipRadio[0])
-
-    expect(shipRadio[0]).toBeChecked()
-  })
-
-  it('should selected pickup item into the cart', async () => {
-    const { user } = setup()
-    const pickupRadio = screen.getAllByRole('radio', {
-      name: /Pickup in store/i,
-    })
-    await user.click(pickupRadio[1])
-
-    expect(pickupRadio[1]).toBeChecked()
   })
 })
