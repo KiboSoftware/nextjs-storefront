@@ -16,11 +16,6 @@ export const grey = {
   50: '#FAFAFA',
 }
 
-export const purple = {
-  // Home Page color
-  500: '#A12E87',
-}
-
 // Create a base theme instance and define the basic design options
 let theme = createTheme({
   typography: {
@@ -86,7 +81,6 @@ let theme = createTheme({
       main: '#e42d00',
     },
     grey: { ...grey },
-    purple: { ...purple },
   },
   components: {
     MuiButton: {
