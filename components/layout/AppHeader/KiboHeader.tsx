@@ -25,12 +25,12 @@ import { useRouter } from 'next/router'
 
 import LoginDialog from '../Login'
 import { HeaderAction, KiboLogo } from '@/components/common'
-import { MyStoreDialog, StoreLocatorDialog } from '@/components/dialogs/Store'
+import { MyStoreDialog, StoreLocatorDialog } from '@/components/dialogs'
 import { MegaMenu, HamburgerMenu, SearchSuggestions } from '@/components/layout'
 import { useAuthContext, useModalContext } from '@/context'
 import { useCartQueries, useCategoryTree, usePurchaseLocation } from '@/hooks'
-import { setOrDeleteCookie } from '@/lib/helpers'
-import type { NavigationLink } from '@/lib/types'
+import { setPurchaseLocationCookie } from '@/lib/helpers'
+import type { LocationCustom, NavigationLink } from '@/lib/types'
 
 import type { Maybe, PrCategory } from '@/lib/gql/types'
 
@@ -227,8 +227,8 @@ const HeaderActions = (props: HeaderActionsProps) => {
       showModal({
         Component: StoreLocatorDialog,
         props: {
-          handleSetStore: async (selectedStore: string) => {
-            setOrDeleteCookie(selectedStore)
+          handleSetStore: async (selectedStore: LocationCustom) => {
+            setPurchaseLocationCookie(selectedStore?.code as string)
             closeModal()
           },
         },
