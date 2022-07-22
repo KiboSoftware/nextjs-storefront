@@ -11,16 +11,19 @@ describe('[components] - SearchBar', () => {
 
   const setup = (showClearButton = false) => {
     let handleSearch
+    let handleEnterSearch
 
     const WrapperComponent = () => {
       const [searchTerm, setSearchTerm] = useState('')
       handleSearch = jest.fn((v) => setSearchTerm(v))
+      handleEnterSearch = jest.fn()
       return (
         <SearchBar
           placeHolder="Search Brand"
           searchTerm={searchTerm}
           onSearch={handleSearch}
           showClearButton={showClearButton}
+          onKeyEnter={handleEnterSearch}
         />
       )
     }

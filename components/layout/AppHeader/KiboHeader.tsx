@@ -328,6 +328,12 @@ export default function KiboHeader(props: KiboHeaderProps) {
       viewHamburgerMenu: value,
     })
   }
+  const handleSearchPortal = () => {
+    setHeaderState({
+      viewHamburgerMenu: false,
+      viewSearchPortal: !headerState.viewSearchPortal,
+    })
+  }
 
   return (
     <Grid container>
@@ -355,7 +361,10 @@ export default function KiboHeader(props: KiboHeaderProps) {
             <Collapse in={headerState.viewSearchPortal}>
               <Box position="static" sx={{ display: { md: 'none' } }}>
                 <StyledToolbar data-testid="searchbar-container">
-                  <SearchSuggestions />
+                  <SearchSuggestions
+                    isViewSearchPortal={headerState.viewSearchPortal}
+                    onEnterSearch={handleSearchPortal}
+                  />
                 </StyledToolbar>
               </Box>
             </Collapse>

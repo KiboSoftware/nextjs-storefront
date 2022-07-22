@@ -25,6 +25,7 @@ interface SortingValues {
 
 export interface ProductListingTemplateProps {
   breadCrumbsList: BreadCrumbType[]
+  productListingHeader: string
   facetList?: FacetType[]
   products?: Product[]
   sortingValues?: { options: SortingValues[]; selected: string }
@@ -163,7 +164,7 @@ const styles = {
   },
   totalResults: {
     marginTop: '1.5rem',
-    marginRight: '1rem',
+    marginRight: { md: 0, xs: '1rem' },
     typography: 'body2',
     color: 'grey.600',
     whiteSpace: 'nowrap',
@@ -174,6 +175,7 @@ const styles = {
 const ProductListingTemplate = (props: ProductListingTemplateProps) => {
   const {
     breadCrumbsList,
+    productListingHeader,
     facetList,
     products = [],
     sortingValues,
@@ -214,8 +216,7 @@ const ProductListingTemplate = (props: ProductListingTemplateProps) => {
             <Box sx={{ ...styles.navBarMain }}>
               {!isLoading ? (
                 <Typography variant="h1" sx={{ ...styles.categoryFacetHeader }}>
-                  {categoryFacet && categoryFacet.header && categoryFacet.header}
-                  {!categoryFacet.header && breadCrumbsList[breadCrumbsList.length - 1].text}
+                  {productListingHeader}
                 </Typography>
               ) : (
                 <Skeleton variant="rectangular" sx={{ ...styles.categoryFacetHeaderLoading }} />
@@ -288,7 +289,9 @@ const ProductListingTemplate = (props: ProductListingTemplateProps) => {
           <FullWidthDivider />
           <Box sx={{ ...styles.mainSection }}>
             <Box sx={{ ...styles.sideBar }}>
-              {(categoryFacet.header || categoryFacet?.childrenCategories?.length) && (
+              {(categoryFacet.header ||
+                (categoryFacet?.childrenCategories &&
+                  categoryFacet?.childrenCategories?.length > 0)) && (
                 <CategoryFacet categoryFacet={categoryFacet} breadcrumbs={breadCrumbsList} />
               )}
               <FacetList
@@ -299,19 +302,21 @@ const ProductListingTemplate = (props: ProductListingTemplateProps) => {
               />
             </Box>
             <Box sx={{ width: '100%' }}>
-              {!isLoading && appliedFilters.length > 0 && (
+              {!isLoading && (
                 <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
                   <Box sx={{ display: 'flex', margin: '1rem 0 0 1rem' }}>
-                    <FilterTiles
-                      appliedFilters={appliedFilters}
-                      onRemoveSelectedTile={handleRemoveSelectedTile}
-                    >
-                      <Link sx={{ ...styles.clearAllButton }} onClick={handleClearAllFilters}>
-                        {t('common:clear-all')}
-                      </Link>
-                    </FilterTiles>
+                    {appliedFilters?.length > 0 && (
+                      <FilterTiles
+                        appliedFilters={appliedFilters}
+                        onRemoveSelectedTile={handleRemoveSelectedTile}
+                      >
+                        <Link sx={{ ...styles.clearAllButton }} onClick={handleClearAllFilters}>
+                          {t('common:clear-all')}
+                        </Link>
+                      </FilterTiles>
+                    )}
                   </Box>
-                  <Box sx={{ ...styles.totalResults }}>{t('results', { totalResults })}</Box>
+                  <Box sx={{ ...styles.totalResults }}>{t('results', { count: totalResults })}</Box>
                 </Box>
               )}
               {!isLoading ? (
@@ -393,7 +398,7 @@ const ProductListingTemplate = (props: ProductListingTemplateProps) => {
         <Box sx={{ ...styles.filterByMobile }}>
           <CategoryFilterByMobile
             facetList={facetList}
-            header={categoryFacet.header}
+            header={productListingHeader}
             totalResults={totalResults}
             isLoading={isLoading}
             appliedFilters={appliedFilters}

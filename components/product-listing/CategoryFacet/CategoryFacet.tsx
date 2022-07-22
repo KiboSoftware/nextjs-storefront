@@ -127,9 +127,9 @@ const CategoryFacet = (props: CategoryFacetProps) => {
             {buttonText}
           </Button>
         )}
-        {breadcrumbs?.length > 1 && (
+        {breadcrumbs?.length >= 1 && (
           <Link
-            href={breadcrumbs[breadcrumbs?.length - 2].link || '/'}
+            href={breadcrumbs[breadcrumbs?.length - 2]?.link || '/'}
             aria-label={t('common:back')}
             sx={{ ...styles.backButton }}
           >
