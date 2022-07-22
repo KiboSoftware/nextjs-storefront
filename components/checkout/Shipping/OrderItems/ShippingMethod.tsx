@@ -1,3 +1,5 @@
+import { useState } from 'react'
+
 import { Typography, Box, MenuItem, Divider } from '@mui/material'
 import { useTranslation } from 'next-i18next'
 
@@ -6,13 +8,12 @@ import ProductItemList from '@/components/common/ProductItemList/ProductItemList
 import { orderGetters } from '@/lib/getters'
 
 import type { Maybe, CrOrderItem, ShippingRate } from '@/lib/gql/types'
-
 export type ShippingMethodProps = {
   shipItems: Maybe<CrOrderItem>[]
   pickupItems: Maybe<CrOrderItem>[]
   orderShipmentMethods: ShippingRate[]
   onShippingMethodChange: (name: string, value: string) => void
-  onClickStoreLocator?: () => void
+  onStoreLocatorClick?: () => void
 }
 export type ShipItemListProps = {
   shipItems: Maybe<CrOrderItem>[]
@@ -23,7 +24,6 @@ export type PickupItemListProps = {
   pickupItems: Maybe<CrOrderItem>[]
   onClickChangeStore?: () => void
 }
-
 const styles = {
   shippingType: {
     variant: 'subtitle1',
@@ -32,11 +32,14 @@ const styles = {
     color: 'text.primary',
   },
 }
-
 const ShipItemList = (shipProps: ShipItemListProps) => {
   const { onShippingMethodChange, orderShipmentMethods, shipItems } = shipProps
   const { t } = useTranslation('common')
-
+  const [selectedShippingMethod, setSelectedShippingMethod] = useState('')
+  const handleShippingMethodChange = (name: string, value: string) => {
+    setSelectedShippingMethod(value)
+    onShippingMethodChange(name, value)
+  }
   return (
     <Box data-testid="ship-items">
       <Typography sx={styles.shippingType} px={2} data-testid="ship-title">
@@ -45,8 +48,9 @@ const ShipItemList = (shipProps: ShipItemListProps) => {
       <Box px={2}>
         <KiboSelect
           name="shippingMethodCode"
-          onChange={onShippingMethodChange}
+          onChange={handleShippingMethodChange}
           placeholder="Select Shipping Option"
+          value={selectedShippingMethod}
         >
           {orderShipmentMethods?.map((item: ShippingRate) => {
             return (
@@ -63,13 +67,11 @@ const ShipItemList = (shipProps: ShipItemListProps) => {
     </Box>
   )
 }
-
 const PickupItemList = (pickupProps: PickupItemListProps) => {
   const { pickupItems, onClickChangeStore } = pickupProps
   const { t } = useTranslation('common')
   const expectedDeliveryDate = orderGetters.getExpectedDeliveryDate(pickupItems)
   const isPickupItem = pickupItems.length > 0
-
   return (
     <Box data-testid="pickup-items">
       <Divider orientation="horizontal" flexItem />
@@ -89,16 +91,14 @@ const PickupItemList = (pickupProps: PickupItemListProps) => {
     </Box>
   )
 }
-
 const ShippingMethod = (props: ShippingMethodProps) => {
   const {
     shipItems,
     pickupItems,
     orderShipmentMethods,
     onShippingMethodChange,
-    onClickStoreLocator,
+    onStoreLocatorClick,
   } = props
-
   return (
     <Box data-testid="shipping-method">
       {shipItems?.length ? (
@@ -110,14 +110,12 @@ const ShippingMethod = (props: ShippingMethodProps) => {
       ) : (
         ''
       )}
-
       {pickupItems?.length ? (
-        <PickupItemList pickupItems={pickupItems} onClickChangeStore={onClickStoreLocator} />
+        <PickupItemList pickupItems={pickupItems} onClickChangeStore={onStoreLocatorClick} />
       ) : (
         ''
       )}
     </Box>
   )
 }
-
 export default ShippingMethod

@@ -14,7 +14,7 @@ import type { CrProductOption } from '@/lib/gql/types'
 export default {
   title: 'Common/ProductItem',
   component: ProductItem,
-  argTypes: { onClickStoreLocator: { action: 'clicked' } },
+  argTypes: { onStoreLocatorClick: { action: 'clicked' } },
 } as ComponentMeta<typeof ProductItem>
 
 const orderItem = orderMock?.checkout?.items && orderMock?.checkout?.items[0]
@@ -90,7 +90,7 @@ WithChageStoreOption.args = {
   isPickupItem: true,
   purchaseLocation: 'Down Store',
   expectedDeliveryDate: 'Mon 12/20',
-  onClickStoreLocator: () => {
+  onStoreLocatorClick: () => {
     console.log('change store clicked')
   },
 }

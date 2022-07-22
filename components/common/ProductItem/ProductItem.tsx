@@ -31,7 +31,7 @@ export interface ProductItemProps {
   isPickupItem?: boolean
   expectedDeliveryDate?: string
   purchaseLocation?: string
-  onClickStoreLocator?: () => void
+  onStoreLocatorClick?: () => void
   children?: ReactNode
 }
 
@@ -64,7 +64,7 @@ const ProductItem = (props: ProductItemProps) => {
     isPickupItem,
     expectedDeliveryDate,
     purchaseLocation,
-    onClickStoreLocator,
+    onStoreLocatorClick,
     children,
   } = props
   const { t } = useTranslation('common')
@@ -162,7 +162,7 @@ const ProductItem = (props: ProductItemProps) => {
               component="button"
               variant="caption"
               color="text.primary"
-              onClick={onClickStoreLocator}
+              onClick={onStoreLocatorClick}
             >
               {purchaseLocation ? t('change-store') : t('select-store')}
             </Link>

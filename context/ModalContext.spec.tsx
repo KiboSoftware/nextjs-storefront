@@ -2,7 +2,7 @@ import { render, screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 
 import { DialogRoot, ModalContextProvider, useModalContext } from './ModalContext'
-import LoginDialog from '@/components/layout/Login'
+import { LoginDialog } from '@/components/layout'
 
 const TestComponent = () => {
   const { props, showModal, closeModal } = useModalContext()

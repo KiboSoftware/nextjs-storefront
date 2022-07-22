@@ -1,8 +1,9 @@
-import React, { useState } from 'react'
+import React from 'react'
 
 import { Box, Stack, Button, Typography, SxProps } from '@mui/material'
 import { Theme } from '@mui/material/styles'
 import { useTranslation } from 'next-i18next'
+import { useRouter } from 'next/router'
 
 import {
   DetailsStep,
@@ -13,8 +14,8 @@ import {
   OrderReview,
   OrderSummary,
 } from '@/components/checkout'
-import type { Action } from '@/components/checkout'
-import { FormStates } from '@/lib/constants'
+import { useCheckoutStepContext } from '@/context'
+import { useCheckout } from '@/hooks'
 
 import type { Order } from '@/lib/gql/types'
 interface CheckoutProps {
@@ -28,34 +29,31 @@ const buttonStyle = {
 } as SxProps<Theme> | undefined
 
 const Checkout = (props: CheckoutProps) => {
-  const { checkout, initialStep = 0 } = props
+  const { checkout: initialCheckout } = props
 
-  const { t } = useTranslation(['checkout', 'common'])
+  const { t } = useTranslation(['checkout'])
+  const router = useRouter()
+
+  const { checkoutId } = router.query
+  const { data: checkout } = useCheckout({
+    cartId: undefined,
+    checkoutId: checkoutId as string,
+    initialCheckout,
+  })
+
+  const { activeStep, steps, setStepBack, setStepStatusSubmit } = useCheckoutStepContext()
 
   const buttonLabels = [t('go-to-shipping'), t('go-to-payment'), t('review-order')]
-  const steps = [t('common:details'), t('shipping'), t('payment'), t('review')]
 
-  // State
-  const [activeStep, setActiveStep] = useState<number>(initialStep)
-  const [activeStepStatus, setActiveStepStatus] = useState<string>(FormStates.INCOMPLETE)
+  const detailsStepIndex = steps.findIndex(
+    (step: string) => step.toLowerCase() === t('details').toLowerCase()
+  )
+  const reviewStepIndex = steps.findIndex(
+    (step: string) => step.toLowerCase() === t('review').toLowerCase()
+  )
 
-  const detailsStepIndex = steps.findIndex((step) => step === t('common:details'))
-  const reviewStepIndex = steps.findIndex((step) => step === t('review'))
-
-  const handleBack = () => {
-    setActiveStep(activeStep - 1)
-  }
-
-  const handleNext = () => {
-    setActiveStepStatus(FormStates.VALIDATE)
-  }
-
-  const completeStepCallback = (action: Action) => {
-    setActiveStepStatus(FormStates.INCOMPLETE)
-    if (action.type === FormStates.COMPLETE) {
-      setActiveStep(activeStep + 1)
-    }
-  }
+  const handleBack = () => setStepBack()
+  const handleSubmit = () => setStepStatusSubmit()
 
   const orderSummaryArgs = {
     nameLabel: t('order-summary'),
@@ -82,29 +80,12 @@ const Checkout = (props: CheckoutProps) => {
         <Typography variant="h1" component="div" gutterBottom>
           {t('checkout', { numberOfItems: 3 })}
         </Typography>
-        <KiboStepper steps={steps} activeStep={activeStep}>
-          <DetailsStep
-            checkout={checkout}
-            stepperStatus={activeStepStatus}
-            onCompleteCallback={completeStepCallback}
-          />
-          <ShippingStep
-            checkout={checkout}
-            stepperStatus={activeStepStatus}
-            onCompleteCallback={completeStepCallback}
-          />
-          <PaymentStep
-            checkout={checkout}
-            stepperStatus={activeStepStatus}
-            {...paymentStepParams}
-            onCompleteCallback={completeStepCallback}
-          />
-          <ReviewStep
-            checkout={checkout}
-            stepperStatus={activeStepStatus}
-            onCompleteCallback={completeStepCallback}
-            onBackButtonClick={handleBack}
-          />
+
+        <KiboStepper>
+          <DetailsStep checkout={checkout} />
+          <ShippingStep checkout={checkout as Order} />
+          <PaymentStep checkout={checkout} {...paymentStepParams} />
+          <ReviewStep checkout={checkout as Order} onBackButtonClick={handleBack} />
         </KiboStepper>
       </Stack>
 
@@ -117,7 +98,7 @@ const Checkout = (props: CheckoutProps) => {
                   variant="contained"
                   sx={{ ...buttonStyle }}
                   fullWidth
-                  onClick={handleNext}
+                  onClick={handleSubmit}
                   disabled={activeStep === steps.length - 1}
                 >
                   {buttonLabels[activeStep]}
@@ -136,9 +117,7 @@ const Checkout = (props: CheckoutProps) => {
             )}
           </OrderSummary>
         )}
-        {activeStep === reviewStepIndex && (
-          <OrderReview checkout={checkout} steps={steps} setActiveStep={setActiveStep} />
-        )}
+        {activeStep === reviewStepIndex && <OrderReview checkout={checkout as Order} />}
       </Box>
     </Stack>
   )

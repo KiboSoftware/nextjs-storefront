@@ -8,6 +8,7 @@ import type { Order } from '@/lib/gql/types'
 interface UseCheckout {
   cartId?: string
   checkoutId?: string
+  initialCheckout?: Order
 }
 export interface UseCheckoutResponse {
   data: Order | undefined
@@ -26,14 +27,20 @@ const getOrCreateCheckout = async (cartId?: string | null, checkoutId?: string |
   return response?.checkout
 }
 
-export const useCheckout = ({ cartId, checkoutId }: UseCheckout): UseCheckoutResponse => {
+export const useCheckout = ({
+  cartId,
+  checkoutId,
+  initialCheckout,
+}: UseCheckout): UseCheckoutResponse => {
   const id = (cartId ? cartId : checkoutId) as string
 
   const {
     data = [],
     isLoading,
     isSuccess,
-  } = useQuery(checkoutKeys.detail(id), () => getOrCreateCheckout(cartId, checkoutId))
+  } = useQuery(checkoutKeys.detail(id), () => getOrCreateCheckout(cartId, checkoutId), {
+    initialData: initialCheckout,
+  })
 
   return { data, isLoading, isSuccess }
 }

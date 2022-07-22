@@ -4,14 +4,13 @@ import { Typography, Box, Divider, Link, styled, Theme } from '@mui/material'
 import { useTranslation } from 'next-i18next'
 
 import { AddressDetailsView } from '@/components/checkout'
+import { useCheckoutStepContext } from '@/context'
 import { checkoutGetters } from '@/lib/getters'
 
 import type { Order } from '@/lib/gql/types'
 
 interface OrderReviewProps {
   checkout: Order
-  steps: string[]
-  setActiveStep: (step: number) => void
 }
 
 const StyledOrderReview = styled(Box)(({ theme }: { theme: Theme }) => ({
@@ -38,8 +37,11 @@ const StyledActions = styled(Link)(({ theme }: { theme: Theme }) => ({
 }))
 
 const OrderReview = (props: OrderReviewProps) => {
-  const { checkout, steps, setActiveStep } = props
-  const { t } = useTranslation(['checkout', 'common'])
+  const { checkout } = props
+
+  const { steps, setActiveStep } = useCheckoutStepContext()
+  const { t } = useTranslation('checkout')
+
   const { personalDetails, shippingDetails, billingDetails, paymentMethods } =
     checkoutGetters.getCheckoutDetails(checkout)
 
@@ -51,7 +53,6 @@ const OrderReview = (props: OrderReviewProps) => {
     const redirectStepIndex = steps.findIndex(
       (step: string) => step === event.currentTarget.getAttribute('data-step')
     )
-
     setActiveStep(redirectStepIndex)
   }
 
@@ -69,7 +70,7 @@ const OrderReview = (props: OrderReviewProps) => {
         </Typography>
         <StyledActions
           data-testid={'edit-personal-details'}
-          data-step={t('common:details')}
+          data-step={t('details')}
           variant="caption"
           onClick={handleEditAction}
         >

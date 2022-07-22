@@ -12,7 +12,7 @@ import type { Maybe, CrOrderItem } from '@/lib/gql/types'
 
 const { Common } = composeStories(stories)
 const onChangeMock = jest.fn()
-const onClickStoreLocatorMock = jest.fn()
+const onStoreLocatorClickMock = jest.fn()
 
 describe('[component] - ShippingMethod', () => {
   const setup = (params?: ShippingMethodProps) => {
@@ -22,7 +22,7 @@ describe('[component] - ShippingMethod', () => {
       <Common
         {...props}
         onShippingMethodChange={onChangeMock}
-        onClickStoreLocator={onClickStoreLocatorMock}
+        onStoreLocatorClick={onStoreLocatorClickMock}
       />
     )
     return {
@@ -105,7 +105,7 @@ describe('[component] - ShippingMethod', () => {
     expect(headings.length).toBe(3)
   })
 
-  it('should call onClickStoreLocatorMock when click onClickStoreLocator for pickupitems only', async () => {
+  it('should call onStoreLocatorClickMock when click onStoreLocatorClick for pickupitems only', async () => {
     const params = {
       shipItems: Common.args?.shipItems as Maybe<CrOrderItem>[],
       pickupItems: Common.args?.pickupItems as Maybe<CrOrderItem>[],
@@ -117,6 +117,6 @@ describe('[component] - ShippingMethod', () => {
       ? screen.getByText(/change-store/i)
       : screen.getByText(/select-store/i)
     await user.click(changeStore)
-    expect(onClickStoreLocatorMock).toHaveBeenCalled()
+    expect(onStoreLocatorClickMock).toHaveBeenCalled()
   })
 })

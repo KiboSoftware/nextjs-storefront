@@ -4,12 +4,17 @@ import { composeStories } from '@storybook/testing-react'
 import { render, screen } from '@testing-library/react'
 
 import * as stories from './KiboStepper.stories'
+import { CheckoutStepProvider } from '@/context'
 
 const { Details } = composeStories(stories)
 
 describe('[components] KiboStepper', () => {
   const setup = () => {
-    render(<Details {...Details.args} />)
+    render(
+      <CheckoutStepProvider steps={['details', 'shipping', 'payment', 'review']}>
+        <Details {...Details.args} />
+      </CheckoutStepProvider>
+    )
   }
 
   it('should render component', () => {

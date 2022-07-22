@@ -3,6 +3,7 @@ import React from 'react'
 import { ComponentStory, ComponentMeta } from '@storybook/react'
 
 import ShippingStep from './ShippingStep'
+import { orderMock } from '@/__mocks__/stories/orderMock'
 
 // Common
 export default {
@@ -16,7 +17,5 @@ const Template: ComponentStory<typeof ShippingStep> = (args) => <ShippingStep {.
 export const Common = Template.bind({})
 Common.args = {
   setAutoFocus: false,
-  stepperStatus: 'VALIDATE',
-  checkout: undefined,
-  onCompleteCallback: () => console.log('called onCompleteCallback on shipping: '),
+  checkout: orderMock.checkout,
 }
