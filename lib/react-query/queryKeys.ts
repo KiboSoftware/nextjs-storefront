@@ -5,6 +5,11 @@ export const checkoutKeys = {
   detail: (id: string) => [...checkoutKeys.all, id] as const,
 }
 
+export const shippingMethodKeys = {
+  all: ['shippingMethod'] as const,
+  detail: (id: string) => [...shippingMethodKeys.all, id] as const,
+}
+
 export const searchKeys = {
   all: ['search'] as const,
   suggestions: (term: string) => [...searchKeys.all, term] as const,

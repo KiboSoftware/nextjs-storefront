@@ -16,7 +16,7 @@ jest.mock('@/components/common/Price/Price', () => priceMock)
 const productOptionListMock = () => <div data-testid="product-option-list-component" />
 jest.mock('@/components/product/ProductOptionList/ProductOptionList', () => productOptionListMock)
 
-const onClickStoreLocatorMock = jest.fn()
+const onStoreLocatorClickMock = jest.fn()
 
 describe('[component] - ProductItem', () => {
   const setup = () => {
@@ -62,13 +62,13 @@ describe('[component] - ProductItem with Price and Pickup Item', () => {
     expect(price).toBeVisible()
   })
 
-  it('should call onClickStoreLocatorMock when click onClickStoreLocator', async () => {
+  it('should call onStoreLocatorClickMock when click onStoreLocatorClick', async () => {
     const user = userEvent.setup()
     render(
       <WithChageStoreOption
         {...WithChageStoreOption.args}
         isPickupItem={true}
-        onClickStoreLocator={onClickStoreLocatorMock}
+        onStoreLocatorClick={onStoreLocatorClickMock}
       />
     )
     const changeStore = WithChageStoreOption.args?.purchaseLocation
@@ -76,7 +76,7 @@ describe('[component] - ProductItem with Price and Pickup Item', () => {
       : screen.getByText(/select-store/i)
 
     await user.click(changeStore)
-    expect(onClickStoreLocatorMock).toHaveBeenCalled()
+    expect(onStoreLocatorClickMock).toHaveBeenCalled()
   })
 
   it('should not show details when no label(price,qty) or options is present', () => {

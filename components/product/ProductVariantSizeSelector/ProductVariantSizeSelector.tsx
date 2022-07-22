@@ -15,7 +15,7 @@ interface SizeOptionsProps extends ProductOptionValue {
 
 const styles = {
   sizeContainer: {
-    width: 54,
+    width: 'fit-content',
     height: 37,
     display: 'flex',
     justifyContent: 'center',
@@ -25,6 +25,7 @@ const styles = {
     borderColor: 'text.primary',
     borderStyle: 'solid',
     cursor: 'pointer',
+    padding: 1,
   },
   selected: {
     backgroundColor: 'text.primary',

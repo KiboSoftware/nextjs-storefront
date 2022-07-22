@@ -3,8 +3,8 @@ import React from 'react'
 import { Typography, Box, styled, Theme, useTheme, useMediaQuery, Stack, Link } from '@mui/material'
 import { useTranslation } from 'next-i18next'
 
-import LoginDialog from '../../Login'
 import KiboDialog from '@/components/common/KiboDialog/KiboDialog'
+import { LoginDialog } from '@/components/layout'
 import Content, {
   RegisterAccountInputData,
 } from '@/components/layout/RegisterAccount/Content/Content'

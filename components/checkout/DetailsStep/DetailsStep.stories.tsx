@@ -17,16 +17,12 @@ const Template: ComponentStory<typeof DetailsStep> = (args) => <DetailsStep {...
 export const Common = Template.bind({})
 Common.args = {
   setAutoFocus: false,
-  stepperStatus: 'INVALID',
   checkout: undefined,
-  onCompleteCallback: () => console.log('called onCompleteCallback : '),
 }
 
 // With account fields
 export const withAccountCreation = Template.bind({})
 withAccountCreation.args = {
   setAutoFocus: false,
-  stepperStatus: 'INVALID',
-  onCompleteCallback: () => console.log('called onCompleteCallback : '),
   checkout: undefined,
 }

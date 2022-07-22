@@ -21,25 +21,3 @@ const Template: ComponentStory<typeof KiboStepper> = (args) => (
 
 // Default
 export const Details = Template.bind({})
-Details.args = {
-  steps: ['details', 'shipping', 'payment', 'review'],
-  activeStep: 0,
-}
-
-export const Shipping = Template.bind({})
-Shipping.args = {
-  steps: ['details', 'shipping', 'payment', 'review'],
-  activeStep: 1,
-}
-
-export const Payment = Template.bind({})
-Payment.args = {
-  steps: ['details', 'shipping', 'payment', 'review'],
-  activeStep: 2,
-}
-
-export const Review = Template.bind({})
-Review.args = {
-  steps: ['details', 'shipping', 'payment', 'review'],
-  activeStep: 3,
-}

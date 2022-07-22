@@ -4,17 +4,18 @@ import { Box, Button } from '@mui/material'
 import { useTranslation } from 'next-i18next'
 import getConfig from 'next/config'
 
-import { SearchStore } from '..'
-import KiboDialog from '@/components/common/KiboDialog/KiboDialog'
+import { KiboDialog } from '@/components/common'
+import { SearchStore } from '@/components/dialogs'
 import { useModalContext } from '@/context'
 import { useStoreLocations, useCurrentLocation } from '@/hooks'
+import { LocationCustom } from '@/lib/types'
 
 import type { Location, Maybe } from '@/lib/gql/types'
 
 interface StoreLocatorProps {
   isOpen: boolean
   isDialogCentered: boolean
-  handleSetStore: (selectedStore: string) => void
+  handleSetStore: (selectedStore: LocationCustom) => void
 }
 
 // Component
@@ -28,7 +29,7 @@ const StoreLocatorDialog = (props: StoreLocatorProps) => {
 
   const [searchParams, setSearchParams] = useState<{ filter: string }>({ filter: '' })
   const [searchTerm, setSearchTerm] = useState<string>('')
-  const [selectedStore, setSelectedStore] = React.useState('')
+  const [selectedStore, setSelectedStore] = React.useState<LocationCustom>({})
   const { isError, data: locations } = useStoreLocations(searchParams)
 
   const initialState = Boolean(!searchParams.filter)
@@ -56,7 +57,7 @@ const StoreLocatorDialog = (props: StoreLocatorProps) => {
         spLocations={!isError ? (locations as Maybe<Location>[]) : []}
         searchTerm={searchTerm}
         initialState={initialState}
-        selectedStore={selectedStore}
+        selectedStore={selectedStore?.code as string}
         setSearchTerm={setSearchTerm}
         setSelectedStore={setSelectedStore}
         onStoreByZipcode={handleSearchByInput}

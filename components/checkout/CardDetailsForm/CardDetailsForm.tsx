@@ -7,9 +7,8 @@ import { useTranslation } from 'next-i18next'
 import { useForm, Controller } from 'react-hook-form'
 import * as yup from 'yup'
 
-import type { Action } from '@/components/checkout'
 import KiboTextBox from '@/components/common/KiboTextBox/KiboTextBox'
-import { FormStates } from '@/lib/constants'
+import { useCheckoutStepContext } from '@/context'
 import { prepareCardDataParams, validateExpiryDate, getCardType } from '@/lib/helpers/credit-card'
 
 interface Card {
@@ -29,7 +28,6 @@ export interface CardData {
 export interface CardDetailsFormProps {
   validateForm: boolean
   onSaveCardData: (cardData: CardData) => void
-  onCompleteCallback: (action: Action) => void
   setValidateForm: (isValidForm: boolean) => void
 }
 
@@ -58,9 +56,11 @@ const useCardSchema = () => {
   })
 }
 const CardDetailsForm = (props: CardDetailsFormProps) => {
-  const { validateForm = false, onSaveCardData, onCompleteCallback, setValidateForm } = props
+  const { validateForm = false, onSaveCardData, setValidateForm } = props
   const { t } = useTranslation('checkout')
   const cardSchema = useCardSchema()
+
+  const { setStepStatusIncomplete } = useCheckoutStepContext()
 
   const {
     formState: { errors, isValid },
@@ -82,7 +82,7 @@ const CardDetailsForm = (props: CardDetailsFormProps) => {
 
   // form is invalid, notify parent form is incomplete
   const onInvalidForm = () => {
-    onCompleteCallback({ type: FormStates.INCOMPLETE })
+    setStepStatusIncomplete()
     setValidateForm(false)
   }
   useEffect(() => {
@@ -100,7 +100,7 @@ const CardDetailsForm = (props: CardDetailsFormProps) => {
           control={control}
           render={({ field }) => (
             <KiboTextBox
-              value={field.value}
+              value={field.value || ''}
               label={t('card-number')}
               required={true}
               onChange={(_name, value) => field.onChange(value)}
@@ -116,7 +116,7 @@ const CardDetailsForm = (props: CardDetailsFormProps) => {
           control={control}
           render={({ field }) => (
             <KiboTextBox
-              value={field.value}
+              value={field.value || ''}
               label={t('expiry-date')}
               placeholder={t('expiry-date-placeholder')}
               required={true}
@@ -133,7 +133,7 @@ const CardDetailsForm = (props: CardDetailsFormProps) => {
           render={({ field }) => (
             <KiboTextBox
               type="password"
-              value={field.value}
+              value={field.value || ''}
               label={t('security-code')}
               placeholder={t('security-code-placeholder')}
               required={true}

@@ -156,8 +156,9 @@ const CartItem = (props: CartItemProps) => {
             <Box sx={{ ...styles.subcontainer }}>
               <FulfillmentOptions
                 fulfillmentOptions={fulfillmentOptions}
+                selected=""
                 onFullfillmentOptionChange={handleFulfillmentOption}
-                onStoreSelection={handleFulfillmentOption}
+                onStoreSetOrUpdate={handleFulfillmentOption}
               />
             </Box>
           </Box>

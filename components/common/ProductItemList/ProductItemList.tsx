@@ -37,7 +37,7 @@ const ProductItemList = (props: ProductItemListProps) => {
           purchaseLocation={orderGetters.getPurchaseLocation(item)}
           isPickupItem={isPickupItem}
           expectedDeliveryDate={expectedDeliveryDate}
-          onClickStoreLocator={onClickChangeStore}
+          onStoreLocatorClick={onClickChangeStore}
           key={item?.id}
           data-testid="product-item"
         ></ProductItem>
