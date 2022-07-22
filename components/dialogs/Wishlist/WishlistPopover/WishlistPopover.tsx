@@ -81,6 +81,7 @@ const WishlistPopover = (props: WishlistPopoverProps) => {
       }}
       onClose={handleClose}
       disableRestoreFocus
+      data-testid="wishlist-component"
     >
       <Box sx={{ ...styles.wishlistMessageContainerStyle }}>
         {isInWishlist && (
@@ -90,7 +91,7 @@ const WishlistPopover = (props: WishlistPopoverProps) => {
               {t('added')}!
             </Typography>
           </Box>
-        )}{' '}
+        )}
         {!isInWishlist && (
           <Box sx={{ ...styles.wishlistMessageStyle }}>
             <FavoriteBorderRoundedIcon sx={{ ...styles.dislikeIconStyle }} />

@@ -4,10 +4,10 @@ import { makeGraphQLClient } from '@/lib/gql/client'
 import { getWishlistQuery } from '@/lib/gql/queries'
 import { wishlistKeys } from '@/lib/react-query/queryKeys'
 
-import type { Maybe, Wishlist, WishlistItem } from '@/lib/gql/types'
+import type { Maybe, Wishlist } from '@/lib/gql/types'
 
 export interface UseWishlistResponse {
-  data?: Maybe<Wishlist>
+  data?: Wishlist
   isLoading: boolean
   isSuccess: boolean
   isFetching: boolean
@@ -20,7 +20,7 @@ const getWishlists = async (): Promise<Wishlist> => {
     variables: {},
   })
 
-  return response?.wishlists.items[0]
+  return response?.wishlists?.items[0]
 }
 
 export const useWishlistQueries = (): UseWishlistResponse => {

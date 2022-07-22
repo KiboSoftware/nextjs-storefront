@@ -3,7 +3,10 @@ import { render, within, screen, cleanup } from '@testing-library/react'
 import '@testing-library/jest-dom'
 import { renderHook } from '@testing-library/react-hooks'
 
+import '@testing-library/jest-dom'
 import * as stories from './ProductDetailTemplate.stories' // import all stories from the stories file
+import { userResponseMock } from '@/__mocks__/stories/userMock'
+import { wishlistMock } from '@/__mocks__/stories/wishlistMock'
 import { useModalContext } from '@/context'
 import { usePurchaseLocation } from '@/hooks'
 import { useCartMutation } from '@/hooks/mutations/useCartMutation/useCartMutation'
@@ -50,6 +53,30 @@ jest.mock(
   '@/components/product/ProductInformation/ProductInformation',
   () => ProductInformationMock
 )
+
+const mockProduct = Common?.args?.product
+const mockWishlist = wishlistMock?.items[0]
+const mockUser = userResponseMock
+jest.mock('@/hooks', () => ({
+  useProductDetailTemplate: jest.fn(() => {
+    return {
+      currentProduct: mockProduct,
+    }
+  }),
+  useCartMutation: jest.fn(() => {
+    return {
+      addToCart: mockProduct,
+    }
+  }),
+  useUserQueries: jest.fn(() => {
+    return {
+      customerAccount: mockUser,
+    }
+  }),
+  useWishlistQueries: jest.fn(() => mockWishlist),
+  useAddToWishlistMutation: jest.fn(() => mockWishlist?.items[0]),
+  useRemoveWishlistItemMutation: jest.fn(() => true),
+}))
 
 const setup = () => {
   renderHook(() => {

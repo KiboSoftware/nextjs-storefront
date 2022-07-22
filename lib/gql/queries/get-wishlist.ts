@@ -1,7 +1,7 @@
 import { wishlist } from '@/lib/gql/fragments'
 
 const getWishlistQuery = /* GraphQL */ `
-  query {
+  query wishlists {
     wishlists {
       items {
         ...wishlist

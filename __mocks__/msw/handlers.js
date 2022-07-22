@@ -9,6 +9,7 @@ import { locationCollectionMock } from '../stories/locationCollectionMock'
 import { productSearchResultMock } from '../stories/productSearchResultMock'
 import { searchSuggestionMock } from '../stories/searchSuggestionResultMock'
 import { userMock, loginUserMock, registerUserMock } from '../stories/userMock'
+import { wishlistMock } from '../stories/wishlistMock'
 
 export const checkoutHandlers = [
   graphql.query('getCheckout', (_req, res, ctx) => {
@@ -119,6 +120,29 @@ export const storeHandlers = [
   }),
 ]
 
+export const wishlistHandlers = [
+  // useWishlistQueries
+  graphql.query('wishlists', (_req, res, ctx) => {
+    return res(ctx.data({ wishlists: wishlistMock }))
+  }),
+
+  graphql.mutation('createWishlist', (_req, res, ctx) => {
+    return res(ctx.data({ ...wishlistMock, items: [] }))
+  }),
+  // useAddToWishlistMutation
+  graphql.mutation('createWishlistItem', (_req, res, ctx) => {
+    return res(ctx.data({ createWishlistItem: wishlistMock?.items[0].items[0] }))
+  }),
+  // useRemoveWishlistItemMutation
+  graphql.mutation('deletewishlistitem', (_req, res, ctx) => {
+    return res(
+      ctx.data({
+        deleteWishlistItem: true,
+      })
+    )
+  }),
+]
+
 export const handlers = [
   ...checkoutHandlers,
   ...searchSuggestionHandlers,
@@ -128,4 +152,5 @@ export const handlers = [
   ...productHandlers,
   ...cartHandlers,
   ...storeHandlers,
+  ...wishlistHandlers,
 ]

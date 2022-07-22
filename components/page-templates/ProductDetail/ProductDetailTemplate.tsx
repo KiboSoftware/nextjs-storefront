@@ -209,7 +209,9 @@ const ProductDetailTemplate = (props: ProductDetailTemplateProps) => {
           isInWishlist: !isProductInWishlist,
         },
       })
-    } catch (err) {}
+    } catch (error) {
+      console.log('Error Add or Remove Wishlist item from PDP', error)
+    }
   }
 
   return (
