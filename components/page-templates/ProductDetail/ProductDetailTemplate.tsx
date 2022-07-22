@@ -12,7 +12,7 @@ import QuantitySelector from '@/components/common/QuantitySelector/QuantitySelec
 import KiboBreadcrumbs from '@/components/core/Breadcrumbs/KiboBreadcrumbs'
 import ImageGallery from '@/components/core/ImageGallery/ImageGallery'
 import { AddToCartDialog, StoreLocatorDialog, WishlistPopover } from '@/components/dialogs'
-import LoginDialog from '@/components/layout/LoginDialog'
+import { LoginDialog } from '@/components/layout'
 import {
   ColorSelector,
   ProductInformation,
