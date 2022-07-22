@@ -34,13 +34,17 @@ describe('[components] CartTemplate integration', () => {
 
   it('should render component', async () => {
     setup()
-
+    const items = Common.args?.cart?.items || []
     const cartTitle = screen.getByText(/cart:shopping-cart/i)
     const cartItemCount = screen.getByText(/cart:cart-item-count/i)
     const orderSummaryHeading = screen.getByText('order-summary')
 
     const gotToCheckout = screen.getByRole('button', {
       name: /go-to-checkout/i,
+    })
+
+    items?.map((_item, index: number) => {
+      expect(screen.getAllByText(/Available to Ship/i)[index]).toBeVisible()
     })
     expect(cartTitle).toBeVisible()
     expect(cartItemCount).toBeVisible()
@@ -90,5 +94,25 @@ describe('[components] CartTemplate integration', () => {
       name: /ship to home/i,
     })
     await user.click(shipRadio[0])
+  })
+
+  it('should selected ship to home item into the cart', async () => {
+    const { user } = setup()
+    const shipRadio = screen.getAllByRole('radio', {
+      name: /ship to home/i,
+    })
+    await user.click(shipRadio[0])
+
+    expect(shipRadio[0]).toBeChecked()
+  })
+
+  it('should selected pickup item into the cart', async () => {
+    const { user } = setup()
+    const pickupRadio = screen.getAllByRole('radio', {
+      name: /Pickup in store/i,
+    })
+    await user.click(pickupRadio[1])
+
+    expect(pickupRadio[1]).toBeChecked()
   })
 })

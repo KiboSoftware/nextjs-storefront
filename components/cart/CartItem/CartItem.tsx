@@ -67,7 +67,10 @@ const styles = {
     alignItems: 'flex-start',
     margin: '0',
     position: 'absolute',
-    padding: 1,
+    padding: {
+      xs: '0.5rem 0',
+      sm: 0.5,
+    },
     top: {
       xs: 0,
       sm: '2%',
