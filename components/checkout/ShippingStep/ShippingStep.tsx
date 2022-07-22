@@ -34,11 +34,18 @@ const ShippingStep = (props: ShippingProps) => {
 
   const [validateForm, setValidateForm] = useState<boolean>(false)
   const [checkoutId, setCheckoutId] = useState<string | null | undefined>(undefined)
+  const [isAddressFormValid, setIsAddressFormValid] = useState<boolean>(false)
+  const [isShippingMethodSaved, setIsShippingMethodSaved] = useState<boolean>(false)
 
   const { t } = useTranslation('checkout')
 
-  const { stepStatus, setStepNext, setStepStatusComplete, setStepStatusIncomplete } =
-    useCheckoutStepContext()
+  const {
+    stepStatus,
+    setStepNext,
+    setStepStatusValid,
+    setStepStatusComplete,
+    setStepStatusIncomplete,
+  } = useCheckoutStepContext()
   const updateCheckoutShippingInfo = useUpdateCheckoutShippingInfo()
   const { data: shippingMethods } = useShippingMethods(checkoutId)
   const handleAddressValidationAndSave = () => setValidateForm(true)
@@ -53,7 +60,6 @@ const ShippingStep = (props: ShippingProps) => {
     try {
       await updateShippingInfo(params)
       setCheckoutId(checkout?.id)
-      setStepStatusIncomplete()
     } catch (error) {
       console.error(error)
     }
@@ -77,6 +83,7 @@ const ShippingStep = (props: ShippingProps) => {
 
     try {
       await updateShippingInfo(params)
+      setIsShippingMethodSaved(true)
     } catch (error) {
       console.error(error)
     }
@@ -86,9 +93,9 @@ const ShippingStep = (props: ShippingProps) => {
     /**/
   }
 
-  useEffect(() => {
-    if (!validateForm) setStepStatusIncomplete()
-  }, [validateForm])
+  const handleFormStatusChange = (status: boolean) => {
+    setIsAddressFormValid(status)
+  }
 
   useEffect(() => {
     if (stepStatus === STEP_STATUS.SUBMIT) {
@@ -96,6 +103,10 @@ const ShippingStep = (props: ShippingProps) => {
       setStepNext()
     }
   }, [stepStatus])
+
+  useEffect(() => {
+    isAddressFormValid && isShippingMethodSaved ? setStepStatusValid() : setStepStatusIncomplete()
+  }, [isAddressFormValid, isShippingMethodSaved])
 
   return (
     <Stack data-testid="checkout-shipping" gap={2}>
@@ -111,6 +122,7 @@ const ShippingStep = (props: ShippingProps) => {
         checkout={checkout}
         validateForm={validateForm}
         onSaveAddress={handleSaveAddress}
+        onFormStatusChange={handleFormStatusChange}
         setValidateForm={setValidateForm}
       />
 

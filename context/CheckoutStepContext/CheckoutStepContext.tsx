@@ -15,6 +15,7 @@ type Action = {
 }
 
 export const STEP_STATUS = {
+  VALID: 'VALID',
   SUBMIT: 'SUBMIT',
   COMPLETE: 'COMPLETE',
   INCOMPLETE: 'INCOMPLETE',
@@ -70,6 +71,8 @@ export const CheckoutStepProvider = (props: CheckoutStepProviderProps) => {
     stateRef.current = state
   }, [state])
 
+  const setStepStatusValid = () => dispatch({ type: 'SET_STEP_STATUS', status: STEP_STATUS.VALID })
+
   const setStepStatusSubmit = () =>
     dispatch({ type: 'SET_STEP_STATUS', status: STEP_STATUS.SUBMIT })
 
@@ -93,9 +96,10 @@ export const CheckoutStepProvider = (props: CheckoutStepProviderProps) => {
       steps,
       setStepNext,
       setStepBack,
+      setStepStatusValid,
+      setStepStatusSubmit,
       setStepStatusComplete,
       setStepStatusIncomplete,
-      setStepStatusSubmit,
       setActiveStep,
     }),
     [
@@ -104,9 +108,10 @@ export const CheckoutStepProvider = (props: CheckoutStepProviderProps) => {
       steps,
       setStepBack,
       setStepNext,
+      setStepStatusValid,
+      setStepStatusSubmit,
       setStepStatusIncomplete,
       setStepStatusComplete,
-      setStepStatusSubmit,
       setActiveStep,
     ]
   )
