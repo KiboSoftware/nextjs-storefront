@@ -4,7 +4,7 @@ import { makeGraphQLClient } from '@/lib/gql/client'
 import { getWishlistQuery } from '@/lib/gql/queries'
 import { wishlistKeys } from '@/lib/react-query/queryKeys'
 
-import type { Maybe, Wishlist } from '@/lib/gql/types'
+import type { Wishlist } from '@/lib/gql/types'
 
 export interface UseWishlistResponse {
   data?: Wishlist

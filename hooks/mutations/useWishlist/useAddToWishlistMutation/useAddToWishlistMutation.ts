@@ -48,7 +48,7 @@ const addToWishlist = async (props: WishlistItemInputParams) => {
   }
 
   const wishlistId = currentWishlist ? currentWishlist?.id || '' : wishlist?.id || ''
-  const variables = await buildAddToWishlistItemInput(product, wishlistId)
+  const variables = buildAddToWishlistItemInput(product, wishlistId)
   const response = await client.request({
     document: createWishlistItemMutation,
     variables,
