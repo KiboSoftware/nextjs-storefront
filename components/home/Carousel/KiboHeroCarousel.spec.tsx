@@ -64,5 +64,14 @@ describe('checkout Component', () => {
       const text = await screen.findAllByText('Save up to 50%')
       expect(text[0]).toBeInTheDocument()
     })
+
+    it('should check top items', () => {
+      render(<Common {...Common.args} withcard={true} />)
+      const body = screen.getAllByText(Common?.args?.topProps.body)
+      const name = screen.getAllByText(Common?.args?.topProps.name)
+
+      expect(body[0]).toBeInTheDocument()
+      expect(name[0]).toBeInTheDocument()
+    })
   })
 })

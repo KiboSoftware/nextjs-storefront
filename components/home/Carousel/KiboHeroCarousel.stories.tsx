@@ -48,7 +48,7 @@ const heroItems = [
 
 const topItems = {
   name: 'Save up to 50% + Free Shipping',
-  body: 'Ends Midnight | ',
+  body: 'Ends Midnight',
   link: 'Shop Sale',
 }
 

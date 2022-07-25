@@ -55,6 +55,7 @@ const KiboHeroCarousel = ({ carouselItem, topProps, withcard }: HeroItemProps) =
     </MainStyle>
   )
 }
+
 const styles = {
   contentStyle: {
     display: 'flex',
@@ -114,6 +115,11 @@ const MainStyle = styled('div')({
 function HeroItem({ props, topProps, withcard }: HeroItemProps) {
   const kiboTheme = useTheme()
   const mobileView = useMediaQuery(kiboTheme.breakpoints.down('sm'))
+
+  const mobileStyle = {
+    fontSize: mobileView ? '0.75rem' : '1rem',
+  }
+
   const {
     imageUrl,
     mobileImageUrl,
@@ -132,13 +138,14 @@ function HeroItem({ props, topProps, withcard }: HeroItemProps) {
     <Card sx={styles.contentStyle}>
       {withcard && (
         <CardContent sx={styles.topStyle}>
-          <Typography sx={{ fontSize: mobileView ? '0.75rem' : '1rem', fontWeight: 'bold' }}>
+          <Typography sx={mobileStyle} style={{ fontWeight: 'bold' }}>
             {name}
           </Typography>
 
           <Box sx={styles.boxStyle}>
-            <Typography sx={{ fontSize: mobileView ? '0.75rem' : '1rem' }}>{body}</Typography>
-            <Typography sx={{ fontSize: mobileView ? '0.75rem' : '1rem' }}>
+            <Typography sx={mobileStyle}>{body}</Typography>
+            <Typography sx={mobileStyle}>
+              {' | '}
               <Link href="/" sx={{ color: 'white' }}>
                 {link}
               </Link>
