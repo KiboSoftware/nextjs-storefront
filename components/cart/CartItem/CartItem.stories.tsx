@@ -27,4 +27,12 @@ Common.args = {
   cartItem,
   actions,
   fulfillmentOptions: fulfillmentOptionsMock,
+  onQuantityUpdate: (cartItemId: string, quantity: number) => {
+    return { cartItemId, quantity }
+  },
+  onCartItemDelete: (cartItemId: string) => cartItemId,
+  onFulfillmentOptionChange: (fulfillmentMethod: string, cartItemId: string) => {
+    return { cartItemId, fulfillmentMethod }
+  },
+  onProductPickupLocation: (cartItemId: string) => cartItemId,
 }
