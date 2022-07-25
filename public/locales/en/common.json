@@ -111,5 +111,7 @@
 
   "added": "Added",
   "removed": "Removed",
-  "view-wishlist": "View Wishlist"
+  "view-wishlist": "View Wishlist",
+  "my-profile": "My Profile",
+  "logout": "Log Out"
 }

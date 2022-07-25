@@ -70,5 +70,6 @@
   "go-to-checkout": "Go To Checkout",
   "save-shipping-address": "Save shipping address",
   "shipping-method": "Shipping Method",
-  "change-store": "change store"
+  "change-store": "change store",
+  "shipping-address": "Shipping Address"
 }
