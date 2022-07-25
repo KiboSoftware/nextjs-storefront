@@ -5,32 +5,22 @@ import { composeStories } from '@storybook/testing-react'
 import { render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 
-import * as stories from '../../../../../components/cart/CartItem/CartItem.stories'
+import * as stories from '@/components/cart/CartItem/CartItem.stories'
 
 const { Common } = composeStories(stories)
 
 describe('[components] - CartItem Integration', () => {
   const setup = () => {
     const user = userEvent.setup()
-    const onQuantityUpdateMock = jest.fn()
-    const onFulfillmentOptionSelectionMock = jest.fn()
-    render(
-      <Common
-        {...Common.args}
-        onQuantityUpdate={onQuantityUpdateMock}
-        onFulfillmentOptionChange={onFulfillmentOptionSelectionMock}
-      />
-    )
+    render(<Common {...Common.args} />)
     return {
-      onQuantityUpdateMock,
       user,
-      onFulfillmentOptionSelectionMock,
     }
   }
 
   it('should render component', async () => {
     // arrange
-    const { onQuantityUpdateMock, user } = setup()
+    const { user } = setup()
 
     // act
     const img = screen.getByRole('img')
@@ -52,6 +42,14 @@ describe('[components] - CartItem Integration', () => {
     expect(increaseButton).toBeEnabled()
     expect(decreaseButton).toBeEnabled()
     expect(actionsIcon).toBeEnabled()
-    expect(onQuantityUpdateMock).toHaveBeenCalledTimes(2)
+  })
+
+  it('should handle fulfillment option selection', async () => {
+    const { user } = setup()
+    const radio = screen.getByRole('radio', {
+      name: /ship to home/i,
+    })
+    await user.click(radio)
+    expect(radio).toBeChecked()
   })
 })

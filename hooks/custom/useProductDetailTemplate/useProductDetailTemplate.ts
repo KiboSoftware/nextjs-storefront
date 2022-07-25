@@ -40,17 +40,6 @@ export const useProductDetailTemplate = (props: UseProductDetailTemplateProps) =
     }
   }, [purchaseLocation?.name, selectedFulfillmentOption?.location?.name])
 
-  useEffect(() => {
-    if (purchaseLocation?.name !== selectedFulfillmentOption?.location?.name) {
-      setSelectedFulfillmentOption({
-        method: '',
-        location: {
-          name: purchaseLocation?.name as string,
-        },
-      })
-    }
-  }, [purchaseLocation?.name, selectedFulfillmentOption?.location?.name])
-
   const productCode = productGetters.getProductId(currentProduct)
 
   // mutations
