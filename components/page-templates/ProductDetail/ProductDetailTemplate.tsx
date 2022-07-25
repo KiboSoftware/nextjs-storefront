@@ -120,7 +120,9 @@ const ProductDetailTemplate = (props: ProductDetailTemplateProps) => {
           },
         })
       }
-    } catch (err) {}
+    } catch (err) {
+      console.log(err)
+    }
   }
 
   const handleFulfillmentOptionChange = (value: string) => {

@@ -1,4 +1,4 @@
-import { waitFor } from '@testing-library/react'
+import { cleanup } from '@testing-library/react'
 import { renderHook } from '@testing-library/react-hooks'
 
 import { useCartMutation } from './useCartMutation'
@@ -59,7 +59,7 @@ describe('[hooks] useCartMutation', () => {
           cartItemInput: cartItemMock as CartItemInput,
         })
 
-        await waitFor(() => expect(updateResponse).toStrictEqual(cartItemMock))
+        expect(updateResponse).toStrictEqual(cartItemMock)
       },
       {
         wrapper: createQueryClientWrapper(),
