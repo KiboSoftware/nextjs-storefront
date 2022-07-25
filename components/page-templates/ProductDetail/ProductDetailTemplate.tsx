@@ -93,11 +93,11 @@ const ProductDetailTemplate = (props: ProductDetailTemplateProps) => {
     isValidForAddToCart,
   } = productGetters.getProductDetails({
     ...currentProduct,
-    fulfillmentMethod: selectedFulfillmentOption.method,
-    purchaseLocationCode: selectedFulfillmentOption.location?.code as string,
+    fulfillmentMethod: selectedFulfillmentOption?.method,
+    purchaseLocationCode: selectedFulfillmentOption?.location?.code as string,
   })
   const fulfillmentOptions = productGetters.getProductFulfillmentOptions(product, {
-    name: selectedFulfillmentOption.location?.name,
+    name: selectedFulfillmentOption?.location?.name,
   })
 
   const isProductInWishlist = wishlistGetters.isInWishlist({
@@ -117,7 +117,7 @@ const ProductDetailTemplate = (props: ProductDetailTemplateProps) => {
           variationProductCode,
           fulfillmentMethod,
           options: updatedShopperEnteredValues,
-          purchaseLocationCode: selectedFulfillmentOption.location?.code,
+          purchaseLocationCode: selectedFulfillmentOption?.location?.code,
         },
         quantity,
       })
@@ -330,7 +330,7 @@ const ProductDetailTemplate = (props: ProductDetailTemplateProps) => {
           <Box paddingY={1}>
             <FulfillmentOptions
               fulfillmentOptions={fulfillmentOptions}
-              selected={selectedFulfillmentOption.method}
+              selected={selectedFulfillmentOption?.method}
               onFullfillmentOptionChange={(value: string) => handleFulfillmentOptionChange(value)}
               onStoreSetOrUpdate={() => handleProductPickupLocation()} // change store: Open storelocator modal. Should not change global store.
             />

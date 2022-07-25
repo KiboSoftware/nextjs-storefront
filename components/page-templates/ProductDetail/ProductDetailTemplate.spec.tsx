@@ -1,15 +1,10 @@
 import { composeStories } from '@storybook/testing-react'
 import { render, within, screen, cleanup } from '@testing-library/react'
 import '@testing-library/jest-dom'
-import { renderHook } from '@testing-library/react-hooks'
 
-import '@testing-library/jest-dom'
 import * as stories from './ProductDetailTemplate.stories' // import all stories from the stories file
 import { userResponseMock } from '@/__mocks__/stories/userMock'
 import { wishlistMock } from '@/__mocks__/stories/wishlistMock'
-import { useModalContext } from '@/context'
-import { usePurchaseLocation } from '@/hooks'
-import { useCartMutation } from '@/hooks/mutations/useCartMutation/useCartMutation'
 
 const { Common } = composeStories(stories)
 
@@ -76,14 +71,11 @@ jest.mock('@/hooks', () => ({
   useWishlistQueries: jest.fn(() => mockWishlist),
   useAddToWishlistMutation: jest.fn(() => mockWishlist?.items[0]),
   useRemoveWishlistItemMutation: jest.fn(() => true),
+  usePurchaseLocation: jest.fn(() => ({})),
+  useModalContext: jest.fn(() => ({})),
 }))
 
 const setup = () => {
-  renderHook(() => {
-    useModalContext()
-    usePurchaseLocation()
-    useCartMutation()
-  })
   render(<Common {...Common?.args} />)
 }
 
