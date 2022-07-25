@@ -113,7 +113,10 @@ const getPurchaseLocation = (item: Maybe<CrOrderItem> | Maybe<CartItem>): string
 // review step changes
 
 const getTotalCollected = (checkout: Order): number => checkout.totalCollected || 0
-//u
+
+const getShippingContact = (checkout: Order): Contact =>
+  checkout?.fulfillmentInfo?.fulfillmentContact as Contact
+
 const getShippingEmail = (checkout: Order): string =>
   checkout.fulfillmentInfo?.fulfillmentContact?.email || ''
 
@@ -121,6 +124,8 @@ const getShippingFirstName = (checkout: Order): string =>
   checkout.fulfillmentInfo?.fulfillmentContact?.firstName || ''
 const getShippingLastNameOrSurname = (checkout: Order): string =>
   checkout.fulfillmentInfo?.fulfillmentContact?.lastNameOrSurname || ''
+const getShippingMiddleNameOrInitial = (checkout: Order): string =>
+  checkout?.fulfillmentInfo?.fulfillmentContact?.middleNameOrInitial || ''
 
 const getShippingPhoneHome = (checkout: Order): string =>
   checkout?.fulfillmentInfo?.fulfillmentContact?.phoneNumbers?.home || ''
@@ -233,5 +238,6 @@ export const checkoutGetters = {
   getPaymentMethods,
   getOrderSummary,
   getCheckoutDetails,
+  getShippingContact,
   ...cartGetters,
 }

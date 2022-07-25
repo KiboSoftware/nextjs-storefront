@@ -67,5 +67,7 @@
   "shipping-details": "Shipping details",
   "order-summary": "Order Summary",
   "free": "Free",
-  "go-to-checkout": "Go To Checkout"
+  "go-to-checkout": "Go To Checkout",
+  "save-shipping-address": "Save shipping address",
+  "shipping-method": "Shipping Method"
 }

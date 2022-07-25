@@ -53,12 +53,14 @@ describe('[page] Search Page', () => {
   it('should run getServerSideProps method', async () => {
     const context = {
       query: {
-        categoryCode: '40',
+        search: 'jacket',
       },
       locale: 'mock-locale',
+      res: { setHeader: jest.fn() },
     }
 
     const response = await getServerSideProps(context)
+
     expect(response).toStrictEqual({
       props: {
         results: mockProductSearchData,
@@ -72,7 +74,7 @@ describe('[page] Search Page', () => {
   })
 
   it('should render the Search page template', () => {
-    const router = createMockRouter()
+    const router = createMockRouter({ query: { search: 'jacket' } })
     render(
       <RouterContext.Provider value={router}>
         <SearchPage />

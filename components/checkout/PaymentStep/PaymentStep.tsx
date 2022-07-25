@@ -13,10 +13,10 @@ import {
 import { useTranslation } from 'next-i18next'
 
 import { CardDetailsForm } from '@/components/checkout'
-import type { Action, CardData } from '@/components/checkout'
+import type { CardData } from '@/components/checkout'
 import AddressForm, { Address, Contact } from '@/components/common/AddressForm/AddressForm'
+import { useCheckoutStepContext, STEP_STATUS } from '@/context'
 import { usePaymentTypes } from '@/hooks'
-import { FormStates } from '@/lib/constants'
 
 import type { Order } from '@/lib/gql/types'
 
@@ -25,11 +25,9 @@ export interface CardPaymentDetails extends CardData {
 }
 
 interface PaymentStepProps {
-  stepperStatus: string
   checkout: Order | undefined
   contact?: Contact
   isUserLoggedIn: boolean
-  onCompleteCallback: (action: Action) => void
 }
 interface PaymentMethod {
   id: string
@@ -94,16 +92,18 @@ const addressData = {
   },
   saveAddress: false,
 }
-// Component
+
 const PaymentStep = (props: PaymentStepProps) => {
-  const { isUserLoggedIn = false, stepperStatus, onCompleteCallback } = props
+  const { checkout, contact, isUserLoggedIn = false } = props
+
   const { t } = useTranslation('checkout')
   const { loadPaymentTypes } = usePaymentTypes()
   const paymentMethods = loadPaymentTypes()
   const [paymentDetails, setPaymentDetails] = useState<CardPaymentDetails>(cardPaymentData)
-
   const [billingAddress, setBillingAddress] = useState<Address>(addressData)
   const [validateForm, setValidateForm] = useState<boolean>(false)
+  const { stepStatus, setStepNext, setStepStatusComplete, setStepStatusIncomplete } =
+    useCheckoutStepContext()
 
   const handleCardData = (cardData: CardData) => {
     setPaymentDetails({
@@ -138,15 +138,20 @@ const PaymentStep = (props: PaymentStepProps) => {
   }
 
   useEffect(() => {
-    if (stepperStatus === FormStates.VALIDATE) {
+    if (!validateForm) setStepStatusIncomplete()
+  }, [validateForm])
+
+  useEffect(() => {
+    if (stepStatus === STEP_STATUS.SUBMIT) {
       setValidateForm(true)
     }
-  }, [stepperStatus])
+  }, [stepStatus])
 
   useEffect(() => {
     if (billingAddress.contact.firstName != '' && paymentDetails.isCardDetailsValidated) {
       createPaymentData() // to be implement save payment data & billing address
-      onCompleteCallback({ type: FormStates.COMPLETE })
+      setStepStatusComplete()
+      setStepNext()
     }
   }, [billingAddress, paymentDetails])
 
@@ -180,7 +185,6 @@ const PaymentStep = (props: PaymentStepProps) => {
         <CardDetailsForm
           validateForm={validateForm}
           onSaveCardData={handleCardData}
-          onCompleteCallback={onCompleteCallback}
           setValidateForm={setValidateForm}
         />
       )}
@@ -205,7 +209,9 @@ const PaymentStep = (props: PaymentStepProps) => {
         label={`${t('billing-address-same-as-shipping')}`}
       />
       <AddressForm
-        {...props}
+        checkout={checkout}
+        contact={contact as Contact}
+        isUserLoggedIn={isUserLoggedIn}
         saveAddressLabel={t('save-billing-address')}
         onSaveAddress={handleSaveAddress}
         validateForm={validateForm}

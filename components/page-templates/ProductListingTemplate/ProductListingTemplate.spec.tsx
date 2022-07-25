@@ -67,7 +67,7 @@ describe('[component] - Category', () => {
     const itemsCount = screen.getByText(/products-to-show/i)
 
     expect(breadCrumbComponent).toBeInTheDocument()
-    expect(header).toHaveTextContent(Category.args?.categoryFacet?.header || '')
+    expect(header).toHaveTextContent(Category.args?.productListingHeader || '')
     expect(viewText[0]).toBeVisible()
     expect(sortByText).toBeVisible()
     expect(categoryFacetComponent).toBeInTheDocument()
@@ -136,6 +136,7 @@ describe('[component] - Category', () => {
           link: '/mens/pants',
         },
       ],
+      productListingHeader: 'Apparel',
       categoryFacet: categoryFacetDataMock,
       totalResults: 30,
       appliedFilters: [],

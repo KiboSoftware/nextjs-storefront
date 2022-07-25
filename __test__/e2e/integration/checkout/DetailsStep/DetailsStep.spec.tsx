@@ -7,13 +7,18 @@ import { render, screen, act, fireEvent } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 
 import * as stories from '@/components/checkout/DetailsStep/DetailsStep.stories'
+import { CheckoutStepProvider } from '@/context'
 
 const { Common } = composeStories(stories)
 
 describe('[components] Details', () => {
   const setup = (args = Common.args) => {
     const user = userEvent.setup()
-    render(<Common {...args} />)
+    render(
+      <CheckoutStepProvider steps={['details', 'shipping', 'payment', 'review']}>
+        <Common {...args} />
+      </CheckoutStepProvider>
+    )
     return {
       user,
     }

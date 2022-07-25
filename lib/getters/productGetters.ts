@@ -51,7 +51,7 @@ const getProductGallery = (product: Product | ProductCustom) => {
 }
 
 const handleProtocolRelativeUrl = (url: string) => {
-  if (!url.startsWith('https')) {
+  if (typeof url === 'string' && !url.startsWith('https')) {
     return `https:${url}`
   }
   return url

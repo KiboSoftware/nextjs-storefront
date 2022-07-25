@@ -1,11 +1,11 @@
 import { renderHook } from '@testing-library/react-hooks'
 
-import { orderMock } from '../../../__mocks__/stories/orderMock'
-import { createQueryClientWrapper } from '../../../__test__/utils/renderWithQueryClient'
-import { useUpdateCheckout } from './useUpdateCheckout'
+import { useUpdateCheckoutPersonalInfo } from './useUpdateCheckoutPersonalInfo'
+import { orderMock } from '@/__mocks__/stories/orderMock'
+import { createQueryClientWrapper } from '@/__test__/utils/renderWithQueryClient'
 
-describe('[hooks] useUpdateCheckout', () => {
-  it('should use useUpdateCheckout', async () => {
+describe('[hooks] useUpdateCheckoutPersonalInfo', () => {
+  it('should use useUpdateCheckoutPersonalInfo', async () => {
     const checkoutDetails = {
       orderId: 'OrderId-1',
       updateMode: '',
@@ -14,7 +14,7 @@ describe('[hooks] useUpdateCheckout', () => {
 
     renderHook(
       async () => {
-        const updatePersonalInfoMutation = useUpdateCheckout()
+        const updatePersonalInfoMutation = useUpdateCheckoutPersonalInfo()
         const response = await updatePersonalInfoMutation.mutateAsync(checkoutDetails)
 
         expect(response).toStrictEqual(orderMock.checkout)

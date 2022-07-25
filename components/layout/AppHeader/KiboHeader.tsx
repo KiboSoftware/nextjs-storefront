@@ -23,10 +23,9 @@ import { styled, SxProps, Theme } from '@mui/material/styles'
 import { useTranslation } from 'next-i18next'
 import { useRouter } from 'next/router'
 
-import LoginDialog from '../Login'
 import { HeaderAction, KiboLogo } from '@/components/common'
 import { MyStoreDialog, StoreLocatorDialog } from '@/components/dialogs'
-import { MegaMenu, HamburgerMenu, SearchSuggestions } from '@/components/layout'
+import { MegaMenu, HamburgerMenu, SearchSuggestions, LoginDialog } from '@/components/layout'
 import { useAuthContext, useModalContext } from '@/context'
 import { useCartQueries, useCategoryTree, usePurchaseLocation } from '@/hooks'
 import { setPurchaseLocationCookie } from '@/lib/helpers'
@@ -329,6 +328,12 @@ export default function KiboHeader(props: KiboHeaderProps) {
       viewHamburgerMenu: value,
     })
   }
+  const handleSearchPortal = () => {
+    setHeaderState({
+      viewHamburgerMenu: false,
+      viewSearchPortal: !headerState.viewSearchPortal,
+    })
+  }
 
   return (
     <Grid container>
@@ -356,7 +361,10 @@ export default function KiboHeader(props: KiboHeaderProps) {
             <Collapse in={headerState.viewSearchPortal}>
               <Box position="static" sx={{ display: { md: 'none' } }}>
                 <StyledToolbar data-testid="searchbar-container">
-                  <SearchSuggestions />
+                  <SearchSuggestions
+                    isViewSearchPortal={headerState.viewSearchPortal}
+                    onEnterSearch={handleSearchPortal}
+                  />
                 </StyledToolbar>
               </Box>
             </Collapse>

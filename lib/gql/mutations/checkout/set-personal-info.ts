@@ -4,8 +4,8 @@ import {
   fullfillmentInfoFragment,
 } from '../../fragments'
 
-export const updateOrder = /* GraphQL */ `
-  mutation updatePersonalDetails($orderId: String!, $updateMode: String, $orderInput: OrderInput) {
+const setPersonalInfo = /* GraphQL */ `
+  mutation setPersonalInfo($orderId: String!, $updateMode: String, $orderInput: OrderInput) {
     checkout: updateOrder(orderId: $orderId, updateMode: $updateMode, orderInput: $orderInput) {
       ...baseCheckoutFragment
       items {
@@ -21,3 +21,4 @@ export const updateOrder = /* GraphQL */ `
   ${checkoutLineItemFragment}
   ${fullfillmentInfoFragment}
 `
+export default setPersonalInfo

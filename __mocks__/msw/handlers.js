@@ -1,35 +1,45 @@
 import { graphql } from 'msw'
 
+import { orderMock, shippingRateMock } from '../stories'
 import { cartItemMock } from '../stories/cartItemMock'
 import { cartMock } from '../stories/cartMock'
 import { categoryTreeDataMock } from '../stories/categoryTreeDataMock'
 import { configuredProductMock } from '../stories/configuredProductMock'
 import { locationCollectionMock } from '../stories/locationCollectionMock'
-import { orderMock } from '../stories/orderMock'
 import { productSearchResultMock } from '../stories/productSearchResultMock'
 import { searchSuggestionMock } from '../stories/searchSuggestionResultMock'
 import { userMock, loginUserMock, registerUserMock } from '../stories/userMock'
 
 export const checkoutHandlers = [
-  // useLoadCheckout
   graphql.query('getCheckout', (_req, res, ctx) => {
     return res(ctx.data(orderMock))
   }),
 
-  // useCheckout
   graphql.query('getOrCreateCheckout', (_req, res, ctx) => {
     return res(ctx.data(orderMock))
   }),
 
-  // useLoadFromCart
   graphql.mutation('getOrCreateCheckoutFromCart', (_req, res, ctx) => {
     return res(ctx.data(orderMock))
   }),
 
-  // useCheckout
-  graphql.mutation('updatePersonalDetails', (_req, res, ctx) => {
+  // Details Step
+  graphql.mutation('setPersonalInfo', (_req, res, ctx) => {
     return res(ctx.data(orderMock))
   }),
+
+  // Shipping Step
+  graphql.mutation('setShippingInformation', (_req, res, ctx) => {
+    return res(ctx.data({ updateOrderFulfillmentInfo: orderMock.checkout.fulfillmentInfo }))
+  }),
+
+  graphql.query('getShippingRates', (_req, res, ctx) => {
+    return res(ctx.data(shippingRateMock))
+  }),
+
+  // Payment Step
+
+  // Order Reivew Step
 ]
 
 export const productHandlers = [

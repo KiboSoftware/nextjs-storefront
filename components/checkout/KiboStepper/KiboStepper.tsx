@@ -2,14 +2,16 @@ import React, { ReactNode, Children } from 'react'
 
 import { Box, Stack, Step, Stepper, Typography, Slider, StepButton } from '@mui/material'
 
+import { useCheckoutStepContext } from '@/context'
+
 interface StepperProps {
-  steps: string[]
   children: ReactNode
-  activeStep: number
 }
 
 const KiboStepper = (props: StepperProps) => {
-  const { steps, children, activeStep } = props
+  const { children } = props
+
+  const { activeStep, steps } = useCheckoutStepContext()
 
   const totalSteps = () => {
     return steps.length
@@ -23,7 +25,7 @@ const KiboStepper = (props: StepperProps) => {
     <Stack sx={{ maxWidth: '872px' }} gap={3}>
       <Box>
         <Stepper nonLinear activeStep={activeStep} connector={null} data-testid="kibo-stepper">
-          {steps.map((label, index) => (
+          {steps.map((label: string, index: number) => (
             <Step key={label} sx={{ flex: 1, padding: 0 }}>
               <StepButton icon={<></>}>
                 <Typography

@@ -10,7 +10,9 @@
   "view": "View",
   "show-more": "Show More",
   "view-results": "View Results",
-  "results": "{{totalResults}} Results",
+  "results_one": "{{count}} Result",
+  "results_other": "{{count}} Results",
   "product-recommendations": "Product Recommendations",
-  "customers-also-bought": "Customers Also Bought"
+  "customers-also-bought": "Customers Also Bought",
+  "search-results": "{{m}} Results for {{n}}"
 }

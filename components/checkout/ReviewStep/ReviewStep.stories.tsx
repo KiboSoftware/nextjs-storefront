@@ -18,5 +18,4 @@ const Template: ComponentStory<typeof ReviewStep> = (args) => <ReviewStep {...ar
 export const Common = Template.bind({})
 Common.args = {
   checkout: orderMock.checkout,
-  stepperStatus: 'VALIDATE',
 }

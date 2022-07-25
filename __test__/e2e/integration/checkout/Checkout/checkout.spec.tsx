@@ -1,17 +1,34 @@
 import React from 'react'
 
 import { composeStories } from '@storybook/testing-react'
-import { cleanup, screen, waitFor } from '@testing-library/react'
+import { cleanup, fireEvent, screen, waitFor, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 
+import { orderMock, shippingRateMock } from '@/__mocks__/stories'
 import { renderWithQueryClient } from '@/__test__/utils/renderWithQueryClient'
 import * as stories from '@/components/page-templates/Checkout/Checkout.stories'
+import { CheckoutStepProvider } from '@/context/CheckoutStepContext/CheckoutStepContext'
 
 const { Common } = composeStories(stories)
 
-const setup = (initialStep: number) => {
+jest.mock('next/router', () => ({
+  useRouter() {
+    return {
+      query: { checkoutId: '13cbf88a39c9fb00010137fd0000678b' },
+    }
+  },
+}))
+
+const setup = (initialActiveStep = 0) => {
   const user = userEvent.setup()
-  renderWithQueryClient(<Common {...Common.args} initialStep={initialStep} />)
+  renderWithQueryClient(
+    <CheckoutStepProvider
+      steps={['details', 'shipping', 'payment', 'review']}
+      initialActiveStep={initialActiveStep}
+    >
+      <Common {...Common.args} />
+    </CheckoutStepProvider>
+  )
   return {
     user,
   }
@@ -41,173 +58,190 @@ describe('[components] Checkout integration', () => {
     expect(backButton).toBeDisabled()
   })
 
-  it('should activate next step(shipping) when user enters valid input and clicks on "Go to Shipping" button', async () => {
-    const { user } = setup(0)
+  describe('Details Step', () => {
+    it('should enable Shipping Step when clicks on Go To Shipping button', async () => {
+      const { user } = setup(0)
 
-    const email = 'Test@gmail.com'
+      const email = orderMock.checkout.email as string
+      const emailInput = screen.getByRole('textbox', { name: /your-email/i })
 
-    // Enter valid details
-    const emailInput = screen.getByRole('textbox', { name: /your-email/i })
+      await user.clear(emailInput)
+      await user.type(emailInput, email)
 
-    await user.clear(emailInput)
-    await user.type(emailInput, email)
+      const goToShipiingButton = screen.getByRole('button', {
+        name: /go-to-shipping/i,
+      })
 
-    await waitFor(() => expect(emailInput).toHaveValue(email))
+      await user.click(goToShipiingButton)
+      const shippingComponent = await screen.findByTestId('checkout-shipping')
+
+      expect(shippingComponent).toBeVisible()
+    })
   })
 
-  it('should call onCompleteCallback when user enters valid inputs', async () => {
-    const onCompleteCallbackMock = jest.fn()
+  describe('Shipping Step', () => {
+    it('should enable Payment Step when user clicks on Go To Payment button', async () => {
+      const { user } = setup(1)
 
-    const { user } = setup(2)
+      const goToPamentButton = screen.getByRole('button', {
+        name: /go-to-payment/i,
+      })
 
-    const creditCard = screen.getByRole('radio', {
-      name: /credit \/ debit card/i,
+      await user.click(goToPamentButton)
+
+      const paymentStep = await screen.findByTestId('checkout-payment')
+
+      expect(paymentStep).toBeVisible()
     })
 
-    await user.click(creditCard)
+    it('should enable Details Step when user clicks on Go Back button', async () => {
+      const { user } = setup(1)
 
-    const cardNumber = screen.getByRole('textbox', {
-      name: /card-number/i,
+      const goBackButton = screen.getByRole('button', {
+        name: /go-back/i,
+      })
+
+      await user.click(goBackButton)
+
+      const detailsStep = await screen.findByTestId('checkout-details')
+
+      expect(detailsStep).toBeVisible()
     })
 
-    const expiryDate = screen.getByPlaceholderText(/expiry-date-placeholder/i)
+    it('should able to save Shipping Address when user clicks on Save Shipping Address button', async () => {
+      const { user } = setup(1)
 
-    const securityCode = screen.getByPlaceholderText(/security-code-placeholder/i)
+      const firstName = screen.getByRole('textbox', { name: /first-name/i })
+      const lastNameOrSurname = screen.getByRole('textbox', { name: /last-name-or-sur-name/i })
+      const address1 = screen.getByRole('textbox', { name: /address1/i })
+      const address2 = screen.getByRole('textbox', { name: /address2/i })
+      const cityOrTown = screen.getByRole('textbox', { name: /city/i })
+      const stateOrProvince = screen.getByRole('textbox', { name: /state-or-province/i })
+      const postalOrZipCode = screen.getByRole('textbox', { name: /postal-or-zip-code/i })
+      const phoneNumberHome = screen.getByRole('textbox', { name: /phone-number/i })
+      const countryCode = screen.getByRole('button', {
+        name: /DE/i,
+      })
 
-    // act
-    const firstName = screen.getByRole('textbox', { name: /first-name/i })
+      const saveShippingAddressButton = screen.getByRole('button', {
+        name: /save-shipping-address/i,
+      })
 
-    // act
-    const lastNameOrSurname = screen.getByRole('textbox', { name: /last-name-or-sur-name/i })
+      await user.type(firstName, 'John')
+      await user.type(lastNameOrSurname, 'Doe')
+      await user.type(address1, 'Baker Street')
+      await user.type(address2, 'Near Lords')
+      await user.type(cityOrTown, 'London')
+      await user.type(stateOrProvince, 'East London')
+      await user.type(postalOrZipCode, '411033')
+      await user.type(phoneNumberHome, '9921215096')
 
-    // act
-    const address1 = screen.getByRole('textbox', { name: /address1/i })
+      await user.click(countryCode)
+      await user.click(saveShippingAddressButton)
+      const rate = `${shippingRateMock.orderShipmentMethods[0].shippingMethodName} $${shippingRateMock.orderShipmentMethods[0].price}`
 
-    // act
-    const address2 = screen.getByRole('textbox', { name: /address2/i })
+      const button = await screen.findByRole('button', { name: 'Select Shipping Option' })
+      fireEvent.mouseDown(button)
+      const options = within(screen.getByRole('listbox'))
+      const option = options.getByText(rate)
 
-    // act
-    const cityOrTown = screen.getByRole('textbox', { name: /city/i })
-
-    // act
-    const stateOrProvince = screen.getByRole('textbox', { name: /state-or-province/i })
-
-    // act
-    const postalOrZipCode = screen.getByRole('textbox', { name: /postal-or-zip-code/i })
-
-    // act
-    const phoneNumberHome = screen.getByRole('textbox', { name: /phone-number/i })
-    await user.type(cardNumber, '4111111111111111')
-    await user.type(expiryDate, '03/2024')
-    await user.type(securityCode, '123')
-    await user.type(firstName, 'John')
-    await user.type(lastNameOrSurname, 'Doe')
-    await user.type(address1, '123 Main St')
-    await user.type(address2, 'Apt 1')
-    await user.type(cityOrTown, 'San Francisco')
-    await user.type(stateOrProvince, 'CA')
-    await user.type(postalOrZipCode, '94107')
-    await user.type(phoneNumberHome, '1234567890')
-    await onCompleteCallbackMock({ type: 'COMPLETE' })
-
-    await waitFor(() => expect(onCompleteCallbackMock).toHaveBeenCalled())
-  })
-
-  it('should enable confirm and pay button in review step when terms and conditions checkbox checked ', async () => {
-    const { user } = setup(3)
-
-    const termsConditions = screen.getByRole('checkbox', {
-      name: /termsconditions/i,
+      expect(option).toBeVisible()
     })
-    termsConditions.focus()
-
-    await user.click(termsConditions)
-
-    await waitFor(() => expect(termsConditions).toBeChecked())
   })
 
-  it('should go to previous payment step when go back button click from review step', async () => {
-    const { user } = setup(3)
+  describe('Payment Step', () => {
+    it('should enable Shipping Step when user clicks on Go Back button', async () => {
+      const { user } = setup(2)
 
-    const reviewComponent = screen.getByTestId(/review-step-component/i)
-    const goBackButton = screen.getByRole('button', {
-      name: /go-back/i,
+      const goBackButton = screen.getByRole('button', {
+        name: /go-back/i,
+      })
+
+      await user.click(goBackButton)
+
+      const shippingStep = await screen.findByTestId('checkout-shipping')
+
+      expect(shippingStep).toBeVisible()
     })
-    goBackButton.focus()
-
-    await user.click(goBackButton)
-
-    await waitFor(() => expect(reviewComponent).not.toBeInTheDocument())
   })
 
-  it('should go to details step when click on edit personal details', async () => {
-    const { user } = setup(3)
+  describe('Review Step', () => {
+    it('should enable Pay and Confirm button in when user checks terms and conditions checkbox', async () => {
+      const { user } = setup(3)
 
-    let personalDetailsStep = screen.queryByTestId('checkout-details')
+      const termsConditions = screen.getByRole('checkbox', {
+        name: /termsconditions/i,
+      })
+      termsConditions.focus()
 
-    expect(personalDetailsStep).not.toBeInTheDocument()
+      await user.click(termsConditions)
 
-    const editPersonalDetails = screen.getByTestId(/edit-personal-details/i)
-    editPersonalDetails.focus()
+      await waitFor(() => expect(termsConditions).toBeChecked())
+    })
 
-    await user.click(editPersonalDetails)
+    it('should enable Payment Step when user clicks on Go Back button', async () => {
+      const { user } = setup(3)
 
-    personalDetailsStep = screen.getByTestId(/checkout-details/i)
+      const reviewComponent = screen.getByTestId(/review-step-component/i)
+      const goBackButton = screen.getByRole('button', {
+        name: /go-back/i,
+      })
 
-    await waitFor(() => expect(personalDetailsStep).toBeInTheDocument())
-  })
+      await user.click(goBackButton)
 
-  it('should go to shipping step when click on edit shipping details', async () => {
-    const { user } = setup(3)
+      await waitFor(() => expect(reviewComponent).not.toBeVisible())
+    })
 
-    let shippingStep = screen.queryByTestId('checkout-shipping')
+    it('should go to details step when click on edit personal details', async () => {
+      const { user } = setup(3)
 
-    expect(shippingStep).not.toBeInTheDocument()
+      let personalDetailsStep = screen.queryByTestId('checkout-details')
+      expect(personalDetailsStep).not.toBeInTheDocument()
 
-    const editShippingDetails = screen.getByTestId(/edit-shipping-details/i)
+      const editPersonalDetails = screen.getByTestId(/edit-personal-details/i)
+      await user.click(editPersonalDetails)
 
-    editShippingDetails.focus()
+      personalDetailsStep = screen.getByTestId(/checkout-details/i)
+      await waitFor(() => expect(personalDetailsStep).toBeVisible())
+    })
 
-    await user.click(editShippingDetails)
+    it('should go to shipping step when click on edit shipping details', async () => {
+      const { user } = setup(3)
 
-    shippingStep = screen.getByTestId(/checkout-shipping/i)
+      let shippingStep = screen.queryByTestId('checkout-shipping')
+      expect(shippingStep).not.toBeInTheDocument()
 
-    await waitFor(() => expect(shippingStep).toBeInTheDocument())
-  })
+      const editShippingDetails = screen.getByTestId(/edit-shipping-details/i)
+      await user.click(editShippingDetails)
 
-  it('should go to payment step when click on edit billing address', async () => {
-    const { user } = setup(3)
+      shippingStep = screen.getByTestId(/checkout-shipping/i)
+      await waitFor(() => expect(shippingStep).toBeVisible())
+    })
 
-    let paymentStep = screen.queryByTestId('checkout-payment')
+    it('should go to payment step when click on edit billing address', async () => {
+      const { user } = setup(3)
 
-    expect(paymentStep).not.toBeInTheDocument()
+      let paymentStep = screen.queryByTestId('checkout-payment')
+      expect(paymentStep).not.toBeInTheDocument()
 
-    const editBillingDetails = screen.getByTestId(/edit-billing-address/i)
+      const editBillingDetails = screen.getByTestId(/edit-billing-address/i)
+      await user.click(editBillingDetails)
 
-    editBillingDetails.focus()
+      paymentStep = screen.getByTestId(/checkout-payment/i)
+      await waitFor(() => expect(paymentStep).toBeVisible())
+    })
 
-    await user.click(editBillingDetails)
+    it('should go to payment step when click on edit payment method', async () => {
+      const { user } = setup(3)
 
-    paymentStep = screen.getByTestId(/checkout-payment/i)
+      let paymentStep = screen.queryByTestId('checkout-payment')
+      expect(paymentStep).not.toBeInTheDocument()
 
-    await waitFor(() => expect(paymentStep).toBeInTheDocument())
-  })
+      const editPaymentMethod = screen.getByTestId(/edit-payment-method/i)
+      await user.click(editPaymentMethod)
 
-  it('should go to payment step when click on edit payment method', async () => {
-    const { user } = setup(3)
-
-    let paymentStep = screen.queryByTestId('checkout-payment')
-
-    expect(paymentStep).not.toBeInTheDocument()
-
-    const editPaymentMethod = screen.getByTestId(/edit-payment-method/i)
-
-    editPaymentMethod.focus()
-
-    await user.click(editPaymentMethod)
-
-    paymentStep = screen.getByTestId(/checkout-payment/i)
-
-    await waitFor(() => expect(paymentStep).toBeInTheDocument())
+      paymentStep = screen.getByTestId(/checkout-payment/i)
+      await waitFor(() => expect(paymentStep).toBeVisible())
+    })
   })
 })

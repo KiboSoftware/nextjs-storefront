@@ -14,19 +14,16 @@ import {
 } from '@mui/material'
 import { useTranslation } from 'next-i18next'
 
-import type { Action } from '@/components/checkout/DetailsStep/DetailsStep'
 import OrderPrice from '@/components/common/OrderPrice/OrderPrice'
 import type { OrderPriceProps } from '@/components/common/OrderPrice/OrderPrice'
 import ProductItemList from '@/components/common/ProductItemList/ProductItemList'
-import { FormStates } from '@/lib/constants'
+import { useCheckoutStepContext, STEP_STATUS } from '@/context'
 import { checkoutGetters } from '@/lib/getters'
 
 import type { Order } from '@/lib/gql/types'
 
 interface ReviewStepProps {
-  stepperStatus: string
   checkout: Order
-  onCompleteCallback: (action: Action) => void
   onBackButtonClick: () => void
 }
 
@@ -50,11 +47,12 @@ const styles = {
 }
 
 const ReviewStep = (props: ReviewStepProps) => {
-  const { checkout, stepperStatus, onCompleteCallback, onBackButtonClick } = props
+  const { checkout, onBackButtonClick } = props
 
   const { t } = useTranslation(['checkout', 'common'])
   const theme = useTheme()
 
+  const { stepStatus, setStepNext, setStepStatusComplete } = useCheckoutStepContext()
   const { shipItems, pickupItems, orderSummary } = checkoutGetters.getCheckoutDetails(checkout)
 
   const { subTotal, shippingTotal, taxTotal, total } = orderSummary
@@ -75,8 +73,9 @@ const ReviewStep = (props: ReviewStepProps) => {
     setAggreeWithTermsAndConditions(event.target.checked)
 
   const handleComplete = () => {
-    if (stepperStatus === FormStates.VALIDATE) {
-      onCompleteCallback({ type: FormStates.COMPLETE })
+    if (stepStatus === STEP_STATUS.SUBMIT) {
+      setStepStatusComplete()
+      setStepNext()
     }
   }
 

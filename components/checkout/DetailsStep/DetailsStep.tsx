@@ -22,15 +22,16 @@ import * as yup from 'yup'
 
 import KiboTextBox from '@/components/common/KiboTextBox/KiboTextBox'
 import PasswordValidation from '@/components/common/PasswordValidation/PasswordValidation'
-import { CheckoutDetails, useUpdateCheckout } from '@/hooks'
+import { LoginDialog } from '@/components/layout'
+import { useAuthContext, useCheckoutStepContext, STEP_STATUS, useModalContext } from '@/context'
+import { PersonalInfo, useUpdateCheckoutPersonalInfo } from '@/hooks'
 import { FormStates } from '@/lib/constants'
 import { isPasswordValid } from '@/lib/helpers/validations/validations'
 
-import type { Order, OrderInput } from '@/lib/gql/types'
-
+import type { Order, OrderInput, Maybe } from '@/lib/gql/types'
 export interface PersonalDetails {
-  email: string
-  showAccountFields?: boolean
+  email: Maybe<string> | undefined
+  showAccountFields: boolean
   firstName: string
   lastNameOrSurname: string
   password: string
@@ -41,9 +42,7 @@ export interface Action {
 }
 interface DetailsProps {
   setAutoFocus?: boolean
-  stepperStatus: string
   checkout: Order | undefined
-  onCompleteCallback: (action: Action) => void
 }
 
 const commonStyle = {
@@ -79,19 +78,28 @@ const useDetailsSchema = () => {
 }
 
 const DetailsStep = (props: DetailsProps) => {
-  const { setAutoFocus = true, stepperStatus, onCompleteCallback, checkout } = props
+  const { setAutoFocus = true, checkout } = props
 
   const { t } = useTranslation('checkout')
-  const updateCheckoutMutation = useUpdateCheckout()
+  const updateCheckoutPersonalInfo = useUpdateCheckoutPersonalInfo()
+  const { isAuthenticated, setAuthError } = useAuthContext()
+  const { showModal } = useModalContext()
+  const { stepStatus, setStepNext, setStepStatusComplete, setStepStatusIncomplete } =
+    useCheckoutStepContext()
 
   const fulfillmentInfo = checkout?.fulfillmentInfo
   const fulfillmentContact = fulfillmentInfo && fulfillmentInfo?.fulfillmentContact
   const personalDetails = {
-    email: (fulfillmentContact && fulfillmentContact.email) || '',
+    email: checkout && checkout.email,
     showAccountFields: false,
     firstName: (fulfillmentContact && fulfillmentContact.firstName) || '',
     lastNameOrSurname: (fulfillmentContact && fulfillmentContact.lastNameOrSurname) || '',
     password: '',
+  }
+
+  const openLoginModal = () => {
+    setAuthError('')
+    if (!isAuthenticated) showModal({ Component: LoginDialog })
   }
 
   const {
@@ -100,10 +108,11 @@ const DetailsStep = (props: DetailsProps) => {
     control,
     watch,
     getValues,
+    reset,
   } = useForm({
     mode: 'onBlur',
     reValidateMode: 'onBlur',
-    defaultValues: personalDetails ? personalDetails : undefined,
+    defaultValues: personalDetails ? { ...personalDetails, email: checkout?.email } : undefined,
     resolver: yupResolver(useDetailsSchema()),
     shouldFocusError: true,
   })
@@ -118,10 +127,10 @@ const DetailsStep = (props: DetailsProps) => {
     console.log(`createAccount: ${JSON.stringify(formData)}`)
   }
 
-  const updateCheckout = async (formData: PersonalDetails) => {
+  const updatePersonalInfo = async (formData: PersonalDetails) => {
     const { email } = formData
 
-    const checkoutDetails: CheckoutDetails = {
+    const personalInfo: PersonalInfo = {
       orderId: checkout?.id as string,
       updateMode: 'ApplyToOriginal',
       orderInput: {
@@ -129,49 +138,63 @@ const DetailsStep = (props: DetailsProps) => {
         email,
       },
     }
-    await updateCheckoutMutation.mutateAsync(checkoutDetails)
+    await updateCheckoutPersonalInfo.mutateAsync(personalInfo)
   }
 
   // if form is valid, onSubmit callback
-  const onValid = async (formData: PersonalDetails, _e: any) => {
+  const onValid = async (formData: PersonalDetails) => {
     try {
-      await updateCheckout(formData)
+      if (!isUserEnteredPasswordValid()) {
+        setStepStatusIncomplete()
+        return
+      }
+
+      await updatePersonalInfo(formData)
       if (formData?.showAccountFields) {
         await createAccount(formData)
       }
 
-      onCompleteCallback({
-        type: isUserEnteredPasswordValid() ? FormStates.COMPLETE : FormStates.INCOMPLETE,
-      })
+      setStepStatusComplete()
+      setStepNext()
     } catch (error) {
-      onCompleteCallback({ type: FormStates.INCOMPLETE })
+      setStepStatusIncomplete()
       console.error(error)
     }
   }
 
   // form is invalid, notify parent form is incomplete
   const onInvalidForm = (_errors?: any, _e?: any) => {
-    onCompleteCallback({ type: FormStates.INCOMPLETE })
+    setStepStatusIncomplete()
   }
 
   useEffect(() => {
-    if (stepperStatus === FormStates.VALIDATE) {
+    if (stepStatus === STEP_STATUS.SUBMIT) {
       handleSubmit(onValid, onInvalidForm)()
     }
-  }, [stepperStatus])
+  }, [stepStatus])
+
+  useEffect(() => {
+    reset({ ...personalDetails })
+  }, [checkout])
 
   return (
     <Stack gap={2} data-testid="checkout-details">
-      <Button
-        variant="contained"
-        color="inherit"
-        sx={{ ...buttonStyle }}
-        style={{ textTransform: 'none' }}
-      >
-        {t('sign-into-your-account')}
-      </Button>
-      <br />
-      {t('or-fill-the-details-below')}
+      {!isAuthenticated && (
+        <div>
+          <Button
+            variant="contained"
+            color="inherit"
+            sx={{ ...buttonStyle }}
+            style={{ textTransform: 'none' }}
+            onClick={openLoginModal}
+          >
+            {t('sign-into-your-account')}
+          </Button>
+          <br />
+          {t('or-fill-the-details-below')}
+        </div>
+      )}
+
       <Typography variant="h2" component="h2" sx={{ fontWeight: 'bold' }}>
         {t('personal-details')}
       </Typography>
@@ -183,7 +206,7 @@ const DetailsStep = (props: DetailsProps) => {
           render={({ field }) => (
             <KiboTextBox
               name="email"
-              value={field.value}
+              value={field.value || ''}
               label={t('your-email')}
               required
               autoFocus={setAutoFocus}

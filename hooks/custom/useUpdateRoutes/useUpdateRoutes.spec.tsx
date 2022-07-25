@@ -12,10 +12,14 @@ describe('useUpdateRoutes', () => {
   const { updateRoute } = useUpdateRoutes()
   it('should add the filter to the url if filter is not present', () => {
     updateRoute('Tenant~color:black')
-    expect(push).toHaveBeenCalledWith({
-      pathname: undefined,
-      query: { categoryCode: '41', filters: 'Tenant~color:blue' },
-    })
+    expect(push).toHaveBeenCalledWith(
+      {
+        pathname: undefined,
+        query: { categoryCode: '41', filters: 'Tenant~color:blue' },
+      },
+      undefined,
+      { scroll: false }
+    )
   })
 
   it('should remove the filter from the url if filter is present', () => {
