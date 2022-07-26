@@ -20,7 +20,7 @@ const getCheckout = async (checkoutId?: string | null) => {
 
   const response = await client.request({
     document: getCheckoutQuery,
-    variables: checkoutId,
+    variables: { checkoutId },
   })
 
   return response?.checkout
