@@ -372,7 +372,7 @@ const ProductDetailTemplate = (props: ProductDetailTemplateProps) => {
           <Divider />
         </Grid>
         <Grid item xs={12}>
-          {properties?.length && (
+          {properties?.length > 0 && (
             <Box paddingY={3}>
               <ProductInformation productFullDescription={description} options={properties} />
             </Box>
