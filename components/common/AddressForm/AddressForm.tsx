@@ -12,7 +12,6 @@ import * as yup from 'yup'
 
 import KiboSelect from '@/components/common/KiboSelect/KiboSelect'
 import KiboTextField from '@/components/common/KiboTextBox/KiboTextBox'
-import { useCheckoutStepContext } from '@/context'
 
 import type { Order } from '@/lib/gql/types'
 
@@ -54,6 +53,7 @@ interface AddressFormProps {
   checkout: Order | undefined
   validateForm: boolean
   onSaveAddress: (data: Address) => void
+  onFormStatusChange?: (status: boolean) => void
   setValidateForm: (isValidForm: boolean) => void
 }
 
@@ -85,13 +85,14 @@ const AddressForm = (props: AddressFormProps) => {
     setAutoFocus = true,
     validateForm = false,
     onSaveAddress,
+    onFormStatusChange,
     setValidateForm,
   } = props
 
   // Define Variables and States
   const {
     control,
-    formState: { errors },
+    formState: { errors, isValid },
     handleSubmit,
   } = useForm({
     mode: 'onBlur',
@@ -123,6 +124,10 @@ const AddressForm = (props: AddressFormProps) => {
   useEffect(() => {
     if (validateForm) handleSubmit(onValid, onInvalidForm)()
   }, [validateForm])
+
+  useEffect(() => {
+    if (onFormStatusChange) onFormStatusChange(isValid)
+  }, [isValid])
 
   return (
     <Box

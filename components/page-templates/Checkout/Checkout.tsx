@@ -14,7 +14,7 @@ import {
   OrderReview,
   OrderSummary,
 } from '@/components/checkout'
-import { useCheckoutStepContext } from '@/context'
+import { useCheckoutStepContext, STEP_STATUS } from '@/context'
 import { useCheckout } from '@/hooks'
 
 import type { Order } from '@/lib/gql/types'
@@ -41,7 +41,8 @@ const Checkout = (props: CheckoutProps) => {
     initialCheckout,
   })
 
-  const { activeStep, steps, setStepBack, setStepStatusSubmit } = useCheckoutStepContext()
+  const { activeStep, stepStatus, steps, setStepBack, setStepStatusSubmit } =
+    useCheckoutStepContext()
 
   const buttonLabels = [t('go-to-shipping'), t('go-to-payment'), t('review-order')]
 
@@ -99,7 +100,7 @@ const Checkout = (props: CheckoutProps) => {
                   sx={{ ...buttonStyle }}
                   fullWidth
                   onClick={handleSubmit}
-                  disabled={activeStep === steps.length - 1}
+                  disabled={stepStatus !== STEP_STATUS.VALID || activeStep === steps.length - 1}
                 >
                   {buttonLabels[activeStep]}
                 </Button>

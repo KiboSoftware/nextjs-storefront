@@ -3,11 +3,20 @@ import React from 'react'
 import { ComponentStory, ComponentMeta } from '@storybook/react'
 
 import KiboStepper from './KiboStepper'
+import { CheckoutStepProvider } from '@/context/CheckoutStepContext/CheckoutStepContext'
+const steps = ['details', 'shipping', 'payment', 'review']
 
 // Common
 export default {
   title: 'Checkout/KiboStepper',
   component: KiboStepper,
+  decorators: [
+    (Story) => (
+      <CheckoutStepProvider steps={steps}>
+        <Story />
+      </CheckoutStepProvider>
+    ),
+  ],
 } as ComponentMeta<typeof KiboStepper>
 
 const Template: ComponentStory<typeof KiboStepper> = (args) => (
