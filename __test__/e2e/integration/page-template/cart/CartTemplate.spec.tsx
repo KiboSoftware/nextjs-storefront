@@ -3,8 +3,12 @@ import React from 'react'
 import { composeStories } from '@storybook/testing-react'
 import { cleanup, screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
+import { graphql } from 'msw'
 import { RouterContext } from 'next/dist/shared/lib/router-context'
 
+import { server } from '@/__mocks__/msw/server'
+import { cartItemMock } from '@/__mocks__/stories/cartItemMock'
+import { cartMock } from '@/__mocks__/stories/cartMock'
 import { createMockRouter } from '@/__test__/utils/createMockRouter'
 import { renderWithQueryClient } from '@/__test__/utils/renderWithQueryClient'
 import { CartTemplateProps } from '@/components/page-templates/CartTemplate/CartTemplate'
@@ -107,6 +111,52 @@ describe('[components] CartTemplate integration', () => {
   })
 
   it('should selected pickup item into the cart', async () => {
+    const { user } = setup()
+    const pickupRadio = screen.getAllByRole('radio', {
+      name: /Pickup in store/i,
+    })
+    await user.click(pickupRadio[1])
+
+    expect(pickupRadio[1]).toBeChecked()
+  })
+
+  it('should change the location code when use select pickup item', async () => {
+    const updatedCartMock = { ...cartMock }
+    const updatedCartItemMock = { ...cartItemMock }
+    updatedCartItemMock.fulfillmentLocationCode = 'Richmond'
+    updatedCartItemMock.fulfillmentMethod = 'Pickup'
+    updatedCartMock?.currentCart?.items?.pop()
+    updatedCartMock?.currentCart?.items?.push(updatedCartItemMock)
+    server.resetHandlers(
+      graphql.mutation('updateCurrentCartItem', (_req, res, ctx) => {
+        return res(
+          ctx.data({
+            updateCurrentCartItem: updatedCartItemMock,
+          })
+        )
+      }),
+      graphql.query('cart', (_req, res, ctx) => {
+        return res(ctx.data(updatedCartMock))
+      })
+    )
+    const { user } = setup()
+    const pickupRadio = screen.getAllByRole('radio', {
+      name: /Pickup in store/i,
+    })
+    await user.click(pickupRadio[1])
+
+    expect(pickupRadio[1]).toBeChecked()
+  })
+
+  it('should throw error on update cart item fulfillment option', async () => {
+    server.resetHandlers(
+      graphql.mutation('updateCurrentCartItem', (_req, res, ctx) => {
+        return res(ctx.status(403))
+      }),
+      graphql.query('cart', (_req, res, ctx) => {
+        return res(ctx.status(500))
+      })
+    )
     const { user } = setup()
     const pickupRadio = screen.getAllByRole('radio', {
       name: /Pickup in store/i,

@@ -15,7 +15,6 @@ const OrderSummaryMock = () => <div data-testid="order-summary-mock" />
 jest.mock('../../cart/CartItemList/CartItemList', () => CartItemListMock)
 jest.mock('../../common/OrderSummary/OrderSummary', () => OrderSummaryMock)
 
-const mockCartItemResponse = cartItemMock
 const mockLocationsResponse = locationCollectionMock.spLocations
 jest.mock('@/hooks', () => ({
   useCheckout: jest.fn(() => ({})),
@@ -24,13 +23,7 @@ jest.mock('@/hooks', () => ({
   useUpdateCheckout: jest.fn(() => ({})),
   useStoreLocations: jest.fn(() => ({ mockLocationsResponse })),
   usePurchaseLocation: jest.fn(() => ({})),
-  useCartMutation: jest.fn(() => ({
-    updateCurrentCartItem: {
-      mutateAsync: () => Promise.resolve({ mockCartItemResponse }),
-      isLoading: false,
-      isSuccess: true,
-    },
-  })),
+  useCartMutation: jest.fn(() => ({})),
 }))
 
 const { Common } = composeStories(stories)

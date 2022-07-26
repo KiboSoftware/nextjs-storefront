@@ -6,22 +6,30 @@ import { render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 
 import * as stories from '@/components/cart/CartItem/CartItem.stories'
-
 const { Common } = composeStories(stories)
 
 describe('[components] - CartItem Integration', () => {
   const setup = () => {
     const user = userEvent.setup()
-    render(<Common {...Common.args} />)
+    const mockOnFulfillmentOptionChange = jest.fn()
+    const mockOnProductPickupLocation = jest.fn()
+    render(
+      <Common
+        {...Common.args}
+        onFulfillmentOptionChange={mockOnFulfillmentOptionChange}
+        onProductPickupLocation={mockOnProductPickupLocation}
+      />
+    )
     return {
       user,
+      mockOnFulfillmentOptionChange,
+      mockOnProductPickupLocation,
     }
   }
 
   it('should render component', async () => {
     // arrange
     const { user } = setup()
-
     // act
     const img = screen.getByRole('img')
     const item = Common.args?.cartItem?.product
@@ -34,7 +42,6 @@ describe('[components] - CartItem Integration', () => {
     await user.click(decreaseButton)
     const actionsIcon = screen.getByRole('button', { name: 'more' })
     await user.click(actionsIcon)
-
     // // assert
     expect(img).toBeInTheDocument()
     expect(fulfillmentOptions).toBeInTheDocument()
@@ -45,11 +52,18 @@ describe('[components] - CartItem Integration', () => {
   })
 
   it('should handle fulfillment option selection', async () => {
-    const { user } = setup()
+    const { user, mockOnFulfillmentOptionChange } = setup()
     const radio = screen.getByRole('radio', {
-      name: /ship to home/i,
+      name: /Pickup in store/i,
     })
     await user.click(radio)
-    expect(radio).toBeChecked()
+    expect(mockOnFulfillmentOptionChange).toBeCalled()
+  })
+
+  it('should handle Change Store', async () => {
+    const { user, mockOnProductPickupLocation } = setup()
+    const store = screen.getByText(/change-store/i)
+    await user.click(store)
+    expect(mockOnProductPickupLocation).toBeCalled()
   })
 })
