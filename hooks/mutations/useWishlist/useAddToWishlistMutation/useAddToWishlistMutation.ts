@@ -12,7 +12,7 @@ import type { Maybe, Wishlist } from '@/lib/gql/types'
 interface WishlistItemInputParams {
   product: WishlistProductInput
   customerAccountId: number
-  currentWishlist: Maybe<Wishlist> | undefined
+  currentWishlist?: Maybe<Wishlist>
 }
 
 export interface InWishlistProductInput {
@@ -20,7 +20,7 @@ export interface InWishlistProductInput {
   variationProductCode?: string
 }
 
-const createWishlist = async (customerAccountId: number): Promise<Wishlist> => {
+const createWishlist = async (customerAccountId: number) => {
   const client = makeGraphQLClient()
 
   const { publicRuntimeConfig } = getConfig()
