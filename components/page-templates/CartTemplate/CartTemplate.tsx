@@ -133,7 +133,7 @@ const CartTemplate = (props: CartTemplateProps) => {
     locationCode = ''
   ) => {
     try {
-      const cartItem = cartItems.find((cart) => cart?.id === cartItemId)
+      const cartItem = cartItems.find((item) => item?.id === cartItemId)
       await updateCartItem.mutateAsync({
         cartItemInput: {
           ...(cartItem as CartItemInput),

@@ -16,9 +16,7 @@ const getCartItemFulfillmentLocation = (
 ): Location => {
   return (
     location &&
-    (location?.filter(
-      (location) => location?.code === cartItem?.fulfillmentLocationCode
-    )[0] as Location)
+    (location?.filter((loc) => loc?.code === cartItem?.fulfillmentLocationCode)[0] as Location)
   )
 }
 

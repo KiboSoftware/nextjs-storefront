@@ -152,16 +152,16 @@ export const useCartMutation = () => {
     }),
 
     updateCartItem: useMutation(updateCartItem, {
-      onMutate: async (updateCartItem) => {
+      onMutate: async (mutatedCartItem) => {
         await queryClient.cancelQueries()
         const previousCart: Cart | undefined = queryClient.getQueryData(cartKeys.all)
         const cart = { ...previousCart }
         const cartItem = cart?.items?.find(
-          (item: Maybe<CartItem>) => item?.id === updateCartItem?.cartItemId
+          (item: Maybe<CartItem>) => item?.id === mutatedCartItem?.cartItemId
         )
         if (cartItem?.id) {
-          cartItem.fulfillmentMethod = updateCartItem.cartItemInput.fulfillmentMethod
-          cartItem.fulfillmentLocationCode = updateCartItem.cartItemInput.fulfillmentLocationCode
+          cartItem.fulfillmentMethod = mutatedCartItem.cartItemInput.fulfillmentMethod
+          cartItem.fulfillmentLocationCode = mutatedCartItem.cartItemInput.fulfillmentLocationCode
         }
         queryClient.setQueryData(cartKeys.all, cart)
         return { previousCart }
