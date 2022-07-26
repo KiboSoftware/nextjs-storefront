@@ -256,13 +256,7 @@ describe('[component] - ProductDetailTemplate integration', () => {
     await waitFor(() => expect(isLoggedIn).toHaveTextContent('true'))
 
     await user.click(addToWishlistButton)
-
     const popover = await screen.findByTestId('wishlist-component')
     await waitFor(() => expect(popover).toBeInTheDocument())
-
-    const addedMessage = screen.getByRole('heading', {
-      name: /added/i,
-    })
-    await waitFor(() => expect(addedMessage).toBeVisible())
   })
 })
