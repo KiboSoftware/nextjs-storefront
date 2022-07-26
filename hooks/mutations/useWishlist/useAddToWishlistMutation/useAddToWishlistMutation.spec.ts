@@ -6,7 +6,7 @@ import { createQueryClientWrapper } from '@/__test__/utils/renderWithQueryClient
 
 const mockWishlist = wishlistMock.items[0]
 
-const removeWishlistItemInput = {
+const addToWishlistItemInput = {
   product: {
     productCode: 'MS-BTL-005',
     isPackagedStandAlone: true,
@@ -22,7 +22,7 @@ describe('[hooks] useAddToWishlistMutation', () => {
     renderHook(
       async () => {
         const { addToWishlist } = useAddToWishlistMutation()
-        const response = await addToWishlist.mutateAsync(removeWishlistItemInput)
+        const response = await addToWishlist.mutateAsync(addToWishlistItemInput)
 
         expect(response).toStrictEqual(mockWishlist?.items[0])
       },
