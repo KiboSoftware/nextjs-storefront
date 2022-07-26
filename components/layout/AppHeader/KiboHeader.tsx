@@ -293,8 +293,8 @@ const HeaderActions = (props: HeaderActionsProps) => {
         {/* My account Icon */}
         <Box sx={headerActionsStyles.myAccountIconWrapper}>
           <HeaderAction
-            title={t('my-account')}
-            subtitle={isAuthenticated ? `${t('hi')}, ${user?.firstName}` : t('log-in')}
+            title={isAuthenticated ? `${t('hi')}, ${user?.firstName}` : t('my-account')}
+            subtitle={isAuthenticated ? t('go-to-my-account') : t('log-in')}
             icon={AccountCircleIcon}
             {...(isMobileViewport && { iconFontSize: 'medium' })}
             onClick={openLoginModal}

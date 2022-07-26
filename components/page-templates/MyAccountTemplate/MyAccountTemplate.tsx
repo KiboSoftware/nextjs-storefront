@@ -15,7 +15,7 @@ import {
   Link,
 } from '@mui/material'
 import { useTranslation } from 'next-i18next'
-import router from 'next/router'
+import { useRouter } from 'next/router'
 
 import { FullWidthDivider } from '@/components/common'
 
@@ -73,6 +73,7 @@ const style = {
 
 const MyAcccountTemplate = () => {
   const { t } = useTranslation(['checkout', 'common'])
+  const router = useRouter()
   const theme = useTheme()
   const mdScreen = useMediaQuery(theme.breakpoints.up('md'))
 
@@ -130,8 +131,8 @@ const MyAcccountTemplate = () => {
       <Accordion disableGutters sx={{ ...style.accordion }}>
         <AccordionSummary
           expandIcon={<ExpandMoreIcon sx={{ ...style.expandedIcon }} />}
-          aria-controls="panel1a-content"
-          id="panel1a-header"
+          aria-controls="panel2a-content"
+          id="panel2a-header"
           sx={{ ...style.accordionSummary }}
         >
           <Typography variant="h3">{t('shipping-address')}</Typography>
@@ -148,8 +149,8 @@ const MyAcccountTemplate = () => {
       <Accordion disableGutters sx={{ ...style.accordion }}>
         <AccordionSummary
           expandIcon={<ExpandMoreIcon sx={{ ...style.expandedIcon }} />}
-          aria-controls="panel1a-content"
-          id="panel1a-header"
+          aria-controls="panel3a-content"
+          id="panel3a-header"
           sx={{ ...style.accordionSummary }}
         >
           <Typography variant="h3">{t('payment-method')}</Typography>
