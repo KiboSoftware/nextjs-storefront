@@ -47,11 +47,22 @@ describe('[components] CartTemplate integration', () => {
     let inputs = screen.getAllByRole('textbox', { name: 'quantity' })
     expect(inputs[0]).toHaveValue('2')
     const plusButton = screen.getAllByRole('button', { name: 'increase' })
-    console.log('plusButton : ', plusButton)
     const button = plusButton[0]
     await user.click(button)
     let newInputs = screen.getAllByRole('textbox', { name: 'quantity' })
     expect(newInputs[0]).toHaveValue('3')
+  })
+
+  it('should update quantity  when click "-" button', async () => {
+    const props = { ...Common.args }
+    const { user } = setup(props)
+    let inputs = screen.getAllByRole('textbox', { name: 'quantity' })
+    expect(inputs[0]).toHaveValue('3')
+    const minusButton = screen.getAllByRole('button', { name: 'decrease' })
+    const button = minusButton[0]
+    await user.click(button)
+    let newInputs = screen.getAllByRole('textbox', { name: 'quantity' })
+    expect(newInputs[0]).toHaveValue('2')
   })
 
   it('should delete cart Item  when click delete icon', async () => {
