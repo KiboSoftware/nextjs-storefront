@@ -190,4 +190,18 @@ describe('[component] - ProductDetailTemplate integration', () => {
 
     expect(addToCartButton).toBeDisabled()
   })
+
+  it('should dispaly login or add/remove wishlist message when add to wishlist button clicks ', async () => {
+    const { user } = setup()
+
+    const addToWishlistButton = screen.getByRole('button', {
+      name: 'common:add-to-wishlist',
+    })
+
+    await user.click(addToWishlistButton)
+
+    const title = screen.getByText('common:log-in')
+
+    expect(title).toBeVisible()
+  })
 })

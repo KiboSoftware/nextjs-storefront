@@ -100,8 +100,18 @@ const WishlistPopover = (props: WishlistPopoverProps) => {
             </Typography>
           </Box>
         )}
-        <Box sx={{ display: 'flex', padding: '0 1.5rem 2.063rem 2.063rem' }}>
-          <Button variant="contained" color="inherit" onClick={handleViewWishlist} fullWidth>
+        <Box
+          sx={{
+            display: 'flex',
+            paddingBottom: '2.063rem',
+          }}
+        >
+          <Button
+            variant="contained"
+            color="inherit"
+            onClick={handleViewWishlist}
+            sx={{ maxWidth: '206px', width: '100%', margin: '0 auto' }}
+          >
             {t('view-wishlist')}
           </Button>
         </Box>
