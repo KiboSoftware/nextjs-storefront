@@ -9,7 +9,7 @@ import {
 import { buildAddToCartInput } from '@/lib/helpers/buildAddToCartInput'
 import { cartKeys } from '@/lib/react-query/queryKeys'
 
-import { CartItem, ProductOption } from '@/lib/gql/types'
+import type { CartItem, ProductOption } from '@/lib/gql/types'
 
 export interface AddToCartProductInput {
   options: ProductOption[]

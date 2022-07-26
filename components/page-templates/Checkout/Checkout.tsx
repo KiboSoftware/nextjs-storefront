@@ -15,7 +15,7 @@ import {
   OrderSummary,
 } from '@/components/checkout'
 import { useCheckoutStepContext, STEP_STATUS } from '@/context'
-import { useCheckout } from '@/hooks'
+import { useCheckoutQueries } from '@/hooks'
 
 import type { Order } from '@/lib/gql/types'
 interface CheckoutProps {
@@ -35,8 +35,7 @@ const Checkout = (props: CheckoutProps) => {
   const router = useRouter()
 
   const { checkoutId } = router.query
-  const { data: checkout } = useCheckout({
-    cartId: undefined,
+  const { data: checkout } = useCheckoutQueries({
     checkoutId: checkoutId as string,
     initialCheckout,
   })

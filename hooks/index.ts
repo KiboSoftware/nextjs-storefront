@@ -26,3 +26,5 @@ export * from './mutations/useUser/useUserAccountRegistrationMutations'
 export * from './mutations/useCartMutation/useCartMutation'
 
 export * from './mutations/useProductMutation/useProductMutation'
+
+export * from './mutations/useCheckoutMutation/useCreateFromCartMutation'

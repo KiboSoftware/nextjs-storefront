@@ -50,7 +50,8 @@ describe('[components] CartTemplate integration', () => {
     console.log('plusButton : ', plusButton)
     const button = plusButton[0]
     await user.click(button)
-    expect(inputs[0]).toHaveValue('3')
+    let newInputs = screen.getAllByRole('textbox', { name: 'quantity' })
+    expect(newInputs[0]).toHaveValue('3')
   })
 
   it('should delete cart Item  when click delete icon', async () => {

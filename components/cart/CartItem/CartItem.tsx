@@ -142,7 +142,7 @@ const CartItem = (props: CartItemProps) => {
                     maxQuantity={maxQuantity}
                     onIncrease={() => hadleQuantityUpdate(cartItemQuantity + 1)}
                     onDecrease={() => hadleQuantityUpdate(cartItemQuantity - 1)}
-                    onUpdateCustomQuantity={(q) => hadleQuantityUpdate(q)}
+                    onQuantityUpdate={(q) => hadleQuantityUpdate(q)}
                   />
                 </Box>
               </ProductItem>

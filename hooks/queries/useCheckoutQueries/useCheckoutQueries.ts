@@ -26,14 +26,19 @@ const getCheckout = async (checkoutId?: string | null) => {
   return response?.checkout
 }
 
-export const useCheckoutQueries = ({ checkoutId }: UseCheckout): UseCheckoutResponse => {
+export const useCheckoutQueries = ({
+  checkoutId,
+  initialCheckout,
+}: UseCheckout): UseCheckoutResponse => {
   const id = checkoutId as string
 
   const {
     data = [],
     isLoading,
     isSuccess,
-  } = useQuery(checkoutKeys.detail(id), () => getCheckout(checkoutId))
+  } = useQuery(checkoutKeys.detail(id), () => getCheckout(checkoutId), {
+    initialData: initialCheckout,
+  })
 
   return { data, isLoading, isSuccess }
 }

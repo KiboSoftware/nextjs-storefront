@@ -33,12 +33,15 @@ describe('[component] - ProductDetailTemplate integration', () => {
     const { user } = setup()
 
     const input = screen.getByRole('textbox', { name: 'quantity' })
+    expect(input).toHaveValue('1')
+
     const increaseButton = screen.getByRole('button', { name: 'increase' })
 
     await user.click(increaseButton)
 
+    const newInput = screen.getByRole('textbox', { name: 'quantity' })
     await waitFor(() => {
-      expect(input).toHaveValue('2')
+      expect(newInput).toHaveValue('2')
     })
   })
 
