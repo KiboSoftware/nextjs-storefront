@@ -23,7 +23,7 @@ describe('[hooks] useRemoveWishlistItemMutation', () => {
         const { removeWishlistItem } = useRemoveWishlistItemMutation()
         const response = await removeWishlistItem.mutateAsync(removeWishlistItemInput)
 
-        expect(response).toStrictEqual(true)
+        expect(response).toBeTruthy()
       },
       {
         wrapper: createQueryClientWrapper(),
