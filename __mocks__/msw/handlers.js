@@ -127,7 +127,8 @@ export const wishlistHandlers = [
   }),
 
   graphql.mutation('createWishlist', (_req, res, ctx) => {
-    return res(ctx.data({ ...wishlistMock, items: [] }))
+    const { customerAccountId, id, name } = wishlistMock?.items[0]
+    return res(ctx.data({ createWishlist: { customerAccountId, id, name, items: [] } }))
   }),
   // useAddToWishlistMutation
   graphql.mutation('createWishlistItem', (_req, res, ctx) => {
