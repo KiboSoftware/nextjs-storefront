@@ -81,10 +81,6 @@ const MyAcccountTemplate = () => {
     router.push('/my-account/order-history')
   }
 
-  const handleLogOut = () => {
-    console.log('logout')
-  }
-
   return (
     <>
       {!mdScreen && (
@@ -185,7 +181,7 @@ const MyAcccountTemplate = () => {
       ) : (
         <FullWidthDivider sx={{ backgroundColor: 'grey.500', ...style.divider }} />
       )}
-      <Box sx={{ ...style.myAccountChildren, cursor: 'pointer' }} onClick={handleLogOut}>
+      <Box sx={{ ...style.myAccountChildren, cursor: 'pointer' }}>
         <Typography variant="h3">{t('common:logout')}</Typography>
       </Box>
       {mdScreen ? (
