@@ -29,7 +29,7 @@ describe('[component] - Category', () => {
 
     const myAccount = screen.getByText(/common:my-account/i)
     const myProfile = screen.getByText(/common:my-profile/i)
-    const shippingAddress = screen.getByText(/shipping-address/i)
+    const addressBook = screen.getByText(/address-book/i)
     const paymentMethod = screen.getByText(/payment-method/i)
     const orderDetails = screen.getByText(/order-details/i)
     const orderHistory = screen.getByText(/common:order-history/i)
@@ -37,7 +37,7 @@ describe('[component] - Category', () => {
 
     expect(myAccount).toBeInTheDocument()
     expect(myProfile).toBeInTheDocument()
-    expect(shippingAddress).toBeInTheDocument()
+    expect(addressBook).toBeInTheDocument()
     expect(paymentMethod).toBeInTheDocument()
     expect(orderDetails).toBeInTheDocument()
     expect(orderHistory).toBeInTheDocument()

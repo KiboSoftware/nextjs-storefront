@@ -207,11 +207,7 @@ const HeaderActions = (props: HeaderActionsProps) => {
 
   const openLoginModal = () => {
     setAuthError('')
-    if (!isAuthenticated) {
-      showModal({ Component: LoginDialog })
-    } else {
-      router.push('/my-account')
-    }
+    if (!isAuthenticated) showModal({ Component: LoginDialog })
   }
 
   const gotoCart = () => {
@@ -293,8 +289,8 @@ const HeaderActions = (props: HeaderActionsProps) => {
         {/* My account Icon */}
         <Box sx={headerActionsStyles.myAccountIconWrapper}>
           <HeaderAction
-            title={isAuthenticated ? `${t('hi')}, ${user?.firstName}` : t('my-account')}
-            subtitle={isAuthenticated ? t('go-to-my-account') : t('log-in')}
+            title={t('my-account')}
+            subtitle={isAuthenticated ? `${t('hi')}, ${user?.firstName}` : t('log-in')}
             icon={AccountCircleIcon}
             {...(isMobileViewport && { iconFontSize: 'medium' })}
             onClick={openLoginModal}

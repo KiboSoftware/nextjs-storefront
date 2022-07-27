@@ -135,7 +135,7 @@ const MyAcccountTemplate = () => {
           id="panel2a-header"
           sx={{ ...style.accordionSummary }}
         >
-          <Typography variant="h3">{t('shipping-address')}</Typography>
+          <Typography variant="h3">{t('address-book')}</Typography>
         </AccordionSummary>
         <AccordionDetails>
           <Typography>{/* TODO */}</Typography>
