@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-var-requires */
 import React from 'react'
 
 import '@testing-library/jest-dom'
@@ -7,6 +8,12 @@ import userEvent from '@testing-library/user-event'
 
 import * as stories from './MyAccountTemplate.stories' // import all stories from the stories file
 const { Common } = composeStories(stories)
+
+const useRouter = jest.spyOn(require('next/router'), 'useRouter')
+const push = jest.fn()
+useRouter.mockImplementation(() => ({
+  push,
+}))
 
 describe('[component] - Category', () => {
   const setup = () => {
@@ -18,7 +25,7 @@ describe('[component] - Category', () => {
   }
 
   it('should render component', async () => {
-    const { user } = setup()
+    setup()
 
     const myAccount = screen.getByText(/common:my-account/i)
     const myProfile = screen.getByText(/common:my-profile/i)
@@ -35,5 +42,15 @@ describe('[component] - Category', () => {
     expect(orderDetails).toBeInTheDocument()
     expect(orderHistory).toBeInTheDocument()
     expect(logout).toBeInTheDocument()
+  })
+
+  it('should redirect to order-history page when users click on Order History link', async () => {
+    const { user } = setup()
+
+    const orderHistory = screen.getByText(/common:order-history/i)
+
+    await user.click(orderHistory)
+
+    expect(push).toHaveBeenCalledWith('/my-account/order-history')
   })
 })
