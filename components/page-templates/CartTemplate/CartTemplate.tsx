@@ -15,6 +15,7 @@ import { useRouter } from 'next/router'
 
 import { CartItemList } from '@/components/cart'
 import { PromoCodeBadge, OrderSummary } from '@/components/common'
+import { useCartQueries, useCreateFromCartMutation, useCartMutation } from '@/hooks'
 import { checkoutGetters } from '@/lib/getters'
 
 import type { Cart } from '@/lib/gql/types'
@@ -41,12 +42,14 @@ const styles = {
 }
 
 const CartTemplate = (props: CartTemplateProps) => {
-  const { cart } = props
+  const { data: cart } = useCartQueries(props?.cart)
 
   const { t } = useTranslation(['common', 'checkout', 'cart'])
   const theme = useTheme()
   const isMobileViewport = useMediaQuery(theme.breakpoints.down('md'))
   const router = useRouter()
+  const { createFromCart } = useCreateFromCartMutation()
+  const { updateCartItemQuantity, removeCartItem } = useCartMutation()
 
   const cartItemCount = checkoutGetters.getCartItemCount(cart)
   const cartItems = checkoutGetters.getCartItems(cart)
@@ -62,11 +65,15 @@ const CartTemplate = (props: CartTemplateProps) => {
     // your code here
   }
 
-  const handleItemQuantity = (_cartItemId: string, _quantity: number) => {
-    // your code here
+  const handleItemQuantity = async (cartItemId: string, quantity: number) => {
+    try {
+      await updateCartItemQuantity.mutateAsync({ cartItemId, quantity })
+    } catch (err) {
+      console.error(err)
+    }
   }
-  const handleDeleteItem = (_cartItemId: string) => {
-    // your code here
+  const handleDeleteItem = async (cartItemId: string) => {
+    await removeCartItem.mutateAsync({ cartItemId })
   }
   const handleItemActions = () => {
     // your code here
@@ -74,10 +81,16 @@ const CartTemplate = (props: CartTemplateProps) => {
   const handleFulfillmentOption = () => {
     // your code here
   }
-  const handleGotoCheckout = () => {
-    const checkoutId = null // To be done using react-query hook
-    router.push(`/checkout/${checkoutId}`)
-    // your code here
+  const handleGotoCheckout = async () => {
+    try {
+      const createFromCartResponse = await createFromCart.mutateAsync(cart?.id)
+      if (createFromCartResponse?.id) {
+        router.push(`/checkout/${createFromCartResponse.id}`)
+      }
+      return false
+    } catch (err) {
+      console.error(err)
+    }
   }
 
   const orderSummaryArgs = {
@@ -130,7 +143,6 @@ const CartTemplate = (props: CartTemplateProps) => {
           onFulfillmentOptionSelection={handleFulfillmentOption}
         />
       </Grid>
-
       {/* Order Summary */}
       <Grid item xs={12} md={4} sx={{ paddingRight: { xs: 0, md: 2 } }}>
         <OrderSummary {...orderSummaryArgs}>

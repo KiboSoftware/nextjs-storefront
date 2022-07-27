@@ -95,6 +95,22 @@ export const cartHandlers = [
       })
     )
   }),
+
+  graphql.mutation('updateCartItemQuantity', (_req, res, ctx) => {
+    return res(
+      ctx.data({
+        updateCartItemQuantity: cartItemMock,
+      })
+    )
+  }),
+
+  graphql.mutation('deleteCartItem', (_req, res, ctx) => {
+    return res(
+      ctx.data({
+        deleteCartItemMutation: true,
+      })
+    )
+  }),
 ]
 
 export const storeHandlers = [

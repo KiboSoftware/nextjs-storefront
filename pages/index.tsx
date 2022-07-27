@@ -14,7 +14,11 @@ export async function getStaticProps(context: GetStaticPropsContext) {
   return {
     props: {
       categoriesTree,
-      ...(await serverSideTranslations(locale as string, ['common'], nextI18NextConfig)),
+      ...(await serverSideTranslations(
+        locale as string,
+        ['common', 'checkout'],
+        nextI18NextConfig
+      )),
     },
   }
 }
