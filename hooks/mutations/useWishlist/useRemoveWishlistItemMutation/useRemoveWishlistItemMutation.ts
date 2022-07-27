@@ -2,7 +2,7 @@ import { useMutation, useQueryClient } from 'react-query'
 
 import { makeGraphQLClient } from '@/lib/gql/client'
 import { deleteWishlistItemMutation } from '@/lib/gql/mutations'
-import { buildRemoveWishlistItemInput } from '@/lib/helpers/buildRemoveWishlistItemInput'
+import { buildRemoveWishlistItemInput } from '@/lib/helpers'
 import { wishlistKeys } from '@/lib/react-query/queryKeys'
 import type { RemoveWishlistItemInput } from '@/lib/types'
 
