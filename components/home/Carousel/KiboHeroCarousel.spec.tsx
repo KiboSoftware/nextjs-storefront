@@ -26,15 +26,13 @@ describe('checkout Component', () => {
     it('should render component', () => {
       setup()
 
-      const Subtitle = screen.getAllByText(Common?.args?.carouselItem[0].subtitle)
+      const Subtitle = screen.getAllByText(Common?.args?.carouselItem?.subtitle)
       const description = screen.getAllByText(Common?.args?.carouselItem[0].description)
       const buttonText = screen.getAllByText(Common?.args?.carouselItem[0].buttonText)
-      const link = screen.getAllByText(Common?.args?.topProps.link)
 
       expect(Subtitle[0]).toBeInTheDocument()
       expect(description[0]).toBeInTheDocument()
       expect(buttonText[0]).toBeInTheDocument()
-      expect(link[0]).toBeInTheDocument()
     })
 
     it('should render button', () => {
@@ -59,19 +57,5 @@ describe('checkout Component', () => {
       expect(screen.getByRole('button', { name: 'Previous' })).toBeVisible()
     })
 
-    it('should  redirect on button click', async () => {
-      setup()
-      const text = await screen.findAllByText('Save up to 50%')
-      expect(text[0]).toBeInTheDocument()
-    })
-
-    it('should check top items', () => {
-      render(<Common {...Common.args} withcard={true} />)
-      const body = screen.getAllByText(Common?.args?.topProps.body)
-      const name = screen.getAllByText(Common?.args?.topProps.name)
-
-      expect(body[0]).toBeInTheDocument()
-      expect(name[0]).toBeInTheDocument()
-    })
   })
 })

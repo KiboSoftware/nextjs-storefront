@@ -6,17 +6,16 @@ import {
   Card,
   CardContent,
   Typography,
-  Box,
   useTheme,
-  Link,
   CardMedia,
 } from '@mui/material'
 import { styled } from '@mui/system'
 import Carousel from 'react-material-ui-carousel'
 
 import { KiboImage } from '@/components/common'
+import { useRouter } from 'next/router'
 
-export interface ItemProps {
+interface ItemProps {
   imageUrl?: string
   mobileImageUrl?: string
   imageAlt?: string
@@ -25,31 +24,23 @@ export interface ItemProps {
   description?: string
   buttonText?: string
   buttonLink?: string
-  contentPosition?: string
-  color?: string
-  component?: string
-  topProps: TopProps
-  withcard: WithCardProps
 }
-interface WithCardProps {
-  withcard: boolean
-}
-interface TopProps {
-  name?: string
-  body?: string
-  link?: string
+export interface HeroCarouselProps {
+  carouselItem: ItemProps[]
 }
 
-type HeroItemProps = {
-  [key: string]: any
-}
+const MainStyle = styled('div')({
+  display: 'flex',
+  margin: '20px',
+  color: 'grey.700',
+})
 
-const KiboHeroCarousel = ({ carouselItem, topProps, withcard }: HeroItemProps) => {
+const KiboHeroCarousel = ({ carouselItem }: HeroCarouselProps) => {
   return (
     <MainStyle>
       <Carousel navButtonsAlwaysVisible={true} swipe={true} sx={{ width: '100%' }}>
         {carouselItem?.map((item?: ItemProps, index?: any) => {
-          return <HeroItem props={item} topProps={topProps} withcard={withcard} key={index} />
+          return <HeroItem props={item} key={index} />
         })}
       </Carousel>
     </MainStyle>
@@ -91,34 +82,12 @@ const styles = {
     textAlign: 'center',
     fontWeight: 800,
   },
-  boxStyle: {
-    margin: '0px',
-    padding: '0px',
-    justifyContent: 'center',
-    display: 'flex',
-    flexDirection: 'row',
-    color: 'common.white',
-  },
-  topStyle: {
-    backgroundColor: ' #A12E87',
-    color: 'common.white',
-    textAlign: 'center',
-    fontSize: { sm: '0.5' },
-  },
 }
-const MainStyle = styled('div')({
-  display: 'flex',
-  margin: '20px',
-  color: 'grey.700',
-})
 
-function HeroItem({ props, topProps, withcard }: HeroItemProps) {
+function HeroItem(props: ItemProps) {
   const kiboTheme = useTheme()
+  const router = useRouter()
   const mobileView = useMediaQuery(kiboTheme.breakpoints.down('sm'))
-
-  const mobileStyle = {
-    fontSize: mobileView ? '0.75rem' : '1rem',
-  }
 
   const {
     imageUrl,
@@ -129,30 +98,10 @@ function HeroItem({ props, topProps, withcard }: HeroItemProps) {
     description,
     buttonText,
     buttonLink,
-    component,
   } = props
-
-  const { name, body, link } = topProps
 
   return (
     <Card sx={styles.contentStyle}>
-      {withcard && (
-        <CardContent sx={styles.topStyle}>
-          <Typography sx={mobileStyle} style={{ fontWeight: 'bold' }}>
-            {name}
-          </Typography>
-
-          <Box sx={styles.boxStyle}>
-            <Typography sx={mobileStyle}>{body}</Typography>
-            <Typography sx={mobileStyle}>
-              {' | '}
-              <Link href="/" sx={{ color: 'white' }}>
-                {link}
-              </Link>
-            </Typography>
-          </Box>
-        </CardContent>
-      )}
       <CardMedia sx={{ width: '100%', height: '100%', position: 'relative' }}>
         <KiboImage
           src={mobileView ? mobileImageUrl : imageUrl}
@@ -181,10 +130,11 @@ function HeroItem({ props, topProps, withcard }: HeroItemProps) {
             </Typography>
 
             <Button
-              component={component}
-              to={{ pathname: buttonLink }}
               variant="contained"
               sx={{ fontSize: mobileView ? '0.5rem' : '1rem' }}
+              onClick={() => {
+                router.push(buttonLink)
+              }}
             >
               {buttonText}
             </Button>

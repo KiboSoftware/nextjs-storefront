@@ -46,20 +46,7 @@ const heroItems = [
   },
 ]
 
-const topItems = {
-  name: 'Save up to 50% + Free Shipping',
-  body: 'Ends Midnight',
-  link: 'Shop Sale',
-}
-
 Common.args = {
   carouselItem: heroItems,
-  topProps: topItems,
-  withcard: true,
 }
 
-withoutTopBar.args = {
-  carouselItem: heroItems,
-  topProps: topItems,
-  withcard: false,
-}
