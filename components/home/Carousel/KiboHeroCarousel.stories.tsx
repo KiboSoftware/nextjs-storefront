@@ -13,8 +13,6 @@ const Template: ComponentStory<typeof KiboHeroCarousel> = (args) => <KiboHeroCar
 
 export const Common = Template.bind({})
 
-export const withoutTopBar = Template.bind({})
-
 const heroItems = [
   {
     imageUrl: 'https://cdn-sb.mozu.com/26507-m1/cms/files/655bb09f-e5f2-4027-8cf6-76d0363172d1',
@@ -27,8 +25,6 @@ const heroItems = [
     buttonText: 'Shop Holiday Items on Sale',
     buttonLink: 'https://',
     contentPosition: 'right',
-    color: '#7D85B1',
-    component: '',
   },
   {
     imageUrl: 'https://cdn-sb.mozu.com/26507-m1/cms/files/7b763015-5d76-4c3c-a5fd-6a14a476b56c',
@@ -41,8 +37,6 @@ const heroItems = [
     buttonText: 'Shop Holiday Items on Sale',
     contentPosition: 'right',
     buttonLink: 'https://',
-    color: '#64ACC8',
-    component: '',
   },
 ]
 

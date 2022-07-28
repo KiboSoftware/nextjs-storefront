@@ -26,11 +26,12 @@ describe('checkout Component', () => {
     it('should render component', () => {
       setup()
 
-      const Subtitle = screen.getAllByText(Common?.args?.carouselItem?.subtitle)
-      const description = screen.getAllByText(Common?.args?.carouselItem[0].description)
-      const buttonText = screen.getAllByText(Common?.args?.carouselItem[0].buttonText)
+      const carouselValues = Common?.args?.carouselItem || []
+      const subtitle = screen.getAllByText(carouselValues[0].subtitle!)
+      const description = screen.getAllByText(carouselValues[0].description!)
+      const buttonText = screen.getAllByText(carouselValues[0].buttonText!)
 
-      expect(Subtitle[0]).toBeInTheDocument()
+      expect(subtitle[0]).toBeInTheDocument()
       expect(description[0]).toBeInTheDocument()
       expect(buttonText[0]).toBeInTheDocument()
     })
@@ -56,6 +57,5 @@ describe('checkout Component', () => {
       setup()
       expect(screen.getByRole('button', { name: 'Previous' })).toBeVisible()
     })
-
   })
 })

@@ -10,20 +10,20 @@ import {
   CardMedia,
 } from '@mui/material'
 import { styled } from '@mui/system'
+import { useRouter } from 'next/router'
 import Carousel from 'react-material-ui-carousel'
 
 import { KiboImage } from '@/components/common'
-import { useRouter } from 'next/router'
 
 interface ItemProps {
-  imageUrl?: string
-  mobileImageUrl?: string
+  imageUrl: string
+  mobileImageUrl: string
   imageAlt?: string
   title?: string
   subtitle?: string
   description?: string
   buttonText?: string
-  buttonLink?: string
+  buttonLink: string
 }
 export interface HeroCarouselProps {
   carouselItem: ItemProps[]
@@ -39,8 +39,8 @@ const KiboHeroCarousel = ({ carouselItem }: HeroCarouselProps) => {
   return (
     <MainStyle>
       <Carousel navButtonsAlwaysVisible={true} swipe={true} sx={{ width: '100%' }}>
-        {carouselItem?.map((item?: ItemProps, index?: any) => {
-          return <HeroItem props={item} key={index} />
+        {carouselItem?.map((item: ItemProps, index: any) => {
+          return <HeroItem {...item} key={index} />
         })}
       </Carousel>
     </MainStyle>
