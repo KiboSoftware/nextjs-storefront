@@ -2,8 +2,8 @@
 import { composeStories } from '@storybook/testing-react'
 import { render, screen, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
-
 import '@testing-library/jest-dom'
+import mediaQuery from 'css-mediaquery'
 
 import * as stories from './KiboHeader.stories' // import all stories from the stories file
 
@@ -15,8 +15,20 @@ useRouter.mockImplementation(() => ({
   push,
 }))
 
+const createMatchMedia = (width) => (query) => ({
+  matches: mediaQuery.match(query, { width }),
+  addListener: () => jest.fn(),
+  removeListener: () => jest.fn(),
+  media: query,
+  onchange: null,
+  addEventListener: jest.fn(),
+  removeEventListener: jest.fn(),
+  dispatchEvent: jest.fn(),
+})
+
 describe('[component] KiboHeader component', () => {
   it('should render the component', () => {
+    window.matchMedia = createMatchMedia(200)
     render(<Common {...Common.args} />)
 
     expect(screen.getByTestId(/kibo header/i)).toBeVisible()
