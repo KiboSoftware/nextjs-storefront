@@ -54,7 +54,7 @@ export const useAddToWishlistMutation = () => {
   return {
     addToWishlist: useMutation(addToWishlist, {
       onSuccess: () => {
-        queryClient.invalidateQueries(wishlistKeys.all)
+        queryClient.removeQueries(wishlistKeys.all)
       },
     }),
   }

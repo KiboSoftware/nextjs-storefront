@@ -24,7 +24,7 @@ export const useRemoveWishlistItemMutation = () => {
   return {
     removeWishlistItem: useMutation(removeWishlistItem, {
       onSuccess: () => {
-        queryClient.invalidateQueries(wishlistKeys.all)
+        queryClient.removeQueries(wishlistKeys.all)
       },
     }),
   }

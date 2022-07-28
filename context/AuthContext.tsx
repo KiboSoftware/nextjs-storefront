@@ -63,7 +63,7 @@ export const AuthContextProvider = ({ children }: AuthContextProviderProps) => {
     setCookieAndUser(account)
     queryClient.invalidateQueries(cartKeys.all)
     onSuccessCallBack && onSuccessCallBack()
-    queryClient.invalidateQueries(wishlistKeys.all)
+    queryClient.removeQueries(wishlistKeys.all)
   }
   // register user
   const createAccount = (params: RegisterAccountInputData, onSuccessCallBack?: () => void) => {
