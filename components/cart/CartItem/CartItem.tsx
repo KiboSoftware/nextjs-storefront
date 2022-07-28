@@ -19,6 +19,7 @@ import Price from '@/components/common/Price/Price'
 import ProductItem from '@/components/common/ProductItem/ProductItem'
 import QuantitySelector from '@/components/common/QuantitySelector/QuantitySelector'
 import { orderGetters, productGetters } from '@/lib/getters'
+import { uiHelpers } from '@/lib/helpers'
 import type { FulfillmentOption } from '@/lib/types'
 
 import type { CartItem as CartItemType, Maybe } from '@/lib/gql/types'
@@ -97,6 +98,8 @@ const CartItem = (props: CartItemProps) => {
 
   const { t } = useTranslation('common')
   const orientationVertical = useMediaQuery(theme.breakpoints.between('xs', 'md'))
+  const { getProductLink } = uiHelpers()
+
   const handleFulfillmentOption = () => onFulfillmentOptionSelection()
   const handleDelete = (cartItemId: string) => onCartItemDelete(cartItemId)
   const hadleQuantityUpdate = (quantity: number) =>
@@ -116,6 +119,7 @@ const CartItem = (props: CartItemProps) => {
                 )}
                 name={orderGetters.getProductName(cartItem)}
                 options={orderGetters.getProductOptions(cartItem)}
+                link={getProductLink(cartItem?.product?.productCode as string)}
               >
                 <Box>
                   <Price
@@ -138,6 +142,7 @@ const CartItem = (props: CartItemProps) => {
                     maxQuantity={maxQuantity}
                     onIncrease={() => hadleQuantityUpdate(cartItemQuantity + 1)}
                     onDecrease={() => hadleQuantityUpdate(cartItemQuantity - 1)}
+                    onQuantityUpdate={(q) => hadleQuantityUpdate(q)}
                   />
                 </Box>
               </ProductItem>

@@ -84,8 +84,13 @@ const DetailsStep = (props: DetailsProps) => {
   const updateCheckoutPersonalInfo = useUpdateCheckoutPersonalInfo()
   const { isAuthenticated, setAuthError } = useAuthContext()
   const { showModal } = useModalContext()
-  const { stepStatus, setStepNext, setStepStatusComplete, setStepStatusIncomplete } =
-    useCheckoutStepContext()
+  const {
+    stepStatus,
+    setStepNext,
+    setStepStatusValid,
+    setStepStatusComplete,
+    setStepStatusIncomplete,
+  } = useCheckoutStepContext()
 
   const fulfillmentInfo = checkout?.fulfillmentInfo
   const fulfillmentContact = fulfillmentInfo && fulfillmentInfo?.fulfillmentContact
@@ -103,7 +108,7 @@ const DetailsStep = (props: DetailsProps) => {
   }
 
   const {
-    formState: { errors },
+    formState: { errors, isValid },
     handleSubmit,
     control,
     watch,
@@ -176,6 +181,10 @@ const DetailsStep = (props: DetailsProps) => {
   useEffect(() => {
     reset({ ...personalDetails })
   }, [checkout])
+
+  useEffect(() => {
+    isValid ? setStepStatusValid() : setStepStatusIncomplete()
+  }, [isValid])
 
   return (
     <Stack gap={2} data-testid="checkout-details">

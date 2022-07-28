@@ -1,6 +1,7 @@
-import { Box, Divider } from '@mui/material'
+import { Box } from '@mui/material'
 
 import CartItem from '@/components/cart/CartItem/CartItem'
+import { FullWidthDivider } from '@/components/common'
 
 import type { CartItem as CartItemType, Maybe } from '@/lib/gql/types'
 
@@ -31,10 +32,10 @@ const CartItemList = (props: CartItemListProps) => {
   return (
     <>
       {cartItems?.map((item: Maybe<CartItemType>, index: number) => (
-        <>
+        <Box key={`${item?.id}-${index}`}>
           <CartItem
-            key={`${item?.id}-${index}`}
             cartItem={item}
+            key={item?.id}
             maxQuantity={undefined}
             onQuantityUpdate={handleQuantityUpdate}
             onCartItemDelete={handleCartItemDelete}
@@ -43,9 +44,9 @@ const CartItemList = (props: CartItemListProps) => {
             onFulfillmentOptionSelection={onFulfillmentOptionSelection}
           />
           <Box sx={{ display: { xs: 'block', sm: 'block', md: 'none' } }}>
-            <Divider />
+            <FullWidthDivider />
           </Box>
-        </>
+        </Box>
       ))}
     </>
   )

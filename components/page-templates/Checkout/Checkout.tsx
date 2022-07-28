@@ -14,8 +14,8 @@ import {
   OrderReview,
   OrderSummary,
 } from '@/components/checkout'
-import { useCheckoutStepContext } from '@/context'
-import { useCheckout } from '@/hooks'
+import { useCheckoutStepContext, STEP_STATUS } from '@/context'
+import { useCheckoutQueries } from '@/hooks'
 
 import type { Order } from '@/lib/gql/types'
 interface CheckoutProps {
@@ -35,13 +35,13 @@ const Checkout = (props: CheckoutProps) => {
   const router = useRouter()
 
   const { checkoutId } = router.query
-  const { data: checkout } = useCheckout({
-    cartId: undefined,
+  const { data: checkout } = useCheckoutQueries({
     checkoutId: checkoutId as string,
     initialCheckout,
   })
 
-  const { activeStep, steps, setStepBack, setStepStatusSubmit } = useCheckoutStepContext()
+  const { activeStep, stepStatus, steps, setStepBack, setStepStatusSubmit } =
+    useCheckoutStepContext()
 
   const buttonLabels = [t('go-to-shipping'), t('go-to-payment'), t('review-order')]
 
@@ -99,7 +99,7 @@ const Checkout = (props: CheckoutProps) => {
                   sx={{ ...buttonStyle }}
                   fullWidth
                   onClick={handleSubmit}
-                  disabled={activeStep === steps.length - 1}
+                  disabled={stepStatus !== STEP_STATUS.VALID || activeStep === steps.length - 1}
                 >
                   {buttonLabels[activeStep]}
                 </Button>

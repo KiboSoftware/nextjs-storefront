@@ -29,7 +29,7 @@ jest.mock('../../checkout/PaymentStep/PaymentStep', () => PaymentStepMock)
 jest.mock('../../checkout/ReviewStep/ReviewStep', () => ReviewStepMock)
 
 jest.mock('@/hooks', () => ({
-  useCheckout: jest.fn(() => ({})),
+  useCheckoutQueries: jest.fn(() => ({})),
   useUpdateCheckout: jest.fn(() => ({})),
 }))
 
