@@ -24,7 +24,7 @@ import {
   useStoreLocations,
   usePurchaseLocation,
 } from '@/hooks'
-import { FormStates, FulfillmentOptions } from '@/lib/constants'
+import { FulfillmentOptions } from '@/lib/constants'
 import { checkoutGetters } from '@/lib/getters'
 import { LocationCustom } from '@/lib/types'
 

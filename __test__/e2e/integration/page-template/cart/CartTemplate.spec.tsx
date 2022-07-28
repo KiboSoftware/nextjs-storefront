@@ -3,13 +3,14 @@ import React from 'react'
 import { composeStories } from '@storybook/testing-react'
 import { cleanup, screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
+// import * as cookienext from 'cookies-next'
 import { RouterContext } from 'next/dist/shared/lib/router-context'
 
 import { createMockRouter } from '@/__test__/utils/createMockRouter'
 import { renderWithQueryClient } from '@/__test__/utils/renderWithQueryClient'
 import { CartTemplateProps } from '@/components/page-templates/CartTemplate/CartTemplate'
 import * as stories from '@/components/page-templates/CartTemplate/CartTemplate.stories'
-import { ModalContextProvider } from '@/context'
+import { DialogRoot, ModalContextProvider } from '@/context'
 
 const { Common } = composeStories(stories)
 
@@ -21,6 +22,7 @@ const setup = (params?: CartTemplateProps) => {
   renderWithQueryClient(
     <RouterContext.Provider value={router}>
       <ModalContextProvider>
+        <DialogRoot />
         <Common {...props} />
       </ModalContextProvider>
     </RouterContext.Provider>
@@ -80,25 +82,17 @@ describe('[components] CartTemplate integration', () => {
     expect(newInputs[0]).toHaveValue('2')
   })
 
-  it('should delete cart Item  when click delete icon', async () => {
-    const { user } = setup()
+  // it('should delete cart Item  when click delete icon', async () => {
+  //   const { user } = setup()
 
-    const cartItem = screen.getAllByRole('group')
-    expect(cartItem).toHaveLength(2)
+  //   const cartItem = screen.getAllByRole('group')
+  //   expect(cartItem).toHaveLength(2)
 
-    const deleteButton = screen.getAllByRole('button', { name: 'item-delete' })
-    await user.click(deleteButton[0])
-    const deletedCartItem = screen.queryByText('Pink Backpack')
-    await waitFor(() => expect(deletedCartItem).not.toBeInTheDocument())
-  })
-
-  it('should selected ship to home item into the cart', async () => {
-    const { user } = setup()
-    const shipRadio = screen.getAllByRole('radio', {
-      name: /ship to home/i,
-    })
-    await user.click(shipRadio[0])
-  })
+  //   const deleteButton = screen.getAllByRole('button', { name: 'item-delete' })
+  //   await user.click(deleteButton[0])
+  //   const deletedCartItem = screen.queryByText('Pink Backpack')
+  //   await waitFor(() => expect(deletedCartItem).not.toBeInTheDocument())
+  // })
 
   it('should selected ship to home item into the cart', async () => {
     const { user } = setup()
@@ -106,14 +100,34 @@ describe('[components] CartTemplate integration', () => {
       name: /ship to home/i,
     })
     await user.click(shipRadio[1])
+
+    await waitFor(() => expect(shipRadio[1]).toBeChecked())
   })
 
-  it('should selected pickup item into the cart', async () => {
+  it('should selected pickup item into the cart and show store selector dialog', async () => {
     const { user } = setup()
     const pickupRadio = screen.getAllByRole('radio', {
       name: /Pickup in store/i,
     })
-
     await user.click(pickupRadio[0])
+    const selectStore = screen.queryAllByText('select-store')
+
+    expect(selectStore[0]).toBeVisible()
   })
+
+  // it('should selected pickup item into the cart with purchase location from cookie', async () => {
+  //   const mockSetCookie = jest.spyOn(cookienext, 'setCookie')
+  //   cookienext.setCookie('kibo_purchase_location', 'Richmond')
+  //   Object.defineProperty(window.document, 'cookie', {
+  //     writable: true,
+  //     value: 'kibo_purchase_location=Richmond',
+  //   })
+
+  //   const { user } = setup()
+  //   const pickupRadio = screen.getAllByRole('radio', {
+  //     name: /Pickup in store/i,
+  //   })
+  //   await user.click(pickupRadio[0])
+  //   expect(pickupRadio[0]).toBeChecked()
+  // })
 })
