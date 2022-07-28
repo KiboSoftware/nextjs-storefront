@@ -1,6 +1,7 @@
 import React from 'react'
 
 import { ComponentStory, ComponentMeta } from '@storybook/react'
+
 import ContentTile from './ContentTile'
 
 export default {

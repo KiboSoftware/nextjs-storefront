@@ -1,9 +1,11 @@
 /** @format */
 
 import * as React from 'react'
-import Grid from '@mui/material/Grid'
+
 import { Box, Link, Typography, useTheme } from '@mui/material'
+import Grid from '@mui/material/Grid'
 import useMediaQuery from '@mui/material/useMediaQuery'
+
 import { KiboImage } from '@/components/common'
 
 export interface TileProps {
@@ -100,28 +102,28 @@ function ContentTile({ largeTileProps, smallTileProps }: any) {
   return (
     <Box sx={{ display: 'flex', padding: '2%', flexDirection: 'column' }}>
       <Box sx={{ display: 'flex', flexDirection: mobileView ? 'column' : 'row' }}>
-        {largeTileProps.map((e: any) => (
+        {largeTileProps.map((tile: any, _key:any) => (
           <ContentTiles
-            imgSource={e.imageSource}
-            title={e.title}
-            subtitle={e.subtitle}
-            link1={e.link1}
-            link2={e.link2}
-            link3={e.link3}
+            imgSource={tile.imageSource}
+            title={tile.title}
+            subtitle={tile.subtitle}
+            link1={tile.link1}
+            link2={tile.link2}
+            link3={tile.link3}
           />
         ))}
       </Box>
       <Box sx={{ width: '100%' }}>
         <Grid container rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
-          {smallTileProps.map((e: any) => (
+          {smallTileProps.map((tile: any) => (
             <Grid item xs={mobileView ? 6 : 3}>
               <ContentTiles
-                imgSource={e.imageSource}
-                title={e.title}
-                subtitle={e.subtitle}
-                link1={e.link1}
-                link2={e.link2}
-                link3={e.link3}
+                imgSource={tile.imageSource}
+                title={tile.title}
+                subtitle={tile.subtitle}
+                link1={tile.link1}
+                link2={tile.link2}
+                link3={tile.link3}
               />
             </Grid>
           ))}
