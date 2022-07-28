@@ -55,6 +55,9 @@ const CategoryPage: NextPage<CategoryPageType> = (props) => {
   const products = productSearchResult?.items as Product[]
   const categoryFacet = productSearchGetters.getCategoryFacet(productSearchResult, categoryCode)
   const appliedFilters = facetGetters.getSelectedFacets(productSearchResult?.facets as Facet[])
+  const categoryPageHeading = categoryFacet.header
+    ? categoryFacet.header
+    : breadcrumbs[breadcrumbs.length - 1].text
   const sortingValues = facetGetters.getSortOptions(
     {
       ...productSearchResult,
@@ -64,24 +67,32 @@ const CategoryPage: NextPage<CategoryPageType> = (props) => {
   )
 
   const changeSorting = (sort: string) => {
-    router.push({
-      pathname: router?.pathname,
-      query: {
-        ...router.query,
-        sort,
+    router.push(
+      {
+        pathname: router?.pathname,
+        query: {
+          ...router.query,
+          sort,
+        },
       },
-    })
+      undefined,
+      { scroll: false }
+    )
   }
 
   const changePagination = () => {
     const pageSize = productSearchResult?.pageSize + publicRuntimeConfig.productListing.pageSize
-    router.push({
-      pathname: router?.pathname,
-      query: {
-        ...router.query,
-        pageSize,
+    router.push(
+      {
+        pathname: router?.pathname,
+        query: {
+          ...router.query,
+          pageSize,
+        },
       },
-    })
+      undefined,
+      { scroll: false }
+    )
   }
 
   useEffect(() => {
@@ -91,6 +102,7 @@ const CategoryPage: NextPage<CategoryPageType> = (props) => {
   return (
     <>
       <ProductListingTemplate
+        productListingHeader={categoryPageHeading as string}
         categoryFacet={categoryFacet}
         facetList={facetList}
         sortingValues={sortingValues}

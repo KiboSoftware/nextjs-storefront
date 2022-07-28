@@ -28,21 +28,20 @@ const setup = () => {
   }
 }
 
-afterEach(() => {
-  cleanup()
-})
-
 describe('[component] - ProductDetailTemplate integration', () => {
   it('should handle quantity selector ', async () => {
     const { user } = setup()
 
     const input = screen.getByRole('textbox', { name: 'quantity' })
+    expect(input).toHaveValue('1')
+
     const increaseButton = screen.getByRole('button', { name: 'increase' })
 
     await user.click(increaseButton)
 
+    const newInput = screen.getByRole('textbox', { name: 'quantity' })
     await waitFor(() => {
-      expect(input).toHaveValue('2')
+      expect(newInput).toHaveValue('2')
     })
   })
 
@@ -148,8 +147,16 @@ describe('[component] - ProductDetailTemplate integration', () => {
     })
   })
 
-  it('should handle adding item to cart', async () => {
+  it('should add ship to home item to cart', async () => {
     const { user } = setup()
+
+    const shipRadio = screen.getByRole('radio', {
+      name: /ship to home/i,
+    })
+
+    await user.click(shipRadio)
+
+    expect(shipRadio).toBeChecked()
 
     const addToCartButton = screen.getByRole('button', {
       name: /common:add-to-cart/i,
@@ -164,5 +171,23 @@ describe('[component] - ProductDetailTemplate integration', () => {
     })
 
     expect(dialogHeader).toBeVisible()
+  })
+
+  it('should not add pickup item to cart if pickup location is not set', async () => {
+    const { user } = setup()
+
+    const pickupRadio = screen.getByRole('radio', {
+      name: /Pickup in store/i,
+    })
+
+    await user.click(pickupRadio)
+
+    expect(pickupRadio).toBeChecked()
+
+    const addToCartButton = screen.getByRole('button', {
+      name: /common:add-to-cart/i,
+    })
+
+    expect(addToCartButton).toBeDisabled()
   })
 })

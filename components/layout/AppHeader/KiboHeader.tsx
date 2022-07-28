@@ -21,17 +21,15 @@ import {
 } from '@mui/material'
 import { styled, SxProps, Theme } from '@mui/material/styles'
 import { useTranslation } from 'next-i18next'
+import { useRouter } from 'next/router'
 
-import LoginDialog from '../Login'
-import SearchSuggestions from '../SearchSuggestions/SearchSuggestions'
-import HeaderAction from '@/components/common/HeaderAction/HeaderAction'
-import KiboLogo from '@/components/common/KiboLogo/KiboLogo'
-import { HamburgerMenu } from '@/components/layout'
-import MegaMenu from '@/components/layout/MegaMenu/MegaMenu'
-import { useAuthContext } from '@/context'
-import { useModalContext } from '@/context/ModalContext'
-import { useCategoryTree } from '@/hooks'
-import type { NavigationLink } from '@/lib/types'
+import { HeaderAction, KiboLogo } from '@/components/common'
+import { MyStoreDialog, StoreLocatorDialog } from '@/components/dialogs'
+import { MegaMenu, HamburgerMenu, SearchSuggestions, LoginDialog } from '@/components/layout'
+import { useAuthContext, useModalContext } from '@/context'
+import { useCartQueries, useCategoryTree, usePurchaseLocation } from '@/hooks'
+import { setPurchaseLocationCookie } from '@/lib/helpers'
+import type { LocationCustom, NavigationLink } from '@/lib/types'
 
 import type { Maybe, PrCategory } from '@/lib/gql/types'
 
@@ -46,8 +44,8 @@ interface HeaderState {
 }
 interface HeaderActionsProps {
   headerState: HeaderState
-  setHeaderState: (val: HeaderState) => void
   isMobileViewport: boolean
+  setHeaderState: (val: HeaderState) => void
 }
 
 const StyledToolbarNav = styled(Box)(() => ({
@@ -200,11 +198,41 @@ const HeaderActions = (props: HeaderActionsProps) => {
   const { headerState, setHeaderState, isMobileViewport } = props
   const { t } = useTranslation('common')
   const { isAuthenticated, user, setAuthError } = useAuthContext()
-  const { showModal } = useModalContext()
+  const router = useRouter()
+  const { data: cart } = useCartQueries({})
+  const itemCount = cart?.items?.length || 0
+  const { showModal, closeModal } = useModalContext()
+
+  const { data: location } = usePurchaseLocation()
 
   const openLoginModal = () => {
     setAuthError('')
     if (!isAuthenticated) showModal({ Component: LoginDialog })
+  }
+
+  const gotoCart = () => {
+    router.push('/cart')
+  }
+
+  const openStoreLocatorModal = () => {
+    if (location.name) {
+      showModal({
+        Component: MyStoreDialog,
+        props: {
+          location,
+        },
+      })
+    } else {
+      showModal({
+        Component: StoreLocatorDialog,
+        props: {
+          handleSetStore: async (selectedStore: LocationCustom) => {
+            setPurchaseLocationCookie(selectedStore?.code as string)
+            closeModal()
+          },
+        },
+      })
+    }
   }
 
   return (
@@ -247,10 +275,15 @@ const HeaderActions = (props: HeaderActionsProps) => {
         {/* Store finder icon */}
         <Box sx={headerActionsStyles.storeFinderWrapper}>
           <HeaderAction
-            title={t('find-a-store')}
-            subtitle={t('view-all')}
+            title={location?.name ? location.name : t('find-a-store')}
+            subtitle={
+              location?.address?.cityOrTown && location?.address?.stateOrProvince
+                ? `${location?.address?.cityOrTown}, ${location?.address?.stateOrProvince}`
+                : t('view-all')
+            }
             icon={FmdGoodIcon}
             {...(isMobileViewport && { iconFontSize: 'medium' })}
+            onClick={openStoreLocatorModal}
           />
         </Box>
         {/* My account Icon */}
@@ -267,8 +300,9 @@ const HeaderActions = (props: HeaderActionsProps) => {
           <HeaderAction
             subtitle={t('cart')}
             icon={ShoppingCartIcon}
-            badgeContent={3}
+            badgeContent={itemCount}
             {...(isMobileViewport && { iconFontSize: 'medium' })}
+            onClick={gotoCart}
           />
         </Box>
       </Box>
@@ -292,6 +326,12 @@ export default function KiboHeader(props: KiboHeaderProps) {
     setHeaderState({
       ...headerState,
       viewHamburgerMenu: value,
+    })
+  }
+  const handleSearchPortal = () => {
+    setHeaderState({
+      viewHamburgerMenu: false,
+      viewSearchPortal: !headerState.viewSearchPortal,
     })
   }
 
@@ -321,7 +361,10 @@ export default function KiboHeader(props: KiboHeaderProps) {
             <Collapse in={headerState.viewSearchPortal}>
               <Box position="static" sx={{ display: { md: 'none' } }}>
                 <StyledToolbar data-testid="searchbar-container">
-                  <SearchSuggestions />
+                  <SearchSuggestions
+                    isViewSearchPortal={headerState.viewSearchPortal}
+                    onEnterSearch={handleSearchPortal}
+                  />
                 </StyledToolbar>
               </Box>
             </Collapse>

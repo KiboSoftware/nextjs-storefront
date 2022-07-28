@@ -1,13 +1,10 @@
 import '@testing-library/jest-dom'
 import { render, screen } from '@testing-library/react'
 import { RouterContext } from 'next/dist/shared/lib/router-context'
-import * as nextRouter from 'next/router'
 
 import { categoryTreeDataMock } from '@/__mocks__/stories/categoryTreeDataMock'
-import { createQueryClientWrapper } from '@/__test__/utils/renderWithQueryClient'
+import { createMockRouter, createQueryClientWrapper } from '@/__test__/utils'
 import CategoryPage, { getServerSideProps } from '@/pages/category/[categoryCode]'
-
-nextRouter.useRouter = jest.fn()
 const mockCategoryTreeData = categoryTreeDataMock
 const mockProductSearchData = {
   totalCount: 1,
@@ -86,9 +83,10 @@ describe('[page] Category Page', () => {
   })
 
   it('should render the Category page template', () => {
-    nextRouter.useRouter.mockImplementation(() => ({ query: { categoryCode: '41' } }))
+    const router = createMockRouter({ query: { categoryCode: '41' } })
+
     render(
-      <RouterContext.Provider>
+      <RouterContext.Provider value={router}>
         <CategoryPage />
       </RouterContext.Provider>,
       {

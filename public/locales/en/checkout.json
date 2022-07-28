@@ -66,5 +66,8 @@
   "pickup-in-store": "Pickup in Store",
   "shipping-details": "Shipping details",
   "order-summary": "Order Summary",
-  "free": "Free"
+  "free": "Free",
+  "go-to-checkout": "Go To Checkout",
+  "save-shipping-address": "Save shipping address",
+  "shipping-method": "Shipping Method"
 }

@@ -1,34 +1,24 @@
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
-import { useRouter } from 'next/router'
-import { useQuery } from 'react-query'
 
 import { CartTemplate } from '@/components/page-templates'
+import { getCart } from '@/lib/api/operations/'
 
-import type {
-  NextPage,
-  GetStaticPathsContext,
-  GetStaticPropsContext,
-  InferGetStaticPropsType,
-  GetServerSidePropsContext,
-} from 'next'
+import type { NextPage, GetServerSidePropsContext } from 'next'
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
-  const { locale } = context
+  const { locale, req } = context
+  const response = await getCart(req)
   return {
     props: {
-      cart: {},
-      ...(await serverSideTranslations(locale as string, ['common', 'cart'])),
+      cart: response?.currentCart,
+      ...(await serverSideTranslations(locale as string, ['common', 'cart', 'checkout'])),
     },
   }
 }
 
 const CartPage: NextPage = (props: any) => {
-  const router = useRouter()
-
-  //const { data } = useQuery('cart', performSearch, { initialData: props.results || [] });
   return (
     <>
-      <h1>Search</h1>
       <CartTemplate {...props} />
     </>
   )

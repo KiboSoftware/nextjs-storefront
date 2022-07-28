@@ -1,6 +1,7 @@
 export { default as KiboHeader } from './AppHeader/KiboHeader'
 export { default as HamburgerMenu } from './HamburgerMenu/HamburgerMenu'
 export { default as CategoryNestedNavigation } from './CategoryNestedNavigation/CategoryNestedNavigation'
-export { default as Login } from './Login'
+export { default as LoginDialog } from './Login/LoginDialog/LoginDialog'
 export { default as MegaMenu } from './MegaMenu/MegaMenu'
 export { default as MegaMenuItem } from './MegaMenuItem/MegaMenuItem'
+export { default as SearchSuggestions } from './SearchSuggestions/SearchSuggestions'

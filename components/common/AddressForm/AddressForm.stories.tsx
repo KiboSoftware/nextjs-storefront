@@ -23,7 +23,6 @@ export const Common = Template.bind({})
 Common.args = {
   setAutoFocus: true,
   checkout: undefined,
-  onCompleteCallback: (action) => action,
   contact: undefined,
   isUserLoggedIn: false,
   saveAddressLabel: 'Save shipping address',

@@ -1,5 +1,6 @@
 import getConfig from 'next/config'
 
+import { cartGetters } from './cartGetters'
 import DefaultImage from '@/public/product_placeholder.svg'
 
 import type {
@@ -11,6 +12,7 @@ import type {
   CrAddress,
   Contact,
   CartItem,
+  Cart,
 } from '@/lib/gql/types'
 
 interface ShippingDetails {
@@ -54,11 +56,11 @@ const { publicRuntimeConfig } = getConfig()
 const getOrderNumber = (checkout: Order) => checkout?.orderNumber
 const getEmail = (checkout: Order) => checkout?.email
 const getId = (checkout: Order) => checkout?.id
-const getTotal = (checkout: Order): number => checkout?.total as number
+const getTotal = (checkout: Order | Cart): number => checkout?.total as number
 const getDiscountedTotal = (checkout: Order) => checkout?.orderDiscounts || 0
-const getShippingTotal = (checkout: Order) => checkout?.shippingTotal || 0
-const getTaxTotal = (checkout: Order) => checkout?.taxTotal || 0
-const getSubtotal = (checkout: Order): number => checkout?.subtotal as number
+const getShippingTotal = (checkout: Order | Cart) => checkout?.shippingTotal || 0
+const getTaxTotal = (checkout: Order | Cart) => checkout?.taxTotal || 0
+const getSubtotal = (checkout: Order | Cart): number => checkout?.subtotal as number
 const getLineItemTotal = (checkout: Order) => {
   return checkout?.items
     ? checkout?.items?.reduce((previous, current) => {
@@ -111,7 +113,10 @@ const getPurchaseLocation = (item: Maybe<CrOrderItem> | Maybe<CartItem>): string
 // review step changes
 
 const getTotalCollected = (checkout: Order): number => checkout.totalCollected || 0
-//u
+
+const getShippingContact = (checkout: Order): Contact =>
+  checkout?.fulfillmentInfo?.fulfillmentContact as Contact
+
 const getShippingEmail = (checkout: Order): string =>
   checkout.fulfillmentInfo?.fulfillmentContact?.email || ''
 
@@ -119,6 +124,8 @@ const getShippingFirstName = (checkout: Order): string =>
   checkout.fulfillmentInfo?.fulfillmentContact?.firstName || ''
 const getShippingLastNameOrSurname = (checkout: Order): string =>
   checkout.fulfillmentInfo?.fulfillmentContact?.lastNameOrSurname || ''
+const getShippingMiddleNameOrInitial = (checkout: Order): string =>
+  checkout?.fulfillmentInfo?.fulfillmentContact?.middleNameOrInitial || ''
 
 const getShippingPhoneHome = (checkout: Order): string =>
   checkout?.fulfillmentInfo?.fulfillmentContact?.phoneNumbers?.home || ''
@@ -231,4 +238,6 @@ export const checkoutGetters = {
   getPaymentMethods,
   getOrderSummary,
   getCheckoutDetails,
+  getShippingContact,
+  ...cartGetters,
 }

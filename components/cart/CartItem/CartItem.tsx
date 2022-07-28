@@ -18,14 +18,26 @@ import FulfillmentOptions from '@/components/common/FulfillmentOptions/Fulfillme
 import Price from '@/components/common/Price/Price'
 import ProductItem from '@/components/common/ProductItem/ProductItem'
 import QuantitySelector from '@/components/common/QuantitySelector/QuantitySelector'
-import { orderGetters } from '@/lib/getters'
+import { orderGetters, productGetters } from '@/lib/getters'
+import { uiHelpers } from '@/lib/helpers'
 import type { FulfillmentOption } from '@/lib/types'
 
-import type { CartItem as CartItemType } from '@/lib/gql/types'
+import type { CartItem as CartItemType, Maybe } from '@/lib/gql/types'
+
+interface CartItemProps {
+  cartItem: Maybe<CartItemType>
+  maxQuantity: number | undefined
+  actions?: Array<string>
+  fulfillmentOptions: FulfillmentOption[]
+  onQuantityUpdate: (cartItemId: string, quantity: number) => void
+  onCartItemDelete: (cartItemId: string) => void
+  onCartItemActionSelection: () => void
+  onFulfillmentOptionSelection: () => void
+}
 
 const styles = {
   card: {
-    maxWidth: '54.5rem',
+    maxWidth: '100%',
     marginBottom: {
       xs: 0,
       sm: 0,
@@ -70,17 +82,6 @@ const styles = {
   } as SxProps<Theme>,
 }
 
-interface CartItemProps {
-  cartItem: CartItemType
-  maxQuantity: number | undefined
-  actions?: Array<string>
-  fulfillmentOptions: FulfillmentOption[]
-  onQuantityUpdate: (cartItemId: string, quantity: number) => void
-  onCartItemDelete: (cartItemId: string) => void
-  onCartItemActionSelection: () => void
-  onFulfillmentOptionSelection: () => void
-}
-
 const CartItem = (props: CartItemProps) => {
   const {
     cartItem,
@@ -97,11 +98,14 @@ const CartItem = (props: CartItemProps) => {
 
   const { t } = useTranslation('common')
   const orientationVertical = useMediaQuery(theme.breakpoints.between('xs', 'md'))
-  const handleDelete = (cartItemId: string) => onCartItemDelete(cartItemId)
-  const updateQuantity = (quantity: number) => onQuantityUpdate(cartItem.id as string, quantity)
-  const handleActionSelection = () => onCartItemActionSelection()
+  const { getProductLink } = uiHelpers()
 
   const handleFulfillmentOption = () => onFulfillmentOptionSelection()
+  const handleDelete = (cartItemId: string) => onCartItemDelete(cartItemId)
+  const hadleQuantityUpdate = (quantity: number) =>
+    onQuantityUpdate(cartItem?.id as string, quantity)
+  const handleActionSelection = () => onCartItemActionSelection()
+  const cartItemQuantity = cartItem?.quantity || 1
 
   return (
     <>
@@ -110,9 +114,12 @@ const CartItem = (props: CartItemProps) => {
           <Box sx={{ ...styles.cartItemContainer }}>
             <Box sx={{ ...styles.subcontainer }}>
               <ProductItem
-                image={orderGetters.getProductImage(cartItem)}
+                image={productGetters.handleProtocolRelativeUrl(
+                  orderGetters.getProductImage(cartItem)
+                )}
                 name={orderGetters.getProductName(cartItem)}
                 options={orderGetters.getProductOptions(cartItem)}
+                link={getProductLink(cartItem?.product?.productCode as string)}
               >
                 <Box>
                   <Price
@@ -130,11 +137,12 @@ const CartItem = (props: CartItemProps) => {
                 </Box>
                 <Box sx={{ py: '0.5rem' }}>
                   <QuantitySelector
-                    quantity={cartItem.quantity}
+                    quantity={cartItemQuantity}
                     label={t('qty')}
                     maxQuantity={maxQuantity}
-                    onIncrease={() => updateQuantity(cartItem.quantity + 1)}
-                    onDecrease={() => updateQuantity(cartItem.quantity - 1)}
+                    onIncrease={() => hadleQuantityUpdate(cartItemQuantity + 1)}
+                    onDecrease={() => hadleQuantityUpdate(cartItemQuantity - 1)}
+                    onQuantityUpdate={(q) => hadleQuantityUpdate(q)}
                   />
                 </Box>
               </ProductItem>
@@ -153,8 +161,9 @@ const CartItem = (props: CartItemProps) => {
             <Box sx={{ ...styles.subcontainer }}>
               <FulfillmentOptions
                 fulfillmentOptions={fulfillmentOptions}
+                selected=""
                 onFullfillmentOptionChange={handleFulfillmentOption}
-                onStoreSelection={handleFulfillmentOption}
+                onStoreSetOrUpdate={handleFulfillmentOption}
               />
             </Box>
           </Box>
@@ -163,22 +172,19 @@ const CartItem = (props: CartItemProps) => {
             <Box sx={{ display: { xs: 'block', sm: 'block', md: 'none' } }}>
               <CartItemActionsMobile
                 actions={actions || []}
-                onMenuItemSelection={handleActionSelection}
+                onMenuItemSelection={() => handleActionSelection()}
               />
             </Box>
             <IconButton
               aria-label="item-delete"
               name="item-delete"
-              onClick={() => handleDelete(cartItem.id as string)}
+              onClick={() => handleDelete(cartItem?.id as string)}
             >
               <Delete />
             </IconButton>
           </Box>
         </Box>
       </Card>
-      <Box sx={{ display: { xs: 'block', sm: 'block', md: 'none' } }}>
-        <Divider orientation="horizontal" flexItem sx={{ margin: '0 -16px' }} />
-      </Box>
     </>
   )
 }

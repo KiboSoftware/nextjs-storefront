@@ -10,10 +10,8 @@ import getConfig from 'next/config'
 import { useForm, Controller } from 'react-hook-form'
 import * as yup from 'yup'
 
-import type { Action } from '@/components/checkout'
 import KiboSelect from '@/components/common/KiboSelect/KiboSelect'
 import KiboTextField from '@/components/common/KiboTextBox/KiboTextBox'
-import { FormStates } from '@/lib/constants'
 
 import type { Order } from '@/lib/gql/types'
 
@@ -47,7 +45,7 @@ export interface Address {
   saveAddress: boolean
 }
 interface AddressFormProps {
-  contact?: Contact
+  contact: Contact
   countries?: string[]
   isUserLoggedIn: boolean
   saveAddressLabel?: string
@@ -55,11 +53,10 @@ interface AddressFormProps {
   checkout: Order | undefined
   validateForm: boolean
   onSaveAddress: (data: Address) => void
-  onCompleteCallback: (action: Action) => void
+  onFormStatusChange?: (status: boolean) => void
   setValidateForm: (isValidForm: boolean) => void
 }
 
-// Component
 const schema = yup.object().shape({
   firstName: yup.string().required('This field is required'),
   lastNameOrSurname: yup.string().required('This field is required'),
@@ -76,6 +73,7 @@ const schema = yup.object().shape({
   }),
 })
 
+// Component
 const AddressForm = (props: AddressFormProps) => {
   const { publicRuntimeConfig } = getConfig()
 
@@ -87,14 +85,14 @@ const AddressForm = (props: AddressFormProps) => {
     setAutoFocus = true,
     validateForm = false,
     onSaveAddress,
-    onCompleteCallback,
+    onFormStatusChange,
     setValidateForm,
   } = props
 
   // Define Variables and States
   const {
     control,
-    formState: { errors },
+    formState: { errors, isValid },
     handleSubmit,
   } = useForm({
     mode: 'onBlur',
@@ -104,7 +102,6 @@ const AddressForm = (props: AddressFormProps) => {
     shouldFocusError: true,
   })
 
-  // Declare custom hooks, functions, event handlers
   const [saveAddress, setSaveAddress] = useState<boolean>(false)
   const { t } = useTranslation('checkout')
 
@@ -119,20 +116,18 @@ const AddressForm = (props: AddressFormProps) => {
 
   const onValid = async (formData: Contact) => {
     onSaveAddress({ contact: formData, saveAddress })
-  }
-
-  // form is invalid, notify parent form is incomplete
-  const onInvalidForm = () => {
-    onCompleteCallback({ type: FormStates.INCOMPLETE })
     setValidateForm(false)
   }
 
+  const onInvalidForm = () => setValidateForm(false)
+
   useEffect(() => {
-    // if form is valid, onSubmit callback
-    if (validateForm) {
-      handleSubmit(onValid, onInvalidForm)()
-    }
+    if (validateForm) handleSubmit(onValid, onInvalidForm)()
   }, [validateForm])
+
+  useEffect(() => {
+    if (onFormStatusChange) onFormStatusChange(isValid)
+  }, [isValid])
 
   return (
     <Box
@@ -153,6 +148,7 @@ const AddressForm = (props: AddressFormProps) => {
             render={({ field }) => (
               <KiboTextField
                 {...field}
+                value={field.value || ''}
                 label={t('first-name')}
                 ref={null}
                 error={!!errors?.firstName}
@@ -174,6 +170,7 @@ const AddressForm = (props: AddressFormProps) => {
             render={({ field }) => (
               <KiboTextField
                 {...field}
+                value={field.value || ''}
                 label={t('last-name-or-sur-name')}
                 ref={null}
                 error={!!errors?.lastNameOrSurname}
@@ -194,6 +191,7 @@ const AddressForm = (props: AddressFormProps) => {
             render={({ field }) => (
               <KiboTextField
                 {...field}
+                value={field.value || ''}
                 label={t('address1')}
                 ref={null}
                 error={!!errors?.address?.address1}
@@ -214,6 +212,7 @@ const AddressForm = (props: AddressFormProps) => {
             render={({ field }) => (
               <KiboTextField
                 {...field}
+                value={field.value || ''}
                 label={t('address2')}
                 ref={null}
                 error={!!errors?.address?.address2}
@@ -233,6 +232,7 @@ const AddressForm = (props: AddressFormProps) => {
             render={({ field }) => (
               <KiboTextField
                 {...field}
+                value={field.value || ''}
                 label={t('city-or-town')}
                 ref={null}
                 error={!!errors?.address?.cityOrTown}
@@ -253,6 +253,7 @@ const AddressForm = (props: AddressFormProps) => {
             render={({ field }) => (
               <KiboTextField
                 {...field}
+                value={field.value || ''}
                 label={t('state-or-province')}
                 ref={null}
                 error={!!errors?.address?.stateOrProvince}
@@ -273,6 +274,7 @@ const AddressForm = (props: AddressFormProps) => {
             render={({ field }) => (
               <KiboTextField
                 {...field}
+                value={field.value || ''}
                 label={t('postal-or-zip-code')}
                 ref={null}
                 error={!!errors?.address?.postalOrZipCode}
@@ -316,6 +318,7 @@ const AddressForm = (props: AddressFormProps) => {
             render={({ field }) => (
               <KiboTextField
                 {...field}
+                value={field.value || ''}
                 label={t('phone-number-home')}
                 ref={null}
                 error={!!errors?.phoneNumbers?.home}

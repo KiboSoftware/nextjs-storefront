@@ -22,7 +22,14 @@ const productInput = {
 }
 
 describe('[hooks] useCartMutation', () => {
-  it('should use useCartMutation', async () => {
+  beforeEach(() => {
+    jest.clearAllMocks()
+  })
+  afterEach(() => {
+    jest.clearAllMocks()
+  })
+
+  it('should use useCartMutation when addToCart', () => {
     renderHook(
       async () => {
         const { addToCart } = useCartMutation()
@@ -31,6 +38,37 @@ describe('[hooks] useCartMutation', () => {
           quantity: 6,
         })
         expect(response).toStrictEqual(cartItemMock)
+      },
+      {
+        wrapper: createQueryClientWrapper(),
+      }
+    )
+  })
+
+  it('should use useCartMutation when updateCartItemQuantity', async () => {
+    renderHook(
+      async () => {
+        const { updateCartItemQuantity } = useCartMutation()
+        const response = await updateCartItemQuantity.mutateAsync({
+          cartItemId: 'fjsdhfjsdh53472bkjsdffdf',
+          quantity: 2,
+        })
+        expect(response).toStrictEqual(cartItemMock)
+      },
+      {
+        wrapper: createQueryClientWrapper(),
+      }
+    )
+  })
+
+  it('should use useCartMutation when removeCartItem', async () => {
+    renderHook(
+      async () => {
+        const { removeCartItem } = useCartMutation()
+        const response = await removeCartItem.mutateAsync({
+          cartItemId: 'fjsdhfjsdh53472bkjsdffdf',
+        })
+        expect(response).toEqual(true)
       },
       {
         wrapper: createQueryClientWrapper(),

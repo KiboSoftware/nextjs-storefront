@@ -2,6 +2,7 @@
   "add-to-cart": "Add to Cart",
   "add-to-wishlist": "Add to Wishlist",
   "one-click-checkout": "1-Click Checkout",
+  "go-to-checkout": "Go To Checkout",
   "added-to-cart": "Added to Cart",
   "available-at": "Available at: {{name}}",
   "available-to-ship": "Available to Ship",
@@ -51,6 +52,7 @@
   "all-departments": "All Departments",
   "cart-sub-total": "Cart Subtotal",
   "estimated-tax": "Estimated Tax",
+  "estimated-order-total": "Estimated Order Total",
   "standard-shopping": "Standard Shipping",
   "currency": "{{val, currency(USD)}}",
   "count": "count",
@@ -67,7 +69,7 @@
   "advertisment": "Advertisment",
   "login-to-your-account": "or Login to Your Account",
   "create-an-account": "Create an Account",
-
+  "email-must-be-a-valid-email": "Email must be a valid email",
   "find-a-store": "Find a Store",
   "view-all": "View All",
   "view-order-details": "View Order Details",
@@ -93,5 +95,17 @@
   "your-order-was-placed-successfully": "Your order was placed successfully",
   "check-your-email-for-your-order-confirmation": "Check your email for your order confirmation",
   "we-have-sent-the-order-confirmation-details-to": "We have sent the order confirmation details to",
-  "shipping-to-home": "Shipping to Home"
+  "shipping-to-home": "Shipping to Home",
+
+  "zip-code": "Zip Code",
+  "my-store": "My Store",
+  "store-info": "Store Info",
+  "get-directions": "Get Directions",
+  "store-hours": "Store Hours",
+  "available-for-pickup": "Available for Pickup",
+  "show-stores-with-availability": "Show Stores with Availability",
+  "find-stores-within-miles": "Find Stores within 100 miles",
+  "stores-within-miles_zero": "No Results - 0 stores within 100 miles",
+  "stores-within-miles_one": "{{count}} store within 100 miles",
+  "stores-within-miles_other": "{{count}} stores within 100 miles"
 }

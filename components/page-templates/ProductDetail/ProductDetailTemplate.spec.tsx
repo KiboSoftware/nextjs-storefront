@@ -1,8 +1,12 @@
 import { composeStories } from '@storybook/testing-react'
 import { render, within, screen, cleanup } from '@testing-library/react'
 import '@testing-library/jest-dom'
+import { renderHook } from '@testing-library/react-hooks'
 
 import * as stories from './ProductDetailTemplate.stories' // import all stories from the stories file
+import { useModalContext } from '@/context'
+import { usePurchaseLocation } from '@/hooks'
+import { useCartMutation } from '@/hooks/mutations/useCartMutation/useCartMutation'
 
 const { Common } = composeStories(stories)
 
@@ -47,16 +51,12 @@ jest.mock(
   () => ProductInformationMock
 )
 
-const mockProduct = Common?.args?.product
-jest.mock('@/hooks', () => ({
-  useProductDetailTemplate: jest.fn(() => {
-    return {
-      currentProduct: mockProduct,
-    }
-  }),
-}))
-
 const setup = () => {
+  renderHook(() => {
+    useModalContext()
+    usePurchaseLocation()
+    useCartMutation()
+  })
   render(<Common {...Common?.args} />)
 }
 

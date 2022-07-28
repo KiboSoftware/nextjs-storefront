@@ -19,6 +19,7 @@ import { productGetters } from '@/lib/getters'
 import DefaultImage from '@/public/product_placeholder.svg'
 
 import type { Maybe, CrProductOption } from '@/lib/gql/types'
+
 export interface ProductItemProps {
   id?: Maybe<string>
   productCode?: Maybe<string>
@@ -31,7 +32,8 @@ export interface ProductItemProps {
   isPickupItem?: boolean
   expectedDeliveryDate?: string
   purchaseLocation?: string
-  onClickStoreLocator?: () => void
+  onStoreLocatorClick?: () => void
+  link?: string
   children?: ReactNode
 }
 
@@ -64,7 +66,8 @@ const ProductItem = (props: ProductItemProps) => {
     isPickupItem,
     expectedDeliveryDate,
     purchaseLocation,
-    onClickStoreLocator,
+    onStoreLocatorClick,
+    link,
     children,
   } = props
   const { t } = useTranslation('common')
@@ -76,14 +79,16 @@ const ProductItem = (props: ProductItemProps) => {
     <Box key={id}>
       <Box sx={{ display: 'flex', pb: 1, pr: 1, gap: 2, flex: 1 }}>
         <Box sx={{ ...styles.imageContainer }}>
-          <KiboImage
-            src={productGetters.handleProtocolRelativeUrl(image) || DefaultImage}
-            height={200}
-            width={200}
-            alt={name}
-            objectFit="contain"
-            errorimage={DefaultImage}
-          />
+          <Link href={link} data-testid="product-item-link">
+            <KiboImage
+              src={productGetters.handleProtocolRelativeUrl(image) || DefaultImage}
+              height={200}
+              width={200}
+              alt={name}
+              objectFit="contain"
+              errorimage={DefaultImage}
+            />
+          </Link>
         </Box>
 
         <Stack mr={1} flex={1}>
@@ -162,7 +167,7 @@ const ProductItem = (props: ProductItemProps) => {
               component="button"
               variant="caption"
               color="text.primary"
-              onClick={onClickStoreLocator}
+              onClick={onStoreLocatorClick}
             >
               {purchaseLocation ? t('change-store') : t('select-store')}
             </Link>

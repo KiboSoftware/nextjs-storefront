@@ -25,6 +25,7 @@ module.exports = {
     'storybook-addon-material-ui5',
     '@storybook/addon-docs',
     '@storybook/addon-a11y',
+    'storybook-addon-next-router',
   ],
   framework: '@storybook/react',
 }
