@@ -1,9 +1,9 @@
 import React from 'react'
 
 import { composeStories } from '@storybook/testing-react'
-import { cleanup, screen, waitFor } from '@testing-library/react'
+import { act, cleanup, screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
-// import * as cookienext from 'cookies-next'
+import * as cookienext from 'cookies-next'
 import { RouterContext } from 'next/dist/shared/lib/router-context'
 
 import { createMockRouter } from '@/__test__/utils/createMockRouter'
@@ -82,26 +82,28 @@ describe('[components] CartTemplate integration', () => {
     expect(newInputs[0]).toHaveValue('2')
   })
 
-  // it('should delete cart Item  when click delete icon', async () => {
-  //   const { user } = setup()
+  it('should delete cart Item  when click delete icon', async () => {
+    const { user } = setup()
 
-  //   const cartItem = screen.getAllByRole('group')
-  //   expect(cartItem).toHaveLength(2)
+    const cartItem = screen.getAllByRole('group')
+    expect(cartItem).toHaveLength(2)
 
-  //   const deleteButton = screen.getAllByRole('button', { name: 'item-delete' })
-  //   await user.click(deleteButton[0])
-  //   const deletedCartItem = screen.queryByText('Pink Backpack')
-  //   await waitFor(() => expect(deletedCartItem).not.toBeInTheDocument())
-  // })
+    const deleteButton = screen.getAllByRole('button', { name: 'item-delete' })
+    await user.click(deleteButton[0])
+    const deletedCartItem = screen.queryByText('Pink Backpack')
+    await waitFor(() => expect(deletedCartItem).not.toBeInTheDocument())
+  })
 
   it('should selected ship to home item into the cart', async () => {
     const { user } = setup()
     const shipRadio = screen.getAllByRole('radio', {
       name: /ship to home/i,
     })
-    await user.click(shipRadio[1])
+    act(async () => {
+      await user.click(shipRadio[0])
+    })
 
-    await waitFor(() => expect(shipRadio[1]).toBeChecked())
+    await waitFor(() => expect(shipRadio[0]).toBeChecked())
   })
 
   it('should selected pickup item into the cart and show store selector dialog', async () => {
@@ -109,25 +111,24 @@ describe('[components] CartTemplate integration', () => {
     const pickupRadio = screen.getAllByRole('radio', {
       name: /Pickup in store/i,
     })
-    await user.click(pickupRadio[0])
+    act(async () => {
+      await user.click(pickupRadio[0])
+    })
     const selectStore = screen.queryAllByText('select-store')
 
-    expect(selectStore[0]).toBeVisible()
+    await waitFor(() => expect(selectStore[0]).toBeVisible())
   })
 
-  // it('should selected pickup item into the cart with purchase location from cookie', async () => {
-  //   const mockSetCookie = jest.spyOn(cookienext, 'setCookie')
-  //   cookienext.setCookie('kibo_purchase_location', 'Richmond')
-  //   Object.defineProperty(window.document, 'cookie', {
-  //     writable: true,
-  //     value: 'kibo_purchase_location=Richmond',
-  //   })
-
-  //   const { user } = setup()
-  //   const pickupRadio = screen.getAllByRole('radio', {
-  //     name: /Pickup in store/i,
-  //   })
-  //   await user.click(pickupRadio[0])
-  //   expect(pickupRadio[0]).toBeChecked()
-  // })
+  it('should selected pickup item into the cart with purchase location from cookie', async () => {
+    cookienext.setCookie('kibo_purchase_location', 'IlJJQ0hNT05EIg==')
+    const { user } = setup()
+    const pickupRadio = screen.getAllByRole('radio', {
+      name: /Pickup in store/i,
+    })
+    await new Promise((r) => setTimeout(r, 2000))
+    act(async () => {
+      await user.click(pickupRadio[1])
+    })
+    await waitFor(() => expect(pickupRadio[1]).toBeChecked())
+  })
 })

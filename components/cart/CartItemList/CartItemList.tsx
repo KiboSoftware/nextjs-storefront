@@ -45,10 +45,7 @@ const CartItemList = (props: CartItemListProps) => {
       cartItem?.fulfillmentLocationCode && cartItem?.fulfillmentMethod === FulfillmentOptions.PICKUP
         ? cartGetters.getCartItemFulfillmentLocation(cartItem, fulfillmentLocations)
         : purchaseLocation
-    return cartGetters.getProductFulfillmentOptions(
-      cartItem?.product as Product,
-      location as Location
-    )
+    return cartGetters.getProductFulfillmentOptions(cartItem?.product as Product, location)
   }
 
   return (
