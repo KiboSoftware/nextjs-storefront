@@ -242,19 +242,19 @@ describe('[component] - ProductDetailTemplate integration', () => {
       })
     )
     const { user } = setup()
-
     const shipRadio = screen.getByRole('radio', {
       name: /ship to home/i,
     })
 
     await user.click(shipRadio)
-
     expect(shipRadio).toBeChecked()
 
     const addToCartButton = screen.getByRole('button', {
       name: /common:add-to-cart/i,
     })
-
     await user.click(addToCartButton)
+
+    const view = screen.queryByTestId('title-component')
+    expect(view).not.toBeInTheDocument()
   })
 })

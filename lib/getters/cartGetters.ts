@@ -1,8 +1,9 @@
 import getConfig from 'next/config'
 
 import { FulfillmentOptions } from '../constants'
-import { Maybe, Cart, CartItem, Location, Product } from '../gql/types'
-import { FulfillmentOption } from '../types'
+
+import type { Maybe, Cart, CartItem, Location, Product } from '../gql/types'
+import type { FulfillmentOption } from '../types'
 
 const { publicRuntimeConfig } = getConfig()
 

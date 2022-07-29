@@ -69,16 +69,8 @@ const CartTemplate = (props: CartTemplateProps) => {
   const cartShippingTotal = checkoutGetters.getShippingTotal(cart)
   const cartTaxTotal = checkoutGetters.getTaxTotal(cart)
   const cartTotal = checkoutGetters.getTotal(cart)
+  const locationCodes = checkoutGetters.getFulfillmentLocationCodes(cartItems)
 
-  const locationCodes =
-    (cartItems.length &&
-      cartItems
-        .filter((item) => item?.fulfillmentMethod === 'Pickup')
-        .map((item) => item?.fulfillmentLocationCode)
-        .filter((value, index, self) => self.indexOf(value) === index)
-        .map((code) => `code eq ${code}`)
-        .join(' or ')) ||
-    ''
   const { data: locations } = useStoreLocations({ filter: locationCodes })
   const { data: purchaseLocation } = usePurchaseLocation()
 

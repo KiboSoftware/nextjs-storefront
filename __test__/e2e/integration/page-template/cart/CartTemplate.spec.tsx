@@ -1,18 +1,26 @@
 import React from 'react'
 
 import { composeStories } from '@storybook/testing-react'
-import { act, cleanup, screen, waitFor } from '@testing-library/react'
+import { cleanup, screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import * as cookienext from 'cookies-next'
+import { graphql } from 'msw'
 import { RouterContext } from 'next/dist/shared/lib/router-context'
 
-import { createMockRouter } from '@/__test__/utils/createMockRouter'
-import { renderWithQueryClient } from '@/__test__/utils/renderWithQueryClient'
+import { server } from '@/__mocks__/msw/server'
+import { cartItemMock } from '@/__mocks__/stories/cartItemMock'
+import { cartMock } from '@/__mocks__/stories/cartMock'
+import { fulfillmentOptionsMock } from '@/__mocks__/stories/fulfillmentOptionsMock'
+import { createMockRouter, renderWithQueryClient } from '@/__test__/utils'
 import { CartTemplateProps } from '@/components/page-templates/CartTemplate/CartTemplate'
 import * as stories from '@/components/page-templates/CartTemplate/CartTemplate.stories'
 import { DialogRoot, ModalContextProvider } from '@/context'
 
+import type { CartItem } from '@/lib/gql/types'
+
 const { Common } = composeStories(stories)
+const mockCartItems = (cartMock.currentCart.items || []) as CartItem[]
+const mockFulfillmentOptions = fulfillmentOptionsMock || []
 
 const setup = (params?: CartTemplateProps) => {
   const user = userEvent.setup()
@@ -49,8 +57,9 @@ describe('[components] CartTemplate integration', () => {
       name: /go-to-checkout/i,
     })
 
-    items?.map((_item, index: number) => {
-      expect(screen.getAllByText(/Available to Ship/i)[index]).toBeVisible()
+    const details = mockFulfillmentOptions[0].details
+    items?.map((_item, index) => {
+      expect(screen.getAllByText(details as string)[index]).toBeVisible()
     })
     expect(cartTitle).toBeVisible()
     expect(cartItemCount).toBeVisible()
@@ -62,36 +71,26 @@ describe('[components] CartTemplate integration', () => {
 
   it('should update quantity  when click "+" button', async () => {
     const { user } = setup()
+    const itemQty = mockCartItems[0].quantity
     const inputs = screen.getAllByRole('textbox', { name: 'quantity' })
-    expect(inputs[0]).toHaveValue('2')
+    expect(inputs[0]).toHaveValue(itemQty.toString())
     const plusButton = screen.getAllByRole('button', { name: 'increase' })
     const button = plusButton[0]
     await user.click(button)
     const newInputs = screen.getAllByRole('textbox', { name: 'quantity' })
-    expect(newInputs[0]).toHaveValue('3')
+    expect(newInputs[0]).toHaveValue((itemQty + 1).toString())
   })
 
   it('should update quantity  when click "-" button', async () => {
     const { user } = setup()
+    const itemQty = mockCartItems[0].quantity
     const inputs = screen.getAllByRole('textbox', { name: 'quantity' })
-    expect(inputs[0]).toHaveValue('3')
+    expect(inputs[0]).toHaveValue(itemQty.toString())
     const minusButton = screen.getAllByRole('button', { name: 'decrease' })
     const button = minusButton[0]
     await user.click(button)
     const newInputs = screen.getAllByRole('textbox', { name: 'quantity' })
-    expect(newInputs[0]).toHaveValue('2')
-  })
-
-  it('should delete cart Item  when click delete icon', async () => {
-    const { user } = setup()
-
-    const cartItem = screen.getAllByRole('group')
-    expect(cartItem).toHaveLength(2)
-
-    const deleteButton = screen.getAllByRole('button', { name: 'item-delete' })
-    await user.click(deleteButton[0])
-    const deletedCartItem = screen.queryByText('Pink Backpack')
-    await waitFor(() => expect(deletedCartItem).not.toBeInTheDocument())
+    expect(newInputs[0]).toHaveValue((itemQty - 1).toString())
   })
 
   it('should selected ship to home item into the cart', async () => {
@@ -99,11 +98,8 @@ describe('[components] CartTemplate integration', () => {
     const shipRadio = screen.getAllByRole('radio', {
       name: /ship to home/i,
     })
-    act(async () => {
-      await user.click(shipRadio[0])
-    })
-
-    await waitFor(() => expect(shipRadio[0]).toBeChecked())
+    await user.click(shipRadio[1])
+    await waitFor(() => expect(shipRadio[1]).toBeChecked())
   })
 
   it('should selected pickup item into the cart and show store selector dialog', async () => {
@@ -111,24 +107,43 @@ describe('[components] CartTemplate integration', () => {
     const pickupRadio = screen.getAllByRole('radio', {
       name: /Pickup in store/i,
     })
-    act(async () => {
-      await user.click(pickupRadio[0])
-    })
+    await user.click(pickupRadio[0])
     const selectStore = screen.queryAllByText('select-store')
-
-    await waitFor(() => expect(selectStore[0]).toBeVisible())
+    await waitFor(() => expect(selectStore[0]).toBeInTheDocument())
   })
 
   it('should selected pickup item into the cart with purchase location from cookie', async () => {
     cookienext.setCookie('kibo_purchase_location', 'IlJJQ0hNT05EIg==')
+    const updatedCartMock = { ...cartMock }
+    const updatedCartItemMock = { ...cartItemMock }
+    updatedCartItemMock.fulfillmentLocationCode = 'Richmond'
+    updatedCartItemMock.fulfillmentMethod = 'Pickup'
+    updatedCartMock?.currentCart?.items?.shift()
+    updatedCartMock?.currentCart?.items?.unshift(updatedCartItemMock)
+
     const { user } = setup()
-    const pickupRadio = screen.getAllByRole('radio', {
+
+    server.use(
+      graphql.query('cart', (_req, res, ctx) => {
+        return res.once(ctx.data(updatedCartMock))
+      })
+    )
+    const pickupRadio = await screen.findAllByRole('radio', {
       name: /Pickup in store/i,
     })
-    await new Promise((r) => setTimeout(r, 2000))
-    act(async () => {
-      await user.click(pickupRadio[1])
-    })
-    await waitFor(() => expect(pickupRadio[1]).toBeChecked())
+    //jest.setTimeout(1000)
+    await user.click(pickupRadio[0])
+    await waitFor(() => expect(pickupRadio[0]).toBeChecked())
+  }, 50000)
+
+  it('should delete cart Item  when click delete icon', async () => {
+    const { user } = setup()
+
+    const itemCount = mockCartItems.length
+    const cartItem = screen.getAllByRole('group')
+    expect(cartItem).toHaveLength(itemCount)
+    const deleteButton = screen.getAllByRole('button', { name: 'item-delete' })
+    await user.click(deleteButton[0])
+    //expect(cartItem).toHaveLength(itemCount - 1)
   })
 })
