@@ -2,10 +2,22 @@ import React from 'react'
 
 import { composeStories } from '@storybook/testing-react'
 import { render, screen } from '@testing-library/react'
+import mediaQuery from 'css-mediaquery'
 
 import * as stories from './KiboHeroCarousel.stories'
 
 const { Common } = composeStories(stories)
+
+const createMatchMedia = (width: number) => (query: string) => ({
+  matches: mediaQuery.match(query, { width }),
+  addListener: () => jest.fn(),
+  removeListener: () => jest.fn(),
+  media: query,
+  onchange: null,
+  addEventListener: jest.fn(),
+  removeEventListener: jest.fn(),
+  dispatchEvent: jest.fn(),
+})
 
 describe('checkout Component', () => {
   const setup = () => render(<Common {...Common.args} />)
@@ -38,7 +50,8 @@ describe('checkout Component', () => {
 
     it('should render button', () => {
       setup()
-      expect(screen.getByRole('button', { name: 'Shop Holiday Items on Sale' })).toBeInTheDocument()
+      const carouselValues = Common?.args?.carouselItem || []
+      expect(screen.getByRole('button', { name: carouselValues[0].buttonText })).toBeInTheDocument()
     })
 
     it('should render product image', () => {
@@ -56,6 +69,30 @@ describe('checkout Component', () => {
     it('should move to previous slide', () => {
       setup()
       expect(screen.getByRole('button', { name: 'Previous' })).toBeVisible()
+    })
+
+    it('mobile', async () => {
+      window.matchMedia = createMatchMedia(500)
+      setup()
+      const carouselValues = Common?.args?.carouselItem || []
+
+      const description = screen.getAllByText(carouselValues[0].description!)
+      const buttontext = screen.getAllByText(carouselValues[0].buttonText!)
+
+      expect(description[0]).toHaveStyle('font-size: 0.75rem')
+      expect(buttontext[0]).toHaveStyle('font-size: 0.5rem')
+    })
+
+    it('Desktop', async () => {
+      window.matchMedia = createMatchMedia(1000)
+      setup()
+      const carouselValues = Common?.args?.carouselItem || []
+
+      const description = screen.getAllByText(carouselValues[0].description!)
+      const buttontext = screen.getAllByText(carouselValues[0].buttonText!)
+
+      expect(description[0]).toHaveStyle('font-size: 1rem')
+      expect(buttontext[0]).toHaveStyle('font-size: 1rem')
     })
   })
 })
