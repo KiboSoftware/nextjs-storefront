@@ -34,6 +34,7 @@ import {
   useRemoveWishlistItemMutation,
 } from '@/hooks'
 import { productGetters, wishlistGetters } from '@/lib/getters'
+import { buildWishlistParams } from '@/lib/helpers'
 import type { ProductCustom, BreadCrumb, PriceRange, LocationCustom } from '@/lib/types'
 
 import type {
@@ -91,6 +92,7 @@ const ProductDetailTemplate = (props: ProductDetailTemplateProps) => {
     optionsVisibility,
     properties,
     isValidForAddToCart,
+    isPackagedStandAlone,
   } = productGetters.getProductDetails({
     ...currentProduct,
     fulfillmentMethod: selectedFulfillmentOption?.method,
@@ -179,20 +181,18 @@ const ProductDetailTemplate = (props: ProductDetailTemplateProps) => {
 
   const handleWishList = async () => {
     try {
-      const variables = {
-        product: {
-          productCode,
-          isPackagedStandAlone: product?.isPackagedStandAlone || true,
-          variationProductCode,
-          options: updatedShopperEnteredValues,
-        },
-        currentWishlist,
-      }
-
       if (!isAuthenticated) {
         showModal({ Component: LoginDialog })
         return
       }
+
+      const variables = buildWishlistParams({
+        productCode,
+        variationProductCode,
+        isPackagedStandAlone,
+        options: updatedShopperEnteredValues,
+        currentWishlist,
+      })
 
       if (!isProductInWishlist) {
         await addToWishlist.mutateAsync({
@@ -210,7 +210,7 @@ const ProductDetailTemplate = (props: ProductDetailTemplateProps) => {
         },
       })
     } catch (error) {
-      console.log('Error Add or Remove Wishlist item from PDP', error)
+      console.log('Error: add or remove wishlist item from PDP', error)
     }
   }
 

@@ -244,7 +244,7 @@ describe('[component] - ProductDetailTemplate integration', () => {
     expect(title).toBeVisible()
   })
 
-  it('should use useAuthContext when login button clicked', async () => {
+  it('should open wishlist popover when logged in user clicks on add to wishlist button', async () => {
     const { user } = testSetup(<TestComponent />)
     const addToWishlistButton = screen.getByRole('button', {
       name: 'common:add-to-wishlist',

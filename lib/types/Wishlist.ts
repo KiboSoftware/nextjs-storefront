@@ -1,3 +1,5 @@
+import type { LocationCustom, ProductCustom } from '@/lib/types'
+
 import { Maybe, ProductOption, Wishlist } from '@/lib/gql/types'
 
 export interface WishlistProductInput {
@@ -9,5 +11,13 @@ export interface WishlistProductInput {
 
 export interface RemoveWishlistItemInput {
   product: WishlistProductInput
+  currentWishlist?: Maybe<Wishlist>
+}
+
+export interface WishlistParams {
+  productCode: string
+  variationProductCode: string
+  isPackagedStandAlone: boolean
+  options: ProductOption[]
   currentWishlist?: Maybe<Wishlist>
 }
