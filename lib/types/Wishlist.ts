@@ -1,5 +1,3 @@
-import type { LocationCustom, ProductCustom } from '@/lib/types'
-
 import { Maybe, ProductOption, Wishlist } from '@/lib/gql/types'
 
 export interface WishlistProductInput {
