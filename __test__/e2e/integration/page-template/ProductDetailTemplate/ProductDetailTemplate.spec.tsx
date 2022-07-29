@@ -6,9 +6,8 @@ import { render, screen, waitFor, fireEvent, within, cleanup } from '@testing-li
 import userEvent from '@testing-library/user-event'
 
 import { ProductCustomMock } from '@/__mocks__/stories/ProductCustomMock'
-import { renderWithQueryClient } from '@/__test__/utils'
 import * as stories from '@/components/page-templates/ProductDetail/ProductDetailTemplate.stories' // import all stories from the stories file
-import { AuthContextProvider, DialogRoot, ModalContextProvider, useAuthContext } from '@/context'
+import { DialogRoot, ModalContextProvider } from '@/context'
 import { productGetters } from '@/lib/getters'
 
 const { Common } = composeStories(stories)
@@ -29,38 +28,11 @@ const setup = () => {
   }
 }
 
-const TestComponent = () => {
-  const mockOnSuccessCallBack = jest.fn()
-  const loginInputs = {
-    formData: {
-      email: 'amol@dev.com',
-      password: '',
-    },
-    isRememberMe: false,
-  }
-  const { isAuthenticated, login } = useAuthContext()
-  const loginUser = () => {
-    login(loginInputs, mockOnSuccessCallBack)
-  }
-  return (
-    <ModalContextProvider>
-      <DialogRoot />
-      <div data-testid="is-logged-in">{isAuthenticated.toString()}</div>
-      <button name="login-button" data-testid="login-button" onClick={loginUser}>
-        Log in
-      </button>
-      <Common {...Common.args} />
-    </ModalContextProvider>
-  )
-}
+let mockIsAuthenticated = true
+jest.mock('@/context/AuthContext', () => ({
+  useAuthContext: () => ({ isAuthenticated: mockIsAuthenticated }),
+}))
 
-const testSetup = (ui: any) => {
-  const user = userEvent.setup()
-  renderWithQueryClient(<AuthContextProvider>{ui}</AuthContextProvider>)
-  return {
-    user,
-  }
-}
 describe('[component] - ProductDetailTemplate integration', () => {
   beforeEach(() => {
     jest.clearAllMocks()
@@ -231,6 +203,7 @@ describe('[component] - ProductDetailTemplate integration', () => {
   })
 
   it('should dispaly login when add to wishlist button clicks ', async () => {
+    mockIsAuthenticated = false
     const { user } = setup()
 
     const addToWishlistButton = screen.getByRole('button', {
@@ -245,15 +218,12 @@ describe('[component] - ProductDetailTemplate integration', () => {
   })
 
   it('should open wishlist popover when logged in user clicks on add to wishlist button', async () => {
-    const { user } = testSetup(<TestComponent />)
+    mockIsAuthenticated = true
+    const { user } = setup()
+
     const addToWishlistButton = screen.getByRole('button', {
       name: 'common:add-to-wishlist',
     })
-    await user.click(addToWishlistButton)
-    const loginButton = screen.getByTestId('login-button')
-    await user.click(loginButton)
-    const isLoggedIn = await screen.findByTestId('is-logged-in')
-    await waitFor(() => expect(isLoggedIn).toHaveTextContent('true'))
 
     await user.click(addToWishlistButton)
     const popover = await screen.findByTestId('wishlist-component')
