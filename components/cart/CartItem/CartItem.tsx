@@ -69,7 +69,7 @@ const styles = {
     position: 'absolute',
     padding: {
       xs: '0.5rem 0',
-      sm: 0.5,
+      sm: '0 0.5rem',
     },
     top: {
       xs: 0,
@@ -109,6 +109,9 @@ const CartItem = (props: CartItemProps) => {
   const hadleQuantityUpdate = (quantity: number) =>
     onQuantityUpdate(cartItem?.id as string, quantity)
   const handleActionSelection = () => onCartItemActionSelection()
+  const handleFulfillmentOptionChange = (fulfillmentMethod: string, cartItemId: string) =>
+    onFulfillmentOptionChange(fulfillmentMethod, cartItemId)
+  const handleProductPickupLocation = (cartItemId: string) => onProductPickupLocation(cartItemId)
 
   return (
     <>
@@ -166,9 +169,9 @@ const CartItem = (props: CartItemProps) => {
                 fulfillmentOptions={fulfillmentOptions}
                 selected={cartItem?.fulfillmentMethod || ''}
                 onFullfillmentOptionChange={(fulfillmentMethod: string) =>
-                  onFulfillmentOptionChange(fulfillmentMethod, cartItem?.id as string)
+                  handleFulfillmentOptionChange(fulfillmentMethod, cartItem?.id as string)
                 }
-                onStoreSetOrUpdate={() => onProductPickupLocation(cartItem?.id as string)} // change store: Open storelocator modal. Should not change global store.
+                onStoreSetOrUpdate={() => handleProductPickupLocation(cartItem?.id as string)} // change store: Open storelocator modal. Should not change global store.
               />
             </Box>
           </Box>
@@ -181,6 +184,7 @@ const CartItem = (props: CartItemProps) => {
               />
             </Box>
             <IconButton
+              sx={{ p: 0.5 }}
               aria-label="item-delete"
               name="item-delete"
               onClick={() => handleDelete(cartItem?.id as string)}

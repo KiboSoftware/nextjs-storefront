@@ -20,9 +20,11 @@ import { useModalContext } from '@/context'
 import {
   useCartQueries,
   useCreateFromCartMutation,
-  useCartMutation,
   useStoreLocations,
   usePurchaseLocation,
+  useCartMutationUpdateCartItemQuantity,
+  useCartMutationRemoveCartItem,
+  useCartMutationUpdateCartItem,
 } from '@/hooks'
 import { FulfillmentOptions } from '@/lib/constants'
 import { checkoutGetters } from '@/lib/getters'
@@ -59,9 +61,10 @@ const CartTemplate = (props: CartTemplateProps) => {
   const isMobileViewport = useMediaQuery(theme.breakpoints.down('md'))
   const router = useRouter()
   const { createFromCart } = useCreateFromCartMutation()
-  const { updateCartItemQuantity, removeCartItem } = useCartMutation()
+  const { updateCartItemQuantity } = useCartMutationUpdateCartItemQuantity()
+  const { removeCartItem } = useCartMutationRemoveCartItem()
+  const { updateCartItem } = useCartMutationUpdateCartItem()
   const { showModal, closeModal } = useModalContext()
-  const { updateCartItem } = useCartMutation()
 
   const cartItemCount = checkoutGetters.getCartItemCount(cart)
   const cartItems = checkoutGetters.getCartItems(cart)

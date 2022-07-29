@@ -7,14 +7,15 @@ import userEvent from '@testing-library/user-event'
 import { graphql } from 'msw'
 
 import { server } from '@/__mocks__/msw/server'
+import { fulfillmentOptionsMock } from '@/__mocks__/stories/fulfillmentOptionsMock'
 import { ProductCustomMock } from '@/__mocks__/stories/ProductCustomMock'
 import * as stories from '@/components/page-templates/ProductDetail/ProductDetailTemplate.stories' // import all stories from the stories file
 import { DialogRoot, ModalContextProvider } from '@/context'
 import { productGetters } from '@/lib/getters'
 
 const { Common } = composeStories(stories)
-
 const mockedProduct = ProductCustomMock
+const mockFulfillmentOptions = fulfillmentOptionsMock || []
 
 const setup = () => {
   const user = userEvent.setup()
@@ -164,7 +165,7 @@ describe('[component] - ProductDetailTemplate integration', () => {
     const { user } = setup()
 
     const shipRadio = screen.getByRole('radio', {
-      name: /ship to home/i,
+      name: new RegExp(`${mockFulfillmentOptions[0].label}`),
     })
 
     await user.click(shipRadio)
@@ -190,7 +191,7 @@ describe('[component] - ProductDetailTemplate integration', () => {
     const { user } = setup()
 
     const pickupRadio = screen.getByRole('radio', {
-      name: /Pickup in store/i,
+      name: new RegExp(`${mockFulfillmentOptions[1].label}`),
     })
 
     await user.click(pickupRadio)
@@ -243,7 +244,7 @@ describe('[component] - ProductDetailTemplate integration', () => {
     )
     const { user } = setup()
     const shipRadio = screen.getByRole('radio', {
-      name: /ship to home/i,
+      name: new RegExp(`${mockFulfillmentOptions[0].label}`),
     })
 
     await user.click(shipRadio)

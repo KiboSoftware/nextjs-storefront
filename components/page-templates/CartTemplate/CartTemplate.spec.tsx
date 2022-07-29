@@ -4,7 +4,6 @@ import { composeStories } from '@storybook/testing-react'
 import { render, screen } from '@testing-library/react'
 
 import * as stories from './CartTemplate.stories'
-import { cartItemMock } from '@/__mocks__/stories/cartItemMock'
 import { locationCollectionMock } from '@/__mocks__/stories/locationCollectionMock'
 
 const CartItemListMock = ({ children }: { children: ReactNode }) => (
@@ -23,7 +22,9 @@ jest.mock('@/hooks', () => ({
   useUpdateCheckout: jest.fn(() => ({})),
   useStoreLocations: jest.fn(() => ({ mockLocationsResponse })),
   usePurchaseLocation: jest.fn(() => ({})),
-  useCartMutation: jest.fn(() => ({})),
+  useCartMutationUpdateCartItemQuantity: jest.fn(() => ({})),
+  useCartMutationUpdateCartItem: jest.fn(() => ({})),
+  useCartMutationRemoveCartItem: jest.fn(() => ({})),
 }))
 
 const { Common } = composeStories(stories)
