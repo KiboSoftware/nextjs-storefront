@@ -107,5 +107,10 @@
   "find-stores-within-miles": "Find Stores within 100 miles",
   "stores-within-miles_zero": "No Results - 0 stores within 100 miles",
   "stores-within-miles_one": "{{count}} store within 100 miles",
-  "stores-within-miles_other": "{{count}} stores within 100 miles"
+  "stores-within-miles_other": "{{count}} stores within 100 miles",
+
+  "your-default-shipping-address": "Your default shipping address",
+  "previously-saved-shipping-addresses": "Previously saved shipping addresses",
+  "no-saved-addresses-yet": "No saved addresses yet!",
+  "primary": "Primary"
 }

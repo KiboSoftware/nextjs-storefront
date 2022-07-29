@@ -40,3 +40,7 @@ export const locationKeys = {
   purchaseLocationParams: (params: { filter: string } | undefined) =>
     [...locationKeys.purchaseLocation, params] as const,
 }
+
+export const userAddressKeys = {
+  all: ['user-address'] as const,
+}
