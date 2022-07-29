@@ -14,7 +14,6 @@ const addToWishlistItemInput = {
     options: [],
   },
   customerAccountId: 1143,
-  currentWishlist: mockWishlist,
 }
 
 describe('[hooks] useAddToWishlistMutation', () => {
@@ -22,6 +21,24 @@ describe('[hooks] useAddToWishlistMutation', () => {
     renderHook(
       async () => {
         const { addToWishlist } = useAddToWishlistMutation()
+        const response = await addToWishlist.mutateAsync({
+          ...addToWishlistItemInput,
+          currentWishlist: mockWishlist,
+        })
+
+        expect(response).toStrictEqual(mockWishlist?.items[0])
+      },
+      {
+        wrapper: createQueryClientWrapper(),
+      }
+    )
+  })
+
+  it('should create new wishlist when current wishlist is not exist ', async () => {
+    renderHook(
+      async () => {
+        const { addToWishlist } = useAddToWishlistMutation()
+
         const response = await addToWishlist.mutateAsync({
           ...addToWishlistItemInput,
         })
