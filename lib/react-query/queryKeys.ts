@@ -52,3 +52,7 @@ export const locationKeys = {
 export const wishlistKeys = {
   all: ['wishlist'] as const,
 }
+
+export const userAddressKeys = {
+  all: ['user-address'] as const,
+}

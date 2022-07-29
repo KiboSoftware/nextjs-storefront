@@ -4,7 +4,7 @@ import { Stack, Button, Typography, SxProps } from '@mui/material'
 import { Theme } from '@mui/material/styles'
 import { useTranslation } from 'next-i18next'
 
-import { ShippingMethod } from '@/components/checkout'
+import { ShippingMethod, AddressList } from '@/components/checkout'
 import { AddressForm } from '@/components/common'
 import { useCheckoutStepContext, STEP_STATUS } from '@/context'
 import { useUpdateCheckoutShippingInfo, useShippingMethods } from '@/hooks'
@@ -12,7 +12,7 @@ import { checkoutGetters } from '@/lib/getters'
 import { buildCheckoutShippingParams, ShippingParams } from '@/lib/helpers'
 import type { ContactForm } from '@/lib/types'
 
-import type { Order, CrOrderItem, Contact } from '@/lib/gql/types'
+import type { Order, CrOrderItem, Contact, CustomerContact } from '@/lib/gql/types'
 
 const buttonStyle = {
   width: '100%',
@@ -23,10 +23,11 @@ const buttonStyle = {
 interface ShippingProps {
   setAutoFocus?: boolean
   checkout: Order
+  userShippingAddress?: CustomerContact[]
 }
 
 const ShippingStep = (props: ShippingProps) => {
-  const { checkout } = props
+  const { checkout, userShippingAddress } = props
 
   const shippingBlockRef = useRef()
 
@@ -39,7 +40,7 @@ const ShippingStep = (props: ShippingProps) => {
   const [isAddressFormValid, setIsAddressFormValid] = useState<boolean>(false)
   const [isShippingMethodSaved, setIsShippingMethodSaved] = useState<boolean>(false)
 
-  const { t } = useTranslation('checkout')
+  const { t } = useTranslation(['checkout', 'common'])
 
   const {
     stepStatus,
@@ -101,6 +102,9 @@ const ShippingStep = (props: ShippingProps) => {
   const handleFormStatusChange = (status: boolean) => {
     setIsAddressFormValid(status)
   }
+  const handleAddressSelect = (_addressId: string) => {
+    // do your stuff for the selected address
+  }
 
   useEffect(() => {
     if (!validateForm) setStepStatusIncomplete()
@@ -122,6 +126,17 @@ const ShippingStep = (props: ShippingProps) => {
       <Typography variant="h2" component="h2" sx={{ fontWeight: 'bold' }}>
         {t('shipping')}
       </Typography>
+      {
+        <AddressList
+          radio={true}
+          heading={t('common:your-default-shipping-address')}
+          subHeading={t('common:previously-saved-shipping-addresses')}
+          addresses={userShippingAddress}
+          radioGroupTitle={'Your default silling dddress'}
+          onAddressSelection={handleAddressSelect}
+          selectedAddressId={''}
+        />
+      }
 
       <AddressForm
         contact={contactProp as ContactForm}
