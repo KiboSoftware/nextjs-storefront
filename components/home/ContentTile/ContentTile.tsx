@@ -17,6 +17,11 @@ export interface TileProps {
   link3: string
 }
 
+export interface ContentTileProps {
+  largeTileProps: TileProps[]
+  smallTileProps: TileProps[]
+}
+
 const ContentTiles = (props: TileProps) => {
   const kiboTheme = useTheme()
   const mobileView = useMediaQuery(kiboTheme.breakpoints.down('sm'))
@@ -97,14 +102,15 @@ const ContentTiles = (props: TileProps) => {
     </Box>
   )
 }
-function ContentTile({ largeTileProps, smallTileProps }: any) {
+function ContentTile({ largeTileProps, smallTileProps }: ContentTileProps) {
   const mobileView = useMediaQuery('(max-width:600px)')
   return (
     <Box sx={{ display: 'flex', padding: '2%', flexDirection: 'column' }}>
       <Box sx={{ display: 'flex', flexDirection: mobileView ? 'column' : 'row' }}>
-        {largeTileProps.map((tile: any, _key:any) => (
+        {largeTileProps.map((tile: TileProps, index) => (
           <ContentTiles
-            imgSource={tile.imageSource}
+            key={index}
+            imgSource={tile.imgSource}
             title={tile.title}
             subtitle={tile.subtitle}
             link1={tile.link1}
@@ -115,10 +121,10 @@ function ContentTile({ largeTileProps, smallTileProps }: any) {
       </Box>
       <Box sx={{ width: '100%' }}>
         <Grid container rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
-          {smallTileProps.map((tile: any) => (
-            <Grid item xs={mobileView ? 6 : 3}>
+          {smallTileProps.map((tile: TileProps, index) => (
+            <Grid key={index} item xs={mobileView ? 6 : 3}>
               <ContentTiles
-                imgSource={tile.imageSource}
+                imgSource={tile.imgSource}
                 title={tile.title}
                 subtitle={tile.subtitle}
                 link1={tile.link1}
