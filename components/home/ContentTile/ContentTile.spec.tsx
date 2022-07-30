@@ -45,8 +45,8 @@ describe('checkout Component', () => {
       const description = screen.getAllByText(tile[0].subtitle)
       const link = screen.getAllByText(tile[0].link1)
 
-      expect(description[0]).toHaveStyle('font-size: 0.75rem')
-      expect(link[0]).toHaveStyle('font-size: 0.75rem')
+      expect(description[0]).toHaveStyle('font-size: 1rem')
+      expect(link[0]).toHaveStyle('font-size: 1rem')
     })
 
     it('desktop', async () => {
@@ -58,8 +58,8 @@ describe('checkout Component', () => {
       const description = screen.getAllByText(tile[0].subtitle)
       const link = screen.getAllByText(tile[0].link1)
 
-      expect(description[0]).toHaveStyle('font-size: 1rem')
-      expect(link[0]).toHaveStyle('font-size: 1rem')
+      expect(description[0]).toHaveStyle('font-size: 0.75rem')
+      expect(link[0]).toHaveStyle('font-size: 0.75rem')
     })
   })
 })
