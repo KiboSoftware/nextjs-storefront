@@ -2,13 +2,13 @@ import { composeStories } from '@storybook/testing-react'
 import { render, screen, act, fireEvent } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 
-import type { Contact } from '@/components/common/AddressForm//AddressForm'
 import * as stories from '@/components/common/AddressForm/AddressForm.stories'
+import type { ContactForm } from '@/lib/types'
 
 const { Common } = composeStories(stories)
 
 describe('[components] - AddressForm integration', () => {
-  const contact = stories.WithProps.args?.contact as Contact
+  const contact = stories.WithProps.args?.contact as ContactForm
   const setup = (params = {}) => {
     const user = userEvent.setup()
     render(<Common {...params} />)

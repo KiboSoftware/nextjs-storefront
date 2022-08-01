@@ -5,3 +5,7 @@ export enum FormStates {
   SHIP = 'Ship',
   PICKUP = 'Pickup',
 }
+
+export enum PaymentType {
+  CREDITCARD = 'CreditCard',
+}

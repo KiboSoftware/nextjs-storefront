@@ -64,6 +64,8 @@ module.exports = {
       defaultRange: '160934',
     },
     storeLocationCookie: LOCATION_COOKIE,
+    pciHost: process.env.KIBO_PCI_HOST,
+    apiHost: process.env.KIBO_API_HOST,
   },
   serverRuntimeConfig: {
     revalidate: 60,
