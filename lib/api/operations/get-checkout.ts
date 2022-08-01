@@ -9,7 +9,7 @@ export default async function getCheckout(checkoutId: string, req: any): Promise
     checkoutId,
   }
 
-  const userClaims = await getUserClaimsFromRequest(req)
+  const { userClaims } = await getUserClaimsFromRequest(req)
   // const userClaims = req ? await getUserClaimsFromRequest(req) : null
   const response = await fetcher({ query, variables }, { userClaims })
 
