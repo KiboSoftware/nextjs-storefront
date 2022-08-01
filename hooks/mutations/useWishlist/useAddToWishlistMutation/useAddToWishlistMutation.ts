@@ -1,8 +1,8 @@
 import { useMutation, useQueryClient } from 'react-query'
 
 import { makeGraphQLClient } from '@/lib/gql/client'
-import { createWishlistMutation, createWishlistItemMutation } from '@/lib/gql/mutations'
-import { buildAddToWishlistItemInput, buildCreateWishlistItemInput } from '@/lib/helpers'
+import { createWishlistItemMutation } from '@/lib/gql/mutations'
+import { buildAddToWishlistItemInput } from '@/lib/helpers'
 import { wishlistKeys } from '@/lib/react-query/queryKeys'
 import type { WishlistProductInput } from '@/lib/types'
 
@@ -19,28 +19,11 @@ export interface InWishlistProductInput {
   variationProductCode?: string
 }
 
-const createWishlist = async (customerAccountId: number) => {
-  const client = makeGraphQLClient()
-
-  const variables = buildCreateWishlistItemInput(customerAccountId)
-  const response = await client.request({
-    document: createWishlistMutation,
-    variables,
-  })
-
-  return response?.createWishlist
-}
-
 const addToWishlist = async (props: WishlistItemInputParams) => {
   const client = makeGraphQLClient()
-  const { product, customerAccountId, currentWishlist } = props
-  let wishlist
-  if (!currentWishlist) {
-    wishlist = await createWishlist(customerAccountId)
-  }
+  const { product, currentWishlist } = props
 
-  const wishlistId = currentWishlist ? currentWishlist?.id || '' : wishlist?.id || ''
-  const variables = buildAddToWishlistItemInput(product, wishlistId)
+  const variables = buildAddToWishlistItemInput(product, currentWishlist?.id as string)
   const response = await client.request({
     document: createWishlistItemMutation,
     variables,

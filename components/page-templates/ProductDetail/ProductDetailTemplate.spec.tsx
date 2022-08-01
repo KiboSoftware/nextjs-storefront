@@ -51,6 +51,8 @@ jest.mock(
 
 const mockProduct = Common?.args?.product
 const mockWishlist = wishlistMock?.items[0]
+const { id, name, customerAccountId } = mockWishlist
+const mockCreateWishlist = { createWishlist: { id, name, customerAccountId, items: [] } }
 const mockUser = userResponseMock
 jest.mock('@/hooks', () => ({
   useProductDetailTemplate: jest.fn(() => {
@@ -69,6 +71,7 @@ jest.mock('@/hooks', () => ({
     }
   }),
   useWishlistQueries: jest.fn(() => mockWishlist),
+  useCreateWishlistMutation: jest.fn(() => mockCreateWishlist),
   useAddToWishlistMutation: jest.fn(() => mockWishlist?.items[0]),
   useRemoveWishlistItemMutation: jest.fn(() => true),
   usePurchaseLocation: jest.fn(() => ({})),

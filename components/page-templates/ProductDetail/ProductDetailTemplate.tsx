@@ -28,10 +28,10 @@ import {
   useProductDetailTemplate,
   usePurchaseLocation,
   useCartMutation,
-  useUserQueries,
   useWishlistQueries,
   useAddToWishlistMutation,
   useRemoveWishlistItemMutation,
+  useCreateWishlistMutation,
 } from '@/hooks'
 import { productGetters, wishlistGetters } from '@/lib/getters'
 import { buildWishlistParams } from '@/lib/helpers'
@@ -43,6 +43,7 @@ import type {
   ProductOption,
   ProductOptionValue,
   ProductPriceRange,
+  Wishlist,
 } from '@/lib/gql/types'
 
 interface ProductDetailTemplateProps {
@@ -56,11 +57,11 @@ const ProductDetailTemplate = (props: ProductDetailTemplateProps) => {
   const { showModal, closeModal } = useModalContext()
   const { addToCart } = useCartMutation()
   const { data: purchaseLocation } = usePurchaseLocation()
-  const { data: customerAccount } = useUserQueries()
   const { data: currentWishlist } = useWishlistQueries()
   const { addToWishlist } = useAddToWishlistMutation()
   const { removeWishlistItem } = useRemoveWishlistItemMutation()
-  const { isAuthenticated } = useAuthContext()
+  const { createWishlist } = useCreateWishlistMutation()
+  const { isAuthenticated, user: customerAccount } = useAuthContext()
 
   // Data hook
   const {
@@ -179,6 +180,31 @@ const ProductDetailTemplate = (props: ProductDetailTemplateProps) => {
     }
   }
 
+  const addOrRemoveWishlistItem = async (wishlist: Wishlist) => {
+    const variables = buildWishlistParams({
+      productCode,
+      variationProductCode,
+      isPackagedStandAlone,
+      options: updatedShopperEnteredValues,
+      currentWishlist: wishlist,
+    })
+
+    if (!isProductInWishlist) {
+      await addToWishlist.mutateAsync({
+        ...variables,
+        customerAccountId: customerAccount?.id as number,
+      })
+    } else {
+      await removeWishlistItem.mutateAsync(variables)
+    }
+    showModal({
+      Component: WishlistPopover,
+      props: {
+        isInWishlist: !isProductInWishlist,
+      },
+    })
+  }
+
   const handleWishList = async () => {
     try {
       if (!isAuthenticated) {
@@ -186,29 +212,10 @@ const ProductDetailTemplate = (props: ProductDetailTemplateProps) => {
         return
       }
 
-      const variables = buildWishlistParams({
-        productCode,
-        variationProductCode,
-        isPackagedStandAlone,
-        options: updatedShopperEnteredValues,
-        currentWishlist,
-      })
-
-      if (!isProductInWishlist) {
-        await addToWishlist.mutateAsync({
-          ...variables,
-          customerAccountId: customerAccount?.id as number,
-        })
-      } else {
-        await removeWishlistItem.mutateAsync(variables)
-      }
-
-      showModal({
-        Component: WishlistPopover,
-        props: {
-          isInWishlist: !isProductInWishlist,
-        },
-      })
+      if (!currentWishlist?.id) {
+        const response = await createWishlist.mutateAsync(customerAccount?.id as number)
+        if (response?.id) addOrRemoveWishlistItem(response)
+      } else addOrRemoveWishlistItem(currentWishlist)
     } catch (error) {
       console.log('Error: add or remove wishlist item from PDP', error)
     }
