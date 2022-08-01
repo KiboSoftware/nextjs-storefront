@@ -18,6 +18,7 @@ export * from './custom/useUpdateRoutes/useUpdateRoutes'
 export * from './custom/usePaymentTypes/usePaymentTypes'
 export * from './custom/useProductDetailTemplate/useProductDetailTemplate'
 export * from './custom/useCurrentLocation/useCurrentLocation'
+export * from './custom/useWishlist/useWishlist'
 
 // Mutation hooks
 export * from './mutations/useUpdateCheckout/useUpdateCheckoutPersonalInfo/useUpdateCheckoutPersonalInfo'

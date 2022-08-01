@@ -11,11 +11,11 @@ export interface RemoveWishlistItemInput {
   product: WishlistProductInput
   currentWishlist?: Maybe<Wishlist>
 }
-
-export interface WishlistParams {
-  productCode: string
-  variationProductCode: string
-  isPackagedStandAlone: boolean
-  options: ProductOption[]
+export interface WishlistParams extends WishlistProductInput {
   currentWishlist?: Maybe<Wishlist>
+}
+export interface WishlistItemInWishlistParams {
+  productCode: string
+  variationProductCode?: string
+  userWishlist?: Maybe<Wishlist>
 }

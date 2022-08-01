@@ -14,11 +14,6 @@ interface WishlistItemInputParams {
   currentWishlist?: Maybe<Wishlist>
 }
 
-export interface InWishlistProductInput {
-  productCode: string
-  variationProductCode?: string
-}
-
 const addToWishlist = async (props: WishlistItemInputParams) => {
   const client = makeGraphQLClient()
   const { product, currentWishlist } = props

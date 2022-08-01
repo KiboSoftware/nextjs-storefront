@@ -11,8 +11,7 @@ import Price from '@/components/common/Price/Price'
 import QuantitySelector from '@/components/common/QuantitySelector/QuantitySelector'
 import KiboBreadcrumbs from '@/components/core/Breadcrumbs/KiboBreadcrumbs'
 import ImageGallery from '@/components/core/ImageGallery/ImageGallery'
-import { AddToCartDialog, StoreLocatorDialog, WishlistPopover } from '@/components/dialogs'
-import { LoginDialog } from '@/components/layout'
+import { AddToCartDialog, StoreLocatorDialog } from '@/components/dialogs'
 import {
   ColorSelector,
   ProductInformation,
@@ -22,19 +21,14 @@ import {
   ProductRecommendations,
   ProductVariantSizeSelector,
 } from '@/components/product'
-import { useAuthContext } from '@/context'
 import { useModalContext } from '@/context/ModalContext'
 import {
   useProductDetailTemplate,
   usePurchaseLocation,
   useCartMutation,
-  useWishlistQueries,
-  useAddToWishlistMutation,
-  useRemoveWishlistItemMutation,
-  useCreateWishlistMutation,
+  useWishlist,
 } from '@/hooks'
-import { productGetters, wishlistGetters } from '@/lib/getters'
-import { buildWishlistParams } from '@/lib/helpers'
+import { productGetters } from '@/lib/getters'
 import type { ProductCustom, BreadCrumb, PriceRange, LocationCustom } from '@/lib/types'
 
 import type {
@@ -43,7 +37,6 @@ import type {
   ProductOption,
   ProductOptionValue,
   ProductPriceRange,
-  Wishlist,
 } from '@/lib/gql/types'
 
 interface ProductDetailTemplateProps {
@@ -57,11 +50,8 @@ const ProductDetailTemplate = (props: ProductDetailTemplateProps) => {
   const { showModal, closeModal } = useModalContext()
   const { addToCart } = useCartMutation()
   const { data: purchaseLocation } = usePurchaseLocation()
-  const { data: currentWishlist } = useWishlistQueries()
-  const { addToWishlist } = useAddToWishlistMutation()
-  const { removeWishlistItem } = useRemoveWishlistItemMutation()
-  const { createWishlist } = useCreateWishlistMutation()
-  const { isAuthenticated, user: customerAccount } = useAuthContext()
+
+  const { addOrRemoveWishlistItem, checkProductInWishlist } = useWishlist()
 
   // Data hook
   const {
@@ -103,12 +93,9 @@ const ProductDetailTemplate = (props: ProductDetailTemplateProps) => {
     name: selectedFulfillmentOption?.location?.name,
   })
 
-  const isProductInWishlist = wishlistGetters.isInWishlist({
-    product: {
-      productCode,
-      variationProductCode,
-    },
-    currentWishlist,
+  const isProductInWishlist = checkProductInWishlist({
+    productCode,
+    variationProductCode,
   })
 
   // methods
@@ -180,42 +167,15 @@ const ProductDetailTemplate = (props: ProductDetailTemplateProps) => {
     }
   }
 
-  const addOrRemoveWishlistItem = async (wishlist: Wishlist) => {
-    const variables = buildWishlistParams({
-      productCode,
-      variationProductCode,
-      isPackagedStandAlone,
-      options: updatedShopperEnteredValues,
-      currentWishlist: wishlist,
-    })
-
-    if (!isProductInWishlist) {
-      await addToWishlist.mutateAsync({
-        ...variables,
-        customerAccountId: customerAccount?.id as number,
-      })
-    } else {
-      await removeWishlistItem.mutateAsync(variables)
-    }
-    showModal({
-      Component: WishlistPopover,
-      props: {
-        isInWishlist: !isProductInWishlist,
-      },
-    })
-  }
-
   const handleWishList = async () => {
     try {
-      if (!isAuthenticated) {
-        showModal({ Component: LoginDialog })
-        return
+      const addOrRemoveWishlistItemParams = {
+        productCode,
+        variationProductCode,
+        isPackagedStandAlone,
+        options: updatedShopperEnteredValues,
       }
-
-      if (!currentWishlist?.id) {
-        const response = await createWishlist.mutateAsync(customerAccount?.id as number)
-        if (response?.id) addOrRemoveWishlistItem(response)
-      } else addOrRemoveWishlistItem(currentWishlist)
+      await addOrRemoveWishlistItem(addOrRemoveWishlistItemParams)
     } catch (error) {
       console.log('Error: add or remove wishlist item from PDP', error)
     }
