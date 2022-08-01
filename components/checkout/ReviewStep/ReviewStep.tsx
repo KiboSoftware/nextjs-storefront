@@ -1,7 +1,6 @@
 import React, { useState } from 'react'
 
 import { yupResolver } from '@hookform/resolvers/yup'
-import { AssignmentReturnTwoTone } from '@mui/icons-material'
 import {
   Typography,
   Box,
@@ -15,7 +14,6 @@ import {
   FormControl,
   SxProps,
 } from '@mui/material'
-import { getBlobFromDataTransferItem } from '@testing-library/user-event/dist/types/utils'
 import { useTranslation } from 'next-i18next'
 import { useForm, Controller } from 'react-hook-form'
 import * as yup from 'yup'
@@ -23,7 +21,7 @@ import * as yup from 'yup'
 import { KiboTextBox, OrderPrice, PasswordValidation } from '@/components/common'
 import type { OrderPriceProps } from '@/components/common/OrderPrice/OrderPrice'
 import ProductItemList from '@/components/common/ProductItemList/ProductItemList'
-import { useCheckoutStepContext, STEP_STATUS, useAuthContext } from '@/context'
+import { useCheckoutStepContext, useAuthContext } from '@/context'
 import { checkoutGetters } from '@/lib/getters'
 import { isPasswordValid } from '@/lib/helpers/validations/validations'
 
@@ -92,7 +90,7 @@ const ReviewStep = (props: ReviewStepProps) => {
 
   const { t } = useTranslation(['checkout', 'common'])
   const theme = useTheme()
-  const { isAuthenticated, setAuthError, createAccount } = useAuthContext()
+  const { isAuthenticated, createAccount } = useAuthContext()
   const [isAgreeWithTermsAndConditions, setAggreeWithTermsAndConditions] = useState<boolean>(false)
 
   const { setStepNext, setStepStatusComplete } = useCheckoutStepContext()

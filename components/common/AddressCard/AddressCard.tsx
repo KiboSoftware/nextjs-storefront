@@ -46,8 +46,6 @@ const AddressCard = (props: AddressProps) => {
         )}
 
         <Typography variant={variant}>{address1}</Typography>
-        <Typography variant={variant}>{address1}</Typography>
-        <Typography variant={variant}>{address1}</Typography>
         <Typography variant={variant}>
           {t('apartment')}
           {address2}

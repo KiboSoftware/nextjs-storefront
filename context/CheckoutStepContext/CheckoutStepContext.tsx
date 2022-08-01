@@ -66,11 +66,6 @@ export const CheckoutStepProvider = (props: CheckoutStepProviderProps) => {
   const stepStatus = useMemo(() => state.stepStatus, [state.stepStatus])
   const steps = useMemo(() => state.steps, [state.steps])
 
-  const stateRef = useRef(state)
-  useEffect(() => {
-    stateRef.current = state
-  }, [state])
-
   const setStepStatusValid = () => dispatch({ type: 'SET_STEP_STATUS', status: STEP_STATUS.VALID })
 
   const setStepStatusSubmit = () =>

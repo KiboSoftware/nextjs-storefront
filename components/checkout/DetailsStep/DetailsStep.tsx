@@ -3,18 +3,7 @@ import React, { useEffect } from 'react'
 
 import { yupResolver } from '@hookform/resolvers/yup'
 import { AccessTime, CardGiftcard, EmojiEvents, FavoriteBorder } from '@mui/icons-material'
-import {
-  Box,
-  Stack,
-  Checkbox,
-  FormControl,
-  FormControlLabel,
-  Button,
-  IconButton,
-  Typography,
-  Grid,
-  SxProps,
-} from '@mui/material'
+import { Box, Stack, Button, IconButton, Typography, Grid, SxProps } from '@mui/material'
 import { Theme } from '@mui/material/styles'
 import { useTranslation } from 'next-i18next'
 import { useForm, Controller } from 'react-hook-form'

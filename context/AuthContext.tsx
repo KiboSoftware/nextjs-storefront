@@ -20,7 +20,7 @@ import { cartKeys, loginKeys } from '@/lib/react-query/queryKeys'
 
 import type { CustomerAccount } from '@/lib/gql/types'
 
-interface AuthContextType {
+export interface AuthContextType {
   isAuthenticated: boolean
   user?: CustomerAccount
   login: (params: LoginData, onSuccessCallBack: () => void) => any
@@ -48,7 +48,7 @@ AuthContext.displayName = 'AuthContext'
 
 export const AuthContextProvider = ({ children }: AuthContextProviderProps) => {
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false)
-  const [user, setUser] = useState<CustomerAccount>()
+  const [user, setUser] = useState<CustomerAccount | undefined>(undefined)
   const [authError, setAuthError] = useState<string>('')
   const { publicRuntimeConfig } = getConfig()
   const authCookieName = publicRuntimeConfig.userCookieKey.toLowerCase()
@@ -168,6 +168,7 @@ export const AuthContextProvider = ({ children }: AuthContextProviderProps) => {
 
 export const useAuthContext = () => {
   const context = useContext(AuthContext)
+
   if (context === undefined) throw new Error('useContext must be inside a Provider with a value')
   return context
 }

@@ -21,14 +21,7 @@ jest.mock('next/router', () => ({
 
 const setup = (initialActiveStep = 0) => {
   const user = userEvent.setup()
-  renderWithQueryClient(
-    <CheckoutStepProvider
-      steps={['details', 'shipping', 'payment', 'review']}
-      initialActiveStep={initialActiveStep}
-    >
-      <Common {...Common.args} />
-    </CheckoutStepProvider>
-  )
+  renderWithQueryClient(<Common {...Common.args} />)
   return {
     user,
   }
@@ -39,28 +32,36 @@ afterEach(() => {
 })
 
 describe('[components] Checkout integration', () => {
-  it('should render component', () => {
-    setup(0)
+  describe('Displaying as active step', () => {
+    it('should display Details Step as active step', () => {
+      const initialActiveStep = 0
+      setup(initialActiveStep)
 
-    const kiboStepper = screen.getByTestId('kibo-stepper')
-    const details = screen.getByTestId('checkout-details')
-    const shipping = screen.queryByTestId('checkout-shipping')
+      const kiboStepper = screen.getByTestId('kibo-stepper')
+      const detailsStep = screen.getByTestId('checkout-details')
+      const shippingStep = screen.queryByTestId('checkout-shipping')
+      const paymentStep = screen.queryByTestId('checkout-payment')
+      const reviewStep = screen.queryByTestId('checkout-review')
 
-    const nextButton = screen.getByRole('button', { name: /go-to-shipping/i })
-    const backButton = screen.getByRole('button', { name: /back/i })
+      const goToShippingButton = screen.getByRole('button', { name: /go-to-shipping/i })
+      const backButton = screen.getByRole('button', { name: /back/i })
 
-    expect(kiboStepper).toBeVisible()
-    expect(details).toBeVisible()
-    expect(shipping).not.toBeInTheDocument()
+      expect(kiboStepper).toBeVisible()
+      expect(detailsStep).toBeVisible()
+      expect(shippingStep).not.toBeInTheDocument()
+      expect(paymentStep).not.toBeInTheDocument()
+      expect(reviewStep).not.toBeInTheDocument()
 
-    expect(nextButton).toBeVisible()
-    expect(backButton).toBeVisible()
-    expect(backButton).toBeDisabled()
+      expect(goToShippingButton).toBeVisible()
+      expect(backButton).toBeVisible()
+      expect(backButton).toBeDisabled()
+    })
   })
 
   describe('Details Step', () => {
-    it('should enable Shipping Step when clicks on Go To Shipping button', async () => {
-      const { user } = setup(0)
+    it('should enable Shipping Step when user clicks on "Go To Shipping" button', async () => {
+      const initialActiveStep = 2
+      const { user } = setup(initialActiveStep)
 
       const email = orderMock.checkout.email as string
       const emailInput = screen.getByRole('textbox', { name: /your-email/i })
