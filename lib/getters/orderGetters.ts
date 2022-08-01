@@ -2,7 +2,7 @@ import { format } from 'date-fns'
 
 import { checkoutGetters } from './checkoutGetters'
 
-import type { CrOrderItem, Maybe, Order, PaymentCard } from '@/lib/gql/types'
+import type { Card, CrOrderItem, Maybe, Order } from '@/lib/gql/types'
 
 const getId = (order: Order) => order.id as string
 
@@ -44,20 +44,18 @@ const getShippingAddress = (order: Order) => order?.fulfillmentInfo?.fulfillment
 
 const getBillingAddress = (order: Order) => order?.billingInfo?.billingContact
 
-const getCardLastFourDigits = (card: Maybe<PaymentCard> | undefined) => {
-  const cardNumberLength = card?.cardNumberPartOrMask?.length as number
-  return card?.cardNumberPartOrMask?.slice(cardNumberLength - 4, cardNumberLength)
+const getCardLastFourDigits = (card: Card) => {
+  const cardNumberLength = card?.cardNumberPart?.length as number
+  return card?.cardNumberPart?.slice(cardNumberLength - 4, cardNumberLength)
 }
 
-const getCardExpireMonth = (card: Maybe<PaymentCard> | undefined): number =>
-  card?.expireMonth as number
+const getCardExpireMonth = (card: Card): number => card?.expireMonth as number
 
-const getCardExpireYear = (card: Maybe<PaymentCard> | undefined): number =>
-  card?.expireYear as number
+const getCardExpireYear = (card: Card): number => card?.expireYear as number
 
-const getCardPaymentDetails = (card: Maybe<PaymentCard> | undefined) => {
+const getCardPaymentDetails = (card: Card) => {
   return {
-    cardLastFourDigits: getCardLastFourDigits(card),
+    cardNumberPart: getCardLastFourDigits(card),
     expireMonth: getCardExpireMonth(card),
     expireYear: getCardExpireYear(card),
   }
