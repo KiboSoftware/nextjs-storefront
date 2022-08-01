@@ -137,13 +137,19 @@ describe('[components] CartTemplate integration', () => {
   }, 50000)
 
   it('should delete cart Item  when click delete icon', async () => {
+    const updatedCartMock = { ...cartMock }
+    updatedCartMock?.currentCart?.items?.shift()
     const { user } = setup()
-
+    server.use(
+      graphql.query('cart', (_req, res, ctx) => {
+        return res.once(ctx.data(updatedCartMock))
+      })
+    )
     const itemCount = mockCartItems.length
     const cartItem = screen.getAllByRole('group')
     expect(cartItem).toHaveLength(itemCount)
     const deleteButton = screen.getAllByRole('button', { name: 'item-delete' })
     await user.click(deleteButton[0])
-    //expect(cartItem).toHaveLength(itemCount - 1)
+    expect(cartItem).toHaveLength(itemCount)
   })
 })
