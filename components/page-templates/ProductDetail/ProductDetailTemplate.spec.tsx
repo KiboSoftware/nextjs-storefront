@@ -70,6 +70,12 @@ jest.mock('@/hooks', () => ({
       customerAccount: mockUser,
     }
   }),
+  useWishlist: jest.fn(() => {
+    return {
+      addOrRemoveWishlistItem: jest.fn(() => true),
+      checkProductInWishlist: jest.fn(() => true),
+    }
+  }),
   useWishlistQueries: jest.fn(() => mockWishlist),
   useCreateWishlistMutation: jest.fn(() => mockCreateWishlist),
   useAddToWishlistMutation: jest.fn(() => mockWishlist?.items[0]),
