@@ -12,41 +12,12 @@ import * as yup from 'yup'
 
 import KiboSelect from '@/components/common/KiboSelect/KiboSelect'
 import KiboTextField from '@/components/common/KiboTextBox/KiboTextBox'
-import { useCheckoutStepContext } from '@/context'
+import { Address, ContactForm } from '@/lib/types'
 
 import type { Order } from '@/lib/gql/types'
 
-// Interface
-export interface Contact {
-  id?: number
-  firstName: string
-  lastNameOrSurname: string
-  middleNameOrInitial?: string
-  email?: string
-  address: {
-    address1: string
-    address2: string
-    address3?: string
-    address4?: string
-    addressType?: string
-    cityOrTown: string
-    countryCode: string
-    isValidated?: boolean
-    postalOrZipCode: string
-    stateOrProvince: string
-  }
-  phoneNumbers: {
-    home: string
-    mobile?: string
-    work?: string
-  }
-}
-export interface Address {
-  contact: Contact
-  saveAddress: boolean
-}
 interface AddressFormProps {
-  contact: Contact
+  contact: ContactForm
   countries?: string[]
   isUserLoggedIn: boolean
   saveAddressLabel?: string
@@ -83,7 +54,7 @@ const AddressForm = (props: AddressFormProps) => {
     countries = publicRuntimeConfig.countries,
     isUserLoggedIn = false,
     saveAddressLabel,
-    setAutoFocus = true,
+    setAutoFocus = false,
     validateForm = false,
     onSaveAddress,
     onFormStatusChange,
@@ -94,6 +65,7 @@ const AddressForm = (props: AddressFormProps) => {
   const {
     control,
     formState: { errors, isValid },
+    reset,
     handleSubmit,
   } = useForm({
     mode: 'onBlur',
@@ -115,20 +87,23 @@ const AddressForm = (props: AddressFormProps) => {
       )
     })
 
-  const onValid = async (formData: Contact) => {
-    onSaveAddress({ contact: formData, saveAddress })
+  const onValid = async (formData: ContactForm) => {
+    onSaveAddress({ contact: formData, isBillingAddressValid: true })
     setValidateForm(false)
   }
 
   const onInvalidForm = () => setValidateForm(false)
 
   useEffect(() => {
+    if (onFormStatusChange) onFormStatusChange(isValid)
     if (validateForm) handleSubmit(onValid, onInvalidForm)()
-  }, [validateForm])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isValid, validateForm])
 
   useEffect(() => {
-    if (onFormStatusChange) onFormStatusChange(isValid)
-  }, [isValid])
+    reset(contact)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [contact])
 
   return (
     <Box
@@ -332,7 +307,7 @@ const AddressForm = (props: AddressFormProps) => {
           />
         </Grid>
 
-        {isUserLoggedIn && (
+        {isUserLoggedIn && saveAddressLabel && (
           <Grid item md={12}>
             <FormControlLabel
               control={<Checkbox onChange={() => setSaveAddress((prevState) => !prevState)} />}

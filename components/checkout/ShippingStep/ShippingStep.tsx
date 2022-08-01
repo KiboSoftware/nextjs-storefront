@@ -6,13 +6,13 @@ import { useTranslation } from 'next-i18next'
 
 import { ShippingMethod } from '@/components/checkout'
 import { AddressForm } from '@/components/common'
-import type { Contact } from '@/components/common/AddressForm/AddressForm'
 import { useCheckoutStepContext, STEP_STATUS } from '@/context'
 import { useUpdateCheckoutShippingInfo, useShippingMethods } from '@/hooks'
 import { checkoutGetters } from '@/lib/getters'
 import { buildCheckoutShippingParams, ShippingParams } from '@/lib/helpers'
+import type { ContactForm } from '@/lib/types'
 
-import type { Order, CrOrderItem } from '@/lib/gql/types'
+import type { Order, CrOrderItem, Contact } from '@/lib/gql/types'
 
 const buttonStyle = {
   width: '100%',
@@ -120,7 +120,7 @@ const ShippingStep = (props: ShippingProps) => {
       </Typography>
 
       <AddressForm
-        contact={contactProp}
+        contact={contactProp as ContactForm}
         isUserLoggedIn={false}
         saveAddressLabel={t('save-shipping-address')}
         setAutoFocus={true}

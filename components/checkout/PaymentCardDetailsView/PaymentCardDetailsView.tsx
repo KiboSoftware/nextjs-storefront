@@ -8,10 +8,12 @@ import PaymentCard from '@/components/common/PaymentCard/PaymentCard'
 interface PaymentCardDetailsViewProps {
   radioGroupTitle?: string
   withoutRadioTitle?: string
-  cardLastFourDigits?: string
+  cardNumberPart?: string
   expireMonth?: number
   expireYear?: number
   radio?: boolean
+  selected?: string
+  onPaymentCardSelection?: (value: string) => void | null
 }
 
 const PaymentCardDetailsView = (props: PaymentCardDetailsViewProps) => {
@@ -19,29 +21,25 @@ const PaymentCardDetailsView = (props: PaymentCardDetailsViewProps) => {
     radioGroupTitle,
     withoutRadioTitle,
     radio = false,
-    cardLastFourDigits,
+    cardNumberPart,
     expireMonth,
     expireYear,
+    selected = '',
+    onPaymentCardSelection,
   } = props
 
   const paymentCardProps = {
-    cardLastFourDigits: cardLastFourDigits,
+    cardNumberPart: cardNumberPart,
     expireMonth: expireMonth,
     expireYear: expireYear,
   }
 
   const radioOptions = [
     {
-      value: cardLastFourDigits as string,
+      value: cardNumberPart as string,
       label: <PaymentCard {...paymentCardProps} />,
     },
   ]
-
-  const [selectedRadio, setSelectedRadio] = React.useState('')
-
-  const handleChange = (value: string) => {
-    setSelectedRadio(value)
-  }
 
   return (
     <Box maxWidth={'fit-content'} data-testid="payment-card-details-view">
@@ -49,8 +47,8 @@ const PaymentCardDetailsView = (props: PaymentCardDetailsViewProps) => {
         <KiboRadio
           title={radioGroupTitle}
           radioOptions={radioOptions}
-          onChange={handleChange}
-          selected={selectedRadio}
+          selected={selected}
+          onChange={(value) => (onPaymentCardSelection ? onPaymentCardSelection(value) : null)}
         />
       )}
       {!radio && <PaymentCard title={withoutRadioTitle} {...paymentCardProps} />}

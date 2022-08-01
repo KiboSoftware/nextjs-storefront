@@ -13,6 +13,7 @@ import {
 interface KiboRadioProps {
   title?: string
   selected?: string
+  align?: string
   radioOptions: {
     label: string | number | ReactElement<any, string | JSXElementConstructor<any>>
     value: string
@@ -22,7 +23,7 @@ interface KiboRadioProps {
 }
 
 export const KiboRadio = (props: KiboRadioProps) => {
-  const { title, radioOptions, selected = '', sx, onChange } = props
+  const { title, radioOptions, selected = '', sx, align = 'center', onChange } = props
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     onChange(event.target.value)
@@ -45,7 +46,7 @@ export const KiboRadio = (props: KiboRadioProps) => {
         {radioOptions.map((radio) => {
           return (
             <FormControlLabel
-              sx={{ width: 'fit-content', ...sx }}
+              sx={{ width: 'fit-content', alignItems: align, ...sx }}
               key={radio.value}
               value={radio.value}
               control={<Radio />}
