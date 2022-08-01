@@ -130,8 +130,19 @@ const ViewOrderDetails = (props: ViewOrderDetailsProps) => {
           {payments?.map((payment) => (
             <SavedPaymentMethodView
               key={payment?.id}
-              card={payment?.billingInfo?.card}
-              billingAddress={payment?.billingInfo?.billingContact?.address}
+              id={payment?.billingInfo?.card?.paymentServiceCardId as string}
+              cardNumberPart={payment?.billingInfo?.card?.cardNumberPartOrMask as string}
+              expireMonth={payment?.billingInfo?.card?.expireMonth as number}
+              expireYear={payment?.billingInfo?.card?.expireYear as number}
+              address1={payment?.billingInfo?.billingContact?.address?.address1 as string}
+              address2={payment?.billingInfo?.billingContact?.address?.address2 as string}
+              cityOrTown={payment?.billingInfo?.billingContact?.address?.cityOrTown as string}
+              postalOrZipCode={
+                payment?.billingInfo?.billingContact?.address?.postalOrZipCode as string
+              }
+              stateOrProvince={
+                payment?.billingInfo?.billingContact?.address?.stateOrProvince as string
+              }
             />
           ))}
         </Box>

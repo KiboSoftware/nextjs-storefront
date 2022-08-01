@@ -40,13 +40,8 @@ const Checkout = (props: CheckoutProps) => {
     initialCheckout,
   })
 
-  const {
-    activeStep,
-    stepStatus,
-    steps,
-    setStepBack,
-    setStepStatusSubmit,
-  } = useCheckoutStepContext()
+  const { activeStep, stepStatus, steps, setStepBack, setStepStatusSubmit } =
+    useCheckoutStepContext()
 
   const buttonLabels = [t('go-to-shipping'), t('go-to-payment'), t('review-order')]
 
@@ -80,7 +75,7 @@ const Checkout = (props: CheckoutProps) => {
   }
 
   return (
-    <Stack direction={{ xs: 'column', md: 'row' }} gap={3}>
+    <Stack direction={{ xs: 'column', md: 'row' }} gap={3} sx={{ paddingBlock: 2 }}>
       <Stack sx={{ width: '100%', maxWidth: '872px' }} gap={3}>
         <Typography variant="h1" component="div" gutterBottom>
           {t('checkout', { numberOfItems: 3 })}
