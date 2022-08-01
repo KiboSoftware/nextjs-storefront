@@ -9,7 +9,11 @@ jest.mock('@/lib/api/util', () => ({
   __esModule: true,
   fetcher: jest.fn(),
 }))
-jest.mock('@/lib/api/util/getUserClaimsFromRequest.ts', () => jest.fn(() => null))
+jest.mock('@/lib/api/util/getUserClaimsFromRequest.ts', () =>
+  jest.fn(() => ({
+    userClaims: null,
+  }))
+)
 
 describe('[operations] Get Checkout', () => {
   it('should get checkout by checkout id', async () => {
