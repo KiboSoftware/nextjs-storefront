@@ -106,6 +106,49 @@ const DetailsStep = (props: DetailsProps) => {
       orderInput: {
         ...(checkout as OrderInput),
         email,
+        payments: [
+          {
+            id: '9bd73d45255c40ef9406aee400ed1255',
+            paymentType: 'CreditCard',
+            status: 'New',
+            paymentWorkflow: 'Mozu',
+            amountCollected: 0,
+            amountCredited: 0,
+            amountRequested: 0,
+            billingInfo: {
+              billingContact: {
+                id: null,
+                firstName: 'John',
+                middleNameOrInitial: null,
+                lastNameOrSurname: 'Doe',
+                email: 'chandradeepta.laha@kibocommerce.com',
+                address: {
+                  address1: 'Lamar Street',
+                  address2: '76/3',
+                  address3: null,
+                  addressType: null,
+                  stateOrProvince: 'TX',
+                  postalOrZipCode: '88888',
+                  cityOrTown: 'Austin',
+                  countryCode: 'US',
+                  isValidated: false,
+                },
+                phoneNumbers: {
+                  home: '999999999',
+                },
+              },
+              isSameBillingShippingAddress: false,
+              card: {
+                paymentServiceCardId: '71e4b52ca83f400a9af00dd7aa1573fb',
+                isTokenized: true,
+                paymentOrCardType: 'VISA',
+                cardNumberPartOrMask: '************1111',
+                expireMonth: 1,
+                expireYear: 2026,
+              },
+            },
+          },
+        ],
       },
     }
     await updateCheckoutPersonalInfo.mutateAsync(personalInfo)

@@ -237,7 +237,9 @@ const getCheckoutDetails = (checkout: Order): CheckoutDetails => {
 }
 
 const getSelectedPaymentMethods = (checkout?: Order, paymentType?: string) => {
-  return checkout?.payments?.filter((each) => each?.paymentType === paymentType)
+  return checkout?.payments?.filter(
+    (each) => each?.paymentType === paymentType && each?.status === 'New'
+  )
 }
 
 export const checkoutGetters = {

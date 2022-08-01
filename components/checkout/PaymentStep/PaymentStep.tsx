@@ -170,7 +170,10 @@ const PaymentStep = (props: PaymentStepProps) => {
       accountDetailsGetters.getCardId(defaultCard?.cardInfo) &&
         setSelectedPaymentBillingRadio(defaultCard.cardInfo?.id as string)
 
-      const selectedCards = checkoutGetters.getSelectedPaymentMethods(checkout)
+      const selectedCards = checkoutGetters.getSelectedPaymentMethods(
+        checkout,
+        PaymentType.CREDITCARD
+      )
 
       selectedCards?.forEach((card) => {
         const cardDetails = card?.billingInfo?.card
@@ -197,29 +200,29 @@ const PaymentStep = (props: PaymentStepProps) => {
       }
     }
 
-    // handle already saved payment in checkout
-    if (checkout?.payments?.length) {
-      const payments = checkout?.payments[0]
-      const card = payments?.billingInfo?.card
-      const billingAddress = payments?.billingInfo?.billingContact
+    // // handle already saved payment in checkout
+    // if (checkout?.payments?.length) {
+    //   const payments = checkout?.payments[0]
+    //   const card = payments?.billingInfo?.card
+    //   const billingAddress = payments?.billingInfo?.billingContact
 
-      setSavedPaymentBillingDetails([
-        ...savedPaymentBillingDetails,
-        {
-          cardInfo: {
-            ...(card as Card),
-            cardNumberPart: card?.cardNumberPartOrMask,
-            contactId: 0,
-            paymentType: newPaymentMethod,
-            id: card?.paymentServiceCardId,
-          },
-          billingAddressInfo: {
-            ...billingAddress,
-          },
-        },
-      ])
-      setSelectedPaymentBillingRadio(card?.paymentServiceCardId as string)
-    }
+    //   setSavedPaymentBillingDetails([
+    //     ...savedPaymentBillingDetails,
+    //     {
+    //       cardInfo: {
+    //         ...(card as Card),
+    //         cardNumberPart: card?.cardNumberPartOrMask,
+    //         contactId: 0,
+    //         paymentType: newPaymentMethod,
+    //         id: card?.paymentServiceCardId,
+    //       },
+    //       billingAddressInfo: {
+    //         ...billingAddress,
+    //       },
+    //     },
+    //   ])
+    //   setSelectedPaymentBillingRadio(card?.paymentServiceCardId as string)
+    // }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isCustomerCardsSuccess, isCustomerContactsSuccess, checkout])
 
@@ -385,9 +388,9 @@ const PaymentStep = (props: PaymentStepProps) => {
     })
 
     if (checkout?.id) {
-      paymentAction.actionName = ''
-      updateCheckoutPaymentMethod.mutate({ orderId: checkout.id, paymentAction })
-      updateCheckoutBillingInfo.mutate({
+      paymentAction = { ...paymentAction, actionName: '' }
+      await updateCheckoutPaymentMethod.mutateAsync({ orderId: checkout.id, paymentAction })
+      await updateCheckoutBillingInfo.mutateAsync({
         orderId: checkout.id,
         billingInfoInput: { ...paymentAction.newBillingInfo },
       })

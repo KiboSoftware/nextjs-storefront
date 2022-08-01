@@ -11,7 +11,7 @@ const updateOrderPaymentAction = /* GraphQL */ `
     $paymentId: String!
     $paymentAction: PaymentActionInput
   ) {
-    createOrderPaymentAction(
+    createOrderPaymentPaymentAction(
       orderId: $orderId
       paymentId: $paymentId
       paymentActionInput: $paymentAction
