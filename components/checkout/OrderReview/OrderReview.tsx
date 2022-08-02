@@ -11,15 +11,18 @@ import {
   Accordion,
   AccordionDetails,
   AccordionSummary,
+  Stack,
 } from '@mui/material'
 import { useTranslation } from 'next-i18next'
 
 import { AddressDetailsView } from '@/components/checkout'
 import { PromoCodeBadge } from '@/components/common'
 import { useCheckoutStepContext } from '@/context'
+import { useStoreLocations, useCurrentLocation, usePurchaseLocation } from '@/hooks'
 import { checkoutGetters } from '@/lib/getters'
+import { storeLocationGetters } from '@/lib/getters/storeLocationGetters'
 
-import type { Order } from '@/lib/gql/types'
+import type { Order, Maybe, Location } from '@/lib/gql/types'
 
 interface OrderReviewProps {
   checkout: Order
@@ -68,8 +71,15 @@ const OrderReview = (props: OrderReviewProps) => {
   const { steps, setActiveStep } = useCheckoutStepContext()
   const { t } = useTranslation('checkout')
 
-  const { personalDetails, shippingDetails, billingDetails, paymentMethods } =
+  const { personalDetails, shippingDetails, billingDetails, paymentMethods, pickupItems } =
     checkoutGetters.getCheckoutDetails(checkout)
+
+  const fulfillmentLocationCodes = pickupItems
+    .map((pickupItem) => `code eq ${pickupItem?.fulfillmentLocationCode}`)
+    .join(' or ')
+
+  const { isError, data: locations } = useStoreLocations({ filter: fulfillmentLocationCodes })
+  const storeLocations = storeLocationGetters.getLocations(locations as Maybe<Location>[])
 
   const { email: userName } = personalDetails
   const { shippingPhoneHome, shippingAddress } = shippingDetails
@@ -180,6 +190,22 @@ const OrderReview = (props: OrderReviewProps) => {
               {t('edit')}
             </StyledActions>
           </StyledRow>
+
+          <Stack sx={{ marginBottom: '1rem' }}>
+            {storeLocations.map((storeLocation) => (
+              <Stack direction="column" sx={{ marginBottom: '20px' }} key={storeLocation.code}>
+                <AddressDetailsView
+                  firstName={storeLocation.name}
+                  address1={storeLocation.address1}
+                  address2={storeLocation.address2}
+                  cityOrTown={storeLocation.city}
+                  postalOrZipCode={storeLocation.zip}
+                  stateOrProvince={storeLocation.state}
+                  withoutRadioTitle={t('store-pickup-details')}
+                />
+              </Stack>
+            ))}
+          </Stack>
 
           <StyledRow sx={{ marginBottom: '1rem' }}>
             <StyledLabel variant="h4">{t('payment-method')}</StyledLabel>
