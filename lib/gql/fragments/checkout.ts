@@ -179,7 +179,11 @@ export const checkoutPaymentFragment = /* GraphQL */ `
   fragment checkoutPaymentFragment on Payment {
     id
     paymentType
+    status
     paymentWorkflow
+    amountCollected
+    amountCredited
+    amountRequested
     billingInfo {
       billingContact {
         ...billingContactFragment

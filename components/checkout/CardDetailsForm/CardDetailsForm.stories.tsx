@@ -2,7 +2,8 @@ import React from 'react'
 
 import { ComponentStory, ComponentMeta } from '@storybook/react'
 
-import CardDetailsForm, { CardData } from './CardDetailsForm'
+import CardDetailsForm from './CardDetailsForm'
+import { CardForm } from '@/lib/types'
 
 export default {
   component: CardDetailsForm,
@@ -15,5 +16,5 @@ const Template: ComponentStory<typeof CardDetailsForm> = (args) => <CardDetailsF
 export const Common = Template.bind({})
 
 Common.args = {
-  onSaveCardData: (cardData: CardData) => cardData,
+  onSaveCardData: (cardData: CardForm) => cardData,
 }

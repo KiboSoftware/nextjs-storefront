@@ -30,12 +30,9 @@ const AddressCard = (props: AddressProps) => {
         </Typography>
       )}
 
-      <Box pt={1}>
+      <Box pt={1} pl={!title ? '55px' : 0}>
         <Typography variant={variant}>{address1}</Typography>
-        <Typography variant={variant}>
-          {t('apartment')}
-          {address2}
-        </Typography>
+        <Typography variant={variant}>{address2}</Typography>
         <Box display="flex">
           <Typography variant={variant} sx={{ '&::after': { content: "','", pr: 0.5 } }}>
             {cityOrTown}
