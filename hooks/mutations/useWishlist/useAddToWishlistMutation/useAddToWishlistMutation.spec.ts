@@ -18,7 +18,7 @@ const addToWishlistItemInput = {
 }
 
 describe('[hooks] useAddToWishlistMutation', () => {
-  it('should use useAddToWishlistMutation', async () => {
+  it('should add item to wishlist', async () => {
     renderHook(
       async () => {
         const { addToWishlist } = useAddToWishlistMutation()

@@ -16,7 +16,7 @@ describe('[hooks] useCreateWishlistMutation', () => {
 
   const { id, name, customerAccountId } = mockWishlist
 
-  it('should use useCreateWishlistMutation', async () => {
+  it('should create wishlist', async () => {
     renderHook(
       async () => {
         const { createWishlist } = useCreateWishlistMutation()

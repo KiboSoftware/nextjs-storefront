@@ -15,7 +15,7 @@ import { WishlistProductInput, WishlistParams, WishlistItemInWishlistParams } fr
 export const useWishlist = () => {
   const { showModal } = useModalContext()
 
-  const { data: currentWishlist } = useWishlistQueries()
+  const { data: wishlist } = useWishlistQueries()
   const { addToWishlist } = useAddToWishlistMutation()
   const { removeWishlistItem } = useRemoveWishlistItemMutation()
   const { createWishlist } = useCreateWishlistMutation()
@@ -28,7 +28,7 @@ export const useWishlist = () => {
         productCode,
         variationProductCode,
       },
-      currentWishlist: userWishlist ? userWishlist : currentWishlist,
+      currentWishlist: userWishlist ? userWishlist : wishlist,
     })
   }
 
@@ -84,12 +84,12 @@ export const useWishlist = () => {
         options,
       }
 
-      if (!currentWishlist?.id) {
+      if (!wishlist?.id) {
         const response = await createWishlist.mutateAsync(customerAccount?.id as number)
         if (response?.id)
           return updateWishlistItem({ ...updateWishlistItemParams, currentWishlist: response })
       } else {
-        return updateWishlistItem({ ...updateWishlistItemParams, currentWishlist })
+        return updateWishlistItem({ ...updateWishlistItemParams, currentWishlist: wishlist })
       }
     } catch (error) {
       console.log('Error: add or remove wishlist item from custom useWishlist', error)

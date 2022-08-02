@@ -17,7 +17,7 @@ const removeWishlistItemInput = {
 }
 
 describe('[hooks] useRemoveWishlistItemMutation', () => {
-  it('should use useRemoveWishlistItemMutation', async () => {
+  it('should remove item from wishlist', async () => {
     renderHook(
       async () => {
         const { removeWishlistItem } = useRemoveWishlistItemMutation()

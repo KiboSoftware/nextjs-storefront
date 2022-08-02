@@ -102,11 +102,11 @@ describe('[component] Product Detail Template component', () => {
   it('should render the Product name', () => {
     setup()
 
-    const name = screen.getByRole('heading', {
+    const productName = screen.getByRole('heading', {
       name: new RegExp(Common?.args?.product?.content?.productName as string),
     })
 
-    expect(name).toBeVisible()
+    expect(productName).toBeVisible()
   })
 
   it('should render the Product price', () => {
