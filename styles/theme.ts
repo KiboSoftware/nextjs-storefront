@@ -3,6 +3,8 @@ import { createTheme, responsiveFontSizes } from '@mui/material/styles'
 export const grey = {
   900: '#2B2B2B',
   // Fill Form Label Text, information text
+  700: '#494949',
+  // Home Page background
   600: '#7C7C7C',
   // Thin borders, placeholder text
   500: '#C7C7C7',
