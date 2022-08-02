@@ -12,7 +12,7 @@ import { useUpdateCheckoutShippingInfo, useShippingMethods } from '@/hooks'
 import { checkoutGetters } from '@/lib/getters'
 import { buildCheckoutShippingParams, ShippingParams } from '@/lib/helpers'
 
-import type { Order, CrOrderItem, CustomerContact } from '@/lib/gql/types'
+import type { Order, CrOrderItem, CustomerContact, CuPhone } from '@/lib/gql/types'
 
 const buttonStyle = {
   width: '100%',
@@ -100,7 +100,19 @@ const ShippingStep = (props: ShippingProps) => {
   const handleAddressSelect = (addressId: string) => {
     const selectedAddress = userShippingAddress?.find((address) => address.id === Number(addressId))
     if (selectedAddress?.id) {
-      const contact = selectedAddress as Contact
+      const contact: Contact = {
+        id: selectedAddress.id,
+        firstName: selectedAddress.firstName || '',
+        lastNameOrSurname: selectedAddress.lastNameOrSurname || '',
+        middleNameOrInitial: selectedAddress.middleNameOrInitial || '',
+        email: selectedAddress.email || '',
+        address: {
+          ...(selectedAddress.address as any),
+        },
+        phoneNumbers: {
+          ...(selectedAddress.phoneNumbers as any),
+        },
+      }
       handleSaveAddress({ contact })
     }
   }
@@ -128,7 +140,7 @@ const ShippingStep = (props: ShippingProps) => {
           subHeading={t('common:previously-saved-shipping-addresses')}
           addresses={userShippingAddress}
           onAddressSelection={handleAddressSelect}
-          selectedAddressId={''}
+          selectedAddressId={contactProp?.id?.toString()}
         />
       }
 
