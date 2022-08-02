@@ -6,7 +6,7 @@ import { useTranslation } from 'next-i18next'
 import { SavedPaymentMethodView } from '@/components/checkout'
 import { AddressCard, OrderSummary, ProductItemList } from '@/components/common'
 import { ProductOption } from '@/components/product'
-import { orderGetters } from '@/lib/getters'
+import { billingGetters, orderGetters } from '@/lib/getters'
 
 import type { Order, CrAddress } from '@/lib/gql/types'
 interface ViewOrderDetailsProps {
@@ -130,18 +130,41 @@ const ViewOrderDetails = (props: ViewOrderDetailsProps) => {
           {payments?.map((payment) => (
             <SavedPaymentMethodView
               key={payment?.id}
-              id={payment?.billingInfo?.card?.paymentServiceCardId as string}
-              cardNumberPart={payment?.billingInfo?.card?.cardNumberPartOrMask as string}
-              expireMonth={payment?.billingInfo?.card?.expireMonth as number}
-              expireYear={payment?.billingInfo?.card?.expireYear as number}
-              address1={payment?.billingInfo?.billingContact?.address?.address1 as string}
-              address2={payment?.billingInfo?.billingContact?.address?.address2 as string}
-              cityOrTown={payment?.billingInfo?.billingContact?.address?.cityOrTown as string}
+              id={
+                orderGetters.getOrderPaymentCardDetails(payment.billingInfo.card)
+                  .paymentServiceCardId as string
+              }
+              cardNumberPart={
+                orderGetters.getOrderPaymentCardDetails(payment.billingInfo.card)
+                  .cardNumberPartOrMask as string
+              }
+              expireMonth={
+                orderGetters.getOrderPaymentCardDetails(payment.billingInfo.card)
+                  .expireMonth as number
+              }
+              expireYear={
+                orderGetters.getOrderPaymentCardDetails(payment.billingInfo.card)
+                  .expireYear as number
+              }
+              address1={
+                billingGetters.getAddress(payment.billingInfo.billingContact.address)
+                  .address1 as string
+              }
+              address2={
+                billingGetters.getAddress(payment.billingInfo.billingContact.address)
+                  .address2 as string
+              }
+              cityOrTown={
+                billingGetters.getAddress(payment.billingInfo.billingContact.address)
+                  .cityOrTown as string
+              }
               postalOrZipCode={
-                payment?.billingInfo?.billingContact?.address?.postalOrZipCode as string
+                billingGetters.getAddress(payment.billingInfo.billingContact.address)
+                  ?.postalOrZipCode as string
               }
               stateOrProvince={
-                payment?.billingInfo?.billingContact?.address?.stateOrProvince as string
+                billingGetters.getAddress(payment.billingInfo.billingContact.address)
+                  .stateOrProvince as string
               }
             />
           ))}

@@ -26,5 +26,4 @@ export const Common = Template.bind({})
 
 Common.args = {
   contact: undefined,
-  isUserLoggedIn: true,
 }

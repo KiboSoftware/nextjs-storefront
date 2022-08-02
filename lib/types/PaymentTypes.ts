@@ -1,5 +1,19 @@
 import { Card, Contact } from '../gql/types'
 
+export interface CardTypeForCheckout {
+  paymentType: string
+  isCardInfoSaved: boolean
+  cardType: string
+  expireMonth: number
+  expireYear: number
+  paymentWorkflow: string
+}
+
+export interface PaymentAndBilling {
+  cardInfo?: SavedCard
+  billingAddressInfo?: SavedBillingAddress
+}
+
 export interface TokenizedCard {
   balance?: number
   id?: string

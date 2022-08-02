@@ -107,5 +107,10 @@
   "find-stores-within-miles": "Find Stores within 100 miles",
   "stores-within-miles_zero": "No Results - 0 stores within 100 miles",
   "stores-within-miles_one": "{{count}} store within 100 miles",
-  "stores-within-miles_other": "{{count}} stores within 100 miles"
+  "stores-within-miles_other": "{{count}} stores within 100 miles",
+  "your-default-payment-method": "Your Default Payment Method",
+  "previously-saved-payment-methods": "Previously saved payment methods",
+  "no-previously-saved-payment-methods": "No previously saved payment methods.",
+  "add-payment-method": "Add Payment Method",
+  "save-payment-method": "Save Payment Method"
 }

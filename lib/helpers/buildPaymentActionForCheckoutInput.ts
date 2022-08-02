@@ -1,16 +1,7 @@
-import { checkoutGetters, accountDetailsGetters } from '@/lib/getters'
-import type { TokenizedCard } from '@/lib/types'
+import { checkoutGetters, accountDetailsGetters, cardGetters } from '@/lib/getters'
+import type { CardTypeForCheckout, TokenizedCard } from '@/lib/types'
 
 import type { BillingInfo, Contact, Order, PaymentActionInput } from '@/lib/gql/types'
-
-export interface CardTypeForCheckout {
-  paymentType: string
-  isCardInfoSaved: boolean
-  cardType: string
-  expireMonth: number
-  expireYear: number
-  paymentWorkflow: string
-}
 
 export const buildCardPaymentActionForCheckoutInput = (
   currencyCode: string,
@@ -27,8 +18,8 @@ export const buildCardPaymentActionForCheckoutInput = (
       paymentOrCardType: creditCardData.cardType,
       expireMonth: creditCardData.expireMonth as number,
       expireYear: creditCardData.expireYear as number,
-      paymentServiceCardId: accountDetailsGetters.getTokenizedId(tokenizedData),
-      cardNumberPartOrMask: accountDetailsGetters.getTokenizedCardNumberMask(tokenizedData),
+      paymentServiceCardId: cardGetters.getTokenizedId(tokenizedData),
+      cardNumberPartOrMask: cardGetters.getTokenizedCardNumberMask(tokenizedData),
       isUsedRecurring: false,
       isTokenized: true,
     },
