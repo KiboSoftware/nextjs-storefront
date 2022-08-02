@@ -68,7 +68,7 @@ describe('[component] - MyAccountTemplate', () => {
     expect(push).toHaveBeenCalledWith('/my-account/order-history')
   })
 
-  it('Desktop', async () => {
+  it('should render desktop view elements', async () => {
     window.matchMedia = createMatchMedia(1000)
 
     setup()
@@ -79,7 +79,7 @@ describe('[component] - MyAccountTemplate', () => {
     expect(headingArray[1]).toHaveTextContent('order-details')
   })
 
-  it('Mobile', async () => {
+  it('should render mobile view elements', async () => {
     window.matchMedia = createMatchMedia(200)
 
     setup()
