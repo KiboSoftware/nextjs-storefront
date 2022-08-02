@@ -45,7 +45,7 @@ const OrderConfirmation = ({ order }: { order: Order }) => {
   }
 
   return (
-    <Grid container>
+    <Grid container data-testid="order-confirmation">
       <Grid item xs={12} sx={{ display: 'flex', flexDirection: 'column', gap: 5 }}>
         <Container maxWidth="xs">
           <Stack width={'100%'} alignItems="center" gap={3}>

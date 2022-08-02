@@ -24,9 +24,13 @@ const getStoreLocations = async (param: { filter: string }) => {
 }
 
 export const useStoreLocations = (searchParams: { filter: string }): LocationType => {
-  const { data = {}, isLoading, isSuccess, isError } = useQuery(
-    locationKeys.locationsParams(searchParams),
-    () => (Boolean(searchParams.filter) ? getStoreLocations(searchParams) : {})
+  const {
+    data = {},
+    isLoading,
+    isSuccess,
+    isError,
+  } = useQuery(locationKeys.locationsParams(searchParams), () =>
+    Boolean(searchParams.filter) ? getStoreLocations(searchParams) : {}
   )
 
   return { data, isLoading, isSuccess, isError }

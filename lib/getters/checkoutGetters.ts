@@ -16,6 +16,9 @@ import type {
 } from '@/lib/gql/types'
 
 interface ShippingDetails {
+  firstName: string
+  middleNameOrInitial: string
+  lastNameOrSurname: string
   shippingPhoneHome: string
   shippingPhoneMobile: string
   shippingPhoneWork: string
@@ -23,6 +26,9 @@ interface ShippingDetails {
 }
 
 interface BillingDetails {
+  firstName: string
+  middleNameOrInitial: string
+  lastNameOrSurname: string
   billingPhoneHome: string
   billingPhoneMobile: string
   billingPhoneWork: string
@@ -136,6 +142,13 @@ const getShippingPhoneWork = (checkout: Order): string =>
 const getShipppingAddress = (checkout: Order) =>
   checkout.fulfillmentInfo?.fulfillmentContact?.address as CrAddress
 
+const getBillingFirstName = (checkout: Order): string =>
+  checkout.billingInfo?.billingContact?.firstName || ''
+const getBillingLastNameOrSurname = (checkout: Order): string =>
+  checkout.billingInfo?.billingContact?.lastNameOrSurname || ''
+const getBillingMiddleNameOrInitial = (checkout: Order): string =>
+  checkout?.billingInfo?.billingContact?.middleNameOrInitial || ''
+
 const getBillingPhoneHome = (checkout: Order): string =>
   checkout.billingInfo?.billingContact?.phoneNumbers?.home || ''
 const getBillingPhoneMobile = (checkout: Order): string =>
@@ -163,7 +176,7 @@ const getPaymentMethods = (checkout: Order) => {
 
 const getPersonalDetails = (checkout: Order): Contact => {
   return {
-    email: getShippingEmail(checkout),
+    email: getEmail(checkout),
     firstName: getShippingFirstName(checkout),
     lastNameOrSurname: getShippingLastNameOrSurname(checkout),
   }
@@ -171,6 +184,9 @@ const getPersonalDetails = (checkout: Order): Contact => {
 
 const getShippingDetails = (checkout: Order): ShippingDetails => {
   return {
+    firstName: getShippingFirstName(checkout),
+    middleNameOrInitial: getShippingMiddleNameOrInitial(checkout),
+    lastNameOrSurname: getShippingLastNameOrSurname(checkout),
     shippingPhoneHome: getShippingPhoneHome(checkout),
     shippingPhoneMobile: getShippingPhoneMobile(checkout),
     shippingPhoneWork: getShippingPhoneWork(checkout),
@@ -180,6 +196,9 @@ const getShippingDetails = (checkout: Order): ShippingDetails => {
 
 const getBillingDetails = (checkout: Order): BillingDetails => {
   return {
+    firstName: getBillingFirstName(checkout),
+    middleNameOrInitial: getBillingMiddleNameOrInitial(checkout),
+    lastNameOrSurname: getBillingLastNameOrSurname(checkout),
     billingPhoneHome: getBillingPhoneHome(checkout),
     billingPhoneMobile: getBillingPhoneMobile(checkout),
     billingPhoneWork: getBillingPhoneWork(checkout),
