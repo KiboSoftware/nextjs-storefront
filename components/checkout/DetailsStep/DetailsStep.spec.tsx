@@ -7,7 +7,6 @@ import { render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 
 import * as stories from './DetailsStep.stories'
-import { CheckoutStepProvider } from '@/context'
 
 const { Common } = composeStories(stories)
 
@@ -18,11 +17,7 @@ jest.mock('../../common/KiboTextBox/KiboTextBox', () => KiboTextBoxMock)
 describe('[components] Details', () => {
   const setup = (args = Common.args) => {
     const user = userEvent.setup()
-    render(
-      <CheckoutStepProvider steps={['details', 'shipping', 'payment', 'review']}>
-        <Common {...args} />
-      </CheckoutStepProvider>
-    )
+    render(<Common {...args} />)
     return {
       user,
     }

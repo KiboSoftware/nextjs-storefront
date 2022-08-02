@@ -27,7 +27,7 @@ interface CheckoutProps {
 
 const buttonStyle = {
   height: '42px',
-  fontSize: (theme: Theme) => theme.typography.subtitle1,
+  fontSize: (themeParam: Theme) => themeParam.typography.subtitle1,
 } as SxProps<Theme> | undefined
 
 const Checkout = (props: CheckoutProps) => {

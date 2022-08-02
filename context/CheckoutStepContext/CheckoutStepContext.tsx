@@ -1,4 +1,4 @@
-import React, { useMemo, useReducer, useContext, createContext, useEffect, useRef } from 'react'
+import React, { useMemo, useReducer, useContext, createContext } from 'react'
 
 export type State = {
   activeStep: number

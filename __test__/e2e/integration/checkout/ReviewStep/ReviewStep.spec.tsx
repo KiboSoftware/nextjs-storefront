@@ -7,9 +7,7 @@ import { mock } from 'jest-mock-extended'
 
 import { createQueryClientWrapper } from '@/__test__/utils'
 import * as stories from '@/components/checkout/ReviewStep/ReviewStep.stories'
-import { LoginData } from '@/components/layout/Login/LoginContent/LoginContent'
 import { AuthContext, AuthContextType } from '@/context/'
-import { CheckoutStepProvider } from '@/context/CheckoutStepContext/CheckoutStepContext'
 import { checkoutGetters } from '@/lib/getters'
 
 import type { Order } from '@/lib/gql/types'
@@ -25,9 +23,7 @@ describe('[components] ReviewStep', () => {
 
     render(
       <AuthContext.Provider value={mockValues}>
-        <CheckoutStepProvider steps={['details', 'shipping', 'payment', 'review']}>
-          <Common {...Common.args} />
-        </CheckoutStepProvider>
+        <Common {...Common.args} />
       </AuthContext.Provider>,
       {
         wrapper: createQueryClientWrapper(),

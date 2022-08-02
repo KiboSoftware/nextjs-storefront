@@ -138,17 +138,12 @@ const ReviewStep = (props: ReviewStepProps) => {
 
   const onValid = async (formData: PersonalDetails) => {
     if (formData?.showAccountFields) {
-      await createAccount(
-        {
-          email: checkout.email as string,
-          firstName: formData.firstName,
-          lastNameOrSurname: formData.lastNameOrSurname,
-          password: formData.password,
-        },
-        () => {
-          console.log('Created account successfully.')
-        }
-      )
+      await createAccount({
+        email: checkout.email as string,
+        firstName: formData.firstName,
+        lastNameOrSurname: formData.lastNameOrSurname,
+        password: formData.password,
+      })
     }
 
     setStepStatusComplete()

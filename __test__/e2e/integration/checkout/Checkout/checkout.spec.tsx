@@ -1,13 +1,12 @@
 import React from 'react'
 
 import { composeStories } from '@storybook/testing-react'
-import { cleanup, fireEvent, screen, waitFor, within } from '@testing-library/react'
+import { cleanup, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 
-import { orderMock, shippingRateMock } from '@/__mocks__/stories'
+import { orderMock } from '@/__mocks__/stories'
 import { renderWithQueryClient } from '@/__test__/utils/renderWithQueryClient'
 import * as stories from '@/components/page-templates/Checkout/Checkout.stories'
-import { CheckoutStepProvider } from '@/context/CheckoutStepContext/CheckoutStepContext'
 
 const { Common } = composeStories(stories)
 
@@ -19,7 +18,7 @@ jest.mock('next/router', () => ({
   },
 }))
 
-const setup = (initialActiveStep = 0) => {
+const setup = (_initialActiveStep = 0) => {
   const user = userEvent.setup()
   renderWithQueryClient(<Common {...Common.args} />)
   return {

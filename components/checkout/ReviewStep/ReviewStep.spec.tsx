@@ -8,7 +8,6 @@ import { mock } from 'jest-mock-extended'
 import * as stories from '../ReviewStep/ReviewStep.stories'
 import { createQueryClientWrapper } from '@/__test__/utils'
 import { AuthContext, AuthContextType } from '@/context/'
-import { CheckoutStepProvider } from '@/context/CheckoutStepContext/CheckoutStepContext'
 const { Common } = composeStories(stories)
 
 const orderPriceMock = () => <div data-testid="order-price-component" />
@@ -24,9 +23,7 @@ const setup = (isAuthenticated = false) => {
 
   render(
     <AuthContext.Provider value={mockValues}>
-      <CheckoutStepProvider steps={['details', 'shipping', 'payment', 'review']}>
-        <Common {...Common.args} />
-      </CheckoutStepProvider>
+      <Common {...Common.args} />
     </AuthContext.Provider>,
     {
       wrapper: createQueryClientWrapper(),
@@ -100,7 +97,7 @@ describe('[components] ReviewStep', () => {
     })
   })
 
-  describe('[components] Non loggedIn user', () => {
+  describe('For non loggedIn user', () => {
     it("shold enable 'I want to create an account' checkbox when user is not loggedIn", () => {
       const isAuthenticated = false
       setup(isAuthenticated)
@@ -174,7 +171,7 @@ describe('[components] ReviewStep', () => {
       })
     })
 
-    describe('should display validation message', () => {
+    describe('Should display validation message', () => {
       it("should display 'Required Field Message' when user tabs out 'First Name' field without entering First Name", async () => {
         const isAuthenticated = false
         const { user } = setup(isAuthenticated)
@@ -192,7 +189,7 @@ describe('[components] ReviewStep', () => {
         expect(requiredFieldMessage).toBeVisible()
       })
 
-      it("should display 'Required Field Message' when user tabs out 'Last Name' field without entering First Name", async () => {
+      it("should display 'Required Field Message' when user tabs out 'Last Name' field without entering Last Name", async () => {
         const isAuthenticated = false
         const { user } = setup(isAuthenticated)
 
@@ -209,7 +206,7 @@ describe('[components] ReviewStep', () => {
         expect(requiredFieldMessage).toBeVisible()
       })
 
-      it("should display 'Required Field Message' when user tabs out 'Password' field without entering First Name", async () => {
+      it("should display 'Required Field Message' when user tabs out 'Password' field without entering Password", async () => {
         const isAuthenticated = false
         const { user } = setup(isAuthenticated)
 
@@ -227,7 +224,7 @@ describe('[components] ReviewStep', () => {
       })
     })
 
-    describe('should display user entered values', () => {
+    describe('Should display user entered values', () => {
       it('should display user entered value when user enters First Name', async () => {
         const isAuthenticated = false
         const { user } = setup(isAuthenticated)
@@ -277,7 +274,7 @@ describe('[components] ReviewStep', () => {
     })
   })
 
-  describe('[components] LoggedIn user', () => {
+  describe('For loggedIn user', () => {
     it("should disable 'I want to create an account' checkbox when user is loggedIn", async () => {
       const isAuthenticated = true
       setup(isAuthenticated)

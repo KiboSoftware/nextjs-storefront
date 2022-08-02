@@ -24,7 +24,7 @@ export interface AuthContextType {
   isAuthenticated: boolean
   user?: CustomerAccount
   login: (params: LoginData, onSuccessCallBack: () => void) => any
-  createAccount: (params: RegisterAccountInputData, onSuccessCallBack: () => void) => any
+  createAccount: (params: RegisterAccountInputData, onSuccessCallBack?: () => void) => any
   setAuthError: Dispatch<SetStateAction<string>>
   authError: string
   logout: () => void
@@ -59,13 +59,13 @@ export const AuthContextProvider = ({ children }: AuthContextProviderProps) => {
 
   const queryClient = useQueryClient()
 
-  const handleOnSuccess = (account: any, onSuccessCallBack: () => void) => {
+  const handleOnSuccess = (account: any, onSuccessCallBack?: () => void) => {
     setCookieAndUser(account)
     queryClient.invalidateQueries(cartKeys.all)
-    onSuccessCallBack()
+    onSuccessCallBack && onSuccessCallBack()
   }
   // register user
-  const createAccount = (params: RegisterAccountInputData, onSuccessCallBack: () => void) => {
+  const createAccount = (params: RegisterAccountInputData, onSuccessCallBack?: () => void) => {
     try {
       const createAccountAndLoginMutationVars = {
         account: {
