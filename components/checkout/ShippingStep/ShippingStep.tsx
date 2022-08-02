@@ -105,7 +105,19 @@ const ShippingStep = (props: ShippingProps) => {
   const handleAddressSelect = (addressId: string) => {
     const selectedAddress = userShippingAddress?.find((address) => address.id === Number(addressId))
     if (selectedAddress?.id) {
-      const contact = selectedAddress as Contact
+      const contact: Contact = {
+        id: selectedAddress.id,
+        firstName: selectedAddress.firstName || '',
+        lastNameOrSurname: selectedAddress.lastNameOrSurname || '',
+        middleNameOrInitial: selectedAddress.middleNameOrInitial || '',
+        email: selectedAddress.email || '',
+        address: {
+          ...(selectedAddress.address as any),
+        },
+        phoneNumbers: {
+          ...(selectedAddress.phoneNumbers as any),
+        },
+      }
       handleSaveAddress({ contact })
     }
   }
@@ -137,7 +149,7 @@ const ShippingStep = (props: ShippingProps) => {
           subHeading={t('common:previously-saved-shipping-addresses')}
           addresses={userShippingAddress}
           onAddressSelection={handleAddressSelect}
-          selectedAddressId={''}
+          selectedAddressId={contactProp?.id?.toString()}
         />
       }
 
