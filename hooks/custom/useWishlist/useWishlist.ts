@@ -1,7 +1,6 @@
 import { WishlistPopover } from '@/components/dialogs'
 import { LoginDialog } from '@/components/layout'
-import { useAuthContext } from '@/context'
-import { useModalContext } from '@/context/ModalContext'
+import { useAuthContext, useModalContext } from '@/context'
 import {
   useWishlistQueries,
   useAddToWishlistMutation,
