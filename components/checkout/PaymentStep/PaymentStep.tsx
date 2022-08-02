@@ -26,21 +26,24 @@ import {
   useUpdateOrderPaymentActionMutation,
 } from '@/hooks'
 import { PaymentType } from '@/lib/constants'
-import { checkoutGetters } from '@/lib/getters'
-import { accountDetailsGetters, PaymentAndBilling } from '@/lib/getters'
-import {
-  buildCardPaymentActionForCheckoutInput,
-  CardTypeForCheckout,
-} from '@/lib/helpers/buildPaymentActionForCheckoutInput'
+import { billingGetters, cardGetters, checkoutGetters, accountDetailsGetters } from '@/lib/getters'
+import { buildCardPaymentActionForCheckoutInput } from '@/lib/helpers/buildPaymentActionForCheckoutInput'
 import { tokenizeCreditCardPayment } from '@/lib/helpers/credit-card'
-import type { Address, CardForm, ContactForm, SavedCard, TokenizedCard } from '@/lib/types'
+import type {
+  Address,
+  CardForm,
+  ContactForm,
+  SavedCard,
+  TokenizedCard,
+  PaymentAndBilling,
+  CardTypeForCheckout,
+} from '@/lib/types'
 
 import type { Card, Contact, Order, PaymentActionInput } from '@/lib/gql/types'
 
 interface PaymentStepProps {
   checkout: Order | undefined
   contact?: ContactForm
-  isUserLoggedIn: boolean
 }
 interface PaymentMethod {
   id: string
@@ -104,11 +107,11 @@ const initialBillingAddressData: Address = {
 }
 
 const PaymentStep = (props: PaymentStepProps) => {
-  const { checkout, isUserLoggedIn = false } = props
+  const { checkout } = props
 
   // hooks
   const { isAuthenticated, user } = useAuthContext()
-  const { t } = useTranslation('checkout')
+  const { t } = useTranslation(['checkout', 'common'])
   const { loadPaymentTypes } = usePaymentTypes()
   const paymentMethods = loadPaymentTypes()
 
@@ -157,75 +160,6 @@ const PaymentStep = (props: PaymentStepProps) => {
     savedPaymentBillingDetails
   )
 
-  // handle initial load of cards and contacts
-  useEffect(() => {
-    // handle saved payment methods in account
-    if (isCustomerCardsSuccess && isCustomerContactsSuccess) {
-      const savedInfo = accountDetailsGetters.getSavedPaymentAndBillingDetails(
-        customerCardsCollection,
-        customerContactsCollection
-      )
-
-      const defaultCard = accountDetailsGetters.getDefaultPaymentBillingMethod(savedInfo)
-      accountDetailsGetters.getCardId(defaultCard?.cardInfo) &&
-        setSelectedPaymentBillingRadio(defaultCard.cardInfo?.id as string)
-
-      const selectedCards = checkoutGetters.getSelectedPaymentMethods(
-        checkout,
-        PaymentType.CREDITCARD
-      )
-
-      selectedCards?.forEach((card) => {
-        const cardDetails = card?.billingInfo?.card
-        const billingAddress = card?.billingInfo?.billingContact
-        savedInfo.push({
-          cardInfo: {
-            ...(cardDetails as Card),
-            cardNumberPart: cardDetails?.cardNumberPartOrMask,
-            id: cardDetails?.paymentServiceCardId,
-            contactId: 0,
-            paymentType: newPaymentMethod,
-          },
-          billingAddressInfo: {
-            ...billingAddress,
-          },
-        })
-
-        setSelectedPaymentBillingRadio(cardDetails?.paymentServiceCardId as string)
-      })
-
-      if (savedInfo.length) {
-        setSavedPaymentBillingDetails(savedInfo)
-        setNewPaymentMethod(PaymentType.CREDITCARD)
-      }
-    }
-
-    // // handle already saved payment in checkout
-    // if (checkout?.payments?.length) {
-    //   const payments = checkout?.payments[0]
-    //   const card = payments?.billingInfo?.card
-    //   const billingAddress = payments?.billingInfo?.billingContact
-
-    //   setSavedPaymentBillingDetails([
-    //     ...savedPaymentBillingDetails,
-    //     {
-    //       cardInfo: {
-    //         ...(card as Card),
-    //         cardNumberPart: card?.cardNumberPartOrMask,
-    //         contactId: 0,
-    //         paymentType: newPaymentMethod,
-    //         id: card?.paymentServiceCardId,
-    //       },
-    //       billingAddressInfo: {
-    //         ...billingAddress,
-    //       },
-    //     },
-    //   ])
-    //   setSelectedPaymentBillingRadio(card?.paymentServiceCardId as string)
-    // }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isCustomerCardsSuccess, isCustomerContactsSuccess, checkout])
-
   // handle saved payment method radio selection to select different payment method
   const handleRadioSavedCardSelection = (value: string) => {
     setSelectedPaymentBillingRadio(value)
@@ -245,7 +179,7 @@ const PaymentStep = (props: PaymentStepProps) => {
     })
   }
 
-  const handleSameAsShippingAddressCheckbox = (_: any, value: boolean) => {
+  const handleSameAsShippingAddressCheckbox = (value: boolean) => {
     const contact = value
       ? checkout?.fulfillmentInfo?.fulfillmentContact
       : initialBillingAddressData
@@ -307,26 +241,6 @@ const PaymentStep = (props: PaymentStepProps) => {
     setValidateForm(true)
   }
 
-  useEffect(() => {
-    if (stepStatus === STEP_STATUS.SUBMIT) {
-      // if(checkout)
-      saveCardDataToOrder()
-      setStepStatusComplete()
-      setStepNext()
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [stepStatus])
-
-  // handling review order button status (enabled/disabled)
-  useEffect(() => {
-    if (selectedPaymentBillingRadio) {
-      isAddingNewPayment ? setStepStatusIncomplete() : setStepStatusValid()
-    } else {
-      setStepStatusIncomplete()
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [selectedPaymentBillingRadio, isAddingNewPayment])
-
   const saveCardDataToOrder = async () => {
     let paymentAction: PaymentActionInput = {}
 
@@ -343,7 +257,7 @@ const PaymentStep = (props: PaymentStepProps) => {
         paymentType,
         cardNumberPart,
         id,
-      } = accountDetailsGetters.getCardDetails(selectedPaymentMethod?.cardInfo as SavedCard)
+      } = cardGetters.getCardDetails(selectedPaymentMethod?.cardInfo as SavedCard)
 
       const cardDetails: CardTypeForCheckout = {
         cardType,
@@ -359,7 +273,7 @@ const PaymentStep = (props: PaymentStepProps) => {
         numberPart: cardNumberPart,
       }
 
-      const isSameAsShipping = accountDetailsGetters.getIsSameBillingShippingAddress(
+      const isSameAsShipping = billingGetters.getIsSameBillingShippingAddress(
         selectedPaymentMethod?.billingAddressInfo
       )
 
@@ -396,14 +310,6 @@ const PaymentStep = (props: PaymentStepProps) => {
       })
     }
   }
-
-  // when payment card and billing address info is available, handleTokenization
-  useEffect(() => {
-    if (isAddingNewPayment && cardFormDetails.cardNumber && billingFormAddress.contact.firstName) {
-      handleTokenization({ ...cardFormDetails })
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isAddingNewPayment, cardFormDetails.cardNumber, billingFormAddress.contact.firstName])
 
   const handleTokenization = async (card: CardForm) => {
     const { publicRuntimeConfig } = getConfig()
@@ -459,6 +365,80 @@ const PaymentStep = (props: PaymentStepProps) => {
     )
   }
 
+  // handle initial load of cards and contacts
+  useEffect(() => {
+    // handle saved payment methods in account
+    if (isCustomerCardsSuccess && isCustomerContactsSuccess) {
+      const savedInfo = accountDetailsGetters.getSavedPaymentAndBillingDetails(
+        customerCardsCollection,
+        customerContactsCollection
+      )
+
+      const defaultCard = accountDetailsGetters.getDefaultPaymentBillingMethod(savedInfo)
+      cardGetters.getCardId(defaultCard?.cardInfo) &&
+        setSelectedPaymentBillingRadio(defaultCard.cardInfo?.id as string)
+
+      const selectedCards = checkoutGetters.getSelectedPaymentMethods(
+        checkout,
+        PaymentType.CREDITCARD
+      )
+
+      selectedCards?.forEach((card) => {
+        const cardDetails = card?.billingInfo?.card
+        const billingAddress = card?.billingInfo?.billingContact
+        savedInfo.push({
+          cardInfo: {
+            ...(cardDetails as Card),
+            cardNumberPart: cardDetails?.cardNumberPartOrMask,
+            id: cardDetails?.paymentServiceCardId,
+            contactId: 0,
+            paymentType: newPaymentMethod,
+          },
+          billingAddressInfo: {
+            ...billingAddress,
+          },
+        })
+
+        setSelectedPaymentBillingRadio(cardDetails?.paymentServiceCardId as string)
+      })
+
+      if (savedInfo.length) {
+        setSavedPaymentBillingDetails(savedInfo)
+        setNewPaymentMethod(PaymentType.CREDITCARD)
+      }
+    }
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isCustomerCardsSuccess, isCustomerContactsSuccess, checkout])
+
+  // when payment card and billing address info is available, handleTokenization
+  useEffect(() => {
+    if (isAddingNewPayment && cardFormDetails.cardNumber && billingFormAddress.contact.firstName) {
+      handleTokenization({ ...cardFormDetails })
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isAddingNewPayment, cardFormDetails.cardNumber, billingFormAddress.contact.firstName])
+
+  // handling review order button status (enabled/disabled)
+  useEffect(() => {
+    if (selectedPaymentBillingRadio) {
+      isAddingNewPayment ? setStepStatusIncomplete() : setStepStatusValid()
+    } else {
+      setStepStatusIncomplete()
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [selectedPaymentBillingRadio, isAddingNewPayment])
+
+  useEffect(() => {
+    if (stepStatus === STEP_STATUS.SUBMIT) {
+      // if(checkout)
+      saveCardDataToOrder()
+      setStepStatusComplete()
+      setStepNext()
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [stepStatus])
+
   return (
     <Stack data-testid="checkout-payment">
       <Typography variant="h2" sx={{ paddingBottom: '1.625rem' }}>
@@ -471,21 +451,23 @@ const PaymentStep = (props: PaymentStepProps) => {
             {defaultCustomerAccountCard.cardInfo?.id && (
               <>
                 <Typography variant="h4" fontWeight={'bold'}>
-                  Your Default Payment Method
+                  {t('common:your-default-payment-method')}
                 </Typography>
                 {getSavedPaymentMethodView(defaultCustomerAccountCard)}
               </>
             )}
 
             <Typography variant="h4" fontWeight={'bold'}>
-              Previously saved payment methods
+              {t('common:previously-saved-payment-methods')}
             </Typography>
             {previouslySavedCustomerAccountCards?.length ? (
               previouslySavedCustomerAccountCards.map((card) => {
                 return getSavedPaymentMethodView(card)
               })
             ) : (
-              <Typography variant="h4">No previously saved payment methods.</Typography>
+              <Typography variant="h4">
+                {t('common:no-previously-saved-payment-methods')}
+              </Typography>
             )}
 
             <Button
@@ -494,7 +476,7 @@ const PaymentStep = (props: PaymentStepProps) => {
               sx={{ width: { xs: '100%', sm: '50%' } }}
               onClick={() => setIsAddingNewPayment(true)}
             >
-              Add Payment Method
+              {t('common:add-payment-method')}
             </Button>
           </Stack>
         </>
@@ -541,11 +523,7 @@ const PaymentStep = (props: PaymentStepProps) => {
       {shouldShowCardForm() && isAuthenticated && (
         <StyledFormControlLabel
           control={
-            <Checkbox
-              onChange={handleSavePaymentMethodChecbox}
-              data-testid="save-payment"
-              value={'save-payment'}
-            />
+            <Checkbox onChange={handleSavePaymentMethodChecbox} data-testid="save-payment" />
           }
           label={`${t('save-payment-method')}`}
         />
@@ -560,13 +538,13 @@ const PaymentStep = (props: PaymentStepProps) => {
           <StyledFormControlLabel
             control={<Checkbox />}
             label={`${t('billing-address-same-as-shipping')}`}
-            onChange={handleSameAsShippingAddressCheckbox}
+            onChange={(_, value) => handleSameAsShippingAddressCheckbox(value)}
           />
           <AddressForm
             checkout={checkout}
             contact={shippingAddress as ContactForm}
             setAutoFocus={false}
-            isUserLoggedIn={isUserLoggedIn}
+            isUserLoggedIn={isAuthenticated}
             onSaveAddress={handleBillingFormAddress}
             validateForm={validateForm}
             setValidateForm={setValidateForm}
@@ -576,7 +554,7 @@ const PaymentStep = (props: PaymentStepProps) => {
           />
           <Stack pl={1} gap={2} sx={{ width: { xs: '100%', md: '50%' } }}>
             <Button variant="contained" color="secondary" onClick={cancelAddingNewPaymentMethod}>
-              Cancel
+              {t('common:cancel')}
             </Button>
             <Button
               variant="contained"
@@ -584,7 +562,7 @@ const PaymentStep = (props: PaymentStepProps) => {
               {...(isAddPaymentMethodButtonDisabled() && { disabled: true })}
               onClick={handleSaveNewPaymentMethod}
             >
-              Save Payment Method
+              {t('common:save-payment-method')}
             </Button>
           </Stack>
         </>

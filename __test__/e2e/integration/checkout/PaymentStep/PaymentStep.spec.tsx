@@ -137,7 +137,7 @@ describe('[components] PaymentStep', () => {
   it('should save payment not to be visible if user not logged in', () => {
     render(
       <CheckoutStepProvider steps={['details', 'shipping', 'payment', 'review']}>
-        <Common {...Common.args} isUserLoggedIn={false} />
+        <Common {...Common.args} />
       </CheckoutStepProvider>
     )
 
