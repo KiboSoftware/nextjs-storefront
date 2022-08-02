@@ -8,6 +8,7 @@ import { configuredProductMock } from '../stories/configuredProductMock'
 import { locationCollectionMock } from '../stories/locationCollectionMock'
 import { productSearchResultMock } from '../stories/productSearchResultMock'
 import { searchSuggestionMock } from '../stories/searchSuggestionResultMock'
+import { userAddressMock } from '../stories/userAddressMock'
 import { userMock, loginUserMock, registerUserMock } from '../stories/userMock'
 
 export const checkoutHandlers = [
@@ -72,6 +73,10 @@ export const userHandlers = [
   // useUser
   graphql.query('getUser', (_req, res, ctx) => {
     return res(ctx.data(userMock))
+  }),
+  //userAddress
+  graphql.query('getUserAddresses', (_req, res, ctx) => {
+    return res(ctx.data(userAddressMock))
   }),
   // login
   graphql.mutation('login', (_req, res, ctx) => {
