@@ -18,7 +18,7 @@ import { useTranslation } from 'next-i18next'
 import { AddressDetailsView } from '@/components/checkout'
 import { PromoCodeBadge } from '@/components/common'
 import { useCheckoutStepContext } from '@/context'
-import { useStoreLocations, useCurrentLocation, usePurchaseLocation } from '@/hooks'
+import { useStoreLocations } from '@/hooks'
 import { checkoutGetters } from '@/lib/getters'
 import { storeLocationGetters } from '@/lib/getters/storeLocationGetters'
 
@@ -78,7 +78,7 @@ const OrderReview = (props: OrderReviewProps) => {
     .map((pickupItem) => `code eq ${pickupItem?.fulfillmentLocationCode}`)
     .join(' or ')
 
-  const { isError, data: locations } = useStoreLocations({ filter: fulfillmentLocationCodes })
+  const { data: locations } = useStoreLocations({ filter: fulfillmentLocationCodes })
   const storeLocations = storeLocationGetters.getLocations(locations as Maybe<Location>[])
 
   const { email: userName } = personalDetails

@@ -216,7 +216,7 @@ describe('[components] ReviewStep', () => {
         await user.click(iWantToCreateAccountCheckbox)
 
         const passwordTexBox = screen.getByLabelText(/password/i)
-        await passwordTexBox.focus()
+        passwordTexBox.focus()
         await user.tab()
 
         const requiredFieldMessage = screen.getByText(/this-field-is-required/i)

@@ -1,6 +1,5 @@
 import React from 'react'
 
-import { RestaurantMenu } from '@mui/icons-material'
 import { Box } from '@mui/material'
 
 import AddressCard from '@/components/common/AddressCard/AddressCard'
