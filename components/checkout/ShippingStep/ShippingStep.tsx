@@ -102,8 +102,12 @@ const ShippingStep = (props: ShippingProps) => {
   const handleFormStatusChange = (status: boolean) => {
     setIsAddressFormValid(status)
   }
-  const handleAddressSelect = (_addressId: string) => {
-    // do your stuff for the selected address
+  const handleAddressSelect = (addressId: string) => {
+    const selectedAddress = userShippingAddress?.find((address) => address.id === Number(addressId))
+    if (selectedAddress?.id) {
+      const contact = selectedAddress as Contact
+      handleSaveAddress({ contact })
+    }
   }
 
   useEffect(() => {
@@ -132,7 +136,6 @@ const ShippingStep = (props: ShippingProps) => {
           heading={t('common:your-default-shipping-address')}
           subHeading={t('common:previously-saved-shipping-addresses')}
           addresses={userShippingAddress}
-          radioGroupTitle={'Your default silling dddress'}
           onAddressSelection={handleAddressSelect}
           selectedAddressId={''}
         />

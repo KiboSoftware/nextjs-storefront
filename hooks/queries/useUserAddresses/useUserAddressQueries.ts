@@ -4,7 +4,7 @@ import { makeGraphQLClient } from '@/lib/gql/client'
 import { getUserAddressesQuery } from '@/lib/gql/queries'
 import { userAddressKeys } from '@/lib/react-query/queryKeys'
 
-import type { Cart, CustomerContact, CustomerContactCollection } from '@/lib/gql/types'
+import type { CustomerContactCollection } from '@/lib/gql/types'
 
 export interface UserAddressType {
   data?: CustomerContactCollection
@@ -25,18 +25,14 @@ const getUserAddresses = async (accountId: number) => {
 }
 
 export const useUserAddressesQueries = ({ accountId }: UseUserAddresses): UserAddressType => {
-  try {
-    const {
-      data = {},
-      isLoading,
-      isSuccess,
-    } = useQuery(userAddressKeys.all, () => getUserAddresses(accountId), {
-      refetchOnWindowFocus: false,
-      enabled: !!accountId,
-    })
+  const {
+    data = {},
+    isLoading,
+    isSuccess,
+  } = useQuery(userAddressKeys.all, () => getUserAddresses(accountId), {
+    refetchOnWindowFocus: false,
+    enabled: !!accountId,
+  })
 
-    return { data, isLoading, isSuccess }
-  } catch (err) {
-    throw new Error()
-  }
+  return { data, isLoading, isSuccess }
 }

@@ -9,8 +9,6 @@ import KiboRadio from '@/components/common/KiboRadio/KiboRadio'
 import type { CrAddress, CuAddress, CustomerContact } from '@/lib/gql/types'
 
 interface AddressListProps {
-  radioGroupTitle?: string
-  withoutRadioTitle?: string
   heading?: string
   subHeading?: string
   radio?: boolean
@@ -21,7 +19,6 @@ interface AddressListProps {
 
 interface KiboAddressListProps {
   addresses: CustomerContact[] | undefined
-  radioGroupTitle?: string
   heading?: string
   subHeading?: string
   selectedAddressId?: string
@@ -30,20 +27,17 @@ interface KiboAddressListProps {
 
 const buildAddressProps = (address: CrAddress | CuAddress | any) => {
   const { address1, address2, cityOrTown, stateOrProvince, postalOrZipCode } = address
-  const addressCardProps = {
+  return {
     address1,
     address2,
     cityOrTown,
     stateOrProvince,
     postalOrZipCode,
   }
-  return addressCardProps
 }
 
 const AddressList = (props: AddressListProps) => {
   const {
-    radioGroupTitle,
-    withoutRadioTitle,
     addresses,
     heading,
     subHeading,
@@ -59,18 +53,13 @@ const AddressList = (props: AddressListProps) => {
         radio ? (
           <KiboRadioAddressList
             addresses={addresses}
-            radioGroupTitle={radioGroupTitle}
             heading={heading}
             subHeading={subHeading}
             selectedAddressId={selectedAddressId}
             onAddressSelect={(addressId) => onAddressSelection(addressId)}
           />
         ) : (
-          <KiboAddressList
-            addresses={addresses}
-            withoutRadioTitle={withoutRadioTitle}
-            onAddressSelection={() => ''}
-          />
+          <KiboAddressList addresses={addresses} heading={heading} onAddressSelection={() => ''} />
         )
       ) : (
         <Typography variant="h4" fontWeight={'bold'}>
@@ -82,12 +71,17 @@ const AddressList = (props: AddressListProps) => {
 }
 
 const KiboAddressList = (props: AddressListProps) => {
-  const { addresses, withoutRadioTitle } = props
+  const { addresses, heading } = props
   return (
     <>
+      {heading && (
+        <Typography variant="h4" fontWeight={'bold'}>
+          {heading}
+        </Typography>
+      )}
       {addresses?.map((item: CustomerContact) => (
         <Box paddingY={1} key={item.id + 'address'}>
-          <AddressCard title={withoutRadioTitle} {...buildAddressProps(item.address)} />
+          <AddressCard title={''} {...buildAddressProps(item.address)} />
         </Box>
       ))}
     </>

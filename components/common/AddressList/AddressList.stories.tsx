@@ -16,7 +16,6 @@ const Template: ComponentStory<typeof AddressList> = (args) => <AddressList {...
 export const Common = Template.bind({})
 
 Common.args = {
-  withoutRadioTitle: '',
   addresses: userAddressResponse.items as CustomerContact[],
 }
 
@@ -24,6 +23,14 @@ export const Radio = Template.bind({})
 
 Radio.args = {
   radio: true,
-  radioGroupTitle: 'Your default silling address',
+  heading: 'Your default shipping address',
+  subHeading: 'Your previouly saved shipping address',
+  addresses: userAddressResponse.items as CustomerContact[],
+}
+export const WithoutRadio = Template.bind({})
+
+WithoutRadio.args = {
+  radio: false,
+  heading: 'Your default shipping address',
   addresses: userAddressResponse.items as CustomerContact[],
 }
