@@ -1,5 +1,4 @@
-import getConfig from 'next/config'
-
+import { FulfillmentOptions } from '../constants'
 import { cartGetters } from './cartGetters'
 import DefaultImage from '@/public/product_placeholder.svg'
 
@@ -57,8 +56,6 @@ interface CheckoutDetails {
   paymentMethods: PaymentMethod[]
 }
 
-const { publicRuntimeConfig } = getConfig()
-
 const getOrderNumber = (checkout: Order) => checkout?.orderNumber
 const getEmail = (checkout: Order) => checkout?.email
 const getId = (checkout: Order) => checkout?.id
@@ -85,11 +82,10 @@ const getItemsByFulfillment = (
   )
 }
 const getPickupItems = (checkout: Order): Maybe<CrOrderItem>[] => {
-  return getItemsByFulfillment(checkout, publicRuntimeConfig.fullfillmentOptions[1].shortName)
+  return getItemsByFulfillment(checkout, FulfillmentOptions.PICKUP)
 }
 const getShipItems = (checkout: Order): Maybe<CrOrderItem>[] =>
-  getItemsByFulfillment(checkout, publicRuntimeConfig.fullfillmentOptions[0].shortName)
-const getDeliveryItems = (checkout: Order) => getItemsByFulfillment(checkout, 'Delivery')
+  getItemsByFulfillment(checkout, FulfillmentOptions.SHIP)
 
 const getProductId = (item: Maybe<CrOrderItem> | Maybe<CartItem>): string => item?.id || ''
 
@@ -157,6 +153,18 @@ const getBillingPhoneWork = (checkout: Order): string =>
   checkout?.billingInfo?.billingContact?.phoneNumbers?.work || ''
 const getBillingAddress = (checkout: Order) =>
   checkout.billingInfo?.billingContact?.address as CrAddress
+
+const getFulfillmentLocationCodes = (cartItems: Maybe<CartItem>[]): string => {
+  const locationCodes = Array.from(
+    cartItems.reduce((set, item) => {
+      if (item?.fulfillmentMethod === FulfillmentOptions.PICKUP) {
+        set.add(`code eq ${item?.fulfillmentLocationCode}`)
+      }
+      return set
+    }, new Set())
+  )
+  return locationCodes.join(' or ')
+}
 
 const getPaymentMethods = (checkout: Order) => {
   const payments: Maybe<Payment>[] = checkout?.payments || []
@@ -241,7 +249,6 @@ export const checkoutGetters = {
   getLineItemTaxTotal,
   getPickupItems,
   getShipItems,
-  getDeliveryItems,
   getProductId,
   getProductCode,
   getProductImage,
@@ -251,6 +258,7 @@ export const checkoutGetters = {
   getProductPrice,
   getProductSalePrice,
   getPurchaseLocation,
+  getFulfillmentLocationCodes,
   getPersonalDetails,
   getShippingDetails,
   getBillingDetails,

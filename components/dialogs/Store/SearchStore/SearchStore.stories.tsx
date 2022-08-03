@@ -21,7 +21,7 @@ Common.args = {
   spLocations: locationList || [],
   searchTerm: '',
   initialState: true,
-  selectedStore: 'ALB',
+  selectedStore: 'RICHMOND',
   setSelectedStore: () => undefined,
   setSearchTerm: (value: string) => value,
   onStoreByZipcode: (userEnteredValue: string) => userEnteredValue,

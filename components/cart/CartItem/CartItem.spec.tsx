@@ -46,7 +46,6 @@ describe('[components] - CartItem', () => {
     const card = screen.getByRole('group')
     const deleteButton = screen.getByRole('button', { name: 'item-delete' })
     await user.click(deleteButton)
-    const separator = screen.getByRole('separator')
 
     // assert
     expect(cartItemAction).toBeVisible()
@@ -56,6 +55,5 @@ describe('[components] - CartItem', () => {
     expect(card).toBeVisible()
     expect(deleteButton).toBeEnabled()
     expect(onDeleteMock).toHaveBeenCalledTimes(1)
-    expect(separator).toBeVisible()
   })
 })

@@ -40,6 +40,7 @@ const CartItemActionsMobile = (props: CartItemActionsMobileProps) => {
   return (
     <>
       <IconButton
+        sx={{ p: 0.5 }}
         aria-label={t('more')}
         id="long-button"
         aria-controls={open ? 'long-menu' : undefined}

@@ -29,9 +29,9 @@ export const useStoreLocations = (searchParams: { filter: string }): LocationTyp
     isLoading,
     isSuccess,
     isError,
-  } = useQuery(locationKeys.locationsParams(searchParams), () =>
-    Boolean(searchParams.filter) ? getStoreLocations(searchParams) : {}
-  )
+  } = useQuery(locationKeys.locationsParams(searchParams), () => getStoreLocations(searchParams), {
+    enabled: !!searchParams.filter,
+  })
 
   return { data, isLoading, isSuccess, isError }
 }

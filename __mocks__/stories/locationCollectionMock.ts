@@ -4,7 +4,7 @@ export const locationCollectionMock: { spLocations: LocationCollection } = {
   spLocations: {
     items: [
       {
-        code: 'ALB',
+        code: 'RICHMOND',
         fulfillmentTypes: [
           {
             code: 'DS',
@@ -15,13 +15,13 @@ export const locationCollectionMock: { spLocations: LocationCollection } = {
             name: 'In Store Pickup',
           },
         ],
-        name: 'Albuquerque',
+        name: 'Richmond',
         phone: '505-505-5055',
         address: {
           address1: '2100 Louisiana Blvd NE',
           address2: '',
-          cityOrTown: 'Albuquerque',
-          stateOrProvince: 'AZ',
+          cityOrTown: 'Richmond',
+          stateOrProvince: 'VA',
           postalOrZipCode: '87110',
         },
         regularHours: {

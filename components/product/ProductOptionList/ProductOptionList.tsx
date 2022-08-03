@@ -17,7 +17,7 @@ const ProductOptionList = (props: ProductOptionListProps) => {
     <>
       {options.map((option: CrProductOption) => (
         <ProductOption
-          key={option?.value}
+          key={`${option?.name}-${option.stringValue}`}
           option={option}
           variant={variant}
           fontWeight={fontWeight}

@@ -8,7 +8,7 @@ const location =
   (locationCollectionMock.spLocations?.items && locationCollectionMock.spLocations?.items[0]) || {}
 
 jest.mock('@/lib/helpers/cookieHelper', () => ({
-  decodeParseCookieValue: jest.fn(() => 'ALB'),
+  decodeParseCookieValue: jest.fn(() => 'RICHMOND'),
 }))
 
 describe('[hooks] usePurchaseLocation', () => {
