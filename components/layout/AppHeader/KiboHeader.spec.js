@@ -1,12 +1,18 @@
+/* eslint-disable @typescript-eslint/no-var-requires */
 import { composeStories } from '@storybook/testing-react'
 import { render, screen, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
-
 import '@testing-library/jest-dom'
 
 import * as stories from './KiboHeader.stories' // import all stories from the stories file
 
 const { Common, Mobile } = composeStories(stories)
+
+const useRouter = jest.spyOn(require('next/router'), 'useRouter')
+const push = jest.fn()
+useRouter.mockImplementation(() => ({
+  push,
+}))
 
 describe('[component] KiboHeader component', () => {
   it('should render the component', () => {
@@ -78,5 +84,15 @@ describe('[component] KiboHeader component', () => {
         name: /search-input/i,
       })
     ).toBeVisible()
+  })
+
+  it('should redirect to cart page when users clicks on cart icon', async () => {
+    const user = userEvent.setup()
+    render(<Common {...Common.args} />)
+
+    const cartIcon = screen.getByTestId('ShoppingCartIcon')
+    await user.click(cartIcon)
+
+    expect(push).toHaveBeenCalledWith('/cart')
   })
 })

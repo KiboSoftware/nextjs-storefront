@@ -207,7 +207,11 @@ const HeaderActions = (props: HeaderActionsProps) => {
 
   const openLoginModal = () => {
     setAuthError('')
-    if (!isAuthenticated) showModal({ Component: LoginDialog })
+    if (!isAuthenticated) {
+      showModal({ Component: LoginDialog })
+    } else {
+      router.push('/my-account')
+    }
   }
 
   const gotoCart = () => {

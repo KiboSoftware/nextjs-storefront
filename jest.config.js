@@ -10,6 +10,7 @@ module.exports = {
     '!**/node_modules/**',
     'hooks/**/*.{js,jsx,ts,tsx}',
     'pages/**/*.{js,jsx,ts,tsx}',
+    '!pages/_middleware.ts',
   ],
   moduleNameMapper: {
     // Handle CSS imports (with CSS modules)
