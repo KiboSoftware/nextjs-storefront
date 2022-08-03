@@ -20,6 +20,8 @@
     "prepare": "husky install"
   },
   "dependencies": {
+    "@contentstack/live-preview-utils": "^1.1.0",
+    "@contentstack/utils": "^1.1.2",
     "@emotion/cache": "latest",
     "@emotion/react": "latest",
     "@emotion/server": "latest",
@@ -30,6 +32,7 @@
     "@mui/icons-material": "^5.4.4",
     "@mui/material": "^5.8.3",
     "@testing-library/react-hooks": "^8.0.0",
+    "contentstack": "^3.15.3",
     "cookies-next": "^2.1.1",
     "core-js": "^3.24.0",
     "credit-card-type": "^9.1.0",

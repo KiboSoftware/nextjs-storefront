@@ -3,6 +3,7 @@ import Head from 'next/head'
 
 import nextI18NextConfig from '../next-i18next.config'
 import getCategoryTree from '@/lib/api/operations/get-category-tree'
+import { getHomePageCMSRes } from '@/lib/operations/get-page'
 
 import type { CategoryCollection } from '@/lib/gql/types'
 import type { NextPage, GetStaticPropsContext } from 'next'
@@ -23,7 +24,8 @@ export async function getStaticProps(context: GetStaticPropsContext) {
   }
 }
 
-const Home: NextPage = () => {
+const Home: NextPage = (props) => {
+  const result = getHomePageCMSRes()
   return (
     <div>
       <Head>
