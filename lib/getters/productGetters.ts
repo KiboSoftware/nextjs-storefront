@@ -153,6 +153,10 @@ const getVariationProductCodeOrProductCode = (product: ProductCustom): string =>
     : (product.productCode as string)
 }
 
+const getIsPackagedStandAlone = (product: ProductCustom): boolean => {
+  return product?.isPackagedStandAlone || true
+}
+
 const getProductDetails = (product: ProductCustom) => {
   const productOptions = getSegregatedOptions(product)
 
@@ -179,6 +183,7 @@ const getProductDetails = (product: ProductCustom) => {
     properties: getProperties(product) as ProductProperties[],
     isValidForAddToCart: validateAddToCart(product),
     productOptions,
+    isPackagedStandAlone: getIsPackagedStandAlone(product),
   }
 }
 const getProductFulfillmentOptions = (
@@ -228,6 +233,7 @@ export const productGetters = {
   getVariationProductCodeOrProductCode,
   handleProtocolRelativeUrl,
   getProductFulfillmentOptions,
+  getIsPackagedStandAlone,
   // grouped
   getProductDetails,
 }

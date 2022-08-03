@@ -16,7 +16,7 @@ import { LoginData } from '@/components/layout/Login/LoginContent/LoginContent'
 import type { RegisterAccountInputData } from '@/components/layout/RegisterAccount/Content/Content'
 import { useUserAccountRegistrationMutations, useUserMutations, useUserQueries } from '@/hooks'
 import { removeClientCookie, storeClientCookie } from '@/lib/helpers/cookieHelper'
-import { cartKeys, loginKeys } from '@/lib/react-query/queryKeys'
+import { cartKeys, loginKeys, wishlistKeys } from '@/lib/react-query/queryKeys'
 
 import type { CustomerAccount } from '@/lib/gql/types'
 
@@ -63,6 +63,7 @@ export const AuthContextProvider = ({ children }: AuthContextProviderProps) => {
     setCookieAndUser(account)
     queryClient.invalidateQueries(cartKeys.all)
     onSuccessCallBack && onSuccessCallBack()
+    queryClient.removeQueries(wishlistKeys.all)
   }
   // register user
   const createAccount = (params: RegisterAccountInputData, onSuccessCallBack?: () => void) => {

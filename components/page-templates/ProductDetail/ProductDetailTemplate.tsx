@@ -1,6 +1,8 @@
 import React from 'react'
 
 import { StarRounded } from '@mui/icons-material'
+import FavoriteBorderRoundedIcon from '@mui/icons-material/FavoriteBorderRounded'
+import FavoriteRoundedIcon from '@mui/icons-material/FavoriteRounded'
 import { Box, Grid, Rating, Button, Typography, Divider } from '@mui/material'
 import { useTranslation } from 'next-i18next'
 
@@ -20,7 +22,12 @@ import {
   ProductVariantSizeSelector,
 } from '@/components/product'
 import { useModalContext } from '@/context/ModalContext'
-import { useProductDetailTemplate, usePurchaseLocation, useCartMutation } from '@/hooks'
+import {
+  useProductDetailTemplate,
+  usePurchaseLocation,
+  useCartMutation,
+  useWishlist,
+} from '@/hooks'
 import { productGetters } from '@/lib/getters'
 import type { ProductCustom, BreadCrumb, PriceRange, LocationCustom } from '@/lib/types'
 
@@ -43,6 +50,8 @@ const ProductDetailTemplate = (props: ProductDetailTemplateProps) => {
   const { showModal, closeModal } = useModalContext()
   const { addToCart } = useCartMutation()
   const { data: purchaseLocation } = usePurchaseLocation()
+
+  const { addOrRemoveWishlistItem, checkProductInWishlist } = useWishlist()
 
   // Data hook
   const {
@@ -74,13 +83,19 @@ const ProductDetailTemplate = (props: ProductDetailTemplateProps) => {
     optionsVisibility,
     properties,
     isValidForAddToCart,
+    isPackagedStandAlone,
   } = productGetters.getProductDetails({
     ...currentProduct,
-    fulfillmentMethod: selectedFulfillmentOption.method,
-    purchaseLocationCode: selectedFulfillmentOption.location?.code as string,
+    fulfillmentMethod: selectedFulfillmentOption?.method,
+    purchaseLocationCode: selectedFulfillmentOption?.location?.code as string,
   })
   const fulfillmentOptions = productGetters.getProductFulfillmentOptions(product, {
-    name: selectedFulfillmentOption.location?.name,
+    name: selectedFulfillmentOption?.location?.name,
+  })
+
+  const isProductInWishlist = checkProductInWishlist({
+    productCode,
+    variationProductCode,
   })
 
   // methods
@@ -92,7 +107,7 @@ const ProductDetailTemplate = (props: ProductDetailTemplateProps) => {
           variationProductCode,
           fulfillmentMethod,
           options: updatedShopperEnteredValues,
-          purchaseLocationCode: selectedFulfillmentOption.location?.code,
+          purchaseLocationCode: selectedFulfillmentOption?.location?.code,
         },
         quantity,
       })
@@ -149,6 +164,20 @@ const ProductDetailTemplate = (props: ProductDetailTemplateProps) => {
           ? t<string>('common:currency', { val: priceRange?.upper?.salePrice })
           : null,
       },
+    }
+  }
+
+  const handleWishList = async () => {
+    try {
+      const addOrRemoveWishlistItemParams = {
+        productCode,
+        variationProductCode,
+        isPackagedStandAlone,
+        options: updatedShopperEnteredValues,
+      }
+      await addOrRemoveWishlistItem(addOrRemoveWishlistItemParams)
+    } catch (error) {
+      console.log('Error: add or remove wishlist item from PDP', error)
     }
   }
 
@@ -268,7 +297,7 @@ const ProductDetailTemplate = (props: ProductDetailTemplateProps) => {
           <Box paddingY={1}>
             <FulfillmentOptions
               fulfillmentOptions={fulfillmentOptions}
-              selected={selectedFulfillmentOption.method}
+              selected={selectedFulfillmentOption?.method}
               onFullfillmentOptionChange={(value: string) => handleFulfillmentOptionChange(value)}
               onStoreSetOrUpdate={() => handleProductPickupLocation()} // change store: Open storelocator modal. Should not change global store.
             />
@@ -285,7 +314,19 @@ const ProductDetailTemplate = (props: ProductDetailTemplateProps) => {
               {t('common:add-to-cart')}
             </Button>
             <Box display="flex" gap={3}>
-              <Button variant="contained" color="secondary" fullWidth>
+              <Button
+                variant="contained"
+                color="secondary"
+                fullWidth
+                onClick={handleWishList}
+                sx={{ padding: '0.375rem 0.5rem' }}
+              >
+                {isProductInWishlist ? (
+                  <FavoriteRoundedIcon sx={{ color: '#BB2500', marginRight: '14px' }} />
+                ) : (
+                  <FavoriteBorderRoundedIcon sx={{ color: '#cdcdcd', marginRight: '14px' }} />
+                )}
+
                 {t('common:add-to-wishlist')}
               </Button>
               <Button variant="contained" color="inherit" fullWidth>
@@ -298,7 +339,7 @@ const ProductDetailTemplate = (props: ProductDetailTemplateProps) => {
           <Divider />
         </Grid>
         <Grid item xs={12}>
-          {properties?.length && (
+          {properties?.length > 0 && (
             <Box paddingY={3}>
               <ProductInformation productFullDescription={description} options={properties} />
             </Box>

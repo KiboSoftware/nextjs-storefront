@@ -28,7 +28,18 @@ const setup = () => {
   }
 }
 
+let mockIsAuthenticated = true
+jest.mock('@/context/AuthContext', () => ({
+  useAuthContext: () => ({ isAuthenticated: mockIsAuthenticated }),
+}))
+
 describe('[component] - ProductDetailTemplate integration', () => {
+  beforeEach(() => {
+    jest.clearAllMocks()
+  })
+  afterEach(() => {
+    jest.clearAllMocks()
+  })
   it('should handle quantity selector ', async () => {
     const { user } = setup()
 
@@ -189,5 +200,33 @@ describe('[component] - ProductDetailTemplate integration', () => {
     })
 
     expect(addToCartButton).toBeDisabled()
+  })
+
+  it('should dispaly login when add to wishlist button clicks ', async () => {
+    mockIsAuthenticated = false
+    const { user } = setup()
+
+    const addToWishlistButton = screen.getByRole('button', {
+      name: 'common:add-to-wishlist',
+    })
+
+    await user.click(addToWishlistButton)
+
+    const title = screen.getByText('common:log-in')
+
+    expect(title).toBeVisible()
+  })
+
+  it('should open wishlist popover when logged in user clicks on add to wishlist button', async () => {
+    mockIsAuthenticated = true
+    const { user } = setup()
+
+    const addToWishlistButton = screen.getByRole('button', {
+      name: 'common:add-to-wishlist',
+    })
+
+    await user.click(addToWishlistButton)
+    const popover = await screen.findByTestId('wishlist-component')
+    await waitFor(() => expect(popover).toBeInTheDocument())
   })
 })
