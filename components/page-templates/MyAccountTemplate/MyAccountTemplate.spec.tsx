@@ -5,21 +5,9 @@ import '@testing-library/jest-dom'
 import { composeStories } from '@storybook/testing-react'
 import { render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
-import mediaQuery from 'css-mediaquery'
 
 import * as stories from './MyAccountTemplate.stories' // import all stories from the stories file
 const { Common } = composeStories(stories)
-
-const createMatchMedia = (width: number) => (query: string) => ({
-  matches: mediaQuery.match(query, { width }),
-  addListener: () => jest.fn(),
-  removeListener: () => jest.fn(),
-  media: query,
-  onchange: null,
-  addEventListener: jest.fn(),
-  removeEventListener: jest.fn(),
-  dispatchEvent: jest.fn(),
-})
 
 const FullWidthDividerMock = () => <div data-testid="full-width-divider-component" />
 jest.mock('../../common/FullWidthDivider/FullWidthDivider', () => FullWidthDividerMock)
@@ -66,27 +54,5 @@ describe('[component] - MyAccountTemplate', () => {
     await user.click(orderHistory)
 
     expect(push).toHaveBeenCalledWith('/my-account/order-history')
-  })
-
-  it('should render desktop view elements', async () => {
-    window.matchMedia = createMatchMedia(1000)
-
-    setup()
-    const fullWidthDividerComponent = screen.queryByTestId('full-width-divider-component')
-    const headingArray = screen.getAllByRole('heading', { level: 1 })
-    expect(fullWidthDividerComponent).not.toBeInTheDocument()
-    expect(headingArray[0]).toHaveTextContent('common:my-account')
-    expect(headingArray[1]).toHaveTextContent('order-details')
-  })
-
-  it('should render mobile view elements', async () => {
-    window.matchMedia = createMatchMedia(200)
-
-    setup()
-    const fullWidthDividerComponent = screen.queryAllByTestId('full-width-divider-component')
-    const headingArray = screen.getAllByRole('heading', { level: 2 })
-    expect(fullWidthDividerComponent.length).toEqual(7)
-    expect(headingArray[0]).toHaveTextContent('common:my-account')
-    expect(headingArray[1]).toHaveTextContent('order-details')
   })
 })
