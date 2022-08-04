@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 
 import { Stack, Button, Typography, SxProps } from '@mui/material'
 import { Theme } from '@mui/material/styles'
@@ -27,6 +27,8 @@ interface ShippingProps {
 
 const ShippingStep = (props: ShippingProps) => {
   const { checkout } = props
+
+  const shippingBlockRef = useRef()
 
   const contactProp = checkoutGetters.getShippingContact(checkout) as Contact
   const shipItems = checkoutGetters.getShipItems(checkout)
@@ -85,6 +87,8 @@ const ShippingStep = (props: ShippingProps) => {
     try {
       await updateShippingInfo(params)
       setIsShippingMethodSaved(true)
+      shippingBlockRef?.current &&
+        (shippingBlockRef.current as Element).scrollIntoView({ behavior: 'smooth' })
     } catch (error) {
       console.error(error)
     }
@@ -114,7 +118,7 @@ const ShippingStep = (props: ShippingProps) => {
   }, [isAddressFormValid, isShippingMethodSaved])
 
   return (
-    <Stack data-testid="checkout-shipping" gap={2}>
+    <Stack data-testid="checkout-shipping" gap={2} ref={shippingBlockRef}>
       <Typography variant="h2" component="h2" sx={{ fontWeight: 'bold' }}>
         {t('shipping')}
       </Typography>
