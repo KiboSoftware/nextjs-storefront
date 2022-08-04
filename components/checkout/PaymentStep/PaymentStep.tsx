@@ -367,48 +367,52 @@ const PaymentStep = (props: PaymentStepProps) => {
     )
   }
 
+  const handleInitialCardDetailsLoad = () => {
+    const savedInfo = accountDetailsGetters.getSavedPaymentAndBillingDetails(
+      customerCardsCollection,
+      customerContactsCollection
+    )
+
+    const defaultCard = accountDetailsGetters.getDefaultPaymentBillingMethod(savedInfo)
+    cardGetters.getCardId(defaultCard?.cardInfo) &&
+      setSelectedPaymentBillingRadio(defaultCard.cardInfo?.id as string)
+
+    const selectedCards = checkoutGetters.getSelectedPaymentMethods(
+      checkout,
+      PaymentType.CREDITCARD
+    )
+
+    selectedCards?.forEach((card) => {
+      const cardDetails = card?.billingInfo?.card
+      const billingAddress = card?.billingInfo?.billingContact
+      !savedInfo.some((each) => each.cardInfo?.id === cardDetails?.paymentServiceCardId) &&
+        savedInfo.push({
+          cardInfo: {
+            ...(cardDetails as Card),
+            cardNumberPart: cardDetails?.cardNumberPartOrMask,
+            id: cardDetails?.paymentServiceCardId,
+            contactId: 0,
+            paymentType: newPaymentMethod,
+          },
+          billingAddressInfo: {
+            ...billingAddress,
+          },
+        })
+
+      setSelectedPaymentBillingRadio(cardDetails?.paymentServiceCardId as string)
+    })
+
+    if (savedInfo.length) {
+      setSavedPaymentBillingDetails(savedInfo)
+      setNewPaymentMethod(PaymentType.CREDITCARD)
+    }
+  }
+
   // handle initial load of cards and contacts
   useEffect(() => {
     // handle saved payment methods in account
     if (isCustomerCardsSuccess && isCustomerContactsSuccess) {
-      const savedInfo = accountDetailsGetters.getSavedPaymentAndBillingDetails(
-        customerCardsCollection,
-        customerContactsCollection
-      )
-
-      const defaultCard = accountDetailsGetters.getDefaultPaymentBillingMethod(savedInfo)
-      cardGetters.getCardId(defaultCard?.cardInfo) &&
-        setSelectedPaymentBillingRadio(defaultCard.cardInfo?.id as string)
-
-      const selectedCards = checkoutGetters.getSelectedPaymentMethods(
-        checkout,
-        PaymentType.CREDITCARD
-      )
-
-      selectedCards?.forEach((card) => {
-        const cardDetails = card?.billingInfo?.card
-        const billingAddress = card?.billingInfo?.billingContact
-        !savedInfo.some((each) => each.cardInfo?.id === cardDetails?.paymentServiceCardId) &&
-          savedInfo.push({
-            cardInfo: {
-              ...(cardDetails as Card),
-              cardNumberPart: cardDetails?.cardNumberPartOrMask,
-              id: cardDetails?.paymentServiceCardId,
-              contactId: 0,
-              paymentType: newPaymentMethod,
-            },
-            billingAddressInfo: {
-              ...billingAddress,
-            },
-          })
-
-        setSelectedPaymentBillingRadio(cardDetails?.paymentServiceCardId as string)
-      })
-
-      if (savedInfo.length) {
-        setSavedPaymentBillingDetails(savedInfo)
-        setNewPaymentMethod(PaymentType.CREDITCARD)
-      }
+      handleInitialCardDetailsLoad()
     }
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
