@@ -1,5 +1,6 @@
-import { CartItemInput } from '../gql/types'
-import { AddToCartProductInput } from '@/hooks/mutations/useCartMutation/useCartMutation'
+import { AddToCartProductInput } from '@/hooks'
+
+import type { CartItemInput } from '../gql/types'
 
 export const buildAddToCartInput = (
   product: AddToCartProductInput,

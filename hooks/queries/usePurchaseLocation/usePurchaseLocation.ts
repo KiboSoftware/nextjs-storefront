@@ -19,7 +19,7 @@ interface LocationType {
 const { publicRuntimeConfig } = getConfig()
 const purchaseLocationCookieName = publicRuntimeConfig.storeLocationCookie
 
-const getPurchaseLocation = async (param: { filter: string }) => {
+const getPurchaseLocation = async (param: { filter: string } | undefined) => {
   const client = makeGraphQLClient()
   const response = await client.request({
     document: getSpLocationsQuery,
@@ -38,10 +38,14 @@ export const usePurchaseLocation = (): LocationType => {
       }
     : undefined
 
-  const { data = {}, isLoading, isSuccess, isError } = useQuery(
-    locationKeys.purchaseLocationParams(param),
-    () => (param ? getPurchaseLocation(param) : {})
-  )
+  const {
+    data = {},
+    isLoading,
+    isSuccess,
+    isError,
+  } = useQuery(locationKeys.purchaseLocationParams(param), () => getPurchaseLocation(param), {
+    enabled: !!param,
+  })
 
   return { data, isLoading, isSuccess, isError }
 }

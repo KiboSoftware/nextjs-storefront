@@ -6,7 +6,7 @@ export const cartItemMock: CartItemType = {
   product: {
     productCode: 'MS-BTL-002',
     variationProductCode: 'MS-BTL-002-8',
-    fulfillmentTypesSupported: ['DirectShip'],
+    fulfillmentTypesSupported: ['DirectShip', 'InStorePickup'],
     name: 'SoftBottle Water Bottle',
     description:
       'The taste-free Platypus Platy bottle with screw cap is an excellent option for bringing water on your backcountry adventures.<br>',

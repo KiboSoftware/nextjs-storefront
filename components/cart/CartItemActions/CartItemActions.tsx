@@ -1,19 +1,19 @@
-import { Box, CardActions, Link as MuiLink } from '@mui/material'
+import { Button, CardActions } from '@mui/material'
 import { useTranslation } from 'next-i18next'
-import Link from 'next/link'
 
 const styles = {
-  linkContainer: {
+  cardAction: {
     display: 'flex',
     alignItems: 'center',
-    pl: 1,
-    pb: 0,
+    justifyContent: 'flex-start',
+    p: '0.5rem 0',
   },
-  cardAction: {
-    p: 0,
-  },
-  link: {
-    pr: 2,
+  button: {
+    minWidth: 'auto',
+    lineHeight: 'initial',
+    color: 'text.primary',
+    justifyContent: 'flex-start',
+    mr: 1,
   },
 }
 
@@ -21,25 +21,19 @@ const CartItemActions = () => {
   const { t } = useTranslation('cart')
 
   return (
-    <Box sx={styles.linkContainer}>
+    <>
       <CardActions sx={styles.cardAction}>
-        <Link href="#" passHref>
-          <MuiLink underline="none" variant="body2" color="text.primary" sx={styles.link}>
-            {t('edit')}
-          </MuiLink>
-        </Link>
-        <Link href="#" passHref>
-          <MuiLink underline="none" variant="body2" color="text.primary" sx={styles.link}>
-            {t('save-for-later')}
-          </MuiLink>
-        </Link>
-        <Link href="#" passHref>
-          <MuiLink underline="none" variant="body2" color="text.primary" sx={styles.link}>
-            {t('add-to-favorites')}
-          </MuiLink>
-        </Link>
+        <Button size="small" sx={styles.button}>
+          {t('edit')}
+        </Button>
+        <Button size="small" sx={styles.button}>
+          {t('save-for-later')}
+        </Button>
+        <Button size="small" sx={styles.button}>
+          {t('add-to-favorites')}
+        </Button>
       </CardActions>
-    </Box>
+    </>
   )
 }
 

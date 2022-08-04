@@ -2,17 +2,20 @@ import React from 'react'
 
 import '@testing-library/jest-dom'
 import { composeStories } from '@storybook/testing-react'
-import { render, screen, waitFor, fireEvent, within, cleanup } from '@testing-library/react'
+import { render, screen, waitFor, fireEvent, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
+import { graphql } from 'msw'
 
+import { server } from '@/__mocks__/msw/server'
+import { fulfillmentOptionsMock } from '@/__mocks__/stories/fulfillmentOptionsMock'
 import { ProductCustomMock } from '@/__mocks__/stories/ProductCustomMock'
 import * as stories from '@/components/page-templates/ProductDetail/ProductDetailTemplate.stories' // import all stories from the stories file
 import { DialogRoot, ModalContextProvider } from '@/context'
 import { productGetters } from '@/lib/getters'
 
 const { Common } = composeStories(stories)
-
 const mockedProduct = ProductCustomMock
+const mockFulfillmentOptions = fulfillmentOptionsMock || []
 
 const setup = () => {
   const user = userEvent.setup()
@@ -162,7 +165,7 @@ describe('[component] - ProductDetailTemplate integration', () => {
     const { user } = setup()
 
     const shipRadio = screen.getByRole('radio', {
-      name: /ship to home/i,
+      name: new RegExp(`${mockFulfillmentOptions[0].label}`),
     })
 
     await user.click(shipRadio)
@@ -188,7 +191,7 @@ describe('[component] - ProductDetailTemplate integration', () => {
     const { user } = setup()
 
     const pickupRadio = screen.getByRole('radio', {
-      name: /Pickup in store/i,
+      name: new RegExp(`${mockFulfillmentOptions[1].label}`),
     })
 
     await user.click(pickupRadio)
@@ -228,5 +231,31 @@ describe('[component] - ProductDetailTemplate integration', () => {
     await user.click(addToWishlistButton)
     const popover = await screen.findByTestId('wishlist-component')
     await waitFor(() => expect(popover).toBeInTheDocument())
+  })
+
+  it('should throw error on add to cart', async () => {
+    server.resetHandlers(
+      graphql.mutation('addToCart', (_req, res, ctx) => {
+        return res(ctx.status(403))
+      }),
+      graphql.query('cart', (_req, res, ctx) => {
+        return res(ctx.status(500))
+      })
+    )
+    const { user } = setup()
+    const shipRadio = screen.getByRole('radio', {
+      name: new RegExp(`${mockFulfillmentOptions[0].label}`),
+    })
+
+    await user.click(shipRadio)
+    expect(shipRadio).toBeChecked()
+
+    const addToCartButton = screen.getByRole('button', {
+      name: /common:add-to-cart/i,
+    })
+    await user.click(addToCartButton)
+
+    const view = screen.queryByTestId('title-component')
+    expect(view).not.toBeInTheDocument()
   })
 })

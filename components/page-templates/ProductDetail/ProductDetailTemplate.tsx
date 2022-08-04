@@ -25,7 +25,7 @@ import { useModalContext } from '@/context/ModalContext'
 import {
   useProductDetailTemplate,
   usePurchaseLocation,
-  useCartMutation,
+  useCartMutationAddToCart,
   useWishlist,
 } from '@/hooks'
 import { productGetters } from '@/lib/getters'
@@ -48,7 +48,7 @@ const ProductDetailTemplate = (props: ProductDetailTemplateProps) => {
   const { product, breadcrumbs } = props
   const { t } = useTranslation(['product', 'common'])
   const { showModal, closeModal } = useModalContext()
-  const { addToCart } = useCartMutation()
+  const { addToCart } = useCartMutationAddToCart()
   const { data: purchaseLocation } = usePurchaseLocation()
 
   const { addOrRemoveWishlistItem, checkProductInWishlist } = useWishlist()
@@ -120,7 +120,9 @@ const ProductDetailTemplate = (props: ProductDetailTemplateProps) => {
           },
         })
       }
-    } catch (err) {}
+    } catch (err) {
+      console.log(err)
+    }
   }
 
   const handleFulfillmentOptionChange = (value: string) => {
