@@ -10,6 +10,8 @@ const { Common } = composeStories(stories)
 
 const AddressListMock = () => <div data-testid="address-list-component" />
 jest.mock('@/components/common/AddressList/AddressList', () => AddressListMock)
+const AddressFormMock = () => <div data-testid="address-form-component" />
+jest.mock('@/components/common/AddressForm/AddressForm', () => AddressFormMock)
 
 describe('[components] ShippingStep', () => {
   const setup = () => {
@@ -26,10 +28,12 @@ describe('[components] ShippingStep', () => {
 
     expect(stepperStatus).toBe('VALIDATE')
   })
-  it('should render AddressList', () => {
+  it('should render shippingStep component', () => {
     setup()
 
     const addressList = screen.getByTestId('address-list-component')
+    const addressForm = screen.getByTestId('address-form-component')
     expect(addressList).toBeInTheDocument()
+    expect(addressForm).toBeInTheDocument()
   })
 })
