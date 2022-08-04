@@ -8,7 +8,6 @@ import { userAddressResponse } from '@/__mocks__/stories/userAddressMock'
 import * as stories from '@/components/common/AddressList/AddressList.stories'
 
 const { Common, Radio, WithoutRadio } = composeStories(stories)
-const user = userEvent.setup()
 
 const onAddressSelectionMock = jest.fn()
 const setup = (params) => {

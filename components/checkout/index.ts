@@ -11,4 +11,3 @@ export { default as ShippingStep } from '@/components/checkout/ShippingStep/Ship
 export { default as OrderReview } from '@/components/checkout/OrderReview/OrderReview'
 export { default as OrderSummary } from '@/components/common/OrderSummary/OrderSummary'
 export { default as ShippingMethod } from '@/components/checkout/Shipping/OrderItems/ShippingMethod'
-export { default as AddressList } from '@/components/common/AddressList/AddressList'
