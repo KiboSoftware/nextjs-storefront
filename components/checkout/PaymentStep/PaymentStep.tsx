@@ -119,7 +119,6 @@ const PaymentStep = (props: PaymentStepProps) => {
   const { data: customerCardsCollection, isSuccess: isCustomerCardsSuccess } = useCustomerCards(
     user?.id as number
   )
-  console.log('dgsfgsdfg', customerCardsCollection.items?.length)
 
   const { data: customerContactsCollection, isSuccess: isCustomerContactsSuccess } =
     useCustomerContacts(user?.id as number)

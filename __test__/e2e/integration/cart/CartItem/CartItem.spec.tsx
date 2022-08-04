@@ -54,7 +54,7 @@ describe('[components] - CartItem Integration', () => {
   it('should handle fulfillment option selection', async () => {
     const { user, mockOnFulfillmentOptionChange } = setup()
     const radio = screen.getByRole('radio', {
-      name: /Pickup in store/i,
+      name: /Pickup/i,
     })
     await user.click(radio)
     expect(mockOnFulfillmentOptionChange).toBeCalled()

@@ -183,6 +183,10 @@ describe('[component] - ProductDetailTemplate integration', () => {
 
     await user.click(addToCartButton)
 
+    await waitFor(() => {
+      expect(screen.getByTestId('title-component')).toBeVisible()
+    })
+
     const view = screen.getByTestId('title-component')
 
     const dialogHeader = within(view).getByRole('heading', {
@@ -198,6 +202,9 @@ describe('[component] - ProductDetailTemplate integration', () => {
     const pickupRadio = screen.getByRole('radio', {
       name: new RegExp(`${mockFulfillmentOptions[1].shortName}`),
     })
+
+    await user.click(pickupRadio)
+
     expect(pickupRadio).toBeChecked()
 
     const addToCartButton = screen.getByRole('button', {
@@ -246,7 +253,7 @@ describe('[component] - ProductDetailTemplate integration', () => {
     )
     const { user } = setup()
     const shipRadio = screen.getByRole('radio', {
-      name: new RegExp(`${mockFulfillmentOptions[0].label}`),
+      name: new RegExp(`${mockFulfillmentOptions[0].shortName}`),
     })
 
     await user.click(shipRadio)

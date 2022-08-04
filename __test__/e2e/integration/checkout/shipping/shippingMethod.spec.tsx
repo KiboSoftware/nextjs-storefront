@@ -10,6 +10,9 @@ import * as stories from '@/components/checkout/Shipping/OrderItems/ShippingMeth
 
 import type { Maybe, CrOrderItem } from '@/lib/gql/types'
 
+const scrollIntoViewMock = jest.fn()
+window.HTMLElement.prototype.scrollIntoView = scrollIntoViewMock
+
 const { Common } = composeStories(stories)
 const onChangeMock = jest.fn()
 const onStoreLocatorClickMock = jest.fn()

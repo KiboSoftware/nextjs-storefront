@@ -14,6 +14,9 @@ const { Common } = composeStories(stories)
 const onShippingMethodChangeMock = jest.fn()
 const onStoreLocatorClickMock = jest.fn()
 
+const scrollIntoViewMock = jest.fn()
+window.HTMLElement.prototype.scrollIntoView = scrollIntoViewMock
+
 const KiboSelectMock = () => <div data-testid="kibo-select-component" />
 jest.mock('@/components/common/KiboSelect/KiboSelect', () => KiboSelectMock)
 
