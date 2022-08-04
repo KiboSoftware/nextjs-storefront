@@ -25,4 +25,4 @@ beforeAll(() => server.listen())
 afterEach(() => server.resetHandlers())
 afterAll(() => server.close())
 
-jest.setTimeout(15000)
+jest.setTimeout(60000)

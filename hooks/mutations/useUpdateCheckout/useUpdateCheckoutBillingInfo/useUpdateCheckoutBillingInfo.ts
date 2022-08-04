@@ -19,7 +19,7 @@ const updateBillingInfo = async (params: UpdateBillingInfoInput) => {
     variables: params,
   })
 
-  return response?.checkout
+  return response?.updateOrderBillingInfo
 }
 
 export const useUpdateCheckoutBillingInfo = () => {

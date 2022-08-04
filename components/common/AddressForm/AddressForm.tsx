@@ -114,6 +114,7 @@ const AddressForm = (props: AddressFormProps) => {
       }}
       noValidate
       autoComplete="off"
+      data-testid="address-form"
     >
       <Grid container rowSpacing={1} columnSpacing={{ md: 4 }}>
         <Grid item xs={12} md={6}>

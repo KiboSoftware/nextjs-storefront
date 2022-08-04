@@ -54,7 +54,7 @@ const getOrderPayments = (order: Order) =>
   order?.payments?.map((payment) => {
     return {
       ...payment,
-      billingInfo: getOrderPaymentBillingInfo(order.billingInfo as BillingInfo),
+      billingInfo: getOrderPaymentBillingInfo(payment?.billingInfo as BillingInfo),
     }
   })
 
@@ -66,11 +66,6 @@ const getShippedTo = (order: Order) =>
 const getShippingAddress = (order: Order) => order?.fulfillmentInfo?.fulfillmentContact
 
 const getBillingAddress = (order: Order) => order?.billingInfo?.billingContact
-
-const getCardLastFourDigits = (card: PaymentCard) => {
-  const cardNumberPartOrMask = getOrderPaymentCardDetails(card).cardNumberPartOrMask as string
-  return cardNumberPartOrMask?.slice(cardNumberPartOrMask.length - 4, cardNumberPartOrMask.length)
-}
 
 const getCardExpireMonth = (card: PaymentCard): number =>
   getOrderPaymentCardDetails(card).expireMonth as number
@@ -111,7 +106,6 @@ export const orderGetters = {
   getShippedTo,
   getShippingAddress,
   getBillingAddress,
-  getCardLastFourDigits,
   getCardExpireMonth,
   getCardExpireYear,
   getOrderDetails,

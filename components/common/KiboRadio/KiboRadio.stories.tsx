@@ -7,14 +7,17 @@ import KiboRadio from './KiboRadio'
 const radioOptions = [
   {
     label: 'Radio Option 1',
+    name: 'Radio Option 1',
     value: 'radio-1',
   },
   {
     label: 'Radio Option 2',
+    name: 'Radio Option 2',
     value: 'radio-2',
   },
   {
     label: 'Radio Option 3',
+    name: 'Radio Option 3',
     value: 'radio-3',
   },
 ]

@@ -19,10 +19,10 @@ const updatePaymentMethod = async (params: PaymentMethodInput) => {
     variables: params,
   })
 
-  return response?.checkout
+  return response?.createOrderPaymentAction
 }
 
-export const useUpdateCheckoutPaymentMethod = () => {
+export const useCreateCheckoutPaymentMethod = () => {
   const queryClient = useQueryClient()
 
   return useMutation(updatePaymentMethod, {

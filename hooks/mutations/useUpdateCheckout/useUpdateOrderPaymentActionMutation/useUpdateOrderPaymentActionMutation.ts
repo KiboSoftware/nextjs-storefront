@@ -20,7 +20,7 @@ const updateOrderPaymentActionMutation = async (params: UpdateOrderPaymentAction
     variables: params,
   })
 
-  return response?.checkout
+  return response?.createOrderPaymentPaymentAction
 }
 
 export const useUpdateOrderPaymentActionMutation = () => {

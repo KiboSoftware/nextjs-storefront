@@ -17,4 +17,10 @@ export const Common = Template.bind({})
 
 Common.args = {
   onSaveCardData: (cardData: CardForm) => cardData,
+  setValidateForm: (isValidForm: boolean) => {
+    console.log(isValidForm)
+  },
+  onFormStatusChange: (saveCardData) => {
+    console.log(saveCardData)
+  },
 }

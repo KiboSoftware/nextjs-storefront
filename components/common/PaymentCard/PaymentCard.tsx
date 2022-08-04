@@ -24,9 +24,9 @@ const PaymentCard = (props: PaymentCardDetailsViewProps) => {
           {title}
         </Typography>
       )}
-      <Box display="flex" pt={1} gap={3}>
-        <Box minWidth={32}>
-          <KiboImage src={VISA} alt={cardType} width={32} height={24} />
+      <Box display="flex" pt={1} gap={2}>
+        <Box minWidth={45}>
+          <KiboImage src={VISA} alt={cardType} width={45} height={35} />
         </Box>
         <Box>
           <Box display="flex">

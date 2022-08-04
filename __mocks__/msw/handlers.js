@@ -1,13 +1,17 @@
-import { graphql } from 'msw'
+import { graphql, rest } from 'msw'
 
 import { orderMock, shippingRateMock } from '../stories'
 import { cartItemMock } from '../stories/cartItemMock'
 import { cartMock } from '../stories/cartMock'
 import { categoryTreeDataMock } from '../stories/categoryTreeDataMock'
 import { configuredProductMock } from '../stories/configuredProductMock'
+import { createOrderPaymentActionMock } from '../stories/createOrderPaymentActionMock'
+import { customerAccountCardsMock } from '../stories/customerAccountCardsMock'
+import { getUserAddressesMock } from '../stories/getUserAddressesMock'
 import { locationCollectionMock } from '../stories/locationCollectionMock'
 import { productSearchResultMock } from '../stories/productSearchResultMock'
 import { searchSuggestionMock } from '../stories/searchSuggestionResultMock'
+import { updateOrderBillingInfoMock } from '../stories/updateOrderBillingInfoMock'
 import { userMock, loginUserMock, registerUserMock } from '../stories/userMock'
 import { wishlistMock } from '../stories/wishlistMock'
 
@@ -39,6 +43,25 @@ export const checkoutHandlers = [
   }),
 
   // Payment Step
+  graphql.mutation('setBillingInformation', (_req, res, ctx) => {
+    return res(ctx.data(updateOrderBillingInfoMock))
+  }),
+
+  graphql.mutation('addPaymentMethod', (_req, res, ctx) => {
+    return res(ctx.data(createOrderPaymentActionMock))
+  }),
+
+  graphql.query('customerAccountCards', (_req, res, ctx) => {
+    return res(ctx.data(customerAccountCardsMock))
+  }),
+
+  graphql.query('getUserAddresses', (_req, res, ctx) => {
+    return res(ctx.data(getUserAddressesMock))
+  }),
+
+  // graphql.mutation('createOrderPaymentPaymentAction', (_req, res, ctx) => {
+  //   return res(ctx.data(shippingRateMock))
+  // })
 
   // Order Reivew Step
 ]

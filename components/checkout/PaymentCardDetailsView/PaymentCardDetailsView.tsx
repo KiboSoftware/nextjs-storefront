@@ -37,6 +37,7 @@ const PaymentCardDetailsView = (props: PaymentCardDetailsViewProps) => {
   const radioOptions = [
     {
       value: cardNumberPart as string,
+      name: cardNumberPart as string,
       label: <PaymentCard {...paymentCardProps} />,
     },
   ]

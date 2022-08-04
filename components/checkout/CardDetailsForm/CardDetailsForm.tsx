@@ -78,6 +78,7 @@ const CardDetailsForm = (props: CardDetailsFormProps) => {
   useEffect(() => {
     if (onFormStatusChange) onFormStatusChange(isValid)
     if (validateForm) handleSubmit(onValid, onInvalidForm)()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isValid, validateForm])
 
   return (

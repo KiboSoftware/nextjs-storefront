@@ -25,3 +25,12 @@ Common.args = {
   postalOrZipCode: '78727',
   stateOrProvince: 'Texas',
 }
+
+export const Radio = Template.bind({})
+
+Radio.args = {
+  ...Common.args,
+  radio: true,
+  displayRowDirection: false,
+  displayTitle: false,
+}

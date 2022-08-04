@@ -22,13 +22,13 @@ import {
   useCustomerContacts,
   usePaymentTypes,
   useUpdateCheckoutBillingInfo,
-  useUpdateCheckoutPaymentMethod,
+  useCreateCheckoutPaymentMethod,
   useUpdateOrderPaymentActionMutation,
 } from '@/hooks'
 import { PaymentType } from '@/lib/constants'
 import { billingGetters, cardGetters, checkoutGetters, accountDetailsGetters } from '@/lib/getters'
+import { tokenizeCreditCardPayment } from '@/lib/helpers'
 import { buildCardPaymentActionForCheckoutInput } from '@/lib/helpers/buildPaymentActionForCheckoutInput'
-import { tokenizeCreditCardPayment } from '@/lib/helpers/credit-card'
 import type {
   Address,
   CardForm,
@@ -119,11 +119,13 @@ const PaymentStep = (props: PaymentStepProps) => {
   const { data: customerCardsCollection, isSuccess: isCustomerCardsSuccess } = useCustomerCards(
     user?.id as number
   )
+  console.log('dgsfgsdfg', customerCardsCollection.items?.length)
+
   const { data: customerContactsCollection, isSuccess: isCustomerContactsSuccess } =
     useCustomerContacts(user?.id as number)
 
   // update checkout payment and billing info
-  const updateCheckoutPaymentMethod = useUpdateCheckoutPaymentMethod()
+  const createOrderPaymentMethod = useCreateCheckoutPaymentMethod()
   const updateCheckoutBillingInfo = useUpdateCheckoutBillingInfo()
   const updateOrderPaymentAction = useUpdateOrderPaymentActionMutation()
 
@@ -201,10 +203,10 @@ const PaymentStep = (props: PaymentStepProps) => {
   }
 
   const shouldShowPreviouslySavedPayments = () => {
-    if (!isAuthenticated) return false
-
-    if (isAuthenticated && !isAddingNewPayment && Boolean(savedPaymentBillingDetails?.length))
-      return true
+    if (Boolean(savedPaymentBillingDetails?.length)) {
+      return isAddingNewPayment ? false : true
+    }
+    return false
   }
 
   const shouldShowPaymentMethodOptions = () => {
@@ -303,7 +305,7 @@ const PaymentStep = (props: PaymentStepProps) => {
 
     if (checkout?.id) {
       paymentAction = { ...paymentAction, actionName: '' }
-      await updateCheckoutPaymentMethod.mutateAsync({ orderId: checkout.id, paymentAction })
+      await createOrderPaymentMethod.mutateAsync({ orderId: checkout.id, paymentAction })
       await updateCheckoutBillingInfo.mutateAsync({
         orderId: checkout.id,
         billingInfoInput: { ...paymentAction.newBillingInfo },
@@ -347,6 +349,7 @@ const PaymentStep = (props: PaymentStepProps) => {
   const getSavedPaymentMethodView = (card: PaymentAndBilling): React.ReactNode => {
     return (
       <SavedPaymentMethodView
+        key={card?.cardInfo?.id as string}
         radio
         displayRowDirection={false}
         displayTitle={false}
@@ -386,18 +389,19 @@ const PaymentStep = (props: PaymentStepProps) => {
       selectedCards?.forEach((card) => {
         const cardDetails = card?.billingInfo?.card
         const billingAddress = card?.billingInfo?.billingContact
-        savedInfo.push({
-          cardInfo: {
-            ...(cardDetails as Card),
-            cardNumberPart: cardDetails?.cardNumberPartOrMask,
-            id: cardDetails?.paymentServiceCardId,
-            contactId: 0,
-            paymentType: newPaymentMethod,
-          },
-          billingAddressInfo: {
-            ...billingAddress,
-          },
-        })
+        !savedInfo.some((each) => each.cardInfo?.id === cardDetails?.paymentServiceCardId) &&
+          savedInfo.push({
+            cardInfo: {
+              ...(cardDetails as Card),
+              cardNumberPart: cardDetails?.cardNumberPartOrMask,
+              id: cardDetails?.paymentServiceCardId,
+              contactId: 0,
+              paymentType: newPaymentMethod,
+            },
+            billingAddressInfo: {
+              ...billingAddress,
+            },
+          })
 
         setSelectedPaymentBillingRadio(cardDetails?.paymentServiceCardId as string)
       })
@@ -431,7 +435,6 @@ const PaymentStep = (props: PaymentStepProps) => {
 
   useEffect(() => {
     if (stepStatus === STEP_STATUS.SUBMIT) {
-      // if(checkout)
       saveCardDataToOrder()
       setStepStatusComplete()
       setStepNext()
@@ -447,7 +450,7 @@ const PaymentStep = (props: PaymentStepProps) => {
 
       {shouldShowPreviouslySavedPayments() && (
         <>
-          <Stack gap={2} width="100%">
+          <Stack gap={2} width="100%" data-testid="saved-payment-methods">
             {defaultCustomerAccountCard.cardInfo?.id && (
               <>
                 <Typography variant="h4" fontWeight={'bold'}>

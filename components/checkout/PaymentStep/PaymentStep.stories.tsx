@@ -3,6 +3,7 @@ import React from 'react'
 import { ComponentStory, ComponentMeta } from '@storybook/react'
 
 import PaymentStep from './PaymentStep'
+import { orderMock } from '@/__mocks__/stories'
 import { CheckoutStepProvider } from '@/context/CheckoutStepContext/CheckoutStepContext'
 
 const steps = ['details', 'shipping', 'payment', 'review']
@@ -25,5 +26,5 @@ const Template: ComponentStory<typeof PaymentStep> = (args) => <PaymentStep {...
 export const Common = Template.bind({})
 
 Common.args = {
-  contact: undefined,
+  checkout: orderMock.checkout,
 }
