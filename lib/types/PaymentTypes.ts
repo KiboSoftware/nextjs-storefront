@@ -64,7 +64,7 @@ export interface ContactForm {
 }
 export interface Address {
   contact: ContactForm
-  isBillingAddressValid: boolean
+  isAddressValid?: boolean
   isSameBillingShippingAddress?: boolean
 }
 

@@ -8,12 +8,12 @@ import PaymentCard from '@/components/common/PaymentCard/PaymentCard'
 interface PaymentCardDetailsViewProps {
   radioGroupTitle?: string
   withoutRadioTitle?: string
-  cardNumberPart?: string
-  expireMonth?: number
-  expireYear?: number
+  cardNumberPart: string
+  expireMonth: number
+  expireYear: number
   radio?: boolean
   selected?: string
-  onPaymentCardSelection?: (value: string) => void | null
+  onPaymentCardSelection?: (value: string) => void
 }
 
 const PaymentCardDetailsView = (props: PaymentCardDetailsViewProps) => {
@@ -29,9 +29,9 @@ const PaymentCardDetailsView = (props: PaymentCardDetailsViewProps) => {
   } = props
 
   const paymentCardProps = {
-    cardNumberPart: cardNumberPart,
-    expireMonth: expireMonth,
-    expireYear: expireYear,
+    cardNumberPart: cardNumberPart as string,
+    expireMonth: expireMonth as number,
+    expireYear: expireYear as number,
   }
 
   const radioOptions = [
@@ -49,7 +49,7 @@ const PaymentCardDetailsView = (props: PaymentCardDetailsViewProps) => {
           title={radioGroupTitle}
           radioOptions={radioOptions}
           selected={selected}
-          onChange={(value) => (onPaymentCardSelection ? onPaymentCardSelection(value) : null)}
+          onChange={(value) => onPaymentCardSelection && onPaymentCardSelection(value)}
         />
       )}
       {!radio && <PaymentCard title={withoutRadioTitle} {...paymentCardProps} />}

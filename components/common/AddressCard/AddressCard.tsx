@@ -1,6 +1,5 @@
 import { Typography, Box } from '@mui/material'
 import { Variant } from '@mui/material/styles/createTypography'
-import { useTranslation } from 'next-i18next'
 
 import type { CrAddress } from '@/lib/gql/types'
 

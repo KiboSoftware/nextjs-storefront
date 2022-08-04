@@ -103,7 +103,7 @@ const initialBillingAddressData: Address = {
     },
   },
   isSameBillingShippingAddress: false,
-  isBillingAddressValid: false,
+  isAddressValid: false,
 }
 
 const PaymentStep = (props: PaymentStepProps) => {
@@ -230,7 +230,7 @@ const PaymentStep = (props: PaymentStepProps) => {
   }
 
   const isAddPaymentMethodButtonDisabled = () => {
-    return !(billingFormAddress.isBillingAddressValid && cardFormDetails.isCardDetailsValidated)
+    return !(billingFormAddress.isAddressValid && cardFormDetails.isCardDetailsValidated)
   }
 
   const cancelAddingNewPaymentMethod = () => {
@@ -551,7 +551,7 @@ const PaymentStep = (props: PaymentStepProps) => {
             validateForm={validateForm}
             setValidateForm={setValidateForm}
             onFormStatusChange={(isValid: boolean) =>
-              setBillingFormAddress({ ...billingFormAddress, isBillingAddressValid: isValid })
+              setBillingFormAddress({ ...billingFormAddress, isAddressValid: isValid })
             }
           />
           <Stack pl={1} gap={2} sx={{ width: { xs: '100%', md: '50%' } }}>

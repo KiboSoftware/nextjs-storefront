@@ -6,9 +6,9 @@ import VISA from '@/assets/visa.svg'
 
 interface PaymentCardDetailsViewProps {
   title?: string
-  cardNumberPart?: string
-  expireMonth?: number
-  expireYear?: number
+  cardNumberPart: string
+  expireMonth: number
+  expireYear: number
   cardType?: string
   radio?: boolean
 }

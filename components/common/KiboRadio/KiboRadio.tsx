@@ -13,7 +13,7 @@ import {
 interface KiboRadioProps {
   title?: string
   selected?: string
-  align?: string
+  align?: 'baseline' | 'center'
   radioOptions: {
     label: string | number | ReactElement<any, string | JSXElementConstructor<any>>
     value: string
