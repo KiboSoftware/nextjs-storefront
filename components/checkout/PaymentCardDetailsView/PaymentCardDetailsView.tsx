@@ -29,15 +29,15 @@ const PaymentCardDetailsView = (props: PaymentCardDetailsViewProps) => {
   } = props
 
   const paymentCardProps = {
-    cardNumberPart: cardNumberPart as string,
-    expireMonth: expireMonth as number,
-    expireYear: expireYear as number,
+    cardNumberPart: cardNumberPart,
+    expireMonth: expireMonth,
+    expireYear: expireYear,
   }
 
   const radioOptions = [
     {
-      value: cardNumberPart as string,
-      name: cardNumberPart as string,
+      value: cardNumberPart,
+      name: cardNumberPart,
       label: <PaymentCard {...paymentCardProps} />,
     },
   ]

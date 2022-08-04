@@ -51,14 +51,6 @@ export const checkoutHandlers = [
     return res(ctx.data(createOrderPaymentActionMock))
   }),
 
-  graphql.query('customerAccountCards', (_req, res, ctx) => {
-    return res(ctx.data(customerAccountCardsMock))
-  }),
-
-  graphql.query('getUserAddresses', (_req, res, ctx) => {
-    return res(ctx.data(getUserAddressesMock))
-  }),
-
   graphql.mutation('createOrderPaymentPaymentAction', (_req, res, ctx) => {
     return res(
       ctx.data({
@@ -68,6 +60,16 @@ export const checkoutHandlers = [
   }),
 
   // Order Reivew Step
+]
+
+export const accountHandlers = [
+  graphql.query('customerAccountCards', (_req, res, ctx) => {
+    return res(ctx.data(customerAccountCardsMock))
+  }),
+
+  graphql.query('getUserAddresses', (_req, res, ctx) => {
+    return res(ctx.data(getUserAddressesMock))
+  }),
 ]
 
 export const productHandlers = [
@@ -189,4 +191,5 @@ export const handlers = [
   ...cartHandlers,
   ...storeHandlers,
   ...wishlistHandlers,
+  ...accountHandlers,
 ]

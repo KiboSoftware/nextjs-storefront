@@ -75,8 +75,7 @@ const AddressForm = (props: AddressFormProps) => {
     shouldFocusError: true,
   })
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const [saveAddress, setSaveAddress] = useState<boolean>(false)
+  const [_, setSaveAddress] = useState<boolean>(false)
 
   const { t } = useTranslation('checkout')
 
