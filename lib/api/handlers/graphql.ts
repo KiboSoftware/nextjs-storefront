@@ -7,12 +7,19 @@ import type { NextApiRequest, NextApiResponse } from 'next'
 export default async function graphQLHandler(req: NextApiRequest, res: NextApiResponse) {
   try {
     const { query, variables } = req.body
-
     const { userClaims, authTicket, authCookieName, isNewAuthTicket } =
       await getUserClaimsFromRequest(req)
-    if (isNewAuthTicket)
-      res.setHeader('Set-Cookie', authCookieName + '=' + prepareSetCookieValue(authTicket))
     const response = await fetcher({ query, variables }, { userClaims })
+    if (req.body.operationName === 'login') {
+      res.setHeader('Set-Cookie', authCookieName + '=;max-age=0')
+    }
+    if (isNewAuthTicket && req.body.operationName === 'addToCart') {
+      // first time customer go for add to cart
+      res.setHeader(
+        'Set-Cookie',
+        authCookieName + '=' + prepareSetCookieValue(authTicket) + ';path=/'
+      )
+    }
 
     res.status(200).json(response)
   } catch (error) {
