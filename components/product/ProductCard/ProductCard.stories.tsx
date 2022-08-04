@@ -56,3 +56,12 @@ LoadingProductCard.args = {
   price: '$19.99',
   isLoading: true,
 }
+
+export const Wishlist = Template.bind({})
+Wishlist.args = {
+  imageUrl: `https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR-FMCFLCcOwFxZ3FNt8RKne3iqrwqY8OOnCw&usqp=CAU`,
+  link: '/product/test-123',
+  price: '$19.98',
+  title: 'This is a product',
+  isShopNow: true,
+}
