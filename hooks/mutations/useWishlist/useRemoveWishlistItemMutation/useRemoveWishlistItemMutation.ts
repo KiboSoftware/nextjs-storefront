@@ -4,7 +4,7 @@ import { makeGraphQLClient } from '@/lib/gql/client'
 import { deleteWishlistItemMutation } from '@/lib/gql/mutations'
 import { buildRemoveWishlistItemInput } from '@/lib/helpers'
 import { wishlistKeys } from '@/lib/react-query/queryKeys'
-import type { RemoveWishlistItemInput } from '@/lib/types'
+import type { RemoveWishlistItemInput, WishlistHookParams } from '@/lib/types'
 
 const removeWishlistItem = async (props: RemoveWishlistItemInput) => {
   const client = makeGraphQLClient()
@@ -18,13 +18,23 @@ const removeWishlistItem = async (props: RemoveWishlistItemInput) => {
   return response?.deleteWishlistItem
 }
 
-export const useRemoveWishlistItemMutation = () => {
+export const useRemoveWishlistItemMutation = (params?: WishlistHookParams) => {
   const queryClient = useQueryClient()
-
   return {
     removeWishlistItem: useMutation(removeWishlistItem, {
       onSuccess: () => {
-        queryClient.removeQueries(wishlistKeys.all)
+        const cleanTimeout = (cleanTimeoutId: any) => {
+          clearTimeout(cleanTimeoutId)
+        }
+
+        if (params?.isRemovedFromWishlist) {
+          const timeoutId = setTimeout(() => {
+            queryClient.invalidateQueries(wishlistKeys.all)
+            cleanTimeout(timeoutId)
+          }, 1000)
+        } else {
+          queryClient.invalidateQueries(wishlistKeys.all)
+        }
       },
     }),
   }

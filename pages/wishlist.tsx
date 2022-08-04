@@ -4,7 +4,6 @@ import getConfig from 'next/config'
 import { LoginDialog } from '@/components/layout'
 import { WishlistTemplate } from '@/components/page-templates'
 import { useAuthContext } from '@/context'
-import { useWishlistQueries } from '@/hooks'
 import { decodeParseCookieValue } from '@/lib/helpers/cookieHelper'
 
 import type { NextPage, GetServerSidePropsContext } from 'next'
@@ -27,12 +26,11 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
 
 const WishlistPage: NextPage = (props: any) => {
   const { isAuthenticated: serverSideIsAuthenticated } = props
-  const { data: wishlists } = useWishlistQueries()
   const { isAuthenticated, user: customerAccount } = useAuthContext()
 
   if (!serverSideIsAuthenticated && !isAuthenticated) return <LoginDialog />
 
-  return <WishlistTemplate {...props} wishlists={wishlists} customerAccount={customerAccount} />
+  return <WishlistTemplate {...props} customerAccount={customerAccount} />
 }
 
 export default WishlistPage
