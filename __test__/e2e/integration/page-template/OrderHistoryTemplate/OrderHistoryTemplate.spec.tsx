@@ -4,11 +4,11 @@ import { composeStories } from '@storybook/testing-react'
 import { render, screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 
-import * as stories from '@/components/order/OrderHistory/OrderHistory.stories'
+import * as stories from '@/components/page-templates/OrderHistoryTemplate/OrderHistoryTemplate.stories'
 
 const { Common } = composeStories(stories)
 
-describe('[component] - OrderHistory', () => {
+describe('[component] - OrderHistoryTemplate', () => {
   it('should display ViewOrderDetails component when user clicks on any Order Item', async () => {
     const user = userEvent.setup()
     render(<Common {...Common?.args} />)

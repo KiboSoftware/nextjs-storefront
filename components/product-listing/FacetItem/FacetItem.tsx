@@ -11,6 +11,9 @@ interface FacetItemProps {
   label: string
   count: number
   isApplied: boolean
+  isElementVisible?: boolean
+  isUpdateRoute?: boolean
+  onFacetItemSelection?: (selectedFacetItem: string, isApplied: boolean) => void
 }
 
 // MUI
@@ -28,12 +31,23 @@ const style = {
 
 // Component
 const FacetItem = (props: FacetItemProps) => {
-  const { filterValue, label: facetItemLabel, count = 0, isApplied = false } = props
+  const {
+    filterValue,
+    label: facetItemLabel,
+    count = 0,
+    isApplied = false,
+    isElementVisible = true,
+    isUpdateRoute = true,
+    onFacetItemSelection,
+  } = props
   const { updateRoute } = useUpdateRoutes()
 
   const handleChange = () => {
-    updateRoute(filterValue)
+    isUpdateRoute ? updateRoute(filterValue) : handleFacetSelection(filterValue)
   }
+
+  const handleFacetSelection = (selectedFacetItem: string) =>
+    onFacetItemSelection && onFacetItemSelection(selectedFacetItem, isApplied)
 
   return (
     <Stack
@@ -48,9 +62,11 @@ const FacetItem = (props: FacetItemProps) => {
         label={facetItemLabel ? facetItemLabel : ''}
         control={<Checkbox size="small" checked={isApplied} onChange={handleChange} />}
       />
-      <FormLabel data-testid="count" aria-label="facet-item-label" sx={{ ...style.formLabel }}>
-        ({count})
-      </FormLabel>
+      {isElementVisible && (
+        <FormLabel data-testid="count" aria-label="facet-item-label" sx={{ ...style.formLabel }}>
+          ({count})
+        </FormLabel>
+      )}
     </Stack>
   )
 }

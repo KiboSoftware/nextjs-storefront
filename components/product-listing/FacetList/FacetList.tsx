@@ -14,8 +14,11 @@ interface FacetListProps {
   facetList?: FacetType[]
   initialItemsToShow?: number
   appliedFilters: FacetValue[]
+  isElementVisible?: boolean
+  isUpdateRoute?: boolean
   onFilterByClose: () => void
   onRemoveSelectedTile: (tile: string) => void
+  onFacetItemSelection?: (selectedFacetItems: string) => void
 }
 
 const styles = {
@@ -41,10 +44,13 @@ const styles = {
 const FacetList = (props: FacetListProps) => {
   const {
     facetList = [],
-    onFilterByClose,
-    onRemoveSelectedTile,
     appliedFilters,
     initialItemsToShow = 6,
+    isElementVisible = true,
+    isUpdateRoute = true,
+    onFilterByClose,
+    onRemoveSelectedTile,
+    onFacetItemSelection,
   } = props
 
   const { t } = useTranslation('common')
@@ -76,6 +82,9 @@ const FacetList = (props: FacetListProps) => {
               numberOfItemsToShow={initialItemsToShow}
               label={facet?.label}
               values={facet?.values}
+              isElementVisible={isElementVisible}
+              isUpdateRoute={isUpdateRoute}
+              onFacetItemSelection={onFacetItemSelection}
             />
           ))}
       </Stack>

@@ -1,7 +1,8 @@
+import { FacetListForHistory, FacetTypeForHistory } from '../constants'
 import { buildBreadcrumbs, uiHelpers } from '@/lib/helpers'
 import type { BreadCrumb, FacetResultsData } from '@/lib/types'
 
-import type { Facet, PrCategory } from '@/lib/gql/types'
+import type { Facet, FacetValue, PrCategory } from '@/lib/gql/types'
 
 interface SortOptionType {
   value: string
@@ -39,8 +40,39 @@ const getSortOptions = (facetResultData: FacetResultsData, sortOptions: SortOpti
   return { options, selected }
 }
 
+const getSelectedFacetItems = (facetList: FacetValue[]) => {
+  const facetItemValues = Array.from(
+    facetList.reduce((set, item) => {
+      if (item?.isApplied) {
+        set.add(item?.filterValue)
+      }
+      return set
+    }, new Set())
+  )
+  return facetItemValues.join(',')
+}
+
+const getFacetListByQueryFilter = (filters: string[]) => {
+  const facetList = [...FacetListForHistory]
+
+  facetList.map((facet) => {
+    filters.some((filter) => filter === facet.filterValue)
+      ? (facet.isApplied = true)
+      : (facet.isApplied = false)
+  })
+  return facetList
+}
+
+const getFacetTypeForHistory = () => FacetTypeForHistory
+
+const getAppliedFacetList = (facetList: any[]) => facetList?.filter((f) => f.isApplied)
+
 export const facetGetters = {
   getBreadcrumbs,
   getSelectedFacets,
   getSortOptions,
+  getSelectedFacetItems,
+  getFacetListByQueryFilter,
+  getFacetTypeForHistory,
+  getAppliedFacetList,
 }

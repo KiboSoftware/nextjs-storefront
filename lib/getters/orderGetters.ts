@@ -1,5 +1,6 @@
 import { format } from 'date-fns'
 
+import { OrderStatus } from '../constants'
 import { billingGetters } from './billingGetters'
 import { checkoutGetters } from './checkoutGetters'
 
@@ -30,7 +31,7 @@ const getExpectedDeliveryDate = (items: Maybe<CrOrderItem>[]) => {
 const getProductNames = (order: Order) => {
   const items = order?.items as CrOrderItem[]
   const productNames = items.map((item) => item?.product?.name)
-  return productNames.join(',')
+  return productNames.join(', ')
 }
 
 const getOrderStatus = (order: Order) => order?.status || ''
@@ -67,8 +68,16 @@ const getShippingAddress = (order: Order) => order?.fulfillmentInfo?.fulfillment
 
 const getBillingAddress = (order: Order) => order?.billingInfo?.billingContact
 
+const getStorePickupAddress = (order: Order) =>
+  order?.payments && order?.payments[0]?.billingInfo?.billingContact?.address
+
 const getCardExpireMonth = (card: PaymentCard): number =>
   getOrderPaymentCardDetails(card).expireMonth
+
+const getCardLastFourDigits = (card: Maybe<PaymentCard> | undefined) => {
+  const cardNumberLength = card?.cardNumberPartOrMask?.length as number
+  return card?.cardNumberPartOrMask?.slice(cardNumberLength - 4, cardNumberLength)
+}
 
 const getCardExpireYear = (card: PaymentCard): number => getOrderPaymentCardDetails(card).expireYear
 
@@ -105,6 +114,8 @@ export const orderGetters = {
   getShippedTo,
   getShippingAddress,
   getBillingAddress,
+  getStorePickupAddress,
+  getCardLastFourDigits,
   getCardExpireMonth,
   getCardExpireYear,
   getOrderDetails,

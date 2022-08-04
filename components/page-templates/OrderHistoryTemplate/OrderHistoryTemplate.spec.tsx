@@ -3,7 +3,7 @@ import React from 'react'
 import { composeStories } from '@storybook/testing-react'
 import { render, screen } from '@testing-library/react'
 
-import * as stories from './OrderHistory.stories'
+import * as stories from './OrderHistoryTemplate.stories'
 
 import type { OrderCollection } from '@/lib/gql/types'
 
@@ -26,15 +26,14 @@ jest.mock('@mui/material', () => ({
   useMediaQuery: jest.fn().mockReturnValue(false),
 }))
 
-describe('[component] - OrderHistory', () => {
+describe('[component] - OrderHistoryTemplate', () => {
   it('should render component', () => {
     render(<Common {...Common?.args} />)
 
-    const orders = Common?.args?.orders as OrderCollection
+    const orders = Common?.args?.orderCollection as OrderCollection
     const itemsLength = orders.items ? orders.items.length : 0
-    const accountTitle = Common?.args?.accountTitle as string
 
-    const accountTitleText = screen.getByText(accountTitle)
+    const accountTitleText = screen.getByText('my-account')
     const orderHistoryText = screen.getByText('order-history')
     const filterOrders = screen.getByTestId('filter-orders-mock')
     const filterTiles = screen.getByTestId('filter-tiles-mock')
