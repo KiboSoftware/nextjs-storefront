@@ -8,6 +8,9 @@ import KiboRadio from '@/components/common/KiboRadio/KiboRadio'
 import type { CrAddress } from '@/lib/gql/types'
 
 interface AddressDetailsViewProps extends CrAddress {
+  firstName?: string
+  middleNameOrInitial?: string
+  lastNameOrSurname?: string
   radioGroupTitle?: string
   withoutRadioTitle?: string
   radio?: boolean
@@ -18,6 +21,9 @@ const AddressDetailsView = (props: AddressDetailsViewProps) => {
     radioGroupTitle,
     withoutRadioTitle,
     radio = false,
+    firstName,
+    middleNameOrInitial,
+    lastNameOrSurname,
     address1,
     address2,
     cityOrTown,
@@ -26,6 +32,9 @@ const AddressDetailsView = (props: AddressDetailsViewProps) => {
   } = props
 
   const addressCardProps = {
+    firstName: firstName,
+    middleNameOrInitial: middleNameOrInitial,
+    lastNameOrSurname: lastNameOrSurname,
     address1: address1,
     address2: address2,
     cityOrTown: cityOrTown,

@@ -3,11 +3,10 @@
 import React from 'react'
 
 import { composeStories } from '@storybook/testing-react'
-import { render, screen, act } from '@testing-library/react'
+import { render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 
 import * as stories from './DetailsStep.stories'
-import { CheckoutStepProvider } from '@/context'
 
 const { Common } = composeStories(stories)
 
@@ -18,11 +17,7 @@ jest.mock('../../common/KiboTextBox/KiboTextBox', () => KiboTextBoxMock)
 describe('[components] Details', () => {
   const setup = (args = Common.args) => {
     const user = userEvent.setup()
-    render(
-      <CheckoutStepProvider steps={['details', 'shipping', 'payment', 'review']}>
-        <Common {...args} />
-      </CheckoutStepProvider>
-    )
+    render(<Common {...args} />)
     return {
       user,
     }
@@ -38,7 +33,6 @@ describe('[components] Details', () => {
     const earnCreditsText = screen.getByText(/earn-credits-with-every-purchase/i)
     const fullRewardsText = screen.getByText(/full-rewards-program-benifits/i)
     const manageYourWishList = screen.getByText(/manage-your-wishlist/i)
-    const iWantToCreateAccount = screen.getByRole('checkbox', { name: /showaccountfields/i })
 
     const emailInput = screen.getByTestId(/text-box-mock/i)
 
@@ -49,23 +43,7 @@ describe('[components] Details', () => {
     expect(earnCreditsText).toBeVisible()
     expect(fullRewardsText).toBeVisible()
     expect(manageYourWishList).toBeVisible()
-    expect(iWantToCreateAccount).toBeInTheDocument()
 
     expect(emailInput).toBeVisible()
-  })
-
-  it('should render firstName, lastName and password when user selects "I want to create account"', async () => {
-    const { user } = setup()
-
-    const emailInput = screen.getByTestId(/text-box-mock/i)
-    expect(emailInput).toBeVisible()
-
-    const iWantToCreateAccount = screen.getByRole('checkbox', { name: /showaccountfields/i })
-    await act(async () => {
-      await user.click(iWantToCreateAccount)
-    })
-
-    const textBoxList = screen.getAllByTestId(/text-box-mock/i)
-    expect(textBoxList).toHaveLength(4)
   })
 })

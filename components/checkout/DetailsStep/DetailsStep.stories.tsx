@@ -3,6 +3,7 @@ import React from 'react'
 import { ComponentStory, ComponentMeta } from '@storybook/react'
 
 import DetailsStep from './DetailsStep'
+import { CheckoutStepProvider } from '@/context'
 
 // Common
 export default {
@@ -11,7 +12,11 @@ export default {
   argTypes: { onPersonalDetailsSave: { action: 'clicked' } },
 } as ComponentMeta<typeof DetailsStep>
 
-const Template: ComponentStory<typeof DetailsStep> = (args) => <DetailsStep {...args} />
+const Template: ComponentStory<typeof DetailsStep> = (args) => (
+  <CheckoutStepProvider steps={['details', 'shipping', 'payment', 'review']}>
+    <DetailsStep {...args} />
+  </CheckoutStepProvider>
+)
 
 // Default
 export const Common = Template.bind({})

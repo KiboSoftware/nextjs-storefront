@@ -15,10 +15,22 @@ import { useRouter } from 'next/router'
 
 import { CartItemList } from '@/components/cart'
 import { PromoCodeBadge, OrderSummary } from '@/components/common'
-import { useCartQueries, useCreateFromCartMutation, useCartMutation } from '@/hooks'
+import { StoreLocatorDialog } from '@/components/dialogs'
+import { useModalContext } from '@/context'
+import {
+  useCartQueries,
+  useCreateFromCartMutation,
+  useStoreLocations,
+  usePurchaseLocation,
+  useCartMutationUpdateCartItemQuantity,
+  useCartMutationRemoveCartItem,
+  useCartMutationUpdateCartItem,
+} from '@/hooks'
+import { FulfillmentOptions } from '@/lib/constants'
 import { checkoutGetters } from '@/lib/getters'
+import { LocationCustom } from '@/lib/types'
 
-import type { Cart } from '@/lib/gql/types'
+import type { Cart, Location, CartItemInput } from '@/lib/gql/types'
 
 export interface CartTemplateProps {
   cart: Cart
@@ -49,7 +61,10 @@ const CartTemplate = (props: CartTemplateProps) => {
   const isMobileViewport = useMediaQuery(theme.breakpoints.down('md'))
   const router = useRouter()
   const { createFromCart } = useCreateFromCartMutation()
-  const { updateCartItemQuantity, removeCartItem } = useCartMutation()
+  const { updateCartItemQuantity } = useCartMutationUpdateCartItemQuantity()
+  const { removeCartItem } = useCartMutationRemoveCartItem()
+  const { updateCartItem } = useCartMutationUpdateCartItem()
+  const { showModal, closeModal } = useModalContext()
 
   const cartItemCount = checkoutGetters.getCartItemCount(cart)
   const cartItems = checkoutGetters.getCartItems(cart)
@@ -57,6 +72,10 @@ const CartTemplate = (props: CartTemplateProps) => {
   const cartShippingTotal = checkoutGetters.getShippingTotal(cart)
   const cartTaxTotal = checkoutGetters.getTaxTotal(cart)
   const cartTotal = checkoutGetters.getTotal(cart)
+  const locationCodes = checkoutGetters.getFulfillmentLocationCodes(cartItems)
+
+  const { data: locations } = useStoreLocations({ filter: locationCodes })
+  const { data: purchaseLocation } = usePurchaseLocation()
 
   const handleApplyCouponCode = () => {
     // your code here
@@ -78,9 +97,51 @@ const CartTemplate = (props: CartTemplateProps) => {
   const handleItemActions = () => {
     // your code here
   }
-  const handleFulfillmentOption = () => {
-    // your code here
+  const handleFulfillmentOptionSelection = async (
+    fulfillmentMethod: string,
+    cartItemId: string
+  ) => {
+    const locationCode =
+      fulfillmentMethod === FulfillmentOptions.PICKUP ? (purchaseLocation.code as string) : ''
+    if (fulfillmentMethod === FulfillmentOptions.PICKUP && !locationCode) {
+      handleProductPickupLocation(cartItemId)
+    } else {
+      mutateCartItem(cartItemId, fulfillmentMethod, locationCode)
+    }
   }
+
+  const handleProductPickupLocation = (cartItemId: string) => {
+    showModal({
+      Component: StoreLocatorDialog,
+      props: {
+        handleSetStore: async (selectedStore: LocationCustom) => {
+          mutateCartItem(cartItemId, FulfillmentOptions.PICKUP, selectedStore?.code)
+          closeModal()
+        },
+      },
+    })
+  }
+
+  const mutateCartItem = async (
+    cartItemId: string,
+    fulfillmentMethod: string,
+    locationCode = ''
+  ) => {
+    try {
+      const cartItem = cartItems.find((item) => item?.id === cartItemId)
+      await updateCartItem.mutateAsync({
+        cartItemInput: {
+          ...(cartItem as CartItemInput),
+          fulfillmentMethod,
+          fulfillmentLocationCode: locationCode,
+        },
+        cartItemId: cartItemId,
+      })
+    } catch (err) {
+      console.log(err)
+    }
+  }
+
   const handleGotoCheckout = async () => {
     try {
       const createFromCartResponse = await createFromCart.mutateAsync(cart?.id)
@@ -109,7 +170,7 @@ const CartTemplate = (props: CartTemplateProps) => {
       <PromoCodeBadge
         onApplyCouponCode={handleApplyCouponCode}
         onRemoveCouponCode={handleRemoveCouponCode}
-        promoList={cart?.couponCodes}
+        promoList={cart?.couponCodes as string[]}
         promoError={false}
       />
     ),
@@ -137,10 +198,15 @@ const CartTemplate = (props: CartTemplateProps) => {
       <Grid item xs={12} md={8} sx={{ paddingRight: { md: 2 } }}>
         <CartItemList
           cartItems={cartItems}
+          fulfillmentLocations={
+            locations && Object.keys(locations).length ? (locations as Location[]) : []
+          }
+          purchaseLocation={purchaseLocation}
           onCartItemQuantityUpdate={handleItemQuantity}
           onCartItemDelete={handleDeleteItem}
           onCartItemActionSelection={handleItemActions}
-          onFulfillmentOptionSelection={handleFulfillmentOption}
+          onFulfillmentOptionSelection={handleFulfillmentOptionSelection}
+          onProductPickupLocation={handleProductPickupLocation}
         />
       </Grid>
       {/* Order Summary */}

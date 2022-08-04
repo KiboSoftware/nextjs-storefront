@@ -84,6 +84,7 @@
     "graphql-codegen": "^0.4.0",
     "husky": "^7.0.4",
     "jest": "^27.4.7",
+    "jest-mock-extended": "^2.0.7",
     "jest-sonar-reporter": "^2.0.0",
     "msw": "^0.39.2",
     "msw-storybook-addon": "^1.6.3",

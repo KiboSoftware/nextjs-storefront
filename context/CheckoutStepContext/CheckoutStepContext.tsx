@@ -1,4 +1,4 @@
-import React, { useMemo, useReducer, useContext, createContext, useEffect, useRef } from 'react'
+import React, { useMemo, useReducer, useContext, createContext } from 'react'
 
 export type State = {
   activeStep: number
@@ -65,11 +65,6 @@ export const CheckoutStepProvider = (props: CheckoutStepProviderProps) => {
   const activeStep = useMemo(() => state.activeStep, [state.activeStep])
   const stepStatus = useMemo(() => state.stepStatus, [state.stepStatus])
   const steps = useMemo(() => state.steps, [state.steps])
-
-  const stateRef = useRef(state)
-  useEffect(() => {
-    stateRef.current = state
-  }, [state])
 
   const setStepStatusValid = () => dispatch({ type: 'SET_STEP_STATUS', status: STEP_STATUS.VALID })
 
