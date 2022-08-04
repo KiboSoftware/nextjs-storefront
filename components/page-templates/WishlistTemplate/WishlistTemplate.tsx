@@ -5,8 +5,7 @@ import { Grid, Typography, Box, Divider, useTheme } from '@mui/material'
 import { useTranslation } from 'next-i18next'
 
 import { ProductCard } from '@/components/product'
-import { useWishlist } from '@/hooks'
-import { useWishlistQueries } from '@/hooks'
+import { useWishlist, useWishlistQueries } from '@/hooks'
 import { productGetters } from '@/lib/getters'
 import { uiHelpers } from '@/lib/helpers'
 import { WishlistProductInput, ProductCustom } from '@/lib/types'
@@ -73,8 +72,13 @@ const WishlistTemplate = (props: any) => {
             xs={6}
           >
             <Box>
-              {item?.product?.productCode && removedProduct?.productCode && (
-                <Box sx={{ maxWidth: '10.75rem', textAlign: 'center' }}>
+              {item?.product?.productCode === removedProduct?.productCode && (
+                <Box
+                  sx={{
+                    display: 'flex',
+                    justifyContent: 'center',
+                  }}
+                >
                   <Typography
                     variant="subtitle2"
                     sx={{
