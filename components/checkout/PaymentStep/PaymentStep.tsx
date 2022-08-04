@@ -352,7 +352,7 @@ const PaymentStep = (props: PaymentStepProps) => {
         radio
         displayRowDirection={false}
         displayTitle={false}
-        selected={selectedPaymentBillingRadio as string}
+        selected={selectedPaymentBillingRadio}
         id={card?.cardInfo?.id as string}
         cardNumberPart={card?.cardInfo?.cardNumberPart as string}
         expireMonth={card?.cardInfo?.expireMonth as number}

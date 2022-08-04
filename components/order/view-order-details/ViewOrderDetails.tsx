@@ -132,39 +132,34 @@ const ViewOrderDetails = (props: ViewOrderDetailsProps) => {
               key={payment?.id}
               id={
                 orderGetters.getOrderPaymentCardDetails(payment.billingInfo.card)
-                  .paymentServiceCardId as string
+                  .paymentServiceCardId
               }
               cardNumberPart={
                 orderGetters.getOrderPaymentCardDetails(payment.billingInfo.card)
-                  .cardNumberPartOrMask as string
+                  .cardNumberPartOrMask
               }
               expireMonth={
-                orderGetters.getOrderPaymentCardDetails(payment.billingInfo.card)
-                  .expireMonth as number
+                orderGetters.getOrderPaymentCardDetails(payment.billingInfo.card).expireMonth
               }
               expireYear={
-                orderGetters.getOrderPaymentCardDetails(payment.billingInfo.card)
-                  .expireYear as number
+                orderGetters.getOrderPaymentCardDetails(payment.billingInfo.card).expireYear
               }
               address1={
-                billingGetters.getAddress(payment.billingInfo.billingContact.address)
-                  .address1 as string
+                billingGetters.getAddress(payment.billingInfo.billingContact.address).address1
               }
               address2={
-                billingGetters.getAddress(payment.billingInfo.billingContact.address)
-                  .address2 as string
+                billingGetters.getAddress(payment.billingInfo.billingContact.address).address2
               }
               cityOrTown={
-                billingGetters.getAddress(payment.billingInfo.billingContact.address)
-                  .cityOrTown as string
+                billingGetters.getAddress(payment.billingInfo.billingContact.address).cityOrTown
               }
               postalOrZipCode={
                 billingGetters.getAddress(payment.billingInfo.billingContact.address)
-                  ?.postalOrZipCode as string
+                  ?.postalOrZipCode
               }
               stateOrProvince={
                 billingGetters.getAddress(payment.billingInfo.billingContact.address)
-                  .stateOrProvince as string
+                  .stateOrProvince
               }
             />
           ))}

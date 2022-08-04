@@ -1,7 +1,6 @@
 import { composeStories } from '@storybook/testing-react'
-import { render, screen, act, fireEvent } from '@testing-library/react'
+import { render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
-import { UserEvent } from '@testing-library/user-event/dist/types/setup'
 
 import * as stories from '@/components/checkout/CardDetailsForm/CardDetailsForm.stories'
 import { CheckoutStepProvider } from '@/context'

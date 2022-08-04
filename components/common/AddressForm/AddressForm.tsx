@@ -75,7 +75,9 @@ const AddressForm = (props: AddressFormProps) => {
     shouldFocusError: true,
   })
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [saveAddress, setSaveAddress] = useState<boolean>(false)
+
   const { t } = useTranslation('checkout')
 
   const generateSelectOptions = () =>
@@ -312,7 +314,7 @@ const AddressForm = (props: AddressFormProps) => {
           <Grid item md={12}>
             <FormControlLabel
               control={<Checkbox onChange={() => setSaveAddress((prevState) => !prevState)} />}
-              label={saveAddressLabel as string}
+              label={saveAddressLabel}
             />
           </Grid>
         )}

@@ -8,7 +8,7 @@ import * as stories from '@/components/order/view-order-details/ViewOrderDetails
 import { FulfillmentOptions } from '@/lib/constants'
 import { orderGetters } from '@/lib/getters'
 
-import type { Card, Order, PaymentCard } from '@/lib/gql/types'
+import type { Order, PaymentCard } from '@/lib/gql/types'
 
 const { Common } = composeStories(stories)
 

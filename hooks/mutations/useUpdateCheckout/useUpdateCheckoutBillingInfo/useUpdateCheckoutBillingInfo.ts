@@ -1,10 +1,10 @@
 import { useMutation, useQueryClient } from 'react-query'
 
 import { makeGraphQLClient } from '@/lib/gql/client'
-import { addPaymentMethodToCheckout, setBillingInfo } from '@/lib/gql/mutations'
+import { setBillingInfo } from '@/lib/gql/mutations'
 import { checkoutKeys } from '@/lib/react-query/queryKeys'
 
-import type { BillingInfoInput, PaymentActionInput } from '@/lib/gql/types'
+import type { BillingInfoInput } from '@/lib/gql/types'
 
 export interface UpdateBillingInfoInput {
   orderId: string

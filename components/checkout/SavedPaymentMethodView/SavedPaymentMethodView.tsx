@@ -52,18 +52,18 @@ const PaymentAndBilling = (props: PaymentAndBillingCardProps) => {
     >
       <PaymentCardDetailsView
         withoutRadioTitle={displayTitle ? t('payment-method') : ''}
-        cardNumberPart={cardNumberPart as string}
-        expireMonth={expireMonth as number}
-        expireYear={expireYear as number}
+        cardNumberPart={cardNumberPart}
+        expireMonth={expireMonth}
+        expireYear={expireYear}
         onPaymentCardSelection={() => null}
       />
       <AddressDetailsView
         withoutRadioTitle={displayTitle ? t('billing-address') : ''}
-        address1={address1 as string}
-        address2={address2 as string}
-        cityOrTown={cityOrTown as string}
-        stateOrProvince={postalOrZipCode as string}
-        postalOrZipCode={stateOrProvince as string}
+        address1={address1}
+        address2={address2}
+        cityOrTown={cityOrTown}
+        stateOrProvince={postalOrZipCode}
+        postalOrZipCode={stateOrProvince}
       />
     </Box>
   )

@@ -1,4 +1,4 @@
-import { graphql, rest } from 'msw'
+import { graphql } from 'msw'
 
 import { orderMock, shippingRateMock } from '../stories'
 import { cartItemMock } from '../stories/cartItemMock'
@@ -59,9 +59,13 @@ export const checkoutHandlers = [
     return res(ctx.data(getUserAddressesMock))
   }),
 
-  // graphql.mutation('createOrderPaymentPaymentAction', (_req, res, ctx) => {
-  //   return res(ctx.data(shippingRateMock))
-  // })
+  graphql.mutation('createOrderPaymentPaymentAction', (_req, res, ctx) => {
+    return res(
+      ctx.data({
+        createOrderPaymentPaymentAction: createOrderPaymentActionMock.createOrderPaymentAction,
+      })
+    )
+  }),
 
   // Order Reivew Step
 ]
@@ -132,7 +136,7 @@ export const cartHandlers = [
     return res(
       ctx.data({
         deleteCartItemMutation: true,
-        })
+      })
     )
   }),
 

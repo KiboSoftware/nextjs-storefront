@@ -26,7 +26,6 @@ const AddressCard = (props: AddressProps) => {
     postalOrZipCode,
     variant = 'body1',
   } = props
-  const { t } = useTranslation('checkout')
 
   const isNameAvailable = firstName || middleNameOrInitial || lastNameOrSurname
 

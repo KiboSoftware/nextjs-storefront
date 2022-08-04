@@ -30,7 +30,7 @@ const ShippingStep = (props: ShippingProps) => {
 
   const shippingBlockRef = useRef()
 
-  const contactProp = checkoutGetters.getShippingContact(checkout) as Contact
+  const contactProp = checkoutGetters.getShippingContact(checkout)
   const shipItems = checkoutGetters.getShipItems(checkout)
   const pickupItems = checkoutGetters.getPickupItems(checkout)
 

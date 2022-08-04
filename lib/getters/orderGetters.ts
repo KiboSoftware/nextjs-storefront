@@ -68,10 +68,9 @@ const getShippingAddress = (order: Order) => order?.fulfillmentInfo?.fulfillment
 const getBillingAddress = (order: Order) => order?.billingInfo?.billingContact
 
 const getCardExpireMonth = (card: PaymentCard): number =>
-  getOrderPaymentCardDetails(card).expireMonth as number
+  getOrderPaymentCardDetails(card).expireMonth
 
-const getCardExpireYear = (card: PaymentCard): number =>
-  getOrderPaymentCardDetails(card).expireYear as number
+const getCardExpireYear = (card: PaymentCard): number => getOrderPaymentCardDetails(card).expireYear
 
 const getOrderDetails = (order: Order) => {
   const id = getId(order)
