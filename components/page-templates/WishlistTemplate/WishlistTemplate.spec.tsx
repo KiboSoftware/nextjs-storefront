@@ -1,5 +1,5 @@
 import { composeStories } from '@storybook/testing-react'
-import { render, within, screen, cleanup } from '@testing-library/react'
+import { render, screen, cleanup } from '@testing-library/react'
 import '@testing-library/jest-dom'
 
 import * as stories from './WishlistTemplate.stories' // import all stories from the stories file
