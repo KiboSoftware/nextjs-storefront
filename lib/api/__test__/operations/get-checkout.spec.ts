@@ -9,11 +9,7 @@ jest.mock('@/lib/api/util', () => ({
   __esModule: true,
   fetcher: jest.fn(),
 }))
-jest.mock('@/lib/api/util/getUserClaimsFromRequest.ts', () =>
-  jest.fn(() => ({
-    userClaims: null,
-  }))
-)
+jest.mock('@/lib/api/util/getUserClaimsFromRequest.ts', () => jest.fn(() => null))
 
 describe('[operations] Get Checkout', () => {
   it('should get checkout by checkout id', async () => {
@@ -22,7 +18,7 @@ describe('[operations] Get Checkout', () => {
       .mockImplementationOnce(async () => ({ data: { checkout: 'checkout' } }))
 
     const checkoutId = '12345'
-    const response = await getCheckout(checkoutId, { userClaims: 'test' })
+    const response = await getCheckout(checkoutId, { userClaims: 'test' }, '')
 
     expect(util.fetcher).toBeCalledWith(
       { query: getCheckoutQuery, variables: { checkoutId } },
