@@ -43,9 +43,9 @@ const WishlistTemplate = (props: any) => {
     }
   }
   return (
-    <Grid container>
-      <Grid xs={12}>
-        <Box sx={{ display: 'flex', padding: '1.5rem 0' }}>
+    <Grid container data-testid="wishlist-template">
+      <Grid item xs={12}>
+        <Box sx={{ display: 'flex', padding: '1.5rem 0', alignItems: 'center' }}>
           <FavoriteRoundedIcon sx={{ color: '#BB2500', marginRight: '0.875rem' }} />{' '}
           <Typography variant="h1">
             {customerAccount?.firstName
@@ -55,9 +55,12 @@ const WishlistTemplate = (props: any) => {
         </Box>
         <Divider color={theme.palette.primary.main} />
       </Grid>
-      <Grid xs={12}>
-        <Typography variant="subtitle2" sx={{ color: 'grey.600', paddingBottom: '1.5rem' }}>
-          {wishlists?.items?.length} items
+      <Grid item xs={12}>
+        <Typography
+          variant="subtitle2"
+          sx={{ color: 'grey.600', paddingBottom: '1.5rem', paddingTop: '1.438rem' }}
+        >
+          {t('item-quantity', { count: wishlists?.items?.length })}
         </Typography>
       </Grid>
       {/* Product Card Section */}
