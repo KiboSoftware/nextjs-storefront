@@ -5,7 +5,8 @@ import { render, screen } from '@testing-library/react'
 
 import * as stories from './ProductCard.stories' // import all stories from the stories file
 
-const { Common, WithSalePrice, WithRating, NoImage, LoadingProductCard } = composeStories(stories)
+const { Common, WithSalePrice, WithRating, NoImage, LoadingProductCard, WithWishlist } =
+  composeStories(stories)
 
 describe('[components] Product Card Component', () => {
   describe('Common Product Card', () => {
@@ -91,6 +92,21 @@ describe('[components] Product Card Component', () => {
       const skeleton = screen.getByTestId('product-card-skeleton')
 
       expect(skeleton).toBeVisible()
+    })
+  })
+  describe('Wishlist Product Card', () => {
+    it('should render Product Card skeleton', async () => {
+      render(<WithWishlist {...WithWishlist.args} />)
+
+      const inWishlistIcon = screen.getByTestId('FavoriteRoundedIcon')
+      const notInWishlistIcon = screen.queryByTestId('FavoriteBorderRoundedIcon')
+      const shopNowButton = screen.getByRole('link', {
+        name: /shop-now/i,
+      })
+
+      expect(inWishlistIcon).toBeVisible()
+      expect(notInWishlistIcon).not.toBeInTheDocument()
+      expect(shopNowButton).toBeVisible()
     })
   })
 })
