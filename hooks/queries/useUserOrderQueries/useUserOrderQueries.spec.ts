@@ -1,16 +1,16 @@
 import { renderHook } from '@testing-library/react-hooks'
 
 import { useUserOrderQueries } from './useUserOrderQueries'
-import { orderMock } from '@/__mocks__/stories/orderMock'
+import { orderCollection } from '@/__mocks__/stories/orderCollection'
 import { createQueryClientWrapper } from '@/__test__/utils/renderWithQueryClient'
 
 describe('[hooks] useUserOrderQueries', () => {
-  it('should return checkout details when user provides valid checkoutId', async () => {
-    const filters = '137a979305c65d00010800230000678b'
-    const { result, waitFor } = renderHook(() => useUserOrderQueries({ filters }), {
+  it('should return order collection when user provides valid order filters', async () => {
+    const { result, waitFor } = renderHook(() => useUserOrderQueries({ filters: ['M-6'] }), {
       wrapper: createQueryClientWrapper(),
     })
+
     await waitFor(() => result.current.isSuccess)
-    expect(result.current.data).toStrictEqual(orderMock.checkout)
+    expect(result.current.data).toStrictEqual(orderCollection.orders)
   })
 })
