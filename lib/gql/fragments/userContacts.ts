@@ -5,20 +5,12 @@ export const userContactFields = /* GraphQL */ `
       name
       isPrimary
     }
-    auditInfo {
-      updateDate
-      createDate
-      updateBy
-      createBy
-    }
-    faxNumber
     label
     id
     email
     firstName
     middleNameOrInitial
     lastNameOrSurname
-    companyOrOrganization
     phoneNumbers {
       home
       mobile

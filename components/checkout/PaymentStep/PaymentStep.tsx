@@ -39,7 +39,7 @@ import type {
   CardTypeForCheckout,
 } from '@/lib/types'
 
-import type { Card, Contact, Order, PaymentActionInput } from '@/lib/gql/types'
+import type { Contact, Order, PaymentActionInput } from '@/lib/gql/types'
 
 interface PaymentStepProps {
   checkout: Order | undefined
@@ -280,7 +280,7 @@ const PaymentStep = (props: PaymentStepProps) => {
 
       paymentAction = buildCardPaymentActionForCheckoutInput(
         'US',
-        checkout as Order,
+        { ...checkout } as Order,
         cardDetails,
         tokenizedData,
         selectedPaymentMethod?.billingAddressInfo as Contact,
@@ -292,6 +292,8 @@ const PaymentStep = (props: PaymentStepProps) => {
       checkout,
       PaymentType.CREDITCARD
     )
+
+    console.log(selectedCards)
 
     selectedCards?.forEach(async (card) => {
       paymentAction = { ...paymentAction, actionName: 'VoidPayment' }
@@ -329,11 +331,11 @@ const PaymentStep = (props: PaymentStepProps) => {
       ...savedPaymentBillingDetails,
       {
         cardInfo: {
-          ...card,
           id: tokenizedCardResponse.id,
           cardNumberPart: tokenizedCardResponse.numberPart,
-          contactId: 0,
           paymentType: newPaymentMethod,
+          expireMonth: card.expireMonth,
+          expireYear: card.expireYear,
         },
         billingAddressInfo: {
           ...billingFormAddress.contact,
@@ -368,7 +370,7 @@ const PaymentStep = (props: PaymentStepProps) => {
   }
 
   const handleInitialCardDetailsLoad = () => {
-    const savedInfo = accountDetailsGetters.getSavedPaymentAndBillingDetails(
+    const savedInfo = accountDetailsGetters.getSavedCardsAndBillingDetails(
       customerCardsCollection,
       customerContactsCollection
     )
@@ -388,10 +390,10 @@ const PaymentStep = (props: PaymentStepProps) => {
       !savedInfo.some((each) => each.cardInfo?.id === cardDetails?.paymentServiceCardId) &&
         savedInfo.push({
           cardInfo: {
-            ...(cardDetails as Card),
-            cardNumberPart: cardDetails?.cardNumberPartOrMask,
-            id: cardDetails?.paymentServiceCardId,
-            contactId: 0,
+            cardNumberPart: cardDetails?.cardNumberPartOrMask as string,
+            id: cardDetails?.paymentServiceCardId as string,
+            expireMonth: cardDetails?.expireMonth,
+            expireYear: cardDetails?.expireYear,
             paymentType: newPaymentMethod,
           },
           billingAddressInfo: {
@@ -548,7 +550,7 @@ const PaymentStep = (props: PaymentStepProps) => {
           />
           <AddressForm
             checkout={checkout}
-            contact={shippingAddress as ContactForm}
+            contact={checkout?.billingInfo?.billingContact as ContactForm}
             setAutoFocus={false}
             isUserLoggedIn={isAuthenticated}
             onSaveAddress={handleBillingFormAddress}

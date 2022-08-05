@@ -1,6 +1,6 @@
 import creditCardType from 'credit-card-type'
 
-import { CardForm } from '@/lib/types'
+import type { CardForm } from '@/lib/types'
 
 export interface CardDataParams {
   cardNumber: string

@@ -33,7 +33,14 @@ export interface CardForm {
   isCardInfoSaved?: boolean
 }
 
-export interface SavedCard extends Card {
+export interface SavedCard {
+  cardNumberPart?: string
+  cardType?: string
+  expireMonth?: number
+  expireYear?: number
+  id?: string
+  isDefaultPayMethod?: boolean
+  nameOnCard?: string
   isCardInfoSaved?: boolean
   paymentType?: string
 }

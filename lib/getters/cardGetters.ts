@@ -23,7 +23,6 @@ const getCardDetails = (card: SavedCard) => {
     id: getCardId(card),
     isDefaultPaymentMethod: getIsDefaultPaymentMethod(card),
     paymentType: getPaymentType(card),
-    contactId: card.contactId,
   }
 }
 

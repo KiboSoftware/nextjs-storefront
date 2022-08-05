@@ -1,4 +1,5 @@
 import { PaymentType } from '../constants'
+import { SavedCard } from './../types/PaymentTypes'
 import { billingGetters, cardGetters } from '@/lib/getters'
 import type { PaymentAndBilling } from '@/lib/types'
 
@@ -9,7 +10,7 @@ import type {
   CustomerContact,
 } from '@/lib/gql/types'
 
-const getcustomerAccountCards = (customerAccountCards: CardCollection): Card[] =>
+const getCustomerAccountCards = (customerAccountCards: CardCollection): Card[] =>
   customerAccountCards ? (customerAccountCards?.items as Card[]) : []
 
 const getCustomerAccountContacts = (
@@ -17,18 +18,18 @@ const getCustomerAccountContacts = (
 ): CustomerContact[] =>
   customerAccountContacts ? (customerAccountContacts?.items as CustomerContact[]) : []
 
-const getSavedPaymentAndBillingDetails = (
+const getSavedCardsAndBillingDetails = (
   customerAccountCards: CardCollection,
   customerAccountContacts: CustomerContactCollection
 ): PaymentAndBilling[] => {
-  const cards: Card[] = getcustomerAccountCards(customerAccountCards)
+  const cards: Card[] = getCustomerAccountCards(customerAccountCards)
   const contacts: CustomerContact[] = getCustomerAccountContacts(customerAccountContacts)
 
   return cards?.map((card) => {
     const assoiciatedAddress = contacts?.find((contact) => contact.id === card.contactId)
     return {
       cardInfo: {
-        ...cardGetters.getCardDetails(card),
+        ...cardGetters.getCardDetails(card as SavedCard),
         isCardInfoSaved: true,
         paymentType: PaymentType.CREDITCARD,
       },
@@ -46,9 +47,9 @@ const getOtherPaymentBillingMethod = (allPaymentAndBillingInfo: PaymentAndBillin
 }
 
 export const accountDetailsGetters = {
-  getcustomerAccountCards,
+  getCustomerAccountCards,
   getCustomerAccountContacts,
-  getSavedPaymentAndBillingDetails,
+  getSavedCardsAndBillingDetails,
   getDefaultPaymentBillingMethod,
   getOtherPaymentBillingMethod,
 }

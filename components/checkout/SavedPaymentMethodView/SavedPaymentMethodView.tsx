@@ -17,6 +17,8 @@ interface PaymentAndBillingCardProps {
   cityOrTown: string
   postalOrZipCode: string
   stateOrProvince: string
+  withoutRadioPaymentTitle?: string
+  withoutRadioBillingTitle?: string
 }
 interface SavedPaymentMethodViewProps extends PaymentAndBillingCardProps {
   radio?: boolean
@@ -25,7 +27,6 @@ interface SavedPaymentMethodViewProps extends PaymentAndBillingCardProps {
 }
 
 const PaymentAndBilling = (props: PaymentAndBillingCardProps) => {
-  const { t } = useTranslation('checkout')
   const {
     cardNumberPart,
     expireMonth,
@@ -35,8 +36,9 @@ const PaymentAndBilling = (props: PaymentAndBillingCardProps) => {
     cityOrTown,
     postalOrZipCode,
     stateOrProvince,
-    displayTitle,
     displayRowDirection,
+    withoutRadioPaymentTitle,
+    withoutRadioBillingTitle,
   } = props
 
   return (
@@ -51,14 +53,14 @@ const PaymentAndBilling = (props: PaymentAndBillingCardProps) => {
       }
     >
       <PaymentCardDetailsView
-        withoutRadioTitle={displayTitle ? t('payment-method') : ''}
+        withoutRadioTitle={withoutRadioPaymentTitle}
         cardNumberPart={cardNumberPart}
         expireMonth={expireMonth}
         expireYear={expireYear}
         onPaymentCardSelection={() => null}
       />
       <AddressDetailsView
-        withoutRadioTitle={displayTitle ? t('billing-address') : ''}
+        withoutRadioTitle={withoutRadioBillingTitle}
         address1={address1}
         address2={address2}
         cityOrTown={cityOrTown}
@@ -81,12 +83,12 @@ const SavedPaymentMethodView = (props: SavedPaymentMethodViewProps) => {
     stateOrProvince,
     radio,
     displayRowDirection = true,
-    displayTitle = true,
     selected = '',
     onPaymentCardSelection,
   } = props
+  const { t } = useTranslation('checkout')
 
-  const PaymentBillingComponent = () => {
+  const PaymentBillingComponent = (props: any) => {
     return (
       <PaymentAndBilling
         cardNumberPart={cardNumberPart}
@@ -98,7 +100,7 @@ const SavedPaymentMethodView = (props: SavedPaymentMethodViewProps) => {
         postalOrZipCode={postalOrZipCode}
         stateOrProvince={stateOrProvince}
         displayRowDirection={displayRowDirection}
-        displayTitle={displayTitle}
+        {...props}
       />
     )
   }
@@ -120,7 +122,12 @@ const SavedPaymentMethodView = (props: SavedPaymentMethodViewProps) => {
           onChange={(value) => (onPaymentCardSelection ? onPaymentCardSelection(value) : null)}
         />
       )}
-      {!radio && <PaymentBillingComponent />}
+      {!radio && (
+        <PaymentBillingComponent
+          withoutRadioPaymentTitle={t('payment-method')}
+          withoutRadioBillingTitle={t('billing-address')}
+        />
+      )}
     </Box>
   )
 }
