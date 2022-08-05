@@ -17,17 +17,24 @@ const removeWishlistItemInput = {
 }
 
 describe('[hooks] useRemoveWishlistItemMutation', () => {
-  it('should remove item from wishlist', async () => {
-    renderHook(
-      async () => {
-        const { removeWishlistItem } = useRemoveWishlistItemMutation()
-        const response = await removeWishlistItem.mutateAsync(removeWishlistItemInput)
+  beforeAll(() => {
+    jest.useFakeTimers()
+  })
 
-        expect(response).toBeTruthy()
-      },
-      {
-        wrapper: createQueryClientWrapper(),
-      }
+  afterEach(() => {
+    jest.clearAllTimers()
+  })
+
+  afterAll(() => {
+    jest.useRealTimers()
+  })
+
+  it('should remove wishlist item from wishlist page', async () => {
+    const { result } = renderHook(
+      () => useRemoveWishlistItemMutation({ isRemovedFromWishlist: true }),
+      { wrapper: createQueryClientWrapper() }
     )
+    const response = await result.current.removeWishlistItem.mutateAsync(removeWishlistItemInput)
+    expect(response).toBeTruthy()
   })
 })

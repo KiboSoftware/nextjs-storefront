@@ -23,9 +23,7 @@ export const useRemoveWishlistItemMutation = (params?: WishlistHookParams) => {
   return {
     removeWishlistItem: useMutation(removeWishlistItem, {
       onSuccess: () => {
-        const cleanTimeout = (cleanTimeoutId: any) => {
-          clearTimeout(cleanTimeoutId)
-        }
+        const cleanTimeout = (cleanTimeoutId: any) => clearTimeout(cleanTimeoutId)
 
         if (params?.isRemovedFromWishlist) {
           const timeoutId = setTimeout(() => {
