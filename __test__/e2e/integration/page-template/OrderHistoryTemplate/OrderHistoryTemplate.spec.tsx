@@ -40,7 +40,7 @@ describe('[component] - OrderHistoryTemplate', () => {
     const filterOrderText = screen.getByText(/filter-orders/i)
     await user.click(filterOrderText)
     expect(screen.getByText(/filter-by/i)).toBeVisible()
-    expect(screen.getByText(/Time Filter/i)).toBeVisible()
+    expect(screen.getByText(FacetTypeForHistory[0].label)).toBeVisible()
 
     const accordian = screen.getByRole('button', { name: new RegExp(FacetTypeForHistory[0].label) })
     await user.click(accordian)
