@@ -550,7 +550,7 @@ const PaymentStep = (props: PaymentStepProps) => {
           />
           <AddressForm
             checkout={checkout}
-            contact={checkout?.billingInfo?.billingContact as ContactForm}
+            contact={shippingAddress as ContactForm}
             setAutoFocus={false}
             isUserLoggedIn={isAuthenticated}
             onSaveAddress={handleBillingFormAddress}
