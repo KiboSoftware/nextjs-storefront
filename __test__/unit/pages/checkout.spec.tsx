@@ -5,7 +5,9 @@ import CheckoutPage, { getServerSideProps } from '@/pages/checkout/[checkoutId]'
 
 import type { Order } from '@/lib/gql/types'
 
-const mockOperations = operations as { getCheckout(checkoutId: string, req: any): Promise<Order> }
+const mockOperations = operations as {
+  getCheckout(checkoutId: string, req: any, res: any): Promise<Order>
+}
 jest.mock('next/router', () => ({
   useRouter() {
     return {
