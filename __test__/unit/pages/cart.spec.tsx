@@ -33,11 +33,7 @@ jest.mock('@/components/page-templates/CartTemplate/CartTemplate', () => ({
   default: () => <div data-testid="cart-template-mock" />,
 }))
 
-jest.mock('@/lib/api/util/getUserClaimsFromRequest.ts', () =>
-  jest.fn(() => ({
-    userClaims: null,
-  }))
-)
+jest.mock('@/lib/api/util/getUserClaimsFromRequest.ts', () => jest.fn(() => null))
 
 describe('[page] Cart Page', () => {
   it('should run getServerSideProps method', async () => {
