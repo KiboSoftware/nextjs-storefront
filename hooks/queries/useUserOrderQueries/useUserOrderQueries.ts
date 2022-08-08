@@ -42,7 +42,9 @@ export const useUserOrderQueries = (param: UseUserOrder): UseUserOrderType => {
     data = {},
     isLoading,
     isSuccess,
-  } = useQuery(ordersKeys.orderFilter(JSON.stringify(filters)), () => getOrders(variables))
+  } = useQuery(ordersKeys.orderFilter(JSON.stringify(filters)), () => getOrders(variables), {
+    retry: 3,
+  })
 
   return { data, isLoading, isSuccess }
 }

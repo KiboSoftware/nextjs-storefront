@@ -1,10 +1,18 @@
 import { format } from 'date-fns'
 
-import { OrderStatus } from '../constants'
 import { billingGetters } from './billingGetters'
 import { checkoutGetters } from './checkoutGetters'
 
-import type { BillingInfo, Contact, CrOrderItem, Maybe, Order, PaymentCard } from '@/lib/gql/types'
+import type { LocationCustom } from '../types'
+import type {
+  BillingInfo,
+  Contact,
+  CrOrderItem,
+  Maybe,
+  Order,
+  PaymentCard,
+  CrAddress,
+} from '@/lib/gql/types'
 
 const getId = (order: Order) => order.id as string
 
@@ -68,8 +76,11 @@ const getShippingAddress = (order: Order) => order?.fulfillmentInfo?.fulfillment
 
 const getBillingAddress = (order: Order) => order?.billingInfo?.billingContact
 
-const getStorePickupAddress = (order: Order) =>
-  order?.payments && order?.payments[0]?.billingInfo?.billingContact?.address
+const getStorePickupAddress = (
+  pickupAddresses: LocationCustom[],
+  fulfillmentLocationCode: string
+): CrAddress =>
+  pickupAddresses?.find((store) => store.code === fulfillmentLocationCode)?.fullAddress as CrAddress
 
 const getCardExpireMonth = (card: PaymentCard): number =>
   getOrderPaymentCardDetails(card).expireMonth

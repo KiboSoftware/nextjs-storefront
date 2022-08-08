@@ -90,8 +90,8 @@ const FilterOrders = (props: FilterOrdersProps) => {
         <FacetList
           facetList={facetList}
           appliedFilters={appliedFilters}
-          isElementVisible={false}
-          isUpdateRoute={false}
+          showSearchAndCount={false}
+          shouldRouteUpdate={false}
           onFilterByClose={onFilterByClose}
           onRemoveSelectedTile={onRemoveSelectedTile}
           onFacetItemSelection={handleFacetItemSelection}

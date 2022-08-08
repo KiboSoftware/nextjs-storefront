@@ -32,7 +32,7 @@ describe('[component] - ViewOrderDetails', () => {
     expect(screen.getByText(/delivered/i)).toBeVisible()
     expect(screen.getByText(/pickup-title/i)).toBeVisible()
     expect(screen.getByText(/est-pickup/i)).toBeVisible()
-    expect(screen.getAllByTestId('address-card-component')).toHaveLength(3)
+    expect(screen.getByTestId('address-card-component')).toBeInTheDocument()
     expect(screen.getByTestId('order-summary-component')).toBeVisible()
     expect(screen.getAllByTestId('product-item-list-component')).toHaveLength(2)
     expect(screen.getAllByTestId('product-option-component')).toHaveLength(3)

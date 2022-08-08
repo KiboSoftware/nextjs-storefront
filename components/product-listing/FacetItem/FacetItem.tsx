@@ -11,8 +11,8 @@ interface FacetItemProps {
   label: string
   count: number
   isApplied: boolean
-  isElementVisible?: boolean
-  isUpdateRoute?: boolean
+  showSearchAndCount?: boolean
+  shouldRouteUpdate?: boolean
   onFacetItemSelection?: (selectedFacetItem: string, isApplied: boolean) => void
 }
 
@@ -36,14 +36,14 @@ const FacetItem = (props: FacetItemProps) => {
     label: facetItemLabel,
     count = 0,
     isApplied = false,
-    isElementVisible = true,
-    isUpdateRoute = true,
+    showSearchAndCount = true,
+    shouldRouteUpdate = true,
     onFacetItemSelection,
   } = props
   const { updateRoute } = useUpdateRoutes()
 
   const handleChange = () => {
-    isUpdateRoute ? updateRoute(filterValue) : handleFacetSelection(filterValue)
+    shouldRouteUpdate ? updateRoute(filterValue) : handleFacetSelection(filterValue)
   }
 
   const handleFacetSelection = (selectedFacetItem: string) =>
@@ -62,7 +62,7 @@ const FacetItem = (props: FacetItemProps) => {
         label={facetItemLabel ? facetItemLabel : ''}
         control={<Checkbox size="small" checked={isApplied} onChange={handleChange} />}
       />
-      {isElementVisible && (
+      {showSearchAndCount && (
         <FormLabel data-testid="count" aria-label="facet-item-label" sx={{ ...style.formLabel }}>
           ({count})
         </FormLabel>

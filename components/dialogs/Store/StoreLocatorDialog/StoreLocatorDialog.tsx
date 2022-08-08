@@ -8,7 +8,7 @@ import { KiboDialog } from '@/components/common'
 import { SearchStore } from '@/components/dialogs'
 import { useModalContext } from '@/context'
 import { useStoreLocations, useCurrentLocation } from '@/hooks'
-import { LocationCustom } from '@/lib/types'
+import type { LocationCustom } from '@/lib/types'
 
 import type { Location, Maybe } from '@/lib/gql/types'
 

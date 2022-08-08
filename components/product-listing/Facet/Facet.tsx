@@ -24,8 +24,8 @@ import type { Facet as FacetType, FacetValue, Maybe } from '@/lib/gql/types'
 // Interface
 interface FacetProps extends FacetType {
   numberOfItemsToShow: number
-  isElementVisible?: boolean
-  isUpdateRoute?: boolean
+  showSearchAndCount?: boolean
+  shouldRouteUpdate?: boolean
   onFacetItemSelection?: (selectedFacetItems: string) => void
 }
 
@@ -56,8 +56,8 @@ const Facet = (props: FacetProps) => {
     numberOfItemsToShow = 6,
     label,
     values = [],
-    isElementVisible = true,
-    isUpdateRoute = true,
+    showSearchAndCount = true,
+    shouldRouteUpdate = true,
     onFacetItemSelection,
   } = props
 
@@ -133,7 +133,7 @@ const Facet = (props: FacetProps) => {
         </AccordionSummary>
 
         <AccordionDetails data-testid="accordian-details" sx={{ ...style.accordionDetails }}>
-          {isElementVisible && (
+          {showSearchAndCount && (
             <SearchBar
               placeHolder={'Search ' + label}
               searchTerm={searchTerm}
@@ -145,8 +145,8 @@ const Facet = (props: FacetProps) => {
           <Box pl={0.5} pr={0.5}>
             <FacetItemList
               itemList={filteredValues as FacetValue[]}
-              isElementVisible={isElementVisible}
-              isUpdateRoute={isUpdateRoute}
+              showSearchAndCount={showSearchAndCount}
+              shouldRouteUpdate={shouldRouteUpdate}
               onFacetItemSelection={onFacetItemSelection}
             />
           </Box>

@@ -27,7 +27,7 @@ const styles = {
   filterByButton: {
     textTransform: 'capitalize',
     borderColor: 'grey.900',
-    color: '#2b2b2b',
+    color: 'grey.900',
     justifyContent: 'space-between',
     width: '148px',
     minWidth: '148px',
@@ -44,7 +44,6 @@ const OrderHistoryTemplate = (props: OrderHistoryProps) => {
 
   const facetList = facetGetters.getFacetListByQueryFilter(queryFilters)
   const facetType = facetGetters.getFacetTypeForHistory()
-  const orders = orderGetters.getNonAbandonedOrder(items as Order[])
   let appliedFilters = facetGetters.getAppliedFacetList(facetList)
 
   const theme = useTheme()
@@ -54,7 +53,7 @@ const OrderHistoryTemplate = (props: OrderHistoryProps) => {
   const handleFilterBy = () => setFilterBy(!showFilterBy)
   const handleAccountTitleClick = () => onAccountTitleClick()
   const handleHistoryItemClick = (id: string) => {
-    const order = orders?.find((orderItem) => orderItem?.id === id) as Order
+    const order = items?.find((orderItem) => orderItem?.id === id) as Order
     setSelectedOrder(order)
   }
   const handleApplyFilter = (selectedFilters: string) => changeFilters(selectedFilters)
@@ -121,7 +120,7 @@ const OrderHistoryTemplate = (props: OrderHistoryProps) => {
             </Stack>
 
             <Stack>
-              {orders?.map((order) => (
+              {items?.map((order) => (
                 <OrderHistoryItem
                   key={order?.id}
                   {...getOrderDetails(order as Order)}

@@ -7,9 +7,11 @@ import { useTranslation } from 'next-i18next'
 import { SavedPaymentMethodView } from '@/components/checkout'
 import { AddressCard, OrderSummary, ProductItemList } from '@/components/common'
 import { ProductOption } from '@/components/product'
+import { useStoreLocations } from '@/hooks'
 import { billingGetters, orderGetters } from '@/lib/getters'
+import { storeLocationGetters } from '@/lib/getters/storeLocationGetters'
 
-import type { Order } from '@/lib/gql/types'
+import type { Maybe, Order, Location } from '@/lib/gql/types'
 
 interface ViewOrderDetailsProps {
   order: Order
@@ -46,7 +48,10 @@ const ViewOrderDetails = (props: ViewOrderDetailsProps) => {
   const shipItems = orderGetters.getShipItems(order)
   const fulfillmentContact = orderGetters.getShippingAddress(order)
   const payments = orderGetters.getOrderPayments(order)
-  const storePickupAddress = orderGetters.getStorePickupAddress(order)
+  const fulfillmentLocationCodes = orderGetters.getFulfillmentLocationCodes(pickupItems)
+
+  const { data: locations } = useStoreLocations({ filter: fulfillmentLocationCodes })
+  const storePickupAddress = storeLocationGetters.getLocations(locations as Maybe<Location>[])
 
   const orderSummeryArgs = {
     nameLabel: t('order-summary'),
@@ -181,10 +186,11 @@ const ViewOrderDetails = (props: ViewOrderDetailsProps) => {
                     {t('est-pickup')} {orderGetters.getExpectedDeliveryDate(pickupItems)}
                   </Typography>
                 </Box>
-                <ProductItemList items={pickupItems} />
-                {fulfillmentContact?.address && <AddressCard {...fulfillmentContact?.address} />}
-                {storePickupAddress && <AddressCard {...storePickupAddress} />}
-                {/* ToBe: Address details need to be handled based on API GetISPULocations by purchase location code */}
+                <ProductItemList
+                  items={pickupItems}
+                  showAddress={true}
+                  storePickupAddresses={storePickupAddress}
+                />
               </Box>
               <Divider sx={{ ...styles.divider }} />
             </Box>

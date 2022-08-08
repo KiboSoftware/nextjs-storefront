@@ -14,8 +14,8 @@ interface FacetListProps {
   facetList?: FacetType[]
   initialItemsToShow?: number
   appliedFilters: FacetValue[]
-  isElementVisible?: boolean
-  isUpdateRoute?: boolean
+  showSearchAndCount?: boolean
+  shouldRouteUpdate?: boolean
   onFilterByClose: () => void
   onRemoveSelectedTile: (tile: string) => void
   onFacetItemSelection?: (selectedFacetItems: string) => void
@@ -46,8 +46,8 @@ const FacetList = (props: FacetListProps) => {
     facetList = [],
     appliedFilters,
     initialItemsToShow = 6,
-    isElementVisible = true,
-    isUpdateRoute = true,
+    showSearchAndCount = true,
+    shouldRouteUpdate = true,
     onFilterByClose,
     onRemoveSelectedTile,
     onFacetItemSelection,
@@ -82,8 +82,8 @@ const FacetList = (props: FacetListProps) => {
               numberOfItemsToShow={initialItemsToShow}
               label={facet?.label}
               values={facet?.values}
-              isElementVisible={isElementVisible}
-              isUpdateRoute={isUpdateRoute}
+              showSearchAndCount={showSearchAndCount}
+              shouldRouteUpdate={shouldRouteUpdate}
               onFacetItemSelection={onFacetItemSelection}
             />
           ))}

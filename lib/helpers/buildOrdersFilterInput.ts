@@ -13,8 +13,8 @@ export const buildOrdersFilterInput = (params: {
 }) => {
   const variables = {
     filter: '',
-    startIndex: 0,
-    pageSize: 20,
+    startIndex: params.startIndex || 0,
+    pageSize: params.pageSize || 20,
   }
 
   // To view order history page
@@ -33,9 +33,7 @@ export const buildOrdersFilterInput = (params: {
     variables.filter = searchFilters.join(' and ')
   }
 
-  // To view order status page
-  if (params.orderNumber && params.billingEmail) {
-    variables.filter = `orderNumber eq ${params.orderNumber} and email eq ${params.billingEmail}`
-  }
+  variables.filter = variables.filter.concat(' and status ne Abandoned')
+  console.log('vvariables', variables.filter)
   return variables
 }

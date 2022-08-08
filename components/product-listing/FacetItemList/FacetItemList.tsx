@@ -10,8 +10,8 @@ import type { FacetValue } from '@/lib/gql/types'
 // Interface
 interface FacetItemListProps {
   itemList: FacetValue[]
-  isElementVisible?: boolean
-  isUpdateRoute?: boolean
+  showSearchAndCount?: boolean
+  shouldRouteUpdate?: boolean
   onFacetItemSelection?: (selectedFacetItems: string) => void
 }
 
@@ -19,8 +19,8 @@ interface FacetItemListProps {
 const FacetItemList = (props: FacetItemListProps) => {
   const {
     itemList = [],
-    isElementVisible = true,
-    isUpdateRoute = true,
+    showSearchAndCount = true,
+    shouldRouteUpdate = true,
     onFacetItemSelection,
   } = props
   const [factItemList, setFactItemList] = useState<FacetValue[]>(itemList)
@@ -46,8 +46,8 @@ const FacetItemList = (props: FacetItemListProps) => {
             label={item?.label || ''}
             count={item?.count || 0}
             isApplied={item?.isApplied || false}
-            isElementVisible={isElementVisible}
-            isUpdateRoute={isUpdateRoute}
+            showSearchAndCount={showSearchAndCount}
+            shouldRouteUpdate={shouldRouteUpdate}
             onFacetItemSelection={handleFacetSelection}
           />
         ))}
