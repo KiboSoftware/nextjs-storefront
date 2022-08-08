@@ -10,7 +10,6 @@ import {
   Theme,
   Link as MuiLink,
 } from '@mui/material'
-
 import Link from 'next/link'
 
 export interface ItemProps {
@@ -63,7 +62,7 @@ const SmallBanner = ({ bannerProps }: ItemProps) => {
         <Box sx={styles.boxStyle}>
           <Typography sx={{ fontSize: '0.875rem' }}>{subtitle}&nbsp;</Typography>
           <Typography data-testid="callToAction" sx={{ fontSize: '0.875rem' }}>
-            <Link href={callToAction.url}>
+            <Link href={callToAction.url} passHref>
               <MuiLink sx={{ color: 'white', textDecoration: 'underline' }}>
                 {callToAction.title}
               </MuiLink>
