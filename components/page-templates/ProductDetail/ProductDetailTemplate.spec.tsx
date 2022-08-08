@@ -1,12 +1,10 @@
 import { composeStories } from '@storybook/testing-react'
 import { render, within, screen, cleanup } from '@testing-library/react'
 import '@testing-library/jest-dom'
-import { renderHook } from '@testing-library/react-hooks'
 
 import * as stories from './ProductDetailTemplate.stories' // import all stories from the stories file
-import { useModalContext } from '@/context'
-import { usePurchaseLocation } from '@/hooks'
-import { useCartMutation } from '@/hooks/mutations/useCartMutation/useCartMutation'
+import { userResponseMock } from '@/__mocks__/stories/userMock'
+import { wishlistMock } from '@/__mocks__/stories/wishlistMock'
 
 const { Common } = composeStories(stories)
 
@@ -51,12 +49,42 @@ jest.mock(
   () => ProductInformationMock
 )
 
+const mockProduct = Common?.args?.product
+const mockWishlist = wishlistMock?.items[0]
+const { id, name, customerAccountId } = mockWishlist
+const mockCreateWishlist = { createWishlist: { id, name, customerAccountId, items: [] } }
+const mockUser = userResponseMock
+jest.mock('@/hooks', () => ({
+  useProductDetailTemplate: jest.fn(() => {
+    return {
+      currentProduct: mockProduct,
+    }
+  }),
+  useCartMutationAddToCart: jest.fn(() => {
+    return {
+      addToCart: mockProduct,
+    }
+  }),
+  useUserQueries: jest.fn(() => {
+    return {
+      customerAccount: mockUser,
+    }
+  }),
+  useWishlist: jest.fn(() => {
+    return {
+      addOrRemoveWishlistItem: jest.fn(() => true),
+      checkProductInWishlist: jest.fn(() => true),
+    }
+  }),
+  useWishlistQueries: jest.fn(() => mockWishlist),
+  useCreateWishlistMutation: jest.fn(() => mockCreateWishlist),
+  useAddToWishlistMutation: jest.fn(() => mockWishlist?.items[0]),
+  useRemoveWishlistItemMutation: jest.fn(() => true),
+  usePurchaseLocation: jest.fn(() => ({})),
+  useModalContext: jest.fn(() => ({})),
+}))
+
 const setup = () => {
-  renderHook(() => {
-    useModalContext()
-    usePurchaseLocation()
-    useCartMutation()
-  })
   render(<Common {...Common?.args} />)
 }
 
@@ -74,11 +102,11 @@ describe('[component] Product Detail Template component', () => {
   it('should render the Product name', () => {
     setup()
 
-    const name = screen.getByRole('heading', {
+    const productName = screen.getByRole('heading', {
       name: new RegExp(Common?.args?.product?.content?.productName as string),
     })
 
-    expect(name).toBeVisible()
+    expect(productName).toBeVisible()
   })
 
   it('should render the Product price', () => {

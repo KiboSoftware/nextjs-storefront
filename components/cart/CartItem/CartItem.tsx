@@ -32,7 +32,8 @@ interface CartItemProps {
   onQuantityUpdate: (cartItemId: string, quantity: number) => void
   onCartItemDelete: (cartItemId: string) => void
   onCartItemActionSelection: () => void
-  onFulfillmentOptionSelection: () => void
+  onFulfillmentOptionChange: (fulfillmentMethod: string, cartItemId: string) => void
+  onProductPickupLocation: (cartItemId: string) => void
 }
 
 const styles = {
@@ -66,7 +67,10 @@ const styles = {
     alignItems: 'flex-start',
     margin: '0',
     position: 'absolute',
-    padding: 1,
+    padding: {
+      xs: '0.5rem 0',
+      sm: '0 0.5rem',
+    },
     top: {
       xs: 0,
       sm: '2%',
@@ -91,21 +95,23 @@ const CartItem = (props: CartItemProps) => {
     onQuantityUpdate,
     onCartItemDelete,
     onCartItemActionSelection,
-    onFulfillmentOptionSelection,
+    onFulfillmentOptionChange,
+    onProductPickupLocation,
   } = props
 
   const theme = useTheme()
-
   const { t } = useTranslation('common')
   const orientationVertical = useMediaQuery(theme.breakpoints.between('xs', 'md'))
+  const cartItemQuantity = cartItem?.quantity || 1
   const { getProductLink } = uiHelpers()
 
-  const handleFulfillmentOption = () => onFulfillmentOptionSelection()
   const handleDelete = (cartItemId: string) => onCartItemDelete(cartItemId)
   const hadleQuantityUpdate = (quantity: number) =>
     onQuantityUpdate(cartItem?.id as string, quantity)
   const handleActionSelection = () => onCartItemActionSelection()
-  const cartItemQuantity = cartItem?.quantity || 1
+  const handleFulfillmentOptionChange = (fulfillmentMethod: string, cartItemId: string) =>
+    onFulfillmentOptionChange(fulfillmentMethod, cartItemId)
+  const handleProductPickupLocation = (cartItemId: string) => onProductPickupLocation(cartItemId)
 
   return (
     <>
@@ -161,9 +167,11 @@ const CartItem = (props: CartItemProps) => {
             <Box sx={{ ...styles.subcontainer }}>
               <FulfillmentOptions
                 fulfillmentOptions={fulfillmentOptions}
-                selected=""
-                onFullfillmentOptionChange={handleFulfillmentOption}
-                onStoreSetOrUpdate={handleFulfillmentOption}
+                selected={cartItem?.fulfillmentMethod || ''}
+                onFullfillmentOptionChange={(fulfillmentMethod: string) =>
+                  handleFulfillmentOptionChange(fulfillmentMethod, cartItem?.id as string)
+                }
+                onStoreSetOrUpdate={() => handleProductPickupLocation(cartItem?.id as string)} // change store: Open storelocator modal. Should not change global store.
               />
             </Box>
           </Box>
@@ -176,6 +184,7 @@ const CartItem = (props: CartItemProps) => {
               />
             </Box>
             <IconButton
+              sx={{ p: 0.5 }}
               aria-label="item-delete"
               name="item-delete"
               onClick={() => handleDelete(cartItem?.id as string)}

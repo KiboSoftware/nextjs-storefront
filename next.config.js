@@ -1,6 +1,7 @@
 /** @type {import('next').NextConfig} */
 const { i18n } = require('./next-i18next.config')
 const LOCATION_COOKIE = 'kibo_purchase_location'
+const DEFAULT_WISHLIST_NAME = 'default-wishlist'
 
 module.exports = {
   reactStrictMode: true,
@@ -64,6 +65,7 @@ module.exports = {
       defaultRange: '160934',
     },
     storeLocationCookie: LOCATION_COOKIE,
+    defaultWishlistName: DEFAULT_WISHLIST_NAME,
   },
   serverRuntimeConfig: {
     revalidate: 60,

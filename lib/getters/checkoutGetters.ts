@@ -1,5 +1,4 @@
-import getConfig from 'next/config'
-
+import { FulfillmentOptions } from '../constants'
 import { cartGetters } from './cartGetters'
 import DefaultImage from '@/public/product_placeholder.svg'
 
@@ -16,6 +15,9 @@ import type {
 } from '@/lib/gql/types'
 
 interface ShippingDetails {
+  firstName: string
+  middleNameOrInitial: string
+  lastNameOrSurname: string
   shippingPhoneHome: string
   shippingPhoneMobile: string
   shippingPhoneWork: string
@@ -23,6 +25,9 @@ interface ShippingDetails {
 }
 
 interface BillingDetails {
+  firstName: string
+  middleNameOrInitial: string
+  lastNameOrSurname: string
   billingPhoneHome: string
   billingPhoneMobile: string
   billingPhoneWork: string
@@ -51,8 +56,6 @@ interface CheckoutDetails {
   paymentMethods: PaymentMethod[]
 }
 
-const { publicRuntimeConfig } = getConfig()
-
 const getOrderNumber = (checkout: Order) => checkout?.orderNumber
 const getEmail = (checkout: Order) => checkout?.email
 const getId = (checkout: Order) => checkout?.id
@@ -79,11 +82,10 @@ const getItemsByFulfillment = (
   )
 }
 const getPickupItems = (checkout: Order): Maybe<CrOrderItem>[] => {
-  return getItemsByFulfillment(checkout, publicRuntimeConfig.fullfillmentOptions[1].shortName)
+  return getItemsByFulfillment(checkout, FulfillmentOptions.PICKUP)
 }
 const getShipItems = (checkout: Order): Maybe<CrOrderItem>[] =>
-  getItemsByFulfillment(checkout, publicRuntimeConfig.fullfillmentOptions[0].shortName)
-const getDeliveryItems = (checkout: Order) => getItemsByFulfillment(checkout, 'Delivery')
+  getItemsByFulfillment(checkout, FulfillmentOptions.SHIP)
 
 const getProductId = (item: Maybe<CrOrderItem> | Maybe<CartItem>): string => item?.id || ''
 
@@ -136,6 +138,13 @@ const getShippingPhoneWork = (checkout: Order): string =>
 const getShipppingAddress = (checkout: Order) =>
   checkout.fulfillmentInfo?.fulfillmentContact?.address as CrAddress
 
+const getBillingFirstName = (checkout: Order): string =>
+  checkout.billingInfo?.billingContact?.firstName || ''
+const getBillingLastNameOrSurname = (checkout: Order): string =>
+  checkout.billingInfo?.billingContact?.lastNameOrSurname || ''
+const getBillingMiddleNameOrInitial = (checkout: Order): string =>
+  checkout?.billingInfo?.billingContact?.middleNameOrInitial || ''
+
 const getBillingPhoneHome = (checkout: Order): string =>
   checkout.billingInfo?.billingContact?.phoneNumbers?.home || ''
 const getBillingPhoneMobile = (checkout: Order): string =>
@@ -144,6 +153,18 @@ const getBillingPhoneWork = (checkout: Order): string =>
   checkout?.billingInfo?.billingContact?.phoneNumbers?.work || ''
 const getBillingAddress = (checkout: Order) =>
   checkout.billingInfo?.billingContact?.address as CrAddress
+
+const getFulfillmentLocationCodes = (cartItems: Maybe<CartItem>[]): string => {
+  const locationCodes = Array.from(
+    cartItems.reduce((set, item) => {
+      if (item?.fulfillmentMethod === FulfillmentOptions.PICKUP) {
+        set.add(`code eq ${item?.fulfillmentLocationCode}`)
+      }
+      return set
+    }, new Set())
+  )
+  return locationCodes.join(' or ')
+}
 
 const getPaymentMethods = (checkout: Order) => {
   const payments: Maybe<Payment>[] = checkout?.payments || []
@@ -163,7 +184,7 @@ const getPaymentMethods = (checkout: Order) => {
 
 const getPersonalDetails = (checkout: Order): Contact => {
   return {
-    email: getShippingEmail(checkout),
+    email: getEmail(checkout),
     firstName: getShippingFirstName(checkout),
     lastNameOrSurname: getShippingLastNameOrSurname(checkout),
   }
@@ -171,6 +192,9 @@ const getPersonalDetails = (checkout: Order): Contact => {
 
 const getShippingDetails = (checkout: Order): ShippingDetails => {
   return {
+    firstName: getShippingFirstName(checkout),
+    middleNameOrInitial: getShippingMiddleNameOrInitial(checkout),
+    lastNameOrSurname: getShippingLastNameOrSurname(checkout),
     shippingPhoneHome: getShippingPhoneHome(checkout),
     shippingPhoneMobile: getShippingPhoneMobile(checkout),
     shippingPhoneWork: getShippingPhoneWork(checkout),
@@ -180,6 +204,9 @@ const getShippingDetails = (checkout: Order): ShippingDetails => {
 
 const getBillingDetails = (checkout: Order): BillingDetails => {
   return {
+    firstName: getBillingFirstName(checkout),
+    middleNameOrInitial: getBillingMiddleNameOrInitial(checkout),
+    lastNameOrSurname: getBillingLastNameOrSurname(checkout),
     billingPhoneHome: getBillingPhoneHome(checkout),
     billingPhoneMobile: getBillingPhoneMobile(checkout),
     billingPhoneWork: getBillingPhoneWork(checkout),
@@ -222,7 +249,6 @@ export const checkoutGetters = {
   getLineItemTaxTotal,
   getPickupItems,
   getShipItems,
-  getDeliveryItems,
   getProductId,
   getProductCode,
   getProductImage,
@@ -232,6 +258,7 @@ export const checkoutGetters = {
   getProductPrice,
   getProductSalePrice,
   getPurchaseLocation,
+  getFulfillmentLocationCodes,
   getPersonalDetails,
   getShippingDetails,
   getBillingDetails,

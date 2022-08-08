@@ -107,5 +107,12 @@
   "find-stores-within-miles": "Find Stores within 100 miles",
   "stores-within-miles_zero": "No Results - 0 stores within 100 miles",
   "stores-within-miles_one": "{{count}} store within 100 miles",
-  "stores-within-miles_other": "{{count}} stores within 100 miles"
+  "stores-within-miles_other": "{{count}} stores within 100 miles",
+
+  "added": "Added",
+  "removed": "Removed",
+  "view-wishlist": "View Wishlist",
+  "my-profile": "My Profile",
+  "logout": "Log Out",
+  "go-to-my-account": "Go to My Account"
 }
