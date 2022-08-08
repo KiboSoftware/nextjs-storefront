@@ -19,7 +19,7 @@ const createMatchMedia = (width: number) => (query: string) => ({
   dispatchEvent: jest.fn(),
 })
 
-describe('checkout Component', () => {
+describe('Component - [KiboHeroCarousel]', () => {
   const setup = () => render(<Common {...Common.args} />)
   it('should render next', () => {
     setup()
