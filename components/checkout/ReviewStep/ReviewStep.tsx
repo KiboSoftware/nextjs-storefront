@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
 
+import { yupResolver } from '@hookform/resolvers/yup'
 import {
   Typography,
   Box,
@@ -10,23 +11,32 @@ import {
   useTheme,
   Checkbox,
   FormControlLabel,
+  FormControl,
   SxProps,
 } from '@mui/material'
 import { useTranslation } from 'next-i18next'
+import { useForm, Controller } from 'react-hook-form'
+import * as yup from 'yup'
 
-import type { Action } from '@/components/checkout/DetailsStep/DetailsStep'
-import OrderPrice from '@/components/common/OrderPrice/OrderPrice'
+import { KiboTextBox, OrderPrice, PasswordValidation } from '@/components/common'
 import type { OrderPriceProps } from '@/components/common/OrderPrice/OrderPrice'
 import ProductItemList from '@/components/common/ProductItemList/ProductItemList'
-import { FormStates } from '@/lib/constants'
+import { useCheckoutStepContext, useAuthContext } from '@/context'
 import { checkoutGetters } from '@/lib/getters'
+import { isPasswordValid } from '@/lib/helpers/validations/validations'
 
-import type { Order } from '@/lib/gql/types'
+import type { Order, Maybe } from '@/lib/gql/types'
+
+export interface PersonalDetails {
+  email: Maybe<string> | undefined
+  showAccountFields: boolean
+  firstName: string
+  lastNameOrSurname: string
+  password: string
+}
 
 interface ReviewStepProps {
-  stepperStatus: string
   checkout: Order
-  onCompleteCallback: (action: Action) => void
   onBackButtonClick: () => void
 }
 
@@ -35,6 +45,11 @@ const buttonStyle = {
   maxWidth: '23.5rem',
   fontSize: (theme: Theme) => theme.typography.subtitle1,
 } as SxProps<Theme> | undefined
+
+const commonStyle = {
+  width: '100%',
+  maxWidth: '421px',
+}
 
 const styles = {
   confirmAndPayButtonStyle: {
@@ -49,15 +64,93 @@ const styles = {
   },
 }
 
+const useDetailsSchema = () => {
+  const { t } = useTranslation('checkout')
+
+  return yup.object().shape({
+    email: yup.string().email().required(t('this-field-is-required')),
+    showAccountFields: yup.boolean(),
+    firstName: yup.string().when('showAccountFields', {
+      is: true,
+      then: yup.string().required(t('this-field-is-required')),
+    }),
+    lastNameOrSurname: yup.string().when('showAccountFields', {
+      is: true,
+      then: yup.string().required(t('this-field-is-required')),
+    }),
+    password: yup.string().when('showAccountFields', {
+      is: true,
+      then: yup.string().required(t('this-field-is-required')),
+    }),
+  })
+}
+
 const ReviewStep = (props: ReviewStepProps) => {
-  const { checkout, stepperStatus, onCompleteCallback, onBackButtonClick } = props
+  const { checkout, onBackButtonClick } = props
 
   const { t } = useTranslation(['checkout', 'common'])
   const theme = useTheme()
+  const { isAuthenticated, createAccount } = useAuthContext()
+  const [isAgreeWithTermsAndConditions, setAggreeWithTermsAndConditions] = useState<boolean>(false)
 
+  const { setStepNext, setStepStatusComplete } = useCheckoutStepContext()
   const { shipItems, pickupItems, orderSummary } = checkoutGetters.getCheckoutDetails(checkout)
-
   const { subTotal, shippingTotal, taxTotal, total } = orderSummary
+
+  const fulfillmentInfo = checkout?.fulfillmentInfo
+  const fulfillmentContact = fulfillmentInfo && fulfillmentInfo?.fulfillmentContact
+  const personalDetails = {
+    email: checkout && checkout.email,
+    showAccountFields: false,
+    firstName: (fulfillmentContact && fulfillmentContact.firstName) || '',
+    lastNameOrSurname: (fulfillmentContact && fulfillmentContact.lastNameOrSurname) || '',
+    password: '',
+  }
+
+  const {
+    formState: { errors, isValid },
+    handleSubmit,
+    control,
+    watch,
+    getValues,
+  } = useForm({
+    mode: 'onBlur',
+    reValidateMode: 'onBlur',
+    defaultValues: personalDetails ? { ...personalDetails, email: checkout?.email } : undefined,
+    resolver: yupResolver(useDetailsSchema()),
+    shouldFocusError: true,
+  })
+
+  const showAccountFields: boolean = watch(['showAccountFields']).join('') === 'true'
+  const userEnteredPassword: string = watch(['password']).join('')
+  const isEnabled = () => {
+    const isUserEnteredPasswordValid = showAccountFields
+      ? isPasswordValid(userEnteredPassword)
+      : true
+
+    const isFormValid = showAccountFields ? isValid && isUserEnteredPasswordValid : true
+
+    return isAgreeWithTermsAndConditions && isFormValid
+  }
+
+  const handleAggreeTermsConditions = (event: React.ChangeEvent<HTMLInputElement>) =>
+    setAggreeWithTermsAndConditions(event.target.checked)
+
+  const onValid = async (formData: PersonalDetails) => {
+    if (formData?.showAccountFields) {
+      await createAccount({
+        email: checkout.email as string,
+        firstName: formData.firstName,
+        lastNameOrSurname: formData.lastNameOrSurname,
+        password: formData.password,
+      })
+    }
+
+    setStepStatusComplete()
+    setStepNext()
+  }
+  const onInvalidForm = () => console.log('Invalid Form')
+  const handleComplete = () => handleSubmit(onValid, onInvalidForm)()
 
   const orderPriceProps: OrderPriceProps = {
     subTotalLabel: t('common:subtotal'),
@@ -69,41 +162,35 @@ const ReviewStep = (props: ReviewStepProps) => {
     tax: t('common:currency', { val: taxTotal }),
     total: t('common:currency', { val: total }),
   }
-  const [isAgreeWithTermsAndConditions, setAggreeWithTermsAndConditions] = useState<boolean>(false)
-
-  const handleAggreeTermsConditions = (event: React.ChangeEvent<HTMLInputElement>) =>
-    setAggreeWithTermsAndConditions(event.target.checked)
-
-  const handleComplete = () => {
-    if (stepperStatus === FormStates.VALIDATE) {
-      onCompleteCallback({ type: FormStates.COMPLETE })
-    }
-  }
 
   return (
     <Box data-testid={'review-step-component'}>
       <Typography variant="h2" component="h2" sx={{ fontWeight: 'bold' }} color="text.primary">
         {t('order-details')}
       </Typography>
+
       <Divider color={theme.palette.primary.main} sx={{ mt: '1.688rem', mb: '1.438rem' }} />
+
       {shipItems && shipItems.length > 0 && (
-        <Box>
+        <Stack gap={4}>
           <Typography variant="h3" component="h3" sx={{ fontWeight: 'bold' }} color="text.primary">
             {t('shipping-to-home')}
           </Typography>
           <ProductItemList items={shipItems} />
           <Divider sx={{ mb: '1.438rem' }} />
-        </Box>
+        </Stack>
       )}
+
       {pickupItems && pickupItems.length > 0 && (
-        <Box>
+        <Stack gap={4}>
           <Typography variant="h3" component="h3" sx={{ fontWeight: 'bold' }} color="text.primary">
             {t('pickup-in-store')}
           </Typography>
           <ProductItemList items={pickupItems} />
           <Divider sx={{ mt: '1.438rem', mb: '1.188rem' }} />
-        </Box>
+        </Stack>
       )}
+
       <OrderPrice {...orderPriceProps} />
 
       <Box sx={{ mt: '31px', mb: '35px' }}>
@@ -121,6 +208,93 @@ const ReviewStep = (props: ReviewStepProps) => {
           }
           label={`${t('terms-conditions')}`}
         />
+
+        <Box>
+          <FormControl>
+            <Controller
+              name="showAccountFields"
+              control={control}
+              defaultValue={personalDetails?.showAccountFields}
+              render={({ field }) => (
+                <FormControlLabel
+                  control={
+                    <Checkbox
+                      inputProps={{
+                        'aria-label': 'showAccountFields',
+                      }}
+                      data-testid="showAccountFields"
+                      size="medium"
+                      color="primary"
+                      disabled={isAuthenticated}
+                      onChange={(_name, value) => field.onChange(value)}
+                    />
+                  }
+                  label={t('i-want-to-create-an-account').toString()}
+                />
+              )}
+            />
+          </FormControl>
+        </Box>
+
+        {getValues()?.showAccountFields && (
+          <FormControl>
+            <Controller
+              name="firstName"
+              control={control}
+              defaultValue={personalDetails?.firstName}
+              render={({ field }) => (
+                <KiboTextBox
+                  value={field.value}
+                  label={t('first-name')}
+                  required
+                  sx={{ ...commonStyle }}
+                  onBlur={field.onBlur}
+                  onChange={(_name, value) => field.onChange(value)}
+                  error={!!errors?.firstName}
+                  helperText={errors?.firstName?.message}
+                />
+              )}
+            />
+            <Controller
+              name="lastNameOrSurname"
+              control={control}
+              defaultValue={personalDetails?.lastNameOrSurname}
+              render={({ field }) => (
+                <KiboTextBox
+                  value={field.value}
+                  label={t('last-name-or-sur-name')}
+                  required
+                  sx={{ ...commonStyle }}
+                  onBlur={field.onBlur}
+                  onChange={(_name, value) => field.onChange(value)}
+                  error={!!errors?.lastNameOrSurname}
+                  helperText={errors?.lastNameOrSurname?.message}
+                />
+              )}
+            />
+            <Controller
+              name="password"
+              control={control}
+              defaultValue={personalDetails?.password}
+              render={({ field }) => (
+                <KiboTextBox
+                  value={field.value}
+                  label={t('password')}
+                  required
+                  sx={{ ...commonStyle }}
+                  onBlur={field.onBlur}
+                  onChange={(_name, value) => field.onChange(value)}
+                  error={!!errors?.password}
+                  helperText={errors?.password?.message}
+                  type="password"
+                  placeholder="password"
+                />
+              )}
+            />
+
+            <PasswordValidation password={userEnteredPassword} />
+          </FormControl>
+        )}
       </Box>
       <Stack alignItems="left">
         <Button
@@ -129,7 +303,7 @@ const ReviewStep = (props: ReviewStepProps) => {
           sx={{
             ...styles.confirmAndPayButtonStyle,
           }}
-          disabled={!isAgreeWithTermsAndConditions}
+          disabled={!isEnabled()}
           onClick={handleComplete}
         >
           {t('confirm-and-pay')}

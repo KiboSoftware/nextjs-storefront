@@ -1,8 +1,9 @@
-import React, { useState } from 'react'
+import React from 'react'
 
-import { Box, Stack, Button, Typography, SxProps } from '@mui/material'
+import { Box, Stack, Button, Typography, SxProps, Divider, useMediaQuery } from '@mui/material'
 import { Theme } from '@mui/material/styles'
 import { useTranslation } from 'next-i18next'
+import { useRouter } from 'next/router'
 
 import {
   DetailsStep,
@@ -13,8 +14,10 @@ import {
   OrderReview,
   OrderSummary,
 } from '@/components/checkout'
-import type { Action } from '@/components/checkout'
-import { FormStates } from '@/lib/constants'
+import { OrderConfirmation } from '@/components/order'
+import { useCheckoutStepContext, STEP_STATUS } from '@/context'
+import { useCheckoutQueries } from '@/hooks'
+import theme from '@/styles/theme'
 
 import type { Order } from '@/lib/gql/types'
 interface CheckoutProps {
@@ -24,38 +27,36 @@ interface CheckoutProps {
 
 const buttonStyle = {
   height: '42px',
-  fontSize: (theme: Theme) => theme.typography.subtitle1,
+  fontSize: (themeParam: Theme) => themeParam.typography.subtitle1,
 } as SxProps<Theme> | undefined
 
 const Checkout = (props: CheckoutProps) => {
-  const { checkout, initialStep = 0 } = props
+  const { checkout: initialCheckout } = props
 
-  const { t } = useTranslation(['checkout', 'common'])
+  const { t } = useTranslation(['checkout'])
+  const router = useRouter()
+
+  const { checkoutId } = router.query
+  const { data: checkout } = useCheckoutQueries({
+    checkoutId: checkoutId as string,
+    initialCheckout,
+  })
+
+  const { activeStep, stepStatus, steps, setStepBack, setStepStatusSubmit } =
+    useCheckoutStepContext()
+  const mdScreen = useMediaQuery(theme.breakpoints.up('md'))
 
   const buttonLabels = [t('go-to-shipping'), t('go-to-payment'), t('review-order')]
-  const steps = [t('common:details'), t('shipping'), t('payment'), t('review')]
 
-  // State
-  const [activeStep, setActiveStep] = useState<number>(initialStep)
-  const [activeStepStatus, setActiveStepStatus] = useState<string>(FormStates.INCOMPLETE)
+  const detailsStepIndex = steps.findIndex(
+    (step: string) => step.toLowerCase() === t('details').toLowerCase()
+  )
+  const reviewStepIndex = steps.findIndex(
+    (step: string) => step.toLowerCase() === t('review').toLowerCase()
+  )
 
-  const detailsStepIndex = steps.findIndex((step) => step === t('common:details'))
-  const reviewStepIndex = steps.findIndex((step) => step === t('review'))
-
-  const handleBack = () => {
-    setActiveStep(activeStep - 1)
-  }
-
-  const handleNext = () => {
-    setActiveStepStatus(FormStates.VALIDATE)
-  }
-
-  const completeStepCallback = (action: Action) => {
-    setActiveStepStatus(FormStates.INCOMPLETE)
-    if (action.type === FormStates.COMPLETE) {
-      setActiveStep(activeStep + 1)
-    }
-  }
+  const handleBack = () => setStepBack()
+  const handleSubmit = () => setStepStatusSubmit()
 
   const orderSummaryArgs = {
     nameLabel: t('order-summary'),
@@ -76,71 +77,83 @@ const Checkout = (props: CheckoutProps) => {
     isUserLoggedIn: true,
   }
 
-  return (
-    <Stack direction={{ xs: 'column', md: 'row' }} gap={3}>
-      <Stack sx={{ width: '100%', maxWidth: '872px' }} gap={3}>
-        <Typography variant="h1" component="div" gutterBottom>
-          {t('checkout', { numberOfItems: 3 })}
-        </Typography>
-        <KiboStepper steps={steps} activeStep={activeStep}>
-          <DetailsStep
-            checkout={checkout}
-            stepperStatus={activeStepStatus}
-            onCompleteCallback={completeStepCallback}
-          />
-          <ShippingStep
-            checkout={checkout}
-            stepperStatus={activeStepStatus}
-            onCompleteCallback={completeStepCallback}
-          />
-          <PaymentStep
-            checkout={checkout}
-            stepperStatus={activeStepStatus}
-            {...paymentStepParams}
-            onCompleteCallback={completeStepCallback}
-          />
-          <ReviewStep
-            checkout={checkout}
-            stepperStatus={activeStepStatus}
-            onCompleteCallback={completeStepCallback}
-            onBackButtonClick={handleBack}
-          />
-        </KiboStepper>
-      </Stack>
+  const numberOfItems = checkout && checkout?.items && checkout?.items?.length
+  const showCheckoutSteps = activeStep !== steps.length
 
-      <Box sx={{ width: '100%', maxWidth: 428, height: 448, paddingTop: '4.313rem' }}>
-        {activeStep != reviewStepIndex && (
-          <OrderSummary {...orderSummaryArgs}>
-            {activeStep < buttonLabels.length && (
-              <Stack direction="column" gap={2}>
-                <Button
-                  variant="contained"
-                  sx={{ ...buttonStyle }}
-                  fullWidth
-                  onClick={handleNext}
-                  disabled={activeStep === steps.length - 1}
-                >
-                  {buttonLabels[activeStep]}
-                </Button>
-                <Button
-                  variant="contained"
-                  color="secondary"
-                  sx={{ ...buttonStyle }}
-                  fullWidth
-                  onClick={handleBack}
-                  disabled={activeStep === detailsStepIndex}
-                >
-                  {t('go-back')}
-                </Button>
+  return (
+    <>
+      {showCheckoutSteps && (
+        <Stack
+          sx={{ paddingTop: '20px', paddingBottom: { md: '40px' } }}
+          direction={{ xs: 'column', md: 'row' }}
+          gap={2}
+        >
+          <Stack sx={{ width: '100%', maxWidth: '872px' }} gap={1}>
+            <Typography variant={mdScreen ? 'h1' : 'h2'} component="div" gutterBottom>
+              {t('checkout', { numberOfItems })}
+            </Typography>
+
+            {!mdScreen && (
+              <Stack sx={{ paddingBottom: '8px' }}>
+                <Divider />
               </Stack>
             )}
-          </OrderSummary>
-        )}
-        {activeStep === reviewStepIndex && (
-          <OrderReview checkout={checkout} steps={steps} setActiveStep={setActiveStep} />
-        )}
-      </Box>
-    </Stack>
+
+            <KiboStepper>
+              <DetailsStep checkout={checkout} />
+              <ShippingStep checkout={checkout as Order} />
+              <PaymentStep checkout={checkout} {...paymentStepParams} />
+              <ReviewStep checkout={checkout as Order} onBackButtonClick={handleBack} />
+            </KiboStepper>
+          </Stack>
+
+          <Box
+            sx={{
+              width: '100%',
+              maxWidth: 428,
+              height: 448,
+              paddingTop: { lg: '4.1rem' },
+              marginLeft: { lg: '1rem' },
+            }}
+          >
+            {activeStep != reviewStepIndex && (
+              <OrderSummary {...orderSummaryArgs}>
+                {activeStep < buttonLabels.length && (
+                  <Stack direction="column" gap={2}>
+                    <Button
+                      variant="contained"
+                      sx={{ ...buttonStyle }}
+                      fullWidth
+                      onClick={handleSubmit}
+                      disabled={stepStatus !== STEP_STATUS.VALID || activeStep === steps.length - 1}
+                    >
+                      {buttonLabels[activeStep]}
+                    </Button>
+                    <Button
+                      variant="contained"
+                      color="secondary"
+                      sx={{ ...buttonStyle }}
+                      fullWidth
+                      onClick={handleBack}
+                      disabled={activeStep === detailsStepIndex}
+                    >
+                      {t('go-back')}
+                    </Button>
+                  </Stack>
+                )}
+              </OrderSummary>
+            )}
+            {activeStep === reviewStepIndex && <OrderReview checkout={checkout as Order} />}
+          </Box>
+        </Stack>
+      )}
+
+      {!showCheckoutSteps && (
+        <Stack sx={{ paddingY: '40px' }}>
+          <OrderConfirmation order={checkout as Order} />
+        </Stack>
+      )}
+    </>
   )
 }
 

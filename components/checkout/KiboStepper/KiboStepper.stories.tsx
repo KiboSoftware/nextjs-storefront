@@ -3,11 +3,20 @@ import React from 'react'
 import { ComponentStory, ComponentMeta } from '@storybook/react'
 
 import KiboStepper from './KiboStepper'
+import { CheckoutStepProvider } from '@/context/CheckoutStepContext/CheckoutStepContext'
+const steps = ['details', 'shipping', 'payment', 'review']
 
 // Common
 export default {
   title: 'Checkout/KiboStepper',
   component: KiboStepper,
+  decorators: [
+    (Story) => (
+      <CheckoutStepProvider steps={steps}>
+        <Story />
+      </CheckoutStepProvider>
+    ),
+  ],
 } as ComponentMeta<typeof KiboStepper>
 
 const Template: ComponentStory<typeof KiboStepper> = (args) => (
@@ -21,25 +30,3 @@ const Template: ComponentStory<typeof KiboStepper> = (args) => (
 
 // Default
 export const Details = Template.bind({})
-Details.args = {
-  steps: ['details', 'shipping', 'payment', 'review'],
-  activeStep: 0,
-}
-
-export const Shipping = Template.bind({})
-Shipping.args = {
-  steps: ['details', 'shipping', 'payment', 'review'],
-  activeStep: 1,
-}
-
-export const Payment = Template.bind({})
-Payment.args = {
-  steps: ['details', 'shipping', 'payment', 'review'],
-  activeStep: 2,
-}
-
-export const Review = Template.bind({})
-Review.args = {
-  steps: ['details', 'shipping', 'payment', 'review'],
-  activeStep: 3,
-}

@@ -6,7 +6,7 @@ describe('[helpers] cookie helper', () => {
   it('should set cookie value', async () => {
     const mockSetCookie = jest.spyOn(cookienext, 'setCookie')
 
-    setPurchaseLocationCookie('ALB')
+    setPurchaseLocationCookie('RICHMOND')
     expect(mockSetCookie).toHaveBeenCalled()
   })
 })

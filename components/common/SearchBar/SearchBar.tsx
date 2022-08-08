@@ -9,6 +9,7 @@ interface SearchProps {
   placeHolder?: string
   searchTerm: string
   onSearch: (searchText: string) => void
+  onKeyEnter?: (searchText: string) => void
   showClearButton: boolean
   childInputRef?: RefObject<HTMLInputElement | undefined>
   inputProps?: any
@@ -37,6 +38,7 @@ const SearchBar = (props: SearchProps) => {
     childInputRef,
     showClearButton = false,
     inputProps,
+    onKeyEnter,
     ...rest
   } = props
   const { t } = useTranslation('common')
@@ -57,6 +59,12 @@ const SearchBar = (props: SearchProps) => {
         value={searchTerm}
         placeholder={placeHolder}
         onChange={handleSearch}
+        onKeyPress={(e) => {
+          if (e.key === 'Enter') {
+            e.preventDefault()
+            onKeyEnter?.(searchTerm)
+          }
+        }}
         size="small"
         sx={{ ...style.inputBase }}
         inputProps={{ 'aria-label': searchInputAriaLabel }}

@@ -3,37 +3,21 @@ import React, { useEffect } from 'react'
 
 import { yupResolver } from '@hookform/resolvers/yup'
 import { AccessTime, CardGiftcard, EmojiEvents, FavoriteBorder } from '@mui/icons-material'
-import {
-  Box,
-  Stack,
-  Checkbox,
-  FormControl,
-  FormControlLabel,
-  Button,
-  IconButton,
-  Typography,
-  Grid,
-  SxProps,
-} from '@mui/material'
+import { Box, Stack, Button, IconButton, Typography, Grid, SxProps } from '@mui/material'
 import { Theme } from '@mui/material/styles'
 import { useTranslation } from 'next-i18next'
 import { useForm, Controller } from 'react-hook-form'
 import * as yup from 'yup'
 
 import KiboTextBox from '@/components/common/KiboTextBox/KiboTextBox'
-import PasswordValidation from '@/components/common/PasswordValidation/PasswordValidation'
-import { CheckoutDetails, useUpdateCheckout } from '@/hooks'
+import { LoginDialog } from '@/components/layout'
+import { useAuthContext, useCheckoutStepContext, STEP_STATUS, useModalContext } from '@/context'
+import { PersonalInfo, useUpdateCheckoutPersonalInfo } from '@/hooks'
 import { FormStates } from '@/lib/constants'
-import { isPasswordValid } from '@/lib/helpers/validations/validations'
 
-import type { Order, OrderInput } from '@/lib/gql/types'
-
+import type { Order, OrderInput, Maybe } from '@/lib/gql/types'
 export interface PersonalDetails {
-  email: string
-  showAccountFields?: boolean
-  firstName: string
-  lastNameOrSurname: string
-  password: string
+  email: Maybe<string> | undefined
 }
 
 export interface Action {
@@ -41,9 +25,7 @@ export interface Action {
 }
 interface DetailsProps {
   setAutoFocus?: boolean
-  stepperStatus: string
   checkout: Order | undefined
-  onCompleteCallback: (action: Action) => void
 }
 
 const commonStyle = {
@@ -79,49 +61,46 @@ const useDetailsSchema = () => {
 }
 
 const DetailsStep = (props: DetailsProps) => {
-  const { setAutoFocus = true, stepperStatus, onCompleteCallback, checkout } = props
+  const { setAutoFocus = true, checkout } = props
 
   const { t } = useTranslation('checkout')
-  const updateCheckoutMutation = useUpdateCheckout()
+  const updateCheckoutPersonalInfo = useUpdateCheckoutPersonalInfo()
+  const { isAuthenticated, setAuthError } = useAuthContext()
+  const { showModal } = useModalContext()
+  const {
+    stepStatus,
+    setStepNext,
+    setStepStatusValid,
+    setStepStatusComplete,
+    setStepStatusIncomplete,
+  } = useCheckoutStepContext()
 
-  const fulfillmentInfo = checkout?.fulfillmentInfo
-  const fulfillmentContact = fulfillmentInfo && fulfillmentInfo?.fulfillmentContact
   const personalDetails = {
-    email: (fulfillmentContact && fulfillmentContact.email) || '',
-    showAccountFields: false,
-    firstName: (fulfillmentContact && fulfillmentContact.firstName) || '',
-    lastNameOrSurname: (fulfillmentContact && fulfillmentContact.lastNameOrSurname) || '',
-    password: '',
+    email: checkout && checkout.email,
+  }
+
+  const openLoginModal = () => {
+    setAuthError('')
+    if (!isAuthenticated) showModal({ Component: LoginDialog })
   }
 
   const {
-    formState: { errors },
+    formState: { errors, isValid },
     handleSubmit,
     control,
-    watch,
-    getValues,
+    reset,
   } = useForm({
     mode: 'onBlur',
     reValidateMode: 'onBlur',
-    defaultValues: personalDetails ? personalDetails : undefined,
+    defaultValues: personalDetails ? { ...personalDetails, email: checkout?.email } : undefined,
     resolver: yupResolver(useDetailsSchema()),
     shouldFocusError: true,
   })
 
-  const showAccountFields = watch(['showAccountFields']).join('')
-  const userEnteredPassword = watch(['password']).join('')
-  const isUserEnteredPasswordValid = () => {
-    return showAccountFields === 'true' ? isPasswordValid(userEnteredPassword) : true
-  }
-
-  const createAccount = async (formData: PersonalDetails) => {
-    console.log(`createAccount: ${JSON.stringify(formData)}`)
-  }
-
-  const updateCheckout = async (formData: PersonalDetails) => {
+  const updatePersonalInfo = async (formData: PersonalDetails) => {
     const { email } = formData
 
-    const checkoutDetails: CheckoutDetails = {
+    const personalInfo: PersonalInfo = {
       orderId: checkout?.id as string,
       updateMode: 'ApplyToOriginal',
       orderInput: {
@@ -129,52 +108,60 @@ const DetailsStep = (props: DetailsProps) => {
         email,
       },
     }
-    await updateCheckoutMutation.mutateAsync(checkoutDetails)
+    await updateCheckoutPersonalInfo.mutateAsync(personalInfo)
   }
 
-  // if form is valid, onSubmit callback
-  const onValid = async (formData: PersonalDetails, _e: any) => {
+  const onValid = async (formData: PersonalDetails) => {
     try {
-      await updateCheckout(formData)
-      if (formData?.showAccountFields) {
-        await createAccount(formData)
-      }
-
-      onCompleteCallback({
-        type: isUserEnteredPasswordValid() ? FormStates.COMPLETE : FormStates.INCOMPLETE,
-      })
+      await updatePersonalInfo(formData)
+      setStepStatusComplete()
+      setStepNext()
     } catch (error) {
-      onCompleteCallback({ type: FormStates.INCOMPLETE })
+      setStepStatusIncomplete()
       console.error(error)
     }
   }
 
-  // form is invalid, notify parent form is incomplete
   const onInvalidForm = (_errors?: any, _e?: any) => {
-    onCompleteCallback({ type: FormStates.INCOMPLETE })
+    setStepStatusIncomplete()
   }
 
   useEffect(() => {
-    if (stepperStatus === FormStates.VALIDATE) {
+    if (stepStatus === STEP_STATUS.SUBMIT) {
       handleSubmit(onValid, onInvalidForm)()
     }
-  }, [stepperStatus])
+  }, [stepStatus])
+
+  useEffect(() => {
+    reset({ ...personalDetails })
+  }, [checkout])
+
+  useEffect(() => {
+    isValid ? setStepStatusValid() : setStepStatusIncomplete()
+  }, [isValid])
 
   return (
     <Stack gap={2} data-testid="checkout-details">
-      <Button
-        variant="contained"
-        color="inherit"
-        sx={{ ...buttonStyle }}
-        style={{ textTransform: 'none' }}
-      >
-        {t('sign-into-your-account')}
-      </Button>
-      <br />
-      {t('or-fill-the-details-below')}
+      {!isAuthenticated && (
+        <div>
+          <Button
+            variant="contained"
+            color="inherit"
+            sx={{ ...buttonStyle }}
+            style={{ textTransform: 'none' }}
+            onClick={openLoginModal}
+          >
+            {t('sign-into-your-account')}
+          </Button>
+          <br />
+          {t('or-fill-the-details-below')}
+        </div>
+      )}
+
       <Typography variant="h2" component="h2" sx={{ fontWeight: 'bold' }}>
         {t('personal-details')}
       </Typography>
+
       <Box>
         <Controller
           name="email"
@@ -183,7 +170,7 @@ const DetailsStep = (props: DetailsProps) => {
           render={({ field }) => (
             <KiboTextBox
               name="email"
-              value={field.value}
+              value={field.value || ''}
               label={t('your-email')}
               required
               autoFocus={setAutoFocus}
@@ -196,117 +183,37 @@ const DetailsStep = (props: DetailsProps) => {
           )}
         />
       </Box>
-      <Box>{t('enjoy-these-perks-with-your-free-account')}</Box>
-      <Grid container>
-        <Grid item xs={12} md={4}>
-          <IconButton aria-label={t('faster-checkout')}>
-            <AccessTime fontSize="medium" />
-          </IconButton>
-          {t('faster-checkout')}
-        </Grid>
-        <Grid item xs={12} md={8}>
-          <IconButton aria-label={t('earn-credits-with-every-purchase')}>
-            <EmojiEvents fontSize="medium" />
-          </IconButton>
-          {t('earn-credits-with-every-purchase')}
-        </Grid>
-        <Grid item xs={12} md={4}>
-          <IconButton aria-label={t('full-rewards-program-benifits')}>
-            <CardGiftcard fontSize="medium" />
-          </IconButton>
-          {t('full-rewards-program-benifits')}
-        </Grid>
-        <Grid item xs={12} md={8}>
-          <IconButton aria-label={t('manage-your-wishlist')}>
-            <FavoriteBorder fontSize="medium" />
-          </IconButton>
-          {t('manage-your-wishlist')}
-        </Grid>
-      </Grid>
-      <Box>
-        <FormControl>
-          <Controller
-            name="showAccountFields"
-            control={control}
-            defaultValue={personalDetails?.showAccountFields}
-            render={({ field }) => (
-              <FormControlLabel
-                control={
-                  <Checkbox
-                    inputProps={{
-                      'aria-label': 'showAccountFields',
-                    }}
-                    data-testid="showAccountFields"
-                    size="medium"
-                    color="primary"
-                    onChange={(_name, value) => field.onChange(value)}
-                  />
-                }
-                label={t('i-want-to-create-an-account').toString()}
-              />
-            )}
-          />
-        </FormControl>
-      </Box>
-      {getValues()?.showAccountFields && (
-        <FormControl>
-          <Controller
-            name="firstName"
-            control={control}
-            defaultValue={personalDetails?.firstName}
-            render={({ field }) => (
-              <KiboTextBox
-                value={field.value}
-                label={t('first-name')}
-                required
-                sx={{ ...commonStyle }}
-                onBlur={field.onBlur}
-                onChange={(_name, value) => field.onChange(value)}
-                error={!!errors?.firstName}
-                helperText={errors?.firstName?.message}
-              />
-            )}
-          />
-          <Controller
-            name="lastNameOrSurname"
-            control={control}
-            defaultValue={personalDetails?.lastNameOrSurname}
-            render={({ field }) => (
-              <KiboTextBox
-                value={field.value}
-                label={t('last-name-or-sur-name')}
-                required
-                sx={{ ...commonStyle }}
-                onBlur={field.onBlur}
-                onChange={(_name, value) => field.onChange(value)}
-                error={!!errors?.lastNameOrSurname}
-                helperText={errors?.lastNameOrSurname?.message}
-              />
-            )}
-          />
-          <Controller
-            name="password"
-            control={control}
-            defaultValue={personalDetails?.password}
-            render={({ field }) => (
-              <KiboTextBox
-                value={field.value}
-                label={t('password')}
-                required
-                sx={{ ...commonStyle }}
-                onBlur={field.onBlur}
-                onChange={(_name, value) => field.onChange(value)}
-                error={!!errors?.password}
-                helperText={errors?.password?.message}
-                type="password"
-                placeholder="password"
-              />
-            )}
-          />
 
-          <PasswordValidation password={userEnteredPassword} />
-        </FormControl>
-      )}
+      <Stack gap={2}>
+        {t('enjoy-these-perks-with-your-free-account')}
+
+        <Grid container>
+          <Grid item xs={12}>
+            <IconButton aria-label={t('faster-checkout')}>
+              <AccessTime fontSize="medium" />
+            </IconButton>
+            {t('faster-checkout')}
+          </Grid>
+          <Grid item xs={12}>
+            <IconButton aria-label={t('earn-credits-with-every-purchase')}>
+              <EmojiEvents fontSize="medium" />
+            </IconButton>
+            {t('earn-credits-with-every-purchase')}
+          </Grid>
+          <Grid item xs={12}>
+            <IconButton aria-label={t('full-rewards-program-benifits')}>
+              <CardGiftcard fontSize="medium" />
+            </IconButton>
+            {t('full-rewards-program-benifits')}
+          </Grid>
+          <Grid item xs={12}>
+            <IconButton aria-label={t('manage-your-wishlist')}>
+              <FavoriteBorder fontSize="medium" />
+            </IconButton>
+            {t('manage-your-wishlist')}
+          </Grid>
+        </Grid>
+      </Stack>
     </Stack>
   )
 }

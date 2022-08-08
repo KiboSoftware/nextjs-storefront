@@ -1,15 +1,13 @@
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
 
 import { CartTemplate } from '@/components/page-templates'
-import { useCartQueries } from '@/hooks'
 import { getCart } from '@/lib/api/operations/'
 
 import type { NextPage, GetServerSidePropsContext } from 'next'
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
-  const { locale, req } = context
-  const response = await getCart(req)
-
+  const { locale, req, res } = context
+  const response = await getCart(req, res)
   return {
     props: {
       cart: response?.currentCart,
@@ -19,11 +17,9 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
 }
 
 const CartPage: NextPage = (props: any) => {
-  const { data: cart } = useCartQueries(props?.cart)
-
   return (
     <>
-      <CartTemplate cart={cart} />
+      <CartTemplate {...props} />
     </>
   )
 }

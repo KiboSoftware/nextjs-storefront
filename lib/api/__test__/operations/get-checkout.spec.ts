@@ -18,7 +18,7 @@ describe('[operations] Get Checkout', () => {
       .mockImplementationOnce(async () => ({ data: { checkout: 'checkout' } }))
 
     const checkoutId = '12345'
-    const response = await getCheckout(checkoutId, { userClaims: 'test' })
+    const response = await getCheckout(checkoutId, { userClaims: 'test' }, '')
 
     expect(util.fetcher).toBeCalledWith(
       { query: getCheckoutQuery, variables: { checkoutId } },

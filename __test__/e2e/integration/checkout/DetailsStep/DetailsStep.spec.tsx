@@ -34,15 +34,6 @@ describe('[components] Details', () => {
     const fullRewardsText = screen.getByText(/full-rewards-program-benifits/i)
     const manageYourWishList = screen.getByText(/manage-your-wishlist/i)
 
-    const iWantToCreateAccount = screen.getByRole('checkbox', { name: /showaccountfields/i })
-
-    const firstNameLabel = screen.queryByText(/last-name/i)
-    const firstNameInput = screen.queryByRole('textbox', { name: /first-name/i })
-    const lastNameLabel = screen.queryByText(/last-name/i)
-    const lastNameInput = screen.queryByRole('textbox', { name: /last-name/i })
-    const passwordLabel = screen.queryByText(/password/i)
-    const passwordInput = screen.queryByRole('textbox', { name: /password/i })
-
     expect(signInButton).toBeVisible()
     expect(orFillTheDetailsText).toBeVisible()
     expect(emailTitle).toBeVisible()
@@ -52,50 +43,6 @@ describe('[components] Details', () => {
     expect(earnCreditsText).toBeVisible()
     expect(fullRewardsText).toBeVisible()
     expect(manageYourWishList).toBeVisible()
-
-    expect(iWantToCreateAccount).toBeInTheDocument()
-
-    expect(firstNameLabel).not.toBeInTheDocument()
-    expect(firstNameInput).not.toBeInTheDocument()
-    expect(lastNameLabel).not.toBeInTheDocument()
-    expect(lastNameInput).not.toBeInTheDocument()
-    expect(passwordLabel).not.toBeInTheDocument()
-    expect(passwordInput).not.toBeInTheDocument()
-  })
-
-  it('should render firstName, lastName and password when user selects "I want to create account"', async () => {
-    const { user } = setup()
-
-    let firstNameLabel = screen.queryByText(/first-name/i)
-    let firstNameInput = screen.queryByRole('textbox', { name: /first-name/i })
-    let lastNameLabel = screen.queryByText(/last-name/i)
-    let lastNameInput = screen.queryByRole('textbox', { name: /last-name/i })
-    const passwordLabel = screen.queryByText(/password/i)
-    let passwordInput = screen.queryByRole('textbox', { name: /password/i })
-
-    expect(firstNameLabel).not.toBeInTheDocument()
-    expect(firstNameInput).not.toBeInTheDocument()
-    expect(lastNameLabel).not.toBeInTheDocument()
-    expect(lastNameInput).not.toBeInTheDocument()
-    expect(passwordLabel).not.toBeInTheDocument()
-    expect(passwordInput).not.toBeInTheDocument()
-
-    const iWantToCreateAccount = screen.getByRole('checkbox', { name: /showaccountfields/i })
-    await act(async () => {
-      await user.click(iWantToCreateAccount)
-    })
-
-    firstNameLabel = screen.getByText(/first-name/i)
-    firstNameInput = screen.getByRole('textbox', { name: /first-name/i })
-    lastNameLabel = screen.getByText(/last-name/i)
-    lastNameInput = screen.getByRole('textbox', { name: /last-name/i })
-    passwordInput = screen.getByPlaceholderText('password')
-
-    expect(firstNameLabel).toBeVisible()
-    expect(firstNameInput).toBeVisible()
-    expect(lastNameLabel).toBeVisible()
-    expect(lastNameInput).toBeVisible()
-    expect(passwordInput).toBeVisible()
   })
 
   it('email should display required field error when user focus out (blur event) the email field', async () => {
@@ -113,25 +60,5 @@ describe('[components] Details', () => {
 
     emailError = screen.getByText(/this\-field\-is\-required/i)
     expect(emailError).toBeVisible()
-  })
-
-  it('Should display required message onBlur of create Account inputs', async () => {
-    // arrange
-    const { user } = setup()
-    const emptyInput = { target: { value: '' } }
-
-    const iWantToCreateAccount = screen.getByRole('checkbox', { name: /showaccountfields/i })
-    await act(async () => {
-      await user.click(iWantToCreateAccount)
-    })
-    const allInputs = screen.getAllByRole('textbox')
-    await act(async () => {
-      allInputs.forEach((input) => {
-        input.focus()
-        fireEvent.blur(input, emptyInput)
-      })
-    })
-    const validationMessage = screen.getAllByText(/this-field-is-required/i)
-    expect(validationMessage).toHaveLength(3)
   })
 })

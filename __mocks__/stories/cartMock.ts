@@ -183,11 +183,11 @@ export const cartResponse: Cart = {
           },
         ],
       },
-      quantity: 1,
+      quantity: 2,
     },
     {
       id: '645802e13dc04e1b803baec400a9ce80',
-      fulfillmentMethod: 'Ship',
+      fulfillmentMethod: 'Pickup',
       purchaseLocation: null,
       fulfillmentLocationCode: 'SACRAMENTO',
       productDiscounts: [],

@@ -5,6 +5,7 @@ import { screen } from '@testing-library/react'
 
 import { renderWithQueryClient } from '../../../__test__/utils/renderWithQueryClient'
 import * as stories from './Checkout.stories'
+import { CheckoutStepProvider } from '@/context/CheckoutStepContext/CheckoutStepContext'
 
 const KiboStepperMock = ({ children }: { children: ReactNode }) => (
   <div data-testid="kibo-stepper-mock">{children}</div>
@@ -14,6 +15,13 @@ const ShippingStepMock = () => <div data-testid="checkout-shipping-mock" />
 const PaymentStepMock = () => <div data-testid="checkout-payment-mock" />
 const ReviewStepMock = () => <div data-testid="checkout-review-mock" />
 
+jest.mock('next/router', () => ({
+  useRouter() {
+    return {
+      query: { checkoutId: '13cbf88a39c9fb00010137fd0000678b' },
+    }
+  },
+}))
 jest.mock('../../checkout/KiboStepper/KiboStepper', () => KiboStepperMock)
 jest.mock('../../checkout/DetailsStep/DetailsStep', () => DetailsStepMock)
 jest.mock('../../checkout/ShippingStep/ShippingStep', () => ShippingStepMock)
@@ -21,7 +29,7 @@ jest.mock('../../checkout/PaymentStep/PaymentStep', () => PaymentStepMock)
 jest.mock('../../checkout/ReviewStep/ReviewStep', () => ReviewStepMock)
 
 jest.mock('@/hooks', () => ({
-  useCheckout: jest.fn(() => ({})),
+  useCheckoutQueries: jest.fn(() => ({})),
   useUpdateCheckout: jest.fn(() => ({})),
 }))
 
@@ -29,7 +37,11 @@ const { Common } = composeStories(stories)
 
 describe('[components] Checkout', () => {
   const setup = () => {
-    renderWithQueryClient(<Common {...Common.args} />)
+    renderWithQueryClient(
+      <CheckoutStepProvider steps={['details', 'shipping', 'payment', 'review']}>
+        <Common {...Common.args} />
+      </CheckoutStepProvider>
+    )
   }
 
   it('should render component', () => {

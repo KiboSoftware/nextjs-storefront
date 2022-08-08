@@ -115,7 +115,6 @@ const SearchStore = (props: SearchStoreProps) => {
               onChange={handleStoreSelection}
             />
           </Box>
-          <FullWidthDivider />
         </Box>
       )}
     </>

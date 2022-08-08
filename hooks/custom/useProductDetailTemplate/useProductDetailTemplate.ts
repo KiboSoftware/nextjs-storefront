@@ -16,11 +16,6 @@ interface SelectedFulfillmentOption {
   location?: LocationCustom
 }
 
-interface SelectedFulfillmentOption {
-  method: string
-  location?: LocationCustom
-}
-
 export const useProductDetailTemplate = (props: UseProductDetailTemplateProps) => {
   const { product, purchaseLocation } = props
   const [currentProduct, setCurrentProduct] = useState<ProductCustom>(product)

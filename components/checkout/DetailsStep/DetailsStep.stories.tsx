@@ -3,6 +3,7 @@ import React from 'react'
 import { ComponentStory, ComponentMeta } from '@storybook/react'
 
 import DetailsStep from './DetailsStep'
+import { CheckoutStepProvider } from '@/context'
 
 // Common
 export default {
@@ -11,22 +12,22 @@ export default {
   argTypes: { onPersonalDetailsSave: { action: 'clicked' } },
 } as ComponentMeta<typeof DetailsStep>
 
-const Template: ComponentStory<typeof DetailsStep> = (args) => <DetailsStep {...args} />
+const Template: ComponentStory<typeof DetailsStep> = (args) => (
+  <CheckoutStepProvider steps={['details', 'shipping', 'payment', 'review']}>
+    <DetailsStep {...args} />
+  </CheckoutStepProvider>
+)
 
 // Default
 export const Common = Template.bind({})
 Common.args = {
   setAutoFocus: false,
-  stepperStatus: 'INVALID',
   checkout: undefined,
-  onCompleteCallback: () => console.log('called onCompleteCallback : '),
 }
 
 // With account fields
 export const withAccountCreation = Template.bind({})
 withAccountCreation.args = {
   setAutoFocus: false,
-  stepperStatus: 'INVALID',
-  onCompleteCallback: () => console.log('called onCompleteCallback : '),
   checkout: undefined,
 }

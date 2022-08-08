@@ -1,6 +1,6 @@
 import { renderHook } from '@testing-library/react-hooks'
 
-import { useCartMutation } from './useCartMutation'
+import { useCartMutationAddToCart } from './useCartMutationAddToCart'
 import { cartItemMock } from '@/__mocks__/stories/cartItemMock'
 import { createQueryClientWrapper } from '@/__test__/utils/renderWithQueryClient'
 
@@ -21,16 +21,24 @@ const productInput = {
   variationProductCode: 'MS-BTL-002-8',
 }
 
-describe('[hooks] useCartMutation', () => {
-  it('should use useCartMutation', async () => {
+describe('[hooks] useCartMutationAddToCart', () => {
+  beforeEach(() => {
+    jest.clearAllMocks()
+  })
+  afterEach(() => {
+    jest.clearAllMocks()
+  })
+
+  it('should use useCartMutationAddToCart when addToCart', () => {
     renderHook(
       async () => {
-        const { addToCart } = useCartMutation()
-        const response = await addToCart.mutateAsync({
+        const { addToCart } = useCartMutationAddToCart()
+        const addResponse = await addToCart.mutateAsync({
           product: productInput,
           quantity: 6,
         })
-        expect(response).toStrictEqual(cartItemMock)
+
+        expect(addResponse).toStrictEqual(cartItemMock)
       },
       {
         wrapper: createQueryClientWrapper(),

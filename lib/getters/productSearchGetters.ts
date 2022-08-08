@@ -12,13 +12,20 @@ const getCategoryFacet = (
   productSearchResult: ProductSearchResult,
   categoryCode?: string | string[]
 ) => {
+  let header: string, childrenCategories: FacetValue[]
   const facetName = 'CategoryCode'
 
   // Searching categories by facetName i.e. : CategoryCode
   const facet = getFacetByName(productSearchResult, facetName)
-  const parent = facet?.values?.find((f) => categoryCode === f?.value)
-  const header = parent?.label as string
-  const childrenCategories = parent?.childrenFacetValues as FacetValue[]
+
+  if (!categoryCode) {
+    header = ''
+    childrenCategories = facet?.values as FacetValue[]
+  } else {
+    const parent = facet?.values?.find((f) => categoryCode === f?.value)
+    header = parent?.label as string
+    childrenCategories = parent?.childrenFacetValues as FacetValue[]
+  }
   return { header, childrenCategories }
 }
 

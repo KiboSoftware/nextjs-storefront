@@ -5,6 +5,9 @@ import { useTranslation } from 'next-i18next'
 import type { CrAddress } from '@/lib/gql/types'
 
 interface AddressProps extends CrAddress {
+  firstName?: string
+  middleNameOrInitial?: string
+  lastNameOrSurname?: string
   title?: string
   radio?: boolean
   variant?: Variant
@@ -12,6 +15,9 @@ interface AddressProps extends CrAddress {
 
 const AddressCard = (props: AddressProps) => {
   const {
+    firstName,
+    middleNameOrInitial,
+    lastNameOrSurname,
     title,
     address1,
     address2,
@@ -22,6 +28,8 @@ const AddressCard = (props: AddressProps) => {
   } = props
   const { t } = useTranslation('checkout')
 
+  const isNameAvailable = firstName || middleNameOrInitial || lastNameOrSurname
+
   return (
     <>
       {title && (
@@ -31,6 +39,12 @@ const AddressCard = (props: AddressProps) => {
       )}
 
       <Box pt={1}>
+        {isNameAvailable && (
+          <Typography variant={variant}>
+            {firstName} {middleNameOrInitial} {lastNameOrSurname}
+          </Typography>
+        )}
+
         <Typography variant={variant}>{address1}</Typography>
         <Typography variant={variant}>
           {t('apartment')}

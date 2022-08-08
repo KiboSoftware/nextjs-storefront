@@ -16,15 +16,15 @@ import { LoginData } from '@/components/layout/Login/LoginContent/LoginContent'
 import type { RegisterAccountInputData } from '@/components/layout/RegisterAccount/Content/Content'
 import { useUserAccountRegistrationMutations, useUserMutations, useUserQueries } from '@/hooks'
 import { removeClientCookie, storeClientCookie } from '@/lib/helpers/cookieHelper'
-import { cartKeys, loginKeys } from '@/lib/react-query/queryKeys'
+import { cartKeys, loginKeys, wishlistKeys } from '@/lib/react-query/queryKeys'
 
 import type { CustomerAccount } from '@/lib/gql/types'
 
-interface AuthContextType {
+export interface AuthContextType {
   isAuthenticated: boolean
   user?: CustomerAccount
   login: (params: LoginData, onSuccessCallBack: () => void) => any
-  createAccount: (params: RegisterAccountInputData, onSuccessCallBack: () => void) => any
+  createAccount: (params: RegisterAccountInputData, onSuccessCallBack?: () => void) => any
   setAuthError: Dispatch<SetStateAction<string>>
   authError: string
   logout: () => void
@@ -48,7 +48,7 @@ AuthContext.displayName = 'AuthContext'
 
 export const AuthContextProvider = ({ children }: AuthContextProviderProps) => {
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false)
-  const [user, setUser] = useState<CustomerAccount>()
+  const [user, setUser] = useState<CustomerAccount | undefined>(undefined)
   const [authError, setAuthError] = useState<string>('')
   const { publicRuntimeConfig } = getConfig()
   const authCookieName = publicRuntimeConfig.userCookieKey.toLowerCase()
@@ -59,13 +59,14 @@ export const AuthContextProvider = ({ children }: AuthContextProviderProps) => {
 
   const queryClient = useQueryClient()
 
-  const handleOnSuccess = (account: any, onSuccessCallBack: () => void) => {
+  const handleOnSuccess = (account: any, onSuccessCallBack?: () => void) => {
     setCookieAndUser(account)
     queryClient.invalidateQueries(cartKeys.all)
-    onSuccessCallBack()
+    onSuccessCallBack && onSuccessCallBack()
+    queryClient.removeQueries(wishlistKeys.all)
   }
   // register user
-  const createAccount = (params: RegisterAccountInputData, onSuccessCallBack: () => void) => {
+  const createAccount = (params: RegisterAccountInputData, onSuccessCallBack?: () => void) => {
     try {
       const createAccountAndLoginMutationVars = {
         account: {
@@ -168,6 +169,7 @@ export const AuthContextProvider = ({ children }: AuthContextProviderProps) => {
 
 export const useAuthContext = () => {
   const context = useContext(AuthContext)
+
   if (context === undefined) throw new Error('useContext must be inside a Provider with a value')
   return context
 }

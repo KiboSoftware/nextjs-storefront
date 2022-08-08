@@ -1,10 +1,11 @@
-import { useMutation } from 'react-query'
+import { useMutation, useQueryClient } from 'react-query'
 
 import { makeGraphQLClient } from '@/lib/gql/client'
 import { addToCartMutation } from '@/lib/gql/mutations'
 import { buildAddToCartInput } from '@/lib/helpers/buildAddToCartInput'
+import { cartKeys } from '@/lib/react-query/queryKeys'
 
-import { ProductOption } from '@/lib/gql/types'
+import type { ProductOption } from '@/lib/gql/types'
 
 export interface AddToCartProductInput {
   options: ProductOption[]
@@ -34,8 +35,13 @@ const addToCart = async (props: AddToCartInputParams) => {
   return response?.addItemToCurrentCart
 }
 
-export const useCartMutation = () => {
+export const useCartMutationAddToCart = () => {
+  const queryClient = useQueryClient()
   return {
-    addToCart: useMutation(addToCart), //todo - invalidate query
+    addToCart: useMutation(addToCart, {
+      onSuccess: () => {
+        queryClient.invalidateQueries(cartKeys.all)
+      },
+    }),
   }
 }
