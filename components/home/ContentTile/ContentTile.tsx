@@ -51,6 +51,17 @@ const styles = {
     width: '100%',
     flexDirection: 'column',
   },
+  linkStyle: {
+    color: 'text.primary',
+    fontSize: '1rem',
+    fontWeight: '500',
+    textTransform: 'uppercase',
+    margin: '1rem',
+  },
+  titleStyle: {
+    display: 'inline-block',
+    veriticalAlign: 'middle',
+  },
 }
 
 const ContentTiles = (props: TileProps) => {
@@ -58,22 +69,19 @@ const ContentTiles = (props: TileProps) => {
   const mobileView = useMediaQuery(kiboTheme.breakpoints.down('sm'))
   const LinkStyle = styled('div')({
     display: 'flex',
-    fontWeight: 'bold',
-    margin: mobileView ? '5%' : '3%',
-    fontSize: mobileView ? '0.75rem' : '1rem',
   })
 
   const { imgSource, title, subtitle, link1, link2, link3 } = props
   return (
     <Box sx={styles.mainStyle}>
-      <KiboImage src={imgSource} width={'100%'} height={mobileView ? '150px' : '250px'} />
+      <KiboImage
+        src={imgSource}
+        width={'100%'}
+        height={mobileView ? '150px' : '200px'}
+        objectFit="cover"
+      />
       <Box sx={styles.boxStyle}>
-        <Box
-          sx={{
-            display: 'inline-block',
-            veriticalAlign: 'middle',
-          }}
-        >
+        <Box sx={styles.titleStyle}>
           <Typography
             sx={{
               fontSize: (theme: Theme) => theme.typography.h2,
@@ -82,15 +90,11 @@ const ContentTiles = (props: TileProps) => {
             {title}
           </Typography>
         </Box>
-        <Box
-          sx={{
-            display: 'inline-block',
-            veriticalAlign: 'middle',
-          }}
-        >
+        <Box sx={styles.titleStyle}>
           <Typography
             sx={{
               fontSize: mobileView ? '0.75rem' : '1rem',
+              fontWeight: '400',
             }}
           >
             {subtitle}
@@ -100,21 +104,21 @@ const ContentTiles = (props: TileProps) => {
         <Box sx={styles.linkBoxStyle}>
           <LinkStyle>
             <Link href={link1.url}>
-              <MuiLink underline="none" component="button" variant="body1" color="text.primary">
+              <MuiLink underline="none" component="button" sx={styles.linkStyle}>
                 {link1.title}
               </MuiLink>
             </Link>
           </LinkStyle>
           <LinkStyle>
             <Link href={link2.url}>
-              <MuiLink underline="none" component="button" variant="body1" color="text.primary">
+              <MuiLink underline="none" component="button" sx={styles.linkStyle}>
                 {link2.title}
               </MuiLink>
             </Link>
           </LinkStyle>
           <LinkStyle>
             <Link href={link3.url}>
-              <MuiLink underline="none" component="button" variant="body1" color="text.primary">
+              <MuiLink underline="none" component="button" sx={styles.linkStyle}>
                 {link3.title}
               </MuiLink>
             </Link>
@@ -133,8 +137,9 @@ function ContentTile({ largeTileProps, smallTileProps }: ContentTileProps) {
       <Box
         sx={{
           display: 'flex',
-          gap: '20px',
+          gap: '30px',
           flexDirection: mobileView ? 'column' : 'row',
+          marginBottom: '30px',
         }}
       >
         {largeTileProps.map((tile: TileProps, index) => (
@@ -150,7 +155,7 @@ function ContentTile({ largeTileProps, smallTileProps }: ContentTileProps) {
         ))}
       </Box>
       <Box sx={{ width: '100%' }}>
-        <Grid container rowSpacing={2} columnSpacing={{ xs: 3, sm: 4, md: 3 }}>
+        <Grid container rowSpacing={1} columnSpacing={{ xs: 3, sm: 4, md: 4 }}>
           {smallTileProps.map((tile: TileProps, index) => (
             <Grid key={index} item xs={mobileView ? 6 : 3}>
               <ContentTiles
