@@ -17,7 +17,7 @@ describe('[component] - FilterOrders', () => {
     expect(screen.getByText(/filter-by/i)).toBeVisible()
     expect(screen.getByText(FacetTypeForHistory[0].label)).toBeVisible()
     FacetTypeForHistory[0].values?.map(async (option) => {
-      expect(screen.getByText(`${option?.label}`)).toBeVisible()
+      expect(screen.getAllByText(`${option?.label}`)[0]).toBeVisible()
       const checkbox = screen.getByRole('checkbox', {
         name: new RegExp(option?.label),
       })
