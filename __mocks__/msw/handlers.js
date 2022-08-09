@@ -109,7 +109,7 @@ export const cartHandlers = [
     return res(
       ctx.data({
         deleteCartItemMutation: true,
-        })
+      })
     )
   }),
 
