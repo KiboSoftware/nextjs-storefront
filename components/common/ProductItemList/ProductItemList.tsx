@@ -39,7 +39,7 @@ const ProductItemList = (props: ProductItemListProps) => {
       data-testid="product-item-stack"
     >
       {items?.map((item: Maybe<CrOrderItem>) => (
-        <>
+        <Stack key={item?.id}>
           <ProductItem
             id={orderGetters.getProductId(item)}
             productCode={orderGetters.getProductCode(item)}
@@ -53,13 +53,12 @@ const ProductItemList = (props: ProductItemListProps) => {
             isPickupItem={isPickupItem}
             expectedDeliveryDate={expectedDeliveryDate}
             onStoreLocatorClick={onClickChangeStore}
-            key={item?.id}
             data-testid="product-item"
           ></ProductItem>
           {showAddress && item?.fulfillmentLocationCode && (
             <AddressCard {...storePickupAddress(item?.fulfillmentLocationCode)} />
           )}
-        </>
+        </Stack>
       ))}
     </Stack>
   )

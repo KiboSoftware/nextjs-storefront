@@ -11,9 +11,9 @@ import type { Facet as FacetType, FacetValue } from '@/lib/gql/types'
 interface FilterOrdersProps {
   facetList?: FacetType[]
   appliedFilters: FacetValue[]
-  onApplyFilter: (selectedFilters: string) => void
+  onFilterApply: (selectedFilters: string) => void
   onFilterByClose: () => void
-  onRemoveSelectedTile: (tile: string) => void
+  onSelectedTileRemoval: (tile: string) => void
 }
 
 const styles = {
@@ -65,16 +65,15 @@ const styles = {
   },
 }
 
-// dummy implementation
 const FilterOrders = (props: FilterOrdersProps) => {
-  const { facetList, appliedFilters, onApplyFilter, onFilterByClose, onRemoveSelectedTile } = props
+  const { facetList, appliedFilters, onFilterApply, onFilterByClose, onSelectedTileRemoval } = props
 
   const { t } = useTranslation('common')
   const [selectedFacetItems, setSelectedFacetItems] = useState<string>('')
 
   const handleFilterByClose = () => onFilterByClose()
-  const handleApplyFilter = () => {
-    onApplyFilter(selectedFacetItems)
+  const handleFilterApply = () => {
+    selectedFacetItems && onFilterApply(selectedFacetItems)
     onFilterByClose()
   }
   const handleFacetItemSelection = (selectedFacetItems: string) =>
@@ -93,7 +92,7 @@ const FilterOrders = (props: FilterOrdersProps) => {
           showSearchAndCount={false}
           shouldRouteUpdate={false}
           onFilterByClose={onFilterByClose}
-          onRemoveSelectedTile={onRemoveSelectedTile}
+          onSelectedTileRemoval={onSelectedTileRemoval}
           onFacetItemSelection={handleFacetItemSelection}
         />
         <Box sx={{ ...styles.buttons }}>
@@ -101,7 +100,7 @@ const FilterOrders = (props: FilterOrdersProps) => {
             variant="contained"
             color="primary"
             sx={{ ...styles.viewResults }}
-            onClick={handleApplyFilter}
+            onClick={handleFilterApply}
           >
             {t('apply')}
           </Button>

@@ -41,14 +41,13 @@ const OrderHistoryTemplate = (props: OrderHistoryProps) => {
   const [showFilterBy, setFilterBy] = useState<boolean>(false)
   const [selectedOrder, setSelectedOrder] = useState<Order | undefined>(undefined)
   const { updateRoute, changeFilters } = useUpdateRoutes()
-
-  const facetList = facetGetters.getFacetListByQueryFilter(queryFilters)
-  const facetType = facetGetters.getFacetTypeForHistory()
-  let appliedFilters = facetGetters.getAppliedFacetList(facetList)
-
   const theme = useTheme()
   const mdScreen = useMediaQuery(theme.breakpoints.up('md'))
   const { t } = useTranslation('common')
+
+  const facetList = facetGetters.getFacetListByQueryFilter(queryFilters)
+  const facetType = facetGetters.getFacetTypeForHistory(t)
+  let appliedFilters = facetGetters.getAppliedFacetList(facetList)
 
   const handleFilterBy = () => setFilterBy(!showFilterBy)
   const handleAccountTitleClick = () => onAccountTitleClick()
@@ -56,10 +55,10 @@ const OrderHistoryTemplate = (props: OrderHistoryProps) => {
     const order = items?.find((orderItem) => orderItem?.id === id) as Order
     setSelectedOrder(order)
   }
-  const handleApplyFilter = (selectedFilters: string) => changeFilters(selectedFilters)
+  const handleFilterApply = (selectedFilters: string) => changeFilters(selectedFilters)
   const handleShowOrderHistoryItem = () => setSelectedOrder(undefined)
 
-  const handleRemoveSelectedTile = (selectedTile: string) => {
+  const handleSelectedTileRemoval = (selectedTile: string) => {
     facetList.find((facet) => {
       facet.filterValue === selectedTile ? (facet.isApplied = false) : facet.isApplied
     })
@@ -99,7 +98,7 @@ const OrderHistoryTemplate = (props: OrderHistoryProps) => {
             >
               <FilterTiles
                 appliedFilters={appliedFilters}
-                onRemoveSelectedTile={handleRemoveSelectedTile}
+                onSelectedTileRemoval={handleSelectedTileRemoval}
               />
               <Button
                 variant="outlined"
@@ -136,8 +135,8 @@ const OrderHistoryTemplate = (props: OrderHistoryProps) => {
               facetList={facetType}
               appliedFilters={appliedFilters}
               onFilterByClose={handleFilterBy}
-              onApplyFilter={handleApplyFilter}
-              onRemoveSelectedTile={handleRemoveSelectedTile}
+              onFilterApply={handleFilterApply}
+              onSelectedTileRemoval={handleSelectedTileRemoval}
             />
           </Stack>
         )}

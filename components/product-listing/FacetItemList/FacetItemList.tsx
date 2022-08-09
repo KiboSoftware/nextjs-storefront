@@ -31,6 +31,7 @@ const FacetItemList = (props: FacetItemListProps) => {
     const selectedFacetItems = facetGetters.getSelectedFacetItems(factItemList)
     onFacetItemSelection && onFacetItemSelection(selectedFacetItems)
   }
+
   useEffect(() => {
     itemList.length && setFactItemList(itemList)
   }, [itemList, factItemList])

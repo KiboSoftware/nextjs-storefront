@@ -17,22 +17,24 @@ const order = Common.args?.orderCollection?.items || []
 
 const setup = () => {
   const user = userEvent.setup()
+  const mockOnAccountTitleClick = jest.fn()
   const router = createMockRouter()
 
   render(
     <RouterContext.Provider value={router}>
-      <Common {...Common.args} />
+      <Common {...Common.args} onAccountTitleClick={mockOnAccountTitleClick} />
     </RouterContext.Provider>
   )
 
   return {
     user,
+    mockOnAccountTitleClick,
     router,
   }
 }
 
 describe('[component] - OrderHistoryTemplate', () => {
-  it('should get order list by applying the time filter', async () => {
+  it('should get order list by applying the time filters', async () => {
     const { user } = setup()
     const submittedDate = orderGetters.getSubmittedDate(order[0] as Order)
     const productNames = orderGetters.getProductNames(order[0] as Order)
@@ -52,7 +54,8 @@ describe('[component] - OrderHistoryTemplate', () => {
 
     const applyButton = screen.getByRole('button', { name: /apply/i })
     await user.click(applyButton)
-
+    const historyItem = await screen.findAllByTestId('history-item')
+    expect(historyItem).toHaveLength(order.length)
     expect(screen.getByText(submittedDate)).toBeVisible()
     expect(screen.getByText(productNames)).toBeVisible()
   })
@@ -69,5 +72,13 @@ describe('[component] - OrderHistoryTemplate', () => {
 
     const viewOrderDetailsAfter = screen.getByRole('heading', { name: /view-order-details/i })
     await waitFor(() => expect(viewOrderDetailsAfter).toBeInTheDocument())
+  })
+
+  it('should go back to my account page on clicking on back arrow icon', async () => {
+    const { user, mockOnAccountTitleClick } = setup()
+    const applyButton = screen.getByTestId(/ArrowBackIosIcon/i)
+    await user.click(applyButton)
+    expect(mockOnAccountTitleClick).toBeCalled()
+    expect(screen.getByText(/my-account/i)).toBeVisible()
   })
 })

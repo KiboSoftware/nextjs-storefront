@@ -19,8 +19,8 @@ export enum OrderStatus {
 
 const currentYear = new Date().getFullYear()
 export const FacetListForHistory = [
-  { label: 'Last 30 days', filterValue: 'M-1', isApplied: false, isDisplayed: true, count: 0 },
-  { label: 'Last 6 months', filterValue: 'M-6', isApplied: false, isDisplayed: true, count: 0 },
+  { label: 'last-30-days', filterValue: 'M-1', isApplied: false, isDisplayed: true, count: 0 },
+  { label: 'last-6-months', filterValue: 'M-6', isApplied: false, isDisplayed: true, count: 0 },
   {
     label: `${currentYear}`,
     filterValue: `Y-${currentYear}`,
@@ -52,5 +52,5 @@ export const FacetListForHistory = [
 ]
 
 export const FacetTypeForHistory = [
-  { facetType: 'Value', label: 'Time Filter', values: FacetListForHistory },
+  { facetType: 'Value', label: 'time-filter', values: FacetListForHistory },
 ]

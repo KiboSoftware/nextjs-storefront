@@ -18,7 +18,7 @@ interface CategoryFilterByMobileProps {
   breadCrumbsList: BreadCrumbType[]
   onClearAllFilters: () => void
   onFilterByClose: () => void
-  onRemoveSelectedTile: (tile: string) => void
+  onSelectedTileRemoval: (tile: string) => void
 }
 
 const styles = {
@@ -81,7 +81,7 @@ const CategoryFilterByMobile = (props: CategoryFilterByMobileProps) => {
     breadCrumbsList,
     onClearAllFilters,
     onFilterByClose,
-    onRemoveSelectedTile,
+    onSelectedTileRemoval,
     isLoading,
   } = props
 
@@ -113,7 +113,7 @@ const CategoryFilterByMobile = (props: CategoryFilterByMobileProps) => {
           facetList={facetList}
           appliedFilters={appliedFilters}
           onFilterByClose={onFilterByClose}
-          onRemoveSelectedTile={onRemoveSelectedTile}
+          onSelectedTileRemoval={onSelectedTileRemoval}
         />
         <Box sx={{ ...styles.buttons }}>
           <Button

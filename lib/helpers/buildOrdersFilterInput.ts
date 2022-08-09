@@ -1,3 +1,5 @@
+import getConfig from 'next/config'
+
 const getPastDateTimestamp = (months: number) => {
   const today = new Date()
   today.setMonth(today.getMonth() - months)
@@ -11,10 +13,11 @@ export const buildOrdersFilterInput = (params: {
   orderNumber?: string
   billingEmail?: string
 }) => {
+  const { publicRuntimeConfig } = getConfig()
   const variables = {
     filter: '',
-    startIndex: params.startIndex || 0,
-    pageSize: params.pageSize || 20,
+    startIndex: params.startIndex || publicRuntimeConfig.orderHistory.startIndex,
+    pageSize: params.pageSize || publicRuntimeConfig.orderHistory.pageSize,
   }
 
   // To view order history page
@@ -34,6 +37,5 @@ export const buildOrdersFilterInput = (params: {
   }
 
   variables.filter = variables.filter.concat(' and status ne Abandoned')
-  console.log('vvariables', variables.filter)
   return variables
 }
