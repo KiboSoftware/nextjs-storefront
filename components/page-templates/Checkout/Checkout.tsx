@@ -45,7 +45,7 @@ const Checkout = (props: CheckoutProps) => {
 
   const { user } = useAuthContext()
   const { data: savedUserAddressData } = useUserAddressesQueries({
-    accountId: user?.id as number, // geetanshu
+    accountId: user?.id as number,
   })
 
   const { activeStep, stepStatus, steps, setStepBack, setStepStatusSubmit } =

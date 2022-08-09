@@ -3,8 +3,7 @@ import React, { useEffect, useState } from 'react'
 import { Box, Stack, Typography } from '@mui/material'
 import { useTranslation } from 'next-i18next'
 
-import AddressCard from '@/components/common/AddressCard/AddressCard'
-import KiboRadio from '@/components/common/KiboRadio/KiboRadio'
+import { KiboRadio, AddressCard } from '@/components/common'
 
 import type { CrAddress, CuAddress, CustomerContact } from '@/lib/gql/types'
 
@@ -14,7 +13,7 @@ interface AddressListProps {
   radio?: boolean
   addresses: CustomerContact[] | undefined
   selectedAddressId?: string
-  onAddressSelection: (addressId: string) => any
+  onAddressSelection: (addressId: string) => void
 }
 
 interface KiboAddressListProps {
@@ -22,10 +21,9 @@ interface KiboAddressListProps {
   heading?: string
   subHeading?: string
   selectedAddressId?: string
-  onAddressSelect: (addressId: string) => any
+  onAddressSelect: (addressId: string) => void
 }
-
-const buildAddressProps = (address: CrAddress | CuAddress | any) => {
+const buildAddressProps = (address: CuAddress | CrAddress) => {
   const { address1, address2, cityOrTown, stateOrProvince, postalOrZipCode } = address
   return {
     address1,
@@ -81,7 +79,7 @@ const KiboAddressList = (props: AddressListProps) => {
       )}
       {addresses?.map((item: CustomerContact) => (
         <Box paddingY={1} key={item.id + 'address'}>
-          <AddressCard title={''} {...buildAddressProps(item.address)} />
+          <AddressCard title={''} {...buildAddressProps(item.address as CuAddress)} />
         </Box>
       ))}
     </>
@@ -99,7 +97,7 @@ const KiboRadioAddressList = (props: KiboAddressListProps) => {
         label: (
           <AddressCard
             title={index === 0 ? t('common:primary') : ''}
-            {...buildAddressProps(item.address)}
+            {...buildAddressProps(item.address as CuAddress)}
           />
         ),
       })

@@ -24,7 +24,6 @@ describe('[component] - AddressList', () => {
   const addressCount = userAddressResponse?.items?.length
   it('should render the component without radio when radio prop is false', () => {
     setup(WithoutRadio.args)
-    console.log('Common.args : ', Common.args)
     const addressCard = screen.getAllByTestId('address-card')
     const heading = screen.getByText(WithoutRadio.args.heading)
     expect(heading).toBeVisible()
@@ -34,7 +33,12 @@ describe('[component] - AddressList', () => {
 
   it('should render the component with radio button when radio prop is true', () => {
     setup(Radio.args)
+    const heading = screen.getByText(Radio.args.heading)
+    const subHeading = screen.getByText(Radio.args.subHeading)
     const addressList = screen.getAllByRole('radio')
+
+    expect(heading).toBeVisible()
+    expect(subHeading).toBeVisible()
     expect(addressList[0]).toBeInTheDocument()
     expect(addressList).toHaveLength(addressCount)
   })
