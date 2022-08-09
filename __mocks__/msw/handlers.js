@@ -59,7 +59,10 @@ export const checkoutHandlers = [
     )
   }),
 
-  // Order Reivew Step
+  // Reivew Step
+  graphql.mutation('createOrderAction', (_req, res, ctx) => {
+    return res(ctx.data({ createOrderAction: orderMock.checkout }))
+  }),
 ]
 
 export const accountHandlers = [

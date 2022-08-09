@@ -24,6 +24,7 @@ export * from './custom/useWishlist/useWishlist'
 // Mutation hooks
 export * from './mutations/useUpdateCheckout/useUpdateCheckoutPersonalInfo/useUpdateCheckoutPersonalInfo'
 export * from './mutations/useUpdateCheckout/useUpdateCheckoutShippingInfo/useUpdateCheckoutShippingInfo'
+export * from './mutations/useCreateOrderMutation/useCreateOrderMutation'
 export * from './mutations/useUser/useUserMutations'
 export * from './mutations/useUser/useUserAccountRegistrationMutations'
 export * from './mutations/useCartMutation/useCartMutationAddToCart/useCartMutationAddToCart'
