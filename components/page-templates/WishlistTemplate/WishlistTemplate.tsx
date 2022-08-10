@@ -8,9 +8,9 @@ import { ProductCard } from '@/components/product'
 import { useWishlist, useWishlistQueries } from '@/hooks'
 import { productGetters } from '@/lib/getters'
 import { uiHelpers } from '@/lib/helpers'
-import { WishlistProductInput, ProductCustom } from '@/lib/types'
+import type { WishlistProductInput, ProductCustom } from '@/lib/types'
 
-import { Maybe, WishlistItem } from '@/lib/gql/types'
+import type { Maybe, WishlistItem, CustomerAccount } from '@/lib/gql/types'
 
 const styles = {
   removedItemStyle: {
@@ -18,14 +18,14 @@ const styles = {
     pointerEvents: 'none',
   },
 }
-const WishlistTemplate = (props: any) => {
+const WishlistTemplate = (props: { customerAccount: CustomerAccount }) => {
   const { customerAccount } = props
   const { t } = useTranslation(['common'])
   const { getProductLink } = uiHelpers()
   const { addOrRemoveWishlistItem } = useWishlist({ isRemovedFromWishlist: true })
   const theme = useTheme()
   const { data: wishlists } = useWishlistQueries()
-  const [removedProduct, setRemovedProduct] = useState<WishlistProductInput>()
+  const [removedProductCode, setRemovedProductCode] = useState<string>('')
 
   const handleAddOrRemoveWishlistItem = async (product: WishlistProductInput) => {
     try {
@@ -36,7 +36,7 @@ const WishlistTemplate = (props: any) => {
         isPackagedStandAlone,
         options,
       }
-      setRemovedProduct(addOrRemoveWishlistItemParams)
+      setRemovedProductCode(productCode)
       await addOrRemoveWishlistItem(addOrRemoveWishlistItemParams)
     } catch (error) {
       console.log('Error: add or remove wishlist item from wishlist template', error)
@@ -76,7 +76,7 @@ const WishlistTemplate = (props: any) => {
               xs={6}
             >
               <Box>
-                {item?.product?.productCode === removedProduct?.productCode && (
+                {item?.product?.productCode === removedProductCode && (
                   <Box
                     sx={{
                       display: 'flex',
@@ -97,13 +97,12 @@ const WishlistTemplate = (props: any) => {
                 )}
                 <Box
                   sx={{
-                    ...(item?.product?.productCode === removedProduct?.productCode &&
+                    ...(item?.product?.productCode === removedProductCode &&
                       styles?.removedItemStyle),
                   }}
                 >
                   <ProductCard
                     key={item?.id}
-                    data-wishlist-item-id={item?.id}
                     isInWishlist={true}
                     isShopNow={true}
                     imageUrl={productGetters.handleProtocolRelativeUrl(
