@@ -37,7 +37,7 @@ const getLastNameOrSurname = (billingData?: CustomerContact | Contact): string =
   billingData?.lastNameOrSurname || ''
 
 const getBillingAddress = (billingData: CustomerContact | Contact) =>
-  getAddress(billingData.address)
+  getAddress(billingData?.address)
 
 const getPhoneNumbers = (billingData?: CustomerContact | Contact) =>
   getContactNumbers(billingData?.phoneNumbers)
