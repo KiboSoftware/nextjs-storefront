@@ -30,7 +30,7 @@ describe('[component] - FilterOrders', () => {
     ).toBeVisible()
     expect(screen.getByText(FacetTypeForHistory[0].label)).toBeVisible()
     Common.args?.appliedFilters?.map(async (option) => {
-      expect(screen.getByText(option?.label as string)).toBeVisible()
+      expect(screen.getAllByText(option?.label as string)[0]).toBeVisible()
       const button = screen.getByRole('button', {
         name: new RegExp(option?.label as string),
       })
