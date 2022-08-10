@@ -76,8 +76,7 @@ const FilterOrders = (props: FilterOrdersProps) => {
     selectedFacetItems && onFilterApply(selectedFacetItems)
     onFilterByClose()
   }
-  const handleFacetItemSelection = (selectedFacetItems: string) =>
-    setSelectedFacetItems(selectedFacetItems)
+  const handleFacetItemSelection = (selectedItems: string) => setSelectedFacetItems(selectedItems)
 
   return (
     <Stack>

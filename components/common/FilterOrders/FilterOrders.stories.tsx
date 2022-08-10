@@ -18,15 +18,17 @@ const Template: ComponentStory<typeof FilterOrders> = (args) => <FilterOrders {.
 
 const filters = [
   {
-    label: 'Last 30 days',
-    filterValue: 'm-1',
-    count: 3,
+    label: 'last-30-days',
+    filterValue: 'M-1',
+    count: 0,
+    isDisplayed: true,
     isApplied: true,
   },
   {
-    label: 'Last 6 months',
-    filterValue: 'm-6',
-    count: 3,
+    label: 'last-6-months',
+    filterValue: 'M-6',
+    count: 0,
+    isDisplayed: true,
     isApplied: true,
   },
 ]

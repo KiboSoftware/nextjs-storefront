@@ -53,8 +53,8 @@ const getSelectedFacetItems = (facetList: FacetValue[]) => {
 }
 
 const getFacetListByQueryFilter = (filters: string[]) => {
-  FacetListForHistory.map((facet) => {
-    filters.some((filter) => filter === facet.filterValue)
+  FacetListForHistory.forEach((facet) => {
+    return filters.some((filter) => filter === facet.filterValue)
       ? (facet.isApplied = true)
       : (facet.isApplied = false)
   })
@@ -62,14 +62,14 @@ const getFacetListByQueryFilter = (filters: string[]) => {
 }
 
 const getFacetTypeForHistory = (t: any) => {
-  FacetTypeForHistory.map((facetType) => {
+  FacetTypeForHistory.forEach((facetType) => {
     facetType.label = t(`${facetType.label}`)
-    facetType.values.map((facet) => (facet.label = t(`${facet.label}`)))
+    facetType.values.forEach((facet) => (facet.label = t(`${facet.label}`)))
   })
   return FacetTypeForHistory
 }
 
-const getAppliedFacetList = (facetList: any[]) => facetList?.filter((f) => f.isApplied)
+const getAppliedFacetList = (facetList: FacetValue[]) => facetList?.filter((f) => f?.isApplied)
 
 export const facetGetters = {
   getBreadcrumbs,
