@@ -46,7 +46,7 @@ const WishlistTemplate = (props: any) => {
     <Grid container data-testid="wishlist-template">
       <Grid item xs={12}>
         <Box sx={{ display: 'flex', padding: '1.5rem 0', alignItems: 'center' }}>
-          <FavoriteRoundedIcon sx={{ color: '#BB2500', marginRight: '0.875rem' }} />{' '}
+          <FavoriteRoundedIcon sx={{ color: '#BB2500', marginRight: '0.875rem' }} />
           <Typography variant="h1">
             {customerAccount?.firstName
               ? customerAccount?.firstName
@@ -60,73 +60,74 @@ const WishlistTemplate = (props: any) => {
           variant="subtitle2"
           sx={{ color: 'grey.600', paddingBottom: '1.5rem', paddingTop: '1.438rem' }}
         >
-          {t('item-quantity', { count: wishlists?.items?.length })}
+          {t('item-quantity', { count: wishlists && wishlists?.items?.length })}
         </Typography>
       </Grid>
       {/* Product Card Section */}
       <Grid container sx={{ display: 'flex', paddingRight: { md: 2 }, flexWrap: 'wrap' }}>
-        {wishlists?.items?.map((item: Maybe<WishlistItem>) => (
-          <Grid
-            key={productGetters.getProductId(item?.product as ProductCustom)}
-            item
-            lg={2.4}
-            md={4}
-            sm={4}
-            xs={6}
-          >
-            <Box>
-              {item?.product?.productCode === removedProduct?.productCode && (
-                <Box
-                  sx={{
-                    display: 'flex',
-                    justifyContent: 'center',
-                  }}
-                >
-                  <Typography
-                    variant="subtitle2"
+        {wishlists &&
+          wishlists?.items?.map((item: Maybe<WishlistItem>) => (
+            <Grid
+              key={productGetters.getProductId(item?.product as ProductCustom)}
+              item
+              lg={2.4}
+              md={4}
+              sm={4}
+              xs={6}
+            >
+              <Box>
+                {item?.product?.productCode === removedProduct?.productCode && (
+                  <Box
                     sx={{
-                      position: 'absolute',
-                      paddingTop: '7.625rem',
-                      zIndex: 3,
+                      display: 'flex',
+                      justifyContent: 'center',
                     }}
                   >
-                    {t('removed')}!
-                  </Typography>
+                    <Typography
+                      variant="subtitle2"
+                      sx={{
+                        position: 'absolute',
+                        paddingTop: '7.625rem',
+                        zIndex: 3,
+                      }}
+                    >
+                      {t('removed')}!
+                    </Typography>
+                  </Box>
+                )}
+                <Box
+                  sx={{
+                    ...(item?.product?.productCode === removedProduct?.productCode &&
+                      styles?.removedItemStyle),
+                  }}
+                >
+                  <ProductCard
+                    key={item?.id}
+                    data-wishlist-item-id={item?.id}
+                    isInWishlist={true}
+                    isShopNow={true}
+                    imageUrl={productGetters.handleProtocolRelativeUrl(
+                      item?.product?.imageUrl as string
+                    )}
+                    link={getProductLink(item?.product?.productCode as string)}
+                    price={t<string>('common:currency', {
+                      val: productGetters.getPrice(item?.product as ProductCustom).regular,
+                    })}
+                    {...(productGetters.getPrice(item?.product as ProductCustom).special && {
+                      salePrice: t<string>('common:currency', {
+                        val: productGetters.getPrice(item?.product as ProductCustom).special,
+                      }),
+                    })}
+                    title={productGetters.getName(item?.product as ProductCustom) as string}
+                    rating={productGetters.getRating(item?.product as ProductCustom)}
+                    onAddOrRemoveWishlistItem={() =>
+                      handleAddOrRemoveWishlistItem(item?.product as WishlistProductInput)
+                    }
+                  />
                 </Box>
-              )}
-              <Box
-                sx={{
-                  ...(item?.product?.productCode === removedProduct?.productCode &&
-                    styles?.removedItemStyle),
-                }}
-              >
-                <ProductCard
-                  key={item?.id}
-                  data-wishlist-item-id={item?.id}
-                  isInWishlist={true}
-                  isShopNow={true}
-                  imageUrl={productGetters.handleProtocolRelativeUrl(
-                    item?.product?.imageUrl as string
-                  )}
-                  link={getProductLink(item?.product?.productCode as string)}
-                  price={t<string>('common:currency', {
-                    val: productGetters.getPrice(item?.product as ProductCustom).regular,
-                  })}
-                  {...(productGetters.getPrice(item?.product as ProductCustom).special && {
-                    salePrice: t<string>('common:currency', {
-                      val: productGetters.getPrice(item?.product as ProductCustom).special,
-                    }),
-                  })}
-                  title={productGetters.getName(item?.product as ProductCustom) as string}
-                  rating={productGetters.getRating(item?.product as ProductCustom)}
-                  onAddOrRemoveWishlistItem={() =>
-                    handleAddOrRemoveWishlistItem(item?.product as WishlistProductInput)
-                  }
-                />
               </Box>
-            </Box>
-          </Grid>
-        ))}
+            </Grid>
+          ))}
       </Grid>
     </Grid>
   )
