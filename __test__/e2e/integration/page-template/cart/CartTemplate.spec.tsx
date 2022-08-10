@@ -96,7 +96,7 @@ describe('[components] CartTemplate integration', () => {
   it('should selected ship to home item into the cart', async () => {
     const { user } = setup()
     const shipRadio = screen.getAllByRole('radio', {
-      name: new RegExp(`${mockFulfillmentOptions[0].label}`),
+      name: new RegExp(`${mockFulfillmentOptions[0].shortName}`),
     })
     await user.click(shipRadio[1])
     await waitFor(() => expect(shipRadio[1]).toBeChecked())
@@ -105,7 +105,7 @@ describe('[components] CartTemplate integration', () => {
   it('should selected pickup item into the cart and show store selector dialog', async () => {
     const { user } = setup()
     const pickupRadio = screen.getAllByRole('radio', {
-      name: new RegExp(`${mockFulfillmentOptions[1].label}`),
+      name: new RegExp(`${mockFulfillmentOptions[1].shortName}`),
     })
     await user.click(pickupRadio[0])
     const selectStore = screen.queryAllByText('select-store')
@@ -129,7 +129,7 @@ describe('[components] CartTemplate integration', () => {
       })
     )
     const pickupRadio = await screen.findAllByRole('radio', {
-      name: new RegExp(`${mockFulfillmentOptions[1].label}`),
+      name: new RegExp(`${mockFulfillmentOptions[1].shortName}`),
     })
 
     await user.click(pickupRadio[0])

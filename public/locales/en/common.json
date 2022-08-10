@@ -114,5 +114,10 @@
   "view-wishlist": "View Wishlist",
   "my-profile": "My Profile",
   "logout": "Log Out",
-  "go-to-my-account": "Go to My Account"
+  "go-to-my-account": "Go to My Account",
+  "your-default-payment-method": "Your Default Payment Method",
+  "previously-saved-payment-methods": "Previously saved payment methods",
+  "no-previously-saved-payment-methods": "No previously saved payment methods.",
+  "add-payment-method": "Add Payment Method",
+  "save-payment-method": "Save Payment Method"
 }

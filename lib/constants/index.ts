@@ -8,3 +8,7 @@ export enum FulfillmentOptions {
   SHIP = 'Ship',
   PICKUP = 'Pickup',
 }
+
+export enum PaymentType {
+  CREDITCARD = 'CreditCard',
+}

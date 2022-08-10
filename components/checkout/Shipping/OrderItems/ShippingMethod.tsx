@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 
 import { Typography, Box, MenuItem, Divider } from '@mui/material'
 import { useTranslation } from 'next-i18next'
@@ -99,8 +99,16 @@ const ShippingMethod = (props: ShippingMethodProps) => {
     onShippingMethodChange,
     onStoreLocatorClick,
   } = props
+
+  const shippingMethodRef = useRef()
+
+  useEffect(() => {
+    shippingMethodRef.current &&
+      (shippingMethodRef.current as Element).scrollIntoView({ behavior: 'smooth' })
+  }, [])
+
   return (
-    <Box data-testid="shipping-method">
+    <Box data-testid="shipping-method" ref={shippingMethodRef}>
       {shipItems?.length ? (
         <ShipItemList
           onShippingMethodChange={onShippingMethodChange}

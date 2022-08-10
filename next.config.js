@@ -22,7 +22,7 @@ module.exports = {
     sizeAttributeFQN: 'Tenant~Size',
     paymentTypes: [
       {
-        id: 'creditcard',
+        id: 'CreditCard',
         name: 'Credit / Debit Card',
       },
     ],
@@ -66,6 +66,8 @@ module.exports = {
     },
     storeLocationCookie: LOCATION_COOKIE,
     defaultWishlistName: DEFAULT_WISHLIST_NAME,
+    pciHost: process.env.KIBO_PCI_HOST,
+    apiHost: process.env.KIBO_API_HOST,
   },
   serverRuntimeConfig: {
     revalidate: 60,

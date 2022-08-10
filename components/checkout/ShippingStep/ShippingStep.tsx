@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 
 import { Stack, Button, Typography, SxProps } from '@mui/material'
 import { Theme } from '@mui/material/styles'
@@ -6,13 +6,13 @@ import { useTranslation } from 'next-i18next'
 
 import { ShippingMethod } from '@/components/checkout'
 import { AddressForm } from '@/components/common'
-import type { Contact } from '@/components/common/AddressForm/AddressForm'
 import { useCheckoutStepContext, STEP_STATUS } from '@/context'
 import { useUpdateCheckoutShippingInfo, useShippingMethods } from '@/hooks'
 import { checkoutGetters } from '@/lib/getters'
 import { buildCheckoutShippingParams, ShippingParams } from '@/lib/helpers'
+import type { ContactForm } from '@/lib/types'
 
-import type { Order, CrOrderItem } from '@/lib/gql/types'
+import type { Order, CrOrderItem, Contact } from '@/lib/gql/types'
 
 const buttonStyle = {
   width: '100%',
@@ -28,7 +28,9 @@ interface ShippingProps {
 const ShippingStep = (props: ShippingProps) => {
   const { checkout } = props
 
-  const contactProp = checkoutGetters.getShippingContact(checkout) as Contact
+  const shippingBlockRef = useRef()
+
+  const contactProp = checkoutGetters.getShippingContact(checkout)
   const shipItems = checkoutGetters.getShipItems(checkout)
   const pickupItems = checkoutGetters.getPickupItems(checkout)
 
@@ -60,6 +62,7 @@ const ShippingStep = (props: ShippingProps) => {
     try {
       await updateShippingInfo(params)
       setCheckoutId(checkout?.id)
+      setStepStatusIncomplete()
     } catch (error) {
       console.error(error)
     }
@@ -84,6 +87,8 @@ const ShippingStep = (props: ShippingProps) => {
     try {
       await updateShippingInfo(params)
       setIsShippingMethodSaved(true)
+      shippingBlockRef?.current &&
+        (shippingBlockRef.current as Element).scrollIntoView({ behavior: 'smooth' })
     } catch (error) {
       console.error(error)
     }
@@ -98,6 +103,10 @@ const ShippingStep = (props: ShippingProps) => {
   }
 
   useEffect(() => {
+    if (!validateForm) setStepStatusIncomplete()
+  }, [validateForm])
+
+  useEffect(() => {
     if (stepStatus === STEP_STATUS.SUBMIT) {
       setStepStatusComplete()
       setStepNext()
@@ -109,13 +118,13 @@ const ShippingStep = (props: ShippingProps) => {
   }, [isAddressFormValid, isShippingMethodSaved])
 
   return (
-    <Stack data-testid="checkout-shipping" gap={2}>
+    <Stack data-testid="checkout-shipping" gap={2} ref={shippingBlockRef}>
       <Typography variant="h2" component="h2" sx={{ fontWeight: 'bold' }}>
         {t('shipping')}
       </Typography>
 
       <AddressForm
-        contact={contactProp}
+        contact={contactProp as ContactForm}
         isUserLoggedIn={false}
         saveAddressLabel={t('save-shipping-address')}
         setAutoFocus={true}
