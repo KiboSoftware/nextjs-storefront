@@ -62,7 +62,7 @@ describe('[components] Fulfillment Options Component', () => {
     const { user, mockOnFullfillmentOptionChange } = setup()
 
     const radio = screen.getByRole('radio', {
-      name: /ship to home/i,
+      name: /ship/i,
     })
 
     await user.click(radio)

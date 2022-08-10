@@ -6,8 +6,8 @@ import { getCart } from '@/lib/api/operations/'
 import type { NextPage, GetServerSidePropsContext } from 'next'
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
-  const { locale, req } = context
-  const response = await getCart(req)
+  const { locale, req, res } = context
+  const response = await getCart(req, res)
   return {
     props: {
       cart: response?.currentCart,

@@ -51,6 +51,7 @@ const SearchStore = (props: SearchStoreProps) => {
   const storeOptions = locations?.map((location) => {
     return {
       value: location?.code || '',
+      name: location?.name as string,
       label: <StoreDetails {...location} />,
     }
   })

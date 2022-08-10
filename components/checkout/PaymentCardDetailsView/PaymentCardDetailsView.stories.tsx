@@ -17,7 +17,7 @@ export const Common = Template.bind({})
 
 Common.args = {
   withoutRadioTitle: 'Payment Method',
-  cardLastFourDigits: '1234',
+  cardNumberPart: '***********1234',
   expireMonth: 4,
   expireYear: 2026,
   radio: false,

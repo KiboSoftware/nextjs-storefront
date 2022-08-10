@@ -2,7 +2,8 @@ import React from 'react'
 
 import { ComponentStory, ComponentMeta } from '@storybook/react'
 
-import AddressForm, { Address, Contact } from './AddressForm'
+import AddressForm from './AddressForm'
+import type { Address, ContactForm } from '@/lib/types'
 
 export default {
   component: AddressForm,
@@ -37,7 +38,7 @@ ForLoggedInUser.args = {
 }
 
 // WithDefault Values
-const contact: Contact = {
+const contact: ContactForm = {
   firstName: 'Shane',
   lastNameOrSurname: 'Warn',
   address: {

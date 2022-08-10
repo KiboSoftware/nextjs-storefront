@@ -8,7 +8,7 @@ import * as stories from '@/components/order/view-order-details/ViewOrderDetails
 import { FulfillmentOptions } from '@/lib/constants'
 import { orderGetters } from '@/lib/getters'
 
-import type { Order } from '@/lib/gql/types'
+import type { Order, PaymentCard } from '@/lib/gql/types'
 
 const { Common } = composeStories(stories)
 
@@ -45,12 +45,14 @@ describe('[components] - ViewOrderDetails Integration', () => {
     })
 
     payments?.map((payment) => {
-      const lastFourDigits = orderGetters.getCardLastFourDigits(payment?.billingInfo?.card)
-      const expireMonth = orderGetters.getCardExpireMonth(payment?.billingInfo?.card)
-      const expireYear = orderGetters.getCardExpireYear(payment?.billingInfo?.card)
+      const cardNumberPartOrMask = orderGetters.getOrderPaymentCardDetails(
+        payment?.billingInfo?.card as PaymentCard
+      ).cardNumberPartOrMask
+      const expireMonth = orderGetters.getCardExpireMonth(payment?.billingInfo?.card as PaymentCard)
+      const expireYear = orderGetters.getCardExpireYear(payment?.billingInfo?.card as PaymentCard)
       expect(screen.getByText(/Ending/i)).toBeVisible()
       expect(screen.getByText(/Exp/i)).toBeVisible()
-      expect(screen.getByText(lastFourDigits || '')).toBeVisible()
+      expect(screen.getByText(cardNumberPartOrMask)).toBeVisible()
       expect(screen.getByText(`${expireMonth}/${expireYear}`)).toBeVisible()
     })
 

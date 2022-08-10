@@ -10,25 +10,13 @@ import * as yup from 'yup'
 import KiboTextBox from '@/components/common/KiboTextBox/KiboTextBox'
 import { useCheckoutStepContext } from '@/context'
 import { prepareCardDataParams, validateExpiryDate, getCardType } from '@/lib/helpers/credit-card'
-
-interface Card {
-  cardNumber: string
-  expiryDate: string
-  cvv: string
-  cardType: string
-  expireMonth: string
-  expireYear: string
-}
-export interface CardData {
-  card: Card
-  paymentType: string
-  isCardDetailsValidated: boolean
-}
+import type { CardForm } from '@/lib/types'
 
 export interface CardDetailsFormProps {
   validateForm: boolean
-  onSaveCardData: (cardData: CardData) => void
+  onSaveCardData: (cardData: CardForm) => void
   setValidateForm: (isValidForm: boolean) => void
+  onFormStatusChange?: (status: boolean) => void
 }
 
 const StyledCardDiv = styled('div')(() => ({
@@ -56,7 +44,7 @@ const useCardSchema = () => {
   })
 }
 const CardDetailsForm = (props: CardDetailsFormProps) => {
-  const { validateForm = false, onSaveCardData, setValidateForm } = props
+  const { validateForm = false, onSaveCardData, setValidateForm, onFormStatusChange } = props
   const { t } = useTranslation('checkout')
   const cardSchema = useCardSchema()
 
@@ -78,6 +66,7 @@ const CardDetailsForm = (props: CardDetailsFormProps) => {
     const cardData = prepareCardDataParams(formData)
     const saveCardData = { ...cardData, isCardDetailsValidated: isValid }
     onSaveCardData(saveCardData)
+    setValidateForm(false)
   }
 
   // form is invalid, notify parent form is incomplete
@@ -85,12 +74,12 @@ const CardDetailsForm = (props: CardDetailsFormProps) => {
     setStepStatusIncomplete()
     setValidateForm(false)
   }
+
   useEffect(() => {
-    // if form is valid, onSubmit callback
-    if (validateForm) {
-      handleSubmit(onValid, onInvalidForm)()
-    }
-  }, [validateForm])
+    if (onFormStatusChange) onFormStatusChange(isValid)
+    if (validateForm) handleSubmit(onValid, onInvalidForm)()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isValid, validateForm])
 
   return (
     <StyledCardDiv data-testid="card-details">

@@ -12,7 +12,7 @@ describe('[component] - PaymentCard', () => {
     render(<Common {...Common.args} />)
 
     expect(screen.getByText(Common.args.title)).toBeVisible()
-    expect(screen.getByText(Common.args.cardLastFourDigits)).toBeVisible()
+    expect(screen.getByText(Common.args.cardNumberPart)).toBeVisible()
     expect(
       screen.getByText(new RegExp(Common.args.expireMonth + '/' + Common.args.expireYear))
     ).toBeVisible()

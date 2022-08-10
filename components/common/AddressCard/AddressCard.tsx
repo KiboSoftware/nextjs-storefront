@@ -1,6 +1,5 @@
 import { Typography, Box } from '@mui/material'
 import { Variant } from '@mui/material/styles/createTypography'
-import { useTranslation } from 'next-i18next'
 
 import type { CrAddress } from '@/lib/gql/types'
 
@@ -26,7 +25,6 @@ const AddressCard = (props: AddressProps) => {
     postalOrZipCode,
     variant = 'body1',
   } = props
-  const { t } = useTranslation('checkout')
 
   const isNameAvailable = firstName || middleNameOrInitial || lastNameOrSurname
 
@@ -46,10 +44,7 @@ const AddressCard = (props: AddressProps) => {
         )}
 
         <Typography variant={variant}>{address1}</Typography>
-        <Typography variant={variant}>
-          {t('apartment')}
-          {address2}
-        </Typography>
+        <Typography variant={variant}>{address2}</Typography>
         <Box display="flex">
           <Typography variant={variant} sx={{ '&::after': { content: "','", pr: 0.5 } }}>
             {cityOrTown}

@@ -115,7 +115,12 @@ describe('[component] - ProductDetailTemplate integration', () => {
       productOptions?.selectOptions[0]?.values &&
       productOptions?.selectOptions[0]?.values[0]?.value
 
-    const ProductOptionSelect = screen.getByRole('button', { name: 'select-product-option' })
+    const mockOptionName =
+      productOptions?.selectOptions &&
+      productOptions?.selectOptions[0]?.attributeDetail &&
+      productOptions?.selectOptions[0]?.attributeDetail.name
+
+    const ProductOptionSelect = screen.getByRole('button', { name: mockOptionName as string })
 
     fireEvent.mouseDown(ProductOptionSelect)
 
@@ -165,7 +170,7 @@ describe('[component] - ProductDetailTemplate integration', () => {
     const { user } = setup()
 
     const shipRadio = screen.getByRole('radio', {
-      name: new RegExp(`${mockFulfillmentOptions[0].label}`),
+      name: new RegExp(`${mockFulfillmentOptions[0].shortName}`),
     })
 
     await user.click(shipRadio)
@@ -177,6 +182,10 @@ describe('[component] - ProductDetailTemplate integration', () => {
     })
 
     await user.click(addToCartButton)
+
+    await waitFor(() => {
+      expect(screen.getByTestId('title-component')).toBeVisible()
+    })
 
     const view = screen.getByTestId('title-component')
 
@@ -191,7 +200,7 @@ describe('[component] - ProductDetailTemplate integration', () => {
     const { user } = setup()
 
     const pickupRadio = screen.getByRole('radio', {
-      name: new RegExp(`${mockFulfillmentOptions[1].label}`),
+      name: new RegExp(`${mockFulfillmentOptions[1].shortName}`),
     })
 
     await user.click(pickupRadio)
@@ -244,7 +253,7 @@ describe('[component] - ProductDetailTemplate integration', () => {
     )
     const { user } = setup()
     const shipRadio = screen.getByRole('radio', {
-      name: new RegExp(`${mockFulfillmentOptions[0].label}`),
+      name: new RegExp(`${mockFulfillmentOptions[0].shortName}`),
     })
 
     await user.click(shipRadio)
