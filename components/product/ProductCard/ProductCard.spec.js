@@ -1,13 +1,21 @@
 import React from 'react'
 
 import { composeStories } from '@storybook/testing-react'
-import { render, screen } from '@testing-library/react'
+import { render, screen, waitFor } from '@testing-library/react'
+import userEvent from '@testing-library/user-event'
 
 import * as stories from './ProductCard.stories' // import all stories from the stories file
 
 const { Common, WithSalePrice, WithRating, NoImage, LoadingProductCard, WithWishlist } =
   composeStories(stories)
 
+const wishlistSetup = () => {
+  const user = userEvent.setup()
+  render(<WithWishlist {...WithWishlist.args} />)
+  return {
+    user,
+  }
+}
 describe('[components] Product Card Component', () => {
   describe('Common Product Card', () => {
     const setup = () => render(<Common {...Common.args} />)
@@ -95,8 +103,8 @@ describe('[components] Product Card Component', () => {
     })
   })
   describe('Wishlist Product Card', () => {
-    it('should render Product Card skeleton', async () => {
-      render(<WithWishlist {...WithWishlist.args} />)
+    it('should render Product Card with wishlist icon and shop now button', async () => {
+      wishlistSetup()
 
       const inWishlistIcon = screen.getByTestId('FavoriteRoundedIcon')
       const notInWishlistIcon = screen.queryByTestId('FavoriteBorderRoundedIcon')
