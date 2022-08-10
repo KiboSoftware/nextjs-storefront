@@ -15,6 +15,7 @@ module.exports = {
       'cdn-tp4.mozu.com',
       'cdn-sb.mozu.com',
       'encrypted-tbn0.gstatic.com',
+      'images.contentstack.io',
     ],
   },
   publicRuntimeConfig: {

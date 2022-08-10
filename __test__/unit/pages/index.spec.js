@@ -1,9 +1,16 @@
 import { render, screen } from '@testing-library/react'
 
 import { categoryTreeDataMock } from '@/__mocks__/stories/categoryTreeDataMock'
+import { cmsHomePageResultMock } from '@/__mocks__/stories/cmsHomePageResultMock'
 import Home, { getStaticProps } from '@/pages/index'
 
+const CmsComponentMock = () => <div data-testid="cms-component" />
+jest.mock('@/components/home/CmsComponent/CmsComponent', () => CmsComponentMock)
 const mockCategoryTreeData = categoryTreeDataMock
+const mockCmsHomePageResult = cmsHomePageResultMock
+const mockCmsResultDataMock = {
+  cmsResults: mockCmsHomePageResult,
+}
 
 jest.mock('@/lib/api/util', () => ({
   fetcher: jest.fn(() => {
@@ -12,6 +19,12 @@ jest.mock('@/lib/api/util', () => ({
         categoriesTree: { items: mockCategoryTreeData.categoriesTree?.items },
       },
     })
+  }),
+}))
+
+jest.mock('@/lib/operations/get-page', () => ({
+  getHomePageCMSRes: jest.fn(() => {
+    return Promise.resolve(mockCmsHomePageResult)
   }),
 }))
 
@@ -28,6 +41,9 @@ jest.mock('next-i18next/serverSideTranslations', () => ({
 }))
 
 describe('Home', () => {
+  const setup = (args) => {
+    render(<Home {...args} />)
+  }
   it('should run getStaticProps method', () => {
     const context = {
       params: {},
@@ -37,19 +53,22 @@ describe('Home', () => {
     const response = getStaticProps(context)
     expect(response).resolves.toStrictEqual({
       props: {
-        categoriesTree: mockCategoryTreeData.categoriesTree.items,
         _nextI18Next: {
           initialI18nStore: { 'mock-locale': [{}], en: [{}] },
           initialLocale: 'mock-locale',
           userConfig: { i18n: [{}] },
         },
+        categoriesTree: mockCategoryTreeData.categoriesTree.items,
+        cmsResults: mockCmsHomePageResult,
       },
     })
   })
 
   it('renders without crashing', () => {
-    render(<Home />)
+    setup(mockCmsResultDataMock)
 
-    expect(screen.getByRole('heading', { name: 'Welcome to Next.js!' })).toBeInTheDocument()
+    const CmsComponent = screen.getAllByTestId('cms-component')
+
+    expect(CmsComponent.length).toEqual(mockCmsResultDataMock?.cmsResults?.length)
   })
 })
