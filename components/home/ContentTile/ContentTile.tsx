@@ -2,16 +2,7 @@
 
 import * as React from 'react'
 
-import {
-  Box,
-  Typography,
-  useTheme,
-  useMediaQuery,
-  Grid,
-  Link as MuiLink,
-  styled,
-} from '@mui/material'
-import { Theme } from '@mui/material/styles'
+import { Box, Typography, useTheme, useMediaQuery, Grid, Link as MuiLink } from '@mui/material'
 import Link from 'next/link'
 
 import { KiboImage } from '@/components/common'
@@ -43,7 +34,7 @@ const styles = {
     alignItems: 'center',
     textAlign: 'center',
     flexDirection: 'column',
-    marginTop: '5px',
+    marginTop: '10px',
   },
   linkBoxStyle: {
     display: 'flex',
@@ -67,9 +58,6 @@ const styles = {
 const ContentTiles = (props: TileProps) => {
   const kiboTheme = useTheme()
   const mobileView = useMediaQuery(kiboTheme.breakpoints.down('sm'))
-  const LinkStyle = styled('div')({
-    display: 'flex',
-  })
 
   const { imgSource, title, subtitle, link1, link2, link3 } = props
   return (
@@ -82,13 +70,7 @@ const ContentTiles = (props: TileProps) => {
       />
       <Box sx={styles.boxStyle}>
         <Box sx={styles.titleStyle}>
-          <Typography
-            sx={{
-              fontSize: (theme: Theme) => theme.typography.h2,
-            }}
-          >
-            {title}
-          </Typography>
+          <Typography variant="h2">{title}</Typography>
         </Box>
         <Box sx={styles.titleStyle}>
           <Typography
@@ -102,33 +84,28 @@ const ContentTiles = (props: TileProps) => {
         </Box>
 
         <Box sx={styles.linkBoxStyle}>
-          <LinkStyle>
-            <Link href={link1.url}>
-              <MuiLink underline="none" component="button" sx={styles.linkStyle}>
-                {link1.title}
-              </MuiLink>
-            </Link>
-          </LinkStyle>
-          <LinkStyle>
-            <Link href={link2.url}>
-              <MuiLink underline="none" component="button" sx={styles.linkStyle}>
-                {link2.title}
-              </MuiLink>
-            </Link>
-          </LinkStyle>
-          <LinkStyle>
-            <Link href={link3.url}>
-              <MuiLink underline="none" component="button" sx={styles.linkStyle}>
-                {link3.title}
-              </MuiLink>
-            </Link>
-          </LinkStyle>
+          <Link href={link1.url}>
+            <MuiLink underline="none" component="button" sx={styles.linkStyle}>
+              {link1.title}
+            </MuiLink>
+          </Link>
+          <Link href={link2.url}>
+            <MuiLink underline="none" component="button" sx={styles.linkStyle}>
+              {link2.title}
+            </MuiLink>
+          </Link>
+
+          <Link href={link3.url}>
+            <MuiLink underline="none" component="button" sx={styles.linkStyle}>
+              {link3.title}
+            </MuiLink>
+          </Link>
         </Box>
       </Box>
     </Box>
   )
 }
-function ContentTile({ largeTileProps, smallTileProps }: ContentTileProps) {
+const ContentTile = ({ largeTileProps, smallTileProps }: ContentTileProps) => {
   const kiboTheme = useTheme()
   const mobileView = useMediaQuery(kiboTheme.breakpoints.down('sm'))
 
