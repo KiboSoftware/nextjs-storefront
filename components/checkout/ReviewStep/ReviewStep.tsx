@@ -141,7 +141,7 @@ const ReviewStep = (props: ReviewStepProps) => {
 
   const onValid = async (formData: PersonalDetails) => {
     const params = buildCreateOrderParams(checkout)
-    await createOrder.mutate(params)
+    await createOrder.mutateAsync(params)
 
     if (formData?.showAccountFields) {
       await createAccount({

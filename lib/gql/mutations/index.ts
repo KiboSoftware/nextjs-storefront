@@ -2,7 +2,7 @@ export { default as configureProductMutation } from './product/configureProductM
 export { default as addToCartMutation } from './cart/addToCartMutation'
 export { default as setPersonalInfo } from './checkout/set-personal-info'
 export { default as setShippingInfo } from './checkout/set-shipping-info'
-export { default as createOrderMutation } from './checkout/create-order'
+export { default as createOrderMutation } from './checkout/create-order-mutation'
 export { default as updateCartItemQuantityMutation } from './cart/updateCartItemQuantityMutation'
 export { default as deleteCartItemMutation } from './cart/deleteCartItemMutation'
 export { default as updateCartItemMutation } from './cart/updateCartItemMutation'
