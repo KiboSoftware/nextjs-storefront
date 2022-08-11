@@ -11,9 +11,9 @@ interface CmsComponentProps {
 
 interface SmallBannerProps {
   small_banner: {
-    title: any
-    subtitle: any
-    call_to_action_link: { title: any; href: any }
+    title: string
+    subtitle: string
+    call_to_action_link: { title: string; href: string }
   }
 }
 
@@ -26,14 +26,33 @@ interface ContentTileProps {
     large_promo_blocks: any[]
   }
 }
+
+interface PromoBlocksDataProps {
+  image: { url: string }
+  title: string
+  subtitle: string
+  links: { href: string }[]
+}
+
+const promoBlocksData = (item: PromoBlocksDataProps) => {
+  return {
+    imgSource: item?.image?.url,
+    title: item?.title,
+    subtitle: item?.subtitle,
+    link1: { ...item?.links[0], url: item?.links[0]?.href },
+    link2: { ...item?.links[1], url: item?.links[1]?.href },
+    link3: { ...item?.links[2], url: item?.links[2]?.href },
+  }
+}
+
 const DefaultComponentMap = {
   small_banner: {
     component: SmallBanner,
     mapDataToProps: (data: SmallBannerProps) => {
       return {
         bannerProps: {
-          title: data.small_banner.title,
-          subtitle: data.small_banner.subtitle,
+          title: data?.small_banner?.title,
+          subtitle: data?.small_banner?.subtitle,
           callToAction: {
             title: data?.small_banner?.call_to_action_link?.title,
             url: data?.small_banner?.call_to_action_link?.href,
@@ -66,16 +85,9 @@ const DefaultComponentMap = {
     component: ContentTile,
     mapDataToProps: (data: ContentTileProps) => {
       return {
-        largeTileProps: data.large_promo_blocks.large_promo_blocks.map((item) => {
-          return {
-            imgSource: item?.image?.url,
-            title: item?.title,
-            subtitle: item?.subtitle,
-            link1: { ...item?.links[0], url: item?.links[0]?.href },
-            link2: { ...item?.links[1], url: item?.links[1]?.href },
-            link3: { ...item?.links[2], url: item?.links[2]?.href },
-          }
-        }),
+        largeTileProps: data?.large_promo_blocks?.large_promo_blocks?.map((item) =>
+          promoBlocksData(item)
+        ),
       }
     },
   },
@@ -83,16 +95,9 @@ const DefaultComponentMap = {
     component: ContentTile,
     mapDataToProps: (data: { small_promo_blocks: { small_promo_blocks: any[] } }) => {
       return {
-        smallTileProps: data?.small_promo_blocks?.small_promo_blocks?.map((item) => {
-          return {
-            imgSource: item?.image?.url,
-            title: item?.title,
-            subtitle: item?.subtitle,
-            link1: { ...item?.links[0], url: item?.links[0]?.href },
-            link2: { ...item?.links[1], url: item?.links[1]?.href },
-            link3: { ...item?.links[2], url: item?.links[2]?.href },
-          }
-        }),
+        smallTileProps: data?.small_promo_blocks?.small_promo_blocks?.map((item) =>
+          promoBlocksData(item)
+        ),
       }
     },
   },
