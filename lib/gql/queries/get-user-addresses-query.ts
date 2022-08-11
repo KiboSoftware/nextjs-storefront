@@ -1,6 +1,6 @@
-import { userContactFields } from '../fragments/userContacts'
+import { userContactFields } from '../fragments'
 
-export const getUserAddressesQuery = /* GraphQL */ `
+const getUserAddressesQuery = /* GraphQL */ `
   query getUserAddresses($accountId: Int!, $startIndex: Int, $pageSize: Int) {
     customerAccountContacts(accountId: $accountId, startIndex: $startIndex, pageSize: $pageSize) {
       pageCount
@@ -13,3 +13,5 @@ export const getUserAddressesQuery = /* GraphQL */ `
 
   ${userContactFields}
 `
+
+export default getUserAddressesQuery

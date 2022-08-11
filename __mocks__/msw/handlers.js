@@ -7,11 +7,11 @@ import { categoryTreeDataMock } from '../stories/categoryTreeDataMock'
 import { configuredProductMock } from '../stories/configuredProductMock'
 import { createOrderPaymentActionMock } from '../stories/createOrderPaymentActionMock'
 import { customerAccountCardsMock } from '../stories/customerAccountCardsMock'
-import { getUserAddressesMock } from '../stories/getUserAddressesMock'
 import { locationCollectionMock } from '../stories/locationCollectionMock'
 import { productSearchResultMock } from '../stories/productSearchResultMock'
 import { searchSuggestionMock } from '../stories/searchSuggestionResultMock'
 import { updateOrderBillingInfoMock } from '../stories/updateOrderBillingInfoMock'
+import { userAddressMock } from '../stories/userAddressMock'
 import { userMock, loginUserMock, registerUserMock } from '../stories/userMock'
 import { wishlistMock } from '../stories/wishlistMock'
 
@@ -69,10 +69,6 @@ export const accountHandlers = [
   graphql.query('customerAccountCards', (_req, res, ctx) => {
     return res(ctx.data(customerAccountCardsMock))
   }),
-
-  graphql.query('getUserAddresses', (_req, res, ctx) => {
-    return res(ctx.data(getUserAddressesMock))
-  }),
 ]
 
 export const productHandlers = [
@@ -105,6 +101,10 @@ export const userHandlers = [
   // useUser
   graphql.query('getUser', (_req, res, ctx) => {
     return res(ctx.data(userMock))
+  }),
+  //userAddress
+  graphql.query('getUserAddresses', (_req, res, ctx) => {
+    return res(ctx.data(userAddressMock))
   }),
   // login
   graphql.mutation('login', (_req, res, ctx) => {

@@ -1,7 +1,7 @@
 import { renderHook } from '@testing-library/react-hooks'
 
 import { useCustomerContacts } from './useCustomerContacts'
-import { getUserAddressesMock } from '@/__mocks__/stories/getUserAddressesMock'
+import { userAddressMock } from '@/__mocks__/stories/userAddressMock'
 import { createQueryClientWrapper } from '@/__test__/utils/renderWithQueryClient'
 
 describe('[hooks] useCustomerContacts', () => {
@@ -12,6 +12,6 @@ describe('[hooks] useCustomerContacts', () => {
 
     await waitFor(() => result.current.isSuccess)
 
-    expect(result.current.data).toStrictEqual(getUserAddressesMock.customerAccountContacts)
+    expect(result.current.data).toStrictEqual(userAddressMock.customerAccountContacts)
   })
 })

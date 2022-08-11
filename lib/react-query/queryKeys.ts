@@ -36,7 +36,7 @@ export const customerAccountCardsKeys = {
 }
 
 export const customerAccountContactsKeys = {
-  all: (accountId: number) => ['customerAccountContacts', accountId] as const,
+  all: ['customerAccountContacts'] as const,
 }
 
 export const locationKeys = {
