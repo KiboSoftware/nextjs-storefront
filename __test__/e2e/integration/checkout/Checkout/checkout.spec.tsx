@@ -3,12 +3,15 @@ import React from 'react'
 import { composeStories } from '@storybook/testing-react'
 import { cleanup, screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
+import { mock } from 'jest-mock-extended'
+import { graphql } from 'msw'
 
+import { server } from '@/__mocks__/msw/server'
 import { orderMock } from '@/__mocks__/stories'
 import { renderWithQueryClient } from '@/__test__/utils/renderWithQueryClient'
 import * as stories from '@/components/page-templates/Checkout/Checkout.stories'
+import { AuthContext, AuthContextType } from '@/context/'
 import { CheckoutStepProvider } from '@/context/CheckoutStepContext/CheckoutStepContext'
-
 const { Common } = composeStories(stories)
 
 jest.mock('next/router', () => ({
@@ -19,15 +22,21 @@ jest.mock('next/router', () => ({
   },
 }))
 
-const setup = (initialActiveStep = 0) => {
+const setup = (initialActiveStep = 0, isAuthenticated = false) => {
   const user = userEvent.setup()
+
+  const mockValues = mock<AuthContextType>()
+  mockValues.isAuthenticated = isAuthenticated
+
   renderWithQueryClient(
-    <CheckoutStepProvider
-      steps={['details', 'shipping', 'payment', 'review']}
-      initialActiveStep={initialActiveStep}
-    >
-      <Common {...Common.args} />
-    </CheckoutStepProvider>
+    <AuthContext.Provider value={mockValues}>
+      <CheckoutStepProvider
+        steps={['details', 'shipping', 'payment', 'review']}
+        initialActiveStep={initialActiveStep}
+      >
+        <Common {...Common.args} />
+      </CheckoutStepProvider>
+    </AuthContext.Provider>
   )
   return {
     user,
@@ -122,18 +131,46 @@ describe('[components] Checkout integration', () => {
   })
 
   describe('Review Step', () => {
-    it('should enable Pay and Confirm button in when user checks terms and conditions checkbox', async () => {
+    it('should show Order Confirmation component when user clicks on Confirm and Pay', async () => {
       const initialActiveStep = 3
-      const { user } = setup(initialActiveStep)
+      const isAuthenticated = false
+      const { user } = setup(initialActiveStep, isAuthenticated)
 
       const termsConditions = screen.getByRole('checkbox', {
         name: /termsconditions/i,
       })
       termsConditions.focus()
-
       await user.click(termsConditions)
 
-      await waitFor(() => expect(termsConditions).toBeChecked())
+      const iWantToCreateAccount = screen.getByRole('checkbox', { name: /showaccountfields/i })
+      expect(iWantToCreateAccount).toBeEnabled()
+
+      await user.click(iWantToCreateAccount)
+      const firstNameTexBox = screen.getByRole('textbox', { name: /first-name/i })
+      const lastNameTexBox = screen.getByRole('textbox', { name: /last-name/i })
+      const passwordTexBox = screen.getByPlaceholderText(/password/i)
+
+      await user.clear(firstNameTexBox)
+      await user.clear(lastNameTexBox)
+      await user.clear(passwordTexBox)
+
+      await user.type(firstNameTexBox, 'first name')
+      await user.type(lastNameTexBox, 'last name')
+      await user.type(passwordTexBox, 'Password@1')
+
+      await user.tab()
+
+      const confirmAndPayButton = screen.getByRole('button', {
+        name: /confirm-and-pay/i,
+      })
+      expect(confirmAndPayButton).toBeEnabled()
+
+      await user.click(confirmAndPayButton)
+
+      await waitFor(() => {
+        const orderConfirmation = screen.getByTestId('order-confirmation')
+        expect(orderConfirmation).toBeInTheDocument()
+      })
     })
 
     it('should enable Payment Step when user clicks on Go Back button', async () => {
