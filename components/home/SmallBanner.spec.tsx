@@ -23,6 +23,5 @@ describe('[Component] - small banner', () => {
     expect(titleTest[0]).toBeVisible()
     expect(subtitleTest[0]).toBeVisible()
     expect(callToActionTest[0]).toBeVisible()
-
   })
 })

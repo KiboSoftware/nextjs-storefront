@@ -38,7 +38,6 @@ const styles = {
     justifyContent: 'center',
     alignItems: 'center',
     textAlign: 'center',
-    fontSize: { sm: '0.5' },
   },
   titleStyle: {
     fontSize: (theme: Theme) => theme.typography.h2,
@@ -60,10 +59,10 @@ const SmallBanner = ({ bannerProps }: ItemProps) => {
         <Typography sx={styles.titleStyle}>{title} &nbsp;</Typography>
 
         <Box sx={styles.boxStyle}>
-          <Typography sx={{ fontSize: '0.875rem' }}>{subtitle}&nbsp;</Typography>
-          <Typography data-testid="callToAction" sx={{ fontSize: '0.875rem' }}>
+          <Typography variant="h5">{subtitle}&nbsp;</Typography>
+          <Typography variant="h5" data-testid="callToAction">
             <Link href={callToAction.url} passHref>
-              <MuiLink sx={{ color: 'white', textDecoration: 'underline' }}>
+              <MuiLink sx={{ color: 'common.white', textDecoration: 'underline' }}>
                 {callToAction.title}
               </MuiLink>
             </Link>
