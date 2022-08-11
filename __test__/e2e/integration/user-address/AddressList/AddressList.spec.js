@@ -6,8 +6,10 @@ import userEvent from '@testing-library/user-event'
 
 import { userAddressResponse } from '@/__mocks__/stories/userAddressMock'
 import * as stories from '@/components/common/AddressList/AddressList.stories'
+import { userAddressGetters } from '@/lib/getters'
 
 const { Common, Radio, WithoutRadio } = composeStories(stories)
+const userShippingAddress = userAddressGetters.getUserShippingAddress(userAddressResponse?.items)
 
 const onAddressSelectionMock = jest.fn()
 const setup = (params) => {
@@ -21,7 +23,7 @@ const setup = (params) => {
 }
 
 describe('[component] - AddressList', () => {
-  const addressCount = userAddressResponse?.items?.length
+  const addressCount = userShippingAddress?.length
   it('should render the component without radio when radio prop is false', () => {
     setup(WithoutRadio.args)
     const addressCard = screen.getAllByTestId('address-card')

@@ -70,6 +70,8 @@ const AddressList = (props: AddressListProps) => {
 
 const KiboAddressList = (props: AddressListProps) => {
   const { addresses, heading } = props
+  const { t } = useTranslation(['common'])
+
   return (
     <>
       {heading && (
@@ -77,9 +79,12 @@ const KiboAddressList = (props: AddressListProps) => {
           {heading}
         </Typography>
       )}
-      {addresses?.map((item: CustomerContact) => (
+      {addresses?.map((item: CustomerContact, index) => (
         <Box paddingY={1} key={item.id + 'address'}>
-          <AddressCard title={''} {...buildAddressProps(item.address as CuAddress)} />
+          <AddressCard
+            title={index === 0 ? t('common:primary') : ''}
+            {...buildAddressProps(item.address as CuAddress)}
+          />
         </Box>
       ))}
     </>

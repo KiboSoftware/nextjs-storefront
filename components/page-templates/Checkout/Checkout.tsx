@@ -16,7 +16,7 @@ import {
 } from '@/components/checkout'
 import { OrderConfirmation } from '@/components/order'
 import { useCheckoutStepContext, STEP_STATUS, useAuthContext } from '@/context'
-import { useCheckoutQueries, useUserAddressesQueries } from '@/hooks'
+import { useCheckoutQueries, useCustomerContacts } from '@/hooks'
 import { userAddressGetters } from '@/lib/getters'
 import theme from '@/styles/theme'
 
@@ -44,9 +44,7 @@ const Checkout = (props: CheckoutProps) => {
   })
 
   const { user } = useAuthContext()
-  const { data: savedUserAddressData } = useUserAddressesQueries({
-    accountId: user?.id as number,
-  })
+  const { data: savedUserAddressData } = useCustomerContacts(user?.id as number)
 
   const { activeStep, stepStatus, steps, setStepBack, setStepStatusSubmit } =
     useCheckoutStepContext()
