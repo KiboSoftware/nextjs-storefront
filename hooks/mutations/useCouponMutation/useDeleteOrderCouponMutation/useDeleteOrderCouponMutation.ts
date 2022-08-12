@@ -14,7 +14,7 @@ const deleteOrderCoupon = async (params: DeleteCartCouponParams) => {
   const { checkoutId, couponCode } = params
 
   const variables = {
-    checkoutId,
+    orderId: checkoutId,
     couponCode,
   }
   const response = await client.request({
