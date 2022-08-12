@@ -31,7 +31,7 @@ describe('[hooks] useRemoveWishlistItemMutation', () => {
 
   it('should remove wishlist item from wishlist page', async () => {
     const { result } = renderHook(
-      () => useRemoveWishlistItemMutation({ isRemovedFromWishlist: true }),
+      () => useRemoveWishlistItemMutation({ isRemovedFromWishlist: true, delay: 1000 }),
       { wrapper: createQueryClientWrapper() }
     )
     const response = await result.current.removeWishlistItem.mutateAsync(removeWishlistItemInput)

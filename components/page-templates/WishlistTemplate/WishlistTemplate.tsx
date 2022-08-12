@@ -22,7 +22,7 @@ const WishlistTemplate = (props: { customerAccount: CustomerAccount }) => {
   const { customerAccount } = props
   const { t } = useTranslation(['common'])
   const { getProductLink } = uiHelpers()
-  const { addOrRemoveWishlistItem } = useWishlist({ isRemovedFromWishlist: true })
+  const { addOrRemoveWishlistItem } = useWishlist({ isRemovedFromWishlist: true, delay: 1000 })
   const theme = useTheme()
   const { data: wishlists } = useWishlistQueries()
   const [removedProductCode, setRemovedProductCode] = useState<string>('')
@@ -46,7 +46,7 @@ const WishlistTemplate = (props: { customerAccount: CustomerAccount }) => {
     <Grid container data-testid="wishlist-template">
       <Grid item xs={12}>
         <Box sx={{ display: 'flex', padding: '1.5rem 0', alignItems: 'center' }}>
-          <FavoriteRoundedIcon sx={{ color: '#BB2500', marginRight: '0.875rem' }} />
+          <FavoriteRoundedIcon sx={{ color: 'error.main', marginRight: '0.875rem' }} />
           <Typography variant="h1">
             {customerAccount?.firstName
               ? customerAccount?.firstName
@@ -76,13 +76,42 @@ const WishlistTemplate = (props: { customerAccount: CustomerAccount }) => {
               xs={6}
             >
               <Box>
-                {item?.product?.productCode === removedProductCode && (
+                <Box
+                  sx={{
+                    display: 'flex',
+                    justifyContent: 'center',
+                  }}
+                >
                   <Box
                     sx={{
-                      display: 'flex',
-                      justifyContent: 'center',
+                      ...(item?.product?.productCode === removedProductCode &&
+                        styles?.removedItemStyle),
                     }}
                   >
+                    <ProductCard
+                      key={item?.id}
+                      isInWishlist={true}
+                      isShopNow={true}
+                      imageUrl={productGetters.handleProtocolRelativeUrl(
+                        item?.product?.imageUrl as string
+                      )}
+                      link={getProductLink(item?.product?.productCode as string)}
+                      price={t<string>('common:currency', {
+                        val: productGetters.getPrice(item?.product as ProductCustom).regular,
+                      })}
+                      {...(productGetters.getPrice(item?.product as ProductCustom).special && {
+                        salePrice: t<string>('common:currency', {
+                          val: productGetters.getPrice(item?.product as ProductCustom).special,
+                        }),
+                      })}
+                      title={productGetters.getName(item?.product as ProductCustom) as string}
+                      rating={productGetters.getRating(item?.product as ProductCustom)}
+                      onAddOrRemoveWishlistItem={() =>
+                        handleAddOrRemoveWishlistItem(item?.product as WishlistProductInput)
+                      }
+                    />
+                  </Box>
+                  {item?.product?.productCode === removedProductCode && (
                     <Typography
                       variant="subtitle2"
                       sx={{
@@ -93,36 +122,7 @@ const WishlistTemplate = (props: { customerAccount: CustomerAccount }) => {
                     >
                       {t('removed')}!
                     </Typography>
-                  </Box>
-                )}
-                <Box
-                  sx={{
-                    ...(item?.product?.productCode === removedProductCode &&
-                      styles?.removedItemStyle),
-                  }}
-                >
-                  <ProductCard
-                    key={item?.id}
-                    isInWishlist={true}
-                    isShopNow={true}
-                    imageUrl={productGetters.handleProtocolRelativeUrl(
-                      item?.product?.imageUrl as string
-                    )}
-                    link={getProductLink(item?.product?.productCode as string)}
-                    price={t<string>('common:currency', {
-                      val: productGetters.getPrice(item?.product as ProductCustom).regular,
-                    })}
-                    {...(productGetters.getPrice(item?.product as ProductCustom).special && {
-                      salePrice: t<string>('common:currency', {
-                        val: productGetters.getPrice(item?.product as ProductCustom).special,
-                      }),
-                    })}
-                    title={productGetters.getName(item?.product as ProductCustom) as string}
-                    rating={productGetters.getRating(item?.product as ProductCustom)}
-                    onAddOrRemoveWishlistItem={() =>
-                      handleAddOrRemoveWishlistItem(item?.product as WishlistProductInput)
-                    }
-                  />
+                  )}
                 </Box>
               </Box>
             </Grid>

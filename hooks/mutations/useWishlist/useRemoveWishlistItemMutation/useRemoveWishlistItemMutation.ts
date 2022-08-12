@@ -29,7 +29,7 @@ export const useRemoveWishlistItemMutation = (params?: WishlistHookParams) => {
           const timeoutId = setTimeout(() => {
             queryClient.invalidateQueries(wishlistKeys.all)
             cleanTimeout(timeoutId)
-          }, 1000)
+          }, params?.delay)
         } else {
           queryClient.invalidateQueries(wishlistKeys.all)
         }

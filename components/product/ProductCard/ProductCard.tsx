@@ -105,9 +105,9 @@ const ProductCard = (props: ProductCardProps) => {
                 onClick={handleAddOrRemoveWishlistItem}
               >
                 {isInWishlist ? (
-                  <FavoriteRoundedIcon sx={{ color: '#BB2500' }} />
+                  <FavoriteRoundedIcon sx={{ color: 'error.main' }} />
                 ) : (
-                  <FavoriteBorderRoundedIcon sx={{ color: '#cdcdcd', marginRight: '14px' }} />
+                  <FavoriteBorderRoundedIcon sx={{ color: 'grey.600', marginRight: '14px' }} />
                 )}
               </Box>
 
@@ -139,14 +139,15 @@ const ProductCard = (props: ProductCardProps) => {
               />
             </Box>
             {isShopNow && (
-              <Button
-                variant="contained"
-                color="primary"
-                sx={{ width: '100%', marginTop: '49px' }}
-                href={link}
-              >
-                {t('shop-now')}
-              </Button>
+              <Link href={link} passHref>
+                <Button
+                  variant="contained"
+                  color="primary"
+                  sx={{ width: '100%', marginTop: '49px' }}
+                >
+                  {t('shop-now')}
+                </Button>
+              </Link>
             )}
           </CardActionArea>
         </Card>
