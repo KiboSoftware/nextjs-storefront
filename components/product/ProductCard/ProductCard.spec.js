@@ -9,13 +9,20 @@ import * as stories from './ProductCard.stories' // import all stories from the 
 const { Common, WithSalePrice, WithRating, NoImage, LoadingProductCard, WithWishlist } =
   composeStories(stories)
 
+const onAddOrRemoveWishlistItemMock = jest.fn()
 const wishlistSetup = () => {
   const user = userEvent.setup()
-  render(<WithWishlist {...WithWishlist.args} />)
+  render(
+    <WithWishlist
+      {...WithWishlist.args}
+      onAddOrRemoveWishlistItem={onAddOrRemoveWishlistItemMock}
+    />
+  )
   return {
     user,
   }
 }
+
 describe('[components] Product Card Component', () => {
   describe('Common Product Card', () => {
     const setup = () => render(<Common {...Common.args} />)
@@ -115,6 +122,28 @@ describe('[components] Product Card Component', () => {
       expect(inWishlistIcon).toBeVisible()
       expect(notInWishlistIcon).not.toBeInTheDocument()
       expect(shopNowButton).toBeVisible()
+    })
+
+    it('should render Product Card without in wishlist icon and shop now button', async () => {
+      render(<WithWishlist {...WithWishlist.args} isInWishlist={false} isShopNow={false} />)
+      const inWishlistIcon = screen.queryByTestId('FavoriteRoundedIcon')
+      const notInWishlistIcon = screen.getByTestId('FavoriteBorderRoundedIcon')
+      const shopNowButton = screen.queryByRole('link', {
+        name: /shop-now/i,
+      })
+
+      expect(inWishlistIcon).not.toBeInTheDocument()
+      expect(notInWishlistIcon).toBeVisible()
+      expect(shopNowButton).not.toBeInTheDocument()
+    })
+
+    it('should call onAddOrRemoveWishlistItem method when user clicks on wishlist icons', async () => {
+      const { user } = wishlistSetup()
+      const inWishlistIcon = screen.getByTestId('FavoriteRoundedIcon')
+
+      await user.click(inWishlistIcon)
+
+      expect(onAddOrRemoveWishlistItemMock).toBeCalled()
     })
   })
 })
