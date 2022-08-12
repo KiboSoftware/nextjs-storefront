@@ -18,3 +18,7 @@ export { default as deleteCustomerAccountCard } from './my-account/delete-custom
 export { default as updateCustomerAccountContact } from './my-account/update-customer-account-contact'
 export { default as createCustomerAccountContact } from './my-account/create-customer-account-contact'
 export { default as deleteCustomerAccountContact } from './my-account/delete-customer-account-contact'
+export { default as updateCartCouponMutation } from './coupon/updateCartCoupon'
+export { default as deleteCartCouponMutation } from './coupon/deleteCartCoupon'
+export { default as updateOrderCouponMutation } from './coupon/updateOrderCoupon'
+export { default as deleteOrderCouponMutation } from './coupon/deleteOrderCoupon'

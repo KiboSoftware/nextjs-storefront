@@ -1,6 +1,6 @@
 /** @format */
 
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 
 import CloseIcon from '@mui/icons-material/Close'
 import { Typography, Box, Button, Stack } from '@mui/material'
@@ -33,20 +33,31 @@ const PromoCodeBadge = (props: PromocodeBadgeProps) => {
   const { t } = useTranslation('common')
   const { onApplyCouponCode, onRemoveCouponCode, promoList, promoError, helpText } = props
   const [promo, setPromo] = useState<string>('')
-  const handleChange = (_name: any, value: string) => {
-    setPromo(value)
-  }
+  const [error, setError] = useState<{
+    isPromoError: boolean
+    promoMessage: string
+  }>({
+    isPromoError: promoError,
+    promoMessage: helpText as string,
+  })
 
   const handleApplyCouponCode = () => {
-    const couponCode = (element: string) => element === promo
-    if (!promoList?.some(couponCode)) {
+    setError({ isPromoError: false, promoMessage: '' })
+    if (!promoList?.includes(promo)) {
       onApplyCouponCode(promo)
       setPromo('')
+    } else {
+      setError({ isPromoError: true, promoMessage: 'Promo code already in use!' })
     }
   }
+
   const handleRemoveCouponCode = (item: any) => {
     onRemoveCouponCode(item)
   }
+
+  useEffect(() => {
+    setError({ isPromoError: promoError, promoMessage: helpText as string })
+  }, [promoError])
 
   return (
     <>
@@ -56,9 +67,9 @@ const PromoCodeBadge = (props: PromocodeBadgeProps) => {
           value={promo}
           placeholder={t('promo-code')}
           sx={styles.textBoxStyle}
-          onChange={handleChange}
-          error={promoError}
-          helperText={helpText}
+          onChange={(_name, value) => setPromo(value)}
+          error={error.isPromoError}
+          helperText={error.promoMessage}
           data-testid="promo-input"
         />
         <Button
@@ -72,20 +83,18 @@ const PromoCodeBadge = (props: PromocodeBadgeProps) => {
         </Button>
       </Stack>
       {promoList?.map((coupon: string) => (
-        <>
-          <Box data-testid="promotype" component="div" sx={styles.boxStyle}>
-            <Stack direction="row" spacing={0.5} alignItems="center">
-              <Typography sx={{ textAlign: 'left' }}>{coupon}</Typography>
-              <CloseIcon
-                sx={{
-                  cursor: 'pointer',
-                  fontSize: '1rem',
-                }}
-                onClick={() => handleRemoveCouponCode(coupon)}
-              />
-            </Stack>
-          </Box>
-        </>
+        <Box key={coupon} data-testid="promotype" component="div" sx={styles.boxStyle}>
+          <Stack direction="row" spacing={0.5} alignItems="center">
+            <Typography sx={{ textAlign: 'left' }}>{coupon}</Typography>
+            <CloseIcon
+              sx={{
+                cursor: 'pointer',
+                fontSize: '1rem',
+              }}
+              onClick={() => handleRemoveCouponCode(coupon)}
+            />
+          </Stack>
+        </Box>
       ))}
     </>
   )

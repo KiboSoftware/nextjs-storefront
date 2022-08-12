@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 
 import { Box, Stack, Button, Typography, SxProps, Divider, useMediaQuery } from '@mui/material'
 import { Theme } from '@mui/material/styles'
@@ -14,9 +14,15 @@ import {
   OrderReview,
   OrderSummary,
 } from '@/components/checkout'
+import { PromoCodeBadge } from '@/components/common'
 import { OrderConfirmation } from '@/components/order'
 import { useCheckoutStepContext, STEP_STATUS, useAuthContext } from '@/context'
-import { useCheckoutQueries, useCustomerContacts } from '@/hooks'
+import {
+  useCheckoutQueries,
+  useCustomerContacts,
+  useUpdateOrderCouponMutation,
+  useDeleteOrderCouponMutation,
+} from '@/hooks'
 import { userAddressGetters } from '@/lib/getters'
 import theme from '@/styles/theme'
 
@@ -34,6 +40,11 @@ const buttonStyle = {
 const Checkout = (props: CheckoutProps) => {
   const { checkout: initialCheckout } = props
 
+  const [promoData, setPromoData] = useState<{ isPromoError: boolean; promoMessage: string }>({
+    isPromoError: false,
+    promoMessage: '',
+  })
+
   const { t } = useTranslation(['checkout'])
   const router = useRouter()
 
@@ -45,6 +56,8 @@ const Checkout = (props: CheckoutProps) => {
 
   const { user } = useAuthContext()
   const { data: savedUserAddressData } = useCustomerContacts(user?.id as number)
+  const updateOrderCoupon = useUpdateOrderCouponMutation()
+  const deleteOrderCoupon = useDeleteOrderCouponMutation()
 
   const { activeStep, stepStatus, steps, setStepBack, setStepStatusSubmit } =
     useCheckoutStepContext()
@@ -62,6 +75,33 @@ const Checkout = (props: CheckoutProps) => {
   const handleBack = () => setStepBack()
   const handleSubmit = () => setStepStatusSubmit()
 
+  const handleApplyCouponCode = async (couponCode: string) => {
+    try {
+      const response = await updateOrderCoupon.mutateAsync({
+        checkoutId: checkoutId as string,
+        couponCode,
+      })
+      if (response?.invalidCoupons?.length) {
+        setPromoData({ isPromoError: true, promoMessage: response?.invalidCoupons[0].reason })
+      }
+    } catch (err) {
+      console.error(err)
+    }
+  }
+  const handleRemoveCouponCode = async (couponCode: string) => {
+    try {
+      const response = await deleteOrderCoupon.mutateAsync({
+        checkoutId: checkoutId as string,
+        couponCode,
+      })
+      if (response?.invalidCoupons?.length) {
+        setPromoData({ isPromoError: true, promoMessage: 'Invalid promo' })
+      }
+    } catch (err) {
+      console.error(err)
+    }
+  }
+
   const orderSummaryArgs = {
     nameLabel: t('order-summary'),
     subTotalLabel: `Cart Subtotal of (${checkout?.items?.length} items)`,
@@ -69,12 +109,27 @@ const Checkout = (props: CheckoutProps) => {
     taxLabel: 'Tax',
     totalLabel: 'Order Total',
     subTotal: t('common:currency', { val: checkout?.subtotal }),
-    shippingTotal: t('free'),
+    discountedSubtotal:
+      checkout?.discountedSubtotal && checkout?.discountedSubtotal != checkout?.subtotal
+        ? t('common:currency', { val: checkout?.discountedSubtotal })
+        : '',
+    shippingTotal: checkout?.shippingTotal
+      ? t('common:currency', { val: checkout?.shippingTotal })
+      : t('checkout:free'),
     tax: t('common:currency', { val: checkout?.taxTotal }),
     total: t('common:currency', { val: checkout?.total }),
     checkoutLabel: 'Go to Checkout',
     shippingLabel: 'Go to Shipping',
     backLabel: 'Go Back',
+    promoComponent: (
+      <PromoCodeBadge
+        onApplyCouponCode={handleApplyCouponCode}
+        onRemoveCouponCode={handleRemoveCouponCode}
+        promoList={checkout?.couponCodes as string[]}
+        promoError={promoData.isPromoError}
+        helpText={promoData.promoMessage}
+      />
+    ),
   }
 
   const paymentStepParams = {

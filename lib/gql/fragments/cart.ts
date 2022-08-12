@@ -49,6 +49,7 @@ export const cartDetails = /* GraphQL */ `
     id
     invalidCoupons {
       couponCode
+      reason
     }
     couponCodes
     orderDiscounts {
@@ -61,6 +62,7 @@ export const cartDetails = /* GraphQL */ `
     }
     total
     subtotal
+    discountedSubtotal
     shippingTotal
     taxTotal
     items {

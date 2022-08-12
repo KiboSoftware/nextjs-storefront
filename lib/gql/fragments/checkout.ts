@@ -54,9 +54,15 @@ export const baseCheckoutFragment = /* GraphQL */ `
     total
     shippingTotal
     discountTotal
+    discountedSubtotal
     subtotal
     taxTotal
     orderNumber
+    couponCodes
+    invalidCoupons {
+      couponCode
+      reason
+    }
     orderDiscounts {
       impact
       discount {

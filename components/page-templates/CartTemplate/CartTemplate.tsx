@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 
 import {
   Grid,
@@ -14,7 +14,7 @@ import { useTranslation } from 'next-i18next'
 import { useRouter } from 'next/router'
 
 import { CartItemList } from '@/components/cart'
-import { PromoCodeBadge, OrderSummary } from '@/components/common'
+import { PromoCodeBadge, OrderSummary, Price } from '@/components/common'
 import { StoreLocatorDialog } from '@/components/dialogs'
 import { useModalContext } from '@/context'
 import {
@@ -25,6 +25,8 @@ import {
   useCartMutationUpdateCartItemQuantity,
   useCartMutationRemoveCartItem,
   useCartMutationUpdateCartItem,
+  useUpdateCartCouponMutation,
+  useDeleteCartCouponMutation,
 } from '@/hooks'
 import { FulfillmentOptions } from '@/lib/constants'
 import { checkoutGetters } from '@/lib/getters'
@@ -69,6 +71,7 @@ const CartTemplate = (props: CartTemplateProps) => {
   const cartItemCount = checkoutGetters.getCartItemCount(cart)
   const cartItems = checkoutGetters.getCartItems(cart)
   const cartSubTotal = checkoutGetters.getSubtotal(cart)
+  const cartDiscountedSubTotal = checkoutGetters.getDiscountedSubtotal(cart)
   const cartShippingTotal = checkoutGetters.getShippingTotal(cart)
   const cartTaxTotal = checkoutGetters.getTaxTotal(cart)
   const cartTotal = checkoutGetters.getTotal(cart)
@@ -76,12 +79,41 @@ const CartTemplate = (props: CartTemplateProps) => {
 
   const { data: locations } = useStoreLocations({ filter: locationCodes })
   const { data: purchaseLocation } = usePurchaseLocation()
+  const updateCartCoupon = useUpdateCartCouponMutation()
+  const deleteCartCoupon = useDeleteCartCouponMutation()
+  const [promoDataInCart, setPromoDataInCart] = useState<{
+    isPromoError: boolean
+    promoMessage: string
+  }>({
+    isPromoError: false,
+    promoMessage: '',
+  })
 
-  const handleApplyCouponCode = () => {
-    // your code here
+  const handleApplyCouponCode = async (couponCode: string) => {
+    try {
+      const response = await updateCartCoupon.mutateAsync({
+        cartId: cart?.id as string,
+        couponCode,
+      })
+      if (response?.invalidCoupons?.length) {
+        setPromoDataInCart({ isPromoError: true, promoMessage: response?.invalidCoupons[0].reason })
+      }
+    } catch (err) {
+      console.error(err)
+    }
   }
-  const handleRemoveCouponCode = () => {
-    // your code here
+  const handleRemoveCouponCode = async (couponCode: string) => {
+    try {
+      const response = await deleteCartCoupon.mutateAsync({
+        cartId: cart?.id as string,
+        couponCode,
+      })
+      if (response?.invalidCoupons?.length) {
+        setPromoDataInCart({ isPromoError: true, promoMessage: response?.invalidCoupons[0].reason })
+      }
+    } catch (err) {
+      console.error(err)
+    }
   }
 
   const handleItemQuantity = async (cartItemId: string, quantity: number) => {
@@ -160,7 +192,11 @@ const CartTemplate = (props: CartTemplateProps) => {
     shippingTotalLabel: t('shipping'),
     taxLabel: t('estimated-tax'),
     totalLabel: t('estimated-order-total'),
-    subTotal: t('currency', { val: cartSubTotal }),
+    subTotal: t('common:currency', { val: cartSubTotal }),
+    discountedSubtotal:
+      cartDiscountedSubTotal && cartDiscountedSubTotal !== cartSubTotal
+        ? t('common:currency', { val: cartDiscountedSubTotal })
+        : '',
     shippingTotal: cartShippingTotal
       ? t('currency', { val: cartShippingTotal })
       : t('checkout:free'),
@@ -171,7 +207,8 @@ const CartTemplate = (props: CartTemplateProps) => {
         onApplyCouponCode={handleApplyCouponCode}
         onRemoveCouponCode={handleRemoveCouponCode}
         promoList={cart?.couponCodes as string[]}
-        promoError={false}
+        promoError={promoDataInCart.isPromoError}
+        helpText={promoDataInCart.promoMessage}
       />
     ),
   }

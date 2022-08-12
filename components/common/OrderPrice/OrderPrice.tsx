@@ -10,6 +10,7 @@ export interface OrderPriceProps {
   taxLabel: string
   totalLabel: string
   subTotal: string
+  discountedSubtotal?: string
   shippingTotal: string
   tax: string
   total: string
@@ -31,6 +32,7 @@ const OrderPrice = (props: OrderPriceProps) => {
     taxLabel,
     totalLabel,
     subTotal,
+    discountedSubtotal,
     shippingTotal,
     tax,
     total,
@@ -44,7 +46,12 @@ const OrderPrice = (props: OrderPriceProps) => {
           <Typography sx={{ ...styles.priceLabel }} variant="body1">
             {subTotalLabel}
           </Typography>
-          <Price variant="body1" fontWeight="bold" price={subTotal} />
+          <Price
+            variant="body1"
+            fontWeight="bold"
+            price={subTotal}
+            salePrice={discountedSubtotal}
+          />
         </Box>
         <Box sx={{ ...styles.priceRow }}>
           <Typography sx={{ ...styles.priceLabel }} variant="body1">
