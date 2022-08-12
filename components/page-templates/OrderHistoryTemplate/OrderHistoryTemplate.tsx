@@ -59,8 +59,8 @@ const OrderHistoryTemplate = (props: OrderHistoryProps) => {
   const handleShowOrderHistoryItem = () => setSelectedOrder(undefined)
 
   const handleSelectedTileRemoval = (selectedTile: string) => {
-    facetList.forEach((facet) =>
-      facet.filterValue === selectedTile ? (facet.isApplied = false) : facet.isApplied
+    facetList.forEach(
+      (facet) => (facet.isApplied = facet.filterValue === selectedTile ? false : facet?.isApplied)
     )
     appliedFilters = facetGetters.getAppliedFacetList(facetList)
     updateRoute(selectedTile)
