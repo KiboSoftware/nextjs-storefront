@@ -6,15 +6,15 @@ import VISA from '@/assets/visa.svg'
 
 interface PaymentCardDetailsViewProps {
   title?: string
-  cardLastFourDigits?: string
-  expireMonth?: number
-  expireYear?: number
+  cardNumberPart: string
+  expireMonth: number
+  expireYear: number
   cardType?: string
   radio?: boolean
 }
 
 const PaymentCard = (props: PaymentCardDetailsViewProps) => {
-  const { title, cardLastFourDigits, expireMonth, expireYear, cardType } = props
+  const { title, cardNumberPart, expireMonth, expireYear, cardType } = props
   const { t } = useTranslation('checkout')
 
   return (
@@ -24,9 +24,9 @@ const PaymentCard = (props: PaymentCardDetailsViewProps) => {
           {title}
         </Typography>
       )}
-      <Box display="flex" pt={1} gap={3}>
-        <Box minWidth={32}>
-          <KiboImage src={VISA} alt={cardType} width={32} height={24} />
+      <Box display="flex" pt={1} gap={2}>
+        <Box minWidth={45}>
+          <KiboImage src={VISA} alt={cardType} width={45} height={35} />
         </Box>
         <Box>
           <Box display="flex">
@@ -34,7 +34,7 @@ const PaymentCard = (props: PaymentCardDetailsViewProps) => {
               {t('ending')}
             </Typography>
             <Typography variant="body1" component="span">
-              {cardLastFourDigits}
+              {cardNumberPart}
             </Typography>
           </Box>
           <Box display="flex">

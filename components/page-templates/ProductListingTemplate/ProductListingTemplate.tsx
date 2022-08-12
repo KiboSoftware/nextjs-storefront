@@ -199,7 +199,7 @@ const ProductListingTemplate = (props: ProductListingTemplateProps) => {
     updateRoute('')
   }
 
-  const handleRemoveSelectedTile = (selectedTile: string) => {
+  const handleSelectedTileRemoval = (selectedTile: string) => {
     updateRoute(selectedTile)
   }
 
@@ -298,7 +298,7 @@ const ProductListingTemplate = (props: ProductListingTemplateProps) => {
                 facetList={facetList}
                 onFilterByClose={handleFilterBy}
                 appliedFilters={appliedFilters}
-                onRemoveSelectedTile={handleRemoveSelectedTile}
+                onSelectedTileRemoval={handleSelectedTileRemoval}
               />
             </Box>
             <Box sx={{ width: '100%' }}>
@@ -308,7 +308,7 @@ const ProductListingTemplate = (props: ProductListingTemplateProps) => {
                     {appliedFilters?.length > 0 && (
                       <FilterTiles
                         appliedFilters={appliedFilters}
-                        onRemoveSelectedTile={handleRemoveSelectedTile}
+                        onSelectedTileRemoval={handleSelectedTileRemoval}
                       >
                         <Link sx={{ ...styles.clearAllButton }} onClick={handleClearAllFilters}>
                           {t('common:clear-all')}
@@ -405,7 +405,7 @@ const ProductListingTemplate = (props: ProductListingTemplateProps) => {
             onClearAllFilters={handleClearAllFilters}
             onFilterByClose={handleFilterBy}
             breadCrumbsList={breadCrumbsList}
-            onRemoveSelectedTile={handleRemoveSelectedTile}
+            onSelectedTileRemoval={handleSelectedTileRemoval}
           />
         </Box>
       )}

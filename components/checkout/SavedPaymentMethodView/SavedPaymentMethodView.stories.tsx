@@ -16,16 +16,21 @@ const Template: ComponentStory<typeof SavedPaymentMethodView> = (args) => (
 export const Common = Template.bind({})
 
 Common.args = {
-  card: {
-    cardNumberPartOrMask: '***********1111',
-    expireMonth: 4,
-    expireYear: 2026,
-  },
-  billingAddress: {
-    address1: '1234, My Address',
-    address2: '1104',
-    cityOrTown: 'Austin',
-    postalOrZipCode: '78727',
-    stateOrProvince: 'Texas',
-  },
+  cardNumberPart: '***********1111',
+  expireMonth: 4,
+  expireYear: 2026,
+  address1: '1234, My Address',
+  address2: '1104',
+  cityOrTown: 'Austin',
+  postalOrZipCode: '78727',
+  stateOrProvince: 'Texas',
+}
+
+export const Radio = Template.bind({})
+
+Radio.args = {
+  ...Common.args,
+  radio: true,
+  displayRowDirection: false,
+  displayTitle: false,
 }

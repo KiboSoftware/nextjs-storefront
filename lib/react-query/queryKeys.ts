@@ -31,6 +31,14 @@ export const cartKeys = {
   all: ['cart'] as const,
 }
 
+export const customerAccountCardsKeys = {
+  all: (accountId: number) => ['customerAccountCards', accountId] as const,
+}
+
+export const customerAccountContactsKeys = {
+  all: ['customerAccountContacts'] as const,
+}
+
 export const locationKeys = {
   locations: ['locations'] as const,
   locationsParams: (params: { filter: string } | undefined) =>
@@ -43,4 +51,9 @@ export const locationKeys = {
 
 export const wishlistKeys = {
   all: ['wishlist'] as const,
+}
+
+export const ordersKeys = {
+  all: ['orders'] as const,
+  orderFilter: (params: string | string[] | undefined) => [...ordersKeys.all, params] as const,
 }

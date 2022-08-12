@@ -48,6 +48,7 @@ const FulfillmentOptions = (props: FulfillmentOptionsProps) => {
   const radioOptions = fulfillmentOptions?.map((option) => {
     return {
       value: option.shortName as string,
+      name: option.shortName as string,
       label: (
         <FulfillmentOptionLabel
           label={option?.label as string}

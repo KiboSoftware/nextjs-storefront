@@ -17,7 +17,7 @@ import { FullWidthDivider, KiboRadio } from '@/components/common'
 import SearchBar from '@/components/common/SearchBar/SearchBar'
 import { StoreDetails } from '@/components/dialogs'
 import { storeLocationGetters } from '@/lib/getters/storeLocationGetters'
-import { LocationCustom } from '@/lib/types'
+import type { LocationCustom } from '@/lib/types'
 
 import type { Maybe, Location } from '@/lib/gql/types'
 
@@ -51,6 +51,7 @@ const SearchStore = (props: SearchStoreProps) => {
   const storeOptions = locations?.map((location) => {
     return {
       value: location?.code || '',
+      name: location?.name as string,
       label: <StoreDetails {...location} />,
     }
   })

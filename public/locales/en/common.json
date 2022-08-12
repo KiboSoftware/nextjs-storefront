@@ -114,5 +114,19 @@
   "view-wishlist": "View Wishlist",
   "my-profile": "My Profile",
   "logout": "Log Out",
-  "go-to-my-account": "Go to My Account"
+  "go-to-my-account": "Go to My Account",
+  "your-default-payment-method": "Your Default Payment Method",
+  "previously-saved-payment-methods": "Previously saved payment methods",
+  "no-previously-saved-payment-methods": "No previously saved payment methods.",
+  "add-payment-method": "Add Payment Method",
+  "save-payment-method": "Save Payment Method",
+
+  "your-default-shipping-address": "Your default shipping address",
+  "previously-saved-shipping-addresses": "Previously saved shipping addresses",
+  "no-saved-addresses-yet": "No saved addresses yet!",
+  "primary": "Primary",
+  
+  "time-filter": "Time Filter",
+  "last-30-days": "Last 30 days",
+  "last-6-months": "Last 6 months"
 }

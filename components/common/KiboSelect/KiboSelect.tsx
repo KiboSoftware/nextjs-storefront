@@ -45,6 +45,7 @@ const KiboSelect = (props: KiboSelectProps) => {
       size="small"
       fullWidth
       variant="outlined"
+      hiddenLabel={!label}
     >
       {label && (
         <InputLabel shrink htmlFor={name} sx={{ top: -18, left: -13 }}>
@@ -59,7 +60,7 @@ const KiboSelect = (props: KiboSelectProps) => {
         value={value}
         MenuProps={MenuProps}
         sx={{ height: '34px', ...sx }}
-        inputProps={{ 'aria-hidden': false }}
+        inputProps={{ 'aria-hidden': false, 'aria-label': label }}
         input={<OutlinedInput size="small" />}
         onChange={(event) => onChange(event.target.name, event.target.value)}
         onBlur={(event) => onBlur && onBlur(event.target.name, event.target.value)}

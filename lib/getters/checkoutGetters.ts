@@ -154,7 +154,7 @@ const getBillingPhoneWork = (checkout: Order): string =>
 const getBillingAddress = (checkout: Order) =>
   checkout.billingInfo?.billingContact?.address as CrAddress
 
-const getFulfillmentLocationCodes = (cartItems: Maybe<CartItem>[]): string => {
+const getFulfillmentLocationCodes = (cartItems: Maybe<CartItem | CrOrderItem>[]): string => {
   const locationCodes = Array.from(
     cartItems.reduce((set, item) => {
       if (item?.fulfillmentMethod === FulfillmentOptions.PICKUP) {
@@ -236,6 +236,12 @@ const getCheckoutDetails = (checkout: Order): CheckoutDetails => {
   }
 }
 
+const getSelectedPaymentMethods = (checkout?: Order, paymentType?: string) => {
+  return checkout?.payments?.filter(
+    (each) => each?.paymentType === paymentType && each?.status === 'New'
+  )
+}
+
 export const checkoutGetters = {
   getOrderNumber,
   getEmail,
@@ -266,5 +272,6 @@ export const checkoutGetters = {
   getOrderSummary,
   getCheckoutDetails,
   getShippingContact,
+  getSelectedPaymentMethods,
   ...cartGetters,
 }

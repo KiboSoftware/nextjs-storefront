@@ -3,3 +3,4 @@ export { default as ProductDetailTemplate } from './ProductDetail/ProductDetailT
 export { default as CartTemplate } from './CartTemplate/CartTemplate'
 export { default as CheckoutTemplate } from './Checkout/Checkout'
 export { default as MyAccountTemplate } from './MyAccountTemplate/MyAccountTemplate'
+export { default as OrderHistoryTemplate } from './OrderHistoryTemplate/OrderHistoryTemplate'

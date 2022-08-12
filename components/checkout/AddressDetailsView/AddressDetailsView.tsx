@@ -45,6 +45,7 @@ const AddressDetailsView = (props: AddressDetailsViewProps) => {
   const radioOptions = [
     {
       value: `${address1},${address2},${cityOrTown},${stateOrProvince},${postalOrZipCode}`,
+      name: `${address1},${address2},${cityOrTown},${stateOrProvince},${postalOrZipCode}`,
       label: (
         <AddressCard
           title="Primary" // check if primary address,

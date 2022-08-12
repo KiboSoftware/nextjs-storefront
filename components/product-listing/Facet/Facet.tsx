@@ -24,6 +24,9 @@ import type { Facet as FacetType, FacetValue, Maybe } from '@/lib/gql/types'
 // Interface
 interface FacetProps extends FacetType {
   numberOfItemsToShow: number
+  showSearchAndCount?: boolean
+  shouldRouteUpdate?: boolean
+  onFacetItemSelection?: (selectedFacetItems: string) => void
 }
 
 // MUI
@@ -49,7 +52,14 @@ const style = {
 
 // Component
 const Facet = (props: FacetProps) => {
-  const { numberOfItemsToShow = 6, label, values = [] } = props
+  const {
+    numberOfItemsToShow = 6,
+    label,
+    values = [],
+    showSearchAndCount = true,
+    shouldRouteUpdate = true,
+    onFacetItemSelection,
+  } = props
 
   const { t } = useTranslation('common')
   const viewMore = t('view-more')
@@ -123,16 +133,22 @@ const Facet = (props: FacetProps) => {
         </AccordionSummary>
 
         <AccordionDetails data-testid="accordian-details" sx={{ ...style.accordionDetails }}>
-          <SearchBar
-            placeHolder={'Search ' + label}
-            searchTerm={searchTerm}
-            onSearch={handleSearch}
-            childInputRef={childInputRef}
-            showClearButton={true}
-          />
-
+          {showSearchAndCount && (
+            <SearchBar
+              placeHolder={'Search ' + label}
+              searchTerm={searchTerm}
+              onSearch={handleSearch}
+              childInputRef={childInputRef}
+              showClearButton={true}
+            />
+          )}
           <Box pl={0.5} pr={0.5}>
-            <FacetItemList itemList={filteredValues} />
+            <FacetItemList
+              itemList={filteredValues as FacetValue[]}
+              showSearchAndCount={showSearchAndCount}
+              shouldRouteUpdate={shouldRouteUpdate}
+              onFacetItemSelection={onFacetItemSelection}
+            />
           </Box>
 
           {isButtonVisible && (

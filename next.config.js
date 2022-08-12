@@ -22,7 +22,7 @@ module.exports = {
     sizeAttributeFQN: 'Tenant~Size',
     paymentTypes: [
       {
-        id: 'creditcard',
+        id: 'CreditCard',
         name: 'Credit / Debit Card',
       },
     ],
@@ -37,6 +37,10 @@ module.exports = {
         { value: 'Oldest', id: 'createDate asc' },
       ],
       pageSize: 16,
+    },
+    orderHistory: {
+      startIndex: 0,
+      pageSize: 20,
     },
     ratingAttrFQN: `tenant~rating`,
     userCookieKey: process.env.KIBO_USER_COOKIE_KEY || 'kibo_at',
@@ -66,6 +70,8 @@ module.exports = {
     },
     storeLocationCookie: LOCATION_COOKIE,
     defaultWishlistName: DEFAULT_WISHLIST_NAME,
+    pciHost: process.env.KIBO_PCI_HOST,
+    apiHost: process.env.KIBO_API_HOST,
   },
   serverRuntimeConfig: {
     revalidate: 60,

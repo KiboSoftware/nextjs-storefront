@@ -5,9 +5,14 @@ import { cartItemMock } from '../stories/cartItemMock'
 import { cartMock } from '../stories/cartMock'
 import { categoryTreeDataMock } from '../stories/categoryTreeDataMock'
 import { configuredProductMock } from '../stories/configuredProductMock'
+import { createOrderPaymentActionMock } from '../stories/createOrderPaymentActionMock'
+import { customerAccountCardsMock } from '../stories/customerAccountCardsMock'
 import { locationCollectionMock } from '../stories/locationCollectionMock'
+import { orderCollection } from '../stories/orderCollection'
 import { productSearchResultMock } from '../stories/productSearchResultMock'
 import { searchSuggestionMock } from '../stories/searchSuggestionResultMock'
+import { updateOrderBillingInfoMock } from '../stories/updateOrderBillingInfoMock'
+import { userAddressMock } from '../stories/userAddressMock'
 import { userMock, loginUserMock, registerUserMock } from '../stories/userMock'
 import { wishlistMock } from '../stories/wishlistMock'
 
@@ -39,8 +44,32 @@ export const checkoutHandlers = [
   }),
 
   // Payment Step
+  graphql.mutation('setBillingInformation', (_req, res, ctx) => {
+    return res(ctx.data(updateOrderBillingInfoMock))
+  }),
 
-  // Order Reivew Step
+  graphql.mutation('addPaymentMethod', (_req, res, ctx) => {
+    return res(ctx.data(createOrderPaymentActionMock))
+  }),
+
+  graphql.mutation('createOrderPaymentPaymentAction', (_req, res, ctx) => {
+    return res(
+      ctx.data({
+        createOrderPaymentPaymentAction: createOrderPaymentActionMock.createOrderPaymentAction,
+      })
+    )
+  }),
+
+  // Reivew Step
+  graphql.mutation('createOrderAction', (_req, res, ctx) => {
+    return res(ctx.data({ createOrderAction: orderMock.checkout }))
+  }),
+]
+
+export const accountHandlers = [
+  graphql.query('customerAccountCards', (_req, res, ctx) => {
+    return res(ctx.data(customerAccountCardsMock))
+  }),
 ]
 
 export const productHandlers = [
@@ -73,6 +102,10 @@ export const userHandlers = [
   // useUser
   graphql.query('getUser', (_req, res, ctx) => {
     return res(ctx.data(userMock))
+  }),
+  //userAddress
+  graphql.query('getUserAddresses', (_req, res, ctx) => {
+    return res(ctx.data(userAddressMock))
   }),
   // login
   graphql.mutation('login', (_req, res, ctx) => {
@@ -109,7 +142,7 @@ export const cartHandlers = [
     return res(
       ctx.data({
         deleteCartItemMutation: true,
-        })
+      })
     )
   }),
 
@@ -152,6 +185,12 @@ export const wishlistHandlers = [
   }),
 ]
 
+export const orderHandlers = [
+  graphql.query('getOrders', (_req, res, ctx) => {
+    return res(ctx.data(orderCollection))
+  }),
+]
+
 export const handlers = [
   ...checkoutHandlers,
   ...searchSuggestionHandlers,
@@ -162,4 +201,6 @@ export const handlers = [
   ...cartHandlers,
   ...storeHandlers,
   ...wishlistHandlers,
+  ...accountHandlers,
+  ...orderHandlers,
 ]

@@ -11,10 +11,10 @@ import type { FacetValue } from '@/lib/gql/types'
 const { Tiles } = composeStories(stories)
 
 describe('[components] Fulfillment Options Component', () => {
-  const onRemoveSelectedTileMock = jest.fn()
+  const onSelectedTileRemovalMock = jest.fn()
   const setup = () => {
     const user = userEvent.setup()
-    render(<Tiles onRemoveSelectedTile={onRemoveSelectedTileMock} />)
+    render(<Tiles onSelectedTileRemoval={onSelectedTileRemovalMock} />)
     return {
       user,
     }
@@ -36,6 +36,6 @@ describe('[components] Fulfillment Options Component', () => {
     const closeIcon = screen.getAllByTestId('CloseIcon')
 
     await user.click(closeIcon[0])
-    expect(onRemoveSelectedTileMock).toHaveBeenCalled()
+    expect(onSelectedTileRemovalMock).toHaveBeenCalled()
   })
 })

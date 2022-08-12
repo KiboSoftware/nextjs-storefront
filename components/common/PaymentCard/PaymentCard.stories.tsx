@@ -15,7 +15,7 @@ export const Common = Template.bind({})
 
 Common.args = {
   title: 'Payment Method',
-  cardLastFourDigits: '1234',
+  cardNumberPart: '****************1234',
   expireMonth: 4,
   expireYear: 2026,
   cardType: 'VISA',

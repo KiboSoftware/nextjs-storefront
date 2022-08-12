@@ -1,11 +1,11 @@
 import React from 'react'
 
 import { composeStories } from '@storybook/testing-react'
-import { render, screen } from '@testing-library/react'
+import { render, screen, waitFor } from '@testing-library/react'
 
 import * as stories from './SavedPaymentMethodView.stories' // import all stories from the stories file
 
-const { Common } = composeStories(stories)
+const { Common, Radio } = composeStories(stories)
 
 const PaymentCardDetailsViewMock = () => <div data-testid="payment-card-details-mock" />
 jest.mock(
@@ -25,5 +25,13 @@ describe('[component] - SavedPaymentMethodView', () => {
 
     expect(screen.getByTestId('payment-card-details-mock')).toBeVisible()
     expect(screen.getByTestId('address-details-view-mock')).toBeVisible()
+  })
+
+  it('should render radio button if radio prop is true', async () => {
+    render(<Radio {...Radio.args} />)
+    const radio = screen.getByRole('radio', { name: 'payment-billing-view' })
+    await waitFor(() => {
+      expect(radio).toBeInTheDocument()
+    })
   })
 })

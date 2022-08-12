@@ -31,6 +31,7 @@ jest.mock('../../checkout/ReviewStep/ReviewStep', () => ReviewStepMock)
 jest.mock('@/hooks', () => ({
   useCheckoutQueries: jest.fn(() => ({})),
   useUpdateCheckout: jest.fn(() => ({})),
+  useCustomerContacts: jest.fn(() => ({})),
 }))
 
 const { Common } = composeStories(stories)
