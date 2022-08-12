@@ -8,8 +8,7 @@ import { SavedPaymentMethodView } from '@/components/checkout'
 import { AddressCard, OrderSummary, ProductItemList } from '@/components/common'
 import { ProductOption } from '@/components/product'
 import { useStoreLocations } from '@/hooks'
-import { billingGetters, orderGetters } from '@/lib/getters'
-import { storeLocationGetters } from '@/lib/getters/storeLocationGetters'
+import { billingGetters, orderGetters, storeLocationGetters } from '@/lib/getters'
 
 import type { Maybe, Order, Location } from '@/lib/gql/types'
 
@@ -86,44 +85,6 @@ const ViewOrderDetails = (props: ViewOrderDetailsProps) => {
           <Typography variant="h1" gutterBottom>
             {t('view-order-details')}
           </Typography>
-          <Box>
-            {payments?.map((payment) => (
-              <SavedPaymentMethodView
-                key={payment?.id}
-                id={
-                  orderGetters.getOrderPaymentCardDetails(payment.billingInfo.card)
-                    .paymentServiceCardId
-                }
-                cardNumberPart={
-                  orderGetters.getOrderPaymentCardDetails(payment.billingInfo.card)
-                    .cardNumberPartOrMask
-                }
-                expireMonth={
-                  orderGetters.getOrderPaymentCardDetails(payment.billingInfo.card).expireMonth
-                }
-                expireYear={
-                  orderGetters.getOrderPaymentCardDetails(payment.billingInfo.card).expireYear
-                }
-                address1={
-                  billingGetters.getAddress(payment.billingInfo.billingContact.address).address1
-                }
-                address2={
-                  billingGetters.getAddress(payment.billingInfo.billingContact.address).address2
-                }
-                cityOrTown={
-                  billingGetters.getAddress(payment.billingInfo.billingContact.address).cityOrTown
-                }
-                postalOrZipCode={
-                  billingGetters.getAddress(payment.billingInfo.billingContact.address)
-                    ?.postalOrZipCode
-                }
-                stateOrProvince={
-                  billingGetters.getAddress(payment.billingInfo.billingContact.address)
-                    .stateOrProvince
-                }
-              />
-            ))}
-          </Box>
           <Divider sx={{ ...styles.divider }} />
         </Grid>
 
@@ -204,8 +165,37 @@ const ViewOrderDetails = (props: ViewOrderDetailsProps) => {
             {payments?.map((payment) => (
               <SavedPaymentMethodView
                 key={payment?.id}
-                card={payment?.billingInfo?.card}
-                billingAddress={payment?.billingInfo?.billingContact?.address}
+                id={
+                  orderGetters.getOrderPaymentCardDetails(payment.billingInfo.card)
+                    .paymentServiceCardId
+                }
+                cardNumberPart={
+                  orderGetters.getOrderPaymentCardDetails(payment.billingInfo.card)
+                    .cardNumberPartOrMask
+                }
+                expireMonth={
+                  orderGetters.getOrderPaymentCardDetails(payment.billingInfo.card).expireMonth
+                }
+                expireYear={
+                  orderGetters.getOrderPaymentCardDetails(payment.billingInfo.card).expireYear
+                }
+                address1={
+                  billingGetters.getAddress(payment.billingInfo.billingContact.address).address1
+                }
+                address2={
+                  billingGetters.getAddress(payment.billingInfo.billingContact.address).address2
+                }
+                cityOrTown={
+                  billingGetters.getAddress(payment.billingInfo.billingContact.address).cityOrTown
+                }
+                postalOrZipCode={
+                  billingGetters.getAddress(payment.billingInfo.billingContact.address)
+                    ?.postalOrZipCode
+                }
+                stateOrProvince={
+                  billingGetters.getAddress(payment.billingInfo.billingContact.address)
+                    .stateOrProvince
+                }
               />
             ))}
           </Box>
