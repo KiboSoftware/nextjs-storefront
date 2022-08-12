@@ -57,7 +57,7 @@ const styles = {
 
 const ContentTiles = (props: TileProps) => {
   const kiboTheme = useTheme()
-  const mobileView = useMediaQuery(kiboTheme.breakpoints.down('sm'))
+  const mobileView = useMediaQuery(kiboTheme.breakpoints.down('md'))
 
   const { imgSource, title, subtitle, link1, link2, link3 } = props
   return (
@@ -107,7 +107,7 @@ const ContentTiles = (props: TileProps) => {
 }
 const ContentTile = ({ largeTileProps, smallTileProps }: ContentTileProps) => {
   const kiboTheme = useTheme()
-  const mobileView = useMediaQuery(kiboTheme.breakpoints.down('sm'))
+  const mobileView = useMediaQuery(kiboTheme.breakpoints.down('md'))
 
   return (
     <Box sx={{ display: 'flex', flexDirection: 'column' }}>
