@@ -52,3 +52,8 @@ export const locationKeys = {
 export const wishlistKeys = {
   all: ['wishlist'] as const,
 }
+
+export const ordersKeys = {
+  all: ['orders'] as const,
+  orderFilter: (params: string | string[] | undefined) => [...ordersKeys.all, params] as const,
+}

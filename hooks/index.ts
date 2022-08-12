@@ -12,6 +12,7 @@ export * from './queries/useShippingMethods/useShippingMethods'
 export * from './queries/useWishlist/useWishlistQueries'
 export * from './queries/useCustomerCards/useCustomerCards'
 export * from './queries/useCustomerContacts/useCustomerContacts'
+export * from './queries/useUserOrderQueries/useUserOrderQueries'
 
 // Custom hooks
 export * from './custom/useDebounce/useDebounce'

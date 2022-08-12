@@ -78,7 +78,7 @@ const MyAcccountTemplate = () => {
   const mdScreen = useMediaQuery(theme.breakpoints.up('md'))
 
   const handleGoToOrderHistory = () => {
-    router.push('/my-account/order-history')
+    router.push('/my-account/order-history?filters=M-6')
   }
 
   return (

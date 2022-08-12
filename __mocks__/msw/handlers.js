@@ -8,6 +8,7 @@ import { configuredProductMock } from '../stories/configuredProductMock'
 import { createOrderPaymentActionMock } from '../stories/createOrderPaymentActionMock'
 import { customerAccountCardsMock } from '../stories/customerAccountCardsMock'
 import { locationCollectionMock } from '../stories/locationCollectionMock'
+import { orderCollection } from '../stories/orderCollection'
 import { productSearchResultMock } from '../stories/productSearchResultMock'
 import { searchSuggestionMock } from '../stories/searchSuggestionResultMock'
 import { updateOrderBillingInfoMock } from '../stories/updateOrderBillingInfoMock'
@@ -184,6 +185,12 @@ export const wishlistHandlers = [
   }),
 ]
 
+export const orderHandlers = [
+  graphql.query('getOrders', (_req, res, ctx) => {
+    return res(ctx.data(orderCollection))
+  }),
+]
+
 export const handlers = [
   ...checkoutHandlers,
   ...searchSuggestionHandlers,
@@ -195,4 +202,5 @@ export const handlers = [
   ...storeHandlers,
   ...wishlistHandlers,
   ...accountHandlers,
+  ...orderHandlers,
 ]

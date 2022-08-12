@@ -37,7 +37,7 @@ export const useUpdateRoutes = () => {
       changeFilters('')
     } else {
       const qs = router?.query as { filters: string }
-      const filters = qs?.filters?.split(',') || []
+      const filters = qs?.filters ? qs?.filters?.split(',') : []
       const currentIndex = filters.indexOf(queryParam)
       if (currentIndex > -1) {
         filters.splice(currentIndex, 1)
@@ -49,5 +49,6 @@ export const useUpdateRoutes = () => {
   }
   return {
     updateRoute,
+    changeFilters,
   }
 }
