@@ -38,6 +38,10 @@ module.exports = {
       ],
       pageSize: 16,
     },
+    orderHistory: {
+      startIndex: 0,
+      pageSize: 20,
+    },
     ratingAttrFQN: `tenant~rating`,
     userCookieKey: process.env.KIBO_USER_COOKIE_KEY || 'kibo_at',
     maxCookieAge: 5 * 24 * 60 * 60 * 1000, //5 days

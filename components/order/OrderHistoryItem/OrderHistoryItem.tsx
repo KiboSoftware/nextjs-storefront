@@ -60,7 +60,7 @@ const OrderHistoryItem = (props: OrderHistoryItemProps) => {
 
           <Price price={t('currency', { val: orderTotal })} />
 
-          <Typography variant="body2" color={'text.secondary'}>
+          <Typography variant="body2" color={'primary'}>
             {orderStatus}
           </Typography>
         </Stack>

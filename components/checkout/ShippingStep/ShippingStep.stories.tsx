@@ -4,8 +4,9 @@ import { ComponentStory, ComponentMeta } from '@storybook/react'
 
 import ShippingStep from './ShippingStep'
 import { orderMock } from '@/__mocks__/stories/orderMock'
+import { userAddressResponse } from '@/__mocks__/stories/userAddressMock'
 import { CheckoutStepProvider } from '@/context/CheckoutStepContext/CheckoutStepContext'
-
+import { userAddressGetters } from '@/lib/getters/userAddressGetters'
 const steps = ['details', 'shipping', 'payment', 'review']
 
 // Common
@@ -25,7 +26,10 @@ const Template: ComponentStory<typeof ShippingStep> = (args) => <ShippingStep {.
 
 // Default
 export const Common = Template.bind({})
+
+const userShippingAddress = userAddressGetters.getUserShippingAddress(userAddressResponse?.items)
 Common.args = {
+  userShippingAddress,
   setAutoFocus: false,
   checkout: orderMock.checkout,
 }

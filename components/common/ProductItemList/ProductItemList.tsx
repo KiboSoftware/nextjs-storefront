@@ -2,20 +2,34 @@ import React from 'react'
 
 import { Stack, Divider } from '@mui/material'
 
-import ProductItem from '@/components/common/ProductItem/ProductItem'
+import { AddressCard, ProductItem } from '..'
 import { orderGetters } from '@/lib/getters'
+import type { LocationCustom } from '@/lib/types'
 
-import type { Maybe, CrOrderItem } from '@/lib/gql/types'
+import type { Maybe, CrOrderItem, CrAddress } from '@/lib/gql/types'
 
 export type ProductItemListProps = {
-  items?: Maybe<CrOrderItem>[]
+  items: Maybe<CrOrderItem>[]
   expectedDeliveryDate?: string
   isPickupItem?: boolean
+  showAddress?: boolean
+  storePickupAddresses?: LocationCustom[]
   onClickChangeStore?: () => void
 }
 
 const ProductItemList = (props: ProductItemListProps) => {
-  const { items, expectedDeliveryDate, isPickupItem = false, onClickChangeStore } = props
+  const {
+    items,
+    expectedDeliveryDate,
+    isPickupItem = false,
+    showAddress = false,
+    storePickupAddresses = [],
+    onClickChangeStore,
+  } = props
+
+  const storePickupAddress = (fulfillmentLocationCode: string): CrAddress => {
+    return orderGetters.getStorePickupAddress(storePickupAddresses, fulfillmentLocationCode)
+  }
 
   return (
     <Stack
@@ -25,22 +39,26 @@ const ProductItemList = (props: ProductItemListProps) => {
       data-testid="product-item-stack"
     >
       {items?.map((item: Maybe<CrOrderItem>) => (
-        <ProductItem
-          id={orderGetters.getProductId(item)}
-          productCode={orderGetters.getProductCode(item)}
-          image={orderGetters.getProductImage(item)}
-          name={orderGetters.getProductName(item)}
-          options={orderGetters.getProductOptions(item)}
-          price={orderGetters.getProductPrice(item)}
-          salePrice={orderGetters.getProductSalePrice(item)}
-          qty={orderGetters.getProductQuantity(item)}
-          purchaseLocation={orderGetters.getPurchaseLocation(item)}
-          isPickupItem={isPickupItem}
-          expectedDeliveryDate={expectedDeliveryDate}
-          onStoreLocatorClick={onClickChangeStore}
-          key={item?.id}
-          data-testid="product-item"
-        ></ProductItem>
+        <Stack key={item?.id}>
+          <ProductItem
+            id={orderGetters.getProductId(item)}
+            productCode={orderGetters.getProductCode(item)}
+            image={orderGetters.getProductImage(item)}
+            name={orderGetters.getProductName(item)}
+            options={orderGetters.getProductOptions(item)}
+            price={orderGetters.getProductPrice(item)}
+            salePrice={orderGetters.getProductSalePrice(item)}
+            qty={orderGetters.getProductQuantity(item)}
+            purchaseLocation={orderGetters.getPurchaseLocation(item)}
+            isPickupItem={isPickupItem}
+            expectedDeliveryDate={expectedDeliveryDate}
+            onStoreLocatorClick={onClickChangeStore}
+            data-testid="product-item"
+          ></ProductItem>
+          {showAddress && item?.fulfillmentLocationCode && (
+            <AddressCard {...storePickupAddress(item?.fulfillmentLocationCode)} />
+          )}
+        </Stack>
       ))}
     </Stack>
   )

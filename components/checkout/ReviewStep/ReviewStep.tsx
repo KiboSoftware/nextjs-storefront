@@ -22,7 +22,9 @@ import { KiboTextBox, OrderPrice, PasswordValidation } from '@/components/common
 import type { OrderPriceProps } from '@/components/common/OrderPrice/OrderPrice'
 import ProductItemList from '@/components/common/ProductItemList/ProductItemList'
 import { useCheckoutStepContext, useAuthContext } from '@/context'
+import { useCreateOrderMutation } from '@/hooks'
 import { checkoutGetters } from '@/lib/getters'
+import { buildCreateOrderParams } from '@/lib/helpers/buildCreateOrderParams'
 import { isPasswordValid } from '@/lib/helpers/validations/validations'
 
 import type { Order, Maybe } from '@/lib/gql/types'
@@ -93,6 +95,7 @@ const ReviewStep = (props: ReviewStepProps) => {
   const { isAuthenticated, createAccount } = useAuthContext()
   const [isAgreeWithTermsAndConditions, setAggreeWithTermsAndConditions] = useState<boolean>(false)
 
+  const createOrder = useCreateOrderMutation()
   const { setStepNext, setStepStatusComplete } = useCheckoutStepContext()
   const { shipItems, pickupItems, orderSummary } = checkoutGetters.getCheckoutDetails(checkout)
   const { subTotal, shippingTotal, taxTotal, total } = orderSummary
@@ -137,6 +140,9 @@ const ReviewStep = (props: ReviewStepProps) => {
     setAggreeWithTermsAndConditions(event.target.checked)
 
   const onValid = async (formData: PersonalDetails) => {
+    const params = buildCreateOrderParams(checkout)
+    await createOrder.mutateAsync(params)
+
     if (formData?.showAccountFields) {
       await createAccount({
         email: checkout.email as string,
