@@ -1,5 +1,7 @@
 import getConfig from 'next/config'
 
+import { OrderStatus } from '../constants'
+
 const getPastDateTimestamp = (months: number) => {
   const today = new Date()
   today.setMonth(today.getMonth() - months)
@@ -36,6 +38,6 @@ export const buildOrdersFilterInput = (params: {
     variables.filter = searchFilters.join(' and ')
   }
 
-  variables.filter = variables.filter.concat(' and status ne Abandoned')
+  variables.filter = variables.filter.concat(` and status ne ${OrderStatus.ABANDONED}`)
   return variables
 }
