@@ -1,439 +1,239 @@
 /** @format */
 
-import React, { useEffect, useState } from 'react'
-
-import { yupResolver } from '@hookform/resolvers/yup'
-import { Visibility, VisibilityOff } from '@mui/icons-material'
-import { Box, Button, Typography, useMediaQuery, useTheme } from '@mui/material'
-import { useTranslation } from 'next-i18next'
-import { Controller, useForm } from 'react-hook-form'
-import * as yup from 'yup'
-
+import React, { useState } from 'react'
+import Box from '@mui/material/Box'
+import Button from '@mui/material/Button'
+import Typography from '@mui/material/Typography'
 import { KiboTextBox, PasswordValidation } from '@/components/common'
-import { useAuthContext } from '@/context'
-import { useUpdateUserData } from '@/hooks/mutations/useProfile/useUpdateUserData/useUpdateUserData'
-import { useUpdateUserPasswordMutations } from '@/hooks/mutations/useProfile/useUpdateUserPassword/useUpdateUserPassword'
+import { useTranslation } from 'next-i18next'
+import { watch } from 'fs'
+import { Controller, useForm } from 'react-hook-form'
+import { width } from '@mui/system'
+import { FormControl } from '@mui/material'
+import { Visibility, VisibilityOff } from '@mui/icons-material'
 
-const style = {
-  box1: {
-    display: 'flex',
-    flexDirection: 'column',
-    gap: 2.5,
-  },
-  box2: {
-    display: 'flex',
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-  },
-  box3: {
-    display: 'flex',
-    alignItems: 'center',
-    cursor: 'pointer',
-    justifyContent: 'end',
-  },
-}
+function MyProfile() {
+  const { t } = useTranslation(['checkout', 'common'])
 
-const useCustomerDetailsSchema = () => {
-  const { t } = useTranslation('checkout')
-  // return yup.object().shape({
-  //   email: yup.string().email().required(t('this-field-is-required')),
-  //   firstName: yup.string().required(t('this-field-is-required')),
-  //   lastNameOrSurname: yup.string().required(t('this-field-is-required')),
-  //   password: yup.string().required(t('this-field-is-required')),
-  // })
-}
-
-const Schema = yup.object().shape({
-  email: yup.string().email().required('this-field-is-required'),
-  firstName: yup.string().required('this-field-is-required'),
-  lastNameOrSurname: yup.string().required('this-field-is-required'),
-  password: yup.string().required('this-field-is-required'),
-})
-
-const MyProfile = () => {
-  const { user, isAuthenticated } = useAuthContext()
-  const { t } = useTranslation(['common', 'checkout'])
-  const { updateUserData } = useUpdateUserData()
-  const { updateUserPasswordData } = useUpdateUserPasswordMutations()
-  const kiboTheme = useTheme()
-  const mobileView = useMediaQuery(kiboTheme.breakpoints.down('md'))
-  const [edit, setEdit] = useState('')
-
+  const [editName, setEditName] = useState(false)
+  const [editEmail, setEditEmail] = useState(false)
+  const [editPassword, setEditPassword] = useState(false)
   const [showPassword, setShowPassword] = useState<boolean>(false)
 
-  const [currentUser, setCurrentUser] = useState({
-    firstName: '',
-    lastName: '',
-    emailAddress: '',
-    id: 0,
-  })
-  const [updatedPassword, setUpdatedpassword] = useState({
-    oldPassword: '',
-    newPassword: '',
-    confirmNewPassword: '',
-  })
-
-  useEffect(() => {
-    if (isAuthenticated) {
-      setCurrentUser({
-        id: user?.id as number,
-        firstName: user?.firstName as string,
-        lastName: user?.lastName as string,
-        emailAddress: user?.emailAddress as string,
-      })
-    }
-  }, [user, isAuthenticated])
-
   const {
-    formState: { errors, isDirty },
+    formState: { errors, isValid },
     control,
-    reset,
+    watch,
   } = useForm({
-    mode: 'onChange',
+    mode: 'all',
     reValidateMode: 'onBlur',
-    resolver: yupResolver(Schema),
     shouldFocusError: true,
-    // context: {},
   })
+  const userEnteredPassword = watch(['password']).join('')
 
-  const handleUpdatUserData = async () => {
-    try {
-      await updateUserData.mutateAsync({
-        accountId: user?.id as number,
-        customerAccountInput: {
-          id: user?.id as number,
-          firstName: currentUser.firstName as string,
-          lastName: currentUser.lastName as string,
-          emailAddress: currentUser.emailAddress,
-        },
-      })
-    } catch (err) {
-      console.log(err)
-    }
-    return setEdit('')
+  const data = {
+    customerName: 'james Hernandez',
+    Email: 'hernandez@gmail.com',
+    phoneNumber: 98656545465,
+    password: 123545,
   }
-
-  const handleCancelUserData = async () => {
-    setCurrentUser({
-      id: user?.id as number,
-      firstName: user?.firstName as string,
-      lastName: user?.lastName as string,
-      emailAddress: user?.emailAddress as string,
-    })
-  }
-
-  const handleUpdatUserPassword = async () => {
-    try {
-      await updateUserPasswordData.mutateAsync({
-        accountId: user?.id as number,
-
-        passwordInfoInput: {
-          oldPassword: updatedPassword.oldPassword,
-          newPassword: updatedPassword.newPassword,
-          externalPassword: updatedPassword.confirmNewPassword,
-        },
-      })
-    } catch (err) {
-      console.log(err)
-    }
-    return setEdit('')
+  const style = {
+    box1: {
+      display: 'flex',
+      flexDirection: 'column',
+      margin: '5px',
+    },
+    box2: {
+      display: 'flex',
+      flexDirection: editName || editEmail || editPassword ? 'column' : 'row',
+      margin: '5px',
+      width: '500px',
+      justifyContent: 'space-between',
+    },
+    box3: {
+      display: 'flex',
+      alignItems: 'end',
+      cursor: 'pointer',
+    },
   }
 
   return (
-    <Box>
-      <Box
-        data-testid="customer-name"
-        sx={style.box1}
-        style={{ width: mobileView ? '100%' : '50%' }}
-      >
-        {edit !== '' ? (
-          <>
-            {edit === 'EditName' && (
-              <>
-                <Typography variant="h4" sx={{ fontWeight: 'bold' }}>
-                  {t('common:edit-customer-name')}
-                </Typography>
-                <Box sx={{ display: 'flex', flexDirection: 'column' }}>
-                  <Controller
-                    name="firstName"
-                    control={control}
-                    defaultValue={currentUser.firstName}
-                    render={({ field }) => (
-                      <KiboTextBox
-                        {...field}
-                        // value={currentUser.firstName}
-                        value={field.value || ''}
-                        label={t('checkout:first-name')}
-                        ref={null}
-                        size="small"
-                        error={!!errors?.firstName}
-                        // onChange={(_name, value) =>
-                        //   setCurrentUser({ ...currentUser, firstName: value })
-                        // }
-                        onChange={(_name, value) => field.onChange(value)}
-                        onBlur={field.onBlur}
-                        required
-                      />
-                    )}
-                  />
-                  <Controller
-                    name="lastNameOrSurname"
-                    control={control}
-                    // defaultValue={user?.lastName}
-                    render={({ field }) => (
-                      <KiboTextBox
-                        {...field}
-                        value={currentUser.lastName}
-                        label={t('checkout:last-name-or-sur-name')}
-                        ref={null}
-                        error={!!errors?.lastNameOrSurname}
-                        onChange={(_name, value) =>
-                          setCurrentUser({ ...currentUser, lastName: value })
-                        }
-                        onBlur={field.onBlur}
-                        required
-                        size="small"
-                      />
-                    )}
-                  />
-                </Box>
-                <Box sx={style.box1} width={'50%'}>
-                  <Button
-                    onClick={() => {
-                      setEdit('')
-                      reset()
-                      setCurrentUser({
-                        ...currentUser,
-                        firstName: user?.firstName as string,
-                        lastName: user?.lastName as string,
-                      })
-                    }}
-                    variant="contained"
-                    color="secondary"
-                  >
-                    {t('common:cancel')}
-                  </Button>
-                  <Button
-                    disabled={!isDirty}
-                    onClick={() => handleUpdatUserData()}
-                    variant="contained"
-                  >
-                    {t('common:save')}
-                  </Button>
-                </Box>
-              </>
+    <Box sx={{ margin: '20px' }}>
+      <Typography>
+        {editName || editEmail || editPassword ? 'Edit My Profile' : 'My Profile'}
+      </Typography>
+      <Box sx={style.box1}>
+        <Box sx={style.box2}>
+          <Box>
+            <Typography variant="h4">
+              {editName ? 'Edit Customer Name' : 'Customer Name'}
+            </Typography>
+            {editName ? (
+              <Box sx={{ display: 'flex', flexDirection: 'column' }}>
+                <KiboTextBox
+                  sx={{ height: '50px', width: '300px', margin: '5px' }}
+                  id="outlined-basic"
+                  label={t('first-name')}
+                />
+                <KiboTextBox
+                  sx={{ height: '50px', width: '300px', margin: '5px' }}
+                  id="outlined-basic"
+                  label={t('last-name')}
+                />
+              </Box>
+            ) : (
+              <Typography>{data.customerName}</Typography>
             )}
-            {edit === 'EditEmail' && (
-              <>
-                <Typography variant="h4" sx={{ fontWeight: 'bold' }}>
-                  {t('common:edit-email')}
-                </Typography>
-                <Box sx={{ display: 'flex', flexDirection: 'column' }}>
+          </Box>
+          {editName ? (
+            <Box
+              sx={{
+                width: '100%',
+                flexDirection: 'column',
+                alignItems: 'stretch',
+                padding: '0 2%',
+              }}
+            >
+              <Button
+                sx={{ width: '100%', marginBottom: 1 }}
+                onClick={() => setEditName(false)}
+                variant="contained"
+                color="secondary"
+              >
+                Cancel
+              </Button>
+              <Button sx={{ width: '100%' }} onClick={() => setEditName(false)} variant="contained">
+                Save
+              </Button>
+            </Box>
+          ) : (
+            <Box sx={style.box3}>
+              <Typography onClick={() => setEditName(true)}> Edit </Typography>
+            </Box>
+          )}
+        </Box>
+        <Box sx={style.box2}>
+          <Box>
+            <Typography>{editEmail ? 'Edit Email' : 'Email'}</Typography>
+            {editEmail ? (
+              <Box sx={{ display: 'flex', flexDirection: 'column' }}>
+                <KiboTextBox
+                  sx={{ height: '50px', width: '300px', margin: '5px' }}
+                  id="outlined-basic"
+                  label="Email"
+                  variant="outlined"
+                />
+              </Box>
+            ) : (
+              <Typography>{data.Email}</Typography>
+            )}
+          </Box>
+          {editEmail ? (
+            <Box
+              sx={{
+                width: '100%',
+                flexDirection: 'column',
+                alignItems: 'stretch',
+                padding: '0 2%',
+              }}
+            >
+              <Button
+                sx={{ width: '100%', marginBottom: 1 }}
+                onClick={() => setEditEmail(false)}
+                variant="contained"
+                color="secondary"
+              >
+                Cancel
+              </Button>
+              <Button
+                sx={{ width: '100%' }}
+                onClick={() => setEditEmail(false)}
+                variant="contained"
+              >
+                Save
+              </Button>
+            </Box>
+          ) : (
+            <Box sx={style.box3}>
+              <Typography onClick={() => setEditEmail(true)}> Edit </Typography>
+            </Box>
+          )}
+        </Box>
+        <Box sx={style.box2}>
+          <Box>
+            <Typography> phoneNumber</Typography>
+            <Typography>{data.phoneNumber}</Typography>
+          </Box>
+          <Box sx={style.box3}>
+            <Typography>Edit</Typography>
+          </Box>
+        </Box>
+        <Box sx={style.box2}>
+          <Box>
+            <Typography>{editPassword ? 'Edit Password' : 'Password'}</Typography>
+            {editPassword ? (
+              <Box sx={{ display: 'flex', flexDirection: 'column' }}>
+                <FormControl sx={{ width: '100%' }}>
                   <Controller
                     name="email"
                     control={control}
                     render={({ field }) => (
                       <KiboTextBox
-                        name="email"
-                        value={currentUser.emailAddress}
-                        label={t('checkout:email')}
+                        value={field.value}
+                        label={t('password')}
                         required
+                        sx={{ width: '100%' }}
                         onBlur={field.onBlur}
-                        onChange={(_name, value) =>
-                          setCurrentUser({ ...currentUser, emailAddress: value })
-                        }
-                        error={!!errors?.email}
-                        size="small"
+                        onChange={(_name, value) => {
+                          field.onChange(value)
+                        }}
+                        error={!!errors?.password}
+                        helperText={errors?.password?.message}
+                        type={showPassword ? 'text' : 'password'}
+                        icon={showPassword ? <Visibility /> : <VisibilityOff />}
+                        onIconClick={() => setShowPassword(!showPassword)}
                       />
                     )}
                   />
-                </Box>
-                <Box sx={style.box1} width={'50%'}>
-                  <Button
-                    variant="contained"
-                    color="secondary"
-                    onClick={() => {
-                      setEdit('')
-                      handleCancelUserData()
-                    }}
-                  >
-                    {t('common:cancel')}
-                  </Button>
-                  <Button
-                    disabled={!isDirty}
-                    onClick={() => handleUpdatUserData()}
-                    variant="contained"
-                  >
-                    {t('common:save')}
-                  </Button>
-                </Box>
-              </>
+                  <PasswordValidation password={userEnteredPassword} />
+                </FormControl>
+              </Box>
+            ) : (
+              <Typography>{data.password}</Typography>
             )}
-            {edit === 'EditPass' && (
-              <>
-                <Typography variant="h4" sx={{ fontWeight: 'bold' }}>
-                  {t('common:edit-password')}
-                </Typography>
-                <Box sx={{ display: 'flex', flexDirection: 'column' }}>
-                  <Controller
-                    name="old-password"
-                    control={control}
-                    render={({ field }) => (
-                      <KiboTextBox
-                        value={field.value}
-                        label={t('Old Password')}
-                        required
-                        onBlur={field.onBlur}
-                        onChange={(_name, value) =>
-                          setUpdatedpassword({ ...updatedPassword, oldPassword: value })
-                        }
-                        error={!!errors?.password}
-                        type={showPassword ? 'text' : 'password'}
-                        icon={showPassword ? <Visibility /> : <VisibilityOff />}
-                        onIconClick={() => setShowPassword(!showPassword)}
-                        size="small"
-                      />
-                    )}
-                  />
-                  <Controller
-                    name="password"
-                    control={control}
-                    render={({ field }) => (
-                      <KiboTextBox
-                        value={field.value}
-                        label={t('New Password')}
-                        required
-                        onBlur={field.onBlur}
-                        onChange={(_name, value) =>
-                          setUpdatedpassword({ ...updatedPassword, newPassword: value })
-                        }
-                        error={!!errors?.password}
-                        type={showPassword ? 'text' : 'password'}
-                        icon={showPassword ? <Visibility /> : <VisibilityOff />}
-                        onIconClick={() => setShowPassword(!showPassword)}
-                        size="small"
-                      />
-                    )}
-                  />
+          </Box>
 
-                  <Controller
-                    name="external-password"
-                    control={control}
-                    render={({ field }) => (
-                      <KiboTextBox
-                        value={field.value}
-                        label={t('Confirm New Password')}
-                        required
-                        onBlur={field.onBlur}
-                        onChange={(_name, value) =>
-                          setUpdatedpassword({ ...updatedPassword, confirmNewPassword: value })
-                        }
-                        error={!!errors?.password}
-                        type={showPassword ? 'text' : 'password'}
-                        icon={showPassword ? <Visibility /> : <VisibilityOff />}
-                        onIconClick={() => setShowPassword(!showPassword)}
-                        size="small"
-                      />
-                    )}
-                  />
-                  {updatedPassword.newPassword.length > 0 && (
-                    <PasswordValidation password={updatedPassword.newPassword} />
-                  )}
-                </Box>
-                <Box sx={style.box1} width={'50%'}>
-                  <Button
-                    onClick={() => {
-                      setEdit('')
-                    }}
-                    variant="contained"
-                    color="secondary"
-                  >
-                    {t('common:cancel')}
-                  </Button>
-                  <Button
-                    disabled={!isDirty}
-                    onClick={() => handleUpdatUserPassword()}
-                    variant="contained"
-                  >
-                    {t('common:save')}
-                  </Button>
-                </Box>
-              </>
-            )}
-          </>
-        ) : (
-          <>
-            <Box sx={style.box2}>
-              <Box>
-                <Typography variant="body2" sx={{ fontWeight: 'bold' }}>
-                  {t('checkout:customer-name')}
-                </Typography>
-                <Typography variant="body2">
-                  {currentUser?.firstName + ' ' + currentUser?.lastName}
-                </Typography>
-              </Box>
-
-              <Box sx={style.box3}>
-                <Typography
-                  variant="body2"
-                  onClick={() => {
-                    setEdit('EditName')
-                  }}
-                  sx={{}}
-                >
-                  {t('common:edit')}
-                </Typography>
-              </Box>
+          {editPassword ? (
+            <Box
+              sx={{
+                width: '100%',
+                flexDirection: 'column',
+                alignItems: 'stretch',
+                padding: '0 2%',
+              }}
+            >
+              <Button
+                sx={{ width: '100%', marginBottom: 1 }}
+                onClick={() => setEditPassword(false)}
+                variant="contained"
+                color="secondary"
+              >
+                Cancel
+              </Button>
+              <Button
+                sx={{ width: '100%' }}
+                onClick={() => setEditPassword(false)}
+                variant="contained"
+              >
+                Save
+              </Button>
             </Box>
-            <Box sx={style.box2}>
-              <Box>
-                <Typography variant="body2" sx={{ fontWeight: 'bold' }}>
-                  {t('checkout:email')}
-                </Typography>
-                <Typography variant="body2">{currentUser?.emailAddress}</Typography>
-              </Box>
-              <Box sx={style.box3}>
-                <Typography
-                  variant="body2"
-                  onClick={() => {
-                    setEdit('EditEmail')
-                  }}
-                >
-                  {t('common:edit')}
-                </Typography>
-              </Box>
+          ) : (
+            <Box sx={style.box3}>
+              <Typography onClick={() => setEditPassword(true)}> Edit </Typography>
             </Box>
-            <Box sx={style.box2}>
-              <Box>
-                <Typography variant="body2" sx={{ fontWeight: 'bold' }}>
-                  {t('checkout:phone-number-home')}
-                </Typography>
-                <Typography variant="body2">(321)456 7890</Typography>
-              </Box>
-              <Box sx={style.box3}>
-                <Typography variant="body2"> {t('common:edit')}</Typography>
-              </Box>
-            </Box>
-            <Box sx={style.box2}>
-              <Box>
-                <Typography variant="body2" sx={{ fontWeight: 'bold' }}>
-                  {t('checkout:password')}
-                </Typography>
-                <Typography variant="body2">*********</Typography>
-              </Box>
-              <Box sx={style.box3}>
-                <Typography
-                  variant="body2"
-                  onClick={() => {
-                    setEdit('EditPass')
-                  }}
-                >
-                  {t('common:edit')}
-                </Typography>
-              </Box>
-            </Box>
-          </>
-        )}
+          )}
+        </Box>
       </Box>
     </Box>
   )
