@@ -6,20 +6,21 @@ import Button from '@mui/material/Button'
 import Typography from '@mui/material/Typography'
 import { KiboTextBox, PasswordValidation } from '@/components/common'
 import { useTranslation } from 'next-i18next'
-import { watch } from 'fs'
 import { Controller, useForm } from 'react-hook-form'
-import { width } from '@mui/system'
 import { FormControl } from '@mui/material'
 import { Visibility, VisibilityOff } from '@mui/icons-material'
+import { useUpateUserMutations } from '@/hooks/mutations/useProfile/useChangeCustomerData/useUpdateCustomerData'
 
 function MyProfile() {
   const { t } = useTranslation(['checkout', 'common'])
-
+  const { updateUserData } = useUpateUserMutations()
   const [editName, setEditName] = useState(false)
   const [editEmail, setEditEmail] = useState(false)
   const [editPassword, setEditPassword] = useState(false)
   const [showPassword, setShowPassword] = useState<boolean>(false)
-
+  const [updatedFirstName, setUpdatedFirstName] = useState('')
+  const [updatedLastName, setUpdatedLastName] = useState('')
+  const [updatedEmail, setUpdatedEmail] = useState('')
   const {
     formState: { errors, isValid },
     control,
@@ -57,6 +58,18 @@ function MyProfile() {
     },
   }
 
+  const handleUpdatUserData = async () => {
+    try {
+      const userDataResponse = await updateUserData.mutateAsync(
+        updatedFirstName,
+        updatedLastName,
+        updatedEmail
+      )
+    } catch (err) {
+      console.log(err)
+    }
+  }
+
   return (
     <Box sx={{ margin: '20px' }}>
       <Typography>
@@ -74,11 +87,13 @@ function MyProfile() {
                   sx={{ height: '50px', width: '300px', margin: '5px' }}
                   id="outlined-basic"
                   label={t('first-name')}
+                  onChange={(e) => setUpdatedFirstName(e)}
                 />
                 <KiboTextBox
                   sx={{ height: '50px', width: '300px', margin: '5px' }}
                   id="outlined-basic"
                   label={t('last-name')}
+                  onChange={(e) => setUpdatedLastName(e)}
                 />
               </Box>
             ) : (
@@ -96,19 +111,23 @@ function MyProfile() {
             >
               <Button
                 sx={{ width: '100%', marginBottom: 1 }}
-                onClick={() => setEditName(false)}
+                onClick={() => handleUpdatUserData()}
                 variant="contained"
                 color="secondary"
               >
                 Cancel
               </Button>
-              <Button sx={{ width: '100%' }} onClick={() => setEditName(false)} variant="contained">
+              <Button
+                sx={{ width: '100%' }}
+                onClick={() => handleUpdatUserData()}
+                variant="contained"
+              >
                 Save
               </Button>
             </Box>
           ) : (
             <Box sx={style.box3}>
-              <Typography onClick={() => setEditName(true)}> Edit </Typography>
+              <Typography onClick={() => handleUpdatUserData()}> Edit </Typography>
             </Box>
           )}
         </Box>
@@ -122,6 +141,7 @@ function MyProfile() {
                   id="outlined-basic"
                   label="Email"
                   variant="outlined"
+                  onChange={(e) => setUpdatedEmail(e)}
                 />
               </Box>
             ) : (
