@@ -43,12 +43,12 @@ const App = (props: KiboAppProps) => {
                 <KiboHeader
                   navLinks={[
                     {
-                      link: '#',
-                      text: 'Order Status',
+                      link: '/order-status',
+                      text: 'order-status',
                     },
                     {
                       link: '/wishlist',
-                      text: 'Wishlist',
+                      text: 'wishlist',
                     },
                     {
                       link: '#',

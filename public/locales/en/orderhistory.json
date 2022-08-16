@@ -7,5 +7,6 @@
   "billing-email": "Billing Email",
   "order-number-is-required": "Order number is required",
   "billing-email-is-required": "Billing Email is required",
-  "billing-email-must-be-a-valid-email": "Billing Email must be a valid email"
+  "billing-email-must-be-a-valid-email": "Billing Email must be a valid email",
+  "shipped-to": "Shipped to"
 }

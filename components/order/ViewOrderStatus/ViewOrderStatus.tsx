@@ -18,13 +18,13 @@ import * as yup from 'yup'
 
 import { FullWidthDivider, KiboTextBox } from '@/components/common'
 
-interface FormData {
+export interface OrderStatusFormData {
   orderNumber: string
   billingEmail: string
 }
 
 export interface ViewOrderStatusProps {
-  onOrderStatusSubmit: (data: FormData) => void
+  onOrderStatusSubmit: (data: OrderStatusFormData) => void
   lookupErrorMessage?: string
 }
 
@@ -57,7 +57,7 @@ const ViewOrderStatus = (props: ViewOrderStatusProps) => {
     control,
     formState: { errors, isDirty, isValid },
     handleSubmit,
-  } = useForm<FormData>({
+  } = useForm<OrderStatusFormData>({
     mode: 'all',
     reValidateMode: 'onChange',
     defaultValues: undefined,
@@ -65,7 +65,7 @@ const ViewOrderStatus = (props: ViewOrderStatusProps) => {
     shouldFocusError: true,
   })
 
-  const onValid = async (formData: FormData) => onOrderStatusSubmit(formData)
+  const onValid = async (formData: OrderStatusFormData) => onOrderStatusSubmit(formData)
 
   return (
     <Stack gap={4}>
@@ -129,6 +129,7 @@ const ViewOrderStatus = (props: ViewOrderStatusProps) => {
           <Button
             type="submit"
             variant="contained"
+            color="primary"
             sx={{ ...buttonStyle }}
             fullWidth
             disabled={!isDirty || !isValid}

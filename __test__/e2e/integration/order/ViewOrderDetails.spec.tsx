@@ -4,7 +4,7 @@ import '@testing-library/jest-dom'
 import { composeStories } from '@storybook/testing-react'
 import { render, screen } from '@testing-library/react'
 
-import * as stories from '@/components/order/view-order-details/ViewOrderDetails.stories'
+import * as stories from '@/components/order/ViewOrderDetails/ViewOrderDetails.stories'
 import { FulfillmentOptions } from '@/lib/constants'
 import { orderGetters } from '@/lib/getters'
 

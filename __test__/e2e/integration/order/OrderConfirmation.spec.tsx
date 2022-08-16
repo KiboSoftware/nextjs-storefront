@@ -4,7 +4,7 @@ import '@testing-library/jest-dom'
 import { composeStories } from '@storybook/testing-react'
 import { render, screen } from '@testing-library/react'
 
-import * as stories from '@/components/order/order-confirmation/OrderConfirmation.stories'
+import * as stories from '@/components/order/OrderConfirmation/OrderConfirmation.stories'
 import { orderGetters } from '@/lib/getters'
 
 import type { Order } from '@/lib/gql/types'

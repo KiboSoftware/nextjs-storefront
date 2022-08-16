@@ -1,11 +1,11 @@
 import React from 'react'
 
 import { ArrowBackIos } from '@mui/icons-material'
-import { Divider, Grid, Typography, Box, Stack } from '@mui/material'
+import { Divider, Grid, Typography, Box, Stack, useTheme, useMediaQuery } from '@mui/material'
 import { useTranslation } from 'next-i18next'
 
 import { SavedPaymentMethodView } from '@/components/checkout'
-import { AddressCard, OrderSummary, ProductItemList } from '@/components/common'
+import { AddressCard, FullWidthDivider, OrderSummary, ProductItemList } from '@/components/common'
 import { ProductOption } from '@/components/product'
 import { useStoreLocations } from '@/hooks'
 import { billingGetters, orderGetters, storeLocationGetters } from '@/lib/getters'
@@ -14,6 +14,8 @@ import type { Maybe, Order, Location } from '@/lib/gql/types'
 
 interface ViewOrderDetailsProps {
   order: Order
+  title: string
+  isOrderStatus?: boolean
   onShowOrderHistoryItem: () => void
 }
 
@@ -32,13 +34,15 @@ const styles = {
     pb: 3,
   },
   divider: {
-    height: '1px',
+    borderColor: 'grey.500',
   },
 }
 
 const ViewOrderDetails = (props: ViewOrderDetailsProps) => {
-  const { order, onShowOrderHistoryItem } = props
-  const { t } = useTranslation(['common', 'checkout'])
+  const { order, title, isOrderStatus = false, onShowOrderHistoryItem } = props
+  const { t } = useTranslation(['common', 'checkout', 'orderhistory'])
+  const theme = useTheme()
+  const mdScreen = useMediaQuery(theme.breakpoints.up('md'))
 
   const orderNumber = orderGetters.getOrderNumber(order)
   const orderTotal = orderGetters.getTotal(order)
@@ -48,6 +52,7 @@ const ViewOrderDetails = (props: ViewOrderDetailsProps) => {
   const fulfillmentContact = orderGetters.getShippingAddress(order)
   const payments = orderGetters.getOrderPayments(order)
   const fulfillmentLocationCodes = orderGetters.getFulfillmentLocationCodes(pickupItems)
+  const shippedTo = orderGetters.getShippedTo(order)
 
   const { data: locations } = useStoreLocations({ filter: fulfillmentLocationCodes })
   const storePickupAddress = storeLocationGetters.getLocations(locations as Maybe<Location>[])
@@ -70,22 +75,28 @@ const ViewOrderDetails = (props: ViewOrderDetailsProps) => {
 
   return (
     <>
-      <Stack
-        sx={{ ...styles.wrapIcon, py: '1.2rem' }}
-        direction="row"
-        gap={2}
-        onClick={handleShowOrderHistoryItem}
-      >
-        <ArrowBackIos fontSize="inherit" sx={styles.wrapIcon} />
-        <Typography variant="body2">{t('order-history')}</Typography>
-      </Stack>
+      {!isOrderStatus && (
+        <Stack
+          sx={{ ...styles.wrapIcon, py: '1.2rem' }}
+          direction="row"
+          gap={2}
+          onClick={handleShowOrderHistoryItem}
+        >
+          <ArrowBackIos fontSize="inherit" sx={styles.wrapIcon} />
+          <Typography variant="body2">{t('order-history')}</Typography>
+        </Stack>
+      )}
       <Grid container>
         {/* Header section */}
         <Grid item xs={12} md={7}>
           <Typography variant="h1" gutterBottom>
-            {t('view-order-details')}
+            {title}
           </Typography>
-          <Divider sx={{ ...styles.divider }} />
+          {mdScreen ? (
+            <Divider sx={{ borderColor: 'primary.main' }} />
+          ) : (
+            <FullWidthDivider color="primary.main" />
+          )}
         </Grid>
 
         {/* Order Details Section */}
@@ -108,8 +119,11 @@ const ViewOrderDetails = (props: ViewOrderDetailsProps) => {
               }}
               variant="body1"
             />
+            {isOrderStatus && (
+              <ProductOption option={{ name: t('shipped-to'), value: shippedTo }} variant="body1" />
+            )}
           </Box>
-          <Divider sx={{ ...styles.divider }} />
+          {mdScreen ? <Divider sx={{ ...styles.divider }} /> : <FullWidthDivider />}
           {/* Shipment orders */}
           {shipItems && shipItems.length > 0 && (
             <Box>
@@ -128,7 +142,7 @@ const ViewOrderDetails = (props: ViewOrderDetailsProps) => {
                 <ProductItemList items={shipItems} />
                 {fulfillmentContact?.address && <AddressCard {...fulfillmentContact?.address} />}
               </Box>
-              <Divider sx={{ ...styles.divider }} />
+              {mdScreen ? <Divider sx={{ ...styles.divider }} /> : <FullWidthDivider />}
             </Box>
           )}
 
@@ -153,58 +167,62 @@ const ViewOrderDetails = (props: ViewOrderDetailsProps) => {
                   storePickupAddresses={storePickupAddress}
                 />
               </Box>
-              <Divider sx={{ ...styles.divider }} />
+              {mdScreen ? <Divider sx={{ ...styles.divider }} /> : <FullWidthDivider />}
             </Box>
           )}
 
           {/* Payment Information */}
-          <Box py={3}>
-            <Typography variant="h3" fontWeight={'bold'}>
-              {t('checkout:payment-information')}
-            </Typography>
-            {payments?.map((payment) => (
-              <SavedPaymentMethodView
-                key={payment?.id}
-                id={
-                  orderGetters.getOrderPaymentCardDetails(payment.billingInfo.card)
-                    .paymentServiceCardId
-                }
-                cardNumberPart={
-                  orderGetters.getOrderPaymentCardDetails(payment.billingInfo.card)
-                    .cardNumberPartOrMask
-                }
-                expireMonth={
-                  orderGetters.getOrderPaymentCardDetails(payment.billingInfo.card).expireMonth
-                }
-                expireYear={
-                  orderGetters.getOrderPaymentCardDetails(payment.billingInfo.card).expireYear
-                }
-                address1={
-                  billingGetters.getAddress(payment.billingInfo.billingContact.address).address1
-                }
-                address2={
-                  billingGetters.getAddress(payment.billingInfo.billingContact.address).address2
-                }
-                cityOrTown={
-                  billingGetters.getAddress(payment.billingInfo.billingContact.address).cityOrTown
-                }
-                postalOrZipCode={
-                  billingGetters.getAddress(payment.billingInfo.billingContact.address)
-                    ?.postalOrZipCode
-                }
-                stateOrProvince={
-                  billingGetters.getAddress(payment.billingInfo.billingContact.address)
-                    .stateOrProvince
-                }
-              />
-            ))}
-          </Box>
+          {!isOrderStatus && (
+            <Box py={3}>
+              <Typography variant="h3" fontWeight={'bold'}>
+                {t('checkout:payment-information')}
+              </Typography>
+              {payments?.map((payment) => (
+                <SavedPaymentMethodView
+                  key={payment?.id}
+                  id={
+                    orderGetters.getOrderPaymentCardDetails(payment.billingInfo.card)
+                      .paymentServiceCardId
+                  }
+                  cardNumberPart={
+                    orderGetters.getOrderPaymentCardDetails(payment.billingInfo.card)
+                      .cardNumberPartOrMask
+                  }
+                  expireMonth={
+                    orderGetters.getOrderPaymentCardDetails(payment.billingInfo.card).expireMonth
+                  }
+                  expireYear={
+                    orderGetters.getOrderPaymentCardDetails(payment.billingInfo.card).expireYear
+                  }
+                  address1={
+                    billingGetters.getAddress(payment.billingInfo.billingContact.address).address1
+                  }
+                  address2={
+                    billingGetters.getAddress(payment.billingInfo.billingContact.address).address2
+                  }
+                  cityOrTown={
+                    billingGetters.getAddress(payment.billingInfo.billingContact.address).cityOrTown
+                  }
+                  postalOrZipCode={
+                    billingGetters.getAddress(payment.billingInfo.billingContact.address)
+                      ?.postalOrZipCode
+                  }
+                  stateOrProvince={
+                    billingGetters.getAddress(payment.billingInfo.billingContact.address)
+                      .stateOrProvince
+                  }
+                />
+              ))}
+            </Box>
+          )}
         </Grid>
 
         {/* Order Summary */}
-        <Grid item xs={12} md={5} sx={{ paddingX: { xs: 0, md: 2 } }}>
-          <OrderSummary {...orderSummeryArgs} />
-        </Grid>
+        {!isOrderStatus && (
+          <Grid item xs={12} md={5} sx={{ paddingX: { xs: 0, md: 2 } }}>
+            <OrderSummary {...orderSummeryArgs} />
+          </Grid>
+        )}
       </Grid>
     </>
   )

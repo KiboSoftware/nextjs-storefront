@@ -175,6 +175,8 @@ const KiboHeaderStyles = {
 }
 
 const TopHeader = ({ navLinks }: { navLinks: NavigationLink[] }) => {
+  const { t } = useTranslation('common')
+
   return (
     <Box sx={{ ...TopHeaderStyles.wrapper }}>
       <Container maxWidth="xl" sx={{ ...TopHeaderStyles.container }}>
@@ -183,7 +185,7 @@ const TopHeader = ({ navLinks }: { navLinks: NavigationLink[] }) => {
             return (
               <Box key={index}>
                 <Link href={nav.link} underline="none" color="common.white">
-                  <Typography variant="body2"> {nav.text}</Typography>
+                  <Typography variant="body2"> {t(`${nav.text}`)}</Typography>
                 </Link>
               </Box>
             )

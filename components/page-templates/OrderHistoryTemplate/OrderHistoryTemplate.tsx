@@ -148,6 +148,7 @@ const OrderHistoryTemplate = (props: OrderHistoryProps) => {
     <Box>
       {selectedOrder && (
         <ViewOrderDetails
+          title={t('view-order-details')}
           order={selectedOrder}
           onShowOrderHistoryItem={handleShowOrderHistoryItem}
         />
