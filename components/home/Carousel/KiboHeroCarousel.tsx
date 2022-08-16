@@ -87,7 +87,7 @@ const styles = {
 function HeroItem(props: ItemProps) {
   const kiboTheme = useTheme()
   const router = useRouter()
-  const mobileView = useMediaQuery(kiboTheme.breakpoints.down('sm'))
+  const mobileView = useMediaQuery(kiboTheme.breakpoints.down('md'))
 
   const {
     imageUrl,
@@ -115,7 +115,7 @@ function HeroItem(props: ItemProps) {
           sx={{
             display: 'flex',
             justifyContent: 'center',
-            marginTop: mobileView ? '80%' : '25%',
+            marginTop: mobileView ? '100%' : '25%',
           }}
         >
           <CardContent sx={styles.cardStyle}>
