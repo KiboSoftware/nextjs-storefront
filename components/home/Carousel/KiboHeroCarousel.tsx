@@ -87,7 +87,7 @@ const styles = {
 function HeroItem(props: ItemProps) {
   const kiboTheme = useTheme()
   const router = useRouter()
-  const mobileView = useMediaQuery(kiboTheme.breakpoints.down('sm'))
+  const mobileView = useMediaQuery(kiboTheme.breakpoints.down('md'))
 
   const {
     imageUrl,
