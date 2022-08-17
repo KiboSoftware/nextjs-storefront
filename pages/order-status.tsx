@@ -18,7 +18,7 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
 
   return {
     props: {
-      isAuthenticated: !!authTicket,
+      isAuthenticated: !!authTicket?.userId,
       ...(await serverSideTranslations(locale as string, ['common', 'orderhistory'])),
     },
   }
