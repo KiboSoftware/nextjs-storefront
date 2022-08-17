@@ -57,7 +57,7 @@ describe('[components] - ViewOrderDetails Integration', () => {
       expect(screen.getByText(`${expireMonth}/${expireYear}`)).toBeVisible()
     })
 
-    expect(screen.getAllByText('currency')).toHaveLength(7)
+    expect(screen.getAllByText('currency')).toHaveLength(8)
     expect(screen.getByText(/order-summary/i)).toBeVisible()
     expect(screen.getByText(/total-price/i)).toBeVisible()
     expect(screen.getByText(/shipping/i)).toBeVisible()

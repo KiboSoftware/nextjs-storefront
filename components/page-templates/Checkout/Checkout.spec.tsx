@@ -14,7 +14,6 @@ const DetailsStepMock = () => <div data-testid="checkout-details-mock" />
 const ShippingStepMock = () => <div data-testid="checkout-shipping-mock" />
 const PaymentStepMock = () => <div data-testid="checkout-payment-mock" />
 const ReviewStepMock = () => <div data-testid="checkout-review-mock" />
-const PromoCodeBadgeMock = () => <div data-testid="promo-code-badge-mock" />
 
 jest.mock('next/router', () => ({
   useRouter() {
@@ -28,7 +27,6 @@ jest.mock('../../checkout/DetailsStep/DetailsStep', () => DetailsStepMock)
 jest.mock('../../checkout/ShippingStep/ShippingStep', () => ShippingStepMock)
 jest.mock('../../checkout/PaymentStep/PaymentStep', () => PaymentStepMock)
 jest.mock('../../checkout/ReviewStep/ReviewStep', () => ReviewStepMock)
-jest.mock('@/components/common/PromoCodeBadge/PromoCodebadge', () => PromoCodeBadgeMock)
 
 jest.mock('@/hooks', () => ({
   useCheckoutQueries: jest.fn(() => ({})),
@@ -57,7 +55,6 @@ describe('[components] Checkout', () => {
     const shipping = screen.getByTestId('checkout-shipping-mock')
     const payment = screen.getByTestId('checkout-payment-mock')
     const review = screen.getByTestId('checkout-review-mock')
-    const promo = screen.getByTestId('promo-code-badge-mock')
 
     const nextButton = screen.getByRole('button', { name: /go-to-shipping/i })
     const backButton = screen.getByRole('button', { name: /back/i })
@@ -67,7 +64,6 @@ describe('[components] Checkout', () => {
     expect(shipping).toBeVisible()
     expect(payment).toBeVisible()
     expect(review).toBeVisible()
-    expect(promo).toBeVisible()
 
     expect(nextButton).toBeVisible()
     expect(backButton).toBeVisible()
