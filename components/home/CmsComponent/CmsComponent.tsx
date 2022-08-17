@@ -45,6 +45,19 @@ const promoBlocksData = (item: PromoBlocksDataProps) => {
   }
 }
 
+const defaultMapDataToProps = (obj: any) => {
+  const newObj: { [key: string]: any } = {}
+  for (const key in obj) {
+    if (obj.hasOwnProperty(key)) {
+      const value = obj[key]
+      const keyCamel = key.replace(/(\_\w)/g, (match) => match[1].toUpperCase())
+      const isRecursive = typeof value === 'object'
+      newObj[keyCamel] = isRecursive ? defaultMapDataToProps(value) : value
+    }
+  }
+  return newObj
+}
+
 const DefaultComponentMap = {
   small_banner: {
     component: SmallBanner,
@@ -109,7 +122,9 @@ const CmsComponent = (props: CmsComponentProps) => {
   const ComponentMapping = props.ComponentMap || DefaultComponentMap
   const mapping = ComponentMapping[name]
   const Component = mapping?.component
-  const cmsProps = mapping.mapDataToProps(content)
+  const cmsProps = mapping?.mapDataToProps
+    ? mapping?.mapDataToProps(content)
+    : defaultMapDataToProps(content)
   return Component ? <Component {...cmsProps} /> : null
 }
 

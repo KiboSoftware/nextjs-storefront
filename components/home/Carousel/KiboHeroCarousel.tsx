@@ -31,7 +31,6 @@ export interface HeroCarouselProps {
 
 const MainStyle = styled('div')({
   display: 'flex',
-  margin: '20px',
   color: 'grey.700',
 })
 
