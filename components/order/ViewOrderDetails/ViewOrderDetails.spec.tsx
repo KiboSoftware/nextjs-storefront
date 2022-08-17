@@ -27,6 +27,7 @@ describe('[component] - ViewOrderDetails', () => {
   it('should render component', () => {
     setup()
 
+    expect(screen.getByText(/order-history/i)).toBeVisible()
     expect(screen.getByText(/view-order-details/i)).toBeVisible()
     expect(screen.getByText(/shipment-details/i)).toBeVisible()
     expect(screen.getByText(/delivered/i)).toBeVisible()

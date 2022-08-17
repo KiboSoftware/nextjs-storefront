@@ -31,6 +31,7 @@ describe('[components] - ViewOrderDetails Integration', () => {
       ) || []
     const payments = Common.args?.order?.payments || []
 
+    expect(screen.getByText(/view-order-details/i)).toBeVisible()
     expect(screen.getByText(/order-number/i)).toBeVisible()
     expect(screen.getByText(/order-date/i)).toBeVisible()
     expect(screen.getByText(/order-total/i)).toBeVisible()
