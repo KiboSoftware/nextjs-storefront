@@ -324,7 +324,7 @@ const ProductDetailTemplate = (props: ProductDetailTemplateProps) => {
                 sx={{ padding: '0.375rem 0.5rem' }}
               >
                 {isProductInWishlist ? (
-                  <FavoriteRoundedIcon sx={{ color: 'error.main', marginRight: '14px' }} />
+                  <FavoriteRoundedIcon sx={{ color: 'red.900', marginRight: '14px' }} />
                 ) : (
                   <FavoriteBorderRoundedIcon sx={{ color: 'grey.600', marginRight: '14px' }} />
                 )}

@@ -46,7 +46,7 @@ const WishlistTemplate = (props: { customerAccount: CustomerAccount }) => {
     <Grid container data-testid="wishlist-template">
       <Grid item xs={12}>
         <Box sx={{ display: 'flex', padding: '1.5rem 0', alignItems: 'center' }}>
-          <FavoriteRoundedIcon sx={{ color: 'error.main', marginRight: '0.875rem' }} />
+          <FavoriteRoundedIcon sx={{ color: 'red.900', marginRight: '0.875rem' }} />
           <Typography variant="h1">
             {customerAccount?.firstName
               ? customerAccount?.firstName

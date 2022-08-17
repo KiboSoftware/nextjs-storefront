@@ -33,7 +33,7 @@ const styles = {
     marginBottom: '1.625rem',
   },
   likeIconStyle: {
-    color: 'error.main',
+    color: 'red.900',
     marginRight: '0.25rem',
   },
   dislikeIconStyle: {

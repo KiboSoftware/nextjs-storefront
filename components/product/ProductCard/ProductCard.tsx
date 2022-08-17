@@ -105,7 +105,7 @@ const ProductCard = (props: ProductCardProps) => {
                 onClick={handleAddOrRemoveWishlistItem}
               >
                 {isInWishlist ? (
-                  <FavoriteRoundedIcon sx={{ color: 'error.main' }} />
+                  <FavoriteRoundedIcon sx={{ color: 'red.900' }} />
                 ) : (
                   <FavoriteBorderRoundedIcon sx={{ color: 'grey.600', marginRight: '14px' }} />
                 )}
