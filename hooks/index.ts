@@ -12,6 +12,7 @@ export * from './queries/useShippingMethods/useShippingMethods'
 export * from './queries/useWishlist/useWishlistQueries'
 export * from './queries/useCustomerCards/useCustomerCards'
 export * from './queries/useCustomerContacts/useCustomerContacts'
+export * from './queries/useUserOrderQueries/useUserOrderQueries'
 
 // Custom hooks
 export * from './custom/useDebounce/useDebounce'
@@ -24,6 +25,7 @@ export * from './custom/useWishlist/useWishlist'
 // Mutation hooks
 export * from './mutations/useUpdateCheckout/useUpdateCheckoutPersonalInfo/useUpdateCheckoutPersonalInfo'
 export * from './mutations/useUpdateCheckout/useUpdateCheckoutShippingInfo/useUpdateCheckoutShippingInfo'
+export * from './mutations/useCreateOrderMutation/useCreateOrderMutation'
 export * from './mutations/useUser/useUserMutations'
 export * from './mutations/useUser/useUserAccountRegistrationMutations'
 export * from './mutations/useCartMutation/useCartMutationAddToCart/useCartMutationAddToCart'

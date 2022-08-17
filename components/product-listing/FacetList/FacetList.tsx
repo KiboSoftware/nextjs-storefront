@@ -14,8 +14,11 @@ interface FacetListProps {
   facetList?: FacetType[]
   initialItemsToShow?: number
   appliedFilters: FacetValue[]
+  showSearchAndCount?: boolean
+  shouldRouteUpdate?: boolean
   onFilterByClose: () => void
-  onRemoveSelectedTile: (tile: string) => void
+  onSelectedTileRemoval: (tile: string) => void
+  onFacetItemSelection?: (selectedFacetItems: string) => void
 }
 
 const styles = {
@@ -41,10 +44,13 @@ const styles = {
 const FacetList = (props: FacetListProps) => {
   const {
     facetList = [],
-    onFilterByClose,
-    onRemoveSelectedTile,
     appliedFilters,
     initialItemsToShow = 6,
+    showSearchAndCount = true,
+    shouldRouteUpdate = true,
+    onFilterByClose,
+    onSelectedTileRemoval,
+    onFacetItemSelection,
   } = props
 
   const { t } = useTranslation('common')
@@ -64,7 +70,10 @@ const FacetList = (props: FacetListProps) => {
         <Close sx={{ ...styles.Close }} onClick={onFilterByClose} />
       </Box>
       <Box sx={{ display: { md: 'none' }, margin: '1rem 0 0 1rem' }}>
-        <FilterTiles appliedFilters={appliedFilters} onRemoveSelectedTile={onRemoveSelectedTile} />
+        <FilterTiles
+          appliedFilters={appliedFilters}
+          onSelectedTileRemoval={onSelectedTileRemoval}
+        />
       </Box>
       {mdScreen ? <Divider sx={{ borderColor: 'grey.500' }} /> : <FullWidthDivider />}
       <Stack>
@@ -76,6 +85,9 @@ const FacetList = (props: FacetListProps) => {
               numberOfItemsToShow={initialItemsToShow}
               label={facet?.label}
               values={facet?.values}
+              showSearchAndCount={showSearchAndCount}
+              shouldRouteUpdate={shouldRouteUpdate}
+              onFacetItemSelection={onFacetItemSelection}
             />
           ))}
       </Stack>

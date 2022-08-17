@@ -5,7 +5,6 @@ export const userContactFields = /* GraphQL */ `
       name
       isPrimary
     }
-    label
     id
     email
     firstName

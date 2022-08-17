@@ -8,7 +8,7 @@ import { StoreLocatorDialog, StoreDetails } from '@/components/dialogs'
 import { useModalContext } from '@/context/ModalContext'
 import { storeLocationGetters } from '@/lib/getters/storeLocationGetters'
 import { setPurchaseLocationCookie } from '@/lib/helpers'
-import { LocationCustom } from '@/lib/types'
+import type { LocationCustom } from '@/lib/types'
 
 import type { Maybe, Location } from '@/lib/gql/types'
 

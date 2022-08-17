@@ -15,8 +15,9 @@ import {
   OrderSummary,
 } from '@/components/checkout'
 import { OrderConfirmation } from '@/components/order'
-import { useCheckoutStepContext, STEP_STATUS } from '@/context'
-import { useCheckoutQueries } from '@/hooks'
+import { useCheckoutStepContext, STEP_STATUS, useAuthContext } from '@/context'
+import { useCheckoutQueries, useCustomerContacts } from '@/hooks'
+import { userAddressGetters } from '@/lib/getters'
 import theme from '@/styles/theme'
 
 import type { Order } from '@/lib/gql/types'
@@ -42,13 +43,11 @@ const Checkout = (props: CheckoutProps) => {
     initialCheckout,
   })
 
-  const {
-    activeStep,
-    stepStatus,
-    steps,
-    setStepBack,
-    setStepStatusSubmit,
-  } = useCheckoutStepContext()
+  const { user } = useAuthContext()
+  const { data: savedUserAddressData } = useCustomerContacts(user?.id as number)
+
+  const { activeStep, stepStatus, steps, setStepBack, setStepStatusSubmit } =
+    useCheckoutStepContext()
   const mdScreen = useMediaQuery(theme.breakpoints.up('md'))
 
   const buttonLabels = [t('go-to-shipping'), t('go-to-payment'), t('review-order')]
@@ -85,6 +84,7 @@ const Checkout = (props: CheckoutProps) => {
   const numberOfItems = checkout && checkout?.items && checkout?.items?.length
   const showCheckoutSteps = activeStep !== steps.length
 
+  const userShippingAddress = userAddressGetters.getUserShippingAddress(savedUserAddressData?.items)
   return (
     <>
       {showCheckoutSteps && (
@@ -106,7 +106,10 @@ const Checkout = (props: CheckoutProps) => {
 
             <KiboStepper>
               <DetailsStep checkout={checkout} />
-              <ShippingStep checkout={checkout as Order} />
+              <ShippingStep
+                checkout={checkout as Order}
+                userShippingAddress={userShippingAddress}
+              />
               <PaymentStep checkout={checkout} {...paymentStepParams} />
               <ReviewStep checkout={checkout as Order} onBackButtonClick={handleBack} />
             </KiboStepper>

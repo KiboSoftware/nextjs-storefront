@@ -1,7 +1,7 @@
 import { useQuery } from 'react-query'
 
 import { makeGraphQLClient } from '@/lib/gql/client'
-import { getUserAddressesQuery } from '@/lib/gql/queries/get-customer-account-contacts'
+import { getUserAddressesQuery } from '@/lib/gql/queries'
 import { customerAccountContactsKeys } from '@/lib/react-query/queryKeys'
 
 import type { CustomerContactCollection } from '@/lib/gql/types'
@@ -28,13 +28,10 @@ export const useCustomerContacts = (accountId: number): UseCustomerContactsRespo
     data = [],
     isLoading,
     isSuccess,
-  } = useQuery(
-    customerAccountContactsKeys.all(accountId),
-    () => loadCustomerAccountContacts(accountId),
-    {
-      enabled: !!accountId,
-    }
-  )
+  } = useQuery(customerAccountContactsKeys.all, () => loadCustomerAccountContacts(accountId), {
+    refetchOnWindowFocus: false,
+    enabled: !!accountId,
+  })
 
   return { data, isLoading, isSuccess }
 }

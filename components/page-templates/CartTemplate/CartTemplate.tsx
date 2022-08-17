@@ -28,7 +28,7 @@ import {
 } from '@/hooks'
 import { FulfillmentOptions } from '@/lib/constants'
 import { checkoutGetters } from '@/lib/getters'
-import { LocationCustom } from '@/lib/types'
+import type { LocationCustom } from '@/lib/types'
 
 import type { Cart, Location, CartItemInput } from '@/lib/gql/types'
 

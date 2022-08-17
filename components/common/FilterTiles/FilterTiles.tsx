@@ -6,7 +6,7 @@ import type { FacetValue } from '@/lib/gql/types'
 export type FilterTilesProps = {
   appliedFilters: FacetValue[]
   children?: React.ReactNode
-  onRemoveSelectedTile: (tile: string) => void
+  onSelectedTileRemoval: (tile: string) => void
 }
 
 const styles = {
@@ -27,7 +27,7 @@ const styles = {
   },
 }
 const FilterTiles = (props: FilterTilesProps) => {
-  const { appliedFilters, children, onRemoveSelectedTile } = props
+  const { appliedFilters, children, onSelectedTileRemoval } = props
 
   return (
     <Box component="div">
@@ -43,7 +43,7 @@ const FilterTiles = (props: FilterTilesProps) => {
             sx={{ ...styles.closeIcon }}
             label={filter.label}
             deleteIcon={<CloseIcon />}
-            onDelete={() => onRemoveSelectedTile(filter?.filterValue as string)}
+            onDelete={() => onSelectedTileRemoval(filter?.filterValue as string)}
           />
         </Stack>
       ))}

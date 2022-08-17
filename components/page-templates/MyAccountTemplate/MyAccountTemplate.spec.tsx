@@ -53,6 +53,6 @@ describe('[component] - MyAccountTemplate', () => {
 
     await user.click(orderHistory)
 
-    expect(push).toHaveBeenCalledWith('/my-account/order-history')
+    expect(push).toHaveBeenCalledWith('/my-account/order-history?filters=M-6')
   })
 })
