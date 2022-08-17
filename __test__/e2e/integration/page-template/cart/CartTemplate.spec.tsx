@@ -8,6 +8,7 @@ import { graphql } from 'msw'
 import { RouterContext } from 'next/dist/shared/lib/router-context'
 
 import { server } from '@/__mocks__/msw/server'
+import { cartCouponMock } from '@/__mocks__/stories/cartCouponMock'
 import { cartItemMock } from '@/__mocks__/stories/cartItemMock'
 import { cartMock } from '@/__mocks__/stories/cartMock'
 import { fulfillmentOptionsMock } from '@/__mocks__/stories/fulfillmentOptionsMock'
@@ -151,5 +152,51 @@ describe('[components] CartTemplate integration', () => {
     const deleteButton = screen.getAllByRole('button', { name: 'item-delete' })
     await user.click(deleteButton[0])
     expect(cartItem).toHaveLength(itemCount)
+  })
+
+  describe('use promocode', () => {
+    afterEach(() => {
+      jest.clearAllMocks()
+      cleanup()
+    })
+
+    it('should apply a coupon when click apply button', async () => {
+      server.use(
+        graphql.query('cart', (_req, res, ctx) => {
+          return res(ctx.data({ currentCart: cartCouponMock.updateCartCoupon }))
+        })
+      )
+      const { user } = setup()
+      const promoCode = '10OFF'
+      const PromoCodeInput = screen.getByPlaceholderText('promo-code')
+
+      const PromoCodeApply = screen.getByRole('button', {
+        name: /apply/i,
+      })
+
+      await user.type(PromoCodeInput, promoCode)
+
+      await user.click(PromoCodeApply)
+
+      const appliedPromoCode = screen.getByText(promoCode)
+      expect(appliedPromoCode).toBeVisible()
+    })
+
+    it('shoul remove a coupon when click cross icon', async () => {
+      const promoCode = '10OFF'
+      const newCart = { ...cartCouponMock.updateCartCoupon }
+      newCart.couponCodes = []
+      server.use(
+        graphql.query('cart', (_req, res, ctx) => {
+          return res(ctx.data({ currentCart: newCart }))
+        })
+      )
+
+      const { user } = setup()
+      const removeIcon = screen.getAllByLabelText('remove-promo-code')
+      await user.click(removeIcon[0])
+      const removedPromoCode = screen.queryByText(promoCode)
+      expect(removedPromoCode).not.toBeInTheDocument()
+    })
   })
 })

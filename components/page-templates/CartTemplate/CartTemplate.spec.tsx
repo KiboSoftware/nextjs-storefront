@@ -25,6 +25,8 @@ jest.mock('@/hooks', () => ({
   useCartMutationUpdateCartItemQuantity: jest.fn(() => ({})),
   useCartMutationUpdateCartItem: jest.fn(() => ({})),
   useCartMutationRemoveCartItem: jest.fn(() => ({})),
+  useUpdateCartCouponMutation: jest.fn(() => ({})),
+  useDeleteCartCouponMutation: jest.fn(() => ({})),
 }))
 
 const { Common } = composeStories(stories)

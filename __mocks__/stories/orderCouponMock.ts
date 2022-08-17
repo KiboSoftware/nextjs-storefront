@@ -1,201 +1,63 @@
-import type { Cart } from '@/lib/gql/types'
+import { Order } from '@/lib/gql/types'
 
-export const cartResponse: Cart = {
-  id: '13bdd5a61958150001dc971f000074e7',
-  invalidCoupons: [],
-  couponCodes: ['10OFF'],
-  orderDiscounts: [],
-  total: 275,
-  subtotal: 275,
-  shippingTotal: 0,
+export const orderCouponResponse: Order = {
+  id: '13fb801515bfe900017d0d17000074e7',
+  email: 'geetanshu1211@gmail.com',
+  totalCollected: 0,
+  amountAvailableForRefund: 0,
+  amountRemainingForPayment: 215,
+  amountRefunded: 0,
+  total: 215,
+  shippingTotal: 25,
+  discountTotal: 10,
+  discountedSubtotal: 190,
+  subtotal: 200,
   taxTotal: 0,
+  orderNumber: 1272,
+  couponCodes: ['10OFF'],
+  invalidCoupons: [],
+  orderDiscounts: [],
+  billingInfo: null,
+  fulfillmentInfo: {
+    shippingMethodCode: '290ec0ab460b4a83acdbae3200fd4f9b',
+    shippingMethodName: 'Next Day AIr',
+    fulfillmentContact: {
+      id: 1497,
+      email: 'geetanshu1211@gmail.com',
+      firstName: 'Subha',
+      middleNameOrInitial: '',
+      lastNameOrSurname: 'Chaudhari',
+      companyOrOrganization: null,
+      phoneNumbers: {
+        home: '7654323456',
+        mobile: null,
+        work: null,
+      },
+      address: {
+        address1: 'Niainital',
+        address2: '',
+        address3: null,
+        address4: null,
+        cityOrTown: 'WC',
+        stateOrProvince: 'NY',
+        postalOrZipCode: '465456',
+        countryCode: 'US',
+        addressType: 'Residential',
+        isValidated: true,
+      },
+    },
+  },
   items: [
     {
-      id: '20feacbdb17e4b65b838aec400a8ec9f',
+      fulfillmentLocationCode: 'SACRAMENTO',
       fulfillmentMethod: 'Ship',
-      purchaseLocation: null,
-      fulfillmentLocationCode: 'SACRAMENTO',
-      productDiscounts: [],
-      subtotal: 175,
-      total: 175,
-      product: {
-        productCode: 'backpack99',
-        fulfillmentTypesSupported: ['DirectShip', 'InStorePickup'],
-        name: 'Pink Backpack',
-        description: 'This is a very nice and durable pink backpack',
-        imageUrl:
-          '//cdn-sb.mozu.com/29927-49696/cms/49696/files/5131e412-4378-4347-8ded-62c3892cf8ce',
-        options: [
-          {
-            attributeFQN: 'tenant~size',
-            name: 'Size',
-            value: 'Medium',
-          },
-        ],
-        properties: [
-          {
-            attributeFQN: 'tenant~availability',
-            name: 'Availability',
-            values: [
-              {
-                value: '24hrs',
-              },
-            ],
-          },
-          {
-            attributeFQN: 'tenant~popularity',
-            name: 'Popularity',
-            values: [
-              {
-                value: 4,
-              },
-            ],
-          },
-          {
-            attributeFQN: 'tenant~rating',
-            name: 'Rating',
-            values: [
-              {
-                value: 4,
-              },
-            ],
-          },
-          {
-            attributeFQN: 'tenant~role',
-            name: 'role',
-            values: [
-              {
-                value: 'Mem',
-              },
-            ],
-          },
-          {
-            attributeFQN: 'tenant~hot-item',
-            name: 'Hot Item',
-            values: [
-              {
-                value: true,
-              },
-            ],
-          },
-          {
-            attributeFQN: 'tenant~top-seller',
-            name: 'Top Seller',
-            values: [
-              {
-                value: true,
-              },
-            ],
-          },
-          {
-            attributeFQN: 'tenant~mystic-tested',
-            name: 'Mystic Tested',
-            values: [
-              {
-                value: true,
-              },
-            ],
-          },
-          {
-            attributeFQN: 'tenant~specifications',
-            name: 'Specifications',
-            values: [
-              {
-                value: 'Test specifications \n1\n2\n3\n4\n5\n etc...',
-              },
-            ],
-          },
-          {
-            attributeFQN: 'tenant~materials',
-            name: 'Materials',
-            values: [
-              {
-                value: 'Test materials\n1\n2\n3\n4\n5\n etc...',
-              },
-            ],
-          },
-          {
-            attributeFQN: 'tenant~other-details',
-            name: 'Other Details',
-            values: [
-              {
-                value: 'Test other details\n1\n2\n3\n4\n5\n etc...',
-              },
-            ],
-          },
-          {
-            attributeFQN: 'tenant~hydration-compatible',
-            name: 'Hydration Compatible',
-            values: [
-              {
-                value: false,
-              },
-            ],
-          },
-          {
-            attributeFQN: 'tenant~material',
-            name: 'Material',
-            values: [
-              {
-                value: 'Nylon/closed-cell-foam',
-              },
-            ],
-          },
-          {
-            attributeFQN: 'tenant~number-of-exterior-pockets',
-            name: 'Number of Exterior Pockets',
-            values: [
-              {
-                value: '2',
-              },
-            ],
-          },
-          {
-            attributeFQN: 'tenant~sleeping-bag-compartment',
-            name: 'Sleeping Bag Compartment',
-            values: [
-              {
-                value: false,
-              },
-            ],
-          },
-          {
-            attributeFQN: 'tenant~features',
-            name: 'Features',
-            values: [
-              {
-                value: 'Avalanche-Airbag',
-              },
-            ],
-          },
-        ],
-        sku: null,
-        price: {
-          price: 175,
-          salePrice: null,
-        },
-        categories: [
-          {
-            id: 1,
-          },
-          {
-            id: 19,
-          },
-        ],
-      },
-      quantity: 2,
-    },
-    {
-      id: '645802e13dc04e1b803baec400a9ce80',
-      fulfillmentMethod: 'Pickup',
-      purchaseLocation: null,
-      fulfillmentLocationCode: 'SACRAMENTO',
-      productDiscounts: [],
-      subtotal: 100,
+      id: 'b76e7da696ad427b998eaef4009a6994',
       total: 100,
+      subtotal: 100,
+      discountTotal: 0,
+      quantity: 1,
       product: {
         productCode: 'BackP_024',
-        fulfillmentTypesSupported: ['DirectShip', 'InStorePickup'],
         name: 'Katahdin 50 Pack',
         description:
           'The JanSport Katahdin 50 pack for weekend trips has adjustable torso, vented back panel, great organization and plenty of straps, so you can wrangle your load while keeping the gear accessible.',
@@ -209,6 +71,21 @@ export const cartResponse: Cart = {
             values: [
               {
                 value: '24-48hrs',
+              },
+            ],
+          },
+          {
+            attributeFQN: 'tenant~product-crosssell',
+            name: 'Product Cross-Sells',
+            values: [
+              {
+                value: '30055',
+              },
+              {
+                value: '464648',
+              },
+              {
+                value: '171129',
               },
             ],
           },
@@ -254,21 +131,6 @@ export const cartResponse: Cart = {
             values: [
               {
                 value: 'Unapproved',
-              },
-            ],
-          },
-          {
-            attributeFQN: 'tenant~product-crosssell',
-            name: 'Product Cross-Sells',
-            values: [
-              {
-                value: '30055',
-              },
-              {
-                value: '464648',
-              },
-              {
-                value: '171129',
               },
             ],
           },
@@ -458,11 +320,11 @@ export const cartResponse: Cart = {
           },
         ],
       },
-      quantity: 1,
     },
   ],
+  payments: [],
 }
 
-export const cartMock: { currentCart: Cart } = {
-  currentCart: cartResponse,
+export const orderCouponMock: { updateOrderCoupon: Order } = {
+  updateOrderCoupon: orderCouponResponse,
 }

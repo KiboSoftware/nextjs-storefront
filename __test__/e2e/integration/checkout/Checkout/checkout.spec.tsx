@@ -4,8 +4,10 @@ import { composeStories } from '@storybook/testing-react'
 import { cleanup, screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { mock } from 'jest-mock-extended'
+import { graphql } from 'msw'
 
-import { orderMock } from '@/__mocks__/stories'
+import { server } from '@/__mocks__/msw/server'
+import { orderMock, orderCouponMock } from '@/__mocks__/stories'
 import { renderWithQueryClient } from '@/__test__/utils/renderWithQueryClient'
 import * as stories from '@/components/page-templates/Checkout/Checkout.stories'
 import { AuthContext, AuthContextType } from '@/context/'
@@ -108,6 +110,47 @@ describe('[components] Checkout integration', () => {
       const detailsStep = await screen.findByTestId('checkout-details')
 
       expect(detailsStep).toBeVisible()
+    })
+
+    it('should apply a coupon when click apply button', async () => {
+      server.use(
+        graphql.query('getCheckout', (_req, res, ctx) => {
+          return res.once(ctx.data({ checkout: orderCouponMock.updateOrderCoupon }))
+        })
+      )
+      const initialActiveStep = 1
+      const { user } = setup(initialActiveStep)
+      const promoCode = '10OFF'
+      const PromoCodeInput = screen.getByPlaceholderText('promo-code')
+
+      const PromoCodeApply = screen.getByRole('button', {
+        name: /apply/i,
+      })
+
+      await user.type(PromoCodeInput, promoCode)
+
+      await user.click(PromoCodeApply)
+
+      const appliedPromoCode = screen.getByText(promoCode)
+      expect(appliedPromoCode).toBeVisible()
+    })
+
+    it('shoul remove a coupon when click cross icon', async () => {
+      const initialActiveStep = 1
+      const promoCode = '10OFF'
+      const newCheckout = { ...orderCouponMock.updateOrderCoupon }
+      newCheckout.couponCodes = []
+      server.use(
+        graphql.query('getCheckout', (_req, res, ctx) => {
+          return res.once(ctx.data({ checkout: newCheckout }))
+        })
+      )
+
+      const { user } = setup(initialActiveStep)
+      const removeIcon = screen.getAllByLabelText('remove-promo-code')
+      await user.click(removeIcon[0])
+      const removedPromoCode = screen.queryByText(promoCode)
+      expect(removedPromoCode).not.toBeInTheDocument()
     })
   })
 

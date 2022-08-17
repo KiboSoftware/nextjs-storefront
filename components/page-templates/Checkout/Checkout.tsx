@@ -82,7 +82,7 @@ const Checkout = (props: CheckoutProps) => {
         couponCode,
       })
       if (response?.invalidCoupons?.length) {
-        setPromoData({ isPromoError: true, promoMessage: response?.invalidCoupons[0].reason })
+        setPromoData({ isPromoError: true, promoMessage: response?.invalidCoupons[0]?.reason })
       }
     } catch (err) {
       console.error(err)
@@ -95,7 +95,7 @@ const Checkout = (props: CheckoutProps) => {
         couponCode,
       })
       if (response?.invalidCoupons?.length) {
-        setPromoData({ isPromoError: true, promoMessage: 'Invalid promo' })
+        setPromoData({ isPromoError: true, promoMessage: response?.invalidCoupons[0]?.reason })
       }
     } catch (err) {
       console.error(err)
@@ -105,9 +105,9 @@ const Checkout = (props: CheckoutProps) => {
   const orderSummaryArgs = {
     nameLabel: t('order-summary'),
     subTotalLabel: `Cart Subtotal of (${checkout?.items?.length} items)`,
-    shippingTotalLabel: 'Standard Shipping',
-    taxLabel: 'Tax',
-    totalLabel: t('Order Total'),
+    shippingTotalLabel: t('common:standard-shopping'),
+    taxLabel: t('common:tax'),
+    totalLabel: t('common:order-total'),
     subTotal: t('common:currency', { val: checkout?.subtotal }),
     discountedSubtotal:
       checkout?.discountedSubtotal && checkout?.discountedSubtotal != checkout?.subtotal
@@ -118,9 +118,9 @@ const Checkout = (props: CheckoutProps) => {
       : t('checkout:free'),
     tax: t('common:currency', { val: checkout?.taxTotal }),
     total: t('common:currency', { val: checkout?.total }),
-    checkoutLabel: 'Go to Checkout',
-    shippingLabel: 'Go to Shipping',
-    backLabel: 'Go Back',
+    checkoutLabel: t('checkout:go-to-checkout'),
+    shippingLabel: t('checkout:go-to-shipping'),
+    backLabel: t('checkout:Go Back'),
     promoComponent: (
       <PromoCodeBadge
         onApplyCouponCode={handleApplyCouponCode}
@@ -139,7 +139,9 @@ const Checkout = (props: CheckoutProps) => {
   const numberOfItems = checkout && checkout?.items && checkout?.items?.length
   const showCheckoutSteps = activeStep !== steps.length
 
-  const userShippingAddress = userAddressGetters.getUserShippingAddress(savedUserAddressData?.items)
+  const userShippingAddress = userAddressGetters?.getUserShippingAddress(
+    savedUserAddressData?.items
+  )
   return (
     <>
       {showCheckoutSteps && (

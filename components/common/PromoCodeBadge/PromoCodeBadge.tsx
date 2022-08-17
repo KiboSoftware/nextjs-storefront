@@ -20,7 +20,7 @@ const styles = {
     display: 'inline-block',
     mr: '0.5rem',
     px: '0.5rem',
-    backgroundColor: '#DCDCDC',
+    backgroundColor: 'grey.500',
   },
   textBoxStyle: {
     minWidth: '10rem',
@@ -43,15 +43,19 @@ const PromoCodeBadge = (props: PromocodeBadgeProps) => {
 
   const handleApplyCouponCode = () => {
     setError({ isPromoError: false, promoMessage: '' })
-    if (!promoList?.includes(promo)) {
+    const isExistingPromo = promoList?.find((promoCode) => {
+      return promoCode.toLowerCase() === promo.toLowerCase()
+    })
+
+    if (!isExistingPromo) {
       onApplyCouponCode(promo)
       setPromo('')
     } else {
-      setError({ isPromoError: true, promoMessage: 'Promo code already in use!' })
+      setError({ isPromoError: true, promoMessage: t('promo-code-already-in-use') })
     }
   }
 
-  const handleRemoveCouponCode = (item: any) => {
+  const handleRemoveCouponCode = (item: string) => {
     onRemoveCouponCode(item)
   }
 
@@ -87,6 +91,7 @@ const PromoCodeBadge = (props: PromocodeBadgeProps) => {
           <Stack direction="row" spacing={0.5} alignItems="center">
             <Typography sx={{ textAlign: 'left' }}>{coupon}</Typography>
             <CloseIcon
+              aria-label="remove-promo-code"
               sx={{
                 cursor: 'pointer',
                 fontSize: '1rem',

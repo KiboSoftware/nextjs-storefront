@@ -73,7 +73,6 @@ const OrderPrice = (props: OrderPriceProps) => {
           {totalLabel}
         </Typography>
         <Price variant="body1" fontWeight="bold" price={total} />
-        {/* tobe: add sale price for promocode */}
       </Box>
     </Box>
   )

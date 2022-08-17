@@ -64,8 +64,11 @@ const getDiscountedTotal = (checkout: Order) => checkout?.orderDiscounts || 0
 const getShippingTotal = (checkout: Order | Cart) => checkout?.shippingTotal || 0
 const getTaxTotal = (checkout: Order | Cart) => checkout?.taxTotal || 0
 const getSubtotal = (checkout: Order | Cart): number => checkout?.subtotal as number
-const getDiscountedSubtotal = (checkout: Order | Cart): number =>
-  checkout?.discountedSubtotal as number
+const getDiscountedSubtotal = (checkout: Order | Cart): number => {
+  if (checkout?.discountedSubtotal && checkout?.discountedSubtotal != checkout?.subtotal)
+    return checkout?.discountedSubtotal as number
+  else return 0
+}
 const getLineItemTotal = (checkout: Order) => {
   return checkout?.items
     ? checkout?.items?.reduce((previous, current) => {

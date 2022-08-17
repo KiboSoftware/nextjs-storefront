@@ -96,7 +96,10 @@ const CartTemplate = (props: CartTemplateProps) => {
         couponCode,
       })
       if (response?.invalidCoupons?.length) {
-        setPromoDataInCart({ isPromoError: true, promoMessage: response?.invalidCoupons[0].reason })
+        setPromoDataInCart({
+          isPromoError: true,
+          promoMessage: response?.invalidCoupons[0]?.reason,
+        })
       }
     } catch (err) {
       console.error(err)
@@ -109,7 +112,10 @@ const CartTemplate = (props: CartTemplateProps) => {
         couponCode,
       })
       if (response?.invalidCoupons?.length) {
-        setPromoDataInCart({ isPromoError: true, promoMessage: response?.invalidCoupons[0].reason })
+        setPromoDataInCart({
+          isPromoError: true,
+          promoMessage: response?.invalidCoupons[0]?.reason,
+        })
       }
     } catch (err) {
       console.error(err)
