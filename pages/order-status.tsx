@@ -1,36 +1,19 @@
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
-import getConfig from 'next/config'
 
-import { LoginDialog } from '@/components/layout'
 import { OrderStatusTemplate } from '@/components/page-templates'
-import { useAuthContext } from '@/context'
-import { decodeParseCookieValue } from '@/lib/helpers/cookieHelper'
 
 import type { NextPage, GetServerSidePropsContext } from 'next'
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
-  const { locale, req } = context
-
-  const { publicRuntimeConfig } = getConfig()
-  const authCookieName = publicRuntimeConfig.userCookieKey.toLowerCase()
-  const cookies = req.cookies
-  const authTicket = decodeParseCookieValue(cookies[authCookieName])
+  const { locale } = context
 
   return {
     props: {
-      isAuthenticated: !!authTicket?.userId,
       ...(await serverSideTranslations(locale as string, ['common', 'orderhistory'])),
     },
   }
 }
 
-const OrderStatusPage: NextPage = (props: any) => {
-  const { isAuthenticated: serverSideIsAuthenticated } = props
-  const { isAuthenticated } = useAuthContext()
-
-  if (!serverSideIsAuthenticated && !isAuthenticated) return <LoginDialog />
-
-  return <OrderStatusTemplate {...props} />
-}
+const OrderStatusPage: NextPage = (props: any) => <OrderStatusTemplate {...props} />
 
 export default OrderStatusPage
