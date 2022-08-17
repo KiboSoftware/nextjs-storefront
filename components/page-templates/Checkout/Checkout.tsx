@@ -107,7 +107,7 @@ const Checkout = (props: CheckoutProps) => {
     subTotalLabel: `Cart Subtotal of (${checkout?.items?.length} items)`,
     shippingTotalLabel: 'Standard Shipping',
     taxLabel: 'Tax',
-    totalLabel: 'Order Total',
+    totalLabel: t('Order Total'),
     subTotal: t('common:currency', { val: checkout?.subtotal }),
     discountedSubtotal:
       checkout?.discountedSubtotal && checkout?.discountedSubtotal != checkout?.subtotal
