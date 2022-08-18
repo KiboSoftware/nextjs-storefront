@@ -1,5 +1,11 @@
 import { createTheme, responsiveFontSizes } from '@mui/material/styles'
 
+declare module '@mui/material/styles/createPalette' {
+  interface PaletteOptions {
+    red?: PaletteColorOptions
+  }
+}
+
 export const grey = {
   900: '#2B2B2B',
   // Fill Form Label Text, information text
@@ -16,6 +22,16 @@ export const grey = {
   50: '#FAFAFA',
 }
 
+export const red = {
+  900: '#bb2500',
+  // wishlist color
+  700: '#e13b0e',
+  600: '#ef4214',
+  500: '#fa4818',
+  300: '#fc825e',
+  100: '#fec9b9',
+  50: '#fbe8e6',
+}
 // Create a base theme instance and define the basic design options
 let theme = createTheme({
   typography: {
@@ -81,6 +97,7 @@ let theme = createTheme({
       main: '#e42d00',
     },
     grey: { ...grey },
+    red: { ...red },
   },
   components: {
     MuiButton: {

@@ -1,6 +1,8 @@
-import React from 'react'
+import React, { MouseEvent } from 'react'
 
 import { StarRounded } from '@mui/icons-material'
+import FavoriteBorderRoundedIcon from '@mui/icons-material/FavoriteBorderRounded'
+import FavoriteRoundedIcon from '@mui/icons-material/FavoriteRounded'
 import {
   Card,
   Typography,
@@ -10,7 +12,9 @@ import {
   Box,
   Stack,
   Skeleton,
+  Button,
 } from '@mui/material'
+import { useTranslation } from 'next-i18next'
 import Link from 'next/link'
 
 import KiboImage from '@/components/common/KiboImage/KiboImage'
@@ -32,6 +36,8 @@ export interface ProductCardProps {
   isInWishlist?: boolean
   isInCart?: boolean
   isLoading?: boolean
+  isShopNow?: boolean
+  onAddOrRemoveWishlistItem?: () => void
 }
 
 const styles = {
@@ -69,7 +75,17 @@ const ProductCard = (props: ProductCardProps) => {
     imageHeight = 140,
     imageAltText = 'product-image-alt',
     isLoading = false,
+    isShopNow = false,
+    isInWishlist = false,
+    onAddOrRemoveWishlistItem,
   } = props
+
+  const { t } = useTranslation('common')
+
+  const handleAddOrRemoveWishlistItem = (event: MouseEvent<HTMLElement>) => {
+    event.preventDefault()
+    onAddOrRemoveWishlistItem && onAddOrRemoveWishlistItem()
+  }
 
   if (isLoading) return <ProductCardSkeleton />
   else
@@ -77,15 +93,34 @@ const ProductCard = (props: ProductCardProps) => {
       <Link href={link} passHref data-testid="product-card-link">
         <Card sx={styles.cardRoot} data-testid="product-card">
           <CardActionArea>
-            <CardMedia sx={{ width: '100%', height: imageHeight, position: 'relative' }}>
-              <KiboImage
-                src={imageUrl || placeholderImageUrl}
-                alt={imageUrl ? imageAltText : 'no-image-alt'}
-                layout="fill"
-                objectFit="contain"
-                data-testid="product-image"
-                errorimage={placeholderImageUrl}
-              />
+            <CardMedia
+              sx={{
+                width: '100%',
+                height: imageHeight,
+                position: 'relative',
+              }}
+            >
+              <Box
+                sx={{ position: 'absolute', right: '0', zIndex: 2 }}
+                onClick={handleAddOrRemoveWishlistItem}
+              >
+                {isInWishlist ? (
+                  <FavoriteRoundedIcon sx={{ color: 'red.900' }} />
+                ) : (
+                  <FavoriteBorderRoundedIcon sx={{ color: 'grey.600', marginRight: '14px' }} />
+                )}
+              </Box>
+
+              <Box sx={{ zIndex: 1 }}>
+                <KiboImage
+                  src={imageUrl || placeholderImageUrl}
+                  alt={imageUrl ? imageAltText : 'no-image-alt'}
+                  layout="fill"
+                  objectFit="contain"
+                  data-testid="product-image"
+                  errorimage={placeholderImageUrl}
+                />
+              </Box>
             </CardMedia>
             <Box flexDirection="column" m={2} mt={1}>
               <Typography variant="body1" gutterBottom color="text.primary">
@@ -103,6 +138,17 @@ const ProductCard = (props: ProductCardProps) => {
                 data-testid="product-rating"
               />
             </Box>
+            {isShopNow && (
+              <Link href={link} passHref>
+                <Button
+                  variant="contained"
+                  color="primary"
+                  sx={{ width: '100%', marginTop: '49px' }}
+                >
+                  {t('shop-now')}
+                </Button>
+              </Link>
+            )}
           </CardActionArea>
         </Card>
       </Link>

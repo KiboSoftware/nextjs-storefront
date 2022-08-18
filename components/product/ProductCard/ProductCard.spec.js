@@ -2,10 +2,26 @@ import React from 'react'
 
 import { composeStories } from '@storybook/testing-react'
 import { render, screen } from '@testing-library/react'
+import userEvent from '@testing-library/user-event'
 
 import * as stories from './ProductCard.stories' // import all stories from the stories file
 
-const { Common, WithSalePrice, WithRating, NoImage, LoadingProductCard } = composeStories(stories)
+const { Common, WithSalePrice, WithRating, NoImage, LoadingProductCard, WithWishlist } =
+  composeStories(stories)
+
+const onAddOrRemoveWishlistItemMock = jest.fn()
+const wishlistSetup = () => {
+  const user = userEvent.setup()
+  render(
+    <WithWishlist
+      {...WithWishlist.args}
+      onAddOrRemoveWishlistItem={onAddOrRemoveWishlistItemMock}
+    />
+  )
+  return {
+    user,
+  }
+}
 
 describe('[components] Product Card Component', () => {
   describe('Common Product Card', () => {
@@ -91,6 +107,43 @@ describe('[components] Product Card Component', () => {
       const skeleton = screen.getByTestId('product-card-skeleton')
 
       expect(skeleton).toBeVisible()
+    })
+  })
+  describe('Wishlist Product Card', () => {
+    it('should render Product Card with wishlist icon and shop now button', async () => {
+      wishlistSetup()
+
+      const inWishlistIcon = screen.getByTestId('FavoriteRoundedIcon')
+      const notInWishlistIcon = screen.queryByTestId('FavoriteBorderRoundedIcon')
+      const shopNowButton = screen.getByRole('link', {
+        name: /shop-now/i,
+      })
+
+      expect(inWishlistIcon).toBeVisible()
+      expect(notInWishlistIcon).not.toBeInTheDocument()
+      expect(shopNowButton).toBeVisible()
+    })
+
+    it('should render Product Card without in wishlist icon and shop now button', async () => {
+      render(<WithWishlist {...WithWishlist.args} isInWishlist={false} isShopNow={false} />)
+      const inWishlistIcon = screen.queryByTestId('FavoriteRoundedIcon')
+      const notInWishlistIcon = screen.getByTestId('FavoriteBorderRoundedIcon')
+      const shopNowButton = screen.queryByRole('link', {
+        name: /shop-now/i,
+      })
+
+      expect(inWishlistIcon).not.toBeInTheDocument()
+      expect(notInWishlistIcon).toBeVisible()
+      expect(shopNowButton).not.toBeInTheDocument()
+    })
+
+    it('should call onAddOrRemoveWishlistItem method when user clicks on wishlist icons', async () => {
+      const { user } = wishlistSetup()
+      const inWishlistIcon = screen.getByTestId('FavoriteRoundedIcon')
+
+      await user.click(inWishlistIcon)
+
+      expect(onAddOrRemoveWishlistItemMock).toBeCalled()
     })
   })
 })

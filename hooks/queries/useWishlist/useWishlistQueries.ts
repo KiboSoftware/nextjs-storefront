@@ -24,7 +24,9 @@ const getWishlists = async (): Promise<Wishlist> => {
 }
 
 export const useWishlistQueries = (): UseWishlistResponse => {
-  const { data, isLoading, isSuccess, isFetching } = useQuery(wishlistKeys.all, getWishlists)
+  const { data, isLoading, isSuccess, isFetching } = useQuery(wishlistKeys.all, getWishlists, {
+    refetchOnWindowFocus: false,
+  })
 
   return { data, isLoading, isSuccess, isFetching }
 }

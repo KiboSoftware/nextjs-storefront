@@ -53,11 +53,9 @@ const getSelectedFacetItems = (facetList: FacetValue[]) => {
 }
 
 const getFacetListByQueryFilter = (filters: string[]) => {
-  FacetListForHistory.forEach((facet) => {
-    return filters.some((filter) => filter === facet.filterValue)
-      ? (facet.isApplied = true)
-      : (facet.isApplied = false)
-  })
+  FacetListForHistory.forEach(
+    (facet) => (facet.isApplied = filters.some((filter) => filter === facet.filterValue))
+  )
   return FacetListForHistory.flat()
 }
 
