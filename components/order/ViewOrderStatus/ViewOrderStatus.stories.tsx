@@ -6,7 +6,7 @@ import ViewOrderStatus from './ViewOrderStatus'
 
 // Common
 export default {
-  title: 'OrderStatus/ViewOrderStatus',
+  title: 'Order/ViewOrderStatus',
   component: ViewOrderStatus,
 } as ComponentMeta<typeof ViewOrderStatus>
 

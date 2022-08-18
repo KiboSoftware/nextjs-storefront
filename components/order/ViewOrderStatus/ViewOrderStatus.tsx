@@ -18,14 +18,15 @@ import * as yup from 'yup'
 
 import { FullWidthDivider, KiboTextBox } from '@/components/common'
 
-interface FormData {
+export interface OrderStatusFormDataProps {
   orderNumber: string
   billingEmail: string
 }
 
 export interface ViewOrderStatusProps {
-  onOrderStatusSubmit: (data: FormData) => void
   lookupErrorMessage?: string
+  lookupWarningMessage?: string
+  onOrderStatusSubmit: (data: OrderStatusFormDataProps) => void
 }
 
 const buttonStyle = {
@@ -47,7 +48,7 @@ const useViewOrderStatusSchema = () => {
 }
 
 const ViewOrderStatus = (props: ViewOrderStatusProps) => {
-  const { onOrderStatusSubmit, lookupErrorMessage } = props
+  const { onOrderStatusSubmit, lookupErrorMessage, lookupWarningMessage } = props
   const { t } = useTranslation('orderhistory')
 
   const theme = useTheme()
@@ -57,7 +58,7 @@ const ViewOrderStatus = (props: ViewOrderStatusProps) => {
     control,
     formState: { errors, isDirty, isValid },
     handleSubmit,
-  } = useForm<FormData>({
+  } = useForm<OrderStatusFormDataProps>({
     mode: 'all',
     reValidateMode: 'onChange',
     defaultValues: undefined,
@@ -65,10 +66,10 @@ const ViewOrderStatus = (props: ViewOrderStatusProps) => {
     shouldFocusError: true,
   })
 
-  const onValid = async (formData: FormData) => onOrderStatusSubmit(formData)
+  const onValid = async (formData: OrderStatusFormDataProps) => onOrderStatusSubmit(formData)
 
   return (
-    <Stack gap={4}>
+    <Stack gap={4} data-testid="ViewOrderStatus">
       <Typography variant="h1">{t('view-order-status')}</Typography>
 
       {mdScreen ? (
@@ -129,6 +130,7 @@ const ViewOrderStatus = (props: ViewOrderStatusProps) => {
           <Button
             type="submit"
             variant="contained"
+            color="primary"
             sx={{ ...buttonStyle }}
             fullWidth
             disabled={!isDirty || !isValid}
@@ -139,6 +141,7 @@ const ViewOrderStatus = (props: ViewOrderStatusProps) => {
       </Stack>
 
       {lookupErrorMessage && <Box color="error.main">{lookupErrorMessage}</Box>}
+      {lookupWarningMessage && <Box color="warning.main">{lookupWarningMessage}</Box>}
 
       {mdScreen ? <Divider sx={{ borderColor: 'grey.500' }} /> : <FullWidthDivider />}
     </Stack>

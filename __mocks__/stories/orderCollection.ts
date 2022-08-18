@@ -21,6 +21,7 @@ export const orderCollection: { orders: OrderCollection } = {
         orderNumber: 81,
         orderDiscounts: [],
         submittedDate: '2021-12-03T14:08:28.838Z',
+        status: 'Accepted',
         billingInfo: null,
         fulfillmentInfo: {
           shippingMethodCode: '691f94b2b57e47239456ada600cdcc9e',

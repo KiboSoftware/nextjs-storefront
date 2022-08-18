@@ -96,7 +96,7 @@ const OrderConfirmation = ({ order }: { order: Order }) => {
               {t('order-details')}
             </Typography>
             <Divider sx={{ height: '1px', bgcolor: 'primary.main' }} />
-            {shipItems && shipItems.length && (
+            {shipItems && shipItems.length > 0 && (
               <Box sx={{ paddingBlock: 2 }}>
                 <Typography variant="h3" fontWeight={700} gutterBottom>
                   {t('shipping-to-home')}
@@ -108,7 +108,7 @@ const OrderConfirmation = ({ order }: { order: Order }) => {
             <Divider sx={{ height: '1px' }} />
 
             {/* Pickup orders */}
-            {pickupItems && pickupItems.length && (
+            {pickupItems && pickupItems.length > 0 && (
               <Box sx={{ paddingBlock: 2 }}>
                 <Typography variant="h3" fontWeight={700} gutterBottom>
                   {t('pickup')}

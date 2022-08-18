@@ -125,10 +125,14 @@
   "previously-saved-shipping-addresses": "Previously saved shipping addresses",
   "no-saved-addresses-yet": "No saved addresses yet!",
   "primary": "Primary",
-
+  
   "time-filter": "Time Filter",
   "last-30-days": "Last 30 days",
   "last-6-months": "Last 6 months",
 
-  "shop-now": "Shop Now"
+  "shop-now": "Shop Now",
+
+  "home": "Home",
+  "order-status": "Order Status",
+  "wishlist": "Wishlist"
 }

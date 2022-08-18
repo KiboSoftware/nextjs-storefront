@@ -18,7 +18,7 @@ const FullWidthDividerMock = () => <div data-testid="full-width-divider-mock"></
 jest.mock('@/components/common/FilterOrders/FilterOrders', () => FilterOrdersMock)
 jest.mock('@/components/common/FilterTiles/FilterTiles', () => FilterTilesMock)
 jest.mock('@/components/order/OrderHistoryItem/OrderHistoryItem', () => OrderHistoryItemMock)
-jest.mock('@/components/order/view-order-details/ViewOrderDetails', () => ViewOrderDetailsMock)
+jest.mock('@/components/order/ViewOrderDetails/ViewOrderDetails', () => ViewOrderDetailsMock)
 jest.mock('@/components/common/FullWidthDivider/FullWidthDivider', () => FullWidthDividerMock)
 
 jest.mock('@mui/material', () => ({

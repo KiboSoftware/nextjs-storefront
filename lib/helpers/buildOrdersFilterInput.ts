@@ -38,6 +38,12 @@ export const buildOrdersFilterInput = (params: {
     variables.filter = searchFilters.join(' and ')
   }
 
-  variables.filter = variables.filter.concat(` and status ne ${OrderStatus.ABANDONED}`)
+  // To view order status page
+  if (params.orderNumber && params.billingEmail) {
+    variables.filter = `orderNumber eq ${params.orderNumber} and email eq ${params.billingEmail}`
+  }
+
+  variables.filter =
+    variables.filter && variables.filter.concat(` and status ne ${OrderStatus.ABANDONED}`)
   return variables
 }
