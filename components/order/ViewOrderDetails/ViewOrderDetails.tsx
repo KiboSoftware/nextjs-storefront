@@ -1,11 +1,11 @@
 import React from 'react'
 
 import { ArrowBackIos } from '@mui/icons-material'
-import { Divider, Grid, Typography, Box, Stack, useTheme, useMediaQuery } from '@mui/material'
+import { Divider, Grid, Typography, Box, Stack } from '@mui/material'
 import { useTranslation } from 'next-i18next'
 
 import { SavedPaymentMethodView } from '@/components/checkout'
-import { AddressCard, FullWidthDivider, OrderSummary, ProductItemList } from '@/components/common'
+import { AddressCard, OrderSummary, ProductItemList } from '@/components/common'
 import { ProductOption } from '@/components/product'
 import { useStoreLocations } from '@/hooks'
 import { billingGetters, orderGetters, storeLocationGetters } from '@/lib/getters'
@@ -16,7 +16,7 @@ interface ViewOrderDetailsProps {
   order: Order
   title: string
   isOrderStatus?: boolean
-  onShowOrderHistoryItem: () => void
+  onGoBackToOrderHistory?: () => void
 }
 
 const styles = {
@@ -39,10 +39,8 @@ const styles = {
 }
 
 const ViewOrderDetails = (props: ViewOrderDetailsProps) => {
-  const { order, title, isOrderStatus = false, onShowOrderHistoryItem } = props
+  const { order, title, isOrderStatus = false, onGoBackToOrderHistory } = props
   const { t } = useTranslation(['common', 'checkout', 'orderhistory'])
-  const theme = useTheme()
-  const mdScreen = useMediaQuery(theme.breakpoints.up('md'))
 
   const orderNumber = orderGetters.getOrderNumber(order)
   const orderTotal = orderGetters.getTotal(order)
@@ -71,7 +69,7 @@ const ViewOrderDetails = (props: ViewOrderDetailsProps) => {
     total: t('currency', { val: orderTotal }),
   }
 
-  const handleShowOrderHistoryItem = () => onShowOrderHistoryItem()
+  const handleGoBackToOrderHistory = () => onGoBackToOrderHistory && onGoBackToOrderHistory()
 
   return (
     <>
@@ -80,23 +78,19 @@ const ViewOrderDetails = (props: ViewOrderDetailsProps) => {
           sx={{ ...styles.wrapIcon, py: '1.2rem' }}
           direction="row"
           gap={2}
-          onClick={handleShowOrderHistoryItem}
+          onClick={handleGoBackToOrderHistory}
         >
           <ArrowBackIos fontSize="inherit" sx={styles.wrapIcon} />
           <Typography variant="body2">{t('order-history')}</Typography>
         </Stack>
       )}
-      <Grid container>
+      <Grid container data-testid="ViewOrderDetails">
         {/* Header section */}
         <Grid item xs={12} md={7}>
           <Typography variant="h1" gutterBottom>
             {title}
           </Typography>
-          {mdScreen ? (
-            <Divider sx={{ borderColor: 'primary.main' }} />
-          ) : (
-            <FullWidthDivider color="primary.main" />
-          )}
+          <Divider sx={{ borderColor: 'primary.main' }} />
         </Grid>
 
         {/* Order Details Section */}
@@ -120,10 +114,13 @@ const ViewOrderDetails = (props: ViewOrderDetailsProps) => {
               variant="body1"
             />
             {isOrderStatus && (
-              <ProductOption option={{ name: t('shipped-to'), value: shippedTo }} variant="body1" />
+              <ProductOption
+                option={{ name: t('orderhistory:shipped-to'), value: shippedTo }}
+                variant="body1"
+              />
             )}
           </Box>
-          {mdScreen ? <Divider sx={{ ...styles.divider }} /> : <FullWidthDivider />}
+          <Divider sx={{ ...styles.divider }} />
           {/* Shipment orders */}
           {shipItems && shipItems.length > 0 && (
             <Box>
@@ -142,7 +139,7 @@ const ViewOrderDetails = (props: ViewOrderDetailsProps) => {
                 <ProductItemList items={shipItems} />
                 {fulfillmentContact?.address && <AddressCard {...fulfillmentContact?.address} />}
               </Box>
-              {mdScreen ? <Divider sx={{ ...styles.divider }} /> : <FullWidthDivider />}
+              <Divider sx={{ ...styles.divider }} />
             </Box>
           )}
 
@@ -167,7 +164,7 @@ const ViewOrderDetails = (props: ViewOrderDetailsProps) => {
                   storePickupAddresses={storePickupAddress}
                 />
               </Box>
-              {mdScreen ? <Divider sx={{ ...styles.divider }} /> : <FullWidthDivider />}
+              <Divider sx={{ ...styles.divider }} />
             </Box>
           )}
 

@@ -22,6 +22,10 @@ describe('[component] - OrderStatusTemplate', () => {
   it('should view order status by providing the order number and billing email', async () => {
     const { user } = setup()
 
+    expect(screen.getByRole('link', { name: /home/i })).toBeVisible()
+    expect(screen.getByRole('link', { name: /order-status/i })).toBeVisible()
+    expect(screen.getByTestId('ViewOrderStatus')).toBeVisible()
+    expect(screen.queryByTestId('ViewOrderDetails')).not.toBeInTheDocument()
     const orderNumberTextbox = screen.getByRole('textbox', { name: /order-number/i })
     const billingEmailTextbox = screen.getByRole('textbox', { name: /billing-email/i })
     await user.type(orderNumberTextbox, '81')
@@ -34,7 +38,7 @@ describe('[component] - OrderStatusTemplate', () => {
     })
     await user.click(checkOrderStatusButton)
     await waitFor(() => {
-      expect(screen.getByText(/shipped-to/i)).toBeVisible()
+      expect(screen.getByTestId('ViewOrderDetails')).toBeVisible()
     })
   })
 })

@@ -1,11 +1,11 @@
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 
 import { Grid } from '@mui/material'
 import { useTranslation } from 'next-i18next'
 
 import KiboBreadcrumbs from '@/components/core/Breadcrumbs/KiboBreadcrumbs'
 import { ViewOrderDetails, ViewOrderStatus } from '@/components/order'
-import { OrderStatusFormData } from '@/components/order/ViewOrderStatus/ViewOrderStatus'
+import type { OrderStatusFormDataProps } from '@/components/order/ViewOrderStatus/ViewOrderStatus'
 import { useUserOrderQueries } from '@/hooks'
 
 import { Order } from '@/lib/gql/types'
@@ -18,26 +18,20 @@ const styles = {
 }
 
 const OrderStatusTemplate = () => {
-  const [queryFilters, setQueryFilters] = useState<OrderStatusFormData>({
+  const [queryFilters, setQueryFilters] = useState<OrderStatusFormDataProps>({
     billingEmail: '',
     orderNumber: '',
   })
-  const [selectedOrder, setSelectedOrder] = useState<Order | undefined>(undefined)
 
   const { t } = useTranslation(['common', 'orderhistory'])
   const { data: orderCollection } = useUserOrderQueries(queryFilters)
-  const { items = [] } = orderCollection
+  const { items = [], pageCount } = orderCollection
   const breadCrumbsList = [
     { text: t('home'), link: '/' },
     { text: t('order-status'), link: '/order-status' },
   ]
-
-  const handleShowOrderHistoryItem = () => setSelectedOrder(undefined)
-  const handleOrderStatusSubmit = (data: OrderStatusFormData) => setQueryFilters(data)
-
-  useEffect(() => {
-    setSelectedOrder((items && items[0]) as Order)
-  }, [items])
+  const order = items && (items[0] as Order)
+  const handleOrderStatusSubmit = (data: OrderStatusFormDataProps) => setQueryFilters(data)
 
   return (
     <Grid container px={1}>
@@ -45,15 +39,19 @@ const OrderStatusTemplate = () => {
         <KiboBreadcrumbs breadcrumbs={breadCrumbsList} />
       </Grid>
       <Grid item xs={12}>
-        {selectedOrder && (
+        {order && (
           <ViewOrderDetails
-            title={t('view-order-status')}
+            title={t('orderhistory:view-order-status')}
             isOrderStatus={true}
-            order={selectedOrder}
-            onShowOrderHistoryItem={handleShowOrderHistoryItem}
+            order={order}
           />
         )}
-        {!selectedOrder && <ViewOrderStatus onOrderStatusSubmit={handleOrderStatusSubmit} />}
+        {!order && (
+          <ViewOrderStatus
+            onOrderStatusSubmit={handleOrderStatusSubmit}
+            lookupWarningMessage={pageCount === 0 ? t('orderhistory:no-orders-found') : ''}
+          />
+        )}
       </Grid>
     </Grid>
   )
