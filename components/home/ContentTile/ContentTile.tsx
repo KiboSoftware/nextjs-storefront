@@ -119,7 +119,7 @@ const ContentTile = ({ largeTileProps, smallTileProps }: ContentTileProps) => {
           marginBottom: '30px',
         }}
       >
-        {largeTileProps.map((tile: TileProps, index) => (
+        {largeTileProps?.map((tile: TileProps, index) => (
           <ContentTiles
             key={index}
             imgSource={tile.imgSource}
@@ -133,7 +133,7 @@ const ContentTile = ({ largeTileProps, smallTileProps }: ContentTileProps) => {
       </Box>
       <Box sx={{ width: '100%' }}>
         <Grid container rowSpacing={1} columnSpacing={{ xs: 3, sm: 4, md: 4 }}>
-          {smallTileProps.map((tile: TileProps, index) => (
+          {smallTileProps?.map((tile: TileProps, index) => (
             <Grid key={index} item xs={mobileView ? 6 : 3}>
               <ContentTiles
                 imgSource={tile.imgSource}
