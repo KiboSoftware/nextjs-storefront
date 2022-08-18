@@ -14,7 +14,7 @@ import { useTranslation } from 'next-i18next'
 import { useRouter } from 'next/router'
 
 import { CartItemList } from '@/components/cart'
-import { PromoCodeBadge, OrderSummary, Price } from '@/components/common'
+import { PromoCodeBadge, OrderSummary } from '@/components/common'
 import { StoreLocatorDialog } from '@/components/dialogs'
 import { useModalContext } from '@/context'
 import {

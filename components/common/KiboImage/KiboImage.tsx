@@ -22,7 +22,7 @@ const onImageError = (
 
 const KiboImage = (props: KiboImageProps) => {
   errorImage.image = props.errorimage
-  return <Image {...props} alt={props.alt} />
+  return <Image {...props} alt={props.alt} onError={onImageError} />
 }
 
 export default KiboImage
