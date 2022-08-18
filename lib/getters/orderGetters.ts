@@ -68,9 +68,11 @@ const getOrderPayments = (order: Order) =>
   })
 
 const getShippedTo = (order: Order) =>
-  capitalizeWord(order?.fulfillmentInfo?.fulfillmentContact?.firstName) +
-  ' ' +
-  capitalizeWord(order?.fulfillmentInfo?.fulfillmentContact?.lastNameOrSurname)
+  order?.fulfillmentInfo?.fulfillmentContact
+    ? capitalizeWord(order?.fulfillmentInfo?.fulfillmentContact?.firstName) +
+      ' ' +
+      capitalizeWord(order?.fulfillmentInfo?.fulfillmentContact?.lastNameOrSurname)
+    : ''
 
 const getShippingAddress = (order: Order) => order?.fulfillmentInfo?.fulfillmentContact
 

@@ -56,8 +56,6 @@ const OrderHistoryTemplate = (props: OrderHistoryProps) => {
     setSelectedOrder(order)
   }
   const handleFilterApply = (selectedFilters: string) => changeFilters(selectedFilters)
-  const handleShowOrderHistoryItem = () => setSelectedOrder(undefined)
-
   const handleSelectedTileRemoval = (selectedTile: string) => {
     facetList.forEach(
       (facet) => (facet.isApplied = facet.filterValue === selectedTile ? false : facet?.isApplied)
@@ -148,8 +146,9 @@ const OrderHistoryTemplate = (props: OrderHistoryProps) => {
     <Box>
       {selectedOrder && (
         <ViewOrderDetails
+          title={t('view-order-details')}
           order={selectedOrder}
-          onShowOrderHistoryItem={handleShowOrderHistoryItem}
+          onGoBackToOrderHistory={() => setSelectedOrder(undefined)}
         />
       )}
       {!selectedOrder && showOrderHistoryItem()}
