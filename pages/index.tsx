@@ -3,23 +3,30 @@ import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
 import nextI18NextConfig from '../next-i18next.config'
 import CmsComponent from '@/components/home/CmsComponent/CmsComponent'
 import getCategoryTree from '@/lib/api/operations/get-category-tree'
-import { getHomePageCMSRes } from '@/lib/operations/get-page'
+import { getPage } from '@/lib/operations/get-page'
 
 import type { CategoryCollection } from '@/lib/gql/types'
 import type { NextPage, GetStaticPropsContext } from 'next'
 
 interface HomePageProps {
-  cmsResults: any
+  cmsPage: any
 }
 
 export async function getStaticProps(context: GetStaticPropsContext) {
   const { locale } = context
   const categoriesTree: CategoryCollection = await getCategoryTree()
-  const cmsResults = await getHomePageCMSRes()
+  const cmsPage = await getPage({
+    contentTypeUid: 'home_page',
+    referenceFieldPath: [
+      'page_components.hero_carousel.hero_carousel_items',
+      'page_components.large_promo_blocks.large_promo_blocks',
+      'page_components.small_promo_blocks.small_promo_blocks',
+    ],
+  })
   return {
     props: {
       categoriesTree,
-      cmsResults,
+      cmsPage,
       ...(await serverSideTranslations(
         locale as string,
         ['common', 'checkout'],
@@ -30,10 +37,10 @@ export async function getStaticProps(context: GetStaticPropsContext) {
 }
 
 const Home: NextPage<HomePageProps> = (props) => {
-  const { cmsResults } = props
+  const { cmsPage } = props
   return (
     <>
-      {cmsResults?.map((data: any) => (
+      {cmsPage?.components?.map((data: any) => (
         <CmsComponent key={Object.keys(data)[0]} content={data} />
       ))}
     </>

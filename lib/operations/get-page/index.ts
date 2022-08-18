@@ -1,23 +1,18 @@
 import Stack from '../../cms/content-stack'
 
-export const getHomePageCMSRes = async () => {
-  const response = await Stack.getEntry({
-    contentTypeUid: 'home_page',
-    referenceFieldPath: [
-      'page_components.hero_carousel.hero_carousel_items',
-      'page_components.large_promo_blocks.large_promo_blocks',
-      'page_components.small_promo_blocks.small_promo_blocks',
-    ],
-    jsonRtePath: [],
-  })
-  return response[0][0]?.page_components
+interface getPageProps {
+  contentTypeUid: string
+  referenceFieldPath: Array<string>
 }
 
-export const getProductRes = async () => {
+export const getPage = async ({ contentTypeUid = '', referenceFieldPath = [] }: getPageProps) => {
   const response = await Stack.getEntry({
-    contentTypeUid: 'product',
-    referenceFieldPath: [],
-    jsonRtePath: undefined,
+    contentTypeUid: contentTypeUid,
+    referenceFieldPath,
+    jsonRtePath: [],
   })
-  return response[0][0]
+
+  return {
+    components: response[0][0]?.page_components,
+  }
 }

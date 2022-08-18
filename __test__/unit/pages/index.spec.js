@@ -9,7 +9,9 @@ jest.mock('@/components/home/CmsComponent/CmsComponent', () => CmsComponentMock)
 const mockCategoryTreeData = categoryTreeDataMock
 const mockCmsHomePageResult = cmsHomePageResultMock
 const mockCmsResultDataMock = {
-  cmsResults: mockCmsHomePageResult,
+  cmsPage: {
+    components: mockCmsHomePageResult,
+  },
 }
 
 jest.mock('@/lib/api/util', () => ({
@@ -23,7 +25,7 @@ jest.mock('@/lib/api/util', () => ({
 }))
 
 jest.mock('@/lib/operations/get-page', () => ({
-  getHomePageCMSRes: jest.fn(() => {
+  getPage: jest.fn(() => {
     return Promise.resolve(mockCmsHomePageResult)
   }),
 }))
@@ -59,7 +61,7 @@ describe('Home', () => {
           userConfig: { i18n: [{}] },
         },
         categoriesTree: mockCategoryTreeData.categoriesTree.items,
-        cmsResults: mockCmsHomePageResult,
+        cmsPage: mockCmsHomePageResult,
       },
     })
   })
@@ -69,6 +71,6 @@ describe('Home', () => {
 
     const CmsComponent = screen.getAllByTestId('cms-component')
 
-    expect(CmsComponent.length).toEqual(mockCmsResultDataMock?.cmsResults?.length)
+    expect(CmsComponent.length).toEqual(mockCmsResultDataMock?.cmsPage?.components?.length)
   })
 })
