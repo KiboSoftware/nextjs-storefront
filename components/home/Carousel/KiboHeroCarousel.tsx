@@ -31,7 +31,6 @@ export interface HeroCarouselProps {
 
 const MainStyle = styled('div')({
   display: 'flex',
-  margin: '20px',
   color: 'grey.700',
 })
 
@@ -67,6 +66,7 @@ const styles = {
     color: 'common.black',
     justifyContent: 'center',
     width: { xs: '80%', md: '50%' },
+    gap: 2,
   },
   nameStyle: {
     width: '100%',
@@ -102,7 +102,16 @@ function HeroItem(props: ItemProps) {
 
   return (
     <Card sx={styles.contentStyle}>
-      <CardMedia sx={{ width: '100%', height: '100%', position: 'relative' }}>
+      <CardMedia
+        sx={{
+          width: '100%',
+          height: '100%',
+          position: 'relative',
+          display: 'flex',
+          flexDirection: 'column',
+          justifyContent: { xs: 'end', md: 'center' },
+        }}
+      >
         <KiboImage
           src={mobileView ? mobileImageUrl : imageUrl}
           alt={imageUrl ? imageAlt : 'product-image-alt'}
@@ -115,7 +124,6 @@ function HeroItem(props: ItemProps) {
           sx={{
             display: 'flex',
             justifyContent: 'center',
-            marginTop: mobileView ? '100%' : '25%',
           }}
         >
           <CardContent sx={styles.cardStyle}>
