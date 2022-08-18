@@ -10,21 +10,17 @@ interface CmsComponentProps {
 }
 
 interface SmallBannerProps {
-  small_banner: {
-    title: string
-    subtitle: string
-    call_to_action_link: { title: string; href: string }
-  }
+  title: string
+  subtitle: string
+  call_to_action_link: { title: string; href: string }
 }
 
 interface KiboHeroCarouselProps {
-  hero_carousel: { hero_carousel_items: any[] }
+  hero_carousel_items: any[]
 }
 
 interface ContentTileProps {
-  large_promo_blocks: {
-    large_promo_blocks: any[]
-  }
+  large_promo_blocks: any[]
 }
 
 interface PromoBlocksDataProps {
@@ -45,30 +41,17 @@ const promoBlocksData = (item: PromoBlocksDataProps) => {
   }
 }
 
-const defaultMapDataToProps = (obj: any) => {
-  const newObj: { [key: string]: any } = {}
-  for (const key in obj) {
-    if (obj.hasOwnProperty(key)) {
-      const value = obj[key]
-      const keyCamel = key.replace(/(\_\w)/g, (match) => match[1].toUpperCase())
-      const isRecursive = typeof value === 'object'
-      newObj[keyCamel] = isRecursive ? defaultMapDataToProps(value) : value
-    }
-  }
-  return newObj
-}
-
 const DefaultComponentMap = {
   small_banner: {
     component: SmallBanner,
     mapDataToProps: (data: SmallBannerProps) => {
       return {
         bannerProps: {
-          title: data?.small_banner?.title,
-          subtitle: data?.small_banner?.subtitle,
+          title: data?.title,
+          subtitle: data?.subtitle,
           callToAction: {
-            title: data?.small_banner?.call_to_action_link?.title,
-            url: data?.small_banner?.call_to_action_link?.href,
+            title: data?.call_to_action_link?.title,
+            url: data?.call_to_action_link?.href,
           },
           backgroundColor: '#A12E87',
         },
@@ -79,7 +62,7 @@ const DefaultComponentMap = {
     component: KiboHeroCarousel,
     mapDataToProps: (data: KiboHeroCarouselProps) => {
       return {
-        carouselItem: data.hero_carousel.hero_carousel_items.map((item) => {
+        carouselItem: data?.hero_carousel_items?.map((item) => {
           return {
             imageUrl: item.desktop_image.url,
             mobileImageUrl: item.mobile_image.url,
@@ -98,19 +81,15 @@ const DefaultComponentMap = {
     component: ContentTile,
     mapDataToProps: (data: ContentTileProps) => {
       return {
-        largeTileProps: data?.large_promo_blocks?.large_promo_blocks?.map((item) =>
-          promoBlocksData(item)
-        ),
+        largeTileProps: data?.large_promo_blocks?.map((item) => promoBlocksData(item)),
       }
     },
   },
   small_promo_blocks: {
     component: ContentTile,
-    mapDataToProps: (data: { small_promo_blocks: { small_promo_blocks: any[] } }) => {
+    mapDataToProps: (data: { small_promo_blocks: any[] }) => {
       return {
-        smallTileProps: data?.small_promo_blocks?.small_promo_blocks?.map((item) =>
-          promoBlocksData(item)
-        ),
+        smallTileProps: data?.small_promo_blocks?.map((item) => promoBlocksData(item)),
       }
     },
   },
@@ -122,9 +101,7 @@ const CmsComponent = (props: CmsComponentProps) => {
   const ComponentMapping = props.ComponentMap || DefaultComponentMap
   const mapping = ComponentMapping[name]
   const Component = mapping?.component
-  const cmsProps = mapping?.mapDataToProps
-    ? mapping?.mapDataToProps(content)
-    : defaultMapDataToProps(content)
+  const cmsProps = mapping?.mapDataToProps(content[name])
   return Component ? <Component {...cmsProps} /> : null
 }
 
