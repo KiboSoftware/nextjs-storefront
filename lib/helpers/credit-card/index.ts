@@ -10,13 +10,13 @@ export interface CardDataParams {
 
 export const prepareCardDataParams = (props: CardDataParams): CardForm => {
   const { cardNumber, expiryDate, cvv } = props
-  const ccardType = creditCardType(cardNumber)
+  const cardType = creditCardType(cardNumber)
   const expiryMonthYear = expiryDate?.split('/')
 
   return {
     cardNumber: cardNumber,
     cvv: cvv,
-    cardType: ccardType.length ? ccardType[0].type.toUpperCase() : '',
+    cardType: cardType.length ? cardType[0].type.toUpperCase() : '',
     expireMonth: Number(expiryMonthYear[0]),
     expireYear: Number(expiryMonthYear[1]),
   }

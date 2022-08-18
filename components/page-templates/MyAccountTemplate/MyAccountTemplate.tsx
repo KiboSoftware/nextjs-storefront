@@ -13,11 +13,16 @@ import {
   useMediaQuery,
   useTheme,
   Link,
+  Grid,
 } from '@mui/material'
 import { useTranslation } from 'next-i18next'
 import { useRouter } from 'next/router'
 
 import { FullWidthDivider } from '@/components/common'
+import { PaymentMethod } from '@/components/my-account'
+import { useAuthContext } from '@/context'
+
+import { CustomerAccount } from '@/lib/gql/types'
 
 const style = {
   accordion: {
@@ -76,120 +81,120 @@ const MyAcccountTemplate = () => {
   const router = useRouter()
   const theme = useTheme()
   const mdScreen = useMediaQuery(theme.breakpoints.up('md'))
-
+  const { user } = useAuthContext()
   const handleGoToOrderHistory = () => {
     router.push('/my-account/order-history?filters=M-6')
   }
 
+  const accordionData = [
+    {
+      id: 'my-profile-accordion',
+      controls: 'my-profile-content',
+      header: t('common:my-profile'),
+      component: null,
+    },
+    {
+      id: 'address-book-accordion',
+      controls: 'address-book-content',
+      header: t('address-book'),
+      component: null,
+    },
+    {
+      id: 'payment-method-accordion',
+      controls: 'payment-method-content',
+      header: t('payment-method'),
+      component: <PaymentMethod user={user as CustomerAccount} />,
+    },
+  ]
+
   return (
-    <>
-      {!mdScreen && (
-        <Link aria-label={t('common:back')} sx={{ ...style.backButton }}>
-          <ChevronLeft />
-          {t('common:back')}
-        </Link>
-      )}
-      <Box
-        sx={{
-          display: { md: 'flex', xs: 'block' },
-          alignItems: 'center',
-          ...style.myAccountChildren,
-        }}
-      >
-        <Box sx={{ display: { xs: 'flex' }, justifyContent: { xs: 'center' } }}>
-          <AccountCircle sx={{ ...style.accountCircle }} />
+    <Grid container>
+      <Grid item md={8} xs={12}>
+        {!mdScreen && (
+          <Link aria-label={t('common:back')} sx={{ ...style.backButton }}>
+            <ChevronLeft />
+            {t('common:back')}
+          </Link>
+        )}
+        <Box
+          sx={{
+            display: { md: 'flex', xs: 'block' },
+            alignItems: 'center',
+            ...style.myAccountChildren,
+          }}
+        >
+          <Box sx={{ display: { xs: 'flex' }, justifyContent: { xs: 'center' } }}>
+            <AccountCircle sx={{ ...style.accountCircle }} />
+          </Box>
+          <Typography
+            variant={mdScreen ? 'h1' : 'h2'}
+            sx={{ paddingLeft: { md: '0.5rem', xs: 0 } }}
+          >
+            {t('common:my-account')}
+          </Typography>
         </Box>
-        <Typography variant={mdScreen ? 'h1' : 'h2'} sx={{ paddingLeft: { md: '0.5rem', xs: 0 } }}>
-          {t('common:my-account')}
-        </Typography>
-      </Box>
-      {mdScreen ? (
-        <Divider sx={{ borderColor: 'grey.500' }} />
-      ) : (
-        <FullWidthDivider color="grey.500" />
-      )}
-      <Accordion disableGutters sx={{ ...style.accordion }}>
-        <AccordionSummary
-          expandIcon={<ExpandMoreIcon sx={{ ...style.expandedIcon }} />}
-          aria-controls="panel1a-content"
-          id="panel1a-header"
-          sx={{ ...style.accordionSummary }}
+        {mdScreen ? (
+          <Divider sx={{ borderColor: 'grey.500' }} />
+        ) : (
+          <FullWidthDivider color="grey.500" />
+        )}
+
+        {accordionData.map((data) => {
+          return (
+            <Box key={data.id}>
+              <Accordion disableGutters sx={{ ...style.accordion }}>
+                <AccordionSummary
+                  expandIcon={<ExpandMoreIcon sx={{ ...style.expandedIcon }} />}
+                  aria-controls={data.controls}
+                  id={data.id}
+                  sx={{ ...style.accordionSummary }}
+                >
+                  <Typography variant="h3">{data.header}</Typography>
+                </AccordionSummary>
+                <AccordionDetails>{data.component}</AccordionDetails>
+              </Accordion>
+              {mdScreen ? (
+                <Divider sx={{ borderColor: 'grey.500' }} />
+              ) : (
+                <FullWidthDivider color="grey.500" />
+              )}
+            </Box>
+          )
+        })}
+
+        <Box sx={{ ...style.myAccountChildren }}>
+          <Typography variant={mdScreen ? 'h1' : 'h2'}>{t('order-details')}</Typography>
+        </Box>
+        {mdScreen ? (
+          <Divider sx={{ borderColor: 'grey.500' }} />
+        ) : (
+          <FullWidthDivider color="grey.500" />
+        )}
+        <Box
+          sx={{
+            ...style.myAccountChildren,
+            ...style.orderHistory,
+          }}
+          onClick={handleGoToOrderHistory}
         >
-          <Typography variant="h3">{t('common:my-profile')}</Typography>
-        </AccordionSummary>
-        <AccordionDetails>{/* Todo */}</AccordionDetails>
-      </Accordion>
-      {mdScreen ? (
-        <Divider sx={{ borderColor: 'grey.500' }} />
-      ) : (
-        <FullWidthDivider color="grey.500" />
-      )}
-      <Accordion disableGutters sx={{ ...style.accordion }}>
-        <AccordionSummary
-          expandIcon={<ExpandMoreIcon sx={{ ...style.expandedIcon }} />}
-          aria-controls="panel2a-content"
-          id="panel2a-header"
-          sx={{ ...style.accordionSummary }}
-        >
-          <Typography variant="h3">{t('address-book')}</Typography>
-        </AccordionSummary>
-        <AccordionDetails>
-          <Typography>{/* TODO */}</Typography>
-        </AccordionDetails>
-      </Accordion>
-      {mdScreen ? (
-        <Divider sx={{ borderColor: 'grey.500' }} />
-      ) : (
-        <FullWidthDivider color="grey.500" />
-      )}
-      <Accordion disableGutters sx={{ ...style.accordion }}>
-        <AccordionSummary
-          expandIcon={<ExpandMoreIcon sx={{ ...style.expandedIcon }} />}
-          aria-controls="panel3a-content"
-          id="panel3a-header"
-          sx={{ ...style.accordionSummary }}
-        >
-          <Typography variant="h3">{t('payment-method')}</Typography>
-        </AccordionSummary>
-        <AccordionDetails>{/* TODO */}</AccordionDetails>
-      </Accordion>
-      {mdScreen ? (
-        <Divider sx={{ borderColor: 'grey.500' }} />
-      ) : (
-        <FullWidthDivider color="grey.500" />
-      )}
-      <Box sx={{ ...style.myAccountChildren }}>
-        <Typography variant={mdScreen ? 'h1' : 'h2'}>{t('order-details')}</Typography>
-      </Box>
-      {mdScreen ? (
-        <Divider sx={{ borderColor: 'grey.500' }} />
-      ) : (
-        <FullWidthDivider color="grey.500" />
-      )}
-      <Box
-        sx={{
-          ...style.myAccountChildren,
-          ...style.orderHistory,
-        }}
-        onClick={handleGoToOrderHistory}
-      >
-        <Typography variant="h3">{t('common:order-history')}</Typography>
-        <ChevronRightIcon />
-      </Box>
-      {mdScreen ? (
-        <Divider sx={{ backgroundColor: 'grey.300', ...style.divider }} />
-      ) : (
-        <FullWidthDivider sx={{ backgroundColor: 'grey.500', ...style.divider }} />
-      )}
-      <Box sx={{ ...style.myAccountChildren, cursor: 'pointer' }}>
-        <Typography variant="h3">{t('common:logout')}</Typography>
-      </Box>
-      {mdScreen ? (
-        <Divider sx={{ borderColor: 'grey.500' }} />
-      ) : (
-        <FullWidthDivider color="grey.500" />
-      )}
-    </>
+          <Typography variant="h3">{t('common:order-history')}</Typography>
+          <ChevronRightIcon />
+        </Box>
+        {mdScreen ? (
+          <Divider sx={{ backgroundColor: 'grey.300', ...style.divider }} />
+        ) : (
+          <FullWidthDivider sx={{ backgroundColor: 'grey.500', ...style.divider }} />
+        )}
+        <Box sx={{ ...style.myAccountChildren, cursor: 'pointer' }}>
+          <Typography variant="h3">{t('common:logout')}</Typography>
+        </Box>
+        {mdScreen ? (
+          <Divider sx={{ borderColor: 'grey.500' }} />
+        ) : (
+          <FullWidthDivider color="grey.500" />
+        )}
+      </Grid>
+    </Grid>
   )
 }
 

@@ -32,11 +32,13 @@ export const cartKeys = {
 }
 
 export const customerAccountCardsKeys = {
-  all: (accountId: number) => ['customerAccountCards', accountId] as const,
+  all: ['customerAccountCards'] as const,
+  cardById: (accountId: number) => [...customerAccountCardsKeys.all, accountId] as const,
 }
 
 export const customerAccountContactsKeys = {
   all: ['customerAccountContacts'] as const,
+  addressById: (accountId: number) => [...customerAccountContactsKeys.all, accountId] as const,
 }
 
 export const locationKeys = {

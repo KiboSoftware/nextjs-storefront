@@ -1,6 +1,7 @@
 import React from 'react'
 
 import { Box } from '@mui/material'
+import { useTranslation } from 'next-i18next'
 
 import AddressCard from '@/components/common/AddressCard/AddressCard'
 import KiboRadio from '@/components/common/KiboRadio/KiboRadio'
@@ -8,17 +9,26 @@ import KiboRadio from '@/components/common/KiboRadio/KiboRadio'
 import type { CrAddress } from '@/lib/gql/types'
 
 interface AddressDetailsViewProps extends CrAddress {
+  id?: number
   firstName?: string
   middleNameOrInitial?: string
   lastNameOrSurname?: string
+  address1?: string
+  address2?: string
+  cityOrTown?: string
+  stateOrProvince?: string
+  postalOrZipCode?: string
   radioGroupTitle?: string
   withoutRadioTitle?: string
   radio?: boolean
+  isPrimary?: boolean
+  selected?: string | number
+  handleRadioChange?: (value: string) => void
 }
 
 const AddressDetailsView = (props: AddressDetailsViewProps) => {
   const {
-    radioGroupTitle,
+    id,
     withoutRadioTitle,
     radio = false,
     firstName,
@@ -29,7 +39,12 @@ const AddressDetailsView = (props: AddressDetailsViewProps) => {
     cityOrTown,
     stateOrProvince,
     postalOrZipCode,
+    isPrimary,
+    selected,
+    handleRadioChange,
   } = props
+
+  const { t } = useTranslation('common')
 
   const addressCardProps = {
     firstName: firstName,
@@ -44,31 +59,21 @@ const AddressDetailsView = (props: AddressDetailsViewProps) => {
 
   const radioOptions = [
     {
-      value: `${address1},${address2},${cityOrTown},${stateOrProvince},${postalOrZipCode}`,
+      value: String(id),
       name: `${address1},${address2},${cityOrTown},${stateOrProvince},${postalOrZipCode}`,
-      label: (
-        <AddressCard
-          title="Primary" // check if primary address,
-          {...addressCardProps}
-        />
-      ),
+      label: <AddressCard {...addressCardProps} />,
     },
   ]
-
-  const [selectedRadio, setSelectedRadio] = React.useState('')
-
-  const handleChange = (value: string) => {
-    setSelectedRadio(value)
-  }
 
   return (
     <Box maxWidth={'fit-content'}>
       {radio && (
         <KiboRadio
-          title={radioGroupTitle}
+          optionIndicator={isPrimary ? t('primary') : ''}
           radioOptions={radioOptions}
-          selected={selectedRadio}
-          onChange={handleChange}
+          selected={String(selected)}
+          align="flex-start"
+          onChange={(value) => handleRadioChange && handleRadioChange(value)}
         />
       )}
 

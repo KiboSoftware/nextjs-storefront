@@ -54,3 +54,8 @@ export const FacetListForHistory = [
 export const FacetTypeForHistory = [
   { facetType: 'Value', label: 'time-filter', values: FacetListForHistory },
 ]
+
+export const AddressType = {
+  BILLING: 'Billing',
+  SHIPPING: 'Shipping',
+}

@@ -27,7 +27,7 @@ export const useUpdateCheckoutBillingInfo = () => {
 
   return useMutation(updateBillingInfo, {
     onSuccess: () => {
-      queryClient.removeQueries([checkoutKeys.all])
+      queryClient.invalidateQueries(checkoutKeys.all)
     },
   })
 }

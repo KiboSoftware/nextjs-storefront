@@ -28,10 +28,14 @@ export const useCustomerContacts = (accountId: number): UseCustomerContactsRespo
     data = [],
     isLoading,
     isSuccess,
-  } = useQuery(customerAccountContactsKeys.all, () => loadCustomerAccountContacts(accountId), {
-    refetchOnWindowFocus: false,
-    enabled: !!accountId,
-  })
+  } = useQuery(
+    customerAccountContactsKeys.addressById(accountId),
+    () => loadCustomerAccountContacts(accountId),
+    {
+      refetchOnWindowFocus: false,
+      enabled: !!accountId,
+    }
+  )
 
   return { data, isLoading, isSuccess }
 }

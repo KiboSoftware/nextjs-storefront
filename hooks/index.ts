@@ -40,3 +40,5 @@ export * from './mutations/useWishlist/useCreateWishlistMutation/useCreateWishli
 export * from './mutations/useUpdateCheckout/useCreateCheckoutPaymentMethod/useCreateCheckoutPaymentMethod'
 export * from './mutations/useUpdateCheckout/useUpdateCheckoutBillingInfo/useUpdateCheckoutBillingInfo'
 export * from './mutations/useUpdateCheckout/useUpdateOrderPaymentActionMutation/useUpdateOrderPaymentActionMutation'
+export * from './mutations/useCustomerCardsMutation/useCustomerCardsMutation'
+export * from './mutations/useCustomerAddressMutation/useCustomerAddressMutation'

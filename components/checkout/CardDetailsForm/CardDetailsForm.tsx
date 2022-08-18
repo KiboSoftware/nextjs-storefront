@@ -8,11 +8,11 @@ import { useForm, Controller } from 'react-hook-form'
 import * as yup from 'yup'
 
 import KiboTextBox from '@/components/common/KiboTextBox/KiboTextBox'
-import { useCheckoutStepContext } from '@/context'
 import { prepareCardDataParams, validateExpiryDate, getCardType } from '@/lib/helpers/credit-card'
 import type { CardForm } from '@/lib/types'
 
 export interface CardDetailsFormProps {
+  cardValue?: CardForm
   validateForm: boolean
   onSaveCardData: (cardData: CardForm) => void
   setValidateForm: (isValidForm: boolean) => void
@@ -27,28 +27,34 @@ const StyledCardDiv = styled('div')(() => ({
 const useCardSchema = () => {
   const { t } = useTranslation('checkout')
   return yup.object({
-    cardNumber: yup
-      .string()
-      .required(t('card-number-required'))
-      .matches(/^\d{15,16}$/g, t('invalid-card-number'))
-      .test('card-type', t('invalid-card-number'), (value) => getCardType(value)),
+    cardNumber: yup.string().when('$isEdit', (isEdit, schema) => {
+      if (!isEdit) {
+        return schema
+          .required(t('card-number-required'))
+          .matches(/^\d{15,16}$/g, t('invalid-card-number'))
+          .test('card-type', t('invalid-card-number'), (value: string) => getCardType(value))
+      } else {
+        return schema
+          .required(t('card-number-required'))
+          .matches(/\*{11,12}\d{4}/g, t('invalid-card-number'))
+      }
+    }),
     expiryDate: yup
       .string()
       .required(t('expiry-date-required'))
       .matches(/^(0?[1-9]|1[012])[/-]\d{4}$/g, t('invalid-expiry-date-format'))
       .test('expiry-date', t('invalid-expiry-date'), (value) => validateExpiryDate(value)),
-    cvv: yup
-      .string()
-      .required(t('cvv-is-required'))
-      .matches(/^\d{3,4}$/g, t('invalid-cvv')),
+    cvv: yup.string().when('$isEdit', (isEdit, schema) => {
+      if (!isEdit) {
+        return schema.required(t('cvv-is-required')).matches(/^\d{3,4}$/g, t('invalid-cvv'))
+      }
+    }),
   })
 }
 const CardDetailsForm = (props: CardDetailsFormProps) => {
-  const { validateForm = false, onSaveCardData, setValidateForm, onFormStatusChange } = props
+  const { validateForm = false, onSaveCardData, onFormStatusChange, cardValue } = props
   const { t } = useTranslation('checkout')
   const cardSchema = useCardSchema()
-
-  const { setStepStatusIncomplete } = useCheckoutStepContext()
 
   const {
     formState: { errors, isValid },
@@ -57,27 +63,22 @@ const CardDetailsForm = (props: CardDetailsFormProps) => {
   } = useForm({
     mode: 'onBlur',
     reValidateMode: 'onBlur',
-    defaultValues: undefined,
+    defaultValues: cardValue ? cardValue : undefined,
     resolver: yupResolver(cardSchema),
     shouldFocusError: true,
+    context: { isEdit: cardValue?.cardNumber?.includes('*') },
   })
 
   const onValid = async (formData: any) => {
     const cardData = prepareCardDataParams(formData)
-    const saveCardData = { ...cardData, isCardDetailsValidated: isValid }
+    const saveCardData = { ...cardData, isCardDetailsValidated: isValid, isDataUpdated: true }
     onSaveCardData(saveCardData)
-    setValidateForm(false)
-  }
-
-  // form is invalid, notify parent form is incomplete
-  const onInvalidForm = () => {
-    setStepStatusIncomplete()
-    setValidateForm(false)
   }
 
   useEffect(() => {
     if (onFormStatusChange) onFormStatusChange(isValid)
-    if (validateForm) handleSubmit(onValid, onInvalidForm)()
+    if (validateForm) handleSubmit(onValid)()
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isValid, validateForm])
 
@@ -87,6 +88,7 @@ const CardDetailsForm = (props: CardDetailsFormProps) => {
         <Controller
           name="cardNumber"
           control={control}
+          defaultValue={cardValue?.cardNumber}
           render={({ field }) => (
             <KiboTextBox
               value={field.value || ''}
@@ -96,13 +98,15 @@ const CardDetailsForm = (props: CardDetailsFormProps) => {
               onBlur={field.onBlur}
               error={!!errors?.cardNumber}
               helperText={errors?.cardNumber?.message as unknown as string}
-              icon={<CreditCard />}
+              icon={<CreditCard color="disabled" />}
+              {...(cardValue && { disabled: true })}
             />
           )}
         />
         <Controller
           name="expiryDate"
           control={control}
+          defaultValue={cardValue?.expiryDate}
           render={({ field }) => (
             <KiboTextBox
               value={field.value || ''}
@@ -119,6 +123,7 @@ const CardDetailsForm = (props: CardDetailsFormProps) => {
         <Controller
           name="cvv"
           control={control}
+          defaultValue={cardValue?.cvv}
           render={({ field }) => (
             <KiboTextBox
               type="password"
@@ -130,7 +135,8 @@ const CardDetailsForm = (props: CardDetailsFormProps) => {
               onBlur={field.onBlur}
               error={!!errors?.cvv}
               helperText={errors?.cvv?.message as unknown as string}
-              icon={<Help />}
+              icon={<Help color="disabled" />}
+              {...(cardValue && { disabled: true })}
             />
           )}
         />

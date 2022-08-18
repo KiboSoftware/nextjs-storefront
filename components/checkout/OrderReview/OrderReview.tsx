@@ -160,7 +160,8 @@ const OrderReview = (props: OrderReviewProps) => {
           <StyledRow sx={{ marginTop: '2.375rem' }}>
             <AddressDetailsView
               {...shippingPersonalDetails}
-              {...shippingAddress}
+              address1={shippingAddress.address1 as string}
+              address2={shippingAddress.address2 as string}
               withoutRadioTitle={t('shipping-details')}
             />
             <StyledActions
@@ -177,7 +178,8 @@ const OrderReview = (props: OrderReviewProps) => {
           <StyledRow>
             <AddressDetailsView
               {...billingPersonalDetails}
-              {...billingAddress}
+              address1={billingAddress.address1 as string}
+              address2={billingAddress.address2 as string}
               withoutRadioTitle={t('billing-address')}
             />
             <StyledActions

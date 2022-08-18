@@ -7,6 +7,7 @@ import { AddressDetailsView, PaymentCardDetailsView } from '@/components/checkou
 import { KiboRadio } from '@/components/common'
 interface PaymentAndBillingCardProps {
   id?: string
+  radio?: boolean
   displayRowDirection?: boolean
   displayTitle?: boolean
   cardNumberPart: string
@@ -84,6 +85,8 @@ const SavedPaymentMethodView = (props: SavedPaymentMethodViewProps) => {
     radio,
     displayRowDirection = true,
     selected = '',
+    withoutRadioPaymentTitle,
+    withoutRadioBillingTitle,
     onPaymentCardSelection,
   } = props
   const { t } = useTranslation('checkout')
@@ -124,8 +127,8 @@ const SavedPaymentMethodView = (props: SavedPaymentMethodViewProps) => {
       )}
       {!radio && (
         <PaymentBillingComponent
-          withoutRadioPaymentTitle={t('payment-method')}
-          withoutRadioBillingTitle={t('billing-address')}
+          withoutRadioPaymentTitle={withoutRadioPaymentTitle}
+          withoutRadioBillingTitle={withoutRadioBillingTitle}
         />
       )}
     </Box>

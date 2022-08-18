@@ -4,3 +4,4 @@ export { default as SearchStore } from '@/components/dialogs/Store/SearchStore/S
 export { default as StoreDetails } from '@/components/dialogs/Store/StoreDetails/StoreDetails'
 export { default as StoreLocatorDialog } from '@/components/dialogs/Store/StoreLocatorDialog/StoreLocatorDialog'
 export { default as WishlistPopover } from './Wishlist/WishlistPopover/WishlistPopover'
+export { default as DeleteConfirmation } from './DeleteConfirmation/DeleteConfirmation'
