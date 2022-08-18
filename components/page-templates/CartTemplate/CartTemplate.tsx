@@ -156,7 +156,7 @@ const CartTemplate = (props: CartTemplateProps) => {
 
   const orderSummaryArgs = {
     nameLabel: t('order-summary'),
-    subTotalLabel: `${t('subtotal')} ${t('item-quantity', { count: cartItemCount })}`,
+    subTotalLabel: `${t('subtotal')} (${t('item-quantity', { count: cartItemCount })})`,
     shippingTotalLabel: t('shipping'),
     taxLabel: t('estimated-tax'),
     totalLabel: t('estimated-order-total'),
