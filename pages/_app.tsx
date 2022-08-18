@@ -47,7 +47,7 @@ const App = (props: KiboAppProps) => {
                       text: 'Order Status',
                     },
                     {
-                      link: '#',
+                      link: '/wishlist',
                       text: 'Wishlist',
                     },
                     {

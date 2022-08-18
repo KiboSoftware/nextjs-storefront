@@ -19,3 +19,8 @@ export interface WishlistItemInWishlistParams {
   variationProductCode?: string
   userWishlist?: Maybe<Wishlist>
 }
+
+export interface WishlistHookParams {
+  isRemovedFromWishlist?: boolean
+  delay?: number
+}

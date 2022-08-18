@@ -9,14 +9,19 @@ import {
 } from '@/hooks'
 import { wishlistGetters } from '@/lib/getters'
 import { buildWishlistParams } from '@/lib/helpers'
-import { WishlistProductInput, WishlistParams, WishlistItemInWishlistParams } from '@/lib/types'
+import {
+  WishlistProductInput,
+  WishlistParams,
+  WishlistItemInWishlistParams,
+  WishlistHookParams,
+} from '@/lib/types'
 
-export const useWishlist = () => {
+export const useWishlist = (params?: WishlistHookParams) => {
   const { showModal } = useModalContext()
 
   const { data: wishlist } = useWishlistQueries()
   const { addToWishlist } = useAddToWishlistMutation()
-  const { removeWishlistItem } = useRemoveWishlistItemMutation()
+  const { removeWishlistItem } = useRemoveWishlistItemMutation(params)
   const { createWishlist } = useCreateWishlistMutation()
   const { isAuthenticated, user: customerAccount } = useAuthContext()
 
