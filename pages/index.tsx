@@ -12,9 +12,19 @@ interface HomePageProps {
   cmsPage: any
 }
 
+interface CategoryTreeResponse {
+  data: {
+    categoriesTree: {
+      items: CategoryCollection
+    }
+  }
+}
+
 export async function getStaticProps(context: GetStaticPropsContext) {
   const { locale } = context
-  const categoriesTree: CategoryCollection = await getCategoryTree()
+  const response: CategoryTreeResponse = await getCategoryTree()
+  const categoriesTree = response.data.categoriesTree.items
+
   const cmsPage = await getPage({
     contentTypeUid: 'home_page',
     referenceFieldPath: [

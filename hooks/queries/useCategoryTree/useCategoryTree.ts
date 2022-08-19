@@ -1,6 +1,6 @@
 import { useQuery } from 'react-query'
 
-import { makeGraphQLClient } from '@/lib/gql/client'
+import { makeCategoryTreeGraphQLClient, makeGraphQLClient } from '@/lib/gql/client'
 import { getCategoryTreeQuery } from '@/lib/gql/queries'
 import { categoryTreeKeys } from '@/lib/react-query/queryKeys'
 
@@ -13,11 +13,12 @@ export interface UseCategoryResponse {
 }
 
 const fetchCategoryTree = async () => {
-  const client = makeGraphQLClient()
+  const client = makeCategoryTreeGraphQLClient()
   const response = await client.request({
     document: getCategoryTreeQuery,
     variables: {},
   })
+
   return response.categoriesTree.items
 }
 
