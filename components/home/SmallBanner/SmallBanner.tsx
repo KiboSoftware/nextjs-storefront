@@ -1,6 +1,16 @@
 import React from 'react'
 
-import { useMediaQuery, Card, CardContent, Typography, Box, useTheme, Link } from '@mui/material'
+import {
+  useMediaQuery,
+  Card,
+  CardContent,
+  Typography,
+  Box,
+  useTheme,
+  Theme,
+  Link as MuiLink,
+} from '@mui/material'
+import Link from 'next/link'
 
 export interface ItemProps {
   bannerProps: BannerProps
@@ -14,37 +24,47 @@ interface BannerProps {
 
 const styles = {
   boxStyle: {
-    margin: '0px',
-    padding: '0px',
     justifyContent: 'center',
+    alignItems: 'center',
+    textAlign: 'center',
     display: 'flex',
     flexDirection: 'row',
     color: 'common.white',
   },
   topStyle: {
+    height: '60px',
+    padding: '20px !important',
     color: 'common.white',
+    justifyContent: 'center',
+    alignItems: 'center',
     textAlign: 'center',
-    fontSize: { sm: '0.5' },
+  },
+  titleStyle: {
+    fontSize: (theme: Theme) => theme.typography.h2,
   },
 }
 
 const SmallBanner = ({ bannerProps }: ItemProps) => {
   const kiboTheme = useTheme()
   const mobileView = useMediaQuery(kiboTheme.breakpoints.down('sm'))
+
   const { title, subtitle, callToAction, backgroundColor } = bannerProps
 
   return (
     <Card sx={{ backgroundColor }}>
-      <CardContent sx={styles.topStyle}>
-        <Typography sx={{ fontSize: mobileView ? '0.75rem' : '1rem', fontWeight: 'bold' }}>
-          {title}
-        </Typography>
+      <CardContent
+        sx={styles.topStyle}
+        style={{ display: 'flex', flexDirection: mobileView ? 'column' : 'row' }}
+      >
+        <Typography sx={styles.titleStyle}>{title} &nbsp;</Typography>
 
         <Box sx={styles.boxStyle}>
-          <Typography sx={{ fontSize: mobileView ? '0.75rem' : '1rem' }}>{subtitle}</Typography>
-          <Typography sx={{ fontSize: mobileView ? '0.75rem' : '1rem' }}>
-            <Link href={callToAction.url} sx={{ color: 'white' }}>
-              {callToAction.title}
+          <Typography variant="h5">{subtitle}&nbsp;</Typography>
+          <Typography variant="h5" data-testid="callToAction">
+            <Link href={callToAction.url} passHref>
+              <MuiLink sx={{ color: 'common.white', textDecoration: 'underline' }}>
+                {callToAction.title}
+              </MuiLink>
             </Link>
           </Typography>
         </Box>
