@@ -20,13 +20,14 @@ jest.mock(
 )
 
 describe('[component] - ViewOrderDetails', () => {
-  const setup = () => {
-    render(<Common {...Common.args} />)
+  const setup = (isOrderStatus: boolean, title: string) => {
+    render(<Common {...Common.args} isOrderStatus={isOrderStatus} title={title} />)
   }
 
   it('should render component', () => {
-    setup()
+    setup(false, 'view-order-details')
 
+    expect(screen.getByText(/order-history/i)).toBeVisible()
     expect(screen.getByText(/view-order-details/i)).toBeVisible()
     expect(screen.getByText(/shipment-details/i)).toBeVisible()
     expect(screen.getByText(/delivered/i)).toBeVisible()
@@ -38,5 +39,15 @@ describe('[component] - ViewOrderDetails', () => {
     expect(screen.getAllByTestId('product-option-component')).toHaveLength(3)
     expect(screen.getByTestId('saved-payment-method-view-component')).toBeVisible()
     expect(screen.getByText('checkout:payment-information')).toBeVisible()
+  })
+
+  it('should render component for Order status', () => {
+    setup(true, 'view-order-status')
+
+    expect(screen.queryByText(/order-history/i)).not.toBeInTheDocument()
+    expect(screen.getByText(/view-order-status/i)).toBeVisible()
+    expect(screen.getByText(/shipment-details/i)).toBeVisible()
+    expect(screen.queryByTestId('order-summary-component')).not.toBeInTheDocument()
+    expect(screen.queryByText('checkout:payment-information')).not.toBeInTheDocument()
   })
 })

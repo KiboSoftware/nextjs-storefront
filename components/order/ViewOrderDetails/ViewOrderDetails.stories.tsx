@@ -16,4 +16,5 @@ const Template: ComponentStory<typeof ViewOrderDetails> = (args) => <ViewOrderDe
 export const Common = Template.bind({})
 Common.args = {
   order: orderMock.checkout,
+  title: 'view-order-details',
 }

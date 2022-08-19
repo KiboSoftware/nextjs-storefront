@@ -7,6 +7,7 @@ import KiboHeroCarousel from './KiboHeroCarousel'
 export default {
   title: 'home/KiboHeroCarousel',
   component: KiboHeroCarousel,
+  parameters: { layout: 'fullscreen' },
 } as ComponentMeta<typeof KiboHeroCarousel>
 
 const Template: ComponentStory<typeof KiboHeroCarousel> = (args) => <KiboHeroCarousel {...args} />
@@ -43,4 +44,3 @@ const heroItems = [
 Common.args = {
   carouselItem: heroItems,
 }
-
