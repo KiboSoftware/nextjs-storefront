@@ -2,23 +2,18 @@ import creditCardType from 'credit-card-type'
 
 import type { CardForm } from '@/lib/types'
 
-export interface CardDataParams {
-  cardNumber: string
-  expiryDate: string
-  cvv: string
-}
-
-export const prepareCardDataParams = (props: CardDataParams): CardForm => {
+export const prepareCardDataParams = (props: CardForm) => {
   const { cardNumber, expiryDate, cvv } = props
-  const cardType = creditCardType(cardNumber)
-  const expiryMonthYear = expiryDate?.split('/')
+  const cardType = creditCardType(cardNumber as string)
+  const expiryMonth = expiryDate?.split('/')[0]
+  const expiryYear = expiryDate?.split('/')[1]
 
   return {
     cardNumber: cardNumber,
     cvv: cvv,
     cardType: cardType.length ? cardType[0].type.toUpperCase() : '',
-    expireMonth: Number(expiryMonthYear[0]),
-    expireYear: Number(expiryMonthYear[1]),
+    expireMonth: Number(expiryMonth),
+    expireYear: Number(expiryYear),
   }
 }
 

@@ -52,7 +52,13 @@ const useCardSchema = () => {
   })
 }
 const CardDetailsForm = (props: CardDetailsFormProps) => {
-  const { validateForm = false, onSaveCardData, onFormStatusChange, cardValue } = props
+  const {
+    validateForm = false,
+    onSaveCardData,
+    onFormStatusChange,
+    cardValue,
+    setValidateForm,
+  } = props
   const { t } = useTranslation('checkout')
   const cardSchema = useCardSchema()
 
@@ -69,10 +75,11 @@ const CardDetailsForm = (props: CardDetailsFormProps) => {
     context: { isEdit: cardValue?.cardNumber?.includes('*') },
   })
 
-  const onValid = async (formData: any) => {
+  const onValid = async (formData: CardForm) => {
     const cardData = prepareCardDataParams(formData)
-    const saveCardData = { ...cardData, isCardDetailsValidated: isValid, isDataUpdated: true }
-    onSaveCardData(saveCardData)
+    const cardDataParams = { ...cardData, isCardDetailsValidated: isValid, isDataUpdated: true }
+    onSaveCardData(cardDataParams)
+    setValidateForm(false)
   }
 
   useEffect(() => {

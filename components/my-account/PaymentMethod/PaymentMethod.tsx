@@ -4,20 +4,22 @@ import { Box, Button, Checkbox, FormControlLabel, Stack, Typography } from '@mui
 import { useTranslation } from 'next-i18next'
 import getConfig from 'next/config'
 
-import { AddressDetailsView, CardDetailsForm, SavedPaymentMethodView } from '@/components/checkout'
-import { AddressForm } from '@/components/common'
+import { CardDetailsForm, SavedPaymentMethodView } from '@/components/checkout'
+import { AddressForm, AddressDetailsView } from '@/components/common'
 import { DeleteConfirmation } from '@/components/dialogs'
 import { useModalContext } from '@/context'
 import {
-  useCustomerAddressMutation,
-  useCustomerCards,
-  useCustomerCardsMutation,
-  useCustomerContacts,
+  useCreateCustomerCardsMutation,
+  useDeleteCustomerCardsMutation,
+  useUpdateCustomerCardsMutation,
+  useCreateCustomerAddressMutation,
+  useUpdateCustomerAddressMutation,
+  useDeleteCustomerAddressMutation,
 } from '@/hooks'
 import { AddressType } from '@/lib/constants'
 import { accountDetailsGetters, cardGetters } from '@/lib/getters'
 import { tokenizeCreditCardPayment } from '@/lib/helpers'
-import {
+import type {
   Address,
   CardForm,
   ContactForm,
@@ -26,10 +28,17 @@ import {
   TokenizedCard,
 } from '@/lib/types'
 
-import { CustomerAccount, CustomerContactInput } from '@/lib/gql/types'
+import type {
+  CardCollection,
+  CustomerAccount,
+  CustomerContactCollection,
+  CustomerContactInput,
+} from '@/lib/gql/types'
 
 interface PaymentMethodProps {
   user: CustomerAccount
+  cards: CardCollection
+  contacts: CustomerContactCollection
 }
 
 interface PaymentMethod {
@@ -68,13 +77,10 @@ const initialBillingAddressData: Address = {
 }
 
 function PaymentMethod(props: PaymentMethodProps) {
-  const { user } = props
+  const { user, cards, contacts } = props
   const { t } = useTranslation('common')
 
-  const { showModal, closeModal } = useModalContext()
-
-  const { data: cards } = useCustomerCards(user?.id)
-  const { data: contacts } = useCustomerContacts(user?.id)
+  const { showModal } = useModalContext()
 
   const savedCardsAndContacts = accountDetailsGetters.getSavedCardsAndBillingDetails(
     cards,
@@ -85,11 +91,13 @@ function PaymentMethod(props: PaymentMethodProps) {
     .getCustomerAccountContacts(contacts)
     ?.filter((contact) => contact.types?.some((type) => type?.name === AddressType.BILLING))
 
-  const { addSavedCardDetails, updateSavedCardDetails, deleteSavedCardDetails } =
-    useCustomerCardsMutation()
+  const { addSavedCardDetails } = useCreateCustomerCardsMutation()
+  const { updateSavedCardDetails } = useUpdateCustomerCardsMutation()
+  const { deleteSavedCardDetails } = useDeleteCustomerCardsMutation()
 
-  const { addSavedAddressDetails, updateSavedAddressDetails, deleteSavedAddressDetails } =
-    useCustomerAddressMutation()
+  const { addSavedAddressDetails } = useCreateCustomerAddressMutation()
+  const { updateSavedAddressDetails } = useUpdateCustomerAddressMutation()
+  const { deleteSavedAddressDetails } = useDeleteCustomerAddressMutation()
 
   const [cardFormDetails, setCardFormDetails] = useState<CardForm>(initialCardFormData)
   const [billingFormAddress, setBillingFormAddress] = useState<Address>(initialBillingAddressData)
@@ -163,7 +171,7 @@ function PaymentMethod(props: PaymentMethodProps) {
       Component: DeleteConfirmation,
       props: {
         onDelete: () => handleDeletePaymentMethod(card),
-        contentText: 'Are you sure ?',
+        contentText: t('delete-confirmation-text'),
       },
     })
   }
@@ -188,8 +196,11 @@ function PaymentMethod(props: PaymentMethodProps) {
     setBillingFormAddress(initialBillingAddressData)
   }
 
-  const handleSaveNewPaymentMethod = async () => {
-    setValidateForm(true)
+  const handleSaveNewPaymentMethod = async (event: { detail: number }) => {
+    // It will execute only once on multiple clicks
+    if (!event.detail || event.detail == 1) {
+      setValidateForm(true)
+    }
   }
 
   const isAddPaymentMethodButtonDisabled = () => {
@@ -284,12 +295,7 @@ function PaymentMethod(props: PaymentMethodProps) {
 
   // when payment card and billing address info is available, handleTokenization
   useEffect(() => {
-    if (
-      isAddingNewPayment &&
-      validateForm &&
-      billingFormAddress.isDataUpdated &&
-      cardFormDetails.isDataUpdated
-    ) {
+    if (isAddingNewPayment && billingFormAddress.isDataUpdated && cardFormDetails.isDataUpdated) {
       if (cardGetters.getCardId(cardFormDetails)) {
         handleCardAndBillingAddress()
       } else if (cardGetters.getCardNumber(cardFormDetails)) {
@@ -299,7 +305,6 @@ function PaymentMethod(props: PaymentMethodProps) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [
     isAddingNewPayment,
-    validateForm,
     cardFormDetails.cardNumber,
     cardFormDetails.isDataUpdated,
     billingFormAddress.isDataUpdated,

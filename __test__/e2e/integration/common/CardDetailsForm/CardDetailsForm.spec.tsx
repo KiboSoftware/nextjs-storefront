@@ -67,6 +67,5 @@ describe('[components] - CardDetailsForm integration', () => {
     await user.tab()
 
     expect(onSaveCardDataMock).toHaveBeenCalled()
-    expect(setValidateFormMock).toHaveBeenLastCalledWith(false)
   })
 })

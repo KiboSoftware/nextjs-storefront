@@ -18,11 +18,11 @@ import {
 import { useTranslation } from 'next-i18next'
 import { useRouter } from 'next/router'
 
-import { FullWidthDivider } from '@/components/common'
 import { PaymentMethod } from '@/components/my-account'
 import { useAuthContext } from '@/context'
+import { useCustomerCards, useCustomerContacts } from '@/hooks'
 
-import { CustomerAccount } from '@/lib/gql/types'
+import type { CustomerAccount } from '@/lib/gql/types'
 
 const style = {
   accordion: {
@@ -76,12 +76,16 @@ const style = {
   },
 }
 
-const MyAcccountTemplate = () => {
+const MyAccountTemplate = () => {
   const { t } = useTranslation(['checkout', 'common'])
   const router = useRouter()
   const theme = useTheme()
   const mdScreen = useMediaQuery(theme.breakpoints.up('md'))
   const { user } = useAuthContext()
+
+  const { data: cards } = useCustomerCards(user?.id as number)
+  const { data: contacts } = useCustomerContacts(user?.id as number)
+
   const handleGoToOrderHistory = () => {
     router.push('/my-account/order-history?filters=M-6')
   }
@@ -103,7 +107,7 @@ const MyAcccountTemplate = () => {
       id: 'payment-method-accordion',
       controls: 'payment-method-content',
       header: t('payment-method'),
-      component: <PaymentMethod user={user as CustomerAccount} />,
+      component: <PaymentMethod user={user as CustomerAccount} cards={cards} contacts={contacts} />,
     },
   ]
 
@@ -133,11 +137,7 @@ const MyAcccountTemplate = () => {
             {t('common:my-account')}
           </Typography>
         </Box>
-        {mdScreen ? (
-          <Divider sx={{ borderColor: 'grey.500' }} />
-        ) : (
-          <FullWidthDivider color="grey.500" />
-        )}
+        <Divider sx={{ borderColor: 'grey.500' }} />
 
         {accordionData.map((data) => {
           return (
@@ -153,11 +153,7 @@ const MyAcccountTemplate = () => {
                 </AccordionSummary>
                 <AccordionDetails>{data.component}</AccordionDetails>
               </Accordion>
-              {mdScreen ? (
-                <Divider sx={{ borderColor: 'grey.500' }} />
-              ) : (
-                <FullWidthDivider color="grey.500" />
-              )}
+              <Divider sx={{ borderColor: 'grey.500' }} />
             </Box>
           )
         })}
@@ -165,11 +161,7 @@ const MyAcccountTemplate = () => {
         <Box sx={{ ...style.myAccountChildren }}>
           <Typography variant={mdScreen ? 'h1' : 'h2'}>{t('order-details')}</Typography>
         </Box>
-        {mdScreen ? (
-          <Divider sx={{ borderColor: 'grey.500' }} />
-        ) : (
-          <FullWidthDivider color="grey.500" />
-        )}
+        <Divider sx={{ borderColor: 'grey.500' }} />
         <Box
           sx={{
             ...style.myAccountChildren,
@@ -180,22 +172,14 @@ const MyAcccountTemplate = () => {
           <Typography variant="h3">{t('common:order-history')}</Typography>
           <ChevronRightIcon />
         </Box>
-        {mdScreen ? (
-          <Divider sx={{ backgroundColor: 'grey.300', ...style.divider }} />
-        ) : (
-          <FullWidthDivider sx={{ backgroundColor: 'grey.500', ...style.divider }} />
-        )}
+        <Divider sx={{ backgroundColor: 'grey.300', ...style.divider }} />
         <Box sx={{ ...style.myAccountChildren, cursor: 'pointer' }}>
           <Typography variant="h3">{t('common:logout')}</Typography>
         </Box>
-        {mdScreen ? (
-          <Divider sx={{ borderColor: 'grey.500' }} />
-        ) : (
-          <FullWidthDivider color="grey.500" />
-        )}
+        <Divider sx={{ borderColor: 'grey.500' }} />
       </Grid>
     </Grid>
   )
 }
 
-export default MyAcccountTemplate
+export default MyAccountTemplate

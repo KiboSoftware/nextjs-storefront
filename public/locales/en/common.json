@@ -139,5 +139,6 @@
   "billing-address": "Billing Address",
   "make-this-my-default-payment": "Make this my default payment",
   "add-new-address": "Add New Address",
-  "select-billing-address": "Select billing address"
+  "select-billing-address": "Select billing address",
+  "delete-confirmation-text": "Are you sure you want to delete ?"
 }

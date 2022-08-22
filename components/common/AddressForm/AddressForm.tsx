@@ -59,6 +59,7 @@ const AddressForm = (props: AddressFormProps) => {
     onSaveAddress,
     onFormStatusChange,
     onDefaultPaymentChange,
+    setValidateForm,
   } = props
 
   // Define Variables and States
@@ -90,6 +91,7 @@ const AddressForm = (props: AddressFormProps) => {
 
   const onValid = async (formData: ContactForm) => {
     onSaveAddress({ contact: formData, isDataUpdated: true })
+    setValidateForm(false)
   }
 
   useEffect(() => {

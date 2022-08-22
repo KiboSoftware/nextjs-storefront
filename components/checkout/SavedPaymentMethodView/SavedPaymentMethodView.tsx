@@ -3,8 +3,8 @@ import React from 'react'
 import { Box } from '@mui/material'
 import { useTranslation } from 'next-i18next'
 
-import { AddressDetailsView, PaymentCardDetailsView } from '@/components/checkout'
-import { KiboRadio } from '@/components/common'
+import { PaymentCardDetailsView } from '@/components/checkout'
+import { KiboRadio, AddressDetailsView } from '@/components/common'
 interface PaymentAndBillingCardProps {
   id?: string
   radio?: boolean

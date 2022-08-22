@@ -22,3 +22,4 @@ export { default as QuantitySelector } from './QuantitySelector/QuantitySelector
 export { default as SearchBar } from './SearchBar/SearchBar'
 export { default as OrderPrice } from './OrderPrice/OrderPrice'
 export { default as AddressList } from '@/components/common/AddressList/AddressList'
+export { default as AddressDetailsView } from '@/components/common/AddressDetailsView/AddressDetailsView'

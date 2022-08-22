@@ -18,7 +18,6 @@ interface AddressDetailsViewProps extends CrAddress {
   cityOrTown?: string
   stateOrProvince?: string
   postalOrZipCode?: string
-  radioGroupTitle?: string
   withoutRadioTitle?: string
   radio?: boolean
   isPrimary?: boolean

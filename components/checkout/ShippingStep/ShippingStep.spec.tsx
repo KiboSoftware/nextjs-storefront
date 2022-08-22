@@ -8,6 +8,9 @@ import { CheckoutStepProvider } from '@/context'
 
 const { Common } = composeStories(stories)
 
+const scrollIntoViewMock = jest.fn()
+window.HTMLElement.prototype.scrollIntoView = scrollIntoViewMock
+
 const AddressListMock = () => <div data-testid="address-list-component" />
 jest.mock('@/components/common/AddressList/AddressList', () => AddressListMock)
 const AddressFormMock = () => <div data-testid="address-form-component" />
