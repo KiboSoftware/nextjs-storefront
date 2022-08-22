@@ -33,25 +33,19 @@ const PromoCodeBadge = (props: PromocodeBadgeProps) => {
   const { t } = useTranslation('common')
   const { onApplyCouponCode, onRemoveCouponCode, promoList, promoError, helpText } = props
   const [promo, setPromo] = useState<string>('')
-  const [error, setError] = useState<{
-    isPromoError: boolean
-    promoMessage: string
-  }>({
-    isPromoError: promoError,
-    promoMessage: helpText as string,
-  })
+  const [errorMessage, setErrorMessage] = useState<string | undefined>(helpText as string)
 
   const handleApplyCouponCode = () => {
-    setError({ isPromoError: false, promoMessage: '' })
-    const isExistingPromo = promoList?.find((promoCode) => {
+    setErrorMessage('')
+    const isPromoCodeApplied = promoList?.find((promoCode) => {
       return promoCode.toLowerCase() === promo.toLowerCase()
     })
 
-    if (!isExistingPromo) {
+    if (!isPromoCodeApplied) {
       onApplyCouponCode(promo)
       setPromo('')
     } else {
-      setError({ isPromoError: true, promoMessage: t('promo-code-already-in-use') })
+      setErrorMessage(t('promo-code-already-in-use'))
     }
   }
 
@@ -60,7 +54,7 @@ const PromoCodeBadge = (props: PromocodeBadgeProps) => {
   }
 
   useEffect(() => {
-    setError({ isPromoError: promoError, promoMessage: helpText as string })
+    setErrorMessage(helpText as string)
   }, [promoError])
 
   return (
@@ -72,8 +66,8 @@ const PromoCodeBadge = (props: PromocodeBadgeProps) => {
           placeholder={t('promo-code')}
           sx={styles.textBoxStyle}
           onChange={(_name, value) => setPromo(value)}
-          error={error.isPromoError}
-          helperText={error.promoMessage}
+          error={!!errorMessage}
+          helperText={errorMessage}
           data-testid="promo-input"
         />
         <Button

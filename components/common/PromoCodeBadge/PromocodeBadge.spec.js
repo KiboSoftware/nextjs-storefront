@@ -12,28 +12,29 @@ import * as stories from './PromoCodeBadge.stories' // import all stories from t
 const { PromocodeBadgeComponent, PromocodeBadge } = composeStories(stories)
 
 describe('PromoCode Component', () => {
-  const setup = () => {
+  const setup = (params) => {
+    const props = params ? params : PromocodeBadgeComponent.args
     const user = userEvent.setup()
-    render(<PromocodeBadgeComponent {...PromocodeBadgeComponent.args} />)
+    render(<PromocodeBadgeComponent {...props} />)
     return {
       user,
     }
   }
   const userEnteredText = 'T'
 
-  it('should render PromoCode text', () => {
+  it('should render component', () => {
     setup()
     const PromoCode = screen.getByRole('textbox')
-
-    expect(PromoCode).toBeVisible()
-  })
-
-  it('should render PromoCode apply button', () => {
-    setup()
     const PromoCodeApply = screen.getByRole('button', {
       name: /apply/i,
     })
+    const removeButton = screen.getByRole('button')
+    const ApplyPromocode = screen.getByTestId('promo-button')
+
+    expect(PromoCode).toBeVisible()
     expect(PromoCodeApply).toBeVisible()
+    expect(removeButton).toBeVisible()
+    expect(ApplyPromocode).toBeVisible()
   })
 
   it('should render promocode badge', () => {
@@ -49,18 +50,6 @@ describe('PromoCode Component', () => {
     expect(PromoCode).toBeInTheDocument('SAVE50')
     const ApplyButton = screen.getByTestId('promo-button')
     expect(ApplyButton).toBeInTheDocument()
-  })
-
-  it('should render remove button', () => {
-    setup()
-    const removeButton = screen.getByRole('button')
-    expect(removeButton).toBeVisible()
-  })
-
-  it('should render ApplyPromocode button', () => {
-    setup()
-    const ApplyPromocode = screen.getByTestId('promo-button')
-    expect(ApplyPromocode).toBeVisible()
   })
 
   it('Test the Apply Button is disable at default', () => {
@@ -82,10 +71,13 @@ describe('PromoCode Component', () => {
   })
 
   it('should disable Apply button when a user enters Promo code and apply it', async () => {
-    setup()
+    const { user } = setup()
+    const input = screen.getByRole('textbox')
     const PromoCodebutton = screen.getByRole('button', {
       name: /apply/i,
     })
+    await user.type(input, userEnteredText)
+    await user.click(PromoCodebutton)
     expect(PromoCodebutton).toBeDisabled()
   })
 
@@ -98,5 +90,40 @@ describe('PromoCode Component', () => {
 
     await user.click(PromoCodebutton)
     expect(screen.getByTestId('promotype')).toBeInTheDocument('SAVE50')
+  })
+  it('should display multiple promocode when a user enter and apply it', async () => {
+    const promoCode = '10OFF'
+    const params = { ...PromocodeBadgeComponent.args, promoList: [promoCode] }
+    const { user } = setup(params)
+    const input = screen.getByRole('textbox')
+    const PromoCodebutton = screen.getByRole('button', { name: /apply/i })
+    await user.type(input, userEnteredText)
+    await user.click(PromoCodebutton)
+
+    const appliedPromoCode = screen.getByText(promoCode)
+    const appliedPromoCode2 = screen.getByText('T')
+    expect(appliedPromoCode).toBeVisible()
+    expect(appliedPromoCode2).toBeVisible()
+  })
+
+  it('should display an error message when the user applies the same promo code more than once', async () => {
+    const params = { ...PromocodeBadgeComponent.args, promoList: ['10OFF'] }
+    const { user } = setup(params)
+    const input = screen.getByRole('textbox')
+    const PromoCodebutton = screen.getByRole('button', { name: /apply/i })
+    await user.type(input, '10OFF')
+    await user.click(PromoCodebutton)
+    const errorMessage = screen.getByText('promo-code-already-in-use')
+    expect(errorMessage).toBeVisible()
+  })
+
+  it('shoul remove a coupon when click cross icon', async () => {
+    const promoCode = '10OFF'
+    const params = { ...PromocodeBadgeComponent.args, promoList: [promoCode] }
+    const { user } = setup(params)
+    const removeIcon = screen.getAllByLabelText('remove-promo-code')
+    await user.click(removeIcon[0])
+    const removedPromoCode = screen.queryByText(promoCode)
+    expect(removedPromoCode).not.toBeInTheDocument()
   })
 })

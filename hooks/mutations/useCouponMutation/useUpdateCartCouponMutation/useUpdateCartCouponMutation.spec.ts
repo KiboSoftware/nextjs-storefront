@@ -1,7 +1,7 @@
 import { renderHook } from '@testing-library/react-hooks'
 
 import { useUpdateCartCouponMutation } from './useUpdateCartCouponMutation'
-import { cartCouponMock } from '@/__mocks__/stories/cartCouponMock'
+import { cartCouponMock } from '@/__mocks__/stories/cartMock'
 import { createQueryClientWrapper } from '@/__test__/utils/renderWithQueryClient'
 
 describe('[hooks] useUpdateCartCouponMutation', () => {

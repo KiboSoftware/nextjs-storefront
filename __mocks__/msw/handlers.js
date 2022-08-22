@@ -1,8 +1,8 @@
 import { graphql } from 'msw'
 
 import { orderMock, shippingRateMock } from '../stories'
-import { cartCouponMock } from '../stories/cartCouponMock'
 import { cartItemMock } from '../stories/cartItemMock'
+import { cartCouponMock } from '../stories/cartMock'
 import { cartMock } from '../stories/cartMock'
 import { categoryTreeDataMock } from '../stories/categoryTreeDataMock'
 import { configuredProductMock } from '../stories/configuredProductMock'
@@ -11,7 +11,7 @@ import { createOrderPaymentActionMock } from '../stories/createOrderPaymentActio
 import { customerAccountCardsMock } from '../stories/customerAccountCardsMock'
 import { locationCollectionMock } from '../stories/locationCollectionMock'
 import { orderCollection } from '../stories/orderCollection'
-import { orderCouponMock } from '../stories/orderCouponMock'
+import { orderCouponMock } from '../stories/orderMock'
 import { productSearchResultMock } from '../stories/productSearchResultMock'
 import { searchSuggestionMock } from '../stories/searchSuggestionResultMock'
 import { updateCustomerAccountCardMock } from '../stories/updateCustomerAccountCardMock'

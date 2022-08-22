@@ -152,6 +152,38 @@ describe('[components] Checkout integration', () => {
       const removedPromoCode = screen.queryByText(promoCode)
       expect(removedPromoCode).not.toBeInTheDocument()
     })
+
+    it('should show error message when applied an invalid coupon', async () => {
+      const newOrderCoupon = { ...orderCouponMock.updateOrderCoupon }
+      newOrderCoupon.invalidCoupons = [
+        {
+          couponCode: '11OFF',
+          reason: 'Invalid coupon code',
+          createDate: '',
+          discountId: 234,
+          reasonCode: 43,
+        },
+      ]
+      server.use(
+        graphql.mutation('updateOrderCoupon', (_req, res, ctx) => {
+          return res(ctx.data({ updateOrderCoupon: newOrderCoupon }))
+        })
+      )
+      const { user } = setup()
+      const promoCode = '11OFF'
+      const PromoCodeInput = screen.getByPlaceholderText('promo-code')
+
+      const PromoCodeApply = screen.getByRole('button', {
+        name: /apply/i,
+      })
+
+      await user.type(PromoCodeInput, promoCode)
+
+      await user.click(PromoCodeApply)
+
+      const errorMessage = screen.getByText('Invalid coupon code')
+      expect(errorMessage).toBeVisible()
+    })
   })
 
   describe('Payment Step', () => {

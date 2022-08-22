@@ -89,7 +89,7 @@ const CartTemplate = (props: CartTemplateProps) => {
     promoMessage: '',
   })
 
-  const handleApplyCouponCode = async (couponCode: string) => {
+  const handleApplyPromoCode = async (couponCode: string) => {
     try {
       const response = await updateCartCoupon.mutateAsync({
         cartId: cart?.id as string,
@@ -105,7 +105,7 @@ const CartTemplate = (props: CartTemplateProps) => {
       console.error(err)
     }
   }
-  const handleRemoveCouponCode = async (couponCode: string) => {
+  const handleRemovePromoCode = async (couponCode: string) => {
     try {
       await deleteCartCoupon.mutateAsync({
         cartId: cart?.id as string,
@@ -204,8 +204,8 @@ const CartTemplate = (props: CartTemplateProps) => {
     total: t('currency', { val: cartTotal }),
     promoComponent: (
       <PromoCodeBadge
-        onApplyCouponCode={handleApplyCouponCode}
-        onRemoveCouponCode={handleRemoveCouponCode}
+        onApplyCouponCode={handleApplyPromoCode}
+        onRemoveCouponCode={handleRemovePromoCode}
         promoList={cart?.couponCodes as string[]}
         promoError={promoDataInCart.isPromoError}
         helpText={promoDataInCart.promoMessage}

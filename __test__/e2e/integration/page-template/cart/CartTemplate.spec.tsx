@@ -8,9 +8,8 @@ import { graphql } from 'msw'
 import { RouterContext } from 'next/dist/shared/lib/router-context'
 
 import { server } from '@/__mocks__/msw/server'
-import { cartCouponMock } from '@/__mocks__/stories/cartCouponMock'
 import { cartItemMock } from '@/__mocks__/stories/cartItemMock'
-import { cartMock } from '@/__mocks__/stories/cartMock'
+import { cartCouponMock, cartMock } from '@/__mocks__/stories/cartMock'
 import { fulfillmentOptionsMock } from '@/__mocks__/stories/fulfillmentOptionsMock'
 import { createMockRouter, renderWithQueryClient } from '@/__test__/utils'
 import { CartTemplateProps } from '@/components/page-templates/CartTemplate/CartTemplate'
@@ -182,7 +181,7 @@ describe('[components] CartTemplate integration', () => {
       expect(appliedPromoCode).toBeVisible()
     })
 
-    it('shoul remove a coupon when click cross icon', async () => {
+    it('should remove a coupon when click cross icon', async () => {
       const promoCode = '10OFF'
       const newCart = { ...cartCouponMock.updateCartCoupon }
       newCart.couponCodes = []
@@ -197,6 +196,37 @@ describe('[components] CartTemplate integration', () => {
       await user.click(removeIcon[0])
       const removedPromoCode = screen.queryByText(promoCode)
       expect(removedPromoCode).not.toBeInTheDocument()
+    })
+    it('should show error message when applied an invalid coupon', async () => {
+      const newCartCoupon = { ...cartCouponMock.updateCartCoupon }
+      newCartCoupon.invalidCoupons = [
+        {
+          couponCode: '11OFF',
+          reason: 'Invalid coupon code',
+          createDate: '',
+          discountId: 234,
+          reasonCode: 43,
+        },
+      ]
+      server.use(
+        graphql.mutation('updateCartCoupon', (_req, res, ctx) => {
+          return res(ctx.data({ updateCartCoupon: newCartCoupon }))
+        })
+      )
+      const { user } = setup()
+      const promoCode = '11OFF'
+      const PromoCodeInput = screen.getByPlaceholderText('promo-code')
+
+      const PromoCodeApply = screen.getByRole('button', {
+        name: /apply/i,
+      })
+
+      await user.type(PromoCodeInput, promoCode)
+
+      await user.click(PromoCodeApply)
+
+      const errorMessage = screen.getByText('Invalid coupon code')
+      expect(errorMessage).toBeVisible()
     })
   })
 })
