@@ -10,6 +10,24 @@ import { categoryTreeDataMock } from '@/__mocks__/stories/categoryTreeDataMock'
 
 nextRouter.useRouter = jest.fn()
 const mockCategoryTreeData = categoryTreeDataMock
+const mockProductRecommendationResult = {
+  components: [
+    { productCode: 'HKFT_019' },
+    { productCode: 'HKFT_020' },
+    { productCode: 'HKFT_021' },
+    { productCode: 'HKFT_022' },
+    { productCode: 'HKFT_024' },
+    { productCode: 'SleepBag_005' },
+  ],
+}
+const mockProductSearchResult = [
+  {
+    productCode: 'mocked-productCode-1',
+  },
+  {
+    productCode: 'mocked-productCode-2',
+  },
+]
 
 jest.mock('next/config', () => () => ({
   publicRuntimeConfig: {
@@ -21,6 +39,12 @@ jest.mock('next/config', () => () => ({
   },
 }))
 
+jest.mock('@/lib/operations/get-page', () => ({
+  getPage: jest.fn(() => {
+    return Promise.resolve(mockProductRecommendationResult)
+  }),
+}))
+
 jest.mock('@/lib/api/util', () => ({
   fetcher: jest.fn(() => {
     return Promise.resolve({
@@ -30,14 +54,7 @@ jest.mock('@/lib/api/util', () => ({
         },
         categoriesTree: { items: mockCategoryTreeData.categoriesTree?.items },
         products: {
-          items: [
-            {
-              productCode: 'mocked-productCode-1',
-            },
-            {
-              productCode: 'mocked-productCode-2',
-            },
-          ],
+          items: mockProductSearchResult,
         },
       },
     })
@@ -78,6 +95,7 @@ describe('[page] Product Details Page', () => {
           productCode: 'mocked-product',
         },
         categoriesTree: mockCategoryTreeData.categoriesTree.items,
+        recomendationProducts: mockProductSearchResult,
         _nextI18Next: {
           initialI18nStore: { 'mock-locale': [{}], en: [{}] },
           initialLocale: 'mock-locale',

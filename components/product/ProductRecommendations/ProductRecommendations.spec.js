@@ -24,6 +24,6 @@ describe('[component] ProductOptionCheckbox component', () => {
 
     const productCard = screen.getAllByTestId('product-card-mock')
 
-    expect(productCard.length).toBe(5)
+    expect(productCard.length).toBe(Common?.args?.products?.length)
   })
 })

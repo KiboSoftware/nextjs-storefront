@@ -4,6 +4,9 @@ import { ComponentStory, ComponentMeta } from '@storybook/react'
 
 import { ProductCustomMock } from '../../../__mocks__/stories/ProductCustomMock'
 import ProductDetailTemplate from './ProductDetailTemplate'
+import { productSearchResultMock } from '@/__mocks__/stories/productSearchResultMock'
+
+import type { Product } from '@/lib/gql/types'
 
 export default {
   title: 'Page Templates/Product Detail',
@@ -23,6 +26,7 @@ Common.args = {
       link: '/',
     },
   ],
+  recommendationProducts: productSearchResultMock?.items?.splice(0, 6) as Product[],
 }
 
 export const WithPriceRange = Template.bind({})
@@ -41,11 +45,13 @@ WithPriceRange.args = {
       link: '/',
     },
   ],
+  recommendationProducts: productSearchResultMock?.items?.splice(0, 6) as Product[],
 }
 
 export const Mobile = Template.bind({})
 Mobile.args = {
   product: ProductCustomMock,
+  recommendationProducts: productSearchResultMock?.items?.splice(0, 6) as Product[],
 }
 Mobile.parameters = {
   viewport: {

@@ -3,6 +3,9 @@ import React from 'react'
 import { ComponentStory, ComponentMeta } from '@storybook/react'
 
 import ProductRecommendations from './ProductRecommendations'
+import { productSearchResultMock } from '@/__mocks__/stories/productSearchResultMock'
+
+import type { Product } from '@/lib/gql/types'
 
 export default {
   title: 'Product/Product Recommendations',
@@ -17,4 +20,5 @@ const Template: ComponentStory<typeof ProductRecommendations> = (args) => (
 export const Common = Template.bind({})
 Common.args = {
   title: 'Product Recommendations',
+  products: productSearchResultMock?.items?.splice(0, 6) as Product[],
 }

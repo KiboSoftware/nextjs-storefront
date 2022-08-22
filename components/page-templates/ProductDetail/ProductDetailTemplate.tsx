@@ -33,6 +33,7 @@ import type { ProductCustom, BreadCrumb, PriceRange, LocationCustom } from '@/li
 
 import type {
   AttributeDetail,
+  Product,
   ProductImage,
   ProductOption,
   ProductOptionValue,
@@ -42,10 +43,11 @@ import type {
 interface ProductDetailTemplateProps {
   product: ProductCustom
   breadcrumbs: BreadCrumb[]
+  recommendationProducts: Product[]
 }
 
 const ProductDetailTemplate = (props: ProductDetailTemplateProps) => {
-  const { product, breadcrumbs } = props
+  const { product, breadcrumbs, recommendationProducts } = props
   const { t } = useTranslation(['product', 'common'])
   const { showModal, closeModal } = useModalContext()
   const { addToCart } = useCartMutationAddToCart()
@@ -349,7 +351,12 @@ const ProductDetailTemplate = (props: ProductDetailTemplateProps) => {
         </Grid>
 
         {/* This section is hardcoded for now */}
-        <ProductRecommendations title={t('product-recommendations')} />
+        {recommendationProducts.length > 0 && (
+          <ProductRecommendations
+            title={t('product-recommendations')}
+            products={recommendationProducts}
+          />
+        )}
         <ProductRecommendations title={t('customers-also-bought')} />
       </Grid>
     </>

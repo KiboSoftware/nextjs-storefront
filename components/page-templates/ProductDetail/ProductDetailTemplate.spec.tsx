@@ -109,14 +109,6 @@ describe('[component] Product Detail Template component', () => {
     expect(productName).toBeVisible()
   })
 
-  it('should render the Product price', () => {
-    setup()
-
-    const price = screen.getByText(/currency/i)
-
-    expect(price).toBeVisible()
-  })
-
   it('should render the Product short description', () => {
     setup()
 

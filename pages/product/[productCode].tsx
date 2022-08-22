@@ -8,6 +8,7 @@ import getCategoryTree from '@/lib/api/operations/get-category-tree'
 import getProduct from '@/lib/api/operations/get-product'
 import search from '@/lib/api/operations/get-product-search'
 import { productGetters } from '@/lib/getters'
+import { getPage } from '@/lib/operations/get-page'
 import type { CategorySearchParams } from '@/lib/types'
 
 import type { CategoryCollection } from '@/lib/gql/types'
@@ -17,6 +18,9 @@ export async function getStaticProps(context: GetStaticPropsContext) {
   const { params, locale } = context
   const { productCode } = params as any
   const { serverRuntimeConfig } = getConfig()
+  const result = await getPage({ contentTypeUid: 'product_detail', entryUrl: productCode })
+  const response =
+    result?.components?.length > 0 ? await search({ productCodes: result?.components }) : []
 
   const product = await getProduct(productCode)
   const categoriesTree: CategoryCollection = await getCategoryTree()
@@ -24,6 +28,7 @@ export async function getStaticProps(context: GetStaticPropsContext) {
     props: {
       product,
       categoriesTree,
+      recomendationProducts: response?.data?.products?.items || [],
       ...(await serverSideTranslations(locale as string, ['common', 'product'], nextI18NextConfig)),
     },
     revalidate: serverRuntimeConfig.revalidate,
@@ -43,8 +48,7 @@ export async function getStaticPaths() {
 }
 
 const ProductDetailPage: NextPage = (props: any) => {
-  const { product } = props
-
+  const { product, recomendationProducts } = props
   const { isFallback } = useRouter()
 
   if (isFallback) {
@@ -54,7 +58,11 @@ const ProductDetailPage: NextPage = (props: any) => {
   const breadcrumbs = product ? productGetters.getBreadcrumbs(product) : []
   return (
     <>
-      <ProductDetailTemplate product={product} breadcrumbs={breadcrumbs} />
+      <ProductDetailTemplate
+        product={product}
+        breadcrumbs={breadcrumbs}
+        recommendationProducts={recomendationProducts}
+      />
     </>
   )
 }
