@@ -107,16 +107,10 @@ const CartTemplate = (props: CartTemplateProps) => {
   }
   const handleRemoveCouponCode = async (couponCode: string) => {
     try {
-      const response = await deleteCartCoupon.mutateAsync({
+      await deleteCartCoupon.mutateAsync({
         cartId: cart?.id as string,
         couponCode,
       })
-      if (response?.invalidCoupons?.length) {
-        setPromoDataInCart({
-          isPromoError: true,
-          promoMessage: response?.invalidCoupons[0]?.reason,
-        })
-      }
     } catch (err) {
       console.error(err)
     }

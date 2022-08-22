@@ -90,13 +90,10 @@ const Checkout = (props: CheckoutProps) => {
   }
   const handleRemoveCouponCode = async (couponCode: string) => {
     try {
-      const response = await deleteOrderCoupon.mutateAsync({
+      await deleteOrderCoupon.mutateAsync({
         checkoutId: checkoutId as string,
         couponCode,
       })
-      if (response?.invalidCoupons?.length) {
-        setPromoData({ isPromoError: true, promoMessage: response?.invalidCoupons[0]?.reason })
-      }
     } catch (err) {
       console.error(err)
     }
