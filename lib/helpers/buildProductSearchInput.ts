@@ -22,7 +22,7 @@ export const buildProductSearchInput = ({
 }: CategorySearchParams): QueryProductSearchArgs => {
   if (productCodes.length > 0) {
     const productCodeFilter: Array<string> = []
-    productCodes.map((code) => {
+    productCodes.forEach((code) => {
       productCodeFilter.push(`productCode eq ${code?.productCode}`)
     })
     return { filter: productCodeFilter.join(' or ') }
