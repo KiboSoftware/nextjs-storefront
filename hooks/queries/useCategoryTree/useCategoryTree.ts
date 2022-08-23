@@ -1,6 +1,6 @@
 import { useQuery } from 'react-query'
 
-import { makeCategoryTreeGraphQLClient, makeGraphQLClient } from '@/lib/gql/client'
+import { makeCategoryTreeGraphQLClient } from '@/lib/gql/client'
 import { getCategoryTreeQuery } from '@/lib/gql/queries'
 import { categoryTreeKeys } from '@/lib/react-query/queryKeys'
 
