@@ -58,7 +58,7 @@ describe('[component] - PaymentMethod (has saved payment methods)', () => {
 
     await user.click(screen.getByRole('button', { name: 'add-payment-method' }))
 
-    expect(screen.getAllByTestId('address-details-view')).toBeVisible()
+    expect(screen.getByTestId('address-details-view')).toBeVisible()
   })
 
   it(`should render  address form if 'Add new address' button is clicked`, async () => {
