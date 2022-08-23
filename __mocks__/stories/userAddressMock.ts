@@ -10,7 +10,7 @@ export const userAddressResponse: CustomerContactCollection = {
       accountId: 1012,
       types: [
         {
-          name: 'Billing',
+          name: 'Shipping',
           isPrimary: false,
         },
       ],
@@ -50,7 +50,7 @@ export const userAddressResponse: CustomerContactCollection = {
       accountId: 1012,
       types: [
         {
-          name: 'Billing',
+          name: 'Shipping',
           isPrimary: true,
         },
       ],

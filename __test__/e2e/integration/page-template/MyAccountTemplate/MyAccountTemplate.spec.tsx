@@ -48,7 +48,7 @@ describe('[component] - PaymentMethod (has saved payment methods)', () => {
 
     await addCardDetails(user)
 
-    await user.click(addressRadios[2])
+    await user.click(addressRadios[0])
 
     expect(savePaymentMethodButton).toBeEnabled()
 
