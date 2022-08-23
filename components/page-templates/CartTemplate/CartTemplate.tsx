@@ -81,25 +81,17 @@ const CartTemplate = (props: CartTemplateProps) => {
   const { data: purchaseLocation } = usePurchaseLocation()
   const updateCartCoupon = useUpdateCartCouponMutation()
   const deleteCartCoupon = useDeleteCartCouponMutation()
-  const [promoDataInCart, setPromoDataInCart] = useState<{
-    isPromoError: boolean
-    promoMessage: string
-  }>({
-    isPromoError: false,
-    promoMessage: '',
-  })
+  const [promoError, setPromoError] = useState<string>('')
 
   const handleApplyPromoCode = async (couponCode: string) => {
     try {
+      setPromoError('')
       const response = await updateCartCoupon.mutateAsync({
         cartId: cart?.id as string,
         couponCode,
       })
       if (response?.invalidCoupons?.length) {
-        setPromoDataInCart({
-          isPromoError: true,
-          promoMessage: response?.invalidCoupons[0]?.reason,
-        })
+        setPromoError(response?.invalidCoupons[0]?.reason)
       }
     } catch (err) {
       console.error(err)
@@ -207,8 +199,8 @@ const CartTemplate = (props: CartTemplateProps) => {
         onApplyCouponCode={handleApplyPromoCode}
         onRemoveCouponCode={handleRemovePromoCode}
         promoList={cart?.couponCodes as string[]}
-        promoError={promoDataInCart.isPromoError}
-        helpText={promoDataInCart.promoMessage}
+        promoError={!!promoError}
+        helpText={promoError}
       />
     ),
   }

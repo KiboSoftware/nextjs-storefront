@@ -40,10 +40,7 @@ const buttonStyle = {
 const Checkout = (props: CheckoutProps) => {
   const { checkout: initialCheckout } = props
 
-  const [promoData, setPromoData] = useState<{ isPromoError: boolean; promoMessage: string }>({
-    isPromoError: false,
-    promoMessage: '',
-  })
+  const [promoError, setPromoError] = useState<string>('')
 
   const { t } = useTranslation(['checkout'])
   const router = useRouter()
@@ -77,12 +74,13 @@ const Checkout = (props: CheckoutProps) => {
 
   const handleApplyCouponCode = async (couponCode: string) => {
     try {
+      setPromoError('')
       const response = await updateOrderCoupon.mutateAsync({
         checkoutId: checkoutId as string,
         couponCode,
       })
       if (response?.invalidCoupons?.length) {
-        setPromoData({ isPromoError: true, promoMessage: response?.invalidCoupons[0]?.reason })
+        setPromoError(response?.invalidCoupons[0]?.reason)
       }
     } catch (err) {
       console.error(err)
@@ -123,8 +121,8 @@ const Checkout = (props: CheckoutProps) => {
         onApplyCouponCode={handleApplyCouponCode}
         onRemoveCouponCode={handleRemoveCouponCode}
         promoList={checkout?.couponCodes as string[]}
-        promoError={promoData.isPromoError}
-        helpText={promoData.promoMessage}
+        promoError={!!promoError}
+        helpText={promoError}
       />
     ),
   }
