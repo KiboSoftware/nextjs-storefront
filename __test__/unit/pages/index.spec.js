@@ -42,6 +42,17 @@ jest.mock('next-i18next/serverSideTranslations', () => ({
   }),
 }))
 
+jest.mock('next/config', () => {
+  return () => {
+    return {
+      serverRuntimeConfig: {
+        cacheKey: 'categoryTree',
+        cacheTimeOut: 10000,
+      },
+    }
+  }
+})
+
 describe('Home', () => {
   const setup = (args) => {
     render(<Home {...args} />)

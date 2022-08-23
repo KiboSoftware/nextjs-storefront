@@ -9,7 +9,7 @@ import { useProductSearch } from '@/hooks'
 import { productSearch, categoryTreeSearchByCode } from '@/lib/api/operations'
 import getCategoryTree from '@/lib/api/operations/get-category-tree'
 import { productSearchGetters, facetGetters } from '@/lib/getters'
-import type { CategorySearchParams } from '@/lib/types'
+import type { CategorySearchParams, CategoryTreeResponse } from '@/lib/types'
 import nextI18NextConfig from '@/next-i18next.config'
 
 import type { PrCategory, ProductSearchResult, Facet, Product, FacetValue } from '@/lib/gql/types'
@@ -26,7 +26,10 @@ export const getServerSideProps: GetServerSideProps = async (
 ) => {
   const { locale, res } = context
   const response = await productSearch(context.query as unknown as CategorySearchParams)
-  const categoriesTree = await getCategoryTree()
+
+  const categoryTreeResponse: CategoryTreeResponse = await getCategoryTree()
+  const categoriesTree = categoryTreeResponse.data.categoriesTree.items
+
   const category = await categoryTreeSearchByCode(context.query)
 
   res.setHeader('Cache-Control', 'public, s-maxage=10, stale-while-revalidate=59')
