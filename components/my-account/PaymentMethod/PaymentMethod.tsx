@@ -133,7 +133,7 @@ function PaymentMethod(props: PaymentMethodProps) {
   }
 
   const handleAddressRadioSelection = (value: string) => {
-    const selected = billingAddresses.find((address) => address.id === Number(value))
+    const selected = billingAddresses?.find((address) => address.id === Number(value))
     setBillingFormAddress({
       ...billingFormAddress,
       contact: selected as ContactForm,
@@ -319,7 +319,7 @@ function PaymentMethod(props: PaymentMethodProps) {
           )}
 
           {savedCardsAndContacts?.map((each) => (
-            <Stack key={each?.cardInfo?.id as string}>
+            <Stack key={each?.cardInfo?.id as string} data-testid="saved-cards-and-contacts">
               {each.cardInfo?.isDefaultPayMethod && (
                 <Typography variant="body1" fontWeight={700}>
                   {t('primary')}
@@ -385,8 +385,12 @@ function PaymentMethod(props: PaymentMethodProps) {
           <Stack display={'flex'} paddingY={2} gap={2} pl={1}>
             {!showBillingFormAddress && (
               <>
-                <Typography variant="h4">{t('select-billing-address')}</Typography>
-                {billingAddresses.map((address) => {
+                {billingAddresses?.length ? (
+                  <Typography variant="h4">{t('select-billing-address')}</Typography>
+                ) : (
+                  handleAddNewBillingAddress()
+                )}
+                {billingAddresses?.map((address) => {
                   return (
                     <AddressDetailsView
                       key={address.id}

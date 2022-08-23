@@ -5,12 +5,14 @@ import { cartItemMock } from '../stories/cartItemMock'
 import { cartMock } from '../stories/cartMock'
 import { categoryTreeDataMock } from '../stories/categoryTreeDataMock'
 import { configuredProductMock } from '../stories/configuredProductMock'
+import { createCustomerAccountCardMock } from '../stories/createCustomerAccountCardMock'
 import { createOrderPaymentActionMock } from '../stories/createOrderPaymentActionMock'
 import { customerAccountCardsMock } from '../stories/customerAccountCardsMock'
 import { locationCollectionMock } from '../stories/locationCollectionMock'
 import { orderCollection } from '../stories/orderCollection'
 import { productSearchResultMock } from '../stories/productSearchResultMock'
 import { searchSuggestionMock } from '../stories/searchSuggestionResultMock'
+import { updateCustomerAccountContactMock } from '../stories/updateCustomerAccountContact'
 import { updateOrderBillingInfoMock } from '../stories/updateOrderBillingInfoMock'
 import { userAddressMock } from '../stories/userAddressMock'
 import { userMock, loginUserMock, registerUserMock } from '../stories/userMock'
@@ -70,6 +72,19 @@ export const accountHandlers = [
   graphql.query('customerAccountCards', (_req, res, ctx) => {
     return res(ctx.data(customerAccountCardsMock))
   }),
+
+  //userAddress
+  graphql.query('getUserAddresses', (_req, res, ctx) => {
+    return res(ctx.data(userAddressMock))
+  }),
+
+  graphql.mutation('updateCustomerAccountContact', (_req, res, ctx) => {
+    return res(ctx.data(updateCustomerAccountContactMock))
+  }),
+
+  graphql.mutation('createCustomerAccountCard', (_req, res, ctx) => {
+    return res(ctx.data(createCustomerAccountCardMock))
+  }),
 ]
 
 export const productHandlers = [
@@ -103,10 +118,7 @@ export const userHandlers = [
   graphql.query('getUser', (_req, res, ctx) => {
     return res(ctx.data(userMock))
   }),
-  //userAddress
-  graphql.query('getUserAddresses', (_req, res, ctx) => {
-    return res(ctx.data(userAddressMock))
-  }),
+
   // login
   graphql.mutation('login', (_req, res, ctx) => {
     return res(ctx.data(loginUserMock))

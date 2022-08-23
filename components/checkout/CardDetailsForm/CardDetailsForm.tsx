@@ -79,7 +79,6 @@ const CardDetailsForm = (props: CardDetailsFormProps) => {
     const cardData = prepareCardDataParams(formData)
     const cardDataParams = { ...cardData, isCardDetailsValidated: isValid, isDataUpdated: true }
     onSaveCardData(cardDataParams)
-    setValidateForm(false)
   }
 
   useEffect(() => {

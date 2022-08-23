@@ -75,10 +75,6 @@ describe('[components] PaymentStep', () => {
 
       await addNewCard(user)
 
-      await waitFor(() => {
-        expect(screen.getByTestId('saved-payment-methods')).toBeVisible()
-      })
-
       expect(paymentTypes).not.toBeVisible()
     })
   })
@@ -116,6 +112,21 @@ describe('[components] PaymentStep', () => {
 })
 
 const addNewCard = async (user: UserEvent) => {
+  await addCardDetails(user)
+  await addBillingAddress(user)
+
+  const saveMethod = screen.getByRole('button', {
+    name: /common:save-payment-method/i,
+  })
+
+  await waitFor(() => {
+    expect(saveMethod).toBeEnabled()
+  })
+
+  await user.click(saveMethod)
+}
+
+const addCardDetails = async (user: UserEvent) => {
   // Card form values
   const cardNumber = screen.getByRole('textbox', {
     name: /card-number/i,
@@ -131,10 +142,9 @@ const addNewCard = async (user: UserEvent) => {
   await user.type(expiryDate, '01/2026')
   await user.type(cvv, '123')
   await user.tab()
+}
 
-  //billing address
-
-  // act
+const addBillingAddress = async (user: UserEvent) => {
   const firstName = screen.getByRole('textbox', { name: /first-name/i })
   const lastNameOrSurname = screen.getByRole('textbox', { name: /last-name-or-sur-name/i })
   const address1 = screen.getByRole('textbox', { name: /address1/i })
@@ -158,14 +168,4 @@ const addNewCard = async (user: UserEvent) => {
   const listbox = within(screen.getByRole('listbox'))
   await user.click(listbox.getByText(/US/i))
   await user.tab()
-
-  const saveMethod = screen.getByRole('button', {
-    name: /common:save-payment-method/i,
-  })
-
-  await waitFor(() => {
-    expect(saveMethod).toBeEnabled()
-  })
-
-  await user.click(saveMethod)
 }
