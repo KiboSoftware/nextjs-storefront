@@ -7,7 +7,7 @@ const cache = {
     return null
   },
 
-  set: (key: string, value: string, timeOut = 10000) => {
+  set: (key: string, value: string, timeOut: number) => {
     nodeCache.set(key, value, timeOut)
   },
 }
