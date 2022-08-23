@@ -1,6 +1,6 @@
 import { PaymentType } from '../constants'
 import { SavedCard } from './../types/PaymentTypes'
-import { billingGetters, cardGetters } from '@/lib/getters'
+import { cardGetters } from '@/lib/getters'
 import type { PaymentAndBilling } from '@/lib/types'
 
 import type {

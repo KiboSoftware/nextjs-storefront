@@ -24,7 +24,6 @@ interface AddressFormProps {
   showDefaultPaymentMethodCheckbox?: boolean
   onSaveAddress: (data: Address) => void
   onFormStatusChange?: (status: boolean) => void
-  setValidateForm: (isValidForm: boolean) => void
   onDefaultPaymentChange?: (value: boolean) => void
 }
 
@@ -59,7 +58,6 @@ const AddressForm = (props: AddressFormProps) => {
     onSaveAddress,
     onFormStatusChange,
     onDefaultPaymentChange,
-    setValidateForm,
   } = props
 
   // Define Variables and States

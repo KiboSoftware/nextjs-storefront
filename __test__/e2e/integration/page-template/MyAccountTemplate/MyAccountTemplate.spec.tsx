@@ -5,7 +5,10 @@ import { UserEvent } from '@testing-library/user-event/dist/types/setup'
 import { graphql } from 'msw'
 
 import { server } from '@/__mocks__/msw/server'
+import { customerAccountCardsMock } from '@/__mocks__/stories/customerAccountCardsMock'
 import * as stories from '@/components/page-templates/MyAccountTemplate/MyAccountTemplate.stories'
+
+import { Card } from '@/lib/gql/types'
 
 const { Common } = composeStories(stories)
 
@@ -89,6 +92,65 @@ describe('[component] - PaymentMethod (has saved payment methods)', () => {
     await waitFor(() => {
       expect(screen.getAllByTestId('saved-cards-and-contacts')).toHaveLength(2)
     })
+  })
+
+  it('should handle editing payment method', async () => {
+    render(<Common />)
+
+    await user.click(screen.getByText('payment-method'))
+
+    const firstPaymentMethodEditText = screen.getAllByText('edit')[0]
+
+    await user.click(firstPaymentMethodEditText)
+
+    if (customerAccountCardsMock.customerAccountCards.items) {
+      const { cardNumberPart, expireMonth, expireYear } = customerAccountCardsMock
+        .customerAccountCards.items[0] as Card
+
+      const cardNumber = screen.getByRole('textbox', {
+        name: /card-number/i,
+      })
+
+      expect(cardNumber).toHaveDisplayValue(cardNumberPart as string)
+
+      const expiryDate = screen.getByRole('textbox', {
+        name: /expiry-date/i,
+      })
+
+      expect(expiryDate).toHaveDisplayValue(`${expireMonth}/${expireYear}`)
+
+      await user.type(expiryDate, '11/2029')
+    }
+    const addressRadios = screen.getAllByRole('radio')
+
+    expect(addressRadios[0]).toBeChecked()
+
+    const savePaymentMethodButton = screen.getByRole('button', { name: 'save-payment-method' })
+
+    server.use(
+      graphql.query('customerAccountCards', (_req, res, ctx) => {
+        return res(
+          ctx.data({
+            customerAccountCards: {
+              totalCount: 1,
+              items: [
+                {
+                  id: '726df82aaf8a406fac8efdecb54964dd',
+                  cardType: 'VISA',
+                  expireMonth: 11,
+                  expireYear: 2029,
+                  cardNumberPart: '************1111',
+                  contactId: 1495,
+                  isDefaultPayMethod: true,
+                },
+              ],
+            },
+          })
+        )
+      })
+    )
+
+    await user.click(savePaymentMethodButton)
   })
 })
 

@@ -24,7 +24,6 @@ const setup = () => {
         validateForm={validateFormMock}
         onFormStatusChange={onFormStatusChangeMock}
         onSaveCardData={onSaveCardDataMock}
-        setValidateForm={setValidateFormMock}
       />
     </CheckoutStepProvider>
   )

@@ -89,7 +89,6 @@ const SavedPaymentMethodView = (props: SavedPaymentMethodViewProps) => {
     withoutRadioBillingTitle,
     onPaymentCardSelection,
   } = props
-  const { t } = useTranslation('checkout')
 
   const PaymentBillingComponent = (props: any) => {
     return (

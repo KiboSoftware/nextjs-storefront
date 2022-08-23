@@ -15,7 +15,6 @@ export interface CardDetailsFormProps {
   cardValue?: CardForm
   validateForm: boolean
   onSaveCardData: (cardData: CardForm) => void
-  setValidateForm: (isValidForm: boolean) => void
   onFormStatusChange?: (status: boolean) => void
 }
 
@@ -52,13 +51,7 @@ const useCardSchema = () => {
   })
 }
 const CardDetailsForm = (props: CardDetailsFormProps) => {
-  const {
-    validateForm = false,
-    onSaveCardData,
-    onFormStatusChange,
-    cardValue,
-    setValidateForm,
-  } = props
+  const { validateForm = false, onSaveCardData, onFormStatusChange, cardValue } = props
   const { t } = useTranslation('checkout')
   const cardSchema = useCardSchema()
 

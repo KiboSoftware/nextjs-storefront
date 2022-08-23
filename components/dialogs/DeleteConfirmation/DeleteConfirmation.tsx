@@ -25,8 +25,8 @@ const DeleteConfirmation = (props: DeleteConfirmationProps) => {
   const { t } = useTranslation('common')
   const { closeModal } = useModalContext()
 
-  const handleDelete = async () => {
-    await onDelete()
+  const handleDelete = () => {
+    onDelete()
     closeModal()
   }
 

@@ -41,11 +41,6 @@ interface PaymentMethodProps {
   contacts: CustomerContactCollection
 }
 
-interface PaymentMethod {
-  id: string
-  name: string
-}
-
 const initialCardFormData: CardForm = {
   cardNumber: '',
   cardType: '',
@@ -76,7 +71,7 @@ const initialBillingAddressData: Address = {
   isAddressValid: false,
 }
 
-function PaymentMethod(props: PaymentMethodProps) {
+const PaymentMethod = (props: PaymentMethodProps) => {
   const { user, cards, contacts } = props
   const { t } = useTranslation('common')
 
@@ -231,7 +226,8 @@ function PaymentMethod(props: PaymentMethodProps) {
       if (input) {
         input.isPrimary = isDefaultPaymentMethod
       }
-      return await updateSavedAddressDetails.mutateAsync({ ...addressData })
+      const response = await updateSavedAddressDetails.mutateAsync({ ...addressData })
+      return response
     } else {
       // add new contact
       addressData.customerContactInput.types = [
@@ -241,7 +237,8 @@ function PaymentMethod(props: PaymentMethodProps) {
         },
       ]
       addressData.customerContactInput.accountId = user.id
-      return await addSavedAddressDetails.mutateAsync({ ...addressData })
+      const response = await addSavedAddressDetails.mutateAsync({ ...addressData })
+      return response
     }
   }
 
@@ -329,8 +326,8 @@ function PaymentMethod(props: PaymentMethodProps) {
                 <SavedPaymentMethodView
                   displayRowDirection={false}
                   displayTitle={false}
-                  id={cardGetters.getCardId(each.cardInfo) as string}
-                  cardNumberPart={cardGetters.getCardNumberPart(each.cardInfo) as string}
+                  id={cardGetters.getCardId(each.cardInfo)}
+                  cardNumberPart={cardGetters.getCardNumberPart(each.cardInfo)}
                   expireMonth={cardGetters.getExpireMonth(each.cardInfo)}
                   expireYear={cardGetters.getExpireYear(each.cardInfo)}
                   address1={each?.billingAddressInfo?.contact?.address?.address1 as string}
@@ -378,7 +375,6 @@ function PaymentMethod(props: PaymentMethodProps) {
             })}
             validateForm={validateForm}
             onSaveCardData={handleCardFormData}
-            setValidateForm={setValidateForm}
             onFormStatusChange={handleCardFormValidDetails}
           />
 
@@ -421,7 +417,6 @@ function PaymentMethod(props: PaymentMethodProps) {
                   isUserLoggedIn={true}
                   onSaveAddress={handleBillingFormAddress}
                   validateForm={validateForm}
-                  setValidateForm={setValidateForm}
                   onFormStatusChange={handleBillingFormValidDetails}
                 />
                 <FormControlLabel

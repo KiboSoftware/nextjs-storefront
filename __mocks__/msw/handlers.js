@@ -12,6 +12,7 @@ import { locationCollectionMock } from '../stories/locationCollectionMock'
 import { orderCollection } from '../stories/orderCollection'
 import { productSearchResultMock } from '../stories/productSearchResultMock'
 import { searchSuggestionMock } from '../stories/searchSuggestionResultMock'
+import { updateCustomerAccountCardMock } from '../stories/updateCustomerAccountCardMock'
 import { updateCustomerAccountContactMock } from '../stories/updateCustomerAccountContact'
 import { updateOrderBillingInfoMock } from '../stories/updateOrderBillingInfoMock'
 import { userAddressMock } from '../stories/userAddressMock'
@@ -84,6 +85,10 @@ export const accountHandlers = [
 
   graphql.mutation('createCustomerAccountCard', (_req, res, ctx) => {
     return res(ctx.data(createCustomerAccountCardMock))
+  }),
+
+  graphql.mutation('updateCustomerAccountCard', (_req, res, ctx) => {
+    return res(ctx.data(updateCustomerAccountCardMock))
   }),
 ]
 

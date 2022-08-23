@@ -547,7 +547,6 @@ const PaymentStep = (props: PaymentStepProps) => {
         <CardDetailsForm
           validateForm={validateForm}
           onSaveCardData={handleCardFormData}
-          setValidateForm={setValidateForm}
           onFormStatusChange={handleCardFormValidDetails}
         />
       )}
@@ -574,12 +573,11 @@ const PaymentStep = (props: PaymentStepProps) => {
             onChange={(_, value) => handleSameAsShippingAddressCheckbox(value)}
           />
           <AddressForm
-            contact={billingFormAddress.contact as ContactForm}
+            contact={billingFormAddress.contact}
             setAutoFocus={false}
             isUserLoggedIn={isAuthenticated}
             onSaveAddress={handleBillingFormAddress}
             validateForm={validateForm}
-            setValidateForm={setValidateForm}
             onFormStatusChange={handleBillingFormValidDetails}
           />
           <Stack pl={1} gap={2} sx={{ width: { xs: '100%', md: '50%' } }}>

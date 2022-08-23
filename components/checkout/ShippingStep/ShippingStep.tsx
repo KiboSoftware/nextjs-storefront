@@ -161,7 +161,6 @@ const ShippingStep = (props: ShippingProps) => {
         validateForm={validateForm}
         onSaveAddress={handleSaveAddress}
         onFormStatusChange={handleFormStatusChange}
-        setValidateForm={setValidateForm}
       />
 
       <Button
