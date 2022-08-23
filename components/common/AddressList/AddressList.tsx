@@ -4,8 +4,9 @@ import { Box, Stack, Typography } from '@mui/material'
 import { useTranslation } from 'next-i18next'
 
 import { KiboRadio, AddressCard } from '@/components/common'
+import { buildAddressProps } from '@/lib/helpers'
 
-import type { CrAddress, CuAddress, CustomerContact } from '@/lib/gql/types'
+import type { CuAddress, CustomerContact } from '@/lib/gql/types'
 
 interface AddressListProps {
   heading?: string
@@ -22,16 +23,6 @@ interface KiboAddressListProps {
   subHeading?: string
   selectedAddressId?: string
   onAddressSelect: (addressId: string) => void
-}
-const buildAddressProps = (address: CuAddress | CrAddress) => {
-  const { address1, address2, cityOrTown, stateOrProvince, postalOrZipCode } = address
-  return {
-    address1,
-    address2,
-    cityOrTown,
-    stateOrProvince,
-    postalOrZipCode,
-  }
 }
 
 const AddressList = (props: AddressListProps) => {

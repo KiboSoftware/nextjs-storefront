@@ -23,6 +23,8 @@ import { useAuthContext } from '@/context'
 import { useCustomerCards, useCustomerContacts } from '@/hooks'
 
 import type { CustomerAccount } from '@/lib/gql/types'
+import { FullWidthDivider } from '@/components/common'
+import AddressBook from '@/components/my-account/AddressBook/AddressBook'
 
 const style = {
   accordion: {
