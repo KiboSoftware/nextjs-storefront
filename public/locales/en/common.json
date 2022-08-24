@@ -129,10 +129,16 @@
   "time-filter": "Time Filter",
   "last-30-days": "Last 30 days",
   "last-6-months": "Last 6 months",
+
+  "save": "Save",
+  "old-password": "Old Password",
+  "new-password": "New Password",
+  "external-password": "Reenter new password",
+
   "shop-now": "Shop Now",
-  "edit-customer-name":"Edit Customer Name",
-  "edit-email":"Edit Email",
-  "edit-password":"Edit Password",
+  "edit-customer-name": "Edit Customer Name",
+  "edit-email": "Edit Email",
+  "edit-password": "Edit Password",
 
   "home": "Home",
   "order-status": "Order Status",
