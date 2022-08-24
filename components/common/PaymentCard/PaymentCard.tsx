@@ -2,7 +2,7 @@ import { Typography, Box } from '@mui/material'
 import { useTranslation } from 'next-i18next'
 
 import KiboImage from '../KiboImage/KiboImage'
-import VISA from '@/assets/visa.svg'
+import { getCreditCardLogo } from '@/lib/helpers/credit-card'
 
 interface PaymentCardDetailsViewProps {
   title?: string
@@ -17,6 +17,7 @@ const PaymentCard = (props: PaymentCardDetailsViewProps) => {
   const { title, cardNumberPart, expireMonth, expireYear, cardType } = props
   const { t } = useTranslation('checkout')
 
+  console.log(cardType)
   return (
     <>
       {title && (
@@ -26,7 +27,12 @@ const PaymentCard = (props: PaymentCardDetailsViewProps) => {
       )}
       <Box display="flex" pt={1} gap={2}>
         <Box minWidth={45}>
-          <KiboImage src={VISA} alt={cardType} width={45} height={35} />
+          <KiboImage
+            src={getCreditCardLogo(cardType as string)}
+            alt={cardType}
+            width={45}
+            height={35}
+          />
         </Box>
         <Box>
           <Box display="flex">

@@ -352,6 +352,7 @@ const PaymentStep = (props: PaymentStepProps) => {
           expireMonth: card.expireMonth,
           expireYear: card.expireYear,
           isCardInfoSaved: card.isCardInfoSaved,
+          cardType: card.cardType,
         },
         billingAddressInfo: {
           ...billingFormAddress,
@@ -365,6 +366,7 @@ const PaymentStep = (props: PaymentStepProps) => {
   }
 
   const getSavedPaymentMethodView = (card: PaymentAndBilling): React.ReactNode => {
+    const address = billingGetters.getAddress(card?.billingAddressInfo?.contact.address)
     return (
       <SavedPaymentMethodView
         key={card?.cardInfo?.id as string}
@@ -372,15 +374,16 @@ const PaymentStep = (props: PaymentStepProps) => {
         displayRowDirection={false}
         displayTitle={false}
         selected={selectedPaymentBillingRadio}
-        id={card?.cardInfo?.id as string}
-        cardNumberPart={card?.cardInfo?.cardNumberPart as string}
-        expireMonth={card?.cardInfo?.expireMonth as number}
-        expireYear={card?.cardInfo?.expireYear as number}
-        address1={card?.billingAddressInfo?.contact?.address?.address1 as string}
-        address2={card?.billingAddressInfo?.contact?.address?.address2 as string}
-        cityOrTown={card?.billingAddressInfo?.contact?.address?.cityOrTown as string}
-        postalOrZipCode={card?.billingAddressInfo?.contact?.address?.postalOrZipCode as string}
-        stateOrProvince={card?.billingAddressInfo?.contact?.address?.stateOrProvince as string}
+        id={cardGetters.getCardId(card?.cardInfo)}
+        cardNumberPart={cardGetters.getCardNumberPart(card?.cardInfo)}
+        expireMonth={cardGetters.getExpireMonth(card?.cardInfo)}
+        expireYear={cardGetters.getExpireYear(card?.cardInfo)}
+        cardType={cardGetters.getCardType(card?.cardInfo)}
+        address1={billingGetters.getAddress1(address)}
+        address2={billingGetters.getAddress2(address)}
+        cityOrTown={billingGetters.getCityOrTown(address)}
+        postalOrZipCode={billingGetters.getPostalOrZipCode(address)}
+        stateOrProvince={billingGetters.getStateOrProvince(address)}
         onPaymentCardSelection={handleRadioSavedCardSelection}
       />
     )
@@ -412,6 +415,7 @@ const PaymentStep = (props: PaymentStepProps) => {
             expireMonth: cardDetails?.expireMonth,
             expireYear: cardDetails?.expireYear,
             paymentType: PaymentType.CREDITCARD,
+            cardType: cardDetails?.paymentOrCardType as string,
           },
           billingAddressInfo: {
             contact: {

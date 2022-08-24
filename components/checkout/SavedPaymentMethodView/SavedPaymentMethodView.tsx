@@ -1,7 +1,6 @@
 import React from 'react'
 
 import { Box } from '@mui/material'
-import { useTranslation } from 'next-i18next'
 
 import { PaymentCardDetailsView } from '@/components/checkout'
 import { KiboRadio, AddressDetailsView } from '@/components/common'
@@ -13,6 +12,7 @@ interface PaymentAndBillingCardProps {
   cardNumberPart: string
   expireMonth: number
   expireYear: number
+  cardType: string
   address1: string
   address2?: string
   cityOrTown: string
@@ -32,6 +32,7 @@ const PaymentAndBilling = (props: PaymentAndBillingCardProps) => {
     cardNumberPart,
     expireMonth,
     expireYear,
+    cardType,
     address1,
     address2,
     cityOrTown,
@@ -58,6 +59,7 @@ const PaymentAndBilling = (props: PaymentAndBillingCardProps) => {
         cardNumberPart={cardNumberPart}
         expireMonth={expireMonth}
         expireYear={expireYear}
+        cardType={cardType}
         onPaymentCardSelection={() => null}
       />
       <AddressDetailsView
@@ -77,6 +79,7 @@ const SavedPaymentMethodView = (props: SavedPaymentMethodViewProps) => {
     cardNumberPart,
     expireMonth,
     expireYear,
+    cardType,
     address1,
     address2,
     cityOrTown,
@@ -96,6 +99,7 @@ const SavedPaymentMethodView = (props: SavedPaymentMethodViewProps) => {
         cardNumberPart={cardNumberPart}
         expireMonth={expireMonth}
         expireYear={expireYear}
+        cardType={cardType}
         address1={address1}
         address2={address2}
         cityOrTown={cityOrTown}

@@ -1,14 +1,21 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 
 import { yupResolver } from '@hookform/resolvers/yup'
 import { CreditCard, Help } from '@mui/icons-material'
-import { styled, FormControl } from '@mui/material'
+import { styled, FormControl, Box } from '@mui/material'
+import creditCardType from 'credit-card-type'
 import { useTranslation } from 'next-i18next'
-import { useForm, Controller } from 'react-hook-form'
+import { useForm, Controller, ControllerRenderProps } from 'react-hook-form'
 import * as yup from 'yup'
 
+import { KiboImage } from '@/components/common'
 import KiboTextBox from '@/components/common/KiboTextBox/KiboTextBox'
-import { prepareCardDataParams, validateExpiryDate, getCardType } from '@/lib/helpers/credit-card'
+import {
+  prepareCardDataParams,
+  validateExpiryDate,
+  getCardType,
+  getCreditCardLogo,
+} from '@/lib/helpers/credit-card'
 import type { CardForm } from '@/lib/types'
 
 export interface CardDetailsFormProps {
@@ -54,6 +61,7 @@ const CardDetailsForm = (props: CardDetailsFormProps) => {
   const { validateForm = false, onSaveCardData, onFormStatusChange, cardValue } = props
   const { t } = useTranslation('checkout')
   const cardSchema = useCardSchema()
+  const [cardTypeLogo, setCardTypeLogo] = useState(getCreditCardLogo(cardValue?.cardType as string))
 
   const {
     formState: { errors, isValid },
@@ -72,6 +80,12 @@ const CardDetailsForm = (props: CardDetailsFormProps) => {
     const cardData = prepareCardDataParams(formData)
     const cardDataParams = { ...cardData, isCardDetailsValidated: isValid, isDataUpdated: true }
     onSaveCardData(cardDataParams)
+  }
+
+  const handleCardType = (field: ControllerRenderProps<CardForm, 'cardNumber'>, value: string) => {
+    field.onChange(value)
+    const cardType = creditCardType(value)[0]
+    setCardTypeLogo(getCreditCardLogo(value.length > 3 ? cardType.type.toUpperCase() : ''))
   }
 
   useEffect(() => {
@@ -93,11 +107,17 @@ const CardDetailsForm = (props: CardDetailsFormProps) => {
               value={field.value || ''}
               label={t('card-number')}
               required={true}
-              onChange={(_name, value) => field.onChange(value)}
+              onChange={(_name, value) => {
+                handleCardType(field, value)
+              }}
               onBlur={field.onBlur}
               error={!!errors?.cardNumber}
               helperText={errors?.cardNumber?.message as unknown as string}
-              icon={<CreditCard color="disabled" />}
+              icon={
+                <Box pr={1}>
+                  <KiboImage src={cardTypeLogo} alt={'cardType'} width={35} height={35} />
+                </Box>
+              }
               {...(cardValue && { disabled: true })}
             />
           )}

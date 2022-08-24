@@ -11,6 +11,7 @@ interface PaymentCardDetailsViewProps {
   cardNumberPart: string
   expireMonth: number
   expireYear: number
+  cardType: string
   radio?: boolean
   selected?: string
   onPaymentCardSelection?: (value: string) => void
@@ -24,6 +25,7 @@ const PaymentCardDetailsView = (props: PaymentCardDetailsViewProps) => {
     cardNumberPart,
     expireMonth,
     expireYear,
+    cardType,
     selected = '',
     onPaymentCardSelection,
   } = props
@@ -32,6 +34,7 @@ const PaymentCardDetailsView = (props: PaymentCardDetailsViewProps) => {
     cardNumberPart: cardNumberPart,
     expireMonth: expireMonth,
     expireYear: expireYear,
+    cardType: cardType,
   }
 
   const radioOptions = [

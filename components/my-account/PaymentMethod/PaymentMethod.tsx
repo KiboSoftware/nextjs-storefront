@@ -150,6 +150,7 @@ const PaymentMethod = (props: PaymentMethodProps) => {
       expireMonth: cardGetters.getExpireMonth(cardAndAddressDetails.cardInfo),
       expireYear: cardGetters.getExpireYear(cardAndAddressDetails.cardInfo),
       expiryDate: cardGetters.getExpireDate(cardAndAddressDetails.cardInfo),
+      cardType: cardGetters.getCardType(cardAndAddressDetails.cardInfo),
       isDataUpdated: false,
     })
 
@@ -330,6 +331,7 @@ const PaymentMethod = (props: PaymentMethodProps) => {
                   cardNumberPart={cardGetters.getCardNumberPart(each.cardInfo)}
                   expireMonth={cardGetters.getExpireMonth(each.cardInfo)}
                   expireYear={cardGetters.getExpireYear(each.cardInfo)}
+                  cardType={cardGetters.getCardType(each.cardInfo)}
                   address1={each?.billingAddressInfo?.contact?.address?.address1 as string}
                   address2={each?.billingAddressInfo?.contact?.address?.address2 as string}
                   cityOrTown={each?.billingAddressInfo?.contact?.address?.cityOrTown as string}
@@ -341,11 +343,16 @@ const PaymentMethod = (props: PaymentMethodProps) => {
                   }
                 />
                 <Stack gap={1}>
-                  <Typography variant="body2" onClick={() => handleEdit(each)}>
+                  <Typography
+                    variant="body2"
+                    sx={{ cursor: 'pointer' }}
+                    onClick={() => handleEdit(each)}
+                  >
                     {t('edit')}
                   </Typography>
                   <Typography
                     variant="body2"
+                    sx={{ cursor: 'pointer' }}
                     onClick={() => openDeleteConfirmation(each.cardInfo as SavedCard)}
                   >
                     {t('delete')}
