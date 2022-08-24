@@ -8,7 +8,7 @@ import type { FulfillmentOption } from '@/lib/types'
 interface FulfillmentOptionsProps {
   fulfillmentOptions: FulfillmentOption[]
   selected: string
-  onFullfillmentOptionChange: (value: string) => void
+  onFulfillmentOptionChange: (value: string) => void
   onStoreSetOrUpdate: () => void
 }
 
@@ -43,7 +43,7 @@ const FulfillmentOptionLabel = (props: FulfillmentOptionLabelProps) => {
 const FulfillmentOptions = (props: FulfillmentOptionsProps) => {
   const { t } = useTranslation('common')
 
-  const { fulfillmentOptions, selected, onFullfillmentOptionChange, onStoreSetOrUpdate } = props
+  const { fulfillmentOptions, selected, onFulfillmentOptionChange, onStoreSetOrUpdate } = props
 
   const radioOptions = fulfillmentOptions?.map((option) => {
     return {
@@ -68,7 +68,7 @@ const FulfillmentOptions = (props: FulfillmentOptionsProps) => {
       <KiboRadio
         radioOptions={radioOptions}
         selected={selected}
-        onChange={onFullfillmentOptionChange}
+        onChange={onFulfillmentOptionChange}
       />
     </Box>
   )

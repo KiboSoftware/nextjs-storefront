@@ -34,7 +34,7 @@ export const useProductDetailTemplate = (props: UseProductDetailTemplateProps) =
       setSelectedFulfillmentOption({
         method: '',
         location: {
-          name: purchaseLocation?.name as string,
+          name: selectedFulfillmentOption?.location?.name || (purchaseLocation?.name as string),
         },
       })
     }

@@ -59,6 +59,10 @@ const getLocations = (locations: Maybe<Location>[]): LocationCustom[] => {
     : []
 }
 
+const getLocationCodes = (locations: Maybe<Location>[]): string => {
+  return locations?.length > 0 ? locations.map((location) => location?.code).join(',') : ''
+}
+
 const getLocation = (location: Maybe<Location>): LocationCustom => {
   return {
     code: getCode(location),
@@ -89,4 +93,5 @@ export const storeLocationGetters = {
   getZip,
   getHours,
   getFullAddress,
+  getLocationCodes,
 }

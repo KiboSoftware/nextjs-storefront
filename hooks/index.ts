@@ -14,6 +14,7 @@ export * from './queries/useWishlist/useWishlistQueries'
 export * from './queries/useCustomerCards/useCustomerCards'
 export * from './queries/useCustomerContacts/useCustomerContacts'
 export * from './queries/useUserOrderQueries/useUserOrderQueries'
+export * from './queries/useProductLocationInventory/useProductLocationInventory'
 
 // Custom hooks
 export * from './custom/useDebounce/useDebounce'

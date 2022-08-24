@@ -14,5 +14,9 @@
   "results_other": "{{count}} Results",
   "product-recommendations": "Product Recommendations",
   "customers-also-bought": "Customers Also Bought",
-  "search-results": "{{m}} Results for {{n}}"
+  "search-results": "{{m}} Results for {{n}}",
+  "item-left": "item(s) left",
+  "in-stock": "In stock",
+  "at": "at",
+  "nearby-stores": "nearby stores"
 }

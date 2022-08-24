@@ -59,3 +59,7 @@ export const ordersKeys = {
   all: ['orders'] as const,
   orderFilter: (params: string | string[] | undefined) => [...ordersKeys.all, params] as const,
 }
+
+export const inventoryKeys = {
+  all: ['inventory'] as const,
+}

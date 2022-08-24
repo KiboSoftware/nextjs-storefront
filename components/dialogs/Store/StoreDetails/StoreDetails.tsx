@@ -7,7 +7,16 @@ import { useTranslation } from 'next-i18next'
 import AddressCard from '@/components/common/AddressCard/AddressCard'
 import type { LocationCustom, HoursCustom } from '@/lib/types'
 
-const StoreDetails = (location: LocationCustom) => {
+import type { LocationInventory } from '@/lib/gql/types'
+
+interface StoreDetailsProps {
+  location: LocationCustom
+  showProductAndInventory?: boolean
+  inventory?: LocationInventory
+}
+
+const StoreDetails = (props: StoreDetailsProps) => {
+  const { location, showProductAndInventory, inventory } = props
   const { t } = useTranslation('common')
   const [expanded, setExpanded] = useState<boolean>(false)
 
@@ -18,9 +27,11 @@ const StoreDetails = (location: LocationCustom) => {
       </Typography>
       <Typography variant="body2">{location?.streetAddress}</Typography>
       <Typography variant="body2">{location?.cityState}</Typography>
-      <Typography variant="body2" color="primary" fontStyle={'italic'}>
-        {t('available-for-pickup')}
-      </Typography>
+      {showProductAndInventory && (
+        <Typography variant="body2" color="primary" fontWeight={700}>
+          {inventory ? `${inventory.stockAvailable} ${t('available')}` : t('not-available')}
+        </Typography>
+      )}
 
       <Box
         data-testid="collapsible"

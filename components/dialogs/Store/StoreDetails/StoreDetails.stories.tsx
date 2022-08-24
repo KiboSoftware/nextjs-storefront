@@ -16,4 +16,6 @@ const Template: ComponentStory<typeof StoreDetails> = ({ ...args }) => <StoreDet
 // Common
 export const Common = Template.bind({})
 
-Common.args = storeLocationGetters.getLocations(locationCollectionMock?.spLocations?.items || [])[0]
+Common.args = {
+  location: storeLocationGetters.getLocations(locationCollectionMock?.spLocations?.items || [])[0],
+}

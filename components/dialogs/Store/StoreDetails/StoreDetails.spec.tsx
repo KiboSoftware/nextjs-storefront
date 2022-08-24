@@ -21,12 +21,12 @@ describe('[components] Store Details', () => {
   it('should render component', () => {
     setup()
 
-    const location = Common.args
+    const location = Common.args?.location
 
     expect(screen.getByText(location?.name || '')).toBeVisible()
     expect(screen.getByText(location?.streetAddress?.trim() || '')).toBeVisible()
     expect(screen.getByText(location?.cityState?.trim() || '')).toBeVisible()
-    expect(screen.getByText(/available-for-pickup/i)).toBeVisible()
+    expect(screen.getByText(/available/i)).toBeVisible()
     expect(screen.getByTestId('collapsible')).toBeVisible()
     expect(screen.getByTestId('KeyboardArrowDownIcon')).toBeVisible()
     expect(screen.queryByTestId('KeyboardArrowUpIcon')).not.toBeInTheDocument()
@@ -35,7 +35,7 @@ describe('[components] Store Details', () => {
 
   it('should expand store info', async () => {
     const { user } = setup()
-    const location = Common.args
+    const location = Common.args?.location
     const collapsible = screen.getByTestId('collapsible')
 
     expect(screen.getByTestId('KeyboardArrowDownIcon')).toBeVisible()
@@ -45,7 +45,7 @@ describe('[components] Store Details', () => {
     expect(screen.getByText(location?.phone || '')).toBeVisible()
     expect(screen.getByTestId('address-card-mock')).toBeVisible()
     expect(screen.getByText(/store-hours/i)).toBeVisible()
-    Common.args?.hours?.map((hour) => {
+    location?.hours?.map((hour) => {
       expect(screen.getByText(`${hour?.day}`)).toBeVisible()
       expect(screen.getAllByText(`${hour?.storeTime}`)).toHaveLength(7)
     })
