@@ -116,7 +116,7 @@ const AddressBook = () => {
   }
 
   return (
-    <Box>
+    <Box data-testid={'address-book-component'}>
       {addresses?.map((item: Maybe<CustomerContact>, index: number) => (
         <Box paddingY={1} key={item?.id + 'address'}>
           {index === 0 && (
