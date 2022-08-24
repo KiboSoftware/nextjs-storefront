@@ -4,7 +4,7 @@ import { ComponentStory, ComponentMeta } from '@storybook/react'
 
 import AddressBook from './AddressBook'
 import { userResponseMock } from '@/__mocks__/stories/userMock'
-import { AuthContext, AuthContextType } from '@/context/'
+import { AuthContext, AuthContextType, DialogRoot, ModalContextProvider } from '@/context'
 
 export default {
   title: 'My Account / Address Book',
@@ -23,7 +23,10 @@ const userContextValues: AuthContextType = {
 
 const Template: ComponentStory<typeof AddressBook> = () => (
   <AuthContext.Provider value={userContextValues}>
-    <AddressBook />
+    <ModalContextProvider>
+      <DialogRoot />
+      <AddressBook />
+    </ModalContextProvider>
   </AuthContext.Provider>
 )
 
