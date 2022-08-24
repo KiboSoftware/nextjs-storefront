@@ -39,7 +39,7 @@ import type {
   CardTypeForCheckout,
 } from '@/lib/types'
 
-import type { Contact, Order, PaymentActionInput } from '@/lib/gql/types'
+import type { Contact, CrAddress, Order, PaymentActionInput } from '@/lib/gql/types'
 
 interface PaymentStepProps {
   checkout: Order | undefined
@@ -366,7 +366,9 @@ const PaymentStep = (props: PaymentStepProps) => {
   }
 
   const getSavedPaymentMethodView = (card: PaymentAndBilling): React.ReactNode => {
-    const address = billingGetters.getAddress(card?.billingAddressInfo?.contact.address)
+    const address = billingGetters.getAddress(
+      card?.billingAddressInfo?.contact.address as CrAddress
+    )
     return (
       <SavedPaymentMethodView
         key={card?.cardInfo?.id as string}

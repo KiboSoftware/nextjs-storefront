@@ -1,4 +1,4 @@
-import type { SavedCard } from '@/lib/types'
+import type { SavedCard, TokenizedCard } from '@/lib/types'
 
 // cards
 const getCardNumberPart = (creditCardData?: SavedCard): string =>
@@ -20,7 +20,7 @@ const getCardType = (creditCardData?: SavedCard): string => creditCardData?.card
 
 const getCardId = (creditCardData?: SavedCard): string => creditCardData?.id || ''
 
-const getIsDefaultPaymentMethod = (creditCardData?: SavedCard): boolean =>
+const getIsDefaultPayMethod = (creditCardData?: SavedCard): boolean =>
   Boolean(creditCardData?.isDefaultPayMethod)
 
 const getPaymentType = (creditCardData?: SavedCard): string => creditCardData?.paymentType || ''
@@ -33,14 +33,15 @@ const getCardDetails = (card: SavedCard) => {
     expireMonth: getExpireMonth(card),
     expireYear: getExpireYear(card),
     id: getCardId(card),
-    isDefaultPaymentMethod: getIsDefaultPaymentMethod(card),
+    isDefaultPayMethod: getIsDefaultPayMethod(card),
     paymentType: getPaymentType(card),
   }
 }
 
-const getTokenizedCardNumberMask = (tokenizedData: any): string => tokenizedData?.numberPart || ''
+const getTokenizedCardNumberMask = (tokenizedData: TokenizedCard): string =>
+  tokenizedData?.numberPart || ''
 
-const getTokenizedId = (tokenizedData: any) => tokenizedData?.id || ''
+const getTokenizedId = (tokenizedData: TokenizedCard) => tokenizedData?.id || ''
 
 export const cardGetters = {
   getCardId,
@@ -49,7 +50,7 @@ export const cardGetters = {
   getExpireMonth,
   getExpireYear,
   getCardType,
-  getIsDefaultPaymentMethod,
+  getIsDefaultPayMethod,
   getPaymentType,
   getIsCardInfoSaved,
   getExpireDate,

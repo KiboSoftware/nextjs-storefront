@@ -32,7 +32,6 @@ const getSavedCardsAndBillingDetails = (
       cardInfo: {
         ...cardGetters.getCardDetails(card as SavedCard),
         isCardInfoSaved: true,
-        isDefaultPayMethod: card.isDefaultPayMethod as boolean,
         paymentType: PaymentType.CREDITCARD,
       },
       billingAddressInfo: {

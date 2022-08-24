@@ -17,7 +17,7 @@ import {
   useDeleteCustomerAddressMutation,
 } from '@/hooks'
 import { AddressType } from '@/lib/constants'
-import { accountDetailsGetters, cardGetters } from '@/lib/getters'
+import { accountDetailsGetters, billingGetters, cardGetters } from '@/lib/getters'
 import { tokenizeCreditCardPayment } from '@/lib/helpers'
 import type {
   Address,
@@ -30,6 +30,7 @@ import type {
 
 import type {
   CardCollection,
+  CrAddress,
   CustomerAccount,
   CustomerContactCollection,
   CustomerContactInput,
@@ -332,15 +333,9 @@ const PaymentMethod = (props: PaymentMethodProps) => {
                   expireMonth={cardGetters.getExpireMonth(each.cardInfo)}
                   expireYear={cardGetters.getExpireYear(each.cardInfo)}
                   cardType={cardGetters.getCardType(each.cardInfo)}
-                  address1={each?.billingAddressInfo?.contact?.address?.address1 as string}
-                  address2={each?.billingAddressInfo?.contact?.address?.address2 as string}
-                  cityOrTown={each?.billingAddressInfo?.contact?.address?.cityOrTown as string}
-                  postalOrZipCode={
-                    each?.billingAddressInfo?.contact?.address?.postalOrZipCode as string
-                  }
-                  stateOrProvince={
-                    each?.billingAddressInfo?.contact?.address?.stateOrProvince as string
-                  }
+                  {...billingGetters.getAddress(
+                    each?.billingAddressInfo?.contact?.address as CrAddress
+                  )}
                 />
                 <Stack gap={1}>
                   <Typography
