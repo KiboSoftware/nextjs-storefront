@@ -3,19 +3,24 @@ import { useMutation, useQueryClient } from 'react-query'
 import { makeGraphQLClient } from '@/lib/gql/client'
 import { UpdateUserDataKeys } from '@/lib/react-query/queryKeys'
 import { updateCustomerData } from '@/lib/gql/mutations/user/updateAccout'
-import { buildUpdateUserData } from '@/lib/helpers/buildUpdateUserData'
 
 export interface UpdateCustomerDataInput {
+  id: number
   firstName: string
   lastName: string
   emailAddress: string
 }
 
-const updateUserDetails = async (props: UpdateCustomerDataInput) => {
-  const client = makeGraphQLClient()
-  const { firstName, lastName, emailAddress } = props
+interface UpdateCustomerDataProps {
+  accountId: number
+  customerAccountInput: UpdateCustomerDataInput
+}
 
-  const variables = { firstName, lastName, emailAddress }
+const updateUserDetails = async (props: UpdateCustomerDataProps) => {
+  const client = makeGraphQLClient()
+  const { accountId, customerAccountInput } = props
+
+  const variables = { accountId, customerAccountInput }
 
   const response = await client.request({
     document: updateCustomerData,
