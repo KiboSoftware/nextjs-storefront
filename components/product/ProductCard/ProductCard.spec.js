@@ -115,13 +115,13 @@ describe('[components] Product Card Component', () => {
 
       const inWishlistIcon = screen.getByTestId('FavoriteRoundedIcon')
       const notInWishlistIcon = screen.queryByTestId('FavoriteBorderRoundedIcon')
-      const shopNowButton = screen.getByRole('link', {
+      const shopNowButton = screen.getAllByRole('link', {
         name: /shop-now/i,
       })
 
       expect(inWishlistIcon).toBeVisible()
       expect(notInWishlistIcon).not.toBeInTheDocument()
-      expect(shopNowButton).toBeVisible()
+      expect(shopNowButton[0]).toBeVisible()
     })
 
     it('should render Product Card without in wishlist icon and shop now button', async () => {

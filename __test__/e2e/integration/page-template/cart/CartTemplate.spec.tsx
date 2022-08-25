@@ -22,6 +22,13 @@ const { Common } = composeStories(stories)
 const mockCartItems = (cartMock.currentCart.items || []) as CartItem[]
 const mockFulfillmentOptions = fulfillmentOptionsMock || []
 
+jest.mock(
+  'next/link',
+  () =>
+    ({ children }: any) =>
+      children
+)
+
 const setup = (params?: CartTemplateProps) => {
   const user = userEvent.setup()
   const router = createMockRouter()

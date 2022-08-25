@@ -14,6 +14,13 @@ useRouter.mockImplementation(() => ({
   push,
 }))
 
+jest.mock(
+  'next/link',
+  () =>
+    ({ children }) =>
+      children
+)
+
 describe('[component] KiboHeader component', () => {
   it('should render the component', () => {
     render(<Common {...Common.args} />)

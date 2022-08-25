@@ -1,9 +1,19 @@
 import React, { useState, useEffect } from 'react'
 
-import { Box, Divider, ListItem, Typography, Toolbar, styled, Link, Container } from '@mui/material'
+import {
+  Box,
+  Divider,
+  ListItem,
+  Typography,
+  Toolbar,
+  styled,
+  Link as MuiLink,
+  Container,
+} from '@mui/material'
 import { usePopupState, bindHover, bindPopover } from 'material-ui-popup-state/hooks'
 import HoverPopover from 'material-ui-popup-state/HoverPopover'
 import { useTranslation } from 'next-i18next'
+import Link from 'next/link'
 
 import { KiboImage } from '@/components/common'
 import { MegaMenuItem } from '@/components/layout'
@@ -83,6 +93,10 @@ const MegaMenuCategory = (props: MegaMenuCategoryProps) => {
     popupId: category?.content?.name,
   })
 
+  const closeBackDrop = () => {
+    popupState.close()
+  }
+
   useEffect(() => {
     childrenCategories.length && onBackdropToggle(popupState.isOpen)
   }, [childrenCategories.length, popupState.isOpen, onBackdropToggle])
@@ -94,12 +108,10 @@ const MegaMenuCategory = (props: MegaMenuCategoryProps) => {
         onMouseOver={() => setActiveCategory(category?.categoryCode || '')}
         selected={popupState.isOpen && category?.categoryCode === activeCategory}
       >
-        <Link
-          href={getCategoryLink(category?.categoryCode as string)}
-          underline="none"
-          color="text.primary"
-        >
-          {category?.content?.name}
+        <Link href={getCategoryLink(category?.categoryCode as string)} passHref>
+          <MuiLink underline="none" color="text.primary">
+            {category?.content?.name}
+          </MuiLink>
         </Link>
       </ListItem>
       {childrenCategories.length > 0 && (
@@ -124,6 +136,7 @@ const MegaMenuCategory = (props: MegaMenuCategoryProps) => {
                     title={cat?.content?.name as string}
                     categoryChildren={cat?.childrenCategories as PrCategory[]}
                     categoryCode={cat?.categoryCode as string}
+                    onBackDropClose={closeBackDrop}
                   />
                 )
               })}

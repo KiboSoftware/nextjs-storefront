@@ -1,9 +1,18 @@
 import React, { useEffect, useState } from 'react'
 
 import { Add, ChevronLeft, Remove } from '@mui/icons-material'
-import { Box, Button, FormLabel, Link, Typography, SxProps, Divider } from '@mui/material'
+import {
+  Box,
+  Button,
+  FormLabel,
+  Link as MuiLink,
+  Typography,
+  SxProps,
+  Divider,
+} from '@mui/material'
 import { Theme } from '@mui/material/styles'
 import { useTranslation } from 'next-i18next'
+import Link from 'next/link'
 
 import { uiHelpers } from '@/lib/helpers'
 import type { BreadCrumb as BreadCrumbType } from '@/lib/types'
@@ -98,18 +107,13 @@ const CategoryFacet = (props: CategoryFacetProps) => {
       </Typography>
       <Box sx={styles.childrenCategories}>
         {filteredValues?.map((child) => (
-          <Link
-            key={child?.value}
-            underline="none"
-            variant="body2"
-            color="text.primary"
-            sx={styles.link}
-            href={getCategoryLink(child?.value as string)}
-          >
-            {child?.label}
-            <FormLabel data-testid="count" aria-label={t('count')} sx={{ ...styles.formLabel }}>
-              ({child?.count})
-            </FormLabel>
+          <Link key={child?.value} href={getCategoryLink(child?.value as string)} passHref>
+            <MuiLink underline="none" variant="body2" color="text.primary" sx={styles.link}>
+              {child?.label}
+              <FormLabel data-testid="count" aria-label={t('count')} sx={{ ...styles.formLabel }}>
+                ({child?.count})
+              </FormLabel>
+            </MuiLink>
           </Link>
         ))}
         {isViewMoreVisible && (
@@ -128,13 +132,11 @@ const CategoryFacet = (props: CategoryFacetProps) => {
           </Button>
         )}
         {breadcrumbs?.length >= 1 && (
-          <Link
-            href={breadcrumbs[breadcrumbs?.length - 2]?.link || '/'}
-            aria-label={t('common:back')}
-            sx={{ ...styles.backButton }}
-          >
-            <ChevronLeft />
-            {t('common:back')}
+          <Link href={breadcrumbs[breadcrumbs?.length - 2]?.link || '/'} passHref>
+            <MuiLink aria-label={t('common:back')} sx={{ ...styles.backButton }}>
+              <ChevronLeft />
+              {t('common:back')}
+            </MuiLink>
           </Link>
         )}
       </Box>

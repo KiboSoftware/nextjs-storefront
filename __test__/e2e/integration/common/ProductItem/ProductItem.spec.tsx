@@ -7,6 +7,13 @@ import * as stories from '@/components/common/ProductItem/ProductItem.stories'
 
 const { Common } = composeStories(stories)
 
+jest.mock(
+  'next/link',
+  () =>
+    ({ children }: any) =>
+      children
+)
+
 describe('[component] - ProductItem Integration', () => {
   const setup = () => {
     render(<Common {...Common.args} />)

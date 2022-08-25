@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { ReactNode } from 'react'
 
 import { composeStories } from '@storybook/testing-react'
 import { render, screen } from '@testing-library/react'
@@ -13,6 +13,13 @@ import { checkoutGetters } from '@/lib/getters'
 import type { Order } from '@/lib/gql/types'
 
 const { Common } = composeStories(stories)
+
+jest.mock(
+  'next/link',
+  () =>
+    ({ children }: any) =>
+      children
+)
 
 describe('[components] ReviewStep', () => {
   const setup = (isAuthenticated = false) => {
