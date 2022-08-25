@@ -7,12 +7,16 @@ import { ThemeProvider } from '@mui/material/styles'
 import { appWithTranslation } from 'next-i18next'
 import { AppProps } from 'next/app'
 import Head from 'next/head'
-import { Hydrate, QueryClientProvider } from 'react-query'
 import 'next-i18next.config'
+import Router from 'next/router'
+import NProgress from 'nprogress'
+import { Hydrate, QueryClientProvider } from 'react-query'
+import '../styles/nprogress.css'
 
 import createEmotionCache from '../lib/createEmotionCache'
 import { generateQueryClient } from '../lib/react-query/queryClient'
 import theme from '../styles/theme'
+import { GlobalFetchingIndicator } from '@/components/common'
 import { KiboHeader } from '@/components/layout'
 import { AuthContextProvider, ModalContextProvider, DialogRoot } from '@/context'
 
@@ -22,6 +26,10 @@ const clientSideEmotionCache = createEmotionCache()
 interface KiboAppProps extends AppProps {
   emotionCache?: EmotionCache
 }
+NProgress.configure({ showSpinner: false })
+Router.events.on('routeChangeStart', () => NProgress.start())
+Router.events.on('routeChangeComplete', () => NProgress.done())
+Router.events.on('routeChangeError', () => NProgress.done())
 
 const App = (props: KiboAppProps) => {
   const { Component, emotionCache = clientSideEmotionCache, pageProps } = props
@@ -40,6 +48,7 @@ const App = (props: KiboAppProps) => {
           <ModalContextProvider>
             <AuthContextProvider>
               <Hydrate state={pageProps.dehydratedState}>
+                <GlobalFetchingIndicator />
                 <KiboHeader
                   navLinks={[
                     {

@@ -51,7 +51,7 @@ const styles = {
   },
   titleStyle: {
     display: 'inline-block',
-    veriticalAlign: 'middle',
+    verticalAlign: 'middle',
   },
 }
 
@@ -65,8 +65,11 @@ const ContentTiles = (props: TileProps) => {
       <KiboImage
         src={imgSource}
         width={'100%'}
-        height={mobileView ? '150px' : '200px'}
+        height={mobileView ? '150px' : '400px'}
         objectFit="cover"
+        objectPosition={'bottom'}
+        quality={100}
+        unoptimized
       />
       <Box sx={styles.boxStyle}>
         <Box sx={styles.titleStyle}>
@@ -117,6 +120,7 @@ const ContentTile = ({ largeTileProps, smallTileProps }: ContentTileProps) => {
           gap: '30px',
           flexDirection: mobileView ? 'column' : 'row',
           marginBottom: '30px',
+          // minHeight: 300,
         }}
       >
         {largeTileProps?.map((tile: TileProps, index) => (

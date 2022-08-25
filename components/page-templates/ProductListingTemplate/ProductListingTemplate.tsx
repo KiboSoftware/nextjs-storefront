@@ -326,6 +326,8 @@ const ProductListingTemplate = (props: ProductListingTemplateProps) => {
                       <Grid
                         key={productGetters.getProductId(product)}
                         item
+                        display={'flex'}
+                        justifyContent="center"
                         lg={3}
                         md={4}
                         sm={4}
@@ -358,7 +360,16 @@ const ProductListingTemplate = (props: ProductListingTemplateProps) => {
                 <Grid container sx={{ flexWrap: 'wrap' }}>
                   {Array.from(Array(16)).map((_, ind) => {
                     return (
-                      <Grid key={ind} item lg={3} md={4} sm={4} xs={6}>
+                      <Grid
+                        key={ind}
+                        display={'flex'}
+                        justifyContent="center"
+                        item
+                        lg={3}
+                        md={4}
+                        sm={4}
+                        xs={6}
+                      >
                         <ProductCard isLoading={isLoading} link="/" />
                       </Grid>
                     )

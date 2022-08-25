@@ -342,13 +342,15 @@ export default function KiboHeader(props: KiboHeaderProps) {
   }
 
   return (
-    <Grid container>
-      <Grid
-        item
-        xs={12}
-        position={sticky ? 'sticky' : 'relative'}
-        sx={{ ...KiboHeaderStyles.appBarContainer }}
-      >
+    <Grid
+      container
+      sx={{
+        position: sticky ? 'sticky' : 'relative',
+        top: 0,
+        zIndex: (theme) => theme.zIndex.appBar,
+      }}
+    >
+      <Grid item xs={12} sx={{ ...KiboHeaderStyles.appBarContainer }}>
         <AppBar
           position={sticky ? 'sticky' : 'static'}
           color="inherit"

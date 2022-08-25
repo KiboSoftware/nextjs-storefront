@@ -106,7 +106,7 @@ const CartItem = (props: CartItemProps) => {
   const { getProductLink } = uiHelpers()
 
   const handleDelete = (cartItemId: string) => onCartItemDelete(cartItemId)
-  const hadleQuantityUpdate = (quantity: number) =>
+  const handleQuantityUpdate = (quantity: number) =>
     onQuantityUpdate(cartItem?.id as string, quantity)
   const handleActionSelection = () => onCartItemActionSelection()
   const handleFulfillmentOptionChange = (fulfillmentMethod: string, cartItemId: string) =>
@@ -146,9 +146,9 @@ const CartItem = (props: CartItemProps) => {
                     quantity={cartItemQuantity}
                     label={t('qty')}
                     maxQuantity={maxQuantity}
-                    onIncrease={() => hadleQuantityUpdate(cartItemQuantity + 1)}
-                    onDecrease={() => hadleQuantityUpdate(cartItemQuantity - 1)}
-                    onQuantityUpdate={(q) => hadleQuantityUpdate(q)}
+                    onIncrease={() => handleQuantityUpdate(cartItemQuantity + 1)}
+                    onDecrease={() => handleQuantityUpdate(cartItemQuantity - 1)}
+                    onQuantityUpdate={(q) => handleQuantityUpdate(q)}
                   />
                 </Box>
               </ProductItem>

@@ -49,6 +49,10 @@ const styles = {
       md: 202,
     },
     boxShadow: 'none',
+    cursor: 'pointer',
+    '&:hover': {
+      boxShadow: '0 2px 16px 4px rgb(40 44 63 / 7%)',
+    },
   },
 }
 
@@ -92,64 +96,54 @@ const ProductCard = (props: ProductCardProps) => {
     return (
       <Link href={link} passHref data-testid="product-card-link">
         <Card sx={styles.cardRoot} data-testid="product-card">
-          <CardActionArea>
-            <CardMedia
-              sx={{
-                width: '100%',
-                height: imageHeight,
-                position: 'relative',
-              }}
-            >
-              <Box
-                sx={{ position: 'absolute', right: '0', zIndex: 2 }}
-                onClick={handleAddOrRemoveWishlistItem}
-              >
-                {isInWishlist ? (
-                  <FavoriteRoundedIcon sx={{ color: 'red.900' }} />
-                ) : (
-                  <FavoriteBorderRoundedIcon sx={{ color: 'grey.600', marginRight: '14px' }} />
-                )}
-              </Box>
-
-              <Box sx={{ zIndex: 1 }}>
-                <KiboImage
-                  src={imageUrl || placeholderImageUrl}
-                  alt={imageUrl ? imageAltText : 'no-image-alt'}
-                  layout="fill"
-                  objectFit="contain"
-                  data-testid="product-image"
-                  errorimage={placeholderImageUrl}
-                />
-              </Box>
-            </CardMedia>
-            <Box flexDirection="column" m={2} mt={1}>
-              <Typography variant="body1" gutterBottom color="text.primary">
-                {title}
-              </Typography>
-              <Price price={price} salePrice={salePrice} variant="body1" />
-              <Rating
-                name="read-only"
-                value={rating}
-                precision={0.5}
-                readOnly
-                size="small"
-                icon={<StarRounded color="primary" data-testid="filled-rating" />}
-                emptyIcon={<StarRounded data-testid="empty-rating" />}
-                data-testid="product-rating"
+          <Box textAlign={'right'} width="100%" onClick={handleAddOrRemoveWishlistItem}>
+            {isInWishlist ? (
+              <FavoriteRoundedIcon sx={{ color: 'red.900' }} />
+            ) : (
+              <FavoriteBorderRoundedIcon sx={{ color: 'grey.600' }} />
+            )}
+          </Box>
+          <CardMedia
+            sx={{
+              width: '100%',
+              height: imageHeight,
+              position: 'relative',
+            }}
+          >
+            <Box sx={{ zIndex: 1 }}>
+              <KiboImage
+                src={imageUrl || placeholderImageUrl}
+                alt={imageUrl ? imageAltText : 'no-image-alt'}
+                layout="fill"
+                objectFit="contain"
+                data-testid="product-image"
+                errorimage={placeholderImageUrl}
               />
             </Box>
-            {isShopNow && (
-              <Link href={link} passHref>
-                <Button
-                  variant="contained"
-                  color="primary"
-                  sx={{ width: '100%', marginTop: '49px' }}
-                >
-                  {t('shop-now')}
-                </Button>
-              </Link>
-            )}
-          </CardActionArea>
+          </CardMedia>
+          <Box flexDirection="column" m={2} mt={1}>
+            <Typography variant="body1" gutterBottom color="text.primary">
+              {title}
+            </Typography>
+            <Price price={price} salePrice={salePrice} variant="body1" />
+            <Rating
+              name="read-only"
+              value={rating}
+              precision={0.5}
+              readOnly
+              size="small"
+              icon={<StarRounded color="primary" data-testid="filled-rating" />}
+              emptyIcon={<StarRounded data-testid="empty-rating" />}
+              data-testid="product-rating"
+            />
+          </Box>
+          {isShopNow && (
+            <Link href={link} passHref>
+              <Button variant="contained" color="primary" sx={{ width: '100%', marginTop: '49px' }}>
+                {t('shop-now')}
+              </Button>
+            </Link>
+          )}
         </Card>
       </Link>
     )
