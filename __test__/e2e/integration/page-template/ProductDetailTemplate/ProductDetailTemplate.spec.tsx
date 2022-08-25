@@ -170,7 +170,7 @@ describe('[component] - ProductDetailTemplate integration', () => {
     const { user } = setup()
 
     const shipRadio = screen.getByRole('radio', {
-      name: new RegExp(`${mockFulfillmentOptions[0].shortName}`),
+      name: new RegExp(`${mockFulfillmentOptions[0]?.shortName}`),
     })
 
     await user.click(shipRadio)
@@ -214,7 +214,7 @@ describe('[component] - ProductDetailTemplate integration', () => {
     expect(addToCartButton).toBeDisabled()
   })
 
-  it('should dispaly login when add to wishlist button clicks ', async () => {
+  it('should display login when add to wishlist button clicks ', async () => {
     mockIsAuthenticated = false
     const { user } = setup()
 

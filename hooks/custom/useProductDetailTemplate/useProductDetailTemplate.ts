@@ -11,9 +11,9 @@ interface UseProductDetailTemplateProps {
   purchaseLocation: Location
 }
 
-interface SelectedFulfillmentOption {
+interface SelectedFulfillmentOption<T extends Location | LocationCustom> {
   method: string
-  location?: LocationCustom
+  location?: T
 }
 
 export const useProductDetailTemplate = (props: UseProductDetailTemplateProps) => {
@@ -23,19 +23,20 @@ export const useProductDetailTemplate = (props: UseProductDetailTemplateProps) =
     ProductOptionSelectionInput[]
   >([])
   const [quantity, setQuantity] = useState<number>(1)
-  const [selectedFulfillmentOption, setSelectedFulfillmentOption] =
-    useState<SelectedFulfillmentOption>({
-      method: '',
-      location: {},
-    })
+  const [selectedFulfillmentOption, setSelectedFulfillmentOption] = useState<
+    SelectedFulfillmentOption<Location>
+  >({
+    method: '',
+    location: {},
+  })
 
   useEffect(() => {
-    if (purchaseLocation?.name !== selectedFulfillmentOption?.location?.name) {
+    if (purchaseLocation?.name || selectedFulfillmentOption?.location?.name) {
       setSelectedFulfillmentOption({
         method: selectedFulfillmentOption?.method || '',
-        location: {
-          name: selectedFulfillmentOption?.location?.name || (purchaseLocation?.name as string),
-        },
+        location: selectedFulfillmentOption.location?.code
+          ? selectedFulfillmentOption?.location
+          : purchaseLocation,
       })
     }
   }, [purchaseLocation?.name, selectedFulfillmentOption?.location?.name])

@@ -6,7 +6,7 @@ import userEvent from '@testing-library/user-event'
 
 import * as stories from './StoreDetails.stories' // import all stories from the stories file
 
-const { Common } = composeStories(stories)
+const { Common, WithInventory } = composeStories(stories)
 
 const AddressCardMock = () => <div data-testid="address-card-mock" />
 jest.mock('@/components/common/AddressCard/AddressCard', () => AddressCardMock)
@@ -26,11 +26,23 @@ describe('[components] Store Details', () => {
     expect(screen.getByText(location?.name || '')).toBeVisible()
     expect(screen.getByText(location?.streetAddress?.trim() || '')).toBeVisible()
     expect(screen.getByText(location?.cityState?.trim() || '')).toBeVisible()
-    expect(screen.getByText(/available/i)).toBeVisible()
+    expect(screen.getByText(/available-for-pickup/i)).toBeVisible()
     expect(screen.getByTestId('collapsible')).toBeVisible()
     expect(screen.getByTestId('KeyboardArrowDownIcon')).toBeVisible()
     expect(screen.queryByTestId('KeyboardArrowUpIcon')).not.toBeInTheDocument()
     expect(screen.queryByText(/get-directions/i)).not.toBeInTheDocument()
+  })
+
+  it('should render component with inventory', () => {
+    render(<WithInventory {...WithInventory.args} />)
+
+    const location = WithInventory.args?.location
+    const inventory = WithInventory.args?.inventory
+
+    expect(screen.getByText(location?.name || '')).toBeVisible()
+    expect(screen.getByText(location?.streetAddress?.trim() || '')).toBeVisible()
+    expect(screen.getByText(location?.cityState?.trim() || '')).toBeVisible()
+    expect(screen.getByText(`${inventory?.stockAvailable} available`)).toBeVisible()
   })
 
   it('should expand store info', async () => {
@@ -52,7 +64,7 @@ describe('[components] Store Details', () => {
     expect(screen.queryByTestId('KeyboardArrowDownIcon')).not.toBeInTheDocument()
   })
 
-  it('should collase store info', async () => {
+  it('should collapse store info', async () => {
     const { user } = setup()
 
     const collapsible = screen.getByTestId('collapsible')

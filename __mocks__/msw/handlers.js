@@ -1,6 +1,6 @@
 import { graphql, rest } from 'msw'
 
-import { orderMock, shippingRateMock } from '../stories'
+import { orderMock, locationInventoryCollectionMock, shippingRateMock } from '../stories'
 import { cartItemMock } from '../stories/cartItemMock'
 import { cartCouponMock, cartMock } from '../stories/cartMock'
 import { categoryTreeDataMock } from '../stories/categoryTreeDataMock'
@@ -66,7 +66,7 @@ export const checkoutHandlers = [
     )
   }),
 
-  // Reivew Step
+  // Review Step
   graphql.mutation('createOrderAction', (_req, res, ctx) => {
     return res(ctx.data({ createOrderAction: orderMock.checkout }))
   }),
@@ -240,6 +240,12 @@ export const orderHandlers = [
   }),
 ]
 
+export const inventoryHandlers = [
+  graphql.query('productLocationInventory', (_req, res, ctx) => {
+    return res(ctx.data(locationInventoryCollectionMock))
+  }),
+]
+
 export const handlers = [
   ...checkoutHandlers,
   ...searchSuggestionHandlers,
@@ -252,4 +258,5 @@ export const handlers = [
   ...wishlistHandlers,
   ...accountHandlers,
   ...orderHandlers,
+  ...inventoryHandlers,
 ]

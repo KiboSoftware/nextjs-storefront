@@ -29,6 +29,7 @@ import {
   useWishlist,
   useProductLocationInventory,
 } from '@/hooks'
+import { FulfillmentOptions as FulfillmentOptionsConstant } from '@/lib/constants'
 import { productGetters } from '@/lib/getters'
 import type { ProductCustom, BreadCrumb, PriceRange, LocationCustom } from '@/lib/types'
 
@@ -99,8 +100,8 @@ const ProductDetailTemplate = (props: ProductDetailTemplateProps) => {
   })
   const quantityLeft = productGetters.getAvailableItemCount(
     product,
-    productInventory.data,
-    selectedFulfillmentOption.method
+    productInventory?.data,
+    selectedFulfillmentOption?.method
   )
 
   const isProductInWishlist = checkProductInWishlist({
@@ -117,7 +118,7 @@ const ProductDetailTemplate = (props: ProductDetailTemplateProps) => {
           variationProductCode,
           fulfillmentMethod,
           options: updatedShopperEnteredValues,
-          purchaseLocationCode: selectedFulfillmentOption?.location?.code,
+          purchaseLocationCode: selectedFulfillmentOption?.location?.code as string,
         },
         quantity,
       })
@@ -136,7 +137,11 @@ const ProductDetailTemplate = (props: ProductDetailTemplateProps) => {
   }
 
   const handleFulfillmentOptionChange = (value: string) => {
-    if (selectedFulfillmentOption?.location?.name || purchaseLocation.code) {
+    if (
+      value === FulfillmentOptionsConstant.SHIP ||
+      selectedFulfillmentOption?.location?.name ||
+      purchaseLocation.code
+    ) {
       setSelectedFulfillmentOption({
         ...selectedFulfillmentOption,
         method: value,
@@ -156,7 +161,7 @@ const ProductDetailTemplate = (props: ProductDetailTemplateProps) => {
         quantity: quantity,
         handleSetStore: async (selectedStore: LocationCustom) => {
           setSelectedFulfillmentOption({
-            method: 'Pickup',
+            method: FulfillmentOptionsConstant.PICKUP,
             location: selectedStore,
           })
           closeModal()
@@ -325,7 +330,8 @@ const ProductDetailTemplate = (props: ProductDetailTemplateProps) => {
 
           <Box pt={2} display="flex" sx={{ justifyContent: 'space-between' }}>
             <Typography fontWeight="600" variant="body2">
-              {`${quantityLeft} ${t('item-left')}`}
+              {selectedFulfillmentOption?.method === FulfillmentOptionsConstant.PICKUP &&
+                `${quantityLeft} ${t('item-left')}`}
             </Typography>
             <Link
               color="inherit"

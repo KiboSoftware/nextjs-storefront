@@ -1,6 +1,6 @@
 export * from './shippingRateMock'
 export * from './orderMock'
-export * from './ProductLocationInventoryMock'
+export * from './LocationInventoryCollectionMock'
 export * from './locationCollectionMock'
 export * from './ProductCustomMock'
 export * from './billingInfoInputMock'

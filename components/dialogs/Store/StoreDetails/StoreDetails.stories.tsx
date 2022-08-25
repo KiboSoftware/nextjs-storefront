@@ -3,7 +3,7 @@ import React from 'react'
 import { ComponentStory, ComponentMeta } from '@storybook/react'
 
 import StoreDetails from './StoreDetails'
-import { locationCollectionMock, productLocationInventoryMock } from '@/__mocks__/stories'
+import { locationCollectionMock, locationInventoryCollectionMock } from '@/__mocks__/stories'
 import { storeLocationGetters } from '@/lib/getters/storeLocationGetters'
 
 export default {
@@ -26,7 +26,7 @@ WithInventory.args = {
   location: storeLocationGetters.getLocations(locationCollectionMock?.spLocations?.items || [])[0],
   showProductAndInventory: true,
   inventory:
-    (productLocationInventoryMock?.productLocationInventory?.items &&
-      productLocationInventoryMock?.productLocationInventory?.items[0]) ||
+    (locationInventoryCollectionMock?.productLocationInventory?.items &&
+      locationInventoryCollectionMock?.productLocationInventory?.items[0]) ||
     undefined,
 }

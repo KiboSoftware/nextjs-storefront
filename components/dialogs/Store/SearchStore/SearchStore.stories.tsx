@@ -6,7 +6,7 @@ import SearchStore from './SearchStore'
 import {
   locationCollectionMock,
   ProductCustomMock,
-  productLocationInventoryMock,
+  locationInventoryCollectionMock,
 } from '@/__mocks__/stories'
 
 export default {
@@ -38,7 +38,7 @@ WithInventory.args = {
   spLocations: locationList || [],
   showProductAndInventory: true,
   product: ProductCustomMock,
-  locationInventory: productLocationInventoryMock?.productLocationInventory?.items || [],
+  locationInventory: locationInventoryCollectionMock?.productLocationInventory?.items || [],
   searchTerm: '',
   initialState: true,
   selectedStore: 'RICHMOND',

@@ -1,5 +1,5 @@
 import type { LocationInventoryCollection } from '@/lib/gql/types'
-export const productLocationInventoryMock: {
+export const locationInventoryCollectionMock: {
   productLocationInventory: LocationInventoryCollection
 } = {
   productLocationInventory: {
