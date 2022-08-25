@@ -1,5 +1,3 @@
-/** @format */
-
 import * as React from 'react'
 
 import { Box, Typography, useTheme, useMediaQuery, Grid, Link as MuiLink } from '@mui/material'
@@ -11,6 +9,8 @@ export interface TileProps {
   imgSource: string
   title: string
   subtitle: string
+  width: number
+  height: number
   link1: { title: string; url: string }
   link2: { title: string; url: string }
   link3: { title: string; url: string }
@@ -59,18 +59,10 @@ const ContentTiles = (props: TileProps) => {
   const kiboTheme = useTheme()
   const mobileView = useMediaQuery(kiboTheme.breakpoints.down('md'))
 
-  const { imgSource, title, subtitle, link1, link2, link3 } = props
+  const { imgSource, title, subtitle, link1, link2, link3, width, height } = props
   return (
     <Box sx={styles.mainStyle}>
-      <KiboImage
-        src={imgSource}
-        width={'100%'}
-        height={mobileView ? '150px' : '400px'}
-        objectFit="cover"
-        objectPosition={'bottom'}
-        quality={100}
-        unoptimized
-      />
+      <KiboImage src={imgSource} width={width} height={height} />
       <Box sx={styles.boxStyle}>
         <Box sx={styles.titleStyle}>
           <Typography variant="h2">{title}</Typography>
@@ -120,7 +112,6 @@ const ContentTile = ({ largeTileProps, smallTileProps }: ContentTileProps) => {
           gap: '30px',
           flexDirection: mobileView ? 'column' : 'row',
           marginBottom: '30px',
-          // minHeight: 300,
         }}
       >
         {largeTileProps?.map((tile: TileProps, index) => (
@@ -129,6 +120,8 @@ const ContentTile = ({ largeTileProps, smallTileProps }: ContentTileProps) => {
             imgSource={tile.imgSource}
             title={tile.title}
             subtitle={tile.subtitle}
+            width={1920}
+            height={1080}
             link1={tile.link1}
             link2={tile.link2}
             link3={tile.link3}
@@ -143,6 +136,8 @@ const ContentTile = ({ largeTileProps, smallTileProps }: ContentTileProps) => {
                 imgSource={tile.imgSource}
                 title={tile.title}
                 subtitle={tile.subtitle}
+                width={1080}
+                height={1350}
                 link1={tile.link1}
                 link2={tile.link2}
                 link3={tile.link3}
