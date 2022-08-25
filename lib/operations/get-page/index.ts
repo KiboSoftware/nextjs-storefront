@@ -17,6 +17,6 @@ export const getPage = async ({
     referenceFieldPath,
   })
   return {
-    components: response[0][0]?.page_components,
+    components: response[0][0]?.page_components || [],
   }
 }

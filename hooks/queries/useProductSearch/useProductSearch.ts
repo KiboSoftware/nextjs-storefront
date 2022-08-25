@@ -27,7 +27,7 @@ const fetchProductSearch = async (searchParams: CategorySearchParams) => {
 
 export const useProductSearch = (
   searchParams: CategorySearchParams,
-  initialData: ProductSearchResult
+  initialData?: ProductSearchResult
 ): UseProductSearchResponse => {
   const { data, isLoading, isSuccess, isFetching } = useQuery(
     productSearchResultKeys.searchParams(searchParams),

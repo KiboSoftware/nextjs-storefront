@@ -3,6 +3,7 @@ import { render, within, screen, cleanup } from '@testing-library/react'
 import '@testing-library/jest-dom'
 
 import * as stories from './ProductDetailTemplate.stories' // import all stories from the stories file
+import { productSearchResultMock } from '@/__mocks__/stories/productSearchResultMock'
 import { userResponseMock } from '@/__mocks__/stories/userMock'
 import { wishlistMock } from '@/__mocks__/stories/wishlistMock'
 
@@ -54,6 +55,7 @@ const mockWishlist = wishlistMock?.items[0]
 const { id, name, customerAccountId } = mockWishlist
 const mockCreateWishlist = { createWishlist: { id, name, customerAccountId, items: [] } }
 const mockUser = userResponseMock
+const mockProductSearch = productSearchResultMock
 jest.mock('@/hooks', () => ({
   useProductDetailTemplate: jest.fn(() => {
     return {
@@ -82,6 +84,7 @@ jest.mock('@/hooks', () => ({
   useRemoveWishlistItemMutation: jest.fn(() => true),
   usePurchaseLocation: jest.fn(() => ({})),
   useModalContext: jest.fn(() => ({})),
+  useProductSearch: jest.fn(() => mockProductSearch),
 }))
 
 const setup = () => {

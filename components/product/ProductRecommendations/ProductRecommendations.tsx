@@ -4,21 +4,24 @@ import { Box, Grid, Typography } from '@mui/material'
 import { useTranslation } from 'next-i18next'
 
 import { ProductCard } from '@/components/product'
+import { useProductSearch } from '@/hooks'
 import { productGetters } from '@/lib/getters'
 import { uiHelpers } from '@/lib/helpers'
+import type { ProductCodes } from '@/lib/types'
 
 import type { Product } from '@/lib/gql/types'
 
 interface ProductRecommendationsProps {
   title?: string
-  products?: Product[]
+  productCodes?: ProductCodes[]
 }
 
-// Chandradeepta Laha: Hardcoded Component. stories and testing should be added later.
 const ProductRecommendations = (props: ProductRecommendationsProps) => {
-  const { title, products } = props
+  const { title, productCodes } = props
   const { t } = useTranslation('common')
   const { getProductLink } = uiHelpers()
+  const { data: productSearchResult } = useProductSearch({ productCodes })
+  const products = productSearchResult?.items as Product[]
 
   return (
     <Grid item xs={12} sx={{ backgroundColor: 'grey.100', p: { xs: 1, md: 5 }, marginY: 2 }}>
@@ -31,7 +34,7 @@ const ProductRecommendations = (props: ProductRecommendationsProps) => {
       >
         {products?.map((product) => {
           return (
-            <Grid item xs={6} md={2} key={product.productCode}>
+            <Grid item xs={6} md={2} key={product?.productCode}>
               <ProductCard
                 imageUrl={
                   productGetters.getCoverImage(product) &&

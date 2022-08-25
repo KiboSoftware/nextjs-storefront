@@ -95,7 +95,7 @@ export const categoryHandlers = [
 export const productSearchHandlers = [
   // useProductSearch
   graphql.query('ProductSearch', (_req, res, ctx) => {
-    return res(ctx.data(productSearchResultMock))
+    return res(ctx.data({ products: productSearchResultMock }))
   }),
 ]
 export const userHandlers = [

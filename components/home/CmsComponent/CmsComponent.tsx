@@ -3,6 +3,7 @@ import React from 'react'
 import KiboHeroCarousel from '../Carousel/KiboHeroCarousel'
 import ContentTile from '../ContentTile/ContentTile'
 import SmallBanner from '../SmallBanner/SmallBanner'
+import { ProductRecommendations } from '@/components/product'
 
 interface CmsComponentProps {
   content: any
@@ -90,6 +91,24 @@ const DefaultComponentMap = {
     mapDataToProps: (data: { small_promo_blocks: any[] }) => {
       return {
         smallTileProps: data?.small_promo_blocks?.map((item) => promoBlocksData(item)),
+      }
+    },
+  },
+  recommendations: {
+    component: ProductRecommendations,
+    mapDataToProps: (data: { product_recommendations: any }) => {
+      return {
+        title: 'Product Recommendations',
+        productCodes: data?.product_recommendations,
+      }
+    },
+  },
+  customers_also_bought: {
+    component: ProductRecommendations,
+    mapDataToProps: (data: { customer_also_bought: any }) => {
+      return {
+        title: 'Customers Also Bought',
+        productCodes: data?.customer_also_bought,
       }
     },
   },

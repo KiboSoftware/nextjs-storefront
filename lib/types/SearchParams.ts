@@ -1,6 +1,6 @@
 import type { GeoCoords } from './GeoCoords'
 
-interface ProductCodes {
+export interface ProductCodes {
   productCode: string
 }
 export interface CategorySearchParams {

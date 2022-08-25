@@ -12,13 +12,13 @@ import QuantitySelector from '@/components/common/QuantitySelector/QuantitySelec
 import KiboBreadcrumbs from '@/components/core/Breadcrumbs/KiboBreadcrumbs'
 import ImageGallery from '@/components/core/ImageGallery/ImageGallery'
 import { AddToCartDialog, StoreLocatorDialog } from '@/components/dialogs'
+import CmsComponent from '@/components/home/CmsComponent/CmsComponent'
 import {
   ColorSelector,
   ProductInformation,
   ProductOptionCheckbox,
   ProductOptionSelect,
   ProductOptionTextBox,
-  ProductRecommendations,
   ProductVariantSizeSelector,
 } from '@/components/product'
 import { useModalContext } from '@/context/ModalContext'
@@ -33,7 +33,6 @@ import type { ProductCustom, BreadCrumb, PriceRange, LocationCustom } from '@/li
 
 import type {
   AttributeDetail,
-  Product,
   ProductImage,
   ProductOption,
   ProductOptionValue,
@@ -43,11 +42,11 @@ import type {
 interface ProductDetailTemplateProps {
   product: ProductCustom
   breadcrumbs: BreadCrumb[]
-  recommendationProducts: Product[]
+  cmsProducts: any
 }
 
 const ProductDetailTemplate = (props: ProductDetailTemplateProps) => {
-  const { product, breadcrumbs, recommendationProducts } = props
+  const { product, breadcrumbs, cmsProducts } = props
   const { t } = useTranslation(['product', 'common'])
   const { showModal, closeModal } = useModalContext()
   const { addToCart } = useCartMutationAddToCart()
@@ -350,14 +349,10 @@ const ProductDetailTemplate = (props: ProductDetailTemplateProps) => {
           )}
         </Grid>
 
-        {/* This section is hardcoded for now */}
-        {recommendationProducts.length > 0 && (
-          <ProductRecommendations
-            title={t('product-recommendations')}
-            products={recommendationProducts}
-          />
-        )}
-        <ProductRecommendations title={t('customers-also-bought')} />
+        {cmsProducts?.components?.length > 0 &&
+          cmsProducts?.components?.map((data: any) => (
+            <CmsComponent key={Object.keys(data)[0]} content={data} />
+          ))}
       </Grid>
     </>
   )

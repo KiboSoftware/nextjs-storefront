@@ -18,17 +18,17 @@ export async function getStaticProps(context: GetStaticPropsContext) {
   const { params, locale } = context
   const { productCode } = params as any
   const { serverRuntimeConfig } = getConfig()
-  const result = await getPage({ contentTypeUid: 'product_detail', entryUrl: productCode })
-  const response =
-    result?.components?.length > 0 ? await search({ productCodes: result?.components }) : []
-
+  const cmsProductDetail = await getPage({
+    contentTypeUid: 'product_detail',
+    entryUrl: productCode,
+  })
   const product = await getProduct(productCode)
   const categoriesTree: CategoryCollection = await getCategoryTree()
   return {
     props: {
       product,
       categoriesTree,
-      recomendationProducts: response?.data?.products?.items || [],
+      cmsProductDetail,
       ...(await serverSideTranslations(locale as string, ['common', 'product'], nextI18NextConfig)),
     },
     revalidate: serverRuntimeConfig.revalidate,
@@ -48,7 +48,7 @@ export async function getStaticPaths() {
 }
 
 const ProductDetailPage: NextPage = (props: any) => {
-  const { product, recomendationProducts } = props
+  const { product, cmsProductDetail } = props
   const { isFallback } = useRouter()
 
   if (isFallback) {
@@ -61,7 +61,7 @@ const ProductDetailPage: NextPage = (props: any) => {
       <ProductDetailTemplate
         product={product}
         breadcrumbs={breadcrumbs}
-        recommendationProducts={recomendationProducts}
+        cmsProducts={cmsProductDetail}
       />
     </>
   )
