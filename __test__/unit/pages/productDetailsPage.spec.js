@@ -7,27 +7,13 @@ import ProductDetailPage, {
   getStaticProps,
 } from '../../../pages/product/[productCode]'
 import { categoryTreeDataMock } from '@/__mocks__/stories/categoryTreeDataMock'
+import { cmsProductDetailMock } from '@/__mocks__/stories/cmsProductDetailMock'
 
 nextRouter.useRouter = jest.fn()
 const mockCategoryTreeData = categoryTreeDataMock
-const mockProductRecommendationResult = {
-  components: [
-    { productCode: 'HKFT_019' },
-    { productCode: 'HKFT_020' },
-    { productCode: 'HKFT_021' },
-    { productCode: 'HKFT_022' },
-    { productCode: 'HKFT_024' },
-    { productCode: 'SleepBag_005' },
-  ],
+const mockProductDetailResult = {
+  components: cmsProductDetailMock,
 }
-const mockProductSearchResult = [
-  {
-    productCode: 'mocked-productCode-1',
-  },
-  {
-    productCode: 'mocked-productCode-2',
-  },
-]
 
 jest.mock('next/config', () => () => ({
   publicRuntimeConfig: {
@@ -41,7 +27,7 @@ jest.mock('next/config', () => () => ({
 
 jest.mock('@/lib/operations/get-page', () => ({
   getPage: jest.fn(() => {
-    return Promise.resolve(mockProductRecommendationResult)
+    return Promise.resolve(mockProductDetailResult)
   }),
 }))
 
@@ -53,8 +39,16 @@ jest.mock('@/lib/api/util', () => ({
           productCode: 'mocked-product',
         },
         categoriesTree: { items: mockCategoryTreeData.categoriesTree?.items },
+        cmsProductDetail: mockProductDetailResult,
         products: {
-          items: mockProductSearchResult,
+          items: [
+            {
+              productCode: 'mocked-productCode-1',
+            },
+            {
+              productCode: 'mocked-productCode-2',
+            },
+          ],
         },
       },
     })
@@ -95,7 +89,7 @@ describe('[page] Product Details Page', () => {
           productCode: 'mocked-product',
         },
         categoriesTree: mockCategoryTreeData.categoriesTree.items,
-        recomendationProducts: mockProductSearchResult,
+        cmsProductDetail: mockProductDetailResult,
         _nextI18Next: {
           initialI18nStore: { 'mock-locale': [{}], en: [{}] },
           initialLocale: 'mock-locale',
