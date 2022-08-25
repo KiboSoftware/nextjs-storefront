@@ -27,7 +27,7 @@ describe('[components] ConfirmationDialog', () => {
 
     expect(title).toBeVisible()
 
-    await user.click(screen.getByRole('button', { name: 'delete' }))
+    await user.click(screen.getByRole('button', { name: 'Delete' }))
 
     expect(onDeleteMock).toBeCalled()
   })
