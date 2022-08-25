@@ -1,18 +1,18 @@
 import React, { useState } from 'react'
 
 import { KeyboardArrowDown, KeyboardArrowUp } from '@mui/icons-material'
-import { Typography, Box, Stack, Link, Collapse, Grid } from '@mui/material'
+import { Typography, Box, Stack, Link, Collapse, Grid, styled } from '@mui/material'
 import { useTranslation } from 'next-i18next'
 
 import AddressCard from '@/components/common/AddressCard/AddressCard'
 import type { LocationCustom, HoursCustom } from '@/lib/types'
 
-import type { LocationInventory } from '@/lib/gql/types'
+import type { Maybe, LocationInventory } from '@/lib/gql/types'
 
 interface StoreDetailsProps {
   location: LocationCustom
   showProductAndInventory?: boolean
-  inventory?: LocationInventory
+  inventory?: Maybe<LocationInventory>
 }
 
 const StoreDetails = (props: StoreDetailsProps) => {
@@ -27,11 +27,17 @@ const StoreDetails = (props: StoreDetailsProps) => {
       </Typography>
       <Typography variant="body2">{location?.streetAddress}</Typography>
       <Typography variant="body2">{location?.cityState}</Typography>
-      {showProductAndInventory && (
-        <Typography variant="body2" color="primary" fontWeight={700}>
-          {inventory ? `${inventory.stockAvailable} ${t('available')}` : t('not-available')}
-        </Typography>
-      )}
+      <Typography
+        variant="body2"
+        color={showProductAndInventory && !inventory ? 'disabled' : 'primary'}
+        fontWeight={700}
+      >
+        {showProductAndInventory
+          ? inventory
+            ? `${inventory?.stockAvailable} ${t('available')}`
+            : t('not-available')
+          : t('available-for-pickup')}
+      </Typography>
 
       <Box
         data-testid="collapsible"

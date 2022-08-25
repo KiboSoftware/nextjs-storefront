@@ -3,7 +3,7 @@ import React from 'react'
 import { ComponentStory, ComponentMeta } from '@storybook/react'
 
 import StoreDetails from './StoreDetails'
-import { locationCollectionMock } from '@/__mocks__/stories/locationCollectionMock'
+import { locationCollectionMock, productLocationInventoryMock } from '@/__mocks__/stories'
 import { storeLocationGetters } from '@/lib/getters/storeLocationGetters'
 
 export default {
@@ -18,4 +18,15 @@ export const Common = Template.bind({})
 
 Common.args = {
   location: storeLocationGetters.getLocations(locationCollectionMock?.spLocations?.items || [])[0],
+}
+
+export const WithInventory = Template.bind({})
+
+WithInventory.args = {
+  location: storeLocationGetters.getLocations(locationCollectionMock?.spLocations?.items || [])[0],
+  showProductAndInventory: true,
+  inventory:
+    (productLocationInventoryMock?.productLocationInventory?.items &&
+      productLocationInventoryMock?.productLocationInventory?.items[0]) ||
+    undefined,
 }

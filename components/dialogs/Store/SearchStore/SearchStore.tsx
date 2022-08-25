@@ -16,7 +16,7 @@ interface SearchStoreProps {
   spLocations: Maybe<Location>[]
   showProductAndInventory?: boolean
   product?: ProductCustom
-  locationInventory?: LocationInventory[]
+  locationInventory?: Maybe<LocationInventory>[]
   quantity?: number
   searchTerm: string
   initialState: boolean
@@ -49,7 +49,7 @@ const SearchStore = (props: SearchStoreProps) => {
   const locations = storeLocationGetters.getLocations(spLocations)
   const storeOptions = locations?.map((location) => {
     const inventory = locationInventory?.find(
-      (inventory) => inventory.locationCode === location.code
+      (inventory) => inventory?.locationCode === location.code
     )
     return {
       value: location?.code || '',
@@ -61,7 +61,7 @@ const SearchStore = (props: SearchStoreProps) => {
           inventory={inventory}
         />
       ),
-      disabled: !inventory,
+      disabled: showProductAndInventory && !inventory,
     }
   })
 
@@ -78,8 +78,8 @@ const SearchStore = (props: SearchStoreProps) => {
             <ProductItem
               image={productGetters.getCoverImage(product as ProductCustom)}
               name={productGetters.getName(product as ProductCustom)}
-              price={productGetters.getPrice(product as ProductCustom).regular.toString()}
-              salePrice={productGetters.getPrice(product as ProductCustom).special.toString()}
+              price={productGetters.getPrice(product as ProductCustom).regular?.toString()}
+              salePrice={productGetters.getPrice(product as ProductCustom).special?.toString()}
               qty={quantity}
             />
           </Box>

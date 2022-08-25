@@ -32,7 +32,7 @@ export const useProductDetailTemplate = (props: UseProductDetailTemplateProps) =
   useEffect(() => {
     if (purchaseLocation?.name !== selectedFulfillmentOption?.location?.name) {
       setSelectedFulfillmentOption({
-        method: '',
+        method: selectedFulfillmentOption?.method || '',
         location: {
           name: selectedFulfillmentOption?.location?.name || (purchaseLocation?.name as string),
         },
