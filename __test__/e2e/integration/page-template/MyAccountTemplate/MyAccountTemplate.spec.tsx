@@ -8,7 +8,7 @@ import { server } from '@/__mocks__/msw/server'
 import { customerAccountCardsMock } from '@/__mocks__/stories/customerAccountCardsMock'
 import * as stories from '@/components/page-templates/MyAccountTemplate/MyAccountTemplate.stories'
 
-import { Card } from '@/lib/gql/types'
+import type { Card } from '@/lib/gql/types'
 
 const { Common } = composeStories(stories)
 

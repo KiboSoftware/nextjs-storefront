@@ -6,7 +6,7 @@ import getConfig from 'next/config'
 
 import { CardDetailsForm, SavedPaymentMethodView } from '@/components/checkout'
 import { AddressForm, AddressDetailsView } from '@/components/common'
-import { DeleteConfirmation } from '@/components/dialogs'
+import { ConfirmationDialog } from '@/components/dialogs'
 import { useModalContext } from '@/context'
 import {
   useCreateCustomerCardsMutation,
@@ -165,10 +165,11 @@ const PaymentMethod = (props: PaymentMethodProps) => {
 
   const openDeleteConfirmation = (card: SavedCard) => {
     showModal({
-      Component: DeleteConfirmation,
+      Component: ConfirmationDialog,
       props: {
-        onDelete: () => handleDeletePaymentMethod(card),
+        onConfirm: () => handleDeletePaymentMethod(card),
         contentText: t('delete-confirmation-text'),
+        primaryButtonText: t('delete'),
       },
     })
   }

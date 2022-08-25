@@ -90,6 +90,14 @@ export const accountHandlers = [
   graphql.mutation('updateCustomerAccountCard', (_req, res, ctx) => {
     return res(ctx.data(updateCustomerAccountCardMock))
   }),
+
+  graphql.mutation('deleteCustomerAccountCard', (_req, res, ctx) => {
+    return res(
+      ctx.data({
+        deleteCustomerAccountCard: true,
+      })
+    )
+  }),
 ]
 
 export const productHandlers = [

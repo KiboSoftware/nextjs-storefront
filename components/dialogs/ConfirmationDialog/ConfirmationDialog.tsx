@@ -6,12 +6,13 @@ import { useTranslation } from 'next-i18next'
 import { KiboDialog } from '@/components/common'
 import { useModalContext } from '@/context/ModalContext'
 
-interface DeleteConfirmationProps {
+interface ConfirmationDialogProps {
   contentText: string
-  onDelete: () => void
+  primaryButtonText: string
+  onConfirm: () => void
 }
 
-const DeleteConfirmationContent = ({ contentText }: { contentText: string }) => {
+const ConfirmationDialogContent = ({ contentText }: { contentText: string }) => {
   return (
     <Typography variant="body1" align="center">
       {contentText}
@@ -20,18 +21,18 @@ const DeleteConfirmationContent = ({ contentText }: { contentText: string }) => 
 }
 
 // Component
-const DeleteConfirmation = (props: DeleteConfirmationProps) => {
-  const { contentText, onDelete } = props
+const ConfirmationDialog = (props: ConfirmationDialogProps) => {
+  const { contentText, primaryButtonText, onConfirm } = props
   const { t } = useTranslation('common')
   const { closeModal } = useModalContext()
 
-  const handleDelete = () => {
-    onDelete()
+  const handlePrimaryButtonClick = () => {
+    onConfirm()
     closeModal()
   }
 
   const DialogArgs = {
-    Content: <DeleteConfirmationContent contentText={contentText} />,
+    Content: <ConfirmationDialogContent contentText={contentText} />,
     Actions: (
       <Stack gap={2} width="100%">
         <Button
@@ -42,8 +43,12 @@ const DeleteConfirmation = (props: DeleteConfirmationProps) => {
         >
           {t('cancel')}
         </Button>
-        <Button sx={{ width: '100%' }} variant="contained" onClick={() => handleDelete()}>
-          {t('delete')}
+        <Button
+          sx={{ width: '100%' }}
+          variant="contained"
+          onClick={() => handlePrimaryButtonClick()}
+        >
+          {primaryButtonText}
         </Button>
       </Stack>
     ),
@@ -56,4 +61,4 @@ const DeleteConfirmation = (props: DeleteConfirmationProps) => {
 
   return <KiboDialog {...DialogArgs} />
 }
-export default DeleteConfirmation
+export default ConfirmationDialog

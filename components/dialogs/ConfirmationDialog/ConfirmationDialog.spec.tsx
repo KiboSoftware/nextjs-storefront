@@ -4,21 +4,21 @@ import { composeStories } from '@storybook/testing-react'
 import { render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 
-import * as stories from './DeleteConfirmation.stories'
+import * as stories from './ConfirmationDialog.stories'
 import { ModalContextProvider } from '@/context'
 
 const { Common } = composeStories(stories)
 
 const onDeleteMock = jest.fn()
 const renderComponent = () => {
-  return render(<Common {...Common.args} onDelete={onDeleteMock} />, {
+  return render(<Common {...Common.args} onConfirm={onDeleteMock} />, {
     wrapper: ModalContextProvider,
   })
 }
 
 const user = userEvent.setup()
 
-describe('[components] DeleteConfirmation Dialog', () => {
+describe('[components] ConfirmationDialog', () => {
   const setup = () => renderComponent()
 
   it('should render component', async () => {
