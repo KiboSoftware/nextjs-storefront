@@ -32,7 +32,7 @@ describe('[components] - MegaMenu', () => {
     expect(menuItems).toHaveLength(categoryTree.length)
   })
 
-  it('should display menu items and advertisment while hovering on category', () => {
+  it('should display menu items and advertisement while hovering on category', () => {
     setup()
 
     const category = Common.args?.categoryTree?.filter((c) => c?.isDisplayed === true) || []

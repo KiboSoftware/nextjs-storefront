@@ -50,6 +50,7 @@ const getOrderPaymentCardDetails = (card: PaymentCard) => {
     cardNumberPartOrMask: card?.cardNumberPartOrMask || '',
     expireMonth: card?.expireMonth || 0,
     expireYear: card?.expireYear || 0,
+    cardType: card?.paymentOrCardType || '',
   }
 }
 const getOrderPaymentBillingInfo = (billingInfo: BillingInfo) => {

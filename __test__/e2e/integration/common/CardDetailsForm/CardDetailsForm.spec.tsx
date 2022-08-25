@@ -24,7 +24,6 @@ const setup = () => {
         validateForm={validateFormMock}
         onFormStatusChange={onFormStatusChangeMock}
         onSaveCardData={onSaveCardDataMock}
-        setValidateForm={setValidateFormMock}
       />
     </CheckoutStepProvider>
   )
@@ -67,6 +66,5 @@ describe('[components] - CardDetailsForm integration', () => {
     await user.tab()
 
     expect(onSaveCardDataMock).toHaveBeenCalled()
-    expect(setValidateFormMock).toHaveBeenLastCalledWith(false)
   })
 })

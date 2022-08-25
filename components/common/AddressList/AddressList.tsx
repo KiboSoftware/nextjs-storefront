@@ -99,6 +99,7 @@ const KiboRadioAddressList = (props: KiboAddressListProps) => {
     if (item.id)
       arr.push({
         value: `${item.id}`,
+        name: `${item.id}`,
         label: (
           <AddressCard
             title={index === 0 ? t('common:primary') : ''}

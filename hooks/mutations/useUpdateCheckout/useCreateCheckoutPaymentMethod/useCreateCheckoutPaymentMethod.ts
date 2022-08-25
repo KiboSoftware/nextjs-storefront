@@ -27,7 +27,7 @@ export const useCreateCheckoutPaymentMethod = () => {
 
   return useMutation(updatePaymentMethod, {
     onSuccess: () => {
-      queryClient.removeQueries([checkoutKeys.all])
+      queryClient.invalidateQueries(checkoutKeys.all)
     },
   })
 }

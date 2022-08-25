@@ -1,9 +1,12 @@
-import { userContactFields } from '../fragments/userContacts'
+import { userContactFields } from '@/lib/gql/fragments/userContacts'
 
 const createCustomerAccountContact = /* GraphQL */ `
   ${userContactFields}
 
-  mutation addUserAddress($accountId: Int!, $customerContactInput: CustomerContactInput!) {
+  mutation createCustomerAccountContact(
+    $accountId: Int!
+    $customerContactInput: CustomerContactInput!
+  ) {
     createCustomerAccountContact(
       accountId: $accountId
       customerContactInput: $customerContactInput
@@ -12,5 +15,4 @@ const createCustomerAccountContact = /* GraphQL */ `
     }
   }
 `
-
 export default createCustomerAccountContact

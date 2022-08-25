@@ -14,10 +14,7 @@ jest.mock(
 )
 
 const AddressDetailsViewMock = () => <div data-testid="address-details-view-mock" />
-jest.mock(
-  '@/components/checkout/AddressDetailsView/AddressDetailsView',
-  () => AddressDetailsViewMock
-)
+jest.mock('@/components/common/AddressDetailsView/AddressDetailsView', () => AddressDetailsViewMock)
 
 describe('[component] - SavedPaymentMethodView', () => {
   it('should render the component', () => {

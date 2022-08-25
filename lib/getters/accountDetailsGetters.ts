@@ -1,6 +1,6 @@
 import { PaymentType } from '../constants'
 import { SavedCard } from './../types/PaymentTypes'
-import { billingGetters, cardGetters } from '@/lib/getters'
+import { cardGetters } from '@/lib/getters'
 import type { PaymentAndBilling } from '@/lib/types'
 
 import type {
@@ -8,6 +8,7 @@ import type {
   CustomerContactCollection,
   Card,
   CustomerContact,
+  Contact,
 } from '@/lib/gql/types'
 
 const getCustomerAccountCards = (customerAccountCards: CardCollection): Card[] =>
@@ -26,14 +27,16 @@ const getSavedCardsAndBillingDetails = (
   const contacts: CustomerContact[] = getCustomerAccountContacts(customerAccountContacts)
 
   return cards?.map((card) => {
-    const assoiciatedAddress = contacts?.find((contact) => contact.id === card.contactId)
+    const associatedAddress = contacts?.find((contact) => contact.id === card.contactId)
     return {
       cardInfo: {
         ...cardGetters.getCardDetails(card as SavedCard),
         isCardInfoSaved: true,
         paymentType: PaymentType.CREDITCARD,
       },
-      billingAddressInfo: billingGetters.getBillingDetails(assoiciatedAddress as CustomerContact),
+      billingAddressInfo: {
+        contact: associatedAddress as Contact,
+      },
     }
   })
 }

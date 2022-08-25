@@ -1,17 +1,18 @@
 import React from 'react'
 
 import { Box } from '@mui/material'
-import { useTranslation } from 'next-i18next'
 
-import { AddressDetailsView, PaymentCardDetailsView } from '@/components/checkout'
-import { KiboRadio } from '@/components/common'
+import { PaymentCardDetailsView } from '@/components/checkout'
+import { KiboRadio, AddressDetailsView } from '@/components/common'
 interface PaymentAndBillingCardProps {
   id?: string
+  radio?: boolean
   displayRowDirection?: boolean
   displayTitle?: boolean
   cardNumberPart: string
   expireMonth: number
   expireYear: number
+  cardType: string
   address1: string
   address2?: string
   cityOrTown: string
@@ -31,6 +32,7 @@ const PaymentAndBilling = (props: PaymentAndBillingCardProps) => {
     cardNumberPart,
     expireMonth,
     expireYear,
+    cardType,
     address1,
     address2,
     cityOrTown,
@@ -57,6 +59,7 @@ const PaymentAndBilling = (props: PaymentAndBillingCardProps) => {
         cardNumberPart={cardNumberPart}
         expireMonth={expireMonth}
         expireYear={expireYear}
+        cardType={cardType}
         onPaymentCardSelection={() => null}
       />
       <AddressDetailsView
@@ -76,6 +79,7 @@ const SavedPaymentMethodView = (props: SavedPaymentMethodViewProps) => {
     cardNumberPart,
     expireMonth,
     expireYear,
+    cardType,
     address1,
     address2,
     cityOrTown,
@@ -84,9 +88,10 @@ const SavedPaymentMethodView = (props: SavedPaymentMethodViewProps) => {
     radio,
     displayRowDirection = true,
     selected = '',
+    withoutRadioPaymentTitle,
+    withoutRadioBillingTitle,
     onPaymentCardSelection,
   } = props
-  const { t } = useTranslation('checkout')
 
   const PaymentBillingComponent = (props: any) => {
     return (
@@ -94,6 +99,7 @@ const SavedPaymentMethodView = (props: SavedPaymentMethodViewProps) => {
         cardNumberPart={cardNumberPart}
         expireMonth={expireMonth}
         expireYear={expireYear}
+        cardType={cardType}
         address1={address1}
         address2={address2}
         cityOrTown={cityOrTown}
@@ -124,8 +130,8 @@ const SavedPaymentMethodView = (props: SavedPaymentMethodViewProps) => {
       )}
       {!radio && (
         <PaymentBillingComponent
-          withoutRadioPaymentTitle={t('payment-method')}
-          withoutRadioBillingTitle={t('billing-address')}
+          withoutRadioPaymentTitle={withoutRadioPaymentTitle}
+          withoutRadioBillingTitle={withoutRadioBillingTitle}
         />
       )}
     </Box>

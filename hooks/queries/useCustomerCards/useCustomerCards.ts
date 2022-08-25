@@ -28,9 +28,13 @@ export const useCustomerCards = (accountId: number): UseCustomerCardsResponse =>
     data = [],
     isLoading,
     isSuccess,
-  } = useQuery(customerAccountCardsKeys.all(accountId), () => loadCustomerAccountCards(accountId), {
-    enabled: !!accountId,
-  })
+  } = useQuery(
+    customerAccountCardsKeys?.cardById(accountId),
+    () => loadCustomerAccountCards(accountId),
+    {
+      enabled: !!accountId,
+    }
+  )
 
   return { data, isLoading, isSuccess }
 }

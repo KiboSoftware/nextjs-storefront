@@ -1,6 +1,6 @@
-import { paymentCardItems } from '../fragments/paymentCardItems'
+import { paymentCardItems } from '@/lib/gql/fragments/paymentCardItems'
 
-const addCustomerAccountCard = /* GraphQL */ `
+const createCustomerAccountContact = /* GraphQL */ `
   mutation createCustomerAccountCard($accountId: Int!, $cardInput: CardInput) {
     createCustomerAccountCard(accountId: $accountId, cardInput: $cardInput) {
       ...customerAccountCardItems
@@ -8,4 +8,5 @@ const addCustomerAccountCard = /* GraphQL */ `
   }
   ${paymentCardItems}
 `
-export default addCustomerAccountCard
+
+export default createCustomerAccountContact

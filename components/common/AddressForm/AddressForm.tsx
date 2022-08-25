@@ -14,19 +14,17 @@ import KiboSelect from '@/components/common/KiboSelect/KiboSelect'
 import KiboTextField from '@/components/common/KiboTextBox/KiboTextBox'
 import { Address, ContactForm } from '@/lib/types'
 
-import type { Order } from '@/lib/gql/types'
-
 interface AddressFormProps {
-  contact: ContactForm
+  contact?: ContactForm
   countries?: string[]
   isUserLoggedIn: boolean
   saveAddressLabel?: string
   setAutoFocus?: boolean
-  checkout: Order | undefined
   validateForm: boolean
+  showDefaultPaymentMethodCheckbox?: boolean
   onSaveAddress: (data: Address) => void
   onFormStatusChange?: (status: boolean) => void
-  setValidateForm: (isValidForm: boolean) => void
+  onDefaultPaymentChange?: (value: boolean) => void
 }
 
 const schema = yup.object().shape({
@@ -56,9 +54,10 @@ const AddressForm = (props: AddressFormProps) => {
     saveAddressLabel,
     setAutoFocus = false,
     validateForm = false,
+    showDefaultPaymentMethodCheckbox = false,
     onSaveAddress,
     onFormStatusChange,
-    setValidateForm,
+    onDefaultPaymentChange,
   } = props
 
   // Define Variables and States
@@ -89,15 +88,12 @@ const AddressForm = (props: AddressFormProps) => {
     })
 
   const onValid = async (formData: ContactForm) => {
-    onSaveAddress({ contact: formData })
-    setValidateForm(false)
+    onSaveAddress({ contact: formData, isDataUpdated: true })
   }
-
-  const onInvalidForm = () => setValidateForm(false)
 
   useEffect(() => {
     if (onFormStatusChange) onFormStatusChange(isValid)
-    if (validateForm) handleSubmit(onValid, onInvalidForm)()
+    if (validateForm) handleSubmit(onValid)()
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isValid, validateForm])
 
@@ -314,6 +310,21 @@ const AddressForm = (props: AddressFormProps) => {
             <FormControlLabel
               control={<Checkbox onChange={() => setSaveAddress((prevState) => !prevState)} />}
               label={saveAddressLabel}
+            />
+          </Grid>
+        )}
+
+        {showDefaultPaymentMethodCheckbox && (
+          <Grid item md={12}>
+            <FormControlLabel
+              control={
+                <Checkbox
+                  onChange={(_, checked) =>
+                    onDefaultPaymentChange && onDefaultPaymentChange(checked)
+                  }
+                />
+              }
+              label={'Make this my default payment'}
             />
           </Grid>
         )}

@@ -8,23 +8,34 @@ import {
   Radio,
   Theme,
   SxProps,
+  Typography,
+  Box,
 } from '@mui/material'
 
 interface KiboRadioProps {
   title?: string
   selected?: string
-  align?: 'baseline' | 'center'
+  align?: 'baseline' | 'center' | 'flex-start'
   radioOptions: {
     label: string | number | ReactElement<any, string | JSXElementConstructor<any>>
     value: string
     name: string
   }[]
+  optionIndicator?: string // use this to assign a specific property to an option. e.g: isPrimary
   sx?: SxProps<Theme>
   onChange: (value: string) => void
 }
 
 export const KiboRadio = (props: KiboRadioProps) => {
-  const { title, radioOptions, selected = '', sx, align = 'center', onChange } = props
+  const {
+    title,
+    radioOptions,
+    selected = '',
+    sx,
+    align = 'center',
+    optionIndicator,
+    onChange,
+  } = props
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     onChange(event.target.value)
@@ -46,13 +57,21 @@ export const KiboRadio = (props: KiboRadioProps) => {
       >
         {radioOptions.map((radio, index) => {
           return (
-            <FormControlLabel
-              sx={{ width: 'fit-content', alignItems: align, ...sx }}
-              key={radio.value + index}
-              value={radio.value}
-              control={<Radio inputProps={{ 'aria-label': radio.name }} />}
-              label={radio.label}
-            />
+            <Box key={radio.value + index}>
+              {optionIndicator && (
+                <Typography
+                  sx={{ fontSize: 'subtitle2', color: 'text.primary', fontWeight: 700, pl: '18%' }}
+                >
+                  {optionIndicator}
+                </Typography>
+              )}
+              <FormControlLabel
+                sx={{ width: 'fit-content', alignItems: align, ...sx }}
+                value={radio.value}
+                control={<Radio inputProps={{ 'aria-label': radio.name }} />}
+                label={radio.label}
+              />
+            </Box>
           )
         })}
       </RadioGroup>

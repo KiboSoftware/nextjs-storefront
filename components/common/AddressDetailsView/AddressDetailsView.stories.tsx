@@ -28,10 +28,11 @@ export const Radio = Template.bind({})
 
 Radio.args = {
   radio: true,
-  radioGroupTitle: 'Your Default Billing Address',
   address1: '1234, My Address',
   address2: '1104',
   cityOrTown: 'Austin',
   stateOrProvince: 'Texas',
   postalOrZipCode: '78727',
+  id: 1092,
+  selected: 1012,
 }

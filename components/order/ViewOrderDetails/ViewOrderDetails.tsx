@@ -174,42 +174,29 @@ const ViewOrderDetails = (props: ViewOrderDetailsProps) => {
               <Typography variant="h3" fontWeight={'bold'}>
                 {t('checkout:payment-information')}
               </Typography>
-              {payments?.map((payment) => (
-                <SavedPaymentMethodView
-                  key={payment?.id}
-                  id={
-                    orderGetters.getOrderPaymentCardDetails(payment.billingInfo.card)
-                      .paymentServiceCardId
-                  }
-                  cardNumberPart={
-                    orderGetters.getOrderPaymentCardDetails(payment.billingInfo.card)
-                      .cardNumberPartOrMask
-                  }
-                  expireMonth={
-                    orderGetters.getOrderPaymentCardDetails(payment.billingInfo.card).expireMonth
-                  }
-                  expireYear={
-                    orderGetters.getOrderPaymentCardDetails(payment.billingInfo.card).expireYear
-                  }
-                  address1={
-                    billingGetters.getAddress(payment.billingInfo.billingContact.address).address1
-                  }
-                  address2={
-                    billingGetters.getAddress(payment.billingInfo.billingContact.address).address2
-                  }
-                  cityOrTown={
-                    billingGetters.getAddress(payment.billingInfo.billingContact.address).cityOrTown
-                  }
-                  postalOrZipCode={
-                    billingGetters.getAddress(payment.billingInfo.billingContact.address)
-                      ?.postalOrZipCode
-                  }
-                  stateOrProvince={
-                    billingGetters.getAddress(payment.billingInfo.billingContact.address)
-                      .stateOrProvince
-                  }
-                />
-              ))}
+              {payments?.map((payment) => {
+                const cardDetails = orderGetters.getOrderPaymentCardDetails(
+                  payment.billingInfo.card
+                )
+                const address = billingGetters.getAddress(
+                  payment.billingInfo.billingContact.address
+                )
+                return (
+                  <SavedPaymentMethodView
+                    key={payment?.id}
+                    id={cardDetails.paymentServiceCardId}
+                    cardNumberPart={cardDetails.cardNumberPartOrMask}
+                    expireMonth={cardDetails.expireMonth}
+                    expireYear={cardDetails.expireYear}
+                    cardType={cardDetails.cardType}
+                    address1={address.address1}
+                    address2={address.address2}
+                    cityOrTown={address.cityOrTown}
+                    postalOrZipCode={address?.postalOrZipCode}
+                    stateOrProvince={address.stateOrProvince}
+                  />
+                )
+              })}
             </Box>
           )}
         </Grid>
