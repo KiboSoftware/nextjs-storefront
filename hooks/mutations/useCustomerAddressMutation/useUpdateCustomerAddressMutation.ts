@@ -6,7 +6,7 @@ import { customerAccountContactsKeys } from '@/lib/react-query/queryKeys'
 
 import type { CustomerContactInput } from '@/lib/gql/types'
 
-interface UpdateCustomerAccountContactDetailsParams {
+export interface UpdateCustomerAccountContactDetailsParams {
   accountId: number
   contactId: number
   customerContactInput: CustomerContactInput

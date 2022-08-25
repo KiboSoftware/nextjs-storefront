@@ -176,7 +176,6 @@ const AddressBook = () => {
             setAutoFocus={true}
             validateForm={validateForm}
             onSaveAddress={handleSaveAddress}
-            setValidateForm={setValidateForm}
             contact={editAddress as ContactForm}
             isUserLoggedIn={isAuthenticated}
           />
