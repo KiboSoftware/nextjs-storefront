@@ -19,7 +19,7 @@ describe('[components] - MegaMenu Integration', () => {
     }
   }
 
-  it('should display menu items and advertisment while hovering on category', async () => {
+  it('should display menu items and advertisement while hovering on category', async () => {
     const { user } = setup()
 
     const category = Common.args?.categoryTree?.filter((c) => c?.isDisplayed === true) || []
@@ -32,7 +32,7 @@ describe('[components] - MegaMenu Integration', () => {
       expect(name).toBeVisible()
     })
 
-    const advertisment = screen.getByText('advertisment')
-    expect(advertisment).toBeVisible()
+    const advertisement = screen.getByText('advertisement')
+    expect(advertisement).toBeVisible()
   })
 })

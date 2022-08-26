@@ -1,16 +1,28 @@
-import type { SavedCard } from '@/lib/types'
+import type { SavedCard, TokenizedCard } from '@/lib/types'
 
 // cards
 const getCardNumberPart = (creditCardData?: SavedCard): string =>
   creditCardData?.cardNumberPart || ''
+
+const getCardNumber = (creditCardData?: SavedCard): string => creditCardData?.cardNumber || ''
+
 const getIsCardInfoSaved = (creditCardData?: SavedCard): boolean =>
   creditCardData?.isCardInfoSaved || false
+
 const getExpireMonth = (creditCardData?: SavedCard): number => creditCardData?.expireMonth || 0
+
 const getExpireYear = (creditCardData?: SavedCard): number => creditCardData?.expireYear || 0
+
+const getExpireDate = (creditCardData?: SavedCard): string =>
+  `${getExpireMonth(creditCardData)}/${getExpireYear(creditCardData)}`
+
 const getCardType = (creditCardData?: SavedCard): string => creditCardData?.cardType || ''
+
 const getCardId = (creditCardData?: SavedCard): string => creditCardData?.id || ''
-const getIsDefaultPaymentMethod = (creditCardData?: SavedCard): boolean =>
+
+const getIsDefaultPayMethod = (creditCardData?: SavedCard): boolean =>
   Boolean(creditCardData?.isDefaultPayMethod)
+
 const getPaymentType = (creditCardData?: SavedCard): string => creditCardData?.paymentType || ''
 
 const getCardDetails = (card: SavedCard) => {
@@ -21,17 +33,30 @@ const getCardDetails = (card: SavedCard) => {
     expireMonth: getExpireMonth(card),
     expireYear: getExpireYear(card),
     id: getCardId(card),
-    isDefaultPaymentMethod: getIsDefaultPaymentMethod(card),
+    isDefaultPayMethod: getIsDefaultPayMethod(card),
     paymentType: getPaymentType(card),
   }
 }
 
-const getTokenizedCardNumberMask = (tokenizedData: any): string => tokenizedData?.numberPart || ''
-const getTokenizedId = (tokenizedData: any) => tokenizedData?.id || ''
+const getTokenizedCardNumberMask = (tokenizedData: TokenizedCard): string =>
+  tokenizedData?.numberPart || ''
+
+const getTokenizedId = (tokenizedData: TokenizedCard) => tokenizedData?.id || ''
 
 export const cardGetters = {
   getCardId,
-  getCardDetails,
+  getCardNumber,
+  getCardNumberPart,
+  getExpireMonth,
+  getExpireYear,
+  getCardType,
+  getIsDefaultPayMethod,
+  getPaymentType,
+  getIsCardInfoSaved,
+  getExpireDate,
+
   getTokenizedCardNumberMask,
   getTokenizedId,
+
+  getCardDetails,
 }

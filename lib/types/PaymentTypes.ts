@@ -31,6 +31,8 @@ export interface CardForm {
   expireYear?: number
   isCardDetailsValidated?: boolean
   isCardInfoSaved?: boolean
+  id?: string
+  isDataUpdated?: boolean
 }
 
 export interface SavedCard {
@@ -43,6 +45,8 @@ export interface SavedCard {
   nameOnCard?: string
   isCardInfoSaved?: boolean
   paymentType?: string
+  contactId?: number
+  cardNumber?: string
 }
 
 export interface ContactForm {
@@ -73,8 +77,10 @@ export interface Address {
   contact: ContactForm
   isAddressValid?: boolean
   isSameBillingShippingAddress?: boolean
+  isDataUpdated?: boolean
 }
 
-export interface SavedBillingAddress extends Contact {
+export interface SavedBillingAddress {
+  contact: Contact
   isSameBillingShippingAddress?: boolean
 }

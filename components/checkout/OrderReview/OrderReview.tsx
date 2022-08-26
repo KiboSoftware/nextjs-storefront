@@ -15,8 +15,7 @@ import {
 } from '@mui/material'
 import { useTranslation } from 'next-i18next'
 
-import { AddressDetailsView } from '@/components/checkout'
-import { PromoCodeBadge } from '@/components/common'
+import { AddressDetailsView, PromoCodeBadge } from '@/components/common'
 import { useCheckoutStepContext } from '@/context'
 import { useStoreLocations } from '@/hooks'
 import { checkoutGetters } from '@/lib/getters'
@@ -160,7 +159,8 @@ const OrderReview = (props: OrderReviewProps) => {
           <StyledRow sx={{ marginTop: '2.375rem' }}>
             <AddressDetailsView
               {...shippingPersonalDetails}
-              {...shippingAddress}
+              address1={shippingAddress.address1 as string}
+              address2={shippingAddress.address2 as string}
               withoutRadioTitle={t('shipping-details')}
             />
             <StyledActions
@@ -177,7 +177,8 @@ const OrderReview = (props: OrderReviewProps) => {
           <StyledRow>
             <AddressDetailsView
               {...billingPersonalDetails}
-              {...billingAddress}
+              address1={billingAddress.address1 as string}
+              address2={billingAddress.address2 as string}
               withoutRadioTitle={t('billing-address')}
             />
             <StyledActions

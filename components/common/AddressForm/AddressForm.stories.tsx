@@ -23,7 +23,6 @@ const Template: ComponentStory<typeof AddressForm> = (args) => {
 export const Common = Template.bind({})
 Common.args = {
   setAutoFocus: true,
-  checkout: undefined,
   contact: undefined,
   isUserLoggedIn: false,
   saveAddressLabel: 'Save shipping address',

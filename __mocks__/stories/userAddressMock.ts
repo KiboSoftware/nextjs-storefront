@@ -7,7 +7,7 @@ export const userAddressResponse: CustomerContactCollection = {
   startIndex: 1,
   items: [
     {
-      accountId: 1262,
+      accountId: 1012,
       types: [
         {
           name: 'Shipping',
@@ -47,7 +47,7 @@ export const userAddressResponse: CustomerContactCollection = {
       },
     },
     {
-      accountId: 1262,
+      accountId: 1012,
       types: [
         {
           name: 'Shipping',
@@ -87,7 +87,7 @@ export const userAddressResponse: CustomerContactCollection = {
       },
     },
     {
-      accountId: 1262,
+      accountId: 1012,
       types: [
         {
           name: 'Billing',
@@ -100,8 +100,6 @@ export const userAddressResponse: CustomerContactCollection = {
         updateBy: 'tbd',
         createBy: 'tbd',
       },
-      faxNumber: null,
-      label: null,
       id: 1495,
       email: 'Chandradeepta.Laha@kibocommerce.com',
       firstName: 'Chandradeepta',

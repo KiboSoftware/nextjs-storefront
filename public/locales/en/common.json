@@ -13,6 +13,7 @@
   "color": "Color",
   "continue-shopping": "Continue Shopping",
   "edit": "Edit",
+  "delete": "Delete",
   "filter-by": "Filter By",
   "go-to-cart": "Go to Cart",
   "log-in": "Log In",
@@ -66,7 +67,7 @@
   "promo-code": "Enter Promo code",
 
   "shop-all": "Shop All",
-  "advertisment": "Advertisment",
+  "advertisement": "Advertisement",
   "login-to-your-account": "or Login to Your Account",
   "create-an-account": "Create an Account",
   "email-must-be-a-valid-email": "Email must be a valid email",
@@ -125,7 +126,7 @@
   "previously-saved-shipping-addresses": "Previously saved shipping addresses",
   "no-saved-addresses-yet": "No saved addresses yet!",
   "primary": "Primary",
-  
+
   "time-filter": "Time Filter",
   "last-30-days": "Last 30 days",
   "last-6-months": "Last 6 months",
@@ -134,5 +135,10 @@
 
   "home": "Home",
   "order-status": "Order Status",
-  "wishlist": "Wishlist"
+  "wishlist": "Wishlist",
+  "billing-address": "Billing Address",
+  "make-this-my-default-payment": "Make this my default payment",
+  "add-new-address": "Add New Address",
+  "select-billing-address": "Select billing address",
+  "delete-confirmation-text": "Are you sure you want to delete ?"
 }

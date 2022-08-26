@@ -158,11 +158,9 @@ const ShippingStep = (props: ShippingProps) => {
         isUserLoggedIn={false}
         saveAddressLabel={t('save-shipping-address')}
         setAutoFocus={true}
-        checkout={checkout}
         validateForm={validateForm}
         onSaveAddress={handleSaveAddress}
         onFormStatusChange={handleFormStatusChange}
-        setValidateForm={setValidateForm}
       />
 
       <Button

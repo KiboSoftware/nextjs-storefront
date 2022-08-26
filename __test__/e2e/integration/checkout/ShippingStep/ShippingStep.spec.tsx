@@ -7,6 +7,8 @@ import userEvent from '@testing-library/user-event'
 import * as stories from '@/components/checkout/ShippingStep/ShippingStep.stories'
 
 const { Common } = composeStories(stories)
+const scrollIntoViewMock = jest.fn()
+window.HTMLElement.prototype.scrollIntoView = scrollIntoViewMock
 
 describe('[components] ShippingStep', () => {
   const setup = () => {

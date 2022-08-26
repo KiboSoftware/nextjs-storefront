@@ -132,11 +132,11 @@ const MegaMenuCategory = (props: MegaMenuCategoryProps) => {
             <Box flex={1} px={4}>
               <Box width={'100%'}>
                 <Typography variant="subtitle2" pt={0.5} fontWeight="bold">
-                  {t('advertisment')}
+                  {t('advertisement')}
                 </Typography>
                 <KiboImage
                   src={DefaultImage}
-                  alt={t('advertisment')}
+                  alt={t('advertisement')}
                   width={'100%'}
                   height={'100%'}
                 />
