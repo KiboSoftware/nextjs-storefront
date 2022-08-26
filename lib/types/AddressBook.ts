@@ -5,7 +5,6 @@ export interface AddressParams {
   address: Address
   isDefaultAddress: boolean
   addressType: string
-  action: string
 }
 
 export interface DeleteAddressParams {

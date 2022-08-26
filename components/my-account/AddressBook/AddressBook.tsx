@@ -2,9 +2,17 @@ import React, { useState } from 'react'
 
 import { Delete } from '@mui/icons-material'
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline'
-import { Box, Typography, Divider, Button, Stack, Checkbox, FormControlLabel } from '@mui/material'
+import {
+  Box,
+  Typography,
+  Divider,
+  Button,
+  Stack,
+  Checkbox,
+  FormControlLabel,
+  Link,
+} from '@mui/material'
 import { useTranslation } from 'next-i18next'
-import Link from 'next/link'
 
 import { AddressCard, AddressForm } from '@/components/common'
 import { ConfirmationDialog } from '@/components/dialogs'
@@ -15,11 +23,12 @@ import {
   useDeleteCustomerAddressMutation,
 } from '@/hooks'
 import { userAddressGetters } from '@/lib/getters'
-import { buildAddressParams, buildAddressProps } from '@/lib/helpers'
+import { buildAddressParams } from '@/lib/helpers'
 import type { Address, ContactForm, DeleteAddressParams } from '@/lib/types'
 
 import type { UpdateCustomerAccountContactDetailsParams } from '@/hooks'
 import type {
+  CrAddress,
   CuAddress,
   CustomerAccount,
   CustomerContact,
@@ -30,6 +39,17 @@ import type {
 interface PaymentMethodProps {
   user: CustomerAccount
   contacts: CustomerContactCollection
+}
+
+const buildAddressProps = (address: CuAddress | CrAddress) => {
+  const { address1, address2, cityOrTown, stateOrProvince, postalOrZipCode } = address
+  return {
+    address1,
+    address2,
+    cityOrTown,
+    stateOrProvince,
+    postalOrZipCode,
+  }
 }
 
 const AddressBook = (props: PaymentMethodProps) => {
@@ -70,7 +90,6 @@ const AddressBook = (props: PaymentMethodProps) => {
           address,
           isDefaultAddress,
           addressType: 'shipping',
-          action: 'update',
         })
 
         await updateSavedAddressDetails.mutateAsync(
@@ -87,7 +106,6 @@ const AddressBook = (props: PaymentMethodProps) => {
           address,
           isDefaultAddress,
           addressType: 'shipping',
-          action: 'add',
         })
 
         await addSavedAddressDetails.mutateAsync(params)
@@ -136,16 +154,13 @@ const AddressBook = (props: PaymentMethodProps) => {
               <AddressCard {...buildAddressProps(item?.address as CuAddress)} />
             </Box>
             <Box sx={{ display: 'flex', flexDirection: 'column' }}>
-              <Link href="" passHref>
-                <Box
-                  component="span"
-                  sx={{ fontSize: '1rem', color: 'text.primary', textDecoration: 'none' }}
-                  onClick={() => handleEditAddress(item as CustomerContact)}
-                >
-                  {t('edit')}
-                </Box>
-              </Link>
-
+              <Typography
+                variant="body2"
+                sx={{ cursor: 'pointer' }}
+                onClick={() => handleEditAddress(item as CustomerContact)}
+              >
+                {t('edit')}
+              </Typography>
               {index > 0 && (
                 <Delete
                   sx={{ marginTop: '1.375rem' }}

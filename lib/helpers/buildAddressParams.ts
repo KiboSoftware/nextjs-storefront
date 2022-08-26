@@ -1,7 +1,8 @@
 import type { AddressParams } from '../types'
 
 export const buildAddressParams = (params: AddressParams) => {
-  const { accountId, address, isDefaultAddress, addressType, action } = params
+  const { accountId, address, isDefaultAddress, addressType } = params
+  const contactId = address?.contact?.id as number
 
   const addressParams = {
     accountId: accountId,
@@ -19,8 +20,8 @@ export const buildAddressParams = (params: AddressParams) => {
 
   const updateAddressParams = {
     ...addressParams,
-    contactId: address?.contact?.id as number,
+    contactId,
   }
 
-  return action === 'update' ? updateAddressParams : addressParams
+  return contactId ? updateAddressParams : addressParams
 }
