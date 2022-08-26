@@ -9,6 +9,13 @@ import * as stories from '../../../../../components/layout/MegaMenu/MegaMenu.sto
 
 const { Common } = composeStories(stories)
 
+jest.mock(
+  'next/link',
+  () =>
+    ({ children }: any) =>
+      children
+)
+
 describe('[components] - MegaMenu Integration', () => {
   const setup = () => {
     const user = userEvent.setup()
@@ -34,5 +41,10 @@ describe('[components] - MegaMenu Integration', () => {
 
     const advertisement = screen.getByText('advertisement')
     expect(advertisement).toBeVisible()
+
+    const menuLinks = screen.getAllByTestId('shopAllLink')
+    await user.click(menuLinks[0])
+    const megaMenuPopup = screen.queryByLabelText('megamenu-back-drop') as HTMLElement
+    expect(megaMenuPopup).not.toBeInTheDocument()
   })
 })

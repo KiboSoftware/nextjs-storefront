@@ -127,7 +127,7 @@ const MegaMenuCategory = (props: MegaMenuCategoryProps) => {
             horizontal: 'center',
           }}
         >
-          <Box display="flex" py={2}>
+          <Box display="flex" py={2} aria-label="megamenu-back-drop">
             <Box display="flex" flex={3} flexWrap={'wrap'}>
               {childrenCategories?.map((cat) => {
                 return (
