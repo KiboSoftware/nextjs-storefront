@@ -84,7 +84,7 @@ jest.mock('@/hooks', () => ({
   useRemoveWishlistItemMutation: jest.fn(() => true),
   usePurchaseLocation: jest.fn(() => ({})),
   useModalContext: jest.fn(() => ({})),
-  useProductSearch: jest.fn(() => mockProductSearch),
+  useProducts: jest.fn(() => mockProductSearch),
 }))
 
 const setup = () => {

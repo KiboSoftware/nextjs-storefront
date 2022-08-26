@@ -18,16 +18,4 @@ describe('[helpers] buildProductSearchInput function', () => {
     }
     expect(buildProductSearchInput(searchParams)).toStrictEqual(buildProductSearchInputMock)
   })
-
-  it('should return the product codes filter according to search params', () => {
-    const searchParams = {
-      productCodes: [{ productCode: 'HKFT_019' }],
-    }
-
-    const productCodesResult = {
-      filter: 'productCode eq HKFT_019',
-    }
-
-    expect(buildProductSearchInput(searchParams)).toStrictEqual(productCodesResult)
-  })
 })

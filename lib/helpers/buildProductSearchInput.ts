@@ -18,32 +18,23 @@ export const buildProductSearchInput = ({
   sort = '',
   search = '',
   filter = '',
-  productCodes = [],
 }: CategorySearchParams): QueryProductSearchArgs => {
-  if (productCodes.length > 0) {
-    const productCodeFilter: Array<string> = []
-    productCodes.forEach((code) => {
-      productCodeFilter.push(`productCode eq ${code?.productCode}`)
-    })
-    return { filter: productCodeFilter.join(' or ') }
-  } else {
-    let facetTemplate = ''
-    let facetHierValue = ''
-    facetTemplate = `categoryCode:${categoryCode || '_root'}`
-    if (categoryCode) {
-      facetHierValue = `categoryCode:${categoryCode}`
-    }
+  let facetTemplate = ''
+  let facetHierValue = ''
+  facetTemplate = `categoryCode:${categoryCode || '_root'}`
+  if (categoryCode) {
+    facetHierValue = `categoryCode:${categoryCode}`
+  }
 
-    const facetValueFilter = getFacetValueFilter(categoryCode, filters)
-    return {
-      query: search,
-      startIndex,
-      pageSize: Number(pageSize),
-      sortBy: sort,
-      facetHierValue,
-      facetTemplate,
-      facetValueFilter,
-      filter,
-    }
+  const facetValueFilter = getFacetValueFilter(categoryCode, filters)
+  return {
+    query: search,
+    startIndex,
+    pageSize: Number(pageSize),
+    sortBy: sort,
+    facetHierValue,
+    facetTemplate,
+    facetValueFilter,
+    filter,
   }
 }

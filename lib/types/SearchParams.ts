@@ -11,7 +11,6 @@ export interface CategorySearchParams {
   sort?: string
   search?: string
   filter?: string
-  productCodes?: ProductCodes[]
 }
 
 export interface LocationSearchParams {

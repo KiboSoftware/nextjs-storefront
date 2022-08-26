@@ -1,6 +1,7 @@
 export const cmsProductDetailMock = [
   {
     recommendations: {
+      title: 'Product Recommendations',
       product_recommendations: [
         {
           productCode: 'Drybag_008',
@@ -25,6 +26,7 @@ export const cmsProductDetailMock = [
   },
   {
     customers_also_bought: {
+      title: 'Customers Also Bought',
       customer_also_bought: [
         {
           productCode: 'Hammock_025',

@@ -96,18 +96,18 @@ const DefaultComponentMap = {
   },
   recommendations: {
     component: ProductRecommendations,
-    mapDataToProps: (data: { product_recommendations: any }) => {
+    mapDataToProps: (data: { title: string; product_recommendations: any }) => {
       return {
-        title: 'Product Recommendations',
+        title: data?.title,
         productCodes: data?.product_recommendations,
       }
     },
   },
   customers_also_bought: {
     component: ProductRecommendations,
-    mapDataToProps: (data: { customer_also_bought: any }) => {
+    mapDataToProps: (data: { title: string; customer_also_bought: any }) => {
       return {
-        title: 'Customers Also Bought',
+        title: data?.title,
         productCodes: data?.customer_also_bought,
       }
     },

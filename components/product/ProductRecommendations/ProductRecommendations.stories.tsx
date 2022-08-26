@@ -3,9 +3,6 @@ import React from 'react'
 import { ComponentStory, ComponentMeta } from '@storybook/react'
 
 import ProductRecommendations from './ProductRecommendations'
-import { productSearchResultMock } from '@/__mocks__/stories/productSearchResultMock'
-
-import type { Product } from '@/lib/gql/types'
 
 export default {
   title: 'Product/Product Recommendations',
