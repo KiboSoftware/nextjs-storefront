@@ -35,6 +35,28 @@ jest.mock('@/components/page-templates/CartTemplate/CartTemplate', () => ({
 
 jest.mock('@/lib/api/util/getUserClaimsFromRequest.ts', () => jest.fn(() => null))
 
+jest.mock('next/config', () => {
+  return () => ({
+    publicRuntimeConfig: {
+      maxCookieAge: 0,
+      productListing: {
+        sortOptions: [
+          { value: 'Best Match', id: '' },
+          { value: 'Price: Low to High', id: 'price asc' },
+          { value: 'Price: High to Low', id: 'price desc' },
+          { value: 'Latest', id: 'createDate desc' },
+          { value: 'Oldest', id: 'createDate asc' },
+        ],
+        pageSize: 16,
+      },
+    },
+    serverRuntimeConfig: {
+      cacheKey: 'categoryTree',
+      cacheTimeOut: 10000,
+    },
+  })
+})
+
 describe('[page] Cart Page', () => {
   it('should run getServerSideProps method', async () => {
     const response = await getServerSideProps({ params: {} } as any)
