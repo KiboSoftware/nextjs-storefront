@@ -18,8 +18,7 @@ export async function getStaticProps(context: GetStaticPropsContext) {
   const { serverRuntimeConfig } = getConfig()
 
   const product = await getProduct(productCode)
-  const categoryTreeResponse: CategoryTreeResponse = await getCategoryTree()
-  const categoriesTree = categoryTreeResponse.data.categoriesTree.items
+  const categoriesTree: CategoryTreeResponse = await getCategoryTree()
 
   return {
     props: {

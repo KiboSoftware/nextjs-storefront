@@ -88,7 +88,7 @@ export const searchSuggestionHandlers = [
 export const categoryHandlers = [
   // useSearchSuggestions
   graphql.query('getCategoryTreeQuery', (_req, res, ctx) => {
-    return res(ctx.data(categoryTreeDataMock))
+    return res(ctx.data(categoryTreeDataMock.categoriesTree.items))
   }),
 ]
 

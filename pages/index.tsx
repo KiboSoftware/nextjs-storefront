@@ -13,8 +13,7 @@ interface HomePageProps {
 
 export async function getStaticProps(context: GetStaticPropsContext) {
   const { locale } = context
-  const categoryTreeResponse: CategoryTreeResponse = await getCategoryTree()
-  const categoriesTree = categoryTreeResponse.data.categoriesTree.items
+  const categoriesTree: CategoryTreeResponse = await getCategoryTree()
 
   const cmsPage = await getPage({
     contentTypeUid: 'home_page',

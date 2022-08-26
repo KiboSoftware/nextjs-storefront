@@ -19,7 +19,7 @@ const fetchCategoryTree = async () => {
     variables: {},
   })
 
-  return response.categoriesTree.items
+  return response
 }
 
 export const useCategoryTree = (initialData: Maybe<PrCategory>[]): UseCategoryResponse => {

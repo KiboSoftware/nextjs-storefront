@@ -27,9 +27,7 @@ export const getServerSideProps: GetServerSideProps = async (
   const { locale, res } = context
   const response = await productSearch(context.query as unknown as CategorySearchParams)
 
-  const categoryTreeResponse: CategoryTreeResponse = await getCategoryTree()
-  const categoriesTree = categoryTreeResponse.data.categoriesTree.items
-
+  const categoriesTree: CategoryTreeResponse = await getCategoryTree()
   const category = await categoryTreeSearchByCode(context.query)
 
   res.setHeader('Cache-Control', 'public, s-maxage=10, stale-while-revalidate=59')

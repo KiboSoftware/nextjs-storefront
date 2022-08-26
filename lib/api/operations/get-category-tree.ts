@@ -5,19 +5,20 @@ import cache from '@/lib/api/util/cache'
 import { getCategoryTreeQuery } from '@/lib/gql/queries'
 
 const { serverRuntimeConfig } = getConfig()
-const key = serverRuntimeConfig.cacheKey
-const timeOut = serverRuntimeConfig.cacheTimeOut
+const cacheKey = serverRuntimeConfig.cacheKey
+const cacheTimeOut = serverRuntimeConfig.cacheTimeOut
 
 export default async function getCategoryTree() {
   try {
-    const cachedItems = cache.get(key)
+    const cachedItems = cache.get(cacheKey)
     if (cachedItems) return cachedItems
 
     if (!cachedItems) {
       const response = await fetcher({ query: getCategoryTreeQuery, variables: {} }, null)
-      cache.set(key, response, timeOut)
+      const items = response.data.categoriesTree.items
+      cache.set(cacheKey, items, cacheTimeOut)
 
-      return response
+      return items
     }
   } catch (error) {
     console.log(error)
