@@ -26,7 +26,7 @@ import {
   usePaymentTypes,
 } from '@/hooks'
 import { PaymentType } from '@/lib/constants'
-import { billingGetters, cardGetters, checkoutGetters, accountDetailsGetters } from '@/lib/getters'
+import { addressGetters, cardGetters, checkoutGetters, accountDetailsGetters } from '@/lib/getters'
 import { tokenizeCreditCardPayment } from '@/lib/helpers'
 import { buildCardPaymentActionForCheckoutInput } from '@/lib/helpers/buildPaymentActionForCheckoutInput'
 import type {
@@ -288,7 +288,7 @@ const PaymentStep = (props: PaymentStepProps) => {
         numberPart: cardNumberPart,
       }
 
-      const isSameAsShipping = billingGetters.getIsSameBillingShippingAddress(
+      const isSameAsShipping = addressGetters.getIsSameBillingShippingAddress(
         selectedPaymentMethod?.billingAddressInfo
       )
 
@@ -366,7 +366,7 @@ const PaymentStep = (props: PaymentStepProps) => {
   }
 
   const getSavedPaymentMethodView = (card: PaymentAndBilling): React.ReactNode => {
-    const address = billingGetters.getAddress(
+    const address = addressGetters.getAddress(
       card?.billingAddressInfo?.contact.address as CrAddress
     )
     return (
@@ -381,11 +381,11 @@ const PaymentStep = (props: PaymentStepProps) => {
         expireMonth={cardGetters.getExpireMonth(card?.cardInfo)}
         expireYear={cardGetters.getExpireYear(card?.cardInfo)}
         cardType={cardGetters.getCardType(card?.cardInfo)}
-        address1={billingGetters.getAddress1(address)}
-        address2={billingGetters.getAddress2(address)}
-        cityOrTown={billingGetters.getCityOrTown(address)}
-        postalOrZipCode={billingGetters.getPostalOrZipCode(address)}
-        stateOrProvince={billingGetters.getStateOrProvince(address)}
+        address1={addressGetters.getAddress1(address)}
+        address2={addressGetters.getAddress2(address)}
+        cityOrTown={addressGetters.getCityOrTown(address)}
+        postalOrZipCode={addressGetters.getPostalOrZipCode(address)}
+        stateOrProvince={addressGetters.getStateOrProvince(address)}
         onPaymentCardSelection={handleRadioSavedCardSelection}
       />
     )
