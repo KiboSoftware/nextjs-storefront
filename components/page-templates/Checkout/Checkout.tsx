@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 
 import { Box, Stack, Button, Typography, SxProps, Divider, useMediaQuery } from '@mui/material'
 import { Theme } from '@mui/material/styles'
@@ -14,9 +14,15 @@ import {
   OrderReview,
   OrderSummary,
 } from '@/components/checkout'
+import { PromoCodeBadge } from '@/components/common'
 import { OrderConfirmation } from '@/components/order'
 import { useCheckoutStepContext, STEP_STATUS, useAuthContext } from '@/context'
-import { useCheckoutQueries, useCustomerContacts } from '@/hooks'
+import {
+  useCheckoutQueries,
+  useCustomerContacts,
+  useUpdateOrderCouponMutation,
+  useDeleteOrderCouponMutation,
+} from '@/hooks'
 import { userAddressGetters } from '@/lib/getters'
 import theme from '@/styles/theme'
 
@@ -34,6 +40,8 @@ const buttonStyle = {
 const Checkout = (props: CheckoutProps) => {
   const { checkout: initialCheckout } = props
 
+  const [promoError, setPromoError] = useState<string>('')
+
   const { t } = useTranslation(['checkout'])
   const router = useRouter()
 
@@ -45,6 +53,8 @@ const Checkout = (props: CheckoutProps) => {
 
   const { user } = useAuthContext()
   const { data: savedUserAddressData } = useCustomerContacts(user?.id as number)
+  const updateOrderCoupon = useUpdateOrderCouponMutation()
+  const deleteOrderCoupon = useDeleteOrderCouponMutation()
 
   const { activeStep, stepStatus, steps, setStepBack, setStepStatusSubmit } =
     useCheckoutStepContext()
@@ -62,19 +72,59 @@ const Checkout = (props: CheckoutProps) => {
   const handleBack = () => setStepBack()
   const handleSubmit = () => setStepStatusSubmit()
 
+  const handleApplyCouponCode = async (couponCode: string) => {
+    try {
+      setPromoError('')
+      const response = await updateOrderCoupon.mutateAsync({
+        checkoutId: checkoutId as string,
+        couponCode,
+      })
+      if (response?.invalidCoupons?.length) {
+        setPromoError(response?.invalidCoupons[0]?.reason)
+      }
+    } catch (err) {
+      console.error(err)
+    }
+  }
+  const handleRemoveCouponCode = async (couponCode: string) => {
+    try {
+      await deleteOrderCoupon.mutateAsync({
+        checkoutId: checkoutId as string,
+        couponCode,
+      })
+    } catch (err) {
+      console.error(err)
+    }
+  }
+
   const orderSummaryArgs = {
     nameLabel: t('order-summary'),
     subTotalLabel: `Cart Subtotal of (${checkout?.items?.length} items)`,
-    shippingTotalLabel: 'Standard Shipping',
-    taxLabel: 'Tax',
-    totalLabel: 'Order Total',
+    shippingTotalLabel: t('common:standard-shopping'),
+    taxLabel: t('common:tax'),
+    totalLabel: t('common:order-total'),
     subTotal: t('common:currency', { val: checkout?.subtotal }),
-    shippingTotal: t('free'),
+    discountedSubtotal:
+      checkout?.discountedSubtotal && checkout?.discountedSubtotal != checkout?.subtotal
+        ? t('common:currency', { val: checkout?.discountedSubtotal })
+        : '',
+    shippingTotal: checkout?.shippingTotal
+      ? t('common:currency', { val: checkout?.shippingTotal })
+      : t('checkout:free'),
     tax: t('common:currency', { val: checkout?.taxTotal }),
     total: t('common:currency', { val: checkout?.total }),
-    checkoutLabel: 'Go to Checkout',
-    shippingLabel: 'Go to Shipping',
-    backLabel: 'Go Back',
+    checkoutLabel: t('checkout:go-to-checkout'),
+    shippingLabel: t('checkout:go-to-shipping'),
+    backLabel: t('checkout:Go Back'),
+    promoComponent: (
+      <PromoCodeBadge
+        onApplyCouponCode={handleApplyCouponCode}
+        onRemoveCouponCode={handleRemoveCouponCode}
+        promoList={checkout?.couponCodes as string[]}
+        promoError={!!promoError}
+        helpText={promoError}
+      />
+    ),
   }
 
   const paymentStepParams = {
@@ -84,7 +134,9 @@ const Checkout = (props: CheckoutProps) => {
   const numberOfItems = checkout && checkout?.items && checkout?.items?.length
   const showCheckoutSteps = activeStep !== steps.length
 
-  const userShippingAddress = userAddressGetters.getUserShippingAddress(savedUserAddressData?.items)
+  const userShippingAddress = userAddressGetters?.getUserShippingAddress(
+    savedUserAddressData?.items
+  )
   return (
     <>
       {showCheckoutSteps && (

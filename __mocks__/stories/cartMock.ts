@@ -3,8 +3,17 @@ import type { Cart } from '@/lib/gql/types'
 export const cartResponse: Cart = {
   id: '13bdd5a61958150001dc971f000074e7',
   invalidCoupons: [],
-  couponCodes: [],
-  orderDiscounts: [],
+  couponCodes: ['10OFF', 'FREE10'],
+  orderDiscounts: [
+    {
+      impact: 10,
+      discount: {
+        id: 10,
+        name: '10off',
+      },
+      couponCode: '10OFF',
+    },
+  ],
   total: 275,
   subtotal: 275,
   shippingTotal: 0,
@@ -465,4 +474,7 @@ export const cartResponse: Cart = {
 
 export const cartMock: { currentCart: Cart } = {
   currentCart: cartResponse,
+}
+export const cartCouponMock: { updateCartCoupon: Cart } = {
+  updateCartCoupon: cartResponse,
 }

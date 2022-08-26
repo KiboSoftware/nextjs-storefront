@@ -53,6 +53,7 @@
   "all-departments": "All Departments",
   "cart-sub-total": "Cart Subtotal",
   "estimated-tax": "Estimated Tax",
+  "tax": "Tax",
   "estimated-order-total": "Estimated Order Total",
   "standard-shopping": "Standard Shipping",
   "currency": "{{val, currency(USD)}}",
@@ -130,7 +131,6 @@
   "time-filter": "Time Filter",
   "last-30-days": "Last 30 days",
   "last-6-months": "Last 6 months",
-
   "shop-now": "Shop Now",
 
   "home": "Home",
@@ -140,5 +140,7 @@
   "make-this-my-default-payment": "Make this my default payment",
   "add-new-address": "Add New Address",
   "select-billing-address": "Select billing address",
-  "delete-confirmation-text": "Are you sure you want to delete ?"
+  "delete-confirmation-text": "Are you sure you want to delete ?",
+
+  "promo-code-already-in-use": "Promo code already in use!"
 }

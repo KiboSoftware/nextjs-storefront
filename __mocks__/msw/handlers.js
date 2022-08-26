@@ -2,7 +2,7 @@ import { graphql } from 'msw'
 
 import { orderMock, shippingRateMock } from '../stories'
 import { cartItemMock } from '../stories/cartItemMock'
-import { cartMock } from '../stories/cartMock'
+import { cartCouponMock, cartMock } from '../stories/cartMock'
 import { categoryTreeDataMock } from '../stories/categoryTreeDataMock'
 import { configuredProductMock } from '../stories/configuredProductMock'
 import { createCustomerAccountCardMock } from '../stories/createCustomerAccountCardMock'
@@ -10,6 +10,7 @@ import { createOrderPaymentActionMock } from '../stories/createOrderPaymentActio
 import { customerAccountCardsMock } from '../stories/customerAccountCardsMock'
 import { locationCollectionMock } from '../stories/locationCollectionMock'
 import { orderCollection } from '../stories/orderCollection'
+import { orderCouponMock } from '../stories/orderMock'
 import { productSearchResultMock } from '../stories/productSearchResultMock'
 import { searchSuggestionMock } from '../stories/searchSuggestionResultMock'
 import { updateCustomerAccountCardMock } from '../stories/updateCustomerAccountCardMock'
@@ -178,6 +179,18 @@ export const cartHandlers = [
       })
     )
   }),
+
+  graphql.mutation('updateCartCoupon', (_req, res, ctx) => {
+    return res(ctx.data(cartCouponMock))
+  }),
+
+  graphql.mutation('deleteCartCoupon', (_req, res, ctx) => {
+    return res(
+      ctx.data({
+        deleteCartCoupon: '1234',
+      })
+    )
+  }),
 ]
 
 export const storeHandlers = [
@@ -213,6 +226,16 @@ export const wishlistHandlers = [
 export const orderHandlers = [
   graphql.query('getOrders', (_req, res, ctx) => {
     return res(ctx.data(orderCollection))
+  }),
+  graphql.mutation('updateOrderCoupon', (_req, res, ctx) => {
+    return res(ctx.data(orderCouponMock))
+  }),
+  graphql.mutation('deleteOrderCoupon', (_req, res, ctx) => {
+    return res(
+      ctx.data({
+        deleteOrderCoupon: '1234',
+      })
+    )
   }),
 ]
 
