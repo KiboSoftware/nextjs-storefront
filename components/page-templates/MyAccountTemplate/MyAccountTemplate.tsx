@@ -102,7 +102,7 @@ const MyAccountTemplate = () => {
       id: 'address-book-accordion',
       controls: 'address-book-content',
       header: t('address-book'),
-      component: <AddressBook />,
+      component: <AddressBook user={user as CustomerAccount} contacts={contacts} />,
     },
     {
       id: 'payment-method-accordion',

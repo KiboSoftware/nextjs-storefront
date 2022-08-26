@@ -16,12 +16,11 @@ const AddressFormMock = () => <div data-testid="address-form-component" />
 jest.mock('@/components/common/AddressCard/AddressCard', () => AddressCardMock)
 jest.mock('@/components/common/AddressForm/AddressForm', () => AddressFormMock)
 
-const setup = (isAuthenticated = false) => {
+const setup = () => {
   const user = userEvent.setup()
 
   const mockValues = mock<AuthContextType>()
-  mockValues.isAuthenticated = isAuthenticated
-  isAuthenticated ? (mockValues.user = userResponseMock) : (mockValues.user = undefined)
+  mockValues.user = userResponseMock
 
   render(
     <AuthContext.Provider value={mockValues}>
@@ -43,8 +42,7 @@ afterEach(() => {
 
 describe('[components] AddressBook', () => {
   it('should render component', async () => {
-    const isAuthenticated = true
-    setup(isAuthenticated)
+    setup()
 
     const addressBookComponent = screen.getByTestId(/address-book-component/i)
     const addNewAddressButton = screen.getByRole('button', {

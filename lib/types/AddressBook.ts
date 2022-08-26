@@ -7,3 +7,8 @@ export interface AddressParams {
   addressType: string
   action: string
 }
+
+export interface DeleteAddressParams {
+  accountId: number
+  contactId: number
+}

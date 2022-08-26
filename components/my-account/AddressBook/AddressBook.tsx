@@ -7,25 +7,36 @@ import { useTranslation } from 'next-i18next'
 import Link from 'next/link'
 
 import { AddressCard, AddressForm } from '@/components/common'
-import { DeleteAddressConfirmationDialog } from '@/components/dialogs'
-import { useModalContext, useAuthContext } from '@/context'
+import { ConfirmationDialog } from '@/components/dialogs'
+import { useModalContext } from '@/context'
 import {
-  useCustomerContacts,
   useCreateCustomerAddressMutation,
   useUpdateCustomerAddressMutation,
   useDeleteCustomerAddressMutation,
 } from '@/hooks'
 import { userAddressGetters } from '@/lib/getters'
 import { buildAddressParams, buildAddressProps } from '@/lib/helpers'
-import type { Address, ContactForm } from '@/lib/types'
+import type { Address, ContactForm, DeleteAddressParams } from '@/lib/types'
 
 import type { UpdateCustomerAccountContactDetailsParams } from '@/hooks'
-import type { CuAddress, CustomerContact, Maybe } from '@/lib/gql/types'
+import type {
+  CuAddress,
+  CustomerAccount,
+  CustomerContact,
+  CustomerContactCollection,
+  Maybe,
+} from '@/lib/gql/types'
 
-const AddressBook = () => {
+interface PaymentMethodProps {
+  user: CustomerAccount
+  contacts: CustomerContactCollection
+}
+
+const AddressBook = (props: PaymentMethodProps) => {
+  const { user, contacts } = props
+
   const { t } = useTranslation('common')
   const { showModal, closeModal } = useModalContext()
-  const { isAuthenticated, user } = useAuthContext()
   const [isAddNewAddress, setIsAddNewAddress] = useState<boolean>(false)
   const [isEditAddress, setIsEditAddress] = useState<boolean>(false)
 
@@ -38,9 +49,7 @@ const AddressBook = () => {
   const { updateSavedAddressDetails } = useUpdateCustomerAddressMutation()
   const { deleteSavedAddressDetails } = useDeleteCustomerAddressMutation()
 
-  const { data: customerContactsCollection } = useCustomerContacts(user?.id as number)
-
-  const addresses = userAddressGetters.getUserShippingAddress(customerContactsCollection?.items)
+  const addresses = userAddressGetters.getUserShippingAddress(contacts?.items)
   const handleNewAddress = () => {
     setIsAddNewAddress(true)
     setEditAddress(undefined)
@@ -93,26 +102,24 @@ const AddressBook = () => {
     setIsEditAddress(false)
   }
 
-  const handleConfirmDeleteAddress = (deleteAddressProps: {
-    accountId: number
-    contactId: number
-  }) => {
+  const handleConfirmDeleteAddress = (deleteAddressProps: DeleteAddressParams) => {
     showModal({
-      Component: DeleteAddressConfirmationDialog,
+      Component: ConfirmationDialog,
       props: {
-        isOpen: true,
-        isDialogCentered: false,
-        onClose: closeModal,
-        onDeleteAddress: async () => {
-          try {
-            await deleteSavedAddressDetails.mutateAsync(deleteAddressProps)
-            closeModal()
-          } catch (error) {
-            console.log('Error: delete saved address from my account', error)
-          }
-        },
+        onConfirm: () => handleDeleteAddress(deleteAddressProps),
+        contentText: t('are-you-sure-you-want-to-delete-this-address'),
+        primaryButtonText: t('delete'),
       },
     })
+  }
+
+  const handleDeleteAddress = async (deleteAddressProps: DeleteAddressParams) => {
+    try {
+      await deleteSavedAddressDetails.mutateAsync(deleteAddressProps)
+      closeModal()
+    } catch (error) {
+      console.log('Error: delete saved address from my account', error)
+    }
   }
 
   return (
@@ -156,7 +163,7 @@ const AddressBook = () => {
         </Box>
       ))}
 
-      {isAuthenticated && !isAddNewAddress && !isEditAddress && (
+      {!isAddNewAddress && !isEditAddress && (
         <Button
           variant="contained"
           color="inherit"
@@ -174,10 +181,10 @@ const AddressBook = () => {
           <AddressForm
             saveAddressLabel={''}
             setAutoFocus={true}
+            isUserLoggedIn={true}
             validateForm={validateForm}
             onSaveAddress={handleSaveAddress}
             contact={editAddress as ContactForm}
-            isUserLoggedIn={isAuthenticated}
           />
           <FormControlLabel
             label={t('make-this-my-default-address')}
