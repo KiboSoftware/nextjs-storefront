@@ -15,7 +15,7 @@ export interface UseCategoryResponse {
 const fetchCategoryTree = async () => {
   const endpoint = makeCategoryTreeGraphEndPoint()
   const response = await fetch(endpoint)
-  return await response.json()
+  return response.json()
 }
 
 export const useCategoryTree = (initialData: Maybe<PrCategory>[]): UseCategoryResponse => {
