@@ -149,8 +149,10 @@ describe('[components] Checkout integration', () => {
       const { user } = setup(initialActiveStep)
       const removeIcon = screen.getAllByLabelText('remove-promo-code')
       await user.click(removeIcon[0])
-      const removedPromoCode = screen.queryByText(promoCode)
-      expect(removedPromoCode).not.toBeInTheDocument()
+      await waitFor(() => {
+        const removedPromoCode = screen.queryByText(promoCode)
+        expect(removedPromoCode).not.toBeInTheDocument()
+      })
     })
 
     it('should show error message when applied an invalid coupon', async () => {
