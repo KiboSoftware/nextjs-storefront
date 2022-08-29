@@ -78,14 +78,14 @@ WithQtyLabel.args = {
     undefined,
 }
 
-export const WithoutDetailOption = TemplateWithQtyLabel.bind({})
+export const WithEmptyDetailOption = TemplateWithQtyLabel.bind({})
 Common.args.options = []
-WithoutDetailOption.args = {
+WithEmptyDetailOption.args = {
   ...Common.args,
 }
 
-export const WithChageStoreOption = TemplateWithQtyLabel.bind({})
-WithChageStoreOption.args = {
+export const WithChangeStoreOption = TemplateWithQtyLabel.bind({})
+WithChangeStoreOption.args = {
   ...WithQtyLabel.args,
   isPickupItem: true,
   purchaseLocation: 'Down Store',
@@ -93,4 +93,15 @@ WithChageStoreOption.args = {
   onStoreLocatorClick: () => {
     console.log('change store clicked')
   },
+}
+
+export const WithoutOptionsForInventory = TemplateWithQtyLabel.bind({})
+Common.args.options = undefined
+WithoutOptionsForInventory.args = {
+  ...Common.args,
+  qty: orderItem?.quantity,
+  price: (orderItem?.product?.price?.price || 0).toString(),
+  salePrice:
+    (orderItem?.product?.price?.salePrice && (orderItem?.product?.price?.salePrice).toString()) ||
+    undefined,
 }

@@ -233,7 +233,7 @@ const isProductVariationsSelected = (product: Product): boolean => {
 
 const getAvailableItemCount = (
   product: ProductCustom,
-  productLocationInventoryData: LocationInventory[],
+  productLocationInventoryData: LocationInventory[] = [],
   fulfillmentOptionValue: string
 ): number => {
   const allVariantSelected = isProductVariationsSelected(product)

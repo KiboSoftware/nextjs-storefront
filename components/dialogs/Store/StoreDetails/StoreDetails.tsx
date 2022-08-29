@@ -46,7 +46,7 @@ const StoreDetails = (props: StoreDetailsProps) => {
         width="fit-content"
         sx={{ cursor: 'pointer' }}
         pb={0.125}
-        onClick={() => setExpanded(!expanded)}
+        onClick={() => setExpanded(showProductAndInventory && !inventory ? false : !expanded)}
       >
         <Typography variant="body2" align="left" py={1} mr={1} sx={{ textDecoration: 'underline' }}>
           {t('store-info')}

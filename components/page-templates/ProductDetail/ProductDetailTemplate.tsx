@@ -68,7 +68,7 @@ const ProductDetailTemplate = (props: ProductDetailTemplateProps) => {
     product,
     purchaseLocation,
   })
-  const productInventory = useProductLocationInventory(
+  const { data: locationInventory } = useProductLocationInventory(
     product?.productCode as string,
     selectedFulfillmentOption?.location?.code as string
   )
@@ -100,7 +100,7 @@ const ProductDetailTemplate = (props: ProductDetailTemplateProps) => {
   })
   const quantityLeft = productGetters.getAvailableItemCount(
     product,
-    productInventory?.data,
+    locationInventory,
     selectedFulfillmentOption?.method
   )
 

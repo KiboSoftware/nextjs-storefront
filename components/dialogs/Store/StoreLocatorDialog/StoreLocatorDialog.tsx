@@ -49,7 +49,7 @@ const StoreLocatorDialog = (props: StoreLocatorProps) => {
   const locationCodes: string = storeLocationGetters.getLocationCodes(
     locations as Maybe<Location>[]
   )
-  const locationInventory = useProductLocationInventory(
+  const { data: locationInventory } = useProductLocationInventory(
     product?.productCode as string,
     locationCodes
   )
@@ -86,7 +86,7 @@ const StoreLocatorDialog = (props: StoreLocatorProps) => {
         spLocations={!isError ? (locations as Maybe<Location>[]) : []}
         showProductAndInventory={showProductAndInventory}
         product={product}
-        locationInventory={locationInventory.data}
+        locationInventory={locationInventory}
         quantity={quantity}
         searchTerm={searchTerm}
         initialState={initialState}
@@ -119,7 +119,7 @@ const StoreLocatorDialog = (props: StoreLocatorProps) => {
         <Button
           sx={{ width: '100%' }}
           variant="contained"
-          disabled={showProductAndInventory && locationInventory.data.length === 0}
+          disabled={showProductAndInventory && locationInventory?.length === 0}
           onClick={() => handleSetStore(selectedStore)}
         >
           {t('set-store')}

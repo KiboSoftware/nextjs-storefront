@@ -29,4 +29,14 @@ describe('[component] - KiboRadio', () => {
     await user.click(radio)
     expect(onChangeMock).toBeCalled()
   })
+
+  it('should disabled the radio button', async () => {
+    render(<Common {...Common.args} />)
+
+    const radio = screen.getByRole('radio', {
+      name: /radio option 1/i,
+    })
+
+    expect(radio).toBeDisabled()
+  })
 })

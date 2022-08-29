@@ -9,6 +9,7 @@ const radioOptions = [
     label: 'Radio Option 1',
     name: 'Radio Option 1',
     value: 'radio-1',
+    disabled: true,
   },
   {
     label: 'Radio Option 2',

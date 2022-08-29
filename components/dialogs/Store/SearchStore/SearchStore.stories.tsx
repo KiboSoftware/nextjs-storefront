@@ -9,6 +9,8 @@ import {
   locationInventoryCollectionMock,
 } from '@/__mocks__/stories'
 
+import type { LocationInventory } from '@/lib/gql/types'
+
 export default {
   title: 'Dialogs/Store/SearchStore',
   component: SearchStore,
@@ -38,7 +40,8 @@ WithInventory.args = {
   spLocations: locationList || [],
   showProductAndInventory: true,
   product: ProductCustomMock,
-  locationInventory: locationInventoryCollectionMock?.productLocationInventory?.items || [],
+  locationInventory:
+    (locationInventoryCollectionMock?.productLocationInventory?.items as LocationInventory[]) || [],
   searchTerm: '',
   initialState: true,
   selectedStore: 'RICHMOND',

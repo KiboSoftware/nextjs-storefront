@@ -31,10 +31,14 @@ export const useProductLocationInventory = (
     data = [],
     isLoading,
     isSuccess,
-  } = useQuery(inventoryKeys.all, () => loadProductLocationInventory(productCode, locationCodes), {
-    refetchOnWindowFocus: false,
-    enabled: !!(productCode && locationCodes),
-  })
+  } = useQuery(
+    inventoryKeys.inventoryParams(productCode, locationCodes),
+    () => loadProductLocationInventory(productCode, locationCodes),
+    {
+      refetchOnWindowFocus: false,
+      enabled: !!(productCode && locationCodes),
+    }
+  )
 
   return { data, isLoading, isSuccess }
 }

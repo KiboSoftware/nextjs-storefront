@@ -16,7 +16,7 @@ interface SearchStoreProps {
   spLocations: Maybe<Location>[]
   showProductAndInventory?: boolean
   product?: ProductCustom
-  locationInventory?: Maybe<LocationInventory>[]
+  locationInventory?: LocationInventory[]
   quantity?: number
   searchTerm: string
   initialState: boolean
@@ -32,7 +32,7 @@ const SearchStore = (props: SearchStoreProps) => {
     spLocations,
     showProductAndInventory = false,
     product,
-    locationInventory,
+    locationInventory = [],
     quantity,
     searchTerm = '',
     initialState,
