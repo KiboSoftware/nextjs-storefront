@@ -49,3 +49,7 @@ export * from './mutations/useCustomerCardsMutation/useDeleteCustomerCardsMutati
 export * from './mutations/useCustomerAddressMutation/useCreateCustomerAddressMutation'
 export * from './mutations/useCustomerAddressMutation/useUpdateCustomerAddressMutation'
 export * from './mutations/useCustomerAddressMutation/useDeleteCustomerAddressMutation'
+export * from './mutations/useCouponMutation/useUpdateCartCouponMutation/useUpdateCartCouponMutation'
+export * from './mutations/useCouponMutation/useDeleteCartCouponMutation/useDeleteCartCouponMutation'
+export * from './mutations/useCouponMutation/useUpdateOrderCouponMutation/useUpdateOrderCouponMutation'
+export * from './mutations/useCouponMutation/useDeleteOrderCouponMutation/useDeleteOrderCouponMutation'

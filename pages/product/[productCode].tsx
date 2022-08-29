@@ -9,9 +9,8 @@ import getProduct from '@/lib/api/operations/get-product'
 import search from '@/lib/api/operations/get-product-search'
 import { productGetters } from '@/lib/getters'
 import { getPage } from '@/lib/operations/get-page'
-import type { CategorySearchParams } from '@/lib/types'
+import type { CategorySearchParams, CategoryTreeResponse } from '@/lib/types'
 
-import type { CategoryCollection } from '@/lib/gql/types'
 import type { NextPage, GetStaticPropsContext } from 'next'
 
 export async function getStaticProps(context: GetStaticPropsContext) {
@@ -23,7 +22,8 @@ export async function getStaticProps(context: GetStaticPropsContext) {
     entryUrl: productCode,
   })
   const product = await getProduct(productCode)
-  const categoriesTree: CategoryCollection = await getCategoryTree()
+  const categoriesTree: CategoryTreeResponse = await getCategoryTree()
+
   return {
     props: {
       product,

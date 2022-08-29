@@ -11,6 +11,17 @@ jest.mock('@/lib/api/util', () => ({
 }))
 jest.mock('@/lib/api/util/getUserClaimsFromRequest.ts', () => jest.fn(() => null))
 
+jest.mock('next/config', () => {
+  return () => {
+    return {
+      serverRuntimeConfig: {
+        cacheKey: 'categoryTree',
+        cacheTimeOut: 10000,
+      },
+    }
+  }
+})
+
 describe('[operations] Get Checkout', () => {
   it('should get checkout by checkout id', async () => {
     mockUtil.fetcher = jest

@@ -10,13 +10,13 @@ export default {
 } as ComponentMeta<typeof PromoCodeBadge>
 
 const Template: ComponentStory<typeof PromoCodeBadge> = (args) => {
-  const { promoError, helpText } = args
-  const [promoList, setPromoList] = useState<any>([])
+  const { promoList = [], promoError, helpText } = args
+  const [promoCodes, setPromoCodes] = useState<any>(promoList)
   const onRemoveCouponCode = (list: any) => {
-    setPromoList((coupon: any) => coupon.filter((item: any) => item !== list))
+    setPromoCodes((coupon: any) => coupon.filter((item: any) => item !== list))
   }
   const onApplyCouponCode = (promo: any) => {
-    setPromoList((e: any) => [...e, promo])
+    setPromoCodes((e: any) => [...e, promo])
   }
 
   return (
@@ -24,7 +24,7 @@ const Template: ComponentStory<typeof PromoCodeBadge> = (args) => {
       <PromoCodeBadge
         onApplyCouponCode={onApplyCouponCode}
         onRemoveCouponCode={onRemoveCouponCode}
-        promoList={promoList}
+        promoList={promoCodes}
         promoError={promoError}
         helpText={helpText}
       />

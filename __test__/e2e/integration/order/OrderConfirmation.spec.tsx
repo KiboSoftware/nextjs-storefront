@@ -47,6 +47,6 @@ describe('[components] - OrderConfirmation Integration', () => {
     expect(screen.getByText('shipping')).toBeVisible()
     expect(screen.getByText(/estimated-tax/i)).toBeVisible()
 
-    expect(screen.getAllByText(/currency/i)).toHaveLength(8)
+    expect(screen.getAllByText(/currency/i)).toHaveLength(9)
   })
 })

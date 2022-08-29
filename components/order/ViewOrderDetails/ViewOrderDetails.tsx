@@ -62,6 +62,7 @@ const ViewOrderDetails = (props: ViewOrderDetailsProps) => {
     taxLabel: t('estimated-tax'),
     totalLabel: t('total-price'),
     subTotal: t('currency', { val: orderGetters.getSubtotal(order) }),
+    discountedSubtotal: t('currency', { val: orderGetters.getDiscountedSubtotal(order) }),
     shippingTotal: orderGetters.getShippingTotal(order)
       ? t('currency', { val: orderGetters.getShippingTotal(order) })
       : t('checkout:free'),

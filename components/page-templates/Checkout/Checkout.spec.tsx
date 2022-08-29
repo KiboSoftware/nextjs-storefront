@@ -32,6 +32,8 @@ jest.mock('@/hooks', () => ({
   useCheckoutQueries: jest.fn(() => ({})),
   useUpdateCheckout: jest.fn(() => ({})),
   useCustomerContacts: jest.fn(() => ({})),
+  useUpdateOrderCouponMutation: jest.fn(() => ({})),
+  useDeleteOrderCouponMutation: jest.fn(() => ({})),
 }))
 
 const { Common } = composeStories(stories)

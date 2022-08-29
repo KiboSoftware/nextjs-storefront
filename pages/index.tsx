@@ -4,17 +4,17 @@ import nextI18NextConfig from '../next-i18next.config'
 import CmsComponent from '@/components/home/CmsComponent/CmsComponent'
 import getCategoryTree from '@/lib/api/operations/get-category-tree'
 import { getPage } from '@/lib/operations/get-page'
+import type { CategoryTreeResponse } from '@/lib/types'
 
-import type { CategoryCollection } from '@/lib/gql/types'
 import type { NextPage, GetStaticPropsContext } from 'next'
-
 interface HomePageProps {
   cmsPage: any
 }
 
 export async function getStaticProps(context: GetStaticPropsContext) {
   const { locale } = context
-  const categoriesTree: CategoryCollection = await getCategoryTree()
+  const categoriesTree: CategoryTreeResponse = await getCategoryTree()
+
   const cmsPage = await getPage({
     contentTypeUid: 'home_page',
     referenceFieldPath: [

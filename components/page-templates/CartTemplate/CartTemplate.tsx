@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 
 import {
   Grid,
@@ -25,6 +25,8 @@ import {
   useCartMutationUpdateCartItemQuantity,
   useCartMutationRemoveCartItem,
   useCartMutationUpdateCartItem,
+  useUpdateCartCouponMutation,
+  useDeleteCartCouponMutation,
 } from '@/hooks'
 import { FulfillmentOptions } from '@/lib/constants'
 import { checkoutGetters } from '@/lib/getters'
@@ -69,6 +71,7 @@ const CartTemplate = (props: CartTemplateProps) => {
   const cartItemCount = checkoutGetters.getCartItemCount(cart)
   const cartItems = checkoutGetters.getCartItems(cart)
   const cartSubTotal = checkoutGetters.getSubtotal(cart)
+  const cartDiscountedSubTotal = checkoutGetters.getDiscountedSubtotal(cart)
   const cartShippingTotal = checkoutGetters.getShippingTotal(cart)
   const cartTaxTotal = checkoutGetters.getTaxTotal(cart)
   const cartTotal = checkoutGetters.getTotal(cart)
@@ -76,12 +79,33 @@ const CartTemplate = (props: CartTemplateProps) => {
 
   const { data: locations } = useStoreLocations({ filter: locationCodes })
   const { data: purchaseLocation } = usePurchaseLocation()
+  const updateCartCoupon = useUpdateCartCouponMutation()
+  const deleteCartCoupon = useDeleteCartCouponMutation()
+  const [promoError, setPromoError] = useState<string>('')
 
-  const handleApplyCouponCode = () => {
-    // your code here
+  const handleApplyPromoCode = async (couponCode: string) => {
+    try {
+      setPromoError('')
+      const response = await updateCartCoupon.mutateAsync({
+        cartId: cart?.id as string,
+        couponCode,
+      })
+      if (response?.invalidCoupons?.length) {
+        setPromoError(response?.invalidCoupons[0]?.reason)
+      }
+    } catch (err) {
+      console.error(err)
+    }
   }
-  const handleRemoveCouponCode = () => {
-    // your code here
+  const handleRemovePromoCode = async (couponCode: string) => {
+    try {
+      await deleteCartCoupon.mutateAsync({
+        cartId: cart?.id as string,
+        couponCode,
+      })
+    } catch (err) {
+      console.error(err)
+    }
   }
 
   const handleItemQuantity = async (cartItemId: string, quantity: number) => {
@@ -160,7 +184,11 @@ const CartTemplate = (props: CartTemplateProps) => {
     shippingTotalLabel: t('shipping'),
     taxLabel: t('estimated-tax'),
     totalLabel: t('estimated-order-total'),
-    subTotal: t('currency', { val: cartSubTotal }),
+    subTotal: t('common:currency', { val: cartSubTotal }),
+    discountedSubtotal:
+      cartDiscountedSubTotal && cartDiscountedSubTotal !== cartSubTotal
+        ? t('common:currency', { val: cartDiscountedSubTotal })
+        : '',
     shippingTotal: cartShippingTotal
       ? t('currency', { val: cartShippingTotal })
       : t('checkout:free'),
@@ -168,10 +196,11 @@ const CartTemplate = (props: CartTemplateProps) => {
     total: t('currency', { val: cartTotal }),
     promoComponent: (
       <PromoCodeBadge
-        onApplyCouponCode={handleApplyCouponCode}
-        onRemoveCouponCode={handleRemoveCouponCode}
+        onApplyCouponCode={handleApplyPromoCode}
+        onRemoveCouponCode={handleRemovePromoCode}
         promoList={cart?.couponCodes as string[]}
-        promoError={false}
+        promoError={!!promoError}
+        helpText={promoError}
       />
     ),
   }

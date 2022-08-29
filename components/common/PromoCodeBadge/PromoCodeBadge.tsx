@@ -1,6 +1,6 @@
 /** @format */
 
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 
 import CloseIcon from '@mui/icons-material/Close'
 import { Typography, Box, Button, Stack } from '@mui/material'
@@ -20,7 +20,7 @@ const styles = {
     display: 'inline-block',
     mr: '0.5rem',
     px: '0.5rem',
-    backgroundColor: '#DCDCDC',
+    backgroundColor: 'grey.500',
   },
   textBoxStyle: {
     minWidth: '10rem',
@@ -33,20 +33,29 @@ const PromoCodeBadge = (props: PromocodeBadgeProps) => {
   const { t } = useTranslation('common')
   const { onApplyCouponCode, onRemoveCouponCode, promoList, promoError, helpText } = props
   const [promo, setPromo] = useState<string>('')
-  const handleChange = (_name: any, value: string) => {
-    setPromo(value)
-  }
+  const [errorMessage, setErrorMessage] = useState<string | undefined>(helpText as string)
 
   const handleApplyCouponCode = () => {
-    const couponCode = (element: string) => element === promo
-    if (!promoList?.some(couponCode)) {
+    setErrorMessage('')
+    const isPromoCodeApplied = promoList?.find((promoCode) => {
+      return promoCode.toLowerCase() === promo.toLowerCase()
+    })
+
+    if (!isPromoCodeApplied) {
       onApplyCouponCode(promo)
       setPromo('')
+    } else {
+      setErrorMessage(t('promo-code-already-in-use'))
     }
   }
-  const handleRemoveCouponCode = (item: any) => {
+
+  const handleRemoveCouponCode = (item: string) => {
     onRemoveCouponCode(item)
   }
+
+  useEffect(() => {
+    setErrorMessage(helpText as string)
+  }, [promoError])
 
   return (
     <>
@@ -56,9 +65,9 @@ const PromoCodeBadge = (props: PromocodeBadgeProps) => {
           value={promo}
           placeholder={t('promo-code')}
           sx={styles.textBoxStyle}
-          onChange={handleChange}
-          error={promoError}
-          helperText={helpText}
+          onChange={(_name, value) => setPromo(value)}
+          error={!!errorMessage}
+          helperText={errorMessage}
           data-testid="promo-input"
         />
         <Button
@@ -72,20 +81,19 @@ const PromoCodeBadge = (props: PromocodeBadgeProps) => {
         </Button>
       </Stack>
       {promoList?.map((coupon: string) => (
-        <>
-          <Box data-testid="promotype" component="div" sx={styles.boxStyle}>
-            <Stack direction="row" spacing={0.5} alignItems="center">
-              <Typography sx={{ textAlign: 'left' }}>{coupon}</Typography>
-              <CloseIcon
-                sx={{
-                  cursor: 'pointer',
-                  fontSize: '1rem',
-                }}
-                onClick={() => handleRemoveCouponCode(coupon)}
-              />
-            </Stack>
-          </Box>
-        </>
+        <Box key={coupon} data-testid="promotype" component="div" sx={styles.boxStyle}>
+          <Stack direction="row" spacing={0.5} alignItems="center">
+            <Typography sx={{ textAlign: 'left' }}>{coupon}</Typography>
+            <CloseIcon
+              aria-label="remove-promo-code"
+              sx={{
+                cursor: 'pointer',
+                fontSize: '1rem',
+              }}
+              onClick={() => handleRemoveCouponCode(coupon)}
+            />
+          </Stack>
+        </Box>
       ))}
     </>
   )

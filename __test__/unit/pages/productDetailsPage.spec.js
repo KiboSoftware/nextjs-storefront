@@ -67,6 +67,30 @@ jest.mock('next-i18next/serverSideTranslations', () => ({
   }),
 }))
 
+jest.mock('next/config', () => {
+  return () => ({
+    publicRuntimeConfig: {
+      maxCookieAge: 0,
+      productListing: {
+        sortOptions: [
+          { value: 'Best Match', id: '' },
+          { value: 'Price: Low to High', id: 'price asc' },
+          { value: 'Price: High to Low', id: 'price desc' },
+          { value: 'Latest', id: 'createDate desc' },
+          { value: 'Oldest', id: 'createDate asc' },
+        ],
+        pageSize: 16,
+      },
+    },
+    serverRuntimeConfig: {
+      revalidate: 60,
+      pageSize: 100,
+      cacheKey: 'categoryTree',
+      cacheTimeOut: 10000,
+    },
+  })
+})
+
 const ProductDetailTemplateMock = () => <div data-testid="productDetailTemplate-mock" />
 jest.mock(
   '@/components/page-templates/ProductDetail/ProductDetailTemplate.tsx',
