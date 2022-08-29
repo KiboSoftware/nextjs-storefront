@@ -46,7 +46,7 @@ const StoreDetails = (props: StoreDetailsProps) => {
         width="fit-content"
         sx={{ cursor: 'pointer' }}
         pb={0.125}
-        onClick={() => setExpanded(showProductAndInventory && !inventory ? false : !expanded)}
+        onClick={() => setExpanded(!expanded)}
       >
         <Typography variant="body2" align="left" py={1} mr={1} sx={{ textDecoration: 'underline' }}>
           {t('store-info')}
@@ -55,10 +55,20 @@ const StoreDetails = (props: StoreDetailsProps) => {
       </Box>
       <Collapse in={expanded} timeout="auto" unmountOnExit>
         <Stack direction="row" spacing={2}>
-          <Link href="#" variant="body2" color={'text.primary'} fontWeight={600}>
+          <Link
+            href="#"
+            variant="body2"
+            color={showProductAndInventory && !inventory ? 'text.disabled' : 'text.primary'}
+            fontWeight={600}
+          >
             {t('get-directions')}
           </Link>
-          <Link href="#" variant="body2" color={'text.primary'} fontWeight={600}>
+          <Link
+            href="#"
+            variant="body2"
+            color={showProductAndInventory && !inventory ? 'text.disabled' : 'text.primary'}
+            fontWeight={600}
+          >
             {location?.phone}
           </Link>
         </Stack>
