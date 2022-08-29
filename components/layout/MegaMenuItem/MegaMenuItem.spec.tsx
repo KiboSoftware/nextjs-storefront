@@ -10,13 +10,6 @@ import * as stories from './MegaMenuItem.stories'
 const { Common } = composeStories(stories)
 const closeBackDropMock = jest.fn()
 
-jest.mock(
-  'next/link',
-  () =>
-    ({ children }: any) =>
-      children
-)
-
 describe('[components] - MegaMenuItem', () => {
   const user = userEvent.setup()
   const setup = () => {

@@ -11,13 +11,6 @@ import { DialogRoot, ModalContextProvider, useModalContext } from '@/context'
 
 const { Common } = composeStories(stories)
 
-jest.mock(
-  'next/link',
-  () =>
-    ({ children }: any) =>
-      children
-)
-
 const TestComponent = () => {
   const { showModal } = useModalContext()
 

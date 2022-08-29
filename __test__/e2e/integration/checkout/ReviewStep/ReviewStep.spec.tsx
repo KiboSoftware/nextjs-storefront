@@ -14,13 +14,6 @@ import type { Order } from '@/lib/gql/types'
 
 const { Common } = composeStories(stories)
 
-jest.mock(
-  'next/link',
-  () =>
-    ({ children }: any) =>
-      children
-)
-
 describe('[components] ReviewStep', () => {
   const setup = (isAuthenticated = false) => {
     const user = userEvent.setup()

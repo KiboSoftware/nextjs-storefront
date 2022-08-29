@@ -8,13 +8,6 @@ import * as stories from './HamburgerMenu.stories' // import all stories from th
 
 const { Common } = composeStories(stories)
 
-jest.mock(
-  'next/link',
-  () =>
-    ({ children }) =>
-      children
-)
-
 describe('[component] HamburgerMenu component', () => {
   it('should render all the list-items if isDrawerOpen props is true', () => {
     render(<Common {...Common.args} />)

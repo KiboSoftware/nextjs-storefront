@@ -24,13 +24,6 @@ jest.mock('@/components/product/ProductOptionList/ProductOptionList', () => prod
 
 const onStoreLocatorClickMock = jest.fn()
 
-jest.mock(
-  'next/link',
-  () =>
-    ({ children }: any) =>
-      children
-)
-
 describe('[component] - ProductItem', () => {
   const setup = () => {
     render(<Common {...Common.args} />)

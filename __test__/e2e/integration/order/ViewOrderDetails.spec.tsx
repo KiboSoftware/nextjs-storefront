@@ -12,13 +12,6 @@ import type { Order, PaymentCard } from '@/lib/gql/types'
 
 const { Common } = composeStories(stories)
 
-jest.mock(
-  'next/link',
-  () =>
-    ({ children }: any) =>
-      children
-)
-
 describe('[components] - ViewOrderDetails Integration', () => {
   const setup = (isOrderStatus: boolean) => {
     render(<Common {...Common.args} isOrderStatus={isOrderStatus} />)

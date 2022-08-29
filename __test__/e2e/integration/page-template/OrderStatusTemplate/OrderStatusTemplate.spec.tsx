@@ -8,13 +8,6 @@ import * as stories from '@/components/page-templates/OrderStatusTemplate/OrderS
 
 const { Common } = composeStories(stories)
 
-jest.mock(
-  'next/link',
-  () =>
-    ({ children }: any) =>
-      children
-)
-
 const setup = () => {
   const user = userEvent.setup()
 

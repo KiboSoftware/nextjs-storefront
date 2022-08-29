@@ -23,6 +23,7 @@ export default function KiboBreadcrumbs({
           return (
             <Link href={item.link as string} key={index} passHref>
               <MuiLink
+                href={item.link as string}
                 underline="hover"
                 variant="caption"
                 color="text.primary"

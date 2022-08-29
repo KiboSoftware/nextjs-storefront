@@ -22,13 +22,6 @@ jest.mock('next/router', () => ({
   },
 }))
 
-jest.mock(
-  'next/link',
-  () =>
-    ({ children }: any) =>
-      children
-)
-
 const setup = (initialActiveStep = 0, isAuthenticated = false) => {
   const user = userEvent.setup()
 

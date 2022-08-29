@@ -9,13 +9,6 @@ import * as stories from '../../../../../components/layout/MegaMenu/MegaMenu.sto
 
 const { Common } = composeStories(stories)
 
-jest.mock(
-  'next/link',
-  () =>
-    ({ children }: any) =>
-      children
-)
-
 describe('[components] - MegaMenu Integration', () => {
   const setup = () => {
     const user = userEvent.setup()

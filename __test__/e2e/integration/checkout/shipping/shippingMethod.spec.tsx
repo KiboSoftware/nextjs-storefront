@@ -17,13 +17,6 @@ const { Common } = composeStories(stories)
 const onChangeMock = jest.fn()
 const onStoreLocatorClickMock = jest.fn()
 
-jest.mock(
-  'next/link',
-  () =>
-    ({ children }: any) =>
-      children
-)
-
 describe('[component] - ShippingMethod', () => {
   const setup = (params?: ShippingMethodProps) => {
     const user = userEvent.setup()

@@ -36,13 +36,6 @@ jest.mock('@/context/AuthContext', () => ({
   useAuthContext: () => ({ isAuthenticated: mockIsAuthenticated }),
 }))
 
-jest.mock(
-  'next/link',
-  () =>
-    ({ children }: any) =>
-      children
-)
-
 describe('[component] - ProductDetailTemplate integration', () => {
   beforeEach(() => {
     jest.clearAllMocks()

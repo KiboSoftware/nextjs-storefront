@@ -108,7 +108,13 @@ const CategoryFacet = (props: CategoryFacetProps) => {
       <Box sx={styles.childrenCategories}>
         {filteredValues?.map((child) => (
           <Link key={child?.value} href={getCategoryLink(child?.value as string)} passHref>
-            <MuiLink underline="none" variant="body2" color="text.primary" sx={styles.link}>
+            <MuiLink
+              href={getCategoryLink(child?.value as string)}
+              underline="none"
+              variant="body2"
+              color="text.primary"
+              sx={styles.link}
+            >
               {child?.label}
               <FormLabel data-testid="count" aria-label={t('count')} sx={{ ...styles.formLabel }}>
                 ({child?.count})
@@ -133,7 +139,11 @@ const CategoryFacet = (props: CategoryFacetProps) => {
         )}
         {breadcrumbs?.length >= 1 && (
           <Link href={breadcrumbs[breadcrumbs?.length - 2]?.link || '/'} passHref>
-            <MuiLink aria-label={t('common:back')} sx={{ ...styles.backButton }}>
+            <MuiLink
+              href={breadcrumbs[breadcrumbs?.length - 2]?.link || '/'}
+              aria-label={t('common:back')}
+              sx={{ ...styles.backButton }}
+            >
               <ChevronLeft />
               {t('common:back')}
             </MuiLink>

@@ -15,13 +15,6 @@ import type { Order } from '@/lib/gql/types'
 const { Common } = composeStories(stories)
 const order = Common.args?.orderCollection?.items || []
 
-jest.mock(
-  'next/link',
-  () =>
-    ({ children }: any) =>
-      children
-)
-
 const setup = () => {
   const user = userEvent.setup()
   const mockOnAccountTitleClick = jest.fn()
