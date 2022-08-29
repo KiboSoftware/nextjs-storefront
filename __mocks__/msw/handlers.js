@@ -1,4 +1,4 @@
-import { graphql } from 'msw'
+import { graphql, rest } from 'msw'
 
 import { orderMock, shippingRateMock } from '../stories'
 import { cartItemMock } from '../stories/cartItemMock'
@@ -19,6 +19,8 @@ import { updateOrderBillingInfoMock } from '../stories/updateOrderBillingInfoMoc
 import { userAddressMock } from '../stories/userAddressMock'
 import { userMock, loginUserMock, registerUserMock } from '../stories/userMock'
 import { wishlistMock } from '../stories/wishlistMock'
+
+const baseUrl = 'http://localhost:3000'
 
 export const checkoutHandlers = [
   graphql.query('getCheckout', (_req, res, ctx) => {
@@ -115,9 +117,8 @@ export const searchSuggestionHandlers = [
 ]
 
 export const categoryHandlers = [
-  // useSearchSuggestions
-  graphql.query('getCategoryTreeQuery', (_req, res, ctx) => {
-    return res(ctx.data(categoryTreeDataMock.categoriesTree.items))
+  rest.get(`${baseUrl}/api/category-tree`, (req, res, ctx) => {
+    return res(ctx.status(200), ctx.json(categoryTreeDataMock.categoriesTree.items))
   }),
 ]
 

@@ -183,8 +183,7 @@ describe('[components] Checkout integration', () => {
 
       await waitFor(() => {
         const errorMessage = screen.getByText('Invalid coupon code')
-
-        expect(errorMessage).toBeInTheDocument()
+        expect(errorMessage).toBeVisible()
       })
     })
   })

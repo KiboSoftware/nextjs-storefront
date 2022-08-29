@@ -227,8 +227,7 @@ describe('[components] CartTemplate integration', () => {
 
       await waitFor(() => {
         const errorMessage = screen.getByText('Invalid coupon code')
-
-        expect(errorMessage).toBeInTheDocument()
+        expect(errorMessage).toBeVisible()
       })
     })
   })
