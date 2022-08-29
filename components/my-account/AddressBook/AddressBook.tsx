@@ -2,16 +2,7 @@ import React, { useState } from 'react'
 
 import { Delete } from '@mui/icons-material'
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline'
-import {
-  Box,
-  Typography,
-  Divider,
-  Button,
-  Stack,
-  Checkbox,
-  FormControlLabel,
-  Link,
-} from '@mui/material'
+import { Box, Typography, Divider, Button, Stack, Checkbox, FormControlLabel } from '@mui/material'
 import { useTranslation } from 'next-i18next'
 
 import { AddressCard, AddressForm } from '@/components/common'
@@ -86,7 +77,7 @@ const AddressBook = (props: PaymentMethodProps) => {
     if (address?.contact?.id) {
       try {
         const params = buildAddressParams({
-          accountId: user?.id as number,
+          accountId: user?.id,
           address,
           isDefaultAddress,
           addressType: 'shipping',
@@ -102,7 +93,7 @@ const AddressBook = (props: PaymentMethodProps) => {
     } else {
       try {
         const params = buildAddressParams({
-          accountId: user?.id as number,
+          accountId: user?.id,
           address,
           isDefaultAddress,
           addressType: 'shipping',
