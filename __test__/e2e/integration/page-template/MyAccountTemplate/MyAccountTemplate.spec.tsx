@@ -97,9 +97,15 @@ describe('[component] - PaymentMethod (has saved payment methods)', () => {
   it('should handle editing payment method', async () => {
     render(<Common />)
 
-    await user.click(screen.getByText('payment-method'))
+    await user.click(
+      screen.getByRole('heading', {
+        name: /payment-method/i,
+      })
+    )
 
-    const firstPaymentMethodEditText = screen.getAllByText('edit')[0]
+    const firstPaymentMethodEditText = screen.getAllByTestId('payment-method-edit-link')[0]
+
+    expect(firstPaymentMethodEditText).toBeVisible()
 
     await user.click(firstPaymentMethodEditText)
 

@@ -47,7 +47,7 @@ describe('[component] - PaymentMethod (has saved payment methods)', () => {
 
     const savedPaymentMethods = screen.getByTestId('saved-payment-method-view')
 
-    await user.click(screen.getByText('edit'))
+    await user.click(screen.getByTestId('payment-method-edit-link'))
 
     expect(savedPaymentMethods).not.toBeVisible()
     expect(screen.getByTestId('card-details-form')).toBeVisible()

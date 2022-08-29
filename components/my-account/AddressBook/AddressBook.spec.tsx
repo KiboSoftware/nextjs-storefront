@@ -1,14 +1,11 @@
 import React from 'react'
 
 import { composeStories } from '@storybook/testing-react'
-import { cleanup, render, screen, waitFor } from '@testing-library/react'
+import { cleanup, render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
-import { mock } from 'jest-mock-extended'
 
 import * as stories from './AddressBook.stories'
-import { userResponseMock } from '@/__mocks__/stories/userMock'
-import { createQueryClientWrapper } from '@/__test__/utils'
-import { AuthContext, AuthContextType } from '@/context/'
+import { userAddressGetters } from '@/lib/getters'
 const { Common } = composeStories(stories)
 
 const AddressCardMock = () => <div data-testid="address-card-component" />
@@ -19,17 +16,7 @@ jest.mock('@/components/common/AddressForm/AddressForm', () => AddressFormMock)
 const setup = () => {
   const user = userEvent.setup()
 
-  const mockValues = mock<AuthContextType>()
-  mockValues.user = userResponseMock
-
-  render(
-    <AuthContext.Provider value={mockValues}>
-      <Common />
-    </AuthContext.Provider>,
-    {
-      wrapper: createQueryClientWrapper(),
-    }
-  )
+  render(<Common {...Common.args} />)
 
   return {
     user,
@@ -41,22 +28,40 @@ afterEach(() => {
 })
 
 describe('[components] AddressBook', () => {
-  it('should render component', async () => {
+  it('should render all saved addresses', () => {
     setup()
-
-    const addressBookComponent = screen.getByTestId(/address-book-component/i)
-    const addNewAddressButton = screen.getByRole('button', {
-      name: /add-new-address/i,
+    const addresses = userAddressGetters.getUserShippingAddress(Common.args?.contacts?.items)
+    const primaryAddressHeading = screen.getByRole('heading', {
+      name: /primary/i,
     })
+    const editAddresses = screen.getAllByText('edit')
+    const deleteAddressIcon = screen.getByTestId('DeleteIcon')
 
-    expect(addressBookComponent).toBeInTheDocument()
-    expect(addNewAddressButton).toBeVisible()
+    expect(screen.getAllByTestId('address-card-component')).toHaveLength(
+      addresses?.length as number
+    )
+    expect(primaryAddressHeading).toBeVisible()
+    expect(editAddresses[0]).toBeVisible()
+    expect(deleteAddressIcon).toBeVisible()
+  })
 
-    await waitFor(async () => {
-      const primaryAddressHeading = screen.getByRole('heading', {
-        name: /primary/i,
-      })
-      expect(primaryAddressHeading).toBeVisible()
-    })
+  it(`should render address form if 'Add New Address' button is clicked`, async () => {
+    const { user } = setup()
+
+    await user.click(screen.getByRole('button', { name: 'add-new-address' }))
+
+    expect(screen.getByTestId('address-form-component')).toBeVisible()
+  })
+
+  it(`should render addressForm if 'Edit' is clicked`, async () => {
+    const { user } = setup()
+
+    const addNewAddress = screen.getByRole('button', { name: 'add-new-address' })
+
+    const editAddresses = screen.getAllByText('edit')
+    await user.click(editAddresses[0])
+
+    expect(addNewAddress).not.toBeVisible()
+    expect(screen.getByTestId('address-form-component')).toBeVisible()
   })
 })

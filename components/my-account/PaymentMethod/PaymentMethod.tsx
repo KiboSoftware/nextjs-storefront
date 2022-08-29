@@ -343,6 +343,7 @@ const PaymentMethod = (props: PaymentMethodProps) => {
                     variant="body2"
                     sx={{ cursor: 'pointer' }}
                     onClick={() => handleEdit(each)}
+                    data-testid="payment-method-edit-link"
                   >
                     {t('edit')}
                   </Typography>
