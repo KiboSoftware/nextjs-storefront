@@ -1,8 +1,7 @@
 import fetch from 'isomorphic-unfetch'
 import { useQuery } from 'react-query'
 
-import { makeCategoryTreeGraphQLClient } from '@/lib/gql/client'
-import getCategoryTreeQuery from '@/lib/gql/queries/get-category-tree'
+import { makeCategoryTreeGraphEndPoint } from '@/lib/gql/client'
 import { categoryTreeKeys } from '@/lib/react-query/queryKeys'
 
 import type { Maybe, PrCategory } from '@/lib/gql/types'
