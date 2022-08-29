@@ -20,6 +20,8 @@ import { userAddressMock } from '../stories/userAddressMock'
 import { userMock, loginUserMock, registerUserMock } from '../stories/userMock'
 import { wishlistMock } from '../stories/wishlistMock'
 
+const baseUrl = 'http://localhost:3000'
+
 export const checkoutHandlers = [
   graphql.query('getCheckout', (_req, res, ctx) => {
     return res(ctx.data(orderMock))
@@ -115,7 +117,7 @@ export const searchSuggestionHandlers = [
 ]
 
 export const categoryHandlers = [
-  rest.get(`http://localhost:3000/api/category-tree`, (req, res, ctx) => {
+  rest.get(`${baseUrl}/api/category-tree`, (req, res, ctx) => {
     return res(ctx.status(200), ctx.json(categoryTreeDataMock.categoriesTree.items))
   }),
 ]
