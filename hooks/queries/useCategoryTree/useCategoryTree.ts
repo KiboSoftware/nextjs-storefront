@@ -1,3 +1,4 @@
+import fetch from 'isomorphic-unfetch'
 import { useQuery } from 'react-query'
 
 import { makeCategoryTreeGraphEndPoint } from '@/lib/gql/client'
@@ -14,7 +15,6 @@ export interface UseCategoryResponse {
 const fetchCategoryTree = async () => {
   const endpoint = makeCategoryTreeGraphEndPoint()
   const response = await fetch(endpoint)
-
   return await response.json()
 }
 

@@ -1,4 +1,4 @@
-import { graphql } from 'msw'
+import { graphql, rest } from 'msw'
 
 import { orderMock, shippingRateMock } from '../stories'
 import { cartItemMock } from '../stories/cartItemMock'
@@ -115,9 +115,8 @@ export const searchSuggestionHandlers = [
 ]
 
 export const categoryHandlers = [
-  // useSearchSuggestions
-  graphql.query('getCategoryTreeQuery', (_req, res, ctx) => {
-    return res(ctx.data(categoryTreeDataMock.categoriesTree.items))
+  rest.get(`http://localhost:3000/api/category-tree`, (req, res, ctx) => {
+    return res(ctx.status(200), ctx.json(categoryTreeDataMock.categoriesTree.items))
   }),
 ]
 
