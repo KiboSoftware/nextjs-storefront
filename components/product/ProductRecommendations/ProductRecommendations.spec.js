@@ -1,9 +1,10 @@
 import { composeStories } from '@storybook/testing-react'
-import { render, screen } from '@testing-library/react'
+import { render, screen, waitFor } from '@testing-library/react'
 import '@testing-library/jest-dom'
 import '@testing-library/jest-dom/extend-expect'
 
 import * as stories from './ProductRecommendations.stories' // import all stories from the stories file
+import { productSearchResultMock } from '@/__mocks__/stories/productSearchResultMock'
 
 const { Common } = composeStories(stories)
 
@@ -19,11 +20,11 @@ describe('[component] ProductOptionCheckbox component', () => {
     expect(title).toBeVisible()
   })
 
-  it('should render the product cards', () => {
+  it('should render the product cards', async () => {
     render(<Common {...Common.args} />)
-
-    const productCard = screen.getAllByTestId('product-card-mock')
-
-    expect(productCard.length).toBe(5)
+    await waitFor(() => {
+      const productCard = screen.getAllByTestId('product-card-mock')
+      expect(productCard.length).toBe(productSearchResultMock?.items?.length)
+    })
   })
 })

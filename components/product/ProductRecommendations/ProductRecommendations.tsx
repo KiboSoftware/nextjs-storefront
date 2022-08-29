@@ -1,18 +1,27 @@
 import React from 'react'
 
 import { Box, Grid, Typography } from '@mui/material'
+import { useTranslation } from 'next-i18next'
 
 import { ProductCard } from '@/components/product'
-import { ProductCustom } from '@/lib/types'
+import { useProducts } from '@/hooks'
+import { productGetters } from '@/lib/getters'
+import { uiHelpers } from '@/lib/helpers'
+import type { ProductCodes } from '@/lib/types'
+
+import type { Product } from '@/lib/gql/types'
 
 interface ProductRecommendationsProps {
-  title?: string
-  products?: ProductCustom[]
+  title: string
+  productCodes: ProductCodes[]
 }
 
-// Chandradeepta Laha: Hardcoded Component. stories and testing should be added later.
 const ProductRecommendations = (props: ProductRecommendationsProps) => {
-  const { title } = props
+  const { title, productCodes } = props
+  const { t } = useTranslation('common')
+  const { getProductLink } = uiHelpers()
+  const { data: productSearchResult } = useProducts(productCodes)
+  const products = productSearchResult?.items as Product[]
 
   return (
     <Grid item xs={12} sx={{ backgroundColor: 'grey.100', p: { xs: 1, md: 5 }, marginY: 2 }}>
@@ -23,18 +32,25 @@ const ProductRecommendations = (props: ProductRecommendationsProps) => {
         display="flex"
         sx={{ gap: { xs: 0, md: 4 }, maxWidth: { xs: '100vw', md: '100%' }, overflowX: 'auto' }}
       >
-        {Array.from(new Array(5)).map((_each, i) => {
+        {products?.map((product) => {
           return (
-            <Grid item xs={6} md={2} key={i}>
+            <Grid item xs={6} md={2} key={product?.productCode}>
               <ProductCard
-                key={i}
-                link="/product"
-                title={'Nike Runner'}
-                price={'$60.00'}
-                rating={4}
                 imageUrl={
-                  'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR-FMCFLCcOwFxZ3FNt8RKne3iqrwqY8OOnCw&usqp=CAU'
+                  productGetters.getCoverImage(product) &&
+                  productGetters.handleProtocolRelativeUrl(productGetters.getCoverImage(product))
                 }
+                link={getProductLink(product?.productCode as string)}
+                price={t<string>('currency', {
+                  val: productGetters.getPrice(product).regular,
+                })}
+                {...(productGetters.getPrice(product).special && {
+                  salePrice: t<string>('currency', {
+                    val: productGetters.getPrice(product).special,
+                  }),
+                })}
+                title={productGetters.getName(product) as string}
+                rating={productGetters.getRating(product)}
               />
             </Grid>
           )

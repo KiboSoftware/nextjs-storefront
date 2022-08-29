@@ -1,7 +1,7 @@
 import { buildProductSearchInput } from '../buildProductSearchInput'
 
 describe('[helpers] buildProductSearchInput function', () => {
-  it('should return the breadcrumbs', () => {
+  it('should return the product search input according to search params', () => {
     const searchParams = {
       filters: ['tenant~brand:adidas,tenant~color:grey'],
       categoryCode: '30',
