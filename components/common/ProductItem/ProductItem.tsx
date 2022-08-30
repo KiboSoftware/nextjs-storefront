@@ -80,7 +80,7 @@ const ProductItem = (props: ProductItemProps) => {
     <Box key={id}>
       <Box sx={{ display: 'flex', pb: 1, pr: 1, gap: 2, flex: 1 }}>
         <Box sx={{ ...styles.imageContainer }}>
-          <Link href={link as string} passHref>
+          <Link href={link || ''} passHref>
             <MuiLink data-testid="product-item-link">
               <KiboImage
                 src={productGetters.handleProtocolRelativeUrl(image) || DefaultImage}
