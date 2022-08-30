@@ -9,7 +9,7 @@ export default {
   title: 'Common/FulfillmentOptions',
   component: FulfillmentOptions,
   argTypes: {
-    onFullfillmentOptionChange: { action: 'clicked' },
+    onFulfillmentOptionChange: { action: 'clicked' },
     onStoreSetOrUpdate: { action: 'clicked' },
   },
 } as ComponentMeta<typeof FulfillmentOptions>

@@ -55,7 +55,7 @@ describe('[components] My Store Dialog integration', () => {
     expect(screen.getByText(location?.name || '')).toBeVisible()
     expect(screen.getByText(location?.streetAddress?.trim() || '')).toBeVisible()
     expect(screen.getByText(location?.cityState || '')).toBeVisible()
-    expect(screen.getByText(/available-for-pickup/i)).toBeVisible()
+    expect(screen.getByText(/available/i)).toBeVisible()
     expect(screen.getByText(/store-info/i)).toBeVisible()
   })
 

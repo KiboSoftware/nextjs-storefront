@@ -20,6 +20,7 @@ interface KiboRadioProps {
     label: string | number | ReactElement<any, string | JSXElementConstructor<any>>
     value: string
     name: string
+    disabled?: boolean
   }[]
   optionIndicator?: string // use this to assign a specific property to an option. e.g: isPrimary
   sx?: SxProps<Theme>
@@ -68,7 +69,12 @@ export const KiboRadio = (props: KiboRadioProps) => {
               <FormControlLabel
                 sx={{ width: 'fit-content', alignItems: align, ...sx }}
                 value={radio.value}
-                control={<Radio inputProps={{ 'aria-label': radio.name }} />}
+                control={
+                  <Radio
+                    inputProps={{ 'aria-label': radio.name }}
+                    {...(radio.disabled && { disabled: radio.disabled })}
+                  />
+                }
                 label={radio.label}
               />
             </Box>

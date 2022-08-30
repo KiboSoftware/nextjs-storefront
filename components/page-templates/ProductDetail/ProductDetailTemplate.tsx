@@ -3,7 +3,7 @@ import React from 'react'
 import { StarRounded } from '@mui/icons-material'
 import FavoriteBorderRoundedIcon from '@mui/icons-material/FavoriteBorderRounded'
 import FavoriteRoundedIcon from '@mui/icons-material/FavoriteRounded'
-import { Box, Grid, Rating, Button, Typography, Divider } from '@mui/material'
+import { Box, Grid, Rating, Button, Typography, Divider, Link } from '@mui/material'
 import { useTranslation } from 'next-i18next'
 
 import FulfillmentOptions from '@/components/common/FulfillmentOptions/FulfillmentOptions'
@@ -27,7 +27,9 @@ import {
   usePurchaseLocation,
   useCartMutationAddToCart,
   useWishlist,
+  useProductLocationInventory,
 } from '@/hooks'
+import { FulfillmentOptions as FulfillmentOptionsConstant } from '@/lib/constants'
 import { productGetters } from '@/lib/getters'
 import type { ProductCustom, BreadCrumb, PriceRange, LocationCustom } from '@/lib/types'
 
@@ -37,6 +39,7 @@ import type {
   ProductOption,
   ProductOptionValue,
   ProductPriceRange,
+  CrProduct,
 } from '@/lib/gql/types'
 
 interface ProductDetailTemplateProps {
@@ -53,8 +56,6 @@ const ProductDetailTemplate = (props: ProductDetailTemplateProps) => {
   const { data: purchaseLocation } = usePurchaseLocation()
 
   const { addOrRemoveWishlistItem, checkProductInWishlist } = useWishlist()
-
-  // Data hook
   const {
     currentProduct,
     quantity,
@@ -67,6 +68,10 @@ const ProductDetailTemplate = (props: ProductDetailTemplateProps) => {
     product,
     purchaseLocation,
   })
+  const { data: locationInventory } = useProductLocationInventory(
+    product?.productCode as string,
+    selectedFulfillmentOption?.location?.code as string
+  )
 
   // Getters
   const {
@@ -93,6 +98,11 @@ const ProductDetailTemplate = (props: ProductDetailTemplateProps) => {
   const fulfillmentOptions = productGetters.getProductFulfillmentOptions(product, {
     name: selectedFulfillmentOption?.location?.name,
   })
+  const quantityLeft = productGetters.getAvailableItemCount(
+    product,
+    locationInventory,
+    selectedFulfillmentOption?.method
+  )
 
   const isProductInWishlist = checkProductInWishlist({
     productCode,
@@ -108,7 +118,7 @@ const ProductDetailTemplate = (props: ProductDetailTemplateProps) => {
           variationProductCode,
           fulfillmentMethod,
           options: updatedShopperEnteredValues,
-          purchaseLocationCode: selectedFulfillmentOption?.location?.code,
+          purchaseLocationCode: selectedFulfillmentOption?.location?.code as string,
         },
         quantity,
       })
@@ -127,19 +137,31 @@ const ProductDetailTemplate = (props: ProductDetailTemplateProps) => {
   }
 
   const handleFulfillmentOptionChange = (value: string) => {
-    setSelectedFulfillmentOption({
-      ...selectedFulfillmentOption,
-      method: value,
-    })
+    if (
+      value === FulfillmentOptionsConstant.SHIP ||
+      selectedFulfillmentOption?.location?.name ||
+      purchaseLocation.code
+    ) {
+      setSelectedFulfillmentOption({
+        ...selectedFulfillmentOption,
+        method: value,
+      })
+    } else {
+      handleProductPickupLocation()
+    }
   }
 
-  const handleProductPickupLocation = () => {
+  const handleProductPickupLocation = (title?: string) => {
     showModal({
       Component: StoreLocatorDialog,
       props: {
+        title: title,
+        showProductAndInventory: true,
+        product: product as CrProduct,
+        quantity: quantity,
         handleSetStore: async (selectedStore: LocationCustom) => {
           setSelectedFulfillmentOption({
-            method: 'Pickup',
+            method: FulfillmentOptionsConstant.PICKUP,
             location: selectedStore,
           })
           closeModal()
@@ -148,7 +170,7 @@ const ProductDetailTemplate = (props: ProductDetailTemplateProps) => {
     })
   }
 
-  // Cloning the price range object to trnaslate the currency values
+  // Cloning the price range object to translate the currency values
   const handlePriceRangeTranslation = (priceRange: ProductPriceRange): PriceRange => {
     return {
       lower: {
@@ -301,11 +323,25 @@ const ProductDetailTemplate = (props: ProductDetailTemplateProps) => {
             <FulfillmentOptions
               fulfillmentOptions={fulfillmentOptions}
               selected={selectedFulfillmentOption?.method}
-              onFullfillmentOptionChange={(value: string) => handleFulfillmentOptionChange(value)}
-              onStoreSetOrUpdate={() => handleProductPickupLocation()} // change store: Open storelocator modal. Should not change global store.
+              onFulfillmentOptionChange={(value: string) => handleFulfillmentOptionChange(value)}
+              onStoreSetOrUpdate={() => handleProductPickupLocation()}
             />
           </Box>
 
+          <Box pt={2} display="flex" sx={{ justifyContent: 'space-between' }}>
+            <Typography fontWeight="600" variant="body2">
+              {selectedFulfillmentOption?.method === FulfillmentOptionsConstant.PICKUP &&
+                `${quantityLeft} ${t('item-left')}`}
+            </Typography>
+            <Link
+              color="inherit"
+              variant="body2"
+              sx={{ cursor: 'pointer' }}
+              onClick={() => handleProductPickupLocation(t('common:check-nearby-store'))}
+            >
+              {t('nearby-stores')}
+            </Link>
+          </Box>
           <Box paddingY={1} display="flex" flexDirection={'column'} gap={2}>
             <Button
               variant="contained"

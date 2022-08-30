@@ -1,28 +1,23 @@
 import React from 'react'
 
-import {
-  Typography,
-  Box,
-  InputLabel,
-  Button,
-  Stack,
-  Checkbox,
-  FormGroup,
-  FormControlLabel,
-  Link,
-} from '@mui/material'
+import { Typography, Box, InputLabel, Button, Stack, Link } from '@mui/material'
 import { useTranslation } from 'next-i18next'
 
-import { FullWidthDivider, KiboRadio } from '@/components/common'
+import { FullWidthDivider, KiboRadio, ProductItem } from '@/components/common'
 import SearchBar from '@/components/common/SearchBar/SearchBar'
 import { StoreDetails } from '@/components/dialogs'
+import { productGetters } from '@/lib/getters'
 import { storeLocationGetters } from '@/lib/getters/storeLocationGetters'
-import type { LocationCustom } from '@/lib/types'
+import type { LocationCustom, ProductCustom } from '@/lib/types'
 
-import type { Maybe, Location } from '@/lib/gql/types'
+import type { Maybe, Location, LocationInventory } from '@/lib/gql/types'
 
 interface SearchStoreProps {
   spLocations: Maybe<Location>[]
+  showProductAndInventory?: boolean
+  product?: ProductCustom
+  locationInventory?: LocationInventory[]
+  quantity?: number
   searchTerm: string
   initialState: boolean
   selectedStore: string
@@ -35,6 +30,10 @@ interface SearchStoreProps {
 const SearchStore = (props: SearchStoreProps) => {
   const {
     spLocations,
+    showProductAndInventory = false,
+    product,
+    locationInventory = [],
+    quantity,
     searchTerm = '',
     initialState,
     selectedStore,
@@ -49,10 +48,20 @@ const SearchStore = (props: SearchStoreProps) => {
 
   const locations = storeLocationGetters.getLocations(spLocations)
   const storeOptions = locations?.map((location) => {
+    const inventory = locationInventory?.find(
+      (inventory) => inventory?.locationCode === location.code
+    )
     return {
       value: location?.code || '',
       name: location?.name as string,
-      label: <StoreDetails {...location} />,
+      label: (
+        <StoreDetails
+          location={location}
+          showProductAndInventory={showProductAndInventory}
+          inventory={inventory}
+        />
+      ),
+      disabled: showProductAndInventory && !inventory,
     }
   })
 
@@ -60,9 +69,21 @@ const SearchStore = (props: SearchStoreProps) => {
     const selectedLocation = locations.find((location) => location.code === value)
     setSelectedStore(selectedLocation as LocationCustom)
   }
+
   return (
     <>
       <Stack spacing={2} py={1}>
+        {showProductAndInventory && (
+          <Box>
+            <ProductItem
+              image={productGetters.getCoverImage(product as ProductCustom)}
+              name={productGetters.getName(product as ProductCustom)}
+              price={productGetters.getPrice(product as ProductCustom).regular?.toString()}
+              salePrice={productGetters.getPrice(product as ProductCustom).special?.toString()}
+              qty={quantity}
+            />
+          </Box>
+        )}
         <Box>
           <InputLabel shrink>{t('zip-code')}</InputLabel>
           <Stack direction="row" spacing={2}>
@@ -89,14 +110,6 @@ const SearchStore = (props: SearchStoreProps) => {
           >
             {t('use-current-location')}
           </Link>
-          <FormGroup>
-            <FormControlLabel
-              color="grey.900"
-              componentsProps={{ typography: { variant: 'body2' } }}
-              control={<Checkbox />}
-              label={t('show-stores-with-availability')}
-            />
-          </FormGroup>
         </Box>
       </Stack>
       <FullWidthDivider />

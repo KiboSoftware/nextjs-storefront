@@ -10,11 +10,12 @@ import type {
   ProductPriceRange,
   ProductProperty,
   Location,
+  LocationInventory,
 } from '@/lib/gql/types'
 
 const { publicRuntimeConfig } = getConfig()
 
-const getName = (product: Product | ProductCustom) => product?.content?.productName
+const getName = (product: Product | ProductCustom): string => product?.content?.productName || ''
 
 const getProductId = (product: Product | ProductCustom): string => product?.productCode || ''
 
@@ -89,7 +90,7 @@ const getOptionSelectedValue = (option: ProductOption) => {
 }
 
 export const getOptionName = (option: ProductOption): string => option?.attributeDetail?.name || ''
-export const getOptions = (product: Product) => product?.options
+export const getOptions = (product: Product): ProductOption[] => product?.options as ProductOption[]
 
 const getSelectedFullfillmentOption = (product: ProductCustom) => product?.fulfillmentMethod
 
@@ -211,6 +212,45 @@ const getProductFulfillmentOptions = (
   }))
 }
 
+const isProductVariationsSelected = (product: Product): boolean => {
+  // check if product variation options selected
+  if (!product?.options && product?.purchasableState?.isPurchasable) {
+    return product.purchasableState?.isPurchasable
+  }
+
+  const requiredOptions = product?.options?.filter((option) => option?.isRequired === true)
+  const selectedOptions = requiredOptions?.map((option) =>
+    option?.values?.some((value) => value?.isSelected === true)
+  )
+
+  if (selectedOptions && product?.purchasableState?.isPurchasable) {
+    return (
+      selectedOptions.every((value) => value === true) && product?.purchasableState?.isPurchasable
+    )
+  }
+  return false
+}
+
+const getAvailableItemCount = (
+  product: ProductCustom,
+  productLocationInventoryData: LocationInventory[] = [],
+  fulfillmentOptionValue: string
+): number => {
+  const allVariantSelected = isProductVariationsSelected(product)
+  const qtyLeft = { value: 0 }
+  if (allVariantSelected) {
+    if (fulfillmentOptionValue === FulfillmentOptions.PICKUP) {
+      qtyLeft.value = productLocationInventoryData[0]?.stockAvailable
+        ? productLocationInventoryData[0]?.stockAvailable
+        : 0
+    } else if (fulfillmentOptionValue === FulfillmentOptions.SHIP)
+      qtyLeft.value = product?.inventoryInfo?.onlineStockAvailable
+        ? product?.inventoryInfo.onlineStockAvailable
+        : 0
+  }
+  return qtyLeft.value
+}
+
 export const productGetters = {
   getName,
   getRating,
@@ -234,6 +274,7 @@ export const productGetters = {
   handleProtocolRelativeUrl,
   getProductFulfillmentOptions,
   getIsPackagedStandAlone,
+  getAvailableItemCount,
   // grouped
   getProductDetails,
 }

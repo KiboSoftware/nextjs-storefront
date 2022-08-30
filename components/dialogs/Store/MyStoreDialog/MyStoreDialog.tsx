@@ -40,7 +40,7 @@ const MyStoreDialog = (props: MyStoreProps) => {
   const DialogArgs = {
     isOpen: isOpen,
     Title: t('my-store'),
-    Content: <StoreDetails {...spLocation} />,
+    Content: <StoreDetails location={spLocation as LocationCustom} />,
     showContentTopDivider: true,
     showContentBottomDivider: true,
     Actions: (

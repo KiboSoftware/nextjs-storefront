@@ -168,7 +168,7 @@ const CartItem = (props: CartItemProps) => {
               <FulfillmentOptions
                 fulfillmentOptions={fulfillmentOptions}
                 selected={cartItem?.fulfillmentMethod || ''}
-                onFullfillmentOptionChange={(fulfillmentMethod: string) =>
+                onFulfillmentOptionChange={(fulfillmentMethod: string) =>
                   handleFulfillmentOptionChange(fulfillmentMethod, cartItem?.id as string)
                 }
                 onStoreSetOrUpdate={() => handleProductPickupLocation(cartItem?.id as string)} // change store: Open storelocator modal. Should not change global store.

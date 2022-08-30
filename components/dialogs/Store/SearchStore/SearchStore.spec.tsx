@@ -35,7 +35,6 @@ describe('[components] Search Store', () => {
     expect(screen.getByTestId('search-bar-component')).toBeVisible()
     expect(screen.getByRole('button', { name: /search/i })).toBeVisible()
     expect(screen.getByText(/use-current-location/i)).toBeVisible()
-    expect(screen.getByText(/show-stores-with-availability/i)).toBeVisible()
     expect(screen.getByText(/find-stores-within-miles/i)).toBeVisible()
     expect(screen.getByTestId('kibo-radio-mock')).toBeVisible()
   })

@@ -25,7 +25,7 @@ export interface ProductItemProps {
   productCode?: Maybe<string>
   image: string
   name: string
-  options: CrProductOption[]
+  options?: CrProductOption[]
   price?: string
   salePrice?: string
   qty?: number
@@ -101,7 +101,7 @@ const ProductItem = (props: ProductItemProps) => {
 
             <Box data-testid="productDetails">
               <Box sx={{ display: { xs: 'block', sm: 'block', md: 'none' } }}>
-                {(options?.length > 0 || price || qty) && (
+                {((options && options?.length > 0) || price || qty) && (
                   <Box
                     display="flex"
                     alignItems="center"
@@ -119,7 +119,7 @@ const ProductItem = (props: ProductItemProps) => {
               </Box>
 
               <Collapse in={mdScreen ? true : expanded} timeout="auto" unmountOnExit>
-                <ProductOptionList options={options} />
+                {options && <ProductOptionList options={options} />}
 
                 {qty && <ProductOption option={{ name: t('qty'), value: qty }} variant="body2" />}
                 {(price || salePrice) && (

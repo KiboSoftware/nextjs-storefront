@@ -12,19 +12,19 @@ describe('[components] Fulfillment Options Component', () => {
   const setup = () => {
     const user = userEvent.setup()
     const mockOnStoreSetOrUpdate = jest.fn()
-    const mockOnFullfillmentOptionChange = jest.fn()
+    const mockOnFulfillmentOptionChange = jest.fn()
     render(
       <Common
         {...Common.args}
         onStoreSetOrUpdate={mockOnStoreSetOrUpdate}
-        onFullfillmentOptionChange={mockOnFullfillmentOptionChange}
+        onFulfillmentOptionChange={mockOnFulfillmentOptionChange}
       />
     )
 
     return {
       user,
       mockOnStoreSetOrUpdate,
-      mockOnFullfillmentOptionChange,
+      mockOnFulfillmentOptionChange,
     }
   }
 
@@ -58,8 +58,8 @@ describe('[components] Fulfillment Options Component', () => {
     expect(mockOnStoreSetOrUpdate).toBeCalled()
   })
 
-  it('should call onFullfillmentOptionChange if radio option selection is changed', async () => {
-    const { user, mockOnFullfillmentOptionChange } = setup()
+  it('should call onFulfillmentOptionChange if radio option selection is changed', async () => {
+    const { user, mockOnFulfillmentOptionChange } = setup()
 
     const radio = screen.getByRole('radio', {
       name: /ship/i,
@@ -67,6 +67,6 @@ describe('[components] Fulfillment Options Component', () => {
 
     await user.click(radio)
 
-    expect(mockOnFullfillmentOptionChange).toBeCalled()
+    expect(mockOnFulfillmentOptionChange).toBeCalled()
   })
 })
