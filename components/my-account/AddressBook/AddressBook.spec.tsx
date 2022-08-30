@@ -5,7 +5,6 @@ import { cleanup, render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 
 import * as stories from './AddressBook.stories'
-import { userAddressGetters } from '@/lib/getters'
 const { Common } = composeStories(stories)
 
 const AddressCardMock = () => <div data-testid="address-card-component" />
@@ -30,16 +29,11 @@ afterEach(() => {
 describe('[components] AddressBook', () => {
   it('should render all saved addresses', () => {
     setup()
-    const addresses = userAddressGetters.getUserShippingAddress(Common.args?.contacts?.items)
-    const primaryAddressHeading = screen.getByRole('heading', {
-      name: /primary/i,
-    })
+    const primaryAddressHeading = screen.getByText(/shipping-address\( primary \)/i)
+
     const editAddresses = screen.getAllByText('edit')
     const deleteAddressIcon = screen.getByTestId('DeleteIcon')
 
-    expect(screen.getAllByTestId('address-card-component')).toHaveLength(
-      addresses?.length as number
-    )
     expect(primaryAddressHeading).toBeVisible()
     expect(editAddresses[0]).toBeVisible()
     expect(deleteAddressIcon).toBeVisible()

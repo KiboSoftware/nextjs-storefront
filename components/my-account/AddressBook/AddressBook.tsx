@@ -2,10 +2,19 @@ import React, { useState } from 'react'
 
 import { Delete } from '@mui/icons-material'
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline'
-import { Box, Typography, Divider, Button, Stack, Checkbox, FormControlLabel } from '@mui/material'
+import {
+  Box,
+  Typography,
+  Divider,
+  Button,
+  Stack,
+  Checkbox,
+  FormControlLabel,
+  MenuItem,
+} from '@mui/material'
 import { useTranslation } from 'next-i18next'
 
-import { AddressCard, AddressForm } from '@/components/common'
+import { AddressCard, AddressForm, KiboSelect } from '@/components/common'
 import { ConfirmationDialog } from '@/components/dialogs'
 import { useModalContext } from '@/context'
 import {
@@ -25,7 +34,6 @@ import type {
   CustomerAccount,
   CustomerContact,
   CustomerContactCollection,
-  Maybe,
 } from '@/lib/gql/types'
 
 interface PaymentMethodProps {
@@ -64,21 +72,27 @@ const AddressBook = (props: PaymentMethodProps) => {
   const [isDefaultAddress, setIsDefaultAddress] = useState<boolean>(false)
 
   const [editAddress, setEditAddress] = useState<CustomerContact>()
+  const [addressType, setAddressType] = useState<string>(AddressType.SHIPPING)
 
   const { addSavedAddressDetails } = useCreateCustomerAddressMutation()
   const { updateSavedAddressDetails } = useUpdateCustomerAddressMutation()
   const { deleteSavedAddressDetails } = useDeleteCustomerAddressMutation()
 
-  const addresses = userAddressGetters.getUserShippingAddress(contacts?.items)
+  const shippingAddresses = userAddressGetters.getUserShippingAddress(contacts?.items)
+  const billingAddresses = userAddressGetters.getUserBillingAddresses(contacts?.items)
+
   const handleNewAddress = () => {
     setIsAddNewAddress(true)
     setEditAddress(undefined)
   }
   const handleEditAddress = (contact: CustomerContact) => {
     setEditAddress(contact)
-    setIsEditAddress(true)
-    const isPrimaryAddress = contact?.types && contact?.types[0]?.isPrimary
-    setIsDefaultAddress(isPrimaryAddress as boolean)
+
+    if (contact?.types) {
+      setIsDefaultAddress(contact?.types[0]?.isPrimary as boolean)
+      setAddressType(contact?.types[0]?.name as string)
+      setIsEditAddress(true)
+    }
   }
 
   const handleAddressValidationAndSave = () => setValidateForm(true)
@@ -89,7 +103,7 @@ const AddressBook = (props: PaymentMethodProps) => {
           accountId: user?.id,
           address,
           isDefaultAddress,
-          addressType: AddressType.SHIPPING.toLowerCase(),
+          addressType: addressType,
         })
 
         await updateSavedAddressDetails.mutateAsync(
@@ -105,7 +119,7 @@ const AddressBook = (props: PaymentMethodProps) => {
           accountId: user?.id,
           address,
           isDefaultAddress,
-          addressType: 'shipping',
+          addressType: addressType,
         })
 
         await addSavedAddressDetails.mutateAsync(params)
@@ -142,11 +156,11 @@ const AddressBook = (props: PaymentMethodProps) => {
 
   return (
     <Box data-testid={'address-book-component'}>
-      {addresses?.map((item: CustomerContact, index: number) => (
+      {shippingAddresses?.map((item: CustomerContact, index: number) => (
         <Box paddingY={1} key={item?.id + 'address'}>
           {index === 0 && (
-            <Typography variant="h2" fontWeight={'500'}>
-              {t('primary')}
+            <Typography variant="body1" fontWeight={700}>
+              {t('shipping-address')}( {t('primary')} )
             </Typography>
           )}
           <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
@@ -176,6 +190,39 @@ const AddressBook = (props: PaymentMethodProps) => {
         </Box>
       ))}
 
+      {billingAddresses?.map((item: CustomerContact, index: number) => (
+        <Box paddingY={1} key={item?.id + 'address'}>
+          {index === 0 && (
+            <Typography variant="body1" fontWeight={700}>
+              {t('billing-address')}( {t('primary')} )
+            </Typography>
+          )}
+          <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
+            <AddressCard {...buildAddressProps(item?.address as CuAddress)} />
+            <Stack>
+              <Typography
+                variant="body2"
+                sx={{ cursor: 'pointer' }}
+                onClick={() => handleEditAddress(item as CustomerContact)}
+              >
+                {t('edit')}
+              </Typography>
+              {index > 0 && (
+                <Delete
+                  sx={{ marginTop: '1.375rem' }}
+                  onClick={() =>
+                    handleConfirmDeleteAddress({
+                      accountId: item?.accountId as number,
+                      contactId: item?.id as number,
+                    })
+                  }
+                />
+              )}
+            </Stack>
+          </Box>
+          <Divider sx={{ marginTop: '1.75rem', marginBottom: '0.25rem' }} />
+        </Box>
+      ))}
       {!isAddNewAddress && !isEditAddress && (
         <Button
           variant="contained"
@@ -191,6 +238,21 @@ const AddressBook = (props: PaymentMethodProps) => {
 
       {(isAddNewAddress || isEditAddress) && (
         <Box pb={'1.813rem'}>
+          <KiboSelect
+            sx={{ typography: 'body2' }}
+            value={addressType}
+            onChange={(_name, value) => setAddressType(value)}
+          >
+            {Object.values(AddressType).map((addressTypeValue: string) => (
+              <MenuItem
+                sx={{ typography: 'body2' }}
+                key={addressTypeValue}
+                value={addressTypeValue}
+              >
+                {addressTypeValue}
+              </MenuItem>
+            ))}
+          </KiboSelect>
           <AddressForm
             saveAddressLabel={''}
             setAutoFocus={true}
