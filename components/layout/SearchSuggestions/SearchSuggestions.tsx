@@ -29,7 +29,6 @@ const style = {
     zIndex: 1400,
     width: '100%',
     maxWidth: { xs: '100%', md: 661 },
-    // marginTop: { xs: 1, md: 0.25 },
   } as SxProps<Theme> | undefined,
   list: {
     p: 2,
