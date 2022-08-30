@@ -11,7 +11,7 @@ import type { ProductCodes } from '@/lib/types'
 
 import type { Product } from '@/lib/gql/types'
 
-interface ProductRecommendationsProps {
+export interface ProductRecommendationsProps {
   title: string
   productCodes: ProductCodes[]
 }
