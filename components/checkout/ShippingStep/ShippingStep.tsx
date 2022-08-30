@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 
 import { Stack, Button, Typography, SxProps } from '@mui/material'
 import { Theme } from '@mui/material/styles'
@@ -28,8 +28,6 @@ interface ShippingProps {
 
 const ShippingStep = (props: ShippingProps) => {
   const { checkout, userShippingAddress } = props
-
-  const shippingBlockRef = useRef()
 
   const contactProp = checkoutGetters.getShippingContact(checkout)
   const shipItems = checkoutGetters.getShipItems(checkout)
@@ -88,8 +86,6 @@ const ShippingStep = (props: ShippingProps) => {
     try {
       await updateShippingInfo(params)
       setIsShippingMethodSaved(true)
-      shippingBlockRef?.current &&
-        (shippingBlockRef.current as Element).scrollIntoView({ behavior: 'smooth' })
     } catch (error) {
       console.error(error)
     }
@@ -131,14 +127,16 @@ const ShippingStep = (props: ShippingProps) => {
       setStepStatusComplete()
       setStepNext()
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [stepStatus])
 
   useEffect(() => {
     isAddressFormValid && isShippingMethodSaved ? setStepStatusValid() : setStepStatusIncomplete()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isAddressFormValid, isShippingMethodSaved])
 
   return (
-    <Stack data-testid="checkout-shipping" gap={2} ref={shippingBlockRef}>
+    <Stack data-testid="checkout-shipping" gap={2}>
       <Typography variant="h2" component="h2" sx={{ fontWeight: 'bold' }}>
         {t('shipping')}
       </Typography>

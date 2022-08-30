@@ -21,7 +21,7 @@ import {
 } from '@mui/material'
 import { styled, SxProps, Theme } from '@mui/material/styles'
 import { useTranslation } from 'next-i18next'
-import { useRouter } from 'next/router'
+import { NextRouter, useRouter } from 'next/router'
 
 import { HeaderAction, KiboLogo } from '@/components/common'
 import { MyStoreDialog, StoreLocatorDialog } from '@/components/dialogs'
@@ -31,7 +31,7 @@ import { useCartQueries, useCategoryTree, usePurchaseLocation } from '@/hooks'
 import { setPurchaseLocationCookie } from '@/lib/helpers'
 import type { LocationCustom, NavigationLink } from '@/lib/types'
 
-import type { Maybe, PrCategory } from '@/lib/gql/types'
+import type { CustomerAccount, Maybe, PrCategory } from '@/lib/gql/types'
 
 interface KiboHeaderProps {
   navLinks: NavigationLink[]
@@ -39,13 +39,18 @@ interface KiboHeaderProps {
   sticky?: boolean
 }
 interface HeaderState {
-  viewHamburgerMenu: boolean
-  viewSearchPortal: boolean
+  viewHamburgerMenu?: boolean
+  viewSearchPortal?: boolean
+  viewStoreLocator?: boolean
 }
 interface HeaderActionsProps {
   headerState: HeaderState
   isMobileViewport: boolean
+  router: NextRouter
+  isAuthenticated: boolean
+  user?: CustomerAccount
   setHeaderState: (val: HeaderState) => void
+  openLoginModal: () => void
 }
 
 const StyledToolbarNav = styled(Box)(() => ({
@@ -56,25 +61,10 @@ const StyledToolbarNav = styled(Box)(() => ({
 }))
 
 const StyledToolbar = styled(Toolbar)(() => ({
-  alignItems: 'center',
-  display: 'flex',
-  backgroundColor: 'grey.300',
-  borderBottomColor: 'grey.300',
-  '& .MuiToolbar-root': {
-    minHeight: { xs: 55 },
-  },
-  '&:before': {
-    content: '""',
-    display: 'block',
-    position: 'absolute',
-    top: 0,
-    left: '31%',
-    width: 10,
-    height: 10,
-    bgcolor: 'grey.300',
-    transform: 'translateY(-50%) rotate(45deg)',
-    zIndex: 0,
-  },
+  display: 'inline-block',
+  height: '100%',
+  paddingTop: '2%',
+  width: '100%',
 }))
 
 const TopHeaderStyles = {
@@ -145,7 +135,6 @@ const headerActionsStyles = {
 const KiboHeaderStyles = {
   appBarContainer: {
     top: 0,
-    zIndex: (theme: Theme) => theme.zIndex.drawer + 1,
   },
   appBarWrapper: {
     boxShadow: 'none',
@@ -197,24 +186,21 @@ const TopHeader = ({ navLinks }: { navLinks: NavigationLink[] }) => {
 }
 
 const HeaderActions = (props: HeaderActionsProps) => {
-  const { headerState, setHeaderState, isMobileViewport } = props
+  const {
+    headerState,
+    setHeaderState,
+    isMobileViewport,
+    openLoginModal,
+    router,
+    isAuthenticated,
+    user,
+  } = props
   const { t } = useTranslation('common')
-  const { isAuthenticated, user, setAuthError } = useAuthContext()
-  const router = useRouter()
   const { data: cart } = useCartQueries({})
   const itemCount = cart?.items?.length || 0
   const { showModal, closeModal } = useModalContext()
 
   const { data: location } = usePurchaseLocation()
-
-  const openLoginModal = () => {
-    setAuthError('')
-    if (!isAuthenticated) {
-      showModal({ Component: LoginDialog })
-    } else {
-      router.push('/my-account')
-    }
-  }
 
   const gotoCart = () => {
     router.push('/cart')
@@ -252,12 +238,11 @@ const HeaderActions = (props: HeaderActionsProps) => {
         {/* Hamburger Menu */}
         <Box sx={headerActionsStyles.hamburgerWrapper}>
           <HeaderAction
-            icon={headerState.viewHamburgerMenu ? CloseIcon : MenuIcon}
+            icon={headerState?.viewHamburgerMenu ? CloseIcon : MenuIcon}
             {...(isMobileViewport && { iconFontSize: 'medium' })}
             onClick={() =>
               setHeaderState({
                 viewHamburgerMenu: !headerState.viewHamburgerMenu,
-                viewSearchPortal: false,
               })
             }
           />
@@ -267,7 +252,6 @@ const HeaderActions = (props: HeaderActionsProps) => {
           sx={headerActionsStyles.mobileSearchIconWrapper}
           onClick={() =>
             setHeaderState({
-              viewHamburgerMenu: false,
               viewSearchPortal: !headerState.viewSearchPortal,
             })
           }
@@ -279,7 +263,14 @@ const HeaderActions = (props: HeaderActionsProps) => {
           <SearchSuggestions />
         </Box>
         {/* Store finder icon */}
-        <Box sx={headerActionsStyles.storeFinderWrapper}>
+        <Box
+          sx={headerActionsStyles.storeFinderWrapper}
+          onClick={() =>
+            setHeaderState({
+              viewStoreLocator: !headerState.viewStoreLocator,
+            })
+          }
+        >
           <HeaderAction
             title={location?.name ? location.name : t('find-a-store')}
             subtitle={
@@ -325,8 +316,13 @@ export default function KiboHeader(props: KiboHeaderProps) {
   const [headerState, setHeaderState] = useState<HeaderState>({
     viewSearchPortal: false,
     viewHamburgerMenu: false,
+    viewStoreLocator: false,
   })
   const [isBackdropOpen, setIsBackdropOpen] = useState<boolean>(false)
+
+  const { isAuthenticated, user, setAuthError } = useAuthContext()
+  const { showModal } = useModalContext()
+  const router = useRouter()
 
   const handleHamburgerMenu = (value: boolean) => {
     setHeaderState({
@@ -341,14 +337,25 @@ export default function KiboHeader(props: KiboHeaderProps) {
     })
   }
 
+  const openLoginModal = () => {
+    setAuthError('')
+    if (!isAuthenticated) {
+      showModal({ Component: LoginDialog })
+    } else {
+      router.push('/my-account')
+    }
+  }
+
   return (
-    <Grid container>
-      <Grid
-        item
-        xs={12}
-        position={sticky ? 'sticky' : 'relative'}
-        sx={{ ...KiboHeaderStyles.appBarContainer }}
-      >
+    <Grid
+      container
+      sx={{
+        position: sticky ? 'sticky' : 'relative',
+        top: 0,
+        zIndex: (theme) => theme.zIndex.drawer + 1,
+      }}
+    >
+      <Grid item xs={12} sx={{ ...KiboHeaderStyles.appBarContainer }}>
         <AppBar
           position={sticky ? 'sticky' : 'static'}
           color="inherit"
@@ -360,13 +367,20 @@ export default function KiboHeader(props: KiboHeaderProps) {
             <TopHeader navLinks={navLinks} />
             {/* Header actions */}
             <HeaderActions
+              user={user}
               headerState={headerState}
-              setHeaderState={setHeaderState}
               isMobileViewport={isMobileViewport}
+              router={router}
+              isAuthenticated={isAuthenticated}
+              setHeaderState={setHeaderState}
+              openLoginModal={openLoginModal}
             />
             <Collapse in={headerState.viewSearchPortal}>
               <Box position="static" sx={{ display: { md: 'none' } }}>
-                <StyledToolbar data-testid="searchbar-container">
+                <StyledToolbar
+                  data-testid="searchbar-container"
+                  sx={{ backgroundColor: 'grey.300' }}
+                >
                   <SearchSuggestions
                     isViewSearchPortal={headerState.viewSearchPortal}
                     onEnterSearch={handleSearchPortal}
@@ -381,6 +395,7 @@ export default function KiboHeader(props: KiboHeaderProps) {
           isDrawerOpen={headerState.viewHamburgerMenu}
           setIsDrawerOpen={handleHamburgerMenu}
           navLinks={navLinks}
+          openLoginModal={openLoginModal}
         />
       </Grid>
       <Grid

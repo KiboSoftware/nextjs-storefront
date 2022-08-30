@@ -79,6 +79,7 @@ let theme = createTheme({
   palette: {
     primary: {
       main: '#2ea195',
+      light: '#C0E3DF',
     },
     secondary: {
       main: '#c0e3df',
@@ -109,6 +110,12 @@ let theme = createTheme({
             boxShadow: 'none',
           },
         },
+        containedPrimary: ({ ownerState, theme }) => ({
+          ...(ownerState.disabled && {
+            backgroundColor: `${theme.palette.primary.light} !important`,
+            color: `${theme.palette.common.white} !important`,
+          }),
+        }),
         containedSecondary: {
           backgroundColor: grey[50],
           borderColor: grey[500],

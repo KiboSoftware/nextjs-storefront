@@ -182,6 +182,7 @@ const Checkout = (props: CheckoutProps) => {
                   <Stack direction="column" gap={2}>
                     <Button
                       variant="contained"
+                      color="primary"
                       sx={{ ...buttonStyle }}
                       fullWidth
                       onClick={handleSubmit}

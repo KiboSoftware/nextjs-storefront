@@ -12,10 +12,11 @@ import type { Maybe, PrCategory } from '@/lib/gql/types'
 
 interface HamburgerMenuProps {
   categoryTree: Maybe<PrCategory>[]
-  isDrawerOpen: boolean
+  isDrawerOpen?: boolean
   navLinks?: NavigationLink[]
   marginTop?: number | string
   setIsDrawerOpen: (isDrawerOpen: boolean) => void
+  openLoginModal: () => void
 }
 
 const styles = {
@@ -26,7 +27,6 @@ const styles = {
     overflowY: 'hidden',
     display: 'flex',
     flexDirection: 'column',
-    maxHeight: '60%',
   },
   menuList: {
     overflowY: 'auto',
@@ -47,7 +47,14 @@ const styles = {
 }
 
 const HamburgerMenu = (props: HamburgerMenuProps) => {
-  const { categoryTree, isDrawerOpen, marginTop = 7, setIsDrawerOpen, navLinks } = props
+  const {
+    categoryTree,
+    isDrawerOpen,
+    marginTop = 7,
+    setIsDrawerOpen,
+    navLinks,
+    openLoginModal,
+  } = props
   const { t } = useTranslation('common')
   const router = useRouter()
 
@@ -57,13 +64,13 @@ const HamburgerMenu = (props: HamburgerMenuProps) => {
 
   const handleCategoryClick = (categoryCode: string) => {
     toggleDrawer(false)
-    router.push('/product/' + categoryCode)
+    router.push('/category/' + categoryCode)
   }
 
   return (
     <SwipeableDrawer
       anchor={'left'}
-      open={isDrawerOpen}
+      open={isDrawerOpen || false}
       onClose={() => toggleDrawer(false)}
       onOpen={() => toggleDrawer(true)}
       data-testid="hamburger-menu"
@@ -83,6 +90,7 @@ const HamburgerMenu = (props: HamburgerMenuProps) => {
                 mobileIconColor="black"
                 iconFontSize="large"
                 showTitleInMobile={true}
+                onClick={openLoginModal}
               />
             </Box>
           </CategoryNestedNavigation>

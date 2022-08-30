@@ -35,9 +35,6 @@ interface StyledDialogProps {
   customMaxWidth?: string
   isDialogCentered: boolean
 }
-interface StyledCloseProps {
-  theme?: Theme
-}
 
 const StyledDialog = styled(Dialog, {
   shouldForwardProp: (prop) => prop !== 'customMaxWidth' && prop !== 'isDialogCentered',
