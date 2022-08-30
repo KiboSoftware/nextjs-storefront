@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react'
 
+import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline'
 import { Box, Button, Checkbox, FormControlLabel, Stack, Typography } from '@mui/material'
 import { useTranslation } from 'next-i18next'
 import getConfig from 'next/config'
@@ -72,6 +73,14 @@ const initialBillingAddressData: Address = {
   isAddressValid: false,
 }
 
+const styles = {
+  addPaymentMethodButtonStyle: {
+    maxWidth: '26.313rem',
+    '& > *:first-child': {
+      fontSize: 'inherit',
+    },
+  },
+}
 const PaymentMethod = (props: PaymentMethodProps) => {
   const { user, cards, contacts } = props
   const { t } = useTranslation('common')
@@ -361,8 +370,9 @@ const PaymentMethod = (props: PaymentMethodProps) => {
           <Button
             variant="contained"
             color="inherit"
-            sx={{ width: { xs: '100%', sm: '50%' } }}
+            sx={{ ...styles.addPaymentMethodButtonStyle }}
             onClick={() => handleAddNewPaymentMethod()}
+            startIcon={<AddCircleOutlineIcon />}
           >
             {t('add-payment-method')}
           </Button>

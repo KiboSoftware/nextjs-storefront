@@ -35,6 +35,22 @@ jest.mock('@/lib/helpers/tokenizeCreditCardPayment', () => {
   }
 })
 
+describe('[component] - AddressBook (has saved addresses )', () => {
+  it('should handle adding new address', async () => {
+    render(<Common />)
+    const addressBook = screen.getByRole('heading', {
+      name: /address-book/i,
+    })
+    await user.click(addressBook)
+
+    const addNewAddressButton = screen.getByRole('button', { name: 'add-new-address' })
+    await user.click(addNewAddressButton)
+
+    const addressForm = screen.getByTestId('address-form')
+    expect(addressForm).toBeVisible()
+  })
+})
+
 describe('[component] - PaymentMethod (has saved payment methods)', () => {
   it('should handle adding new card', async () => {
     render(<Common />)

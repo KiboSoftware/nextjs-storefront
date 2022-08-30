@@ -13,6 +13,7 @@ import {
   useUpdateCustomerAddressMutation,
   useDeleteCustomerAddressMutation,
 } from '@/hooks'
+import { AddressType } from '@/lib/constants'
 import { userAddressGetters } from '@/lib/getters'
 import { buildAddressParams } from '@/lib/helpers'
 import type { Address, ContactForm, DeleteAddressParams } from '@/lib/types'
@@ -32,6 +33,14 @@ interface PaymentMethodProps {
   contacts: CustomerContactCollection
 }
 
+const styles = {
+  addNewAddressButtonStyle: {
+    maxWidth: '26.313rem',
+    '& > *:first-child': {
+      fontSize: 'inherit',
+    },
+  },
+}
 const buildAddressProps = (address: CuAddress | CrAddress) => {
   const { address1, address2, cityOrTown, stateOrProvince, postalOrZipCode } = address
   return {
@@ -80,7 +89,7 @@ const AddressBook = (props: PaymentMethodProps) => {
           accountId: user?.id,
           address,
           isDefaultAddress,
-          addressType: 'shipping',
+          addressType: AddressType.SHIPPING.toLowerCase(),
         })
 
         await updateSavedAddressDetails.mutateAsync(
@@ -133,7 +142,7 @@ const AddressBook = (props: PaymentMethodProps) => {
 
   return (
     <Box data-testid={'address-book-component'}>
-      {addresses?.map((item: Maybe<CustomerContact>, index: number) => (
+      {addresses?.map((item: CustomerContact, index: number) => (
         <Box paddingY={1} key={item?.id + 'address'}>
           {index === 0 && (
             <Typography variant="h2" fontWeight={'500'}>
@@ -141,10 +150,8 @@ const AddressBook = (props: PaymentMethodProps) => {
             </Typography>
           )}
           <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
-            <Box sx={{ display: 'block' }}>
-              <AddressCard {...buildAddressProps(item?.address as CuAddress)} />
-            </Box>
-            <Box sx={{ display: 'flex', flexDirection: 'column' }}>
+            <AddressCard {...buildAddressProps(item?.address as CuAddress)} />
+            <Stack>
               <Typography
                 variant="body2"
                 sx={{ cursor: 'pointer' }}
@@ -163,7 +170,7 @@ const AddressBook = (props: PaymentMethodProps) => {
                   }
                 />
               )}
-            </Box>
+            </Stack>
           </Box>
           <Divider sx={{ marginTop: '1.75rem', marginBottom: '0.25rem' }} />
         </Box>
@@ -173,11 +180,11 @@ const AddressBook = (props: PaymentMethodProps) => {
         <Button
           variant="contained"
           color="inherit"
-          sx={{ maxWidth: '26.313rem' }}
+          sx={{ ...styles.addNewAddressButtonStyle }}
           onClick={handleNewAddress}
           fullWidth
+          startIcon={<AddCircleOutlineIcon />}
         >
-          <AddCircleOutlineIcon sx={{ paddingRight: '1rem' }} />
           {t('add-new-address')}
         </Button>
       )}
