@@ -30,7 +30,7 @@ import {
   useProductLocationInventory,
 } from '@/hooks'
 import { FulfillmentOptions as FulfillmentOptionsConstant } from '@/lib/constants'
-import { productGetters } from '@/lib/getters'
+import { productGetters, wishlistGetters } from '@/lib/getters'
 import type { ProductCustom, BreadCrumb, PriceRange, LocationCustom } from '@/lib/types'
 
 import type {
@@ -194,6 +194,8 @@ const ProductDetailTemplate = (props: ProductDetailTemplateProps) => {
 
   const handleWishList = async () => {
     try {
+      if (!wishlistGetters.isAvailableToAddToWishlist(currentProduct)) return
+
       const addOrRemoveWishlistItemParams = {
         productCode,
         variationProductCode,
@@ -359,6 +361,9 @@ const ProductDetailTemplate = (props: ProductDetailTemplateProps) => {
                 fullWidth
                 onClick={handleWishList}
                 sx={{ padding: '0.375rem 0.5rem' }}
+                {...(!wishlistGetters.isAvailableToAddToWishlist(currentProduct) && {
+                  disabled: true,
+                })}
               >
                 {isProductInWishlist ? (
                   <FavoriteRoundedIcon sx={{ color: 'red.900', marginRight: '14px' }} />

@@ -1,5 +1,6 @@
-import type { Maybe, Wishlist } from '@/lib/gql/types'
+import type { ProductCustom } from '@/lib/types'
 
+import type { Maybe, Wishlist } from '@/lib/gql/types'
 export interface InWishlistProductInput {
   productCode: string
   variationProductCode?: string
@@ -22,6 +23,14 @@ const isInWishlist = (props: InWishlistItemInputParams) => {
   })
 }
 
+const isAvailableToAddToWishlist = (product: ProductCustom) => {
+  if (product?.options?.some((option) => option?.isRequired))
+    return Boolean(product?.purchasableState?.isPurchasable)
+
+  return true
+}
+
 export const wishlistGetters = {
   isInWishlist,
+  isAvailableToAddToWishlist,
 }

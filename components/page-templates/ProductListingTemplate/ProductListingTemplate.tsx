@@ -379,6 +379,7 @@ const ProductListingTemplate = (props: ProductListingTemplateProps) => {
                             productCode: product?.productCode as string,
                             variationProductCode: product?.variationProductCode as string,
                           })}
+                          isShowWishlistIcon={!productGetters.isVariationProduct(product)}
                           onAddOrRemoveWishlistItem={() => handleWishList(product as ProductCustom)}
                         />
                       </Grid>

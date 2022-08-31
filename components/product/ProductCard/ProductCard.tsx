@@ -37,6 +37,7 @@ export interface ProductCardProps {
   isInCart?: boolean
   isLoading?: boolean
   isShopNow?: boolean
+  isShowWishlistIcon?: boolean
   onAddOrRemoveWishlistItem?: () => void
 }
 
@@ -81,6 +82,7 @@ const ProductCard = (props: ProductCardProps) => {
     isLoading = false,
     isShopNow = false,
     isInWishlist = false,
+    isShowWishlistIcon = true,
     onAddOrRemoveWishlistItem,
   } = props
 
@@ -98,13 +100,15 @@ const ProductCard = (props: ProductCardProps) => {
         <Link href={link} passHref data-testid="product-card-link">
           <MuiLink href={link} underline="none">
             <Card sx={styles.cardRoot} data-testid="product-card">
-              <Box textAlign={'right'} width="100%" onClick={handleAddOrRemoveWishlistItem}>
-                {isInWishlist ? (
-                  <FavoriteRoundedIcon sx={{ color: 'red.900' }} />
-                ) : (
-                  <FavoriteBorderRoundedIcon sx={{ color: 'grey.600' }} />
-                )}
-              </Box>
+              {isShowWishlistIcon && (
+                <Box textAlign={'right'} width="100%" onClick={handleAddOrRemoveWishlistItem}>
+                  {isInWishlist ? (
+                    <FavoriteRoundedIcon sx={{ color: 'red.900' }} />
+                  ) : (
+                    <FavoriteBorderRoundedIcon sx={{ color: 'grey.600' }} />
+                  )}
+                </Box>
+              )}
               <CardMedia
                 sx={{
                   width: '100%',
