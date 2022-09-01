@@ -2,7 +2,7 @@ import { Variant } from '@mui/material/styles/createTypography'
 
 import { ProductOption } from '@/components/product'
 
-import type { CrProductOption, ProductOption as ProductOptionType } from '@/lib/gql/types'
+import type { CrProductOption } from '@/lib/gql/types'
 
 interface ProductOptionListProps {
   options: CrProductOption[]
