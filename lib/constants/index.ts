@@ -59,3 +59,39 @@ export const AddressType = {
   BILLING: 'Billing',
   SHIPPING: 'Shipping',
 }
+
+export const footerConfig = {
+  sections: [
+    {
+      title: 'about us',
+      items: [
+        { link: '', text: 'Who we are' },
+        { link: '', text: 'Quality in the detail' },
+        { link: '', text: 'Customer Reviews' },
+      ],
+    },
+    {
+      title: 'departments',
+      items: [
+        { link: '', text: 'Mens' },
+        { link: '', text: 'Womens' },
+        { link: '', text: 'Kids' },
+      ],
+    },
+    {
+      title: 'contact',
+      items: [
+        { link: '', text: 'Customer Service' },
+        { link: '', text: 'Contact Us' },
+      ],
+    },
+    { title: 'payment & delivery', items: [{ link: '', text: 'Purchase Terms' }] },
+  ],
+  social: [
+    { iconPath: '/icons/facebook.svg', link: '' },
+    { iconPath: '/icons/google.svg', link: '' },
+    { iconPath: '/icons/pinterest.svg', link: '' },
+    { iconPath: '/icons/twitter.svg', link: '' },
+    { iconPath: '/icons/youtube.svg', link: '' },
+  ],
+}
