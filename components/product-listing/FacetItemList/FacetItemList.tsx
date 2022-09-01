@@ -25,15 +25,16 @@ const FacetItemList = (props: FacetItemListProps) => {
   } = props
   const [factItemList, setFactItemList] = useState<FacetValue[]>(itemList)
 
-  const handleFacetSelection = (selectedFacetItem: string, isApplied: boolean) => {
-    itemList.filter((facet) => facet.filterValue === selectedFacetItem)[0].isApplied = !isApplied
-    setFactItemList(itemList)
-    const selectedFacetItems = facetGetters.getSelectedFacetItems(factItemList)
+  const handleFacetSelection = async (selectedFacetItem: string, isApplied: boolean) => {
+    const newItemList = [...itemList]
+    newItemList.filter((facet) => facet.filterValue === selectedFacetItem)[0].isApplied = !isApplied
+    setFactItemList(newItemList)
+    const selectedFacetItems = facetGetters.getSelectedFacetItems(newItemList)
     onFacetItemSelection && onFacetItemSelection(selectedFacetItems)
   }
 
   useEffect(() => {
-    itemList.length && setFactItemList(itemList)
+    setFactItemList(itemList)
   }, [itemList, factItemList])
 
   return (
