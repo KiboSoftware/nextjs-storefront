@@ -2,26 +2,73 @@
 
 import React, { useEffect, useState } from 'react'
 
+import { yupResolver } from '@hookform/resolvers/yup'
 import { Password, Visibility, VisibilityOff } from '@mui/icons-material'
 import { Box, Button, Typography, useMediaQuery, useTheme } from '@mui/material'
 import { useTranslation } from 'next-i18next'
 import { Controller, useForm } from 'react-hook-form'
+import * as yup from 'yup'
 
-import { KiboTextBox ,PasswordValidation} from '@/components/common'
+import { KiboTextBox, PasswordValidation } from '@/components/common'
 import { useAuthContext } from '@/context'
-import { useUpateUserMutations } from '@/hooks/mutations/useProfile/useChangeCustomerData/useUpdateCustomerData'
-import { useUpdateUserPasswordMutations } from '@/hooks/mutations/useProfile/useUpdateCustomerPassword/useUpdatePassword'
+import { useUpdateUserData, useUpdateUserPasswordMutations } from '@/hooks'
 
+const style = {
+  box1: {
+    display: 'flex',
+    flexDirection: 'column',
+    gap: 2.5,
+  },
+  box2: {
+    display: 'flex',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+  },
+  box3: {
+    display: 'flex',
+    alignItems: 'center',
+    cursor: 'pointer',
+    justifyContent: 'end',
+  },
+}
+
+const useCustomerDetailsSchema = () => {
+  const { t } = useTranslation('checkout')
+  // return yup.object().shape({
+  //   email: yup.string().email().required(t('this-field-is-required')),
+  //   showAccountFields: yup.boolean(),
+  //   firstName: yup.string().when('showAccountFields', {
+  //     is: true,
+  //     then: yup.string().required(t('this-field-is-required')),
+  //   }),
+  //   lastNameOrSurname: yup.string().when('showAccountFields', {
+  //     is: true,
+  //     then: yup.string().required(t('this-field-is-required')),
+  //   }),
+  //   password: yup.string().when('showAccountFields', {
+  //     is: true,
+  //     then: yup.string().required(t('this-field-is-required')),
+  //   }),
+  // })
+
+  return yup.object().shape({
+    email: yup.string().email().required(t('this-field-is-required')),
+    firstName: yup.string().required(t('this-field-is-required')),
+    lastNameOrSurname: yup.string().required(t('this-field-is-required')),
+    password: yup.string().required(t('this-field-is-required')),
+  })
+}
 const MyProfile = () => {
   const { user, isAuthenticated } = useAuthContext()
-  const { t } = useTranslation(['checkout', 'common'])
-  const { updateUserData } = useUpateUserMutations()
+  const { t } = useTranslation(['common', 'checkout'])
+  const { updateUserData } = useUpdateUserData()
   const { updateUserPasswordData } = useUpdateUserPasswordMutations()
-  const [edit, setEdit] = useState(false)
-  const [editName, setEditName] = useState(false)
-  const [editEmail, setEditEmail] = useState(false)
-  const [editPassword, setEditPassword] = useState(false)
+  const kiboTheme = useTheme()
+  const mobileView = useMediaQuery(kiboTheme.breakpoints.down('md'))
+  const [edit, setEdit] = useState('')
+
   const [showPassword, setShowPassword] = useState<boolean>(false)
+
   const [currentUser, setCurrentUser] = useState({
     firstName: '',
     lastName: '',
@@ -31,32 +78,11 @@ const MyProfile = () => {
   const [updatedPassword, setUpdatedpassword] = useState({
     oldPassword: '',
     newPassword: '',
-    externalPassword: '',
+    confirmNewPassword: '',
   })
-  const style = {
-    box1: {
-      display: 'flex',
-      flexDirection: 'column',
-      gap: 2.5,
-    },
-    box2: {
-      display: 'flex',
-      flexDirection: 'row',
-      justifyContent: 'space-between',
-    },
-    box3: {
-      display: 'flex',
-      alignItems: 'center',
-      cursor: 'pointer',
-      justifyContent: 'end',
-    },
-  }
-
-  const kiboTheme = useTheme()
-  const mobileView = useMediaQuery(kiboTheme.breakpoints.down('md'))
 
   useEffect(() => {
-    if (!isAuthenticated) {
+    if (isAuthenticated) {
       setCurrentUser({
         id: user?.id as number,
         firstName: user?.firstName as string,
@@ -64,59 +90,45 @@ const MyProfile = () => {
         emailAddress: user?.emailAddress as string,
       })
     }
-  }, [user])
-
-  interface disable {
-    forName: boolean
-    forEmail: boolean
-  }
-
-  const [disableButton, setDisableButton] = useState<disable>({
-    forName: true,
-    forEmail: true,
-  })
-
-  useEffect(() => {
-    if (
-      currentUser.firstName !== user?.firstName ||
-      currentUser.lastName !== user?.lastName ||
-      currentUser.emailAddress !== user?.emailAddress
-    ) {
-      setDisableButton({ forName: false, forEmail: false })
-    } else {
-      setDisableButton({ forName: true, forEmail: true })
-    }
-  }, [currentUser])
+  }, [user, isAuthenticated])
 
   const {
-    formState: { errors },
+    formState: { errors, isDirty },
     control,
-    watch,
+    reset,
   } = useForm({
-    mode: 'all',
+    mode: 'onChange',
     reValidateMode: 'onBlur',
+    resolver: yupResolver(useCustomerDetailsSchema()),
     shouldFocusError: true,
   })
 
-  const userEnteredPassword = watch(['password']).join('')
-
   const handleUpdatUserData = async () => {
     try {
+      // let formData = {};
+      // const form = new FormData();
+      // formData = {
+      //   ...formData,
+      //   accountId: user?.id,
+      //   customerAccountInput: {
+      //     id: user?.id,
+      //     firstName: firstname,
+      //     lastName: lastname,
+      //     emailAddress: email
+      // }}
       await updateUserData.mutateAsync({
-        accountId: currentUser.id,
+        accountId: user?.id as number,
         customerAccountInput: {
-          id: currentUser.id,
-          firstName: currentUser.firstName,
-          lastName: currentUser.lastName,
+          id: user?.id as number,
+          firstName: currentUser.firstName as string,
+          lastName: currentUser.lastName as string,
           emailAddress: currentUser.emailAddress,
         },
       })
     } catch (err) {
       console.log(err)
-    } finally {
-      setDisableButton({ forName: true, forEmail: true })
     }
-    return setEdit(false)
+    return setEdit('')
   }
 
   const handleCancelUserData = async () => {
@@ -131,39 +143,44 @@ const MyProfile = () => {
   const handleUpdatUserPassword = async () => {
     try {
       await updateUserPasswordData.mutateAsync({
-        accountId: currentUser.id,
+        accountId: user?.id as number,
+
         passwordInfoInput: {
           oldPassword: updatedPassword.oldPassword,
           newPassword: updatedPassword.newPassword,
-          externalPassword: updatedPassword.externalPassword,
+          externalPassword: updatedPassword.confirmNewPassword,
         },
       })
     } catch (err) {
       console.log(err)
     }
-    return setEdit(false)
+    return setEdit('')
   }
 
   return (
     <Box>
-      <Box sx={style.box1} style={{ width: mobileView ? '100%' : '50%' }}>
-        {edit ? (
+      <Box
+        data-testid="customer-name"
+        sx={style.box1}
+        style={{ width: mobileView ? '100%' : '50%' }}
+      >
+        {edit !== '' ? (
           <>
-            {editName && (
+            {edit === 'EditName' && (
               <>
                 <Typography variant="h4" sx={{ fontWeight: 'bold' }}>
-                  {editName ? 'Edit Customer Name' : 'Customer Name'}
+                  {t('common:edit-customer-name')}
                 </Typography>
                 <Box sx={{ display: 'flex', flexDirection: 'column' }}>
                   <Controller
                     name="firstName"
                     control={control}
-                    defaultValue={currentUser.firstName}
+                    // defaultValue={currentUser?.firstName}
                     render={({ field }) => (
                       <KiboTextBox
                         {...field}
                         value={currentUser.firstName}
-                        label={t('first-name')}
+                        label={t('checkout:first-name')}
                         ref={null}
                         size="small"
                         error={!!errors?.firstName}
@@ -172,19 +189,19 @@ const MyProfile = () => {
                           setCurrentUser({ ...currentUser, firstName: value })
                         }
                         onBlur={field.onBlur}
-                        required={true}
+                        required
                       />
                     )}
                   />
                   <Controller
                     name="lastNameOrSurname"
                     control={control}
-                    defaultValue={currentUser.lastName}
+                    // defaultValue={user?.lastName}
                     render={({ field }) => (
                       <KiboTextBox
                         {...field}
                         value={currentUser.lastName}
-                        label={t('last-name-or-sur-name')}
+                        label={t('checkout:last-name-or-sur-name')}
                         ref={null}
                         error={!!errors?.lastNameOrSurname}
                         helperText={errors?.lastNameOrSurname?.message}
@@ -192,25 +209,22 @@ const MyProfile = () => {
                           setCurrentUser({ ...currentUser, lastName: value })
                         }
                         onBlur={field.onBlur}
-                        required={true}
+                        required
                         size="small"
                       />
                     )}
                   />
                 </Box>
-                <Box
-                  sx={{
-                    display: 'flex',
-                    gap: 1,
-                    width: '50%',
-                    flexDirection: 'column',
-                  }}
-                >
+                <Box sx={style.box1} width={'50%'}>
                   <Button
                     onClick={() => {
-                      setEdit(false)
-                      setEditName(false)
-                      handleCancelUserData()
+                      setEdit('')
+                      reset()
+                      setCurrentUser({
+                        ...currentUser,
+                        firstName: user?.firstName as string,
+                        lastName: user?.lastName as string,
+                      })
                     }}
                     variant="contained"
                     color="secondary"
@@ -218,7 +232,7 @@ const MyProfile = () => {
                     {t('common:cancel')}
                   </Button>
                   <Button
-                    disabled={disableButton.forName}
+                    disabled={!isDirty}
                     onClick={() => handleUpdatUserData()}
                     variant="contained"
                   >
@@ -227,10 +241,10 @@ const MyProfile = () => {
                 </Box>
               </>
             )}
-            {editEmail && (
+            {edit === 'EditEmail' && (
               <>
                 <Typography variant="h4" sx={{ fontWeight: 'bold' }}>
-                  {editEmail ? 'Edit Email' : 'Email'}
+                  {t('common:edit-email')}
                 </Typography>
                 <Box sx={{ display: 'flex', flexDirection: 'column' }}>
                   <Controller
@@ -240,7 +254,7 @@ const MyProfile = () => {
                       <KiboTextBox
                         name="email"
                         value={currentUser.emailAddress}
-                        label={t('your-email')}
+                        label={t('checkout:email')}
                         required
                         onBlur={field.onBlur}
                         onChange={(_name, value) =>
@@ -253,27 +267,19 @@ const MyProfile = () => {
                     )}
                   />
                 </Box>
-                <Box
-                  sx={{
-                    display: 'flex',
-                    gap: 1,
-                    width: '50%',
-                    flexDirection: 'column',
-                  }}
-                >
+                <Box sx={style.box1} width={'50%'}>
                   <Button
                     variant="contained"
                     color="secondary"
                     onClick={() => {
-                      setEdit(false)
-                      setEditEmail(false)
+                      setEdit('')
                       handleCancelUserData()
                     }}
                   >
                     {t('common:cancel')}
                   </Button>
                   <Button
-                    disabled={disableButton.forEmail}
+                    disabled={!isDirty}
                     onClick={() => handleUpdatUserData()}
                     variant="contained"
                   >
@@ -282,10 +288,10 @@ const MyProfile = () => {
                 </Box>
               </>
             )}
-            {editPassword && (
+            {edit === 'EditPass' && (
               <>
                 <Typography variant="h4" sx={{ fontWeight: 'bold' }}>
-                  {editPassword ? 'Edit Password' : 'Password'}
+                  {t('common:edit-password')}
                 </Typography>
                 <Box sx={{ display: 'flex', flexDirection: 'column' }}>
                   <Controller
@@ -315,7 +321,7 @@ const MyProfile = () => {
                     render={({ field }) => (
                       <KiboTextBox
                         value={field.value}
-                        label={t('password')}
+                        label={t('common:new-password')}
                         required
                         onBlur={field.onBlur}
                         onChange={(_name, value) =>
@@ -341,7 +347,7 @@ const MyProfile = () => {
                         required
                         onBlur={field.onBlur}
                         onChange={(_name, value) =>
-                          setUpdatedpassword({ ...updatedPassword, externalPassword: value })
+                          setUpdatedpassword({ ...updatedPassword, confirmNewPassword: value })
                         }
                         error={!!errors?.password}
                         helperText={errors?.password?.message}
@@ -352,27 +358,25 @@ const MyProfile = () => {
                       />
                     )}
                   />
-                  {userEnteredPassword && <PasswordValidation password={userEnteredPassword} />}
+                  {updatedPassword.newPassword.length > 0 && (
+                    <PasswordValidation password={updatedPassword.newPassword} />
+                  )}
                 </Box>
-                <Box
-                  sx={{
-                    display: 'flex',
-                    gap: 1,
-                    width: '50%',
-                    flexDirection: 'column',
-                  }}
-                >
+                <Box sx={style.box1} width={'50%'}>
                   <Button
                     onClick={() => {
-                      setEditPassword(false)
-                      setEdit(false)
+                      setEdit('')
                     }}
                     variant="contained"
                     color="secondary"
                   >
                     {t('common:cancel')}
                   </Button>
-                  <Button onClick={() => handleUpdatUserPassword()} variant="contained">
+                  <Button
+                    disabled={!isDirty}
+                    onClick={() => handleUpdatUserPassword()}
+                    variant="contained"
+                  >
                     {t('common:save')}
                   </Button>
                 </Box>
@@ -387,7 +391,7 @@ const MyProfile = () => {
                   {t('checkout:customer-name')}
                 </Typography>
                 <Typography variant="body2">
-                  {currentUser.firstName + ' ' + currentUser.lastName}
+                  {currentUser?.firstName + ' ' + currentUser?.lastName}
                 </Typography>
               </Box>
 
@@ -395,8 +399,7 @@ const MyProfile = () => {
                 <Typography
                   variant="body2"
                   onClick={() => {
-                    setEdit(true)
-                    setEditName(true)
+                    setEdit('EditName')
                   }}
                   sx={{}}
                 >
@@ -409,14 +412,13 @@ const MyProfile = () => {
                 <Typography variant="body2" sx={{ fontWeight: 'bold' }}>
                   {t('checkout:email')}
                 </Typography>
-                <Typography variant="body2">{currentUser.emailAddress}</Typography>
+                <Typography variant="body2">{currentUser?.emailAddress}</Typography>
               </Box>
               <Box sx={style.box3}>
                 <Typography
                   variant="body2"
                   onClick={() => {
-                    setEditEmail(true)
-                    setEdit(true)
+                    setEdit('EditEmail')
                   }}
                 >
                   {t('common:edit')}
@@ -439,14 +441,13 @@ const MyProfile = () => {
                 <Typography variant="body2" sx={{ fontWeight: 'bold' }}>
                   {t('checkout:password')}
                 </Typography>
-                <Password fontSize='small'></Password>
+                <Typography variant="body2">*********</Typography>
               </Box>
               <Box sx={style.box3}>
                 <Typography
                   variant="body2"
                   onClick={() => {
-                    setEditPassword(true)
-                    setEdit(true)
+                    setEdit('EditPass')
                   }}
                 >
                   {t('common:edit')}

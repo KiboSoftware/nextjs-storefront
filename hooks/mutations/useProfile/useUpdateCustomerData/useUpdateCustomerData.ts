@@ -1,22 +1,23 @@
+import { loginKeys } from './../../../../lib/react-query/queryKeys'
 import { useMutation, useQueryClient } from 'react-query'
 
 import { makeGraphQLClient } from '@/lib/gql/client'
 import { UpdateUserDataKeys } from '@/lib/react-query/queryKeys'
 import { updateCustomerData } from '@/lib/gql/mutations/user/updateAccout'
 
-export interface UpdateCustomerDataInput {
+export interface UpdateUserDataInput {
   id: number
   firstName: string
   lastName: string
   emailAddress: string
 }
 
-interface UpdateCustomerDataProps {
+interface UpdateUserDataProps {
   accountId: number
-  customerAccountInput: UpdateCustomerDataInput
+  customerAccountInput: UpdateUserDataInput
 }
 
-const updateUserDetails = async (props: UpdateCustomerDataProps) => {
+const updateUserDetails = async (props: UpdateUserDataProps) => {
   const client = makeGraphQLClient()
   const { accountId, customerAccountInput } = props
 
@@ -30,12 +31,13 @@ const updateUserDetails = async (props: UpdateCustomerDataProps) => {
   return response
 }
 
-export const useUpateUserMutations = () => {
+export const useUpdateUserData = () => {
   const queryClient = useQueryClient()
   return {
     updateUserData: useMutation(updateUserDetails, {
       onSuccess: () => {
         queryClient.invalidateQueries(UpdateUserDataKeys.all)
+        // queryClient.invalidateQueries(loginKeys.user)
       },
     }),
   }

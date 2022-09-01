@@ -4,18 +4,18 @@ import { makeGraphQLClient } from '@/lib/gql/client'
 import { UpdatePasswordKeys } from '@/lib/react-query/queryKeys'
 import { updatePassword } from '@/lib/gql/mutations/user/updatePassword'
 
-export interface UpdateCustomerPasswordInput {
+export interface UpdateUserPasswordInput {
   oldPassword: string
   newPassword: string
   externalPassword: string
 }
 
-interface UpdateCustomerPasswordProps {
+interface UpdateUserPasswordProps {
   accountId: number
-  passwordInfoInput: UpdateCustomerPasswordInput
+  passwordInfoInput: UpdateUserPasswordInput
 }
 
-const updateUserPassword = async (props: UpdateCustomerPasswordProps) => {
+const updateUserPassword = async (props: UpdateUserPasswordProps) => {
   const client = makeGraphQLClient()
   const { accountId, passwordInfoInput } = props
 
