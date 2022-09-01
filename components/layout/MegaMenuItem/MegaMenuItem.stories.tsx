@@ -12,6 +12,9 @@ const childrenCategories =
 export default {
   title: 'Layout/MegaMenuItem',
   component: MegaMenuItem,
+  argTypes: {
+    onBackDropClose: { action: 'closeBackDrop' },
+  },
 } as ComponentMeta<typeof MegaMenuItem>
 
 const Template: ComponentStory<typeof MegaMenuItem> = (args) => <MegaMenuItem {...args} />

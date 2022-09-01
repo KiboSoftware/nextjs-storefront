@@ -9,7 +9,7 @@ import ShoppingCartIcon from '@mui/icons-material/ShoppingCart'
 import {
   Typography,
   Toolbar,
-  Link,
+  Link as MuiLink,
   Grid,
   Collapse,
   Box,
@@ -21,6 +21,7 @@ import {
 } from '@mui/material'
 import { styled, SxProps, Theme } from '@mui/material/styles'
 import { useTranslation } from 'next-i18next'
+import Link from 'next/link'
 import { NextRouter, useRouter } from 'next/router'
 
 import { HeaderAction, KiboLogo } from '@/components/common'
@@ -173,8 +174,10 @@ const TopHeader = ({ navLinks }: { navLinks: NavigationLink[] }) => {
           {navLinks?.map((nav, index) => {
             return (
               <Box key={index}>
-                <Link href={nav.link} underline="none" color="common.white">
-                  <Typography variant="body2"> {t(`${nav.text}`)}</Typography>
+                <Link href={nav.link} passHref>
+                  <MuiLink underline="none" color="common.white">
+                    <Typography variant="body2"> {t(`${nav.text}`)}</Typography>
+                  </MuiLink>
                 </Link>
               </Box>
             )
@@ -231,8 +234,10 @@ const HeaderActions = (props: HeaderActionsProps) => {
     <Container maxWidth="xl" sx={headerActionsStyles.container}>
       <Box sx={headerActionsStyles.wrapper}>
         <Box position="relative" sx={headerActionsStyles.logoWrapper}>
-          <Link href="/">
-            <KiboLogo />
+          <Link href="/" passHref>
+            <MuiLink>
+              <KiboLogo />
+            </MuiLink>
           </Link>
         </Box>
         {/* Hamburger Menu */}

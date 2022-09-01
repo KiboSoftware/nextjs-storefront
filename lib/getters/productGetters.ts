@@ -243,10 +243,11 @@ const getAvailableItemCount = (
       qtyLeft.value = productLocationInventoryData[0]?.stockAvailable
         ? productLocationInventoryData[0]?.stockAvailable
         : 0
-    } else if (fulfillmentOptionValue === FulfillmentOptions.SHIP)
+    } else if (fulfillmentOptionValue === FulfillmentOptions.SHIP) {
       qtyLeft.value = product?.inventoryInfo?.onlineStockAvailable
         ? product?.inventoryInfo.onlineStockAvailable
         : 0
+    }
   }
   return qtyLeft.value
 }

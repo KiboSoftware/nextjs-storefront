@@ -2,13 +2,15 @@ import React from 'react'
 
 import '@testing-library/jest-dom'
 import { composeStories } from '@storybook/testing-react'
-import { render, screen, waitFor, fireEvent, within } from '@testing-library/react'
+import { screen, waitFor, fireEvent, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
+import * as cookienext from 'cookies-next'
 import { graphql } from 'msw'
 
 import { server } from '@/__mocks__/msw/server'
 import { fulfillmentOptionsMock } from '@/__mocks__/stories/fulfillmentOptionsMock'
 import { ProductCustomMock } from '@/__mocks__/stories/ProductCustomMock'
+import { renderWithQueryClient } from '@/__test__/utils/renderWithQueryClient'
 import * as stories from '@/components/page-templates/ProductDetail/ProductDetailTemplate.stories' // import all stories from the stories file
 import { DialogRoot, ModalContextProvider } from '@/context'
 import { productGetters } from '@/lib/getters'
@@ -19,7 +21,7 @@ const mockFulfillmentOptions = fulfillmentOptionsMock || []
 
 const setup = () => {
   const user = userEvent.setup()
-  render(
+  renderWithQueryClient(
     <ModalContextProvider>
       <DialogRoot />
       <Common {...Common.args} />
@@ -196,7 +198,7 @@ describe('[component] - ProductDetailTemplate integration', () => {
     expect(dialogHeader).toBeVisible()
   })
 
-  it('should not add pickup item to cart if pickup location is not set', async () => {
+  it('should show store selector dialog if selecting pickup radio and location is not set', async () => {
     const { user } = setup()
 
     const pickupRadio = screen.getByRole('radio', {
@@ -205,14 +207,34 @@ describe('[component] - ProductDetailTemplate integration', () => {
 
     await user.click(pickupRadio)
 
-    expect(pickupRadio).toBeChecked()
+    const selectStore = screen.queryAllByText('select-store')
+
+    await waitFor(() => expect(selectStore[0]).toBeInTheDocument())
+
+    expect(pickupRadio).not.toBeChecked()
+  })
+
+  it('should add pickup item to cart if pickup location is set', async () => {
+    cookienext.setCookie('kibo_purchase_location', 'IlJJQ0hNT05EIg==')
+
+    const { user } = setup()
+
+    const pickupRadio = await screen.findByRole('radio', {
+      name: new RegExp(`${mockFulfillmentOptions[1].shortName}`),
+    })
+
+    await user.click(pickupRadio)
+
+    await waitFor(() => expect(pickupRadio).toBeChecked())
 
     const addToCartButton = screen.getByRole('button', {
       name: /common:add-to-cart/i,
     })
 
-    expect(addToCartButton).toBeDisabled()
-  })
+    expect(addToCartButton).toBeEnabled()
+
+    cookienext.deleteCookie('kibo_purchase_location')
+  }, 50000)
 
   it('should display login when add to wishlist button clicks ', async () => {
     mockIsAuthenticated = false

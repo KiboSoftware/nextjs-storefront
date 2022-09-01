@@ -1,5 +1,13 @@
 import { AccountCircle } from '@mui/icons-material'
-import { Box, Divider, List, ListItem, ListItemText, SwipeableDrawer } from '@mui/material'
+import {
+  Box,
+  Divider,
+  List,
+  ListItem,
+  ListItemText,
+  SwipeableDrawer,
+  Link as MuiLink,
+} from '@mui/material'
 import { useTranslation } from 'next-i18next'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
@@ -97,12 +105,15 @@ const HamburgerMenu = (props: HamburgerMenuProps) => {
         </Box>
         <Box sx={{ ...styles.spacer }}></Box>
         <List sx={{ ...styles.navLinksList }}>
+          {navLinks?.length}
           {navLinks?.map((nav) => (
             <Box key={nav.text}>
               <Link href={nav.link} passHref>
-                <ListItem button sx={{ paddingInline: 4 }}>
-                  <ListItemText primary={nav.text} />
-                </ListItem>
+                <MuiLink>
+                  <ListItem button sx={{ paddingInline: 4 }}>
+                    <ListItemText primary={nav.text} />
+                  </ListItem>
+                </MuiLink>
               </Link>
               <Divider />
             </Box>
