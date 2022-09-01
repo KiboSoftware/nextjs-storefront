@@ -1,5 +1,5 @@
 import { composeStories } from '@storybook/testing-react'
-import { render, screen, waitFor } from '@testing-library/react'
+import { render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 
 import '@testing-library/jest-dom'
@@ -13,7 +13,7 @@ describe('[component] HamburgerMenu component', () => {
     render(<Common {...Common.args} />)
     const menu = screen.getAllByRole('button')
 
-    expect(menu.length).toBe(12)
+    expect(menu.length).toBe(16)
   })
 
   it('should not render all the list-items if isDrawerOpen props is false', () => {

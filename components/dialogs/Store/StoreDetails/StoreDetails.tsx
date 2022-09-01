@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 
 import { KeyboardArrowDown, KeyboardArrowUp } from '@mui/icons-material'
-import { Typography, Box, Stack, Link, Collapse, Grid, styled } from '@mui/material'
+import { Typography, Box, Stack, Link, Collapse, Grid } from '@mui/material'
 import { useTranslation } from 'next-i18next'
 
 import AddressCard from '@/components/common/AddressCard/AddressCard'

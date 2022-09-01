@@ -3,7 +3,17 @@ import React, { MouseEvent } from 'react'
 import { StarRounded } from '@mui/icons-material'
 import FavoriteBorderRoundedIcon from '@mui/icons-material/FavoriteBorderRounded'
 import FavoriteRoundedIcon from '@mui/icons-material/FavoriteRounded'
-import { Card, Typography, Rating, CardMedia, Box, Stack, Skeleton, Button } from '@mui/material'
+import {
+  Card,
+  Typography,
+  Rating,
+  CardMedia,
+  Box,
+  Stack,
+  Skeleton,
+  Button,
+  Link as MuiLink,
+} from '@mui/material'
 import { useTranslation } from 'next-i18next'
 import Link from 'next/link'
 
@@ -84,58 +94,70 @@ const ProductCard = (props: ProductCardProps) => {
   if (isLoading) return <ProductCardSkeleton />
   else
     return (
-      <Link href={link} passHref data-testid="product-card-link">
-        <Card sx={styles.cardRoot} data-testid="product-card">
-          <Box textAlign={'right'} width="100%" onClick={handleAddOrRemoveWishlistItem}>
-            {isInWishlist ? (
-              <FavoriteRoundedIcon sx={{ color: 'red.900' }} />
-            ) : (
-              <FavoriteBorderRoundedIcon sx={{ color: 'grey.600' }} />
-            )}
-          </Box>
-          <CardMedia
-            sx={{
-              width: '100%',
-              height: imageHeight,
-              position: 'relative',
-            }}
-          >
-            <Box sx={{ zIndex: 1 }}>
-              <KiboImage
-                src={imageUrl || placeholderImageUrl}
-                alt={imageUrl ? imageAltText : 'no-image-alt'}
-                layout="fill"
-                objectFit="contain"
-                data-testid="product-image"
-                errorimage={placeholderImageUrl}
-              />
-            </Box>
-          </CardMedia>
-          <Box flexDirection="column" m={2} mt={1}>
-            <Typography variant="body1" gutterBottom color="text.primary">
-              {title}
-            </Typography>
-            <Price price={price} salePrice={salePrice} variant="body1" />
-            <Rating
-              name="read-only"
-              value={rating}
-              precision={0.5}
-              readOnly
-              size="small"
-              icon={<StarRounded color="primary" data-testid="filled-rating" />}
-              emptyIcon={<StarRounded data-testid="empty-rating" />}
-              data-testid="product-rating"
-            />
-          </Box>
+      <Box>
+        <Link href={link} passHref data-testid="product-card-link">
+          <MuiLink href={link}>
+            <Card sx={styles.cardRoot} data-testid="product-card">
+              <Box textAlign={'right'} width="100%" onClick={handleAddOrRemoveWishlistItem}>
+                {isInWishlist ? (
+                  <FavoriteRoundedIcon sx={{ color: 'red.900' }} />
+                ) : (
+                  <FavoriteBorderRoundedIcon sx={{ color: 'grey.600' }} />
+                )}
+              </Box>
+              <CardMedia
+                sx={{
+                  width: '100%',
+                  height: imageHeight,
+                  position: 'relative',
+                }}
+              >
+                <Box sx={{ zIndex: 1 }}>
+                  <KiboImage
+                    src={imageUrl || placeholderImageUrl}
+                    alt={imageUrl ? imageAltText : 'no-image-alt'}
+                    layout="fill"
+                    objectFit="contain"
+                    data-testid="product-image"
+                    errorimage={placeholderImageUrl}
+                  />
+                </Box>
+              </CardMedia>
+              <Box flexDirection="column" m={2} mt={1}>
+                <Typography variant="body1" gutterBottom color="text.primary">
+                  {title}
+                </Typography>
+                <Price price={price} salePrice={salePrice} variant="body1" />
+                <Rating
+                  name="read-only"
+                  value={rating}
+                  precision={0.5}
+                  readOnly
+                  size="small"
+                  icon={<StarRounded color="primary" data-testid="filled-rating" />}
+                  emptyIcon={<StarRounded data-testid="empty-rating" />}
+                  data-testid="product-rating"
+                />
+              </Box>
+            </Card>
+          </MuiLink>
+        </Link>
+        <Box>
           {isShopNow && (
             <Link href={link} passHref>
-              <Button variant="contained" color="primary" sx={{ width: '100%', marginTop: '49px' }}>
-                {t('shop-now')}
-              </Button>
+              <MuiLink href={link}>
+                <Button
+                  variant="contained"
+                  color="primary"
+                  sx={{ width: '100%', marginTop: '49px' }}
+                >
+                  {t('shop-now')}
+                </Button>
+              </MuiLink>
             </Link>
           )}
-        </Card>
-      </Link>
+        </Box>
+      </Box>
     )
 }
 

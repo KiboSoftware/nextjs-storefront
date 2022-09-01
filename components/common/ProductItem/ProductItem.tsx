@@ -8,10 +8,11 @@ import {
   Collapse,
   useMediaQuery,
   useTheme,
-  Link,
+  Link as MuiLink,
   Stack,
 } from '@mui/material'
 import { useTranslation } from 'next-i18next'
+import Link from 'next/link'
 
 import { KiboImage, Price } from '@/components/common'
 import { ProductOption, ProductOptionList } from '@/components/product'
@@ -79,15 +80,17 @@ const ProductItem = (props: ProductItemProps) => {
     <Box key={id}>
       <Box sx={{ display: 'flex', pb: 1, pr: 1, gap: 2, flex: 1 }}>
         <Box sx={{ ...styles.imageContainer }}>
-          <Link href={link} data-testid="product-item-link">
-            <KiboImage
-              src={productGetters.handleProtocolRelativeUrl(image) || DefaultImage}
-              height={200}
-              width={200}
-              alt={name}
-              objectFit="contain"
-              errorimage={DefaultImage}
-            />
+          <Link href={link || ''} passHref>
+            <MuiLink data-testid="product-item-link">
+              <KiboImage
+                src={productGetters.handleProtocolRelativeUrl(image) || DefaultImage}
+                height={200}
+                width={200}
+                alt={name}
+                objectFit="contain"
+                errorimage={DefaultImage}
+              />
+            </MuiLink>
           </Link>
         </Box>
 
@@ -163,14 +166,14 @@ const ProductItem = (props: ProductItemProps) => {
             />
           </Box>
           <Box px={2}>
-            <Link
+            <MuiLink
               component="button"
               variant="caption"
               color="text.primary"
               onClick={onStoreLocatorClick}
             >
               {purchaseLocation ? t('change-store') : t('select-store')}
-            </Link>
+            </MuiLink>
           </Box>
         </>
       )}

@@ -21,9 +21,8 @@ const setup = () => {
 describe('[component] - OrderStatusTemplate', () => {
   it('should view order status by providing the order number and billing email', async () => {
     const { user } = setup()
-
-    expect(screen.getByRole('link', { name: /home/i })).toBeVisible()
-    expect(screen.getByRole('link', { name: /order-status/i })).toBeVisible()
+    const breadcrumbs = screen.getAllByLabelText('breadcrumb-link')
+    expect(breadcrumbs[0]).toBeVisible()
     expect(screen.getByTestId('ViewOrderStatus')).toBeVisible()
     expect(screen.queryByTestId('ViewOrderDetails')).not.toBeInTheDocument()
     const orderNumberTextbox = screen.getByRole('textbox', { name: /order-number/i })

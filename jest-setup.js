@@ -20,6 +20,13 @@ jest.mock('next-i18next', () => ({
   },
 }))
 
+jest.mock(
+  'next/link',
+  () =>
+    ({ children }) =>
+      children
+)
+
 // Mock the server
 beforeAll(() => server.listen())
 afterEach(() => server.resetHandlers())
