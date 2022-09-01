@@ -1,6 +1,14 @@
 import * as React from 'react'
 
-import { Box, Typography, useTheme, useMediaQuery, Grid, Link as MuiLink } from '@mui/material'
+import {
+  Box,
+  Typography,
+  useTheme,
+  useMediaQuery,
+  Grid,
+  Link as MuiLink,
+  styled,
+} from '@mui/material'
 import Link from 'next/link'
 
 import { KiboImage } from '@/components/common'
@@ -9,14 +17,14 @@ export interface TileProps {
   imgSource: string
   title: string
   subtitle: string
-  width: number
-  height: number
+  tileType?: 'large' | 'small'
   link1: { title: string; url: string }
   link2: { title: string; url: string }
   link3: { title: string; url: string }
 }
 
 export interface ContentTileProps {
+  title?: string
   largeTileProps: TileProps[]
   smallTileProps: TileProps[]
 }
@@ -34,7 +42,7 @@ const styles = {
     alignItems: 'center',
     textAlign: 'center',
     flexDirection: 'column',
-    marginTop: '10px',
+    marginTop: '20px',
   },
   linkBoxStyle: {
     display: 'flex',
@@ -54,15 +62,39 @@ const styles = {
     verticalAlign: 'middle',
   },
 }
-
+const LargeImageWrapper = styled('div')(
+  ({ theme }) => `
+  position: relative;
+  width: 100%;
+  min-height: 400px;
+  ${theme.breakpoints.down('md')} {
+    min-height: 250px;
+  }
+`
+)
+const SmallImageWrapper = styled('div')(
+  ({ theme }) => `
+  position: relative;
+  width: 100%;
+  min-height: 260px;
+  ${theme.breakpoints.down('md')} {
+    min-height: 175px;
+  }
+`
+)
 const ContentTiles = (props: TileProps) => {
   const kiboTheme = useTheme()
   const mobileView = useMediaQuery(kiboTheme.breakpoints.down('md'))
 
-  const { imgSource, title, subtitle, link1, link2, link3, width, height } = props
+  const { imgSource, title, subtitle, link1, link2, link3, tileType = 'large' } = props
+  const ImageWrapper = tileType === 'small' ? SmallImageWrapper : LargeImageWrapper
   return (
     <Box sx={styles.mainStyle}>
-      <KiboImage src={imgSource} width={width} height={height} />
+      <Box>
+        <ImageWrapper>
+          <KiboImage src={imgSource} layout="fill" objectFit="cover" quality={75} />
+        </ImageWrapper>
+      </Box>
       <Box sx={styles.boxStyle}>
         <Box sx={styles.titleStyle}>
           <Typography variant="h2">{title}</Typography>
@@ -72,6 +104,7 @@ const ContentTiles = (props: TileProps) => {
             sx={{
               fontSize: mobileView ? '0.75rem' : '1rem',
               fontWeight: '400',
+              margin: '10px 0',
             }}
           >
             {subtitle}
@@ -100,12 +133,22 @@ const ContentTiles = (props: TileProps) => {
     </Box>
   )
 }
-const ContentTile = ({ largeTileProps, smallTileProps }: ContentTileProps) => {
+const ContentTile = ({ largeTileProps, smallTileProps, title }: ContentTileProps) => {
   const kiboTheme = useTheme()
   const mobileView = useMediaQuery(kiboTheme.breakpoints.down('md'))
 
   return (
     <Box sx={{ display: 'flex', flexDirection: 'column' }}>
+      {title && (
+        <Typography
+          variant="h1"
+          component="h2"
+          color="primary"
+          sx={{ textAlign: 'center', margin: mobileView ? '20px 0' : '40px 0' }}
+        >
+          {title}
+        </Typography>
+      )}
       <Box
         sx={{
           display: 'flex',
@@ -120,8 +163,7 @@ const ContentTile = ({ largeTileProps, smallTileProps }: ContentTileProps) => {
             imgSource={tile.imgSource}
             title={tile.title}
             subtitle={tile.subtitle}
-            width={1920}
-            height={1080}
+            tileType="large"
             link1={tile.link1}
             link2={tile.link2}
             link3={tile.link3}
@@ -136,8 +178,7 @@ const ContentTile = ({ largeTileProps, smallTileProps }: ContentTileProps) => {
                 imgSource={tile.imgSource}
                 title={tile.title}
                 subtitle={tile.subtitle}
-                width={1080}
-                height={1350}
+                tileType="small"
                 link1={tile.link1}
                 link2={tile.link2}
                 link3={tile.link3}

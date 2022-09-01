@@ -21,6 +21,7 @@ interface KiboHeroCarouselProps {
 }
 
 interface ContentTileProps {
+  title: string
   large_promo_blocks: any[]
 }
 
@@ -82,14 +83,16 @@ const DefaultComponentMap = {
     component: ContentTile,
     mapDataToProps: (data: ContentTileProps) => {
       return {
+        title: data?.title || 'The Latest Lineup',
         largeTileProps: data?.large_promo_blocks?.map((item) => promoBlocksData(item)),
       }
     },
   },
   small_promo_blocks: {
     component: ContentTile,
-    mapDataToProps: (data: { small_promo_blocks: any[] }) => {
+    mapDataToProps: (data: { small_promo_blocks: any[]; title: string }) => {
       return {
+        title: data?.title,
         smallTileProps: data?.small_promo_blocks?.map((item) => promoBlocksData(item)),
       }
     },

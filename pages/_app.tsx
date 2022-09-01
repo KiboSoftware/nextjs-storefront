@@ -17,8 +17,9 @@ import createEmotionCache from '../lib/createEmotionCache'
 import { generateQueryClient } from '../lib/react-query/queryClient'
 import theme from '../styles/theme'
 import { GlobalFetchingIndicator } from '@/components/common'
-import { KiboHeader } from '@/components/layout'
+import { KiboHeader, Footer } from '@/components/layout'
 import { AuthContextProvider, ModalContextProvider, DialogRoot } from '@/context'
+import { footerConfig as footerProps } from '@/lib/constants'
 
 // Client-side cache, shared for the whole session of the user in the browser.
 const clientSideEmotionCache = createEmotionCache()
@@ -38,7 +39,7 @@ const App = (props: KiboAppProps) => {
   return (
     <CacheProvider value={emotionCache}>
       <Head>
-        <title>Title</title>
+        <title>Kibo Commerce - NextJS</title>
         <meta name="viewport" content="initial-scale=1, width=device-width" />
       </Head>
       <ThemeProvider theme={theme}>
@@ -75,6 +76,7 @@ const App = (props: KiboAppProps) => {
                 <Container maxWidth={'xl'}>
                   <Component {...pageProps} />
                 </Container>
+                <Footer {...footerProps} />
               </Hydrate>
             </AuthContextProvider>
           </ModalContextProvider>
