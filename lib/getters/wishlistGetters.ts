@@ -23,11 +23,22 @@ const isInWishlist = (props: InWishlistItemInputParams) => {
   })
 }
 
-const isAvailableToAddToWishlist = (product: ProductCustom) => {
-  if (product?.options?.some((option) => option?.isRequired))
-    return Boolean(product?.purchasableState?.isPurchasable)
+const isValidateProductVariationSelected = (product: ProductCustom): boolean => {
+  const requiredOptions = product?.options?.filter((option) => option?.isRequired === true)
+  const selectedOptions = requiredOptions?.filter(
+    (option) => option?.values?.filter((value) => value?.isSelected === true)?.length
+  )
 
-  return true
+  return requiredOptions?.length === selectedOptions?.length
+}
+
+const isAvailableToAddToWishlist = (product: ProductCustom) => {
+  if (!product?.options) return true
+
+  if (product?.purchasableState?.isPurchasable) return product.purchasableState?.isPurchasable
+
+  if (product?.options?.some((option) => option?.isRequired))
+    return isValidateProductVariationSelected(product)
 }
 
 export const wishlistGetters = {
