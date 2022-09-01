@@ -114,18 +114,18 @@ const ContentTiles = (props: TileProps) => {
 
         <Box sx={styles.linkBoxStyle}>
           <Link href={link1.url} passHref>
-            <MuiLink underline="none" component="button" sx={styles.linkStyle}>
+            <MuiLink underline="none" sx={styles.linkStyle}>
               {link1.title}
             </MuiLink>
           </Link>
           <Link href={link2.url} passHref>
-            <MuiLink underline="none" component="button" sx={styles.linkStyle}>
+            <MuiLink underline="none" sx={styles.linkStyle}>
               {link2.title}
             </MuiLink>
           </Link>
 
           <Link href={link3.url} passHref>
-            <MuiLink underline="none" component="button" sx={styles.linkStyle}>
+            <MuiLink underline="none" sx={styles.linkStyle}>
               {link3.title}
             </MuiLink>
           </Link>
@@ -139,8 +139,7 @@ const ContentTile = ({ largeTileProps, smallTileProps, title }: ContentTileProps
   const mobileView = useMediaQuery(kiboTheme.breakpoints.down('md'))
 
   return (
-  <Container maxWidth={'xl'} sx={{ display: 'flex', flexDirection: 'column' }}>
-    <Box sx={{ display: 'flex', flexDirection: 'column' }}>
+    <Container maxWidth={'xl'} sx={{ display: 'flex', flexDirection: 'column' }}>
       {title && (
         <Typography
           variant="h1"

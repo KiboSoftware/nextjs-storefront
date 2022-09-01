@@ -16,7 +16,6 @@ import createEmotionCache from '../lib/createEmotionCache'
 import { generateQueryClient } from '../lib/react-query/queryClient'
 import theme from '../styles/theme'
 import { GlobalFetchingIndicator } from '@/components/common'
-
 import { KiboHeader, DefaultLayout, Footer } from '@/components/layout'
 import { AuthContextProvider, ModalContextProvider, DialogRoot } from '@/context'
 import { footerConfig as footerProps } from '@/lib/constants'
