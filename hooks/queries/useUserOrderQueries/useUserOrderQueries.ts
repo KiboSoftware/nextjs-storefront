@@ -43,8 +43,8 @@ export const useUserOrderQueries = (param: UseUserOrder): UseUserOrderType => {
     isLoading,
     isSuccess,
   } = useQuery(ordersKeys.all, () => getOrders(variables), {
-    enabled: !!(filters?.length || (orderNumber && billingEmail)),
-    retry: 3,
+    enabled: !!(JSON.stringify(filters) || (orderNumber && billingEmail)),
+    refetchOnWindowFocus: false,
   })
 
   return { data, isLoading, isSuccess }

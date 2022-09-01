@@ -3,11 +3,13 @@ import React, { useState } from 'react'
 import { Add, ArrowBackIos } from '@mui/icons-material'
 import { Stack, Typography, Divider, Box, useMediaQuery, useTheme, Button } from '@mui/material'
 import { useTranslation } from 'next-i18next'
+import { useQueryClient } from 'react-query'
 
 import { FilterOrders, FilterTiles, FullWidthDivider } from '@/components/common'
 import { OrderHistoryItem, ViewOrderDetails } from '@/components/order'
 import { useUpdateRoutes } from '@/hooks'
 import { facetGetters, orderGetters } from '@/lib/getters'
+import { ordersKeys } from '@/lib/react-query/queryKeys'
 
 import type { OrderCollection, Order } from '@/lib/gql/types'
 
@@ -36,6 +38,7 @@ const styles = {
 }
 
 const OrderHistoryTemplate = (props: OrderHistoryProps) => {
+  const queryClient = useQueryClient()
   const { queryFilters = [], orderCollection, onAccountTitleClick } = props
   const { items = [] } = orderCollection
   const [showFilterBy, setFilterBy] = useState<boolean>(false)
@@ -55,13 +58,17 @@ const OrderHistoryTemplate = (props: OrderHistoryProps) => {
     const order = items?.find((orderItem) => orderItem?.id === id) as Order
     setSelectedOrder(order)
   }
-  const handleFilterApply = (selectedFilters: string) => changeFilters(selectedFilters)
+  const handleFilterApply = (selectedFilters: string) => {
+    changeFilters(selectedFilters)
+    queryClient.removeQueries(ordersKeys.all)
+  }
   const handleSelectedTileRemoval = (selectedTile: string) => {
     facetList.forEach(
       (facet) => (facet.isApplied = facet.filterValue === selectedTile ? false : facet?.isApplied)
     )
     appliedFilters = facetGetters.getAppliedFacetList(facetList)
     updateRoute(selectedTile)
+    queryClient.removeQueries(ordersKeys.all)
   }
 
   const getOrderDetails = (order: Order) => {
