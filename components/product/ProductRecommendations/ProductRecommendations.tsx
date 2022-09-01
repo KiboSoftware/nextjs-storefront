@@ -11,7 +11,7 @@ import type { ProductCodes } from '@/lib/types'
 
 import type { Product } from '@/lib/gql/types'
 
-interface ProductRecommendationsProps {
+export interface ProductRecommendationsProps {
   title: string
   productCodes: ProductCodes[]
 }
@@ -34,7 +34,7 @@ const ProductRecommendations = (props: ProductRecommendationsProps) => {
       >
         {products?.map((product) => {
           return (
-            <Grid item xs={6} md={2} key={product?.productCode}>
+            <Box key={product?.productCode} width="100%">
               <ProductCard
                 imageUrl={
                   productGetters.getCoverImage(product) &&
@@ -52,7 +52,7 @@ const ProductRecommendations = (props: ProductRecommendationsProps) => {
                 title={productGetters.getName(product) as string}
                 rating={productGetters.getRating(product)}
               />
-            </Grid>
+            </Box>
           )
         })}
       </Box>

@@ -8,6 +8,7 @@ import {
   Grid,
   Link as MuiLink,
   styled,
+  Container,
 } from '@mui/material'
 import Link from 'next/link'
 
@@ -138,6 +139,7 @@ const ContentTile = ({ largeTileProps, smallTileProps, title }: ContentTileProps
   const mobileView = useMediaQuery(kiboTheme.breakpoints.down('md'))
 
   return (
+  <Container maxWidth={'xl'} sx={{ display: 'flex', flexDirection: 'column' }}>
     <Box sx={{ display: 'flex', flexDirection: 'column' }}>
       {title && (
         <Typography
@@ -187,7 +189,7 @@ const ContentTile = ({ largeTileProps, smallTileProps, title }: ContentTileProps
           ))}
         </Grid>
       </Box>
-    </Box>
+    </Container>
   )
 }
 

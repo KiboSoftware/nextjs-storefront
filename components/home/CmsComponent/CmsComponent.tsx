@@ -1,6 +1,7 @@
 import React from 'react'
 
 import KiboHeroCarousel from '../Carousel/KiboHeroCarousel'
+import CmsHomePageProducts from '../CmsHomePageProducts/CmsHomePageProducts'
 import ContentTile from '../ContentTile/ContentTile'
 import SmallBanner from '../SmallBanner/SmallBanner'
 import { ProductRecommendations } from '@/components/product'
@@ -56,6 +57,21 @@ const DefaultComponentMap = {
             url: data?.call_to_action_link?.href,
           },
           backgroundColor: '#A12E87',
+        },
+      }
+    },
+  },
+  home_page_products: {
+    component: CmsHomePageProducts,
+    mapDataToProps: (data: any) => {
+      return {
+        recentlyViewed: {
+          title: data?.reference[0].title,
+          productCodes: data?.reference[0]?.home_page_products,
+        },
+        topSellings: {
+          title: data?.reference[1].title,
+          productCodes: data?.reference[1]?.home_page_products,
         },
       }
     },
