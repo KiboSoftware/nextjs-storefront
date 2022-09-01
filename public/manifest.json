@@ -1,10 +1,10 @@
 {
-  "theme_color": "#f69435",
-  "background_color": "#f69435",
-  "display": "browser",
+  "theme_color": "#2ea195",
+  "background_color": "#fff",
+  "display": "standalone",
   "scope": "/",
   "start_url": "/",
-  "name": "kibo-commerce-react-next",
+  "name": "Kibo Commerce - NextJS",
   "short_name": "kibo-commerce",
   "icons": [
     {
