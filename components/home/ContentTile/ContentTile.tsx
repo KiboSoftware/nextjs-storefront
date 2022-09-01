@@ -1,6 +1,14 @@
 import * as React from 'react'
 
-import { Box, Typography, useTheme, useMediaQuery, Grid, Link as MuiLink } from '@mui/material'
+import {
+  Box,
+  Typography,
+  useTheme,
+  useMediaQuery,
+  Grid,
+  Link as MuiLink,
+  Container,
+} from '@mui/material'
 import Link from 'next/link'
 
 import { KiboImage } from '@/components/common'
@@ -105,7 +113,7 @@ const ContentTile = ({ largeTileProps, smallTileProps }: ContentTileProps) => {
   const mobileView = useMediaQuery(kiboTheme.breakpoints.down('md'))
 
   return (
-    <Box sx={{ display: 'flex', flexDirection: 'column' }}>
+    <Container maxWidth={'xl'} sx={{ display: 'flex', flexDirection: 'column' }}>
       <Box
         sx={{
           display: 'flex',
@@ -146,7 +154,7 @@ const ContentTile = ({ largeTileProps, smallTileProps }: ContentTileProps) => {
           ))}
         </Grid>
       </Box>
-    </Box>
+    </Container>
   )
 }
 

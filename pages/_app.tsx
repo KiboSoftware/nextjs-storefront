@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { ReactElement, useState, ReactNode } from 'react'
 
 import { CacheProvider, EmotionCache } from '@emotion/react'
 import { Container } from '@mui/material'
@@ -17,15 +17,21 @@ import createEmotionCache from '../lib/createEmotionCache'
 import { generateQueryClient } from '../lib/react-query/queryClient'
 import theme from '../styles/theme'
 import { GlobalFetchingIndicator } from '@/components/common'
+import Layout from '@/components/common/Layout/Layout'
 import { KiboHeader } from '@/components/layout'
 import { AuthContextProvider, ModalContextProvider, DialogRoot } from '@/context'
 
 // Client-side cache, shared for the whole session of the user in the browser.
 const clientSideEmotionCache = createEmotionCache()
 
-interface KiboAppProps extends AppProps {
-  emotionCache?: EmotionCache
+interface NextPageWithLayout {
+  getLayout?: (page: ReactElement) => ReactNode
 }
+type KiboAppProps = AppProps & {
+  emotionCache?: EmotionCache
+  Component: NextPageWithLayout
+}
+
 NProgress.configure({ showSpinner: false })
 Router.events.on('routeChangeStart', () => NProgress.start())
 Router.events.on('routeChangeComplete', () => NProgress.done())
@@ -34,6 +40,7 @@ Router.events.on('routeChangeError', () => NProgress.done())
 const App = (props: KiboAppProps) => {
   const { Component, emotionCache = clientSideEmotionCache, pageProps } = props
   const [queryClient] = useState(() => generateQueryClient())
+  const getLayout = Component.getLayout ?? ((page) => <Layout>{page}</Layout>)
 
   return (
     <CacheProvider value={emotionCache}>
@@ -72,9 +79,7 @@ const App = (props: KiboAppProps) => {
                   sticky={true}
                 />
                 <DialogRoot />
-                <Container maxWidth={'xl'}>
-                  <Component {...pageProps} />
-                </Container>
+                {getLayout(<Component {...pageProps} />)}
               </Hydrate>
             </AuthContextProvider>
           </ModalContextProvider>
