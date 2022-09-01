@@ -3,7 +3,7 @@
 import React, { useEffect, useState } from 'react'
 
 import { yupResolver } from '@hookform/resolvers/yup'
-import { Password, Visibility, VisibilityOff } from '@mui/icons-material'
+import { Visibility, VisibilityOff } from '@mui/icons-material'
 import { Box, Button, Typography, useMediaQuery, useTheme } from '@mui/material'
 import { useTranslation } from 'next-i18next'
 import { Controller, useForm } from 'react-hook-form'
@@ -11,7 +11,8 @@ import * as yup from 'yup'
 
 import { KiboTextBox, PasswordValidation } from '@/components/common'
 import { useAuthContext } from '@/context'
-import { useUpdateUserData, useUpdateUserPasswordMutations } from '@/hooks'
+import { useUpdateUserData } from '@/hooks/mutations/useProfile/useUpdateUserData/useUpdateUserData'
+import { useUpdateUserPasswordMutations } from '@/hooks/mutations/useProfile/useUpdateUserPassword/useUpdateUserPassword'
 
 const style = {
   box1: {
@@ -36,28 +37,19 @@ const useCustomerDetailsSchema = () => {
   const { t } = useTranslation('checkout')
   // return yup.object().shape({
   //   email: yup.string().email().required(t('this-field-is-required')),
-  //   showAccountFields: yup.boolean(),
-  //   firstName: yup.string().when('showAccountFields', {
-  //     is: true,
-  //     then: yup.string().required(t('this-field-is-required')),
-  //   }),
-  //   lastNameOrSurname: yup.string().when('showAccountFields', {
-  //     is: true,
-  //     then: yup.string().required(t('this-field-is-required')),
-  //   }),
-  //   password: yup.string().when('showAccountFields', {
-  //     is: true,
-  //     then: yup.string().required(t('this-field-is-required')),
-  //   }),
+  //   firstName: yup.string().required(t('this-field-is-required')),
+  //   lastNameOrSurname: yup.string().required(t('this-field-is-required')),
+  //   password: yup.string().required(t('this-field-is-required')),
   // })
-
-  return yup.object().shape({
-    email: yup.string().email().required(t('this-field-is-required')),
-    firstName: yup.string().required(t('this-field-is-required')),
-    lastNameOrSurname: yup.string().required(t('this-field-is-required')),
-    password: yup.string().required(t('this-field-is-required')),
-  })
 }
+
+const Schema = yup.object().shape({
+  email: yup.string().email().required('this-field-is-required'),
+  firstName: yup.string().required('this-field-is-required'),
+  lastNameOrSurname: yup.string().required('this-field-is-required'),
+  password: yup.string().required('this-field-is-required'),
+})
+
 const MyProfile = () => {
   const { user, isAuthenticated } = useAuthContext()
   const { t } = useTranslation(['common', 'checkout'])
@@ -99,23 +91,13 @@ const MyProfile = () => {
   } = useForm({
     mode: 'onChange',
     reValidateMode: 'onBlur',
-    resolver: yupResolver(useCustomerDetailsSchema()),
+    resolver: yupResolver(Schema),
     shouldFocusError: true,
+    // context: {},
   })
 
   const handleUpdatUserData = async () => {
     try {
-      // let formData = {};
-      // const form = new FormData();
-      // formData = {
-      //   ...formData,
-      //   accountId: user?.id,
-      //   customerAccountInput: {
-      //     id: user?.id,
-      //     firstName: firstname,
-      //     lastName: lastname,
-      //     emailAddress: email
-      // }}
       await updateUserData.mutateAsync({
         accountId: user?.id as number,
         customerAccountInput: {
@@ -175,19 +157,20 @@ const MyProfile = () => {
                   <Controller
                     name="firstName"
                     control={control}
-                    // defaultValue={currentUser?.firstName}
+                    defaultValue={currentUser.firstName}
                     render={({ field }) => (
                       <KiboTextBox
                         {...field}
-                        value={currentUser.firstName}
+                        // value={currentUser.firstName}
+                        value={field.value || ''}
                         label={t('checkout:first-name')}
                         ref={null}
                         size="small"
                         error={!!errors?.firstName}
-                        helperText={errors?.firstName?.message}
-                        onChange={(_name, value) =>
-                          setCurrentUser({ ...currentUser, firstName: value })
-                        }
+                        // onChange={(_name, value) =>
+                        //   setCurrentUser({ ...currentUser, firstName: value })
+                        // }
+                        onChange={(_name, value) => field.onChange(value)}
                         onBlur={field.onBlur}
                         required
                       />
@@ -204,7 +187,6 @@ const MyProfile = () => {
                         label={t('checkout:last-name-or-sur-name')}
                         ref={null}
                         error={!!errors?.lastNameOrSurname}
-                        helperText={errors?.lastNameOrSurname?.message}
                         onChange={(_name, value) =>
                           setCurrentUser({ ...currentUser, lastName: value })
                         }
@@ -261,7 +243,6 @@ const MyProfile = () => {
                           setCurrentUser({ ...currentUser, emailAddress: value })
                         }
                         error={!!errors?.email}
-                        helperText={errors?.email?.message}
                         size="small"
                       />
                     )}
@@ -300,14 +281,13 @@ const MyProfile = () => {
                     render={({ field }) => (
                       <KiboTextBox
                         value={field.value}
-                        label={t('common:old-password')}
+                        label={t('Old Password')}
                         required
                         onBlur={field.onBlur}
                         onChange={(_name, value) =>
                           setUpdatedpassword({ ...updatedPassword, oldPassword: value })
                         }
                         error={!!errors?.password}
-                        helperText={errors?.password?.message}
                         type={showPassword ? 'text' : 'password'}
                         icon={showPassword ? <Visibility /> : <VisibilityOff />}
                         onIconClick={() => setShowPassword(!showPassword)}
@@ -321,14 +301,13 @@ const MyProfile = () => {
                     render={({ field }) => (
                       <KiboTextBox
                         value={field.value}
-                        label={t('common:new-password')}
+                        label={t('New Password')}
                         required
                         onBlur={field.onBlur}
                         onChange={(_name, value) =>
                           setUpdatedpassword({ ...updatedPassword, newPassword: value })
                         }
                         error={!!errors?.password}
-                        helperText={errors?.password?.message}
                         type={showPassword ? 'text' : 'password'}
                         icon={showPassword ? <Visibility /> : <VisibilityOff />}
                         onIconClick={() => setShowPassword(!showPassword)}
@@ -343,14 +322,13 @@ const MyProfile = () => {
                     render={({ field }) => (
                       <KiboTextBox
                         value={field.value}
-                        label={t('common:external-password')}
+                        label={t('Confirm New Password')}
                         required
                         onBlur={field.onBlur}
                         onChange={(_name, value) =>
                           setUpdatedpassword({ ...updatedPassword, confirmNewPassword: value })
                         }
                         error={!!errors?.password}
-                        helperText={errors?.password?.message}
                         type={showPassword ? 'text' : 'password'}
                         icon={showPassword ? <Visibility /> : <VisibilityOff />}
                         onIconClick={() => setShowPassword(!showPassword)}
