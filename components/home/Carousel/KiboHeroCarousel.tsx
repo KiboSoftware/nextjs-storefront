@@ -56,6 +56,7 @@ const styles = {
     margin: '0px',
     padding: '0px',
     outline: 'none',
+    borderRadius: '0px',
   },
   cardStyle: {
     display: 'flex',

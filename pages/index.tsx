@@ -1,12 +1,17 @@
+import { ReactElement, ReactNode } from 'react'
+
+import { Box } from '@mui/material'
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
 
 import nextI18NextConfig from '../next-i18next.config'
 import CmsComponent from '@/components/home/CmsComponent/CmsComponent'
+import { FullWidthLayout } from '@/components/layout'
 import getCategoryTree from '@/lib/api/operations/get-category-tree'
 import { getPage } from '@/lib/operations/get-page'
-import type { CategoryTreeResponse } from '@/lib/types'
+import type { CategoryTreeResponse, NextPageWithLayout } from '@/lib/types'
 
-import type { NextPage, GetStaticPropsContext } from 'next'
+import type { GetStaticPropsContext } from 'next'
+
 interface HomePageProps {
   cmsPage: any
 }
@@ -37,7 +42,7 @@ export async function getStaticProps(context: GetStaticPropsContext) {
   }
 }
 
-const Home: NextPage<HomePageProps> = (props) => {
+const Home: NextPageWithLayout<HomePageProps> = (props) => {
   const { cmsPage } = props
   return (
     <>
@@ -47,5 +52,7 @@ const Home: NextPage<HomePageProps> = (props) => {
     </>
   )
 }
+
+Home.getLayout = FullWidthLayout
 
 export default Home
