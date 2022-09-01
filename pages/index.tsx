@@ -10,13 +10,13 @@ import getCategoryTree from '@/lib/api/operations/get-category-tree'
 import { getPage } from '@/lib/operations/get-page'
 import type { CategoryTreeResponse, NextPageWithLayout } from '@/lib/types'
 
-import type { GetStaticPropsContext } from 'next'
+import type { GetServerSidePropsContext } from 'next'
 
 interface HomePageProps {
   cmsPage: any
 }
 
-export async function getStaticProps(context: GetStaticPropsContext) {
+export async function getServerSideProps(context: GetServerSidePropsContext) {
   const { locale } = context
   const categoriesTree: CategoryTreeResponse = await getCategoryTree()
 
