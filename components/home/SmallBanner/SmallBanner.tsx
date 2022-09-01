@@ -51,7 +51,7 @@ const SmallBanner = ({ bannerProps }: ItemProps) => {
   const { title, subtitle, callToAction, backgroundColor } = bannerProps
 
   return (
-    <Card sx={{ backgroundColor }}>
+    <Card sx={{ backgroundColor, borderRadius: '0px' }}>
       <CardContent
         sx={styles.topStyle}
         style={{ display: 'flex', flexDirection: mobileView ? 'column' : 'row' }}
