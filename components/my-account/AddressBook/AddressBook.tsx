@@ -82,55 +82,44 @@ const AddressBook = (props: PaymentMethodProps) => {
   const handleNewAddress = () => {
     setIsAddNewAddress(true)
     setEditAddress(undefined)
+    setAddressType(AddressType.SHIPPING)
   }
 
   const handleEditAddress = (contact: CustomerContact) => {
-    setEditAddress(contact)
-
     if (contact?.types) {
       setIsDefaultAddress(contact?.types[0]?.isPrimary as boolean)
       setAddressType(contact?.types[0]?.name as string)
       setIsEditAddress(true)
     }
+    setEditAddress(contact)
   }
 
   const handleAddressValidationAndSave = () => setValidateForm(true)
 
   const handleSaveAddress = async (address: Address) => {
-    if (address?.contact?.id) {
-      try {
-        const params = buildAddressParams({
-          accountId: user?.id,
-          address,
-          isDefaultAddress,
-          addressType: addressType,
-        })
+    const params = buildAddressParams({
+      accountId: user?.id,
+      address,
+      isDefaultAddress,
+      addressType: addressType,
+    })
 
+    try {
+      if (address?.contact?.id) {
         await updateSavedAddressDetails.mutateAsync(
           params as UpdateCustomerAccountContactDetailsParams
         )
-        setIsEditAddress(false)
-      } catch (error) {
-        console.log('Error: edit saved address from my account', error)
-      }
-    } else {
-      try {
-        const params = buildAddressParams({
-          accountId: user?.id,
-          address,
-          isDefaultAddress,
-          addressType: addressType,
-        })
-
+      } else {
         await addSavedAddressDetails.mutateAsync(params)
-        setIsAddNewAddress(false)
-      } catch (error) {
-        console.log('Error: add new address from my account', error)
       }
+      setIsEditAddress(false)
+      setValidateForm(false)
+    } catch (error) {
+      console.log('Error: add/edit saved address from my account', error)
     }
   }
 
-  const handleCancelUpdateAddress = async () => {
+  const handleCancelUpdateAddress = () => {
     setIsAddNewAddress(false)
     setIsEditAddress(false)
   }
@@ -157,73 +146,77 @@ const AddressBook = (props: PaymentMethodProps) => {
 
   return (
     <Box data-testid={'address-book-component'}>
-      {shippingAddresses?.map((item: CustomerContact, index: number) => (
-        <Box paddingY={1} key={`${item?.id}address`}>
-          {index === 0 && (
-            <Typography variant="body1" fontWeight={700}>
-              {t('shipping-address')}( {t('primary')} )
-            </Typography>
-          )}
-          <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
-            <AddressCard {...buildAddressProps(item?.address as CuAddress)} />
-            <Stack>
-              <Typography
-                variant="body2"
-                sx={{ cursor: 'pointer' }}
-                onClick={() => handleEditAddress(item as CustomerContact)}
-              >
-                {t('edit')}
-              </Typography>
-              {index > 0 && (
-                <Delete
-                  sx={{ marginTop: '1.375rem' }}
-                  onClick={() =>
-                    handleConfirmDeleteAddress({
-                      accountId: item?.accountId as number,
-                      contactId: item?.id as number,
-                    })
-                  }
-                />
+      {!isAddNewAddress && !isEditAddress && (
+        <Box>
+          {shippingAddresses?.map((item: CustomerContact, index: number) => (
+            <Box paddingY={1} key={`${item?.id}address`}>
+              {index === 0 && (
+                <Typography variant="body1" fontWeight={700}>
+                  {t('shipping-address')}( {t('primary')} )
+                </Typography>
               )}
-            </Stack>
-          </Box>
-          <Divider sx={{ marginTop: '1.75rem', marginBottom: '0.25rem' }} />
-        </Box>
-      ))}
+              <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
+                <AddressCard {...buildAddressProps(item?.address as CuAddress)} />
+                <Stack>
+                  <Typography
+                    variant="body2"
+                    sx={{ cursor: 'pointer' }}
+                    onClick={() => handleEditAddress(item as CustomerContact)}
+                  >
+                    {t('edit')}
+                  </Typography>
+                  {index > 0 && (
+                    <Delete
+                      sx={{ marginTop: '1.375rem' }}
+                      onClick={() =>
+                        handleConfirmDeleteAddress({
+                          accountId: item?.accountId as number,
+                          contactId: item?.id as number,
+                        })
+                      }
+                    />
+                  )}
+                </Stack>
+              </Box>
+              <Divider sx={{ marginTop: '1.75rem', marginBottom: '0.25rem' }} />
+            </Box>
+          ))}
 
-      {billingAddresses?.map((item: CustomerContact, index: number) => (
-        <Box paddingY={1} key={item?.id + 'address'}>
-          {index === 0 && (
-            <Typography variant="body1" fontWeight={700}>
-              {t('billing-address')}( {t('primary')} )
-            </Typography>
-          )}
-          <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
-            <AddressCard {...buildAddressProps(item?.address as CuAddress)} />
-            <Stack>
-              <Typography
-                variant="body2"
-                sx={{ cursor: 'pointer' }}
-                onClick={() => handleEditAddress(item as CustomerContact)}
-              >
-                {t('edit')}
-              </Typography>
-              {index > 0 && (
-                <Delete
-                  sx={{ marginTop: '1.375rem' }}
-                  onClick={() =>
-                    handleConfirmDeleteAddress({
-                      accountId: item?.accountId as number,
-                      contactId: item?.id as number,
-                    })
-                  }
-                />
+          {billingAddresses?.map((item: CustomerContact, index: number) => (
+            <Box paddingY={1} key={item?.id + 'address'}>
+              {index === 0 && (
+                <Typography variant="body1" fontWeight={700}>
+                  {t('billing-address')}( {t('primary')} )
+                </Typography>
               )}
-            </Stack>
-          </Box>
-          <Divider sx={{ marginTop: '1.75rem', marginBottom: '0.25rem' }} />
+              <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
+                <AddressCard {...buildAddressProps(item?.address as CuAddress)} />
+                <Stack>
+                  <Typography
+                    variant="body2"
+                    sx={{ cursor: 'pointer' }}
+                    onClick={() => handleEditAddress(item as CustomerContact)}
+                  >
+                    {t('edit')}
+                  </Typography>
+                  {index > 0 && (
+                    <Delete
+                      sx={{ marginTop: '1.375rem' }}
+                      onClick={() =>
+                        handleConfirmDeleteAddress({
+                          accountId: item?.accountId as number,
+                          contactId: item?.id as number,
+                        })
+                      }
+                    />
+                  )}
+                </Stack>
+              </Box>
+              <Divider sx={{ marginTop: '1.75rem', marginBottom: '0.25rem' }} />
+            </Box>
+          ))}
         </Box>
-      ))}
+      )}
       {!isAddNewAddress && !isEditAddress && (
         <Button
           variant="contained"
