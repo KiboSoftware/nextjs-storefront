@@ -14,7 +14,7 @@ jest.mock('@/components/product/ProductCard/ProductCard', () => ProductCardMock)
 describe('[component] CmsHomePageProducts', () => {
   it('should render component', async () => {
     render(<Common {...Common.args} />)
-    const title = screen.getAllByRole('heading', { level: 2 })
+    const title = screen.getAllByRole('heading')
 
     await waitFor(() => {
       const productCard = screen.getAllByTestId('product-card-mock')

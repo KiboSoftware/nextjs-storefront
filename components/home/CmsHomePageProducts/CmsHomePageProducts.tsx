@@ -5,6 +5,11 @@ import { Container, Grid } from '@mui/material'
 import { ProductRecommendations } from '@/components/product'
 import { ProductRecommendationsProps } from '@/components/product/ProductRecommendations/ProductRecommendations'
 
+interface CmsHomePageProductsProps {
+  recentlyViewed: ProductRecommendationsProps
+  topSellings: ProductRecommendationsProps
+}
+
 const styles = {
   gridContainer: {
     display: { md: 'flex', xs: 'block' },
@@ -12,10 +17,7 @@ const styles = {
     marginBottom: { xs: '3rem', md: '3rem' },
   },
 }
-const CmsHomePageProducts = (props: {
-  recentlyViewed: ProductRecommendationsProps
-  topSellings: ProductRecommendationsProps
-}) => {
+const CmsHomePageProducts = (props: CmsHomePageProductsProps) => {
   return (
     <Container maxWidth={'xl'}>
       <Grid sx={{ ...styles.gridContainer }} container columnSpacing={{ md: 5 }}>
