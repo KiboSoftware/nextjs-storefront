@@ -1,7 +1,6 @@
-import React, { ReactElement, useState, ReactNode } from 'react'
+import React, { useState } from 'react'
 
 import { CacheProvider, EmotionCache } from '@emotion/react'
-import { Container } from '@mui/material'
 import CssBaseline from '@mui/material/CssBaseline'
 import { ThemeProvider } from '@mui/material/styles'
 import { appWithTranslation } from 'next-i18next'
@@ -17,16 +16,12 @@ import createEmotionCache from '../lib/createEmotionCache'
 import { generateQueryClient } from '../lib/react-query/queryClient'
 import theme from '../styles/theme'
 import { GlobalFetchingIndicator } from '@/components/common'
-import Layout from '@/components/common/Layout/Layout'
-import { KiboHeader } from '@/components/layout'
+import { KiboHeader, DefaultLayout } from '@/components/layout'
 import { AuthContextProvider, ModalContextProvider, DialogRoot } from '@/context'
-
+import type { NextPageWithLayout } from '@/lib/types'
 // Client-side cache, shared for the whole session of the user in the browser.
 const clientSideEmotionCache = createEmotionCache()
 
-interface NextPageWithLayout {
-  getLayout?: (page: ReactElement) => ReactNode
-}
 type KiboAppProps = AppProps & {
   emotionCache?: EmotionCache
   Component: NextPageWithLayout
@@ -40,7 +35,7 @@ Router.events.on('routeChangeError', () => NProgress.done())
 const App = (props: KiboAppProps) => {
   const { Component, emotionCache = clientSideEmotionCache, pageProps } = props
   const [queryClient] = useState(() => generateQueryClient())
-  const getLayout = Component.getLayout ?? ((page) => <Layout>{page}</Layout>)
+  const getLayout = Component.getLayout ?? ((page) => <DefaultLayout>{page}</DefaultLayout>)
 
   return (
     <CacheProvider value={emotionCache}>
