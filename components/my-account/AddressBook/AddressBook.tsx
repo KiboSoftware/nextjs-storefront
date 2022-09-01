@@ -63,17 +63,15 @@ const buildAddressProps = (address: CuAddress | CrAddress) => {
 const AddressBook = (props: PaymentMethodProps) => {
   const { user, contacts } = props
 
-  const { t } = useTranslation('common')
-  const { showModal, closeModal } = useModalContext()
   const [isAddNewAddress, setIsAddNewAddress] = useState<boolean>(false)
   const [isEditAddress, setIsEditAddress] = useState<boolean>(false)
-
   const [validateForm, setValidateForm] = useState<boolean>(false)
   const [isDefaultAddress, setIsDefaultAddress] = useState<boolean>(false)
-
   const [editAddress, setEditAddress] = useState<CustomerContact>()
   const [addressType, setAddressType] = useState<string>(AddressType.SHIPPING)
 
+  const { t } = useTranslation('common')
+  const { showModal, closeModal } = useModalContext()
   const { addSavedAddressDetails } = useCreateCustomerAddressMutation()
   const { updateSavedAddressDetails } = useUpdateCustomerAddressMutation()
   const { deleteSavedAddressDetails } = useDeleteCustomerAddressMutation()
@@ -85,6 +83,7 @@ const AddressBook = (props: PaymentMethodProps) => {
     setIsAddNewAddress(true)
     setEditAddress(undefined)
   }
+
   const handleEditAddress = (contact: CustomerContact) => {
     setEditAddress(contact)
 
@@ -96,6 +95,7 @@ const AddressBook = (props: PaymentMethodProps) => {
   }
 
   const handleAddressValidationAndSave = () => setValidateForm(true)
+
   const handleSaveAddress = async (address: Address) => {
     if (address?.contact?.id) {
       try {
@@ -129,6 +129,7 @@ const AddressBook = (props: PaymentMethodProps) => {
       }
     }
   }
+
   const handleCancelUpdateAddress = async () => {
     setIsAddNewAddress(false)
     setIsEditAddress(false)
@@ -157,7 +158,7 @@ const AddressBook = (props: PaymentMethodProps) => {
   return (
     <Box data-testid={'address-book-component'}>
       {shippingAddresses?.map((item: CustomerContact, index: number) => (
-        <Box paddingY={1} key={item?.id + 'address'}>
+        <Box paddingY={1} key={`${item?.id}address`}>
           {index === 0 && (
             <Typography variant="body1" fontWeight={700}>
               {t('shipping-address')}( {t('primary')} )
