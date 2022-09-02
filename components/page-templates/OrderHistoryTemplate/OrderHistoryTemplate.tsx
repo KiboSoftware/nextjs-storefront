@@ -1,21 +1,18 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 
 import { Add, ArrowBackIos } from '@mui/icons-material'
 import { Stack, Typography, Divider, Box, useMediaQuery, useTheme, Button } from '@mui/material'
 import { useTranslation } from 'next-i18next'
-import { useQueryClient } from 'react-query'
 
 import { FilterOrders, FilterTiles, FullWidthDivider } from '@/components/common'
 import { OrderHistoryItem, ViewOrderDetails } from '@/components/order'
-import { useUpdateRoutes } from '@/hooks'
+import { useUpdateRoutes, useUserOrderQueries } from '@/hooks'
 import { facetGetters, orderGetters } from '@/lib/getters'
-import { ordersKeys } from '@/lib/react-query/queryKeys'
 
-import type { OrderCollection, Order } from '@/lib/gql/types'
+import type { Order } from '@/lib/gql/types'
 
 interface OrderHistoryProps {
   queryFilters: string[]
-  orderCollection: OrderCollection
   onAccountTitleClick: () => void
 }
 
@@ -38,9 +35,16 @@ const styles = {
 }
 
 const OrderHistoryTemplate = (props: OrderHistoryProps) => {
-  const queryClient = useQueryClient()
-  const { queryFilters = [], orderCollection, onAccountTitleClick } = props
+  const { queryFilters = [], onAccountTitleClick } = props
+  const [updateQueryFilters, setpUateQueryFilters] = useState<any>({
+    filters: [...queryFilters],
+    isOrderHistory: true,
+    isRefetching: true,
+  })
+
+  const { data: orderCollection, isFetching } = useUserOrderQueries(updateQueryFilters)
   const { items = [] } = orderCollection
+
   const [showFilterBy, setFilterBy] = useState<boolean>(false)
   const [selectedOrder, setSelectedOrder] = useState<Order | undefined>(undefined)
   const { updateRoute, changeFilters } = useUpdateRoutes()
@@ -60,7 +64,7 @@ const OrderHistoryTemplate = (props: OrderHistoryProps) => {
   }
   const handleFilterApply = (selectedFilters: string) => {
     changeFilters(selectedFilters)
-    queryClient.removeQueries(ordersKeys.all)
+    setpUateQueryFilters({ ...updateQueryFilters, isRefetching: true, filters: [selectedFilters] })
   }
   const handleSelectedTileRemoval = (selectedTile: string) => {
     facetList.forEach(
@@ -68,7 +72,11 @@ const OrderHistoryTemplate = (props: OrderHistoryProps) => {
     )
     appliedFilters = facetGetters.getAppliedFacetList(facetList)
     updateRoute(selectedTile)
-    queryClient.removeQueries(ordersKeys.all)
+    setpUateQueryFilters({
+      ...updateQueryFilters,
+      filters: appliedFilters?.map((appliedFilter) => appliedFilter?.filterValue),
+      isRefetching: true,
+    })
   }
 
   const getOrderDetails = (order: Order) => {
@@ -148,6 +156,9 @@ const OrderHistoryTemplate = (props: OrderHistoryProps) => {
       </Box>
     )
   }
+  useEffect(() => {
+    if (isFetching) setpUateQueryFilters({ ...updateQueryFilters, isRefetching: false })
+  }, [isFetching])
 
   return (
     <Box>
