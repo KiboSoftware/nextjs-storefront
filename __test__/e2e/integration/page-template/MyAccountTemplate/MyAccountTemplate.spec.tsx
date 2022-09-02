@@ -49,6 +49,18 @@ describe('[component] - AddressBook (has saved addresses )', () => {
 
     const addressForm = screen.getByTestId('address-form')
     expect(addressForm).toBeVisible()
+
+    await addUpdateAddress(user)
+    const saveAddressButton = screen.getByRole('button', {
+      name: /save/i,
+    })
+
+    await user.click(saveAddressButton)
+
+    await waitFor(async () => {
+      const addressForm = await screen.findByTestId('address-form')
+      expect(addressForm).not.toBeVisible()
+    })
   })
 
   it('should handle edit address', async () => {
@@ -61,30 +73,7 @@ describe('[component] - AddressBook (has saved addresses )', () => {
     const editAddressLinks = screen.getAllByText('edit')
     await user.click(editAddressLinks[0])
 
-    const firstName = screen.getByRole('textbox', { name: /first-name/i })
-    const lastNameOrSurname = screen.getByRole('textbox', { name: /last-name-or-sur-name/i })
-    const address1 = screen.getByRole('textbox', { name: /address1/i })
-    const address2 = screen.getByRole('textbox', { name: /address2/i })
-    const cityOrTown = screen.getByRole('textbox', { name: /city/i })
-    const stateOrProvince = screen.getByRole('textbox', { name: /state-or-province/i })
-    const postalOrZipCode = screen.getByRole('textbox', { name: /postal-or-zip-code/i })
-    const phoneNumberHome = screen.getByRole('textbox', { name: /phone-number/i })
-    const countryCode = screen.getByRole('button', { name: 'country-code' })
-
-    await user.type(firstName, 'Ron')
-    await user.type(lastNameOrSurname, 'Batman')
-    await user.type(address1, '1523 Stellar Dr')
-    await user.type(address2, '23/1')
-    await user.type(cityOrTown, 'Kenai')
-    await user.type(stateOrProvince, 'AK')
-    await user.type(postalOrZipCode, '99611')
-    await user.type(phoneNumberHome, '9072832799')
-    fireEvent.mouseDown(countryCode)
-
-    const listbox = within(screen.getByRole('listbox'))
-    await user.click(listbox.getByText(/US/i))
-    await user.tab()
-
+    await addUpdateAddress(user)
     const saveAddressButton = screen.getByRole('button', {
       name: /save/i,
     })
@@ -96,6 +85,7 @@ describe('[component] - AddressBook (has saved addresses )', () => {
       expect(addressForm).not.toBeVisible()
     })
   })
+
   it('should handle delete address', async () => {
     render(
       <ModalContextProvider>
@@ -266,5 +256,31 @@ const addCardDetails = async (user: UserEvent) => {
   await user.type(cardNumber, '4111111111111111')
   await user.type(expiryDate, '01/2026')
   await user.type(cvv, '123')
+  await user.tab()
+}
+
+const addUpdateAddress = async (user: UserEvent) => {
+  const firstName = screen.getByRole('textbox', { name: /first-name/i })
+  const lastNameOrSurname = screen.getByRole('textbox', { name: /last-name-or-sur-name/i })
+  const address1 = screen.getByRole('textbox', { name: /address1/i })
+  const address2 = screen.getByRole('textbox', { name: /address2/i })
+  const cityOrTown = screen.getByRole('textbox', { name: /city/i })
+  const stateOrProvince = screen.getByRole('textbox', { name: /state-or-province/i })
+  const postalOrZipCode = screen.getByRole('textbox', { name: /postal-or-zip-code/i })
+  const phoneNumberHome = screen.getByRole('textbox', { name: /phone-number/i })
+  const countryCode = screen.getByRole('button', { name: 'country-code' })
+
+  await user.type(firstName, 'Ron')
+  await user.type(lastNameOrSurname, 'Batman')
+  await user.type(address1, '1523 Stellar Dr')
+  await user.type(address2, '23/1')
+  await user.type(cityOrTown, 'Kenai')
+  await user.type(stateOrProvince, 'AK')
+  await user.type(postalOrZipCode, '99611')
+  await user.type(phoneNumberHome, '9072832799')
+  fireEvent.mouseDown(countryCode)
+
+  const listbox = within(screen.getByRole('listbox'))
+  await user.click(listbox.getByText(/US/i))
   await user.tab()
 }
