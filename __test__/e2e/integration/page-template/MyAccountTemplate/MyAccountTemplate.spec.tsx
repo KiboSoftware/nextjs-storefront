@@ -1,5 +1,5 @@
 import { composeStories } from '@storybook/testing-react'
-import { render, screen, waitFor } from '@testing-library/react'
+import { fireEvent, render, screen, waitFor, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { UserEvent } from '@testing-library/user-event/dist/types/setup'
 import { graphql } from 'msw'
@@ -48,6 +48,52 @@ describe('[component] - AddressBook (has saved addresses )', () => {
 
     const addressForm = screen.getByTestId('address-form')
     expect(addressForm).toBeVisible()
+  })
+
+  it('should handle edit address', async () => {
+    render(<Common />)
+    const addressBook = screen.getByRole('heading', {
+      name: /address-book/i,
+    })
+    await user.click(addressBook)
+
+    const editAddressLinks = screen.getAllByText('edit')
+    await user.click(editAddressLinks[0])
+
+    const firstName = screen.getByRole('textbox', { name: /first-name/i })
+    const lastNameOrSurname = screen.getByRole('textbox', { name: /last-name-or-sur-name/i })
+    const address1 = screen.getByRole('textbox', { name: /address1/i })
+    const address2 = screen.getByRole('textbox', { name: /address2/i })
+    const cityOrTown = screen.getByRole('textbox', { name: /city/i })
+    const stateOrProvince = screen.getByRole('textbox', { name: /state-or-province/i })
+    const postalOrZipCode = screen.getByRole('textbox', { name: /postal-or-zip-code/i })
+    const phoneNumberHome = screen.getByRole('textbox', { name: /phone-number/i })
+    const countryCode = screen.getByRole('button', { name: 'country-code' })
+
+    await user.type(firstName, 'Ron')
+    await user.type(lastNameOrSurname, 'Batman')
+    await user.type(address1, '1523 Stellar Dr')
+    await user.type(address2, '23/1')
+    await user.type(cityOrTown, 'Kenai')
+    await user.type(stateOrProvince, 'AK')
+    await user.type(postalOrZipCode, '99611')
+    await user.type(phoneNumberHome, '9072832799')
+    fireEvent.mouseDown(countryCode)
+
+    const listbox = within(screen.getByRole('listbox'))
+    await user.click(listbox.getByText(/US/i))
+    await user.tab()
+
+    const saveAddressButton = screen.getByRole('button', {
+      name: /save/i,
+    })
+
+    await user.click(saveAddressButton)
+
+    await waitFor(async () => {
+      const addressForm = await screen.findByTestId('address-form')
+      expect(addressForm).not.toBeVisible()
+    })
   })
 })
 
