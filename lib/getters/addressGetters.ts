@@ -70,7 +70,7 @@ const getBillingDetails = <T extends GenericContact>(billingData?: T) => {
 const getIsSameBillingShippingAddress = (billingData?: SavedBillingAddress): boolean =>
   Boolean(billingData?.isSameBillingShippingAddress)
 
-export const billingGetters = {
+export const addressGetters = {
   getAddress,
   getAddress1,
   getAddress2,

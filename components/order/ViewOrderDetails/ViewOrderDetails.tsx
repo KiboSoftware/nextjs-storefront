@@ -8,7 +8,7 @@ import { SavedPaymentMethodView } from '@/components/checkout'
 import { AddressCard, OrderSummary, ProductItemList } from '@/components/common'
 import { ProductOption } from '@/components/product'
 import { useStoreLocations } from '@/hooks'
-import { billingGetters, orderGetters, storeLocationGetters } from '@/lib/getters'
+import { addressGetters, orderGetters, storeLocationGetters } from '@/lib/getters'
 
 import type { Maybe, Order, Location } from '@/lib/gql/types'
 
@@ -179,7 +179,7 @@ const ViewOrderDetails = (props: ViewOrderDetailsProps) => {
                 const cardDetails = orderGetters.getOrderPaymentCardDetails(
                   payment.billingInfo.card
                 )
-                const address = billingGetters.getAddress(
+                const address = addressGetters.getAddress(
                   payment.billingInfo.billingContact.address
                 )
                 return (

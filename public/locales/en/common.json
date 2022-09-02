@@ -144,5 +144,10 @@
   "select-billing-address": "Select billing address",
   "delete-confirmation-text": "Are you sure you want to delete ?",
 
-  "promo-code-already-in-use": "Promo code already in use!"
+  "promo-code-already-in-use": "Promo code already in use!",
+
+  "address-book": "Address Book",
+  "delete-address-confirm-message": "Are you sure you want to delete this address?",
+  "make-this-my-default-address": "Make this my default address",
+  "shipping-address": "Shipping Address"
 }

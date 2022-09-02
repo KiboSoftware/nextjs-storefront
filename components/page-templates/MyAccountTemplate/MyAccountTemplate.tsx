@@ -19,6 +19,7 @@ import { useTranslation } from 'next-i18next'
 import { useRouter } from 'next/router'
 
 import { PaymentMethod } from '@/components/my-account'
+import AddressBook from '@/components/my-account/AddressBook/AddressBook'
 import { useAuthContext } from '@/context'
 import { useCustomerCards, useCustomerContacts } from '@/hooks'
 
@@ -101,7 +102,7 @@ const MyAccountTemplate = () => {
       id: 'address-book-accordion',
       controls: 'address-book-content',
       header: t('address-book'),
-      component: null,
+      component: <AddressBook user={user as CustomerAccount} contacts={contacts} />,
     },
     {
       id: 'payment-method-accordion',

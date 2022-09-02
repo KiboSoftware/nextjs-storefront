@@ -21,6 +21,9 @@ import { userMock, loginUserMock, registerUserMock } from '../stories/userMock'
 import { wishlistMock } from '../stories/wishlistMock'
 
 const baseUrl = 'http://localhost:3000'
+const mockCreateCustomerAccount = {
+  createCustomerAccountContact: updateCustomerAccountContactMock.updateCustomerAccountContact,
+}
 
 export const checkoutHandlers = [
   graphql.query('getCheckout', (_req, res, ctx) => {
@@ -82,8 +85,16 @@ export const accountHandlers = [
     return res(ctx.data(userAddressMock))
   }),
 
+  graphql.mutation('createCustomerAccountContact', (_req, res, ctx) => {
+    return res(ctx.data({ mockCreateCustomerAccount }))
+  }),
+
   graphql.mutation('updateCustomerAccountContact', (_req, res, ctx) => {
     return res(ctx.data(updateCustomerAccountContactMock))
+  }),
+
+  graphql.mutation('deleteCustomerAccountContact', (_req, res, ctx) => {
+    return res(ctx.data({ deleteCustomerAccountContact: true }))
   }),
 
   graphql.mutation('createCustomerAccountCard', (_req, res, ctx) => {

@@ -1,35 +1,34 @@
 import { useMutation, useQueryClient } from 'react-query'
 
 import { makeGraphQLClient } from '@/lib/gql/client'
-import { updateCustomerAccountContact } from '@/lib/gql/mutations'
+import { createCustomerAccountContact } from '@/lib/gql/mutations'
 import { customerAccountContactsKeys } from '@/lib/react-query/queryKeys'
 
 import type { CustomerContactInput } from '@/lib/gql/types'
 
-export interface UpdateCustomerAccountContactDetailsParams {
+interface CreateCustomerAccountContactDetailsParams {
   accountId: number
-  contactId: number
   customerContactInput: CustomerContactInput
 }
 
-const updateCustomerAccountContactDetails = async (
-  params: UpdateCustomerAccountContactDetailsParams
+const addCustomerAccountContactDetails = async (
+  params: CreateCustomerAccountContactDetailsParams
 ) => {
   const client = makeGraphQLClient()
 
   const response = await client.request({
-    document: updateCustomerAccountContact,
+    document: createCustomerAccountContact,
     variables: params,
   })
 
-  return response?.updateCustomerAccountContact
+  return response?.createCustomerAccountContact
 }
 
-export const useUpdateCustomerAddressMutation = () => {
+export const useCreateCustomerAddressMutation = () => {
   const queryClient = useQueryClient()
 
   return {
-    updateSavedAddressDetails: useMutation(updateCustomerAccountContactDetails, {
+    addSavedAddressDetails: useMutation(addCustomerAccountContactDetails, {
       onSuccess: () => {
         queryClient.invalidateQueries(customerAccountContactsKeys.all)
       },

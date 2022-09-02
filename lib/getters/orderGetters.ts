@@ -1,6 +1,6 @@
 import { format } from 'date-fns'
 
-import { billingGetters } from './billingGetters'
+import { addressGetters } from './addressGetters'
 import { checkoutGetters } from './checkoutGetters'
 
 import type { LocationCustom } from '../types'
@@ -57,7 +57,7 @@ const getOrderPaymentBillingInfo = (billingInfo: BillingInfo) => {
   return {
     ...billingInfo,
     card: getOrderPaymentCardDetails(billingInfo.card as PaymentCard),
-    billingContact: billingGetters.getBillingDetails(billingInfo.billingContact as Contact),
+    billingContact: addressGetters.getBillingDetails(billingInfo.billingContact as Contact),
   }
 }
 const getOrderPayments = (order: Order) =>

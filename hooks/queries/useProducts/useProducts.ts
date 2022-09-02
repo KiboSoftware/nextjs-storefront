@@ -32,7 +32,7 @@ export const useProducts = (productCodes: ProductCodes[]): UseProductsResponse =
   })
   const searchParams = buildProductSearchInput({
     filter: productCodeFilter.join(' or '),
-    pageSize: productCodes?.length as number,
+    pageSize: productCodes?.length,
   }) as CategorySearchParams
   const { data, isLoading, isSuccess, isFetching } = useQuery(
     productSearchResultKeys.searchParams(searchParams),
