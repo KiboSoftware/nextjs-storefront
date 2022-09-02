@@ -5,6 +5,7 @@ import { render, screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { RouterContext } from 'next/dist/shared/lib/router-context'
 
+import { orderCollection } from '@/__mocks__/stories'
 import { createMockRouter } from '@/__test__/utils'
 import * as stories from '@/components/page-templates/OrderHistoryTemplate/OrderHistoryTemplate.stories'
 import { FacetTypeForHistory } from '@/lib/constants'
@@ -13,7 +14,7 @@ import { orderGetters } from '@/lib/getters'
 import type { Order } from '@/lib/gql/types'
 
 const { Common } = composeStories(stories)
-const order = Common.args?.orderCollection?.items || []
+const order = orderCollection?.orders?.items || []
 
 const setup = () => {
   const user = userEvent.setup()

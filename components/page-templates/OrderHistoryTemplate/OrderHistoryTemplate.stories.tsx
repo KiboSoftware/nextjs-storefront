@@ -3,7 +3,6 @@ import React from 'react'
 import { ComponentStory, ComponentMeta } from '@storybook/react'
 
 import OrderHistoryTemplate from './OrderHistoryTemplate'
-import { orderCollection } from '@/__mocks__/stories/orderCollection'
 
 // Common
 export default {
@@ -24,5 +23,4 @@ const filters = ['m-1', 'm-6']
 export const Common = Template.bind({})
 Common.args = {
   queryFilters: filters,
-  orderCollection: orderCollection.orders,
 }

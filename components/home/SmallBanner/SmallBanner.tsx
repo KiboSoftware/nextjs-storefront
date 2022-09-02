@@ -62,7 +62,7 @@ const SmallBanner = ({ bannerProps }: ItemProps) => {
           <Typography variant="h5">{subtitle}&nbsp;</Typography>
           <Typography variant="h5" data-testid="callToAction">
             <Link href={callToAction.url} passHref>
-              <MuiLink sx={{ color: 'common.white', textDecoration: 'underline' }}>
+              <MuiLink underline="none" sx={{ color: 'common.white' }}>
                 {callToAction.title}
               </MuiLink>
             </Link>

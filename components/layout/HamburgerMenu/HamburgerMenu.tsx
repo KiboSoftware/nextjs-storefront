@@ -109,7 +109,7 @@ const HamburgerMenu = (props: HamburgerMenuProps) => {
           {navLinks?.map((nav) => (
             <Box key={nav.text}>
               <Link href={nav.link} passHref>
-                <MuiLink>
+                <MuiLink underline="none">
                   <ListItem button sx={{ paddingInline: 4 }}>
                     <ListItemText primary={nav.text} />
                   </ListItem>

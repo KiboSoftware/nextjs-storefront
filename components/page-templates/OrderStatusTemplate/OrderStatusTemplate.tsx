@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 
 import { Grid } from '@mui/material'
 import { useTranslation } from 'next-i18next'
@@ -21,17 +21,25 @@ const OrderStatusTemplate = () => {
   const [queryFilters, setQueryFilters] = useState<OrderStatusFormDataProps>({
     billingEmail: '',
     orderNumber: '',
+    isOrderStatus: true,
+    isRefetching: true,
   })
 
   const { t } = useTranslation(['common', 'orderhistory'])
-  const { data: orderCollection } = useUserOrderQueries(queryFilters)
+  const { data: orderCollection, isFetching } = useUserOrderQueries(queryFilters)
   const { items = [], pageCount } = orderCollection
   const breadCrumbsList = [
     { text: t('home'), link: '/' },
     { text: t('order-status'), link: '/order-status' },
   ]
   const order = items && (items[0] as Order)
-  const handleOrderStatusSubmit = (data: OrderStatusFormDataProps) => setQueryFilters(data)
+  const handleOrderStatusSubmit = (data: OrderStatusFormDataProps) => {
+    setQueryFilters({ ...data, isOrderStatus: true, isRefetching: true })
+  }
+
+  useEffect(() => {
+    if (isFetching) setQueryFilters({ ...queryFilters, isRefetching: false })
+  }, [isFetching])
 
   return (
     <Grid container px={1}>
