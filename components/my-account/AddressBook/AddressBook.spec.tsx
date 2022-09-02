@@ -29,7 +29,7 @@ afterEach(() => {
 describe('[components] AddressBook', () => {
   it('should render all saved addresses', () => {
     setup()
-    const primaryAddressHeading = screen.getByText(/shipping-address\( primary \)/i)
+    const primaryAddressHeading = screen.getByText(/shipping-address/i)
 
     const editAddresses = screen.getAllByText('edit')
     const deleteAddressIcon = screen.getByTestId('DeleteIcon')
