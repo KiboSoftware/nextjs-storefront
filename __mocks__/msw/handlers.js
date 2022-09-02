@@ -101,6 +101,9 @@ export const accountHandlers = [
       })
     )
   }),
+  graphql.mutation('deleteCustomerAccountContact', (_req, res, ctx) => {
+    return res(ctx.data({ deleteCustomerAccountContact: true }))
+  }),
 ]
 
 export const productHandlers = [

@@ -120,6 +120,9 @@ describe('[component] - AddressBook (has saved addresses )', () => {
 
     expect(deleteConfirmMessage).toBeVisible()
     expect(deleteButton).toBeVisible()
+
+    await user.click(deleteButton)
+    expect(deleteButton).not.toBeVisible()
   })
 })
 
