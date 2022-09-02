@@ -7,6 +7,7 @@ import { graphql } from 'msw'
 import { server } from '@/__mocks__/msw/server'
 import { customerAccountCardsMock } from '@/__mocks__/stories/customerAccountCardsMock'
 import * as stories from '@/components/page-templates/MyAccountTemplate/MyAccountTemplate.stories'
+import { DialogRoot, ModalContextProvider } from '@/context'
 
 import type { Card } from '@/lib/gql/types'
 
@@ -94,6 +95,31 @@ describe('[component] - AddressBook (has saved addresses )', () => {
       const addressForm = await screen.findByTestId('address-form')
       expect(addressForm).not.toBeVisible()
     })
+  })
+  it('should handle delete address', async () => {
+    render(
+      <ModalContextProvider>
+        <DialogRoot />
+        <Common />
+      </ModalContextProvider>
+    )
+
+    const addressBook = screen.getByRole('heading', {
+      name: /address-book/i,
+    })
+    await user.click(addressBook)
+
+    const deleteAddressIcons = screen.getAllByTestId('DeleteIcon')
+    await user.click(deleteAddressIcons[0])
+
+    const deleteConfirmMessage = screen.getByText(/are-you-sure-you-want-to-delete-this-address/i)
+
+    const deleteButton = screen.getByRole('button', {
+      name: /delete/i,
+    })
+
+    expect(deleteConfirmMessage).toBeVisible()
+    expect(deleteButton).toBeVisible()
   })
 })
 
