@@ -11,6 +11,7 @@ import {
   Checkbox,
   FormControlLabel,
   MenuItem,
+  Grid,
 } from '@mui/material'
 import { useTranslation } from 'next-i18next'
 
@@ -36,9 +37,17 @@ import type {
   CustomerContactCollection,
 } from '@/lib/gql/types'
 
-interface PaymentMethodProps {
+interface AddressBookProps {
   user: CustomerAccount
   contacts: CustomerContactCollection
+}
+
+interface AddressListProps {
+  customerContact: CustomerContact
+  isPrimaryAddress: boolean
+  addressType: string
+  editAddress: (customerContact: CustomerContact) => void
+  deleteAddress: (deleteAddressParams: { accountId: number; contactId: number }) => void
 }
 
 const styles = {
@@ -60,7 +69,50 @@ const buildAddressProps = (address: CuAddress | CrAddress) => {
   }
 }
 
-const AddressBook = (props: PaymentMethodProps) => {
+const AccountAddressList = (props: AddressListProps) => {
+  const { customerContact, isPrimaryAddress, addressType, editAddress, deleteAddress } = props
+  const { t } = useTranslation('common')
+  return (
+    <Box>
+      {isPrimaryAddress && (
+        <Stack>
+          <Typography variant="h3" sx={{ pb: '1rem', fontWeight: '700' }}>
+            {addressType === AddressType.SHIPPING ? t('shipping-address') : t('billing-address')}
+          </Typography>
+          <Typography variant="h4" fontWeight="500">
+            {t('primary')}
+          </Typography>
+        </Stack>
+      )}
+      <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
+        <AddressCard {...buildAddressProps(customerContact?.address as CuAddress)} />
+        <Stack>
+          <Typography
+            variant="body2"
+            sx={{ cursor: 'pointer' }}
+            onClick={() => editAddress(customerContact)}
+          >
+            {t('edit')}
+          </Typography>
+          {!isPrimaryAddress && (
+            <Delete
+              sx={{ marginTop: '1.375rem' }}
+              onClick={() =>
+                deleteAddress({
+                  accountId: customerContact?.accountId as number,
+                  contactId: customerContact?.id as number,
+                })
+              }
+            />
+          )}
+        </Stack>
+      </Box>
+      <Divider sx={{ marginTop: '1.75rem', marginBottom: '0.25rem' }} />
+    </Box>
+  )
+}
+
+const AddressBook = (props: AddressBookProps) => {
   const { user, contacts } = props
 
   const [isAddNewAddress, setIsAddNewAddress] = useState<boolean>(false)
@@ -109,10 +161,12 @@ const AddressBook = (props: PaymentMethodProps) => {
         await updateSavedAddressDetails.mutateAsync(
           params as UpdateCustomerAccountContactDetailsParams
         )
+        setIsEditAddress(false)
       } else {
         await addSavedAddressDetails.mutateAsync(params)
+        setIsAddNewAddress(false)
       }
-      setIsEditAddress(false)
+
       setValidateForm(false)
     } catch (error) {
       console.log('Error: add/edit saved address from my account', error)
@@ -150,69 +204,25 @@ const AddressBook = (props: PaymentMethodProps) => {
         <Box>
           {shippingAddresses?.map((item: CustomerContact, index: number) => (
             <Box paddingY={1} key={`${item?.id}address`}>
-              {index === 0 && (
-                <Typography variant="body1" fontWeight={700}>
-                  {t('shipping-address')}( {t('primary')} )
-                </Typography>
-              )}
-              <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
-                <AddressCard {...buildAddressProps(item?.address as CuAddress)} />
-                <Stack>
-                  <Typography
-                    variant="body2"
-                    sx={{ cursor: 'pointer' }}
-                    onClick={() => handleEditAddress(item as CustomerContact)}
-                  >
-                    {t('edit')}
-                  </Typography>
-                  {index > 0 && (
-                    <Delete
-                      sx={{ marginTop: '1.375rem' }}
-                      onClick={() =>
-                        handleConfirmDeleteAddress({
-                          accountId: item?.accountId as number,
-                          contactId: item?.id as number,
-                        })
-                      }
-                    />
-                  )}
-                </Stack>
-              </Box>
-              <Divider sx={{ marginTop: '1.75rem', marginBottom: '0.25rem' }} />
+              <AccountAddressList
+                customerContact={item}
+                isPrimaryAddress={index === 0}
+                addressType={AddressType.SHIPPING}
+                editAddress={handleEditAddress}
+                deleteAddress={handleConfirmDeleteAddress}
+              />
             </Box>
           ))}
 
           {billingAddresses?.map((item: CustomerContact, index: number) => (
             <Box paddingY={1} key={item?.id + 'address'}>
-              {index === 0 && (
-                <Typography variant="body1" fontWeight={700}>
-                  {t('billing-address')}( {t('primary')} )
-                </Typography>
-              )}
-              <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
-                <AddressCard {...buildAddressProps(item?.address as CuAddress)} />
-                <Stack>
-                  <Typography
-                    variant="body2"
-                    sx={{ cursor: 'pointer' }}
-                    onClick={() => handleEditAddress(item as CustomerContact)}
-                  >
-                    {t('edit')}
-                  </Typography>
-                  {index > 0 && (
-                    <Delete
-                      sx={{ marginTop: '1.375rem' }}
-                      onClick={() =>
-                        handleConfirmDeleteAddress({
-                          accountId: item?.accountId as number,
-                          contactId: item?.id as number,
-                        })
-                      }
-                    />
-                  )}
-                </Stack>
-              </Box>
-              <Divider sx={{ marginTop: '1.75rem', marginBottom: '0.25rem' }} />
+              <AccountAddressList
+                customerContact={item}
+                isPrimaryAddress={index === 0}
+                addressType={AddressType.BILLING}
+                editAddress={handleEditAddress}
+                deleteAddress={handleConfirmDeleteAddress}
+              />
             </Box>
           ))}
         </Box>
@@ -232,21 +242,24 @@ const AddressBook = (props: PaymentMethodProps) => {
 
       {(isAddNewAddress || isEditAddress) && (
         <Box pb={'1.813rem'}>
-          <KiboSelect
-            sx={{ typography: 'body2' }}
-            value={addressType}
-            onChange={(_name, value) => setAddressType(value)}
-          >
-            {Object.values(AddressType).map((addressTypeValue: string) => (
-              <MenuItem
-                sx={{ typography: 'body2' }}
-                key={addressTypeValue}
-                value={addressTypeValue}
-              >
-                {addressTypeValue}
-              </MenuItem>
-            ))}
-          </KiboSelect>
+          <Grid item xs={12} md={6} pl={1} pb={2.5} pr={6.5}>
+            <KiboSelect
+              sx={{ typography: 'body2', width: '100%' }}
+              value={addressType}
+              onChange={(_name, value) => setAddressType(value)}
+            >
+              {Object.values(AddressType).map((addressTypeValue: string) => (
+                <MenuItem
+                  sx={{ typography: 'body2' }}
+                  key={addressTypeValue}
+                  value={addressTypeValue}
+                >
+                  {addressTypeValue}
+                </MenuItem>
+              ))}
+            </KiboSelect>
+          </Grid>
+
           <AddressForm
             saveAddressLabel={''}
             setAutoFocus={true}
@@ -255,6 +268,7 @@ const AddressBook = (props: PaymentMethodProps) => {
             onSaveAddress={handleSaveAddress}
             contact={editAddress as ContactForm}
           />
+
           <FormControlLabel
             label={t('make-this-my-default-address')}
             control={
