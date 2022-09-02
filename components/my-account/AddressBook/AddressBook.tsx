@@ -99,7 +99,7 @@ const AccountAddress = (props: AccountAddressProps) => {
               sx={{ marginTop: '1.375rem' }}
               onClick={() =>
                 deleteAddress({
-                  accountId: customerContact?.accountId as number,
+                  accountId: customerContact?.accountId,
                   contactId: customerContact?.id as number,
                 })
               }

@@ -1,6 +1,3 @@
-import { ReactElement, ReactNode } from 'react'
-
-import { Box } from '@mui/material'
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
 
 import nextI18NextConfig from '../next-i18next.config'
