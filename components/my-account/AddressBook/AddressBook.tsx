@@ -42,7 +42,7 @@ interface AddressBookProps {
   contacts: CustomerContactCollection
 }
 
-interface AddressListProps {
+interface AccountAddressProps {
   customerContact: CustomerContact
   isPrimaryAddress: boolean
   addressType: string
@@ -69,7 +69,7 @@ const buildAddressProps = (address: CuAddress | CrAddress) => {
   }
 }
 
-const AccountAddressList = (props: AddressListProps) => {
+const AccountAddress = (props: AccountAddressProps) => {
   const { customerContact, isPrimaryAddress, addressType, editAddress, deleteAddress } = props
   const { t } = useTranslation('common')
   return (
@@ -204,7 +204,7 @@ const AddressBook = (props: AddressBookProps) => {
         <Box>
           {shippingAddresses?.map((item: CustomerContact, index: number) => (
             <Box paddingY={1} key={`${item?.id}address`}>
-              <AccountAddressList
+              <AccountAddress
                 customerContact={item}
                 isPrimaryAddress={index === 0}
                 addressType={AddressType.SHIPPING}
@@ -216,7 +216,7 @@ const AddressBook = (props: AddressBookProps) => {
 
           {billingAddresses?.map((item: CustomerContact, index: number) => (
             <Box paddingY={1} key={item?.id + 'address'}>
-              <AccountAddressList
+              <AccountAddress
                 customerContact={item}
                 isPrimaryAddress={index === 0}
                 addressType={AddressType.BILLING}
