@@ -112,7 +112,7 @@ describe('[component] - AddressBook (has saved addresses )', () => {
     const deleteAddressIcons = screen.getAllByTestId('DeleteIcon')
     await user.click(deleteAddressIcons[0])
 
-    const deleteConfirmMessage = screen.getByText(/are-you-sure-you-want-to-delete-this-address/i)
+    const deleteConfirmMessage = screen.getByText(/delete-address-confirm-message/i)
 
     const deleteButton = screen.getByRole('button', {
       name: /delete/i,

@@ -183,7 +183,7 @@ const AddressBook = (props: AddressBookProps) => {
       Component: ConfirmationDialog,
       props: {
         onConfirm: () => handleDeleteAddress(deleteAddressProps),
-        contentText: t('are-you-sure-you-want-to-delete-this-address'),
+        contentText: t('delete-address-confirm-message'),
         primaryButtonText: t('delete'),
       },
     })
