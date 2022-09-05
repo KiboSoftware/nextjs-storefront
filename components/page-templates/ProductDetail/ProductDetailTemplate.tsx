@@ -6,11 +6,8 @@ import FavoriteRoundedIcon from '@mui/icons-material/FavoriteRounded'
 import { Box, Grid, Rating, Button, Typography, Divider, Link } from '@mui/material'
 import { useTranslation } from 'next-i18next'
 
-import FulfillmentOptions from '@/components/common/FulfillmentOptions/FulfillmentOptions'
-import Price from '@/components/common/Price/Price'
-import QuantitySelector from '@/components/common/QuantitySelector/QuantitySelector'
-import KiboBreadcrumbs from '@/components/core/Breadcrumbs/KiboBreadcrumbs'
-import ImageGallery from '@/components/core/ImageGallery/ImageGallery'
+import { FulfillmentOptions, Price, QuantitySelector } from '@/components/common'
+import { KiboBreadcrumbs, ImageGallery } from '@/components/core'
 import { AddToCartDialog, StoreLocatorDialog } from '@/components/dialogs'
 import CmsComponent from '@/components/home/CmsComponent/CmsComponent'
 import {

@@ -12,7 +12,7 @@ import { CategoryFacet, CategoryFilterByMobile, FacetList } from '@/components/p
 import { CategoryFacetData } from '@/components/product-listing/CategoryFacet/CategoryFacet'
 import { useUpdateRoutes, useWishlist } from '@/hooks'
 import { productGetters } from '@/lib/getters'
-import { uiHelpers } from '@/lib/helpers'
+import { buildAddOrRemoveWishlistItem, uiHelpers } from '@/lib/helpers'
 import type { BreadCrumb as BreadCrumbType, ProductCustom } from '@/lib/types'
 
 import type { Facet as FacetType, FacetValue, Product } from '@/lib/gql/types'
@@ -207,20 +207,7 @@ const ProductListingTemplate = (props: ProductListingTemplateProps) => {
 
   const handleWishList = async (product: ProductCustom) => {
     try {
-      const { productCode, variationProductCode, isPackagedStandAlone } =
-        productGetters.getProductDetails(product)
-      const addOrRemoveWishlistItemParams = {
-        productCode,
-        variationProductCode,
-        isPackagedStandAlone,
-        options:
-          product?.options?.map((productOption) => ({
-            attributeFQN: productOption?.attributeFQN,
-            name: productOption?.attributeDetail?.name,
-            value: productOption?.values?.find((v) => v?.isSelected)?.value,
-          })) || [],
-      }
-
+      const addOrRemoveWishlistItemParams = buildAddOrRemoveWishlistItem(product)
       await addOrRemoveWishlistItem(addOrRemoveWishlistItemParams)
     } catch (error) {
       console.log('Error: add or remove wishlist item from PLP', error)
