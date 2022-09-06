@@ -1,7 +1,6 @@
-import { Maybe, ProductOption, Wishlist } from '@/lib/gql/types'
-
+import type { Maybe, ProductOptionSelectionInput, Wishlist } from '@/lib/gql/types'
 export interface WishlistProductInput {
-  options: ProductOption[]
+  options: ProductOptionSelectionInput[]
   productCode: string
   isPackagedStandAlone: boolean
   variationProductCode?: string

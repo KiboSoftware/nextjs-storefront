@@ -10,11 +10,12 @@ export const buildAddToWishlistItemInput = (
     wishlistId: wishlistId,
     wishlistItemInput: {
       product: {
-        options: product?.options?.map((productOption) => ({
-          attributeFQN: productOption?.attributeFQN,
-          name: productOption?.attributeDetail?.name,
-          value: productOption?.values?.find((value) => value?.isSelected)?.value,
-        })),
+        options: product?.options?.map((option) => {
+          return {
+            attributeFQN: option?.attributeFQN,
+            value: option?.value || option?.shopperEnteredValue,
+          }
+        }),
         productCode: product?.productCode || '',
         variationProductCode: product?.variationProductCode || '',
         isPackagedStandAlone: product?.isPackagedStandAlone || true,
