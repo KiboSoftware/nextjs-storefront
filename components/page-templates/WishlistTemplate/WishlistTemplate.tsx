@@ -1,8 +1,9 @@
 import React, { useState } from 'react'
 
 import FavoriteRoundedIcon from '@mui/icons-material/FavoriteRounded'
-import { Grid, Typography, Box, Divider, useTheme } from '@mui/material'
+import { Grid, Typography, Box, Divider, useTheme, Link as MuiLink, Button } from '@mui/material'
 import { useTranslation } from 'next-i18next'
+import Link from 'next/link'
 
 import { ProductCard } from '@/components/product'
 import { useWishlist, useWishlistQueries } from '@/hooks'
@@ -44,90 +45,111 @@ const WishlistTemplate = (props: { customerAccount: CustomerAccount }) => {
   }
   return (
     <Grid container data-testid="wishlist-template">
-      <Grid item xs={12}>
-        <Box sx={{ display: 'flex', padding: '1.5rem 0', alignItems: 'center' }}>
-          <FavoriteRoundedIcon sx={{ color: 'red.900', marginRight: '0.875rem' }} />
-          <Typography variant="h1">
-            {customerAccount?.firstName
-              ? customerAccount?.firstName
-              : customerAccount?.emailAddress}
+      <>
+        <Grid item xs={12}>
+          <Box sx={{ display: 'flex', padding: '1.5rem 0', alignItems: 'center' }}>
+            <FavoriteRoundedIcon sx={{ color: 'red.900', marginRight: '0.875rem' }} />
+            <Typography variant="h1">
+              {customerAccount?.firstName
+                ? customerAccount?.firstName
+                : customerAccount?.emailAddress}
+            </Typography>
+          </Box>
+          <Divider color={theme.palette.primary.main} />
+        </Grid>
+        <Grid item xs={12}>
+          <Typography
+            variant="subtitle2"
+            sx={{ color: 'grey.600', paddingBottom: '1.5rem', paddingTop: '1.438rem' }}
+          >
+            {t('item-quantity', { count: wishlists?.items?.length || 0 })}
           </Typography>
-        </Box>
-        <Divider color={theme.palette.primary.main} />
-      </Grid>
-      <Grid item xs={12}>
-        <Typography
-          variant="subtitle2"
-          sx={{ color: 'grey.600', paddingBottom: '1.5rem', paddingTop: '1.438rem' }}
-        >
-          {t('item-quantity', { count: wishlists && wishlists?.items?.length })}
-        </Typography>
-      </Grid>
-      {/* Product Card Section */}
-      <Grid container sx={{ display: 'flex', paddingRight: { md: 2 }, flexWrap: 'wrap' }}>
-        {wishlists &&
-          wishlists?.items?.map((item: Maybe<WishlistItem>) => (
-            <Grid
-              key={productGetters.getProductId(item?.product as ProductCustom)}
-              item
-              lg={2.4}
-              md={4}
-              sm={4}
-              xs={6}
-            >
-              <Box>
-                <Box
-                  sx={{
-                    display: 'flex',
-                    justifyContent: 'center',
-                  }}
+        </Grid>
+        {/* Product Card Section */}
+        {wishlists?.items?.length ? (
+          <Grid container sx={{ display: 'flex', paddingRight: { md: 2 }, flexWrap: 'wrap' }}>
+            {wishlists &&
+              wishlists?.items?.map((item: Maybe<WishlistItem>) => (
+                <Grid
+                  key={productGetters.getProductId(item?.product as ProductCustom)}
+                  item
+                  lg={2.4}
+                  md={4}
+                  sm={4}
+                  xs={6}
                 >
-                  <Box
-                    sx={{
-                      ...(item?.product?.productCode === removedProductCode &&
-                        styles?.removedItemStyle),
-                    }}
-                  >
-                    <ProductCard
-                      key={item?.id}
-                      isInWishlist={true}
-                      isShopNow={true}
-                      imageUrl={productGetters.handleProtocolRelativeUrl(
-                        item?.product?.imageUrl as string
-                      )}
-                      link={getProductLink(item?.product?.productCode as string)}
-                      price={t<string>('common:currency', {
-                        val: productGetters.getPrice(item?.product as ProductCustom).regular,
-                      })}
-                      {...(productGetters.getPrice(item?.product as ProductCustom).special && {
-                        salePrice: t<string>('common:currency', {
-                          val: productGetters.getPrice(item?.product as ProductCustom).special,
-                        }),
-                      })}
-                      title={productGetters.getName(item?.product as ProductCustom) as string}
-                      rating={productGetters.getRating(item?.product as ProductCustom)}
-                      onAddOrRemoveWishlistItem={() =>
-                        handleAddOrRemoveWishlistItem(item?.product as WishlistProductInput)
-                      }
-                    />
-                  </Box>
-                  {item?.product?.productCode === removedProductCode && (
-                    <Typography
-                      variant="subtitle2"
+                  <Box>
+                    <Box
                       sx={{
-                        position: 'absolute',
-                        paddingTop: '7.625rem',
-                        zIndex: 3,
+                        display: 'flex',
+                        justifyContent: 'center',
                       }}
                     >
-                      {t('removed')}!
-                    </Typography>
-                  )}
-                </Box>
-              </Box>
-            </Grid>
-          ))}
-      </Grid>
+                      <Box
+                        sx={{
+                          ...(item?.product?.productCode === removedProductCode &&
+                            styles?.removedItemStyle),
+                        }}
+                      >
+                        <ProductCard
+                          key={item?.id}
+                          isInWishlist={true}
+                          isShopNow={true}
+                          imageUrl={productGetters.handleProtocolRelativeUrl(
+                            item?.product?.imageUrl as string
+                          )}
+                          link={getProductLink(item?.product?.productCode as string)}
+                          price={t<string>('common:currency', {
+                            val: productGetters.getPrice(item?.product as ProductCustom).regular,
+                          })}
+                          {...(productGetters.getPrice(item?.product as ProductCustom).special && {
+                            salePrice: t<string>('common:currency', {
+                              val: productGetters.getPrice(item?.product as ProductCustom).special,
+                            }),
+                          })}
+                          title={productGetters.getName(item?.product as ProductCustom) as string}
+                          rating={productGetters.getRating(item?.product as ProductCustom)}
+                          onAddOrRemoveWishlistItem={() =>
+                            handleAddOrRemoveWishlistItem(item?.product as WishlistProductInput)
+                          }
+                        />
+                      </Box>
+                      {item?.product?.productCode === removedProductCode && (
+                        <Typography
+                          variant="subtitle2"
+                          sx={{
+                            position: 'absolute',
+                            paddingTop: '7.625rem',
+                            zIndex: 3,
+                          }}
+                        >
+                          {t('removed')}!
+                        </Typography>
+                      )}
+                    </Box>
+                  </Box>
+                </Grid>
+              ))}
+          </Grid>
+        ) : (
+          <Box>
+            <Typography variant="subtitle2">{t('empty-wishlist-message')}</Typography>
+            <Box maxWidth="23.5rem">
+              <Link href="/" passHref>
+                <MuiLink href="/" underline="none">
+                  <Button
+                    variant="contained"
+                    color="primary"
+                    sx={{ width: '100%', marginTop: '3.063rem' }}
+                  >
+                    {t('shop-now')}
+                  </Button>
+                </MuiLink>
+              </Link>
+            </Box>
+          </Box>
+        )}
+      </>
     </Grid>
   )
 }
