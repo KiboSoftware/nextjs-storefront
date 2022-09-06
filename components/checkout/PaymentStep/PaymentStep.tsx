@@ -331,8 +331,9 @@ const PaymentStep = (props: PaymentStepProps) => {
 
   const handleTokenization = async (card: CardForm) => {
     const { publicRuntimeConfig } = getConfig()
-    const pciHost = publicRuntimeConfig?.pciHost
-    const apiHost = publicRuntimeConfig?.apiHost as string
+    console.log('publicRuntimeConfig,', publicRuntimeConfig)
+    const pciHost = 'payments-sb.mozu.com'
+    const apiHost = 'http://t26507-s41315.sandbox.mozu.com/'
     const tokenizedCardResponse: TokenizedCard = await tokenizeCreditCardPayment(
       card,
       pciHost,
