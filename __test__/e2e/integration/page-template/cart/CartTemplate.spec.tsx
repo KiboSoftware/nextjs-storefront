@@ -158,6 +158,10 @@ describe('[components] CartTemplate integration', () => {
       jest.clearAllMocks()
       cleanup()
     })
+    beforeEach(() => {
+      jest.clearAllMocks()
+      cleanup()
+    })
 
     it('should apply a coupon when click apply button', async () => {
       server.use(
@@ -166,19 +170,21 @@ describe('[components] CartTemplate integration', () => {
         })
       )
       const { user } = setup()
-      const promoCode = '10OFF'
-      const PromoCodeInput = screen.getByPlaceholderText('promo-code')
+      await waitFor(async () => {
+        const promoCode = '10OFF'
+        const PromoCodeInput = screen.getByPlaceholderText('promo-code')
 
-      const PromoCodeApply = screen.getByRole('button', {
-        name: /apply/i,
+        const PromoCodeApply = screen.getByRole('button', {
+          name: /apply/i,
+        })
+
+        await user.type(PromoCodeInput, promoCode)
+
+        await user.click(PromoCodeApply)
+
+        const appliedPromoCode = screen.getByText(promoCode)
+        expect(appliedPromoCode).toBeVisible()
       })
-
-      await user.type(PromoCodeInput, promoCode)
-
-      await user.click(PromoCodeApply)
-
-      const appliedPromoCode = screen.getByText(promoCode)
-      expect(appliedPromoCode).toBeVisible()
     })
 
     it('should remove a coupon when click cross icon', async () => {
@@ -192,10 +198,12 @@ describe('[components] CartTemplate integration', () => {
       )
 
       const { user } = setup()
-      const removeIcon = screen.getAllByLabelText('remove-promo-code')
-      await user.click(removeIcon[0])
-      const removedPromoCode = screen.queryByText(promoCode)
-      expect(removedPromoCode).not.toBeInTheDocument()
+      await waitFor(async () => {
+        const removeIcon = screen.getAllByLabelText('remove-promo-code')
+        await user.click(removeIcon[0])
+        const removedPromoCode = screen.queryByText(promoCode)
+        expect(removedPromoCode).not.toBeInTheDocument()
+      })
     })
     it('should show error message when applied an invalid coupon', async () => {
       const newCartCoupon = { ...cartCouponMock.updateCartCoupon }
@@ -214,20 +222,22 @@ describe('[components] CartTemplate integration', () => {
         })
       )
       const { user } = setup()
-      const promoCode = '11OFF'
-      const PromoCodeInput = screen.getByPlaceholderText('promo-code')
+      await waitFor(async () => {
+        const promoCode = '11OFF'
+        const PromoCodeInput = screen.getByPlaceholderText('promo-code')
 
-      const PromoCodeApply = screen.getByRole('button', {
-        name: /apply/i,
-      })
+        const PromoCodeApply = screen.getByRole('button', {
+          name: /apply/i,
+        })
 
-      await user.type(PromoCodeInput, promoCode)
+        await user.type(PromoCodeInput, promoCode)
 
-      await user.click(PromoCodeApply)
+        await user.click(PromoCodeApply)
 
-      await waitFor(() => {
-        const errorMessage = screen.getByText('Invalid coupon code')
-        expect(errorMessage).toBeVisible()
+        await waitFor(() => {
+          const errorMessage = screen.getByText('Invalid coupon code')
+          expect(errorMessage).toBeVisible()
+        })
       })
     })
   })

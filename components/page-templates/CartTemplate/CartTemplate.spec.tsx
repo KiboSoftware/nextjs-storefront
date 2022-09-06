@@ -1,11 +1,15 @@
 import React, { ReactNode } from 'react'
 
 import { composeStories } from '@storybook/testing-react'
-import { render, screen } from '@testing-library/react'
+import { screen, waitFor } from '@testing-library/react'
+import userEvent from '@testing-library/user-event'
+import { RouterContext } from 'next/dist/shared/lib/router-context'
 
+import { CartTemplateProps } from './CartTemplate'
 import * as stories from './CartTemplate.stories'
 import { locationCollectionMock } from '@/__mocks__/stories/locationCollectionMock'
-
+import { createMockRouter, renderWithQueryClient } from '@/__test__/utils'
+import { ModalContextProvider, DialogRoot } from '@/context'
 const CartItemListMock = ({ children }: { children: ReactNode }) => (
   <div data-testid="cart-item-list-mock">{children}</div>
 )
@@ -14,29 +18,27 @@ const OrderSummaryMock = () => <div data-testid="order-summary-mock" />
 jest.mock('../../cart/CartItemList/CartItemList', () => CartItemListMock)
 jest.mock('../../common/OrderSummary/OrderSummary', () => OrderSummaryMock)
 
-const mockLocationsResponse = locationCollectionMock.spLocations
-jest.mock('@/hooks', () => ({
-  useCheckout: jest.fn(() => ({})),
-  useCreateFromCartMutation: jest.fn(() => ({})),
-  useCartQueries: jest.fn(() => ({})),
-  useUpdateCheckout: jest.fn(() => ({})),
-  useStoreLocations: jest.fn(() => ({ mockLocationsResponse })),
-  usePurchaseLocation: jest.fn(() => ({})),
-  useCartMutationUpdateCartItemQuantity: jest.fn(() => ({})),
-  useCartMutationUpdateCartItem: jest.fn(() => ({})),
-  useCartMutationRemoveCartItem: jest.fn(() => ({})),
-  useUpdateCartCouponMutation: jest.fn(() => ({})),
-  useDeleteCartCouponMutation: jest.fn(() => ({})),
-}))
-
 const { Common } = composeStories(stories)
+const setup = (params?: CartTemplateProps) => {
+  const user = userEvent.setup()
+  const router = createMockRouter()
+  const props = params ? params : Common.args
 
-describe('[components] CartTemplate', () => {
-  const setup = () => {
-    render(<Common {...Common.args} />)
+  renderWithQueryClient(
+    <RouterContext.Provider value={router}>
+      <ModalContextProvider>
+        <DialogRoot />
+        <Common {...props} />
+      </ModalContextProvider>
+    </RouterContext.Provider>
+  )
+  return {
+    user,
+    router,
   }
-
-  it('should render component', () => {
+}
+describe('[components] CartTemplate', () => {
+  it('should render component', async () => {
     setup()
     const cartTitle = screen.getByText(/cart:shopping-cart/i)
     const cartItemCount = screen.getByText(/cart:cart-item-count/i)
@@ -47,5 +49,22 @@ describe('[components] CartTemplate', () => {
     expect(cartItemCount).toBeVisible()
     expect(cartItemList).toBeVisible()
     expect(orderSummary).toBeVisible()
+  })
+
+  it('should render empty cart when no items present in cart', async () => {
+    const cartParams = { ...Common.args }
+    if (cartParams.cart) cartParams.cart.items = []
+
+    const { user, router } = setup(cartParams as CartTemplateProps)
+    await waitFor(async () => {
+      const emptyCartSubTitle = screen.getByText(/cart:empty-cart-message/i)
+
+      expect(emptyCartSubTitle).toBeVisible()
+    })
+    const shopNowButton = screen.getByText(/common:shop-now/i)
+    await user.click(shopNowButton)
+    await waitFor(() => {
+      expect(router.route).toBe('/')
+    })
   })
 })
