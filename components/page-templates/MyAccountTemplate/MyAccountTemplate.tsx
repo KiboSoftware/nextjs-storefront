@@ -82,7 +82,7 @@ const MyAccountTemplate = () => {
   const router = useRouter()
   const theme = useTheme()
   const mdScreen = useMediaQuery(theme.breakpoints.up('md'))
-  const { user } = useAuthContext()
+  const { user, logout } = useAuthContext()
 
   const { data: cards } = useCustomerCards(user?.id as number)
   const { data: contacts } = useCustomerContacts(user?.id as number)
@@ -174,7 +174,7 @@ const MyAccountTemplate = () => {
           <ChevronRightIcon />
         </Box>
         <Divider sx={{ backgroundColor: 'grey.300', ...style.divider }} />
-        <Box sx={{ ...style.myAccountChildren, cursor: 'pointer' }}>
+        <Box sx={{ ...style.myAccountChildren, cursor: 'pointer' }} onClick={logout}>
           <Typography variant="h3">{t('common:logout')}</Typography>
         </Box>
         <Divider sx={{ borderColor: 'grey.500' }} />
