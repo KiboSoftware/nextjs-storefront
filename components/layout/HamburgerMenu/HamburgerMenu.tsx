@@ -9,7 +9,6 @@ import {
   Link as MuiLink,
 } from '@mui/material'
 import { useTranslation } from 'next-i18next'
-import Link from 'next/link'
 import { useRouter } from 'next/router'
 
 import HeaderAction from '@/components/common/HeaderAction/HeaderAction'
@@ -41,7 +40,6 @@ const styles = {
     overflowY: 'auto',
     width: '100%',
     flex: 1,
-    pt: 2,
   },
   spacer: {
     backgroundColor: 'grey.300',
@@ -77,6 +75,11 @@ const HamburgerMenu = (props: HamburgerMenuProps) => {
     router.push('/category/' + categoryCode)
   }
 
+  const handleNavLinks = (link: string) => {
+    toggleDrawer(false)
+    router.push(link)
+  }
+
   return (
     <SwipeableDrawer
       anchor={'left'}
@@ -107,16 +110,16 @@ const HamburgerMenu = (props: HamburgerMenuProps) => {
         </Box>
         <Box sx={{ ...styles.spacer }}></Box>
         <List sx={{ ...styles.navLinksList }}>
-          {navLinks?.length}
           {navLinks?.map((nav) => (
             <Box key={nav.text}>
-              <Link href={nav.link} passHref>
-                <MuiLink underline="none">
-                  <ListItem button sx={{ paddingInline: 4 }}>
-                    <ListItemText primary={nav.text} />
-                  </ListItem>
-                </MuiLink>
-              </Link>
+              <MuiLink underline="none">
+                <ListItem button sx={{ paddingInline: 4 }}>
+                  <ListItemText
+                    primary={t(`${nav.text}`)}
+                    onClick={() => handleNavLinks(nav.link)}
+                  />
+                </ListItem>
+              </MuiLink>
               <Divider />
             </Box>
           ))}

@@ -52,7 +52,7 @@ describe('[component] CategroyNestedNavigation component', () => {
     // Getting all the visible categories
     const allVisibleCategories = Common.args.categoryTree.filter((cat) => cat.isDisplayed)
 
-    await user.click(screen.getByText(/Camping/i))
+    await user.click(screen.getAllByTestId('ArrowForwardIcon')[0])
 
     expect(screen.getByText(/Tents/i)).toBeVisible()
 

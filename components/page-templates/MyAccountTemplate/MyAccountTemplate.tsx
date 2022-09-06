@@ -116,7 +116,7 @@ const MyAccountTemplate = () => {
     <Grid container>
       <Grid item md={8} xs={12}>
         {!mdScreen && (
-          <Link aria-label={t('common:back')} sx={{ ...style.backButton }}>
+          <Link aria-label={t('common:back')} sx={{ ...style.backButton }} href="/">
             <ChevronLeft />
             {t('common:back')}
           </Link>

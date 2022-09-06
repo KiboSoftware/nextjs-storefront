@@ -12,6 +12,7 @@ import {
   ListSubheader,
   Slide,
   Theme,
+  Typography,
 } from '@mui/material'
 import { useTranslation } from 'next-i18next'
 
@@ -86,8 +87,13 @@ const CategoryNestedNavigation = (props: CategoryNestedNavigationProps) => {
     if (previousCategory === undefined) onCloseMenu(false)
     if (previousCategory) {
       setActiveCategory(previousCategory?.childrenCategories as PrCategory[])
+      const parentCategory: Maybe<PrCategory | undefined | null> = findParentNode(
+        categoryTree,
+        previousCategory?.categoryCode
+      )
+
       setSubHeader({
-        backLink: subHeader.label,
+        backLink: parentCategory ? (parentCategory?.content?.name as string) : t('all-departments'),
         label: previousCategory?.content?.name as string,
         categoryCode: previousCategory?.categoryCode as string,
       })
@@ -100,7 +106,7 @@ const CategoryNestedNavigation = (props: CategoryNestedNavigationProps) => {
       aria-labelledby="category-nested-list"
       role="list"
       subheader={
-        <Box display="flex" alignItems="center" pl={4} pr={2} py={1}>
+        <Box display="flex" alignItems="center" pl={4} pr={2} pt={2}>
           <IconButton size="small" aria-label="back-arrow-button" onClick={handleBackClick}>
             <ArrowBackIos sx={{ ...styles.smallIcon }} />
           </IconButton>
@@ -124,7 +130,10 @@ const CategoryNestedNavigation = (props: CategoryNestedNavigationProps) => {
         </ListItemButton>
       )}
       <ListItem sx={{ paddingInline: 4 }}>
-        <ListItemText primary={subHeader.label} sx={{ ...styles.listHeader }} />
+        <ListItemText
+          primary={<Typography fontWeight="bold">{subHeader.label}</Typography>}
+          sx={{ ...styles.listHeader }}
+        />
       </ListItem>
       <Divider />
       {activeCategory?.map((category: Maybe<PrCategory>) => {
@@ -136,12 +145,15 @@ const CategoryNestedNavigation = (props: CategoryNestedNavigationProps) => {
             appear={true}
           >
             <Box>
-              <ListItemButton
-                onClick={() => handleCatgeoryClick(category)}
-                sx={{ paddingInline: 4 }}
-              >
-                <ListItemText primary={category?.content?.name} sx={{ ...styles.listContent }} />
-                {category?.childrenCategories?.length ? <ArrowForward fontSize="small" /> : null}
+              <ListItemButton sx={{ paddingInline: 4 }}>
+                <ListItemText
+                  primary={category?.content?.name}
+                  sx={{ ...styles.listContent }}
+                  onClick={() => onCategoryClick(category?.categoryCode || '')}
+                />
+                {category?.childrenCategories?.length ? (
+                  <ArrowForward fontSize="small" onClick={() => handleCatgeoryClick(category)} />
+                ) : null}
               </ListItemButton>
               <Divider />
             </Box>

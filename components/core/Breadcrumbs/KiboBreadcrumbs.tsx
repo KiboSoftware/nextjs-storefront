@@ -18,7 +18,7 @@ export default function KiboBreadcrumbs({
 }: BreadcrumbsProps) {
   return (
     <div role="presentation">
-      <Breadcrumbs aria-label="breadcrumb" separator={separator} {...rest}>
+      <Breadcrumbs separator={separator} {...rest}>
         {breadcrumbs?.map((item: BreadCrumbType, index) => {
           return (
             <Link href={item.link as string} key={index} passHref>

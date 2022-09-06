@@ -346,8 +346,10 @@ export default function KiboHeader(props: KiboHeaderProps) {
     setAuthError('')
     if (!isAuthenticated) {
       showModal({ Component: LoginDialog })
+      handleHamburgerMenu(false)
     } else {
       router.push('/my-account')
+      handleHamburgerMenu(false)
     }
   }
 
