@@ -6,11 +6,8 @@ import FavoriteRoundedIcon from '@mui/icons-material/FavoriteRounded'
 import { Box, Grid, Rating, Button, Typography, Divider, Link } from '@mui/material'
 import { useTranslation } from 'next-i18next'
 
-import FulfillmentOptions from '@/components/common/FulfillmentOptions/FulfillmentOptions'
-import Price from '@/components/common/Price/Price'
-import QuantitySelector from '@/components/common/QuantitySelector/QuantitySelector'
-import KiboBreadcrumbs from '@/components/core/Breadcrumbs/KiboBreadcrumbs'
-import ImageGallery from '@/components/core/ImageGallery/ImageGallery'
+import { FulfillmentOptions, Price, QuantitySelector } from '@/components/common'
+import { KiboBreadcrumbs, ImageGallery } from '@/components/core'
 import { AddToCartDialog, StoreLocatorDialog } from '@/components/dialogs'
 import CmsComponent from '@/components/home/CmsComponent/CmsComponent'
 import {
@@ -30,7 +27,7 @@ import {
   useProductLocationInventory,
 } from '@/hooks'
 import { FulfillmentOptions as FulfillmentOptionsConstant } from '@/lib/constants'
-import { productGetters } from '@/lib/getters'
+import { productGetters, wishlistGetters } from '@/lib/getters'
 import type { ProductCustom, BreadCrumb, PriceRange, LocationCustom } from '@/lib/types'
 
 import type {
@@ -194,6 +191,8 @@ const ProductDetailTemplate = (props: ProductDetailTemplateProps) => {
 
   const handleWishList = async () => {
     try {
+      if (!wishlistGetters.isAvailableToAddToWishlist(currentProduct)) return
+
       const addOrRemoveWishlistItemParams = {
         productCode,
         variationProductCode,
@@ -359,6 +358,9 @@ const ProductDetailTemplate = (props: ProductDetailTemplateProps) => {
                 fullWidth
                 onClick={handleWishList}
                 sx={{ padding: '0.375rem 0.5rem' }}
+                {...(!wishlistGetters.isAvailableToAddToWishlist(currentProduct) && {
+                  disabled: true,
+                })}
               >
                 {isProductInWishlist ? (
                   <FavoriteRoundedIcon sx={{ color: 'red.900', marginRight: '14px' }} />

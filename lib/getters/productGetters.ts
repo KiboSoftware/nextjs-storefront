@@ -158,6 +158,9 @@ const getIsPackagedStandAlone = (product: ProductCustom): boolean => {
   return product?.isPackagedStandAlone || true
 }
 
+const isVariationProduct = (product: Product): boolean =>
+  Boolean(product?.options?.filter((option) => option?.isRequired === true).length)
+
 const getProductDetails = (product: ProductCustom) => {
   const productOptions = getSegregatedOptions(product)
 
@@ -276,6 +279,7 @@ export const productGetters = {
   getProductFulfillmentOptions,
   getIsPackagedStandAlone,
   getAvailableItemCount,
+  isVariationProduct,
   // grouped
   getProductDetails,
 }
