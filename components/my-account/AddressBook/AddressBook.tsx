@@ -30,7 +30,6 @@ import type { Address, ContactForm, DeleteAddressParams } from '@/lib/types'
 
 import type { UpdateCustomerAccountContactDetailsParams } from '@/hooks'
 import type {
-  CrAddress,
   CuAddress,
   CustomerAccount,
   CustomerContact,
