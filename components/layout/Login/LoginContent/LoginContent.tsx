@@ -156,7 +156,6 @@ const LoginContent = (props: LoginContentProps) => {
             variant="contained"
             color="primary"
             sx={{ fontSize: '18px' }}
-            onClick={handleSubmit(handleLogin)}
             disabled={!isValid}
             type="submit"
             form="loginForm"
