@@ -1,6 +1,6 @@
 import getConfig from 'next/config'
 
-import { UserAuthTicket } from '@kibocommerce/graphql-client'
+import type { UserAuthTicket } from '@kibocommerce/graphql-client'
 
 const { publicRuntimeConfig } = getConfig()
 const apiHost = publicRuntimeConfig.apiHost || process.env.KIBO_API_HOST
