@@ -331,6 +331,10 @@ const PaymentStep = (props: PaymentStepProps) => {
 
   const handleTokenization = async (card: CardForm) => {
     const { publicRuntimeConfig } = getConfig()
+    
+    console.log(`NEXT_PUBLIC_PCI_HOST: ${ publicRuntimeConfig?.pciHost}`)
+    console.log(`NEXT_PUBLIC_API_HOST: ${ publicRuntimeConfig?.apiHost}`)
+
     const pciHost = publicRuntimeConfig?.pciHost
     const apiHost = publicRuntimeConfig?.apiHost as string
     const tokenizedCardResponse: TokenizedCard = await tokenizeCreditCardPayment(
