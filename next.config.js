@@ -71,8 +71,8 @@ module.exports = {
     },
     storeLocationCookie: LOCATION_COOKIE,
     defaultWishlistName: DEFAULT_WISHLIST_NAME,
-    pciHost: process.env.NEXT_PUBLIC_KIBO_PCI_HOST,
-    apiHost: process.env.NEXT_PUBLIC_KIBO_API_HOST,
+    pciHost: process.env.KIBO_PCI_HOST,
+    apiHost: process.env.KIBO_API_HOST,
     contentStack: {
       CONTENTSTACK_API_KEY: process.env.NEXT_PUBLIC_CONTENTSTACK_API_KEY,
       CONTENTSTACK_DELIVERY_TOKEN: process.env.CONTENTSTACK_DELIVERY_TOKEN,
