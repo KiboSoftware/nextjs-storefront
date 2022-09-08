@@ -10,7 +10,7 @@ import { ModalContextProvider } from '@/context/ModalContext'
 
 const { Common } = composeStories(stories)
 
-const LoginContentMock = () => <input data-testid="kibo-login-cotent" />
+const LoginContentMock = () => <input data-testid="kibo-login-content" />
 jest.mock('../LoginContent/LoginContent', () => LoginContentMock)
 
 const renderComponent = () => {
@@ -30,7 +30,7 @@ describe('[components] (LoginDialog)', () => {
     const { user } = setup()
     const title = screen.getByText('log-in')
     const closeIcon = screen.getByRole('button', { name: 'close' })
-    const loginContent = screen.getByTestId('kibo-login-cotent')
+    const loginContent = screen.getByTestId('kibo-login-content')
 
     expect(title).toBeVisible()
     expect(closeIcon).toBeVisible()

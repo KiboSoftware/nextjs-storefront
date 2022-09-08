@@ -96,7 +96,7 @@ const LoginContent = (props: LoginContentProps) => {
   return (
     <Box
       sx={{ ...styles.contentBox }}
-      data-testid="kibo-login-cotent"
+      data-testid="kibo-login-content"
       component="form"
       onSubmit={handleSubmit(handleLogin)}
       id="loginForm"
