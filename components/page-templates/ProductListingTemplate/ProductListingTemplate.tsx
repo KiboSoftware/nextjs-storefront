@@ -10,10 +10,10 @@ import KiboBreadcrumbs from '@/components/core/Breadcrumbs/KiboBreadcrumbs'
 import { ProductCard } from '@/components/product'
 import { CategoryFacet, CategoryFilterByMobile, FacetList } from '@/components/product-listing'
 import { CategoryFacetData } from '@/components/product-listing/CategoryFacet/CategoryFacet'
-import { useUpdateRoutes } from '@/hooks'
+import { useUpdateRoutes, useWishlist } from '@/hooks'
 import { productGetters } from '@/lib/getters'
-import { uiHelpers } from '@/lib/helpers'
-import type { BreadCrumb as BreadCrumbType } from '@/lib/types'
+import { buildAddOrRemoveWishlistItem, uiHelpers } from '@/lib/helpers'
+import type { BreadCrumb as BreadCrumbType, ProductCustom } from '@/lib/types'
 
 import type { Facet as FacetType, FacetValue, Product } from '@/lib/gql/types'
 
@@ -189,6 +189,8 @@ const ProductListingTemplate = (props: ProductListingTemplateProps) => {
   } = props
   const { getProductLink } = uiHelpers()
   const { updateRoute } = useUpdateRoutes()
+  const { addOrRemoveWishlistItem, checkProductInWishlist } = useWishlist()
+
   const [showFilterBy, setFilterBy] = useState<boolean>(false)
 
   const { t } = useTranslation(['product', 'common'])
@@ -201,6 +203,15 @@ const ProductListingTemplate = (props: ProductListingTemplateProps) => {
 
   const handleSelectedTileRemoval = (selectedTile: string) => {
     updateRoute(selectedTile)
+  }
+
+  const handleWishList = async (product: ProductCustom) => {
+    try {
+      const addOrRemoveWishlistItemParams = buildAddOrRemoveWishlistItem(product)
+      await addOrRemoveWishlistItem(addOrRemoveWishlistItemParams)
+    } catch (error) {
+      console.log('Error: add or remove wishlist item from PLP', error)
+    }
   }
 
   return (
@@ -351,6 +362,12 @@ const ProductListingTemplate = (props: ProductListingTemplateProps) => {
                           })}
                           title={productGetters.getName(product) as string}
                           rating={productGetters.getRating(product)}
+                          isInWishlist={checkProductInWishlist({
+                            productCode: product?.productCode as string,
+                            variationProductCode: product?.variationProductCode as string,
+                          })}
+                          isShowWishlistIcon={!productGetters.isVariationProduct(product)}
+                          onAddOrRemoveWishlistItem={() => handleWishList(product as ProductCustom)}
                         />
                       </Grid>
                     )

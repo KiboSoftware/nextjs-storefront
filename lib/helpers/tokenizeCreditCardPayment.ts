@@ -7,7 +7,7 @@ export const tokenizeCreditCardPayment = async (
 ) => {
   try {
     const url = `https://${pciHost}/payments/commerce/payments/cards/`
-    const tenantId = apiHost.split('//')[1].split('-')[0].split('t')[1].toString()
+    const tenantId = apiHost.split('-')[0].split('t')[1].toString()
     const { cardNumber, cardType, cvv } = creditCardData
     const ccData = { cardNumber, cardType, cvv, persistCard: true }
 

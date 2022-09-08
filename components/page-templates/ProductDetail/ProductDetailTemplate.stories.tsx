@@ -2,9 +2,8 @@ import React from 'react'
 
 import { ComponentStory, ComponentMeta } from '@storybook/react'
 
-import { ProductCustomMock } from '../../../__mocks__/stories/ProductCustomMock'
 import ProductDetailTemplate from './ProductDetailTemplate'
-import { cmsProductDetailMock } from '@/__mocks__/stories/cmsProductDetailMock'
+import { cmsProductDetailMock, ProductCustomMock } from '@/__mocks__/stories'
 
 export default {
   title: 'Page Templates/Product Detail',
