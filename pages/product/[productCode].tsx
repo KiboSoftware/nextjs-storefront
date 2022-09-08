@@ -42,7 +42,7 @@ export async function getStaticPaths() {
   } as CategorySearchParams)
   const { items } = searchResponse?.data?.products
   const paths: string[] = []
-  items.length &&
+  items?.length &&
     items?.map((item: { productCode: string }) => paths.push(`/product/${item.productCode}`))
   return { paths, fallback: true }
 }
