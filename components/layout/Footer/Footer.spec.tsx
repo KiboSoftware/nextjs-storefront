@@ -20,35 +20,17 @@ const setup = () => {
 describe('[component] Footer component', () => {
   it('should render component', () => {
     setup()
+    const headings = Common?.args?.sections?.map((section: any) => section.title)
+    headings.push('social')
+    const links = [] as any
+    Common?.args?.sections?.map((section: any) =>
+      section.items.map((item: any) => links.push(item.text))
+    )
 
-    const aboutUs = screen.getByRole('heading', { name: /about us/i })
-    const departments = screen.getByRole('heading', { name: /departments/i })
-    const contact = screen.getByRole('heading', { name: /contact/i })
-    const paymentAndDelivery = screen.getByRole('heading', { name: /payment & delivery/i })
-    const social = screen.getByRole('heading', { name: /social/i })
+    const headingRoles = screen.getAllByRole('heading').map((a) => a.textContent)
+    const linkRoles = screen.getAllByRole('link').map((a) => a.textContent)
 
-    const whoWeAre = screen.getByRole('link', { name: /who we are/i })
-    const quality = screen.getByRole('link', { name: /Quality in the detail/i })
-    const customerReviews = screen.getByRole('link', { name: /Customer Reviews/i })
-    const mens = screen.getByRole('link', { name: 'Mens' })
-    const womens = screen.getByRole('link', { name: 'Womens' })
-    const kids = screen.getByRole('link', { name: /kids/i })
-    const contactUs = screen.getByRole('link', { name: /contact us/i })
-    const purchaseTerms = screen.getByRole('link', { name: /Purchase terms/i })
-
-    expect(aboutUs).toBeVisible()
-    expect(departments).toBeVisible()
-    expect(contact).toBeVisible()
-    expect(paymentAndDelivery).toBeVisible()
-    expect(social).toBeVisible()
-
-    expect(whoWeAre).toBeVisible()
-    expect(quality).toBeVisible()
-    expect(customerReviews).toBeVisible()
-    expect(mens).toBeVisible()
-    expect(womens).toBeVisible()
-    expect(kids).toBeVisible()
-    expect(contactUs).toBeVisible()
-    expect(purchaseTerms).toBeVisible()
+    expect(headingRoles).toEqual(headings)
+    expect(linkRoles).toEqual(links)
   })
 })
