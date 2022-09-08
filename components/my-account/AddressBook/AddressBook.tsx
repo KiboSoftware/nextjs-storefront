@@ -30,7 +30,6 @@ import type { Address, ContactForm, DeleteAddressParams } from '@/lib/types'
 
 import type { UpdateCustomerAccountContactDetailsParams } from '@/hooks'
 import type {
-  CrAddress,
   CuAddress,
   CustomerAccount,
   CustomerContact,
@@ -58,9 +57,12 @@ const styles = {
     },
   },
 }
-const buildAddressProps = (address: CuAddress | CrAddress) => {
-  const { address1, address2, cityOrTown, stateOrProvince, postalOrZipCode } = address
+const buildAddressProps = (customerContact: CustomerContact) => {
+  const { firstName, lastNameOrSurname, address } = customerContact
+  const { address1, address2, cityOrTown, stateOrProvince, postalOrZipCode } = address as CuAddress
   return {
+    firstName: firstName as string,
+    lastNameOrSurname: lastNameOrSurname as string,
     address1,
     address2,
     cityOrTown,
@@ -85,7 +87,7 @@ const AccountAddress = (props: AccountAddressProps) => {
         </Stack>
       )}
       <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
-        <AddressCard {...buildAddressProps(customerContact?.address as CuAddress)} />
+        <AddressCard {...buildAddressProps(customerContact)} />
         <Stack>
           <Typography
             variant="body2"
