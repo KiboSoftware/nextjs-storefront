@@ -9,11 +9,11 @@ import {
   Link as MuiLink,
 } from '@mui/material'
 import { useTranslation } from 'next-i18next'
-import Link from 'next/link'
 import { useRouter } from 'next/router'
 
 import HeaderAction from '@/components/common/HeaderAction/HeaderAction'
 import { CategoryNestedNavigation } from '@/components/layout'
+import { useAuthContext } from '@/context'
 import type { NavigationLink } from '@/lib/types'
 
 import type { Maybe, PrCategory } from '@/lib/gql/types'
@@ -40,7 +40,6 @@ const styles = {
     overflowY: 'auto',
     width: '100%',
     flex: 1,
-    pt: 2,
   },
   spacer: {
     backgroundColor: 'grey.300',
@@ -64,6 +63,7 @@ const HamburgerMenu = (props: HamburgerMenuProps) => {
     openLoginModal,
   } = props
   const { t } = useTranslation('common')
+  const { isAuthenticated, user } = useAuthContext()
   const router = useRouter()
 
   const toggleDrawer = (open: boolean) => {
@@ -73,6 +73,11 @@ const HamburgerMenu = (props: HamburgerMenuProps) => {
   const handleCategoryClick = (categoryCode: string) => {
     toggleDrawer(false)
     router.push('/category/' + categoryCode)
+  }
+
+  const handleNavLinks = (link: string) => {
+    toggleDrawer(false)
+    router.push(link)
   }
 
   return (
@@ -92,8 +97,8 @@ const HamburgerMenu = (props: HamburgerMenuProps) => {
           >
             <Box width="100%">
               <HeaderAction
-                title={t('my-account')}
-                subtitle={t('log-in')}
+                title={isAuthenticated ? `${t('hi')}, ${user?.firstName}` : t('my-account')}
+                subtitle={isAuthenticated ? t('go-to-my-account') : t('log-in')}
                 icon={AccountCircle}
                 mobileIconColor="black"
                 iconFontSize="large"
@@ -105,16 +110,16 @@ const HamburgerMenu = (props: HamburgerMenuProps) => {
         </Box>
         <Box sx={{ ...styles.spacer }}></Box>
         <List sx={{ ...styles.navLinksList }}>
-          {navLinks?.length}
           {navLinks?.map((nav) => (
             <Box key={nav.text}>
-              <Link href={nav.link} passHref>
-                <MuiLink underline="none">
-                  <ListItem button sx={{ paddingInline: 4 }}>
-                    <ListItemText primary={nav.text} />
-                  </ListItem>
-                </MuiLink>
-              </Link>
+              <MuiLink underline="none">
+                <ListItem button sx={{ paddingInline: 4 }}>
+                  <ListItemText
+                    primary={t(`${nav.text}`)}
+                    onClick={() => handleNavLinks(nav.link)}
+                  />
+                </ListItem>
+              </MuiLink>
               <Divider />
             </Box>
           ))}
