@@ -95,7 +95,7 @@ describe('[components] (LoginContent)', () => {
       expect(onLoginMock).toHaveBeenCalledWith({
         formData: {
           email: 'example@example.com',
-          password: 'abc',
+          password: ' ',
         },
         isRememberMe: false,
       })
@@ -126,7 +126,7 @@ const loginInputs = async (user: UserEvent) => {
   const passwordInput = screen.getByLabelText('password')
 
   await user.type(emailInput, 'example@example.com')
-  await user.type(passwordInput, 'abc')
+  await user.type(passwordInput, ' ')
 
   await user.tab()
 }
