@@ -22,15 +22,17 @@ describe('[component] Footer component', () => {
     setup()
     const headings = Common?.args?.sections?.map((section: any) => section.title)
     headings.push('social')
-    const links = [] as any
-    Common?.args?.sections?.map((section: any) =>
-      section.items.map((item: any) => links.push(item.text))
-    )
 
-    const headingRoles = screen.getAllByRole('heading').map((a) => a.textContent)
-    const linkRoles = screen.getAllByRole('link').map((a) => a.textContent)
+    const links = Common?.args?.sections
+      ?.map((section: any) => section.items.map((item: any) => item.text))
+      .flat()
 
-    expect(headingRoles).toEqual(headings)
-    expect(linkRoles).toEqual(links)
+    headings.map((heading: any) => {
+      expect(screen.getByText(heading)).toBeVisible()
+    })
+
+    links.map((link: any) => {
+      expect(screen.getByText(link)).toBeVisible()
+    })
   })
 })
