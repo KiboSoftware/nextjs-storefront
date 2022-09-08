@@ -46,7 +46,7 @@ describe('[components] (LoginContent)', () => {
     expect(forgotPasswordLink).toBeVisible()
   })
 
-  it('should show entered email input ', async () => {
+  it('should show user entered email', async () => {
     const { user } = setup()
 
     const emailInput = screen.getByRole('textbox', { name: 'email' })
@@ -56,7 +56,7 @@ describe('[components] (LoginContent)', () => {
     await waitFor(() => expect(emailInput).toHaveValue(email))
   })
 
-  it('should show entered password input', async () => {
+  it('should show user entered password', async () => {
     const { user } = setup()
     const passwordInput = screen.getByLabelText('password')
     await user.type(passwordInput, 'abc')
@@ -65,7 +65,7 @@ describe('[components] (LoginContent)', () => {
     await waitFor(() => expect(passwordInput).toHaveValue('abc'))
   })
 
-  it('should disable login button when user enters invalid inputs ', async () => {
+  it('should keep login button disable when user enters invalid credentials', async () => {
     const { user } = setup()
 
     const emailInput = screen.getByRole('textbox', { name: 'email' })
@@ -81,7 +81,7 @@ describe('[components] (LoginContent)', () => {
     await waitFor(() => expect(loginButton).toBeDisabled())
   })
 
-  it('should enable login button when user enters valid inputs and  call onLoginMock when user click onLogin ', async () => {
+  it('should enable login button and call onLoginMock when user enters valid credentials and clicks on Login button', async () => {
     const { user } = setup()
 
     // valid inputs
@@ -91,10 +91,18 @@ describe('[components] (LoginContent)', () => {
     await waitFor(() => expect(loginButton).toBeEnabled())
 
     await user.click(loginButton)
-    await waitFor(() => expect(onLoginMock).toHaveBeenCalled())
+    await waitFor(() =>
+      expect(onLoginMock).toHaveBeenCalledWith({
+        formData: {
+          email: 'example@example.com',
+          password: 'abc',
+        },
+        isRememberMe: false,
+      })
+    )
   })
 
-  it('should call onForgotPasswordClickMock when click forgotPasswordLink', async () => {
+  it('should call onForgotPasswordClickMock callback function when user clicks on forgotPasswordLink', async () => {
     const { user } = setup()
     const forgotPasswordLink = screen.getByRole('button', { name: 'common:forgot-password' })
 
@@ -103,7 +111,7 @@ describe('[components] (LoginContent)', () => {
     expect(onForgotPasswordClickMock).toBeCalled()
   })
 
-  it('should login when user entered valid credentials & enter key pressed', async () => {
+  it('should login when user enters valid credentials and press enter key', async () => {
     const { user } = setup()
     await loginInputs(user)
 

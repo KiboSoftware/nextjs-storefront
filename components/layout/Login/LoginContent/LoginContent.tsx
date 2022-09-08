@@ -94,76 +94,80 @@ const LoginContent = (props: LoginContentProps) => {
   }
 
   return (
-    <Box sx={{ ...styles.contentBox }} data-testid="kibo-login-cotent">
-      <Box component="form" onSubmit={handleSubmit(handleLogin)} id="loginForm">
-        <FormControl sx={{ width: '100%' }}>
-          <Controller
-            name="email"
-            control={control}
-            defaultValue={loginInputs?.email}
-            render={({ field }) => (
-              <KiboTextBox
-                name="email"
-                value={field.value}
-                label={t('email')}
-                ref={null}
-                required
-                sx={{ ...styles.formInput }}
-                onBlur={field.onBlur}
-                onChange={(_name, value) => field.onChange(value)}
-                error={!!errors?.email}
-                helperText={errors?.email?.message}
-                autoFocus={true}
-              />
-            )}
-          />
-          <Controller
-            name="password"
-            control={control}
-            defaultValue={loginInputs?.password}
-            render={({ field }) => (
-              <KiboTextBox
-                name="password"
-                value={field.value}
-                label={t('password')}
-                ref={null}
-                required
-                sx={{ ...styles.formInput }}
-                onBlur={field.onBlur}
-                onChange={(_name, value) => {
-                  field.onChange(value)
-                }}
-                error={!!errors?.password}
-                helperText={errors?.password?.message}
-                type={showPassword ? 'text' : 'password'}
-                icon={showPassword ? <Visibility /> : <VisibilityOff />}
-                onIconClick={handleClickShowPassword}
-              />
-            )}
-          />
-          <FormControlLabel
-            sx={{ pb: 2 }}
-            control={<Checkbox onChange={(_, checked) => setIsRememberMe(checked)} />}
-            label={t('common:remember-me')}
-            labelPlacement="end"
-          />
-          {errorMessage && (
-            <Typography color="error" justifyContent="center" display="flex">
-              {errorMessage}
-            </Typography>
+    <Box
+      sx={{ ...styles.contentBox }}
+      data-testid="kibo-login-cotent"
+      component="form"
+      onSubmit={handleSubmit(handleLogin)}
+      id="loginForm"
+    >
+      <FormControl sx={{ width: '100%' }}>
+        <Controller
+          name="email"
+          control={control}
+          defaultValue={loginInputs?.email}
+          render={({ field }) => (
+            <KiboTextBox
+              name="email"
+              value={field.value}
+              label={t('email')}
+              ref={null}
+              required
+              sx={{ ...styles.formInput }}
+              onBlur={field.onBlur}
+              onChange={(_name, value) => field.onChange(value)}
+              error={!!errors?.email}
+              helperText={errors?.email?.message}
+              autoFocus={true}
+            />
           )}
-          <Button
-            variant="contained"
-            color="primary"
-            sx={{ fontSize: '18px' }}
-            disabled={!isValid}
-            type="submit"
-            form="loginForm"
-          >
-            {t('common:log-in')}
-          </Button>
-        </FormControl>
-      </Box>
+        />
+        <Controller
+          name="password"
+          control={control}
+          defaultValue={loginInputs?.password}
+          render={({ field }) => (
+            <KiboTextBox
+              name="password"
+              value={field.value}
+              label={t('password')}
+              ref={null}
+              required
+              sx={{ ...styles.formInput }}
+              onBlur={field.onBlur}
+              onChange={(_name, value) => {
+                field.onChange(value)
+              }}
+              error={!!errors?.password}
+              helperText={errors?.password?.message}
+              type={showPassword ? 'text' : 'password'}
+              icon={showPassword ? <Visibility /> : <VisibilityOff />}
+              onIconClick={handleClickShowPassword}
+            />
+          )}
+        />
+        <FormControlLabel
+          sx={{ pb: 2 }}
+          control={<Checkbox onChange={(_, checked) => setIsRememberMe(checked)} />}
+          label={t('common:remember-me')}
+          labelPlacement="end"
+        />
+        {errorMessage && (
+          <Typography color="error" justifyContent="center" display="flex">
+            {errorMessage}
+          </Typography>
+        )}
+        <Button
+          variant="contained"
+          color="primary"
+          sx={{ fontSize: '18px' }}
+          disabled={!isValid}
+          type="submit"
+          form="loginForm"
+        >
+          {t('common:log-in')}
+        </Button>
+      </FormControl>
       <Box pt={2} display="flex" justifyContent="center">
         <Link
           component="button"
