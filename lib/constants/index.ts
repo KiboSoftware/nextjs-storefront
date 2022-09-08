@@ -9,6 +9,10 @@ export enum FulfillmentOptions {
   PICKUP = 'Pickup',
 }
 
+export enum PaymentWorkflow {
+  MOZU = 'Mozu',
+}
+
 export enum PaymentType {
   CREDITCARD = 'CreditCard',
 }

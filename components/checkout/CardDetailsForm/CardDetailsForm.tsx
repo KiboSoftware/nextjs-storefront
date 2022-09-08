@@ -85,7 +85,7 @@ const CardDetailsForm = (props: CardDetailsFormProps) => {
   const handleCardType = (field: ControllerRenderProps<CardForm, 'cardNumber'>, value: string) => {
     field.onChange(value)
     const cardType = creditCardType(value)[0]
-    setCardTypeLogo(getCreditCardLogo(value.length > 3 ? cardType.type.toUpperCase() : ''))
+    setCardTypeLogo(getCreditCardLogo(value.length > 3 ? cardType?.type.toUpperCase() : ''))
   }
 
   useEffect(() => {
