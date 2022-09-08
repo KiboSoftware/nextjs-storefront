@@ -149,5 +149,7 @@
   "address-book": "Address Book",
   "delete-address-confirm-message": "Are you sure you want to delete this address?",
   "make-this-my-default-address": "Make this my default address",
-  "shipping-address": "Shipping Address"
+  "shipping-address": "Shipping Address",
+
+  "social": "Social"
 }

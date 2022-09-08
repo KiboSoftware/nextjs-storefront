@@ -1,4 +1,5 @@
 import { Grid, Typography, Box, Link } from '@mui/material'
+import { useTranslation } from 'next-i18next'
 
 import { KiboImage } from '@/components/common'
 
@@ -13,6 +14,7 @@ const FooterItemLink = (props: any) => {
 }
 export default function Footer(props: any) {
   const { sections = [], social = [] } = props
+  const { t } = useTranslation('common')
   const mdColumnWidth = 12 / sections.length
   return (
     <Box
@@ -53,7 +55,7 @@ export default function Footer(props: any) {
             variant="h4"
             sx={{ textTransform: 'uppercase', fontWeight: '600', marginBottom: 1 }}
           >
-            Social
+            {t('social')}
           </Typography>
           {social.map((socialItem: any) => (
             <Box key={socialItem.iconPath} component="span" sx={{ margin: '0 4px' }}>
