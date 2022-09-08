@@ -13,6 +13,7 @@ const { Common } = composeStories(stories)
 
 const onForgotPasswordClickMock = jest.fn()
 const onLoginMock = jest.fn()
+const password = Math.random().toString(36).substring(2, 7)
 
 describe('[components] (LoginContent)', () => {
   const email = 'test@gmail.com'
@@ -95,7 +96,7 @@ describe('[components] (LoginContent)', () => {
       expect(onLoginMock).toHaveBeenCalledWith({
         formData: {
           email: 'example@example.com',
-          password: ' ',
+          password,
         },
         isRememberMe: false,
       })
@@ -126,7 +127,7 @@ const loginInputs = async (user: UserEvent) => {
   const passwordInput = screen.getByLabelText('password')
 
   await user.type(emailInput, 'example@example.com')
-  await user.type(passwordInput, ' ')
+  await user.type(passwordInput, password)
 
   await user.tab()
 }
