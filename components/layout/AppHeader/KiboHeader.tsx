@@ -344,12 +344,11 @@ export default function KiboHeader(props: KiboHeaderProps) {
 
   const openLoginModal = () => {
     setAuthError('')
+    handleHamburgerMenu(false)
     if (!isAuthenticated) {
       showModal({ Component: LoginDialog })
-      handleHamburgerMenu(false)
     } else {
       router.push('/my-account')
-      handleHamburgerMenu(false)
     }
   }
 
