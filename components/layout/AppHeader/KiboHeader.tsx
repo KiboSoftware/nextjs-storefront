@@ -291,8 +291,8 @@ const HeaderActions = (props: HeaderActionsProps) => {
         {/* My account Icon */}
         <Box sx={headerActionsStyles.myAccountIconWrapper}>
           <HeaderAction
-            title={isAuthenticated ? `${t('hi')}, ${user?.firstName}` : t('my-account')}
-            subtitle={isAuthenticated ? t('go-to-my-account') : t('log-in')}
+            title={t('my-account')}
+            subtitle={isAuthenticated ? `${t('hi')}, ${user?.firstName}` : t('log-in')}
             icon={AccountCircleIcon}
             {...(isMobileViewport && { iconFontSize: 'medium' })}
             onClick={openLoginModal}
@@ -344,7 +344,6 @@ export default function KiboHeader(props: KiboHeaderProps) {
 
   const openLoginModal = () => {
     setAuthError('')
-    handleHamburgerMenu(false)
     if (!isAuthenticated) {
       showModal({ Component: LoginDialog })
     } else {
