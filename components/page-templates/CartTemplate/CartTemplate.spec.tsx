@@ -67,7 +67,7 @@ describe('[components] CartTemplate', () => {
 
       expect(emptyCartSubTitle).toBeVisible()
     })
-    const shopNowButton = screen.getByText(/common:shop-now/i)
+    const shopNowButton = screen.getByRole('button', { name: /common:shop-now/i })
     await user.click(shopNowButton)
     await waitFor(() => {
       expect(router.route).toBe('/')
