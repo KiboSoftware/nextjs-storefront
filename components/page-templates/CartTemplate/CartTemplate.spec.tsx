@@ -3,11 +3,12 @@ import React, { ReactNode } from 'react'
 import { composeStories } from '@storybook/testing-react'
 import { screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
+import { graphql } from 'msw'
 import { RouterContext } from 'next/dist/shared/lib/router-context'
 
 import { CartTemplateProps } from './CartTemplate'
 import * as stories from './CartTemplate.stories'
-import { locationCollectionMock } from '@/__mocks__/stories/locationCollectionMock'
+import { server } from '@/__mocks__/msw/server'
 import { createMockRouter, renderWithQueryClient } from '@/__test__/utils'
 import { ModalContextProvider, DialogRoot } from '@/context'
 const CartItemListMock = ({ children }: { children: ReactNode }) => (
@@ -54,6 +55,11 @@ describe('[components] CartTemplate', () => {
   it('should render empty cart when no items present in cart', async () => {
     const cartParams = { ...Common.args }
     if (cartParams.cart) cartParams.cart.items = []
+    server.use(
+      graphql.query('cart', (_req, res, ctx) => {
+        return res.once(ctx.data({ currentCart: cartParams.cart }))
+      })
+    )
 
     const { user, router } = setup(cartParams as CartTemplateProps)
     await waitFor(async () => {

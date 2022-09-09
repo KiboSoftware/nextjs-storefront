@@ -261,7 +261,7 @@ const CartTemplate = (props: CartTemplateProps) => {
           </Grid>
         </>
       ) : (
-        <>
+        <Box data-testid="empty-cart">
           <Typography variant="h4" fontWeight={'bold'}>
             {t('cart:empty-cart-message')}
           </Typography>
@@ -278,7 +278,7 @@ const CartTemplate = (props: CartTemplateProps) => {
               </MuiLink>
             </Link>
           </Box>
-        </>
+        </Box>
       )}
     </Grid>
   )

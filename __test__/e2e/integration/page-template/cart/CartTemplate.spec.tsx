@@ -41,6 +41,7 @@ const setup = (params?: CartTemplateProps) => {
 }
 
 describe('[components] CartTemplate integration', () => {
+  server.resetHandlers()
   afterEach(() => {
     jest.clearAllMocks()
     cleanup()
@@ -153,92 +154,84 @@ describe('[components] CartTemplate integration', () => {
     expect(cartItem).toHaveLength(itemCount)
   })
 
-  describe('use promocode', () => {
-    afterEach(() => {
-      jest.clearAllMocks()
-      cleanup()
-    })
-    beforeEach(() => {
-      jest.clearAllMocks()
-      cleanup()
-    })
-
-    it('should apply a coupon when click apply button', async () => {
-      server.use(
-        graphql.query('cart', (_req, res, ctx) => {
-          return res(ctx.data({ currentCart: cartCouponMock.updateCartCoupon }))
-        })
-      )
-      const { user } = setup()
-      await waitFor(async () => {
-        const promoCode = '10OFF'
-        const PromoCodeInput = screen.getByPlaceholderText('promo-code')
-
-        const PromoCodeApply = screen.getByRole('button', {
-          name: /apply/i,
-        })
-
-        await user.type(PromoCodeInput, promoCode)
-
-        await user.click(PromoCodeApply)
-
-        const appliedPromoCode = screen.getByText(promoCode)
-        expect(appliedPromoCode).toBeVisible()
+  it('should apply a coupon when click apply button', async () => {
+    const { user } = setup()
+    server.use(
+      graphql.query('cart', (_req, res, ctx) => {
+        return res(ctx.data({ currentCart: cartCouponMock.updateCartCoupon }))
       })
-    })
-
-    it('should remove a coupon when click cross icon', async () => {
+    )
+    await waitFor(async () => {
       const promoCode = '10OFF'
-      const newCart = { ...cartCouponMock.updateCartCoupon }
-      newCart.couponCodes = []
-      server.use(
-        graphql.query('cart', (_req, res, ctx) => {
-          return res(ctx.data({ currentCart: newCart }))
-        })
-      )
+      const PromoCodeInput = screen.getByPlaceholderText('promo-code')
 
-      const { user } = setup()
-      await waitFor(async () => {
-        const removeIcon = screen.getAllByLabelText('remove-promo-code')
-        await user.click(removeIcon[0])
-        const removedPromoCode = screen.queryByText(promoCode)
-        expect(removedPromoCode).not.toBeInTheDocument()
+      const PromoCodeApply = screen.getByRole('button', {
+        name: /apply/i,
       })
+
+      await user.type(PromoCodeInput, promoCode)
+
+      await user.click(PromoCodeApply)
+
+      const appliedPromoCode = screen.getByText(promoCode)
+      expect(appliedPromoCode).toBeVisible()
     })
-    it('should show error message when applied an invalid coupon', async () => {
-      const newCartCoupon = { ...cartCouponMock.updateCartCoupon }
-      newCartCoupon.invalidCoupons = [
-        {
-          couponCode: '11OFF',
-          reason: 'Invalid coupon code',
-          createDate: '',
-          discountId: 234,
-          reasonCode: 43,
-        },
-      ]
-      server.use(
-        graphql.mutation('updateCartCoupon', (_req, res, ctx) => {
-          return res(ctx.data({ updateCartCoupon: newCartCoupon }))
-        })
-      )
-      const { user } = setup()
-      await waitFor(async () => {
-        const promoCode = '11OFF'
-        const PromoCodeInput = screen.getByPlaceholderText('promo-code')
+  })
 
-        const PromoCodeApply = screen.getByRole('button', {
-          name: /apply/i,
-        })
+  it('should remove a coupon when click cross icon', async () => {
+    const { user } = setup()
 
-        await user.type(PromoCodeInput, promoCode)
-
-        await user.click(PromoCodeApply)
-
-        await waitFor(() => {
-          const errorMessage = screen.getByText('Invalid coupon code')
-          expect(errorMessage).toBeVisible()
-        })
+    const promoCode = '10OFF'
+    const newCart = { ...cartCouponMock.updateCartCoupon }
+    newCart.couponCodes = []
+    server.use(
+      graphql.query('cart', (_req, res, ctx) => {
+        return res(ctx.data({ currentCart: newCart }))
+      }),
+      graphql.query('updateCartCoupon', (_req, res, ctx) => {
+        return res(ctx.data({ updateCartCoupon: newCart }))
       })
+    )
+
+    const removeIcon = screen.getAllByLabelText('remove-promo-code')
+    await user.click(removeIcon[0])
+    await waitFor(() => {
+      const removedPromoCode = screen.queryByText(promoCode)
+      expect(removedPromoCode).not.toBeInTheDocument()
+    })
+  })
+
+  it('should show error message when applied an invalid coupon', async () => {
+    const newCartCoupon = { ...cartCouponMock.updateCartCoupon }
+    newCartCoupon.invalidCoupons = [
+      {
+        couponCode: '11OFF',
+        reason: 'Invalid coupon code',
+        createDate: '',
+        discountId: 234,
+        reasonCode: 43,
+      },
+    ]
+    server.use(
+      graphql.mutation('updateCartCoupon', (_req, res, ctx) => {
+        return res(ctx.data({ updateCartCoupon: newCartCoupon }))
+      })
+    )
+    const { user } = setup()
+    const promoCode = '11OFF'
+    const PromoCodeInput = screen.getByPlaceholderText('promo-code')
+
+    const PromoCodeApply = screen.getByRole('button', {
+      name: /apply/i,
+    })
+
+    await user.type(PromoCodeInput, promoCode)
+
+    await user.click(PromoCodeApply)
+
+    await waitFor(() => {
+      const errorMessage = screen.getByText('Invalid coupon code')
+      expect(errorMessage).toBeVisible()
     })
   })
 })
