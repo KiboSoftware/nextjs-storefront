@@ -228,7 +228,7 @@ describe('[components] CartTemplate integration', () => {
     updatedCartMock?.currentCart?.items?.shift()
     server.use(
       graphql.query('cart', (_req, res, ctx) => {
-        return res.once(ctx.data(updatedCartMock))
+        return res(ctx.data(updatedCartMock))
       })
     )
 

@@ -57,7 +57,7 @@ describe('[components] CartTemplate', () => {
     if (cartParams.cart) cartParams.cart.items = []
     server.use(
       graphql.query('cart', (_req, res, ctx) => {
-        return res.once(ctx.data({ currentCart: cartParams.cart }))
+        return res(ctx.data({ currentCart: cartParams.cart }))
       })
     )
 
