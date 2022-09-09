@@ -127,7 +127,7 @@ describe('[components] Checkout integration', () => {
     it('should apply a coupon when click apply button', async () => {
       server.use(
         graphql.query('getCheckout', (_req, res, ctx) => {
-          return res.once(ctx.data({ checkout: orderCouponMock.updateOrderCoupon }))
+          return res(ctx.data({ checkout: orderCouponMock.updateOrderCoupon }))
         })
       )
       const initialActiveStep = 1
@@ -142,9 +142,10 @@ describe('[components] Checkout integration', () => {
       await user.type(PromoCodeInput, promoCode)
 
       await user.click(PromoCodeApply)
-
-      const appliedPromoCode = screen.getByText(promoCode)
-      expect(appliedPromoCode).toBeVisible()
+      await waitFor(() => {
+        const appliedPromoCode = screen.getByText(promoCode)
+        expect(appliedPromoCode).toBeVisible()
+      })
     })
 
     it('should remove a coupon when click cross icon', async () => {
@@ -154,7 +155,7 @@ describe('[components] Checkout integration', () => {
       newCheckout.couponCodes = []
       server.use(
         graphql.query('getCheckout', (_req, res, ctx) => {
-          return res.once(ctx.data({ checkout: newCheckout }))
+          return res(ctx.data({ checkout: newCheckout }))
         })
       )
 
