@@ -1,12 +1,15 @@
+import '@testing-library/jest-dom'
+
 import { composeStories } from '@storybook/testing-react'
 import { render, screen, cleanup } from '@testing-library/react'
-import '@testing-library/jest-dom'
+import userEvent from '@testing-library/user-event'
 
 import * as stories from './WishlistTemplate.stories' // import all stories from the stories file
 import { userResponseMock } from '@/__mocks__/stories/userMock'
 import { wishlistMock } from '@/__mocks__/stories/wishlistMock'
+import { createMockRouter } from '@/__test__/utils'
 
-const { Common } = composeStories(stories)
+const { Common, Empty } = composeStories(stories)
 
 afterEach(cleanup)
 
@@ -45,5 +48,20 @@ describe('[component] Wishlist Template component', () => {
     expect(inWishlistIcon).toBeVisible()
     expect(wishlistItemsQuantity).toBeVisible()
     expect(userName).toBeVisible()
+  })
+  it('should render empty wishlist when no item present', async () => {
+    const user = userEvent.setup()
+    const router = createMockRouter()
+
+    render(<Empty {...Empty?.args} />)
+
+    const emptyWishlist = screen.getByText('empty-wishlist-message')
+    const shopNowButton = screen.getByRole('button', { name: 'shop-now' })
+
+    expect(emptyWishlist).toBeVisible()
+    expect(shopNowButton).toBeVisible()
+
+    await user.click(shopNowButton)
+    expect(router.route).toBe('/')
   })
 })
