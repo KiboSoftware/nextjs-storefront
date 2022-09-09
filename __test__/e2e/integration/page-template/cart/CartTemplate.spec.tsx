@@ -121,14 +121,14 @@ describe('[components] CartTemplate integration', () => {
     updatedCartItemMock.fulfillmentMethod = 'Pickup'
     updatedCartMock?.currentCart?.items?.shift()
     updatedCartMock?.currentCart?.items?.unshift(updatedCartItemMock)
-
-    const { user } = setup()
-
     server.use(
       graphql.query('cart', (_req, res, ctx) => {
         return res.once(ctx.data(updatedCartMock))
       })
     )
+
+    const { user } = setup()
+
     const pickupRadio = await screen.findAllByRole('radio', {
       name: new RegExp(`${mockFulfillmentOptions[1].shortName}`),
     })
@@ -140,12 +140,13 @@ describe('[components] CartTemplate integration', () => {
   it('should delete cart Item  when click delete icon', async () => {
     const updatedCartMock = { ...cartMock }
     updatedCartMock?.currentCart?.items?.shift()
-    const { user } = setup()
     server.use(
       graphql.query('cart', (_req, res, ctx) => {
         return res.once(ctx.data(updatedCartMock))
       })
     )
+
+    const { user } = setup()
     const itemCount = mockCartItems.length
     const cartItem = screen.getAllByRole('group')
     expect(cartItem).toHaveLength(itemCount)
@@ -155,12 +156,13 @@ describe('[components] CartTemplate integration', () => {
   })
 
   it('should apply a coupon when click apply button', async () => {
-    const { user } = setup()
     server.use(
       graphql.query('cart', (_req, res, ctx) => {
         return res(ctx.data({ currentCart: cartCouponMock.updateCartCoupon }))
       })
     )
+    const { user } = setup()
+
     await waitFor(async () => {
       const promoCode = '10OFF'
       const PromoCodeInput = screen.getByPlaceholderText('promo-code')
@@ -179,11 +181,6 @@ describe('[components] CartTemplate integration', () => {
   })
 
   it('should remove a coupon when click cross icon', async () => {
-    const { user } = setup()
-
-    const promoCode = '10OFF'
-    const newCart = { ...cartCouponMock.updateCartCoupon }
-    newCart.couponCodes = []
     server.use(
       graphql.query('cart', (_req, res, ctx) => {
         return res(ctx.data({ currentCart: newCart }))
@@ -192,6 +189,11 @@ describe('[components] CartTemplate integration', () => {
         return res(ctx.data({ updateCartCoupon: newCart }))
       })
     )
+    const { user } = setup()
+
+    const promoCode = '10OFF'
+    const newCart = { ...cartCouponMock.updateCartCoupon }
+    newCart.couponCodes = []
 
     const removeIcon = screen.getAllByLabelText('remove-promo-code')
     await user.click(removeIcon[0])
