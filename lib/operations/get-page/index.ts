@@ -1,3 +1,5 @@
+import getConfig from 'next/config'
+
 import Stack from '../../cms/content-stack'
 
 interface getPageProps {
@@ -5,18 +7,20 @@ interface getPageProps {
   referenceFieldPath?: Array<string>
   entryUrl?: string
 }
-
-export const getPage = async ({
-  contentTypeUid = '',
-  entryUrl = '',
-  referenceFieldPath = [],
-}: getPageProps) => {
-  const response = await Stack.getEntry({
-    contentTypeUid: contentTypeUid,
-    entryUrl,
-    referenceFieldPath,
-  })
+const getContentStackPage = async (params: any) => {
+  const response = await Stack.getEntry(params)
   return {
     components: response[0][0]?.page_components || [],
+  }
+}
+
+export const getPage = async (params: any) => {
+  const { publicRuntimeConfig } = getConfig()
+  const currentCMS = publicRuntimeConfig.cms || ''
+  if (currentCMS === 'contentstack') {
+    return getContentStackPage(params)
+  }
+  return {
+    components: [],
   }
 }
