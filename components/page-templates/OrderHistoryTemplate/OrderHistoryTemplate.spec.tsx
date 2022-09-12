@@ -30,7 +30,7 @@ describe('[component] - OrderHistoryTemplate', () => {
   it('should render component', async () => {
     render(<Common {...Common?.args} />)
     await waitFor(async () => {
-      const orders = orderCollection.orders as OrderCollection
+      const orders = orderCollection.orders
       const itemsLength = orders.items ? orders.items.length : 0
 
       const accountTitleText = screen.getByText('my-account')
