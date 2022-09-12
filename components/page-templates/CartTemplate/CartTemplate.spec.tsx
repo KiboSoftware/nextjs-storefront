@@ -73,7 +73,7 @@ describe('[components] CartTemplate', () => {
       const emptyCartSubTitle = screen.getByText(/cart:empty-cart-message/i)
 
       expect(emptyCartSubTitle).toBeVisible()
-      const shopNowButton = screen.getByText(/common:shop-now/i)
+      const shopNowButton = screen.getByRole('link', { name: /common:shop-now/i })
       await user.click(shopNowButton)
       await waitFor(() => {
         expect(router.route).toBe('/')
