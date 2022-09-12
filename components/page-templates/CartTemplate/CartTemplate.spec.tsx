@@ -1,7 +1,7 @@
 import React, { ReactNode } from 'react'
 
 import { composeStories } from '@storybook/testing-react'
-import { screen, waitFor } from '@testing-library/react'
+import { cleanup, screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { graphql } from 'msw'
 import { RouterContext } from 'next/dist/shared/lib/router-context'
@@ -38,18 +38,25 @@ const setup = (params?: CartTemplateProps) => {
     router,
   }
 }
+
+beforeEach(() => {
+  cleanup()
+})
+
 describe('[components] CartTemplate', () => {
   it('should render component', async () => {
     setup()
-    const cartTitle = screen.getByText(/cart:shopping-cart/i)
-    const cartItemCount = screen.getByText(/cart:cart-item-count/i)
-    const cartItemList = screen.getByTestId('cart-item-list-mock')
-    const orderSummary = screen.getByTestId('cart-item-list-mock')
+    await waitFor(async () => {
+      const cartTitle = screen.getByText(/cart:shopping-cart/i)
+      const cartItemCount = screen.getByText(/cart:cart-item-count/i)
+      const cartItemList = screen.getByTestId('cart-item-list-mock')
+      const orderSummary = screen.getByTestId('cart-item-list-mock')
 
-    expect(cartTitle).toBeVisible()
-    expect(cartItemCount).toBeVisible()
-    expect(cartItemList).toBeVisible()
-    expect(orderSummary).toBeVisible()
+      expect(cartTitle).toBeVisible()
+      await waitFor(async () => expect(cartItemCount).toBeVisible())
+      await waitFor(async () => expect(cartItemList).toBeVisible())
+      await waitFor(async () => expect(orderSummary).toBeVisible())
+    })
   })
 
   it('should render empty cart when no items present in cart', async () => {
@@ -66,11 +73,11 @@ describe('[components] CartTemplate', () => {
       const emptyCartSubTitle = screen.getByText(/cart:empty-cart-message/i)
 
       expect(emptyCartSubTitle).toBeVisible()
-    })
-    const shopNowButton = screen.getByText(/common:shop-now/i)
-    await user.click(shopNowButton)
-    await waitFor(() => {
-      expect(router.route).toBe('/')
+      const shopNowButton = screen.getByText(/common:shop-now/i)
+      await user.click(shopNowButton)
+      await waitFor(() => {
+        expect(router.route).toBe('/')
+      })
     })
   })
 })
