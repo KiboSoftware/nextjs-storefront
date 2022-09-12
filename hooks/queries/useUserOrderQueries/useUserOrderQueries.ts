@@ -42,7 +42,7 @@ export const useUserOrderQueries = (param: UseUserOrder): UseUserOrderType => {
     isSuccess,
     isFetching,
   } = useQuery(ordersKeys.all, () => getOrders(param), {
-    enabled: param.isRefetching,
+    enabled: param?.isRefetching,
     refetchOnWindowFocus: false,
   })
 

@@ -27,7 +27,8 @@ const FacetItemList = (props: FacetItemListProps) => {
 
   const handleFacetSelection = async (selectedFacetItem: string, isApplied: boolean) => {
     const newItemList = [...itemList]
-    newItemList.filter((facet) => facet.filterValue === selectedFacetItem)[0].isApplied = !isApplied
+    newItemList.filter((facet) => facet?.filterValue === selectedFacetItem)[0].isApplied =
+      !isApplied
     setFactItemList(newItemList)
     const selectedFacetItems = facetGetters.getSelectedFacetItems(newItemList)
     onFacetItemSelection && onFacetItemSelection(selectedFacetItems)

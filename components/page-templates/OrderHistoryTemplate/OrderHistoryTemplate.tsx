@@ -36,7 +36,7 @@ const styles = {
 
 const OrderHistoryTemplate = (props: OrderHistoryProps) => {
   const { queryFilters = [], onAccountTitleClick } = props
-  const [updateQueryFilters, setpUateQueryFilters] = useState<any>({
+  const [updateQueryFilters, setUpdateQueryFilters] = useState<any>({
     filters: [...queryFilters],
     isOrderHistory: true,
     isRefetching: true,
@@ -64,7 +64,7 @@ const OrderHistoryTemplate = (props: OrderHistoryProps) => {
   }
   const handleFilterApply = (selectedFilters: string) => {
     changeFilters(selectedFilters)
-    setpUateQueryFilters({ ...updateQueryFilters, isRefetching: true, filters: [selectedFilters] })
+    setUpdateQueryFilters({ ...updateQueryFilters, isRefetching: true, filters: [selectedFilters] })
   }
   const handleSelectedTileRemoval = (selectedTile: string) => {
     facetList.forEach(
@@ -72,7 +72,7 @@ const OrderHistoryTemplate = (props: OrderHistoryProps) => {
     )
     appliedFilters = facetGetters.getAppliedFacetList(facetList)
     updateRoute(selectedTile)
-    setpUateQueryFilters({
+    setUpdateQueryFilters({
       ...updateQueryFilters,
       filters: appliedFilters?.map((appliedFilter) => appliedFilter?.filterValue),
       isRefetching: true,
@@ -157,7 +157,7 @@ const OrderHistoryTemplate = (props: OrderHistoryProps) => {
     )
   }
   useEffect(() => {
-    if (isFetching) setpUateQueryFilters({ ...updateQueryFilters, isRefetching: false })
+    if (isFetching) setUpdateQueryFilters({ ...updateQueryFilters, isRefetching: false })
   }, [isFetching])
 
   return (
