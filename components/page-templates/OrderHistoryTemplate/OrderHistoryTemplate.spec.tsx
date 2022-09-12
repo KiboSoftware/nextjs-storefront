@@ -6,7 +6,6 @@ import { render, screen, waitFor } from '@testing-library/react'
 import * as stories from './OrderHistoryTemplate.stories'
 import { orderCollection } from '@/__mocks__/stories'
 
-import type { OrderCollection } from '@/lib/gql/types'
 const { Common } = composeStories(stories)
 
 const FilterOrdersMock = () => <div data-testid="filter-orders-mock" />
