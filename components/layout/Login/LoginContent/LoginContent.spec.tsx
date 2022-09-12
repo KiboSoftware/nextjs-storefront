@@ -95,7 +95,7 @@ describe('[components] (LoginContent)', () => {
       expect(onLoginMock).toHaveBeenCalledWith({
         formData: {
           email: 'example@example.com',
-          password: 'abc', //NOSONAR
+          password: 'abc',
         },
         isRememberMe: false,
       })
