@@ -44,10 +44,10 @@ describe('[component] - AddressBook (has saved addresses )', () => {
     })
     await user.click(addressBook)
 
-    const addNewAddressButton = screen.getByRole('button', { name: 'add-new-address' })
+    const addNewAddressButton = screen.getByRole('button', { name: /add-new-address/i })
     await user.click(addNewAddressButton)
 
-    const addressForm = screen.getByTestId('address-form')
+    let addressForm = screen.getByTestId('address-form')
     expect(addressForm).toBeVisible()
 
     await addUpdateAddress(user)
@@ -56,11 +56,8 @@ describe('[component] - AddressBook (has saved addresses )', () => {
     })
 
     await user.click(saveAddressButton)
-
-    await waitFor(async () => {
-      const addressForm = await screen.findByTestId('address-form')
-      expect(addressForm).not.toBeVisible()
-    })
+    addressForm = await screen.findByTestId('address-form')
+    await waitFor(() => expect(addressForm).not.toBeVisible())
   })
 
   it('should handle edit address', async () => {
@@ -80,10 +77,8 @@ describe('[component] - AddressBook (has saved addresses )', () => {
 
     await user.click(saveAddressButton)
 
-    await waitFor(async () => {
-      const addressForm = await screen.findByTestId('address-form')
-      expect(addressForm).not.toBeVisible()
-    })
+    const addressForm = await screen.findByTestId('address-form')
+    await waitFor(() => expect(addressForm).not.toBeVisible())
   })
 
   it('should handle delete address', async () => {

@@ -60,8 +60,7 @@ const StyledActions = styled(Link)(({ theme }: { theme: Theme }) => ({
   textAlign: 'right',
   flex: '25%',
   color: theme?.palette.text.primary,
-  fontWeight: 600,
-  fontSize: '1rem',
+  fontSize: theme?.typography.body1.fontSize,
 }))
 
 const OrderReview = (props: OrderReviewProps) => {
@@ -145,9 +144,12 @@ const OrderReview = (props: OrderReviewProps) => {
               data-testid={'edit-personal-details'}
               data-step={t('details')}
               variant="caption"
+              color="text.primary"
               onClick={handleEditAction}
             >
-              {t('edit')}
+              <Typography sx={{ cursor: 'pointer' }} component="span" fontWeight={600}>
+                {t('edit')}
+              </Typography>
             </StyledActions>
           </StyledRow>
 
@@ -170,7 +172,9 @@ const OrderReview = (props: OrderReviewProps) => {
               color="text.primary"
               onClick={handleEditAction}
             >
-              {t('edit')}
+              <Typography sx={{ cursor: 'pointer' }} component="span" fontWeight={600}>
+                {t('edit')}
+              </Typography>
             </StyledActions>
           </StyledRow>
 
@@ -188,7 +192,9 @@ const OrderReview = (props: OrderReviewProps) => {
               color="text.primary"
               onClick={handleEditAction}
             >
-              {t('edit')}
+              <Typography sx={{ cursor: 'pointer' }} component="span" fontWeight={600}>
+                {t('edit')}
+              </Typography>
             </StyledActions>
           </StyledRow>
 
@@ -217,7 +223,9 @@ const OrderReview = (props: OrderReviewProps) => {
               color="text.primary"
               onClick={handleEditAction}
             >
-              {t('edit')}
+              <Typography sx={{ cursor: 'pointer' }} component="span" fontWeight={600}>
+                {t('edit')}
+              </Typography>
             </StyledActions>
           </StyledRow>
 

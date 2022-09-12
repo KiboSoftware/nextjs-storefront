@@ -25,6 +25,7 @@ const getSavedCardsAndBillingDetails = (
 ): PaymentAndBilling[] => {
   const cards: Card[] = getCustomerAccountCards(customerAccountCards)
   const contacts: CustomerContact[] = getCustomerAccountContacts(customerAccountContacts)
+  if (!(cards && contacts)) return []
 
   return cards?.map((card) => {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars

@@ -17,7 +17,6 @@ const PaymentCard = (props: PaymentCardDetailsViewProps) => {
   const { title, cardNumberPart, expireMonth, expireYear, cardType } = props
   const { t } = useTranslation('checkout')
 
-  console.log(cardType)
   return (
     <>
       {title && (
