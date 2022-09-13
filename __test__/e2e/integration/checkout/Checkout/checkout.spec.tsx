@@ -12,6 +12,7 @@ import { renderWithQueryClient } from '@/__test__/utils/renderWithQueryClient'
 import * as stories from '@/components/page-templates/Checkout/Checkout.stories'
 import { AuthContext, AuthContextType } from '@/context/'
 import { CheckoutStepProvider } from '@/context/CheckoutStepContext/CheckoutStepContext'
+import { addNewCard } from '@/__test__/e2e/helper'
 const { Common } = composeStories(stories)
 
 jest.mock('next/router', () => ({
@@ -21,6 +22,17 @@ jest.mock('next/router', () => ({
     }
   },
 }))
+
+jest.mock('@/lib/helpers/tokenizeCreditCardPayment', () => {
+  return {
+    tokenizeCreditCardPayment: jest.fn().mockImplementation(() => {
+      return {
+        id: 'hdah7d87ewbeed7wd8w8',
+        numberPart: '************1111',
+      }
+    }),
+  }
+})
 
 const setup = (initialActiveStep = 0, isAuthenticated = false) => {
   const user = userEvent.setup()
@@ -135,7 +147,7 @@ describe('[components] Checkout integration', () => {
       expect(appliedPromoCode).toBeVisible()
     })
 
-    it('shoul remove a coupon when click cross icon', async () => {
+    it('should remove a coupon when click cross icon', async () => {
       const initialActiveStep = 1
       const promoCode = '10OFF'
       const newCheckout = { ...orderCouponMock.updateOrderCoupon }
@@ -204,6 +216,31 @@ describe('[components] Checkout integration', () => {
       const shippingStep = await screen.findByTestId('checkout-shipping')
 
       expect(shippingStep).toBeVisible()
+    })
+
+    it('should enable Review Step when user clicks on Review order button', async () => {
+      const initialActiveStep = 2
+      const { user } = setup(initialActiveStep)
+
+      await user.click(screen.getByRole('button', { name: 'common:add-payment-method' }))
+
+      const creditCardPaymentMethodRadio = screen.getByRole('radio')
+
+      await user.click(creditCardPaymentMethodRadio)
+
+      await addNewCard(user)
+
+      const reviewOrderButton = screen.getByRole('button', {
+        name: /review-order/i,
+      })
+
+      await user.click(reviewOrderButton)
+
+      const reviewStep = screen.getByRole('heading', {
+        name: 'review',
+      })
+
+      expect(reviewStep).toBeVisible()
     })
   })
 

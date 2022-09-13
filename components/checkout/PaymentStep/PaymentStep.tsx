@@ -140,7 +140,7 @@ const PaymentStep = (props: PaymentStepProps) => {
   } = useCheckoutStepContext()
 
   // states
-  const [newPaymentMethod, setNewPaymentMethod] = useState<string>('')
+  const [newPaymentMethod, setNewPaymentMethod] = useState<string>('CreditCard')
   const [cardFormDetails, setCardFormDetails] = useState<CardForm>(initialCardFormData)
 
   const [billingFormAddress, setBillingFormAddress] = useState<Address>(initialBillingAddressData)
