@@ -1,7 +1,7 @@
+import { createClient } from 'contentful'
 import getConfig from 'next/config'
 
 import Stack from '../../cms/content-stack'
-
 interface getPageProps {
   contentTypeUid?: string
   referenceFieldPath?: Array<string>
@@ -14,12 +14,28 @@ const getContentStackPage = async (params: any) => {
   }
 }
 
-export const getPage = async (params: any) => {
-  const { publicRuntimeConfig } = getConfig()
-  const currentCMS = publicRuntimeConfig.cms || ''
-  if (currentCMS === 'contentstack') {
-    return getContentStackPage(params)
+const { publicRuntimeConfig } = getConfig()
+
+const getContentfulPage = async () => {
+  const client = createClient({
+    space: publicRuntimeConfig.contentful.CONTENTFUL_SPACE_ID,
+    accessToken: publicRuntimeConfig.contentful.CONTENTFUL_ACCESS_TOKEN,
+  })
+
+  const res = await client.getEntries({ content_type: 'homePage' })
+  return {
+    props: {
+      components: res.items[0].fields,
+      revalidate: 10,
+    },
   }
+}
+
+export const getPage = async (params: any) => {
+  const currentCMS = publicRuntimeConfig.cms || ''
+  if (currentCMS === 'contentstack') return getContentStackPage(params)
+  if (currentCMS === 'contentful') return getContentfulPage()
+
   return {
     components: [],
   }

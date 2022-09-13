@@ -79,6 +79,10 @@ module.exports = {
       CONTENTSTACK_DELIVERY_TOKEN: process.env.NEXT_PUBLIC_CONTENTSTACK_DELIVERY_TOKEN,
       CONTENTSTACK_ENVIRONMENT: process.env.NEXT_PUBLIC_CONTENTSTACK_ENVIRONMENT,
     },
+    contentful: {
+      CONTENTFUL_SPACE_ID: process.env.CONTENTFUL_SPACE_ID,
+      CONTENTFUL_ACCESS_TOKEN: process.env.CONTENTFUL_ACCESS_TOKEN,
+    },
   },
   serverRuntimeConfig: {
     revalidate: 60,
