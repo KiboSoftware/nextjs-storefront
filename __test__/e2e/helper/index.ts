@@ -1,4 +1,4 @@
-import { screen, fireEvent, waitFor, within } from '@testing-library/react'
+import { screen, waitFor, within } from '@testing-library/react'
 import { UserEvent } from '@testing-library/user-event/dist/types/setup'
 
 export const addNewCard = async (user: UserEvent) => {
@@ -53,7 +53,7 @@ const addBillingAddress = async (user: UserEvent) => {
   await user.type(stateOrProvince, 'TX')
   await user.type(postalOrZipCode, '989848')
   await user.type(phoneNumberHome, '9938938494')
-  fireEvent.mouseDown(countryCode)
+  await user.click(countryCode)
 
   const listbox = within(screen.getByRole('listbox'))
   await user.click(listbox.getByText(/US/i))
