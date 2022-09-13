@@ -94,7 +94,13 @@ const LoginContent = (props: LoginContentProps) => {
   }
 
   return (
-    <Box sx={{ ...styles.contentBox }} data-testid="kibo-login-cotent">
+    <Box
+      sx={{ ...styles.contentBox }}
+      data-testid="kibo-login-content"
+      component="form"
+      onSubmit={handleSubmit(handleLogin)}
+      id="loginForm"
+    >
       <FormControl sx={{ width: '100%' }}>
         <Controller
           name="email"
@@ -155,8 +161,9 @@ const LoginContent = (props: LoginContentProps) => {
           variant="contained"
           color="primary"
           sx={{ fontSize: '18px' }}
-          onClick={handleSubmit(handleLogin)}
           disabled={!isValid}
+          type="submit"
+          form="loginForm"
         >
           {t('common:log-in')}
         </Button>

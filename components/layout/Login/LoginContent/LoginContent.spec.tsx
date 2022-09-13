@@ -2,10 +2,12 @@
 import React from 'react'
 
 import { composeStories } from '@storybook/testing-react'
-import { act, fireEvent, render, screen, waitFor } from '@testing-library/react'
+import { render, screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 
 import * as stories from './LoginContent.stories' // import all stories from the stories file
+
+import type { UserEvent } from '@testing-library/user-event/dist/types/setup'
 
 const { Common } = composeStories(stories)
 
@@ -44,21 +46,26 @@ describe('[components] (LoginContent)', () => {
     expect(forgotPasswordLink).toBeVisible()
   })
 
-  it('should show entered email input ', async () => {
-    setup()
+  it('should show user entered email', async () => {
+    const { user } = setup()
+
     const emailInput = screen.getByRole('textbox', { name: 'email' })
-    fireEvent.blur(emailInput, { target: { value: email } })
+    await user.type(emailInput, email)
+    await user.tab()
+
     await waitFor(() => expect(emailInput).toHaveValue(email))
   })
 
-  it('should show entered password input', async () => {
-    setup()
+  it('should show user entered password', async () => {
+    const { user } = setup()
     const passwordInput = screen.getByLabelText('password')
-    fireEvent.blur(passwordInput, { target: { value: 'abc' } })
+    await user.type(passwordInput, 'abc')
+    await user.tab()
+
     await waitFor(() => expect(passwordInput).toHaveValue('abc'))
   })
 
-  it('should disable login button when user enters invalid inputs ', async () => {
+  it('should keep login button disable when user enters invalid credentials', async () => {
     const { user } = setup()
 
     const emailInput = screen.getByRole('textbox', { name: 'email' })
@@ -68,41 +75,58 @@ describe('[components] (LoginContent)', () => {
     expect(loginButton).toBeDisabled()
 
     // invalid inputs
-    await act(async () => {
-      await user.clear(emailInput)
-      await user.type(emailInput, 'abcd-email')
-      await user.clear(passwordInput)
-      await user.type(passwordInput, 'abc')
-    })
-    expect(loginButton).toBeDisabled()
+    await user.type(emailInput, 'abcd-email')
+    await user.type(passwordInput, 'abc')
+
+    await waitFor(() => expect(loginButton).toBeDisabled())
   })
 
-  it('should enable login button when user enters valid inputs and  call onLoginMock when user click onLogin ', async () => {
+  it('should enable login button and call onLoginMock when user enters valid credentials and clicks on Login button', async () => {
     const { user } = setup()
-
-    const emailInput = screen.getByRole('textbox', { name: 'email' })
-    const passwordInput = screen.getByLabelText('password')
-    const loginButton = screen.getByRole('button', { name: 'common:log-in' })
 
     // valid inputs
-    await act(async () => {
-      fireEvent.change(emailInput, { target: { value: 'example@example.com' } })
-      fireEvent.change(passwordInput, { target: { value: 'abc' } })
-    })
+    await loginInputs(user)
 
+    const loginButton = screen.getByRole('button', { name: 'common:log-in' })
     await waitFor(() => expect(loginButton).toBeEnabled())
-    await act(async () => {
-      await user.click(loginButton)
-    })
-    await waitFor(() => expect(onLoginMock).toHaveBeenCalled())
+
+    await user.click(loginButton)
+    await waitFor(() =>
+      expect(onLoginMock).toHaveBeenCalledWith({
+        formData: {
+          email: 'example@example.com',
+          password: 'abc', //NOSONAR
+        },
+        isRememberMe: false,
+      })
+    )
   })
 
-  it('should call onForgotPasswordClickMock when click forgotPasswordLink', async () => {
+  it('should call onForgotPasswordClickMock callback function when user clicks on forgotPasswordLink', async () => {
     const { user } = setup()
     const forgotPasswordLink = screen.getByRole('button', { name: 'common:forgot-password' })
-    await act(async () => {
-      await user.click(forgotPasswordLink)
-    })
+
+    await user.click(forgotPasswordLink)
+
     expect(onForgotPasswordClickMock).toBeCalled()
   })
+
+  it('should login when user enters valid credentials and press enter key', async () => {
+    const { user } = setup()
+    await loginInputs(user)
+
+    await user.keyboard('{Enter}')
+
+    await waitFor(() => expect(onLoginMock).toHaveBeenCalled())
+  })
 })
+
+const loginInputs = async (user: UserEvent) => {
+  const emailInput = screen.getByRole('textbox', { name: 'email' })
+  const passwordInput = screen.getByLabelText('password')
+
+  await user.type(emailInput, 'example@example.com')
+  await user.type(passwordInput, 'abc')
+
+  await user.tab()
+}
