@@ -1,14 +1,16 @@
 import React from 'react'
 
 import { composeStories } from '@storybook/testing-react'
-import { render, screen, fireEvent, waitFor, cleanup, within } from '@testing-library/react'
+import { render, screen, waitFor, cleanup } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
-import { UserEvent } from '@testing-library/user-event/dist/types/setup'
 import getConfig from 'next/config'
 
+import { orderMock } from '@/__mocks__/stories'
+import { addNewCard } from '@/__test__/e2e/helper'
 import * as stories from '@/components/checkout/PaymentStep/PaymentStep.stories'
 import { CheckoutStepProvider } from '@/context'
-import { addNewCard } from '@/__test__/e2e/helper'
+
+import { Order } from '@/lib/gql/types'
 
 let mockIsAuthenticated = false
 const userMock = {
@@ -41,11 +43,12 @@ jest.mock('@/lib/helpers/tokenizeCreditCardPayment', () => {
   }
 })
 
-const setup = () => {
+const setup = (param: { checkout: Order }) => {
   const user = userEvent.setup()
+
   render(
     <CheckoutStepProvider steps={['details', 'shipping', 'payment', 'review']}>
-      <Common {...Common.args} />
+      <Common {...Common.args} checkout={param.checkout} />
     </CheckoutStepProvider>
   )
 
@@ -59,7 +62,9 @@ afterEach(() => cleanup())
 describe('[components] PaymentStep', () => {
   describe('Unauthenticated user', () => {
     it('should handle adding new credit card', async () => {
-      const { user } = setup()
+      const { user } = setup({
+        checkout: { ...orderMock.checkout, payments: [] },
+      })
 
       const paymentTypes = screen.getByTestId('payment-types')
       expect(paymentTypes).toBeVisible()
@@ -80,12 +85,11 @@ describe('[components] PaymentStep', () => {
     })
   })
 
-  mockIsAuthenticated = true
-  userMock.id = 1012
-
   describe('Authenticated user', () => {
     it('should handle adding new credit card', async () => {
-      const { user } = setup()
+      mockIsAuthenticated = true
+      userMock.id = 1012
+      const { user } = setup(orderMock)
 
       expect(screen.queryByTestId('card-details')).not.toBeInTheDocument()
       expect(screen.queryByTestId('address-form')).not.toBeInTheDocument()
