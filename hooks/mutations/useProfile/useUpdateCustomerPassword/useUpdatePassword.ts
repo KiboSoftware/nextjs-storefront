@@ -1,7 +1,6 @@
-import { useMutation, useQueryClient } from 'react-query'
+import { useMutation } from 'react-query'
 
 import { makeGraphQLClient } from '@/lib/gql/client'
-import { UpdatePasswordKeys } from '@/lib/react-query/queryKeys'
 import { updatePassword } from '@/lib/gql/mutations/user/updatePassword'
 
 export interface UpdateCustomerPasswordInput {
@@ -30,12 +29,7 @@ const updateUserPassword = async (props: UpdateCustomerPasswordProps) => {
 }
 
 export const useUpdateUserPasswordMutations = () => {
-  const queryClient = useQueryClient()
   return {
-    updateUserPasswordData: useMutation(updateUserPassword, {
-      onSuccess: () => {
-        queryClient.invalidateQueries(UpdatePasswordKeys.all)
-      },
-    }),
+    updateUserPasswordData: useMutation(updateUserPassword),
   }
 }

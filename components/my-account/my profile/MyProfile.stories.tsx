@@ -12,4 +12,3 @@ export default {
 const Template: ComponentStory<typeof MyProfile> = () => <MyProfile />
 
 export const Common = Template.bind({})
-
