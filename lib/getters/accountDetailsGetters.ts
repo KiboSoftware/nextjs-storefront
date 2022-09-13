@@ -25,9 +25,13 @@ const getSavedCardsAndBillingDetails = (
 ): PaymentAndBilling[] => {
   const cards: Card[] = getCustomerAccountCards(customerAccountCards)
   const contacts: CustomerContact[] = getCustomerAccountContacts(customerAccountContacts)
+  if (!(cards && contacts)) return []
 
   return cards?.map((card) => {
-    const associatedAddress = contacts?.find((contact) => contact.id === card.contactId)
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const { accountId, types, ...rest } = contacts?.find(
+      (contact) => contact.id === card.contactId
+    ) as CustomerContact
     return {
       cardInfo: {
         ...cardGetters.getCardDetails(card as SavedCard),
@@ -35,7 +39,7 @@ const getSavedCardsAndBillingDetails = (
         paymentType: PaymentType.CREDITCARD,
       },
       billingAddressInfo: {
-        contact: associatedAddress as Contact,
+        contact: rest as Contact,
       },
     }
   })

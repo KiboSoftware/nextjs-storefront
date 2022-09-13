@@ -172,7 +172,8 @@ const getFulfillmentLocationCodes = (cartItems: Maybe<CartItem | CrOrderItem>[])
 }
 
 const getPaymentMethods = (checkout: Order) => {
-  const payments: Maybe<Payment>[] = checkout?.payments || []
+  const payments: Maybe<Payment>[] =
+    checkout?.payments?.filter((payment) => payment?.status === 'New') || []
 
   if (!payments) return []
 

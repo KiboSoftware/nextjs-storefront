@@ -4,7 +4,7 @@ import { composeStories } from '@storybook/testing-react'
 import { render, screen, waitFor, cleanup } from '@testing-library/react'
 
 // eslint-disable-next-line import/order
-import * as stories from '../PaymentStep/PaymentStep.stories' // import all stories from the stories file
+import * as stories from './PaymentStep.stories' // import all stories from the stories file
 
 const { Common } = composeStories(stories)
 

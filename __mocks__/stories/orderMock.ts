@@ -357,7 +357,7 @@ const checkoutResponse: Order = {
           expireYear: 2024,
         },
       },
-      status: 'Authorized',
+      status: 'New',
       isRecurring: false,
       amountCollected: 0,
       amountCredited: 0,

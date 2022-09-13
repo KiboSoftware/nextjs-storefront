@@ -1,13 +1,16 @@
 import React from 'react'
 
 import { composeStories } from '@storybook/testing-react'
-import { render, screen, fireEvent, waitFor, cleanup, within } from '@testing-library/react'
+import { render, screen, waitFor, cleanup } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
-import { UserEvent } from '@testing-library/user-event/dist/types/setup'
 import getConfig from 'next/config'
 
+import { orderMock } from '@/__mocks__/stories'
+import { addNewCard } from '@/__test__/e2e/helper'
 import * as stories from '@/components/checkout/PaymentStep/PaymentStep.stories'
 import { CheckoutStepProvider } from '@/context'
+
+import { Order } from '@/lib/gql/types'
 
 let mockIsAuthenticated = false
 const userMock = {
@@ -40,11 +43,12 @@ jest.mock('@/lib/helpers/tokenizeCreditCardPayment', () => {
   }
 })
 
-const setup = () => {
+const setup = (param: { checkout: Order }) => {
   const user = userEvent.setup()
+
   render(
     <CheckoutStepProvider steps={['details', 'shipping', 'payment', 'review']}>
-      <Common {...Common.args} />
+      <Common {...Common.args} checkout={param.checkout} />
     </CheckoutStepProvider>
   )
 
@@ -58,7 +62,9 @@ afterEach(() => cleanup())
 describe('[components] PaymentStep', () => {
   describe('Unauthenticated user', () => {
     it('should handle adding new credit card', async () => {
-      const { user } = setup()
+      const { user } = setup({
+        checkout: { ...orderMock.checkout, payments: [] },
+      })
 
       const paymentTypes = screen.getByTestId('payment-types')
       expect(paymentTypes).toBeVisible()
@@ -79,12 +85,11 @@ describe('[components] PaymentStep', () => {
     })
   })
 
-  mockIsAuthenticated = true
-  userMock.id = 1012
-
   describe('Authenticated user', () => {
     it('should handle adding new credit card', async () => {
-      const { user } = setup()
+      mockIsAuthenticated = true
+      userMock.id = 1012
+      const { user } = setup(orderMock)
 
       expect(screen.queryByTestId('card-details')).not.toBeInTheDocument()
       expect(screen.queryByTestId('address-form')).not.toBeInTheDocument()
@@ -95,7 +100,7 @@ describe('[components] PaymentStep', () => {
 
       const radios = screen.getAllByRole('radio')
 
-      expect(radios.length).toBe(1)
+      expect(radios.length).toBe(2)
 
       const addPaymentMethodButton = screen.getByRole('button', {
         name: /common:add-payment-method/i,
@@ -110,62 +115,3 @@ describe('[components] PaymentStep', () => {
     })
   })
 })
-
-const addNewCard = async (user: UserEvent) => {
-  await addCardDetails(user)
-  await addBillingAddress(user)
-
-  const saveMethod = screen.getByRole('button', {
-    name: /common:save-payment-method/i,
-  })
-
-  await waitFor(() => {
-    expect(saveMethod).toBeEnabled()
-  })
-
-  await user.click(saveMethod)
-}
-
-const addCardDetails = async (user: UserEvent) => {
-  // Card form values
-  const cardNumber = screen.getByRole('textbox', {
-    name: /card-number/i,
-  })
-
-  const expiryDate = screen.getByRole('textbox', {
-    name: /expiry-date/i,
-  })
-
-  const cvv = screen.getByPlaceholderText(/security-code-placeholder/i)
-
-  await user.type(cardNumber, '4111111111111111')
-  await user.type(expiryDate, '01/2026')
-  await user.type(cvv, '123')
-  await user.tab()
-}
-
-const addBillingAddress = async (user: UserEvent) => {
-  const firstName = screen.getByRole('textbox', { name: /first-name/i })
-  const lastNameOrSurname = screen.getByRole('textbox', { name: /last-name-or-sur-name/i })
-  const address1 = screen.getByRole('textbox', { name: /address1/i })
-  const address2 = screen.getByRole('textbox', { name: /address2/i })
-  const cityOrTown = screen.getByRole('textbox', { name: /city/i })
-  const stateOrProvince = screen.getByRole('textbox', { name: /state-or-province/i })
-  const postalOrZipCode = screen.getByRole('textbox', { name: /postal-or-zip-code/i })
-  const phoneNumberHome = screen.getByRole('textbox', { name: /phone-number/i })
-  const countryCode = screen.getByRole('button', { name: 'country-code' })
-
-  await user.type(firstName, 'John')
-  await user.type(lastNameOrSurname, 'Doe')
-  await user.type(address1, '400, Lamar Street')
-  await user.type(address2, '23/1')
-  await user.type(cityOrTown, 'Austin')
-  await user.type(stateOrProvince, 'TX')
-  await user.type(postalOrZipCode, '989848')
-  await user.type(phoneNumberHome, '9938938494')
-  fireEvent.mouseDown(countryCode)
-
-  const listbox = within(screen.getByRole('listbox'))
-  await user.click(listbox.getByText(/US/i))
-  await user.tab()
-}

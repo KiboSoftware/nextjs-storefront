@@ -25,7 +25,7 @@ import {
   useUpdateOrderPaymentActionMutation,
   usePaymentTypes,
 } from '@/hooks'
-import { PaymentType } from '@/lib/constants'
+import { PaymentType, PaymentWorkflow } from '@/lib/constants'
 import { addressGetters, cardGetters, checkoutGetters, accountDetailsGetters } from '@/lib/getters'
 import { tokenizeCreditCardPayment } from '@/lib/helpers'
 import { buildCardPaymentActionForCheckoutInput } from '@/lib/helpers/buildPaymentActionForCheckoutInput'
@@ -280,7 +280,7 @@ const PaymentStep = (props: PaymentStepProps) => {
         expireYear,
         isCardInfoSaved,
         paymentType,
-        paymentWorkflow: 'Mozu',
+        paymentWorkflow: PaymentWorkflow.MOZU,
       }
 
       const tokenizedData: TokenizedCard = {
@@ -306,6 +306,16 @@ const PaymentStep = (props: PaymentStepProps) => {
       checkout,
       PaymentType.CREDITCARD
     )
+
+    if (
+      selectedCards?.some(
+        (card) => card?.billingInfo?.card?.paymentServiceCardId === selectedPaymentBillingRadio
+      )
+    ) {
+      setStepStatusComplete()
+      setStepNext()
+      return
+    }
 
     selectedCards?.forEach(async (card) => {
       paymentAction = { ...paymentAction, actionName: 'VoidPayment' }
@@ -392,10 +402,11 @@ const PaymentStep = (props: PaymentStepProps) => {
   }
 
   const handleInitialCardDetailsLoad = () => {
-    const savedInfo = accountDetailsGetters.getSavedCardsAndBillingDetails(
-      customerCardsCollection,
-      customerContactsCollection
-    )
+    const savedInfo =
+      accountDetailsGetters.getSavedCardsAndBillingDetails(
+        customerCardsCollection,
+        customerContactsCollection
+      ) || []
 
     const defaultCard = accountDetailsGetters.getDefaultPaymentBillingMethod(savedInfo)
     cardGetters.getCardId(defaultCard?.cardInfo) &&
@@ -409,8 +420,11 @@ const PaymentStep = (props: PaymentStepProps) => {
     selectedCards?.forEach((card) => {
       const cardDetails = card?.billingInfo?.card
       const billingAddress = card?.billingInfo?.billingContact
-      !savedInfo.some((each) => each.cardInfo?.id === cardDetails?.paymentServiceCardId) &&
-        savedInfo.push({
+      Boolean(
+        !savedInfo?.length ||
+          !savedInfo?.some((each) => each.cardInfo?.id === cardDetails?.paymentServiceCardId)
+      ) &&
+        savedInfo?.push({
           cardInfo: {
             cardNumberPart: cardDetails?.cardNumberPartOrMask as string,
             id: cardDetails?.paymentServiceCardId as string,
@@ -429,7 +443,7 @@ const PaymentStep = (props: PaymentStepProps) => {
       setSelectedPaymentBillingRadio(cardDetails?.paymentServiceCardId as string)
     })
 
-    if (savedInfo.length) {
+    if (savedInfo?.length) {
       setSavedPaymentBillingDetails(savedInfo)
       setNewPaymentMethod(PaymentType.CREDITCARD)
     }
@@ -438,7 +452,7 @@ const PaymentStep = (props: PaymentStepProps) => {
   // handle initial load of cards and contacts
   useEffect(() => {
     // handle saved payment methods in account
-    if (isCustomerCardsSuccess && isCustomerContactsSuccess) {
+    if ((isCustomerCardsSuccess && isCustomerContactsSuccess) || !isAuthenticated) {
       handleInitialCardDetailsLoad()
     }
 
