@@ -41,6 +41,8 @@ describe('[component] - OrderStatusTemplate', () => {
       expect(checkOrderStatusButton).toBeEnabled()
     })
     await user.click(checkOrderStatusButton)
-    expect(screen.getByTestId('ViewOrderDetails')).toBeVisible()
+    await waitFor(() => {
+      expect(screen.getByTestId('ViewOrderDetails')).toBeVisible()
+    })
   })
 })
