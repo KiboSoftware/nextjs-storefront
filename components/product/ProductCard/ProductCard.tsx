@@ -153,7 +153,7 @@ const ProductCard = (props: ProductCardProps) => {
                 <Button
                   variant="contained"
                   color="primary"
-                  sx={{ width: '100%', marginTop: '49px' }}
+                  sx={{ width: '100%', marginTop: '3.063rem' }}
                 >
                   {t('shop-now')}
                 </Button>

@@ -151,5 +151,7 @@
   "make-this-my-default-address": "Make this my default address",
   "shipping-address": "Shipping Address",
 
-  "social": "Social"
+  "social": "Social",
+
+  "empty-wishlist-message": "You haven’t saved any items to your wishlist yet. Tap the heart of your favorite items to add them to your wishlist."
 }
