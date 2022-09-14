@@ -11,8 +11,6 @@ interface UseUserOrder {
   orderNumber?: string
   billingEmail?: string
   filters?: string | string[]
-  isOrderHistory?: boolean
-  isOrderStatus?: boolean
   isRefetching: boolean
 }
 
@@ -41,10 +39,17 @@ export const useUserOrderQueries = (param: UseUserOrder): UseUserOrderType => {
     isLoading,
     isSuccess,
     isFetching,
-  } = useQuery(ordersKeys.all, () => getOrders(param), {
-    enabled: param?.isRefetching,
-    refetchOnWindowFocus: false,
-  })
+  } = useQuery(
+    ordersKeys.all,
+    () => {
+      if (param.orderNumber === '' && param.billingEmail === '') return []
+      return getOrders(param)
+    },
+    {
+      enabled: param?.isRefetching,
+      refetchOnWindowFocus: false,
+    }
+  )
 
   return { data, isLoading, isSuccess, isFetching }
 }

@@ -3,9 +3,7 @@ import React from 'react'
 import { composeStories } from '@storybook/testing-react'
 import { cleanup, render, screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
-import { graphql } from 'msw'
 
-import { server } from '@/__mocks__/msw/server'
 import * as stories from '@/components/page-templates/OrderStatusTemplate/OrderStatusTemplate.stories'
 
 const { Common } = composeStories(stories)
@@ -27,11 +25,6 @@ describe('[component] - OrderStatusTemplate', () => {
   })
 
   it('should view order status by providing the order number and billing email', async () => {
-    server.use(
-      graphql.query('getOrders', (_req, res, ctx) => {
-        return res.once(ctx.data({ orders: {} }))
-      })
-    )
     const { user } = setup()
     const breadcrumbs = screen.getAllByLabelText('breadcrumb-link')
     expect(breadcrumbs[0]).toBeVisible()
@@ -48,8 +41,6 @@ describe('[component] - OrderStatusTemplate', () => {
       expect(checkOrderStatusButton).toBeEnabled()
     })
     await user.click(checkOrderStatusButton)
-    await waitFor(() => {
-      expect(screen.getByTestId('ViewOrderDetails')).toBeVisible()
-    })
+    expect(screen.getByTestId('ViewOrderDetails')).toBeVisible()
   })
 })

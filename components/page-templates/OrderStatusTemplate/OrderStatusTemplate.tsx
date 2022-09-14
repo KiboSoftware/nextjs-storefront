@@ -21,20 +21,19 @@ const OrderStatusTemplate = () => {
   const [queryFilters, setQueryFilters] = useState<OrderStatusFormDataProps>({
     billingEmail: '',
     orderNumber: '',
-    isOrderStatus: true,
     isRefetching: true,
   })
 
   const { t } = useTranslation(['common', 'orderhistory'])
   const { data: orderCollection, isFetching } = useUserOrderQueries(queryFilters)
   const { items = [], pageCount } = orderCollection
+  const order = items && (items[0] as Order)
   const breadCrumbsList = [
     { text: t('home'), link: '/' },
     { text: t('order-status'), link: '/order-status' },
   ]
-  const order = items && (items[0] as Order)
   const handleOrderStatusSubmit = (data: OrderStatusFormDataProps) => {
-    setQueryFilters({ ...data, isOrderStatus: true, isRefetching: true })
+    setQueryFilters({ ...data, isRefetching: true })
   }
 
   useEffect(() => {
@@ -47,14 +46,14 @@ const OrderStatusTemplate = () => {
         <KiboBreadcrumbs breadcrumbs={breadCrumbsList} />
       </Grid>
       <Grid item xs={12}>
-        {order && (
+        {order?.id && (
           <ViewOrderDetails
             title={t('orderhistory:view-order-status')}
             isOrderStatus={true}
-            order={order}
+            order={order as Order}
           />
         )}
-        {!order && (
+        {!order?.id && (
           <ViewOrderStatus
             onOrderStatusSubmit={handleOrderStatusSubmit}
             lookupWarningMessage={pageCount === 0 ? t('orderhistory:no-orders-found') : ''}

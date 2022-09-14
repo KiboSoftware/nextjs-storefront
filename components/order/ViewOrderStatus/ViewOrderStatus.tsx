@@ -21,7 +21,6 @@ import { FullWidthDivider, KiboTextBox } from '@/components/common'
 export interface OrderStatusFormDataProps {
   orderNumber: string
   billingEmail: string
-  isOrderStatus: boolean
   isRefetching: boolean
 }
 

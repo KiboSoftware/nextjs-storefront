@@ -10,13 +10,11 @@ describe('[helpers] buildOrdersFilterInput function', () => {
     const orderHistoryVariables = {
       ...variables,
       filters: [],
-      isOrderHistory: true,
     }
     const orderStatusVariables = {
       ...variables,
       orderNumber: '81',
       billingEmail: 'chandra@email.com',
-      isOrderStatus: true,
     }
 
     const buildOrdersFilterInputMock = {

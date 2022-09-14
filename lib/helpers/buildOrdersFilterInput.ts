@@ -14,8 +14,6 @@ export const buildOrdersFilterInput = (params: {
   pageSize?: number
   orderNumber?: string
   billingEmail?: string
-  isOrderHistory?: boolean
-  isOrderStatus?: boolean
 }) => {
   const { publicRuntimeConfig } = getConfig()
   const variables = {
@@ -25,7 +23,7 @@ export const buildOrdersFilterInput = (params: {
   }
 
   // To view order history page
-  if (params.isOrderHistory && params.filters?.length) {
+  if (params.filters?.length) {
     const searchFilters = []
     for (const filters of params.filters) {
       const filter = filters.split('-')
@@ -41,7 +39,7 @@ export const buildOrdersFilterInput = (params: {
   }
 
   // To view order status page
-  if (params.isOrderStatus) {
+  if (params.orderNumber && params.billingEmail) {
     variables.filter = `orderNumber eq ${params.orderNumber} and email eq ${params.billingEmail}`
   }
   const defaultQuery = `status ne ${OrderStatus.ABANDONED}`

@@ -38,7 +38,6 @@ const OrderHistoryTemplate = (props: OrderHistoryProps) => {
   const { queryFilters = [], onAccountTitleClick } = props
   const [updateQueryFilters, setUpdateQueryFilters] = useState<any>({
     filters: [...queryFilters],
-    isOrderHistory: true,
     isRefetching: true,
   })
 
