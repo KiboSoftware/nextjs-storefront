@@ -91,4 +91,7 @@ module.exports = {
     cacheKey: 'categoryTree',
     cacheTimeOut: 10000,
   },
+  images: {
+    domains: ['images.ctfassets.net'],
+  },
 }
