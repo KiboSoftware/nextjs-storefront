@@ -25,6 +25,7 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
       'page_components.large_promo_blocks.large_promo_blocks',
       'page_components.small_promo_blocks.small_promo_blocks',
     ],
+    entryUrl: '',
   })
   return {
     props: {

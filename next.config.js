@@ -80,8 +80,9 @@ module.exports = {
       CONTENTSTACK_ENVIRONMENT: process.env.NEXT_PUBLIC_CONTENTSTACK_ENVIRONMENT,
     },
     contentful: {
-      CONTENTFUL_SPACE_ID: process.env.CONTENTFUL_SPACE_ID,
-      CONTENTFUL_ACCESS_TOKEN: process.env.CONTENTFUL_ACCESS_TOKEN,
+      contentful_space_id: process.env.CONTENTFUL_SPACE_ID,
+      contentful_access_token: process.env.CONTENTFUL_ACCESS_TOKEN,
+      homePageId: process.env.CONTENTFUL_HOME_PAGE_ID,
     },
   },
   serverRuntimeConfig: {

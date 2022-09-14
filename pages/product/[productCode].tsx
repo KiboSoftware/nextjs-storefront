@@ -20,6 +20,7 @@ export async function getStaticProps(context: GetStaticPropsContext) {
 
   const cmsProductDetail = await getPage({
     contentTypeUid: 'product_detail',
+    referenceFieldPath: [],
     entryUrl: productCode,
   })
   const product = await getProduct(productCode)
