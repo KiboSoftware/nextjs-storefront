@@ -18,9 +18,7 @@ import {
 import { useTranslation } from 'next-i18next'
 import { useRouter } from 'next/router'
 
-import { MyProfile } from '@/components/my-account'
-import { PaymentMethod } from '@/components/my-account'
-import AddressBook from '@/components/my-account/AddressBook/AddressBook'
+import { MyProfile, PaymentMethod, AddressBook } from '@/components/my-account'
 import { useAuthContext } from '@/context'
 import { useCustomerCardsQueries, useCustomerContactsQueries } from '@/hooks'
 
@@ -97,7 +95,7 @@ const MyAccountTemplate = () => {
       id: 'my-profile-accordion',
       controls: 'my-profile-content',
       header: t('my-profile'),
-      component: <MyProfile />,
+      component: <MyProfile user={user as CustomerAccount} />,
     },
     {
       id: 'address-book-accordion',

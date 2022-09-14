@@ -9,6 +9,15 @@ export default {
   component: MyProfile,
 } as ComponentMeta<typeof MyProfile>
 
-const Template: ComponentStory<typeof MyProfile> = () => <MyProfile />
+const Template: ComponentStory<typeof MyProfile> = (args) => <MyProfile {...args} />
 
 export const Common = Template.bind({})
+
+Common.args = {
+  user: {
+    id: 1012,
+    firstName: 'Kripa',
+    lastName: 'Babu',
+    emailAddress: 'kripa@gmail.com',
+  },
+}

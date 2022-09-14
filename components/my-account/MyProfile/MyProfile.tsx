@@ -6,9 +6,7 @@ import { Box, Stack, Typography } from '@mui/material'
 import { useTranslation } from 'next-i18next'
 
 import { ProfileDetailsForm } from '@/components/my-account'
-import { useAuthContext } from '@/context'
-import { useUpateUserMutations } from '@/hooks/mutations/useProfile/useChangeCustomerData/useUpdateCustomerData'
-import { useUpdateUserPasswordMutations } from '@/hooks/mutations/useProfile/useUpdateCustomerPassword/useUpdatePassword'
+import { useUpdateUserDataMutations, useUpdateUserPasswordMutations } from '@/hooks'
 import { accountDetailsGetters } from '@/lib/getters'
 import { UpdateProfileDataParam, PasswordTypes } from '@/lib/types'
 
@@ -19,11 +17,14 @@ enum ProfileSections {
   Email,
   Password,
 }
+interface MyProfileProps {
+  user: CustomerAccount
+}
 
-const MyProfile = () => {
-  const { user } = useAuthContext()
+const MyProfile = (props: MyProfileProps) => {
+  const { user } = props
   const { t } = useTranslation(['checkout', 'common'])
-  const { updateUserData } = useUpateUserMutations()
+  const { updateUserData } = useUpdateUserDataMutations()
   const { updateUserPasswordData } = useUpdateUserPasswordMutations()
 
   const [currentEditableField, setCurrentEditableField] = useState<number | null>(null)
@@ -76,9 +77,9 @@ const MyProfile = () => {
         accountId: currentUser.id as number,
         customerAccountInput: {
           id: currentUser.id as number,
-          firstName: profileFormData.firstName as string,
-          lastName: profileFormData.lastName as string,
-          emailAddress: profileFormData.emailAddress as string,
+          firstName: profileFormData.firstName || currentUser.firstName,
+          lastName: profileFormData.lastName || currentUser.lastName,
+          emailAddress: profileFormData.emailAddress || currentUser.emailAddress,
         },
       })
     } catch (err) {

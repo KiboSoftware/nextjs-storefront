@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 
 import { yupResolver } from '@hookform/resolvers/yup'
 import { Visibility, VisibilityOff } from '@mui/icons-material'
@@ -27,15 +27,13 @@ const StyledCardDiv = styled('div')(() => ({
 const useCardSchema = () => {
   const { t } = useTranslation('checkout')
   return yup.object({
-    firstName: yup.string().when('$isEmailForm', (isEmailForm, schema) => {
-      if (!isEmailForm) {
-        return schema.required(t('this-field-is-required'))
-      }
+    firstName: yup.string().when(['$isEmailForm', '$isPasswordForm'], {
+      is: (isEmailForm: boolean, isPasswordForm: boolean) => !isEmailForm && !isPasswordForm,
+      then: yup.string().required(t('this-field-is-required')),
     }),
-    lastName: yup.string().when('$isEmailForm', (isEmailForm, schema) => {
-      if (!isEmailForm) {
-        return schema.required(t('this-field-is-required'))
-      }
+    lastName: yup.string().when(['$isEmailForm', '$isPasswordForm'], {
+      is: (isEmailForm: boolean, isPasswordForm: boolean) => !isEmailForm && !isPasswordForm,
+      then: yup.string().required(t('this-field-is-required')),
     }),
     emailAddress: yup.string().when('$isEmailForm', (isEmailForm, schema) => {
       if (isEmailForm) {
@@ -49,19 +47,24 @@ const useCardSchema = () => {
     }),
     newPassword: yup.string().when('$isPasswordForm', (isPasswordForm, schema) => {
       if (isPasswordForm) {
-        return schema.required(t('this-field-is-required'))
+        return schema
+          .required(t('this-field-is-required'))
+          .min(8, "Password length doesn't match")
+          .matches(/\d/g, 'Password should contain at least one number')
+          .matches(/(?=.*[A-Z])/g, 'Password should contain at least one capital letter')
+          .matches(/[!@#$%^&*]/g, 'Password should contain at least special character')
       }
     }),
-    confirmPassword: yup
-      .string()
-      .when('$isPasswordForm', (isPasswordForm, schema) => {
-        if (isPasswordForm) {
-          return schema.required(t('this-field-is-required'))
-        }
-      })
-      .oneOf([yup.ref('newPassword'), null], "Passwords don't match!"),
+    confirmPassword: yup.string().when('$isPasswordForm', (isPasswordForm, schema) => {
+      if (isPasswordForm) {
+        return schema
+          .required(t('this-field-is-required'))
+          .oneOf([yup.ref('newPassword')], "Passwords don't match!")
+      }
+    }),
   })
 }
+
 const ProfileDetailsForm = (props: ProfileDetailsFormProps) => {
   const {
     firstName,
@@ -100,18 +103,21 @@ const ProfileDetailsForm = (props: ProfileDetailsFormProps) => {
   }
 
   const {
-    formState: { errors, isValid },
+    formState: { errors, isValid, isDirty },
     watch,
     control,
+    trigger,
     handleSubmit,
   } = useForm({
-    mode: 'onBlur',
-    reValidateMode: 'onBlur',
+    mode: 'onChange',
+    reValidateMode: 'onChange',
     defaultValues: getDefaultValues(),
+    criteriaMode: 'all',
     resolver: yupResolver(cardSchema),
     shouldFocusError: true,
     context: { isEmailForm, isPasswordForm },
   })
+  const userEnteredPassword = watch('newPassword')
 
   const buildParam = (formData: ProfileDetails) => {
     if (formData.emailAddress) {
@@ -140,7 +146,9 @@ const ProfileDetailsForm = (props: ProfileDetailsFormProps) => {
     })
   }
 
-  const userEnteredPassword = watch('newPassword')
+  useEffect(() => {
+    trigger('confirmPassword')
+  }, [userEnteredPassword, trigger])
 
   return (
     <form>
@@ -160,7 +168,7 @@ const ProfileDetailsForm = (props: ProfileDetailsFormProps) => {
                   onChange={(_name, value) => field.onChange(value)}
                   onBlur={field.onBlur}
                   error={!!errors?.emailAddress}
-                  helperText={errors?.emailAddress?.message as unknown as string}
+                  helperText={errors?.emailAddress?.message as string}
                 />
               )}
             />
@@ -179,7 +187,7 @@ const ProfileDetailsForm = (props: ProfileDetailsFormProps) => {
                     onBlur={field.onBlur}
                     onChange={(_name, value) => field.onChange(value)}
                     error={!!errors.currentPassword}
-                    helperText={errors?.currentPassword?.message}
+                    helperText={errors?.currentPassword?.message as string}
                     type={showPassword.currentPassword ? 'text' : 'password'}
                     icon={showPassword.currentPassword ? <Visibility /> : <VisibilityOff />}
                     onIconClick={() => handleClickShowPassword('currentPassword')}
@@ -198,7 +206,7 @@ const ProfileDetailsForm = (props: ProfileDetailsFormProps) => {
                     onBlur={field.onBlur}
                     onChange={(_name, value) => field.onChange(value)}
                     error={!!errors.newPassword}
-                    helperText={errors?.newPassword?.message}
+                    helperText={errors?.newPassword?.message as string}
                     placeholder={t('must-be-at-least-8-characters')}
                     type={showPassword.newPassword ? 'text' : 'password'}
                     icon={showPassword.newPassword ? <Visibility /> : <VisibilityOff />}
@@ -218,14 +226,14 @@ const ProfileDetailsForm = (props: ProfileDetailsFormProps) => {
                     onBlur={field.onBlur}
                     onChange={(_name, value) => field.onChange(value)}
                     error={!!errors.confirmPassword}
-                    helperText={errors?.confirmPassword?.message}
+                    helperText={errors?.confirmPassword?.message as string}
                     type={showPassword.confirmPassword ? 'text' : 'password'}
                     icon={showPassword.confirmPassword ? <Visibility /> : <VisibilityOff />}
                     onIconClick={() => handleClickShowPassword('confirmPassword')}
                   />
                 )}
               />
-              <Box pb={2}>
+              <Box sx={{ paddingBlock: 2 }}>
                 <PasswordValidation password={userEnteredPassword as string} />
               </Box>
             </>
@@ -245,7 +253,7 @@ const ProfileDetailsForm = (props: ProfileDetailsFormProps) => {
                     onChange={(_name, value) => field.onChange(value)}
                     onBlur={field.onBlur}
                     error={!!errors?.firstName}
-                    helperText={errors?.firstName?.message as unknown as string}
+                    helperText={errors?.firstName?.message as string}
                   />
                 )}
               />
@@ -261,7 +269,7 @@ const ProfileDetailsForm = (props: ProfileDetailsFormProps) => {
                     onChange={(_name, value) => field.onChange(value)}
                     onBlur={field.onBlur}
                     error={!!errors?.lastName}
-                    helperText={errors?.lastName?.message as unknown as string}
+                    helperText={errors?.lastName?.message as string}
                   />
                 )}
               />
@@ -275,10 +283,10 @@ const ProfileDetailsForm = (props: ProfileDetailsFormProps) => {
             <Button
               variant="contained"
               color="primary"
-              {...(!isValid && { disabled: true })}
+              {...((!isValid || !isDirty) && { disabled: true })}
               onClick={() => handleSubmit(onValid)()}
             >
-              {t('common:save-payment-method')}
+              {t('common:save')}
             </Button>
           </Stack>
         </FormControl>
