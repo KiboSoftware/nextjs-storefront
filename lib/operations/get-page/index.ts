@@ -2,6 +2,7 @@ import getConfig from 'next/config'
 
 import Stack from '../../cms/content-stack'
 import contentful from '@/lib/cms/contentful'
+import { CMS } from '@/lib/constants'
 import { contentfulGetters } from '@/lib/getters'
 
 interface PageProps {
@@ -21,7 +22,7 @@ const getContentStackPage = async (params: PageProps) => {
 
 const getContentfulPage = async (productCode: string) => {
   if (productCode) {
-    const response = await contentful.fetchProductDetails(productCode) //BackP_004
+    const response = await contentful.fetchProductDetails(productCode)
     const productData = contentfulGetters.getContentfulProductData(
       response?.data?.productDetailsCollection?.items[0]
     )
@@ -38,8 +39,8 @@ const getContentfulPage = async (productCode: string) => {
 
 export const getPage = async (params: PageProps) => {
   const currentCMS = publicRuntimeConfig.cms || ''
-  if (currentCMS === 'contentstack') return getContentStackPage(params)
-  if (currentCMS === 'contentful') return getContentfulPage(params.entryUrl)
+  if (currentCMS === CMS.CONTENTSTACK) return getContentStackPage(params)
+  if (currentCMS === CMS.CONTENTFUL) return getContentfulPage(params.entryUrl)
 
   return {
     components: [],
