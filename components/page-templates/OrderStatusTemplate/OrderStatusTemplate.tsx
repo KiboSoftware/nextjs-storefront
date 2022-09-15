@@ -50,7 +50,7 @@ const OrderStatusTemplate = () => {
           <ViewOrderDetails
             title={t('orderhistory:view-order-status')}
             isOrderStatus={true}
-            order={order as Order}
+            order={order}
           />
         )}
         {!order?.id && (
