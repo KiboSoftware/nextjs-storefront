@@ -1,11 +1,16 @@
 import React, { ReactNode } from 'react'
 
 import { composeStories } from '@storybook/testing-react'
-import { render, screen } from '@testing-library/react'
+import { cleanup, screen, waitFor } from '@testing-library/react'
+import userEvent from '@testing-library/user-event'
+import { graphql } from 'msw'
+import { RouterContext } from 'next/dist/shared/lib/router-context'
 
+import { CartTemplateProps } from './CartTemplate'
 import * as stories from './CartTemplate.stories'
-import { locationCollectionMock } from '@/__mocks__/stories/locationCollectionMock'
-
+import { server } from '@/__mocks__/msw/server'
+import { createMockRouter, renderWithQueryClient } from '@/__test__/utils'
+import { ModalContextProvider, DialogRoot } from '@/context'
 const CartItemListMock = ({ children }: { children: ReactNode }) => (
   <div data-testid="cart-item-list-mock">{children}</div>
 )
@@ -14,38 +19,65 @@ const OrderSummaryMock = () => <div data-testid="order-summary-mock" />
 jest.mock('../../cart/CartItemList/CartItemList', () => CartItemListMock)
 jest.mock('../../common/OrderSummary/OrderSummary', () => OrderSummaryMock)
 
-const mockLocationsResponse = locationCollectionMock.spLocations
-jest.mock('@/hooks', () => ({
-  useCheckout: jest.fn(() => ({})),
-  useCreateFromCartMutation: jest.fn(() => ({})),
-  useCartQueries: jest.fn(() => ({})),
-  useUpdateCheckout: jest.fn(() => ({})),
-  useStoreLocations: jest.fn(() => ({ mockLocationsResponse })),
-  usePurchaseLocation: jest.fn(() => ({})),
-  useCartMutationUpdateCartItemQuantity: jest.fn(() => ({})),
-  useCartMutationUpdateCartItem: jest.fn(() => ({})),
-  useCartMutationRemoveCartItem: jest.fn(() => ({})),
-  useUpdateCartCouponMutation: jest.fn(() => ({})),
-  useDeleteCartCouponMutation: jest.fn(() => ({})),
-}))
-
 const { Common } = composeStories(stories)
+const setup = (params?: CartTemplateProps) => {
+  const user = userEvent.setup()
+  const router = createMockRouter()
+  const props = params ? params : Common.args
+
+  renderWithQueryClient(
+    <RouterContext.Provider value={router}>
+      <ModalContextProvider>
+        <DialogRoot />
+        <Common {...props} />
+      </ModalContextProvider>
+    </RouterContext.Provider>
+  )
+  return {
+    user,
+    router,
+  }
+}
+
+beforeEach(() => {
+  cleanup()
+})
 
 describe('[components] CartTemplate', () => {
-  const setup = () => {
-    render(<Common {...Common.args} />)
-  }
-
-  it('should render component', () => {
+  it('should render component', async () => {
     setup()
-    const cartTitle = screen.getByText(/cart:shopping-cart/i)
-    const cartItemCount = screen.getByText(/cart:cart-item-count/i)
-    const cartItemList = screen.getByTestId('cart-item-list-mock')
-    const orderSummary = screen.getByTestId('cart-item-list-mock')
+    await waitFor(async () => {
+      const cartTitle = screen.getByText(/cart:shopping-cart/i)
+      const cartItemCount = screen.getByText(/cart:cart-item-count/i)
+      const cartItemList = screen.getByTestId('cart-item-list-mock')
+      const orderSummary = screen.getByTestId('cart-item-list-mock')
 
-    expect(cartTitle).toBeVisible()
-    expect(cartItemCount).toBeVisible()
-    expect(cartItemList).toBeVisible()
-    expect(orderSummary).toBeVisible()
+      expect(cartTitle).toBeVisible()
+      await waitFor(async () => expect(cartItemCount).toBeVisible())
+      await waitFor(async () => expect(cartItemList).toBeVisible())
+      await waitFor(async () => expect(orderSummary).toBeVisible())
+    })
+  })
+
+  it('should render empty cart when no items present in cart', async () => {
+    const cartParams = { ...Common.args }
+    if (cartParams.cart) cartParams.cart.items = []
+    server.use(
+      graphql.query('cart', (_req, res, ctx) => {
+        return res(ctx.data({ currentCart: cartParams.cart }))
+      })
+    )
+
+    const { user, router } = setup(cartParams as CartTemplateProps)
+    await waitFor(async () => {
+      const emptyCartSubTitle = screen.getByText(/cart:empty-cart-message/i)
+
+      expect(emptyCartSubTitle).toBeVisible()
+      const shopNowButton = screen.getByRole('link', { name: /common:shop-now/i })
+      await user.click(shopNowButton)
+      await waitFor(() => {
+        expect(router.route).toBe('/')
+      })
+    })
   })
 })

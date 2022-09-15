@@ -9,8 +9,10 @@ import {
   useTheme,
   useMediaQuery,
   Divider,
+  Link as MuiLink,
 } from '@mui/material'
 import { useTranslation } from 'next-i18next'
+import Link from 'next/link'
 import { useRouter } from 'next/router'
 
 import { CartItemList } from '@/components/cart'
@@ -224,37 +226,61 @@ const CartTemplate = (props: CartTemplateProps) => {
         </Grid>
       )}
       {/* Cart item Section */}
-      <Grid item xs={12} md={8} sx={{ paddingRight: { md: 2 } }}>
-        <CartItemList
-          cartItems={cartItems}
-          fulfillmentLocations={
-            locations && Object.keys(locations).length ? (locations as Location[]) : []
-          }
-          purchaseLocation={purchaseLocation}
-          onCartItemQuantityUpdate={handleItemQuantity}
-          onCartItemDelete={handleDeleteItem}
-          onCartItemActionSelection={handleItemActions}
-          onFulfillmentOptionSelection={handleFulfillmentOptionSelection}
-          onProductPickupLocation={handleProductPickupLocation}
-        />
-      </Grid>
-      {/* Order Summary */}
-      <Grid item xs={12} md={4} sx={{ paddingRight: { xs: 0, md: 2 } }}>
-        <OrderSummary {...orderSummaryArgs}>
-          <Stack direction="column" gap={2}>
-            <Button
-              disabled={!cartItemCount}
-              variant="contained"
-              name="goToCart"
-              sx={{ ...styles.checkoutButtonStyle }}
-              fullWidth
-              onClick={handleGotoCheckout}
-            >
-              {t('go-to-checkout')}
-            </Button>
-          </Stack>
-        </OrderSummary>
-      </Grid>
+      {cart?.items?.length && (
+        <>
+          <Grid item xs={12} md={8} sx={{ paddingRight: { md: 2 } }}>
+            <CartItemList
+              cartItems={cartItems}
+              fulfillmentLocations={
+                locations && Object.keys(locations).length ? (locations as Location[]) : []
+              }
+              purchaseLocation={purchaseLocation}
+              onCartItemQuantityUpdate={handleItemQuantity}
+              onCartItemDelete={handleDeleteItem}
+              onCartItemActionSelection={handleItemActions}
+              onFulfillmentOptionSelection={handleFulfillmentOptionSelection}
+              onProductPickupLocation={handleProductPickupLocation}
+            />
+          </Grid>
+          {/* Order Summary */}
+          <Grid item xs={12} md={4} sx={{ paddingRight: { xs: 0, md: 2 } }}>
+            <OrderSummary {...orderSummaryArgs}>
+              <Stack direction="column" gap={2}>
+                <Button
+                  disabled={!cartItemCount}
+                  variant="contained"
+                  name="goToCart"
+                  sx={{ ...styles.checkoutButtonStyle }}
+                  fullWidth
+                  onClick={handleGotoCheckout}
+                >
+                  {t('go-to-checkout')}
+                </Button>
+              </Stack>
+            </OrderSummary>
+          </Grid>
+        </>
+      )}
+      {!cart?.items?.length && (
+        <Box data-testid="empty-cart">
+          <Typography variant="h4" fontWeight={'bold'}>
+            {t('cart:empty-cart-message')}
+          </Typography>
+          <Box maxWidth="23.5rem">
+            <Link href="/" passHref>
+              <MuiLink href="/">
+                <Button
+                  variant="contained"
+                  color="primary"
+                  sx={{ width: '100%', marginTop: '3.063rem' }}
+                >
+                  {t('common:shop-now')}
+                </Button>
+              </MuiLink>
+            </Link>
+          </Box>
+        </Box>
+      )}
     </Grid>
   )
 }

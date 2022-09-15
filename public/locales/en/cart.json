@@ -3,5 +3,6 @@
   "edit": "Edit",
   "save-for-later": "Save for Later",
   "add-to-favorites": "Add to Favorites",
-  "cart-item-count": "{{count}} items"
+  "cart-item-count": "{{count}} items",
+  "empty-cart-message": "You haven’t added any items to your shopping cart yet. Shop now to add your favorite items to your cart."
 }
