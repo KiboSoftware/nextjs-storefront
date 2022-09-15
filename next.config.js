@@ -16,6 +16,7 @@ module.exports = {
       'cdn-sb.mozu.com',
       'encrypted-tbn0.gstatic.com',
       'images.contentstack.io',
+      'images.ctfassets.net',
     ],
   },
   publicRuntimeConfig: {
@@ -89,8 +90,5 @@ module.exports = {
     pageSize: 100,
     cacheKey: 'categoryTree',
     cacheTimeOut: 10000,
-  },
-  images: {
-    domains: ['images.ctfassets.net'],
   },
 }

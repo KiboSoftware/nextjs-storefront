@@ -2,6 +2,7 @@ import getConfig from 'next/config'
 
 import Stack from '../../cms/content-stack'
 import contentful from '@/lib/cms/contentful'
+import { contentfulGetters } from '@/lib/getters'
 
 interface PageProps {
   contentTypeUid: string
@@ -19,11 +20,20 @@ const getContentStackPage = async (params: PageProps) => {
 }
 
 const getContentfulPage = async (productCode: string) => {
-  const response = productCode
-    ? await contentful.fetchHomePage()
-    : await contentful.fetchProductDetails(productCode) //BackP_004
-
-  return response
+  if (productCode) {
+    const response = await contentful.fetchProductDetails(productCode) //BackP_004
+    const productData = contentfulGetters.getContentfulProductData(
+      response?.data?.productDetailsCollection?.items[0]
+    )
+    return {
+      components: productData || [],
+    }
+  } else {
+    const response = await contentful.fetchHomePage()
+    return {
+      components: contentfulGetters.getContentfulPageData(response?.data) || [],
+    }
+  }
 }
 
 export const getPage = async (params: PageProps) => {
