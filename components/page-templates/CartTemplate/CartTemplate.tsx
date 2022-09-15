@@ -226,7 +226,7 @@ const CartTemplate = (props: CartTemplateProps) => {
         </Grid>
       )}
       {/* Cart item Section */}
-      {cart?.items?.length ? (
+      {cart?.items?.length && (
         <>
           <Grid item xs={12} md={8} sx={{ paddingRight: { md: 2 } }}>
             <CartItemList
@@ -260,7 +260,8 @@ const CartTemplate = (props: CartTemplateProps) => {
             </OrderSummary>
           </Grid>
         </>
-      ) : (
+      )}
+      {!cart?.items?.length && (
         <Box data-testid="empty-cart">
           <Typography variant="h4" fontWeight={'bold'}>
             {t('cart:empty-cart-message')}
