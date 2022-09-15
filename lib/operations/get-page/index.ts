@@ -18,15 +18,18 @@ const getContentStackPage = async (params: PageProps) => {
   }
 }
 
-const getContentfulPage = async () => {
-  const response = await contentful.fetchContent()
+const getContentfulPage = async (productCode: string) => {
+  const response = productCode
+    ? await contentful.fetchHomePage()
+    : await contentful.fetchProductDetails(productCode) //BackP_004
+
   return response
 }
 
 export const getPage = async (params: PageProps) => {
   const currentCMS = publicRuntimeConfig.cms || ''
   if (currentCMS === 'contentstack') return getContentStackPage(params)
-  if (currentCMS === 'contentful') return getContentfulPage()
+  if (currentCMS === 'contentful') return getContentfulPage(params.entryUrl)
 
   return {
     components: [],
