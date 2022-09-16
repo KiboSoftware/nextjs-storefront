@@ -34,9 +34,7 @@ const styles = {
   smallIcon: {
     fontSize: (theme: Theme) => theme.typography.body2,
   },
-  listHeader: {
-    fontSize: (theme: Theme) => theme.typography.h3,
-  },
+  listHeader: { paddingLeft: 4, paddingRight: 4, paddingTop: 1.5, paddingBottom: 1.5 },
   listContent: {
     fontSize: (theme: Theme) => theme.typography.subtitle2,
   },
@@ -59,7 +57,7 @@ const CategoryNestedNavigation = (props: CategoryNestedNavigationProps) => {
     setSubHeader(initialSubHeader)
   }
 
-  const handleCatgeoryClick = (clickedCategory: Maybe<PrCategory>) => {
+  const handleCategoryClick = (clickedCategory: Maybe<PrCategory>) => {
     if (clickedCategory?.childrenCategories?.length) {
       const selectedCategory: Maybe<PrCategory> = activeCategory?.find(
         (category) => category?.categoryCode === clickedCategory?.categoryCode
@@ -106,7 +104,7 @@ const CategoryNestedNavigation = (props: CategoryNestedNavigationProps) => {
       aria-labelledby="category-nested-list"
       role="list"
       subheader={
-        <Box display="flex" alignItems="center" pl={4} pr={2} pt={2}>
+        <Box display="flex" alignItems="center" pl={3} pr={2} pt={'4px'}>
           <IconButton size="small" aria-label="back-arrow-button" onClick={handleBackClick}>
             <ArrowBackIos sx={{ ...styles.smallIcon }} />
           </IconButton>
@@ -124,16 +122,13 @@ const CategoryNestedNavigation = (props: CategoryNestedNavigationProps) => {
         </Box>
       }
     >
-      {children && (
-        <ListItemButton sx={{ backgroundColor: 'grey.300', marginBlock: 1 }}>
+      {children && subHeader.label === initialSubHeader.label && (
+        <ListItemButton sx={{ backgroundColor: 'grey.300', paddingBlock: '4px' }}>
           <ListItemText primary={children} />
         </ListItemButton>
       )}
-      <ListItem sx={{ paddingInline: 4 }}>
-        <ListItemText
-          primary={<Typography fontWeight="bold">{subHeader.label}</Typography>}
-          sx={{ ...styles.listHeader }}
-        />
+      <ListItem sx={styles.listHeader}>
+        <ListItemText primary={<Typography variant="h2">{subHeader.label}</Typography>} />
       </ListItem>
       <Divider />
       {activeCategory?.map((category: Maybe<PrCategory>) => {
@@ -152,7 +147,7 @@ const CategoryNestedNavigation = (props: CategoryNestedNavigationProps) => {
                   onClick={() => onCategoryClick(category?.categoryCode || '')}
                 />
                 {category?.childrenCategories?.length ? (
-                  <ArrowForward fontSize="small" onClick={() => handleCatgeoryClick(category)} />
+                  <ArrowForward fontSize="small" onClick={() => handleCategoryClick(category)} />
                 ) : null}
               </ListItemButton>
               <Divider />
