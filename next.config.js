@@ -74,15 +74,15 @@ module.exports = {
     defaultWishlistName: DEFAULT_WISHLIST_NAME,
     pciHost: process.env.KIBO_PCI_HOST,
     apiHost: process.env.KIBO_API_HOST,
-    cms: process.env.CMS || 'contentful',
-    contentStack: {
-      CONTENTSTACK_API_KEY: process.env.NEXT_PUBLIC_CONTENTSTACK_API_KEY,
-      CONTENTSTACK_DELIVERY_TOKEN: process.env.NEXT_PUBLIC_CONTENTSTACK_DELIVERY_TOKEN,
-      CONTENTSTACK_ENVIRONMENT: process.env.NEXT_PUBLIC_CONTENTSTACK_ENVIRONMENT,
+    cms: process.env.CMS || 'contentstack',
+    contentstack: {
+      apiKey: process.env.NEXT_PUBLIC_CONTENTSTACK_API_KEY,
+      deliveryToken: process.env.NEXT_PUBLIC_CONTENTSTACK_DELIVERY_TOKEN,
+      environment: process.env.NEXT_PUBLIC_CONTENTSTACK_ENVIRONMENT,
     },
     contentful: {
-      spaceId: process.env.CONTENTFUL_SPACE_ID,
       accessToken: process.env.CONTENTFUL_ACCESS_TOKEN,
+      URL: `https://graphql.contentful.com/content/v1/spaces/${process.env.CONTENTFUL_SPACE_ID}/environments/master`,
     },
   },
   serverRuntimeConfig: {

@@ -1,4 +1,4 @@
-const formatCMSProduct = (cmsProducts: any) => {
+const formatContentfulProduct = (cmsProducts: any) => {
   if (cmsProducts?.product_recommendations) {
     return {
       ...cmsProducts,
@@ -20,7 +20,7 @@ const getContentfulProductData = (contentfulProductData: any) => {
   return (
     contentfulProductData &&
     Object.entries(contentfulProductData)?.map((item) => {
-      return { [item[0]]: formatCMSProduct(item[1]) }
+      return { [item[0]]: formatContentfulProduct(item[1]) }
     })
   )
 }
