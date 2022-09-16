@@ -31,8 +31,11 @@ const getContentfulPage = async (productCode: string) => {
     }
   } else {
     const response = await contentful.fetchHomePage()
+    const homePageData = contentfulGetters.getContentfulPageData(
+      response?.data?.homePageCollection?.items
+    )
     return {
-      components: contentfulGetters.getContentfulPageData(response?.data) || [],
+      components: homePageData || [],
     }
   }
 }
