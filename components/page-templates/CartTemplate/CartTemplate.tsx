@@ -31,7 +31,8 @@ import {
   useDeleteCartCouponMutation,
 } from '@/hooks'
 import { FulfillmentOptions } from '@/lib/constants'
-import { checkoutGetters } from '@/lib/getters'
+import { orderGetters } from '@/lib/getters'
+import { cartGetters } from '@/lib/getters/cartGetters'
 import type { LocationCustom } from '@/lib/types'
 
 import type { Cart, Location, CartItemInput } from '@/lib/gql/types'
@@ -52,7 +53,7 @@ const styles = {
     height: '1px',
   },
   checkoutButtonStyle: {
-    borderradius: '0.25rem',
+    borderRadius: '0.25rem',
     height: '42px',
   },
 }
@@ -70,14 +71,14 @@ const CartTemplate = (props: CartTemplateProps) => {
   const { updateCartItem } = useUpdateCartItemMutation()
   const { showModal, closeModal } = useModalContext()
 
-  const cartItemCount = checkoutGetters.getCartItemCount(cart)
-  const cartItems = checkoutGetters.getCartItems(cart)
-  const cartSubTotal = checkoutGetters.getSubtotal(cart)
-  const cartDiscountedSubTotal = checkoutGetters.getDiscountedSubtotal(cart)
-  const cartShippingTotal = checkoutGetters.getShippingTotal(cart)
-  const cartTaxTotal = checkoutGetters.getTaxTotal(cart)
-  const cartTotal = checkoutGetters.getTotal(cart)
-  const locationCodes = checkoutGetters.getFulfillmentLocationCodes(cartItems)
+  const cartItemCount = cartGetters.getCartItemCount(cart)
+  const cartItems = cartGetters.getCartItems(cart)
+  const cartSubTotal = orderGetters.getSubtotal(cart)
+  const cartDiscountedSubTotal = orderGetters.getDiscountedSubtotal(cart)
+  const cartShippingTotal = orderGetters.getShippingTotal(cart)
+  const cartTaxTotal = orderGetters.getTaxTotal(cart)
+  const cartTotal = orderGetters.getTotal(cart)
+  const locationCodes = orderGetters.getFulfillmentLocationCodes(cartItems)
 
   const { data: locations } = useStoreLocationsQueries({ filter: locationCodes })
   const { data: purchaseLocation } = usePurchaseLocationQueries()

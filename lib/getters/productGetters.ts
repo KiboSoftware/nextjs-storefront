@@ -3,6 +3,7 @@ import getConfig from 'next/config'
 import { FulfillmentOptions } from '../constants'
 import { buildBreadcrumbsParams, uiHelpers } from '@/lib/helpers'
 import type { ProductCustom, BreadCrumb, ProductProperties, FulfillmentOption } from '@/lib/types'
+import DefaultImage from '@/public/product_placeholder.svg'
 
 import type {
   Product,
@@ -11,13 +12,32 @@ import type {
   ProductProperty,
   Location,
   LocationInventory,
+  CrProduct,
+  CrProductOption,
 } from '@/lib/gql/types'
+
+type ProductOptionsReturnType<T> = T extends 'Product'
+  ? ProductOption[]
+  : T extends 'CrProduct'
+  ? CrProductOption[]
+  : never
 
 const { publicRuntimeConfig } = getConfig()
 
-const getName = (product: Product | ProductCustom): string => product?.content?.productName || ''
+function isCrProduct(product: Product | ProductCustom | CrProduct): product is CrProduct {
+  return (product as CrProduct) !== undefined
+}
 
-const getProductId = (product: Product | ProductCustom): string => product?.productCode || ''
+const getName = (product: Product | ProductCustom | CrProduct): string => {
+  if (isCrProduct(product)) {
+    return product.name || ''
+  }
+
+  return product?.content?.productName || ''
+}
+
+const getProductId = (product: Product | ProductCustom | CrProduct): string =>
+  product?.productCode || ''
 
 const getRating = (product: Product | ProductCustom) => {
   const attr = product?.properties?.find(
@@ -28,7 +48,9 @@ const getRating = (product: Product | ProductCustom) => {
 
 const getProductTotalReviews = (): number => 0
 
-const getPrice = (product: Product | ProductCustom): { regular: number; special: number } => {
+const getPrice = (
+  product: Product | ProductCustom | CrProduct
+): { regular: number; special: number } => {
   return {
     regular: product?.price?.price as number,
     special: product?.price?.salePrice as number,
@@ -50,6 +72,8 @@ const getShortDescription = (product: Product | ProductCustom): string =>
 const getProductGallery = (product: Product | ProductCustom) => {
   return product?.content?.productImages
 }
+
+const getProductImage = (product: CrProduct): string => product?.imageUrl || DefaultImage
 
 const handleProtocolRelativeUrl = (url: string) => {
   if (typeof url === 'string' && !url.startsWith('https')) {
@@ -90,9 +114,14 @@ const getOptionSelectedValue = (option: ProductOption) => {
 }
 
 export const getOptionName = (option: ProductOption): string => option?.attributeDetail?.name || ''
-export const getOptions = (product: Product): ProductOption[] => product?.options as ProductOption[]
 
-const getSelectedFullfillmentOption = (product: ProductCustom) => product?.fulfillmentMethod
+export const getOptions = <T extends Product | CrProduct>(
+  product: T
+): ProductOptionsReturnType<T> => {
+  return product.options as ProductOptionsReturnType<T>
+}
+
+const getSelectedFulfillmentOption = (product: ProductCustom) => product?.fulfillmentMethod
 
 const getSegregatedOptions = (product: ProductCustom) => {
   const options = product?.options
@@ -168,7 +197,7 @@ const getProductDetails = (product: ProductCustom) => {
     productName: getName(product),
     productCode: getProductId(product),
     variationProductCode: getVariationProductCodeOrProductCode(product),
-    fulfillmentMethod: getSelectedFullfillmentOption(product),
+    fulfillmentMethod: getSelectedFulfillmentOption(product),
     productPrice: getPrice(product),
     productPriceRange: getPriceRange(product),
     productRating: getRating(product),
@@ -279,7 +308,7 @@ export const productGetters = {
   getOptionName,
   getOptions,
   getSegregatedOptions,
-  getSelectedFullfillmentOption,
+  getSelectedFulfillmentOption,
   getCoverImage,
   getProductId,
   validateAddToCart,
@@ -289,6 +318,7 @@ export const productGetters = {
   getIsPackagedStandAlone,
   getAvailableItemCount,
   isVariationProduct,
+  getProductImage,
   // grouped
   getProductDetails,
 }

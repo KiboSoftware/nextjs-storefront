@@ -4,9 +4,10 @@ import React from 'react'
 import { composeStories } from '@storybook/testing-react'
 import { render, screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
-import { UserEvent } from '@testing-library/user-event/dist/types/setup'
 
 import * as stories from './LoginContent.stories' // import all stories from the stories file
+
+import type { UserEvent } from '@testing-library/user-event/dist/types/setup/'
 
 const { Common } = composeStories(stories)
 
@@ -120,7 +121,7 @@ describe('[components] (LoginContent)', () => {
   })
 })
 
-const loginInputs = async (user: any) => {
+const loginInputs = async (user: UserEvent) => {
   const emailInput = screen.getByRole('textbox', { name: 'email' })
   const passwordInput = screen.getByLabelText('password')
 

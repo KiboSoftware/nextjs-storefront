@@ -26,7 +26,7 @@ import {
   usePaymentTypes,
 } from '@/hooks'
 import { PaymentType, PaymentWorkflow } from '@/lib/constants'
-import { addressGetters, cardGetters, checkoutGetters, accountDetailsGetters } from '@/lib/getters'
+import { addressGetters, cardGetters, orderGetters, userGetters } from '@/lib/getters'
 import { tokenizeCreditCardPayment } from '@/lib/helpers'
 import { buildCardPaymentActionForCheckoutParams } from '@/lib/helpers/buildCardPaymentActionForCheckoutParams'
 import type {
@@ -152,12 +152,7 @@ const PaymentStep = (props: PaymentStepProps) => {
   )
 
   // default card details if payment method is card
-  const defaultCustomerAccountCard = accountDetailsGetters.getDefaultPaymentBillingMethod(
-    savedPaymentBillingDetails
-  )
-
-  // other card details with billing if payment method is card
-  const previouslySavedCustomerAccountCards = accountDetailsGetters.getOtherPaymentBillingMethod(
+  const defaultCustomerAccountCard = userGetters.getDefaultPaymentBillingMethod(
     savedPaymentBillingDetails
   )
 
@@ -301,10 +296,7 @@ const PaymentStep = (props: PaymentStepProps) => {
       )
     }
 
-    const selectedCards = checkoutGetters.getSelectedPaymentMethods(
-      checkout,
-      PaymentType.CREDITCARD
-    )
+    const selectedCards = orderGetters.getSelectedPaymentMethods(checkout, PaymentType.CREDITCARD)
 
     if (
       selectedCards?.some(
@@ -379,42 +371,46 @@ const PaymentStep = (props: PaymentStepProps) => {
       card?.billingAddressInfo?.contact.address as CrAddress
     )
     return (
-      <SavedPaymentMethodView
-        key={card?.cardInfo?.id as string}
-        radio
-        displayRowDirection={false}
-        displayTitle={false}
-        selected={selectedPaymentBillingRadio}
-        id={cardGetters.getCardId(card?.cardInfo)}
-        cardNumberPart={cardGetters.getCardNumberPart(card?.cardInfo)}
-        expireMonth={cardGetters.getExpireMonth(card?.cardInfo)}
-        expireYear={cardGetters.getExpireYear(card?.cardInfo)}
-        cardType={cardGetters.getCardType(card?.cardInfo)}
-        address1={addressGetters.getAddress1(address)}
-        address2={addressGetters.getAddress2(address)}
-        cityOrTown={addressGetters.getCityOrTown(address)}
-        postalOrZipCode={addressGetters.getPostalOrZipCode(address)}
-        stateOrProvince={addressGetters.getStateOrProvince(address)}
-        onPaymentCardSelection={handleRadioSavedCardSelection}
-      />
+      <>
+        {defaultCustomerAccountCard.cardInfo?.id === card.cardInfo?.id && (
+          <Typography variant="h4" fontWeight={'bold'}>
+            {t('common:primary')}
+          </Typography>
+        )}
+        <SavedPaymentMethodView
+          key={card?.cardInfo?.id as string}
+          radio
+          displayRowDirection={false}
+          displayTitle={false}
+          selected={selectedPaymentBillingRadio}
+          id={cardGetters.getCardId(card?.cardInfo)}
+          cardNumberPart={cardGetters.getCardNumberPart(card?.cardInfo)}
+          expireMonth={cardGetters.getExpireMonth(card?.cardInfo)}
+          expireYear={cardGetters.getExpireYear(card?.cardInfo)}
+          cardType={cardGetters.getCardType(card?.cardInfo)}
+          address1={addressGetters.getAddress1(address)}
+          address2={addressGetters.getAddress2(address)}
+          cityOrTown={addressGetters.getCityOrTown(address)}
+          postalOrZipCode={addressGetters.getPostalOrZipCode(address)}
+          stateOrProvince={addressGetters.getStateOrProvince(address)}
+          onPaymentCardSelection={handleRadioSavedCardSelection}
+        />
+      </>
     )
   }
 
   const handleInitialCardDetailsLoad = () => {
     const savedInfo =
-      accountDetailsGetters.getSavedCardsAndBillingDetails(
+      userGetters.getSavedCardsAndBillingDetails(
         customerCardsCollection,
         customerContactsCollection
       ) || []
 
-    const defaultCard = accountDetailsGetters.getDefaultPaymentBillingMethod(savedInfo)
+    const defaultCard = userGetters.getDefaultPaymentBillingMethod(savedInfo)
     cardGetters.getCardId(defaultCard?.cardInfo) &&
       setSelectedPaymentBillingRadio(defaultCard.cardInfo?.id as string)
 
-    const selectedCards = checkoutGetters.getSelectedPaymentMethods(
-      checkout,
-      PaymentType.CREDITCARD
-    )
+    const selectedCards = orderGetters.getSelectedPaymentMethods(checkout, PaymentType.CREDITCARD)
 
     selectedCards?.forEach((card) => {
       const cardDetails = card?.billingInfo?.card
@@ -502,20 +498,8 @@ const PaymentStep = (props: PaymentStepProps) => {
       {shouldShowPreviouslySavedPayments() && (
         <>
           <Stack gap={2} width="100%" data-testid="saved-payment-methods">
-            {defaultCustomerAccountCard.cardInfo?.id && (
-              <>
-                <Typography variant="h4" fontWeight={'bold'}>
-                  {t('common:your-default-payment-method')}
-                </Typography>
-                {getSavedPaymentMethodView(defaultCustomerAccountCard)}
-              </>
-            )}
-
-            <Typography variant="h4" fontWeight={'bold'}>
-              {t('common:previously-saved-payment-methods')}
-            </Typography>
-            {previouslySavedCustomerAccountCards?.length ? (
-              previouslySavedCustomerAccountCards.map((card) => {
+            {savedPaymentBillingDetails?.length ? (
+              savedPaymentBillingDetails.map((card) => {
                 return getSavedPaymentMethodView(card)
               })
             ) : (

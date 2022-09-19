@@ -23,10 +23,10 @@ import {
   useUpdateOrderCouponMutation,
   useDeleteOrderCouponMutation,
 } from '@/hooks'
-import { userAddressGetters } from '@/lib/getters'
+import { userGetters } from '@/lib/getters'
 import theme from '@/styles/theme'
 
-import type { Order } from '@/lib/gql/types'
+import type { CustomerContact, Order } from '@/lib/gql/types'
 interface CheckoutProps {
   checkout: Order
   initialStep?: number
@@ -134,8 +134,8 @@ const Checkout = (props: CheckoutProps) => {
   const numberOfItems = checkout && checkout?.items && checkout?.items?.length
   const showCheckoutSteps = activeStep !== steps.length
 
-  const userShippingAddress = userAddressGetters?.getUserShippingAddress(
-    savedUserAddressData?.items
+  const userShippingAddress = userGetters?.getUserShippingAddress(
+    savedUserAddressData?.items as CustomerContact[]
   )
   return (
     <>

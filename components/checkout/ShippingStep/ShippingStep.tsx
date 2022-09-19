@@ -9,7 +9,8 @@ import { AddressDetailsView, AddressForm } from '@/components/common'
 import { useCheckoutStepContext, STEP_STATUS } from '@/context'
 import { useUpdateCheckoutShippingInfoMutation, useShippingMethodsQueries } from '@/hooks'
 import { DefaultId } from '@/lib/constants'
-import { checkoutGetters, userAddressGetters } from '@/lib/getters'
+import { orderGetters, userGetters } from '@/lib/getters'
+import { buildCheckoutShippingParams, ShippingParams } from '@/lib/helpers'
 
 import type { Order, CrOrderItem, Contact, CustomerContact } from '@/lib/gql/types'
 
@@ -30,16 +31,16 @@ interface ShippingProps {
 const ShippingStep = (props: ShippingProps) => {
   const { checkout, userShippingAddress: addresses, isAuthenticated } = props
 
-  const checkoutShippingContact = checkoutGetters.getShippingContact(checkout)
-  const checkoutShippingMethodCode = checkoutGetters.getShippingMethodCode(checkout)
+  const checkoutShippingContact = orderGetters.getShippingContact(checkout)
+  const checkoutShippingMethodCode = orderGetters.getShippingMethodCode(checkout)
   const userShippingAddress = isAuthenticated
-    ? (userAddressGetters.getUserShippingAddress(addresses) as CustomerContact[])
+    ? userGetters.getUserShippingAddress(addresses as CustomerContact[])
     : []
   if (checkoutShippingContact && checkoutShippingContact.id === null) {
     checkoutShippingContact.id = DefaultId.ADDRESSID
   }
-  const shipItems = checkoutGetters.getShipItems(checkout)
-  const pickupItems = checkoutGetters.getPickupItems(checkout)
+  const shipItems = orderGetters.getShipItems(checkout)
+  const pickupItems = orderGetters.getPickupItems(checkout)
 
   const [validateForm, setValidateForm] = useState<boolean>(false)
   const [checkoutId, setCheckoutId] = useState<string | null | undefined>(undefined)
@@ -51,7 +52,7 @@ const ShippingStep = (props: ShippingProps) => {
   const [savedShippingAddresses, setSavedShippingAddresses] = useState<
     CustomerContact[] | undefined
   >(
-    userAddressGetters.getAllShippingAddresses(
+    userGetters.getAllShippingAddresses(
       checkoutShippingContact,
       userShippingAddress as CustomerContact[]
     )
@@ -60,10 +61,10 @@ const ShippingStep = (props: ShippingProps) => {
     Boolean(savedShippingAddresses?.length)
   )
 
-  const defaultShippingAddress = userAddressGetters.getDefaultShippingAddress(
+  const defaultShippingAddress = userGetters.getDefaultShippingAddress(
     savedShippingAddresses as CustomerContact[]
   )
-  const previouslySavedShippingAddress = userAddressGetters.getOtherShippingAddress(
+  const previouslySavedShippingAddress = userGetters.getOtherShippingAddress(
     savedShippingAddresses as CustomerContact[],
     defaultShippingAddress?.id as number
   )
@@ -185,7 +186,7 @@ const ShippingStep = (props: ShippingProps) => {
   useEffect(() => {
     if (isNewAddressAdded)
       setSavedShippingAddresses(
-        userAddressGetters.getAllShippingAddresses(
+        userGetters.getAllShippingAddresses(
           checkoutShippingContact,
           userShippingAddress as CustomerContact[]
         )

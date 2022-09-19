@@ -22,7 +22,7 @@ import { orderGetters, productGetters } from '@/lib/getters'
 import { uiHelpers } from '@/lib/helpers'
 import type { FulfillmentOption } from '@/lib/types'
 
-import type { CartItem as CartItemType, Maybe } from '@/lib/gql/types'
+import type { CartItem as CartItemType, CrProduct, Maybe } from '@/lib/gql/types'
 
 interface CartItemProps {
   cartItem: Maybe<CartItemType>
@@ -121,21 +121,25 @@ const CartItem = (props: CartItemProps) => {
             <Box sx={{ ...styles.subcontainer }}>
               <ProductItem
                 image={productGetters.handleProtocolRelativeUrl(
-                  orderGetters.getProductImage(cartItem)
+                  productGetters.getProductImage(cartItem?.product as CrProduct)
                 )}
-                name={orderGetters.getProductName(cartItem)}
-                options={orderGetters.getProductOptions(cartItem)}
+                name={productGetters.getName(cartItem?.product as CrProduct)}
+                options={productGetters.getOptions(cartItem?.product as CrProduct)}
                 link={getProductLink(cartItem?.product?.productCode as string)}
               >
                 <Box>
                   <Price
                     variant="body2"
                     fontWeight="bold"
-                    price={t('currency', { val: orderGetters.getProductPrice(cartItem) })}
+                    price={t('currency', {
+                      val: productGetters
+                        .getPrice(cartItem?.product as CrProduct)
+                        .regular?.toString(),
+                    })}
                     salePrice={
-                      orderGetters.getProductSalePrice(cartItem)
+                      productGetters.getPrice(cartItem?.product as CrProduct).special
                         ? t('currency', {
-                            val: orderGetters.getProductSalePrice(cartItem),
+                            val: productGetters.getPrice(cartItem?.product as CrProduct).special,
                           })
                         : undefined
                     }

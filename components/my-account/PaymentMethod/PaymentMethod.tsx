@@ -18,7 +18,7 @@ import {
   useDeleteCustomerAddressMutation,
 } from '@/hooks'
 import { AddressType } from '@/lib/constants'
-import { accountDetailsGetters, addressGetters, cardGetters } from '@/lib/getters'
+import { addressGetters, cardGetters, userGetters } from '@/lib/getters'
 import { tokenizeCreditCardPayment } from '@/lib/helpers'
 import type {
   Address,
@@ -87,14 +87,11 @@ const PaymentMethod = (props: PaymentMethodProps) => {
 
   const { showModal } = useModalContext()
 
-  const savedCardsAndContacts = accountDetailsGetters.getSavedCardsAndBillingDetails(
-    cards,
-    contacts
-  )
+  const savedCardsAndContacts = userGetters.getSavedCardsAndBillingDetails(cards, contacts)
 
-  const billingAddresses = accountDetailsGetters
-    .getCustomerAccountContacts(contacts)
-    ?.filter((contact) => contact.types?.some((type) => type?.name === AddressType.BILLING))
+  const savedAddresses = userGetters.getSavedAddresses(contacts)
+
+  const billingAddresses = userGetters.getUserBillingAddresses(savedAddresses)
 
   const { addSavedCardDetails } = useCreateCustomerCardsMutation()
   const { updateSavedCardDetails } = useUpdateCustomerCardsMutation()
@@ -400,13 +397,13 @@ const PaymentMethod = (props: PaymentMethodProps) => {
                 ) : (
                   handleAddNewBillingAddress()
                 )}
-                {billingAddresses?.map((address) => {
+                {billingAddresses?.map((address, index) => {
                   return (
                     <AddressDetailsView
                       key={address.id}
                       radio={true}
                       id={address.id as number}
-                      isPrimary={address.types?.some((type) => type?.isPrimary)}
+                      isPrimary={index === 0}
                       firstName={address.firstName as string}
                       middleNameOrInitial={address.middleNameOrInitial as string}
                       lastNameOrSurname={address.lastNameOrSurname as string}

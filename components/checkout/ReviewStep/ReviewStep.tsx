@@ -23,7 +23,8 @@ import type { OrderPriceProps } from '@/components/common/OrderPrice/OrderPrice'
 import ProductItemList from '@/components/common/ProductItemList/ProductItemList'
 import { useCheckoutStepContext, useAuthContext } from '@/context'
 import { useCreateOrderMutation } from '@/hooks'
-import { checkoutGetters } from '@/lib/getters'
+import { orderGetters } from '@/lib/getters'
+import { buildCreateOrderParams } from '@/lib/helpers/buildCreateOrderParams'
 import { isPasswordValid } from '@/lib/helpers/validations/validations'
 
 import type { Order, Maybe } from '@/lib/gql/types'
@@ -92,11 +93,11 @@ const ReviewStep = (props: ReviewStepProps) => {
   const { t } = useTranslation(['checkout', 'common'])
   const theme = useTheme()
   const { isAuthenticated, createAccount } = useAuthContext()
-  const [isAgreeWithTermsAndConditions, setAggreeWithTermsAndConditions] = useState<boolean>(false)
+  const [isAgreeWithTermsAndConditions, setAgreeWithTermsAndConditions] = useState<boolean>(false)
 
   const createOrder = useCreateOrderMutation()
   const { setStepNext, setStepStatusComplete } = useCheckoutStepContext()
-  const { shipItems, pickupItems, orderSummary } = checkoutGetters.getCheckoutDetails(checkout)
+  const { shipItems, pickupItems, orderSummary } = orderGetters.getCheckoutDetails(checkout)
   const { subTotal, shippingTotal, taxTotal, total } = orderSummary
 
   const fulfillmentInfo = checkout?.fulfillmentInfo
@@ -135,8 +136,8 @@ const ReviewStep = (props: ReviewStepProps) => {
     return isAgreeWithTermsAndConditions && isFormValid
   }
 
-  const handleAggreeTermsConditions = (event: React.ChangeEvent<HTMLInputElement>) =>
-    setAggreeWithTermsAndConditions(event.target.checked)
+  const handleAgreeTermsConditions = (event: React.ChangeEvent<HTMLInputElement>) =>
+    setAgreeWithTermsAndConditions(event.target.checked)
 
   const onValid = async (formData: PersonalDetails) => {
     await createOrder.mutateAsync(checkout)
@@ -207,7 +208,7 @@ const ReviewStep = (props: ReviewStepProps) => {
               data-testid="termsConditions"
               size="medium"
               color="primary"
-              onChange={handleAggreeTermsConditions}
+              onChange={handleAgreeTermsConditions}
             />
           }
           label={`${t('terms-conditions')}`}

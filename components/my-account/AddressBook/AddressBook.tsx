@@ -24,7 +24,7 @@ import {
   useDeleteCustomerAddressMutation,
 } from '@/hooks'
 import { AddressType } from '@/lib/constants'
-import { userAddressGetters } from '@/lib/getters'
+import { userGetters } from '@/lib/getters'
 import { buildAddressParams } from '@/lib/helpers'
 import type { Address, ContactForm, DeleteAddressParams } from '@/lib/types'
 
@@ -130,8 +130,8 @@ const AddressBook = (props: AddressBookProps) => {
   const { updateSavedAddressDetails } = useUpdateCustomerAddressMutation()
   const { deleteSavedAddressDetails } = useDeleteCustomerAddressMutation()
 
-  const shippingAddresses = userAddressGetters.getUserShippingAddress(contacts?.items)
-  const billingAddresses = userAddressGetters.getUserBillingAddresses(contacts?.items)
+  const shippingAddresses = userGetters.getUserShippingAddress(contacts?.items as CustomerContact[])
+  const billingAddresses = userGetters.getUserBillingAddresses(contacts?.items as CustomerContact[])
 
   const handleNewAddress = () => {
     setIsAddNewAddress(true)

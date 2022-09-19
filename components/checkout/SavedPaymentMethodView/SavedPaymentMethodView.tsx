@@ -12,7 +12,7 @@ interface PaymentAndBillingCardProps {
   cardNumberPart: string
   expireMonth: number
   expireYear: number
-  cardType: string
+  cardType?: string
   address1: string
   address2?: string
   cityOrTown: string

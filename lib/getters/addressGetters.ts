@@ -1,4 +1,4 @@
-import { SavedBillingAddress } from '@/lib/types'
+import { LocationCustom, SavedBillingAddress } from '@/lib/types'
 
 import type {
   Contact,
@@ -14,7 +14,7 @@ type GenericPhone = CuPhone | CrPhone | null
 type GenericContact = CustomerContact | Contact
 
 // billing
-const getContactNumbers = <T extends GenericPhone>(contactNumbers?: T) => {
+const getContactNumbers = (contactNumbers?: GenericPhone) => {
   return {
     home: contactNumbers?.home || '',
     mobile: contactNumbers?.mobile || '',
@@ -22,16 +22,16 @@ const getContactNumbers = <T extends GenericPhone>(contactNumbers?: T) => {
   }
 }
 
-const getAddress1 = <T extends GenericAddress>(address?: T) => address?.address1 || ''
-const getAddress2 = <T extends GenericAddress>(address?: T) => address?.address2 || ''
-const getAddress3 = <T extends GenericAddress>(address?: T) => address?.address3 || ''
-const getAddress4 = <T extends GenericAddress>(address?: T) => address?.address4 || ''
-const getAddressType = <T extends GenericAddress>(address?: T) => address?.addressType || ''
-const getCityOrTown = <T extends GenericAddress>(address?: T) => address?.cityOrTown || ''
-const getPostalOrZipCode = <T extends GenericAddress>(address?: T) => address?.postalOrZipCode || ''
-const getStateOrProvince = <T extends GenericAddress>(address?: T) => address?.stateOrProvince || ''
+const getAddress1 = (address?: GenericAddress) => address?.address1 || ''
+const getAddress2 = (address?: GenericAddress) => address?.address2 || ''
+const getAddress3 = (address?: GenericAddress) => address?.address3 || ''
+const getAddress4 = (address?: GenericAddress) => address?.address4 || ''
+const getAddressType = (address?: GenericAddress) => address?.addressType || ''
+const getCityOrTown = (address?: GenericAddress) => address?.cityOrTown || ''
+const getPostalOrZipCode = (address?: GenericAddress) => address?.postalOrZipCode || ''
+const getStateOrProvince = (address?: GenericAddress) => address?.stateOrProvince || ''
 
-const getAddress = <T extends GenericAddress | null>(address: T) => {
+const getAddress = (address: GenericAddress | null) => {
   return {
     address1: getAddress1(address),
     address2: getAddress2(address),
@@ -43,20 +43,19 @@ const getAddress = <T extends GenericAddress | null>(address: T) => {
     stateOrProvince: getStateOrProvince(address),
   }
 }
-const getFirstName = <T extends GenericContact>(billingData?: T): string =>
-  billingData?.firstName || ''
+const getFirstName = (billingData?: GenericContact): string => billingData?.firstName || ''
 
-const getLastNameOrSurname = <T extends GenericContact>(billingData?: T): string =>
+const getLastNameOrSurname = (billingData?: GenericContact): string =>
   billingData?.lastNameOrSurname || ''
 
-const getPhoneNumbers = <T extends GenericContact>(billingData?: T) =>
+const getPhoneNumbers = (billingData?: GenericContact) =>
   getContactNumbers(billingData?.phoneNumbers)
 
-const getEmail = <T extends GenericContact>(billingData?: T): string => billingData?.email || ''
+const getEmail = (billingData?: GenericContact): string => billingData?.email || ''
 
-const getId = <T extends GenericContact>(billingData?: T) => billingData?.id || 0
+const getId = (billingData?: GenericContact) => billingData?.id || 0
 
-const getBillingDetails = <T extends GenericContact>(billingData?: T) => {
+const getBillingDetails = (billingData?: GenericContact) => {
   return {
     firstName: getFirstName(billingData),
     lastNameOrSurname: getLastNameOrSurname(billingData),
@@ -69,6 +68,12 @@ const getBillingDetails = <T extends GenericContact>(billingData?: T) => {
 
 const getIsSameBillingShippingAddress = (billingData?: SavedBillingAddress): boolean =>
   Boolean(billingData?.isSameBillingShippingAddress)
+
+const getStorePickupAddress = (
+  pickupAddresses: LocationCustom[],
+  fulfillmentLocationCode: string
+): CrAddress =>
+  pickupAddresses?.find((store) => store.code === fulfillmentLocationCode)?.fullAddress as CrAddress
 
 export const addressGetters = {
   getAddress,
@@ -84,4 +89,5 @@ export const addressGetters = {
   getLastNameOrSurname,
   getBillingDetails,
   getIsSameBillingShippingAddress,
+  getStorePickupAddress,
 }

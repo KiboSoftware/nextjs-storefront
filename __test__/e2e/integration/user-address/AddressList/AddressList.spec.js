@@ -6,10 +6,10 @@ import userEvent from '@testing-library/user-event'
 
 import { userAddressResponse } from '@/__mocks__/stories/userAddressMock'
 import * as stories from '@/components/common/AddressList/AddressList.stories'
-import { userAddressGetters } from '@/lib/getters'
+import { userGetters } from '@/lib/getters'
 
 const { Common, Radio, WithoutRadio } = composeStories(stories)
-const userShippingAddress = userAddressGetters.getUserShippingAddress(userAddressResponse?.items)
+const userShippingAddress = userGetters.getUserShippingAddress(userAddressResponse?.items)
 
 const onAddressSelectionMock = jest.fn()
 const setup = (params) => {

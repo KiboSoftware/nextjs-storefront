@@ -47,7 +47,7 @@ const ViewOrderDetails = (props: ViewOrderDetailsProps) => {
   const submittedDate = orderGetters.getSubmittedDate(order)
   const pickupItems = orderGetters.getPickupItems(order)
   const shipItems = orderGetters.getShipItems(order)
-  const fulfillmentContact = orderGetters.getShippingAddress(order)
+  const fulfillmentContactAddress = orderGetters.getShippingAddress(order)
   const payments = orderGetters.getOrderPayments(order)
   const fulfillmentLocationCodes = orderGetters.getFulfillmentLocationCodes(pickupItems)
   const shippedTo = orderGetters.getShippedTo(order)
@@ -138,7 +138,7 @@ const ViewOrderDetails = (props: ViewOrderDetailsProps) => {
                   </Typography>
                 </Box>
                 <ProductItemList items={shipItems} />
-                {fulfillmentContact?.address && <AddressCard {...fulfillmentContact?.address} />}
+                {fulfillmentContactAddress && <AddressCard {...fulfillmentContactAddress} />}
               </Box>
               <Divider sx={{ ...styles.divider }} />
             </Box>
@@ -189,7 +189,6 @@ const ViewOrderDetails = (props: ViewOrderDetailsProps) => {
                     cardNumberPart={cardDetails.cardNumberPartOrMask}
                     expireMonth={cardDetails.expireMonth}
                     expireYear={cardDetails.expireYear}
-                    cardType={cardDetails.cardType}
                     address1={address.address1}
                     address2={address.address2}
                     cityOrTown={address.cityOrTown}

@@ -11,7 +11,7 @@ interface PaymentCardDetailsViewProps {
   cardNumberPart: string
   expireMonth: number
   expireYear: number
-  cardType: string
+  cardType?: string
   radio?: boolean
   selected?: string
   onPaymentCardSelection?: (value: string) => void

@@ -4,7 +4,7 @@ import { ComponentStory, ComponentMeta } from '@storybook/react'
 
 import AddressList from './AddressList'
 import { userAddressResponse } from '@/__mocks__/stories/userAddressMock'
-import { userAddressGetters } from '@/lib/getters'
+import { userGetters } from '@/lib/getters'
 
 import { CustomerContact } from '@/lib/gql/types'
 export default {
@@ -12,7 +12,9 @@ export default {
   component: AddressList,
 } as ComponentMeta<typeof AddressList>
 
-const userShippingAddress = userAddressGetters.getUserShippingAddress(userAddressResponse?.items)
+const userShippingAddress = userGetters.getUserShippingAddress(
+  userAddressResponse?.items as CustomerContact[]
+)
 
 const Template: ComponentStory<typeof AddressList> = (args) => <AddressList {...args} />
 
