@@ -59,7 +59,7 @@ const styles = {
     padding: '1rem 0.5rem',
     justifyContent: 'space-around',
   },
-  subcontainer: {
+  subContainer: {
     flex: 1,
     padding: '0 0.5rem',
   },
@@ -118,7 +118,7 @@ const CartItem = (props: CartItemProps) => {
       <Card sx={{ ...styles.card }} role="group">
         <Box sx={{ position: 'relative' }}>
           <Box sx={{ ...styles.cartItemContainer }}>
-            <Box sx={{ ...styles.subcontainer }}>
+            <Box sx={{ ...styles.subContainer }}>
               <ProductItem
                 image={productGetters.handleProtocolRelativeUrl(
                   productGetters.getProductImage(cartItem?.product as CrProduct)
@@ -168,7 +168,7 @@ const CartItem = (props: CartItemProps) => {
               flexItem
             />
 
-            <Box sx={{ ...styles.subcontainer }}>
+            <Box sx={{ ...styles.subContainer }}>
               <FulfillmentOptions
                 fulfillmentOptions={fulfillmentOptions}
                 selected={cartItem?.fulfillmentMethod || ''}

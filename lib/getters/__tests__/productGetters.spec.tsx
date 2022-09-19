@@ -1,6 +1,8 @@
 import { ProductCustomMock } from '../../../__mocks__/stories/ProductCustomMock'
 import { productGetters } from '../productGetters'
 
+import { ProductOption } from '@/lib/gql/types'
+
 describe('[getters] productGetters', () => {
   it('should return the product name', () => {
     expect(productGetters.getName(ProductCustomMock)).toBe('Diamondback Sortie')
@@ -11,9 +13,11 @@ describe('[getters] productGetters', () => {
   })
 
   it('should return the product coverImage', () => {
-    expect(productGetters.getCoverImage(ProductCustomMock)).toBe(
-      ProductCustomMock?.content?.productImages[0].imageUrl
-    )
+    if (ProductCustomMock?.content?.productImages) {
+      expect(productGetters.getCoverImage(ProductCustomMock)).toBe(
+        ProductCustomMock?.content?.productImages[0]?.imageUrl
+      )
+    }
   })
 
   it('should return the product id', () => {
@@ -27,7 +31,7 @@ describe('[getters] productGetters', () => {
   })
 
   it('should return the product total reviews', () => {
-    expect(productGetters.getProductTotalReviews(ProductCustomMock)).toBe(0)
+    expect(productGetters.getProductTotalReviews()).toBe(0)
   })
 
   it('should return the product price', () => {
@@ -43,19 +47,19 @@ describe('[getters] productGetters', () => {
 
   it('should return the product description', () => {
     expect(productGetters.getDescription(ProductCustomMock)).toStrictEqual(
-      ProductCustomMock.content.productFullDescription
+      ProductCustomMock?.content?.productFullDescription
     )
   })
 
   it('should return the product short description', () => {
     expect(productGetters.getShortDescription(ProductCustomMock)).toStrictEqual(
-      ProductCustomMock.content.productShortDescription
+      ProductCustomMock?.content?.productShortDescription
     )
   })
 
   it('should return the product Gallery', () => {
     expect(productGetters.getProductGallery(ProductCustomMock)).toStrictEqual(
-      ProductCustomMock.content.productImages
+      ProductCustomMock.content?.productImages
     )
   })
 
@@ -98,6 +102,7 @@ describe('[getters] productGetters', () => {
       attributeDetail: {
         name: 'Color',
         inputType: 'List',
+        dataTypeSequence: 0,
       },
       isProductImageGroupSelector: false,
       isRequired: true,
@@ -108,12 +113,14 @@ describe('[getters] productGetters', () => {
           isSelected: true,
           deltaPrice: null,
           stringValue: 'Orange',
+          attributeValueId: 0,
         },
         {
           value: 'Purple',
           isSelected: false,
           deltaPrice: null,
           stringValue: 'Purple',
+          attributeValueId: 1,
         },
       ],
     }
@@ -122,9 +129,11 @@ describe('[getters] productGetters', () => {
   })
 
   it('should return the product option name', () => {
-    expect(productGetters.getOptionName(ProductCustomMock.options[0])).toStrictEqual(
-      ProductCustomMock.options[0].attributeDetail.name
-    )
+    if (ProductCustomMock?.options?.length) {
+      expect(
+        productGetters.getOptionName(ProductCustomMock.options[0] as ProductOption)
+      ).toStrictEqual(ProductCustomMock?.options[0]?.attributeDetail?.name)
+    }
   })
 
   it('should return the product options', () => {
@@ -132,14 +141,18 @@ describe('[getters] productGetters', () => {
   })
 
   it('should return the product segregated options', () => {
-    const segregatedOptions = {
-      colourOptions: ProductCustomMock.options[0],
-      sizeOptions: ProductCustomMock.options[1],
-      selectOptions: [ProductCustomMock.options[2]],
-      yesNoOptions: [ProductCustomMock.options[3]],
-      textBoxOptions: [ProductCustomMock.options[4]],
+    if (ProductCustomMock.options) {
+      const segregatedOptions = {
+        colourOptions: ProductCustomMock.options[0],
+        sizeOptions: ProductCustomMock.options[1],
+        selectOptions: [ProductCustomMock.options[2]],
+        yesNoOptions: [ProductCustomMock.options[3]],
+        textBoxOptions: [ProductCustomMock.options[4]],
+      }
+      expect(productGetters.getSegregatedOptions(ProductCustomMock)).toStrictEqual(
+        segregatedOptions
+      )
     }
-    expect(productGetters.getSegregatedOptions(ProductCustomMock)).toStrictEqual(segregatedOptions)
   })
 
   it('should return the product fulfillment method', () => {

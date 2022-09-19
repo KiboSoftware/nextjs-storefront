@@ -16,9 +16,9 @@ import type {
   CrProductOption,
 } from '@/lib/gql/types'
 
-type ProductOptionsReturnType<T> = T extends 'Product'
+type ProductOptionsReturnType<T> = T extends ProductCustom
   ? ProductOption[]
-  : T extends 'CrProduct'
+  : T extends CrProduct
   ? CrProductOption[]
   : never
 
@@ -114,7 +114,7 @@ const getOptionSelectedValue = (option: ProductOption) => {
 
 export const getOptionName = (option: ProductOption): string => option?.attributeDetail?.name || ''
 
-export const getOptions = <T extends Product | CrProduct>(
+export const getOptions = <T extends ProductCustom | CrProduct>(
   product: T
 ): ProductOptionsReturnType<T> => {
   return product.options as ProductOptionsReturnType<T>
