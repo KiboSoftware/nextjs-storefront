@@ -70,8 +70,7 @@ const formatHomePageProductsData = (homePageProductsData: any) => {
   }
 }
 
-// const formatPromoBlocksLinksData = (linksData: { Title: string; URL: string }[]) => {
-const formatPromoBlocksLinksData = (linksData: any) => {
+const formatPromoBlocksLinksData = (linksData: { Title: string; URL: string }[]) => {
   return linksData?.map((link: any) => formatLinkData(link))
 }
 
