@@ -25,14 +25,13 @@ type ProductOptionsReturnType<T> = T extends 'Product'
 const { publicRuntimeConfig } = getConfig()
 
 function isCrProduct(product: Product | ProductCustom | CrProduct): product is CrProduct {
-  return (product as CrProduct) !== undefined
+  return (product as CrProduct).name !== undefined
 }
 
 const getName = (product: Product | ProductCustom | CrProduct): string => {
   if (isCrProduct(product)) {
     return product.name || ''
   }
-
   return product?.content?.productName || ''
 }
 
