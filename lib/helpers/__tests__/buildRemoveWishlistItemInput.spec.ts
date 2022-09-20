@@ -1,8 +1,8 @@
-import { buildRemoveWishlistItemInput } from '../buildRemoveWishlistItemInput'
+import { buildRemoveWishlistItemInputParams } from '../buildRemoveWishlistItemInputParams'
 import { wishlistMock } from '@/__mocks__/stories/wishlistMock'
 
-describe('[helpers] buildRemoveWishlistItemInput function', () => {
-  it('should return the buildRemoveWishlistItemInput variables', () => {
+describe('[helpers] buildRemoveWishlistItemInputParams function', () => {
+  it('should return the buildRemoveWishlistItemInputParams variables', () => {
     const product = {
       productCode: 'MS-BTL-005',
       isPackagedStandAlone: true,
@@ -12,7 +12,7 @@ describe('[helpers] buildRemoveWishlistItemInput function', () => {
     const currentWishlist = wishlistMock?.items[0]
 
     const { id: wishlistItemId } = wishlistMock?.items[0]?.items[1]
-    expect(buildRemoveWishlistItemInput({ product, currentWishlist })).toStrictEqual({
+    expect(buildRemoveWishlistItemInputParams({ product, currentWishlist })).toStrictEqual({
       wishlistId: currentWishlist?.id,
       wishlistItemId,
     })

@@ -12,4 +12,5 @@ const buildBreadcrumbsList = (rootCat: PrCategory, bc: BreadCrumb[]): BreadCrumb
   return rootCat.parentCategory ? buildBreadcrumbsList(rootCat.parentCategory, newBc) : newBc
 }
 
-export const buildBreadcrumbs = (rootCat: PrCategory) => buildBreadcrumbsList(rootCat, []).reverse()
+export const buildBreadcrumbsParams = (rootCat: PrCategory) =>
+  buildBreadcrumbsList(rootCat, []).reverse()

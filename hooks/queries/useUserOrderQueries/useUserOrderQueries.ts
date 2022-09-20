@@ -2,7 +2,7 @@ import { useQuery } from 'react-query'
 
 import { makeGraphQLClient } from '@/lib/gql/client'
 import { getOrdersQuery } from '@/lib/gql/queries'
-import { buildOrdersFilterInput } from '@/lib/helpers'
+import { buildOrdersFilterInputParams } from '@/lib/helpers'
 import { ordersKeys } from '@/lib/react-query/queryKeys'
 
 import type { OrderCollection } from '@/lib/gql/types'

@@ -1,7 +1,7 @@
-import { buildAddToWishlistItemInput } from '../buildAddToWishlistInput'
+import { buildAddToWishlistItemInputParams } from '../buildAddToWishlistInputParams'
 
 describe('[helpers] buildAddToWishlistInput function', () => {
-  it('should return the buildAddToWishlistItemInput variables', () => {
+  it('should return the buildAddToWishlistItemInputParams variables', () => {
     const product = {
       productCode: 'MS-BTL-005',
       isPackagedStandAlone: true,
@@ -10,7 +10,7 @@ describe('[helpers] buildAddToWishlistInput function', () => {
     }
     const wishlistId = '13cc2e5236615b000102f572000045a4'
 
-    expect(buildAddToWishlistItemInput(product, wishlistId)).toStrictEqual({
+    expect(buildAddToWishlistItemInputParams(product, wishlistId)).toStrictEqual({
       wishlistId,
       wishlistItemInput: {
         product,

@@ -1,6 +1,6 @@
 import type { RemoveWishlistItemInput } from '@/lib/types'
 
-export const buildRemoveWishlistItemInput = (
+export const buildRemoveWishlistItemInputParams = (
   params: RemoveWishlistItemInput
 ): { wishlistId: string; wishlistItemId: string } => {
   const { product, currentWishlist } = params

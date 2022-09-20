@@ -1,10 +1,10 @@
-import { buildAddOrRemoveWishlistItem } from '../buildAddOrRemoveWishlistItem'
+import { buildAddOrRemoveWishlistItemParams } from '../buildAddOrRemoveWishlistItemParams'
 import { ProductCustomMock } from '@/__mocks__/stories'
 
-describe('[helpers] buildAddOrRemoveWishlistItem function', () => {
+describe('[helpers] buildAddOrRemoveWishlistItemParams function', () => {
   it('should return the addOrRemoveWishlistItem variables', () => {
     const mockedProduct = ProductCustomMock
-    expect(buildAddOrRemoveWishlistItem(mockedProduct)).toStrictEqual({
+    expect(buildAddOrRemoveWishlistItemParams(mockedProduct)).toStrictEqual({
       productCode: mockedProduct.productCode,
       variationProductCode: mockedProduct.variationProductCode,
       isPackagedStandAlone: true,

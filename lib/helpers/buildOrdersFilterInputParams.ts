@@ -8,7 +8,7 @@ const getPastDateTimestamp = (months: number) => {
   return today.toISOString()
 }
 
-export const buildOrdersFilterInput = (params: {
+export const buildOrdersFilterInputParams = (params: {
   filters?: Array<string> | string
   startIndex?: number
   pageSize?: number

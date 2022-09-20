@@ -1,12 +1,12 @@
-import { buildProductSearchInput } from '../buildProductSearchInput'
+import { buildProductSearchInputParams } from '../buildProductSearchInputParams'
 
-describe('[helpers] buildProductSearchInput function', () => {
+describe('[helpers] buildProductSearchInputParams function', () => {
   it('should return the product search input according to search params', () => {
     const searchParams = {
       filters: ['tenant~brand:adidas,tenant~color:grey'],
       categoryCode: '30',
     }
-    const buildProductSearchInputMock = {
+    const buildProductSearchInputParamsMock = {
       query: '',
       startIndex: 0,
       pageSize: 16,
@@ -17,6 +17,8 @@ describe('[helpers] buildProductSearchInput function', () => {
       facetValueFilter: 'categoryCode:30,tenant~brand:adidas,tenant~color:grey',
       filter: '',
     }
-    expect(buildProductSearchInput(searchParams)).toStrictEqual(buildProductSearchInputMock)
+    expect(buildProductSearchInputParams(searchParams)).toStrictEqual(
+      buildProductSearchInputParamsMock
+    )
   })
 })

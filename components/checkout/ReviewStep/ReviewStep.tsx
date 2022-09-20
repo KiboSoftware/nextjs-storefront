@@ -24,7 +24,6 @@ import ProductItemList from '@/components/common/ProductItemList/ProductItemList
 import { useCheckoutStepContext, useAuthContext } from '@/context'
 import { useCreateOrderMutation } from '@/hooks'
 import { checkoutGetters } from '@/lib/getters'
-import { buildCreateOrderParams } from '@/lib/helpers/buildCreateOrderParams'
 import { isPasswordValid } from '@/lib/helpers/validations/validations'
 
 import type { Order, Maybe } from '@/lib/gql/types'
@@ -140,8 +139,7 @@ const ReviewStep = (props: ReviewStepProps) => {
     setAggreeWithTermsAndConditions(event.target.checked)
 
   const onValid = async (formData: PersonalDetails) => {
-    const params = buildCreateOrderParams(checkout)
-    await createOrder.mutateAsync(params)
+    await createOrder.mutateAsync(checkout)
 
     if (formData?.showAccountFields) {
       await createAccount({
