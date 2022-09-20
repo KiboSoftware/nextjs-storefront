@@ -104,7 +104,7 @@ const ProductDetailTemplate = (props: ProductDetailTemplateProps) => {
     },
     locationInventory
   )
-  console.log('test', product)
+
   const isProductInWishlist = checkProductInWishlist({
     productCode,
     variationProductCode,
