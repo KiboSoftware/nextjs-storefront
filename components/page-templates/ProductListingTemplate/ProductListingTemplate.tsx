@@ -332,10 +332,10 @@ const ProductListingTemplate = (props: ProductListingTemplateProps) => {
               )}
               {!isLoading ? (
                 <Grid container sx={{ flexWrap: 'wrap' }}>
-                  {products?.map((product) => {
+                  {products?.map((product, index) => {
                     return (
                       <Grid
-                        key={productGetters.getProductId(product)}
+                        key={`${productGetters.getProductId(product)}-${index}`}
                         item
                         display={'flex'}
                         justifyContent="center"

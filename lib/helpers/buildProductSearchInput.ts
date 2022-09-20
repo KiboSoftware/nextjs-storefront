@@ -21,9 +21,11 @@ export const buildProductSearchInput = ({
 }: CategorySearchParams): QueryProductSearchArgs => {
   let facetTemplate = ''
   let facetHierValue = ''
+  let facet = ''
   facetTemplate = `categoryCode:${categoryCode || '_root'}`
   if (categoryCode) {
     facetHierValue = `categoryCode:${categoryCode}`
+    facet = 'categoryCode'
   }
 
   const facetValueFilter = getFacetValueFilter(categoryCode, filters)
@@ -32,6 +34,7 @@ export const buildProductSearchInput = ({
     startIndex,
     pageSize: Number(pageSize),
     sortBy: sort,
+    facet,
     facetHierValue,
     facetTemplate,
     facetValueFilter,
