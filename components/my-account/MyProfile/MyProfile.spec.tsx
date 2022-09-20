@@ -8,15 +8,6 @@ import * as stories from './MyProfile.stories'
 
 const { Common } = composeStories(stories)
 
-const onChangMock = jest.fn()
-const KiboTextBoxMock = () => <input data-testid="text-box-mock" onChange={onChangMock} />
-const ProfileDetailsFormMock = () => <div data-testid="profile-details-form-component" />
-jest.mock('@/components/common/KiboTextBox/KiboTextBox.tsx', () => KiboTextBoxMock)
-jest.mock(
-  '@/components/my-account/ProfileDetailsForm/ProfileDetailsForm',
-  () => ProfileDetailsFormMock
-)
-
 const setup = () => {
   const user = userEvent.setup()
 
@@ -31,23 +22,63 @@ describe('[components] MyProfile', () => {
   it('should render component', () => {
     setup()
 
-    const customerNameText = screen.getByText(/customer-name/i)
-    const emailText = screen.getByText(/email/i)
-    const passwordText = screen.getByText(/password/i)
-    const editName = screen.getAllByText(/edit/i)
+    const customerNameLabel = screen.getByText(/customer-name/i)
+    const customerName = screen.getByText(
+      `${Common.args?.user?.firstName} ${Common.args?.user?.lastName}` as string
+    )
 
-    expect(customerNameText).toBeVisible()
-    expect(emailText).toBeVisible()
-    expect(passwordText).toBeVisible()
-    expect(editName[0]).toBeVisible()
+    const emailLabel = screen.getByText(/email/i)
+    const email = screen.getByText(Common.args?.user?.emailAddress as string)
+
+    const passwordLabel = screen.getByText(/password/i)
+    const editLink = screen.getAllByText(/edit/i)
+
+    expect(customerNameLabel).toBeVisible()
+    expect(customerName).toBeVisible()
+
+    expect(emailLabel).toBeVisible()
+    expect(email).toBeVisible()
+
+    expect(passwordLabel).toBeVisible()
+    expect(editLink).toHaveLength(3)
   })
 
-  it(`should render name form if 'edit' button is clicked`, async () => {
+  it(`should render names form if 'edit' button is clicked`, async () => {
     const { user } = setup()
 
     const editName = screen.getAllByText(/edit/i)
     await user.click(editName[0])
 
-    expect(screen.getByTestId('profile-details-form-component')).toBeVisible()
+    const firstNameInput = screen.getByRole('textbox', { name: 'first-name' })
+    const lastNameInput = screen.getByRole('textbox', { name: 'last-name-or-sur-name' })
+
+    expect(firstNameInput).toBeVisible()
+    expect(lastNameInput).toBeVisible()
+  })
+
+  it(`should render email form if 'edit' button is clicked`, async () => {
+    const { user } = setup()
+
+    const editName = screen.getAllByText(/edit/i)
+    await user.click(editName[1])
+
+    const emailInput = screen.getByRole('textbox', { name: 'email' })
+
+    expect(emailInput).toBeVisible()
+  })
+
+  it(`should render password form if 'edit' button is clicked`, async () => {
+    const { user } = setup()
+
+    const editName = screen.getAllByText(/edit/i)
+    await user.click(editName[2])
+
+    const currentPassword = await screen.findByLabelText('current-password')
+    const newPassword = await screen.findByLabelText('new-password')
+    const confirmPassword = await screen.findByLabelText('confirm-password')
+
+    expect(currentPassword).toBeVisible()
+    expect(newPassword).toBeVisible()
+    expect(confirmPassword).toBeVisible()
   })
 })

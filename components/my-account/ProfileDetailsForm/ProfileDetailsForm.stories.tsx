@@ -14,11 +14,21 @@ const Template: ComponentStory<typeof ProfileDetailsForm> = (args) => (
 )
 
 // Common
-export const Common = Template.bind({})
+export const NameForm = Template.bind({})
 
-Common.args = {
+NameForm.args = {
   firstName: '',
   lastName: '',
-  emailAddress: '',
-  isEmailForm: false,
+}
+
+export const EmailForm = Template.bind({})
+
+EmailForm.args = {
+  isEmailForm: true,
+}
+
+export const PasswordForm = Template.bind({})
+
+PasswordForm.args = {
+  isPasswordForm: true,
 }

@@ -112,12 +112,13 @@ const ProfileDetailsForm = (props: ProfileDetailsFormProps) => {
     mode: 'onChange',
     reValidateMode: 'onChange',
     defaultValues: getDefaultValues(),
-    criteriaMode: 'all',
+    criteriaMode: 'firstError',
     resolver: yupResolver(cardSchema),
     shouldFocusError: true,
     context: { isEmailForm, isPasswordForm },
   })
   const userEnteredPassword = watch('newPassword')
+  const confirmationPassword = watch('confirmPassword')
 
   const buildParam = (formData: ProfileDetails) => {
     if (formData.emailAddress) {
@@ -147,8 +148,10 @@ const ProfileDetailsForm = (props: ProfileDetailsFormProps) => {
   }
 
   useEffect(() => {
-    trigger('confirmPassword')
-  }, [userEnteredPassword, trigger])
+    if (isPasswordForm && confirmationPassword) {
+      trigger('confirmPassword')
+    }
+  }, [isPasswordForm, userEnteredPassword, confirmationPassword, trigger])
 
   return (
     <form>
@@ -181,7 +184,7 @@ const ProfileDetailsForm = (props: ProfileDetailsFormProps) => {
                 control={control}
                 render={({ field }) => (
                   <KiboTextBox
-                    value={field.value}
+                    value={field.value || ''}
                     label={t('current-password')}
                     required
                     onBlur={field.onBlur}
@@ -200,7 +203,7 @@ const ProfileDetailsForm = (props: ProfileDetailsFormProps) => {
                 control={control}
                 render={({ field }) => (
                   <KiboTextBox
-                    value={field.value}
+                    value={field.value || ''}
                     label={t('new-password')}
                     required
                     onBlur={field.onBlur}
@@ -220,7 +223,7 @@ const ProfileDetailsForm = (props: ProfileDetailsFormProps) => {
                 control={control}
                 render={({ field }) => (
                   <KiboTextBox
-                    value={field.value}
+                    value={field.value || ''}
                     label={t('confirm-password')}
                     required
                     onBlur={field.onBlur}

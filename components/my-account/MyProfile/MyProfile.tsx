@@ -66,7 +66,7 @@ const MyProfile = (props: MyProfileProps) => {
     })
   }, [id, firstName, lastName, emailAddress])
 
-  const handleUpdateProfileData = async <T extends UpdateProfileDataParam>(profileFormData: T) => {
+  const handleUpdateProfileData = async (profileFormData: UpdateProfileDataParam) => {
     if (profileFormData.oldPassword && profileFormData.newPassword) {
       handleUpdateUserPassword(profileFormData)
       return
