@@ -1,18 +1,13 @@
-import { loginKeys } from './../../../../lib/react-query/queryKeys';
 import { useMutation, useQueryClient } from 'react-query'
 
+import { loginKeys } from './../../../../lib/react-query/queryKeys'
 import { makeGraphQLClient } from '@/lib/gql/client'
 import { updatePassword } from '@/lib/gql/mutations/user/updatePassword'
 
-export interface UpdateUserPasswordInput {
-  oldPassword: string
-  newPassword: string
-  externalPassword: string
-}
-
+import { PasswordInfoInput } from '@/lib/gql/types'
 interface UpdateUserPasswordProps {
   accountId: number
-  passwordInfoInput: UpdateUserPasswordInput
+  passwordInfoInput: PasswordInfoInput
 }
 
 const updateUserPassword = async (props: UpdateUserPasswordProps) => {

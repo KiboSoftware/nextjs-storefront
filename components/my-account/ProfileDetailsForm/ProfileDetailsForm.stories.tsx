@@ -7,6 +7,10 @@ import ProfileDetailsForm from './ProfileDetailsForm'
 export default {
   component: ProfileDetailsForm,
   title: 'My Profile/ProfileDetailsForm',
+  argTypes: {
+    onCancel: { action: 'onCancel' },
+    onSaveProfileData: { action: 'onSaveProfileData' },
+  },
 } as ComponentMeta<typeof ProfileDetailsForm>
 
 const Template: ComponentStory<typeof ProfileDetailsForm> = (args) => (
