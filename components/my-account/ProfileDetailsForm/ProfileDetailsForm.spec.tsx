@@ -2,7 +2,6 @@ import React from 'react'
 
 import { composeStories } from '@storybook/testing-react'
 import { render, screen, act } from '@testing-library/react'
-import userEvent from '@testing-library/user-event'
 
 import * as stories from './ProfileDetailsForm.stories' // import all stories from the stories file
 

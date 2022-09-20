@@ -37,7 +37,7 @@ const MyProfile = (props: MyProfileProps) => {
   })
 
   const { id, firstName, lastName, emailAddress, fullName } =
-    accountDetailsGetters.getPersonalDetails(user as CustomerAccount)
+    accountDetailsGetters.getPersonalDetails(user)
 
   const viewProfileDetails = [
     {
@@ -59,7 +59,7 @@ const MyProfile = (props: MyProfileProps) => {
 
   useEffect(() => {
     setCurrentUser({
-      id: id as number,
+      id: id,
       firstName: firstName,
       lastName: lastName,
       emailAddress: emailAddress,
@@ -74,9 +74,9 @@ const MyProfile = (props: MyProfileProps) => {
 
     try {
       await updateUserData.mutateAsync({
-        accountId: currentUser.id as number,
+        accountId: currentUser.id,
         customerAccountInput: {
-          id: currentUser.id as number,
+          id: currentUser.id,
           firstName: profileFormData.firstName || currentUser.firstName,
           lastName: profileFormData.lastName || currentUser.lastName,
           emailAddress: profileFormData.emailAddress || currentUser.emailAddress,

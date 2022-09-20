@@ -98,7 +98,6 @@ const ProfileDetailsForm = (props: ProfileDetailsFormProps) => {
     if (firstName && lastName) {
       return { firstName, lastName }
     }
-    return
   }
 
   const {
@@ -121,19 +120,19 @@ const ProfileDetailsForm = (props: ProfileDetailsFormProps) => {
 
   const buildParam = (formData: ProfileDetails) => {
     if (formData.emailAddress) {
-      return { emailAddress: formData.emailAddress as string }
+      return { emailAddress: formData.emailAddress }
     }
 
     if (formData.firstName && formData.lastName) {
       return {
-        firstName: formData.firstName as string,
-        lastName: formData.lastName as string,
+        firstName: formData.firstName,
+        lastName: formData.lastName,
       }
     }
 
     return {
-      oldPassword: formData.currentPassword as string,
-      newPassword: formData.newPassword as string,
+      oldPassword: formData.currentPassword,
+      newPassword: formData.newPassword,
     }
   }
 

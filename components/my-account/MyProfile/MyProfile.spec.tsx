@@ -24,7 +24,7 @@ describe('[components] MyProfile', () => {
 
     const customerNameLabel = screen.getByText(/customer-name/i)
     const customerName = screen.getByText(
-      `${Common.args?.user?.firstName} ${Common.args?.user?.lastName}` as string
+      `${Common.args?.user?.firstName} ${Common.args?.user?.lastName}`
     )
 
     const emailLabel = screen.getByText(/email/i)
