@@ -192,10 +192,11 @@ const getProductDetails = (product: ProductCustom) => {
 }
 const getProductFulfillmentOptions = (
   product: Product,
-  purchaseLocation: Location
+  purchaseLocation: Location,
+  productLocationInventoryData?: LocationInventory[]
 ): FulfillmentOption[] => {
-  const fullfillmentOptions = publicRuntimeConfig.fullfillmentOptions
-  return fullfillmentOptions.map((option: FulfillmentOption) => ({
+  const fulfillmentOptions = publicRuntimeConfig.fulfillmentOptions
+  return fulfillmentOptions.map((option: FulfillmentOption) => ({
     value: option.value,
     name: option.name,
     code: option.code,
@@ -208,8 +209,18 @@ const getProductFulfillmentOptions = (
         (type) => type.toLowerCase() === option?.value?.toLowerCase()
       ).length === 0,
     details: (() => {
-      if (option.shortName === FulfillmentOptions.SHIP) return option.details // checking if Directship
-      if (purchaseLocation?.name) return `${option.details}: ${purchaseLocation.name}`
+      if (option.shortName === FulfillmentOptions.SHIP)
+        return product?.inventoryInfo?.onlineStockAvailable && isProductVariationsSelected(product)
+          ? option.details
+          : option.unavailableDetails // checking if Directship
+      if (purchaseLocation?.name)
+        return `${
+          productLocationInventoryData &&
+          productLocationInventoryData[0]?.stockAvailable &&
+          isProductVariationsSelected(product)
+            ? option.details
+            : option.unavailableDetails
+        }: ${purchaseLocation.name}`
       return ''
     })(),
   }))

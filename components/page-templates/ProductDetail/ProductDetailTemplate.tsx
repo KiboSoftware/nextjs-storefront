@@ -92,15 +92,19 @@ const ProductDetailTemplate = (props: ProductDetailTemplateProps) => {
     fulfillmentMethod: selectedFulfillmentOption?.method,
     purchaseLocationCode: selectedFulfillmentOption?.location?.code as string,
   })
-  const fulfillmentOptions = productGetters.getProductFulfillmentOptions(product, {
-    name: selectedFulfillmentOption?.location?.name,
-  })
   const quantityLeft = productGetters.getAvailableItemCount(
     product,
     locationInventory,
     selectedFulfillmentOption?.method
   )
-
+  const fulfillmentOptions = productGetters.getProductFulfillmentOptions(
+    product,
+    {
+      name: selectedFulfillmentOption?.location?.name,
+    },
+    locationInventory
+  )
+  console.log('test', product)
   const isProductInWishlist = checkProductInWishlist({
     productCode,
     variationProductCode,
@@ -329,8 +333,7 @@ const ProductDetailTemplate = (props: ProductDetailTemplateProps) => {
 
           <Box pt={2} display="flex" sx={{ justifyContent: 'space-between' }}>
             <Typography fontWeight="600" variant="body2">
-              {selectedFulfillmentOption?.method === FulfillmentOptionsConstant.PICKUP &&
-                `${quantityLeft} ${t('item-left')}`}
+              {selectedFulfillmentOption?.method && `${quantityLeft} ${t('item-left')}`}
             </Typography>
             <Link
               color="inherit"
@@ -347,7 +350,7 @@ const ProductDetailTemplate = (props: ProductDetailTemplateProps) => {
               color="primary"
               fullWidth
               onClick={() => handleAddToCart()}
-              {...(!isValidForAddToCart && { disabled: true })}
+              {...(!(isValidForAddToCart && quantityLeft > 0) && { disabled: true })}
             >
               {t('common:add-to-cart')}
             </Button>
