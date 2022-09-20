@@ -251,5 +251,13 @@
   "customers-also-bought": "Customers Also Bought",
   "search-results": "{{m}} Results for {{n}}",
   "item-left": "item(s) left",
-  "nearby-stores": "Nearby stores"
+  "nearby-stores": "Nearby stores",
+  "password-length-does-not-match": "Password length doesn't match",
+  "password-should-contain-at-least-one-number": "Password should contain at least one number",
+  "password-should-contain-at-least-one-capital-letter": "Password should contain at least one capital letter",
+  "password-should-contain-at-least-special-character": "Password should contain at least special character",
+  "it-should-match-your-new-password": "It should match your new password",
+
+  "confirm-password": "Confirm password",
+  "current-password": "Current password"
 }

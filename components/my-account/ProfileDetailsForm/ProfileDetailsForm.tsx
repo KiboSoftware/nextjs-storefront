@@ -25,7 +25,7 @@ const StyledCardDiv = styled('div')(() => ({
 }))
 
 const useCardSchema = () => {
-  const { t } = useTranslation('checkout')
+  const { t } = useTranslation('common')
   return yup.object({
     firstName: yup.string().when(['$isEmailForm', '$isPasswordForm'], {
       is: (isEmailForm: boolean, isPasswordForm: boolean) => !isEmailForm && !isPasswordForm,
@@ -49,17 +49,17 @@ const useCardSchema = () => {
       if (isPasswordForm) {
         return schema
           .required(t('this-field-is-required'))
-          .min(8, "Password length doesn't match")
-          .matches(/\d/g, 'Password should contain at least one number')
-          .matches(/(?=.*[A-Z])/g, 'Password should contain at least one capital letter')
-          .matches(/[!@#$%^&*]/g, 'Password should contain at least special character')
+          .min(8, t('password-length-does-not-match'))
+          .matches(/\d/g, t('password-should-contain-at-least-one-number'))
+          .matches(/(?=.*[A-Z])/g, t('password-should-contain-at-least-one-capital-letter'))
+          .matches(/[!@#$%^&*]/g, t('password-should-contain-at-least-special-character'))
       }
     }),
     confirmPassword: yup.string().when('$isPasswordForm', (isPasswordForm, schema) => {
       if (isPasswordForm) {
         return schema
           .required(t('this-field-is-required'))
-          .oneOf([yup.ref('newPassword')], "Passwords don't match!")
+          .oneOf([yup.ref('newPassword')], t('it-should-match-your-new-password'))
       }
     }),
   })
@@ -75,7 +75,7 @@ const ProfileDetailsForm = (props: ProfileDetailsFormProps) => {
     onSaveProfileData,
     onCancel,
   } = props
-  const { t } = useTranslation('checkout')
+  const { t } = useTranslation('common')
   const cardSchema = useCardSchema()
   const [showPassword, setShowPassword] = useState({
     currentPassword: false,
@@ -281,7 +281,7 @@ const ProfileDetailsForm = (props: ProfileDetailsFormProps) => {
 
           <Stack gap={2} sx={{ width: { xs: '100%', md: '50%' } }}>
             <Button variant="contained" color="secondary" onClick={onCancel}>
-              {t('common:cancel')}
+              {t('cancel')}
             </Button>
             <Button
               variant="contained"
@@ -289,7 +289,7 @@ const ProfileDetailsForm = (props: ProfileDetailsFormProps) => {
               {...((!isValid || !isDirty) && { disabled: true })}
               onClick={() => handleSubmit(onValid)()}
             >
-              {t('common:save')}
+              {t('save')}
             </Button>
           </Stack>
         </FormControl>
