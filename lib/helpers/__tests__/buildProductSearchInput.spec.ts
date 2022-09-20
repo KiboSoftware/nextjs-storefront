@@ -11,6 +11,7 @@ describe('[helpers] buildProductSearchInput function', () => {
       startIndex: 0,
       pageSize: 16,
       sortBy: '',
+      facet: 'categoryCode',
       facetHierValue: 'categoryCode:30',
       facetTemplate: 'categoryCode:30',
       facetValueFilter: 'categoryCode:30,tenant~brand:adidas,tenant~color:grey',
