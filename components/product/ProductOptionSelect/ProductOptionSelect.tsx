@@ -19,7 +19,7 @@ export interface ProductOptionSelectProps {
 }
 
 const ProductOptionSelect = (props: ProductOptionSelectProps) => {
-  const { t } = useTranslation('product')
+  const { t } = useTranslation('common')
   const {
     optionValues,
     name = t('select-product-option'),

@@ -85,7 +85,7 @@ const CategoryFilterByMobile = (props: CategoryFilterByMobileProps) => {
     isLoading,
   } = props
 
-  const { t } = useTranslation(['product', 'common'])
+  const { t } = useTranslation('common')
 
   const headerPart = (
     <>
@@ -123,7 +123,7 @@ const CategoryFilterByMobile = (props: CategoryFilterByMobileProps) => {
             disabled={!appliedFilters?.length}
             onClick={onClearAllFilters}
           >
-            {t('common:clear-all')}
+            {t('clear-all')}
           </Button>
           <Button
             variant="contained"

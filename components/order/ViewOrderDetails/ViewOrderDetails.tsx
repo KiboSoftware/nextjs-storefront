@@ -40,7 +40,7 @@ const styles = {
 
 const ViewOrderDetails = (props: ViewOrderDetailsProps) => {
   const { order, title, isOrderStatus = false, onGoBackToOrderHistory } = props
-  const { t } = useTranslation(['common', 'checkout', 'orderhistory'])
+  const { t } = useTranslation('common')
 
   const orderNumber = orderGetters.getOrderNumber(order)
   const orderTotal = orderGetters.getTotal(order)
@@ -65,7 +65,7 @@ const ViewOrderDetails = (props: ViewOrderDetailsProps) => {
     discountedSubtotal: t('currency', { val: orderGetters.getDiscountedSubtotal(order) }),
     shippingTotal: orderGetters.getShippingTotal(order)
       ? t('currency', { val: orderGetters.getShippingTotal(order) })
-      : t('checkout:free'),
+      : t('free'),
     tax: t('currency', { val: orderGetters.getTaxTotal(order) }),
     total: t('currency', { val: orderTotal }),
   }
@@ -115,10 +115,7 @@ const ViewOrderDetails = (props: ViewOrderDetailsProps) => {
               variant="body1"
             />
             {isOrderStatus && (
-              <ProductOption
-                option={{ name: t('orderhistory:shipped-to'), value: shippedTo }}
-                variant="body1"
-              />
+              <ProductOption option={{ name: t('shipped-to'), value: shippedTo }} variant="body1" />
             )}
           </Box>
           <Divider sx={{ ...styles.divider }} />
@@ -173,7 +170,7 @@ const ViewOrderDetails = (props: ViewOrderDetailsProps) => {
           {!isOrderStatus && (
             <Box py={3}>
               <Typography variant="h3" fontWeight={'bold'}>
-                {t('checkout:payment-information')}
+                {t('payment-information')}
               </Typography>
               {payments?.map((payment) => {
                 const cardDetails = orderGetters.getOrderPaymentCardDetails(

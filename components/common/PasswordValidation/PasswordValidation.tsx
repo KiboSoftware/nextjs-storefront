@@ -11,7 +11,7 @@ interface PasswordValidationProps {
 
 const PasswordValidation = (props: PasswordValidationProps) => {
   const { password = '' } = props
-  const { t } = useTranslation('checkout')
+  const { t } = useTranslation('common')
 
   const {
     isHavingAtLeastEightCharacters,

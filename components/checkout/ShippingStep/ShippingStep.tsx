@@ -69,7 +69,7 @@ const ShippingStep = (props: ShippingProps) => {
     defaultShippingAddress?.id as number
   )
 
-  const { t } = useTranslation(['checkout', 'common'])
+  const { t } = useTranslation('common')
   const shippingAddressRef = useRef()
 
   const {
@@ -223,7 +223,7 @@ const ShippingStep = (props: ShippingProps) => {
             {defaultShippingAddress && (
               <>
                 <Typography variant="h4" fontWeight={'bold'}>
-                  {t('common:your-default-shipping-address')}
+                  {t('your-default-shipping-address')}
                 </Typography>
                 {getSavedShippingAddressView(defaultShippingAddress, true)}
               </>
@@ -232,7 +232,7 @@ const ShippingStep = (props: ShippingProps) => {
             {previouslySavedShippingAddress?.length > 0 && (
               <>
                 <Typography variant="h4" fontWeight={'bold'}>
-                  {t('common:previously-saved-shipping-addresses')}
+                  {t('previously-saved-shipping-addresses')}
                 </Typography>
                 {previouslySavedShippingAddress?.map((address) => {
                   return address && getSavedShippingAddressView(address)
@@ -246,7 +246,7 @@ const ShippingStep = (props: ShippingProps) => {
               sx={{ width: { xs: '100%', sm: '50%' } }}
               onClick={handleAddNewAddress}
             >
-              {t('common:add-new-address')}
+              {t('add-new-address')}
             </Button>
           </Stack>
           {shippingMethods.length > 0 && (
@@ -277,7 +277,7 @@ const ShippingStep = (props: ShippingProps) => {
               color="secondary"
               onClick={() => setShouldShowAddAddressButton(true)}
             >
-              {t('common:cancel')}
+              {t('cancel')}
             </Button>
             <Button
               variant="contained"

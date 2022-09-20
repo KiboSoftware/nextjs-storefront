@@ -11,7 +11,7 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
   return {
     props: {
       cart: response?.currentCart,
-      ...(await serverSideTranslations(locale as string, ['common', 'cart', 'checkout'])),
+      ...(await serverSideTranslations(locale as string, ['common'])),
     },
   }
 }

@@ -112,7 +112,7 @@ const PaymentStep = (props: PaymentStepProps) => {
 
   // hooks
   const { isAuthenticated, user } = useAuthContext()
-  const { t } = useTranslation(['checkout', 'common'])
+  const { t } = useTranslation('common')
 
   const { loadPaymentTypes } = usePaymentTypes()
   const paymentMethods = loadPaymentTypes()
@@ -374,7 +374,7 @@ const PaymentStep = (props: PaymentStepProps) => {
       <>
         {defaultCustomerAccountCard.cardInfo?.id === card.cardInfo?.id && (
           <Typography variant="h4" fontWeight={'bold'}>
-            {t('common:primary')}
+            {t('primary')}
           </Typography>
         )}
         <SavedPaymentMethodView
@@ -503,9 +503,7 @@ const PaymentStep = (props: PaymentStepProps) => {
                 return getSavedPaymentMethodView(card)
               })
             ) : (
-              <Typography variant="h4">
-                {t('common:no-previously-saved-payment-methods')}
-              </Typography>
+              <Typography variant="h4">{t('no-previously-saved-payment-methods')}</Typography>
             )}
 
             <Button
@@ -514,7 +512,7 @@ const PaymentStep = (props: PaymentStepProps) => {
               sx={{ width: { xs: '100%', sm: '50%' } }}
               onClick={handleAddPaymentMethod}
             >
-              {t('common:add-payment-method')}
+              {t('add-payment-method')}
             </Button>
           </Stack>
         </>
@@ -585,7 +583,7 @@ const PaymentStep = (props: PaymentStepProps) => {
           />
           <Stack pl={1} gap={2} sx={{ width: { xs: '100%', md: '50%' } }}>
             <Button variant="contained" color="secondary" onClick={cancelAddingNewPaymentMethod}>
-              {t('common:cancel')}
+              {t('cancel')}
             </Button>
             <Button
               variant="contained"
@@ -593,7 +591,7 @@ const PaymentStep = (props: PaymentStepProps) => {
               {...(isAddPaymentMethodButtonDisabled() && { disabled: true })}
               onClick={handleSaveNewPaymentMethod}
             >
-              {t('common:save-payment-method')}
+              {t('save-payment-method')}
             </Button>
           </Stack>
         </>

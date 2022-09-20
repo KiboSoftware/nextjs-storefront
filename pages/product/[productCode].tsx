@@ -31,7 +31,7 @@ export async function getStaticProps(context: GetStaticPropsContext) {
       product,
       categoriesTree,
       cmsProductDetail,
-      ...(await serverSideTranslations(locale as string, ['common', 'product'], nextI18NextConfig)),
+      ...(await serverSideTranslations(locale as string, ['common'], nextI18NextConfig)),
     },
     revalidate: serverRuntimeConfig.revalidate,
   }

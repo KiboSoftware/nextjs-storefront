@@ -9,7 +9,7 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
 
   return {
     props: {
-      ...(await serverSideTranslations(locale as string, ['common', 'orderhistory'])),
+      ...(await serverSideTranslations(locale as string, ['common'])),
     },
   }
 }

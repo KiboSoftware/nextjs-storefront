@@ -37,7 +37,7 @@ const styles = {
 const Content = (props: ContentProps) => {
   const { setAutoFocus = true, onRegisterNow, errorMessage } = props
   const [showPassword, setShowPassword] = useState<boolean>(false)
-  const { t } = useTranslation(['checkout', 'common'])
+  const { t } = useTranslation('common')
 
   const useDetailsSchema = () => {
     return yup.object().shape({
@@ -170,7 +170,7 @@ const Content = (props: ContentProps) => {
           onClick={() => handleSubmit(handleCreateAccount)()}
           disabled={!isValid}
         >
-          {t('common:create-an-account')}
+          {t('create-an-account')}
         </Button>
       </FormControl>
     </Box>

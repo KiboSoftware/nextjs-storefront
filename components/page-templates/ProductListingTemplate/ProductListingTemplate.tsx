@@ -193,7 +193,7 @@ const ProductListingTemplate = (props: ProductListingTemplateProps) => {
 
   const [showFilterBy, setFilterBy] = useState<boolean>(false)
 
-  const { t } = useTranslation(['product', 'common'])
+  const { t } = useTranslation('common')
 
   const handleFilterBy = () => setFilterBy(!showFilterBy)
 
@@ -233,7 +233,7 @@ const ProductListingTemplate = (props: ProductListingTemplateProps) => {
               )}
               <Box sx={{ ...styles.navBarSort }}>
                 {!isLoading ? (
-                  <Box sx={{ ...styles.navBarLabel }}>{t('common:sort-by')}</Box>
+                  <Box sx={{ ...styles.navBarLabel }}>{t('sort-by')}</Box>
                 ) : (
                   <Skeleton
                     variant="rectangular"
@@ -271,7 +271,7 @@ const ProductListingTemplate = (props: ProductListingTemplateProps) => {
                       sx={{ ...styles.filterByButton }}
                       onClick={handleFilterBy}
                     >
-                      {t('common:filter-by')}
+                      {t('filter-by')}
                     </Button>
                   ) : (
                     <Skeleton variant="rectangular" height={36} />
@@ -321,7 +321,7 @@ const ProductListingTemplate = (props: ProductListingTemplateProps) => {
                         onSelectedTileRemoval={handleSelectedTileRemoval}
                       >
                         <Link sx={{ ...styles.clearAllButton }} onClick={handleClearAllFilters}>
-                          {t('common:clear-all')}
+                          {t('clear-all')}
                         </Link>
                       </FilterTiles>
                     )}

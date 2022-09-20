@@ -31,7 +31,7 @@ const StyledCardDiv = styled('div')(() => ({
 }))
 
 const useCardSchema = () => {
-  const { t } = useTranslation('checkout')
+  const { t } = useTranslation('common')
   return yup.object({
     cardNumber: yup.string().when('$isEdit', (isEdit, schema) => {
       if (!isEdit) {
@@ -59,7 +59,7 @@ const useCardSchema = () => {
 }
 const CardDetailsForm = (props: CardDetailsFormProps) => {
   const { validateForm = false, onSaveCardData, onFormStatusChange, cardValue } = props
-  const { t } = useTranslation('checkout')
+  const { t } = useTranslation('common')
   const cardSchema = useCardSchema()
   const [cardTypeLogo, setCardTypeLogo] = useState(getCreditCardLogo(cardValue?.cardType as string))
 

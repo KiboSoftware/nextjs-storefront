@@ -57,13 +57,13 @@ const LoginContent = (props: LoginContentProps) => {
     password: '',
   }
 
-  const { t } = useTranslation(['checkout', 'common'])
+  const { t } = useTranslation('common')
 
   const useLoginInputSchema = () => {
     return yup.object().shape({
       email: yup
         .string()
-        .email(t('common:email-must-be-a-valid-email'))
+        .email(t('email-must-be-a-valid-email'))
         .required(t('this-field-is-required')),
       password: yup.string().required(t('this-field-is-required')),
     })
@@ -149,7 +149,7 @@ const LoginContent = (props: LoginContentProps) => {
         <FormControlLabel
           sx={{ pb: 2 }}
           control={<Checkbox onChange={(_, checked) => setIsRememberMe(checked)} />}
-          label={t('common:remember-me')}
+          label={t('remember-me')}
           labelPlacement="end"
         />
         {errorMessage && (
@@ -165,7 +165,7 @@ const LoginContent = (props: LoginContentProps) => {
           type="submit"
           form="loginForm"
         >
-          {t('common:log-in')}
+          {t('log-in')}
         </Button>
       </FormControl>
       <Box pt={2} display="flex" justifyContent="center">
@@ -175,7 +175,7 @@ const LoginContent = (props: LoginContentProps) => {
           color="text.primary"
           onClick={handleForgotPassword}
         >
-          {t('common:forgot-password')}
+          {t('forgot-password')}
         </Link>
       </Box>
     </Box>

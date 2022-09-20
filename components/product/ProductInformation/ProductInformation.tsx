@@ -42,7 +42,7 @@ interface ProductInformationProps {
 const ProductInformation = (props: ProductInformationProps) => {
   const { options = [], productFullDescription } = props
 
-  const { t } = useTranslation('product')
+  const { t } = useTranslation('common')
 
   return (
     <>

@@ -80,7 +80,7 @@ const AddressForm = (props: AddressFormProps) => {
 
   const [_, setSaveAddress] = useState<boolean>(false)
 
-  const { t } = useTranslation('checkout')
+  const { t } = useTranslation('common')
 
   const generateSelectOptions = () =>
     countries?.map((country: string) => {

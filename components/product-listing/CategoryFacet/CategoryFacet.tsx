@@ -78,10 +78,10 @@ const styles = {
 const CategoryFacet = (props: CategoryFacetProps) => {
   const { initialItemsToShow = 5, categoryFacet, breadcrumbs } = props
   const { getCategoryLink } = uiHelpers()
-  const { t } = useTranslation(['product', 'common'])
+  const { t } = useTranslation('common')
 
-  const viewMore = t('common:view-more')
-  const viewLess = t('common:view-less')
+  const viewMore = t('view-more')
+  const viewLess = t('view-less')
 
   const childrenLength = categoryFacet?.childrenCategories?.length || 0
   const isViewMoreVisible = childrenLength > initialItemsToShow
@@ -133,9 +133,9 @@ const CategoryFacet = (props: CategoryFacetProps) => {
         )}
         {breadcrumbs?.length >= 1 && (
           <Link href={breadcrumbs[breadcrumbs?.length - 2]?.link || '/'} passHref>
-            <MuiLink aria-label={t('common:back')} sx={{ ...styles.backButton }}>
+            <MuiLink aria-label={t('back')} sx={{ ...styles.backButton }}>
               <ChevronLeft />
-              {t('common:back')}
+              {t('back')}
             </MuiLink>
           </Link>
         )}

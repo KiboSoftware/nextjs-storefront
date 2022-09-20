@@ -26,14 +26,14 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
     props: {
       checkout,
       checkoutId,
-      ...(await serverSideTranslations(locale as string, ['common', 'checkout'])),
+      ...(await serverSideTranslations(locale as string, ['common'])),
     },
   }
 }
 
 const CheckoutPage: NextPage<CheckoutPageProps> = (props) => {
-  const { t } = useTranslation(['checkout', 'common'])
-  const steps = [t('common:details'), t('shipping'), t('payment'), t('review')]
+  const { t } = useTranslation('common')
+  const steps = [t('details'), t('shipping'), t('payment'), t('review')]
 
   return (
     <>

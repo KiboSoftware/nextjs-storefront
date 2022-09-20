@@ -67,7 +67,7 @@ const OrderReview = (props: OrderReviewProps) => {
   const { checkout } = props
 
   const { steps, setActiveStep } = useCheckoutStepContext()
-  const { t } = useTranslation('checkout')
+  const { t } = useTranslation('common')
 
   const {
     personalDetails,

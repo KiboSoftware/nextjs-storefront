@@ -67,7 +67,7 @@ const styles = {
 }
 
 const useDetailsSchema = () => {
-  const { t } = useTranslation('checkout')
+  const { t } = useTranslation('common')
 
   return yup.object().shape({
     email: yup.string().email().required(t('this-field-is-required')),
@@ -90,7 +90,7 @@ const useDetailsSchema = () => {
 const ReviewStep = (props: ReviewStepProps) => {
   const { checkout, onBackButtonClick } = props
 
-  const { t } = useTranslation(['checkout', 'common'])
+  const { t } = useTranslation('common')
   const theme = useTheme()
   const { isAuthenticated, createAccount } = useAuthContext()
   const [isAgreeWithTermsAndConditions, setAgreeWithTermsAndConditions] = useState<boolean>(false)
@@ -158,14 +158,14 @@ const ReviewStep = (props: ReviewStepProps) => {
   const handleComplete = () => handleSubmit(onValid, onInvalidForm)()
 
   const orderPriceProps: OrderPriceProps = {
-    subTotalLabel: t('common:subtotal'),
+    subTotalLabel: t('subtotal'),
     shippingTotalLabel: t('shipping'),
-    taxLabel: t('common:estimated-tax'),
-    totalLabel: t('common:total'),
-    subTotal: t('common:currency', { val: subTotal }),
+    taxLabel: t('estimated-tax'),
+    totalLabel: t('total'),
+    subTotal: t('currency', { val: subTotal }),
     shippingTotal: shippingTotal ? t('currency', { val: shippingTotal }) : t('free'),
-    tax: t('common:currency', { val: taxTotal }),
-    total: t('common:currency', { val: total }),
+    tax: t('currency', { val: taxTotal }),
+    total: t('currency', { val: total }),
   }
 
   return (

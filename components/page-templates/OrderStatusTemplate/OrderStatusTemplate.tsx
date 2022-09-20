@@ -24,7 +24,7 @@ const OrderStatusTemplate = () => {
     isRefetching: true,
   })
 
-  const { t } = useTranslation(['common', 'orderhistory'])
+  const { t } = useTranslation('common')
   const { data: orderCollection, isFetching } = useUserOrderQueries(queryFilters)
   const { items = [], pageCount } = orderCollection
   const order = items && (items[0] as Order)
@@ -47,16 +47,12 @@ const OrderStatusTemplate = () => {
       </Grid>
       <Grid item xs={12}>
         {order?.id && (
-          <ViewOrderDetails
-            title={t('orderhistory:view-order-status')}
-            isOrderStatus={true}
-            order={order}
-          />
+          <ViewOrderDetails title={t('view-order-status')} isOrderStatus={true} order={order} />
         )}
         {!order?.id && (
           <ViewOrderStatus
             onOrderStatusSubmit={handleOrderStatusSubmit}
-            lookupWarningMessage={pageCount === 0 ? t('orderhistory:no-orders-found') : ''}
+            lookupWarningMessage={pageCount === 0 ? t('no-orders-found') : ''}
           />
         )}
       </Grid>

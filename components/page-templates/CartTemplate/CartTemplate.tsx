@@ -61,7 +61,7 @@ const styles = {
 const CartTemplate = (props: CartTemplateProps) => {
   const { data: cart } = useCartQueries(props?.cart)
 
-  const { t } = useTranslation(['common', 'checkout', 'cart'])
+  const { t } = useTranslation('common')
   const theme = useTheme()
   const isMobileViewport = useMediaQuery(theme.breakpoints.down('md'))
   const router = useRouter()
@@ -192,9 +192,7 @@ const CartTemplate = (props: CartTemplateProps) => {
       cartDiscountedSubTotal && cartDiscountedSubTotal !== cartSubTotal
         ? t('common:currency', { val: cartDiscountedSubTotal })
         : '',
-    shippingTotal: cartShippingTotal
-      ? t('currency', { val: cartShippingTotal })
-      : t('checkout:free'),
+    shippingTotal: cartShippingTotal ? t('currency', { val: cartShippingTotal }) : t('free'),
     tax: t('currency', { val: cartTaxTotal }),
     total: t('currency', { val: cartTotal }),
     promoComponent: (
@@ -214,10 +212,10 @@ const CartTemplate = (props: CartTemplateProps) => {
       <Grid item xs={12} md={8} sx={{ paddingX: { xs: 2, md: 0 }, paddingY: { xs: 2 } }}>
         <Box display="flex" gap={1}>
           <Typography variant="h1" gutterBottom>
-            {t('cart:shopping-cart')}
+            {t('shopping-cart')}
           </Typography>
           <Typography variant="h1" fontWeight={'normal'}>
-            ({t('cart:cart-item-count', { count: cartItemCount })})
+            ({t('cart-item-count', { count: cartItemCount })})
           </Typography>
         </Box>
       </Grid>
@@ -265,7 +263,7 @@ const CartTemplate = (props: CartTemplateProps) => {
       {!cart?.items?.length && (
         <Box data-testid="empty-cart">
           <Typography variant="h4" fontWeight={'bold'}>
-            {t('cart:empty-cart-message')}
+            {t('empty-cart-message')}
           </Typography>
           <Box maxWidth="23.5rem">
             <Link href="/" passHref>
