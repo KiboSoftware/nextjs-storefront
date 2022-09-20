@@ -210,14 +210,12 @@ const getProductFulfillmentOptions = (
       ).length === 0,
     details: (() => {
       if (option.shortName === FulfillmentOptions.SHIP)
-        return product?.inventoryInfo?.onlineStockAvailable && isProductVariationsSelected(product)
+        return product?.inventoryInfo?.onlineStockAvailable
           ? option.details
           : option.unavailableDetails // checking if Directship
       if (purchaseLocation?.name)
         return `${
-          productLocationInventoryData &&
-          productLocationInventoryData[0]?.stockAvailable &&
-          isProductVariationsSelected(product)
+          productLocationInventoryData && productLocationInventoryData[0]?.stockAvailable
             ? option.details
             : option.unavailableDetails
         }: ${purchaseLocation.name}`
