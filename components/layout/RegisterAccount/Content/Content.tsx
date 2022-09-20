@@ -8,8 +8,7 @@ import { useTranslation } from 'next-i18next'
 import { useForm, Controller } from 'react-hook-form'
 import * as yup from 'yup'
 
-import KiboTextBox from '@/components/common/KiboTextBox/KiboTextBox'
-import PasswordValidation from '@/components/common/PasswordValidation/PasswordValidation'
+import { KiboTextBox, PasswordValidation } from '@/components/common'
 import { isPasswordValid } from '@/lib/helpers/validations/validations'
 
 export interface RegisterAccountInputData {

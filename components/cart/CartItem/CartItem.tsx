@@ -12,13 +12,9 @@ import {
 import { grey } from '@mui/material/colors'
 import { useTranslation } from 'next-i18next'
 
-import CartItemActions from '@/components/cart/CartItemActions/CartItemActions'
-import CartItemActionsMobile from '@/components/cart/CartItemActionsMobile/CartItemActionsMobile'
-import FulfillmentOptions from '@/components/common/FulfillmentOptions/FulfillmentOptions'
-import Price from '@/components/common/Price/Price'
-import ProductItem from '@/components/common/ProductItem/ProductItem'
-import QuantitySelector from '@/components/common/QuantitySelector/QuantitySelector'
-import { orderGetters, productGetters } from '@/lib/getters'
+import { CartItemActions, CartItemActionsMobile } from '@/components/cart'
+import { FulfillmentOptions, Price, ProductItem, QuantitySelector } from '@/components/common'
+import { productGetters } from '@/lib/getters'
 import { uiHelpers } from '@/lib/helpers'
 import type { FulfillmentOption } from '@/lib/types'
 

@@ -8,8 +8,7 @@ import { useTranslation } from 'next-i18next'
 import { useForm, Controller, ControllerRenderProps } from 'react-hook-form'
 import * as yup from 'yup'
 
-import { KiboImage } from '@/components/common'
-import KiboTextBox from '@/components/common/KiboTextBox/KiboTextBox'
+import { KiboImage, KiboTextBox } from '@/components/common'
 import {
   prepareCardDataParams,
   validateExpiryDate,

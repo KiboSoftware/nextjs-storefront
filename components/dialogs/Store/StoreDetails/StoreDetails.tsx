@@ -4,7 +4,7 @@ import { KeyboardArrowDown, KeyboardArrowUp } from '@mui/icons-material'
 import { Typography, Box, Stack, Link, Collapse, Grid } from '@mui/material'
 import { useTranslation } from 'next-i18next'
 
-import AddressCard from '@/components/common/AddressCard/AddressCard'
+import { AddressCard } from '@/components/common'
 import type { LocationCustom, HoursCustom } from '@/lib/types'
 
 import type { Maybe, LocationInventory } from '@/lib/gql/types'

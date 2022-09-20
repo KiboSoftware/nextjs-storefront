@@ -15,7 +15,7 @@ import { Box } from '@mui/system'
 import { useTranslation } from 'next-i18next'
 import { TransformWrapper, TransformComponent } from 'react-zoom-pan-pinch'
 
-import KiboImage from '@/components/common/KiboImage/KiboImage'
+import { KiboImage } from '@/components/common'
 import { productGetters } from '@/lib/getters'
 import { swipeDetect } from '@/lib/helpers'
 import DefaultImage from '@/public/product_placeholder.svg'

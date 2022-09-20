@@ -1,6 +1,6 @@
 import { Box } from '@mui/material'
 
-import CartItem from '@/components/cart/CartItem/CartItem'
+import { CartItem } from '@/components/cart'
 import { FullWidthDivider } from '@/components/common'
 import { FulfillmentOptions } from '@/lib/constants'
 import { cartGetters } from '@/lib/getters/cartGetters'

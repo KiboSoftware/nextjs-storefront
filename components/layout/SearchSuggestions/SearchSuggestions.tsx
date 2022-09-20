@@ -19,8 +19,8 @@ import getConfig from 'next/config'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
 
-import SearchBar from '@/components/common/SearchBar/SearchBar'
-import { useDebounce, useSearchSuggestionsQueries } from '@/hooks'
+import { SearchBar } from '@/components/common'
+import { useDebounce, useSearchSuggestions } from '@/hooks'
 
 const style = {
   paper: {

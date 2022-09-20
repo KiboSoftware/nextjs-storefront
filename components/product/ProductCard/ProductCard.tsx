@@ -17,8 +17,7 @@ import {
 import { useTranslation } from 'next-i18next'
 import Link from 'next/link'
 
-import KiboImage from '@/components/common/KiboImage/KiboImage'
-import Price from '@/components/common/Price/Price'
+import { KiboImage, Price } from '@/components/common'
 import DefaultImage from '@/public/product_placeholder.svg'
 
 export interface ProductCardProps {

@@ -6,9 +6,9 @@ import CloseIcon from '@mui/icons-material/Close'
 import { Typography, Box, Button, Stack } from '@mui/material'
 import { useTranslation } from 'next-i18next'
 
-import KiboTextBox from '@/components/common/KiboTextBox/KiboTextBox'
+import { KiboTextBox } from '@/components/common'
 
-export interface PromocodeBadgeProps {
+export interface PromoCodeBadgeProps {
   onApplyCouponCode: (promo: string) => void
   onRemoveCouponCode: (promo: string) => void
   promoList?: string[] | null
@@ -29,7 +29,7 @@ const styles = {
   buttonStyle: { width: '5rem', height: '2.20rem', marginTop: '1.5rem' },
 }
 
-const PromoCodeBadge = (props: PromocodeBadgeProps) => {
+const PromoCodeBadge = (props: PromoCodeBadgeProps) => {
   const { t } = useTranslation('common')
   const { onApplyCouponCode, onRemoveCouponCode, promoList, promoError, helpText } = props
   const [promo, setPromo] = useState<string>('')

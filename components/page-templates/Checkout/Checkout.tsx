@@ -12,9 +12,8 @@ import {
   ShippingStep,
   PaymentStep,
   OrderReview,
-  OrderSummary,
 } from '@/components/checkout'
-import { PromoCodeBadge } from '@/components/common'
+import { OrderSummary, PromoCodeBadge } from '@/components/common'
 import { OrderConfirmation } from '@/components/order'
 import { useCheckoutStepContext, STEP_STATUS, useAuthContext } from '@/context'
 import {

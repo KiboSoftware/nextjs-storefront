@@ -2,8 +2,7 @@ import React from 'react'
 
 import { Box } from '@mui/material'
 
-import KiboRadio from '@/components/common/KiboRadio/KiboRadio'
-import PaymentCard from '@/components/common/PaymentCard/PaymentCard'
+import { KiboRadio, PaymentCard } from '@/components/common'
 
 interface PaymentCardDetailsViewProps {
   radioGroupTitle?: string
