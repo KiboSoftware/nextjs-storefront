@@ -99,3 +99,8 @@ export const footerConfig = {
     { iconPath: '/icons/youtube.svg', link: '' },
   ],
 }
+
+export enum CMS {
+  CONTENTFUL = 'contentful',
+  CONTENTSTACK = 'contentstack',
+}
