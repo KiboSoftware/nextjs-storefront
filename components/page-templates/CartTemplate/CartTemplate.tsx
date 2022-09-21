@@ -187,10 +187,10 @@ const CartTemplate = (props: CartTemplateProps) => {
     shippingTotalLabel: t('shipping'),
     taxLabel: t('estimated-tax'),
     totalLabel: t('estimated-order-total'),
-    subTotal: t('common:currency', { val: cartSubTotal }),
+    subTotal: t('currency', { val: cartSubTotal }),
     discountedSubtotal:
       cartDiscountedSubTotal && cartDiscountedSubTotal !== cartSubTotal
-        ? t('common:currency', { val: cartDiscountedSubTotal })
+        ? t('currency', { val: cartDiscountedSubTotal })
         : '',
     shippingTotal: cartShippingTotal ? t('currency', { val: cartShippingTotal }) : t('free'),
     tax: t('currency', { val: cartTaxTotal }),
@@ -273,7 +273,7 @@ const CartTemplate = (props: CartTemplateProps) => {
                   color="primary"
                   sx={{ width: '100%', marginTop: '3.063rem' }}
                 >
-                  {t('common:shop-now')}
+                  {t('shop-now')}
                 </Button>
               </MuiLink>
             </Link>

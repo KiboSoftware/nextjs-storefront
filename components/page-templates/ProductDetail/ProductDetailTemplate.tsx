@@ -175,18 +175,18 @@ const ProductDetailTemplate = (props: ProductDetailTemplateProps) => {
     return {
       lower: {
         price: priceRange?.lower?.price
-          ? t<string>('common:currency', { val: priceRange?.lower?.price })
+          ? t<string>('currency', { val: priceRange?.lower?.price })
           : null,
         salePrice: priceRange?.lower?.salePrice
-          ? t<string>('common:currency', { val: priceRange?.lower?.salePrice })
+          ? t<string>('currency', { val: priceRange?.lower?.salePrice })
           : null,
       },
       upper: {
         price: priceRange?.upper?.price
-          ? t<string>('common:currency', { val: priceRange?.upper?.price })
+          ? t<string>('currency', { val: priceRange?.upper?.price })
           : null,
         salePrice: priceRange?.upper?.salePrice
-          ? t<string>('common:currency', { val: priceRange?.upper?.salePrice })
+          ? t<string>('currency', { val: priceRange?.upper?.salePrice })
           : null,
       },
     }
@@ -217,9 +217,9 @@ const ProductDetailTemplate = (props: ProductDetailTemplateProps) => {
             {productName}
           </Typography>
           <Price
-            price={t<string>('common:currency', { val: productPrice.regular })}
+            price={t<string>('currency', { val: productPrice.regular })}
             {...(productPrice.special && {
-              salePrice: t<string>('common:currency', { val: productPrice.special }),
+              salePrice: t<string>('currency', { val: productPrice.special }),
             })}
             priceRange={productPriceRange && handlePriceRangeTranslation(productPriceRange)}
           />

@@ -50,8 +50,8 @@ describe('[components] CartTemplate integration', () => {
   it('should render component', async () => {
     setup()
     const items = Common.args?.cart?.items || []
-    const cartTitle = screen.getByText(/cart:shopping-cart/i)
-    const cartItemCount = screen.getByText(/cart:cart-item-count/i)
+    const cartTitle = screen.getByText(/shopping-cart/i)
+    const cartItemCount = screen.getByText(/cart-item-count/i)
     const orderSummaryHeading = screen.getByText('order-summary')
 
     const gotToCheckout = screen.getByRole('button', {

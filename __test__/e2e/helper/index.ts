@@ -6,7 +6,7 @@ export const addNewCard = async (user: UserEvent) => {
   await addBillingAddress(user)
 
   const saveMethod = screen.getByRole('button', {
-    name: /common:save-payment-method/i,
+    name: /save-payment-method/i,
   })
 
   await waitFor(() => {

@@ -99,22 +99,22 @@ const Checkout = (props: CheckoutProps) => {
   const orderSummaryArgs = {
     nameLabel: t('order-summary'),
     subTotalLabel: `Cart Subtotal of (${checkout?.items?.length} items)`,
-    shippingTotalLabel: t('common:standard-shopping'),
-    taxLabel: t('common:tax'),
-    totalLabel: t('common:order-total'),
-    subTotal: t('common:currency', { val: checkout?.subtotal }),
+    shippingTotalLabel: t('standard-shopping'),
+    taxLabel: t('tax'),
+    totalLabel: t('order-total'),
+    subTotal: t('currency', { val: checkout?.subtotal }),
     discountedSubtotal:
       checkout?.discountedSubtotal && checkout?.discountedSubtotal != checkout?.subtotal
-        ? t('common:currency', { val: checkout?.discountedSubtotal })
+        ? t('currency', { val: checkout?.discountedSubtotal })
         : '',
     shippingTotal: checkout?.shippingTotal
-      ? t('common:currency', { val: checkout?.shippingTotal })
-      : t('checkout:free'),
-    tax: t('common:currency', { val: checkout?.taxTotal }),
-    total: t('common:currency', { val: checkout?.total }),
-    checkoutLabel: t('checkout:go-to-checkout'),
-    shippingLabel: t('checkout:go-to-shipping'),
-    backLabel: t('checkout:Go Back'),
+      ? t('currency', { val: checkout?.shippingTotal })
+      : t('free'),
+    tax: t('currency', { val: checkout?.taxTotal }),
+    total: t('currency', { val: checkout?.total }),
+    checkoutLabel: t('go-to-checkout'),
+    shippingLabel: t('go-to-shipping'),
+    backLabel: t('go-back'),
     promoComponent: (
       <PromoCodeBadge
         onApplyCouponCode={handleApplyCouponCode}

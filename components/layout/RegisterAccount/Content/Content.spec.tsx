@@ -33,7 +33,7 @@ describe('[components] Register Account(Content)', () => {
     const firstNameInput = screen.getByRole('textbox', { name: /first-name/i })
     const lastNameInput = screen.getByRole('textbox', { name: /last-name/i })
     const passwordInput = screen.getByLabelText(/password/i)
-    const createAccountButton = screen.getByRole('button', { name: /common:create-an-account/i })
+    const createAccountButton = screen.getByRole('button', { name: /create-an-account/i })
 
     expect(emailInput).toBeVisible()
     expect(firstNameInput).toBeVisible()
@@ -50,7 +50,7 @@ describe('[components] Register Account(Content)', () => {
     const registerAccountFormFirstNameInput = screen.getByRole('textbox', { name: /first-name/i })
     const registerAccountFormLastNameInput = screen.getByRole('textbox', { name: /last-name/i })
     const registerAccountFormPasswordInput = screen.getByLabelText(/password/i)
-    const createAccountButton = screen.getByRole('button', { name: /common:create-an-account/i })
+    const createAccountButton = screen.getByRole('button', { name: /create-an-account/i })
 
     fireEvent.change(emailInput, { target: { value: 'example@example.com' } })
     fireEvent.change(registerAccountFormFirstNameInput, { target: { value: 'Example' } })

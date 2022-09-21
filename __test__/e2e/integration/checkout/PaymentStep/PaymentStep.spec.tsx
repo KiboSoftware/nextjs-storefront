@@ -103,7 +103,7 @@ describe('[components] PaymentStep', () => {
       expect(radios.length).toBe(2)
 
       const addPaymentMethodButton = screen.getByRole('button', {
-        name: /common:add-payment-method/i,
+        name: /add-payment-method/i,
       })
 
       await user.click(addPaymentMethodButton)

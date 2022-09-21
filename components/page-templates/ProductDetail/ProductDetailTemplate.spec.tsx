@@ -193,7 +193,7 @@ describe('[component] Product Detail Template component', () => {
 
     expect(
       screen.getByRole('button', {
-        name: 'common:add-to-cart',
+        name: 'add-to-cart',
       })
     ).toBeVisible()
   })
@@ -203,7 +203,7 @@ describe('[component] Product Detail Template component', () => {
 
     expect(
       screen.getByRole('button', {
-        name: 'common:add-to-wishlist',
+        name: 'add-to-wishlist',
       })
     ).toBeVisible()
   })
@@ -213,7 +213,7 @@ describe('[component] Product Detail Template component', () => {
 
     expect(
       screen.getByRole('button', {
-        name: 'common:one-click-checkout',
+        name: 'one-click-checkout',
       })
     ).toBeVisible()
   })

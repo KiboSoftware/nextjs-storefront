@@ -36,7 +36,7 @@ describe('[components] (LoginDialog)', () => {
     expect(closeIcon).toBeVisible()
     expect(loginContent).toBeVisible()
 
-    const registerNowLink = screen.getByRole('button', { name: 'common:register-now' })
+    const registerNowLink = screen.getByRole('button', { name: 'register-now' })
     expect(registerNowLink).toBeVisible()
 
     await act(async () => {

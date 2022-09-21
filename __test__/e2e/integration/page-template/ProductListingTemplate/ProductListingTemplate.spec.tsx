@@ -44,7 +44,7 @@ describe('[component] - ProductListingTemplate integration', () => {
     const inWishlistIcon = screen.getAllByTestId('FavoriteBorderRoundedIcon')
     expect(inWishlistIcon[0]).toBeVisible()
     await user.click(inWishlistIcon[0])
-    const title = screen.getByText('common:log-in')
+    const title = screen.getAllByText('log-in')[0]
 
     expect(title).toBeVisible()
   })

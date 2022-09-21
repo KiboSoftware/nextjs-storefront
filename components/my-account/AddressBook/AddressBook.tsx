@@ -286,7 +286,7 @@ const AddressBook = (props: AddressBookProps) => {
           />
           <Stack pl={1} gap={2} sx={{ width: { xs: '100%', md: '50%', maxWidth: '26.313rem' } }}>
             <Button variant="contained" color="secondary" onClick={handleCancelUpdateAddress}>
-              {t('common:cancel')}
+              {t('cancel')}
             </Button>
             <Button variant="contained" color="primary" onClick={handleAddressValidationAndSave}>
               {t('save')}

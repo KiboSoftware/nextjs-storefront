@@ -70,11 +70,11 @@ describe('[components] - ViewOrderDetails Integration', () => {
     const order = Common.args?.order as Order
     expect(screen.getByText(/order-number/i)).toBeVisible()
     expect(screen.getByText(/order-date/i)).toBeVisible()
-    expect(screen.getByText(/orderhistory:shipped-to/i)).toBeVisible()
+    expect(screen.getByText(/shipped-to/i)).toBeVisible()
     expect(screen.getByText(`${Common.args?.order?.orderNumber}`)).toBeVisible()
     expect(screen.getByText(orderGetters.getSubmittedDate(order))).toBeVisible()
     expect(screen.getByText(orderGetters.getShippedTo(order))).toBeVisible()
     expect(screen.queryByText(/order-summary/i)).not.toBeInTheDocument()
-    expect(screen.queryByText('checkout:payment-information')).not.toBeInTheDocument()
+    expect(screen.queryByText('payment-information')).not.toBeInTheDocument()
   })
 })

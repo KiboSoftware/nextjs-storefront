@@ -61,7 +61,7 @@ const AddressList = (props: AddressListProps) => {
         )
       ) : (
         <Typography variant="h4" fontWeight={'bold'}>
-          {t('common:no-saved-addresses-yet')}
+          {t('no-saved-addresses-yet')}
         </Typography>
       )}
     </Box>
@@ -82,7 +82,7 @@ const KiboAddressList = (props: AddressListProps) => {
       {addresses?.map((item: CustomerContact, index) => (
         <Box paddingY={1} key={item.id + 'address'}>
           <AddressCard
-            title={index === 0 ? t('common:primary') : ''}
+            title={index === 0 ? t('primary') : ''}
             {...buildAddressProps(item.address as CuAddress)}
           />
         </Box>
@@ -102,7 +102,7 @@ const KiboRadioAddressList = (props: KiboAddressListProps) => {
         name: `${item.id}`,
         label: (
           <AddressCard
-            title={index === 0 ? t('common:primary') : ''}
+            title={index === 0 ? t('primary') : ''}
             {...buildAddressProps(item.address as CuAddress)}
           />
         ),

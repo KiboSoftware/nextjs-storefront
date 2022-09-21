@@ -40,7 +40,7 @@ const OrderConfirmation = ({ order }: { order: Order }) => {
     discountedSubtotal: t('currency', { val: orderGetters.getDiscountedSubtotal(order) }),
     shippingTotal: orderGetters.getShippingTotal(order)
       ? t('currency', { val: orderGetters.getShippingTotal(order) })
-      : t('checkout:free'),
+      : t('free'),
     tax: t('currency', { val: orderGetters.getTaxTotal(order) }),
     total: t('currency', { val: orderTotal }),
   }

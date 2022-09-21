@@ -93,11 +93,11 @@ const WishlistTemplate = (props: { customerAccount: CustomerAccount }) => {
                             item?.product?.imageUrl as string
                           )}
                           link={getProductLink(item?.product?.productCode as string)}
-                          price={t<string>('common:currency', {
+                          price={t<string>('currency', {
                             val: productGetters.getPrice(item?.product as ProductCustom).regular,
                           })}
                           {...(productGetters.getPrice(item?.product as ProductCustom).special && {
-                            salePrice: t<string>('common:currency', {
+                            salePrice: t<string>('currency', {
                               val: productGetters.getPrice(item?.product as ProductCustom).special,
                             }),
                           })}

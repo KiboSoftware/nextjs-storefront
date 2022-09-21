@@ -56,7 +56,7 @@ export const KiboRadio = (props: KiboRadioProps) => {
         value={selected}
         onChange={handleChange}
       >
-        {radioOptions.map((radio, index) => {
+        {radioOptions?.map((radio, index) => {
           return (
             <Box key={radio.value + index}>
               {optionIndicator && (

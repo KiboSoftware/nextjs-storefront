@@ -42,7 +42,7 @@ describe('[components] Register Account Dialog', () => {
     const registerAccountFormPasswordLabel = screen.queryByText(/password/i)
     const registerAccountFormPasswordInput = screen.getByLabelText(/password/i)
 
-    const createAccountButton = screen.getByRole('button', { name: /common:create-an-account/i })
+    const createAccountButton = screen.getByRole('button', { name: /create-an-account/i })
 
     expect(registerAccountFormEmailLabel).toBeVisible()
     expect(registerAccountFormEmailInput).toBeVisible()

@@ -33,7 +33,7 @@ const LoginFooter = (props: LoginFooterProps) => {
         {t('dont-have-an-account-yet')}
       </Typography>
       <Link component="button" variant="body1" color="text.primary" onClick={onRegisterNow}>
-        {t('common:register-now')}
+        {t('register-now')}
       </Link>
     </StyledActionsComponent>
   )

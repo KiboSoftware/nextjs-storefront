@@ -351,11 +351,11 @@ const ProductListingTemplate = (props: ProductListingTemplateProps) => {
                             )
                           }
                           link={getProductLink(product?.productCode as string)}
-                          price={t<string>('common:currency', {
+                          price={t<string>('currency', {
                             val: productGetters.getPrice(product).regular,
                           })}
                           {...(productGetters.getPrice(product).special && {
-                            salePrice: t<string>('common:currency', {
+                            salePrice: t<string>('currency', {
                               val: productGetters.getPrice(product).special,
                             }),
                           })}

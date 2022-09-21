@@ -33,9 +33,9 @@ describe('[components] (LoginContent)', () => {
     const emailInput = screen.getByRole('textbox', { name: 'email' })
     const passwordInput = screen.getByLabelText('password')
     const eyeIcon = screen.getByRole('button', { name: 'toggle icon visibility' })
-    const rememberMeCheckbox = screen.getByRole('checkbox', { name: 'common:remember-me' })
-    const loginButton = screen.getByRole('button', { name: 'common:log-in' })
-    const forgotPasswordLink = screen.getByRole('button', { name: 'common:forgot-password' })
+    const rememberMeCheckbox = screen.getByRole('checkbox', { name: 'remember-me' })
+    const loginButton = screen.getByRole('button', { name: 'log-in' })
+    const forgotPasswordLink = screen.getByRole('button', { name: 'forgot-password' })
 
     expect(emailInput).toBeVisible()
     expect(passwordInput).toBeVisible()
@@ -70,7 +70,7 @@ describe('[components] (LoginContent)', () => {
 
     const emailInput = screen.getByRole('textbox', { name: 'email' })
     const passwordInput = screen.getByLabelText('password')
-    const loginButton = screen.getByRole('button', { name: 'common:log-in' })
+    const loginButton = screen.getByRole('button', { name: 'log-in' })
 
     expect(loginButton).toBeDisabled()
 
@@ -87,7 +87,7 @@ describe('[components] (LoginContent)', () => {
     // valid inputs
     await loginInputs(user)
 
-    const loginButton = screen.getByRole('button', { name: 'common:log-in' })
+    const loginButton = screen.getByRole('button', { name: 'log-in' })
     await waitFor(() => expect(loginButton).toBeEnabled())
 
     await user.click(loginButton)
@@ -104,7 +104,7 @@ describe('[components] (LoginContent)', () => {
 
   it('should call onForgotPasswordClickMock callback function when user clicks on forgotPasswordLink', async () => {
     const { user } = setup()
-    const forgotPasswordLink = screen.getByRole('button', { name: 'common:forgot-password' })
+    const forgotPasswordLink = screen.getByRole('button', { name: 'forgot-password' })
 
     await user.click(forgotPasswordLink)
 
