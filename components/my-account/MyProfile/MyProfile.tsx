@@ -23,7 +23,7 @@ interface MyProfileProps {
 
 const MyProfile = (props: MyProfileProps) => {
   const { user } = props
-  const { t } = useTranslation(['checkout', 'common'])
+  const { t } = useTranslation('common')
   const { updateUserData } = useUpdateUserDataMutations()
   const { updateUserPasswordData } = useUpdateUserPasswordMutations()
 
@@ -42,17 +42,17 @@ const MyProfile = (props: MyProfileProps) => {
   const viewProfileDetails = [
     {
       id: ProfileSections.Name,
-      label: t('checkout:customer-name'),
+      label: t('customer-name'),
       value: fullName,
     },
     {
       id: ProfileSections.Email,
-      label: t('checkout:email'),
+      label: t('email'),
       value: currentUser.emailAddress,
     },
     {
       id: ProfileSections.Password,
-      label: t('checkout:password'),
+      label: t('password'),
       value: '**************',
     },
   ]
@@ -134,7 +134,9 @@ const MyProfile = (props: MyProfileProps) => {
                 <Typography variant="h4" sx={{ fontWeight: 'bold' }}>
                   {each.label}
                 </Typography>
-                <Typography variant="body1">{each.value}</Typography>
+                <Typography variant="body1" data-testid={each.label}>
+                  {each.value}
+                </Typography>
               </Stack>
               <Typography
                 variant="body1"
@@ -143,7 +145,7 @@ const MyProfile = (props: MyProfileProps) => {
                 }}
                 sx={{ cursor: 'pointer' }}
               >
-                {t('common:edit')}
+                {t('edit')}
               </Typography>
             </Box>
           )

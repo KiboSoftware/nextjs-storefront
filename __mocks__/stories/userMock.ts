@@ -1,7 +1,7 @@
 import type { CustomerAccount, CustomerAuthTicket } from '@/lib/gql/types'
 
 export const userResponseMock: CustomerAccount = {
-  id: 1074,
+  id: 1012,
   userId: '3e69cbd5f3694a76916e64451cb76968',
   firstName: 'Suman',
   lastName: 'Patro',

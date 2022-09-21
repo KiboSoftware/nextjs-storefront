@@ -52,7 +52,7 @@ interface AccountAddressProps {
 const styles = {
   addNewAddressButtonStyle: {
     maxWidth: '26.313rem',
-    '& > *:first-child': {
+    '& > *:first-of-type': {
       fontSize: 'inherit',
     },
   },
@@ -93,6 +93,7 @@ const AccountAddress = (props: AccountAddressProps) => {
             variant="body2"
             sx={{ cursor: 'pointer' }}
             onClick={() => editAddress(customerContact)}
+            data-testid={`address-edit`}
           >
             {t('edit')}
           </Typography>

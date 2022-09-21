@@ -121,6 +121,8 @@
   "no-previously-saved-payment-methods": "No previously saved payment methods.",
   "add-payment-method": "Add Payment Method",
   "save-payment-method": "Save Payment Method",
+  "payment-method": "Payment Method",
+
   "your-default-shipping-address": "Your default shipping address",
   "previously-saved-shipping-addresses": "Previously saved shipping addresses",
   "no-saved-addresses-yet": "No saved addresses yet!",
@@ -196,7 +198,6 @@
   "country-code": "Country",
   "phone-number-home": "Phone number",
   "this-field-is-required": "This field is required",
-  "payment-method": "Payment Method",
   "ending": "Ending:",
   "exp": "Exp:",
   "apartment": "Apt. ",
