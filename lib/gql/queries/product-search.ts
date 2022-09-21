@@ -7,6 +7,7 @@ const searchProductsQuery = /* GraphQL */ `
     $filter: String
     $pageSize: Int
     $sortBy: String
+    $facet: String
     $facetHierValue: String
     $facetTemplate: String
     $facetValueFilter: String
@@ -16,6 +17,7 @@ const searchProductsQuery = /* GraphQL */ `
       filter: $filter
       startIndex: $startIndex
       pageSize: $pageSize
+      facet: $facet
       sortBy: $sortBy
       facetHierValue: $facetHierValue
       facetTemplate: $facetTemplate
