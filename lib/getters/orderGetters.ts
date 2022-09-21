@@ -3,11 +3,8 @@ import { format } from 'date-fns'
 import { FulfillmentOptions } from '../constants'
 import { addressGetters } from './addressGetters'
 import { cardGetters } from './cardGetters'
-import DefaultImage from '@/public/product_placeholder.svg'
 
-import type { BillingInfo, PaymentCard } from '@/lib/gql/types'
 import type {
-  CrProductOption,
   CrOrderItem,
   Order,
   Payment,
@@ -16,6 +13,8 @@ import type {
   Contact,
   CartItem,
   Cart,
+  BillingInfo,
+  PaymentCard,
 } from '@/lib/gql/types'
 
 interface ShippingDetails {

@@ -24,19 +24,20 @@ type ProductOptionsReturnType<T> = T extends ProductCustom
 
 const { publicRuntimeConfig } = getConfig()
 
-function isCrProduct(product: Product | ProductCustom | CrProduct): product is CrProduct {
+type GenericProduct = Product | ProductCustom | CrProduct
+
+function isCrProduct(product: GenericProduct): product is CrProduct {
   return (product as CrProduct).name !== undefined
 }
 
-const getName = (product: Product | ProductCustom | CrProduct): string => {
+const getName = (product: GenericProduct): string => {
   if (isCrProduct(product)) {
     return product.name || ''
   }
   return product?.content?.productName || ''
 }
 
-const getProductId = (product: Product | ProductCustom | CrProduct): string =>
-  product?.productCode || ''
+const getProductId = (product: GenericProduct): string => product?.productCode || ''
 
 const getRating = (product: Product | ProductCustom) => {
   const attr = product?.properties?.find(
@@ -47,9 +48,7 @@ const getRating = (product: Product | ProductCustom) => {
 
 const getProductTotalReviews = (): number => 0
 
-const getPrice = (
-  product: Product | ProductCustom | CrProduct
-): { regular: number; special: number } => {
+const getPrice = (product: GenericProduct): { regular: number; special: number } => {
   return {
     regular: product?.price?.price as number,
     special: product?.price?.salePrice as number,
