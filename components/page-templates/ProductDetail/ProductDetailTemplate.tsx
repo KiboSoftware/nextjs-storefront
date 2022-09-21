@@ -93,7 +93,7 @@ const ProductDetailTemplate = (props: ProductDetailTemplateProps) => {
     purchaseLocationCode: selectedFulfillmentOption?.location?.code as string,
   })
   const quantityLeft = productGetters.getAvailableItemCount(
-    product,
+    currentProduct,
     locationInventory,
     selectedFulfillmentOption?.method
   )
