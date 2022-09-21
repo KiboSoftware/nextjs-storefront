@@ -1,7 +1,7 @@
 import React from 'react'
 
 import { composeStories } from '@storybook/testing-react'
-import { render, screen, waitFor } from '@testing-library/react'
+import { cleanup, render, screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 
 import * as stories from '@/components/page-templates/OrderStatusTemplate/OrderStatusTemplate.stories'
@@ -19,6 +19,11 @@ const setup = () => {
 }
 
 describe('[component] - OrderStatusTemplate', () => {
+  afterEach(() => {
+    jest.clearAllMocks()
+    cleanup()
+  })
+
   it('should view order status by providing the order number and billing email', async () => {
     const { user } = setup()
     const breadcrumbs = screen.getAllByLabelText('breadcrumb-link')

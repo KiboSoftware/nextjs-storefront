@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 
 import { Grid } from '@mui/material'
 import { useTranslation } from 'next-i18next'
@@ -21,17 +21,24 @@ const OrderStatusTemplate = () => {
   const [queryFilters, setQueryFilters] = useState<OrderStatusFormDataProps>({
     billingEmail: '',
     orderNumber: '',
+    isRefetching: true,
   })
 
   const { t } = useTranslation(['common', 'orderhistory'])
-  const { data: orderCollection } = useUserOrderQueries(queryFilters)
+  const { data: orderCollection, isFetching } = useUserOrderQueries(queryFilters)
   const { items = [], pageCount } = orderCollection
+  const order = items && (items[0] as Order)
   const breadCrumbsList = [
     { text: t('home'), link: '/' },
     { text: t('order-status'), link: '/order-status' },
   ]
-  const order = items && (items[0] as Order)
-  const handleOrderStatusSubmit = (data: OrderStatusFormDataProps) => setQueryFilters(data)
+  const handleOrderStatusSubmit = (data: OrderStatusFormDataProps) => {
+    setQueryFilters({ ...data, isRefetching: true })
+  }
+
+  useEffect(() => {
+    if (isFetching) setQueryFilters({ ...queryFilters, isRefetching: false })
+  }, [isFetching])
 
   return (
     <Grid container px={1}>
@@ -39,14 +46,14 @@ const OrderStatusTemplate = () => {
         <KiboBreadcrumbs breadcrumbs={breadCrumbsList} />
       </Grid>
       <Grid item xs={12}>
-        {order && (
+        {order?.id && (
           <ViewOrderDetails
             title={t('orderhistory:view-order-status')}
             isOrderStatus={true}
             order={order}
           />
         )}
-        {!order && (
+        {!order?.id && (
           <ViewOrderStatus
             onOrderStatusSubmit={handleOrderStatusSubmit}
             lookupWarningMessage={pageCount === 0 ? t('orderhistory:no-orders-found') : ''}

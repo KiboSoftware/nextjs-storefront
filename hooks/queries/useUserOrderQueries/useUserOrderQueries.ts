@@ -11,16 +11,19 @@ interface UseUserOrder {
   orderNumber?: string
   billingEmail?: string
   filters?: string | string[]
+  isRefetching: boolean
 }
 
 export interface UseUserOrderType {
   data: OrderCollection
   isLoading: boolean
   isSuccess: boolean
+  isFetching: boolean
 }
 
-const getOrders = async (variables: { filter: string; startIndex: number; pageSize: number }) => {
+const getOrders = async (params: UseUserOrder) => {
   const client = makeGraphQLClient()
+  const variables = buildOrdersFilterInput(params)
 
   const response = await client.request({
     document: getOrdersQuery,
@@ -31,21 +34,22 @@ const getOrders = async (variables: { filter: string; startIndex: number; pageSi
 }
 
 export const useUserOrderQueries = (param: UseUserOrder): UseUserOrderType => {
-  const { orderNumber, billingEmail, filters } = param
-  const variables = buildOrdersFilterInput({
-    filters,
-    orderNumber,
-    billingEmail,
-  })
-
   const {
     data = {},
     isLoading,
     isSuccess,
-  } = useQuery(ordersKeys.all, () => getOrders(variables), {
-    enabled: !!(filters?.length || (orderNumber && billingEmail)),
-    retry: 3,
-  })
+    isFetching,
+  } = useQuery(
+    ordersKeys.all,
+    () => {
+      if (param.orderNumber === '' && param.billingEmail === '') return []
+      return getOrders(param)
+    },
+    {
+      enabled: param?.isRefetching,
+      refetchOnWindowFocus: false,
+    }
+  )
 
-  return { data, isLoading, isSuccess }
+  return { data, isLoading, isSuccess, isFetching }
 }

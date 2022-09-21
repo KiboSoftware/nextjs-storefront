@@ -23,7 +23,7 @@ export const buildOrdersFilterInput = (params: {
   }
 
   // To view order history page
-  if (params.filters) {
+  if (params.filters?.length) {
     const searchFilters = []
     for (const filters of params.filters) {
       const filter = filters.split('-')
@@ -42,8 +42,9 @@ export const buildOrdersFilterInput = (params: {
   if (params.orderNumber && params.billingEmail) {
     variables.filter = `orderNumber eq ${params.orderNumber} and email eq ${params.billingEmail}`
   }
-
-  variables.filter =
-    variables.filter && variables.filter.concat(` and status ne ${OrderStatus.ABANDONED}`)
+  const defaultQuery = `status ne ${OrderStatus.ABANDONED}`
+  variables.filter = variables.filter
+    ? variables.filter.concat(` and ${defaultQuery}`)
+    : defaultQuery
   return variables
 }
