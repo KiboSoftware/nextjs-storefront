@@ -1,5 +1,5 @@
 import { composeStories } from '@storybook/testing-react'
-import { fireEvent, render, screen, waitFor, within, act, cleanup } from '@testing-library/react'
+import { fireEvent, render, screen, waitFor, within, cleanup } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { UserEvent } from '@testing-library/user-event/dist/types/setup'
 import { graphql } from 'msw'
@@ -9,13 +9,7 @@ import { userMock } from '@/__mocks__/stories'
 import { customerAccountCardsMock } from '@/__mocks__/stories/customerAccountCardsMock'
 import { createQueryClientWrapper } from '@/__test__/utils'
 import * as stories from '@/components/page-templates/MyAccountTemplate/MyAccountTemplate.stories'
-import {
-  AuthContext,
-  AuthContextProvider,
-  AuthContextType,
-  DialogRoot,
-  ModalContextProvider,
-} from '@/context'
+import { AuthContextProvider, DialogRoot, ModalContextProvider } from '@/context'
 
 import type { Card } from '@/lib/gql/types'
 
