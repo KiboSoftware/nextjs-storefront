@@ -1,34 +1,88 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+<h2 align="center">KiboCommerce & Next.JS</h2>
+
+<p align="center">
+This is a headless ecommerce starter kit for KiboCommerce platform using Next.JS <br>
+Demo: <a href="https://nextjs-storefront-kibo-commerce.vercel.app">https://nextjs-storefront-kibo-commerce.vercel.app</a>
+</p>
+
+### Features
+
+- Performant by default
+- SEO Ready
+- Internationalization
+- Responsive
+- UI Components built on top of Material UI 5
+- Theming
+- KiboCommerce data hooks
+- PWA Ready
+- Omni Channel Capability (Ship to home and Pickup in Store support)
 
 ## Getting Started
 
-First, run the development server:
+1. Clone this repo
+
+```bash
+git clone https://github.com/KiboSoftware/nextjs-storefront.git
+```
+
+2. Change into directory and install dependencies
+
+```bash
+npm install
+```
+
+3. Copy .env template
+
+```bash
+cp .env.template .env.local
+```
+
+4. Configure env variables for your Kibo Commerce environment
+5. Start Dev server
 
 ```bash
 npm run dev
-# or
-yarn dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Configuration
 
-You can start editing the page by modifying `pages/index.tsx`. The page auto-updates as you edit the file.
+.env example
 
-[API routes](https://nextjs.org/docs/api-routes/introduction) can be accessed on [http://localhost:3000/api/hello](http://localhost:3000/api/hello). This endpoint can be edited in `pages/api/hello.ts`.
+```bash
+KIBO_API_HOST=t1234-s1234.sandbox.mozu.com
+KIBO_AUTH_HOST=home.mozu.com
+KIBO_CLIENT_ID=KIBO_APP.1.0.0.Release
+KIBO_SHARED_SECRET=12345_Secret
+```
 
-The `pages/api` directory is mapped to `/api/*`. Files in this directory are treated as [API routes](https://nextjs.org/docs/api-routes/introduction) instead of React pages.
+The following data is required to configure the storefront to communicate with your Kibo API Client.
 
-## Learn More
+- `apiHost` - Your Kibo Commerce API Host.
+- `authHost` - Kibo Commerce Authentication Host Server. It is used to request an access token from Kibo Commerce OAuth 2.0 service. Production and Production sandbox, use `home.mozu.com`
+- `clientId` - Unique Application (Client) ID of your Application
+- `sharedSecret` - Secret API key used to authenticate application. Viewable from your [Kibo eCommerce Dev Center](https://mozu.com/login)
 
-To learn more about Next.js, take a look at the following resources:
+Visit [Kibo documentation](https://apidocs.kibong-perf.com/?spec=graphql#auth) for more details on API authentication
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Useful Commands
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
+```bash
+npm run dev # Start dev server
+npm run build # Run production build
+npm run start # Run production start
+npm run generate-types # generate typescript Kibo API types from GraphQL Schema
+npm run storybook # start storybook for
+npm run test # run unit / integration tests
+```
 
-## Deploy on Vercel
+## Built with
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+- Framework - [Next.JS](https://nextjs.org/docs)
+- Component Library - [Material UI 5](https://mui.com/material-ui/getting-started/overview/)
+- Testing - [Jest](https://jestjs.io/docs/getting-started)
+- Data Fetching / State Management - [React Query](https://react-query-v3.tanstack.com/overview)
+- Localization - [Next i18Next](https://github.com/i18next/next-i18next)
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+## Contributions
+
+All contributions welcome!
