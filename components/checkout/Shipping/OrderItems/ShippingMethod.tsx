@@ -12,12 +12,15 @@ export type ShippingMethodProps = {
   shipItems: Maybe<CrOrderItem>[]
   pickupItems: Maybe<CrOrderItem>[]
   orderShipmentMethods: ShippingRate[]
+  selectedShippingMethodCode: string
   onShippingMethodChange: (name: string, value: string) => void
   onStoreLocatorClick?: () => void
 }
 export type ShipItemListProps = {
   shipItems: Maybe<CrOrderItem>[]
   orderShipmentMethods: ShippingRate[]
+  selectedShippingMethod: string
+  setSelectedShippingMethod: (shippingMethod: string) => void
   onShippingMethodChange: (name: string, value: string) => void
 }
 export type PickupItemListProps = {
@@ -33,9 +36,15 @@ const styles = {
   },
 }
 const ShipItemList = (shipProps: ShipItemListProps) => {
-  const { onShippingMethodChange, orderShipmentMethods, shipItems } = shipProps
+  const {
+    onShippingMethodChange,
+    orderShipmentMethods,
+    shipItems,
+    selectedShippingMethod,
+    setSelectedShippingMethod,
+  } = shipProps
   const { t } = useTranslation('common')
-  const [selectedShippingMethod, setSelectedShippingMethod] = useState('')
+
   const handleShippingMethodChange = (name: string, value: string) => {
     setSelectedShippingMethod(value)
     onShippingMethodChange(name, value)
@@ -96,16 +105,22 @@ const ShippingMethod = (props: ShippingMethodProps) => {
     shipItems,
     pickupItems,
     orderShipmentMethods,
+    selectedShippingMethodCode,
     onShippingMethodChange,
     onStoreLocatorClick,
   } = props
 
   const shippingMethodRef = useRef()
+  const [selectedShippingMethod, setSelectedShippingMethod] = useState(selectedShippingMethodCode)
 
   useEffect(() => {
     shippingMethodRef.current &&
-      (shippingMethodRef.current as Element).scrollIntoView({ behavior: 'smooth' })
-  }, [])
+      !selectedShippingMethodCode &&
+      (shippingMethodRef.current as Element).scrollIntoView({
+        behavior: 'smooth',
+        block: 'center',
+      })
+  }, [selectedShippingMethodCode])
 
   return (
     <Box data-testid="shipping-method" ref={shippingMethodRef}>
@@ -113,6 +128,8 @@ const ShippingMethod = (props: ShippingMethodProps) => {
         <ShipItemList
           onShippingMethodChange={onShippingMethodChange}
           orderShipmentMethods={orderShipmentMethods}
+          selectedShippingMethod={selectedShippingMethod}
+          setSelectedShippingMethod={setSelectedShippingMethod}
           shipItems={shipItems}
         />
       ) : (

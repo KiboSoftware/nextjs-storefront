@@ -52,7 +52,7 @@ const Checkout = (props: CheckoutProps) => {
   })
 
   const { user } = useAuthContext()
-  const { data: savedUserAddressData } = useCustomerContacts(user?.id as number)
+  const { data: savedUserAddressData, isSuccess } = useCustomerContacts(user?.id as number)
   const updateOrderCoupon = useUpdateOrderCouponMutation()
   const deleteOrderCoupon = useDeleteOrderCouponMutation()
 
@@ -96,7 +96,7 @@ const Checkout = (props: CheckoutProps) => {
       console.error(err)
     }
   }
-
+  console.log('stepStatus', stepStatus)
   const orderSummaryArgs = {
     nameLabel: t('order-summary'),
     subTotalLabel: `Cart Subtotal of (${checkout?.items?.length} items)`,
@@ -158,10 +158,12 @@ const Checkout = (props: CheckoutProps) => {
 
             <KiboStepper>
               <DetailsStep checkout={checkout} />
-              <ShippingStep
-                checkout={checkout as Order}
-                userShippingAddress={userShippingAddress}
-              />
+              {isSuccess && (
+                <ShippingStep
+                  checkout={checkout as Order}
+                  userShippingAddress={userShippingAddress}
+                />
+              )}
               <PaymentStep checkout={checkout} {...paymentStepParams} />
               <ReviewStep checkout={checkout as Order} onBackButtonClick={handleBack} />
             </KiboStepper>

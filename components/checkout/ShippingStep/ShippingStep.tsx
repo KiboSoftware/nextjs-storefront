@@ -1,16 +1,15 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 
 import { Stack, Button, Typography, SxProps } from '@mui/material'
 import { Theme } from '@mui/material/styles'
 import { useTranslation } from 'next-i18next'
 
 import { ShippingMethod } from '@/components/checkout'
-import { AddressForm, AddressList } from '@/components/common'
+import { AddressDetailsView, AddressForm } from '@/components/common'
 import { useCheckoutStepContext, STEP_STATUS } from '@/context'
 import { useUpdateCheckoutShippingInfo, useShippingMethods } from '@/hooks'
-import { checkoutGetters } from '@/lib/getters'
+import { checkoutGetters, userAddressGetters } from '@/lib/getters'
 import { buildCheckoutShippingParams, ShippingParams } from '@/lib/helpers'
-import type { ContactForm } from '@/lib/types'
 
 import type { Order, CrOrderItem, Contact, CustomerContact } from '@/lib/gql/types'
 
@@ -27,18 +26,44 @@ interface ShippingProps {
 }
 
 const ShippingStep = (props: ShippingProps) => {
-  const { checkout, userShippingAddress } = props
+  const { checkout, userShippingAddress: addresses } = props
 
   const contactProp = checkoutGetters.getShippingContact(checkout)
+  contactProp.id = contactProp.id || 1
+  const userShippingAddress = userAddressGetters.getUserShippingAddress(addresses)
   const shipItems = checkoutGetters.getShipItems(checkout)
   const pickupItems = checkoutGetters.getPickupItems(checkout)
 
   const [validateForm, setValidateForm] = useState<boolean>(false)
   const [checkoutId, setCheckoutId] = useState<string | null | undefined>(undefined)
   const [isAddressFormValid, setIsAddressFormValid] = useState<boolean>(false)
-  const [isShippingMethodSaved, setIsShippingMethodSaved] = useState<boolean>(false)
+  const [shouldShowAddAddressButton, setShouldShowAddAddressButton] = useState<boolean>(
+    Boolean(userShippingAddress?.length)
+  )
+  const [isNewAddressAdded, setIsNewAddressAdded] = useState<boolean>(false)
+
+  const [selectedShippingAddressId, setSelectedShippingAddressId] = useState<number>(
+    contactProp?.id as number
+  )
+  const [savedShippingAddresses, setSavedShippingAddresses] = useState<
+    CustomerContact[] | undefined
+  >(
+    userAddressGetters.getAllShippingAddresses(
+      contactProp,
+      userShippingAddress as CustomerContact[]
+    )
+  )
+
+  const defaultShippingAddress = userAddressGetters.getDefaultShippingAddress(
+    savedShippingAddresses as CustomerContact[]
+  )
+  const previouslySavedShippingAddress = userAddressGetters.getOtherShippingAddress(
+    savedShippingAddresses as CustomerContact[],
+    defaultShippingAddress?.id as number
+  )
 
   const { t } = useTranslation(['checkout', 'common'])
+  const shippingAddressRef = useRef()
 
   const {
     stepStatus,
@@ -48,19 +73,21 @@ const ShippingStep = (props: ShippingProps) => {
     setStepStatusIncomplete,
   } = useCheckoutStepContext()
   const updateCheckoutShippingInfo = useUpdateCheckoutShippingInfo()
-  const { data: shippingMethods } = useShippingMethods(checkoutId)
+  const { data: shippingMethods } = useShippingMethods(checkoutId, selectedShippingAddressId)
+
   const handleAddressValidationAndSave = () => setValidateForm(true)
 
-  const updateShippingInfo = async (params: ShippingParams) => {
+  const updateShippingInfo = async (params: ShippingParams) =>
     await updateCheckoutShippingInfo.mutateAsync(params)
-  }
 
   const handleSaveAddress = async ({ contact }: { contact: Contact }) => {
     const params = buildCheckoutShippingParams({ checkout, contact: contact })
-
     try {
       await updateShippingInfo(params)
       setCheckoutId(checkout?.id)
+      setSelectedShippingAddressId((contact?.id as number) || 1)
+      setShouldShowAddAddressButton(true)
+      setIsNewAddressAdded(true)
       setStepStatusIncomplete()
     } catch (error) {
       console.error(error)
@@ -85,7 +112,11 @@ const ShippingStep = (props: ShippingProps) => {
 
     try {
       await updateShippingInfo(params)
-      setIsShippingMethodSaved(true)
+      shippingAddressRef.current &&
+        (shippingAddressRef.current as Element).scrollIntoView({
+          behavior: 'smooth',
+          block: 'start',
+        })
     } catch (error) {
       console.error(error)
     }
@@ -95,11 +126,12 @@ const ShippingStep = (props: ShippingProps) => {
     /**/
   }
 
-  const handleFormStatusChange = (status: boolean) => {
-    setIsAddressFormValid(status)
-  }
+  const handleFormStatusChange = (status: boolean) => setIsAddressFormValid(status)
+
   const handleAddressSelect = (addressId: string) => {
-    const selectedAddress = userShippingAddress?.find((address) => address.id === Number(addressId))
+    const selectedAddress = savedShippingAddresses?.find(
+      (address) => address.id === Number(addressId)
+    )
     if (selectedAddress?.id) {
       const contact: Contact = {
         id: selectedAddress.id,
@@ -117,10 +149,41 @@ const ShippingStep = (props: ShippingProps) => {
       handleSaveAddress({ contact })
     }
   }
+  const getSavedPaymentMethodView = (
+    address: CustomerContact,
+    isPrimary?: boolean
+  ): React.ReactNode => (
+    <AddressDetailsView
+      key={address.id}
+      radio={true}
+      id={address.id as number}
+      isPrimary={isPrimary}
+      firstName={address.firstName as string}
+      middleNameOrInitial={address.middleNameOrInitial as string}
+      lastNameOrSurname={address.lastNameOrSurname as string}
+      address1={address.address?.address1 as string}
+      address2={address.address?.address2 as string}
+      cityOrTown={address.address?.cityOrTown as string}
+      stateOrProvince={address.address?.stateOrProvince as string}
+      postalOrZipCode={address.address?.postalOrZipCode as string}
+      selected={selectedShippingAddressId?.toString()}
+      handleRadioChange={handleAddressSelect}
+    />
+  )
 
   useEffect(() => {
-    if (!validateForm) setStepStatusIncomplete()
-  }, [validateForm])
+    if (isNewAddressAdded)
+      setSavedShippingAddresses(
+        userAddressGetters.getAllShippingAddresses(
+          contactProp,
+          userShippingAddress as CustomerContact[]
+        )
+      )
+  }, [contactProp])
+
+  useEffect(() => {
+    if (selectedShippingAddressId) setCheckoutId(checkout.id)
+  }, [selectedShippingAddressId])
 
   useEffect(() => {
     if (stepStatus === STEP_STATUS.SUBMIT) {
@@ -131,54 +194,93 @@ const ShippingStep = (props: ShippingProps) => {
   }, [stepStatus])
 
   useEffect(() => {
-    isAddressFormValid && isShippingMethodSaved ? setStepStatusValid() : setStepStatusIncomplete()
+    selectedShippingAddressId &&
+    checkout.fulfillmentInfo?.shippingMethodCode &&
+    shouldShowAddAddressButton
+      ? setStepStatusValid()
+      : setStepStatusIncomplete()
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isAddressFormValid, isShippingMethodSaved])
+  }, [selectedShippingAddressId, checkout, shouldShowAddAddressButton])
 
   return (
-    <Stack data-testid="checkout-shipping" gap={2}>
+    <Stack data-testid="checkout-shipping" gap={2} ref={shippingAddressRef}>
       <Typography variant="h2" component="h2" sx={{ fontWeight: 'bold' }}>
         {t('shipping')}
       </Typography>
-      {
-        <AddressList
-          radio={true}
-          heading={t('common:your-default-shipping-address')}
-          subHeading={t('common:previously-saved-shipping-addresses')}
-          addresses={userShippingAddress}
-          onAddressSelection={handleAddressSelect}
-          selectedAddressId={contactProp?.id?.toString()}
-        />
-      }
+      {shouldShowAddAddressButton && (
+        <>
+          <Stack gap={2} width="100%" data-testid="saved-payment-methods">
+            {defaultShippingAddress && (
+              <>
+                <Typography variant="h4" fontWeight={'bold'}>
+                  {t('common:your-default-shipping-address')}
+                </Typography>
+                {getSavedPaymentMethodView(defaultShippingAddress, true)}
+              </>
+            )}
 
-      <AddressForm
-        contact={contactProp as ContactForm}
-        isUserLoggedIn={false}
-        saveAddressLabel={t('save-shipping-address')}
-        setAutoFocus={true}
-        validateForm={validateForm}
-        onSaveAddress={handleSaveAddress}
-        onFormStatusChange={handleFormStatusChange}
-      />
+            <Typography variant="h4" fontWeight={'bold'}>
+              {t('common:previously-saved-shipping-addresses')}
+            </Typography>
+            {previouslySavedShippingAddress?.length ? (
+              previouslySavedShippingAddress.map((address) => {
+                return getSavedPaymentMethodView(address)
+              })
+            ) : (
+              <Typography variant="h4">{t('common:no-saved-addresses-yet')}</Typography>
+            )}
 
-      <Button
-        variant="contained"
-        color="inherit"
-        sx={{ ...buttonStyle }}
-        style={{ textTransform: 'none' }}
-        onClick={handleAddressValidationAndSave}
-      >
-        {t('save-shipping-address')}
-      </Button>
-
-      {shippingMethods.length > 0 && (
-        <ShippingMethod
-          shipItems={shipItems as CrOrderItem[]}
-          pickupItems={pickupItems as CrOrderItem[]}
-          orderShipmentMethods={shippingMethods}
-          onShippingMethodChange={handleSaveShippingMethod}
-          onStoreLocatorClick={handleStoreLocatorClick}
-        />
+            <Button
+              variant="contained"
+              color="inherit"
+              sx={{ width: { xs: '100%', sm: '50%' } }}
+              onClick={() => setShouldShowAddAddressButton(false)}
+            >
+              {t('common:add-new-address')}
+            </Button>
+          </Stack>
+          {shippingMethods.length > 0 && (
+            <ShippingMethod
+              shipItems={shipItems as CrOrderItem[]}
+              pickupItems={pickupItems as CrOrderItem[]}
+              orderShipmentMethods={[...shippingMethods]}
+              selectedShippingMethodCode={checkout.fulfillmentInfo?.shippingMethodCode as string}
+              onShippingMethodChange={handleSaveShippingMethod}
+              onStoreLocatorClick={handleStoreLocatorClick}
+            />
+          )}
+        </>
+      )}
+      {!shouldShowAddAddressButton && (
+        <>
+          <AddressForm
+            isUserLoggedIn={false}
+            saveAddressLabel={t('save-shipping-address')}
+            setAutoFocus={true}
+            validateForm={validateForm}
+            onSaveAddress={handleSaveAddress}
+            onFormStatusChange={handleFormStatusChange}
+          />
+          <Stack pl={1} gap={2} sx={{ width: { xs: '100%', md: '50%' } }}>
+            <Button
+              variant="contained"
+              color="secondary"
+              onClick={() => setShouldShowAddAddressButton(true)}
+            >
+              {t('common:cancel')} {JSON.stringify(isAddressFormValid)}
+            </Button>
+            <Button
+              variant="contained"
+              color="inherit"
+              sx={{ ...buttonStyle }}
+              style={{ textTransform: 'none' }}
+              onClick={handleAddressValidationAndSave}
+              {...(!isAddressFormValid && { disabled: true })}
+            >
+              {t('save-shipping-address')}
+            </Button>
+          </Stack>
+        </>
       )}
     </Stack>
   )

@@ -32,10 +32,10 @@ const schema = yup.object().shape({
   lastNameOrSurname: yup.string().required('This field is required'),
   address: yup.object().shape({
     address1: yup.string().required('This field is required'),
-    address2: yup.string().required('This field is required'),
+    address2: yup.string().nullable(true).notRequired(),
     cityOrTown: yup.string().required('This field is required'),
     stateOrProvince: yup.string().required('This field is required'),
-    postalOrZipCode: yup.string().required('This field is required'),
+    postalOrZipCode: yup.string().required('This field is required').min(4).max(5),
     countryCode: yup.string().required('This field is required'),
   }),
   phoneNumbers: yup.object().shape({
@@ -87,9 +87,8 @@ const AddressForm = (props: AddressFormProps) => {
       )
     })
 
-  const onValid = async (formData: ContactForm) => {
+  const onValid = async (formData: ContactForm) =>
     onSaveAddress({ contact: formData, isDataUpdated: true })
-  }
 
   useEffect(() => {
     if (onFormStatusChange) onFormStatusChange(isValid)
@@ -324,7 +323,7 @@ const AddressForm = (props: AddressFormProps) => {
                   }
                 />
               }
-              label={'Make this my default payment'}
+              label={t('make-this-my-default-payment')}
             />
           </Grid>
         )}

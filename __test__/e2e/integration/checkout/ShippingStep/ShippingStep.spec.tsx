@@ -50,5 +50,30 @@ describe('[components] ShippingStep', () => {
 
     await user.click(radio[0])
     expect(radio[0]).toBeChecked()
+
+    const addShippingAddressButton = screen.getByRole('button', {
+      name: /add-new-address/i,
+    })
+    expect(addShippingAddressButton).toBeVisible()
+  })
+
+  it('should handle add new address', async () => {
+    setup()
+
+    const saveShippingAddressButton = screen.getByRole('button', {
+      name: /save-shipping-address/i,
+    })
+    const firstNameInput = screen.getByRole('textbox', {
+      name: /first-name/i,
+    })
+    const addressCard = screen.getAllByTestId('address-card')
+    const heading = screen.getByText('common:your-default-shipping-address')
+    const addressCount = Common?.args?.userShippingAddress?.length as number
+
+    expect(saveShippingAddressButton).toBeVisible()
+    expect(firstNameInput).toBeVisible()
+    expect(heading).toBeVisible()
+    expect(addressCard[0]).toBeVisible()
+    expect(addressCard).toHaveLength(addressCount)
   })
 })
