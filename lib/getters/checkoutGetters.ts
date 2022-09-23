@@ -142,6 +142,8 @@ const getShippingPhoneWork = (checkout: Order): string =>
   checkout?.fulfillmentInfo?.fulfillmentContact?.phoneNumbers?.work || ''
 const getShipppingAddress = (checkout: Order) =>
   checkout.fulfillmentInfo?.fulfillmentContact?.address as CrAddress
+const getShippingMethodCode = (checkout: Order): string =>
+  checkout.fulfillmentInfo?.shippingMethodCode || ''
 
 const getBillingFirstName = (checkout: Order): string =>
   checkout.billingInfo?.billingContact?.firstName || ''
@@ -280,5 +282,6 @@ export const checkoutGetters = {
   getCheckoutDetails,
   getShippingContact,
   getSelectedPaymentMethods,
+  getShippingMethodCode,
   ...cartGetters,
 }

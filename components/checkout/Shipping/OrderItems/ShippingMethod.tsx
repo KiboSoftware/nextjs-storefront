@@ -51,10 +51,10 @@ const ShipItemList = (shipProps: ShipItemListProps) => {
   }
   return (
     <Box data-testid="ship-items">
-      <Typography sx={styles.shippingType} px={2} data-testid="ship-title">
+      <Typography sx={styles.shippingType} py={2} data-testid="ship-title">
         {t('ship')}
       </Typography>
-      <Box px={2}>
+      <Box pr={2}>
         <KiboSelect
           name="shippingMethodCode"
           onChange={handleShippingMethodChange}
@@ -85,7 +85,7 @@ const PickupItemList = (pickupProps: PickupItemListProps) => {
     <Box data-testid="pickup-items">
       <Divider orientation="horizontal" flexItem />
       <Box pt={2} pb={3}>
-        <Typography sx={styles.shippingType} px={2} data-testid="pickup-title">
+        <Typography sx={styles.shippingType} py={2} data-testid="pickup-title">
           {t('pickup')}
         </Typography>
       </Box>
@@ -110,6 +110,7 @@ const ShippingMethod = (props: ShippingMethodProps) => {
     onStoreLocatorClick,
   } = props
 
+  const { t } = useTranslation('checkout')
   const shippingMethodRef = useRef()
   const [selectedShippingMethod, setSelectedShippingMethod] = useState(selectedShippingMethodCode)
 
@@ -124,6 +125,9 @@ const ShippingMethod = (props: ShippingMethodProps) => {
 
   return (
     <Box data-testid="shipping-method" ref={shippingMethodRef}>
+      <Typography variant="h2" component="h2" pt={2}>
+        {t('shipping-method')}
+      </Typography>
       {shipItems?.length ? (
         <ShipItemList
           onShippingMethodChange={onShippingMethodChange}

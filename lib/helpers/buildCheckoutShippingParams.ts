@@ -1,3 +1,5 @@
+import { DefaultId } from '../constants'
+
 import type { Order, Contact, FulfillmentInfoInput } from '@/lib/gql/types'
 
 export interface ShippingParams {
@@ -23,6 +25,7 @@ export const buildCheckoutShippingParams = (params: Params): ShippingParams => {
       fulfillmentContact: {
         ...(contact ? contact : checkout.fulfillmentInfo?.fulfillmentContact),
         email: email ? email : checkout.email,
+        id: contact?.id === DefaultId.ADDRESSID ? null : contact?.id,
       },
 
       shippingMethodCode: shippingMethodCode ? shippingMethodCode : null,

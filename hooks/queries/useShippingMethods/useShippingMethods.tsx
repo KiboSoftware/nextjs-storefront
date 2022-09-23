@@ -25,18 +25,18 @@ const loadShippingMethods = async (checkoutId: string) => {
 
 export const useShippingMethods = (
   checkoutId: string | null | undefined,
-  addressId?: number
+  isNewAddressAdded?: boolean
 ): UseShippingMethodsResponse => {
   const {
     data = [],
     isLoading,
     isSuccess,
   } = useQuery(
-    shippingMethodKeys.detail(checkoutId as string, addressId?.toString()),
+    shippingMethodKeys.detail(checkoutId as string, isNewAddressAdded?.toString()),
     () => loadShippingMethods(checkoutId as string),
     {
       cacheTime: 0,
-      enabled: !!(checkoutId && addressId),
+      enabled: !!(checkoutId && isNewAddressAdded?.toString()),
     }
   )
 
