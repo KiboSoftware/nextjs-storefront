@@ -138,20 +138,20 @@ const ShippingStep = (props: ShippingProps) => {
 
   const handleAddressSelect = (addressId: string) => {
     const selectedAddress = savedShippingAddresses?.find(
-      (address) => address.id === Number(addressId)
+      (address) => address?.id === Number(addressId)
     )
     if (selectedAddress?.id) {
       const contact: Contact = {
-        id: selectedAddress.id,
-        firstName: selectedAddress.firstName || '',
-        lastNameOrSurname: selectedAddress.lastNameOrSurname || '',
-        middleNameOrInitial: selectedAddress.middleNameOrInitial || '',
-        email: selectedAddress.email || '',
+        id: selectedAddress?.id,
+        firstName: selectedAddress?.firstName || '',
+        lastNameOrSurname: selectedAddress?.lastNameOrSurname || '',
+        middleNameOrInitial: selectedAddress?.middleNameOrInitial || '',
+        email: selectedAddress?.email || '',
         address: {
-          ...(selectedAddress.address as any),
+          ...(selectedAddress?.address as any),
         },
         phoneNumbers: {
-          ...(selectedAddress.phoneNumbers as any),
+          ...(selectedAddress?.phoneNumbers as any),
         },
       }
       handleSaveAddress({ contact })
@@ -168,18 +168,18 @@ const ShippingStep = (props: ShippingProps) => {
     isPrimary?: boolean
   ): React.ReactNode => (
     <AddressDetailsView
-      key={address.id}
+      key={address?.id as number}
       radio={true}
-      id={address.id as number}
+      id={address?.id as number}
       isPrimary={isPrimary}
-      firstName={address.firstName as string}
-      middleNameOrInitial={address.middleNameOrInitial as string}
-      lastNameOrSurname={address.lastNameOrSurname as string}
-      address1={address.address?.address1 as string}
-      address2={address.address?.address2 as string}
-      cityOrTown={address.address?.cityOrTown as string}
-      stateOrProvince={address.address?.stateOrProvince as string}
-      postalOrZipCode={address.address?.postalOrZipCode as string}
+      firstName={address?.firstName as string}
+      middleNameOrInitial={address?.middleNameOrInitial as string}
+      lastNameOrSurname={address?.lastNameOrSurname as string}
+      address1={address?.address?.address1 as string}
+      address2={address?.address?.address2 as string}
+      cityOrTown={address?.address?.cityOrTown as string}
+      stateOrProvince={address?.address?.stateOrProvince as string}
+      postalOrZipCode={address?.address?.postalOrZipCode as string}
       selected={selectedShippingAddressId?.toString()}
       handleRadioChange={handleAddressSelect}
     />
@@ -235,8 +235,8 @@ const ShippingStep = (props: ShippingProps) => {
               {t('common:previously-saved-shipping-addresses')}
             </Typography>
             {previouslySavedShippingAddress?.length ? (
-              previouslySavedShippingAddress.map((address) => {
-                return getSavedPaymentMethodView(address)
+              previouslySavedShippingAddress?.map((address) => {
+                return address && getSavedPaymentMethodView(address)
               })
             ) : (
               <Typography variant="h4">{t('common:no-saved-addresses-yet')}</Typography>
