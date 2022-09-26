@@ -84,15 +84,15 @@ const OrderReview = (props: OrderReviewProps) => {
   const { billingAddress } = billingDetails
 
   const shippingPersonalDetails = {
-    firstName: shippingDetails.firstName,
-    middleNameOrInitial: shippingDetails.middleNameOrInitial,
-    lastNameOrSurname: shippingDetails.lastNameOrSurname,
+    firstName: shippingDetails?.firstName,
+    middleNameOrInitial: shippingDetails?.middleNameOrInitial,
+    lastNameOrSurname: shippingDetails?.lastNameOrSurname,
   }
 
   const billingPersonalDetails = {
-    firstName: billingDetails.firstName,
-    middleNameOrInitial: billingDetails.middleNameOrInitial,
-    lastNameOrSurname: billingDetails.lastNameOrSurname,
+    firstName: billingDetails?.firstName,
+    middleNameOrInitial: billingDetails?.middleNameOrInitial,
+    lastNameOrSurname: billingDetails?.lastNameOrSurname,
   }
 
   const handleEditAction = (event: MouseEvent<HTMLElement>) => {
@@ -161,8 +161,11 @@ const OrderReview = (props: OrderReviewProps) => {
           <StyledRow sx={{ marginTop: '2.375rem' }}>
             <AddressDetailsView
               {...shippingPersonalDetails}
-              address1={shippingAddress.address1 as string}
-              address2={shippingAddress.address2 as string}
+              address1={shippingAddress?.address1 as string}
+              address2={shippingAddress?.address2 as string}
+              cityOrTown={shippingAddress?.cityOrTown as string}
+              stateOrProvince={shippingAddress?.stateOrProvince as string}
+              postalOrZipCode={shippingAddress?.postalOrZipCode as string}
               withoutRadioTitle={t('shipping-details')}
             />
             <StyledActions
@@ -181,8 +184,11 @@ const OrderReview = (props: OrderReviewProps) => {
           <StyledRow>
             <AddressDetailsView
               {...billingPersonalDetails}
-              address1={billingAddress.address1 as string}
-              address2={billingAddress.address2 as string}
+              address1={billingAddress?.address1 as string}
+              address2={billingAddress?.address2 as string}
+              cityOrTown={billingAddress?.cityOrTown as string}
+              stateOrProvince={billingAddress?.stateOrProvince as string}
+              postalOrZipCode={billingAddress?.postalOrZipCode as string}
               withoutRadioTitle={t('billing-address')}
             />
             <StyledActions
@@ -199,15 +205,15 @@ const OrderReview = (props: OrderReviewProps) => {
           </StyledRow>
 
           <Stack sx={{ marginBottom: '1rem' }}>
-            {storeLocations.map((storeLocation) => (
-              <Stack direction="column" sx={{ marginBottom: '20px' }} key={storeLocation.code}>
+            {storeLocations?.map((storeLocation) => (
+              <Stack direction="column" sx={{ marginBottom: '20px' }} key={storeLocation?.code}>
                 <AddressDetailsView
-                  firstName={storeLocation.name}
-                  address1={storeLocation.address1}
-                  address2={storeLocation.address2}
-                  cityOrTown={storeLocation.city}
-                  postalOrZipCode={storeLocation.zip}
-                  stateOrProvince={storeLocation.state}
+                  firstName={storeLocation?.name}
+                  address1={storeLocation?.address1}
+                  address2={storeLocation?.address2}
+                  cityOrTown={storeLocation?.city}
+                  postalOrZipCode={storeLocation?.zip}
+                  stateOrProvince={storeLocation?.state}
                   withoutRadioTitle={t('store-pickup-details')}
                 />
               </Stack>
@@ -229,14 +235,14 @@ const OrderReview = (props: OrderReviewProps) => {
             </StyledActions>
           </StyledRow>
 
-          {paymentMethods.map((paymentMethod) => (
+          {paymentMethods?.map((paymentMethod) => (
             <StyledRow
               sx={{ display: 'inline' }}
-              key={`${paymentMethod.cardNumberPartOrMask}-${paymentMethod.expiry}`}
+              key={`${paymentMethod?.cardNumberPartOrMask}-${paymentMethod?.expiry}`}
             >
-              <Typography variant="body1">{paymentMethod.cardType}</Typography>
-              <Typography variant="body1">{paymentMethod.cardNumberPartOrMask}</Typography>
-              <Typography variant="body1">{paymentMethod.expiry} XXX</Typography>
+              <Typography variant="body1">{paymentMethod?.cardType}</Typography>
+              <Typography variant="body1">{paymentMethod?.cardNumberPartOrMask}</Typography>
+              <Typography variant="body1">{paymentMethod?.expiry} XXX</Typography>
             </StyledRow>
           ))}
 

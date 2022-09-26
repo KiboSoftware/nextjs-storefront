@@ -38,9 +38,7 @@ const AddressCard = (props: AddressProps) => {
 
       <Box pt={1} data-testid="address-card">
         {isNameAvailable && (
-          <Typography variant={variant}>
-            {firstName} {middleNameOrInitial} {lastNameOrSurname}
-          </Typography>
+          <Typography variant={variant}>{`${firstName} ${lastNameOrSurname}`}</Typography>
         )}
 
         <Typography variant={variant}>{address1}</Typography>

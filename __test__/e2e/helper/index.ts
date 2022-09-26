@@ -51,7 +51,7 @@ const addBillingAddress = async (user: UserEvent) => {
   await user.type(address2, '23/1')
   await user.type(cityOrTown, 'Austin')
   await user.type(stateOrProvince, 'TX')
-  await user.type(postalOrZipCode, '989848')
+  await user.type(postalOrZipCode, '98984')
   await user.type(phoneNumberHome, '9938938494')
   await user.click(countryCode)
 

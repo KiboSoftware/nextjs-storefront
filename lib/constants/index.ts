@@ -104,3 +104,7 @@ export enum CMS {
   CONTENTFUL = 'contentful',
   CONTENTSTACK = 'contentstack',
 }
+
+export enum DefaultId {
+  ADDRESSID = 1,
+}

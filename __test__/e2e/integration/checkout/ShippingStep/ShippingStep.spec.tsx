@@ -1,9 +1,10 @@
 import React from 'react'
 
 import { composeStories } from '@storybook/testing-react'
-import { render, screen } from '@testing-library/react'
+import { render, screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 
+import { orderMock } from '@/__mocks__/stories'
 import * as stories from '@/components/checkout/ShippingStep/ShippingStep.stories'
 
 const { Common } = composeStories(stories)
@@ -19,12 +20,44 @@ describe('[components] ShippingStep', () => {
     }
   }
 
-  it('should render component', () => {
-    setup()
+  it('should handle previously save address selection', async () => {
+    const { user } = setup()
 
-    const shippingHeading = screen.getByRole('heading', {
-      name: 'shipping',
+    const defaultAddress = screen.getByRole('heading', {
+      name: /common:your-default-shipping-address/i,
     })
+    const savedAddress = screen.getByRole('heading', {
+      name: /common:previously-saved-shipping-addresses/i,
+    })
+    const addShippingAddressButton = screen.getByRole('button', {
+      name: /add-new-address/i,
+    })
+    const addressCard = screen.getAllByTestId('address-card')
+
+    expect(defaultAddress).toBeVisible()
+    expect(savedAddress).toBeVisible()
+    expect(addShippingAddressButton).toBeVisible()
+    expect(addressCard[0]).toBeVisible()
+
+    const radio = screen.getAllByRole('radio')
+    await user.click(radio[0])
+    expect(radio[0]).toBeChecked()
+    await waitFor(() => {
+      expect(screen.getByText(/shipping-method/i)).toBeVisible()
+    })
+  })
+
+  it('should handle add new address', async () => {
+    render(
+      <Common
+        {...Common.args}
+        userShippingAddress={undefined}
+        checkout={{
+          ...orderMock.checkout,
+          fulfillmentInfo: { ...orderMock.checkout.fulfillmentInfo, fulfillmentContact: null },
+        }}
+      />
+    )
 
     const saveShippingAddressButton = screen.getByRole('button', {
       name: /save-shipping-address/i,
@@ -32,23 +65,8 @@ describe('[components] ShippingStep', () => {
     const firstNameInput = screen.getByRole('textbox', {
       name: /first-name/i,
     })
-    const addressCard = screen.getAllByTestId('address-card')
-    const heading = screen.getByText('common:your-default-shipping-address')
-    const addressCount = Common?.args?.userShippingAddress?.length as number
 
-    expect(shippingHeading).toBeVisible()
     expect(saveShippingAddressButton).toBeVisible()
     expect(firstNameInput).toBeVisible()
-    expect(heading).toBeVisible()
-    expect(addressCard[0]).toBeVisible()
-    expect(addressCard).toHaveLength(addressCount)
-  })
-
-  it('should handle previously save address selection', async () => {
-    const { user } = setup()
-    const radio = screen.getAllByRole('radio')
-
-    await user.click(radio[0])
-    expect(radio[0]).toBeChecked()
   })
 })

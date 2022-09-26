@@ -51,8 +51,8 @@ const Checkout = (props: CheckoutProps) => {
     initialCheckout,
   })
 
-  const { user } = useAuthContext()
-  const { data: savedUserAddressData } = useCustomerContacts(user?.id as number)
+  const { isAuthenticated, user } = useAuthContext()
+  const { data: savedUserAddressData, isSuccess } = useCustomerContacts(user?.id as number)
   const updateOrderCoupon = useUpdateOrderCouponMutation()
   const deleteOrderCoupon = useDeleteOrderCouponMutation()
 
@@ -158,10 +158,13 @@ const Checkout = (props: CheckoutProps) => {
 
             <KiboStepper>
               <DetailsStep checkout={checkout} />
-              <ShippingStep
-                checkout={checkout as Order}
-                userShippingAddress={userShippingAddress}
-              />
+              {((isAuthenticated && isSuccess) || !isAuthenticated) && (
+                <ShippingStep
+                  checkout={checkout as Order}
+                  userShippingAddress={userShippingAddress}
+                  isAuthenticated={isAuthenticated}
+                />
+              )}
               <PaymentStep checkout={checkout} {...paymentStepParams} />
               <ReviewStep checkout={checkout as Order} onBackButtonClick={handleBack} />
             </KiboStepper>

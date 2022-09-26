@@ -8,12 +8,15 @@ import { graphql } from 'msw'
 
 import { server } from '@/__mocks__/msw/server'
 import { orderMock, orderCouponMock } from '@/__mocks__/stories'
+import { addNewCard } from '@/__test__/e2e/helper'
 import { renderWithQueryClient } from '@/__test__/utils/renderWithQueryClient'
 import * as stories from '@/components/page-templates/Checkout/Checkout.stories'
 import { AuthContext, AuthContextType } from '@/context/'
 import { CheckoutStepProvider } from '@/context/CheckoutStepContext/CheckoutStepContext'
-import { addNewCard } from '@/__test__/e2e/helper'
+
 const { Common } = composeStories(stories)
+const scrollIntoViewMock = jest.fn()
+window.HTMLElement.prototype.scrollIntoView = scrollIntoViewMock
 
 jest.mock('next/router', () => ({
   useRouter() {

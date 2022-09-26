@@ -12,12 +12,15 @@ export type ShippingMethodProps = {
   shipItems: Maybe<CrOrderItem>[]
   pickupItems: Maybe<CrOrderItem>[]
   orderShipmentMethods: ShippingRate[]
+  selectedShippingMethodCode: string
   onShippingMethodChange: (name: string, value: string) => void
   onStoreLocatorClick?: () => void
 }
 export type ShipItemListProps = {
   shipItems: Maybe<CrOrderItem>[]
   orderShipmentMethods: ShippingRate[]
+  selectedShippingMethod: string
+  setSelectedShippingMethod: (shippingMethod: string) => void
   onShippingMethodChange: (name: string, value: string) => void
 }
 export type PickupItemListProps = {
@@ -33,19 +36,25 @@ const styles = {
   },
 }
 const ShipItemList = (shipProps: ShipItemListProps) => {
-  const { onShippingMethodChange, orderShipmentMethods, shipItems } = shipProps
+  const {
+    onShippingMethodChange,
+    orderShipmentMethods,
+    shipItems,
+    selectedShippingMethod,
+    setSelectedShippingMethod,
+  } = shipProps
   const { t } = useTranslation('common')
-  const [selectedShippingMethod, setSelectedShippingMethod] = useState('')
+
   const handleShippingMethodChange = (name: string, value: string) => {
     setSelectedShippingMethod(value)
     onShippingMethodChange(name, value)
   }
   return (
     <Box data-testid="ship-items">
-      <Typography sx={styles.shippingType} px={2} data-testid="ship-title">
+      <Typography sx={styles.shippingType} py={2} data-testid="ship-title">
         {t('ship')}
       </Typography>
-      <Box px={2}>
+      <Box pr={2}>
         <KiboSelect
           name="shippingMethodCode"
           onChange={handleShippingMethodChange}
@@ -76,7 +85,7 @@ const PickupItemList = (pickupProps: PickupItemListProps) => {
     <Box data-testid="pickup-items">
       <Divider orientation="horizontal" flexItem />
       <Box pt={2} pb={3}>
-        <Typography sx={styles.shippingType} px={2} data-testid="pickup-title">
+        <Typography sx={styles.shippingType} py={2} data-testid="pickup-title">
           {t('pickup')}
         </Typography>
       </Box>
@@ -96,23 +105,35 @@ const ShippingMethod = (props: ShippingMethodProps) => {
     shipItems,
     pickupItems,
     orderShipmentMethods,
+    selectedShippingMethodCode,
     onShippingMethodChange,
     onStoreLocatorClick,
   } = props
 
+  const { t } = useTranslation('checkout')
   const shippingMethodRef = useRef()
+  const [selectedShippingMethod, setSelectedShippingMethod] = useState(selectedShippingMethodCode)
 
   useEffect(() => {
     shippingMethodRef.current &&
-      (shippingMethodRef.current as Element).scrollIntoView({ behavior: 'smooth' })
-  }, [])
+      !selectedShippingMethodCode &&
+      (shippingMethodRef.current as Element).scrollIntoView({
+        behavior: 'smooth',
+        block: 'center',
+      })
+  }, [selectedShippingMethodCode])
 
   return (
     <Box data-testid="shipping-method" ref={shippingMethodRef}>
+      <Typography variant="h2" component="h2" pt={2}>
+        {t('shipping-method')}
+      </Typography>
       {shipItems?.length ? (
         <ShipItemList
           onShippingMethodChange={onShippingMethodChange}
           orderShipmentMethods={orderShipmentMethods}
+          selectedShippingMethod={selectedShippingMethod}
+          setSelectedShippingMethod={setSelectedShippingMethod}
           shipItems={shipItems}
         />
       ) : (

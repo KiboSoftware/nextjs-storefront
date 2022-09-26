@@ -44,7 +44,7 @@ export const orderCollection: { orders: OrderCollection } = {
               address4: null,
               cityOrTown: 'Pune',
               stateOrProvince: 'Austin',
-              postalOrZipCode: '423455',
+              postalOrZipCode: '42345',
               countryCode: 'US',
               addressType: 'Residential',
               isValidated: false,

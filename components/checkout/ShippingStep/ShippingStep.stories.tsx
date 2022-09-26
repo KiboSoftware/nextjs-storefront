@@ -32,4 +32,5 @@ Common.args = {
   userShippingAddress,
   setAutoFocus: false,
   checkout: orderMock.checkout,
+  isAuthenticated: true,
 }

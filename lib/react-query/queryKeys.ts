@@ -7,7 +7,8 @@ export const checkoutKeys = {
 
 export const shippingMethodKeys = {
   all: ['shippingMethod'] as const,
-  detail: (id: string) => [...shippingMethodKeys.all, id] as const,
+  detail: (id: string, newAddress?: string, addressId?: number) =>
+    [...shippingMethodKeys.all, id, newAddress, addressId] as const,
 }
 
 export const searchKeys = {

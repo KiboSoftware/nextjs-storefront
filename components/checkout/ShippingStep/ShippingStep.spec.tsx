@@ -11,8 +11,8 @@ const { Common } = composeStories(stories)
 const scrollIntoViewMock = jest.fn()
 window.HTMLElement.prototype.scrollIntoView = scrollIntoViewMock
 
-const AddressListMock = () => <div data-testid="address-list-component" />
-jest.mock('@/components/common/AddressList/AddressList', () => AddressListMock)
+const AddressDetailsViewMock = () => <div data-testid="address-details-view" />
+jest.mock('@/components/common/AddressDetailsView/AddressDetailsView', () => AddressDetailsViewMock)
 const AddressFormMock = () => <div data-testid="address-form-component" />
 jest.mock('@/components/common/AddressForm/AddressForm', () => AddressFormMock)
 
@@ -31,12 +31,15 @@ describe('[components] ShippingStep', () => {
 
     expect(stepperStatus).toBe('VALIDATE')
   })
-  it('should render shippingStep component', () => {
+
+  it('should render component', () => {
     setup()
 
-    const addressList = screen.getByTestId('address-list-component')
-    const addressForm = screen.getByTestId('address-form-component')
-    expect(addressList).toBeInTheDocument()
-    expect(addressForm).toBeInTheDocument()
+    const shippingHeading = screen.getAllByRole('heading', {
+      name: /shipping/i,
+    })
+    const addressDetails = screen.getAllByTestId('address-details-view')
+    expect(shippingHeading[0]).toBeVisible()
+    expect(addressDetails[0]).toBeInTheDocument()
   })
 })
