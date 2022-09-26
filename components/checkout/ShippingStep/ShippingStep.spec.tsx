@@ -31,12 +31,15 @@ describe('[components] ShippingStep', () => {
 
     expect(stepperStatus).toBe('VALIDATE')
   })
-  it('should render shippingStep component', () => {
+
+  it('should render component', () => {
     setup()
 
-    const addressList = screen.getByTestId('address-details-view')
-    const addressForm = screen.getByTestId('address-form-component')
-    expect(addressList).toBeInTheDocument()
-    expect(addressForm).toBeInTheDocument()
+    const shippingHeading = screen.getByRole('heading', {
+      name: /shipping/i,
+    })
+    const addressDetails = screen.getAllByTestId('address-details-view')
+    expect(shippingHeading).toBeVisible()
+    expect(addressDetails[0]).toBeInTheDocument()
   })
 })

@@ -231,15 +231,15 @@ const ShippingStep = (props: ShippingProps) => {
               </>
             )}
 
-            <Typography variant="h4" fontWeight={'bold'}>
-              {t('common:previously-saved-shipping-addresses')}
-            </Typography>
-            {previouslySavedShippingAddress?.length ? (
-              previouslySavedShippingAddress?.map((address) => {
-                return address && getSavedPaymentMethodView(address)
-              })
-            ) : (
-              <Typography variant="h4">{t('common:no-saved-addresses-yet')}</Typography>
+            {previouslySavedShippingAddress?.length > 0 && (
+              <>
+                <Typography variant="h4" fontWeight={'bold'}>
+                  {t('common:previously-saved-shipping-addresses')}
+                </Typography>
+                {previouslySavedShippingAddress?.map((address) => {
+                  return address && getSavedPaymentMethodView(address)
+                })}
+              </>
             )}
 
             <Button

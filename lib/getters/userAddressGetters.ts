@@ -17,19 +17,23 @@ const getUserBillingAddresses = (addresses: CustomerContact[] | any) => {
   if (addresses?.length) if (addresses?.length) return getAddresses(addresses, AddressType.BILLING)
 }
 const getAllShippingAddresses = (
-  contactProp: Contact,
+  checkoutShippingContact: Contact,
   userShippingAddress: CustomerContact[] = []
 ) => {
+  if (!userShippingAddress.length && checkoutShippingContact === null) {
+    return []
+  }
+
   const existingAddressId = userShippingAddress?.findIndex(
-    (address) => address?.id === contactProp?.id
+    (address) => address?.id === checkoutShippingContact?.id
   )
 
   if (existingAddressId < 0) {
-    userShippingAddress?.unshift(contactProp as CustomerContact)
+    userShippingAddress?.unshift(checkoutShippingContact as CustomerContact)
   } else {
     userShippingAddress[existingAddressId] = {
       ...userShippingAddress[existingAddressId],
-      ...(contactProp as CustomerContact),
+      ...(checkoutShippingContact as CustomerContact),
     }
   }
   return userShippingAddress
