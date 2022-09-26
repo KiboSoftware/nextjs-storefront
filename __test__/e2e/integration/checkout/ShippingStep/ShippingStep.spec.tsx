@@ -33,13 +33,14 @@ describe('[components] ShippingStep', () => {
       name: /add-new-address/i,
     })
     const addressCard = screen.getAllByTestId('address-card')
-    const radio = screen.getAllByRole('radio')
-    await user.click(radio[0])
 
     expect(defaultAddress).toBeVisible()
     expect(savedAddress).toBeVisible()
     expect(addShippingAddressButton).toBeVisible()
     expect(addressCard[0]).toBeVisible()
+
+    const radio = screen.getAllByRole('radio')
+    await user.click(radio[0])
     expect(radio[0]).toBeChecked()
     await waitFor(() => {
       expect(screen.getByText(/shipping-method/i)).toBeVisible()

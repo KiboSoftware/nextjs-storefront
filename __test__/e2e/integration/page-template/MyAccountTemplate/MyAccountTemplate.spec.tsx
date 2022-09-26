@@ -276,6 +276,7 @@ const addUpdateAddress = async (user: UserEvent) => {
   await user.clear(postalOrZipCode)
   await user.type(postalOrZipCode, '98984')
   await user.clear(phoneNumberHome)
+  await user.type(phoneNumberHome, '9072832799')
   fireEvent.mouseDown(countryCode)
 
   const listbox = within(screen.getByRole('listbox'))
