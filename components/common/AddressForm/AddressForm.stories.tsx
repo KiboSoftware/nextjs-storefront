@@ -45,7 +45,7 @@ const contact: ContactForm = {
     address2: 'address 2',
     cityOrTown: 'Sydney',
     stateOrProvince: 'New South Wales',
-    postalOrZipCode: '411 033',
+    postalOrZipCode: '41103',
     countryCode: 'DE',
   },
   phoneNumbers: {

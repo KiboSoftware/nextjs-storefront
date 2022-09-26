@@ -41,7 +41,7 @@ export const getUserAddressesMock: { customerAccountContacts: CustomerContactCol
           address4: null,
           cityOrTown: 'Austin',
           stateOrProvince: 'TX',
-          postalOrZipCode: '345435',
+          postalOrZipCode: '34543',
           countryCode: 'US',
           addressType: 'Residential',
           isValidated: false,

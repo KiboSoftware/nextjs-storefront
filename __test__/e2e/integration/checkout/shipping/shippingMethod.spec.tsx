@@ -64,8 +64,7 @@ describe('[component] - ShippingMethod', () => {
       shipItems: Common.args?.shipItems as Maybe<CrOrderItem>[],
       pickupItems: [],
       orderShipmentMethods: shippingRateMock.orderShipmentMethods,
-      selectedShippingMethodCode: shippingRateMock.orderShipmentMethods[0]
-        .shippingMethodCode as string,
+      selectedShippingMethodCode: '',
       onShippingMethodChange: (name: string, value: string) => ({ name, value }),
     }
 
@@ -87,8 +86,7 @@ describe('[component] - ShippingMethod', () => {
       shipItems: [],
       pickupItems: Common.args?.pickupItems as Maybe<CrOrderItem>[],
       orderShipmentMethods: shippingRateMock.orderShipmentMethods,
-      selectedShippingMethodCode: shippingRateMock.orderShipmentMethods[0]
-        .shippingMethodCode as string,
+      selectedShippingMethodCode: '',
       onShippingMethodChange: (name: string, value: string) => ({ name, value }),
     }
 
@@ -102,8 +100,7 @@ describe('[component] - ShippingMethod', () => {
       shipItems: Common.args?.shipItems as Maybe<CrOrderItem>[],
       pickupItems: Common.args?.pickupItems as Maybe<CrOrderItem>[],
       orderShipmentMethods: shippingRateMock.orderShipmentMethods,
-      selectedShippingMethodCode: shippingRateMock.orderShipmentMethods[0]
-        .shippingMethodCode as string,
+      selectedShippingMethodCode: '',
       onShippingMethodChange: (name: string, value: string) => ({ name, value }),
     }
 
@@ -111,7 +108,7 @@ describe('[component] - ShippingMethod', () => {
     const products = screen.getAllByRole('img')
     const headings = screen.getAllByRole('heading')
     expect(products.length).toBe(3)
-    expect(headings.length).toBe(3)
+    expect(headings.length).toBe(4)
   })
 
   it('should call onStoreLocatorClickMock when click onStoreLocatorClick for pickupitems only', async () => {
@@ -119,8 +116,7 @@ describe('[component] - ShippingMethod', () => {
       shipItems: Common.args?.shipItems as Maybe<CrOrderItem>[],
       pickupItems: Common.args?.pickupItems as Maybe<CrOrderItem>[],
       orderShipmentMethods: shippingRateMock.orderShipmentMethods,
-      selectedShippingMethodCode: shippingRateMock.orderShipmentMethods[0]
-        .shippingMethodCode as string,
+      selectedShippingMethodCode: '',
       onShippingMethodChange: (name: string, value: string) => ({ name, value }),
     }
     const { user } = setup(params)

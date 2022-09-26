@@ -35,11 +35,11 @@ describe('[components] ShippingStep', () => {
   it('should render component', () => {
     setup()
 
-    const shippingHeading = screen.getByRole('heading', {
+    const shippingHeading = screen.getAllByRole('heading', {
       name: /shipping/i,
     })
     const addressDetails = screen.getAllByTestId('address-details-view')
-    expect(shippingHeading).toBeVisible()
+    expect(shippingHeading[0]).toBeVisible()
     expect(addressDetails[0]).toBeInTheDocument()
   })
 })

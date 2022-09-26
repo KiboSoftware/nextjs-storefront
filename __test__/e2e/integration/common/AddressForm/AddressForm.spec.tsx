@@ -195,7 +195,7 @@ describe('[components] - AddressForm integration', () => {
         })
       })
       const validationMessage = screen.getAllByText(/this field is required/i)
-      expect(validationMessage).toHaveLength(8)
+      expect(validationMessage).toHaveLength(7)
     })
   })
 })
