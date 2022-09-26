@@ -80,7 +80,11 @@ const ShippingStep = (props: ShippingProps) => {
     setStepStatusIncomplete,
   } = useCheckoutStepContext()
   const updateCheckoutShippingInfo = useUpdateCheckoutShippingInfo()
-  const { data: shippingMethods } = useShippingMethods(checkoutId, isNewAddressAdded)
+  const { data: shippingMethods } = useShippingMethods(
+    checkoutId,
+    isNewAddressAdded,
+    selectedShippingAddressId
+  )
 
   const handleAddressValidationAndSave = () => setValidateForm(true)
 
