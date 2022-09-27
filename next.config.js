@@ -86,7 +86,7 @@ module.exports = {
     },
   },
   serverRuntimeConfig: {
-    revalidate: 60,
+    revalidate: process.env.GLOBAL_PAGE_REVALIDATE || 30,
     pageSize: 100,
     cacheKey: 'categoryTree',
     cacheTimeOut: 10000,
