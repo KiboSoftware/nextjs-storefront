@@ -1,6 +1,6 @@
 /** @format */
 
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 
 import { Box, Stack, Typography } from '@mui/material'
 import { useTranslation } from 'next-i18next'
