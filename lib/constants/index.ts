@@ -103,6 +103,7 @@ export const footerConfig = {
 export enum CMS {
   CONTENTFUL = 'contentful',
   CONTENTSTACK = 'contentstack',
+  AMPLIENCE = 'amplience',
 }
 
 export enum DefaultId {

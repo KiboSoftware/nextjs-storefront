@@ -100,7 +100,6 @@ const formatSmallPromoBlocksData = (largePromoBlocksData: any) => {
 }
 
 const getContentfulPageData = (contentfulPageData: any) => {
-  // console.log('###contentfulPageData###', JSON.stringify(contentfulPageData))
   const smallBanner =
     contentfulPageData[0]?.small_banner &&
     formatSmallBannerData(contentfulPageData[0]?.small_banner)
