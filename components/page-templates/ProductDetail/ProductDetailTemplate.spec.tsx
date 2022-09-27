@@ -99,7 +99,7 @@ jest.mock('@/hooks', () => ({
 const setup = () => {
   render(<Common {...Common?.args} />)
 }
-
+jest.unmock('next/link')
 describe('[component] Product Detail Template component', () => {
   it('should render the Breadcrumb component', () => {
     setup()

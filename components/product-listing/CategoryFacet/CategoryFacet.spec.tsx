@@ -11,6 +11,8 @@ import type { CategoryFacetProps } from './CategoryFacet'
 
 const { CategoryFacetDesktop } = composeStories(stories)
 
+jest.unmock('next/link')
+
 describe('[component] - CategoryFacet', () => {
   const setup = (params?: CategoryFacetProps) => {
     const props = params ? params : CategoryFacetDesktop.args
@@ -26,7 +28,7 @@ describe('[component] - CategoryFacet', () => {
     setup()
 
     const heading = screen.getByRole('heading')
-    const backButton = screen.getByRole('link', { name: /back/i })
+    const backButton = screen.getByLabelText(/common:back/i)
 
     const childrenCategoriesLabels =
       CategoryFacetDesktop?.args?.categoryFacet?.childrenCategories?.map(
@@ -109,7 +111,7 @@ describe('[component] - CategoryFacet', () => {
     setup(params)
 
     const heading = screen.getByRole('heading')
-    const backButton = screen.getByRole('link', { name: /back/i })
+    const backButton = screen.getByLabelText(/common:back/i)
 
     expect(heading).toBeVisible()
     expect(backButton).toBeInTheDocument()

@@ -115,7 +115,7 @@ describe('[components] Product Card Component', () => {
 
       const inWishlistIcon = screen.getByTestId('FavoriteRoundedIcon')
       const notInWishlistIcon = screen.queryByTestId('FavoriteBorderRoundedIcon')
-      const shopNowButton = screen.getAllByRole('link', {
+      const shopNowButton = screen.getAllByRole('button', {
         name: /shop-now/i,
       })
 
