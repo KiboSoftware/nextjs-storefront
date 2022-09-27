@@ -25,12 +25,7 @@ const updateUserPassword = async (props: UpdateUserPasswordProps) => {
 }
 
 export const useUpdateUserPasswordMutations = () => {
-  const queryClient = useQueryClient()
   return {
-    updateUserPasswordData: useMutation(updateUserPassword, {
-      onSuccess: () => {
-        queryClient.invalidateQueries(loginKeys.user)
-      },
-    }),
+    updateUserPasswordData: useMutation(updateUserPassword),
   }
 }

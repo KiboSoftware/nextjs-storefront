@@ -29,13 +29,6 @@ const MyProfile = (props: MyProfileProps) => {
 
   const [currentEditableField, setCurrentEditableField] = useState<number | null>(null)
 
-  const [currentUser, setCurrentUser] = useState({
-    firstName: '',
-    lastName: '',
-    emailAddress: '',
-    id: 0,
-  })
-
   const { id, firstName, lastName, emailAddress, fullName } =
     accountDetailsGetters.getPersonalDetails(user)
 
@@ -48,7 +41,7 @@ const MyProfile = (props: MyProfileProps) => {
     {
       id: ProfileSections.Email,
       label: t('email'),
-      value: currentUser.emailAddress,
+      value: emailAddress,
     },
     {
       id: ProfileSections.Password,
@@ -56,15 +49,6 @@ const MyProfile = (props: MyProfileProps) => {
       value: '**************',
     },
   ]
-
-  useEffect(() => {
-    setCurrentUser({
-      id: id,
-      firstName: firstName,
-      lastName: lastName,
-      emailAddress: emailAddress,
-    })
-  }, [id, firstName, lastName, emailAddress])
 
   const handleUpdateProfileData = async (profileFormData: UpdateProfileDataParam) => {
     if (profileFormData.oldPassword && profileFormData.newPassword) {
@@ -74,12 +58,12 @@ const MyProfile = (props: MyProfileProps) => {
 
     try {
       await updateUserData.mutateAsync({
-        accountId: currentUser.id,
+        accountId: id,
         customerAccountInput: {
-          id: currentUser.id,
-          firstName: profileFormData.firstName || currentUser.firstName,
-          lastName: profileFormData.lastName || currentUser.lastName,
-          emailAddress: profileFormData.emailAddress || currentUser.emailAddress,
+          id: id,
+          firstName: profileFormData.firstName || firstName,
+          lastName: profileFormData.lastName || lastName,
+          emailAddress: profileFormData.emailAddress || emailAddress,
         },
       })
     } catch (err) {
@@ -91,7 +75,7 @@ const MyProfile = (props: MyProfileProps) => {
   const handleUpdateUserPassword = async (updatedPassword: PasswordTypes) => {
     try {
       await updateUserPasswordData.mutateAsync({
-        accountId: currentUser.id,
+        accountId: id,
         passwordInfoInput: {
           oldPassword: updatedPassword.oldPassword as string,
           newPassword: updatedPassword.newPassword as string,
