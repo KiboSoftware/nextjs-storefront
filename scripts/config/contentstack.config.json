@@ -1,6 +1,6 @@
 {
   "master_locale": { "name": "English - United States", "code": "en-us" },
-  "target_stack": "blt31c87c8549983f7c",
+  "target_stack": "",
   "data": "./scripts/contentstack/content/content_types/main",
   "useBackedupDir": "./scripts/contentstack/content/content_types/main"
 }
