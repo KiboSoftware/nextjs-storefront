@@ -12,13 +12,4 @@ fs.writeFile(configPath, JSON.stringify(configFile), (err, res) => {
 })
 
 const commandsToExecute = `csdx cm:stacks:import -c  "${configPath}" `
-exec(commandsToExecute, (error, stdout, stderr) => {
-  if (error) {
-    console.log(`error: ${error.message}`)
-    return
-  }
-  if (stderr) {
-    console.log(`stderr: ${stderr}`)
-    return
-  }
-})
+exec(commandsToExecute)
