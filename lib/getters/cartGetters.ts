@@ -25,8 +25,8 @@ const getProductFulfillmentOptions = (
   product: Product,
   location: Location
 ): FulfillmentOption[] => {
-  const fullfillmentOptions = publicRuntimeConfig.fullfillmentOptions
-  return fullfillmentOptions.map((option: FulfillmentOption) => ({
+  const fulfillmentOptions = publicRuntimeConfig.fulfillmentOptions
+  return fulfillmentOptions.map((option: FulfillmentOption) => ({
     value: option.value,
     name: option.name,
     code: option.code,

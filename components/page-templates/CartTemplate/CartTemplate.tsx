@@ -268,7 +268,7 @@ const CartTemplate = (props: CartTemplateProps) => {
           </Typography>
           <Box maxWidth="23.5rem">
             <Link href="/" passHref>
-              <MuiLink href="/">
+              <MuiLink>
                 <Button
                   variant="contained"
                   color="primary"

@@ -98,7 +98,7 @@ const ProductCard = (props: ProductCardProps) => {
     return (
       <Box>
         <Link href={link} passHref data-testid="product-card-link">
-          <MuiLink href={link} underline="none">
+          <MuiLink underline="none">
             <Card sx={styles.cardRoot} data-testid="product-card">
               {isShowWishlistIcon && (
                 <Box textAlign={'right'} width="100%" onClick={handleAddOrRemoveWishlistItem}>
@@ -149,7 +149,7 @@ const ProductCard = (props: ProductCardProps) => {
         <Box>
           {isShopNow && (
             <Link href={link} passHref>
-              <MuiLink href={link} underline="none">
+              <MuiLink underline="none">
                 <Button
                   variant="contained"
                   color="primary"

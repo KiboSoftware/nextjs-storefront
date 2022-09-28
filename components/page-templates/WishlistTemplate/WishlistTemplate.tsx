@@ -136,7 +136,7 @@ const WishlistTemplate = (props: { customerAccount: CustomerAccount }) => {
             <Typography variant="subtitle2">{t('empty-wishlist-message')}</Typography>
             <Box maxWidth="23.5rem">
               <Link href="/" passHref>
-                <MuiLink href="/" underline="none">
+                <MuiLink underline="none">
                   <Button
                     variant="contained"
                     color="primary"
