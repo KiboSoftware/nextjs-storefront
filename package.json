@@ -17,9 +17,11 @@
     "test-report-coverage": "jest --silent --coverage --testResultsProcessor=jest-sonar-reporter",
     "test-watch": "jest --watch",
     "prettier:format": "prettier --write .",
-    "prepare": "husky install"
+    "prepare": "husky install",
+    "import-contentstack-content-types": "node scripts/contentstack/index.js"
   },
   "dependencies": {
+    "@contentstack/cli": "^1.0.4",
     "@contentstack/live-preview-utils": "^1.1.0",
     "@contentstack/utils": "^1.1.2",
     "@emotion/cache": "latest",
