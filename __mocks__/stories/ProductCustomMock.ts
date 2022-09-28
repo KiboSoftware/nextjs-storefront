@@ -271,7 +271,7 @@ export const ProductCustomMock: ProductCustom = {
       values: [
         {
           value: 'Orange',
-          isSelected: false,
+          isSelected: true,
           deltaPrice: null,
           stringValue: 'Orange',
           attributeValueId: 0,
@@ -299,7 +299,7 @@ export const ProductCustomMock: ProductCustom = {
       values: [
         {
           value: 'L',
-          isSelected: false,
+          isSelected: true,
           deltaPrice: null,
           stringValue: 'L',
           attributeValueId: 0,
@@ -336,7 +336,7 @@ export const ProductCustomMock: ProductCustom = {
       values: [
         {
           value: 150,
-          isSelected: false,
+          isSelected: true,
           deltaPrice: null,
           stringValue: '150',
           attributeValueId: 0,
@@ -401,9 +401,9 @@ export const ProductCustomMock: ProductCustom = {
   ],
   productImageGroups: [],
   inventoryInfo: {
-    manageStock: false,
-    onlineLocationCode: null,
-    onlineSoftStockAvailable: null,
-    onlineStockAvailable: null,
+    manageStock: true,
+    onlineLocationCode: 'RICHMOND',
+    onlineSoftStockAvailable: 100,
+    onlineStockAvailable: 100,
   },
 }

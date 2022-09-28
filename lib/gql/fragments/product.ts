@@ -61,6 +61,16 @@ fragment productOptions on Product {
   }
 }
 `
+export const productInventoryInfo = /* GraphQL */ `
+  fragment productInventoryInfo on Product {
+    inventoryInfo {
+      manageStock
+      onlineLocationCode
+      onlineSoftStockAvailable
+      onlineStockAvailable
+    }
+  }
+`
 export const productInfo = `
 fragment productInfo on Product {
         productCode
@@ -93,9 +103,11 @@ fragment productInfo on Product {
         ...productAttributes
         ...productContent
         ...productOptions
+        ...productInventoryInfo
 }
 ${productPrices}
 ${productAttributes}
 ${productContent}
 ${productOptions}
+${productInventoryInfo}
 `

@@ -167,7 +167,7 @@ const ShippingStep = (props: ShippingProps) => {
     setIsNewAddressAdded(false)
   }
 
-  const getSavedPaymentMethodView = (
+  const getSavedShippingAddressView = (
     address: CustomerContact,
     isPrimary?: boolean
   ): React.ReactNode => (
@@ -225,13 +225,13 @@ const ShippingStep = (props: ShippingProps) => {
       </Typography>
       {shouldShowAddAddressButton && (
         <>
-          <Stack gap={2} width="100%" data-testid="saved-payment-methods">
+          <Stack gap={2} width="100%">
             {defaultShippingAddress && (
               <>
                 <Typography variant="h4" fontWeight={'bold'}>
                   {t('common:your-default-shipping-address')}
                 </Typography>
-                {getSavedPaymentMethodView(defaultShippingAddress, true)}
+                {getSavedShippingAddressView(defaultShippingAddress, true)}
               </>
             )}
 
@@ -241,7 +241,7 @@ const ShippingStep = (props: ShippingProps) => {
                   {t('common:previously-saved-shipping-addresses')}
                 </Typography>
                 {previouslySavedShippingAddress?.map((address) => {
-                  return address && getSavedPaymentMethodView(address)
+                  return address && getSavedShippingAddressView(address)
                 })}
               </>
             )}

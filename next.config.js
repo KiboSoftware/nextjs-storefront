@@ -47,13 +47,14 @@ module.exports = {
     ratingAttrFQN: `tenant~rating`,
     userCookieKey: process.env.KIBO_USER_COOKIE_KEY || 'kibo_at',
     maxCookieAge: 5 * 24 * 60 * 60 * 1000, //5 days
-    fullfillmentOptions: [
+    fulfillmentOptions: [
       {
         value: 'DirectShip',
         code: 'DS',
         name: 'Direct Ship',
         label: 'Ship to Home',
         details: 'Available to Ship',
+        unavailableDetails: 'Unavailable to Ship',
         isRequired: false,
         shortName: 'Ship',
       },
@@ -63,6 +64,7 @@ module.exports = {
         name: 'In Store Pickup',
         label: 'Pickup in Store',
         details: 'Available at',
+        unavailableDetails: 'Unavailable at',
         isRequired: false,
         shortName: 'Pickup',
       },
