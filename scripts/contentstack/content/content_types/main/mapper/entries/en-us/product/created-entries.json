@@ -1,0 +1,17 @@
+{
+  "stackHeaders": { "api_key": "blt31c87c8549983f7c" },
+  "content_type_uid": "product",
+  "urlPath": "/content_types/product/entries/blt95071c4e5b4ded48",
+  "title": "Command Stack Products",
+  "tags": [],
+  "locale": "en-us",
+  "ACL": {},
+  "uid": "blt95071c4e5b4ded48",
+  "created_by": "blt10d62bcb26322317",
+  "updated_by": "blt10d62bcb26322317",
+  "created_at": "2022-09-28T08:04:42.809Z",
+  "updated_at": "2022-09-28T08:04:42.809Z",
+  "url": "/command-stack-products",
+  "_version": 1,
+  "_in_progress": false
+}
