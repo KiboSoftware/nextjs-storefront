@@ -87,6 +87,10 @@ module.exports = {
       accessToken: process.env.CONTENTFUL_ACCESS_TOKEN,
       URL: `https://graphql.contentful.com/content/v1/spaces/${process.env.CONTENTFUL_SPACE_ID}/environments/master`,
     },
+    amplience: {
+      hubName: 'kibo',
+      homePageContentId: 'c79e66ce-6de5-44e3-b87e-6cdf5601c817',
+    },
   },
   serverRuntimeConfig: {
     revalidate: process.env.GLOBAL_PAGE_REVALIDATE || 30,
