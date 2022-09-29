@@ -89,7 +89,7 @@ module.exports = {
     },
     amplience: {
       hubName: 'kibo',
-      homePageContentId: 'c79e66ce-6de5-44e3-b87e-6cdf5601c817',
+      homePageContentUrl: 'https://kibo-example.com/kibo-home-page',
     },
   },
   serverRuntimeConfig: {
