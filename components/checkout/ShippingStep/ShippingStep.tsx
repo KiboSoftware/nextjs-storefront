@@ -89,7 +89,7 @@ const ShippingStep = (props: ShippingProps) => {
 
   const handleSaveAddress = async ({ contact }: { contact: Contact }) => {
     try {
-      await updateCheckoutShippingInfo.mutateAsync({ checkout, contact: contact })
+      await updateCheckoutShippingInfo.mutateAsync({ checkout, contact })
       setCheckoutId(checkout?.id)
       setSelectedShippingAddressId((contact?.id as number) || DefaultId.ADDRESSID)
       setShouldShowAddAddressButton(true)

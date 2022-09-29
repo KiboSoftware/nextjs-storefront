@@ -2,7 +2,7 @@ import { useQuery } from 'react-query'
 
 import { makeGraphQLClient } from '@/lib/gql/client'
 import { searchProductsQuery } from '@/lib/gql/queries'
-import { buildProductSearchInputParams } from '@/lib/helpers/buildProductSearchInputParams'
+import { buildProductSearchParams } from '@/lib/helpers/buildProductSearchParams'
 import { productSearchResultKeys } from '@/lib/react-query/queryKeys'
 import type { CategorySearchParams } from '@/lib/types'
 
@@ -16,7 +16,7 @@ export interface UseProductSearchResponse {
 }
 
 const fetchProductSearch = async (searchParams: CategorySearchParams) => {
-  const productSearchInput = buildProductSearchInputParams(searchParams)
+  const productSearchInput = buildProductSearchParams(searchParams)
   const client = makeGraphQLClient()
   const response = await client.request({
     document: searchProductsQuery,

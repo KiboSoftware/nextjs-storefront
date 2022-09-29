@@ -3,7 +3,7 @@ import type { CardTypeForCheckout, TokenizedCard } from '@/lib/types'
 
 import type { BillingInfo, Contact, Order, PaymentActionInput } from '@/lib/gql/types'
 
-export const buildCardPaymentActionForCheckoutInputParams = (
+export const buildCardPaymentActionForCheckoutParams = (
   currencyCode: string,
   checkout: Order,
   creditCardData: CardTypeForCheckout,

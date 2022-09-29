@@ -28,7 +28,7 @@ import {
 import { PaymentType, PaymentWorkflow } from '@/lib/constants'
 import { addressGetters, cardGetters, checkoutGetters, accountDetailsGetters } from '@/lib/getters'
 import { tokenizeCreditCardPayment } from '@/lib/helpers'
-import { buildCardPaymentActionForCheckoutInputParams } from '@/lib/helpers/buildCardPaymentActionForCheckoutInputParams'
+import { buildCardPaymentActionForCheckoutParams } from '@/lib/helpers/buildCardPaymentActionForCheckoutParams'
 import type {
   Address,
   CardForm,
@@ -292,7 +292,7 @@ const PaymentStep = (props: PaymentStepProps) => {
         selectedPaymentMethod?.billingAddressInfo
       )
 
-      paymentAction = buildCardPaymentActionForCheckoutInputParams(
+      paymentAction = buildCardPaymentActionForCheckoutParams(
         'US',
         { ...checkout } as Order,
         cardDetails,

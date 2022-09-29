@@ -2,7 +2,7 @@ import { useQuery } from 'react-query'
 
 import { makeGraphQLClient } from '@/lib/gql/client'
 import { searchProductsQuery } from '@/lib/gql/queries'
-import { buildProductSearchInputParams } from '@/lib/helpers/buildProductSearchInputParams'
+import { buildProductSearchParams } from '@/lib/helpers'
 import { productSearchResultKeys } from '@/lib/react-query/queryKeys'
 import type { CategorySearchParams, ProductCodes } from '@/lib/types'
 
@@ -16,7 +16,7 @@ export interface UseProductsResponse {
 }
 
 const fetchProductSearch = async (searchParams: CategorySearchParams) => {
-  const productSearchInput = buildProductSearchInputParams(searchParams)
+  const productSearchInput = buildProductSearchParams(searchParams)
   const client = makeGraphQLClient()
   const response = await client.request({
     document: searchProductsQuery,
@@ -30,7 +30,7 @@ export const useProducts = (productCodes: ProductCodes[]): UseProductsResponse =
   productCodes?.forEach((code) => {
     productCodeFilter.push(`productCode eq ${code?.productCode}`)
   })
-  const searchParams = buildProductSearchInputParams({
+  const searchParams = buildProductSearchParams({
     filter: productCodeFilter.join(' or '),
     pageSize: productCodes?.length,
   }) as CategorySearchParams

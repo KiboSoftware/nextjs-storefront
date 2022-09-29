@@ -8,13 +8,13 @@ const getPastDateTimestamp = (months: number) => {
   return today.toISOString()
 }
 
-export const buildOrdersFilterInputParams = (params: {
+export const buildOrdersFilterParams = (params: {
   filters?: Array<string> | string
   startIndex?: number
   pageSize?: number
   orderNumber?: string
   billingEmail?: string
-}) => {
+}): { filter: string; startIndex: number; pageSize: number } => {
   const { publicRuntimeConfig } = getConfig()
   const variables = {
     filter: '',

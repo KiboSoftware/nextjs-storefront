@@ -2,7 +2,7 @@ import { AddToCartProductInput } from '@/hooks'
 
 import type { CartItemInput } from '../gql/types'
 
-export const buildAddToCartInputParams = (
+export const buildAddToCartParams = (
   product: AddToCartProductInput,
   quantity: number
 ): CartItemInput => {

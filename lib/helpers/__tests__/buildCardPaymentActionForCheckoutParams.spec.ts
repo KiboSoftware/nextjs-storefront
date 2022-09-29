@@ -1,9 +1,9 @@
-import { buildCardPaymentActionForCheckoutInputParams } from '../buildCardPaymentActionForCheckoutInputParams'
+import { buildCardPaymentActionForCheckoutParams } from '../buildCardPaymentActionForCheckoutParams'
 import { orderMock } from '@/__mocks__/stories'
 import { billingInfoInputMock } from '@/__mocks__/stories/billingInfoInputMock'
 
 describe('[helpers] buildAddToWishlistInput function', () => {
-  it('should return the buildAddToWishlistItemInputParams variables', () => {
+  it('should return the buildAddToWishlistItemParams variables', () => {
     const currencyCode = 'US'
     const checkout = orderMock.checkout
     const creditCardData = {
@@ -25,7 +25,7 @@ describe('[helpers] buildAddToWishlistInput function', () => {
     }
 
     expect(
-      buildCardPaymentActionForCheckoutInputParams(
+      buildCardPaymentActionForCheckoutParams(
         currencyCode,
         checkout,
         creditCardData,

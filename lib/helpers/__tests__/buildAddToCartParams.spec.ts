@@ -1,7 +1,7 @@
 import { ProductCustomMock } from '../../../__mocks__/stories/ProductCustomMock'
-import { buildAddToCartInputParams } from '../buildAddToCartInputParams'
+import { buildAddToCartParams } from '../buildAddToCartParams'
 
-describe('[helpers] buildAddToCartInputParams function', () => {
+describe('[helpers] buildAddToCartParams function', () => {
   it('should return the addToCartInput variables', () => {
     const mockedProduct = ProductCustomMock
     const options = [
@@ -13,7 +13,7 @@ describe('[helpers] buildAddToCartInputParams function', () => {
     ]
     const quantity = 2
     expect(
-      buildAddToCartInputParams(
+      buildAddToCartParams(
         {
           options,
           productCode: mockedProduct.productCode as string,

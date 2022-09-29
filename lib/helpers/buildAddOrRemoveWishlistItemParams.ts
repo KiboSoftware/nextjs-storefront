@@ -1,8 +1,10 @@
 import { productGetters } from '../getters'
 
-import type { ProductCustom } from '../types'
+import type { ProductCustom, WishlistProductInput } from '../types'
 
-export const buildAddOrRemoveWishlistItemParams = (product: ProductCustom) => {
+export const buildAddOrRemoveWishlistItemParams = (
+  product: ProductCustom
+): WishlistProductInput => {
   const { productCode, variationProductCode, isPackagedStandAlone } =
     productGetters.getProductDetails(product)
 

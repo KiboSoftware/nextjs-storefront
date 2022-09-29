@@ -18,7 +18,7 @@ export interface ShippingInfo {
 const updateShippingInfo = async (params: CheckoutShippingParams) => {
   const client = makeGraphQLClient()
 
-  const shippingInfo: ShippingInfo = buildCheckoutShippingParams(params)
+  const shippingInfo = buildCheckoutShippingParams(params)
 
   const response = await client.request({
     document: setShippingInfo,

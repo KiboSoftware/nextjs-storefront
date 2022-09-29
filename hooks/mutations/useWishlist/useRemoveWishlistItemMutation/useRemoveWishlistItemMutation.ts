@@ -2,7 +2,7 @@ import { useMutation, useQueryClient } from 'react-query'
 
 import { makeGraphQLClient } from '@/lib/gql/client'
 import { deleteWishlistItemMutation } from '@/lib/gql/mutations'
-import { buildRemoveWishlistItemInputParams } from '@/lib/helpers'
+import { buildRemoveWishlistItemParams } from '@/lib/helpers'
 import { wishlistKeys } from '@/lib/react-query/queryKeys'
 import type { RemoveWishlistItemInput, WishlistHookParams } from '@/lib/types'
 
@@ -10,7 +10,7 @@ const removeWishlistItem = async (props: RemoveWishlistItemInput) => {
   const client = makeGraphQLClient()
   const { product, currentWishlist } = props
 
-  const variables = buildRemoveWishlistItemInputParams({ product, currentWishlist })
+  const variables = buildRemoveWishlistItemParams({ product, currentWishlist })
   const response = await client.request({
     document: deleteWishlistItemMutation,
     variables,

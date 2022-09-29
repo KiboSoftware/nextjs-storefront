@@ -10,7 +10,7 @@ function getFacetValueFilter(categoryCode: string, filters: Array<string> = []) 
   return facetValueFilter + filters
 }
 
-export const buildProductSearchInputParams = ({
+export const buildProductSearchParams = ({
   categoryCode = '',
   pageSize = 16,
   filters = [],

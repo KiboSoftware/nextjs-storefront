@@ -2,7 +2,7 @@ import { useMutation, useQueryClient } from 'react-query'
 
 import { makeGraphQLClient } from '@/lib/gql/client'
 import { createOrderMutation } from '@/lib/gql/mutations'
-import { buildCreateOrderParams } from '@/lib/helpers/buildCreateOrderParams'
+import { buildCreateOrderParams } from '@/lib/helpers'
 import { checkoutKeys } from '@/lib/react-query/queryKeys'
 
 import type { Order, OrderActionInput } from '@/lib/gql/types'
