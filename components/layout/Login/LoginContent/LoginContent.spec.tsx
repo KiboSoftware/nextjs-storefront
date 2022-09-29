@@ -4,10 +4,9 @@ import React from 'react'
 import { composeStories } from '@storybook/testing-react'
 import { render, screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
+import { UserEvent } from '@testing-library/user-event/dist/types/setup'
 
 import * as stories from './LoginContent.stories' // import all stories from the stories file
-
-import type { UserEvent } from '@testing-library/user-event/dist/types/setup'
 
 const { Common } = composeStories(stories)
 

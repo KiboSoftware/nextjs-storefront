@@ -7,6 +7,7 @@ import {
   ListItemText,
   SwipeableDrawer,
   Link as MuiLink,
+  Typography,
 } from '@mui/material'
 import { useTranslation } from 'next-i18next'
 import { useRouter } from 'next/router'
@@ -35,11 +36,11 @@ const styles = {
     overflowY: 'hidden',
     display: 'flex',
     flexDirection: 'column',
+    justifyContent: 'flex-start',
   },
   menuList: {
     overflowY: 'auto',
     width: '100%',
-    flex: 1,
   },
   spacer: {
     backgroundColor: 'grey.300',
@@ -115,7 +116,11 @@ const HamburgerMenu = (props: HamburgerMenuProps) => {
               <MuiLink underline="none">
                 <ListItem button sx={{ paddingInline: 4 }}>
                   <ListItemText
-                    primary={t(`${nav.text}`)}
+                    primary={
+                      <Typography variant="body2" color="text.primary">
+                        {t(`${nav.text}`)}
+                      </Typography>
+                    }
                     onClick={() => handleNavLinks(nav.link)}
                   />
                 </ListItem>
