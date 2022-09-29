@@ -1,7 +1,7 @@
 import { ProductCustomMock } from '../../../__mocks__/stories/ProductCustomMock'
 import { productGetters } from '../productGetters'
 
-import { ProductOption } from '@/lib/gql/types'
+import type { ProductOption } from '@/lib/gql/types'
 
 describe('[getters] productGetters', () => {
   it('should return the product name', () => {

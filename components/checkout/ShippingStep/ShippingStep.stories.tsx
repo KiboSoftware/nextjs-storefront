@@ -8,7 +8,7 @@ import { userAddressResponse } from '@/__mocks__/stories/userAddressMock'
 import { CheckoutStepProvider } from '@/context/CheckoutStepContext/CheckoutStepContext'
 import { userGetters } from '@/lib/getters/userGetters'
 
-import { CustomerContact } from '@/lib/gql/types'
+import type { CustomerContact } from '@/lib/gql/types'
 const steps = ['details', 'shipping', 'payment', 'review']
 
 // Common

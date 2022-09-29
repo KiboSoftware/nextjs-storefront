@@ -1,4 +1,4 @@
-import { LocationCustom, SavedBillingAddress } from '@/lib/types'
+import type { LocationCustom, SavedBillingAddress } from '@/lib/types'
 
 import type {
   Contact,

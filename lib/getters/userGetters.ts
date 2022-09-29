@@ -1,4 +1,7 @@
-import {
+import { cardGetters } from './cardGetters'
+import { AddressType, PaymentType } from '@/lib/constants'
+
+import type {
   Card,
   CardCollection,
   Contact,
@@ -6,9 +9,7 @@ import {
   CustomerContact,
   CustomerContactCollection,
 } from '../gql/types'
-import { PaymentAndBilling, SavedCard } from '../types'
-import { cardGetters } from './cardGetters'
-import { AddressType, PaymentType } from '@/lib/constants'
+import type { PaymentAndBilling, SavedCard } from '../types'
 
 const getSavedAddresses = (customerAccountContacts: CustomerContactCollection): CustomerContact[] =>
   customerAccountContacts ? (customerAccountContacts?.items as CustomerContact[]) : []

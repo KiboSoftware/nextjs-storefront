@@ -25,7 +25,7 @@ const StyledActionsComponent = styled(Stack)(() => ({
 const LoginFooter = (props: LoginFooterProps) => {
   const { onRegisterNow } = props
 
-  const { t } = useTranslation(['common'])
+  const { t } = useTranslation('common')
 
   return (
     <StyledActionsComponent>
@@ -40,7 +40,7 @@ const LoginFooter = (props: LoginFooterProps) => {
 }
 
 const LoginDialog = () => {
-  const { t } = useTranslation(['common'])
+  const { t } = useTranslation('common')
 
   const { authError = '', login } = useAuthContext()
   const { showModal, closeModal } = useModalContext()

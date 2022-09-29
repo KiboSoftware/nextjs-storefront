@@ -21,7 +21,7 @@ const styles = {
 }
 const WishlistTemplate = (props: { customerAccount: CustomerAccount }) => {
   const { customerAccount } = props
-  const { t } = useTranslation(['common'])
+  const { t } = useTranslation('common')
   const { getProductLink } = uiHelpers()
   const { addOrRemoveWishlistItem } = useWishlist({ isRemovedFromWishlist: true, delay: 1000 })
   const theme = useTheme()

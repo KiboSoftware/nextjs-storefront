@@ -43,7 +43,7 @@ const AddressList = (props: AddressListProps) => {
     selectedAddressId,
     onAddressSelection,
   } = props
-  const { t } = useTranslation(['common'])
+  const { t } = useTranslation('common')
 
   return (
     <Box maxWidth={'fit-content'}>
@@ -70,7 +70,7 @@ const AddressList = (props: AddressListProps) => {
 
 const KiboAddressList = (props: AddressListProps) => {
   const { addresses, heading } = props
-  const { t } = useTranslation(['common'])
+  const { t } = useTranslation('common')
 
   return (
     <>
@@ -94,7 +94,7 @@ const KiboAddressList = (props: AddressListProps) => {
 const KiboRadioAddressList = (props: KiboAddressListProps) => {
   const { addresses, selectedAddressId, heading, subHeading, onAddressSelect } = props
   const [selectedAddress, setSelectedAddress] = useState(selectedAddressId)
-  const { t } = useTranslation(['common'])
+  const { t } = useTranslation('common')
   const radioOptions = addresses?.reduce((arr: any, item: CustomerContact, index: number) => {
     if (item.id)
       arr.push({

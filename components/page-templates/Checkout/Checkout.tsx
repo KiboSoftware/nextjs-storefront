@@ -41,7 +41,7 @@ const Checkout = (props: CheckoutProps) => {
 
   const [promoError, setPromoError] = useState<string>('')
 
-  const { t } = useTranslation(['checkout'])
+  const { t } = useTranslation('common')
   const router = useRouter()
 
   const { checkoutId } = router.query

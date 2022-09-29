@@ -31,8 +31,7 @@ import {
   useDeleteCartCouponMutation,
 } from '@/hooks'
 import { FulfillmentOptions } from '@/lib/constants'
-import { orderGetters } from '@/lib/getters'
-import { cartGetters } from '@/lib/getters/cartGetters'
+import { orderGetters, cartGetters } from '@/lib/getters'
 import type { LocationCustom } from '@/lib/types'
 
 import type { Cart, Location, CartItemInput } from '@/lib/gql/types'
