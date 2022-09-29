@@ -24,10 +24,10 @@ describe('[components] ShippingStep', () => {
     const { user } = setup()
 
     const defaultAddress = screen.getByRole('heading', {
-      name: /common:your-default-shipping-address/i,
+      name: /your-default-shipping-address/i,
     })
     const savedAddress = screen.getByRole('heading', {
-      name: /common:previously-saved-shipping-addresses/i,
+      name: /previously-saved-shipping-addresses/i,
     })
     const addShippingAddressButton = screen.getByRole('button', {
       name: /add-new-address/i,
