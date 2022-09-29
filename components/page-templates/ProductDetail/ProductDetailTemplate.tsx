@@ -86,7 +86,6 @@ const ProductDetailTemplate = (props: ProductDetailTemplateProps) => {
     optionsVisibility,
     properties,
     isValidForAddToCart,
-    isPackagedStandAlone,
   } = productGetters.getProductDetails({
     ...currentProduct,
     fulfillmentMethod: selectedFulfillmentOption?.method,
@@ -197,13 +196,7 @@ const ProductDetailTemplate = (props: ProductDetailTemplateProps) => {
     try {
       if (!wishlistGetters.isAvailableToAddToWishlist(currentProduct)) return
 
-      const addOrRemoveWishlistItemParams = {
-        productCode,
-        variationProductCode,
-        isPackagedStandAlone,
-        options: updatedShopperEnteredValues,
-      }
-      await addOrRemoveWishlistItem(addOrRemoveWishlistItemParams)
+      await addOrRemoveWishlistItem({ product: currentProduct })
     } catch (error) {
       console.log('Error: add or remove wishlist item from PDP', error)
     }

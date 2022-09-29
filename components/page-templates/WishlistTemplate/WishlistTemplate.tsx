@@ -30,15 +30,9 @@ const WishlistTemplate = (props: { customerAccount: CustomerAccount }) => {
 
   const handleAddOrRemoveWishlistItem = async (product: WishlistProductInput) => {
     try {
-      const { productCode, variationProductCode, isPackagedStandAlone, options } = product
-      const addOrRemoveWishlistItemParams = {
-        productCode,
-        variationProductCode,
-        isPackagedStandAlone,
-        options,
-      }
+      const { productCode } = product
       setRemovedProductCode(productCode)
-      await addOrRemoveWishlistItem(addOrRemoveWishlistItemParams)
+      await addOrRemoveWishlistItem({ product })
     } catch (error) {
       console.log('Error: add or remove wishlist item from wishlist template', error)
     }
