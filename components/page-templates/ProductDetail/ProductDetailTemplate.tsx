@@ -21,10 +21,10 @@ import {
 import { useModalContext } from '@/context/ModalContext'
 import {
   useProductDetailTemplate,
-  usePurchaseLocation,
-  useCartMutationAddToCart,
+  usePurchaseLocationQueries,
+  useAddToCartMutation,
   useWishlist,
-  useProductLocationInventory,
+  useProductLocationInventoryQueries,
 } from '@/hooks'
 import { FulfillmentOptions as FulfillmentOptionsConstant } from '@/lib/constants'
 import { productGetters, wishlistGetters } from '@/lib/getters'
@@ -49,8 +49,8 @@ const ProductDetailTemplate = (props: ProductDetailTemplateProps) => {
   const { product, breadcrumbs, cmsProducts } = props
   const { t } = useTranslation(['product', 'common'])
   const { showModal, closeModal } = useModalContext()
-  const { addToCart } = useCartMutationAddToCart()
-  const { data: purchaseLocation } = usePurchaseLocation()
+  const { addToCart } = useAddToCartMutation()
+  const { data: purchaseLocation } = usePurchaseLocationQueries()
 
   const { addOrRemoveWishlistItem, checkProductInWishlist } = useWishlist()
   const {
@@ -65,7 +65,7 @@ const ProductDetailTemplate = (props: ProductDetailTemplateProps) => {
     product,
     purchaseLocation,
   })
-  const { data: locationInventory } = useProductLocationInventory(
+  const { data: locationInventory } = useProductLocationInventoryQueries(
     product?.productCode as string,
     selectedFulfillmentOption?.location?.code as string
   )

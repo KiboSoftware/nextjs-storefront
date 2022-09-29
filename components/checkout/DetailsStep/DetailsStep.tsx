@@ -12,7 +12,7 @@ import * as yup from 'yup'
 import KiboTextBox from '@/components/common/KiboTextBox/KiboTextBox'
 import { LoginDialog } from '@/components/layout'
 import { useAuthContext, useCheckoutStepContext, STEP_STATUS, useModalContext } from '@/context'
-import { PersonalInfo, useUpdateCheckoutPersonalInfo } from '@/hooks'
+import { PersonalInfo, useUpdateCheckoutPersonalInfoMutation } from '@/hooks'
 import { FormStates } from '@/lib/constants'
 
 import type { Order, OrderInput, Maybe } from '@/lib/gql/types'
@@ -64,7 +64,7 @@ const DetailsStep = (props: DetailsProps) => {
   const { setAutoFocus = true, checkout } = props
 
   const { t } = useTranslation('checkout')
-  const updateCheckoutPersonalInfo = useUpdateCheckoutPersonalInfo()
+  const updateCheckoutPersonalInfo = useUpdateCheckoutPersonalInfoMutation()
   const { isAuthenticated, setAuthError } = useAuthContext()
   const { showModal } = useModalContext()
   const {

@@ -6,11 +6,28 @@ describe('[helpers] buildOrdersFilterParams function', () => {
       startIndex: 0,
       pageSize: 20,
     }
-    const buildOrdersFilterParamsMock = {
+
+    const orderHistoryVariables = {
+      ...variables,
+      filters: [],
+    }
+    const orderStatusVariables = {
+      ...variables,
+      orderNumber: '81',
+      billingEmail: 'chandra@email.com',
+    }
+
+    const buildOrdersFilterInputMock = {
       startIndex: 0,
       pageSize: 20,
       filter: 'orderNumber eq 81 and email eq chandra@email.com and status ne Abandoned',
     }
-    expect(buildOrdersFilterParams(variables)).toStrictEqual(buildOrdersFilterParamsMock)
+    const buildOrdersHistoryMock = {
+      startIndex: 0,
+      pageSize: 20,
+      filter: 'status ne Abandoned',
+    }
+    expect(buildOrdersFilterParams(orderStatusVariables)).toStrictEqual(buildOrdersFilterInputMock)
+    expect(buildOrdersFilterParams(orderHistoryVariables)).toStrictEqual(buildOrdersHistoryMock)
   })
 })

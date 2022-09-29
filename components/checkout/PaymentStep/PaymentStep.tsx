@@ -18,10 +18,10 @@ import { CardDetailsForm, SavedPaymentMethodView } from '@/components/checkout'
 import { AddressForm } from '@/components/common'
 import { useCheckoutStepContext, STEP_STATUS, useAuthContext } from '@/context'
 import {
-  useCustomerCards,
-  useCustomerContacts,
-  useUpdateCheckoutBillingInfo,
-  useCreateCheckoutPaymentMethod,
+  useCustomerCardsQueries,
+  useCustomerContactsQueries,
+  useUpdateCheckoutBillingInfoMutation,
+  useCreateCheckoutPaymentMethodMutation,
   useUpdateOrderPaymentActionMutation,
   usePaymentTypes,
 } from '@/hooks'
@@ -118,16 +118,15 @@ const PaymentStep = (props: PaymentStepProps) => {
   const paymentMethods = loadPaymentTypes()
 
   // getting saved card and billing details
-  const { data: customerCardsCollection, isSuccess: isCustomerCardsSuccess } = useCustomerCards(
-    user?.id as number
-  )
+  const { data: customerCardsCollection, isSuccess: isCustomerCardsSuccess } =
+    useCustomerCardsQueries(user?.id as number)
 
   const { data: customerContactsCollection, isSuccess: isCustomerContactsSuccess } =
-    useCustomerContacts(user?.id as number)
+    useCustomerContactsQueries(user?.id as number)
 
   // update checkout payment and billing info
-  const createOrderPaymentMethod = useCreateCheckoutPaymentMethod()
-  const updateCheckoutBillingInfo = useUpdateCheckoutBillingInfo()
+  const createOrderPaymentMethod = useCreateCheckoutPaymentMethodMutation()
+  const updateCheckoutBillingInfo = useUpdateCheckoutBillingInfoMutation()
   const updateOrderPaymentAction = useUpdateOrderPaymentActionMutation()
 
   // checkout context handling

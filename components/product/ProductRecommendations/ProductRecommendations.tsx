@@ -4,7 +4,7 @@ import { Box, Grid, Typography } from '@mui/material'
 import { useTranslation } from 'next-i18next'
 
 import { ProductCard } from '@/components/product'
-import { useProducts } from '@/hooks'
+import { useProductsQueries } from '@/hooks'
 import { productGetters } from '@/lib/getters'
 import { uiHelpers } from '@/lib/helpers'
 import type { ProductCodes } from '@/lib/types'
@@ -20,7 +20,7 @@ const ProductRecommendations = (props: ProductRecommendationsProps) => {
   const { title, productCodes } = props
   const { t } = useTranslation('common')
   const { getProductLink } = uiHelpers()
-  const { data: productSearchResult } = useProducts(productCodes)
+  const { data: productSearchResult } = useProductsQueries(productCodes)
   const products = productSearchResult?.items as Product[]
 
   return (

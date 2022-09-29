@@ -8,7 +8,11 @@ import getConfig from 'next/config'
 import { KiboDialog } from '@/components/common'
 import { SearchStore } from '@/components/dialogs'
 import { useModalContext } from '@/context'
-import { useStoreLocations, useCurrentLocation, useProductLocationInventory } from '@/hooks'
+import {
+  useStoreLocationsQueries,
+  useCurrentLocation,
+  useProductLocationInventoryQueries,
+} from '@/hooks'
 import { storeLocationGetters } from '@/lib/getters'
 import type { LocationCustom, ProductCustom } from '@/lib/types'
 
@@ -45,11 +49,11 @@ const StoreLocatorDialog = (props: StoreLocatorProps) => {
   const [searchTerm, setSearchTerm] = useState<string>('')
   const [selectedStore, setSelectedStore] = React.useState<LocationCustom>({})
 
-  const { isError, data: locations } = useStoreLocations(searchParams)
+  const { isError, data: locations } = useStoreLocationsQueries(searchParams)
   const locationCodes: string = storeLocationGetters.getLocationCodes(
     locations as Maybe<Location>[]
   )
-  const { data: locationInventory } = useProductLocationInventory(
+  const { data: locationInventory } = useProductLocationInventoryQueries(
     product?.productCode as string,
     locationCodes
   )
