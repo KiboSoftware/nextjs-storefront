@@ -1,4 +1,4 @@
-import { Card, Contact } from '../gql/types'
+import type { Contact } from '../gql/types'
 
 export interface CardTypeForCheckout {
   paymentType: string

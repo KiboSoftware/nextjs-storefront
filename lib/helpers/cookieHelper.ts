@@ -4,8 +4,8 @@ import getConfig from 'next/config'
 import type { UserAuthTicket } from '@kibocommerce/graphql-client'
 
 const config = getConfig()
-const maxCookieAge = config?.publicRuntimeConfig.maxCookieAge
-const purchaseLocationCookieName = config?.publicRuntimeConfig.storeLocationCookie
+const maxCookieAge = config?.publicRuntimeConfig?.maxCookieAge
+const purchaseLocationCookieName = config?.publicRuntimeConfig?.storeLocationCookie
 
 export const storeClientCookie = (cookieName: string, cookieValue: UserAuthTicket | string) => {
   const date = new Date()

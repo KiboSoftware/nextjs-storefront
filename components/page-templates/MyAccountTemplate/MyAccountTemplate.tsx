@@ -21,7 +21,7 @@ import { useRouter } from 'next/router'
 import { PaymentMethod } from '@/components/my-account'
 import AddressBook from '@/components/my-account/AddressBook/AddressBook'
 import { useAuthContext } from '@/context'
-import { useCustomerCards, useCustomerContacts } from '@/hooks'
+import { useCustomerCardsQueries, useCustomerContactsQueries } from '@/hooks'
 
 import type { CustomerAccount } from '@/lib/gql/types'
 
@@ -84,8 +84,8 @@ const MyAccountTemplate = () => {
   const mdScreen = useMediaQuery(theme.breakpoints.up('md'))
   const { user, logout } = useAuthContext()
 
-  const { data: cards } = useCustomerCards(user?.id as number)
-  const { data: contacts } = useCustomerContacts(user?.id as number)
+  const { data: cards } = useCustomerCardsQueries(user?.id as number)
+  const { data: contacts } = useCustomerContactsQueries(user?.id as number)
 
   const handleGoToOrderHistory = () => {
     router.push('/my-account/order-history?filters=M-6')

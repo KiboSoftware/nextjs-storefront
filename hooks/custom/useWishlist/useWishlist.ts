@@ -8,12 +8,13 @@ import {
   useCreateWishlistMutation,
 } from '@/hooks'
 import { wishlistGetters } from '@/lib/getters'
-import { buildWishlistParams } from '@/lib/helpers'
-import {
-  WishlistProductInput,
+import { buildAddOrRemoveWishlistItemParams, buildWishlistParams } from '@/lib/helpers'
+import type {
   WishlistParams,
   WishlistItemInWishlistParams,
   WishlistHookParams,
+  WishlistProductInput,
+  ProductCustom,
 } from '@/lib/types'
 
 export const useWishlist = (params?: WishlistHookParams) => {
@@ -72,14 +73,20 @@ export const useWishlist = (params?: WishlistHookParams) => {
     return !isProductInWishlist
   }
 
-  const addOrRemoveWishlistItem = async (props: WishlistProductInput) => {
+  const addOrRemoveWishlistItem = async ({
+    product,
+  }: {
+    product: ProductCustom | WishlistProductInput
+  }) => {
     try {
       if (!isAuthenticated) {
         showModal({ Component: LoginDialog })
         return
       }
 
-      const { productCode, variationProductCode, isPackagedStandAlone, options } = props
+      const params = buildAddOrRemoveWishlistItemParams(product as ProductCustom)
+
+      const { productCode, variationProductCode, isPackagedStandAlone, options } = params
 
       const updateWishlistItemParams = {
         productCode,

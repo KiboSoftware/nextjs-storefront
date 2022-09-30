@@ -28,7 +28,7 @@ import { HeaderAction, KiboLogo } from '@/components/common'
 import { MyStoreDialog, StoreLocatorDialog } from '@/components/dialogs'
 import { MegaMenu, HamburgerMenu, SearchSuggestions, LoginDialog } from '@/components/layout'
 import { useAuthContext, useModalContext } from '@/context'
-import { useCartQueries, useCategoryTree, usePurchaseLocation } from '@/hooks'
+import { useCartQueries, useCategoryTreeQueries, usePurchaseLocationQueries } from '@/hooks'
 import { setPurchaseLocationCookie } from '@/lib/helpers'
 import type { LocationCustom, NavigationLink } from '@/lib/types'
 
@@ -203,7 +203,7 @@ const HeaderActions = (props: HeaderActionsProps) => {
   const itemCount = cart?.items?.length || 0
   const { showModal, closeModal } = useModalContext()
 
-  const { data: location } = usePurchaseLocation()
+  const { data: location } = usePurchaseLocationQueries()
 
   const gotoCart = () => {
     router.push('/cart')
@@ -314,7 +314,7 @@ const HeaderActions = (props: HeaderActionsProps) => {
 
 export default function KiboHeader(props: KiboHeaderProps) {
   const { navLinks, categoriesTree: initialCategoryTree, sticky } = props
-  const { data: categoriesTree } = useCategoryTree(initialCategoryTree)
+  const { data: categoriesTree } = useCategoryTreeQueries(initialCategoryTree)
   const kiboTheme = useTheme()
   const isMobileViewport = useMediaQuery(kiboTheme.breakpoints.down('md'))
 

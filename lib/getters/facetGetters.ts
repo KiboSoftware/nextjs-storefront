@@ -1,5 +1,5 @@
 import { FacetListForHistory, FacetTypeForHistory } from '../constants'
-import { buildBreadcrumbs, uiHelpers } from '@/lib/helpers'
+import { buildBreadcrumbsParams, uiHelpers } from '@/lib/helpers'
 import type { BreadCrumb, FacetResultsData } from '@/lib/types'
 
 import type { Facet, FacetValue, PrCategory } from '@/lib/gql/types'
@@ -15,7 +15,7 @@ const getBreadcrumbs = (searchData: { categories: PrCategory[] }): BreadCrumb[] 
   if (!searchData?.categories?.[0]) {
     return homeCrumb
   }
-  const categoryCrumbs = buildBreadcrumbs(searchData?.categories[0]).map((b) => ({
+  const categoryCrumbs = buildBreadcrumbsParams(searchData?.categories[0]).map((b) => ({
     ...b,
     link: getCategoryLink(b?.link as string),
   }))

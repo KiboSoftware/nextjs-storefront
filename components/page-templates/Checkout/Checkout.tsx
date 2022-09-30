@@ -19,7 +19,7 @@ import { OrderConfirmation } from '@/components/order'
 import { useCheckoutStepContext, STEP_STATUS, useAuthContext } from '@/context'
 import {
   useCheckoutQueries,
-  useCustomerContacts,
+  useCustomerContactsQueries,
   useUpdateOrderCouponMutation,
   useDeleteOrderCouponMutation,
 } from '@/hooks'
@@ -52,7 +52,7 @@ const Checkout = (props: CheckoutProps) => {
   })
 
   const { isAuthenticated, user } = useAuthContext()
-  const { data: savedUserAddressData, isSuccess } = useCustomerContacts(user?.id as number)
+  const { data: savedUserAddressData, isSuccess } = useCustomerContactsQueries(user?.id as number)
   const updateOrderCoupon = useUpdateOrderCouponMutation()
   const deleteOrderCoupon = useDeleteOrderCouponMutation()
 

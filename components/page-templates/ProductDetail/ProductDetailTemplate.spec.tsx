@@ -69,7 +69,7 @@ jest.mock('@/hooks', () => ({
       currentProduct: mockProduct,
     }
   }),
-  useCartMutationAddToCart: jest.fn(() => {
+  useAddToCartMutation: jest.fn(() => {
     return {
       addToCart: mockProduct,
     }
@@ -89,11 +89,11 @@ jest.mock('@/hooks', () => ({
   useCreateWishlistMutation: jest.fn(() => mockCreateWishlist),
   useAddToWishlistMutation: jest.fn(() => mockWishlist?.items[0]),
   useRemoveWishlistItemMutation: jest.fn(() => true),
-  usePurchaseLocation: jest.fn(() => ({})),
+  usePurchaseLocationQueries: jest.fn(() => ({})),
   useModalContext: jest.fn(() => ({})),
-  useProducts: jest.fn(() => mockProductSearch),
-  useStoreLocations: jest.fn(() => ({ mockLocationsResponse })),
-  useProductLocationInventory: jest.fn(() => mockInventory),
+  useProductsQueries: jest.fn(() => mockProductSearch),
+  useStoreLocationsQueries: jest.fn(() => ({ mockLocationsResponse })),
+  useProductLocationInventoryQueries: jest.fn(() => mockInventory),
 }))
 
 const setup = () => {

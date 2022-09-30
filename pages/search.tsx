@@ -6,7 +6,7 @@ import getConfig from 'next/config'
 import { useRouter } from 'next/router'
 
 import { ProductListingTemplate } from '@/components/page-templates'
-import { useProductSearch } from '@/hooks'
+import { useProductSearchQueries } from '@/hooks'
 import { productSearch } from '@/lib/api/operations'
 import { facetGetters, productSearchGetters } from '@/lib/getters'
 import type { CategorySearchParams } from '@/lib/types'
@@ -42,7 +42,10 @@ const SearchPage: NextPage<SearchPageType> = (props) => {
     router.query as unknown as CategorySearchParams
   )
 
-  const { data: searchPageResults, isFetching } = useProductSearch(searchParams, props.results)
+  const { data: searchPageResults, isFetching } = useProductSearchQueries(
+    searchParams,
+    props.results
+  )
 
   const breadcrumbs = [{ text: 'Home', link: '/' }]
   const searchPageHeading = router?.query?.search

@@ -1,7 +1,7 @@
 import getConfig from 'next/config'
 
 import { FulfillmentOptions } from '../constants'
-import { buildBreadcrumbs, uiHelpers } from '@/lib/helpers'
+import { buildBreadcrumbsParams, uiHelpers } from '@/lib/helpers'
 import type { ProductCustom, BreadCrumb, ProductProperties, FulfillmentOption } from '@/lib/types'
 
 import type {
@@ -64,7 +64,7 @@ const getBreadcrumbs = (product: Product | ProductCustom): BreadCrumb[] => {
   if (!product?.categories?.[0]) {
     return homeCrumb
   }
-  const productCrumbs = buildBreadcrumbs(product?.categories[0]).map((b) => ({
+  const productCrumbs = buildBreadcrumbsParams(product?.categories[0]).map((b) => ({
     ...b,
     link: getCategoryLink(b?.link as string),
   }))

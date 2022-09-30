@@ -120,7 +120,7 @@ describe('[components] (LoginContent)', () => {
   })
 })
 
-const loginInputs = async (user: UserEvent) => {
+const loginInputs = async (user: any) => {
   const emailInput = screen.getByRole('textbox', { name: 'email' })
   const passwordInput = screen.getByLabelText('password')
 

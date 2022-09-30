@@ -31,7 +31,7 @@ jest.mock('../../checkout/ReviewStep/ReviewStep', () => ReviewStepMock)
 jest.mock('@/hooks', () => ({
   useCheckoutQueries: jest.fn(() => ({})),
   useUpdateCheckout: jest.fn(() => ({})),
-  useCustomerContacts: jest.fn(() => ({})),
+  useCustomerContactsQueries: jest.fn(() => ({})),
   useUpdateOrderCouponMutation: jest.fn(() => ({})),
   useDeleteOrderCouponMutation: jest.fn(() => ({})),
 }))

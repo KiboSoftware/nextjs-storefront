@@ -20,7 +20,7 @@ import Link from 'next/link'
 import { useRouter } from 'next/router'
 
 import SearchBar from '@/components/common/SearchBar/SearchBar'
-import { useDebounce, useSearchSuggestions } from '@/hooks'
+import { useDebounce, useSearchSuggestionsQueries } from '@/hooks'
 
 const style = {
   paper: {
@@ -100,7 +100,7 @@ const SearchSuggestions = (props: SearchSuggestionsProps) => {
     handleClose()
   }
 
-  const searchSuggestionResult = useSearchSuggestions(
+  const searchSuggestionResult = useSearchSuggestionsQueries(
     useDebounce(searchTerm.trim(), publicRuntimeConfig.debounceTimeout)
   )
 

@@ -7,10 +7,9 @@ import { useTranslation } from 'next-i18next'
 import { ShippingMethod } from '@/components/checkout'
 import { AddressDetailsView, AddressForm } from '@/components/common'
 import { useCheckoutStepContext, STEP_STATUS } from '@/context'
-import { useUpdateCheckoutShippingInfo, useShippingMethods } from '@/hooks'
+import { useUpdateCheckoutShippingInfoMutation, useShippingMethodsQueries } from '@/hooks'
 import { DefaultId } from '@/lib/constants'
 import { checkoutGetters, userAddressGetters } from '@/lib/getters'
-import { buildCheckoutShippingParams, ShippingParams } from '@/lib/helpers'
 
 import type { Order, CrOrderItem, Contact, CustomerContact } from '@/lib/gql/types'
 
@@ -79,8 +78,8 @@ const ShippingStep = (props: ShippingProps) => {
     setStepStatusComplete,
     setStepStatusIncomplete,
   } = useCheckoutStepContext()
-  const updateCheckoutShippingInfo = useUpdateCheckoutShippingInfo()
-  const { data: shippingMethods } = useShippingMethods(
+  const updateCheckoutShippingInfo = useUpdateCheckoutShippingInfoMutation()
+  const { data: shippingMethods } = useShippingMethodsQueries(
     checkoutId,
     isNewAddressAdded,
     selectedShippingAddressId
@@ -88,13 +87,9 @@ const ShippingStep = (props: ShippingProps) => {
 
   const handleAddressValidationAndSave = () => setValidateForm(true)
 
-  const updateShippingInfo = async (params: ShippingParams) =>
-    await updateCheckoutShippingInfo.mutateAsync(params)
-
   const handleSaveAddress = async ({ contact }: { contact: Contact }) => {
-    const params = buildCheckoutShippingParams({ checkout, contact: contact })
     try {
-      await updateShippingInfo(params)
+      await updateCheckoutShippingInfo.mutateAsync({ checkout, contact })
       setCheckoutId(checkout?.id)
       setSelectedShippingAddressId((contact?.id as number) || DefaultId.ADDRESSID)
       setShouldShowAddAddressButton(true)
@@ -114,16 +109,14 @@ const ShippingStep = (props: ShippingProps) => {
       (method) => method.shippingMethodCode === shippingMethodCode
     )?.shippingMethodName as string
 
-    const params = buildCheckoutShippingParams({
-      checkout,
-      contact: undefined,
-      email: undefined,
-      shippingMethodCode,
-      shippingMethodName,
-    })
-
     try {
-      await updateShippingInfo(params)
+      await updateCheckoutShippingInfo.mutateAsync({
+        checkout,
+        contact: undefined,
+        email: undefined,
+        shippingMethodCode,
+        shippingMethodName,
+      })
       shippingAddressRef.current &&
         (shippingAddressRef.current as Element).scrollIntoView({
           behavior: 'smooth',

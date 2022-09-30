@@ -1,5 +1,3 @@
-import { SignalCellularNullSharp } from '@mui/icons-material'
-
 import { getCheckout } from '@/lib/api/operations'
 import * as util from '@/lib/api/util'
 import { getCheckoutQuery } from '@/lib/gql/queries'

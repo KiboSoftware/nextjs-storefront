@@ -22,11 +22,11 @@ import { useModalContext } from '@/context'
 import {
   useCartQueries,
   useCreateFromCartMutation,
-  useStoreLocations,
-  usePurchaseLocation,
-  useCartMutationUpdateCartItemQuantity,
-  useCartMutationRemoveCartItem,
-  useCartMutationUpdateCartItem,
+  useStoreLocationsQueries,
+  usePurchaseLocationQueries,
+  useUpdateCartItemQuantityMutation,
+  useRemoveCartItemMutation,
+  useUpdateCartItemMutation,
   useUpdateCartCouponMutation,
   useDeleteCartCouponMutation,
 } from '@/hooks'
@@ -65,9 +65,9 @@ const CartTemplate = (props: CartTemplateProps) => {
   const isMobileViewport = useMediaQuery(theme.breakpoints.down('md'))
   const router = useRouter()
   const { createFromCart } = useCreateFromCartMutation()
-  const { updateCartItemQuantity } = useCartMutationUpdateCartItemQuantity()
-  const { removeCartItem } = useCartMutationRemoveCartItem()
-  const { updateCartItem } = useCartMutationUpdateCartItem()
+  const { updateCartItemQuantity } = useUpdateCartItemQuantityMutation()
+  const { removeCartItem } = useRemoveCartItemMutation()
+  const { updateCartItem } = useUpdateCartItemMutation()
   const { showModal, closeModal } = useModalContext()
 
   const cartItemCount = checkoutGetters.getCartItemCount(cart)
@@ -79,8 +79,8 @@ const CartTemplate = (props: CartTemplateProps) => {
   const cartTotal = checkoutGetters.getTotal(cart)
   const locationCodes = checkoutGetters.getFulfillmentLocationCodes(cartItems)
 
-  const { data: locations } = useStoreLocations({ filter: locationCodes })
-  const { data: purchaseLocation } = usePurchaseLocation()
+  const { data: locations } = useStoreLocationsQueries({ filter: locationCodes })
+  const { data: purchaseLocation } = usePurchaseLocationQueries()
   const updateCartCoupon = useUpdateCartCouponMutation()
   const deleteCartCoupon = useDeleteCartCouponMutation()
   const [promoError, setPromoError] = useState<string>('')
