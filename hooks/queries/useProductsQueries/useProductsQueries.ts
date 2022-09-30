@@ -36,7 +36,10 @@ export const useProductsQueries = (productCodes: ProductCodes[]): UseProductsRes
   }) as CategorySearchParams
   const { data, isLoading, isSuccess, isFetching } = useQuery(
     productSearchResultKeys.searchParams(searchParams),
-    () => fetchProductSearch(searchParams)
+    () => fetchProductSearch(searchParams),
+    {
+      enabled: !!searchParams.filter,
+    }
   )
 
   return { data, isLoading, isSuccess, isFetching }

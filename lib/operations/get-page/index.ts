@@ -41,17 +41,26 @@ const getContentfulPage = async (productCode: string) => {
   }
 }
 
-const getAmpliencePage = async () => {
-  const response = await amplience.fetchHomePage()
-  const pageData = amplienceGetters.getAmpliencePageData(response?.contentTypes)
-  return { components: pageData }
+const getAmpliencePage = async (productCode?: string) => {
+  if (productCode) {
+    const response = await amplience.fetchProductDetails(productCode)
+    const pageData = response && amplienceGetters.getAmplienceProductDetailsPageData(response)
+    return { components: pageData || [] }
+  } else {
+    const response = await amplience.fetchHomePage()
+    const pageData =
+      response &&
+      response?.contentTypes &&
+      amplienceGetters.getAmplienceHomePageData(response?.contentTypes)
+    return { components: pageData || [] }
+  }
 }
 
 export const getPage = async (params: PageProps) => {
   const currentCMS = publicRuntimeConfig.cms || ''
   if (currentCMS === CMS.CONTENTSTACK) return getContentStackPage(params)
   if (currentCMS === CMS.CONTENTFUL) return getContentfulPage(params.entryUrl)
-  if (currentCMS === CMS.AMPLIENCE) return getAmpliencePage()
+  if (currentCMS === CMS.AMPLIENCE) return getAmpliencePage(params.entryUrl)
 
   return {
     components: [],

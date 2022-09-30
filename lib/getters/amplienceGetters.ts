@@ -1,3 +1,7 @@
+import getConfig from 'next/config'
+
+const { publicRuntimeConfig } = getConfig()
+
 const formatLinkData = (links: any) => {
   const { link: title, url: href } = links
   return { title, href }
@@ -78,28 +82,67 @@ const formatSmallPromoBlocksData = (smallPromoBlocksData: any) => ({
   },
 })
 
-const getAmpliencePageData = (ampliencePageData: any) => {
+const getAmplienceHomePageData = (ampliencePageData: any) => {
   const smallBanner = formatSmallBannerData(
-    ampliencePageData?.find((data: any) => data?._meta?.name === 'Kibo Simple Banner')
+    ampliencePageData?.find(
+      (data: any) =>
+        data?._meta?.name === publicRuntimeConfig.amplience?.homePageContentTypes?.smallBanner
+    )
   )
   const heroCarousel = formatHeroCarouselData(
-    ampliencePageData?.find((data: any) => data?._meta?.name === 'Kibo Hero Carousel Demo')
+    ampliencePageData?.find(
+      (data: any) =>
+        data?._meta?.name === publicRuntimeConfig.amplience?.homePageContentTypes?.heroCarousel
+    )
   )
 
   const homePageProducts = formatHomePageProductsData(
-    ampliencePageData?.find((data: any) => data?._meta?.name === 'Home Page Products')
+    ampliencePageData?.find(
+      (data: any) =>
+        data?._meta?.name === publicRuntimeConfig.amplience?.homePageContentTypes?.homePageProducts
+    )
   )
 
   const largePromoBlocks = formatLargePromoBlocksData(
-    ampliencePageData?.find((data: any) => data?._meta?.name === 'Large promo blocks')
+    ampliencePageData?.find(
+      (data: any) =>
+        data?._meta?.name === publicRuntimeConfig.amplience?.homePageContentTypes?.largePromoBlocks
+    )
   )
 
   const smallPromoBlocks = formatSmallPromoBlocksData(
-    ampliencePageData?.find((data: any) => data?._meta?.name === 'Small promo blocks')
+    ampliencePageData?.find(
+      (data: any) =>
+        data?._meta?.name === publicRuntimeConfig.amplience?.homePageContentTypes?.smallPromoBlocks
+    )
   )
   return [smallBanner, heroCarousel, homePageProducts, largePromoBlocks, smallPromoBlocks]
 }
 
+const formatAmplienceProductDetailsData = (cmsProducts: any) => {
+  const recommendations = {
+    recommendations: {
+      title: cmsProducts?.recommendations?.title,
+      product_recommendations: cmsProducts?.recommendations?.productSelector?.map(
+        (productCode: string) => ({ productCode })
+      ),
+    },
+  }
+  const customersAlsoBought = {
+    customers_also_bought: {
+      title: cmsProducts?.customersAlsoBought?.title,
+      customer_also_bought: cmsProducts?.customersAlsoBought?.productSelector.map(
+        (productCode: string) => ({ productCode })
+      ),
+    },
+  }
+  return [recommendations, customersAlsoBought]
+}
+
+const getAmplienceProductDetailsPageData = (amplienceProductData: any) =>
+  formatAmplienceProductDetailsData(amplienceProductData)
+
 export const amplienceGetters = {
-  getAmpliencePageData,
+  getAmplienceHomePageData,
+  getAmplienceProductDetailsPageData,
 }
