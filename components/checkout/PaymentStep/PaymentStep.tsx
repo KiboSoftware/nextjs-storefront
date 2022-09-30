@@ -282,7 +282,7 @@ const PaymentStep = (props: PaymentStepProps) => {
         numberPart: cardNumberPart,
       }
 
-      const isSameAsShipping = addressGetters.getIsSameBillingShippingAddress(
+      const isSameAsShipping = addressGetters.getIsBillingShippingAddressSame(
         selectedPaymentMethod?.billingAddressInfo
       )
 

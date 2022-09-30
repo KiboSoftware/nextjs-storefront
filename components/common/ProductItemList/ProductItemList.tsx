@@ -43,9 +43,9 @@ const ProductItemList = (props: ProductItemListProps) => {
         return (
           <Stack key={item?.id}>
             <ProductItem
-              id={orderGetters.getCartItemId(item)}
-              qty={orderGetters.getProductQuantity(item)}
-              purchaseLocation={orderGetters.getPurchaseLocation(item)}
+              id={orderGetters.getCartItemId(item as CrOrderItem)}
+              qty={orderGetters.getProductQuantity(item as CrOrderItem)}
+              purchaseLocation={orderGetters.getPurchaseLocation(item as CrOrderItem)}
               productCode={productGetters.getProductId(product)}
               image={productGetters.getProductImage(product)}
               name={productGetters.getName(product)}

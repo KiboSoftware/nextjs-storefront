@@ -1,5 +1,6 @@
-import { Card, PaymentCard } from '../gql/types'
 import type { SavedCard, TokenizedCard } from '@/lib/types'
+
+import type { Card, PaymentCard } from '../gql/types'
 
 type GenericCard = SavedCard | Card
 // cards

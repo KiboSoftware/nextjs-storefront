@@ -34,7 +34,7 @@ import { FulfillmentOptions } from '@/lib/constants'
 import { orderGetters, cartGetters } from '@/lib/getters'
 import type { LocationCustom } from '@/lib/types'
 
-import type { Cart, Location, CartItemInput } from '@/lib/gql/types'
+import type { Cart, Location, CartItemInput, CartItem } from '@/lib/gql/types'
 
 export interface CartTemplateProps {
   cart: Cart
@@ -77,7 +77,7 @@ const CartTemplate = (props: CartTemplateProps) => {
   const cartShippingTotal = orderGetters.getShippingTotal(cart)
   const cartTaxTotal = orderGetters.getTaxTotal(cart)
   const cartTotal = orderGetters.getTotal(cart)
-  const locationCodes = orderGetters.getFulfillmentLocationCodes(cartItems)
+  const locationCodes = orderGetters.getFulfillmentLocationCodes(cartItems as CartItem[])
 
   const { data: locations } = useStoreLocationsQueries({ filter: locationCodes })
   const { data: purchaseLocation } = usePurchaseLocationQueries()

@@ -90,13 +90,11 @@ const OrderReview = (props: OrderReviewProps) => {
 
   const shippingPersonalDetails = {
     firstName: shippingDetails?.firstName,
-    middleNameOrInitial: shippingDetails?.middleNameOrInitial,
     lastNameOrSurname: shippingDetails?.lastNameOrSurname,
   }
 
   const billingPersonalDetails = {
     firstName: billingDetails?.firstName,
-    middleNameOrInitial: billingDetails?.middleNameOrInitial,
     lastNameOrSurname: billingDetails?.lastNameOrSurname,
   }
 

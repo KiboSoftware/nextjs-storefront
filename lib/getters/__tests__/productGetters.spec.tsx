@@ -24,43 +24,11 @@ describe('[getters] productGetters', () => {
     expect(productGetters.getProductId(ProductCustomMock)).toBe(ProductCustomMock?.productCode)
   })
 
-  it('should return the product variation product code or code', () => {
-    expect(productGetters.getVariationProductCodeOrProductCode(ProductCustomMock)).toBe(
-      ProductCustomMock?.variationProductCode
-    )
-  })
-
-  it('should return the product total reviews', () => {
-    expect(productGetters.getProductTotalReviews()).toBe(0)
-  })
-
   it('should return the product price', () => {
     expect(productGetters.getPrice(ProductCustomMock)).toStrictEqual({
       regular: 2300,
       special: null,
     })
-  })
-
-  it('should return the product price range', () => {
-    expect(productGetters.getPriceRange(ProductCustomMock)).toBeNull()
-  })
-
-  it('should return the product description', () => {
-    expect(productGetters.getDescription(ProductCustomMock)).toStrictEqual(
-      ProductCustomMock?.content?.productFullDescription
-    )
-  })
-
-  it('should return the product short description', () => {
-    expect(productGetters.getShortDescription(ProductCustomMock)).toStrictEqual(
-      ProductCustomMock?.content?.productShortDescription
-    )
-  })
-
-  it('should return the product Gallery', () => {
-    expect(productGetters.getProductGallery(ProductCustomMock)).toStrictEqual(
-      ProductCustomMock.content?.productImages
-    )
   })
 
   it('should return the product breadcrumbs', () => {
@@ -79,21 +47,6 @@ describe('[getters] productGetters', () => {
       },
     ]
     expect(productGetters.getBreadcrumbs(ProductCustomMock)).toStrictEqual(breadcrumbs)
-  })
-
-  it('should return the product properties', () => {
-    const properties = [
-      {
-        name: 'Product Cross-Sells',
-        value: 'BIKE1, BIKE2, BOT1',
-      },
-      {
-        name: 'Popularity',
-        value: '1',
-      },
-    ]
-
-    expect(productGetters.getProperties(ProductCustomMock)).toStrictEqual(properties)
   })
 
   it('should return the product selected option value', () => {
@@ -138,31 +91,6 @@ describe('[getters] productGetters', () => {
 
   it('should return the product options', () => {
     expect(productGetters.getOptions(ProductCustomMock)).toStrictEqual(ProductCustomMock.options)
-  })
-
-  it('should return the product segregated options', () => {
-    if (ProductCustomMock.options) {
-      const segregatedOptions = {
-        colourOptions: ProductCustomMock.options[0],
-        sizeOptions: ProductCustomMock.options[1],
-        selectOptions: [ProductCustomMock.options[2]],
-        yesNoOptions: [ProductCustomMock.options[3]],
-        textBoxOptions: [ProductCustomMock.options[4]],
-      }
-      expect(productGetters.getSegregatedOptions(ProductCustomMock)).toStrictEqual(
-        segregatedOptions
-      )
-    }
-  })
-
-  it('should return the product fulfillment method', () => {
-    expect(productGetters.getSelectedFulfillmentOption(ProductCustomMock)).toBe(
-      ProductCustomMock.fulfillmentMethod
-    )
-  })
-
-  it('should return if the product is validated to add to cart', () => {
-    expect(productGetters.validateAddToCart(ProductCustomMock)).toBeTruthy()
   })
 
   it('should return url added with protocol if not provided', () => {

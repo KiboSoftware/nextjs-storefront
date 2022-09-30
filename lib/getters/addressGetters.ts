@@ -43,31 +43,18 @@ const getAddress = (address: GenericAddress | null) => {
     stateOrProvince: getStateOrProvince(address),
   }
 }
-const getFirstName = (billingData?: GenericContact): string => billingData?.firstName || ''
+const getFirstName = (contact?: GenericContact): string => contact?.firstName || ''
 
-const getLastNameOrSurname = (billingData?: GenericContact): string =>
-  billingData?.lastNameOrSurname || ''
+const getLastNameOrSurname = (contact?: GenericContact): string => contact?.lastNameOrSurname || ''
 
-const getPhoneNumbers = (billingData?: GenericContact) =>
-  getContactNumbers(billingData?.phoneNumbers)
+const getPhoneNumbers = (contact?: GenericContact) => getContactNumbers(contact?.phoneNumbers)
 
-const getEmail = (billingData?: GenericContact): string => billingData?.email || ''
+const getEmail = (contact?: GenericContact): string => contact?.email || ''
 
-const getId = (billingData?: GenericContact) => billingData?.id || 0
+const getContactId = (contact?: GenericContact) => contact?.id || 0
 
-const getBillingDetails = (billingData?: GenericContact) => {
-  return {
-    firstName: getFirstName(billingData),
-    lastNameOrSurname: getLastNameOrSurname(billingData),
-    address: getAddress(billingData?.address as GenericAddress),
-    phoneNumbers: getPhoneNumbers(billingData),
-    email: getEmail(billingData),
-    id: getId(billingData),
-  }
-}
-
-const getIsSameBillingShippingAddress = (billingData?: SavedBillingAddress): boolean =>
-  Boolean(billingData?.isSameBillingShippingAddress)
+const getIsBillingShippingAddressSame = (data?: SavedBillingAddress): boolean =>
+  Boolean(data?.isSameBillingShippingAddress)
 
 const getStorePickupAddress = (
   pickupAddresses: LocationCustom[],
@@ -87,7 +74,9 @@ export const addressGetters = {
   getStateOrProvince,
   getFirstName,
   getLastNameOrSurname,
-  getBillingDetails,
-  getIsSameBillingShippingAddress,
+  getIsBillingShippingAddressSame,
   getStorePickupAddress,
+  getPhoneNumbers,
+  getEmail,
+  getContactId,
 }

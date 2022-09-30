@@ -26,15 +26,16 @@ const { publicRuntimeConfig } = getConfig()
 
 type GenericProduct = Product | ProductCustom | CrProduct
 
-function isCrProduct(product: GenericProduct): product is CrProduct {
-  return (product as CrProduct).name !== undefined
-}
-
 const getName = (product: GenericProduct): string => {
-  if (isCrProduct(product)) {
+  if ('name' in product) {
     return product.name || ''
   }
-  return product?.content?.productName || ''
+
+  if ('content' in product) {
+    return product?.content?.productName || ''
+  }
+
+  return ''
 }
 
 const getProductId = (product: GenericProduct): string => product?.productCode || ''
@@ -45,8 +46,6 @@ const getRating = (product: Product | ProductCustom) => {
   )?.values
   return attr?.[0]?.value
 }
-
-const getProductTotalReviews = (): number => 0
 
 const getPrice = (product: GenericProduct): { regular: number; special: number } => {
   return {
@@ -294,29 +293,17 @@ const getAvailableItemCount = (
 export const productGetters = {
   getName,
   getRating,
-  getProductTotalReviews,
   getPrice,
-  getPriceRange,
-  getDescription,
-  getShortDescription,
-  getProductGallery,
   getBreadcrumbs,
-  getProperties,
   getOptionSelectedValue,
   getOptionName,
   getOptions,
-  getSegregatedOptions,
-  getSelectedFulfillmentOption,
   getCoverImage,
   getProductId,
-  validateAddToCart,
-  getVariationProductCodeOrProductCode,
   handleProtocolRelativeUrl,
   getProductFulfillmentOptions,
-  getIsPackagedStandAlone,
   getAvailableItemCount,
   isVariationProduct,
   getProductImage,
-  // grouped
   getProductDetails,
 }

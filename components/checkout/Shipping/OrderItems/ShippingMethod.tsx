@@ -78,7 +78,7 @@ const ShipItemList = (shipProps: ShipItemListProps) => {
 const PickupItemList = (pickupProps: PickupItemListProps) => {
   const { pickupItems, onClickChangeStore } = pickupProps
   const { t } = useTranslation('common')
-  const expectedDeliveryDate = orderGetters.getExpectedDeliveryDate(pickupItems)
+  const expectedDeliveryDate = orderGetters.getExpectedDeliveryDate(pickupItems as CrOrderItem[])
   const isPickupItem = pickupItems.length > 0
   return (
     <Box data-testid="pickup-items">

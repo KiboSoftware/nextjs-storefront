@@ -18,6 +18,9 @@ const getSavedCards = (customerAccountCards: CardCollection): Card[] =>
   customerAccountCards ? (customerAccountCards?.items as Card[]) : []
 
 const getAddresses = (addresses: CustomerContact[], addressType: string): CustomerContact[] => {
+  if (!addresses?.length) {
+    return []
+  }
   return addresses
     ?.filter(
       (item: CustomerContact) =>
@@ -26,12 +29,11 @@ const getAddresses = (addresses: CustomerContact[], addressType: string): Custom
     ?.sort((a: any, b: any) => b?.types[0]?.isPrimary - a?.types[0]?.isPrimary)
 }
 
-const getUserShippingAddress = (addresses: CustomerContact[]): CustomerContact[] | undefined => {
-  if (addresses?.length) return getAddresses(addresses, AddressType.SHIPPING)
-}
-const getUserBillingAddresses = (addresses: CustomerContact[]): CustomerContact[] | undefined => {
-  if (addresses?.length) if (addresses?.length) return getAddresses(addresses, AddressType.BILLING)
-}
+const getUserShippingAddress = (addresses: CustomerContact[]): CustomerContact[] | undefined =>
+  getAddresses(addresses, AddressType.SHIPPING)
+
+const getUserBillingAddresses = (addresses: CustomerContact[]): CustomerContact[] | undefined =>
+  getAddresses(addresses, AddressType.BILLING)
 
 const getSavedCardsAndBillingDetails = (
   customerAccountCards: CardCollection,
@@ -73,14 +75,6 @@ const getFullName = (user: CustomerAccount) => `${getFirstName(user)} ${getLastN
 const getEmailAddress = (user: CustomerAccount) => user?.emailAddress || ''
 
 const getUserId = (user: CustomerAccount) => user?.id
-
-const getPersonalDetails = (user: CustomerAccount) => ({
-  firstName: getFirstName(user),
-  lastName: getLastName(user),
-  emailAddress: getEmailAddress(user),
-  fullName: getFullName(user),
-  id: getUserId(user),
-})
 
 const getAllShippingAddresses = (
   checkoutShippingContact: Contact,
@@ -125,7 +119,6 @@ export const userGetters = {
   getUserShippingAddress,
   getUserBillingAddresses,
   getSavedAddresses,
-  getSavedCards,
   getSavedCardsAndBillingDetails,
   getDefaultPaymentBillingMethod,
 
@@ -134,7 +127,6 @@ export const userGetters = {
   getFullName,
   getEmailAddress,
   getUserId,
-  getPersonalDetails,
   getAllShippingAddresses,
   getDefaultShippingAddress,
   getOtherShippingAddress,
