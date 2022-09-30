@@ -1,9 +1,10 @@
 import getConfig from 'next/config'
 
 import Stack from '../../cms/content-stack'
+import amplience from '@/lib/cms/amplience'
 import contentful from '@/lib/cms/contentful'
 import { CMS } from '@/lib/constants'
-import { contentfulGetters } from '@/lib/getters'
+import { contentfulGetters, amplienceGetters } from '@/lib/getters'
 
 interface PageProps {
   contentTypeUid: string
@@ -40,10 +41,17 @@ const getContentfulPage = async (productCode: string) => {
   }
 }
 
+const getAmpliencePage = async () => {
+  const response = await amplience.fetchHomePage()
+  const pageData = amplienceGetters.getAmpliencePageData(response?.contentTypes)
+  return { components: pageData }
+}
+
 export const getPage = async (params: PageProps) => {
   const currentCMS = publicRuntimeConfig.cms || ''
   if (currentCMS === CMS.CONTENTSTACK) return getContentStackPage(params)
   if (currentCMS === CMS.CONTENTFUL) return getContentfulPage(params.entryUrl)
+  if (currentCMS === CMS.AMPLIENCE) return getAmpliencePage()
 
   return {
     components: [],
