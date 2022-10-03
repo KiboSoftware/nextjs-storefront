@@ -12,8 +12,8 @@ const { Common } = composeStories(stories)
 
 const orderPriceMock = () => <div data-testid="order-price-component" />
 const productItemListMock = () => <div data-testid="product-item-stack" />
-jest.mock('@/components/common/OrderPrice/OrderPrice', () => orderPriceMock)
-jest.mock('@/components/common/ProductItemList/ProductItemList', () => productItemListMock)
+jest.mock('@/components/common/OrderPrice/OrderPrice', () => () => orderPriceMock())
+jest.mock('@/components/common/ProductItemList/ProductItemList', () => () => productItemListMock())
 
 const setup = (isAuthenticated = false) => {
   const user = userEvent.setup()

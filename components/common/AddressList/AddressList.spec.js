@@ -10,10 +10,10 @@ import { userGetters } from '@/lib/getters'
 const { Common, Radio } = composeStories(stories)
 
 const KiboAddressListMock = () => <div data-testid="address-card-list-mock" />
-jest.mock('@/components/common/AddressCard/AddressCard', () => KiboAddressListMock)
+jest.mock('@/components/common/AddressCard/AddressCard', () => () => KiboAddressListMock())
 
 const KiboRadioAddressListMock = () => <div data-testid="address-card-list-radio-mock" />
-jest.mock('@/components/common/KiboRadio/KiboRadio', () => KiboRadioAddressListMock)
+jest.mock('@/components/common/KiboRadio/KiboRadio', () => () => KiboRadioAddressListMock())
 const userShippingAddress = userGetters.getUserShippingAddress(userAddressResponse?.items)
 
 describe('[component] - AddressList', () => {

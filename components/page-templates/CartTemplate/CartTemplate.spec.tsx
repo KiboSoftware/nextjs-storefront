@@ -11,13 +11,17 @@ import * as stories from './CartTemplate.stories'
 import { server } from '@/__mocks__/msw/server'
 import { createMockRouter, renderWithQueryClient } from '@/__test__/utils'
 import { ModalContextProvider, DialogRoot } from '@/context'
-const CartItemListMock = ({ children }: { children: ReactNode }) => (
-  <div data-testid="cart-item-list-mock">{children}</div>
-)
-const OrderSummaryMock = () => <div data-testid="order-summary-mock" />
 
-jest.mock('../../cart/CartItemList/CartItemList', () => CartItemListMock)
-jest.mock('../../common/OrderSummary/OrderSummary', () => OrderSummaryMock)
+jest.mock('../../cart/CartItemList/CartItemList', () => ({
+  __esModule: true,
+  default: ({ children }: { children: ReactNode }) => (
+    <div data-testid="cart-item-list-mock">{children}</div>
+  ),
+}))
+jest.mock('../../common/OrderSummary/OrderSummary', () => ({
+  __esModule: true,
+  default: () => <div data-testid="order-summary-mock" />,
+}))
 
 const { Common } = composeStories(stories)
 const setup = (params?: CartTemplateProps) => {

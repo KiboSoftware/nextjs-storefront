@@ -10,7 +10,7 @@ import * as stories from './MyAccountTemplate.stories' // import all stories fro
 const { Common } = composeStories(stories)
 
 const FullWidthDividerMock = () => <div data-testid="full-width-divider-component" />
-jest.mock('../../common/FullWidthDivider/FullWidthDivider', () => FullWidthDividerMock)
+jest.mock('../../common/FullWidthDivider/FullWidthDivider', () => () => FullWidthDividerMock())
 const useRouter = jest.spyOn(require('next/router'), 'useRouter')
 const push = jest.fn()
 useRouter.mockImplementation(() => ({

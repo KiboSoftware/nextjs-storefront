@@ -14,7 +14,7 @@ const { Common, Empty } = composeStories(stories)
 afterEach(cleanup)
 
 const ProductCardMock = () => <div data-testid="product-card-mock" />
-jest.mock('@/components/product/ProductCard/ProductCard', () => ProductCardMock)
+jest.mock('@/components/product/ProductCard/ProductCard', () => () => ProductCardMock())
 
 const mockWishlist = wishlistMock?.items[0]
 

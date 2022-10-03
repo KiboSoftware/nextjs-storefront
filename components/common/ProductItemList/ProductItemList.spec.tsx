@@ -8,7 +8,7 @@ import type { ProductItemListProps } from './ProductItemList'
 const { Common } = composeStories(stories)
 
 const productItemMock = () => <div data-testid="product-item-component" />
-jest.mock('@/components/common/ProductItem/ProductItem', () => productItemMock)
+jest.mock('@/components/common/ProductItem/ProductItem', () => () => productItemMock())
 
 describe('[component] - ProductItemList', () => {
   const setup = (params?: ProductItemListProps) => {

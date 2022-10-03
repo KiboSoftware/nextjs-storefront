@@ -12,9 +12,9 @@ import type { Location, Maybe } from '@/lib/gql/types'
 const { Common } = composeStories(stories)
 
 const searchBarMock = () => <input data-testid="search-bar-component" name="searchInput" />
-jest.mock('@/components/common/SearchBar/SearchBar', () => searchBarMock)
+jest.mock('@/components/common/SearchBar/SearchBar', () => () => searchBarMock())
 const KiboRadioMock = () => <div data-testid="kibo-radio-mock" />
-jest.mock('@/components/common/KiboRadio/KiboRadio', () => KiboRadioMock)
+jest.mock('@/components/common/KiboRadio/KiboRadio', () => () => KiboRadioMock())
 
 const onStoreByCurrentLocationMock = jest.fn()
 

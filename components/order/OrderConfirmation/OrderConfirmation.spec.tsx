@@ -6,11 +6,11 @@ import * as stories from './OrderConfirmation.stories'
 const { Common } = composeStories(stories)
 
 const orderSummaryMock = () => <div data-testid="order-summary-component" />
-jest.mock('@/components/common/OrderSummary/OrderSummary', () => orderSummaryMock)
+jest.mock('@/components/common/OrderSummary/OrderSummary', () => () => orderSummaryMock())
 const productItemListMock = () => <div data-testid="product-item-list-component" />
-jest.mock('@/components/common/ProductItemList/ProductItemList', () => productItemListMock)
+jest.mock('@/components/common/ProductItemList/ProductItemList', () => () => productItemListMock())
 const productOptionListMock = () => <div data-testid="product-option-list-component" />
-jest.mock('@/components/product/ProductOption/ProductOption', () => productOptionListMock)
+jest.mock('@/components/product/ProductOption/ProductOption', () => () => productOptionListMock())
 
 describe('[component] - ViewOrderDetails', () => {
   const setup = () => {

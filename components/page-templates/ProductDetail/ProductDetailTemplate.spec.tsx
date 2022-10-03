@@ -16,42 +16,48 @@ const { Common, WithMoreDetails } = composeStories(stories)
 afterEach(cleanup)
 
 const ColorSelectorMock = () => <div data-testid="color-selector-mock" />
-jest.mock('@/components/product/ColorSelector/ColorSelector', () => ColorSelectorMock)
+jest.mock('@/components/product/ColorSelector/ColorSelector', () => () => ColorSelectorMock())
 
 const ProductVariantSizeSelectorMock = () => <div data-testid="size-selector-mock" />
 jest.mock(
   '@/components/product/ProductVariantSizeSelector/ProductVariantSizeSelector',
-  () => ProductVariantSizeSelectorMock
+  () => () => ProductVariantSizeSelectorMock()
 )
 
 const ProductOptionCheckboxMock = () => <div data-testid="product-option-checkbox-mock" />
 jest.mock(
   '@/components/product/ProductOptionCheckbox/ProductOptionCheckbox',
-  () => ProductOptionCheckboxMock
+  () => () => ProductOptionCheckboxMock()
 )
 
 const ProductOptionSelectMock = () => <div data-testid="product-option-select-mock" />
 jest.mock(
   '@/components/product/ProductOptionSelect/ProductOptionSelect',
-  () => ProductOptionSelectMock
+  () => () => ProductOptionSelectMock()
 )
 
 const ProductOptionTextBoxMock = () => <div data-testid="product-option-textbox-mock" />
 jest.mock(
   '@/components/product/ProductOptionTextBox/ProductOptionTextBox',
-  () => ProductOptionTextBoxMock
+  () => () => ProductOptionTextBoxMock()
 )
 
 const QuantitySelectorMock = () => <div data-testid="quantity-selector-mock" />
-jest.mock('@/components/common/QuantitySelector/QuantitySelector', () => QuantitySelectorMock)
+jest.mock(
+  '@/components/common/QuantitySelector/QuantitySelector',
+  () => () => QuantitySelectorMock()
+)
 
 const FulfillmentOptionsMock = () => <div data-testid="fulfillment-options-mock" />
-jest.mock('@/components/common/FulfillmentOptions/FulfillmentOptions', () => FulfillmentOptionsMock)
+jest.mock(
+  '@/components/common/FulfillmentOptions/FulfillmentOptions',
+  () => () => FulfillmentOptionsMock()
+)
 
 const ProductInformationMock = () => <div data-testid="product-information-mock" />
 jest.mock(
   '@/components/product/ProductInformation/ProductInformation',
-  () => ProductInformationMock
+  () => () => ProductInformationMock()
 )
 
 const mockProduct = Common?.args?.product

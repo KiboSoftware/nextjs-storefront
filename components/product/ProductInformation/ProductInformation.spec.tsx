@@ -9,7 +9,10 @@ import * as stories from './ProductInformation.stories'
 const { Common } = composeStories(stories)
 
 const productOptionMock = () => <div data-testid="product-option-list-component" />
-jest.mock('@/components/product/ProductOptionList/ProductOptionList', () => productOptionMock)
+jest.mock(
+  '@/components/product/ProductOptionList/ProductOptionList',
+  () => () => productOptionMock()
+)
 
 describe('[component] - ProductInformation', () => {
   const setup = () => {

@@ -10,23 +10,27 @@ import { ModalContextProvider } from '@/context/ModalContext'
 
 const { Common } = composeStories(stories)
 
-const RegisterAccountContentMock = () => <div data-testid="register-account-content-component" />
-const RegisterAccountDialogMock = (props: KiboDialogProps) => {
-  const { Title, Content, Actions } = props
-  return (
-    <div data-testid="register-account-dialog">
-      {Title}
-      <br />
-      {Content}
-      <br />
-      {Actions}
-      <br />
-    </div>
-  )
-}
+jest.mock('@/components/layout/RegisterAccount/Content/Content', () => ({
+  __esModule: true,
+  default: () => <div data-testid="register-account-content-component" />,
+}))
 
-jest.mock('../Content/Content', () => RegisterAccountContentMock)
-jest.mock('../../../common/KiboDialog/KiboDialog', () => RegisterAccountDialogMock)
+jest.mock('@/components/common/KiboDialog/KiboDialog', () => ({
+  __esModule: true,
+  default: (props: KiboDialogProps) => {
+    const { Title, Content, Actions } = props
+    return (
+      <div data-testid="register-account-dialog">
+        {Title}
+        <br />
+        {Content}
+        <br />
+        {Actions}
+        <br />
+      </div>
+    )
+  },
+}))
 
 const renderComponent = () => {
   return render(<Common {...Common.args} />, { wrapper: ModalContextProvider })

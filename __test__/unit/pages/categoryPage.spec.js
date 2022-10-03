@@ -47,7 +47,7 @@ jest.mock('next-i18next/serverSideTranslations', () => ({
 const ProductListingTemplateMock = () => <div data-testid="productListingTemplate-mock" />
 jest.mock(
   '@/components/page-templates/ProductListingTemplate/ProductListingTemplate.tsx',
-  () => ProductListingTemplateMock
+  () => () => ProductListingTemplateMock()
 )
 
 jest.mock('@/lib/api/util/getUserClaimsFromRequest.ts', () => jest.fn(() => null))

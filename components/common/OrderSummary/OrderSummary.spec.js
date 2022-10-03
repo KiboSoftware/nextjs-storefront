@@ -10,7 +10,7 @@ import * as stories from './OrderSummary.stories' // import all stories from the
 const { Checkout } = composeStories(stories)
 
 const orderPriceMock = () => <div data-testid="order-price-component" />
-jest.mock('@/components/common/OrderPrice/OrderPrice', () => orderPriceMock)
+jest.mock('@/components/common/OrderPrice/OrderPrice', () => () => orderPriceMock())
 
 describe('checkout Component', () => {
   it('should render order summary heading', () => {

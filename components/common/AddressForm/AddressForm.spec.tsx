@@ -16,7 +16,7 @@ const KiboTextBoxMock = () => (
     onBlur={onBlurMock}
   />
 )
-jest.mock('../KiboTextBox/KiboTextBox', () => KiboTextBoxMock)
+jest.mock('../KiboTextBox/KiboTextBox', () => () => KiboTextBoxMock())
 
 describe('[components] - AddressForm', () => {
   const setup = () => {

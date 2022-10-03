@@ -7,14 +7,6 @@ import { renderWithQueryClient } from '../../../__test__/utils/renderWithQueryCl
 import * as stories from './Checkout.stories'
 import { CheckoutStepProvider } from '@/context/CheckoutStepContext/CheckoutStepContext'
 
-const KiboStepperMock = ({ children }: { children: ReactNode }) => (
-  <div data-testid="kibo-stepper-mock">{children}</div>
-)
-const DetailsStepMock = () => <div data-testid="checkout-details-mock" />
-const ShippingStepMock = () => <div data-testid="checkout-shipping-mock" />
-const PaymentStepMock = () => <div data-testid="checkout-payment-mock" />
-const ReviewStepMock = () => <div data-testid="checkout-review-mock" />
-
 jest.mock('next/router', () => ({
   useRouter() {
     return {
@@ -22,11 +14,28 @@ jest.mock('next/router', () => ({
     }
   },
 }))
-jest.mock('../../checkout/KiboStepper/KiboStepper', () => KiboStepperMock)
-jest.mock('../../checkout/DetailsStep/DetailsStep', () => DetailsStepMock)
-jest.mock('../../checkout/ShippingStep/ShippingStep', () => ShippingStepMock)
-jest.mock('../../checkout/PaymentStep/PaymentStep', () => PaymentStepMock)
-jest.mock('../../checkout/ReviewStep/ReviewStep', () => ReviewStepMock)
+jest.mock('@/components/checkout/KiboStepper/KiboStepper', () => ({
+  __esModule: true,
+  default: ({ children }: { children: ReactNode }) => (
+    <div data-testid="kibo-stepper-mock">{children}</div>
+  ),
+}))
+jest.mock('@/components/checkout/DetailsStep/DetailsStep', () => ({
+  __esModule: true,
+  default: () => <div data-testid="checkout-details-mock" />,
+}))
+jest.mock('@/components/checkout/ShippingStep/ShippingStep', () => ({
+  __esModule: true,
+  default: () => <div data-testid="checkout-shipping-mock" />,
+}))
+jest.mock('@/components/checkout/PaymentStep/PaymentStep', () => ({
+  __esModule: true,
+  default: () => <div data-testid="checkout-payment-mock" />,
+}))
+jest.mock('@/components/checkout/ReviewStep/ReviewStep', () => ({
+  __esModule: true,
+  default: () => <div data-testid="checkout-review-mock" />,
+}))
 
 jest.mock('@/hooks', () => ({
   useCheckoutQueries: jest.fn(() => ({})),

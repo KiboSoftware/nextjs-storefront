@@ -8,11 +8,11 @@ import WishlistPage, { getServerSideProps } from '@/pages/wishlist'
 const WishlistTemplateMock = () => <div data-testid="wishlistTemplate-mock" />
 jest.mock(
   '@/components/page-templates/WishlistTemplate/WishlistTemplate.tsx',
-  () => WishlistTemplateMock
+  () => () => WishlistTemplateMock()
 )
 
 const LoginDialogMock = () => <div data-testid="loginDialog-mock" />
-jest.mock('@/components/layout/Login/LoginDialog/LoginDialog.tsx', () => LoginDialogMock)
+jest.mock('@/components/layout/Login/LoginDialog/LoginDialog.tsx', () => () => LoginDialogMock())
 
 jest.mock('@/lib/helpers/cookieHelper', () => ({
   decodeParseCookieValue: jest.fn(() => 'kibo_at'),

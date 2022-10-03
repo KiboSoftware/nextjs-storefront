@@ -12,24 +12,26 @@ const onCloseMock = jest.fn()
 const kiboTitleMock = () => <div data-testid="title-component" />
 const kiboContentMock = () => <div data-testid="content-component" />
 const kiboActionsMock = () => <div data-testid="actions-component" />
-const KiboDialogMock = (props: KiboDialogProps) => {
-  const { Title, Content, Actions } = props
-  return (
-    <div data-testid="kibo-dialog">
-      {Title}
-      <br />
-      {Content}
-      <br />
-      {Actions}
-      <br />
-    </div>
-  )
-}
 
-jest.mock('../Title/Title', () => kiboTitleMock)
-jest.mock('../Content/Content', () => kiboContentMock)
-jest.mock('../Actions/Actions', () => kiboActionsMock)
-jest.mock('@/components/common/KiboDialog/KiboDialog', () => KiboDialogMock)
+jest.mock('../Title/Title', () => () => kiboTitleMock())
+jest.mock('../Content/Content', () => () => kiboContentMock())
+jest.mock('../Actions/Actions', () => () => kiboActionsMock())
+jest.mock('@/components/common/KiboDialog/KiboDialog', () => ({
+  __esModule: true,
+  default: (props: KiboDialogProps) => {
+    const { Title, Content, Actions } = props
+    return (
+      <div data-testid="kibo-dialog">
+        {Title}
+        <br />
+        {Content}
+        <br />
+        {Actions}
+        <br />
+      </div>
+    )
+  },
+}))
 
 describe('[components] Add To Cart Dialog', () => {
   const setup = (params = {}) => render(<Common {...params} closeModal={onCloseMock} />)
