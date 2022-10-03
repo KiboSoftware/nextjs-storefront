@@ -1,0 +1,25 @@
+{
+  "blt607e2b2ecdb280a2": {
+    "title": "HKFT_020_REC",
+    "rec_products": [
+      { "productCode": "Hammock_015" },
+      { "productCode": "BackP_002" },
+      { "productCode": "HKFT_018" }
+    ],
+    "product": {},
+    "tags": [],
+    "locale": "en-us",
+    "uid": "blt607e2b2ecdb280a2",
+    "_version": 4,
+    "_in_progress": false,
+    "publish_details": [
+      {
+        "environment": "blt603fad7317f94527",
+        "locale": "en-us",
+        "time": "2022-08-12T08:00:01.208Z",
+        "user": "blt10d62bcb26322317",
+        "version": 4
+      }
+    ]
+  }
+}

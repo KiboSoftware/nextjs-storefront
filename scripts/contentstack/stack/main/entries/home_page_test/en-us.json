@@ -1,0 +1,51 @@
+{
+  "bltb86f1f9cb603ec29": {
+    "title": "Kibo Commerce Home Test",
+    "page_components": [
+      {
+        "small_banner": {
+          "title": "My Title Changed",
+          "_metadata": { "uid": "csc286e04155aa54cb" },
+          "subtitle": "My Subtitle",
+          "call_to_action_link": { "title": "My Link", "href": "/myLink" }
+        }
+      }
+    ],
+    "tags": [],
+    "locale": "en-us",
+    "uid": "bltb86f1f9cb603ec29",
+    "ACL": {},
+    "_version": 2,
+    "_in_progress": false,
+    "publish_details": [
+      {
+        "environment": "blt603fad7317f94527",
+        "locale": "en-us",
+        "time": "2022-09-02T09:33:21.053Z",
+        "user": "blt32e72466330d1ea2",
+        "version": 2
+      },
+      {
+        "environment": "bltbf95468be0064d2d",
+        "locale": "en-us",
+        "time": "2022-09-02T09:31:35.234Z",
+        "user": "blt32e72466330d1ea2",
+        "version": 1
+      },
+      {
+        "environment": "bltd6be9d1bcecc05ec",
+        "locale": "en-us",
+        "time": "2022-09-02T09:31:35.222Z",
+        "user": "blt32e72466330d1ea2",
+        "version": 1
+      },
+      {
+        "environment": "blt329e0549f3583f14",
+        "locale": "en-us",
+        "time": "2022-09-02T09:31:35.229Z",
+        "user": "blt32e72466330d1ea2",
+        "version": 1
+      }
+    ]
+  }
+}

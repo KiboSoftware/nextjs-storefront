@@ -1,0 +1,59 @@
+{
+  "title": "KiboCommerce",
+  "uid": "kibocommerce",
+  "schema": [
+    {
+      "data_type": "text",
+      "display_name": "Title",
+      "field_metadata": { "_default": true, "version": 3 },
+      "mandatory": true,
+      "uid": "title",
+      "unique": true,
+      "multiple": false,
+      "non_localizable": false
+    },
+    {
+      "data_type": "text",
+      "display_name": "URL",
+      "uid": "url",
+      "field_metadata": { "_default": true, "version": 3 },
+      "multiple": false,
+      "unique": false,
+      "mandatory": false,
+      "non_localizable": false
+    },
+    {
+      "display_name": "Single Product",
+      "extension_uid": "bltd6c28ec294ae9837",
+      "field_metadata": { "extension": true },
+      "uid": "single_product",
+      "mandatory": false,
+      "multiple": false,
+      "non_localizable": false,
+      "unique": false,
+      "config": { "type": "product_single" },
+      "data_type": "json"
+    },
+    {
+      "display_name": "Multiple Product",
+      "extension_uid": "bltd6c28ec294ae9837",
+      "field_metadata": { "extension": true },
+      "uid": "multiple_product",
+      "mandatory": false,
+      "multiple": false,
+      "non_localizable": false,
+      "unique": false,
+      "config": {},
+      "data_type": "json"
+    }
+  ],
+  "description": "Kibocommerce contentType example",
+  "options": {
+    "is_page": true,
+    "singleton": false,
+    "sub_title": [],
+    "title": "title",
+    "url_pattern": "/:title",
+    "url_prefix": "/"
+  }
+}

@@ -1,0 +1,26 @@
+[
+  {
+    "stackHeaders": { "api_key": "bltee41ac4678a1dae3" },
+    "urlPath": "/assets/blt96cb3ee442ff1251",
+    "uid": "blt96cb3ee442ff1251",
+    "content_type": "image/jpeg",
+    "file_size": "604385",
+    "tags": [],
+    "filename": "Nike_gear_(2)_copy.jpeg",
+    "url": "https://images.contentstack.io/v3/assets/bltee41ac4678a1dae3/blt96cb3ee442ff1251/630fe284b5284f56ca59ca29/Nike_gear_(2)_copy.jpeg",
+    "ACL": {},
+    "is_dir": false,
+    "parent_uid": null,
+    "_version": 1,
+    "title": "Nike_gear_(2)_copy.jpeg",
+    "publish_details": [
+      {
+        "environment": "blt603fad7317f94527",
+        "locale": "en-us",
+        "time": "2022-08-31T23:50:15.370Z",
+        "user": "bltf91f17181a05b1aa",
+        "version": 1
+      }
+    ]
+  }
+]

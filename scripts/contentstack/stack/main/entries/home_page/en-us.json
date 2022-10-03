@@ -1,0 +1,89 @@
+{
+  "blt98399aab8bf63c9f": {
+    "title": "KiboCommerce Home",
+    "page_components": [
+      {
+        "small_banner": {
+          "title": "Save up to68%",
+          "_metadata": { "uid": "cs83e4eb0d334b088f" },
+          "subtitle": "Valid until tomorrow!",
+          "call_to_action_link": { "title": "Shop Now", "href": "/category/deals" }
+        }
+      },
+      {
+        "hero_carousel": {
+          "hero_carousel_items": [
+            { "uid": "blt8af7a1604c390b64", "_content_type_uid": "hero_carousel_item" }
+          ],
+          "_metadata": { "uid": "cs9112a956228a4460" }
+        }
+      },
+      {
+        "home_page_products": {
+          "reference": [
+            { "uid": "bltece0b08459a9d839", "_content_type_uid": "home_page_products" },
+            { "uid": "blte21417264832bc30", "_content_type_uid": "home_page_products" }
+          ],
+          "_metadata": { "uid": "cs0c51d37181fc1d35" }
+        }
+      },
+      {
+        "large_promo_blocks": {
+          "large_promo_blocks": [
+            { "uid": "bltc0bec4b482a68847", "_content_type_uid": "promo_block" },
+            { "uid": "blt0888628b94db9a51", "_content_type_uid": "promo_block" }
+          ],
+          "_metadata": { "uid": "cs5599acb78eb790cb" }
+        }
+      },
+      {
+        "small_promo_blocks": {
+          "small_promo_blocks": [
+            { "uid": "blt49699354f7519a17", "_content_type_uid": "promo_block" },
+            { "uid": "blt7727bad46b22291d", "_content_type_uid": "promo_block" },
+            { "uid": "blt9a87a61e74cc8b41", "_content_type_uid": "promo_block" },
+            { "uid": "blteac9742ca9a0977b", "_content_type_uid": "promo_block" }
+          ],
+          "_metadata": { "uid": "cs33b8a726dce7f59e" }
+        }
+      }
+    ],
+    "tags": [],
+    "locale": "en-us",
+    "uid": "blt98399aab8bf63c9f",
+    "ACL": {},
+    "_version": 42,
+    "_in_progress": false,
+    "url": "/",
+    "publish_details": [
+      {
+        "environment": "blt603fad7317f94527",
+        "locale": "en-us",
+        "time": "2022-09-27T21:35:52.202Z",
+        "user": "bltb732d387e152936c",
+        "version": 42
+      },
+      {
+        "environment": "blt329e0549f3583f14",
+        "locale": "en-us",
+        "time": "2022-09-27T21:35:52.194Z",
+        "user": "bltb732d387e152936c",
+        "version": 42
+      },
+      {
+        "environment": "bltbf95468be0064d2d",
+        "locale": "en-us",
+        "time": "2022-09-27T21:35:52.208Z",
+        "user": "bltb732d387e152936c",
+        "version": 42
+      },
+      {
+        "environment": "bltd6be9d1bcecc05ec",
+        "locale": "en-us",
+        "time": "2022-09-27T21:35:52.214Z",
+        "user": "bltb732d387e152936c",
+        "version": 42
+      }
+    ]
+  }
+}

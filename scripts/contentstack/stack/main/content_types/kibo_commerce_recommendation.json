@@ -1,0 +1,42 @@
+{
+  "title": "kibo commerce recommendation",
+  "uid": "kibo_commerce_recommendation",
+  "schema": [
+    {
+      "data_type": "text",
+      "display_name": "Title",
+      "field_metadata": { "_default": true, "version": 3 },
+      "mandatory": true,
+      "uid": "title",
+      "unique": true,
+      "multiple": false,
+      "non_localizable": false
+    },
+    {
+      "display_name": "rec products",
+      "extension_uid": "blt8252df5b67cdc985",
+      "field_metadata": { "extension": true },
+      "uid": "rec_products",
+      "mandatory": false,
+      "non_localizable": false,
+      "unique": false,
+      "config": {},
+      "data_type": "json",
+      "multiple": false
+    },
+    {
+      "display_name": "product",
+      "extension_uid": "blt8252df5b67cdc985",
+      "field_metadata": { "extension": true },
+      "uid": "product",
+      "mandatory": false,
+      "non_localizable": false,
+      "unique": false,
+      "config": {},
+      "data_type": "json",
+      "multiple": false
+    }
+  ],
+  "description": "",
+  "options": { "is_page": false, "singleton": false, "sub_title": [], "title": "title" }
+}

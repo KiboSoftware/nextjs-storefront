@@ -1,0 +1,15 @@
+{
+  "blt92ecd8b724ee35fa": {
+    "title": "KiboExample",
+    "url": "/",
+    "tags": [],
+    "locale": "en-us",
+    "uid": "blt92ecd8b724ee35fa",
+    "ACL": {},
+    "_version": 39,
+    "_in_progress": false,
+    "multiple_product": [{ "id": "MS-CAM-002" }, { "id": "MS-PANT-004" }],
+    "single_product": [{ "id": "MS-JKT-001" }],
+    "publish_details": []
+  }
+}

@@ -1,0 +1,23 @@
+{
+  "bltc5a8b55f16e5f255": {
+    "title": "HKFT_020",
+    "product": [{ "productCode": "Hammock_015" }],
+    "recommendations": [
+      { "uid": "blt607e2b2ecdb280a2", "_content_type_uid": "kibo_commerce_recommendation" }
+    ],
+    "tags": [],
+    "locale": "en-us",
+    "uid": "bltc5a8b55f16e5f255",
+    "_version": 3,
+    "_in_progress": false,
+    "publish_details": [
+      {
+        "environment": "blt603fad7317f94527",
+        "locale": "en-us",
+        "time": "2022-08-12T07:59:04.791Z",
+        "user": "blt10d62bcb26322317",
+        "version": 3
+      }
+    ]
+  }
+}
