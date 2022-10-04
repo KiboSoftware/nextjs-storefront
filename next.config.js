@@ -105,6 +105,9 @@ module.exports = {
         smallPromoBlocks: 'Small promo blocks',
       },
     },
+    builderIO: {
+      apiKey: process.env.BUILDER_IO_API_KEY,
+    },
   },
   serverRuntimeConfig: {
     revalidate: process.env.GLOBAL_PAGE_REVALIDATE || 30,
