@@ -1,0 +1,21 @@
+[
+  {
+    "title": "Custom Kibo Product",
+    "uid": "custom_kibo_product",
+    "schema": [
+      {
+        "display_name": "Custom",
+        "extension_uid": "bltd6c28ec294ae9837",
+        "field_metadata": { "extension": true },
+        "uid": "custom",
+        "mandatory": false,
+        "multiple": true,
+        "non_localizable": false,
+        "unique": false,
+        "config": {},
+        "data_type": "json"
+      }
+    ],
+    "description": ""
+  }
+]

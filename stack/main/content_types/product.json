@@ -1,0 +1,30 @@
+{
+  "title": "Product",
+  "uid": "product",
+  "schema": [
+    {
+      "data_type": "text",
+      "display_name": "Title",
+      "field_metadata": { "_default": true, "version": 3 },
+      "mandatory": true,
+      "uid": "title",
+      "unique": true,
+      "multiple": false,
+      "non_localizable": false
+    },
+    {
+      "display_name": "Kibo Product",
+      "extension_uid": "blt8252df5b67cdc985",
+      "field_metadata": { "extension": true },
+      "uid": "kibo_product",
+      "mandatory": false,
+      "non_localizable": false,
+      "unique": false,
+      "config": {},
+      "data_type": "json",
+      "multiple": false
+    }
+  ],
+  "description": "Kibo Product",
+  "options": { "is_page": false, "singleton": true, "sub_title": [], "title": "title" }
+}

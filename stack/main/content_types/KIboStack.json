@@ -1,0 +1,18 @@
+{
+  "title": "KIboStack",
+  "uid": "KIboStack",
+  "schema": [
+    {
+      "data_type": "text",
+      "display_name": "Title",
+      "field_metadata": { "_default": true, "version": 3 },
+      "mandatory": true,
+      "uid": "title",
+      "unique": true,
+      "multiple": false,
+      "non_localizable": false
+    }
+  ],
+  "description": "",
+  "options": { "is_page": false, "singleton": true, "sub_title": [], "title": "title" }
+}

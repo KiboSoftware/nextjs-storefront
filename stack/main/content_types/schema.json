@@ -1,0 +1,969 @@
+[
+  {
+    "title": "KiboCommerce",
+    "uid": "kibocommerce",
+    "schema": [
+      {
+        "data_type": "text",
+        "display_name": "Title",
+        "field_metadata": { "_default": true, "version": 3 },
+        "mandatory": true,
+        "uid": "title",
+        "unique": true,
+        "multiple": false,
+        "non_localizable": false
+      },
+      {
+        "data_type": "text",
+        "display_name": "URL",
+        "uid": "url",
+        "field_metadata": { "_default": true, "version": 3 },
+        "multiple": false,
+        "unique": false,
+        "mandatory": false,
+        "non_localizable": false
+      },
+      {
+        "display_name": "Single Product",
+        "extension_uid": "bltd6c28ec294ae9837",
+        "field_metadata": { "extension": true },
+        "uid": "single_product",
+        "mandatory": false,
+        "multiple": false,
+        "non_localizable": false,
+        "unique": false,
+        "config": { "type": "product_single" },
+        "data_type": "json"
+      },
+      {
+        "display_name": "Multiple Product",
+        "extension_uid": "bltd6c28ec294ae9837",
+        "field_metadata": { "extension": true },
+        "uid": "multiple_product",
+        "mandatory": false,
+        "multiple": false,
+        "non_localizable": false,
+        "unique": false,
+        "config": {},
+        "data_type": "json"
+      }
+    ],
+    "description": "Kibocommerce contentType example",
+    "options": {
+      "is_page": true,
+      "singleton": false,
+      "sub_title": [],
+      "title": "title",
+      "url_pattern": "/:title",
+      "url_prefix": "/"
+    }
+  },
+  {
+    "title": "NOP",
+    "uid": "NOP",
+    "schema": [
+      {
+        "data_type": "text",
+        "display_name": "Title",
+        "field_metadata": { "_default": true, "version": 3 },
+        "mandatory": true,
+        "uid": "title",
+        "unique": true,
+        "multiple": false,
+        "non_localizable": false
+      },
+      {
+        "display_name": "Custom",
+        "extension_uid": "bltd6c28ec294ae9837",
+        "field_metadata": { "extension": true },
+        "uid": "custom",
+        "mandatory": false,
+        "multiple": false,
+        "non_localizable": false,
+        "unique": false,
+        "config": {},
+        "data_type": "json"
+      }
+    ],
+    "description": "",
+    "options": { "is_page": false, "singleton": true, "sub_title": [], "title": "title" }
+  },
+  {
+    "title": "Kibo1",
+    "uid": "Kibo1",
+    "schema": [
+      {
+        "data_type": "text",
+        "display_name": "Title",
+        "field_metadata": { "_default": true, "version": 3 },
+        "mandatory": true,
+        "uid": "title",
+        "unique": true,
+        "multiple": false,
+        "non_localizable": false
+      },
+      {
+        "display_name": "Custom",
+        "extension_uid": "bltd6c28ec294ae9837",
+        "field_metadata": { "extension": true },
+        "uid": "custom",
+        "mandatory": false,
+        "multiple": false,
+        "non_localizable": false,
+        "unique": false,
+        "config": {},
+        "data_type": "json"
+      }
+    ],
+    "description": "",
+    "options": { "is_page": false, "singleton": true, "sub_title": [], "title": "title" }
+  },
+  {
+    "title": "KiboLive",
+    "uid": "KiboLive",
+    "schema": [
+      {
+        "data_type": "text",
+        "display_name": "Title",
+        "field_metadata": { "_default": true, "version": 3 },
+        "mandatory": true,
+        "uid": "title",
+        "unique": true,
+        "multiple": false,
+        "non_localizable": false
+      }
+    ],
+    "description": "",
+    "options": { "is_page": false, "singleton": true, "sub_title": [], "title": "title" }
+  },
+  {
+    "title": "KiboProj",
+    "uid": "KiboProj",
+    "schema": [
+      {
+        "data_type": "text",
+        "display_name": "Title",
+        "field_metadata": { "_default": true, "version": 3 },
+        "mandatory": true,
+        "uid": "title",
+        "unique": true,
+        "multiple": false,
+        "non_localizable": false
+      },
+      {
+        "display_name": "Custom",
+        "extension_uid": "bltd6c28ec294ae9837",
+        "field_metadata": { "extension": true },
+        "uid": "custom",
+        "mandatory": false,
+        "multiple": false,
+        "non_localizable": false,
+        "unique": false,
+        "config": {},
+        "data_type": "json"
+      }
+    ],
+    "description": "",
+    "options": { "is_page": false, "singleton": true, "sub_title": [], "title": "title" }
+  },
+  {
+    "title": "KIboStack",
+    "uid": "KIboStack",
+    "schema": [
+      {
+        "data_type": "text",
+        "display_name": "Title",
+        "field_metadata": { "_default": true, "version": 3 },
+        "mandatory": true,
+        "uid": "title",
+        "unique": true,
+        "multiple": false,
+        "non_localizable": false
+      }
+    ],
+    "description": "",
+    "options": { "is_page": false, "singleton": true, "sub_title": [], "title": "title" }
+  },
+  {
+    "title": "test",
+    "uid": "test",
+    "schema": [
+      {
+        "data_type": "text",
+        "display_name": "Title",
+        "field_metadata": { "_default": true, "version": 3 },
+        "mandatory": true,
+        "uid": "title",
+        "unique": true,
+        "multiple": false,
+        "non_localizable": false
+      },
+      {
+        "display_name": "Custom",
+        "extension_uid": "blt8252df5b67cdc985",
+        "field_metadata": { "extension": true },
+        "uid": "custom",
+        "mandatory": false,
+        "non_localizable": false,
+        "unique": false,
+        "config": {},
+        "data_type": "json",
+        "multiple": false
+      }
+    ],
+    "description": "",
+    "options": { "is_page": false, "singleton": true, "sub_title": [], "title": "title" }
+  },
+  {
+    "title": "Promo Block",
+    "uid": "promo_block",
+    "schema": [
+      {
+        "data_type": "text",
+        "display_name": "Title",
+        "field_metadata": { "_default": true, "version": 3 },
+        "mandatory": true,
+        "uid": "title",
+        "unique": true,
+        "multiple": false,
+        "non_localizable": false
+      },
+      {
+        "data_type": "file",
+        "display_name": "Image",
+        "uid": "image",
+        "extensions": [],
+        "field_metadata": { "description": "", "rich_text_type": "standard" },
+        "mandatory": false,
+        "multiple": false,
+        "non_localizable": false,
+        "unique": false
+      },
+      {
+        "data_type": "text",
+        "display_name": "Subtitle",
+        "uid": "subtitle",
+        "field_metadata": { "description": "", "default_value": "", "version": 3 },
+        "format": "",
+        "error_messages": { "format": "" },
+        "mandatory": false,
+        "multiple": false,
+        "non_localizable": false,
+        "unique": false
+      },
+      {
+        "data_type": "link",
+        "display_name": "Links",
+        "uid": "links",
+        "field_metadata": { "description": "", "default_value": { "title": "", "url": "" } },
+        "mandatory": false,
+        "multiple": true,
+        "non_localizable": false,
+        "unique": false,
+        "max_instance": 3
+      }
+    ],
+    "description": "",
+    "options": { "is_page": false, "singleton": false, "sub_title": [], "title": "title" }
+  },
+  {
+    "title": "Hero Carousel Item",
+    "uid": "hero_carousel_item",
+    "schema": [
+      {
+        "data_type": "text",
+        "display_name": "Title",
+        "field_metadata": { "_default": true, "version": 3 },
+        "mandatory": true,
+        "uid": "title",
+        "unique": true,
+        "multiple": false,
+        "non_localizable": false
+      },
+      {
+        "data_type": "text",
+        "display_name": "Subtitle",
+        "uid": "subtitle",
+        "field_metadata": { "description": "", "default_value": "", "version": 3 },
+        "format": "",
+        "error_messages": { "format": "" },
+        "mandatory": false,
+        "multiple": false,
+        "non_localizable": false,
+        "unique": false
+      },
+      {
+        "data_type": "text",
+        "display_name": "Description",
+        "uid": "description",
+        "field_metadata": { "description": "", "default_value": "", "version": 3 },
+        "format": "",
+        "error_messages": { "format": "" },
+        "mandatory": false,
+        "multiple": false,
+        "non_localizable": false,
+        "unique": false
+      },
+      {
+        "data_type": "link",
+        "display_name": "Button Link",
+        "uid": "button_link",
+        "field_metadata": { "description": "", "default_value": { "title": "", "url": "" } },
+        "mandatory": false,
+        "multiple": false,
+        "non_localizable": false,
+        "unique": false
+      },
+      {
+        "data_type": "file",
+        "display_name": "Desktop Image",
+        "uid": "desktop_image",
+        "extensions": [],
+        "field_metadata": { "description": "", "rich_text_type": "standard" },
+        "mandatory": false,
+        "multiple": false,
+        "non_localizable": false,
+        "unique": false
+      },
+      {
+        "data_type": "file",
+        "display_name": "Mobile Image",
+        "uid": "mobile_image",
+        "extensions": [],
+        "field_metadata": { "description": "", "rich_text_type": "standard" },
+        "mandatory": false,
+        "multiple": false,
+        "non_localizable": false,
+        "unique": false
+      },
+      {
+        "data_type": "text",
+        "display_name": "Image Alt Text",
+        "uid": "image_alt_text",
+        "field_metadata": { "description": "", "default_value": "", "version": 3 },
+        "format": "",
+        "error_messages": { "format": "" },
+        "mandatory": false,
+        "multiple": false,
+        "non_localizable": false,
+        "unique": false
+      }
+    ],
+    "description": "",
+    "options": { "is_page": false, "singleton": false, "sub_title": [], "title": "title" }
+  },
+  {
+    "title": "Kibo commerce product",
+    "uid": "kibo_commerce_product",
+    "schema": [
+      {
+        "data_type": "text",
+        "display_name": "Title",
+        "field_metadata": { "_default": true, "version": 3 },
+        "mandatory": true,
+        "uid": "title",
+        "unique": true,
+        "multiple": false,
+        "non_localizable": false
+      },
+      {
+        "display_name": "product",
+        "extension_uid": "blt8252df5b67cdc985",
+        "field_metadata": { "extension": true },
+        "uid": "product",
+        "mandatory": false,
+        "non_localizable": false,
+        "unique": false,
+        "config": {},
+        "data_type": "json",
+        "multiple": false
+      },
+      {
+        "data_type": "reference",
+        "display_name": "recommendations",
+        "reference_to": ["kibo_commerce_recommendation"],
+        "field_metadata": { "ref_multiple": false, "ref_multiple_content_types": true },
+        "uid": "recommendations",
+        "mandatory": false,
+        "multiple": false,
+        "non_localizable": false,
+        "unique": false
+      }
+    ],
+    "description": "",
+    "options": { "is_page": false, "singleton": true, "sub_title": [], "title": "title" }
+  },
+  {
+    "title": "kibo commerce recommendation",
+    "uid": "kibo_commerce_recommendation",
+    "schema": [
+      {
+        "data_type": "text",
+        "display_name": "Title",
+        "field_metadata": { "_default": true, "version": 3 },
+        "mandatory": true,
+        "uid": "title",
+        "unique": true,
+        "multiple": false,
+        "non_localizable": false
+      },
+      {
+        "display_name": "rec products",
+        "extension_uid": "blt8252df5b67cdc985",
+        "field_metadata": { "extension": true },
+        "uid": "rec_products",
+        "mandatory": false,
+        "non_localizable": false,
+        "unique": false,
+        "config": {},
+        "data_type": "json",
+        "multiple": false
+      },
+      {
+        "display_name": "product",
+        "extension_uid": "blt8252df5b67cdc985",
+        "field_metadata": { "extension": true },
+        "uid": "product",
+        "mandatory": false,
+        "non_localizable": false,
+        "unique": false,
+        "config": {},
+        "data_type": "json",
+        "multiple": false
+      }
+    ],
+    "description": "",
+    "options": { "is_page": false, "singleton": false, "sub_title": [], "title": "title" }
+  },
+  {
+    "title": "Product",
+    "uid": "product",
+    "schema": [
+      {
+        "data_type": "text",
+        "display_name": "Title",
+        "field_metadata": { "_default": true, "version": 3 },
+        "mandatory": true,
+        "uid": "title",
+        "unique": true,
+        "multiple": false,
+        "non_localizable": false
+      },
+      {
+        "display_name": "Kibo Product",
+        "extension_uid": "blt8252df5b67cdc985",
+        "field_metadata": { "extension": true },
+        "uid": "kibo_product",
+        "mandatory": false,
+        "non_localizable": false,
+        "unique": false,
+        "config": {},
+        "data_type": "json",
+        "multiple": false
+      }
+    ],
+    "description": "Kibo Product",
+    "options": { "is_page": false, "singleton": true, "sub_title": [], "title": "title" }
+  },
+  {
+    "title": "Kibo Single product",
+    "uid": "kibo_single_product",
+    "schema": [
+      {
+        "data_type": "text",
+        "display_name": "Title",
+        "field_metadata": { "_default": true, "version": 3 },
+        "mandatory": true,
+        "uid": "title",
+        "unique": true,
+        "multiple": false,
+        "non_localizable": false
+      },
+      {
+        "data_type": "reference",
+        "display_name": "Reference",
+        "reference_to": ["product"],
+        "field_metadata": { "ref_multiple": false, "ref_multiple_content_types": true },
+        "uid": "reference",
+        "mandatory": false,
+        "multiple": false,
+        "non_localizable": false,
+        "unique": false
+      }
+    ],
+    "description": "",
+    "options": { "is_page": false, "singleton": false, "sub_title": [], "title": "title" }
+  },
+  {
+    "title": "product detail page",
+    "uid": "product_detail_page",
+    "schema": [
+      {
+        "data_type": "text",
+        "display_name": "Title",
+        "field_metadata": { "_default": true, "version": 3 },
+        "mandatory": true,
+        "uid": "title",
+        "unique": true,
+        "multiple": false,
+        "non_localizable": false
+      },
+      {
+        "data_type": "blocks",
+        "display_name": "Page components",
+        "blocks": [
+          {
+            "title": "recommendations",
+            "uid": "recommendations",
+            "schema": [
+              {
+                "data_type": "text",
+                "display_name": "title",
+                "uid": "title",
+                "field_metadata": { "description": "", "default_value": "", "version": 3 },
+                "format": "",
+                "error_messages": { "format": "" },
+                "mandatory": false,
+                "multiple": false,
+                "non_localizable": false,
+                "unique": false
+              },
+              {
+                "display_name": "product recommendations",
+                "extension_uid": "blt8252df5b67cdc985",
+                "field_metadata": { "extension": true },
+                "uid": "product_recommendations",
+                "mandatory": false,
+                "non_localizable": false,
+                "unique": false,
+                "config": {},
+                "data_type": "json",
+                "multiple": false
+              }
+            ]
+          }
+        ],
+        "multiple": true,
+        "uid": "page_components",
+        "field_metadata": { "instruction": "", "description": "" },
+        "mandatory": false,
+        "non_localizable": false,
+        "unique": false
+      }
+    ],
+    "description": "",
+    "options": { "is_page": false, "singleton": true, "sub_title": [], "title": "title" }
+  },
+  {
+    "title": "Product Detail",
+    "uid": "product_detail",
+    "schema": [
+      {
+        "data_type": "text",
+        "display_name": "Title",
+        "field_metadata": { "_default": true, "version": 3 },
+        "mandatory": true,
+        "uid": "title",
+        "unique": true,
+        "multiple": false,
+        "non_localizable": false
+      },
+      {
+        "data_type": "blocks",
+        "display_name": "Page Components",
+        "blocks": [
+          {
+            "title": "recommendations",
+            "uid": "recommendations",
+            "schema": [
+              {
+                "data_type": "text",
+                "display_name": "Title",
+                "uid": "title",
+                "field_metadata": { "description": "", "default_value": "", "version": 3 },
+                "format": "",
+                "error_messages": { "format": "" },
+                "mandatory": false,
+                "multiple": false,
+                "non_localizable": false,
+                "unique": false
+              },
+              {
+                "display_name": "product recommendations",
+                "extension_uid": "blt8252df5b67cdc985",
+                "field_metadata": { "extension": true },
+                "uid": "product_recommendations",
+                "mandatory": false,
+                "non_localizable": false,
+                "unique": false,
+                "config": {},
+                "data_type": "json",
+                "multiple": false
+              }
+            ]
+          },
+          {
+            "title": "Customers Also Bought",
+            "uid": "customers_also_bought",
+            "schema": [
+              {
+                "data_type": "text",
+                "display_name": "Title",
+                "uid": "title",
+                "field_metadata": { "description": "", "default_value": "", "version": 3 },
+                "format": "",
+                "error_messages": { "format": "" },
+                "mandatory": false,
+                "multiple": false,
+                "non_localizable": false,
+                "unique": false
+              },
+              {
+                "display_name": "Customer also bought",
+                "extension_uid": "blt8252df5b67cdc985",
+                "field_metadata": { "extension": true },
+                "uid": "customer_also_bought",
+                "mandatory": false,
+                "non_localizable": false,
+                "unique": false,
+                "config": {},
+                "data_type": "json",
+                "multiple": false
+              }
+            ]
+          }
+        ],
+        "multiple": true,
+        "uid": "page_components",
+        "field_metadata": { "instruction": "", "description": "" },
+        "mandatory": false,
+        "non_localizable": false,
+        "unique": false
+      }
+    ],
+    "description": "",
+    "options": { "is_page": false, "singleton": false, "sub_title": [], "title": "title" }
+  },
+  {
+    "title": "Home Page Test",
+    "uid": "home_page_test",
+    "schema": [
+      {
+        "data_type": "text",
+        "display_name": "Title",
+        "field_metadata": { "_default": true, "version": 3 },
+        "mandatory": true,
+        "uid": "title",
+        "unique": true,
+        "multiple": false,
+        "non_localizable": false
+      },
+      {
+        "data_type": "blocks",
+        "display_name": "Page Components",
+        "blocks": [
+          {
+            "title": "small banner",
+            "uid": "small_banner",
+            "schema": [
+              {
+                "data_type": "text",
+                "display_name": "title",
+                "uid": "title",
+                "field_metadata": {
+                  "description": "",
+                  "default_value": "",
+                  "placeholder": "title",
+                  "version": 3
+                },
+                "format": "",
+                "error_messages": { "format": "" },
+                "mandatory": false,
+                "multiple": false,
+                "non_localizable": false,
+                "unique": false
+              },
+              {
+                "data_type": "text",
+                "display_name": "subtitle",
+                "uid": "subtitle",
+                "field_metadata": {
+                  "description": "",
+                  "default_value": "",
+                  "placeholder": "subtitle",
+                  "version": 3
+                },
+                "format": "",
+                "error_messages": { "format": "" },
+                "mandatory": false,
+                "multiple": false,
+                "non_localizable": false,
+                "unique": false
+              },
+              {
+                "data_type": "link",
+                "display_name": "call to action link",
+                "uid": "call_to_action_link",
+                "field_metadata": {
+                  "description": "",
+                  "default_value": { "title": "", "url": "" }
+                },
+                "mandatory": false,
+                "multiple": false,
+                "non_localizable": false,
+                "unique": false
+              }
+            ]
+          }
+        ],
+        "multiple": true,
+        "uid": "page_components",
+        "field_metadata": { "instruction": "", "description": "" },
+        "mandatory": false,
+        "non_localizable": false,
+        "unique": false
+      }
+    ],
+    "description": "Home Page Test Description",
+    "options": { "is_page": false, "singleton": true, "sub_title": [], "title": "title" }
+  },
+  {
+    "title": "demo products",
+    "uid": "demo_products",
+    "schema": [
+      {
+        "data_type": "text",
+        "display_name": "Title",
+        "field_metadata": { "_default": true, "version": 3 },
+        "mandatory": true,
+        "uid": "title",
+        "unique": true,
+        "multiple": false,
+        "non_localizable": false
+      }
+    ],
+    "description": "",
+    "options": { "is_page": false, "singleton": true, "sub_title": [], "title": "title" }
+  },
+  {
+    "title": "Home Page",
+    "uid": "home_page",
+    "schema": [
+      {
+        "data_type": "text",
+        "display_name": "Title",
+        "field_metadata": { "_default": true, "version": 3 },
+        "mandatory": true,
+        "uid": "title",
+        "unique": true,
+        "multiple": false,
+        "non_localizable": false
+      },
+      {
+        "data_type": "text",
+        "display_name": "URL",
+        "uid": "url",
+        "field_metadata": { "_default": true, "version": 3 },
+        "multiple": false,
+        "unique": false,
+        "mandatory": true,
+        "non_localizable": false
+      },
+      {
+        "data_type": "blocks",
+        "display_name": "Page Components",
+        "blocks": [
+          {
+            "title": "Small Banner",
+            "uid": "small_banner",
+            "schema": [
+              {
+                "data_type": "text",
+                "display_name": "Title",
+                "uid": "title",
+                "field_metadata": { "description": "", "default_value": "", "version": 3 },
+                "format": "",
+                "error_messages": { "format": "" },
+                "mandatory": false,
+                "multiple": false,
+                "non_localizable": false,
+                "unique": false
+              },
+              {
+                "data_type": "text",
+                "display_name": "Subtitle",
+                "uid": "subtitle",
+                "field_metadata": { "description": "", "default_value": "", "version": 3 },
+                "format": "",
+                "error_messages": { "format": "" },
+                "mandatory": false,
+                "multiple": false,
+                "non_localizable": false,
+                "unique": false
+              },
+              {
+                "data_type": "link",
+                "display_name": "Call To Action Link",
+                "uid": "call_to_action_link",
+                "field_metadata": {
+                  "description": "",
+                  "default_value": { "title": "", "url": "" }
+                },
+                "mandatory": false,
+                "multiple": false,
+                "non_localizable": false,
+                "unique": false
+              }
+            ]
+          },
+          {
+            "title": "Hero Carousel",
+            "uid": "hero_carousel",
+            "schema": [
+              {
+                "data_type": "reference",
+                "display_name": "Hero Carousel Items",
+                "reference_to": ["hero_carousel_item"],
+                "field_metadata": { "ref_multiple": true, "ref_multiple_content_types": true },
+                "uid": "hero_carousel_items",
+                "mandatory": false,
+                "multiple": false,
+                "non_localizable": false,
+                "unique": false
+              }
+            ]
+          },
+          {
+            "title": "Large Promo Blocks",
+            "uid": "large_promo_blocks",
+            "schema": [
+              {
+                "data_type": "reference",
+                "display_name": "Large Promo Blocks",
+                "reference_to": ["promo_block"],
+                "field_metadata": {
+                  "ref_multiple": true,
+                  "ref_multiple_content_types": true,
+                  "description": "Add two large promo blocks"
+                },
+                "uid": "large_promo_blocks",
+                "mandatory": false,
+                "multiple": false,
+                "non_localizable": false,
+                "unique": false
+              }
+            ]
+          },
+          {
+            "title": "Small Promo Blocks",
+            "uid": "small_promo_blocks",
+            "schema": [
+              {
+                "data_type": "reference",
+                "display_name": "Small Promo Blocks",
+                "reference_to": ["promo_block"],
+                "field_metadata": { "ref_multiple": true, "ref_multiple_content_types": true },
+                "uid": "small_promo_blocks",
+                "mandatory": false,
+                "multiple": false,
+                "non_localizable": false,
+                "unique": false
+              }
+            ]
+          },
+          {
+            "title": "Home Page products",
+            "uid": "home_page_products",
+            "schema": [
+              {
+                "data_type": "reference",
+                "display_name": "Reference",
+                "reference_to": ["home_page_products"],
+                "field_metadata": { "ref_multiple": true, "ref_multiple_content_types": true },
+                "uid": "reference",
+                "mandatory": false,
+                "multiple": false,
+                "non_localizable": false,
+                "unique": false
+              }
+            ]
+          }
+        ],
+        "multiple": true,
+        "uid": "page_components",
+        "field_metadata": { "instruction": "", "description": "" },
+        "mandatory": false,
+        "non_localizable": false,
+        "unique": false
+      }
+    ],
+    "description": "",
+    "options": { "is_page": true, "singleton": true, "sub_title": [], "title": "title" }
+  },
+  {
+    "title": "Page",
+    "uid": "page",
+    "schema": [
+      {
+        "display_name": "Title",
+        "uid": "title",
+        "data_type": "text",
+        "field_metadata": { "_default": true, "version": 3 },
+        "unique": false,
+        "mandatory": true,
+        "multiple": false,
+        "non_localizable": false
+      },
+      {
+        "display_name": "URL",
+        "uid": "url",
+        "data_type": "text",
+        "field_metadata": { "_default": true, "version": 3 },
+        "unique": false,
+        "multiple": false,
+        "mandatory": false,
+        "non_localizable": false
+      }
+    ],
+    "description": "",
+    "options": {
+      "title": "title",
+      "publishable": true,
+      "is_page": true,
+      "singleton": false,
+      "sub_title": ["url"],
+      "url_pattern": "/:title",
+      "url_prefix": "/"
+    }
+  },
+  {
+    "title": "Home Page products",
+    "uid": "home_page_products",
+    "schema": [
+      {
+        "data_type": "text",
+        "display_name": "Title",
+        "field_metadata": { "_default": true, "version": 3 },
+        "mandatory": true,
+        "uid": "title",
+        "unique": true,
+        "multiple": false,
+        "non_localizable": false
+      },
+      {
+        "display_name": "Home Page Products",
+        "extension_uid": "blt8252df5b67cdc985",
+        "field_metadata": { "extension": true },
+        "uid": "home_page_products",
+        "mandatory": false,
+        "non_localizable": false,
+        "unique": false,
+        "config": {},
+        "data_type": "json",
+        "multiple": false
+      }
+    ],
+    "description": "",
+    "options": { "is_page": false, "singleton": false, "sub_title": [], "title": "title" }
+  }
+]

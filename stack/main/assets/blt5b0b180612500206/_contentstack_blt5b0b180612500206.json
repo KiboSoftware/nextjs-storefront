@@ -1,0 +1,34 @@
+[
+  {
+    "stackHeaders": { "api_key": "bltee41ac4678a1dae3" },
+    "urlPath": "/assets/blt5b0b180612500206",
+    "uid": "blt5b0b180612500206",
+    "content_type": "text/html",
+    "file_size": "20206",
+    "tags": [],
+    "filename": "redirect.html",
+    "url": "https://assets.contentstack.io/v3/assets/bltee41ac4678a1dae3/blt5b0b180612500206/61a8cf5d41ee302cc583609e/redirect.html",
+    "ACL": {},
+    "is_dir": false,
+    "parent_uid": null,
+    "_version": 1,
+    "title": "redirect.html",
+    "publish_details": []
+  },
+  {
+    "stackHeaders": { "api_key": "bltee41ac4678a1dae3" },
+    "urlPath": "/assets/blt5b0b180612500206",
+    "uid": "blt5b0b180612500206",
+    "content_type": "text/html",
+    "file_size": "20206",
+    "tags": [],
+    "filename": "redirect.html",
+    "url": "https://assets.contentstack.io/v3/assets/bltee41ac4678a1dae3/blt5b0b180612500206/61a8cf5d41ee302cc583609e/redirect.html",
+    "ACL": {},
+    "is_dir": false,
+    "parent_uid": null,
+    "_version": 2,
+    "title": "bigcommerce-redirect.html",
+    "publish_details": []
+  }
+]

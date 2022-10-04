@@ -1,0 +1,64 @@
+[
+  {
+    "stackHeaders": { "api_key": "bltee41ac4678a1dae3" },
+    "urlPath": "/assets/blt2da6a5a553ff6a23",
+    "uid": "blt2da6a5a553ff6a23",
+    "created_at": "2022-07-29T22:07:09.694Z",
+    "updated_at": "2022-07-29T22:07:09.694Z",
+    "created_by": "bltf91f17181a05b1aa",
+    "updated_by": "bltf91f17181a05b1aa",
+    "content_type": "application/vnd.contenstack.folder",
+    "tags": [],
+    "name": "Hero Images",
+    "ACL": {
+      "roles": [],
+      "others": {
+        "read": false,
+        "create": false,
+        "update": false,
+        "delete": false,
+        "sub_acl": {
+          "read": false,
+          "create": false,
+          "update": false,
+          "delete": false,
+          "publish": false
+        }
+      }
+    },
+    "is_dir": true,
+    "parent_uid": null,
+    "_version": 1
+  },
+  {
+    "stackHeaders": { "api_key": "bltee41ac4678a1dae3" },
+    "urlPath": "/assets/bltff151cb8e183b87c",
+    "uid": "bltff151cb8e183b87c",
+    "created_at": "2022-07-29T22:04:53.615Z",
+    "updated_at": "2022-07-29T22:04:53.615Z",
+    "created_by": "bltf91f17181a05b1aa",
+    "updated_by": "bltf91f17181a05b1aa",
+    "content_type": "application/vnd.contenstack.folder",
+    "tags": [],
+    "name": "Promos",
+    "ACL": {
+      "roles": [],
+      "others": {
+        "read": false,
+        "create": false,
+        "update": false,
+        "delete": false,
+        "sub_acl": {
+          "read": false,
+          "create": false,
+          "update": false,
+          "delete": false,
+          "publish": false
+        }
+      }
+    },
+    "is_dir": true,
+    "parent_uid": null,
+    "_version": 1
+  }
+]

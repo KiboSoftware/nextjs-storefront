@@ -1,0 +1,52 @@
+{
+  "title": "Promo Block",
+  "uid": "promo_block",
+  "schema": [
+    {
+      "data_type": "text",
+      "display_name": "Title",
+      "field_metadata": { "_default": true, "version": 3 },
+      "mandatory": true,
+      "uid": "title",
+      "unique": true,
+      "multiple": false,
+      "non_localizable": false
+    },
+    {
+      "data_type": "file",
+      "display_name": "Image",
+      "uid": "image",
+      "extensions": [],
+      "field_metadata": { "description": "", "rich_text_type": "standard" },
+      "mandatory": false,
+      "multiple": false,
+      "non_localizable": false,
+      "unique": false
+    },
+    {
+      "data_type": "text",
+      "display_name": "Subtitle",
+      "uid": "subtitle",
+      "field_metadata": { "description": "", "default_value": "", "version": 3 },
+      "format": "",
+      "error_messages": { "format": "" },
+      "mandatory": false,
+      "multiple": false,
+      "non_localizable": false,
+      "unique": false
+    },
+    {
+      "data_type": "link",
+      "display_name": "Links",
+      "uid": "links",
+      "field_metadata": { "description": "", "default_value": { "title": "", "url": "" } },
+      "mandatory": false,
+      "multiple": true,
+      "non_localizable": false,
+      "unique": false,
+      "max_instance": 3
+    }
+  ],
+  "description": "",
+  "options": { "is_page": false, "singleton": false, "sub_title": [], "title": "title" }
+}

@@ -1,0 +1,80 @@
+{
+  "title": "Home Page Test",
+  "uid": "home_page_test",
+  "schema": [
+    {
+      "data_type": "text",
+      "display_name": "Title",
+      "field_metadata": { "_default": true, "version": 3 },
+      "mandatory": true,
+      "uid": "title",
+      "unique": true,
+      "multiple": false,
+      "non_localizable": false
+    },
+    {
+      "data_type": "blocks",
+      "display_name": "Page Components",
+      "blocks": [
+        {
+          "title": "small banner",
+          "uid": "small_banner",
+          "schema": [
+            {
+              "data_type": "text",
+              "display_name": "title",
+              "uid": "title",
+              "field_metadata": {
+                "description": "",
+                "default_value": "",
+                "placeholder": "title",
+                "version": 3
+              },
+              "format": "",
+              "error_messages": { "format": "" },
+              "mandatory": false,
+              "multiple": false,
+              "non_localizable": false,
+              "unique": false
+            },
+            {
+              "data_type": "text",
+              "display_name": "subtitle",
+              "uid": "subtitle",
+              "field_metadata": {
+                "description": "",
+                "default_value": "",
+                "placeholder": "subtitle",
+                "version": 3
+              },
+              "format": "",
+              "error_messages": { "format": "" },
+              "mandatory": false,
+              "multiple": false,
+              "non_localizable": false,
+              "unique": false
+            },
+            {
+              "data_type": "link",
+              "display_name": "call to action link",
+              "uid": "call_to_action_link",
+              "field_metadata": { "description": "", "default_value": { "title": "", "url": "" } },
+              "mandatory": false,
+              "multiple": false,
+              "non_localizable": false,
+              "unique": false
+            }
+          ]
+        }
+      ],
+      "multiple": true,
+      "uid": "page_components",
+      "field_metadata": { "instruction": "", "description": "" },
+      "mandatory": false,
+      "non_localizable": false,
+      "unique": false
+    }
+  ],
+  "description": "Home Page Test Description",
+  "options": { "is_page": false, "singleton": true, "sub_title": [], "title": "title" }
+}
