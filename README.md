@@ -108,7 +108,7 @@ csdx cm:stacks:export -k blt********** -d “C:\Users\Name\Desktop\content\stack
 5. add exported content on github repository
 
 ```bash
-git init -b main    # it will initiate & create new branch "main", give any name for branch
+git init -b main    # it will initiate & create new branch "main". You can provide any name for branch
 git add .   #add all files & folders
 git commit -m "initial commit"   #commit all added files & folders
 ```
@@ -126,7 +126,7 @@ Example https://github.com/KiboSoftware/stack-contentstack.git
 ```bash
 git remote add origin https://github.com/KiboSoftware/stack-contentstack.git
 git remote -v   # Verifies the new remote URL
-git push -u origin main   # Pushes the changes in your local repository up to the remote repository you specified as the origin
+git push -u origin main   # Push the changes in your local repository up to the remote repository you specified as the origin
 ```
 
 8. Create Tag for Release on github repository
