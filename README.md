@@ -82,67 +82,78 @@ npm run test # run unit / integration tests
 3. Login to Source Stack
    open your terminal and run this command to log in to the CLI session:
 
-````bash
+```bash
 csdx auth:login  #This command will ask you to provide your "Source Stack" Contentstack account credentials.
+```
 
 4. After successful login, run this command to export your stack’s content to the “stack” folder:
-Syntax
-csdx cm:stacks:export -k <stack_ApiKey> -d “<path_to_store_content>”
+   Syntax
+   csdx cm:stacks:export -k <stack_ApiKey> -d “<path_to_store_content>”
 
 For example:
+
 ```bash
 csdx cm:stacks:export -k blt********** -d “C:\Users\Name\Desktop\content\stack”
+```
 
 5. add exported content on github repository
+
 ```bash
 git init -b main    # it will initiate & create new branch "main", give any name for branch
 git add .   #add all files & folders
 git commit -m "initial commit"   #commit all added files & folders
+```
 
 6. copy github repository URL
-  1. On GitHub.com, navigate to the main page of the repository
-  2. click on "Code" button
+1. On GitHub.com, navigate to the main page of the repository
+1. click on "Code" button
 
- Example https://github.com/KiboSoftware/stack-contentstack.git
+Example https://github.com/KiboSoftware/stack-contentstack.git
 
 7. Add remote github repository URL
-  Syntax
-  $ git remote add origin <REMOTE_URL>  # Sets the new remote
-  ```bash
-  git remote add origin https://github.com/KiboSoftware/stack-contentstack.git
-  git remote -v   # Verifies the new remote URL
-  git push -u origin main   # Pushes the changes in your local repository up to the remote repository you specified as the origin
+   Syntax
+   $ git remote add origin <REMOTE_URL> # Sets the new remote
+
+```bash
+git remote add origin https://github.com/KiboSoftware/stack-contentstack.git
+git remote -v   # Verifies the new remote URL
+git push -u origin main   # Pushes the changes in your local repository up to the remote repository you specified as the origin
+```
 
 8. Create Tag for Release on github repository
-  Syntax
+   Syntax
    git tag <Version Info>
 
-  ```bash
-  git tag v-1.0.0
-  git push origin v-1.0.0
+```bash
+git tag v-1.0.0
+git push origin v-1.0.0
+```
 
-9. Chose Tag  & create Releases
- 1. On GitHub.com, navigate to the main page of the repository.
- 2. To the right of the list of files, click Releases.
- 3. Click "Draft a new release" button.
- 4. Click Choose a tag, type a version number for your release, and press Enter. Alternatively, select an existing tag.
-    Choose "v-1.0.0"    # which was previously pushed from cli
- 5. Type a title and description for your release. Default title will be selected tag - name like "v-1.0.0"
- 6. Click on "Publish release" button at the bottom
+9. Chose Tag & create Releases
+   1. On GitHub.com, navigate to the main page of the repository.
+   2. To the right of the list of files, click Releases.
+   3. Click "Draft a new release" button.
+   4. Click Choose a tag, type a version number for your release, and press Enter. Alternatively, select an existing tag.
+      Choose "v-1.0.0" # which was previously pushed from cli
+   5. Type a title and description for your release. Default title will be selected tag - name like "v-1.0.0"
+   6. Click on "Publish release" button at the bottom
 
- For more information about release
- https://docs.github.com/en/repositories/releasing-projects-on-github/managing-releases-in-a-repository
+For more information about release
+https://docs.github.com/en/repositories/releasing-projects-on-github/managing-releases-in-a-repository
 
 10. Login to target stack using CLI session
-  ```bash
-  csdx auth:login   # Use target/import stack credentials
+
+```bash
+csdx auth:login   # Use target/import stack credentials
+```
 
 11. After successful login, run this command to import your content from github repo to the target “stack”:
-  Syntax
-  csdx cm:stacks:seed --repo "<account/repository>" -k <stack_ApiKey>
+    Syntax
+    csdx cm:stacks:seed --repo "<account/repository>" -k <stack_ApiKey>
 
-  ```bash
-  csdx cm:stacks:seed --repo "KiboSoftware/stack-contentstack" -k blt**********
+```bash
+csdx cm:stacks:seed --repo "KiboSoftware/stack-contentstack" -k blt**********
+```
 
 ## Built with
 
@@ -155,4 +166,7 @@ git commit -m "initial commit"   #commit all added files & folders
 ## Contributions
 
 All contributions welcome!
-````
+
+```
+
+```
