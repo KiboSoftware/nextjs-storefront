@@ -25,10 +25,10 @@ const fetchProductSearch = async (searchParams: CategorySearchParams) => {
   return response.products
 }
 
-export const useProductsQueries = (productCodes: ProductCodes[]): UseProductsResponse => {
+export const useProductsQueries = (productCodes: string[]): UseProductsResponse => {
   const productCodeFilter: Array<string> = []
-  productCodes?.forEach((code) => {
-    productCodeFilter.push(`productCode eq ${code?.productCode}`)
+  productCodes?.forEach((productCode) => {
+    productCodeFilter.push(`productCode eq ${productCode}`)
   })
   const searchParams = buildProductSearchParams({
     filter: productCodeFilter.join(' or '),

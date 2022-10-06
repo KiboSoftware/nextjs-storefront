@@ -13,7 +13,7 @@ import type { Product } from '@/lib/gql/types'
 
 export interface ProductRecommendationsProps {
   title: string
-  productCodes: ProductCodes[]
+  productCodes: string[]
 }
 
 const ProductRecommendations = (props: ProductRecommendationsProps) => {

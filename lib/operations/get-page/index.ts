@@ -4,7 +4,7 @@ import Stack from '../../cms/content-stack'
 import amplience from '@/lib/cms/amplience'
 import contentful from '@/lib/cms/contentful'
 import { CMS } from '@/lib/constants'
-import { contentfulGetters, amplienceGetters } from '@/lib/getters'
+import { contentfulGetters, amplienceGetters, contentStackGetters } from '@/lib/getters'
 
 interface PageProps {
   contentTypeUid: string
@@ -16,8 +16,9 @@ const { publicRuntimeConfig } = getConfig()
 
 const getContentStackPage = async (params: PageProps) => {
   const response = await Stack.getEntry(params)
+
   return {
-    components: response[0][0]?.page_components || [],
+    components: contentStackGetters.getContentStackPageData(response[0][0]?.page_components) || [],
   }
 }
 

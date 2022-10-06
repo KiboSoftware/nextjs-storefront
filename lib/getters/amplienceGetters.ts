@@ -46,7 +46,7 @@ const formatHeroCarouselData = (heroCarouselData: any) => {
 const formatHomePageProductsData = (homePageProductsData: any) => {
   const homePageProductsReference = homePageProductsData?.products.map((reference: any) => ({
     title: reference?.title,
-    home_page_products: reference?.productSelector?.map((productCode: string) => ({ productCode })),
+    home_page_products: reference?.productSelector,
   }))
 
   return {

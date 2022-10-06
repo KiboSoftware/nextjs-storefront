@@ -137,6 +137,7 @@ const CmsComponent = (props: CmsComponentProps) => {
   const { content } = props
   const name = Object.keys(content)[0]
   const ComponentMapping = props.ComponentMap || DefaultComponentMap
+
   const mapping = ComponentMapping[name]
   const Component = mapping?.component
   const cmsProps = mapping?.mapDataToProps(content[name])

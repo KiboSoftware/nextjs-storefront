@@ -2,16 +2,12 @@ const formatContentfulProduct = (cmsProducts: any) => {
   if (cmsProducts?.product_recommendations) {
     return {
       ...cmsProducts,
-      product_recommendations: cmsProducts?.product_recommendations?.map((productCode: string) => {
-        return { productCode }
-      }),
+      product_recommendations: cmsProducts?.product_recommendations,
     }
   } else {
     return {
       ...cmsProducts,
-      customers_also_bought: cmsProducts?.customers_also_bought?.map((productCode: string) => {
-        return { productCode }
-      }),
+      customers_also_bought: cmsProducts?.customers_also_bought,
     }
   }
 }
@@ -56,9 +52,7 @@ const formatHomePageProductsData = (homePageProductsData: any) => {
   const homePageProductsReference = homePageProductsData?.reference.map((reference: any) => {
     return {
       ...reference,
-      home_page_products: reference.home_page_products?.map((productCode: string) => {
-        return { productCode }
-      }),
+      home_page_products: reference.home_page_products,
     }
   })
 
