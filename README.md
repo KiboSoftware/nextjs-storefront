@@ -139,13 +139,13 @@ git push origin v-1.0.0
 ```
 
 9. Chose Tag & create Releases
-   1. On GitHub.com, navigate to the main page of the repository.
-   2. To the right of the list of files, click Releases.
-   3. Click "Draft a new release" button.
-   4. Click Choose a tag, type a version number for your release, and press Enter. Alternatively, select an existing tag.
-      Choose "v-1.0.0" # which was previously pushed from cli
-   5. Type a title and description for your release. Default title will be selected tag - name like "v-1.0.0"
-   6. Click on "Publish release" button at the bottom
+   i. On GitHub.com, navigate to the main page of the repository.
+   ii. To the right of the list of files, click Releases.
+   iii. Click "Draft a new release" button.
+   iv. Click Choose a tag, type a version number for your release, and press Enter. Alternatively, select an existing tag.
+   Choose "v-1.0.0" # which was previously pushed from cli
+   v. Type a title and description for your release. Default title will be selected tag - name like "v-1.0.0"
+   vi. Click on "Publish release" button at the bottom
 
 For more information about release
 https://docs.github.com/en/repositories/releasing-projects-on-github/managing-releases-in-a-repository
