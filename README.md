@@ -87,6 +87,7 @@ npm run test # run unit / integration tests
 
 1. Create github repository with public access
 2. Create a folder named “stack” in your machine.
+   Example: Project Folder/Directory > stack (folder)
 3. Login to Source Stack
    open your terminal and run this command to log in to the CLI session:
 
