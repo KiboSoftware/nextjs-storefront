@@ -17,12 +17,5 @@ const Template: ComponentStory<typeof ProductRecommendations> = (args) => (
 export const Common = Template.bind({})
 Common.args = {
   title: 'Product Recommendations',
-  productCodes: [
-    { productCode: 'HKFT_023' },
-    { productCode: 'Hammock_022' },
-    { productCode: 'SleepBag_006' },
-    { productCode: 'HKFT_026' },
-    { productCode: 'BackP_007' },
-    { productCode: 'Hammock_021' },
-  ],
+  productCodes: ['HKFT_023', 'Hammock_022', 'SleepBag_006', 'HKFT_026', 'BackP_007', 'Hammock_021'],
 }

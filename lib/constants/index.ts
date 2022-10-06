@@ -104,6 +104,7 @@ export enum CMS {
   CONTENTFUL = 'contentful',
   CONTENTSTACK = 'contentstack',
   AMPLIENCE = 'amplience',
+  BUILDERIO = 'builder-io',
 }
 
 export enum DefaultId {

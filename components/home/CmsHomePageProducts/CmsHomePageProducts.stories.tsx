@@ -18,10 +18,10 @@ export const Common = Template.bind({})
 Common.args = {
   recentlyViewed: {
     title: 'Recently Viewed and Related',
-    productCodes: [{ productCode: 'SHOE12' }],
+    productCodes: ['SHOE12'],
   },
   topSellings: {
     title: 'Top-selling products',
-    productCodes: [{ productCode: 'ACC1' }],
+    productCodes: ['ACC1'],
   },
 }

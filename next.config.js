@@ -18,6 +18,7 @@ module.exports = {
       'images.contentstack.io',
       'images.ctfassets.net',
       'cdn.media.amplience.net',
+      'cdn.builder.io',
     ],
   },
   publicRuntimeConfig: {
@@ -77,7 +78,7 @@ module.exports = {
     defaultWishlistName: DEFAULT_WISHLIST_NAME,
     pciHost: process.env.KIBO_PCI_HOST,
     apiHost: process.env.KIBO_API_HOST,
-    cms: process.env.CMS || 'contentstack', // 'amplience', 'contentful'
+    cms: process.env.CMS || 'contentful', // 'amplience', 'contentstack'
     contentstack: {
       apiKey: process.env.NEXT_PUBLIC_CONTENTSTACK_API_KEY,
       deliveryToken: process.env.NEXT_PUBLIC_CONTENTSTACK_DELIVERY_TOKEN,

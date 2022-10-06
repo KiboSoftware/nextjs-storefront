@@ -2,13 +2,16 @@ import React from 'react'
 
 import { BuilderComponent, builder, useIsPreviewing } from '@builder.io/react'
 import { Builder } from '@builder.io/react'
+import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
 import getConfig from 'next/config'
 import { useRouter } from 'next/router'
 
+import nextI18NextConfig from '../../next-i18next.config'
 import KiboHeroCarousel from '@/components/home/Carousel/KiboHeroCarousel'
 import CmsHomePageProducts from '@/components/home/CmsHomePageProducts/CmsHomePageProducts'
 import ContentTile from '@/components/home/ContentTile/ContentTile'
 import SmallBanner from '@/components/home/SmallBanner/SmallBanner'
+import { FullWidthLayout } from '@/components/layout'
 import { ProductRecommendations } from '@/components/product'
 
 const { publicRuntimeConfig } = getConfig()
@@ -365,9 +368,7 @@ Builder.registerComponent(ContentTile, {
   ],
 })
 
-export async function getStaticProps({ params }: any) {
-  console.log('--params?.page--', params?.page)
-
+export async function getStaticProps({ params, locale }: any) {
   // Fetch the builder content
   const page = await builder
     .get('page', {
@@ -380,6 +381,7 @@ export async function getStaticProps({ params }: any) {
   return {
     props: {
       page: page || null,
+      ...(await serverSideTranslations(locale as string, ['common', 'product'], nextI18NextConfig)),
     },
     revalidate: 5,
   }
@@ -399,13 +401,13 @@ export async function getStaticPaths() {
   }
 }
 
-export default function Page({ page }: any) {
-  const router = useRouter()
-  const isPreviewing = useIsPreviewing()
-
+const Page = ({ page }: any) => {
   return (
     <>
       <BuilderComponent model="page" content={page} />
     </>
   )
 }
+
+Page.getLayout = FullWidthLayout
+export default Page
