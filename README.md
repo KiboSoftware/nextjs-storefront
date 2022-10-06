@@ -75,7 +75,7 @@ npm run storybook # start storybook for
 npm run test # run unit / integration tests
 ```
 
-## Import from Non-Contentstack's GitHub Repository using ContentStack Seed Commands
+## Import stack content from Non-Contentstack's GitHub Repository using ContentStack Seed Commands
 
 1. Create github repository with public access
 2. Create a folder named “stack” in your machine.
