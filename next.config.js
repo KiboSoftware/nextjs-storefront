@@ -77,11 +77,13 @@ module.exports = {
     defaultWishlistName: DEFAULT_WISHLIST_NAME,
     pciHost: process.env.KIBO_PCI_HOST,
     apiHost: process.env.KIBO_API_HOST,
-    cms: process.env.CMS || 'amplience',
+    cms: process.env.CMS || 'contentstack',
     contentstack: {
-      apiKey: process.env.NEXT_PUBLIC_CONTENTSTACK_API_KEY,
-      deliveryToken: process.env.NEXT_PUBLIC_CONTENTSTACK_DELIVERY_TOKEN,
-      environment: process.env.NEXT_PUBLIC_CONTENTSTACK_ENVIRONMENT,
+      apiKey: 'blt31c87c8549983f7c',
+      deliveryToken: 'csc74017d59e923dd52be62872',
+      environment: 'dev',
+      managementToken: 'cs40c62977d4770e46e5b72f17',
+      apiHost: 'api.contentstack.io',
     },
     contentful: {
       accessToken: process.env.CONTENTFUL_ACCESS_TOKEN,
