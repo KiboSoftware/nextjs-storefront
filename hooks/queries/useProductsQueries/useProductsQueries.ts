@@ -4,7 +4,7 @@ import { makeGraphQLClient } from '@/lib/gql/client'
 import { searchProductsQuery } from '@/lib/gql/queries'
 import { buildProductSearchParams } from '@/lib/helpers'
 import { productSearchResultKeys } from '@/lib/react-query/queryKeys'
-import type { CategorySearchParams, ProductCodes } from '@/lib/types'
+import type { CategorySearchParams } from '@/lib/types'
 
 import type { ProductSearchResult } from '@/lib/gql/types'
 
