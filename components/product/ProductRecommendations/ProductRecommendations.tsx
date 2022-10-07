@@ -24,39 +24,45 @@ const ProductRecommendations = (props: ProductRecommendationsProps) => {
   const products = productSearchResult?.items as Product[]
 
   return (
-    <Grid item xs={12} sx={{ backgroundColor: 'grey.100', p: { xs: 1, md: 5 }, marginY: 2 }}>
-      <Typography variant="h2" gutterBottom>
-        {title}
-      </Typography>
-      <Box
-        display="flex"
-        sx={{ gap: { xs: 0, md: 4 }, maxWidth: { xs: '100vw', md: '100%' }, overflowX: 'auto' }}
-      >
-        {products?.map((product) => {
-          return (
-            <Box key={product?.productCode} width="100%">
-              <ProductCard
-                imageUrl={
-                  productGetters.getCoverImage(product) &&
-                  productGetters.handleProtocolRelativeUrl(productGetters.getCoverImage(product))
-                }
-                link={getProductLink(product?.productCode as string)}
-                price={t<string>('currency', {
-                  val: productGetters.getPrice(product).regular,
-                })}
-                {...(productGetters.getPrice(product).special && {
-                  salePrice: t<string>('currency', {
-                    val: productGetters.getPrice(product).special,
-                  }),
-                })}
-                title={productGetters.getName(product) as string}
-                rating={productGetters.getRating(product)}
-              />
-            </Box>
-          )
-        })}
-      </Box>
-    </Grid>
+    <>
+      {productCodes?.length > 0 && (
+        <Grid item xs={12} sx={{ backgroundColor: 'grey.100', p: { xs: 1, md: 5 }, marginY: 2 }}>
+          <Typography variant="h2" gutterBottom>
+            {title}
+          </Typography>
+          <Box
+            display="flex"
+            sx={{ gap: { xs: 0, md: 4 }, maxWidth: { xs: '100vw', md: '100%' }, overflowX: 'auto' }}
+          >
+            {products?.map((product) => {
+              return (
+                <Box key={product?.productCode} width="100%">
+                  <ProductCard
+                    imageUrl={
+                      productGetters.getCoverImage(product) &&
+                      productGetters.handleProtocolRelativeUrl(
+                        productGetters.getCoverImage(product)
+                      )
+                    }
+                    link={getProductLink(product?.productCode as string)}
+                    price={t<string>('currency', {
+                      val: productGetters.getPrice(product).regular,
+                    })}
+                    {...(productGetters.getPrice(product).special && {
+                      salePrice: t<string>('currency', {
+                        val: productGetters.getPrice(product).special,
+                      }),
+                    })}
+                    title={productGetters.getName(product) as string}
+                    rating={productGetters.getRating(product)}
+                  />
+                </Box>
+              )
+            })}
+          </Box>
+        </Grid>
+      )}
+    </>
   )
 }
 

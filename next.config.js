@@ -90,6 +90,18 @@ module.exports = {
     amplience: {
       hubName: 'kibo',
       homePageContentUrl: 'https://kibo-example.com/kibo-home-page',
+      productDetailsPageContentUrl: 'https://kibo-examples.com/pdp-products',
+      requestParams: {
+        format: 'inlined',
+        depth: 'all',
+      },
+      homePageContentTypes: {
+        smallBanner: 'Kibo Simple Banner',
+        heroCarousel: 'Kibo Hero Carousel Demo',
+        homePageProducts: 'Home Page Products',
+        largePromoBlocks: 'Large promo blocks',
+        smallPromoBlocks: 'Small promo blocks',
+      },
     },
   },
   serverRuntimeConfig: {
