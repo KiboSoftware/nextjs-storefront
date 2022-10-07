@@ -80,8 +80,8 @@ module.exports = {
     cms: process.env.CMS || 'contentstack',
     contentstack: {
       apiKey: 'blt31c87c8549983f7c',
-      deliveryToken: 'csc74017d59e923dd52be62872',
-      environment: 'dev',
+      deliveryToken: 'cse75da174a21518f5e92b77e8',
+      environment: 'preview',
       managementToken: 'cs40c62977d4770e46e5b72f17',
       apiHost: 'api.contentstack.io',
     },
