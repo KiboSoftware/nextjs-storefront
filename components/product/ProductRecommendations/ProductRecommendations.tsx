@@ -7,7 +7,6 @@ import { ProductCard } from '@/components/product'
 import { useProductsQueries } from '@/hooks'
 import { productGetters } from '@/lib/getters'
 import { uiHelpers } from '@/lib/helpers'
-import type { ProductCodes } from '@/lib/types'
 
 import type { Product } from '@/lib/gql/types'
 
