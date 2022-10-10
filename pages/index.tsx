@@ -20,6 +20,7 @@ const getCmsHomePageData = async () => {
     contentTypeUid: 'home_page',
     referenceFieldPath: [
       'page_components.hero_carousel.hero_carousel_items',
+      'page_components.home_page_products.reference',
       'page_components.large_promo_blocks.large_promo_blocks',
       'page_components.small_promo_blocks.small_promo_blocks',
     ],
