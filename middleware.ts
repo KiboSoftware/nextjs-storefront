@@ -1,6 +1,6 @@
 import { NextResponse, NextRequest } from 'next/server'
 
-import { decodeParseCookieValue } from '@/lib/helpers/cookieHelper'
+import { decodeParseCookieValue } from './lib/helpers/cookieHelper'
 
 const checkIsAutheticated = (req: NextRequest) => {
   const cookie = req.headers.get('cookie')
