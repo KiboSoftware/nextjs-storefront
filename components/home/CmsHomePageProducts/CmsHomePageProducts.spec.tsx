@@ -17,10 +17,10 @@ describe('[component] CmsHomePageProducts', () => {
   it('should render component', async () => {
     render(<Common {...Common.args} />)
     const title = screen.getAllByRole('heading')
-
+    const itemCount = (productSearchResultMock?.items?.length || 0) * 2
     await waitFor(() => {
       const productCard = screen.getAllByTestId('product-card-mock')
-      expect(productCard.length).toBe(productSearchResultMock?.items?.length)
+      expect(productCard.length).toBe(itemCount)
     })
     expect(title[0]).toHaveTextContent(Common?.args?.recentlyViewed?.title as string)
     expect(title[1]).toHaveTextContent(Common?.args?.topSellings?.title as string)
