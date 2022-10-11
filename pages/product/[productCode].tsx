@@ -63,13 +63,9 @@ export async function getStaticPaths() {
   } as CategorySearchParams)
   const { items } = searchResponse?.data?.products
 
-  let paths: string[] = []
+  const paths: string[] = []
   items?.length &&
     items?.map((item: { productCode: string }) => paths.push(`/product/${item.productCode}`))
-
-  if (currentCMS === CMS.BUILDERIO) {
-    paths = ['/product/[productCode]']
-  }
 
   return { paths, fallback: true }
 }
