@@ -124,7 +124,7 @@ const formatAmplienceProductDetailsData = (cmsProducts: any) => {
     recommendations: {
       title: cmsProducts?.recommendations?.title,
       product_recommendations: cmsProducts?.recommendations?.productSelector?.map(
-        (productCode: string) => ({ productCode })
+        (productCode: string) => productCode
       ),
     },
   }
@@ -132,7 +132,7 @@ const formatAmplienceProductDetailsData = (cmsProducts: any) => {
     customers_also_bought: {
       title: cmsProducts?.customersAlsoBought?.title,
       customer_also_bought: cmsProducts?.customersAlsoBought?.productSelector.map(
-        (productCode: string) => ({ productCode })
+        (productCode: string) => productCode
       ),
     },
   }

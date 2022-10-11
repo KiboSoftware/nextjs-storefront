@@ -5,7 +5,9 @@ import getConfig from 'next/config'
 import { useRouter } from 'next/router'
 
 import nextI18NextConfig from '../../next-i18next.config'
+import CmsComponent from '@/components/home/CmsComponent/CmsComponent'
 import { ProductDetailTemplate } from '@/components/page-templates'
+import { ProductRecommendations } from '@/components/product'
 import getCategoryTree from '@/lib/api/operations/get-category-tree'
 import getProduct from '@/lib/api/operations/get-product'
 import search from '@/lib/api/operations/get-product-search'
@@ -34,6 +36,14 @@ export async function getStaticProps(context: GetStaticPropsContext) {
   const product = await getProduct(productCode)
   const categoriesTree: CategoryTreeResponse = await getCategoryTree()
 
+  const page = await builder
+    .get('page', {
+      userAttributes: {
+        urlPath: `/product/productdetails`,
+      },
+    })
+    .toPromise()
+
   return {
     props: {
       productCode,
@@ -51,10 +61,16 @@ export async function getStaticPaths() {
   const searchResponse = await search({
     pageSize: serverRuntimeConfig.pageSize,
   } as CategorySearchParams)
-  const items = searchResponse?.data?.products?.items || []
-  const paths: string[] = []
+  const { items } = searchResponse?.data?.products
+
+  let paths: string[] = []
   items?.length &&
     items?.map((item: { productCode: string }) => paths.push(`/product/${item.productCode}`))
+
+  if (currentCMS === CMS.BUILDERIO) {
+    paths = ['/product/[productCode]']
+  }
+
   return { paths, fallback: true }
 }
 

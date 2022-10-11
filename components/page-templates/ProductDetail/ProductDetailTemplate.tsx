@@ -9,7 +9,6 @@ import { useTranslation } from 'next-i18next'
 import { FulfillmentOptions, Price, QuantitySelector } from '@/components/common'
 import { KiboBreadcrumbs, ImageGallery } from '@/components/core'
 import { AddToCartDialog, StoreLocatorDialog } from '@/components/dialogs'
-import CmsComponent from '@/components/home/CmsComponent/CmsComponent'
 import {
   ColorSelector,
   ProductInformation,
@@ -42,12 +41,12 @@ import type {
 interface ProductDetailTemplateProps {
   product: ProductCustom
   breadcrumbs: BreadCrumb[]
-  cmsProducts: any
+  children?: any
 }
 
 const ProductDetailTemplate = (props: ProductDetailTemplateProps) => {
-  const { product, breadcrumbs, cmsProducts } = props
-  const { t } = useTranslation('common')
+  const { product, breadcrumbs, children } = props
+  const { t } = useTranslation(['common'])
   const { showModal, closeModal } = useModalContext()
   const { addToCart } = useAddToCartMutation()
   const { data: purchaseLocation } = usePurchaseLocationQueries()
@@ -383,10 +382,7 @@ const ProductDetailTemplate = (props: ProductDetailTemplateProps) => {
           )}
         </Grid>
 
-        {cmsProducts?.components?.length > 0 &&
-          cmsProducts?.components?.map((data: any) => (
-            <CmsComponent key={Object.keys(data)[0]} content={data} />
-          ))}
+        {children}
       </Grid>
     </>
   )
