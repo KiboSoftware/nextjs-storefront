@@ -70,10 +70,10 @@ describe('[components] CartTemplate', () => {
 
     const { user, router } = setup(cartParams as CartTemplateProps)
     await waitFor(async () => {
-      const emptyCartSubTitle = screen.getByText(/empty-cart-message/i)
+      const emptyCartSubTitle = screen.getByText(/empty-cart-message/)
 
       expect(emptyCartSubTitle).toBeVisible()
-      const shopNowButton = screen.getByRole('link', { name: /shop-now/i })
+      const shopNowButton = screen.getByRole('button', { name: /shop-now/ })
       await user.click(shopNowButton)
       await waitFor(() => {
         expect(router.route).toBe('/')
