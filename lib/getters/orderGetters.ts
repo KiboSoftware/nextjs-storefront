@@ -1,6 +1,13 @@
 import { format } from 'date-fns'
 
 import { FulfillmentOptions } from '../constants'
+import {
+  ShippingDetails,
+  BillingDetails,
+  CheckoutDetails,
+  OrderSummary,
+  PaymentMethod,
+} from '../types/OrderGettersTypes'
 import { addressGetters } from './addressGetters'
 import { cardGetters } from './cardGetters'
 
@@ -8,7 +15,6 @@ import type {
   CrOrderItem,
   Order,
   Payment,
-  Maybe,
   CrAddress,
   Contact,
   CartItem,
@@ -18,47 +24,6 @@ import type {
   CustomerContact,
   CuAddress,
 } from '@/lib/gql/types'
-
-interface ContactDetails {
-  firstName: string
-  lastNameOrSurname: string
-}
-
-interface ShippingDetails extends ContactDetails {
-  shippingPhoneHome: string
-  shippingPhoneMobile: string
-  shippingPhoneWork: string
-  shippingAddress: CrAddress
-}
-
-interface BillingDetails extends ContactDetails {
-  billingPhoneHome?: string
-  billingPhoneMobile?: string
-  billingPhoneWork?: string
-  billingAddress: CrAddress
-}
-
-interface OrderSummary {
-  shippingTotal: number
-  subTotal: number
-  taxTotal: number
-  total: number
-  totalCollected: number
-}
-interface PaymentMethod {
-  cardType: string
-  cardNumberPartOrMask: string
-  expiry: string
-}
-interface CheckoutDetails {
-  shipItems: Maybe<CrOrderItem>[]
-  pickupItems: Maybe<CrOrderItem>[]
-  orderSummary: OrderSummary
-  personalDetails: Contact
-  shippingDetails: ShippingDetails
-  billingDetails: BillingDetails
-  paymentMethods: PaymentMethod[]
-}
 
 const getEmail = (order: Order) => order?.email
 const getTotal = (order: Order | Cart): number => order?.total as number
@@ -101,17 +66,11 @@ const getShippingLastNameOrSurname = (order: Order): string =>
   addressGetters.getLastNameOrSurname(order.fulfillmentInfo?.fulfillmentContact as Contact)
 
 const getShippingPhoneHome = (order: Order): string =>
-  addressGetters.getPhoneNumbers(
-    order?.fulfillmentInfo?.fulfillmentContact?.phoneNumbers as Contact
-  ).home
+  addressGetters.getPhoneNumbers(order?.fulfillmentInfo?.fulfillmentContact as Contact).home
 const getShippingPhoneMobile = (order: Order): string =>
-  addressGetters.getPhoneNumbers(
-    order?.fulfillmentInfo?.fulfillmentContact?.phoneNumbers as Contact
-  ).mobile
+  addressGetters.getPhoneNumbers(order?.fulfillmentInfo?.fulfillmentContact as Contact).mobile
 const getShippingPhoneWork = (order: Order): string =>
-  addressGetters.getPhoneNumbers(
-    order?.fulfillmentInfo?.fulfillmentContact?.phoneNumbers as Contact
-  ).work
+  addressGetters.getPhoneNumbers(order?.fulfillmentInfo?.fulfillmentContact as Contact).work
 const getShippingAddress = (order: Order) =>
   addressGetters.getAddress(order?.fulfillmentInfo?.fulfillmentContact?.address as CrAddress)
 

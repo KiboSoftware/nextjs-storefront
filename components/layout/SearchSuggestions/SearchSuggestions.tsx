@@ -20,7 +20,7 @@ import Link from 'next/link'
 import { useRouter } from 'next/router'
 
 import { SearchBar } from '@/components/common'
-import { useDebounce, useSearchSuggestions } from '@/hooks'
+import { useDebounce, useSearchSuggestionsQueries } from '@/hooks'
 
 const style = {
   paper: {
