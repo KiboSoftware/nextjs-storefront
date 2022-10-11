@@ -36,13 +36,16 @@ export async function getStaticProps(context: GetStaticPropsContext) {
   const product = await getProduct(productCode)
   const categoriesTree: CategoryTreeResponse = await getCategoryTree()
 
-  const page = await builder
-    .get('page', {
-      userAttributes: {
-        urlPath: `/product/${productCode}`,
-      },
-    })
-    .toPromise()
+  let page
+  if (isCurrentCMSBuilderIO) {
+    page = await builder
+      .get('page', {
+        userAttributes: {
+          urlPath: `/product/${productCode}`,
+        },
+      })
+      .toPromise()
+  }
 
   return {
     props: {
