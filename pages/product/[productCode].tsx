@@ -39,7 +39,7 @@ export async function getStaticProps(context: GetStaticPropsContext) {
   const page = await builder
     .get('page', {
       userAttributes: {
-        urlPath: `/product/productdetails`,
+        urlPath: `/product/${productCode}`,
       },
     })
     .toPromise()
