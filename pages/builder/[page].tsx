@@ -366,12 +366,11 @@ Builder.registerComponent(ContentTile, {
   ],
 })
 
-export async function getStaticProps({ params, locale }: any) {
-  // Fetch the builder content
+export async function getStaticProps({ locale }: any) {
   const page = await builder
     .get('page', {
       userAttributes: {
-        urlPath: '/builder/homepage', // (params?.page?.join("/") || "")
+        urlPath: '/builder/homepage',
       },
     })
     .toPromise()
