@@ -9,7 +9,6 @@ import { orderMock } from '@/__mocks__/stories'
 import { addNewCard } from '@/__test__/e2e/helper'
 import * as stories from '@/components/checkout/PaymentStep/PaymentStep.stories'
 import { CheckoutStepProvider } from '@/context'
-import { UserEvent } from '@testing-library/user-event/dist/types/setup/setup'
 
 import { Order } from '@/lib/gql/types'
 
