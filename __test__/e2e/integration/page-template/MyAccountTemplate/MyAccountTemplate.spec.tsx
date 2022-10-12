@@ -370,7 +370,7 @@ describe('[component] - PaymentMethod (has saved payment methods)', () => {
   })
 })
 
-const addCardDetails = async (user: any) => {
+const addCardDetails = async (user: UserEvent) => {
   // Card form values
   const cardNumber = screen.getByRole('textbox', {
     name: /card-number/i,
@@ -388,7 +388,7 @@ const addCardDetails = async (user: any) => {
   await user.tab()
 }
 
-const addUpdateAddress = async (user: any) => {
+const addUpdateAddress = async (user: UserEvent) => {
   const firstName = screen.getByRole('textbox', { name: /first-name/i })
   const lastNameOrSurname = screen.getByRole('textbox', { name: /last-name-or-sur-name/i })
   const address1 = screen.getByRole('textbox', { name: /address1/i })

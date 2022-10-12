@@ -7,7 +7,7 @@ import { useTranslation } from 'next-i18next'
 
 import { ProfileDetailsForm } from '@/components/my-account'
 import { useUpdateUserDataMutations, useUpdateUserPasswordMutations } from '@/hooks'
-import { accountDetailsGetters } from '@/lib/getters'
+import { userGetters } from '@/lib/getters'
 import { UpdateProfileDataParam, PasswordTypes } from '@/lib/types'
 
 import { CustomerAccount } from '@/lib/gql/types'
@@ -30,7 +30,7 @@ const MyProfile = (props: MyProfileProps) => {
   const [currentEditableField, setCurrentEditableField] = useState<number | null>(null)
 
   const { id, firstName, lastName, emailAddress, fullName } =
-    accountDetailsGetters.getPersonalDetails(user)
+    userGetters.getCustomerAccountDetails(user)
 
   const viewProfileDetails = [
     {
