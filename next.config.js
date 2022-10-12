@@ -1,9 +1,21 @@
 /** @type {import('next').NextConfig} */
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+const withPWA = require('next-pwa')({
+  dest: 'public',
+  register: true,
+  skipWaiting: true,
+  disable: process.env.NODE_ENV === 'development',
+  fallbacks: {
+    image: '/product_placeholder.svg',
+  },
+})
+
+// eslint-disable-next-line @typescript-eslint/no-var-requires
 const { i18n } = require('./next-i18next.config')
 const LOCATION_COOKIE = 'kibo_purchase_location'
 const DEFAULT_WISHLIST_NAME = 'default-wishlist'
 
-module.exports = {
+module.exports = withPWA({
   reactStrictMode: true,
   i18n,
   images: {
@@ -110,4 +122,4 @@ module.exports = {
     cacheKey: 'categoryTree',
     cacheTimeOut: 10000,
   },
-}
+})
