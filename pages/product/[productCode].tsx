@@ -66,7 +66,7 @@ export async function getStaticPaths() {
 const ProductDetailPage: NextPage = (props: any) => {
   const { productCode, product, cmsProductDetail } = props
   const { isFallback } = useRouter()
-  const [cmsProductDetailRespones, setCmsProductDetailPageResponse] = useState(cmsProductDetail)
+  const [cmsProductDetailRespone, setCmsProductDetailPageResponse] = useState(cmsProductDetail)
 
   const fetchData = async () => {
     try {
@@ -93,7 +93,7 @@ const ProductDetailPage: NextPage = (props: any) => {
       <ProductDetailTemplate
         product={product}
         breadcrumbs={breadcrumbs}
-        cmsProducts={cmsProductDetailRespones}
+        cmsProducts={cmsProductDetailRespone}
       />
     </>
   )

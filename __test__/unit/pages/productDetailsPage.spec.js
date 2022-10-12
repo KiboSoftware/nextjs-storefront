@@ -120,6 +120,7 @@ describe('[page] Product Details Page', () => {
     const response = getStaticProps(context)
     expect(response).resolves.toStrictEqual({
       props: {
+        productCode: 'MS-BTL-001',
         product: {
           productCode: 'mocked-product',
         },
