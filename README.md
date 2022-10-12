@@ -83,6 +83,37 @@ npm run test # run unit / integration tests
 - Data Fetching / State Management - [React Query](https://react-query-v3.tanstack.com/overview)
 - Localization - [Next i18Next](https://github.com/i18next/next-i18next)
 
+## Import KiboCommerce demo data for ContentStack
+
+Seed your ContentStack Stack with content seen in the Kibo Commerce demo using the ContentStack CLI.
+For full details, please check ContentStack's CLI Documentation
+
+### Prerequisites
+
+    Contentstack account
+    Node.js version 8 or above
+
+### Steps
+
+1. Install ContentStack CLI
+
+```bash
+npm install -g @contentstack/cli
+```
+
+2. Login to target stack using CLI session
+
+```bash
+csdx auth:login   # Use target/import stack credentials
+```
+
+3. After successful login, run this command to import your content from github repo to the target “stack”:  
+   Replace `<stack_ApiKey>` with your ContentStack api key
+
+```bash
+csdx cm:stacks:seed --repo "KiboSoftware/stack-contentstack" -k <stack_ApiKey>
+```
+
 ## Contributions
 
 All contributions welcome!
