@@ -114,6 +114,36 @@ csdx auth:login   # Use target/import stack credentials
 csdx cm:stacks:seed --repo "KiboSoftware/stack-contentstack" -k <stack_ApiKey>
 ```
 
+## Import KiboCommerce demo data for Contentful
+
+Seed your Contentful Space with content seen in the Kibo Commerce demo using the Contentful CLI.
+For full details, please check Contentful's CLI Documentation
+
+### Prerequisites
+
+Contentful account
+
+### Steps
+
+1. Install Contentful CLI
+
+```bash
+npm install -g contentful-cli
+```
+
+2. Login to target space using CLI session
+
+```bash
+contentful login   # Use target/import space credentials
+```
+
+3. After successful login, run this command to import your content from exported directory to the target “space”:  
+   Replace `<path_to_import_target-space-config>` with your export.json path
+
+```bash
+contentful space import --config “<path_to_import_target-space-config>”
+```
+
 ## Contributions
 
 All contributions welcome!
