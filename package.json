@@ -20,7 +20,6 @@
     "prepare": "husky install"
   },
   "dependencies": {
-    "@contentstack/cli": "^1.0.4",
     "@contentstack/live-preview-utils": "^1.1.0",
     "@contentstack/utils": "^1.1.2",
     "@emotion/cache": "latest",
