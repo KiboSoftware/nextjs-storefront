@@ -43,7 +43,7 @@ const AddressList = (props: AddressListProps) => {
     selectedAddressId,
     onAddressSelection,
   } = props
-  const { t } = useTranslation(['common'])
+  const { t } = useTranslation('common')
 
   return (
     <Box maxWidth={'fit-content'}>
@@ -61,7 +61,7 @@ const AddressList = (props: AddressListProps) => {
         )
       ) : (
         <Typography variant="h4" fontWeight={'bold'}>
-          {t('common:no-saved-addresses-yet')}
+          {t('no-saved-addresses-yet')}
         </Typography>
       )}
     </Box>
@@ -70,7 +70,7 @@ const AddressList = (props: AddressListProps) => {
 
 const KiboAddressList = (props: AddressListProps) => {
   const { addresses, heading } = props
-  const { t } = useTranslation(['common'])
+  const { t } = useTranslation('common')
 
   return (
     <>
@@ -82,7 +82,7 @@ const KiboAddressList = (props: AddressListProps) => {
       {addresses?.map((item: CustomerContact, index) => (
         <Box paddingY={1} key={item.id + 'address'}>
           <AddressCard
-            title={index === 0 ? t('common:primary') : ''}
+            title={index === 0 ? t('primary') : ''}
             {...buildAddressProps(item.address as CuAddress)}
           />
         </Box>
@@ -94,7 +94,7 @@ const KiboAddressList = (props: AddressListProps) => {
 const KiboRadioAddressList = (props: KiboAddressListProps) => {
   const { addresses, selectedAddressId, heading, subHeading, onAddressSelect } = props
   const [selectedAddress, setSelectedAddress] = useState(selectedAddressId)
-  const { t } = useTranslation(['common'])
+  const { t } = useTranslation('common')
   const radioOptions = addresses?.reduce((arr: any, item: CustomerContact, index: number) => {
     if (item.id)
       arr.push({
@@ -102,7 +102,7 @@ const KiboRadioAddressList = (props: KiboAddressListProps) => {
         name: `${item.id}`,
         label: (
           <AddressCard
-            title={index === 0 ? t('common:primary') : ''}
+            title={index === 0 ? t('primary') : ''}
             {...buildAddressProps(item.address as CuAddress)}
           />
         ),

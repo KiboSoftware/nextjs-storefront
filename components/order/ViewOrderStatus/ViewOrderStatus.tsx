@@ -37,7 +37,7 @@ const buttonStyle = {
 } as SxProps<Theme> | undefined
 
 const useViewOrderStatusSchema = () => {
-  const { t } = useTranslation('orderhistory')
+  const { t } = useTranslation('common')
 
   return yup.object().shape({
     orderNumber: yup.string().required(t('order-number-is-required')),
@@ -50,7 +50,7 @@ const useViewOrderStatusSchema = () => {
 
 const ViewOrderStatus = (props: ViewOrderStatusProps) => {
   const { onOrderStatusSubmit, lookupErrorMessage, lookupWarningMessage } = props
-  const { t } = useTranslation('orderhistory')
+  const { t } = useTranslation('common')
 
   const theme = useTheme()
   const mdScreen = useMediaQuery(theme.breakpoints.up('md'))

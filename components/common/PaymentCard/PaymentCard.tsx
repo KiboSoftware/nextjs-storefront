@@ -15,7 +15,7 @@ interface PaymentCardDetailsViewProps {
 
 const PaymentCard = (props: PaymentCardDetailsViewProps) => {
   const { title, cardNumberPart, expireMonth, expireYear, cardType } = props
-  const { t } = useTranslation('checkout')
+  const { t } = useTranslation('common')
 
   return (
     <>

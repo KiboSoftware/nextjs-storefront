@@ -78,7 +78,7 @@ const style = {
 }
 
 const MyAccountTemplate = () => {
-  const { t } = useTranslation(['checkout', 'common'])
+  const { t } = useTranslation('common')
   const router = useRouter()
   const theme = useTheme()
   const mdScreen = useMediaQuery(theme.breakpoints.up('md'))
@@ -95,7 +95,7 @@ const MyAccountTemplate = () => {
     {
       id: 'my-profile-accordion',
       controls: 'my-profile-content',
-      header: t('common:my-profile'),
+      header: t('my-profile'),
       component: null,
     },
     {
@@ -116,9 +116,9 @@ const MyAccountTemplate = () => {
     <Grid container>
       <Grid item md={8} xs={12}>
         {!mdScreen && (
-          <Link aria-label={t('common:back')} sx={{ ...style.backButton }} href="/">
+          <Link aria-label={t('back')} sx={{ ...style.backButton }} href="/">
             <ChevronLeft />
-            {t('common:back')}
+            {t('back')}
           </Link>
         )}
         <Box
@@ -135,7 +135,7 @@ const MyAccountTemplate = () => {
             variant={mdScreen ? 'h1' : 'h2'}
             sx={{ paddingLeft: { md: '0.5rem', xs: 0 } }}
           >
-            {t('common:my-account')}
+            {t('my-account')}
           </Typography>
         </Box>
         <Divider sx={{ borderColor: 'grey.500' }} />
@@ -170,12 +170,12 @@ const MyAccountTemplate = () => {
           }}
           onClick={handleGoToOrderHistory}
         >
-          <Typography variant="h3">{t('common:order-history')}</Typography>
+          <Typography variant="h3">{t('order-history')}</Typography>
           <ChevronRightIcon />
         </Box>
         <Divider sx={{ backgroundColor: 'grey.300', ...style.divider }} />
         <Box sx={{ ...style.myAccountChildren, cursor: 'pointer' }} onClick={logout}>
-          <Typography variant="h3">{t('common:logout')}</Typography>
+          <Typography variant="h3">{t('logout')}</Typography>
         </Box>
         <Divider sx={{ borderColor: 'grey.500' }} />
       </Grid>

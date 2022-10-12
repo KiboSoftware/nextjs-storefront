@@ -1,40 +1,45 @@
 import type { SavedCard, TokenizedCard } from '@/lib/types'
 
+import type { Card, PaymentCard } from '../gql/types'
+
+type GenericCard = SavedCard | Card
 // cards
-const getCardNumberPart = (creditCardData?: SavedCard): string =>
+const getCardNumberPart = (creditCardData?: GenericCard): string =>
   creditCardData?.cardNumberPart || ''
+
+const getExpireDate = (creditCardData?: GenericCard): string =>
+  `${getExpireMonth(creditCardData)}/${getExpireYear(creditCardData)}`
+
+const getCardType = (creditCardData?: GenericCard): string => creditCardData?.cardType || ''
+
+const getCardId = (creditCardData?: GenericCard): string => creditCardData?.id || ''
+
+const getIsDefaultPayMethod = (creditCardData?: GenericCard): boolean =>
+  Boolean(creditCardData?.isDefaultPayMethod)
 
 const getCardNumber = (creditCardData?: SavedCard): string => creditCardData?.cardNumber || ''
 
 const getIsCardInfoSaved = (creditCardData?: SavedCard): boolean =>
   creditCardData?.isCardInfoSaved || false
 
-const getExpireMonth = (creditCardData?: SavedCard): number => creditCardData?.expireMonth || 0
-
-const getExpireYear = (creditCardData?: SavedCard): number => creditCardData?.expireYear || 0
-
-const getExpireDate = (creditCardData?: SavedCard): string =>
-  `${getExpireMonth(creditCardData)}/${getExpireYear(creditCardData)}`
-
-const getCardType = (creditCardData?: SavedCard): string => creditCardData?.cardType || ''
-
-const getCardId = (creditCardData?: SavedCard): string => creditCardData?.id || ''
-
-const getIsDefaultPayMethod = (creditCardData?: SavedCard): boolean =>
-  Boolean(creditCardData?.isDefaultPayMethod)
-
 const getPaymentType = (creditCardData?: SavedCard): string => creditCardData?.paymentType || ''
 
-const getCardDetails = (card: SavedCard) => {
+const getExpireMonth = (creditCardData?: GenericCard | PaymentCard): number =>
+  creditCardData?.expireMonth || 0
+
+const getExpireYear = (creditCardData?: GenericCard | PaymentCard): number =>
+  creditCardData?.expireYear || 0
+
+const getCardDetails = (card: GenericCard) => {
   return {
     cardNumberPart: getCardNumberPart(card),
-    isCardInfoSaved: getIsCardInfoSaved(card),
     cardType: getCardType(card),
     expireMonth: getExpireMonth(card),
     expireYear: getExpireYear(card),
     id: getCardId(card),
     isDefaultPayMethod: getIsDefaultPayMethod(card),
-    paymentType: getPaymentType(card),
+    isCardInfoSaved: getIsCardInfoSaved(card as SavedCard),
+    paymentType: getPaymentType(card as SavedCard),
   }
 }
 
@@ -42,6 +47,9 @@ const getTokenizedCardNumberMask = (tokenizedData: TokenizedCard): string =>
   tokenizedData?.numberPart || ''
 
 const getTokenizedId = (tokenizedData: TokenizedCard) => tokenizedData?.id || ''
+
+const getPaymentServiceCardId = (card: PaymentCard) => card.paymentServiceCardId || ''
+const getCardNumberPartOrMask = (card: PaymentCard) => card.cardNumberPartOrMask || ''
 
 export const cardGetters = {
   getCardId,
@@ -54,6 +62,8 @@ export const cardGetters = {
   getPaymentType,
   getIsCardInfoSaved,
   getExpireDate,
+  getPaymentServiceCardId,
+  getCardNumberPartOrMask,
 
   getTokenizedCardNumberMask,
   getTokenizedId,

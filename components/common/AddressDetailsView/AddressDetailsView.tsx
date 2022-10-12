@@ -3,8 +3,7 @@ import React from 'react'
 import { Box } from '@mui/material'
 import { useTranslation } from 'next-i18next'
 
-import AddressCard from '@/components/common/AddressCard/AddressCard'
-import KiboRadio from '@/components/common/KiboRadio/KiboRadio'
+import { AddressCard, KiboRadio } from '@/components/common'
 
 import type { CrAddress } from '@/lib/gql/types'
 

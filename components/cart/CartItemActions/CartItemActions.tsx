@@ -18,7 +18,7 @@ const styles = {
 }
 
 const CartItemActions = () => {
-  const { t } = useTranslation('cart')
+  const { t } = useTranslation('common')
 
   return (
     <>

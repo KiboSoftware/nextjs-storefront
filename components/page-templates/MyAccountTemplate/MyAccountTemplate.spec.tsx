@@ -29,13 +29,13 @@ describe('[component] - MyAccountTemplate', () => {
   it('should render component', async () => {
     setup()
 
-    const myAccount = screen.getByText(/common:my-account/i)
-    const myProfile = screen.getByText(/common:my-profile/i)
+    const myAccount = screen.getByText(/my-account/i)
+    const myProfile = screen.getByText(/my-profile/i)
     const addressBook = screen.getByText(/address-book/i)
     const paymentMethod = screen.getAllByText(/payment-method/)[0]
     const orderDetails = screen.getByText(/order-details/i)
-    const orderHistory = screen.getByText(/common:order-history/i)
-    const logout = screen.getByText(/common:logout/i)
+    const orderHistory = screen.getByText(/order-history/i)
+    const logout = screen.getByText(/logout/i)
 
     expect(myAccount).toBeInTheDocument()
     expect(myProfile).toBeInTheDocument()
@@ -49,7 +49,7 @@ describe('[component] - MyAccountTemplate', () => {
   it('should redirect to order-history page when users click on Order History link', async () => {
     const { user } = setup()
 
-    const orderHistory = screen.getByText(/common:order-history/i)
+    const orderHistory = screen.getByText(/order-history/i)
 
     await user.click(orderHistory)
 

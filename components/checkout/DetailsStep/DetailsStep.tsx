@@ -9,7 +9,7 @@ import { useTranslation } from 'next-i18next'
 import { useForm, Controller } from 'react-hook-form'
 import * as yup from 'yup'
 
-import KiboTextBox from '@/components/common/KiboTextBox/KiboTextBox'
+import { KiboTextBox } from '@/components/common'
 import { LoginDialog } from '@/components/layout'
 import { useAuthContext, useCheckoutStepContext, STEP_STATUS, useModalContext } from '@/context'
 import { PersonalInfo, useUpdateCheckoutPersonalInfoMutation } from '@/hooks'
@@ -40,7 +40,7 @@ const buttonStyle = {
 } as SxProps<Theme> | undefined
 
 const useDetailsSchema = () => {
-  const { t } = useTranslation('checkout')
+  const { t } = useTranslation('common')
 
   return yup.object().shape({
     email: yup.string().email().required(t('this-field-is-required')),
@@ -63,7 +63,7 @@ const useDetailsSchema = () => {
 const DetailsStep = (props: DetailsProps) => {
   const { setAutoFocus = true, checkout } = props
 
-  const { t } = useTranslation('checkout')
+  const { t } = useTranslation('common')
   const updateCheckoutPersonalInfo = useUpdateCheckoutPersonalInfoMutation()
   const { isAuthenticated, setAuthError } = useAuthContext()
   const { showModal } = useModalContext()

@@ -80,7 +80,7 @@ const OrderHistoryTemplate = (props: OrderHistoryProps) => {
 
   const getOrderDetails = (order: Order) => {
     const { id, submittedDate, productNames, orderTotal, orderStatus } =
-      orderGetters.getOrderDetails(order)
+      orderGetters.getOrderHistoryDetails(order)
     return {
       id,
       submittedDate,

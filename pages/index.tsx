@@ -31,11 +31,7 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
     props: {
       categoriesTree,
       cmsPage,
-      ...(await serverSideTranslations(
-        locale as string,
-        ['common', 'checkout'],
-        nextI18NextConfig
-      )),
+      ...(await serverSideTranslations(locale as string, ['common'], nextI18NextConfig)),
     },
   }
 }

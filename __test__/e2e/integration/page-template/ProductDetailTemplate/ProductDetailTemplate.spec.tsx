@@ -180,7 +180,7 @@ describe('[component] - ProductDetailTemplate integration', () => {
     expect(shipRadio).toBeChecked()
 
     const addToCartButton = screen.getByRole('button', {
-      name: /common:add-to-cart/i,
+      name: /add-to-cart/i,
     })
 
     await user.click(addToCartButton)
@@ -228,7 +228,7 @@ describe('[component] - ProductDetailTemplate integration', () => {
     await waitFor(() => expect(pickupRadio).toBeChecked())
 
     const addToCartButton = screen.getByRole('button', {
-      name: /common:add-to-cart/i,
+      name: /add-to-cart/i,
     })
 
     expect(addToCartButton).toBeEnabled()
@@ -241,12 +241,12 @@ describe('[component] - ProductDetailTemplate integration', () => {
     const { user } = setup()
 
     const addToWishlistButton = screen.getByRole('button', {
-      name: 'common:add-to-wishlist',
+      name: 'add-to-wishlist',
     })
 
     await user.click(addToWishlistButton)
 
-    const title = screen.getByText('common:log-in')
+    const title = screen.getAllByText('log-in')[0]
 
     expect(title).toBeVisible()
   })
@@ -256,7 +256,7 @@ describe('[component] - ProductDetailTemplate integration', () => {
     const { user } = setup()
 
     const addToWishlistButton = screen.getByRole('button', {
-      name: 'common:add-to-wishlist',
+      name: 'add-to-wishlist',
     })
 
     await user.click(addToWishlistButton)
@@ -282,7 +282,7 @@ describe('[component] - ProductDetailTemplate integration', () => {
     expect(shipRadio).toBeChecked()
 
     const addToCartButton = screen.getByRole('button', {
-      name: /common:add-to-cart/i,
+      name: /add-to-cart/i,
     })
     await user.click(addToCartButton)
 

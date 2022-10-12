@@ -12,9 +12,8 @@ import {
   ShippingStep,
   PaymentStep,
   OrderReview,
-  OrderSummary,
 } from '@/components/checkout'
-import { PromoCodeBadge } from '@/components/common'
+import { OrderSummary, PromoCodeBadge } from '@/components/common'
 import { OrderConfirmation } from '@/components/order'
 import { useCheckoutStepContext, STEP_STATUS, useAuthContext } from '@/context'
 import {
@@ -23,10 +22,10 @@ import {
   useUpdateOrderCouponMutation,
   useDeleteOrderCouponMutation,
 } from '@/hooks'
-import { userAddressGetters } from '@/lib/getters'
+import { userGetters } from '@/lib/getters'
 import theme from '@/styles/theme'
 
-import type { Order } from '@/lib/gql/types'
+import type { CustomerContact, Order } from '@/lib/gql/types'
 interface CheckoutProps {
   checkout: Order
   initialStep?: number
@@ -42,7 +41,7 @@ const Checkout = (props: CheckoutProps) => {
 
   const [promoError, setPromoError] = useState<string>('')
 
-  const { t } = useTranslation(['checkout'])
+  const { t } = useTranslation('common')
   const router = useRouter()
 
   const { checkoutId } = router.query
@@ -100,22 +99,22 @@ const Checkout = (props: CheckoutProps) => {
   const orderSummaryArgs = {
     nameLabel: t('order-summary'),
     subTotalLabel: `Cart Subtotal of (${checkout?.items?.length} items)`,
-    shippingTotalLabel: t('common:standard-shopping'),
-    taxLabel: t('common:tax'),
-    totalLabel: t('common:order-total'),
-    subTotal: t('common:currency', { val: checkout?.subtotal }),
+    shippingTotalLabel: t('standard-shopping'),
+    taxLabel: t('tax'),
+    totalLabel: t('order-total'),
+    subTotal: t('currency', { val: checkout?.subtotal }),
     discountedSubtotal:
       checkout?.discountedSubtotal && checkout?.discountedSubtotal != checkout?.subtotal
-        ? t('common:currency', { val: checkout?.discountedSubtotal })
+        ? t('currency', { val: checkout?.discountedSubtotal })
         : '',
     shippingTotal: checkout?.shippingTotal
-      ? t('common:currency', { val: checkout?.shippingTotal })
-      : t('checkout:free'),
-    tax: t('common:currency', { val: checkout?.taxTotal }),
-    total: t('common:currency', { val: checkout?.total }),
-    checkoutLabel: t('checkout:go-to-checkout'),
-    shippingLabel: t('checkout:go-to-shipping'),
-    backLabel: t('checkout:Go Back'),
+      ? t('currency', { val: checkout?.shippingTotal })
+      : t('free'),
+    tax: t('currency', { val: checkout?.taxTotal }),
+    total: t('currency', { val: checkout?.total }),
+    checkoutLabel: t('go-to-checkout'),
+    shippingLabel: t('go-to-shipping'),
+    backLabel: t('go-back'),
     promoComponent: (
       <PromoCodeBadge
         onApplyCouponCode={handleApplyCouponCode}
@@ -134,8 +133,8 @@ const Checkout = (props: CheckoutProps) => {
   const numberOfItems = checkout && checkout?.items && checkout?.items?.length
   const showCheckoutSteps = activeStep !== steps.length
 
-  const userShippingAddress = userAddressGetters?.getUserShippingAddress(
-    savedUserAddressData?.items
+  const userShippingAddress = userGetters?.getUserShippingAddress(
+    savedUserAddressData?.items as CustomerContact[]
   )
   return (
     <>

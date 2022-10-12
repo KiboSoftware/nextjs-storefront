@@ -5,8 +5,7 @@ import { ComponentStory, ComponentMeta } from '@storybook/react'
 
 import ProductItem from './ProductItem'
 import { orderMock } from '@/__mocks__/stories/orderMock'
-import Price from '@/components/common/Price/Price'
-import QuantitySelector from '@/components/common/QuantitySelector/QuantitySelector'
+import { Price, QuantitySelector } from '@/components/common'
 import DefaultImage from '@/public/product_placeholder.svg'
 
 import type { CrProductOption } from '@/lib/gql/types'

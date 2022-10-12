@@ -226,7 +226,7 @@ describe('[components] Checkout integration', () => {
       const initialActiveStep = 2
       const { user } = setup(initialActiveStep)
 
-      await user.click(screen.getByRole('button', { name: 'common:add-payment-method' }))
+      await user.click(screen.getByRole('button', { name: 'add-payment-method' }))
 
       const creditCardPaymentMethodRadio = screen.getByRole('radio')
 

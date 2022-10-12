@@ -8,8 +8,7 @@ import { useTranslation } from 'next-i18next'
 import { useForm, Controller } from 'react-hook-form'
 import * as yup from 'yup'
 
-import KiboTextBox from '@/components/common/KiboTextBox/KiboTextBox'
-import PasswordValidation from '@/components/common/PasswordValidation/PasswordValidation'
+import { KiboTextBox, PasswordValidation } from '@/components/common'
 import { isPasswordValid } from '@/lib/helpers/validations/validations'
 
 export interface RegisterAccountInputData {
@@ -37,7 +36,7 @@ const styles = {
 const Content = (props: ContentProps) => {
   const { setAutoFocus = true, onRegisterNow, errorMessage } = props
   const [showPassword, setShowPassword] = useState<boolean>(false)
-  const { t } = useTranslation(['checkout', 'common'])
+  const { t } = useTranslation('common')
 
   const useDetailsSchema = () => {
     return yup.object().shape({
@@ -170,7 +169,7 @@ const Content = (props: ContentProps) => {
           onClick={() => handleSubmit(handleCreateAccount)()}
           disabled={!isValid}
         >
-          {t('common:create-an-account')}
+          {t('create-an-account')}
         </Button>
       </FormControl>
     </Box>

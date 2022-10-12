@@ -3,7 +3,7 @@ import React from 'react'
 import { Typography, Box, styled, Theme, useTheme, useMediaQuery, Stack, Link } from '@mui/material'
 import { useTranslation } from 'next-i18next'
 
-import KiboDialog from '@/components/common/KiboDialog/KiboDialog'
+import { KiboDialog } from '@/components/common'
 import { LoginDialog } from '@/components/layout'
 import Content, {
   RegisterAccountInputData,

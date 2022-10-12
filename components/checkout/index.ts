@@ -8,5 +8,4 @@ export { default as KiboStepper } from '@/components/checkout/KiboStepper/KiboSt
 export { default as ReviewStep } from '@/components/checkout/ReviewStep/ReviewStep'
 export { default as ShippingStep } from '@/components/checkout/ShippingStep/ShippingStep'
 export { default as OrderReview } from '@/components/checkout/OrderReview/OrderReview'
-export { default as OrderSummary } from '@/components/common/OrderSummary/OrderSummary'
 export { default as ShippingMethod } from '@/components/checkout/Shipping/OrderItems/ShippingMethod'

@@ -31,10 +31,10 @@ import {
   useDeleteCartCouponMutation,
 } from '@/hooks'
 import { FulfillmentOptions } from '@/lib/constants'
-import { checkoutGetters } from '@/lib/getters'
+import { orderGetters, cartGetters } from '@/lib/getters'
 import type { LocationCustom } from '@/lib/types'
 
-import type { Cart, Location, CartItemInput } from '@/lib/gql/types'
+import type { Cart, Location, CartItemInput, CartItem } from '@/lib/gql/types'
 
 export interface CartTemplateProps {
   cart: Cart
@@ -52,7 +52,7 @@ const styles = {
     height: '1px',
   },
   checkoutButtonStyle: {
-    borderradius: '0.25rem',
+    borderRadius: '0.25rem',
     height: '42px',
   },
 }
@@ -60,7 +60,7 @@ const styles = {
 const CartTemplate = (props: CartTemplateProps) => {
   const { data: cart } = useCartQueries(props?.cart)
 
-  const { t } = useTranslation(['common', 'checkout', 'cart'])
+  const { t } = useTranslation('common')
   const theme = useTheme()
   const isMobileViewport = useMediaQuery(theme.breakpoints.down('md'))
   const router = useRouter()
@@ -70,14 +70,14 @@ const CartTemplate = (props: CartTemplateProps) => {
   const { updateCartItem } = useUpdateCartItemMutation()
   const { showModal, closeModal } = useModalContext()
 
-  const cartItemCount = checkoutGetters.getCartItemCount(cart)
-  const cartItems = checkoutGetters.getCartItems(cart)
-  const cartSubTotal = checkoutGetters.getSubtotal(cart)
-  const cartDiscountedSubTotal = checkoutGetters.getDiscountedSubtotal(cart)
-  const cartShippingTotal = checkoutGetters.getShippingTotal(cart)
-  const cartTaxTotal = checkoutGetters.getTaxTotal(cart)
-  const cartTotal = checkoutGetters.getTotal(cart)
-  const locationCodes = checkoutGetters.getFulfillmentLocationCodes(cartItems)
+  const cartItemCount = cartGetters.getCartItemCount(cart)
+  const cartItems = cartGetters.getCartItems(cart)
+  const cartSubTotal = orderGetters.getSubtotal(cart)
+  const cartDiscountedSubTotal = orderGetters.getDiscountedSubtotal(cart)
+  const cartShippingTotal = orderGetters.getShippingTotal(cart)
+  const cartTaxTotal = orderGetters.getTaxTotal(cart)
+  const cartTotal = orderGetters.getTotal(cart)
+  const locationCodes = orderGetters.getFulfillmentLocationCodes(cartItems as CartItem[])
 
   const { data: locations } = useStoreLocationsQueries({ filter: locationCodes })
   const { data: purchaseLocation } = usePurchaseLocationQueries()
@@ -186,14 +186,12 @@ const CartTemplate = (props: CartTemplateProps) => {
     shippingTotalLabel: t('shipping'),
     taxLabel: t('estimated-tax'),
     totalLabel: t('estimated-order-total'),
-    subTotal: t('common:currency', { val: cartSubTotal }),
+    subTotal: t('currency', { val: cartSubTotal }),
     discountedSubtotal:
       cartDiscountedSubTotal && cartDiscountedSubTotal !== cartSubTotal
-        ? t('common:currency', { val: cartDiscountedSubTotal })
+        ? t('currency', { val: cartDiscountedSubTotal })
         : '',
-    shippingTotal: cartShippingTotal
-      ? t('currency', { val: cartShippingTotal })
-      : t('checkout:free'),
+    shippingTotal: cartShippingTotal ? t('currency', { val: cartShippingTotal }) : t('free'),
     tax: t('currency', { val: cartTaxTotal }),
     total: t('currency', { val: cartTotal }),
     promoComponent: (
@@ -207,16 +205,18 @@ const CartTemplate = (props: CartTemplateProps) => {
     ),
   }
 
+  console.log('length', cart?.items?.length)
+
   return (
     <Grid container>
       {/* Header section */}
       <Grid item xs={12} md={8} sx={{ paddingX: { xs: 2, md: 0 }, paddingY: { xs: 2 } }}>
         <Box display="flex" gap={1}>
           <Typography variant="h1" gutterBottom>
-            {t('cart:shopping-cart')}
+            {t('shopping-cart')}
           </Typography>
           <Typography variant="h1" fontWeight={'normal'}>
-            ({t('cart:cart-item-count', { count: cartItemCount })})
+            ({t('cart-item-count', { count: cartItemCount })})
           </Typography>
         </Box>
       </Grid>
@@ -264,7 +264,7 @@ const CartTemplate = (props: CartTemplateProps) => {
       {!cart?.items?.length && (
         <Box data-testid="empty-cart">
           <Typography variant="h4" fontWeight={'bold'}>
-            {t('cart:empty-cart-message')}
+            {t('empty-cart-message')}
           </Typography>
           <Box maxWidth="23.5rem">
             <Link href="/" passHref>
@@ -274,7 +274,7 @@ const CartTemplate = (props: CartTemplateProps) => {
                   color="primary"
                   sx={{ width: '100%', marginTop: '3.063rem' }}
                 >
-                  {t('common:shop-now')}
+                  {t('shop-now')}
                 </Button>
               </MuiLink>
             </Link>

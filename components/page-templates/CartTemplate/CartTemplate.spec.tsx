@@ -47,8 +47,8 @@ describe('[components] CartTemplate', () => {
   it('should render component', async () => {
     setup()
     await waitFor(async () => {
-      const cartTitle = screen.getByText(/cart:shopping-cart/i)
-      const cartItemCount = screen.getByText(/cart:cart-item-count/i)
+      const cartTitle = screen.getByText(/shopping-cart/i)
+      const cartItemCount = screen.getByText(/cart-item-count/i)
       const cartItemList = screen.getByTestId('cart-item-list-mock')
       const orderSummary = screen.getByTestId('cart-item-list-mock')
 
@@ -69,11 +69,11 @@ describe('[components] CartTemplate', () => {
     )
 
     const { user, router } = setup(cartParams as CartTemplateProps)
-    const emptyCartSubTitle = screen.getByText(/cart:empty-cart-message/i)
-    expect(emptyCartSubTitle).toBeVisible()
-
     await waitFor(async () => {
-      const shopNowButton = screen.getByRole('button', { name: /common:shop-now/i })
+      const emptyCartSubTitle = screen.getByText(/empty-cart-message/)
+
+      expect(emptyCartSubTitle).toBeVisible()
+      const shopNowButton = screen.getByRole('button', { name: /shop-now/ })
       await user.click(shopNowButton)
       await waitFor(() => {
         expect(router.route).toBe('/')

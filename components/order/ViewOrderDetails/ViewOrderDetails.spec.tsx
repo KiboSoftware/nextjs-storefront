@@ -38,7 +38,7 @@ describe('[component] - ViewOrderDetails', () => {
     expect(screen.getAllByTestId('product-item-list-component')).toHaveLength(2)
     expect(screen.getAllByTestId('product-option-component')).toHaveLength(3)
     expect(screen.getByTestId('saved-payment-method-view-component')).toBeVisible()
-    expect(screen.getByText('checkout:payment-information')).toBeVisible()
+    expect(screen.getByText('payment-information')).toBeVisible()
   })
 
   it('should render component for Order status', () => {
@@ -48,6 +48,6 @@ describe('[component] - ViewOrderDetails', () => {
     expect(screen.getByText(/view-order-status/i)).toBeVisible()
     expect(screen.getByText(/shipment-details/i)).toBeVisible()
     expect(screen.queryByTestId('order-summary-component')).not.toBeInTheDocument()
-    expect(screen.queryByText('checkout:payment-information')).not.toBeInTheDocument()
+    expect(screen.queryByText('payment-information')).not.toBeInTheDocument()
   })
 })

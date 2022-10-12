@@ -3,10 +3,10 @@ import React from 'react'
 import { Stack, Divider } from '@mui/material'
 
 import { AddressCard, ProductItem } from '..'
-import { orderGetters } from '@/lib/getters'
+import { addressGetters, orderGetters, productGetters } from '@/lib/getters'
 import type { LocationCustom } from '@/lib/types'
 
-import type { Maybe, CrOrderItem, CrAddress } from '@/lib/gql/types'
+import type { Maybe, CrOrderItem, CrAddress, CrProduct } from '@/lib/gql/types'
 
 export type ProductItemListProps = {
   items: Maybe<CrOrderItem>[]
@@ -28,7 +28,7 @@ const ProductItemList = (props: ProductItemListProps) => {
   } = props
 
   const storePickupAddress = (fulfillmentLocationCode: string): CrAddress => {
-    return orderGetters.getStorePickupAddress(storePickupAddresses, fulfillmentLocationCode)
+    return addressGetters.getStorePickupAddress(storePickupAddresses, fulfillmentLocationCode)
   }
 
   return (
@@ -38,28 +38,31 @@ const ProductItemList = (props: ProductItemListProps) => {
       spacing={2}
       data-testid="product-item-stack"
     >
-      {items?.map((item: Maybe<CrOrderItem>) => (
-        <Stack key={item?.id}>
-          <ProductItem
-            id={orderGetters.getProductId(item)}
-            productCode={orderGetters.getProductCode(item)}
-            image={orderGetters.getProductImage(item)}
-            name={orderGetters.getProductName(item)}
-            options={orderGetters.getProductOptions(item)}
-            price={orderGetters.getProductPrice(item)}
-            salePrice={orderGetters.getProductSalePrice(item)}
-            qty={orderGetters.getProductQuantity(item)}
-            purchaseLocation={orderGetters.getPurchaseLocation(item)}
-            isPickupItem={isPickupItem}
-            expectedDeliveryDate={expectedDeliveryDate}
-            onStoreLocatorClick={onClickChangeStore}
-            data-testid="product-item"
-          ></ProductItem>
-          {showAddress && item?.fulfillmentLocationCode && (
-            <AddressCard {...storePickupAddress(item?.fulfillmentLocationCode)} />
-          )}
-        </Stack>
-      ))}
+      {items?.map((item: Maybe<CrOrderItem>) => {
+        const product = item?.product as CrProduct
+        return (
+          <Stack key={item?.id}>
+            <ProductItem
+              id={orderGetters.getCartItemId(item as CrOrderItem)}
+              qty={orderGetters.getProductQuantity(item as CrOrderItem)}
+              purchaseLocation={orderGetters.getPurchaseLocation(item as CrOrderItem)}
+              productCode={productGetters.getProductId(product)}
+              image={productGetters.getProductImage(product)}
+              name={productGetters.getName(product)}
+              options={productGetters.getOptions(product)}
+              price={productGetters.getPrice(product).regular?.toString()}
+              salePrice={productGetters.getPrice(product).special?.toString()}
+              isPickupItem={isPickupItem}
+              expectedDeliveryDate={expectedDeliveryDate}
+              onStoreLocatorClick={onClickChangeStore}
+              data-testid="product-item"
+            ></ProductItem>
+            {showAddress && item?.fulfillmentLocationCode && (
+              <AddressCard {...storePickupAddress(item?.fulfillmentLocationCode)} />
+            )}
+          </Stack>
+        )
+      })}
     </Stack>
   )
 }

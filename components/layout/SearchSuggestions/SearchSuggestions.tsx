@@ -19,7 +19,7 @@ import getConfig from 'next/config'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
 
-import SearchBar from '@/components/common/SearchBar/SearchBar'
+import { SearchBar } from '@/components/common'
 import { useDebounce, useSearchSuggestionsQueries } from '@/hooks'
 
 const style = {

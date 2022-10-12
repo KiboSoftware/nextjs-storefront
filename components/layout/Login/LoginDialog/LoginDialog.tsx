@@ -3,8 +3,8 @@ import React from 'react'
 import { Stack, Typography, Link, styled } from '@mui/material'
 import { useTranslation } from 'next-i18next'
 
-import RegisterAccountDialog from '../../RegisterAccount/RegisterAccountDialog/RegisterAccountDialog'
-import KiboDialog from '@/components/common/KiboDialog/KiboDialog'
+import { KiboDialog } from '@/components/common'
+import { RegisterAccountDialog } from '@/components/layout'
 import LoginContent, { LoginData } from '@/components/layout/Login/LoginContent/LoginContent'
 import { useAuthContext } from '@/context'
 import { useModalContext } from '@/context/ModalContext'
@@ -25,7 +25,7 @@ const StyledActionsComponent = styled(Stack)(() => ({
 const LoginFooter = (props: LoginFooterProps) => {
   const { onRegisterNow } = props
 
-  const { t } = useTranslation(['common'])
+  const { t } = useTranslation('common')
 
   return (
     <StyledActionsComponent>
@@ -33,14 +33,14 @@ const LoginFooter = (props: LoginFooterProps) => {
         {t('dont-have-an-account-yet')}
       </Typography>
       <Link component="button" variant="body1" color="text.primary" onClick={onRegisterNow}>
-        {t('common:register-now')}
+        {t('register-now')}
       </Link>
     </StyledActionsComponent>
   )
 }
 
 const LoginDialog = () => {
-  const { t } = useTranslation(['common'])
+  const { t } = useTranslation('common')
 
   const { authError = '', login } = useAuthContext()
   const { showModal, closeModal } = useModalContext()

@@ -5,7 +5,7 @@ import { render, screen } from '@testing-library/react'
 
 import * as stories from './AddressList.stories' // import all stories from the stories file
 import { userAddressResponse } from '@/__mocks__/stories/userAddressMock'
-import { userAddressGetters } from '@/lib/getters'
+import { userGetters } from '@/lib/getters'
 
 const { Common, Radio } = composeStories(stories)
 
@@ -14,7 +14,7 @@ jest.mock('@/components/common/AddressCard/AddressCard', () => KiboAddressListMo
 
 const KiboRadioAddressListMock = () => <div data-testid="address-card-list-radio-mock" />
 jest.mock('@/components/common/KiboRadio/KiboRadio', () => KiboRadioAddressListMock)
-const userShippingAddress = userAddressGetters.getUserShippingAddress(userAddressResponse?.items)
+const userShippingAddress = userGetters.getUserShippingAddress(userAddressResponse?.items)
 
 describe('[component] - AddressList', () => {
   const addressCount = userShippingAddress?.length

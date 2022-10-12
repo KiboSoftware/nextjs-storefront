@@ -40,14 +40,14 @@ const styles = {
 
 const ViewOrderDetails = (props: ViewOrderDetailsProps) => {
   const { order, title, isOrderStatus = false, onGoBackToOrderHistory } = props
-  const { t } = useTranslation(['common', 'checkout', 'orderhistory'])
+  const { t } = useTranslation('common')
 
   const orderNumber = orderGetters.getOrderNumber(order)
   const orderTotal = orderGetters.getTotal(order)
   const submittedDate = orderGetters.getSubmittedDate(order)
   const pickupItems = orderGetters.getPickupItems(order)
   const shipItems = orderGetters.getShipItems(order)
-  const fulfillmentContact = orderGetters.getShippingAddress(order)
+  const fulfillmentContactAddress = orderGetters.getShippingAddress(order)
   const payments = orderGetters.getOrderPayments(order)
   const fulfillmentLocationCodes = orderGetters.getFulfillmentLocationCodes(pickupItems)
   const shippedTo = orderGetters.getShippedTo(order)
@@ -65,7 +65,7 @@ const ViewOrderDetails = (props: ViewOrderDetailsProps) => {
     discountedSubtotal: t('currency', { val: orderGetters.getDiscountedSubtotal(order) }),
     shippingTotal: orderGetters.getShippingTotal(order)
       ? t('currency', { val: orderGetters.getShippingTotal(order) })
-      : t('checkout:free'),
+      : t('free'),
     tax: t('currency', { val: orderGetters.getTaxTotal(order) }),
     total: t('currency', { val: orderTotal }),
   }
@@ -115,10 +115,7 @@ const ViewOrderDetails = (props: ViewOrderDetailsProps) => {
               variant="body1"
             />
             {isOrderStatus && (
-              <ProductOption
-                option={{ name: t('orderhistory:shipped-to'), value: shippedTo }}
-                variant="body1"
-              />
+              <ProductOption option={{ name: t('shipped-to'), value: shippedTo }} variant="body1" />
             )}
           </Box>
           <Divider sx={{ ...styles.divider }} />
@@ -138,7 +135,7 @@ const ViewOrderDetails = (props: ViewOrderDetailsProps) => {
                   </Typography>
                 </Box>
                 <ProductItemList items={shipItems} />
-                {fulfillmentContact?.address && <AddressCard {...fulfillmentContact?.address} />}
+                {fulfillmentContactAddress && <AddressCard {...fulfillmentContactAddress} />}
               </Box>
               <Divider sx={{ ...styles.divider }} />
             </Box>
@@ -173,7 +170,7 @@ const ViewOrderDetails = (props: ViewOrderDetailsProps) => {
           {!isOrderStatus && (
             <Box py={3}>
               <Typography variant="h3" fontWeight={'bold'}>
-                {t('checkout:payment-information')}
+                {t('payment-information')}
               </Typography>
               {payments?.map((payment) => {
                 const cardDetails = orderGetters.getOrderPaymentCardDetails(
@@ -189,7 +186,6 @@ const ViewOrderDetails = (props: ViewOrderDetailsProps) => {
                     cardNumberPart={cardDetails.cardNumberPartOrMask}
                     expireMonth={cardDetails.expireMonth}
                     expireYear={cardDetails.expireYear}
-                    cardType={cardDetails.cardType}
                     address1={address.address1}
                     address2={address.address2}
                     cityOrTown={address.cityOrTown}

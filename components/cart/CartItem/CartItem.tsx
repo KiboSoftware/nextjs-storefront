@@ -12,17 +12,13 @@ import {
 import { grey } from '@mui/material/colors'
 import { useTranslation } from 'next-i18next'
 
-import CartItemActions from '@/components/cart/CartItemActions/CartItemActions'
-import CartItemActionsMobile from '@/components/cart/CartItemActionsMobile/CartItemActionsMobile'
-import FulfillmentOptions from '@/components/common/FulfillmentOptions/FulfillmentOptions'
-import Price from '@/components/common/Price/Price'
-import ProductItem from '@/components/common/ProductItem/ProductItem'
-import QuantitySelector from '@/components/common/QuantitySelector/QuantitySelector'
-import { orderGetters, productGetters } from '@/lib/getters'
+import { CartItemActions, CartItemActionsMobile } from '@/components/cart'
+import { FulfillmentOptions, Price, ProductItem, QuantitySelector } from '@/components/common'
+import { productGetters } from '@/lib/getters'
 import { uiHelpers } from '@/lib/helpers'
 import type { FulfillmentOption } from '@/lib/types'
 
-import type { CartItem as CartItemType, Maybe } from '@/lib/gql/types'
+import type { CartItem as CartItemType, CrProduct, Maybe } from '@/lib/gql/types'
 
 interface CartItemProps {
   cartItem: Maybe<CartItemType>
@@ -59,7 +55,7 @@ const styles = {
     padding: '1rem 0.5rem',
     justifyContent: 'space-around',
   },
-  subcontainer: {
+  subContainer: {
     flex: 1,
     padding: '0 0.5rem',
   },
@@ -118,24 +114,28 @@ const CartItem = (props: CartItemProps) => {
       <Card sx={{ ...styles.card }} role="group">
         <Box sx={{ position: 'relative' }}>
           <Box sx={{ ...styles.cartItemContainer }}>
-            <Box sx={{ ...styles.subcontainer }}>
+            <Box sx={{ ...styles.subContainer }}>
               <ProductItem
                 image={productGetters.handleProtocolRelativeUrl(
-                  orderGetters.getProductImage(cartItem)
+                  productGetters.getProductImage(cartItem?.product as CrProduct)
                 )}
-                name={orderGetters.getProductName(cartItem)}
-                options={orderGetters.getProductOptions(cartItem)}
+                name={productGetters.getName(cartItem?.product as CrProduct)}
+                options={productGetters.getOptions(cartItem?.product as CrProduct)}
                 link={getProductLink(cartItem?.product?.productCode as string)}
               >
                 <Box>
                   <Price
                     variant="body2"
                     fontWeight="bold"
-                    price={t('currency', { val: orderGetters.getProductPrice(cartItem) })}
+                    price={t('currency', {
+                      val: productGetters
+                        .getPrice(cartItem?.product as CrProduct)
+                        .regular?.toString(),
+                    })}
                     salePrice={
-                      orderGetters.getProductSalePrice(cartItem)
+                      productGetters.getPrice(cartItem?.product as CrProduct).special
                         ? t('currency', {
-                            val: orderGetters.getProductSalePrice(cartItem),
+                            val: productGetters.getPrice(cartItem?.product as CrProduct).special,
                           })
                         : undefined
                     }
@@ -164,7 +164,7 @@ const CartItem = (props: CartItemProps) => {
               flexItem
             />
 
-            <Box sx={{ ...styles.subcontainer }}>
+            <Box sx={{ ...styles.subContainer }}>
               <FulfillmentOptions
                 fulfillmentOptions={fulfillmentOptions}
                 selected={cartItem?.fulfillmentMethod || ''}

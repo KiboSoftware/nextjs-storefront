@@ -8,7 +8,7 @@ import { mock } from 'jest-mock-extended'
 import { createQueryClientWrapper } from '@/__test__/utils'
 import * as stories from '@/components/checkout/ReviewStep/ReviewStep.stories'
 import { AuthContext, AuthContextType } from '@/context/'
-import { checkoutGetters } from '@/lib/getters'
+import { orderGetters } from '@/lib/getters'
 
 import type { Order } from '@/lib/gql/types'
 
@@ -69,7 +69,7 @@ describe('[components] ReviewStep', () => {
     setup()
 
     const checkout = Common.args?.checkout as Order
-    const { shipItems } = checkoutGetters.getCheckoutDetails(checkout)
+    const { shipItems } = orderGetters.getCheckoutDetails(checkout)
     const productImage = screen.getByRole('img', {
       name: shipItems[0]?.product?.name as string,
     })

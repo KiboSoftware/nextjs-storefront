@@ -28,7 +28,7 @@ describe('[component] - CategoryFacet', () => {
     setup()
 
     const heading = screen.getByRole('heading')
-    const backButton = screen.getByLabelText(/common:back/i)
+    const backButton = screen.getByLabelText(/back/i)
 
     const childrenCategoriesLabels =
       CategoryFacetDesktop?.args?.categoryFacet?.childrenCategories?.map(
@@ -111,7 +111,7 @@ describe('[component] - CategoryFacet', () => {
     setup(params)
 
     const heading = screen.getByRole('heading')
-    const backButton = screen.getByLabelText(/common:back/i)
+    const backButton = screen.getByLabelText(/back/i)
 
     expect(heading).toBeVisible()
     expect(backButton).toBeInTheDocument()

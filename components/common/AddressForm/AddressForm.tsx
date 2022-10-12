@@ -10,9 +10,8 @@ import getConfig from 'next/config'
 import { useForm, Controller } from 'react-hook-form'
 import * as yup from 'yup'
 
-import KiboSelect from '@/components/common/KiboSelect/KiboSelect'
-import KiboTextField from '@/components/common/KiboTextBox/KiboTextBox'
-import { Address, ContactForm } from '@/lib/types'
+import { KiboSelect, KiboTextBox } from '@/components/common'
+import type { Address, ContactForm } from '@/lib/types'
 
 interface AddressFormProps {
   contact?: ContactForm
@@ -80,7 +79,7 @@ const AddressForm = (props: AddressFormProps) => {
 
   const [_, setSaveAddress] = useState<boolean>(false)
 
-  const { t } = useTranslation('checkout')
+  const { t } = useTranslation('common')
 
   const generateSelectOptions = () =>
     countries?.map((country: string) => {
@@ -123,14 +122,14 @@ const AddressForm = (props: AddressFormProps) => {
             control={control}
             defaultValue={contact?.firstName}
             render={({ field }) => (
-              <KiboTextField
+              <KiboTextBox
                 {...field}
                 value={field.value || ''}
                 label={t('first-name')}
                 ref={null}
                 error={!!errors?.firstName}
                 helperText={errors?.firstName?.message}
-                onChange={(_name, value) => field.onChange(value)}
+                onChange={(_name: string, value: string) => field.onChange(value)}
                 onBlur={field.onBlur}
                 autoFocus={setAutoFocus}
                 required={true}
@@ -145,14 +144,14 @@ const AddressForm = (props: AddressFormProps) => {
             control={control}
             defaultValue={contact?.lastNameOrSurname}
             render={({ field }) => (
-              <KiboTextField
+              <KiboTextBox
                 {...field}
                 value={field.value || ''}
                 label={t('last-name-or-sur-name')}
                 ref={null}
                 error={!!errors?.lastNameOrSurname}
                 helperText={errors?.lastNameOrSurname?.message}
-                onChange={(_name, value) => field.onChange(value)}
+                onChange={(_name: string, value: string) => field.onChange(value)}
                 onBlur={field.onBlur}
                 required={true}
               />
@@ -166,14 +165,14 @@ const AddressForm = (props: AddressFormProps) => {
             control={control}
             defaultValue={contact?.address?.address1}
             render={({ field }) => (
-              <KiboTextField
+              <KiboTextBox
                 {...field}
                 value={field.value || ''}
                 label={t('address1')}
                 ref={null}
                 error={!!errors?.address?.address1}
                 helperText={errors?.address?.address1?.message}
-                onChange={(_name, value) => field.onChange(value)}
+                onChange={(_name: string, value: string) => field.onChange(value)}
                 onBlur={field.onBlur}
                 required={true}
               />
@@ -187,14 +186,14 @@ const AddressForm = (props: AddressFormProps) => {
             control={control}
             defaultValue={contact?.address?.address2}
             render={({ field }) => (
-              <KiboTextField
+              <KiboTextBox
                 {...field}
                 value={field.value || ''}
                 label={t('address2')}
                 ref={null}
                 error={!!errors?.address?.address2}
                 helperText={errors?.address?.address2?.message}
-                onChange={(_name, value) => field.onChange(value)}
+                onChange={(_name: string, value: string) => field.onChange(value)}
                 onBlur={field.onBlur}
               />
             )}
@@ -207,14 +206,14 @@ const AddressForm = (props: AddressFormProps) => {
             control={control}
             defaultValue={contact?.address?.cityOrTown}
             render={({ field }) => (
-              <KiboTextField
+              <KiboTextBox
                 {...field}
                 value={field.value || ''}
                 label={t('city-or-town')}
                 ref={null}
                 error={!!errors?.address?.cityOrTown}
                 helperText={errors?.address?.cityOrTown?.message}
-                onChange={(_name, value) => field.onChange(value)}
+                onChange={(_name: string, value: string) => field.onChange(value)}
                 onBlur={field.onBlur}
                 required={true}
               />
@@ -228,14 +227,14 @@ const AddressForm = (props: AddressFormProps) => {
             control={control}
             defaultValue={contact?.address?.stateOrProvince}
             render={({ field }) => (
-              <KiboTextField
+              <KiboTextBox
                 {...field}
                 value={field.value || ''}
                 label={t('state-or-province')}
                 ref={null}
                 error={!!errors?.address?.stateOrProvince}
                 helperText={errors?.address?.stateOrProvince?.message}
-                onChange={(_name, value) => field.onChange(value)}
+                onChange={(_name: string, value: string) => field.onChange(value)}
                 onBlur={field.onBlur}
                 required={true}
               />
@@ -249,14 +248,14 @@ const AddressForm = (props: AddressFormProps) => {
             control={control}
             defaultValue={contact?.address?.postalOrZipCode}
             render={({ field }) => (
-              <KiboTextField
+              <KiboTextBox
                 {...field}
                 value={field.value || ''}
                 label={t('postal-or-zip-code')}
                 ref={null}
                 error={!!errors?.address?.postalOrZipCode}
                 helperText={errors?.address?.postalOrZipCode?.message}
-                onChange={(_name, value) => field.onChange(value)}
+                onChange={(_name: string, value: string) => field.onChange(value)}
                 onBlur={field.onBlur}
                 required={true}
               />
@@ -293,14 +292,14 @@ const AddressForm = (props: AddressFormProps) => {
             control={control}
             defaultValue={contact?.phoneNumbers?.home}
             render={({ field }) => (
-              <KiboTextField
+              <KiboTextBox
                 {...field}
                 value={field.value || ''}
                 label={t('phone-number-home')}
                 ref={null}
                 error={!!errors?.phoneNumbers?.home}
                 helperText={errors?.phoneNumbers?.home?.message}
-                onChange={(_name, value) => field.onChange(value)}
+                onChange={(_name: string, value: string) => field.onChange(value)}
                 onBlur={field.onBlur}
                 required={true}
               />

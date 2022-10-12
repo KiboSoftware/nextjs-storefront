@@ -1,7 +1,7 @@
 import { MenuItem } from '@mui/material'
 import { useTranslation } from 'next-i18next'
 
-import KiboSelect from '@/components/common/KiboSelect/KiboSelect'
+import { KiboSelect } from '@/components/common'
 
 import type { Maybe, ProductOptionValue } from '@/lib/gql/types'
 
@@ -19,7 +19,7 @@ export interface ProductOptionSelectProps {
 }
 
 const ProductOptionSelect = (props: ProductOptionSelectProps) => {
-  const { t } = useTranslation('product')
+  const { t } = useTranslation('common')
   const {
     optionValues,
     name = t('select-product-option'),

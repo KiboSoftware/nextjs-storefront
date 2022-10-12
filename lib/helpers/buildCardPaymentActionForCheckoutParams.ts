@@ -1,4 +1,4 @@
-import { checkoutGetters, cardGetters } from '@/lib/getters'
+import { orderGetters, cardGetters } from '@/lib/getters'
 import type { CardTypeForCheckout, TokenizedCard } from '@/lib/types'
 
 import type { BillingInfo, Contact, Order, PaymentActionInput } from '@/lib/gql/types'
@@ -27,7 +27,7 @@ export const buildCardPaymentActionForCheckoutParams = (
 
   return {
     currencyCode,
-    amount: checkoutGetters.getTotal(checkout),
+    amount: orderGetters.getTotal(checkout),
     newBillingInfo: {
       ...billingInfo,
       paymentType: creditCardData.paymentType,

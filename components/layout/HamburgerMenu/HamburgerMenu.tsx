@@ -12,7 +12,7 @@ import {
 import { useTranslation } from 'next-i18next'
 import { useRouter } from 'next/router'
 
-import HeaderAction from '@/components/common/HeaderAction/HeaderAction'
+import { HeaderAction } from '@/components/common'
 import { CategoryNestedNavigation } from '@/components/layout'
 import { useAuthContext } from '@/context'
 import type { NavigationLink } from '@/lib/types'

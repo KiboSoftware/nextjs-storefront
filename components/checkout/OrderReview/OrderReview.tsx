@@ -18,7 +18,7 @@ import { useTranslation } from 'next-i18next'
 import { AddressDetailsView, PromoCodeBadge } from '@/components/common'
 import { useCheckoutStepContext } from '@/context'
 import { useStoreLocationsQueries } from '@/hooks'
-import { checkoutGetters } from '@/lib/getters'
+import { orderGetters } from '@/lib/getters'
 import { storeLocationGetters } from '@/lib/getters/storeLocationGetters'
 
 import type { Order, Maybe, Location } from '@/lib/gql/types'
@@ -67,10 +67,15 @@ const OrderReview = (props: OrderReviewProps) => {
   const { checkout } = props
 
   const { steps, setActiveStep } = useCheckoutStepContext()
-  const { t } = useTranslation('checkout')
+  const { t } = useTranslation('common')
 
-  const { personalDetails, shippingDetails, billingDetails, paymentMethods, pickupItems } =
-    checkoutGetters.getCheckoutDetails(checkout)
+  const {
+    personalDetails,
+    shippingDetails,
+    billingDetails,
+    paymentMethods,
+    pickupItems,
+  } = orderGetters.getCheckoutDetails(checkout)
 
   const fulfillmentLocationCodes = pickupItems
     .map((pickupItem) => `code eq ${pickupItem?.fulfillmentLocationCode}`)
@@ -85,13 +90,11 @@ const OrderReview = (props: OrderReviewProps) => {
 
   const shippingPersonalDetails = {
     firstName: shippingDetails?.firstName,
-    middleNameOrInitial: shippingDetails?.middleNameOrInitial,
     lastNameOrSurname: shippingDetails?.lastNameOrSurname,
   }
 
   const billingPersonalDetails = {
     firstName: billingDetails?.firstName,
-    middleNameOrInitial: billingDetails?.middleNameOrInitial,
     lastNameOrSurname: billingDetails?.lastNameOrSurname,
   }
 
@@ -111,14 +114,14 @@ const OrderReview = (props: OrderReviewProps) => {
 
   return (
     <Accordion
-      data-testid="accordian"
+      data-testid="accordion"
       onChange={handleAccordionChange}
       disableGutters
       sx={{ ...style.accordion }}
       defaultExpanded={true}
     >
       <AccordionSummary
-        data-testid="accordian-summery"
+        data-testid="accordion-summery"
         expandIcon={<ExpandMore />}
         aria-controls="panel1bh-content"
         id="panel1bh-header"
@@ -133,7 +136,7 @@ const OrderReview = (props: OrderReviewProps) => {
         </Typography>
       </AccordionSummary>
 
-      <AccordionDetails data-testid="accordian-details" sx={{ ...style.accordionDetails }}>
+      <AccordionDetails data-testid="accordion-details" sx={{ ...style.accordionDetails }}>
         <Divider sx={{ marginX: '20px' }} />
         <StyledOrderReview>
           <StyledRow sx={{ marginBottom: '0.563rem' }}>

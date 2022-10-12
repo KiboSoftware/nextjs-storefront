@@ -1,6 +1,6 @@
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 
-import KiboTextBox from '@/components/common/KiboTextBox/KiboTextBox'
+import { KiboTextBox } from '@/components/common'
 
 import type { ProductOption } from '@/lib/gql/types'
 

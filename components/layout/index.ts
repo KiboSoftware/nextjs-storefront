@@ -8,3 +8,4 @@ export { default as SearchSuggestions } from './SearchSuggestions/SearchSuggesti
 export { default as Footer } from './Footer/Footer'
 export { default as DefaultLayout } from './DefaultLayout/DefaultLayout'
 export { default as FullWidthLayout } from './FullWidthLayout/FullWidthLayout'
+export { default as RegisterAccountDialog } from './RegisterAccount/RegisterAccountDialog/RegisterAccountDialog'

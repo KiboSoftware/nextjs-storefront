@@ -6,7 +6,7 @@ import { render, screen } from '@testing-library/react'
 
 import * as stories from '@/components/order/ViewOrderDetails/ViewOrderDetails.stories'
 import { FulfillmentOptions } from '@/lib/constants'
-import { orderGetters } from '@/lib/getters'
+import { cardGetters, orderGetters } from '@/lib/getters'
 
 import type { Order, PaymentCard } from '@/lib/gql/types'
 
@@ -46,11 +46,11 @@ describe('[components] - ViewOrderDetails Integration', () => {
     })
 
     payments?.map((payment) => {
-      const cardNumberPartOrMask = orderGetters.getOrderPaymentCardDetails(
+      const cardNumberPartOrMask = cardGetters.getCardNumberPartOrMask(
         payment?.billingInfo?.card as PaymentCard
-      ).cardNumberPartOrMask
-      const expireMonth = orderGetters.getCardExpireMonth(payment?.billingInfo?.card as PaymentCard)
-      const expireYear = orderGetters.getCardExpireYear(payment?.billingInfo?.card as PaymentCard)
+      )
+      const expireMonth = cardGetters.getExpireMonth(payment?.billingInfo?.card as PaymentCard)
+      const expireYear = cardGetters.getExpireYear(payment?.billingInfo?.card as PaymentCard)
       expect(screen.getByText(/Ending/i)).toBeVisible()
       expect(screen.getByText(/Exp/i)).toBeVisible()
       expect(screen.getByText(cardNumberPartOrMask)).toBeVisible()
@@ -70,11 +70,11 @@ describe('[components] - ViewOrderDetails Integration', () => {
     const order = Common.args?.order as Order
     expect(screen.getByText(/order-number/i)).toBeVisible()
     expect(screen.getByText(/order-date/i)).toBeVisible()
-    expect(screen.getByText(/orderhistory:shipped-to/i)).toBeVisible()
+    expect(screen.getByText(/shipped-to/i)).toBeVisible()
     expect(screen.getByText(`${Common.args?.order?.orderNumber}`)).toBeVisible()
     expect(screen.getByText(orderGetters.getSubmittedDate(order))).toBeVisible()
     expect(screen.getByText(orderGetters.getShippedTo(order))).toBeVisible()
     expect(screen.queryByText(/order-summary/i)).not.toBeInTheDocument()
-    expect(screen.queryByText('checkout:payment-information')).not.toBeInTheDocument()
+    expect(screen.queryByText('payment-information')).not.toBeInTheDocument()
   })
 })

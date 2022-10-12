@@ -3,8 +3,7 @@ import { useEffect, useRef, useState } from 'react'
 import { Typography, Box, MenuItem, Divider } from '@mui/material'
 import { useTranslation } from 'next-i18next'
 
-import KiboSelect from '@/components/common/KiboSelect/KiboSelect'
-import ProductItemList from '@/components/common/ProductItemList/ProductItemList'
+import { KiboSelect, ProductItemList } from '@/components/common'
 import { orderGetters } from '@/lib/getters'
 
 import type { Maybe, CrOrderItem, ShippingRate } from '@/lib/gql/types'
@@ -79,7 +78,7 @@ const ShipItemList = (shipProps: ShipItemListProps) => {
 const PickupItemList = (pickupProps: PickupItemListProps) => {
   const { pickupItems, onClickChangeStore } = pickupProps
   const { t } = useTranslation('common')
-  const expectedDeliveryDate = orderGetters.getExpectedDeliveryDate(pickupItems)
+  const expectedDeliveryDate = orderGetters.getExpectedDeliveryDate(pickupItems as CrOrderItem[])
   const isPickupItem = pickupItems.length > 0
   return (
     <Box data-testid="pickup-items">

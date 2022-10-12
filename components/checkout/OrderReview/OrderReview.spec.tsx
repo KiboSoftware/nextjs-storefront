@@ -4,7 +4,7 @@ import { composeStories } from '@storybook/testing-react'
 import { render, screen } from '@testing-library/react'
 
 import * as stories from '../OrderReview/OrderReview.stories'
-import { checkoutGetters } from '@/lib/getters'
+import { orderGetters } from '@/lib/getters'
 
 import type { Order } from '@/lib/gql/types'
 
@@ -43,7 +43,7 @@ describe('[components] OrderReview', () => {
 
     const checkout = Common.args?.checkout as Order
     const { personalDetails, shippingDetails, paymentMethods } =
-      checkoutGetters.getCheckoutDetails(checkout)
+      orderGetters.getCheckoutDetails(checkout)
 
     const { email } = personalDetails
     const { shippingPhoneHome } = shippingDetails

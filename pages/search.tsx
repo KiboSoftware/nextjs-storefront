@@ -28,13 +28,13 @@ export const getServerSideProps: GetServerSideProps = async (
   return {
     props: {
       results: response?.data?.products || [],
-      ...(await serverSideTranslations(locale as string, ['product', 'common'])),
+      ...(await serverSideTranslations(locale as string, ['common'])),
     },
   }
 }
 
 const SearchPage: NextPage<SearchPageType> = (props) => {
-  const { t } = useTranslation('product')
+  const { t } = useTranslation('common')
   const router = useRouter()
   const { publicRuntimeConfig } = getConfig()
 

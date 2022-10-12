@@ -47,7 +47,7 @@ interface ProductDetailTemplateProps {
 
 const ProductDetailTemplate = (props: ProductDetailTemplateProps) => {
   const { product, breadcrumbs, cmsProducts } = props
-  const { t } = useTranslation(['product', 'common'])
+  const { t } = useTranslation('common')
   const { showModal, closeModal } = useModalContext()
   const { addToCart } = useAddToCartMutation()
   const { data: purchaseLocation } = usePurchaseLocationQueries()
@@ -175,18 +175,18 @@ const ProductDetailTemplate = (props: ProductDetailTemplateProps) => {
     return {
       lower: {
         price: priceRange?.lower?.price
-          ? t<string>('common:currency', { val: priceRange?.lower?.price })
+          ? t<string>('currency', { val: priceRange?.lower?.price })
           : null,
         salePrice: priceRange?.lower?.salePrice
-          ? t<string>('common:currency', { val: priceRange?.lower?.salePrice })
+          ? t<string>('currency', { val: priceRange?.lower?.salePrice })
           : null,
       },
       upper: {
         price: priceRange?.upper?.price
-          ? t<string>('common:currency', { val: priceRange?.upper?.price })
+          ? t<string>('currency', { val: priceRange?.upper?.price })
           : null,
         salePrice: priceRange?.upper?.salePrice
-          ? t<string>('common:currency', { val: priceRange?.upper?.salePrice })
+          ? t<string>('currency', { val: priceRange?.upper?.salePrice })
           : null,
       },
     }
@@ -217,9 +217,9 @@ const ProductDetailTemplate = (props: ProductDetailTemplateProps) => {
             {productName}
           </Typography>
           <Price
-            price={t<string>('common:currency', { val: productPrice.regular })}
+            price={t<string>('currency', { val: productPrice.regular })}
             {...(productPrice.special && {
-              salePrice: t<string>('common:currency', { val: productPrice.special }),
+              salePrice: t<string>('currency', { val: productPrice.special }),
             })}
             priceRange={productPriceRange && handlePriceRangeTranslation(productPriceRange)}
           />
@@ -332,7 +332,7 @@ const ProductDetailTemplate = (props: ProductDetailTemplateProps) => {
               color="inherit"
               variant="body2"
               sx={{ cursor: 'pointer' }}
-              onClick={() => handleProductPickupLocation(t('common:check-nearby-store'))}
+              onClick={() => handleProductPickupLocation(t('check-nearby-store'))}
             >
               {t('nearby-stores')}
             </Link>
@@ -345,7 +345,7 @@ const ProductDetailTemplate = (props: ProductDetailTemplateProps) => {
               onClick={() => handleAddToCart()}
               {...(!(isValidForAddToCart && quantityLeft > 0) && { disabled: true })}
             >
-              {t('common:add-to-cart')}
+              {t('add-to-cart')}
             </Button>
             <Box display="flex" gap={3}>
               <Button
@@ -364,10 +364,10 @@ const ProductDetailTemplate = (props: ProductDetailTemplateProps) => {
                   <FavoriteBorderRoundedIcon sx={{ color: 'grey.600', marginRight: '14px' }} />
                 )}
 
-                {t('common:add-to-wishlist')}
+                {t('add-to-wishlist')}
               </Button>
               <Button variant="contained" color="inherit" fullWidth>
-                {t('common:one-click-checkout')}
+                {t('one-click-checkout')}
               </Button>
             </Box>
           </Box>

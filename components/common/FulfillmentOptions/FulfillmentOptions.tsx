@@ -1,7 +1,7 @@
 import { Box, Stack, Typography } from '@mui/material'
 import { useTranslation } from 'next-i18next'
 
-import KiboRadio from '@/components/common/KiboRadio/KiboRadio'
+import { KiboRadio } from '@/components/common'
 import { FulfillmentOptions as FulfillmentOptionsConstant } from '@/lib/constants'
 import type { FulfillmentOption } from '@/lib/types'
 

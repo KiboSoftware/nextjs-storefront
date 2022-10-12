@@ -3,9 +3,8 @@ import React from 'react'
 import { Box, Divider } from '@mui/material'
 import { useTranslation } from 'next-i18next'
 
-import OrderPrice from '@/components/common/OrderPrice/OrderPrice'
+import { OrderPrice, ProductItem } from '@/components/common'
 import type { OrderPriceProps } from '@/components/common/OrderPrice/OrderPrice'
-import ProductItem from '@/components/common/ProductItem/ProductItem'
 
 import type { CartItem, CrProductOption } from '@/lib/gql/types'
 interface CartContentProps {
@@ -15,16 +14,16 @@ interface CartContentProps {
 const Content = (props: CartContentProps) => {
   const { cartItem } = props
   const { shippingTotal, quantity, subtotal, itemTaxTotal, total } = cartItem
-  const { t } = useTranslation(['checkout', 'common'])
+  const { t } = useTranslation('common')
   const orderPriceProps: OrderPriceProps = {
-    subTotalLabel: `${t('common:cart-sub-total')} (${t('item-quantity', { count: quantity })})`,
-    shippingTotalLabel: t('common:standard-shopping'),
-    taxLabel: t('common:estimated-tax'),
-    totalLabel: t('common:total'),
-    subTotal: t('common:currency', { val: subtotal }),
-    shippingTotal: shippingTotal ? t('common:currency', { val: shippingTotal }) : t('free'),
-    tax: t('common:currency', { val: itemTaxTotal }),
-    total: t('common:currency', { val: total }),
+    subTotalLabel: `${t('cart-sub-total')} (${t('item-quantity', { count: quantity })})`,
+    shippingTotalLabel: t('standard-shopping'),
+    taxLabel: t('estimated-tax'),
+    totalLabel: t('total'),
+    subTotal: t('currency', { val: subtotal }),
+    shippingTotal: shippingTotal ? t('currency', { val: shippingTotal }) : t('free'),
+    tax: t('currency', { val: itemTaxTotal }),
+    total: t('currency', { val: total }),
   }
 
   return (

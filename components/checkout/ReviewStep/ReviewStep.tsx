@@ -18,12 +18,12 @@ import { useTranslation } from 'next-i18next'
 import { useForm, Controller } from 'react-hook-form'
 import * as yup from 'yup'
 
-import { KiboTextBox, OrderPrice, PasswordValidation } from '@/components/common'
+import { KiboTextBox, OrderPrice, PasswordValidation, ProductItemList } from '@/components/common'
 import type { OrderPriceProps } from '@/components/common/OrderPrice/OrderPrice'
-import ProductItemList from '@/components/common/ProductItemList/ProductItemList'
 import { useCheckoutStepContext, useAuthContext } from '@/context'
 import { useCreateOrderMutation } from '@/hooks'
-import { checkoutGetters } from '@/lib/getters'
+import { orderGetters } from '@/lib/getters'
+import { buildCreateOrderParams } from '@/lib/helpers/buildCreateOrderParams'
 import { isPasswordValid } from '@/lib/helpers/validations/validations'
 
 import type { Order, Maybe } from '@/lib/gql/types'
@@ -66,7 +66,7 @@ const styles = {
 }
 
 const useDetailsSchema = () => {
-  const { t } = useTranslation('checkout')
+  const { t } = useTranslation('common')
 
   return yup.object().shape({
     email: yup.string().email().required(t('this-field-is-required')),
@@ -89,14 +89,14 @@ const useDetailsSchema = () => {
 const ReviewStep = (props: ReviewStepProps) => {
   const { checkout, onBackButtonClick } = props
 
-  const { t } = useTranslation(['checkout', 'common'])
+  const { t } = useTranslation('common')
   const theme = useTheme()
   const { isAuthenticated, createAccount } = useAuthContext()
-  const [isAgreeWithTermsAndConditions, setAggreeWithTermsAndConditions] = useState<boolean>(false)
+  const [isAgreeWithTermsAndConditions, setAgreeWithTermsAndConditions] = useState<boolean>(false)
 
   const createOrder = useCreateOrderMutation()
   const { setStepNext, setStepStatusComplete } = useCheckoutStepContext()
-  const { shipItems, pickupItems, orderSummary } = checkoutGetters.getCheckoutDetails(checkout)
+  const { shipItems, pickupItems, orderSummary } = orderGetters.getCheckoutDetails(checkout)
   const { subTotal, shippingTotal, taxTotal, total } = orderSummary
 
   const fulfillmentInfo = checkout?.fulfillmentInfo
@@ -135,8 +135,8 @@ const ReviewStep = (props: ReviewStepProps) => {
     return isAgreeWithTermsAndConditions && isFormValid
   }
 
-  const handleAggreeTermsConditions = (event: React.ChangeEvent<HTMLInputElement>) =>
-    setAggreeWithTermsAndConditions(event.target.checked)
+  const handleAgreeTermsConditions = (event: React.ChangeEvent<HTMLInputElement>) =>
+    setAgreeWithTermsAndConditions(event.target.checked)
 
   const onValid = async (formData: PersonalDetails) => {
     await createOrder.mutateAsync(checkout)
@@ -157,14 +157,14 @@ const ReviewStep = (props: ReviewStepProps) => {
   const handleComplete = () => handleSubmit(onValid, onInvalidForm)()
 
   const orderPriceProps: OrderPriceProps = {
-    subTotalLabel: t('common:subtotal'),
+    subTotalLabel: t('subtotal'),
     shippingTotalLabel: t('shipping'),
-    taxLabel: t('common:estimated-tax'),
-    totalLabel: t('common:total'),
-    subTotal: t('common:currency', { val: subTotal }),
+    taxLabel: t('estimated-tax'),
+    totalLabel: t('total'),
+    subTotal: t('currency', { val: subTotal }),
     shippingTotal: shippingTotal ? t('currency', { val: shippingTotal }) : t('free'),
-    tax: t('common:currency', { val: taxTotal }),
-    total: t('common:currency', { val: total }),
+    tax: t('currency', { val: taxTotal }),
+    total: t('currency', { val: total }),
   }
 
   return (
@@ -207,7 +207,7 @@ const ReviewStep = (props: ReviewStepProps) => {
               data-testid="termsConditions"
               size="medium"
               color="primary"
-              onChange={handleAggreeTermsConditions}
+              onChange={handleAgreeTermsConditions}
             />
           }
           label={`${t('terms-conditions')}`}
