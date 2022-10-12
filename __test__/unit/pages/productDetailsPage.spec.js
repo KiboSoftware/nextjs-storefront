@@ -15,6 +15,10 @@ const mockProductDetailResult = {
   components: cmsProductDetailMock,
 }
 
+jest.mock('@/lib/cms/content-stack', () => ({
+  onEntryChange: jest.fn(),
+}))
+
 jest.mock('next/config', () => () => ({
   publicRuntimeConfig: {
     maxCookieAge: 10,
@@ -80,6 +84,13 @@ jest.mock('next/config', () => {
           { value: 'Oldest', id: 'createDate asc' },
         ],
         pageSize: 16,
+      },
+      contentstack: {
+        apiKey: 'api_key',
+        deliveryToken: 'delivery_token',
+        environment: 'environment',
+        managementToken: 'management_token',
+        apiHost: 'api_host',
       },
     },
     serverRuntimeConfig: {
