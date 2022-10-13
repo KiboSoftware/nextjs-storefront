@@ -1,6 +1,7 @@
 import { composeStories } from '@storybook/testing-react'
 import { fireEvent, render, screen, waitFor, within, cleanup } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
+import { UserEvent } from '@testing-library/user-event/dist/types/setup/setup'
 import { graphql } from 'msw'
 
 import { server } from '@/__mocks__/msw/server'
@@ -369,7 +370,7 @@ describe('[component] - PaymentMethod (has saved payment methods)', () => {
   })
 })
 
-const addCardDetails = async (user: any) => {
+const addCardDetails = async (user: UserEvent) => {
   // Card form values
   const cardNumber = screen.getByRole('textbox', {
     name: /card-number/i,
@@ -387,7 +388,7 @@ const addCardDetails = async (user: any) => {
   await user.tab()
 }
 
-const addUpdateAddress = async (user: any) => {
+const addUpdateAddress = async (user: UserEvent) => {
   const firstName = screen.getByRole('textbox', { name: /first-name/i })
   const lastNameOrSurname = screen.getByRole('textbox', { name: /last-name-or-sur-name/i })
   const address1 = screen.getByRole('textbox', { name: /address1/i })
