@@ -49,7 +49,7 @@ export async function getStaticProps(context: GetStaticPropsContext) {
       categoriesTree,
       cmsProductDetail,
       ...(await serverSideTranslations(locale as string, ['common'], nextI18NextConfig)),
-      section,
+      section: section || null,
     },
     revalidate: serverRuntimeConfig.revalidate,
   }
