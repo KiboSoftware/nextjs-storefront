@@ -1,4 +1,4 @@
-import React, { MouseEvent } from 'react'
+import React, { MouseEvent, useState } from 'react'
 
 import { StarRounded } from '@mui/icons-material'
 import FavoriteBorderRoundedIcon from '@mui/icons-material/FavoriteBorderRounded'
@@ -18,8 +18,11 @@ import { useTranslation } from 'next-i18next'
 import Link from 'next/link'
 
 import { KiboImage, Price } from '@/components/common'
+import { ProductQuickViewDialog } from '@/components/product'
+import { useModalContext } from '@/context'
 import DefaultImage from '@/public/product_placeholder.svg'
 
+import type { Product } from '@/lib/gql/types'
 export interface ProductCardProps {
   title?: string
   link: string
@@ -36,8 +39,12 @@ export interface ProductCardProps {
   isInCart?: boolean
   isLoading?: boolean
   isShopNow?: boolean
+  isShown?: boolean
   isShowWishlistIcon?: boolean
+  product?: Product
+  isQuickViewModal?: boolean
   onAddOrRemoveWishlistItem?: () => void
+  fromProductListingPage?: boolean
 }
 
 const styles = {
@@ -68,6 +75,8 @@ const ProductCardSkeleton = () => {
 }
 
 const ProductCard = (props: ProductCardProps) => {
+  //setting state for displaying quickview button
+  const [isQuickViewShown, setIsQuickViewShown] = useState(false)
   const {
     price,
     title,
@@ -82,67 +91,93 @@ const ProductCard = (props: ProductCardProps) => {
     isShopNow = false,
     isInWishlist = false,
     isShowWishlistIcon = true,
+    isQuickViewModal = true,
+    product,
     onAddOrRemoveWishlistItem,
+    fromProductListingPage,
   } = props
 
   const { t } = useTranslation('common')
-
+  const { showModal } = useModalContext()
   const handleAddOrRemoveWishlistItem = (event: MouseEvent<HTMLElement>) => {
     event.preventDefault()
     onAddOrRemoveWishlistItem && onAddOrRemoveWishlistItem()
   }
-
+  const openProductQuickViewModal = () => {
+    showModal({
+      Component: ProductQuickViewDialog,
+      props: {
+        product,
+        isQuickViewModal,
+      },
+    })
+  }
   if (isLoading) return <ProductCardSkeleton />
   else
     return (
       <Box>
         <Link href={link} passHref data-testid="product-card-link">
           <MuiLink underline="none">
-            <Card sx={styles.cardRoot} data-testid="product-card">
-              {isShowWishlistIcon && (
-                <Box textAlign={'right'} width="100%" onClick={handleAddOrRemoveWishlistItem}>
-                  {isInWishlist ? (
-                    <FavoriteRoundedIcon sx={{ color: 'red.900' }} />
-                  ) : (
-                    <FavoriteBorderRoundedIcon sx={{ color: 'grey.600' }} />
+            <Box
+              onMouseEnter={() => setIsQuickViewShown(true)}
+              onMouseLeave={() => setIsQuickViewShown(false)}
+            >
+              <Card sx={styles.cardRoot} data-testid="product-card">
+                {isShowWishlistIcon && (
+                  <Box textAlign={'right'} width="100%" onClick={handleAddOrRemoveWishlistItem}>
+                    {isInWishlist ? (
+                      <FavoriteRoundedIcon sx={{ color: 'red.900' }} />
+                    ) : (
+                      <FavoriteBorderRoundedIcon sx={{ color: 'grey.600' }} />
+                    )}
+                  </Box>
+                )}
+                <CardMedia
+                  sx={{
+                    width: '100%',
+                    height: imageHeight,
+                    position: 'relative',
+                  }}
+                >
+                  <Box sx={{ zIndex: 1 }}>
+                    <KiboImage
+                      src={imageUrl || placeholderImageUrl}
+                      alt={imageUrl ? imageAltText : 'no-image-alt'}
+                      layout="fill"
+                      objectFit="contain"
+                      data-testid="product-image"
+                      errorimage={placeholderImageUrl}
+                    />
+                  </Box>
+                </CardMedia>
+                <Box flexDirection="column" m={2} mt={1}>
+                  <Typography variant="body1" gutterBottom color="text.primary">
+                    {title}
+                  </Typography>
+                  <Price price={price} salePrice={salePrice} variant="body1" />
+                  <Rating
+                    name="read-only"
+                    value={rating}
+                    precision={0.5}
+                    readOnly
+                    size="small"
+                    icon={<StarRounded color="primary" data-testid="filled-rating" />}
+                    emptyIcon={<StarRounded data-testid="empty-rating" />}
+                    data-testid="product-rating"
+                  />
+                  {isQuickViewShown && fromProductListingPage && (
+                    <Button
+                      variant="contained"
+                      color="secondary"
+                      sx={{ width: '100%', marginTop: '1 rem' }}
+                      onClick={openProductQuickViewModal}
+                    >
+                      {t('quick-view')}
+                    </Button>
                   )}
                 </Box>
-              )}
-              <CardMedia
-                sx={{
-                  width: '100%',
-                  height: imageHeight,
-                  position: 'relative',
-                }}
-              >
-                <Box sx={{ zIndex: 1 }}>
-                  <KiboImage
-                    src={imageUrl || placeholderImageUrl}
-                    alt={imageUrl ? imageAltText : 'no-image-alt'}
-                    layout="fill"
-                    objectFit="contain"
-                    data-testid="product-image"
-                    errorimage={placeholderImageUrl}
-                  />
-                </Box>
-              </CardMedia>
-              <Box flexDirection="column" m={2} mt={1}>
-                <Typography variant="body1" gutterBottom color="text.primary">
-                  {title}
-                </Typography>
-                <Price price={price} salePrice={salePrice} variant="body1" />
-                <Rating
-                  name="read-only"
-                  value={rating}
-                  precision={0.5}
-                  readOnly
-                  size="small"
-                  icon={<StarRounded color="primary" data-testid="filled-rating" />}
-                  emptyIcon={<StarRounded data-testid="empty-rating" />}
-                  data-testid="product-rating"
-                />
-              </Box>
-            </Card>
+              </Card>
+            </Box>
           </MuiLink>
         </Link>
         <Box>

@@ -3,8 +3,9 @@ import React from 'react'
 import { StarRounded } from '@mui/icons-material'
 import FavoriteBorderRoundedIcon from '@mui/icons-material/FavoriteBorderRounded'
 import FavoriteRoundedIcon from '@mui/icons-material/FavoriteRounded'
-import { Box, Grid, Rating, Button, Typography, Divider, Link } from '@mui/material'
+import { Box, Grid, Rating, Button, Typography, Divider, Link as MuiLink } from '@mui/material'
 import { useTranslation } from 'next-i18next'
+import Link from 'next/link'
 
 import { FulfillmentOptions, Price, QuantitySelector } from '@/components/common'
 import { KiboBreadcrumbs, ImageGallery } from '@/components/core'
@@ -28,6 +29,7 @@ import {
 } from '@/hooks'
 import { FulfillmentOptions as FulfillmentOptionsConstant } from '@/lib/constants'
 import { productGetters, wishlistGetters } from '@/lib/getters'
+import { uiHelpers } from '@/lib/helpers'
 import type { ProductCustom, BreadCrumb, PriceRange, LocationCustom } from '@/lib/types'
 
 import type {
@@ -41,12 +43,25 @@ import type {
 
 interface ProductDetailTemplateProps {
   product: ProductCustom
-  breadcrumbs: BreadCrumb[]
-  cmsProducts: any
+  breadcrumbs?: BreadCrumb[]
+  cmsProducts?: any
+  isQuickViewModal?: boolean
 }
 
+const styles = {
+  moreDetails: {
+    typography: 'body2',
+    textDecoration: 'underline',
+    color: 'text.primary',
+    display: 'flex',
+    alignItems: 'center',
+    padding: '0.5rem 0',
+    cursor: 'pointer',
+  },
+}
 const ProductDetailTemplate = (props: ProductDetailTemplateProps) => {
-  const { product, breadcrumbs, cmsProducts } = props
+  const { getProductLink } = uiHelpers()
+  const { product, breadcrumbs = [], cmsProducts = [], isQuickViewModal = false } = props
   const { t } = useTranslation('common')
   const { showModal, closeModal } = useModalContext()
   const { addToCart } = useAddToCartMutation()
@@ -211,7 +226,6 @@ const ProductDetailTemplate = (props: ProductDetailTemplateProps) => {
         <Grid item xs={12} md={6} sx={{ pb: { xs: 3, md: 0 } }}>
           <ImageGallery images={productGallery as ProductImage[]} title={''} />
         </Grid>
-
         <Grid item xs={12} md={6} sx={{ width: '100%', pl: { xs: 0, md: 5 } }}>
           <Typography variant="h1" gutterBottom>
             {productName}
@@ -231,6 +245,17 @@ const ProductDetailTemplate = (props: ProductDetailTemplateProps) => {
                 __html: shortDescription,
               }}
             />
+            {isQuickViewModal && (
+              <Link href={getProductLink(product?.productCode as string)} passHref>
+                <MuiLink
+                  aria-label={t('more-details')}
+                  sx={{ ...styles.moreDetails }}
+                  onClick={() => closeModal()}
+                >
+                  {t('more-details')}
+                </MuiLink>
+              </Link>
+            )}
           </Box>
 
           <Box data-testid="product-rating">
@@ -328,14 +353,14 @@ const ProductDetailTemplate = (props: ProductDetailTemplateProps) => {
             <Typography fontWeight="600" variant="body2">
               {selectedFulfillmentOption?.method && `${quantityLeft} ${t('item-left')}`}
             </Typography>
-            <Link
+            <MuiLink
               color="inherit"
               variant="body2"
               sx={{ cursor: 'pointer' }}
               onClick={() => handleProductPickupLocation(t('check-nearby-store'))}
             >
               {t('nearby-stores')}
-            </Link>
+            </MuiLink>
           </Box>
           <Box paddingY={1} display="flex" flexDirection={'column'} gap={2}>
             <Button
@@ -372,18 +397,24 @@ const ProductDetailTemplate = (props: ProductDetailTemplateProps) => {
             </Box>
           </Box>
         </Grid>
-        <Grid item xs={12} paddingY={3}>
-          <Divider />
-        </Grid>
-        <Grid item xs={12}>
-          {properties?.length > 0 && (
-            <Box paddingY={3}>
-              <ProductInformation productFullDescription={description} options={properties} />
-            </Box>
-          )}
-        </Grid>
-
-        {cmsProducts?.components?.length > 0 &&
+        {!isQuickViewModal && (
+          <>
+            {' '}
+            <Grid item xs={12} paddingY={3}>
+              <Divider />
+            </Grid>
+            <Grid item xs={12}>
+              {properties?.length > 0 && (
+                <Box paddingY={3}>
+                  <ProductInformation productFullDescription={description} options={properties} />
+                </Box>
+              )}
+            </Grid>
+          </>
+        )}
+        ​
+        {!isQuickViewModal &&
+          cmsProducts?.components?.length > 0 &&
           cmsProducts?.components?.map((data: any) => (
             <CmsComponent key={Object.keys(data)[0]} content={data} />
           ))}

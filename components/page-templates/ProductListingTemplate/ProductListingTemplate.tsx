@@ -36,6 +36,7 @@ export interface ProductListingTemplateProps {
   pageSize: number
   onSortItemSelection: (value: string) => void
   onPaginationChange: () => void
+  fromProductListingPage?: boolean
 }
 
 const styles = {
@@ -186,6 +187,7 @@ const ProductListingTemplate = (props: ProductListingTemplateProps) => {
     pageSize,
     onSortItemSelection,
     onPaginationChange,
+    fromProductListingPage = true,
   } = props
   const { getProductLink } = uiHelpers()
   const { updateRoute } = useUpdateRoutes()
@@ -344,6 +346,8 @@ const ProductListingTemplate = (props: ProductListingTemplateProps) => {
                         xs={6}
                       >
                         <ProductCard
+                          product={product}
+                          fromProductListingPage={fromProductListingPage}
                           imageUrl={
                             productGetters.getCoverImage(product) &&
                             productGetters.handleProtocolRelativeUrl(

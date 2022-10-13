@@ -260,5 +260,7 @@
   "it-should-match-your-new-password": "It should match your new password",
 
   "confirm-password": "Confirm password",
-  "current-password": "Current password"
+  "current-password": "Current password",
+  "quick-view": "Quick View",
+  "more-details": "More Details"
 }
