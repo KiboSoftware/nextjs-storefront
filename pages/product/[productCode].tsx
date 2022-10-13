@@ -36,15 +36,10 @@ export async function getStaticProps(context: GetStaticPropsContext) {
   const product = await getProduct(productCode)
   const categoriesTree: CategoryTreeResponse = await getCategoryTree()
 
-  let page
+  let section
   if (isCurrentCMSBuilderIO) {
-    page = await builder
-      .get('page', {
-        userAttributes: {
-          urlPath: `/product/${productCode}`,
-        },
-      })
-      .toPromise()
+    const sections = await builder.getAll('kibosection')
+    section = sections.find((section) => section?.data?.slug === productCode)
   }
 
   return {
