@@ -17,6 +17,7 @@ import {
   ProductOptionCheckbox,
   ProductOptionSelect,
   ProductOptionTextBox,
+  ProductQuickViewDialog,
   ProductVariantSizeSelector,
 } from '@/components/product'
 import { useModalContext } from '@/context/ModalContext'
@@ -54,7 +55,7 @@ const styles = {
     textDecoration: 'underline',
     color: 'text.primary',
     display: 'flex',
-    alignItems: 'center',
+    alignItems: 'left',
     padding: '0.5rem 0',
     cursor: 'pointer',
   },
@@ -174,6 +175,18 @@ const ProductDetailTemplate = (props: ProductDetailTemplateProps) => {
         showProductAndInventory: true,
         product: product as CrProduct,
         quantity: quantity,
+        isNested: true,
+        NestedDialog: ProductQuickViewDialog,
+        nestedDialogProps: { product: currentProduct, isQuickViewModal: true },
+        onNestedDialogClose: () => {
+          showModal({
+            Component: ProductQuickViewDialog,
+            props: {
+              product: currentProduct,
+              isQuickViewModal: true,
+            },
+          })
+        },
         handleSetStore: async (selectedStore: LocationCustom) => {
           setSelectedFulfillmentOption({
             method: FulfillmentOptionsConstant.PICKUP,
@@ -388,8 +401,7 @@ const ProductDetailTemplate = (props: ProductDetailTemplateProps) => {
                 ) : (
                   <FavoriteBorderRoundedIcon sx={{ color: 'grey.600', marginRight: '14px' }} />
                 )}
-
-                {t('add-to-wishlist')}
+                ​{t('add-to-wishlist')}
               </Button>
               <Button variant="contained" color="inherit" fullWidth>
                 {t('one-click-checkout')}
@@ -399,7 +411,6 @@ const ProductDetailTemplate = (props: ProductDetailTemplateProps) => {
         </Grid>
         {!isQuickViewModal && (
           <>
-            {' '}
             <Grid item xs={12} paddingY={3}>
               <Divider />
             </Grid>
@@ -410,14 +421,12 @@ const ProductDetailTemplate = (props: ProductDetailTemplateProps) => {
                 </Box>
               )}
             </Grid>
+            {cmsProducts?.components?.length > 0 &&
+              cmsProducts?.components?.map((data: any) => (
+                <CmsComponent key={Object.keys(data)[0]} content={data} />
+              ))}
           </>
         )}
-        ​
-        {!isQuickViewModal &&
-          cmsProducts?.components?.length > 0 &&
-          cmsProducts?.components?.map((data: any) => (
-            <CmsComponent key={Object.keys(data)[0]} content={data} />
-          ))}
       </Grid>
     </>
   )
