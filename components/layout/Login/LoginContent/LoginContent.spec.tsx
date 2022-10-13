@@ -7,7 +7,7 @@ import userEvent from '@testing-library/user-event'
 
 import * as stories from './LoginContent.stories' // import all stories from the stories file
 
-import type { UserEvent } from '@testing-library/user-event/dist/types/setup/'
+import type { UserEvent } from '@testing-library/user-event/dist/types/setup/setup'
 
 const { Common } = composeStories(stories)
 
