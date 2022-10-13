@@ -26,7 +26,7 @@ const getCmsProductPageData = async (productCode: string) => {
 }
 
 export async function getStaticProps(context: GetStaticPropsContext) {
-  const { params, locale } = context
+  const { params, locale, preview = false } = context
   const { productCode } = params as any
   const { serverRuntimeConfig } = getConfig()
 

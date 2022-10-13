@@ -27,6 +27,7 @@ import { NextRouter, useRouter } from 'next/router'
 import { HeaderAction, KiboLogo } from '@/components/common'
 import { MyStoreDialog, StoreLocatorDialog } from '@/components/dialogs'
 import { MegaMenu, HamburgerMenu, SearchSuggestions, LoginDialog } from '@/components/layout'
+import PreviewMode from '@/components/PreviewMode'
 import { useAuthContext, useModalContext } from '@/context'
 import { useCartQueries, useCategoryTreeQueries, usePurchaseLocationQueries } from '@/hooks'
 import { setPurchaseLocationCookie } from '@/lib/helpers'
@@ -166,25 +167,43 @@ const KiboHeaderStyles = {
 
 const TopHeader = ({ navLinks }: { navLinks: NavigationLink[] }) => {
   const { t } = useTranslation('common')
-
+  const { isPreview } = useRouter()
   return (
-    <Box sx={{ ...TopHeaderStyles.wrapper }}>
-      <Container maxWidth="xl" sx={{ ...TopHeaderStyles.container }}>
-        <StyledToolbarNav>
-          {navLinks?.map((nav, index) => {
-            return (
-              <Box key={index}>
-                <Link href={nav.link} passHref>
-                  <MuiLink underline="none" color="common.white">
-                    <Typography variant="body2"> {t(`${nav.text}`)}</Typography>
-                  </MuiLink>
-                </Link>
-              </Box>
-            )
-          })}
-        </StyledToolbarNav>
-      </Container>
-    </Box>
+    <>
+      {isPreview && (
+        <Box sx={{ paddingLeft: '45%' }}>
+          <Box
+            sx={{
+              position: 'absolute',
+              backgroundColor: '#A12E87',
+              display: 'flex',
+              flexDirection: 'row',
+              zIndex: 1000,
+              margin: 0,
+            }}
+          >
+            <PreviewMode />
+          </Box>
+        </Box>
+      )}
+      <Box sx={{ ...TopHeaderStyles.wrapper }}>
+        <Container maxWidth="xl" sx={{ ...TopHeaderStyles.container }}>
+          <StyledToolbarNav>
+            {navLinks?.map((nav, index) => {
+              return (
+                <Box key={index}>
+                  <Link href={nav.link} passHref>
+                    <MuiLink underline="none" color="common.white">
+                      <Typography variant="body2"> {t(`${nav.text}`)}</Typography>
+                    </MuiLink>
+                  </Link>
+                </Box>
+              )
+            })}
+          </StyledToolbarNav>
+        </Container>
+      </Box>
+    </>
   )
 }
 

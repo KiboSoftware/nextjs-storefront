@@ -10,6 +10,7 @@ interface PageProps {
   contentTypeUid: string
   referenceFieldPath: Array<string>
   entryUrl: string
+  preview?: boolean
 }
 
 const { publicRuntimeConfig } = getConfig()
@@ -22,9 +23,9 @@ const getContentStackPage = async (params: PageProps) => {
   }
 }
 
-const getContentfulPage = async (productCode: string) => {
+const getContentfulPage = async (productCode: string, preview: boolean) => {
   if (productCode) {
-    const response = await contentful.fetchProductDetails(productCode)
+    const response = await contentful.fetchProductDetails({ preview, productCode })
     const productData = contentfulGetters.getContentfulProductData(
       response?.data?.productDetailsCollection?.items[0]
     )
@@ -32,7 +33,7 @@ const getContentfulPage = async (productCode: string) => {
       components: productData || [],
     }
   } else {
-    const response = await contentful.fetchHomePage()
+    const response = await contentful.fetchHomePage({ preview })
     const homePageData = contentfulGetters.getContentfulPageData(
       response?.data?.homePageCollection?.items
     )
@@ -60,7 +61,8 @@ const getAmpliencePage = async (productCode?: string) => {
 export const getPage = async (params: PageProps) => {
   const currentCMS = publicRuntimeConfig.cms || ''
   if (currentCMS === CMS.CONTENTSTACK) return getContentStackPage(params)
-  if (currentCMS === CMS.CONTENTFUL) return getContentfulPage(params.entryUrl)
+  if (currentCMS === CMS.CONTENTFUL)
+    return getContentfulPage(params.entryUrl, params.preview || false)
   if (currentCMS === CMS.AMPLIENCE) return getAmpliencePage(params.entryUrl)
 
   return {
