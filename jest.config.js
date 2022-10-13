@@ -16,8 +16,7 @@ const customJestConfig = {
     '!**/node_modules/**',
     'hooks/**/*.{js,jsx,ts,tsx}',
     'pages/**/*.{js,jsx,ts,tsx}',
-    '!pages/_middleware.ts',
-    '!**/*.spec.{js,jsx,ts,tsx}',
+    '!middleware.ts',
   ],
   moduleNameMapper: {
     // Handle module aliases (this will be automatically configured for you soon)
