@@ -115,13 +115,23 @@ const getOtherShippingAddress = (
   )
 }
 
+const getCustomerAccountDetails = (user: CustomerAccount) => {
+  return {
+    id: getUserId(user),
+    firstName: getFirstName(user),
+    lastName: getLastName(user),
+    emailAddress: getEmailAddress(user),
+    fullName: getFullName(user),
+  }
+}
+
 export const userGetters = {
   getUserShippingAddress,
   getUserBillingAddresses,
   getSavedAddresses,
   getSavedCardsAndBillingDetails,
   getDefaultPaymentBillingMethod,
-
+  getCustomerAccountDetails,
   getFirstName,
   getLastName,
   getFullName,

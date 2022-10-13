@@ -112,6 +112,10 @@ export const accountHandlers = [
       })
     )
   }),
+
+  graphql.mutation('updateCustomerData', (_req, res, ctx) => {
+    return res(ctx.data({}))
+  }),
 ]
 
 export const productHandlers = [

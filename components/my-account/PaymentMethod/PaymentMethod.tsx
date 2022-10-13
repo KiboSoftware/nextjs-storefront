@@ -76,7 +76,7 @@ const initialBillingAddressData: Address = {
 const styles = {
   addPaymentMethodButtonStyle: {
     maxWidth: '26.313rem',
-    '& > *:first-child': {
+    '& > *:first-of-type': {
       fontSize: 'inherit',
     },
   },

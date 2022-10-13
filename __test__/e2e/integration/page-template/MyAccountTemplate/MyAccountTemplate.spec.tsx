@@ -1,29 +1,39 @@
 import { composeStories } from '@storybook/testing-react'
-import { fireEvent, render, screen, waitFor, within } from '@testing-library/react'
+import { fireEvent, render, screen, waitFor, within, cleanup } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { UserEvent } from '@testing-library/user-event/dist/types/setup'
 import { graphql } from 'msw'
 
 import { server } from '@/__mocks__/msw/server'
+import { userMock } from '@/__mocks__/stories'
 import { customerAccountCardsMock } from '@/__mocks__/stories/customerAccountCardsMock'
+import { createQueryClientWrapper } from '@/__test__/utils'
 import * as stories from '@/components/page-templates/MyAccountTemplate/MyAccountTemplate.stories'
-import { DialogRoot, ModalContextProvider } from '@/context'
+import { AuthContextProvider, DialogRoot, ModalContextProvider } from '@/context'
 
 import type { Card } from '@/lib/gql/types'
 
 const { Common } = composeStories(stories)
 
-const user = userEvent.setup()
-
-jest.mock('@/context/AuthContext', () => ({
-  useAuthContext: () => {
-    return {
-      user: {
-        id: 1012,
-      },
+const setup = () => {
+  const user = userEvent.setup()
+  render(
+    <AuthContextProvider>
+      <Common />
+    </AuthContextProvider>,
+    {
+      wrapper: createQueryClientWrapper(),
     }
-  },
-}))
+  )
+
+  return {
+    user,
+  }
+}
+
+afterEach(() => {
+  cleanup()
+})
 
 jest.mock('@/lib/helpers/tokenizeCreditCardPayment', () => {
   return {
@@ -36,9 +46,130 @@ jest.mock('@/lib/helpers/tokenizeCreditCardPayment', () => {
   }
 })
 
+describe('[component] - MyProfile', () => {
+  it(`should handle email form edit`, async () => {
+    const { user } = setup()
+
+    server.use(
+      graphql.query('getUser', (_req, res, ctx) => {
+        return res.once(
+          ctx.data({
+            customerAccount: {
+              ...userMock.customerAccount,
+              emailAddress: 'johnDoe@gmail.com',
+            },
+          })
+        )
+      })
+    )
+
+    const MyProfile = screen.getByRole('heading', {
+      name: /my-profile/i,
+    })
+    await user.click(MyProfile)
+
+    const editName = screen.getAllByText(/edit/i)
+    await user.click(editName[1])
+
+    const emailInput = screen.getByRole('textbox', { name: 'email' })
+
+    expect(emailInput).toHaveValue('suman@email.com')
+
+    await user.type(emailInput, 'johnDoe@gmail.com')
+
+    await user.click(screen.getByRole('button', { name: 'save' }))
+
+    await waitFor(() => {
+      expect(screen.getByTestId('email')).toHaveTextContent('johnDoe@gmail.com')
+    })
+  })
+
+  it(`should handle names form edit`, async () => {
+    const { user } = setup()
+
+    server.use(
+      graphql.query('getUser', (_req, res, ctx) => {
+        return res.once(
+          ctx.data({
+            customerAccount: {
+              ...userMock.customerAccount,
+              firstName: 'John',
+              lastName: 'Doe',
+            },
+          })
+        )
+      })
+    )
+
+    const MyProfile = screen.getByRole('heading', {
+      name: /my-profile/i,
+    })
+    await user.click(MyProfile)
+
+    const editName = screen.getAllByText(/edit/i)
+    await user.click(editName[0])
+
+    const firstNameInput = screen.getByRole('textbox', { name: 'first-name' })
+    const lastNameInput = screen.getByRole('textbox', { name: 'last-name-or-sur-name' })
+
+    expect(firstNameInput).toHaveValue('Suman')
+    expect(lastNameInput).toHaveValue('Patro')
+
+    await user.type(firstNameInput, 'John')
+    await user.type(lastNameInput, 'Doe')
+
+    await user.click(screen.getByRole('button', { name: 'save' }))
+
+    await waitFor(() => {
+      expect(screen.getByTestId('customer-name')).toHaveTextContent('John Doe')
+    })
+  })
+
+  it(`should handle password form edit`, async () => {
+    const { user } = setup()
+
+    server.use(
+      graphql.query('getUser', (_req, res, ctx) => {
+        return res.once(
+          ctx.data({
+            customerAccount: {
+              ...userMock.customerAccount,
+              firstName: 'John',
+              lastName: 'Doe',
+            },
+          })
+        )
+      })
+    )
+
+    const MyProfile = screen.getByRole('heading', {
+      name: /my-profile/i,
+    })
+    await user.click(MyProfile)
+
+    const editName = screen.getAllByText(/edit/i)
+    await user.click(editName[0])
+
+    const firstNameInput = screen.getByRole('textbox', { name: 'first-name' })
+    const lastNameInput = screen.getByRole('textbox', { name: 'last-name-or-sur-name' })
+
+    expect(firstNameInput).toHaveValue('Suman')
+    expect(lastNameInput).toHaveValue('Patro')
+
+    await user.type(firstNameInput, 'John')
+    await user.type(lastNameInput, 'Doe')
+
+    await user.click(screen.getByRole('button', { name: 'save' }))
+
+    await waitFor(() => {
+      expect(screen.getByTestId('customer-name')).toHaveTextContent('John Doe')
+    })
+  })
+})
+
 describe('[component] - AddressBook (has saved addresses )', () => {
   it('should handle adding new address', async () => {
-    render(<Common />)
+    const { user } = setup()
     const addressBook = screen.getByRole('heading', {
       name: /address-book/i,
     })
@@ -59,13 +190,13 @@ describe('[component] - AddressBook (has saved addresses )', () => {
   })
 
   it('should handle edit address', async () => {
-    render(<Common />)
+    const { user } = setup()
     const addressBook = screen.getByRole('heading', {
       name: /address-book/i,
     })
     await user.click(addressBook)
 
-    const editAddressLinks = screen.getAllByText('edit')
+    const editAddressLinks = screen.getAllByTestId(/address-edit/)
     await user.click(editAddressLinks[0])
 
     await addUpdateAddress(user)
@@ -78,11 +209,18 @@ describe('[component] - AddressBook (has saved addresses )', () => {
   })
 
   it('should handle delete address', async () => {
+    const user = userEvent.setup()
+
     render(
-      <ModalContextProvider>
-        <DialogRoot />
-        <Common />
-      </ModalContextProvider>
+      <AuthContextProvider>
+        <ModalContextProvider>
+          <DialogRoot />
+          <Common />
+        </ModalContextProvider>
+      </AuthContextProvider>,
+      {
+        wrapper: createQueryClientWrapper(),
+      }
     )
 
     const addressBook = screen.getByRole('heading', {
@@ -109,7 +247,7 @@ describe('[component] - AddressBook (has saved addresses )', () => {
 
 describe('[component] - PaymentMethod (has saved payment methods)', () => {
   it('should handle adding new card', async () => {
-    render(<Common />)
+    const { user } = setup()
 
     await user.click(screen.getByText('payment-method'))
 
@@ -167,7 +305,7 @@ describe('[component] - PaymentMethod (has saved payment methods)', () => {
   })
 
   it('should handle editing payment method', async () => {
-    render(<Common />)
+    const { user } = setup()
 
     await user.click(
       screen.getByRole('heading', {

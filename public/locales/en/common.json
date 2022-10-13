@@ -121,6 +121,8 @@
   "no-previously-saved-payment-methods": "No previously saved payment methods.",
   "add-payment-method": "Add Payment Method",
   "save-payment-method": "Save Payment Method",
+  "payment-method": "Payment Method",
+
   "your-default-shipping-address": "Your default shipping address",
   "previously-saved-shipping-addresses": "Previously saved shipping addresses",
   "no-saved-addresses-yet": "No saved addresses yet!",
@@ -129,7 +131,16 @@
   "time-filter": "Time Filter",
   "last-30-days": "Last 30 days",
   "last-6-months": "Last 6 months",
+
+  "save": "Save",
+  "old-password": "Old Password",
+  "new-password": "New Password",
+  "external-password": "Reenter new password",
+
   "shop-now": "Shop Now",
+  "edit-customer-name": "Edit Customer Name",
+  "edit-email": "Edit Email",
+  "edit-password": "Edit Password",
 
   "home": "Home",
   "order-status": "Order Status",
@@ -187,7 +198,6 @@
   "country-code": "Country",
   "phone-number-home": "Phone number",
   "this-field-is-required": "This field is required",
-  "payment-method": "Payment Method",
   "ending": "Ending:",
   "exp": "Exp:",
   "apartment": "Apt. ",
@@ -242,5 +252,13 @@
   "customers-also-bought": "Customers Also Bought",
   "search-results": "{{m}} Results for {{n}}",
   "item-left": "item(s) left",
-  "nearby-stores": "Nearby stores"
+  "nearby-stores": "Nearby stores",
+  "password-length-does-not-match": "Password length doesn't match",
+  "password-should-contain-at-least-one-number": "Password should contain at least one number",
+  "password-should-contain-at-least-one-capital-letter": "Password should contain at least one capital letter",
+  "password-should-contain-at-least-special-character": "Password should contain at least special character",
+  "it-should-match-your-new-password": "It should match your new password",
+
+  "confirm-password": "Confirm password",
+  "current-password": "Current password"
 }

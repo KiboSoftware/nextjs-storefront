@@ -43,3 +43,5 @@ storybook-static
 
 # vscode
 /.vscode/
+
+test-report.xml

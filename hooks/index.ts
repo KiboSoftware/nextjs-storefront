@@ -54,3 +54,6 @@ export * from './mutations/useCouponMutations/useUpdateCartCouponMutation/useUpd
 export * from './mutations/useCouponMutations/useDeleteCartCouponMutation/useDeleteCartCouponMutation'
 export * from './mutations/useCouponMutations/useUpdateOrderCouponMutation/useUpdateOrderCouponMutation'
 export * from './mutations/useCouponMutations/useDeleteOrderCouponMutation/useDeleteOrderCouponMutation'
+
+export * from './mutations/useProfile/useUpdateUserData/useUpdateUserData'
+export * from './mutations/useProfile/useUpdateUserPassword/useUpdateUserPassword'
