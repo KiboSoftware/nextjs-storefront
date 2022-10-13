@@ -1,4 +1,4 @@
-import React, { MouseEvent, useState } from 'react'
+import React, { MouseEvent, useState, SyntheticEvent } from 'react'
 
 import { StarRounded } from '@mui/icons-material'
 import FavoriteBorderRoundedIcon from '@mui/icons-material/FavoriteBorderRounded'
@@ -75,8 +75,6 @@ const ProductCardSkeleton = () => {
 }
 
 const ProductCard = (props: ProductCardProps) => {
-  //setting state for displaying quickview button
-  const [isQuickViewShown, setIsQuickViewShown] = useState(false)
   const {
     price,
     title,
@@ -94,16 +92,18 @@ const ProductCard = (props: ProductCardProps) => {
     isQuickViewModal = true,
     product,
     onAddOrRemoveWishlistItem,
-    fromProductListingPage,
+    fromProductListingPage = false,
   } = props
 
+  const [isQuickViewShown, setIsQuickViewShown] = useState<boolean>(false)
   const { t } = useTranslation('common')
   const { showModal } = useModalContext()
   const handleAddOrRemoveWishlistItem = (event: MouseEvent<HTMLElement>) => {
     event.preventDefault()
     onAddOrRemoveWishlistItem && onAddOrRemoveWishlistItem()
   }
-  const openProductQuickViewModal = () => {
+  const openProductQuickViewModal = (e: SyntheticEvent<Element, Event>) => {
+    e.preventDefault()
     showModal({
       Component: ProductQuickViewDialog,
       props: {
