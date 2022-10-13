@@ -1,7 +1,7 @@
 import { composeStories } from '@storybook/testing-react'
 import { fireEvent, render, screen, waitFor, within, cleanup } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
-import { UserEvent } from '@testing-library/user-event/dist/types/setup'
+import { UserEvent } from '@testing-library/user-event/dist/types/setup/setup'
 import { graphql } from 'msw'
 
 import { server } from '@/__mocks__/msw/server'
