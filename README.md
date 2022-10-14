@@ -114,7 +114,8 @@ csdx auth:login   # Use target/import stack credentials
 csdx cm:stacks:seed --repo "KiboSoftware/stack-contentstack" -k <stack_ApiKey>
 ```
 
-4. Reference: ContentStack Data Repo [Source code]. https://github.com/KiboSoftware/stack-contentstack.
+4. Reference: ContentStack Data Repository.
+   https://github.com/KiboSoftware/stack-contentstack.
 
 ## Import KiboCommerce demo data for Contentful
 
@@ -146,7 +147,8 @@ contentful login   # Use target/import space credentials
 contentful space import --config “<path_to_import_target-space-config>”
 ```
 
-4. Reference: Contentful Data Repo [Source code]. https://github.com/KiboSoftware/contentful-space.
+4. Reference: Contentful Data Repository.
+   https://github.com/KiboSoftware/contentful-space.
 
 ## Contributions
 
