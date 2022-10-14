@@ -60,7 +60,7 @@ export async function getStaticPaths() {
   const searchResponse = await search({
     pageSize: serverRuntimeConfig.pageSize,
   } as CategorySearchParams)
-  const { items } = searchResponse?.data?.products
+  const { items } = searchResponse?.data?.products || []
 
   const paths: string[] = []
   items?.length &&
