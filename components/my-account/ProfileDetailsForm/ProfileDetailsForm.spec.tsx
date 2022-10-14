@@ -8,7 +8,10 @@ import * as stories from './ProfileDetailsForm.stories' // import all stories fr
 const { NameForm, EmailForm, PasswordForm } = composeStories(stories)
 
 const PasswordValidationMock = () => <input data-testid="password-validation-mock" />
-jest.mock('@/components/common/PasswordValidation/PasswordValidation', () => PasswordValidationMock)
+jest.mock(
+  '@/components/common/PasswordValidation/PasswordValidation',
+  () => () => PasswordValidationMock()
+)
 
 describe('[component] - ProfileDetailsForm', () => {
   it('should render Names form', () => {

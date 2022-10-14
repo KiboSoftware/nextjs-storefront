@@ -2,7 +2,7 @@ import { loadEnvConfig } from '@next/env'
 import { setGlobalConfig } from '@storybook/testing-react'
 
 import * as globalStorybookConfig from './.storybook/preview'
-import '@testing-library/jest-dom'
+import '@testing-library/jest-dom/extend-expect'
 import { server } from './__mocks__/msw/server'
 
 const projectDir = process.cwd()
