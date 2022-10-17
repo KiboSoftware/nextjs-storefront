@@ -3,7 +3,7 @@ import React from 'react'
 import { ComponentStory, ComponentMeta } from '@storybook/react'
 
 import ProductDetailTemplate from './ProductDetailTemplate'
-import { cmsProductDetailMock, ProductCustomMock } from '@/__mocks__/stories'
+import { ProductCustomMock } from '@/__mocks__/stories'
 
 export default {
   title: 'Page Templates/Product Detail',

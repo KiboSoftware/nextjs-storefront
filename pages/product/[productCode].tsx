@@ -16,11 +16,13 @@ import type { CategorySearchParams, CategoryTreeResponse } from '@/lib/types'
 
 import type { NextPage, GetStaticPropsContext } from 'next'
 
-const getCmsProductPageData = async (productCode: string) => {
+const getCmsProductPageData = async (params: { productCode: string; preview?: boolean }) => {
+  const { productCode, preview } = params
   const cmsPage = await getPage({
     contentTypeUid: 'product_detail',
     referenceFieldPath: [],
     entryUrl: productCode,
+    preview,
   })
   return cmsPage
 }
@@ -30,7 +32,7 @@ export async function getStaticProps(context: GetStaticPropsContext) {
   const { productCode } = params as any
   const { serverRuntimeConfig } = getConfig()
 
-  const cmsProductDetail = await getCmsProductPageData(productCode)
+  const cmsProductDetail = await getCmsProductPageData({ productCode, preview })
   const product = await getProduct(productCode)
   const categoriesTree: CategoryTreeResponse = await getCategoryTree()
 
@@ -40,6 +42,7 @@ export async function getStaticProps(context: GetStaticPropsContext) {
       product,
       categoriesTree,
       cmsProductDetail,
+      preview,
       ...(await serverSideTranslations(locale as string, ['common'], nextI18NextConfig)),
     },
     revalidate: serverRuntimeConfig.revalidate,
@@ -59,13 +62,13 @@ export async function getStaticPaths() {
 }
 
 const ProductDetailPage: NextPage = (props: any) => {
-  const { productCode, product, cmsProductDetail } = props
+  const { productCode, product, cmsProductDetail, preview } = props
   const { isFallback } = useRouter()
   const [cmsProductDetailRespone, setCmsProductDetailPageResponse] = useState(cmsProductDetail)
 
   const fetchData = async () => {
     try {
-      const cmsPage = await getCmsProductPageData(productCode)
+      const cmsPage = await getCmsProductPageData({ productCode, preview })
       setCmsProductDetailPageResponse(cmsPage)
     } catch (error) {
       console.error(error)

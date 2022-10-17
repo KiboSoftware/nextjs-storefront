@@ -14,8 +14,9 @@ import type { GetServerSidePropsContext } from 'next'
 
 interface HomePageProps {
   cmsPage: any
+  preview?: boolean
 }
-const getCmsHomePageData = async () => {
+const getCmsHomePageData = async ({ preview }: { preview?: boolean }) => {
   const cmsPage = await getPage({
     contentTypeUid: 'home_page',
     referenceFieldPath: [
@@ -25,30 +26,32 @@ const getCmsHomePageData = async () => {
       'page_components.small_promo_blocks.small_promo_blocks',
     ],
     entryUrl: '',
+    preview,
   })
   return cmsPage
 }
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
-  const { locale } = context
+  const { locale, preview = false } = context
   const categoriesTree: CategoryTreeResponse = await getCategoryTree()
 
-  const cmsPage = await getCmsHomePageData()
+  const cmsPage = await getCmsHomePageData({ preview })
   return {
     props: {
       categoriesTree,
       cmsPage,
+      preview,
       ...(await serverSideTranslations(locale as string, ['common'], nextI18NextConfig)),
     },
   }
 }
 
 const Home: NextPageWithLayout<HomePageProps> = (props) => {
-  const { cmsPage } = props
+  const { cmsPage, preview } = props
   const [cmsPages, setCmsPage] = useState(cmsPage)
   const fetchData = async () => {
     try {
-      const cmsPage = await getCmsHomePageData()
+      const cmsPage = await getCmsHomePageData({ preview })
       setCmsPage(cmsPage)
     } catch (error) {
       console.error(error)

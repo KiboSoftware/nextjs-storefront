@@ -8,7 +8,7 @@ function PreviewMode() {
       <Typography color="common.white" paddingRight={2}>
         You are in preview mode
       </Typography>
-      <Link prefetch={false} href="/api/disable-preview" passHref>
+      <Link prefetch={false} href="/api/contentful/disable-preview" passHref>
         <MuiLink
           underline="none"
           component="button"
