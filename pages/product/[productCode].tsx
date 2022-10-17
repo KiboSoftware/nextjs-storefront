@@ -31,11 +31,6 @@ export async function getStaticProps(context: GetStaticPropsContext) {
   const { serverRuntimeConfig } = getConfig()
 
   const cmsProductDetail = await getCmsProductPageData(productCode)
-  // const cmsProductDetail = await getPage({
-  //   contentTypeUid: 'product_detail',
-  //   referenceFieldPath: [],
-  //   entryUrl: productCode,
-  // })
   const product = await getProduct(productCode)
   const categoriesTree: CategoryTreeResponse = await getCategoryTree()
 
