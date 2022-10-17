@@ -9,6 +9,7 @@ import {
   styled,
   Link as MuiLink,
   Container,
+  Tabs,
 } from '@mui/material'
 import { usePopupState, bindHover, bindPopover } from 'material-ui-popup-state/hooks'
 import HoverPopover from 'material-ui-popup-state/HoverPopover'
@@ -24,6 +25,7 @@ import type { Maybe, PrCategory } from '@/lib/gql/types'
 
 interface MegaMenuProps {
   categoryTree: Maybe<PrCategory>[]
+  backgroundColor?: string
   onBackdropToggle: (isOpen: boolean) => void
 }
 
@@ -36,10 +38,9 @@ interface MegaMenuCategoryProps {
 
 const StyledToolbar = styled(Toolbar)(({ theme }) => ({
   '&.MuiToolbar-root': {
-    backgroundColor: theme.palette.common.white,
+    backgroundColor: 'inherit',
     position: 'relative',
-    overflow: 'hidden',
-    minHeight: 59,
+    minHeight: 55,
     display: 'flex',
     borderBottomWidth: 1,
     borderBottomStyle: 'solid',
@@ -48,18 +49,19 @@ const StyledToolbar = styled(Toolbar)(({ theme }) => ({
     borderTopStyle: 'solid',
     borderTopColor: theme.palette.grey[300],
     paddingInline: 0,
-    flexWrap: 'wrap',
-    gap: '4%',
+    whiteSpace: 'nowrap',
+    flex: 1,
+    color: 'black',
+    maxWidth: '90%',
   },
 }))
 
 const style = {
   listItem: {
-    paddingInline: 0.75,
-    paddingTop: 2.25,
-    paddingBottom: 1.25,
     cursor: 'pointer',
     borderBottom: '4px solid transparent',
+    pt: 1.5,
+    pb: 1.5,
     '&.Mui-selected': {
       borderBottom: '4px solid',
       borderBottomColor: 'primary.main',
@@ -78,6 +80,7 @@ const style = {
     borderTopColor: 'grey.300',
     position: 'relative',
     overflowY: 'scroll',
+    marginTop: 0.5,
   },
 }
 
@@ -98,8 +101,8 @@ const MegaMenuCategory = (props: MegaMenuCategoryProps) => {
   }
 
   useEffect(() => {
-    childrenCategories.length && onBackdropToggle(popupState.isOpen)
-  }, [childrenCategories.length, popupState.isOpen, onBackdropToggle])
+    childrenCategories?.length && onBackdropToggle(popupState.isOpen)
+  }, [childrenCategories?.length, popupState.isOpen, onBackdropToggle])
 
   return (
     <Box {...bindHover(popupState)} role="group" color="text.primary">
@@ -114,7 +117,7 @@ const MegaMenuCategory = (props: MegaMenuCategoryProps) => {
           </MuiLink>
         </Link>
       </ListItem>
-      {childrenCategories.length > 0 && (
+      {childrenCategories?.length > 0 && (
         <HoverPopover
           {...bindPopover(popupState)}
           PaperProps={{ sx: { ...style.popoverPaper } }}
@@ -163,14 +166,64 @@ const MegaMenuCategory = (props: MegaMenuCategoryProps) => {
 }
 
 const MegaMenu = (props: MegaMenuProps) => {
-  const { categoryTree = [], onBackdropToggle } = props
+  const { categoryTree = [], backgroundColor, onBackdropToggle } = props
 
   const [activeCategory, setActiveCategory] = useState<string>('')
 
   return (
     <StyledToolbar data-testid="megamenu-container">
-      <Container maxWidth="xl" sx={{ display: 'flex', gap: '4%' }}>
-        {categoryTree?.map((category) => (
+      {/* <Container maxWidth="xl" sx={{ display: 'flex', gap: 2 }}> */}
+      <Tabs
+        // value={value}
+        // onChange={handleChange}
+        variant="scrollable"
+        scrollButtons
+        allowScrollButtonsMobile
+        aria-label="scrollable auto tabs example"
+      >
+        {[
+          ...categoryTree,
+          {
+            categoryCode: 'Bike001',
+            categoryId: 1,
+            updateDate: null,
+            content: {
+              name: 'Bikes',
+            },
+          },
+          {
+            categoryCode: 'Bike001',
+            categoryId: 1,
+            updateDate: null,
+            content: {
+              name: 'Hammers',
+            },
+          },
+          {
+            categoryCode: 'Bike001',
+            categoryId: 1,
+            updateDate: null,
+            content: {
+              name: 'Cameras',
+            },
+          },
+          {
+            categoryCode: 'Bike001',
+            categoryId: 1,
+            updateDate: null,
+            content: {
+              name: 'Cameras 2',
+            },
+          },
+          {
+            categoryCode: 'Bike001',
+            categoryId: 1,
+            updateDate: null,
+            content: {
+              name: 'Cameras 4',
+            },
+          },
+        ]?.map((category) => (
           <MegaMenuCategory
             key={category?.categoryCode}
             category={category}
@@ -179,7 +232,8 @@ const MegaMenu = (props: MegaMenuProps) => {
             setActiveCategory={setActiveCategory}
           />
         ))}
-      </Container>
+      </Tabs>
+      {/* </Container> */}
     </StyledToolbar>
   )
 }
