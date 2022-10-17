@@ -96,6 +96,7 @@ describe('Home', () => {
         },
         categoriesTree: mockCategoryTreeData.categoriesTree.items,
         cmsPage: mockCmsHomePageResult,
+        preview: false,
       },
     })
   })
