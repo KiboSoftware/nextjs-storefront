@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 
+import { BuilderComponent, builder, Builder } from '@builder.io/react'
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
 import getConfig from 'next/config'
 import { useRouter } from 'next/router'
@@ -12,11 +13,36 @@ import getCategoryTree from '@/lib/api/operations/get-category-tree'
 import getProduct from '@/lib/api/operations/get-product'
 import search from '@/lib/api/operations/get-product-search'
 import { onEntryChange } from '@/lib/cms/content-stack'
+import { CMS } from '@/lib/constants'
 import { productGetters } from '@/lib/getters'
 import { getPage } from '@/lib/operations/get-page'
 import type { CategorySearchParams, CategoryTreeResponse } from '@/lib/types'
 
 import type { NextPage, GetStaticPropsContext } from 'next'
+
+const { publicRuntimeConfig } = getConfig()
+const currentCMS = publicRuntimeConfig?.cms
+
+const builderIOApiKey = publicRuntimeConfig?.builderIO?.apiKey
+const isCurrentCMSBuilderIO = currentCMS === CMS.BUILDERIO && builderIOApiKey
+
+if (isCurrentCMSBuilderIO) {
+  builder.init(builderIOApiKey)
+
+  Builder.registerComponent(ProductRecommendations, {
+    name: 'ProductRecommendations',
+    inputs: [
+      {
+        name: 'title',
+        type: 'string',
+      },
+      {
+        name: 'productCodes',
+        type: 'KiboCommerceProductsList',
+      },
+    ],
+  })
+}
 
 const getCmsProductPageData = async (productCode: string) => {
   const cmsPage = await getPage({
@@ -48,8 +74,8 @@ export async function getStaticProps(context: GetStaticPropsContext) {
       product,
       categoriesTree,
       cmsProductDetail,
-      ...(await serverSideTranslations(locale as string, ['common'], nextI18NextConfig)),
       section: section || null,
+      ...(await serverSideTranslations(locale as string, ['common'], nextI18NextConfig)),
     },
     revalidate: serverRuntimeConfig.revalidate,
   }
@@ -60,7 +86,7 @@ export async function getStaticPaths() {
   const searchResponse = await search({
     pageSize: serverRuntimeConfig.pageSize,
   } as CategorySearchParams)
-  const { items } = searchResponse?.data?.products || []
+  const items = searchResponse?.data?.products?.items || []
 
   const paths: string[] = []
   items?.length &&
@@ -70,7 +96,7 @@ export async function getStaticPaths() {
 }
 
 const ProductDetailPage: NextPage = (props: any) => {
-  const { productCode, product, cmsProductDetail } = props
+  const { productCode, product, cmsProductDetail, section } = props
   const { isFallback } = useRouter()
   const [cmsProductDetailRespone, setCmsProductDetailPageResponse] = useState(cmsProductDetail)
 
@@ -96,11 +122,14 @@ const ProductDetailPage: NextPage = (props: any) => {
   const breadcrumbs = product ? productGetters.getBreadcrumbs(product) : []
   return (
     <>
-      <ProductDetailTemplate
-        product={product}
-        breadcrumbs={breadcrumbs}
-        cmsProducts={cmsProductDetailRespone}
-      />
+      <ProductDetailTemplate product={product} breadcrumbs={breadcrumbs}>
+        {cmsProductDetailRespone?.components?.length > 0 &&
+          cmsProductDetailRespone?.components?.map((data: any) => (
+            <CmsComponent key={Object.keys(data)[0]} content={data} />
+          ))}
+
+        {section && <BuilderComponent model="pdpsection" content={section} />}
+      </ProductDetailTemplate>
     </>
   )
 }
