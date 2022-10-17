@@ -12,9 +12,7 @@ import * as stories from '@/components/page-templates/MyAccountTemplate/MyAccoun
 import { AuthContextProvider, DialogRoot, ModalContextProvider } from '@/context'
 
 import type { Card } from '@/lib/gql/types'
-
 const { Common } = composeStories(stories)
-
 const setup = () => {
   const user = userEvent.setup()
   render(
@@ -25,16 +23,17 @@ const setup = () => {
       wrapper: createQueryClientWrapper(),
     }
   )
-
   return {
     user,
   }
 }
-
+beforeEach(() => {
+  server.resetHandlers()
+})
 afterEach(() => {
   cleanup()
+  server.resetHandlers()
 })
-
 jest.mock('@/lib/helpers/tokenizeCreditCardPayment', () => {
   return {
     tokenizeCreditCardPayment: jest.fn().mockImplementation(() => {
@@ -45,11 +44,13 @@ jest.mock('@/lib/helpers/tokenizeCreditCardPayment', () => {
     }),
   }
 })
-
 describe('[component] - MyProfile', () => {
   it(`should handle email form edit`, async () => {
     const { user } = setup()
-
+    const MyProfile = screen.getByRole('heading', {
+      name: /my-profile/i,
+    })
+    await user.click(MyProfile)
     server.use(
       graphql.query('getUser', (_req, res, ctx) => {
         return res.once(
@@ -62,31 +63,22 @@ describe('[component] - MyProfile', () => {
         )
       })
     )
-
-    const MyProfile = screen.getByRole('heading', {
-      name: /my-profile/i,
-    })
-    await user.click(MyProfile)
-
     const editName = screen.getAllByText(/edit/i)
     await user.click(editName[1])
-
     const emailInput = screen.getByRole('textbox', { name: 'email' })
-
     expect(emailInput).toHaveValue('suman@email.com')
-
     await user.type(emailInput, 'johnDoe@gmail.com')
-
     await user.click(screen.getByRole('button', { name: 'save' }))
-
     await waitFor(() => {
       expect(screen.getByTestId('email')).toHaveTextContent('johnDoe@gmail.com')
     })
   })
-
   it(`should handle names form edit`, async () => {
     const { user } = setup()
-
+    const MyProfile = screen.getByRole('heading', {
+      name: /my-profile/i,
+    })
+    await user.click(MyProfile)
     server.use(
       graphql.query('getUser', (_req, res, ctx) => {
         return res.once(
@@ -100,73 +92,20 @@ describe('[component] - MyProfile', () => {
         )
       })
     )
-
-    const MyProfile = screen.getByRole('heading', {
-      name: /my-profile/i,
-    })
-    await user.click(MyProfile)
-
     const editName = screen.getAllByText(/edit/i)
     await user.click(editName[0])
-
     const firstNameInput = screen.getByRole('textbox', { name: 'first-name' })
     const lastNameInput = screen.getByRole('textbox', { name: 'last-name-or-sur-name' })
-
     expect(firstNameInput).toHaveValue('Suman')
     expect(lastNameInput).toHaveValue('Patro')
-
     await user.type(firstNameInput, 'John')
     await user.type(lastNameInput, 'Doe')
-
     await user.click(screen.getByRole('button', { name: 'save' }))
-
-    await waitFor(() => {
-      expect(screen.getByTestId('customer-name')).toHaveTextContent('John Doe')
-    })
-  })
-
-  it(`should handle password form edit`, async () => {
-    const { user } = setup()
-
-    server.use(
-      graphql.query('getUser', (_req, res, ctx) => {
-        return res.once(
-          ctx.data({
-            customerAccount: {
-              ...userMock.customerAccount,
-              firstName: 'John',
-              lastName: 'Doe',
-            },
-          })
-        )
-      })
-    )
-
-    const MyProfile = screen.getByRole('heading', {
-      name: /my-profile/i,
-    })
-    await user.click(MyProfile)
-
-    const editName = screen.getAllByText(/edit/i)
-    await user.click(editName[0])
-
-    const firstNameInput = screen.getByRole('textbox', { name: 'first-name' })
-    const lastNameInput = screen.getByRole('textbox', { name: 'last-name-or-sur-name' })
-
-    expect(firstNameInput).toHaveValue('Suman')
-    expect(lastNameInput).toHaveValue('Patro')
-
-    await user.type(firstNameInput, 'John')
-    await user.type(lastNameInput, 'Doe')
-
-    await user.click(screen.getByRole('button', { name: 'save' }))
-
     await waitFor(() => {
       expect(screen.getByTestId('customer-name')).toHaveTextContent('John Doe')
     })
   })
 })
-
 describe('[component] - AddressBook (has saved addresses )', () => {
   it('should handle adding new address', async () => {
     const { user } = setup()
@@ -174,43 +113,33 @@ describe('[component] - AddressBook (has saved addresses )', () => {
       name: /address-book/i,
     })
     await user.click(addressBook)
-
     const addNewAddressButton = screen.getByRole('button', { name: /add-new-address/i })
     await user.click(addNewAddressButton)
-
     expect(screen.getByTestId('address-form')).toBeVisible()
-
     await addUpdateAddress(user)
     const saveAddressButton = screen.getByRole('button', {
       name: /save/i,
     })
     await user.click(saveAddressButton)
-
     await waitFor(() => expect(screen.queryByTestId('address-form')).not.toBeInTheDocument())
   })
-
   it('should handle edit address', async () => {
     const { user } = setup()
     const addressBook = screen.getByRole('heading', {
       name: /address-book/i,
     })
     await user.click(addressBook)
-
     const editAddressLinks = screen.getAllByTestId(/address-edit/)
     await user.click(editAddressLinks[0])
-
     await addUpdateAddress(user)
     const saveAddressButton = screen.getByRole('button', {
       name: /save/i,
     })
     await user.click(saveAddressButton)
-
     await waitFor(() => expect(screen.queryByTestId('address-form')).not.toBeInTheDocument())
   })
-
   it('should handle delete address', async () => {
     const user = userEvent.setup()
-
     render(
       <AuthContextProvider>
         <ModalContextProvider>
@@ -222,49 +151,33 @@ describe('[component] - AddressBook (has saved addresses )', () => {
         wrapper: createQueryClientWrapper(),
       }
     )
-
     const addressBook = screen.getByRole('heading', {
       name: /address-book/i,
     })
     await user.click(addressBook)
-
     const deleteAddressIcons = screen.getAllByTestId('DeleteIcon')
     await user.click(deleteAddressIcons[0])
-
     const deleteConfirmMessage = screen.getByText(/delete-address-confirm-message/i)
-
     const deleteButton = screen.getByRole('button', {
       name: /delete/i,
     })
-
     expect(deleteConfirmMessage).toBeVisible()
     expect(deleteButton).toBeVisible()
-
     await user.click(deleteButton)
     expect(deleteButton).not.toBeVisible()
   })
 })
-
 describe('[component] - PaymentMethod (has saved payment methods)', () => {
   it('should handle adding new card', async () => {
     const { user } = setup()
-
     await user.click(screen.getByText('payment-method'))
-
     await user.click(screen.getByRole('button', { name: 'add-payment-method' }))
-
     const savePaymentMethodButton = screen.getByRole('button', { name: 'save-payment-method' })
-
     expect(savePaymentMethodButton).toBeDisabled()
-
     const addressRadios = screen.getAllByRole('radio')
-
     await addCardDetails(user)
-
     await user.click(addressRadios[0])
-
     expect(savePaymentMethodButton).toBeEnabled()
-
     server.use(
       graphql.query('customerAccountCards', (_req, res, ctx) => {
         return res(
@@ -296,53 +209,37 @@ describe('[component] - PaymentMethod (has saved payment methods)', () => {
         )
       })
     )
-
     await user.click(savePaymentMethodButton)
-
     await waitFor(() => {
       expect(screen.getAllByTestId('saved-cards-and-contacts')).toHaveLength(2)
     })
   })
-
   it('should handle editing payment method', async () => {
     const { user } = setup()
-
     await user.click(
       screen.getByRole('heading', {
         name: /payment-method/i,
       })
     )
-
     const firstPaymentMethodEditText = screen.getAllByTestId('payment-method-edit-link')[0]
-
     expect(firstPaymentMethodEditText).toBeVisible()
-
     await user.click(firstPaymentMethodEditText)
-
     if (customerAccountCardsMock.customerAccountCards.items) {
       const { cardNumberPart, expireMonth, expireYear } = customerAccountCardsMock
         .customerAccountCards.items[0] as Card
-
       const cardNumber = screen.getByRole('textbox', {
         name: /card-number/i,
       })
-
       expect(cardNumber).toHaveDisplayValue(cardNumberPart as string)
-
       const expiryDate = screen.getByRole('textbox', {
         name: /expiry-date/i,
       })
-
       expect(expiryDate).toHaveDisplayValue(`${expireMonth}/${expireYear}`)
-
       await user.type(expiryDate, '11/2029')
     }
     const addressRadios = screen.getAllByRole('radio')
-
     expect(addressRadios[0]).toBeChecked()
-
     const savePaymentMethodButton = screen.getByRole('button', { name: 'save-payment-method' })
-
     server.use(
       graphql.query('customerAccountCards', (_req, res, ctx) => {
         return res(
@@ -365,29 +262,23 @@ describe('[component] - PaymentMethod (has saved payment methods)', () => {
         )
       })
     )
-
     await user.click(savePaymentMethodButton)
   })
 })
-
 const addCardDetails = async (user: UserEvent) => {
   // Card form values
   const cardNumber = screen.getByRole('textbox', {
     name: /card-number/i,
   })
-
   const expiryDate = screen.getByRole('textbox', {
     name: /expiry-date/i,
   })
-
   const cvv = screen.getByPlaceholderText(/security-code-placeholder/i)
-
   await user.type(cardNumber, '4111111111111111')
   await user.type(expiryDate, '01/2026')
   await user.type(cvv, '123')
   await user.tab()
 }
-
 const addUpdateAddress = async (user: UserEvent) => {
   const firstName = screen.getByRole('textbox', { name: /first-name/i })
   const lastNameOrSurname = screen.getByRole('textbox', { name: /last-name-or-sur-name/i })
@@ -398,7 +289,6 @@ const addUpdateAddress = async (user: UserEvent) => {
   const postalOrZipCode = screen.getByRole('textbox', { name: /postal-or-zip-code/i })
   const phoneNumberHome = screen.getByRole('textbox', { name: /phone-number/i })
   const countryCode = screen.getByRole('button', { name: 'country-code' })
-
   await user.clear(firstName)
   await user.type(firstName, 'Ron')
   await user.clear(lastNameOrSurname)
@@ -416,7 +306,6 @@ const addUpdateAddress = async (user: UserEvent) => {
   await user.clear(phoneNumberHome)
   await user.type(phoneNumberHome, '9072832799')
   fireEvent.mouseDown(countryCode)
-
   const listbox = within(screen.getByRole('listbox'))
   await user.click(listbox.getByText(/US/i))
   await user.tab()
