@@ -1,22 +1,11 @@
 import { render, screen } from '@testing-library/react'
 
 import { categoryTreeDataMock } from '@/__mocks__/stories/categoryTreeDataMock'
-import { cmsHomePageResultMock } from '@/__mocks__/stories/cmsHomePageResultMock'
+import { homePageResultMock } from '@/__mocks__/stories/homePageResultMock'
 import Home, { getServerSideProps } from '@/pages/index'
 
-const CmsComponentMock = () => <div data-testid="cms-component" />
-jest.mock('@/components/home/CmsComponent/CmsComponent', () => CmsComponentMock)
 const mockCategoryTreeData = categoryTreeDataMock
-const mockCmsHomePageResult = cmsHomePageResultMock
-const mockCmsResultDataMock = {
-  cmsPage: {
-    components: mockCmsHomePageResult,
-  },
-}
-
-jest.mock('@/lib/cms/content-stack', () => ({
-  onEntryChange: jest.fn(),
-}))
+const mockHomePageResult = homePageResultMock || []
 
 jest.mock('next/config', () => {
   return () => ({
@@ -32,13 +21,6 @@ jest.mock('next/config', () => {
         ],
         pageSize: 16,
       },
-      contentstack: {
-        apiKey: 'api_key',
-        deliveryToken: 'delivery_token',
-        environment: 'environment',
-        managementToken: 'management_token',
-        apiHost: 'api_host',
-      },
     },
     serverRuntimeConfig: {
       cacheKey: 'categoryTree',
@@ -52,15 +34,9 @@ jest.mock('@/lib/api/util', () => ({
     return Promise.resolve({
       data: {
         categoriesTree: { items: mockCategoryTreeData.categoriesTree?.items },
-        cmsPage: mockCmsHomePageResult,
+        carouselItem: mockHomePageResult,
       },
     })
-  }),
-}))
-
-jest.mock('@/lib/operations/get-page', () => ({
-  getPage: jest.fn(() => {
-    return Promise.resolve(mockCmsHomePageResult)
   }),
 }))
 
@@ -95,16 +71,17 @@ describe('Home', () => {
           userConfig: { i18n: [{}] },
         },
         categoriesTree: mockCategoryTreeData.categoriesTree.items,
-        cmsPage: mockCmsHomePageResult,
+        carouselItem: mockHomePageResult,
       },
     })
   })
 
   it('renders without crashing', () => {
-    setup(mockCmsResultDataMock)
+    setup(mockHomePageResult)
 
-    const CmsComponent = screen.getAllByTestId('cms-component')
-
-    expect(CmsComponent.length).toEqual(mockCmsResultDataMock?.cmsPage?.components?.length)
+    const subtitle = screen.getAllByText(mockHomePageResult[0].subtitle || '')
+    const description = screen.getAllByText(mockHomePageResult[0].description)
+    expect(subtitle).toBeVisible()
+    expect(description).toBeVisible()
   })
 })
