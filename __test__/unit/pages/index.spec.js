@@ -1,8 +1,6 @@
-import { render, screen } from '@testing-library/react'
-
 import { categoryTreeDataMock } from '@/__mocks__/stories/categoryTreeDataMock'
 import { homePageResultMock } from '@/__mocks__/stories/homePageResultMock'
-import Home, { getServerSideProps } from '@/pages/index'
+import { getServerSideProps } from '@/pages/index'
 
 const mockCategoryTreeData = categoryTreeDataMock
 const mockHomePageResult = homePageResultMock || []
@@ -53,9 +51,6 @@ jest.mock('next-i18next/serverSideTranslations', () => ({
 }))
 
 describe('Home', () => {
-  const setup = (args) => {
-    render(<Home {...args} />)
-  }
   it('should run getServerSideProps method', () => {
     const context = {
       params: {},
@@ -74,14 +69,5 @@ describe('Home', () => {
         carouselItem: mockHomePageResult,
       },
     })
-  })
-
-  it('renders without crashing', () => {
-    setup(mockHomePageResult)
-
-    const subtitle = screen.getAllByText(mockHomePageResult[0].subtitle || '')
-    const description = screen.getAllByText(mockHomePageResult[0].description)
-    expect(subtitle).toBeVisible()
-    expect(description).toBeVisible()
   })
 })
