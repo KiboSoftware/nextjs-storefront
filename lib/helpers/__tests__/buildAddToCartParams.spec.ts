@@ -31,7 +31,7 @@ describe('[helpers] buildAddToCartParams function', () => {
       },
       quantity: 2,
       fulfillmentMethod: mockedProduct.fulfillmentMethod,
-      purchaseLocation: mockedProduct.purchaseLocationCode,
+      fulfillmentLocationCode: mockedProduct.purchaseLocationCode,
     })
   })
 })
