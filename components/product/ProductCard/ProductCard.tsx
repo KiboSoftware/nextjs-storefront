@@ -1,4 +1,4 @@
-import React, { MouseEvent, useState, SyntheticEvent } from 'react'
+import React, { MouseEvent, useState } from 'react'
 
 import { StarRounded } from '@mui/icons-material'
 import FavoriteBorderRoundedIcon from '@mui/icons-material/FavoriteBorderRounded'
@@ -18,8 +18,6 @@ import { useTranslation } from 'next-i18next'
 import Link from 'next/link'
 
 import { KiboImage, Price } from '@/components/common'
-import { ProductQuickViewDialog } from '@/components/product'
-import { useModalContext } from '@/context'
 import DefaultImage from '@/public/product_placeholder.svg'
 
 import type { Product } from '@/lib/gql/types'
@@ -45,6 +43,7 @@ export interface ProductCardProps {
   isQuickViewModal?: boolean
   onAddOrRemoveWishlistItem?: () => void
   fromProductListingPage?: boolean
+  onClickQuickViewModal?: () => void
 }
 
 const styles = {
@@ -89,28 +88,21 @@ const ProductCard = (props: ProductCardProps) => {
     isShopNow = false,
     isInWishlist = false,
     isShowWishlistIcon = true,
-    isQuickViewModal = true,
-    product,
     onAddOrRemoveWishlistItem,
     fromProductListingPage = false,
+    onClickQuickViewModal,
   } = props
 
   const [isQuickViewShown, setIsQuickViewShown] = useState<boolean>(false)
   const { t } = useTranslation('common')
-  const { showModal } = useModalContext()
+
   const handleAddOrRemoveWishlistItem = (event: MouseEvent<HTMLElement>) => {
     event.preventDefault()
     onAddOrRemoveWishlistItem && onAddOrRemoveWishlistItem()
   }
-  const openProductQuickViewModal = (e: SyntheticEvent<Element, Event>) => {
-    e.preventDefault()
-    showModal({
-      Component: ProductQuickViewDialog,
-      props: {
-        product,
-        isQuickViewModal,
-      },
-    })
+  const handleOpenProductQuickViewModal = (event: MouseEvent<HTMLElement>) => {
+    event.preventDefault()
+    onClickQuickViewModal && onClickQuickViewModal()
   }
   if (isLoading) return <ProductCardSkeleton />
   else
@@ -165,12 +157,12 @@ const ProductCard = (props: ProductCardProps) => {
                     emptyIcon={<StarRounded data-testid="empty-rating" />}
                     data-testid="product-rating"
                   />
-                  {isQuickViewShown && fromProductListingPage && (
+                  {fromProductListingPage && (
                     <Button
                       variant="contained"
                       color="secondary"
-                      sx={{ width: '100%', marginTop: '1 rem' }}
-                      onClick={openProductQuickViewModal}
+                      sx={{ width: '100%', marginTop: '1 rem', opacity: isQuickViewShown ? 1 : 0 }}
+                      onClick={handleOpenProductQuickViewModal}
                     >
                       {t('quick-view')}
                     </Button>

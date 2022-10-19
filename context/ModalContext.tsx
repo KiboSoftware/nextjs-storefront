@@ -18,7 +18,11 @@ interface ModalContextProviderProps {
 
 const ModalContext = createContext({
   Component: null,
-  props: {},
+  props: {
+    isNested: false,
+    NestedDialog: null,
+    nestedDialogProps: {},
+  },
 } as ModalContextType)
 
 ModalContext.displayName = 'ModalContext'
@@ -26,7 +30,11 @@ ModalContext.displayName = 'ModalContext'
 export const ModalContextProvider = ({ children }: ModalContextProviderProps) => {
   const [modalState, setModalState] = useState<ModalStateType>({
     Component: null,
-    props: {},
+    props: {
+      isNested: false,
+      NestedDialog: null,
+      nestedDialogProps: {},
+    },
   })
 
   const showModal = (showModalProps: ModalStateType) => {
@@ -62,12 +70,12 @@ export const useModalContext = () => {
 
 export const DialogRoot = () => {
   const { Component, props, closeModal } = useModalContext()
-  const { isNested, NestedDialog, nestedDialogProps } = props
+  const NestedDialog = props?.NestedDialog
   if (Component) {
-    if (isNested) {
+    if (props?.isNested) {
       return (
         <>
-          <NestedDialog {...nestedDialogProps} closeModal={closeModal} />
+          <NestedDialog {...props?.nestedDialogProps} closeModal={closeModal} />
           {Component && <Component {...props} closeModal={closeModal} />}
         </>
       )

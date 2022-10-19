@@ -21,7 +21,7 @@ const ProductQuickViewDialog = (props: ProductQuickViewDialogProps) => {
       showContentBottomDivider={false}
       Actions={''}
       Content={<ProductDetailTemplate product={product} isQuickViewModal={isQuickViewModal} />}
-      customMaxWidth="85rem"
+      customMaxWidth="80rem"
       onClose={closeModal}
     />
   )
