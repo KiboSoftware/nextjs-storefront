@@ -10,6 +10,7 @@ const steps = ['details', 'shipping', 'payment', 'review']
 export default {
   title: 'Checkout/KiboStepper',
   component: KiboStepper,
+  argTypes: { onHandleBack: { action: 'clicked' } },
   decorators: [
     (Story) => (
       <CheckoutStepProvider steps={steps}>

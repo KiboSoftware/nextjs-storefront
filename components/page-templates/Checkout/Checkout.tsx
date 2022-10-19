@@ -145,16 +145,6 @@ const Checkout = (props: CheckoutProps) => {
           gap={2}
         >
           <Stack sx={{ width: '100%', maxWidth: '872px' }} gap={1}>
-            <Typography variant={mdScreen ? 'h1' : 'h2'} component="div" gutterBottom>
-              {t('checkout', { numberOfItems })}
-            </Typography>
-
-            {!mdScreen && (
-              <Stack sx={{ paddingBottom: '8px' }}>
-                <Divider />
-              </Stack>
-            )}
-
             <KiboStepper>
               <DetailsStep checkout={checkout} />
               {((isAuthenticated && isSuccess) || !isAuthenticated) && (
@@ -173,9 +163,11 @@ const Checkout = (props: CheckoutProps) => {
             sx={{
               width: '100%',
               maxWidth: 428,
-              height: 448,
+              height: 'fit-content',
               paddingTop: { lg: '4.1rem' },
               marginLeft: { lg: '1rem' },
+              position: { md: 'sticky' },
+              top: { lg: '130px', md: '200px' },
             }}
           >
             {activeStep != reviewStepIndex && (
