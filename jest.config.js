@@ -11,8 +11,6 @@ module.exports = {
     'hooks/**/*.{js,jsx,ts,tsx}',
     'pages/**/*.{js,jsx,ts,tsx}',
     '!pages/_middleware.ts',
-    '!pages/api/contentful',
-    '!components/PreviewMode',
   ],
   moduleNameMapper: {
     // Handle CSS imports (with CSS modules)
