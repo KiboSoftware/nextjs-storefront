@@ -47,12 +47,9 @@ const useCardSchema = () => {
     }),
     newPassword: yup.string().when('$isPasswordForm', (isPasswordForm, schema) => {
       if (isPasswordForm) {
-        return schema
-          .string()
-          .required(t('this-field-is-required'))
-          .test((value = '') => {
-            return isPasswordValid(value)
-          })
+        return schema.required(t('this-field-is-required')).test((value = '') => {
+          return isPasswordValid(value)
+        })
       }
     }),
     confirmPassword: yup.string().when('$isPasswordForm', (isPasswordForm, schema) => {
