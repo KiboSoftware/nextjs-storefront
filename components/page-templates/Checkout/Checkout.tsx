@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 
-import { Box, Stack, Button, Typography, SxProps, Divider, useMediaQuery } from '@mui/material'
+import { Box, Stack, Button, SxProps } from '@mui/material'
 import { Theme } from '@mui/material/styles'
 import { useTranslation } from 'next-i18next'
 import { useRouter } from 'next/router'
@@ -57,7 +57,6 @@ const Checkout = (props: CheckoutProps) => {
 
   const { activeStep, stepStatus, steps, setStepBack, setStepStatusSubmit } =
     useCheckoutStepContext()
-  const mdScreen = useMediaQuery(theme.breakpoints.up('md'))
 
   const buttonLabels = [t('go-to-shipping'), t('go-to-payment'), t('review-order')]
 
@@ -130,7 +129,6 @@ const Checkout = (props: CheckoutProps) => {
     isUserLoggedIn: true,
   }
 
-  const numberOfItems = checkout && checkout?.items && checkout?.items?.length
   const showCheckoutSteps = activeStep !== steps.length
 
   const userShippingAddress = userGetters?.getUserShippingAddress(
