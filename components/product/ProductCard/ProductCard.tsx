@@ -1,4 +1,4 @@
-import React, { MouseEvent, useState } from 'react'
+import React, { MouseEvent } from 'react'
 
 import { StarRounded } from '@mui/icons-material'
 import FavoriteBorderRoundedIcon from '@mui/icons-material/FavoriteBorderRounded'
@@ -39,7 +39,7 @@ export interface ProductCardProps {
   isShopNow?: boolean
   isShowWishlistIcon?: boolean
   product?: Product
-  fromProductListingPage?: boolean
+  showQuickViewButton?: boolean
   onAddOrRemoveWishlistItem?: () => void
   onClickQuickViewModal?: () => void
 }
@@ -56,7 +56,15 @@ const styles = {
     cursor: 'pointer',
     '&:hover': {
       boxShadow: '0 2px 16px 4px rgb(40 44 63 / 7%)',
+      '.quick-view': {
+        opacity: 1,
+      },
     },
+  },
+  quickView: {
+    opacity: 0,
+    width: '100%',
+    marginTop: '1 rem',
   },
 }
 
@@ -87,11 +95,10 @@ const ProductCard = (props: ProductCardProps) => {
     isInWishlist = false,
     isShowWishlistIcon = true,
     onAddOrRemoveWishlistItem,
-    fromProductListingPage = false,
+    showQuickViewButton = false,
     onClickQuickViewModal,
   } = props
 
-  const [isQuickViewShown, setIsQuickViewShown] = useState<boolean>(false)
   const { t } = useTranslation('common')
 
   const handleAddOrRemoveWishlistItem = (event: MouseEvent<HTMLElement>) => {
@@ -108,10 +115,7 @@ const ProductCard = (props: ProductCardProps) => {
       <Box>
         <Link href={link} passHref data-testid="product-card-link">
           <MuiLink underline="none">
-            <Box
-              onMouseEnter={() => setIsQuickViewShown(true)}
-              onMouseLeave={() => setIsQuickViewShown(false)}
-            >
+            <Box>
               <Card sx={styles.cardRoot} data-testid="product-card">
                 {isShowWishlistIcon && (
                   <Box textAlign={'right'} width="100%" onClick={handleAddOrRemoveWishlistItem}>
@@ -155,11 +159,12 @@ const ProductCard = (props: ProductCardProps) => {
                     emptyIcon={<StarRounded data-testid="empty-rating" />}
                     data-testid="product-rating"
                   />
-                  {fromProductListingPage && (
+                  {showQuickViewButton && (
                     <Button
                       variant="contained"
                       color="secondary"
-                      sx={{ width: '100%', marginTop: '1 rem', opacity: isQuickViewShown ? 1 : 0 }}
+                      className="quick-view"
+                      sx={styles.quickView}
                       onClick={handleOpenProductQuickViewModal}
                     >
                       {t('quick-view')}

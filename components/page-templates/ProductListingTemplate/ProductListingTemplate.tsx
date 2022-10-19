@@ -38,7 +38,7 @@ export interface ProductListingTemplateProps {
   pageSize: number
   onSortItemSelection: (value: string) => void
   onPaginationChange: () => void
-  fromProductListingPage?: boolean
+  showQuickViewButton?: boolean
   isQuickViewModal?: boolean
 }
 
@@ -190,7 +190,7 @@ const ProductListingTemplate = (props: ProductListingTemplateProps) => {
     pageSize,
     onSortItemSelection,
     onPaginationChange,
-    fromProductListingPage = true,
+    showQuickViewButton = true,
   } = props
   const { getProductLink } = uiHelpers()
   const { updateRoute } = useUpdateRoutes()
@@ -358,7 +358,7 @@ const ProductListingTemplate = (props: ProductListingTemplateProps) => {
                       >
                         <ProductCard
                           product={product}
-                          fromProductListingPage={fromProductListingPage}
+                          showQuickViewButton={showQuickViewButton}
                           imageUrl={
                             productGetters.getCoverImage(product) &&
                             productGetters.handleProtocolRelativeUrl(
