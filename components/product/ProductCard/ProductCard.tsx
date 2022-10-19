@@ -37,12 +37,10 @@ export interface ProductCardProps {
   isInCart?: boolean
   isLoading?: boolean
   isShopNow?: boolean
-  isShown?: boolean
   isShowWishlistIcon?: boolean
   product?: Product
-  isQuickViewModal?: boolean
-  onAddOrRemoveWishlistItem?: () => void
   fromProductListingPage?: boolean
+  onAddOrRemoveWishlistItem?: () => void
   onClickQuickViewModal?: () => void
 }
 
