@@ -9,8 +9,8 @@ import {
   styled,
   Link as MuiLink,
   Container,
-  Tabs,
 } from '@mui/material'
+import Tabs, { tabsClasses } from '@mui/material/Tabs'
 import { usePopupState, bindHover, bindPopover } from 'material-ui-popup-state/hooks'
 import HoverPopover from 'material-ui-popup-state/HoverPopover'
 import { useTranslation } from 'next-i18next'
@@ -25,7 +25,6 @@ import type { Maybe, PrCategory } from '@/lib/gql/types'
 
 interface MegaMenuProps {
   categoryTree: Maybe<PrCategory>[]
-  backgroundColor?: string
   onBackdropToggle: (isOpen: boolean) => void
 }
 
@@ -52,7 +51,7 @@ const StyledToolbar = styled(Toolbar)(({ theme }) => ({
     whiteSpace: 'nowrap',
     flex: 1,
     color: 'black',
-    maxWidth: '90%',
+    maxWidth: '100%',
   },
 }))
 
@@ -166,74 +165,35 @@ const MegaMenuCategory = (props: MegaMenuCategoryProps) => {
 }
 
 const MegaMenu = (props: MegaMenuProps) => {
-  const { categoryTree = [], backgroundColor, onBackdropToggle } = props
+  const { categoryTree = [], onBackdropToggle } = props
 
   const [activeCategory, setActiveCategory] = useState<string>('')
 
   return (
     <StyledToolbar data-testid="megamenu-container">
-      {/* <Container maxWidth="xl" sx={{ display: 'flex', gap: 2 }}> */}
-      <Tabs
-        // value={value}
-        // onChange={handleChange}
-        variant="scrollable"
-        scrollButtons
-        allowScrollButtonsMobile
-        aria-label="scrollable auto tabs example"
-      >
-        {[
-          ...categoryTree,
-          {
-            categoryCode: 'Bike001',
-            categoryId: 1,
-            updateDate: null,
-            content: {
-              name: 'Bikes',
+      <Container maxWidth="xl">
+        <Tabs
+          value={false}
+          variant="scrollable"
+          scrollButtons="auto"
+          aria-label="scrollable auto tabs example"
+          sx={{
+            [`& .${tabsClasses.scrollButtons}`]: {
+              '&.Mui-disabled': { display: 'none' },
             },
-          },
-          {
-            categoryCode: 'Bike001',
-            categoryId: 1,
-            updateDate: null,
-            content: {
-              name: 'Hammers',
-            },
-          },
-          {
-            categoryCode: 'Bike001',
-            categoryId: 1,
-            updateDate: null,
-            content: {
-              name: 'Cameras',
-            },
-          },
-          {
-            categoryCode: 'Bike001',
-            categoryId: 1,
-            updateDate: null,
-            content: {
-              name: 'Cameras 2',
-            },
-          },
-          {
-            categoryCode: 'Bike001',
-            categoryId: 1,
-            updateDate: null,
-            content: {
-              name: 'Cameras 4',
-            },
-          },
-        ]?.map((category) => (
-          <MegaMenuCategory
-            key={category?.categoryCode}
-            category={category}
-            onBackdropToggle={onBackdropToggle}
-            activeCategory={activeCategory}
-            setActiveCategory={setActiveCategory}
-          />
-        ))}
-      </Tabs>
-      {/* </Container> */}
+          }}
+        >
+          {categoryTree?.map((category) => (
+            <MegaMenuCategory
+              key={category?.categoryCode}
+              category={category}
+              onBackdropToggle={onBackdropToggle}
+              activeCategory={activeCategory}
+              setActiveCategory={setActiveCategory}
+            />
+          ))}
+        </Tabs>
+      </Container>
     </StyledToolbar>
   )
 }

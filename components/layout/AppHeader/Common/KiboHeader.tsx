@@ -1,9 +1,6 @@
-import React, { useEffect, useState } from 'react'
+import React, { Dispatch, SetStateAction, useEffect, useState } from 'react'
 
-import AccountCircleIcon from '@mui/icons-material/AccountCircle'
-import FmdGoodIcon from '@mui/icons-material/FmdGood'
 import SearchIcon from '@mui/icons-material/Search'
-import ShoppingCartIcon from '@mui/icons-material/ShoppingCart'
 import {
   Typography,
   Link as MuiLink,
@@ -12,20 +9,28 @@ import {
   AppBar,
   Backdrop,
   Container,
+  useMediaQuery,
+  useTheme,
 } from '@mui/material'
 import { useTranslation } from 'next-i18next'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
 
 import { HeaderAction, KiboLogo } from '@/components/common'
-import { MyStoreDialog, StoreLocatorDialog } from '@/components/dialogs'
-import { MegaMenu, SearchSuggestions, LoginDialog } from '@/components/layout'
-import { useAuthContext, useModalContext } from '@/context'
-import { useHeaderContext } from '@/context/HeaderContext'
-import { useCartQueries, useCategoryTreeQueries, usePurchaseLocationQueries } from '@/hooks'
-import { cartGetters } from '@/lib/getters'
-import { setPurchaseLocationCookie } from '@/lib/helpers'
-import type { LocationCustom, NavigationLink } from '@/lib/types'
+import {
+  MegaMenu,
+  SearchSuggestions,
+  MobileHeader,
+  StoreFinderIcon,
+  AccountIcon,
+  CartIcon,
+  HamburgerMenu,
+  LoginDialog,
+  CheckoutHeader,
+} from '@/components/layout'
+import { useAuthContext, useHeaderContext, useModalContext } from '@/context'
+import { useCategoryTreeQueries } from '@/hooks'
+import type { NavigationLink } from '@/lib/types'
 
 import type { Maybe, PrCategory } from '@/lib/gql/types'
 
@@ -35,9 +40,16 @@ interface KiboHeaderProps {
   sticky?: boolean
 }
 
+interface HeaderActionAreaProps {
+  isHeaderSmall: boolean
+  categoriesTree: Maybe<PrCategory>[]
+  setIsBackdropOpen: Dispatch<SetStateAction<boolean>>
+  handleAccountIconClick: () => void
+}
+
 const TopHeaderStyles = {
   wrapper: {
-    display: { xs: 'none', md: 'flex' },
+    display: 'flex',
     backgroundColor: 'common.black',
     height: 56,
     justifyContent: 'flex-end',
@@ -71,9 +83,8 @@ const HeaderActionAreaStyles = {
     pt: 1.3,
   },
   logoWrapper: {
-    order: { xs: 3, md: 0 },
-    // display: 'flex',
-    top: { xs: 0, md: '-27px' },
+    order: 0,
+    top: '-27px',
   },
 }
 
@@ -81,7 +92,7 @@ const TopHeader = ({ navLinks }: { navLinks: NavigationLink[] }) => {
   const { t } = useTranslation('common')
 
   return (
-    <Box sx={{ ...TopHeaderStyles.wrapper }}>
+    <Box sx={{ ...TopHeaderStyles.wrapper }} data-testid="top-bar">
       <Container maxWidth="xl" sx={{ ...TopHeaderStyles.container }}>
         <Box display="flex" justifyContent="flex-end" alignItems="center" gap={5}>
           {navLinks?.map((nav, index) => {
@@ -101,108 +112,18 @@ const TopHeader = ({ navLinks }: { navLinks: NavigationLink[] }) => {
   )
 }
 
-const StoreFinderIcon = () => {
-  const { toggleStoreLocator, headerState } = useHeaderContext()
-  const { data: location } = usePurchaseLocationQueries()
-  const { showModal, closeModal } = useModalContext()
+const HeaderActionArea = (props: HeaderActionAreaProps) => {
+  const { isHeaderSmall, categoriesTree, setIsBackdropOpen, handleAccountIconClick } = props
+  const { headerState, toggleSearchBar } = useHeaderContext()
   const { t } = useTranslation('common')
 
-  const openStoreLocatorModal = () => {
-    if (location.name) {
-      showModal({
-        Component: MyStoreDialog,
-        props: {
-          location,
-        },
-      })
-    } else {
-      showModal({
-        Component: StoreLocatorDialog,
-        props: {
-          handleSetStore: async (selectedStore: LocationCustom) => {
-            setPurchaseLocationCookie(selectedStore?.code as string)
-            closeModal()
-          },
-        },
-      })
-    }
-  }
-  const handleClick = () => {
-    toggleStoreLocator()
-    openStoreLocatorModal()
-  }
-
   return (
-    <HeaderAction
-      title={location?.name ? location.name : t('find-a-store')}
-      subtitle={
-        location?.address?.cityOrTown && location?.address?.stateOrProvince
-          ? `${location?.address?.cityOrTown}, ${location?.address?.stateOrProvince}`
-          : t('view-all')
-      }
-      icon={FmdGoodIcon}
-      onClick={handleClick}
-    />
-  )
-}
-
-const AccountIcon = () => {
-  const { isAuthenticated, user, setAuthError } = useAuthContext()
-  const { showModal } = useModalContext()
-  const { toggleHamburgerMenu, headerState } = useHeaderContext()
-  const router = useRouter()
-  const { t } = useTranslation('common')
-
-  const openLoginModal = () => {
-    setAuthError('')
-    headerState.isHamburgerMenuVisible && toggleHamburgerMenu()
-    if (!isAuthenticated) {
-      showModal({ Component: LoginDialog })
-    } else {
-      router.push('/my-account')
-    }
-  }
-
-  return (
-    <HeaderAction
-      title={isAuthenticated ? `${t('hi')}, ${user?.firstName}` : t('my-account')}
-      subtitle={isAuthenticated ? t('go-to-my-account') : t('log-in')}
-      icon={AccountCircleIcon}
-      onClick={openLoginModal}
-    />
-  )
-}
-
-const CartIcon = () => {
-  const { t } = useTranslation('common')
-  const { data: cart } = useCartQueries({})
-  const itemCount = cartGetters.getCartItemCount(cart)
-  const router = useRouter()
-  const gotoCart = () => {
-    router.push('/cart')
-  }
-
-  return (
-    <HeaderAction
-      subtitle={t('cart')}
-      icon={ShoppingCartIcon}
-      badgeContent={itemCount}
-      onClick={gotoCart}
-    />
-  )
-}
-
-const HeaderActionArea = (props: any) => {
-  const { isHeaderSmall, categoriesTree, setIsBackdropOpen } = props
-  const [isSearchBarVisible, setIsSearchBarVisible] = useState(false)
-
-  return (
-    <Box sx={{ ...HeaderActionAreaStyles.wrapper }}>
+    <Box sx={{ ...HeaderActionAreaStyles.wrapper }} data-testid="header-action-area">
       <Container
         maxWidth="xl"
         sx={{
           ...TopHeaderStyles.container,
-          justifyContent: isHeaderSmall ? 'flex-start' : 'space-between',
+          justifyContent: 'space-between',
         }}
       >
         <Box
@@ -218,32 +139,44 @@ const HeaderActionArea = (props: any) => {
             </MuiLink>
           </Link>
         </Box>
-        {(!isHeaderSmall || isSearchBarVisible) && (
+        {(!isHeaderSmall || headerState.isSearchBarVisible) && (
           <Box sx={HeaderActionAreaStyles.searchSuggestionsWrapper} data-testid="Search-container">
-            <SearchSuggestions />
+            <SearchSuggestions
+              isViewSearchPortal={headerState.isMobileSearchPortalVisible}
+              onEnterSearch={() => toggleSearchBar(false)}
+            />
             {isHeaderSmall && (
               <Box p={1} pt={0.7}>
-                <Typography color="text.primary" onClick={() => setIsSearchBarVisible(false)}>
-                  Cancel
+                <Typography
+                  color="text.primary"
+                  sx={{ cursor: 'pointer' }}
+                  onClick={() => toggleSearchBar(false)}
+                >
+                  {t('cancel')}
                 </Typography>
               </Box>
             )}
           </Box>
         )}
-        {isHeaderSmall && !isSearchBarVisible && (
-          <MegaMenu
-            categoryTree={categoriesTree}
-            onBackdropToggle={setIsBackdropOpen}
-            backgroundColor="grey.300"
-          />
+        {isHeaderSmall && !headerState.isSearchBarVisible && (
+          <Box maxWidth="calc(100% - 501px)" sx={{ backgroundColor: 'grey.300' }}>
+            <MegaMenu categoryTree={categoriesTree} onBackdropToggle={setIsBackdropOpen} />
+          </Box>
         )}
         <Box display="flex" gap={2}>
-          {isHeaderSmall && !isSearchBarVisible && (
-            <HeaderAction icon={SearchIcon} onClick={() => setIsSearchBarVisible(true)} />
+          {isHeaderSmall && !headerState.isSearchBarVisible && (
+            <HeaderAction
+              icon={SearchIcon}
+              iconFontSize={isHeaderSmall ? 'medium' : 'large'}
+              onClick={() => toggleSearchBar(true)}
+            />
           )}
-          <StoreFinderIcon />
-          <AccountIcon />
-          <CartIcon />
+          <StoreFinderIcon size={isHeaderSmall ? 'medium' : 'large'} />
+          <AccountIcon
+            size={isHeaderSmall ? 'medium' : 'large'}
+            handleAccountIconClick={handleAccountIconClick}
+          />
+          <CartIcon size={isHeaderSmall ? 'medium' : 'large'} />
         </Box>
       </Container>
     </Box>
@@ -253,9 +186,44 @@ const HeaderActionArea = (props: any) => {
 const KiboHeader = (props: KiboHeaderProps) => {
   const { navLinks, categoriesTree: initialCategoryTree, sticky } = props
   const { data: categoriesTree } = useCategoryTreeQueries(initialCategoryTree)
-
+  const { headerState, toggleMobileSearchPortal, toggleHamburgerMenu } = useHeaderContext()
+  const { isAuthenticated, setAuthError } = useAuthContext()
+  const { showModal } = useModalContext()
+  const router = useRouter()
   const [isBackdropOpen, setIsBackdropOpen] = useState<boolean>(false)
+
+  const theme = useTheme()
+  const mdScreen = useMediaQuery(theme.breakpoints.up('md'))
+
   const [isHeaderSmall, setIsHeaderSmall] = useState(false)
+  const isCheckoutPage = router.pathname.includes('checkout')
+
+  const isSectionVisible = () => !isHeaderSmall && mdScreen && !isCheckoutPage
+
+  const handleAccountIconClick = () => {
+    setAuthError('')
+    headerState.isHamburgerMenuVisible && toggleHamburgerMenu()
+    if (!isAuthenticated) {
+      showModal({ Component: LoginDialog })
+    } else {
+      router.push('/my-account')
+    }
+  }
+
+  const getSection = () => {
+    if (isCheckoutPage) return <CheckoutHeader isDesktop={mdScreen} />
+
+    if (!mdScreen) return <MobileHeader />
+
+    return (
+      <HeaderActionArea
+        isHeaderSmall={isHeaderSmall}
+        categoriesTree={categoriesTree}
+        setIsBackdropOpen={setIsBackdropOpen}
+        handleAccountIconClick={handleAccountIconClick}
+      />
+    )
+  }
 
   useEffect(() => {
     const handler = () => {
@@ -295,10 +263,8 @@ const KiboHeader = (props: KiboHeaderProps) => {
       >
         <Backdrop open={isBackdropOpen} data-testid="backdrop" />
 
-        <Collapse in={!isHeaderSmall} timeout={1000}>
-          <Box>
-            <TopHeader navLinks={navLinks} />
-          </Box>
+        <Collapse in={isSectionVisible()} timeout={1000}>
+          <TopHeader navLinks={navLinks} />
         </Collapse>
         <Box
           component={'section'}
@@ -306,14 +272,9 @@ const KiboHeader = (props: KiboHeaderProps) => {
             zIndex: (theme) => theme.zIndex.modal,
           }}
         >
-          <HeaderActionArea
-            isHeaderSmall={isHeaderSmall}
-            categoriesTree={categoriesTree}
-            isBackdropOpen={isBackdropOpen}
-            setIsBackdropOpen={setIsBackdropOpen}
-          />
+          {getSection()}
         </Box>
-        <Collapse in={!isHeaderSmall} timeout={1000}>
+        <Collapse in={isSectionVisible()} timeout={1000}>
           <Box
             component={'section'}
             sx={{
@@ -322,11 +283,29 @@ const KiboHeader = (props: KiboHeaderProps) => {
               borderStyle: 'solid',
               borderColor: 'grey.500',
             }}
+            data-testid="mega-menu-container"
           >
             <MegaMenu categoryTree={categoriesTree} onBackdropToggle={setIsBackdropOpen} />
           </Box>
         </Collapse>
+
+        <Collapse in={headerState.isMobileSearchPortalVisible}>
+          <Box p={1} height={'55px'} sx={{ display: { xs: 'block', md: 'none' } }}>
+            <SearchSuggestions
+              isViewSearchPortal={headerState.isMobileSearchPortalVisible}
+              onEnterSearch={() => toggleMobileSearchPortal()}
+            />
+          </Box>
+        </Collapse>
       </AppBar>
+
+      <HamburgerMenu
+        categoryTree={categoriesTree || []}
+        isDrawerOpen={headerState.isHamburgerMenuVisible}
+        setIsDrawerOpen={() => toggleHamburgerMenu()}
+        navLinks={navLinks}
+        handleAccountIconClick={handleAccountIconClick}
+      />
     </>
   )
 }

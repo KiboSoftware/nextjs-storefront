@@ -16,20 +16,19 @@ export default {
 
 const Template: ComponentStory<typeof KiboHeader> = (args) => (
   <>
-    <KiboHeader {...args}>
-      <Container>
-        <Box sx={{ my: 2 }}>
-          {[...new Array(121)]
-            .map(
-              () => `Cras mattis consectetur purus sit amet fermentum.
+    <KiboHeader {...args}></KiboHeader>
+    <Container>
+      <Box sx={{ my: 2 }}>
+        {[...new Array(121)]
+          .map(
+            () => `Cras mattis consectetur purus sit amet fermentum.
 Cras justo odio, dapibus ac facilisis in, egestas eget quam.
 Morbi leo risus, porta ac consectetur ac, vestibulum at eros.
 Praesent commodo cursus magna, vel scelerisque nisl consectetur et.`
-            )
-            .join('\n')}
-        </Box>
-      </Container>
-    </KiboHeader>
+          )
+          .join('\n')}
+      </Box>
+    </Container>
   </>
 )
 
@@ -55,19 +54,8 @@ Common.args = {
   ],
 }
 
-export const Mobile = Template.bind({})
-Mobile.parameters = {
-  viewport: {
-    defaultViewport: 'iphone12promax',
-  },
-}
-
-Mobile.args = {
-  ...Common.args,
-}
-
 export const Sticky = Template.bind({})
 Sticky.args = {
-  ...Mobile.args,
+  ...Common.args,
   sticky: true,
 }

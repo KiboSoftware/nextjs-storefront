@@ -7,9 +7,9 @@ interface HeaderState {
   isMobileSearchPortalVisible?: boolean
 }
 
-interface HeaderContextType {
+export interface HeaderContextType {
   headerState: HeaderState
-  toggleSearchBar: () => void
+  toggleSearchBar: (value: boolean) => void
   toggleHamburgerMenu: () => void
   toggleStoreLocator: () => void
   toggleMobileSearchPortal: () => void
@@ -19,13 +19,14 @@ interface HeaderContextProviderProps {
   children: ReactNode
 }
 
-const HeaderContext = createContext({
+export const HeaderContext = createContext({
   headerState: {
-    isSearchPortalVisible: false,
+    isSearchBarVisible: false,
     isHamburgerMenuVisible: false,
     isStoreLocatorVisible: false,
+    isMobileSearchPortalVisible: false,
   },
-  toggleSearchBar: () => null,
+  toggleSearchBar: (value: boolean) => null,
   toggleHamburgerMenu: () => null,
   toggleStoreLocator: () => null,
   toggleMobileSearchPortal: () => null,
@@ -39,18 +40,27 @@ export const HeaderContextProvider = ({ children }: HeaderContextProviderProps) 
     isMobileSearchPortalVisible: false,
   })
 
-  const toggleSearchBar = () =>
-    setHeaderState({ ...headerState, isSearchBarVisible: !headerState.isSearchBarVisible })
+  const toggleSearchBar = (value: boolean) =>
+    setHeaderState({ ...headerState, isSearchBarVisible: value })
 
   const toggleHamburgerMenu = () =>
-    setHeaderState({ ...headerState, isHamburgerMenuVisible: !headerState.isHamburgerMenuVisible })
+    setHeaderState({
+      ...headerState,
+      isMobileSearchPortalVisible: false,
+      isHamburgerMenuVisible: !headerState.isHamburgerMenuVisible,
+    })
 
   const toggleStoreLocator = () =>
-    setHeaderState({ ...headerState, isStoreLocatorVisible: !headerState.isStoreLocatorVisible })
+    setHeaderState({
+      ...headerState,
+      isMobileSearchPortalVisible: false,
+      isStoreLocatorVisible: !headerState.isStoreLocatorVisible,
+    })
 
   const toggleMobileSearchPortal = () =>
     setHeaderState({
       ...headerState,
+      isHamburgerMenuVisible: false,
       isMobileSearchPortalVisible: !headerState.isMobileSearchPortalVisible,
     })
 

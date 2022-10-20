@@ -17,7 +17,12 @@ import { generateQueryClient } from '../lib/react-query/queryClient'
 import theme from '../styles/theme'
 import { GlobalFetchingIndicator } from '@/components/common'
 import { KiboHeader, DefaultLayout, Footer } from '@/components/layout'
-import { AuthContextProvider, ModalContextProvider, DialogRoot } from '@/context'
+import {
+  AuthContextProvider,
+  ModalContextProvider,
+  DialogRoot,
+  HeaderContextProvider,
+} from '@/context'
 import { footerConfig as footerProps } from '@/lib/constants'
 import type { NextPageWithLayout } from '@/lib/types'
 
@@ -51,34 +56,36 @@ const App = (props: KiboAppProps) => {
         <QueryClientProvider client={queryClient}>
           <ModalContextProvider>
             <AuthContextProvider>
-              <Hydrate state={pageProps.dehydratedState}>
-                <GlobalFetchingIndicator />
-                <KiboHeader
-                  navLinks={[
-                    {
-                      link: '/order-status',
-                      text: 'order-status',
-                    },
-                    {
-                      link: '/wishlist',
-                      text: 'wishlist',
-                    },
-                    {
-                      link: '#',
-                      text: 'Nav Link 2',
-                    },
-                    {
-                      link: '#',
-                      text: 'Nav Link 3',
-                    },
-                  ]}
-                  categoriesTree={pageProps.categoriesTree || []}
-                  sticky={true}
-                />
-                <DialogRoot />
-                {getLayout(<Component {...pageProps} />)}
-                <Footer {...footerProps} />
-              </Hydrate>
+              <HeaderContextProvider>
+                <Hydrate state={pageProps.dehydratedState}>
+                  <GlobalFetchingIndicator />
+                  <KiboHeader
+                    navLinks={[
+                      {
+                        link: '/order-status',
+                        text: 'order-status',
+                      },
+                      {
+                        link: '/wishlist',
+                        text: 'wishlist',
+                      },
+                      {
+                        link: '#',
+                        text: 'Nav Link 2',
+                      },
+                      {
+                        link: '#',
+                        text: 'Nav Link 3',
+                      },
+                    ]}
+                    categoriesTree={pageProps.categoriesTree || []}
+                    sticky={true}
+                  />
+                  <DialogRoot />
+                  {getLayout(<Component {...pageProps} />)}
+                  <Footer {...footerProps} />
+                </Hydrate>
+              </HeaderContextProvider>
             </AuthContextProvider>
           </ModalContextProvider>
         </QueryClientProvider>

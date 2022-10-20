@@ -25,7 +25,7 @@ interface HamburgerMenuProps {
   navLinks?: NavigationLink[]
   marginTop?: number | string
   setIsDrawerOpen: (isDrawerOpen: boolean) => void
-  openLoginModal: () => void
+  handleAccountIconClick: () => void
 }
 
 const styles = {
@@ -61,7 +61,7 @@ const HamburgerMenu = (props: HamburgerMenuProps) => {
     marginTop = 7,
     setIsDrawerOpen,
     navLinks,
-    openLoginModal,
+    handleAccountIconClick,
   } = props
   const { t } = useTranslation('common')
   const { isAuthenticated, user } = useAuthContext()
@@ -104,7 +104,7 @@ const HamburgerMenu = (props: HamburgerMenuProps) => {
                 mobileIconColor="black"
                 iconFontSize="large"
                 showTitleInMobile={true}
-                onClick={openLoginModal}
+                onClick={handleAccountIconClick}
               />
             </Box>
           </CategoryNestedNavigation>
