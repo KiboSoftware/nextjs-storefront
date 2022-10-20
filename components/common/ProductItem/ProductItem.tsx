@@ -1,4 +1,4 @@
-import React, { ReactNode, useState } from 'react'
+import React, { ReactNode, useState, ChangeEvent } from 'react'
 
 import { KeyboardArrowDown, KeyboardArrowUp } from '@mui/icons-material'
 import {
@@ -10,6 +10,7 @@ import {
   useTheme,
   Link as MuiLink,
   Stack,
+  Checkbox,
 } from '@mui/material'
 import { useTranslation } from 'next-i18next'
 import Link from 'next/link'
@@ -36,6 +37,9 @@ export interface ProductItemProps {
   onStoreLocatorClick?: () => void
   link?: string
   children?: ReactNode
+  showCheckbox?: boolean
+  disableCheckbox?: boolean
+  onSelectItem?: (orderItemId: string) => void
 }
 
 const styles = {
@@ -70,15 +74,23 @@ const ProductItem = (props: ProductItemProps) => {
     onStoreLocatorClick,
     link,
     children,
+    showCheckbox = false,
+    disableCheckbox = false,
+    onSelectItem,
   } = props
   const { t } = useTranslation('common')
   const theme = useTheme()
   const mdScreen = useMediaQuery(theme.breakpoints.up('md'))
   const [expanded, setExpanded] = useState<boolean>(true)
+  const handleSelectItem = (event: ChangeEvent<HTMLInputElement>) =>
+    onSelectItem && onSelectItem(event.target.value)
 
   return (
     <Box key={id}>
       <Box sx={{ display: 'flex', pb: 1, pr: 1, gap: 2, flex: 1 }}>
+        {showCheckbox && (
+          <Checkbox value={id} onChange={handleSelectItem} disabled={disableCheckbox} />
+        )}
         <Box sx={{ ...styles.imageContainer }}>
           <Link href={link || ''} passHref>
             <MuiLink data-testid="product-item-link">

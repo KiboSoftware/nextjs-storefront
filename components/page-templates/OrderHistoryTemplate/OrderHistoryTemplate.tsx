@@ -5,7 +5,7 @@ import { Stack, Typography, Divider, Box, useMediaQuery, useTheme, Button } from
 import { useTranslation } from 'next-i18next'
 
 import { FilterOrders, FilterTiles, FullWidthDivider } from '@/components/common'
-import { OrderHistoryItem, ViewOrderDetails } from '@/components/order'
+import { OrderHistoryItem, ViewOrderDetails, OrderReturnItems } from '@/components/order'
 import { useUpdateRoutes, useUserOrderQueries } from '@/hooks'
 import { facetGetters, orderGetters } from '@/lib/getters'
 
@@ -50,6 +50,7 @@ const OrderHistoryTemplate = (props: OrderHistoryProps) => {
   const theme = useTheme()
   const mdScreen = useMediaQuery(theme.breakpoints.up('md'))
   const { t } = useTranslation('common')
+  const [isReturnItems, setIsReturnItems] = useState<boolean>(false)
 
   const facetList = facetGetters.getFacetListByQueryFilter(queryFilters)
   const facetType = facetGetters.getFacetTypeForHistory(t)
@@ -161,14 +162,22 @@ const OrderHistoryTemplate = (props: OrderHistoryProps) => {
 
   return (
     <Box>
-      {selectedOrder && (
+      {selectedOrder && !isReturnItems && (
         <ViewOrderDetails
           title={t('view-order-details')}
           order={selectedOrder}
           onGoBackToOrderHistory={() => setSelectedOrder(undefined)}
+          onItemsReturn={() => setIsReturnItems(true)}
         />
       )}
       {!selectedOrder && showOrderHistoryItem()}
+      {selectedOrder && isReturnItems && (
+        <OrderReturnItems
+          title={t('choose-items-to-return')}
+          order={selectedOrder}
+          onGoBackToOrderDetails={() => setIsReturnItems(false)}
+        />
+      )}
     </Box>
   )
 }

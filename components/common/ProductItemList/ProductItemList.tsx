@@ -15,6 +15,10 @@ export type ProductItemListProps = {
   showAddress?: boolean
   storePickupAddresses?: LocationCustom[]
   onClickChangeStore?: () => void
+  showCheckbox?: boolean
+  disableCheckbox?: boolean
+  showDivider?: boolean
+  onSelectItem?: (orderItemId: string) => void
 }
 
 const ProductItemList = (props: ProductItemListProps) => {
@@ -25,6 +29,10 @@ const ProductItemList = (props: ProductItemListProps) => {
     showAddress = false,
     storePickupAddresses = [],
     onClickChangeStore,
+    showCheckbox = false,
+    disableCheckbox = false,
+    showDivider = false,
+    onSelectItem,
   } = props
 
   const storePickupAddress = (fulfillmentLocationCode: string): CrAddress => {
@@ -34,7 +42,7 @@ const ProductItemList = (props: ProductItemListProps) => {
   return (
     <Stack
       direction="column"
-      divider={<Divider orientation="horizontal" flexItem />}
+      divider={showDivider && <Divider orientation="horizontal" flexItem />}
       spacing={2}
       data-testid="product-item-stack"
     >
@@ -56,6 +64,9 @@ const ProductItemList = (props: ProductItemListProps) => {
               expectedDeliveryDate={expectedDeliveryDate}
               onStoreLocatorClick={onClickChangeStore}
               data-testid="product-item"
+              showCheckbox={showCheckbox}
+              disableCheckbox={disableCheckbox}
+              onSelectItem={onSelectItem}
             ></ProductItem>
             {showAddress && item?.fulfillmentLocationCode && (
               <AddressCard {...storePickupAddress(item?.fulfillmentLocationCode)} />

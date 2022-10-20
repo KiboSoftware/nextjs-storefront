@@ -1,7 +1,7 @@
 import React from 'react'
 
 import { ArrowBackIos } from '@mui/icons-material'
-import { Divider, Grid, Typography, Box, Stack } from '@mui/material'
+import { Divider, Grid, Typography, Box, Stack, Button } from '@mui/material'
 import { useTranslation } from 'next-i18next'
 
 import { SavedPaymentMethodView } from '@/components/checkout'
@@ -17,6 +17,7 @@ interface ViewOrderDetailsProps {
   title: string
   isOrderStatus?: boolean
   onGoBackToOrderHistory?: () => void
+  onItemsReturn?: () => void
 }
 
 const styles = {
@@ -39,7 +40,7 @@ const styles = {
 }
 
 const ViewOrderDetails = (props: ViewOrderDetailsProps) => {
-  const { order, title, isOrderStatus = false, onGoBackToOrderHistory } = props
+  const { order, title, isOrderStatus = false, onGoBackToOrderHistory, onItemsReturn } = props
   const { t } = useTranslation('common')
 
   const orderNumber = orderGetters.getOrderNumber(order)
@@ -71,6 +72,7 @@ const ViewOrderDetails = (props: ViewOrderDetailsProps) => {
   }
 
   const handleGoBackToOrderHistory = () => onGoBackToOrderHistory && onGoBackToOrderHistory()
+  const handleItemsReturn = () => onItemsReturn && onItemsReturn()
 
   return (
     <>
@@ -201,7 +203,17 @@ const ViewOrderDetails = (props: ViewOrderDetailsProps) => {
         {/* Order Summary */}
         {!isOrderStatus && (
           <Grid item xs={12} md={5} sx={{ paddingX: { xs: 0, md: 2 } }}>
-            <OrderSummary {...orderSummeryArgs} />
+            <OrderSummary {...orderSummeryArgs}>
+              <Button
+                variant="contained"
+                color="inherit"
+                fullWidth
+                sx={{ mt: '0.75rem' }}
+                onClick={handleItemsReturn}
+              >
+                {t('return-items')}
+              </Button>
+            </OrderSummary>
           </Grid>
         )}
       </Grid>
