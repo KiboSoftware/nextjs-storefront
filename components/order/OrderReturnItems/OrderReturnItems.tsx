@@ -174,16 +174,6 @@ const OrderReturnItems = (props: OrderReturnItemsProps) => {
                   )
                 })}
             </KiboSelect>
-            <Box sx={{ ...(selectedReturnReason === '' && { display: 'none' }) }}>
-              <Typography pt={2} pb={0.5}>
-                {t('comments-optional')}
-              </Typography>
-              <TextareaAutosize
-                aria-label="return comment textarea"
-                minRows={2}
-                style={{ width: '23.5rem' }}
-              />
-            </Box>
           </Box>
           {/* Shipment orders */}
           {!!shipItems.length && (
