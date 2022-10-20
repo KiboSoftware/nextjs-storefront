@@ -15,9 +15,7 @@ module.exports = {
       'cdn-tp4.mozu.com',
       'cdn-sb.mozu.com',
       'encrypted-tbn0.gstatic.com',
-      'images.contentstack.io',
       'images.ctfassets.net',
-      'cdn.media.amplience.net',
     ],
   },
   publicRuntimeConfig: {
@@ -77,34 +75,6 @@ module.exports = {
     defaultWishlistName: DEFAULT_WISHLIST_NAME,
     pciHost: process.env.KIBO_PCI_HOST,
     apiHost: process.env.KIBO_API_HOST,
-    cms: process.env.CMS || 'contentstack', // 'amplience', 'contentful'
-    contentstack: {
-      apiKey: process.env.NEXT_PUBLIC_CONTENTSTACK_API_KEY,
-      deliveryToken: process.env.NEXT_PUBLIC_CONTENTSTACK_DELIVERY_TOKEN,
-      environment: process.env.NEXT_PUBLIC_CONTENTSTACK_ENVIRONMENT,
-      managementToken: process.env.NEXT_PUBLIC_CONTENTSTACK_MANAGEMENT_TOKEN,
-      apiHost: process.env.NEXT_PUBLIC_CONTENTSTACK_API_HOST,
-    },
-    contentful: {
-      accessToken: process.env.CONTENTFUL_ACCESS_TOKEN,
-      URL: `https://graphql.contentful.com/content/v1/spaces/${process.env.CONTENTFUL_SPACE_ID}/environments/master`,
-    },
-    amplience: {
-      hubName: 'kibo',
-      homePageContentUrl: 'https://kibo-example.com/kibo-home-page',
-      productDetailsPageContentUrl: 'https://kibo-examples.com/pdp-products',
-      requestParams: {
-        format: 'inlined',
-        depth: 'all',
-      },
-      homePageContentTypes: {
-        smallBanner: 'Kibo Simple Banner',
-        heroCarousel: 'Kibo Hero Carousel Demo',
-        homePageProducts: 'Home Page Products',
-        largePromoBlocks: 'Large promo blocks',
-        smallPromoBlocks: 'Small promo blocks',
-      },
-    },
   },
   serverRuntimeConfig: {
     revalidate: process.env.GLOBAL_PAGE_REVALIDATE || 30,
