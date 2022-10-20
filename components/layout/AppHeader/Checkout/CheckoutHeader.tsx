@@ -22,7 +22,7 @@ const CheckoutHeaderStyles = {
   },
 }
 
-const CheckoutHeader = ({ isDesktop = true }: { isDesktop: boolean }) => {
+const CheckoutHeader = () => {
   const router = useRouter()
   const { t } = useTranslation()
   const { checkoutId } = router.query

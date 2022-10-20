@@ -211,7 +211,7 @@ const KiboHeader = (props: KiboHeaderProps) => {
   }
 
   const getSection = () => {
-    if (isCheckoutPage) return <CheckoutHeader isDesktop={mdScreen} />
+    if (isCheckoutPage) return <CheckoutHeader />
 
     if (!mdScreen) return <MobileHeader />
 

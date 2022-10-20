@@ -12,6 +12,7 @@ const useRouter = jest.spyOn(require('next/router'), 'useRouter')
 const push = jest.fn()
 useRouter.mockImplementation(() => ({
   push,
+  pathname: '/',
 }))
 
 jest.mock('@mui/material', () => ({

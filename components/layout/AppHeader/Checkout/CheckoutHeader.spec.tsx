@@ -7,9 +7,9 @@ import { renderWithQueryClient } from '@/__test__/utils'
 
 const useRouter = jest.spyOn(require('next/router'), 'useRouter')
 const push = jest.fn()
-
 useRouter.mockImplementation(() => ({
   push,
+  pathname: '/checkout',
   query: {
     checkoutId: '137a979305c65d00010800230000678b',
   },
@@ -17,7 +17,7 @@ useRouter.mockImplementation(() => ({
 
 describe('[component] MobileHeader component', () => {
   it('should render the component', () => {
-    renderWithQueryClient(<CheckoutHeader isDesktop={true} />)
+    renderWithQueryClient(<CheckoutHeader />)
 
     expect(screen.getByText(/checkout/)).toBeVisible()
     expect(screen.queryByTestId(/top-bar/)).not.toBeInTheDocument()

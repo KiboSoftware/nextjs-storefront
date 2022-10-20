@@ -1,7 +1,6 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
 import { composeStories } from '@storybook/testing-react'
-import { render, screen, within } from '@testing-library/react'
-import userEvent from '@testing-library/user-event'
+import { render, screen } from '@testing-library/react'
 import '@testing-library/jest-dom'
 
 import * as stories from './MobileHeader.stories' // import all stories from the stories file
@@ -12,6 +11,7 @@ const useRouter = jest.spyOn(require('next/router'), 'useRouter')
 const push = jest.fn()
 useRouter.mockImplementation(() => ({
   push,
+  pathname: '/',
 }))
 
 jest.mock('@mui/material', () => ({
