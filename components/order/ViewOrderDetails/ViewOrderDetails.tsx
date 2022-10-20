@@ -204,15 +204,17 @@ const ViewOrderDetails = (props: ViewOrderDetailsProps) => {
         {!isOrderStatus && (
           <Grid item xs={12} md={5} sx={{ paddingX: { xs: 0, md: 2 } }}>
             <OrderSummary {...orderSummeryArgs}>
-              <Button
-                variant="contained"
-                color="inherit"
-                fullWidth
-                sx={{ mt: '0.75rem' }}
-                onClick={handleItemsReturn}
-              >
-                {t('return-items')}
-              </Button>
+              {order?.status === 'Completed' && (
+                <Button
+                  variant="contained"
+                  color="inherit"
+                  fullWidth
+                  sx={{ mt: '0.75rem' }}
+                  onClick={handleItemsReturn}
+                >
+                  {t('return-items')}
+                </Button>
+              )}
             </OrderSummary>
           </Grid>
         )}
