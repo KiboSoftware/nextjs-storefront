@@ -89,7 +89,17 @@ const ProductItem = (props: ProductItemProps) => {
     <Box key={id}>
       <Box sx={{ display: 'flex', pb: 1, pr: 1, gap: 2, flex: 1 }}>
         {showCheckbox && (
-          <Checkbox value={id} onChange={handleSelectItem} disabled={disableCheckbox} />
+          <Checkbox
+            value={id}
+            onChange={handleSelectItem}
+            disabled={disableCheckbox}
+            sx={{
+              '&.Mui-disabled.Mui-checked': {
+                color: 'primary.main',
+                opacity: 0.26,
+              },
+            }}
+          />
         )}
         <Box sx={{ ...styles.imageContainer }}>
           <Link href={link || ''} passHref>
