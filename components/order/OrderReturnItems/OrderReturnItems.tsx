@@ -18,6 +18,7 @@ import { OrderReturnItemsDialog } from '@/components/dialogs'
 import { ProductOption } from '@/components/product'
 import { useModalContext } from '@/context'
 import { useReturnReasonsQueries, useCreateOrderReturnItemsMutation } from '@/hooks'
+import { OrderStatus, OrderReturnType } from '@/lib/constants'
 import { orderGetters, productGetters } from '@/lib/getters'
 import { CreateOrderReturnItemsInputParams } from '@/lib/types'
 
@@ -87,7 +88,7 @@ const OrderReturnItems = (props: OrderReturnItemsProps) => {
 
   const handleConfirmReturnRequest = async () => {
     const createReturnItemsParams: CreateOrderReturnItemsInputParams = {
-      returnType: 'Replace',
+      returnType: OrderReturnType.REPLACE,
       reason: selectedReturnReason,
       notes: '',
       originalOrderId: order?.id as string,
@@ -96,7 +97,7 @@ const OrderReturnItems = (props: OrderReturnItemsProps) => {
     }
     const createReturnItemsResponse = await createReturnItems.mutateAsync(createReturnItemsParams)
 
-    if (createReturnItemsResponse?.status === 'Created') {
+    if (createReturnItemsResponse?.status === OrderStatus.CREATED) {
       setIsReturnRequestSuccess(true)
 
       showModal({

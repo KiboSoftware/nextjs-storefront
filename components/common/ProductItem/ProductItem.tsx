@@ -34,11 +34,11 @@ export interface ProductItemProps {
   isPickupItem?: boolean
   expectedDeliveryDate?: string
   purchaseLocation?: string
-  onStoreLocatorClick?: () => void
   link?: string
   children?: ReactNode
   showCheckbox?: boolean
   disableCheckbox?: boolean
+  onStoreLocatorClick?: () => void
   onSelectItem?: (orderItemId: string) => void
 }
 
@@ -71,11 +71,11 @@ const ProductItem = (props: ProductItemProps) => {
     isPickupItem,
     expectedDeliveryDate,
     purchaseLocation,
-    onStoreLocatorClick,
     link,
     children,
     showCheckbox = false,
     disableCheckbox = false,
+    onStoreLocatorClick,
     onSelectItem,
   } = props
   const { t } = useTranslation('common')

@@ -19,6 +19,8 @@ export enum PaymentType {
 
 export enum OrderStatus {
   ABANDONED = 'Abandoned',
+  COMPLETED = 'Completed',
+  CREATED = 'Created',
 }
 
 const currentYear = new Date().getFullYear()
@@ -102,4 +104,8 @@ export const footerConfig = {
 
 export enum DefaultId {
   ADDRESSID = 1,
+}
+
+export const OrderReturnType = {
+  REPLACE: 'Replace',
 }

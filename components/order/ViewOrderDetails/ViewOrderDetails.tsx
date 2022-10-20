@@ -8,6 +8,7 @@ import { SavedPaymentMethodView } from '@/components/checkout'
 import { AddressCard, OrderSummary, ProductItemList } from '@/components/common'
 import { ProductOption } from '@/components/product'
 import { useStoreLocationsQueries } from '@/hooks'
+import { OrderStatus } from '@/lib/constants'
 import { addressGetters, orderGetters, storeLocationGetters } from '@/lib/getters'
 
 import type { Maybe, Order, Location } from '@/lib/gql/types'
@@ -204,7 +205,7 @@ const ViewOrderDetails = (props: ViewOrderDetailsProps) => {
         {!isOrderStatus && (
           <Grid item xs={12} md={5} sx={{ paddingX: { xs: 0, md: 2 } }}>
             <OrderSummary {...orderSummeryArgs}>
-              {order?.status === 'Completed' && (
+              {order?.status === OrderStatus.COMPLETED && (
                 <Button
                   variant="contained"
                   color="inherit"
