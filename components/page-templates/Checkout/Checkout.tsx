@@ -142,7 +142,7 @@ const Checkout = (props: CheckoutProps) => {
           gap={2}
         >
           <Stack sx={{ width: '100%', maxWidth: '872px' }} gap={1}>
-            <KiboStepper>
+            <KiboStepper isSticky={true}>
               <DetailsStep checkout={checkout} />
               {((isAuthenticated && isSuccess) || !isAuthenticated) && (
                 <ShippingStep

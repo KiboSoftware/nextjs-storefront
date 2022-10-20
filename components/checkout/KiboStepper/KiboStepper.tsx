@@ -6,6 +6,7 @@ import { useCheckoutStepContext } from '@/context'
 
 interface StepperProps {
   children: ReactNode
+  isSticky: boolean
 }
 
 const StepperStyles = {
@@ -20,7 +21,7 @@ const StepperStyles = {
 }
 
 const KiboStepper = (props: StepperProps) => {
-  const { children } = props
+  const { children, isSticky = true } = props
 
   const { activeStep, steps, setActiveStep } = useCheckoutStepContext()
 
@@ -38,7 +39,7 @@ const KiboStepper = (props: StepperProps) => {
 
   return (
     <Stack sx={{ maxWidth: '872px' }} gap={3}>
-      <Box sx={{ ...StepperStyles.wrapperBox }}>
+      <Box sx={isSticky ? StepperStyles.wrapperBox : {}}>
         <Stepper nonLinear activeStep={activeStep} connector={null} data-testid="kibo-stepper">
           {steps.map((label: string, index: number) => (
             <Step key={label} sx={{ flex: 1, padding: 0 }}>

@@ -21,7 +21,7 @@ export default {
 } as ComponentMeta<typeof KiboStepper>
 
 const Template: ComponentStory<typeof KiboStepper> = (args) => (
-  <KiboStepper {...args}>
+  <KiboStepper {...args} isSticky={false}>
     <p>Details step content goes here...</p>
     <p>Shipping step content goes here...</p>
     <p>Payment step content goes here...</p>
