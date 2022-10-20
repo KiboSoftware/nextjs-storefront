@@ -13,7 +13,7 @@ export default {
   argTypes: { onHandleBack: { action: 'clicked' } },
   decorators: [
     (Story) => (
-      <CheckoutStepProvider steps={steps}>
+      <CheckoutStepProvider steps={steps} initialActiveStep={1}>
         <Story />
       </CheckoutStepProvider>
     ),

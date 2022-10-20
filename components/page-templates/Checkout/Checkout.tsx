@@ -23,7 +23,6 @@ import {
   useDeleteOrderCouponMutation,
 } from '@/hooks'
 import { userGetters } from '@/lib/getters'
-import theme from '@/styles/theme'
 
 import type { CustomerContact, Order } from '@/lib/gql/types'
 interface CheckoutProps {

@@ -109,7 +109,7 @@ const ShippingMethod = (props: ShippingMethodProps) => {
     onStoreLocatorClick,
   } = props
 
-  const { t } = useTranslation('checkout')
+  const { t } = useTranslation('common')
   const shippingMethodRef = useRef()
   const [selectedShippingMethod, setSelectedShippingMethod] = useState(selectedShippingMethodCode)
 
