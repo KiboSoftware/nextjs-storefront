@@ -108,4 +108,5 @@ export enum DefaultId {
 
 export const OrderReturnType = {
   REPLACE: 'Replace',
+  REFUND: 'Refund',
 }

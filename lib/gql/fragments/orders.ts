@@ -108,6 +108,7 @@ export const baseOrderFragment = /* GraphQL */ `
         ...contactForOrdersFragment
       }
     }
+    returnStatus
   }
   ${contactForOrdersFragment}
 `

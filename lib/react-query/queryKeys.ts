@@ -70,3 +70,7 @@ export const inventoryKeys = {
 export const returnReasonsKeys = {
   all: ['returnReasons'] as const,
 }
+
+export const returnsKeys = {
+  all: ['returns'] as const,
+}

@@ -1,23 +1,18 @@
 import React, { useState } from 'react'
 
 import { ArrowBackIos } from '@mui/icons-material'
-import {
-  Divider,
-  Grid,
-  Typography,
-  Box,
-  Stack,
-  Button,
-  MenuItem,
-  TextareaAutosize,
-} from '@mui/material'
+import { Divider, Grid, Typography, Box, Stack, Button, MenuItem } from '@mui/material'
 import { useTranslation } from 'next-i18next'
 
 import { KiboImage, KiboSelect, ProductItemList } from '@/components/common'
 import { OrderReturnItemsDialog } from '@/components/dialogs'
 import { ProductOption } from '@/components/product'
 import { useModalContext } from '@/context'
-import { useReturnReasonsQueries, useCreateOrderReturnItemsMutation } from '@/hooks'
+import {
+  useReturnReasonsQueries,
+  useReturnsQueries,
+  useCreateOrderReturnItemsMutation,
+} from '@/hooks'
 import { OrderStatus, OrderReturnType } from '@/lib/constants'
 import { orderGetters, productGetters } from '@/lib/getters'
 import { CreateOrderReturnItemsInputParams } from '@/lib/types'
@@ -56,6 +51,9 @@ const OrderReturnItems = (props: OrderReturnItemsProps) => {
   const { showModal, closeModal } = useModalContext()
 
   const { data: returnReasons } = useReturnReasonsQueries()
+  const { data: returnOrder } = useReturnsQueries({
+    filter: `originalOrderId eq ${order?.id}`,
+  })
   const { createReturnItems } = useCreateOrderReturnItemsMutation()
 
   const orderNumber = orderGetters.getOrderNumber(order)
@@ -88,7 +86,7 @@ const OrderReturnItems = (props: OrderReturnItemsProps) => {
 
   const handleConfirmReturnRequest = async () => {
     const createReturnItemsParams: CreateOrderReturnItemsInputParams = {
-      returnType: OrderReturnType.REPLACE,
+      returnType: OrderReturnType.REFUND,
       reason: selectedReturnReason,
       notes: '',
       originalOrderId: order?.id as string,

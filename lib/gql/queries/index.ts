@@ -13,3 +13,4 @@ export { default as getCustomerAccountCards } from './checkout/get-customer-acco
 export { default as getUserAddressesQuery } from './get-user-addresses-query'
 export { default as getProductLocationInventoryQuery } from './get-product-location-inventory'
 export { default as getReturnReasonsQuery } from './get-return-reasons'
+export { default as getReturnsQuery } from './get-returns'
