@@ -1,6 +1,5 @@
 import { composeStories } from '@storybook/testing-react'
 import { render, within, screen, cleanup } from '@testing-library/react'
-import userEvent from '@testing-library/user-event'
 import '@testing-library/jest-dom'
 
 import * as stories from './ProductDetailTemplate.stories' // import all stories from the stories file
