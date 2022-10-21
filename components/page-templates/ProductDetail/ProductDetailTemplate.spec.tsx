@@ -1,5 +1,6 @@
 import { composeStories } from '@storybook/testing-react'
 import { render, within, screen, cleanup } from '@testing-library/react'
+import userEvent from '@testing-library/user-event'
 import '@testing-library/jest-dom'
 
 import * as stories from './ProductDetailTemplate.stories' // import all stories from the stories file
@@ -11,7 +12,7 @@ import {
   productSearchResultMock,
 } from '@/__mocks__/stories'
 
-const { Common } = composeStories(stories)
+const { Common, WithMoreDetails } = composeStories(stories)
 
 afterEach(cleanup)
 
@@ -99,6 +100,7 @@ jest.mock('@/hooks', () => ({
 const setup = () => {
   render(<Common {...Common?.args} />)
 }
+
 jest.unmock('next/link')
 describe('[component] Product Detail Template component', () => {
   it('should render the Breadcrumb component', () => {
@@ -231,5 +233,15 @@ describe('[component] Product Detail Template component', () => {
       name: /more-details/i,
     })
     expect(moreDetails).not.toBeInTheDocument()
+  })
+
+  it('should  render moredetails link', () => {
+    render(<WithMoreDetails {...WithMoreDetails.args} isQuickViewModal={true} />)
+
+    const moreDetail = screen.queryByRole('link', {
+      name: /more-details/i,
+    })
+
+    expect(moreDetail).toBeInTheDocument()
   })
 })

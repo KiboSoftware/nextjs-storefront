@@ -53,11 +53,11 @@ describe('[component] - ProductListingTemplate integration', () => {
     mockIsAuthenticated = false
     const { user } = setup()
 
+    const productCards = screen.getAllByTestId('product-card')
     await waitFor(async () => {
-      const productCards = screen.getAllByTestId('product-card')
       const quickViewButton = within(productCards[0]).getByRole('button', { name: /quick-view/i })
       await user.click(quickViewButton)
-      await waitFor(() => expect(screen.getByRole('button', { name: 'close' })).toBeVisible())
+      expect(screen.getByRole('button', { name: 'close' })).toBeVisible()
     })
   })
 })

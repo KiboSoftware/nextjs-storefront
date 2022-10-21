@@ -52,3 +52,8 @@ Mobile.parameters = {
     defaultViewport: 'iphone12promax',
   },
 }
+
+export const WithMoreDetails = Template.bind({})
+WithMoreDetails.args = {
+  isQuickViewModal: true,
+}
