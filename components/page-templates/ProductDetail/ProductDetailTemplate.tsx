@@ -10,7 +10,6 @@ import Link from 'next/link'
 import { FulfillmentOptions, Price, QuantitySelector } from '@/components/common'
 import { KiboBreadcrumbs, ImageGallery } from '@/components/core'
 import { AddToCartDialog, StoreLocatorDialog } from '@/components/dialogs'
-import CmsComponent from '@/components/home/CmsComponent/CmsComponent'
 import {
   ColorSelector,
   ProductInformation,
@@ -251,7 +250,7 @@ const ProductDetailTemplate = (props: ProductDetailTemplateProps) => {
           })}
           priceRange={productPriceRange && handlePriceRangeTranslation(productPriceRange)}
         />
-        ​
+
         <Box paddingY={1} display={shortDescription ? 'block' : 'none'}>
           <Box
             data-testid="short-description"
@@ -271,7 +270,7 @@ const ProductDetailTemplate = (props: ProductDetailTemplateProps) => {
             </Link>
           )}
         </Box>
-        ​
+
         <Box data-testid="product-rating">
           <Rating
             name="read-only"
@@ -283,7 +282,7 @@ const ProductDetailTemplate = (props: ProductDetailTemplateProps) => {
             emptyIcon={<StarRounded />}
           />
         </Box>
-        ​
+
         <Box paddingX={1} paddingY={3} display={optionsVisibility.color ? 'block' : 'none'}>
           <ColorSelector
             attributeFQN={productOptions?.colourOptions?.attributeFQN as string}
@@ -291,7 +290,7 @@ const ProductDetailTemplate = (props: ProductDetailTemplateProps) => {
             onColorChange={selectProductOption}
           />
         </Box>
-        ​
+
         <Box paddingY={1} display={optionsVisibility.size ? 'block' : 'none'}>
           <ProductVariantSizeSelector
             values={productOptions?.sizeOptions?.values as ProductOptionValue[]}
@@ -299,7 +298,7 @@ const ProductDetailTemplate = (props: ProductDetailTemplateProps) => {
             onSizeChange={selectProductOption}
           />
         </Box>
-        ​
+
         <Box paddingY={1} display={optionsVisibility.select ? 'block' : 'none'}>
           {productOptions?.selectOptions?.map((option) => {
             return (
@@ -315,7 +314,7 @@ const ProductDetailTemplate = (props: ProductDetailTemplateProps) => {
             )
           })}
         </Box>
-        ​
+
         <Box paddingY={1} display={optionsVisibility.checkbox ? 'block' : 'none'}>
           {productOptions?.yesNoOptions.map((option: ProductOption | null) => {
             const attributeDetail = option?.attributeDetail as AttributeDetail
@@ -332,7 +331,7 @@ const ProductDetailTemplate = (props: ProductDetailTemplateProps) => {
             )
           })}
         </Box>
-        ​
+
         <Box paddingY={1} display={optionsVisibility.textbox ? 'block' : 'none'}>
           {productOptions?.textBoxOptions.map((option) => {
             return (
@@ -344,7 +343,7 @@ const ProductDetailTemplate = (props: ProductDetailTemplateProps) => {
             )
           })}
         </Box>
-        ​
+
         <Box paddingY={1}>
           <QuantitySelector
             label="Qty"
@@ -353,7 +352,7 @@ const ProductDetailTemplate = (props: ProductDetailTemplateProps) => {
             onDecrease={() => setQuantity((prevQuantity: number) => Number(prevQuantity) - 1)}
           />
         </Box>
-        ​
+
         <Box paddingY={1}>
           <FulfillmentOptions
             fulfillmentOptions={fulfillmentOptions}
@@ -362,7 +361,7 @@ const ProductDetailTemplate = (props: ProductDetailTemplateProps) => {
             onStoreSetOrUpdate={() => handleProductPickupLocation()}
           />
         </Box>
-        ​
+
         <Box pt={2} display="flex" sx={{ justifyContent: 'space-between' }}>
           <Typography fontWeight="600" variant="body2">
             {selectedFulfillmentOption?.method && `${quantityLeft} ${t('item-left')}`}
@@ -422,10 +421,6 @@ const ProductDetailTemplate = (props: ProductDetailTemplateProps) => {
               </Box>
             )}
           </Grid>
-          {cmsProducts?.components?.length > 0 &&
-            cmsProducts?.components?.map((data: any) => (
-              <CmsComponent key={Object.keys(data)[0]} content={data} />
-            ))}
         </>
       )}
     </Grid>
