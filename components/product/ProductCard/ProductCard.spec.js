@@ -1,13 +1,20 @@
 import React from 'react'
 
 import { composeStories } from '@storybook/testing-react'
-import { render, screen } from '@testing-library/react'
+import { render, screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 
 import * as stories from './ProductCard.stories' // import all stories from the stories file
 
-const { Common, WithSalePrice, WithRating, NoImage, LoadingProductCard, WithWishlist } =
-  composeStories(stories)
+const {
+  Common,
+  WithSalePrice,
+  WithRating,
+  NoImage,
+  LoadingProductCard,
+  WithWishlist,
+  WithQuickViewButton,
+} = composeStories(stories)
 
 const onAddOrRemoveWishlistItemMock = jest.fn()
 const wishlistSetup = () => {
@@ -16,6 +23,20 @@ const wishlistSetup = () => {
     <WithWishlist
       {...WithWishlist.args}
       onAddOrRemoveWishlistItem={onAddOrRemoveWishlistItemMock}
+    />
+  )
+  return {
+    user,
+  }
+}
+
+const onClickQuickViewModalMock = jest.fn()
+const quickViewSetup = () => {
+  const user = userEvent.setup()
+  render(
+    <WithQuickViewButton
+      {...WithQuickViewButton.args}
+      onClickQuickViewModal={onClickQuickViewModalMock}
     />
   )
   return {
@@ -144,6 +165,28 @@ describe('[components] Product Card Component', () => {
       await user.click(inWishlistIcon)
 
       expect(onAddOrRemoveWishlistItemMock).toBeCalled()
+    })
+  })
+
+  describe('Product Card with Quick-View Button', () => {
+    it('should  render Product Card without quick-view button', async () => {
+      quickViewSetup()
+
+      const quickViewButton = screen.getAllByRole('button', {
+        name: /quick-view/i,
+      })
+
+      expect(quickViewButton[0]).not.toBeVisible()
+    })
+
+    it('should call onClickQuickViewModal method when user clicks on quick-view button', async () => {
+      const { user } = quickViewSetup()
+      await user.hover(screen.getByTestId('product-card'))
+
+      const quickViewButton = screen.getByRole('button', { name: /quick-view/i })
+      await user.click(quickViewButton)
+
+      expect(onClickQuickViewModalMock).toBeCalled()
     })
   })
 })

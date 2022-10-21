@@ -67,3 +67,9 @@ WithWishlist.args = {
   isShopNow: true,
   onAddOrRemoveWishlistItem: () => console.log('add or remove wishlist icon clicked'),
 }
+
+export const WithQuickViewButton = Template.bind({})
+WithQuickViewButton.args = {
+  showQuickViewButton: true,
+  onClickQuickViewModal: () => console.log('quick-view button clicked'),
+}

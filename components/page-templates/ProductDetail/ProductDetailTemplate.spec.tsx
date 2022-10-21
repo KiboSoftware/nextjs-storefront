@@ -223,4 +223,13 @@ describe('[component] Product Detail Template component', () => {
 
     expect(screen.getByTestId('product-information-mock')).toBeVisible()
   })
+
+  it('should not render moredetails link', () => {
+    setup()
+
+    const moreDetails = screen.queryByRole('link', {
+      name: /more-details/i,
+    })
+    expect(moreDetails).not.toBeInTheDocument()
+  })
 })
