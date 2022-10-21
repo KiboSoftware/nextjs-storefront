@@ -2,7 +2,7 @@ import React from 'react'
 
 import '@testing-library/jest-dom'
 import { composeStories } from '@storybook/testing-react'
-import { screen, waitFor } from '@testing-library/react'
+import { screen, waitFor, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 
 import { renderWithQueryClient } from '@/__test__/utils/renderWithQueryClient'
@@ -49,14 +49,15 @@ describe('[component] - ProductListingTemplate integration', () => {
     expect(title).toBeVisible()
   })
 
-  it('should open wishlist added popover when logged in user clicks on wishlist icon', async () => {
-    mockIsAuthenticated = true
+  it('should display productquickviewDialog when quick-view button is clicked', async () => {
+    mockIsAuthenticated = false
     const { user } = setup()
 
-    const inWishlistIcon = screen.getAllByTestId('FavoriteBorderRoundedIcon')
-    await user.click(inWishlistIcon[0])
-    const popover = await screen.findByTestId('wishlist-component')
-
-    await waitFor(() => expect(popover).toBeInTheDocument())
+    await waitFor(async () => {
+      const productCards = screen.getAllByTestId('product-card')
+      const quickViewButton = within(productCards[0]).getByRole('button', { name: /quick-view/i })
+      await user.click(quickViewButton)
+      await waitFor(() => expect(screen.getByRole('button', { name: 'close' })).toBeVisible())
+    })
   })
 })

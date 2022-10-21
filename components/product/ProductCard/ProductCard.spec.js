@@ -181,7 +181,6 @@ describe('[components] Product Card Component', () => {
 
     it('should call onClickQuickViewModal method when user clicks on quick-view button', async () => {
       const { user } = quickViewSetup()
-      await user.hover(screen.getByTestId('product-card'))
 
       const quickViewButton = screen.getByRole('button', { name: /quick-view/i })
       await user.click(quickViewButton)
