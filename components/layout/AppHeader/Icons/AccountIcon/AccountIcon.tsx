@@ -3,13 +3,13 @@ import { useTranslation } from 'next-i18next'
 
 import { HeaderAction } from '@/components/common'
 import { useAuthContext } from '@/context'
+import type { IconProps } from '@/lib/types'
 
-type IconProps = {
-  size: 'small' | 'medium' | 'large'
-  handleAccountIconClick: () => void
+interface AccountIconProps extends IconProps {
+  onAccountIconClick: () => void
 }
 
-const AccountIcon = ({ size, handleAccountIconClick }: IconProps) => {
+const AccountIcon = ({ size, onAccountIconClick }: AccountIconProps) => {
   const { isAuthenticated, user } = useAuthContext()
   const { t } = useTranslation('common')
 
@@ -19,7 +19,7 @@ const AccountIcon = ({ size, handleAccountIconClick }: IconProps) => {
       subtitle={isAuthenticated ? t('go-to-my-account') : t('log-in')}
       icon={AccountCircleIcon}
       iconFontSize={size}
-      onClick={handleAccountIconClick}
+      onClick={onAccountIconClick}
     />
   )
 }

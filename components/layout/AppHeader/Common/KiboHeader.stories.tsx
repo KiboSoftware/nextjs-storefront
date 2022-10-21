@@ -57,5 +57,5 @@ Common.args = {
 export const Sticky = Template.bind({})
 Sticky.args = {
   ...Common.args,
-  sticky: true,
+  isSticky: true,
 }

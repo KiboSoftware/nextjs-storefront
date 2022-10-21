@@ -37,14 +37,14 @@ import type { Maybe, PrCategory } from '@/lib/gql/types'
 interface KiboHeaderProps {
   navLinks: NavigationLink[]
   categoriesTree: Maybe<PrCategory>[]
-  sticky?: boolean
+  isSticky?: boolean
 }
 
 interface HeaderActionAreaProps {
   isHeaderSmall: boolean
   categoriesTree: Maybe<PrCategory>[]
   setIsBackdropOpen: Dispatch<SetStateAction<boolean>>
-  handleAccountIconClick: () => void
+  onAccountIconClick: () => void
 }
 
 const TopHeaderStyles = {
@@ -88,6 +88,20 @@ const HeaderActionAreaStyles = {
   },
 }
 
+const KiboHeaderStyles = {
+  appBarStyles: {
+    backgroundColor: 'grey.300',
+    zIndex: (theme: any) => theme.zIndex.modal,
+    scrollBehavior: 'smooth',
+  },
+  megaMenuStyles: {
+    backgroundColor: 'common.white',
+    borderWidth: '1px',
+    borderStyle: 'solid',
+    borderColor: 'grey.500',
+  },
+}
+
 const TopHeader = ({ navLinks }: { navLinks: NavigationLink[] }) => {
   const { t } = useTranslation('common')
 
@@ -113,8 +127,9 @@ const TopHeader = ({ navLinks }: { navLinks: NavigationLink[] }) => {
 }
 
 const HeaderActionArea = (props: HeaderActionAreaProps) => {
-  const { isHeaderSmall, categoriesTree, setIsBackdropOpen, handleAccountIconClick } = props
+  const { isHeaderSmall, categoriesTree, setIsBackdropOpen, onAccountIconClick } = props
   const { headerState, toggleSearchBar } = useHeaderContext()
+  const { isMobileSearchPortalVisible, isSearchBarVisible } = headerState
   const { t } = useTranslation('common')
 
   return (
@@ -139,10 +154,10 @@ const HeaderActionArea = (props: HeaderActionAreaProps) => {
             </MuiLink>
           </Link>
         </Box>
-        {(!isHeaderSmall || headerState.isSearchBarVisible) && (
+        {(!isHeaderSmall || isSearchBarVisible) && (
           <Box sx={HeaderActionAreaStyles.searchSuggestionsWrapper} data-testid="Search-container">
             <SearchSuggestions
-              isViewSearchPortal={headerState.isMobileSearchPortalVisible}
+              isViewSearchPortal={isMobileSearchPortalVisible}
               onEnterSearch={() => toggleSearchBar(false)}
             />
             {isHeaderSmall && (
@@ -158,13 +173,13 @@ const HeaderActionArea = (props: HeaderActionAreaProps) => {
             )}
           </Box>
         )}
-        {isHeaderSmall && !headerState.isSearchBarVisible && (
+        {isHeaderSmall && !isSearchBarVisible && (
           <Box maxWidth="calc(100% - 501px)" sx={{ backgroundColor: 'grey.300' }}>
             <MegaMenu categoryTree={categoriesTree} onBackdropToggle={setIsBackdropOpen} />
           </Box>
         )}
         <Box display="flex" gap={2}>
-          {isHeaderSmall && !headerState.isSearchBarVisible && (
+          {isHeaderSmall && !isSearchBarVisible && (
             <HeaderAction
               icon={SearchIcon}
               iconFontSize={isHeaderSmall ? 'medium' : 'large'}
@@ -174,7 +189,7 @@ const HeaderActionArea = (props: HeaderActionAreaProps) => {
           <StoreFinderIcon size={isHeaderSmall ? 'medium' : 'large'} />
           <AccountIcon
             size={isHeaderSmall ? 'medium' : 'large'}
-            handleAccountIconClick={handleAccountIconClick}
+            onAccountIconClick={onAccountIconClick}
           />
           <CartIcon size={isHeaderSmall ? 'medium' : 'large'} />
         </Box>
@@ -184,25 +199,26 @@ const HeaderActionArea = (props: HeaderActionAreaProps) => {
 }
 
 const KiboHeader = (props: KiboHeaderProps) => {
-  const { navLinks, categoriesTree: initialCategoryTree, sticky } = props
+  const { navLinks, categoriesTree: initialCategoryTree, isSticky } = props
   const { data: categoriesTree } = useCategoryTreeQueries(initialCategoryTree)
   const { headerState, toggleMobileSearchPortal, toggleHamburgerMenu } = useHeaderContext()
   const { isAuthenticated, setAuthError } = useAuthContext()
   const { showModal } = useModalContext()
   const router = useRouter()
-  const [isBackdropOpen, setIsBackdropOpen] = useState<boolean>(false)
-
   const theme = useTheme()
   const mdScreen = useMediaQuery(theme.breakpoints.up('md'))
 
-  const [isHeaderSmall, setIsHeaderSmall] = useState(false)
+  const [isBackdropOpen, setIsBackdropOpen] = useState<boolean>(false)
+  const [isHeaderSmall, setIsHeaderSmall] = useState<boolean>(false)
+
+  const { isHamburgerMenuVisible, isMobileSearchPortalVisible } = headerState
   const isCheckoutPage = router.pathname.includes('checkout')
 
   const isSectionVisible = () => !isHeaderSmall && mdScreen && !isCheckoutPage
 
   const handleAccountIconClick = () => {
     setAuthError('')
-    headerState.isHamburgerMenuVisible && toggleHamburgerMenu()
+    isHamburgerMenuVisible && toggleHamburgerMenu()
     if (!isAuthenticated) {
       showModal({ Component: LoginDialog })
     } else {
@@ -210,7 +226,7 @@ const KiboHeader = (props: KiboHeaderProps) => {
     }
   }
 
-  const getSection = () => {
+  const getSection = (): React.ReactNode => {
     if (isCheckoutPage) return <CheckoutHeader />
 
     if (!mdScreen) return <MobileHeader />
@@ -220,47 +236,38 @@ const KiboHeader = (props: KiboHeaderProps) => {
         isHeaderSmall={isHeaderSmall}
         categoriesTree={categoriesTree}
         setIsBackdropOpen={setIsBackdropOpen}
-        handleAccountIconClick={handleAccountIconClick}
+        onAccountIconClick={handleAccountIconClick}
       />
     )
   }
 
+  const scrollHandler = () => {
+    setIsHeaderSmall((isHeaderSmall) => {
+      if (
+        !isHeaderSmall &&
+        (document.body.scrollTop > 0.1 || document.documentElement.scrollTop > 0.1)
+      )
+        return true
+
+      if (
+        isHeaderSmall &&
+        document.body.scrollTop < 0.1 &&
+        document.documentElement.scrollTop < 0.1
+      )
+        return false
+
+      return isHeaderSmall
+    })
+  }
+
   useEffect(() => {
-    const handler = () => {
-      setIsHeaderSmall((isHeaderSmall) => {
-        if (
-          !isHeaderSmall &&
-          (document.body.scrollTop > 0.1 || document.documentElement.scrollTop > 0.1)
-        ) {
-          return true
-        }
-
-        if (
-          isHeaderSmall &&
-          document.body.scrollTop < 0.1 &&
-          document.documentElement.scrollTop < 0.1
-        ) {
-          return false
-        }
-
-        return isHeaderSmall
-      })
-    }
-
-    window.addEventListener('scroll', handler)
-    return () => window.removeEventListener('scroll', handler)
+    window.addEventListener('scroll', scrollHandler)
+    return () => window.removeEventListener('scroll', scrollHandler)
   }, [isHeaderSmall])
 
   return (
     <>
-      <AppBar
-        position={sticky ? 'sticky' : 'static'}
-        sx={{
-          backgroundColor: 'grey.300',
-          zIndex: (theme) => theme.zIndex.modal,
-          scrollBehavior: 'smooth',
-        }}
-      >
+      <AppBar position={isSticky ? 'sticky' : 'static'} sx={KiboHeaderStyles.appBarStyles}>
         <Backdrop open={isBackdropOpen} data-testid="backdrop" />
 
         <Collapse in={isSectionVisible()} timeout={1000}>
@@ -277,22 +284,17 @@ const KiboHeader = (props: KiboHeaderProps) => {
         <Collapse in={isSectionVisible()} timeout={1000}>
           <Box
             component={'section'}
-            sx={{
-              backgroundColor: 'common.white',
-              borderWidth: '1px',
-              borderStyle: 'solid',
-              borderColor: 'grey.500',
-            }}
+            sx={KiboHeaderStyles.megaMenuStyles}
             data-testid="mega-menu-container"
           >
             <MegaMenu categoryTree={categoriesTree} onBackdropToggle={setIsBackdropOpen} />
           </Box>
         </Collapse>
 
-        <Collapse in={headerState.isMobileSearchPortalVisible}>
+        <Collapse in={isMobileSearchPortalVisible}>
           <Box p={1} height={'55px'} sx={{ display: { xs: 'block', md: 'none' } }}>
             <SearchSuggestions
-              isViewSearchPortal={headerState.isMobileSearchPortalVisible}
+              isViewSearchPortal={isMobileSearchPortalVisible}
               onEnterSearch={() => toggleMobileSearchPortal()}
             />
           </Box>
@@ -301,10 +303,10 @@ const KiboHeader = (props: KiboHeaderProps) => {
 
       <HamburgerMenu
         categoryTree={categoriesTree || []}
-        isDrawerOpen={headerState.isHamburgerMenuVisible}
+        isDrawerOpen={isHamburgerMenuVisible}
         setIsDrawerOpen={() => toggleHamburgerMenu()}
         navLinks={navLinks}
-        handleAccountIconClick={handleAccountIconClick}
+        onAccountIconClick={handleAccountIconClick}
       />
     </>
   )

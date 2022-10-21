@@ -21,7 +21,7 @@ const setup = (isAuthenticated = false) => {
   const handleAccountIconClickMock = jest.fn()
   renderWithQueryClient(
     <AuthContext.Provider value={mockValues}>
-      <AccountIcon size="large" handleAccountIconClick={handleAccountIconClickMock} />
+      <AccountIcon size="large" onAccountIconClick={handleAccountIconClickMock} />
     </AuthContext.Provider>
   )
   return {

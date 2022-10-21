@@ -5,16 +5,16 @@ import { useRouter } from 'next/router'
 import { HeaderAction } from '@/components/common'
 import { useCartQueries } from '@/hooks'
 import { cartGetters } from '@/lib/getters'
-
-type IconProps = {
-  size: 'small' | 'medium' | 'large'
-}
+import type { IconProps } from '@/lib/types'
 
 const CartIcon = ({ size }: IconProps) => {
   const { t } = useTranslation('common')
+
   const { data: cart } = useCartQueries({})
   const itemCount = cartGetters.getCartItemCount(cart)
+
   const router = useRouter()
+
   const gotoCart = () => {
     router.push('/cart')
   }

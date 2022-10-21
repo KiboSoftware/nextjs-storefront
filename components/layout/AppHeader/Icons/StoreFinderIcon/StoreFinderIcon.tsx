@@ -6,22 +6,25 @@ import { MyStoreDialog, StoreLocatorDialog } from '@/components/dialogs'
 import { useModalContext } from '@/context'
 import { useHeaderContext } from '@/context/HeaderContext'
 import { usePurchaseLocationQueries } from '@/hooks'
+import { storeLocationGetters } from '@/lib/getters'
 import { setPurchaseLocationCookie } from '@/lib/helpers'
-import type { LocationCustom } from '@/lib/types'
-
-type IconProps = {
-  size: 'small' | 'medium' | 'large'
-}
+import type { IconProps, LocationCustom } from '@/lib/types'
 
 const StoreFinderIcon = ({ size }: IconProps) => {
   const { toggleStoreLocator } = useHeaderContext()
+
   const { data: location } = usePurchaseLocationQueries()
-  console.log('location', location)
+
   const { showModal, closeModal } = useModalContext()
+
   const { t } = useTranslation('common')
 
+  const locationName = storeLocationGetters.getName(location)
+  const locationCity = storeLocationGetters.getCity(location)
+  const locationState = storeLocationGetters.getState(location)
+
   const openStoreLocatorModal = () => {
-    if (location.name) {
+    if (locationName) {
       showModal({
         Component: MyStoreDialog,
         props: {
@@ -33,7 +36,7 @@ const StoreFinderIcon = ({ size }: IconProps) => {
         Component: StoreLocatorDialog,
         props: {
           handleSetStore: async (selectedStore: LocationCustom) => {
-            setPurchaseLocationCookie(selectedStore?.code as string)
+            setPurchaseLocationCookie(storeLocationGetters.getCode(selectedStore))
             closeModal()
           },
         },
@@ -47,12 +50,8 @@ const StoreFinderIcon = ({ size }: IconProps) => {
 
   return (
     <HeaderAction
-      title={location?.name ? location.name : t('find-a-store')}
-      subtitle={
-        location?.address?.cityOrTown && location?.address?.stateOrProvince
-          ? `${location?.address?.cityOrTown}, ${location?.address?.stateOrProvince}`
-          : t('view-all')
-      }
+      title={locationName ? locationName : t('find-a-store')}
+      subtitle={locationCity && locationState ? `${locationCity}, ${locationState}` : t('view-all')}
       icon={FmdGoodIcon}
       iconFontSize={size}
       onClick={handleClick}

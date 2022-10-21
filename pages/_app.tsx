@@ -79,7 +79,7 @@ const App = (props: KiboAppProps) => {
                       },
                     ]}
                     categoriesTree={pageProps.categoriesTree || []}
-                    sticky={true}
+                    isSticky={true}
                   />
                   <DialogRoot />
                   {getLayout(<Component {...pageProps} />)}
