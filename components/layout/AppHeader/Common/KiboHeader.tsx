@@ -132,6 +132,8 @@ const HeaderActionArea = (props: HeaderActionAreaProps) => {
   const { isMobileSearchPortalVisible, isSearchBarVisible } = headerState
   const { t } = useTranslation('common')
 
+  const showSearchBarInLargeHeader = !isHeaderSmall || isSearchBarVisible
+  const shouldShowSearchIconInSmallHeader = isHeaderSmall && !isSearchBarVisible
   return (
     <Box sx={{ ...HeaderActionAreaStyles.wrapper }} data-testid="header-action-area">
       <Container
@@ -154,7 +156,7 @@ const HeaderActionArea = (props: HeaderActionAreaProps) => {
             </MuiLink>
           </Link>
         </Box>
-        {(!isHeaderSmall || isSearchBarVisible) && (
+        {showSearchBarInLargeHeader && (
           <Box sx={HeaderActionAreaStyles.searchSuggestionsWrapper} data-testid="Search-container">
             <SearchSuggestions
               isViewSearchPortal={isMobileSearchPortalVisible}
@@ -173,13 +175,13 @@ const HeaderActionArea = (props: HeaderActionAreaProps) => {
             )}
           </Box>
         )}
-        {isHeaderSmall && !isSearchBarVisible && (
+        {shouldShowSearchIconInSmallHeader && (
           <Box maxWidth="calc(100% - 501px)" sx={{ backgroundColor: 'grey.300' }}>
             <MegaMenu categoryTree={categoriesTree} onBackdropToggle={setIsBackdropOpen} />
           </Box>
         )}
         <Box display="flex" gap={2}>
-          {isHeaderSmall && !isSearchBarVisible && (
+          {shouldShowSearchIconInSmallHeader && (
             <HeaderAction
               icon={SearchIcon}
               iconFontSize={isHeaderSmall ? 'medium' : 'large'}
