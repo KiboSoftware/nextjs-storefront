@@ -7,7 +7,7 @@ import { useModalContext } from '@/context'
 import { useHeaderContext } from '@/context/HeaderContext'
 import { usePurchaseLocationQueries } from '@/hooks'
 import { setPurchaseLocationCookie } from '@/lib/helpers'
-import { LocationCustom } from '@/lib/types'
+import type { LocationCustom } from '@/lib/types'
 
 type IconProps = {
   size: 'small' | 'medium' | 'large'

@@ -9,7 +9,7 @@ import { KiboLogo } from '@/components/common'
 import { useCheckoutQueries } from '@/hooks'
 import { orderGetters } from '@/lib/getters'
 
-import { Order } from '@/lib/gql/types'
+import type { Order } from '@/lib/gql/types'
 
 const CheckoutHeaderStyles = {
   container: {

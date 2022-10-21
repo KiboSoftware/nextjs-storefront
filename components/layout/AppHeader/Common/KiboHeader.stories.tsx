@@ -16,7 +16,7 @@ export default {
 
 const Template: ComponentStory<typeof KiboHeader> = (args) => (
   <>
-    <KiboHeader {...args}></KiboHeader>
+    <KiboHeader {...args} />
     <Container>
       <Box sx={{ my: 2 }}>
         {[...new Array(121)]

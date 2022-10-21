@@ -1,4 +1,4 @@
-import { createContext, ReactNode, useContext, useEffect, useState } from 'react'
+import { createContext, ReactNode, useContext, useState } from 'react'
 
 interface HeaderState {
   isHamburgerMenuVisible?: boolean
@@ -43,12 +43,14 @@ export const HeaderContextProvider = ({ children }: HeaderContextProviderProps) 
   const toggleSearchBar = (value: boolean) =>
     setHeaderState({ ...headerState, isSearchBarVisible: value })
 
-  const toggleHamburgerMenu = () =>
+  const toggleHamburgerMenu = () => {
+    console.log('toggle', headerState.isHamburgerMenuVisible)
     setHeaderState({
       ...headerState,
       isMobileSearchPortalVisible: false,
       isHamburgerMenuVisible: !headerState.isHamburgerMenuVisible,
     })
+  }
 
   const toggleStoreLocator = () =>
     setHeaderState({
