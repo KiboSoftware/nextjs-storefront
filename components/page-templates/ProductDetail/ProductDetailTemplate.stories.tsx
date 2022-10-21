@@ -55,5 +55,6 @@ Mobile.parameters = {
 
 export const WithMoreDetails = Template.bind({})
 WithMoreDetails.args = {
+  product: ProductCustomMock,
   isQuickViewModal: true,
 }
