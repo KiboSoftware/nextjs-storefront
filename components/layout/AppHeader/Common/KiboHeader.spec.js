@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
 import { composeStories } from '@storybook/testing-react'
-import { render, screen } from '@testing-library/react'
+import { cleanup, render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import '@testing-library/jest-dom'
 
@@ -19,6 +19,10 @@ jest.mock('@mui/material', () => ({
   ...jest.requireActual('@mui/material'),
   useMediaQuery: jest.fn().mockReturnValue(true),
 }))
+
+afterEach(() => {
+  cleanup()
+})
 
 describe('[component] KiboHeader component', () => {
   it('should render the component', () => {
