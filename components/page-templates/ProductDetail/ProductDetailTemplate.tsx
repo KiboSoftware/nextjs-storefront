@@ -54,14 +54,15 @@ const styles = {
     textDecoration: 'underline',
     color: 'text.primary',
     display: 'flex',
-    alignItems: 'left',
+    alignItems: 'right',
     padding: '0.5rem 0',
     cursor: 'pointer',
+    paddingLeft: '30rem',
   },
 }
 const ProductDetailTemplate = (props: ProductDetailTemplateProps) => {
   const { getProductLink } = uiHelpers()
-  const { product, breadcrumbs = [], cmsProducts = [], isQuickViewModal = false } = props
+  const { product, breadcrumbs = [], isQuickViewModal = false } = props
   const { t } = useTranslation('common')
   const { showModal, closeModal } = useModalContext()
   const { addToCart } = useAddToCartMutation()
