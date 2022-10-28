@@ -9,7 +9,7 @@ interface StepperProps {
   isSticky: boolean
 }
 
-const StepperStyles = {
+const stepperStyles = {
   wrapperBox: {
     position: 'sticky',
     width: '100%',
@@ -39,7 +39,7 @@ const KiboStepper = (props: StepperProps) => {
 
   return (
     <Stack sx={{ maxWidth: '872px' }} gap={3}>
-      <Box sx={isSticky ? StepperStyles.wrapperBox : {}}>
+      <Box sx={isSticky ? stepperStyles.wrapperBox : {}}>
         <Stepper nonLinear activeStep={activeStep} connector={null} data-testid="kibo-stepper">
           {steps.map((label: string, index: number) => (
             <Step key={label} sx={{ flex: 1, padding: 0 }}>
