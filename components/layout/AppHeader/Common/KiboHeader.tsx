@@ -11,6 +11,8 @@ import {
   Container,
   useMediaQuery,
   useTheme,
+  Slide,
+  useScrollTrigger,
 } from '@mui/material'
 import { useTranslation } from 'next-i18next'
 import Link from 'next/link'
@@ -47,7 +49,12 @@ interface HeaderActionAreaProps {
   onAccountIconClick: () => void
 }
 
-const TopHeaderStyles = {
+interface HideOnScrollProps {
+  trigger: boolean
+  children: React.ReactElement
+}
+
+const topHeaderStyles = {
   wrapper: {
     display: 'flex',
     backgroundColor: 'common.black',
@@ -62,7 +69,7 @@ const TopHeaderStyles = {
   },
 }
 
-const HeaderActionAreaStyles = {
+const headerActionAreaStyles = {
   wrapper: {
     display: 'flex',
     backgroundColor: 'grey.300',
@@ -88,7 +95,7 @@ const HeaderActionAreaStyles = {
   },
 }
 
-const KiboHeaderStyles = {
+const kiboHeaderStyles = {
   appBarStyles: {
     backgroundColor: 'grey.300',
     zIndex: (theme: any) => theme.zIndex.modal,
@@ -102,12 +109,21 @@ const KiboHeaderStyles = {
   },
 }
 
-const TopHeader = ({ navLinks }: { navLinks: NavigationLink[] }) => {
+const TopHeader = ({
+  navLinks,
+  isElementVisible,
+}: {
+  navLinks: NavigationLink[]
+  isElementVisible: boolean
+}) => {
   const { t } = useTranslation('common')
 
   return (
-    <Box sx={{ ...TopHeaderStyles.wrapper }} data-testid="top-bar">
-      <Container maxWidth="xl" sx={{ ...TopHeaderStyles.container }}>
+    <Box
+      sx={{ ...topHeaderStyles.wrapper, ...(!isElementVisible && { display: 'none' }) }}
+      data-testid="top-bar"
+    >
+      <Container maxWidth="xl" sx={{ ...topHeaderStyles.container }}>
         <Box display="flex" justifyContent="flex-end" alignItems="center" gap={5}>
           {navLinks?.map((nav, index) => {
             return (
@@ -135,18 +151,18 @@ const HeaderActionArea = (props: HeaderActionAreaProps) => {
   const showSearchBarInLargeHeader = !isHeaderSmall || isSearchBarVisible
   const shouldShowSearchIconInSmallHeader = isHeaderSmall && !isSearchBarVisible
   return (
-    <Box sx={{ ...HeaderActionAreaStyles.wrapper }} data-testid="header-action-area">
+    <Box sx={{ ...headerActionAreaStyles.wrapper }} data-testid="header-action-area">
       <Container
         maxWidth="xl"
         sx={{
-          ...TopHeaderStyles.container,
+          ...topHeaderStyles.container,
           justifyContent: 'space-between',
         }}
       >
         <Box
           position="relative"
           sx={{
-            ...HeaderActionAreaStyles.logoWrapper,
+            ...headerActionAreaStyles.logoWrapper,
             ...(isHeaderSmall && { top: 0 }),
           }}
         >
@@ -157,7 +173,7 @@ const HeaderActionArea = (props: HeaderActionAreaProps) => {
           </Link>
         </Box>
         {showSearchBarInLargeHeader && (
-          <Box sx={HeaderActionAreaStyles.searchSuggestionsWrapper} data-testid="Search-container">
+          <Box sx={headerActionAreaStyles.searchSuggestionsWrapper} data-testid="Search-container">
             <SearchSuggestions
               isViewSearchPortal={isMobileSearchPortalVisible}
               onEnterSearch={() => toggleSearchBar(false)}
@@ -200,6 +216,16 @@ const HeaderActionArea = (props: HeaderActionAreaProps) => {
   )
 }
 
+function HideOnScroll(props: HideOnScrollProps) {
+  const { trigger, children } = props
+
+  return (
+    <Slide appear={false} direction="down" in={!trigger}>
+      <Box sx={{ ...(trigger && { height: 0 }) }}>{children}</Box>
+    </Slide>
+  )
+}
+
 const KiboHeader = (props: KiboHeaderProps) => {
   const { navLinks, categoriesTree: initialCategoryTree, isSticky } = props
   const { data: categoriesTree } = useCategoryTreeQueries(initialCategoryTree)
@@ -209,14 +235,16 @@ const KiboHeader = (props: KiboHeaderProps) => {
   const router = useRouter()
   const theme = useTheme()
   const mdScreen = useMediaQuery(theme.breakpoints.up('md'))
+  const trigger = useScrollTrigger({
+    disableHysteresis: true,
+    threshold: 0,
+  })
 
   const [isBackdropOpen, setIsBackdropOpen] = useState<boolean>(false)
-  const [isHeaderSmall, setIsHeaderSmall] = useState<boolean>(false)
 
   const { isHamburgerMenuVisible, isMobileSearchPortalVisible } = headerState
   const isCheckoutPage = router.pathname.includes('checkout')
-
-  const isSectionVisible = () => !isHeaderSmall && mdScreen && !isCheckoutPage
+  const isElementVisible = !isCheckoutPage && mdScreen && !trigger
 
   const handleAccountIconClick = () => {
     setAuthError('')
@@ -235,7 +263,7 @@ const KiboHeader = (props: KiboHeaderProps) => {
 
     return (
       <HeaderActionArea
-        isHeaderSmall={isHeaderSmall}
+        isHeaderSmall={trigger}
         categoriesTree={categoriesTree}
         setIsBackdropOpen={setIsBackdropOpen}
         onAccountIconClick={handleAccountIconClick}
@@ -243,38 +271,14 @@ const KiboHeader = (props: KiboHeaderProps) => {
     )
   }
 
-  const scrollHandler = () => {
-    setIsHeaderSmall((isHeaderSmall) => {
-      if (
-        !isHeaderSmall &&
-        (document.body.scrollTop > 0.1 || document.documentElement.scrollTop > 0.1)
-      )
-        return true
-
-      if (
-        isHeaderSmall &&
-        document.body.scrollTop < 0.1 &&
-        document.documentElement.scrollTop < 0.1
-      )
-        return false
-
-      return isHeaderSmall
-    })
-  }
-
-  useEffect(() => {
-    window.addEventListener('scroll', scrollHandler)
-    return () => window.removeEventListener('scroll', scrollHandler)
-  }, [isHeaderSmall])
-
   return (
     <>
-      <AppBar position={isSticky ? 'sticky' : 'static'} sx={KiboHeaderStyles.appBarStyles}>
+      <AppBar position={isSticky ? 'sticky' : 'static'} sx={kiboHeaderStyles.appBarStyles}>
         <Backdrop open={isBackdropOpen} data-testid="backdrop" />
 
-        <Collapse in={isSectionVisible()} timeout={1000}>
-          <TopHeader navLinks={navLinks} />
-        </Collapse>
+        <HideOnScroll trigger={trigger}>
+          <TopHeader navLinks={navLinks} isElementVisible={isElementVisible} />
+        </HideOnScroll>
         <Box
           component={'section'}
           sx={{
@@ -283,15 +287,19 @@ const KiboHeader = (props: KiboHeaderProps) => {
         >
           {getSection()}
         </Box>
-        <Collapse in={isSectionVisible()} timeout={1000}>
+
+        <HideOnScroll trigger={trigger}>
           <Box
             component={'section'}
-            sx={KiboHeaderStyles.megaMenuStyles}
+            sx={{
+              ...kiboHeaderStyles.megaMenuStyles,
+              ...(!isElementVisible && { display: 'none' }),
+            }}
             data-testid="mega-menu-container"
           >
             <MegaMenu categoryTree={categoriesTree} onBackdropToggle={setIsBackdropOpen} />
           </Box>
-        </Collapse>
+        </HideOnScroll>
 
         <Collapse in={isMobileSearchPortalVisible}>
           <Box p={1} height={'55px'} sx={{ display: { xs: 'block', md: 'none' } }}>

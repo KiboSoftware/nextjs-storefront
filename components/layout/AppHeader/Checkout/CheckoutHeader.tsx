@@ -11,7 +11,7 @@ import { orderGetters } from '@/lib/getters'
 
 import type { Order } from '@/lib/gql/types'
 
-const CheckoutHeaderStyles = {
+const checkoutHeaderStyles = {
   container: {
     backgroundColor: 'common.black',
     height: '55px',
@@ -33,7 +33,7 @@ const CheckoutHeader = () => {
 
   return (
     <>
-      <Container maxWidth="xl" sx={CheckoutHeaderStyles.container} data-testid="checkout-header">
+      <Container maxWidth="xl" sx={checkoutHeaderStyles.container} data-testid="checkout-header">
         <Box position="relative">
           <Link href="/" passHref>
             <MuiLink>
