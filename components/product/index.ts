@@ -8,3 +8,4 @@ export { default as ProductOptionSelect } from './ProductOptionSelect/ProductOpt
 export { default as ProductOptionTextBox } from './ProductOptionTextBox/ProductOptionTextBox'
 export { default as ProductRecommendations } from './ProductRecommendations/ProductRecommendations'
 export { default as ProductVariantSizeSelector } from './ProductVariantSizeSelector/ProductVariantSizeSelector'
+export { default as ProductQuickViewDialog } from './ProductQuickViewModal/ProductQuickViewDialog'

@@ -110,18 +110,18 @@ const KiboDialog = (props: KiboDialogProps) => {
       data-test-id="kibo-dialog"
     >
       <Container maxWidth={'xl'}>
-        {Title && (
-          <StyledDialogTitle id="kibo-dialog-title">
+        <StyledDialogTitle id="kibo-dialog-title">
+          {Title && (
             <Typography color="text.secendary" variant="h3" fontWeight={'bold'} component="span">
               {Title}
             </Typography>
-            {showCloseButton && (
-              <StyledIconButton aria-label="close" onClick={onClose}>
-                <StyledClose />
-              </StyledIconButton>
-            )}
-          </StyledDialogTitle>
-        )}
+          )}
+          {showCloseButton && (
+            <StyledIconButton aria-label="close" onClick={onClose}>
+              <StyledClose />
+            </StyledIconButton>
+          )}
+        </StyledDialogTitle>
         {showContentTopDivider && <FullWidthDivider />}
         <DialogContent>{Content}</DialogContent>
         {showContentBottomDivider && <FullWidthDivider />}

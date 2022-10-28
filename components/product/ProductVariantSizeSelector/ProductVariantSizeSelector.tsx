@@ -16,7 +16,7 @@ interface SizeOptionsProps extends ProductOptionValue {
 const styles = {
   sizeContainer: {
     width: 'fit-content',
-    height: 37,
+    height: 22,
     display: 'flex',
     justifyContent: 'center',
     alignItems: 'center',
