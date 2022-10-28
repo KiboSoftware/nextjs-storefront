@@ -67,3 +67,14 @@ WithWishlist.args = {
   isShopNow: true,
   onAddOrRemoveWishlistItem: () => console.log('add or remove wishlist icon clicked'),
 }
+
+export const WithQuickViewButton = Template.bind({})
+WithQuickViewButton.args = {
+  imageUrl: `https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR-FMCFLCcOwFxZ3FNt8RKne3iqrwqY8OOnCw&usqp=CAU`,
+  link: '/product/test-123',
+  price: '$19.98',
+  salePrice: '$8.99',
+  title: 'This is a product',
+  showQuickViewButton: true,
+  onClickQuickViewModal: () => console.log('quick-view button clicked'),
+}

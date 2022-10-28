@@ -7,9 +7,10 @@ import { useTranslation } from 'next-i18next'
 
 import { FilterTiles, KiboSelect, FullWidthDivider } from '@/components/common'
 import KiboBreadcrumbs from '@/components/core/Breadcrumbs/KiboBreadcrumbs'
-import { ProductCard } from '@/components/product'
+import { ProductCard, ProductQuickViewDialog } from '@/components/product'
 import { CategoryFacet, CategoryFilterByMobile, FacetList } from '@/components/product-listing'
 import { CategoryFacetData } from '@/components/product-listing/CategoryFacet/CategoryFacet'
+import { useModalContext } from '@/context'
 import { useUpdateRoutes, useWishlist } from '@/hooks'
 import { productGetters } from '@/lib/getters'
 import { uiHelpers } from '@/lib/helpers'
@@ -36,6 +37,8 @@ export interface ProductListingTemplateProps {
   pageSize: number
   onSortItemSelection: (value: string) => void
   onPaginationChange: () => void
+  showQuickViewButton?: boolean
+  isQuickViewModal?: boolean
 }
 
 const styles = {
@@ -186,6 +189,7 @@ const ProductListingTemplate = (props: ProductListingTemplateProps) => {
     pageSize,
     onSortItemSelection,
     onPaginationChange,
+    showQuickViewButton = true,
   } = props
   const { getProductLink } = uiHelpers()
   const { updateRoute } = useUpdateRoutes()
@@ -194,7 +198,7 @@ const ProductListingTemplate = (props: ProductListingTemplateProps) => {
   const [showFilterBy, setFilterBy] = useState<boolean>(false)
 
   const { t } = useTranslation('common')
-
+  const { showModal } = useModalContext()
   const handleFilterBy = () => setFilterBy(!showFilterBy)
 
   const handleClearAllFilters = () => {
@@ -212,7 +216,15 @@ const ProductListingTemplate = (props: ProductListingTemplateProps) => {
       console.log('Error: add or remove wishlist item from PLP', error)
     }
   }
-
+  const openProductQuickViewModal = (product: ProductCustom) => {
+    showModal({
+      Component: ProductQuickViewDialog,
+      props: {
+        product,
+        isQuickViewModal: true,
+      },
+    })
+  }
   return (
     <>
       <Box sx={{ ...styles.breadcrumbsClass }}>
@@ -344,6 +356,8 @@ const ProductListingTemplate = (props: ProductListingTemplateProps) => {
                         xs={6}
                       >
                         <ProductCard
+                          product={product}
+                          showQuickViewButton={showQuickViewButton}
                           imageUrl={
                             productGetters.getCoverImage(product) &&
                             productGetters.handleProtocolRelativeUrl(
@@ -367,6 +381,9 @@ const ProductListingTemplate = (props: ProductListingTemplateProps) => {
                           })}
                           isShowWishlistIcon={!productGetters.isVariationProduct(product)}
                           onAddOrRemoveWishlistItem={() => handleWishList(product as ProductCustom)}
+                          onClickQuickViewModal={() =>
+                            openProductQuickViewModal(product as ProductCustom)
+                          }
                         />
                       </Grid>
                     )

@@ -20,6 +20,7 @@ import Link from 'next/link'
 import { KiboImage, Price } from '@/components/common'
 import DefaultImage from '@/public/product_placeholder.svg'
 
+import type { Product } from '@/lib/gql/types'
 export interface ProductCardProps {
   title?: string
   link: string
@@ -37,7 +38,10 @@ export interface ProductCardProps {
   isLoading?: boolean
   isShopNow?: boolean
   isShowWishlistIcon?: boolean
+  product?: Product
+  showQuickViewButton?: boolean
   onAddOrRemoveWishlistItem?: () => void
+  onClickQuickViewModal?: () => void
 }
 
 const styles = {
@@ -52,7 +56,15 @@ const styles = {
     cursor: 'pointer',
     '&:hover': {
       boxShadow: '0 2px 16px 4px rgb(40 44 63 / 7%)',
+      '.quick-view': {
+        opacity: 1,
+      },
     },
+  },
+  quickView: {
+    opacity: 0,
+    width: '100%',
+    marginTop: '1 rem',
   },
 }
 
@@ -83,6 +95,8 @@ const ProductCard = (props: ProductCardProps) => {
     isInWishlist = false,
     isShowWishlistIcon = true,
     onAddOrRemoveWishlistItem,
+    showQuickViewButton = false,
+    onClickQuickViewModal,
   } = props
 
   const { t } = useTranslation('common')
@@ -91,58 +105,74 @@ const ProductCard = (props: ProductCardProps) => {
     event.preventDefault()
     onAddOrRemoveWishlistItem && onAddOrRemoveWishlistItem()
   }
-
+  const handleOpenProductQuickViewModal = (event: MouseEvent<HTMLElement>) => {
+    event.preventDefault()
+    onClickQuickViewModal && onClickQuickViewModal()
+  }
   if (isLoading) return <ProductCardSkeleton />
   else
     return (
       <Box>
         <Link href={link} passHref data-testid="product-card-link">
           <MuiLink underline="none">
-            <Card sx={styles.cardRoot} data-testid="product-card">
-              {isShowWishlistIcon && (
-                <Box textAlign={'right'} width="100%" onClick={handleAddOrRemoveWishlistItem}>
-                  {isInWishlist ? (
-                    <FavoriteRoundedIcon sx={{ color: 'red.900' }} />
-                  ) : (
-                    <FavoriteBorderRoundedIcon sx={{ color: 'grey.600' }} />
+            <Box>
+              <Card sx={styles.cardRoot} data-testid="product-card">
+                {isShowWishlistIcon && (
+                  <Box textAlign={'right'} width="100%" onClick={handleAddOrRemoveWishlistItem}>
+                    {isInWishlist ? (
+                      <FavoriteRoundedIcon sx={{ color: 'red.900' }} />
+                    ) : (
+                      <FavoriteBorderRoundedIcon sx={{ color: 'grey.600' }} />
+                    )}
+                  </Box>
+                )}
+                <CardMedia
+                  sx={{
+                    width: '100%',
+                    height: imageHeight,
+                    position: 'relative',
+                  }}
+                >
+                  <Box sx={{ zIndex: 1 }}>
+                    <KiboImage
+                      src={imageUrl || placeholderImageUrl}
+                      alt={imageUrl ? imageAltText : 'no-image-alt'}
+                      layout="fill"
+                      objectFit="contain"
+                      data-testid="product-image"
+                      errorimage={placeholderImageUrl}
+                    />
+                  </Box>
+                </CardMedia>
+                <Box flexDirection="column" m={2} mt={1}>
+                  <Typography variant="body1" gutterBottom color="text.primary">
+                    {title}
+                  </Typography>
+                  <Price price={price} salePrice={salePrice} variant="body1" />
+                  <Rating
+                    name="read-only"
+                    value={rating}
+                    precision={0.5}
+                    readOnly
+                    size="small"
+                    icon={<StarRounded color="primary" data-testid="filled-rating" />}
+                    emptyIcon={<StarRounded data-testid="empty-rating" />}
+                    data-testid="product-rating"
+                  />
+                  {showQuickViewButton && (
+                    <Button
+                      variant="contained"
+                      color="secondary"
+                      className="quick-view"
+                      sx={styles.quickView}
+                      onClick={handleOpenProductQuickViewModal}
+                    >
+                      {t('quick-view')}
+                    </Button>
                   )}
                 </Box>
-              )}
-              <CardMedia
-                sx={{
-                  width: '100%',
-                  height: imageHeight,
-                  position: 'relative',
-                }}
-              >
-                <Box sx={{ zIndex: 1 }}>
-                  <KiboImage
-                    src={imageUrl || placeholderImageUrl}
-                    alt={imageUrl ? imageAltText : 'no-image-alt'}
-                    layout="fill"
-                    objectFit="contain"
-                    data-testid="product-image"
-                    errorimage={placeholderImageUrl}
-                  />
-                </Box>
-              </CardMedia>
-              <Box flexDirection="column" m={2} mt={1}>
-                <Typography variant="body1" gutterBottom color="text.primary">
-                  {title}
-                </Typography>
-                <Price price={price} salePrice={salePrice} variant="body1" />
-                <Rating
-                  name="read-only"
-                  value={rating}
-                  precision={0.5}
-                  readOnly
-                  size="small"
-                  icon={<StarRounded color="primary" data-testid="filled-rating" />}
-                  emptyIcon={<StarRounded data-testid="empty-rating" />}
-                  data-testid="product-rating"
-                />
-              </Box>
-            </Card>
+              </Card>
+            </Box>
           </MuiLink>
         </Link>
         <Box>
