@@ -15,7 +15,7 @@ import {
 } from '@/hooks'
 import { OrderStatus, OrderReturnType } from '@/lib/constants'
 import { orderGetters, productGetters } from '@/lib/getters'
-import { CreateOrderReturnItemsInputParams } from '@/lib/types'
+import type { CreateOrderReturnItemsInputParams } from '@/lib/types'
 
 import type { Maybe, Order, CrOrderItem, CrProduct } from '@/lib/gql/types'
 
@@ -180,10 +180,10 @@ const OrderReturnItems = (props: OrderReturnItemsProps) => {
                 <ProductItemList
                   items={shipItems}
                   showAddress={false}
-                  showCheckbox={true}
+                  isCheckboxVisible={true}
                   showDivider={false}
-                  disableCheckbox={isReturnRequestSuccess}
-                  onSelectItem={(orderItemId: string) => handleReturnItems(orderItemId)}
+                  isCheckboxDisabled={isReturnRequestSuccess}
+                  onItemSelection={(orderItemId: string) => handleReturnItems(orderItemId)}
                 />
               </Box>
               <Divider sx={{ ...styles.divider }} />
@@ -196,10 +196,10 @@ const OrderReturnItems = (props: OrderReturnItemsProps) => {
                 <ProductItemList
                   items={pickupItems}
                   showAddress={false}
-                  showCheckbox={true}
+                  isCheckboxVisible={true}
                   showDivider={false}
-                  disableCheckbox={isReturnRequestSuccess}
-                  onSelectItem={(orderItemId: string) => handleReturnItems(orderItemId)}
+                  isCheckboxDisabled={isReturnRequestSuccess}
+                  onItemSelection={(orderItemId: string) => handleReturnItems(orderItemId)}
                 />
               </Box>
             </Box>

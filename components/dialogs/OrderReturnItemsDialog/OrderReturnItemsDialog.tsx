@@ -6,7 +6,7 @@ import { useTranslation } from 'next-i18next'
 
 import { KiboDialog, ProductItemList } from '@/components/common'
 
-import { Maybe, CrOrderItem } from '@/lib/gql/types'
+import type { Maybe, CrOrderItem } from '@/lib/gql/types'
 
 interface OrderReturnItemsDialogProps {
   orderItems: Maybe<CrOrderItem>[]

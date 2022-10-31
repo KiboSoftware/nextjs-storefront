@@ -36,10 +36,10 @@ export interface ProductItemProps {
   purchaseLocation?: string
   link?: string
   children?: ReactNode
-  showCheckbox?: boolean
-  disableCheckbox?: boolean
+  isCheckboxVisible?: boolean
+  isCheckboxDisabled?: boolean
   onStoreLocatorClick?: () => void
-  onSelectItem?: (orderItemId: string) => void
+  onItemSelection?: (orderItemId: string) => void
 }
 
 const styles = {
@@ -52,10 +52,11 @@ const styles = {
     alignItems: 'center',
   },
 
-  image: {
-    width: '100%',
-    height: '100%',
-    objectFit: 'contain',
+  checkbox: {
+    '&.Mui-disabled.Mui-checked': {
+      color: 'primary.main',
+      opacity: 0.26,
+    },
   },
 }
 
@@ -73,32 +74,27 @@ const ProductItem = (props: ProductItemProps) => {
     purchaseLocation,
     link,
     children,
-    showCheckbox = false,
-    disableCheckbox = false,
+    isCheckboxVisible = false,
+    isCheckboxDisabled = false,
     onStoreLocatorClick,
-    onSelectItem,
+    onItemSelection,
   } = props
   const { t } = useTranslation('common')
   const theme = useTheme()
   const mdScreen = useMediaQuery(theme.breakpoints.up('md'))
   const [expanded, setExpanded] = useState<boolean>(true)
   const handleSelectItem = (event: ChangeEvent<HTMLInputElement>) =>
-    onSelectItem && onSelectItem(event.target.value)
+    onItemSelection && onItemSelection(event.target.value)
 
   return (
     <Box key={id}>
       <Box sx={{ display: 'flex', pb: 1, pr: 1, gap: 2, flex: 1 }}>
-        {showCheckbox && (
+        {isCheckboxVisible && (
           <Checkbox
             value={id}
             onChange={handleSelectItem}
-            disabled={disableCheckbox}
-            sx={{
-              '&.Mui-disabled.Mui-checked': {
-                color: 'primary.main',
-                opacity: 0.26,
-              },
-            }}
+            disabled={isCheckboxDisabled}
+            sx={{ ...styles.checkbox }}
           />
         )}
         <Box sx={{ ...styles.imageContainer }}>
