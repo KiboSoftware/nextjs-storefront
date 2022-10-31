@@ -6,7 +6,7 @@ import OrderReturnItemsDialog from './OrderReturnItemsDialog'
 import { orderReturnItemsMock } from '@/__mocks__/stories/orderMock'
 
 export default {
-  title: 'Dialogs/OrderReturnItems/OrderReturnItemsDialog',
+  title: 'Dialogs/OrderReturnItemsDialog',
   component: OrderReturnItemsDialog,
   argTypes: { closeModal: { action: 'closeModal' } },
 } as ComponentMeta<typeof OrderReturnItemsDialog>
