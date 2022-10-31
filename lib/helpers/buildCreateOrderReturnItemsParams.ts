@@ -1,7 +1,7 @@
 import type { CreateOrderReturnItemsParams } from '@/lib/types'
 
 export const buildCreateOrderReturnItemsParams = (params: CreateOrderReturnItemsParams) => {
-  const { items, returnType, reason, notes } = params
+  const { items, returnType, reason } = params
 
   return items.map((item) => {
     return {

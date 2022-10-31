@@ -6,8 +6,8 @@ import { buildCreateOrderReturnItemsParams } from '@/lib/helpers'
 import type { CreateOrderReturnItemsInputParams } from '@/lib/types'
 
 const createOrderReturnItems = async (params: CreateOrderReturnItemsInputParams) => {
-  const { returnType, reason, notes, originalOrderId, items, locationCode } = params
-  const returnItems = buildCreateOrderReturnItemsParams({ items, returnType, reason, notes })
+  const { returnType, reason, originalOrderId, items, locationCode } = params
+  const returnItems = buildCreateOrderReturnItemsParams({ items, returnType, reason })
 
   const client = makeGraphQLClient()
 

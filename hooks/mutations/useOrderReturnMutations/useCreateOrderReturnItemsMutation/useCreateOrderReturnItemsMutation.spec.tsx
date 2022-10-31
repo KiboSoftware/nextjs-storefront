@@ -14,7 +14,6 @@ describe('[hooks] useCreateOrderReturnItemsMutation', () => {
         const response = await createReturnItems.mutateAsync({
           returnType: 'Replace',
           reason: 'Damaged',
-          notes: '',
           originalOrderId: '',
           items: [],
           locationCode: '',

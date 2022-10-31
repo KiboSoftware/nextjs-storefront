@@ -88,7 +88,6 @@ const OrderReturnItems = (props: OrderReturnItemsProps) => {
     const createReturnItemsParams: CreateOrderReturnItemsInputParams = {
       returnType: OrderReturnType.REFUND,
       reason: selectedReturnReason,
-      notes: '',
       originalOrderId: order?.id as string,
       items: selectedReturnItems,
       locationCode: orderGetters.getLocationCode(order) as string,
