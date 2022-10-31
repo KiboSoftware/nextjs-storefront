@@ -10,6 +10,7 @@ import Link from 'next/link'
 import { FulfillmentOptions, Price, QuantitySelector } from '@/components/common'
 import { KiboBreadcrumbs, ImageGallery } from '@/components/core'
 import { AddToCartDialog, StoreLocatorDialog } from '@/components/dialogs'
+import { CmsComponent } from '@/components/home'
 import {
   ColorSelector,
   ProductInformation,
@@ -62,7 +63,7 @@ const styles = {
 }
 const ProductDetailTemplate = (props: ProductDetailTemplateProps) => {
   const { getProductLink } = uiHelpers()
-  const { product, breadcrumbs = [], isQuickViewModal = false } = props
+  const { product, breadcrumbs = [], isQuickViewModal = false, cmsProducts } = props
   const { t } = useTranslation('common')
   const { showModal, closeModal } = useModalContext()
   const { addToCart } = useAddToCartMutation()
@@ -422,6 +423,10 @@ const ProductDetailTemplate = (props: ProductDetailTemplateProps) => {
               </Box>
             )}
           </Grid>
+          {cmsProducts?.components?.length > 0 &&
+            cmsProducts?.components?.map((data: any) => (
+              <CmsComponent key={Object.keys(data)[0]} content={data} />
+            ))}
         </>
       )}
     </Grid>

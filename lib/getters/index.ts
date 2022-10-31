@@ -8,3 +8,6 @@ export * from './addressGetters'
 export * from './storeLocationGetters'
 export * from './userGetters'
 export * from './cartGetters'
+
+// cms
+export * from './amplienceGetters'
