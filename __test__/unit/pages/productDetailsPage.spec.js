@@ -11,6 +11,10 @@ import { categoryTreeDataMock } from '@/__mocks__/stories/categoryTreeDataMock'
 nextRouter.useRouter = jest.fn()
 const mockCategoryTreeData = categoryTreeDataMock
 
+jest.mock('@/cms/operations/get-page', () => ({
+  getPage: jest.fn().mockImplementation(() => 'cmsProductDetail'),
+}))
+
 jest.mock('next/config', () => () => ({
   publicRuntimeConfig: {
     maxCookieAge: 10,
@@ -98,7 +102,6 @@ describe('[page] Product Details Page', () => {
     const response = getStaticProps(context)
     expect(response).resolves.toStrictEqual({
       props: {
-        productCode: 'MS-BTL-001',
         product: {
           productCode: 'mocked-product',
         },
@@ -108,6 +111,7 @@ describe('[page] Product Details Page', () => {
           initialLocale: 'mock-locale',
           userConfig: { i18n: [{}] },
         },
+        cmsProductDetail: 'cmsProductDetail',
       },
       revalidate: 60,
     })

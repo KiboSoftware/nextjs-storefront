@@ -19,6 +19,9 @@ jest.mock('next/config', () => {
         ],
         pageSize: 16,
       },
+      amplience: {
+        hubName: 'kibo',
+      },
     },
     serverRuntimeConfig: {
       cacheKey: 'categoryTree',
@@ -26,6 +29,10 @@ jest.mock('next/config', () => {
     },
   })
 })
+
+jest.mock('@/cms/operations/get-page', () => ({
+  getPage: jest.fn().mockImplementation(() => 'cmsPage'),
+}))
 
 jest.mock('@/lib/api/util', () => ({
   fetcher: jest.fn(() => {
@@ -66,7 +73,7 @@ describe('Home', () => {
           userConfig: { i18n: [{}] },
         },
         categoriesTree: mockCategoryTreeData.categoriesTree.items,
-        carouselItem: mockHomePageResult,
+        cmsPage: 'cmsPage',
       },
     })
   })
