@@ -54,7 +54,7 @@ const OrderSummary = (props: OrderSummaryProps) => {
     promoComponent,
   }
   return (
-    <Card sx={{ bgcolor: 'grey.100' }}>
+    <Card sx={{ bgcolor: 'grey.100', maxWidth: '428px' }}>
       <CardContent>
         <Box sx={styles.headerStyle}>
           <Typography variant="h3" color="text.primary" fontWeight="bold" pt={0.5}>

@@ -262,6 +262,8 @@ const getOrderHistoryDetails = (order: Order) => {
 const getShippingMethodCode = (checkout: Order): string =>
   checkout.fulfillmentInfo?.shippingMethodCode || ''
 
+const getLocationCode = (order: Order) => order?.locationCode
+
 export const orderGetters = {
   getCheckoutItemCount,
   getSubmittedDate,
@@ -289,4 +291,5 @@ export const orderGetters = {
   getShippingContact,
   getSelectedPaymentMethods,
   getShippingMethodCode,
+  getLocationCode,
 }

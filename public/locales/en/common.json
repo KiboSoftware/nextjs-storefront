@@ -262,5 +262,15 @@
   "confirm-password": "Confirm password",
   "current-password": "Current password",
   "quick-view": "Quick View",
-  "more-details": "More Details"
+  "more-details": "More Details",
+
+  "return-items": "Return Items",
+  "items-you-are-returning": "Items you’re returning",
+  "confirm-return-request": "Confirm Return Request",
+  "reason-for-your-return": "Reason for your return",
+  "comments-optional": "Comments (optional)",
+  "return-request-submitted": "Return Request Submitted",
+  "choose-items-to-return": "Choose Items to Return",
+  "please-select-a-reason-for-your-return": "Please select a reason for your return",
+  "choose-a-response": "Choose a response"
 }
