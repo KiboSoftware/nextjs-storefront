@@ -18,6 +18,7 @@ interface AddressFormProps {
   countries?: string[]
   isUserLoggedIn: boolean
   saveAddressLabel?: string
+  isAddressFormInDialog?: boolean
   setAutoFocus?: boolean
   validateForm: boolean
   showDefaultPaymentMethodCheckbox?: boolean
@@ -55,6 +56,7 @@ const AddressForm = (props: AddressFormProps) => {
     countries = publicRuntimeConfig.countries,
     isUserLoggedIn = false,
     saveAddressLabel,
+    isAddressFormInDialog = false,
     setAutoFocus = false,
     validateForm = false,
     showDefaultPaymentMethodCheckbox = false,
@@ -116,7 +118,7 @@ const AddressForm = (props: AddressFormProps) => {
       data-testid="address-form"
     >
       <Grid container rowSpacing={1} columnSpacing={{ md: 4 }}>
-        <Grid item xs={12} md={6}>
+        <Grid item xs={12} md={isAddressFormInDialog ? 12 : 6}>
           <Controller
             name="firstName"
             control={control}
@@ -138,7 +140,7 @@ const AddressForm = (props: AddressFormProps) => {
           />
         </Grid>
 
-        <Grid item xs={12} md={6}>
+        <Grid item xs={12} md={isAddressFormInDialog ? 12 : 6}>
           <Controller
             name="lastNameOrSurname"
             control={control}
@@ -200,7 +202,7 @@ const AddressForm = (props: AddressFormProps) => {
           />
         </Grid>
 
-        <Grid item xs={12} md={6}>
+        <Grid item xs={12} md={isAddressFormInDialog ? 12 : 6}>
           <Controller
             name="address.cityOrTown"
             control={control}
@@ -221,7 +223,7 @@ const AddressForm = (props: AddressFormProps) => {
           />
         </Grid>
 
-        <Grid item xs={12} md={6}>
+        <Grid item xs={12} md={isAddressFormInDialog ? 9 : 6}>
           <Controller
             name="address.stateOrProvince"
             control={control}
@@ -242,7 +244,7 @@ const AddressForm = (props: AddressFormProps) => {
           />
         </Grid>
 
-        <Grid item xs={12} md={6}>
+        <Grid item xs={12} md={isAddressFormInDialog ? 3 : 6}>
           <Controller
             name="address.postalOrZipCode"
             control={control}
@@ -263,7 +265,7 @@ const AddressForm = (props: AddressFormProps) => {
           />
         </Grid>
 
-        <Grid item xs={12} md={6}>
+        <Grid item xs={12} md={isAddressFormInDialog ? 12 : 6}>
           <Controller
             name="address.countryCode"
             control={control}
@@ -286,7 +288,7 @@ const AddressForm = (props: AddressFormProps) => {
           />
         </Grid>
 
-        <Grid item xs={12} md={6}>
+        <Grid item xs={12} md={isAddressFormInDialog ? 12 : 6}>
           <Controller
             name="phoneNumbers.home"
             control={control}
