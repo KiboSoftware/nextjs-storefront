@@ -2,7 +2,6 @@ import { composeStories } from '@storybook/testing-react'
 import { render, screen } from '@testing-library/react'
 
 import * as stories from './AddressInputFormDialog.stories'
-import { ModalContextProvider } from '@/context'
 
 const { Common } = composeStories(stories)
 
@@ -10,7 +9,7 @@ const addressFormMock = () => <div data-testid="address-input-form-dialog" />
 jest.mock('@/components/common/AddressForm/AddressForm', () => addressFormMock)
 
 const renderComponent = () => {
-  return render(<Common {...Common.args} />, { wrapper: ModalContextProvider })
+  return render(<Common {...Common.args} />)
 }
 
 describe('[components]  AddressInputForm Dialog', () => {

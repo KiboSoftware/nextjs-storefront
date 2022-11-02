@@ -18,6 +18,7 @@ const Template: ComponentStory<typeof AddressInputFormDialog> = ({ ...args }) =>
 // Common
 export const Common = Template.bind({})
 Common.args = {
+  formTitle: 'Add new address',
   isAddressFormValid: true,
   setAutoFocus: true,
   validateForm: false,

@@ -10,6 +10,7 @@ import { useModalContext } from '@/context/ModalContext'
 import type { Address, ContactForm } from '@/lib/types'
 
 interface AddressInputFormDialogProps {
+  formTitle?: string
   contact?: ContactForm
   isAddressFormValid: boolean
   isUserLoggedIn: boolean
@@ -29,7 +30,11 @@ const buttonStyle = {
 } as SxProps<Theme> | undefined
 
 const AddressInputFormDialog = (props: AddressInputFormDialogProps) => {
+  const { closeModal } = useModalContext()
+  const { t } = useTranslation('common')
+
   const {
+    formTitle = t('add-new-address'),
     contact,
     isAddressFormValid,
     isUserLoggedIn,
@@ -40,12 +45,11 @@ const AddressInputFormDialog = (props: AddressInputFormDialogProps) => {
     onFormStatusChange,
     onHandleAddressValidationAndSave,
   } = props
-  const { closeModal } = useModalContext()
-  const { t } = useTranslation('common')
+
   return (
     <KiboDialog
       showCloseButton
-      Title={'Add New Address'}
+      Title={formTitle}
       showContentTopDivider={true}
       showContentBottomDivider={false}
       Actions={''}
