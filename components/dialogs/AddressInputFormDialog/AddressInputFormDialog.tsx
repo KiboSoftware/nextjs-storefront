@@ -6,7 +6,7 @@ import { useTranslation } from 'next-i18next'
 
 import AddressForm from '@/components/common/AddressForm/AddressForm'
 import KiboDialog from '@/components/common/KiboDialog/KiboDialog'
-import { useModalContext } from '@/context/ModalContext'
+import { useModalContext } from '@/context'
 import type { Address, ContactForm } from '@/lib/types'
 
 interface AddressInputFormDialogProps {
