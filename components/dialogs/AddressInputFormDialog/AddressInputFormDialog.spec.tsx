@@ -15,7 +15,7 @@ const renderComponent = () => {
 describe('[components]  AddressInputForm Dialog', () => {
   const setup = () => renderComponent()
 
-  it('should render component', async () => {
+  it('should render component', () => {
     setup()
 
     const closeIcon = screen.getByRole('button', { name: 'close' })
@@ -25,7 +25,15 @@ describe('[components]  AddressInputForm Dialog', () => {
     expect(addressInputFormDialogComponent).toBeVisible()
   })
 
-  it('should render save and cancel button', async () => {
+  it('should have a title', () => {
+    setup()
+
+    const dialogHeading = screen.getByRole('heading', { name: 'Add new address' })
+
+    expect(dialogHeading).toBeVisible()
+  })
+
+  it('should render save and cancel button', () => {
     setup()
 
     const saveButton = screen.getByRole('button', { name: 'save' })
