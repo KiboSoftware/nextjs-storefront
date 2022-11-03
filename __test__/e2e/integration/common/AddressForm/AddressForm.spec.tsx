@@ -179,6 +179,17 @@ describe('[components] - AddressForm integration', () => {
       // asert
       expect(saveShippingAddress).toBeInTheDocument()
     })
+
+    it('should only show when showDefaultPaymentMethodCheckbox = true', () => {
+      // arrange
+      setup({ showDefaultPaymentMethodCheckbox: true })
+
+      // act
+      const savePaymentMethod = screen.getByRole('checkbox')
+
+      // asert
+      expect(savePaymentMethod).toBeInTheDocument()
+    })
   })
 
   describe('should display validation message', () => {
