@@ -10,12 +10,12 @@ import { useModalContext } from '@/context/ModalContext'
 import type { Address, ContactForm } from '@/lib/types'
 
 interface AddressInputFormDialogProps {
-  formTitle?: string
-  contact?: ContactForm
   isAddressFormValid: boolean
   isUserLoggedIn: boolean
   setAutoFocus: boolean
   validateForm: boolean
+  formTitle?: string
+  contact?: ContactForm
   isAddressFormInDialog?: boolean
   onSaveAddress: (data: Address) => void
   onFormStatusChange: (status: boolean) => void
