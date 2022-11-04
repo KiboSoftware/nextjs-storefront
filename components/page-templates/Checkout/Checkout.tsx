@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 
-import { Box, Stack, Button, Typography, SxProps, Divider, useMediaQuery } from '@mui/material'
+import { Box, Stack, Button, SxProps } from '@mui/material'
 import { Theme } from '@mui/material/styles'
 import { useTranslation } from 'next-i18next'
 import { useRouter } from 'next/router'
@@ -23,7 +23,6 @@ import {
   useDeleteOrderCouponMutation,
 } from '@/hooks'
 import { userGetters } from '@/lib/getters'
-import theme from '@/styles/theme'
 
 import type { CustomerContact, Order } from '@/lib/gql/types'
 interface CheckoutProps {
@@ -57,7 +56,6 @@ const Checkout = (props: CheckoutProps) => {
 
   const { activeStep, stepStatus, steps, setStepBack, setStepStatusSubmit } =
     useCheckoutStepContext()
-  const mdScreen = useMediaQuery(theme.breakpoints.up('md'))
 
   const buttonLabels = [t('go-to-shipping'), t('go-to-payment'), t('review-order')]
 
@@ -130,7 +128,6 @@ const Checkout = (props: CheckoutProps) => {
     isUserLoggedIn: true,
   }
 
-  const numberOfItems = checkout && checkout?.items && checkout?.items?.length
   const showCheckoutSteps = activeStep !== steps.length
 
   const userShippingAddress = userGetters?.getUserShippingAddress(
@@ -145,17 +142,7 @@ const Checkout = (props: CheckoutProps) => {
           gap={2}
         >
           <Stack sx={{ width: '100%', maxWidth: '872px' }} gap={1}>
-            <Typography variant={mdScreen ? 'h1' : 'h2'} component="div" gutterBottom>
-              {t('checkout', { numberOfItems })}
-            </Typography>
-
-            {!mdScreen && (
-              <Stack sx={{ paddingBottom: '8px' }}>
-                <Divider />
-              </Stack>
-            )}
-
-            <KiboStepper>
+            <KiboStepper isSticky={true}>
               <DetailsStep checkout={checkout} />
               {((isAuthenticated && isSuccess) || !isAuthenticated) && (
                 <ShippingStep
@@ -173,9 +160,11 @@ const Checkout = (props: CheckoutProps) => {
             sx={{
               width: '100%',
               maxWidth: 428,
-              height: 448,
+              height: 'fit-content',
               paddingTop: { lg: '4.1rem' },
               marginLeft: { lg: '1rem' },
+              position: { md: 'sticky' },
+              top: { lg: '130px', md: '200px' },
             }}
           >
             {activeStep != reviewStepIndex && (

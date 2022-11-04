@@ -10,9 +10,10 @@ const steps = ['details', 'shipping', 'payment', 'review']
 export default {
   title: 'Checkout/KiboStepper',
   component: KiboStepper,
+  argTypes: { onHandleBack: { action: 'clicked' } },
   decorators: [
     (Story) => (
-      <CheckoutStepProvider steps={steps}>
+      <CheckoutStepProvider steps={steps} initialActiveStep={1}>
         <Story />
       </CheckoutStepProvider>
     ),
@@ -20,7 +21,7 @@ export default {
 } as ComponentMeta<typeof KiboStepper>
 
 const Template: ComponentStory<typeof KiboStepper> = (args) => (
-  <KiboStepper {...args}>
+  <KiboStepper {...args} isSticky={false}>
     <p>Details step content goes here...</p>
     <p>Shipping step content goes here...</p>
     <p>Payment step content goes here...</p>

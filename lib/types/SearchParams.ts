@@ -1,8 +1,5 @@
 import type { GeoCoords } from './GeoCoords'
 
-export interface ProductCodes {
-  productCode: string
-}
 export interface CategorySearchParams {
   categoryCode?: string
   pageSize?: number
