@@ -6,6 +6,7 @@ import Logo from '@/public/kibo_logo.png'
 interface KiboLogoProps {
   logo?: string | StaticImageData // URL or File
   alt?: string
+  small?: boolean
 }
 
 const styles = {
@@ -19,11 +20,15 @@ const styles = {
       md: 78,
     },
   },
+  smallLogo: {
+    width: 40,
+    height: 40,
+  },
 }
 
-const KiboLogo = ({ logo = Logo, alt = 'kibo-logo' }: KiboLogoProps) => {
+const KiboLogo = ({ logo = Logo, alt = 'kibo-logo', small }: KiboLogoProps) => {
   return (
-    <Box width={'100%'} sx={styles.logoContainer}>
+    <Box width={'100%'} sx={small ? styles.smallLogo : styles.logoContainer}>
       <KiboImage src={logo} alt={alt} width={'100%'} height={'100%'} />
     </Box>
   )

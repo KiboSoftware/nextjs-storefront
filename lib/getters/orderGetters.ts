@@ -25,6 +25,7 @@ import type {
   CuAddress,
 } from '@/lib/gql/types'
 
+const getCheckoutItemCount = (order: Order) => order?.items?.length
 const getEmail = (order: Order) => order?.email
 const getTotal = (order: Order | Cart): number => order?.total as number
 const getShippingTotal = (order: Order | Cart) => order?.shippingTotal || 0
@@ -262,6 +263,7 @@ const getShippingMethodCode = (checkout: Order): string =>
   checkout.fulfillmentInfo?.shippingMethodCode || ''
 
 export const orderGetters = {
+  getCheckoutItemCount,
   getSubmittedDate,
   getProductNames,
   getExpectedDeliveryDate,

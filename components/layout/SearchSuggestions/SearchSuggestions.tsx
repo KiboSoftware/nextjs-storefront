@@ -116,7 +116,7 @@ const SearchSuggestions = (props: SearchSuggestionsProps) => {
   }, [searchTerm])
 
   return (
-    <Stack width="100%" gap={1}>
+    <Stack width="100%" gap={1} sx={{ maxWidth: { xs: '100%', md: '65%' } }}>
       <Box sx={{ zIndex: 1400 }}>
         <SearchBar
           searchTerm={searchTerm}

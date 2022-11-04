@@ -10,6 +10,7 @@ import {
   Link as MuiLink,
   Container,
 } from '@mui/material'
+import Tabs, { tabsClasses } from '@mui/material/Tabs'
 import { usePopupState, bindHover, bindPopover } from 'material-ui-popup-state/hooks'
 import HoverPopover from 'material-ui-popup-state/HoverPopover'
 import { useTranslation } from 'next-i18next'
@@ -36,10 +37,9 @@ interface MegaMenuCategoryProps {
 
 const StyledToolbar = styled(Toolbar)(({ theme }) => ({
   '&.MuiToolbar-root': {
-    backgroundColor: theme.palette.common.white,
+    backgroundColor: 'inherit',
     position: 'relative',
-    overflow: 'hidden',
-    minHeight: 59,
+    minHeight: 55,
     display: 'flex',
     borderBottomWidth: 1,
     borderBottomStyle: 'solid',
@@ -48,18 +48,19 @@ const StyledToolbar = styled(Toolbar)(({ theme }) => ({
     borderTopStyle: 'solid',
     borderTopColor: theme.palette.grey[300],
     paddingInline: 0,
-    flexWrap: 'wrap',
-    gap: '4%',
+    whiteSpace: 'nowrap',
+    flex: 1,
+    color: 'black',
+    maxWidth: '100%',
   },
 }))
 
 const style = {
   listItem: {
-    paddingInline: 0.75,
-    paddingTop: 2.25,
-    paddingBottom: 1.25,
     cursor: 'pointer',
     borderBottom: '4px solid transparent',
+    pt: 1.5,
+    pb: 1.5,
     '&.Mui-selected': {
       borderBottom: '4px solid',
       borderBottomColor: 'primary.main',
@@ -78,6 +79,7 @@ const style = {
     borderTopColor: 'grey.300',
     position: 'relative',
     overflowY: 'scroll',
+    marginTop: 0.5,
   },
 }
 
@@ -98,8 +100,8 @@ const MegaMenuCategory = (props: MegaMenuCategoryProps) => {
   }
 
   useEffect(() => {
-    childrenCategories.length && onBackdropToggle(popupState.isOpen)
-  }, [childrenCategories.length, popupState.isOpen, onBackdropToggle])
+    childrenCategories?.length && onBackdropToggle(popupState.isOpen)
+  }, [childrenCategories?.length, popupState.isOpen, onBackdropToggle])
 
   return (
     <Box {...bindHover(popupState)} role="group" color="text.primary">
@@ -114,7 +116,7 @@ const MegaMenuCategory = (props: MegaMenuCategoryProps) => {
           </MuiLink>
         </Link>
       </ListItem>
-      {childrenCategories.length > 0 && (
+      {childrenCategories?.length > 0 && (
         <HoverPopover
           {...bindPopover(popupState)}
           PaperProps={{ sx: { ...style.popoverPaper } }}
@@ -169,16 +171,28 @@ const MegaMenu = (props: MegaMenuProps) => {
 
   return (
     <StyledToolbar data-testid="megamenu-container">
-      <Container maxWidth="xl" sx={{ display: 'flex', gap: '4%' }}>
-        {categoryTree?.map((category) => (
-          <MegaMenuCategory
-            key={category?.categoryCode}
-            category={category}
-            onBackdropToggle={onBackdropToggle}
-            activeCategory={activeCategory}
-            setActiveCategory={setActiveCategory}
-          />
-        ))}
+      <Container maxWidth="xl">
+        <Tabs
+          value={false}
+          variant="scrollable"
+          scrollButtons="auto"
+          aria-label="scrollable auto tabs example"
+          sx={{
+            [`& .${tabsClasses.scrollButtons}`]: {
+              '&.Mui-disabled': { display: 'none' },
+            },
+          }}
+        >
+          {categoryTree?.map((category) => (
+            <MegaMenuCategory
+              key={category?.categoryCode}
+              category={category}
+              onBackdropToggle={onBackdropToggle}
+              activeCategory={activeCategory}
+              setActiveCategory={setActiveCategory}
+            />
+          ))}
+        </Tabs>
       </Container>
     </StyledToolbar>
   )
