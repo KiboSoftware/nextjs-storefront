@@ -38,7 +38,7 @@ jest.mock('@/hooks', () => ({
 const StoreLocatorDialogMock = () => <div data-testid="StoreLocatorDialogMock"></div>
 jest.mock(
   '@/components/dialogs/Store/StoreLocatorDialog/StoreLocatorDialog',
-  () => StoreLocatorDialogMock
+  () => () => StoreLocatorDialogMock()
 )
 
 describe('[component] StoreFinderIcon component', () => {
