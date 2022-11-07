@@ -5,7 +5,12 @@ import { Theme } from '@mui/material/styles'
 import { useTranslation } from 'next-i18next'
 
 import { ShippingMethod } from '@/components/checkout'
-import { AddressDetailsView, AddressForm, KiboRadio } from '@/components/common'
+import {
+  AddressDetailsView,
+  AddressForm,
+  KiboRadio,
+  ProductItemWithAddressList,
+} from '@/components/common'
 import { useCheckoutStepContext, STEP_STATUS } from '@/context'
 import { useUpdateCheckoutShippingInfoMutation, useShippingMethodsQueries } from '@/hooks'
 import { DefaultId } from '@/lib/constants'
@@ -223,7 +228,7 @@ const ShippingStep = (props: ShippingProps) => {
       shortName: 'SingleShip',
     },
     {
-      value: 'ShipToManyAddress',
+      value: 'ShipToMultiAddress',
       code: 'STMA',
       name: 'Ship to more than one address',
       label: 'Ship to more than one address',
