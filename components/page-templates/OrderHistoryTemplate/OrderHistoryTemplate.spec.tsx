@@ -14,11 +14,20 @@ const OrderHistoryItemMock = () => <div data-testid="order-history-item-mock" />
 const ViewOrderDetailsMock = () => <div data-testid="view-order-details-mock" />
 const FullWidthDividerMock = () => <div data-testid="full-width-divider-mock"></div>
 
-jest.mock('@/components/common/FilterOrders/FilterOrders', () => FilterOrdersMock)
-jest.mock('@/components/common/FilterTiles/FilterTiles', () => FilterTilesMock)
-jest.mock('@/components/order/OrderHistoryItem/OrderHistoryItem', () => OrderHistoryItemMock)
-jest.mock('@/components/order/ViewOrderDetails/ViewOrderDetails', () => ViewOrderDetailsMock)
-jest.mock('@/components/common/FullWidthDivider/FullWidthDivider', () => FullWidthDividerMock)
+jest.mock('@/components/common/FilterOrders/FilterOrders', () => () => FilterOrdersMock())
+jest.mock('@/components/common/FilterTiles/FilterTiles', () => () => FilterTilesMock())
+jest.mock(
+  '@/components/order/OrderHistoryItem/OrderHistoryItem',
+  () => () => OrderHistoryItemMock()
+)
+jest.mock(
+  '@/components/order/ViewOrderDetails/ViewOrderDetails',
+  () => () => ViewOrderDetailsMock()
+)
+jest.mock(
+  '@/components/common/FullWidthDivider/FullWidthDivider',
+  () => () => FullWidthDividerMock()
+)
 
 jest.mock('@mui/material', () => ({
   ...jest.requireActual('@mui/material'),

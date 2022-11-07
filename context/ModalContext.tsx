@@ -76,7 +76,7 @@ export const DialogRoot = () => {
       return (
         <>
           <NestedDialog {...props?.nestedDialogProps} closeModal={closeModal} />
-          {Component && <Component {...props} closeModal={closeModal} />}
+          <Component {...props} closeModal={closeModal} />
         </>
       )
     }

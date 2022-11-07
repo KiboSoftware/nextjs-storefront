@@ -11,7 +11,7 @@ const { Common, Radio } = composeStories(stories)
 const mockOnPaymentCardSelection = jest.fn()
 
 const PaymentCardMock = () => <div data-testid="payment-card-mock" />
-jest.mock('@/components/common/PaymentCard/PaymentCard', () => PaymentCardMock)
+jest.mock('@/components/common/PaymentCard/PaymentCard', () => () => PaymentCardMock())
 
 const user = userEvent.setup()
 

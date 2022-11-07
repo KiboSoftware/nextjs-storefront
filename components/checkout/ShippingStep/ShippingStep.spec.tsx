@@ -12,9 +12,12 @@ const scrollIntoViewMock = jest.fn()
 window.HTMLElement.prototype.scrollIntoView = scrollIntoViewMock
 
 const AddressDetailsViewMock = () => <div data-testid="address-details-view" />
-jest.mock('@/components/common/AddressDetailsView/AddressDetailsView', () => AddressDetailsViewMock)
+jest.mock(
+  '@/components/common/AddressDetailsView/AddressDetailsView',
+  () => () => AddressDetailsViewMock()
+)
 const AddressFormMock = () => <div data-testid="address-form-component" />
-jest.mock('@/components/common/AddressForm/AddressForm', () => AddressFormMock)
+jest.mock('@/components/common/AddressForm/AddressForm', () => () => AddressFormMock())
 
 describe('[components] ShippingStep', () => {
   const setup = () => {

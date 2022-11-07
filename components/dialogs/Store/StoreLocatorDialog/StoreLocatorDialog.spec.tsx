@@ -9,7 +9,7 @@ import { ModalContextProvider } from '@/context'
 const { Common } = composeStories(stories)
 
 const searchStoreMock = () => <div data-testid="search-store-content" />
-jest.mock('../SearchStore/SearchStore', () => searchStoreMock)
+jest.mock('../SearchStore/SearchStore', () => () => searchStoreMock())
 
 const renderComponent = () => {
   return render(<Common {...Common.args} />, { wrapper: ModalContextProvider })

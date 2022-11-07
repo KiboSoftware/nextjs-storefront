@@ -12,8 +12,11 @@ const { Common } = composeStories(stories)
 const priceMock = () => <div data-testid="price-mock" />
 const FullWidthDividerMock = () => <div data-testid="full-width-divider-mock"></div>
 
-jest.mock('@/components/common/Price/Price', () => priceMock)
-jest.mock('@/components/common/FullWidthDivider/FullWidthDivider', () => FullWidthDividerMock)
+jest.mock('@/components/common/Price/Price', () => () => priceMock())
+jest.mock(
+  '@/components/common/FullWidthDivider/FullWidthDivider',
+  () => () => FullWidthDividerMock()
+)
 
 jest.mock('@mui/material', () => ({
   ...jest.requireActual('@mui/material'),

@@ -83,7 +83,7 @@ jest.mock('next/config', () => {
 const ProductDetailTemplateMock = () => <div data-testid="productDetailTemplate-mock" />
 jest.mock(
   '@/components/page-templates/ProductDetail/ProductDetailTemplate.tsx',
-  () => ProductDetailTemplateMock
+  () => () => ProductDetailTemplateMock()
 )
 
 describe('[page] Product Details Page', () => {

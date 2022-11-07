@@ -1,6 +1,12 @@
-/* Jest Config using Babel until NextJS Rust Compiler works with MaterialUI5 */
+const nextJest = require('next/jest')
 
-module.exports = {
+const createJestConfig = nextJest({
+  // Provide the path to your Next.js app to load next.config.js and .env files in your test environment
+  dir: './',
+})
+
+// Add any custom config to be passed to Jest
+const customJestConfig = {
   collectCoverageFrom: [
     'components/**/*.{js,jsx,ts,tsx}',
     'context/**/*.{js,jsx,ts,tsx}',
@@ -10,11 +16,10 @@ module.exports = {
     '!**/node_modules/**',
     'hooks/**/*.{js,jsx,ts,tsx}',
     'pages/**/*.{js,jsx,ts,tsx}',
-    '!pages/_middleware.ts',
+    '!middleware.ts',
   ],
   moduleNameMapper: {
-    // Handle CSS imports (with CSS modules)
-    // https://jestjs.io/docs/webpack#mocking-css-modules
+    // Handle module aliases (this will be automatically configured for you soon)
     '^.+\\.module\\.(css|sass|scss)$': 'identity-obj-proxy',
 
     // Handle CSS imports (without CSS modules)
@@ -39,21 +44,13 @@ module.exports = {
     '^@/pages/(.*)$': '<rootDir>/pages/$1',
     '^@/(.*)$': '<rootDir>/$1',
   },
-  // Add more setup options before each test is run
-  // setupFilesAfterEnv: ['<rootDir>/jest.setup.js'],
-  testPathIgnorePatterns: [
-    '<rootDir>/node_modules/',
-    '<rootDir>/.next/',
-    '<rootDir>/__test__/integration/',
-    '<rootDir>/__test__/utils/',
-    '<rootDir>/react-query/',
-  ],
-  testEnvironment: 'jsdom',
+  testEnvironment: 'jest-environment-jsdom',
   transform: {
-    // Use babel-jest to transpile tests with the next/babel preset
-    // https://jestjs.io/docs/configuration#transform-objectstring-pathtotransformer--pathtotransformer-object
-    '^.+\\.(js|jsx|ts|tsx)$': ['babel-jest', { presets: ['next/babel'] }],
+    '^.+\\.(js|jsx|ts|tsx)$': ['@swc/jest'],
   },
   transformIgnorePatterns: ['/node_modules/', '^.+\\.module\\.(css|sass|scss)$'],
-  setupFilesAfterEnv: ['./jest-setup.js'],
+  setupFilesAfterEnv: ['./jestSetup.js'],
 }
+
+// createJestConfig is exported this way to ensure that next/jest can load the Next.js config which is async
+module.exports = createJestConfig(customJestConfig)

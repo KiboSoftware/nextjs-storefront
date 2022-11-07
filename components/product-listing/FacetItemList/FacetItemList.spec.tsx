@@ -9,7 +9,7 @@ import * as stories from './FacetItemList.stories'
 const { Common } = composeStories(stories)
 
 const facetItemMock = () => <div data-testid="facet-item-component" />
-jest.mock('../FacetItem/FacetItem', () => facetItemMock)
+jest.mock('../FacetItem/FacetItem', () => () => facetItemMock())
 
 describe('[components] - FacetItemList', () => {
   const setup = () => {

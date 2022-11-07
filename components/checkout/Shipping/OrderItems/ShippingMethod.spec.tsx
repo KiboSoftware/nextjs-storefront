@@ -18,10 +18,10 @@ const scrollIntoViewMock = jest.fn()
 window.HTMLElement.prototype.scrollIntoView = scrollIntoViewMock
 
 const KiboSelectMock = () => <div data-testid="kibo-select-component" />
-jest.mock('@/components/common/KiboSelect/KiboSelect', () => KiboSelectMock)
+jest.mock('@/components/common/KiboSelect/KiboSelect', () => () => KiboSelectMock())
 
 const productItemMock = () => <div data-testid="product-item-component" />
-jest.mock('@/components/common/ProductItem/ProductItem', () => productItemMock)
+jest.mock('@/components/common/ProductItem/ProductItem', () => () => productItemMock())
 
 describe('[component] - ShippingMethod', () => {
   const setup = (params?: ShippingMethodProps) => {

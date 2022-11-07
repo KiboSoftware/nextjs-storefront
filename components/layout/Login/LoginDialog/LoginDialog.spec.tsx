@@ -11,7 +11,7 @@ import { ModalContextProvider } from '@/context/ModalContext'
 const { Common } = composeStories(stories)
 
 const LoginContentMock = () => <input data-testid="kibo-login-content" />
-jest.mock('../LoginContent/LoginContent', () => LoginContentMock)
+jest.mock('../LoginContent/LoginContent', () => () => LoginContentMock())
 
 const renderComponent = () => {
   return render(<Common {...Common.args} />, { wrapper: ModalContextProvider })

@@ -16,14 +16,14 @@ const FiltersFacetMock = () => <div data-testid="filters-facet-component" />
 const CategoryFilterByMobileMock = () => <div data-testid="category-filterby-mobile-component" />
 const ProductCardMock = () => <div data-testid="product-card-component" />
 
-jest.mock('../../product-listing/CategoryFacet/CategoryFacet', () => CategoryFacetMock)
+jest.mock('../../product-listing/CategoryFacet/CategoryFacet', () => () => CategoryFacetMock())
 jest.mock(
   '../../product-listing/CategoryFilterByMobile/CategoryFilterByMobile',
-  () => CategoryFilterByMobileMock
+  () => () => CategoryFilterByMobileMock()
 )
-jest.mock('../../product-listing/FacetList/FacetList', () => FiltersFacetMock)
-jest.mock('../../core/Breadcrumbs/KiboBreadcrumbs', () => KiboBreadcrumbsMock)
-jest.mock('../../product/ProductCard/ProductCard', () => ProductCardMock)
+jest.mock('../../product-listing/FacetList/FacetList', () => () => FiltersFacetMock())
+jest.mock('../../core/Breadcrumbs/KiboBreadcrumbs', () => () => KiboBreadcrumbsMock())
+jest.mock('../../product/ProductCard/ProductCard', () => () => ProductCardMock())
 
 describe('[component] - Category', () => {
   const setup = (params?: ProductListingTemplateProps) => {

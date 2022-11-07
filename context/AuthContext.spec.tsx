@@ -24,6 +24,11 @@ const registerInputs = {
   password: '',
 }
 
+jest.mock('@/lib/helpers/cookieHelper', () => ({
+  __esModule: true,
+  ...jest.requireActual('@/lib/helpers/cookieHelper'),
+}))
+
 describe('[context] - AuthContext', () => {
   beforeEach(() => {
     jest.clearAllMocks()
@@ -88,7 +93,7 @@ describe('[context] - AuthContext', () => {
     it('should set isAuthenticated to true when successfully logged in', async () => {
       const { user } = setup(<TestComponent />)
       const loginButton = screen.getByRole('button', { name: 'Log in' })
-      const storeClientCookieSpy = jest.spyOn(cookieHelper, 'storeClientCookie')
+      const storeClientCookieFn = jest.spyOn(cookieHelper, 'storeClientCookie')
       const isLoggedIn = await screen.findByTestId('is-logged-in')
       const userFirstName = screen.getByTestId('user-first-name')
 
@@ -97,7 +102,7 @@ describe('[context] - AuthContext', () => {
       await waitFor(() => expect(isLoggedIn).toHaveTextContent('true'))
       await waitFor(() => expect(userFirstName).toHaveTextContent('Suman'))
       await waitFor(() => expect(authError).toHaveTextContent(''))
-      await waitFor(() => expect(storeClientCookieSpy).toHaveBeenCalled())
+      await waitFor(() => expect(storeClientCookieFn).toHaveBeenCalled())
       await waitFor(() => expect(mockOnSuccessCallBack).toHaveBeenCalled())
     })
     it('should set isAuthenticated to true when successfully create a new account', async () => {

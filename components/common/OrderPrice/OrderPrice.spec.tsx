@@ -7,7 +7,7 @@ import * as stories from './OrderPrice.stories' // import all stories from the s
 
 const { Common, WithPromoCode } = composeStories(stories)
 const PromoCodeBadgeMock = () => <div data-testid="promo-code-badge-component" />
-jest.mock('@/components/common/PromoCodeBadge/PromoCodeBadge', () => PromoCodeBadgeMock)
+jest.mock('@/components/common/PromoCodeBadge/PromoCodeBadge', () => () => PromoCodeBadgeMock())
 
 describe('[components] OrderPrice', () => {
   it('should render component', async () => {

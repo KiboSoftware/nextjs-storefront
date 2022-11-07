@@ -10,17 +10,23 @@ import * as stories from './CartItem.stories'
 const { Common } = composeStories(stories)
 
 const cartItemActionsMock = () => <div data-testid="cart-item-actions-component" />
-jest.mock('@/components/cart/CartItemActions/CartItemActions', () => cartItemActionsMock)
+jest.mock('@/components/cart/CartItemActions/CartItemActions', () => () => cartItemActionsMock())
 const fulfillmentOptionsMock = () => <div data-testid="fulfillment-options-component" />
-jest.mock('@/components/common/FulfillmentOptions/FulfillmentOptions', () => fulfillmentOptionsMock)
+jest.mock(
+  '@/components/common/FulfillmentOptions/FulfillmentOptions',
+  () => () => fulfillmentOptionsMock()
+)
 const productItemMock = () => <div data-testid="cart-item-component" />
-jest.mock('@/components/common/ProductItem/ProductItem', () => productItemMock)
+jest.mock('@/components/common/ProductItem/ProductItem', () => () => productItemMock())
 const quantitySelectorMock = () => <div data-testid="quantity-selector-component" />
-jest.mock('@/components/common/QuantitySelector/QuantitySelector', () => quantitySelectorMock)
+jest.mock(
+  '@/components/common/QuantitySelector/QuantitySelector',
+  () => () => quantitySelectorMock()
+)
 const cartItemActionsMobileMock = () => <div data-testid="cart-item-actions-mobile-component" />
 jest.mock(
   '@/components/cart/CartItemActionsMobile/CartItemActionsMobile',
-  () => cartItemActionsMobileMock
+  () => () => cartItemActionsMobileMock()
 )
 
 describe('[components] - CartItem', () => {

@@ -15,9 +15,9 @@ const CardDetailsFormMock = () => <div data-testid="card-details" />
 const KiboTextBoxMock = () => <input data-testid="text-box-mock" onBlur={onBlurMock} />
 import { CheckoutStepProvider } from '@/context'
 
-jest.mock('../../common/KiboTextBox/KiboTextBox', () => KiboTextBoxMock)
-jest.mock('../CardDetailsForm/CardDetailsForm', () => CardDetailsFormMock)
-jest.mock('../../common/AddressForm/AddressForm', () => AddressFormMock)
+jest.mock('../../common/KiboTextBox/KiboTextBox', () => () => KiboTextBoxMock())
+jest.mock('../CardDetailsForm/CardDetailsForm', () => () => CardDetailsFormMock())
+jest.mock('../../common/AddressForm/AddressForm', () => () => AddressFormMock())
 
 const mockIsAuthenticated = true
 const mockUser: { id?: number } = {

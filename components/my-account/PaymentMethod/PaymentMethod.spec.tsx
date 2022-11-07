@@ -9,16 +9,22 @@ const { Common, NoSavedCards } = composeStories(stories)
 const SavedPaymentMethodViewMock = () => <div data-testid="saved-payment-method-view" />
 jest.mock(
   '@/components/checkout/SavedPaymentMethodView/SavedPaymentMethodView',
-  () => SavedPaymentMethodViewMock
+  () => () => SavedPaymentMethodViewMock()
 )
 const CardDetailsFormMock = () => <div data-testid="card-details-form" />
-jest.mock('@/components/checkout/CardDetailsForm/CardDetailsForm', () => CardDetailsFormMock)
+jest.mock(
+  '@/components/checkout/CardDetailsForm/CardDetailsForm',
+  () => () => CardDetailsFormMock()
+)
 
 const AddressFormMock = () => <div data-testid="address-form" />
-jest.mock('@/components/common/AddressForm/AddressForm', () => AddressFormMock)
+jest.mock('@/components/common/AddressForm/AddressForm', () => () => AddressFormMock())
 
 const AddressDetailsViewMock = () => <div data-testid="address-details-view" />
-jest.mock('@/components/common/AddressDetailsView/AddressDetailsView', () => AddressDetailsViewMock)
+jest.mock(
+  '@/components/common/AddressDetailsView/AddressDetailsView',
+  () => () => AddressDetailsViewMock()
+)
 
 const user = userEvent.setup()
 

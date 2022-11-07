@@ -9,7 +9,7 @@ import * as stories from './StoreDetails.stories' // import all stories from the
 const { Common, WithInventory } = composeStories(stories)
 
 const AddressCardMock = () => <div data-testid="address-card-mock" />
-jest.mock('@/components/common/AddressCard/AddressCard', () => AddressCardMock)
+jest.mock('@/components/common/AddressCard/AddressCard', () => () => AddressCardMock())
 
 describe('[components] Store Details', () => {
   const setup = () => {

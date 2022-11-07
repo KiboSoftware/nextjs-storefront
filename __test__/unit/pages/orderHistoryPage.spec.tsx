@@ -20,7 +20,7 @@ jest.mock('next-i18next/serverSideTranslations', () => ({
 const orderHistoryTemplateMock = () => <div data-testid="orderHistoryTemplate-mock" />
 jest.mock(
   '@/components/page-templates/OrderHistoryTemplate/OrderHistoryTemplate.tsx',
-  () => orderHistoryTemplateMock
+  () => () => orderHistoryTemplateMock()
 )
 
 describe('[page] Order History Page', () => {

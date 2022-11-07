@@ -9,12 +9,12 @@ import { ModalContextProvider } from '@/context'
 const { Common } = composeStories(stories)
 
 const storeDetailsMock = () => <div data-testid="store-details-content" />
-jest.mock('../StoreDetails/StoreDetails', () => storeDetailsMock)
+jest.mock('../StoreDetails/StoreDetails', () => () => storeDetailsMock())
 
 const storeLocatorDialogMock = () => <div data-testid="store-locator-dialog" />
 jest.mock(
   '@/components/dialogs/Store/StoreLocatorDialog/StoreLocatorDialog',
-  () => storeLocatorDialogMock
+  () => () => storeLocatorDialogMock()
 )
 
 const renderComponent = () => {

@@ -9,7 +9,7 @@ import { productSearchResultMock } from '@/__mocks__/stories/productSearchResult
 const { Common } = composeStories(stories)
 
 const ProductCardMock = () => <div data-testid="product-card-mock" />
-jest.mock('../ProductCard/ProductCard', () => ProductCardMock)
+jest.mock('../ProductCard/ProductCard', () => () => ProductCardMock())
 
 describe('[component] ProductOptionCheckbox component', () => {
   it('should render the title', () => {

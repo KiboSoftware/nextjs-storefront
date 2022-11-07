@@ -11,7 +11,10 @@ import type { Order } from '@/lib/gql/types'
 const { Common } = composeStories(stories)
 
 const AddressDetailsViewMock = () => <div data-testid="address-details-view-mock" />
-jest.mock('@/components/common/AddressDetailsView/AddressDetailsView', () => AddressDetailsViewMock)
+jest.mock(
+  '@/components/common/AddressDetailsView/AddressDetailsView',
+  () => () => AddressDetailsViewMock()
+)
 
 describe('[components] OrderReview', () => {
   const setup = () => {

@@ -19,8 +19,11 @@ const KiboTextBoxMock = () => (
 )
 const FullWidthDividerMock = () => <div data-testid="full-width-divider-mock"></div>
 
-jest.mock('@/components/common/KiboTextBox/KiboTextBox', () => KiboTextBoxMock)
-jest.mock('@/components/common/FullWidthDivider/FullWidthDivider', () => FullWidthDividerMock)
+jest.mock('@/components/common/KiboTextBox/KiboTextBox', () => () => KiboTextBoxMock())
+jest.mock(
+  '@/components/common/FullWidthDivider/FullWidthDivider',
+  () => () => FullWidthDividerMock()
+)
 
 jest.mock('@mui/material', () => ({
   ...jest.requireActual('@mui/material'),

@@ -4,7 +4,12 @@ const LOCATION_COOKIE = 'kibo_purchase_location'
 const DEFAULT_WISHLIST_NAME = 'default-wishlist'
 
 module.exports = {
-  reactStrictMode: true,
+  reactStrictMode: false,
+  compiler: {
+    // see https://styled-components.com/docs/tooling#babel-plugin for more info on the options.
+    styledComponents: true,
+    emotion: true,
+  },
   i18n,
   images: {
     domains: [

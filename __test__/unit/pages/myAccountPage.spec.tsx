@@ -20,7 +20,7 @@ jest.mock('next-i18next/serverSideTranslations', () => ({
 const MyAccountTemplateMock = () => <div data-testid="MyAccountTemplate-mock" />
 jest.mock(
   '@/components/page-templates/MyAccountTemplate/MyAccountTemplate.tsx',
-  () => MyAccountTemplateMock
+  () => () => MyAccountTemplateMock()
 )
 
 describe('[page] MyAccount Page', () => {

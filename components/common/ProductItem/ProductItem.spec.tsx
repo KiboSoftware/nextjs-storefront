@@ -15,12 +15,15 @@ const {
 } = composeStories(stories)
 
 const imageMock = () => <div data-testid="image-component" />
-jest.mock('@/components/common/KiboImage/KiboImage', () => imageMock)
+jest.mock('@/components/common/KiboImage/KiboImage', () => () => imageMock())
 const priceMock = () => <div data-testid="price-component" />
-jest.mock('@/components/common/Price/Price', () => priceMock)
+jest.mock('@/components/common/Price/Price', () => () => priceMock())
 
 const productOptionListMock = () => <div data-testid="product-option-list-component" />
-jest.mock('@/components/product/ProductOptionList/ProductOptionList', () => productOptionListMock)
+jest.mock(
+  '@/components/product/ProductOptionList/ProductOptionList',
+  () => () => productOptionListMock()
+)
 
 const onStoreLocatorClickMock = jest.fn()
 

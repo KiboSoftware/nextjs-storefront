@@ -8,6 +8,7 @@ import { useForm, Controller } from 'react-hook-form'
 import * as yup from 'yup'
 
 import { PasswordValidation, KiboTextBox } from '@/components/common'
+import { isPasswordValid } from '@/lib/helpers/validations/validations'
 import { ProfileDetails, UpdateProfileDataParam } from '@/lib/types'
 
 type PasswordFieldType = 'currentPassword' | 'newPassword' | 'confirmPassword'
@@ -46,12 +47,9 @@ const useCardSchema = () => {
     }),
     newPassword: yup.string().when('$isPasswordForm', (isPasswordForm, schema) => {
       if (isPasswordForm) {
-        return schema
-          .required(t('this-field-is-required'))
-          .min(8, t('password-length-does-not-match'))
-          .matches(/\d/g, t('password-should-contain-at-least-one-number'))
-          .matches(/(?=.*[A-Z])/g, t('password-should-contain-at-least-one-capital-letter'))
-          .matches(/[!@#$%^&*]/g, t('password-should-contain-at-least-special-character'))
+        return schema.required(t('this-field-is-required')).test((value = '') => {
+          return isPasswordValid(value)
+        })
       }
     }),
     confirmPassword: yup.string().when('$isPasswordForm', (isPasswordForm, schema) => {

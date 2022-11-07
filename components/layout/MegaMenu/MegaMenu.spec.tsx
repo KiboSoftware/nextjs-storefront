@@ -9,7 +9,7 @@ import * as stories from './MegaMenu.stories'
 const { Common } = composeStories(stories)
 
 const megaMenuItemMock = () => <div data-testid="mega-menu-item-component" />
-jest.mock('@/components/layout/MegaMenuItem/MegaMenuItem', () => megaMenuItemMock)
+jest.mock('@/components/layout/MegaMenuItem/MegaMenuItem', () => () => megaMenuItemMock())
 
 describe('[components] - MegaMenu', () => {
   const setIsBackdropOpenMock = jest.fn((isOpen) => {

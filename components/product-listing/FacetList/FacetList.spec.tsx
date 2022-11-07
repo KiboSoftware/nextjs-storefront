@@ -10,7 +10,7 @@ import * as stories from './FacetList.stories'
 const { Common } = composeStories(stories)
 
 const facetMock = () => <div data-testid="facet" />
-jest.mock('../Facet/Facet', () => facetMock)
+jest.mock('../Facet/Facet', () => () => facetMock())
 
 describe('[components] - FacetList', () => {
   const onFilterByCloseMock = jest.fn()

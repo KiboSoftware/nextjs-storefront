@@ -26,7 +26,7 @@ const TestComponent = () => {
 }
 
 const LoginDialogMock = () => <div data-testid="login-dialog-test" />
-jest.mock('../components/layout/Login/LoginDialog/LoginDialog', () => LoginDialogMock)
+jest.mock('../components/layout/Login/LoginDialog/LoginDialog', () => () => LoginDialogMock())
 
 describe('[context] - ModalContext', () => {
   const setup = (ui: any) => {

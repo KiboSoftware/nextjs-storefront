@@ -9,7 +9,7 @@ import * as stories from './AddressDetailsView.stories' // import all stories fr
 const { Common, Radio } = composeStories(stories)
 
 const AddressCardMock = () => <div data-testid="address-card-mock" />
-jest.mock('@/components/common/AddressCard/AddressCard', () => AddressCardMock)
+jest.mock('@/components/common/AddressCard/AddressCard', () => () => AddressCardMock())
 
 const setupRadio = () => {
   const mockHandleRadioChange = jest.fn()

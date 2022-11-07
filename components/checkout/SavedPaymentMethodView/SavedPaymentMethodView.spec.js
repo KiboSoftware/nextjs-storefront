@@ -10,11 +10,14 @@ const { Common, Radio } = composeStories(stories)
 const PaymentCardDetailsViewMock = () => <div data-testid="payment-card-details-mock" />
 jest.mock(
   '@/components/checkout/PaymentCardDetailsView/PaymentCardDetailsView',
-  () => PaymentCardDetailsViewMock
+  () => () => PaymentCardDetailsViewMock()
 )
 
 const AddressDetailsViewMock = () => <div data-testid="address-details-view-mock" />
-jest.mock('@/components/common/AddressDetailsView/AddressDetailsView', () => AddressDetailsViewMock)
+jest.mock(
+  '@/components/common/AddressDetailsView/AddressDetailsView',
+  () => () => AddressDetailsViewMock()
+)
 
 describe('[component] - SavedPaymentMethodView', () => {
   it('should render the component', () => {

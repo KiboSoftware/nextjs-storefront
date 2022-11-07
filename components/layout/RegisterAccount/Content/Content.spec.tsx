@@ -16,7 +16,10 @@ const formDataMock = {
   password: 'Example@1234', //NOSONAR
 }
 
-jest.mock('@/components/common/PasswordValidation/PasswordValidation', () => PasswordValidationMock)
+jest.mock(
+  '@/components/common/PasswordValidation/PasswordValidation',
+  () => () => PasswordValidationMock()
+)
 
 describe('[components] Register Account(Content)', () => {
   const setup = () => {

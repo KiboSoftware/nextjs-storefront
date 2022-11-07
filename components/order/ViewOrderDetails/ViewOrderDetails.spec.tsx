@@ -6,17 +6,17 @@ import * as stories from './ViewOrderDetails.stories'
 const { Common } = composeStories(stories)
 
 const addressCardMock = () => <div data-testid="address-card-component" />
-jest.mock('@/components/common/AddressCard/AddressCard', () => addressCardMock)
+jest.mock('@/components/common/AddressCard/AddressCard', () => () => addressCardMock())
 const orderSummaryMock = () => <div data-testid="order-summary-component" />
-jest.mock('@/components/common/OrderSummary/OrderSummary', () => orderSummaryMock)
+jest.mock('@/components/common/OrderSummary/OrderSummary', () => () => orderSummaryMock())
 const ProductItemListMock = () => <div data-testid="product-item-list-component" />
-jest.mock('@/components/common/ProductItemList/ProductItemList', () => ProductItemListMock)
+jest.mock('@/components/common/ProductItemList/ProductItemList', () => () => ProductItemListMock())
 const productOptionMock = () => <div data-testid="product-option-component" />
-jest.mock('@/components/product/ProductOption/ProductOption', () => productOptionMock)
+jest.mock('@/components/product/ProductOption/ProductOption', () => () => productOptionMock())
 const savedPaymentMethodViewMock = () => <div data-testid="saved-payment-method-view-component" />
 jest.mock(
   '@/components/checkout/SavedPaymentMethodView/SavedPaymentMethodView',
-  () => savedPaymentMethodViewMock
+  () => () => savedPaymentMethodViewMock()
 )
 
 describe('[component] - ViewOrderDetails', () => {

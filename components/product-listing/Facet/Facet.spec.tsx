@@ -11,8 +11,8 @@ const { Common } = composeStories(stories)
 
 const searchMock = () => <div data-testid="search-component" />
 const facetItemListMock = () => <div data-testid="facet-item-list-component" />
-jest.mock('../../common/SearchBar/SearchBar', () => searchMock)
-jest.mock('../FacetItemList/FacetItemList', () => facetItemListMock)
+jest.mock('../../common/SearchBar/SearchBar', () => () => searchMock())
+jest.mock('../FacetItemList/FacetItemList', () => () => facetItemListMock())
 
 describe('[components] - FacetItem', () => {
   const setup = (values = Common.args?.values || []) => {

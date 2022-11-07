@@ -12,7 +12,7 @@ const { Common } = composeStories(stories)
 
 const onChangMock = jest.fn()
 const KiboTextBoxMock = () => <input data-testid="text-box-mock" onChange={onChangMock} />
-jest.mock('../../common/KiboTextBox/KiboTextBox', () => KiboTextBoxMock)
+jest.mock('../../common/KiboTextBox/KiboTextBox', () => () => KiboTextBoxMock())
 
 describe('[components] Details', () => {
   const setup = (args = Common.args) => {

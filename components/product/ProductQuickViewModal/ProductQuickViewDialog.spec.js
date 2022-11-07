@@ -9,8 +9,8 @@ const { Common } = composeStories(stories)
 
 const ProductDetailTemplateMock = () => <div data-testid="product-detail-template" />
 jest.mock(
-  '../../page-templates/ProductDetail/ProductDetailTemplate',
-  () => ProductDetailTemplateMock
+  '@/components/page-templates/ProductDetail/ProductDetailTemplate',
+  () => () => ProductDetailTemplateMock()
 )
 
 const renderComponent = () => {
