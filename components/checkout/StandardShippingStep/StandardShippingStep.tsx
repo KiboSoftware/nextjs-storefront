@@ -3,6 +3,7 @@ import React, { useEffect, useRef, useState } from 'react'
 import { Stack, Button, Typography, SxProps } from '@mui/material'
 import { Theme } from '@mui/material/styles'
 import { useTranslation } from 'next-i18next'
+import getConfig from 'next/config'
 
 import { ShippingMethod } from '@/components/checkout'
 import { AddressDetailsView, AddressForm } from '@/components/common'
@@ -29,6 +30,7 @@ interface ShippingProps {
 
 const StandardShippingStep = (props: ShippingProps) => {
   const { checkout, userShippingAddress: addresses, isAuthenticated } = props
+  const { publicRuntimeConfig } = getConfig()
 
   const checkoutShippingContact = orderGetters.getShippingContact(checkout)
   const checkoutShippingMethodCode = orderGetters.getShippingMethodCode(checkout)
@@ -158,6 +160,18 @@ const StandardShippingStep = (props: ShippingProps) => {
   const handleAddNewAddress = () => {
     setShouldShowAddAddressButton(false)
     setIsNewAddressAdded(false)
+  }
+
+  const shipOptions = publicRuntimeConfig.shipOptions
+  const radioOptions = shipOptions.map((option: any) => ({
+    value: option.value,
+    name: option.name,
+    label: <Typography variant="body2">{option.label}</Typography>,
+  }))
+
+  const onChangeShippingOption = (option: string) => {
+    console.log('onChangeShippingOption', option)
+    setShippingOption(option)
   }
 
   const getSavedShippingAddressView = (
