@@ -76,7 +76,9 @@ const ShippingStep = (props: ShippingProps) => {
 
   const isMultiShipEnabled = publicRuntimeConfig.isMultiShipEnabled
 
-  const [shippingOption, setShippingOption] = useState<string>('')
+  const [shippingOption, setShippingOption] = useState<string>('ShipToHome')
+
+  const isMultiShipEnabled = publicRuntimeConfig.isMultiShipEnabled
 
   const defaultShippingAddress = userGetters.getDefaultShippingAddress(
     savedShippingAddresses as CustomerContact[]
@@ -178,6 +180,7 @@ const ShippingStep = (props: ShippingProps) => {
     setIsNewAddressAdded(false)
   }
 
+  const shipOptions = publicRuntimeConfig.shipOptions
   const radioOptions = shipOptions.map((option: any) => ({
     value: option.value,
     name: option.name,
@@ -236,42 +239,97 @@ const ShippingStep = (props: ShippingProps) => {
       : setStepStatusIncomplete()
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedShippingAddressId, checkout, shouldShowAddAddressButton])
-  const shipOptions = [
-    {
-      value: 'ShipToHome',
-      code: 'STH',
-      name: 'Ship to Home',
-      label: 'Ship to Home',
-      shortName: 'SingleShip',
-    },
-    {
-      value: 'ShipToMultiAddress',
-      code: 'STMA',
-      name: 'Ship to more than one address',
-      label: 'Ship to more than one address',
-      shortName: 'MultiShip',
-    },
-  ]
-  const radioOptions = shipOptions.map((option) => ({
-    value: option.value,
-    name: option.name,
-    label: <Typography variant="body2">{option.label}</Typography>,
-  }))
-
-  const onChangeShippingOption = (option: string) => setShippingOption(option)
 
   return (
     <Stack data-testid="checkout-shipping" gap={2} ref={shippingAddressRef}>
       <Typography variant="h2" component="h2" sx={{ fontWeight: 'bold' }}>
         {!showMultiShipContinueButton ? t('shipping-address') : t('shipping')}
       </Typography>
-      <KiboRadio
-        radioOptions={radioOptions}
-        selected={shippingOption}
-        onChange={onChangeShippingOption}
-      />
+      {isMultiShipEnabled && (
+        <KiboRadio
+          radioOptions={radioOptions}
+          selected={shippingOption}
+          onChange={onChangeShippingOption}
+        />
+      )}
       {shippingOption === 'ShipToHome' && (
-        <Stack>Ship to Home custom component to be implemented</Stack>
+        <>
+          {shouldShowAddAddressButton && (
+            <>
+              <Stack gap={2} width="100%">
+                {defaultShippingAddress && (
+                  <>
+                    <Typography variant="h4" fontWeight={'bold'}>
+                      {t('your-default-shipping-address')}
+                    </Typography>
+                    {getSavedShippingAddressView(defaultShippingAddress, true)}
+                  </>
+                )}
+
+                {previouslySavedShippingAddress?.length > 0 && (
+                  <>
+                    <Typography variant="h4" fontWeight={'bold'}>
+                      {t('previously-saved-shipping-addresses')}
+                    </Typography>
+                    {previouslySavedShippingAddress?.map((address) => {
+                      return address && getSavedShippingAddressView(address)
+                    })}
+                  </>
+                )}
+
+                <Button
+                  variant="contained"
+                  color="inherit"
+                  sx={{ width: { xs: '100%', sm: '50%' } }}
+                  onClick={handleAddNewAddress}
+                >
+                  {t('add-new-address')}
+                </Button>
+              </Stack>
+              {shippingMethods.length > 0 && (
+                <ShippingMethod
+                  shipItems={shipItems as CrOrderItem[]}
+                  pickupItems={pickupItems as CrOrderItem[]}
+                  orderShipmentMethods={[...shippingMethods]}
+                  selectedShippingMethodCode={checkoutShippingMethodCode}
+                  onShippingMethodChange={handleSaveShippingMethod}
+                  onStoreLocatorClick={handleStoreLocatorClick}
+                />
+              )}
+            </>
+          )}
+          {!shouldShowAddAddressButton && (
+            <>
+              <AddressForm
+                isUserLoggedIn={false}
+                saveAddressLabel={t('save-shipping-address')}
+                setAutoFocus={true}
+                validateForm={validateForm}
+                onSaveAddress={handleSaveAddress}
+                onFormStatusChange={handleFormStatusChange}
+              />
+              <Stack pl={1} gap={2} sx={{ width: { xs: '100%', md: '50%' } }}>
+                <Button
+                  variant="contained"
+                  color="secondary"
+                  onClick={() => setShouldShowAddAddressButton(true)}
+                >
+                  {t('cancel')}
+                </Button>
+                <Button
+                  variant="contained"
+                  color="inherit"
+                  sx={{ ...buttonStyle }}
+                  style={{ textTransform: 'none' }}
+                  onClick={handleAddressValidationAndSave}
+                  {...(!isAddressFormValid && { disabled: true })}
+                >
+                  {t('save-shipping-address')}
+                </Button>
+              </Stack>
+            </>
+          )}
+        </>
       )}
       {shippingOption === 'ShipToMultiAddress' && (
         <Stack>
