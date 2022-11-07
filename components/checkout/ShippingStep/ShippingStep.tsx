@@ -328,7 +328,9 @@ const ShippingStep = (props: ShippingProps) => {
         </>
       )}
       {shippingOption === 'ShipToMultiAddress' && (
-        <Stack>Ship to more than one address custom component to be implemented</Stack>
+        <Stack>
+          <ProductItemWithAddressList items={checkout?.items as CrOrderItem[]} />
+        </Stack>
       )}
     </Stack>
   )
