@@ -161,10 +161,9 @@ const Checkout = (props: CheckoutProps) => {
               width: '100%',
               maxWidth: 428,
               height: 'fit-content',
-              paddingTop: { lg: '4.1rem' },
               marginLeft: { lg: '1rem' },
               position: { md: 'sticky' },
-              top: { lg: '130px', md: '200px' },
+              top: '80px',
             }}
           >
             {activeStep != reviewStepIndex && (
