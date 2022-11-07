@@ -3,7 +3,7 @@ import React from 'react'
 import { ComponentStory, ComponentMeta } from '@storybook/react'
 
 import ViewOrderDetails from './ViewOrderDetails'
-import { orderMock } from '@/__mocks__/stories/orderMock'
+import { orderMock, orderReturnItemsMock } from '@/__mocks__/stories/orderMock'
 
 export default {
   title: 'Order/ViewOrderDetails',
@@ -16,5 +16,11 @@ const Template: ComponentStory<typeof ViewOrderDetails> = (args) => <ViewOrderDe
 export const Common = Template.bind({})
 Common.args = {
   order: orderMock.checkout,
+  title: 'view-order-details',
+}
+
+export const WithReturnItemButton = Template.bind({})
+WithReturnItemButton.args = {
+  order: orderReturnItemsMock.createReturn,
   title: 'view-order-details',
 }

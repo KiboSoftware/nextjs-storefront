@@ -112,16 +112,13 @@ const OrderReturnItems = (props: OrderReturnItemsProps) => {
         <Typography variant="body2">{t('order-details')}</Typography>
       </Stack>
 
-      <Grid container data-testid="ViewOrderDetails">
-        {/* Header section */}
+      <Grid container>
         <Grid item xs={12} md={7}>
           <Typography variant="h1" gutterBottom>
             {title}
           </Typography>
           <Divider sx={{ borderColor: 'primary.main' }} />
         </Grid>
-
-        {/* Order Details Section */}
         <Grid item xs={12} md={7}>
           <Box sx={{ ...styles.container }}>
             <ProductOption

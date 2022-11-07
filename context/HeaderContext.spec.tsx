@@ -85,7 +85,7 @@ describe('[context] - HeaderContext', () => {
     expect(screen.getByTestId('isMobileSearchPortalVisible')).toHaveTextContent('true')
   })
 
-  it('should handle toggleMobileSearchPortal', async () => {
+  it('should handle toggleSearchBar', async () => {
     const { user } = setup(<TestComponent />)
 
     expect(screen.getByTestId('isSearchBarVisible')).toHaveTextContent('false')
@@ -95,7 +95,7 @@ describe('[context] - HeaderContext', () => {
     expect(screen.getByTestId('isSearchBarVisible')).toHaveTextContent('true')
   })
 
-  it('should handle toggleMobileSearchPortal', async () => {
+  it('should handle toggleStoreLocator', async () => {
     const { user } = setup(<TestComponent />)
 
     expect(screen.getByTestId('isStoreLocatorVisible')).toHaveTextContent('false')
