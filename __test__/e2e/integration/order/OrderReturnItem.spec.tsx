@@ -6,12 +6,18 @@ import { render, screen, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 
 import * as stories from '@/components/order/OrderReturnItems/OrderReturnItems.stories'
+import { ModalContextProvider, DialogRoot } from '@/context'
 
 const { Common } = composeStories(stories)
 
 const setup = () => {
   const user = userEvent.setup()
-  render(<Common {...Common.args} />)
+  render(
+    <ModalContextProvider>
+      <DialogRoot />
+      <Common {...Common.args} />
+    </ModalContextProvider>
+  )
   return {
     user,
   }
@@ -59,5 +65,9 @@ describe('[components] - OrderReturnItems Integration', () => {
       name: /confirm-return-request/i,
     })
     expect(showConfirmReturnRequest).toBeEnabled()
+    await user.click(showConfirmReturnRequest)
+
+    const title = screen.getByText(/return-request-submitted/i)
+    expect(title).toBeVisible()
   })
 })
