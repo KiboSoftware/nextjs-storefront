@@ -19,6 +19,7 @@ export * from './queries/useReturnsQueries/useReturnsQueries'
 
 // MultiShip
 export * from './queries/multiShip/useCheckoutQueries/useCheckoutQueries'
+export * from './queries/useCheckoutDestinationQueries/useCheckoutDestinationQueries'
 
 // Custom hooks
 export * from './custom/useDebounce/useDebounce'

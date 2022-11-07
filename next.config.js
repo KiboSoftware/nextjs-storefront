@@ -80,6 +80,23 @@ module.exports = {
     defaultWishlistName: DEFAULT_WISHLIST_NAME,
     pciHost: process.env.KIBO_PCI_HOST,
     apiHost: process.env.KIBO_API_HOST,
+    isMultiShipEnabled: true,
+    shipOptions: [
+      {
+        value: 'ShipToHome',
+        code: 'STH',
+        name: 'Ship to Home',
+        label: 'Ship to Home',
+        shortName: 'SingleShip',
+      },
+      {
+        value: 'ShipToMultiAddress',
+        code: 'STMA',
+        name: 'Ship to more than one address',
+        label: 'Ship to more than one address',
+        shortName: 'MultiShip',
+      },
+    ],
   },
   serverRuntimeConfig: {
     revalidate: process.env.GLOBAL_PAGE_REVALIDATE || 30,
