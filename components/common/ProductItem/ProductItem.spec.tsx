@@ -1,7 +1,7 @@
 import React from 'react'
 
 import { composeStories } from '@storybook/testing-react'
-import { render, screen } from '@testing-library/react'
+import { render, screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 
 import * as stories from './ProductItem.stories'
@@ -12,6 +12,7 @@ const {
   WithQtyLabel,
   WithChangeStoreOption: WithChangeStoreOption,
   WithoutOptionsForInventory,
+  WithCheckBoxForReturnProduct,
 } = composeStories(stories)
 
 const imageMock = () => <div data-testid="image-component" />
@@ -102,5 +103,20 @@ describe('[component] - ProductItem with Price and Pickup Item', () => {
     expect(screen.getByText(`${WithQtyLabel.args?.qty}`)).toBeVisible()
     expect(screen.getByTestId('price-component')).toBeVisible()
     expect(screen.queryByTestId('product-option-list-component')).not.toBeInTheDocument()
+  })
+})
+
+describe('[component] - ProductItem with checkbox of returnItem', () => {
+  it('should handle ReturnProductSelectionCheckbox', async () => {
+    render(<WithCheckBoxForReturnProduct {...WithCheckBoxForReturnProduct.args} />)
+    const user = userEvent.setup()
+    const checkbox = screen.getByRole('checkbox')
+
+    expect(checkbox).not.toBeChecked()
+    await user.click(checkbox)
+
+    await waitFor(() => {
+      expect(checkbox).toBeChecked()
+    })
   })
 })

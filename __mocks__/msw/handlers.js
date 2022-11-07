@@ -250,7 +250,7 @@ export const orderHandlers = [
     return res(ctx.data(orderCollection))
   }),
   graphql.query('returnReasons', (_req, res, ctx) => {
-    return res(ctx.data({ items: returnReasonsMock.reaturnReasons.items }))
+    return res(ctx.data({ returnReasons: returnReasonsMock.returnReasons }))
   }),
   graphql.mutation('updateOrderCoupon', (_req, res, ctx) => {
     return res(ctx.data(orderCouponMock))
