@@ -28,3 +28,7 @@ export { default as updateCheckoutCouponMutation } from './coupon/updateCheckout
 export { default as deleteCheckoutCouponMutation } from './coupon/deleteCheckoutCouponMutation'
 export { default as checkoutPaymentActionMutation } from './checkout/create-checkout-payment-action-mutation'
 export { default as setMultiShipPersonalInfo } from './checkout/multi-ship-personal-info'
+export { default as createCheckoutDestination } from './checkout/create-checkout-destination'
+export { default as updateCheckoutDestination } from './checkout/update-checkout-destination'
+export { default as updateCheckoutItemDestination } from './checkout/update-checkout-item-destination'
+export { default as splitOrderShipment } from './checkout/split-order-shipment'

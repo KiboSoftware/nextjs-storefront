@@ -209,3 +209,22 @@ export const checkoutPaymentFragment = /* GraphQL */ `
   }
   ${billingContactFragment}
 `
+
+export const shipmentItemFragment = /* GraphQL */ `
+  fragment shipmentItemFragment on ShipmentItem {
+    items{
+    productCode
+    variationProductCode
+    originalOrderItemId
+    name
+    imageUrl
+    quantity
+    parentItemId
+        
+    options {
+      attributeFQN
+      name
+      value
+    }
+  }
+`
