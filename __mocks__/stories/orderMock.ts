@@ -376,5 +376,5 @@ export const orderCouponMock: { updateOrderCoupon: Order } = {
   updateOrderCoupon: checkoutResponse,
 }
 export const orderReturnItemsMock: { createReturn: Order } = {
-  createReturn: checkoutResponse,
+  createReturn: { ...checkoutResponse, status: 'Completed' },
 }
