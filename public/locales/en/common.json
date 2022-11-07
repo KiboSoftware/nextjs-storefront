@@ -286,5 +286,7 @@
   "subscription-number": "Subscription Number :",
   "status": "Status : ",
   "shipment-frequency": "Shipment Frequency",
-  "estimated-next-arrival-date": "Estimated Arrival for next delivery"
+  "estimated-next-arrival-date": "Estimated Arrival for next delivery",
+  "edit-address": "Edit Address",
+  "split-into-multiple-shipments": "Split into multiple shipments"
 }
