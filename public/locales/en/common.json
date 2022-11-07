@@ -272,5 +272,7 @@
   "return-request-submitted": "Return Request Submitted",
   "choose-items-to-return": "Choose Items to Return",
   "please-select-a-reason-for-your-return": "Please select a reason for your return",
-  "choose-a-response": "Choose a response"
+  "choose-a-response": "Choose a response",
+  "edit-address": "Edit Address",
+  "split-into-multiple-shipments": "Split into multiple shipments"
 }
