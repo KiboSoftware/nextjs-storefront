@@ -1,6 +1,16 @@
-import React, { useState } from 'react'
+import React from 'react'
 
-import { Divider, Box, MenuItem, Card, Link } from '@mui/material'
+import {
+  Stack,
+  Divider,
+  Box,
+  MenuItem,
+  Card,
+  SxProps,
+  Theme,
+  Typography,
+  Link,
+} from '@mui/material'
 import { useTranslation } from 'next-i18next'
 
 import { KiboSelect, ProductItem } from '@/components/common'
@@ -106,25 +116,11 @@ const ProductItemWithAddressList = (props: ProductItemWithAddressListProps) => {
     },
   ]
 
-  const [selectedAddresses, setSelectedAddresses] = useState<{ [key: string]: string }>({})
-  const handleSelectShippingAddress = (id: number, value: string) => {
-    // need to modify as per API response
-    setSelectedAddresses({ ...selectedAddresses, [id]: value })
-  }
-  const handleEditAddress = () => {
-    // need to handle
-    console.log('edit address')
-  }
-  const handleAddAddress = () => {
-    console.log('add address')
-  }
-  const handleSplitAddress = () => {
-    console.log('split multi address')
-  }
+  const hanndleSelectShippingAddress = () => console.log('select address')
 
   return (
     <>
-      {items?.map((item: Maybe<CrOrderItem>, index: number) => {
+      {items?.map((item: Maybe<CrOrderItem>) => {
         const product = item?.product as CrProduct
         return (
           <Card key={item?.id} sx={{ ...styles.card }}>
@@ -146,15 +142,15 @@ const ProductItemWithAddressList = (props: ProductItemWithAddressListProps) => {
             <Box sx={{ ...styles.subContainer, display: 'flex', flexDirection: 'column' }}>
               <KiboSelect
                 name="multiShipAddresses"
-                onChange={(_name, value) => handleSelectShippingAddress(index, value)}
-                placeholder={t('select-a-saved-address')}
-                value={selectedAddresses[index]}
+                onChange={hanndleSelectShippingAddress}
+                placeholder="Select a saved address"
+                value={''}
               >
                 {destinationContacts?.map((contact: Contact) => {
-                  const formattedAddress = `${contact?.address?.address1}, ${contact?.address?.address2}, ${contact?.address?.cityOrTown}, ${contact?.address?.stateOrProvince}, ${contact?.address?.postalOrZipCode}, ${contact?.address?.countryCode} `
+                  const formatedAddress = `${contact?.address?.address1}, ${contact?.address?.address2}, ${contact?.address?.cityOrTown}, ${contact?.address?.stateOrProvince}, ${contact?.address?.postalOrZipCode}, ${contact?.address?.countryCode} `
                   return (
-                    <MenuItem key={contact.id} value={`${contact.id}`}>
-                      {formattedAddress}
+                    <MenuItem key={contact.id} value={`${formatedAddress}`}>
+                      {formatedAddress}
                     </MenuItem>
                   )
                 })}
@@ -165,7 +161,6 @@ const ProductItemWithAddressList = (props: ProductItemWithAddressListProps) => {
                   variant="caption"
                   color="text.primary"
                   sx={{ padding: '5px' }}
-                  onClick={handleEditAddress}
                 >
                   {t('edit-address')}
                 </Link>
@@ -179,25 +174,21 @@ const ProductItemWithAddressList = (props: ProductItemWithAddressListProps) => {
                   variant="caption"
                   color="text.primary"
                   sx={{ padding: '5px' }}
-                  onClick={handleAddAddress}
                 >
                   {t('add-new-address')}
                 </Link>
               </Box>
-              {orderGetters.getProductQuantity(item as CrOrderItem) > 1 && (
-                <Box sx={{ ...styles.splitShipment }}>
-                  +
-                  <Link
-                    component="button"
-                    variant="caption"
-                    color="text.primary"
-                    sx={{ padding: '5px', ml: '12px' }}
-                    onClick={handleSplitAddress}
-                  >
-                    {t('split-into-multiple-shipments')}
-                  </Link>
-                </Box>
-              )}
+              <Box sx={{ ...styles.splitShipment }}>
+                +
+                <Link
+                  component="button"
+                  variant="caption"
+                  color="text.primary"
+                  sx={{ padding: '5px', ml: '12px' }}
+                >
+                  {t('split-into-multiple-shipments')}
+                </Link>
+              </Box>
             </Box>
           </Card>
         )
