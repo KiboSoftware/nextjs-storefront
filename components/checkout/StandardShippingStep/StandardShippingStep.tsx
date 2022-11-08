@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react'
 
-import { Stack, Button, Typography, SxProps } from '@mui/material'
+import { Stack, Button, Typography, SxProps, Box } from '@mui/material'
 import { Theme } from '@mui/material/styles'
 import { useTranslation } from 'next-i18next'
 import getConfig from 'next/config'
@@ -228,7 +228,7 @@ const StandardShippingStep = (props: ShippingProps) => {
   return (
     <Stack data-testid="checkout-shipping" gap={2} ref={shippingAddressRef}>
       <Typography variant="h2" component="h2" sx={{ fontWeight: 'bold' }}>
-        {t('shipping')}
+        {!showMultiShipContinueButton ? t('shipping-address') : t('shipping')}
       </Typography>
       {shouldShowAddAddressButton && (
         <>
