@@ -8,13 +8,13 @@ import * as stories from './OrderReturnItems.stories'
 const { Common } = composeStories(stories)
 
 const productOptionMock = () => <div data-testid="product-option-component" />
-jest.mock('@/components/product/ProductOption/ProductOption', () => productOptionMock)
+jest.mock('@/components/product/ProductOption/ProductOption', () => () => productOptionMock())
 
 const KiboSelectMock = () => <div data-testid="kibo-select-component" />
-jest.mock('@/components/common/KiboSelect/KiboSelect', () => KiboSelectMock)
+jest.mock('@/components/common/KiboSelect/KiboSelect', () => () => KiboSelectMock())
 
 const productItemListMock = () => <div data-testid="product-item-list-component" />
-jest.mock('@/components/common/ProductItemList/ProductItemList', () => productItemListMock)
+jest.mock('@/components/common/ProductItemList/ProductItemList', () => () => productItemListMock())
 
 jest.mock('@mui/material', () => ({
   ...jest.requireActual('@mui/material'),

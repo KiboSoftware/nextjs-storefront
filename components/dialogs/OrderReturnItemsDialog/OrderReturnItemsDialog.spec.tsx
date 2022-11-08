@@ -8,7 +8,7 @@ import * as stories from './OrderReturnItemsDialog.stories' // import all storie
 const { Common } = composeStories(stories)
 
 const productItemListMock = () => <div data-testid="product-item-list-component" />
-jest.mock('@/components/common/ProductItemList/ProductItemList', () => productItemListMock)
+jest.mock('@/components/common/ProductItemList/ProductItemList', () => () => productItemListMock())
 
 describe('[components] (OrderReturnItemsDialog)', () => {
   const setup = () => render(<Common {...Common.args} />)
