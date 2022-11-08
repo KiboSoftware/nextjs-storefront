@@ -26,3 +26,4 @@ export { default as AddressDetailsView } from './AddressDetailsView/AddressDetai
 export { default as GlobalFetchingIndicator } from './GlobalFetchingIndicator/GlobalFetchingIndicator'
 export { default as ReturnItemList } from './ReturnItemList/ReturnItemList'
 export { default as ProductItemWithAddressList } from './ProductItemWithAddressList/ProductItemWithAddressList'
+export { default as ShippingGroupsWithMethod } from './ShippingGroupsWithMethod/ShippingGroupsWithMethod'
