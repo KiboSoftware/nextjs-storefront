@@ -4,7 +4,6 @@
 /node_modules
 /.pnp
 .pnp.js
-package.lock.json
 
 # testing
 /coverage
@@ -46,3 +45,4 @@ storybook-static
 /.vscode/
 
 test-report.xml
+package-lock.json
