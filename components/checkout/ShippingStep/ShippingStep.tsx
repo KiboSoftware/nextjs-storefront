@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react'
 
-import { Stack, Button, Typography, SxProps } from '@mui/material'
+import { Stack, Button, Typography, SxProps, Box } from '@mui/material'
 import { Theme } from '@mui/material/styles'
 import { useTranslation } from 'next-i18next'
 import getConfig from 'next/config'
@@ -11,6 +11,7 @@ import {
   AddressForm,
   KiboRadio,
   ProductItemWithAddressList,
+  ShippingGroupsWithMethod,
 } from '@/components/common'
 import { useCheckoutStepContext, STEP_STATUS } from '@/context'
 import { useUpdateCheckoutShippingInfoMutation, useShippingMethodsQueries } from '@/hooks'
@@ -70,6 +71,8 @@ const ShippingStep = (props: ShippingProps) => {
   )
 
   const [shippingOption, setShippingOption] = useState<string>('ShipToHome')
+
+  const [showMultiShipContinueButton, setShowMultiShipContinueButton] = useState<boolean>(true)
 
   const isMultiShipEnabled = publicRuntimeConfig.isMultiShipEnabled
 
@@ -239,9 +242,9 @@ const ShippingStep = (props: ShippingProps) => {
   return (
     <Stack data-testid="checkout-shipping" gap={2} ref={shippingAddressRef}>
       <Typography variant="h2" component="h2" sx={{ fontWeight: 'bold' }}>
-        {t('shipping')}
+        {!showMultiShipContinueButton ? t('shipping-address') : t('shipping')}
       </Typography>
-      {isMultiShipEnabled && (
+      {isMultiShipEnabled && showMultiShipContinueButton && (
         <KiboRadio
           radioOptions={radioOptions}
           selected={shippingOption}

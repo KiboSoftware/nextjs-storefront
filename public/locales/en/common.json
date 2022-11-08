@@ -288,5 +288,9 @@
   "shipment-frequency": "Shipment Frequency",
   "estimated-next-arrival-date": "Estimated Arrival for next delivery",
   "edit-address": "Edit Address",
-  "split-into-multiple-shipments": "Split into multiple shipments"
+  "split-into-multiple-shipments": "Split into multiple shipments",
+  "continue": "Continue",
+  "shipments-of": "Shipment {{shipmentNumber}} of {{numberOfShipments}}",
+  "multiple-addresses": "Multiple addresses",
+  "ship-to": "Ship to"
 }
