@@ -11,6 +11,7 @@ import {
   AddressForm,
   KiboRadio,
   ProductItemWithAddressList,
+  ShippingGroupsWithMethod,
 } from '@/components/common'
 import { useCheckoutStepContext, STEP_STATUS } from '@/context'
 import { useUpdateCheckoutShippingInfoMutation, useShippingMethodsQueries } from '@/hooks'
@@ -77,6 +78,8 @@ const ShippingStep = (props: ShippingProps) => {
   const isMultiShipEnabled = publicRuntimeConfig.isMultiShipEnabled
 
   const [shippingOption, setShippingOption] = useState<string>('ShipToHome')
+
+  const [showMultiShipContinueButton, setShowMultiShipContinueButton] = useState<boolean>(true)
 
   const isMultiShipEnabled = publicRuntimeConfig.isMultiShipEnabled
 
@@ -245,7 +248,7 @@ const ShippingStep = (props: ShippingProps) => {
       <Typography variant="h2" component="h2" sx={{ fontWeight: 'bold' }}>
         {!showMultiShipContinueButton ? t('shipping-address') : t('shipping')}
       </Typography>
-      {isMultiShipEnabled && (
+      {isMultiShipEnabled && showMultiShipContinueButton && (
         <KiboRadio
           radioOptions={radioOptions}
           selected={shippingOption}
