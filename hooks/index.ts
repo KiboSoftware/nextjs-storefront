@@ -69,5 +69,4 @@ export * from './mutations/useProfile/useUpdateUserPassword/useUpdateUserPasswor
 
 //Destination
 export * from './mutations/useCreateCheckoutDestinationMutations/useCreateCheckoutDestinationMutations'
-export * from './mutations/useSplitItemMutations/useSplitItemMutations'
 export * from './mutations/useUpdateCheckoutItemDestinationMutations/useUpdateCheckoutItemDestinationMutations'

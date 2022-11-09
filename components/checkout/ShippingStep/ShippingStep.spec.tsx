@@ -18,6 +18,18 @@ jest.mock(
 )
 const AddressFormMock = () => <div data-testid="address-form-component" />
 jest.mock('@/components/common/AddressForm/AddressForm', () => () => AddressFormMock())
+const ProductItemWithAddressList = () => (
+  <div data-testid="product-item-with-address-list-component" />
+)
+jest.mock(
+  '@/components/common/ProductItemWithAddressList/ProductItemWithAddressList',
+  () => ProductItemWithAddressList
+)
+const ShippingGroupsWithMethod = () => <div data-testid="shipping-group-with-method-component" />
+jest.mock(
+  '@/components/common/ShippingGroupsWithMethod/ShippingGroupsWithMethod',
+  () => ShippingGroupsWithMethod
+)
 
 describe('[components] ShippingStep', () => {
   const setup = () => {
@@ -41,8 +53,14 @@ describe('[components] ShippingStep', () => {
     const shippingHeading = screen.getAllByRole('heading', {
       name: /shipping/i,
     })
+    const productItemWithAddressList = screen.getByTestId(
+      'product-item-with-address-list-component'
+    )
+    const shippingGroupWithMethod = screen.getByTestId('shipping-group-with-method-component')
     const addressDetails = screen.getAllByTestId('address-details-view')
     expect(shippingHeading[0]).toBeVisible()
+    expect(productItemWithAddressList).toBeVisible()
+    expect(shippingGroupWithMethod).toBeVisible()
     expect(addressDetails[0]).toBeInTheDocument()
   })
 })
