@@ -97,6 +97,9 @@
   "we-have-sent-the-order-confirmation-details-to": "We have sent the order confirmation details to",
   "shipping-to-home": "Shipping to Home",
 
+  "shipping-to-address": "Shipping to Address",
+  "est-arrival": "Est. Arrival",
+
   "zip-code": "Zip Code",
   "my-store": "My Store",
   "store-info": "Store Info",

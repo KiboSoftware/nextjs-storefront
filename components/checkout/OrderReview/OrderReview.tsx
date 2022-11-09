@@ -15,16 +15,19 @@ import {
 } from '@mui/material'
 import { useTranslation } from 'next-i18next'
 
+// Need to be handled with API later
+import { userAddressResponse } from '@/__mocks__/stories/userAddressMock'
 import { AddressDetailsView, PromoCodeBadge } from '@/components/common'
 import { useCheckoutStepContext } from '@/context'
 import { useStoreLocationsQueries } from '@/hooks'
 import { orderGetters } from '@/lib/getters'
 import { storeLocationGetters } from '@/lib/getters/storeLocationGetters'
 
-import type { Order, Maybe, Location } from '@/lib/gql/types'
+import type { Order, Maybe, Location, CustomerContact } from '@/lib/gql/types'
 
 interface OrderReviewProps {
   checkout: Order
+  isMultiShipEnabled?: boolean
 }
 
 const style = {
@@ -64,18 +67,13 @@ const StyledActions = styled(Link)(({ theme }: { theme: Theme }) => ({
 }))
 
 const OrderReview = (props: OrderReviewProps) => {
-  const { checkout } = props
+  const { checkout, isMultiShipEnabled = true } = props
 
   const { steps, setActiveStep } = useCheckoutStepContext()
   const { t } = useTranslation('common')
 
-  const {
-    personalDetails,
-    shippingDetails,
-    billingDetails,
-    paymentMethods,
-    pickupItems,
-  } = orderGetters.getCheckoutDetails(checkout)
+  const { personalDetails, shippingDetails, billingDetails, paymentMethods, pickupItems } =
+    orderGetters.getCheckoutDetails(checkout)
 
   const fulfillmentLocationCodes = pickupItems
     .map((pickupItem) => `code eq ${pickupItem?.fulfillmentLocationCode}`)
@@ -111,6 +109,9 @@ const OrderReview = (props: OrderReviewProps) => {
   ) => {
     if (!expanded) return
   }
+
+  // Need to be handled with API later
+  const multiShippingAddressesList = userAddressResponse?.items as CustomerContact[]
 
   return (
     <Accordion
@@ -161,28 +162,73 @@ const OrderReview = (props: OrderReviewProps) => {
             <Typography variant="body1">{shippingPhoneHome}</Typography>
           </StyledRow>
 
-          <StyledRow sx={{ marginTop: '2.375rem' }}>
-            <AddressDetailsView
-              {...shippingPersonalDetails}
-              address1={shippingAddress?.address1 as string}
-              address2={shippingAddress?.address2 as string}
-              cityOrTown={shippingAddress?.cityOrTown as string}
-              stateOrProvince={shippingAddress?.stateOrProvince as string}
-              postalOrZipCode={shippingAddress?.postalOrZipCode as string}
-              withoutRadioTitle={t('shipping-details')}
-            />
-            <StyledActions
-              data-testid={'edit-shipping-details'}
-              data-step={t('shipping')}
-              variant="caption"
-              color="text.primary"
-              onClick={handleEditAction}
-            >
-              <Typography sx={{ cursor: 'pointer' }} component="span" fontWeight={600}>
-                {t('edit')}
-              </Typography>
-            </StyledActions>
-          </StyledRow>
+          {!isMultiShipEnabled && (
+            <StyledRow sx={{ marginTop: '2.375rem' }}>
+              <AddressDetailsView
+                {...shippingPersonalDetails}
+                address1={shippingAddress?.address1 as string}
+                address2={shippingAddress?.address2 as string}
+                cityOrTown={shippingAddress?.cityOrTown as string}
+                stateOrProvince={shippingAddress?.stateOrProvince as string}
+                postalOrZipCode={shippingAddress?.postalOrZipCode as string}
+                withoutRadioTitle={t('shipping-details')}
+              />
+
+              <StyledActions
+                data-testid={'edit-shipping-details'}
+                data-step={t('shipping')}
+                variant="caption"
+                color="text.primary"
+                onClick={handleEditAction}
+              >
+                <Typography sx={{ cursor: 'pointer' }} component="span" fontWeight={600}>
+                  {t('edit')}
+                </Typography>
+              </StyledActions>
+            </StyledRow>
+          )}
+
+          {isMultiShipEnabled &&
+            multiShippingAddressesList &&
+            multiShippingAddressesList.length > 0 && (
+              <>
+                <StyledRow sx={{ marginTop: '2.375rem', marginBottom: '0.25rem' }}>
+                  <Typography variant="subtitle2" fontWeight={600}>
+                    {t('shipping-details')}
+                  </Typography>
+
+                  <StyledActions
+                    data-testid={'edit-shipping-details'}
+                    data-step={t('shipping')}
+                    variant="caption"
+                    color="text.primary"
+                    onClick={handleEditAction}
+                  >
+                    <Typography sx={{ cursor: 'pointer' }} component="span" fontWeight={600}>
+                      {t('edit')}
+                    </Typography>
+                  </StyledActions>
+                </StyledRow>
+
+                <StyledRow sx={{ flexWrap: 'wrap', flexDirection: 'column', marginBottom: '0rem' }}>
+                  {multiShippingAddressesList?.map((multiAddress) => {
+                    return (
+                      <Box key={multiAddress?.id}>
+                        <AddressDetailsView
+                          firstName={multiAddress?.firstName as string}
+                          lastNameOrSurname={multiAddress?.lastNameOrSurname as string}
+                          address1={multiAddress?.address?.address1 as string}
+                          address2={multiAddress?.address?.address2 as string}
+                          cityOrTown={multiAddress?.address?.cityOrTown as string}
+                          stateOrProvince={multiAddress?.address?.stateOrProvince as string}
+                          postalOrZipCode={multiAddress?.address?.postalOrZipCode as string}
+                        />
+                      </Box>
+                    )
+                  })}
+                </StyledRow>
+              </>
+            )}
 
           <StyledRow>
             <AddressDetailsView
