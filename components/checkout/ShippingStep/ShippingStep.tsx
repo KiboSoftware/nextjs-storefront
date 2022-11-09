@@ -347,7 +347,10 @@ const ShippingStep = (props: ShippingProps) => {
             </>
           )}
           {!showMultiShipContinueButton && (
-            <ShippingGroupsWithMethod items={checkout?.items as CrOrderItem[]} />
+            <ShippingGroupsWithMethod
+              items={checkout?.items as CrOrderItem[]}
+              onClickEdit={() => setShowMultiShipContinueButton(true)}
+            />
           )}
         </Stack>
       )}

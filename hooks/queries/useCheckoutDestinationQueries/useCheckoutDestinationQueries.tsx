@@ -1,43 +1,40 @@
 import { useQuery } from 'react-query'
 
 import { makeGraphQLClient } from '@/lib/gql/client'
-import { getCheckoutDestinationQuery, getCheckoutDestinationsQuery } from '@/lib/gql/queries'
+import { getCheckoutDestinationQuery } from '@/lib/gql/queries'
 import { checkoutDestinationKeys } from '@/lib/react-query/queryKeys'
 
-import type { Order } from '@/lib/gql/types'
+import type { Destination } from '@/lib/gql/types'
 interface UseDestination {
   checkoutId: string
-  destinationId?: string
+  destinationId: string
 }
 export interface UseDestinationResponse {
-  data: Order | undefined
+  data: Destination
   isLoading: boolean
   isSuccess: boolean
 }
 
 const getCheckoutDestination = async (params: UseDestination) => {
-  let query = getCheckoutDestinationsQuery
-  if (params.destinationId) query = getCheckoutDestinationQuery
   const client = makeGraphQLClient()
 
   const response = await client.request({
-    document: query,
-    variables: { variables: params },
+    document: getCheckoutDestinationQuery,
+    variables: params,
   })
 
-  return response
+  return response?.checkoutDestination
 }
 
 export const useCheckoutDestinationQueries = (params: UseDestination): UseDestinationResponse => {
-  const queryKey = params?.destinationId
-    ? checkoutDestinationKeys.destinationId(params?.destinationId)
-    : checkoutDestinationKeys.all
-
+  const destinationId = params?.destinationId as string
   const {
     data = [],
     isLoading,
     isSuccess,
-  } = useQuery(queryKey, () => getCheckoutDestination(params))
+  } = useQuery(checkoutDestinationKeys.destinationId(destinationId), () =>
+    getCheckoutDestination(params)
+  )
 
   return { data, isLoading, isSuccess }
 }
