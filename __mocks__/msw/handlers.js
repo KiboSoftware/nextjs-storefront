@@ -12,6 +12,7 @@ import { cartItemMock } from '../stories/cartItemMock'
 import { cartCouponMock, cartMock } from '../stories/cartMock'
 import { categoryTreeDataMock } from '../stories/categoryTreeDataMock'
 import { checkoutDestinationsMock } from '../stories/checkoutDestinationsMock'
+import { checkoutResponse } from '../stories/checkoutMock'
 import { configuredProductMock } from '../stories/configuredProductMock'
 import { createCustomerAccountCardMock } from '../stories/createCustomerAccountCardMock'
 import { createOrderPaymentActionMock } from '../stories/createOrderPaymentActionMock'
@@ -330,7 +331,7 @@ export const orderHandlers = [
   graphql.mutation('updateCheckoutItemDestination', (_req, res, ctx) => {
     return res(
       ctx.data({
-        updateCheckoutItemDestination: checkoutMock,
+        updateCheckoutItemDestination: checkoutResponse,
       })
     )
   }),
