@@ -18,4 +18,12 @@ const Template: ComponentStory<typeof OrderReview> = (args) => <OrderReview {...
 export const Common = Template.bind({})
 Common.args = {
   checkout: orderMock.checkout,
+  isMultiShipEnabled: false,
+}
+
+//With multi-ship enabled
+export const WithMultiShippingAddresses = Template.bind({})
+WithMultiShippingAddresses.args = {
+  checkout: orderMock.checkout,
+  isMultiShipEnabled: true,
 }

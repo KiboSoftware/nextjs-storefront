@@ -15,10 +15,17 @@ import {
   SxProps,
 } from '@mui/material'
 import { useTranslation } from 'next-i18next'
+import getConfig from 'next/config'
 import { useForm, Controller } from 'react-hook-form'
 import * as yup from 'yup'
 
-import { KiboTextBox, OrderPrice, PasswordValidation, ProductItemList } from '@/components/common'
+import {
+  KiboTextBox,
+  OrderPrice,
+  PasswordValidation,
+  ProductItemList,
+  ReviewProductItemsWithAddresses,
+} from '@/components/common'
 import type { OrderPriceProps } from '@/components/common/OrderPrice/OrderPrice'
 import { useCheckoutStepContext, useAuthContext } from '@/context'
 import { useCreateOrderMutation } from '@/hooks'
@@ -88,6 +95,7 @@ const useDetailsSchema = () => {
 
 const ReviewStep = (props: ReviewStepProps) => {
   const { checkout, onBackButtonClick } = props
+  const { publicRuntimeConfig } = getConfig()
 
   const { t } = useTranslation('common')
   const theme = useTheme()
@@ -167,6 +175,8 @@ const ReviewStep = (props: ReviewStepProps) => {
     total: t('currency', { val: total }),
   }
 
+  const isMultiShipEnabled = publicRuntimeConfig.isMultiShipEnabled
+
   return (
     <Box data-testid={'review-step-component'}>
       <Typography variant="h2" component="h2" sx={{ fontWeight: 'bold' }} color="text.primary">
@@ -175,7 +185,7 @@ const ReviewStep = (props: ReviewStepProps) => {
 
       <Divider color={theme.palette.primary.main} sx={{ mt: '1.688rem', mb: '1.438rem' }} />
 
-      {shipItems && shipItems.length > 0 && (
+      {!isMultiShipEnabled && shipItems && shipItems.length > 0 && (
         <Stack gap={4}>
           <Typography variant="h3" component="h3" sx={{ fontWeight: 'bold' }} color="text.primary">
             {t('shipping-to-home')}
@@ -185,7 +195,18 @@ const ReviewStep = (props: ReviewStepProps) => {
         </Stack>
       )}
 
-      {pickupItems && pickupItems.length > 0 && (
+      {/* multiShip array will be used later after API is handled instead on shipItems */}
+      {isMultiShipEnabled && shipItems && shipItems.length > 0 && (
+        <Stack gap={4}>
+          <Typography variant="h3" component="h3" sx={{ fontWeight: 'bold' }} color="text.primary">
+            {t('shipping-to-address')}
+          </Typography>
+          <ReviewProductItemsWithAddresses items={shipItems} />
+          <Divider sx={{ mb: '1.438rem' }} />
+        </Stack>
+      )}
+
+      {!isMultiShipEnabled && pickupItems && pickupItems.length > 0 && (
         <Stack gap={4}>
           <Typography variant="h3" component="h3" sx={{ fontWeight: 'bold' }} color="text.primary">
             {t('pickup-in-store')}
