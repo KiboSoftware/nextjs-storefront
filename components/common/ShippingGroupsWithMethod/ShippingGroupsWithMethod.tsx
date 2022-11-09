@@ -111,8 +111,11 @@ const ShippingGroupsWithMethod = (props: ShippingGroupsWithMethodProps) => {
     { shippingMethodName: 'Expedited', price: 15 },
   ]
 
-  const hanndleSelectShippingOption = () => console.log('select shipping option')
-
+  const [selectShippingOptions, setSelectShippingOptions] = useState<any>({})
+  const hanndleSelectShippingOption = (id: number, value: string) => {
+    // need to modify as per API response
+    setSelectShippingOptions({ ...selectShippingOptions, [id]: value })
+  }
   return (
     <>
       <Box sx={{ ...styles.multipleAddresses }}>
@@ -160,10 +163,10 @@ const ShippingGroupsWithMethod = (props: ShippingGroupsWithMethodProps) => {
               </Box>
               <KiboSelect
                 name="shippingMethods"
-                onChange={hanndleSelectShippingOption}
-                placeholder="Select shipping option"
+                placeholder={t('select-shipping-option')}
                 sx={{ ...styles.shippingMethods }}
-                value={''}
+                onChange={(_name, value) => hanndleSelectShippingOption(index, value)}
+                value={selectShippingOptions[index]}
               >
                 {shipmentMethods?.map((item: ShippingRate) => {
                   return (
