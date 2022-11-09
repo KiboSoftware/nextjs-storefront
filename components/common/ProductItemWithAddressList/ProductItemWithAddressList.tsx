@@ -129,7 +129,7 @@ const ProductItemWithAddressList = (props: ProductItemWithAddressListProps) => {
     console.log('add address')
   }
   const handleSplitAddress = () => {
-    console.log('split address')
+    console.log('split multi address')
   }
 
   return (
