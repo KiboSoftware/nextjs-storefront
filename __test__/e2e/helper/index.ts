@@ -1,5 +1,5 @@
 import { screen, waitFor, within } from '@testing-library/react'
-import { UserEvent } from '@testing-library/user-event/dist/types/setup/setup'
+import { UserEvent } from '@testing-library/user-event/dist/types/setup'
 
 export const addNewCard = async (user: UserEvent) => {
   await addCardDetails(user)
