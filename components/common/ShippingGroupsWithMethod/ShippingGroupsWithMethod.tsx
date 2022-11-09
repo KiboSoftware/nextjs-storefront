@@ -10,6 +10,7 @@ import type { Maybe, CrOrderItem, CrProduct, Contact, ShippingRate } from '@/lib
 
 export type ShippingGroupsWithMethodProps = {
   items: Maybe<CrOrderItem>[]
+  onClickEdit: () => void
 }
 
 const styles = {
@@ -49,7 +50,7 @@ const styles = {
   },
 }
 const ShippingGroupsWithMethod = (props: ShippingGroupsWithMethodProps) => {
-  const { items } = props
+  const { items, onClickEdit } = props
 
   const { t } = useTranslation('common')
 
@@ -123,7 +124,13 @@ const ShippingGroupsWithMethod = (props: ShippingGroupsWithMethodProps) => {
           {t('multiple-addresses')}
         </Typography>
 
-        <Link component="button" variant="caption" color="text.primary" sx={{ padding: '5px' }}>
+        <Link
+          component="button"
+          variant="caption"
+          color="text.primary"
+          sx={{ padding: '5px' }}
+          onClick={onClickEdit}
+        >
           {t('edit')}
         </Link>
       </Box>
