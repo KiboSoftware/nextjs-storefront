@@ -278,5 +278,7 @@
   "continue": "Continue",
   "shipments-of": "Shipment {{shipmentNumber}} of {{numberOfShipments}}",
   "multiple-addresses": "Multiple addresses",
-  "ship-to": "Ship to"
+  "ship-to": "Ship to",
+  "select-a-saved-address": "Select a saved address",
+  "select-shipping-option": "Select shipping option"
 }
