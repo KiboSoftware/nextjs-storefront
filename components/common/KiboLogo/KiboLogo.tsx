@@ -4,7 +4,7 @@ import KiboImage from '../KiboImage/KiboImage'
 import Logo from '@/public/kibo_logo.png'
 
 interface KiboLogoProps {
-  logo?: string | StaticImageData // URL or File
+  logo?: any // URL or File
   alt?: string
   small?: boolean
 }
