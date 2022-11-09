@@ -32,7 +32,7 @@ jobs:
           key: ${{ runner.os }}-package-${{ hashFiles('**/package-lock.json') }}
 
       - name: Install dependencies
-        run: npm ci
+        run: npm i
   lint:
     name: Run Linter
     needs: prepare_dependencies
