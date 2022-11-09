@@ -1,14 +1,14 @@
 import React from 'react'
 
-import { Stack, Divider, Typography, Box } from '@mui/material'
+import { Stack, Divider, Typography } from '@mui/material'
 import { useTranslation } from 'next-i18next'
 
 import { ProductItem } from '..'
 // Need to be handled with API later
 import { userAddressResponse } from '@/__mocks__/stories/userAddressMock'
-import { orderGetters, productGetters, addressGetters } from '@/lib/getters'
+import { orderGetters, productGetters } from '@/lib/getters'
 
-import type { Maybe, CrOrderItem, CrProduct, CustomerContact, CrAddress } from '@/lib/gql/types'
+import type { Maybe, CrOrderItem, CrProduct, CustomerContact } from '@/lib/gql/types'
 
 export type ReviewProductItemsWithAddressesProps = {
   items: Maybe<CrOrderItem>[]
@@ -36,63 +36,34 @@ const ReviewProductItemsWithAddresses = (props: ReviewProductItemsWithAddressesP
             <Typography
               variant="h4"
               component="h4"
-              fontWeight={600}
+              sx={{ fontWeight: 'bold' }}
               color="text.primary"
-              sx={{ display: 'flex' }}
             >
               {t('ship-to')}
-
-              <Box display="flex">
-                <Typography
-                  variant="h4"
-                  color="text.primary"
-                  sx={{
-                    '&::after': { content: "','", pr: 0.5 },
-                    paddingLeft: '4px',
-                    textTransform: 'capitalize',
-                  }}
-                >
-                  {addressGetters.getAddress1(userShippingAddresses[index]?.address as CrAddress)}
-                </Typography>
-                <Typography
-                  variant="h4"
-                  color="text.primary"
-                  sx={{ '&::after': { content: "','", pr: 0.5 }, textTransform: 'capitalize' }}
-                >
-                  {addressGetters.getAddress2(userShippingAddresses[index]?.address as CrAddress)}
-                </Typography>
-                <Typography
-                  variant="h4"
-                  color="text.primary"
-                  sx={{ '&::after': { content: "','", pr: 0.5 }, textTransform: 'capitalize' }}
-                >
-                  {addressGetters.getCityOrTown(userShippingAddresses[index]?.address as CrAddress)}
-                </Typography>
-                <Typography
-                  variant="h4"
-                  color="text.primary"
-                  sx={{ '&::after': { content: "', '", pr: 0.5 }, textTransform: 'capitalize' }}
-                >
-                  {addressGetters.getStateOrProvince(
-                    userShippingAddresses[index]?.address as CrAddress
-                  )}
-                </Typography>
-                <Typography variant="h4" color="text.primary" sx={{ textTransform: 'capitalize' }}>
-                  {addressGetters.getPostalOrZipCode(
-                    userShippingAddresses[index]?.address as CrAddress
-                  )}
-                </Typography>
-              </Box>
+              {':'}
+              <Typography
+                variant="h4"
+                component="span"
+                color="text.primary"
+                sx={{ textTransform: 'capitalize' }}
+              >
+                {' '}
+                {userShippingAddresses[index]?.address?.address1},{' '}
+                {userShippingAddresses[index]?.address?.address2},{' '}
+                {userShippingAddresses[index]?.address?.cityOrTown},{' '}
+                {userShippingAddresses[index]?.address?.stateOrProvince},{' '}
+                {userShippingAddresses[index]?.address?.postalOrZipCode},{' '}
+                {userShippingAddresses[index]?.address?.countryCode}
+              </Typography>
             </Typography>
 
-            {/* To be mapped with actual result from API */}
             <Typography
               variant="h4"
               component="h4"
-              sx={{ fontWeight: 'bold', marginTop: '0' }}
+              sx={{ fontWeight: 'bold', marginTop: '0 !important' }}
               color="primary"
             >
-              {t('est-arrival')}
+              {t('est-arrival')} Mon 20, Dec
             </Typography>
 
             <Stack key={item?.id}>

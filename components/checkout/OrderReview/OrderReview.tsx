@@ -27,7 +27,7 @@ import type { Order, Maybe, Location, CustomerContact } from '@/lib/gql/types'
 
 interface OrderReviewProps {
   checkout: Order
-  isMultiShipEnabled: boolean
+  isMultiShipEnabled?: boolean
 }
 
 const style = {
@@ -67,7 +67,7 @@ const StyledActions = styled(Link)(({ theme }: { theme: Theme }) => ({
 }))
 
 const OrderReview = (props: OrderReviewProps) => {
-  const { checkout, isMultiShipEnabled } = props
+  const { checkout, isMultiShipEnabled = true } = props
 
   const { steps, setActiveStep } = useCheckoutStepContext()
   const { t } = useTranslation('common')
