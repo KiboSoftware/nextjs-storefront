@@ -1,7 +1,6 @@
 import React from 'react'
 
-import { Stack, Button, SxProps } from '@mui/material'
-import { Theme } from '@mui/material/styles'
+import { Stack, Button } from '@mui/material'
 import { useTranslation } from 'next-i18next'
 
 import AddressForm from '@/components/common/AddressForm/AddressForm'
@@ -9,29 +8,22 @@ import KiboDialog from '@/components/common/KiboDialog/KiboDialog'
 import { useModalContext } from '@/context'
 import type { Address, ContactForm } from '@/lib/types'
 
-interface AddressInputFormDialogProps {
+interface AddressFormDialogProps {
   isAddressFormValid: boolean
   isUserLoggedIn: boolean
   setAutoFocus: boolean
   validateForm: boolean
   formTitle?: string
   contact?: ContactForm
-  isAddressFormInDialog?: boolean
   onSaveAddress: (data: Address) => void
   onFormStatusChange: (status: boolean) => void
-  onHandleAddressValidationAndSave: () => void
+  onAddressValidationAndSave: () => void
 }
 
-const buttonStyle = {
-  width: '100%',
-  height: '42px',
-  textTransform: 'none',
-  fontSize: (theme: Theme) => theme.typography.subtitle1,
-} as SxProps<Theme> | undefined
-
-const AddressInputFormDialog = (props: AddressInputFormDialogProps) => {
+const AddressFormDialog = (props: AddressFormDialogProps) => {
   const { closeModal } = useModalContext()
   const { t } = useTranslation('common')
+  const isAddressFormInDialog = true
 
   const {
     formTitle = t('add-new-address'),
@@ -39,11 +31,10 @@ const AddressInputFormDialog = (props: AddressInputFormDialogProps) => {
     isAddressFormValid,
     isUserLoggedIn,
     setAutoFocus,
-    isAddressFormInDialog = true,
     validateForm,
     onSaveAddress,
     onFormStatusChange,
-    onHandleAddressValidationAndSave,
+    onAddressValidationAndSave,
   } = props
 
   return (
@@ -70,10 +61,9 @@ const AddressInputFormDialog = (props: AddressInputFormDialogProps) => {
             </Button>
             <Button
               variant="contained"
-              color="inherit"
-              sx={{ ...buttonStyle }}
+              color="primary"
               {...(!isAddressFormValid && { disabled: true })}
-              onClick={onHandleAddressValidationAndSave}
+              onClick={onAddressValidationAndSave}
             >
               {t('save')}
             </Button>
@@ -85,4 +75,4 @@ const AddressInputFormDialog = (props: AddressInputFormDialogProps) => {
     />
   )
 }
-export default AddressInputFormDialog
+export default AddressFormDialog

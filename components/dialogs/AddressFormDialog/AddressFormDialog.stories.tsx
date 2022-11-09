@@ -2,27 +2,26 @@ import React from 'react'
 
 import { ComponentStory, ComponentMeta } from '@storybook/react'
 
-import AddressInputFormDialog from './AddressInputFormDialog'
+import AddressFormDialog from './AddressFormDialog'
 import type { Address, ContactForm } from '@/lib/types'
 
 export default {
-  title: 'Dialogs/AddressInputFormDialog/Dialog',
-  component: AddressInputFormDialog,
+  title: 'Dialogs/AddressFormDialog/Dialog',
+  component: AddressFormDialog,
   argTypes: { onClose: { action: 'onClose' } },
-} as ComponentMeta<typeof AddressInputFormDialog>
+} as ComponentMeta<typeof AddressFormDialog>
 
-const Template: ComponentStory<typeof AddressInputFormDialog> = ({ ...args }) => (
-  <AddressInputFormDialog {...args} />
+const Template: ComponentStory<typeof AddressFormDialog> = ({ ...args }) => (
+  <AddressFormDialog {...args} />
 )
 
 // Common
 export const Common = Template.bind({})
 Common.args = {
-  formTitle: 'Add new address',
+  formTitle: 'Add New Address',
   isAddressFormValid: true,
   setAutoFocus: true,
   validateForm: false,
-  isAddressFormInDialog: true,
   onSaveAddress: (data: Address) => console.log('called handleSave(data) : ', data),
 }
 

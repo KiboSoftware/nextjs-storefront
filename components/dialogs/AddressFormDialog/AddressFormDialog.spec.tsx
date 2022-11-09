@@ -2,14 +2,14 @@ import { composeStories } from '@storybook/testing-react'
 import { render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 
-import * as stories from './AddressInputFormDialog.stories'
+import * as stories from './AddressFormDialog.stories'
 
 const { Common } = composeStories(stories)
 
-const addressFormMock = () => <div data-testid="address-input-form-dialog" />
-jest.mock('@/components/common/AddressForm/AddressForm', () => addressFormMock)
+const addressFormMock = () => <div data-testid="address-form-mock" />
+jest.mock('@/components/common/AddressForm/AddressForm', () => () => addressFormMock())
 
-describe('[components]  AddressInputForm Dialog', () => {
+describe('[components]  AddressFormDialog Dialog', () => {
   const setup = (params = {}) => {
     const user = userEvent.setup()
     render(<Common {...params} />)
@@ -21,7 +21,7 @@ describe('[components]  AddressInputForm Dialog', () => {
     setup({ ...Common.args })
 
     const closeIcon = screen.getByRole('button', { name: 'close' })
-    const addressInputFormDialogComponent = screen.getByTestId('address-input-form-dialog')
+    const addressInputFormDialogComponent = screen.getByTestId('address-form-mock')
 
     expect(closeIcon).toBeVisible()
     expect(addressInputFormDialogComponent).toBeVisible()
@@ -30,7 +30,7 @@ describe('[components]  AddressInputForm Dialog', () => {
   it('should have a title', () => {
     setup({ ...Common.args })
 
-    const dialogHeading = screen.getByRole('heading', { name: 'Add new address' })
+    const dialogHeading = screen.getByRole('heading', { name: 'Add New Address' })
 
     expect(dialogHeading).toBeVisible()
   })
