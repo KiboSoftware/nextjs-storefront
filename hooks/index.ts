@@ -43,7 +43,7 @@ export * from './mutations/useWishlistMutations/useCreateWishlistMutation/useCre
 export * from './mutations/useUpdateCheckoutMutations/useCreateCheckoutPaymentMethod/useCreateCheckoutPaymentMethodMutation'
 export * from './mutations/useUpdateCheckoutMutations/useUpdateCheckoutBillingInfo/useUpdateCheckoutBillingInfoMutation'
 export * from './mutations/useUpdateCheckoutMutations/useUpdateOrderPaymentActionMutation/useUpdateOrderPaymentActionMutation'
-export * from './mutations/useOrderReturnMutations/useCreateOrderReturnItemsMutation/useCreateOrderReturnItemsMutation'
+export * from './mutations/useCreateOrderReturnItemsMutation/useCreateOrderReturnItemsMutation'
 // cards
 export * from './mutations/useCustomerCardsMutations/useCreateCustomerCardsMutation'
 export * from './mutations/useCustomerCardsMutations/useUpdateCustomerCardsMutation'

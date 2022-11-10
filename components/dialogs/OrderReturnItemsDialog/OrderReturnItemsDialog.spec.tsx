@@ -10,7 +10,7 @@ const { Common } = composeStories(stories)
 const productItemListMock = () => <div data-testid="product-item-list-component" />
 jest.mock('@/components/common/ProductItemList/ProductItemList', () => () => productItemListMock())
 
-describe('[components] (OrderReturnItemsDialog)', () => {
+describe('[components] OrderReturnItemsDialog', () => {
   const setup = () => render(<Common {...Common.args} />)
 
   it('should render component', async () => {

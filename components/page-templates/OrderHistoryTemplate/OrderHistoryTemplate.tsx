@@ -46,11 +46,12 @@ const OrderHistoryTemplate = (props: OrderHistoryProps) => {
 
   const [showFilterBy, setFilterBy] = useState<boolean>(false)
   const [selectedOrder, setSelectedOrder] = useState<Order | undefined>(undefined)
+  const [isReturnItems, setIsReturnItems] = useState<boolean>(false)
+
   const { updateRoute, changeFilters } = useUpdateRoutes()
   const theme = useTheme()
   const mdScreen = useMediaQuery(theme.breakpoints.up('md'))
   const { t } = useTranslation('common')
-  const [isReturnItems, setIsReturnItems] = useState<boolean>(false)
 
   const facetList = facetGetters.getFacetListByQueryFilter(queryFilters)
   const facetType = facetGetters.getFacetTypeForHistory(t)

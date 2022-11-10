@@ -42,7 +42,7 @@ const OrderReturnItems = (props: OrderReturnItemsProps) => {
 
   const [selectedReturnItems, setSelectedReturnItems] = useState<Maybe<CrOrderItem>[]>([])
   const [selectedReturnReason, setSelectedReturnReason] = useState<string>('')
-  const [isReturnRequestSuccess, setIsReturnRequestSuccess] = useState<boolean>(false)
+  const [isReturnRequestSuccessful, setIsReturnRequestSuccessful] = useState<boolean>(false)
 
   const { showModal, closeModal } = useModalContext()
 
@@ -57,20 +57,16 @@ const OrderReturnItems = (props: OrderReturnItemsProps) => {
 
   const handleGoBackToOrderDetails = () => onGoBackToOrderDetails && onGoBackToOrderDetails()
   const handleReturnItems = (orderItemId: string) => {
-    if (
-      selectedReturnItems?.filter((orderItem: Maybe<CrOrderItem>) => orderItem?.id === orderItemId)
-        ?.length
-    ) {
+    const selectedReturnItem = selectedReturnItems?.find(
+      (orderItem) => orderItem?.id === orderItemId
+    )
+    if (selectedReturnItem) {
       setSelectedReturnItems(
-        selectedReturnItems?.filter(
-          (orderItem: Maybe<CrOrderItem>) => orderItem?.id !== orderItemId
-        )
+        selectedReturnItems?.filter((orderItem) => orderItem?.id !== orderItemId)
       )
     } else {
-      const selectedItem = order?.items?.filter(
-        (orderItem: Maybe<CrOrderItem>) => orderItem?.id === orderItemId
-      )
-      selectedItem?.length && setSelectedReturnItems([...selectedReturnItems, ...selectedItem])
+      const selectedItem = order?.items?.find((orderItem) => orderItem?.id === orderItemId)
+      selectedItem && setSelectedReturnItems([...selectedReturnItems, selectedItem])
     }
   }
 
@@ -88,7 +84,7 @@ const OrderReturnItems = (props: OrderReturnItemsProps) => {
     const createReturnItemsResponse = await createReturnItems.mutateAsync(createReturnItemsParams)
 
     if (createReturnItemsResponse?.status === OrderStatus.CREATED) {
-      setIsReturnRequestSuccess(true)
+      setIsReturnRequestSuccessful(true)
 
       showModal({
         Component: OrderReturnItemsDialog,
@@ -171,7 +167,7 @@ const OrderReturnItems = (props: OrderReturnItemsProps) => {
                   showAddress={false}
                   isCheckboxVisible={true}
                   showDivider={false}
-                  isCheckboxDisabled={isReturnRequestSuccess}
+                  isCheckboxDisabled={isReturnRequestSuccessful}
                   onItemSelection={(orderItemId: string) => handleReturnItems(orderItemId)}
                 />
               </Box>
@@ -187,7 +183,7 @@ const OrderReturnItems = (props: OrderReturnItemsProps) => {
                   showAddress={false}
                   isCheckboxVisible={true}
                   showDivider={false}
-                  isCheckboxDisabled={isReturnRequestSuccess}
+                  isCheckboxDisabled={isReturnRequestSuccessful}
                   onItemSelection={(orderItemId: string) => handleReturnItems(orderItemId)}
                 />
               </Box>
@@ -231,7 +227,7 @@ const OrderReturnItems = (props: OrderReturnItemsProps) => {
                 disabled={
                   !selectedReturnItems.length ||
                   selectedReturnReason === '' ||
-                  isReturnRequestSuccess
+                  isReturnRequestSuccessful
                 }
               >
                 {t('confirm-return-request')}

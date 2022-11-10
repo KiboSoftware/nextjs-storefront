@@ -110,4 +110,5 @@ Common.args.options = undefined
 WithCheckBoxForReturnProduct.args = {
   ...Common.args,
   isCheckboxVisible: true,
+  onItemSelection: () => console.log('Return Item Selected'),
 }

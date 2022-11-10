@@ -27,6 +27,7 @@ jest.mock(
 )
 
 const onStoreLocatorClickMock = jest.fn()
+const onItemSelectionMock = jest.fn()
 
 describe('[component] - ProductItem', () => {
   const setup = () => {
@@ -104,11 +105,14 @@ describe('[component] - ProductItem with Price and Pickup Item', () => {
     expect(screen.getByTestId('price-component')).toBeVisible()
     expect(screen.queryByTestId('product-option-list-component')).not.toBeInTheDocument()
   })
-})
 
-describe('[component] - ProductItem with checkbox of returnItem', () => {
-  it('should handle ReturnProductSelectionCheckbox', async () => {
-    render(<WithCheckBoxForReturnProduct {...WithCheckBoxForReturnProduct.args} />)
+  it('should select checkbox for Item to be returned , when isCheckboxVisible is true', async () => {
+    render(
+      <WithCheckBoxForReturnProduct
+        {...WithCheckBoxForReturnProduct.args}
+        onItemSelection={onItemSelectionMock}
+      />
+    )
     const user = userEvent.setup()
     const checkbox = screen.getByRole('checkbox')
 
@@ -118,5 +122,6 @@ describe('[component] - ProductItem with checkbox of returnItem', () => {
     await waitFor(() => {
       expect(checkbox).toBeChecked()
     })
+    expect(onItemSelectionMock).toBeCalled()
   })
 })

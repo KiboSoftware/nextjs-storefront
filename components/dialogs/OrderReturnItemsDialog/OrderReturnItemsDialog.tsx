@@ -14,6 +14,15 @@ interface OrderReturnItemsDialogProps {
   closeModal: () => void
 }
 
+const styles = {
+  returnRequestButtonstyle: {
+    fontWeight: 'bold',
+    display: 'block',
+    marginLeft: '1rem',
+    color: 'text.primary',
+  },
+}
+
 // Component
 const OrderReturnItemsDialog = (props: OrderReturnItemsDialogProps) => {
   const { orderItems, reason, closeModal } = props
@@ -25,10 +34,7 @@ const OrderReturnItemsDialog = (props: OrderReturnItemsDialogProps) => {
         <CheckCircle sx={{ color: 'primary.main' }} />
         <Typography
           sx={{
-            fontWeight: 'bold',
-            display: 'block',
-            marginLeft: '1rem',
-            color: 'text.primary',
+            ...styles.returnRequestButtonstyle,
           }}
         >
           {t('return-request-submitted')}
