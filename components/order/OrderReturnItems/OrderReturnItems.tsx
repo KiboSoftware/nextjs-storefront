@@ -70,8 +70,7 @@ const OrderReturnItems = (props: OrderReturnItemsProps) => {
     }
   }
 
-  const handleReturnReasonSelection = (name: string, value: string) =>
-    setSelectedReturnReason(value)
+  const handleReturnReasonSelection = (value: string) => setSelectedReturnReason(value)
 
   const handleConfirmReturnRequest = async () => {
     const createReturnItemsParams: CreateOrderReturnItemsInputParams = {
@@ -146,7 +145,7 @@ const OrderReturnItems = (props: OrderReturnItemsProps) => {
               placeholder={t('choose-a-response')}
               sx={{ maxWidth: '23.5rem' }}
               value={selectedReturnReason}
-              onChange={handleReturnReasonSelection}
+              onChange={(_name, value) => handleReturnReasonSelection(value)}
             >
               {returnReasons &&
                 Object.values(returnReasons)?.map((reason: string) => {
