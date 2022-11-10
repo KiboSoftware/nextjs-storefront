@@ -4,7 +4,7 @@ import { makeGraphQLClient } from '@/lib/gql/client'
 import { getReturnsQuery } from '@/lib/gql/queries'
 import { returnsKeys } from '@/lib/react-query/queryKeys'
 
-import type { ReturnCollection, ReturnObj } from '@/lib/gql/types'
+import type { ReturnCollection } from '@/lib/gql/types'
 
 export interface UseReturnsResponse {
   data?: ReturnCollection
