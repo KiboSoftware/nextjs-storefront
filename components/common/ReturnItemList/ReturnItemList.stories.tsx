@@ -22,16 +22,3 @@ export const Common = Template.bind({})
 Common.args = {
   items: orderItems as CrOrderItem[],
 }
-
-const TemplateWithPickupItem: ComponentStory<typeof ReturnItemList> = (args) => (
-  <ReturnItemList {...args} />
-)
-export const WithPickupItem = TemplateWithPickupItem.bind({})
-
-WithPickupItem.args = {
-  items: orderItems as CrOrderItem[],
-  isPickupItem: true,
-  onClickChangeStore: () => {
-    console.log('change store clicked')
-  },
-}
