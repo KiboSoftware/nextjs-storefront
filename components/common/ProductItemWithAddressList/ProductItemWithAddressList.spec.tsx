@@ -8,9 +8,9 @@ import type { ProductItemWithAddressListProps } from './ProductItemWithAddressLi
 const { Common } = composeStories(stories)
 
 const productItemMock = () => <div data-testid="product-item-component" />
-jest.mock('@/components/common/ProductItem/ProductItem', () => productItemMock)
+jest.mock('@/components/common/ProductItem/ProductItem', () => () => productItemMock())
 const kiboSelect = () => <div data-testid="kibo-select-component" />
-jest.mock('@/components/common/KiboSelect/KiboSelect', () => kiboSelect)
+jest.mock('@/components/common/KiboSelect/KiboSelect', () => () => kiboSelect())
 
 describe('[component] - ProductItemWithAddressList', () => {
   const setup = (params?: ProductItemWithAddressListProps) => {

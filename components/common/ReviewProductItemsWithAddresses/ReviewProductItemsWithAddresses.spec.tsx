@@ -8,7 +8,7 @@ import type { ReviewProductItemsWithAddressesProps } from './ReviewProductItemsW
 const { Common } = composeStories(stories)
 
 const productItemMock = () => <div data-testid="product-item-component-multi-ship" />
-jest.mock('@/components/common/ProductItem/ProductItem', () => productItemMock)
+jest.mock('@/components/common/ProductItem/ProductItem', () => () => productItemMock())
 
 describe('[component] - ReviewProductItemsWithAddresses', () => {
   const setup = (params?: ReviewProductItemsWithAddressesProps) => {
