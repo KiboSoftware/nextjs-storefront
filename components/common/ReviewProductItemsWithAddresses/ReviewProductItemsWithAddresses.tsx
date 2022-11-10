@@ -6,9 +6,9 @@ import { useTranslation } from 'next-i18next'
 import { ProductItem } from '..'
 // Need to be handled with API later
 import { userAddressResponse } from '@/__mocks__/stories/userAddressMock'
-import { orderGetters, productGetters } from '@/lib/getters'
+import { orderGetters, productGetters, addressGetters } from '@/lib/getters'
 
-import type { Maybe, CrOrderItem, CrProduct, CustomerContact } from '@/lib/gql/types'
+import type { Maybe, CrOrderItem, CrProduct, CustomerContact, CrAddress } from '@/lib/gql/types'
 
 export type ReviewProductItemsWithAddressesProps = {
   items: Maybe<CrOrderItem>[]
@@ -47,19 +47,24 @@ const ReviewProductItemsWithAddresses = (props: ReviewProductItemsWithAddressesP
                 sx={{ textTransform: 'capitalize' }}
               >
                 {' '}
-                {userShippingAddresses[index]?.address?.address1},{' '}
-                {userShippingAddresses[index]?.address?.address2},{' '}
-                {userShippingAddresses[index]?.address?.cityOrTown},{' '}
-                {userShippingAddresses[index]?.address?.stateOrProvince},{' '}
-                {userShippingAddresses[index]?.address?.postalOrZipCode},{' '}
-                {userShippingAddresses[index]?.address?.countryCode}
+                {addressGetters.getAddress1(
+                  userShippingAddresses[index]?.address as CrAddress
+                )}{' '}
+                {addressGetters.getAddress2(userShippingAddresses[index]?.address as CrAddress)}{' '}
+                {addressGetters.getCityOrTown(userShippingAddresses[index]?.address as CrAddress)}{' '}
+                {addressGetters.getStateOrProvince(
+                  userShippingAddresses[index]?.address as CrAddress
+                )}{' '}
+                {addressGetters.getPostalOrZipCode(
+                  userShippingAddresses[index]?.address as CrAddress
+                )}{' '}
               </Typography>
             </Typography>
 
             <Typography
               variant="h4"
               component="h4"
-              sx={{ fontWeight: 'bold', marginTop: '0 !important' }}
+              sx={{ fontWeight: 'bold', marginTop: '0' }}
               color="primary"
             >
               {t('est-arrival')} Mon 20, Dec
