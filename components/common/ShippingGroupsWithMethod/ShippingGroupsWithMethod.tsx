@@ -172,7 +172,7 @@ const ShippingGroupsWithMethod = (props: ShippingGroupsWithMethodProps) => {
                   component="span"
                   sx={{ fontWeight: 'bold', marginRight: '4px' }}
                 >
-                  {t('ship-to')}:
+                  {t('ship-to')}
                 </Typography>
                 <Typography variant="body1" component="span">
                   4321 Another Address, Austin, TX 78741
