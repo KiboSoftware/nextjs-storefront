@@ -3,6 +3,7 @@ import { FormControl, FormHelperText, Select } from '@mui/material'
 export interface KiboSelectProps {
   name?: string
   value?: string
+  required?: boolean
   helperText?: string
   error?: boolean
   placeholder?: string
@@ -28,6 +29,7 @@ const KiboSelect = (props: KiboSelectProps) => {
   const {
     name = 'kibo-select',
     value = '',
+    required = false,
     helperText = '',
     error = false,
     placeholder,
@@ -46,6 +48,7 @@ const KiboSelect = (props: KiboSelectProps) => {
       fullWidth
       variant="outlined"
       hiddenLabel={!label}
+      required={required}
     >
       {label && (
         <InputLabel shrink htmlFor={name} sx={{ top: -18, left: -13 }}>

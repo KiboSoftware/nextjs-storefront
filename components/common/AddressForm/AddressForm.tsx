@@ -280,6 +280,7 @@ const AddressForm = (props: AddressFormProps) => {
                   helperText={errors?.address?.countryCode?.message}
                   onChange={(_name, value) => field.onChange(value)}
                   onBlur={field.onBlur}
+                  required={true}
                 >
                   {generateSelectOptions()}
                 </KiboSelect>
