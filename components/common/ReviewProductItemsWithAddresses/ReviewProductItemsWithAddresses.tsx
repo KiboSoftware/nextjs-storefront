@@ -40,7 +40,6 @@ const ReviewProductItemsWithAddresses = (props: ReviewProductItemsWithAddressesP
               color="text.primary"
             >
               {t('ship-to')}
-              {':'}
               <Typography
                 variant="h4"
                 component="span"

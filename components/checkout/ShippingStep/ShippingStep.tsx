@@ -69,8 +69,9 @@ const ShippingStep = (props: ShippingProps) => {
   const [shouldShowAddAddressButton, setShouldShowAddAddressButton] = useState<boolean>(
     Boolean(savedShippingAddresses?.length)
   )
+  const shipOptions = publicRuntimeConfig.shipOptions
 
-  const [shippingOption, setShippingOption] = useState<string>('ShipToHome')
+  const [shippingOption, setShippingOption] = useState<string>(shipOptions[0].value)
 
   const [showMultiShipContinueButton, setShowMultiShipContinueButton] = useState<boolean>(true)
 
@@ -176,17 +177,13 @@ const ShippingStep = (props: ShippingProps) => {
     setIsNewAddressAdded(false)
   }
 
-  const shipOptions = publicRuntimeConfig.shipOptions
   const radioOptions = shipOptions.map((option: any) => ({
     value: option.value,
     name: option.name,
     label: <Typography variant="body2">{option.label}</Typography>,
   }))
 
-  const onChangeShippingOption = (option: string) => {
-    console.log('onChangeShippingOption', option)
-    setShippingOption(option)
-  }
+  const onChangeShippingOption = (option: string) => setShippingOption(option)
 
   const getSavedShippingAddressView = (
     address: CustomerContact,
