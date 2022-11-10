@@ -4,7 +4,7 @@ import { CheckCircle } from '@mui/icons-material'
 import { Box, Stack, Typography } from '@mui/material'
 import { useTranslation } from 'next-i18next'
 
-import { KiboDialog, ProductItemList } from '@/components/common'
+import { KiboDialog, ReturnItemList } from '@/components/common'
 
 import type { Maybe, CrOrderItem } from '@/lib/gql/types'
 
@@ -51,7 +51,7 @@ const OrderReturnItemsDialog = (props: OrderReturnItemsDialogProps) => {
             {reason}
           </Typography>
         </Box>
-        <ProductItemList items={orderItems} showAddress={false} showDivider={false} />
+        <ReturnItemList items={orderItems} />
       </Stack>
     ),
     showContentTopDivider: true,

@@ -13,8 +13,8 @@ jest.mock('@/components/product/ProductOption/ProductOption', () => () => produc
 const KiboSelectMock = () => <div data-testid="kibo-select-component" />
 jest.mock('@/components/common/KiboSelect/KiboSelect', () => () => KiboSelectMock())
 
-const productItemListMock = () => <div data-testid="product-item-list-component" />
-jest.mock('@/components/common/ProductItemList/ProductItemList', () => () => productItemListMock())
+const returnItemListMock = () => <div data-testid="return-item-list-component" />
+jest.mock('@/components/common/ReturnItemList/ReturnItemList', () => () => returnItemListMock())
 
 jest.mock('@mui/material', () => ({
   ...jest.requireActual('@mui/material'),
@@ -30,7 +30,7 @@ describe('[component] - OrderReturnItems', () => {
     const returnReasonHeading = screen.getByText(/reason-for-your-return/i)
     const kiboSelect = screen.getByTestId('kibo-select-component')
     const productOptions = screen.getAllByTestId('product-option-component')
-    const productItemList = screen.getAllByTestId('product-item-list-component')
+    const returnItemList = screen.getAllByTestId('return-item-list-component')
 
     expect(orderDetails).toBeVisible()
     expect(backArrowButton).toBeVisible()
@@ -38,6 +38,6 @@ describe('[component] - OrderReturnItems', () => {
     expect(returnReasonHeading).toBeVisible()
     expect(kiboSelect).toBeInTheDocument()
     expect(productOptions[0]).toBeInTheDocument()
-    expect(productItemList[0]).toBeInTheDocument()
+    expect(returnItemList[0]).toBeInTheDocument()
   })
 })

@@ -104,11 +104,3 @@ WithoutOptionsForInventory.args = {
     (orderItem?.product?.price?.salePrice && (orderItem?.product?.price?.salePrice).toString()) ||
     undefined,
 }
-
-export const WithCheckBoxForReturnProduct = Template.bind({})
-Common.args.options = undefined
-WithCheckBoxForReturnProduct.args = {
-  ...Common.args,
-  isCheckboxVisible: true,
-  onItemSelection: () => console.log('Return Item Selected'),
-}

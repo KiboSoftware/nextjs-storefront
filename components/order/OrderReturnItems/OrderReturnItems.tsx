@@ -4,7 +4,7 @@ import { ArrowBackIos } from '@mui/icons-material'
 import { Divider, Grid, Typography, Box, Stack, Button, MenuItem } from '@mui/material'
 import { useTranslation } from 'next-i18next'
 
-import { KiboImage, KiboSelect, ProductItemList } from '@/components/common'
+import { KiboImage, KiboSelect, ReturnItemList } from '@/components/common'
 import { OrderReturnItemsDialog } from '@/components/dialogs'
 import { ProductOption } from '@/components/product'
 import { useModalContext } from '@/context'
@@ -162,11 +162,8 @@ const OrderReturnItems = (props: OrderReturnItemsProps) => {
           {!!shipItems.length && (
             <Box>
               <Box sx={{ ...styles.container }}>
-                <ProductItemList
+                <ReturnItemList
                   items={shipItems}
-                  showAddress={false}
-                  isCheckboxVisible={true}
-                  showDivider={false}
                   isCheckboxDisabled={isReturnRequestSuccessful}
                   onItemSelection={(orderItemId: string) => handleReturnItems(orderItemId)}
                 />
@@ -178,11 +175,8 @@ const OrderReturnItems = (props: OrderReturnItemsProps) => {
           {!!pickupItems.length && (
             <Box>
               <Box sx={{ ...styles.container }}>
-                <ProductItemList
+                <ReturnItemList
                   items={pickupItems}
-                  showAddress={false}
-                  isCheckboxVisible={true}
-                  showDivider={false}
                   isCheckboxDisabled={isReturnRequestSuccessful}
                   onItemSelection={(orderItemId: string) => handleReturnItems(orderItemId)}
                 />

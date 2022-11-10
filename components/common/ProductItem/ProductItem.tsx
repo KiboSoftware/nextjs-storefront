@@ -1,4 +1,4 @@
-import React, { ReactNode, useState, ChangeEvent } from 'react'
+import React, { ReactNode, useState } from 'react'
 
 import { KeyboardArrowDown, KeyboardArrowUp } from '@mui/icons-material'
 import {
@@ -10,7 +10,6 @@ import {
   useTheme,
   Link as MuiLink,
   Stack,
-  Checkbox,
 } from '@mui/material'
 import { useTranslation } from 'next-i18next'
 import Link from 'next/link'
@@ -36,10 +35,7 @@ export interface ProductItemProps {
   purchaseLocation?: string
   link?: string
   children?: ReactNode
-  isCheckboxVisible?: boolean
-  isCheckboxDisabled?: boolean
   onStoreLocatorClick?: () => void
-  onItemSelection?: (orderItemId: string) => void
 }
 
 const styles = {
@@ -50,13 +46,6 @@ const styles = {
     display: 'flex',
     justifyContent: 'center',
     alignItems: 'center',
-  },
-
-  checkbox: {
-    '&.Mui-disabled.Mui-checked': {
-      color: 'primary.main',
-      opacity: 0.26,
-    },
   },
 }
 
@@ -74,29 +63,16 @@ const ProductItem = (props: ProductItemProps) => {
     purchaseLocation,
     link,
     children,
-    isCheckboxVisible = false,
-    isCheckboxDisabled = false,
     onStoreLocatorClick,
-    onItemSelection,
   } = props
   const { t } = useTranslation('common')
   const theme = useTheme()
   const mdScreen = useMediaQuery(theme.breakpoints.up('md'))
   const [expanded, setExpanded] = useState<boolean>(true)
-  const handleSelectItem = (event: ChangeEvent<HTMLInputElement>) =>
-    onItemSelection && onItemSelection(event.target.value)
 
   return (
     <Box key={id}>
       <Box sx={{ display: 'flex', pb: 1, pr: 1, gap: 2, flex: 1 }}>
-        {isCheckboxVisible && (
-          <Checkbox
-            value={id}
-            onChange={handleSelectItem}
-            disabled={isCheckboxDisabled}
-            sx={{ ...styles.checkbox }}
-          />
-        )}
         <Box sx={{ ...styles.imageContainer }}>
           <Link href={link || ''} passHref>
             <MuiLink data-testid="product-item-link">

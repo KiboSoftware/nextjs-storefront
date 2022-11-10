@@ -7,8 +7,8 @@ import * as stories from './OrderReturnItemsDialog.stories' // import all storie
 
 const { Common } = composeStories(stories)
 
-const productItemListMock = () => <div data-testid="product-item-list-component" />
-jest.mock('@/components/common/ProductItemList/ProductItemList', () => () => productItemListMock())
+const returnItemListMock = () => <div data-testid="return-item-list-component" />
+jest.mock('@/components/common/ReturnItemList/ReturnItemList', () => () => returnItemListMock())
 
 describe('[components] OrderReturnItemsDialog', () => {
   const setup = () => render(<Common {...Common.args} />)
@@ -18,11 +18,11 @@ describe('[components] OrderReturnItemsDialog', () => {
     const title = screen.getByText(/return-request-submitted/i)
     const returnReason = screen.getByText(/reason-for-your-return/i)
     const closeIcon = screen.getByRole('button', { name: 'close' })
-    const productItemList = screen.getByTestId('product-item-list-component')
+    const returnItemList = screen.getByTestId('return-item-list-component')
 
     expect(title).toBeVisible()
     expect(returnReason).toBeVisible()
     expect(closeIcon).toBeVisible()
-    expect(productItemList).toBeVisible()
+    expect(returnItemList).toBeVisible()
   })
 })
