@@ -855,7 +855,7 @@ export const orderCollection: { orders: OrderCollection } = {
         taxTotal: 0,
         orderNumber: 2475,
         submittedDate: 1647411417956,
-        status: 'Delivered',
+        status: 'Completed',
         orderDiscounts: [],
         invalidCoupons: [],
         couponCodes: [],

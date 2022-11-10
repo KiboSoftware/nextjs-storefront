@@ -196,7 +196,7 @@ const OrderReturnItems = (props: OrderReturnItemsProps) => {
                 {selectedReturnItems?.map((item: Maybe<CrOrderItem>) => (
                   <Box
                     key={item?.id}
-                    sx={{ mr: '1.563rem', mb: '1.563rem', backgroundColor: '#fff' }}
+                    sx={{ mr: '1.563rem', mb: '1.563rem', backgroundColor: 'white' }}
                   >
                     <KiboImage
                       src={productGetters.handleProtocolRelativeUrl(

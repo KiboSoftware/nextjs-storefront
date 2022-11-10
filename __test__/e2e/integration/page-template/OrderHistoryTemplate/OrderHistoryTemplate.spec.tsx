@@ -82,4 +82,16 @@ describe('[component] - OrderHistoryTemplate', () => {
     expect(mockOnAccountTitleClick).toBeCalled()
     expect(screen.getByText(/my-account/i)).toBeVisible()
   })
+
+  it('should display go to order return when user clicks return item button', async () => {
+    const { user } = setup()
+    const orderHistoryItem = screen.getAllByTestId('history-item')
+    await user.click(orderHistoryItem[3])
+    screen.getByRole('heading', { name: /view-order-details/i })
+
+    const returnButton = screen.getByRole('button', { name: /return-items/i })
+    await user.click(returnButton)
+    const chooseItemsHeading = screen.getByText(/choose-items-to-return/i)
+    expect(chooseItemsHeading).toBeVisible()
+  })
 })
