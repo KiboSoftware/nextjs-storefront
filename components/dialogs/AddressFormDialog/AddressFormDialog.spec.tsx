@@ -22,17 +22,15 @@ describe('[components]  AddressFormDialog Dialog', () => {
 
     const closeIcon = screen.getByRole('button', { name: 'close' })
     const addressInputFormDialogComponent = screen.getByTestId('address-form-mock')
+    const dialogHeading = screen.getByRole('heading', { name: 'Add New Address' })
+    const saveButton = screen.getByRole('button', { name: 'save' })
+    const cancelButton = screen.getByRole('button', { name: 'cancel' })
 
     expect(closeIcon).toBeVisible()
-    expect(addressInputFormDialogComponent).toBeVisible()
-  })
-
-  it('should have a title', () => {
-    setup({ ...Common.args })
-
-    const dialogHeading = screen.getByRole('heading', { name: 'Add New Address' })
-
     expect(dialogHeading).toBeVisible()
+    expect(addressInputFormDialogComponent).toBeVisible()
+    expect(saveButton).toBeVisible()
+    expect(cancelButton).toBeVisible()
   })
 
   it('should disable save button', () => {
@@ -41,15 +39,5 @@ describe('[components]  AddressFormDialog Dialog', () => {
     const saveButton = screen.getByRole('button', { name: 'save' })
 
     expect(saveButton).toBeDisabled()
-  })
-
-  it('should render save and cancel button', () => {
-    setup({ ...Common.args })
-
-    const saveButton = screen.getByRole('button', { name: 'save' })
-    const cancelButton = screen.getByRole('button', { name: 'cancel' })
-
-    expect(saveButton).toBeVisible()
-    expect(cancelButton).toBeVisible()
   })
 })
