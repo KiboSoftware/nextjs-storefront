@@ -44,8 +44,8 @@ import type {
 interface ProductDetailTemplateProps {
   product: ProductCustom
   breadcrumbs?: BreadCrumb[]
-  cmsProducts?: any
   isQuickViewModal?: boolean
+  children?: any
 }
 
 const styles = {
@@ -62,7 +62,7 @@ const styles = {
 }
 const ProductDetailTemplate = (props: ProductDetailTemplateProps) => {
   const { getProductLink } = uiHelpers()
-  const { product, breadcrumbs = [], isQuickViewModal = false } = props
+  const { product, breadcrumbs = [], isQuickViewModal = false, children } = props
   const { t } = useTranslation('common')
   const { showModal, closeModal } = useModalContext()
   const { addToCart } = useAddToCartMutation()
@@ -422,6 +422,7 @@ const ProductDetailTemplate = (props: ProductDetailTemplateProps) => {
               </Box>
             )}
           </Grid>
+          {children && children}
         </>
       )}
     </Grid>

@@ -48,28 +48,32 @@ const SmallBanner = ({ bannerProps }: ItemProps) => {
   const kiboTheme = useTheme()
   const mobileView = useMediaQuery(kiboTheme.breakpoints.down('sm'))
 
-  const { title, subtitle, callToAction, backgroundColor } = bannerProps
+  const { title, subtitle, callToAction, backgroundColor } = bannerProps || {}
 
   return (
-    <Card sx={{ backgroundColor, borderRadius: '0px' }}>
-      <CardContent
-        sx={styles.topStyle}
-        style={{ display: 'flex', flexDirection: mobileView ? 'column' : 'row' }}
-      >
-        <Typography sx={styles.titleStyle}>{title} &nbsp;</Typography>
+    <>
+      {bannerProps && (
+        <Card sx={{ backgroundColor, borderRadius: '0px' }}>
+          <CardContent
+            sx={styles.topStyle}
+            style={{ display: 'flex', flexDirection: mobileView ? 'column' : 'row' }}
+          >
+            <Typography sx={styles.titleStyle}>{title} &nbsp;</Typography>
 
-        <Box sx={styles.boxStyle}>
-          <Typography variant="h5">{subtitle}&nbsp;</Typography>
-          <Typography variant="h5" data-testid="callToAction">
-            <Link href={callToAction.url} passHref>
-              <MuiLink underline="none" sx={{ color: 'common.white' }}>
-                {callToAction.title}
-              </MuiLink>
-            </Link>
-          </Typography>
-        </Box>
-      </CardContent>
-    </Card>
+            <Box sx={styles.boxStyle}>
+              <Typography variant="h5">{subtitle}&nbsp;</Typography>
+              <Typography variant="h5" data-testid="callToAction">
+                <Link href={callToAction?.url || ''} passHref>
+                  <MuiLink underline="none" sx={{ color: 'common.white' }}>
+                    {callToAction?.title}
+                  </MuiLink>
+                </Link>
+              </Typography>
+            </Box>
+          </CardContent>
+        </Card>
+      )}
+    </>
   )
 }
 

@@ -261,7 +261,9 @@ describe('[component] - PaymentMethod (has saved payment methods)', () => {
         )
       })
     )
-    await user.click(savePaymentMethodButton)
+    await waitFor(() => {
+      user.click(savePaymentMethodButton)
+    })
   })
 })
 

@@ -37,7 +37,7 @@ describe('[component] KiboHeader component', () => {
     render(<Common {...Common.args} />)
 
     Common?.args?.navLinks?.forEach((each) => {
-      expect(screen.getByText(new RegExp(each.text))).toBeVisible()
+      expect(screen.getAllByText(new RegExp(each.text))[0]).toBeVisible()
     })
   })
 
@@ -52,9 +52,8 @@ describe('[component] KiboHeader component', () => {
 
     expect(screen.getByTestId('FmdGoodIcon')).toBeVisible()
     expect(screen.getByText(/find-a-store/i)).toBeVisible()
-
-    expect(screen.getByTestId('AccountCircleIcon')).toBeVisible()
-    expect(screen.getByText(/my-account/i)).toBeVisible()
+    expect(screen.getAllByTestId('AccountCircleIcon')[0]).toBeVisible()
+    expect(screen.getAllByText(/my-account/i)[0]).toBeVisible()
 
     expect(screen.getByTestId('ShoppingCartIcon')).toBeVisible()
     expect(screen.getByText(/cart/i)).toBeVisible()

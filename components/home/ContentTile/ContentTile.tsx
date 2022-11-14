@@ -145,54 +145,58 @@ const ContentTile = ({ largeTileProps, smallTileProps, title }: ContentTileProps
 
   return (
     <Container maxWidth={'xl'} sx={{ display: 'flex', flexDirection: 'column' }}>
-      {title && (
-        <Typography
-          variant="h1"
-          component="h2"
-          color="primary"
-          sx={{ textAlign: 'center', margin: mobileView ? '20px 0' : '40px 0' }}
-        >
-          {title}
-        </Typography>
-      )}
-      <Box
-        sx={{
-          display: 'flex',
-          gap: '30px',
-          flexDirection: mobileView ? 'column' : 'row',
-          marginBottom: '30px',
-        }}
-      >
-        {largeTileProps?.map((tile: TileProps, index) => (
-          <ContentTiles
-            key={index}
-            imgSource={tile.imgSource}
-            title={tile.title}
-            subtitle={tile.subtitle}
-            tileType="large"
-            link1={tile.link1}
-            link2={tile.link2}
-            link3={tile.link3}
-          />
-        ))}
-      </Box>
-      <Box sx={{ width: '100%' }}>
-        <Grid container rowSpacing={1} columnSpacing={{ xs: 3, sm: 4, md: 4 }}>
-          {smallTileProps?.map((tile: TileProps, index) => (
-            <Grid key={index} item xs={mobileView ? 6 : 3}>
+      {(largeTileProps || smallTileProps) && (
+        <>
+          {title && (
+            <Typography
+              variant="h1"
+              component="h2"
+              color="primary"
+              sx={{ textAlign: 'center', margin: mobileView ? '20px 0' : '40px 0' }}
+            >
+              {title}
+            </Typography>
+          )}
+          <Box
+            sx={{
+              display: 'flex',
+              gap: '30px',
+              flexDirection: mobileView ? 'column' : 'row',
+              marginBottom: '30px',
+            }}
+          >
+            {largeTileProps?.map((tile: TileProps, index) => (
               <ContentTiles
+                key={index}
                 imgSource={tile.imgSource}
                 title={tile.title}
                 subtitle={tile.subtitle}
-                tileType="small"
+                tileType="large"
                 link1={tile.link1}
                 link2={tile.link2}
                 link3={tile.link3}
               />
+            ))}
+          </Box>
+          <Box sx={{ width: '100%' }}>
+            <Grid container rowSpacing={1} columnSpacing={{ xs: 3, sm: 4, md: 4 }}>
+              {smallTileProps?.map((tile: TileProps, index) => (
+                <Grid key={index} item xs={mobileView ? 6 : 3}>
+                  <ContentTiles
+                    imgSource={tile.imgSource}
+                    title={tile.title}
+                    subtitle={tile.subtitle}
+                    tileType="small"
+                    link1={tile.link1}
+                    link2={tile.link2}
+                    link3={tile.link3}
+                  />
+                </Grid>
+              ))}
             </Grid>
-          ))}
-        </Grid>
-      </Box>
+          </Box>
+        </>
+      )}
     </Container>
   )
 }
