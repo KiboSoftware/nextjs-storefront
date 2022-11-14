@@ -422,7 +422,7 @@ const ProductDetailTemplate = (props: ProductDetailTemplateProps) => {
               </Box>
             )}
           </Grid>
-          {children && children}
+          {children}
         </>
       )}
     </Grid>
