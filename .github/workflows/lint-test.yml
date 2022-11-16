@@ -11,6 +11,7 @@ on:
       - master
       - main
       - develop
+  workflow_dispatch:
 
 jobs:
   prepare_dependencies:
@@ -25,8 +26,14 @@ jobs:
         with:
           node-version: '16'
 
+      - name: Get cached dependencies
+        uses: actions/cache@v2
+        with:
+          path: '**/node_modules'
+          key: ${{ runner.os }}-package-${{ hashFiles('**/package-lock.json') }}
+
       - name: Install dependencies
-        run: npm i
+        run: npm ci
   lint:
     name: Run Linter
     needs: prepare_dependencies
