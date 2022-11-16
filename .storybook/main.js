@@ -13,7 +13,7 @@ module.exports = {
       new TsconfigPathsPlugin({ extensions: config.resolve.extensions }),
     ])
     console.log(config.module.rules[12])
-    config.resolve.alias['@emotion/styled'] = resolve('../node_modules/@emotion/styled')
+    config.resolve.alias['@emotion/styled'] = resolve('/node_modules/@emotion/styled')
     config.resolve.alias = {
       ...config.resolve.alias,
       'next-i18next': 'react-i18next',
