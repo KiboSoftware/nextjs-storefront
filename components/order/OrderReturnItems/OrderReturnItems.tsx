@@ -164,7 +164,7 @@ const OrderReturnItems = (props: OrderReturnItemsProps) => {
                 <ReturnItemList
                   items={shipItems}
                   isCheckboxDisabled={isReturnRequestSuccessful}
-                  onItemSelection={(orderItemId: string) => handleReturnItems(orderItemId)}
+                  onItemSelection={handleReturnItems}
                 />
               </Box>
               <Divider sx={{ ...styles.divider }} />
@@ -177,7 +177,7 @@ const OrderReturnItems = (props: OrderReturnItemsProps) => {
                 <ReturnItemList
                   items={pickupItems}
                   isCheckboxDisabled={isReturnRequestSuccessful}
-                  onItemSelection={(orderItemId: string) => handleReturnItems(orderItemId)}
+                  onItemSelection={handleReturnItems}
                 />
               </Box>
             </Box>
