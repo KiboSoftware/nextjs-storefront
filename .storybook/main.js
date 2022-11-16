@@ -2,6 +2,7 @@ const path = require('path')
 const { TsconfigPathsPlugin } = require('tsconfig-paths-webpack-plugin')
 
 function resolve(dir) {
+  var __dirname = path.resolve()
   return path.join(__dirname, dir)
 }
 
