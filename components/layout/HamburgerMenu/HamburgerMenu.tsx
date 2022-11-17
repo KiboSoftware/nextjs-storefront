@@ -82,55 +82,57 @@ const HamburgerMenu = (props: HamburgerMenuProps) => {
   }
 
   return (
-    <SwipeableDrawer
-      anchor={'left'}
-      open={isDrawerOpen || false}
-      onClose={() => toggleDrawer(false)}
-      onOpen={() => toggleDrawer(true)}
-      data-testid="hamburger-menu"
-    >
-      <Box sx={{ ...styles.container, marginTop: marginTop }} role="presentation">
-        <Box sx={{ ...styles.menuList }}>
-          <CategoryNestedNavigation
-            categoryTree={categoryTree}
-            onCloseMenu={toggleDrawer}
-            onCategoryClick={handleCategoryClick}
-          >
-            <Box width="100%">
-              <HeaderAction
-                title={isAuthenticated ? `${t('hi')}, ${user?.firstName}` : t('my-account')}
-                subtitle={isAuthenticated ? t('go-to-my-account') : t('log-in')}
-                icon={AccountCircle}
-                mobileIconColor="black"
-                iconFontSize="large"
-                showTitleInMobile={true}
-                onClick={onAccountIconClick}
-              />
-            </Box>
-          </CategoryNestedNavigation>
+    <>
+      <SwipeableDrawer
+        anchor={'left'}
+        open={isDrawerOpen || false}
+        onClose={() => toggleDrawer(false)}
+        onOpen={() => toggleDrawer(true)}
+        data-testid="hamburger-menu"
+      >
+        <Box sx={{ ...styles.container, marginTop: marginTop }} role="presentation">
+          <Box sx={{ ...styles.menuList }}>
+            <CategoryNestedNavigation
+              categoryTree={categoryTree}
+              onCloseMenu={toggleDrawer}
+              onCategoryClick={handleCategoryClick}
+            >
+              <Box width="100%">
+                <HeaderAction
+                  title={isAuthenticated ? `${t('hi')}, ${user?.firstName}` : t('my-account')}
+                  subtitle={isAuthenticated ? t('go-to-my-account') : t('log-in')}
+                  icon={AccountCircle}
+                  mobileIconColor="black"
+                  iconFontSize="large"
+                  showTitleInMobile={true}
+                  onClick={onAccountIconClick}
+                />
+              </Box>
+            </CategoryNestedNavigation>
+          </Box>
+          <Box sx={{ ...styles.spacer }}></Box>
+          <List sx={{ ...styles.navLinksList }}>
+            {navLinks?.map((nav) => (
+              <Box key={nav.text}>
+                <MuiLink underline="none">
+                  <ListItem button sx={{ paddingInline: 4 }}>
+                    <ListItemText
+                      primary={
+                        <Typography variant="body2" color="text.primary">
+                          {t(`${nav.text}`)}
+                        </Typography>
+                      }
+                      onClick={() => handleNavLinks(nav.link)}
+                    />
+                  </ListItem>
+                </MuiLink>
+                <Divider />
+              </Box>
+            ))}
+          </List>
         </Box>
-        <Box sx={{ ...styles.spacer }}></Box>
-        <List sx={{ ...styles.navLinksList }}>
-          {navLinks?.map((nav) => (
-            <Box key={nav.text}>
-              <MuiLink underline="none">
-                <ListItem button sx={{ paddingInline: 4 }}>
-                  <ListItemText
-                    primary={
-                      <Typography variant="body2" color="text.primary">
-                        {t(`${nav.text}`)}
-                      </Typography>
-                    }
-                    onClick={() => handleNavLinks(nav.link)}
-                  />
-                </ListItem>
-              </MuiLink>
-              <Divider />
-            </Box>
-          ))}
-        </List>
-      </Box>
-    </SwipeableDrawer>
+      </SwipeableDrawer>
+    </>
   )
 }
 
