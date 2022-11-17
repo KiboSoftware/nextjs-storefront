@@ -34,10 +34,31 @@ interface ShippingProps {
   checkout: Order
   userShippingAddress?: CustomerContact[]
   isAuthenticated: boolean
+  isMultiShipEnabled?: boolean
+  updateCheckoutShippingInfo: (params: any) => void
+  shippingMethods: any
+  checkoutId?: string
+  isNewAddressAdded: boolean
+  selectedShippingAddressId: string
+  setCheckoutId: (params: any) => void
+  setIsNewAddressAdded: (params: any) => void
+  setSelectedShippingAddressId: (params: any) => void
 }
 
 const ShippingStep = (props: ShippingProps) => {
-  const { checkout, userShippingAddress: addresses, isAuthenticated } = props
+  const {
+    checkout,
+    userShippingAddress: addresses,
+    isAuthenticated,
+    isMultiShipEnabled,
+    updateCheckoutShippingInfo,
+    shippingMethods,
+    isNewAddressAdded,
+    selectedShippingAddressId,
+    setCheckoutId,
+    setIsNewAddressAdded,
+    setSelectedShippingAddressId,
+  } = props
   const { publicRuntimeConfig } = getConfig()
 
   const checkoutShippingContact = orderGetters.getShippingContact(checkout)
@@ -52,12 +73,12 @@ const ShippingStep = (props: ShippingProps) => {
   const pickupItems = orderGetters.getPickupItems(checkout)
 
   const [validateForm, setValidateForm] = useState<boolean>(false)
-  const [checkoutId, setCheckoutId] = useState<string | null | undefined>(undefined)
+  // const [checkoutId, setCheckoutId] = useState<string | null | undefined>(undefined)
   const [isAddressFormValid, setIsAddressFormValid] = useState<boolean>(false)
-  const [isNewAddressAdded, setIsNewAddressAdded] = useState<boolean>(false)
-  const [selectedShippingAddressId, setSelectedShippingAddressId] = useState<number>(
-    checkoutShippingContact?.id as number
-  )
+  // const [isNewAddressAdded, setIsNewAddressAdded] = useState<boolean>(false)
+  // const [selectedShippingAddressId, setSelectedShippingAddressId] = useState<number>(
+  //   checkoutShippingContact?.id as number
+  // )
   const [savedShippingAddresses, setSavedShippingAddresses] = useState<
     CustomerContact[] | undefined
   >(
@@ -74,14 +95,6 @@ const ShippingStep = (props: ShippingProps) => {
   const [shippingOption, setShippingOption] = useState<string>(shipOptions[0].value)
 
   const [showMultiShipContinueButton, setShowMultiShipContinueButton] = useState<boolean>(true)
-
-  const isMultiShipEnabled = publicRuntimeConfig.isMultiShipEnabled
-
-  const [shippingOption, setShippingOption] = useState<string>('ShipToHome')
-
-  const [showMultiShipContinueButton, setShowMultiShipContinueButton] = useState<boolean>(true)
-
-  const isMultiShipEnabled = publicRuntimeConfig.isMultiShipEnabled
 
   const defaultShippingAddress = userGetters.getDefaultShippingAddress(
     savedShippingAddresses as CustomerContact[]
@@ -101,18 +114,20 @@ const ShippingStep = (props: ShippingProps) => {
     setStepStatusComplete,
     setStepStatusIncomplete,
   } = useCheckoutStepContext()
-  const updateCheckoutShippingInfo = useUpdateCheckoutShippingInfoMutation()
-  const { data: shippingMethods } = useShippingMethodsQueries(
-    checkoutId,
-    isNewAddressAdded,
-    selectedShippingAddressId
-  )
+  // const updateCheckoutShippingInfo = useUpdateCheckoutShippingInfoMutation()
+  // const { data: shippingMethods } = useShippingMethodsQueries(
+  //   checkoutId,
+  //   isNewAddressAdded,
+  //   selectedShippingAddressId
+  // )
 
   const handleAddressValidationAndSave = () => setValidateForm(true)
 
   const handleSaveAddress = async ({ contact }: { contact: Contact }) => {
     try {
-      await updateCheckoutShippingInfo.mutateAsync({ checkout, contact })
+      // await updateCheckoutShippingInfo.mutateAsync({ checkout, contact })
+      await updateCheckoutShippingInfo({ checkout, contact })
+
       setCheckoutId(checkout?.id)
       setSelectedShippingAddressId((contact?.id as number) || DefaultId.ADDRESSID)
       setShouldShowAddAddressButton(true)
@@ -129,11 +144,18 @@ const ShippingStep = (props: ShippingProps) => {
     shippingMethodCode: string
   ) => {
     const shippingMethodName = shippingMethods.find(
-      (method) => method.shippingMethodCode === shippingMethodCode
+      (method: any) => method.shippingMethodCode === shippingMethodCode
     )?.shippingMethodName as string
 
     try {
-      await updateCheckoutShippingInfo.mutateAsync({
+      // await updateCheckoutShippingInfo.mutateAsync({
+      //   checkout,
+      //   contact: undefined,
+      //   email: undefined,
+      //   shippingMethodCode,
+      //   shippingMethodName,
+      // })
+      await updateCheckoutShippingInfo({
         checkout,
         contact: undefined,
         email: undefined,
@@ -183,7 +205,6 @@ const ShippingStep = (props: ShippingProps) => {
     setIsNewAddressAdded(false)
   }
 
-  const shipOptions = publicRuntimeConfig.shipOptions
   const radioOptions = shipOptions.map((option: any) => ({
     value: option.value,
     name: option.name,
