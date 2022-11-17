@@ -45,3 +45,4 @@ storybook-static
 /.vscode/
 
 test-report.xml
+package-lock.json
