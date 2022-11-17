@@ -6,3 +6,5 @@ export { default as MyAccountTemplate } from './MyAccountTemplate/MyAccountTempl
 export { default as OrderHistoryTemplate } from './OrderHistoryTemplate/OrderHistoryTemplate'
 export { default as WishlistTemplate } from './WishlistTemplate/WishlistTemplate'
 export { default as OrderStatusTemplate } from './OrderStatusTemplate/OrderStatusTemplate'
+export { default as StandardShipCheckoutTemplate } from './StandardShipCheckoutTemplate/StandardShipCheckoutTemplate'
+export { default as MultiShipCheckoutTemplate } from './MultiShipCheckoutTemplate/MultiShipCheckoutTemplate'

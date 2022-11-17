@@ -15,7 +15,7 @@ import { useAuthContext, useCheckoutStepContext, STEP_STATUS, useModalContext } 
 import { PersonalInfo, useUpdateCheckoutPersonalInfoMutation } from '@/hooks'
 import { FormStates } from '@/lib/constants'
 
-import type { Order, OrderInput, Maybe } from '@/lib/gql/types'
+import type { Order, OrderInput, Maybe, Checkout } from '@/lib/gql/types'
 export interface PersonalDetails {
   email: Maybe<string> | undefined
 }
@@ -25,7 +25,8 @@ export interface Action {
 }
 interface DetailsProps {
   setAutoFocus?: boolean
-  checkout: Order | undefined
+  checkout: Order | Checkout | undefined
+  updateCheckoutPersonalInfo?: (params: any) => void
 }
 
 const commonStyle = {
@@ -61,10 +62,10 @@ const useDetailsSchema = () => {
 }
 
 const DetailsStep = (props: DetailsProps) => {
-  const { setAutoFocus = true, checkout } = props
+  const { setAutoFocus = true, checkout, updateCheckoutPersonalInfo } = props
 
   const { t } = useTranslation('common')
-  const updateCheckoutPersonalInfo = useUpdateCheckoutPersonalInfoMutation()
+  // const updateCheckoutPersonalInfo = useUpdateCheckoutPersonalInfoMutation()
   const { isAuthenticated, setAuthError } = useAuthContext()
   const { showModal } = useModalContext()
   const {
@@ -98,17 +99,18 @@ const DetailsStep = (props: DetailsProps) => {
   })
 
   const updatePersonalInfo = async (formData: PersonalDetails) => {
-    const { email } = formData
+    // const { email } = formData
 
-    const personalInfo: PersonalInfo = {
-      orderId: checkout?.id as string,
-      updateMode: 'ApplyToOriginal',
-      orderInput: {
-        ...(checkout as OrderInput),
-        email,
-      },
-    }
-    await updateCheckoutPersonalInfo.mutateAsync(personalInfo)
+    // const personalInfo: PersonalInfo = {
+    //   orderId: checkout?.id as string,
+    //   updateMode: 'ApplyToOriginal',
+    //   orderInput: {
+    //     ...(checkout as OrderInput),
+    //     email,
+    //   },
+    // }
+    // await updateCheckoutPersonalInfo.mutateAsync(personalInfo)
+    updateCheckoutPersonalInfo(formData)
   }
 
   const onValid = async (formData: PersonalDetails) => {
