@@ -1,7 +1,11 @@
 import { useTranslation } from 'next-i18next'
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
 
-import { CheckoutTemplate } from '@/components/page-templates'
+import {
+  CheckoutTemplate,
+  StandardShipCheckoutTemplate,
+  MultiShipCheckoutTemplate,
+} from '@/components/page-templates'
 import { CheckoutStepProvider } from '@/context/CheckoutStepContext/CheckoutStepContext'
 import { getCheckout } from '@/lib/api/operations'
 
@@ -11,6 +15,7 @@ import type { NextPage, GetServerSidePropsContext } from 'next'
 interface CheckoutPageProps {
   checkoutId: string
   checkout: Order
+  isMultiShipEnabled?: boolean
 }
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
@@ -26,6 +31,7 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
     props: {
       checkout,
       checkoutId,
+      isMultiShipEnabled: true,
       ...(await serverSideTranslations(locale as string, ['common'])),
     },
   }
@@ -38,7 +44,11 @@ const CheckoutPage: NextPage<CheckoutPageProps> = (props) => {
   return (
     <>
       <CheckoutStepProvider steps={steps}>
-        <CheckoutTemplate {...props} />
+        {props.isMultiShipEnabled ? (
+          <MultiShipCheckoutTemplate {...props} />
+        ) : (
+          <StandardShipCheckoutTemplate {...props} />
+        )}
       </CheckoutStepProvider>
     </>
   )
