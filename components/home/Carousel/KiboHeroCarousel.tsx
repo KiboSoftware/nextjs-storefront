@@ -36,13 +36,17 @@ const MainStyle = styled('div')({
 
 const KiboHeroCarousel = ({ carouselItem }: HeroCarouselProps) => {
   return (
-    <MainStyle>
-      <Carousel navButtonsAlwaysVisible={true} swipe={true} sx={{ width: '100%' }}>
-        {carouselItem?.map((item: ItemProps, index: any) => {
-          return <HeroItem {...item} key={index} />
-        })}
-      </Carousel>
-    </MainStyle>
+    <>
+      {carouselItem?.length > 0 && (
+        <MainStyle>
+          <Carousel navButtonsAlwaysVisible={true} swipe={true} sx={{ width: '100%' }}>
+            {carouselItem?.map((item: ItemProps, index: any) => {
+              return <HeroItem {...item} key={index} />
+            })}
+          </Carousel>
+        </MainStyle>
+      )}
+    </>
   )
 }
 

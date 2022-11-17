@@ -19,7 +19,7 @@ describe('[component] HamburgerMenu component', () => {
   it('should not render all the list-items if isDrawerOpen props is false', () => {
     render(<Common isDrawerOpen={false} />)
 
-    expect(screen.queryByTestId('hamburger-menu')).not.toBeInTheDocument()
+    expect(screen.queryByTestId('hamburger-menu')).not.toBeVisible()
   })
 
   it('should render all the list-items if isDrawerOpen props is true', () => {
