@@ -64,7 +64,6 @@ const DetailsStep = (props: DetailsProps) => {
   const { setAutoFocus = true, checkout, updateCheckoutPersonalInfo } = props
 
   const { t } = useTranslation('common')
-
   const { isAuthenticated, setAuthError } = useAuthContext()
   const { showModal } = useModalContext()
   const {
