@@ -21,6 +21,8 @@ export * from './queries/useCheckoutDestinationQueries/useCheckoutDestinationQue
 // MultiShip
 export * from './queries/multiShip/useCheckoutQueries/useCheckoutQueries'
 export * from './queries/useCheckoutDestinationQueries/useCheckoutDestinationQueries'
+// Multiship Query
+export * from './queries/multiShip/useCheckoutQueries/useCheckoutQueries'
 
 //Subscription
 export * from './queries/subscription/useSubscriptionsQueries/useSubscriptionsQueries'
