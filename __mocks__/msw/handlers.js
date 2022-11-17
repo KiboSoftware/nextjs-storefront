@@ -84,6 +84,14 @@ export const checkoutHandlers = [
   graphql.mutation('createOrderAction', (_req, res, ctx) => {
     return res(ctx.data({ createOrderAction: orderMock.checkout }))
   }),
+
+  //checkout coupon
+  graphql.mutation('updateCheckoutCoupon', (_req, res, ctx) => {
+    return res(ctx.data({ updateCheckoutCoupon: checkoutMock }))
+  }),
+  graphql.mutation('deleteCheckoutCoupon', (_req, res, ctx) => {
+    return res(ctx.data({ deleteCheckoutCoupon: checkoutMock }))
+  }),
 ]
 
 export const accountHandlers = [
