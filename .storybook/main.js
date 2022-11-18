@@ -1,9 +1,8 @@
 const path = require('path')
 const { TsconfigPathsPlugin } = require('tsconfig-paths-webpack-plugin')
 
-function resolve(dir) {
-  const dirname = path.dirname(__dirname)
-  return path.join(dirname, dir)
+await function resolve(dir) {
+  return await import.meta.resolve(dir, import.meta.url)
 }
 
 module.exports = {
