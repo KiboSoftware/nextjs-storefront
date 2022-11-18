@@ -192,6 +192,30 @@ describe('[components] - AddressForm integration', () => {
     })
   })
 
+  describe('should display half width form fields when not in dialog for desktop', () => {
+    it('should have half width form fields except Street and Apt when isAddressFormInDialog = false', () => {
+      // arrange
+      setup({ isAddressFormInDialog: false })
+
+      // // act
+      const classElements = document.getElementsByClassName('MuiGrid-grid-md-6')
+
+      // asert
+      expect(classElements.length).toBe(7)
+    })
+
+    it('should have full width form fields when isAddressFormInDialog = true', () => {
+      // arrange
+      setup({ isAddressFormInDialog: true })
+
+      // // act
+      const classElements = document.getElementsByClassName('MuiGrid-grid-md-12')
+
+      // asert
+      expect(classElements.length).toBe(5)
+    })
+  })
+
   describe('should display validation message', () => {
     const emptyInput = { target: { value: '' } }
     it('Should display required message onBlur of inputs', async () => {
