@@ -42,7 +42,7 @@ describe('[components] - OrderReturnItems Integration', () => {
     expect(confirmReturnRequestButton).toBeDisabled()
   })
 
-  it('should have return reason selected ,checkbox checked and return request button to be enabled', async () => {
+  it('should have return reason selected ,checkbox checked and return request button to be enabled and dialog to be visible', async () => {
     const { user } = setup()
     const kiboSelectBtn = screen.getByRole('button', { name: 'choose-a-response' })
     expect(kiboSelectBtn).toBeVisible()
