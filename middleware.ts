@@ -14,6 +14,7 @@ export function middleware(request: NextRequest) {
     if (checkIsAutheticated(request)) {
       return NextResponse.next()
     }
+
     const homeUrl = new URL('/', request.url)
     return NextResponse.redirect(homeUrl)
   }
