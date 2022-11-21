@@ -10,7 +10,6 @@ const checkIsAutheticated = (req: NextRequest) => {
 }
 
 export function middleware(request: NextRequest) {
-    const homeUrl = new URL('/', request.url)
-    return NextResponse.redirect(homeUrl)
+   
  
 }
