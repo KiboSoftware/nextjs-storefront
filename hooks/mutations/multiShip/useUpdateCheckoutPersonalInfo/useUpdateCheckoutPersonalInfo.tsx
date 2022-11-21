@@ -1,7 +1,7 @@
 import { useMutation, useQueryClient } from 'react-query'
 
 import { makeGraphQLClient } from '@/lib/gql/client'
-import { setMultishipPersonalInfo } from '@/lib/gql/mutations'
+import { setMultiShipPersonalInfo } from '@/lib/gql/mutations'
 import { checkoutKeys } from '@/lib/react-query/queryKeys'
 
 import type { CheckoutInput } from '@/lib/gql/types'
@@ -15,7 +15,7 @@ const updatePersonalInfo = async (multiShipPersonalInfo: MultiShipPersonalInfo) 
   const client = makeGraphQLClient()
 
   const response = await client.request({
-    document: setMultishipPersonalInfo,
+    document: setMultiShipPersonalInfo,
     variables: multiShipPersonalInfo,
   })
 
