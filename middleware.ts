@@ -1,11 +1,9 @@
 import { NextResponse, NextRequest } from 'next/server'
 
-import { decodeParseCookieValue } from './lib/helpers/cookieHelper'
-
 const checkIsAutheticated = (req: NextRequest) => {
   const cookie = req.headers.get('cookie')
-
-  const decodedCookie = decodeParseCookieValue(cookie?.split('kibo_at=')[1])
+  const cookieValue = cookie?.split('kibo_at=')[1]
+  const decodedCookie = JSON.parse(atob(cookieValue as string))
   return decodedCookie?.userId
 }
 
@@ -17,5 +15,5 @@ export function middleware(request: NextRequest) {
     const homeUrl = new URL('/', request.url)
     return NextResponse.redirect(homeUrl)
   }
+   return NextResponse.next()
 }
-
