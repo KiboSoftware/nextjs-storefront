@@ -13,7 +13,6 @@ export type ReturnItemListProps = {
   isPickupItem?: boolean
   storePickupAddresses?: LocationCustom[]
   isCheckboxDisabled?: boolean
-  onClickChangeStore?: () => void
   onItemSelection?: (orderItemId: string) => void
 }
 
@@ -33,7 +32,7 @@ const ReturnItemList = (props: ReturnItemListProps) => {
 
   return (
     <Stack direction="column" spacing={2} data-testid="return-item-stack">
-      {items?.map((item: Maybe<CrOrderItem>) => {
+      {items?.map((item) => {
         const product = item?.product as CrProduct
         return (
           <Stack key={item?.id} direction="row">

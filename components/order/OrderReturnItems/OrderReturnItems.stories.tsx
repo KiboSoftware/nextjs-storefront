@@ -17,4 +17,5 @@ export const Common = Template.bind({})
 Common.args = {
   order: orderMock.checkout,
   title: 'choose-items-to-return',
+  onGoBackToOrderDetails: () => console.log('go back to to order details'),
 }

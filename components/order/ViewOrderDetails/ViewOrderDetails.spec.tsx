@@ -8,7 +8,7 @@ import * as stories from './ViewOrderDetails.stories'
 
 const { Common, WithReturnItemButton } = composeStories(stories)
 
-const onItemsReturnMock = jest.fn()
+const onReturnItemsVisibleMock = jest.fn()
 
 const addressCardMock = () => <div data-testid="address-card-component" />
 jest.mock('@/components/common/AddressCard/AddressCard', () => () => addressCardMock())
@@ -39,7 +39,7 @@ const returnItemSetup = () => {
       {...WithReturnItemButton.args}
       isOrderStatus={false}
       title={'view-order-status'}
-      onItemsReturn={onItemsReturnMock}
+      onReturnItemsVisible={onReturnItemsVisibleMock}
     />
   )
   return {
@@ -83,7 +83,7 @@ describe('[component] - ViewOrderDetails', () => {
     expect(screen.queryByText(/return-items/i)).not.toBeInTheDocument()
   })
 
-  it('should render return item button and handleItemsReturn function should be called', async () => {
+  it('should render return item button and handleReturnItems function should be called', async () => {
     const { user } = returnItemSetup()
 
     const orderSummaryContent = screen.getByTestId('order-summary-component')
@@ -92,6 +92,6 @@ describe('[component] - ViewOrderDetails', () => {
     expect(orderSummaryContent).toContainElement(returnItemButton)
 
     await user.click(returnItemButton)
-    expect(onItemsReturnMock).toHaveBeenCalled()
+    expect(onReturnItemsVisibleMock).toHaveBeenCalled()
   })
 })

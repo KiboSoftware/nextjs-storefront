@@ -46,7 +46,7 @@ const OrderHistoryTemplate = (props: OrderHistoryProps) => {
 
   const [showFilterBy, setFilterBy] = useState<boolean>(false)
   const [selectedOrder, setSelectedOrder] = useState<Order | undefined>(undefined)
-  const [isReturnItems, setIsReturnItems] = useState<boolean>(false)
+  const [isReturnItemsVisible, setIsReturnItemsVisible] = useState<boolean>(false)
 
   const { updateRoute, changeFilters } = useUpdateRoutes()
   const theme = useTheme()
@@ -163,20 +163,20 @@ const OrderHistoryTemplate = (props: OrderHistoryProps) => {
 
   return (
     <Box>
-      {selectedOrder && !isReturnItems && (
+      {selectedOrder && !isReturnItemsVisible && (
         <ViewOrderDetails
           title={t('view-order-details')}
           order={selectedOrder}
           onGoBackToOrderHistory={() => setSelectedOrder(undefined)}
-          onItemsReturn={() => setIsReturnItems(true)}
+          onReturnItemsVisible={setIsReturnItemsVisible}
         />
       )}
       {!selectedOrder && showOrderHistoryItem()}
-      {selectedOrder && isReturnItems && (
+      {selectedOrder && isReturnItemsVisible && (
         <OrderReturnItems
           title={t('choose-items-to-return')}
           order={selectedOrder}
-          onGoBackToOrderDetails={() => setIsReturnItems(false)}
+          onGoBackToOrderDetails={setIsReturnItemsVisible}
         />
       )}
     </Box>

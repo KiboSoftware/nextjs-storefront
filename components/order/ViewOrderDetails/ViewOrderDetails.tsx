@@ -18,7 +18,7 @@ interface ViewOrderDetailsProps {
   title: string
   isOrderStatus?: boolean
   onGoBackToOrderHistory?: () => void
-  onItemsReturn?: () => void
+  onReturnItemsVisible?: (isReturnItemsVisible: boolean) => void
 }
 
 const styles = {
@@ -41,7 +41,13 @@ const styles = {
 }
 
 const ViewOrderDetails = (props: ViewOrderDetailsProps) => {
-  const { order, title, isOrderStatus = false, onGoBackToOrderHistory, onItemsReturn } = props
+  const {
+    order,
+    title,
+    isOrderStatus = false,
+    onGoBackToOrderHistory,
+    onReturnItemsVisible,
+  } = props
   const { t } = useTranslation('common')
 
   const orderNumber = orderGetters.getOrderNumber(order)
@@ -73,7 +79,6 @@ const ViewOrderDetails = (props: ViewOrderDetailsProps) => {
   }
 
   const handleGoBackToOrderHistory = () => onGoBackToOrderHistory && onGoBackToOrderHistory()
-  const handleItemsReturn = () => onItemsReturn && onItemsReturn()
 
   return (
     <>
@@ -211,7 +216,7 @@ const ViewOrderDetails = (props: ViewOrderDetailsProps) => {
                   color="inherit"
                   fullWidth
                   sx={{ mt: '0.75rem' }}
-                  onClick={handleItemsReturn}
+                  onClick={() => onReturnItemsVisible && onReturnItemsVisible(true)}
                 >
                   {t('return-items')}
                 </Button>

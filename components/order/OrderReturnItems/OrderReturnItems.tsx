@@ -18,7 +18,7 @@ import type { Maybe, Order, CrOrderItem, CrProduct } from '@/lib/gql/types'
 interface OrderReturnItemsProps {
   order: Order
   title: string
-  onGoBackToOrderDetails?: () => void
+  onGoBackToOrderDetails: (isReturnItemsVisible: boolean) => void
 }
 
 const styles = {
@@ -55,7 +55,6 @@ const OrderReturnItems = (props: OrderReturnItemsProps) => {
   const pickupItems = orderGetters.getPickupItems(order)
   const shipItems = orderGetters.getShipItems(order)
 
-  const handleGoBackToOrderDetails = () => onGoBackToOrderDetails && onGoBackToOrderDetails()
   const handleReturnItems = (orderItemId: string) => {
     const selectedReturnItem = selectedReturnItems?.find(
       (orderItem) => orderItem?.id === orderItemId
@@ -101,7 +100,7 @@ const OrderReturnItems = (props: OrderReturnItemsProps) => {
         sx={{ ...styles.wrapIcon, py: '1.2rem' }}
         direction="row"
         gap={2}
-        onClick={handleGoBackToOrderDetails}
+        onClick={() => onGoBackToOrderDetails(false)}
       >
         <ArrowBackIos fontSize="inherit" sx={styles.wrapIcon} />
         <Typography variant="body2">{t('order-details')}</Typography>
