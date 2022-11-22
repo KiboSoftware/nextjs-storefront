@@ -7,13 +7,12 @@ const checkIsAutheticated = (req: NextRequest) => {
   return decodedCookie?.userId
 }
 
+
 export function middleware(request: NextRequest) {
   if (request.nextUrl.pathname.startsWith('/my-account')) {
-    if (checkIsAutheticated(request)) {
-      return NextResponse.next()
+    if (!checkIsAutheticated(request)) {
+      return NextResponse.redirect('/')
     }
-    const homeUrl = new URL('/', request.url)
-    return NextResponse.redirect(homeUrl)
   }
-   return NextResponse.next()
 }
+
