@@ -8,12 +8,11 @@ const checkIsAutheticated = (req: NextRequest) => {
 }
 
 export function middleware(request: NextRequest) {
-  if (1==2) {
+  if (request.nextUrl.pathname== 'abcd') {
     if (checkIsAutheticated(request)) {
       return NextResponse.next()
     }
-    const homeUrl = new URL('/', request.url)
-    return NextResponse.redirect(homeUrl)
+    return NextResponse.redirect('/')
   }
 
 }
