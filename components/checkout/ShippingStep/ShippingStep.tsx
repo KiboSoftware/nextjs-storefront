@@ -18,6 +18,7 @@ const buttonStyle = {
   width: '100%',
   maxWidth: '421px',
   height: '42px',
+  textTransform: 'none',
   fontSize: (theme: Theme) => theme.typography.subtitle1,
 } as SxProps<Theme> | undefined
 
@@ -283,7 +284,6 @@ const ShippingStep = (props: ShippingProps) => {
               variant="contained"
               color="inherit"
               sx={{ ...buttonStyle }}
-              style={{ textTransform: 'none' }}
               onClick={handleAddressValidationAndSave}
               {...(!isAddressFormValid && { disabled: true })}
             >
