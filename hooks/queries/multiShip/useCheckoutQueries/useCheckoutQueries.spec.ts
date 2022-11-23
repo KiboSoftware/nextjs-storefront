@@ -1,7 +1,7 @@
 import { renderHook } from '@testing-library/react-hooks'
 
 import { useMultiShipCheckoutQueries } from './useCheckoutQueries'
-import { multiShipCheckOutMock } from '@/__mocks__/stories'
+import { checkoutMock } from '@/__mocks__/stories'
 import { createQueryClientWrapper } from '@/__test__/utils/renderWithQueryClient'
 
 describe('[hooks] MultiShip useCheckoutQueries', () => {
@@ -11,6 +11,6 @@ describe('[hooks] MultiShip useCheckoutQueries', () => {
       wrapper: createQueryClientWrapper(),
     })
     await waitFor(() => result.current.isSuccess)
-    expect(result.current.data).toStrictEqual(multiShipCheckOutMock.checkout)
+    expect(result.current.data).toStrictEqual(checkoutMock.checkout)
   })
 })

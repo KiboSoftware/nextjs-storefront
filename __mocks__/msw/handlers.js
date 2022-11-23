@@ -52,7 +52,7 @@ export const checkoutHandlers = [
 
   // MultiShip
   graphql.query('getMultiShipCheckout', (_req, res, ctx) => {
-    return res(ctx.data(multiShipCheckOutMock))
+    return res(ctx.data(checkoutMock))
   }),
 
   // Details Step
