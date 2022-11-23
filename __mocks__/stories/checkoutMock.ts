@@ -1,6 +1,6 @@
 import type { Checkout } from '@/lib/gql/types'
 
-const multiShipCheckoutResponse: Checkout = {
+const checkoutResponse: Checkout = {
   id: '147542c811037d000104fe140000678b',
   originalCartId: '1475090c07e0230001d986680000678b',
   submittedDate: null,
@@ -124,6 +124,6 @@ const multiShipCheckoutResponse: Checkout = {
   tenantId: 0,
 }
 
-export const multiShipCheckoutMock: { checkout: Checkout } = {
-  checkout: multiShipCheckoutResponse,
+export const checkoutMock: { checkout: Checkout } = {
+  checkout: checkoutResponse,
 }
