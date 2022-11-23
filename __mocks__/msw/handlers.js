@@ -7,6 +7,7 @@ import {
   returnReasonsMock,
   createReturnMock,
   checkoutMock,
+  multiShipCheckOutMock,
 } from '../stories'
 import { cartItemMock } from '../stories/cartItemMock'
 import { cartCouponMock, cartMock } from '../stories/cartMock'
@@ -47,6 +48,11 @@ export const checkoutHandlers = [
 
   graphql.mutation('getOrCreateCheckoutFromCart', (_req, res, ctx) => {
     return res(ctx.data(orderMock))
+  }),
+
+  // MultiShip
+  graphql.query('getMultiShipCheckout', (_req, res, ctx) => {
+    return res(ctx.data(multiShipCheckOutMock))
   }),
 
   // Details Step

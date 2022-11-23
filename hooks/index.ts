@@ -17,6 +17,9 @@ export * from './queries/useProductLocationInventoryQueries/useProductLocationIn
 export * from './queries/useReturnReasonsQueries/useReturnReasonsQueries'
 export * from './queries/useReturnsQueries/useReturnsQueries'
 
+// MultiShip
+export * from './queries/multiShip/useCheckoutQueries/useCheckoutQueries'
+
 // Custom hooks
 export * from './custom/useDebounce/useDebounce'
 export * from './custom/useUpdateRoutes/useUpdateRoutes'
