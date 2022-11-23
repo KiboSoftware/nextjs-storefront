@@ -20,7 +20,7 @@ export const useCreateCheckoutMutation = () => {
 
   return useMutation(createCheckout, {
     onSuccess: () => {
-      queryClient.removeQueries([checkoutKeys.all])
+      queryClient.invalidateQueries(checkoutKeys.all)
     },
   })
 }
