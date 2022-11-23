@@ -4,7 +4,7 @@ import { RouterContext } from 'next/dist/shared/lib/router-context'
 
 import { cartMock } from '@/__mocks__/stories/cartMock'
 import { createMockRouter, createQueryClientWrapper } from '@/__test__/utils'
-import CartPage, { getServerSideProps } from '@/pages/cart'
+import CartPage, { getServerSideProps } from '@/src/pages/cart'
 
 const mockCart = cartMock
 

@@ -4,7 +4,7 @@ import { RouterContext } from 'next/dist/shared/lib/router-context'
 
 import { categoryTreeDataMock } from '@/__mocks__/stories/categoryTreeDataMock'
 import { createMockRouter, createQueryClientWrapper } from '@/__test__/utils'
-import CategoryPage, { getServerSideProps } from '@/pages/category/[categoryCode]'
+import CategoryPage, { getServerSideProps } from '@/src/pages/category/[categoryCode]'
 const mockCategoryTreeData = categoryTreeDataMock
 const mockProductSearchData = {
   totalCount: 1,

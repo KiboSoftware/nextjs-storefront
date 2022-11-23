@@ -41,7 +41,7 @@ const customJestConfig = {
     // Handle hooks aliases
     '^@/hooks(.*)$': '<rootDir>/hooks/$1',
     // Handle pages aliases
-    '^@/pages/(.*)$': '<rootDir>/pages/$1',
+    '^@/src/pages/(.*)$': '<rootDir>/pages/$1',
     '^@/(.*)$': '<rootDir>/$1',
   },
   testEnvironment: 'jest-environment-jsdom',

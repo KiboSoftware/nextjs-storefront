@@ -3,7 +3,7 @@ import { render, screen } from '@testing-library/react'
 import { RouterContext } from 'next/dist/shared/lib/router-context'
 
 import { createMockRouter, createQueryClientWrapper } from '@/__test__/utils'
-import SearchPage, { getServerSideProps } from '@/pages/search'
+import SearchPage, { getServerSideProps } from '@/src/pages/search'
 
 const mockProductSearchData = {
   totalCount: 1,
