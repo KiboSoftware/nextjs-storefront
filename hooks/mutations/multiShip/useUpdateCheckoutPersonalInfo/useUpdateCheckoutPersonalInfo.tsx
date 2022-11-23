@@ -27,7 +27,7 @@ export const useUpdateCheckoutPersonalInfo = () => {
 
   return useMutation(updatePersonalInfo, {
     onSuccess: () => {
-      queryClient.removeQueries([checkoutKeys.all])
+      queryClient.invalidateQueries(checkoutKeys.all)
     },
   })
 }
