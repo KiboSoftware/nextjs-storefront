@@ -6,7 +6,7 @@ import { checkoutKeys } from '@/lib/react-query/queryKeys'
 
 import type { Checkout } from '@/lib/gql/types'
 interface UseMultiShipCheckout {
-  checkoutId?: string
+  checkoutId: string
   initialCheckout?: Checkout
 }
 export interface UseMultiShipCheckoutResponse {
@@ -15,7 +15,7 @@ export interface UseMultiShipCheckoutResponse {
   isSuccess: boolean
 }
 
-const getCheckout = async (checkoutId?: string | null) => {
+const getCheckout = async (checkoutId: string) => {
   const client = makeGraphQLClient()
 
   const response = await client.request({
