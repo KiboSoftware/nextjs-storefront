@@ -4,7 +4,7 @@ import { useUpdateMultiShipCheckoutPersonalInfo } from './useUpdateCheckoutPerso
 import { checkoutMock } from '@/__mocks__/stories'
 import { createQueryClientWrapper } from '@/__test__/utils/renderWithQueryClient'
 
-import { CheckoutInput } from '@/lib/gql/types'
+import type { CheckoutInput } from '@/lib/gql/types'
 
 describe('[hooks] useUpdateMultiShipCheckoutPersonalInfo', () => {
   it('should use useUpdateMultiShipCheckoutPersonalInfo', async () => {
