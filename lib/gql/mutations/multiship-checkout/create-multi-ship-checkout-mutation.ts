@@ -2,6 +2,7 @@ import {
   contactForOrdersFragment,
   checkoutLineItemFragment,
   checkoutPaymentFragment,
+  multiShipCheckoutGroupingFragment,
 } from '@/lib/gql/fragments'
 
 const createCheckoutMutation = /* GraphQL */ `
@@ -15,49 +16,7 @@ const createCheckoutMutation = /* GraphQL */ `
         ...checkoutLineItemFragment
       }
       groupings {
-        id
-        destinationId
-        fulfillmentMethod
-        orderItemIds
-        shippingMethodCode
-        shippingMethodName
-        standaloneGroup
-        shippingDiscounts {
-          methodCode
-          discount {
-            impact
-            discount {
-              id
-              name
-            }
-            couponCode
-          }
-        }
-        handlingDiscounts {
-          impact
-          discount {
-            id
-            name
-          }
-          couponCode
-        }
-        dutyAmount
-        dutyTotal
-        shippingAmount
-        shippingSubTotal
-        itemLevelShippingDiscountTotal
-        orderLevelShippingDiscountTotal
-        shippingTax
-        shippingTaxTotal
-        shippingTotal
-        handlingAmount
-        handlingSubTotal
-        itemLevelHandlingDiscountTotal
-        orderLevelHandlingDiscountTotal
-        handlingTax
-        handlingTaxTotal
-        handlingTotal
-        taxData
+        ...multiShipCheckoutGroupingFragment
       }
       destinations {
         id
@@ -74,8 +33,6 @@ const createCheckoutMutation = /* GraphQL */ `
       acceptsMarketing
       customerAccountId
       email
-      customerTaxId
-      isTaxExempt
       currencyCode
       priceListCode
       attributes {
@@ -83,21 +40,11 @@ const createCheckoutMutation = /* GraphQL */ `
         attributeDefinitionId
         values
       }
-      shopperNotes {
-        giftMessage
-        comments
-        deliveryInstructions
-      }
       availableActions
       data
       taxData
       channelCode
       locationCode
-      ipAddress
-      sourceDevice
-      visitId
-      webSessionId
-      customerInteractionType
       orderDiscounts {
         impact
         discount {
@@ -147,6 +94,7 @@ const createCheckoutMutation = /* GraphQL */ `
     }
   }
   ${checkoutLineItemFragment}
+  ${multiShipCheckoutGroupingFragment}
   ${checkoutPaymentFragment}
   ${contactForOrdersFragment}
 `
