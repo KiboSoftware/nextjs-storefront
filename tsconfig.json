@@ -25,5 +25,16 @@
     }
   },
   "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx"],
-  "exclude": ["node_modules"]
+  "exclude": ["node_modules"],
+  "typedocOptions": {
+    "entryPoints": [
+      "hooks/custom/useCurrentLocation/useCurrentLocation.ts",
+      "hooks/custom/useDebounce/useDebounce.ts",
+      "hooks/custom/usePaymentTypes/usePaymentTypes.ts",
+      "hooks/custom/useProductDetailTemplate/useProductDetailTemplate.ts",
+      "hooks/custom/useUpdateRoutes/useUpdateRoutes.ts",
+      "hooks/custom/useWishlist/useWishlist.ts"
+    ],
+    "out": "hooksDoc"
+  }
 }
