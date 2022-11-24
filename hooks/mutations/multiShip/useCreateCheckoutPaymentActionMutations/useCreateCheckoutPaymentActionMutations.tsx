@@ -11,7 +11,7 @@ export interface CheckoutPaymentActionInput {
   paymentAction: PaymentActionInput
 }
 
-const createCheckoutPaymentActionMultiship = async (params: CheckoutPaymentActionInput) => {
+const createCheckoutPayment = async (params: CheckoutPaymentActionInput) => {
   const client = makeGraphQLClient()
 
   const response = await client.request({
@@ -25,7 +25,7 @@ const createCheckoutPaymentActionMultiship = async (params: CheckoutPaymentActio
 export const useCreateCheckoutPaymentActionMutations = () => {
   const queryClient = useQueryClient()
 
-  return useMutation(createCheckoutPaymentActionMultiship, {
+  return useMutation(createCheckoutPayment, {
     onSuccess: () => {
       queryClient.invalidateQueries(checkoutKeys.all)
     },

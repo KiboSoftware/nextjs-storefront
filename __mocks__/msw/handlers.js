@@ -11,6 +11,7 @@ import {
 import { cartItemMock } from '../stories/cartItemMock'
 import { cartCouponMock, cartMock } from '../stories/cartMock'
 import { categoryTreeDataMock } from '../stories/categoryTreeDataMock'
+import { checkoutMock } from '../stories/checkoutMock'
 import { configuredProductMock } from '../stories/configuredProductMock'
 import { createCustomerAccountCardMock } from '../stories/createCustomerAccountCardMock'
 import { createOrderPaymentActionMock } from '../stories/createOrderPaymentActionMock'
@@ -91,7 +92,15 @@ export const checkoutHandlers = [
   }),
   graphql.mutation('deleteCheckoutCoupon', (_req, res, ctx) => {
     return res(ctx.data({ deleteCheckoutCoupon: checkoutMock }))
-  }),
+
+    // Multi Ship Payment
+    graphql.mutation('checkoutPaymentAction', (_req, res, ctx) => {
+      return res(
+        ctx.data({
+          createCheckoutPaymentAction: checkoutMock,
+        })
+      )
+    }),
 ]
 
 export const accountHandlers = [
