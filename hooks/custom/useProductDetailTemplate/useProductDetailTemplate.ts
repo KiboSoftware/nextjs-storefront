@@ -16,6 +16,10 @@ interface SelectedFulfillmentOption<T extends Location | LocationCustom> {
   location?: T
 }
 
+/**
+ * [Custom Hook] Updates shopper entered values for product , sets selected fulfillment and product options,
+ * @param props Expects object { product : holds product details value , purchaseLocation : purchaseLocation of user }
+ */
 export const useProductDetailTemplate = (props: UseProductDetailTemplateProps) => {
   const { product, purchaseLocation } = props
   const [currentProduct, setCurrentProduct] = useState<ProductCustom>(product)
