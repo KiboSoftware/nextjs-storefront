@@ -4,12 +4,12 @@ import { Divider, Box, MenuItem, Card, Typography, Link } from '@mui/material'
 import { useTranslation } from 'next-i18next'
 
 import { KiboSelect, ProductItem } from '@/components/common'
-import { orderGetters, productGetters } from '@/lib/getters'
+import { orderGetters, productGetters, checkoutGetters } from '@/lib/getters'
 
-import type { Maybe, CrOrderItem, CrProduct, Contact, ShippingRate } from '@/lib/gql/types'
+import type { Maybe, CrOrderItem, CrProduct, ShippingRate, Checkout } from '@/lib/gql/types'
 
 export type ShippingGroupsWithMethodProps = {
-  items: Maybe<CrOrderItem>[]
+  checkout: Checkout
   onClickEdit: () => void
 }
 
@@ -49,63 +49,36 @@ const styles = {
     alignItems: 'baseline',
   },
 }
+
+const ProductGroup = ({ items }: { items: Maybe<CrOrderItem>[] }) => {
+  return (
+    <>
+      {items?.map((item: Maybe<CrOrderItem>) => {
+        const product = item?.product as CrProduct
+        return (
+          <ProductItem
+            key={item?.id}
+            id={orderGetters.getCartItemId(item as CrOrderItem)}
+            qty={orderGetters.getProductQuantity(item as CrOrderItem)}
+            purchaseLocation={orderGetters.getPurchaseLocation(item as CrOrderItem)}
+            productCode={productGetters.getProductId(product)}
+            image={productGetters.getProductImage(product)}
+            name={productGetters.getName(product)}
+            options={productGetters.getOptions(product)}
+            price={productGetters.getPrice(product).regular?.toString()}
+            salePrice={productGetters.getPrice(product).special?.toString()}
+            data-testid="product-item-address"
+          />
+        )
+      })}
+    </>
+  )
+}
+
 const ShippingGroupsWithMethod = (props: ShippingGroupsWithMethodProps) => {
-  const { items, onClickEdit } = props
+  const { checkout, onClickEdit } = props
 
   const { t } = useTranslation('common')
-
-  const destinationContacts: Contact[] = [
-    {
-      id: 1,
-      email: 'amolp@dev.com',
-      firstName: 'ram',
-      middleNameOrInitial: null,
-      lastNameOrSurname: 'nam',
-      companyOrOrganization: null,
-      phoneNumbers: {
-        home: '3354533453',
-        mobile: null,
-        work: null,
-      },
-      address: {
-        address1: 'street',
-        address2: 'apartment',
-        address3: null,
-        address4: null,
-        cityOrTown: 'city',
-        stateOrProvince: 'state',
-        postalOrZipCode: '23423',
-        countryCode: 'US',
-        addressType: null,
-        isValidated: false,
-      },
-    },
-    {
-      id: 2,
-      email: 'jon@doe.com',
-      firstName: 'jon',
-      middleNameOrInitial: null,
-      lastNameOrSurname: 'doe',
-      companyOrOrganization: null,
-      phoneNumbers: {
-        home: '5555555555',
-        mobile: null,
-        work: null,
-      },
-      address: {
-        address1: 'street1',
-        address2: 'apartment1',
-        address3: null,
-        address4: null,
-        cityOrTown: 'city1',
-        stateOrProvince: 'state1',
-        postalOrZipCode: '222222',
-        countryCode: 'US',
-        addressType: null,
-        isValidated: false,
-      },
-    },
-  ]
 
   const shipmentMethods = [
     { shippingMethodName: 'Standard', price: 0 },
@@ -113,10 +86,15 @@ const ShippingGroupsWithMethod = (props: ShippingGroupsWithMethodProps) => {
   ]
 
   const [selectShippingOptions, setSelectShippingOptions] = useState<any>({})
+
+  const destinationItemGroups = checkoutGetters.buildItemsGroupFromCheckoutGroupings(checkout)
+
+  console.log('destinationItemGroups###', destinationItemGroups)
+
   const hanndleSelectShippingOption = (id: number, value: string) => {
-    // need to modify as per API response
     setSelectShippingOptions({ ...selectShippingOptions, [id]: value })
   }
+
   return (
     <>
       <Box sx={{ ...styles.multipleAddresses }}>
@@ -140,13 +118,15 @@ const ShippingGroupsWithMethod = (props: ShippingGroupsWithMethodProps) => {
         {t('shipping-method')}
       </Typography>
 
-      {items?.map((item: Maybe<CrOrderItem>, index: number) => {
-        const product = item?.product as CrProduct
+      {destinationItemGroups?.map((destinationItemGroup, index: number) => {
         return (
-          <Card key={item?.id} sx={{ ...styles.card }}>
+          <Card key={destinationItemGroup?.destinationId} sx={{ ...styles.card }}>
             <Box sx={{ ...styles.subContainer }}>
               <Typography variant="subtitle1" component="span">
-                {t('shipments-of', { shipmentNumber: index + 1, numberOfShipments: items?.length })}
+                {t('shipments-of', {
+                  shipmentNumber: index + 1,
+                  numberOfShipments: destinationItemGroups?.length,
+                })}
               </Typography>
               <Divider
                 sx={{
@@ -165,7 +145,9 @@ const ShippingGroupsWithMethod = (props: ShippingGroupsWithMethodProps) => {
                   {t('ship-to')}:
                 </Typography>
                 <Typography variant="body1" component="span">
-                  4321 Another Address, Austin, TX 78741
+                  {checkoutGetters.formatDestinationAddress(
+                    destinationItemGroup?.destination?.destinationContact
+                  )}
                 </Typography>
               </Box>
               <KiboSelect
@@ -184,17 +166,9 @@ const ShippingGroupsWithMethod = (props: ShippingGroupsWithMethodProps) => {
                 })}
               </KiboSelect>
               {/* Iterate shipping address product items */}
-              <ProductItem
-                id={orderGetters.getCartItemId(item as CrOrderItem)}
-                qty={orderGetters.getProductQuantity(item as CrOrderItem)}
-                purchaseLocation={orderGetters.getPurchaseLocation(item as CrOrderItem)}
-                productCode={productGetters.getProductId(product)}
-                image={productGetters.getProductImage(product)}
-                name={productGetters.getName(product)}
-                options={productGetters.getOptions(product)}
-                price={productGetters.getPrice(product).regular?.toString()}
-                salePrice={productGetters.getPrice(product).special?.toString()}
-                data-testid="product-item-address"
+              <ProductGroup
+                key={destinationItemGroup?.destinationId}
+                items={destinationItemGroup?.items}
               />
               <Divider
                 sx={{

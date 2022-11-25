@@ -1,5 +1,5 @@
-export const destinationContact = `
-fragment destinationContact on Contact {
+export const destinationContactFragment = `
+fragment destinationContactFragment on Contact {
       id
         email
         firstName

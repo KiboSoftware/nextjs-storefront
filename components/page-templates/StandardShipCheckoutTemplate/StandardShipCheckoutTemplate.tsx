@@ -12,6 +12,7 @@ import {
   ShippingStep,
   PaymentStep,
   OrderReview,
+  StandardShippingStep,
 } from '@/components/checkout'
 import { OrderSummary, PromoCodeBadge } from '@/components/common'
 import { OrderConfirmation } from '@/components/order'
@@ -192,18 +193,10 @@ const StandardShipCheckoutTemplate = (props: CheckoutProps) => {
                 updateCheckoutPersonalInfo={updateCheckoutPersonalInfo}
               />
               {((isAuthenticated && isSuccess) || !isAuthenticated) && (
-                <ShippingStep
+                <StandardShippingStep
                   checkout={checkout as Order}
                   userShippingAddress={userShippingAddress}
                   isAuthenticated={isAuthenticated}
-                  updateCheckoutShippingInfo={updateCheckoutShippingInfo}
-                  shippingMethods={shippingMethods}
-                  setCheckoutId={setCheckoutId}
-                  setIsNewAddressAdded={setIsNewAddressAdded}
-                  setSelectedShippingAddressId={setSelectedShippingAddressId}
-                  checkoutId={checkoutId}
-                  isNewAddressAdded={isNewAddressAdded}
-                  selectedShippingAddressId={selectedShippingAddressId}
                 />
               )}
               <PaymentStep checkout={checkout} {...paymentStepParams} />

@@ -34,3 +34,5 @@ export { default as updateCheckoutDestination } from './checkout/update-checkout
 export { default as updateCheckoutItemDestination } from './checkout/update-checkout-item-destination'
 export { default as splitOrderShipment } from './checkout/split-order-shipment'
 export { default as editSubscriptionFrequencyMutation } from './subscription/edit-subscription-frequency-mutation'
+export { default as setMultiShipPersonalInfo } from './checkout/set-multi-ship-personal-info'
+export { default as createMultiShipCheckoutFromCartMutation } from './checkout/create-multi-ship-checkout-from-cart'
