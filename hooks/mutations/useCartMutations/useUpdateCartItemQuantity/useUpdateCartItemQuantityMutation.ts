@@ -27,6 +27,16 @@ const updateCartItemQuantity = async (params: UpdateCartItemQuantityParams) => {
   return response?.updateCartItemQuantity
 }
 
+/**
+ * [ Mutation hook => updateCurrentCartItemQuantity(cartItemId: String!, quantity: Int!): CartItem ]
+ *
+ * Description : Updates the quantity of items currently in the cart
+ *
+ * Parameters passed to function updateCartItemQuantity(params: UpdateCartItemQuantityParams) => expects object of type 'UpdateCartItemQuantityParams' containing cartItemId and quantity
+ *
+ * On success, calls invalidateQueries on cartKeys and fetches the updated result
+ * @returns 'response?.updateCartItemQuantity' with updated quantity for the items in cart
+ */
 export const useUpdateCartItemQuantityMutation = () => {
   const queryClient = useQueryClient()
   return {

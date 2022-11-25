@@ -28,6 +28,16 @@ const updateCartItem = async (props: UpdateCartItemParams) => {
   return response?.updateCurrentCartItem
 }
 
+/**
+ * [ Mutation hook => updateCurrentCartItem(cartItemId: String!, cartItemInput: CartItemInput): CartItem ]
+ *
+ * Description : Updates the 'fulfillmentMethod(Shipping/Pickup in store)' and 'fulfillmentLocationCode' based on selected option
+ *
+ * Parameters passed to function updateCartItem(props: UpdateCartItemParams) => expects object of type 'UpdateCartItemParams'
+ *
+ * On success, calls invalidateQueries on cartKeys and fetches the updated result
+ * @returns 'response?.updateCurrentCartItem' and changes the fulfillment method
+ */
 export const useUpdateCartItemMutation = () => {
   const queryClient = useQueryClient()
   return {
