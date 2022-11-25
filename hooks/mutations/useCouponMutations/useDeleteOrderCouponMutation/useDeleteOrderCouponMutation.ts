@@ -25,6 +25,16 @@ const deleteOrderCoupon = async (params: DeleteCartCouponParams) => {
   return response?.deleteOrderCoupon
 }
 
+/**
+ * [ Mutation hook => deleteOrderCoupon($orderId: String!, $couponCode: String!) ]
+ *
+ * Description : Removes promo code from Order Summary in checkout pages
+ *
+ * Parameters passed to function deleteOrderCoupon(params: DeleteCartCouponParams) => expects object of type 'DeleteCartCouponParams' containing checkoutId and couponCode
+ *
+ * On success, calls invalidateQueries on cartKeys and fetches the updated result
+ * @returns 'response?.deleteOrderCoupon' and deletes the applied coupon on checkout page
+ */
 export const useDeleteOrderCouponMutation = () => {
   const queryClient = useQueryClient()
   return useMutation(deleteOrderCoupon, {

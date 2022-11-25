@@ -25,6 +25,16 @@ const createOrder = async (checkout: Order) => {
   return response?.createOrderAction
 }
 
+/**
+ * [ Mutation hook => createOrderAction($orderId: String!, $orderActionInput: OrderActionInput) ]
+ *
+ * Description : Creates a new order after clicking 'Confirm & Pay' button on Review step of checkout page
+ *
+ * Parameters passed to function createOrder(checkout: Order) => expects object of type 'Order'
+ *
+ * On success, calls invalidateQueries on checkoutKeys and fetches the updated result
+ * @returns 'response?.createOrderAction' and creates a new order with orderId
+ */
 export const useCreateOrderMutation = () => {
   const queryClient = useQueryClient()
 
