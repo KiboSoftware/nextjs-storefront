@@ -1,7 +1,7 @@
 import { useQuery } from 'react-query'
 
 import { makeGraphQLClient } from '@/lib/gql/client'
-import { getCheckoutQuery } from '@/lib/gql/queries'
+import { getMultiShipCheckoutQuery } from '@/lib/gql/queries'
 import { checkoutKeys } from '@/lib/react-query/queryKeys'
 
 import type { Checkout } from '@/lib/gql/types'
@@ -20,40 +20,7 @@ const getCheckout = async (checkoutId?: string | null) => {
   const client = makeGraphQLClient()
 
   const response = await client.request({
-    document: `query checkout($checkoutId:String!){
-  checkout(checkoutId: $checkoutId) {
-    id
-    siteId
-    tenantId
-    feeTotal
-    subTotal
-    itemTaxTotal
-    itemTotal
-    shippingSubTotal
-    shippingTaxTotal
-    itemLevelShippingDiscountTotal
-    orderLevelShippingDiscountTotal
-    shippingTotal
-    handlingSubTotal
-    itemLevelHandlingDiscountTotal
-    orderLevelHandlingDiscountTotal
-    handlingTaxTotal
-    handlingTotal
-    total
-    amountRemainingForPayment
-    itemLevelProductDiscountTotal
-    orderLevelProductDiscountTotal
-    items{
-      quantity
-      product{
-        productCode
-        name
-      }
-      
-    }
-  
-    }
-}`, //@to-do, multiship query
+    document: getMultiShipCheckoutQuery,
     variables: { checkoutId },
   })
 

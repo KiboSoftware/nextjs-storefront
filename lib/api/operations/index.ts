@@ -5,3 +5,4 @@ export { default as categoryTreeSearchByCode } from './get-category-tree-by-code
 export { default as getCheckout } from './get-checkout'
 export { default as getCart } from './get-cart'
 export { default as getCategoryTree } from './get-category-tree'
+export { default as getMultiShipCheckout } from './get-multi-ship-checkout'

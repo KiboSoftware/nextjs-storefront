@@ -16,7 +16,7 @@ const addCheckoutDestination = async (params: CreateCheckoutDestination) => {
 
   const response = await client.request({
     document: createCheckoutDestination,
-    variables: { variables: params },
+    variables: params,
   })
 
   return response?.createCheckoutDestination
