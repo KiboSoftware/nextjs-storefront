@@ -22,6 +22,9 @@ export * from './queries/multiShip/useCheckoutQueries/useCheckoutQueries'
 export * from './queries/useCheckoutDestinationQueries/useCheckoutDestinationQueries'
 // Multiship Query
 export * from './queries/multiShip/useCheckoutQueries/useCheckoutQueries'
+export * from './queries/multiShip/useCheckoutDestinationQueries/useCheckoutDestinationQueries'
+export * from './queries/multiShip/useCheckoutDestinationsQueries/useCheckoutDestinationsQueries'
+export * from './queries/multiShip/useCheckoutShippingMethodsQuery/useCheckoutShippingMethodsQuery'
 
 // Custom hooks
 export * from './custom/useDebounce/useDebounce'

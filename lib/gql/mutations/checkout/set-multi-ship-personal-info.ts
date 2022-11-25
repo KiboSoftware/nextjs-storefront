@@ -1,15 +1,8 @@
 import { checkoutLineItemFragment, destinationContactFragment } from '../../fragments'
-const updateCheckoutItemDestination = /* GraphQL */ `
-  mutation updateCheckoutItemDestination(
-    $checkoutId: String!
-    $itemId: String!
-    $destinationId: String!
-  ) {
-    updateCheckoutItemDestination(
-      checkoutId: $checkoutId
-      itemId: $itemId
-      destinationId: $destinationId
-    ) {
+
+const setMultiShipPersonalInfo = /* GraphQL */ `
+  mutation updateCheckout($checkoutId: String!, $checkoutInput: CheckoutInput) {
+    checkout: updateCheckout(checkoutId: $checkoutId, checkoutInput: $checkoutInput) {
       id
       siteId
       tenantId
@@ -69,5 +62,4 @@ const updateCheckoutItemDestination = /* GraphQL */ `
   ${checkoutLineItemFragment}
   ${destinationContactFragment}
 `
-
-export default updateCheckoutItemDestination
+export default setMultiShipPersonalInfo
