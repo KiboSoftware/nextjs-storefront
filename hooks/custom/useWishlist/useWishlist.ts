@@ -17,6 +17,14 @@ import type {
   ProductCustom,
 } from '@/lib/types'
 
+/**
+ * [Custom Hook] Updates the wishlist items and checks if the product is already in wishlist.
+ *
+ * Return two functions:
+ * 1. checkProductInWishlist(props: WishlistItemInWishlistParams) => Expects object of type 'WishlistItemInWishlistParams'
+ * 2. addOrRemoveWishlistItem({product: ProductCustom | WishlistProductInput}) => Expects product object of type 'ProductCustom' or 'WishlistProductInput'
+ * @param params Expects a nullable prop of type 'WishlistHookParams'
+ */
 export const useWishlist = (params?: WishlistHookParams) => {
   const { showModal } = useModalContext()
 
