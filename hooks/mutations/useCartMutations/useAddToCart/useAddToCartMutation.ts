@@ -34,7 +34,16 @@ const addToCart = async (props: AddToCartInputParams) => {
 
   return response?.addItemToCurrentCart
 }
-
+/**
+ * [Mutation hook => addItemToCurrentCart(cartItemInput: CartItemInput): CartItem]
+ *
+ * Description : Add the product items to the cart
+ *
+ * Parameters passed to function addToCart(props: AddToCartInputParams) => expects object of type 'AddToCartInputParams' including product details and quantity
+ *
+ * On success, calls invalidateQueries on cartKeys
+ * @returns 'response?.addItemToCurrentCart' containing product details added to cart and it's quantity
+ */
 export const useAddToCartMutation = () => {
   const queryClient = useQueryClient()
   return {
