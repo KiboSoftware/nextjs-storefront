@@ -21,7 +21,23 @@ const getMultiShipCheckoutQuery = /* GraphQL */ `
         }
       }
       groupings {
-        ...checkoutGroupingsFragment
+        id
+        destinationId
+        orderItemIds
+        fulfillmentMethod
+        shippingMethodCode
+        shippingMethodName
+        dutyTotal
+        shippingSubTotal
+        itemLevelShippingDiscountTotal
+        orderLevelShippingDiscountTotal
+        shippingTaxTotal
+        shippingTotal
+        handlingSubTotal
+        itemLevelHandlingDiscountTotal
+        orderLevelHandlingDiscountTotal
+        handlingTaxTotal
+        handlingTotal
       }
     }
   }
