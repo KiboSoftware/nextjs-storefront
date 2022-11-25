@@ -6,19 +6,19 @@ import { checkoutKeys } from '@/lib/react-query/queryKeys'
 
 import type { OrderInput } from '@/lib/gql/types'
 
-export interface MultiShipPersonalInfo {
+export interface MultiShipShippingInfo {
   orderId: string
   updateMode: string
   version?: string
   orderInput: OrderInput
 }
 
-const updatePersonalInfo = async (personalInfo: MultiShipPersonalInfo) => {
+const updateShippingInfo = async (shippingInfo: MultiShipShippingInfo) => {
   const client = makeGraphQLClient()
 
   const response = await client.request({
     document: setPersonalInfo,
-    variables: personalInfo,
+    variables: shippingInfo,
   })
 
   //   return response?.checkout
@@ -30,7 +30,7 @@ const updatePersonalInfo = async (personalInfo: MultiShipPersonalInfo) => {
 const useUpdateCheckoutShippingInfoMutation = () => {
   const queryClient = useQueryClient()
 
-  return useMutation(updatePersonalInfo, {
+  return useMutation(updateShippingInfo, {
     onSuccess: () => {
       queryClient.removeQueries([checkoutKeys.all])
     },

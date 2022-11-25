@@ -2,7 +2,7 @@ import { useMutation, useQueryClient } from 'react-query'
 
 import { makeGraphQLClient } from '@/lib/gql/client'
 import { updateCheckoutItemDestination } from '@/lib/gql/mutations'
-import { checkoutDestinationKeys } from '@/lib/react-query/queryKeys'
+import { checkoutKeys } from '@/lib/react-query/queryKeys'
 
 export interface UseCheckoutItemDestination {
   checkoutId: string
@@ -26,7 +26,7 @@ export const useUpdateCheckoutItemDestinationMutations = () => {
 
   return useMutation(setCheckoutItemDestination, {
     onSuccess: () => {
-      queryClient.invalidateQueries(checkoutDestinationKeys.all)
+      queryClient.invalidateQueries(checkoutKeys.all)
     },
   })
 }

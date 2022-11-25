@@ -14,12 +14,15 @@ import {
 import { useTranslation } from 'next-i18next'
 
 import { KiboSelect, ProductItem } from '@/components/common'
-import { orderGetters, productGetters } from '@/lib/getters'
+import { orderGetters, productGetters, checkoutGetters } from '@/lib/getters'
 
-import type { Maybe, CrOrderItem, CrProduct, Contact } from '@/lib/gql/types'
+import type { Maybe, CrOrderItem, CrProduct, Contact, Checkout, Destination } from '@/lib/gql/types'
 
 export type ProductItemWithAddressListProps = {
-  items: Maybe<CrOrderItem>[]
+  checkout: Checkout
+  multiShipAddresses: any
+  createCheckoutDestination: () => any
+  createOrSetDestinationAddress: (id: string, destinationIdOrAddressId: string) => any
 }
 
 const styles = {
@@ -59,68 +62,9 @@ const styles = {
   },
 }
 const ProductItemWithAddressList = (props: ProductItemWithAddressListProps) => {
-  const { items } = props
+  const { checkout, multiShipAddresses, createOrSetDestinationAddress } = props
 
   const { t } = useTranslation('common')
-
-  const destinationContacts: Contact[] = [
-    {
-      id: 1,
-      email: 'amolp@dev.com',
-      firstName: 'ram',
-      middleNameOrInitial: null,
-      lastNameOrSurname: 'nam',
-      companyOrOrganization: null,
-      phoneNumbers: {
-        home: '3354533453',
-        mobile: null,
-        work: null,
-      },
-      address: {
-        address1: 'street',
-        address2: 'apartment',
-        address3: null,
-        address4: null,
-        cityOrTown: 'city',
-        stateOrProvince: 'state',
-        postalOrZipCode: '23423',
-        countryCode: 'US',
-        addressType: null,
-        isValidated: false,
-      },
-    },
-    {
-      id: 2,
-      email: 'jon@doe.com',
-      firstName: 'jon',
-      middleNameOrInitial: null,
-      lastNameOrSurname: 'doe',
-      companyOrOrganization: null,
-      phoneNumbers: {
-        home: '5555555555',
-        mobile: null,
-        work: null,
-      },
-      address: {
-        address1: 'street1',
-        address2: 'apartment1',
-        address3: null,
-        address4: null,
-        cityOrTown: 'city1',
-        stateOrProvince: 'state1',
-        postalOrZipCode: '222222',
-        countryCode: 'US',
-        addressType: null,
-        isValidated: false,
-      },
-    },
-  ]
-
-  const [selectedAddresses, setSelectedAddresses] = useState<any>({})
-  const handleSelectShippingAddress = (id: number, value: string) => {
-    // need to modify as per API response
-    setSelectedAddresses({ ...selectedAddresses, [id]: value })
-  }
   const handleEditAddress = () => {
     // need to handle
     console.log('edit address')
@@ -134,7 +78,7 @@ const ProductItemWithAddressList = (props: ProductItemWithAddressListProps) => {
 
   return (
     <>
-      {items?.map((item: Maybe<CrOrderItem>, index: number) => {
+      {checkout?.items?.map((item: Maybe<CrOrderItem>) => {
         const product = item?.product as CrProduct
         return (
           <Card key={item?.id} sx={{ ...styles.card }}>
@@ -156,15 +100,20 @@ const ProductItemWithAddressList = (props: ProductItemWithAddressListProps) => {
             <Box sx={{ ...styles.subContainer, display: 'flex', flexDirection: 'column' }}>
               <KiboSelect
                 name="multiShipAddresses"
-                onChange={(_name, value) => handleSelectShippingAddress(index, value)}
+                onChange={(_name, value) => createOrSetDestinationAddress(item?.id, value)}
                 placeholder={t('select-a-saved-address')}
-                value={selectedAddresses[index]}
+                value={item?.destinationId as string}
               >
-                {destinationContacts?.map((contact: Contact) => {
-                  const formatedAddress = `${contact?.address?.address1}, ${contact?.address?.address2}, ${contact?.address?.cityOrTown}, ${contact?.address?.stateOrProvince}, ${contact?.address?.postalOrZipCode}, ${contact?.address?.countryCode} `
+                {multiShipAddresses?.map((multiShipAddress) => {
+                  const destinationOrAddressId = multiShipAddress?.destinationId
+                    ? multiShipAddress?.destinationId
+                    : multiShipAddress?.address?.id
                   return (
-                    <MenuItem key={contact.id} value={`${contact.id}`}>
-                      {formatedAddress}
+                    <MenuItem
+                      key={multiShipAddress?.address?.id}
+                      value={`${destinationOrAddressId}`}
+                    >
+                      {checkoutGetters.formatDestinationAddress(multiShipAddress?.address)}
                     </MenuItem>
                   )
                 })}

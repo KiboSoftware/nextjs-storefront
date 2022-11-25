@@ -2,7 +2,7 @@ import {
   baseMultiShipCheckoutFragment,
   checkoutLineItemFragment,
   checkoutPaymentFragment,
-  contactForOrdersFragment,
+  destinationContactFragment,
   multiShipCheckoutGroupingFragment,
 } from '@/lib/gql/fragments'
 
@@ -20,7 +20,7 @@ const getMultiShipCheckoutQuery = /* GraphQL */ `
       destinations {
         id
         destinationContact {
-          ...contactForOrdersFragment
+          ...destinationContactFragment
         }
         isDestinationCommercial
         data
@@ -34,6 +34,6 @@ const getMultiShipCheckoutQuery = /* GraphQL */ `
   ${multiShipCheckoutGroupingFragment}
   ${checkoutLineItemFragment}
   ${checkoutPaymentFragment}
-  ${contactForOrdersFragment}
+  ${destinationContactFragment}
 `
 export default getMultiShipCheckoutQuery

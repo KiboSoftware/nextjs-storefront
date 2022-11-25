@@ -12,6 +12,7 @@ import {
   PaymentStep,
   ReviewStep,
   ShippingStep,
+  MultiShippingStep,
 } from '@/components/checkout'
 import { OrderSummary, PromoCodeBadge } from '@/components/common'
 import { OrderConfirmation } from '@/components/order'
@@ -25,10 +26,14 @@ import {
   useUpdateMultiShipCheckoutPersonalInfoMutation,
   useUpdateMultiShipCheckoutShippingInfoMutation,
   useUpdateOrderCouponMutation,
+  useCheckoutDestinationsQueries,
+  MultiShipPersonalInfo,
+  useCreateCheckoutDestinationMutations,
+  useCheckoutShippingMethodsQuery,
 } from '@/hooks'
 import { userGetters } from '@/lib/getters'
 
-import type { CustomerContact, Checkout } from '@/lib/gql/types'
+import type { CustomerContact, Checkout, CheckoutInput } from '@/lib/gql/types'
 interface CheckoutProps {
   checkout: Checkout
   initialStep?: number
@@ -40,26 +45,8 @@ const buttonStyle = {
   fontSize: (themeParam: Theme) => themeParam.typography.subtitle1,
 } as SxProps<Theme> | undefined
 
-// import {somehooks} from 'multiship ship checkout hook'
 const MultiShipCheckoutTemplate = (props: CheckoutProps) => {
-  //  const {method1, method2 ...} = somehooks()
-  //<kiboStepper>
-  //  <DetailsStep {...props} method1={method1}/>
-
-  // <ShippingStep {...props} method2={method2}/>
-
-  // <PaymentStep {...props} />
-  // <ReviewStep {...props} />
-  //   <kiboStepper>
-
   const { checkout: initialCheckout, isMultiShipEnabled } = props
-
-  //   const buildFormattedCheckoutData = (checkoutParams: Checkout) => {
-  //     //   @to-do data format as per standard checkout
-  //   }
-  //   const checkoutFormattedData = buildFormattedCheckoutData(checkoutParams)
-
-  //
 
   const router = useRouter()
   const [promoError, setPromoError] = useState<string>('')
@@ -79,28 +66,27 @@ const MultiShipCheckoutTemplate = (props: CheckoutProps) => {
   // Hooks
   const updateMultiShipCheckoutPersonalInfo = useUpdateMultiShipCheckoutPersonalInfoMutation()
   const updateMultiShipCheckoutShippingInfo = useUpdateMultiShipCheckoutShippingInfoMutation()
-  const { data: shippingMethods } = useShippingMethodsQueries(
+  const createCheckoutDestination = useCreateCheckoutDestinationMutations()
+
+  const { data: shippingMethods } = useCheckoutShippingMethodsQuery(
     checkoutId,
     isNewAddressAdded,
-    selectedShippingAddressId
+    checkout?.groupings[0]?.destinationId //this should call on each selected destination for multiship
   )
 
   const updateCheckoutPersonalInfo = async (formData: PersonalDetails) => {
     const { email } = formData
-    // @to-do Modify code as per multiship
-    const personalInfo: PersonalInfo = {
-      orderId: checkout?.id as string,
-      updateMode: 'ApplyToOriginal',
-      orderInput: {
-        ...(checkout as OrderInput),
+    const personalInfo: MultiShipPersonalInfo = {
+      checkoutId: checkout?.id as string,
+      checkoutInput: {
+        ...(checkout as Checkout),
         email,
-      },
+      } as CheckoutInput,
     }
     await updateMultiShipCheckoutPersonalInfo.mutateAsync(personalInfo)
   }
 
   const updateCheckoutShippingInfo = async (shippingInfo: any) => {
-    console.log('updateCheckoutShippingInfo')
     await updateMultiShipCheckoutShippingInfo.mutateAsync(shippingInfo)
   }
 
@@ -155,15 +141,16 @@ const MultiShipCheckoutTemplate = (props: CheckoutProps) => {
     shippingTotalLabel: t('standard-shopping'),
     taxLabel: t('tax'),
     totalLabel: t('order-total'),
-    subTotal: t('currency', { val: checkout?.subtotal }),
+    subTotal: t('currency', { val: checkout?.subTotal }),
     discountedSubtotal:
-      checkout?.discountedSubtotal && checkout?.discountedSubtotal != checkout?.subtotal
+      checkout?.discountedSubtotal && checkout?.discountedSubtotal != checkout?.subTotal
         ? t('currency', { val: checkout?.discountedSubtotal })
-        : '',
+        : '', //discountedSubtotal?
     shippingTotal: checkout?.shippingTotal
       ? t('currency', { val: checkout?.shippingTotal })
       : t('free'),
-    tax: t('currency', { val: checkout?.taxTotal }),
+    tax: t('currency', { val: checkout?.itemTaxTotal }),
+    // tax: t('currency', { val: checkout?.taxTotal }), //taxTotal?
     total: t('currency', { val: checkout?.total }),
     checkoutLabel: t('go-to-checkout'),
     shippingLabel: t('go-to-shipping'),
@@ -188,6 +175,11 @@ const MultiShipCheckoutTemplate = (props: CheckoutProps) => {
   const userShippingAddress = userGetters?.getUserShippingAddress(
     savedUserAddressData?.items as CustomerContact[]
   )
+
+  const { data: destionations } = useCheckoutDestinationsQueries({
+    checkoutId: checkoutId as string,
+  })
+
   return (
     <>
       {showCheckoutSteps && (
@@ -203,7 +195,7 @@ const MultiShipCheckoutTemplate = (props: CheckoutProps) => {
                 updateCheckoutPersonalInfo={updateCheckoutPersonalInfo}
               />
               {((isAuthenticated && isSuccess) || !isAuthenticated) && (
-                <ShippingStep
+                <MultiShippingStep
                   checkout={checkout as Order}
                   userShippingAddress={userShippingAddress}
                   isAuthenticated={isAuthenticated}
@@ -216,6 +208,8 @@ const MultiShipCheckoutTemplate = (props: CheckoutProps) => {
                   checkoutId={checkoutId}
                   isNewAddressAdded={isNewAddressAdded}
                   selectedShippingAddressId={selectedShippingAddressId}
+                  destinations={destionations}
+                  createCheckoutDestination={createCheckoutDestination}
                 />
               )}
               <PaymentStep checkout={checkout} {...paymentStepParams} />

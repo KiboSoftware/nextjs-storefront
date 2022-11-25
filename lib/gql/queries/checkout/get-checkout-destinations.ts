@@ -1,15 +1,15 @@
-import { destinationContact } from '../../fragments/destinationContact'
+import { destinationContactFragment } from '../../fragments'
 
 const getCheckoutDestinationsQuery = /* GraphQL */ `
   query getCheckoutDestinations($checkoutId: String!) {
     checkoutDestinations(checkoutId: $checkoutId) {
       destinationContact {
-        ...destinationContact
+        ...destinationContactFragment
       }
       id
       isDestinationCommercial
     }
   }
-  ${destinationContact}
+  ${destinationContactFragment}
 `
 export default getCheckoutDestinationsQuery

@@ -28,6 +28,7 @@ import {
   useUpdateCartItemMutation,
   useUpdateCartCouponMutation,
   useDeleteCartCouponMutation,
+  useCreateMultiShipCheckoutFromCartMutation,
 } from '@/hooks'
 import { FulfillmentOptions } from '@/lib/constants'
 import { orderGetters, cartGetters } from '@/lib/getters'
@@ -36,6 +37,7 @@ import type { LocationCustom } from '@/lib/types'
 import type { Cart, Location, CartItemInput, CartItem } from '@/lib/gql/types'
 
 export interface CartTemplateProps {
+  isMultiShipEnabled: boolean
   cart: Cart
 }
 
@@ -57,6 +59,7 @@ const styles = {
 }
 
 const CartTemplate = (props: CartTemplateProps) => {
+  const { isMultiShipEnabled } = props
   const { data: cart } = useCartQueries(props?.cart)
 
   const { t } = useTranslation('common')
@@ -64,6 +67,7 @@ const CartTemplate = (props: CartTemplateProps) => {
   const isMobileViewport = useMediaQuery(theme.breakpoints.down('md'))
   const router = useRouter()
   const { createFromCart } = useCreateFromCartMutation()
+  const { createMultiShipCheckoutFromCart } = useCreateMultiShipCheckoutFromCartMutation()
   const { updateCartItemQuantity } = useUpdateCartItemQuantityMutation()
   const { removeCartItem } = useRemoveCartItemMutation()
   const { updateCartItem } = useUpdateCartItemMutation()
@@ -169,7 +173,10 @@ const CartTemplate = (props: CartTemplateProps) => {
 
   const handleGotoCheckout = async () => {
     try {
-      const createFromCartResponse = await createFromCart.mutateAsync(cart?.id)
+      const createFromCartResponse = isMultiShipEnabled
+        ? await createMultiShipCheckoutFromCart.mutateAsync(cart?.id)
+        : await createFromCart.mutateAsync(cart?.id)
+
       if (createFromCartResponse?.id) {
         router.push(`/checkout/${createFromCartResponse.id}`)
       }
