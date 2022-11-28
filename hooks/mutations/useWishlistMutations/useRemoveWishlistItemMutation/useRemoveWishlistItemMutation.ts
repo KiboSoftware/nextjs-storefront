@@ -18,6 +18,15 @@ const removeWishlistItem = async (props: RemoveWishlistItemInput) => {
   return response?.deleteWishlistItem
 }
 
+/**
+ * [ Mutation hook => createWishlist(wishlistInput: $wishlistInput)]
+ *
+ * Description : It deleted item from wishlist
+ * On success, calls invalidateQueries on wishlistKeys and clears timeout
+ * @param params  WishlistHookParams
+ * @returns function removeWishlistItem which calls remove wishlist mutation it accepts props (props: RemoveWishlistItemInput) in params and deletes item from wishlist
+ */
+
 export const useRemoveWishlistItemMutation = (params?: WishlistHookParams) => {
   const queryClient = useQueryClient()
   return {

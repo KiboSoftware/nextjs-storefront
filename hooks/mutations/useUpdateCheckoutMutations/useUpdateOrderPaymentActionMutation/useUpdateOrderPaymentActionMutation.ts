@@ -23,6 +23,16 @@ const updateOrderPaymentActionMutation = async (params: UpdateOrderPaymentAction
   return response?.createOrderPaymentPaymentAction
 }
 
+/**
+ * [ Mutation hook => createOrderPaymentPaymentAction(orderId: $orderId,paymentId: $paymentId,paymentActionInput: $paymentAction) ]
+ *
+ * Description : It updates user payment action for order at checkout
+ *
+ * Parameters passed to function updateOrderPaymentActionMutation(params: UpdateOrderPaymentActionParams) => expects object of type ' UpdateOrderPaymentActionParams' containing  orderId, paymentId,paymentAction
+ *
+ * On success, calls invalidateQueries on checkoutKeys
+ * @returns 'response?.createOrderPaymentPaymentAction' containing updated payment information at checkout
+ */
 export const useUpdateOrderPaymentActionMutation = () => {
   const queryClient = useQueryClient()
 

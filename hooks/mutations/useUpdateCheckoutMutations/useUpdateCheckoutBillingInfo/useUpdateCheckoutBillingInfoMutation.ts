@@ -22,6 +22,16 @@ const updateBillingInfo = async (params: UpdateBillingInfoInput) => {
   return response?.updateOrderBillingInfo
 }
 
+/**
+ * [ Mutation hook => updateOrderBillingInfo(orderId: $orderId, billingInfoInput: $billingInfoInput) ]
+ *
+ * Description : It updates user billing info at checkout
+ *
+ * Parameters passed to function updateBillingInfo(params: UpdateBillingInfoInput) => expects object of type 'UpdateBillingInfoInput' containing orderid and billinginfo input
+ *
+ * On success, calls invalidateQueries on checkoutKeys
+ * @returns 'response?.updateOrderBillingInfo' containing updated billing details of user
+ */
 export const useUpdateCheckoutBillingInfoMutation = () => {
   const queryClient = useQueryClient()
 

@@ -14,6 +14,17 @@ const loginUser = async (customerUserAuthInfoInput: CustomerUserAuthInfoInput) =
   return response?.account
 }
 
+/**
+ * [ Mutation hook => createCustomerAuthTicket(customerUserAuthInfoInput: $loginInput) ]
+ *
+ * Description : It logs user in account by creating auth ticket
+ *
+ * Parameters passed to function loginUser(customerAccountAndAuthInfoInput: CustomerAccountAndAuthInfoInput) => expects object of type ' CustomerAccountAndAuthInfoInput' containing password and username
+ *
+ * On success, calls invalidateQueries on loginKeys
+ * @returns 'response?.account' containing information related to logged in user account
+ */
+
 export const useUserMutations = () => {
   const queryClient = useQueryClient()
   const {

@@ -28,6 +28,17 @@ const updateShippingInfo = async (params: CheckoutShippingParams) => {
   return response?.updateOrderFulfillmentInfo
 }
 
+/**
+ * [ Mutation hook => updateOrderFulfillmentInfo(orderId: $orderId, fulfillmentInfoInput: $fulfillmentInfoInput) ]
+ *
+ * Description : It updates user shipping(fulfillment) info at checkout
+ *
+ * Parameters passed to function updateShippingInfo(params: CheckoutShippingParams) => expects object of type ' ShippingInfo' containing  orderId and fulfillmentInfoInput
+ *
+ * On success, calls invalidateQueries on checkoutKeys
+ * @returns 'response?.updateOrderFulfillmentInfo' containing updated shipping checkout information
+ */
+
 export const useUpdateCheckoutShippingInfoMutation = () => {
   const queryClient = useQueryClient()
 

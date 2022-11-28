@@ -26,6 +26,16 @@ const addToWishlist = async (props: WishlistItemInputParams) => {
   return response?.createWishlistItem
 }
 
+/**
+ * [ Mutation hook => createWishlistItem(wishlistId: $wishlistId, wishlistItemInput: $wishlistItemInput)]
+ *
+ * Description : It add item to wishlist for current user
+ *
+ * Parameters passed to function addToWishlist(props: WishlistItemInputParams) => expects object of type ' WishlistItemInputParams' containing  product: WishlistProductInput,customerAccountId: number,currentWishlist?: Maybe<Wishlist>
+ *
+ * On success, calls invalidateQueries on wishlistKeys
+ * @returns 'response?.createWishlistItem' containing wishlist items for current user
+ */
 export const useAddToWishlistMutation = () => {
   const queryClient = useQueryClient()
 

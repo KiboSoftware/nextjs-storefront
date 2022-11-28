@@ -15,6 +15,19 @@ const registerUser = async (customerAccountAndAuthInfoInput: CustomerAccountAndA
   return response?.account
 }
 
+/**
+ * [ Mutation hook => createCustomerAccountAndLogin(customerAccountAndAuthInfoInput: $customerAccountAndAuthInfoInput) ]
+ *
+ * Description : It creates account for user and logIn user into account created
+ *
+ * Parameters passed to function registerUser(customerAccountAndAuthInfoInput: CustomerAccountAndAuthInfoInput) => expects object of type ' CustomerAccountAndAuthInfoInput' containing account?: InputMaybe<CustomerAccountInput> | undefined;
+ *  externalPassword?: InputMaybe<string> | undefined;
+ *  isImport?: InputMaybe<boolean> | undefined;
+ *  password?: InputMaybe<...> | undefined;
+ *
+ * On success, calls invalidateQueries on loginKeys
+ * @returns 'response?.account' containing information related to user account
+ */
 export const useUserAccountRegistrationMutations = () => {
   const queryClient = useQueryClient()
   const {

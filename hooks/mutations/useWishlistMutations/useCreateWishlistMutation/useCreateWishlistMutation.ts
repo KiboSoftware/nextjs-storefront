@@ -24,6 +24,17 @@ const createWishlist = async (customerAccountId: number) => {
   return response?.createWishlist
 }
 
+/**
+ * [ Mutation hook => createWishlist(wishlistInput: $wishlistInput)]
+ *
+ * Description : It creates wishlist for user
+ *
+ * Parameters passed to function createWishlist(customerAccountId: number) => customerAccountId in params
+ *
+ * On success, calls invalidateQueries on wishlistKeys
+ * @returns 'response?.createWishlistItem' containing wishlist created for user
+ */
+
 export const useCreateWishlistMutation = () => {
   const queryClient = useQueryClient()
 
