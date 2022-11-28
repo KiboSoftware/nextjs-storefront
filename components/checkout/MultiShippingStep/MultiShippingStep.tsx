@@ -130,15 +130,15 @@ const MultiShippingStep = (props: ShippingProps) => {
       })
 
       if (destination?.id) {
-        const allItems = checkout?.items
-        const checkoutId = checkout?.id
-        allItems?.forEach(async (item) => {
+        for (const item of checkout?.items) {
+          const itemId = item?.id as string
+          const checkoutId = checkout?.id as string
           await updateCheckoutItemDestination.mutateAsync({
-            itemId: item?.id as string,
-            destinationId: destination?.id,
-            checkoutId: checkoutId as string,
+            itemId,
+            destinationId: destination?.id as string,
+            checkoutId,
           })
-        })
+        }
 
         // setCheckoutId(checkout?.id)
         // setSelectedShippingAddressId(destination?.id as string) // set Selected MultiShipaddress
@@ -193,12 +193,13 @@ const MultiShippingStep = (props: ShippingProps) => {
       const destinationId = await handleCreateDestinationAddress(destinationIdOrAddressId)
       console.log('###in## Not existing##')
       for (const item of checkout?.items) {
-        const nexit = await updateCheckoutItemDestination.mutateAsync({
-          itemId: item?.id,
-          destinationId: destinationId as string,
-          checkoutId: checkout?.id as string,
+        const itemId = item?.id as string
+        const checkoutId = checkout?.id as string
+        await updateCheckoutItemDestination.mutateAsync({
+          itemId,
+          destinationId,
+          checkoutId,
         })
-        console.log('##NotexIt', nexit)
       }
       // checkout?.items?.map(async (item) => {
       //   await updateCheckoutItemDestination.mutateAsync({
@@ -210,13 +211,37 @@ const MultiShippingStep = (props: ShippingProps) => {
     } else {
       console.log('###in## existing##')
       for (const item of checkout?.items) {
-        const exIt = await updateCheckoutItemDestination.mutateAsync({
-          itemId: item?.id,
+        const itemId = item?.id as string
+        const checkoutId = checkout?.id as string
+        await updateCheckoutItemDestination.mutateAsync({
+          itemId,
           destinationId: destinationIdOrAddressId as string,
-          checkoutId: checkout?.id as string,
+          checkoutId,
         })
-        console.log('##exIt', exIt)
       }
+      // await updateCheckoutItemDestination.mutateAsync({
+      //   itemId: 'b98c27de676846729c46af4d00b09b8d',
+
+      //   destinationId: '7e366f2fab9848ddb5a8af5b008626b8',
+
+      //   checkoutId: '147279b50e001200016ca6ae000074e7',
+      // })
+
+      // await updateCheckoutItemDestination.mutateAsync({
+      //   itemId: 'bad76750cd2a48e2aacfaf5600693525',
+
+      //   destinationId: '7e366f2fab9848ddb5a8af5b008626b8',
+
+      //   checkoutId: '147279b50e001200016ca6ae000074e7',
+      // })
+
+      // await updateCheckoutItemDestination.mutateAsync({
+      //   itemId: '1ef37299b50d44ddb037af4d00b09b8d',
+
+      //   destinationId: '7e366f2fab9848ddb5a8af5b008626b8',
+
+      //   checkoutId: '147279b50e001200016ca6ae000074e7',
+      // })
       // checkout?.items?.map(async (item) => {
       //   const ex = await updateCheckoutItemDestination.mutateAsync({
       //     itemId: item?.id,
@@ -239,17 +264,19 @@ const MultiShippingStep = (props: ShippingProps) => {
     label: <Typography variant="body2">{option.label}</Typography>,
   }))
 
-  const onChangeShippingOption = (option: string) => {
+  const onChangeShippingOption = async (option: string) => {
     if (checkout?.groupings?.length > 1 && option === shipOptions[0].value) {
       const defaultDestinationId = checkout?.groupings[0]?.destinationId as string
-
-      checkout?.items?.forEach(async (item) => {
-        updateCheckoutItemDestination.mutateAsync({
-          itemId: item?.id as string,
-          destinationId: defaultDestinationId,
-          checkoutId: checkout?.id as string,
+      console.log('defaultDestinationId:###############', defaultDestinationId)
+      for (const item of checkout?.items) {
+        const itemId = item?.id as string
+        const checkoutId = checkout?.id as string
+        await updateCheckoutItemDestination.mutateAsync({
+          itemId,
+          destinationId: defaultDestinationId as string,
+          checkoutId,
         })
-      })
+      }
     }
 
     setShippingOption(option)
