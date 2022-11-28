@@ -130,11 +130,13 @@ const MultiShippingStep = (props: ShippingProps) => {
       })
 
       if (destination?.id) {
-        checkout?.items?.forEach(async (item) => {
+        const allItems = checkout?.items
+        const checkoutId = checkout?.id
+        allItems?.forEach(async (item) => {
           await updateCheckoutItemDestination.mutateAsync({
             itemId: item?.id as string,
             destinationId: destination?.id,
-            checkoutId: checkout?.id as string,
+            checkoutId: checkoutId as string,
           })
         })
 
@@ -182,13 +184,48 @@ const MultiShippingStep = (props: ShippingProps) => {
 
   const handleFormStatusChange = (status: boolean) => setIsAddressFormValid(status)
 
-  const handleAddressSelect = (destinationIdOrAddressId: string) => {
-    checkout?.items?.forEach((item) => {
-      handleCreateOrSetDestinationAddress(
-        item?.id?.toString(),
-        destinationIdOrAddressId?.toString()
-      )
-    })
+  const handleAddressSelect = async (destinationIdOrAddressId: string) => {
+    const existingDestinationAddress = checkout?.destinations?.find(
+      (destination) => destination?.id === destinationIdOrAddressId
+    )
+
+    if (!existingDestinationAddress?.id) {
+      const destinationId = await handleCreateDestinationAddress(destinationIdOrAddressId)
+      console.log('###in## Not existing##')
+      for (const item of checkout?.items) {
+        const nexit = await updateCheckoutItemDestination.mutateAsync({
+          itemId: item?.id,
+          destinationId: destinationId as string,
+          checkoutId: checkout?.id as string,
+        })
+        console.log('##NotexIt', nexit)
+      }
+      // checkout?.items?.map(async (item) => {
+      //   await updateCheckoutItemDestination.mutateAsync({
+      //     itemId: item?.id,
+      //     destinationId: destinationId as string,
+      //     checkoutId: checkout?.id as string,
+      //   })
+      // })
+    } else {
+      console.log('###in## existing##')
+      for (const item of checkout?.items) {
+        const exIt = await updateCheckoutItemDestination.mutateAsync({
+          itemId: item?.id,
+          destinationId: destinationIdOrAddressId as string,
+          checkoutId: checkout?.id as string,
+        })
+        console.log('##exIt', exIt)
+      }
+      // checkout?.items?.map(async (item) => {
+      //   const ex = await updateCheckoutItemDestination.mutateAsync({
+      //     itemId: item?.id,
+      //     destinationId: destinationIdOrAddressId as string,
+      //     checkoutId: checkout?.id as string,
+      //   })
+      //   console.log('In existin#### after', ex)
+      // })
+    }
   }
 
   const handleAddNewAddress = () => {
@@ -207,7 +244,7 @@ const MultiShippingStep = (props: ShippingProps) => {
       const defaultDestinationId = checkout?.groupings[0]?.destinationId as string
 
       checkout?.items?.forEach(async (item) => {
-        await updateCheckoutItemDestination.mutateAsync({
+        updateCheckoutItemDestination.mutateAsync({
           itemId: item?.id as string,
           destinationId: defaultDestinationId,
           checkoutId: checkout?.id as string,
@@ -220,9 +257,10 @@ const MultiShippingStep = (props: ShippingProps) => {
 
   const getSavedShippingAddressView = (contact: any, isPrimary?: boolean): React.ReactNode => {
     const { destinationId, address } = contact
+    console.log('###destinationId####', destinationId)
     return (
       <AddressDetailsView
-        key={destinationId || address?.id}
+        key={destinationId + address?.id}
         radio={true}
         id={destinationId || address?.id}
         isPrimary={isPrimary}
@@ -240,33 +278,42 @@ const MultiShippingStep = (props: ShippingProps) => {
     )
   }
 
+  const handleCreateDestinationAddress = async (shippingAddressId: string) => {
+    const existingAddress = userShippingAddress?.find(
+      (shippingAddress) => shippingAddress?.id?.toString() === shippingAddressId
+    )
+
+    const { accountId, types, ...rest } = existingAddress
+
+    const newDestination = await createCheckoutDestination.mutateAsync({
+      checkoutId: checkout?.id as string,
+      destinationInput: {
+        destinationContact: rest,
+      },
+    })
+
+    return newDestination?.id
+  }
+
   const handleCreateOrSetDestinationAddress = async (id: string, value: string) => {
     const existingDestinationAddress = checkout?.destinations?.find(
       (destination) => destination?.id === value
     )
-    let destinationId = existingDestinationAddress?.id
 
     if (!existingDestinationAddress?.id) {
-      const existingAddress = userShippingAddress?.find(
-        (shippingAddress) => shippingAddress?.id?.toString() === value
-      )
-
-      const { accountId, types, ...rest } = existingAddress
-
-      const newDestination = await createCheckoutDestination.mutateAsync({
+      const destinationId = await handleCreateDestinationAddress(value)
+      await updateCheckoutItemDestination.mutateAsync({
+        itemId: id,
+        destinationId: destinationId as string,
         checkoutId: checkout?.id as string,
-        destinationInput: {
-          destinationContact: rest,
-        },
       })
-      destinationId = newDestination?.id
+    } else {
+      await updateCheckoutItemDestination.mutateAsync({
+        itemId: id,
+        destinationId: existingDestinationAddress?.id as string,
+        checkoutId: checkout?.id as string,
+      })
     }
-
-    await updateCheckoutItemDestination.mutateAsync({
-      itemId: id,
-      destinationId: destinationId as string,
-      checkoutId: checkout?.id as string,
-    })
   }
 
   useEffect(() => {
