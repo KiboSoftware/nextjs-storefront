@@ -22,7 +22,7 @@ const getCurrentCart = async () => {
 }
 
 /**
- * [ Query hook => useCartQueries call the graphql query 'currentCart: Cart' ]
+ * [ Query hook => useCartQueries uses the graphql query 'currentCart: Cart' ]
  *
  * Description : Fetches details about to the items present currently in the cart.
  *

@@ -27,7 +27,7 @@ const updateOrderCoupon = async (params: UpdateOrderCouponParams) => {
 }
 
 /**
- * [ Mutation hook => updateOrderCoupon($orderId: String!, $couponCode: String!) ]
+ * [ Mutation hook => useUpdateOrderCouponMutation uses the graphlql mutation 'updateOrderCoupon($orderId: String!, $couponCode: String!)' ]
  *
  * Description : Applies promo code in Order Summary of checkout pages
  *

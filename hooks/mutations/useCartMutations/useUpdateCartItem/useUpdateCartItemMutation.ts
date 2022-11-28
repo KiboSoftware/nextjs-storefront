@@ -29,7 +29,7 @@ const updateCartItem = async (props: UpdateCartItemParams) => {
 }
 
 /**
- * [ Mutation hook => updateCurrentCartItem(cartItemId: String!, cartItemInput: CartItemInput): CartItem ]
+ * [ Mutation hook => useUpdateCartItemMutation uses the graphql mutation 'updateCurrentCartItem(cartItemId: String!, cartItemInput: CartItemInput): CartItem' ]
  *
  * Description : Updates the 'fulfillmentMethod(Shipping/Pickup in store)' and 'fulfillmentLocationCode' based on selected option
  *

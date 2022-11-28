@@ -26,7 +26,7 @@ const updateCartCoupon = async (params: UpdateCartCouponParams) => {
 }
 
 /**
- * [ Mutation hook => updateCartCoupon($cartId: String!, $couponCode: String!) ]
+ * [ Mutation hook => useUpdateCartCouponMutation uses the graphlql mutation 'updateCartCoupon($cartId: String!, $couponCode: String!)' ]
  *
  * Description : Applies promo code in Order Summary of cart page
  *

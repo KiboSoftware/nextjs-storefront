@@ -26,7 +26,7 @@ const deleteCartCoupon = async (params: DeleteCartCouponParams) => {
 }
 
 /**
- * [ Mutation hook => deleteCartCoupon(cartId: String!, couponCode: String!): Cart ]
+ * [ Mutation hook => useDeleteCartCouponMutation uses the graphlql mutation 'deleteCartCoupon(cartId: String!, couponCode: String!): Cart' ]
  *
  * Description : Removes promo code from Order Summary in cart page
  *

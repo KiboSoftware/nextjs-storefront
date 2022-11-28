@@ -26,7 +26,7 @@ const createOrder = async (checkout: Order) => {
 }
 
 /**
- * [ Mutation hook => createOrderAction($orderId: String!, $orderActionInput: OrderActionInput) ]
+ * [ Mutation hook => useCreateOrderMutation uses the graphlql mutation 'createOrderAction($orderId: String!, $orderActionInput: OrderActionInput)' ]
  *
  * Description : Creates a new order after clicking 'Confirm & Pay' button on Review step of checkout page
  *

@@ -27,7 +27,7 @@ const getCheckout = async (checkoutId?: string | null) => {
 }
 
 /**
- * [ Query hook => useCheckoutQueries call the graphql query 'checkout(checkoutId: String!): Checkout' ]
+ * [ Query hook => useCheckoutQueries uses the graphql query 'checkout(checkoutId: String!): Checkout' ]
  *
  * Description : Fetches the data required on checkout steps(items, fulfillment info, discounts(if any) etc.)
  *

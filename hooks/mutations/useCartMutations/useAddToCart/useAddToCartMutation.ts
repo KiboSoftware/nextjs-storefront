@@ -35,7 +35,7 @@ const addToCart = async (props: AddToCartInputParams) => {
   return response?.addItemToCurrentCart
 }
 /**
- * [ Mutation hook => addItemToCurrentCart(cartItemInput: CartItemInput): CartItem ]
+ * [ Mutation hook => useAddToCartMutation uses the graphlql mutation 'addItemToCurrentCart(cartItemInput: CartItemInput): CartItem' ]
  *
  * Description : Add the product items to the cart
  *
