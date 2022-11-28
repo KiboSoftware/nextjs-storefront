@@ -1,13 +1,14 @@
 import React from 'react'
 
 import { ArrowBackIos } from '@mui/icons-material'
-import { Divider, Grid, Typography, Box, Stack } from '@mui/material'
+import { Divider, Grid, Typography, Box, Stack, Button } from '@mui/material'
 import { useTranslation } from 'next-i18next'
 
 import { SavedPaymentMethodView } from '@/components/checkout'
 import { AddressCard, OrderSummary, ProductItemList } from '@/components/common'
 import { ProductOption } from '@/components/product'
 import { useStoreLocationsQueries } from '@/hooks'
+import { OrderStatus } from '@/lib/constants'
 import { addressGetters, orderGetters, storeLocationGetters } from '@/lib/getters'
 
 import type { Maybe, Order, Location } from '@/lib/gql/types'
@@ -17,6 +18,7 @@ interface ViewOrderDetailsProps {
   title: string
   isOrderStatus?: boolean
   onGoBackToOrderHistory?: () => void
+  onReturnItemsVisible?: (isReturnItemsVisible: boolean) => void
 }
 
 const styles = {
@@ -39,7 +41,13 @@ const styles = {
 }
 
 const ViewOrderDetails = (props: ViewOrderDetailsProps) => {
-  const { order, title, isOrderStatus = false, onGoBackToOrderHistory } = props
+  const {
+    order,
+    title,
+    isOrderStatus = false,
+    onGoBackToOrderHistory,
+    onReturnItemsVisible,
+  } = props
   const { t } = useTranslation('common')
 
   const orderNumber = orderGetters.getOrderNumber(order)
@@ -201,7 +209,19 @@ const ViewOrderDetails = (props: ViewOrderDetailsProps) => {
         {/* Order Summary */}
         {!isOrderStatus && (
           <Grid item xs={12} md={5} sx={{ paddingX: { xs: 0, md: 2 } }}>
-            <OrderSummary {...orderSummeryArgs} />
+            <OrderSummary {...orderSummeryArgs}>
+              {order?.status === OrderStatus.COMPLETED && (
+                <Button
+                  variant="contained"
+                  color="inherit"
+                  fullWidth
+                  sx={{ mt: '0.75rem' }}
+                  onClick={() => onReturnItemsVisible && onReturnItemsVisible(true)}
+                >
+                  {t('return-items')}
+                </Button>
+              )}
+            </OrderSummary>
           </Grid>
         )}
       </Grid>

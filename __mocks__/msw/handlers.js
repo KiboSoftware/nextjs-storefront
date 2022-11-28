@@ -1,6 +1,12 @@
 import { graphql, rest } from 'msw'
 
-import { orderMock, locationInventoryCollectionMock, shippingRateMock } from '../stories'
+import {
+  orderMock,
+  locationInventoryCollectionMock,
+  shippingRateMock,
+  returnReasonsMock,
+  createReturnMock,
+} from '../stories'
 import { cartItemMock } from '../stories/cartItemMock'
 import { cartCouponMock, cartMock } from '../stories/cartMock'
 import { categoryTreeDataMock } from '../stories/categoryTreeDataMock'
@@ -243,6 +249,9 @@ export const orderHandlers = [
   graphql.query('getOrders', (_req, res, ctx) => {
     return res(ctx.data(orderCollection))
   }),
+  graphql.query('returnReasons', (_req, res, ctx) => {
+    return res(ctx.data({ returnReasons: returnReasonsMock.returnReasons }))
+  }),
   graphql.mutation('updateOrderCoupon', (_req, res, ctx) => {
     return res(ctx.data(orderCouponMock))
   }),
@@ -252,6 +261,9 @@ export const orderHandlers = [
         deleteOrderCoupon: '1234',
       })
     )
+  }),
+  graphql.mutation('createReturn', (_req, res, ctx) => {
+    return res(ctx.data(createReturnMock))
   }),
 ]
 

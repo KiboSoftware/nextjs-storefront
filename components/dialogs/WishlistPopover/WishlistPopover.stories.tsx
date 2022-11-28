@@ -5,7 +5,7 @@ import { ComponentStory, ComponentMeta } from '@storybook/react'
 import WishlistPopover from './WishlistPopover'
 
 export default {
-  title: 'Dialogs/Wishlist/WishlistPopover',
+  title: 'Dialogs/WishlistPopover',
   component: WishlistPopover,
 } as ComponentMeta<typeof WishlistPopover>
 

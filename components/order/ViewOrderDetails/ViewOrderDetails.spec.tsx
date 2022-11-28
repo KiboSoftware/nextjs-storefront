@@ -1,14 +1,24 @@
+import React, { ReactNode } from 'react'
+
 import { composeStories } from '@storybook/testing-react'
-import { render, screen } from '@testing-library/react'
+import { render, screen, cleanup } from '@testing-library/react'
+import userEvent from '@testing-library/user-event'
 
 import * as stories from './ViewOrderDetails.stories'
 
-const { Common } = composeStories(stories)
+const { Common, WithReturnItemButton } = composeStories(stories)
+
+const onReturnItemsVisibleMock = jest.fn()
 
 const addressCardMock = () => <div data-testid="address-card-component" />
 jest.mock('@/components/common/AddressCard/AddressCard', () => () => addressCardMock())
-const orderSummaryMock = () => <div data-testid="order-summary-component" />
-jest.mock('@/components/common/OrderSummary/OrderSummary', () => () => orderSummaryMock())
+
+jest.mock('@/components/common/OrderSummary/OrderSummary', () => ({
+  __esModule: true,
+  default: ({ children }: { children: ReactNode }) => (
+    <div data-testid="order-summary-component">{children}</div>
+  ),
+}))
 const ProductItemListMock = () => <div data-testid="product-item-list-component" />
 jest.mock('@/components/common/ProductItemList/ProductItemList', () => () => ProductItemListMock())
 const productOptionMock = () => <div data-testid="product-option-component" />
@@ -19,11 +29,27 @@ jest.mock(
   () => () => savedPaymentMethodViewMock()
 )
 
-describe('[component] - ViewOrderDetails', () => {
-  const setup = (isOrderStatus: boolean, title: string) => {
-    render(<Common {...Common.args} isOrderStatus={isOrderStatus} title={title} />)
+const setup = (isOrderStatus: boolean, title: string) => {
+  render(<Common {...Common.args} isOrderStatus={isOrderStatus} title={title} />)
+}
+const returnItemSetup = () => {
+  const user = userEvent.setup()
+  render(
+    <WithReturnItemButton
+      {...WithReturnItemButton.args}
+      isOrderStatus={false}
+      title={'view-order-status'}
+      onReturnItemsVisible={onReturnItemsVisibleMock}
+    />
+  )
+  return {
+    user,
   }
+}
 
+afterEach(() => cleanup())
+
+describe('[component] - ViewOrderDetails', () => {
   it('should render component', () => {
     setup(false, 'view-order-details')
 
@@ -49,5 +75,23 @@ describe('[component] - ViewOrderDetails', () => {
     expect(screen.getByText(/shipment-details/i)).toBeVisible()
     expect(screen.queryByTestId('order-summary-component')).not.toBeInTheDocument()
     expect(screen.queryByText('payment-information')).not.toBeInTheDocument()
+  })
+
+  it('should render component with order status false and return item button should not be visible', () => {
+    setup(false, 'view-order-status')
+
+    expect(screen.queryByText(/return-items/i)).not.toBeInTheDocument()
+  })
+
+  it('should render return item button and handleReturnItems function should be called', async () => {
+    const { user } = returnItemSetup()
+
+    const orderSummaryContent = screen.getByTestId('order-summary-component')
+    const returnItemButton = screen.queryByRole('button', { name: 'return-items' }) as HTMLElement
+
+    expect(orderSummaryContent).toContainElement(returnItemButton)
+
+    await user.click(returnItemButton)
+    expect(onReturnItemsVisibleMock).toHaveBeenCalled()
   })
 })

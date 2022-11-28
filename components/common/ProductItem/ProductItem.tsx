@@ -33,9 +33,9 @@ export interface ProductItemProps {
   isPickupItem?: boolean
   expectedDeliveryDate?: string
   purchaseLocation?: string
-  onStoreLocatorClick?: () => void
   link?: string
   children?: ReactNode
+  onStoreLocatorClick?: () => void
 }
 
 const styles = {
@@ -46,12 +46,6 @@ const styles = {
     display: 'flex',
     justifyContent: 'center',
     alignItems: 'center',
-  },
-
-  image: {
-    width: '100%',
-    height: '100%',
-    objectFit: 'contain',
   },
 }
 
@@ -67,9 +61,9 @@ const ProductItem = (props: ProductItemProps) => {
     isPickupItem,
     expectedDeliveryDate,
     purchaseLocation,
-    onStoreLocatorClick,
     link,
     children,
+    onStoreLocatorClick,
   } = props
   const { t } = useTranslation('common')
   const theme = useTheme()
