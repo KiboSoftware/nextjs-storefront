@@ -32,7 +32,7 @@ const useUpdateCheckoutShippingInfoMutation = () => {
 
   return useMutation(updateShippingInfo, {
     onSuccess: () => {
-      queryClient.removeQueries([checkoutKeys.all])
+      queryClient.invalidateQueries(checkoutKeys.all)
     },
   })
 }
