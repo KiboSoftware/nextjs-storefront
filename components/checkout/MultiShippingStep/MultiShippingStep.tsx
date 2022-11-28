@@ -106,7 +106,7 @@ const MultiShippingStep = (props: ShippingProps) => {
 
   const { t } = useTranslation('common')
   const shippingAddressRef = useRef()
-
+  // hooks
   const {
     stepStatus,
     setStepNext,
@@ -114,6 +114,9 @@ const MultiShippingStep = (props: ShippingProps) => {
     setStepStatusComplete,
     setStepStatusIncomplete,
   } = useCheckoutStepContext()
+
+  const updateCheckoutItemDestination = useUpdateCheckoutItemDestinationMutations()
+  // end hooks
 
   const handleAddressValidationAndSave = () => setValidateForm(true)
 
@@ -125,16 +128,23 @@ const MultiShippingStep = (props: ShippingProps) => {
           destinationContact: contact,
         },
       })
-      checkout?.items?.forEach((item) => {
-        handleCreateOrSetDestinationAddress(item?.id?.toString(), destination?.id?.toString())
-      })
 
-      setCheckoutId(checkout?.id)
-      // setSelectedShippingAddressId((contact?.id as number) || DefaultId.ADDRESSID) // set Selected MultiShipaddress
-      setShouldShowAddAddressButton(true)
-      setValidateForm(false)
-      setIsNewAddressAdded(true)
-      setStepStatusIncomplete()
+      if (destination?.id) {
+        checkout?.items?.forEach(async (item) => {
+          await updateCheckoutItemDestination.mutateAsync({
+            itemId: item?.id as string,
+            destinationId: destination?.id,
+            checkoutId: checkout?.id as string,
+          })
+        })
+
+        // setCheckoutId(checkout?.id)
+        // setSelectedShippingAddressId(destination?.id as string) // set Selected MultiShipaddress
+        setShouldShowAddAddressButton(true)
+        // setValidateForm(false)
+        // setIsNewAddressAdded(true)
+        // setStepStatusIncomplete()
+      }
     } catch (error) {
       console.error(error)
     }
@@ -194,10 +204,14 @@ const MultiShippingStep = (props: ShippingProps) => {
 
   const onChangeShippingOption = (option: string) => {
     if (checkout?.groupings?.length > 1 && option === shipOptions[0].value) {
-      const defaultDestinationId = checkout?.groupings[0]?.destinationId
+      const defaultDestinationId = checkout?.groupings[0]?.destinationId as string
 
-      checkout?.items?.forEach((item) => {
-        handleCreateOrSetDestinationAddress(item?.id?.toString(), defaultDestinationId)
+      checkout?.items?.forEach(async (item) => {
+        await updateCheckoutItemDestination.mutateAsync({
+          itemId: item?.id as string,
+          destinationId: defaultDestinationId,
+          checkoutId: checkout?.id as string,
+        })
       })
     }
 
@@ -225,8 +239,6 @@ const MultiShippingStep = (props: ShippingProps) => {
       />
     )
   }
-
-  const updateCheckoutItemDestination = useUpdateCheckoutItemDestinationMutations()
 
   const handleCreateOrSetDestinationAddress = async (id: string, value: string) => {
     const existingDestinationAddress = checkout?.destinations?.find(
