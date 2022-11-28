@@ -3,7 +3,7 @@ import { render, screen } from '@testing-library/react'
 import { RouterContext } from 'next/dist/shared/lib/router-context'
 
 import { createMockRouter, createQueryClientWrapper } from '@/__test__/utils'
-import WishlistPage, { getServerSideProps } from '@/src/pages/wishlist'
+import WishlistPage, { getServerSideProps } from '@/pages/wishlist'
 
 const WishlistTemplateMock = () => <div data-testid="wishlistTemplate-mock" />
 jest.mock(

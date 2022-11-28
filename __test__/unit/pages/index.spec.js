@@ -1,6 +1,6 @@
 import { categoryTreeDataMock } from '@/__mocks__/stories/categoryTreeDataMock'
 import { homePageResultMock } from '@/__mocks__/stories/homePageResultMock'
-import { getServerSideProps } from '@/src/pages/index'
+import { getServerSideProps } from '@/pages/index'
 
 const mockCategoryTreeData = categoryTreeDataMock
 const mockHomePageResult = homePageResultMock || []

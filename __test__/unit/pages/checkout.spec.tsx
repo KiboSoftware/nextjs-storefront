@@ -1,7 +1,7 @@
 import { render, screen } from '@testing-library/react'
 
 import * as operations from '@/lib/api/operations'
-import CheckoutPage, { getServerSideProps } from '@/src/pages/checkout/[checkoutId]'
+import CheckoutPage, { getServerSideProps } from '@/pages/checkout/[checkoutId]'
 
 import type { Order } from '@/lib/gql/types'
 

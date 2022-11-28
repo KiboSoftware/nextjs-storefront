@@ -3,7 +3,7 @@ import { render, screen } from '@testing-library/react'
 import { RouterContext } from 'next/dist/shared/lib/router-context'
 
 import { createMockRouter, createQueryClientWrapper } from '@/__test__/utils'
-import OrderHistoryPage, { getServerSideProps } from '@/src/pages/my-account/order-history/index'
+import OrderHistoryPage, { getServerSideProps } from '@/pages/my-account/order-history/index'
 
 jest.mock('next-i18next/serverSideTranslations', () => ({
   serverSideTranslations: jest.fn(() => {
