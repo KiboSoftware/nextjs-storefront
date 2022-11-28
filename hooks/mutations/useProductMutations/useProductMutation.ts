@@ -30,6 +30,18 @@ const configureProduct = async (configureProductDetails: ConfigureProductDetails
   return response.configureProduct
 }
 
+/**
+ * [ Mutation hook => useProductMutation calls the graphQL mutation
+ *
+ * configureProduct(productCode: String!, includeOptionDetails: Boolean, skipInventoryCheck: Boolean, quantity: Int, purchaseLocation: String, variationProductCodeFilter: String, productOptionSelectionsInput: ProductOptionSelectionsInput): ConfiguredProduct
+ *
+ * Description : Update the product configurations
+ *
+ * Parameters passed to function configureProduct(params: ConfigureProductDetails) => expects object containing productCode and updatedOptions.
+ *
+ * @returns 'response?.configureProduct', which has product details like productCode, purchaseLocation, options, productImages etc.
+ */
+
 export const useProductMutation = () => {
   return {
     configureProduct: useMutation(configureProduct),

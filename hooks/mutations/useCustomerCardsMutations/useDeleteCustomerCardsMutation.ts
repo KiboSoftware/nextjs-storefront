@@ -20,6 +20,20 @@ const deleteCustomerAccountCardDetails = async (params: DeleteCustomerAccountCar
   return response.deleteCustomerAccountCard
 }
 
+/**
+ * [ Mutation hook => useDeleteCustomerCardsMutation calls the graphQL mutation
+ *
+ * deleteCustomerAccountCard(accountId: Int!, cardId: Int!): Boolean
+ *
+ * Description : Delete the customer's card details saved on their account
+ *
+ * Parameters passed to function deleteCustomerAccountCardDetails(params: DeleteCustomerAccountCardDetailsParams) => expects object containing accountId and cardId to delete the card details.
+ *
+ * On success, calls invalidateQueries all customerAccountCardsKeys and fetches the updated result.
+ *
+ * @returns 'response?.deleteCustomerAccountCard', that is True/False value to identify if customer's card has been deleted or not.
+ */
+
 export const useDeleteCustomerCardsMutation = () => {
   const queryClient = useQueryClient()
 

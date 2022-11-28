@@ -24,6 +24,20 @@ const addCustomerAccountContactDetails = async (
   return response?.createCustomerAccountContact
 }
 
+/**
+ * [ Mutation hook => useCreateCustomerAddressMutation calls the graphQL mutation
+ *
+ * createCustomerAccountContact(accountId: Int!, customerContactInput: CustomerContactInput): CustomerContact
+ *
+ * Description : Save the customer's contact (address) to the account which can be used at the time of checkout for shipping and billing address.
+ *
+ * Parameters passed to function addCustomerAccountContactDetails(params: CreateCustomerAccountContactDetailsParams) => expects object containing accountId and customerContactInput to add the contact details.
+ *
+ * On success, calls invalidateQueries all customerAccountContactsKeys and fetches the updated result.
+ *
+ * @returns 'response?.createCustomerAccountContact', which has Customer's contact details like accountId,  Address, firstName, LastName etc.
+ */
+
 export const useCreateCustomerAddressMutation = () => {
   const queryClient = useQueryClient()
 

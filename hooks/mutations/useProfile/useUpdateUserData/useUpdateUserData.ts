@@ -25,6 +25,20 @@ const updateUserDetails = async (props: UpdateUserDataProps) => {
   return response
 }
 
+/**
+ * [ Mutation hook => useUpdateUserDataMutations calls the graphQL mutation
+ *
+ * updateCustomerAccount(accountId: Int!, customerAccountInput: CustomerAccountInput): CustomerAccount
+ *
+ * Description : Update the existing customer's profile information like first name, last name and email address.
+ *
+ * Parameters passed to function updateUserDetails(props: UpdateUserDataProps) => expects object containing accountId and customerAccountInput to update the profile details.
+ *
+ * On success, calls invalidateQueries loginKeys.user and fetches the updated result.
+ *
+ * @returns 'response', which has updated customer's profile details like userName, firstName, lastName, emailAddress etc.
+ */
+
 export const useUpdateUserDataMutations = () => {
   const queryClient = useQueryClient()
   return {

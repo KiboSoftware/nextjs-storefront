@@ -1,5 +1,5 @@
 /**
- * useCurrentLocation hooks used to get the user's current location coordinates.
+ * [Custom Hook] useCurrentLocation hooks used to get the user's current location coordinates.
  *
  * navigator.geolocation.getCurrentPosition method gets the user’s current position and accepts 3 parameters; a success callback function, an error callback function and a position options object.
  *

@@ -26,7 +26,7 @@ const removeCartItem = async (params: RemoveCartItemParams) => {
 }
 
 /**
- * [ Mutation hook => useRemoveCartItemMutation uses the graphlql mutation 'deleteCurrentCartItem(cartItemId: String!): Boolean' ]
+ * [ Mutation hook => useRemoveCartItemMutation uses the graphql mutation 'deleteCurrentCartItem(cartItemId: String!): Boolean' ]
  *
  * Description : Removes the product item from the cart
  *

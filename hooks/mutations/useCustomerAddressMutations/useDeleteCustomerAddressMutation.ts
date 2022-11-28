@@ -22,6 +22,20 @@ const deleteCustomerAccountContactDetails = async (
   return response.deleteCustomerAccountContact
 }
 
+/**
+ * [ Mutation hook => useDeleteCustomerAddressMutation calls the graphQL mutation
+ *
+ * deleteCustomerAccountContact(accountId: Int!, contactId: Int!): Boolean
+ *
+ * Description : Delete the customer's contact (address) saved on their account
+ *
+ * Parameters passed to function deleteCustomerAccountContactDetails(params: DeleteCustomerAccountContactDetailsParams) => expects object containing accountId and contactId to delete the address.
+ *
+ * On success, calls invalidateQueries all customerAccountContactsKeys and fetches the updated result.
+ *
+ * @returns 'response?.deleteCustomerAccountContact', that is True/False value to identify if customer's contact has been deleted or not.
+ */
+
 export const useDeleteCustomerAddressMutation = () => {
   const queryClient = useQueryClient()
 

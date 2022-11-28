@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 
 /**
- * The debounced value will reflect the latest value when the useDebounce hook called for the specified time period.
+ * [Custom Hook] The debounced value will reflect the latest value when the useDebounce hook called for the specified time period.
  *
  * Uses of useDebounce to prevent API calls from being fired on every keystroke.
  *
