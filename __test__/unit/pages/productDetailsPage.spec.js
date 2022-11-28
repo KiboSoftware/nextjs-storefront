@@ -2,11 +2,8 @@ import '@testing-library/jest-dom'
 import { render, screen } from '@testing-library/react'
 import * as nextRouter from 'next/router'
 
-import ProductDetailPage, {
-  getStaticPaths,
-  getStaticProps,
-} from '../../../pages/product/[productCode]'
 import { categoryTreeDataMock } from '@/__mocks__/stories/categoryTreeDataMock'
+import ProductDetailPage, { getStaticPaths, getStaticProps } from '@/pages/product/[productCode]'
 
 nextRouter.useRouter = jest.fn()
 const mockCategoryTreeData = categoryTreeDataMock
