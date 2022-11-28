@@ -23,6 +23,14 @@ const loadCustomerAccountCards = async (accountId: number) => {
   return response?.customerAccountCards
 }
 
+/**
+ * [ Query hook => useCustomerCardsQueries call the graphql query 'customerAccountCards(accountId: Int!): CardCollection' ]
+ *
+ * Description : Fetches saved payment cards for a particular user
+ *
+ * @param accountId stores the user id of the user whose saved card details needed to be fetched
+ * @returns 'response?.customerAccountCards' all the saved cards for payment options for the requested user based on accountId
+ */
 export const useCustomerCardsQueries = (accountId: number): UseCustomerCardsResponse => {
   const {
     data = [],

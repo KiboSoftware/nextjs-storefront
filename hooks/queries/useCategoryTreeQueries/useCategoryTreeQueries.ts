@@ -18,6 +18,16 @@ const fetchCategoryTree = async () => {
   return response.json()
 }
 
+/**
+ * [ Query hook => useCategoryTreeQueries fetches the data from the GET api call to the '/api/category-tree' ]
+ *
+ * Description : Fetches categories and all related sub categories for the storefront
+ *
+ * On success, returns the category data items
+ *
+ * @param initialData stores the category data for the storefront present on server side. Used to check if the data has got stale, if not; cached data is returned.
+ * @returns category and related children catagories
+ */
 export const useCategoryTreeQueries = (initialData: Maybe<PrCategory>[]): UseCategoryResponse => {
   const {
     data = [],

@@ -23,6 +23,14 @@ const loadCustomerAccountContacts = async (accountId: number) => {
   return response?.customerAccountContacts
 }
 
+/**
+ * [ Query hook => useCustomerContactsQueries call the graphql query 'customerAccountContacts(accountId: Int!,startIndex: Int,pageSize: Int): CustomerContactCollection' ]
+ *
+ * Description : Fetches saved addresses for a particular user
+ *
+ * @param accountId stores the user id of the user whose saved address details needed to be fetched
+ * @returns 'response?.customerAccountContacts' all the saved addresses for the requested user based on accountId
+ */
 export const useCustomerContactsQueries = (accountId: number): UseCustomerContactsResponse => {
   const {
     data = [],
