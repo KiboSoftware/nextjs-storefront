@@ -196,7 +196,7 @@ const MultiShipCheckoutTemplate = (props: CheckoutProps) => {
               />
               {((isAuthenticated && isSuccess) || !isAuthenticated) && (
                 <MultiShippingStep
-                  checkout={checkout as Order}
+                  checkout={checkout as Checkout}
                   userShippingAddress={userShippingAddress}
                   isAuthenticated={isAuthenticated}
                   isMultiShipEnabled={isMultiShipEnabled}
@@ -213,7 +213,7 @@ const MultiShipCheckoutTemplate = (props: CheckoutProps) => {
                 />
               )}
               <PaymentStep checkout={checkout} {...paymentStepParams} />
-              <ReviewStep checkout={checkout as Order} onBackButtonClick={handleBack} />
+              <ReviewStep checkout={checkout as Checkout} onBackButtonClick={handleBack} />
             </KiboStepper>
           </Stack>
 
