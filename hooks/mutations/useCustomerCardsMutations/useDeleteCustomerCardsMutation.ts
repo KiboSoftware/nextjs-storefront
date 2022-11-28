@@ -21,9 +21,9 @@ const deleteCustomerAccountCardDetails = async (params: DeleteCustomerAccountCar
 }
 
 /**
- * [ Mutation hook => useDeleteCustomerCardsMutation calls the graphQL mutation
+ * [Mutation hook] useDeleteCustomerCardsMutation uses the graphQL mutation
  *
- * deleteCustomerAccountCard(accountId: Int!, cardId: Int!): Boolean
+ * <b>deleteCustomerAccountCard(accountId: Int!, cardId: Int!): Boolean</b>
  *
  * Description : Delete the customer's card details saved on their account
  *

@@ -26,9 +26,9 @@ const updateCustomerAccountContactDetails = async (
 }
 
 /**
- * [ Mutation hook => useUpdateCustomerAddressMutation calls the graphQL mutation
+ * [Mutation hook] useUpdateCustomerAddressMutation uses the graphQL mutation
  *
- * updateCustomerAccountContact(accountId: Int!, contactId: Int!, userId: String, customerContactInput: CustomerContactInput): CustomerContact
+ * <b>updateCustomerAccountContact(accountId: Int!, contactId: Int!, userId: String, customerContactInput: CustomerContactInput): CustomerContact</b>
  *
  * Description : Update the existing customer's contact (address) saved into the account.
  *

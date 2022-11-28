@@ -31,9 +31,9 @@ const configureProduct = async (configureProductDetails: ConfigureProductDetails
 }
 
 /**
- * [ Mutation hook => useProductMutation calls the graphQL mutation
+ * [Mutation hook] useProductMutation uses the graphQL mutation
  *
- * configureProduct(productCode: String!, includeOptionDetails: Boolean, skipInventoryCheck: Boolean, quantity: Int, purchaseLocation: String, variationProductCodeFilter: String, productOptionSelectionsInput: ProductOptionSelectionsInput): ConfiguredProduct
+ * </b>configureProduct(productCode: String!, includeOptionDetails: Boolean, skipInventoryCheck: Boolean, quantity: Int, purchaseLocation: String, variationProductCodeFilter: String, productOptionSelectionsInput: ProductOptionSelectionsInput): ConfiguredProduct</b>
  *
  * Description : Update the product configurations
  *

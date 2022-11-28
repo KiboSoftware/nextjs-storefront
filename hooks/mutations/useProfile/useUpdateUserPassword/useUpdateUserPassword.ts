@@ -24,9 +24,9 @@ const updateUserPassword = async (props: UpdateUserPasswordProps) => {
 }
 
 /**
- * [ Mutation hook => useUpdateUserPasswordMutations calls the graphQL mutation
+ * [Mutation hook] useUpdateUserPasswordMutations uses the graphQL mutation
  *
- * changeCustomerAccountPassword(accountId: Int!, unlockAccount: Boolean, userId: String, passwordInfoInput: PasswordInfoInput): Boolean
+ * <b>changeCustomerAccountPassword(accountId: Int!, unlockAccount: Boolean, userId: String, passwordInfoInput: PasswordInfoInput): Boolean</b>
  *
  * Description : Update the existing customer's account password by passing old password and new password.
  *

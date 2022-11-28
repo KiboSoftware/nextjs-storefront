@@ -24,9 +24,9 @@ const updateCustomerAccountCardDetails = async (params: UpdateCustomerAccountCar
 }
 
 /**
- * [ Mutation hook => useUpdateCustomerCardsMutation calls the graphQL mutation
+ * [Mutation hook] useUpdateCustomerCardsMutation uses the graphQL mutation
  *
- * updateCustomerAccountCard(accountId: Int!, cardId: String!, cardInput: CardInput): Card
+ * <b>updateCustomerAccountCard(accountId: Int!, cardId: String!, cardInput: CardInput): Card</b>
  *
  * Description : Update the existing customer's card information saved into the account.
  *

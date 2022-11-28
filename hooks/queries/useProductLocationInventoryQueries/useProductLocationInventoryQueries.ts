@@ -23,6 +23,23 @@ const loadProductLocationInventory = async (productCode: string, locationCodes: 
   return response?.productLocationInventory?.items
 }
 
+/**
+ * [Query hook] useProductLocationInventoryQueries uses the graphQL query
+ *
+ * <b>productLocationInventory(productCode: String!, locationCodes: String): LocationInventoryCollection</b>
+ *
+ * Description : Fetches details about inventory available on specified locations by providing productCode and locationCodes. Here locationCodes could be single string value or comma separated string value.
+ *
+ * Parameters passed to function loadProductLocationInventory(productCode: string, locationCodes: string) => expects productCode and locationCodes to get the inventory.
+ *
+ * On success, returns the inventory details with 'refetchOnWindowFocus' set to false for this react query
+ *
+ * @param productCode Accepts a string value
+ * @param locationCodes Accepts a string value
+ *
+ * @returns 'response?.productLocationInventory?.items', which is list of available inventories.
+ */
+
 export const useProductLocationInventoryQueries = (
   productCode: string,
   locationCodes: string

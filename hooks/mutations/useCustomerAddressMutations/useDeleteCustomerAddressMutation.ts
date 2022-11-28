@@ -23,9 +23,9 @@ const deleteCustomerAccountContactDetails = async (
 }
 
 /**
- * [ Mutation hook => useDeleteCustomerAddressMutation calls the graphQL mutation
+ * [Mutation hook] useDeleteCustomerAddressMutation uses the graphQL mutation
  *
- * deleteCustomerAccountContact(accountId: Int!, contactId: Int!): Boolean
+ * <b>deleteCustomerAccountContact(accountId: Int!, contactId: Int!): Boolean</b>
  *
  * Description : Delete the customer's contact (address) saved on their account
  *

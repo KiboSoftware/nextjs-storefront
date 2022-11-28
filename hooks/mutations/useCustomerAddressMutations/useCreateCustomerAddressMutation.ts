@@ -25,9 +25,9 @@ const addCustomerAccountContactDetails = async (
 }
 
 /**
- * [ Mutation hook => useCreateCustomerAddressMutation calls the graphQL mutation
+ * [Mutation hook] useCreateCustomerAddressMutation uses the graphQL mutation
  *
- * createCustomerAccountContact(accountId: Int!, customerContactInput: CustomerContactInput): CustomerContact
+ * <b>createCustomerAccountContact(accountId: Int!, customerContactInput: CustomerContactInput): CustomerContact</b>
  *
  * Description : Save the customer's contact (address) to the account which can be used at the time of checkout for shipping and billing address.
  *

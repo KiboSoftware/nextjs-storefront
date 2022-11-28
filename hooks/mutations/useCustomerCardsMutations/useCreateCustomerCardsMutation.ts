@@ -23,9 +23,9 @@ const addCustomerAccountCardDetails = async (params: AddCustomerAccountCardDetai
 }
 
 /**
- * [ Mutation hook => useCreateCustomerCardsMutation calls the graphQL mutation
+ * [Mutation hook] useCreateCustomerCardsMutation uses the graphQL mutation
  *
- * createCustomerAccountCard(accountId: Int!, cardInput: CardInput): Card
+ * <b>createCustomerAccountCard(accountId: Int!, cardInput: CardInput): Card</b>
  *
  * Description : Save the customer's card details to the account which can be used at the time of checkout for payment.
  *
