@@ -2,7 +2,6 @@ import { useQuery } from 'react-query'
 
 import { makeGraphQLClient } from '@/lib/gql/client'
 import { getCheckoutShippingMethodsQuery } from '@/lib/gql/queries'
-
 import { shippingMethodKeys } from '@/lib/react-query/queryKeys'
 
 import type { CheckoutGroupRates } from '@/lib/gql/types'
@@ -27,7 +26,7 @@ const loadShippingMethods = async (checkoutId: string) => {
 export const useCheckoutShippingMethodsQuery = (
   checkoutId: string | null | undefined,
   isNewAddressAdded?: boolean,
-  selectedShippingAddressId?: number
+  selectedShippingAddressId?: number | undefined | null
 ): UseCheckoutShippingMethodsResponse => {
   console.log(
     '##checkoutId',

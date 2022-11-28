@@ -119,10 +119,18 @@ const MultiShippingStep = (props: ShippingProps) => {
 
   const handleSaveAddress = async ({ contact }: { contact: Contact }) => {
     try {
-      await updateCheckoutShippingInfo({ checkout, contact })
+      const destination = await createCheckoutDestination.mutateAsync({
+        checkoutId: checkout?.id as string,
+        destinationInput: {
+          destinationContact: contact,
+        },
+      })
+      checkout?.items?.forEach((item) => {
+        handleCreateOrSetDestinationAddress(item?.id?.toString(), destination?.id?.toString())
+      })
 
       setCheckoutId(checkout?.id)
-      setSelectedShippingAddressId((contact?.id as number) || DefaultId.ADDRESSID) // set Selected MultiShipaddress
+      // setSelectedShippingAddressId((contact?.id as number) || DefaultId.ADDRESSID) // set Selected MultiShipaddress
       setShouldShowAddAddressButton(true)
       setValidateForm(false)
       setIsNewAddressAdded(true)
