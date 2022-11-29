@@ -25,6 +25,22 @@ const fetchProductSearch = async (searchParams: CategorySearchParams) => {
   return response.products
 }
 
+/**
+ * [Query hook] useProductsQueries uses the graphQL query
+ *
+ * <b>ProductSearch(query: String, startIndex: Int, filter: String, pageSize: Int, sortBy: String, facet: String, facetHierValue: String, facetTemplate: String, facetValueFilter: String): ProductSearchResult</b>
+ *
+ * Description : Fetches the product details based on filter and pagesize, here filter contains product codes.
+ *
+ * Parameters passed to function fetchProductSearch(searchParams: CategorySearchParams) => expects filter as productCode and page size to get the products.
+ *
+ * On success, returns the product list with 'refetchOnWindowFocus' set to false for this react query
+ *
+ * @param productCodes Accepts a Array<string> value
+ *
+ * @returns 'response?.products', which is list of products.
+ */
+
 export const useProductsQueries = (productCodes: Array<string>): UseProductsResponse => {
   const productCodeFilter: Array<string> = []
   productCodes?.forEach((code) => {

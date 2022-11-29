@@ -30,7 +30,7 @@ const updateUserPassword = async (props: UpdateUserPasswordProps) => {
  *
  * Description : Update the existing customer's account password by passing old password and new password.
  *
- * Parameters passed to function updateUserPassword(props: UpdateUserPasswordProps) => expects object containing accountId and passwordInfoInput to update the password.
+ * Parameters passed to internal function updateUserPassword(props: UpdateUserPasswordProps) => expects object containing accountId and passwordInfoInput to update the password.
  *
  * @returns 'response', that is True/False value to identify if password has been changed or not.
  */

@@ -29,7 +29,7 @@ const addCustomerAccountCardDetails = async (params: AddCustomerAccountCardDetai
  *
  * Description : Save the customer's card details to the account which can be used at the time of checkout for payment.
  *
- * Parameters passed to function addCustomerAccountCardDetails(params: AddCustomerAccountCardDetailsParams) => expects object containing accountId and cardInput to add the card details.
+ * Parameters passed to internal function addCustomerAccountCardDetails(params: AddCustomerAccountCardDetailsParams) => expects object containing accountId and cardInput to add the card details.
  *
  * On success, calls invalidateQueries all customerAccountCardsKeys and fetches the updated result.
  *

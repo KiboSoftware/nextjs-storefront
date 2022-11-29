@@ -27,7 +27,7 @@ const deleteCustomerAccountCardDetails = async (params: DeleteCustomerAccountCar
  *
  * Description : Delete the customer's card details saved on their account
  *
- * Parameters passed to function deleteCustomerAccountCardDetails(params: DeleteCustomerAccountCardDetailsParams) => expects object containing accountId and cardId to delete the card details.
+ * Parameters passed to internal function deleteCustomerAccountCardDetails(params: DeleteCustomerAccountCardDetailsParams) => expects object containing accountId and cardId to delete the card details.
  *
  * On success, calls invalidateQueries all customerAccountCardsKeys and fetches the updated result.
  *

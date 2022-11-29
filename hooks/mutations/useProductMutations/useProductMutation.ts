@@ -37,7 +37,7 @@ const configureProduct = async (configureProductDetails: ConfigureProductDetails
  *
  * Description : Update the product configurations
  *
- * Parameters passed to function configureProduct(params: ConfigureProductDetails) => expects object containing productCode and updatedOptions.
+ * Parameters passed to internal function configureProduct(params: ConfigureProductDetails) => expects object containing productCode and updatedOptions.
  *
  * @returns 'response?.configureProduct', which has product details like productCode, purchaseLocation, options, productImages etc.
  */

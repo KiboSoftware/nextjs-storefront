@@ -28,6 +28,24 @@ const getPurchaseLocation = async (param: { filter: string } | undefined) => {
   return response?.spLocations?.items[0]
 }
 
+/**
+ * [Query hook] usePurchaseLocationQueries uses the graphQL query
+ *
+ * <b>spLocations(startIndex: Int, pageSize: Int, sortBy: String, filter: String, includeAttributeDefinition: Boolean): LocationCollection</b>
+ *
+ * Description : Fetches the locations based on filter value, here filter contains location code stored in cookie.
+ * Store locator icon on header, select the location code by zipcode and set it to cookie.
+ * Then retrieving the location code from cookie to get the location name etc using this hook.
+ *
+ * Parameters passed to function getPurchaseLocation(param: { filter: string } | undefined) => expects filter as location code to get the locations.
+ *
+ * On success, returns the first location detail from location list
+ *
+ * @param productCodes Accepts a Array<string> value
+ *
+ * @returns 'response?.spLocations?.items[0]', which is first location from list.
+ */
+
 export const usePurchaseLocationQueries = (): LocationType => {
   const locationCookieValue = decodeParseCookieValue(
     getCookie(purchaseLocationCookieName) as string
