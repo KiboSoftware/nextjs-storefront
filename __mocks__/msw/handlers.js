@@ -7,7 +7,6 @@ import {
   returnReasonsMock,
   createReturnMock,
   checkoutMock,
-  multiShipCheckOutMock,
 } from '../stories'
 import { cartItemMock } from '../stories/cartItemMock'
 import { cartCouponMock, cartMock } from '../stories/cartMock'
