@@ -122,39 +122,41 @@ const MultiShippingStep = (props: ShippingProps) => {
   // end hooks
 
   const handleAddressValidationAndSave = () => setValidateForm(true)
-
-  const handleSaveAddress = async ({ contact }: { contact: Contact }) => {
-    console.log('handleSaveAddress : ', contact)
+  const handleUpdateDestinationAddress = async ({ contact }: { contact: Contact }) => {
+    console.log('handleUpdateDestinationAddress : ', contact)
+    //@todo create or update destination
     closeModal()
-    // try {
-    //   const destination = await createCheckoutDestination.mutateAsync({
-    //     checkoutId: checkout?.id as string,
-    //     destinationInput: {
-    //       destinationContact: contact,
-    //     },
-    //   })
+  }
+  const handleSaveAddress = async ({ contact }: { contact: Contact }) => {
+    try {
+      const destination = await createCheckoutDestination.mutateAsync({
+        checkoutId: checkout?.id as string,
+        destinationInput: {
+          destinationContact: contact,
+        },
+      })
 
-    //   if (destination?.id) {
-    //     for (const item of checkout?.items) {
-    //       const itemId = item?.id as string
-    //       const checkoutId = checkout?.id as string
-    //       await updateCheckoutItemDestination.mutateAsync({
-    //         itemId,
-    //         destinationId: destination?.id as string,
-    //         checkoutId,
-    //       })
-    //     }
+      if (destination?.id) {
+        for (const item of checkout?.items) {
+          const itemId = item?.id as string
+          const checkoutId = checkout?.id as string
+          await updateCheckoutItemDestination.mutateAsync({
+            itemId,
+            destinationId: destination?.id as string,
+            checkoutId,
+          })
+        }
 
-    //     // setCheckoutId(checkout?.id)
-    //     // setSelectedShippingAddressId(destination?.id as string) // set Selected MultiShipaddress
-    //     setShouldShowAddAddressButton(true)
-    //     // setValidateForm(false)
-    //     // setIsNewAddressAdded(true)
-    //     // setStepStatusIncomplete()
-    //   }
-    // } catch (error) {
-    //   console.error(error)
-    // }
+        // setCheckoutId(checkout?.id)
+        // setSelectedShippingAddressId(destination?.id as string) // set Selected MultiShipaddress
+        setShouldShowAddAddressButton(true)
+        // setValidateForm(false)
+        // setIsNewAddressAdded(true)
+        // setStepStatusIncomplete()
+      }
+    } catch (error) {
+      console.error(error)
+    }
   }
 
   const handleSaveShippingMethod = async (
@@ -206,15 +208,7 @@ const MultiShippingStep = (props: ShippingProps) => {
           checkoutId,
         })
       }
-      // checkout?.items?.map(async (item) => {
-      //   await updateCheckoutItemDestination.mutateAsync({
-      //     itemId: item?.id,
-      //     destinationId: destinationId as string,
-      //     checkoutId: checkout?.id as string,
-      //   })
-      // })
     } else {
-      console.log('###in## existing##')
       for (const item of checkout?.items) {
         const itemId = item?.id as string
         const checkoutId = checkout?.id as string
@@ -224,37 +218,6 @@ const MultiShippingStep = (props: ShippingProps) => {
           checkoutId,
         })
       }
-      // await updateCheckoutItemDestination.mutateAsync({
-      //   itemId: 'b98c27de676846729c46af4d00b09b8d',
-
-      //   destinationId: '7e366f2fab9848ddb5a8af5b008626b8',
-
-      //   checkoutId: '147279b50e001200016ca6ae000074e7',
-      // })
-
-      // await updateCheckoutItemDestination.mutateAsync({
-      //   itemId: 'bad76750cd2a48e2aacfaf5600693525',
-
-      //   destinationId: '7e366f2fab9848ddb5a8af5b008626b8',
-
-      //   checkoutId: '147279b50e001200016ca6ae000074e7',
-      // })
-
-      // await updateCheckoutItemDestination.mutateAsync({
-      //   itemId: '1ef37299b50d44ddb037af4d00b09b8d',
-
-      //   destinationId: '7e366f2fab9848ddb5a8af5b008626b8',
-
-      //   checkoutId: '147279b50e001200016ca6ae000074e7',
-      // })
-      // checkout?.items?.map(async (item) => {
-      //   const ex = await updateCheckoutItemDestination.mutateAsync({
-      //     itemId: item?.id,
-      //     destinationId: destinationIdOrAddressId as string,
-      //     checkoutId: checkout?.id as string,
-      //   })
-      //   console.log('In existin#### after', ex)
-      // })
     }
   }
 
@@ -350,7 +313,6 @@ const MultiShippingStep = (props: ShippingProps) => {
 
   const createOrUpdateDestination = (params?: any) => {
     const { destination } = params
-    console.log('createOrUpdateDestination : ')
     showModal({
       Component: AddressFormDialog,
       props: {
@@ -360,7 +322,7 @@ const MultiShippingStep = (props: ShippingProps) => {
         isAddressFormValid: false,
         setAutoFocus: true,
         validateForm: false,
-        onSaveAddress: handleSaveAddress,
+        onSaveAddress: handleUpdateDestinationAddress,
       },
     })
   }
