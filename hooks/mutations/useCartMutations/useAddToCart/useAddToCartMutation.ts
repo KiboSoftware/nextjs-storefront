@@ -35,14 +35,17 @@ const addToCart = async (props: AddToCartInputParams) => {
   return response?.addItemToCurrentCart
 }
 /**
- * [ Mutation hook => useAddToCartMutation uses the graphql mutation 'addItemToCurrentCart(cartItemInput: CartItemInput): CartItem' ]
+ * [Mutation hook] useAddToCartMutation uses the graphql mutation
  *
- * Description : Add the product items to the cart
+ * <b>addItemToCurrentCart(cartItemInput: CartItemInput): CartItem</b>
+ *
+ * Description : Add the product items to the cart with selected quantity
  *
  * Parameters passed to function addToCart(props: AddToCartInputParams) => expects object of type 'AddToCartInputParams' containing product details and quantity
  *
- * On success, calls invalidateQueries on cartKeys
- * @returns 'response?.addItemToCurrentCart' containing product details added to cart and it's quantity
+ * On success, calls invalidateQueries on cartKeys and fetches the updated result.
+ *
+ * @returns 'response?.addItemToCurrentCart' which contains object of product items added to cart and it's quantity
  */
 export const useAddToCartMutation = () => {
   const queryClient = useQueryClient()

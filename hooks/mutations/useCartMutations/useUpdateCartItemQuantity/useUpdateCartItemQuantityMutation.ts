@@ -28,14 +28,17 @@ const updateCartItemQuantity = async (params: UpdateCartItemQuantityParams) => {
 }
 
 /**
- * [ Mutation hook => useUpdateCartItemQuantityMutation uses the graphql mutation 'updateCurrentCartItemQuantity(cartItemId: String!, quantity: Int!): CartItem' ]
+ * [Mutation hook] useUpdateCartItemQuantityMutation uses the graphql mutation
+ *
+ * <b>updateCurrentCartItemQuantity(cartItemId: String!, quantity: Int!): CartItem'</b>
  *
  * Description : Updates the quantity of items currently in the cart
  *
  * Parameters passed to function updateCartItemQuantity(params: UpdateCartItemQuantityParams) => expects object of type 'UpdateCartItemQuantityParams' containing cartItemId and quantity
  *
  * On success, calls invalidateQueries on cartKeys and fetches the updated result
- * @returns 'response?.updateCartItemQuantity' with updated quantity for the items in cart
+ *
+ * @returns 'response?.updateCartItemQuantity' which contains updated quantity for the items present in the cart
  */
 export const useUpdateCartItemQuantityMutation = () => {
   const queryClient = useQueryClient()

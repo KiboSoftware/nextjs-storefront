@@ -26,14 +26,17 @@ const deleteCartCoupon = async (params: DeleteCartCouponParams) => {
 }
 
 /**
- * [ Mutation hook => useDeleteCartCouponMutation uses the graphlql mutation 'deleteCartCoupon(cartId: String!, couponCode: String!): Cart' ]
+ * [Mutation hook] useDeleteCartCouponMutation uses the graphlql mutation
+ *
+ * <b>deleteCartCoupon(cartId: String!, couponCode: String!): Cart</b>
  *
  * Description : Removes promo code from Order Summary in cart page
  *
  * Parameters passed to function deleteCartCoupon(params: DeleteCartCouponParams) => expects object of type 'DeleteCartCouponParams' containing cartId and couponCode
  *
  * On success, calls invalidateQueries on cartKeys and fetches the updated result
- * @returns 'response?.deleteCartCoupon' and deletes the applied coupon on cart page
+ *
+ * @returns 'response?.deleteCartCoupon' which removes the applied coupon on cart page
  */
 export const useDeleteCartCouponMutation = () => {
   const queryClient = useQueryClient()

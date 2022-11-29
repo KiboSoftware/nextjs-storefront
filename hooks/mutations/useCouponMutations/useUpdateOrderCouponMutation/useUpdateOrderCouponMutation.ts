@@ -27,14 +27,17 @@ const updateOrderCoupon = async (params: UpdateOrderCouponParams) => {
 }
 
 /**
- * [ Mutation hook => useUpdateOrderCouponMutation uses the graphlql mutation 'updateOrderCoupon($orderId: String!, $couponCode: String!)' ]
+ * [Mutation hook] useUpdateOrderCouponMutation uses the graphlql mutation
+ *
+ * <b>updateOrderCoupon($orderId: String!, $couponCode: String!)</b>
  *
  * Description : Applies promo code in Order Summary of checkout pages
  *
  * Parameters passed to function updateOrderCoupon(params: UpdateOrderCouponParams) => expects object of type 'UpdateOrderCouponParams' containing checkoutId and couponCode
  *
  * On success, calls invalidateQueries on cartKeys and fetches the updated result
- * @returns 'response?.updateOrderCoupon' and applies the coupon on checkout page
+ *
+ * @returns 'response?.updateOrderCoupon' which applies the coupon on checkout page((if coupon is valid))
  */
 export const useUpdateOrderCouponMutation = () => {
   const queryClient = useQueryClient()
