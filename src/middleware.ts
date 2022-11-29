@@ -9,8 +9,11 @@ const checkIsAutheticated = (req: NextRequest) => {
 
 export function middleware(request: NextRequest) {
   if (request.nextUrl.pathname.startsWith('/my-account')) {
-    if (!checkIsAutheticated(request)) {
-      return NextResponse.redirect('/')
+    if (checkIsAutheticated(request)) {
+      return NextResponse.next()
     }
+
+    const homeUrl = new URL('/', request.url)
+    return NextResponse.redirect(homeUrl)
   }
 }
