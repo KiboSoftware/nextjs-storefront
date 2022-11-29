@@ -28,7 +28,6 @@ import { userGetters } from '@/lib/getters'
 import type { CustomerContact, Order } from '@/lib/gql/types'
 interface CheckoutProps {
   checkout: Order
-  initialStep?: number
 }
 
 const buttonStyle = {

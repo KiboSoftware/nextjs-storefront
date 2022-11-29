@@ -19,23 +19,14 @@ const loadShippingMethods = async (checkoutId: string) => {
     document: getCheckoutShippingMethodsQuery,
     variables: { checkoutId },
   })
-  console.log('###useCheckoutShippingMethodsQuery##', response)
   return response?.checkoutShippingMethods
 }
 
 export const useCheckoutShippingMethodsQuery = (
   checkoutId: string | null | undefined,
   isNewAddressAdded?: boolean,
-  selectedShippingAddressId?: number | undefined | null
+  selectedShippingAddressId?: string | null
 ): UseCheckoutShippingMethodsResponse => {
-  console.log(
-    '##checkoutId',
-    checkoutId,
-    '###isNewAddressAdded',
-    isNewAddressAdded,
-    '###selectedShippingAddressId',
-    selectedShippingAddressId
-  )
   const {
     data = [],
     isLoading,
@@ -44,7 +35,7 @@ export const useCheckoutShippingMethodsQuery = (
     shippingMethodKeys.detail(
       checkoutId as string,
       isNewAddressAdded?.toString(),
-      selectedShippingAddressId
+      selectedShippingAddressId as string
     ),
     () => loadShippingMethods(checkoutId as string),
     {

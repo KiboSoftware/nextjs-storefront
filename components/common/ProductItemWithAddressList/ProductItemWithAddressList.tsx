@@ -21,7 +21,6 @@ import type { Maybe, CrOrderItem, CrProduct, Contact, Checkout, Destination } fr
 export type ProductItemWithAddressListProps = {
   checkout: Checkout
   multiShipAddresses: any
-  createCheckoutDestination: () => any
   createOrSetDestinationAddress: (id: string, destinationIdOrAddressId: string) => any
   onUpdateDestinationAddress: (params?: any) => any
 }
@@ -121,7 +120,7 @@ const ProductItemWithAddressList = (props: ProductItemWithAddressListProps) => {
                     : multiShipAddress?.address?.id
                   return (
                     <MenuItem
-                      key={multiShipAddress?.address?.id}
+                      key={`${multiShipAddress?.address?.id}-${multiShipAddress?.destinationId}`}
                       value={`${destinationOrAddressId}`}
                     >
                       {checkoutGetters.formatDestinationAddress(multiShipAddress?.address)}

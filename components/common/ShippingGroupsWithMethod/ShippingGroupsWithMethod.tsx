@@ -81,6 +81,7 @@ const ShippingGroupsWithMethod = (props: ShippingGroupsWithMethodProps) => {
   const { t } = useTranslation('common')
 
   const shipmentMethods = [
+    //@to-do use multirate api
     { shippingMethodName: 'Standard', price: 0 },
     { shippingMethodName: 'Expedited', price: 15 },
   ]
@@ -89,9 +90,7 @@ const ShippingGroupsWithMethod = (props: ShippingGroupsWithMethodProps) => {
 
   const destinationItemGroups = checkoutGetters.buildItemsGroupFromCheckoutGroupings(checkout)
 
-  console.log('destinationItemGroups###', destinationItemGroups)
-
-  const hanndleSelectShippingOption = (id: number, value: string) => {
+  const handleSelectShippingOption = (id: number, value: string) => {
     setSelectShippingOptions({ ...selectShippingOptions, [id]: value })
   }
 
@@ -154,7 +153,7 @@ const ShippingGroupsWithMethod = (props: ShippingGroupsWithMethodProps) => {
                 name="shippingMethods"
                 placeholder={t('select-shipping-option')}
                 sx={{ ...styles.shippingMethods }}
-                onChange={(_name, value) => hanndleSelectShippingOption(index, value)}
+                onChange={(_name, value) => handleSelectShippingOption(index, value)}
                 value={selectShippingOptions[index]}
               >
                 {shipmentMethods?.map((item: ShippingRate) => {
@@ -165,7 +164,6 @@ const ShippingGroupsWithMethod = (props: ShippingGroupsWithMethodProps) => {
                   )
                 })}
               </KiboSelect>
-              {/* Iterate shipping address product items */}
               <ProductGroup
                 key={destinationItemGroup?.destinationId}
                 items={destinationItemGroup?.items}
