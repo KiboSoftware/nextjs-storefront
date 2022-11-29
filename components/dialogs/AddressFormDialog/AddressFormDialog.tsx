@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 
 import { Stack, Button } from '@mui/material'
 import { useTranslation } from 'next-i18next'
@@ -7,7 +7,6 @@ import AddressForm from '@/components/common/AddressForm/AddressForm'
 import KiboDialog from '@/components/common/KiboDialog/KiboDialog'
 import { useModalContext } from '@/context'
 import type { Address, ContactForm } from '@/lib/types'
-
 interface AddressFormDialogProps {
   isAddressFormValid: boolean
   isUserLoggedIn: boolean
@@ -24,7 +23,6 @@ const AddressFormDialog = (props: AddressFormDialogProps) => {
   const { closeModal } = useModalContext()
   const { t } = useTranslation('common')
   const isAddressFormInDialog = true
-
   const {
     formTitle = t('add-new-address'),
     contact,
