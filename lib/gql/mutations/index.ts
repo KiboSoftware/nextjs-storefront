@@ -27,3 +27,4 @@ export { default as createReturnItemMutation } from './order-return-items/create
 export { default as updateCheckoutCouponMutation } from './coupon/updateCheckoutCouponMutation'
 export { default as deleteCheckoutCouponMutation } from './coupon/deleteCheckoutCouponMutation'
 export { default as checkoutPaymentActionMutation } from './checkout/create-checkout-payment-action-mutation'
+export { default as setMultiShipPersonalInfo } from './checkout/multi-ship-personal-info'
