@@ -30,7 +30,7 @@ const useCheckoutQueries = ({
   checkoutId,
   initialCheckout,
 }: UseMultiShipCheckout): UseMultiShipCheckoutResponse => {
-  const id = checkoutId as string
+  const id = checkoutId
 
   const {
     data = [],
