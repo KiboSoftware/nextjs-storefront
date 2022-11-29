@@ -9,11 +9,11 @@ import {
   DetailsStep,
   KiboStepper,
   ReviewStep,
-  ShippingStep,
   PaymentStep,
   OrderReview,
   StandardShippingStep,
 } from '@/components/checkout'
+import { PersonalDetails } from '@/components/checkout/DetailsStep/DetailsStep'
 import { OrderSummary, PromoCodeBadge } from '@/components/common'
 import { OrderConfirmation } from '@/components/order'
 import { useCheckoutStepContext, STEP_STATUS, useAuthContext } from '@/context'
@@ -23,15 +23,14 @@ import {
   useUpdateOrderCouponMutation,
   useDeleteOrderCouponMutation,
   useUpdateCheckoutPersonalInfoMutation,
-  useUpdateCheckoutShippingInfoMutation,
-  useShippingMethodsQueries,
+  PersonalInfo,
 } from '@/hooks'
 import { userGetters } from '@/lib/getters'
 
-import type { CustomerContact, Order } from '@/lib/gql/types'
+import type { CustomerContact, Order, OrderInput } from '@/lib/gql/types'
+
 interface CheckoutProps {
   checkout: Order
-  initialStep?: number
 }
 
 const buttonStyle = {
@@ -39,26 +38,11 @@ const buttonStyle = {
   fontSize: (themeParam: Theme) => themeParam.typography.subtitle1,
 } as SxProps<Theme> | undefined
 
-// import {somehooks} from 'standard ship checkout hook'
 const StandardShipCheckoutTemplate = (props: CheckoutProps) => {
-  //  const {method1, method2 ...} = somehooks()
-  //<kiboStepper>
-  //  <DetailsStep {...props} method1={method1}/>
-
-  // <ShippingStep {...props} method2={method2}/>
-
-  // <PaymentStep {...props} />
-  // <ReviewStep {...props} />
-  //   <kiboStepper>
-
   const { checkout: initialCheckout } = props
   const router = useRouter()
   const [promoError, setPromoError] = useState<string>('')
-  const { checkoutId: queryCheckoutId } = router.query
-  // States
-  const [checkoutId, setCheckoutId] = useState<string | null | undefined>(queryCheckoutId)
-  const [isNewAddressAdded, setIsNewAddressAdded] = useState<boolean>(false)
-  const [selectedShippingAddressId, setSelectedShippingAddressId] = useState<number>(null) //assign default  checkoutShippingContact?.id as number
+  const { checkoutId } = router.query
 
   const { t } = useTranslation('common')
 
@@ -71,11 +55,6 @@ const StandardShipCheckoutTemplate = (props: CheckoutProps) => {
   const { data: savedUserAddressData, isSuccess } = useCustomerContactsQueries(user?.id as number)
   const updateOrderCoupon = useUpdateOrderCouponMutation()
   const deleteOrderCoupon = useDeleteOrderCouponMutation()
-  const { data: shippingMethods } = useShippingMethodsQueries(
-    checkoutId,
-    isNewAddressAdded,
-    selectedShippingAddressId
-  )
 
   const { activeStep, stepStatus, steps, setStepBack, setStepStatusSubmit } =
     useCheckoutStepContext()
@@ -158,7 +137,6 @@ const StandardShipCheckoutTemplate = (props: CheckoutProps) => {
   )
 
   const updateStandardCheckoutPersonalInfo = useUpdateCheckoutPersonalInfoMutation()
-  const updateStandardCheckoutShippingInfo = useUpdateCheckoutShippingInfoMutation()
 
   const updateCheckoutPersonalInfo = async (formData: PersonalDetails) => {
     const { email } = formData
@@ -174,10 +152,6 @@ const StandardShipCheckoutTemplate = (props: CheckoutProps) => {
     await updateStandardCheckoutPersonalInfo.mutateAsync(personalInfo)
   }
 
-  const updateCheckoutShippingInfo = async (shippingInfo: any) => {
-    console.log('updateCheckoutShippingInfo')
-    await updateStandardCheckoutShippingInfo.mutateAsync(shippingInfo)
-  }
   return (
     <>
       {showCheckoutSteps && (

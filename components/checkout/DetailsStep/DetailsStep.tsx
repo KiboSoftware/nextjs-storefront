@@ -12,10 +12,9 @@ import * as yup from 'yup'
 import { KiboTextBox } from '@/components/common'
 import { LoginDialog } from '@/components/layout'
 import { useAuthContext, useCheckoutStepContext, STEP_STATUS, useModalContext } from '@/context'
-import { PersonalInfo, useUpdateCheckoutPersonalInfoMutation } from '@/hooks'
 import { FormStates } from '@/lib/constants'
 
-import type { Order, OrderInput, Maybe, Checkout } from '@/lib/gql/types'
+import type { Maybe, Order, Checkout } from '@/lib/gql/types'
 export interface PersonalDetails {
   email: Maybe<string> | undefined
 }
@@ -26,7 +25,7 @@ export interface Action {
 interface DetailsProps {
   setAutoFocus?: boolean
   checkout: Order | Checkout | undefined
-  updateCheckoutPersonalInfo?: (params: any) => void
+  updateCheckoutPersonalInfo: (params: any) => void //@to-do add generic type for this param as std/multi
 }
 
 const commonStyle = {
@@ -65,7 +64,7 @@ const DetailsStep = (props: DetailsProps) => {
   const { setAutoFocus = true, checkout, updateCheckoutPersonalInfo } = props
 
   const { t } = useTranslation('common')
-  // const updateCheckoutPersonalInfo = useUpdateCheckoutPersonalInfoMutation()
+
   const { isAuthenticated, setAuthError } = useAuthContext()
   const { showModal } = useModalContext()
   const {
@@ -98,20 +97,8 @@ const DetailsStep = (props: DetailsProps) => {
     shouldFocusError: true,
   })
 
-  const updatePersonalInfo = async (formData: PersonalDetails) => {
-    // const { email } = formData
-
-    // const personalInfo: PersonalInfo = {
-    //   orderId: checkout?.id as string,
-    //   updateMode: 'ApplyToOriginal',
-    //   orderInput: {
-    //     ...(checkout as OrderInput),
-    //     email,
-    //   },
-    // }
-    // await updateCheckoutPersonalInfo.mutateAsync(personalInfo)
+  const updatePersonalInfo = async (formData: PersonalDetails) =>
     updateCheckoutPersonalInfo(formData)
-  }
 
   const onValid = async (formData: PersonalDetails) => {
     try {

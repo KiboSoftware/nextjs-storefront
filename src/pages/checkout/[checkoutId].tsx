@@ -9,19 +9,19 @@ import {
 import { CheckoutStepProvider } from '@/context/CheckoutStepContext/CheckoutStepContext'
 import { getCheckout, getMultiShipCheckout } from '@/lib/api/operations'
 
-import type { Order } from '@/lib/gql/types'
+import type { Checkout, Order } from '@/lib/gql/types'
 import type { NextPage, GetServerSidePropsContext } from 'next'
 
 interface CheckoutPageProps {
   checkoutId: string
-  checkout: Order
+  checkout: any //add generic type
   isMultiShipEnabled?: boolean
 }
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
   const { locale, params, req, res } = context
   const { checkoutId } = params as any
-  const isMultiShipEnabled = true
+  const isMultiShipEnabled = false
   const checkout = isMultiShipEnabled
     ? await getMultiShipCheckout(checkoutId, req, res)
     : await getCheckout(checkoutId, req, res)
