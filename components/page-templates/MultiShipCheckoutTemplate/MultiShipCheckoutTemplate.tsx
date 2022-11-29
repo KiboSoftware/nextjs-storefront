@@ -42,7 +42,7 @@ const MultiShipCheckoutTemplate = (props: CheckoutProps) => {
   const [promoError, setPromoError] = useState<string>('')
   const [checkoutId, setCheckoutId] = useState<string | null | undefined>(queryCheckoutId as string)
   const [isNewAddressAdded, setIsNewAddressAdded] = useState<boolean>(false)
-  const [selectedShippingAddressId, setSelectedShippingAddressId] = useState<number>(0)
+  const [selectedShippingAddressId, setSelectedShippingAddressId] = useState<string>(0)
 
   // Hooks
   const { t } = useTranslation('common')
