@@ -209,27 +209,3 @@ export const checkoutPaymentFragment = /* GraphQL */ `
   }
   ${billingContactFragment}
 `
-
-export const baseMultiShipCheckoutFragment = /* GraphQL */ `
-  fragment baseMultiShipCheckoutFragment on Checkout {
-    id
-    email
-    amountRemainingForPayment
-    total
-    shippingTotal
-    subTotal
-    couponCodes
-    invalidCoupons {
-      couponCode
-      reason
-    }
-    orderDiscounts {
-      impact
-      discount {
-        id
-        name
-      }
-      couponCode
-    }
-  }
-`

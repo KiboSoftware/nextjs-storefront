@@ -1,4 +1,5 @@
 import type { Checkout } from '@/lib/gql/types'
+
 const checkoutResponse: Checkout = {
   id: '147542c811037d000104fe140000678b',
   originalCartId: '1475090c07e0230001d986680000678b',
@@ -122,6 +123,7 @@ const checkoutResponse: Checkout = {
   siteId: 0,
   tenantId: 0,
 }
+
 export const checkoutMock: { checkout: Checkout } = {
   checkout: checkoutResponse,
 }
