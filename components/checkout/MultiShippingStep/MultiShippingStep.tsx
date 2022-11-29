@@ -13,7 +13,9 @@ import {
   ProductItemWithAddressList,
   ShippingGroupsWithMethod,
 } from '@/components/common'
+import AddressFormDialog from '@/components/dialogs/AddressFormDialog/AddressFormDialog'
 import { useCheckoutStepContext, STEP_STATUS } from '@/context'
+import { useModalContext } from '@/context/ModalContext'
 import { useUpdateCheckoutItemDestinationMutations } from '@/hooks'
 import { DefaultId } from '@/lib/constants'
 import { orderGetters, userGetters, checkoutGetters } from '@/lib/getters'
@@ -59,6 +61,7 @@ const MultiShippingStep = (props: ShippingProps) => {
     createCheckoutDestination,
   } = props
   const { publicRuntimeConfig } = getConfig()
+  const { showModal, closeModal } = useModalContext()
 
   const checkoutShippingContact = orderGetters.getShippingContact(checkout)
   const checkoutShippingMethodCode = orderGetters.getShippingMethodCode(checkout)
@@ -121,35 +124,37 @@ const MultiShippingStep = (props: ShippingProps) => {
   const handleAddressValidationAndSave = () => setValidateForm(true)
 
   const handleSaveAddress = async ({ contact }: { contact: Contact }) => {
-    try {
-      const destination = await createCheckoutDestination.mutateAsync({
-        checkoutId: checkout?.id as string,
-        destinationInput: {
-          destinationContact: contact,
-        },
-      })
+    console.log('handleSaveAddress : ', contact)
+    closeModal()
+    // try {
+    //   const destination = await createCheckoutDestination.mutateAsync({
+    //     checkoutId: checkout?.id as string,
+    //     destinationInput: {
+    //       destinationContact: contact,
+    //     },
+    //   })
 
-      if (destination?.id) {
-        for (const item of checkout?.items) {
-          const itemId = item?.id as string
-          const checkoutId = checkout?.id as string
-          await updateCheckoutItemDestination.mutateAsync({
-            itemId,
-            destinationId: destination?.id as string,
-            checkoutId,
-          })
-        }
+    //   if (destination?.id) {
+    //     for (const item of checkout?.items) {
+    //       const itemId = item?.id as string
+    //       const checkoutId = checkout?.id as string
+    //       await updateCheckoutItemDestination.mutateAsync({
+    //         itemId,
+    //         destinationId: destination?.id as string,
+    //         checkoutId,
+    //       })
+    //     }
 
-        // setCheckoutId(checkout?.id)
-        // setSelectedShippingAddressId(destination?.id as string) // set Selected MultiShipaddress
-        setShouldShowAddAddressButton(true)
-        // setValidateForm(false)
-        // setIsNewAddressAdded(true)
-        // setStepStatusIncomplete()
-      }
-    } catch (error) {
-      console.error(error)
-    }
+    //     // setCheckoutId(checkout?.id)
+    //     // setSelectedShippingAddressId(destination?.id as string) // set Selected MultiShipaddress
+    //     setShouldShowAddAddressButton(true)
+    //     // setValidateForm(false)
+    //     // setIsNewAddressAdded(true)
+    //     // setStepStatusIncomplete()
+    //   }
+    // } catch (error) {
+    //   console.error(error)
+    // }
   }
 
   const handleSaveShippingMethod = async (
@@ -343,6 +348,23 @@ const MultiShippingStep = (props: ShippingProps) => {
     }
   }
 
+  const createOrUpdateDestination = (params?: any) => {
+    const { destination } = params
+    console.log('createOrUpdateDestination : ')
+    showModal({
+      Component: AddressFormDialog,
+      props: {
+        isUserLoggedIn: false,
+        formTitle: destination?.id ? 'Edit Address' : 'Add New Address',
+        contact: destination,
+        isAddressFormValid: false,
+        setAutoFocus: true,
+        validateForm: false,
+        onSaveAddress: handleSaveAddress,
+      },
+    })
+  }
+
   useEffect(() => {
     if (isNewAddressAdded)
       setSavedShippingAddresses(
@@ -477,6 +499,7 @@ const MultiShippingStep = (props: ShippingProps) => {
               <ProductItemWithAddressList
                 checkout={checkout}
                 multiShipAddresses={multiShipAddresses}
+                onUpdateDestinationAddress={createOrUpdateDestination}
                 createOrSetDestinationAddress={handleCreateOrSetDestinationAddress}
               />
               <Button
