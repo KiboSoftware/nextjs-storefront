@@ -41,7 +41,7 @@ export const checkoutHandlers = [
     return res(ctx.data(orderMock))
   }),
 
-  graphql.query('createMultiShipCheckout', (_req, res, ctx) => {
+  graphql.mutation('createMultiShipCheckout', (_req, res, ctx) => {
     return res(ctx.data(checkoutMock))
   }),
 
