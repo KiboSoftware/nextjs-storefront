@@ -5,28 +5,17 @@ import { Theme } from '@mui/material/styles'
 import { useTranslation } from 'next-i18next'
 import { useRouter } from 'next/router'
 
-import {
-  DetailsStep,
-  KiboStepper,
-  OrderReview,
-  PaymentStep,
-  ReviewStep,
-  ShippingStep,
-  MultiShippingStep,
-} from '@/components/checkout'
+import { DetailsStep, KiboStepper, MultiShippingStep } from '@/components/checkout'
+import type { PersonalDetails } from '@/components/checkout/DetailsStep/DetailsStep'
 import { OrderSummary, PromoCodeBadge } from '@/components/common'
-import { OrderConfirmation } from '@/components/order'
 import { useCheckoutStepContext, STEP_STATUS, useAuthContext } from '@/context'
 import {
   useCustomerContactsQueries,
   useDeleteOrderCouponMutation,
   useMultiShipCheckoutQueries,
-  useShippingMethodsQueries,
-  useUpdateCheckoutShippingInfoMutation,
   useUpdateMultiShipCheckoutPersonalInfoMutation,
   useUpdateMultiShipCheckoutShippingInfoMutation,
   useUpdateOrderCouponMutation,
-  useCheckoutDestinationsQueries,
   MultiShipPersonalInfo,
   useCreateCheckoutDestinationMutations,
   useCheckoutShippingMethodsQuery,
@@ -34,10 +23,9 @@ import {
 import { userGetters } from '@/lib/getters'
 
 import type { CustomerContact, Checkout, CheckoutInput } from '@/lib/gql/types'
+
 interface CheckoutProps {
   checkout: Checkout
-  initialStep?: number
-  isMultiShipEnabled: boolean
 }
 
 const buttonStyle = {
@@ -46,24 +34,22 @@ const buttonStyle = {
 } as SxProps<Theme> | undefined
 
 const MultiShipCheckoutTemplate = (props: CheckoutProps) => {
-  const { checkout: initialCheckout, isMultiShipEnabled } = props
+  const { checkout: initialCheckout } = props
 
   const router = useRouter()
-  const [promoError, setPromoError] = useState<string>('')
   const { checkoutId: queryCheckoutId } = router.query
   // States
-  const [checkoutId, setCheckoutId] = useState<string | null | undefined>(queryCheckoutId)
+  const [promoError, setPromoError] = useState<string>('')
+  const [checkoutId, setCheckoutId] = useState<string | null | undefined>(queryCheckoutId as string)
   const [isNewAddressAdded, setIsNewAddressAdded] = useState<boolean>(false)
-  const [selectedShippingAddressId, setSelectedShippingAddressId] = useState<number>(0) //assign default  checkoutShippingContact?.id as number
+  const [selectedShippingAddressId, setSelectedShippingAddressId] = useState<number>(0)
 
+  // Hooks
   const { t } = useTranslation('common')
-
   const { data: checkout } = useMultiShipCheckoutQueries({
     checkoutId: checkoutId as string,
     initialCheckout,
   })
-
-  // Hooks
   const updateMultiShipCheckoutPersonalInfo = useUpdateMultiShipCheckoutPersonalInfoMutation()
   const updateMultiShipCheckoutShippingInfo = useUpdateMultiShipCheckoutShippingInfoMutation()
   const createCheckoutDestination = useCreateCheckoutDestinationMutations()
@@ -71,7 +57,7 @@ const MultiShipCheckoutTemplate = (props: CheckoutProps) => {
   const { data: shippingMethods } = useCheckoutShippingMethodsQuery(
     checkoutId,
     isNewAddressAdded,
-    checkout?.groupings[0]?.destinationId //this should call on each selected destination for multiship
+    checkout?.groupings[0]?.destinationId as string
   )
 
   const updateCheckoutPersonalInfo = async (formData: PersonalDetails) => {
@@ -176,10 +162,6 @@ const MultiShipCheckoutTemplate = (props: CheckoutProps) => {
     savedUserAddressData?.items as CustomerContact[]
   )
 
-  const { data: destionations } = useCheckoutDestinationsQueries({
-    checkoutId: checkoutId as string,
-  })
-
   return (
     <>
       {showCheckoutSteps && (
@@ -199,21 +181,19 @@ const MultiShipCheckoutTemplate = (props: CheckoutProps) => {
                   checkout={checkout as Checkout}
                   userShippingAddress={userShippingAddress}
                   isAuthenticated={isAuthenticated}
-                  isMultiShipEnabled={isMultiShipEnabled}
                   updateCheckoutShippingInfo={updateCheckoutShippingInfo}
-                  shippingMethods={shippingMethods}
+                  shippingMethods={shippingMethods} //@to-do muse multiRate api
                   setCheckoutId={setCheckoutId}
                   setIsNewAddressAdded={setIsNewAddressAdded}
                   setSelectedShippingAddressId={setSelectedShippingAddressId}
-                  checkoutId={checkoutId}
                   isNewAddressAdded={isNewAddressAdded}
                   selectedShippingAddressId={selectedShippingAddressId}
-                  destinations={destionations}
                   createCheckoutDestination={createCheckoutDestination}
                 />
               )}
-              <PaymentStep checkout={checkout} {...paymentStepParams} />
-              <ReviewStep checkout={checkout as Checkout} onBackButtonClick={handleBack} />
+              {/* @to-do Use below steps for future development */}
+              {/* <PaymentStep checkout={checkout} {...paymentStepParams} />
+              <ReviewStep checkout={checkout as Checkout} onBackButtonClick={handleBack} /> */}
             </KiboStepper>
           </Stack>
 
@@ -255,14 +235,16 @@ const MultiShipCheckoutTemplate = (props: CheckoutProps) => {
                 )}
               </OrderSummary>
             )}
-            {activeStep === reviewStepIndex && <OrderReview checkout={checkout as Checkout} />}
+            {/* @to-do Use below code during order review step */}
+            {/* {activeStep === reviewStepIndex && <OrderReview checkout={checkout as Checkout} />} */}
           </Box>
         </Stack>
       )}
 
       {!showCheckoutSteps && (
         <Stack sx={{ paddingY: '40px' }}>
-          <OrderConfirmation order={checkout as Checkout} />
+          {/* @to-do Use below code during order confirmation */}
+          {/* <OrderConfirmation order={checkout as Checkout} /> */}
         </Stack>
       )}
     </>

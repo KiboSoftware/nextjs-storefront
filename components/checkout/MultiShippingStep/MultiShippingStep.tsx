@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react'
 
-import { Stack, Button, Typography, SxProps, Box } from '@mui/material'
+import { Stack, Button, Typography, SxProps } from '@mui/material'
 import { Theme } from '@mui/material/styles'
 import { useTranslation } from 'next-i18next'
 import getConfig from 'next/config'
@@ -38,7 +38,7 @@ interface ShippingProps {
   shippingMethods: any
   checkoutId?: string
   isNewAddressAdded: boolean
-  selectedShippingAddressId: string
+  selectedShippingAddressId: number | string
   setCheckoutId: (params: any) => void
   setIsNewAddressAdded: (params: any) => void
   setSelectedShippingAddressId: (params: any) => void
@@ -57,7 +57,6 @@ const MultiShippingStep = (props: ShippingProps) => {
     setCheckoutId,
     setIsNewAddressAdded,
     setSelectedShippingAddressId,
-
     createCheckoutDestination,
   } = props
   const { publicRuntimeConfig } = getConfig()
@@ -147,12 +146,12 @@ const MultiShippingStep = (props: ShippingProps) => {
           })
         }
 
-        // setCheckoutId(checkout?.id)
-        // setSelectedShippingAddressId(destination?.id as string) // set Selected MultiShipaddress
+        setCheckoutId(checkout?.id)
+        setSelectedShippingAddressId(destination?.id as string)
         setShouldShowAddAddressButton(true)
-        // setValidateForm(false)
-        // setIsNewAddressAdded(true)
-        // setStepStatusIncomplete()
+        setValidateForm(false)
+        setIsNewAddressAdded(true)
+        setStepStatusIncomplete()
       }
     } catch (error) {
       console.error(error)
@@ -198,7 +197,6 @@ const MultiShippingStep = (props: ShippingProps) => {
 
     if (!existingDestinationAddress?.id) {
       const destinationId = await handleCreateDestinationAddress(destinationIdOrAddressId)
-      console.log('###in## Not existing##')
       for (const item of checkout?.items) {
         const itemId = item?.id as string
         const checkoutId = checkout?.id as string
@@ -235,7 +233,6 @@ const MultiShippingStep = (props: ShippingProps) => {
   const onChangeShippingOption = async (option: string) => {
     if (checkout?.groupings?.length > 1 && option === shipOptions[0].value) {
       const defaultDestinationId = checkout?.groupings[0]?.destinationId as string
-      console.log('defaultDestinationId:###############', defaultDestinationId)
       for (const item of checkout?.items) {
         const itemId = item?.id as string
         const checkoutId = checkout?.id as string
@@ -252,7 +249,6 @@ const MultiShippingStep = (props: ShippingProps) => {
 
   const getSavedShippingAddressView = (contact: any, isPrimary?: boolean): React.ReactNode => {
     const { destinationId, address } = contact
-    console.log('###destinationId####', destinationId)
     return (
       <AddressDetailsView
         key={destinationId + address?.id}
@@ -277,7 +273,7 @@ const MultiShippingStep = (props: ShippingProps) => {
     const existingAddress = userShippingAddress?.find(
       (shippingAddress) => shippingAddress?.id?.toString() === shippingAddressId
     )
-
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const { accountId, types, ...rest } = existingAddress
 
     const newDestination = await createCheckoutDestination.mutateAsync({
@@ -361,7 +357,6 @@ const MultiShippingStep = (props: ShippingProps) => {
       <Typography variant="h2" component="h2" sx={{ fontWeight: 'bold' }}>
         {!showMultiShipContinueButton ? t('shipping-address') : t('shipping')}
       </Typography>
-      {/* Options ship to home / multi ship */}
       {showMultiShipContinueButton && (
         <KiboRadio
           radioOptions={radioOptions}
@@ -370,21 +365,11 @@ const MultiShippingStep = (props: ShippingProps) => {
         />
       )}
 
-      {/* Ship to Home / standard shipping in multishipping  */}
-      {shippingOption === 'ShipToHome' && (
+      {shippingOption === shipOptions[0].value && (
         <>
           {shouldShowAddAddressButton && (
             <>
               <Stack gap={2} width="100%">
-                {/* {defaultShippingAddress && (
-                  <>
-                    <Typography variant="h4" fontWeight={'bold'}>
-                      {t('your-default-shipping-address')}
-                    </Typography>
-                    {getSavedShippingAddressView(defaultShippingAddress, true)}
-                  </>
-                )} */}
-
                 {multiShipAddresses?.length > 0 && (
                   <>
                     <Typography variant="h4" fontWeight={'bold'}>
@@ -451,10 +436,7 @@ const MultiShippingStep = (props: ShippingProps) => {
           )}
         </>
       )}
-      {/* End Ship to Home / standard shipping in multishipping  */}
-
-      {/* Muti Ship  Section */}
-      {shippingOption === 'ShipToMultiAddress' && (
+      {shippingOption === shipOptions[1].value && ( //for more than one address
         <Stack>
           {showMultiShipContinueButton && (
             <>
@@ -482,7 +464,6 @@ const MultiShippingStep = (props: ShippingProps) => {
           )}
         </Stack>
       )}
-      {/* End of Muti Ship Section */}
     </Stack>
   )
 }
