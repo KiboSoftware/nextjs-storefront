@@ -18,7 +18,11 @@ interface SelectedFulfillmentOption<T extends Location | LocationCustom> {
 
 /**
  * [Custom Hook] Updates shopper entered values for product , sets selected fulfillment and product options,
+ * Description : It has 2 functions
+ * 1. updateShopperEnteredValues -> It updates user entered value for the products  ,
+ * 2.selectProductOption -> It sets uset selected productoption for the variant product type  example:color, size
  * @param props Expects object { product : holds product details value , purchaseLocation : purchaseLocation of user }
+ * It returns user selected product quantity, fulfillmentoption (location) of user, product option selected by user
  */
 export const useProductDetailTemplate = (props: UseProductDetailTemplateProps) => {
   const { product, purchaseLocation } = props
