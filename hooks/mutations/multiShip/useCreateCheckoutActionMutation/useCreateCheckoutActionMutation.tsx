@@ -23,7 +23,7 @@ const createCheckout = async (checkout: Checkout) => {
     variables: checkoutInfo,
   })
 
-  return response
+  return response?.createCheckoutAction
 }
 
 const useCreateCheckoutActionMutation = () => {
@@ -36,4 +36,4 @@ const useCreateCheckoutActionMutation = () => {
   })
 }
 
-export const useCreateMultiShipOrderMutation = useCreateCheckoutActionMutation
+export const useCreateMultiShipCheckoutMutation = useCreateCheckoutActionMutation
