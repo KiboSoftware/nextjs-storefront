@@ -2,20 +2,21 @@ import { useMutation, useQueryClient } from 'react-query'
 
 import { makeGraphQLClient } from '@/lib/gql/client'
 import { createCheckoutActionMutation } from '@/lib/gql/mutations'
-import { buildCreateCheckoutParams } from '@/lib/helpers'
 import { checkoutKeys } from '@/lib/react-query/queryKeys'
 
 import type { Checkout, CheckoutActionInput } from '@/lib/gql/types'
 
-export interface OrderMultiShipInfo {
+export interface MultiShipCreateActionParams {
   checkoutId: string
   checkoutActionInput: CheckoutActionInput
 }
 
-const createOrder = async (checkout: Checkout) => {
-  const checkoutInfo: OrderMultiShipInfo = buildCreateCheckoutParams(checkout)
-
+const createCheckout = async (checkout: Checkout) => {
   const client = makeGraphQLClient()
+  const checkoutInfo: MultiShipCreateActionParams = {
+    checkoutId: checkout.id as string,
+    checkoutActionInput: { actionName: 'SubmitOrder' },
+  }
 
   const response = await client.request({
     document: createCheckoutActionMutation,
@@ -28,7 +29,7 @@ const createOrder = async (checkout: Checkout) => {
 const useCreateCheckoutActionMutation = () => {
   const queryClient = useQueryClient()
 
-  return useMutation(createOrder, {
+  return useMutation(createCheckout, {
     onSuccess: () => {
       queryClient.removeQueries([checkoutKeys.all])
     },
