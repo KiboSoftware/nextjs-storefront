@@ -19,7 +19,7 @@ const fetchCategoryTree = async () => {
 }
 
 /**
- * [ Query hook => useCategoryTreeQueries fetches the data from the GET api call to the '/api/category-tree' ]
+ * [Query hook] useCategoryTreeQueries fetches the data from the GET api call to the <b>/api/category-tree</b>
  *
  * Description : Fetches categories and all related sub categories for the storefront
  *

@@ -22,14 +22,16 @@ const getCurrentCart = async () => {
 }
 
 /**
- * [ Query hook => useCartQueries uses the graphql query 'currentCart: Cart' ]
+ * [Query hook] useCartQueries uses the graphQL query
  *
- * Description : Fetches details about to the items present currently in the cart.
+ * <b>currentCart: Cart</b>
+ *
+ * Description : Fetches details about the items present currently in the cart
  *
  * On success, returns the current cart items with 'refetchOnWindowFocus' set to false for this react query
  *
  * @param initialData stores the data for cart present on server side. Used to check if the data has got stale, if not; data is not fetched again.
- * @returns 'response?.currentCart' all the updated items present in cart if the data has got stale
+ * @returns 'response?.currentCart' which contains all the updated items present in cart
  */
 export const useCartQueries = (initialData: Cart): UseCartType => {
   try {
