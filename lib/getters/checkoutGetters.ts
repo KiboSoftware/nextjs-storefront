@@ -34,7 +34,6 @@ const formatDestinationAddress = (contact: Contact) => {
 
 const getMultiShipAddresses = ({ checkout, savedShippingAddresses }) => {
   const destinationAddresses = checkout?.destinations?.map((destination) => {
-    // console.log('destination?.destinationContact', Object?.values(destination?.destinationContact))
     return {
       destinationId: destination?.id,
       address: destination?.destinationContact,
@@ -49,7 +48,6 @@ const getMultiShipAddresses = ({ checkout, savedShippingAddresses }) => {
     )
   )
 
-  console.log('savedShippingAddresses', savedShippingAddresses)
   const savedAddresses = savedShippingAddresses
     ?.filter((shippingAddress) => {
       if (destinationAddressIds?.includes(shippingAddress?.id)) return
@@ -70,8 +68,6 @@ const getMultiShipAddresses = ({ checkout, savedShippingAddresses }) => {
     })
     .filter(Boolean)
 
-  console.log('destinationAddresses', destinationAddresses)
-  console.log('savedAddresses', savedAddresses)
   return [...destinationAddresses, ...savedAddresses]
 }
 

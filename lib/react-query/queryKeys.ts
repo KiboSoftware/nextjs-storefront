@@ -15,7 +15,7 @@ export const splitOrderShipmentKeys = {
 
 export const shippingMethodKeys = {
   all: ['shippingMethod'] as const,
-  detail: (id: string, newAddress?: string, addressId?: number) =>
+  detail: (id: string, newAddress?: string, addressId?: number | string) =>
     [...shippingMethodKeys.all, id, newAddress, addressId] as const,
 }
 
