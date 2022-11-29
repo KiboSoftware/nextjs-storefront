@@ -37,6 +37,7 @@ export * from './mutations/useCartMutations/useUpdateCartItem/useUpdateCartItemM
 export * from './mutations/useCartMutations/useUpdateCartItemQuantity/useUpdateCartItemQuantityMutation'
 export * from './mutations/useProductMutations/useProductMutation'
 export * from './mutations/useCheckoutMutations/useCreateFromCartMutation'
+export * from './mutations/multiShip/useCreateCheckoutMutation/useCreateCheckoutMutation'
 export * from './mutations/useWishlistMutations/useAddToWishlistMutation/useAddToWishlistMutation'
 export * from './mutations/useWishlistMutations/useRemoveWishlistItemMutation/useRemoveWishlistItemMutation'
 export * from './mutations/useWishlistMutations/useCreateWishlistMutation/useCreateWishlistMutation'
