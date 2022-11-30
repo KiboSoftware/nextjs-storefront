@@ -78,6 +78,10 @@ export * from './mutations/useCouponMutations/useDeleteOrderCouponMutation/useDe
 export * from './mutations/useProfile/useUpdateUserData/useUpdateUserData'
 export * from './mutations/useProfile/useUpdateUserPassword/useUpdateUserPassword'
 
+//Destination
+export * from './mutations/multiShip/useCreateCheckoutDestinationMutations/useCreateCheckoutDestinationMutations'
+export * from './mutations/multiShip/useUpdateCheckoutItemDestinationMutations/useUpdateCheckoutItemDestinationMutations'
+export * from './mutations/multiShip/useUpdateCheckoutDestinationMutations/useUpdateCheckoutDestinationMutations'
 // MultiShip
 export * from './mutations/multiShip/useCreateCheckoutActionMutation/useCreateCheckoutActionMutation'
 export * from './mutations/multiShip/useCreateCheckoutDestinationMutations/useCreateCheckoutDestinationMutations'
