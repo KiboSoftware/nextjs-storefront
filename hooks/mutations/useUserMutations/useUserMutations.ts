@@ -15,14 +15,17 @@ const loginUser = async (customerUserAuthInfoInput: CustomerUserAuthInfoInput) =
 }
 
 /**
- * [ Mutation hook => createCustomerAuthTicket(customerUserAuthInfoInput: $loginInput) ]
+ * [Mutation hook] useUserMutations uses the graphQL mutation
  *
- * Description : It logs user in account by creating auth ticket
+ * <b>createCustomerAuthTicket(customerUserAuthInfoInput: CustomerUserAuthInfoInput): CustomerAuthTicket</b>
+ *
+ * Description : Logs user in account by creating auth ticket
  *
  * Parameters passed to function loginUser(customerAccountAndAuthInfoInput: CustomerAccountAndAuthInfoInput) => expects object of type ' CustomerAccountAndAuthInfoInput' containing password and username
  *
- * On success, calls invalidateQueries on loginKeys
- * @returns 'response?.account' containing information related to logged in user account
+ * On success, calls invalidateQueries on loginKeys and fetches the updated result.
+ *
+ * @returns 'response?.account', which contains information related to logged in user account
  */
 
 export const useUserMutations = () => {

@@ -29,11 +29,11 @@ const deleteCustomerAccountContactDetails = async (
  *
  * Description : Delete the customer's contact (address) saved on their account
  *
- * Parameters passed to function deleteCustomerAccountContactDetails(params: DeleteCustomerAccountContactDetailsParams) => expects object containing accountId and contactId to delete the address.
+ * Parameters passed to function deleteCustomerAccountContactDetails(params: DeleteCustomerAccountContactDetailsParams) => expects object of type DeleteCustomerAccountContactDetailsParams containing accountId and contactId.
  *
  * On success, calls invalidateQueries all customerAccountContactsKeys and fetches the updated result.
  *
- * @returns 'response?.deleteCustomerAccountContact', that is True/False value to identify if customer's contact has been deleted or not.
+ * @returns 'response?.deleteCustomerAccountContact', which contains True/False value to identify if customer's contact has been deleted or not.
  */
 
 export const useDeleteCustomerAddressMutation = () => {

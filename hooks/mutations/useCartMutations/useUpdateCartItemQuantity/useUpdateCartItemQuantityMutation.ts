@@ -28,9 +28,9 @@ const updateCartItemQuantity = async (params: UpdateCartItemQuantityParams) => {
 }
 
 /**
- * [Mutation hook] useUpdateCartItemQuantityMutation uses the graphql mutation
+ * [Mutation hook] useUpdateCartItemQuantityMutation uses the graphQL mutation
  *
- * <b>updateCurrentCartItemQuantity(cartItemId: String!, quantity: Int!): CartItem'</b>
+ * <b>updateCurrentCartItemQuantity(cartItemId: String!, quantity: Int!): CartItem</b>
  *
  * Description : Updates the quantity of items currently in the cart
  *

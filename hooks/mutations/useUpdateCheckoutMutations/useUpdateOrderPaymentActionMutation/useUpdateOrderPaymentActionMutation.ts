@@ -27,15 +27,19 @@ const updateOrderPaymentActionMutation = async (params: UpdateOrderPaymentAction
 }
 
 /**
- * [ Mutation hook => createOrderPaymentPaymentAction(orderId: $orderId,paymentId: $paymentId,paymentActionInput: $paymentAction) ]
+ * [Mutation hook] useUpdateOrderPaymentActionMutation uses the graphQL mutation
  *
- * Description : It updates user payment action for order at checkout
+ * <b>createOrderPaymentPaymentAction(orderId: String!, paymentId: String!, paymentActionInput: PaymentActionInput): Order</b>
+ *
+ * Description : Updates user payment action for order at checkout
  *
  * Parameters passed to function updateOrderPaymentActionMutation(params: UpdateOrderPaymentActionParams) => expects object of type ' UpdateOrderPaymentActionParams' containing  orderId, paymentId,paymentAction
  *
- * On success, calls invalidateQueries on checkoutKeys
- * @returns 'response?.createOrderPaymentPaymentAction' containing updated payment information at checkout
+ * On success, calls invalidateQueries on checkoutKeys and fetches the updated result.
+ *
+ * @returns 'response?.updateOrderBillingInfo', which contains updated payment information at checkout
  */
+
 export const useUpdateOrderPaymentActionMutation = () => {
   const queryClient = useQueryClient()
 

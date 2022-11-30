@@ -37,13 +37,11 @@ const getPurchaseLocation = async (param: { filter: string } | undefined) => {
  * Store locator icon on header, select the location code by zipcode and set it to cookie.
  * Then retrieving the location code from cookie to get the location name etc using this hook.
  *
- * Parameters passed to function getPurchaseLocation(param: { filter: string } | undefined) => expects filter as location code to get the locations.
+ * Parameters passed to function getPurchaseLocation(param: { filter: string } | undefined) => expects filter containing location code from the cookies.
  *
- * On success, returns the first location detail from location list
+ * On success, returns the first location detail from location list.
  *
- * @param productCodes Accepts a Array<string> value
- *
- * @returns 'response?.spLocations?.items[0]', which is first location from list.
+ * @returns 'response?.spLocations?.items[0]', which contains first location from list as it will always return single item based on location code.
  */
 
 export const usePurchaseLocationQueries = (): LocationType => {

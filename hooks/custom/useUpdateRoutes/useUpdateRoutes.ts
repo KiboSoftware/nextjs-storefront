@@ -9,6 +9,7 @@ const nonFilters = ['page', 'sort', 'search', 'itemsPerPage']
  * 1. changeFilters(filters: string) => Accepts a string value or empty string and appends to the URL
  * 2. updateRoute(queryParam: string) => Accepts a string value or empty string and determines the positioning of queryParam in URL and then calls changeFilters(filters: string)
  */
+
 export const useUpdateRoutes = () => {
   const router = useRouter()
 

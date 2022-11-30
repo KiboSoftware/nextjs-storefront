@@ -35,14 +35,14 @@ const fetchProductSearch = async (searchParams: CategorySearchParams) => {
  *
  * Description : Fetches the product details based on search keyword passing by searchParams.
  *
- * Parameters passed to function fetchProductSearch(searchParams: CategorySearchParams) => expects route.query like categoryCode, filters, sort, search etc to get the products.
+ * Parameters passed to function fetchProductSearch(searchParams: CategorySearchParams) => expects object of type CategorySearchParams containing categoryCode, pageSize, filters, startIndex, sort, search, filter.
  *
  * On success, returns the product list with 'refetchOnWindowFocus' set to false for this react query
  *
- * @param searchParams Accepts a CategorySearchParams value
- * @param initialData Accepts a ProductSearchResult value
+ * @param searchParams get required values from route.query and used inside the search params
+ * @param initialData stores the data for cart present on server side. Used to check if the data has got stale, if not; data is not fetched again.
  *
- * @returns 'response?.products', which is list of products.
+ * @returns 'response?.products', which contains list of products based of search request.
  */
 
 export const useProductSearchQueries = (

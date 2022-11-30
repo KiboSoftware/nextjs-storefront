@@ -28,14 +28,17 @@ const updatePersonalInfo = async (personalInfo: PersonalInfo) => {
 }
 
 /**
- * [ Mutation hook => checkout: updateOrder(orderId: $orderId, updateMode: $updateMode, orderInput: $orderInput) ]
+ * [Mutation hook] useUpdateCheckoutPersonalInfoMutation uses the graphQL mutation
  *
- * Description : It updates user personal info at checkout
+ * <b>updateOrder(orderId: String!,updateMode: String, version: String, orderInput: OrderInput): Order</b>
+ *
+ * Description : Updates user personal info at checkout
  *
  * Parameters passed to function updatePersonalInfo(personalInfo: PersonalInfo) => expects object of type ' PersonalInfo' containing  orderId,updateMode , version ,orderInput
  *
- * On success, calls invalidateQueries on checkoutKeys
- * @returns 'response?.checkout' containing updated checkout information
+ * On success, calls invalidateQueries on checkoutKeys and fetches the updated result.
+ *
+ * @returns 'response?.updateOrderBillingInfo', which contains updated checkout information
  */
 
 export const useUpdateCheckoutPersonalInfoMutation = () => {

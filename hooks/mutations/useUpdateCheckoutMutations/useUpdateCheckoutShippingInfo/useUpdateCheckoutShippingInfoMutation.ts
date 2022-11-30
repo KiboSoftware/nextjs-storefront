@@ -32,14 +32,17 @@ const updateShippingInfo = async (params: CheckoutShippingParams) => {
 }
 
 /**
- * [ Mutation hook => updateOrderFulfillmentInfo(orderId: $orderId, fulfillmentInfoInput: $fulfillmentInfoInput) ]
+ * [Mutation hook] useUpdateCheckoutShippingInfoMutation uses the graphQL mutation
  *
- * Description : It updates user shipping(fulfillment) info at checkout
+ * <b>updateOrderFulfillmentInfo(orderId: String!, updateMode: String, version: String, fulfillmentInfoInput: FulfillmentInfoInput): FulfillmentInfo</b>
+ *
+ * Description : Updates user shipping(fulfillment) info at checkout
  *
  * Parameters passed to function updateShippingInfo(params: CheckoutShippingParams) => expects object of type ' ShippingInfo' containing  orderId and fulfillmentInfoInput
  *
- * On success, calls invalidateQueries on checkoutKeys
- * @returns 'response?.updateOrderFulfillmentInfo' containing updated shipping checkout information
+ * On success, calls invalidateQueries on checkoutKeys and fetches the updated result.
+ *
+ * @returns 'response?.updateOrderBillingInfo', which contains updated shipping checkout information
  */
 
 export const useUpdateCheckoutShippingInfoMutation = () => {

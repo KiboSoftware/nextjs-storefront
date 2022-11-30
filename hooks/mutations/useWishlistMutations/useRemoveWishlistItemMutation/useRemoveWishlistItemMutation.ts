@@ -19,12 +19,18 @@ const removeWishlistItem = async (props: RemoveWishlistItemInput) => {
 }
 
 /**
- * [ Mutation hook => createWishlist(wishlistInput: $wishlistInput)]
+ * [Mutation hook] useRemoveCartItemMutation uses the graphql mutation
+ * <b>deleteWishlistItem(wishlistId: String!, wishlistItemId: String!): Boolean</b>
  *
- * Description : It deleted item from wishlist
- * On success, calls invalidateQueries on wishlistKeys and clears timeout
- * @param params  WishlistHookParams
- * @returns function removeWishlistItem which calls remove wishlist mutation it accepts props (props: RemoveWishlistItemInput) in params and deletes item from wishlist
+ * Description : Deleted item from wishlist based on wishlistId and wishlistItemId.
+ *
+ * Parameters passed to function removeWishlistItem(props: RemoveWishlistItemInput) => expects params as product and currentWishlist.
+ *
+ * On success, calls invalidateQueries on wishlistKeys, clears timeout and fetches the updated result
+ *
+ * @param params Accepts a WishlistHookParams value
+ *
+ * @returns response?.deleteWishlistItem, which contains True/False value to identify if customer's card has been deleted or not.
  */
 
 export const useRemoveWishlistItemMutation = (params?: WishlistHookParams) => {

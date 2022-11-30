@@ -15,9 +15,9 @@ const getOrCreateCheckout = async (cartId?: string | null) => {
 }
 
 /**
- * [Mutation hook] useCreateFromCartMutation uses the graphlql mutation
+ * [Mutation hook] useCreateFromCartMutation uses the graphQL mutation
  *
- * <b>createOrder(cartId: $cartId)'</b>
+ * <b>createOrder(cartId: String, quoteId: String, orderInput: OrderInput): Order</b>
  *
  * Description : Prepares data for checkout page from cart
  *

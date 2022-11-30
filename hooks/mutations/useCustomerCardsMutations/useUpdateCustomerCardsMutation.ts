@@ -30,7 +30,7 @@ const updateCustomerAccountCardDetails = async (params: UpdateCustomerAccountCar
  *
  * Description : Update the existing customer's card information saved into the account.
  *
- * Parameters passed to internal function updateCustomerAccountCardDetails(params: UpdateCustomerAccountCardDetailsParams) => expects object containing accountId, cardId and cardInput to update the card details.
+ * Parameters passed to internal function updateCustomerAccountCardDetails(params: UpdateCustomerAccountCardDetailsParams) => expects object of type UpdateCustomerAccountCardDetailsParams containing accountId, cardId and cardInput.
  *
  * On success, calls invalidateQueries all customerAccountCardsKeys and fetches the updated result.
  *

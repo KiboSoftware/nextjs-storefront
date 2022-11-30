@@ -33,13 +33,13 @@ const loadShippingMethods = async (checkoutId: string) => {
  *
  * Description : Fetches the shipping methods based on checkout id.
  *
- * Parameters passed to function loadShippingMethods(checkoutId: string) => expects checkoutId to get the shipping methods.
+ * Parameters passed to function loadShippingMethods(checkoutId: string) => expects checkoutId
  *
  * On success, returns the received list of shipping methods.
  *
- * @param checkoutId Accepts a string value
+ * @param checkoutId Accepts created checkout id
  *
- * @returns 'response?.orderShipmentMethods', which is shipping methods.
+ * @returns 'response?.orderShipmentMethods', which contains shipping methods based on checkoutId request.
  */
 
 export const useShippingMethodsQueries = (

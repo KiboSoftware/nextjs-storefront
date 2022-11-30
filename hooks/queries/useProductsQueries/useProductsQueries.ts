@@ -35,13 +35,13 @@ const fetchProductSearch = async (searchParams: CategorySearchParams) => {
  *
  * Description : Fetches the product details based on filter and pagesize, here filter contains product codes.
  *
- * Parameters passed to function fetchProductSearch(searchParams: CategorySearchParams) => expects filter as productCode and page size to get the products.
+ * Parameters passed to function fetchProductSearch(searchParams: CategorySearchParams) => expects object of type CategorySearchParams containing categoryCode, pageSize, filters, startIndex, sort, search, filter.
  *
  * On success, returns the product list with 'refetchOnWindowFocus' set to false for this react query
  *
- * @param productCodes Accepts a Array<string> value
+ * @param productCodes Accept array of product code and converting it to string with separated by 'or' to be used further.
  *
- * @returns 'response?.products', which is list of products.
+ * @returns 'response?.products', which contains list of products based on search request.
  */
 
 export const useProductsQueries = (productCodes: Array<string>): UseProductsResponse => {

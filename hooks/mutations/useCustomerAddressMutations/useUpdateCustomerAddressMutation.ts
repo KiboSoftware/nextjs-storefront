@@ -34,11 +34,11 @@ const updateCustomerAccountContactDetails = async (
  *
  * Description : Update the existing customer's contact (address) saved into the account.
  *
- * Parameters passed to function updateCustomerAccountContactDetails(params: UpdateCustomerAccountContactDetailsParams) => expects object containing accountId, contactId and customerContactInput to update the contact details.
+ * Parameters passed to function updateCustomerAccountContactDetails(params: UpdateCustomerAccountContactDetailsParams) => expects object of type UpdateCustomerAccountContactDetailsParams containing accountId, contactId and customerContactInput.
  *
  * On success, calls invalidateQueries all customerAccountContactsKeys and fetches the updated result.
  *
- * @returns 'response?.updateCustomerAccountContact', which has list of Customer's contact details.
+ * @returns 'response?.updateCustomerAccountContact', which contains list of Customer's contact details.
  */
 
 export const useUpdateCustomerAddressMutation = () => {

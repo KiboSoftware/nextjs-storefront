@@ -16,18 +16,19 @@ const registerUser = async (customerAccountAndAuthInfoInput: CustomerAccountAndA
 }
 
 /**
- * [ Mutation hook => createCustomerAccountAndLogin(customerAccountAndAuthInfoInput: $customerAccountAndAuthInfoInput) ]
+ * [Mutation hook] useUserAccountRegistrationMutations uses the graphQL mutation
  *
- * Description : It creates account for user and logIn user into account created
+ * <b>createCustomerAccountAndLogin(customerAccountAndAuthInfoInput: CustomerAccountAndAuthInfoInput): CustomerAuthTicket</b>
  *
- * Parameters passed to function registerUser(customerAccountAndAuthInfoInput: CustomerAccountAndAuthInfoInput) => expects object of type ' CustomerAccountAndAuthInfoInput' containing account?: InputMaybe<CustomerAccountInput> | undefined;
- *  externalPassword?: InputMaybe<string> | undefined;
- *  isImport?: InputMaybe<boolean> | undefined;
- *  password?: InputMaybe<...> | undefined;
+ * Description : Creates account for user and logIn user into account created
  *
- * On success, calls invalidateQueries on loginKeys
- * @returns 'response?.account' containing information related to user account
+ * Parameters passed to function registerUser(customerAccountAndAuthInfoInput: CustomerAccountAndAuthInfoInput) => expects object of type ' CustomerAccountAndAuthInfoInput' containing account, externalPassword, isImport and password.
+ *
+ * On success, calls invalidateQueries on loginKeys and fetches the updated result.
+ *
+ * @returns 'response?.account', which contains auth related information for user
  */
+
 export const useUserAccountRegistrationMutations = () => {
   const queryClient = useQueryClient()
   const {

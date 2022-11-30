@@ -26,7 +26,7 @@ const deleteCartCoupon = async (params: DeleteCartCouponParams) => {
 }
 
 /**
- * [Mutation hook] useDeleteCartCouponMutation uses the graphlql mutation
+ * [Mutation hook] useDeleteCartCouponMutation uses the graphQL mutation
  *
  * <b>deleteCartCoupon(cartId: String!, couponCode: String!): Cart</b>
  *

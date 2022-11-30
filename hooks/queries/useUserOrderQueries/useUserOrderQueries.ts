@@ -41,15 +41,15 @@ const getOrders = async (params: UseUserOrder) => {
  *
  * <b>orders(startIndex: Int, pageSize: Int, sortBy: String, filter: String): OrderCollection</b>
  *
- * Description : Fetches the orders based on `filters and status (ABANDONED)` or `order number and billing email and status (ABANDONED)`.
+ * Description : Fetches the orders based on filter provided and non abandoned orders.
  *
- * Parameters passed to function getOrders(params: UseUserOrder) => expects params as filters or order number and billing email.
+ * Parameters passed to function getOrders(params: UseUserOrder) => expects UseUserOrder containing filters or order number and billing email.
  *
  * On success, returns the list of orders
  *
- * @param params Accepts a UseUserOrder value
+ * @param params Accepts a UseUserOrder value as filters (duration like M-1, M-6, Y-2022 etc) or order number and billing email including status (ABANDONED)
  *
- * @returns 'response?.orders', which is orders list.
+ * @returns 'response?.orders', which contains orders list.
  */
 
 export const useUserOrderQueries = (param: UseUserOrder): UseUserOrderType => {

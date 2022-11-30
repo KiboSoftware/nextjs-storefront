@@ -37,9 +37,16 @@ const getCheckout = async (checkoutId?: string | null) => {
  *
  * Description : Fetches the data required on checkout steps(items, fulfillment info, discounts(if any) etc.)
  *
- * @param checkoutId checkout Id passed as string
- * @returns 'response?.checkout' which data required for the passed on checkoutID
+ * Parameters passed to function getCheckout(checkoutId?: string | null) => expects checkoutId.
+ *
+ * On success, returns the checkout
+ *
+ * @param checkoutId passing the created checkout id
+ * @param initialCheckout stores the data for checkout present on server side. Used to check if the data has got stale, if not; data is not fetched again.
+ *
+ * @returns 'response?.checkout' which contains checkout details
  */
+
 export const useCheckoutQueries = ({
   checkoutId,
   initialCheckout,

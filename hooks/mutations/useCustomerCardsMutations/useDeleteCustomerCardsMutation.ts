@@ -27,11 +27,11 @@ const deleteCustomerAccountCardDetails = async (params: DeleteCustomerAccountCar
  *
  * Description : Delete the customer's card details saved on their account
  *
- * Parameters passed to internal function deleteCustomerAccountCardDetails(params: DeleteCustomerAccountCardDetailsParams) => expects object containing accountId and cardId to delete the card details.
+ * Parameters passed to internal function deleteCustomerAccountCardDetails(params: DeleteCustomerAccountCardDetailsParams) => expects object of type DeleteCustomerAccountCardDetailsParams containing accountId and cardId.
  *
  * On success, calls invalidateQueries all customerAccountCardsKeys and fetches the updated result.
  *
- * @returns 'response?.deleteCustomerAccountCard', that is True/False value to identify if customer's card has been deleted or not.
+ * @returns 'response?.deleteCustomerAccountCard', which contains True/False value to identify if customer's card has been deleted or not.
  */
 
 export const useDeleteCustomerCardsMutation = () => {

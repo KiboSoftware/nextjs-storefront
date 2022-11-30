@@ -29,9 +29,9 @@ const createOrder = async (checkout: Order) => {
 }
 
 /**
- * [Mutation hook] useCreateOrderMutation uses the graphlql mutation
+ * [Mutation hook] useCreateOrderMutation uses the graphQL mutation
  *
- * <b>createOrderAction($orderId: String!, $orderActionInput: OrderActionInput)</b>
+ * <b>createOrderAction(orderId: String!, orderActionInput: OrderActionInput): Order</b>
  *
  * Description : Creates a new order after clicking 'Confirm & Pay' button on Review step of checkout page
  *
@@ -39,7 +39,7 @@ const createOrder = async (checkout: Order) => {
  *
  * On success, calls invalidateQueries on checkoutKeys and fetches the updated result
  *
- * @returns 'response?.createOrderAction' which returns with an Order number, payment status, product items with totals, shipping and billing details, fulfillment methods.
+ * @returns 'response?.createOrderAction' which contains Order number, payment status, product items with totals, shipping and billing details, fulfillment methods.
  */
 export const useCreateOrderMutation = () => {
   const queryClient = useQueryClient()

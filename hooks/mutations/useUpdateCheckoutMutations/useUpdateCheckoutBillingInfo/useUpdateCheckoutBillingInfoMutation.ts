@@ -26,15 +26,19 @@ const updateBillingInfo = async (params: UpdateBillingInfoInput) => {
 }
 
 /**
- * [ Mutation hook => updateOrderBillingInfo(orderId: $orderId, billingInfoInput: $billingInfoInput) ]
+ * [Mutation hook] useUpdateCheckoutBillingInfoMutation uses the graphQL mutation
  *
- * Description : It updates user billing info at checkout
+ * <b>updateOrderBillingInfo(orderId: String!, updateMode: String, version: String, billingInfoInput: BillingInfoInput): BillingInfo</b>
  *
- * Parameters passed to function updateBillingInfo(params: UpdateBillingInfoInput) => expects object of type 'UpdateBillingInfoInput' containing orderid and billinginfo input
+ * Description : Updates user billing info at checkout
  *
- * On success, calls invalidateQueries on checkoutKeys
- * @returns 'response?.updateOrderBillingInfo' containing updated billing details of user
+ * Parameters passed to function updateBillingInfo(params: UpdateBillingInfoInput) => expects object of type 'UpdateBillingInfoInput' containing orderId and billingInfo input
+ *
+ * On success, calls invalidateQueries on checkoutKeys and fetches the updated result.
+ *
+ * @returns 'response?.updateOrderBillingInfo', which contains updated billing details of user
  */
+
 export const useUpdateCheckoutBillingInfoMutation = () => {
   const queryClient = useQueryClient()
 

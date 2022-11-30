@@ -31,13 +31,13 @@ const getStoreLocations = async (param: { filter: string }) => {
  * Description : Fetches the locations based on filter value, here filter value location code or 'geo near(${latitude}, ${longitude}, ${defaultRange})'.
  * 'geo near' filter could be used to search by current location latitude and longitude.
  *
- * Parameters passed to function getStoreLocations(param: { filter: string } | undefined) => expects filter as location code or geo location to get the locations.
+ * Parameters passed to function getStoreLocations(param: { filter: string } | undefined) => expects filter containing location code or geo location
  *
  * On success, returns the list of location
  *
- * @param param Accepts a { filter: string } value
+ * @param param Expect 'location code' or 'geo near(${latitude}, ${longitude}, ${defaultRange})' inside the filter value
  *
- * @returns 'response?.spLocations?.items', which is location list.
+ * @returns 'response?.spLocations?.items', which contains location list based on filter value request.
  */
 
 export const useStoreLocationsQueries = (searchParams: { filter: string }): LocationType => {

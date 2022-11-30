@@ -37,7 +37,7 @@ const getWishlists = async (): Promise<Wishlist> => {
  *
  * On success, returns the first item of wishlists
  *
- * @returns 'response?.wishlists?.items[0]'
+ * @returns 'response?.wishlists?.items[0], which contains the first wishlist item'
  */
 
 export const useWishlistQueries = (): UseWishlistResponse => {

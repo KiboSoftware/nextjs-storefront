@@ -27,15 +27,19 @@ const addToWishlist = async (props: WishlistItemInputParams) => {
 }
 
 /**
- * [ Mutation hook => createWishlistItem(wishlistId: $wishlistId, wishlistItemInput: $wishlistItemInput)]
+ * [Mutation hook] useAddToWishlistMutation uses the graphQL mutation
  *
- * Description : It add item to wishlist for current user
+ * <b>createWishlistItem(wishlistId: String!, wishlistItemInput: WishlistItemInput): WishlistItem</b>
  *
- * Parameters passed to function addToWishlist(props: WishlistItemInputParams) => expects object of type ' WishlistItemInputParams' containing  product: WishlistProductInput,customerAccountId: number,currentWishlist?: Maybe<Wishlist>
+ * Description : Add item to wishlist for current user
  *
- * On success, calls invalidateQueries on wishlistKeys
- * @returns 'response?.createWishlistItem' containing wishlist items for current user
+ * Parameters passed to function addToWishlist(props: WishlistItemInputParams) => expects object of type ' WishlistItemInputParams' containing  product ,customerAccountId ,currentWishlist
+ *
+ * On success, calls invalidateQueries on wishlistKeys and fetches the updated result.
+ *
+ * @returns 'response?.createWishlistItem', which contains wishlist items for current user
  */
+
 export const useAddToWishlistMutation = () => {
   const queryClient = useQueryClient()
 

@@ -29,15 +29,19 @@ const loadCustomerAccountContacts = async (accountId: number) => {
 /**
  * [Query hook] useCustomerContactsQueries uses the graphQL query
  *
- * <b>customerAccountContacts(accountId: Int!,startIndex: Int,pageSize: Int): CustomerContactCollection'</b>
+ * <b>customerAccountContacts(accountId: Int!,startIndex: Int,pageSize: Int): CustomerContactCollection</b>
  *
  * Description : Fetches saved addresses for a particular user
+ *
+ * Parameters passed to function loadCustomerAccountContacts(accountId: number) => expects accountId.
  *
  * On success, returns the saved addresses with 'refetchOnWindowFocus' set to false for this react query
  *
  * @param accountId stores the user id of the user whose saved address details needed to be fetched
+ *
  * @returns 'response?.customerAccountContacts' which contains all the saved addresses details for the requested user based on accountId
  */
+
 export const useCustomerContactsQueries = (accountId: number): UseCustomerContactsResponse => {
   const {
     data = [],

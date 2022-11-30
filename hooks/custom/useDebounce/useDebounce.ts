@@ -9,10 +9,12 @@ import { useEffect, useState } from 'react'
  *
  * clearTimeout(handler) will cancel the timeout if value changes. Timeout gets cleared and restarted
  *
- * @param value Accepts a string value
- * @param delay Accepts a number value
+ * @param value Excepts user entered value on search suggestions feature
+ * @param delay Expect debounce timeout value
+ *
  * @returns The latest debounced value on specified time period.
  */
+
 export const useDebounce = (value: string, delay: number) => {
   const [debouncedValue, setDebouncedValue] = useState<string>(value)
 
