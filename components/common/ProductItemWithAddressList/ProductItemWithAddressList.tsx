@@ -70,17 +70,23 @@ const ProductItemWithAddressList = (props: ProductItemWithAddressListProps) => {
   } = props
 
   const { t } = useTranslation('common')
-  const handleEditAddress = (destinationId) => {
-    console.log('handleEditAddress : ', destinationId)
+  const handleEditDestination = (item) => {
+    console.log('handleEditDestination : ', item)
     console.log('multiShipAddresses : ', multiShipAddresses)
-    const contact = multiShipAddresses.find((address) => address.destinationId === destinationId)
+    const contact = multiShipAddresses.find(
+      (address) => address.destinationId === item.destinationId
+    )
     // need to handle
     console.log('edit address')
-    onUpdateDestinationAddress({ destination: contact.address })
+    onUpdateDestinationAddress({
+      destinationInput: { ...contact.address, destinationId: item.destinationId, itemId: item.id },
+    })
   }
-  const handleAddAddress = () => {
-    console.log('add address')
-    onUpdateDestinationAddress({})
+  const handleAddDestination = (item) => {
+    console.log('add address:', item)
+    onUpdateDestinationAddress({
+      destinationInput: { itemId: item.id },
+    })
   }
   const handleSplitAddress = () => {
     console.log('split address')
@@ -134,7 +140,7 @@ const ProductItemWithAddressList = (props: ProductItemWithAddressListProps) => {
                   variant="caption"
                   color="text.primary"
                   sx={{ padding: '5px' }}
-                  onClick={() => handleEditAddress(item?.destinationId)}
+                  onClick={() => handleEditDestination(item)}
                 >
                   {t('edit-address')}
                 </Link>
@@ -148,7 +154,7 @@ const ProductItemWithAddressList = (props: ProductItemWithAddressListProps) => {
                   variant="caption"
                   color="text.primary"
                   sx={{ padding: '5px' }}
-                  onClick={() => handleAddAddress({})}
+                  onClick={() => handleAddDestination(item)}
                 >
                   {t('add-new-address')}
                 </Link>

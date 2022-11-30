@@ -16,7 +16,10 @@ import {
 import AddressFormDialog from '@/components/dialogs/AddressFormDialog/AddressFormDialog'
 import { useCheckoutStepContext, STEP_STATUS } from '@/context'
 import { useModalContext } from '@/context/ModalContext'
-import { useUpdateCheckoutItemDestinationMutations } from '@/hooks'
+import {
+  useUpdateCheckoutItemDestinationMutations,
+  useUpdateCheckoutDestinationMutations,
+} from '@/hooks'
 import { DefaultId } from '@/lib/constants'
 import { orderGetters, userGetters, checkoutGetters } from '@/lib/getters'
 
@@ -46,12 +49,16 @@ interface ShippingProps {
   onUpdateCheckoutShippingMethod: (params: any) => void
 }
 
+interface DestinationInput extends Contact {
+  destinationId: string
+  itemId: string
+}
+
 const MultiShippingStep = (props: ShippingProps) => {
   const {
     checkout,
     userShippingAddress: addresses,
     isAuthenticated,
-    updateCheckoutShippingInfo,
     shippingMethods,
     isNewAddressAdded,
     selectedShippingAddressId,
@@ -120,13 +127,33 @@ const MultiShippingStep = (props: ShippingProps) => {
   } = useCheckoutStepContext()
 
   const updateCheckoutItemDestination = useUpdateCheckoutItemDestinationMutations()
+  const updateCheckoutDestination = useUpdateCheckoutDestinationMutations()
   // end hooks
 
   const handleAddressValidationAndSave = () => setValidateForm(true)
-  const handleUpdateDestinationAddress = async ({ contact }: { contact: Contact }) => {
-    console.log('handleUpdateDestinationAddress : ', contact)
-    //@todo create or update destination
+  const handleUpdateDestinationAddress = async ({ contact }: { contact: DestinationInput }) => {
+    const { destinationId, itemId, ...rest } = contact
     closeModal()
+    if (destinationId)
+      await updateCheckoutDestination.mutateAsync({
+        checkoutId: checkout?.id as string,
+        destinationId,
+        destinationInput: { id: destinationId, destinationContact: rest },
+      })
+    else {
+      const destination = await createCheckoutDestination.mutateAsync({
+        checkoutId: checkout?.id as string,
+        destinationInput: {
+          destinationContact: rest,
+        },
+      })
+
+      await updateCheckoutItemDestination.mutateAsync({
+        itemId,
+        destinationId: destination?.id as string,
+        checkoutId: checkout?.id as string,
+      })
+    }
   }
   const handleSaveAddress = async ({ contact }: { contact: Contact }) => {
     try {
@@ -299,13 +326,14 @@ const MultiShippingStep = (props: ShippingProps) => {
   }
 
   const createOrUpdateDestination = (params?: any) => {
-    const { destination } = params
+    // destination
+    const { destinationInput } = params
     showModal({
       Component: AddressFormDialog,
       props: {
         isUserLoggedIn: false,
-        formTitle: destination?.id ? 'Edit Address' : 'Add New Address',
-        contact: destination,
+        formTitle: destinationInput?.destinationId ? 'Edit Address' : 'Add New Address',
+        contact: destinationInput,
         isAddressFormValid: false,
         setAutoFocus: true,
         validateForm: false,
