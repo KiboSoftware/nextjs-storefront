@@ -30,6 +30,7 @@ export const useCheckoutQueries = ({
   checkoutId,
   initialCheckout,
 }: UseCheckout): UseCheckoutResponse => {
+  console.log('useCheckoutQueries old called.......')
   const id = checkoutId as string
 
   const {

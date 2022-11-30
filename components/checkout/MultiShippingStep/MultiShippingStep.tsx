@@ -37,7 +37,6 @@ interface ShippingProps {
   checkout: Checkout
   userShippingAddress?: CustomerContact[]
   isAuthenticated: boolean
-  updateCheckoutShippingInfo: (params: any) => void
   shippingMethods: any
   checkoutId?: string
   isNewAddressAdded: boolean

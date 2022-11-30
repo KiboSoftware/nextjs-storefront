@@ -61,6 +61,7 @@ const styles = {
 
 const CartTemplate = (props: CartTemplateProps) => {
   const { isMultiShipEnabled } = props
+  console.log('CartTemplate isMultiShipEnabled : ', isMultiShipEnabled)
   const { data: cart } = useCartQueries(props?.cart)
 
   const { t } = useTranslation('common')

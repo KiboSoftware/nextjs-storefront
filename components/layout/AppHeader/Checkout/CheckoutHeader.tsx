@@ -26,10 +26,11 @@ const CheckoutHeader = () => {
   const router = useRouter()
   const { t } = useTranslation()
   const { checkoutId } = router.query
-  const { data: checkout } = useCheckoutQueries({
-    checkoutId: checkoutId as string,
-  })
-  const numberOfItems = orderGetters.getCheckoutItemCount(checkout as Order)
+  // const { data: checkout } = useCheckoutQueries({
+  //   checkoutId: checkoutId as string,
+  // })
+  // const numberOfItems = orderGetters.getCheckoutItemCount(checkout as Order)
+  const numberOfItems = 3 // @todo hardcoded uncomment above code considering multiship
 
   return (
     <>

@@ -14,7 +14,6 @@ import {
   useDeleteOrderCouponMutation,
   useMultiShipCheckoutQueries,
   useUpdateMultiShipCheckoutPersonalInfoMutation,
-  useUpdateMultiShipCheckoutShippingInfoMutation,
   useUpdateOrderCouponMutation,
   MultiShipPersonalInfo,
   useCreateCheckoutDestinationMutations,
@@ -52,7 +51,6 @@ const MultiShipCheckoutTemplate = (props: CheckoutProps) => {
     initialCheckout,
   })
   const updateMultiShipCheckoutPersonalInfo = useUpdateMultiShipCheckoutPersonalInfoMutation()
-  const updateMultiShipCheckoutShippingInfo = useUpdateMultiShipCheckoutShippingInfoMutation()
   const createCheckoutDestination = useCreateCheckoutDestinationMutations()
   const createCheckoutShippingMethod = useCreateCheckoutShippingMethodMutation()
 
@@ -72,10 +70,6 @@ const MultiShipCheckoutTemplate = (props: CheckoutProps) => {
       } as CheckoutInput,
     }
     await updateMultiShipCheckoutPersonalInfo.mutateAsync(personalInfo)
-  }
-
-  const updateCheckoutShippingInfo = async (shippingInfo: any) => {
-    await updateMultiShipCheckoutShippingInfo.mutateAsync(shippingInfo)
   }
 
   const { isAuthenticated, user } = useAuthContext()
@@ -197,7 +191,6 @@ const MultiShipCheckoutTemplate = (props: CheckoutProps) => {
                   checkout={checkout as Checkout}
                   userShippingAddress={userShippingAddress}
                   isAuthenticated={isAuthenticated}
-                  updateCheckoutShippingInfo={updateCheckoutShippingInfo}
                   shippingMethods={shippingMethods} //@to-do muse multiRate api
                   setCheckoutId={setCheckoutId}
                   setIsNewAddressAdded={setIsNewAddressAdded}
