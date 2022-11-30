@@ -1,6 +1,6 @@
 import { NextResponse, NextRequest } from 'next/server'
 
-const checkIsAutheticated = (req: NextRequest) => {
+const checkIsAuthenticated = (req: NextRequest) => {
   const cookie = req.headers.get('cookie')
   const cookieValue = cookie?.split('kibo_at=')[1]
   const decodedCookie = JSON.parse(atob(cookieValue as string))
@@ -9,7 +9,7 @@ const checkIsAutheticated = (req: NextRequest) => {
 
 export function middleware(request: NextRequest) {
   if (request.nextUrl.pathname.startsWith('/my-account')) {
-    if (checkIsAutheticated(request)) {
+    if (checkIsAuthenticated(request)) {
       return NextResponse.next()
     }
 
