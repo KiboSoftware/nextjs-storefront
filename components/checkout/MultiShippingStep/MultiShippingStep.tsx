@@ -43,6 +43,7 @@ interface ShippingProps {
   setIsNewAddressAdded: (params: any) => void
   setSelectedShippingAddressId: (params: any) => void
   createCheckoutDestination: any
+  onUpdateCheckoutShippingMethod: (params: any) => void
 }
 
 const MultiShippingStep = (props: ShippingProps) => {
@@ -58,6 +59,7 @@ const MultiShippingStep = (props: ShippingProps) => {
     setIsNewAddressAdded,
     setSelectedShippingAddressId,
     createCheckoutDestination,
+    onUpdateCheckoutShippingMethod,
   } = props
   const { publicRuntimeConfig } = getConfig()
   const { showModal, closeModal } = useModalContext()
@@ -162,23 +164,12 @@ const MultiShippingStep = (props: ShippingProps) => {
     _shippingMethodName: string,
     shippingMethodCode: string
   ) => {
-    const shippingMethodName = shippingMethods.find(
-      (method: any) => method.shippingMethodCode === shippingMethodCode
-    )?.shippingMethodName as string
-
     try {
-      await updateCheckoutShippingInfo({
-        checkout,
-        contact: undefined,
-        email: undefined,
-        shippingMethodCode,
-        shippingMethodName,
-      })
-      shippingAddressRef.current &&
-        (shippingAddressRef.current as Element).scrollIntoView({
-          behavior: 'smooth',
-          block: 'start',
-        })
+      const groupingId = checkout?.groupings[0]?.id as string
+      const shippingMethodGroup = shippingMethods?.find(
+        (shippingMethod) => shippingMethod?.groupingId === groupingId
+      )
+      onUpdateCheckoutShippingMethod({ shippingMethodGroup, shippingMethodCode })
     } catch (error) {
       console.error(error)
     }
@@ -459,7 +450,9 @@ const MultiShippingStep = (props: ShippingProps) => {
           {!showMultiShipContinueButton && (
             <ShippingGroupsWithMethod
               checkout={checkout}
+              shippingMethods={shippingMethods}
               onClickEdit={() => setShowMultiShipContinueButton(true)}
+              onUpdateCheckoutShippingMethod={onUpdateCheckoutShippingMethod}
             />
           )}
         </Stack>
