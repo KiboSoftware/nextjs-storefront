@@ -6,11 +6,20 @@ import { useTranslation } from 'next-i18next'
 import { KiboSelect, ProductItem } from '@/components/common'
 import { orderGetters, productGetters, checkoutGetters } from '@/lib/getters'
 
-import type { Maybe, CrOrderItem, CrProduct, ShippingRate, Checkout } from '@/lib/gql/types'
+import type {
+  Maybe,
+  CrOrderItem,
+  CrProduct,
+  ShippingRateInput,
+  Checkout,
+  CheckoutGroupRates,
+} from '@/lib/gql/types'
 
 export type ShippingGroupsWithMethodProps = {
   checkout: Checkout
+  shippingMethods: CheckoutGroupRates[]
   onClickEdit: () => void
+  onUpdateCheckoutShippingMethod: (params: any) => void
 }
 
 const styles = {
@@ -76,22 +85,17 @@ const ProductGroup = ({ items }: { items: Maybe<CrOrderItem>[] }) => {
 }
 
 const ShippingGroupsWithMethod = (props: ShippingGroupsWithMethodProps) => {
-  const { checkout, onClickEdit } = props
+  const { checkout, shippingMethods, onClickEdit, onUpdateCheckoutShippingMethod } = props
 
   const { t } = useTranslation('common')
 
-  const shipmentMethods = [
-    //@to-do use multirate api
-    { shippingMethodName: 'Standard', price: 0 },
-    { shippingMethodName: 'Expedited', price: 15 },
-  ]
-
-  const [selectShippingOptions, setSelectShippingOptions] = useState<any>({})
-
   const destinationItemGroups = checkoutGetters.buildItemsGroupFromCheckoutGroupings(checkout)
 
-  const handleSelectShippingOption = (id: number, value: string) => {
-    setSelectShippingOptions({ ...selectShippingOptions, [id]: value })
+  const handleSelectShippingOption = async (id: string, value: string) => {
+    const shippingMethodGroup = shippingMethods?.find(
+      (shippingMethod) => shippingMethod?.groupingId === id
+    )
+     onUpdateCheckoutShippingMethod({ shippingMethodGroup, shippingMethodCode: value })
   }
 
   return (
@@ -153,16 +157,30 @@ const ShippingGroupsWithMethod = (props: ShippingGroupsWithMethodProps) => {
                 name="shippingMethods"
                 placeholder={t('select-shipping-option')}
                 sx={{ ...styles.shippingMethods }}
-                onChange={(_name, value) => handleSelectShippingOption(index, value)}
-                value={selectShippingOptions[index]}
+                onChange={(_name, value) =>
+                  handleSelectShippingOption(destinationItemGroup?.groupingId, value)
+                }
+                value={
+                  checkout?.groupings?.find(
+                    (group) => group?.id === destinationItemGroup?.groupingId
+                  )?.shippingMethodCode as string
+                }
               >
-                {shipmentMethods?.map((item: ShippingRate) => {
-                  return (
-                    <MenuItem key={item.shippingMethodName} value={`${item.shippingMethodName}`}>
-                      {`${item.shippingMethodName} $${item.price}`}
-                    </MenuItem>
+                {shippingMethods
+                  ?.find(
+                    (shippingMethod) =>
+                      shippingMethod.groupingId === destinationItemGroup?.groupingId
                   )
-                })}
+                  ?.shippingRates?.map((shippingRate) => {
+                    return (
+                      <MenuItem
+                        key={shippingRate?.shippingMethodName}
+                        value={`${shippingRate?.shippingMethodCode}`}
+                      >
+                        {`${shippingRate?.shippingMethodName} $${shippingRate?.price}`}
+                      </MenuItem>
+                    )
+                  })}
               </KiboSelect>
               <ProductGroup
                 key={destinationItemGroup?.destinationId}

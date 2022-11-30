@@ -16,11 +16,11 @@ export * from './queries/useUserOrderQueries/useUserOrderQueries'
 export * from './queries/useProductLocationInventoryQueries/useProductLocationInventoryQueries'
 export * from './queries/useReturnReasonsQueries/useReturnReasonsQueries'
 export * from './queries/useReturnsQueries/useReturnsQueries'
-export * from './queries/useCheckoutDestinationQueries/useCheckoutDestinationQueries'
+export * from './queries/multiShip/useCheckoutDestinationQueries/useCheckoutDestinationQueries'
 
 // MultiShip
 export * from './queries/multiShip/useCheckoutQueries/useCheckoutQueries'
-export * from './queries/useCheckoutDestinationQueries/useCheckoutDestinationQueries'
+export * from './queries/multiShip/useCheckoutDestinationQueries/useCheckoutDestinationQueries'
 // Multiship Query
 export * from './queries/multiShip/useCheckoutQueries/useCheckoutQueries'
 export * from './queries/multiShip/useCheckoutDestinationQueries/useCheckoutDestinationQueries'
@@ -82,8 +82,12 @@ export * from './mutations/useProfile/useUpdateUserPassword/useUpdateUserPasswor
 // MultiShip
 export * from './mutations/multiShip/useCreateCheckoutActionMutation/useCreateCheckoutActionMutation'
 //Destination
-export * from './mutations/useCreateCheckoutDestinationMutations/useCreateCheckoutDestinationMutations'
-export * from './mutations/useUpdateCheckoutItemDestinationMutations/useUpdateCheckoutItemDestinationMutations'
+export * from './mutations/multiShip/useCreateCheckoutDestinationMutations/useCreateCheckoutDestinationMutations'
+export * from './mutations/multiShip/useUpdateCheckoutItemDestinationMutations/useUpdateCheckoutItemDestinationMutations'
 
 // Subscription
 export * from './mutations/useSubscription/useEditSubscriptionFrequencyMutation/useEditSubscriptionFrequencyMutation'
+export * from './mutations/multiShip/useUpdateCheckoutPersonalInfoMutation/useUpdateCheckoutPersonalInfoMutation'
+export * from './mutations/multiShip/useUpdateCheckoutShippingInfoMutation/useUpdateCheckoutShippingInfoMutation'
+export * from './mutations/multiShip/useCreateCheckoutFromCartMutation/useCreateCheckoutFromCartMutation'
+export * from './mutations/multiShip/useCreateCheckoutShippingMethodMutation/useCreateCheckoutShippingMethodMutation'

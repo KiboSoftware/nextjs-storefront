@@ -19,6 +19,7 @@ import {
   MultiShipPersonalInfo,
   useCreateCheckoutDestinationMutations,
   useCheckoutShippingMethodsQuery,
+  useCreateCheckoutShippingMethodMutation,
 } from '@/hooks'
 import { userGetters } from '@/lib/getters'
 
@@ -53,6 +54,7 @@ const MultiShipCheckoutTemplate = (props: CheckoutProps) => {
   const updateMultiShipCheckoutPersonalInfo = useUpdateMultiShipCheckoutPersonalInfoMutation()
   const updateMultiShipCheckoutShippingInfo = useUpdateMultiShipCheckoutShippingInfoMutation()
   const createCheckoutDestination = useCreateCheckoutDestinationMutations()
+  const createCheckoutShippingMethod = useCreateCheckoutShippingMethodMutation()
 
   const { data: shippingMethods } = useCheckoutShippingMethodsQuery(
     checkoutId,
@@ -162,6 +164,20 @@ const MultiShipCheckoutTemplate = (props: CheckoutProps) => {
     savedUserAddressData?.items as CustomerContact[]
   )
 
+  const updateCheckoutShippingMethod = async (params) => {
+    const { shippingMethodGroup, shippingMethodCode } = params
+    const shippingRate = shippingMethodGroup?.shippingRates?.find(
+      (shippingRate) => shippingRate?.shippingMethodCode === shippingMethodCode
+    )
+    await createCheckoutShippingMethod.mutateAsync({
+      checkoutId: checkout?.id as string,
+      checkoutGroupShippingMethodInput: {
+        groupingId: shippingMethodGroup?.groupingId as string,
+        shippingRate,
+      },
+    })
+  }
+
   return (
     <>
       {showCheckoutSteps && (
@@ -189,6 +205,7 @@ const MultiShipCheckoutTemplate = (props: CheckoutProps) => {
                   isNewAddressAdded={isNewAddressAdded}
                   selectedShippingAddressId={selectedShippingAddressId}
                   createCheckoutDestination={createCheckoutDestination}
+                  onUpdateCheckoutShippingMethod={updateCheckoutShippingMethod}
                 />
               )}
               {/* @to-do Use below steps for future development */}
