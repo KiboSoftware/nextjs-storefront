@@ -9,6 +9,10 @@ interface UseCheckout {
   checkoutId?: string
   initialCheckout?: Order
 }
+
+/**
+ * @hidden
+ */
 export interface UseCheckoutResponse {
   data: Order | undefined
   isLoading: boolean

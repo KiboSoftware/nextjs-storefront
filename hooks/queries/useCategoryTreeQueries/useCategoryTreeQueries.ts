@@ -6,6 +6,9 @@ import { categoryTreeKeys } from '@/lib/react-query/queryKeys'
 
 import type { Maybe, PrCategory } from '@/lib/gql/types'
 
+/**
+ * @hidden
+ */
 export interface UseCategoryResponse {
   data: Maybe<PrCategory>[]
   isLoading: boolean

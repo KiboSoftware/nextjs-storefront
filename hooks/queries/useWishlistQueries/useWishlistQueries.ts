@@ -6,6 +6,9 @@ import { wishlistKeys } from '@/lib/react-query/queryKeys'
 
 import type { Wishlist } from '@/lib/gql/types'
 
+/**
+ * @hidden
+ */
 export interface UseWishlistResponse {
   data?: Wishlist
   isLoading: boolean

@@ -5,6 +5,10 @@ import { getCurrentUser } from '@/lib/gql/mutations/user/getUser'
 import { loginKeys } from '@/lib/react-query/queryKeys'
 
 import type { CustomerAccount } from '@/lib/gql/types'
+
+/**
+ * @hidden
+ */
 export interface UserResultType {
   data?: CustomerAccount
   isLoading: boolean

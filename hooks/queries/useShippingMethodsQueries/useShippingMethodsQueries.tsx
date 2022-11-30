@@ -6,6 +6,9 @@ import { shippingMethodKeys } from '@/lib/react-query/queryKeys'
 
 import type { ShippingRate } from '@/lib/gql/types'
 
+/**
+ * @hidden
+ */
 export interface UseShippingMethodsResponse {
   data: ShippingRate[]
   isLoading: boolean

@@ -6,6 +6,9 @@ import { cartKeys } from '@/lib/react-query/queryKeys'
 
 import type { Cart } from '@/lib/gql/types'
 
+/**
+ * @hidden
+ */
 export interface UseCartType {
   data: Cart
   isLoading: boolean

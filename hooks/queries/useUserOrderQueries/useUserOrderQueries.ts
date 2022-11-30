@@ -14,6 +14,9 @@ interface UseUserOrder {
   isRefetching: boolean
 }
 
+/**
+ * @hidden
+ */
 export interface UseUserOrderType {
   data: OrderCollection
   isLoading: boolean

@@ -6,6 +6,9 @@ import { customerAccountContactsKeys } from '@/lib/react-query/queryKeys'
 
 import type { CustomerContactCollection } from '@/lib/gql/types'
 
+/**
+ * @hidden
+ */
 export interface UseCustomerContactsResponse {
   data: CustomerContactCollection
   isLoading: boolean

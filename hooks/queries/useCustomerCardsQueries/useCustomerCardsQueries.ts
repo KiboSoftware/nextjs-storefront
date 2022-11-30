@@ -6,6 +6,9 @@ import { customerAccountCardsKeys } from '@/lib/react-query/queryKeys'
 
 import type { CardCollection } from '@/lib/gql/types'
 
+/**
+ * @hidden
+ */
 export interface UseCustomerCardsResponse {
   data: CardCollection
   isLoading: boolean

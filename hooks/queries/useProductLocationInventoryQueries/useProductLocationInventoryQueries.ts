@@ -6,6 +6,9 @@ import { inventoryKeys } from '@/lib/react-query/queryKeys'
 
 import type { LocationInventory } from '@/lib/gql/types'
 
+/**
+ * @hidden
+ */
 export interface UseProductLocationInventoryType {
   data: LocationInventory[]
   isLoading: boolean

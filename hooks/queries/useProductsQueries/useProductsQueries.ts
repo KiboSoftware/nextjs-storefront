@@ -8,6 +8,9 @@ import type { CategorySearchParams } from '@/lib/types'
 
 import type { ProductSearchResult } from '@/lib/gql/types'
 
+/**
+ * @hidden
+ */
 export interface UseProductsResponse {
   data: ProductSearchResult
   isLoading: boolean

@@ -6,6 +6,9 @@ import { searchKeys } from '@/lib/react-query/queryKeys'
 
 import type { SearchSuggestionResult } from '@/lib/gql/types'
 
+/**
+ * @hidden
+ */
 export interface SearchSuggestionResultType {
   data: SearchSuggestionResult
   isLoading: boolean
