@@ -26,6 +26,22 @@ const loadShippingMethods = async (checkoutId: string) => {
   return response?.orderShipmentMethods
 }
 
+/**
+ * [Query hook] useShippingMethodsQueries uses the graphQL query
+ *
+ * <b>orderShipmentMethods(orderId: String!): [ShippingRate]</b>
+ *
+ * Description : Fetches the shipping methods based on checkout id.
+ *
+ * Parameters passed to function loadShippingMethods(checkoutId: string) => expects checkoutId to get the shipping methods.
+ *
+ * On success, returns the received list of shipping methods.
+ *
+ * @param checkoutId Accepts a string value
+ *
+ * @returns 'response?.orderShipmentMethods', which is shipping methods.
+ */
+
 export const useShippingMethodsQueries = (
   checkoutId: string | null | undefined,
   isNewAddressAdded?: boolean,

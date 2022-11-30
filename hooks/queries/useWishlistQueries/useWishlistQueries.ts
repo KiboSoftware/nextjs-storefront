@@ -26,6 +26,20 @@ const getWishlists = async (): Promise<Wishlist> => {
   return response?.wishlists?.items[0]
 }
 
+/**
+ * [Query hook] useWishlistQueries uses the graphQL query
+ *
+ * <b>wishlists(startIndex: Int, pageSize: Int, sortBy: String, filter: String): WishlistCollection</b>
+ *
+ * Description : Fetches the all wishlists
+ *
+ * Parameters passed to function getWishlists()
+ *
+ * On success, returns the first item of wishlists
+ *
+ * @returns 'response?.wishlists?.items[0]'
+ */
+
 export const useWishlistQueries = (): UseWishlistResponse => {
   const { data, isLoading, isSuccess, isFetching } = useQuery(wishlistKeys.all, getWishlists, {
     refetchOnWindowFocus: false,

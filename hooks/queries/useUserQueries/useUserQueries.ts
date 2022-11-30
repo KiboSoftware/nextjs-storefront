@@ -27,6 +27,20 @@ const loadUser = async () => {
   return response?.customerAccount
 }
 
+/**
+ * [Query hook] useUserQueries uses the graphQL query
+ *
+ * <b>getCurrentAccount: CustomerAccount</b>
+ *
+ * Description : Fetches the current customer's account details for authentication
+ *
+ * Parameters passed to function loadUser()
+ *
+ * On success, returns the customer account
+ *
+ * @returns 'response?.customerAccount'
+ */
+
 export const useUserQueries = (): UserResultType => {
   const { data, isLoading, isSuccess, isError, error } = useQuery(loginKeys.user, loadUser)
   return {

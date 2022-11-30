@@ -36,6 +36,22 @@ const getOrders = async (params: UseUserOrder) => {
   return response?.orders
 }
 
+/**
+ * [Query hook] useUserOrderQueries uses the graphQL query
+ *
+ * <b>orders(startIndex: Int, pageSize: Int, sortBy: String, filter: String): OrderCollection</b>
+ *
+ * Description : Fetches the orders based on `filters and status (ABANDONED)` or `order number and billing email and status (ABANDONED)`.
+ *
+ * Parameters passed to function getOrders(params: UseUserOrder) => expects params as filters or order number and billing email.
+ *
+ * On success, returns the list of orders
+ *
+ * @param params Accepts a UseUserOrder value
+ *
+ * @returns 'response?.orders', which is orders list.
+ */
+
 export const useUserOrderQueries = (param: UseUserOrder): UseUserOrderType => {
   const {
     data = {},
