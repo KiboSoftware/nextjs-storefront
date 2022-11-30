@@ -6,6 +6,9 @@ import { checkoutKeys } from '@/lib/react-query/queryKeys'
 
 import type { PaymentActionInput } from '@/lib/gql/types'
 
+/**
+ * @hidden
+ */
 export interface UpdateOrderPaymentActionParams {
   orderId: string
   paymentId: string

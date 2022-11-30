@@ -6,6 +6,9 @@ import { checkoutKeys } from '@/lib/react-query/queryKeys'
 
 import type { BillingInfoInput } from '@/lib/gql/types'
 
+/**
+ * @hidden
+ */
 export interface UpdateBillingInfoInput {
   orderId: string
   billingInfoInput: BillingInfoInput

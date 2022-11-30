@@ -7,6 +7,9 @@ import { checkoutKeys } from '@/lib/react-query/queryKeys'
 
 import type { Order, OrderActionInput } from '@/lib/gql/types'
 
+/**
+ * @hidden
+ */
 export interface OrderInfo {
   orderId: string
   orderActionInput: OrderActionInput

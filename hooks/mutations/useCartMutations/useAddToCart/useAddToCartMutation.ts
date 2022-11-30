@@ -7,6 +7,9 @@ import { cartKeys } from '@/lib/react-query/queryKeys'
 
 import type { ProductOption } from '@/lib/gql/types'
 
+/**
+ * @hidden
+ */
 export interface AddToCartProductInput {
   options: ProductOption[]
   productCode: string

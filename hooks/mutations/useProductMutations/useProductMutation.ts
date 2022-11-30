@@ -5,6 +5,9 @@ import { configureProductMutation } from '@/lib/gql/mutations'
 
 import type { ProductOptionSelectionInput } from '@/lib/gql/types'
 
+/**
+ * @hidden
+ */
 export interface ConfigureProductDetails {
   updatedOptions: ProductOptionSelectionInput[]
   productCode: string

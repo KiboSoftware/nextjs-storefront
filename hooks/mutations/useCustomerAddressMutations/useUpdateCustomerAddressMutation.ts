@@ -5,7 +5,9 @@ import { updateCustomerAccountContact } from '@/lib/gql/mutations'
 import { customerAccountContactsKeys } from '@/lib/react-query/queryKeys'
 
 import type { CustomerContactInput } from '@/lib/gql/types'
-
+/**
+ * @hidden
+ */
 export interface UpdateCustomerAccountContactDetailsParams {
   accountId: number
   contactId: number
