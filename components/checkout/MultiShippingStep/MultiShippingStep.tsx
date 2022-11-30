@@ -75,6 +75,11 @@ export type ShipOption = {
   shortName: string
 }
 
+interface DestinationInput extends Contact {
+  destinationId: string
+  itemId: string
+}
+
 const MultiShippingStep = (props: ShippingProps) => {
   const {
     checkout,
