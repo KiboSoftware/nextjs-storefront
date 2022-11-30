@@ -4,6 +4,7 @@ import type { CrOrderItem, Checkout, Maybe, Destination, Contact } from '@/lib/g
 
 interface DestinationItemGroup {
   destinationId: string
+  groupingId: string
   destination: Maybe<Destination> | undefined
   items: Maybe<CrOrderItem>[] | undefined
 }
@@ -15,6 +16,7 @@ const buildItemsGroupFromCheckoutGroupings = (checkout: Checkout) => {
     )
     const sortedGroup: DestinationItemGroup = {
       destinationId: group?.destinationId as string,
+      groupingId: group?.id as string,
       destination: checkout?.destinations?.find(
         (destination) => destination?.id === group?.destinationId
       ),
