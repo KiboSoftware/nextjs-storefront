@@ -1,4 +1,9 @@
-import { checkoutLineItemFragment, destinationContactFragment } from '../../fragments'
+import {
+  checkoutLineItemFragment,
+  destinationContactFragment,
+  baseMultiShipCheckoutFragment,
+  checkoutGroupingsFragment,
+} from '../../fragments'
 const updateCheckoutItemDestination = /* GraphQL */ `
   mutation updateCheckoutItemDestination(
     $checkoutId: String!
@@ -10,31 +15,7 @@ const updateCheckoutItemDestination = /* GraphQL */ `
       itemId: $itemId
       destinationId: $destinationId
     ) {
-      id
-      siteId
-      tenantId
-      number
-      originalCartId
-      submittedDate
-      type
-      feeTotal
-      subTotal
-      itemTaxTotal
-      itemTotal
-      shippingSubTotal
-      shippingTaxTotal
-      itemLevelShippingDiscountTotal
-      orderLevelShippingDiscountTotal
-      shippingTotal
-      handlingSubTotal
-      itemLevelHandlingDiscountTotal
-      orderLevelHandlingDiscountTotal
-      handlingTaxTotal
-      handlingTotal
-      total
-      amountRemainingForPayment
-      itemLevelProductDiscountTotal
-      orderLevelProductDiscountTotal
+      ...baseMultiShipCheckoutFragment
       items {
         destinationId
         ...checkoutLineItemFragment
@@ -46,28 +27,14 @@ const updateCheckoutItemDestination = /* GraphQL */ `
         }
       }
       groupings {
-        id
-        destinationId
-        orderItemIds
-        fulfillmentMethod
-        shippingMethodCode
-        shippingMethodName
-        dutyTotal
-        shippingSubTotal
-        itemLevelShippingDiscountTotal
-        orderLevelShippingDiscountTotal
-        shippingTaxTotal
-        shippingTotal
-        handlingSubTotal
-        itemLevelHandlingDiscountTotal
-        orderLevelHandlingDiscountTotal
-        handlingTaxTotal
-        handlingTotal
+        ...checkoutGroupingsFragment
       }
     }
   }
   ${checkoutLineItemFragment}
   ${destinationContactFragment}
+  ${baseMultiShipCheckoutFragment}
+  ${checkoutGroupingsFragment}
 `
 
 export default updateCheckoutItemDestination

@@ -1,33 +1,14 @@
-import { checkoutLineItemFragment, destinationContactFragment } from '../../fragments'
+import {
+  checkoutLineItemFragment,
+  destinationContactFragment,
+  checkoutGroupingsFragment,
+  baseMultiShipCheckoutFragment,
+} from '../../fragments'
 
 const getMultiShipCheckoutQuery = /* GraphQL */ `
   query getCheckout($checkoutId: String!) {
     checkout(checkoutId: $checkoutId) {
-      id
-      siteId
-      tenantId
-      number
-      originalCartId
-      submittedDate
-      type
-      feeTotal
-      subTotal
-      itemTaxTotal
-      itemTotal
-      shippingSubTotal
-      shippingTaxTotal
-      itemLevelShippingDiscountTotal
-      orderLevelShippingDiscountTotal
-      shippingTotal
-      handlingSubTotal
-      itemLevelHandlingDiscountTotal
-      orderLevelHandlingDiscountTotal
-      handlingTaxTotal
-      handlingTotal
-      total
-      amountRemainingForPayment
-      itemLevelProductDiscountTotal
-      orderLevelProductDiscountTotal
+      ...baseMultiShipCheckoutFragment
       items {
         destinationId
         ...checkoutLineItemFragment
@@ -39,27 +20,13 @@ const getMultiShipCheckoutQuery = /* GraphQL */ `
         }
       }
       groupings {
-        id
-        destinationId
-        orderItemIds
-        fulfillmentMethod
-        shippingMethodCode
-        shippingMethodName
-        dutyTotal
-        shippingSubTotal
-        itemLevelShippingDiscountTotal
-        orderLevelShippingDiscountTotal
-        shippingTaxTotal
-        shippingTotal
-        handlingSubTotal
-        itemLevelHandlingDiscountTotal
-        orderLevelHandlingDiscountTotal
-        handlingTaxTotal
-        handlingTotal
+        ...checkoutGroupingsFragment
       }
     }
   }
   ${checkoutLineItemFragment}
   ${destinationContactFragment}
+  ${checkoutGroupingsFragment}
+  ${baseMultiShipCheckoutFragment}
 `
 export default getMultiShipCheckoutQuery

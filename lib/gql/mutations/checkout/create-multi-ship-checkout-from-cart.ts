@@ -1,33 +1,14 @@
-import { checkoutLineItemFragment, destinationContactFragment } from '../../fragments'
+import {
+  checkoutLineItemFragment,
+  destinationContactFragment,
+  baseMultiShipCheckoutFragment,
+  checkoutGroupingsFragment,
+} from '../../fragments'
 
 const createMultiShipCheckoutFromCartMutation = /* GraphQL */ `
   mutation createCheckout($cartId: String!) {
     checkout: createCheckout(cartId: $cartId) {
-      id
-      siteId
-      tenantId
-      number
-      originalCartId
-      submittedDate
-      type
-      feeTotal
-      subTotal
-      itemTaxTotal
-      itemTotal
-      shippingSubTotal
-      shippingTaxTotal
-      itemLevelShippingDiscountTotal
-      orderLevelShippingDiscountTotal
-      shippingTotal
-      handlingSubTotal
-      itemLevelHandlingDiscountTotal
-      orderLevelHandlingDiscountTotal
-      handlingTaxTotal
-      handlingTotal
-      total
-      amountRemainingForPayment
-      itemLevelProductDiscountTotal
-      orderLevelProductDiscountTotal
+      ...baseMultiShipCheckoutFragment
       items {
         destinationId
         ...checkoutLineItemFragment
@@ -39,27 +20,13 @@ const createMultiShipCheckoutFromCartMutation = /* GraphQL */ `
         }
       }
       groupings {
-        id
-        destinationId
-        orderItemIds
-        fulfillmentMethod
-        shippingMethodCode
-        shippingMethodName
-        dutyTotal
-        shippingSubTotal
-        itemLevelShippingDiscountTotal
-        orderLevelShippingDiscountTotal
-        shippingTaxTotal
-        shippingTotal
-        handlingSubTotal
-        itemLevelHandlingDiscountTotal
-        orderLevelHandlingDiscountTotal
-        handlingTaxTotal
-        handlingTotal
+        ...checkoutGroupingsFragment
       }
     }
   }
   ${checkoutLineItemFragment}
   ${destinationContactFragment}
+  ${baseMultiShipCheckoutFragment}
+  ${checkoutGroupingsFragment}
 `
 export default createMultiShipCheckoutFromCartMutation
