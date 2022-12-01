@@ -1,3 +1,6 @@
+/**
+ * @module mutation_useUpdateCheckoutShippingInfo
+ */
 import { useMutation, useQueryClient } from 'react-query'
 
 import { makeGraphQLClient } from '@/lib/gql/client'

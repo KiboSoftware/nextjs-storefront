@@ -1,3 +1,6 @@
+/**
+ * @module mutation_useUpdateUserPassword
+ */
 import { useMutation } from 'react-query'
 
 import { makeGraphQLClient } from '@/lib/gql/client'

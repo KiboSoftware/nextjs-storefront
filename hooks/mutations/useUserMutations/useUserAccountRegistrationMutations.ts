@@ -1,3 +1,6 @@
+/**
+ * @module mutation_useUserAccountRegistration
+ */
 import { useMutation, useQueryClient } from 'react-query'
 
 import { makeGraphQLClient } from '@/lib/gql/client'

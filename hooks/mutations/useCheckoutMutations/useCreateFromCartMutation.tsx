@@ -1,3 +1,6 @@
+/**
+ * @module mutation_useCreateFromCart
+ */
 import { useMutation } from 'react-query'
 
 import { makeGraphQLClient } from '@/lib/gql/client'

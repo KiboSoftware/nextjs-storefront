@@ -1,3 +1,6 @@
+/**
+ * @module mutation_useRemoveWishlistItem
+ */
 import { useMutation, useQueryClient } from 'react-query'
 
 import { makeGraphQLClient } from '@/lib/gql/client'
@@ -22,7 +25,7 @@ const removeWishlistItem = async (props: RemoveWishlistItemInput) => {
  * [Mutation hook] useRemoveCartItemMutation uses the graphql mutation
  * <b>deleteWishlistItem(wishlistId: String!, wishlistItemId: String!): Boolean</b>
  *
- * Description : Deleted item from wishlist based on wishlistId and wishlistItemId.
+ * Description : Deletes item from wishlist based on wishlistId and wishlistItemId.
  *
  * Parameters passed to function removeWishlistItem(props: RemoveWishlistItemInput) => expects params as product and currentWishlist.
  *
@@ -30,7 +33,7 @@ const removeWishlistItem = async (props: RemoveWishlistItemInput) => {
  *
  * @param params Accepts a WishlistHookParams value
  *
- * @returns response?.deleteWishlistItem, which contains True/False value to identify if customer's card has been deleted or not.
+ * @returns response?.deleteWishlistItem, which contains True/False value to identify if wishlist item has been deleted or not.
  */
 
 export const useRemoveWishlistItemMutation = (params?: WishlistHookParams) => {

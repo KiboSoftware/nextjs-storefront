@@ -1,3 +1,6 @@
+/**
+ * @module mutation_useUpdateUserData
+ */
 import { useMutation, useQueryClient } from 'react-query'
 
 import { loginKeys } from '../../../../lib/react-query/queryKeys'

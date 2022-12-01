@@ -1,3 +1,6 @@
+/**
+ * @module mutation_useAddToWishlist
+ */
 import { useMutation, useQueryClient } from 'react-query'
 
 import { makeGraphQLClient } from '@/lib/gql/client'

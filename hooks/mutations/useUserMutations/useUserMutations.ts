@@ -1,3 +1,6 @@
+/**
+ * @module mutation_useUser
+ */
 import { useMutation, useQueryClient } from 'react-query'
 
 import { CustomerUserAuthInfoInput } from '../../../lib/gql/types'

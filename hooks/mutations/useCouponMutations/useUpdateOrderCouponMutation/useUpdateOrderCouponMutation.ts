@@ -1,3 +1,6 @@
+/**
+ * @module mutation_useUpdateOrderCoupon
+ */
 import { useMutation, useQueryClient } from 'react-query'
 
 import { makeGraphQLClient } from '@/lib/gql/client'

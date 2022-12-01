@@ -1,3 +1,6 @@
+/**
+ * @module mutation_useDeleteCartCoupon
+ */
 import { useMutation, useQueryClient } from 'react-query'
 
 import { makeGraphQLClient } from '@/lib/gql/client'
