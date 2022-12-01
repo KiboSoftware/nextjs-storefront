@@ -185,15 +185,6 @@ const MultiShippingStep = (props: ShippingProps) => {
       })
 
       if (destination?.id) {
-        // for (const item of checkout?.items) {
-        //   const itemId = item?.id as string
-        //   const checkoutId = checkout?.id as string
-        //   await updateItemDestination({
-        //     itemId,
-        //     destinationId: destination?.id as string,
-        //     checkoutId,
-        //   })
-        // }
         await updateSameDestinationForAllItems({ destinationId: destination?.id as string })
 
         setCheckoutId(checkout?.id)
@@ -236,26 +227,8 @@ const MultiShippingStep = (props: ShippingProps) => {
 
     if (!existingDestinationAddress?.id) {
       const destinationId = await handleCreateDestinationAddress(destinationIdOrAddressId)
-      // for (const item of checkout?.items) {
-      //   const itemId = item?.id as string
-      //   const checkoutId = checkout?.id as string
-      //   await updateItemDestination({
-      //     itemId,
-      //     destinationId,
-      //     checkoutId,
-      //   })
-      // }
       await updateSameDestinationForAllItems({ destinationId: destinationId as string })
     } else {
-      // for (const item of checkout?.items) {
-      //   const itemId = item?.id as string
-      //   const checkoutId = checkout?.id as string
-      //   await updateItemDestination({
-      //     itemId,
-      //     destinationId: destinationIdOrAddressId as string,
-      //     checkoutId,
-      //   })
-      // }
       await updateSameDestinationForAllItems({ destinationId: destinationIdOrAddressId as string })
     }
   }
@@ -274,15 +247,6 @@ const MultiShippingStep = (props: ShippingProps) => {
   const onChangeShippingOption = async (option: string) => {
     if (checkout?.groupings?.length > 1 && option === shipOptions[0].value) {
       const defaultDestinationId = checkout?.groupings[0]?.destinationId as string
-      // for (const item of checkout?.items) {
-      //   const itemId = item?.id as string
-      //   const checkoutId = checkout?.id as string
-      //   await updateItemDestination({
-      //     itemId,
-      //     destinationId: defaultDestinationId as string,
-      //     checkoutId,
-      //   })
-      // }
       await updateSameDestinationForAllItems({ destinationId: defaultDestinationId as string })
     }
 
