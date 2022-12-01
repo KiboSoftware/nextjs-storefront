@@ -21,7 +21,7 @@ interface CheckoutPageProps {
 export async function getServerSideProps(context: GetServerSidePropsContext) {
   const { locale, params, req, res } = context
   const { checkoutId } = params as any
-  const isMultiShipEnabled = true
+  const isMultiShipEnabled = false
   const checkout = isMultiShipEnabled
     ? await getMultiShipCheckout(checkoutId, req, res)
     : await getCheckout(checkoutId, req, res)
