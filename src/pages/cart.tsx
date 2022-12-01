@@ -10,7 +10,7 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
   const response = await getCart(req, res)
   return {
     props: {
-      isMultiShipEnabled: false,
+      isMultiShipEnabled: true,
       cart: response?.currentCart,
       ...(await serverSideTranslations(locale as string, ['common'])),
     },

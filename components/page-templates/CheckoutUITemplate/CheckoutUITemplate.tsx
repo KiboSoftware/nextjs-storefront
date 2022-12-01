@@ -9,9 +9,9 @@ import { OrderSummary, PromoCodeBadge } from '@/components/common'
 import { OrderConfirmation } from '@/components/order'
 import { useCheckoutStepContext, STEP_STATUS } from '@/context'
 
-import type { CustomerContact, Order } from '@/lib/gql/types'
+import type { Checkout, CustomerContact, Order } from '@/lib/gql/types'
 interface CheckoutTemplateUIProps {
-  checkout: Order
+  checkout: Order | Checkout
   initialStep?: number
   promoError: string
   handleApplyCouponCode: (couponCode: string) => void
@@ -40,21 +40,22 @@ const CheckoutUITemplate = (props: CheckoutTemplateUIProps) => {
   const handleBack = () => setStepBack()
   const handleSubmit = () => setStepStatusSubmit()
   // ****************** use Getters Here ****************
+  const subTotal = checkout?.subtotal || checkout?.subTotal
   const orderSummaryArgs = {
     nameLabel: t('order-summary'),
     subTotalLabel: `Cart Subtotal of (${checkout?.items?.length} items)`,
     shippingTotalLabel: t('standard-shopping'),
     taxLabel: t('tax'),
     totalLabel: t('order-total'),
-    subTotal: t('currency', { val: checkout?.subtotal }),
+    subTotal: t('currency', { val: subTotal }),
     discountedSubtotal:
-      checkout?.discountedSubtotal && checkout?.discountedSubtotal != checkout?.subtotal
+      checkout?.discountedSubtotal && checkout?.discountedSubtotal != subTotal
         ? t('currency', { val: checkout?.discountedSubtotal })
         : '',
     shippingTotal: checkout?.shippingTotal
       ? t('currency', { val: checkout?.shippingTotal })
       : t('free'),
-    tax: t('currency', { val: checkout?.taxTotal }),
+    tax: t('currency', { val: checkout?.taxTotal || checkout?.itemTaxTotal }),
     total: t('currency', { val: checkout?.total }),
     checkoutLabel: t('go-to-checkout'),
     shippingLabel: t('go-to-shipping'),
