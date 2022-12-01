@@ -229,3 +229,54 @@ export const shipmentItemFragment = /* GraphQL */ `
     }
   }
 `
+
+export const checkoutGroupingsFragment = /* GraphQL */ `
+  fragment checkoutGroupingsFragment on CheckoutGrouping {
+    id
+    destinationId
+    orderItemIds
+    fulfillmentMethod
+    shippingMethodCode
+    shippingMethodName
+    dutyTotal
+    shippingSubTotal
+    itemLevelShippingDiscountTotal
+    orderLevelShippingDiscountTotal
+    shippingTaxTotal
+    shippingTotal
+    handlingSubTotal
+    itemLevelHandlingDiscountTotal
+    orderLevelHandlingDiscountTotal
+    handlingTaxTotal
+    handlingTotal
+  }
+`
+export const baseMultiShipCheckoutFragment = /* GraphQL */ `
+  fragment baseMultiShipCheckoutFragment on Checkout {
+    id
+    siteId
+    tenantId
+    number
+    originalCartId
+    submittedDate
+    type
+    feeTotal
+    subTotal
+    itemTaxTotal
+    itemTotal
+    shippingSubTotal
+    shippingTaxTotal
+    itemLevelShippingDiscountTotal
+    orderLevelShippingDiscountTotal
+    shippingTotal
+    handlingSubTotal
+    itemLevelHandlingDiscountTotal
+    orderLevelHandlingDiscountTotal
+    handlingTaxTotal
+    handlingTotal
+    total
+    amountRemainingForPayment
+    itemLevelProductDiscountTotal
+    orderLevelProductDiscountTotal
+  }
+`
