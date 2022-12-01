@@ -1,3 +1,6 @@
+/**
+ * @module custom_useWishlist
+ */
 import { WishlistPopover } from '@/components/dialogs'
 import { LoginDialog } from '@/components/layout'
 import { useAuthContext, useModalContext } from '@/context'
@@ -21,10 +24,10 @@ import type {
  * [Custom Hook] Updates the wishlist items and checks if the product is already in wishlist.
  *
  * Return two functions:
- * 1. checkProductInWishlist(props: WishlistItemInWishlistParams) => Expects object of type 'WishlistItemInWishlistParams'
- * 2. addOrRemoveWishlistItem({product: ProductCustom | WishlistProductInput}) => Expects product object of type 'ProductCustom' or 'WishlistProductInput'\
+ * 1. checkProductInWishlist(props: WishlistItemInWishlistParams) => Expects object of type 'WishlistItemInWishlistParams' containing productCode
+ * 2. addOrRemoveWishlistItem({product: ProductCustom | WishlistProductInput}) => Expects product object of type 'ProductCustom' or 'WishlistProductInput'
  *
- * @param params Expects a nullable prop of type 'WishlistHookParams'
+ * @param params Expects a nullable prop of type 'WishlistHookParams' containing isRemovedFromWishlist and delay
  */
 
 export const useWishlist = (params?: WishlistHookParams) => {

@@ -1,3 +1,6 @@
+/**
+ * @module custom_useUpdateRoutes
+ */
 import { useRouter } from 'next/router'
 
 const nonFilters = ['page', 'sort', 'search', 'itemsPerPage']

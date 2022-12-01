@@ -1,3 +1,6 @@
+/**
+ * @module custom_useDebounce
+ */
 import { useEffect, useState } from 'react'
 
 /**
@@ -13,6 +16,7 @@ import { useEffect, useState } from 'react'
  * @param delay Expect debounce timeout value
  *
  * @returns The latest debounced value on specified time period.
+ *
  */
 
 export const useDebounce = (value: string, delay: number) => {
