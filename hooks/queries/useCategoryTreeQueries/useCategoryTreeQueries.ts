@@ -1,3 +1,6 @@
+/**
+ * @module query_useCategoryTree
+ */
 import fetch from 'isomorphic-unfetch'
 import { useQuery } from 'react-query'
 

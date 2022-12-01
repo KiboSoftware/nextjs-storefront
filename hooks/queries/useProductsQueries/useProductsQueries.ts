@@ -1,3 +1,6 @@
+/**
+ * @module query_useProducts
+ */
 import { useQuery } from 'react-query'
 
 import { makeGraphQLClient } from '@/lib/gql/client'

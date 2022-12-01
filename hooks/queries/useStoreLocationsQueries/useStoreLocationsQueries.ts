@@ -1,3 +1,6 @@
+/**
+ * @module query_useStoreLocations
+ */
 import { useQuery } from 'react-query'
 
 import { makeGraphQLClient } from '@/lib/gql/client'
@@ -35,7 +38,7 @@ const getStoreLocations = async (param: { filter: string }) => {
  *
  * On success, returns the list of location
  *
- * @param param Expect 'location code' or 'geo near(${latitude}, ${longitude}, ${defaultRange})' inside the filter value
+ * @param searchParams Expect 'location code' or 'geo near(${latitude}, ${longitude}, ${defaultRange})' inside the filter value
  *
  * @returns 'response?.spLocations?.items', which contains location list based on filter value request.
  */

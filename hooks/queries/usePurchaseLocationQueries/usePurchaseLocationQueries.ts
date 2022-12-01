@@ -1,3 +1,6 @@
+/**
+ * @module query_usePurchaseLocation
+ */
 import { getCookie } from 'cookies-next'
 import getConfig from 'next/config'
 import { useQuery } from 'react-query'

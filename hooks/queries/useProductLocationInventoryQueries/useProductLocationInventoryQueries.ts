@@ -1,3 +1,6 @@
+/**
+ * @module query_useProductLocationInventory
+ */
 import { useQuery } from 'react-query'
 
 import { makeGraphQLClient } from '@/lib/gql/client'
@@ -31,14 +34,14 @@ const loadProductLocationInventory = async (productCode: string, locationCodes: 
  *
  * <b>productLocationInventory(productCode: String!, locationCodes: String): LocationInventoryCollection</b>
  *
- * Description : Fetches details about inventory available on specified locations by providing productCode and locationCodes. Here locationCodes could be single string value or comma separated string value.
+ * Description : Fetches details about inventory available on specified locations by providing productCode and locationCodes.
  *
  * Parameters passed to function loadProductLocationInventory(productCode: string, locationCodes: string) => expects productCode and locationCodes.
  *
  * On success, returns the inventory details with 'refetchOnWindowFocus' set to false for this react query
  *
- * @param productCode
- * @param locationCodes
+ * @param productCode unique product code for which inventory needed to be fetched
+ * @param locationCodes location codes could be single string value or comma separated string value
  *
  * @returns 'response?.productLocationInventory?.items', which contains list of available inventories.
  */

@@ -1,3 +1,6 @@
+/**
+ * @module query_useUserOrder
+ */
 import { useQuery } from 'react-query'
 
 import { makeGraphQLClient } from '@/lib/gql/client'
@@ -47,7 +50,7 @@ const getOrders = async (params: UseUserOrder) => {
  *
  * On success, returns the list of orders
  *
- * @param params Accepts a UseUserOrder value as filters (duration like M-1, M-6, Y-2022 etc) or order number and billing email including status (ABANDONED)
+ * @param param Accepts a UseUserOrder value as filters (duration like M-1, M-6, Y-2022 etc) or order number and billing email including status (ABANDONED)
  *
  * @returns 'response?.orders', which contains orders list.
  */
