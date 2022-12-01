@@ -1,11 +1,14 @@
 import React from 'react'
+
 import { Box, Stack, Button, SxProps } from '@mui/material'
 import { Theme } from '@mui/material/styles'
 import { useTranslation } from 'next-i18next'
+
 import { KiboStepper, OrderReview } from '@/components/checkout'
 import { OrderSummary, PromoCodeBadge } from '@/components/common'
 import { OrderConfirmation } from '@/components/order'
 import { useCheckoutStepContext, STEP_STATUS } from '@/context'
+
 import type { CustomerContact, Order } from '@/lib/gql/types'
 interface CheckoutTemplateUIProps {
   checkout: Order
