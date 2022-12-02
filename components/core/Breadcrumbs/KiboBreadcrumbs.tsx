@@ -22,7 +22,7 @@ export default function KiboBreadcrumbs({
         {breadcrumbs?.map((item: BreadCrumbType, index) => {
           return (
             <Link href={item.link as string} key={index} passHref>
-              <MuiLink
+              {/* <MuiLink
                 underline="hover"
                 variant="caption"
                 color="text.primary"
@@ -34,7 +34,9 @@ export default function KiboBreadcrumbs({
                 }}
               >
                 {item.text}
-              </MuiLink>
+              </MuiLink> */}
+
+              {item.text}
             </Link>
           )
         })}

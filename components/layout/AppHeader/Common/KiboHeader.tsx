@@ -129,9 +129,11 @@ const TopHeader = ({
             return (
               <Box key={index}>
                 <Link href={nav.link} passHref>
-                  <MuiLink underline="none" color="common.white">
+                  {/* <MuiLink underline="none" color="common.white">
                     <Typography variant="body2"> {t(`${nav.text}`)}</Typography>
-                  </MuiLink>
+                  </MuiLink> */}
+
+                  <Typography variant="body2"> {t(`${nav.text}`)}</Typography>
                 </Link>
               </Box>
             )
@@ -167,9 +169,11 @@ const HeaderActionArea = (props: HeaderActionAreaProps) => {
           }}
         >
           <Link href="/" passHref>
-            <MuiLink>
+            {/* <MuiLink>
               <KiboLogo small={isHeaderSmall} />
-            </MuiLink>
+            </MuiLink> */}
+
+            <KiboLogo small={isHeaderSmall} />
           </Link>
         </Box>
         {showSearchBarInLargeHeader && (

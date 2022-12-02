@@ -111,9 +111,10 @@ const MegaMenuCategory = (props: MegaMenuCategoryProps) => {
         selected={popupState.isOpen && category?.categoryCode === activeCategory}
       >
         <Link href={getCategoryLink(category?.categoryCode as string)} passHref>
-          <MuiLink underline="none" color="text.primary">
+          {/* <MuiLink underline="none" color="text.primary">
             {category?.content?.name}
-          </MuiLink>
+          </MuiLink> */}
+          {category?.content?.name}
         </Link>
       </ListItem>
       {childrenCategories?.length > 0 && (
@@ -152,8 +153,8 @@ const MegaMenuCategory = (props: MegaMenuCategoryProps) => {
                 <KiboImage
                   src={DefaultImage}
                   alt={t('advertisement')}
-                  width={'100%'}
-                  height={'100%'}
+                  width={'100'}
+                  height={'100'}
                 />
               </Box>
             </Box>

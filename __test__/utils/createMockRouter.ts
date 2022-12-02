@@ -24,6 +24,7 @@ export function createMockRouter(router?: Partial<NextRouter>): NextRouter {
     defaultLocale: 'en',
     domainLocales: [],
     isPreview: false,
+    forward: jest.fn(),
     ...router,
   }
 }

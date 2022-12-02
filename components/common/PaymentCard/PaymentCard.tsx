@@ -28,7 +28,7 @@ const PaymentCard = (props: PaymentCardDetailsViewProps) => {
         <Box minWidth={45}>
           <KiboImage
             src={getCreditCardLogo(cardType as string)}
-            alt={cardType}
+            alt={cardType!}
             width={45}
             height={35}
           />

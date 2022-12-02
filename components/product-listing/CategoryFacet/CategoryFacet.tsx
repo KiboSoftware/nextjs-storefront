@@ -133,10 +133,13 @@ const CategoryFacet = (props: CategoryFacetProps) => {
         )}
         {breadcrumbs?.length >= 1 && (
           <Link href={breadcrumbs[breadcrumbs?.length - 2]?.link || '/'} passHref>
-            <MuiLink aria-label={t('back')} sx={{ ...styles.backButton }}>
+            {/* <MuiLink aria-label={t('back')} sx={{ ...styles.backButton }}>
               <ChevronLeft />
               {t('back')}
-            </MuiLink>
+            </MuiLink> */}
+
+            <ChevronLeft />
+            {t('back')}
           </Link>
         )}
       </Box>

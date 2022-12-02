@@ -130,7 +130,7 @@ const WishlistTemplate = (props: { customerAccount: CustomerAccount }) => {
             <Typography variant="subtitle2">{t('empty-wishlist-message')}</Typography>
             <Box maxWidth="23.5rem">
               <Link href="/" passHref>
-                <MuiLink underline="none">
+                {/* <MuiLink underline="none">
                   <Button
                     variant="contained"
                     color="primary"
@@ -138,7 +138,15 @@ const WishlistTemplate = (props: { customerAccount: CustomerAccount }) => {
                   >
                     {t('shop-now')}
                   </Button>
-                </MuiLink>
+                </MuiLink> */}
+
+                <Button
+                  variant="contained"
+                  color="primary"
+                  sx={{ width: '100%', marginTop: '3.063rem' }}
+                >
+                  {t('shop-now')}
+                </Button>
               </Link>
             </Box>
           </Box>

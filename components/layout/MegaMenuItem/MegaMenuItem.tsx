@@ -30,28 +30,35 @@ const MegaMenuItem = (props: MegaMenuItemProps) => {
           />
         </ListItem>
         <ListItem button sx={{ cursor: 'pointer' }}>
-          <Link href={getCategoryLink(categoryCode)} passHref>
-            <MuiLink
+          <Link href={getCategoryLink(categoryCode)} passHref onClick={onBackDropClose}>
+            {/* <MuiLink
               data-testid="shopAllLink"
               underline="none"
               color="grey.900"
               onClick={onBackDropClose}
             >
               {t('shop-all')}
-            </MuiLink>
+            </MuiLink> */}
+            {t('shop-all')}
           </Link>
         </ListItem>
         {categoryChildren?.map((cat) => (
           <ListItem key={cat?.categoryId} role="group">
-            <Link href={getCategoryLink(cat?.categoryCode as string)} passHref>
-              <MuiLink
+            <Link
+              href={getCategoryLink(cat?.categoryCode as string)}
+              passHref
+              data-testid="categoryLink"
+              onClick={onBackDropClose}
+            >
+              {/* <MuiLink
                 data-testid="categoryLink"
                 underline="none"
                 color="grey.900"
                 onClick={onBackDropClose}
               >
                 {cat?.content?.name}
-              </MuiLink>
+              </MuiLink> */}
+              {cat?.content?.name}
             </Link>
           </ListItem>
         ))}

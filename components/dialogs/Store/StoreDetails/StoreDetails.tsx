@@ -86,7 +86,7 @@ const StoreDetails = (props: StoreDetailsProps) => {
                 sx={{ display: 'flex', justifyContent: 'space-between', gap: '10px' }}
               >
                 <Typography textTransform={'capitalize'} variant="body2" pr={1}>
-                  {hour?.day}
+                  {hour?.day as string}
                 </Typography>
                 <Typography variant="body2">{hour?.storeTime}</Typography>
               </Box>

@@ -268,7 +268,7 @@ const CartTemplate = (props: CartTemplateProps) => {
           </Typography>
           <Box maxWidth="23.5rem">
             <Link href="/" passHref>
-              <MuiLink>
+              {/* <MuiLink>
                 <Button
                   variant="contained"
                   color="primary"
@@ -276,7 +276,15 @@ const CartTemplate = (props: CartTemplateProps) => {
                 >
                   {t('shop-now')}
                 </Button>
-              </MuiLink>
+              </MuiLink> */}
+
+              <Button
+                variant="contained"
+                color="primary"
+                sx={{ width: '100%', marginTop: '3.063rem' }}
+              >
+                {t('shop-now')}
+              </Button>
             </Link>
           </Box>
         </Box>

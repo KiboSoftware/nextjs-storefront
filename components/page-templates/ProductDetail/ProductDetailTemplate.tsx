@@ -261,13 +261,14 @@ const ProductDetailTemplate = (props: ProductDetailTemplateProps) => {
           />
           {isQuickViewModal && (
             <Link href={getProductLink(product?.productCode as string)} passHref>
-              <MuiLink
+              {/* <MuiLink
                 aria-label={t('more-details')}
                 sx={{ ...styles.moreDetails }}
                 onClick={() => closeModal()}
               >
                 {t('more-details')}
-              </MuiLink>
+              </MuiLink> */}
+              {t('more-details')}
             </Link>
           )}
         </Box>

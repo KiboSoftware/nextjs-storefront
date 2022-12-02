@@ -16,6 +16,6 @@ export const Common = Template.bind({})
 Common.args = {
   src: Logo,
   alt: 'test-alt-text',
-  width: '100%',
-  height: '100%',
+  width: '100',
+  height: '100',
 }

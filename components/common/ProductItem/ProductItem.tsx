@@ -75,7 +75,7 @@ const ProductItem = (props: ProductItemProps) => {
       <Box sx={{ display: 'flex', pb: 1, pr: 1, gap: 2, flex: 1 }}>
         <Box sx={{ ...styles.imageContainer }}>
           <Link href={link || ''} passHref>
-            <MuiLink data-testid="product-item-link">
+            {/* <MuiLink data-testid="product-item-link">
               <KiboImage
                 src={productGetters.handleProtocolRelativeUrl(image) || DefaultImage}
                 height={200}
@@ -84,7 +84,16 @@ const ProductItem = (props: ProductItemProps) => {
                 objectFit="contain"
                 errorimage={DefaultImage}
               />
-            </MuiLink>
+            </MuiLink> */}
+
+            <KiboImage
+              src={productGetters.handleProtocolRelativeUrl(image) || DefaultImage}
+              height={200}
+              width={200}
+              alt={name}
+              objectFit="contain"
+              errorimage={DefaultImage}
+            />
           </Link>
         </Box>
 

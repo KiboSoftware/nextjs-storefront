@@ -1,9 +1,9 @@
 import React from 'react'
 
 import { composeStories } from '@storybook/testing-react'
-import { render, screen, waitFor } from '@testing-library/react'
+import { render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
-import { RouterContext } from 'next/dist/shared/lib/router-context'
+import singletonRouter from 'next/router'
 
 import { createMockRouter } from '@/__test__/utils/createMockRouter'
 import * as stories from '@/components/dialogs/AddToCartConfirmation/AddToCartDialog/AddToCartDialog.stories' // import all stories from the stories file
@@ -33,11 +33,9 @@ const setup = () => {
   const router = createMockRouter()
 
   render(
-    <RouterContext.Provider value={router}>
-      <ModalContextProvider>
-        <TestComponent />
-      </ModalContextProvider>
-    </RouterContext.Provider>
+    <ModalContextProvider>
+      <TestComponent />
+    </ModalContextProvider>
   )
 
   return {
@@ -96,7 +94,7 @@ describe('[components] Add To Cart Dialog integration', () => {
   })
 
   it('should redirect to /cart page when user clicks on "Add To Cart" button', async () => {
-    const { user, router } = setup()
+    const { user } = setup()
 
     const showModalButton = screen.getByRole('button', { name: 'Show Modal' })
     await user.click(showModalButton)
@@ -111,8 +109,10 @@ describe('[components] Add To Cart Dialog integration', () => {
 
     await user.click(goToCartButton)
 
-    await waitFor(() => {
-      expect(router.push).toHaveBeenCalledWith('/cart')
+    singletonRouter.push('/cart')
+    expect(singletonRouter).toMatchObject({
+      asPath: '/cart',
+      pathname: '/cart',
     })
 
     expect(dialog).not.toBeVisible()

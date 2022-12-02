@@ -59,7 +59,7 @@ export default function Footer(props: any) {
           </Typography>
           {social.map((socialItem: any) => (
             <Box key={socialItem.iconPath} component="span" sx={{ margin: '0 4px' }}>
-              <KiboImage src={socialItem.iconPath} width={32} height={32} />
+              <KiboImage src={socialItem.iconPath} alt={'content tiles'} width={32} height={32} />
             </Box>
           ))}
         </Grid>

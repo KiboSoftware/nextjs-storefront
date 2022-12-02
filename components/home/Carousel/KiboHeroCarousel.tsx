@@ -18,7 +18,7 @@ import { KiboImage } from '@/components/common'
 interface ItemProps {
   imageUrl: string
   mobileImageUrl: string
-  imageAlt?: string
+  imageAlt: string
   title?: string
   subtitle?: string
   description?: string

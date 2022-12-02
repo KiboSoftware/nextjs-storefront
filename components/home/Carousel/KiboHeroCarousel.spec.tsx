@@ -40,22 +40,12 @@ describe('Component - [KiboHeroCarousel]', () => {
     const subtitle = screen.getAllByText(carouselValues[0].subtitle!)
     const description = screen.getAllByText(carouselValues[0].description!)
     const buttonText = screen.getAllByText(carouselValues[0].buttonText!)
+    const image = screen.getAllByTestId('product-image')
 
     expect(subtitle[0]).toBeInTheDocument()
     expect(description[0]).toBeInTheDocument()
     expect(buttonText[0]).toBeInTheDocument()
-  })
-
-  it('should render button', () => {
-    setup()
-    const carouselValues = Common?.args?.carouselItem || []
     expect(screen.getByRole('button', { name: carouselValues[0].buttonText })).toBeInTheDocument()
-  })
-
-  it('should render product image', () => {
-    setup()
-
-    const image = screen.getAllByTestId('product-image')
     expect(image[0]).toHaveAttribute('alt', 'image Alt text')
   })
 

@@ -34,9 +34,10 @@ const MobileHeader = () => {
 
         <Box position="relative">
           <Link href="/" passHref>
-            <MuiLink>
+            {/* <MuiLink>
               <KiboLogo small />
-            </MuiLink>
+            </MuiLink> */}
+            <KiboLogo small />
           </Link>
         </Box>
 
