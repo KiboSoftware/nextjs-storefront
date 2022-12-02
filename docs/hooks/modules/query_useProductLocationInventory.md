@@ -39,4 +39,4 @@ On success, returns the inventory details with 'refetchOnWindowFocus' set to fal
 
 #### Defined in
 
-[queries/useProductLocationInventoryQueries/useProductLocationInventoryQueries.ts:49](https://github.com/KiboSoftware/nextjs-storefront/blob/2f9709d/hooks/queries/useProductLocationInventoryQueries/useProductLocationInventoryQueries.ts#L49)
+[queries/useProductLocationInventoryQueries/useProductLocationInventoryQueries.ts:49](https://github.com/KiboSoftware/nextjs-storefront/blob/98414f4/hooks/queries/useProductLocationInventoryQueries/useProductLocationInventoryQueries.ts#L49)

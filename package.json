@@ -18,7 +18,7 @@
     "test-watch": "jest --watch",
     "prettier:format": "prettier --write .",
     "prepare": "husky install",
-    "generate-docs:hooks": "npx typedoc --entryPointStrategy expand hooks/ --out docs/hooks --exclude \"**/*+(.spec)+(.ts|.tsx)\" "
+    "generate-docs:hooks": "npx typedoc --entryPointStrategy expand hooks/ --out docs/hooks --exclude \"**/*+(.spec)+(.ts|.tsx)\" --exclude \"**/multiShip/**/*+(.ts|.tsx)\" "
   },
   "dependencies": {
     "@emotion/cache": "latest",

@@ -16,6 +16,7 @@
 - [useCreateCustomerCardsMutation](index.md#usecreatecustomercardsmutation)
 - [useCreateFromCartMutation](index.md#usecreatefromcartmutation)
 - [useCreateOrderMutation](index.md#usecreateordermutation)
+- [useCreateOrderReturnItemsMutation](index.md#usecreateorderreturnitemsmutation)
 - [useCreateWishlistMutation](index.md#usecreatewishlistmutation)
 - [useCurrentLocation](index.md#usecurrentlocation)
 - [useCustomerCardsQueries](index.md#usecustomercardsqueries)
@@ -34,6 +35,8 @@
 - [usePurchaseLocationQueries](index.md#usepurchaselocationqueries)
 - [useRemoveCartItemMutation](index.md#useremovecartitemmutation)
 - [useRemoveWishlistItemMutation](index.md#useremovewishlistitemmutation)
+- [useReturnReasonsQueries](index.md#usereturnreasonsqueries)
+- [useReturnsQueries](index.md#usereturnsqueries)
 - [useSearchSuggestionsQueries](index.md#usesearchsuggestionsqueries)
 - [useShippingMethodsQueries](index.md#useshippingmethodsqueries)
 - [useStoreLocationsQueries](index.md#usestorelocationsqueries)
@@ -116,6 +119,12 @@ Re-exports [useCreateFromCartMutation](mutation_useCreateFromCart.md#usecreatefr
 ### useCreateOrderMutation
 
 Re-exports [useCreateOrderMutation](mutation_useCreateOrder.md#usecreateordermutation)
+
+---
+
+### useCreateOrderReturnItemsMutation
+
+Re-exports [useCreateOrderReturnItemsMutation](mutations_useCreateOrderReturnItemsMutation_useCreateOrderReturnItemsMutation.md#usecreateorderreturnitemsmutation)
 
 ---
 
@@ -224,6 +233,18 @@ Re-exports [useRemoveCartItemMutation](mutation_useRemoveCartItem.md#useremoveca
 ### useRemoveWishlistItemMutation
 
 Re-exports [useRemoveWishlistItemMutation](mutation_useRemoveWishlistItem.md#useremovewishlistitemmutation)
+
+---
+
+### useReturnReasonsQueries
+
+Re-exports [useReturnReasonsQueries](queries_useReturnReasonsQueries_useReturnReasonsQueries.md#usereturnreasonsqueries)
+
+---
+
+### useReturnsQueries
+
+Re-exports [useReturnsQueries](queries_useReturnsQueries_useReturnsQueries.md#usereturnsqueries)
 
 ---
 

@@ -36,4 +36,4 @@ On success, calls invalidateQueries on wishlistKeys and fetches the updated resu
 
 #### Defined in
 
-[mutations/useWishlistMutations/useCreateWishlistMutation/useCreateWishlistMutation.ts:44](https://github.com/KiboSoftware/nextjs-storefront/blob/2f9709d/hooks/mutations/useWishlistMutations/useCreateWishlistMutation/useCreateWishlistMutation.ts#L44)
+[mutations/useWishlistMutations/useCreateWishlistMutation/useCreateWishlistMutation.ts:44](https://github.com/KiboSoftware/nextjs-storefront/blob/98414f4/hooks/mutations/useWishlistMutations/useCreateWishlistMutation/useCreateWishlistMutation.ts#L44)

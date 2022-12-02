@@ -37,4 +37,4 @@ The latest debounced value on specified time period.
 
 #### Defined in
 
-[custom/useDebounce/useDebounce.ts:22](https://github.com/KiboSoftware/nextjs-storefront/blob/2f9709d/hooks/custom/useDebounce/useDebounce.ts#L22)
+[custom/useDebounce/useDebounce.ts:22](https://github.com/KiboSoftware/nextjs-storefront/blob/98414f4/hooks/custom/useDebounce/useDebounce.ts#L22)

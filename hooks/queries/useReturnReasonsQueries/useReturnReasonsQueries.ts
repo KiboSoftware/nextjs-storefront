@@ -6,6 +6,9 @@ import { returnReasonsKeys } from '@/lib/react-query/queryKeys'
 
 import type { ReturnReason } from '@/lib/gql/types'
 
+/**
+ * @hidden
+ */
 export interface UseReturnReasonsResponse {
   data?: ReturnReason
   isLoading: boolean

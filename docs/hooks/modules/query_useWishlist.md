@@ -18,11 +18,11 @@
 
 <b>wishlists(startIndex: Int, pageSize: Int, sortBy: String, filter: String): WishlistCollection</b>
 
-Description : Fetches the all wishlists
+Description : Fetches the all wishlists for logged in user. To authenticate the user, request header taking token from the cookie.
 
 Parameters passed to function getWishlists()
 
-On success, returns the first item of wishlists
+On success, returns the first item of wishlists as it will always have single item with respect to customer account id.
 
 #### Returns
 
@@ -32,4 +32,4 @@ On success, returns the first item of wishlists
 
 #### Defined in
 
-[queries/useWishlistQueries/useWishlistQueries.ts:46](https://github.com/KiboSoftware/nextjs-storefront/blob/2f9709d/hooks/queries/useWishlistQueries/useWishlistQueries.ts#L46)
+[queries/useWishlistQueries/useWishlistQueries.ts:46](https://github.com/KiboSoftware/nextjs-storefront/blob/98414f4/hooks/queries/useWishlistQueries/useWishlistQueries.ts#L46)

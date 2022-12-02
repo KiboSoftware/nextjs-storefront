@@ -40,4 +40,4 @@ On success, returns the list of location
 
 #### Defined in
 
-[queries/useStoreLocationsQueries/useStoreLocationsQueries.ts:46](https://github.com/KiboSoftware/nextjs-storefront/blob/2f9709d/hooks/queries/useStoreLocationsQueries/useStoreLocationsQueries.ts#L46)
+[queries/useStoreLocationsQueries/useStoreLocationsQueries.ts:46](https://github.com/KiboSoftware/nextjs-storefront/blob/98414f4/hooks/queries/useStoreLocationsQueries/useStoreLocationsQueries.ts#L46)

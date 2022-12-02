@@ -32,4 +32,4 @@ On success, calls invalidateQueries on cartKeys and fetches the updated result
 
 #### Defined in
 
-[mutations/useCouponMutations/useDeleteCartCouponMutation/useDeleteCartCouponMutation.ts:44](https://github.com/KiboSoftware/nextjs-storefront/blob/2f9709d/hooks/mutations/useCouponMutations/useDeleteCartCouponMutation/useDeleteCartCouponMutation.ts#L44)
+[mutations/useCouponMutations/useDeleteCartCouponMutation/useDeleteCartCouponMutation.ts:44](https://github.com/KiboSoftware/nextjs-storefront/blob/98414f4/hooks/mutations/useCouponMutations/useDeleteCartCouponMutation/useDeleteCartCouponMutation.ts#L44)

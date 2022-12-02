@@ -32,4 +32,4 @@ On success, calls invalidateQueries on checkoutKeys and fetches the updated resu
 
 #### Defined in
 
-[mutations/useCreateOrderMutations/useCreateOrderMutation.tsx:47](https://github.com/KiboSoftware/nextjs-storefront/blob/2f9709d/hooks/mutations/useCreateOrderMutations/useCreateOrderMutation.tsx#L47)
+[mutations/useCreateOrderMutations/useCreateOrderMutation.tsx:47](https://github.com/KiboSoftware/nextjs-storefront/blob/98414f4/hooks/mutations/useCreateOrderMutations/useCreateOrderMutation.tsx#L47)

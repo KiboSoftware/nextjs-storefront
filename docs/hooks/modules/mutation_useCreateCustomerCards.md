@@ -36,4 +36,4 @@ On success, calls invalidateQueries all customerAccountCardsKeys and fetches the
 
 #### Defined in
 
-[mutations/useCustomerCardsMutations/useCreateCustomerCardsMutation.ts:42](https://github.com/KiboSoftware/nextjs-storefront/blob/2f9709d/hooks/mutations/useCustomerCardsMutations/useCreateCustomerCardsMutation.ts#L42)
+[mutations/useCustomerCardsMutations/useCreateCustomerCardsMutation.ts:42](https://github.com/KiboSoftware/nextjs-storefront/blob/98414f4/hooks/mutations/useCustomerCardsMutations/useCreateCustomerCardsMutation.ts#L42)

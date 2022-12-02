@@ -34,4 +34,4 @@ Parameters passed to internal function updateUserPassword(props: UpdateUserPassw
 
 #### Defined in
 
-[mutations/useProfile/useUpdateUserPassword/useUpdateUserPassword.ts:41](https://github.com/KiboSoftware/nextjs-storefront/blob/2f9709d/hooks/mutations/useProfile/useUpdateUserPassword/useUpdateUserPassword.ts#L41)
+[mutations/useProfile/useUpdateUserPassword/useUpdateUserPassword.ts:41](https://github.com/KiboSoftware/nextjs-storefront/blob/98414f4/hooks/mutations/useProfile/useUpdateUserPassword/useUpdateUserPassword.ts#L41)

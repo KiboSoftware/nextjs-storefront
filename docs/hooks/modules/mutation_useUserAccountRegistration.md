@@ -42,4 +42,4 @@ On success, calls invalidateQueries on loginKeys and fetches the updated result.
 
 #### Defined in
 
-[mutations/useUserMutations/useUserAccountRegistrationMutations.ts:35](https://github.com/KiboSoftware/nextjs-storefront/blob/2f9709d/hooks/mutations/useUserMutations/useUserAccountRegistrationMutations.ts#L35)
+[mutations/useUserMutations/useUserAccountRegistrationMutations.ts:35](https://github.com/KiboSoftware/nextjs-storefront/blob/98414f4/hooks/mutations/useUserMutations/useUserAccountRegistrationMutations.ts#L35)

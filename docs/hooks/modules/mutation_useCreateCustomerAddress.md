@@ -36,4 +36,4 @@ On success, calls invalidateQueries all customerAccountContactsKeys and fetches 
 
 #### Defined in
 
-[mutations/useCustomerAddressMutations/useCreateCustomerAddressMutation.ts:44](https://github.com/KiboSoftware/nextjs-storefront/blob/2f9709d/hooks/mutations/useCustomerAddressMutations/useCreateCustomerAddressMutation.ts#L44)
+[mutations/useCustomerAddressMutations/useCreateCustomerAddressMutation.ts:44](https://github.com/KiboSoftware/nextjs-storefront/blob/98414f4/hooks/mutations/useCustomerAddressMutations/useCreateCustomerAddressMutation.ts#L44)

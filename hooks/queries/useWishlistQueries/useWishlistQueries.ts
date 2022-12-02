@@ -34,11 +34,11 @@ const getWishlists = async (): Promise<Wishlist> => {
  *
  * <b>wishlists(startIndex: Int, pageSize: Int, sortBy: String, filter: String): WishlistCollection</b>
  *
- * Description : Fetches the all wishlists
+ * Description : Fetches the all wishlists for logged in user. To authenticate the user, request header taking token from the cookie.
  *
  * Parameters passed to function getWishlists()
  *
- * On success, returns the first item of wishlists
+ * On success, returns the first item of wishlists as it will always have single item with respect to customer account id.
  *
  * @returns 'response?.wishlists?.items[0], which contains the first wishlist item'
  */

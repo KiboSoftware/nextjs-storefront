@@ -6,6 +6,9 @@ import { returnsKeys } from '@/lib/react-query/queryKeys'
 
 import type { ReturnCollection } from '@/lib/gql/types'
 
+/**
+ * @hidden
+ */
 export interface UseReturnsResponse {
   data?: ReturnCollection
   isLoading: boolean

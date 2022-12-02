@@ -32,4 +32,4 @@ On success, calls invalidateQueries on checkoutKeys and fetches the updated resu
 
 #### Defined in
 
-[mutations/useUpdateCheckoutMutations/useUpdateCheckoutPersonalInfo/useUpdateCheckoutPersonalInfoMutation.ts:47](https://github.com/KiboSoftware/nextjs-storefront/blob/2f9709d/hooks/mutations/useUpdateCheckoutMutations/useUpdateCheckoutPersonalInfo/useUpdateCheckoutPersonalInfoMutation.ts#L47)
+[mutations/useUpdateCheckoutMutations/useUpdateCheckoutPersonalInfo/useUpdateCheckoutPersonalInfoMutation.ts:47](https://github.com/KiboSoftware/nextjs-storefront/blob/98414f4/hooks/mutations/useUpdateCheckoutMutations/useUpdateCheckoutPersonalInfo/useUpdateCheckoutPersonalInfoMutation.ts#L47)
