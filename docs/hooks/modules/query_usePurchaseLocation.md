@@ -34,4 +34,4 @@ On success, returns the first location detail from location list.
 
 #### Defined in
 
-[queries/usePurchaseLocationQueries/usePurchaseLocationQueries.ts:50](https://github.com/KiboSoftware/nextjs-storefront/blob/98414f4/hooks/queries/usePurchaseLocationQueries/usePurchaseLocationQueries.ts#L50)
+[queries/usePurchaseLocationQueries/usePurchaseLocationQueries.ts:50](https://github.com/KiboSoftware/nextjs-storefront/blob/a6cbcc7/hooks/queries/usePurchaseLocationQueries/usePurchaseLocationQueries.ts#L50)

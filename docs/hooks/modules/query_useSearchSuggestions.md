@@ -39,4 +39,4 @@ On success, returns the received search suggestions.
 
 #### Defined in
 
-[queries/useSearchSuggestionsQueries/useSearchSuggestionsQueries.ts:47](https://github.com/KiboSoftware/nextjs-storefront/blob/98414f4/hooks/queries/useSearchSuggestionsQueries/useSearchSuggestionsQueries.ts#L47)
+[queries/useSearchSuggestionsQueries/useSearchSuggestionsQueries.ts:47](https://github.com/KiboSoftware/nextjs-storefront/blob/a6cbcc7/hooks/queries/useSearchSuggestionsQueries/useSearchSuggestionsQueries.ts#L47)

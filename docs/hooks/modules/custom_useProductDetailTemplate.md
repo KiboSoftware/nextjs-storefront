@@ -45,4 +45,4 @@ User selected product quantity, fulfillmentOption (location) of user, product op
 
 #### Defined in
 
-[custom/useProductDetailTemplate/useProductDetailTemplate.ts:34](https://github.com/KiboSoftware/nextjs-storefront/blob/98414f4/hooks/custom/useProductDetailTemplate/useProductDetailTemplate.ts#L34)
+[custom/useProductDetailTemplate/useProductDetailTemplate.ts:34](https://github.com/KiboSoftware/nextjs-storefront/blob/a6cbcc7/hooks/custom/useProductDetailTemplate/useProductDetailTemplate.ts#L34)

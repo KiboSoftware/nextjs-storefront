@@ -32,4 +32,4 @@ On success, returns the first item of wishlists as it will always have single it
 
 #### Defined in
 
-[queries/useWishlistQueries/useWishlistQueries.ts:46](https://github.com/KiboSoftware/nextjs-storefront/blob/98414f4/hooks/queries/useWishlistQueries/useWishlistQueries.ts#L46)
+[queries/useWishlistQueries/useWishlistQueries.ts:46](https://github.com/KiboSoftware/nextjs-storefront/blob/a6cbcc7/hooks/queries/useWishlistQueries/useWishlistQueries.ts#L46)

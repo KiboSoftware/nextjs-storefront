@@ -38,4 +38,4 @@ On success, returns the current cart items with 'refetchOnWindowFocus' set to fa
 
 #### Defined in
 
-[queries/useCartQueries/useCartQueries.ts:45](https://github.com/KiboSoftware/nextjs-storefront/blob/98414f4/hooks/queries/useCartQueries/useCartQueries.ts#L45)
+[queries/useCartQueries/useCartQueries.ts:45](https://github.com/KiboSoftware/nextjs-storefront/blob/a6cbcc7/hooks/queries/useCartQueries/useCartQueries.ts#L45)

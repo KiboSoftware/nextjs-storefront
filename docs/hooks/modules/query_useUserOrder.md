@@ -38,4 +38,4 @@ On success, returns the list of orders
 
 #### Defined in
 
-[queries/useUserOrderQueries/useUserOrderQueries.ts:58](https://github.com/KiboSoftware/nextjs-storefront/blob/98414f4/hooks/queries/useUserOrderQueries/useUserOrderQueries.ts#L58)
+[queries/useUserOrderQueries/useUserOrderQueries.ts:58](https://github.com/KiboSoftware/nextjs-storefront/blob/a6cbcc7/hooks/queries/useUserOrderQueries/useUserOrderQueries.ts#L58)

@@ -36,4 +36,4 @@ category and related children catagories
 
 #### Defined in
 
-[queries/useCategoryTreeQueries/useCategoryTreeQueries.ts:40](https://github.com/KiboSoftware/nextjs-storefront/blob/98414f4/hooks/queries/useCategoryTreeQueries/useCategoryTreeQueries.ts#L40)
+[queries/useCategoryTreeQueries/useCategoryTreeQueries.ts:40](https://github.com/KiboSoftware/nextjs-storefront/blob/a6cbcc7/hooks/queries/useCategoryTreeQueries/useCategoryTreeQueries.ts#L40)

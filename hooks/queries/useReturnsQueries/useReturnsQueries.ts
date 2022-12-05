@@ -26,6 +26,22 @@ const getReturns = async (param: { filter: string }): Promise<ReturnCollection> 
   return response?.returns
 }
 
+/**
+ * [Query hook] useReturnsQueries uses the graphQL query
+ *
+ * <b>returns(startIndex: Int, pageSize: Int, sortBy: String, filter: String, q: String): ReturnCollection</b>
+ *
+ * Description : Fetches the list of items returned with reasons and return type.
+ *
+ * Parameters passed to function getReturns(param: { filter: string }) => can be used to filter out the results for return items
+ *
+ * On success, returns items that are returned and 'refetchOnWindowFocus' set to false for this react query
+ *
+ * @param searchParams can be used to filter out the results
+ *
+ * @returns 'response?.returns', which contains list of items returned
+ */
+
 export const useReturnsQueries = (searchParams: { filter: string }): UseReturnsResponse => {
   const { data, isLoading, isSuccess, isFetching } = useQuery(
     returnsKeys.all,

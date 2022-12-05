@@ -38,4 +38,4 @@ Return two functions:
 
 #### Defined in
 
-[custom/useWishlist/useWishlist.ts:33](https://github.com/KiboSoftware/nextjs-storefront/blob/98414f4/hooks/custom/useWishlist/useWishlist.ts#L33)
+[custom/useWishlist/useWishlist.ts:33](https://github.com/KiboSoftware/nextjs-storefront/blob/a6cbcc7/hooks/custom/useWishlist/useWishlist.ts#L33)
