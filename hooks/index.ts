@@ -90,6 +90,11 @@ export * from './mutations/multiShip/useUpdateCheckoutPersonalInfoMutation/useUp
 export * from './mutations/multiShip/useUpdateCheckoutShippingInfoMutation/useUpdateCheckoutShippingInfoMutation'
 export * from './mutations/multiShip/useCreateCheckoutFromCartMutation/useCreateCheckoutFromCartMutation'
 export * from './mutations/multiShip/useCreateCheckoutShippingMethodMutation/useCreateCheckoutShippingMethodMutation'
+<<<<<<< HEAD
 
 // Subscription
 export * from './mutations/useSubscription/useEditSubscriptionFrequencyMutation/useEditSubscriptionFrequencyMutation'
+=======
+export * from './mutations/multiShip/useUpdateCheckoutCouponMutation/useUpdateCheckoutCouponMutation'
+export * from './mutations/multiShip/useDeleteCheckoutCouponMutation/useDeleteCheckoutCouponMutation'
+>>>>>>> a83bdde4 (multiship apply coupon code)

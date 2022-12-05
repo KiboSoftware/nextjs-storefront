@@ -16,6 +16,7 @@ const updateCheckoutItemDestination = /* GraphQL */ `
       destinationId: $destinationId
     ) {
       ...baseMultiShipCheckoutFragment
+      couponCodes
       items {
         destinationId
         ...checkoutLineItemFragment

@@ -9,6 +9,7 @@ const getMultiShipCheckoutQuery = /* GraphQL */ `
   query getCheckout($checkoutId: String!) {
     checkout(checkoutId: $checkoutId) {
       ...baseMultiShipCheckoutFragment
+      couponCodes
       items {
         destinationId
         ...checkoutLineItemFragment

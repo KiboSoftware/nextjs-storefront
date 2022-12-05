@@ -9,6 +9,7 @@ const setMultiShipPersonalInfo = /* GraphQL */ `
   mutation updateCheckout($checkoutId: String!, $checkoutInput: CheckoutInput) {
     checkout: updateCheckout(checkoutId: $checkoutId, checkoutInput: $checkoutInput) {
       ...baseMultiShipCheckoutFragment
+      couponCodes
       items {
         destinationId
         ...checkoutLineItemFragment

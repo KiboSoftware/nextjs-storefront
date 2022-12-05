@@ -39,8 +39,15 @@ const CheckoutUITemplate = (props: CheckoutTemplateUIProps) => {
   )
   const handleBack = () => setStepBack()
   const handleSubmit = () => setStepStatusSubmit()
-  // ****************** use Getters Here ****************
+
   const subTotal = checkout?.subtotal || checkout?.subTotal
+
+  const discountedSubtotal = checkout?.discountedSubtotal
+    ? checkout?.discountedSubtotal
+    : checkout?.itemLevelProductDiscountTotal + checkout?.orderLevelProductDiscountTotal
+  const tax = checkout?.taxTotal ? checkout?.taxTotal : checkout?.itemTaxTotal
+
+  console.log('discountedSubtotal', discountedSubtotal, 'subTotal', subTotal)
   const orderSummaryArgs = {
     nameLabel: t('order-summary'),
     subTotalLabel: `Cart Subtotal of (${checkout?.items?.length} items)`,
@@ -48,14 +55,15 @@ const CheckoutUITemplate = (props: CheckoutTemplateUIProps) => {
     taxLabel: t('tax'),
     totalLabel: t('order-total'),
     subTotal: t('currency', { val: subTotal }),
+
     discountedSubtotal:
-      checkout?.discountedSubtotal && checkout?.discountedSubtotal != subTotal
-        ? t('currency', { val: checkout?.discountedSubtotal })
+      discountedSubtotal > 0 && discountedSubtotal !== subTotal
+        ? t('currency', { val: subTotal - discountedSubtotal })
         : '',
     shippingTotal: checkout?.shippingTotal
       ? t('currency', { val: checkout?.shippingTotal })
       : t('free'),
-    tax: t('currency', { val: checkout?.taxTotal || checkout?.itemTaxTotal }),
+    tax: t('currency', { val: tax || 0 }),
     total: t('currency', { val: checkout?.total }),
     checkoutLabel: t('go-to-checkout'),
     shippingLabel: t('go-to-shipping'),

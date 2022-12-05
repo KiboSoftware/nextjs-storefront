@@ -125,3 +125,7 @@ const checkoutResponse: Checkout = {
 export const checkoutMock: { checkout: Checkout } = {
   checkout: checkoutResponse,
 }
+
+export const checkoutCouponMock: { updateCheckoutCoupon: Checkout } = {
+  updateCheckoutCoupon: checkoutResponse,
+}
