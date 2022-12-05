@@ -35,4 +35,6 @@ export { default as updateCheckoutItemDestination } from './checkout/update-chec
 export { default as splitOrderShipment } from './checkout/split-order-shipment'
 export { default as setMultiShipPersonalInfo } from './checkout/set-multi-ship-personal-info'
 export { default as createMultiShipCheckoutFromCartMutation } from './checkout/create-multi-ship-checkout-from-cart'
-export {default as createCheckoutShippingMethod} from './checkout/create-checkout-shipping-method'
+export { default as createCheckoutShippingMethod } from './checkout/create-checkout-shipping-method'
+export { default as updateCheckoutCouponMutation } from './coupon/update-checkout-coupon'
+export { default as deleteCheckoutCouponMutation } from './coupon/delete-checkout-coupon'
