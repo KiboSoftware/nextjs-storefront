@@ -9,11 +9,11 @@ import { CheckoutUITemplate } from '@/components/page-templates'
 import { useAuthContext } from '@/context'
 import {
   useCustomerContactsQueries,
-  useDeleteOrderCouponMutation,
+  useDeleteCheckoutCouponMutation,
   useMultiShipCheckoutQueries,
   useUpdateMultiShipCheckoutPersonalInfoMutation,
   useUpdateMultiShipCheckoutShippingInfoMutation,
-  useUpdateOrderCouponMutation,
+  useUpdateCheckoutCouponMutation,
   MultiShipPersonalInfo,
   useCreateCheckoutDestinationMutations,
   useCheckoutShippingMethodsQuery,
@@ -72,13 +72,13 @@ const MultiShipCheckoutTemplate = (props: CheckoutProps) => {
 
   const { isAuthenticated, user } = useAuthContext()
   const { data: savedUserAddressData, isSuccess } = useCustomerContactsQueries(user?.id as number)
-  const updateOrderCoupon = useUpdateOrderCouponMutation()
-  const deleteOrderCoupon = useDeleteOrderCouponMutation()
+  const updateCheckoutCoupon = useUpdateCheckoutCouponMutation()
+  const deleteCheckoutCoupon = useDeleteCheckoutCouponMutation()
 
   const handleApplyCouponCode = async (couponCode: string) => {
     try {
       setPromoError('')
-      const response = await updateOrderCoupon.mutateAsync({
+      const response = await updateCheckoutCoupon.mutateAsync({
         checkoutId: checkoutId as string,
         couponCode,
       })
@@ -91,7 +91,7 @@ const MultiShipCheckoutTemplate = (props: CheckoutProps) => {
   }
   const handleRemoveCouponCode = async (couponCode: string) => {
     try {
-      await deleteOrderCoupon.mutateAsync({
+      await deleteCheckoutCoupon.mutateAsync({
         checkoutId: checkoutId as string,
         couponCode,
       })

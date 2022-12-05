@@ -95,3 +95,5 @@ export * from './mutations/multiShip/useUpdateCheckoutPersonalInfoMutation/useUp
 export * from './mutations/multiShip/useUpdateCheckoutShippingInfoMutation/useUpdateCheckoutShippingInfoMutation'
 export * from './mutations/multiShip/useCreateCheckoutFromCartMutation/useCreateCheckoutFromCartMutation'
 export * from './mutations/multiShip/useCreateCheckoutShippingMethodMutation/useCreateCheckoutShippingMethodMutation'
+export * from './mutations/multiShip/useUpdateCheckoutCouponMutation/useUpdateCheckoutCouponMutation'
+export * from './mutations/multiShip/useDeleteCheckoutCouponMutation/useDeleteCheckoutCouponMutation'
