@@ -1,14 +1,14 @@
 import {
-  contactForOrdersFragment,
+  baseMultiShipCheckoutFragment,
   checkoutLineItemFragment,
   checkoutPaymentFragment,
+  contactForOrdersFragment,
   multiShipCheckoutGroupingFragment,
-  baseMultiShipCheckoutFragment,
 } from '@/lib/gql/fragments'
 
-const createCheckoutMutation = /* GraphQL */ `
-  mutation createCheckout($cartId: String) {
-    createCheckout(cartId: $cartId) {
+const getMultiShipCheckoutQuery = /* GraphQL */ `
+  query getMultiShipCheckout($checkoutId: String!) {
+    checkout(checkoutId: $checkoutId) {
       ...baseMultiShipCheckoutFragment
       items {
         destinationId
@@ -31,10 +31,9 @@ const createCheckoutMutation = /* GraphQL */ `
     }
   }
   ${baseMultiShipCheckoutFragment}
-  ${checkoutLineItemFragment}
   ${multiShipCheckoutGroupingFragment}
+  ${checkoutLineItemFragment}
   ${checkoutPaymentFragment}
   ${contactForOrdersFragment}
 `
-
-export default createCheckoutMutation
+export default getMultiShipCheckoutQuery
