@@ -113,6 +113,8 @@ const getPickupItems = (checkout: Checkout): CrOrderItem[] => {
 const getShipItems = (checkout: Checkout): CrOrderItem[] =>
   getItemsByFulfillment(checkout, FulfillmentOptions.SHIP)
 
+const getCheckoutItemCount = (checkout: Checkout) => checkout?.items?.length
+
 export const checkoutGetters = {
   buildItemsGroupFromCheckoutGroupings,
   formatDestinationAddress,
