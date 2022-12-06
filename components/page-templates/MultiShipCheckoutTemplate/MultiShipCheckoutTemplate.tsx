@@ -12,7 +12,6 @@ import {
   useDeleteCheckoutCouponMutation,
   useMultiShipCheckoutQueries,
   useUpdateMultiShipCheckoutPersonalInfoMutation,
-  useUpdateMultiShipCheckoutShippingInfoMutation,
   useUpdateCheckoutCouponMutation,
   MultiShipPersonalInfo,
   useCreateCheckoutDestinationMutations,
@@ -21,7 +20,7 @@ import {
 } from '@/hooks'
 import { userGetters } from '@/lib/getters'
 
-import type { CustomerContact, Checkout, CheckoutInput } from '@/lib/gql/types'
+import type { CustomerContact, Checkout } from '@/lib/gql/types'
 interface CheckoutProps {
   checkout: Checkout
 }
@@ -44,30 +43,22 @@ const MultiShipCheckoutTemplate = (props: CheckoutProps) => {
     initialCheckout,
   })
   const updateMultiShipCheckoutPersonalInfo = useUpdateMultiShipCheckoutPersonalInfoMutation()
-  const updateMultiShipCheckoutShippingInfo = useUpdateMultiShipCheckoutShippingInfoMutation()
   const createCheckoutDestination = useCreateCheckoutDestinationMutations()
   const createCheckoutShippingMethod = useCreateCheckoutShippingMethodMutation()
 
   const { data: shippingMethods } = useCheckoutShippingMethodsQuery(
     checkoutId,
     isNewAddressAdded,
-    checkout?.groupings[0]?.destinationId as string
+    checkout?.groupings && (checkout?.groupings[0]?.destinationId as string)
   )
 
   const updateCheckoutPersonalInfo = async (formData: PersonalDetails) => {
     const { email } = formData
     const personalInfo: MultiShipPersonalInfo = {
-      checkoutId: checkout?.id as string,
-      checkoutInput: {
-        ...(checkout as Checkout),
-        email,
-      } as CheckoutInput,
+      checkout,
+      email,
     }
-    await updateMultiShipCheckoutPersonalInfo.mutateAsync(personalInfo)
-  }
-
-  const updateCheckoutShippingInfo = async (shippingInfo: any) => {
-    await updateMultiShipCheckoutShippingInfo.mutateAsync(shippingInfo)
+    return await updateMultiShipCheckoutPersonalInfo.mutateAsync(personalInfo)
   }
 
   const { isAuthenticated, user } = useAuthContext()
@@ -134,7 +125,6 @@ const MultiShipCheckoutTemplate = (props: CheckoutProps) => {
             checkout={checkout as Checkout}
             userShippingAddress={userShippingAddress}
             isAuthenticated={isAuthenticated}
-            updateCheckoutShippingInfo={updateCheckoutShippingInfo}
             shippingMethods={shippingMethods} //@to-do muse multiRate api
             setCheckoutId={setCheckoutId}
             setIsNewAddressAdded={setIsNewAddressAdded}

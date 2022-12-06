@@ -76,9 +76,12 @@ const getMultiShipAddresses = ({ checkout, savedShippingAddresses }) => {
 const getInitialShippingOption = (checkout, shippingOptions) =>
   checkout?.groupings?.length > 1 ? shippingOptions[1]?.value : shippingOptions[0]?.value
 
+const getCheckoutItemCount = (checkout: Checkout) => checkout?.items?.length
+
 export const checkoutGetters = {
   buildItemsGroupFromCheckoutGroupings,
   formatDestinationAddress,
   getMultiShipAddresses,
   getInitialShippingOption,
+  getCheckoutItemCount,
 }

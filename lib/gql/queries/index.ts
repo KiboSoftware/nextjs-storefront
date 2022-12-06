@@ -18,5 +18,5 @@ export { default as getCheckoutDestinationsQuery } from './checkout/get-checkout
 export { default as getCheckoutDestinationQuery } from './checkout/get-checkout-destination'
 export { default as getSubscriptionsQuery } from './subscription/get-subscriptions-query'
 //multiship
-export { default as getMultiShipCheckoutQuery } from './multiship-checkout/get-multi-ship-checkout-query'
+export { default as getMultiShipCheckoutQuery } from './checkout/get-multi-ship-checkout-query'
 export { default as getCheckoutShippingMethodsQuery } from './checkout/get-multi-ship-checkout-shipping-methods'
