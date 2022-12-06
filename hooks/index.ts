@@ -16,10 +16,6 @@ export * from './queries/useUserOrderQueries/useUserOrderQueries'
 export * from './queries/useProductLocationInventoryQueries/useProductLocationInventoryQueries'
 export * from './queries/useReturnReasonsQueries/useReturnReasonsQueries'
 export * from './queries/useReturnsQueries/useReturnsQueries'
-
-// MultiShip
-export * from './queries/multiShip/useCheckoutQueries/useCheckoutQueries'
-export * from './queries/useCheckoutDestinationQueries/useCheckoutDestinationQueries'
 // Multiship Query
 export * from './queries/multiShip/useCheckoutQueries/useCheckoutQueries'
 export * from './queries/multiShip/useCheckoutDestinationQueries/useCheckoutDestinationQueries'
@@ -46,7 +42,6 @@ export * from './mutations/useCartMutations/useUpdateCartItem/useUpdateCartItemM
 export * from './mutations/useCartMutations/useUpdateCartItemQuantity/useUpdateCartItemQuantityMutation'
 export * from './mutations/useProductMutations/useProductMutation'
 export * from './mutations/useCheckoutMutations/useCreateFromCartMutation'
-export * from './mutations/multiShip/useCreateCheckoutMutation/useCreateCheckoutMutation'
 export * from './mutations/useWishlistMutations/useAddToWishlistMutation/useAddToWishlistMutation'
 export * from './mutations/useWishlistMutations/useRemoveWishlistItemMutation/useRemoveWishlistItemMutation'
 export * from './mutations/useWishlistMutations/useCreateWishlistMutation/useCreateWishlistMutation'
@@ -82,7 +77,6 @@ export * from './mutations/multiShip/useUpdateCheckoutDestinationMutations/useUp
 // MultiShip
 export * from './mutations/multiShip/useCreateCheckoutActionMutation/useCreateCheckoutActionMutation'
 export * from './mutations/multiShip/useUpdateCheckoutPersonalInfoMutation/useUpdateCheckoutPersonalInfoMutation'
-export * from './mutations/multiShip/useUpdateCheckoutShippingInfoMutation/useUpdateCheckoutShippingInfoMutation'
 export * from './mutations/multiShip/useCreateCheckoutFromCartMutation/useCreateCheckoutFromCartMutation'
 export * from './mutations/multiShip/useCreateCheckoutShippingMethodMutation/useCreateCheckoutShippingMethodMutation'
 export * from './mutations/multiShip/useUpdateCheckoutCouponMutation/useUpdateCheckoutCouponMutation'

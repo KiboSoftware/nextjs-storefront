@@ -1,4 +1,5 @@
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
+import getConfig from 'next/config'
 
 import { CartTemplate } from '@/components/page-templates'
 import { getCart } from '@/lib/api/operations/'
@@ -8,9 +9,12 @@ import type { NextPage, GetServerSidePropsContext } from 'next'
 export async function getServerSideProps(context: GetServerSidePropsContext) {
   const { locale, req, res } = context
   const response = await getCart(req, res)
+  const { publicRuntimeConfig } = getConfig()
+  const isMultiShipEnabled = publicRuntimeConfig.isMultiShipEnabled
+
   return {
     props: {
-      isMultiShipEnabled: true,
+      isMultiShipEnabled,
       cart: response?.currentCart,
       ...(await serverSideTranslations(locale as string, ['common'])),
     },

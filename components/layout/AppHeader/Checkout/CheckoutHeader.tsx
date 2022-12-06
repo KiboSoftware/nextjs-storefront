@@ -3,13 +3,8 @@ import React from 'react'
 import { Box, Container, Link as MuiLink, Typography } from '@mui/material'
 import { useTranslation } from 'next-i18next'
 import Link from 'next/link'
-import { useRouter } from 'next/router'
 
 import { KiboLogo } from '@/components/common'
-import { useCheckoutQueries } from '@/hooks'
-import { orderGetters } from '@/lib/getters'
-
-import type { Order } from '@/lib/gql/types'
 
 const checkoutHeaderStyles = {
   container: {
@@ -22,14 +17,8 @@ const checkoutHeaderStyles = {
   },
 }
 
-const CheckoutHeader = () => {
-  const router = useRouter()
+const CheckoutHeader = ({ numberOfItems }: { numberOfItems: number }) => {
   const { t } = useTranslation()
-  const { checkoutId } = router.query
-  const { data: checkout } = useCheckoutQueries({
-    checkoutId: checkoutId as string,
-  })
-  const numberOfItems = orderGetters.getCheckoutItemCount(checkout as Order)
 
   return (
     <>
