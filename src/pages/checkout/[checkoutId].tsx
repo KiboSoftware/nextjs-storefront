@@ -1,5 +1,6 @@
 import { useTranslation } from 'next-i18next'
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
+import getConfig from 'next/config'
 
 import {
   StandardShipCheckoutTemplate,
@@ -20,7 +21,8 @@ interface CheckoutPageProps {
 export async function getServerSideProps(context: GetServerSidePropsContext) {
   const { locale, params, req, res } = context
   const { checkoutId } = params as any
-  const isMultiShipEnabled = true
+  const { publicRuntimeConfig } = getConfig()
+  const isMultiShipEnabled = publicRuntimeConfig.isMultiShipEnabled
   const checkout = isMultiShipEnabled
     ? await getMultiShipCheckout(checkoutId, req, res)
     : await getCheckout(checkoutId, req, res)
