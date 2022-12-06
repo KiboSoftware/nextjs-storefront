@@ -8,7 +8,7 @@ import type { CheckoutGroupShippingMethodInput } from '@/lib/gql/types'
 
 export interface MultiShipCreateCheckoutShippingMethod {
   checkoutId: string
-  checkoutGroupShippingMethodInput: CheckoutGroupShippingMethodInput
+  checkoutGroupShippingMethodInput: CheckoutGroupShippingMethodInput[]
 }
 
 const setCheckoutShippingMethod = async (

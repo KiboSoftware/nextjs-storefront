@@ -102,10 +102,12 @@ const MultiShipCheckoutTemplate = (props: CheckoutProps) => {
     )
     await createCheckoutShippingMethod.mutateAsync({
       checkoutId: checkout?.id as string,
-      checkoutGroupShippingMethodInput: {
-        groupingId: shippingMethodGroup?.groupingId as string,
-        shippingRate,
-      },
+      checkoutGroupShippingMethodInput: [
+        {
+          groupingId: shippingMethodGroup?.groupingId as string,
+          shippingRate,
+        },
+      ],
     })
   }
 
