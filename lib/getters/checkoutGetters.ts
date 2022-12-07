@@ -30,7 +30,7 @@ const buildItemsGroupFromCheckoutGroupings = (checkout: Checkout) => {
 }
 
 const formatDestinationAddress = (contact: Contact) => {
-  const { firstName, lastNameOrSurname, email, address } = contact
+  const { firstName, lastNameOrSurname, address } = contact
   return `${firstName}, ${lastNameOrSurname}, ${address?.address1}, ${address?.address2}, ${address?.cityOrTown}, ${address?.stateOrProvince}, ${address?.postalOrZipCode}, ${address?.countryCode} `
 }
 
@@ -52,13 +52,14 @@ const getMultiShipAddresses = ({ checkout, savedShippingAddresses }) => {
 
   const savedAddresses = savedShippingAddresses
     ?.filter((shippingAddress) => {
-      if (destinationAddressIds?.includes(shippingAddress?.id)) return
+      if (destinationAddressIds?.includes(shippingAddress?.id)) return false
 
-      return checkout?.destinations?.find(
+      const matchedShippingAddress = checkout?.destinations?.find(
         (destination) =>
           destination?.destinationContact?.firstName === shippingAddress?.firstName &&
           lodash.isEqual(destination?.destinationContact?.address, shippingAddress?.address)
       )
+      return !matchedShippingAddress
     })
     ?.map((savedShippingAddress) => {
       if (savedShippingAddress?.address) {
@@ -77,6 +78,15 @@ const getInitialShippingOption = (checkout, shippingOptions) =>
   checkout?.groupings?.length > 1 ? shippingOptions[1]?.value : shippingOptions[0]?.value
 
 const getCheckoutItemCount = (checkout: Checkout) => checkout?.items?.length
+const checkMultiShipPaymentValid = (checkout: Checkout) => {
+  const groupingWithoutShippingRates = checkout?.groupings?.find(
+    (grouping) => !grouping?.shippingMethodCode && !grouping?.shippingMethodName
+  )
+  return !groupingWithoutShippingRates
+}
+const getShippingMethodCode = (checkout: Checkout) => {
+  return checkout?.groupings[0]?.shippingMethodCode
+}
 
 export const checkoutGetters = {
   buildItemsGroupFromCheckoutGroupings,
@@ -84,4 +94,6 @@ export const checkoutGetters = {
   getMultiShipAddresses,
   getInitialShippingOption,
   getCheckoutItemCount,
+  checkMultiShipPaymentValid,
+  getShippingMethodCode,
 }

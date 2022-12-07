@@ -23,7 +23,7 @@ import {
 import { DefaultId } from '@/lib/constants'
 import { orderGetters, userGetters, checkoutGetters } from '@/lib/getters'
 
-import type { CrOrderItem, Contact, CustomerContact, Checkout } from '@/lib/gql/types'
+import type { CrOrderItem, Contact, CrContact, CustomerContact, Checkout } from '@/lib/gql/types'
 
 const buttonStyle = {
   width: '100%',
@@ -48,7 +48,7 @@ interface ShippingProps {
   onUpdateCheckoutShippingMethod: (params: any) => void
 }
 
-interface DestinationInput extends Contact {
+interface CustomDestinationInput extends Contact {
   destinationId: string
   itemId: string
 }
@@ -76,7 +76,7 @@ const MultiShippingStep = (props: ShippingProps) => {
   const { showModal, closeModal } = useModalContext()
 
   const checkoutShippingContact = orderGetters.getShippingContact(checkout)
-  const checkoutShippingMethodCode = orderGetters.getShippingMethodCode(checkout)
+  const checkoutShippingMethodCode = checkoutGetters.getShippingMethodCode(checkout)
   const userShippingAddress = isAuthenticated
     ? userGetters.getUserShippingAddress(addresses as CustomerContact[])
     : []
@@ -110,6 +110,7 @@ const MultiShippingStep = (props: ShippingProps) => {
     checkout,
     savedShippingAddresses: userShippingAddress,
   })
+  const isMultiShipPaymentStepValid = checkoutGetters.checkMultiShipPaymentValid(checkout)
 
   const { t } = useTranslation('common')
   const shippingAddressRef = useRef()
@@ -127,7 +128,11 @@ const MultiShippingStep = (props: ShippingProps) => {
   // end hooks
 
   const handleAddressValidationAndSave = () => setValidateForm(true)
-  const handleUpdateDestinationAddress = async ({ contact }: { contact: DestinationInput }) => {
+  const handleUpdateDestinationAddress = async ({
+    contact,
+  }: {
+    contact: CustomDestinationInput
+  }) => {
     const { destinationId, itemId, ...rest } = contact
     closeModal()
     if (destinationId)
@@ -352,11 +357,8 @@ const MultiShippingStep = (props: ShippingProps) => {
   }, [stepStatus])
 
   useEffect(() => {
-    selectedShippingAddressId && checkoutShippingMethodCode && shouldShowAddAddressButton
-      ? setStepStatusValid()
-      : setStepStatusIncomplete()
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [selectedShippingAddressId, checkout, shouldShowAddAddressButton])
+    isMultiShipPaymentStepValid ? setStepStatusValid() : setStepStatusIncomplete()
+  }, [isMultiShipPaymentStepValid])
 
   return (
     <Stack data-testid="checkout-shipping" gap={2} ref={shippingAddressRef}>

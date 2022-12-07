@@ -132,7 +132,7 @@ export const baseCheckoutFragment = /* GraphQL */ `
   }
 `
 export const billingContactFragment = /* GraphQL */ `
-  fragment billingContactFragment on Contact {
+  fragment billingContactFragment on CrContact {
     id
     firstName
     middleNameOrInitial

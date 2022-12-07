@@ -1,7 +1,7 @@
 const createCheckoutShippingMethod = /* GraphQL */ `
   mutation createCheckoutShippingMethod(
     $checkoutId: String!
-    $checkoutGroupShippingMethodInput: CheckoutGroupShippingMethodInput
+    $checkoutGroupShippingMethodInput: [CheckoutGroupShippingMethodInput]
   ) {
     checkout: createCheckoutShippingMethod(
       checkoutId: $checkoutId

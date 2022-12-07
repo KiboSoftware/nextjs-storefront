@@ -28,7 +28,7 @@ export const orderItemProductFragment = /* GraphQL */ `
 `
 
 export const contactForOrdersFragment = /* GraphQL */ `
-  fragment contactForOrdersFragment on Contact {
+  fragment contactForOrdersFragment on CrContact {
     id
     firstName
     middleNameOrInitial
@@ -72,7 +72,7 @@ export const orderItemFragment = /* GraphQL */ `
 `
 
 export const baseOrderFragment = /* GraphQL */ `
-  fragment baseOrderFragment on Order {
+  fragment baseOrderFragment on CrOrder {
     id
     email
     total
@@ -114,7 +114,7 @@ export const baseOrderFragment = /* GraphQL */ `
 `
 
 export const orderPaymentFragment = /* GraphQL */ `
-  fragment orderPaymentFragment on Payment {
+  fragment orderPaymentFragment on CrPayment {
     id
     paymentType
     paymentWorkflow

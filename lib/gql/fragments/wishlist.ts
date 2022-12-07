@@ -1,5 +1,5 @@
 export const wishlistItem = `
-fragment wishlistItem on WishlistItem {
+fragment wishlistItem on CrWishlistItem {
     id
     quantity
     total
@@ -25,7 +25,7 @@ fragment wishlistItem on WishlistItem {
 `
 
 export const wishlist = /* GraphQL */ `
-  fragment wishlist on Wishlist {
+  fragment wishlist on CrWishlist {
     customerAccountId
     name
     id
