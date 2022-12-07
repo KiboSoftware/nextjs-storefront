@@ -4,7 +4,7 @@ const updateCheckoutDestination = /* GraphQL */ `
   mutation updateCheckoutDestination(
     $checkoutId: String!
     $destinationId: String!
-    $destinationInput: DestinationInput
+    $destinationInput: CrDestinationInput
   ) {
     updateCheckoutDestination(
       checkoutId: $checkoutId
