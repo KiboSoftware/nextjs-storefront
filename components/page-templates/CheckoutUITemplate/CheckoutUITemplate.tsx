@@ -112,7 +112,7 @@ const CheckoutUITemplate = (props: CheckoutTemplateUIProps) => {
                       onClick={handleSubmit}
                       disabled={stepStatus !== STEP_STATUS.VALID || activeStep === steps.length - 1}
                     >
-                      {buttonLabels[activeStep]}#{stepStatus}#{STEP_STATUS.VALID?.toString()}
+                      {buttonLabels[activeStep]}
                     </Button>
                     <Button
                       variant="contained"
