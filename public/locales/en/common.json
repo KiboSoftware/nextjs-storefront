@@ -272,5 +272,17 @@
   "return-request-submitted": "Return Request Submitted",
   "choose-items-to-return": "Choose Items to Return",
   "please-select-a-reason-for-your-return": "Please select a reason for your return",
-  "choose-a-response": "Choose a response"
+  "choose-a-response": "Choose a response",
+
+  "my-subscription": "My Subscription",
+  "ship-an-item-now": "Ship an item now",
+  "skip-shipment": "Skip Shipment",
+  "edit-frequency": "Edit Frequency",
+  "edit-order-date": "Edit Order Date",
+  "cancel-an-item": "Cancel an Item",
+  "edit-billing-information": "Edit Billing Information",
+  "edit-shipping-address": "Edit Shipping Address",
+  "pause-subscription": "Pause Subscription",
+  "subscription-number": "Subscription Number :",
+  "status": "Status : "
 }
