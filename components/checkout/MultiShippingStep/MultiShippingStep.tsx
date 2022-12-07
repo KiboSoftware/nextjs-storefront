@@ -403,7 +403,7 @@ const MultiShippingStep = (props: ShippingProps) => {
                   shipItems={shipItems as CrOrderItem[]}
                   pickupItems={pickupItems as CrOrderItem[]}
                   orderShipmentMethods={[...shippingMethods[0].shippingRates]}
-                  selectedShippingMethodCode={checkoutShippingMethodCode}
+                  selectedShippingMethodCode={checkoutShippingMethodCode as string}
                   onShippingMethodChange={handleSaveShippingMethod}
                   onStoreLocatorClick={handleStoreLocatorClick}
                 />
