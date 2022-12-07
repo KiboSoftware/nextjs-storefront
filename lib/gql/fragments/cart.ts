@@ -1,5 +1,5 @@
 export const cartItemDetails = /* GraphQL */ `
-  fragment cartItemDetails on CartItem {
+  fragment cartItemDetails on CrCartItem {
     id
     fulfillmentMethod
     purchaseLocation
@@ -45,7 +45,7 @@ export const cartItemDetails = /* GraphQL */ `
 export const cartDetails = /* GraphQL */ `
   ${cartItemDetails}
 
-  fragment cartDetails on Cart {
+  fragment cartDetails on CrCart {
     id
     invalidCoupons {
       couponCode
