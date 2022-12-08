@@ -16,9 +16,7 @@ const getSubscriptionFrequency = (subscription: any) =>
   `${subscription?.frequency?.value} ${subscription?.frequency?.unit}`
 
 const nextOrderItemDate = (subscription: any) =>
-  subscription?.nextOrderDate
-    ? (format(new Date(subscription.nextOrderDate), 'MMMM dd, yyyy') as string)
-    : subscription.nextOrderDate
+  format(new Date(subscription.nextOrderDate), 'MMMM dd, yyyy') as string
 
 const getSubscriptionNumber = (subscription: any) => subscription?.number
 
