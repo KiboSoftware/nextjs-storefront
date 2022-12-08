@@ -121,13 +121,15 @@ const MySubscriptionTemplate = (props: SubscriptionProps) => {
               />
             </Stack>
             <Stack direction="row">
-              <Typography sx={{ pr: { xs: '5%', md: '20%' } }}>{'Shipment Frequency '}</Typography>
+              <Typography sx={{ pr: { xs: '5%', md: '20%' } }}>
+                {t('shipment-frequency')}
+              </Typography>
               <Typography sx={{ fontWeight: 'bold', display: 'flex', pl: '6%' }}>
                 {subscriptionFrequency}
               </Typography>
             </Stack>
             <Stack direction="row">
-              <Typography>{'Estimated Arrival for next delivery'}</Typography>
+              <Typography>{t('estimated-next-arrival-date')}</Typography>
               <Typography sx={{ fontWeight: 'bold', pl: '10px' }}>{nextOrderDate}</Typography>
             </Stack>
           </Stack>

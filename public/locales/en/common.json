@@ -284,5 +284,7 @@
   "edit-shipping-address": "Edit Shipping Address",
   "pause-subscription": "Pause Subscription",
   "subscription-number": "Subscription Number :",
-  "status": "Status : "
+  "status": "Status : ",
+  "shipment-frequency": "Shipment Frequency",
+  "estimated-next-arrival-date": "Estimated Arrival for next delivery"
 }
