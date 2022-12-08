@@ -13,6 +13,10 @@ interface SubscriptionProps {
   subscription: any
 }
 
+interface SubscriptionButtonProps {
+  subscriptionButtonName: string
+}
+
 const style = {
   button: {
     width: {
@@ -44,6 +48,17 @@ const style = {
     },
     justifyContent: 'space-between',
   },
+}
+
+const SubscriptionButton = (props: SubscriptionButtonProps) => {
+  const { subscriptionButtonName } = props
+  const { t } = useTranslation('common')
+
+  return (
+    <Button variant="contained" color="secondary" sx={{ ...style.button }}>
+      {t(subscriptionButtonName)}
+    </Button>
+  )
 }
 
 const MySubscriptionTemplate = (props: SubscriptionProps) => {
@@ -117,30 +132,14 @@ const MySubscriptionTemplate = (props: SubscriptionProps) => {
             </Stack>
           </Stack>
           <Stack direction="column" sx={{ pb: { xs: '5%', lg: '0' } }}>
-            <Button variant="contained" color="secondary" sx={{ ...style.button }}>
-              {t('ship-an-item-now')}
-            </Button>
-            <Button variant="contained" color="secondary" sx={{ ...style.button }}>
-              {t('skip-shipment')}
-            </Button>
-            <Button variant="contained" color="secondary" sx={{ ...style.button }}>
-              {t('edit-frequency')}
-            </Button>
-            <Button variant="contained" color="secondary" sx={{ ...style.button }}>
-              {t('edit-order-date')}
-            </Button>
-            <Button variant="contained" color="secondary" sx={{ ...style.button }}>
-              {t('cancel-an-item')}
-            </Button>
-            <Button variant="contained" color="secondary" sx={{ ...style.button }}>
-              {t('edit-billing-information')}
-            </Button>
-            <Button variant="contained" color="secondary" sx={{ ...style.button }}>
-              {t('edit-shipping-address')}
-            </Button>
-            <Button variant="contained" color="secondary" sx={{ ...style.button }}>
-              {t('pause-subscription')}
-            </Button>
+            <SubscriptionButton subscriptionButtonName="ship-an-item-now" />
+            <SubscriptionButton subscriptionButtonName="skip-shipment" />
+            <SubscriptionButton subscriptionButtonName="edit-frequency" />
+            <SubscriptionButton subscriptionButtonName="edit-order-date" />
+            <SubscriptionButton subscriptionButtonName="cancel-an-item" />
+            <SubscriptionButton subscriptionButtonName="edit-billing-information" />
+            <SubscriptionButton subscriptionButtonName="edit-shipping-address" />
+            <SubscriptionButton subscriptionButtonName="pause-subscription" />
           </Stack>
         </Stack>
       </CardContent>
