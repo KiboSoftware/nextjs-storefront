@@ -17,7 +17,7 @@ const getSubscriptionFrequency = (subscription: any) =>
 
 const nextOrderItemDate = (subscription: any) =>
   subscription?.nextOrderDate
-    ? (format(new Date(subscription?.nextOrderDate), 'MMMM dd, yyyy') as string)
+    ? (format(new Date(subscription.nextOrderDate), 'MMMM dd, yyyy') as string)
     : subscription.nextOrderDate
 
 const getSubscriptionNumber = (subscription: any) => subscription?.number

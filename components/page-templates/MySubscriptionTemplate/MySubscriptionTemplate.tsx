@@ -1,6 +1,6 @@
 import React from 'react'
 
-import { Card, Stack, Typography, CardContent, Button, Grid } from '@mui/material'
+import { Card, Stack, Typography, CardContent, Button } from '@mui/material'
 import { useTranslation } from 'next-i18next'
 
 import { ProductItem } from '@/components/common'
