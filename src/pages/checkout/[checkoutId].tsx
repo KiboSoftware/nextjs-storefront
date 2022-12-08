@@ -9,12 +9,12 @@ import {
 import { CheckoutStepProvider } from '@/context/CheckoutStepContext/CheckoutStepContext'
 import { getCheckout, getMultiShipCheckout } from '@/lib/api/operations'
 
-import type { Checkout, Order } from '@/lib/gql/types'
+import type { Checkout, CrOrder } from '@/lib/gql/types'
 import type { NextPage, GetServerSidePropsContext } from 'next'
 
 interface CheckoutPageProps {
   checkoutId: string
-  checkout: any //add generic type
+  checkout: CrOrder | Checkout
   isMultiShipEnabled?: boolean
 }
 
@@ -44,14 +44,14 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
 const CheckoutPage: NextPage<CheckoutPageProps> = (props) => {
   const { t } = useTranslation('common')
   const steps = [t('details'), t('shipping'), t('payment'), t('review')]
-
+  const { checkout, ...rest } = props
   return (
     <>
       <CheckoutStepProvider steps={steps}>
         {props.isMultiShipEnabled ? (
-          <MultiShipCheckoutTemplate {...props} />
+          <MultiShipCheckoutTemplate {...rest} checkout={checkout as Checkout} />
         ) : (
-          <StandardShipCheckoutTemplate {...props} />
+          <StandardShipCheckoutTemplate {...rest} checkout={checkout as CrOrder} />
         )}
       </CheckoutStepProvider>
     </>

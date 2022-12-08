@@ -7,7 +7,7 @@ import { makeGraphQLClient } from '@/lib/gql/client'
 import { setPersonalInfo } from '@/lib/gql/mutations'
 import { checkoutKeys } from '@/lib/react-query/queryKeys'
 
-import type { OrderInput } from '@/lib/gql/types'
+import type { CrOrderInput } from '@/lib/gql/types'
 
 /**
  * @hidden
@@ -16,7 +16,7 @@ export interface PersonalInfo {
   orderId: string
   updateMode: string
   version?: string
-  orderInput: OrderInput
+  orderInput: CrOrderInput
 }
 
 const updatePersonalInfo = async (personalInfo: PersonalInfo) => {

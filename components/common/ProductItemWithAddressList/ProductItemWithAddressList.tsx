@@ -1,28 +1,24 @@
-import React, { useState } from 'react'
+import React from 'react'
 
-import {
-  Stack,
-  Divider,
-  Box,
-  MenuItem,
-  Card,
-  SxProps,
-  Theme,
-  Typography,
-  Link,
-} from '@mui/material'
+import { Divider, Box, MenuItem, Card, Link } from '@mui/material'
 import { useTranslation } from 'next-i18next'
 
+import { CustomDestinationInput } from '@/components/checkout/MultiShippingStep/MultiShippingStep'
 import { KiboSelect, ProductItem } from '@/components/common'
 import { orderGetters, productGetters, checkoutGetters } from '@/lib/getters'
 
-import type { Maybe, CrOrderItem, CrProduct, Contact, Checkout, Destination } from '@/lib/gql/types'
+import type { Maybe, CrOrderItem, CrProduct, Checkout, CrContact } from '@/lib/gql/types'
+
+type MultiShipAddress = {
+  destinationId: string
+  address: CrContact
+}
 
 export type ProductItemWithAddressListProps = {
   checkout: Checkout
-  multiShipAddresses: any
-  createOrSetDestinationAddress: (id: string, destinationIdOrAddressId: string) => any
-  onUpdateDestinationAddress: (params?: any) => any
+  multiShipAddresses: MultiShipAddress[]
+  onSelectCreateOrSetDestinationAddress: (id: string, destinationIdOrAddressId: string) => void
+  onUpdateDestinationAddress: (params: { destinationInput: CustomDestinationInput }) => void
 }
 
 const styles = {
@@ -65,31 +61,30 @@ const ProductItemWithAddressList = (props: ProductItemWithAddressListProps) => {
   const {
     checkout,
     multiShipAddresses,
-    createOrSetDestinationAddress,
+    onSelectCreateOrSetDestinationAddress,
     onUpdateDestinationAddress,
   } = props
 
   const { t } = useTranslation('common')
-  const handleEditDestination = (item) => {
-    console.log('handleEditDestination : ', item)
-    console.log('multiShipAddresses : ', multiShipAddresses)
-    const contact = multiShipAddresses.find(
-      (address) => address.destinationId === item.destinationId
+  const handleEditDestination = (item: Maybe<CrOrderItem>) => {
+    const contact = multiShipAddresses?.find(
+      (address) => address.destinationId === item?.destinationId
     )
-    // need to handle
-    console.log('edit address')
     onUpdateDestinationAddress({
-      destinationInput: { ...contact.address, destinationId: item.destinationId, itemId: item.id },
+      destinationInput: {
+        ...contact?.address,
+        destinationId: item?.destinationId as string,
+        itemId: item?.id as string,
+      },
     })
   }
-  const handleAddDestination = (item) => {
-    console.log('add address:', item)
+  const handleAddDestination = (item: Maybe<CrOrderItem>) => {
     onUpdateDestinationAddress({
-      destinationInput: { itemId: item.id },
+      destinationInput: { itemId: item?.id as string },
     })
   }
   const handleSplitAddress = () => {
-    console.log('split address')
+    console.log('split address need to be implemented when api will be available')
   }
 
   return (
@@ -116,7 +111,9 @@ const ProductItemWithAddressList = (props: ProductItemWithAddressListProps) => {
             <Box sx={{ ...styles.subContainer, display: 'flex', flexDirection: 'column' }}>
               <KiboSelect
                 name="multiShipAddresses"
-                onChange={(_name, value) => createOrSetDestinationAddress(item?.id, value)}
+                onChange={(_name, value) =>
+                  onSelectCreateOrSetDestinationAddress(item?.id as string, value)
+                }
                 placeholder={t('select-a-saved-address')}
                 value={item?.destinationId as string}
               >

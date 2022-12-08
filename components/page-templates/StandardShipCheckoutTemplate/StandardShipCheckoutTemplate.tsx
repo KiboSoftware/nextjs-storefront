@@ -3,12 +3,7 @@ import React, { useState } from 'react'
 import { useTranslation } from 'next-i18next'
 import { useRouter } from 'next/router'
 
-import {
-  DetailsStep,
-  ReviewStep,
-  PaymentStep,
-  StandardShippingStep,
-} from '@/components/checkout'
+import { DetailsStep, ReviewStep, PaymentStep, StandardShippingStep } from '@/components/checkout'
 import { PersonalDetails } from '@/components/checkout/DetailsStep/DetailsStep'
 import { CheckoutUITemplate } from '@/components/page-templates'
 import { useCheckoutStepContext, useAuthContext } from '@/context'
@@ -22,10 +17,10 @@ import {
 } from '@/hooks'
 import { userGetters } from '@/lib/getters'
 
-import type { CustomerContact, Order, OrderInput } from '@/lib/gql/types'
+import type { CustomerContact, CrOrder, CrOrderInput } from '@/lib/gql/types'
 
 interface CheckoutProps {
-  checkout: Order
+  checkout: CrOrder
 }
 
 const StandardShipCheckoutTemplate = (props: CheckoutProps) => {
@@ -33,8 +28,6 @@ const StandardShipCheckoutTemplate = (props: CheckoutProps) => {
   const router = useRouter()
   const [promoError, setPromoError] = useState<string>('')
   const { checkoutId } = router.query
-
-  const { t } = useTranslation('common')
 
   const { data: checkout } = useCheckoutQueries({
     checkoutId: checkoutId as string,
@@ -88,7 +81,7 @@ const StandardShipCheckoutTemplate = (props: CheckoutProps) => {
       orderId: checkout?.id as string,
       updateMode: 'ApplyToOriginal',
       orderInput: {
-        ...(checkout as OrderInput),
+        ...(checkout as CrOrderInput),
         email,
       },
     }
@@ -98,7 +91,7 @@ const StandardShipCheckoutTemplate = (props: CheckoutProps) => {
   return (
     <>
       <CheckoutUITemplate
-        checkout={checkout as Order}
+        checkout={checkout as CrOrder}
         handleApplyCouponCode={handleApplyCouponCode}
         handleRemoveCouponCode={handleRemoveCouponCode}
         isSuccess={isSuccess}
@@ -108,13 +101,13 @@ const StandardShipCheckoutTemplate = (props: CheckoutProps) => {
         <DetailsStep checkout={checkout} updateCheckoutPersonalInfo={updateCheckoutPersonalInfo} />
         {((isAuthenticated && isSuccess) || !isAuthenticated) && (
           <StandardShippingStep
-            checkout={checkout as Order}
+            checkout={checkout as CrOrder}
             userShippingAddress={userShippingAddress}
             isAuthenticated={isAuthenticated}
           />
         )}
         <PaymentStep checkout={checkout} />
-        <ReviewStep checkout={checkout as Order} onBackButtonClick={handleBack} />
+        <ReviewStep checkout={checkout as CrOrder} onBackButtonClick={handleBack} />
       </CheckoutUITemplate>
     </>
   )

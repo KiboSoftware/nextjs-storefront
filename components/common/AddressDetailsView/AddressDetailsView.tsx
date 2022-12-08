@@ -8,7 +8,7 @@ import { AddressCard, KiboRadio } from '@/components/common'
 import type { CrAddress } from '@/lib/gql/types'
 
 interface AddressDetailsViewProps extends CrAddress {
-  id?: number
+  id?: number | string
   firstName?: string
   middleNameOrInitial?: string
   lastNameOrSurname?: string
