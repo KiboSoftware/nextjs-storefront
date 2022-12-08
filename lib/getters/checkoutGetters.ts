@@ -1,11 +1,11 @@
 import lodash from 'lodash'
 
-import type { CrOrderItem, Checkout, Maybe, Destination, Contact } from '@/lib/gql/types'
+import type { CrOrderItem, Checkout, Maybe, CrDestination, Contact } from '@/lib/gql/types'
 
 interface DestinationItemGroup {
   destinationId: string
   groupingId: string
-  destination: Maybe<Destination> | undefined
+  destination: Maybe<CrDestination> | undefined
   items: Maybe<CrOrderItem>[] | undefined
 }
 
@@ -31,7 +31,7 @@ const buildItemsGroupFromCheckoutGroupings = (checkout: Checkout) => {
 
 const formatDestinationAddress = (contact: Contact) => {
   const { firstName, lastNameOrSurname, address } = contact
-  return `${firstName}, ${lastNameOrSurname}, ${address?.address1}, ${address?.address2}, ${address?.cityOrTown}, ${address?.stateOrProvince}, ${address?.postalOrZipCode}, ${address?.countryCode} `
+  return `${firstName} ${lastNameOrSurname}, ${address?.address1}, ${address?.address2}, ${address?.cityOrTown}, ${address?.stateOrProvince}, ${address?.postalOrZipCode}, ${address?.countryCode} `
 }
 
 const getMultiShipAddresses = ({ checkout, savedShippingAddresses }) => {

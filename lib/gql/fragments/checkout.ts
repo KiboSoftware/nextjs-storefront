@@ -44,7 +44,7 @@ export const checkoutLineItemFragment = /* GraphQL */ `
 `
 
 export const baseCheckoutFragment = /* GraphQL */ `
-  fragment baseCheckoutFragment on Order {
+  fragment baseCheckoutFragment on CrOrder {
     id
     email
     totalCollected
@@ -184,7 +184,7 @@ export const fullfillmentInfoFragment = /* GraphQL */ `
 `
 
 export const checkoutPaymentFragment = /* GraphQL */ `
-  fragment checkoutPaymentFragment on Payment {
+  fragment checkoutPaymentFragment on CrPayment {
     id
     paymentType
     status
