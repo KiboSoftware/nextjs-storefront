@@ -1,6 +1,6 @@
 import React from 'react'
 
-import { Stack, Divider, Typography } from '@mui/material'
+import { Stack, Divider, Typography, Box } from '@mui/material'
 import { useTranslation } from 'next-i18next'
 
 import { ProductItem } from '..'
@@ -36,38 +36,63 @@ const ReviewProductItemsWithAddresses = (props: ReviewProductItemsWithAddressesP
             <Typography
               variant="h4"
               component="h4"
-              sx={{ fontWeight: 'bold' }}
+              fontWeight={600}
               color="text.primary"
+              sx={{ display: 'flex' }}
             >
               {t('ship-to')}
-              <Typography
-                variant="h4"
-                component="span"
-                color="text.primary"
-                sx={{ textTransform: 'capitalize' }}
-              >
-                {' '}
-                {addressGetters.getAddress1(
-                  userShippingAddresses[index]?.address as CrAddress
-                )}{' '}
-                {addressGetters.getAddress2(userShippingAddresses[index]?.address as CrAddress)}{' '}
-                {addressGetters.getCityOrTown(userShippingAddresses[index]?.address as CrAddress)}{' '}
-                {addressGetters.getStateOrProvince(
-                  userShippingAddresses[index]?.address as CrAddress
-                )}{' '}
-                {addressGetters.getPostalOrZipCode(
-                  userShippingAddresses[index]?.address as CrAddress
-                )}{' '}
-              </Typography>
+
+              <Box display="flex">
+                <Typography
+                  variant="h4"
+                  color="text.primary"
+                  sx={{
+                    '&::after': { content: "','", pr: 0.5 },
+                    paddingLeft: '4px',
+                    textTransform: 'capitalize',
+                  }}
+                >
+                  {addressGetters.getAddress1(userShippingAddresses[index]?.address as CrAddress)}
+                </Typography>
+                <Typography
+                  variant="h4"
+                  color="text.primary"
+                  sx={{ '&::after': { content: "','", pr: 0.5 }, textTransform: 'capitalize' }}
+                >
+                  {addressGetters.getAddress2(userShippingAddresses[index]?.address as CrAddress)}
+                </Typography>
+                <Typography
+                  variant="h4"
+                  color="text.primary"
+                  sx={{ '&::after': { content: "','", pr: 0.5 }, textTransform: 'capitalize' }}
+                >
+                  {addressGetters.getCityOrTown(userShippingAddresses[index]?.address as CrAddress)}
+                </Typography>
+                <Typography
+                  variant="h4"
+                  color="text.primary"
+                  sx={{ '&::after': { content: "', '", pr: 0.5 }, textTransform: 'capitalize' }}
+                >
+                  {addressGetters.getStateOrProvince(
+                    userShippingAddresses[index]?.address as CrAddress
+                  )}
+                </Typography>
+                <Typography variant="h4" color="text.primary" sx={{ textTransform: 'capitalize' }}>
+                  {addressGetters.getPostalOrZipCode(
+                    userShippingAddresses[index]?.address as CrAddress
+                  )}
+                </Typography>
+              </Box>
             </Typography>
 
+            {/* To be mapped with actual result from API */}
             <Typography
               variant="h4"
               component="h4"
               sx={{ fontWeight: 'bold', marginTop: '0' }}
               color="primary"
             >
-              {t('est-arrival')} Mon 20, Dec
+              {t('est-arrival')}
             </Typography>
 
             <Stack key={item?.id}>

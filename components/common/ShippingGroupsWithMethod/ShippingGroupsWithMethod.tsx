@@ -1,16 +1,6 @@
 import React, { useState } from 'react'
 
-import {
-  Stack,
-  Divider,
-  Box,
-  MenuItem,
-  Card,
-  SxProps,
-  Theme,
-  Typography,
-  Link,
-} from '@mui/material'
+import { Divider, Box, MenuItem, Card, Typography, Link } from '@mui/material'
 import { useTranslation } from 'next-i18next'
 
 import { KiboSelect, ProductItem } from '@/components/common'

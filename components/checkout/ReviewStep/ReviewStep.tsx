@@ -15,7 +15,6 @@ import {
   SxProps,
 } from '@mui/material'
 import { useTranslation } from 'next-i18next'
-import getConfig from 'next/config'
 import { useForm, Controller } from 'react-hook-form'
 import * as yup from 'yup'
 
@@ -46,6 +45,7 @@ export interface PersonalDetails {
 interface ReviewStepProps {
   checkout: Order
   onBackButtonClick: () => void
+  isMultiShipEnabled: boolean
 }
 
 const buttonStyle = {
@@ -94,8 +94,7 @@ const useDetailsSchema = () => {
 }
 
 const ReviewStep = (props: ReviewStepProps) => {
-  const { checkout, onBackButtonClick } = props
-  const { publicRuntimeConfig } = getConfig()
+  const { checkout, onBackButtonClick, isMultiShipEnabled } = props
 
   const { t } = useTranslation('common')
   const theme = useTheme()
@@ -175,8 +174,6 @@ const ReviewStep = (props: ReviewStepProps) => {
     total: t('currency', { val: total }),
   }
 
-  const isMultiShipEnabled = publicRuntimeConfig.isMultiShipEnabled
-
   return (
     <Box data-testid={'review-step-component'}>
       <Typography variant="h2" component="h2" sx={{ fontWeight: 'bold' }} color="text.primary">
@@ -198,7 +195,7 @@ const ReviewStep = (props: ReviewStepProps) => {
       {/* multiShip array will be used later after API is handled instead on shipItems */}
       {isMultiShipEnabled && shipItems && shipItems.length > 0 && (
         <Stack gap={4}>
-          <Typography variant="h3" component="h3" sx={{ fontWeight: 'bold' }} color="text.primary">
+          <Typography variant="h3" component="h3" fontWeight={600} color="text.primary">
             {t('shipping-to-address')}
           </Typography>
           <ReviewProductItemsWithAddresses items={shipItems} />
