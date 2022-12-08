@@ -26,7 +26,6 @@ import type {
   CrShippingRate,
   Maybe,
 } from '@/lib/gql/types'
-
 interface CheckoutProps {
   checkout: Checkout
 }

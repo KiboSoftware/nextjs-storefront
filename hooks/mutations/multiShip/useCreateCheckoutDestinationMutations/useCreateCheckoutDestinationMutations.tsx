@@ -4,7 +4,7 @@ import { makeGraphQLClient } from '@/lib/gql/client'
 import { createCheckoutDestination } from '@/lib/gql/mutations'
 import { checkoutDestinationKeys, checkoutKeys } from '@/lib/react-query/queryKeys'
 
-import type { CrDestinationInput } from '@/lib/gql/types'
+import type { CrDestination, CrDestinationInput } from '@/lib/gql/types'
 
 export interface AddCheckoutDestinationParams {
   checkoutId: string
@@ -22,7 +22,7 @@ const addCheckoutDestination = async (params: AddCheckoutDestinationParams) => {
   return response?.createCheckoutDestination
 }
 
-export const useCreateCheckoutDestinationMutations = () => {
+export const useCreateCheckoutDestinationMutations = (): CrDestination => {
   const queryClient = useQueryClient()
 
   return useMutation(addCheckoutDestination, {
