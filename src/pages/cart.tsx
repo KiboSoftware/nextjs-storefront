@@ -15,7 +15,7 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
   return {
     props: {
       isMultiShipEnabled,
-      cart: response?.currentCart,
+      cart: response?.currentCart || null,
       ...(await serverSideTranslations(locale as string, ['common'])),
     },
   }
