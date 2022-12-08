@@ -28,3 +28,4 @@ export { default as updateCheckoutCouponMutation } from './coupon/updateCheckout
 export { default as deleteCheckoutCouponMutation } from './coupon/deleteCheckoutCouponMutation'
 export { default as checkoutPaymentActionMutation } from './checkout/create-checkout-payment-action-mutation'
 export { default as setMultiShipPersonalInfo } from './checkout/multi-ship-personal-info'
+export { default as createCheckoutActionMutation } from './checkout/create-checkout-action-mutation'

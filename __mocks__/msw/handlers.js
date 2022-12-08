@@ -111,6 +111,10 @@ export const checkoutHandlers = [
   graphql.mutation('updateCheckout', (_req, res, ctx) => {
     return res(ctx.data(checkoutMock))
   }),
+  // Multiship
+  graphql.mutation('createCheckoutAction', (_req, res, ctx) => {
+    return res(ctx.data({ createCheckoutAction: checkoutMock }))
+  }),
 ]
 
 export const accountHandlers = [

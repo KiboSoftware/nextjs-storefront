@@ -68,3 +68,6 @@ export * from './mutations/useCouponMutations/useDeleteOrderCouponMutation/useDe
 
 export * from './mutations/useProfile/useUpdateUserData/useUpdateUserData'
 export * from './mutations/useProfile/useUpdateUserPassword/useUpdateUserPassword'
+
+// MultiShip
+export * from './mutations/multiShip/useCreateCheckoutActionMutation/useCreateCheckoutActionMutation'
