@@ -113,7 +113,7 @@ const ShippingGroupsWithMethod = (props: ShippingGroupsWithMethodProps) => {
   ]
 
   const [selectShippingOptions, setSelectShippingOptions] = useState<any>({})
-  const hanndleSelectShippingOption = (id: number, value: string) => {
+  const handleSelectShippingOption = (id: number, value: string) => {
     // need to modify as per API response
     setSelectShippingOptions({ ...selectShippingOptions, [id]: value })
   }
@@ -172,7 +172,7 @@ const ShippingGroupsWithMethod = (props: ShippingGroupsWithMethodProps) => {
                 name="shippingMethods"
                 placeholder={t('select-shipping-option')}
                 sx={{ ...styles.shippingMethods }}
-                onChange={(_name, value) => hanndleSelectShippingOption(index, value)}
+                onChange={(_name, value) => handleSelectShippingOption(index, value)}
                 value={selectShippingOptions[index]}
               >
                 {shipmentMethods?.map((item: ShippingRate) => {

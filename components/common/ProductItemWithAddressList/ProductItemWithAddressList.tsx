@@ -151,10 +151,10 @@ const ProductItemWithAddressList = (props: ProductItemWithAddressListProps) => {
                 value={selectedAddresses[index]}
               >
                 {destinationContacts?.map((contact: Contact) => {
-                  const formatedAddress = `${contact?.address?.address1}, ${contact?.address?.address2}, ${contact?.address?.cityOrTown}, ${contact?.address?.stateOrProvince}, ${contact?.address?.postalOrZipCode}, ${contact?.address?.countryCode} `
+                  const formattedAddress = `${contact?.address?.address1}, ${contact?.address?.address2}, ${contact?.address?.cityOrTown}, ${contact?.address?.stateOrProvince}, ${contact?.address?.postalOrZipCode}, ${contact?.address?.countryCode} `
                   return (
                     <MenuItem key={contact.id} value={`${contact.id}`}>
-                      {formatedAddress}
+                      {formattedAddress}
                     </MenuItem>
                   )
                 })}

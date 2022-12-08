@@ -1,13 +1,11 @@
 import { renderHook } from '@testing-library/react-hooks'
 
 import { useUpdateCheckoutItemDestinationMutations } from './useUpdateCheckoutItemDestinationMutations'
-import { checkoutResponse } from '@/__mocks__/stories'
+import { checkoutMock } from '@/__mocks__/stories'
 import { createQueryClientWrapper } from '@/__test__/utils/renderWithQueryClient'
 
 describe('[hooks] useUpdateCheckoutItemDestinationMutations', () => {
   it('should use useUpdateCheckoutItemDestinationMutations', async () => {
-    const checkoutItemDestination = checkoutResponse
-
     renderHook(
       async () => {
         const updateCheckoutItemDestination = useUpdateCheckoutItemDestinationMutations()
@@ -17,7 +15,7 @@ describe('[hooks] useUpdateCheckoutItemDestinationMutations', () => {
           destinationId: '',
         })
 
-        expect(response).toEqual(checkoutItemDestination)
+        expect(response).toEqual(checkoutMock)
       },
       {
         wrapper: createQueryClientWrapper(),
