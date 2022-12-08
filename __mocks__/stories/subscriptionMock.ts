@@ -575,7 +575,6 @@ export const subscriptionResponse: any = {
     isTaxExempt: false,
     currencyCode: 'USD',
     channelCode: 'RETAIL',
-    ipAddress: '49.36.100.53',
     customerInteractionType: 'Unknown',
     frequency: {
       unit: 'Month',

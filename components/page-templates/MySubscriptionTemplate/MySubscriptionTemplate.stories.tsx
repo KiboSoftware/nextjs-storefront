@@ -6,7 +6,7 @@ import MySubscriptionTemplate from './MySubscriptionTemplate'
 import { subscriptionResponse } from '@/__mocks__/stories/subscriptionMock'
 
 export default {
-  title: 'Page Templates/MySubscription Template',
+  title: 'MySubscription Template/MySubscription Template',
   component: MySubscriptionTemplate,
   argTypes: { onChange: { action: 'onChange' } },
   parameters: {

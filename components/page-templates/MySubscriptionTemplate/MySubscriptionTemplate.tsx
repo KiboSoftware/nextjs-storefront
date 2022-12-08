@@ -95,14 +95,16 @@ const MySubscriptionTemplate = (props: SubscriptionProps) => {
       <CardContent>
         <Stack direction={{ xs: 'column-reverse', md: 'row' }} sx={{ ...style.subscriptionItem }}>
           <Stack direction="column" sx={{ pt: { xs: '5 %' } }}>
-            <ProductItem
-              image={productGetters.handleProtocolRelativeUrl(
-                productGetters.getProductImage(subscription?.items[0]?.product as CrProduct)
-              )}
-              name={productGetters.getName(subscription?.items[0]?.product as CrProduct)}
-              options={productGetters.getOptions(subscription?.items[0]?.product as CrProduct)}
-              link={getProductLink(subscription?.items[0]?.product?.productCode as string)}
-            />
+            <Stack direction="row" sx={{ mt: { md: '3%' } }}>
+              <ProductItem
+                image={productGetters.handleProtocolRelativeUrl(
+                  productGetters.getProductImage(subscription?.items[0]?.product as CrProduct)
+                )}
+                name={productGetters.getName(subscription?.items[0]?.product as CrProduct)}
+                options={productGetters.getOptions(subscription?.items[0]?.product as CrProduct)}
+                link={getProductLink(subscription?.items[0]?.product?.productCode as string)}
+              />
+            </Stack>
             <Stack direction="row">
               <Typography sx={{ pr: { xs: '5%', md: '20%' } }}>{'Shipment Frequency '}</Typography>
               <Typography sx={{ fontWeight: 'bold', display: 'flex', pl: '6%' }}>
@@ -114,29 +116,29 @@ const MySubscriptionTemplate = (props: SubscriptionProps) => {
               <Typography sx={{ fontWeight: 'bold', pl: '10px' }}>{nextOrderDate}</Typography>
             </Stack>
           </Stack>
-          <Stack direction="column" sx={{ pb: '5%' }}>
-            <Button variant="contained" color="primary" sx={{ ...style.button }}>
+          <Stack direction="column" sx={{ pb: { xs: '5%', lg: '0' } }}>
+            <Button variant="contained" color="secondary" sx={{ ...style.button }}>
               {t('ship-an-item-now')}
             </Button>
-            <Button variant="contained" color="primary" sx={{ ...style.button }}>
+            <Button variant="contained" color="secondary" sx={{ ...style.button }}>
               {t('skip-shipment')}
             </Button>
-            <Button variant="contained" color="primary" sx={{ ...style.button }}>
+            <Button variant="contained" color="secondary" sx={{ ...style.button }}>
               {t('edit-frequency')}
             </Button>
-            <Button variant="contained" color="primary" sx={{ ...style.button }}>
+            <Button variant="contained" color="secondary" sx={{ ...style.button }}>
               {t('edit-order-date')}
             </Button>
-            <Button variant="contained" color="primary" sx={{ ...style.button }}>
+            <Button variant="contained" color="secondary" sx={{ ...style.button }}>
               {t('cancel-an-item')}
             </Button>
-            <Button variant="contained" color="primary" sx={{ ...style.button }}>
+            <Button variant="contained" color="secondary" sx={{ ...style.button }}>
               {t('edit-billing-information')}
             </Button>
-            <Button variant="contained" color="primary" sx={{ ...style.button }}>
+            <Button variant="contained" color="secondary" sx={{ ...style.button }}>
               {t('edit-shipping-address')}
             </Button>
-            <Button variant="contained" color="primary" sx={{ ...style.button }}>
+            <Button variant="contained" color="secondary" sx={{ ...style.button }}>
               {t('pause-subscription')}
             </Button>
           </Stack>
