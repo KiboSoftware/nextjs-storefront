@@ -11,7 +11,7 @@ import { useUpdateCheckoutShippingInfoMutation, useShippingMethodsQueries } from
 import { DefaultId } from '@/lib/constants'
 import { orderGetters, userGetters } from '@/lib/getters'
 
-import type { Order, CrOrderItem, Contact, CustomerContact } from '@/lib/gql/types'
+import type { CrOrder, CrOrderItem, CrContact, CustomerContact } from '@/lib/gql/types'
 
 const buttonStyle = {
   width: '100%',
@@ -22,7 +22,7 @@ const buttonStyle = {
 
 interface ShippingProps {
   setAutoFocus?: boolean
-  checkout: Order
+  checkout: CrOrder
   userShippingAddress?: CustomerContact[]
   isAuthenticated: boolean
 }
@@ -87,7 +87,7 @@ const StandardShippingStep = (props: ShippingProps) => {
 
   const handleAddressValidationAndSave = () => setValidateForm(true)
 
-  const handleSaveAddress = async ({ contact }: { contact: Contact }) => {
+  const handleSaveAddress = async ({ contact }: { contact: CrContact }) => {
     try {
       await updateCheckoutShippingInfo.mutateAsync({ checkout, contact })
       setCheckoutId(checkout?.id)
@@ -138,7 +138,7 @@ const StandardShippingStep = (props: ShippingProps) => {
       (address) => address?.id === Number(addressId)
     )
     if (selectedAddress?.id) {
-      const contact: Contact = {
+      const contact: CrContact = {
         id: selectedAddress?.id,
         firstName: selectedAddress?.firstName || '',
         lastNameOrSurname: selectedAddress?.lastNameOrSurname || '',

@@ -1,6 +1,5 @@
 import React, { useState } from 'react'
 
-import { useTranslation } from 'next-i18next'
 import { useRouter } from 'next/router'
 
 import { DetailsStep, MultiShippingStep } from '@/components/checkout'
@@ -20,7 +19,13 @@ import {
 } from '@/hooks'
 import { userGetters } from '@/lib/getters'
 
-import type { CustomerContact, Checkout } from '@/lib/gql/types'
+import type {
+  CustomerContact,
+  Checkout,
+  CheckoutGroupRates,
+  CrShippingRate,
+  Maybe,
+} from '@/lib/gql/types'
 interface CheckoutProps {
   checkout: Checkout
 }
@@ -29,15 +34,12 @@ const MultiShipCheckoutTemplate = (props: CheckoutProps) => {
   const { checkout: initialCheckout } = props
 
   const router = useRouter()
-  const { checkoutId: queryCheckoutId } = router.query
+  const { checkoutId } = router.query
   // States
   const [promoError, setPromoError] = useState<string>('')
-  const [checkoutId, setCheckoutId] = useState<string | null | undefined>(queryCheckoutId as string)
   const [isNewAddressAdded, setIsNewAddressAdded] = useState<boolean>(false)
-  const [selectedShippingAddressId, setSelectedShippingAddressId] = useState<string>(0)
 
   // Hooks
-  const { t } = useTranslation('common')
   const { data: checkout } = useMultiShipCheckoutQueries({
     checkoutId: checkoutId as string,
     initialCheckout,
@@ -47,7 +49,7 @@ const MultiShipCheckoutTemplate = (props: CheckoutProps) => {
   const createCheckoutShippingMethod = useCreateCheckoutShippingMethodMutation()
 
   const { data: shippingMethods } = useCheckoutShippingMethodsQuery(
-    checkoutId,
+    checkoutId as string,
     isNewAddressAdded,
     checkout?.groupings && (checkout?.groupings[0]?.destinationId as string)
   )
@@ -95,10 +97,14 @@ const MultiShipCheckoutTemplate = (props: CheckoutProps) => {
     savedUserAddressData?.items as CustomerContact[]
   )
 
-  const updateCheckoutShippingMethod = async (params) => {
+  const updateCheckoutShippingMethod = async (params: {
+    shippingMethodGroup: CheckoutGroupRates
+    shippingMethodCode: string
+  }) => {
     const { shippingMethodGroup, shippingMethodCode } = params
     const shippingRate = shippingMethodGroup?.shippingRates?.find(
-      (shippingRate) => shippingRate?.shippingMethodCode === shippingMethodCode
+      (shippingRate: Maybe<CrShippingRate>) =>
+        shippingRate?.shippingMethodCode === shippingMethodCode
     )
     await createCheckoutShippingMethod.mutateAsync({
       checkoutId: checkout?.id as string,
@@ -114,7 +120,7 @@ const MultiShipCheckoutTemplate = (props: CheckoutProps) => {
   return (
     <>
       <CheckoutUITemplate
-        checkout={checkout as Order}
+        checkout={checkout as Checkout}
         handleApplyCouponCode={handleApplyCouponCode}
         handleRemoveCouponCode={handleRemoveCouponCode}
         isSuccess={isSuccess}
@@ -127,12 +133,9 @@ const MultiShipCheckoutTemplate = (props: CheckoutProps) => {
             checkout={checkout as Checkout}
             userShippingAddress={userShippingAddress}
             isAuthenticated={isAuthenticated}
-            shippingMethods={shippingMethods} //@to-do use multiRate api
-            setCheckoutId={setCheckoutId}
+            shippingMethods={shippingMethods}
             setIsNewAddressAdded={setIsNewAddressAdded}
-            setSelectedShippingAddressId={setSelectedShippingAddressId}
             isNewAddressAdded={isNewAddressAdded}
-            selectedShippingAddressId={selectedShippingAddressId}
             createCheckoutDestination={createCheckoutDestination}
             onUpdateCheckoutShippingMethod={updateCheckoutShippingMethod}
           />

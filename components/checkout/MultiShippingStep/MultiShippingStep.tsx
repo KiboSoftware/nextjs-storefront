@@ -23,7 +23,13 @@ import {
 import { DefaultId } from '@/lib/constants'
 import { orderGetters, userGetters, checkoutGetters } from '@/lib/getters'
 
-import type { CrOrderItem, Contact, CrContact, CustomerContact, Checkout } from '@/lib/gql/types'
+import type {
+  CrOrderItem,
+  CrContact,
+  CustomerContact,
+  Checkout,
+  CheckoutGroupRates,
+} from '@/lib/gql/types'
 
 const buttonStyle = {
   width: '100%',
@@ -37,19 +43,19 @@ interface ShippingProps {
   checkout: Checkout
   userShippingAddress?: CustomerContact[]
   isAuthenticated: boolean
-  shippingMethods: any
+  shippingMethods: CheckoutGroupRates[]
   checkoutId?: string
   isNewAddressAdded: boolean
-  selectedShippingAddressId: number | string
-  setCheckoutId: (params: any) => void
-  setIsNewAddressAdded: (params: any) => void
-  setSelectedShippingAddressId: (params: any) => void
+  setIsNewAddressAdded: (params: boolean) => void
   createCheckoutDestination: any
-  onUpdateCheckoutShippingMethod: (params: any) => void
+  onUpdateCheckoutShippingMethod: (params: {
+    shippingMethodGroup?: CheckoutGroupRates
+    shippingMethodCode: string
+  }) => void
 }
 
-interface CustomDestinationInput extends Contact {
-  destinationId: string
+export interface CustomDestinationInput extends CrContact {
+  destinationId?: string
   itemId: string
 }
 
@@ -58,6 +64,19 @@ interface UpdateItemDestinationParams {
   destinationId: string
   checkoutId: string
 }
+interface ShippingDestination {
+  destinationId: string
+  address: CrContact
+}
+
+type ShipOption = {
+  value: string
+  code: string
+  name: string
+  label: string
+  shortName: string
+}
+
 const MultiShippingStep = (props: ShippingProps) => {
   const {
     checkout,
@@ -65,10 +84,7 @@ const MultiShippingStep = (props: ShippingProps) => {
     isAuthenticated,
     shippingMethods,
     isNewAddressAdded,
-    selectedShippingAddressId,
-    setCheckoutId,
     setIsNewAddressAdded,
-    setSelectedShippingAddressId,
     createCheckoutDestination,
     onUpdateCheckoutShippingMethod,
   } = props
@@ -179,7 +195,7 @@ const MultiShippingStep = (props: ShippingProps) => {
     }
   }
 
-  const handleSaveAddress = async ({ contact }: { contact: Contact }) => {
+  const handleSaveAddress = async ({ contact }: { contact: CrContact }) => {
     try {
       const destination = await createCheckoutDestination.mutateAsync({
         checkoutId: checkout?.id as string,
@@ -191,8 +207,6 @@ const MultiShippingStep = (props: ShippingProps) => {
       if (destination?.id) {
         await updateSameDestinationForAllItems({ destinationId: destination?.id as string })
 
-        setCheckoutId(checkout?.id)
-        setSelectedShippingAddressId(destination?.id as string)
         setShouldShowAddAddressButton(true)
         setValidateForm(false)
         setIsNewAddressAdded(true)
@@ -208,10 +222,13 @@ const MultiShippingStep = (props: ShippingProps) => {
     shippingMethodCode: string
   ) => {
     try {
-      const groupingId = checkout?.groupings[0]?.id as string
+      console.log('handleSaveShippingMethod', shippingMethodCode)
+      const groupingId = checkout?.groupings && (checkout?.groupings[0]?.id as string)
+      console.log('groupingId : ', groupingId)
       const shippingMethodGroup = shippingMethods?.find(
-        (shippingMethod) => shippingMethod?.groupingId === groupingId
+        (shippingMethod: CheckoutGroupRates) => shippingMethod?.groupingId === groupingId
       )
+      console.log('shippingMethodGroup : ', shippingMethodGroup)
       onUpdateCheckoutShippingMethod({ shippingMethodGroup, shippingMethodCode })
     } catch (error) {
       console.error(error)
@@ -242,28 +259,33 @@ const MultiShippingStep = (props: ShippingProps) => {
     setIsNewAddressAdded(false)
   }
 
-  const radioOptions = shipOptions.map((option: any) => ({
+  const radioOptions = shipOptions.map((option: ShipOption) => ({
     value: option.value,
     name: option.name,
     label: <Typography variant="body2">{option.label}</Typography>,
   }))
 
   const onChangeShippingOption = async (option: string) => {
-    if (checkout?.groupings?.length > 1 && option === shipOptions[0].value) {
-      const defaultDestinationId = checkout?.groupings[0]?.destinationId as string
+    const groupings = checkout?.groupings
+    if (groupings && groupings?.length > 1 && option === shipOptions[0].value) {
+      const defaultDestinationId = groupings && (groupings[0]?.destinationId as string)
       await updateSameDestinationForAllItems({ destinationId: defaultDestinationId as string })
     }
 
     setShippingOption(option)
   }
 
-  const getSavedShippingAddressView = (contact: any, isPrimary?: boolean): React.ReactNode => {
+  const getSavedShippingAddressView = (
+    contact: ShippingDestination,
+    isPrimary?: boolean
+  ): React.ReactNode => {
     const { destinationId, address } = contact
+    const selectedDestinationId = checkout?.groupings && checkout?.groupings[0]?.destinationId
     return (
       <AddressDetailsView
         key={destinationId + address?.id}
         radio={true}
-        id={destinationId || address?.id}
+        id={(destinationId as string) || (address?.id as number)}
         isPrimary={isPrimary}
         firstName={address?.firstName as string}
         middleNameOrInitial={address?.middleNameOrInitial as string}
@@ -273,7 +295,7 @@ const MultiShippingStep = (props: ShippingProps) => {
         cityOrTown={address?.address?.cityOrTown as string}
         stateOrProvince={address?.address?.stateOrProvince as string}
         postalOrZipCode={address?.address?.postalOrZipCode as string}
-        selected={checkout?.groupings[0]?.destinationId as string}
+        selected={selectedDestinationId as string}
         handleRadioChange={handleAddressSelect}
       />
     )
@@ -317,7 +339,7 @@ const MultiShippingStep = (props: ShippingProps) => {
     }
   }
 
-  const createOrUpdateDestination = (params?: any) => {
+  const createOrUpdateDestination = (params: { destinationInput: CustomDestinationInput }) => {
     // destination
     const { destinationInput } = params
     showModal({
@@ -343,10 +365,6 @@ const MultiShippingStep = (props: ShippingProps) => {
         )
       )
   }, [checkoutShippingContact, isNewAddressAdded])
-
-  useEffect(() => {
-    if (selectedShippingAddressId) setCheckoutId(checkout.id)
-  }, [selectedShippingAddressId])
 
   useEffect(() => {
     if (stepStatus === STEP_STATUS.SUBMIT) {
@@ -398,11 +416,11 @@ const MultiShippingStep = (props: ShippingProps) => {
                   {t('add-new-address')}
                 </Button>
               </Stack>
-              {shippingMethods && shippingMethods[0]?.shippingRates.length > 0 && (
+              {shippingMethods && shippingMethods[0]?.shippingRates?.length > 0 && (
                 <ShippingMethod
                   shipItems={shipItems as CrOrderItem[]}
                   pickupItems={pickupItems as CrOrderItem[]}
-                  orderShipmentMethods={[...shippingMethods[0].shippingRates]}
+                  orderShipmentMethods={[...shippingMethods[0]?.shippingRates]}
                   selectedShippingMethodCode={checkoutShippingMethodCode as string}
                   onShippingMethodChange={handleSaveShippingMethod}
                   onStoreLocatorClick={handleStoreLocatorClick}
@@ -452,7 +470,7 @@ const MultiShippingStep = (props: ShippingProps) => {
                 checkout={checkout}
                 multiShipAddresses={multiShipAddresses}
                 onUpdateDestinationAddress={createOrUpdateDestination}
-                createOrSetDestinationAddress={handleCreateOrSetDestinationAddress}
+                onSelectCreateOrSetDestinationAddress={handleCreateOrSetDestinationAddress}
               />
               <Button
                 variant="contained"
@@ -468,7 +486,7 @@ const MultiShippingStep = (props: ShippingProps) => {
             <ShippingGroupsWithMethod
               checkout={checkout}
               shippingMethods={shippingMethods}
-              onClickEdit={() => setShowMultiShipContinueButton(true)}
+              onClickEditMultiShippingDetails={() => setShowMultiShipContinueButton(true)}
               onUpdateCheckoutShippingMethod={onUpdateCheckoutShippingMethod}
             />
           )}

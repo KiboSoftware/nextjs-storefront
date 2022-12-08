@@ -156,7 +156,7 @@ export const billingContactFragment = /* GraphQL */ `
 `
 
 export const fullfillmentInfoFragment = /* GraphQL */ `
-  fragment fullfillmentInfoFragment on FulfillmentInfo {
+  fragment fullfillmentInfoFragment on CrFulfillmentInfo {
     shippingMethodCode
     shippingMethodName
     fulfillmentContact {

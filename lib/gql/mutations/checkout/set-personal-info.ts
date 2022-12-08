@@ -5,7 +5,7 @@ import {
 } from '../../fragments'
 
 const setPersonalInfo = /* GraphQL */ `
-  mutation setPersonalInfo($orderId: String!, $updateMode: String, $orderInput: OrderInput) {
+  mutation setPersonalInfo($orderId: String!, $updateMode: String, $orderInput: CrOrderInput) {
     checkout: updateOrder(orderId: $orderId, updateMode: $updateMode, orderInput: $orderInput) {
       ...baseCheckoutFragment
       items {

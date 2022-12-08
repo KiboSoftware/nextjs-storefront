@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React from 'react'
 
 import { Divider, Box, MenuItem, Card, Typography, Link } from '@mui/material'
 import { useTranslation } from 'next-i18next'
@@ -6,20 +6,16 @@ import { useTranslation } from 'next-i18next'
 import { KiboSelect, ProductItem } from '@/components/common'
 import { orderGetters, productGetters, checkoutGetters } from '@/lib/getters'
 
-import type {
-  Maybe,
-  CrOrderItem,
-  CrProduct,
-  ShippingRateInput,
-  Checkout,
-  CheckoutGroupRates,
-} from '@/lib/gql/types'
+import type { Maybe, CrOrderItem, CrProduct, Checkout, CheckoutGroupRates } from '@/lib/gql/types'
 
 export type ShippingGroupsWithMethodProps = {
   checkout: Checkout
   shippingMethods: CheckoutGroupRates[]
-  onClickEdit: () => void
-  onUpdateCheckoutShippingMethod: (params: any) => void
+  onClickEditMultiShippingDetails: () => void
+  onUpdateCheckoutShippingMethod: (params: {
+    shippingMethodGroup?: CheckoutGroupRates
+    shippingMethodCode: string
+  }) => void
 }
 
 const styles = {
@@ -28,9 +24,9 @@ const styles = {
     boxShadow: 'none',
     borderRadius: 0,
     justifyContent: 'space-around',
-    pt: '24px',
+    pt: '1.5rem',
     pb: '0px',
-    pr: '13px',
+    pr: '0.813rem',
     display: 'flex',
     flexDirection: {
       xs: 'column',
@@ -48,9 +44,9 @@ const styles = {
     mt: 'auto',
   },
   shippingMethods: {
-    maxWidth: '421px',
+    maxWidth: '26.313rem',
     width: '100%',
-    marginBottom: '30px',
+    marginBottom: '1.875rem',
   },
   multipleAddresses: {
     display: 'flex',
@@ -85,7 +81,12 @@ const ProductGroup = ({ items }: { items: Maybe<CrOrderItem>[] }) => {
 }
 
 const ShippingGroupsWithMethod = (props: ShippingGroupsWithMethodProps) => {
-  const { checkout, shippingMethods, onClickEdit, onUpdateCheckoutShippingMethod } = props
+  const {
+    checkout,
+    shippingMethods,
+    onClickEditMultiShippingDetails,
+    onUpdateCheckoutShippingMethod,
+  } = props
 
   const { t } = useTranslation('common')
 
@@ -95,7 +96,7 @@ const ShippingGroupsWithMethod = (props: ShippingGroupsWithMethodProps) => {
     const shippingMethodGroup = shippingMethods?.find(
       (shippingMethod) => shippingMethod?.groupingId === id
     )
-     onUpdateCheckoutShippingMethod({ shippingMethodGroup, shippingMethodCode: value })
+    onUpdateCheckoutShippingMethod({ shippingMethodGroup, shippingMethodCode: value })
   }
 
   return (
@@ -109,13 +110,13 @@ const ShippingGroupsWithMethod = (props: ShippingGroupsWithMethodProps) => {
           component="button"
           variant="caption"
           color="text.primary"
-          sx={{ padding: '5px' }}
-          onClick={onClickEdit}
+          sx={{ padding: '0.313rem' }}
+          onClick={onClickEditMultiShippingDetails}
         >
           {t('edit')}
         </Link>
       </Box>
-      <Divider sx={{ paddingTop: '18px' }} />
+      <Divider sx={{ paddingTop: '1.125rem' }} />
 
       <Typography variant="h2" component="h2" pt={4.25}>
         {t('shipping-method')}
@@ -133,9 +134,9 @@ const ShippingGroupsWithMethod = (props: ShippingGroupsWithMethodProps) => {
               </Typography>
               <Divider
                 sx={{
-                  marginTop: '8px',
+                  marginTop: '0.5rem',
                   borderColor: 'primary.main',
-                  maxWidth: '421px',
+                  maxWidth: '26.313rem',
                   width: '100%',
                 }}
               />
@@ -143,7 +144,7 @@ const ShippingGroupsWithMethod = (props: ShippingGroupsWithMethodProps) => {
                 <Typography
                   variant="body1"
                   component="span"
-                  sx={{ fontWeight: 'bold', marginRight: '4px' }}
+                  sx={{ fontWeight: 'bold', marginRight: '0.25rem' }}
                 >
                   {t('ship-to')}:
                 </Typography>
@@ -188,8 +189,8 @@ const ShippingGroupsWithMethod = (props: ShippingGroupsWithMethodProps) => {
               />
               <Divider
                 sx={{
-                  marginTop: '22px',
-                  maxWidth: '421px',
+                  marginTop: '1.375rem',
+                  maxWidth: '26.313rem',
                   width: '100%',
                 }}
               />
