@@ -1,5 +1,5 @@
 /**
- * @module query_useCustomerCard
+ * @module useCustomerCardsQueries
  */
 import { useQuery } from 'react-query'
 

@@ -1,5 +1,5 @@
 /**
- * @module query_usePurchaseLocation
+ * @module usePurchaseLocationQueries
  */
 import { getCookie } from 'cookies-next'
 import getConfig from 'next/config'

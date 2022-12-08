@@ -1,5 +1,5 @@
 /**
- * @module query_useStoreLocations
+ * @module useStoreLocationsQueries
  */
 import { useQuery } from 'react-query'
 

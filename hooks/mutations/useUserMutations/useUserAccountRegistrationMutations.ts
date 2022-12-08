@@ -1,5 +1,5 @@
 /**
- * @module mutation_useUserAccountRegistration
+ * @module useUserAccountRegistrationMutations
  */
 import { useMutation, useQueryClient } from 'react-query'
 

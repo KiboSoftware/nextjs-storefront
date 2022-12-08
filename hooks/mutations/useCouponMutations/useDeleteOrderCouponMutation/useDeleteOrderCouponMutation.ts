@@ -1,5 +1,5 @@
 /**
- * @module mutation_useDeleteOrderCoupon
+ * @module useDeleteOrderCouponMutation
  */
 import { useMutation, useQueryClient } from 'react-query'
 

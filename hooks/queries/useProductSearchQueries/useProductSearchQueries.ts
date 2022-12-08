@@ -1,5 +1,5 @@
 /**
- * @module query_useProductSearch
+ * @module useProductSearchQueries
  */
 import { useQuery } from 'react-query'
 

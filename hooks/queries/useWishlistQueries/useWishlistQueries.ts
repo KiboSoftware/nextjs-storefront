@@ -1,5 +1,5 @@
 /**
- * @module query_useWishlist
+ * @module useWishlistQueries
  */
 import { useQuery } from 'react-query'
 

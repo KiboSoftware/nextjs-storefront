@@ -1,5 +1,5 @@
 /**
- * @module mutation_useUpdateOrderCoupon
+ * @module useUpdateOrderCouponMutation
  */
 import { useMutation, useQueryClient } from 'react-query'
 

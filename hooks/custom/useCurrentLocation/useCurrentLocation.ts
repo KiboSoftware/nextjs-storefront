@@ -1,5 +1,5 @@
 /**
- * @module custom_useCurrentLocation
+ * @module useCurrentLocation
  */
 
 /**

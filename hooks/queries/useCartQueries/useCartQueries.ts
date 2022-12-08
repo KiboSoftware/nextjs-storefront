@@ -1,5 +1,5 @@
 /**
- * @module query_useCart
+ * @module useCartQueries
  */
 import { useQuery } from 'react-query'
 

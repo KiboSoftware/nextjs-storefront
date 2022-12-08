@@ -1,5 +1,5 @@
 /**
- * @module custom_useWishlist
+ * @module useWishlist
  */
 import { WishlistPopover } from '@/components/dialogs'
 import { LoginDialog } from '@/components/layout'

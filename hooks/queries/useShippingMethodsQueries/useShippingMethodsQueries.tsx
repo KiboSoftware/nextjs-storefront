@@ -1,5 +1,5 @@
 /**
- * @module query_useShippingMethods
+ * @module useShippingMethodsQueries
  */
 import { useQuery } from 'react-query'
 

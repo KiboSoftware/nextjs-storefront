@@ -1,5 +1,5 @@
 /**
- * @module custom_usePaymentTypes
+ * @module usePaymentTypes
  */
 import getConfig from 'next/config'
 

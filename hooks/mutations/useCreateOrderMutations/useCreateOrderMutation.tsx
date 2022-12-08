@@ -1,5 +1,5 @@
 /**
- * @module mutation_useCreateOrder
+ * @module useCreateOrderMutation
  */
 import { useMutation, useQueryClient } from 'react-query'
 

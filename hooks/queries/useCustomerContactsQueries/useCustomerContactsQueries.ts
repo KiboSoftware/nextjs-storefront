@@ -1,5 +1,5 @@
 /**
- * @module query_useCustomerContacts
+ * @module useCustomerContactsQueries
  */
 import { useQuery } from 'react-query'
 

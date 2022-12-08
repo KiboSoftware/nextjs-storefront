@@ -1,90 +1,61 @@
-next-storefront / [Exports](modules.md)
+next-storefront
 
-<h2 align="center">KiboCommerce & Next.JS</h2>
+# next-storefront
 
-<p align="center">
-This is a headless ecommerce starter kit for KiboCommerce platform using Next.JS <br>
-Demo: <a href="https://nextjs-storefront-kibo-commerce.vercel.app">https://nextjs-storefront-kibo-commerce.vercel.app</a>
-</p>
+## Table of contents
 
-### Features
+### Modules
 
-- Performant by default
-- SEO Ready
-- Internationalization
-- Responsive
-- UI Components built on top of Material UI 5
-- Theming
-- KiboCommerce data hooks
-- PWA Ready
-- Omni Channel Capability (Ship to home and Pickup in Store support)
-
-## Getting Started
-
-1. Clone this repo
-
-```bash
-git clone https://github.com/KiboSoftware/nextjs-storefront.git
-```
-
-2. Change into directory and install dependencies
-
-```bash
-npm install
-```
-
-3. Copy .env template
-
-```bash
-cp .env.template .env.local
-```
-
-4. Configure env variables for your Kibo Commerce environment
-5. Start Dev server
-
-```bash
-npm run dev
-```
-
-## Configuration
-
-.env example
-
-```bash
-KIBO_API_HOST=t1234-s1234.sandbox.mozu.com
-KIBO_AUTH_HOST=home.mozu.com
-KIBO_CLIENT_ID=KIBO_APP.1.0.0.Release
-KIBO_SHARED_SECRET=12345_Secret
-```
-
-The following data is required to configure the storefront to communicate with your Kibo API Client.
-
-- `apiHost` - Your Kibo Commerce API Host.
-- `authHost` - Kibo Commerce Authentication Host Server. It is used to request an access token from Kibo Commerce OAuth 2.0 service. Production and Production sandbox, use `home.mozu.com`
-- `clientId` - Unique Application (Client) ID of your Application
-- `sharedSecret` - Secret API key used to authenticate application. Viewable from your [Kibo eCommerce Dev Center](https://mozu.com/login)
-
-Visit [Kibo documentation](https://apidocs.kibong-perf.com/?spec=graphql#auth) for more details on API authentication
-
-## Useful Commands
-
-```bash
-npm run dev # Start dev server
-npm run build # Run production build
-npm run start # Run production start
-npm run generate-types # generate typescript Kibo API types from GraphQL Schema
-npm run storybook # start storybook for
-npm run test # run unit / integration tests
-```
-
-## Built with
-
-- Framework - [Next.JS](https://nextjs.org/docs)
-- Component Library - [Material UI 5](https://mui.com/material-ui/getting-started/overview/)
-- Testing - [Jest](https://jestjs.io/docs/getting-started)
-- Data Fetching / State Management - [React Query](https://react-query-v3.tanstack.com/overview)
-- Localization - [Next i18Next](https://github.com/i18next/next-i18next)
-
-## Contributions
-
-All contributions welcome!
+- [useAddToCartMutation](modules/useAddToCartMutation.md)
+- [useAddToWishlistMutation](modules/useAddToWishlistMutation.md)
+- [useCartQueries](modules/useCartQueries.md)
+- [useCategoryTreeQueries](modules/useCategoryTreeQueries.md)
+- [useCheckoutQueries](modules/useCheckoutQueries.md)
+- [useCreateCheckoutPaymentMethodMutation](modules/useCreateCheckoutPaymentMethodMutation.md)
+- [useCreateCustomerAddressMutation](modules/useCreateCustomerAddressMutation.md)
+- [useCreateCustomerCardsMutation](modules/useCreateCustomerCardsMutation.md)
+- [useCreateFromCartMutation](modules/useCreateFromCartMutation.md)
+- [useCreateOrderMutation](modules/useCreateOrderMutation.md)
+- [useCreateOrderReturnItemsMutation](modules/useCreateOrderReturnItemsMutation.md)
+- [useCreateWishlistMutation](modules/useCreateWishlistMutation.md)
+- [useCurrentLocation](modules/useCurrentLocation.md)
+- [useCustomerCardsQueries](modules/useCustomerCardsQueries.md)
+- [useCustomerContactsQueries](modules/useCustomerContactsQueries.md)
+- [useDebounce](modules/useDebounce.md)
+- [useDeleteCartCouponMutation](modules/useDeleteCartCouponMutation.md)
+- [useDeleteCustomerAddressMutation](modules/useDeleteCustomerAddressMutation.md)
+- [useDeleteCustomerCardsMutation](modules/useDeleteCustomerCardsMutation.md)
+- [useDeleteOrderCouponMutation](modules/useDeleteOrderCouponMutation.md)
+- [usePaymentTypes](modules/usePaymentTypes.md)
+- [useProductDetailTemplate](modules/useProductDetailTemplate.md)
+- [useProductLocationInventoryQueries](modules/useProductLocationInventoryQueries.md)
+- [useProductMutation](modules/useProductMutation.md)
+- [useProductSearchQueries](modules/useProductSearchQueries.md)
+- [useProductsQueries](modules/useProductsQueries.md)
+- [usePurchaseLocationQueries](modules/usePurchaseLocationQueries.md)
+- [useRemoveCartItemMutation](modules/useRemoveCartItemMutation.md)
+- [useRemoveWishlistItemMutation](modules/useRemoveWishlistItemMutation.md)
+- [useReturnReasonsQueries](modules/useReturnReasonsQueries.md)
+- [useReturnsQueries](modules/useReturnsQueries.md)
+- [useSearchSuggestionsQueries](modules/useSearchSuggestionsQueries.md)
+- [useShippingMethodsQueries](modules/useShippingMethodsQueries.md)
+- [useStoreLocationsQueries](modules/useStoreLocationsQueries.md)
+- [useUpdateCartCouponMutation](modules/useUpdateCartCouponMutation.md)
+- [useUpdateCartItemMutation](modules/useUpdateCartItemMutation.md)
+- [useUpdateCartItemQuantityMutation](modules/useUpdateCartItemQuantityMutation.md)
+- [useUpdateCheckoutBillingInfoMutation](modules/useUpdateCheckoutBillingInfoMutation.md)
+- [useUpdateCheckoutPersonalInfoMutation](modules/useUpdateCheckoutPersonalInfoMutation.md)
+- [useUpdateCheckoutShippingInfoMutation](modules/useUpdateCheckoutShippingInfoMutation.md)
+- [useUpdateCustomerAddressMutation](modules/useUpdateCustomerAddressMutation.md)
+- [useUpdateCustomerCardsMutation](modules/useUpdateCustomerCardsMutation.md)
+- [useUpdateOrderCouponMutation](modules/useUpdateOrderCouponMutation.md)
+- [useUpdateOrderPaymentActionMutation](modules/useUpdateOrderPaymentActionMutation.md)
+- [useUpdateRoutes](modules/useUpdateRoutes.md)
+- [useUpdateUserDataMutations](modules/useUpdateUserDataMutations.md)
+- [useUpdateUserPasswordMutations](modules/useUpdateUserPasswordMutations.md)
+- [useUserAccountRegistrationMutations](modules/useUserAccountRegistrationMutations.md)
+- [useUserMutations](modules/useUserMutations.md)
+- [useUserOrderQueries](modules/useUserOrderQueries.md)
+- [useUserQueries](modules/useUserQueries.md)
+- [useWishlist](modules/useWishlist.md)
+- [useWishlistQueries](modules/useWishlistQueries.md)

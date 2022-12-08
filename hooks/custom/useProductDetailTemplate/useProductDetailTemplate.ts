@@ -1,5 +1,5 @@
 /**
- * @module custom_useProductDetailTemplate
+ * @module useProductDetailTemplate
  */
 import { useEffect, useState } from 'react'
 

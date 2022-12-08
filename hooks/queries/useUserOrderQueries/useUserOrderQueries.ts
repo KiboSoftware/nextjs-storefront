@@ -1,5 +1,5 @@
 /**
- * @module query_useUserOrder
+ * @module useUserOrderQueries
  */
 import { useQuery } from 'react-query'
 

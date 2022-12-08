@@ -1,5 +1,5 @@
 /**
- * @module mutation_useCreateWishlist
+ * @module useCreateWishlistMutation
  */
 import getConfig from 'next/config'
 import { useMutation, useQueryClient } from 'react-query'

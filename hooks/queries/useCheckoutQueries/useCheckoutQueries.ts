@@ -1,5 +1,5 @@
 /**
- * @module query_useCheckout
+ * @module useCheckoutQueries
  */
 import { useQuery } from 'react-query'
 

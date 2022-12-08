@@ -1,5 +1,5 @@
 /**
- * @module mutation_useAddToWishlist
+ * @module useAddToWishlistMutation
  */
 import { useMutation, useQueryClient } from 'react-query'
 

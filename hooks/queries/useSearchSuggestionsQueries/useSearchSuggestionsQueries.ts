@@ -1,5 +1,5 @@
 /**
- * @module query_useSearchSuggestions
+ * @module useSearchSuggestionsQueries
  */
 import { useQuery } from 'react-query'
 

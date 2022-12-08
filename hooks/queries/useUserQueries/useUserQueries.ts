@@ -1,5 +1,5 @@
 /**
- * @module query_useUser
+ * @module useUserQueries
  */
 import { useQuery } from 'react-query'
 

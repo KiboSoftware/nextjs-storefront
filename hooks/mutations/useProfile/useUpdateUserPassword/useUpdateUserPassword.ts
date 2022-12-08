@@ -1,5 +1,5 @@
 /**
- * @module mutation_useUpdateUserPassword
+ * @module useUpdateUserPasswordMutations
  */
 import { useMutation } from 'react-query'
 

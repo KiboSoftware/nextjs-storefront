@@ -1,5 +1,5 @@
 /**
- * @module custom_useDebounce
+ * @module useDebounce
  */
 import { useEffect, useState } from 'react'
 

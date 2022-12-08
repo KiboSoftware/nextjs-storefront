@@ -1,5 +1,5 @@
 /**
- * @module mutation_useUpdateCartItemQuantity
+ * @module useUpdateCartItemQuantityMutation
  */
 import { useMutation, useQueryClient } from 'react-query'
 

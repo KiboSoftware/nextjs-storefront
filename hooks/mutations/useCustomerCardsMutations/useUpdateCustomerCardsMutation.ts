@@ -1,5 +1,5 @@
 /**
- * @module mutation_useUpdateCustomerCards
+ * @module useUpdateCustomerCardsMutation
  */
 import { useMutation, useQueryClient } from 'react-query'
 

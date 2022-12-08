@@ -1,3 +1,6 @@
+/**
+ * @module useReturnsQueries
+ */
 import { useQuery } from 'react-query'
 
 import { makeGraphQLClient } from '@/lib/gql/client'

@@ -1,5 +1,5 @@
 /**
- * @module mutation_useUpdateCheckoutPersonalInfo
+ * @module useUpdateCheckoutPersonalInfoMutation
  */
 import { useMutation, useQueryClient } from 'react-query'
 

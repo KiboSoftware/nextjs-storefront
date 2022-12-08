@@ -1,5 +1,5 @@
 /**
- * @module mutation_useRemoveCartItem
+ * @module useRemoveCartItemMutation
  */
 import { useMutation, useQueryClient } from 'react-query'
 

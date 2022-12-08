@@ -1,5 +1,5 @@
 /**
- * @module query_useProductLocationInventory
+ * @module useProductLocationInventoryQueries
  */
 import { useQuery } from 'react-query'
 

@@ -1,5 +1,5 @@
 /**
- * @module custom_useUpdateRoutes
+ * @module useUpdateRoutes
  */
 import { useRouter } from 'next/router'
 

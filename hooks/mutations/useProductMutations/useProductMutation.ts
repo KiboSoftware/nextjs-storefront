@@ -1,5 +1,5 @@
 /**
- * @module mutation_useProduct
+ * @module useProductMutation
  */
 import { useMutation } from 'react-query'
 

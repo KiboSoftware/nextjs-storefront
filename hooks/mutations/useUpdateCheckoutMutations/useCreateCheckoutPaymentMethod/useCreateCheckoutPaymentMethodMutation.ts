@@ -1,5 +1,5 @@
 /**
- * @module mutation_useCreateCheckoutPaymentMethod
+ * @module useCreateCheckoutPaymentMethodMutation
  */
 import { useMutation, useQueryClient } from 'react-query'
 
