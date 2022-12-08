@@ -55,8 +55,8 @@ const MultiShipCheckoutTemplate = (props: CheckoutProps) => {
   const updateCheckoutPersonalInfo = async (formData: PersonalDetails) => {
     const { email } = formData
     const personalInfo: MultiShipPersonalInfo = {
-      checkout,
-      email,
+      checkout: checkout as Checkout,
+      email: email as string,
     }
     return await updateMultiShipCheckoutPersonalInfo.mutateAsync(personalInfo)
   }
@@ -127,7 +127,7 @@ const MultiShipCheckoutTemplate = (props: CheckoutProps) => {
             checkout={checkout as Checkout}
             userShippingAddress={userShippingAddress}
             isAuthenticated={isAuthenticated}
-            shippingMethods={shippingMethods} //@to-do muse multiRate api
+            shippingMethods={shippingMethods} //@to-do use multiRate api
             setCheckoutId={setCheckoutId}
             setIsNewAddressAdded={setIsNewAddressAdded}
             setSelectedShippingAddressId={setSelectedShippingAddressId}
