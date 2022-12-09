@@ -1,15 +1,6 @@
 import * as React from 'react'
 
-import {
-  Box,
-  Typography,
-  useTheme,
-  useMediaQuery,
-  Grid,
-  Link as MuiLink,
-  styled,
-  Container,
-} from '@mui/material'
+import { Box, Typography, useTheme, useMediaQuery, Grid, styled, Container } from '@mui/material'
 import Link from 'next/link'
 
 import { KiboImage } from '@/components/common'
@@ -121,29 +112,17 @@ const ContentTiles = (props: TileProps) => {
         <Box sx={styles.linkBoxStyle}>
           {link1?.url && (
             <Link href={link1?.url} passHref>
-              {/* <MuiLink underline="none" sx={styles.linkStyle}>
-                {link1.title}
-              </MuiLink> */}
-
-              {link1.title}
+              <Typography sx={styles.linkStyle}>{link1.title}</Typography>
             </Link>
           )}
           {link2?.url && (
             <Link href={link2?.url} passHref>
-              {/* <MuiLink underline="none" sx={styles.linkStyle}>
-                {link2.title}
-              </MuiLink> */}
-
-              {link2.title}
+              <Typography sx={styles.linkStyle}>{link2.title}</Typography>
             </Link>
           )}
           {link3?.url && (
             <Link href={link3?.url} passHref>
-              {/* <MuiLink underline="none" sx={styles.linkStyle}>
-                {link3.title}
-              </MuiLink> */}
-
-              {link3.title}
+              <Typography sx={styles.linkStyle}>{link3.title}</Typography>
             </Link>
           )}
         </Box>

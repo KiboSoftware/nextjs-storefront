@@ -8,7 +8,7 @@ import {
   Box,
   useTheme,
   Theme,
-  Link as MuiLink,
+  styled,
 } from '@mui/material'
 import Link from 'next/link'
 
@@ -44,6 +44,10 @@ const styles = {
   },
 }
 
+const StyledLink = styled(Link)(({ theme }: { theme: Theme }) => ({
+  color: theme?.palette.common.white,
+}))
+
 const SmallBanner = ({ bannerProps }: ItemProps) => {
   const kiboTheme = useTheme()
   const mobileView = useMediaQuery(kiboTheme.breakpoints.down('sm'))
@@ -63,13 +67,9 @@ const SmallBanner = ({ bannerProps }: ItemProps) => {
             <Box sx={styles.boxStyle}>
               <Typography variant="h5">{subtitle}&nbsp;</Typography>
               <Typography variant="h5" data-testid="callToAction">
-                <Link href={callToAction?.url || ''} passHref>
-                  {/* <MuiLink underline="none" sx={{ color: 'common.white' }}>
-                    {callToAction?.title}
-                  </MuiLink> */}
-
+                <StyledLink href={callToAction?.url || ''} passHref>
                   {callToAction?.title}
-                </Link>
+                </StyledLink>
               </Typography>
             </Box>
           </CardContent>

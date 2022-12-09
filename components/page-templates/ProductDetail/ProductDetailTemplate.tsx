@@ -3,7 +3,17 @@ import React from 'react'
 import { StarRounded } from '@mui/icons-material'
 import FavoriteBorderRoundedIcon from '@mui/icons-material/FavoriteBorderRounded'
 import FavoriteRoundedIcon from '@mui/icons-material/FavoriteRounded'
-import { Box, Grid, Rating, Button, Typography, Divider, Link as MuiLink } from '@mui/material'
+import {
+  Box,
+  Grid,
+  Rating,
+  Button,
+  Typography,
+  Divider,
+  Link as MuiLink,
+  styled,
+  Theme,
+} from '@mui/material'
 import { useTranslation } from 'next-i18next'
 import Link from 'next/link'
 
@@ -60,6 +70,13 @@ const styles = {
     paddingLeft: '30rem',
   },
 }
+
+const StyledLink = styled(Link)(({ theme }: { theme: Theme }) => ({
+  ...styles.moreDetails,
+  color: theme?.palette.text.primary,
+  fontSize: theme?.typography.body2.fontSize,
+}))
+
 const ProductDetailTemplate = (props: ProductDetailTemplateProps) => {
   const { getProductLink } = uiHelpers()
   const { product, breadcrumbs = [], isQuickViewModal = false, children } = props
@@ -260,16 +277,14 @@ const ProductDetailTemplate = (props: ProductDetailTemplateProps) => {
             }}
           />
           {isQuickViewModal && (
-            <Link href={getProductLink(product?.productCode as string)} passHref>
-              {/* <MuiLink
-                aria-label={t('more-details')}
-                sx={{ ...styles.moreDetails }}
-                onClick={() => closeModal()}
-              >
-                {t('more-details')}
-              </MuiLink> */}
+            <StyledLink
+              href={getProductLink(product?.productCode as string)}
+              passHref
+              onClick={() => closeModal()}
+              aria-label={t('more-details')}
+            >
               {t('more-details')}
-            </Link>
+            </StyledLink>
           )}
         </Box>
 
@@ -304,15 +319,16 @@ const ProductDetailTemplate = (props: ProductDetailTemplateProps) => {
         <Box paddingY={1} display={optionsVisibility.select ? 'block' : 'none'}>
           {productOptions?.selectOptions?.map((option) => {
             return (
-              <ProductOptionSelect
-                key={option?.attributeDetail?.name}
-                name={option?.attributeDetail?.name}
-                optionValues={option?.values as ProductOptionValue[]}
-                value={productGetters.getOptionSelectedValue(option as ProductOption)}
-                label={productGetters.getOptionName(option as ProductOption)}
-                attributeFQN={option?.attributeFQN as string}
-                onDropdownChange={selectProductOption}
-              />
+              <Box key={option?.attributeDetail?.name} paddingY={1}>
+                <ProductOptionSelect
+                  name={option?.attributeDetail?.name}
+                  optionValues={option?.values as ProductOptionValue[]}
+                  value={productGetters.getOptionSelectedValue(option as ProductOption)}
+                  label={productGetters.getOptionName(option as ProductOption)}
+                  attributeFQN={option?.attributeFQN as string}
+                  onDropdownChange={selectProductOption}
+                />
+              </Box>
             )
           })}
         </Box>

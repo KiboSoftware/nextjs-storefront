@@ -1,15 +1,7 @@
 import React, { useEffect, useState } from 'react'
 
 import { Add, ChevronLeft, Remove } from '@mui/icons-material'
-import {
-  Box,
-  Button,
-  FormLabel,
-  Link as MuiLink,
-  Typography,
-  SxProps,
-  Divider,
-} from '@mui/material'
+import { Box, Button, FormLabel, Typography, SxProps, Divider, styled } from '@mui/material'
 import { Theme } from '@mui/material/styles'
 import { useTranslation } from 'next-i18next'
 import Link from 'next/link'
@@ -56,9 +48,7 @@ const styles = {
     cursor: 'pointer',
   },
   backButton: {
-    typography: 'body2',
     textDecoration: 'underline',
-    color: 'text.primary',
     display: 'flex',
     alignItems: 'center',
     padding: '0.5rem 0',
@@ -74,6 +64,18 @@ const styles = {
     pl: 0,
   },
 }
+
+const StyledBackLink = styled(Link)(({ theme }: { theme: Theme }) => ({
+  ...styles.backButton,
+  color: theme?.palette.text.primary,
+  fontSize: theme?.typography.body2.fontSize,
+}))
+
+const StyledLink = styled(Link)(({ theme }: { theme: Theme }) => ({
+  ...styles.link,
+  color: theme?.palette.text.primary,
+  fontSize: theme?.typography.body2.fontSize,
+}))
 
 const CategoryFacet = (props: CategoryFacetProps) => {
   const { initialItemsToShow = 5, categoryFacet, breadcrumbs } = props
@@ -107,14 +109,12 @@ const CategoryFacet = (props: CategoryFacetProps) => {
       </Typography>
       <Box sx={styles.childrenCategories}>
         {filteredValues?.map((child) => (
-          <Link key={child?.value} href={getCategoryLink(child?.value as string)} passHref>
-            <MuiLink underline="none" variant="body2" color="text.primary" sx={styles.link}>
-              {child?.label}
-              <FormLabel data-testid="count" aria-label={t('count')} sx={{ ...styles.formLabel }}>
-                ({child?.count})
-              </FormLabel>
-            </MuiLink>
-          </Link>
+          <StyledLink key={child?.value} href={getCategoryLink(child?.value as string)} passHref>
+            {child?.label}
+            <FormLabel data-testid="count" aria-label={t('count')} sx={{ ...styles.formLabel }}>
+              ({child?.count})
+            </FormLabel>
+          </StyledLink>
         ))}
         {isViewMoreVisible && (
           <Button
@@ -132,15 +132,10 @@ const CategoryFacet = (props: CategoryFacetProps) => {
           </Button>
         )}
         {breadcrumbs?.length >= 1 && (
-          <Link href={breadcrumbs[breadcrumbs?.length - 2]?.link || '/'} passHref>
-            {/* <MuiLink aria-label={t('back')} sx={{ ...styles.backButton }}>
-              <ChevronLeft />
-              {t('back')}
-            </MuiLink> */}
-
+          <StyledBackLink href={breadcrumbs[breadcrumbs?.length - 2]?.link || '/'} passHref>
             <ChevronLeft />
             {t('back')}
-          </Link>
+          </StyledBackLink>
         )}
       </Box>
       <Divider sx={{ borderColor: 'grey.500' }} />

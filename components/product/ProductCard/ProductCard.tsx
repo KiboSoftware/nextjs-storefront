@@ -3,17 +3,7 @@ import React, { MouseEvent } from 'react'
 import { StarRounded } from '@mui/icons-material'
 import FavoriteBorderRoundedIcon from '@mui/icons-material/FavoriteBorderRounded'
 import FavoriteRoundedIcon from '@mui/icons-material/FavoriteRounded'
-import {
-  Card,
-  Typography,
-  Rating,
-  CardMedia,
-  Box,
-  Stack,
-  Skeleton,
-  Button,
-  Link as MuiLink,
-} from '@mui/material'
+import { Card, Typography, Rating, CardMedia, Box, Stack, Skeleton, Button } from '@mui/material'
 import { useTranslation } from 'next-i18next'
 import Link from 'next/link'
 
@@ -114,67 +104,6 @@ const ProductCard = (props: ProductCardProps) => {
     return (
       <Box>
         <Link href={link} passHref data-testid="product-card-link">
-          {/* <MuiLink underline="none">
-            <Box>
-              <Card sx={styles.cardRoot} data-testid="product-card">
-                {isShowWishlistIcon && (
-                  <Box textAlign={'right'} width="100%" onClick={handleAddOrRemoveWishlistItem}>
-                    {isInWishlist ? (
-                      <FavoriteRoundedIcon sx={{ color: 'red.900' }} />
-                    ) : (
-                      <FavoriteBorderRoundedIcon sx={{ color: 'grey.600' }} />
-                    )}
-                  </Box>
-                )}
-                <CardMedia
-                  sx={{
-                    width: '100%',
-                    height: imageHeight,
-                    position: 'relative',
-                  }}
-                >
-                  <Box sx={{ zIndex: 1 }}>
-                    <KiboImage
-                      src={imageUrl || placeholderImageUrl}
-                      alt={imageUrl ? imageAltText : 'no-image-alt'}
-                      layout="fill"
-                      objectFit="contain"
-                      data-testid="product-image"
-                      errorimage={placeholderImageUrl}
-                    />
-                  </Box>
-                </CardMedia>
-                <Box flexDirection="column" m={2} mt={1}>
-                  <Typography variant="body1" gutterBottom color="text.primary">
-                    {title}
-                  </Typography>
-                  <Price price={price} salePrice={salePrice} variant="body1" />
-                  <Rating
-                    name="read-only"
-                    value={rating}
-                    precision={0.5}
-                    readOnly
-                    size="small"
-                    icon={<StarRounded color="primary" data-testid="filled-rating" />}
-                    emptyIcon={<StarRounded data-testid="empty-rating" />}
-                    data-testid="product-rating"
-                  />
-                  {showQuickViewButton && (
-                    <Button
-                      variant="contained"
-                      color="secondary"
-                      className="quick-view"
-                      sx={styles.quickView}
-                      onClick={handleOpenProductQuickViewModal}
-                    >
-                      {t('quick-view')}
-                    </Button>
-                  )}
-                </Box>
-              </Card>
-            </Box>
-          </MuiLink> */}
-
           <Box>
             <Card sx={styles.cardRoot} data-testid="product-card">
               {isShowWishlistIcon && (
@@ -237,15 +166,6 @@ const ProductCard = (props: ProductCardProps) => {
         <Box>
           {isShopNow && (
             <Link href={link} passHref>
-              {/* <MuiLink underline="none">
-                <Button
-                  variant="contained"
-                  color="primary"
-                  sx={{ width: '100%', marginTop: '3.063rem' }}
-                >
-                  {t('shop-now')}
-                </Button>
-              </MuiLink> */}
               <Button
                 variant="contained"
                 color="primary"

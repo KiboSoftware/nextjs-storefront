@@ -1,6 +1,6 @@
 import React from 'react'
 
-import { Box, Container, Link as MuiLink, Typography } from '@mui/material'
+import { Box, Container, Typography } from '@mui/material'
 import { useTranslation } from 'next-i18next'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
@@ -36,9 +36,6 @@ const CheckoutHeader = () => {
       <Container maxWidth="xl" sx={checkoutHeaderStyles.container} data-testid="checkout-header">
         <Box position="relative">
           <Link href="/" passHref>
-            {/* <MuiLink>
-              <KiboLogo small />
-            </MuiLink> */}
             <KiboLogo small />
           </Link>
         </Box>

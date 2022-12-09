@@ -9,7 +9,6 @@ import {
   useTheme,
   useMediaQuery,
   Divider,
-  Link as MuiLink,
 } from '@mui/material'
 import { useTranslation } from 'next-i18next'
 import Link from 'next/link'
@@ -268,16 +267,6 @@ const CartTemplate = (props: CartTemplateProps) => {
           </Typography>
           <Box maxWidth="23.5rem">
             <Link href="/" passHref>
-              {/* <MuiLink>
-                <Button
-                  variant="contained"
-                  color="primary"
-                  sx={{ width: '100%', marginTop: '3.063rem' }}
-                >
-                  {t('shop-now')}
-                </Button>
-              </MuiLink> */}
-
               <Button
                 variant="contained"
                 color="primary"

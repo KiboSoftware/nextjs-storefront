@@ -142,7 +142,7 @@ const ViewOrderDetails = (props: ViewOrderDetailsProps) => {
                     {orderGetters.getExpectedDeliveryDate(shipItems)}
                   </Typography>
                 </Box>
-                <ProductItemList items={shipItems} />
+                <ProductItemList items={shipItems} width="15%" />
                 {fulfillmentContactAddress && <AddressCard {...fulfillmentContactAddress} />}
               </Box>
               <Divider sx={{ ...styles.divider }} />
@@ -168,6 +168,7 @@ const ViewOrderDetails = (props: ViewOrderDetailsProps) => {
                   items={pickupItems}
                   showAddress={true}
                   storePickupAddresses={storePickupAddress}
+                  width="15%"
                 />
               </Box>
               <Divider sx={{ ...styles.divider }} />

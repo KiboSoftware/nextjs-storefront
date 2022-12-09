@@ -10,6 +10,8 @@ import {
   useTheme,
   Link as MuiLink,
   Stack,
+  Theme,
+  SxProps,
 } from '@mui/material'
 import { useTranslation } from 'next-i18next'
 import Link from 'next/link'
@@ -35,17 +37,17 @@ export interface ProductItemProps {
   purchaseLocation?: string
   link?: string
   children?: ReactNode
+  width?: string
   onStoreLocatorClick?: () => void
 }
 
 const styles = {
   imageContainer: {
-    maxHeight: 150,
-    maxWidth: 120,
-    flex: 1,
+    height: 120,
     display: 'flex',
     justifyContent: 'center',
     alignItems: 'center',
+    position: 'relative',
   },
 }
 
@@ -63,6 +65,7 @@ const ProductItem = (props: ProductItemProps) => {
     purchaseLocation,
     link,
     children,
+    width = '25%',
     onStoreLocatorClick,
   } = props
   const { t } = useTranslation('common')
@@ -73,23 +76,11 @@ const ProductItem = (props: ProductItemProps) => {
   return (
     <Box key={id}>
       <Box sx={{ display: 'flex', pb: 1, pr: 1, gap: 2, flex: 1 }}>
-        <Box sx={{ ...styles.imageContainer }}>
+        <Box sx={{ ...styles.imageContainer, width }}>
           <Link href={link || ''} passHref>
-            {/* <MuiLink data-testid="product-item-link">
-              <KiboImage
-                src={productGetters.handleProtocolRelativeUrl(image) || DefaultImage}
-                height={200}
-                width={200}
-                alt={name}
-                objectFit="contain"
-                errorimage={DefaultImage}
-              />
-            </MuiLink> */}
-
             <KiboImage
               src={productGetters.handleProtocolRelativeUrl(image) || DefaultImage}
-              height={200}
-              width={200}
+              layout="fill"
               alt={name}
               objectFit="contain"
               errorimage={DefaultImage}

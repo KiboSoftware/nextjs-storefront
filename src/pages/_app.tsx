@@ -10,7 +10,7 @@ import 'next-i18next.config'
 import Router from 'next/router'
 import NProgress from 'nprogress'
 import { Hydrate, QueryClientProvider } from 'react-query'
-import '../../styles/nprogress.css'
+import '../../styles/global.css'
 
 import createEmotionCache from '../../lib/createEmotionCache'
 import { generateQueryClient } from '../../lib/react-query/queryClient'

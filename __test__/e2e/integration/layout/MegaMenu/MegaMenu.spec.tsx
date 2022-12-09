@@ -35,9 +35,9 @@ describe('[components] - MegaMenu Integration', () => {
     const advertisement = screen.getByText('advertisement')
     expect(advertisement).toBeVisible()
 
-    // const menuLinks = screen.getAllByTestId('shopAllLink')
-    // await user.click(menuLinks[0])
-    // const megaMenuPopup = screen.queryByLabelText('megamenu-back-drop') as HTMLElement
-    // expect(megaMenuPopup).not.toBeInTheDocument()
+    const menuLinks = screen.getAllByText('shop-all')
+    await user.click(menuLinks[0])
+    const megaMenuPopup = screen.queryByLabelText('megamenu-back-drop') as HTMLElement
+    expect(megaMenuPopup).not.toBeInTheDocument()
   })
 })

@@ -7,8 +7,8 @@ import {
   Typography,
   Toolbar,
   styled,
-  Link as MuiLink,
   Container,
+  Theme,
 } from '@mui/material'
 import Tabs, { tabsClasses } from '@mui/material/Tabs'
 import { usePopupState, bindHover, bindPopover } from 'material-ui-popup-state/hooks'
@@ -83,6 +83,11 @@ const style = {
   },
 }
 
+const StyledLink = styled(Link)(({ theme }: { theme: Theme }) => ({
+  color: theme?.palette.text.primary,
+  fontSize: theme?.typography.body1.fontSize,
+}))
+
 const MegaMenuCategory = (props: MegaMenuCategoryProps) => {
   const { category, activeCategory, onBackdropToggle, setActiveCategory } = props
   const childrenCategories = category?.childrenCategories as PrCategory[]
@@ -110,12 +115,13 @@ const MegaMenuCategory = (props: MegaMenuCategoryProps) => {
         onMouseOver={() => setActiveCategory(category?.categoryCode || '')}
         selected={popupState.isOpen && category?.categoryCode === activeCategory}
       >
-        <Link href={getCategoryLink(category?.categoryCode as string)} passHref>
-          {/* <MuiLink underline="none" color="text.primary">
-            {category?.content?.name}
-          </MuiLink> */}
+        <StyledLink
+          href={getCategoryLink(category?.categoryCode as string)}
+          passHref
+          onClick={closeBackDrop}
+        >
           {category?.content?.name}
-        </Link>
+        </StyledLink>
       </ListItem>
       {childrenCategories?.length > 0 && (
         <HoverPopover

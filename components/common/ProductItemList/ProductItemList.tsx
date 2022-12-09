@@ -1,6 +1,6 @@
 import React from 'react'
 
-import { Stack, Divider } from '@mui/material'
+import { Stack, Divider, Theme, SxProps } from '@mui/material'
 
 import { AddressCard, ProductItem } from '..'
 import { addressGetters, orderGetters, productGetters } from '@/lib/getters'
@@ -14,6 +14,7 @@ export type ProductItemListProps = {
   isPickupItem?: boolean
   showAddress?: boolean
   storePickupAddresses?: LocationCustom[]
+  width?: string
   onClickChangeStore?: () => void
 }
 
@@ -24,6 +25,7 @@ const ProductItemList = (props: ProductItemListProps) => {
     isPickupItem = false,
     showAddress = false,
     storePickupAddresses = [],
+    width,
     onClickChangeStore,
   } = props
 
@@ -56,6 +58,7 @@ const ProductItemList = (props: ProductItemListProps) => {
               expectedDeliveryDate={expectedDeliveryDate}
               onStoreLocatorClick={onClickChangeStore}
               data-testid="product-item"
+              width={width}
             ></ProductItem>
             {showAddress && item?.fulfillmentLocationCode && (
               <AddressCard {...storePickupAddress(item?.fulfillmentLocationCode)} />

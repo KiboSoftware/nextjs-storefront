@@ -54,6 +54,7 @@ const ReturnItemList = (props: ReturnItemListProps) => {
               salePrice={productGetters.getPrice(product).special?.toString()}
               isPickupItem={isPickupItem}
               data-testid="return-product-item"
+              sx={{ width: '100px' }}
             />
           </Stack>
         )

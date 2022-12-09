@@ -1,6 +1,6 @@
 import React from 'react'
 
-import { Link as MuiLink } from '@mui/material'
+import { Typography } from '@mui/material'
 import Breadcrumbs from '@mui/material/Breadcrumbs'
 import Link from 'next/link'
 
@@ -22,21 +22,9 @@ export default function KiboBreadcrumbs({
         {breadcrumbs?.map((item: BreadCrumbType, index) => {
           return (
             <Link href={item.link as string} key={index} passHref>
-              {/* <MuiLink
-                underline="hover"
-                variant="caption"
-                color="text.primary"
-                aria-label="breadcrumb-link"
-                sx={{
-                  typography: {
-                    sm: 'body2',
-                  },
-                }}
-              >
+              <Typography variant="body2" color="text.primary" aria-label="breadcrumb-link">
                 {item.text}
-              </MuiLink> */}
-
-              {item.text}
+              </Typography>
             </Link>
           )
         })}

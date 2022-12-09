@@ -1,7 +1,7 @@
 import React from 'react'
 
 import SearchIcon from '@mui/icons-material/Search'
-import { Box, Link as MuiLink } from '@mui/material'
+import { Box } from '@mui/material'
 import Link from 'next/link'
 
 import { HeaderAction, KiboLogo } from '@/components/common'
@@ -34,9 +34,6 @@ const MobileHeader = () => {
 
         <Box position="relative">
           <Link href="/" passHref>
-            {/* <MuiLink>
-              <KiboLogo small />
-            </MuiLink> */}
             <KiboLogo small />
           </Link>
         </Box>

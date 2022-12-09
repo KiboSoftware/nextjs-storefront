@@ -3,7 +3,6 @@ import React, { Dispatch, SetStateAction, useState } from 'react'
 import SearchIcon from '@mui/icons-material/Search'
 import {
   Typography,
-  Link as MuiLink,
   Collapse,
   Box,
   AppBar,
@@ -13,6 +12,8 @@ import {
   useTheme,
   Slide,
   useScrollTrigger,
+  Theme,
+  styled,
 } from '@mui/material'
 import { useTranslation } from 'next-i18next'
 import Link from 'next/link'
@@ -109,6 +110,11 @@ const kiboHeaderStyles = {
   },
 }
 
+const StyledLink = styled(Link)(({ theme }: { theme: Theme }) => ({
+  color: theme?.palette.common.white,
+  fontSize: theme?.typography.body2.fontSize,
+}))
+
 const TopHeader = ({
   navLinks,
   isElementVisible,
@@ -128,13 +134,9 @@ const TopHeader = ({
           {navLinks?.map((nav, index) => {
             return (
               <Box key={index}>
-                <Link href={nav.link} passHref>
-                  {/* <MuiLink underline="none" color="common.white">
-                    <Typography variant="body2"> {t(`${nav.text}`)}</Typography>
-                  </MuiLink> */}
-
-                  <Typography variant="body2"> {t(`${nav.text}`)}</Typography>
-                </Link>
+                <StyledLink href={nav.link} passHref>
+                  {t(`${nav.text}`)}
+                </StyledLink>
               </Box>
             )
           })}
@@ -169,10 +171,6 @@ const HeaderActionArea = (props: HeaderActionAreaProps) => {
           }}
         >
           <Link href="/" passHref>
-            {/* <MuiLink>
-              <KiboLogo small={isHeaderSmall} />
-            </MuiLink> */}
-
             <KiboLogo small={isHeaderSmall} />
           </Link>
         </Box>

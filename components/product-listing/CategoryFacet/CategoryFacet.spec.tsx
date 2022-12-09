@@ -28,7 +28,7 @@ describe('[component] - CategoryFacet', () => {
     setup()
 
     const heading = screen.getByRole('heading')
-    //const backButton = screen.getByLabelText(/back/i)
+    const backButton = screen.getByRole('link', { name: /back/i })
 
     const childrenCategoriesLabels =
       CategoryFacetDesktop?.args?.categoryFacet?.childrenCategories?.map(
@@ -42,8 +42,8 @@ describe('[component] - CategoryFacet', () => {
       CategoryFacetDesktop.args?.initialItemsToShow || 0
     )
     expect(heading).toBeVisible()
-    // expect(backButton).toBeInTheDocument()
-    // expect(backButton).toHaveAttribute('href', '/')
+    expect(backButton).toBeInTheDocument()
+    expect(backButton).toHaveAttribute('href', '/')
   })
 
   it('should display all the children with href attribute present when user clicks on View More button', async () => {
@@ -85,12 +85,12 @@ describe('[component] - CategoryFacet', () => {
       CategoryFacetDesktop.args?.categoryFacet?.childrenCategories?.length || 0
     )
 
-    // childrenCategoriesLabelsListAfterClick?.map((childrenCategory) => {
-    //   const categoryCode = CategoryFacetDesktop?.args?.categoryFacet?.childrenCategories?.find(
-    //     (category) => childrenCategory.textContent?.includes(category?.label as string)
-    //   )?.value
-    //   expect(childrenCategory).toHaveAttribute('href', `/category/${categoryCode}`)
-    // })
+    childrenCategoriesLabelsListAfterClick?.map((childrenCategory) => {
+      const categoryCode = CategoryFacetDesktop?.args?.categoryFacet?.childrenCategories?.find(
+        (category) => childrenCategory.textContent?.includes(category?.label as string)
+      )?.value
+      expect(childrenCategory).toHaveAttribute('href', `/category/${categoryCode}`)
+    })
   })
 
   it('should display heading and back button only when we dont have any childrenCategories', () => {
@@ -112,9 +112,9 @@ describe('[component] - CategoryFacet', () => {
     setup(params)
 
     const heading = screen.getByRole('heading')
-    //const backButton = screen.getByLabelText(/back/i)
+    const backButton = screen.getByRole('link', { name: /back/i })
 
     expect(heading).toBeVisible()
-    //expect(backButton).toBeInTheDocument()
+    expect(backButton).toBeInTheDocument()
   })
 })

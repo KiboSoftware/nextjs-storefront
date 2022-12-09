@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 
 import FavoriteRoundedIcon from '@mui/icons-material/FavoriteRounded'
-import { Grid, Typography, Box, Divider, useTheme, Link as MuiLink, Button } from '@mui/material'
+import { Grid, Typography, Box, Divider, useTheme, Button } from '@mui/material'
 import { useTranslation } from 'next-i18next'
 import Link from 'next/link'
 
@@ -130,16 +130,6 @@ const WishlistTemplate = (props: { customerAccount: CustomerAccount }) => {
             <Typography variant="subtitle2">{t('empty-wishlist-message')}</Typography>
             <Box maxWidth="23.5rem">
               <Link href="/" passHref>
-                {/* <MuiLink underline="none">
-                  <Button
-                    variant="contained"
-                    color="primary"
-                    sx={{ width: '100%', marginTop: '3.063rem' }}
-                  >
-                    {t('shop-now')}
-                  </Button>
-                </MuiLink> */}
-
                 <Button
                   variant="contained"
                   color="primary"
