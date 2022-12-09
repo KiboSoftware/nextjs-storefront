@@ -106,7 +106,7 @@ const ProductItemWithAddressList = (props: ProductItemWithAddressListProps) => {
     },
   ]
 
-  const [selectedAddresses, setSelectedAddresses] = useState<any>({})
+  const [selectedAddresses, setSelectedAddresses] = useState<{ [key: string]: string }>({})
   const handleSelectShippingAddress = (id: number, value: string) => {
     // need to modify as per API response
     setSelectedAddresses({ ...selectedAddresses, [id]: value })

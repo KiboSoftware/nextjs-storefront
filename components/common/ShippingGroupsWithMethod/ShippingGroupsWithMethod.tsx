@@ -10,7 +10,7 @@ import type { Maybe, CrOrderItem, CrProduct, Contact, ShippingRate } from '@/lib
 
 export type ShippingGroupsWithMethodProps = {
   items: Maybe<CrOrderItem>[]
-  onClickEdit: () => void
+  onShippingAddressEditClick: () => void
 }
 
 const styles = {
@@ -50,7 +50,7 @@ const styles = {
   },
 }
 const ShippingGroupsWithMethod = (props: ShippingGroupsWithMethodProps) => {
-  const { items, onClickEdit } = props
+  const { items, onShippingAddressEditClick } = props
 
   const { t } = useTranslation('common')
 
@@ -59,7 +59,7 @@ const ShippingGroupsWithMethod = (props: ShippingGroupsWithMethodProps) => {
     { shippingMethodName: 'Expedited', price: 15 },
   ]
 
-  const [selectShippingOptions, setSelectShippingOptions] = useState<any>({})
+  const [selectShippingOptions, setSelectShippingOptions] = useState<{ [key: string]: string }>({})
   const handleSelectShippingOption = (id: number, value: string) => {
     // need to modify as per API response
     setSelectShippingOptions({ ...selectShippingOptions, [id]: value })
@@ -76,7 +76,7 @@ const ShippingGroupsWithMethod = (props: ShippingGroupsWithMethodProps) => {
           variant="caption"
           color="text.primary"
           sx={{ padding: '5px' }}
-          onClick={onClickEdit}
+          onClick={onShippingAddressEditClick}
         >
           {t('edit')}
         </Link>

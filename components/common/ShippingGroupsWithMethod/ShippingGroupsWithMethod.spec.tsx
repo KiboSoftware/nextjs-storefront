@@ -20,7 +20,7 @@ describe('[component] - ShippingGroupsWithMethod', () => {
   const user = userEvent.setup()
   const setup = (params?: ShippingGroupsWithMethodProps) => {
     const props = params ? params : Common.args
-    render(<Common {...props} onClickEdit={onClickEditMock} />)
+    render(<Common {...props} onShippingAddressEditClick={onClickEditMock} />)
     return {
       user,
     }
@@ -34,6 +34,7 @@ describe('[component] - ShippingGroupsWithMethod', () => {
     const shippingMethodText = screen.getByText(/shipping-method/i)
     const subTitle = screen.getAllByText(/shipments-of/i)
     const shipTo = screen.getAllByText(/ship-to/i)
+    const shippingStep = screen.getByText(/shipping/i)
     const addressSelect = screen.getAllByTestId('kibo-select-component')
     const productItems = screen.getAllByTestId('product-item-component-shipping-group')
     const itemsCount = (Common.args?.items && Common.args?.items.length) || 0
@@ -49,5 +50,6 @@ describe('[component] - ShippingGroupsWithMethod', () => {
     expect(productItems).toHaveLength(itemsCount)
     await user.click(editLink)
     expect(onClickEditMock).toBeCalled()
+    expect(shippingStep).toBeVisible()
   })
 })
