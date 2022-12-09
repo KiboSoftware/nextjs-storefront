@@ -32,8 +32,12 @@ export const useCheckoutDestinationQueries = (params: UseDestination): UseDestin
     data = [],
     isLoading,
     isSuccess,
-  } = useQuery(checkoutDestinationKeys.destinationId(destinationId), () =>
-    getCheckoutDestination(params)
+  } = useQuery(
+    checkoutDestinationKeys.destinationId(destinationId),
+    () => getCheckoutDestination(params),
+    {
+      enabled: !!params?.checkoutId && !!destinationId,
+    }
   )
 
   return { data, isLoading, isSuccess }

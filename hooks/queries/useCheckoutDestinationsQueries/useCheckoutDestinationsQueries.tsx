@@ -32,7 +32,9 @@ export const useCheckoutDestinationsQueries = (
     data = [],
     isLoading,
     isSuccess,
-  } = useQuery(checkoutDestinationKeys.all, () => getCheckoutDestinations(params))
+  } = useQuery(checkoutDestinationKeys.all, () => getCheckoutDestinations(params), {
+    enabled: !!params?.checkoutId,
+  })
 
   return { data, isLoading, isSuccess }
 }

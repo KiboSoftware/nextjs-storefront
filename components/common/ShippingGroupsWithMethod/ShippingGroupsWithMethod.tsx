@@ -54,59 +54,6 @@ const ShippingGroupsWithMethod = (props: ShippingGroupsWithMethodProps) => {
 
   const { t } = useTranslation('common')
 
-  const destinationContacts: Contact[] = [
-    {
-      id: 1,
-      email: 'amolp@dev.com',
-      firstName: 'ram',
-      middleNameOrInitial: null,
-      lastNameOrSurname: 'nam',
-      companyOrOrganization: null,
-      phoneNumbers: {
-        home: '3354533453',
-        mobile: null,
-        work: null,
-      },
-      address: {
-        address1: 'street',
-        address2: 'apartment',
-        address3: null,
-        address4: null,
-        cityOrTown: 'city',
-        stateOrProvince: 'state',
-        postalOrZipCode: '23423',
-        countryCode: 'US',
-        addressType: null,
-        isValidated: false,
-      },
-    },
-    {
-      id: 2,
-      email: 'jon@doe.com',
-      firstName: 'jon',
-      middleNameOrInitial: null,
-      lastNameOrSurname: 'doe',
-      companyOrOrganization: null,
-      phoneNumbers: {
-        home: '5555555555',
-        mobile: null,
-        work: null,
-      },
-      address: {
-        address1: 'street1',
-        address2: 'apartment1',
-        address3: null,
-        address4: null,
-        cityOrTown: 'city1',
-        stateOrProvince: 'state1',
-        postalOrZipCode: '222222',
-        countryCode: 'US',
-        addressType: null,
-        isValidated: false,
-      },
-    },
-  ]
-
   const shipmentMethods = [
     { shippingMethodName: 'Standard', price: 0 },
     { shippingMethodName: 'Expedited', price: 15 },
