@@ -9,9 +9,9 @@ import { OrderSummary, PromoCodeBadge } from '@/components/common'
 import { OrderConfirmation } from '@/components/order'
 import { useCheckoutStepContext, STEP_STATUS } from '@/context'
 
-import type { Checkout, CustomerContact, Order } from '@/lib/gql/types'
+import type { Checkout, CustomerContact, CrOrder } from '@/lib/gql/types'
 interface CheckoutTemplateUIProps {
-  checkout: Order | Checkout
+  checkout: CrOrder | Checkout
   initialStep?: number
   promoError: string
   handleApplyCouponCode: (couponCode: string) => void
@@ -47,7 +47,6 @@ const CheckoutUITemplate = (props: CheckoutTemplateUIProps) => {
     : checkout?.itemLevelProductDiscountTotal + checkout?.orderLevelProductDiscountTotal
   const tax = checkout?.taxTotal ? checkout?.taxTotal : checkout?.itemTaxTotal
 
-  console.log('discountedSubtotal', discountedSubtotal, 'subTotal', subTotal)
   const orderSummaryArgs = {
     nameLabel: t('order-summary'),
     subTotalLabel: `Cart Subtotal of (${checkout?.items?.length} items)`,
@@ -128,13 +127,13 @@ const CheckoutUITemplate = (props: CheckoutTemplateUIProps) => {
                 )}
               </OrderSummary>
             )}
-            {activeStep === reviewStepIndex && <OrderReview checkout={checkout as Order} />}
+            {activeStep === reviewStepIndex && <OrderReview checkout={checkout as CrOrder} />}
           </Box>
         </Stack>
       )}
       {!showCheckoutSteps && (
         <Stack sx={{ paddingY: 8 }}>
-          <OrderConfirmation order={checkout as Order} />
+          <OrderConfirmation order={checkout as CrOrder} />
         </Stack>
       )}
     </>

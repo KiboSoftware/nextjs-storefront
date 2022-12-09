@@ -13,69 +13,69 @@ import { cardGetters } from './cardGetters'
 
 import type {
   CrOrderItem,
-  Order,
-  Payment,
+  CrOrder,
+  CrPayment,
   CrAddress,
-  Contact,
-  CartItem,
-  Cart,
-  BillingInfo,
-  PaymentCard,
+  CrContact,
+  CrCartItem,
+  CrCart,
+  CrBillingInfo,
+  CrPaymentCard,
   CustomerContact,
   CuAddress,
 } from '@/lib/gql/types'
 
-const getCheckoutItemCount = (order: Order) => order?.items?.length
-const getEmail = (order: Order) => order?.email
-const getTotal = (order: Order | Cart): number => order?.total as number
-const getShippingTotal = (order: Order | Cart) => order?.shippingTotal || 0
-const getTaxTotal = (order: Order | Cart) => order?.taxTotal || 0
-const getSubtotal = (order: Order | Cart): number => order?.subtotal as number
-const getDiscountedSubtotal = (order: Order | Cart): number => {
+const getCheckoutItemCount = (order: CrOrder) => order?.items?.length
+const getEmail = (order: CrOrder) => order?.email
+const getTotal = (order: CrOrder | CrCart): number => order?.total as number
+const getShippingTotal = (order: CrOrder | CrCart) => order?.shippingTotal || 0
+const getTaxTotal = (order: CrOrder | CrCart) => order?.taxTotal || 0
+const getSubtotal = (order: CrOrder | CrCart): number => order?.subtotal as number
+const getDiscountedSubtotal = (order: CrOrder | CrCart): number => {
   if (order?.discountedSubtotal && order?.discountedSubtotal != order?.subtotal)
     return order?.discountedSubtotal
   else return 0
 }
 
-const getItemsByFulfillment = (order: Order, fulfillmentMethod: string): CrOrderItem[] => {
+const getItemsByFulfillment = (order: CrOrder, fulfillmentMethod: string): CrOrderItem[] => {
   return (
     (order?.items?.filter(
       (lineItem) => lineItem?.fulfillmentMethod === fulfillmentMethod
     ) as CrOrderItem[]) || []
   )
 }
-const getPickupItems = (order: Order): CrOrderItem[] => {
+const getPickupItems = (order: CrOrder): CrOrderItem[] => {
   return getItemsByFulfillment(order, FulfillmentOptions.PICKUP)
 }
-const getShipItems = (order: Order): CrOrderItem[] =>
+const getShipItems = (order: CrOrder): CrOrderItem[] =>
   getItemsByFulfillment(order, FulfillmentOptions.SHIP)
 
-const getCartItemId = (item: CrOrderItem | CartItem): string => item?.id || ''
+const getCartItemId = (item: CrOrderItem | CrCartItem): string => item?.id || ''
 
-const getProductQuantity = (item: CrOrderItem | CartItem): number => item?.quantity || 0
+const getProductQuantity = (item: CrOrderItem | CrCartItem): number => item?.quantity || 0
 
-const getPurchaseLocation = (item: CrOrderItem | CartItem): string => item?.purchaseLocation || ''
+const getPurchaseLocation = (item: CrOrderItem | CrCartItem): string => item?.purchaseLocation || ''
 
-const getTotalCollected = (order: Order): number => order.totalCollected || 0
+const getTotalCollected = (order: CrOrder): number => order.totalCollected || 0
 
-const getShippingContact = (order: Order): Contact =>
-  order?.fulfillmentInfo?.fulfillmentContact as Contact
+const getShippingContact = (order: CrOrder): CrContact =>
+  order?.fulfillmentInfo?.fulfillmentContact as CrContact
 
-const getShippingFirstName = (order: Order): string =>
-  addressGetters.getFirstName(order.fulfillmentInfo?.fulfillmentContact as Contact)
-const getShippingLastNameOrSurname = (order: Order): string =>
-  addressGetters.getLastNameOrSurname(order.fulfillmentInfo?.fulfillmentContact as Contact)
+const getShippingFirstName = (order: CrOrder): string =>
+  addressGetters.getFirstName(order.fulfillmentInfo?.fulfillmentContact as CrContact)
+const getShippingLastNameOrSurname = (order: CrOrder): string =>
+  addressGetters.getLastNameOrSurname(order.fulfillmentInfo?.fulfillmentContact as CrContact)
 
-const getShippingPhoneHome = (order: Order): string =>
-  addressGetters.getPhoneNumbers(order?.fulfillmentInfo?.fulfillmentContact as Contact).home
-const getShippingPhoneMobile = (order: Order): string =>
-  addressGetters.getPhoneNumbers(order?.fulfillmentInfo?.fulfillmentContact as Contact).mobile
-const getShippingPhoneWork = (order: Order): string =>
-  addressGetters.getPhoneNumbers(order?.fulfillmentInfo?.fulfillmentContact as Contact).work
-const getShippingAddress = (order: Order) =>
+const getShippingPhoneHome = (order: CrOrder): string =>
+  addressGetters.getPhoneNumbers(order?.fulfillmentInfo?.fulfillmentContact as CrContact).home
+const getShippingPhoneMobile = (order: CrOrder): string =>
+  addressGetters.getPhoneNumbers(order?.fulfillmentInfo?.fulfillmentContact as CrContact).mobile
+const getShippingPhoneWork = (order: CrOrder): string =>
+  addressGetters.getPhoneNumbers(order?.fulfillmentInfo?.fulfillmentContact as CrContact).work
+const getShippingAddress = (order: CrOrder) =>
   addressGetters.getAddress(order?.fulfillmentInfo?.fulfillmentContact?.address as CrAddress)
 
-const getFulfillmentLocationCodes = (cartItems: (CartItem | CrOrderItem)[]): string => {
+const getFulfillmentLocationCodes = (cartItems: (CrCartItem | CrOrderItem)[]): string => {
   const locationCodes = Array.from(
     cartItems.reduce((set, item) => {
       if (item?.fulfillmentMethod === FulfillmentOptions.PICKUP) {
@@ -87,16 +87,17 @@ const getFulfillmentLocationCodes = (cartItems: (CartItem | CrOrderItem)[]): str
   return locationCodes.join(' or ')
 }
 
-const getPaymentMethods = (order: Order) => {
-  const payments: Payment[] =
-    (order?.payments?.filter((payment) => payment?.status?.toLowerCase() === 'new') as Payment[]) ||
-    []
+const getPaymentMethods = (order: CrOrder) => {
+  const payments: CrPayment[] =
+    (order?.payments?.filter(
+      (payment) => payment?.status?.toLowerCase() === 'new'
+    ) as CrPayment[]) || []
 
   if (!payments) return []
 
   return payments
-    .filter((p: Payment) => p?.billingInfo?.card)
-    .map((item: Payment) => {
+    .filter((p: CrPayment) => p?.billingInfo?.card)
+    .map((item: CrPayment) => {
       return {
         cardType: item?.billingInfo?.card?.paymentOrCardType,
         cardNumberPartOrMask: item?.billingInfo?.card?.cardNumberPartOrMask,
@@ -105,7 +106,7 @@ const getPaymentMethods = (order: Order) => {
     }) as PaymentMethod[]
 }
 
-const getPersonalDetails = (order: Order): Contact => {
+const getPersonalDetails = (order: CrOrder): CrContact => {
   return {
     email: getEmail(order),
     firstName: getShippingFirstName(order),
@@ -113,7 +114,7 @@ const getPersonalDetails = (order: Order): Contact => {
   }
 }
 
-const getShippingDetails = (order: Order): ShippingDetails => {
+const getShippingDetails = (order: CrOrder): ShippingDetails => {
   return {
     firstName: getShippingFirstName(order),
     lastNameOrSurname: getShippingLastNameOrSurname(order),
@@ -124,8 +125,8 @@ const getShippingDetails = (order: Order): ShippingDetails => {
   }
 }
 
-const getBillingDetails = (order: Order): BillingDetails => {
-  const contact = order?.billingInfo?.billingContact as Contact
+const getBillingDetails = (order: CrOrder): BillingDetails => {
+  const contact = order?.billingInfo?.billingContact as CrContact
 
   return {
     firstName: addressGetters.getFirstName(contact),
@@ -134,7 +135,7 @@ const getBillingDetails = (order: Order): BillingDetails => {
   }
 }
 
-const getOrderSummary = (order: Order): OrderSummary => {
+const getOrderSummary = (order: CrOrder): OrderSummary => {
   return {
     shippingTotal: getShippingTotal(order),
     subTotal: getSubtotal(order),
@@ -144,7 +145,7 @@ const getOrderSummary = (order: Order): OrderSummary => {
   }
 }
 
-const getCheckoutDetails = (order: Order): CheckoutDetails => {
+const getCheckoutDetails = (order: CrOrder): CheckoutDetails => {
   return {
     shipItems: getShipItems(order),
     pickupItems: getPickupItems(order),
@@ -156,22 +157,22 @@ const getCheckoutDetails = (order: Order): CheckoutDetails => {
   }
 }
 
-const getSelectedPaymentMethods = (order?: Order, paymentType?: string) => {
+const getSelectedPaymentMethods = (order?: CrOrder, paymentType?: string) => {
   return order?.payments?.filter(
     (each) => each?.paymentType === paymentType && each?.status === 'New'
   )
 }
 
-const getId = (order: Order) => order.id as string
+const getId = (order: CrOrder) => order.id as string
 
-const getOrderNumber = (order: Order) => order?.orderNumber
+const getOrderNumber = (order: CrOrder) => order?.orderNumber
 
-const getOrderTotal = (order: Order) => order?.total || 0
+const getOrderTotal = (order: CrOrder) => order?.total || 0
 
 const capitalizeWord = (word?: string) =>
   word && word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()
 
-const getSubmittedDate = (order: Order, withTimestamp?: boolean) =>
+const getSubmittedDate = (order: CrOrder, withTimestamp?: boolean) =>
   order?.submittedDate
     ? withTimestamp
       ? (format(new Date(order?.submittedDate), 'MMMM dd, yyyy, hh:mm a zzz') as string)
@@ -184,15 +185,15 @@ const getExpectedDeliveryDate = (items: CrOrderItem[]) => {
     : items[0]?.expectedDeliveryDate
 }
 
-const getProductNames = (order: Order) => {
+const getProductNames = (order: CrOrder) => {
   const items = order?.items as CrOrderItem[]
   const productNames = items.map((item) => item?.product?.name)
   return productNames.join(', ')
 }
 
-const getOrderStatus = (order: Order) => order?.status || ''
+const getOrderStatus = (order: CrOrder) => order?.status || ''
 
-const getOrderPaymentCardDetails = (card: PaymentCard) => {
+const getOrderPaymentCardDetails = (card: CrPaymentCard) => {
   return {
     paymentServiceCardId: cardGetters.getPaymentServiceCardId(card),
     cardNumberPartOrMask: cardGetters.getCardNumberPartOrMask(card),
@@ -201,7 +202,7 @@ const getOrderPaymentCardDetails = (card: PaymentCard) => {
   }
 }
 
-const getPaymentBillingDetails = (data?: CustomerContact | Contact) => {
+const getPaymentBillingDetails = (data?: CustomerContact | CrContact) => {
   return {
     firstName: addressGetters.getFirstName(data),
     lastNameOrSurname: addressGetters.getLastNameOrSurname(data),
@@ -212,22 +213,22 @@ const getPaymentBillingDetails = (data?: CustomerContact | Contact) => {
   }
 }
 
-const getOrderPaymentBillingInfo = (billingInfo: BillingInfo) => {
+const getOrderPaymentBillingInfo = (billingInfo: CrBillingInfo) => {
   return {
     ...billingInfo,
-    card: getOrderPaymentCardDetails(billingInfo.card as PaymentCard),
-    billingContact: getPaymentBillingDetails(billingInfo.billingContact as Contact),
+    card: getOrderPaymentCardDetails(billingInfo.card as CrPaymentCard),
+    billingContact: getPaymentBillingDetails(billingInfo.billingContact as CrContact),
   }
 }
-const getOrderPayments = (order: Order) =>
+const getOrderPayments = (order: CrOrder) =>
   order?.payments?.map((payment) => {
     return {
       ...payment,
-      billingInfo: getOrderPaymentBillingInfo(payment?.billingInfo as BillingInfo),
+      billingInfo: getOrderPaymentBillingInfo(payment?.billingInfo as CrBillingInfo),
     }
   })
 
-const getShippedTo = (order: Order) =>
+const getShippedTo = (order: CrOrder) =>
   order?.fulfillmentInfo?.fulfillmentContact
     ? capitalizeWord(order?.fulfillmentInfo?.fulfillmentContact?.firstName as string) +
       ' ' +
@@ -235,7 +236,7 @@ const getShippedTo = (order: Order) =>
     : ''
 
 // Order History Template
-const getOrderHistoryDetails = (order: Order) => {
+const getOrderHistoryDetails = (order: CrOrder) => {
   const id = getId(order)
   const orderNumber = getOrderNumber(order)
   const submittedDate = getSubmittedDate(order)
@@ -259,10 +260,10 @@ const getOrderHistoryDetails = (order: Order) => {
   }
 }
 
-const getShippingMethodCode = (checkout: Order): string =>
+const getShippingMethodCode = (checkout: CrOrder): string =>
   checkout.fulfillmentInfo?.shippingMethodCode || ''
 
-const getLocationCode = (order: Order) => order?.locationCode
+const getLocationCode = (order: CrOrder) => order?.locationCode
 
 export const orderGetters = {
   getCheckoutItemCount,

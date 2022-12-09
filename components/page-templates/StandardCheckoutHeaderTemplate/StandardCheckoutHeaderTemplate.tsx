@@ -6,7 +6,7 @@ import { CheckoutHeader } from '@/components/layout'
 import { useCheckoutQueries } from '@/hooks'
 import { orderGetters } from '@/lib/getters'
 
-import { Order } from '@/lib/gql/types'
+import { CrOrder } from '@/lib/gql/types'
 
 const StandardCheckoutHeaderTemplate = () => {
   const router = useRouter()
@@ -14,7 +14,7 @@ const StandardCheckoutHeaderTemplate = () => {
   const { data: checkout } = useCheckoutQueries({
     checkoutId: checkoutId as string,
   })
-  const numberOfItems = orderGetters.getCheckoutItemCount(checkout as Order)
+  const numberOfItems = orderGetters.getCheckoutItemCount(checkout as CrOrder)
 
   return <CheckoutHeader numberOfItems={numberOfItems as number} />
 }

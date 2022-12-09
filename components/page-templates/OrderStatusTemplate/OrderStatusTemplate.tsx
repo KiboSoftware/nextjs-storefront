@@ -8,7 +8,7 @@ import { ViewOrderDetails, ViewOrderStatus } from '@/components/order'
 import type { OrderStatusFormDataProps } from '@/components/order/ViewOrderStatus/ViewOrderStatus'
 import { useUserOrderQueries } from '@/hooks'
 
-import { Order } from '@/lib/gql/types'
+import { CrOrder } from '@/lib/gql/types'
 
 const styles = {
   breadcrumbsClass: {
@@ -27,7 +27,7 @@ const OrderStatusTemplate = () => {
   const { t } = useTranslation('common')
   const { data: orderCollection, isFetching } = useUserOrderQueries(queryFilters)
   const { items = [], pageCount } = orderCollection
-  const order = items && (items[0] as Order)
+  const order = items && (items[0] as CrOrder)
   const breadCrumbsList = [
     { text: t('home'), link: '/' },
     { text: t('order-status'), link: '/order-status' },

@@ -7,17 +7,17 @@ import { makeGraphQLClient } from '@/lib/gql/client'
 import { getCheckoutQuery } from '@/lib/gql/queries'
 import { checkoutKeys } from '@/lib/react-query/queryKeys'
 
-import type { Order } from '@/lib/gql/types'
+import type { CrOrder } from '@/lib/gql/types'
 interface UseCheckout {
   checkoutId?: string
-  initialCheckout?: Order
+  initialCheckout?: CrOrder
 }
 
 /**
  * @hidden
  */
 export interface UseCheckoutResponse {
-  data: Order | undefined
+  data: CrOrder | undefined
   isLoading: boolean
   isSuccess: boolean
 }

@@ -7,7 +7,7 @@ import { makeGraphQLClient } from '@/lib/gql/client'
 import { deleteCartItemMutation } from '@/lib/gql/mutations'
 import { cartKeys } from '@/lib/react-query/queryKeys'
 
-import type { CartItem } from '@/lib/gql/types'
+import type { CrCartItem } from '@/lib/gql/types'
 
 interface RemoveCartItemParams {
   cartItemId: string
@@ -50,7 +50,7 @@ export const useRemoveCartItemMutation = () => {
 
         const previousCart: any = queryClient.getQueryData(cartKeys.all)
         const newCart = previousCart?.items?.filter(
-          (item: CartItem) => item.id !== deleteCartItem.cartItemId
+          (item: CrCartItem) => item.id !== deleteCartItem.cartItemId
         )
         queryClient.setQueryData(cartKeys.all, newCart)
 

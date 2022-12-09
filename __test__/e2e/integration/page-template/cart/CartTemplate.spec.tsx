@@ -59,7 +59,7 @@ describe('[components] CartTemplate integration', () => {
     })
 
     const details = mockFulfillmentOptions[0].details
-    items?.map((_item: CrCartItem, index: number) => {
+    items?.map((_item, index: number) => {
       expect(screen.getAllByText(details as string)[index]).toBeVisible()
     })
     expect(cartTitle).toBeVisible()
