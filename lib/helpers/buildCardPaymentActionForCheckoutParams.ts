@@ -1,17 +1,17 @@
 import { orderGetters, cardGetters } from '@/lib/getters'
 import type { CardTypeForCheckout, TokenizedCard } from '@/lib/types'
 
-import type { BillingInfo, Contact, Order, PaymentActionInput } from '@/lib/gql/types'
+import type { CrBillingInfo, CrContact, CrOrder, PaymentActionInput } from '@/lib/gql/types'
 
 export const buildCardPaymentActionForCheckoutParams = (
   currencyCode: string,
-  checkout: Order,
+  checkout: CrOrder,
   creditCardData: CardTypeForCheckout,
   tokenizedData: TokenizedCard,
-  billingAddress: Contact,
+  billingAddress: CrContact,
   isBillingAddressAsShipping: boolean
 ): PaymentActionInput => {
-  const billingInfo: BillingInfo = {
+  const billingInfo: CrBillingInfo = {
     billingContact: billingAddress,
     card: {
       isCardInfoSaved: creditCardData.isCardInfoSaved || false,

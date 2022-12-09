@@ -472,9 +472,9 @@ export const cartResponse: CrCart = {
   ],
 }
 
-export const cartMock: { currentCart: Cart } = {
+export const cartMock: { currentCart: CrCart } = {
   currentCart: cartResponse,
 }
-export const cartCouponMock: { updateCartCoupon: Cart } = {
+export const cartCouponMock: { updateCartCoupon: CrCart } = {
   updateCartCoupon: cartResponse,
 }

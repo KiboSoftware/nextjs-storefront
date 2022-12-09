@@ -1,4 +1,4 @@
-import { Contact, CrAddress, CrOrderItem, Maybe } from '../gql/types'
+import { CrContact, CrAddress, CrOrderItem, Maybe } from '../gql/types'
 
 interface ContactDetails {
   firstName: string
@@ -35,7 +35,7 @@ export interface CheckoutDetails {
   shipItems: Maybe<CrOrderItem>[]
   pickupItems: Maybe<CrOrderItem>[]
   orderSummary: OrderSummary
-  personalDetails: Contact
+  personalDetails: CrContact
   shippingDetails: ShippingDetails
   billingDetails: BillingDetails
   paymentMethods: PaymentMethod[]

@@ -9,7 +9,7 @@ import { OrderHistoryItem, ViewOrderDetails, OrderReturnItems } from '@/componen
 import { useUpdateRoutes, useUserOrderQueries } from '@/hooks'
 import { facetGetters, orderGetters } from '@/lib/getters'
 
-import type { Order } from '@/lib/gql/types'
+import type { CrOrder } from '@/lib/gql/types'
 
 interface OrderHistoryProps {
   queryFilters: string[]
@@ -45,7 +45,7 @@ const OrderHistoryTemplate = (props: OrderHistoryProps) => {
   const { items = [] } = orderCollection
 
   const [showFilterBy, setFilterBy] = useState<boolean>(false)
-  const [selectedOrder, setSelectedOrder] = useState<Order | undefined>(undefined)
+  const [selectedOrder, setSelectedOrder] = useState<CrOrder | undefined>(undefined)
   const [isReturnItemsVisible, setIsReturnItemsVisible] = useState<boolean>(false)
 
   const { updateRoute, changeFilters } = useUpdateRoutes()
@@ -60,7 +60,7 @@ const OrderHistoryTemplate = (props: OrderHistoryProps) => {
   const handleFilterBy = () => setFilterBy(!showFilterBy)
   const handleAccountTitleClick = () => onAccountTitleClick()
   const handleHistoryItemClick = (id: string) => {
-    const order = items?.find((orderItem) => orderItem?.id === id) as Order
+    const order = items?.find((orderItem) => orderItem?.id === id) as CrOrder
     setSelectedOrder(order)
   }
   const handleFilterApply = (selectedFilters: string) => {
@@ -80,7 +80,7 @@ const OrderHistoryTemplate = (props: OrderHistoryProps) => {
     })
   }
 
-  const getOrderDetails = (order: Order) => {
+  const getOrderDetails = (order: CrOrder) => {
     const { id, submittedDate, productNames, orderTotal, orderStatus } =
       orderGetters.getOrderHistoryDetails(order)
     return {
@@ -136,7 +136,7 @@ const OrderHistoryTemplate = (props: OrderHistoryProps) => {
               {items?.map((order) => (
                 <OrderHistoryItem
                   key={order?.id}
-                  {...getOrderDetails(order as Order)}
+                  {...getOrderDetails(order as CrOrder)}
                   onHistoryItemClick={handleHistoryItemClick}
                 />
               ))}

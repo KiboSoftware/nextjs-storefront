@@ -25,9 +25,9 @@ import {
 } from '@/hooks'
 import { userGetters } from '@/lib/getters'
 
-import type { CustomerContact, Order } from '@/lib/gql/types'
+import type { CustomerContact, CrOrder } from '@/lib/gql/types'
 interface CheckoutProps {
-  checkout: Order
+  checkout: CrOrder
 }
 
 const buttonStyle = {
@@ -149,17 +149,13 @@ const Checkout = (props: CheckoutProps) => {
               <DetailsStep checkout={checkout} />
               {((isAuthenticated && isSuccess) || !isAuthenticated) && (
                 <ShippingStep
-                  checkout={checkout as Order}
+                  checkout={checkout as CrOrder}
                   userShippingAddress={userShippingAddress}
                   isAuthenticated={isAuthenticated}
                 />
               )}
               <PaymentStep checkout={checkout} {...paymentStepParams} />
-              <ReviewStep
-                isMultiShipEnabled={isMultiShipEnabled}
-                checkout={checkout as Order}
-                onBackButtonClick={handleBack}
-              />
+              <ReviewStep checkout={checkout as CrOrder} onBackButtonClick={handleBack} />
             </KiboStepper>
           </Stack>
 
@@ -201,16 +197,14 @@ const Checkout = (props: CheckoutProps) => {
                 )}
               </OrderSummary>
             )}
-            {activeStep === reviewStepIndex && (
-              <OrderReview isMultiShipEnabled={isMultiShipEnabled} checkout={checkout as Order} />
-            )}
+            {activeStep === reviewStepIndex && <OrderReview checkout={checkout as CrOrder} />}
           </Box>
         </Stack>
       )}
 
       {!showCheckoutSteps && (
         <Stack sx={{ paddingY: '40px' }}>
-          <OrderConfirmation order={checkout as Order} />
+          <OrderConfirmation order={checkout as CrOrder} />
         </Stack>
       )}
     </>

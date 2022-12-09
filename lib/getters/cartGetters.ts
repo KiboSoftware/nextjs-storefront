@@ -2,17 +2,17 @@ import getConfig from 'next/config'
 
 import { FulfillmentOptions } from '../constants'
 
-import type { Maybe, Cart, CartItem, Location, Product } from '../gql/types'
+import type { Maybe, CrCart, CrCartItem, Location, Product } from '../gql/types'
 import type { FulfillmentOption } from '../types'
 
 const { publicRuntimeConfig } = getConfig()
 
-const getCartItemCount = (cart: Cart) => cart?.items?.length || 0
+const getCartItemCount = (cart: CrCart) => cart?.items?.length || 0
 
-const getCartItems = (cart: Cart) => cart?.items || []
+const getCartItems = (cart: CrCart) => cart?.items || []
 
 const getCartItemFulfillmentLocation = (
-  cartItem: Maybe<CartItem>,
+  cartItem: Maybe<CrCartItem>,
   location: Maybe<Location>[]
 ): Location => {
   return (

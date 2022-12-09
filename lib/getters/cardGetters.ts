@@ -1,6 +1,6 @@
 import type { SavedCard, TokenizedCard } from '@/lib/types'
 
-import type { Card, PaymentCard } from '../gql/types'
+import type { Card, CrPaymentCard } from '../gql/types'
 
 type GenericCard = SavedCard | Card
 // cards
@@ -24,10 +24,10 @@ const getIsCardInfoSaved = (creditCardData?: SavedCard): boolean =>
 
 const getPaymentType = (creditCardData?: SavedCard): string => creditCardData?.paymentType || ''
 
-const getExpireMonth = (creditCardData?: GenericCard | PaymentCard): number =>
+const getExpireMonth = (creditCardData?: GenericCard | CrPaymentCard): number =>
   creditCardData?.expireMonth || 0
 
-const getExpireYear = (creditCardData?: GenericCard | PaymentCard): number =>
+const getExpireYear = (creditCardData?: GenericCard | CrPaymentCard): number =>
   creditCardData?.expireYear || 0
 
 const getCardDetails = (card: GenericCard) => {
@@ -48,8 +48,8 @@ const getTokenizedCardNumberMask = (tokenizedData: TokenizedCard): string =>
 
 const getTokenizedId = (tokenizedData: TokenizedCard) => tokenizedData?.id || ''
 
-const getPaymentServiceCardId = (card: PaymentCard) => card.paymentServiceCardId || ''
-const getCardNumberPartOrMask = (card: PaymentCard) => card.cardNumberPartOrMask || ''
+const getPaymentServiceCardId = (card: CrPaymentCard) => card.paymentServiceCardId || ''
+const getCardNumberPartOrMask = (card: CrPaymentCard) => card.cardNumberPartOrMask || ''
 
 export const cardGetters = {
   getCardId,

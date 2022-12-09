@@ -8,7 +8,7 @@ import * as stories from '@/components/order/ViewOrderDetails/ViewOrderDetails.s
 import { FulfillmentOptions } from '@/lib/constants'
 import { cardGetters, orderGetters } from '@/lib/getters'
 
-import type { CrOrder, CrPaymentCard, CrOrderItem, CrPayment } from '@/lib/gql/types'
+import type { CrOrder, CrPaymentCard } from '@/lib/gql/types'
 
 const { Common } = composeStories(stories)
 
@@ -23,11 +23,11 @@ describe('[components] - ViewOrderDetails Integration', () => {
     const order = Common.args?.order as CrOrder
     const shipItems =
       Common.args?.order?.items?.filter(
-        (item: CrOrderItem) => item?.fulfillmentMethod === FulfillmentOptions.SHIP
+        (item) => item?.fulfillmentMethod === FulfillmentOptions.SHIP
       ) || []
     const pickupItems =
       Common.args?.order?.items?.filter(
-        (item: CrOrderItem) => item?.fulfillmentMethod === FulfillmentOptions.PICKUP
+        (item) => item?.fulfillmentMethod === FulfillmentOptions.PICKUP
       ) || []
     const payments = Common.args?.order?.payments || []
 
@@ -38,14 +38,14 @@ describe('[components] - ViewOrderDetails Integration', () => {
     expect(screen.getByText(`${Common.args?.order?.orderNumber}`)).toBeVisible()
     expect(screen.getByText(orderGetters.getSubmittedDate(order))).toBeVisible()
 
-    shipItems?.map((item: CrOrderItem) => {
+    shipItems?.map((item) => {
       expect(screen.getByText(item?.product?.name || '')).toBeVisible()
     })
-    pickupItems?.map((item: CrOrderItem) => {
+    pickupItems?.map((item) => {
       expect(screen.getByText(item?.product?.name || '')).toBeVisible()
     })
 
-    payments?.map((payment: CrPayment) => {
+    payments?.map((payment) => {
       const cardNumberPartOrMask = cardGetters.getCardNumberPartOrMask(
         payment?.billingInfo?.card as CrPaymentCard
       )
