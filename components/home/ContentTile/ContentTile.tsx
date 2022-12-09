@@ -74,19 +74,6 @@ const SmallImageWrapper = styled('div')(
   }
 `
 )
-
-const StyledLink = styled(Link)(
-  ({ theme }) => `
-  font-weight: 500;
-  text-transform: uppercase;
-  margin: 1rem;
-  color: ${theme?.palette.text.primary};
-  font-size: ${theme?.typography.body1.fontSize};
-  font-family: ${theme?.typography.fontFamily};
-  text-decoration: none;
-`
-)
-
 const ContentTiles = (props: TileProps) => {
   const kiboTheme = useTheme()
   const mobileView = useMediaQuery(kiboTheme.breakpoints.down('md'))
@@ -124,19 +111,19 @@ const ContentTiles = (props: TileProps) => {
 
         <Box sx={styles.linkBoxStyle}>
           {link1?.url && (
-            <StyledLink href={link1?.url} passHref>
-              {link1.title}
-            </StyledLink>
+            <Link href={link1?.url} passHref>
+              <Typography sx={styles.linkStyle}>{link1.title}</Typography>
+            </Link>
           )}
           {link2?.url && (
-            <StyledLink href={link2?.url} passHref>
-              {link2.title}
-            </StyledLink>
+            <Link href={link2?.url} passHref>
+              <Typography sx={styles.linkStyle}>{link2.title}</Typography>
+            </Link>
           )}
           {link3?.url && (
-            <StyledLink href={link3?.url} passHref>
-              {link3.title}
-            </StyledLink>
+            <Link href={link3?.url} passHref>
+              <Typography sx={styles.linkStyle}>{link3.title}</Typography>
+            </Link>
           )}
         </Box>
       </Box>
