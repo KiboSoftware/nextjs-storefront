@@ -10,7 +10,7 @@ import * as stories from '@/components/checkout/ReviewStep/ReviewStep.stories'
 import { AuthContext, AuthContextType } from '@/context/'
 import { orderGetters } from '@/lib/getters'
 
-import type { Order } from '@/lib/gql/types'
+import type { CrOrder } from '@/lib/gql/types'
 
 const { Common } = composeStories(stories)
 
@@ -68,7 +68,7 @@ describe('[components] ReviewStep', () => {
   it('should display productItems when items with shipping products', () => {
     setup()
 
-    const checkout = Common.args?.checkout as Order
+    const checkout = Common.args?.checkout as CrOrder
     const { shipItems } = orderGetters.getCheckoutDetails(checkout)
     const productImage = screen.getByRole('img', {
       name: shipItems[0]?.product?.name as string,

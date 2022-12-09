@@ -33,7 +33,7 @@ import { orderGetters } from '@/lib/getters'
 import { buildCreateOrderParams } from '@/lib/helpers/buildCreateOrderParams'
 import { isPasswordValid } from '@/lib/helpers/validations/validations'
 
-import type { Order, Maybe } from '@/lib/gql/types'
+import type { CrOrder, Maybe } from '@/lib/gql/types'
 
 export interface PersonalDetails {
   email: Maybe<string> | undefined
@@ -44,7 +44,7 @@ export interface PersonalDetails {
 }
 
 interface ReviewStepProps {
-  checkout: Order
+  checkout: CrOrder
   onBackButtonClick: () => void
   isMultiShipEnabled: boolean
 }
@@ -277,7 +277,7 @@ const ReviewStep = (props: ReviewStepProps) => {
                   onBlur={field.onBlur}
                   onChange={(_name, value) => field.onChange(value)}
                   error={!!errors?.firstName}
-                  helperText={errors?.firstName?.message}
+                  helperText={errors?.firstName?.message as string}
                 />
               )}
             />
@@ -294,7 +294,7 @@ const ReviewStep = (props: ReviewStepProps) => {
                   onBlur={field.onBlur}
                   onChange={(_name, value) => field.onChange(value)}
                   error={!!errors?.lastNameOrSurname}
-                  helperText={errors?.lastNameOrSurname?.message}
+                  helperText={errors?.lastNameOrSurname?.message as string}
                 />
               )}
             />

@@ -1,4 +1,4 @@
-import type { CartItem as CartItemType } from '@/lib/gql/types'
+import type { CrCartItem as CartItemType } from '@/lib/gql/types'
 
 export const cartItemMock: CartItemType = {
   id: '1beef214158842d7a305ae68009d4d4c',

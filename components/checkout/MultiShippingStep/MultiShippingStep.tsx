@@ -416,16 +416,18 @@ const MultiShippingStep = (props: ShippingProps) => {
                   {t('add-new-address')}
                 </Button>
               </Stack>
-              {shippingMethods && shippingMethods[0]?.shippingRates?.length > 0 && (
-                <ShippingMethod
-                  shipItems={shipItems as CrOrderItem[]}
-                  pickupItems={pickupItems as CrOrderItem[]}
-                  orderShipmentMethods={[...shippingMethods[0]?.shippingRates]}
-                  selectedShippingMethodCode={checkoutShippingMethodCode as string}
-                  onShippingMethodChange={handleSaveShippingMethod}
-                  onStoreLocatorClick={handleStoreLocatorClick}
-                />
-              )}
+              {shippingMethods &&
+                shippingMethods[0]?.shippingRates &&
+                shippingMethods[0]?.shippingRates?.length > 0 && (
+                  <ShippingMethod
+                    shipItems={shipItems as CrOrderItem[]}
+                    pickupItems={pickupItems as CrOrderItem[]}
+                    orderShipmentMethods={[...shippingMethods[0]?.shippingRates]}
+                    selectedShippingMethodCode={checkoutShippingMethodCode as string}
+                    onShippingMethodChange={handleSaveShippingMethod}
+                    onStoreLocatorClick={handleStoreLocatorClick}
+                  />
+                )}
             </>
           )}
 

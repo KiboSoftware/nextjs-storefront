@@ -6,20 +6,12 @@ import { useTranslation } from 'next-i18next'
 import getConfig from 'next/config'
 
 import { ShippingMethod } from '@/components/checkout'
-import {
-  AddressDetailsView,
-  AddressForm,
-  KiboRadio,
-  ProductItemWithAddressList,
-  ShippingGroupsWithMethod,
-} from '@/components/common'
+import { AddressDetailsView, AddressForm, KiboRadio } from '@/components/common'
 import { useCheckoutStepContext, STEP_STATUS } from '@/context'
-import { useUpdateCheckoutShippingInfoMutation, useShippingMethodsQueries } from '@/hooks'
 import { DefaultId } from '@/lib/constants'
 import { orderGetters, userGetters } from '@/lib/getters'
-import { buildCheckoutShippingParams, ShippingParams } from '@/lib/helpers'
 
-import type { Order, CrOrderItem, Contact, CustomerContact } from '@/lib/gql/types'
+import type { CrOrder, CrOrderItem, CrContact, CustomerContact } from '@/lib/gql/types'
 
 const buttonStyle = {
   width: '100%',
@@ -31,7 +23,7 @@ const buttonStyle = {
 
 interface ShippingProps {
   setAutoFocus?: boolean
-  checkout: Order
+  checkout: CrOrder
   userShippingAddress?: CustomerContact[]
   isAuthenticated: boolean
   isMultiShipEnabled?: boolean
@@ -123,7 +115,7 @@ const ShippingStep = (props: ShippingProps) => {
 
   const handleAddressValidationAndSave = () => setValidateForm(true)
 
-  const handleSaveAddress = async ({ contact }: { contact: Contact }) => {
+  const handleSaveAddress = async ({ contact }: { contact: CrContact }) => {
     try {
       // await updateCheckoutShippingInfo.mutateAsync({ checkout, contact })
       await updateCheckoutShippingInfo({ checkout, contact })
@@ -183,7 +175,7 @@ const ShippingStep = (props: ShippingProps) => {
       (address) => address?.id === Number(addressId)
     )
     if (selectedAddress?.id) {
-      const contact: Contact = {
+      const contact: CrContact = {
         id: selectedAddress?.id,
         firstName: selectedAddress?.firstName || '',
         lastNameOrSurname: selectedAddress?.lastNameOrSurname || '',

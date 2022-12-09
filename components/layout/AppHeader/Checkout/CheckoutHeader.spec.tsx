@@ -17,7 +17,7 @@ useRouter.mockImplementation(() => ({
 
 describe('[component] MobileHeader component', () => {
   it('should render the component', () => {
-    renderWithQueryClient(<CheckoutHeader />)
+    renderWithQueryClient(<CheckoutHeader numberOfItems={3} />)
 
     expect(screen.getByText(/checkout/)).toBeVisible()
     expect(screen.queryByTestId(/top-bar/)).not.toBeInTheDocument()

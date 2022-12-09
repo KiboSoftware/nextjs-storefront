@@ -7,7 +7,7 @@ import { render, screen } from '@testing-library/react'
 import * as stories from '@/components/order/OrderConfirmation/OrderConfirmation.stories'
 import { orderGetters } from '@/lib/getters'
 
-import type { Order } from '@/lib/gql/types'
+import type { CrOrder } from '@/lib/gql/types'
 
 const { Common } = composeStories(stories)
 
@@ -19,7 +19,7 @@ describe('[components] - OrderConfirmation Integration', () => {
   it('should render component', async () => {
     setup()
 
-    const order = Common.args?.order as Order
+    const order = Common.args?.order as CrOrder
 
     const orderNumber = orderGetters.getOrderNumber(order)
     const submittedDate = orderGetters.getSubmittedDate(order)
