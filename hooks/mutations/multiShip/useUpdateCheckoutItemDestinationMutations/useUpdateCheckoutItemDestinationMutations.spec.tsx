@@ -1,12 +1,12 @@
 import { renderHook } from '@testing-library/react-hooks'
 
 import { useUpdateCheckoutItemDestinationMutations } from './useUpdateCheckoutItemDestinationMutations'
-import { checkoutResponse } from '@/__mocks__/stories'
+import { checkoutMock } from '@/__mocks__/stories'
 import { createQueryClientWrapper } from '@/__test__/utils/renderWithQueryClient'
 
 describe('[hooks] useUpdateCheckoutItemDestinationMutations', () => {
   it('should use useUpdateCheckoutItemDestinationMutations', async () => {
-    const checkoutItemDestination = checkoutResponse
+    const checkoutItemDestination = checkoutMock
 
     renderHook(
       async () => {

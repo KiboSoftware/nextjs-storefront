@@ -4,7 +4,7 @@ import { useUpdateCartItemMutation } from './useUpdateCartItemMutation'
 import { cartItemMock } from '@/__mocks__/stories/cartItemMock'
 import { createQueryClientWrapper } from '@/__test__/utils/renderWithQueryClient'
 
-import type { CartItemInput } from '@/lib/gql/types'
+import type { CrCartItemInput } from '@/lib/gql/types'
 
 describe('[hooks] useUpdateCartItemMutation', () => {
   beforeEach(() => {
@@ -21,7 +21,7 @@ describe('[hooks] useUpdateCartItemMutation', () => {
 
         const updateResponse = await updateCartItem.mutateAsync({
           cartItemId: '1beef214158842d7a305ae68009d4d4c',
-          cartItemInput: cartItemMock as CartItemInput,
+          cartItemInput: cartItemMock as CrCartItemInput,
         })
 
         expect(updateResponse).toStrictEqual(cartItemMock)

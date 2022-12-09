@@ -7,13 +7,13 @@ import { makeGraphQLClient } from '@/lib/gql/client'
 import { getCartQuery } from '@/lib/gql/queries'
 import { cartKeys } from '@/lib/react-query/queryKeys'
 
-import type { Cart } from '@/lib/gql/types'
+import type { CrCart } from '@/lib/gql/types'
 
 /**
  * @hidden
  */
 export interface UseCartType {
-  data: Cart
+  data: CrCart
   isLoading: boolean
   isSuccess: boolean
 }
@@ -42,7 +42,7 @@ const getCurrentCart = async () => {
  *
  * @returns 'response?.currentCart' which contains all the updated items present in cart
  */
-export const useCartQueries = (initialData: Cart): UseCartType => {
+export const useCartQueries = (initialData: CrCart): UseCartType => {
   try {
     const {
       data = {},

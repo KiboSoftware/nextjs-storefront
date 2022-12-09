@@ -1,6 +1,8 @@
 import lodash from 'lodash'
 
-import type { CrOrderItem, Checkout, Maybe, CrDestination, Contact } from '@/lib/gql/types'
+import { ShipOption } from '@/components/checkout/MultiShippingStep/MultiShippingStep'
+
+import type { CrOrderItem, Checkout, Maybe, CrDestination, CrContact } from '@/lib/gql/types'
 
 interface DestinationItemGroup {
   destinationId: string
@@ -29,12 +31,18 @@ const buildItemsGroupFromCheckoutGroupings = (checkout: Checkout) => {
   return checkoutGroupings
 }
 
-const formatDestinationAddress = (contact: Contact) => {
+const formatDestinationAddress = (contact: CrContact) => {
   const { firstName, lastNameOrSurname, address } = contact
   return `${firstName} ${lastNameOrSurname}, ${address?.address1}, ${address?.address2}, ${address?.cityOrTown}, ${address?.stateOrProvince}, ${address?.postalOrZipCode}, ${address?.countryCode} `
 }
 
-const getMultiShipAddresses = ({ checkout, savedShippingAddresses }) => {
+const getMultiShipAddresses = ({
+  checkout,
+  savedShippingAddresses,
+}: {
+  checkout: Checkout
+  savedShippingAddresses: CrContact[]
+}) => {
   const destinationAddresses = checkout?.destinations?.map((destination) => {
     return {
       destinationId: destination?.id,
@@ -45,7 +53,7 @@ const getMultiShipAddresses = ({ checkout, savedShippingAddresses }) => {
   const destinationAddressIds = Array.from(
     new Set(
       destinationAddresses
-        .map((destinationAddress) => destinationAddress.destinationContact?.id)
+        ?.map((destinationAddress) => destinationAddress?.destinationContact?.id)
         .filter(Boolean)
     )
   )
@@ -74,7 +82,7 @@ const getMultiShipAddresses = ({ checkout, savedShippingAddresses }) => {
   return [...destinationAddresses, ...savedAddresses]
 }
 
-const getInitialShippingOption = (checkout, shippingOptions) =>
+const getInitialShippingOption = (checkout: Checkout, shippingOptions: ShipOption[]) =>
   checkout?.groupings?.length > 1 ? shippingOptions[1]?.value : shippingOptions[0]?.value
 
 const getCheckoutItemCount = (checkout: Checkout) => checkout?.items?.length

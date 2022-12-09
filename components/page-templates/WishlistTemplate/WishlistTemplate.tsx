@@ -11,7 +11,7 @@ import { productGetters } from '@/lib/getters'
 import { uiHelpers } from '@/lib/helpers'
 import type { WishlistProductInput, ProductCustom } from '@/lib/types'
 
-import type { Maybe, WishlistItem, CustomerAccount } from '@/lib/gql/types'
+import type { Maybe, CrWishlistItem, CustomerAccount } from '@/lib/gql/types'
 
 const styles = {
   removedItemStyle: {
@@ -63,7 +63,7 @@ const WishlistTemplate = (props: { customerAccount: CustomerAccount }) => {
         {wishlists?.items?.length ? (
           <Grid container sx={{ display: 'flex', paddingRight: { md: 2 }, flexWrap: 'wrap' }}>
             {wishlists &&
-              wishlists?.items?.map((item: Maybe<WishlistItem>) => (
+              wishlists?.items?.map((item: Maybe<CrWishlistItem>) => (
                 <Grid
                   key={productGetters.getProductId(item?.product as ProductCustom)}
                   item

@@ -1,15 +1,13 @@
-import { DefaultId } from '../constants'
-
-import type { Order, Contact, FulfillmentInfoInput } from '@/lib/gql/types'
+import type { CrOrder, CrContact, CrFulfillmentInfoInput } from '@/lib/gql/types'
 
 export interface ShippingParams {
   orderId: string
-  fulfillmentInfoInput: FulfillmentInfoInput
+  fulfillmentInfoInput: CrFulfillmentInfoInput
 }
 
 export interface CheckoutShippingParams {
-  checkout: Order
-  contact?: Contact
+  checkout: CrOrder
+  contact?: CrContact
   email?: string
   shippingMethodCode?: string
   shippingMethodName?: string
@@ -30,6 +28,6 @@ export const buildCheckoutShippingParams = (params: CheckoutShippingParams): Shi
       shippingMethodCode: shippingMethodCode ? shippingMethodCode : null,
 
       shippingMethodName: shippingMethodName ? shippingMethodName : null,
-    } as FulfillmentInfoInput,
+    } as CrFulfillmentInfoInput,
   } as ShippingParams
 }

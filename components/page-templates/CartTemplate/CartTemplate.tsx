@@ -35,11 +35,11 @@ import { FulfillmentOptions } from '@/lib/constants'
 import { orderGetters, cartGetters } from '@/lib/getters'
 import type { LocationCustom } from '@/lib/types'
 
-import type { Cart, Location, CartItemInput, CartItem } from '@/lib/gql/types'
+import type { CrCart, Location, CrCartItemInput, CrCartItem } from '@/lib/gql/types'
 
 export interface CartTemplateProps {
   isMultiShipEnabled: boolean
-  cart: Cart
+  cart: CrCart
 }
 
 const styles = {
@@ -158,10 +158,10 @@ const CartTemplate = (props: CartTemplateProps) => {
     locationCode = ''
   ) => {
     try {
-      const cartItem = cartItems.find((item) => item?.id === cartItemId)
+      const cartItem = cartItems.find((item: CrCartItem) => item?.id === cartItemId)
       await updateCartItem.mutateAsync({
         cartItemInput: {
-          ...(cartItem as CartItemInput),
+          ...(cartItem as CrCartItemInput),
           fulfillmentMethod,
           fulfillmentLocationCode: locationCode,
         },

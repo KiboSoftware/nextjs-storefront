@@ -4,7 +4,7 @@ import { AddressType, PaymentType } from '@/lib/constants'
 import type {
   Card,
   CardCollection,
-  Contact,
+  CrContact,
   CustomerAccount,
   CustomerContact,
   CustomerContactCollection,
@@ -56,7 +56,7 @@ const getSavedCardsAndBillingDetails = (
         paymentType: PaymentType.CREDITCARD,
       },
       billingAddressInfo: {
-        contact: rest as Contact,
+        contact: rest as CrContact,
       },
     }
   })
@@ -77,7 +77,7 @@ const getEmailAddress = (user: CustomerAccount) => user?.emailAddress || ''
 const getUserId = (user: CustomerAccount) => user?.id
 
 const getAllShippingAddresses = (
-  checkoutShippingContact: Contact,
+  checkoutShippingContact: CrContact,
   userShippingAddress: CustomerContact[] = []
 ) => {
   if (!userShippingAddress.length && checkoutShippingContact === null) {

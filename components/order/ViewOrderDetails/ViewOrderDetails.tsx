@@ -11,7 +11,14 @@ import { useStoreLocationsQueries } from '@/hooks'
 import { OrderStatus } from '@/lib/constants'
 import { addressGetters, orderGetters, storeLocationGetters } from '@/lib/getters'
 
-import type { Maybe, CrOrder, Location } from '@/lib/gql/types'
+import type {
+  Maybe,
+  CrOrder,
+  Location,
+  CrPaymentInput,
+  InputMaybe,
+  CrAddressInput,
+} from '@/lib/gql/types'
 
 interface ViewOrderDetailsProps {
   order: CrOrder
@@ -180,12 +187,12 @@ const ViewOrderDetails = (props: ViewOrderDetailsProps) => {
               <Typography variant="h3" fontWeight={'bold'}>
                 {t('payment-information')}
               </Typography>
-              {payments?.map((payment:CrPayment) => {
+              {payments?.map((payment: Maybe<CrPaymentInput>) => {
                 const cardDetails = orderGetters.getOrderPaymentCardDetails(
-                  payment.billingInfo.card
+                  payment?.billingInfo?.card
                 )
                 const address = addressGetters.getAddress(
-                  payment.billingInfo.billingContact.address
+                  payment?.billingInfo?.billingContact?.address as InputMaybe<CrAddressInput>
                 )
                 return (
                   <SavedPaymentMethodView

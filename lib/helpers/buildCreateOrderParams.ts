@@ -1,6 +1,6 @@
-import { Order } from '../gql/types'
+import { CrOrder } from '../gql/types'
 
-export const buildCreateOrderParams = (order: Order) => ({
+export const buildCreateOrderParams = (order: CrOrder) => ({
   orderId: order.id as string,
   orderActionInput: { actionName: 'SubmitOrder' },
 })

@@ -10,7 +10,7 @@ import type { Maybe, CrOrderItem, CrShippingRate } from '@/lib/gql/types'
 export type ShippingMethodProps = {
   shipItems: Maybe<CrOrderItem>[]
   pickupItems: Maybe<CrOrderItem>[]
-  orderShipmentMethods: CrShippingRate[]
+  orderShipmentMethods: Maybe<CrShippingRate>[]
   selectedShippingMethodCode: string
   onShippingMethodChange: (name: string, value: string) => void
   onStoreLocatorClick?: () => void

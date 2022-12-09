@@ -131,7 +131,7 @@ const MultiShipCheckoutTemplate = (props: CheckoutProps) => {
         {((isAuthenticated && isSuccess) || !isAuthenticated) && (
           <MultiShippingStep
             checkout={checkout as Checkout}
-            userShippingAddress={userShippingAddress}
+            userSavedShippingAddress={userShippingAddress}
             isAuthenticated={isAuthenticated}
             shippingMethods={shippingMethods}
             setIsNewAddressAdded={setIsNewAddressAdded}

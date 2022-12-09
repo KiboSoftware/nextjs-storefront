@@ -41,7 +41,7 @@ const buttonStyle = {
 interface ShippingProps {
   setAutoFocus?: boolean
   checkout: Checkout
-  userShippingAddress?: CustomerContact[]
+  userSavedShippingAddress?: CustomerContact[]
   isAuthenticated: boolean
   shippingMethods: CheckoutGroupRates[]
   checkoutId?: string
@@ -49,7 +49,7 @@ interface ShippingProps {
   setIsNewAddressAdded: (params: boolean) => void
   createCheckoutDestination: any
   onUpdateCheckoutShippingMethod: (params: {
-    shippingMethodGroup?: CheckoutGroupRates
+    shippingMethodGroup: CheckoutGroupRates
     shippingMethodCode: string
   }) => void
 }
@@ -69,7 +69,7 @@ interface ShippingDestination {
   address: CrContact
 }
 
-type ShipOption = {
+export type ShipOption = {
   value: string
   code: string
   name: string
@@ -80,7 +80,7 @@ type ShipOption = {
 const MultiShippingStep = (props: ShippingProps) => {
   const {
     checkout,
-    userShippingAddress: addresses,
+    userSavedShippingAddress: addresses,
     isAuthenticated,
     shippingMethods,
     isNewAddressAdded,
@@ -105,9 +105,7 @@ const MultiShippingStep = (props: ShippingProps) => {
   const [validateForm, setValidateForm] = useState<boolean>(false)
   const [isAddressFormValid, setIsAddressFormValid] = useState<boolean>(false)
 
-  const [savedShippingAddresses, setSavedShippingAddresses] = useState<
-    CustomerContact[] | undefined
-  >(
+  const [savedShippingAddresses, setSavedShippingAddresses] = useState<CustomerContact[]>(
     userGetters.getAllShippingAddresses(
       checkoutShippingContact,
       userShippingAddress as CustomerContact[]
@@ -222,14 +220,14 @@ const MultiShippingStep = (props: ShippingProps) => {
     shippingMethodCode: string
   ) => {
     try {
-      console.log('handleSaveShippingMethod', shippingMethodCode)
       const groupingId = checkout?.groupings && (checkout?.groupings[0]?.id as string)
-      console.log('groupingId : ', groupingId)
       const shippingMethodGroup = shippingMethods?.find(
         (shippingMethod: CheckoutGroupRates) => shippingMethod?.groupingId === groupingId
       )
-      console.log('shippingMethodGroup : ', shippingMethodGroup)
-      onUpdateCheckoutShippingMethod({ shippingMethodGroup, shippingMethodCode })
+      onUpdateCheckoutShippingMethod({
+        shippingMethodGroup: shippingMethodGroup as CheckoutGroupRates,
+        shippingMethodCode,
+      })
     } catch (error) {
       console.error(error)
     }
@@ -304,7 +302,8 @@ const MultiShippingStep = (props: ShippingProps) => {
   const handleCreateDestinationAddress = async (shippingAddressId: string) => {
     const existingAddress = userShippingAddress?.find(
       (shippingAddress) => shippingAddress?.id?.toString() === shippingAddressId
-    )
+    ) as CustomerContact
+
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const { accountId, types, ...rest } = existingAddress
 

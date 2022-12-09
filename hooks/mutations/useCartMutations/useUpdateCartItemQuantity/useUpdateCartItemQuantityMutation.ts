@@ -7,7 +7,7 @@ import { makeGraphQLClient } from '@/lib/gql/client'
 import { updateCartItemQuantityMutation } from '@/lib/gql/mutations'
 import { cartKeys } from '@/lib/react-query/queryKeys'
 
-import type { CartItem } from '@/lib/gql/types'
+import type { CrCartItem } from '@/lib/gql/types'
 
 interface UpdateCartItemQuantityParams {
   cartItemId: string
@@ -54,7 +54,7 @@ export const useUpdateCartItemQuantityMutation = () => {
         const previousCart: any = queryClient.getQueryData(cartKeys.all)
         const cart = { ...previousCart }
         const cartItem = cart?.items?.find(
-          (item: CartItem) => item.id === modifiedCartItem.cartItemId
+          (item: CrCartItem) => item.id === modifiedCartItem.cartItemId
         )
 
         if (cartItem?.id) cartItem.quantity = modifiedCartItem.quantity

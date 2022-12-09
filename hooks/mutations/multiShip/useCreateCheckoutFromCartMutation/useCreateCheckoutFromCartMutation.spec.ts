@@ -9,8 +9,8 @@ describe('[hooks] useCreateCheckoutFromCartMutation', () => {
     renderHook(
       async () => {
         const cartId = '137a94b6402be000013718d80000678b'
-        const { createFromCart } = useCreateMultiShipCheckoutFromCartMutation()
-        const response = await createFromCart.mutateAsync(cartId)
+        const { createMultiShipCheckoutFromCart } = useCreateMultiShipCheckoutFromCartMutation()
+        const response = await createMultiShipCheckoutFromCart.mutateAsync(cartId)
         expect(response).toStrictEqual(orderMock.checkout)
       },
       {

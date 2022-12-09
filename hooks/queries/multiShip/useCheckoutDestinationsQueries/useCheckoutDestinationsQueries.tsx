@@ -4,12 +4,12 @@ import { makeGraphQLClient } from '@/lib/gql/client'
 import { getCheckoutDestinationsQuery } from '@/lib/gql/queries'
 import { checkoutDestinationKeys } from '@/lib/react-query/queryKeys'
 
-import type { Destination } from '@/lib/gql/types'
+import type { CrDestination } from '@/lib/gql/types'
 interface UseDestinations {
   checkoutId: string
 }
 export interface UseDestinationsResponse {
-  data: Destination[]
+  data: CrDestination[]
   isLoading: boolean
   isSuccess: boolean
 }

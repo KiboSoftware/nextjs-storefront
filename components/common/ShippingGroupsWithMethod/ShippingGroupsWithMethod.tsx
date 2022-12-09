@@ -13,7 +13,7 @@ export type ShippingGroupsWithMethodProps = {
   shippingMethods: CheckoutGroupRates[]
   onClickEditMultiShippingDetails: () => void
   onUpdateCheckoutShippingMethod: (params: {
-    shippingMethodGroup?: CheckoutGroupRates
+    shippingMethodGroup: CheckoutGroupRates
     shippingMethodCode: string
   }) => void
 }
@@ -96,7 +96,10 @@ const ShippingGroupsWithMethod = (props: ShippingGroupsWithMethodProps) => {
     const shippingMethodGroup = shippingMethods?.find(
       (shippingMethod) => shippingMethod?.groupingId === id
     )
-    onUpdateCheckoutShippingMethod({ shippingMethodGroup, shippingMethodCode: value })
+    onUpdateCheckoutShippingMethod({
+      shippingMethodGroup: shippingMethodGroup as CheckoutGroupRates,
+      shippingMethodCode: value,
+    })
   }
 
   return (
