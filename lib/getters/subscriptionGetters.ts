@@ -22,11 +22,17 @@ const getSubscriptionNumber = (subscription: any) => subscription?.number
 
 const getSubscriptionStatus = (subscription: any) => subscription?.status
 
+const getSubscriptionDetails = (subscription: any) => {
+  return {
+    subscriberName: getSubscriberName(subscription),
+    subscriberAddress: getSubscriberAddress(subscription),
+    subscriptionFrequency: getSubscriptionFrequency(subscription),
+    nextOrderDate: nextOrderItemDate(subscription),
+    subscriptionNumber: getSubscriptionNumber(subscription),
+    subscriptionStatus: getSubscriptionStatus(subscription),
+  }
+}
+
 export const subscriptionGetters = {
-  getSubscriberName,
-  getSubscriberAddress,
-  getSubscriptionFrequency,
-  nextOrderItemDate,
-  getSubscriptionNumber,
-  getSubscriptionStatus,
+  getSubscriptionDetails,
 }

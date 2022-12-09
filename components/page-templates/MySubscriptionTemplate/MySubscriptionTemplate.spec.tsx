@@ -22,6 +22,8 @@ describe('[component] - MySubscription Template', () => {
     setup()
     const subscriptionNumber = screen.getByText(/subscription-number/i)
     const status = screen.getByText(/status/i)
+    const shipmentFrequency = screen.getByText(/shipment-frequency/i)
+    const nextArrivalDate = screen.getByText(/estimated-next-arrival-date/i)
     const shipItemNowButton = screen.getByRole('button', {
       name: /ship-an-item-now/i,
     })
@@ -49,6 +51,8 @@ describe('[component] - MySubscription Template', () => {
 
     expect(subscriptionNumber).toBeInTheDocument()
     expect(status).toBeInTheDocument()
+    expect(shipmentFrequency).toBeInTheDocument()
+    expect(nextArrivalDate).toBeInTheDocument()
     expect(skipShipmentButton).toBeVisible()
     expect(shipItemNowButton).toBeVisible()
     expect(editFrequencyButton).toBeVisible()

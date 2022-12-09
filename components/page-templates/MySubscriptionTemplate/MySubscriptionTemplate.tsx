@@ -9,7 +9,7 @@ import { uiHelpers } from '@/lib/helpers'
 
 import type { CrProduct } from '@/lib/gql/types'
 
-interface SubscriptionProps {
+interface MySubscriptionTemplateProps {
   subscription: any
 }
 
@@ -61,14 +61,22 @@ const SubscriptionButton = (props: SubscriptionButtonProps) => {
   )
 }
 
-const MySubscriptionTemplate = (props: SubscriptionProps) => {
+const MySubscriptionTemplate = (props: MySubscriptionTemplateProps) => {
   const { subscription } = props
-  const subscriberName = subscriptionGetters.getSubscriberName(subscription)
-  const subscriberAddress = subscriptionGetters.getSubscriberAddress(subscription)
-  const subscriptionFrequency = subscriptionGetters.getSubscriptionFrequency(subscription)
-  const nextOrderDate = subscriptionGetters.nextOrderItemDate(subscription)
-  const subscriptionNumber = subscriptionGetters.getSubscriptionNumber(subscription)
-  const subscriptionStatus = subscriptionGetters.getSubscriptionStatus(subscription)
+
+  const {
+    subscriberName,
+    subscriberAddress,
+    subscriptionFrequency,
+    nextOrderDate,
+    subscriptionNumber,
+    subscriptionStatus,
+  } = subscriptionGetters.getSubscriptionDetails(subscription)
+
+  const productImage = productGetters.getProductImage(subscription?.items[0]?.product as CrProduct)
+  const productImageLink = productGetters.handleProtocolRelativeUrl(productImage)
+  const productName = productGetters.getName(subscription?.items[0]?.product as CrProduct)
+  const productOptions = productGetters.getOptions(subscription?.items[0]?.product as CrProduct)
 
   const { getProductLink } = uiHelpers()
   const { t } = useTranslation('common')
@@ -112,11 +120,9 @@ const MySubscriptionTemplate = (props: SubscriptionProps) => {
           <Stack direction="column" sx={{ pt: { xs: '5 %' } }}>
             <Stack direction="row" sx={{ mt: { md: '3%' } }}>
               <ProductItem
-                image={productGetters.handleProtocolRelativeUrl(
-                  productGetters.getProductImage(subscription?.items[0]?.product as CrProduct)
-                )}
-                name={productGetters.getName(subscription?.items[0]?.product as CrProduct)}
-                options={productGetters.getOptions(subscription?.items[0]?.product as CrProduct)}
+                image={productImageLink}
+                name={productName}
+                options={productOptions}
                 link={getProductLink(subscription?.items[0]?.product?.productCode as string)}
               />
             </Stack>
