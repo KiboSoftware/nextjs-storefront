@@ -43,5 +43,12 @@ describe('[components] - MegaMenuItem', () => {
     const menuLink = screen.getByText('shop-all')
     await user.click(menuLink)
     expect(closeBackDropMock).toBeCalled()
+
+    const categoryChildren = Common.args?.categoryChildren
+    categoryChildren?.map(async (cat) => {
+      const name = screen.getByRole('link', { name: `${cat?.content?.name}` })
+      await user.click(name)
+      expect(closeBackDropMock).toBeCalled()
+    })
   })
 })

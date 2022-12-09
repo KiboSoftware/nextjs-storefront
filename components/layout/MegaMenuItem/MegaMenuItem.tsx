@@ -34,18 +34,17 @@ const MegaMenuItem = (props: MegaMenuItemProps) => {
             primaryTypographyProps={{ variant: 'subtitle2', fontWeight: 'bold' }}
           />
         </ListItem>
-        <ListItem sx={{ cursor: 'pointer' }}>
-          <StyledLink href={getCategoryLink(categoryCode)} passHref onClick={onBackDropClose}>
+        <ListItem sx={{ cursor: 'pointer' }} onClick={onBackDropClose}>
+          <StyledLink href={getCategoryLink(categoryCode)} passHref>
             {t('shop-all')}
           </StyledLink>
         </ListItem>
         {categoryChildren?.map((cat) => (
-          <ListItem key={cat?.categoryId} role="group">
+          <ListItem key={cat?.categoryId} role="group" onClick={onBackDropClose}>
             <StyledLink
               href={getCategoryLink(cat?.categoryCode as string)}
               passHref
               data-testid="categoryLink"
-              onClick={onBackDropClose}
             >
               {cat?.content?.name}
             </StyledLink>
