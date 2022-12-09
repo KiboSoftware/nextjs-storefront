@@ -39,10 +39,10 @@ import type {
   CardTypeForCheckout,
 } from '@/lib/types'
 
-import type { Contact, CrAddress, Order, PaymentActionInput } from '@/lib/gql/types'
+import type { CrContact, CrAddress, CrOrder, PaymentActionInput, CrPaymentCard } from '@/lib/gql/types'
 
 interface PaymentStepProps {
-  checkout: Order | undefined
+  checkout: CrOrder | undefined
   contact?: ContactForm
 }
 
@@ -288,10 +288,10 @@ const PaymentStep = (props: PaymentStepProps) => {
 
       paymentAction = buildCardPaymentActionForCheckoutParams(
         'US',
-        { ...checkout } as Order,
+        { ...checkout } as CrOrder,
         cardDetails,
         tokenizedData,
-        selectedPaymentMethod?.billingAddressInfo?.contact as Contact,
+        selectedPaymentMethod?.billingAddressInfo?.contact as CrContact,
         isSameAsShipping
       )
     }
@@ -300,7 +300,7 @@ const PaymentStep = (props: PaymentStepProps) => {
 
     if (
       selectedCards?.some(
-        (card) => card?.billingInfo?.card?.paymentServiceCardId === selectedPaymentBillingRadio
+        (card:CrPaymentCard) => card.?.billingInfo?.card?.paymentServiceCardId === selectedPaymentBillingRadio
       )
     ) {
       setStepStatusComplete()
@@ -308,7 +308,7 @@ const PaymentStep = (props: PaymentStepProps) => {
       return
     }
 
-    selectedCards?.forEach(async (card) => {
+    selectedCards?.forEach(async (card:CrPaymentCard) => {
       paymentAction = { ...paymentAction, actionName: 'VoidPayment' }
       await updateOrderPaymentAction.mutateAsync({
         orderId: checkout?.id as string,
@@ -412,7 +412,7 @@ const PaymentStep = (props: PaymentStepProps) => {
 
     const selectedCards = orderGetters.getSelectedPaymentMethods(checkout, PaymentType.CREDITCARD)
 
-    selectedCards?.forEach((card) => {
+    selectedCards?.forEach((card:CrPaymentCard) => {
       const cardDetails = card?.billingInfo?.card
       const billingAddress = card?.billingInfo?.billingContact
       Boolean(

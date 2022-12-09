@@ -7,9 +7,9 @@ import { OrderSummary, ProductItemList } from '@/components/common'
 import { ProductOptionList } from '@/components/product'
 import { orderGetters } from '@/lib/getters'
 
-import type { Order } from '@/lib/gql/types'
+import type { CrOrder } from '@/lib/gql/types'
 
-const OrderConfirmation = ({ order }: { order: Order }) => {
+const OrderConfirmation = ({ order }: { order: CrOrder }) => {
   const { t } = useTranslation('common')
 
   const orderTotal = orderGetters.getTotal(order)

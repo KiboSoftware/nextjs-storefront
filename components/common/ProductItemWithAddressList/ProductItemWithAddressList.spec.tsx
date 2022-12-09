@@ -27,7 +27,6 @@ describe('[component] - ProductItemWithAddressList', () => {
     const splitItemLink = screen.getAllByRole('button', { name: 'split-into-multiple-shipments' })
 
     const productItems = screen.getAllByTestId('product-item-component')
-    const itemsCount = (Common.args?.items && Common.args?.items.length) || 0
 
     expect(kiboSelect[0]).toBeVisible()
     expect(editAddress[0]).toBeVisible()
@@ -35,6 +34,5 @@ describe('[component] - ProductItemWithAddressList', () => {
     expect(splitItemLink[0]).toBeVisible()
     expect(productItems[0]).toBeInTheDocument()
     expect(productItems[0]).toBeVisible()
-    expect(productItems).toHaveLength(itemsCount)
   })
 })

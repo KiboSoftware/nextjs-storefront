@@ -16,10 +16,10 @@ import { CartTemplateProps } from '@/components/page-templates/CartTemplate/Cart
 import * as stories from '@/components/page-templates/CartTemplate/CartTemplate.stories'
 import { DialogRoot, ModalContextProvider } from '@/context'
 
-import type { CartItem } from '@/lib/gql/types'
+import type { CrCartItem } from '@/lib/gql/types'
 
 const { Common } = composeStories(stories)
-const mockCartItems = (cartMock.currentCart.items || []) as CartItem[]
+const mockCartItems = (cartMock.currentCart.items || []) as CrCartItem[]
 const mockFulfillmentOptions = fulfillmentOptionsMock || []
 
 const setup = (params?: CartTemplateProps) => {
@@ -59,7 +59,7 @@ describe('[components] CartTemplate integration', () => {
     })
 
     const details = mockFulfillmentOptions[0].details
-    items?.map((_item, index) => {
+    items?.map((_item: CrCartItem, index: number) => {
       expect(screen.getAllByText(details as string)[index]).toBeVisible()
     })
     expect(cartTitle).toBeVisible()

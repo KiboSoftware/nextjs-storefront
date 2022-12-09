@@ -10,7 +10,7 @@ import { addNewCard } from '@/__test__/e2e/helper'
 import * as stories from '@/components/checkout/PaymentStep/PaymentStep.stories'
 import { CheckoutStepProvider } from '@/context'
 
-import { Order } from '@/lib/gql/types'
+import { CrOrder } from '@/lib/gql/types'
 
 let mockIsAuthenticated = false
 const userMock = {
@@ -43,7 +43,7 @@ jest.mock('@/lib/helpers/tokenizeCreditCardPayment', () => {
   }
 })
 
-const setup = (param: { checkout: Order }) => {
+const setup = (param: { checkout: CrOrder }) => {
   const user = userEvent.setup()
 
   render(

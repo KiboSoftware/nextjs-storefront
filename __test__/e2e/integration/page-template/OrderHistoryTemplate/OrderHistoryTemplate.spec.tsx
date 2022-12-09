@@ -11,7 +11,7 @@ import * as stories from '@/components/page-templates/OrderHistoryTemplate/Order
 import { FacetTypeForHistory } from '@/lib/constants'
 import { orderGetters } from '@/lib/getters'
 
-import type { Order } from '@/lib/gql/types'
+import type { CrOrder } from '@/lib/gql/types'
 
 const { Common } = composeStories(stories)
 const order = orderCollection?.orders?.items || []
@@ -37,8 +37,8 @@ const setup = () => {
 describe('[component] - OrderHistoryTemplate', () => {
   it('should get order list by applying the time filters', async () => {
     const { user } = setup()
-    const submittedDate = orderGetters.getSubmittedDate(order[0] as Order)
-    const productNames = orderGetters.getProductNames(order[0] as Order)
+    const submittedDate = orderGetters.getSubmittedDate(order[0] as CrOrder)
+    const productNames = orderGetters.getProductNames(order[0] as CrOrder)
 
     const filterOrderText = screen.getByText(/filter-orders/i)
     await user.click(filterOrderText)

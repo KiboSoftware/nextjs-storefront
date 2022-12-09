@@ -1,6 +1,6 @@
-import { BillingInfo } from '@/lib/gql/types'
+import { CrBillingInfo } from '@/lib/gql/types'
 
-export const updateOrderBillingInfoMock: { updateOrderBillingInfo: BillingInfo } = {
+export const updateOrderBillingInfoMock: { updateOrderBillingInfo: CrBillingInfo } = {
   updateOrderBillingInfo: {
     billingContact: {
       id: null,

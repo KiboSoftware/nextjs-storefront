@@ -23,10 +23,10 @@ import { useStoreLocationsQueries } from '@/hooks'
 import { orderGetters } from '@/lib/getters'
 import { storeLocationGetters } from '@/lib/getters/storeLocationGetters'
 
-import type { Order, Maybe, Location, CustomerContact } from '@/lib/gql/types'
+import type { CrOrder, Maybe, Location, CustomerContact } from '@/lib/gql/types'
 
 interface OrderReviewProps {
-  checkout: Order
+  checkout: CrOrder
   isMultiShipEnabled?: boolean
 }
 

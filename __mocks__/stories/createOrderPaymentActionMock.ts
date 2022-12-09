@@ -1,9 +1,10 @@
-import { Order } from '@/lib/gql/types'
+import { CrOrder } from '@/lib/gql/types'
 
-export const createOrderPaymentActionMock: { createOrderPaymentAction: Order } = {
+export const createOrderPaymentActionMock: { createOrderPaymentAction: CrOrder } = {
   createOrderPaymentAction: {
     id: '13eaad5a5526f20001d2fab9000074e7',
     email: 'chandradeepta.laha@kibocommerce.com',
+    continuityOrderOrdinal: 1,
     totalCollected: 0,
     amountAvailableForRefund: 0,
     amountRemainingForPayment: 0,
