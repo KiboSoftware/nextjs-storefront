@@ -6,9 +6,9 @@ import { useTranslation } from 'next-i18next'
 import { OrderPrice, ProductItem } from '@/components/common'
 import type { OrderPriceProps } from '@/components/common/OrderPrice/OrderPrice'
 
-import type { CartItem, CrProductOption } from '@/lib/gql/types'
+import type { CrCartItem, CrProductOption } from '@/lib/gql/types'
 interface CartContentProps {
-  cartItem: CartItem
+  cartItem: CrCartItem
 }
 
 const Content = (props: CartContentProps) => {

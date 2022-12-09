@@ -6,18 +6,18 @@ import { useTranslation } from 'next-i18next'
 import { KiboSelect, ProductItemList } from '@/components/common'
 import { orderGetters } from '@/lib/getters'
 
-import type { Maybe, CrOrderItem, ShippingRate } from '@/lib/gql/types'
+import type { Maybe, CrOrderItem, CrShippingRate } from '@/lib/gql/types'
 export type ShippingMethodProps = {
   shipItems: Maybe<CrOrderItem>[]
   pickupItems: Maybe<CrOrderItem>[]
-  orderShipmentMethods: ShippingRate[]
+  orderShipmentMethods: CrShippingRate[]
   selectedShippingMethodCode: string
   onShippingMethodChange: (name: string, value: string) => void
   onStoreLocatorClick?: () => void
 }
 export type ShipItemListProps = {
   shipItems: Maybe<CrOrderItem>[]
-  orderShipmentMethods: ShippingRate[]
+  orderShipmentMethods: CrShippingRate[]
   selectedShippingMethod: string
   setSelectedShippingMethod: (shippingMethod: string) => void
   onShippingMethodChange: (name: string, value: string) => void
@@ -60,7 +60,7 @@ const ShipItemList = (shipProps: ShipItemListProps) => {
           placeholder="Select Shipping Option"
           value={selectedShippingMethod}
         >
-          {orderShipmentMethods?.map((item: ShippingRate) => {
+          {orderShipmentMethods?.map((item: CrShippingRate) => {
             return (
               <MenuItem key={item.shippingMethodCode} value={`${item.shippingMethodCode}`}>
                 {`${item.shippingMethodName} $${item.price}`}

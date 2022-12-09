@@ -1,6 +1,6 @@
-import type { Cart } from '@/lib/gql/types'
+import type { CrCart } from '@/lib/gql/types'
 
-export const cartResponse: Cart = {
+export const cartResponse: CrCart = {
   id: '13bdd5a61958150001dc971f000074e7',
   invalidCoupons: [],
   couponCodes: ['10OFF', 'FREE10'],

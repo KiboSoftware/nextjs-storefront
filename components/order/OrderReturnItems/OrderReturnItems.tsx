@@ -13,10 +13,10 @@ import { OrderStatus, OrderReturnType } from '@/lib/constants'
 import { orderGetters, productGetters } from '@/lib/getters'
 import type { CreateOrderReturnItemsInputParams } from '@/lib/types'
 
-import type { Maybe, Order, CrOrderItem, CrProduct } from '@/lib/gql/types'
+import type { Maybe, CrOrder, CrOrderItem, CrProduct } from '@/lib/gql/types'
 
 interface OrderReturnItemsProps {
-  order: Order
+  order: CrOrder
   title: string
   onGoBackToOrderDetails: (isReturnItemsVisible: boolean) => void
 }

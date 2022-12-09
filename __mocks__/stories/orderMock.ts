@@ -1,8 +1,9 @@
-import type { Order } from '@/lib/gql/types'
-const checkoutResponse: Order = {
+import type { CrOrder } from '@/lib/gql/types'
+const checkoutResponse: CrOrder = {
   id: '137a94b6402be000013718d80000678b',
   email: 'amolp@dev.com',
   total: 125,
+  continuityOrderOrdinal:1,
   shippingTotal: 0,
   discountTotal: 0,
   subtotal: 125,
@@ -369,12 +370,12 @@ const checkoutResponse: Order = {
   amountRemainingForPayment: 0,
   totalCollected: 0,
 }
-export const orderMock: { checkout: Order } = {
+export const orderMock: { checkout: CrOrder } = {
   checkout: checkoutResponse,
 }
-export const orderCouponMock: { updateOrderCoupon: Order } = {
+export const orderCouponMock: { updateOrderCoupon: CrOrder } = {
   updateOrderCoupon: checkoutResponse,
 }
-export const orderReturnItemsMock: { createReturn: Order } = {
+export const orderReturnItemsMock: { createReturn: CrOrder } = {
   createReturn: { ...checkoutResponse, status: 'Completed' },
 }

@@ -47,6 +47,7 @@ export const baseCheckoutFragment = /* GraphQL */ `
   fragment baseCheckoutFragment on CrOrder {
     id
     email
+    continuityOrderOrdinal
     totalCollected
     amountAvailableForRefund
     amountRemainingForPayment

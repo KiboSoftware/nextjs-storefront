@@ -11,10 +11,10 @@ import { useStoreLocationsQueries } from '@/hooks'
 import { OrderStatus } from '@/lib/constants'
 import { addressGetters, orderGetters, storeLocationGetters } from '@/lib/getters'
 
-import type { Maybe, Order, Location } from '@/lib/gql/types'
+import type { Maybe, CrOrder, Location } from '@/lib/gql/types'
 
 interface ViewOrderDetailsProps {
-  order: Order
+  order: CrOrder
   title: string
   isOrderStatus?: boolean
   onGoBackToOrderHistory?: () => void
@@ -180,7 +180,7 @@ const ViewOrderDetails = (props: ViewOrderDetailsProps) => {
               <Typography variant="h3" fontWeight={'bold'}>
                 {t('payment-information')}
               </Typography>
-              {payments?.map((payment) => {
+              {payments?.map((payment:CrPayment) => {
                 const cardDetails = orderGetters.getOrderPaymentCardDetails(
                   payment.billingInfo.card
                 )

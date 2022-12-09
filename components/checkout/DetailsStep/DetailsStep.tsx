@@ -14,7 +14,7 @@ import { LoginDialog } from '@/components/layout'
 import { useAuthContext, useCheckoutStepContext, STEP_STATUS, useModalContext } from '@/context'
 import { FormStates } from '@/lib/constants'
 
-import type { Maybe, Order, Checkout } from '@/lib/gql/types'
+import type { Maybe, CrOrder, Checkout } from '@/lib/gql/types'
 export interface PersonalDetails {
   email: Maybe<string> | undefined
 }
@@ -24,7 +24,7 @@ export interface Action {
 }
 interface DetailsProps {
   setAutoFocus?: boolean
-  checkout: Order | Checkout | undefined
+  checkout: CrOrder | Checkout | undefined
   updateCheckoutPersonalInfo: (params: any) => void //@to-do add generic type for this param as std/multi
 }
 
@@ -167,7 +167,7 @@ const DetailsStep = (props: DetailsProps) => {
               onBlur={field.onBlur}
               onChange={(_name, value) => field.onChange(value)}
               error={!!errors?.email}
-              helperText={errors?.email?.message}
+              helperText={errors?.email?.message as string}
             />
           )}
         />
