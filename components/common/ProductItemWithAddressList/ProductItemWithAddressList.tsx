@@ -9,7 +9,7 @@ import { orderGetters, productGetters, checkoutGetters } from '@/lib/getters'
 
 import type { Maybe, CrOrderItem, CrProduct, Checkout, CrContact } from '@/lib/gql/types'
 
-type MultiShipAddress = {
+export type MultiShipAddress = {
   destinationId: string
   address: CrContact
 }

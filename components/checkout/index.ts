@@ -6,7 +6,6 @@ export { default as CardDetailsForm } from '@/components/checkout/CardDetailsFor
 export { default as PaymentStep } from '@/components/checkout/PaymentStep/PaymentStep'
 export { default as KiboStepper } from '@/components/checkout/KiboStepper/KiboStepper'
 export { default as ReviewStep } from '@/components/checkout/ReviewStep/ReviewStep'
-export { default as ShippingStep } from '@/components/checkout/ShippingStep/ShippingStep'
 export { default as OrderReview } from '@/components/checkout/OrderReview/OrderReview'
 export { default as ShippingMethod } from '@/components/checkout/Shipping/OrderItems/ShippingMethod'
 export { default as StandardShippingStep } from '@/components/checkout/StandardShippingStep/StandardShippingStep'

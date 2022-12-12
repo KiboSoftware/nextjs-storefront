@@ -17,7 +17,7 @@ export type ShippingMethodProps = {
 }
 export type ShipItemListProps = {
   shipItems: Maybe<CrOrderItem>[]
-  orderShipmentMethods: CrShippingRate[]
+  orderShipmentMethods: Maybe<CrShippingRate>[]
   selectedShippingMethod: string
   setSelectedShippingMethod: (shippingMethod: string) => void
   onShippingMethodChange: (name: string, value: string) => void
@@ -60,10 +60,10 @@ const ShipItemList = (shipProps: ShipItemListProps) => {
           placeholder="Select Shipping Option"
           value={selectedShippingMethod}
         >
-          {orderShipmentMethods?.map((item: CrShippingRate) => {
+          {orderShipmentMethods?.map((item) => {
             return (
-              <MenuItem key={item.shippingMethodCode} value={`${item.shippingMethodCode}`}>
-                {`${item.shippingMethodName} $${item.price}`}
+              <MenuItem key={item?.shippingMethodCode} value={`${item?.shippingMethodCode}`}>
+                {`${item?.shippingMethodName} $${item?.price}`}
               </MenuItem>
             )
           })}
