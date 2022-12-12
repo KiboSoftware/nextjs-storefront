@@ -37,7 +37,6 @@ const MultiShipCheckoutTemplate = (props: CheckoutProps) => {
   const { checkoutId } = router.query
   // States
   const [promoError, setPromoError] = useState<string>('')
-  const [isNewAddressAdded, setIsNewAddressAdded] = useState<boolean>(false)
 
   // Hooks
   const { data: checkout } = useMultiShipCheckoutQueries({
@@ -50,7 +49,6 @@ const MultiShipCheckoutTemplate = (props: CheckoutProps) => {
 
   const { data: shippingMethods } = useCheckoutShippingMethodsQuery(
     checkoutId as string,
-    isNewAddressAdded,
     checkout?.groupings && (checkout?.groupings[0]?.destinationId as string)
   )
 
@@ -134,8 +132,6 @@ const MultiShipCheckoutTemplate = (props: CheckoutProps) => {
             userSavedShippingAddress={userShippingAddress}
             isAuthenticated={isAuthenticated}
             shippingMethods={shippingMethods}
-            setIsNewAddressAdded={setIsNewAddressAdded}
-            isNewAddressAdded={isNewAddressAdded}
             createCheckoutDestination={createCheckoutDestination}
             onUpdateCheckoutShippingMethod={updateCheckoutShippingMethod}
           />

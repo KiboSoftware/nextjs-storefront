@@ -13,6 +13,7 @@ import {
   ProductItemWithAddressList,
   ShippingGroupsWithMethod,
 } from '@/components/common'
+import type { MultiShipAddress } from '@/components/common/ProductItemWithAddressList/ProductItemWithAddressList'
 import AddressFormDialog from '@/components/dialogs/AddressFormDialog/AddressFormDialog'
 import { useCheckoutStepContext, STEP_STATUS } from '@/context'
 import { useModalContext } from '@/context/ModalContext'
@@ -20,8 +21,7 @@ import {
   useUpdateCheckoutItemDestinationMutations,
   useUpdateCheckoutDestinationMutations,
 } from '@/hooks'
-import { DefaultId } from '@/lib/constants'
-import { orderGetters, userGetters, checkoutGetters } from '@/lib/getters'
+import { userGetters, checkoutGetters } from '@/lib/getters'
 
 import type {
   CrOrderItem,
@@ -45,8 +45,6 @@ interface ShippingProps {
   isAuthenticated: boolean
   shippingMethods: CheckoutGroupRates[]
   checkoutId?: string
-  isNewAddressAdded: boolean
-  setIsNewAddressAdded: (params: boolean) => void
   createCheckoutDestination: any
   onUpdateCheckoutShippingMethod: (params: {
     shippingMethodGroup: CheckoutGroupRates
@@ -83,37 +81,24 @@ const MultiShippingStep = (props: ShippingProps) => {
     userSavedShippingAddress: addresses,
     isAuthenticated,
     shippingMethods,
-    isNewAddressAdded,
-    setIsNewAddressAdded,
     createCheckoutDestination,
     onUpdateCheckoutShippingMethod,
   } = props
   const { publicRuntimeConfig } = getConfig()
   const { showModal, closeModal } = useModalContext()
 
-  const checkoutShippingContact = orderGetters.getShippingContact(checkout)
   const checkoutShippingMethodCode = checkoutGetters.getShippingMethodCode(checkout)
   const userShippingAddress = isAuthenticated
     ? userGetters.getUserShippingAddress(addresses as CustomerContact[])
     : []
-  if (checkoutShippingContact && checkoutShippingContact.id === null) {
-    checkoutShippingContact.id = DefaultId.ADDRESSID
-  }
-  const shipItems = orderGetters.getShipItems(checkout)
-  const pickupItems = orderGetters.getPickupItems(checkout)
+
+  const shipItems = checkoutGetters.getShipItems(checkout)
+  const pickupItems = checkoutGetters.getPickupItems(checkout)
 
   const [validateForm, setValidateForm] = useState<boolean>(false)
   const [isAddressFormValid, setIsAddressFormValid] = useState<boolean>(false)
 
-  const [savedShippingAddresses, setSavedShippingAddresses] = useState<CustomerContact[]>(
-    userGetters.getAllShippingAddresses(
-      checkoutShippingContact,
-      userShippingAddress as CustomerContact[]
-    )
-  )
-  const [shouldShowAddAddressButton, setShouldShowAddAddressButton] = useState<boolean>(
-    Boolean(savedShippingAddresses?.length)
-  )
+  const [shouldShowAddAddressButton, setShouldShowAddAddressButton] = useState<boolean>(true)
   const shipOptions = publicRuntimeConfig.shipOptions
   const initialShippingOption = checkoutGetters?.getInitialShippingOption(checkout, shipOptions)
   const [shippingOption, setShippingOption] = useState<string>(initialShippingOption)
@@ -122,7 +107,7 @@ const MultiShippingStep = (props: ShippingProps) => {
 
   const multiShipAddresses = checkoutGetters.getMultiShipAddresses({
     checkout,
-    savedShippingAddresses: userShippingAddress,
+    savedShippingAddresses: userShippingAddress as CrContact[],
   })
   const isMultiShipPaymentStepValid = checkoutGetters.checkMultiShipPaymentValid(checkout)
 
@@ -207,7 +192,6 @@ const MultiShippingStep = (props: ShippingProps) => {
 
         setShouldShowAddAddressButton(true)
         setValidateForm(false)
-        setIsNewAddressAdded(true)
         setStepStatusIncomplete()
       }
     } catch (error) {
@@ -252,10 +236,7 @@ const MultiShippingStep = (props: ShippingProps) => {
     }
   }
 
-  const handleAddNewAddress = () => {
-    setShouldShowAddAddressButton(false)
-    setIsNewAddressAdded(false)
-  }
+  const handleAddNewAddress = () => setShouldShowAddAddressButton(false)
 
   const radioOptions = shipOptions.map((option: ShipOption) => ({
     value: option.value,
@@ -354,16 +335,6 @@ const MultiShippingStep = (props: ShippingProps) => {
       },
     })
   }
-
-  useEffect(() => {
-    if (isNewAddressAdded)
-      setSavedShippingAddresses(
-        userGetters.getAllShippingAddresses(
-          checkoutShippingContact,
-          userShippingAddress as CustomerContact[]
-        )
-      )
-  }, [checkoutShippingContact, isNewAddressAdded])
 
   useEffect(() => {
     if (stepStatus === STEP_STATUS.SUBMIT) {
@@ -469,7 +440,7 @@ const MultiShippingStep = (props: ShippingProps) => {
             <>
               <ProductItemWithAddressList
                 checkout={checkout}
-                multiShipAddresses={multiShipAddresses}
+                multiShipAddresses={multiShipAddresses as MultiShipAddress[]}
                 onUpdateDestinationAddress={createOrUpdateDestination}
                 onSelectCreateOrSetDestinationAddress={handleCreateOrSetDestinationAddress}
               />
