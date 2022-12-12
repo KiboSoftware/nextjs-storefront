@@ -36,7 +36,7 @@ export const useCheckoutDestinationQueries = (params: UseDestination): UseDestin
     checkoutDestinationKeys.destinationId(destinationId),
     () => getCheckoutDestination(params),
     {
-      enabled: !!params?.checkoutId && !!destinationId,
+      enabled: !!params?.checkoutId,
     }
   )
 
