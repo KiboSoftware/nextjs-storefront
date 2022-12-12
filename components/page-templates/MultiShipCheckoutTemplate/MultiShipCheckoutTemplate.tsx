@@ -19,13 +19,16 @@ import {
 } from '@/hooks'
 import { userGetters } from '@/lib/getters'
 
+import type { CommonCheckout } from '../CheckoutUITemplate/CheckoutUITemplate'
 import type {
   CustomerContact,
   Checkout,
   CheckoutGroupRates,
   CrShippingRate,
   Maybe,
+  CrOrder,
 } from '@/lib/gql/types'
+
 interface CheckoutProps {
   checkout: Checkout
 }
@@ -118,7 +121,7 @@ const MultiShipCheckoutTemplate = (props: CheckoutProps) => {
   return (
     <>
       <CheckoutUITemplate
-        checkout={checkout as Checkout}
+        checkout={checkout as CommonCheckout<CrOrder, Checkout>}
         handleApplyCouponCode={handleApplyCouponCode}
         handleRemoveCouponCode={handleRemoveCouponCode}
         isSuccess={isSuccess}

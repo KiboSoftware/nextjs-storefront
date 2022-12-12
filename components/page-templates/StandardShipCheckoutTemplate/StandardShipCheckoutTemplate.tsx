@@ -1,6 +1,5 @@
 import React, { useState } from 'react'
 
-import { useTranslation } from 'next-i18next'
 import { useRouter } from 'next/router'
 
 import { DetailsStep, ReviewStep, PaymentStep, StandardShippingStep } from '@/components/checkout'
@@ -17,7 +16,8 @@ import {
 } from '@/hooks'
 import { userGetters } from '@/lib/getters'
 
-import type { CustomerContact, CrOrder, CrOrderInput } from '@/lib/gql/types'
+import type { CommonCheckout } from '../CheckoutUITemplate/CheckoutUITemplate'
+import type { CustomerContact, CrOrder, CrOrderInput, Checkout } from '@/lib/gql/types'
 
 interface CheckoutProps {
   checkout: CrOrder
@@ -91,7 +91,7 @@ const StandardShipCheckoutTemplate = (props: CheckoutProps) => {
   return (
     <>
       <CheckoutUITemplate
-        checkout={checkout as CrOrder}
+        checkout={checkout as CommonCheckout<CrOrder, Checkout>}
         handleApplyCouponCode={handleApplyCouponCode}
         handleRemoveCouponCode={handleRemoveCouponCode}
         isSuccess={isSuccess}
