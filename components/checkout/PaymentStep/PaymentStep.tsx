@@ -46,6 +46,8 @@ import type {
   PaymentActionInput,
   CrPaymentCard,
   CrPaymentInput,
+  CrPayment,
+  Maybe,
 } from '@/lib/gql/types'
 
 interface PaymentStepProps {
@@ -307,7 +309,7 @@ const PaymentStep = (props: PaymentStepProps) => {
 
     if (
       selectedCards?.some(
-        (card: CrPaymentInput) =>
+        (card: Maybe<CrPayment>) =>
           card?.billingInfo?.card?.paymentServiceCardId === selectedPaymentBillingRadio
       )
     ) {
@@ -316,7 +318,7 @@ const PaymentStep = (props: PaymentStepProps) => {
       return
     }
 
-    selectedCards?.forEach(async (card: CrPaymentInput) => {
+    selectedCards?.forEach(async (card: Maybe<CrPayment>) => {
       paymentAction = { ...paymentAction, actionName: 'VoidPayment' }
       await updateOrderPaymentAction.mutateAsync({
         orderId: checkout?.id as string,
@@ -420,7 +422,7 @@ const PaymentStep = (props: PaymentStepProps) => {
 
     const selectedCards = orderGetters.getSelectedPaymentMethods(checkout, PaymentType.CREDITCARD)
 
-    selectedCards?.forEach((card: CrPaymentCard) => {
+    selectedCards?.forEach((card: Maybe<CrPayment>) => {
       const cardDetails = card?.billingInfo?.card
       const billingAddress = card?.billingInfo?.billingContact
       Boolean(

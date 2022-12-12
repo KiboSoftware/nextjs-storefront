@@ -15,9 +15,9 @@ import type {
   Maybe,
   CrOrder,
   Location,
-  CrPaymentInput,
   InputMaybe,
   CrAddressInput,
+  CrPaymentInput,
 } from '@/lib/gql/types'
 
 interface ViewOrderDetailsProps {
@@ -187,8 +187,8 @@ const ViewOrderDetails = (props: ViewOrderDetailsProps) => {
               <Typography variant="h3" fontWeight={'bold'}>
                 {t('payment-information')}
               </Typography>
-              {payments?.map((payment: Maybe<CrPaymentInput>) => {
-                const cardDetails = orderGetters.getOrderPaymentCardDetails(
+              {payments?.map((payment) => {
+                const cardDetails = orderGetters?.getOrderPaymentCardDetails(
                   payment?.billingInfo?.card
                 )
                 const address = addressGetters.getAddress(

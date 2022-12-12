@@ -1,6 +1,8 @@
 import lodash from 'lodash'
 
+import { FulfillmentOptions } from '../constants'
 import { ShipOption } from '@/components/checkout/MultiShippingStep/MultiShippingStep'
+import type { MultiShipAddress } from '@/components/common/ProductItemWithAddressList/ProductItemWithAddressList'
 
 import type { CrOrderItem, Checkout, Maybe, CrDestination, CrContact } from '@/lib/gql/types'
 
@@ -46,14 +48,14 @@ const getMultiShipAddresses = ({
   const destinationAddresses = checkout?.destinations?.map((destination) => {
     return {
       destinationId: destination?.id,
-      address: destination?.destinationContact,
+      address: destination?.destinationContact, //address property added to match with my account addresses
     }
-  })
+  }) as MultiShipAddress[]
 
   const destinationAddressIds = Array.from(
     new Set(
       destinationAddresses
-        ?.map((destinationAddress) => destinationAddress?.destinationContact?.id)
+        ?.map((destinationAddress) => destinationAddress?.address?.id)
         .filter(Boolean)
     )
   )
@@ -83,7 +85,9 @@ const getMultiShipAddresses = ({
 }
 
 const getInitialShippingOption = (checkout: Checkout, shippingOptions: ShipOption[]) =>
-  checkout?.groupings?.length > 1 ? shippingOptions[1]?.value : shippingOptions[0]?.value
+  checkout?.groupings && checkout?.groupings?.length > 1
+    ? shippingOptions[1]?.value
+    : shippingOptions[0]?.value
 
 const getCheckoutItemCount = (checkout: Checkout) => checkout?.items?.length
 const checkMultiShipPaymentValid = (checkout: Checkout) => {
@@ -93,8 +97,21 @@ const checkMultiShipPaymentValid = (checkout: Checkout) => {
   return !groupingWithoutShippingRates
 }
 const getShippingMethodCode = (checkout: Checkout) => {
-  return checkout?.groupings[0]?.shippingMethodCode
+  return checkout?.groupings && checkout?.groupings[0]?.shippingMethodCode
 }
+
+const getItemsByFulfillment = (checkout: Checkout, fulfillmentMethod: string): CrOrderItem[] => {
+  return (
+    (checkout?.items?.filter(
+      (lineItem) => lineItem?.fulfillmentMethod === fulfillmentMethod
+    ) as CrOrderItem[]) || []
+  )
+}
+const getPickupItems = (checkout: Checkout): CrOrderItem[] => {
+  return getItemsByFulfillment(checkout, FulfillmentOptions.PICKUP)
+}
+const getShipItems = (checkout: Checkout): CrOrderItem[] =>
+  getItemsByFulfillment(checkout, FulfillmentOptions.SHIP)
 
 export const checkoutGetters = {
   buildItemsGroupFromCheckoutGroupings,
@@ -104,4 +121,6 @@ export const checkoutGetters = {
   getCheckoutItemCount,
   checkMultiShipPaymentValid,
   getShippingMethodCode,
+  getShipItems,
+  getPickupItems,
 }

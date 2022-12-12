@@ -35,7 +35,7 @@ import { FulfillmentOptions } from '@/lib/constants'
 import { orderGetters, cartGetters } from '@/lib/getters'
 import type { LocationCustom } from '@/lib/types'
 
-import type { CrCart, Location, CrCartItemInput, CrCartItem } from '@/lib/gql/types'
+import type { Maybe, CrCart, Location, CrCartItemInput, CrCartItem } from '@/lib/gql/types'
 
 export interface CartTemplateProps {
   isMultiShipEnabled: boolean
@@ -81,7 +81,7 @@ const CartTemplate = (props: CartTemplateProps) => {
   const cartShippingTotal = orderGetters.getShippingTotal(cart)
   const cartTaxTotal = orderGetters.getTaxTotal(cart)
   const cartTotal = orderGetters.getTotal(cart)
-  const locationCodes = orderGetters.getFulfillmentLocationCodes(cartItems as CartItem[])
+  const locationCodes = orderGetters.getFulfillmentLocationCodes(cartItems as CrCartItem[])
 
   const { data: locations } = useStoreLocationsQueries({ filter: locationCodes })
   const { data: purchaseLocation } = usePurchaseLocationQueries()
@@ -158,7 +158,7 @@ const CartTemplate = (props: CartTemplateProps) => {
     locationCode = ''
   ) => {
     try {
-      const cartItem = cartItems.find((item: CrCartItem) => item?.id === cartItemId)
+      const cartItem = cartItems.find((item: Maybe<CrCartItem>) => item?.id === cartItemId)
       await updateCartItem.mutateAsync({
         cartItemInput: {
           ...(cartItem as CrCartItemInput),
