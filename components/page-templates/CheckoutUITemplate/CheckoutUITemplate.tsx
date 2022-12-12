@@ -10,8 +10,11 @@ import { OrderConfirmation } from '@/components/order'
 import { useCheckoutStepContext, STEP_STATUS } from '@/context'
 
 import type { Checkout, CustomerContact, CrOrder } from '@/lib/gql/types'
+
+export type CommonCheckout<T1, T2> = T1 & T2
+
 interface CheckoutTemplateUIProps {
-  checkout: CrOrder | Checkout
+  checkout: CommonCheckout<CrOrder, Checkout>
   initialStep?: number
   promoError: string
   handleApplyCouponCode: (couponCode: string) => void
