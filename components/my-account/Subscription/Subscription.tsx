@@ -9,8 +9,8 @@ import { uiHelpers } from '@/lib/helpers'
 
 import type { CrProduct } from '@/lib/gql/types'
 
-interface MySubscriptionTemplateProps {
-  subscription: any
+interface SubscriptionProps {
+  subscription?: any
 }
 
 interface SubscriptionButtonProps {
@@ -18,6 +18,12 @@ interface SubscriptionButtonProps {
 }
 
 const style = {
+  wrapIcon: {
+    display: 'flex',
+    alignItems: 'center',
+    flexWrap: 'wrap',
+    cursor: 'pointer',
+  },
   button: {
     width: {
       xs: '100%',
@@ -61,7 +67,7 @@ const SubscriptionButton = (props: SubscriptionButtonProps) => {
   )
 }
 
-const MySubscriptionTemplate = (props: MySubscriptionTemplateProps) => {
+const Subscription = (props: SubscriptionProps) => {
   const { subscription } = props
 
   const {
@@ -155,4 +161,4 @@ const MySubscriptionTemplate = (props: MySubscriptionTemplateProps) => {
   )
 }
 
-export default MySubscriptionTemplate
+export default Subscription

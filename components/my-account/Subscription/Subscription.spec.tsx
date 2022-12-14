@@ -6,10 +6,10 @@ import { composeStories } from '@storybook/testing-react'
 import { render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 
-import * as stories from './MySubscriptionTemplate.stories' // import all stories from the stories file
+import * as stories from './Subscription.stories' // import all stories from the stories file
 const { Common } = composeStories(stories)
 
-describe('[component] - MySubscription Template', () => {
+describe('[component] - Subscription', () => {
   const setup = () => {
     const user = userEvent.setup()
     render(<Common />)
