@@ -386,8 +386,7 @@ const MultiShippingStep = (props: ShippingProps) => {
                   {t('add-new-address')}
                 </Button>
               </Stack>
-              {shippingMethods &&
-                shippingMethods[0]?.shippingRates &&
+              {shippingMethods[0]?.shippingRates &&
                 shippingMethods[0]?.shippingRates?.length > 0 && (
                   <ShippingMethod
                     shipItems={shipItems as CrOrderItem[]}
