@@ -10,7 +10,7 @@ import { CrOrder } from '@/lib/gql/types'
 
 const StandardCheckoutHeaderTemplate = () => {
   const router = useRouter()
-  const { checkoutId } = router.query
+  const checkoutId = router?.query?.checkoutId
   const { data: checkout } = useCheckoutQueries({
     checkoutId: checkoutId as string,
   })
