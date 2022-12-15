@@ -37,7 +37,7 @@ const MultiShipCheckoutTemplate = (props: CheckoutProps) => {
   const { checkout: initialCheckout } = props
 
   const router = useRouter()
-  const { checkoutId } = router.query
+  const checkoutId = router?.query?.checkoutId
   // States
   const [promoError, setPromoError] = useState<string>('')
 
@@ -98,15 +98,24 @@ const MultiShipCheckoutTemplate = (props: CheckoutProps) => {
     savedUserAddressData?.items as CustomerContact[]
   )
 
+  const getShippingRateFromMethodGroupByMethodCode = async (
+    shippingMethodGroup: CheckoutGroupRates,
+    shippingMethodCode: string
+  ) =>
+    shippingMethodGroup?.shippingRates?.find(
+      (shippingRate: Maybe<CrShippingRate>) =>
+        shippingRate?.shippingMethodCode === shippingMethodCode
+    )
   const updateCheckoutShippingMethod = async (params: {
     shippingMethodGroup: CheckoutGroupRates
     shippingMethodCode: string
   }) => {
     const { shippingMethodGroup, shippingMethodCode } = params
-    const shippingRate = shippingMethodGroup?.shippingRates?.find(
-      (shippingRate: Maybe<CrShippingRate>) =>
-        shippingRate?.shippingMethodCode === shippingMethodCode
+    const shippingRate = await getShippingRateFromMethodGroupByMethodCode(
+      shippingMethodGroup,
+      shippingMethodCode
     )
+
     await createCheckoutShippingMethod.mutateAsync({
       checkoutId: checkout?.id as string,
       checkoutGroupShippingMethodInput: [
