@@ -1,7 +1,10 @@
 import { fullfillmentInfoFragment } from '../../fragments'
 
 const setShippingInfoMutation = /* GraphQL */ `
-  mutation setShippingInformation($orderId: String!, $fulfillmentInfoInput: FulfillmentInfoInput) {
+  mutation setShippingInformation(
+    $orderId: String!
+    $fulfillmentInfoInput: CrFulfillmentInfoInput
+  ) {
     updateOrderFulfillmentInfo(orderId: $orderId, fulfillmentInfoInput: $fulfillmentInfoInput) {
       ...fullfillmentInfoFragment
     }
