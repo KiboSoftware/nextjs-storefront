@@ -22,6 +22,8 @@ import {
   ModalContextProvider,
   DialogRoot,
   HeaderContextProvider,
+  SnackbarRoot,
+  SnackbarContextProvider,
 } from '@/context'
 import { footerConfig as footerProps } from '@/lib/constants'
 import type { NextPageWithLayout } from '@/lib/types'
@@ -54,40 +56,43 @@ const App = (props: KiboAppProps) => {
         {/* CssBaseline kickstart an elegant, consistent, and simple baseline to build upon. */}
         <CssBaseline />
         <QueryClientProvider client={queryClient}>
-          <ModalContextProvider>
-            <AuthContextProvider>
-              <HeaderContextProvider>
-                <Hydrate state={pageProps.dehydratedState}>
-                  <GlobalFetchingIndicator />
-                  <KiboHeader
-                    navLinks={[
-                      {
-                        link: '/order-status',
-                        text: 'order-status',
-                      },
-                      {
-                        link: '/wishlist',
-                        text: 'wishlist',
-                      },
-                      {
-                        link: '#',
-                        text: 'Nav Link 2',
-                      },
-                      {
-                        link: '#',
-                        text: 'Nav Link 3',
-                      },
-                    ]}
-                    categoriesTree={pageProps.categoriesTree || []}
-                    isSticky={true}
-                  />
-                  <DialogRoot />
-                  {getLayout(<Component {...pageProps} />)}
-                  <Footer {...footerProps} />
-                </Hydrate>
-              </HeaderContextProvider>
-            </AuthContextProvider>
-          </ModalContextProvider>
+          <SnackbarContextProvider>
+            <ModalContextProvider>
+              <AuthContextProvider>
+                <HeaderContextProvider>
+                  <Hydrate state={pageProps.dehydratedState}>
+                    <GlobalFetchingIndicator />
+                    <KiboHeader
+                      navLinks={[
+                        {
+                          link: '/order-status',
+                          text: 'order-status',
+                        },
+                        {
+                          link: '/wishlist',
+                          text: 'wishlist',
+                        },
+                        {
+                          link: '#',
+                          text: 'Nav Link 2',
+                        },
+                        {
+                          link: '#',
+                          text: 'Nav Link 3',
+                        },
+                      ]}
+                      categoriesTree={pageProps.categoriesTree || []}
+                      isSticky={true}
+                    />
+                    <DialogRoot />
+                    <SnackbarRoot />
+                    {getLayout(<Component {...pageProps} />)}
+                    <Footer {...footerProps} />
+                  </Hydrate>
+                </HeaderContextProvider>
+              </AuthContextProvider>
+            </ModalContextProvider>
+          </SnackbarContextProvider>
         </QueryClientProvider>
       </ThemeProvider>
     </CacheProvider>

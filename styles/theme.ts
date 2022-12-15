@@ -88,9 +88,6 @@ let theme = createTheme({
       primary: grey[900],
       secondary: grey[600],
     },
-    success: {
-      main: '#17514b',
-    },
     warning: {
       main: '#f8ca24',
     },
@@ -135,6 +132,13 @@ let theme = createTheme({
           '&:hover': {
             backgroundColor: grey[900],
           },
+        },
+      },
+    },
+    MuiSnackbar: {
+      styleOverrides: {
+        root: {
+          zIndex: 2000,
         },
       },
     },
