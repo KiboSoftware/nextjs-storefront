@@ -6,7 +6,7 @@ import {
 } from '../../fragments'
 
 const getMultiShipCheckoutQuery = /* GraphQL */ `
-  query getCheckout($checkoutId: String!) {
+  query getMultiShipCheckout($checkoutId: String!) {
     checkout(checkoutId: $checkoutId) {
       ...baseMultiShipCheckoutFragment
       couponCodes

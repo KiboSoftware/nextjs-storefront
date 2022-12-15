@@ -297,6 +297,9 @@ export const orderHandlers = [
   graphql.query('getCheckoutDestinations', (_req, res, ctx) => {
     return res(ctx.data({ checkoutDestinations: checkoutDestinationsMock.checkoutDestinations }))
   }),
+  graphql.query('getMultiShipCheckout', (_req, res, ctx) => {
+    return res(ctx.data(checkoutMock))
+  }),
 
   graphql.mutation('updateOrderCoupon', (_req, res, ctx) => {
     return res(ctx.data(orderCouponMock))
