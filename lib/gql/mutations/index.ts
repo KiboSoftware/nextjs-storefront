@@ -34,3 +34,4 @@ export { default as createMultiShipCheckoutFromCartMutation } from './checkout/c
 export { default as createCheckoutShippingMethod } from './checkout/create-checkout-shipping-method'
 export { default as updateCheckoutCouponMutation } from './coupon/update-checkout-coupon'
 export { default as deleteCheckoutCouponMutation } from './coupon/delete-checkout-coupon'
+export { default as createCheckoutActionMutation } from './checkout/create-checkout-action-mutation'

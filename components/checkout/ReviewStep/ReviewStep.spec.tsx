@@ -8,7 +8,7 @@ import { mock } from 'jest-mock-extended'
 import * as stories from '../ReviewStep/ReviewStep.stories'
 import { createQueryClientWrapper } from '@/__test__/utils'
 import { AuthContext, AuthContextType } from '@/context/'
-const { Common } = composeStories(stories)
+const { Common, WithMultiShippingAddresses } = composeStories(stories)
 
 const orderPriceMock = () => <div data-testid="order-price-component" />
 const productItemListMock = () => <div data-testid="product-item-stack" />
@@ -54,6 +54,9 @@ describe('[components] ReviewStep', () => {
     const pickupInStoreHeading = screen.getByRole('heading', {
       name: /pickup-in-store/i,
     })
+    const multiShipHeading = screen.queryByRole('heading', {
+      name: /shipping-to-address/i,
+    })
     const iAgreeCheckbox = screen.getByRole('checkbox', { name: /termsConditions/i })
     const iWantToCreateAccountCheckbox = screen.getByRole('checkbox', {
       name: /showaccountfields/i,
@@ -69,6 +72,7 @@ describe('[components] ReviewStep', () => {
     expect(orderDetailsHeading).toBeVisible()
     expect(shippingToHomeHeading).toBeVisible()
     expect(pickupInStoreHeading).toBeVisible()
+    expect(multiShipHeading).not.toBeInTheDocument()
     expect(iAgreeCheckbox).toBeInTheDocument()
     expect(iWantToCreateAccountCheckbox).toBeInTheDocument()
     expect(confirmAndPayButton).toBeVisible()
@@ -95,6 +99,16 @@ describe('[components] ReviewStep', () => {
     await waitFor(() => {
       expect(confirmAndPayButton).toBeEnabled()
     })
+  })
+
+  it('should show multiShipping addresses when multiShip is enabled', () => {
+    render(<WithMultiShippingAddresses {...WithMultiShippingAddresses.args} />)
+
+    const multiShipHeading = screen.getByRole('heading', {
+      name: /shipping-to-address/i,
+    })
+
+    expect(multiShipHeading).toBeInTheDocument()
   })
 
   describe('For non loggedIn user', () => {

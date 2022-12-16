@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 
 import { useRouter } from 'next/router'
 
-import { DetailsStep, MultiShippingStep } from '@/components/checkout'
+import { DetailsStep, MultiShippingStep, PaymentStep, ReviewStep } from '@/components/checkout'
 import type { PersonalDetails } from '@/components/checkout/DetailsStep/DetailsStep'
 import { CheckoutUITemplate } from '@/components/page-templates'
 import { useAuthContext } from '@/context'
@@ -16,8 +16,9 @@ import {
   useCreateCheckoutDestinationMutations,
   useCheckoutShippingMethodsQuery,
   useCreateCheckoutShippingMethodMutation,
+  useCreateMultiShipCheckoutMutation,
 } from '@/hooks'
-import { userGetters } from '@/lib/getters'
+import { checkoutGetters, userGetters } from '@/lib/getters'
 
 import type {
   CustomerContact,
@@ -46,6 +47,7 @@ const MultiShipCheckoutTemplate = (props: CheckoutProps) => {
   const updateMultiShipCheckoutPersonalInfo = useUpdateMultiShipCheckoutPersonalInfoMutation()
   const createCheckoutDestination = useCreateCheckoutDestinationMutations()
   const createCheckoutShippingMethod = useCreateCheckoutShippingMethodMutation()
+  const createOrder = useCreateMultiShipCheckoutMutation()
 
   const { data: shippingMethods } = useCheckoutShippingMethodsQuery(
     checkoutId as string,
@@ -124,6 +126,29 @@ const MultiShipCheckoutTemplate = (props: CheckoutProps) => {
     })
   }
 
+  const personalDetails = {
+    email: checkout && checkout.email,
+    showAccountFields: false,
+    firstName: (checkout && checkout?.alternateContact?.firstName) || '',
+    lastNameOrSurname: (checkout && checkout?.alternateContact?.lastNameOrSurname) || '',
+    password: '',
+  }
+
+  const orderSummaryProps = {
+    subTotal: checkout?.subTotal,
+    shippingTotal: checkout?.shippingTotal,
+    taxTotal: checkoutGetters.getTaxTotal(checkout as Checkout),
+    total: checkout?.total,
+  }
+
+  const handleCreateOrder = (checkout: Checkout) => {
+    // need to be implemented
+    createOrder.mutateAsync(checkout)
+    console.log('handleCreateOrder called.....')
+  }
+
+  const { shipItems, pickupItems } = checkoutGetters.getCheckoutDetails(checkout as Checkout)
+
   return (
     <>
       <CheckoutUITemplate
@@ -145,9 +170,16 @@ const MultiShipCheckoutTemplate = (props: CheckoutProps) => {
             onUpdateCheckoutShippingMethod={updateCheckoutShippingMethod}
           />
         )}
-        {/* @to-do Use below steps for future development */}
-        {/* <PaymentStep checkout={checkout} {...paymentStepParams} />
-              <ReviewStep checkout={checkout as Checkout} onBackButtonClick={handleBack} /> */}
+        {/*<PaymentStep checkout={checkout}  />*/}
+        <ReviewStep
+          checkout={checkout as CommonCheckout<CrOrder, Checkout>}
+          shipItems={shipItems}
+          pickupItems={pickupItems}
+          personalDetails={personalDetails}
+          orderSummaryProps={orderSummaryProps}
+          onCreateOrder={handleCreateOrder}
+          isMultiShipEnabled={true}
+        />
       </CheckoutUITemplate>
     </>
   )

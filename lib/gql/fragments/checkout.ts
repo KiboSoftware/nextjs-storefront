@@ -259,6 +259,13 @@ export const baseMultiShipCheckoutFragment = /* GraphQL */ `
     tenantId
     number
     originalCartId
+    email
+    alternateContact {
+      firstName
+      lastNameOrSurname
+      emailAddress
+      phoneNumber
+    }
     submittedDate
     type
     feeTotal

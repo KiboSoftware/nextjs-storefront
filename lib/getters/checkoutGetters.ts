@@ -113,7 +113,15 @@ const getPickupItems = (checkout: Checkout): CrOrderItem[] => {
 const getShipItems = (checkout: Checkout): CrOrderItem[] =>
   getItemsByFulfillment(checkout, FulfillmentOptions.SHIP)
 
-const getCheckoutItemCount = (checkout: Checkout) => checkout?.items?.length
+const getCheckoutDetails = (checkout: Checkout) => {
+  return {
+    shipItems: getShipItems(checkout),
+    pickupItems: getPickupItems(checkout),
+  }
+}
+const getTaxTotal = (checkout: Checkout) => {
+  return checkout?.itemTaxTotal + checkout?.shippingTaxTotal + checkout?.handlingTaxTotal
+}
 
 export const checkoutGetters = {
   buildItemsGroupFromCheckoutGroupings,
@@ -125,4 +133,6 @@ export const checkoutGetters = {
   getShippingMethodCode,
   getShipItems,
   getPickupItems,
+  getCheckoutDetails,
+  getTaxTotal,
 }
