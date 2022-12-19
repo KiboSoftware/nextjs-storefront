@@ -75,7 +75,7 @@ export type ShipOption = {
   shortName: string
 }
 
-interface DestinationInput extends Contact {
+interface DestinationInput extends CrContact {
   destinationId: string
   itemId: string
 }

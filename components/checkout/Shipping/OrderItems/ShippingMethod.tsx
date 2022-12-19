@@ -107,7 +107,6 @@ const ShippingMethod = (props: ShippingMethodProps) => {
     selectedShippingMethodCode,
     onShippingMethodChange,
     onStoreLocatorClick,
-    onUpdateCheckoutShippingMethod,
   } = props
 
   const { t } = useTranslation('common')

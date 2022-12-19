@@ -1,9 +1,8 @@
 import React, { useEffect, useRef, useState } from 'react'
 
-import { Stack, Button, Typography, SxProps, Box } from '@mui/material'
+import { Stack, Button, Typography, SxProps } from '@mui/material'
 import { Theme } from '@mui/material/styles'
 import { useTranslation } from 'next-i18next'
-import getConfig from 'next/config'
 
 import { ShippingMethod } from '@/components/checkout'
 import { AddressDetailsView, AddressForm } from '@/components/common'
@@ -26,20 +25,10 @@ interface ShippingProps {
   checkout: CrOrder
   userShippingAddress?: CustomerContact[]
   isAuthenticated: boolean
-  isMultiShipEnabled?: boolean
-  updateCheckoutShippingInfo: (params: any) => void
-  shippingMethods: any
-  checkoutId?: string
-  isNewAddressAdded: boolean
-  selectedShippingAddressId: string
-  setCheckoutId: (params: any) => void
-  setIsNewAddressAdded: (params: any) => void
-  setSelectedShippingAddressId: (params: any) => void
 }
 
 const StandardShippingStep = (props: ShippingProps) => {
   const { checkout, userShippingAddress: addresses, isAuthenticated } = props
-  const { publicRuntimeConfig } = getConfig()
 
   const checkoutShippingContact = orderGetters.getShippingContact(checkout)
   const checkoutShippingMethodCode = orderGetters.getShippingMethodCode(checkout)
@@ -53,12 +42,12 @@ const StandardShippingStep = (props: ShippingProps) => {
   const pickupItems = orderGetters.getPickupItems(checkout)
 
   const [validateForm, setValidateForm] = useState<boolean>(false)
-  // const [checkoutId, setCheckoutId] = useState<string | null | undefined>(undefined)
+  const [checkoutId, setCheckoutId] = useState<string | null | undefined>(undefined)
   const [isAddressFormValid, setIsAddressFormValid] = useState<boolean>(false)
-  // const [isNewAddressAdded, setIsNewAddressAdded] = useState<boolean>(false)
-  // const [selectedShippingAddressId, setSelectedShippingAddressId] = useState<number>(
-  //   checkoutShippingContact?.id as number
-  // )
+  const [isNewAddressAdded, setIsNewAddressAdded] = useState<boolean>(false)
+  const [selectedShippingAddressId, setSelectedShippingAddressId] = useState<number>(
+    checkoutShippingContact?.id as number
+  )
   const [savedShippingAddresses, setSavedShippingAddresses] = useState<
     CustomerContact[] | undefined
   >(
@@ -70,7 +59,6 @@ const StandardShippingStep = (props: ShippingProps) => {
   const [shouldShowAddAddressButton, setShouldShowAddAddressButton] = useState<boolean>(
     Boolean(savedShippingAddresses?.length)
   )
-  const shipOptions = publicRuntimeConfig.shipOptions
 
   const defaultShippingAddress = userGetters.getDefaultShippingAddress(
     savedShippingAddresses as CustomerContact[]
@@ -90,20 +78,18 @@ const StandardShippingStep = (props: ShippingProps) => {
     setStepStatusComplete,
     setStepStatusIncomplete,
   } = useCheckoutStepContext()
-  // const updateCheckoutShippingInfo = useUpdateCheckoutShippingInfoMutation()
-  // const { data: shippingMethods } = useShippingMethodsQueries(
-  //   checkoutId,
-  //   isNewAddressAdded,
-  //   selectedShippingAddressId
-  // )
+  const updateCheckoutShippingInfo = useUpdateCheckoutShippingInfoMutation()
+  const { data: shippingMethods } = useShippingMethodsQueries(
+    checkoutId,
+    isNewAddressAdded,
+    selectedShippingAddressId
+  )
 
   const handleAddressValidationAndSave = () => setValidateForm(true)
 
   const handleSaveAddress = async ({ contact }: { contact: CrContact }) => {
     try {
-      // await updateCheckoutShippingInfo.mutateAsync({ checkout, contact })
-      await updateCheckoutShippingInfo({ checkout, contact })
-
+      await updateCheckoutShippingInfo.mutateAsync({ checkout, contact })
       setCheckoutId(checkout?.id)
       setSelectedShippingAddressId((contact?.id as number) || DefaultId.ADDRESSID)
       setShouldShowAddAddressButton(true)
@@ -120,18 +106,11 @@ const StandardShippingStep = (props: ShippingProps) => {
     shippingMethodCode: string
   ) => {
     const shippingMethodName = shippingMethods.find(
-      (method: any) => method.shippingMethodCode === shippingMethodCode
+      (method) => method.shippingMethodCode === shippingMethodCode
     )?.shippingMethodName as string
 
     try {
-      // await updateCheckoutShippingInfo.mutateAsync({
-      //   checkout,
-      //   contact: undefined,
-      //   email: undefined,
-      //   shippingMethodCode,
-      //   shippingMethodName,
-      // })
-      await updateCheckoutShippingInfo({
+      await updateCheckoutShippingInfo.mutateAsync({
         checkout,
         contact: undefined,
         email: undefined,
@@ -180,14 +159,6 @@ const StandardShippingStep = (props: ShippingProps) => {
     setShouldShowAddAddressButton(false)
     setIsNewAddressAdded(false)
   }
-
-  const radioOptions = shipOptions.map((option: any) => ({
-    value: option.value,
-    name: option.name,
-    label: <Typography variant="body2">{option.label}</Typography>,
-  }))
-
-  const onChangeShippingOption = (option: string) => setShippingOption(option)
 
   const getSavedShippingAddressView = (
     address: CustomerContact,
@@ -243,7 +214,7 @@ const StandardShippingStep = (props: ShippingProps) => {
   return (
     <Stack data-testid="checkout-shipping" gap={2} ref={shippingAddressRef}>
       <Typography variant="h2" component="h2" sx={{ fontWeight: 'bold' }}>
-        {!showMultiShipContinueButton ? t('shipping-address') : t('shipping')}
+        {t('shipping')}
       </Typography>
       {shouldShowAddAddressButton && (
         <>

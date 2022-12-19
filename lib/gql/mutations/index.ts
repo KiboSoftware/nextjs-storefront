@@ -24,7 +24,6 @@ export { default as updateOrderCouponMutation } from './coupon/updateOrderCoupon
 export { default as deleteOrderCouponMutation } from './coupon/deleteOrderCoupon'
 export { default as createReturnItemMutation } from './order-return-items/createReturnItemMutation'
 export { default as checkoutPaymentActionMutation } from './checkout/create-checkout-payment-action-mutation'
-export { default as createCheckoutActionMutation } from './checkout/create-checkout-action-mutation'
 export { default as createCheckoutDestination } from './checkout/create-checkout-destination'
 export { default as updateCheckoutDestination } from './checkout/update-checkout-destination'
 export { default as updateCheckoutItemDestination } from './checkout/update-checkout-item-destination'
