@@ -1,3 +1,6 @@
+/**
+ * @module useCheckoutQueries
+ */
 import { useQuery } from 'react-query'
 
 import { makeGraphQLClient } from '@/lib/gql/client'
@@ -9,6 +12,10 @@ interface UseCheckout {
   checkoutId?: string
   initialCheckout?: Order
 }
+
+/**
+ * @hidden
+ */
 export interface UseCheckoutResponse {
   data: Order | undefined
   isLoading: boolean
@@ -25,6 +32,23 @@ const getCheckout = async (checkoutId?: string | null) => {
 
   return response?.checkout
 }
+
+/**
+ * [Query hook] useCheckoutQueries uses the graphQL query
+ *
+ * <b>checkout(checkoutId: String!): Checkout</b>
+ *
+ * Description : Fetches the data required on checkout steps(items, fulfillment info, discounts(if any) etc.)
+ *
+ * Parameters passed to function getCheckout(checkoutId?: string | null) => expects checkoutId.
+ *
+ * On success, returns the checkout
+ *
+ * @param checkoutId passing the created checkout id
+ * @param initialCheckout stores the data for checkout present on server side. Used to check if the data has got stale, if not; data is not fetched again.
+ *
+ * @returns 'response?.checkout' which contains checkout details
+ */
 
 export const useCheckoutQueries = ({
   checkoutId,

@@ -17,7 +17,8 @@
     "test-report-coverage": "jest --silent --coverage --testResultsProcessor=jest-sonar-reporter",
     "test-watch": "jest --watch",
     "prettier:format": "prettier --write .",
-    "prepare": "husky install"
+    "prepare": "husky install",
+    "generate-docs:hooks": "npx typedoc --entryPointStrategy expand hooks/ --out docs/hooks --readme none --exclude \"**/*+(.spec)+(.ts|.tsx)\" --exclude \"**/multiShip/**/*+(.ts|.tsx)\" --exclude \"**/index.ts\" "
   },
   "dependencies": {
     "@emotion/cache": "latest",
@@ -101,7 +102,9 @@
     "storybook-addon-next": "^1.3.1",
     "ts-jest": "^28.0.3",
     "tsconfig-paths-webpack-plugin": "^3.5.2",
-    "typescript": "4.5.2"
+    "typedoc": "^0.23.21",
+    "typedoc-plugin-markdown": "^3.13.6",
+    "typescript": "^4.7.4"
   },
   "msw": {
     "workerDirectory": "public"

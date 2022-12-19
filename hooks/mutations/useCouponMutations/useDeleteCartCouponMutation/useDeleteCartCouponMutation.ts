@@ -1,3 +1,6 @@
+/**
+ * @module useDeleteCartCouponMutation
+ */
 import { useMutation, useQueryClient } from 'react-query'
 
 import { makeGraphQLClient } from '@/lib/gql/client'
@@ -25,6 +28,19 @@ const deleteCartCoupon = async (params: DeleteCartCouponParams) => {
   return response?.deleteCartCoupon
 }
 
+/**
+ * [Mutation hook] useDeleteCartCouponMutation uses the graphQL mutation
+ *
+ * <b>deleteCartCoupon(cartId: String!, couponCode: String!): Cart</b>
+ *
+ * Description : Removes promo code from Order Summary in cart page
+ *
+ * Parameters passed to function deleteCartCoupon(params: DeleteCartCouponParams) => expects object of type 'DeleteCartCouponParams' containing cartId and couponCode
+ *
+ * On success, calls invalidateQueries on cartKeys and fetches the updated result
+ *
+ * @returns 'response?.deleteCartCoupon' which removes the applied coupon on cart page
+ */
 export const useDeleteCartCouponMutation = () => {
   const queryClient = useQueryClient()
   return useMutation(deleteCartCoupon, {

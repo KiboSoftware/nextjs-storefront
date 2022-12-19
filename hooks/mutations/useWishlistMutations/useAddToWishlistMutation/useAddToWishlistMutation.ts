@@ -1,3 +1,6 @@
+/**
+ * @module useAddToWishlistMutation
+ */
 import { useMutation, useQueryClient } from 'react-query'
 
 import { makeGraphQLClient } from '@/lib/gql/client'
@@ -25,6 +28,20 @@ const addToWishlist = async (props: WishlistItemInputParams) => {
   })
   return response?.createWishlistItem
 }
+
+/**
+ * [Mutation hook] useAddToWishlistMutation uses the graphQL mutation
+ *
+ * <b>createWishlistItem(wishlistId: String!, wishlistItemInput: WishlistItemInput): WishlistItem</b>
+ *
+ * Description : Add item to wishlist for current user
+ *
+ * Parameters passed to function addToWishlist(props: WishlistItemInputParams) => expects object of type ' WishlistItemInputParams' containing  product ,customerAccountId ,currentWishlist
+ *
+ * On success, calls invalidateQueries on wishlistKeys and fetches the updated result.
+ *
+ * @returns 'response?.createWishlistItem', which contains wishlist items for current user
+ */
 
 export const useAddToWishlistMutation = () => {
   const queryClient = useQueryClient()

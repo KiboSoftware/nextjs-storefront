@@ -1,3 +1,6 @@
+/**
+ * @module useUpdateCheckoutBillingInfoMutation
+ */
 import { useMutation, useQueryClient } from 'react-query'
 
 import { makeGraphQLClient } from '@/lib/gql/client'
@@ -6,6 +9,9 @@ import { checkoutKeys } from '@/lib/react-query/queryKeys'
 
 import type { BillingInfoInput } from '@/lib/gql/types'
 
+/**
+ * @hidden
+ */
 export interface UpdateBillingInfoInput {
   orderId: string
   billingInfoInput: BillingInfoInput
@@ -21,6 +27,20 @@ const updateBillingInfo = async (params: UpdateBillingInfoInput) => {
 
   return response?.updateOrderBillingInfo
 }
+
+/**
+ * [Mutation hook] useUpdateCheckoutBillingInfoMutation uses the graphQL mutation
+ *
+ * <b>updateOrderBillingInfo(orderId: String!, updateMode: String, version: String, billingInfoInput: BillingInfoInput): BillingInfo</b>
+ *
+ * Description : Updates user billing info at checkout
+ *
+ * Parameters passed to function updateBillingInfo(params: UpdateBillingInfoInput) => expects object of type 'UpdateBillingInfoInput' containing orderId and billingInfo input
+ *
+ * On success, calls invalidateQueries on checkoutKeys and fetches the updated result.
+ *
+ * @returns 'response?.updateOrderBillingInfo', which contains updated billing details of user
+ */
 
 export const useUpdateCheckoutBillingInfoMutation = () => {
   const queryClient = useQueryClient()

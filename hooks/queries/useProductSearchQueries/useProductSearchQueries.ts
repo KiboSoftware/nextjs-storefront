@@ -1,3 +1,6 @@
+/**
+ * @module useProductSearchQueries
+ */
 import { useQuery } from 'react-query'
 
 import { makeGraphQLClient } from '@/lib/gql/client'
@@ -8,6 +11,9 @@ import type { CategorySearchParams } from '@/lib/types'
 
 import type { ProductSearchResult } from '@/lib/gql/types'
 
+/**
+ * @hidden
+ */
 export interface UseProductSearchResponse {
   data: ProductSearchResult
   isLoading: boolean
@@ -22,8 +28,25 @@ const fetchProductSearch = async (searchParams: CategorySearchParams) => {
     document: searchProductsQuery,
     variables: productSearchInput,
   })
-  return response.products
+  return response?.products
 }
+
+/**
+ * [Query hook] useProductSearchQueries uses the graphQL query
+ *
+ * <b>ProductSearch(query: String, startIndex: Int, filter: String, pageSize: Int, sortBy: String, facet: String, facetHierValue: String, facetTemplate: String, facetValueFilter: String): ProductSearchResult</b>
+ *
+ * Description : Fetches the product details based on search keyword passing by searchParams.
+ *
+ * Parameters passed to function fetchProductSearch(searchParams: CategorySearchParams) => expects object of type CategorySearchParams containing categoryCode, pageSize, filters, startIndex, sort, search, filter.
+ *
+ * On success, returns the product list with 'refetchOnWindowFocus' set to false for this react query
+ *
+ * @param searchParams get required values from route.query and used inside the search params
+ * @param initialData stores the data for cart present on server side. Used to check if the data has got stale, if not; data is not fetched again.
+ *
+ * @returns 'response?.products', which contains list of products based of search request.
+ */
 
 export const useProductSearchQueries = (
   searchParams: CategorySearchParams,

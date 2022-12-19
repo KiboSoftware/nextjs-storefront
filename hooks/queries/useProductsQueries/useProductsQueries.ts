@@ -1,3 +1,6 @@
+/**
+ * @module useProductsQueries
+ */
 import { useQuery } from 'react-query'
 
 import { makeGraphQLClient } from '@/lib/gql/client'
@@ -8,6 +11,9 @@ import type { CategorySearchParams } from '@/lib/types'
 
 import type { ProductSearchResult } from '@/lib/gql/types'
 
+/**
+ * @hidden
+ */
 export interface UseProductsResponse {
   data: ProductSearchResult
   isLoading: boolean
@@ -24,6 +30,22 @@ const fetchProductSearch = async (searchParams: CategorySearchParams) => {
   })
   return response.products
 }
+
+/**
+ * [Query hook] useProductsQueries uses the graphQL query
+ *
+ * <b>ProductSearch(query: String, startIndex: Int, filter: String, pageSize: Int, sortBy: String, facet: String, facetHierValue: String, facetTemplate: String, facetValueFilter: String): ProductSearchResult</b>
+ *
+ * Description : Fetches the product details based on filter and pagesize, here filter contains product codes.
+ *
+ * Parameters passed to function fetchProductSearch(searchParams: CategorySearchParams) => expects object of type CategorySearchParams containing categoryCode, pageSize, filters, startIndex, sort, search, filter.
+ *
+ * On success, returns the product list with 'refetchOnWindowFocus' set to false for this react query
+ *
+ * @param productCodes Accept array of product code and converting it to string with separated by 'or' to be used further.
+ *
+ * @returns 'response?.products', which contains list of products based on search request.
+ */
 
 export const useProductsQueries = (productCodes: Array<string>): UseProductsResponse => {
   const productCodeFilter: Array<string> = []

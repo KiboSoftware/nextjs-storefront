@@ -1,3 +1,6 @@
+/**
+ * @module useCreateWishlistMutation
+ */
 import getConfig from 'next/config'
 import { useMutation, useQueryClient } from 'react-query'
 
@@ -23,6 +26,20 @@ const createWishlist = async (customerAccountId: number) => {
 
   return response?.createWishlist
 }
+
+/**
+ * [Mutation hook] useCreateWishlistMutation uses the graphQL mutation
+ *
+ * <b>createWishlist(wishlistInput: WishlistInput): Wishlist</b>
+ *
+ * Description : Creates the wishlist for logged in user
+ *
+ * Parameters passed to function createWishlist(customerAccountId: number) => expects object containing accountId to create wishlist.
+ *
+ * On success, calls invalidateQueries on wishlistKeys and fetches the updated result.
+ *
+ * @returns 'response?.createWishlistItem', which contains wishlist created for user.
+ */
 
 export const useCreateWishlistMutation = () => {
   const queryClient = useQueryClient()

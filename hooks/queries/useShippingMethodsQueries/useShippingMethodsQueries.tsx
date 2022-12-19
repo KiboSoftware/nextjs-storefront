@@ -1,3 +1,6 @@
+/**
+ * @module useShippingMethodsQueries
+ */
 import { useQuery } from 'react-query'
 
 import { makeGraphQLClient } from '@/lib/gql/client'
@@ -6,6 +9,9 @@ import { shippingMethodKeys } from '@/lib/react-query/queryKeys'
 
 import type { ShippingRate } from '@/lib/gql/types'
 
+/**
+ * @hidden
+ */
 export interface UseShippingMethodsResponse {
   data: ShippingRate[]
   isLoading: boolean
@@ -22,6 +28,22 @@ const loadShippingMethods = async (checkoutId: string) => {
 
   return response?.orderShipmentMethods
 }
+
+/**
+ * [Query hook] useShippingMethodsQueries uses the graphQL query
+ *
+ * <b>orderShipmentMethods(orderId: String!): [ShippingRate]</b>
+ *
+ * Description : Fetches the shipping methods based on checkout id.
+ *
+ * Parameters passed to function loadShippingMethods(checkoutId: string) => expects checkoutId
+ *
+ * On success, returns the received list of shipping methods.
+ *
+ * @param checkoutId Accepts created checkout id
+ *
+ * @returns 'response?.orderShipmentMethods', which contains shipping methods based on checkoutId request.
+ */
 
 export const useShippingMethodsQueries = (
   checkoutId: string | null | undefined,

@@ -1,3 +1,6 @@
+/**
+ * @module useUserMutations
+ */
 import { useMutation, useQueryClient } from 'react-query'
 
 import { CustomerUserAuthInfoInput } from '../../../lib/gql/types'
@@ -13,6 +16,20 @@ const loginUser = async (customerUserAuthInfoInput: CustomerUserAuthInfoInput) =
   })
   return response?.account
 }
+
+/**
+ * [Mutation hook] useUserMutations uses the graphQL mutation
+ *
+ * <b>createCustomerAuthTicket(customerUserAuthInfoInput: CustomerUserAuthInfoInput): CustomerAuthTicket</b>
+ *
+ * Description : Logs user in account by creating auth ticket
+ *
+ * Parameters passed to function loginUser(customerAccountAndAuthInfoInput: CustomerAccountAndAuthInfoInput) => expects object of type ' CustomerAccountAndAuthInfoInput' containing password and username
+ *
+ * On success, calls invalidateQueries on loginKeys and fetches the updated result.
+ *
+ * @returns 'response?.account', which contains information related to logged in user account
+ */
 
 export const useUserMutations = () => {
   const queryClient = useQueryClient()

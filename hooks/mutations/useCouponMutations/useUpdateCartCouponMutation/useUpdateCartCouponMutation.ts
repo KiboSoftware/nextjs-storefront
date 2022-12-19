@@ -1,3 +1,6 @@
+/**
+ * @module useUpdateCartCouponMutation
+ */
 import { useMutation, useQueryClient } from 'react-query'
 
 import { makeGraphQLClient } from '@/lib/gql/client'
@@ -25,6 +28,19 @@ const updateCartCoupon = async (params: UpdateCartCouponParams) => {
   return response?.updateCartCoupon
 }
 
+/**
+ * [Mutation hook] useUpdateCartCouponMutation uses the graphQL mutation
+ *
+ * <b>updateCartCoupon(cartId: String!, couponCode: String!): Cart</b>
+ *
+ * Description : Applies promo code in Order Summary of cart page
+ *
+ * Parameters passed to function updateCartCoupon(params: UpdateCartCouponParams) => expects object of type 'UpdateCartCouponParams' containing cartId and couponCode
+ *
+ * On success, calls invalidateQueries on cartKeys and fetches the updated result
+ *
+ * @returns 'response?.updateCartCoupon' which applies the coupon on cart page(if coupon is valid)
+ */
 export const useUpdateCartCouponMutation = () => {
   const queryClient = useQueryClient()
   return useMutation(updateCartCoupon, {

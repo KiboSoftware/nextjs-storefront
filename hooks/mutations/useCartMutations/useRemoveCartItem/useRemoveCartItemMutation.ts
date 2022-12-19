@@ -1,3 +1,6 @@
+/**
+ * @module useRemoveCartItemMutation
+ */
 import { useMutation, useQueryClient } from 'react-query'
 
 import { makeGraphQLClient } from '@/lib/gql/client'
@@ -25,6 +28,19 @@ const removeCartItem = async (params: RemoveCartItemParams) => {
   return response?.deleteCartItemMutation
 }
 
+/**
+ * [Mutation hook] useRemoveCartItemMutation uses the graphQL mutation
+ *
+ * <b>deleteCurrentCartItem(cartItemId: String!): Boolean</b>
+ *
+ * Description : Removes the product item from the cart
+ *
+ * Parameters passed to function removeCartItem(params: RemoveCartItemParams) => expects object of type RemoveCartItemParams containing cartItemId of the product to be deleted
+ *
+ * On success, calls invalidateQueries on cartKeys and fetches the updated result
+ *
+ * @returns 'response?.deleteCartItemMutation' returns 'true' if product is deleted
+ */
 export const useRemoveCartItemMutation = () => {
   const queryClient = useQueryClient()
   return {

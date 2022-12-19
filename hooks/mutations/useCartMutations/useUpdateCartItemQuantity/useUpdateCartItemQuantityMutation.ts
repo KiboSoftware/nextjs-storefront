@@ -1,3 +1,6 @@
+/**
+ * @module useUpdateCartItemQuantityMutation
+ */
 import { useMutation, useQueryClient } from 'react-query'
 
 import { makeGraphQLClient } from '@/lib/gql/client'
@@ -27,6 +30,19 @@ const updateCartItemQuantity = async (params: UpdateCartItemQuantityParams) => {
   return response?.updateCartItemQuantity
 }
 
+/**
+ * [Mutation hook] useUpdateCartItemQuantityMutation uses the graphQL mutation
+ *
+ * <b>updateCurrentCartItemQuantity(cartItemId: String!, quantity: Int!): CartItem</b>
+ *
+ * Description : Updates the quantity of items currently in the cart
+ *
+ * Parameters passed to function updateCartItemQuantity(params: UpdateCartItemQuantityParams) => expects object of type 'UpdateCartItemQuantityParams' containing cartItemId and quantity
+ *
+ * On success, calls invalidateQueries on cartKeys and fetches the updated result
+ *
+ * @returns 'response?.updateCartItemQuantity' which contains updated quantity for the items present in the cart
+ */
 export const useUpdateCartItemQuantityMutation = () => {
   const queryClient = useQueryClient()
   return {

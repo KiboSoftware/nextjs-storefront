@@ -1,3 +1,6 @@
+/**
+ * @module useUpdateCheckoutShippingInfoMutation
+ */
 import { useMutation, useQueryClient } from 'react-query'
 
 import { makeGraphQLClient } from '@/lib/gql/client'
@@ -10,6 +13,9 @@ import { checkoutKeys } from '@/lib/react-query/queryKeys'
 
 import type { FulfillmentInfoInput } from '@/lib/gql/types'
 
+/**
+ * @hidden
+ */
 export interface ShippingInfo {
   orderId: string
   fulfillmentInfoInput: FulfillmentInfoInput
@@ -27,6 +33,20 @@ const updateShippingInfo = async (params: CheckoutShippingParams) => {
 
   return response?.updateOrderFulfillmentInfo
 }
+
+/**
+ * [Mutation hook] useUpdateCheckoutShippingInfoMutation uses the graphQL mutation
+ *
+ * <b>updateOrderFulfillmentInfo(orderId: String!, updateMode: String, version: String, fulfillmentInfoInput: FulfillmentInfoInput): FulfillmentInfo</b>
+ *
+ * Description : Updates user shipping(fulfillment) info at checkout
+ *
+ * Parameters passed to function updateShippingInfo(params: CheckoutShippingParams) => expects object of type ' ShippingInfo' containing  orderId and fulfillmentInfoInput
+ *
+ * On success, calls invalidateQueries on checkoutKeys and fetches the updated result.
+ *
+ * @returns 'response?.updateOrderBillingInfo', which contains updated shipping checkout information
+ */
 
 export const useUpdateCheckoutShippingInfoMutation = () => {
   const queryClient = useQueryClient()
