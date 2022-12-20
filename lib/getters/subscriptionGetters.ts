@@ -1,26 +1,27 @@
 import { format } from 'date-fns'
 
-const getSubscriberName = (subscription: any) =>
+import type { Subscription } from '@/lib/gql/types'
+
+const getSubscriberName = (subscription: Subscription) =>
   `${subscription?.fulfillmentInfo?.fulfillmentContact?.firstName} ${subscription?.fulfillmentInfo?.fulfillmentContact?.lastNameOrSurname}`
 
-const getAddress = (subscription: any) => subscription?.fulfillmentInfo?.fulfillmentContact?.address
+const getAddress = (subscription: Subscription) =>
+  subscription?.fulfillmentInfo?.fulfillmentContact?.address
 
-const getSubscriberAddress = (subscription: any) =>
-  `${getAddress(subscription)?.address1} ${getAddress(subscription)?.address2}  ${
-    getAddress(subscription)?.cityOrTown
-  } ${getAddress(subscription)?.stateOrProvince} ${getAddress(subscription)?.postalOrZipCode}  ${
-    getAddress(subscription)?.countryCode
-  }`
+const getSubscriberAddress = (subscription: Subscription): string =>
+  `${getAddress(subscription)?.address1}  ${getAddress(subscription)?.cityOrTown} ${
+    getAddress(subscription)?.stateOrProvince
+  } ${getAddress(subscription)?.postalOrZipCode}  ${getAddress(subscription)?.countryCode}`
 
-const getSubscriptionFrequency = (subscription: any) =>
+const getSubscriptionFrequency = (subscription: Subscription) =>
   `${subscription?.frequency?.value} ${subscription?.frequency?.unit}`
 
-const nextOrderItemDate = (subscription: any) =>
+const nextOrderItemDate = (subscription: Subscription) =>
   format(new Date(subscription?.nextOrderDate), 'MMMM dd, yyyy')
 
-const getSubscriptionNumber = (subscription: any) => subscription?.number
+const getSubscriptionNumber = (subscription: Subscription) => subscription?.number
 
-const getSubscriptionStatus = (subscription: any) => subscription?.status
+const getSubscriptionStatus = (subscription: Subscription) => subscription?.status
 
 const getSubscriptionDetails = (subscription: any) => {
   return {
@@ -34,5 +35,11 @@ const getSubscriptionDetails = (subscription: any) => {
 }
 
 export const subscriptionGetters = {
+  getSubscriberName,
+  getSubscriberAddress,
+  nextOrderItemDate,
+  getSubscriptionNumber,
+  getSubscriptionStatus,
+  getSubscriptionFrequency,
   getSubscriptionDetails,
 }

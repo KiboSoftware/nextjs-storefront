@@ -814,6 +814,7 @@ export type Cart = {
   shippingTaxTotal?: Maybe<Scalars['Float']>
   shippingTotal?: Maybe<Scalars['Float']>
   siteId?: Maybe<Scalars['Int']>
+  subscription?: Maybe<CrSubscriptionInfo>
   subtotal?: Maybe<Scalars['Float']>
   suggestedDiscounts?: Maybe<Array<Maybe<SuggestedDiscount>>>
   taxData?: Maybe<Scalars['Object']>
@@ -925,6 +926,7 @@ export type CartItem = {
   shippingDiscounts?: Maybe<Array<Maybe<AppliedLineItemShippingDiscount>>>
   shippingTaxTotal?: Maybe<Scalars['Float']>
   shippingTotal?: Maybe<Scalars['Float']>
+  subscription?: Maybe<CrSubscriptionInfo>
   subtotal?: Maybe<Scalars['Float']>
   taxData?: Maybe<Scalars['Object']>
   taxableTotal?: Maybe<Scalars['Float']>
@@ -996,6 +998,7 @@ export type CartItemInput = {
   shippingDiscounts?: InputMaybe<Array<InputMaybe<AppliedLineItemShippingDiscountInput>>>
   shippingTaxTotal?: InputMaybe<Scalars['Float']>
   shippingTotal?: InputMaybe<Scalars['Float']>
+  subscription?: InputMaybe<CrSubscriptionInfoInput>
   subtotal?: InputMaybe<Scalars['Float']>
   taxData?: InputMaybe<Scalars['Object']>
   taxableTotal?: InputMaybe<Scalars['Float']>
@@ -1890,6 +1893,25 @@ export type CrDiscountInput = {
   name?: InputMaybe<Scalars['String']>
 }
 
+export type CrFrequency = {
+  __typename?: 'CrFrequency'
+  _get?: Maybe<Scalars['AnyScalar']>
+  _root?: Maybe<CrFrequency>
+  unit?: Maybe<Scalars['String']>
+  value: Scalars['Int']
+}
+
+export type CrFrequency_GetArgs = {
+  allowUndefined?: InputMaybe<Scalars['Boolean']>
+  defaultValue?: InputMaybe<Scalars['AnyScalar']>
+  path: Scalars['String']
+}
+
+export type CrFrequencyInput = {
+  unit?: InputMaybe<Scalars['String']>
+  value: Scalars['Int']
+}
+
 export type CrMeasurement = {
   __typename?: 'CrMeasurement'
   _get?: Maybe<Scalars['AnyScalar']>
@@ -1946,6 +1968,7 @@ export type CrOrderItem = {
   shippingDiscounts?: Maybe<Array<Maybe<AppliedLineItemShippingDiscount>>>
   shippingTaxTotal?: Maybe<Scalars['Float']>
   shippingTotal?: Maybe<Scalars['Float']>
+  subscription?: Maybe<CrSubscriptionInfo>
   subtotal?: Maybe<Scalars['Float']>
   taxData?: Maybe<Scalars['Object']>
   taxableTotal?: Maybe<Scalars['Float']>
@@ -2007,6 +2030,7 @@ export type CrOrderItemInput = {
   shippingDiscounts?: InputMaybe<Array<InputMaybe<AppliedLineItemShippingDiscountInput>>>
   shippingTaxTotal?: InputMaybe<Scalars['Float']>
   shippingTotal?: InputMaybe<Scalars['Float']>
+  subscription?: InputMaybe<CrSubscriptionInfoInput>
   subtotal?: InputMaybe<Scalars['Float']>
   taxData?: InputMaybe<Scalars['Object']>
   taxableTotal?: InputMaybe<Scalars['Float']>
@@ -2326,6 +2350,54 @@ export type CrProductPropertyValue_GetArgs = {
 export type CrProductPropertyValueInput = {
   stringValue?: InputMaybe<Scalars['String']>
   value?: InputMaybe<Scalars['Object']>
+}
+
+export type CrSubscriptionInfo = {
+  __typename?: 'CrSubscriptionInfo'
+  _get?: Maybe<Scalars['AnyScalar']>
+  _root?: Maybe<CrSubscriptionInfo>
+  frequency?: Maybe<CrFrequency>
+  required?: Maybe<Scalars['Boolean']>
+  trial?: Maybe<CrTrial>
+}
+
+export type CrSubscriptionInfo_GetArgs = {
+  allowUndefined?: InputMaybe<Scalars['Boolean']>
+  defaultValue?: InputMaybe<Scalars['AnyScalar']>
+  path: Scalars['String']
+}
+
+export type CrSubscriptionInfoInput = {
+  frequency?: InputMaybe<CrFrequencyInput>
+  required?: InputMaybe<Scalars['Boolean']>
+  trial?: InputMaybe<CrTrialInput>
+}
+
+export type CrTrial = {
+  __typename?: 'CrTrial'
+  _get?: Maybe<Scalars['AnyScalar']>
+  _root?: Maybe<CrTrial>
+  duration: Scalars['Int']
+  enabled?: Maybe<Scalars['Boolean']>
+  substituteProductCode?: Maybe<Scalars['String']>
+  substituteProductOptions?: Maybe<Array<Maybe<CrProductOption>>>
+  substituteProductQuantity: Scalars['Int']
+  substituteVariationProductCode?: Maybe<Scalars['String']>
+}
+
+export type CrTrial_GetArgs = {
+  allowUndefined?: InputMaybe<Scalars['Boolean']>
+  defaultValue?: InputMaybe<Scalars['AnyScalar']>
+  path: Scalars['String']
+}
+
+export type CrTrialInput = {
+  duration: Scalars['Int']
+  enabled?: InputMaybe<Scalars['Boolean']>
+  substituteProductCode?: InputMaybe<Scalars['String']>
+  substituteProductOptions?: InputMaybe<Array<InputMaybe<CrProductOptionInput>>>
+  substituteProductQuantity: Scalars['Int']
+  substituteVariationProductCode?: InputMaybe<Scalars['String']>
 }
 
 export type Credit = {
@@ -4886,6 +4958,7 @@ export type Mutation = {
   addItemsToCart?: Maybe<Scalars['Boolean']>
   addItemsToCurrentCart?: Maybe<Scalars['Boolean']>
   addRoleToCustomerB2bAccount?: Maybe<Scalars['Boolean']>
+  addSubscriptionItem?: Maybe<Subscription>
   adminCreateLocation?: Maybe<Location>
   adminCreateLocationAttribute?: Maybe<LoAttribute>
   adminCreateLocationGroup?: Maybe<LocationGroup>
@@ -4893,9 +4966,12 @@ export type Mutation = {
   adminUpdateLocation?: Maybe<Location>
   adminUpdateLocationAttribute?: Maybe<LoAttribute>
   adminUpdateLocationType?: Maybe<LocationType>
+  applySubscriptionCoupon?: Maybe<Subscription>
   cancelOrder?: Maybe<Order>
   changeCustomerAccountPassword?: Maybe<Scalars['Boolean']>
+  clearSubscriptionDraft?: Maybe<Subscription>
   configureProduct?: Maybe<ConfiguredProduct>
+  convertSubscriptionToOrder?: Maybe<SbOrder>
   createCartForUser?: Maybe<Cart>
   createCheckout?: Maybe<Checkout>
   createCheckoutAction?: Maybe<Checkout>
@@ -4968,6 +5044,7 @@ export type Mutation = {
   createReturnPaymentAction?: Maybe<ReturnObj>
   createReturnPaymentPaymentAction?: Maybe<ReturnObj>
   createReturnShipment?: Maybe<Array<Maybe<CrPackageObj>>>
+  createSubscription?: Maybe<Subscription>
   createTargetRule?: Maybe<TargetRule>
   createWishlist?: Maybe<Wishlist>
   createWishlistItem?: Maybe<WishlistItem>
@@ -5029,16 +5106,20 @@ export type Mutation = {
   deleteReturnNote?: Maybe<Scalars['Boolean']>
   deleteReturnPackage?: Maybe<Scalars['Boolean']>
   deleteReturnShipment?: Maybe<Scalars['Boolean']>
+  deleteSubscriptionItem?: Maybe<Subscription>
   deleteUserCart?: Maybe<Scalars['Boolean']>
   deleteWishlist?: Maybe<Scalars['Boolean']>
   deleteWishlistItem?: Maybe<Scalars['Boolean']>
   deleteWishlistItems?: Maybe<Wishlist>
   manageLocationProductInventory?: Maybe<LocationInventoryCollection>
+  orderSubscriptionNow?: Maybe<Subscription>
   patchDocumentListDocument?: Maybe<Document>
+  performSubscriptionAction?: Maybe<Subscription>
   recomputeCustomerAccountLifetimeValue?: Maybe<Scalars['Boolean']>
   refreshCustomerAuthTickets?: Maybe<CustomerAuthTicket>
   rejectCartDiscount?: Maybe<Cart>
   removeCustomerB2bAccountUser?: Maybe<Scalars['Boolean']>
+  removeOneTimeSubscriptionCoupon?: Maybe<Subscription>
   repriceOrderShipment?: Maybe<Shipment>
   resendCheckoutEmail?: Maybe<Scalars['Boolean']>
   resendCustomerCreditEmail?: Maybe<Scalars['Boolean']>
@@ -5050,6 +5131,7 @@ export type Mutation = {
   setCustomerAccountPasswordChangeRequired?: Maybe<Scalars['Boolean']>
   setReturnRestock?: Maybe<ReturnObj>
   setReturnShip?: Maybe<Order>
+  skipNextSubscription?: Maybe<Subscription>
   splitOrderShipment?: Maybe<Array<Maybe<Shipment>>>
   toggleDocumentPublishing?: Maybe<Scalars['Boolean']>
   updateCart?: Maybe<Cart>
@@ -5128,6 +5210,13 @@ export type Mutation = {
   updateReturn?: Maybe<ReturnObj>
   updateReturnNote?: Maybe<OrderNote>
   updateReturnPackage?: Maybe<CrPackageObj>
+  updateSubscription?: Maybe<Subscription>
+  updateSubscriptionAdjustments?: Maybe<Subscription>
+  updateSubscriptionFrequency?: Maybe<Subscription>
+  updateSubscriptionFulfillmentInfo?: Maybe<SbFulfillmentInfo>
+  updateSubscriptionItemQuantity?: Maybe<Subscription>
+  updateSubscriptionNextOrderDate?: Maybe<Subscription>
+  updateSubscriptionPayment?: Maybe<Subscription>
   updateTargetRule?: Maybe<TargetRule>
   updateUserCart?: Maybe<Cart>
   updateUserOrder?: Maybe<Order>
@@ -5172,6 +5261,12 @@ export type MutationAddRoleToCustomerB2bAccountArgs = {
   userId: Scalars['String']
 }
 
+export type MutationAddSubscriptionItemArgs = {
+  subscriptionId: Scalars['String']
+  subscriptionItemInput?: InputMaybe<SbSubscriptionItemInput>
+  updateMode?: InputMaybe<Scalars['String']>
+}
+
 export type MutationAdminCreateLocationArgs = {
   locationInput?: InputMaybe<LocationInput>
 }
@@ -5203,6 +5298,12 @@ export type MutationAdminUpdateLocationTypeArgs = {
   locationTypeInput?: InputMaybe<LocationTypeInput>
 }
 
+export type MutationApplySubscriptionCouponArgs = {
+  couponCode: Scalars['String']
+  subscriptionId: Scalars['String']
+  updateMode?: InputMaybe<Scalars['String']>
+}
+
 export type MutationCancelOrderArgs = {
   canceledReasonInput?: InputMaybe<CanceledReasonInput>
   orderId: Scalars['String']
@@ -5215,6 +5316,10 @@ export type MutationChangeCustomerAccountPasswordArgs = {
   userId?: InputMaybe<Scalars['String']>
 }
 
+export type MutationClearSubscriptionDraftArgs = {
+  subscriptionId: Scalars['String']
+}
+
 export type MutationConfigureProductArgs = {
   includeOptionDetails?: InputMaybe<Scalars['Boolean']>
   productCode: Scalars['String']
@@ -5222,7 +5327,13 @@ export type MutationConfigureProductArgs = {
   purchaseLocation?: InputMaybe<Scalars['String']>
   quantity?: InputMaybe<Scalars['Int']>
   skipInventoryCheck?: InputMaybe<Scalars['Boolean']>
+  subscriptionFrequency?: InputMaybe<Scalars['String']>
+  useSubscriptionPricing?: InputMaybe<Scalars['Boolean']>
   variationProductCodeFilter?: InputMaybe<Scalars['String']>
+}
+
+export type MutationConvertSubscriptionToOrderArgs = {
+  subscriptionId: Scalars['String']
 }
 
 export type MutationCreateCartForUserArgs = {
@@ -5578,6 +5689,10 @@ export type MutationCreateReturnShipmentArgs = {
   returnId: Scalars['String']
 }
 
+export type MutationCreateSubscriptionArgs = {
+  subscriptionInput?: InputMaybe<SubscriptionInput>
+}
+
 export type MutationCreateTargetRuleArgs = {
   targetRuleInput?: InputMaybe<TargetRuleInput>
 }
@@ -5861,6 +5976,13 @@ export type MutationDeleteReturnShipmentArgs = {
   shipmentId: Scalars['String']
 }
 
+export type MutationDeleteSubscriptionItemArgs = {
+  subscriptionId: Scalars['String']
+  subscriptionItemId: Scalars['String']
+  subscriptionReasonInput?: InputMaybe<SubscriptionReasonInput>
+  updateMode?: InputMaybe<Scalars['String']>
+}
+
 export type MutationDeleteUserCartArgs = {
   userId: Scalars['String']
 }
@@ -5882,10 +6004,19 @@ export type MutationManageLocationProductInventoryArgs = {
   locationInventoryQueryInput?: InputMaybe<LocationInventoryQueryInput>
 }
 
+export type MutationOrderSubscriptionNowArgs = {
+  subscriptionId: Scalars['String']
+}
+
 export type MutationPatchDocumentListDocumentArgs = {
   documentId: Scalars['String']
   documentInput?: InputMaybe<DocumentInput>
   documentListName: Scalars['String']
+}
+
+export type MutationPerformSubscriptionActionArgs = {
+  subscriptionActionInput?: InputMaybe<SubscriptionActionInput>
+  subscriptionId: Scalars['String']
 }
 
 export type MutationRecomputeCustomerAccountLifetimeValueArgs = {
@@ -5904,6 +6035,12 @@ export type MutationRejectCartDiscountArgs = {
 export type MutationRemoveCustomerB2bAccountUserArgs = {
   accountId: Scalars['Int']
   userId: Scalars['String']
+}
+
+export type MutationRemoveOneTimeSubscriptionCouponArgs = {
+  oneTimeCouponsInput?: InputMaybe<OneTimeCouponsInput>
+  subscriptionId: Scalars['String']
+  updateMode?: InputMaybe<Scalars['String']>
 }
 
 export type MutationRepriceOrderShipmentArgs = {
@@ -5959,6 +6096,10 @@ export type MutationSetReturnRestockArgs = {
 export type MutationSetReturnShipArgs = {
   returnId: Scalars['String']
   returnItemSpecifierInput?: InputMaybe<ReturnItemSpecifierInput>
+}
+
+export type MutationSkipNextSubscriptionArgs = {
+  subscriptionId: Scalars['String']
 }
 
 export type MutationSplitOrderShipmentArgs = {
@@ -6420,6 +6561,46 @@ export type MutationUpdateReturnPackageArgs = {
   returnId: Scalars['String']
 }
 
+export type MutationUpdateSubscriptionArgs = {
+  subscriptionId: Scalars['String']
+  subscriptionInput?: InputMaybe<SubscriptionInput>
+}
+
+export type MutationUpdateSubscriptionAdjustmentsArgs = {
+  subscriptionAdjustmentInput?: InputMaybe<SubscriptionAdjustmentInput>
+  subscriptionId: Scalars['String']
+}
+
+export type MutationUpdateSubscriptionFrequencyArgs = {
+  frequencyInput?: InputMaybe<SbFrequencyInput>
+  subscriptionId: Scalars['String']
+}
+
+export type MutationUpdateSubscriptionFulfillmentInfoArgs = {
+  fulfillmentInfoInput?: InputMaybe<SbFulfillmentInfoInput>
+  subscriptionId: Scalars['String']
+  updateMode?: InputMaybe<Scalars['String']>
+}
+
+export type MutationUpdateSubscriptionItemQuantityArgs = {
+  quantity: Scalars['Int']
+  subscriptionId: Scalars['String']
+  subscriptionItemId: Scalars['String']
+  subscriptionReasonInput?: InputMaybe<SubscriptionReasonInput>
+  updateMode?: InputMaybe<Scalars['String']>
+}
+
+export type MutationUpdateSubscriptionNextOrderDateArgs = {
+  subscriptionId: Scalars['String']
+  subscriptionNextOrderDateInput?: InputMaybe<SubscriptionNextOrderDateInput>
+}
+
+export type MutationUpdateSubscriptionPaymentArgs = {
+  paymentInput?: InputMaybe<SbPaymentInput>
+  subscriptionId: Scalars['String']
+  updateMode?: InputMaybe<Scalars['String']>
+}
+
 export type MutationUpdateTargetRuleArgs = {
   code: Scalars['String']
   targetRuleInput?: InputMaybe<TargetRuleInput>
@@ -6470,6 +6651,7 @@ export type MutationValidateProductArgs = {
   quantity?: InputMaybe<Scalars['Int']>
   skipDefaults?: InputMaybe<Scalars['Boolean']>
   skipInventoryCheck?: InputMaybe<Scalars['Boolean']>
+  useSubscriptionPricing?: InputMaybe<Scalars['Boolean']>
 }
 
 export type MutationValidateProductDiscountsArgs = {
@@ -6483,6 +6665,58 @@ export type MutationValidateProductDiscountsArgs = {
 
 export type MutationValidateTargetRuleArgs = {
   targetRuleInput?: InputMaybe<TargetRuleInput>
+}
+
+export type OneTimeCouponsInput = {
+  couponCodes?: InputMaybe<Array<Scalars['String']>>
+}
+
+export type OnetimeProduct = {
+  __typename?: 'OnetimeProduct'
+  _get?: Maybe<Scalars['AnyScalar']>
+  _root?: Maybe<OnetimeProduct>
+  fulfillmentLocationCode?: Maybe<Scalars['String']>
+  fulfillmentType?: Maybe<Scalars['String']>
+  options?: Maybe<Array<Maybe<SbProductOption>>>
+  productCode?: Maybe<Scalars['String']>
+  productName?: Maybe<Scalars['String']>
+  quantity: Scalars['Int']
+  variationProductCode?: Maybe<Scalars['String']>
+}
+
+export type OnetimeProduct_GetArgs = {
+  allowUndefined?: InputMaybe<Scalars['Boolean']>
+  defaultValue?: InputMaybe<Scalars['AnyScalar']>
+  path: Scalars['String']
+}
+
+export type OnetimeProductInput = {
+  fulfillmentLocationCode?: InputMaybe<Scalars['String']>
+  fulfillmentType?: InputMaybe<Scalars['String']>
+  options?: InputMaybe<Array<InputMaybe<SbProductOptionInput>>>
+  productCode?: InputMaybe<Scalars['String']>
+  productName?: InputMaybe<Scalars['String']>
+  quantity: Scalars['Int']
+  variationProductCode?: InputMaybe<Scalars['String']>
+}
+
+export type OnetimeShippingMethod = {
+  __typename?: 'OnetimeShippingMethod'
+  _get?: Maybe<Scalars['AnyScalar']>
+  _root?: Maybe<OnetimeShippingMethod>
+  shippingMethodCode?: Maybe<Scalars['String']>
+  shippingMethodName?: Maybe<Scalars['String']>
+}
+
+export type OnetimeShippingMethod_GetArgs = {
+  allowUndefined?: InputMaybe<Scalars['Boolean']>
+  defaultValue?: InputMaybe<Scalars['AnyScalar']>
+  path: Scalars['String']
+}
+
+export type OnetimeShippingMethodInput = {
+  shippingMethodCode?: InputMaybe<Scalars['String']>
+  shippingMethodName?: InputMaybe<Scalars['String']>
 }
 
 export enum NodeTypeEnum {
@@ -6596,6 +6830,7 @@ export type Order = {
   sourceDevice?: Maybe<Scalars['String']>
   status?: Maybe<Scalars['String']>
   submittedDate?: Maybe<Scalars['DateTime']>
+  subscriptionIds?: Maybe<Array<Scalars['String']>>
   subtotal?: Maybe<Scalars['Float']>
   suggestedDiscounts?: Maybe<Array<Maybe<SuggestedDiscount>>>
   taxData?: Maybe<Scalars['Object']>
@@ -6757,6 +6992,7 @@ export type OrderInput = {
   sourceDevice?: InputMaybe<Scalars['String']>
   status?: InputMaybe<Scalars['String']>
   submittedDate?: InputMaybe<Scalars['DateTime']>
+  subscriptionIds?: InputMaybe<Array<Scalars['String']>>
   subtotal?: InputMaybe<Scalars['Float']>
   suggestedDiscounts?: InputMaybe<Array<InputMaybe<SuggestedDiscountInput>>>
   taxData?: InputMaybe<Scalars['Object']>
@@ -8643,6 +8879,8 @@ export type Query = {
   exchangeRates?: Maybe<Array<Maybe<CurrencyExchangeRate>>>
   getAnonymousShopperToken?: Maybe<CustomerAuthTicket>
   getCurrentAccount?: Maybe<CustomerAccount>
+  getSubscriptionReasons?: Maybe<SubscriptionReasonCollection>
+  getSubscriptionShipmentMethods?: Maybe<Array<Maybe<SbShippingRate>>>
   inStockNotification?: Maybe<InStockNotificationSubscription>
   inStockNotifications?: Maybe<InStockNotificationSubscriptionCollection>
   localeServiceTypes?: Maybe<Array<Maybe<ServiceType>>>
@@ -8709,6 +8947,8 @@ export type Query = {
   returns?: Maybe<ReturnCollection>
   spLocation?: Maybe<Location>
   spLocations?: Maybe<LocationCollection>
+  subscription?: Maybe<Subscription>
+  subscriptions?: Maybe<SubscriptionCollection>
   suggestionSearch?: Maybe<SearchSuggestionResult>
   targetRule?: Maybe<TargetRule>
   targetRules?: Maybe<TargetRuleCollection>
@@ -9274,6 +9514,15 @@ export type QueryEntityListsArgs = {
   startIndex?: InputMaybe<Scalars['Int']>
 }
 
+export type QueryGetSubscriptionReasonsArgs = {
+  category?: InputMaybe<Scalars['String']>
+}
+
+export type QueryGetSubscriptionShipmentMethodsArgs = {
+  draft?: InputMaybe<Scalars['Boolean']>
+  subscriptionId: Scalars['String']
+}
+
 export type QueryInStockNotificationArgs = {
   id: Scalars['Int']
 }
@@ -9466,6 +9715,7 @@ export type QueryProductArgs = {
   quantity?: InputMaybe<Scalars['Int']>
   skipInventoryCheck?: InputMaybe<Scalars['Boolean']>
   sliceValue?: InputMaybe<Scalars['String']>
+  useSubscriptionPricing?: InputMaybe<Scalars['Boolean']>
   supressOutOfStock404?: InputMaybe<Scalars['Boolean']>
   variationProductCode?: InputMaybe<Scalars['String']>
   variationProductCodeFilter?: InputMaybe<Scalars['String']>
@@ -9510,6 +9760,7 @@ export type QueryProductSearchArgs = {
   sortDefinitionName?: InputMaybe<Scalars['String']>
   spellcorrectOverride?: InputMaybe<Scalars['String']>
   startIndex?: InputMaybe<Scalars['Int']>
+  useSubscriptionPricing?: InputMaybe<Scalars['Boolean']>
 }
 
 export type QueryProductSearchRandomAccessCursorArgs = {
@@ -9534,6 +9785,7 @@ export type QueryProductsArgs = {
   responseOptions?: InputMaybe<Scalars['String']>
   sortBy?: InputMaybe<Scalars['String']>
   startIndex?: InputMaybe<Scalars['Int']>
+  useSubscriptionPricing?: InputMaybe<Scalars['Boolean']>
 }
 
 export type QueryPropertyTypeArgs = {
@@ -9649,6 +9901,20 @@ export type QuerySpLocationsArgs = {
   filter?: InputMaybe<Scalars['String']>
   includeAttributeDefinition?: InputMaybe<Scalars['Boolean']>
   pageSize?: InputMaybe<Scalars['Int']>
+  sortBy?: InputMaybe<Scalars['String']>
+  startIndex?: InputMaybe<Scalars['Int']>
+}
+
+export type QuerySubscriptionArgs = {
+  draft?: InputMaybe<Scalars['Boolean']>
+  subscriptionId: Scalars['String']
+}
+
+export type QuerySubscriptionsArgs = {
+  filter?: InputMaybe<Scalars['String']>
+  pageSize?: InputMaybe<Scalars['Int']>
+  q?: InputMaybe<Scalars['String']>
+  qLimit?: InputMaybe<Scalars['Int']>
   sortBy?: InputMaybe<Scalars['String']>
   startIndex?: InputMaybe<Scalars['Int']>
 }
@@ -10252,6 +10518,2349 @@ export type ReturnReasonInput = {
   reason?: InputMaybe<Scalars['String']>
 }
 
+export type SbAddress = {
+  __typename?: 'SBAddress'
+  _get?: Maybe<Scalars['AnyScalar']>
+  _root?: Maybe<SbAddress>
+  address1?: Maybe<Scalars['String']>
+  address2?: Maybe<Scalars['String']>
+  address3?: Maybe<Scalars['String']>
+  address4?: Maybe<Scalars['String']>
+  addressType?: Maybe<Scalars['String']>
+  cityOrTown?: Maybe<Scalars['String']>
+  countryCode?: Maybe<Scalars['String']>
+  isValidated?: Maybe<Scalars['Boolean']>
+  postalOrZipCode?: Maybe<Scalars['String']>
+  stateOrProvince?: Maybe<Scalars['String']>
+}
+
+export type SbAddress_GetArgs = {
+  allowUndefined?: InputMaybe<Scalars['Boolean']>
+  defaultValue?: InputMaybe<Scalars['AnyScalar']>
+  path: Scalars['String']
+}
+
+export type SbAddressInput = {
+  address1?: InputMaybe<Scalars['String']>
+  address2?: InputMaybe<Scalars['String']>
+  address3?: InputMaybe<Scalars['String']>
+  address4?: InputMaybe<Scalars['String']>
+  addressType?: InputMaybe<Scalars['String']>
+  cityOrTown?: InputMaybe<Scalars['String']>
+  countryCode?: InputMaybe<Scalars['String']>
+  isValidated?: InputMaybe<Scalars['Boolean']>
+  postalOrZipCode?: InputMaybe<Scalars['String']>
+  stateOrProvince?: InputMaybe<Scalars['String']>
+}
+
+export type SbAdjustment = {
+  __typename?: 'SBAdjustment'
+  _get?: Maybe<Scalars['AnyScalar']>
+  _root?: Maybe<SbAdjustment>
+  amount?: Maybe<Scalars['Float']>
+  description?: Maybe<Scalars['String']>
+  internalComment?: Maybe<Scalars['String']>
+}
+
+export type SbAdjustment_GetArgs = {
+  allowUndefined?: InputMaybe<Scalars['Boolean']>
+  defaultValue?: InputMaybe<Scalars['AnyScalar']>
+  path: Scalars['String']
+}
+
+export type SbAdjustmentInput = {
+  amount?: InputMaybe<Scalars['Float']>
+  description?: InputMaybe<Scalars['String']>
+  internalComment?: InputMaybe<Scalars['String']>
+}
+
+export type SbAlternateContact = {
+  __typename?: 'SBAlternateContact'
+  _get?: Maybe<Scalars['AnyScalar']>
+  _root?: Maybe<SbAlternateContact>
+  emailAddress?: Maybe<Scalars['String']>
+  firstName?: Maybe<Scalars['String']>
+  lastNameOrSurname?: Maybe<Scalars['String']>
+  phoneNumber?: Maybe<Scalars['String']>
+}
+
+export type SbAlternateContact_GetArgs = {
+  allowUndefined?: InputMaybe<Scalars['Boolean']>
+  defaultValue?: InputMaybe<Scalars['AnyScalar']>
+  path: Scalars['String']
+}
+
+export type SbAppliedDiscount = {
+  __typename?: 'SBAppliedDiscount'
+  _get?: Maybe<Scalars['AnyScalar']>
+  _root?: Maybe<SbAppliedDiscount>
+  couponCode?: Maybe<Scalars['String']>
+  discount?: Maybe<SbDiscount>
+  excluded?: Maybe<Scalars['Boolean']>
+  impact?: Maybe<Scalars['Float']>
+}
+
+export type SbAppliedDiscount_GetArgs = {
+  allowUndefined?: InputMaybe<Scalars['Boolean']>
+  defaultValue?: InputMaybe<Scalars['AnyScalar']>
+  path: Scalars['String']
+}
+
+export type SbAppliedDiscountInput = {
+  couponCode?: InputMaybe<Scalars['String']>
+  discount?: InputMaybe<SbDiscountInput>
+  excluded?: InputMaybe<Scalars['Boolean']>
+  impact?: InputMaybe<Scalars['Float']>
+}
+
+export type SbAppliedLineItemProductDiscount = {
+  __typename?: 'SBAppliedLineItemProductDiscount'
+  _get?: Maybe<Scalars['AnyScalar']>
+  _root?: Maybe<SbAppliedLineItemProductDiscount>
+  appliesToSalePrice?: Maybe<Scalars['Boolean']>
+  couponCode?: Maybe<Scalars['String']>
+  discount?: Maybe<SbDiscount>
+  discountQuantity: Scalars['Int']
+  excluded?: Maybe<Scalars['Boolean']>
+  impact?: Maybe<Scalars['Float']>
+  impactPerUnit?: Maybe<Scalars['Float']>
+  productQuantity?: Maybe<Scalars['Int']>
+}
+
+export type SbAppliedLineItemProductDiscount_GetArgs = {
+  allowUndefined?: InputMaybe<Scalars['Boolean']>
+  defaultValue?: InputMaybe<Scalars['AnyScalar']>
+  path: Scalars['String']
+}
+
+export type SbAppliedLineItemProductDiscountInput = {
+  appliesToSalePrice?: InputMaybe<Scalars['Boolean']>
+  couponCode?: InputMaybe<Scalars['String']>
+  discount?: InputMaybe<SbDiscountInput>
+  discountQuantity: Scalars['Int']
+  excluded?: InputMaybe<Scalars['Boolean']>
+  impact?: InputMaybe<Scalars['Float']>
+  impactPerUnit?: InputMaybe<Scalars['Float']>
+  productQuantity?: InputMaybe<Scalars['Int']>
+}
+
+export type SbAppliedLineItemShippingDiscount = {
+  __typename?: 'SBAppliedLineItemShippingDiscount'
+  _get?: Maybe<Scalars['AnyScalar']>
+  _root?: Maybe<SbAppliedLineItemShippingDiscount>
+  discount?: Maybe<SbAppliedDiscount>
+  discountQuantity: Scalars['Int']
+  impactPerUnit: Scalars['Float']
+  methodCode?: Maybe<Scalars['String']>
+}
+
+export type SbAppliedLineItemShippingDiscount_GetArgs = {
+  allowUndefined?: InputMaybe<Scalars['Boolean']>
+  defaultValue?: InputMaybe<Scalars['AnyScalar']>
+  path: Scalars['String']
+}
+
+export type SbAppliedLineItemShippingDiscountInput = {
+  discount?: InputMaybe<SbAppliedDiscountInput>
+  discountQuantity: Scalars['Int']
+  impactPerUnit: Scalars['Float']
+  methodCode?: InputMaybe<Scalars['String']>
+}
+
+export type SbAuditInfo = {
+  __typename?: 'SBAuditInfo'
+  _get?: Maybe<Scalars['AnyScalar']>
+  _root?: Maybe<SbAuditInfo>
+  createBy?: Maybe<Scalars['String']>
+  createDate?: Maybe<Scalars['DateTime']>
+  updateBy?: Maybe<Scalars['String']>
+  updateDate?: Maybe<Scalars['DateTime']>
+}
+
+export type SbAuditInfo_GetArgs = {
+  allowUndefined?: InputMaybe<Scalars['Boolean']>
+  defaultValue?: InputMaybe<Scalars['AnyScalar']>
+  path: Scalars['String']
+}
+
+export type SbAuditInfoInput = {
+  createBy?: InputMaybe<Scalars['String']>
+  createDate?: InputMaybe<Scalars['DateTime']>
+  updateBy?: InputMaybe<Scalars['String']>
+  updateDate?: InputMaybe<Scalars['DateTime']>
+}
+
+export type SbBillingInfo = {
+  __typename?: 'SBBillingInfo'
+  _get?: Maybe<Scalars['AnyScalar']>
+  _root?: Maybe<SbBillingInfo>
+  auditInfo?: Maybe<SbAuditInfo>
+  billingContact?: Maybe<SbContact>
+  card?: Maybe<SbPaymentCard>
+  check?: Maybe<SbCheckPayment>
+  customCreditType?: Maybe<Scalars['String']>
+  data?: Maybe<Scalars['Object']>
+  externalTransactionId?: Maybe<Scalars['String']>
+  isRecurring?: Maybe<Scalars['Boolean']>
+  isSameBillingShippingAddress?: Maybe<Scalars['Boolean']>
+  paymentType?: Maybe<Scalars['String']>
+  paymentWorkflow?: Maybe<Scalars['String']>
+  purchaseOrder?: Maybe<SbPurchaseOrderPayment>
+  recurringTransactionId?: Maybe<Scalars['String']>
+  storeCreditCode?: Maybe<Scalars['String']>
+  storeCreditType?: Maybe<Scalars['String']>
+  token?: Maybe<SbPaymentToken>
+}
+
+export type SbBillingInfo_GetArgs = {
+  allowUndefined?: InputMaybe<Scalars['Boolean']>
+  defaultValue?: InputMaybe<Scalars['AnyScalar']>
+  path: Scalars['String']
+}
+
+export type SbBillingInfoInput = {
+  auditInfo?: InputMaybe<SbAuditInfoInput>
+  billingContact?: InputMaybe<SbContactInput>
+  card?: InputMaybe<SbPaymentCardInput>
+  check?: InputMaybe<SbCheckPaymentInput>
+  customCreditType?: InputMaybe<Scalars['String']>
+  data?: InputMaybe<Scalars['Object']>
+  externalTransactionId?: InputMaybe<Scalars['String']>
+  isRecurring?: InputMaybe<Scalars['Boolean']>
+  isSameBillingShippingAddress?: InputMaybe<Scalars['Boolean']>
+  paymentType?: InputMaybe<Scalars['String']>
+  paymentWorkflow?: InputMaybe<Scalars['String']>
+  purchaseOrder?: InputMaybe<SbPurchaseOrderPaymentInput>
+  recurringTransactionId?: InputMaybe<Scalars['String']>
+  storeCreditCode?: InputMaybe<Scalars['String']>
+  storeCreditType?: InputMaybe<Scalars['String']>
+  token?: InputMaybe<SbPaymentTokenInput>
+}
+
+export type SbBundledProduct = {
+  __typename?: 'SBBundledProduct'
+  _get?: Maybe<Scalars['AnyScalar']>
+  _root?: Maybe<SbBundledProduct>
+  allocationExpiration?: Maybe<Scalars['DateTime']>
+  allocationId?: Maybe<Scalars['Int']>
+  creditValue?: Maybe<Scalars['Float']>
+  deltaPrice?: Maybe<Scalars['Float']>
+  description?: Maybe<Scalars['String']>
+  fulfillmentStatus?: Maybe<Scalars['String']>
+  goodsType?: Maybe<Scalars['String']>
+  imageUrl?: Maybe<Scalars['String']>
+  isPackagedStandAlone?: Maybe<Scalars['Boolean']>
+  measurements?: Maybe<SbPackageMeasurements>
+  name?: Maybe<Scalars['String']>
+  optionAttributeFQN?: Maybe<Scalars['String']>
+  optionValue?: Maybe<Scalars['Object']>
+  productCode?: Maybe<Scalars['String']>
+  productReservationId?: Maybe<Scalars['Int']>
+  quantity: Scalars['Int']
+  stock?: Maybe<SbProductStock>
+}
+
+export type SbBundledProduct_GetArgs = {
+  allowUndefined?: InputMaybe<Scalars['Boolean']>
+  defaultValue?: InputMaybe<Scalars['AnyScalar']>
+  path: Scalars['String']
+}
+
+export type SbBundledProductInput = {
+  allocationExpiration?: InputMaybe<Scalars['DateTime']>
+  allocationId?: InputMaybe<Scalars['Int']>
+  creditValue?: InputMaybe<Scalars['Float']>
+  deltaPrice?: InputMaybe<Scalars['Float']>
+  description?: InputMaybe<Scalars['String']>
+  fulfillmentStatus?: InputMaybe<Scalars['String']>
+  goodsType?: InputMaybe<Scalars['String']>
+  imageUrl?: InputMaybe<Scalars['String']>
+  isPackagedStandAlone?: InputMaybe<Scalars['Boolean']>
+  measurements?: InputMaybe<SbPackageMeasurementsInput>
+  name?: InputMaybe<Scalars['String']>
+  optionAttributeFQN?: InputMaybe<Scalars['String']>
+  optionValue?: InputMaybe<Scalars['Object']>
+  productCode?: InputMaybe<Scalars['String']>
+  productReservationId?: InputMaybe<Scalars['Int']>
+  quantity: Scalars['Int']
+  stock?: InputMaybe<SbProductStockInput>
+}
+
+export type SbCanceledItem = {
+  __typename?: 'SBCanceledItem'
+  _get?: Maybe<Scalars['AnyScalar']>
+  _root?: Maybe<SbCanceledItem>
+  actualPrice: Scalars['Float']
+  auditInfo?: Maybe<SbAuditInfo>
+  backorderReleaseDate?: Maybe<Scalars['DateTime']>
+  canceledReason?: Maybe<SbCanceledReason>
+  cartItemId?: Maybe<Scalars['String']>
+  childItemIds?: Maybe<Array<Scalars['String']>>
+  data?: Maybe<Scalars['Object']>
+  duty: Scalars['Float']
+  fulfillmentFields?: Maybe<Array<Maybe<SbFulfillmentField>>>
+  fulfillmentLocationCode?: Maybe<Scalars['String']>
+  giftCards?: Maybe<Array<Maybe<SbGiftCard>>>
+  handling: Scalars['Float']
+  handlingDiscount: Scalars['Float']
+  handlingTax: Scalars['Float']
+  imageUrl?: Maybe<Scalars['String']>
+  inventoryTags?: Maybe<Array<Maybe<SbInventoryTags>>>
+  isAssemblyRequired?: Maybe<Scalars['Boolean']>
+  isPackagedStandAlone?: Maybe<Scalars['Boolean']>
+  isReservedInventory?: Maybe<Scalars['Boolean']>
+  isTaxable?: Maybe<Scalars['Boolean']>
+  itemDiscount: Scalars['Float']
+  itemTax: Scalars['Float']
+  lineId: Scalars['Int']
+  lineItemAdjustment?: Maybe<Scalars['Float']>
+  lineItemCost: Scalars['Float']
+  locatorName?: Maybe<Scalars['String']>
+  measurements?: Maybe<SbPackageMeasurements>
+  name?: Maybe<Scalars['String']>
+  optionAttributeFQN?: Maybe<Scalars['String']>
+  options?: Maybe<Array<Maybe<SbProductOption>>>
+  originalOrderItemId?: Maybe<Scalars['String']>
+  originalQuantity?: Maybe<Scalars['Int']>
+  overridePrice?: Maybe<Scalars['Float']>
+  parentId?: Maybe<Scalars['String']>
+  parentItemId?: Maybe<Scalars['String']>
+  partNumber?: Maybe<Scalars['String']>
+  productCode?: Maybe<Scalars['String']>
+  quantity: Scalars['Int']
+  readyForPickupQuantity?: Maybe<Scalars['Int']>
+  shipping: Scalars['Float']
+  shippingDiscount: Scalars['Float']
+  shippingTax: Scalars['Float']
+  sku?: Maybe<Scalars['String']>
+  taxData?: Maybe<Scalars['Object']>
+  taxableHandling: Scalars['Float']
+  taxableLineItemCost: Scalars['Float']
+  taxableShipping: Scalars['Float']
+  unitPrice: Scalars['Float']
+  upc?: Maybe<Scalars['String']>
+  variationProductCode?: Maybe<Scalars['String']>
+  weightedDutyAdjustment: Scalars['Float']
+  weightedHandlingAdjustment: Scalars['Float']
+  weightedHandlingTaxAdjustment: Scalars['Float']
+  weightedLineItemTaxAdjustment: Scalars['Float']
+  weightedShipmentAdjustment: Scalars['Float']
+  weightedShippingAdjustment: Scalars['Float']
+  weightedShippingTaxAdjustment: Scalars['Float']
+}
+
+export type SbCanceledItem_GetArgs = {
+  allowUndefined?: InputMaybe<Scalars['Boolean']>
+  defaultValue?: InputMaybe<Scalars['AnyScalar']>
+  path: Scalars['String']
+}
+
+export type SbCanceledReason = {
+  __typename?: 'SBCanceledReason'
+  _get?: Maybe<Scalars['AnyScalar']>
+  _root?: Maybe<SbCanceledReason>
+  description?: Maybe<Scalars['String']>
+  moreInfo?: Maybe<Scalars['String']>
+  reasonCode?: Maybe<Scalars['String']>
+}
+
+export type SbCanceledReason_GetArgs = {
+  allowUndefined?: InputMaybe<Scalars['Boolean']>
+  defaultValue?: InputMaybe<Scalars['AnyScalar']>
+  path: Scalars['String']
+}
+
+export type SbCapturableShipmentSummary = {
+  __typename?: 'SBCapturableShipmentSummary'
+  _get?: Maybe<Scalars['AnyScalar']>
+  _root?: Maybe<SbCapturableShipmentSummary>
+  amountApplied: Scalars['Float']
+  shipmentNumber: Scalars['Int']
+  shipmentTotal: Scalars['Float']
+}
+
+export type SbCapturableShipmentSummary_GetArgs = {
+  allowUndefined?: InputMaybe<Scalars['Boolean']>
+  defaultValue?: InputMaybe<Scalars['AnyScalar']>
+  path: Scalars['String']
+}
+
+export type SbCapturableShipmentSummaryInput = {
+  amountApplied: Scalars['Float']
+  shipmentNumber: Scalars['Int']
+  shipmentTotal: Scalars['Float']
+}
+
+export type SbCategory = {
+  __typename?: 'SBCategory'
+  _get?: Maybe<Scalars['AnyScalar']>
+  _root?: Maybe<SbCategory>
+  id?: Maybe<Scalars['Int']>
+  parent?: Maybe<SbCategory>
+}
+
+export type SbCategory_GetArgs = {
+  allowUndefined?: InputMaybe<Scalars['Boolean']>
+  defaultValue?: InputMaybe<Scalars['AnyScalar']>
+  path: Scalars['String']
+}
+
+export type SbCategoryInput = {
+  id?: InputMaybe<Scalars['Int']>
+  parent?: InputMaybe<SbCategoryInput>
+}
+
+export type SbChangeMessage = {
+  __typename?: 'SBChangeMessage'
+  _get?: Maybe<Scalars['AnyScalar']>
+  _root?: Maybe<SbChangeMessage>
+  amount?: Maybe<Scalars['Float']>
+  appId?: Maybe<Scalars['String']>
+  appKey?: Maybe<Scalars['String']>
+  appName?: Maybe<Scalars['String']>
+  attributes?: Maybe<Scalars['Object']>
+  correlationId?: Maybe<Scalars['String']>
+  createDate?: Maybe<Scalars['DateTime']>
+  id?: Maybe<Scalars['String']>
+  identifier?: Maybe<Scalars['String']>
+  message?: Maybe<Scalars['String']>
+  metadata?: Maybe<Scalars['Object']>
+  newValue?: Maybe<Scalars['String']>
+  oldValue?: Maybe<Scalars['String']>
+  subject?: Maybe<Scalars['String']>
+  subjectType?: Maybe<Scalars['String']>
+  success?: Maybe<Scalars['Boolean']>
+  userFirstName?: Maybe<Scalars['String']>
+  userId?: Maybe<Scalars['String']>
+  userLastName?: Maybe<Scalars['String']>
+  userScopeType?: Maybe<Scalars['String']>
+  verb?: Maybe<Scalars['String']>
+}
+
+export type SbChangeMessage_GetArgs = {
+  allowUndefined?: InputMaybe<Scalars['Boolean']>
+  defaultValue?: InputMaybe<Scalars['AnyScalar']>
+  path: Scalars['String']
+}
+
+export type SbChangeMessageInput = {
+  amount?: InputMaybe<Scalars['Float']>
+  appId?: InputMaybe<Scalars['String']>
+  appKey?: InputMaybe<Scalars['String']>
+  appName?: InputMaybe<Scalars['String']>
+  attributes?: InputMaybe<Scalars['Object']>
+  correlationId?: InputMaybe<Scalars['String']>
+  createDate?: InputMaybe<Scalars['DateTime']>
+  id?: InputMaybe<Scalars['String']>
+  identifier?: InputMaybe<Scalars['String']>
+  message?: InputMaybe<Scalars['String']>
+  metadata?: InputMaybe<Scalars['Object']>
+  newValue?: InputMaybe<Scalars['String']>
+  oldValue?: InputMaybe<Scalars['String']>
+  subject?: InputMaybe<Scalars['String']>
+  subjectType?: InputMaybe<Scalars['String']>
+  success?: InputMaybe<Scalars['Boolean']>
+  userFirstName?: InputMaybe<Scalars['String']>
+  userId?: InputMaybe<Scalars['String']>
+  userLastName?: InputMaybe<Scalars['String']>
+  userScopeType?: InputMaybe<Scalars['String']>
+  verb?: InputMaybe<Scalars['String']>
+}
+
+export type SbCheckPayment = {
+  __typename?: 'SBCheckPayment'
+  _get?: Maybe<Scalars['AnyScalar']>
+  _root?: Maybe<SbCheckPayment>
+  checkNumber?: Maybe<Scalars['String']>
+}
+
+export type SbCheckPayment_GetArgs = {
+  allowUndefined?: InputMaybe<Scalars['Boolean']>
+  defaultValue?: InputMaybe<Scalars['AnyScalar']>
+  path: Scalars['String']
+}
+
+export type SbCheckPaymentInput = {
+  checkNumber?: InputMaybe<Scalars['String']>
+}
+
+export type SbCommerceUnitPrice = {
+  __typename?: 'SBCommerceUnitPrice'
+  _get?: Maybe<Scalars['AnyScalar']>
+  _root?: Maybe<SbCommerceUnitPrice>
+  extendedAmount?: Maybe<Scalars['Float']>
+  listAmount?: Maybe<Scalars['Float']>
+  overrideAmount?: Maybe<Scalars['Float']>
+  saleAmount?: Maybe<Scalars['Float']>
+}
+
+export type SbCommerceUnitPrice_GetArgs = {
+  allowUndefined?: InputMaybe<Scalars['Boolean']>
+  defaultValue?: InputMaybe<Scalars['AnyScalar']>
+  path: Scalars['String']
+}
+
+export type SbCommerceUnitPriceInput = {
+  extendedAmount?: InputMaybe<Scalars['Float']>
+  listAmount?: InputMaybe<Scalars['Float']>
+  overrideAmount?: InputMaybe<Scalars['Float']>
+  saleAmount?: InputMaybe<Scalars['Float']>
+}
+
+export type SbContact = {
+  __typename?: 'SBContact'
+  _get?: Maybe<Scalars['AnyScalar']>
+  _root?: Maybe<SbContact>
+  address?: Maybe<SbAddress>
+  companyOrOrganization?: Maybe<Scalars['String']>
+  email?: Maybe<Scalars['String']>
+  firstName?: Maybe<Scalars['String']>
+  id?: Maybe<Scalars['Int']>
+  lastNameOrSurname?: Maybe<Scalars['String']>
+  middleNameOrInitial?: Maybe<Scalars['String']>
+  phoneNumbers?: Maybe<SbPhone>
+}
+
+export type SbContact_GetArgs = {
+  allowUndefined?: InputMaybe<Scalars['Boolean']>
+  defaultValue?: InputMaybe<Scalars['AnyScalar']>
+  path: Scalars['String']
+}
+
+export type SbContactInput = {
+  address?: InputMaybe<SbAddressInput>
+  companyOrOrganization?: InputMaybe<Scalars['String']>
+  email?: InputMaybe<Scalars['String']>
+  firstName?: InputMaybe<Scalars['String']>
+  id?: InputMaybe<Scalars['Int']>
+  lastNameOrSurname?: InputMaybe<Scalars['String']>
+  middleNameOrInitial?: InputMaybe<Scalars['String']>
+  phoneNumbers?: InputMaybe<SbPhoneInput>
+}
+
+export type SbCredit = {
+  __typename?: 'SBCredit'
+  _get?: Maybe<Scalars['AnyScalar']>
+  _root?: Maybe<SbCredit>
+  amount: Scalars['Float']
+  auditInfo?: Maybe<SbAuditInfo>
+  giftCard?: Maybe<SbGatewayGiftCard>
+  id?: Maybe<Scalars['String']>
+  parentPaymentId?: Maybe<Scalars['String']>
+  parentPaymentInteractionId?: Maybe<Scalars['String']>
+}
+
+export type SbCredit_GetArgs = {
+  allowUndefined?: InputMaybe<Scalars['Boolean']>
+  defaultValue?: InputMaybe<Scalars['AnyScalar']>
+  path: Scalars['String']
+}
+
+export type SbCustomer = {
+  __typename?: 'SBCustomer'
+  _get?: Maybe<Scalars['AnyScalar']>
+  _root?: Maybe<SbCustomer>
+  customerContact?: Maybe<SbContact>
+  data?: Maybe<Scalars['Object']>
+  isDestinationCommercial?: Maybe<Scalars['Boolean']>
+}
+
+export type SbCustomer_GetArgs = {
+  allowUndefined?: InputMaybe<Scalars['Boolean']>
+  defaultValue?: InputMaybe<Scalars['AnyScalar']>
+  path: Scalars['String']
+}
+
+export type SbDestination = {
+  __typename?: 'SBDestination'
+  _get?: Maybe<Scalars['AnyScalar']>
+  _root?: Maybe<SbDestination>
+  data?: Maybe<Scalars['Object']>
+  destinationContact?: Maybe<SbContact>
+  id?: Maybe<Scalars['String']>
+  isDestinationCommercial?: Maybe<Scalars['Boolean']>
+}
+
+export type SbDestination_GetArgs = {
+  allowUndefined?: InputMaybe<Scalars['Boolean']>
+  defaultValue?: InputMaybe<Scalars['AnyScalar']>
+  path: Scalars['String']
+}
+
+export type SbDigitalPackage = {
+  __typename?: 'SBDigitalPackage'
+  _get?: Maybe<Scalars['AnyScalar']>
+  _root?: Maybe<SbDigitalPackage>
+  auditInfo?: Maybe<SbAuditInfo>
+  availableActions?: Maybe<Array<Scalars['String']>>
+  changeMessages?: Maybe<Array<Maybe<SbChangeMessage>>>
+  code?: Maybe<Scalars['String']>
+  fulfillmentDate?: Maybe<Scalars['DateTime']>
+  fulfillmentLocationCode?: Maybe<Scalars['String']>
+  id?: Maybe<Scalars['String']>
+  items?: Maybe<Array<Maybe<SbDigitalPackageItem>>>
+  status?: Maybe<Scalars['String']>
+}
+
+export type SbDigitalPackage_GetArgs = {
+  allowUndefined?: InputMaybe<Scalars['Boolean']>
+  defaultValue?: InputMaybe<Scalars['AnyScalar']>
+  path: Scalars['String']
+}
+
+export type SbDigitalPackageItem = {
+  __typename?: 'SBDigitalPackageItem'
+  _get?: Maybe<Scalars['AnyScalar']>
+  _root?: Maybe<SbDigitalPackageItem>
+  fulfillmentItemType?: Maybe<Scalars['String']>
+  giftCardCode?: Maybe<Scalars['String']>
+  lineId?: Maybe<Scalars['Int']>
+  optionAttributeFQN?: Maybe<Scalars['String']>
+  productCode?: Maybe<Scalars['String']>
+  quantity: Scalars['Int']
+}
+
+export type SbDigitalPackageItem_GetArgs = {
+  allowUndefined?: InputMaybe<Scalars['Boolean']>
+  defaultValue?: InputMaybe<Scalars['AnyScalar']>
+  path: Scalars['String']
+}
+
+export type SbDiscount = {
+  __typename?: 'SBDiscount'
+  _get?: Maybe<Scalars['AnyScalar']>
+  _root?: Maybe<SbDiscount>
+  expirationDate?: Maybe<Scalars['DateTime']>
+  hasMultipleTargetProducts?: Maybe<Scalars['Boolean']>
+  id: Scalars['Int']
+  itemIds?: Maybe<Array<Scalars['String']>>
+  name?: Maybe<Scalars['String']>
+}
+
+export type SbDiscount_GetArgs = {
+  allowUndefined?: InputMaybe<Scalars['Boolean']>
+  defaultValue?: InputMaybe<Scalars['AnyScalar']>
+  path: Scalars['String']
+}
+
+export type SbDiscountInput = {
+  expirationDate?: InputMaybe<Scalars['DateTime']>
+  hasMultipleTargetProducts?: InputMaybe<Scalars['Boolean']>
+  id: Scalars['Int']
+  itemIds?: InputMaybe<Array<Scalars['String']>>
+  name?: InputMaybe<Scalars['String']>
+}
+
+export type SbExtendedProperty = {
+  __typename?: 'SBExtendedProperty'
+  _get?: Maybe<Scalars['AnyScalar']>
+  _root?: Maybe<SbExtendedProperty>
+  key?: Maybe<Scalars['String']>
+  value?: Maybe<Scalars['String']>
+}
+
+export type SbExtendedProperty_GetArgs = {
+  allowUndefined?: InputMaybe<Scalars['Boolean']>
+  defaultValue?: InputMaybe<Scalars['AnyScalar']>
+  path: Scalars['String']
+}
+
+export type SbFrequency = {
+  __typename?: 'SBFrequency'
+  _get?: Maybe<Scalars['AnyScalar']>
+  _root?: Maybe<SbFrequency>
+  unit?: Maybe<Scalars['String']>
+  value: Scalars['Int']
+}
+
+export type SbFrequency_GetArgs = {
+  allowUndefined?: InputMaybe<Scalars['Boolean']>
+  defaultValue?: InputMaybe<Scalars['AnyScalar']>
+  path: Scalars['String']
+}
+
+export type SbFrequencyInput = {
+  unit?: InputMaybe<Scalars['String']>
+  value: Scalars['Int']
+}
+
+export type SbFulfillmentAlternateContact = {
+  __typename?: 'SBFulfillmentAlternateContact'
+  _get?: Maybe<Scalars['AnyScalar']>
+  _root?: Maybe<SbFulfillmentAlternateContact>
+  email?: Maybe<Scalars['String']>
+  firstName?: Maybe<Scalars['String']>
+  lastNameOrSurname?: Maybe<Scalars['String']>
+  phoneNumber?: Maybe<Scalars['String']>
+}
+
+export type SbFulfillmentAlternateContact_GetArgs = {
+  allowUndefined?: InputMaybe<Scalars['Boolean']>
+  defaultValue?: InputMaybe<Scalars['AnyScalar']>
+  path: Scalars['String']
+}
+
+export type SbFulfillmentField = {
+  __typename?: 'SBFulfillmentField'
+  _get?: Maybe<Scalars['AnyScalar']>
+  _root?: Maybe<SbFulfillmentField>
+  name?: Maybe<Scalars['String']>
+  required?: Maybe<Scalars['Boolean']>
+  userEnteredValue?: Maybe<Scalars['Object']>
+}
+
+export type SbFulfillmentField_GetArgs = {
+  allowUndefined?: InputMaybe<Scalars['Boolean']>
+  defaultValue?: InputMaybe<Scalars['AnyScalar']>
+  path: Scalars['String']
+}
+
+export type SbFulfillmentFieldInput = {
+  name?: InputMaybe<Scalars['String']>
+  required?: InputMaybe<Scalars['Boolean']>
+  userEnteredValue?: InputMaybe<Scalars['Object']>
+}
+
+export type SbFulfillmentInfo = {
+  __typename?: 'SBFulfillmentInfo'
+  _get?: Maybe<Scalars['AnyScalar']>
+  _root?: Maybe<SbFulfillmentInfo>
+  auditInfo?: Maybe<SbAuditInfo>
+  data?: Maybe<Scalars['Object']>
+  fulfillmentContact?: Maybe<SbContact>
+  isDestinationCommercial?: Maybe<Scalars['Boolean']>
+  shippingMethodCode?: Maybe<Scalars['String']>
+  shippingMethodName?: Maybe<Scalars['String']>
+}
+
+export type SbFulfillmentInfo_GetArgs = {
+  allowUndefined?: InputMaybe<Scalars['Boolean']>
+  defaultValue?: InputMaybe<Scalars['AnyScalar']>
+  path: Scalars['String']
+}
+
+export type SbFulfillmentInfoInput = {
+  auditInfo?: InputMaybe<SbAuditInfoInput>
+  data?: InputMaybe<Scalars['Object']>
+  fulfillmentContact?: InputMaybe<SbContactInput>
+  isDestinationCommercial?: InputMaybe<Scalars['Boolean']>
+  shippingMethodCode?: InputMaybe<Scalars['String']>
+  shippingMethodName?: InputMaybe<Scalars['String']>
+}
+
+export type SbFulfillmentShopperNotes = {
+  __typename?: 'SBFulfillmentShopperNotes'
+  _get?: Maybe<Scalars['AnyScalar']>
+  _root?: Maybe<SbFulfillmentShopperNotes>
+  comments?: Maybe<Scalars['String']>
+  deliveryInstructions?: Maybe<Scalars['String']>
+  giftMessage?: Maybe<Scalars['String']>
+}
+
+export type SbFulfillmentShopperNotes_GetArgs = {
+  allowUndefined?: InputMaybe<Scalars['Boolean']>
+  defaultValue?: InputMaybe<Scalars['AnyScalar']>
+  path: Scalars['String']
+}
+
+export type SbFulfillmentTask = {
+  __typename?: 'SBFulfillmentTask'
+  _get?: Maybe<Scalars['AnyScalar']>
+  _root?: Maybe<SbFulfillmentTask>
+  active?: Maybe<Scalars['Boolean']>
+  attributes?: Maybe<Scalars['Object']>
+  completed?: Maybe<Scalars['Boolean']>
+  completedDate?: Maybe<Scalars['DateTime']>
+  description?: Maybe<Scalars['String']>
+  inputs?: Maybe<Array<Maybe<SbTaskInput>>>
+  links?: Maybe<Scalars['Object']>
+  name?: Maybe<Scalars['String']>
+  skippable?: Maybe<Scalars['Boolean']>
+  subject?: Maybe<Scalars['String']>
+  taskId?: Maybe<Scalars['String']>
+}
+
+export type SbFulfillmentTask_GetArgs = {
+  allowUndefined?: InputMaybe<Scalars['Boolean']>
+  defaultValue?: InputMaybe<Scalars['AnyScalar']>
+  path: Scalars['String']
+}
+
+export type SbFutureInventory = {
+  __typename?: 'SBFutureInventory'
+  _get?: Maybe<Scalars['AnyScalar']>
+  _root?: Maybe<SbFutureInventory>
+  allocated?: Maybe<Scalars['Int']>
+  available?: Maybe<Scalars['Int']>
+  createDate?: Maybe<Scalars['DateTime']>
+  deliveryDate?: Maybe<Scalars['DateTime']>
+  futureInventoryID?: Maybe<Scalars['Int']>
+  onhand?: Maybe<Scalars['Int']>
+  pending?: Maybe<Scalars['Int']>
+}
+
+export type SbFutureInventory_GetArgs = {
+  allowUndefined?: InputMaybe<Scalars['Boolean']>
+  defaultValue?: InputMaybe<Scalars['AnyScalar']>
+  path: Scalars['String']
+}
+
+export type SbFutureInventoryInput = {
+  allocated?: InputMaybe<Scalars['Int']>
+  available?: InputMaybe<Scalars['Int']>
+  createDate?: InputMaybe<Scalars['DateTime']>
+  deliveryDate?: InputMaybe<Scalars['DateTime']>
+  futureInventoryID?: InputMaybe<Scalars['Int']>
+  onhand?: InputMaybe<Scalars['Int']>
+  pending?: InputMaybe<Scalars['Int']>
+}
+
+export type SbGatewayGiftCard = {
+  __typename?: 'SBGatewayGiftCard'
+  _get?: Maybe<Scalars['AnyScalar']>
+  _root?: Maybe<SbGatewayGiftCard>
+  amount: Scalars['Float']
+  cardNumber?: Maybe<Scalars['String']>
+  cardPin?: Maybe<Scalars['String']>
+  currencyCode?: Maybe<Scalars['String']>
+  id?: Maybe<Scalars['String']>
+}
+
+export type SbGatewayGiftCard_GetArgs = {
+  allowUndefined?: InputMaybe<Scalars['Boolean']>
+  defaultValue?: InputMaybe<Scalars['AnyScalar']>
+  path: Scalars['String']
+}
+
+export type SbGatewayGiftCardInput = {
+  amount: Scalars['Float']
+  cardNumber?: InputMaybe<Scalars['String']>
+  cardPin?: InputMaybe<Scalars['String']>
+  currencyCode?: InputMaybe<Scalars['String']>
+  id?: InputMaybe<Scalars['String']>
+}
+
+export type SbGiftCard = {
+  __typename?: 'SBGiftCard'
+  _get?: Maybe<Scalars['AnyScalar']>
+  _root?: Maybe<SbGiftCard>
+  activationDate?: Maybe<Scalars['DateTime']>
+  cardNumber?: Maybe<Scalars['String']>
+  code?: Maybe<Scalars['String']>
+  creditType?: Maybe<Scalars['String']>
+  creditValue?: Maybe<Scalars['Float']>
+  currencyCode?: Maybe<Scalars['String']>
+  currentBalance?: Maybe<Scalars['Float']>
+  customerId?: Maybe<Scalars['Int']>
+  expirationDate?: Maybe<Scalars['DateTime']>
+  initialBalance?: Maybe<Scalars['Float']>
+}
+
+export type SbGiftCard_GetArgs = {
+  allowUndefined?: InputMaybe<Scalars['Boolean']>
+  defaultValue?: InputMaybe<Scalars['AnyScalar']>
+  path: Scalars['String']
+}
+
+export type SbInvalidCoupon = {
+  __typename?: 'SBInvalidCoupon'
+  _get?: Maybe<Scalars['AnyScalar']>
+  _root?: Maybe<SbInvalidCoupon>
+  couponCode?: Maybe<Scalars['String']>
+  createDate: Scalars['DateTime']
+  discountId: Scalars['Int']
+  reason?: Maybe<Scalars['String']>
+  reasonCode: Scalars['Int']
+}
+
+export type SbInvalidCoupon_GetArgs = {
+  allowUndefined?: InputMaybe<Scalars['Boolean']>
+  defaultValue?: InputMaybe<Scalars['AnyScalar']>
+  path: Scalars['String']
+}
+
+export type SbInvalidCouponInput = {
+  couponCode?: InputMaybe<Scalars['String']>
+  createDate: Scalars['DateTime']
+  discountId: Scalars['Int']
+  reason?: InputMaybe<Scalars['String']>
+  reasonCode: Scalars['Int']
+}
+
+export type SbInventoryTags = {
+  __typename?: 'SBInventoryTags'
+  _get?: Maybe<Scalars['AnyScalar']>
+  _root?: Maybe<SbInventoryTags>
+  name?: Maybe<Scalars['String']>
+  value?: Maybe<Scalars['String']>
+}
+
+export type SbInventoryTags_GetArgs = {
+  allowUndefined?: InputMaybe<Scalars['Boolean']>
+  defaultValue?: InputMaybe<Scalars['AnyScalar']>
+  path: Scalars['String']
+}
+
+export type SbInventoryTagsInput = {
+  name?: InputMaybe<Scalars['String']>
+  value?: InputMaybe<Scalars['String']>
+}
+
+export type SbMeasurement = {
+  __typename?: 'SBMeasurement'
+  _get?: Maybe<Scalars['AnyScalar']>
+  _root?: Maybe<SbMeasurement>
+  unit?: Maybe<Scalars['String']>
+  value?: Maybe<Scalars['Float']>
+}
+
+export type SbMeasurement_GetArgs = {
+  allowUndefined?: InputMaybe<Scalars['Boolean']>
+  defaultValue?: InputMaybe<Scalars['AnyScalar']>
+  path: Scalars['String']
+}
+
+export type SbMeasurementInput = {
+  unit?: InputMaybe<Scalars['String']>
+  value?: InputMaybe<Scalars['Float']>
+}
+
+export type SbOrder = {
+  __typename?: 'SBOrder'
+  _get?: Maybe<Scalars['AnyScalar']>
+  _root?: Maybe<SbOrder>
+  acceptedDate?: Maybe<Scalars['DateTime']>
+  acceptsMarketing?: Maybe<Scalars['Boolean']>
+  adjustment?: Maybe<SbAdjustment>
+  alternateContact?: Maybe<SbAlternateContact>
+  amountAvailableForRefund: Scalars['Float']
+  amountRefunded: Scalars['Float']
+  amountRemainingForPayment: Scalars['Float']
+  attributes?: Maybe<Array<Maybe<SbOrderAttribute>>>
+  auditInfo?: Maybe<SbAuditInfo>
+  availableActions?: Maybe<Array<Scalars['String']>>
+  billingInfo?: Maybe<SbBillingInfo>
+  cancelledDate?: Maybe<Scalars['DateTime']>
+  changeMessages?: Maybe<Array<Maybe<SbChangeMessage>>>
+  channelCode?: Maybe<Scalars['String']>
+  closedDate?: Maybe<Scalars['DateTime']>
+  continuityOrderOrdinal: Scalars['Int']
+  couponCodes?: Maybe<Array<Scalars['String']>>
+  credits?: Maybe<Array<Maybe<SbCredit>>>
+  currencyCode?: Maybe<Scalars['String']>
+  customerAccountId?: Maybe<Scalars['Int']>
+  customerInteractionType?: Maybe<Scalars['String']>
+  customerTaxId?: Maybe<Scalars['String']>
+  data?: Maybe<Scalars['Object']>
+  digitalPackages?: Maybe<Array<Maybe<SbDigitalPackage>>>
+  discountThresholdMessages?: Maybe<Array<Maybe<SbThresholdMessage>>>
+  discountTotal?: Maybe<Scalars['Float']>
+  discountedSubtotal?: Maybe<Scalars['Float']>
+  discountedTotal?: Maybe<Scalars['Float']>
+  dutyAmount?: Maybe<Scalars['Float']>
+  dutyTotal?: Maybe<Scalars['Float']>
+  email?: Maybe<Scalars['String']>
+  expirationDate?: Maybe<Scalars['DateTime']>
+  extendedProperties?: Maybe<Array<Maybe<SbExtendedProperty>>>
+  externalId?: Maybe<Scalars['String']>
+  feeTotal?: Maybe<Scalars['Float']>
+  fulfillmentInfo?: Maybe<SbFulfillmentInfo>
+  fulfillmentStatus?: Maybe<Scalars['String']>
+  handlingAdjustment?: Maybe<SbAdjustment>
+  handlingAmount?: Maybe<Scalars['Float']>
+  handlingDiscounts?: Maybe<Array<Maybe<SbAppliedDiscount>>>
+  handlingSubTotal?: Maybe<Scalars['Float']>
+  handlingTaxTotal?: Maybe<Scalars['Float']>
+  handlingTotal?: Maybe<Scalars['Float']>
+  hasDraft?: Maybe<Scalars['Boolean']>
+  id?: Maybe<Scalars['String']>
+  importDate?: Maybe<Scalars['DateTime']>
+  invalidCoupons?: Maybe<Array<Maybe<SbInvalidCoupon>>>
+  ipAddress?: Maybe<Scalars['String']>
+  isDraft?: Maybe<Scalars['Boolean']>
+  isEligibleForReturns?: Maybe<Scalars['Boolean']>
+  isFulfillable?: Maybe<Scalars['Boolean']>
+  isHistoricalImport?: Maybe<Scalars['Boolean']>
+  isImport?: Maybe<Scalars['Boolean']>
+  isOptInForSms?: Maybe<Scalars['Boolean']>
+  isPartialOrder?: Maybe<Scalars['Boolean']>
+  isTaxExempt?: Maybe<Scalars['Boolean']>
+  isUnified?: Maybe<Scalars['Boolean']>
+  itemTaxTotal?: Maybe<Scalars['Float']>
+  items?: Maybe<Array<Maybe<SbOrderItem>>>
+  lastValidationDate?: Maybe<Scalars['DateTime']>
+  lineItemSubtotalWithOrderAdjustments?: Maybe<Scalars['Float']>
+  locationCode?: Maybe<Scalars['String']>
+  notes?: Maybe<Array<Maybe<SbOrderNote>>>
+  orderDiscounts?: Maybe<Array<Maybe<SbAppliedDiscount>>>
+  orderNumber?: Maybe<Scalars['Int']>
+  originalCartId?: Maybe<Scalars['String']>
+  originalQuoteId?: Maybe<Scalars['String']>
+  originalQuoteNumber?: Maybe<Scalars['Int']>
+  packages?: Maybe<Array<Maybe<SbPackageObj>>>
+  parentCheckoutId?: Maybe<Scalars['String']>
+  parentCheckoutNumber?: Maybe<Scalars['Int']>
+  parentOrderId?: Maybe<Scalars['String']>
+  parentOrderNumber?: Maybe<Scalars['Int']>
+  parentReturnId?: Maybe<Scalars['String']>
+  parentReturnNumber?: Maybe<Scalars['Int']>
+  partialOrderCount?: Maybe<Scalars['Int']>
+  partialOrderNumber?: Maybe<Scalars['Int']>
+  paymentStatus?: Maybe<Scalars['String']>
+  payments?: Maybe<Array<Maybe<SbPayment>>>
+  pickups?: Maybe<Array<Maybe<SbPickup>>>
+  priceListCode?: Maybe<Scalars['String']>
+  readyToCapture?: Maybe<Scalars['Boolean']>
+  refunds?: Maybe<Array<Maybe<SbRefund>>>
+  rejectedDiscounts?: Maybe<Array<Maybe<SbSuggestedDiscount>>>
+  reservationId?: Maybe<Scalars['String']>
+  returnStatus?: Maybe<Scalars['String']>
+  shipments?: Maybe<Array<Maybe<SbShipment>>>
+  shippingAdjustment?: Maybe<SbAdjustment>
+  shippingAmountBeforeDiscountsAndAdjustments?: Maybe<Scalars['Float']>
+  shippingDiscounts?: Maybe<Array<Maybe<SbShippingDiscount>>>
+  shippingSubTotal?: Maybe<Scalars['Float']>
+  shippingTaxTotal?: Maybe<Scalars['Float']>
+  shippingTotal?: Maybe<Scalars['Float']>
+  shopperNotes?: Maybe<SbShopperNotes>
+  siteId?: Maybe<Scalars['Int']>
+  sourceDevice?: Maybe<Scalars['String']>
+  status?: Maybe<Scalars['String']>
+  submittedDate?: Maybe<Scalars['DateTime']>
+  subscriptionIds?: Maybe<Array<Scalars['String']>>
+  subtotal?: Maybe<Scalars['Float']>
+  suggestedDiscounts?: Maybe<Array<Maybe<SbSuggestedDiscount>>>
+  taxData?: Maybe<Scalars['Object']>
+  taxTotal?: Maybe<Scalars['Float']>
+  tenantId?: Maybe<Scalars['Int']>
+  total?: Maybe<Scalars['Float']>
+  totalCollected: Scalars['Float']
+  type?: Maybe<Scalars['String']>
+  userId?: Maybe<Scalars['String']>
+  validationResults?: Maybe<Array<Maybe<SbOrderValidationResult>>>
+  version?: Maybe<Scalars['String']>
+  visitId?: Maybe<Scalars['String']>
+  webSessionId?: Maybe<Scalars['String']>
+}
+
+export type SbOrder_GetArgs = {
+  allowUndefined?: InputMaybe<Scalars['Boolean']>
+  defaultValue?: InputMaybe<Scalars['AnyScalar']>
+  path: Scalars['String']
+}
+
+export type SbOrderAttribute = {
+  __typename?: 'SBOrderAttribute'
+  _get?: Maybe<Scalars['AnyScalar']>
+  _root?: Maybe<SbOrderAttribute>
+  attributeDefinitionId?: Maybe<Scalars['Int']>
+  auditInfo?: Maybe<SbAuditInfo>
+  fullyQualifiedName?: Maybe<Scalars['String']>
+  values?: Maybe<Array<Scalars['Object']>>
+}
+
+export type SbOrderAttribute_GetArgs = {
+  allowUndefined?: InputMaybe<Scalars['Boolean']>
+  defaultValue?: InputMaybe<Scalars['AnyScalar']>
+  path: Scalars['String']
+}
+
+export type SbOrderItem = {
+  __typename?: 'SBOrderItem'
+  _get?: Maybe<Scalars['AnyScalar']>
+  _root?: Maybe<SbOrderItem>
+  adjustedLineItemSubtotal?: Maybe<Scalars['Float']>
+  auditInfo?: Maybe<SbAuditInfo>
+  autoAddDiscountId?: Maybe<Scalars['Int']>
+  childItemIds?: Maybe<Array<Scalars['String']>>
+  data?: Maybe<Scalars['Object']>
+  destinationId?: Maybe<Scalars['String']>
+  discountTotal?: Maybe<Scalars['Float']>
+  discountedTotal?: Maybe<Scalars['Float']>
+  dutyAmount?: Maybe<Scalars['Float']>
+  expectedDeliveryDate?: Maybe<Scalars['DateTime']>
+  extendedTotal?: Maybe<Scalars['Float']>
+  feeTotal?: Maybe<Scalars['Float']>
+  fulfillmentLocationCode?: Maybe<Scalars['String']>
+  fulfillmentMethod?: Maybe<Scalars['String']>
+  handlingAmount?: Maybe<Scalars['Float']>
+  id?: Maybe<Scalars['String']>
+  inventoryTags?: Maybe<Array<Maybe<SbInventoryTags>>>
+  isAssemblyRequired?: Maybe<Scalars['Boolean']>
+  isRecurring?: Maybe<Scalars['Boolean']>
+  isReservationEnabled?: Maybe<Scalars['Boolean']>
+  isTaxable?: Maybe<Scalars['Boolean']>
+  itemTaxTotal?: Maybe<Scalars['Float']>
+  lineId?: Maybe<Scalars['Int']>
+  lineItemAdjustment?: Maybe<Scalars['Float']>
+  localeCode?: Maybe<Scalars['String']>
+  originalCartItemId?: Maybe<Scalars['String']>
+  parentItemId?: Maybe<Scalars['String']>
+  product?: Maybe<SbProduct>
+  productDiscount?: Maybe<SbAppliedLineItemProductDiscount>
+  productDiscounts?: Maybe<Array<Maybe<SbAppliedLineItemProductDiscount>>>
+  purchaseLocation?: Maybe<Scalars['String']>
+  quantity: Scalars['Int']
+  shippingAmountBeforeDiscountsAndAdjustments?: Maybe<Scalars['Float']>
+  shippingDiscounts?: Maybe<Array<Maybe<SbAppliedLineItemShippingDiscount>>>
+  shippingTaxTotal?: Maybe<Scalars['Float']>
+  shippingTotal?: Maybe<Scalars['Float']>
+  subscription?: Maybe<SbSubscriptionInfo>
+  subtotal?: Maybe<Scalars['Float']>
+  taxData?: Maybe<Scalars['Object']>
+  taxableTotal?: Maybe<Scalars['Float']>
+  total?: Maybe<Scalars['Float']>
+  totalWithWeightedShippingAndHandling?: Maybe<Scalars['Float']>
+  totalWithoutWeightedShippingAndHandling?: Maybe<Scalars['Float']>
+  unitPrice?: Maybe<SbCommerceUnitPrice>
+  weightedOrderAdjustment?: Maybe<Scalars['Float']>
+  weightedOrderDiscount?: Maybe<Scalars['Float']>
+  weightedOrderDuty?: Maybe<Scalars['Float']>
+  weightedOrderHandlingAdjustment?: Maybe<Scalars['Float']>
+  weightedOrderHandlingFee?: Maybe<Scalars['Float']>
+  weightedOrderHandlingFeeDiscount?: Maybe<Scalars['Float']>
+  weightedOrderHandlingFeeTax?: Maybe<Scalars['Float']>
+  weightedOrderShipping?: Maybe<Scalars['Float']>
+  weightedOrderShippingDiscount?: Maybe<Scalars['Float']>
+  weightedOrderShippingManualAdjustment?: Maybe<Scalars['Float']>
+  weightedOrderShippingTax?: Maybe<Scalars['Float']>
+  weightedOrderTax?: Maybe<Scalars['Float']>
+}
+
+export type SbOrderItem_GetArgs = {
+  allowUndefined?: InputMaybe<Scalars['Boolean']>
+  defaultValue?: InputMaybe<Scalars['AnyScalar']>
+  path: Scalars['String']
+}
+
+export type SbOrderNote = {
+  __typename?: 'SBOrderNote'
+  _get?: Maybe<Scalars['AnyScalar']>
+  _root?: Maybe<SbOrderNote>
+  auditInfo?: Maybe<SbAuditInfo>
+  id?: Maybe<Scalars['String']>
+  text?: Maybe<Scalars['String']>
+}
+
+export type SbOrderNote_GetArgs = {
+  allowUndefined?: InputMaybe<Scalars['Boolean']>
+  defaultValue?: InputMaybe<Scalars['AnyScalar']>
+  path: Scalars['String']
+}
+
+export type SbOrderNoteInput = {
+  auditInfo?: InputMaybe<SbAuditInfoInput>
+  id?: InputMaybe<Scalars['String']>
+  text?: InputMaybe<Scalars['String']>
+}
+
+export type SbOrderValidationMessage = {
+  __typename?: 'SBOrderValidationMessage'
+  _get?: Maybe<Scalars['AnyScalar']>
+  _root?: Maybe<SbOrderValidationMessage>
+  message?: Maybe<Scalars['String']>
+  messageType?: Maybe<Scalars['String']>
+  orderItemId?: Maybe<Scalars['String']>
+}
+
+export type SbOrderValidationMessage_GetArgs = {
+  allowUndefined?: InputMaybe<Scalars['Boolean']>
+  defaultValue?: InputMaybe<Scalars['AnyScalar']>
+  path: Scalars['String']
+}
+
+export type SbOrderValidationResult = {
+  __typename?: 'SBOrderValidationResult'
+  _get?: Maybe<Scalars['AnyScalar']>
+  _root?: Maybe<SbOrderValidationResult>
+  createdDate?: Maybe<Scalars['DateTime']>
+  messages?: Maybe<Array<Maybe<SbOrderValidationMessage>>>
+  status?: Maybe<Scalars['String']>
+  validationId?: Maybe<Scalars['String']>
+  validatorName?: Maybe<Scalars['String']>
+  validatorType?: Maybe<Scalars['String']>
+}
+
+export type SbOrderValidationResult_GetArgs = {
+  allowUndefined?: InputMaybe<Scalars['Boolean']>
+  defaultValue?: InputMaybe<Scalars['AnyScalar']>
+  path: Scalars['String']
+}
+
+export type SbPackageItem = {
+  __typename?: 'SBPackageItem'
+  _get?: Maybe<Scalars['AnyScalar']>
+  _root?: Maybe<SbPackageItem>
+  fulfillmentItemType?: Maybe<Scalars['String']>
+  lineId?: Maybe<Scalars['Int']>
+  optionAttributeFQN?: Maybe<Scalars['String']>
+  productCode?: Maybe<Scalars['String']>
+  quantity: Scalars['Int']
+}
+
+export type SbPackageItem_GetArgs = {
+  allowUndefined?: InputMaybe<Scalars['Boolean']>
+  defaultValue?: InputMaybe<Scalars['AnyScalar']>
+  path: Scalars['String']
+}
+
+export type SbPackageMeasurements = {
+  __typename?: 'SBPackageMeasurements'
+  _get?: Maybe<Scalars['AnyScalar']>
+  _root?: Maybe<SbPackageMeasurements>
+  height?: Maybe<SbMeasurement>
+  length?: Maybe<SbMeasurement>
+  weight?: Maybe<SbMeasurement>
+  width?: Maybe<SbMeasurement>
+}
+
+export type SbPackageMeasurements_GetArgs = {
+  allowUndefined?: InputMaybe<Scalars['Boolean']>
+  defaultValue?: InputMaybe<Scalars['AnyScalar']>
+  path: Scalars['String']
+}
+
+export type SbPackageMeasurementsInput = {
+  height?: InputMaybe<SbMeasurementInput>
+  length?: InputMaybe<SbMeasurementInput>
+  weight?: InputMaybe<SbMeasurementInput>
+  width?: InputMaybe<SbMeasurementInput>
+}
+
+export type SbPackageObj = {
+  __typename?: 'SBPackageObj'
+  _get?: Maybe<Scalars['AnyScalar']>
+  _root?: Maybe<SbPackageObj>
+  attributes?: Maybe<Scalars['Object']>
+  auditInfo?: Maybe<SbAuditInfo>
+  availableActions?: Maybe<Array<Scalars['String']>>
+  carrier?: Maybe<Scalars['String']>
+  changeMessages?: Maybe<Array<Maybe<SbChangeMessage>>>
+  code?: Maybe<Scalars['String']>
+  fulfillmentDate?: Maybe<Scalars['DateTime']>
+  fulfillmentLocationCode?: Maybe<Scalars['String']>
+  fxcbDocumentsUrl?: Maybe<Scalars['String']>
+  fxcbPackNotificationId?: Maybe<Scalars['String']>
+  hasLabel?: Maybe<Scalars['Boolean']>
+  id?: Maybe<Scalars['String']>
+  integratorId?: Maybe<Scalars['String']>
+  items?: Maybe<Array<Maybe<SbPackageItem>>>
+  labelFormat?: Maybe<Scalars['String']>
+  manifestId?: Maybe<Scalars['String']>
+  measurements?: Maybe<SbPackageMeasurements>
+  packageId?: Maybe<Scalars['String']>
+  packagingType?: Maybe<Scalars['String']>
+  packingSlipItemDetails?: Maybe<Array<Maybe<SbPackingSlipItemDetail>>>
+  packingSlipNumber?: Maybe<Scalars['Int']>
+  returnCarrier?: Maybe<Scalars['String']>
+  returnTrackingNumbers?: Maybe<Array<Scalars['String']>>
+  returnTrackings?: Maybe<Array<Maybe<SbTracking>>>
+  shipmentId?: Maybe<Scalars['String']>
+  shippingMethodCode?: Maybe<Scalars['String']>
+  shippingMethodName?: Maybe<Scalars['String']>
+  signatureRequired?: Maybe<Scalars['Boolean']>
+  status?: Maybe<Scalars['String']>
+  trackingNumber?: Maybe<Scalars['String']>
+  trackingNumbers?: Maybe<Array<Scalars['String']>>
+  trackings?: Maybe<Array<Maybe<SbTracking>>>
+}
+
+export type SbPackageObj_GetArgs = {
+  allowUndefined?: InputMaybe<Scalars['Boolean']>
+  defaultValue?: InputMaybe<Scalars['AnyScalar']>
+  path: Scalars['String']
+}
+
+export type SbPackingSlipItemDetail = {
+  __typename?: 'SBPackingSlipItemDetail'
+  _get?: Maybe<Scalars['AnyScalar']>
+  _root?: Maybe<SbPackingSlipItemDetail>
+  attributes?: Maybe<Scalars['Object']>
+  lineId?: Maybe<Scalars['Int']>
+  originalOrderItemId?: Maybe<Scalars['String']>
+  quantity?: Maybe<Scalars['Int']>
+}
+
+export type SbPackingSlipItemDetail_GetArgs = {
+  allowUndefined?: InputMaybe<Scalars['Boolean']>
+  defaultValue?: InputMaybe<Scalars['AnyScalar']>
+  path: Scalars['String']
+}
+
+export type SbPayment = {
+  __typename?: 'SBPayment'
+  _get?: Maybe<Scalars['AnyScalar']>
+  _root?: Maybe<SbPayment>
+  amountCollected: Scalars['Float']
+  amountCredited: Scalars['Float']
+  amountRequested: Scalars['Float']
+  auditInfo?: Maybe<SbAuditInfo>
+  availableActions?: Maybe<Array<Scalars['String']>>
+  billingInfo?: Maybe<SbBillingInfo>
+  changeMessages?: Maybe<Array<Maybe<SbChangeMessage>>>
+  data?: Maybe<Scalars['Object']>
+  externalTransactionId?: Maybe<Scalars['String']>
+  gatewayGiftCard?: Maybe<SbGatewayGiftCard>
+  groupId?: Maybe<SbPaymentActionTarget>
+  id?: Maybe<Scalars['String']>
+  interactions?: Maybe<Array<Maybe<SbPaymentInteraction>>>
+  isRecurring?: Maybe<Scalars['Boolean']>
+  orderId?: Maybe<Scalars['String']>
+  paymentServiceTransactionId?: Maybe<Scalars['String']>
+  paymentType?: Maybe<Scalars['String']>
+  paymentWorkflow?: Maybe<Scalars['String']>
+  status?: Maybe<Scalars['String']>
+  subPayments?: Maybe<Array<Maybe<SbSubPayment>>>
+}
+
+export type SbPayment_GetArgs = {
+  allowUndefined?: InputMaybe<Scalars['Boolean']>
+  defaultValue?: InputMaybe<Scalars['AnyScalar']>
+  path: Scalars['String']
+}
+
+export type SbPaymentActionTarget = {
+  __typename?: 'SBPaymentActionTarget'
+  _get?: Maybe<Scalars['AnyScalar']>
+  _root?: Maybe<SbPaymentActionTarget>
+  targetId?: Maybe<Scalars['String']>
+  targetNumber?: Maybe<Scalars['Int']>
+  targetType?: Maybe<Scalars['String']>
+}
+
+export type SbPaymentActionTarget_GetArgs = {
+  allowUndefined?: InputMaybe<Scalars['Boolean']>
+  defaultValue?: InputMaybe<Scalars['AnyScalar']>
+  path: Scalars['String']
+}
+
+export type SbPaymentActionTargetInput = {
+  targetId?: InputMaybe<Scalars['String']>
+  targetNumber?: InputMaybe<Scalars['Int']>
+  targetType?: InputMaybe<Scalars['String']>
+}
+
+export type SbPaymentCard = {
+  __typename?: 'SBPaymentCard'
+  _get?: Maybe<Scalars['AnyScalar']>
+  _root?: Maybe<SbPaymentCard>
+  bin?: Maybe<Scalars['String']>
+  cardNumberPartOrMask?: Maybe<Scalars['String']>
+  ccLastFour?: Maybe<Scalars['String']>
+  expireMonth: Scalars['Int']
+  expireYear: Scalars['Int']
+  isCardInfoSaved?: Maybe<Scalars['Boolean']>
+  isTokenized?: Maybe<Scalars['Boolean']>
+  isUsedRecurring?: Maybe<Scalars['Boolean']>
+  nameOnCard?: Maybe<Scalars['String']>
+  paymentOrCardType?: Maybe<Scalars['String']>
+  paymentServiceCardId?: Maybe<Scalars['String']>
+}
+
+export type SbPaymentCard_GetArgs = {
+  allowUndefined?: InputMaybe<Scalars['Boolean']>
+  defaultValue?: InputMaybe<Scalars['AnyScalar']>
+  path: Scalars['String']
+}
+
+export type SbPaymentCardInput = {
+  bin?: InputMaybe<Scalars['String']>
+  cardNumberPartOrMask?: InputMaybe<Scalars['String']>
+  ccLastFour?: InputMaybe<Scalars['String']>
+  expireMonth: Scalars['Int']
+  expireYear: Scalars['Int']
+  isCardInfoSaved?: InputMaybe<Scalars['Boolean']>
+  isTokenized?: InputMaybe<Scalars['Boolean']>
+  isUsedRecurring?: InputMaybe<Scalars['Boolean']>
+  nameOnCard?: InputMaybe<Scalars['String']>
+  paymentOrCardType?: InputMaybe<Scalars['String']>
+  paymentServiceCardId?: InputMaybe<Scalars['String']>
+}
+
+export type SbPaymentGatewayResponseData = {
+  __typename?: 'SBPaymentGatewayResponseData'
+  _get?: Maybe<Scalars['AnyScalar']>
+  _root?: Maybe<SbPaymentGatewayResponseData>
+  key?: Maybe<Scalars['String']>
+  value?: Maybe<Scalars['String']>
+}
+
+export type SbPaymentGatewayResponseData_GetArgs = {
+  allowUndefined?: InputMaybe<Scalars['Boolean']>
+  defaultValue?: InputMaybe<Scalars['AnyScalar']>
+  path: Scalars['String']
+}
+
+export type SbPaymentGatewayResponseDataInput = {
+  key?: InputMaybe<Scalars['String']>
+  value?: InputMaybe<Scalars['String']>
+}
+
+export type SbPaymentInput = {
+  amountCollected: Scalars['Float']
+  amountCredited: Scalars['Float']
+  amountRequested: Scalars['Float']
+  auditInfo?: InputMaybe<SbAuditInfoInput>
+  availableActions?: InputMaybe<Array<Scalars['String']>>
+  billingInfo?: InputMaybe<SbBillingInfoInput>
+  changeMessages?: InputMaybe<Array<InputMaybe<SbChangeMessageInput>>>
+  data?: InputMaybe<Scalars['Object']>
+  externalTransactionId?: InputMaybe<Scalars['String']>
+  gatewayGiftCard?: InputMaybe<SbGatewayGiftCardInput>
+  groupId?: InputMaybe<SbPaymentActionTargetInput>
+  id?: InputMaybe<Scalars['String']>
+  interactions?: InputMaybe<Array<InputMaybe<SbPaymentInteractionInput>>>
+  isRecurring?: InputMaybe<Scalars['Boolean']>
+  orderId?: InputMaybe<Scalars['String']>
+  paymentServiceTransactionId?: InputMaybe<Scalars['String']>
+  paymentType?: InputMaybe<Scalars['String']>
+  paymentWorkflow?: InputMaybe<Scalars['String']>
+  status?: InputMaybe<Scalars['String']>
+  subPayments?: InputMaybe<Array<InputMaybe<SbSubPaymentInput>>>
+}
+
+export type SbPaymentInteraction = {
+  __typename?: 'SBPaymentInteraction'
+  _get?: Maybe<Scalars['AnyScalar']>
+  _root?: Maybe<SbPaymentInteraction>
+  amount?: Maybe<Scalars['Float']>
+  auditInfo?: Maybe<SbAuditInfo>
+  capturableShipmentsSummary?: Maybe<Array<Maybe<SbCapturableShipmentSummary>>>
+  checkNumber?: Maybe<Scalars['String']>
+  currencyCode?: Maybe<Scalars['String']>
+  gatewayAVSCodes?: Maybe<Scalars['String']>
+  gatewayAuthCode?: Maybe<Scalars['String']>
+  gatewayCVV2Codes?: Maybe<Scalars['String']>
+  gatewayInteractionId?: Maybe<Scalars['Int']>
+  gatewayResponseCode?: Maybe<Scalars['String']>
+  gatewayResponseData?: Maybe<Array<Maybe<SbPaymentGatewayResponseData>>>
+  gatewayResponseText?: Maybe<Scalars['String']>
+  gatewayTransactionId?: Maybe<Scalars['String']>
+  id?: Maybe<Scalars['String']>
+  interactionDate?: Maybe<Scalars['DateTime']>
+  interactionType?: Maybe<Scalars['String']>
+  isManual?: Maybe<Scalars['Boolean']>
+  isRecurring?: Maybe<Scalars['Boolean']>
+  note?: Maybe<Scalars['String']>
+  orderId?: Maybe<Scalars['String']>
+  paymentEntryStatus?: Maybe<Scalars['String']>
+  paymentId?: Maybe<Scalars['String']>
+  paymentTransactionInteractionIdReference?: Maybe<Scalars['Int']>
+  refundId?: Maybe<Scalars['String']>
+  returnId?: Maybe<Scalars['String']>
+  status?: Maybe<Scalars['String']>
+  target?: Maybe<SbPaymentActionTarget>
+}
+
+export type SbPaymentInteraction_GetArgs = {
+  allowUndefined?: InputMaybe<Scalars['Boolean']>
+  defaultValue?: InputMaybe<Scalars['AnyScalar']>
+  path: Scalars['String']
+}
+
+export type SbPaymentInteractionInput = {
+  amount?: InputMaybe<Scalars['Float']>
+  auditInfo?: InputMaybe<SbAuditInfoInput>
+  capturableShipmentsSummary?: InputMaybe<Array<InputMaybe<SbCapturableShipmentSummaryInput>>>
+  checkNumber?: InputMaybe<Scalars['String']>
+  currencyCode?: InputMaybe<Scalars['String']>
+  gatewayAVSCodes?: InputMaybe<Scalars['String']>
+  gatewayAuthCode?: InputMaybe<Scalars['String']>
+  gatewayCVV2Codes?: InputMaybe<Scalars['String']>
+  gatewayInteractionId?: InputMaybe<Scalars['Int']>
+  gatewayResponseCode?: InputMaybe<Scalars['String']>
+  gatewayResponseData?: InputMaybe<Array<InputMaybe<SbPaymentGatewayResponseDataInput>>>
+  gatewayResponseText?: InputMaybe<Scalars['String']>
+  gatewayTransactionId?: InputMaybe<Scalars['String']>
+  id?: InputMaybe<Scalars['String']>
+  interactionDate?: InputMaybe<Scalars['DateTime']>
+  interactionType?: InputMaybe<Scalars['String']>
+  isManual?: InputMaybe<Scalars['Boolean']>
+  isRecurring?: InputMaybe<Scalars['Boolean']>
+  note?: InputMaybe<Scalars['String']>
+  orderId?: InputMaybe<Scalars['String']>
+  paymentEntryStatus?: InputMaybe<Scalars['String']>
+  paymentId?: InputMaybe<Scalars['String']>
+  paymentTransactionInteractionIdReference?: InputMaybe<Scalars['Int']>
+  refundId?: InputMaybe<Scalars['String']>
+  returnId?: InputMaybe<Scalars['String']>
+  status?: InputMaybe<Scalars['String']>
+  target?: InputMaybe<SbPaymentActionTargetInput>
+}
+
+export type SbPaymentToken = {
+  __typename?: 'SBPaymentToken'
+  _get?: Maybe<Scalars['AnyScalar']>
+  _root?: Maybe<SbPaymentToken>
+  paymentServiceTokenId?: Maybe<Scalars['String']>
+  type?: Maybe<Scalars['String']>
+}
+
+export type SbPaymentToken_GetArgs = {
+  allowUndefined?: InputMaybe<Scalars['Boolean']>
+  defaultValue?: InputMaybe<Scalars['AnyScalar']>
+  path: Scalars['String']
+}
+
+export type SbPaymentTokenInput = {
+  paymentServiceTokenId?: InputMaybe<Scalars['String']>
+  type?: InputMaybe<Scalars['String']>
+}
+
+export type SbPhone = {
+  __typename?: 'SBPhone'
+  _get?: Maybe<Scalars['AnyScalar']>
+  _root?: Maybe<SbPhone>
+  home?: Maybe<Scalars['String']>
+  mobile?: Maybe<Scalars['String']>
+  work?: Maybe<Scalars['String']>
+}
+
+export type SbPhone_GetArgs = {
+  allowUndefined?: InputMaybe<Scalars['Boolean']>
+  defaultValue?: InputMaybe<Scalars['AnyScalar']>
+  path: Scalars['String']
+}
+
+export type SbPhoneInput = {
+  home?: InputMaybe<Scalars['String']>
+  mobile?: InputMaybe<Scalars['String']>
+  work?: InputMaybe<Scalars['String']>
+}
+
+export type SbPickup = {
+  __typename?: 'SBPickup'
+  _get?: Maybe<Scalars['AnyScalar']>
+  _root?: Maybe<SbPickup>
+  auditInfo?: Maybe<SbAuditInfo>
+  availableActions?: Maybe<Array<Scalars['String']>>
+  changeMessages?: Maybe<Array<Maybe<SbChangeMessage>>>
+  code?: Maybe<Scalars['String']>
+  fulfillmentDate?: Maybe<Scalars['DateTime']>
+  fulfillmentLocationCode?: Maybe<Scalars['String']>
+  id?: Maybe<Scalars['String']>
+  items?: Maybe<Array<Maybe<SbPickupItem>>>
+  status?: Maybe<Scalars['String']>
+}
+
+export type SbPickup_GetArgs = {
+  allowUndefined?: InputMaybe<Scalars['Boolean']>
+  defaultValue?: InputMaybe<Scalars['AnyScalar']>
+  path: Scalars['String']
+}
+
+export type SbPickupItem = {
+  __typename?: 'SBPickupItem'
+  _get?: Maybe<Scalars['AnyScalar']>
+  _root?: Maybe<SbPickupItem>
+  fulfillmentItemType?: Maybe<Scalars['String']>
+  lineId?: Maybe<Scalars['Int']>
+  optionAttributeFQN?: Maybe<Scalars['String']>
+  productCode?: Maybe<Scalars['String']>
+  quantity: Scalars['Int']
+}
+
+export type SbPickupItem_GetArgs = {
+  allowUndefined?: InputMaybe<Scalars['Boolean']>
+  defaultValue?: InputMaybe<Scalars['AnyScalar']>
+  path: Scalars['String']
+}
+
+export type SbProduct = {
+  __typename?: 'SBProduct'
+  _get?: Maybe<Scalars['AnyScalar']>
+  _root?: Maybe<SbProduct>
+  allocationExpiration?: Maybe<Scalars['DateTime']>
+  allocationId?: Maybe<Scalars['Int']>
+  bundledProducts?: Maybe<Array<Maybe<SbBundledProduct>>>
+  categories?: Maybe<Array<Maybe<SbCategory>>>
+  description?: Maybe<Scalars['String']>
+  discountsRestricted?: Maybe<Scalars['Boolean']>
+  discountsRestrictedEndDate?: Maybe<Scalars['DateTime']>
+  discountsRestrictedStartDate?: Maybe<Scalars['DateTime']>
+  fulfillmentFields?: Maybe<Array<Maybe<SbFulfillmentField>>>
+  fulfillmentStatus?: Maybe<Scalars['String']>
+  fulfillmentTypesSupported?: Maybe<Array<Scalars['String']>>
+  goodsType?: Maybe<Scalars['String']>
+  imageAlternateText?: Maybe<Scalars['String']>
+  imageUrl?: Maybe<Scalars['String']>
+  isPackagedStandAlone?: Maybe<Scalars['Boolean']>
+  isRecurring?: Maybe<Scalars['Boolean']>
+  isTaxable?: Maybe<Scalars['Boolean']>
+  measurements?: Maybe<SbPackageMeasurements>
+  mfgPartNumber?: Maybe<Scalars['String']>
+  name?: Maybe<Scalars['String']>
+  options?: Maybe<Array<Maybe<SbProductOption>>>
+  price?: Maybe<SbProductPrice>
+  productCode?: Maybe<Scalars['String']>
+  productReservationId?: Maybe<Scalars['Int']>
+  productType?: Maybe<Scalars['String']>
+  productUsage?: Maybe<Scalars['String']>
+  properties?: Maybe<Array<Maybe<SbProductProperty>>>
+  sku?: Maybe<Scalars['String']>
+  stock?: Maybe<SbProductStock>
+  upc?: Maybe<Scalars['String']>
+  variationProductCode?: Maybe<Scalars['String']>
+}
+
+export type SbProduct_GetArgs = {
+  allowUndefined?: InputMaybe<Scalars['Boolean']>
+  defaultValue?: InputMaybe<Scalars['AnyScalar']>
+  path: Scalars['String']
+}
+
+export type SbProductInput = {
+  allocationExpiration?: InputMaybe<Scalars['DateTime']>
+  allocationId?: InputMaybe<Scalars['Int']>
+  bundledProducts?: InputMaybe<Array<InputMaybe<SbBundledProductInput>>>
+  categories?: InputMaybe<Array<InputMaybe<SbCategoryInput>>>
+  description?: InputMaybe<Scalars['String']>
+  discountsRestricted?: InputMaybe<Scalars['Boolean']>
+  discountsRestrictedEndDate?: InputMaybe<Scalars['DateTime']>
+  discountsRestrictedStartDate?: InputMaybe<Scalars['DateTime']>
+  fulfillmentFields?: InputMaybe<Array<InputMaybe<SbFulfillmentFieldInput>>>
+  fulfillmentStatus?: InputMaybe<Scalars['String']>
+  fulfillmentTypesSupported?: InputMaybe<Array<Scalars['String']>>
+  goodsType?: InputMaybe<Scalars['String']>
+  imageAlternateText?: InputMaybe<Scalars['String']>
+  imageUrl?: InputMaybe<Scalars['String']>
+  isPackagedStandAlone?: InputMaybe<Scalars['Boolean']>
+  isRecurring?: InputMaybe<Scalars['Boolean']>
+  isTaxable?: InputMaybe<Scalars['Boolean']>
+  measurements?: InputMaybe<SbPackageMeasurementsInput>
+  mfgPartNumber?: InputMaybe<Scalars['String']>
+  name?: InputMaybe<Scalars['String']>
+  options?: InputMaybe<Array<InputMaybe<SbProductOptionInput>>>
+  price?: InputMaybe<SbProductPriceInput>
+  productCode?: InputMaybe<Scalars['String']>
+  productReservationId?: InputMaybe<Scalars['Int']>
+  productType?: InputMaybe<Scalars['String']>
+  productUsage?: InputMaybe<Scalars['String']>
+  properties?: InputMaybe<Array<InputMaybe<SbProductPropertyInput>>>
+  sku?: InputMaybe<Scalars['String']>
+  stock?: InputMaybe<SbProductStockInput>
+  upc?: InputMaybe<Scalars['String']>
+  variationProductCode?: InputMaybe<Scalars['String']>
+}
+
+export type SbProductOption = {
+  __typename?: 'SBProductOption'
+  _get?: Maybe<Scalars['AnyScalar']>
+  _root?: Maybe<SbProductOption>
+  attributeFQN?: Maybe<Scalars['String']>
+  dataType?: Maybe<Scalars['String']>
+  name?: Maybe<Scalars['String']>
+  shopperEnteredValue?: Maybe<Scalars['Object']>
+  stringValue?: Maybe<Scalars['String']>
+  value?: Maybe<Scalars['Object']>
+}
+
+export type SbProductOption_GetArgs = {
+  allowUndefined?: InputMaybe<Scalars['Boolean']>
+  defaultValue?: InputMaybe<Scalars['AnyScalar']>
+  path: Scalars['String']
+}
+
+export type SbProductOptionInput = {
+  attributeFQN?: InputMaybe<Scalars['String']>
+  dataType?: InputMaybe<Scalars['String']>
+  name?: InputMaybe<Scalars['String']>
+  shopperEnteredValue?: InputMaybe<Scalars['Object']>
+  stringValue?: InputMaybe<Scalars['String']>
+  value?: InputMaybe<Scalars['Object']>
+}
+
+export type SbProductPrice = {
+  __typename?: 'SBProductPrice'
+  _get?: Maybe<Scalars['AnyScalar']>
+  _root?: Maybe<SbProductPrice>
+  creditValue?: Maybe<Scalars['Float']>
+  msrp?: Maybe<Scalars['Float']>
+  price?: Maybe<Scalars['Float']>
+  priceListCode?: Maybe<Scalars['String']>
+  priceListEntryMode?: Maybe<Scalars['String']>
+  salePrice?: Maybe<Scalars['Float']>
+  tenantOverridePrice?: Maybe<Scalars['Float']>
+}
+
+export type SbProductPrice_GetArgs = {
+  allowUndefined?: InputMaybe<Scalars['Boolean']>
+  defaultValue?: InputMaybe<Scalars['AnyScalar']>
+  path: Scalars['String']
+}
+
+export type SbProductPriceInput = {
+  creditValue?: InputMaybe<Scalars['Float']>
+  msrp?: InputMaybe<Scalars['Float']>
+  price?: InputMaybe<Scalars['Float']>
+  priceListCode?: InputMaybe<Scalars['String']>
+  priceListEntryMode?: InputMaybe<Scalars['String']>
+  salePrice?: InputMaybe<Scalars['Float']>
+  tenantOverridePrice?: InputMaybe<Scalars['Float']>
+}
+
+export type SbProductProperty = {
+  __typename?: 'SBProductProperty'
+  _get?: Maybe<Scalars['AnyScalar']>
+  _root?: Maybe<SbProductProperty>
+  attributeFQN?: Maybe<Scalars['String']>
+  dataType?: Maybe<Scalars['String']>
+  isMultiValue?: Maybe<Scalars['Boolean']>
+  name?: Maybe<Scalars['String']>
+  values?: Maybe<Array<Maybe<SbProductPropertyValue>>>
+}
+
+export type SbProductProperty_GetArgs = {
+  allowUndefined?: InputMaybe<Scalars['Boolean']>
+  defaultValue?: InputMaybe<Scalars['AnyScalar']>
+  path: Scalars['String']
+}
+
+export type SbProductPropertyInput = {
+  attributeFQN?: InputMaybe<Scalars['String']>
+  dataType?: InputMaybe<Scalars['String']>
+  isMultiValue?: InputMaybe<Scalars['Boolean']>
+  name?: InputMaybe<Scalars['String']>
+  values?: InputMaybe<Array<InputMaybe<SbProductPropertyValueInput>>>
+}
+
+export type SbProductPropertyValue = {
+  __typename?: 'SBProductPropertyValue'
+  _get?: Maybe<Scalars['AnyScalar']>
+  _root?: Maybe<SbProductPropertyValue>
+  stringValue?: Maybe<Scalars['String']>
+  value?: Maybe<Scalars['Object']>
+}
+
+export type SbProductPropertyValue_GetArgs = {
+  allowUndefined?: InputMaybe<Scalars['Boolean']>
+  defaultValue?: InputMaybe<Scalars['AnyScalar']>
+  path: Scalars['String']
+}
+
+export type SbProductPropertyValueInput = {
+  stringValue?: InputMaybe<Scalars['String']>
+  value?: InputMaybe<Scalars['Object']>
+}
+
+export type SbProductStock = {
+  __typename?: 'SBProductStock'
+  _get?: Maybe<Scalars['AnyScalar']>
+  _root?: Maybe<SbProductStock>
+  aggregateInventory?: Maybe<Scalars['Int']>
+  availableDate?: Maybe<Scalars['DateTime']>
+  futureInventories?: Maybe<Array<Maybe<SbFutureInventory>>>
+  isOnBackOrder?: Maybe<Scalars['Boolean']>
+  manageStock?: Maybe<Scalars['Boolean']>
+  stockAvailable?: Maybe<Scalars['Int']>
+}
+
+export type SbProductStock_GetArgs = {
+  allowUndefined?: InputMaybe<Scalars['Boolean']>
+  defaultValue?: InputMaybe<Scalars['AnyScalar']>
+  path: Scalars['String']
+}
+
+export type SbProductStockInput = {
+  aggregateInventory?: InputMaybe<Scalars['Int']>
+  availableDate?: InputMaybe<Scalars['DateTime']>
+  futureInventories?: InputMaybe<Array<InputMaybe<SbFutureInventoryInput>>>
+  isOnBackOrder?: InputMaybe<Scalars['Boolean']>
+  manageStock?: InputMaybe<Scalars['Boolean']>
+  stockAvailable?: InputMaybe<Scalars['Int']>
+}
+
+export type SbPurchaseOrderCustomField = {
+  __typename?: 'SBPurchaseOrderCustomField'
+  _get?: Maybe<Scalars['AnyScalar']>
+  _root?: Maybe<SbPurchaseOrderCustomField>
+  code?: Maybe<Scalars['String']>
+  label?: Maybe<Scalars['String']>
+  value?: Maybe<Scalars['String']>
+}
+
+export type SbPurchaseOrderCustomField_GetArgs = {
+  allowUndefined?: InputMaybe<Scalars['Boolean']>
+  defaultValue?: InputMaybe<Scalars['AnyScalar']>
+  path: Scalars['String']
+}
+
+export type SbPurchaseOrderCustomFieldInput = {
+  code?: InputMaybe<Scalars['String']>
+  label?: InputMaybe<Scalars['String']>
+  value?: InputMaybe<Scalars['String']>
+}
+
+export type SbPurchaseOrderPayment = {
+  __typename?: 'SBPurchaseOrderPayment'
+  _get?: Maybe<Scalars['AnyScalar']>
+  _root?: Maybe<SbPurchaseOrderPayment>
+  customFields?: Maybe<Array<Maybe<SbPurchaseOrderCustomField>>>
+  paymentTerm?: Maybe<SbPurchaseOrderPaymentTerm>
+  purchaseOrderNumber?: Maybe<Scalars['String']>
+}
+
+export type SbPurchaseOrderPayment_GetArgs = {
+  allowUndefined?: InputMaybe<Scalars['Boolean']>
+  defaultValue?: InputMaybe<Scalars['AnyScalar']>
+  path: Scalars['String']
+}
+
+export type SbPurchaseOrderPaymentInput = {
+  customFields?: InputMaybe<Array<InputMaybe<SbPurchaseOrderCustomFieldInput>>>
+  paymentTerm?: InputMaybe<SbPurchaseOrderPaymentTermInput>
+  purchaseOrderNumber?: InputMaybe<Scalars['String']>
+}
+
+export type SbPurchaseOrderPaymentTerm = {
+  __typename?: 'SBPurchaseOrderPaymentTerm'
+  _get?: Maybe<Scalars['AnyScalar']>
+  _root?: Maybe<SbPurchaseOrderPaymentTerm>
+  code?: Maybe<Scalars['String']>
+  description?: Maybe<Scalars['String']>
+}
+
+export type SbPurchaseOrderPaymentTerm_GetArgs = {
+  allowUndefined?: InputMaybe<Scalars['Boolean']>
+  defaultValue?: InputMaybe<Scalars['AnyScalar']>
+  path: Scalars['String']
+}
+
+export type SbPurchaseOrderPaymentTermInput = {
+  code?: InputMaybe<Scalars['String']>
+  description?: InputMaybe<Scalars['String']>
+}
+
+export type SbRefund = {
+  __typename?: 'SBRefund'
+  _get?: Maybe<Scalars['AnyScalar']>
+  _root?: Maybe<SbRefund>
+  amount: Scalars['Float']
+  auditInfo?: Maybe<SbAuditInfo>
+  id?: Maybe<Scalars['String']>
+  orderId?: Maybe<Scalars['String']>
+  payment?: Maybe<SbPayment>
+  reason?: Maybe<Scalars['String']>
+  reasonCode?: Maybe<Scalars['String']>
+  refundMethod?: Maybe<Scalars['String']>
+}
+
+export type SbRefund_GetArgs = {
+  allowUndefined?: InputMaybe<Scalars['Boolean']>
+  defaultValue?: InputMaybe<Scalars['AnyScalar']>
+  path: Scalars['String']
+}
+
+export type SbShipment = {
+  __typename?: 'SBShipment'
+  _get?: Maybe<Scalars['AnyScalar']>
+  _root?: Maybe<SbShipment>
+  alternateContact?: Maybe<SbFulfillmentAlternateContact>
+  auditInfo?: Maybe<SbAuditInfo>
+  backorderCreatedDate?: Maybe<Scalars['Int']>
+  canceledItems?: Maybe<Array<Maybe<SbCanceledItem>>>
+  changeMessages?: Maybe<Array<Maybe<SbChangeMessage>>>
+  cost?: Maybe<Scalars['Float']>
+  currencyCode?: Maybe<Scalars['String']>
+  customer?: Maybe<SbCustomer>
+  customerAccountId?: Maybe<Scalars['Int']>
+  customerTaxId?: Maybe<Scalars['String']>
+  data?: Maybe<Scalars['Object']>
+  destination?: Maybe<SbDestination>
+  dutyAdjustment: Scalars['Float']
+  dutyTotal: Scalars['Float']
+  email?: Maybe<Scalars['String']>
+  externalOrderId?: Maybe<Scalars['String']>
+  externalShipmentId?: Maybe<Scalars['String']>
+  fulfillmentDate?: Maybe<Scalars['DateTime']>
+  fulfillmentLocationCode?: Maybe<Scalars['String']>
+  fulfillmentStatus?: Maybe<Scalars['String']>
+  futureDate?: Maybe<Scalars['DateTime']>
+  handlingAdjustment: Scalars['Float']
+  handlingSubtotal: Scalars['Float']
+  handlingTaxAdjustment: Scalars['Float']
+  handlingTaxTotal: Scalars['Float']
+  handlingTotal: Scalars['Float']
+  id?: Maybe<Scalars['String']>
+  isExpress?: Maybe<Scalars['Boolean']>
+  isTransfer?: Maybe<Scalars['Boolean']>
+  items?: Maybe<Array<Maybe<SbShipmentItem>>>
+  lineItemSubtotal: Scalars['Float']
+  lineItemTaxAdjustment: Scalars['Float']
+  lineItemTaxTotal: Scalars['Float']
+  lineItemTotal: Scalars['Float']
+  number?: Maybe<Scalars['Int']>
+  orderId?: Maybe<Scalars['String']>
+  orderNumber: Scalars['Int']
+  orderSubmitDate?: Maybe<Scalars['DateTime']>
+  origin?: Maybe<SbContact>
+  originalShipmentNumber?: Maybe<Scalars['Int']>
+  packages?: Maybe<Array<Maybe<SbPackageObj>>>
+  parentCheckoutNumber?: Maybe<Scalars['Int']>
+  parentShipmentNumber?: Maybe<Scalars['Int']>
+  pickStatus?: Maybe<Scalars['String']>
+  pickType?: Maybe<Scalars['String']>
+  pickupInfo?: Maybe<Scalars['Object']>
+  readyToCapture?: Maybe<Scalars['Boolean']>
+  shipmentAdjustment: Scalars['Float']
+  shipmentNotes?: Maybe<Array<Maybe<SbShipmentNote>>>
+  shipmentStatus?: Maybe<Scalars['String']>
+  shipmentStatusReason?: Maybe<SbShipmentStatusReason>
+  shipmentType?: Maybe<Scalars['String']>
+  shippingAdjustment: Scalars['Float']
+  shippingMethodCode?: Maybe<Scalars['String']>
+  shippingMethodName?: Maybe<Scalars['String']>
+  shippingSubtotal: Scalars['Float']
+  shippingTaxAdjustment: Scalars['Float']
+  shippingTaxTotal: Scalars['Float']
+  shippingTotal: Scalars['Float']
+  shopperNotes?: Maybe<SbFulfillmentShopperNotes>
+  taxData?: Maybe<Scalars['Object']>
+  total: Scalars['Float']
+  transferShipmentNumbers?: Maybe<Array<Scalars['Int']>>
+  workflowProcessContainerId?: Maybe<Scalars['String']>
+  workflowProcessId?: Maybe<Scalars['String']>
+  workflowState?: Maybe<SbWorkflowState>
+}
+
+export type SbShipment_GetArgs = {
+  allowUndefined?: InputMaybe<Scalars['Boolean']>
+  defaultValue?: InputMaybe<Scalars['AnyScalar']>
+  path: Scalars['String']
+}
+
+export type SbShipmentItem = {
+  __typename?: 'SBShipmentItem'
+  _get?: Maybe<Scalars['AnyScalar']>
+  _root?: Maybe<SbShipmentItem>
+  actualPrice: Scalars['Float']
+  auditInfo?: Maybe<SbAuditInfo>
+  backorderReleaseDate?: Maybe<Scalars['DateTime']>
+  cartItemId?: Maybe<Scalars['String']>
+  childItemIds?: Maybe<Array<Scalars['String']>>
+  data?: Maybe<Scalars['Object']>
+  duty: Scalars['Float']
+  fulfillmentFields?: Maybe<Array<Maybe<SbFulfillmentField>>>
+  fulfillmentLocationCode?: Maybe<Scalars['String']>
+  giftCards?: Maybe<Array<Maybe<SbGiftCard>>>
+  handling: Scalars['Float']
+  handlingDiscount: Scalars['Float']
+  handlingTax: Scalars['Float']
+  imageUrl?: Maybe<Scalars['String']>
+  inventoryTags?: Maybe<Array<Maybe<SbInventoryTags>>>
+  isAssemblyRequired?: Maybe<Scalars['Boolean']>
+  isPackagedStandAlone?: Maybe<Scalars['Boolean']>
+  isReservedInventory?: Maybe<Scalars['Boolean']>
+  isTaxable?: Maybe<Scalars['Boolean']>
+  itemDiscount: Scalars['Float']
+  itemTax: Scalars['Float']
+  lineId: Scalars['Int']
+  lineItemAdjustment?: Maybe<Scalars['Float']>
+  lineItemCost: Scalars['Float']
+  locatorName?: Maybe<Scalars['String']>
+  measurements?: Maybe<SbPackageMeasurements>
+  name?: Maybe<Scalars['String']>
+  optionAttributeFQN?: Maybe<Scalars['String']>
+  options?: Maybe<Array<Maybe<SbProductOption>>>
+  originalOrderItemId?: Maybe<Scalars['String']>
+  overridePrice?: Maybe<Scalars['Float']>
+  parentId?: Maybe<Scalars['String']>
+  parentItemId?: Maybe<Scalars['String']>
+  partNumber?: Maybe<Scalars['String']>
+  productCode?: Maybe<Scalars['String']>
+  quantity: Scalars['Int']
+  readyForPickupQuantity?: Maybe<Scalars['Int']>
+  shipping: Scalars['Float']
+  shippingDiscount: Scalars['Float']
+  shippingTax: Scalars['Float']
+  sku?: Maybe<Scalars['String']>
+  taxData?: Maybe<Scalars['Object']>
+  taxableHandling: Scalars['Float']
+  taxableLineItemCost: Scalars['Float']
+  taxableShipping: Scalars['Float']
+  unitPrice: Scalars['Float']
+  upc?: Maybe<Scalars['String']>
+  variationProductCode?: Maybe<Scalars['String']>
+  weightedDutyAdjustment: Scalars['Float']
+  weightedHandlingAdjustment: Scalars['Float']
+  weightedHandlingTaxAdjustment: Scalars['Float']
+  weightedLineItemTaxAdjustment: Scalars['Float']
+  weightedShipmentAdjustment: Scalars['Float']
+  weightedShippingAdjustment: Scalars['Float']
+  weightedShippingTaxAdjustment: Scalars['Float']
+}
+
+export type SbShipmentItem_GetArgs = {
+  allowUndefined?: InputMaybe<Scalars['Boolean']>
+  defaultValue?: InputMaybe<Scalars['AnyScalar']>
+  path: Scalars['String']
+}
+
+export type SbShipmentNote = {
+  __typename?: 'SBShipmentNote'
+  _get?: Maybe<Scalars['AnyScalar']>
+  _root?: Maybe<SbShipmentNote>
+  attributes?: Maybe<Scalars['Object']>
+  auditInfo?: Maybe<SbAuditInfo>
+  noteId?: Maybe<Scalars['String']>
+  noteText?: Maybe<Scalars['String']>
+  role?: Maybe<Scalars['String']>
+  username?: Maybe<Scalars['String']>
+}
+
+export type SbShipmentNote_GetArgs = {
+  allowUndefined?: InputMaybe<Scalars['Boolean']>
+  defaultValue?: InputMaybe<Scalars['AnyScalar']>
+  path: Scalars['String']
+}
+
+export type SbShipmentStatusReason = {
+  __typename?: 'SBShipmentStatusReason'
+  _get?: Maybe<Scalars['AnyScalar']>
+  _root?: Maybe<SbShipmentStatusReason>
+  moreInfo?: Maybe<Scalars['String']>
+  reasonCode?: Maybe<Scalars['String']>
+}
+
+export type SbShipmentStatusReason_GetArgs = {
+  allowUndefined?: InputMaybe<Scalars['Boolean']>
+  defaultValue?: InputMaybe<Scalars['AnyScalar']>
+  path: Scalars['String']
+}
+
+export type SbShippingDiscount = {
+  __typename?: 'SBShippingDiscount'
+  _get?: Maybe<Scalars['AnyScalar']>
+  _root?: Maybe<SbShippingDiscount>
+  discount?: Maybe<SbAppliedDiscount>
+  methodCode?: Maybe<Scalars['String']>
+}
+
+export type SbShippingDiscount_GetArgs = {
+  allowUndefined?: InputMaybe<Scalars['Boolean']>
+  defaultValue?: InputMaybe<Scalars['AnyScalar']>
+  path: Scalars['String']
+}
+
+export type SbShippingDiscountInput = {
+  discount?: InputMaybe<SbAppliedDiscountInput>
+  methodCode?: InputMaybe<Scalars['String']>
+}
+
+export type SbShippingRate = {
+  __typename?: 'SBShippingRate'
+  _get?: Maybe<Scalars['AnyScalar']>
+  _root?: Maybe<SbShippingRate>
+  currencyCode?: Maybe<Scalars['String']>
+  data?: Maybe<Scalars['Object']>
+  isValid?: Maybe<Scalars['Boolean']>
+  messages?: Maybe<Array<Scalars['String']>>
+  price?: Maybe<Scalars['Float']>
+  shippingMethodCode?: Maybe<Scalars['String']>
+  shippingMethodName?: Maybe<Scalars['String']>
+  shippingZoneCode?: Maybe<Scalars['String']>
+}
+
+export type SbShippingRate_GetArgs = {
+  allowUndefined?: InputMaybe<Scalars['Boolean']>
+  defaultValue?: InputMaybe<Scalars['AnyScalar']>
+  path: Scalars['String']
+}
+
+export type SbShopperNotes = {
+  __typename?: 'SBShopperNotes'
+  _get?: Maybe<Scalars['AnyScalar']>
+  _root?: Maybe<SbShopperNotes>
+  comments?: Maybe<Scalars['String']>
+  deliveryInstructions?: Maybe<Scalars['String']>
+  giftMessage?: Maybe<Scalars['String']>
+}
+
+export type SbShopperNotes_GetArgs = {
+  allowUndefined?: InputMaybe<Scalars['Boolean']>
+  defaultValue?: InputMaybe<Scalars['AnyScalar']>
+  path: Scalars['String']
+}
+
+export type SbSubPayment = {
+  __typename?: 'SBSubPayment'
+  _get?: Maybe<Scalars['AnyScalar']>
+  _root?: Maybe<SbSubPayment>
+  amountCollected: Scalars['Float']
+  amountCredited: Scalars['Float']
+  amountRefunded: Scalars['Float']
+  amountRequested: Scalars['Float']
+  status?: Maybe<Scalars['String']>
+  target?: Maybe<SbPaymentActionTarget>
+}
+
+export type SbSubPayment_GetArgs = {
+  allowUndefined?: InputMaybe<Scalars['Boolean']>
+  defaultValue?: InputMaybe<Scalars['AnyScalar']>
+  path: Scalars['String']
+}
+
+export type SbSubPaymentInput = {
+  amountCollected: Scalars['Float']
+  amountCredited: Scalars['Float']
+  amountRefunded: Scalars['Float']
+  amountRequested: Scalars['Float']
+  status?: InputMaybe<Scalars['String']>
+  target?: InputMaybe<SbPaymentActionTargetInput>
+}
+
+export type SbSubscriptionInfo = {
+  __typename?: 'SBSubscriptionInfo'
+  _get?: Maybe<Scalars['AnyScalar']>
+  _root?: Maybe<SbSubscriptionInfo>
+  frequency?: Maybe<SbFrequency>
+  required?: Maybe<Scalars['Boolean']>
+  trial?: Maybe<SbTrial>
+}
+
+export type SbSubscriptionInfo_GetArgs = {
+  allowUndefined?: InputMaybe<Scalars['Boolean']>
+  defaultValue?: InputMaybe<Scalars['AnyScalar']>
+  path: Scalars['String']
+}
+
+export type SbSubscriptionItem = {
+  __typename?: 'SBSubscriptionItem'
+  _get?: Maybe<Scalars['AnyScalar']>
+  _root?: Maybe<SbSubscriptionItem>
+  adjustedLineItemSubtotal?: Maybe<Scalars['Float']>
+  auditInfo?: Maybe<SbAuditInfo>
+  autoAddDiscountId?: Maybe<Scalars['Int']>
+  childItemIds?: Maybe<Array<Scalars['String']>>
+  data?: Maybe<Scalars['Object']>
+  discountTotal?: Maybe<Scalars['Float']>
+  discountedTotal?: Maybe<Scalars['Float']>
+  extendedTotal?: Maybe<Scalars['Float']>
+  feeTotal?: Maybe<Scalars['Float']>
+  fulfillmentLocationCode?: Maybe<Scalars['String']>
+  fulfillmentMethod?: Maybe<Scalars['String']>
+  handlingAmount?: Maybe<Scalars['Float']>
+  id?: Maybe<Scalars['String']>
+  inventoryTags?: Maybe<Array<Maybe<SbInventoryTags>>>
+  isAssemblyRequired?: Maybe<Scalars['Boolean']>
+  isOnetimeItem?: Maybe<Scalars['Boolean']>
+  isRecurring?: Maybe<Scalars['Boolean']>
+  isTaxable?: Maybe<Scalars['Boolean']>
+  itemTaxTotal?: Maybe<Scalars['Float']>
+  lineId?: Maybe<Scalars['Int']>
+  lineItemAdjustment?: Maybe<Scalars['Float']>
+  localeCode?: Maybe<Scalars['String']>
+  parentItemCode?: Maybe<Scalars['String']>
+  parentItemId?: Maybe<Scalars['String']>
+  product?: Maybe<SbProduct>
+  productDiscount?: Maybe<SbAppliedLineItemProductDiscount>
+  productDiscounts?: Maybe<Array<Maybe<SbAppliedLineItemProductDiscount>>>
+  purchaseLocation?: Maybe<Scalars['String']>
+  quantity: Scalars['Int']
+  shippingAmountBeforeDiscountsAndAdjustments?: Maybe<Scalars['Float']>
+  shippingDiscounts?: Maybe<Array<Maybe<SbAppliedLineItemShippingDiscount>>>
+  shippingTaxTotal?: Maybe<Scalars['Float']>
+  shippingTotal?: Maybe<Scalars['Float']>
+  subtotal?: Maybe<Scalars['Float']>
+  taxData?: Maybe<Scalars['Object']>
+  taxableTotal?: Maybe<Scalars['Float']>
+  total?: Maybe<Scalars['Float']>
+  totalWithWeightedShippingAndHandling?: Maybe<Scalars['Float']>
+  totalWithoutWeightedShippingAndHandling?: Maybe<Scalars['Float']>
+  unitPrice?: Maybe<SbCommerceUnitPrice>
+  weightedOrderAdjustment?: Maybe<Scalars['Float']>
+  weightedOrderDiscount?: Maybe<Scalars['Float']>
+  weightedOrderDuty?: Maybe<Scalars['Float']>
+  weightedOrderHandlingAdjustment?: Maybe<Scalars['Float']>
+  weightedOrderHandlingFee?: Maybe<Scalars['Float']>
+  weightedOrderHandlingFeeDiscount?: Maybe<Scalars['Float']>
+  weightedOrderHandlingFeeTax?: Maybe<Scalars['Float']>
+  weightedOrderShipping?: Maybe<Scalars['Float']>
+  weightedOrderShippingDiscount?: Maybe<Scalars['Float']>
+  weightedOrderShippingManualAdjustment?: Maybe<Scalars['Float']>
+  weightedOrderShippingTax?: Maybe<Scalars['Float']>
+  weightedOrderTax?: Maybe<Scalars['Float']>
+}
+
+export type SbSubscriptionItem_GetArgs = {
+  allowUndefined?: InputMaybe<Scalars['Boolean']>
+  defaultValue?: InputMaybe<Scalars['AnyScalar']>
+  path: Scalars['String']
+}
+
+export type SbSubscriptionItemInput = {
+  adjustedLineItemSubtotal?: InputMaybe<Scalars['Float']>
+  auditInfo?: InputMaybe<SbAuditInfoInput>
+  autoAddDiscountId?: InputMaybe<Scalars['Int']>
+  childItemIds?: InputMaybe<Array<Scalars['String']>>
+  data?: InputMaybe<Scalars['Object']>
+  discountTotal?: InputMaybe<Scalars['Float']>
+  discountedTotal?: InputMaybe<Scalars['Float']>
+  extendedTotal?: InputMaybe<Scalars['Float']>
+  feeTotal?: InputMaybe<Scalars['Float']>
+  fulfillmentLocationCode?: InputMaybe<Scalars['String']>
+  fulfillmentMethod?: InputMaybe<Scalars['String']>
+  handlingAmount?: InputMaybe<Scalars['Float']>
+  id?: InputMaybe<Scalars['String']>
+  inventoryTags?: InputMaybe<Array<InputMaybe<SbInventoryTagsInput>>>
+  isAssemblyRequired?: InputMaybe<Scalars['Boolean']>
+  isOnetimeItem?: InputMaybe<Scalars['Boolean']>
+  isRecurring?: InputMaybe<Scalars['Boolean']>
+  isTaxable?: InputMaybe<Scalars['Boolean']>
+  itemTaxTotal?: InputMaybe<Scalars['Float']>
+  lineId?: InputMaybe<Scalars['Int']>
+  lineItemAdjustment?: InputMaybe<Scalars['Float']>
+  localeCode?: InputMaybe<Scalars['String']>
+  parentItemCode?: InputMaybe<Scalars['String']>
+  parentItemId?: InputMaybe<Scalars['String']>
+  product?: InputMaybe<SbProductInput>
+  productDiscount?: InputMaybe<SbAppliedLineItemProductDiscountInput>
+  productDiscounts?: InputMaybe<Array<InputMaybe<SbAppliedLineItemProductDiscountInput>>>
+  purchaseLocation?: InputMaybe<Scalars['String']>
+  quantity: Scalars['Int']
+  shippingAmountBeforeDiscountsAndAdjustments?: InputMaybe<Scalars['Float']>
+  shippingDiscounts?: InputMaybe<Array<InputMaybe<SbAppliedLineItemShippingDiscountInput>>>
+  shippingTaxTotal?: InputMaybe<Scalars['Float']>
+  shippingTotal?: InputMaybe<Scalars['Float']>
+  subtotal?: InputMaybe<Scalars['Float']>
+  taxData?: InputMaybe<Scalars['Object']>
+  taxableTotal?: InputMaybe<Scalars['Float']>
+  total?: InputMaybe<Scalars['Float']>
+  totalWithWeightedShippingAndHandling?: InputMaybe<Scalars['Float']>
+  totalWithoutWeightedShippingAndHandling?: InputMaybe<Scalars['Float']>
+  unitPrice?: InputMaybe<SbCommerceUnitPriceInput>
+  weightedOrderAdjustment?: InputMaybe<Scalars['Float']>
+  weightedOrderDiscount?: InputMaybe<Scalars['Float']>
+  weightedOrderDuty?: InputMaybe<Scalars['Float']>
+  weightedOrderHandlingAdjustment?: InputMaybe<Scalars['Float']>
+  weightedOrderHandlingFee?: InputMaybe<Scalars['Float']>
+  weightedOrderHandlingFeeDiscount?: InputMaybe<Scalars['Float']>
+  weightedOrderHandlingFeeTax?: InputMaybe<Scalars['Float']>
+  weightedOrderShipping?: InputMaybe<Scalars['Float']>
+  weightedOrderShippingDiscount?: InputMaybe<Scalars['Float']>
+  weightedOrderShippingManualAdjustment?: InputMaybe<Scalars['Float']>
+  weightedOrderShippingTax?: InputMaybe<Scalars['Float']>
+  weightedOrderTax?: InputMaybe<Scalars['Float']>
+}
+
+export type SbSuggestedDiscount = {
+  __typename?: 'SBSuggestedDiscount'
+  _get?: Maybe<Scalars['AnyScalar']>
+  _root?: Maybe<SbSuggestedDiscount>
+  autoAdd?: Maybe<Scalars['Boolean']>
+  discountId: Scalars['Int']
+  hasMultipleProducts?: Maybe<Scalars['Boolean']>
+  hasOptions?: Maybe<Scalars['Boolean']>
+  productCode?: Maybe<Scalars['String']>
+}
+
+export type SbSuggestedDiscount_GetArgs = {
+  allowUndefined?: InputMaybe<Scalars['Boolean']>
+  defaultValue?: InputMaybe<Scalars['AnyScalar']>
+  path: Scalars['String']
+}
+
+export type SbTaskInput = {
+  __typename?: 'SBTaskInput'
+  _get?: Maybe<Scalars['AnyScalar']>
+  _root?: Maybe<SbTaskInput>
+  helpMessage?: Maybe<Scalars['String']>
+  label?: Maybe<Scalars['String']>
+  maxLength?: Maybe<Scalars['Int']>
+  maximum: Scalars['Float']
+  minLength?: Maybe<Scalars['Int']>
+  minimum: Scalars['Float']
+  name?: Maybe<Scalars['String']>
+  options?: Maybe<Array<Scalars['Object']>>
+  pattern?: Maybe<Scalars['String']>
+  required?: Maybe<Scalars['Boolean']>
+  type?: Maybe<Scalars['String']>
+}
+
+export type SbTaskInput_GetArgs = {
+  allowUndefined?: InputMaybe<Scalars['Boolean']>
+  defaultValue?: InputMaybe<Scalars['AnyScalar']>
+  path: Scalars['String']
+}
+
+export type SbThresholdMessage = {
+  __typename?: 'SBThresholdMessage'
+  _get?: Maybe<Scalars['AnyScalar']>
+  _root?: Maybe<SbThresholdMessage>
+  discountId: Scalars['Int']
+  message?: Maybe<Scalars['String']>
+  requiresCouponCode?: Maybe<Scalars['Boolean']>
+  showInCart?: Maybe<Scalars['Boolean']>
+  showOnCheckout?: Maybe<Scalars['Boolean']>
+  thresholdValue: Scalars['Float']
+}
+
+export type SbThresholdMessage_GetArgs = {
+  allowUndefined?: InputMaybe<Scalars['Boolean']>
+  defaultValue?: InputMaybe<Scalars['AnyScalar']>
+  path: Scalars['String']
+}
+
+export type SbTracking = {
+  __typename?: 'SBTracking'
+  _get?: Maybe<Scalars['AnyScalar']>
+  _root?: Maybe<SbTracking>
+  attributes?: Maybe<Scalars['Object']>
+  number?: Maybe<Scalars['String']>
+  url?: Maybe<Scalars['String']>
+}
+
+export type SbTracking_GetArgs = {
+  allowUndefined?: InputMaybe<Scalars['Boolean']>
+  defaultValue?: InputMaybe<Scalars['AnyScalar']>
+  path: Scalars['String']
+}
+
+export type SbTrial = {
+  __typename?: 'SBTrial'
+  _get?: Maybe<Scalars['AnyScalar']>
+  _root?: Maybe<SbTrial>
+  duration: Scalars['Int']
+  enabled?: Maybe<Scalars['Boolean']>
+  substituteProductCode?: Maybe<Scalars['String']>
+  substituteProductOptions?: Maybe<Array<Maybe<SbProductOption>>>
+  substituteProductQuantity: Scalars['Int']
+  substituteVariationProductCode?: Maybe<Scalars['String']>
+}
+
+export type SbTrial_GetArgs = {
+  allowUndefined?: InputMaybe<Scalars['Boolean']>
+  defaultValue?: InputMaybe<Scalars['AnyScalar']>
+  path: Scalars['String']
+}
+
+export type SbTrialInput = {
+  duration: Scalars['Int']
+  enabled?: InputMaybe<Scalars['Boolean']>
+  substituteProductCode?: InputMaybe<Scalars['String']>
+  substituteProductOptions?: InputMaybe<Array<InputMaybe<SbProductOptionInput>>>
+  substituteProductQuantity: Scalars['Int']
+  substituteVariationProductCode?: InputMaybe<Scalars['String']>
+}
+
+export type SbWorkflowState = {
+  __typename?: 'SBWorkflowState'
+  _get?: Maybe<Scalars['AnyScalar']>
+  _root?: Maybe<SbWorkflowState>
+  attributes?: Maybe<Scalars['Object']>
+  auditInfo?: Maybe<SbAuditInfo>
+  completedDate?: Maybe<Scalars['DateTime']>
+  processInstanceId?: Maybe<Scalars['String']>
+  shipmentState?: Maybe<Scalars['String']>
+  taskList?: Maybe<Array<Maybe<SbFulfillmentTask>>>
+}
+
+export type SbWorkflowState_GetArgs = {
+  allowUndefined?: InputMaybe<Scalars['Boolean']>
+  defaultValue?: InputMaybe<Scalars['AnyScalar']>
+  path: Scalars['String']
+}
+
 export type SearchSuggestion = {
   __typename?: 'SearchSuggestion'
   _get?: Maybe<Scalars['AnyScalar']>
@@ -10774,6 +13383,260 @@ export type Spellcheck_GetArgs = {
 export type SplitShipmentsObjectInput = {
   newShipments?: InputMaybe<Array<InputMaybe<ShipmentInput>>>
   originalShipment?: InputMaybe<ShipmentInput>
+}
+
+export type Subscription = {
+  __typename?: 'Subscription'
+  _get?: Maybe<Scalars['AnyScalar']>
+  _root?: Maybe<Subscription>
+  adjustment?: Maybe<SbAdjustment>
+  auditInfo?: Maybe<SbAuditInfo>
+  changeMessages?: Maybe<Array<Maybe<SbChangeMessage>>>
+  channelCode?: Maybe<Scalars['String']>
+  couponCodes?: Maybe<Array<Scalars['String']>>
+  currencyCode?: Maybe<Scalars['String']>
+  customerAccountId?: Maybe<Scalars['Int']>
+  customerInteractionType?: Maybe<Scalars['String']>
+  customerTaxId?: Maybe<Scalars['String']>
+  data?: Maybe<Scalars['Object']>
+  discountedSubtotal: Scalars['Float']
+  dutyAmount?: Maybe<Scalars['Float']>
+  dutyTotal: Scalars['Float']
+  email?: Maybe<Scalars['String']>
+  externalId?: Maybe<Scalars['String']>
+  feeTotal: Scalars['Float']
+  frequency?: Maybe<SbFrequency>
+  fulfillmentInfo?: Maybe<SbFulfillmentInfo>
+  handlingAdjustment?: Maybe<SbAdjustment>
+  handlingAmount?: Maybe<Scalars['Float']>
+  handlingDiscounts?: Maybe<Array<Maybe<SbAppliedDiscount>>>
+  handlingSubTotal: Scalars['Float']
+  handlingTax?: Maybe<Scalars['Float']>
+  handlingTaxTotal: Scalars['Float']
+  handlingTotal: Scalars['Float']
+  hasDraft?: Maybe<Scalars['Boolean']>
+  id?: Maybe<Scalars['String']>
+  invalidCoupons?: Maybe<Array<Maybe<SbInvalidCoupon>>>
+  ipAddress?: Maybe<Scalars['String']>
+  isDraft?: Maybe<Scalars['Boolean']>
+  isImport?: Maybe<Scalars['Boolean']>
+  isTaxExempt?: Maybe<Scalars['Boolean']>
+  itemLevelAdjustmentsTotal: Scalars['Float']
+  itemLevelHandlingDiscountTotal: Scalars['Float']
+  itemLevelProductDiscountTotal: Scalars['Float']
+  itemLevelShippingDiscountTotal: Scalars['Float']
+  itemTaxTotal: Scalars['Float']
+  itemTotal: Scalars['Float']
+  items?: Maybe<Array<Maybe<SbSubscriptionItem>>>
+  lastContinuityOrderDateOnSubPaused?: Maybe<Scalars['DateTime']>
+  lineItemSubtotalWithOrderAdjustments?: Maybe<Scalars['Float']>
+  locationCode?: Maybe<Scalars['String']>
+  nextOrderDate?: Maybe<Scalars['DateTime']>
+  nextOrderDateOffsetCounter?: Maybe<Scalars['Int']>
+  notes?: Maybe<Array<Maybe<SbOrderNote>>>
+  number: Scalars['Int']
+  oneTimeCouponCodes?: Maybe<Array<Scalars['String']>>
+  onetimeProducts?: Maybe<Array<Maybe<OnetimeProduct>>>
+  onetimeShippingMethod?: Maybe<OnetimeShippingMethod>
+  orderDiscounts?: Maybe<Array<Maybe<SbAppliedDiscount>>>
+  orderLevelHandlingDiscountTotal: Scalars['Float']
+  orderLevelProductDiscountTotal: Scalars['Float']
+  orderLevelShippingDiscountTotal: Scalars['Float']
+  ordinal: Scalars['Int']
+  parentOrderId?: Maybe<Scalars['String']>
+  payment?: Maybe<SbPayment>
+  priceListCode?: Maybe<Scalars['String']>
+  reasons?: Maybe<Array<Maybe<SubscriptionReason>>>
+  shippingAdjustment?: Maybe<SbAdjustment>
+  shippingAmount: Scalars['Float']
+  shippingDiscounts?: Maybe<Array<Maybe<SbShippingDiscount>>>
+  shippingSubTotal: Scalars['Float']
+  shippingTax?: Maybe<Scalars['Float']>
+  shippingTaxTotal: Scalars['Float']
+  shippingTotal: Scalars['Float']
+  siteId: Scalars['Int']
+  sourceDevice?: Maybe<Scalars['String']>
+  status?: Maybe<Scalars['String']>
+  subTotal: Scalars['Float']
+  subscriptionSkipCounter?: Maybe<Scalars['Int']>
+  taxData?: Maybe<Scalars['Object']>
+  tenantId: Scalars['Int']
+  total: Scalars['Float']
+  trial?: Maybe<SbTrial>
+  userId?: Maybe<Scalars['String']>
+  visitId?: Maybe<Scalars['String']>
+  webSessionId?: Maybe<Scalars['String']>
+}
+
+export type Subscription_GetArgs = {
+  allowUndefined?: InputMaybe<Scalars['Boolean']>
+  defaultValue?: InputMaybe<Scalars['AnyScalar']>
+  path: Scalars['String']
+}
+
+export type SubscriptionActionInput = {
+  actionName?: InputMaybe<Scalars['String']>
+  reason?: InputMaybe<SubscriptionReasonInput>
+}
+
+export type SubscriptionAdjustmentInput = {
+  handlingAdjustment?: InputMaybe<Scalars['Float']>
+  itemAdjustment?: InputMaybe<Scalars['Float']>
+  reason?: InputMaybe<SubscriptionReasonInput>
+  shippingAdjustment?: InputMaybe<Scalars['Float']>
+}
+
+export type SubscriptionCollection = {
+  __typename?: 'SubscriptionCollection'
+  _get?: Maybe<Scalars['AnyScalar']>
+  _root?: Maybe<SubscriptionCollection>
+  items?: Maybe<Array<Maybe<Subscription>>>
+  pageCount: Scalars['Int']
+  pageSize: Scalars['Int']
+  startIndex: Scalars['Int']
+  totalCount: Scalars['Int']
+}
+
+export type SubscriptionCollection_GetArgs = {
+  allowUndefined?: InputMaybe<Scalars['Boolean']>
+  defaultValue?: InputMaybe<Scalars['AnyScalar']>
+  path: Scalars['String']
+}
+
+export type SubscriptionInput = {
+  adjustment?: InputMaybe<SbAdjustmentInput>
+  auditInfo?: InputMaybe<SbAuditInfoInput>
+  changeMessages?: InputMaybe<Array<InputMaybe<SbChangeMessageInput>>>
+  channelCode?: InputMaybe<Scalars['String']>
+  couponCodes?: InputMaybe<Array<Scalars['String']>>
+  currencyCode?: InputMaybe<Scalars['String']>
+  customerAccountId?: InputMaybe<Scalars['Int']>
+  customerInteractionType?: InputMaybe<Scalars['String']>
+  customerTaxId?: InputMaybe<Scalars['String']>
+  data?: InputMaybe<Scalars['Object']>
+  discountedSubtotal: Scalars['Float']
+  dutyAmount?: InputMaybe<Scalars['Float']>
+  dutyTotal: Scalars['Float']
+  email?: InputMaybe<Scalars['String']>
+  externalId?: InputMaybe<Scalars['String']>
+  feeTotal: Scalars['Float']
+  frequency?: InputMaybe<SbFrequencyInput>
+  fulfillmentInfo?: InputMaybe<SbFulfillmentInfoInput>
+  handlingAdjustment?: InputMaybe<SbAdjustmentInput>
+  handlingAmount?: InputMaybe<Scalars['Float']>
+  handlingDiscounts?: InputMaybe<Array<InputMaybe<SbAppliedDiscountInput>>>
+  handlingSubTotal: Scalars['Float']
+  handlingTax?: InputMaybe<Scalars['Float']>
+  handlingTaxTotal: Scalars['Float']
+  handlingTotal: Scalars['Float']
+  hasDraft?: InputMaybe<Scalars['Boolean']>
+  id?: InputMaybe<Scalars['String']>
+  invalidCoupons?: InputMaybe<Array<InputMaybe<SbInvalidCouponInput>>>
+  ipAddress?: InputMaybe<Scalars['String']>
+  isDraft?: InputMaybe<Scalars['Boolean']>
+  isImport?: InputMaybe<Scalars['Boolean']>
+  isTaxExempt?: InputMaybe<Scalars['Boolean']>
+  itemLevelAdjustmentsTotal: Scalars['Float']
+  itemLevelHandlingDiscountTotal: Scalars['Float']
+  itemLevelProductDiscountTotal: Scalars['Float']
+  itemLevelShippingDiscountTotal: Scalars['Float']
+  itemTaxTotal: Scalars['Float']
+  itemTotal: Scalars['Float']
+  items?: InputMaybe<Array<InputMaybe<SbSubscriptionItemInput>>>
+  lastContinuityOrderDateOnSubPaused?: InputMaybe<Scalars['DateTime']>
+  lineItemSubtotalWithOrderAdjustments?: InputMaybe<Scalars['Float']>
+  locationCode?: InputMaybe<Scalars['String']>
+  nextOrderDate?: InputMaybe<Scalars['DateTime']>
+  nextOrderDateOffsetCounter?: InputMaybe<Scalars['Int']>
+  notes?: InputMaybe<Array<InputMaybe<SbOrderNoteInput>>>
+  number: Scalars['Int']
+  oneTimeCouponCodes?: InputMaybe<Array<Scalars['String']>>
+  onetimeProducts?: InputMaybe<Array<InputMaybe<OnetimeProductInput>>>
+  onetimeShippingMethod?: InputMaybe<OnetimeShippingMethodInput>
+  orderDiscounts?: InputMaybe<Array<InputMaybe<SbAppliedDiscountInput>>>
+  orderLevelHandlingDiscountTotal: Scalars['Float']
+  orderLevelProductDiscountTotal: Scalars['Float']
+  orderLevelShippingDiscountTotal: Scalars['Float']
+  ordinal: Scalars['Int']
+  parentOrderId?: InputMaybe<Scalars['String']>
+  payment?: InputMaybe<SbPaymentInput>
+  priceListCode?: InputMaybe<Scalars['String']>
+  reasons?: InputMaybe<Array<InputMaybe<SubscriptionReasonInput>>>
+  shippingAdjustment?: InputMaybe<SbAdjustmentInput>
+  shippingAmount: Scalars['Float']
+  shippingDiscounts?: InputMaybe<Array<InputMaybe<SbShippingDiscountInput>>>
+  shippingSubTotal: Scalars['Float']
+  shippingTax?: InputMaybe<Scalars['Float']>
+  shippingTaxTotal: Scalars['Float']
+  shippingTotal: Scalars['Float']
+  siteId: Scalars['Int']
+  sourceDevice?: InputMaybe<Scalars['String']>
+  status?: InputMaybe<Scalars['String']>
+  subTotal: Scalars['Float']
+  subscriptionSkipCounter?: InputMaybe<Scalars['Int']>
+  taxData?: InputMaybe<Scalars['Object']>
+  tenantId: Scalars['Int']
+  total: Scalars['Float']
+  trial?: InputMaybe<SbTrialInput>
+  userId?: InputMaybe<Scalars['String']>
+  visitId?: InputMaybe<Scalars['String']>
+  webSessionId?: InputMaybe<Scalars['String']>
+}
+
+export type SubscriptionNextOrderDateInput = {
+  nextOrderDate: Scalars['DateTime']
+}
+
+export type SubscriptionReason = {
+  __typename?: 'SubscriptionReason'
+  _get?: Maybe<Scalars['AnyScalar']>
+  _root?: Maybe<SubscriptionReason>
+  actionName?: Maybe<Scalars['String']>
+  description?: Maybe<Scalars['String']>
+  moreInfo?: Maybe<Scalars['String']>
+  reasonCode?: Maybe<Scalars['String']>
+}
+
+export type SubscriptionReason_GetArgs = {
+  allowUndefined?: InputMaybe<Scalars['Boolean']>
+  defaultValue?: InputMaybe<Scalars['AnyScalar']>
+  path: Scalars['String']
+}
+
+export type SubscriptionReasonCollection = {
+  __typename?: 'SubscriptionReasonCollection'
+  _get?: Maybe<Scalars['AnyScalar']>
+  _root?: Maybe<SubscriptionReasonCollection>
+  items?: Maybe<Array<Maybe<SubscriptionReasonOption>>>
+  totalCount: Scalars['Int']
+}
+
+export type SubscriptionReasonCollection_GetArgs = {
+  allowUndefined?: InputMaybe<Scalars['Boolean']>
+  defaultValue?: InputMaybe<Scalars['AnyScalar']>
+  path: Scalars['String']
+}
+
+export type SubscriptionReasonInput = {
+  actionName?: InputMaybe<Scalars['String']>
+  description?: InputMaybe<Scalars['String']>
+  moreInfo?: InputMaybe<Scalars['String']>
+  reasonCode?: InputMaybe<Scalars['String']>
+}
+
+export type SubscriptionReasonOption = {
+  __typename?: 'SubscriptionReasonOption'
+  _get?: Maybe<Scalars['AnyScalar']>
+  _root?: Maybe<SubscriptionReasonOption>
+  name?: Maybe<Scalars['String']>
+  needsMoreInfo?: Maybe<Scalars['Boolean']>
+  reasonCode?: Maybe<Scalars['String']>
+}
+
+export type SubscriptionReasonOption_GetArgs = {
+  allowUndefined?: InputMaybe<Scalars['Boolean']>
+  defaultValue?: InputMaybe<Scalars['AnyScalar']>
+  path: Scalars['String']
 }
 
 export type SubPayment = {

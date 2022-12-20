@@ -82,3 +82,7 @@ export const returnReasonsKeys = {
 export const returnsKeys = {
   all: ['returns'] as const,
 }
+
+export const subscriptionKeys = {
+  all: ['subscriptions'] as const,
+}

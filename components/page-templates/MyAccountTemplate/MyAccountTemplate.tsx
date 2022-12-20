@@ -90,6 +90,10 @@ const MyAccountTemplate = () => {
     router.push('/my-account/order-history?filters=M-6')
   }
 
+  const handleGoToSubscription = () => {
+    router.push('/my-account/subscription')
+  }
+
   const accordionData = [
     {
       id: 'my-profile-accordion',
@@ -161,6 +165,21 @@ const MyAccountTemplate = () => {
         <Box sx={{ ...style.myAccountChildren }}>
           <Typography variant={mdScreen ? 'h1' : 'h2'}>{t('order-details')}</Typography>
         </Box>
+
+        {/* code for subscription below */}
+        <Divider sx={{ borderColor: 'grey.500' }} />
+        <Box
+          sx={{
+            ...style.myAccountChildren,
+            ...style.orderHistory,
+          }}
+          onClick={handleGoToSubscription}
+        >
+          <Typography variant="h3">{t('my-subscription')}</Typography>
+          <ChevronRightIcon />
+        </Box>
+        {/* code for subscription ends here */}
+
         <Divider sx={{ borderColor: 'grey.500' }} />
         <Box
           sx={{
