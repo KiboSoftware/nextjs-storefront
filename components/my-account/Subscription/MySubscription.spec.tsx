@@ -5,42 +5,21 @@ import { composeStories } from '@storybook/testing-react'
 import { render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 
+<<<<<<<< HEAD:components/my-account/Subscription/SubscriptionItem/SubscriptionItem.spec.tsx
 import * as stories from './SubscriptionItem.stories' // import all stories from the stories file
-import { subscriptionItemMock } from '@/__mocks__/stories'
-import { createQueryClientWrapper } from '@/__test__/utils'
-import { DialogRoot, ModalContextProvider } from '@/context'
+import { subscriptionItemMock } from '@/__mocks__/stories/subscriptionCollectionMock'
 import { subscriptionGetters } from '@/lib/getters'
 
+========
+import * as stories from './MySubscription.stories' // import all stories from the stories file
+>>>>>>>> 1da7622 (feat:subscription component dashboard implementation):components/my-account/Subscription/MySubscription.spec.tsx
 const { Common } = composeStories(stories)
 const subscriptionItem = subscriptionItemMock?.items
 
-const orderSubscriptionNowMock = jest.fn()
-
-jest.mock(
-  '@/hooks/mutations/subscription/useOrderSubscriptionNow/useOrderSubscriptionNowMutation',
-  () => ({
-    useOrderSubscriptionNowMutation: jest.fn(() => ({
-      orderSubscriptionNow: {
-        mutateAsync: orderSubscriptionNowMock,
-      },
-    })),
-  })
-)
-
-describe('[component] - SubscriptionItem', () => {
+describe('[component] - Subscription', () => {
   const setup = () => {
     const user = userEvent.setup()
-    render(
-      <>
-        <ModalContextProvider>
-          <DialogRoot />
-          <Common />
-        </ModalContextProvider>
-      </>,
-      {
-        wrapper: createQueryClientWrapper(),
-      }
-    )
+    render(<Common />)
     return {
       user,
     }
@@ -107,36 +86,5 @@ describe('[component] - SubscriptionItem', () => {
     expect(editBillingInformationButton).toBeVisible()
     expect(editShippingAddressButton).toBeVisible()
     expect(pauseSubscriptionButton).toBeVisible()
-  })
-
-  it('should open Edit Subscription Frequency Dialog when user clicks on Edit Frequency button', async () => {
-    setup()
-
-    const editFrequencyButton = screen.getByRole('button', {
-      name: /edit-frequency/i,
-    })
-
-    await userEvent.click(editFrequencyButton)
-
-    expect(screen.getByRole('dialog')).toBeVisible()
-    expect(screen.getByRole('heading', { level: 2 })).toHaveTextContent(
-      'edit-subscription-frequency'
-    )
-  })
-
-  it('should render Confirmation Dialog if clicked on ship-an-item-now button', async () => {
-    const { user } = setup()
-    const shipAnItemNowButton = screen.getByRole('button', { name: 'ship-an-item-now' })
-
-    await user.click(shipAnItemNowButton)
-
-    expect(screen.getByRole('dialog')).toBeVisible()
-    expect(screen.getByText('place-an-order-of-this-subscription-now')).toBeVisible()
-
-    const confirmOrderButton = screen.getByRole('button', { name: 'confirm' })
-
-    await user.click(confirmOrderButton)
-
-    expect(orderSubscriptionNowMock).toHaveBeenCalled()
   })
 })
