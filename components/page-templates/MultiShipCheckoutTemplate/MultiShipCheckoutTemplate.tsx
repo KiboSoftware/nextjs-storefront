@@ -142,9 +142,7 @@ const MultiShipCheckoutTemplate = (props: CheckoutProps) => {
   }
 
   const handleCreateOrder = (checkout: Checkout) => {
-    // need to be implemented
     createOrder.mutateAsync(checkout)
-    console.log('handleCreateOrder called.....')
   }
 
   const { shipItems, pickupItems } = checkoutGetters.getCheckoutDetails(checkout as Checkout)
@@ -172,7 +170,7 @@ const MultiShipCheckoutTemplate = (props: CheckoutProps) => {
         )}
         {/*<PaymentStep checkout={checkout}  />*/}
         <ReviewStep
-          checkout={checkout as CommonCheckout<CrOrder, Checkout>}
+          checkout={checkout as Checkout}
           shipItems={shipItems}
           pickupItems={pickupItems}
           personalDetails={personalDetails}

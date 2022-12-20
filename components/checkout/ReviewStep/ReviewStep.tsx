@@ -26,7 +26,6 @@ import {
   ReviewProductItemsWithAddresses,
 } from '@/components/common'
 import type { OrderPriceProps } from '@/components/common/OrderPrice/OrderPrice'
-import { CommonCheckout } from '@/components/page-templates/CheckoutUITemplate/CheckoutUITemplate'
 import { useCheckoutStepContext, useAuthContext } from '@/context'
 import { isPasswordValid } from '@/lib/helpers/validations/validations'
 
@@ -40,8 +39,8 @@ export interface PersonalDetails {
   password: string
 }
 
-interface ReviewStepProps {
-  checkout: CommonCheckout<CrOrder, Checkout>
+interface ReviewStepProps<T> {
+  checkout: T
   shipItems: any
   pickupItems: any
   personalDetails: any
@@ -95,7 +94,7 @@ const useDetailsSchema = () => {
   })
 }
 
-const ReviewStep = (props: ReviewStepProps) => {
+const ReviewStep = <T extends CrOrder | Checkout>(props: ReviewStepProps<T>) => {
   const {
     checkout,
     personalDetails,

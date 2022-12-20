@@ -5,7 +5,7 @@ import { useRouter } from 'next/router'
 import { DetailsStep, ReviewStep, PaymentStep, StandardShippingStep } from '@/components/checkout'
 import { PersonalDetails } from '@/components/checkout/DetailsStep/DetailsStep'
 import { CheckoutUITemplate } from '@/components/page-templates'
-import { useCheckoutStepContext, useAuthContext } from '@/context'
+import { useAuthContext } from '@/context'
 import {
   useCheckoutQueries,
   useCustomerContactsQueries,
@@ -13,8 +13,9 @@ import {
   useDeleteOrderCouponMutation,
   useUpdateCheckoutPersonalInfoMutation,
   PersonalInfo,
+  useCreateOrderMutation,
 } from '@/hooks'
-import { userGetters } from '@/lib/getters'
+import { orderGetters, userGetters } from '@/lib/getters'
 
 import type { CustomerContact, CrOrder, CrOrderInput } from '@/lib/gql/types'
 
@@ -37,10 +38,7 @@ const StandardShipCheckoutTemplate = (props: CheckoutProps) => {
   const { data: savedUserAddressData, isSuccess } = useCustomerContactsQueries(user?.id as number)
   const updateOrderCoupon = useUpdateOrderCouponMutation()
   const deleteOrderCoupon = useDeleteOrderCouponMutation()
-
-  const { setStepBack } = useCheckoutStepContext()
-
-  const handleBack = () => setStepBack()
+  const createOrder = useCreateOrderMutation()
 
   const handleApplyCouponCode = async (couponCode: string) => {
     try {
@@ -86,6 +84,20 @@ const StandardShipCheckoutTemplate = (props: CheckoutProps) => {
     }
     await updateStandardCheckoutPersonalInfo.mutateAsync(personalInfo)
   }
+  const orderDetails = orderGetters.getCheckoutDetails(checkout as CrOrder)
+
+  const personalDetails = {
+    ...orderDetails.personalDetails,
+    showAccountFields: false,
+    password: '',
+  }
+
+  const handleCreateOrder = (checkout: CrOrder) => {
+    console.log('handleCreateOrder called standard :')
+    createOrder.mutateAsync(checkout)
+  }
+
+  const { shipItems, pickupItems } = orderGetters.getCheckoutDetails(checkout as CrOrder)
 
   return (
     <>
@@ -106,7 +118,15 @@ const StandardShipCheckoutTemplate = (props: CheckoutProps) => {
           />
         )}
         <PaymentStep checkout={checkout} />
-        <ReviewStep checkout={checkout as CrOrder} onBackButtonClick={handleBack} />
+        <ReviewStep
+          checkout={checkout as CrOrder}
+          shipItems={shipItems}
+          pickupItems={pickupItems}
+          personalDetails={personalDetails}
+          orderSummaryProps={orderDetails?.orderSummary}
+          onCreateOrder={handleCreateOrder}
+          isMultiShipEnabled={true}
+        />
       </CheckoutUITemplate>
     </>
   )

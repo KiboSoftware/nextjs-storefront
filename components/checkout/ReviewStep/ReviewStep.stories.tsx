@@ -4,10 +4,9 @@ import { ComponentStory, ComponentMeta } from '@storybook/react'
 
 import ReviewStep from './ReviewStep'
 import { orderMock } from '@/__mocks__/stories/orderMock'
-import type { CommonCheckout } from '@/components/page-templates/CheckoutUITemplate/CheckoutUITemplate'
 import { CheckoutStepProvider } from '@/context/CheckoutStepContext/CheckoutStepContext'
 
-import type { Checkout, CrOrder } from '@/lib/gql/types'
+import type { CrOrder } from '@/lib/gql/types'
 
 // Common
 export default {
@@ -25,13 +24,13 @@ const Template: ComponentStory<typeof ReviewStep> = (args) => (
 // Default
 export const Common = Template.bind({})
 Common.args = {
-  checkout: orderMock.checkout as CommonCheckout<CrOrder, Checkout>,
+  checkout: orderMock.checkout,
   isMultiShipEnabled: false,
 }
 
 // With isMultiShipEnabled = true
 export const WithMultiShippingAddresses = Template.bind({})
 WithMultiShippingAddresses.args = {
-  checkout: orderMock.checkout as CommonCheckout<CrOrder, Checkout>,
+  checkout: orderMock.checkout as CrOrder,
   isMultiShipEnabled: true,
 }
