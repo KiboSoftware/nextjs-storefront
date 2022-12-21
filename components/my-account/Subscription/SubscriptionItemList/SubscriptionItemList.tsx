@@ -4,7 +4,10 @@ import { Card, Stack, Typography, CardContent, Button } from '@mui/material'
 import { useTranslation } from 'next-i18next'
 
 import { ProductItem } from '@/components/common'
+import { ConfirmationDialog } from '@/components/dialogs'
 import { ProductOption } from '@/components/product'
+import { useModalContext } from '@/context'
+import { useOrderSubscriptionNowMutation } from '@/hooks'
 import { subscriptionGetters, productGetters } from '@/lib/getters'
 import { uiHelpers } from '@/lib/helpers'
 
@@ -16,6 +19,9 @@ interface SubscriptionItemListProps {
 
 interface SubscriptionButtonProps {
   subscriptionButtonName: string
+
+  // use param as object
+  handleButtonClick: (param?: any) => void
 }
 
 const style = {
@@ -59,11 +65,16 @@ const style = {
 }
 
 const SubscriptionButton = (props: SubscriptionButtonProps) => {
-  const { subscriptionButtonName } = props
+  const { subscriptionButtonName, handleButtonClick } = props
   const { t } = useTranslation('common')
 
   return (
-    <Button variant="contained" color="secondary" sx={{ ...style.button }}>
+    <Button
+      variant="contained"
+      color="secondary"
+      sx={{ ...style.button }}
+      onClick={handleButtonClick}
+    >
       {t(subscriptionButtonName)}
     </Button>
   )
@@ -72,12 +83,29 @@ const SubscriptionButton = (props: SubscriptionButtonProps) => {
 const SubscriptionItemList = (props: SubscriptionItemListProps) => {
   const { subscriptionDetailsData: subscriptionDetails } = props
 
+  const { orderSubscriptionNow } = useOrderSubscriptionNowMutation()
+
   const { getProductLink } = uiHelpers()
   const { t } = useTranslation('common')
+  const { showModal } = useModalContext()
+
+  const handleShipItemNow = (param: { id: string }) => {
+    showModal({
+      Component: ConfirmationDialog,
+      props: {
+        onConfirm: () =>
+          orderSubscriptionNow.mutateAsync({
+            subscriptionId: param.id,
+          }),
+        contentText: t('place-an-order-of-this-subscription-now'),
+        primaryButtonText: t('confirm'),
+      },
+    })
+  }
 
   return (
     <>
-      {subscriptionDetails?.totalCount >= 1 &&
+      {subscriptionDetails?.totalCount > 0 &&
         subscriptionDetails?.items?.map((subscriptionItemData) => (
           <Card key={subscriptionItemData?.id as string} sx={{ ...style.card }}>
             <CardContent sx={{ bgcolor: 'grey.100' }}>
@@ -166,14 +194,40 @@ const SubscriptionItemList = (props: SubscriptionItemListProps) => {
                   </Stack>
                 </Stack>
                 <Stack direction="column" sx={{ pb: { xs: '5%', lg: '0' } }}>
-                  <SubscriptionButton subscriptionButtonName="ship-an-item-now" />
-                  <SubscriptionButton subscriptionButtonName="skip-shipment" />
-                  <SubscriptionButton subscriptionButtonName="edit-frequency" />
-                  <SubscriptionButton subscriptionButtonName="edit-order-date" />
-                  <SubscriptionButton subscriptionButtonName="cancel-an-item" />
-                  <SubscriptionButton subscriptionButtonName="edit-billing-information" />
-                  <SubscriptionButton subscriptionButtonName="edit-shipping-address" />
-                  <SubscriptionButton subscriptionButtonName="pause-subscription" />
+                  <SubscriptionButton
+                    subscriptionButtonName="ship-an-item-now"
+                    handleButtonClick={() =>
+                      handleShipItemNow({ id: subscriptionItemData?.id as string })
+                    }
+                  />
+                  <SubscriptionButton
+                    subscriptionButtonName="skip-shipment"
+                    handleButtonClick={() => null}
+                  />
+                  <SubscriptionButton
+                    subscriptionButtonName="edit-frequency"
+                    handleButtonClick={() => null}
+                  />
+                  <SubscriptionButton
+                    subscriptionButtonName="edit-order-date"
+                    handleButtonClick={() => null}
+                  />
+                  <SubscriptionButton
+                    subscriptionButtonName="cancel-an-item"
+                    handleButtonClick={() => null}
+                  />
+                  <SubscriptionButton
+                    subscriptionButtonName="edit-billing-information"
+                    handleButtonClick={() => null}
+                  />
+                  <SubscriptionButton
+                    subscriptionButtonName="edit-shipping-address"
+                    handleButtonClick={() => null}
+                  />
+                  <SubscriptionButton
+                    subscriptionButtonName="pause-subscription"
+                    handleButtonClick={() => null}
+                  />
                 </Stack>
               </Stack>
             </CardContent>
