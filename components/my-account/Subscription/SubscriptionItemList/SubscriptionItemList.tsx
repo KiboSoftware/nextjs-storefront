@@ -4,6 +4,7 @@ import { Card, Stack, Typography, CardContent, Button } from '@mui/material'
 import { useTranslation } from 'next-i18next'
 
 import { ProductItem } from '@/components/common'
+import { ProductOption } from '@/components/product'
 import { subscriptionGetters, productGetters } from '@/lib/getters'
 import { uiHelpers } from '@/lib/helpers'
 
@@ -83,7 +84,7 @@ const SubscriptionItemList = (props: SubscriptionItemListProps) => {
               <Stack
                 direction={{ xs: 'column', md: 'row' }}
                 spacing={{ xs: '0', md: '5' }}
-                sx={{ justifyContent: 'space-between' }}
+                justifyContent={'space-between'}
               >
                 <Stack direction="column">
                   <Typography variant="h4" sx={{ fontWeight: 'bold' }}>
@@ -95,24 +96,28 @@ const SubscriptionItemList = (props: SubscriptionItemListProps) => {
                 </Stack>
                 <Stack direction="column" sx={{ ...style.subscriptionNumber }}>
                   <Stack direction="row">
-                    <Typography variant="h4" align="right" sx={{ fontWeight: 'bold' }}>
-                      {t('subscription-number')}
-                    </Typography>
-                    <Typography variant="h4" align="right">
-                      {subscriptionGetters.getSubscriptionNumber(
-                        subscriptionItemData as Subscription
-                      )}
-                    </Typography>
+                    <ProductOption
+                      option={{
+                        name: t('subscription-number'),
+                        value: subscriptionGetters.getSubscriptionNumber(
+                          subscriptionItemData as Subscription
+                        ),
+                      }}
+                      variant="h4"
+                      align="right"
+                    />
                   </Stack>
                   <Stack direction="row" sx={{ xs: { pl: '0' } }}>
-                    <Typography variant="h4" align="right" sx={{ fontWeight: 'bold' }}>
-                      {t('status')}
-                    </Typography>
-                    <Typography variant="h4" align="right" sx={{ pl: '2%' }}>
-                      {subscriptionGetters.getSubscriptionStatus(
-                        subscriptionItemData as Subscription
-                      )}
-                    </Typography>
+                    <ProductOption
+                      option={{
+                        name: t('status'),
+                        value: subscriptionGetters.getSubscriptionStatus(
+                          subscriptionItemData as Subscription
+                        ),
+                      }}
+                      variant="h4"
+                      align="right"
+                    />
                   </Stack>
                 </Stack>
               </Stack>
@@ -175,7 +180,7 @@ const SubscriptionItemList = (props: SubscriptionItemListProps) => {
           </Card>
         ))}
       {subscriptionDetails?.totalCount === 0 && (
-        <Typography>{'You do not have any subscriptions'}</Typography>
+        <Typography>{t('no-subscription-message')}</Typography>
       )}
     </>
   )
