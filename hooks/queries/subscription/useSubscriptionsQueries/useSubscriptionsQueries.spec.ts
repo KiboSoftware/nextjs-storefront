@@ -1,7 +1,7 @@
 import { renderHook } from '@testing-library/react-hooks'
 
 import { useSubscriptionsQueries } from './useSubscriptionsQueries'
-import { subscriptionMock } from '@/__mocks__/stories/subscriptionMock'
+import { subscriptionCollectionMock } from '@/__mocks__/stories/subscriptionCollectionMock'
 import { createQueryClientWrapper } from '@/__test__/utils/renderWithQueryClient'
 
 describe('[hooks] useSubscriptionsQueries', () => {
@@ -11,6 +11,6 @@ describe('[hooks] useSubscriptionsQueries', () => {
     })
 
     await waitFor(() => result.current.isSuccess)
-    expect(result.current.data).toStrictEqual(subscriptionMock)
+    expect(result.current.data).toStrictEqual(subscriptionCollectionMock)
   })
 })

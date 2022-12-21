@@ -1,6 +1,6 @@
 import type { SubscriptionCollection } from '@/lib/gql/types'
 
-export const subscriptionMock: { subscriptions: SubscriptionCollection } = {
+export const subscriptionCollectionMock: { subscriptions: SubscriptionCollection } = {
   subscriptions: {
     startIndex: 1,
     pageSize: 20,

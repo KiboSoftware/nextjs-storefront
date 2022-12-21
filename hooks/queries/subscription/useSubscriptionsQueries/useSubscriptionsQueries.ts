@@ -23,18 +23,14 @@ const getSubscriptions = async () => {
 }
 
 export const useSubscriptionsQueries = (): SubscriptionType => {
-  try {
-    const {
-      data = {},
-      isLoading,
-      isSuccess,
-      isFetching,
-    } = useQuery(subscriptionKeys.all, getSubscriptions, {
-      refetchOnWindowFocus: false,
-    })
+  const {
+    data = {},
+    isLoading,
+    isSuccess,
+    isFetching,
+  } = useQuery(subscriptionKeys.all, getSubscriptions, {
+    refetchOnWindowFocus: false,
+  })
 
-    return { data, isLoading, isSuccess, isFetching }
-  } catch (err) {
-    throw new Error()
-  }
+  return { data, isLoading, isSuccess, isFetching }
 }
