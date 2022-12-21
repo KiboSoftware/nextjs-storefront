@@ -13,7 +13,7 @@ import type { Checkout, CustomerContact, CrOrder } from '@/lib/gql/types'
 
 export type CommonCheckout<T1, T2> = T1 & T2
 
-interface CheckoutTemplateUIProps {
+interface CheckoutUITemplateProps {
   checkout: CommonCheckout<CrOrder, Checkout>
   initialStep?: number
   promoError: string
@@ -28,7 +28,7 @@ const buttonStyle = {
   fontSize: (themeParam: Theme) => themeParam.typography.subtitle1,
 } as SxProps<Theme> | undefined
 
-const CheckoutUITemplate = (props: CheckoutTemplateUIProps) => {
+const CheckoutUITemplate = (props: CheckoutUITemplateProps) => {
   const { checkout, handleApplyCouponCode, handleRemoveCouponCode, promoError, children } = props
   const { t } = useTranslation('common')
   const { activeStep, stepStatus, steps, setStepStatusSubmit, setStepBack } =

@@ -8,7 +8,7 @@ import { ViewOrderDetails, ViewOrderStatus } from '@/components/order'
 import type { OrderStatusFormDataProps } from '@/components/order/ViewOrderStatus/ViewOrderStatus'
 import { useUserOrderQueries } from '@/hooks'
 
-import { CrOrder } from '@/lib/gql/types'
+import type { CrOrder } from '@/lib/gql/types'
 
 const styles = {
   breadcrumbsClass: {
