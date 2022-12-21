@@ -5,7 +5,7 @@ import { ComponentStory, ComponentMeta } from '@storybook/react'
 import MySubscription from './MySubscription'
 
 export default {
-  title: 'Subscription/Subscription',
+  title: 'Subscription/MySubscription',
   component: MySubscription,
   argTypes: {
     onAccountTitleClick: { action: 'onAccountTitleClick' },
