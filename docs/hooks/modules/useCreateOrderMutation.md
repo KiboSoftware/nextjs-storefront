@@ -12,7 +12,7 @@
 
 ### useCreateOrderMutation
 
-▸ **useCreateOrderMutation**(): `UseMutationResult`<`any`, `unknown`, `Order`, `unknown`\>
+▸ **useCreateOrderMutation**(): `UseMutationResult`<`any`, `unknown`, `CrOrder`, `unknown`\>
 
 [Mutation hook] useCreateOrderMutation uses the graphQL mutation
 
@@ -26,10 +26,10 @@ On success, calls invalidateQueries on checkoutKeys and fetches the updated resu
 
 #### Returns
 
-`UseMutationResult`<`any`, `unknown`, `Order`, `unknown`\>
+`UseMutationResult`<`any`, `unknown`, `CrOrder`, `unknown`\>
 
 'response?.createOrderAction' which contains Order number, payment status, product items with totals, shipping and billing details, fulfillment methods.
 
 #### Defined in
 
-[mutations/useCreateOrderMutations/useCreateOrderMutation.tsx:47](https://github.com/KiboSoftware/nextjs-storefront/blob/973d553/hooks/mutations/useCreateOrderMutations/useCreateOrderMutation.tsx#L47)
+[mutations/useCreateOrderMutations/useCreateOrderMutation.tsx:47](https://github.com/KiboSoftware/nextjs-storefront/blob/561a164/hooks/mutations/useCreateOrderMutations/useCreateOrderMutation.tsx#L47)

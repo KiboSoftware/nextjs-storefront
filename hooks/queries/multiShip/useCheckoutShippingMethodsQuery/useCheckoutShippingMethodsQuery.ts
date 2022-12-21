@@ -1,3 +1,6 @@
+/**
+ * @module useCheckoutShippingMethodsQuery
+ */
 import { useQuery } from 'react-query'
 
 import { makeGraphQLClient } from '@/lib/gql/client'
@@ -6,6 +9,9 @@ import { shippingMethodKeys } from '@/lib/react-query/queryKeys'
 
 import type { CheckoutGroupRates } from '@/lib/gql/types'
 
+/**
+ * @hidden
+ */
 export interface UseCheckoutShippingMethodsResponse {
   data: CheckoutGroupRates[]
   isLoading: boolean
@@ -22,6 +28,20 @@ const loadShippingMethods = async (checkoutId: string) => {
   return response?.checkoutShippingMethods
 }
 
+/**
+ * [Query hook] useCheckoutShippingMethodsQuery uses the graphQL query
+ *
+ * <b>checkoutShippingMethods(checkoutId: String!): [CheckoutGroupRates]</b>
+ *
+ * Description : Retrieves available shipping methods for groupings. Typically used to display available shipping method options on the checkout page.
+ *
+ * Parameters passed to function loadShippingMethods(checkoutId: string) => expects checkoutId
+ *
+ * @param checkoutId stores checkoutId
+ * @param selectedShippingAddressId stores the id of selected shipping address
+ *
+ * @returns 'response?.checkout' which contains available shipping methods for groupings
+ */
 export const useCheckoutShippingMethodsQuery = (
   checkoutId: string | null | undefined,
   selectedShippingAddressId?: string | null

@@ -41,4 +41,4 @@ response?.deleteWishlistItem, which contains True/False value to identify if wis
 
 #### Defined in
 
-[mutations/useWishlistMutations/useRemoveWishlistItemMutation/useRemoveWishlistItemMutation.ts:39](https://github.com/KiboSoftware/nextjs-storefront/blob/973d553/hooks/mutations/useWishlistMutations/useRemoveWishlistItemMutation/useRemoveWishlistItemMutation.ts#L39)
+[mutations/useWishlistMutations/useRemoveWishlistItemMutation/useRemoveWishlistItemMutation.ts:39](https://github.com/KiboSoftware/nextjs-storefront/blob/561a164/hooks/mutations/useWishlistMutations/useRemoveWishlistItemMutation/useRemoveWishlistItemMutation.ts#L39)

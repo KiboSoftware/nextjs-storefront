@@ -34,4 +34,4 @@ On success, returns the customer account
 
 #### Defined in
 
-[queries/useUserQueries/useUserQueries.ts:49](https://github.com/KiboSoftware/nextjs-storefront/blob/973d553/hooks/queries/useUserQueries/useUserQueries.ts#L49)
+[queries/useUserQueries/useUserQueries.ts:49](https://github.com/KiboSoftware/nextjs-storefront/blob/561a164/hooks/queries/useUserQueries/useUserQueries.ts#L49)

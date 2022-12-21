@@ -38,4 +38,4 @@ On success, returns the checkout
 
 #### Defined in
 
-[queries/useCheckoutQueries/useCheckoutQueries.ts:53](https://github.com/KiboSoftware/nextjs-storefront/blob/973d553/hooks/queries/useCheckoutQueries/useCheckoutQueries.ts#L53)
+[queries/useCheckoutQueries/useCheckoutQueries.ts:53](https://github.com/KiboSoftware/nextjs-storefront/blob/561a164/hooks/queries/useCheckoutQueries/useCheckoutQueries.ts#L53)

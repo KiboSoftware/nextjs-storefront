@@ -36,4 +36,4 @@ On success, calls invalidateQueries on cartKeys and fetches the updated result
 
 #### Defined in
 
-[mutations/useCartMutations/useUpdateCartItem/useUpdateCartItemMutation.ts:47](https://github.com/KiboSoftware/nextjs-storefront/blob/973d553/hooks/mutations/useCartMutations/useUpdateCartItem/useUpdateCartItemMutation.ts#L47)
+[mutations/useCartMutations/useUpdateCartItem/useUpdateCartItemMutation.ts:47](https://github.com/KiboSoftware/nextjs-storefront/blob/561a164/hooks/mutations/useCartMutations/useUpdateCartItem/useUpdateCartItemMutation.ts#L47)

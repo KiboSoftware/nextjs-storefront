@@ -34,4 +34,4 @@ Parameters passed to function getOrCreateCheckout(cartId?: string | null) => exp
 
 #### Defined in
 
-[mutations/useCheckoutMutations/useCreateFromCartMutation.tsx:31](https://github.com/KiboSoftware/nextjs-storefront/blob/973d553/hooks/mutations/useCheckoutMutations/useCreateFromCartMutation.tsx#L31)
+[mutations/useCheckoutMutations/useCreateFromCartMutation.tsx:31](https://github.com/KiboSoftware/nextjs-storefront/blob/561a164/hooks/mutations/useCheckoutMutations/useCreateFromCartMutation.tsx#L31)

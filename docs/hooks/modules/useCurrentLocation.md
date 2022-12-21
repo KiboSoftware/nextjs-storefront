@@ -34,4 +34,4 @@ The promise with current Geo location coordinates
 
 #### Defined in
 
-[custom/useCurrentLocation/useCurrentLocation.ts:17](https://github.com/KiboSoftware/nextjs-storefront/blob/973d553/hooks/custom/useCurrentLocation/useCurrentLocation.ts#L17)
+[custom/useCurrentLocation/useCurrentLocation.ts:17](https://github.com/KiboSoftware/nextjs-storefront/blob/561a164/hooks/custom/useCurrentLocation/useCurrentLocation.ts#L17)
