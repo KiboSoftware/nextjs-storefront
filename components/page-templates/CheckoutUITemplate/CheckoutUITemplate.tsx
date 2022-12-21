@@ -11,10 +11,8 @@ import { useCheckoutStepContext, STEP_STATUS } from '@/context'
 
 import type { Checkout, CustomerContact, CrOrder } from '@/lib/gql/types'
 
-export type CommonCheckout<T1, T2> = T1 & T2
-
-interface CheckoutUITemplateProps {
-  checkout: CommonCheckout<CrOrder, Checkout>
+interface CheckoutUITemplateProps<T> {
+  checkout: T
   initialStep?: number
   promoError: string
   handleApplyCouponCode: (couponCode: string) => void
@@ -28,7 +26,7 @@ const buttonStyle = {
   fontSize: (themeParam: Theme) => themeParam.typography.subtitle1,
 } as SxProps<Theme> | undefined
 
-const CheckoutUITemplate = (props: CheckoutUITemplateProps) => {
+const CheckoutUITemplate = <T extends CrOrder | Checkout>(props: CheckoutUITemplateProps<T>) => {
   const { checkout, handleApplyCouponCode, handleRemoveCouponCode, promoError, children } = props
   const { t } = useTranslation('common')
   const { activeStep, stepStatus, steps, setStepStatusSubmit, setStepBack } =
@@ -43,12 +41,13 @@ const CheckoutUITemplate = (props: CheckoutUITemplateProps) => {
   const handleBack = () => setStepBack()
   const handleSubmit = () => setStepStatusSubmit()
 
-  const subTotal = checkout?.subtotal || checkout?.subTotal
+  const subTotal = (checkout as CrOrder)?.subtotal || (checkout as Checkout)?.subTotal
 
-  const discountedSubtotal = checkout?.discountedSubtotal
-    ? checkout?.discountedSubtotal
-    : checkout?.itemLevelProductDiscountTotal + checkout?.orderLevelProductDiscountTotal
-  const tax = checkout?.taxTotal ? checkout?.taxTotal : checkout?.itemTaxTotal
+  const discountedSubtotal =
+    (checkout as CrOrder)?.discountedSubtotal ||
+    (checkout as Checkout).itemLevelProductDiscountTotal +
+      (checkout as Checkout)?.orderLevelProductDiscountTotal
+  const tax = (checkout as CrOrder)?.taxTotal || (checkout as CrOrder)?.itemTaxTotal
 
   const orderSummaryArgs = {
     nameLabel: t('order-summary'),
