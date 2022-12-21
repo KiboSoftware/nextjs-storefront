@@ -22,7 +22,7 @@ import { orderCouponMock } from '../stories/orderMock'
 import { orderShipment } from '../stories/orderShipmentMock'
 import { productSearchResultMock } from '../stories/productSearchResultMock'
 import { searchSuggestionMock } from '../stories/searchSuggestionResultMock'
-import { subscriptionMock } from '../stories/subscriptionMock'
+import { subscriptionCollectionMock } from '../stories/subscriptionCollectionMock'
 import { updateCustomerAccountCardMock } from '../stories/updateCustomerAccountCardMock'
 import { updateCustomerAccountContactMock } from '../stories/updateCustomerAccountContact'
 import { updateOrderBillingInfoMock } from '../stories/updateOrderBillingInfoMock'
@@ -344,7 +344,7 @@ export const inventoryHandlers = [
 export const subscriptionHandlers = [
   // getSubscriptions
   graphql.query('getSubscriptions', (_req, res, ctx) => {
-    return res(ctx.data(subscriptionMock))
+    return res(ctx.data(subscriptionCollectionMock))
   }),
 ]
 
