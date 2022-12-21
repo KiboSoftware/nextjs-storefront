@@ -1,5 +1,5 @@
 const orderSubscriptionNow = /* GraphQL */ `
-  mutation orderSubscriptionNow($subscriptionId: String) {
+  mutation orderSubscriptionNow($subscriptionId: String!) {
     orderSubscriptionNow(subscriptionId: $subscriptionId) {
       id
     }
