@@ -6,7 +6,7 @@ import { CheckoutHeader } from '@/components/layout'
 import { useMultiShipCheckoutQueries } from '@/hooks'
 import { checkoutGetters } from '@/lib/getters'
 
-import { Checkout } from '@/lib/gql/types'
+import type { Checkout } from '@/lib/gql/types'
 
 const MultiShipCheckoutHeaderTemplate = () => {
   const router = useRouter()
