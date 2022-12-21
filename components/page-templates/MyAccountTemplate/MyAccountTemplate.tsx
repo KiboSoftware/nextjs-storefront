@@ -16,6 +16,7 @@ import {
   Grid,
 } from '@mui/material'
 import { useTranslation } from 'next-i18next'
+import getConfig from 'next/config'
 import { useRouter } from 'next/router'
 
 import { MyProfile, PaymentMethod, AddressBook } from '@/components/my-account'
@@ -78,6 +79,8 @@ const style = {
 
 const MyAccountTemplate = () => {
   const { t } = useTranslation('common')
+  const { publicRuntimeConfig } = getConfig()
+  const isSubscriptionEnabled = publicRuntimeConfig.isSubscriptionEnabled
   const router = useRouter()
   const theme = useTheme()
   const mdScreen = useMediaQuery(theme.breakpoints.up('md'))
@@ -168,16 +171,18 @@ const MyAccountTemplate = () => {
 
         {/* code for subscription below */}
         <Divider sx={{ borderColor: 'grey.500' }} />
-        <Box
-          sx={{
-            ...style.myAccountChildren,
-            ...style.orderHistory,
-          }}
-          onClick={handleGoToSubscription}
-        >
-          <Typography variant="h3">{t('my-subscription')}</Typography>
-          <ChevronRightIcon />
-        </Box>
+        {isSubscriptionEnabled && (
+          <Box
+            sx={{
+              ...style.myAccountChildren,
+              ...style.orderHistory,
+            }}
+            onClick={handleGoToSubscription}
+          >
+            <Typography variant="h3">{t('my-subscription')}</Typography>
+            <ChevronRightIcon />
+          </Box>
+        )}
         {/* code for subscription ends here */}
 
         <Divider sx={{ borderColor: 'grey.500' }} />
