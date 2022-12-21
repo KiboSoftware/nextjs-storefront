@@ -32,4 +32,4 @@ Return two functions:
 
 #### Defined in
 
-[custom/useUpdateRoutes/useUpdateRoutes.ts:16](https://github.com/KiboSoftware/nextjs-storefront/blob/973d553/hooks/custom/useUpdateRoutes/useUpdateRoutes.ts#L16)
+[custom/useUpdateRoutes/useUpdateRoutes.ts:16](https://github.com/KiboSoftware/nextjs-storefront/blob/561a164/hooks/custom/useUpdateRoutes/useUpdateRoutes.ts#L16)

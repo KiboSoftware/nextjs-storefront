@@ -40,4 +40,4 @@ On success, returns the received list of shipping methods.
 
 #### Defined in
 
-[queries/useShippingMethodsQueries/useShippingMethodsQueries.tsx:48](https://github.com/KiboSoftware/nextjs-storefront/blob/973d553/hooks/queries/useShippingMethodsQueries/useShippingMethodsQueries.tsx#L48)
+[queries/useShippingMethodsQueries/useShippingMethodsQueries.tsx:48](https://github.com/KiboSoftware/nextjs-storefront/blob/561a164/hooks/queries/useShippingMethodsQueries/useShippingMethodsQueries.tsx#L48)

@@ -1,3 +1,6 @@
+/**
+ * @module useCreateMultiShipCheckoutFromCartMutation
+ */
 import { useMutation } from 'react-query'
 
 import { makeGraphQLClient } from '@/lib/gql/client'
@@ -20,4 +23,15 @@ const useCreateCheckoutFromCartMutation = () => {
   }
 }
 
+/**
+ * [Mutation hook] useCreateMultiShipCheckoutFromCartMutation uses the graphQL mutation
+ *
+ * <b>createCheckout(cartId: String): Checkout</b>
+ *
+ * Description : Creates a new checkout from an existing cart, that is, when the customer chooses to proceed to checkout.
+ *
+ * Parameters passed to function createCheckout(cartId?: string | null) => expects cartId
+ *
+ * @returns 'response?.checkout' which contains which contains data for checkout pages(product items, fulfillment method etc.;)
+ */
 export const useCreateMultiShipCheckoutFromCartMutation = useCreateCheckoutFromCartMutation

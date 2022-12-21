@@ -38,4 +38,4 @@ On success, returns the saved addresses with 'refetchOnWindowFocus' set to false
 
 #### Defined in
 
-[queries/useCustomerContactsQueries/useCustomerContactsQueries.ts:48](https://github.com/KiboSoftware/nextjs-storefront/blob/973d553/hooks/queries/useCustomerContactsQueries/useCustomerContactsQueries.ts#L48)
+[queries/useCustomerContactsQueries/useCustomerContactsQueries.ts:48](https://github.com/KiboSoftware/nextjs-storefront/blob/561a164/hooks/queries/useCustomerContactsQueries/useCustomerContactsQueries.ts#L48)

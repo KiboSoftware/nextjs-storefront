@@ -39,4 +39,4 @@ On success, returns the product list with 'refetchOnWindowFocus' set to false fo
 
 #### Defined in
 
-[queries/useProductSearchQueries/useProductSearchQueries.ts:51](https://github.com/KiboSoftware/nextjs-storefront/blob/973d553/hooks/queries/useProductSearchQueries/useProductSearchQueries.ts#L51)
+[queries/useProductSearchQueries/useProductSearchQueries.ts:51](https://github.com/KiboSoftware/nextjs-storefront/blob/561a164/hooks/queries/useProductSearchQueries/useProductSearchQueries.ts#L51)

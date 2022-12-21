@@ -39,4 +39,4 @@ On success, returns items that are returned and 'refetchOnWindowFocus' set to fa
 
 #### Defined in
 
-[queries/useReturnsQueries/useReturnsQueries.ts:48](https://github.com/KiboSoftware/nextjs-storefront/blob/973d553/hooks/queries/useReturnsQueries/useReturnsQueries.ts#L48)
+[queries/useReturnsQueries/useReturnsQueries.ts:48](https://github.com/KiboSoftware/nextjs-storefront/blob/561a164/hooks/queries/useReturnsQueries/useReturnsQueries.ts#L48)

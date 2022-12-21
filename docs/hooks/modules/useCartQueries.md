@@ -26,9 +26,9 @@ On success, returns the current cart items with 'refetchOnWindowFocus' set to fa
 
 #### Parameters
 
-| Name          | Type   | Description                                                                                                                  |
-| :------------ | :----- | :--------------------------------------------------------------------------------------------------------------------------- |
-| `initialData` | `Cart` | stores the data for cart present on server side. Used to check if the data has got stale, if not; data is not fetched again. |
+| Name          | Type     | Description                                                                                                                  |
+| :------------ | :------- | :--------------------------------------------------------------------------------------------------------------------------- |
+| `initialData` | `CrCart` | stores the data for cart present on server side. Used to check if the data has got stale, if not; data is not fetched again. |
 
 #### Returns
 
@@ -38,4 +38,4 @@ On success, returns the current cart items with 'refetchOnWindowFocus' set to fa
 
 #### Defined in
 
-[queries/useCartQueries/useCartQueries.ts:45](https://github.com/KiboSoftware/nextjs-storefront/blob/973d553/hooks/queries/useCartQueries/useCartQueries.ts#L45)
+[queries/useCartQueries/useCartQueries.ts:45](https://github.com/KiboSoftware/nextjs-storefront/blob/561a164/hooks/queries/useCartQueries/useCartQueries.ts#L45)

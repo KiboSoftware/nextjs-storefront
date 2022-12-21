@@ -1,3 +1,6 @@
+/**
+ * @module useDeleteCheckoutCouponMutation
+ */
 import { useMutation, useQueryClient } from 'react-query'
 
 import { makeGraphQLClient } from '@/lib/gql/client'
@@ -21,6 +24,19 @@ const deleteCheckoutCoupon = async (params: DeleteCheckoutCouponParams) => {
   return response?.deleteCheckoutCoupon
 }
 
+/**
+ * [Mutation hook] useDeleteCheckoutCouponMutation uses the graphQL mutation
+ *
+ * <b>deleteCheckoutCoupon(checkoutId: String!, couponCode: String!): Checkout</b>
+ *
+ * Description : Removes the coupons that had been applied to the checkout.
+ *
+ * Parameters passed to function deleteCheckoutCoupon(params: DeleteCheckoutCouponParams) => expects checkoutId and couponCode
+ *
+ * On success, calls invalidateQueries on checkoutKeys and fetches the updated result.
+ *
+ * @returns 'response?.deleteCheckoutCoupon' which removes the applied coupon on checkout page
+ */
 export const useDeleteCheckoutCouponMutation = () => {
   const queryClient = useQueryClient()
   return useMutation(deleteCheckoutCoupon, {
