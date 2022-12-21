@@ -62,12 +62,12 @@ const MySubscription = (props: SubscriptionProps) => {
 
   return (
     <>
-      <Stack sx={{ mt: '2%' }}>
+      <Stack mt={2}>
         <Stack sx={style.wrapIcon} direction="row" gap={2} onClick={handleAccountTitleClick}>
           <ArrowBackIos fontSize="inherit" sx={style.wrapIcon} />
           <Typography variant="body2">{t('my-account')}</Typography>
         </Stack>
-        <Stack sx={{ py: '1.2rem' }}>
+        <Stack py={'1.2rem'}>
           <Typography variant="h1">{t('my-subscription')}</Typography>
         </Stack>
       </Stack>
