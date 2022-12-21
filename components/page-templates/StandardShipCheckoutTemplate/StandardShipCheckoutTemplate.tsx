@@ -16,8 +16,7 @@ import {
 } from '@/hooks'
 import { userGetters } from '@/lib/getters'
 
-import type { CommonCheckout } from '../CheckoutUITemplate/CheckoutUITemplate'
-import type { CustomerContact, CrOrder, CrOrderInput, Checkout } from '@/lib/gql/types'
+import type { CustomerContact, CrOrder, CrOrderInput } from '@/lib/gql/types'
 
 interface CheckoutProps {
   checkout: CrOrder
@@ -91,7 +90,7 @@ const StandardShipCheckoutTemplate = (props: CheckoutProps) => {
   return (
     <>
       <CheckoutUITemplate
-        checkout={checkout as CommonCheckout<CrOrder, Checkout>}
+        checkout={checkout as CrOrder}
         handleApplyCouponCode={handleApplyCouponCode}
         handleRemoveCouponCode={handleRemoveCouponCode}
         isSuccess={isSuccess}
