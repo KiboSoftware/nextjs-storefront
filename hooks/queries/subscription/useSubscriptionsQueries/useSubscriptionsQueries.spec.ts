@@ -11,6 +11,6 @@ describe('[hooks] useSubscriptionsQueries', () => {
     })
 
     await waitFor(() => result.current.isSuccess)
-    expect(result.current.data).toStrictEqual(subscriptionCollectionMock)
+    expect(result.current.data).toStrictEqual(subscriptionCollectionMock.subscriptions)
   })
 })

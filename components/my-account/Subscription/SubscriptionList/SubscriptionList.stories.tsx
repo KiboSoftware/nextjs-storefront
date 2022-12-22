@@ -2,19 +2,19 @@ import React from 'react'
 
 import { ComponentStory, ComponentMeta } from '@storybook/react'
 
-import MySubscription from './MySubscription'
+import SubscriptionList from './SubscriptionList'
 
 export default {
-  title: 'Subscription/MySubscription',
-  component: MySubscription,
+  title: 'Subscription/SubscriptionList',
+  component: SubscriptionList,
   argTypes: {
     onAccountTitleClick: { action: 'onAccountTitleClick' },
   },
   parameters: {
     layout: 'fullscreen',
   },
-} as ComponentMeta<typeof MySubscription>
+} as ComponentMeta<typeof SubscriptionList>
 
-const Template: ComponentStory<typeof MySubscription> = (args) => <MySubscription {...args} />
+const Template: ComponentStory<typeof SubscriptionList> = (args) => <SubscriptionList {...args} />
 
 export const Common = Template.bind({})

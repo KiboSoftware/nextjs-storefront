@@ -2,7 +2,7 @@ import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
 import getConfig from 'next/config'
 import { useRouter } from 'next/router'
 
-import { MySubscription } from '@/components/my-account'
+import { SubscriptionList } from '@/components/my-account'
 
 import type { GetServerSideProps, GetServerSidePropsContext, NextPage } from 'next'
 
@@ -25,7 +25,7 @@ const SubscriptionPage: NextPage = () => {
   const handleAccountTitleClick = () => router.push('/my-account')
   return (
     <>
-      <MySubscription onAccountTitleClick={handleAccountTitleClick} />
+      <SubscriptionList onAccountTitleClick={handleAccountTitleClick} />
     </>
   )
 }

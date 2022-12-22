@@ -4,10 +4,12 @@ import { ArrowBackIos } from '@mui/icons-material'
 import { Stack, Typography } from '@mui/material'
 import { useTranslation } from 'next-i18next'
 
-import SubscriptionItemList from '../SubscriptionItemList/SubscriptionItemList'
+import { SubscriptionItem } from '@/components/my-account'
 import { useSubscriptionsQueries } from '@/hooks'
 
-interface SubscriptionProps {
+import type { Subscription } from '@/lib/gql/types'
+
+interface SubscriptionListProps {
   onAccountTitleClick: () => void
 }
 
@@ -18,40 +20,9 @@ const style = {
     flexWrap: 'wrap',
     cursor: 'pointer',
   },
-  button: {
-    width: {
-      xs: '100%',
-      sm: '50%',
-      lg: '100%',
-    },
-    mt: '5%',
-  },
-  card: {
-    maxWidth: '100%',
-    border: 1,
-    borderRadius: 1,
-    mt: '1%',
-  },
-  subscriptionNumber: {
-    pt: {
-      xs: '2%',
-      md: '0',
-    },
-    justifyContent: {
-      xs: 'flex-start',
-      md: 'space-between',
-    },
-  },
-  subscriptionItem: {
-    pt: {
-      xs: '2%',
-      md: '1%',
-    },
-    justifyContent: 'space-between',
-  },
 }
 
-const MySubscription = (props: SubscriptionProps) => {
+const SubscriptionList = (props: SubscriptionListProps) => {
   const { onAccountTitleClick } = props
 
   const { data: subscriptionDetails } = useSubscriptionsQueries()
@@ -71,9 +42,19 @@ const MySubscription = (props: SubscriptionProps) => {
           <Typography variant="h1">{t('my-subscription')}</Typography>
         </Stack>
       </Stack>
-      <SubscriptionItemList subscriptionDetailsData={subscriptionDetails} />
+
+      {subscriptionDetails?.totalCount > 0 &&
+        subscriptionDetails?.items?.map((subscriptionItemData) => (
+          <SubscriptionItem
+            key={subscriptionItemData?.id as string}
+            subscriptionDetailsData={subscriptionItemData as Subscription}
+          />
+        ))}
+      {subscriptionDetails?.totalCount === 0 && (
+        <Typography>{t('no-subscription-message')}</Typography>
+      )}
     </>
   )
 }
 
-export default MySubscription
+export default SubscriptionList
