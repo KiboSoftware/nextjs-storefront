@@ -3,6 +3,7 @@ import React, { useState } from 'react'
 import { Box, Stack, Button, SxProps } from '@mui/material'
 import { Theme } from '@mui/material/styles'
 import { useTranslation } from 'next-i18next'
+import getConfig from 'next/config'
 import { useRouter } from 'next/router'
 
 import {
@@ -37,11 +38,14 @@ const buttonStyle = {
 
 const Checkout = (props: CheckoutProps) => {
   const { checkout: initialCheckout } = props
+  const { publicRuntimeConfig } = getConfig()
 
   const [promoError, setPromoError] = useState<string>('')
 
   const { t } = useTranslation('common')
   const router = useRouter()
+
+  const isMultiShipEnabled = publicRuntimeConfig.isMultiShipEnabled
 
   const { checkoutId } = router.query
   const { data: checkout } = useCheckoutQueries({
@@ -152,7 +156,11 @@ const Checkout = (props: CheckoutProps) => {
                 />
               )}
               <PaymentStep checkout={checkout} {...paymentStepParams} />
-              <ReviewStep checkout={checkout as Order} onBackButtonClick={handleBack} />
+              <ReviewStep
+                isMultiShipEnabled={isMultiShipEnabled}
+                checkout={checkout as Order}
+                onBackButtonClick={handleBack}
+              />
             </KiboStepper>
           </Stack>
 
@@ -194,7 +202,9 @@ const Checkout = (props: CheckoutProps) => {
                 )}
               </OrderSummary>
             )}
-            {activeStep === reviewStepIndex && <OrderReview checkout={checkout as Order} />}
+            {activeStep === reviewStepIndex && (
+              <OrderReview isMultiShipEnabled={isMultiShipEnabled} checkout={checkout as Order} />
+            )}
           </Box>
         </Stack>
       )}

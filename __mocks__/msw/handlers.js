@@ -11,6 +11,7 @@ import {
 import { cartItemMock } from '../stories/cartItemMock'
 import { cartCouponMock, cartMock } from '../stories/cartMock'
 import { categoryTreeDataMock } from '../stories/categoryTreeDataMock'
+import { checkoutDestinationsMock } from '../stories/checkoutDestinationsMock'
 import { configuredProductMock } from '../stories/configuredProductMock'
 import { createCustomerAccountCardMock } from '../stories/createCustomerAccountCardMock'
 import { createOrderPaymentActionMock } from '../stories/createOrderPaymentActionMock'
@@ -18,6 +19,7 @@ import { customerAccountCardsMock } from '../stories/customerAccountCardsMock'
 import { locationCollectionMock } from '../stories/locationCollectionMock'
 import { orderCollection } from '../stories/orderCollection'
 import { orderCouponMock } from '../stories/orderMock'
+import { orderShipment } from '../stories/orderShipmentMock'
 import { productSearchResultMock } from '../stories/productSearchResultMock'
 import { searchSuggestionMock } from '../stories/searchSuggestionResultMock'
 import { updateCustomerAccountCardMock } from '../stories/updateCustomerAccountCardMock'
@@ -288,6 +290,13 @@ export const orderHandlers = [
   graphql.query('returnReasons', (_req, res, ctx) => {
     return res(ctx.data({ returnReasons: returnReasonsMock.returnReasons }))
   }),
+  graphql.query('getCheckoutDestination', (_req, res, ctx) => {
+    return res(ctx.data({ checkoutDestination: checkoutDestinationsMock.checkoutDestinations[0] }))
+  }),
+  graphql.query('getCheckoutDestinations', (_req, res, ctx) => {
+    return res(ctx.data({ checkoutDestinations: checkoutDestinationsMock.checkoutDestinations }))
+  }),
+
   graphql.mutation('updateOrderCoupon', (_req, res, ctx) => {
     return res(ctx.data(orderCouponMock))
   }),
@@ -300,6 +309,28 @@ export const orderHandlers = [
   }),
   graphql.mutation('createReturn', (_req, res, ctx) => {
     return res(ctx.data(createReturnMock))
+  }),
+
+  graphql.mutation('createCheckoutDestination', (_req, res, ctx) => {
+    return res(
+      ctx.data({
+        createCheckoutDestination: checkoutDestinationsMock.checkoutDestinations[0],
+      })
+    )
+  }),
+  graphql.mutation('updateCheckoutDestination', (_req, res, ctx) => {
+    return res(
+      ctx.data({
+        updateCheckoutDestination: checkoutDestinationsMock.checkoutDestinations[0],
+      })
+    )
+  }),
+  graphql.mutation('updateCheckoutItemDestination', (_req, res, ctx) => {
+    return res(
+      ctx.data({
+        updateCheckoutItemDestination: checkoutMock,
+      })
+    )
   }),
 ]
 

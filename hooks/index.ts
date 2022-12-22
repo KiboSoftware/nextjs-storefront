@@ -16,6 +16,7 @@ export * from './queries/useUserOrderQueries/useUserOrderQueries'
 export * from './queries/useProductLocationInventoryQueries/useProductLocationInventoryQueries'
 export * from './queries/useReturnReasonsQueries/useReturnReasonsQueries'
 export * from './queries/useReturnsQueries/useReturnsQueries'
+export * from './queries/useCheckoutDestinationQueries/useCheckoutDestinationQueries'
 
 // MultiShip
 export * from './queries/multiShip/useCheckoutQueries/useCheckoutQueries'
@@ -71,3 +72,6 @@ export * from './mutations/useProfile/useUpdateUserPassword/useUpdateUserPasswor
 
 // MultiShip
 export * from './mutations/multiShip/useCreateCheckoutActionMutation/useCreateCheckoutActionMutation'
+//Destination
+export * from './mutations/useCreateCheckoutDestinationMutations/useCreateCheckoutDestinationMutations'
+export * from './mutations/useUpdateCheckoutItemDestinationMutations/useUpdateCheckoutItemDestinationMutations'

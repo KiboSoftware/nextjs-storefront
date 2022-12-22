@@ -1,11 +1,18 @@
 import React, { useEffect, useRef, useState } from 'react'
 
-import { Stack, Button, Typography, SxProps } from '@mui/material'
+import { Stack, Button, Typography, SxProps, Box } from '@mui/material'
 import { Theme } from '@mui/material/styles'
 import { useTranslation } from 'next-i18next'
+import getConfig from 'next/config'
 
 import { ShippingMethod } from '@/components/checkout'
-import { AddressDetailsView, AddressForm } from '@/components/common'
+import {
+  AddressDetailsView,
+  AddressForm,
+  KiboRadio,
+  ProductItemWithAddressList,
+  ShippingGroupsWithMethod,
+} from '@/components/common'
 import { useCheckoutStepContext, STEP_STATUS } from '@/context'
 import { useUpdateCheckoutShippingInfoMutation, useShippingMethodsQueries } from '@/hooks'
 import { DefaultId } from '@/lib/constants'
@@ -31,6 +38,7 @@ interface ShippingProps {
 
 const ShippingStep = (props: ShippingProps) => {
   const { checkout, userShippingAddress: addresses, isAuthenticated } = props
+  const { publicRuntimeConfig } = getConfig()
 
   const checkoutShippingContact = orderGetters.getShippingContact(checkout)
   const checkoutShippingMethodCode = orderGetters.getShippingMethodCode(checkout)
@@ -61,6 +69,13 @@ const ShippingStep = (props: ShippingProps) => {
   const [shouldShowAddAddressButton, setShouldShowAddAddressButton] = useState<boolean>(
     Boolean(savedShippingAddresses?.length)
   )
+  const shipOptions = publicRuntimeConfig.shipOptions
+
+  const [shippingOption, setShippingOption] = useState<string>(shipOptions[0].value)
+
+  const [showMultiShipContinueButton, setShowMultiShipContinueButton] = useState<boolean>(true)
+
+  const isMultiShipEnabled = publicRuntimeConfig.isMultiShipEnabled
 
   const defaultShippingAddress = userGetters.getDefaultShippingAddress(
     savedShippingAddresses as CustomerContact[]
@@ -162,6 +177,14 @@ const ShippingStep = (props: ShippingProps) => {
     setIsNewAddressAdded(false)
   }
 
+  const radioOptions = shipOptions.map((option: any) => ({
+    value: option.value,
+    name: option.name,
+    label: <Typography variant="body2">{option.label}</Typography>,
+  }))
+
+  const onChangeShippingOption = (option: string) => setShippingOption(option)
+
   const getSavedShippingAddressView = (
     address: CustomerContact,
     isPrimary?: boolean
@@ -216,81 +239,117 @@ const ShippingStep = (props: ShippingProps) => {
   return (
     <Stack data-testid="checkout-shipping" gap={2} ref={shippingAddressRef}>
       <Typography variant="h2" component="h2" sx={{ fontWeight: 'bold' }}>
-        {t('shipping')}
+        {!showMultiShipContinueButton ? t('shipping-address') : t('shipping')}
       </Typography>
-      {shouldShowAddAddressButton && (
+      {isMultiShipEnabled && showMultiShipContinueButton && (
+        <KiboRadio
+          radioOptions={radioOptions}
+          selected={shippingOption}
+          onChange={onChangeShippingOption}
+        />
+      )}
+      {shippingOption === 'ShipToHome' && (
         <>
-          <Stack gap={2} width="100%">
-            {defaultShippingAddress && (
-              <>
-                <Typography variant="h4" fontWeight={'bold'}>
-                  {t('your-default-shipping-address')}
-                </Typography>
-                {getSavedShippingAddressView(defaultShippingAddress, true)}
-              </>
-            )}
+          {shouldShowAddAddressButton && (
+            <>
+              <Stack gap={2} width="100%">
+                {defaultShippingAddress && (
+                  <>
+                    <Typography variant="h4" fontWeight={'bold'}>
+                      {t('your-default-shipping-address')}
+                    </Typography>
+                    {getSavedShippingAddressView(defaultShippingAddress, true)}
+                  </>
+                )}
 
-            {previouslySavedShippingAddress?.length > 0 && (
-              <>
-                <Typography variant="h4" fontWeight={'bold'}>
-                  {t('previously-saved-shipping-addresses')}
-                </Typography>
-                {previouslySavedShippingAddress?.map((address) => {
-                  return address && getSavedShippingAddressView(address)
-                })}
-              </>
-            )}
+                {previouslySavedShippingAddress?.length > 0 && (
+                  <>
+                    <Typography variant="h4" fontWeight={'bold'}>
+                      {t('previously-saved-shipping-addresses')}
+                    </Typography>
+                    {previouslySavedShippingAddress?.map((address) => {
+                      return address && getSavedShippingAddressView(address)
+                    })}
+                  </>
+                )}
 
-            <Button
-              variant="contained"
-              color="inherit"
-              sx={{ width: { xs: '100%', sm: '50%' } }}
-              onClick={handleAddNewAddress}
-            >
-              {t('add-new-address')}
-            </Button>
-          </Stack>
-          {shippingMethods.length > 0 && (
-            <ShippingMethod
-              shipItems={shipItems as CrOrderItem[]}
-              pickupItems={pickupItems as CrOrderItem[]}
-              orderShipmentMethods={[...shippingMethods]}
-              selectedShippingMethodCode={checkoutShippingMethodCode}
-              onShippingMethodChange={handleSaveShippingMethod}
-              onStoreLocatorClick={handleStoreLocatorClick}
-            />
+                <Button
+                  variant="contained"
+                  color="inherit"
+                  sx={{ width: { xs: '100%', sm: '50%' } }}
+                  onClick={handleAddNewAddress}
+                >
+                  {t('add-new-address')}
+                </Button>
+              </Stack>
+              {shippingMethods.length > 0 && (
+                <ShippingMethod
+                  shipItems={shipItems as CrOrderItem[]}
+                  pickupItems={pickupItems as CrOrderItem[]}
+                  orderShipmentMethods={[...shippingMethods]}
+                  selectedShippingMethodCode={checkoutShippingMethodCode}
+                  onShippingMethodChange={handleSaveShippingMethod}
+                  onStoreLocatorClick={handleStoreLocatorClick}
+                />
+              )}
+            </>
+          )}
+          {!shouldShowAddAddressButton && (
+            <>
+              <AddressForm
+                isUserLoggedIn={false}
+                saveAddressLabel={t('save-shipping-address')}
+                setAutoFocus={true}
+                validateForm={validateForm}
+                onSaveAddress={handleSaveAddress}
+                onFormStatusChange={handleFormStatusChange}
+              />
+              <Stack pl={1} gap={2} sx={{ width: { xs: '100%', md: '50%' } }}>
+                <Button
+                  variant="contained"
+                  color="secondary"
+                  onClick={() => setShouldShowAddAddressButton(true)}
+                >
+                  {t('cancel')}
+                </Button>
+                <Button
+                  variant="contained"
+                  color="inherit"
+                  sx={{ ...buttonStyle }}
+                  style={{ textTransform: 'none' }}
+                  onClick={handleAddressValidationAndSave}
+                  {...(!isAddressFormValid && { disabled: true })}
+                >
+                  {t('save-shipping-address')}
+                </Button>
+              </Stack>
+            </>
           )}
         </>
       )}
-      {!shouldShowAddAddressButton && (
-        <>
-          <AddressForm
-            isUserLoggedIn={false}
-            saveAddressLabel={t('save-shipping-address')}
-            setAutoFocus={true}
-            validateForm={validateForm}
-            onSaveAddress={handleSaveAddress}
-            onFormStatusChange={handleFormStatusChange}
-          />
-          <Stack pl={1} gap={2} sx={{ width: { xs: '100%', md: '50%' } }}>
-            <Button
-              variant="contained"
-              color="secondary"
-              onClick={() => setShouldShowAddAddressButton(true)}
-            >
-              {t('cancel')}
-            </Button>
-            <Button
-              variant="contained"
-              color="inherit"
-              sx={{ ...buttonStyle }}
-              onClick={handleAddressValidationAndSave}
-              {...(!isAddressFormValid && { disabled: true })}
-            >
-              {t('save-shipping-address')}
-            </Button>
-          </Stack>
-        </>
+      {shippingOption === 'ShipToMultiAddress' && (
+        <Stack>
+          {/*  */}
+          {showMultiShipContinueButton && (
+            <>
+              <ProductItemWithAddressList items={checkout?.items as CrOrderItem[]} />
+              <Button
+                variant="contained"
+                color="primary"
+                sx={{ maxWidth: '421px', width: '100%' }}
+                onClick={() => setShowMultiShipContinueButton(false)}
+              >
+                {t('continue')}
+              </Button>
+            </>
+          )}
+          {!showMultiShipContinueButton && (
+            <ShippingGroupsWithMethod
+              items={checkout?.items as CrOrderItem[]}
+              onShippingAddressEditClick={() => setShowMultiShipContinueButton(true)}
+            />
+          )}
+        </Stack>
       )}
     </Stack>
   )

@@ -13,7 +13,7 @@ import { AuthContextProvider, DialogRoot, ModalContextProvider } from '@/context
 import type { Card } from '@/lib/gql/types'
 const { Common } = composeStories(stories)
 const setup = () => {
-  const user = userEvent.setup()
+  const user = userEvent.setup({ skipHover: true })
   render(
     <AuthContextProvider>
       <Common />
@@ -238,7 +238,9 @@ describe('[component] - PaymentMethod (has saved payment methods)', () => {
     }
     const addressRadios = screen.getAllByRole('radio')
     expect(addressRadios[0]).toBeChecked()
-    const savePaymentMethodButton = screen.getByRole('button', { name: 'save-payment-method' })
+    const savePaymentMethodButton = await screen.findByRole('button', {
+      name: 'save-payment-method',
+    })
     server.use(
       graphql.query('customerAccountCards', (_req, res, ctx) => {
         return res(

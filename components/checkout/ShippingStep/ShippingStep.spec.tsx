@@ -16,8 +16,23 @@ jest.mock(
   '@/components/common/AddressDetailsView/AddressDetailsView',
   () => () => AddressDetailsViewMock()
 )
+
 const AddressFormMock = () => <div data-testid="address-form-component" />
 jest.mock('@/components/common/AddressForm/AddressForm', () => () => AddressFormMock())
+const ProductItemWithAddressList = () => (
+  <div data-testid="product-item-with-address-list-component" />
+)
+
+jest.mock(
+  '@/components/common/ProductItemWithAddressList/ProductItemWithAddressList',
+  () => () => ProductItemWithAddressList()
+)
+
+const ShippingGroupsWithMethod = () => <div data-testid="shipping-group-with-method-component" />
+jest.mock(
+  '@/components/common/ShippingGroupsWithMethod/ShippingGroupsWithMethod',
+  () => () => ShippingGroupsWithMethod()
+)
 
 describe('[components] ShippingStep', () => {
   const setup = () => {

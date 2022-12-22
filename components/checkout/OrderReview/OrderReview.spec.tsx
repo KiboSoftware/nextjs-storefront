@@ -8,7 +8,7 @@ import { orderGetters } from '@/lib/getters'
 
 import type { Order } from '@/lib/gql/types'
 
-const { Common } = composeStories(stories)
+const { Common, WithMultiShippingAddresses } = composeStories(stories)
 
 const AddressDetailsViewMock = () => <div data-testid="address-details-view-mock" />
 jest.mock(
@@ -39,6 +39,20 @@ describe('[components] OrderReview', () => {
     expect(personalDetailsHeading).toBeVisible()
     expect(paymentMethodHeading).toBeVisible()
     expect(editLinks).toHaveLength(4)
+  })
+
+  it('should display address details more than two times when multiShip is enabled', () => {
+    render(<WithMultiShippingAddresses {...WithMultiShippingAddresses.args} />)
+
+    const addressDetailComponent = screen.getAllByTestId('address-details-view-mock')
+    expect(addressDetailComponent.length).toBeGreaterThan(2)
+  })
+
+  it('should display address details two times when multiShip is disabled', () => {
+    setup()
+
+    const addressDetailComponent = screen.getAllByTestId('address-details-view-mock')
+    expect(addressDetailComponent).toHaveLength(2)
   })
 
   it('should display the personal details', () => {

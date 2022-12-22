@@ -23,4 +23,12 @@ const Template: ComponentStory<typeof ReviewStep> = (args) => (
 export const Common = Template.bind({})
 Common.args = {
   checkout: orderMock.checkout,
+  isMultiShipEnabled: false,
+}
+
+// With isMultiShipEnabled = true
+export const WithMultiShippingAddresses = Template.bind({})
+WithMultiShippingAddresses.args = {
+  checkout: orderMock.checkout,
+  isMultiShipEnabled: true,
 }
