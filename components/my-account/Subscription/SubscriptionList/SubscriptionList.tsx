@@ -1,4 +1,5 @@
 import React from 'react'
+import { useCallback } from 'react'
 
 import { ArrowBackIos } from '@mui/icons-material'
 import { Stack, Typography } from '@mui/material'
@@ -29,7 +30,7 @@ const SubscriptionList = (props: SubscriptionListProps) => {
 
   const { t } = useTranslation('common')
 
-  const handleAccountTitleClick = () => onAccountTitleClick()
+  const handleAccountTitleClick = useCallback(() => onAccountTitleClick(), [onAccountTitleClick])
 
   return (
     <>

@@ -1,3 +1,5 @@
+import { useCallback } from 'react'
+
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
 import getConfig from 'next/config'
 import { useRouter } from 'next/router'
@@ -22,7 +24,7 @@ export const getServerSideProps: GetServerSideProps = async (
 }
 const SubscriptionPage: NextPage = () => {
   const router = useRouter()
-  const handleAccountTitleClick = () => router.push('/my-account')
+  const handleAccountTitleClick = useCallback(() => router.push('/my-account'), [router])
   return (
     <>
       <SubscriptionList onAccountTitleClick={handleAccountTitleClick} />

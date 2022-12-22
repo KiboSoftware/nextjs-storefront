@@ -1,4 +1,5 @@
 import React from 'react'
+import { useCallback } from 'react'
 
 import { AccountCircle, ChevronLeft } from '@mui/icons-material'
 import ChevronRightIcon from '@mui/icons-material/ChevronRight'
@@ -93,9 +94,9 @@ const MyAccountTemplate = () => {
     router.push('/my-account/order-history?filters=M-6')
   }
 
-  const handleGoToSubscription = () => {
+  const handleGoToSubscription = useCallback(() => {
     router.push('/my-account/subscription')
-  }
+  }, [router])
 
   const accordionData = [
     {
