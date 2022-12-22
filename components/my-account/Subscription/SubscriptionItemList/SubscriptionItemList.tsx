@@ -4,7 +4,10 @@ import { Card, Stack, Typography, CardContent, Button } from '@mui/material'
 import { useTranslation } from 'next-i18next'
 
 import { ProductItem } from '@/components/common'
+import { ConfirmationDialog } from '@/components/dialogs'
 import { ProductOption } from '@/components/product'
+import { useModalContext, useSnackbarContext } from '@/context'
+import { useSkipNextSubscriptionMutation } from '@/hooks'
 import { subscriptionGetters, productGetters } from '@/lib/getters'
 import { uiHelpers } from '@/lib/helpers'
 
@@ -16,6 +19,7 @@ interface SubscriptionItemListProps {
 
 interface SubscriptionButtonProps {
   subscriptionButtonName: string
+  handleButtonClick: (param?: any) => void
 }
 
 const style = {
@@ -59,11 +63,16 @@ const style = {
 }
 
 const SubscriptionButton = (props: SubscriptionButtonProps) => {
-  const { subscriptionButtonName } = props
+  const { subscriptionButtonName, handleButtonClick } = props
   const { t } = useTranslation('common')
 
   return (
-    <Button variant="contained" color="secondary" sx={{ ...style.button }}>
+    <Button
+      variant="contained"
+      color="secondary"
+      sx={{ ...style.button }}
+      onClick={handleButtonClick}
+    >
       {t(subscriptionButtonName)}
     </Button>
   )
@@ -74,6 +83,37 @@ const SubscriptionItemList = (props: SubscriptionItemListProps) => {
 
   const { getProductLink } = uiHelpers()
   const { t } = useTranslation('common')
+
+  const { showModal } = useModalContext()
+  const { showSnackbar } = useSnackbarContext()
+  const skipNextSubscription = useSkipNextSubscriptionMutation()
+
+  const skipNextOrderConfirmation = (subscriptionId: string) => {
+    showModal({
+      Component: ConfirmationDialog,
+      props: {
+        onConfirm: () => callSkipSubscriptionMutation(subscriptionId),
+        contentText: t('skip-next-subscription-confirmation'),
+        primaryButtonText: t('Yes'),
+      },
+    })
+  }
+
+  const callSkipSubscriptionMutation = async (subscriptionId: string) => {
+    try {
+      const skipSubscriptionResponse = await skipNextSubscription.mutateAsync(
+        subscriptionId as string
+      )
+      if (skipSubscriptionResponse?.id) {
+        const { nextOrderDate } =
+          subscriptionGetters.getSubscriptionDetails(skipSubscriptionResponse)
+        showSnackbar(t('next-order-skip') + nextOrderDate, 'success')
+      }
+      return false
+    } catch (err) {
+      console.error(err)
+    }
+  }
 
   return (
     <>
@@ -166,14 +206,40 @@ const SubscriptionItemList = (props: SubscriptionItemListProps) => {
                   </Stack>
                 </Stack>
                 <Stack direction="column" sx={{ pb: { xs: '5%', lg: '0' } }}>
-                  <SubscriptionButton subscriptionButtonName="ship-an-item-now" />
-                  <SubscriptionButton subscriptionButtonName="skip-shipment" />
-                  <SubscriptionButton subscriptionButtonName="edit-frequency" />
-                  <SubscriptionButton subscriptionButtonName="edit-order-date" />
-                  <SubscriptionButton subscriptionButtonName="cancel-an-item" />
-                  <SubscriptionButton subscriptionButtonName="edit-billing-information" />
-                  <SubscriptionButton subscriptionButtonName="edit-shipping-address" />
-                  <SubscriptionButton subscriptionButtonName="pause-subscription" />
+                  <SubscriptionButton
+                    subscriptionButtonName="ship-an-item-now"
+                    handleButtonClick={() => null}
+                  />
+                  <SubscriptionButton
+                    subscriptionButtonName="skip-shipment"
+                    handleButtonClick={() =>
+                      skipNextOrderConfirmation(subscriptionItemData?.id as string)
+                    }
+                  />
+                  <SubscriptionButton
+                    subscriptionButtonName="edit-frequency"
+                    handleButtonClick={() => null}
+                  />
+                  <SubscriptionButton
+                    subscriptionButtonName="edit-order-date"
+                    handleButtonClick={() => null}
+                  />
+                  <SubscriptionButton
+                    subscriptionButtonName="cancel-an-item"
+                    handleButtonClick={() => null}
+                  />
+                  <SubscriptionButton
+                    subscriptionButtonName="edit-billing-information"
+                    handleButtonClick={() => null}
+                  />
+                  <SubscriptionButton
+                    subscriptionButtonName="edit-shipping-address"
+                    handleButtonClick={() => null}
+                  />
+                  <SubscriptionButton
+                    subscriptionButtonName="pause-subscription"
+                    handleButtonClick={() => null}
+                  />
                 </Stack>
               </Stack>
             </CardContent>
