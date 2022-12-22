@@ -49,7 +49,7 @@ interface ShippingProps {
   onUpdateCheckoutShippingMethod: (params: {
     shippingMethodGroup: CheckoutGroupRates
     shippingMethodCode: string
-  }) => void
+  }) => Promise<void>
 }
 
 export interface CustomDestinationInput extends CrContact {
@@ -208,7 +208,8 @@ const MultiShippingStep = (props: ShippingProps) => {
       const shippingMethodGroup = shippingMethods?.find(
         (shippingMethod: CheckoutGroupRates) => shippingMethod?.groupingId === groupingId
       )
-      onUpdateCheckoutShippingMethod({
+
+      await onUpdateCheckoutShippingMethod({
         shippingMethodGroup: shippingMethodGroup as CheckoutGroupRates,
         shippingMethodCode,
       })
