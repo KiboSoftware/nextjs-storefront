@@ -255,6 +255,7 @@ export const checkoutGroupingsFragment = /* GraphQL */ `
 export const baseMultiShipCheckoutFragment = /* GraphQL */ `
   fragment baseMultiShipCheckoutFragment on Checkout {
     id
+    email
     siteId
     tenantId
     number

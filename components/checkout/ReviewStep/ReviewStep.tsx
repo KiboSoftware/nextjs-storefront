@@ -46,7 +46,6 @@ export interface PersonalDetails {
 interface ReviewStepProps {
   checkout: CrOrder
   onBackButtonClick: () => void
-  isMultiShipEnabled: boolean
 }
 
 const buttonStyle = {
