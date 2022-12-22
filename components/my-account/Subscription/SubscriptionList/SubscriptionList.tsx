@@ -1,8 +1,4 @@
-<<<<<<< HEAD
 import React, { useCallback } from 'react'
-=======
-import React from 'react'
->>>>>>> f37e0806 (Resolved PR Comments and fixed failing test case)
 
 import { ArrowBackIos } from '@mui/icons-material'
 import { Stack, Typography } from '@mui/material'
