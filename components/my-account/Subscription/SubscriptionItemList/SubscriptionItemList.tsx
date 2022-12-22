@@ -21,7 +21,7 @@ interface SubscriptionButtonProps {
   subscriptionButtonName: string
 
   // use param as object
-  handleButtonClick: (param?: any) => void
+  onClickHandler: () => void
 }
 
 const style = {
@@ -65,16 +65,11 @@ const style = {
 }
 
 const SubscriptionButton = (props: SubscriptionButtonProps) => {
-  const { subscriptionButtonName, handleButtonClick } = props
+  const { subscriptionButtonName, onClickHandler } = props
   const { t } = useTranslation('common')
 
   return (
-    <Button
-      variant="contained"
-      color="secondary"
-      sx={{ ...style.button }}
-      onClick={handleButtonClick}
-    >
+    <Button variant="contained" color="secondary" sx={{ ...style.button }} onClick={onClickHandler}>
       {t(subscriptionButtonName)}
     </Button>
   )
@@ -196,37 +191,37 @@ const SubscriptionItemList = (props: SubscriptionItemListProps) => {
                 <Stack direction="column" sx={{ pb: { xs: '5%', lg: '0' } }}>
                   <SubscriptionButton
                     subscriptionButtonName="ship-an-item-now"
-                    handleButtonClick={() =>
+                    onClickHandler={() =>
                       handleShipItemNow({ id: subscriptionItemData?.id as string })
                     }
                   />
                   <SubscriptionButton
                     subscriptionButtonName="skip-shipment"
-                    handleButtonClick={() => null}
+                    onClickHandler={() => null}
                   />
                   <SubscriptionButton
                     subscriptionButtonName="edit-frequency"
-                    handleButtonClick={() => null}
+                    onClickHandler={() => null}
                   />
                   <SubscriptionButton
                     subscriptionButtonName="edit-order-date"
-                    handleButtonClick={() => null}
+                    onClickHandler={() => null}
                   />
                   <SubscriptionButton
                     subscriptionButtonName="cancel-an-item"
-                    handleButtonClick={() => null}
+                    onClickHandler={() => null}
                   />
                   <SubscriptionButton
                     subscriptionButtonName="edit-billing-information"
-                    handleButtonClick={() => null}
+                    onClickHandler={() => null}
                   />
                   <SubscriptionButton
                     subscriptionButtonName="edit-shipping-address"
-                    handleButtonClick={() => null}
+                    onClickHandler={() => null}
                   />
                   <SubscriptionButton
                     subscriptionButtonName="pause-subscription"
-                    handleButtonClick={() => null}
+                    onClickHandler={() => null}
                   />
                 </Stack>
               </Stack>
