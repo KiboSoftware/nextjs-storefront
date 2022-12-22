@@ -6,9 +6,18 @@ import { render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 
 import * as stories from './SubscriptionItem.stories' // import all stories from the stories file
+<<<<<<< HEAD
 import { subscriptionItemMock } from '@/__mocks__/stories/subscriptionCollectionMock'
 import { subscriptionGetters } from '@/lib/getters'
 
+=======
+<<<<<<<< HEAD:components/my-account/Subscription/MySubscription/MySubscription.spec.tsx
+import { subscriptionItemMock } from '@/__mocks__/stories/subscriptionCollectionMock'
+import { subscriptionGetters } from '@/lib/getters'
+
+========
+>>>>>>>> f37e0806 (Resolved PR Comments and fixed failing test case):components/my-account/Subscription/SubscriptionItem/SubscriptionItem.spec.tsx
+>>>>>>> f37e0806 (Resolved PR Comments and fixed failing test case)
 const { Common } = composeStories(stories)
 const subscriptionItem = subscriptionItemMock?.items
 
