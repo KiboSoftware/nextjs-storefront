@@ -4,11 +4,18 @@ import { Card, Stack, Typography, CardContent, Button } from '@mui/material'
 import { useTranslation } from 'next-i18next'
 
 import { ProductItem } from '@/components/common'
+import { EditSubscriptionFrequencyDialog } from '@/components/dialogs'
 import { ProductOption } from '@/components/product'
+import { useModalContext } from '@/context/ModalContext'
 import { subscriptionGetters, productGetters } from '@/lib/getters'
 import { uiHelpers } from '@/lib/helpers'
 
-import type { CrProduct, Subscription, SubscriptionCollection } from '@/lib/gql/types'
+import type {
+  CrProduct,
+  Subscription,
+  SbSubscriptionItem,
+  SubscriptionCollection,
+} from '@/lib/gql/types'
 
 interface SubscriptionItemListProps {
   subscriptionDetailsData: SubscriptionCollection
@@ -16,6 +23,7 @@ interface SubscriptionItemListProps {
 
 interface SubscriptionButtonProps {
   subscriptionButtonName: string
+  onClickHandler?: any
 }
 
 const style = {
@@ -59,11 +67,11 @@ const style = {
 }
 
 const SubscriptionButton = (props: SubscriptionButtonProps) => {
-  const { subscriptionButtonName } = props
+  const { subscriptionButtonName, onClickHandler } = props
   const { t } = useTranslation('common')
 
   return (
-    <Button variant="contained" color="secondary" sx={{ ...style.button }}>
+    <Button variant="contained" color="secondary" sx={{ ...style.button }} onClick={onClickHandler}>
       {t(subscriptionButtonName)}
     </Button>
   )
@@ -72,8 +80,20 @@ const SubscriptionButton = (props: SubscriptionButtonProps) => {
 const SubscriptionItemList = (props: SubscriptionItemListProps) => {
   const { subscriptionDetailsData: subscriptionDetails } = props
 
+  const { showModal } = useModalContext()
   const { getProductLink } = uiHelpers()
   const { t } = useTranslation('common')
+
+  const handleEditFrequency = (subscriptionId: string, itemsArray: SbSubscriptionItem[]) => {
+    const values = itemsArray[0].product?.properties?.find(
+      (property) => property?.name === 'Subscription Frequency'
+    )?.values
+
+    showModal({
+      Component: EditSubscriptionFrequencyDialog,
+      props: { subscriptionId: subscriptionId, values: values },
+    })
+  }
 
   return (
     <>
@@ -168,7 +188,15 @@ const SubscriptionItemList = (props: SubscriptionItemListProps) => {
                 <Stack direction="column" sx={{ pb: { xs: '5%', lg: '0' } }}>
                   <SubscriptionButton subscriptionButtonName="ship-an-item-now" />
                   <SubscriptionButton subscriptionButtonName="skip-shipment" />
-                  <SubscriptionButton subscriptionButtonName="edit-frequency" />
+                  <SubscriptionButton
+                    subscriptionButtonName="edit-frequency"
+                    onClickHandler={() =>
+                      handleEditFrequency(
+                        subscriptionItemData?.id as string,
+                        subscriptionItemData?.items as SbSubscriptionItem[]
+                      )
+                    }
+                  />
                   <SubscriptionButton subscriptionButtonName="edit-order-date" />
                   <SubscriptionButton subscriptionButtonName="cancel-an-item" />
                   <SubscriptionButton subscriptionButtonName="edit-billing-information" />

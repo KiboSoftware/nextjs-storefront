@@ -78,3 +78,6 @@ export * from './mutations/multiShip/useCreateCheckoutActionMutation/useCreateCh
 //Destination
 export * from './mutations/useCreateCheckoutDestinationMutations/useCreateCheckoutDestinationMutations'
 export * from './mutations/useUpdateCheckoutItemDestinationMutations/useUpdateCheckoutItemDestinationMutations'
+
+// Subscription
+export * from './mutations/useSubscription/useEditSubscriptionFrequencyMutation/useEditSubscriptionFrequencyMutation'

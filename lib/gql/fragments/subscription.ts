@@ -13,6 +13,7 @@ export const subscriptionItemProductFragment = /* GraphQL */ `
       attributeFQN
       name
       values {
+        stringValue
         value
       }
     }
