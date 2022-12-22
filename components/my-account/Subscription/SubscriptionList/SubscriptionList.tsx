@@ -1,5 +1,4 @@
-import React from 'react'
-import { useCallback } from 'react'
+import React, { useCallback } from 'react'
 
 import { ArrowBackIos } from '@mui/icons-material'
 import { Stack, Typography } from '@mui/material'
