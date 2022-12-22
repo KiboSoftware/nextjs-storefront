@@ -54,6 +54,7 @@ const EditSubscriptionFrequencyDialog = (props: EditSubscriptionFrequencyDialogP
     <>
       <Stack gap={2} width="100%">
         <Button
+          name="cancel"
           sx={{ width: '100%' }}
           variant="contained"
           color="secondary"
@@ -62,6 +63,7 @@ const EditSubscriptionFrequencyDialog = (props: EditSubscriptionFrequencyDialogP
           {t('cancel')}
         </Button>
         <Button
+          name="confirm"
           sx={{ width: '100%' }}
           variant="contained"
           onClick={updateFrequency}

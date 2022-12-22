@@ -1,8 +1,8 @@
 import React from 'react'
 
-import { Iron } from '@mui/icons-material'
+import { InputLabel, FormControl, Select, MenuItem } from '@mui/material'
 import { composeStories } from '@storybook/testing-react'
-import { render, screen } from '@testing-library/react'
+import { render, screen, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 
 import * as stories from './EditSubscriptionFrequencyDialog.stories'
@@ -15,33 +15,33 @@ jest.mock('@/components/common', () => ({
   __esModule: true,
   KiboSelect: jest.fn(({ children, onChange, value }) => (
     <div data-testid="Kibo-Select-Div">
-      <select
-        name="KiboSelect"
-        id="KiboSelect"
-        onChange={onChange}
-        placeholder="new Placeholder"
-        value={value}
-      >
-        <option value="15 Days">15 Days</option>
-        <option value="100 Days" selected>
-          100 Days
-        </option>
-      </select>
+      <FormControl fullWidth>
+        <InputLabel id="demo-simple-select-label">Frequency</InputLabel>
+        <Select
+          labelId="KiboSelect"
+          value={value}
+          label="Frequency"
+          onChange={(event) => onChange(event.target.name, event.target.value)}
+          placeholder="select-subscription-frequency"
+        >
+          {children}
+        </Select>
+      </FormControl>
     </div>
   )),
 }))
 
-// jest.mock('@/components/common/KiboDialog/KiboDialog', () => ({children}) => (
-//  {children}
-//   <div data-testid="kibo-dialog-mock">
-//     <button type="button" onClick={}>
-//       cancel
-//     </button>
-//     <button type="button" onClick={}>
-//       confirm
-//     </button>
-//   </div>
-// ))
+jest.mock('@/components/common/KiboDialog/KiboDialog', () => ({
+  __esModule: true,
+  default: ({ children, Actions }) => {
+    return (
+      <>
+        {children}
+        {Actions}
+      </>
+    )
+  },
+}))
 
 describe('[components] EditSubscriptionFrequencyDialog', () => {
   const setup = () => {
@@ -76,7 +76,7 @@ describe('[components] EditSubscriptionFrequencyDialog', () => {
     expect(confirmButtton).toBeDisabled()
   })
 
-  it.only('sholud only enable Confirm button when user selects frequency', async () => {
+  it('sholud only enable Confirm button when user selects frequency', async () => {
     setup()
 
     const confirmButtton = screen.getByRole('button', {
@@ -86,19 +86,51 @@ describe('[components] EditSubscriptionFrequencyDialog', () => {
     expect(confirmButtton).toBeDisabled()
 
     // Act
-    await user.selectOptions(
-      screen.getByRole('combobox'),
-      screen.getByRole('option', { name: '100 Days' })
-    )
+    const kiboSelectBtn = screen.getByRole('button', {
+      name: /​/i,
+    })
+    await user.click(kiboSelectBtn)
 
-    // Assert
-    // const selectedOption = screen.getByRole('option', { name: '100 Days' }).selected
-    // expect(selectedOption).toBe(true)
+    const listbox = await screen.findByRole('listbox')
+    await user.click(within(listbox).getByRole('option', { name: '45 Days' }))
 
-    // expect(confirmButtton).toBeEnabled()
+    //Assert
+    expect(confirmButtton).toBeEnabled()
   })
 
-  it('should save frequency when user selects frequency and clicks on Confirm button', () => {
-    //Need to complete
+  it('should save frequency and display SnackBar when user selects frequency and clicks on Confirm button', async () => {
+    setup()
+
+    // Select Frequency
+    const kiboSelectBtn = screen.getByRole('button', {
+      name: /​/i,
+    })
+    await user.click(kiboSelectBtn)
+
+    const listbox = await screen.findByRole('listbox')
+    await user.click(within(listbox).getByRole('option', { name: '45 Days' }))
+
+    // Click on Confrim button
+    const confirmlButton = screen.getByRole('button', {
+      name: /confirm/i,
+    })
+
+    expect(confirmlButton).toBeVisible()
+    expect(confirmlButton).toBeEnabled()
+    user.click(confirmlButton)
+
+    //TODO
+    // 1. Mock the handler and verify the response
+    // 2. Check whether SnackBar is displayed or not
+  })
+
+  it('should close modal when user clicks on Cancel button', () => {
+    const cancelButton = screen.getByRole('button', {
+      name: /cancel/i,
+    })
+    expect(cancelButton).toBeVisible()
+
+    //TODO
+    // 1. Verify that Dialog is closed
   })
 })
