@@ -6,18 +6,10 @@ import { render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 
 import * as stories from './SubscriptionItem.stories' // import all stories from the stories file
-<<<<<<< HEAD
-import { subscriptionItemMock } from '@/__mocks__/stories/subscriptionCollectionMock'
+import { subscriptionItemMock } from '@/__mocks__/stories'
+import { createQueryClientWrapper } from '@/__test__/utils'
+import { DialogRoot, ModalContextProvider } from '@/context'
 import { subscriptionGetters } from '@/lib/getters'
-
-=======
-<<<<<<<< HEAD:components/my-account/Subscription/MySubscription/MySubscription.spec.tsx
-import { subscriptionItemMock } from '@/__mocks__/stories/subscriptionCollectionMock'
-import { subscriptionGetters } from '@/lib/getters'
-
-========
->>>>>>>> f37e0806 (Resolved PR Comments and fixed failing test case):components/my-account/Subscription/SubscriptionItem/SubscriptionItem.spec.tsx
->>>>>>> f37e0806 (Resolved PR Comments and fixed failing test case)
 const { Common } = composeStories(stories)
 const subscriptionItem = subscriptionItemMock?.items
 
@@ -31,7 +23,15 @@ jest.mock('@/context/ModalContext', () => ({
 describe('[component] - Subscription', () => {
   const setup = () => {
     const user = userEvent.setup()
-    render(<Common />)
+    render(
+      <ModalContextProvider>
+        <DialogRoot />
+        <Common />
+      </ModalContextProvider>,
+      {
+        wrapper: createQueryClientWrapper(),
+      }
+    )
     return {
       user,
     }
@@ -110,5 +110,14 @@ describe('[component] - Subscription', () => {
     await userEvent.click(editFrequencyButton)
 
     expect(showModalMock).toHaveBeenCalledTimes(1)
+  })
+
+  it('should render Confirmation Dialog if clicked on ship-an-item-now button', async () => {
+    const { user } = setup()
+    const shipAnItemNowButton = screen.getByRole('button', { name: 'ship-an-item-now' })
+
+    await user.click(shipAnItemNowButton)
+
+    expect(screen.getByText('place-an-order-of-this-subscription-now')).toBeVisible()
   })
 })
