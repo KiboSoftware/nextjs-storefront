@@ -7,6 +7,10 @@ import { ProductItem } from '@/components/common'
 import { EditSubscriptionFrequencyDialog } from '@/components/dialogs'
 import { ProductOption } from '@/components/product'
 import { useModalContext } from '@/context/ModalContext'
+import { ConfirmationDialog } from '@/components/dialogs'
+import { ProductOption } from '@/components/product'
+import { useModalContext } from '@/context'
+import { useOrderSubscriptionNowMutation } from '@/hooks'
 import { subscriptionGetters, productGetters } from '@/lib/getters'
 import { uiHelpers } from '@/lib/helpers'
 
@@ -14,6 +18,11 @@ import type { CrProduct, Subscription, SbSubscriptionItem } from '@/lib/gql/type
 
 interface SubscriptionItemProps {
   subscriptionDetailsData: Subscription
+}
+
+interface SubscriptionButtonProps {
+  subscriptionButtonName: string
+  onClickHandler?: () => void
 }
 
 const style = {
@@ -60,6 +69,17 @@ const style = {
     },
     justifyContent: 'space-between',
   },
+}
+
+const SubscriptionButton = (props: SubscriptionButtonProps) => {
+  const { subscriptionButtonName, onClickHandler } = props
+  const { t } = useTranslation('common')
+
+  return (
+    <Button variant="contained" color="secondary" sx={{ ...style.button }} onClick={onClickHandler}>
+      {t(subscriptionButtonName)}
+    </Button>
+  )
 }
 
 const SubscriptionItem = (props: SubscriptionItemProps) => {
@@ -159,7 +179,12 @@ const SubscriptionItem = (props: SubscriptionItemProps) => {
             }}
           >
             <Stack direction={{ xs: 'column', md: 'column', lg: 'column' }} ml="2%">
-              <Button variant="contained" color="secondary" sx={{ ...style.button }}>
+              <Button
+                variant="contained"
+                color="secondary"
+                sx={{ ...style.button }}
+                onClick={() => handleShipItemNow({ id: subscriptionDetailsData?.id as string })}
+              >
                 {t('ship-an-item-now')}
               </Button>
               <Button variant="contained" color="secondary" sx={{ ...style.button }}>
