@@ -83,18 +83,18 @@ const SubscriptionItemList = (props: SubscriptionItemListProps) => {
   const { showSnackbar } = useSnackbarContext()
   const skipNextSubscription = useSkipNextSubscriptionMutation()
 
-  const skipNextOrderConfirmation = (subscriptionId: string) => {
+  const handleSkipNextSubscription = (subscriptionId: string) => {
     showModal({
       Component: ConfirmationDialog,
       props: {
-        onConfirm: () => callSkipSubscriptionMutation(subscriptionId),
+        onConfirm: () => confirmSkipNextSubscription(subscriptionId),
         contentText: t('skip-next-subscription-confirmation'),
         primaryButtonText: t('Yes'),
       },
     })
   }
 
-  const callSkipSubscriptionMutation = async (subscriptionId: string) => {
+  const confirmSkipNextSubscription = async (subscriptionId: string) => {
     try {
       const skipSubscriptionResponse = await skipNextSubscription.mutateAsync(
         subscriptionId as string
@@ -205,7 +205,7 @@ const SubscriptionItemList = (props: SubscriptionItemListProps) => {
                   <SubscriptionButton
                     subscriptionButtonName="skip-shipment"
                     onClickHandler={() =>
-                      skipNextOrderConfirmation(subscriptionItemData?.id as string)
+                      handleSkipNextSubscription(subscriptionItemData?.id as string)
                     }
                   />
                   <SubscriptionButton subscriptionButtonName="edit-frequency" />
