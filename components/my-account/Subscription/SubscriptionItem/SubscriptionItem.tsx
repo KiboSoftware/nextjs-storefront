@@ -164,7 +164,7 @@ const SubscriptionItem = (props: SubscriptionItemProps) => {
             <Stack direction="row">
               <Typography>{t('estimated-next-arrival-date')}</Typography>
               <Typography sx={{ fontWeight: 'bold', pl: '10px' }}>
-                {subscriptionGetters.nextOrderItemDate(subscriptionDetailsData as Subscription)}
+                {subscriptionGetters.nextOrderItemDate(subscriptionDetailsData)}
               </Typography>
             </Stack>
           </Stack>
