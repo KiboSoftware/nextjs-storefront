@@ -91,10 +91,10 @@ const SubscriptionItem = (props: SubscriptionItemProps) => {
         >
           <Stack direction="column">
             <Typography variant="h4" sx={{ fontWeight: 'bold' }}>
-              {subscriptionGetters.getSubscriberName(subscriptionDetailsData as Subscription)}
+              {subscriptionGetters.getSubscriberName(subscriptionDetailsData)}
             </Typography>
             <Typography variant="h4">
-              {subscriptionGetters.getSubscriberAddress(subscriptionDetailsData as Subscription)}
+              {subscriptionGetters.getSubscriberAddress(subscriptionDetailsData)}
             </Typography>
           </Stack>
           <Stack direction="column" sx={{ ...style.subscriptionNumber }}>
@@ -102,9 +102,7 @@ const SubscriptionItem = (props: SubscriptionItemProps) => {
               <ProductOption
                 option={{
                   name: t('subscription-number'),
-                  value: subscriptionGetters.getSubscriptionNumber(
-                    subscriptionDetailsData as Subscription
-                  ),
+                  value: subscriptionGetters.getSubscriptionNumber(subscriptionDetailsData),
                 }}
                 variant="h4"
                 align="right"
@@ -114,9 +112,7 @@ const SubscriptionItem = (props: SubscriptionItemProps) => {
               <ProductOption
                 option={{
                   name: t('status'),
-                  value: subscriptionGetters.getSubscriptionStatus(
-                    subscriptionDetailsData as Subscription
-                  ),
+                  value: subscriptionGetters.getSubscriptionStatus(subscriptionDetailsData),
                 }}
                 variant="h4"
                 align="right"
@@ -147,15 +143,13 @@ const SubscriptionItem = (props: SubscriptionItemProps) => {
                 {t('shipment-frequency')}
               </Typography>
               <Typography fontWeight="bold" pl="6%" sx={{ display: 'flex' }}>
-                {subscriptionGetters.getSubscriptionFrequency(
-                  subscriptionDetailsData as Subscription
-                )}
+                {subscriptionGetters.getSubscriptionFrequency(subscriptionDetailsData)}
               </Typography>
             </Stack>
             <Stack direction="row">
               <Typography>{t('estimated-next-arrival-date')}</Typography>
               <Typography sx={{ fontWeight: 'bold', pl: '10px' }}>
-                {subscriptionGetters.nextOrderItemDate(subscriptionDetailsData as Subscription)}
+                {subscriptionGetters.nextOrderItemDate(subscriptionDetailsData)}
               </Typography>
             </Stack>
           </Stack>
