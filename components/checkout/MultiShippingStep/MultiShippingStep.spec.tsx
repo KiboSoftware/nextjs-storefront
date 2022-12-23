@@ -28,13 +28,6 @@ describe('[components] MultiShippingStep', () => {
     )
   }
 
-  it('should stepperStatus validate', () => {
-    setup()
-    const stepperStatus = 'VALIDATE'
-
-    expect(stepperStatus).toBe('VALIDATE')
-  })
-
   it('should render component', () => {
     setup()
 

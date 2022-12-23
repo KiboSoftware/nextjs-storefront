@@ -179,7 +179,7 @@ const ReviewStep = (props: ReviewStepProps) => {
 
   return (
     <Box data-testid={'review-step-component'}>
-      <Typography variant="h2" component="h2" sx={{ fontWeight: 'bold' }} color="text.primary">
+      <Typography variant="h2" component="h2" fontWeight={'bold'} color="text.primary">
         {t('order-details')}
       </Typography>
 
@@ -187,7 +187,7 @@ const ReviewStep = (props: ReviewStepProps) => {
 
       {!isMultiShipEnabled && shipItems && shipItems.length > 0 && (
         <Stack gap={4}>
-          <Typography variant="h3" component="h3" sx={{ fontWeight: 'bold' }} color="text.primary">
+          <Typography variant="h3" component="h3" fontWeight={'bold'} color="text.primary">
             {t('shipping-to-home')}
           </Typography>
           <ProductItemList items={shipItems} />
@@ -198,7 +198,7 @@ const ReviewStep = (props: ReviewStepProps) => {
       {/* multiShip array will be used later after API is handled instead on shipItems */}
       {isMultiShipEnabled && shipItems && shipItems.length > 0 && (
         <Stack gap={4}>
-          <Typography variant="h3" component="h3" sx={{ fontWeight: 'bold' }} color="text.primary">
+          <Typography variant="h3" component="h3" fontWeight={'bold'} color="text.primary">
             {t('shipping-to-address')}
           </Typography>
           <ReviewProductItemsWithAddresses items={shipItems} />
@@ -208,7 +208,7 @@ const ReviewStep = (props: ReviewStepProps) => {
 
       {!isMultiShipEnabled && pickupItems && pickupItems.length > 0 && (
         <Stack gap={4}>
-          <Typography variant="h3" component="h3" sx={{ fontWeight: 'bold' }} color="text.primary">
+          <Typography variant="h3" component="h3" fontWeight={'bold'} color="text.primary">
             {t('pickup-in-store')}
           </Typography>
           <ProductItemList items={pickupItems} />

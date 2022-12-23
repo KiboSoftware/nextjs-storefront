@@ -30,10 +30,11 @@ import {
   CartIcon,
   HamburgerMenu,
   LoginDialog,
-  CheckoutHeader,
 } from '@/components/layout'
-import MultiShipCheckoutHeaderTemplate from '@/components/page-templates/MultiShipCheckoutHeaderTemplate/MultiShipCheckoutHeaderTemplate'
-import StandardCheckoutHeaderTemplate from '@/components/page-templates/StandardCheckoutHeaderTemplate/StandardCheckoutHeaderTemplate'
+import {
+  MultiShipCheckoutHeaderTemplate,
+  StandardCheckoutHeaderTemplate,
+} from '@/components/page-templates'
 import { useAuthContext, useHeaderContext, useModalContext } from '@/context'
 import { useCategoryTreeQueries } from '@/hooks'
 import type { NavigationLink } from '@/lib/types'

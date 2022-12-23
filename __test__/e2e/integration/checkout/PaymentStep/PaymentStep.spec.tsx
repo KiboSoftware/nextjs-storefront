@@ -10,7 +10,7 @@ import { addNewCard } from '@/__test__/e2e/helper'
 import * as stories from '@/components/checkout/PaymentStep/PaymentStep.stories'
 import { CheckoutStepProvider } from '@/context'
 
-import { CrOrder } from '@/lib/gql/types'
+import type { CrOrder } from '@/lib/gql/types'
 
 let mockIsAuthenticated = false
 const userMock = {

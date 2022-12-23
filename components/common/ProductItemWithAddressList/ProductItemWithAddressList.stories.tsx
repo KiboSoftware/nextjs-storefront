@@ -4,6 +4,9 @@ import { ComponentStory, ComponentMeta } from '@storybook/react'
 
 import ProductItemWithAddressList from './ProductItemWithAddressList'
 import { checkoutMock } from '@/__mocks__/stories'
+import { checkoutGetters } from '@/lib/getters'
+
+import type { MultiShipAddress } from './ProductItemWithAddressList'
 
 export default {
   title: 'Common/ProductItemWithAddressList',
@@ -17,7 +20,12 @@ const Template: ComponentStory<typeof ProductItemWithAddressList> = (args) => (
 )
 
 export const Common = Template.bind({})
+const multiShipAddresses = checkoutGetters.getMultiShipAddresses({
+  checkout: checkoutMock.checkout,
+  savedShippingAddresses: [],
+})
 
 Common.args = {
   checkout: checkoutMock.checkout,
+  multiShipAddresses: multiShipAddresses as MultiShipAddress[],
 }

@@ -22,10 +22,10 @@ export interface PersonalDetails {
 export interface Action {
   type: FormStates.COMPLETE | FormStates.INCOMPLETE | FormStates.VALIDATE
 }
-interface DetailsProps {
+interface DetailsProps<T> {
   setAutoFocus?: boolean
-  checkout: CrOrder | Checkout | undefined
-  updateCheckoutPersonalInfo: (params: any) => void //@to-do add generic type for this param as std/multi
+  checkout: T
+  updateCheckoutPersonalInfo: (params: { email: Maybe<string> | undefined }) => Promise<void>
 }
 
 const commonStyle = {
@@ -60,7 +60,7 @@ const useDetailsSchema = () => {
   })
 }
 
-const DetailsStep = (props: DetailsProps) => {
+const DetailsStep = <T extends CrOrder | Checkout>(props: DetailsProps<T>) => {
   const { setAutoFocus = true, checkout, updateCheckoutPersonalInfo } = props
 
   const { t } = useTranslation('common')
@@ -97,12 +97,9 @@ const DetailsStep = (props: DetailsProps) => {
     shouldFocusError: true,
   })
 
-  const updatePersonalInfo = async (formData: PersonalDetails) =>
-    updateCheckoutPersonalInfo(formData)
-
   const onValid = async (formData: PersonalDetails) => {
     try {
-      await updatePersonalInfo(formData)
+      await updateCheckoutPersonalInfo(formData)
       setStepStatusComplete()
       setStepNext()
     } catch (error) {

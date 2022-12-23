@@ -3,7 +3,7 @@ import React from 'react'
 import { ComponentStory, ComponentMeta } from '@storybook/react'
 
 import MultiShippingStep from './MultiShippingStep'
-import { checkoutMock } from '@/__mocks__/stories'
+import { checkoutMock, multiShippingRateMock } from '@/__mocks__/stories'
 import { userAddressResponse } from '@/__mocks__/stories/userAddressMock'
 import { CheckoutStepProvider } from '@/context/CheckoutStepContext/CheckoutStepContext'
 import { userGetters } from '@/lib/getters/userGetters'
@@ -37,4 +37,5 @@ Common.args = {
   checkout: checkoutMock.checkout,
   isAuthenticated: true,
   userSavedShippingAddress,
+  shippingMethods: multiShippingRateMock?.checkoutShippingMethods,
 }

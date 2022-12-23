@@ -3,12 +3,16 @@ import React from 'react'
 import { ComponentStory, ComponentMeta } from '@storybook/react'
 
 import ShippingGroupsWithMethod from './ShippingGroupsWithMethod'
-import { checkoutMock } from '@/__mocks__/stories'
+import { checkoutMock, multiShippingRateMock } from '@/__mocks__/stories'
 
 export default {
   title: 'Common/ShippingGroupsWithMethod',
   component: ShippingGroupsWithMethod,
-  argTypes: {},
+  argTypes: {
+    onUpdateCheckoutShippingMethod: {
+      action: 'onChange',
+    },
+  },
 } as ComponentMeta<typeof ShippingGroupsWithMethod>
 
 const Template: ComponentStory<typeof ShippingGroupsWithMethod> = (args) => (
@@ -18,6 +22,7 @@ const Template: ComponentStory<typeof ShippingGroupsWithMethod> = (args) => (
 export const Common = Template.bind({})
 
 Common.args = {
-  checkout: checkoutMock.checkout,
-  //@todo add other props here for testing
+  checkout: checkoutMock?.checkout,
+  shippingMethods: multiShippingRateMock?.checkoutShippingMethods,
+  onUpdateCheckoutShippingMethod: () => console.log('select shipping rate called'),
 }

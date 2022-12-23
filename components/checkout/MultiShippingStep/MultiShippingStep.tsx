@@ -14,7 +14,7 @@ import {
   ShippingGroupsWithMethod,
 } from '@/components/common'
 import type { MultiShipAddress } from '@/components/common/ProductItemWithAddressList/ProductItemWithAddressList'
-import AddressFormDialog from '@/components/dialogs/AddressFormDialog/AddressFormDialog'
+import { AddressFormDialog } from '@/components/dialogs'
 import { useCheckoutStepContext, STEP_STATUS } from '@/context'
 import { useModalContext } from '@/context/ModalContext'
 import {
@@ -84,35 +84,33 @@ const MultiShippingStep = (props: ShippingProps) => {
     createCheckoutDestination,
     onUpdateCheckoutShippingMethod,
   } = props
-  const { publicRuntimeConfig } = getConfig()
+
   const { showModal, closeModal } = useModalContext()
+  const { t } = useTranslation('common')
+  const shippingAddressRef = useRef()
+
+  const { publicRuntimeConfig } = getConfig()
+  const shipOptions = publicRuntimeConfig.shipOptions
 
   const checkoutShippingMethodCode = checkoutGetters.getShippingMethodCode(checkout)
   const userShippingAddress = isAuthenticated
     ? userGetters.getUserShippingAddress(addresses as CustomerContact[])
     : []
-
   const shipItems = checkoutGetters.getShipItems(checkout)
   const pickupItems = checkoutGetters.getPickupItems(checkout)
-
-  const [validateForm, setValidateForm] = useState<boolean>(false)
-  const [isAddressFormValid, setIsAddressFormValid] = useState<boolean>(false)
-
-  const [shouldShowAddAddressButton, setShouldShowAddAddressButton] = useState<boolean>(true)
-  const shipOptions = publicRuntimeConfig.shipOptions
   const initialShippingOption = checkoutGetters?.getInitialShippingOption(checkout, shipOptions)
-  const [shippingOption, setShippingOption] = useState<string>(initialShippingOption)
-
-  const [showMultiShipContinueButton, setShowMultiShipContinueButton] = useState<boolean>(true)
-
   const multiShipAddresses = checkoutGetters.getMultiShipAddresses({
     checkout,
     savedShippingAddresses: userShippingAddress as CrContact[],
   })
   const isMultiShipPaymentStepValid = checkoutGetters.checkMultiShipPaymentValid(checkout)
 
-  const { t } = useTranslation('common')
-  const shippingAddressRef = useRef()
+  const [validateForm, setValidateForm] = useState<boolean>(false)
+  const [isAddressFormValid, setIsAddressFormValid] = useState<boolean>(false)
+  const [shouldShowAddAddressButton, setShouldShowAddAddressButton] = useState<boolean>(true)
+  const [shippingOption, setShippingOption] = useState<string>(initialShippingOption)
+  const [showMultiShipContinueButton, setShowMultiShipContinueButton] = useState<boolean>(true)
+
   // hooks
   const {
     stepStatus,
@@ -327,7 +325,7 @@ const MultiShippingStep = (props: ShippingProps) => {
       Component: AddressFormDialog,
       props: {
         isUserLoggedIn: false,
-        formTitle: destinationInput?.destinationId ? 'Edit Address' : 'Add New Address',
+        formTitle: destinationInput?.destinationId ? t('edit-address') : t('add-new-address'),
         contact: destinationInput,
         isAddressFormValid: false,
         setAutoFocus: true,

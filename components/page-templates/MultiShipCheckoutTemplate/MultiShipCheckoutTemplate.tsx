@@ -44,14 +44,16 @@ const MultiShipCheckoutTemplate = (props: CheckoutProps) => {
     checkoutId: checkoutId as string,
     initialCheckout,
   })
-  const updateMultiShipCheckoutPersonalInfo = useUpdateMultiShipCheckoutPersonalInfoMutation()
-  const createCheckoutDestination = useCreateCheckoutDestinationMutations()
-  const createCheckoutShippingMethod = useCreateCheckoutShippingMethodMutation()
-
   const { data: shippingMethods } = useCheckoutShippingMethodsQuery(
     checkoutId as string,
     checkout?.groupings && (checkout?.groupings[0]?.destinationId as string)
   )
+
+  const updateMultiShipCheckoutPersonalInfo = useUpdateMultiShipCheckoutPersonalInfoMutation()
+  const createCheckoutDestination = useCreateCheckoutDestinationMutations()
+  const createCheckoutShippingMethod = useCreateCheckoutShippingMethodMutation()
+  const updateCheckoutCoupon = useUpdateCheckoutCouponMutation()
+  const deleteCheckoutCoupon = useDeleteCheckoutCouponMutation()
 
   const updateCheckoutPersonalInfo = async (formData: PersonalDetails) => {
     const { email } = formData
@@ -64,33 +66,6 @@ const MultiShipCheckoutTemplate = (props: CheckoutProps) => {
 
   const { isAuthenticated, user } = useAuthContext()
   const { data: savedUserAddressData, isSuccess } = useCustomerContactsQueries(user?.id as number)
-  const updateCheckoutCoupon = useUpdateCheckoutCouponMutation()
-  const deleteCheckoutCoupon = useDeleteCheckoutCouponMutation()
-
-  const handleApplyCouponCode = async (couponCode: string) => {
-    try {
-      setPromoError('')
-      const response = await updateCheckoutCoupon.mutateAsync({
-        checkoutId: checkoutId as string,
-        couponCode,
-      })
-      if (response?.invalidCoupons?.length) {
-        setPromoError(response?.invalidCoupons[0]?.reason)
-      }
-    } catch (err) {
-      console.error(err)
-    }
-  }
-  const handleRemoveCouponCode = async (couponCode: string) => {
-    try {
-      await deleteCheckoutCoupon.mutateAsync({
-        checkoutId: checkoutId as string,
-        couponCode,
-      })
-    } catch (err) {
-      console.error(err)
-    }
-  }
 
   const userShippingAddress = userGetters?.getUserShippingAddress(
     savedUserAddressData?.items as CustomerContact[]
@@ -125,6 +100,31 @@ const MultiShipCheckoutTemplate = (props: CheckoutProps) => {
     })
   }
 
+  const handleApplyCouponCode = async (couponCode: string) => {
+    try {
+      setPromoError('')
+      const response = await updateCheckoutCoupon.mutateAsync({
+        checkoutId: checkoutId as string,
+        couponCode,
+      })
+      if (response?.invalidCoupons?.length) {
+        setPromoError(response?.invalidCoupons[0]?.reason)
+      }
+    } catch (err) {
+      console.error(err)
+    }
+  }
+  const handleRemoveCouponCode = async (couponCode: string) => {
+    try {
+      await deleteCheckoutCoupon.mutateAsync({
+        checkoutId: checkoutId as string,
+        couponCode,
+      })
+    } catch (err) {
+      console.error(err)
+    }
+  }
+
   return (
     <>
       <CheckoutUITemplate
@@ -135,7 +135,10 @@ const MultiShipCheckoutTemplate = (props: CheckoutProps) => {
         promoError={promoError}
         userShippingAddress={userShippingAddress}
       >
-        <DetailsStep checkout={checkout} updateCheckoutPersonalInfo={updateCheckoutPersonalInfo} />
+        <DetailsStep
+          checkout={checkout as Checkout}
+          updateCheckoutPersonalInfo={updateCheckoutPersonalInfo}
+        />
         {((isAuthenticated && isSuccess) || !isAuthenticated) && (
           <MultiShippingStep
             checkout={checkout as Checkout}
