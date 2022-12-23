@@ -2,9 +2,9 @@ import lodash from 'lodash'
 
 import { FulfillmentOptions } from '../constants'
 import { ShipOption } from '@/components/checkout/MultiShippingStep/MultiShippingStep'
-import type { MultiShipAddress } from '@/components/common/ProductItemWithAddressList/ProductItemWithAddressList'
 
 import type { CrOrderItem, Checkout, Maybe, CrDestination, CrContact } from '@/lib/gql/types'
+import { MultiShipAddress } from '../types/MultiShip'
 
 interface DestinationItemGroup {
   destinationId: string

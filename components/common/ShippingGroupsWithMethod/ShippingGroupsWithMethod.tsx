@@ -170,7 +170,7 @@ const ShippingGroupsWithMethod = (props: ShippingGroupsWithMethodProps) => {
                   component="span"
                   sx={{ fontWeight: 'bold', marginRight: '0.25rem' }}
                 >
-                  {t('ship-to')}:
+                  {t('ship-to')}
                 </Typography>
                 <Typography variant="body1" component="span">
                   {checkoutGetters.formatDestinationAddress(
