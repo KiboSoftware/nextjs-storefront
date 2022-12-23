@@ -13,7 +13,6 @@ import {
   ProductItemWithAddressList,
   ShippingGroupsWithMethod,
 } from '@/components/common'
-import type { MultiShipAddress } from '@/components/common/ProductItemWithAddressList/ProductItemWithAddressList'
 import { AddressFormDialog } from '@/components/dialogs'
 import { useCheckoutStepContext, STEP_STATUS } from '@/context'
 import { useModalContext } from '@/context/ModalContext'
@@ -30,12 +29,14 @@ import type {
   Checkout,
   CheckoutGroupRates,
 } from '@/lib/gql/types'
+import { MultiShipAddress } from '@/lib/types/MultiShip'
 
 const buttonStyle = {
   width: '100%',
   maxWidth: '421px',
   height: '42px',
   fontSize: (theme: Theme) => theme.typography.subtitle1,
+  textTransform: 'none'
 } as SxProps<Theme> | undefined
 
 interface ShippingProps {
@@ -421,7 +422,6 @@ const MultiShippingStep = (props: ShippingProps) => {
                   variant="contained"
                   color="inherit"
                   sx={{ ...buttonStyle }}
-                  style={{ textTransform: 'none' }}
                   onClick={handleAddressValidationAndSave}
                   {...(!isAddressFormValid && { disabled: true })}
                 >

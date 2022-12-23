@@ -8,11 +8,7 @@ import { KiboSelect, ProductItem } from '@/components/common'
 import { orderGetters, productGetters, checkoutGetters } from '@/lib/getters'
 
 import type { Maybe, CrOrderItem, CrProduct, Checkout, CrContact } from '@/lib/gql/types'
-
-export type MultiShipAddress = {
-  destinationId: string
-  address: CrContact
-}
+import { MultiShipAddress } from '@/lib/types/MultiShip'
 
 export type ProductItemWithAddressListProps = {
   checkout: Checkout

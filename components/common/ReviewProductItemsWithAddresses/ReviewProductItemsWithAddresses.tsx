@@ -35,7 +35,6 @@ const ReviewProductItemsWithAddresses = (props: ReviewProductItemsWithAddressesP
           <>
             <Typography variant="h4" component="h4" fontWeight={'bold'} color="text.primary">
               {t('ship-to')}
-              {':'}
               <Typography
                 variant="h4"
                 component="span"
