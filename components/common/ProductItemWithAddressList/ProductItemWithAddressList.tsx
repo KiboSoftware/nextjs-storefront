@@ -84,7 +84,8 @@ const ProductItemWithAddressList = (props: ProductItemWithAddressListProps) => {
     })
   }
   const handleSplitAddress = () => {
-    console.log('split address need to be implemented when api will be available')
+    // @to-do split address need to be implemented when api will be available
+    console.log('split address')
   }
 
   return (

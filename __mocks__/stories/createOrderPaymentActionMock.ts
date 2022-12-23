@@ -1,4 +1,4 @@
-import { CrOrder } from '@/lib/gql/types'
+import type { CrOrder } from '@/lib/gql/types'
 
 export const createOrderPaymentActionMock: { createOrderPaymentAction: CrOrder } = {
   createOrderPaymentAction: {

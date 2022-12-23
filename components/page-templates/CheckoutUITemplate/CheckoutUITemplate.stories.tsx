@@ -4,7 +4,7 @@ import { ComponentStory, ComponentMeta } from '@storybook/react'
 import { graphql } from 'msw'
 
 import CheckoutUITemplate from './CheckoutUITemplate'
-import { checkoutMock } from '@/__mocks__/stories'
+import { orderMock, checkoutMock } from '@/__mocks__/stories'
 export default {
   title: 'Page Templates/Checkout UI Template',
   component: CheckoutUITemplate,
@@ -22,3 +22,11 @@ const Template: ComponentStory<typeof CheckoutUITemplate> = (args) => (
 )
 
 export const Common = Template.bind({})
+Common.args = {
+  checkout: orderMock?.checkout,
+}
+
+export const MultiShip = Template.bind({})
+MultiShip.args = {
+  checkout: checkoutMock?.checkout,
+}

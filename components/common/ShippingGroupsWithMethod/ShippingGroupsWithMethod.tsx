@@ -53,6 +53,13 @@ const styles = {
     justifyContent: 'space-between',
     alignItems: 'baseline',
   },
+  shipmentDivider: {
+    marginTop: '0.5rem',
+    borderColor: 'primary.main',
+    maxWidth: '26.313rem',
+    width: '100%',
+  },
+  groupDivider: { marginTop: '1.375rem', maxWidth: '26.313rem', width: '100%' },
 }
 
 const ProductGroup = ({ items }: { items: Maybe<CrOrderItem>[] }) => {
@@ -102,6 +109,27 @@ const ShippingGroupsWithMethod = (props: ShippingGroupsWithMethodProps) => {
     })
   }
 
+  const ShippingRatesOptions = ({ groupingId }: { groupingId: Maybe<string> }) => {
+    const shippingRates = shippingMethods?.find(
+      (shippingMethod) => shippingMethod.groupingId === groupingId
+    )?.shippingRates
+
+    return (
+      <>
+        {shippingRates?.map((shippingRate) => {
+          return (
+            <MenuItem
+              key={shippingRate?.shippingMethodName}
+              value={`${shippingRate?.shippingMethodCode}`}
+            >
+              {`${shippingRate?.shippingMethodName} $${shippingRate?.price}`}
+            </MenuItem>
+          )
+        })}
+      </>
+    )
+  }
+
   return (
     <>
       <Box sx={{ ...styles.multipleAddresses }}>
@@ -135,14 +163,7 @@ const ShippingGroupsWithMethod = (props: ShippingGroupsWithMethodProps) => {
                   numberOfShipments: destinationItemGroups?.length,
                 })}
               </Typography>
-              <Divider
-                sx={{
-                  marginTop: '0.5rem',
-                  borderColor: 'primary.main',
-                  maxWidth: '26.313rem',
-                  width: '100%',
-                }}
-              />
+              <Divider sx={{ ...styles.shipmentDivider }} />
               <Box pt={2}>
                 <Typography
                   variant="body1"
@@ -170,21 +191,7 @@ const ShippingGroupsWithMethod = (props: ShippingGroupsWithMethodProps) => {
                   )?.shippingMethodCode as string
                 }
               >
-                {shippingMethods
-                  ?.find(
-                    (shippingMethod) =>
-                      shippingMethod.groupingId === destinationItemGroup?.groupingId
-                  )
-                  ?.shippingRates?.map((shippingRate) => {
-                    return (
-                      <MenuItem
-                        key={shippingRate?.shippingMethodName}
-                        value={`${shippingRate?.shippingMethodCode}`}
-                      >
-                        {`${shippingRate?.shippingMethodName} $${shippingRate?.price}`}
-                      </MenuItem>
-                    )
-                  })}
+                <ShippingRatesOptions groupingId={destinationItemGroup?.groupingId} />
               </KiboSelect>
               <ProductGroup
                 key={destinationItemGroup?.destinationId}
@@ -192,9 +199,7 @@ const ShippingGroupsWithMethod = (props: ShippingGroupsWithMethodProps) => {
               />
               <Divider
                 sx={{
-                  marginTop: '1.375rem',
-                  maxWidth: '26.313rem',
-                  width: '100%',
+                  ...styles.groupDivider,
                 }}
               />
             </Box>

@@ -1,4 +1,4 @@
-import { CrDestination } from '@/lib/gql/types'
+import type { CrDestination } from '@/lib/gql/types'
 
 export const checkoutDestinationsMock: { checkoutDestinations: CrDestination[] } = {
   checkoutDestinations: [

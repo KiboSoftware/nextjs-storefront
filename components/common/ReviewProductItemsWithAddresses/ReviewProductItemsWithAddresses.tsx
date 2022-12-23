@@ -33,12 +33,7 @@ const ReviewProductItemsWithAddresses = (props: ReviewProductItemsWithAddressesP
         const product = item?.product as CrProduct
         return (
           <>
-            <Typography
-              variant="h4"
-              component="h4"
-              sx={{ fontWeight: 'bold' }}
-              color="text.primary"
-            >
+            <Typography variant="h4" component="h4" fontWeight={'bold'} color="text.primary">
               {t('ship-to')}
               {':'}
               <Typography

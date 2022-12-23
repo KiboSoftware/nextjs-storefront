@@ -6,7 +6,7 @@ import { CheckoutHeader } from '@/components/layout'
 import { useCheckoutQueries } from '@/hooks'
 import { orderGetters } from '@/lib/getters'
 
-import { CrOrder } from '@/lib/gql/types'
+import type { CrOrder } from '@/lib/gql/types'
 
 const StandardCheckoutHeaderTemplate = () => {
   const router = useRouter()
