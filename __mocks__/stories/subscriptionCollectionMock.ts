@@ -245,3 +245,13 @@ export const subscriptionItemMock: { items: Subscription } = {
     total: 237.75,
   },
 }
+
+export const noSubscriptionMock: { subscriptions: SubscriptionCollection } = {
+  subscriptions: {
+    startIndex: 1,
+    pageSize: 20,
+    pageCount: 1,
+    totalCount: 0,
+    items: [],
+  },
+}
