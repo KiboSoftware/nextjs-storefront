@@ -6,9 +6,9 @@ import { useTranslation } from 'next-i18next'
 import { CustomDestinationInput } from '@/components/checkout/MultiShippingStep/MultiShippingStep'
 import { KiboSelect, ProductItem } from '@/components/common'
 import { orderGetters, productGetters, checkoutGetters } from '@/lib/getters'
+import { MultiShipAddress } from '@/lib/types/MultiShip'
 
 import type { Maybe, CrOrderItem, CrProduct, Checkout, CrContact } from '@/lib/gql/types'
-import { MultiShipAddress } from '@/lib/types/MultiShip'
 
 export type ProductItemWithAddressListProps = {
   checkout: Checkout
@@ -51,6 +51,9 @@ const styles = {
   },
   splitShipment: {
     mt: 'auto',
+    ':before': {
+      content: "'+'",
+    },
   },
 }
 const ProductItemWithAddressList = (props: ProductItemWithAddressListProps) => {
@@ -155,7 +158,6 @@ const ProductItemWithAddressList = (props: ProductItemWithAddressListProps) => {
               </Box>
               {orderGetters.getProductQuantity(item as CrOrderItem) > 1 && (
                 <Box sx={{ ...styles.splitShipment }}>
-                  +
                   <Link
                     component="button"
                     variant="caption"

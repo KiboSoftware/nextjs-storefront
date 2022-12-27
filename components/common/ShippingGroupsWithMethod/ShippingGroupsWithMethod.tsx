@@ -3,7 +3,7 @@ import React from 'react'
 import { Divider, Box, MenuItem, Card, Typography, Link } from '@mui/material'
 import { useTranslation } from 'next-i18next'
 
-import { KiboSelect, ProductItem } from '@/components/common'
+import { KiboSelect, Price, ProductItem } from '@/components/common'
 import { orderGetters, productGetters, checkoutGetters } from '@/lib/getters'
 
 import type { Maybe, CrOrderItem, CrProduct, Checkout, CheckoutGroupRates } from '@/lib/gql/types'
@@ -109,27 +109,6 @@ const ShippingGroupsWithMethod = (props: ShippingGroupsWithMethodProps) => {
     })
   }
 
-  const ShippingRatesOptions = ({ groupingId }: { groupingId: Maybe<string> }) => {
-    const shippingRates = shippingMethods?.find(
-      (shippingMethod) => shippingMethod.groupingId === groupingId
-    )?.shippingRates
-
-    return (
-      <>
-        {shippingRates?.map((shippingRate) => {
-          return (
-            <MenuItem
-              key={shippingRate?.shippingMethodName}
-              value={`${shippingRate?.shippingMethodCode}`}
-            >
-              {`${shippingRate?.shippingMethodName} $${shippingRate?.price}`}
-            </MenuItem>
-          )
-        })}
-      </>
-    )
-  }
-
   return (
     <>
       <Box sx={{ ...styles.multipleAddresses }}>
@@ -186,12 +165,34 @@ const ShippingGroupsWithMethod = (props: ShippingGroupsWithMethodProps) => {
                   handleSelectShippingOption(destinationItemGroup?.groupingId, value)
                 }
                 value={
-                  checkout?.groupings?.find(
+                  (checkout?.groupings?.find(
                     (group) => group?.id === destinationItemGroup?.groupingId
-                  )?.shippingMethodCode as string
+                  )?.shippingMethodCode as string) || ''
                 }
               >
-                <ShippingRatesOptions groupingId={destinationItemGroup?.groupingId} />
+                {shippingMethods
+                  ?.find(
+                    (shippingMethod) =>
+                      shippingMethod.groupingId === destinationItemGroup?.groupingId
+                  )
+                  ?.shippingRates?.map((shippingRate) => {
+                    return (
+                      <MenuItem
+                        key={shippingRate?.shippingMethodName}
+                        value={`${shippingRate?.shippingMethodCode || ''}`}
+                      >
+                        <Price
+                          variant="body2"
+                          fontWeight="normal"
+                          price={
+                            `${shippingRate?.shippingMethodName}` +
+                            ' ' +
+                            t('currency', { val: shippingRate?.price })
+                          }
+                        />
+                      </MenuItem>
+                    )
+                  })}
               </KiboSelect>
               <ProductGroup
                 key={destinationItemGroup?.destinationId}

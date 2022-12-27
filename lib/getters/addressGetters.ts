@@ -62,6 +62,14 @@ const getStorePickupAddress = (
 ): CrAddress =>
   pickupAddresses?.find((store) => store.code === fulfillmentLocationCode)?.fullAddress as CrAddress
 
+const getFormattedAddress = (contact?: GenericContact) => {
+  contact?.address?.address1 + ' '
+  contact?.address?.address2 + ' '
+  contact?.address?.cityOrTown + ' '
+  contact?.address?.stateOrProvince + ' '
+  contact?.address?.postalOrZipCode + ' '
+  contact?.address?.countryCode
+}
 export const addressGetters = {
   getAddress,
   getAddress1,
@@ -79,4 +87,5 @@ export const addressGetters = {
   getPhoneNumbers,
   getEmail,
   getContactId,
+  getFormattedAddress,
 }

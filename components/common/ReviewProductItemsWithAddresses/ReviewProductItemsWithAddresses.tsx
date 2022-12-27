@@ -4,11 +4,13 @@ import { Stack, Divider, Typography } from '@mui/material'
 import { useTranslation } from 'next-i18next'
 
 import { ProductItem } from '..'
+
 // Need to be handled with API later
-import { userAddressResponse } from '@/__mocks__/stories/userAddressMock'
-import { orderGetters, productGetters } from '@/lib/getters'
+import { addressGetters, checkoutGetters, orderGetters, productGetters } from '@/lib/getters'
 
 import type { Maybe, CrOrderItem, CrProduct, CustomerContact } from '@/lib/gql/types'
+
+import { userAddressResponse } from '@/__mocks__/stories/userAddressMock'
 
 export type ReviewProductItemsWithAddressesProps = {
   items: Maybe<CrOrderItem>[]
@@ -31,6 +33,7 @@ const ReviewProductItemsWithAddresses = (props: ReviewProductItemsWithAddressesP
     >
       {items?.map((item: Maybe<CrOrderItem>, index) => {
         const product = item?.product as CrProduct
+        const formattedAddress = addressGetters.getFormattedAddress(userShippingAddresses[index])
         return (
           <>
             <Typography variant="h4" component="h4" fontWeight={'bold'} color="text.primary">
@@ -41,23 +44,12 @@ const ReviewProductItemsWithAddresses = (props: ReviewProductItemsWithAddressesP
                 color="text.primary"
                 sx={{ textTransform: 'capitalize' }}
               >
-                {' '}
-                {userShippingAddresses[index]?.address?.address1},{' '}
-                {userShippingAddresses[index]?.address?.address2},{' '}
-                {userShippingAddresses[index]?.address?.cityOrTown},{' '}
-                {userShippingAddresses[index]?.address?.stateOrProvince},{' '}
-                {userShippingAddresses[index]?.address?.postalOrZipCode},{' '}
-                {userShippingAddresses[index]?.address?.countryCode}
+                {formattedAddress}
               </Typography>
             </Typography>
 
-            <Typography
-              variant="h4"
-              component="h4"
-              sx={{ fontWeight: 'bold', marginTop: '0 !important' }}
-              color="primary"
-            >
-              {t('est-arrival')} Mon 20, Dec
+            <Typography variant="h4" component="h4" marginTop="0" fontWeight="bold" color="primary">
+              {t('est-arrival')} {checkoutGetters.getFormattedDate(item?.expectedDeliveryDate)}
             </Typography>
 
             <Stack key={item?.id}>
