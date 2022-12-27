@@ -1,10 +1,18 @@
+import { format } from 'date-fns'
 import lodash from 'lodash'
 
 import { FulfillmentOptions } from '../constants'
+import { MultiShipAddress } from '../types/MultiShip'
 import { ShipOption } from '@/components/checkout/MultiShippingStep/MultiShippingStep'
 
-import type { CrOrderItem, Checkout, Maybe, CrDestination, CrContact } from '@/lib/gql/types'
-import { MultiShipAddress } from '../types/MultiShip'
+import type {
+  CrOrderItem,
+  Checkout,
+  Maybe,
+  CrDestination,
+  CrContact,
+  Scalars,
+} from '@/lib/gql/types'
 
 interface DestinationItemGroup {
   destinationId: string
@@ -113,6 +121,10 @@ const getPickupItems = (checkout: Checkout): CrOrderItem[] => {
 const getShipItems = (checkout: Checkout): CrOrderItem[] =>
   getItemsByFulfillment(checkout, FulfillmentOptions.SHIP)
 
+const getFormattedDate = (dateInput: Scalars['DateTime']) => {
+  return dateInput ? format(new Date(dateInput), 'MMMM dd, yyyy, hh:mm a zzz') : ''
+}
+
 export const checkoutGetters = {
   buildItemsGroupFromCheckoutGroupings,
   formatDestinationAddress,
@@ -123,4 +135,5 @@ export const checkoutGetters = {
   getShippingMethodCode,
   getShipItems,
   getPickupItems,
+  getFormattedDate,
 }

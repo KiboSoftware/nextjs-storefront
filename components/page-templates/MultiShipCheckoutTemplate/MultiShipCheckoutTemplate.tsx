@@ -5,6 +5,7 @@ import { useRouter } from 'next/router'
 import { DetailsStep, MultiShippingStep } from '@/components/checkout'
 import type { PersonalDetails } from '@/components/checkout/DetailsStep/DetailsStep'
 import { CheckoutUITemplate } from '@/components/page-templates'
+
 import { useAuthContext } from '@/context'
 import {
   useCustomerContactsQueries,
@@ -17,6 +18,7 @@ import {
   useCheckoutShippingMethodsQuery,
   useCreateCheckoutShippingMethodMutation,
 } from '@/hooks'
+
 import { userGetters } from '@/lib/getters'
 
 import type {
@@ -72,21 +74,21 @@ const MultiShipCheckoutTemplate = (props: CheckoutProps) => {
   )
 
   const getShippingRateFromMethodGroupByMethodCode = async (
-    shippingMethodGroup: CheckoutGroupRates,
-    shippingMethodCode: string
+    shippingMethodCode: string,
+    shippingMethodGroup: CheckoutGroupRates
   ) =>
     shippingMethodGroup?.shippingRates?.find(
       (shippingRate: Maybe<CrShippingRate>) =>
         shippingRate?.shippingMethodCode === shippingMethodCode
     )
   const updateCheckoutShippingMethod = async (params: {
-    shippingMethodGroup: CheckoutGroupRates
     shippingMethodCode: string
+    shippingMethodGroup: CheckoutGroupRates
   }) => {
     const { shippingMethodGroup, shippingMethodCode } = params
     const shippingRate = await getShippingRateFromMethodGroupByMethodCode(
-      shippingMethodGroup,
-      shippingMethodCode
+      shippingMethodCode,
+      shippingMethodGroup
     )
 
     await createCheckoutShippingMethod.mutateAsync({
@@ -141,6 +143,7 @@ const MultiShipCheckoutTemplate = (props: CheckoutProps) => {
         />
         {((isAuthenticated && isSuccess) || !isAuthenticated) && (
           <MultiShippingStep
+            key={checkout?.groupings?.map((group) => group?.id).join('')}
             checkout={checkout as Checkout}
             userSavedShippingAddress={userShippingAddress}
             isAuthenticated={isAuthenticated}

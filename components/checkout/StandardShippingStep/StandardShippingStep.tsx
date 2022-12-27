@@ -6,12 +6,13 @@ import { useTranslation } from 'next-i18next'
 
 import { ShippingMethod } from '@/components/checkout'
 import { AddressDetailsView, AddressForm } from '@/components/common'
-import { useCheckoutStepContext, STEP_STATUS } from '@/context'
-import { useUpdateCheckoutShippingInfoMutation, useShippingMethodsQueries } from '@/hooks'
 import { DefaultId } from '@/lib/constants'
 import { orderGetters, userGetters } from '@/lib/getters'
 
 import type { CrOrder, CrOrderItem, CrContact, CustomerContact } from '@/lib/gql/types'
+
+import { useCheckoutStepContext, STEP_STATUS } from '@/context'
+import { useUpdateCheckoutShippingInfoMutation, useShippingMethodsQueries } from '@/hooks'
 
 const buttonStyle = {
   width: '100%',
@@ -101,10 +102,7 @@ const StandardShippingStep = (props: ShippingProps) => {
     }
   }
 
-  const handleSaveShippingMethod = async (
-    _shippingMethodName: string,
-    shippingMethodCode: string
-  ) => {
+  const handleSaveShippingMethod = async (shippingMethodCode: string) => {
     const shippingMethodName = shippingMethods.find(
       (method) => method.shippingMethodCode === shippingMethodCode
     )?.shippingMethodName as string

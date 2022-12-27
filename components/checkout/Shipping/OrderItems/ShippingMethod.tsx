@@ -3,7 +3,7 @@ import { useEffect, useRef, useState } from 'react'
 import { Typography, Box, MenuItem, Divider } from '@mui/material'
 import { useTranslation } from 'next-i18next'
 
-import { KiboSelect, ProductItemList } from '@/components/common'
+import { KiboSelect, Price, ProductItemList } from '@/components/common'
 import { orderGetters } from '@/lib/getters'
 
 import type { Maybe, CrOrderItem, CrShippingRate } from '@/lib/gql/types'
@@ -12,7 +12,7 @@ export type ShippingMethodProps = {
   pickupItems: Maybe<CrOrderItem>[]
   orderShipmentMethods: Maybe<CrShippingRate>[]
   selectedShippingMethodCode: string
-  onShippingMethodChange: (name: string, value: string) => void
+  onShippingMethodChange: (value: string, name?: string) => void
   onStoreLocatorClick?: () => void
 }
 export type ShipItemListProps = {
@@ -20,7 +20,7 @@ export type ShipItemListProps = {
   orderShipmentMethods: Maybe<CrShippingRate>[]
   selectedShippingMethod: string
   setSelectedShippingMethod: (shippingMethod: string) => void
-  onShippingMethodChange: (name: string, value: string) => void
+  onShippingMethodChange: (value: string, name?: string) => void
 }
 export type PickupItemListProps = {
   pickupItems: Maybe<CrOrderItem>[]
@@ -46,7 +46,7 @@ const ShipItemList = (shipProps: ShipItemListProps) => {
 
   const handleShippingMethodChange = (name: string, value: string) => {
     setSelectedShippingMethod(value)
-    onShippingMethodChange(name, value)
+    onShippingMethodChange(value, name)
   }
   return (
     <Box data-testid="ship-items">
@@ -63,7 +63,11 @@ const ShipItemList = (shipProps: ShipItemListProps) => {
           {orderShipmentMethods?.map((item) => {
             return (
               <MenuItem key={item?.shippingMethodCode} value={`${item?.shippingMethodCode}`}>
-                {`${item?.shippingMethodName} $${item?.price}`}
+                <Price
+                  variant="body2"
+                  fontWeight="normal"
+                  price={`${item?.shippingMethodName}` + ' ' + t('currency', { val: item?.price })}
+                />
               </MenuItem>
             )
           })}
