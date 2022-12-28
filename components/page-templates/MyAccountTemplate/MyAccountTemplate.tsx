@@ -20,11 +20,10 @@ import getConfig from 'next/config'
 import { useRouter } from 'next/router'
 
 import { MyProfile, PaymentMethod, AddressBook } from '@/components/my-account'
-
-import type { CustomerAccount } from '@/lib/gql/types'
-
 import { useAuthContext } from '@/context'
 import { useCustomerCardsQueries, useCustomerContactsQueries } from '@/hooks'
+
+import type { CustomerAccount } from '@/lib/gql/types'
 
 const style = {
   accordion: {

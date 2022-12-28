@@ -57,7 +57,7 @@ describe('[component] - ShippingMethod', () => {
       orderShipmentMethods: shippingRateMock.orderShipmentMethods,
       selectedShippingMethodCode: shippingRateMock.orderShipmentMethods[0]
         .shippingMethodCode as string,
-      onShippingMethodChange: (name: string, value: string) => ({ name, value }),
+      onShippingMethodChange: (value: string, name?: string) => ({ name, value }),
     }
     setup(params)
 
@@ -75,7 +75,7 @@ describe('[component] - ShippingMethod', () => {
       orderShipmentMethods: shippingRateMock.orderShipmentMethods,
       selectedShippingMethodCode: shippingRateMock.orderShipmentMethods[0]
         .shippingMethodCode as string,
-      onShippingMethodChange: (name: string, value: string) => ({ name, value }),
+      onShippingMethodChange: (value: string, name?: string) => ({ name, value }),
     }
     setup(params)
 
@@ -93,7 +93,7 @@ describe('[component] - ShippingMethod', () => {
       orderShipmentMethods: shippingRateMock.orderShipmentMethods,
       selectedShippingMethodCode: shippingRateMock.orderShipmentMethods[0]
         .shippingMethodCode as string,
-      onShippingMethodChange: (name: string, value: string) => ({ name, value }),
+      onShippingMethodChange: (value: string, name?: string) => ({ name, value }),
     }
     setup(params)
 
