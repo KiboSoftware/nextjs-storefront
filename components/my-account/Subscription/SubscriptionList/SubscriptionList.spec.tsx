@@ -3,8 +3,7 @@ import React, { ReactNode } from 'react'
 
 import '@testing-library/jest-dom'
 import { composeStories } from '@storybook/testing-react'
-import { cleanup, screen, waitFor } from '@testing-library/react'
-import { render } from '@testing-library/react'
+import { render, cleanup, screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { graphql } from 'msw'
 

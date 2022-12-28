@@ -36,6 +36,7 @@ describe('[component] - MyAccountTemplate', () => {
     const orderDetails = screen.getByText(/order-details/i)
     const orderHistory = screen.getByText(/order-history/i)
     const logout = screen.getByText(/logout/i)
+    const mySubscription = screen.getByText(/my-subscription/i)
 
     expect(myAccount).toBeInTheDocument()
     expect(myProfile).toBeInTheDocument()
@@ -44,6 +45,7 @@ describe('[component] - MyAccountTemplate', () => {
     expect(orderDetails).toBeInTheDocument()
     expect(orderHistory).toBeInTheDocument()
     expect(logout).toBeInTheDocument()
+    expect(mySubscription).toBeInTheDocument()
   })
 
   it('should redirect to order-history page when users click on Order History link', async () => {
@@ -54,5 +56,15 @@ describe('[component] - MyAccountTemplate', () => {
     await user.click(orderHistory)
 
     expect(push).toHaveBeenCalledWith('/my-account/order-history?filters=M-6')
+  })
+
+  it('should redirect to my-subscription page when users click on My Subscription link', async () => {
+    const { user } = setup()
+
+    const mySubscription = screen.getByText(/my-subscription/i)
+
+    await user.click(mySubscription)
+
+    expect(push).toHaveBeenCalledWith('/my-account/subscription')
   })
 })
