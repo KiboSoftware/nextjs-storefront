@@ -36,14 +36,14 @@ const ReviewProductItemsWithAddresses = (props: ReviewProductItemsWithAddressesP
           <>
             <Typography variant="h4" component="h4" fontWeight={'bold'} color="text.primary">
               {t('ship-to')}
-            </Typography>
-            <Typography
-              variant="h4"
-              component="span"
-              color="text.primary"
-              sx={{ textTransform: 'capitalize' }}
-            >
-              {`${formattedAddress}`}
+              <Typography
+                variant="h4"
+                component="span"
+                color="text.primary"
+                sx={{ textTransform: 'capitalize' }}
+              >
+                {`${formattedAddress}`}
+              </Typography>
             </Typography>
 
             <Typography variant="h4" component="h4" marginTop="0" fontWeight="bold" color="primary">
