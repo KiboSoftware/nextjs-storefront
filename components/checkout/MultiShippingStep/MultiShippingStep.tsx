@@ -14,6 +14,12 @@ import {
   ShippingGroupsWithMethod,
 } from '@/components/common'
 import { AddressFormDialog } from '@/components/dialogs'
+import { useCheckoutStepContext, STEP_STATUS } from '@/context'
+import { useModalContext } from '@/context/ModalContext'
+import {
+  useUpdateCheckoutItemDestinationMutations,
+  useUpdateCheckoutDestinationMutations,
+} from '@/hooks'
 import { userGetters, checkoutGetters } from '@/lib/getters'
 import { MultiShipAddress } from '@/lib/types/MultiShip'
 
@@ -24,13 +30,6 @@ import type {
   Checkout,
   CheckoutGroupRates,
 } from '@/lib/gql/types'
-
-import { useCheckoutStepContext, STEP_STATUS } from '@/context'
-import { useModalContext } from '@/context/ModalContext'
-import {
-  useUpdateCheckoutItemDestinationMutations,
-  useUpdateCheckoutDestinationMutations,
-} from '@/hooks'
 
 const buttonStyle = {
   width: '100%',

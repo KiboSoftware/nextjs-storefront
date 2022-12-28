@@ -65,7 +65,7 @@ describe('[component] - ShippingMethod', () => {
       pickupItems: [],
       orderShipmentMethods: shippingRateMock.orderShipmentMethods,
       selectedShippingMethodCode: '',
-      onShippingMethodChange: (name: string, value: string) => ({ name, value }),
+      onShippingMethodChange: (value: string, name?: string) => ({ value, name }),
     }
 
     const { user } = setup(params)
@@ -87,7 +87,7 @@ describe('[component] - ShippingMethod', () => {
       pickupItems: Common.args?.pickupItems as Maybe<CrOrderItem>[],
       orderShipmentMethods: shippingRateMock.orderShipmentMethods,
       selectedShippingMethodCode: '',
-      onShippingMethodChange: (name: string, value: string) => ({ name, value }),
+      onShippingMethodChange: (value: string, name?: string) => ({ name, value }),
     }
 
     setup(params)
@@ -101,7 +101,7 @@ describe('[component] - ShippingMethod', () => {
       pickupItems: Common.args?.pickupItems as Maybe<CrOrderItem>[],
       orderShipmentMethods: shippingRateMock.orderShipmentMethods,
       selectedShippingMethodCode: '',
-      onShippingMethodChange: (name: string, value: string) => ({ name, value }),
+      onShippingMethodChange: (value: string, name?: string) => ({ name, value }),
     }
 
     setup(params)
@@ -117,7 +117,7 @@ describe('[component] - ShippingMethod', () => {
       pickupItems: Common.args?.pickupItems as Maybe<CrOrderItem>[],
       orderShipmentMethods: shippingRateMock.orderShipmentMethods,
       selectedShippingMethodCode: '',
-      onShippingMethodChange: (name: string, value: string) => ({ name, value }),
+      onShippingMethodChange: (value: string, name?: string) => ({ name, value }),
     }
     const { user } = setup(params)
     const changeStore = params?.pickupItems[0]?.purchaseLocation

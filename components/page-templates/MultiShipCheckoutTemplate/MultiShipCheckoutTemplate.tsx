@@ -5,7 +5,6 @@ import { useRouter } from 'next/router'
 import { DetailsStep, MultiShippingStep } from '@/components/checkout'
 import type { PersonalDetails } from '@/components/checkout/DetailsStep/DetailsStep'
 import { CheckoutUITemplate } from '@/components/page-templates'
-
 import { useAuthContext } from '@/context'
 import {
   useCustomerContactsQueries,
@@ -18,7 +17,6 @@ import {
   useCheckoutShippingMethodsQuery,
   useCreateCheckoutShippingMethodMutation,
 } from '@/hooks'
-
 import { userGetters } from '@/lib/getters'
 
 import type {

@@ -3,14 +3,12 @@ import React from 'react'
 import { Stack, Divider, Typography } from '@mui/material'
 import { useTranslation } from 'next-i18next'
 
-import { ProductItem } from '..'
-
 // Need to be handled with API later
+import { ProductItem } from '..'
+import { userAddressResponse } from '@/__mocks__/stories/userAddressMock'
 import { addressGetters, checkoutGetters, orderGetters, productGetters } from '@/lib/getters'
 
 import type { Maybe, CrOrderItem, CrProduct, CustomerContact } from '@/lib/gql/types'
-
-import { userAddressResponse } from '@/__mocks__/stories/userAddressMock'
 
 export type ReviewProductItemsWithAddressesProps = {
   items: Maybe<CrOrderItem>[]
@@ -38,14 +36,14 @@ const ReviewProductItemsWithAddresses = (props: ReviewProductItemsWithAddressesP
           <>
             <Typography variant="h4" component="h4" fontWeight={'bold'} color="text.primary">
               {t('ship-to')}
-              <Typography
-                variant="h4"
-                component="span"
-                color="text.primary"
-                sx={{ textTransform: 'capitalize' }}
-              >
-                {formattedAddress}
-              </Typography>
+            </Typography>
+            <Typography
+              variant="h4"
+              component="span"
+              color="text.primary"
+              sx={{ textTransform: 'capitalize' }}
+            >
+              {`${formattedAddress}`}
             </Typography>
 
             <Typography variant="h4" component="h4" marginTop="0" fontWeight="bold" color="primary">
