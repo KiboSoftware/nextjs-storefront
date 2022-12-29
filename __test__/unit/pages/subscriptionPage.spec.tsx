@@ -24,7 +24,7 @@ jest.mock(
 )
 
 describe('[page] Subscription Page', () => {
-  it('should run getServerSideProps method', async () => {
+  it('should run getServerSideProps method for subscription page', async () => {
     const context = {
       locale: 'mock-locale',
     }
