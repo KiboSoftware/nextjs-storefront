@@ -32,7 +32,6 @@ const noSubscriptionSetup = () => {
   }
 }
 describe('[component] - Subscription', () => {
-  //todo:Work in progress
   const setup = () => {
     const user = userEvent.setup()
     render(<Common />)
