@@ -6,7 +6,7 @@ import { screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 
 import { renderWithQueryClient } from '@/__test__/utils/renderWithQueryClient'
-import * as stories from '@/components/my-account/Subscription/SubscriptionItemList/SubscriptionItemList.stories' // import all stories from the stories file
+import * as stories from '@/components/my-account/Subscription/SubscriptionList/SubscriptionList.stories' // import all stories from the stories file
 import { DialogRoot, ModalContextProvider } from '@/context'
 
 const { Common } = composeStories(stories)
@@ -25,7 +25,7 @@ const setup = () => {
   }
 }
 
-describe('[component] - SubscriptionItemList integration', () => {
+describe('[component] - SubscriptionList integration', () => {
   it('should open confirmation dialog on skip shipment button click', async () => {
     const { user } = setup()
 

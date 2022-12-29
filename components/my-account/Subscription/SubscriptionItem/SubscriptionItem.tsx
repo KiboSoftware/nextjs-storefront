@@ -4,11 +4,10 @@ import { Card, Stack, Typography, CardContent, Button } from '@mui/material'
 import { useTranslation } from 'next-i18next'
 
 import { ProductItem } from '@/components/common'
-import { EditSubscriptionFrequencyDialog } from '@/components/dialogs'
-import { ConfirmationDialog } from '@/components/dialogs'
+import { ConfirmationDialog, EditSubscriptionFrequencyDialog } from '@/components/dialogs'
 import { ProductOption } from '@/components/product'
-import { useModalContext } from '@/context'
-import { useOrderSubscriptionNowMutation } from '@/hooks'
+import { useModalContext, useSnackbarContext } from '@/context'
+import { useSkipNextSubscriptionMutation, useOrderSubscriptionNowMutation } from '@/hooks'
 import { subscriptionGetters, productGetters } from '@/lib/getters'
 import { uiHelpers } from '@/lib/helpers'
 
@@ -70,6 +69,10 @@ const SubscriptionItem = (props: SubscriptionItemProps) => {
   const { getProductLink } = uiHelpers()
   const { t } = useTranslation('common')
   const { showModal } = useModalContext()
+  const { showSnackbar } = useSnackbarContext()
+
+  const skipNextSubscription = useSkipNextSubscriptionMutation()
+  const { orderSubscriptionNow } = useOrderSubscriptionNowMutation()
 
   const handleEditFrequency = (subscriptionId: string, subscriptionItems: SbSubscriptionItem[]) => {
     const values = subscriptionGetters.getFrequencyValues(subscriptionItems[0].product)
@@ -79,8 +82,6 @@ const SubscriptionItem = (props: SubscriptionItemProps) => {
       props: { subscriptionId: subscriptionId, values: values },
     })
   }
-
-  const { orderSubscriptionNow } = useOrderSubscriptionNowMutation()
 
   const handleShipItemNow = (param: { id: string }) => {
     showModal({
@@ -94,6 +95,33 @@ const SubscriptionItem = (props: SubscriptionItemProps) => {
         primaryButtonText: t('confirm'),
       },
     })
+  }
+
+  const handleSkipNextSubscription = (subscriptionId: string) => {
+    showModal({
+      Component: ConfirmationDialog,
+      props: {
+        onConfirm: () => confirmSkipNextSubscription(subscriptionId),
+        contentText: t('skip-next-subscription-confirmation'),
+        primaryButtonText: t('Yes'),
+      },
+    })
+  }
+
+  const confirmSkipNextSubscription = async (subscriptionId: string) => {
+    try {
+      const skipSubscriptionResponse = await skipNextSubscription.mutateAsync(
+        subscriptionId as string
+      )
+      if (skipSubscriptionResponse?.id) {
+        const { nextOrderDate } =
+          subscriptionGetters.getSubscriptionDetails(skipSubscriptionResponse)
+        showSnackbar(t('next-order-skip') + nextOrderDate, 'success')
+      }
+      return false
+    } catch (err) {
+      console.error(err)
+    }
   }
 
   return (
@@ -185,7 +213,12 @@ const SubscriptionItem = (props: SubscriptionItemProps) => {
               >
                 {t('ship-an-item-now')}
               </Button>
-              <Button variant="contained" color="secondary" sx={{ ...style.button }}>
+              <Button
+                variant="contained"
+                color="secondary"
+                sx={{ ...style.button }}
+                onClick={() => handleSkipNextSubscription(subscriptionDetailsData?.id as string)}
+              >
                 {t('skip-shipment')}
               </Button>
               <Button
