@@ -2,8 +2,12 @@ import React from 'react'
 
 import { composeStories } from '@storybook/testing-react'
 import { render, screen } from '@testing-library/react'
+import userEvent from '@testing-library/user-event'
+import { mock } from 'jest-mock-extended'
 
 import * as stories from './CheckoutUITemplate.stories'
+import { renderWithQueryClient } from '@/__test__/utils/renderWithQueryClient'
+import { AuthContext, AuthContextType, CheckoutStepProvider } from '@/context'
 
 const { Common } = composeStories(stories)
 
@@ -25,15 +29,44 @@ jest.mock('@mui/material', () => ({
   useMediaQuery: jest.fn().mockReturnValue(false),
 }))
 
-describe('[component] - CheckoutUITemplate', () => {
-  it('should render component', async () => {
-    render(<Common {...Common?.args} />)
-    const orderSummary = screen.getByTestId('order-summary-mock')
-    const OrderConfirmation = screen.getByTestId('order-confirmation-mock')
-    const OrderReview = screen.getByTestId('order-review-mock')
+const setup = (initialActiveStep = 0, isAuthenticated = false) => {
+  const user = userEvent.setup()
 
+  const mockValues = mock<AuthContextType>()
+  mockValues.isAuthenticated = isAuthenticated
+
+  renderWithQueryClient(
+    <AuthContext.Provider value={mockValues}>
+      <CheckoutStepProvider
+        steps={['details', 'shipping', 'payment', 'review']}
+        initialActiveStep={initialActiveStep}
+      >
+        <Common {...Common.args} />
+      </CheckoutStepProvider>
+    </AuthContext.Provider>
+  )
+  return {
+    user,
+  }
+}
+
+describe('[component] - CheckoutUITemplate', () => {
+  it('should render checkout stepper component', async () => {
+    const initialActiveStep = 0
+    setup(initialActiveStep)
+
+    const kiboStepper = screen.getByTestId('kibo-stepper')
+    const orderSummary = screen.getByTestId('order-summary-mock')
+
+    expect(kiboStepper).toBeVisible()
     expect(orderSummary).toBeVisible()
-    expect(OrderConfirmation).toBeVisible()
-    expect(OrderReview).toBeVisible()
+  })
+
+  it('should render order confirmation component', async () => {
+    const initialActiveStep = 4
+    setup(initialActiveStep)
+
+    const orderConfirmation = screen.getByTestId('order-confirmation-mock')
+    expect(orderConfirmation).toBeVisible()
   })
 })
