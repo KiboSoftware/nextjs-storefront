@@ -15,7 +15,7 @@ describe('[hooks] useUpdateCheckoutItemDestinationMutations', () => {
           destinationId: '',
         })
 
-        expect(response).toEqual(checkoutMock)
+        expect(response).toEqual(checkoutMock.checkout)
       },
       {
         wrapper: createQueryClientWrapper(),
