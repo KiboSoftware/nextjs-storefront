@@ -1,5 +1,4 @@
-/* eslint-disable @typescript-eslint/no-var-requires */
-import React, { ReactNode } from 'react'
+import React from 'react'
 
 import '@testing-library/jest-dom'
 import { composeStories } from '@storybook/testing-react'
@@ -9,13 +8,14 @@ import { graphql } from 'msw'
 
 import * as stories from './SubscriptionList.stories' // import all stories from the stories file
 import { server } from '@/__mocks__/msw/server'
-import { noSubscriptionMock } from '@/__mocks__/stories/subscriptionCollectionMock'
+import {
+  noSubscriptionMock,
+  subscriptionCollectionMock,
+} from '@/__mocks__/stories/subscriptionCollectionMock'
 
 jest.mock('../SubscriptionItem/SubscriptionItem.tsx', () => ({
   __esModule: true,
-  default: ({ children }: { children: ReactNode }) => (
-    <div data-testid="subscription-item-list-mock">{children}</div>
-  ),
+  default: () => <div data-testid="subscription-item-mock" />,
 }))
 
 const { Common, NoSubscription } = composeStories(stories)
@@ -49,13 +49,13 @@ describe('[component] - Subscription', () => {
     expect(accountTitleText).toBeVisible()
 
     await waitFor(async () => {
-      const subscriptionItemList = screen.getByTestId('subscription-item-list-mock')
+      const subscriptionItemList = screen.getAllByTestId('subscription-item-mock')
 
-      await waitFor(async () => expect(subscriptionItemList).toBeVisible())
+      expect(subscriptionItemList).toHaveLength(subscriptionCollectionMock.subscriptions.totalCount)
     })
   })
 
-  it('should render message when no subscribition items under user', async () => {
+  it('should render message when no subscription items under user', async () => {
     noSubscriptionSetup()
 
     server.use(

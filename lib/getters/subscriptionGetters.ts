@@ -9,9 +9,9 @@ const getAddress = (subscription: Subscription) =>
   subscription?.fulfillmentInfo?.fulfillmentContact?.address
 
 const getSubscriberAddress = (subscription: Subscription): string =>
-  `${getAddress(subscription)?.address1}  ${getAddress(subscription)?.cityOrTown} ${
+  `${getAddress(subscription)?.address1} ${getAddress(subscription)?.cityOrTown} ${
     getAddress(subscription)?.stateOrProvince
-  } ${getAddress(subscription)?.postalOrZipCode}  ${getAddress(subscription)?.countryCode}`
+  } ${getAddress(subscription)?.postalOrZipCode} ${getAddress(subscription)?.countryCode}`
 
 const getSubscriptionFrequency = (subscription: Subscription) =>
   `${subscription?.frequency?.value} ${subscription?.frequency?.unit}`

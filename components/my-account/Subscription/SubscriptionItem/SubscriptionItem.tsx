@@ -162,16 +162,32 @@ const SubscriptionItem = (props: SubscriptionItemProps) => {
             }}
           >
             <Stack direction={{ xs: 'column', md: 'column', lg: 'column' }} ml="2%">
-              <SubscriptionButton subscriptionButtonName="ship-an-item-now" />
-              <SubscriptionButton subscriptionButtonName="skip-shipment" />
-              <SubscriptionButton subscriptionButtonName="edit-frequency" />
-              <SubscriptionButton subscriptionButtonName="edit-order-date" />
+              <Button variant="contained" color="secondary" sx={{ ...style.button }}>
+                {t('ship-an-item-now')}
+              </Button>
+              <Button variant="contained" color="secondary" sx={{ ...style.button }}>
+                {t('skip-shipment')}
+              </Button>
+              <Button variant="contained" color="secondary" sx={{ ...style.button }}>
+                {t('edit-frequency')}
+              </Button>
+              <Button variant="contained" color="secondary" sx={{ ...style.button }}>
+                {t('edit-order-date')}
+              </Button>
             </Stack>
             <Stack direction={{ xs: 'column', md: 'column', lg: 'column' }} ml="2%">
-              <SubscriptionButton subscriptionButtonName="cancel-an-item" />
-              <SubscriptionButton subscriptionButtonName="edit-billing-information" />
-              <SubscriptionButton subscriptionButtonName="edit-shipping-address" />
-              <SubscriptionButton subscriptionButtonName="pause-subscription" />
+              <Button variant="contained" color="secondary" sx={{ ...style.button }}>
+                {t('cancel-an-item')}
+              </Button>
+              <Button variant="contained" color="secondary" sx={{ ...style.button }}>
+                {t('edit-billing-information')}
+              </Button>
+              <Button variant="contained" color="secondary" sx={{ ...style.button }}>
+                {t('edit-shipping-address')}
+              </Button>
+              <Button variant="contained" color="secondary" sx={{ ...style.button }}>
+                {t('pause-subscription')}
+              </Button>
             </Stack>
           </Stack>
         </Stack>
