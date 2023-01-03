@@ -13,6 +13,9 @@ import {
   useDeleteOrderCouponMutation,
   useUpdateCheckoutPersonalInfoMutation,
   PersonalInfo,
+  useUpdateCheckoutBillingInfoMutation,
+  useCreateCheckoutPaymentMethodMutation,
+  useUpdateOrderPaymentActionMutation,
 } from '@/hooks'
 import { PersonalInfoUpdateMode } from '@/lib/constants'
 import { userGetters } from '@/lib/getters'

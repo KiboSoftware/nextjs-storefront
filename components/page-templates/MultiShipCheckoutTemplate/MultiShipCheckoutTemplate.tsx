@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 
 import { useRouter } from 'next/router'
 
-import { DetailsStep, MultiShippingStep } from '@/components/checkout'
+import { DetailsStep, MultiShippingStep, PaymentStep } from '@/components/checkout'
 import type { PersonalDetails } from '@/components/checkout/DetailsStep/DetailsStep'
 import { CheckoutUITemplate } from '@/components/page-templates'
 import { useAuthContext } from '@/context'
@@ -151,8 +151,8 @@ const MultiShipCheckoutTemplate = (props: CheckoutProps) => {
           />
         )}
         {/* @to-do Use below steps for future development */}
-        {/* <PaymentStep checkout={checkout} {...paymentStepParams} />
-              <ReviewStep checkout={checkout as Checkout} onBackButtonClick={handleBack} /> */}
+        <PaymentStep checkout={checkout} isMultiShip={true} />
+        {/* <ReviewStep checkout={checkout as Checkout} onBackButtonClick={handleBack} /> */}
       </CheckoutUITemplate>
     </>
   )

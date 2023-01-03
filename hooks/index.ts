@@ -59,7 +59,6 @@ export * from './mutations/useUpdateCheckoutMutations/useUpdateOrderPaymentActio
 export * from './mutations/useCreateOrderReturnItemsMutation/useCreateOrderReturnItemsMutation'
 
 //multiship hooks
-export * from './mutations/multiShip/useCreateCheckoutPaymentActionMutations/useCreateCheckoutPaymentActionMutations'
 
 // cards
 export * from './mutations/useCustomerCardsMutations/useCreateCustomerCardsMutation'
@@ -95,3 +94,5 @@ export * from './mutations/multiShip/useCreateCheckoutFromCartMutation/useCreate
 export * from './mutations/multiShip/useCreateCheckoutShippingMethodMutation/useCreateCheckoutShippingMethodMutation'
 export * from './mutations/multiShip/useUpdateCheckoutCouponMutation/useUpdateCheckoutCouponMutation'
 export * from './mutations/multiShip/useDeleteCheckoutCouponMutation/useDeleteCheckoutCouponMutation'
+export * from './mutations/multiShip/useCreateCheckoutPaymentActionMutation/useCreateCheckoutPaymentActionMutation'
+export * from './mutations/multiShip/useUpdateCheckoutPaymentActionMutation/useUpdateCheckoutPaymentActionMutation'

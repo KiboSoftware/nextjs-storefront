@@ -24,6 +24,8 @@ import {
   useCreateCheckoutPaymentMethodMutation,
   useUpdateOrderPaymentActionMutation,
   usePaymentTypes,
+  useCreateMultiShipCheckoutPaymentActionMutation,
+  useUpdateMultiShipCheckoutPaymentActionMutation,
 } from '@/hooks'
 import { PaymentType, PaymentWorkflow } from '@/lib/constants'
 import { addressGetters, cardGetters, orderGetters, userGetters } from '@/lib/getters'
@@ -44,15 +46,15 @@ import type {
   CrAddress,
   CrOrder,
   PaymentActionInput,
-  CrPaymentCard,
-  CrPaymentInput,
   CrPayment,
   Maybe,
+  Checkout,
 } from '@/lib/gql/types'
 
 interface PaymentStepProps {
-  checkout: CrOrder | undefined
+  checkout?: CrOrder | Checkout
   contact?: ContactForm
+  isMultiShip?: boolean
 }
 
 interface PaymentMethod {
@@ -117,7 +119,7 @@ const initialBillingAddressData: Address = {
 }
 
 const PaymentStep = (props: PaymentStepProps) => {
-  const { checkout } = props
+  const { checkout, isMultiShip } = props
 
   // hooks
   const { isAuthenticated, user } = useAuthContext()
@@ -137,6 +139,10 @@ const PaymentStep = (props: PaymentStepProps) => {
   const createOrderPaymentMethod = useCreateCheckoutPaymentMethodMutation()
   const updateCheckoutBillingInfo = useUpdateCheckoutBillingInfoMutation()
   const updateOrderPaymentAction = useUpdateOrderPaymentActionMutation()
+
+  // multiship
+  const createMultiShipCheckoutPaymentAction = useCreateMultiShipCheckoutPaymentActionMutation()
+  const updateMultiShipCheckoutPaymentAction = useUpdateMultiShipCheckoutPaymentActionMutation()
 
   // checkout context handling
   const {
@@ -186,7 +192,7 @@ const PaymentStep = (props: PaymentStepProps) => {
 
   const handleSameAsShippingAddressCheckbox = (value: boolean) => {
     const contact = value
-      ? checkout?.fulfillmentInfo?.fulfillmentContact
+      ? (checkout as CrOrder)?.fulfillmentInfo?.fulfillmentContact
       : initialBillingAddressData
     setBillingFormAddress({
       ...billingFormAddress,
@@ -305,7 +311,10 @@ const PaymentStep = (props: PaymentStepProps) => {
       )
     }
 
-    const selectedCards = orderGetters.getSelectedPaymentMethods(checkout, PaymentType.CREDITCARD)
+    const selectedCards = orderGetters.getSelectedPaymentMethods(
+      checkout as CrOrder,
+      PaymentType.CREDITCARD
+    )
 
     if (
       selectedCards?.some(
@@ -320,20 +329,35 @@ const PaymentStep = (props: PaymentStepProps) => {
 
     selectedCards?.forEach(async (card: Maybe<CrPayment>) => {
       paymentAction = { ...paymentAction, actionName: 'VoidPayment' }
-      await updateOrderPaymentAction.mutateAsync({
-        orderId: checkout?.id as string,
-        paymentId: card?.id as string,
-        paymentAction,
-      })
+      if (checkout?.id) {
+        await updateMultiShipCheckoutPaymentAction.mutateAsync({
+          checkoutId: checkout?.id as string,
+          paymentId: card?.id as string,
+          paymentAction,
+        })
+      } else {
+        await updateOrderPaymentAction.mutateAsync({
+          orderId: checkout?.id as string,
+          paymentId: card?.id as string,
+          paymentAction,
+        })
+      }
     })
 
     if (checkout?.id) {
       paymentAction = { ...paymentAction, actionName: '' }
-      await createOrderPaymentMethod.mutateAsync({ orderId: checkout.id, paymentAction })
-      await updateCheckoutBillingInfo.mutateAsync({
-        orderId: checkout.id,
-        billingInfoInput: { ...paymentAction.newBillingInfo },
-      })
+      if (!isMultiShip) {
+        await createOrderPaymentMethod.mutateAsync({ orderId: checkout.id, paymentAction })
+        await updateCheckoutBillingInfo.mutateAsync({
+          orderId: checkout.id,
+          billingInfoInput: { ...paymentAction.newBillingInfo },
+        })
+      } else {
+        createMultiShipCheckoutPaymentAction.mutateAsync({
+          checkoutId: checkout.id,
+          paymentAction,
+        })
+      }
 
       setStepStatusComplete()
       setStepNext()
@@ -420,7 +444,10 @@ const PaymentStep = (props: PaymentStepProps) => {
     cardGetters.getCardId(defaultCard?.cardInfo) &&
       setSelectedPaymentBillingRadio(defaultCard.cardInfo?.id as string)
 
-    const selectedCards = orderGetters.getSelectedPaymentMethods(checkout, PaymentType.CREDITCARD)
+    const selectedCards = orderGetters.getSelectedPaymentMethods(
+      checkout as CrOrder,
+      PaymentType.CREDITCARD
+    )
 
     selectedCards?.forEach((card: Maybe<CrPayment>) => {
       const cardDetails = card?.billingInfo?.card
