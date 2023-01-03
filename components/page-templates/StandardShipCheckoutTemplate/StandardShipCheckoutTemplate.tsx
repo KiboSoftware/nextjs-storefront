@@ -112,7 +112,7 @@ const StandardShipCheckoutTemplate = (props: CheckoutProps) => {
             isAuthenticated={isAuthenticated}
           />
         )}
-        <PaymentStep checkout={checkout} />
+        <PaymentStep checkout={checkout as CrOrder} />
         <ReviewStep checkout={checkout as CrOrder} onBackButtonClick={handleBack} />
       </CheckoutUITemplate>
     </>

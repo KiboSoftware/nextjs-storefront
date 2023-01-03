@@ -151,7 +151,7 @@ const MultiShipCheckoutTemplate = (props: CheckoutProps) => {
           />
         )}
         {/* @to-do Use below steps for future development */}
-        <PaymentStep checkout={checkout} isMultiShip={true} />
+        <PaymentStep checkout={checkout as Checkout} isMultiShip={true} />
         {/* <ReviewStep checkout={checkout as Checkout} onBackButtonClick={handleBack} /> */}
       </CheckoutUITemplate>
     </>

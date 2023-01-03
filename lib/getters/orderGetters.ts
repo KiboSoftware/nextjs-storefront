@@ -23,11 +23,12 @@ import type {
   CrPaymentCard,
   CustomerContact,
   CuAddress,
+  Checkout,
 } from '@/lib/gql/types'
 
 const getCheckoutItemCount = (order: CrOrder) => order?.items?.length
 const getEmail = (order: CrOrder) => order?.email
-const getTotal = (order: CrOrder | CrCart): number => order?.total as number
+const getTotal = (order: CrOrder | CrCart | Checkout): number => order?.total as number
 const getShippingTotal = (order: CrOrder | CrCart) => order?.shippingTotal || 0
 const getTaxTotal = (order: CrOrder | CrCart) => order?.taxTotal || 0
 const getSubtotal = (order: CrOrder | CrCart): number => order?.subtotal as number
@@ -157,7 +158,7 @@ const getCheckoutDetails = (order: CrOrder): CheckoutDetails => {
   }
 }
 
-const getSelectedPaymentMethods = (order?: CrOrder, paymentType?: string) => {
+const getSelectedPaymentMethods = (order?: CrOrder | Checkout, paymentType?: string) => {
   return order?.payments?.filter(
     (each) => each?.paymentType === paymentType && each?.status === 'New'
   )
