@@ -123,6 +123,10 @@ export const checkoutHandlers = [
   graphql.mutation('createCheckoutAction', (_req, res, ctx) => {
     return res(ctx.data({ createCheckoutAction: checkoutMock }))
   }),
+
+  graphql.mutation('createCheckoutShippingMethod', (_req, res, ctx) => {
+    return res(ctx.data(checkoutMock))
+  }),
 ]
 
 export const accountHandlers = [
