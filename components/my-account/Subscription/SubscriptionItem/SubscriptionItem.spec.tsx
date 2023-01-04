@@ -5,14 +5,10 @@ import { composeStories } from '@storybook/testing-react'
 import { render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 
-<<<<<<<< HEAD:components/my-account/Subscription/SubscriptionItem/SubscriptionItem.spec.tsx
 import * as stories from './SubscriptionItem.stories' // import all stories from the stories file
 import { subscriptionItemMock } from '@/__mocks__/stories/subscriptionCollectionMock'
 import { subscriptionGetters } from '@/lib/getters'
 
-========
-import * as stories from './MySubscription.stories' // import all stories from the stories file
->>>>>>>> 06679656 (feat:subscription component dashboard implementation):components/my-account/Subscription/MySubscription.spec.tsx
 const { Common } = composeStories(stories)
 const subscriptionItem = subscriptionItemMock?.items
 
