@@ -20,6 +20,11 @@ interface DestinationItemGroup {
   items: Maybe<CrOrderItem>[] | undefined
 }
 
+interface CheckoutShippingAddresses {
+  checkout: Checkout
+  savedShippingAddresses: CrContact[]
+}
+
 const buildItemsGroupFromCheckoutGroupings = (checkout: Checkout) => {
   const checkoutGroupings = checkout?.groupings?.reduce((sortedGroups: any, group: any) => {
     const groupItems = checkout?.items?.filter((item) =>
@@ -45,13 +50,7 @@ const formatDestinationAddress = (contact: CrContact) => {
   return `${firstName} ${lastNameOrSurname}, ${address?.address1}, ${address?.address2}, ${address?.cityOrTown}, ${address?.stateOrProvince}, ${address?.postalOrZipCode}, ${address?.countryCode} `
 }
 
-const getMultiShipAddresses = ({
-  checkout,
-  savedShippingAddresses,
-}: {
-  checkout: Checkout
-  savedShippingAddresses: CrContact[]
-}) => {
+const getMultiShipAddresses = ({ checkout, savedShippingAddresses }: CheckoutShippingAddresses) => {
   const destinationAddresses = checkout?.destinations?.map((destination) => {
     return {
       destinationId: destination?.id,

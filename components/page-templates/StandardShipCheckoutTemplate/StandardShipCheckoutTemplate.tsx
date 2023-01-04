@@ -3,7 +3,6 @@ import React, { useState } from 'react'
 import { useRouter } from 'next/router'
 
 import { DetailsStep, ReviewStep, PaymentStep, StandardShippingStep } from '@/components/checkout'
-import { PersonalDetails } from '@/components/checkout/DetailsStep/DetailsStep'
 import { CheckoutUITemplate } from '@/components/page-templates'
 import { useCheckoutStepContext, useAuthContext } from '@/context'
 import {
@@ -14,16 +13,16 @@ import {
   useUpdateCheckoutPersonalInfoMutation,
   PersonalInfo,
 } from '@/hooks'
-import { CheckoutUpdateMode } from '@/lib/constants'
 import { userGetters } from '@/lib/getters'
+import type { PersonalDetails } from '@/lib/types'
 
 import type { CustomerContact, CrOrder, CrOrderInput } from '@/lib/gql/types'
 
-interface CheckoutProps {
+interface StandardShipCheckoutProps {
   checkout: CrOrder
 }
 
-const StandardShipCheckoutTemplate = (props: CheckoutProps) => {
+const StandardShipCheckoutTemplate = (props: StandardShipCheckoutProps) => {
   const { checkout: initialCheckout } = props
   const router = useRouter()
   const [promoError, setPromoError] = useState<string>('')
@@ -78,12 +77,8 @@ const StandardShipCheckoutTemplate = (props: CheckoutProps) => {
     const { email } = formData
 
     const personalInfo: PersonalInfo = {
-      orderId: checkout?.id as string,
-      updateMode: CheckoutUpdateMode.APPLY_TO_ORIGINAL,
-      orderInput: {
-        ...(checkout as CrOrderInput),
-        email,
-      },
+      checkout: checkout as CrOrderInput,
+      email: email as string,
     }
     await updateStandardCheckoutPersonalInfo.mutateAsync(personalInfo)
   }

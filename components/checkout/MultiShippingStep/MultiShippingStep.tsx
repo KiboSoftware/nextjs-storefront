@@ -21,7 +21,7 @@ import {
   useUpdateCheckoutDestinationMutations,
 } from '@/hooks'
 import { userGetters, checkoutGetters } from '@/lib/getters'
-import { MultiShipAddress, ShipOption } from '@/lib/types'
+import type { CustomDestinationInput, MultiShipAddress, ShipOption } from '@/lib/types'
 
 import type {
   CrOrderItem,
@@ -39,7 +39,7 @@ const buttonStyle = {
   textTransform: 'none',
 } as SxProps<Theme> | undefined
 
-interface ShippingProps {
+interface MultiShippingStepProps {
   setAutoFocus?: boolean
   checkout: Checkout
   userSavedShippingAddress?: CustomerContact[]
@@ -53,11 +53,6 @@ interface ShippingProps {
   }) => Promise<void>
 }
 
-export interface CustomDestinationInput extends CrContact {
-  destinationId?: string
-  itemId: string
-}
-
 interface UpdateItemDestinationParams {
   itemId: string
   destinationId: string
@@ -68,7 +63,11 @@ interface ShippingDestination {
   address: CrContact
 }
 
-const MultiShippingStep = (props: ShippingProps) => {
+interface CustomDestinationContact {
+  contact: CustomDestinationInput
+}
+
+const MultiShippingStep = (props: MultiShippingStepProps) => {
   const {
     checkout,
     userSavedShippingAddress: addresses,
@@ -104,6 +103,9 @@ const MultiShippingStep = (props: ShippingProps) => {
   const [shippingOption, setShippingOption] = useState<string>(initialShippingOption)
   const [showMultiShipContinueButton, setShowMultiShipContinueButton] = useState<boolean>(true)
 
+  const shipToHome = shipOptions[0]?.value
+  const shipToMultiAddress = shipOptions[1]?.value
+
   // hooks
   const {
     stepStatus,
@@ -118,11 +120,7 @@ const MultiShippingStep = (props: ShippingProps) => {
   // end hooks
 
   const handleAddressValidationAndSave = () => setValidateForm(true)
-  const handleUpdateDestinationAddress = async ({
-    contact,
-  }: {
-    contact: CustomDestinationInput
-  }) => {
+  const handleUpdateDestinationAddress = async ({ contact }: CustomDestinationContact) => {
     const { destinationId, itemId, ...rest } = contact
     closeModal()
     if (destinationId)
@@ -217,12 +215,11 @@ const MultiShippingStep = (props: ShippingProps) => {
       (destination) => destination?.id === destinationIdOrAddressId
     )
 
-    if (!existingDestinationAddress?.id) {
-      const destinationId = await handleCreateDestinationAddress(destinationIdOrAddressId)
-      await updateSameDestinationForAllItems({ destinationId: destinationId as string })
-    } else {
-      await updateSameDestinationForAllItems({ destinationId: destinationIdOrAddressId as string })
-    }
+    const destinationId = existingDestinationAddress?.id
+      ? destinationIdOrAddressId
+      : await handleCreateDestinationAddress(destinationIdOrAddressId)
+
+    await updateSameDestinationForAllItems({ destinationId })
   }
 
   const handleAddNewAddress = () => setShouldShowAddAddressButton(false)
@@ -235,7 +232,7 @@ const MultiShippingStep = (props: ShippingProps) => {
 
   const onChangeShippingOption = async (option: string) => {
     const groupings = checkout?.groupings
-    if (groupings && groupings?.length > 1 && option === shipOptions[0].value) {
+    if (groupings && groupings?.length > 1 && option === shipToHome.value) {
       const defaultDestinationId = groupings && (groupings[0]?.destinationId as string)
       await updateSameDestinationForAllItems({ destinationId: defaultDestinationId as string })
     }
@@ -292,20 +289,15 @@ const MultiShippingStep = (props: ShippingProps) => {
       (destination) => destination?.id === value
     )
 
-    if (!existingDestinationAddress?.id) {
-      const destinationId = await handleCreateDestinationAddress(value)
-      await updateItemDestination({
-        itemId: id,
-        destinationId: destinationId as string,
-        checkoutId: checkout?.id as string,
-      })
-    } else {
-      await updateItemDestination({
-        itemId: id,
-        destinationId: existingDestinationAddress?.id as string,
-        checkoutId: checkout?.id as string,
-      })
-    }
+    const destinationId = existingDestinationAddress?.id
+      ? existingDestinationAddress?.id
+      : await handleCreateDestinationAddress(value)
+
+    await updateItemDestination({
+      itemId: id,
+      destinationId: destinationId as string,
+      checkoutId: checkout?.id as string,
+    })
   }
 
   const createOrUpdateDestination = (params: { destinationInput: CustomDestinationInput }) => {
@@ -350,7 +342,7 @@ const MultiShippingStep = (props: ShippingProps) => {
         />
       )}
 
-      {shippingOption === shipOptions[0].value && (
+      {shippingOption === shipToHome.value && (
         <>
           {shouldShowAddAddressButton && (
             <>
@@ -421,7 +413,7 @@ const MultiShippingStep = (props: ShippingProps) => {
           )}
         </>
       )}
-      {shippingOption === shipOptions[1].value && ( //for more than one address
+      {shippingOption === shipToMultiAddress && ( //for more than one address
         <Stack>
           {showMultiShipContinueButton && (
             <>

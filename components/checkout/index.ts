@@ -1,7 +1,6 @@
 export { default as PaymentCardDetailsView } from '@/components/checkout/PaymentCardDetailsView/PaymentCardDetailsView'
 export { default as SavedPaymentMethodView } from '@/components/checkout/SavedPaymentMethodView/SavedPaymentMethodView'
 export { default as DetailsStep } from '@/components/checkout/DetailsStep/DetailsStep'
-export type { Action } from '@/components/checkout/DetailsStep/DetailsStep'
 export { default as CardDetailsForm } from '@/components/checkout/CardDetailsForm/CardDetailsForm'
 export { default as PaymentStep } from '@/components/checkout/PaymentStep/PaymentStep'
 export { default as KiboStepper } from '@/components/checkout/KiboStepper/KiboStepper'

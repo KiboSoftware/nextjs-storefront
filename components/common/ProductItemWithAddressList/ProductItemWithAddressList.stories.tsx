@@ -5,7 +5,7 @@ import { ComponentStory, ComponentMeta } from '@storybook/react'
 import ProductItemWithAddressList from './ProductItemWithAddressList'
 import { checkoutMock } from '@/__mocks__/stories'
 import { checkoutGetters } from '@/lib/getters'
-import { MultiShipAddress } from '@/lib/types/MultiShip'
+import type { MultiShipAddress } from '@/lib/types/Checkout'
 
 export default {
   title: 'Common/ProductItemWithAddressList',

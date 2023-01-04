@@ -3,12 +3,13 @@ import React from 'react'
 import { ComponentStory, ComponentMeta } from '@storybook/react'
 
 import MultiShippingStep from './MultiShippingStep'
-import { checkoutMock, multiShippingRateMock } from '@/__mocks__/stories'
+import { checkoutMock, checkoutGroupRatesMock } from '@/__mocks__/stories'
 import { userAddressResponse } from '@/__mocks__/stories/userAddressMock'
 import { CheckoutStepProvider } from '@/context/CheckoutStepContext/CheckoutStepContext'
 import { userGetters } from '@/lib/getters/userGetters'
 
 import type { CustomerContact } from '@/lib/gql/types'
+
 const steps = ['details', 'shipping', 'payment', 'review']
 
 // Common
@@ -37,5 +38,5 @@ Common.args = {
   checkout: checkoutMock.checkout,
   isAuthenticated: true,
   userSavedShippingAddress,
-  shippingMethods: multiShippingRateMock?.checkoutShippingMethods,
+  shippingMethods: checkoutGroupRatesMock?.checkoutShippingMethods,
 }

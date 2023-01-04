@@ -3,7 +3,6 @@ import React, { useState } from 'react'
 import { useRouter } from 'next/router'
 
 import { DetailsStep, MultiShippingStep } from '@/components/checkout'
-import type { PersonalDetails } from '@/components/checkout/DetailsStep/DetailsStep'
 import { CheckoutUITemplate } from '@/components/page-templates'
 import { useAuthContext } from '@/context'
 import {
@@ -18,6 +17,7 @@ import {
   useCreateCheckoutShippingMethodMutation,
 } from '@/hooks'
 import { userGetters } from '@/lib/getters'
+import type { PersonalDetails } from '@/lib/types'
 
 import type {
   CustomerContact,
@@ -27,11 +27,16 @@ import type {
   Maybe,
 } from '@/lib/gql/types'
 
-interface CheckoutProps {
+interface MultiShipCheckoutProps {
   checkout: Checkout
 }
 
-const MultiShipCheckoutTemplate = (props: CheckoutProps) => {
+interface MultiShipCheckoutShippingMethod {
+  shippingMethodCode: string
+  shippingMethodGroup: CheckoutGroupRates
+}
+
+const MultiShipCheckoutTemplate = (props: MultiShipCheckoutProps) => {
   const { checkout: initialCheckout } = props
 
   const router = useRouter()
@@ -79,10 +84,7 @@ const MultiShipCheckoutTemplate = (props: CheckoutProps) => {
       (shippingRate: Maybe<CrShippingRate>) =>
         shippingRate?.shippingMethodCode === shippingMethodCode
     )
-  const updateCheckoutShippingMethod = async (params: {
-    shippingMethodCode: string
-    shippingMethodGroup: CheckoutGroupRates
-  }) => {
+  const updateCheckoutShippingMethod = async (params: MultiShipCheckoutShippingMethod) => {
     const { shippingMethodGroup, shippingMethodCode } = params
     const shippingRate = await getShippingRateFromMethodGroupByMethodCode(
       shippingMethodCode,

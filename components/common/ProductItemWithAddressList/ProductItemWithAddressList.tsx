@@ -3,12 +3,11 @@ import React from 'react'
 import { Divider, Box, MenuItem, Card, Link } from '@mui/material'
 import { useTranslation } from 'next-i18next'
 
-import { CustomDestinationInput } from '@/components/checkout/MultiShippingStep/MultiShippingStep'
 import { KiboSelect, ProductItem } from '@/components/common'
 import { orderGetters, productGetters, checkoutGetters } from '@/lib/getters'
-import { MultiShipAddress } from '@/lib/types/MultiShip'
+import type { CustomDestinationInput, MultiShipAddress } from '@/lib/types'
 
-import type { Maybe, CrOrderItem, CrProduct, Checkout, CrContact } from '@/lib/gql/types'
+import type { Maybe, CrOrderItem, CrProduct, Checkout } from '@/lib/gql/types'
 
 export type ProductItemWithAddressListProps = {
   checkout: Checkout

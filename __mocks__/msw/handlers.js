@@ -7,7 +7,7 @@ import {
   returnReasonsMock,
   createReturnMock,
   checkoutMock,
-  multiShippingRateMock,
+  checkoutGroupRatesMock,
 } from '../stories'
 import { cartItemMock } from '../stories/cartItemMock'
 import { cartCouponMock, cartMock } from '../stories/cartMock'
@@ -20,7 +20,6 @@ import { customerAccountCardsMock } from '../stories/customerAccountCardsMock'
 import { locationCollectionMock } from '../stories/locationCollectionMock'
 import { orderCollection } from '../stories/orderCollection'
 import { orderCouponMock } from '../stories/orderMock'
-import { orderShipment } from '../stories/orderShipmentMock'
 import { productSearchResultMock } from '../stories/productSearchResultMock'
 import { searchSuggestionMock } from '../stories/searchSuggestionResultMock'
 import { subscriptionCollectionMock } from '../stories/subscriptionCollectionMock'
@@ -60,7 +59,7 @@ export const checkoutHandlers = [
   }),
 
   graphql.query('getCheckoutShippingMethods', (_req, res, ctx) => {
-    return res(ctx.data(multiShippingRateMock))
+    return res(ctx.data(checkoutGroupRatesMock))
   }),
 
   // Details Step

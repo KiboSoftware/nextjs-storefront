@@ -12,16 +12,10 @@ import * as yup from 'yup'
 import { KiboTextBox } from '@/components/common'
 import { LoginDialog } from '@/components/layout'
 import { useAuthContext, useCheckoutStepContext, STEP_STATUS, useModalContext } from '@/context'
-import { FormStates } from '@/lib/constants'
+import type { PersonalDetails } from '@/lib/types'
 
 import type { Maybe, CrOrder, Checkout } from '@/lib/gql/types'
-export interface PersonalDetails {
-  email: Maybe<string> | undefined
-}
 
-export interface Action {
-  type: FormStates.COMPLETE | FormStates.INCOMPLETE | FormStates.VALIDATE
-}
 interface DetailsProps<T> {
   setAutoFocus?: boolean
   checkout: T

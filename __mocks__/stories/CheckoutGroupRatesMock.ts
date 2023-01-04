@@ -1,6 +1,6 @@
 import type { CheckoutGroupRates } from '@/lib/gql/types'
 
-export const multiShippingRateMock: { checkoutShippingMethods: CheckoutGroupRates[] } = {
+export const checkoutGroupRatesMock: { checkoutShippingMethods: CheckoutGroupRates[] } = {
   checkoutShippingMethods: [
     {
       groupingId: '6c8d2679e69a429db72ca1fcd2e56e77',
