@@ -21,7 +21,7 @@ import {
   useUpdateCheckoutDestinationMutations,
 } from '@/hooks'
 import { userGetters, checkoutGetters } from '@/lib/getters'
-import { MultiShipAddress } from '@/lib/types/MultiShip'
+import { MultiShipAddress, ShipOption } from '@/lib/types'
 
 import type {
   CrOrderItem,
@@ -66,14 +66,6 @@ interface UpdateItemDestinationParams {
 interface ShippingDestination {
   destinationId: string
   address: CrContact
-}
-
-export type ShipOption = {
-  value: string
-  code: string
-  name: string
-  label: string
-  shortName: string
 }
 
 const MultiShippingStep = (props: ShippingProps) => {

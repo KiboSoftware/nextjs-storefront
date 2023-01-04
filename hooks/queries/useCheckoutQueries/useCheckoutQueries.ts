@@ -10,6 +10,7 @@ import { checkoutKeys } from '@/lib/react-query/queryKeys'
 import type { CrOrder } from '@/lib/gql/types'
 interface UseCheckout {
   checkoutId?: string
+  isMultiship?: boolean
   initialCheckout?: CrOrder
 }
 
@@ -52,6 +53,7 @@ const getCheckout = async (checkoutId?: string | null) => {
 
 export const useCheckoutQueries = ({
   checkoutId,
+  isMultiship,
   initialCheckout,
 }: UseCheckout): UseCheckoutResponse => {
   const id = checkoutId as string
@@ -62,6 +64,7 @@ export const useCheckoutQueries = ({
     isSuccess,
   } = useQuery(checkoutKeys.detail(id), () => getCheckout(checkoutId), {
     initialData: initialCheckout,
+    enabled: !isMultiship,
   })
 
   return { data, isLoading, isSuccess }

@@ -7,6 +7,6 @@ export { default as PaymentStep } from '@/components/checkout/PaymentStep/Paymen
 export { default as KiboStepper } from '@/components/checkout/KiboStepper/KiboStepper'
 export { default as ReviewStep } from '@/components/checkout/ReviewStep/ReviewStep'
 export { default as OrderReview } from '@/components/checkout/OrderReview/OrderReview'
-export { default as ShippingMethod } from '@/components/checkout/Shipping/OrderItems/ShippingMethod'
+export { default as ShippingMethod } from '@/components/checkout/ShippingMethod/ShippingMethod'
 export { default as StandardShippingStep } from '@/components/checkout/StandardShippingStep/StandardShippingStep'
 export { default as MultiShippingStep } from '@/components/checkout/MultiShippingStep/MultiShippingStep'

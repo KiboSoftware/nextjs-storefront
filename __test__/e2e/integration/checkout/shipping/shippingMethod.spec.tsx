@@ -5,8 +5,8 @@ import { fireEvent, render, screen, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 
 import { shippingRateMock } from '@/__mocks__/stories/shippingRateMock'
-import { ShippingMethodProps } from '@/components/checkout/Shipping/OrderItems/ShippingMethod'
-import * as stories from '@/components/checkout/Shipping/OrderItems/ShippingMethod.stories'
+import { ShippingMethodProps } from '@/components/checkout/ShippingMethod/ShippingMethod'
+import * as stories from '@/components/checkout/ShippingMethod/ShippingMethod.stories'
 
 import type { Maybe, CrOrderItem } from '@/lib/gql/types'
 

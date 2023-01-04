@@ -131,7 +131,6 @@ const MultiShipCheckoutTemplate = (props: CheckoutProps) => {
         checkout={checkout as Checkout}
         handleApplyCouponCode={handleApplyCouponCode}
         handleRemoveCouponCode={handleRemoveCouponCode}
-        isSuccess={isSuccess}
         promoError={promoError}
         userShippingAddress={userShippingAddress}
       >

@@ -7,6 +7,4 @@ export { default as WishlistTemplate } from './WishlistTemplate/WishlistTemplate
 export { default as OrderStatusTemplate } from './OrderStatusTemplate/OrderStatusTemplate'
 export { default as StandardShipCheckoutTemplate } from './StandardShipCheckoutTemplate/StandardShipCheckoutTemplate'
 export { default as MultiShipCheckoutTemplate } from './MultiShipCheckoutTemplate/MultiShipCheckoutTemplate'
-export { default as CheckoutUITemplate } from './CheckoutUITemplate/CheckoutUITemplate'
-export { default as MultiShipCheckoutHeaderTemplate } from './MultiShipCheckoutHeaderTemplate/MultiShipCheckoutHeaderTemplate'
-export { default as StandardCheckoutHeaderTemplate } from './StandardCheckoutHeaderTemplate/StandardCheckoutHeaderTemplate'
+export { default as CheckoutUITemplate } from '../checkout/CheckoutUITemplate/CheckoutUITemplate'

@@ -7,6 +7,7 @@ import { checkoutKeys } from '@/lib/react-query/queryKeys'
 import type { Checkout } from '@/lib/gql/types'
 interface UseMultiShipCheckout {
   checkoutId: string
+  isMultiship?: boolean
   initialCheckout?: Checkout
 }
 export interface UseMultiShipCheckoutResponse {
@@ -28,6 +29,7 @@ const getCheckout = async (checkoutId: string) => {
 
 const useCheckoutQueries = ({
   checkoutId,
+  isMultiship,
   initialCheckout,
 }: UseMultiShipCheckout): UseMultiShipCheckoutResponse => {
   const id = checkoutId
@@ -38,6 +40,7 @@ const useCheckoutQueries = ({
     isSuccess,
   } = useQuery(checkoutKeys.detail(id), () => getCheckout(checkoutId), {
     initialData: initialCheckout,
+    enabled: !!isMultiship,
   })
 
   return { data, isLoading, isSuccess }

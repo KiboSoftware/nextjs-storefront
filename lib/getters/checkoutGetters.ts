@@ -1,9 +1,8 @@
 import { format } from 'date-fns'
 import lodash from 'lodash'
 
-import { FulfillmentOptions } from '../constants'
-import { MultiShipAddress } from '../types/MultiShip'
-import { ShipOption } from '@/components/checkout/MultiShippingStep/MultiShippingStep'
+import { FulfillmentOptions } from '@/lib/constants'
+import type { ShipOption, MultiShipAddress } from '@/lib/types'
 
 import type {
   CrOrderItem,

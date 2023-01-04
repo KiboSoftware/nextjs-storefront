@@ -30,11 +30,8 @@ import {
   CartIcon,
   HamburgerMenu,
   LoginDialog,
+  CheckoutHeader,
 } from '@/components/layout'
-import {
-  MultiShipCheckoutHeaderTemplate,
-  StandardCheckoutHeaderTemplate,
-} from '@/components/page-templates'
 import { useAuthContext, useHeaderContext, useModalContext } from '@/context'
 import { useCategoryTreeQueries } from '@/hooks'
 import type { NavigationLink } from '@/lib/types'
@@ -264,12 +261,7 @@ const KiboHeader = (props: KiboHeaderProps) => {
   }
 
   const getSection = (): React.ReactNode => {
-    if (isCheckoutPage)
-      return isMultiShipEnabled ? (
-        <MultiShipCheckoutHeaderTemplate />
-      ) : (
-        <StandardCheckoutHeaderTemplate />
-      )
+    if (isCheckoutPage) return <CheckoutHeader isMultiShipEnabled={isMultiShipEnabled} />
 
     if (!mdScreen) return <MobileHeader />
 

@@ -5,7 +5,7 @@ import { render, screen } from '@testing-library/react'
 
 import * as stories from './ShippingMethod.stories'
 import { shippingRateMock } from '@/__mocks__/stories/shippingRateMock'
-import { ShippingMethodProps } from '@/components/checkout/Shipping/OrderItems/ShippingMethod'
+import { ShippingMethodProps } from '@/components/checkout/ShippingMethod/ShippingMethod'
 
 import type { Maybe, CrOrderItem } from '@/lib/gql/types'
 

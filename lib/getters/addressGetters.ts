@@ -67,7 +67,6 @@ const getFormattedAddress = (contact?: GenericContact) => {
   getAddress2(contact?.address) + ' '
   getCityOrTown(contact?.address) + ' '
   getStateOrProvince(contact?.address) + ' '
-  getPostalOrZipCode(contact?.address) + ' '
   getPostalOrZipCode(contact?.address)
 }
 export const addressGetters = {

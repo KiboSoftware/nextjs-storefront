@@ -14,7 +14,7 @@ import {
   useUpdateCheckoutPersonalInfoMutation,
   PersonalInfo,
 } from '@/hooks'
-import { PersonalInfoUpdateMode } from '@/lib/constants'
+import { CheckoutUpdateMode } from '@/lib/constants'
 import { userGetters } from '@/lib/getters'
 
 import type { CustomerContact, CrOrder, CrOrderInput } from '@/lib/gql/types'
@@ -79,7 +79,7 @@ const StandardShipCheckoutTemplate = (props: CheckoutProps) => {
 
     const personalInfo: PersonalInfo = {
       orderId: checkout?.id as string,
-      updateMode: PersonalInfoUpdateMode.APPLYTOORIGINAL,
+      updateMode: CheckoutUpdateMode.APPLY_TO_ORIGINAL,
       orderInput: {
         ...(checkout as CrOrderInput),
         email,
@@ -94,7 +94,6 @@ const StandardShipCheckoutTemplate = (props: CheckoutProps) => {
         checkout={checkout as CrOrder}
         handleApplyCouponCode={handleApplyCouponCode}
         handleRemoveCouponCode={handleRemoveCouponCode}
-        isSuccess={isSuccess}
         promoError={promoError}
         userShippingAddress={userShippingAddress}
       >
