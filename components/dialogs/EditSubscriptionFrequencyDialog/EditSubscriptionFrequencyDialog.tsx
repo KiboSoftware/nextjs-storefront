@@ -3,13 +3,12 @@ import React, { useState } from 'react'
 import { Stack, Button, MenuItem } from '@mui/material'
 import { useTranslation } from 'next-i18next'
 
-import { KiboSelect } from '@/components/common'
-import KiboDialog from '@/components/common/KiboDialog/KiboDialog'
+import { KiboSelect, KiboDialog } from '@/components/common'
 import { useModalContext } from '@/context/ModalContext'
 import { useSnackbarContext } from '@/context/SnackbarContext/SnackbarContext'
 import { useEditSubscriptionFrequencyMutation } from '@/hooks'
 
-import { SbProductPropertyValue } from '@/lib/gql/types'
+import type { SbProductPropertyValue } from '@/lib/gql/types'
 
 interface EditSubscriptionFrequencyDialogProps {
   subscriptionId: string
@@ -46,9 +45,7 @@ const EditSubscriptionFrequencyDialog = (props: EditSubscriptionFrequencyDialogP
     showSnackbar(t('subscription-frequency-updated-successfully'), 'success')
   }
 
-  const handleFrequencyChange = async (name: string, value: string) => {
-    setSelectedFrequency(value)
-  }
+  const handleFrequencyChange = async (name: string, value: string) => setSelectedFrequency(value)
 
   const Actions = (
     <>

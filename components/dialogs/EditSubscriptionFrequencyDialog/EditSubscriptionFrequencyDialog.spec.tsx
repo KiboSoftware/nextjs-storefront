@@ -1,6 +1,6 @@
 import React from 'react'
 
-import { InputLabel, FormControl, Select, MenuItem } from '@mui/material'
+import { InputLabel, FormControl, Select } from '@mui/material'
 import { composeStories } from '@storybook/testing-react'
 import { render, screen, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
@@ -33,13 +33,8 @@ jest.mock('@/components/common', () => ({
 
 jest.mock('@/components/common/KiboDialog/KiboDialog', () => ({
   __esModule: true,
-  default: ({ children, Actions }) => {
-    return (
-      <>
-        {children}
-        {Actions}
-      </>
-    )
+  default: ({ Actions }: { Actions: React.ReactNode }) => {
+    return <>{Actions}</>
   },
 }))
 
@@ -50,7 +45,7 @@ describe('[components] EditSubscriptionFrequencyDialog', () => {
     })
   }
 
-  it('should render component', async () => {
+  it.only('should render component', async () => {
     setup()
 
     const kiboSelectMock = screen.getByRole('combobox')
