@@ -43,11 +43,11 @@ describe('[component] - SubscriptionList integration', () => {
   it('should open confirmation dialog on skip shipment button click', async () => {
     const { user } = setup()
 
-    const skipShipmentButton = screen.getByRole('button', {
+    const skipShipmentButton = screen.getAllByRole('button', {
       name: /skip-shipment/i,
     })
 
-    await user.click(skipShipmentButton)
+    await user.click(skipShipmentButton[0])
 
     const confirmationText = screen.getByText(/skip-next-subscription-confirmation/i)
     expect(confirmationText).toBeVisible()
