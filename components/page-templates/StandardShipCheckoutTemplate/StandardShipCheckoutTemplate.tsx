@@ -20,7 +20,7 @@ import {
 import { PersonalInfoUpdateMode } from '@/lib/constants'
 import { userGetters } from '@/lib/getters'
 
-import type { CustomerContact, CrOrder, CrOrderInput } from '@/lib/gql/types'
+import type { CustomerContact, CrOrder, CrOrderInput, PaymentActionInput } from '@/lib/gql/types'
 
 interface CheckoutProps {
   checkout: CrOrder
@@ -91,6 +91,32 @@ const StandardShipCheckoutTemplate = (props: CheckoutProps) => {
     await updateStandardCheckoutPersonalInfo.mutateAsync(personalInfo)
   }
 
+  // Payment Step
+
+  const updateOrderPaymentAction = useUpdateOrderPaymentActionMutation()
+  const createOrderPaymentMethod = useCreateCheckoutPaymentMethodMutation()
+  const updateCheckoutBillingInfo = useUpdateCheckoutBillingInfoMutation()
+
+  const handleVoidPayment = async (
+    id: string,
+    paymentId: string,
+    paymentAction: PaymentActionInput
+  ) => {
+    await updateOrderPaymentAction.mutateAsync({
+      orderId: id as string,
+      paymentId,
+      paymentAction,
+    })
+  }
+
+  const handleAddPayment = async (id: string, paymentAction: PaymentActionInput) => {
+    await createOrderPaymentMethod.mutateAsync({ orderId: id, paymentAction })
+    await updateCheckoutBillingInfo.mutateAsync({
+      orderId: id,
+      billingInfoInput: { ...paymentAction.newBillingInfo },
+    })
+  }
+
   return (
     <>
       <CheckoutUITemplate
@@ -112,7 +138,11 @@ const StandardShipCheckoutTemplate = (props: CheckoutProps) => {
             isAuthenticated={isAuthenticated}
           />
         )}
-        <PaymentStep checkout={checkout as CrOrder} />
+        <PaymentStep
+          checkout={checkout as CrOrder}
+          onVoidPayment={handleVoidPayment}
+          onAddPayment={handleAddPayment}
+        />
         <ReviewStep checkout={checkout as CrOrder} onBackButtonClick={handleBack} />
       </CheckoutUITemplate>
     </>

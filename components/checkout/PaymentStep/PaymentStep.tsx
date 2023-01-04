@@ -17,16 +17,7 @@ import getConfig from 'next/config'
 import { CardDetailsForm, SavedPaymentMethodView } from '@/components/checkout'
 import { AddressForm } from '@/components/common'
 import { useCheckoutStepContext, STEP_STATUS, useAuthContext } from '@/context'
-import {
-  useCustomerCardsQueries,
-  useCustomerContactsQueries,
-  useUpdateCheckoutBillingInfoMutation,
-  useCreateCheckoutPaymentMethodMutation,
-  useUpdateOrderPaymentActionMutation,
-  usePaymentTypes,
-  useCreateMultiShipCheckoutPaymentActionMutation,
-  useUpdateMultiShipCheckoutPaymentActionMutation,
-} from '@/hooks'
+import { useCustomerCardsQueries, useCustomerContactsQueries, usePaymentTypes } from '@/hooks'
 import { PaymentType, PaymentWorkflow } from '@/lib/constants'
 import { addressGetters, cardGetters, orderGetters, userGetters } from '@/lib/getters'
 import { tokenizeCreditCardPayment } from '@/lib/helpers'
@@ -55,6 +46,8 @@ interface PaymentStepProps {
   checkout: CrOrder | Checkout
   contact?: ContactForm
   isMultiShip?: boolean
+  onVoidPayment: (id: string, paymentId: string, paymentAction: PaymentActionInput) => void
+  onAddPayment: (id: string, paymentAction: PaymentActionInput) => void
 }
 
 interface PaymentMethod {
@@ -119,7 +112,7 @@ const initialBillingAddressData: Address = {
 }
 
 const PaymentStep = (props: PaymentStepProps) => {
-  const { checkout, isMultiShip } = props
+  const { checkout, onVoidPayment, onAddPayment } = props
 
   // hooks
   const { isAuthenticated, user } = useAuthContext()
@@ -134,15 +127,6 @@ const PaymentStep = (props: PaymentStepProps) => {
 
   const { data: customerContactsCollection, isSuccess: isCustomerContactsSuccess } =
     useCustomerContactsQueries(user?.id as number)
-
-  // update checkout payment and billing info
-  const createOrderPaymentMethod = useCreateCheckoutPaymentMethodMutation()
-  const updateCheckoutBillingInfo = useUpdateCheckoutBillingInfoMutation()
-  const updateOrderPaymentAction = useUpdateOrderPaymentActionMutation()
-
-  // multiship
-  const createMultiShipCheckoutPaymentAction = useCreateMultiShipCheckoutPaymentActionMutation()
-  const updateMultiShipCheckoutPaymentAction = useUpdateMultiShipCheckoutPaymentActionMutation()
 
   // checkout context handling
   const {
@@ -326,36 +310,12 @@ const PaymentStep = (props: PaymentStepProps) => {
 
     selectedCards?.forEach(async (card: Maybe<CrPayment>) => {
       paymentAction = { ...paymentAction, actionName: 'VoidPayment' }
-      if (isMultiShip) {
-        await updateMultiShipCheckoutPaymentAction.mutateAsync({
-          checkoutId: checkout?.id as string,
-          paymentId: card?.id as string,
-          paymentAction,
-        })
-      } else {
-        await updateOrderPaymentAction.mutateAsync({
-          orderId: checkout?.id as string,
-          paymentId: card?.id as string,
-          paymentAction,
-        })
-      }
+      onVoidPayment(checkout?.id as string, card?.id as string, paymentAction)
     })
 
     if (checkout?.id) {
       paymentAction = { ...paymentAction, actionName: '' }
-      if (isMultiShip) {
-        createMultiShipCheckoutPaymentAction.mutateAsync({
-          checkoutId: checkout.id,
-          paymentAction,
-        })
-      } else {
-        await createOrderPaymentMethod.mutateAsync({ orderId: checkout.id, paymentAction })
-        await updateCheckoutBillingInfo.mutateAsync({
-          orderId: checkout.id,
-          billingInfoInput: { ...paymentAction.newBillingInfo },
-        })
-      }
-
+      onAddPayment(checkout.id as string, paymentAction)
       setStepStatusComplete()
       setStepNext()
     }

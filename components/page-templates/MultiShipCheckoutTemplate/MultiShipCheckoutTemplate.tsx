@@ -16,6 +16,8 @@ import {
   useCreateCheckoutDestinationMutations,
   useCheckoutShippingMethodsQuery,
   useCreateCheckoutShippingMethodMutation,
+  useUpdateMultiShipCheckoutPaymentActionMutation,
+  useCreateMultiShipCheckoutPaymentActionMutation,
 } from '@/hooks'
 import { userGetters } from '@/lib/getters'
 
@@ -25,6 +27,7 @@ import type {
   CheckoutGroupRates,
   CrShippingRate,
   Maybe,
+  PaymentActionInput,
 } from '@/lib/gql/types'
 
 interface CheckoutProps {
@@ -125,6 +128,29 @@ const MultiShipCheckoutTemplate = (props: CheckoutProps) => {
     }
   }
 
+  // Payment Step
+  const updateMultiShipCheckoutPaymentAction = useUpdateMultiShipCheckoutPaymentActionMutation()
+  const createMultiShipCheckoutPaymentAction = useCreateMultiShipCheckoutPaymentActionMutation()
+
+  const handleVoidPayment = async (
+    id: string,
+    paymentId: string,
+    paymentAction: PaymentActionInput
+  ) => {
+    await updateMultiShipCheckoutPaymentAction.mutateAsync({
+      checkoutId: id as string,
+      paymentId,
+      paymentAction,
+    })
+  }
+
+  const handleAddPayment = async (id: string, paymentAction: PaymentActionInput) => {
+    await createMultiShipCheckoutPaymentAction.mutateAsync({
+      checkoutId: id,
+      paymentAction,
+    })
+  }
+
   return (
     <>
       <CheckoutUITemplate
@@ -150,8 +176,11 @@ const MultiShipCheckoutTemplate = (props: CheckoutProps) => {
             onUpdateCheckoutShippingMethod={updateCheckoutShippingMethod}
           />
         )}
-        {/* @to-do Use below steps for future development */}
-        <PaymentStep checkout={checkout as Checkout} isMultiShip={true} />
+        <PaymentStep
+          checkout={checkout as Checkout}
+          onVoidPayment={handleVoidPayment}
+          onAddPayment={handleAddPayment}
+        />
         {/* <ReviewStep checkout={checkout as Checkout} onBackButtonClick={handleBack} /> */}
       </CheckoutUITemplate>
     </>
