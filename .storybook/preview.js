@@ -67,6 +67,7 @@ export const parameters = {
       wishlist: [...handlers.wishlistHandlers],
       productSearch: [...handlers.productSearchHandlers],
       inventory: [...handlers.inventoryHandlers],
+      subscriptions: [...handlers.subscriptionHandlers],
     },
   },
 

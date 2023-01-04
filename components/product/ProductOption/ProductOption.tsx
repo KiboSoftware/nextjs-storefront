@@ -7,6 +7,7 @@ interface ProductOptionProps {
   option: CrProductOption
   variant?: Variant
   fontWeight?: 'bold' | 'normal'
+  align?: 'right' | 'left'
 }
 
 const ProductOption = (prop: ProductOptionProps) => {

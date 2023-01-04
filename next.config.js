@@ -97,6 +97,7 @@ module.exports = {
         shortName: 'MultiShip',
       },
     ],
+    isSubscriptionEnabled: true,
   },
   serverRuntimeConfig: {
     revalidate: process.env.GLOBAL_PAGE_REVALIDATE || 30,

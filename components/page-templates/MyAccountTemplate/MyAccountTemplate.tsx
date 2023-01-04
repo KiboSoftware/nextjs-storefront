@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useCallback } from 'react'
 
 import { AccountCircle, ChevronLeft } from '@mui/icons-material'
 import ChevronRightIcon from '@mui/icons-material/ChevronRight'
@@ -16,6 +16,7 @@ import {
   Grid,
 } from '@mui/material'
 import { useTranslation } from 'next-i18next'
+import getConfig from 'next/config'
 import { useRouter } from 'next/router'
 
 import { MyProfile, PaymentMethod, AddressBook } from '@/components/my-account'
@@ -78,6 +79,8 @@ const style = {
 
 const MyAccountTemplate = () => {
   const { t } = useTranslation('common')
+  const { publicRuntimeConfig } = getConfig()
+  const isSubscriptionEnabled = publicRuntimeConfig.isSubscriptionEnabled
   const router = useRouter()
   const theme = useTheme()
   const mdScreen = useMediaQuery(theme.breakpoints.up('md'))
@@ -89,6 +92,10 @@ const MyAccountTemplate = () => {
   const handleGoToOrderHistory = () => {
     router.push('/my-account/order-history?filters=M-6')
   }
+
+  const handleGoToSubscription = useCallback(() => {
+    router.push('/my-account/subscription')
+  }, [router])
 
   const accordionData = [
     {
@@ -161,6 +168,23 @@ const MyAccountTemplate = () => {
         <Box sx={{ ...style.myAccountChildren }}>
           <Typography variant={mdScreen ? 'h1' : 'h2'}>{t('order-details')}</Typography>
         </Box>
+
+        {/* code for subscription below */}
+        <Divider sx={{ borderColor: 'grey.500' }} />
+        {isSubscriptionEnabled && (
+          <Box
+            sx={{
+              ...style.myAccountChildren,
+              ...style.orderHistory,
+            }}
+            onClick={handleGoToSubscription}
+          >
+            <Typography variant="h3">{t('my-subscription')}</Typography>
+            <ChevronRightIcon />
+          </Box>
+        )}
+        {/* code for subscription ends here */}
+
         <Divider sx={{ borderColor: 'grey.500' }} />
         <Box
           sx={{

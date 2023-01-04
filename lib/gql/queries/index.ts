@@ -18,3 +18,4 @@ export { default as getReturnsQuery } from './get-returns'
 
 export { default as getCheckoutDestinationsQuery } from './checkout/get-checkout-destinations'
 export { default as getCheckoutDestinationQuery } from './checkout/get-checkout-destination'
+export { default as getSubscriptionsQuery } from './subscription/get-subscriptions-query'
