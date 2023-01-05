@@ -346,6 +346,9 @@ export const subscriptionHandlers = [
   graphql.query('getSubscriptions', (_req, res, ctx) => {
     return res(ctx.data(subscriptionCollectionMock))
   }),
+  graphql.mutation('updateSubscriptionFrequency', (_req, res, ctx) => {
+    return res(ctx.data({ updateSubscriptionFrequency: { frequency: '4 Months' } }))
+  }),
 ]
 
 export const handlers = [

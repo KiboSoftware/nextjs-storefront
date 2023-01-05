@@ -11,32 +11,65 @@ import { ModalContextProvider } from '@/context'
 const { Common } = composeStories(stories)
 const user = userEvent.setup()
 
-jest.mock('@/components/common', () => ({
+interface KiboSelectProps {
+  children: React.ReactNode
+  onChange: (name: string, value: string) => void
+  value: string
+}
+
+interface KiboDialogProps {
+  Content: React.ReactNode
+  Actions: React.ReactNode
+}
+
+jest.mock('@/components/common/KiboSelect/KiboSelect', () => ({
   __esModule: true,
-  KiboSelect: jest.fn(({ children, onChange, value }) => (
-    <div data-testid="Kibo-Select-Div">
-      <FormControl fullWidth>
-        <InputLabel id="demo-simple-select-label">Frequency</InputLabel>
-        <Select
-          labelId="KiboSelect"
-          value={value}
-          label="Frequency"
-          onChange={(event) => onChange(event.target.name, event.target.value)}
-          placeholder="select-subscription-frequency"
-        >
-          {children}
-        </Select>
-      </FormControl>
-    </div>
-  )),
+  default: ({ children, onChange, value }: KiboSelectProps) => (
+    <FormControl fullWidth>
+      <InputLabel id="demo-simple-select-label">Frequency Mocked</InputLabel>
+      <Select
+        data-testid="KiboSelect"
+        labelId="KiboSelect"
+        value={value}
+        label="Frequency"
+        onChange={(event) => onChange(event.target.name, event.target.value)}
+        placeholder="select-subscription-frequency"
+      >
+        {children}
+      </Select>
+    </FormControl>
+  ),
 }))
 
 jest.mock('@/components/common/KiboDialog/KiboDialog', () => ({
   __esModule: true,
-  default: ({ Actions }: { Actions: React.ReactNode }) => {
-    return <>{Actions}</>
+  default: ({ Content, Actions }: KiboDialogProps) => {
+    return (
+      <>
+        {Content}
+        {Actions}
+      </>
+    )
   },
 }))
+
+const closeModalMock = jest.fn()
+jest.mock('@/context/ModalContext', () => ({
+  useModalContext: () => {
+    return { closeModal: closeModalMock }
+  },
+}))
+
+const showSnackbarMock = jest.fn()
+jest.mock('@/context/SnackbarContext/SnackbarContext', () => ({
+  useSnackbarContext: () => {
+    return { showSnackbar: showSnackbarMock }
+  },
+}))
+
+afterEach(() => {
+  jest.clearAllMocks()
+})
 
 describe('[components] EditSubscriptionFrequencyDialog', () => {
   const setup = () => {
@@ -45,12 +78,10 @@ describe('[components] EditSubscriptionFrequencyDialog', () => {
     })
   }
 
-  it.only('should render component', async () => {
+  it('should render component', async () => {
     setup()
 
-    const kiboSelectMock = screen.getByRole('combobox')
-    const heading = screen.getByRole('heading')
-
+    const kiboSelectMock = screen.getByRole('button', { expanded: false })
     const cancelButton = screen.getByRole('button', {
       name: /cancel/i,
     })
@@ -60,7 +91,8 @@ describe('[components] EditSubscriptionFrequencyDialog', () => {
 
     // Assertions
     expect(kiboSelectMock).toBeVisible()
-    expect(heading).toHaveTextContent(/edit-subscription-frequency/i)
+
+    await user.click(kiboSelectMock)
     Common.args?.values?.map((value) => {
       const frequency = screen.getByText(`${value.stringValue}`)
       expect(frequency).toBeVisible()
@@ -112,20 +144,21 @@ describe('[components] EditSubscriptionFrequencyDialog', () => {
 
     expect(confirmlButton).toBeVisible()
     expect(confirmlButton).toBeEnabled()
-    user.click(confirmlButton)
+    await user.click(confirmlButton)
 
-    //TODO
-    // 1. Mock the handler and verify the response
-    // 2. Check whether SnackBar is displayed or not
+    expect(closeModalMock).toHaveBeenCalledTimes(1)
+    expect(showSnackbarMock).toHaveBeenCalledTimes(1)
   })
 
-  it('should close modal when user clicks on Cancel button', () => {
+  it('should close modal when user clicks on Cancel button', async () => {
+    setup()
+
     const cancelButton = screen.getByRole('button', {
       name: /cancel/i,
     })
     expect(cancelButton).toBeVisible()
+    await user.click(cancelButton)
 
-    //TODO
-    // 1. Verify that Dialog is closed
+    expect(closeModalMock).toHaveBeenCalledTimes(1)
   })
 })
