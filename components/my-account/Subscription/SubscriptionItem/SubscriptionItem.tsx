@@ -71,9 +71,7 @@ const SubscriptionItem = (props: SubscriptionItemProps) => {
   const { showModal } = useModalContext()
 
   const handleEditFrequency = (subscriptionId: string, subscriptionItems: SbSubscriptionItem[]) => {
-    const values = subscriptionItems[0].product?.properties?.find(
-      (property) => property?.name === SUBSCRIPTION_FREQUENCY
-    )?.values
+    const values = subscriptionGetters.getFrequencyValues(subscriptionItems)
 
     showModal({
       Component: EditSubscriptionFrequencyDialog,
