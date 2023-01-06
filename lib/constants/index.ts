@@ -111,4 +111,4 @@ export const OrderReturnType = {
   REFUND: 'Refund',
 }
 
-export const SUBSCRIPTION_FREQUENCY = 'Subscription Frequency'
+export const SUBSCRIPTION_FREQUENCY = 'system~subscription-frequency'
