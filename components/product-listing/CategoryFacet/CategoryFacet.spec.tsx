@@ -117,3 +117,4 @@ describe('[component] - CategoryFacet', () => {
     expect(heading).toBeVisible()
     expect(backButton).toBeInTheDocument()
   })
+})
