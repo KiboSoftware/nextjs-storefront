@@ -107,7 +107,6 @@ const ProfileDetailsForm = (props: ProfileDetailsFormProps) => {
   } = useForm({
     mode: 'onChange',
     reValidateMode: 'onChange',
-    defaultValues: getDefaultValues(),
     criteriaMode: 'firstError',
     resolver: yupResolver(cardSchema),
     shouldFocusError: true,

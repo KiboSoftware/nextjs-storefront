@@ -1,6 +1,6 @@
 import React from 'react'
 
-import { Link as MuiLink, List, ListItem, ListItemText, Stack } from '@mui/material'
+import { List, ListItem, ListItemText, Stack, Theme, styled } from '@mui/material'
 import { useTranslation } from 'next-i18next'
 import Link from 'next/link'
 
@@ -14,6 +14,11 @@ interface MegaMenuItemProps {
   categoryCode: string
   onBackDropClose: () => void
 }
+
+const StyledLink = styled(Link)(({ theme }: { theme: Theme }) => ({
+  color: theme?.palette.text.primary,
+  fontSize: theme?.typography.body1.fontSize,
+}))
 
 const MegaMenuItem = (props: MegaMenuItemProps) => {
   const { title, categoryChildren, categoryCode, onBackDropClose } = props
@@ -29,30 +34,20 @@ const MegaMenuItem = (props: MegaMenuItemProps) => {
             primaryTypographyProps={{ variant: 'subtitle2', fontWeight: 'bold' }}
           />
         </ListItem>
-        <ListItem button sx={{ cursor: 'pointer' }}>
-          <Link href={getCategoryLink(categoryCode)} passHref>
-            <MuiLink
-              data-testid="shopAllLink"
-              underline="none"
-              color="grey.900"
-              onClick={onBackDropClose}
-            >
-              {t('shop-all')}
-            </MuiLink>
-          </Link>
+        <ListItem sx={{ cursor: 'pointer' }} onClick={onBackDropClose}>
+          <StyledLink href={getCategoryLink(categoryCode)} passHref>
+            {t('shop-all')}
+          </StyledLink>
         </ListItem>
         {categoryChildren?.map((cat) => (
-          <ListItem key={cat?.categoryId} role="group">
-            <Link href={getCategoryLink(cat?.categoryCode as string)} passHref>
-              <MuiLink
-                data-testid="categoryLink"
-                underline="none"
-                color="grey.900"
-                onClick={onBackDropClose}
-              >
-                {cat?.content?.name}
-              </MuiLink>
-            </Link>
+          <ListItem key={cat?.categoryId} role="group" onClick={onBackDropClose}>
+            <StyledLink
+              href={getCategoryLink(cat?.categoryCode as string)}
+              passHref
+              data-testid="categoryLink"
+            >
+              {cat?.content?.name}
+            </StyledLink>
           </ListItem>
         ))}
       </List>

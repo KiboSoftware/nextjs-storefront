@@ -1,5 +1,6 @@
 import { loadEnvConfig } from '@next/env'
 import { setGlobalConfig } from '@storybook/testing-react'
+import mockRouter from 'next-router-mock'
 
 import * as globalStorybookConfig from './.storybook/preview'
 import '@testing-library/jest-dom'
@@ -27,9 +28,14 @@ jest.mock(
       children
 )
 
+jest.mock('next/router', () => require('next-router-mock'))
+jest.mock('next/dist/client/router', () => require('next-router-mock'))
+
 // Mock the server
 beforeAll(() => server.listen())
-afterEach(() => server.resetHandlers())
+afterEach(() => {
+  server.resetHandlers()
+})
 afterAll(() => server.close())
 
 jest.setTimeout(80000)

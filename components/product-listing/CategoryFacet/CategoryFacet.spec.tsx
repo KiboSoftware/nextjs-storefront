@@ -28,7 +28,7 @@ describe('[component] - CategoryFacet', () => {
     setup()
 
     const heading = screen.getByRole('heading')
-    const backButton = screen.getByLabelText(/back/i)
+    const backButton = screen.getByRole('link', { name: /back/i })
 
     const childrenCategoriesLabels =
       CategoryFacetDesktop?.args?.categoryFacet?.childrenCategories?.map(
@@ -84,6 +84,7 @@ describe('[component] - CategoryFacet', () => {
     expect(childrenCategoriesLabelsListAfterClick).toHaveLength(
       CategoryFacetDesktop.args?.categoryFacet?.childrenCategories?.length || 0
     )
+
     childrenCategoriesLabelsListAfterClick?.map((childrenCategory) => {
       const categoryCode = CategoryFacetDesktop?.args?.categoryFacet?.childrenCategories?.find(
         (category) => childrenCategory.textContent?.includes(category?.label as string)
@@ -111,7 +112,7 @@ describe('[component] - CategoryFacet', () => {
     setup(params)
 
     const heading = screen.getByRole('heading')
-    const backButton = screen.getByLabelText(/back/i)
+    const backButton = screen.getByRole('link', { name: /back/i })
 
     expect(heading).toBeVisible()
     expect(backButton).toBeInTheDocument()

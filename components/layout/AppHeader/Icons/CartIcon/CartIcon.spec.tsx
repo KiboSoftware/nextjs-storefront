@@ -1,8 +1,8 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
-import { screen, waitFor } from '@testing-library/react'
+import { screen } from '@testing-library/react'
 import '@testing-library/jest-dom'
 import userEvent from '@testing-library/user-event'
-import { RouterContext } from 'next/dist/shared/lib/router-context'
+import singletonRouter from 'next/router'
 
 import CartIcon from './CartIcon'
 import { createMockRouter, renderWithQueryClient } from '@/__test__/utils'
@@ -13,12 +13,10 @@ const setup = () => {
   const router = createMockRouter()
 
   renderWithQueryClient(
-    <RouterContext.Provider value={router}>
-      <ModalContextProvider>
-        <DialogRoot />
-        <CartIcon size="large" />
-      </ModalContextProvider>
-    </RouterContext.Provider>
+    <ModalContextProvider>
+      <DialogRoot />
+      <CartIcon size="large" />
+    </ModalContextProvider>
   )
   return {
     user,
@@ -34,12 +32,13 @@ describe('[component] CartIcon component', () => {
   })
 
   it('should change route on click of icon', async () => {
-    const { user, router } = setup()
+    const { user } = setup()
 
     await user.click(screen.getByText(/cart/))
 
-    await waitFor(() => {
-      expect(router.push).toBeCalledWith('/cart')
+    expect(singletonRouter).toMatchObject({
+      asPath: '/cart',
+      pathname: '/cart',
     })
   })
 })
