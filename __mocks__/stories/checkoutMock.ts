@@ -1,6 +1,7 @@
 import type { Checkout } from '@/lib/gql/types'
 const checkoutResponse: Checkout = {
   id: '148a06a207b12d0001492285000045a4',
+  email: 'test1@gmail.com',
   siteId: 22116,
   tenantId: 17828,
   number: 161,

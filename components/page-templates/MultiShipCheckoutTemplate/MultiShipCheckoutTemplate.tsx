@@ -47,6 +47,7 @@ const MultiShipCheckoutTemplate = (props: MultiShipCheckoutProps) => {
   // Hooks
   const { data: checkout } = useMultiShipCheckoutQueries({
     checkoutId: checkoutId as string,
+    isMultiship: true,
     initialCheckout,
   })
   const { data: shippingMethods } = useCheckoutShippingMethodsQuery(
@@ -66,7 +67,7 @@ const MultiShipCheckoutTemplate = (props: MultiShipCheckoutProps) => {
       checkout: checkout as Checkout,
       email: email as string,
     }
-    return await updateMultiShipCheckoutPersonalInfo.mutateAsync(personalInfo)
+    await updateMultiShipCheckoutPersonalInfo.mutateAsync(personalInfo)
   }
 
   const { isAuthenticated, user } = useAuthContext()
@@ -134,23 +135,20 @@ const MultiShipCheckoutTemplate = (props: MultiShipCheckoutProps) => {
         handleApplyCouponCode={handleApplyCouponCode}
         handleRemoveCouponCode={handleRemoveCouponCode}
         promoError={promoError}
-        userShippingAddress={userShippingAddress}
       >
         <DetailsStep
           checkout={checkout as Checkout}
           updateCheckoutPersonalInfo={updateCheckoutPersonalInfo}
         />
-        {((isAuthenticated && isSuccess) || !isAuthenticated) && (
-          <MultiShippingStep
-            key={checkout?.groupings?.map((group) => group?.id).join('')}
-            checkout={checkout as Checkout}
-            userSavedShippingAddress={userShippingAddress}
-            isAuthenticated={isAuthenticated}
-            shippingMethods={shippingMethods}
-            createCheckoutDestination={createCheckoutDestination}
-            onUpdateCheckoutShippingMethod={updateCheckoutShippingMethod}
-          />
-        )}
+        <MultiShippingStep
+          key={checkout?.groupings?.map((group) => group?.id).join('')}
+          checkout={checkout as Checkout}
+          userSavedShippingAddress={userShippingAddress}
+          isAuthenticated={isAuthenticated}
+          shippingMethods={shippingMethods}
+          createCheckoutDestination={createCheckoutDestination}
+          onUpdateCheckoutShippingMethod={updateCheckoutShippingMethod}
+        />
         {/* @to-do Use below steps for future development */}
         {/* <PaymentStep checkout={checkout} {...paymentStepParams} />
               <ReviewStep checkout={checkout as Checkout} onBackButtonClick={handleBack} /> */}

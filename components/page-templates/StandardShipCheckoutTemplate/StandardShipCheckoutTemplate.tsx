@@ -30,6 +30,7 @@ const StandardShipCheckoutTemplate = (props: StandardShipCheckoutProps) => {
 
   const { data: checkout } = useCheckoutQueries({
     checkoutId: checkoutId as string,
+    isMultiship: true,
     initialCheckout,
   })
 
@@ -90,7 +91,6 @@ const StandardShipCheckoutTemplate = (props: StandardShipCheckoutProps) => {
         handleApplyCouponCode={handleApplyCouponCode}
         handleRemoveCouponCode={handleRemoveCouponCode}
         promoError={promoError}
-        userShippingAddress={userShippingAddress}
       >
         <DetailsStep
           checkout={checkout as CrOrder}

@@ -232,7 +232,7 @@ const MultiShippingStep = (props: MultiShippingStepProps) => {
 
   const onChangeShippingOption = async (option: string) => {
     const groupings = checkout?.groupings
-    if (groupings && groupings?.length > 1 && option === shipToHome.value) {
+    if (groupings && groupings?.length > 1 && option === shipToHome) {
       const defaultDestinationId = groupings && (groupings[0]?.destinationId as string)
       await updateSameDestinationForAllItems({ destinationId: defaultDestinationId as string })
     }
@@ -342,7 +342,7 @@ const MultiShippingStep = (props: MultiShippingStepProps) => {
         />
       )}
 
-      {shippingOption === shipToHome.value && (
+      {shippingOption === shipToHome && (
         <>
           {shouldShowAddAddressButton && (
             <>

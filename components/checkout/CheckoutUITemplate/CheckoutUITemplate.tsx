@@ -17,7 +17,6 @@ interface CheckoutUITemplateProps<T> {
   promoError: string
   handleApplyCouponCode: (couponCode: string) => void
   handleRemoveCouponCode: (couponCode: string) => void
-  userShippingAddress?: CustomerContact[]
   children?: React.ReactNode
 }
 const buttonStyle = {
