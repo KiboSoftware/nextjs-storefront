@@ -52,14 +52,27 @@ const checkoutStepReducer = (state: State, action: Action): State => {
 
 interface CheckoutStepProviderProps {
   initialActiveStep?: number
+  currentStepStatus?: string
   steps?: string[]
   children: any
 }
 export const CheckoutStepProvider = (props: CheckoutStepProviderProps) => {
-  const { initialActiveStep = 0, steps: stepsProp, ...otherProps } = props
+  const {
+    initialActiveStep = 0,
+    currentStepStatus = STEP_STATUS.INCOMPLETE,
+    steps: stepsProp,
+    ...otherProps
+  } = props
   const [state, dispatch] = useReducer(
     checkoutStepReducer,
-    stepsProp ? { ...initialState, steps: stepsProp, activeStep: initialActiveStep } : initialState
+    stepsProp
+      ? {
+          ...initialState,
+          steps: stepsProp,
+          activeStep: initialActiveStep,
+          stepStatus: currentStepStatus,
+        }
+      : initialState
   )
 
   const activeStep = useMemo(() => state.activeStep, [state.activeStep])
