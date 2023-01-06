@@ -7,7 +7,6 @@ import { ProductItem } from '@/components/common'
 import { EditSubscriptionFrequencyDialog } from '@/components/dialogs'
 import { ProductOption } from '@/components/product'
 import { useModalContext } from '@/context/ModalContext'
-import { SUBSCRIPTION_FREQUENCY } from '@/lib/constants'
 import { subscriptionGetters, productGetters } from '@/lib/getters'
 import { uiHelpers } from '@/lib/helpers'
 
@@ -71,7 +70,7 @@ const SubscriptionItem = (props: SubscriptionItemProps) => {
   const { showModal } = useModalContext()
 
   const handleEditFrequency = (subscriptionId: string, subscriptionItems: SbSubscriptionItem[]) => {
-    const values = subscriptionGetters.getFrequencyValues(subscriptionItems)
+    const values = subscriptionGetters.getFrequencyValues(subscriptionItems[0].product)
 
     showModal({
       Component: EditSubscriptionFrequencyDialog,

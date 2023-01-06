@@ -2,7 +2,7 @@ import { format } from 'date-fns'
 
 import { SUBSCRIPTION_FREQUENCY } from '../constants'
 
-import type { SbSubscriptionItem, Subscription } from '@/lib/gql/types'
+import type { SbProduct, SbProductProperty, Subscription } from '@/lib/gql/types'
 
 const getSubscriberName = (subscription: Subscription) =>
   `${subscription?.fulfillmentInfo?.fulfillmentContact?.firstName} ${subscription?.fulfillmentInfo?.fulfillmentContact?.lastNameOrSurname}`
@@ -36,10 +36,11 @@ const getSubscriptionDetails = (subscription: any) => {
   }
 }
 
-const getFrequencyValues = (subscriptionItems: SbSubscriptionItem[]) => {
-  return subscriptionItems[0].product?.properties?.find(
-    (property) => property?.attributeFQN === SUBSCRIPTION_FREQUENCY
-  )?.values
+const getFrequencyValues = (product: SbProduct | null | undefined) => {
+  if (!product) return
+
+  return product?.properties?.find((property) => property?.attributeFQN === SUBSCRIPTION_FREQUENCY)
+    ?.values
 }
 
 export const subscriptionGetters = {
