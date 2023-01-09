@@ -122,10 +122,12 @@ jest.mock('../../common/ProductItemWithAddressList/ProductItemWithAddressList', 
       </button>
       <button
         type="button"
-        data-testid="onSelectCreateOrSetDestinationAddress"
-        onClick={() => onSelectCreateOrSetDestinationAddress('mockId', 'mockValue')}
+        data-testid="createOrSetDestinationAddress"
+        onClick={() =>
+          onSelectCreateOrSetDestinationAddress('mockId', 'bf92ade4f3514c08bbeeaf6400833d00')
+        }
       >
-        Handle Create Or Set Destination Address
+        Create Or Set Destination Address
       </button>
     </div>
   ),
@@ -134,6 +136,21 @@ jest.mock('../../common/ProductItemWithAddressList/ProductItemWithAddressList', 
 jest.mock('../../common/ShippingGroupsWithMethod/ShippingGroupsWithMethod', () => ({
   __esModule: true,
   default: () => <div data-testid="shipping-groups-with-method"></div>,
+}))
+
+const updateCheckoutItemDestinationMock = jest.fn()
+const updateCheckoutDestinationMock = jest.fn()
+jest.mock('@/hooks', () => ({
+  useUpdateCheckoutItemDestinationMutations: jest.fn(() => {
+    return {
+      mutateAsync: updateCheckoutItemDestinationMock,
+    }
+  }),
+  useUpdateCheckoutDestinationMutations: jest.fn(() => {
+    return {
+      mutateAsync: updateCheckoutDestinationMock,
+    }
+  }),
 }))
 
 describe('[components] MultiShippingStep', () => {
@@ -183,11 +200,16 @@ describe('Ship To Multi Address', () => {
     const continueButton = screen.getByRole('button', { name: 'continue' })
 
     expect(screen.getByTestId('product-item-with-address-list-mock')).toBeVisible()
+
+    const createOrSetDestinationAddress = screen.getByRole('button', {
+      name: /Create Or Set Destination Address/i,
+    })
+    await user.click(createOrSetDestinationAddress)
+
+    expect(updateCheckoutItemDestinationMock).toBeCalled()
+
     const createOrUpdateDestination = screen.getByRole('button', {
       name: /Create Or Update Destination/i,
-    })
-    const onSelectCreateOrSetDestinationAddress = screen.getByRole('button', {
-      name: /Handle Create Or Set Destination Address/i,
     })
 
     await user.click(createOrUpdateDestination)
