@@ -8478,10 +8478,6 @@ export type MutationSkipNextSubscriptionArgs = {
   subscriptionId: Scalars['String']
 }
 
-export type MutationSkipNextSubscriptionArgs = {
-  subscriptionId: Scalars['String']
-}
-
 export type MutationSplitOrderShipmentArgs = {
   orderId: Scalars['String']
   shipmentNumber: Scalars['String']
@@ -11471,7 +11467,6 @@ export type QueryProductArgs = {
   sliceValue?: InputMaybe<Scalars['String']>
   useSubscriptionPricing?: InputMaybe<Scalars['Boolean']>
   supressOutOfStock404?: InputMaybe<Scalars['Boolean']>
-  useSubscriptionPricing?: InputMaybe<Scalars['Boolean']>
   variationProductCode?: InputMaybe<Scalars['String']>
   variationProductCodeFilter?: InputMaybe<Scalars['String']>
 }

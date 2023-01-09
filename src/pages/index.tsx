@@ -1,6 +1,5 @@
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
 
-import nextI18NextConfig from '../../next-i18next.config'
 import { homePageResultMock } from '@/__mocks__/stories'
 import KiboHeroCarousel from '@/components/home/Carousel/KiboHeroCarousel'
 import { FullWidthLayout } from '@/components/layout'
@@ -20,7 +19,7 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
     props: {
       categoriesTree,
       carouselItem: homePageResultMock,
-      ...(await serverSideTranslations(locale as string, ['common'], nextI18NextConfig)),
+      ...(await serverSideTranslations(locale as string, ['common'])),
     },
   }
 }

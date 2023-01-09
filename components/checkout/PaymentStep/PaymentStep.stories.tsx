@@ -25,6 +25,11 @@ const Template: ComponentStory<typeof PaymentStep> = (args) => <PaymentStep {...
 // Common
 export const Common = Template.bind({})
 
+const handleVoidPayment = () => 'onVoidPayment'
+const handleAddPayment = () => 'onAddPayment'
+
 Common.args = {
   checkout: orderMock.checkout,
+  onVoidPayment: handleVoidPayment,
+  onAddPayment: handleAddPayment,
 }
