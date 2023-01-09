@@ -13,21 +13,29 @@ import { subscriptionGetters } from '@/lib/getters'
 const { Common } = composeStories(stories)
 const subscriptionItem = subscriptionItemMock?.items
 
-const showModalMock = jest.fn()
-jest.mock('@/context/ModalContext', () => ({
-  useModalContext: () => ({
-    showModal: showModalMock,
-  }),
-}))
+const orderSubscriptionNowMock = jest.fn()
 
-describe('[component] - Subscription', () => {
+jest.mock(
+  '@/hooks/mutations/subscription/useOrderSubscriptionNow/useOrderSubscriptionNowMutation',
+  () => ({
+    useOrderSubscriptionNowMutation: jest.fn(() => ({
+      orderSubscriptionNow: {
+        mutateAsync: orderSubscriptionNowMock,
+      },
+    })),
+  })
+)
+
+describe('[component] - SubscriptionItem', () => {
   const setup = () => {
     const user = userEvent.setup()
     render(
-      <ModalContextProvider>
-        <DialogRoot />
-        <Common />
-      </ModalContextProvider>,
+      <>
+        <ModalContextProvider>
+          <DialogRoot />
+          <Common />
+        </ModalContextProvider>
+      </>,
       {
         wrapper: createQueryClientWrapper(),
       }
@@ -109,7 +117,10 @@ describe('[component] - Subscription', () => {
 
     await userEvent.click(editFrequencyButton)
 
-    expect(showModalMock).toHaveBeenCalledTimes(1)
+    expect(screen.getByRole('dialog')).toBeVisible()
+    expect(screen.getByRole('heading', { level: 2 })).toHaveTextContent(
+      'edit-subscription-frequency'
+    )
   })
 
   it('should render Confirmation Dialog if clicked on ship-an-item-now button', async () => {
@@ -118,6 +129,13 @@ describe('[component] - Subscription', () => {
 
     await user.click(shipAnItemNowButton)
 
+    expect(screen.getByRole('dialog')).toBeVisible()
     expect(screen.getByText('place-an-order-of-this-subscription-now')).toBeVisible()
+
+    const confirmOrderButton = screen.getByRole('button', { name: 'confirm' })
+
+    await user.click(confirmOrderButton)
+
+    expect(orderSubscriptionNowMock).toHaveBeenCalled()
   })
 })
