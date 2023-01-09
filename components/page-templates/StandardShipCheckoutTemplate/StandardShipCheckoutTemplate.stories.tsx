@@ -29,4 +29,5 @@ const Template: ComponentStory<typeof StandardShipCheckoutTemplate> = (args) => 
 export const Common = Template.bind({})
 Common.args = {
   checkout: orderMock.checkout,
+  isMultiShipEnabled: false,
 }

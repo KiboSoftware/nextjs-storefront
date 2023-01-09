@@ -29,4 +29,5 @@ const Template: ComponentStory<typeof MultiShipCheckoutTemplate> = (args) => (
 export const Common = Template.bind({})
 Common.args = {
   checkout: checkoutMock.checkout,
+  isMultiShipEnabled: true,
 }

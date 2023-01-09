@@ -44,14 +44,22 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
 const CheckoutPage: NextPage<CheckoutPageProps> = (props) => {
   const { t } = useTranslation('common')
   const steps = [t('details'), t('shipping'), t('payment'), t('review')]
-  const { checkout, ...rest } = props
+  const { checkout, isMultiShipEnabled, ...rest } = props
   return (
     <>
       <CheckoutStepProvider steps={steps}>
-        {props.isMultiShipEnabled ? (
-          <MultiShipCheckoutTemplate {...rest} checkout={checkout as Checkout} />
+        {isMultiShipEnabled ? (
+          <MultiShipCheckoutTemplate
+            {...rest}
+            checkout={checkout as Checkout}
+            isMultiShipEnabled={!!isMultiShipEnabled}
+          />
         ) : (
-          <StandardShipCheckoutTemplate {...rest} checkout={checkout as CrOrder} />
+          <StandardShipCheckoutTemplate
+            {...rest}
+            checkout={checkout as CrOrder}
+            isMultiShipEnabled={!!isMultiShipEnabled}
+          />
         )}
       </CheckoutStepProvider>
     </>

@@ -29,6 +29,7 @@ import type {
 
 interface MultiShipCheckoutProps {
   checkout: Checkout
+  isMultiShipEnabled: boolean
 }
 
 interface MultiShipCheckoutShippingMethod {
@@ -37,7 +38,7 @@ interface MultiShipCheckoutShippingMethod {
 }
 
 const MultiShipCheckoutTemplate = (props: MultiShipCheckoutProps) => {
-  const { checkout: initialCheckout } = props
+  const { checkout: initialCheckout, isMultiShipEnabled } = props
 
   const router = useRouter()
   const checkoutId = router?.query?.checkoutId
@@ -47,7 +48,7 @@ const MultiShipCheckoutTemplate = (props: MultiShipCheckoutProps) => {
   // Hooks
   const { data: checkout } = useMultiShipCheckoutQueries({
     checkoutId: checkoutId as string,
-    isMultiship: true,
+    isMultiship: isMultiShipEnabled,
     initialCheckout,
   })
   const { data: shippingMethods } = useCheckoutShippingMethodsQuery(
@@ -71,7 +72,7 @@ const MultiShipCheckoutTemplate = (props: MultiShipCheckoutProps) => {
   }
 
   const { isAuthenticated, user } = useAuthContext()
-  const { data: savedUserAddressData, isSuccess } = useCustomerContactsQueries(user?.id as number)
+  const { data: savedUserAddressData } = useCustomerContactsQueries(user?.id as number)
 
   const userShippingAddress = userGetters?.getUserShippingAddress(
     savedUserAddressData?.items as CustomerContact[]

@@ -20,22 +20,23 @@ import type { CustomerContact, CrOrder, CrOrderInput } from '@/lib/gql/types'
 
 interface StandardShipCheckoutProps {
   checkout: CrOrder
+  isMultiShipEnabled: boolean
 }
 
 const StandardShipCheckoutTemplate = (props: StandardShipCheckoutProps) => {
-  const { checkout: initialCheckout } = props
+  const { checkout: initialCheckout, isMultiShipEnabled } = props
   const router = useRouter()
   const [promoError, setPromoError] = useState<string>('')
   const { checkoutId } = router.query
 
   const { data: checkout } = useCheckoutQueries({
     checkoutId: checkoutId as string,
-    isMultiship: true,
+    isMultiship: isMultiShipEnabled,
     initialCheckout,
   })
 
   const { isAuthenticated, user } = useAuthContext()
-  const { data: savedUserAddressData, isSuccess } = useCustomerContactsQueries(user?.id as number)
+  const { data: savedUserAddressData } = useCustomerContactsQueries(user?.id as number)
   const updateOrderCoupon = useUpdateOrderCouponMutation()
   const deleteOrderCoupon = useDeleteOrderCouponMutation()
 
@@ -96,13 +97,11 @@ const StandardShipCheckoutTemplate = (props: StandardShipCheckoutProps) => {
           checkout={checkout as CrOrder}
           updateCheckoutPersonalInfo={updateCheckoutPersonalInfo}
         />
-        {((isAuthenticated && isSuccess) || !isAuthenticated) && (
-          <StandardShippingStep
-            checkout={checkout as CrOrder}
-            userShippingAddress={userShippingAddress}
-            isAuthenticated={isAuthenticated}
-          />
-        )}
+        <StandardShippingStep
+          checkout={checkout as CrOrder}
+          userShippingAddress={userShippingAddress}
+          isAuthenticated={isAuthenticated}
+        />
         <PaymentStep checkout={checkout} />
         <ReviewStep checkout={checkout as CrOrder} onBackButtonClick={handleBack} />
       </CheckoutUITemplate>

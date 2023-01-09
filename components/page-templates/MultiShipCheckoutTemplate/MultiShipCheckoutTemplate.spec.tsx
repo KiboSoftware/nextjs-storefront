@@ -134,13 +134,11 @@ describe('[component] - MultiShipCheckout template', () => {
   it('should render component', async () => {
     render(<Common {...Common?.args} />)
     const checkoutUITemplate = screen.getByTestId('checkout-ui-template-mock')
+    const detailsStep = screen.getByTestId('details-step-mock')
+    const multiShippingStep = screen.getByTestId('multi-shipping-step-mock')
 
     expect(checkoutUITemplate).toBeVisible()
-
-    const detailsStep = screen.getByTestId('details-step-mock')
     expect(detailsStep).toBeVisible()
-
-    const multiShippingStep = screen.getByTestId('multi-shipping-step-mock')
     expect(multiShippingStep).toBeVisible()
   })
 
