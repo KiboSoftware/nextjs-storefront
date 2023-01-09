@@ -8,6 +8,9 @@ import { makeGraphQLClient } from '@/lib/gql/client'
 import { orderSubscriptionNow } from '@/lib/gql/mutations'
 import { subscriptionKeys } from '@/lib/react-query/queryKeys'
 
+/**
+ * @hidden
+ */
 interface OrderSubscriptionNowInputParams {
   subscriptionId: string
 }
