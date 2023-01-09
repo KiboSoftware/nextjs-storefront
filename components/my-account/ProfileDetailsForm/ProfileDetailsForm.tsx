@@ -64,9 +64,9 @@ const useCardSchema = () => {
 
 const ProfileDetailsForm = (props: ProfileDetailsFormProps) => {
   const {
-    firstName,
-    lastName,
-    emailAddress,
+    firstName = '',
+    lastName = '',
+    emailAddress = '',
     isEmailForm = false,
     isPasswordForm = false,
     onSaveProfileData,
@@ -79,24 +79,6 @@ const ProfileDetailsForm = (props: ProfileDetailsFormProps) => {
     newPassword: false,
     confirmPassword: false,
   })
-
-  const getDefaultValues = () => {
-    if (isEmailForm) {
-      return { emailAddress }
-    }
-
-    if (isPasswordForm) {
-      return {
-        currentPassword: '',
-        newPassword: '',
-        confirmPassword: '',
-      }
-    }
-
-    if (firstName && lastName) {
-      return { firstName, lastName }
-    }
-  }
 
   const {
     formState: { errors, isValid, isDirty },

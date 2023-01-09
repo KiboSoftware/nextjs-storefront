@@ -29,6 +29,7 @@ import { updateOrderBillingInfoMock } from '../stories/updateOrderBillingInfoMoc
 import { userAddressMock } from '../stories/userAddressMock'
 import { userMock, loginUserMock, registerUserMock } from '../stories/userMock'
 import { wishlistMock } from '../stories/wishlistMock'
+import { subscriptionMock } from '@/__mocks__/stories/subscriptionMock'
 
 const baseUrl = 'http://localhost:3000'
 const mockCreateCustomerAccount = {
@@ -345,6 +346,9 @@ export const subscriptionHandlers = [
   // getSubscriptions
   graphql.query('getSubscriptions', (_req, res, ctx) => {
     return res(ctx.data(subscriptionCollectionMock))
+  }),
+  graphql.mutation('updateSubscriptionFrequency', (_req, res, ctx) => {
+    return res(ctx.data(subscriptionMock))
   }),
 ]
 

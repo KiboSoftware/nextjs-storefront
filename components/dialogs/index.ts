@@ -6,3 +6,4 @@ export { default as StoreLocatorDialog } from '@/components/dialogs/Store/StoreL
 export { default as WishlistPopover } from './WishlistPopover/WishlistPopover'
 export { default as ConfirmationDialog } from './ConfirmationDialog/ConfirmationDialog'
 export { default as OrderReturnItemsDialog } from './OrderReturnItemsDialog/OrderReturnItemsDialog'
+export { default as EditSubscriptionFrequencyDialog } from './EditSubscriptionFrequencyDialog/EditSubscriptionFrequencyDialog'

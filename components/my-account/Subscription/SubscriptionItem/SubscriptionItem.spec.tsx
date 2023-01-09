@@ -12,6 +12,13 @@ import { subscriptionGetters } from '@/lib/getters'
 const { Common } = composeStories(stories)
 const subscriptionItem = subscriptionItemMock?.items
 
+const showModalMock = jest.fn()
+jest.mock('@/context/ModalContext', () => ({
+  useModalContext: () => ({
+    showModal: showModalMock,
+  }),
+}))
+
 describe('[component] - Subscription', () => {
   const setup = () => {
     const user = userEvent.setup()
@@ -82,5 +89,17 @@ describe('[component] - Subscription', () => {
     expect(editBillingInformationButton).toBeVisible()
     expect(editShippingAddressButton).toBeVisible()
     expect(pauseSubscriptionButton).toBeVisible()
+  })
+
+  it('should open Edit Subscription Frequency Dialog when user clicks on Edit Frequency button', async () => {
+    setup()
+
+    const editFrequencyButton = screen.getByRole('button', {
+      name: /edit-frequency/i,
+    })
+
+    await userEvent.click(editFrequencyButton)
+
+    expect(showModalMock).toHaveBeenCalledTimes(1)
   })
 })

@@ -4,18 +4,16 @@ import { Card, Stack, Typography, CardContent, Button } from '@mui/material'
 import { useTranslation } from 'next-i18next'
 
 import { ProductItem } from '@/components/common'
+import { EditSubscriptionFrequencyDialog } from '@/components/dialogs'
 import { ProductOption } from '@/components/product'
+import { useModalContext } from '@/context/ModalContext'
 import { subscriptionGetters, productGetters } from '@/lib/getters'
 import { uiHelpers } from '@/lib/helpers'
 
-import type { CrProduct, Subscription } from '@/lib/gql/types'
+import type { CrProduct, Subscription, SbSubscriptionItem } from '@/lib/gql/types'
 
 interface SubscriptionItemProps {
   subscriptionDetailsData: Subscription
-}
-
-interface SubscriptionButtonProps {
-  subscriptionButtonName: string
 }
 
 const style = {
@@ -64,22 +62,21 @@ const style = {
   },
 }
 
-const SubscriptionButton = (props: SubscriptionButtonProps) => {
-  const { subscriptionButtonName } = props
-  const { t } = useTranslation('common')
-
-  return (
-    <Button variant="contained" color="secondary" sx={{ ...style.button }}>
-      {t(subscriptionButtonName)}
-    </Button>
-  )
-}
-
 const SubscriptionItem = (props: SubscriptionItemProps) => {
   const { subscriptionDetailsData } = props
 
   const { getProductLink } = uiHelpers()
   const { t } = useTranslation('common')
+  const { showModal } = useModalContext()
+
+  const handleEditFrequency = (subscriptionId: string, subscriptionItems: SbSubscriptionItem[]) => {
+    const values = subscriptionGetters.getFrequencyValues(subscriptionItems[0].product)
+
+    showModal({
+      Component: EditSubscriptionFrequencyDialog,
+      props: { subscriptionId: subscriptionId, values: values },
+    })
+  }
 
   return (
     <Card sx={{ ...style.card }}>
@@ -168,7 +165,17 @@ const SubscriptionItem = (props: SubscriptionItemProps) => {
               <Button variant="contained" color="secondary" sx={{ ...style.button }}>
                 {t('skip-shipment')}
               </Button>
-              <Button variant="contained" color="secondary" sx={{ ...style.button }}>
+              <Button
+                variant="contained"
+                color="secondary"
+                sx={{ ...style.button }}
+                onClick={() =>
+                  handleEditFrequency(
+                    subscriptionDetailsData?.id as string,
+                    subscriptionDetailsData?.items as SbSubscriptionItem[]
+                  )
+                }
+              >
                 {t('edit-frequency')}
               </Button>
               <Button variant="contained" color="secondary" sx={{ ...style.button }}>
