@@ -33,7 +33,7 @@ const addCardDetails = async (user: any) => {
   await user.tab()
 }
 
-const addBillingAddress = async (user: any) => {
+export const addBillingAddress = async (user: any) => {
   const firstName = screen.getByRole('textbox', { name: /first-name/i })
   const lastNameOrSurname = screen.getByRole('textbox', { name: /last-name-or-sur-name/i })
   const address1 = screen.getByRole('textbox', { name: /address1/i })
