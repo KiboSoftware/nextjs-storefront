@@ -2,7 +2,6 @@ import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
 import getConfig from 'next/config'
 import { useRouter } from 'next/router'
 
-import nextI18NextConfig from '../../../next-i18next.config'
 import { ProductDetailTemplate } from '@/components/page-templates'
 import getCategoryTree from '@/lib/api/operations/get-category-tree'
 import getProduct from '@/lib/api/operations/get-product'
@@ -25,7 +24,7 @@ export async function getStaticProps(context: GetStaticPropsContext) {
       productCode,
       product,
       categoriesTree,
-      ...(await serverSideTranslations(locale as string, ['common'], nextI18NextConfig)),
+      ...(await serverSideTranslations(locale as string, ['common'])),
     },
     revalidate: serverRuntimeConfig.revalidate,
   }

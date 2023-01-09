@@ -5,8 +5,6 @@ import { useTranslation } from 'next-i18next'
 
 import { ProductItem } from '@/components/common'
 import { EditSubscriptionFrequencyDialog } from '@/components/dialogs'
-import { ProductOption } from '@/components/product'
-import { useModalContext } from '@/context/ModalContext'
 import { ConfirmationDialog } from '@/components/dialogs'
 import { ProductOption } from '@/components/product'
 import { useModalContext } from '@/context'
@@ -18,11 +16,6 @@ import type { CrProduct, Subscription, SbSubscriptionItem } from '@/lib/gql/type
 
 interface SubscriptionItemProps {
   subscriptionDetailsData: Subscription
-}
-
-interface SubscriptionButtonProps {
-  subscriptionButtonName: string
-  onClickHandler?: () => void
 }
 
 const style = {
@@ -71,17 +64,6 @@ const style = {
   },
 }
 
-const SubscriptionButton = (props: SubscriptionButtonProps) => {
-  const { subscriptionButtonName, onClickHandler } = props
-  const { t } = useTranslation('common')
-
-  return (
-    <Button variant="contained" color="secondary" sx={{ ...style.button }} onClick={onClickHandler}>
-      {t(subscriptionButtonName)}
-    </Button>
-  )
-}
-
 const SubscriptionItem = (props: SubscriptionItemProps) => {
   const { subscriptionDetailsData } = props
 
@@ -95,6 +77,22 @@ const SubscriptionItem = (props: SubscriptionItemProps) => {
     showModal({
       Component: EditSubscriptionFrequencyDialog,
       props: { subscriptionId: subscriptionId, values: values },
+    })
+  }
+
+  const { orderSubscriptionNow } = useOrderSubscriptionNowMutation()
+
+  const handleShipItemNow = (param: { id: string }) => {
+    showModal({
+      Component: ConfirmationDialog,
+      props: {
+        onConfirm: () =>
+          orderSubscriptionNow.mutateAsync({
+            subscriptionId: param.id,
+          }),
+        contentText: t('place-an-order-of-this-subscription-now'),
+        primaryButtonText: t('confirm'),
+      },
     })
   }
 
