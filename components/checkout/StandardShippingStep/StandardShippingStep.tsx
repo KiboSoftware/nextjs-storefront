@@ -247,8 +247,8 @@ const StandardShippingStep = (props: ShippingProps) => {
           </Stack>
           {shippingMethods.length > 0 && (
             <ShippingMethod
-              shipItems={shipItems as CrOrderItem[]}
-              pickupItems={pickupItems as CrOrderItem[]}
+              shipItems={shipItems}
+              pickupItems={pickupItems}
               orderShipmentMethods={[...shippingMethods]}
               selectedShippingMethodCode={checkoutShippingMethodCode}
               onShippingMethodChange={handleSaveShippingMethod}

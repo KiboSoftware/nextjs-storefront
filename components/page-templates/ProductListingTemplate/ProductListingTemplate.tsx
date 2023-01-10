@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { Suspense, useState } from 'react'
 
 import { Add, Apps, List } from '@mui/icons-material'
 import { Grid, MenuItem, Typography, Box, Button, SxProps, Skeleton, Link } from '@mui/material'
@@ -51,8 +51,8 @@ const styles = {
   },
   navBar: {
     display: 'flex',
-    flexWwrap: 'wrap',
-    postion: 'relative',
+    flexWrap: 'wrap',
+    position: 'relative',
   },
   navBarMain: {
     display: 'flex',
@@ -236,26 +236,30 @@ const ProductListingTemplate = (props: ProductListingTemplateProps) => {
           <FullWidthDivider />
           <Box sx={{ ...styles.navBar }}>
             <Box sx={{ ...styles.navBarMain }}>
-              {!isLoading ? (
+              <Suspense
+                fallback={
+                  <Skeleton variant="rectangular" sx={{ ...styles.categoryFacetHeaderLoading }} />
+                }
+              >
                 <Typography variant="h1" sx={{ ...styles.categoryFacetHeader }}>
                   {productListingHeader}
                 </Typography>
-              ) : (
-                <Skeleton variant="rectangular" sx={{ ...styles.categoryFacetHeaderLoading }} />
-              )}
+              </Suspense>
               <Box sx={{ ...styles.navBarSort }}>
-                {!isLoading ? (
+                <Suspense
+                  fallback={
+                    <Skeleton
+                      variant="rectangular"
+                      height={18}
+                      width={54}
+                      sx={{ ...styles.navBarLabel }}
+                    />
+                  }
+                >
                   <Box sx={{ ...styles.navBarLabel }}>{t('sort-by')}</Box>
-                ) : (
-                  <Skeleton
-                    variant="rectangular"
-                    height={18}
-                    width={54}
-                    sx={{ ...styles.navBarLabel }}
-                  />
-                )}
+                </Suspense>
                 <Box sx={{ ...styles.sorting }}>
-                  {!isLoading ? (
+                  <Suspense fallback={<Skeleton variant="rectangular" height={36} />}>
                     <KiboSelect
                       sx={{ typography: 'body2' }}
                       value={sortingValues?.selected}
@@ -271,12 +275,10 @@ const ProductListingTemplate = (props: ProductListingTemplateProps) => {
                         </MenuItem>
                       ))}
                     </KiboSelect>
-                  ) : (
-                    <Skeleton variant="rectangular" height={36} />
-                  )}
+                  </Suspense>
                 </Box>
                 <Box sx={{ ...styles.filterBy }}>
-                  {!isLoading ? (
+                  <Suspense fallback={<Skeleton variant="rectangular" height={36} />}>
                     <Button
                       variant="outlined"
                       endIcon={<Add fontSize="small" />}
@@ -285,13 +287,18 @@ const ProductListingTemplate = (props: ProductListingTemplateProps) => {
                     >
                       {t('filter-by')}
                     </Button>
-                  ) : (
-                    <Skeleton variant="rectangular" height={36} />
-                  )}
+                  </Suspense>
                 </Box>
               </Box>
-
-              {!isLoading ? (
+              <Suspense
+                fallback={
+                  <Box sx={{ ...styles.navBarView }}>
+                    <Skeleton sx={{ marginRight: '1rem' }} height={24} width={34} />
+                    <Skeleton sx={{ marginRight: '1rem' }} height={40} width={32} />
+                    <Skeleton height={40} width={32} />
+                  </Box>
+                }
+              >
                 <Box sx={{ ...styles.navBarView }}>
                   <Typography variant="body1" color="text.primary" sx={{ marginRight: '1rem' }}>
                     {t('view')}
@@ -299,13 +306,7 @@ const ProductListingTemplate = (props: ProductListingTemplateProps) => {
                   <Apps sx={{ fontSize: '2rem', marginRight: '1rem' }} />
                   <List sx={{ fontSize: '2.4rem' }} />
                 </Box>
-              ) : (
-                <Box sx={{ ...styles.navBarView }}>
-                  <Skeleton sx={{ marginRight: '1rem' }} height={24} width={34} />
-                  <Skeleton sx={{ marginRight: '1rem' }} height={40} width={32} />
-                  <Skeleton height={40} width={32} />
-                </Box>
-              )}
+              </Suspense>
             </Box>
           </Box>
           <FullWidthDivider />
@@ -341,7 +342,28 @@ const ProductListingTemplate = (props: ProductListingTemplateProps) => {
                   <Box sx={{ ...styles.totalResults }}>{t('results', { count: totalResults })}</Box>
                 </Box>
               )}
-              {!isLoading ? (
+              <Suspense
+                fallback={
+                  <Grid container sx={{ flexWrap: 'wrap' }}>
+                    {Array.from(Array(16)).map((_, ind) => {
+                      return (
+                        <Grid
+                          key={ind}
+                          display={'flex'}
+                          justifyContent="center"
+                          item
+                          lg={3}
+                          md={4}
+                          sm={4}
+                          xs={6}
+                        >
+                          <ProductCard isLoading={isLoading} link="/" />
+                        </Grid>
+                      )
+                    })}
+                  </Grid>
+                }
+              >
                 <Grid container sx={{ flexWrap: 'wrap' }}>
                   {products?.map((product, index) => {
                     return (
@@ -389,26 +411,7 @@ const ProductListingTemplate = (props: ProductListingTemplateProps) => {
                     )
                   })}
                 </Grid>
-              ) : (
-                <Grid container sx={{ flexWrap: 'wrap' }}>
-                  {Array.from(Array(16)).map((_, ind) => {
-                    return (
-                      <Grid
-                        key={ind}
-                        display={'flex'}
-                        justifyContent="center"
-                        item
-                        lg={3}
-                        md={4}
-                        sm={4}
-                        xs={6}
-                      >
-                        <ProductCard isLoading={isLoading} link="/" />
-                      </Grid>
-                    )
-                  })}
-                </Grid>
-              )}
+              </Suspense>
 
               {!isLoading && (
                 <Box>

@@ -1,6 +1,5 @@
 import React from 'react'
 
-import { composeStories } from '@storybook/testing-react'
 import { cleanup, screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { mock } from 'jest-mock-extended'

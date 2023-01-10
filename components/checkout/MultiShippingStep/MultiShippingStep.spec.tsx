@@ -281,7 +281,6 @@ describe('Ship To Home', () => {
   }
   it('should render component when initial Shipping Option is ShipToMultiAddress', async () => {
     setup()
-    const user = userEvent.setup()
     const shippingHeading = screen.getAllByRole('heading', {
       name: /shipping/i,
     })

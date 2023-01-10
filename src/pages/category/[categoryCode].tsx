@@ -4,7 +4,6 @@ import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
 import getConfig from 'next/config'
 import { useRouter } from 'next/router'
 
-import nextI18NextConfig from '../../../next-i18next.config'
 import { ProductListingTemplate } from '@/components/page-templates'
 import { useProductSearchQueries } from '@/hooks'
 import { productSearch, categoryTreeSearchByCode } from '@/lib/api/operations'

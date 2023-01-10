@@ -11,14 +11,7 @@ import { useStoreLocationsQueries } from '@/hooks'
 import { OrderStatus } from '@/lib/constants'
 import { addressGetters, orderGetters, storeLocationGetters } from '@/lib/getters'
 
-import type {
-  Maybe,
-  CrOrder,
-  Location,
-  InputMaybe,
-  CrAddressInput,
-  CrPaymentInput,
-} from '@/lib/gql/types'
+import type { Maybe, CrOrder, Location, InputMaybe, CrAddressInput } from '@/lib/gql/types'
 
 interface ViewOrderDetailsProps {
   order: CrOrder

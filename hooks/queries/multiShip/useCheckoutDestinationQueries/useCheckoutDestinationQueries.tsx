@@ -27,7 +27,7 @@ const getCheckoutDestination = async (params: UseDestination) => {
 }
 
 export const useCheckoutDestinationQueries = (params: UseDestination): UseDestinationResponse => {
-  const destinationId = params?.destinationId as string
+  const destinationId = params?.destinationId
   const {
     data = [],
     isLoading,

@@ -32,45 +32,47 @@ export default {
   ],
 } as ComponentMeta<typeof CheckoutUITemplate>
 
+const handleBackButtonClick = () => undefined
+
 const Template: ComponentStory<typeof CheckoutUITemplate> = (args) => (
   <CheckoutStepProvider steps={['details', 'shipping', 'payment', 'review']} initialActiveStep={1}>
     <CheckoutUITemplate {...args}>
       <DetailsStep
-        checkout={orderMock.checkout as CrOrder}
+        checkout={orderMock.checkout}
         updateCheckoutPersonalInfo={handleUpdateCheckoutPersonalInfo}
       />
       <StandardShippingStep
-        checkout={orderMock.checkout as CrOrder}
+        checkout={orderMock.checkout}
         userShippingAddress={[]}
         isAuthenticated={true}
       />
       <PaymentStep checkout={orderMock.checkout} />
-      <ReviewStep checkout={orderMock.checkout as CrOrder} onBackButtonClick={() => null} />
+      <ReviewStep checkout={orderMock.checkout} onBackButtonClick={handleBackButtonClick} />
     </CheckoutUITemplate>
   </CheckoutStepProvider>
 )
 
 const handleUpdateCheckoutPersonalInfo = async () => undefined
 const handleUpdateCheckoutShippingMethod = async () => undefined
-
+const handleCreateCheckoutDestination = () => undefined
 const MultiShipTemplate: ComponentStory<typeof CheckoutUITemplate> = (args) => (
   <CheckoutStepProvider steps={['details', 'shipping', 'payment', 'review']} initialActiveStep={1}>
     <CheckoutUITemplate {...args}>
       <DetailsStep
-        checkout={checkoutMock.checkout as Checkout}
+        checkout={checkoutMock.checkout}
         updateCheckoutPersonalInfo={handleUpdateCheckoutPersonalInfo}
       />
       <MultiShippingStep
         key={checkoutMock.checkout?.groupings?.map((group) => group?.id).join('')}
-        checkout={checkoutMock.checkout as Checkout}
+        checkout={checkoutMock.checkout}
         userSavedShippingAddress={[]}
         isAuthenticated={true}
         shippingMethods={[]}
-        createCheckoutDestination={() => null}
+        createCheckoutDestination={handleCreateCheckoutDestination}
         onUpdateCheckoutShippingMethod={handleUpdateCheckoutShippingMethod}
       />
-      {/* <PaymentStep checkout={checkoutMock.checkout as Checkout} />
-      <ReviewStep checkout={checkoutMock.checkout as Checkout} onBackButtonClick={() => null} /> */}
+      {/* <PaymentStep checkout={checkoutMock.checkout} />
+      <ReviewStep checkout={checkoutMock.checkout} onBackButtonClick={() => null} /> */}
     </CheckoutUITemplate>
   </CheckoutStepProvider>
 )

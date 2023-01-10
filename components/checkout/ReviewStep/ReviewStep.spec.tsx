@@ -49,7 +49,6 @@ describe('[components] ReviewStep', () => {
       name: /order-details/i,
     })
     // TODO: will be taken care in Review Step Ticket
-
     // const shippingToHomeHeading = screen.getByRole('heading', {
     //   name: /shipping-to-home/i,
     // })
@@ -73,7 +72,6 @@ describe('[components] ReviewStep', () => {
     expect(reviewComponent).toBeInTheDocument()
     expect(orderDetailsHeading).toBeVisible()
     // TODO: will be taken care in Review Step Ticket
-
     // expect(shippingToHomeHeading).toBeVisible()
     // expect(pickupInStoreHeading).toBeVisible()
     // expect(multiShipHeading).not.toBeInTheDocument()

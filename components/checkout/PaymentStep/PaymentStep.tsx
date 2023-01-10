@@ -44,8 +44,6 @@ import type {
   CrAddress,
   CrOrder,
   PaymentActionInput,
-  CrPaymentCard,
-  CrPaymentInput,
   CrPayment,
   Maybe,
 } from '@/lib/gql/types'

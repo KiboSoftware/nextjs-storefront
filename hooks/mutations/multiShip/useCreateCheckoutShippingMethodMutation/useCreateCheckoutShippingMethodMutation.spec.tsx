@@ -1,7 +1,7 @@
 import { renderHook } from '@testing-library/react-hooks'
 
 import { useCreateCheckoutShippingMethodMutation } from './useCreateCheckoutShippingMethodMutation'
-import { checkoutMock, shippingRateMock } from '@/__mocks__/stories'
+import { checkoutMock } from '@/__mocks__/stories'
 import { createQueryClientWrapper } from '@/__test__/utils/renderWithQueryClient'
 
 describe('[hooks] useCreateCheckoutShippingMethodMutation', () => {

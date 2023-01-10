@@ -233,8 +233,8 @@ const MultiShippingStep = (props: MultiShippingStepProps) => {
   const onChangeShippingOption = async (option: string) => {
     const groupings = checkout?.groupings
     if (groupings && groupings?.length > 1 && option === shipToHome) {
-      const defaultDestinationId = groupings && (groupings[0]?.destinationId as string)
-      await updateSameDestinationForAllItems({ destinationId: defaultDestinationId as string })
+      const defaultDestinationId = groupings[0]?.destinationId as string
+      await updateSameDestinationForAllItems({ destinationId: defaultDestinationId })
     }
 
     setShippingOption(option)
@@ -250,7 +250,7 @@ const MultiShippingStep = (props: MultiShippingStepProps) => {
       <AddressDetailsView
         key={destinationId + address?.id}
         radio={true}
-        id={(destinationId as string) || (address?.id as number)}
+        id={destinationId || (address?.id as number)}
         isPrimary={isPrimary}
         firstName={address?.firstName as string}
         middleNameOrInitial={address?.middleNameOrInitial as string}
@@ -370,8 +370,8 @@ const MultiShippingStep = (props: MultiShippingStepProps) => {
               {shippingMethods[0]?.shippingRates &&
                 shippingMethods[0]?.shippingRates?.length > 0 && (
                   <ShippingMethod
-                    shipItems={shipItems as CrOrderItem[]}
-                    pickupItems={pickupItems as CrOrderItem[]}
+                    shipItems={shipItems}
+                    pickupItems={pickupItems}
                     orderShipmentMethods={[...shippingMethods[0]?.shippingRates]}
                     selectedShippingMethodCode={checkoutShippingMethodCode as string}
                     onShippingMethodChange={handleSaveShippingMethod}

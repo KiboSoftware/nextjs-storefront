@@ -6,8 +6,7 @@ import userEvent from '@testing-library/user-event'
 import CheckoutUITemplate from './CheckoutUITemplate'
 import { orderMock } from '@/__mocks__/stories'
 import { renderWithQueryClient } from '@/__test__/utils/renderWithQueryClient'
-import { useCheckoutStepContext } from '@/context'
-import { CheckoutStepProvider } from '@/context'
+import { useCheckoutStepContext, CheckoutStepProvider } from '@/context'
 
 interface KiboStepperProps {
   children: any

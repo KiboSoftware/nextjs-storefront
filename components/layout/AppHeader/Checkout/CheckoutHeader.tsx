@@ -8,8 +8,6 @@ import { useRouter } from 'next/router'
 import { KiboLogo } from '@/components/common'
 import { useCheckoutQueries, useMultiShipCheckoutQueries } from '@/hooks'
 
-import { Checkout } from '@/lib/gql/types'
-
 const checkoutHeaderStyles = {
   container: {
     backgroundColor: 'common.black',
