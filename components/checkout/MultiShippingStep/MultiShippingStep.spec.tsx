@@ -5,8 +5,7 @@ import { render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 
 import * as stories from './MultiShippingStep.stories'
-import { addBillingAddress } from '@/__test__/e2e/helper'
-import { DialogRoot, ModalContextProvider, useModalContext, CheckoutStepProvider } from '@/context'
+import { DialogRoot, ModalContextProvider, CheckoutStepProvider } from '@/context'
 import type { CustomDestinationInput } from '@/lib/types'
 
 import type { CrContact } from '@/lib/gql/types'
@@ -37,9 +36,10 @@ const contactMock = {
 }
 const createCheckoutDestinationMock = {
   mutateAsync: jest.fn().mockImplementation(() => ({
-    id: 'abc',
+    id: 'testId',
   })),
 }
+
 const TestComponent = () => {
   return (
     <div>
@@ -90,7 +90,21 @@ jest.mock('../../checkout/ShippingMethod/ShippingMethod', () => ({
 
 jest.mock('../../common/AddressDetailsView/AddressDetailsView', () => ({
   __esModule: true,
-  default: () => <div data-testid="address-details-view"></div>,
+  default: ({
+    handleRadioChange,
+  }: {
+    handleRadioChange: (destinationIdOrAddressId: string) => void
+  }) => (
+    <div data-testid="address-details-view">
+      <button
+        type="button"
+        data-testid="handleRadioChange"
+        onClick={() => handleRadioChange('bf92ade4f3514c08bbeeaf6400833d00')}
+      >
+        Handle Radio Change
+      </button>
+    </div>
+  ),
 }))
 
 jest.mock('../../common/ProductItemWithAddressList/ProductItemWithAddressList', () => ({
@@ -116,12 +130,20 @@ jest.mock('../../common/ProductItemWithAddressList/ProductItemWithAddressList', 
       </button>
       <button
         type="button"
-        data-testid="createOrSetDestinationAddress"
+        data-testid="setDestinationAddress"
         onClick={() =>
           onSelectCreateOrSetDestinationAddress('mockId', 'bf92ade4f3514c08bbeeaf6400833d00')
         }
       >
-        Create Or Set Destination Address
+        Create Destination Address
+      </button>
+
+      <button
+        type="button"
+        data-testid="createDestinationAddress"
+        onClick={() => onSelectCreateOrSetDestinationAddress('mockId', '1441')}
+      >
+        Set Destination Address
       </button>
     </div>
   ),
@@ -208,16 +230,24 @@ describe('Ship To Multi Address', () => {
 
   it('should call handleCreateOrSetDestinationAddress method', async () => {
     setup()
-    const createOrSetDestinationAddress = screen.getByRole('button', {
-      name: /Create Or Set Destination Address/i,
+    const setDestinationAddress = screen.getByRole('button', {
+      name: /Set Destination Address/i,
     })
 
-    await user.click(createOrSetDestinationAddress)
+    await user.click(setDestinationAddress)
 
+    expect(updateCheckoutItemDestinationMock).toBeCalled()
+
+    const createDestinationAddress = screen.getByRole('button', {
+      name: /Create Destination Address/i,
+    })
+
+    await user.click(createDestinationAddress)
+    expect(createCheckoutDestinationMock.mutateAsync).toBeCalled()
     expect(updateCheckoutItemDestinationMock).toBeCalled()
   })
 
-  it('should call handleUpdateDestinationAddress method', async () => {
+  it('should call createOrUpdateDestination and  handleUpdateDestinationAddress method', async () => {
     setup()
     const createOrUpdateDestination = screen.getByRole('button', {
       name: /Create Or Update Destination/i,
@@ -232,6 +262,7 @@ describe('Ship To Multi Address', () => {
     await user.click(screen.getByRole('button', { name: /On Save Address/i }))
 
     expect(createCheckoutDestinationMock.mutateAsync).toBeCalled()
+    expect(createCheckoutDestinationMock.mutateAsync).toHaveReturnedWith({ id: 'testId' })
     expect(updateCheckoutItemDestinationMock).toBeCalled()
   })
 })
@@ -312,5 +343,21 @@ describe('Ship To Home', () => {
         destinationContact: contactMock,
       },
     })
+  })
+
+  it('should call handleAddressSelect', async () => {
+    setup()
+    const user = userEvent.setup()
+    const shipToHome = screen.getByRole('radio', {
+      name: /Ship To Home/i,
+    })
+
+    await user.click(shipToHome)
+    expect(screen.getByText(/previously-saved-shipping-addresses/i)).toBeVisible()
+    expect(screen.getAllByTestId(/address-details-view/i)[0]).toBeVisible()
+
+    await user.click(screen.getAllByRole('button', { name: /Handle Radio Change/ })[0])
+
+    expect(updateCheckoutItemDestinationMock).toBeCalled()
   })
 })
