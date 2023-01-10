@@ -32,9 +32,11 @@ const skipNextSubscription = async (subscriptionId?: string | null) => {
 export const useSkipNextSubscriptionMutation = () => {
   const queryClient = useQueryClient()
 
-  return useMutation(skipNextSubscription, {
-    onSuccess: () => {
-      queryClient.invalidateQueries(subscriptionKeys.all)
-    },
-  })
+  return {
+    skipNextSubscription: useMutation(skipNextSubscription, {
+      onSuccess: () => {
+        queryClient.invalidateQueries(subscriptionKeys.all)
+      },
+    }),
+  }
 }

@@ -9,7 +9,7 @@ describe('[hooks] useSkipNextSubscriptionMutation', () => {
     renderHook(
       async () => {
         const subscriptionId = '149ceaac15c2eb00016c498e000045a4'
-        const skipNextSubscription = useSkipNextSubscriptionMutation()
+        const { skipNextSubscription } = useSkipNextSubscriptionMutation()
         const response = await skipNextSubscription.mutateAsync(subscriptionId)
         expect(response).toStrictEqual(subscriptionCollectionMock.subscriptions)
       },

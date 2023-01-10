@@ -25,18 +25,13 @@ const style = {
     cursor: 'pointer',
   },
   button: {
-    width: {
-      xs: '100%',
-      sm: '50%',
-      lg: '100%',
-    },
-    height: {
-      xs: '20%',
-      sm: '30%',
-      lg: '50%',
-    },
+    width: '100%',
     mt: '5%',
     ml: '0.5%',
+    px: {
+      xs: 1,
+      sm: 4,
+    },
   },
   card: {
     maxWidth: '100%',
@@ -71,7 +66,7 @@ const SubscriptionItem = (props: SubscriptionItemProps) => {
   const { showModal } = useModalContext()
   const { showSnackbar } = useSnackbarContext()
 
-  const skipNextSubscription = useSkipNextSubscriptionMutation()
+  const { skipNextSubscription } = useSkipNextSubscriptionMutation()
   const { orderSubscriptionNow } = useOrderSubscriptionNowMutation()
 
   const handleEditFrequency = (subscriptionId: string, subscriptionItems: SbSubscriptionItem[]) => {
@@ -103,7 +98,7 @@ const SubscriptionItem = (props: SubscriptionItemProps) => {
       props: {
         onConfirm: () => confirmSkipNextSubscription(subscriptionId),
         contentText: t('skip-next-subscription-confirmation'),
-        primaryButtonText: t('Yes'),
+        primaryButtonText: t('yes'),
       },
     })
   }
@@ -197,14 +192,13 @@ const SubscriptionItem = (props: SubscriptionItemProps) => {
             </Stack>
           </Stack>
           <Stack
-            direction="row"
+            direction="column"
             sx={{
               pb: { xs: '5%', lg: '0' },
-              flex: 1,
               justifyContent: 'flex-end',
             }}
           >
-            <Stack direction={{ xs: 'column', md: 'column', lg: 'column' }} ml="2%">
+            <Stack direction={'row'} sx={{ whiteSpace: 'nowrap' }} gap={2}>
               <Button
                 variant="contained"
                 color="secondary"
@@ -213,6 +207,11 @@ const SubscriptionItem = (props: SubscriptionItemProps) => {
               >
                 {t('ship-an-item-now')}
               </Button>
+              <Button variant="contained" color="secondary" sx={{ ...style.button }}>
+                {t('cancel-an-item')}
+              </Button>
+            </Stack>
+            <Stack direction={'row'} sx={{ whiteSpace: 'nowrap' }} gap={2}>
               <Button
                 variant="contained"
                 color="secondary"
@@ -221,6 +220,11 @@ const SubscriptionItem = (props: SubscriptionItemProps) => {
               >
                 {t('skip-shipment')}
               </Button>
+              <Button variant="contained" color="secondary" sx={{ ...style.button }}>
+                {t('edit-billing-information')}
+              </Button>
+            </Stack>
+            <Stack direction={'row'} sx={{ whiteSpace: 'nowrap' }} gap={2}>
               <Button
                 variant="contained"
                 color="secondary"
@@ -235,18 +239,12 @@ const SubscriptionItem = (props: SubscriptionItemProps) => {
                 {t('edit-frequency')}
               </Button>
               <Button variant="contained" color="secondary" sx={{ ...style.button }}>
-                {t('edit-order-date')}
+                {t('edit-shipping-address')}
               </Button>
             </Stack>
-            <Stack direction={{ xs: 'column', md: 'column', lg: 'column' }} ml="2%">
+            <Stack direction={'row'} sx={{ whiteSpace: 'nowrap' }} gap={2}>
               <Button variant="contained" color="secondary" sx={{ ...style.button }}>
-                {t('cancel-an-item')}
-              </Button>
-              <Button variant="contained" color="secondary" sx={{ ...style.button }}>
-                {t('edit-billing-information')}
-              </Button>
-              <Button variant="contained" color="secondary" sx={{ ...style.button }}>
-                {t('edit-shipping-address')}
+                {t('edit-order-date')}
               </Button>
               <Button variant="contained" color="secondary" sx={{ ...style.button }}>
                 {t('pause-subscription')}
