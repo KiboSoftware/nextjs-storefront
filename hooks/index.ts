@@ -22,10 +22,6 @@ export * from './queries/multiShip/useCheckoutQueries/useCheckoutQueries'
 export * from './queries/multiShip/useCheckoutDestinationQueries/useCheckoutDestinationQueries'
 export * from './queries/multiShip/useCheckoutShippingMethodsQuery/useCheckoutShippingMethodsQuery'
 
-//Subscription
-export * from './queries/subscription/useSubscriptionsQueries/useSubscriptionsQueries'
-export * from './mutations/useSubscription/useOrderSubscriptionNow/useOrderSubscriptionNowMutation'
-
 // Custom hooks
 export * from './custom/useDebounce/useDebounce'
 export * from './custom/useUpdateRoutes/useUpdateRoutes'
@@ -88,7 +84,8 @@ export * from './mutations/multiShip/useCreateCheckoutShippingMethodMutation/use
 export * from './mutations/multiShip/useUpdateCheckoutCouponMutation/useUpdateCheckoutCouponMutation'
 export * from './mutations/multiShip/useDeleteCheckoutCouponMutation/useDeleteCheckoutCouponMutation'
 
-// Subscription
-export * from './mutations/useSubscription/useOrderSubscriptionNow/useOrderSubscriptionNow'
+//Subscription
+export * from './queries/subscription/useSubscriptionsQueries/useSubscriptionsQueries'
+export * from './mutations/useSubscription/useOrderSubscriptionNow/useOrderSubscriptionNowMutation'
 export * from './mutations/useSubscription/useEditSubscriptionFrequencyMutation/useEditSubscriptionFrequencyMutation'
 export * from './mutations/useSubscription/useSkipNextSubscription/useSkipNextSubscriptionMutation'
