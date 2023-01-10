@@ -49,6 +49,7 @@ jest.mock('next/config', () => {
         ],
         pageSize: 16,
       },
+      isMultiShipEnabled: true,
     },
     serverRuntimeConfig: {
       cacheKey: 'categoryTree',
@@ -62,6 +63,7 @@ describe('[page] Cart Page', () => {
     const response = await getServerSideProps({ params: {} } as any)
     expect(response).toStrictEqual({
       props: {
+        isMultiShipEnabled: true,
         cart: cartMock?.currentCart,
         _nextI18Next: {
           initialI18nStore: { 'mock-locale': [{}], en: [{}] },

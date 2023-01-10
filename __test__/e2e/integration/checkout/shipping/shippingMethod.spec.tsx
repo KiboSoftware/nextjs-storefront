@@ -13,6 +13,14 @@ import type { Maybe, CrOrderItem } from '@/lib/gql/types'
 const scrollIntoViewMock = jest.fn()
 window.HTMLElement.prototype.scrollIntoView = scrollIntoViewMock
 
+jest.mock('next-i18next', () => ({
+  useTranslation: () => ({
+    i18n: { language: 'en' },
+    t: (key: string, options?: { val: number | string }) =>
+      key === 'currency' ? `$${options?.val}` : key,
+  }),
+}))
+
 const { Common } = composeStories(stories)
 const onChangeMock = jest.fn()
 const onStoreLocatorClickMock = jest.fn()

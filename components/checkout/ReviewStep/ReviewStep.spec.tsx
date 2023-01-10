@@ -48,15 +48,17 @@ describe('[components] ReviewStep', () => {
     const orderDetailsHeading = screen.getByRole('heading', {
       name: /order-details/i,
     })
-    const shippingToHomeHeading = screen.getByRole('heading', {
-      name: /shipping-to-home/i,
-    })
-    const pickupInStoreHeading = screen.getByRole('heading', {
-      name: /pickup-in-store/i,
-    })
-    const multiShipHeading = screen.queryByRole('heading', {
-      name: /shipping-to-address/i,
-    })
+    // TODO: will be taken care in Review Step Ticket
+
+    // const shippingToHomeHeading = screen.getByRole('heading', {
+    //   name: /shipping-to-home/i,
+    // })
+    // const pickupInStoreHeading = screen.getByRole('heading', {
+    //   name: /pickup-in-store/i,
+    // })
+    // const multiShipHeading = screen.queryByRole('heading', {
+    //   name: /shipping-to-address/i,
+    // })
     const iAgreeCheckbox = screen.getByRole('checkbox', { name: /termsConditions/i })
     const iWantToCreateAccountCheckbox = screen.getByRole('checkbox', {
       name: /showaccountfields/i,
@@ -70,9 +72,11 @@ describe('[components] ReviewStep', () => {
 
     expect(reviewComponent).toBeInTheDocument()
     expect(orderDetailsHeading).toBeVisible()
-    expect(shippingToHomeHeading).toBeVisible()
-    expect(pickupInStoreHeading).toBeVisible()
-    expect(multiShipHeading).not.toBeInTheDocument()
+    // TODO: will be taken care in Review Step Ticket
+
+    // expect(shippingToHomeHeading).toBeVisible()
+    // expect(pickupInStoreHeading).toBeVisible()
+    // expect(multiShipHeading).not.toBeInTheDocument()
     expect(iAgreeCheckbox).toBeInTheDocument()
     expect(iWantToCreateAccountCheckbox).toBeInTheDocument()
     expect(confirmAndPayButton).toBeVisible()

@@ -9,11 +9,10 @@ import { OrderSummary, PromoCodeBadge } from '@/components/common'
 import { OrderConfirmation } from '@/components/order'
 import { useCheckoutStepContext, STEP_STATUS } from '@/context'
 
-import type { Checkout, CustomerContact, CrOrder } from '@/lib/gql/types'
+import type { Checkout, CrOrder } from '@/lib/gql/types'
 
 interface CheckoutUITemplateProps<T> {
   checkout: T
-  initialStep?: number
   promoError: string
   handleApplyCouponCode: (couponCode: string) => void
   handleRemoveCouponCode: (couponCode: string) => void
@@ -78,6 +77,7 @@ const CheckoutUITemplate = <T extends CrOrder | Checkout>(props: CheckoutUITempl
     ),
   }
   const showCheckoutSteps = activeStep !== steps.length
+
   return (
     <>
       {showCheckoutSteps && (

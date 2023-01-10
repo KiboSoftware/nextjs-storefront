@@ -120,7 +120,6 @@ const setup = (initialActiveStep = 0, currentStepStatus = STEP_STATUS.INCOMPLETE
   const user = userEvent.setup()
 
   const checkout = orderMock.checkout
-  const initialStep = initialActiveStep
   const promoError = ''
   const handleApplyCouponCodeMock = jest.fn()
   const handleRemoveCouponCodeMock = jest.fn()
@@ -133,7 +132,6 @@ const setup = (initialActiveStep = 0, currentStepStatus = STEP_STATUS.INCOMPLETE
     >
       <CheckoutUITemplate
         checkout={checkout}
-        initialStep={initialStep}
         promoError={promoError}
         handleApplyCouponCode={handleApplyCouponCodeMock}
         handleRemoveCouponCode={handleRemoveCouponCodeMock}

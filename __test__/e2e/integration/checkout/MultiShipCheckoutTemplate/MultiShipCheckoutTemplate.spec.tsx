@@ -7,13 +7,12 @@ import { mock } from 'jest-mock-extended'
 import { graphql } from 'msw'
 
 import { server } from '@/__mocks__/msw/server'
-import { checkoutCouponMock } from '@/__mocks__/stories'
+import { checkoutCouponMock, checkoutMock } from '@/__mocks__/stories'
 import { renderWithQueryClient } from '@/__test__/utils/renderWithQueryClient'
-import * as stories from '@/components/page-templates/MultiShipCheckoutTemplate/MultiShipCheckoutTemplate.stories'
+import { MultiShipCheckoutTemplate } from '@/components/page-templates'
 import { AuthContext, AuthContextType } from '@/context/'
 import { CheckoutStepProvider } from '@/context/CheckoutStepContext/CheckoutStepContext'
 
-const { Common } = composeStories(stories)
 const scrollIntoViewMock = jest.fn()
 window.HTMLElement.prototype.scrollIntoView = scrollIntoViewMock
 
@@ -48,7 +47,7 @@ const setup = (initialActiveStep = 0, isAuthenticated = false) => {
         steps={['details', 'shipping', 'payment', 'review']}
         initialActiveStep={initialActiveStep}
       >
-        <Common {...Common.args} />
+        <MultiShipCheckoutTemplate checkout={checkoutMock.checkout} isMultiShipEnabled={true} />
       </CheckoutStepProvider>
     </AuthContext.Provider>
   )

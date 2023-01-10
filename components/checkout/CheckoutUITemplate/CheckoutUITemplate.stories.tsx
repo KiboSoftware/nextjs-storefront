@@ -33,7 +33,7 @@ export default {
 } as ComponentMeta<typeof CheckoutUITemplate>
 
 const Template: ComponentStory<typeof CheckoutUITemplate> = (args) => (
-  <CheckoutStepProvider steps={['details', 'shipping', 'payment', 'review']}>
+  <CheckoutStepProvider steps={['details', 'shipping', 'payment', 'review']} initialActiveStep={1}>
     <CheckoutUITemplate {...args}>
       <DetailsStep
         checkout={orderMock.checkout as CrOrder}

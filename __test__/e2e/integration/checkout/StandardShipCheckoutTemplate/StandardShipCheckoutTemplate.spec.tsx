@@ -1,19 +1,17 @@
 import React from 'react'
 
-import { composeStories } from '@storybook/testing-react'
 import { cleanup, screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { mock } from 'jest-mock-extended'
 import { graphql } from 'msw'
 
 import { server } from '@/__mocks__/msw/server'
-import { orderCouponMock } from '@/__mocks__/stories'
+import { orderCouponMock, orderMock } from '@/__mocks__/stories'
 import { renderWithQueryClient } from '@/__test__/utils/renderWithQueryClient'
-import * as stories from '@/components/page-templates/StandardShipCheckoutTemplate/StandardShipCheckoutTemplate.stories'
+import { StandardShipCheckoutTemplate } from '@/components/page-templates'
 import { AuthContext, AuthContextType } from '@/context/'
 import { CheckoutStepProvider } from '@/context/CheckoutStepContext/CheckoutStepContext'
 
-const { Common } = composeStories(stories)
 const scrollIntoViewMock = jest.fn()
 window.HTMLElement.prototype.scrollIntoView = scrollIntoViewMock
 
@@ -48,7 +46,7 @@ const setup = (initialActiveStep = 0, isAuthenticated = false) => {
         steps={['details', 'shipping', 'payment', 'review']}
         initialActiveStep={initialActiveStep}
       >
-        <Common {...Common.args} />
+        <StandardShipCheckoutTemplate checkout={orderMock.checkout} isMultiShipEnabled={false} />
       </CheckoutStepProvider>
     </AuthContext.Provider>
   )
