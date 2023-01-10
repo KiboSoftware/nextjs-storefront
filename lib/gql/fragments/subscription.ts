@@ -28,6 +28,19 @@ export const subscriptionItemProductFragment = /* GraphQL */ `
   }
 `
 
+export const baseSkipSubscriptionFragment = /* GraphQL */ `
+  fragment baseSkipSubscriptionFragment on Subscription {
+    id
+    number
+    parentOrderId
+    nextOrderDate
+    lastContinuityOrderDateOnSubPaused
+    nextOrderDateOffsetCounter
+    subscriptionSkipCounter
+    couponCodes
+  }
+`
+
 export const subscriptionItemFragment = /* GraphQL */ `
   fragment subscriptionItemFragment on SBSubscriptionItem {
     fulfillmentLocationCode
