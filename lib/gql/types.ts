@@ -515,57 +515,6 @@ export type CarrierServiceGenerateLabelResponse_GetArgs = {
   path: Scalars['String']
 }
 
-export type Cart = {
-  __typename?: 'Cart'
-  _get?: Maybe<Scalars['AnyScalar']>
-  _root?: Maybe<Cart>
-  auditInfo?: Maybe<CrAuditInfo>
-  cartMessage?: Maybe<CartMessage>
-  cartMessages?: Maybe<Array<Maybe<CartMessage>>>
-  changeMessages?: Maybe<Array<Maybe<ChangeMessage>>>
-  channelCode?: Maybe<Scalars['String']>
-  couponCodes?: Maybe<Array<Scalars['String']>>
-  currencyCode?: Maybe<Scalars['String']>
-  customerInteractionType?: Maybe<Scalars['String']>
-  data?: Maybe<Scalars['Object']>
-  discountThresholdMessages?: Maybe<Array<Maybe<ThresholdMessage>>>
-  discountTotal?: Maybe<Scalars['Float']>
-  discountedSubtotal?: Maybe<Scalars['Float']>
-  discountedTotal?: Maybe<Scalars['Float']>
-  expirationDate?: Maybe<Scalars['DateTime']>
-  extendedProperties?: Maybe<Array<Maybe<ExtendedProperty>>>
-  feeTotal?: Maybe<Scalars['Float']>
-  fulfillmentInfo?: Maybe<FulfillmentInfo>
-  handlingAmount?: Maybe<Scalars['Float']>
-  handlingSubTotal?: Maybe<Scalars['Float']>
-  handlingTaxTotal?: Maybe<Scalars['Float']>
-  handlingTotal?: Maybe<Scalars['Float']>
-  id?: Maybe<Scalars['String']>
-  invalidCoupons?: Maybe<Array<Maybe<InvalidCoupon>>>
-  itemTaxTotal?: Maybe<Scalars['Float']>
-  items?: Maybe<Array<Maybe<CartItem>>>
-  lastValidationDate?: Maybe<Scalars['DateTime']>
-  lineItemSubtotalWithOrderAdjustments?: Maybe<Scalars['Float']>
-  orderDiscounts?: Maybe<Array<Maybe<CrAppliedDiscount>>>
-  priceListCode?: Maybe<Scalars['String']>
-  rejectedDiscounts?: Maybe<Array<Maybe<SuggestedDiscount>>>
-  shippingAmountBeforeDiscountsAndAdjustments?: Maybe<Scalars['Float']>
-  shippingSubTotal?: Maybe<Scalars['Float']>
-  shippingTaxTotal?: Maybe<Scalars['Float']>
-  shippingTotal?: Maybe<Scalars['Float']>
-  siteId?: Maybe<Scalars['Int']>
-  subscription?: Maybe<CrSubscriptionInfo>
-  subtotal?: Maybe<Scalars['Float']>
-  suggestedDiscounts?: Maybe<Array<Maybe<SuggestedDiscount>>>
-  taxData?: Maybe<Scalars['Object']>
-  taxTotal?: Maybe<Scalars['Float']>
-  tenantId?: Maybe<Scalars['Int']>
-  total?: Maybe<Scalars['Float']>
-  userId?: Maybe<Scalars['String']>
-  visitId?: Maybe<Scalars['String']>
-  webSessionId?: Maybe<Scalars['String']>
-}
-
 export type Cart_GetArgs = {
   allowUndefined?: InputMaybe<Scalars['Boolean']>
   defaultValue?: InputMaybe<Scalars['AnyScalar']>
@@ -586,108 +535,6 @@ export type CartChangeMessageCollection_GetArgs = {
   path: Scalars['String']
 }
 
-export type CartInput = {
-  auditInfo?: InputMaybe<CrAuditInfoInput>
-  cartMessage?: InputMaybe<CartMessageInput>
-  cartMessages?: InputMaybe<Array<InputMaybe<CartMessageInput>>>
-  changeMessages?: InputMaybe<Array<InputMaybe<ChangeMessageInput>>>
-  channelCode?: InputMaybe<Scalars['String']>
-  couponCodes?: InputMaybe<Array<Scalars['String']>>
-  currencyCode?: InputMaybe<Scalars['String']>
-  customerInteractionType?: InputMaybe<Scalars['String']>
-  data?: InputMaybe<Scalars['Object']>
-  discountThresholdMessages?: InputMaybe<Array<InputMaybe<ThresholdMessageInput>>>
-  discountTotal?: InputMaybe<Scalars['Float']>
-  discountedSubtotal?: InputMaybe<Scalars['Float']>
-  discountedTotal?: InputMaybe<Scalars['Float']>
-  expirationDate?: InputMaybe<Scalars['DateTime']>
-  extendedProperties?: InputMaybe<Array<InputMaybe<ExtendedPropertyInput>>>
-  feeTotal?: InputMaybe<Scalars['Float']>
-  fulfillmentInfo?: InputMaybe<FulfillmentInfoInput>
-  handlingAmount?: InputMaybe<Scalars['Float']>
-  handlingSubTotal?: InputMaybe<Scalars['Float']>
-  handlingTaxTotal?: InputMaybe<Scalars['Float']>
-  handlingTotal?: InputMaybe<Scalars['Float']>
-  id?: InputMaybe<Scalars['String']>
-  invalidCoupons?: InputMaybe<Array<InputMaybe<InvalidCouponInput>>>
-  itemTaxTotal?: InputMaybe<Scalars['Float']>
-  items?: InputMaybe<Array<InputMaybe<CartItemInput>>>
-  lastValidationDate?: InputMaybe<Scalars['DateTime']>
-  lineItemSubtotalWithOrderAdjustments?: InputMaybe<Scalars['Float']>
-  orderDiscounts?: InputMaybe<Array<InputMaybe<CrAppliedDiscountInput>>>
-  priceListCode?: InputMaybe<Scalars['String']>
-  rejectedDiscounts?: InputMaybe<Array<InputMaybe<SuggestedDiscountInput>>>
-  shippingAmountBeforeDiscountsAndAdjustments?: InputMaybe<Scalars['Float']>
-  shippingSubTotal?: InputMaybe<Scalars['Float']>
-  shippingTaxTotal?: InputMaybe<Scalars['Float']>
-  shippingTotal?: InputMaybe<Scalars['Float']>
-  siteId?: InputMaybe<Scalars['Int']>
-  subtotal?: InputMaybe<Scalars['Float']>
-  suggestedDiscounts?: InputMaybe<Array<InputMaybe<SuggestedDiscountInput>>>
-  taxData?: InputMaybe<Scalars['Object']>
-  taxTotal?: InputMaybe<Scalars['Float']>
-  tenantId?: InputMaybe<Scalars['Int']>
-  total?: InputMaybe<Scalars['Float']>
-  userId?: InputMaybe<Scalars['String']>
-  visitId?: InputMaybe<Scalars['String']>
-  webSessionId?: InputMaybe<Scalars['String']>
-}
-
-export type CartItem = {
-  __typename?: 'CartItem'
-  _get?: Maybe<Scalars['AnyScalar']>
-  _root?: Maybe<CartItem>
-  adjustedLineItemSubtotal?: Maybe<Scalars['Float']>
-  auditInfo?: Maybe<CrAuditInfo>
-  autoAddDiscountId?: Maybe<Scalars['Int']>
-  childItemIds?: Maybe<Array<Scalars['String']>>
-  data?: Maybe<Scalars['Object']>
-  discountTotal?: Maybe<Scalars['Float']>
-  discountedTotal?: Maybe<Scalars['Float']>
-  extendedTotal?: Maybe<Scalars['Float']>
-  feeTotal?: Maybe<Scalars['Float']>
-  fulfillmentLocationCode?: Maybe<Scalars['String']>
-  fulfillmentMethod?: Maybe<Scalars['String']>
-  handlingAmount?: Maybe<Scalars['Float']>
-  id?: Maybe<Scalars['String']>
-  isAssemblyRequired?: Maybe<Scalars['Boolean']>
-  isRecurring?: Maybe<Scalars['Boolean']>
-  isTaxable?: Maybe<Scalars['Boolean']>
-  itemTaxTotal?: Maybe<Scalars['Float']>
-  lineId?: Maybe<Scalars['Int']>
-  localeCode?: Maybe<Scalars['String']>
-  parentItemId?: Maybe<Scalars['String']>
-  product?: Maybe<CrProduct>
-  productDiscount?: Maybe<AppliedLineItemProductDiscount>
-  productDiscounts?: Maybe<Array<Maybe<AppliedLineItemProductDiscount>>>
-  purchaseLocation?: Maybe<Scalars['String']>
-  quantity: Scalars['Int']
-  shippingAmountBeforeDiscountsAndAdjustments?: Maybe<Scalars['Float']>
-  shippingDiscounts?: Maybe<Array<Maybe<AppliedLineItemShippingDiscount>>>
-  shippingTaxTotal?: Maybe<Scalars['Float']>
-  shippingTotal?: Maybe<Scalars['Float']>
-  subscription?: Maybe<CrSubscriptionInfo>
-  subtotal?: Maybe<Scalars['Float']>
-  taxData?: Maybe<Scalars['Object']>
-  taxableTotal?: Maybe<Scalars['Float']>
-  total?: Maybe<Scalars['Float']>
-  totalWithWeightedShippingAndHandling?: Maybe<Scalars['Float']>
-  totalWithoutWeightedShippingAndHandling?: Maybe<Scalars['Float']>
-  unitPrice?: Maybe<CommerceUnitPrice>
-  weightedOrderAdjustment?: Maybe<Scalars['Float']>
-  weightedOrderDiscount?: Maybe<Scalars['Float']>
-  weightedOrderDuty?: Maybe<Scalars['Float']>
-  weightedOrderHandlingAdjustment?: Maybe<Scalars['Float']>
-  weightedOrderHandlingFee?: Maybe<Scalars['Float']>
-  weightedOrderHandlingFeeDiscount?: Maybe<Scalars['Float']>
-  weightedOrderHandlingFeeTax?: Maybe<Scalars['Float']>
-  weightedOrderShipping?: Maybe<Scalars['Float']>
-  weightedOrderShippingDiscount?: Maybe<Scalars['Float']>
-  weightedOrderShippingManualAdjustment?: Maybe<Scalars['Float']>
-  weightedOrderShippingTax?: Maybe<Scalars['Float']>
-  weightedOrderTax?: Maybe<Scalars['Float']>
-}
-
 export type CartItem_GetArgs = {
   allowUndefined?: InputMaybe<Scalars['Boolean']>
   defaultValue?: InputMaybe<Scalars['AnyScalar']>
@@ -706,58 +553,6 @@ export type CartItemCollection_GetArgs = {
   allowUndefined?: InputMaybe<Scalars['Boolean']>
   defaultValue?: InputMaybe<Scalars['AnyScalar']>
   path: Scalars['String']
-}
-
-export type CartItemInput = {
-  adjustedLineItemSubtotal?: InputMaybe<Scalars['Float']>
-  auditInfo?: InputMaybe<CrAuditInfoInput>
-  autoAddDiscountId?: InputMaybe<Scalars['Int']>
-  childItemIds?: InputMaybe<Array<Scalars['String']>>
-  data?: InputMaybe<Scalars['Object']>
-  discountTotal?: InputMaybe<Scalars['Float']>
-  discountedTotal?: InputMaybe<Scalars['Float']>
-  extendedTotal?: InputMaybe<Scalars['Float']>
-  feeTotal?: InputMaybe<Scalars['Float']>
-  fulfillmentLocationCode?: InputMaybe<Scalars['String']>
-  fulfillmentMethod?: InputMaybe<Scalars['String']>
-  handlingAmount?: InputMaybe<Scalars['Float']>
-  id?: InputMaybe<Scalars['String']>
-  isAssemblyRequired?: InputMaybe<Scalars['Boolean']>
-  isRecurring?: InputMaybe<Scalars['Boolean']>
-  isTaxable?: InputMaybe<Scalars['Boolean']>
-  itemTaxTotal?: InputMaybe<Scalars['Float']>
-  lineId?: InputMaybe<Scalars['Int']>
-  localeCode?: InputMaybe<Scalars['String']>
-  parentItemId?: InputMaybe<Scalars['String']>
-  product?: InputMaybe<CrProductInput>
-  productDiscount?: InputMaybe<AppliedLineItemProductDiscountInput>
-  productDiscounts?: InputMaybe<Array<InputMaybe<AppliedLineItemProductDiscountInput>>>
-  purchaseLocation?: InputMaybe<Scalars['String']>
-  quantity: Scalars['Int']
-  shippingAmountBeforeDiscountsAndAdjustments?: InputMaybe<Scalars['Float']>
-  shippingDiscounts?: InputMaybe<Array<InputMaybe<AppliedLineItemShippingDiscountInput>>>
-  shippingTaxTotal?: InputMaybe<Scalars['Float']>
-  shippingTotal?: InputMaybe<Scalars['Float']>
-  subscription?: InputMaybe<CrSubscriptionInfoInput>
-  subtotal?: InputMaybe<Scalars['Float']>
-  taxData?: InputMaybe<Scalars['Object']>
-  taxableTotal?: InputMaybe<Scalars['Float']>
-  total?: InputMaybe<Scalars['Float']>
-  totalWithWeightedShippingAndHandling?: InputMaybe<Scalars['Float']>
-  totalWithoutWeightedShippingAndHandling?: InputMaybe<Scalars['Float']>
-  unitPrice?: InputMaybe<CommerceUnitPriceInput>
-  weightedOrderAdjustment?: InputMaybe<Scalars['Float']>
-  weightedOrderDiscount?: InputMaybe<Scalars['Float']>
-  weightedOrderDuty?: InputMaybe<Scalars['Float']>
-  weightedOrderHandlingAdjustment?: InputMaybe<Scalars['Float']>
-  weightedOrderHandlingFee?: InputMaybe<Scalars['Float']>
-  weightedOrderHandlingFeeDiscount?: InputMaybe<Scalars['Float']>
-  weightedOrderHandlingFeeTax?: InputMaybe<Scalars['Float']>
-  weightedOrderShipping?: InputMaybe<Scalars['Float']>
-  weightedOrderShippingDiscount?: InputMaybe<Scalars['Float']>
-  weightedOrderShippingManualAdjustment?: InputMaybe<Scalars['Float']>
-  weightedOrderShippingTax?: InputMaybe<Scalars['Float']>
-  weightedOrderTax?: InputMaybe<Scalars['Float']>
 }
 
 export type CartMessage = {
@@ -8716,10 +8511,6 @@ export type MutationSkipNextSubscriptionArgs = {
   subscriptionId: Scalars['String']
 }
 
-export type MutationSkipNextSubscriptionArgs = {
-  subscriptionId: Scalars['String']
-}
-
 export type MutationSplitOrderShipmentArgs = {
   orderId: Scalars['String']
   shipmentNumber: Scalars['String']
@@ -9371,118 +9162,6 @@ export type OrderCollection_GetArgs = {
   allowUndefined?: InputMaybe<Scalars['Boolean']>
   defaultValue?: InputMaybe<Scalars['AnyScalar']>
   path: Scalars['String']
-}
-
-export type OrderInput = {
-  acceptedDate?: InputMaybe<Scalars['DateTime']>
-  acceptsMarketing?: InputMaybe<Scalars['Boolean']>
-  adjustment?: InputMaybe<AdjustmentInput>
-  amountAvailableForRefund: Scalars['Float']
-  amountRefunded: Scalars['Float']
-  amountRemainingForPayment: Scalars['Float']
-  attributes?: InputMaybe<Array<InputMaybe<OrderAttributeInput>>>
-  auditInfo?: InputMaybe<CrAuditInfoInput>
-  availableActions?: InputMaybe<Array<Scalars['String']>>
-  billingInfo?: InputMaybe<BillingInfoInput>
-  cancelledDate?: InputMaybe<Scalars['DateTime']>
-  changeMessages?: InputMaybe<Array<InputMaybe<ChangeMessageInput>>>
-  channelCode?: InputMaybe<Scalars['String']>
-  closedDate?: InputMaybe<Scalars['DateTime']>
-  couponCodes?: InputMaybe<Array<Scalars['String']>>
-  credits?: InputMaybe<Array<InputMaybe<CreditInput>>>
-  currencyCode?: InputMaybe<Scalars['String']>
-  customerAccountId?: InputMaybe<Scalars['Int']>
-  customerInteractionType?: InputMaybe<Scalars['String']>
-  customerTaxId?: InputMaybe<Scalars['String']>
-  data?: InputMaybe<Scalars['Object']>
-  digitalPackages?: InputMaybe<Array<InputMaybe<DigitalPackageInput>>>
-  discountThresholdMessages?: InputMaybe<Array<InputMaybe<ThresholdMessageInput>>>
-  discountTotal?: InputMaybe<Scalars['Float']>
-  discountedSubtotal?: InputMaybe<Scalars['Float']>
-  discountedTotal?: InputMaybe<Scalars['Float']>
-  dutyAmount?: InputMaybe<Scalars['Float']>
-  dutyTotal?: InputMaybe<Scalars['Float']>
-  email?: InputMaybe<Scalars['String']>
-  expirationDate?: InputMaybe<Scalars['DateTime']>
-  extendedProperties?: InputMaybe<Array<InputMaybe<ExtendedPropertyInput>>>
-  externalId?: InputMaybe<Scalars['String']>
-  feeTotal?: InputMaybe<Scalars['Float']>
-  fulfillmentInfo?: InputMaybe<FulfillmentInfoInput>
-  fulfillmentStatus?: InputMaybe<Scalars['String']>
-  handlingAdjustment?: InputMaybe<AdjustmentInput>
-  handlingAmount?: InputMaybe<Scalars['Float']>
-  handlingDiscounts?: InputMaybe<Array<InputMaybe<CrAppliedDiscountInput>>>
-  handlingSubTotal?: InputMaybe<Scalars['Float']>
-  handlingTaxTotal?: InputMaybe<Scalars['Float']>
-  handlingTotal?: InputMaybe<Scalars['Float']>
-  hasDraft?: InputMaybe<Scalars['Boolean']>
-  id?: InputMaybe<Scalars['String']>
-  importDate?: InputMaybe<Scalars['DateTime']>
-  invalidCoupons?: InputMaybe<Array<InputMaybe<InvalidCouponInput>>>
-  ipAddress?: InputMaybe<Scalars['String']>
-  isDraft?: InputMaybe<Scalars['Boolean']>
-  isEligibleForReturns?: InputMaybe<Scalars['Boolean']>
-  isFulfillable?: InputMaybe<Scalars['Boolean']>
-  isHistoricalImport?: InputMaybe<Scalars['Boolean']>
-  isImport?: InputMaybe<Scalars['Boolean']>
-  isOptInForSms?: InputMaybe<Scalars['Boolean']>
-  isPartialOrder?: InputMaybe<Scalars['Boolean']>
-  isTaxExempt?: InputMaybe<Scalars['Boolean']>
-  isUnified?: InputMaybe<Scalars['Boolean']>
-  itemTaxTotal?: InputMaybe<Scalars['Float']>
-  items?: InputMaybe<Array<InputMaybe<CrOrderItemInput>>>
-  lastValidationDate?: InputMaybe<Scalars['DateTime']>
-  lineItemSubtotalWithOrderAdjustments?: InputMaybe<Scalars['Float']>
-  locationCode?: InputMaybe<Scalars['String']>
-  notes?: InputMaybe<Array<InputMaybe<OrderNoteInput>>>
-  orderDiscounts?: InputMaybe<Array<InputMaybe<CrAppliedDiscountInput>>>
-  orderNumber?: InputMaybe<Scalars['Int']>
-  originalCartId?: InputMaybe<Scalars['String']>
-  originalQuoteId?: InputMaybe<Scalars['String']>
-  originalQuoteNumber?: InputMaybe<Scalars['Int']>
-  packages?: InputMaybe<Array<InputMaybe<CrPackageObjInput>>>
-  parentCheckoutId?: InputMaybe<Scalars['String']>
-  parentCheckoutNumber?: InputMaybe<Scalars['Int']>
-  parentOrderId?: InputMaybe<Scalars['String']>
-  parentOrderNumber?: InputMaybe<Scalars['Int']>
-  parentReturnId?: InputMaybe<Scalars['String']>
-  parentReturnNumber?: InputMaybe<Scalars['Int']>
-  partialOrderCount?: InputMaybe<Scalars['Int']>
-  partialOrderNumber?: InputMaybe<Scalars['Int']>
-  paymentStatus?: InputMaybe<Scalars['String']>
-  payments?: InputMaybe<Array<InputMaybe<PaymentInput>>>
-  pickups?: InputMaybe<Array<InputMaybe<PickupInput>>>
-  priceListCode?: InputMaybe<Scalars['String']>
-  readyToCapture?: InputMaybe<Scalars['Boolean']>
-  refunds?: InputMaybe<Array<InputMaybe<RefundInput>>>
-  rejectedDiscounts?: InputMaybe<Array<InputMaybe<SuggestedDiscountInput>>>
-  returnStatus?: InputMaybe<Scalars['String']>
-  shipments?: InputMaybe<Array<InputMaybe<ShipmentInput>>>
-  shippingAdjustment?: InputMaybe<AdjustmentInput>
-  shippingAmountBeforeDiscountsAndAdjustments?: InputMaybe<Scalars['Float']>
-  shippingDiscounts?: InputMaybe<Array<InputMaybe<ShippingDiscountInput>>>
-  shippingSubTotal?: InputMaybe<Scalars['Float']>
-  shippingTaxTotal?: InputMaybe<Scalars['Float']>
-  shippingTotal?: InputMaybe<Scalars['Float']>
-  shopperNotes?: InputMaybe<ShopperNotesInput>
-  siteId?: InputMaybe<Scalars['Int']>
-  sourceDevice?: InputMaybe<Scalars['String']>
-  status?: InputMaybe<Scalars['String']>
-  submittedDate?: InputMaybe<Scalars['DateTime']>
-  subscriptionIds?: InputMaybe<Array<Scalars['String']>>
-  subtotal?: InputMaybe<Scalars['Float']>
-  suggestedDiscounts?: InputMaybe<Array<InputMaybe<SuggestedDiscountInput>>>
-  taxData?: InputMaybe<Scalars['Object']>
-  taxTotal?: InputMaybe<Scalars['Float']>
-  tenantId?: InputMaybe<Scalars['Int']>
-  total?: InputMaybe<Scalars['Float']>
-  totalCollected: Scalars['Float']
-  type?: InputMaybe<Scalars['String']>
-  userId?: InputMaybe<Scalars['String']>
-  validationResults?: InputMaybe<Array<InputMaybe<OrderValidationResultInput>>>
-  version?: InputMaybe<Scalars['String']>
-  visitId?: InputMaybe<Scalars['String']>
-  webSessionId?: InputMaybe<Scalars['String']>
 }
 
 export type OrderItemCollection = {
@@ -11831,7 +11510,6 @@ export type QueryProductArgs = {
   quantity?: InputMaybe<Scalars['Int']>
   skipInventoryCheck?: InputMaybe<Scalars['Boolean']>
   sliceValue?: InputMaybe<Scalars['String']>
-  useSubscriptionPricing?: InputMaybe<Scalars['Boolean']>
   supressOutOfStock404?: InputMaybe<Scalars['Boolean']>
   useSubscriptionPricing?: InputMaybe<Scalars['Boolean']>
   variationProductCode?: InputMaybe<Scalars['String']>
