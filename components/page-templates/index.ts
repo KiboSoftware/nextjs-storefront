@@ -1,5 +1,6 @@
 export { default as ProductListingTemplate } from './ProductListingTemplate/ProductListingTemplate'
 export { default as ProductDetailTemplate } from './ProductDetail/ProductDetailTemplate'
+export { default as ProductDetailSkeleton } from './ProductDetail/ProductDetailSkeleton'
 export { default as CartTemplate } from './CartTemplate/CartTemplate'
 export { default as MyAccountTemplate } from './MyAccountTemplate/MyAccountTemplate'
 export { default as OrderHistoryTemplate } from './OrderHistoryTemplate/OrderHistoryTemplate'
