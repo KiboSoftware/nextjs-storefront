@@ -6,23 +6,40 @@ import { render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 
 import * as stories from './SubscriptionItem.stories' // import all stories from the stories file
-import { subscriptionItemMock } from '@/__mocks__/stories/subscriptionCollectionMock'
+import { subscriptionItemMock } from '@/__mocks__/stories'
+import { createQueryClientWrapper } from '@/__test__/utils'
+import { DialogRoot, ModalContextProvider } from '@/context'
 import { subscriptionGetters } from '@/lib/getters'
-
 const { Common } = composeStories(stories)
 const subscriptionItem = subscriptionItemMock?.items
 
-const showModalMock = jest.fn()
-jest.mock('@/context/ModalContext', () => ({
-  useModalContext: () => ({
-    showModal: showModalMock,
-  }),
-}))
+const orderSubscriptionNowMock = jest.fn()
 
-describe('[component] - Subscription', () => {
+jest.mock(
+  '@/hooks/mutations/subscription/useOrderSubscriptionNow/useOrderSubscriptionNowMutation',
+  () => ({
+    useOrderSubscriptionNowMutation: jest.fn(() => ({
+      orderSubscriptionNow: {
+        mutateAsync: orderSubscriptionNowMock,
+      },
+    })),
+  })
+)
+
+describe('[component] - SubscriptionItem', () => {
   const setup = () => {
     const user = userEvent.setup()
-    render(<Common />)
+    render(
+      <>
+        <ModalContextProvider>
+          <DialogRoot />
+          <Common />
+        </ModalContextProvider>
+      </>,
+      {
+        wrapper: createQueryClientWrapper(),
+      }
+    )
     return {
       user,
     }
@@ -100,6 +117,25 @@ describe('[component] - Subscription', () => {
 
     await userEvent.click(editFrequencyButton)
 
-    expect(showModalMock).toHaveBeenCalledTimes(1)
+    expect(screen.getByRole('dialog')).toBeVisible()
+    expect(screen.getByRole('heading', { level: 2 })).toHaveTextContent(
+      'edit-subscription-frequency'
+    )
+  })
+
+  it('should render Confirmation Dialog if clicked on ship-an-item-now button', async () => {
+    const { user } = setup()
+    const shipAnItemNowButton = screen.getByRole('button', { name: 'ship-an-item-now' })
+
+    await user.click(shipAnItemNowButton)
+
+    expect(screen.getByRole('dialog')).toBeVisible()
+    expect(screen.getByText('place-an-order-of-this-subscription-now')).toBeVisible()
+
+    const confirmOrderButton = screen.getByRole('button', { name: 'confirm' })
+
+    await user.click(confirmOrderButton)
+
+    expect(orderSubscriptionNowMock).toHaveBeenCalled()
   })
 })

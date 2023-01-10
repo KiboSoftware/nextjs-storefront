@@ -5,8 +5,10 @@ import { useTranslation } from 'next-i18next'
 
 import { ProductItem } from '@/components/common'
 import { EditSubscriptionFrequencyDialog } from '@/components/dialogs'
+import { ConfirmationDialog } from '@/components/dialogs'
 import { ProductOption } from '@/components/product'
-import { useModalContext } from '@/context/ModalContext'
+import { useModalContext } from '@/context'
+import { useOrderSubscriptionNowMutation } from '@/hooks'
 import { subscriptionGetters, productGetters } from '@/lib/getters'
 import { uiHelpers } from '@/lib/helpers'
 
@@ -75,6 +77,22 @@ const SubscriptionItem = (props: SubscriptionItemProps) => {
     showModal({
       Component: EditSubscriptionFrequencyDialog,
       props: { subscriptionId: subscriptionId, values: values },
+    })
+  }
+
+  const { orderSubscriptionNow } = useOrderSubscriptionNowMutation()
+
+  const handleShipItemNow = (param: { id: string }) => {
+    showModal({
+      Component: ConfirmationDialog,
+      props: {
+        onConfirm: () =>
+          orderSubscriptionNow.mutateAsync({
+            subscriptionId: param.id,
+          }),
+        contentText: t('place-an-order-of-this-subscription-now'),
+        primaryButtonText: t('confirm'),
+      },
     })
   }
 
@@ -159,7 +177,12 @@ const SubscriptionItem = (props: SubscriptionItemProps) => {
             }}
           >
             <Stack direction={{ xs: 'column', md: 'column', lg: 'column' }} ml="2%">
-              <Button variant="contained" color="secondary" sx={{ ...style.button }}>
+              <Button
+                variant="contained"
+                color="secondary"
+                sx={{ ...style.button }}
+                onClick={() => handleShipItemNow({ id: subscriptionDetailsData?.id as string })}
+              >
                 {t('ship-an-item-now')}
               </Button>
               <Button variant="contained" color="secondary" sx={{ ...style.button }}>
