@@ -35,3 +35,5 @@ export { default as updateCheckoutDestination } from './checkout/update-checkout
 export { default as updateCheckoutItemDestination } from './checkout/update-checkout-item-destination'
 export { default as splitOrderShipment } from './checkout/split-order-shipment'
 export { default as editSubscriptionFrequencyMutation } from './subscription/edit-subscription-frequency-mutation'
+// subscription
+export { default as orderSubscriptionNow } from './subscription/orderSubscriptionNow'

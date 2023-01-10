@@ -37,7 +37,7 @@ export const getServerSideProps: GetServerSideProps = async (
       results: response?.data?.products || [],
       categoriesTree,
       category,
-      ...(await serverSideTranslations(locale as string, ['common'], nextI18NextConfig)),
+      ...(await serverSideTranslations(locale as string, ['common'])),
     },
   }
 }

@@ -20,7 +20,7 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
     props: {
       categoriesTree,
       carouselItem: homePageResultMock,
-      ...(await serverSideTranslations(locale as string, ['common'], nextI18NextConfig)),
+      ...(await serverSideTranslations(locale as string, ['common'])),
     },
   }
 }

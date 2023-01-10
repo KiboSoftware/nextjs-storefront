@@ -18,9 +18,8 @@ jest.mock('next-i18next/serverSideTranslations', () => ({
 }))
 
 const SubscriptionListMock = () => <div data-testid="SubscriptionList-mock" />
-jest.mock(
-  '@/components/my-account/Subscription/SubscriptionList/SubscriptionList.tsx',
-  () => () => SubscriptionListMock()
+jest.mock('@/components/my-account/Subscription/SubscriptionList/SubscriptionList.tsx', () => () =>
+  SubscriptionListMock()
 )
 
 describe('[page] Subscription Page', () => {
