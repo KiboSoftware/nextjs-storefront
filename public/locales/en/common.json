@@ -286,8 +286,8 @@
   "edit-billing-information": "Edit Billing Information",
   "edit-shipping-address": "Edit Shipping Address",
   "pause-subscription": "Pause Subscription",
-  "subscription-number": "Subscription Number :",
-  "status": "Status : ",
+  "subscription-number": "Subscription Number",
+  "status": "Status",
   "shipment-frequency": "Shipment Frequency",
   "estimated-next-arrival-date": "Estimated Arrival for next delivery",
   "no-subscription-message": "You do not have any subscriptions",
@@ -303,5 +303,8 @@
   "confirm": "Confirm",
   "edit-subscription-frequency": "Edit Subscription Frequency",
   "subscription-frequency-updated-successfully": "Subscription frequency updated successfully",
-  "place-an-order-of-this-subscription-now": "Place an order of this subscription now?"
+  "place-an-order-of-this-subscription-now": "Place an order of this subscription now?",
+  "skip-next-subscription-confirmation": "Are you sure you want to skip next subscription order?",
+  "next-order-skip": "Skipped next subscription order. Next order will be placed on ",
+  "yes": "Yes"
 }

@@ -10,17 +10,30 @@ import { subscriptionItemMock } from '@/__mocks__/stories'
 import { createQueryClientWrapper } from '@/__test__/utils'
 import { DialogRoot, ModalContextProvider } from '@/context'
 import { subscriptionGetters } from '@/lib/getters'
+
 const { Common } = composeStories(stories)
 const subscriptionItem = subscriptionItemMock?.items
 
 const orderSubscriptionNowMock = jest.fn()
+const skipNextSubscriptionMock = jest.fn()
 
 jest.mock(
-  '@/hooks/mutations/subscription/useOrderSubscriptionNow/useOrderSubscriptionNowMutation',
+  '@/hooks/mutations/useSubscription/useOrderSubscriptionNow/useOrderSubscriptionNowMutation',
   () => ({
     useOrderSubscriptionNowMutation: jest.fn(() => ({
       orderSubscriptionNow: {
         mutateAsync: orderSubscriptionNowMock,
+      },
+    })),
+  })
+)
+
+jest.mock(
+  '@/hooks/mutations/useSubscription/useSkipNextSubscription/useSkipNextSubscriptionMutation',
+  () => ({
+    useSkipNextSubscriptionMutation: jest.fn(() => ({
+      skipNextSubscription: {
+        mutateAsync: skipNextSubscriptionMock,
       },
     })),
   })
@@ -137,5 +150,21 @@ describe('[component] - SubscriptionItem', () => {
     await user.click(confirmOrderButton)
 
     expect(orderSubscriptionNowMock).toHaveBeenCalled()
+  })
+
+  it('should render Confirmation Dialog if clicked on skip-shipment button', async () => {
+    const { user } = setup()
+    const skipShipmentButton = screen.getByRole('button', { name: 'skip-shipment' })
+
+    await user.click(skipShipmentButton)
+
+    expect(screen.getByRole('dialog')).toBeVisible()
+    expect(screen.getByText('skip-next-subscription-confirmation')).toBeVisible()
+
+    const confirmButton = screen.getByRole('button', { name: 'yes' })
+
+    await user.click(confirmButton)
+
+    expect(skipNextSubscriptionMock).toHaveBeenCalled()
   })
 })

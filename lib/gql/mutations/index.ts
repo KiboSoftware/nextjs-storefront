@@ -37,3 +37,4 @@ export { default as updateCheckoutCouponMutation } from './coupon/update-checkou
 export { default as deleteCheckoutCouponMutation } from './coupon/delete-checkout-coupon'
 // subscription
 export { default as orderSubscriptionNow } from './subscription/orderSubscriptionNow'
+export { default as skipNextSubscriptionMutation } from './subscription/skip-next-subscription-mutation'

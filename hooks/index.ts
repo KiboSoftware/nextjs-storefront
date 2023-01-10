@@ -24,7 +24,7 @@ export * from './queries/multiShip/useCheckoutShippingMethodsQuery/useCheckoutSh
 
 //Subscription
 export * from './queries/subscription/useSubscriptionsQueries/useSubscriptionsQueries'
-export * from './mutations/subscription/useOrderSubscriptionNow/useOrderSubscriptionNowMutation'
+export * from './mutations/useSubscription/useOrderSubscriptionNow/useOrderSubscriptionNowMutation'
 
 // Custom hooks
 export * from './custom/useDebounce/useDebounce'
@@ -85,8 +85,10 @@ export * from './mutations/multiShip/useUpdateCheckoutItemDestinationMutations/u
 export * from './mutations/multiShip/useUpdateCheckoutPersonalInfoMutation/useUpdateCheckoutPersonalInfoMutation'
 export * from './mutations/multiShip/useCreateCheckoutFromCartMutation/useCreateCheckoutFromCartMutation'
 export * from './mutations/multiShip/useCreateCheckoutShippingMethodMutation/useCreateCheckoutShippingMethodMutation'
-
-// Subscription
-export * from './mutations/useSubscription/useEditSubscriptionFrequencyMutation/useEditSubscriptionFrequencyMutation'
 export * from './mutations/multiShip/useUpdateCheckoutCouponMutation/useUpdateCheckoutCouponMutation'
 export * from './mutations/multiShip/useDeleteCheckoutCouponMutation/useDeleteCheckoutCouponMutation'
+
+// Subscription
+export * from './mutations/useSubscription/useOrderSubscriptionNow/useOrderSubscriptionNow'
+export * from './mutations/useSubscription/useEditSubscriptionFrequencyMutation/useEditSubscriptionFrequencyMutation'
+export * from './mutations/useSubscription/useSkipNextSubscription/useSkipNextSubscriptionMutation'
