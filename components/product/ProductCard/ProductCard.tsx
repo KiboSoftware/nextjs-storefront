@@ -8,9 +8,11 @@ import { useTranslation } from 'next-i18next'
 import Link from 'next/link'
 
 import { KiboImage, Price } from '@/components/common'
+import { usePriceRangeFormatter } from '@/hooks'
 import DefaultImage from '@/public/product_placeholder.svg'
 
-import type { Product } from '@/lib/gql/types'
+import type { Product, ProductPriceRange } from '@/lib/gql/types'
+
 export interface ProductCardProps {
   title?: string
   link: string
@@ -19,6 +21,7 @@ export interface ProductCardProps {
   imageAltText?: string
   price?: string
   salePrice?: string
+  priceRange?: ProductPriceRange
   productCode?: string
   rating?: number
   imageHeight?: number
@@ -72,11 +75,12 @@ const ProductCardSkeleton = () => {
 const ProductCard = (props: ProductCardProps) => {
   const {
     price,
+    salePrice,
+    priceRange,
     title,
     link,
     imageUrl,
     placeholderImageUrl = DefaultImage,
-    salePrice,
     rating = 0,
     imageHeight = 140,
     imageAltText = 'product-image-alt',
@@ -88,6 +92,8 @@ const ProductCard = (props: ProductCardProps) => {
     showQuickViewButton = false,
     onClickQuickViewModal,
   } = props
+
+  const productPriceRange = usePriceRangeFormatter(priceRange as ProductPriceRange)
 
   const { t } = useTranslation('common')
 
@@ -137,7 +143,12 @@ const ProductCard = (props: ProductCardProps) => {
                 <Typography variant="body1" gutterBottom color="text.primary">
                   {title}
                 </Typography>
-                <Price price={price} salePrice={salePrice} variant="body1" />
+                <Price
+                  price={price}
+                  salePrice={salePrice}
+                  priceRange={productPriceRange}
+                  variant="body1"
+                />
                 <Rating
                   name="read-only"
                   value={rating}

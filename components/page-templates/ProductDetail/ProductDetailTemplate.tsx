@@ -36,18 +36,18 @@ import {
   useAddToCartMutation,
   useWishlist,
   useProductLocationInventoryQueries,
+  usePriceRangeFormatter,
 } from '@/hooks'
 import { FulfillmentOptions as FulfillmentOptionsConstant } from '@/lib/constants'
 import { productGetters, wishlistGetters } from '@/lib/getters'
 import { uiHelpers } from '@/lib/helpers'
-import type { ProductCustom, BreadCrumb, PriceRange, LocationCustom } from '@/lib/types'
+import type { ProductCustom, BreadCrumb, LocationCustom } from '@/lib/types'
 
 import type {
   AttributeDetail,
   ProductImage,
   ProductOption,
   ProductOptionValue,
-  ProductPriceRange,
   CrProduct,
 } from '@/lib/gql/types'
 
@@ -216,26 +216,26 @@ const ProductDetailTemplate = (props: ProductDetailTemplateProps) => {
   }
 
   // Cloning the price range object to translate the currency values
-  const handlePriceRangeTranslation = (priceRange: ProductPriceRange): PriceRange => {
-    return {
-      lower: {
-        price: priceRange?.lower?.price
-          ? t<string>('currency', { val: priceRange?.lower?.price })
-          : null,
-        salePrice: priceRange?.lower?.salePrice
-          ? t<string>('currency', { val: priceRange?.lower?.salePrice })
-          : null,
-      },
-      upper: {
-        price: priceRange?.upper?.price
-          ? t<string>('currency', { val: priceRange?.upper?.price })
-          : null,
-        salePrice: priceRange?.upper?.salePrice
-          ? t<string>('currency', { val: priceRange?.upper?.salePrice })
-          : null,
-      },
-    }
-  }
+  // const handlePriceRangeTranslation = (priceRange: ProductPriceRange): PriceRange => {
+  //   return {
+  //     lower: {
+  //       price: priceRange?.lower?.price
+  //         ? t<string>('currency', { val: priceRange?.lower?.price })
+  //         : null,
+  //       salePrice: priceRange?.lower?.salePrice
+  //         ? t<string>('currency', { val: priceRange?.lower?.salePrice })
+  //         : null,
+  //     },
+  //     upper: {
+  //       price: priceRange?.upper?.price
+  //         ? t<string>('currency', { val: priceRange?.upper?.price })
+  //         : null,
+  //       salePrice: priceRange?.upper?.salePrice
+  //         ? t<string>('currency', { val: priceRange?.upper?.salePrice })
+  //         : null,
+  //     },
+  //   }
+  // }
 
   const handleWishList = async () => {
     try {
@@ -266,7 +266,7 @@ const ProductDetailTemplate = (props: ProductDetailTemplateProps) => {
           {...(productPrice.special && {
             salePrice: t<string>('currency', { val: productPrice.special }),
           })}
-          priceRange={productPriceRange && handlePriceRangeTranslation(productPriceRange)}
+          priceRange={usePriceRangeFormatter(productPriceRange)}
         />
 
         <Box paddingY={1} display={shortDescription ? 'block' : 'none'}>

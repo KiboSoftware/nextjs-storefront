@@ -294,6 +294,7 @@ export const productGetters = {
   getName,
   getRating,
   getPrice,
+  getPriceRange,
   getBreadcrumbs,
   getOptionSelectedValue,
   getOptionName,
