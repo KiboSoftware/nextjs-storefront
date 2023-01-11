@@ -1,14 +1,14 @@
 import React from 'react'
 
-import { Stack, Divider, Typography, Box } from '@mui/material'
+import { Stack, Divider, Typography } from '@mui/material'
 import { useTranslation } from 'next-i18next'
 
-import { ProductItem } from '..'
 // Need to be handled with API later
+import { ProductItem } from '..'
 import { userAddressResponse } from '@/__mocks__/stories/userAddressMock'
-import { orderGetters, productGetters, addressGetters } from '@/lib/getters'
+import { addressGetters, checkoutGetters, orderGetters, productGetters } from '@/lib/getters'
 
-import type { Maybe, CrOrderItem, CrProduct, CustomerContact, CrAddress } from '@/lib/gql/types'
+import type { Maybe, CrOrderItem, CrProduct, CustomerContact } from '@/lib/gql/types'
 
 export type ReviewProductItemsWithAddressesProps = {
   items: Maybe<CrOrderItem>[]
@@ -31,68 +31,23 @@ const ReviewProductItemsWithAddresses = (props: ReviewProductItemsWithAddressesP
     >
       {items?.map((item: Maybe<CrOrderItem>, index) => {
         const product = item?.product as CrProduct
+        const formattedAddress = addressGetters.getFormattedAddress(userShippingAddresses[index])
         return (
           <>
-            <Typography
-              variant="h4"
-              component="h4"
-              fontWeight={600}
-              color="text.primary"
-              sx={{ display: 'flex' }}
-            >
+            <Typography variant="h4" component="h4" fontWeight={'bold'} color="text.primary">
               {t('ship-to')}
-
-              <Box display="flex">
-                <Typography
-                  variant="h4"
-                  color="text.primary"
-                  sx={{
-                    '&::after': { content: "','", pr: 0.5 },
-                    paddingLeft: '4px',
-                    textTransform: 'capitalize',
-                  }}
-                >
-                  {addressGetters.getAddress1(userShippingAddresses[index]?.address as CrAddress)}
-                </Typography>
-                <Typography
-                  variant="h4"
-                  color="text.primary"
-                  sx={{ '&::after': { content: "','", pr: 0.5 }, textTransform: 'capitalize' }}
-                >
-                  {addressGetters.getAddress2(userShippingAddresses[index]?.address as CrAddress)}
-                </Typography>
-                <Typography
-                  variant="h4"
-                  color="text.primary"
-                  sx={{ '&::after': { content: "','", pr: 0.5 }, textTransform: 'capitalize' }}
-                >
-                  {addressGetters.getCityOrTown(userShippingAddresses[index]?.address as CrAddress)}
-                </Typography>
-                <Typography
-                  variant="h4"
-                  color="text.primary"
-                  sx={{ '&::after': { content: "', '", pr: 0.5 }, textTransform: 'capitalize' }}
-                >
-                  {addressGetters.getStateOrProvince(
-                    userShippingAddresses[index]?.address as CrAddress
-                  )}
-                </Typography>
-                <Typography variant="h4" color="text.primary" sx={{ textTransform: 'capitalize' }}>
-                  {addressGetters.getPostalOrZipCode(
-                    userShippingAddresses[index]?.address as CrAddress
-                  )}
-                </Typography>
-              </Box>
+              <Typography
+                variant="h4"
+                component="span"
+                color="text.primary"
+                sx={{ textTransform: 'capitalize' }}
+              >
+                {`${formattedAddress}`}
+              </Typography>
             </Typography>
 
-            {/* To be mapped with actual result from API */}
-            <Typography
-              variant="h4"
-              component="h4"
-              sx={{ fontWeight: 'bold', marginTop: '0' }}
-              color="primary"
-            >
-              {t('est-arrival')}
+            <Typography variant="h4" component="h4" marginTop="0" fontWeight="bold" color="primary">
+              {t('est-arrival')} {checkoutGetters.getFormattedDate(item?.expectedDeliveryDate)}
             </Typography>
 
             <Stack key={item?.id}>

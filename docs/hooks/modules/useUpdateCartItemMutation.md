@@ -16,7 +16,7 @@
 
 [Mutation hook] useUpdateCartItemMutation uses the graphQL mutation
 
-<b>updateCurrentCartItem(cartItemId: String!, cartItemInput: CartItemInput): CartItem</b>
+<b>updateCurrentCartItem(cartItemId: String!, cartItemInput: CrCartItemInput): CartItem</b>
 
 Description : Updates the 'fulfillmentMethod(Shipping/Pickup in store)' and 'fulfillmentLocationCode' based on selected option on cart page
 

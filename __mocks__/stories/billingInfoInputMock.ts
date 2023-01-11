@@ -1,6 +1,6 @@
-import { BillingInfoInput } from '@/lib/gql/types'
+import { CrBillingInfoInput } from '@/lib/gql/types'
 
-export const billingInfoInputMock: BillingInfoInput = {
+export const billingInfoInputMock: CrBillingInfoInput = {
   billingContact: {
     email: 'chandradeepta.laha@kibocommerce.com',
     firstName: 'John',

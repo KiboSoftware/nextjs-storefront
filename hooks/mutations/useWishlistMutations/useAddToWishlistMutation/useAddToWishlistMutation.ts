@@ -9,12 +9,12 @@ import { buildAddToWishlistItemParams } from '@/lib/helpers'
 import { wishlistKeys } from '@/lib/react-query/queryKeys'
 import type { WishlistProductInput } from '@/lib/types'
 
-import type { Maybe, Wishlist } from '@/lib/gql/types'
+import type { Maybe, CrWishlist } from '@/lib/gql/types'
 
 interface WishlistItemInputParams {
   product: WishlistProductInput
   customerAccountId: number
-  currentWishlist?: Maybe<Wishlist>
+  currentWishlist?: Maybe<CrWishlist>
 }
 
 const addToWishlist = async (props: WishlistItemInputParams) => {

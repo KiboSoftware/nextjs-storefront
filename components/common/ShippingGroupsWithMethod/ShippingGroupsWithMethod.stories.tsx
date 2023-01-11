@@ -3,24 +3,26 @@ import React from 'react'
 import { ComponentStory, ComponentMeta } from '@storybook/react'
 
 import ShippingGroupsWithMethod from './ShippingGroupsWithMethod'
-import { orderMock } from '@/__mocks__/stories/orderMock'
-
-import type { CrOrderItem } from '@/lib/gql/types'
+import { checkoutMock, checkoutGroupRatesMock } from '@/__mocks__/stories'
 
 export default {
   title: 'Common/ShippingGroupsWithMethod',
   component: ShippingGroupsWithMethod,
-  argTypes: {},
+  argTypes: {
+    onUpdateCheckoutShippingMethod: {
+      action: 'onChange',
+    },
+  },
 } as ComponentMeta<typeof ShippingGroupsWithMethod>
 
-const orderItems = orderMock?.checkout?.items
-
-// Default Line Item
 const Template: ComponentStory<typeof ShippingGroupsWithMethod> = (args) => (
   <ShippingGroupsWithMethod {...args} />
 )
 
 export const Common = Template.bind({})
+
 Common.args = {
-  items: orderItems as CrOrderItem[],
+  checkout: checkoutMock?.checkout,
+  shippingMethods: checkoutGroupRatesMock?.checkoutShippingMethods,
+  onUpdateCheckoutShippingMethod: () => console.log('select shipping rate called'),
 }

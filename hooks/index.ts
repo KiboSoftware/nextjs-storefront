@@ -16,14 +16,11 @@ export * from './queries/useUserOrderQueries/useUserOrderQueries'
 export * from './queries/useProductLocationInventoryQueries/useProductLocationInventoryQueries'
 export * from './queries/useReturnReasonsQueries/useReturnReasonsQueries'
 export * from './queries/useReturnsQueries/useReturnsQueries'
-export * from './queries/useCheckoutDestinationQueries/useCheckoutDestinationQueries'
 
-// MultiShip
+// Multiship Query
 export * from './queries/multiShip/useCheckoutQueries/useCheckoutQueries'
-
-//Subscription
-export * from './queries/subscription/useSubscriptionsQueries/useSubscriptionsQueries'
-export * from './mutations/useSubscription/useOrderSubscriptionNow/useOrderSubscriptionNowMutation'
+export * from './queries/multiShip/useCheckoutDestinationQueries/useCheckoutDestinationQueries'
+export * from './queries/multiShip/useCheckoutShippingMethodsQuery/useCheckoutShippingMethodsQuery'
 
 // Custom hooks
 export * from './custom/useDebounce/useDebounce'
@@ -45,7 +42,6 @@ export * from './mutations/useCartMutations/useUpdateCartItem/useUpdateCartItemM
 export * from './mutations/useCartMutations/useUpdateCartItemQuantity/useUpdateCartItemQuantityMutation'
 export * from './mutations/useProductMutations/useProductMutation'
 export * from './mutations/useCheckoutMutations/useCreateFromCartMutation'
-export * from './mutations/multiShip/useCreateCheckoutMutation/useCreateCheckoutMutation'
 export * from './mutations/useWishlistMutations/useAddToWishlistMutation/useAddToWishlistMutation'
 export * from './mutations/useWishlistMutations/useRemoveWishlistItemMutation/useRemoveWishlistItemMutation'
 export * from './mutations/useWishlistMutations/useCreateWishlistMutation/useCreateWishlistMutation'
@@ -74,13 +70,22 @@ export * from './mutations/useCouponMutations/useDeleteOrderCouponMutation/useDe
 export * from './mutations/useProfile/useUpdateUserData/useUpdateUserData'
 export * from './mutations/useProfile/useUpdateUserPassword/useUpdateUserPassword'
 
+//Destination
+export * from './mutations/multiShip/useCreateCheckoutDestinationMutations/useCreateCheckoutDestinationMutations'
+export * from './mutations/multiShip/useUpdateCheckoutItemDestinationMutations/useUpdateCheckoutItemDestinationMutations'
+export * from './mutations/multiShip/useUpdateCheckoutDestinationMutations/useUpdateCheckoutDestinationMutations'
 // MultiShip
 export * from './mutations/multiShip/useCreateCheckoutActionMutation/useCreateCheckoutActionMutation'
-//Destination
-export * from './mutations/useCreateCheckoutDestinationMutations/useCreateCheckoutDestinationMutations'
-export * from './mutations/useUpdateCheckoutItemDestinationMutations/useUpdateCheckoutItemDestinationMutations'
+export * from './mutations/multiShip/useCreateCheckoutDestinationMutations/useCreateCheckoutDestinationMutations'
+export * from './mutations/multiShip/useUpdateCheckoutItemDestinationMutations/useUpdateCheckoutItemDestinationMutations'
+export * from './mutations/multiShip/useUpdateCheckoutPersonalInfoMutation/useUpdateCheckoutPersonalInfoMutation'
+export * from './mutations/multiShip/useCreateCheckoutFromCartMutation/useCreateCheckoutFromCartMutation'
+export * from './mutations/multiShip/useCreateCheckoutShippingMethodMutation/useCreateCheckoutShippingMethodMutation'
+export * from './mutations/multiShip/useUpdateCheckoutCouponMutation/useUpdateCheckoutCouponMutation'
+export * from './mutations/multiShip/useDeleteCheckoutCouponMutation/useDeleteCheckoutCouponMutation'
 
-// Subscription
+//Subscription
+export * from './queries/subscription/useSubscriptionsQueries/useSubscriptionsQueries'
+export * from './mutations/useSubscription/useOrderSubscriptionNow/useOrderSubscriptionNowMutation'
 export * from './mutations/useSubscription/useEditSubscriptionFrequencyMutation/useEditSubscriptionFrequencyMutation'
-//subscription
 export * from './mutations/useSubscription/useSkipNextSubscription/useSkipNextSubscriptionMutation'

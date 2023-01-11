@@ -3,9 +3,9 @@ import React from 'react'
 import { ComponentStory, ComponentMeta } from '@storybook/react'
 
 import ProductItemWithAddressList from './ProductItemWithAddressList'
-import { orderMock } from '@/__mocks__/stories/orderMock'
-
-import type { CrOrderItem } from '@/lib/gql/types'
+import { checkoutMock } from '@/__mocks__/stories'
+import { checkoutGetters } from '@/lib/getters'
+import type { MultiShipAddress } from '@/lib/types/Checkout'
 
 export default {
   title: 'Common/ProductItemWithAddressList',
@@ -13,14 +13,18 @@ export default {
   argTypes: {},
 } as ComponentMeta<typeof ProductItemWithAddressList>
 
-const orderItems = orderMock?.checkout?.items
-
 // Default Line Item
 const Template: ComponentStory<typeof ProductItemWithAddressList> = (args) => (
   <ProductItemWithAddressList {...args} />
 )
 
 export const Common = Template.bind({})
+const multiShipAddresses = checkoutGetters.getMultiShipAddresses({
+  checkout: checkoutMock.checkout,
+  savedShippingAddresses: [],
+})
+
 Common.args = {
-  items: orderItems as CrOrderItem[],
+  checkout: checkoutMock.checkout,
+  multiShipAddresses: multiShipAddresses as MultiShipAddress[],
 }

@@ -6,10 +6,7 @@ import Link from 'next/link'
 import { useRouter } from 'next/router'
 
 import { KiboLogo } from '@/components/common'
-import { useCheckoutQueries } from '@/hooks'
-import { orderGetters } from '@/lib/getters'
-
-import type { Order } from '@/lib/gql/types'
+import { useCheckoutQueries, useMultiShipCheckoutQueries } from '@/hooks'
 
 const checkoutHeaderStyles = {
   container: {
@@ -22,14 +19,20 @@ const checkoutHeaderStyles = {
   },
 }
 
-const CheckoutHeader = () => {
-  const router = useRouter()
+const CheckoutHeader = ({ isMultiShipEnabled }: { isMultiShipEnabled: boolean }) => {
   const { t } = useTranslation()
+  const router = useRouter()
   const { checkoutId } = router.query
+  const { data: multishipCheckout } = useMultiShipCheckoutQueries({
+    checkoutId: checkoutId as string,
+    isMultiship: isMultiShipEnabled,
+  })
+
   const { data: checkout } = useCheckoutQueries({
     checkoutId: checkoutId as string,
+    isMultiship: isMultiShipEnabled,
   })
-  const numberOfItems = orderGetters.getCheckoutItemCount(checkout as Order)
+  const numberOfItems = multishipCheckout?.items?.length || checkout?.items?.length
 
   return (
     <>

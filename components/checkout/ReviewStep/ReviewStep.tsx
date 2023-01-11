@@ -15,6 +15,7 @@ import {
   SxProps,
 } from '@mui/material'
 import { useTranslation } from 'next-i18next'
+import getConfig from 'next/config'
 import { useForm, Controller } from 'react-hook-form'
 import * as yup from 'yup'
 
@@ -32,7 +33,7 @@ import { orderGetters } from '@/lib/getters'
 import { buildCreateOrderParams } from '@/lib/helpers/buildCreateOrderParams'
 import { isPasswordValid } from '@/lib/helpers/validations/validations'
 
-import type { Order, Maybe } from '@/lib/gql/types'
+import type { CrOrder, Maybe } from '@/lib/gql/types'
 
 export interface PersonalDetails {
   email: Maybe<string> | undefined
@@ -43,9 +44,8 @@ export interface PersonalDetails {
 }
 
 interface ReviewStepProps {
-  checkout: Order
+  checkout: CrOrder
   onBackButtonClick: () => void
-  isMultiShipEnabled: boolean
 }
 
 const buttonStyle = {
@@ -94,7 +94,8 @@ const useDetailsSchema = () => {
 }
 
 const ReviewStep = (props: ReviewStepProps) => {
-  const { checkout, onBackButtonClick, isMultiShipEnabled } = props
+  const { checkout, onBackButtonClick } = props
+  const { publicRuntimeConfig } = getConfig()
 
   const { t } = useTranslation('common')
   const theme = useTheme()
@@ -174,9 +175,11 @@ const ReviewStep = (props: ReviewStepProps) => {
     total: t('currency', { val: total }),
   }
 
+  const isMultiShipEnabled = publicRuntimeConfig.isMultiShipEnabled
+
   return (
     <Box data-testid={'review-step-component'}>
-      <Typography variant="h2" component="h2" sx={{ fontWeight: 'bold' }} color="text.primary">
+      <Typography variant="h2" component="h2" fontWeight={'bold'} color="text.primary">
         {t('order-details')}
       </Typography>
 
@@ -184,7 +187,7 @@ const ReviewStep = (props: ReviewStepProps) => {
 
       {!isMultiShipEnabled && shipItems && shipItems.length > 0 && (
         <Stack gap={4}>
-          <Typography variant="h3" component="h3" sx={{ fontWeight: 'bold' }} color="text.primary">
+          <Typography variant="h3" component="h3" fontWeight={'bold'} color="text.primary">
             {t('shipping-to-home')}
           </Typography>
           <ProductItemList items={shipItems} />
@@ -195,7 +198,7 @@ const ReviewStep = (props: ReviewStepProps) => {
       {/* multiShip array will be used later after API is handled instead on shipItems */}
       {isMultiShipEnabled && shipItems && shipItems.length > 0 && (
         <Stack gap={4}>
-          <Typography variant="h3" component="h3" fontWeight={600} color="text.primary">
+          <Typography variant="h3" component="h3" fontWeight={'bold'} color="text.primary">
             {t('shipping-to-address')}
           </Typography>
           <ReviewProductItemsWithAddresses items={shipItems} />
@@ -205,7 +208,7 @@ const ReviewStep = (props: ReviewStepProps) => {
 
       {!isMultiShipEnabled && pickupItems && pickupItems.length > 0 && (
         <Stack gap={4}>
-          <Typography variant="h3" component="h3" sx={{ fontWeight: 'bold' }} color="text.primary">
+          <Typography variant="h3" component="h3" fontWeight={'bold'} color="text.primary">
             {t('pickup-in-store')}
           </Typography>
           <ProductItemList items={pickupItems} />
@@ -273,7 +276,7 @@ const ReviewStep = (props: ReviewStepProps) => {
                   onBlur={field.onBlur}
                   onChange={(_name, value) => field.onChange(value)}
                   error={!!errors?.firstName}
-                  helperText={errors?.firstName?.message}
+                  helperText={errors?.firstName?.message as string}
                 />
               )}
             />
@@ -290,7 +293,7 @@ const ReviewStep = (props: ReviewStepProps) => {
                   onBlur={field.onBlur}
                   onChange={(_name, value) => field.onChange(value)}
                   error={!!errors?.lastNameOrSurname}
-                  helperText={errors?.lastNameOrSurname?.message}
+                  helperText={errors?.lastNameOrSurname?.message as string}
                 />
               )}
             />

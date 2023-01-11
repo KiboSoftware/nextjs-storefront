@@ -16,6 +16,7 @@ import {
   styled,
 } from '@mui/material'
 import { useTranslation } from 'next-i18next'
+import getConfig from 'next/config'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
 
@@ -36,7 +37,6 @@ import { useCategoryTreeQueries } from '@/hooks'
 import type { NavigationLink } from '@/lib/types'
 
 import type { Maybe, PrCategory } from '@/lib/gql/types'
-
 interface KiboHeaderProps {
   navLinks: NavigationLink[]
   categoriesTree: Maybe<PrCategory>[]
@@ -247,6 +247,8 @@ const KiboHeader = (props: KiboHeaderProps) => {
   const { isHamburgerMenuVisible, isMobileSearchPortalVisible } = headerState
   const isCheckoutPage = router.pathname.includes('checkout')
   const isElementVisible = !isCheckoutPage && mdScreen && !trigger
+  const { publicRuntimeConfig } = getConfig()
+  const isMultiShipEnabled = publicRuntimeConfig.isMultiShipEnabled
 
   const handleAccountIconClick = () => {
     setAuthError('')
@@ -259,7 +261,7 @@ const KiboHeader = (props: KiboHeaderProps) => {
   }
 
   const getSection = (): React.ReactNode => {
-    if (isCheckoutPage) return <CheckoutHeader />
+    if (isCheckoutPage) return <CheckoutHeader isMultiShipEnabled={isMultiShipEnabled} />
 
     if (!mdScreen) return <MobileHeader />
 

@@ -7,9 +7,8 @@ import { createQueryClientWrapper } from '@/__test__/utils/renderWithQueryClient
 describe('[hooks] useUpdateCheckoutPersonalInfoMutation', () => {
   it('should use useUpdateCheckoutPersonalInfoMutation', async () => {
     const checkoutDetails = {
-      orderId: 'OrderId-1',
-      updateMode: '',
-      orderInput: orderMock.checkout,
+      checkout: orderMock.checkout,
+      email: 'amol23@kibo.com',
     }
 
     renderHook(

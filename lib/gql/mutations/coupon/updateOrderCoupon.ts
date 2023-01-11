@@ -9,6 +9,7 @@ const updateOrderCouponMutation = /* GraphQL */ `
   mutation updateOrderCoupon($orderId: String!, $couponCode: String!) {
     updateOrderCoupon(orderId: $orderId, couponCode: $couponCode) {
       ...baseCheckoutFragment
+      couponCodes
       items {
         ...checkoutLineItemFragment
       }

@@ -1,6 +1,6 @@
-import type { ShippingRate } from '@/lib/gql/types'
+import type { CrShippingRate } from '@/lib/gql/types'
 
-export const shippingRateMock: { orderShipmentMethods: ShippingRate[] } = {
+export const shippingRateMock: { orderShipmentMethods: CrShippingRate[] } = {
   orderShipmentMethods: [
     {
       shippingMethodCode: '691f94b2b57e47239456ada600cdcc9e',

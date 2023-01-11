@@ -7,6 +7,7 @@ import {
   returnReasonsMock,
   createReturnMock,
   checkoutMock,
+  checkoutGroupRatesMock,
   orderSubscriptionNowMock,
 } from '../stories'
 import { cartItemMock } from '../stories/cartItemMock'
@@ -20,7 +21,6 @@ import { customerAccountCardsMock } from '../stories/customerAccountCardsMock'
 import { locationCollectionMock } from '../stories/locationCollectionMock'
 import { orderCollection } from '../stories/orderCollection'
 import { orderCouponMock } from '../stories/orderMock'
-import { orderShipment } from '../stories/orderShipmentMock'
 import { productSearchResultMock } from '../stories/productSearchResultMock'
 import { searchSuggestionMock } from '../stories/searchSuggestionResultMock'
 import { subscriptionCollectionMock } from '../stories/subscriptionCollectionMock'
@@ -57,6 +57,10 @@ export const checkoutHandlers = [
   // MultiShip
   graphql.query('getMultiShipCheckout', (_req, res, ctx) => {
     return res(ctx.data(checkoutMock))
+  }),
+
+  graphql.query('getCheckoutShippingMethods', (_req, res, ctx) => {
+    return res(ctx.data(checkoutGroupRatesMock))
   }),
 
   // Details Step
@@ -119,6 +123,10 @@ export const checkoutHandlers = [
   // Multiship
   graphql.mutation('createCheckoutAction', (_req, res, ctx) => {
     return res(ctx.data({ createCheckoutAction: checkoutMock }))
+  }),
+
+  graphql.mutation('createCheckoutShippingMethod', (_req, res, ctx) => {
+    return res(ctx.data(checkoutMock))
   }),
 ]
 
@@ -299,6 +307,9 @@ export const orderHandlers = [
   graphql.query('getCheckoutDestinations', (_req, res, ctx) => {
     return res(ctx.data({ checkoutDestinations: checkoutDestinationsMock.checkoutDestinations }))
   }),
+  graphql.query('getMultiShipCheckout', (_req, res, ctx) => {
+    return res(ctx.data(checkoutMock))
+  }),
 
   graphql.mutation('updateOrderCoupon', (_req, res, ctx) => {
     return res(ctx.data(orderCouponMock))
@@ -331,7 +342,7 @@ export const orderHandlers = [
   graphql.mutation('updateCheckoutItemDestination', (_req, res, ctx) => {
     return res(
       ctx.data({
-        updateCheckoutItemDestination: checkoutMock,
+        updateCheckoutItemDestination: checkoutMock.checkout,
       })
     )
   }),

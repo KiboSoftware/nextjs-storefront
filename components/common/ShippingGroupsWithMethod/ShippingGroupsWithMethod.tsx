@@ -1,16 +1,21 @@
-import React, { useState } from 'react'
+import React from 'react'
 
 import { Divider, Box, MenuItem, Card, Typography, Link } from '@mui/material'
 import { useTranslation } from 'next-i18next'
 
-import { KiboSelect, ProductItem } from '@/components/common'
-import { orderGetters, productGetters } from '@/lib/getters'
+import { KiboSelect, Price, ProductItem } from '@/components/common'
+import { orderGetters, productGetters, checkoutGetters } from '@/lib/getters'
 
-import type { Maybe, CrOrderItem, CrProduct, Contact, ShippingRate } from '@/lib/gql/types'
+import type { Maybe, CrOrderItem, CrProduct, Checkout, CheckoutGroupRates } from '@/lib/gql/types'
 
 export type ShippingGroupsWithMethodProps = {
-  items: Maybe<CrOrderItem>[]
-  onShippingAddressEditClick: () => void
+  checkout: Checkout
+  shippingMethods: CheckoutGroupRates[]
+  onClickEditMultiShippingDetails: () => void
+  onUpdateCheckoutShippingMethod: (params: {
+    shippingMethodGroup: CheckoutGroupRates
+    shippingMethodCode: string
+  }) => void
 }
 
 const styles = {
@@ -19,9 +24,9 @@ const styles = {
     boxShadow: 'none',
     borderRadius: 0,
     justifyContent: 'space-around',
-    pt: '24px',
+    pt: '1.5rem',
     pb: '0px',
-    pr: '13px',
+    pr: '0.813rem',
     display: 'flex',
     flexDirection: {
       xs: 'column',
@@ -39,31 +44,71 @@ const styles = {
     mt: 'auto',
   },
   shippingMethods: {
-    maxWidth: '421px',
+    maxWidth: '26.313rem',
     width: '100%',
-    marginBottom: '30px',
+    marginBottom: '1.875rem',
   },
   multipleAddresses: {
     display: 'flex',
     justifyContent: 'space-between',
     alignItems: 'baseline',
   },
+  shipmentDivider: {
+    marginTop: '0.5rem',
+    borderColor: 'primary.main',
+    maxWidth: '26.313rem',
+    width: '100%',
+  },
+  groupDivider: { marginTop: '1.375rem', maxWidth: '26.313rem', width: '100%' },
 }
+
+const ProductGroup = ({ items }: { items: Maybe<CrOrderItem>[] }) => {
+  return (
+    <>
+      {items?.map((item: Maybe<CrOrderItem>) => {
+        const product = item?.product as CrProduct
+        return (
+          <ProductItem
+            key={item?.id}
+            id={orderGetters.getCartItemId(item as CrOrderItem)}
+            qty={orderGetters.getProductQuantity(item as CrOrderItem)}
+            purchaseLocation={orderGetters.getPurchaseLocation(item as CrOrderItem)}
+            productCode={productGetters.getProductId(product)}
+            image={productGetters.getProductImage(product)}
+            name={productGetters.getName(product)}
+            options={productGetters.getOptions(product)}
+            price={productGetters.getPrice(product).regular?.toString()}
+            salePrice={productGetters.getPrice(product).special?.toString()}
+            data-testid="product-item-address"
+          />
+        )
+      })}
+    </>
+  )
+}
+
 const ShippingGroupsWithMethod = (props: ShippingGroupsWithMethodProps) => {
-  const { items, onShippingAddressEditClick } = props
+  const {
+    checkout,
+    shippingMethods,
+    onClickEditMultiShippingDetails,
+    onUpdateCheckoutShippingMethod,
+  } = props
 
   const { t } = useTranslation('common')
 
-  const shipmentMethods = [
-    { shippingMethodName: 'Standard', price: 0 },
-    { shippingMethodName: 'Expedited', price: 15 },
-  ]
+  const destinationItemGroups = checkoutGetters.buildItemsGroupFromCheckoutGroupings(checkout)
 
-  const [selectShippingOptions, setSelectShippingOptions] = useState<{ [key: string]: string }>({})
-  const handleSelectShippingOption = (id: number, value: string) => {
-    // need to modify as per API response
-    setSelectShippingOptions({ ...selectShippingOptions, [id]: value })
+  const handleSelectShippingOption = async (id: string, value: string) => {
+    const shippingMethodGroup = shippingMethods?.find(
+      (shippingMethod) => shippingMethod?.groupingId === id
+    )
+    onUpdateCheckoutShippingMethod({
+      shippingMethodGroup: shippingMethodGroup as CheckoutGroupRates,
+      shippingMethodCode: value,
+    })
   }
+
   return (
     <>
       <Box sx={{ ...styles.multipleAddresses }}>
@@ -75,79 +120,87 @@ const ShippingGroupsWithMethod = (props: ShippingGroupsWithMethodProps) => {
           component="button"
           variant="caption"
           color="text.primary"
-          sx={{ padding: '5px' }}
-          onClick={onShippingAddressEditClick}
+          sx={{ padding: '0.313rem' }}
+          onClick={onClickEditMultiShippingDetails}
         >
           {t('edit')}
         </Link>
       </Box>
-      <Divider sx={{ paddingTop: '18px' }} />
+      <Divider sx={{ paddingTop: '1.125rem' }} />
 
       <Typography variant="h2" component="h2" pt={4.25}>
         {t('shipping-method')}
       </Typography>
 
-      {items?.map((item: Maybe<CrOrderItem>, index: number) => {
-        const product = item?.product as CrProduct
+      {destinationItemGroups?.map((destinationItemGroup, index: number) => {
         return (
-          <Card key={item?.id} sx={{ ...styles.card }}>
+          <Card key={destinationItemGroup?.destinationId} sx={{ ...styles.card }}>
             <Box sx={{ ...styles.subContainer }}>
               <Typography variant="subtitle1" component="span">
-                {t('shipments-of', { shipmentNumber: index + 1, numberOfShipments: items?.length })}
+                {t('shipments-of', {
+                  shipmentNumber: index + 1,
+                  numberOfShipments: destinationItemGroups?.length,
+                })}
               </Typography>
-              <Divider
-                sx={{
-                  marginTop: '8px',
-                  borderColor: 'primary.main',
-                  maxWidth: '421px',
-                  width: '100%',
-                }}
-              />
+              <Divider sx={{ ...styles.shipmentDivider }} />
               <Box pt={2}>
                 <Typography
                   variant="body1"
                   component="span"
-                  sx={{ fontWeight: 'bold', marginRight: '4px' }}
+                  sx={{ fontWeight: 'bold', marginRight: '0.25rem' }}
                 >
                   {t('ship-to')}
                 </Typography>
                 <Typography variant="body1" component="span">
-                  4321 Another Address, Austin, TX 78741
+                  {checkoutGetters.formatDestinationAddress(
+                    destinationItemGroup?.destination?.destinationContact
+                  )}
                 </Typography>
               </Box>
               <KiboSelect
                 name="shippingMethods"
                 placeholder={t('select-shipping-option')}
                 sx={{ ...styles.shippingMethods }}
-                onChange={(_name, value) => handleSelectShippingOption(index, value)}
-                value={selectShippingOptions[index]}
+                onChange={(_name, value) =>
+                  handleSelectShippingOption(destinationItemGroup?.groupingId, value)
+                }
+                value={
+                  (checkout?.groupings?.find(
+                    (group) => group?.id === destinationItemGroup?.groupingId
+                  )?.shippingMethodCode as string) || ''
+                }
               >
-                {shipmentMethods?.map((item: ShippingRate) => {
-                  return (
-                    <MenuItem key={item.shippingMethodName} value={`${item.shippingMethodName}`}>
-                      {`${item.shippingMethodName} $${item.price}`}
-                    </MenuItem>
+                {shippingMethods
+                  ?.find(
+                    (shippingMethod) =>
+                      shippingMethod.groupingId === destinationItemGroup?.groupingId
                   )
-                })}
+                  ?.shippingRates?.map((shippingRate) => {
+                    return (
+                      <MenuItem
+                        key={shippingRate?.shippingMethodName}
+                        value={`${shippingRate?.shippingMethodCode || ''}`}
+                      >
+                        <Price
+                          variant="body2"
+                          fontWeight="normal"
+                          price={
+                            `${shippingRate?.shippingMethodName}` +
+                            ' ' +
+                            t('currency', { val: shippingRate?.price })
+                          }
+                        />
+                      </MenuItem>
+                    )
+                  })}
               </KiboSelect>
-              {/* Iterate shipping address product items */}
-              <ProductItem
-                id={orderGetters.getCartItemId(item as CrOrderItem)}
-                qty={orderGetters.getProductQuantity(item as CrOrderItem)}
-                purchaseLocation={orderGetters.getPurchaseLocation(item as CrOrderItem)}
-                productCode={productGetters.getProductId(product)}
-                image={productGetters.getProductImage(product)}
-                name={productGetters.getName(product)}
-                options={productGetters.getOptions(product)}
-                price={productGetters.getPrice(product).regular?.toString()}
-                salePrice={productGetters.getPrice(product).special?.toString()}
-                data-testid="product-item-address"
+              <ProductGroup
+                key={destinationItemGroup?.destinationId}
+                items={destinationItemGroup?.items}
               />
               <Divider
                 sx={{
-                  marginTop: '22px',
-                  maxWidth: '421px',
-                  width: '100%',
+                  ...styles.groupDivider,
                 }}
               />
             </Box>

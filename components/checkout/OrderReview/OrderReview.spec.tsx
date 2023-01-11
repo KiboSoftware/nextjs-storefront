@@ -6,7 +6,7 @@ import { render, screen } from '@testing-library/react'
 import * as stories from '../OrderReview/OrderReview.stories'
 import { orderGetters } from '@/lib/getters'
 
-import type { Order } from '@/lib/gql/types'
+import type { CrOrder } from '@/lib/gql/types'
 
 const { Common, WithMultiShippingAddresses } = composeStories(stories)
 
@@ -58,7 +58,7 @@ describe('[components] OrderReview', () => {
   it('should display the personal details', () => {
     setup()
 
-    const checkout = Common.args?.checkout as Order
+    const checkout = Common.args?.checkout as CrOrder
     const { personalDetails, shippingDetails, paymentMethods } =
       orderGetters.getCheckoutDetails(checkout)
 

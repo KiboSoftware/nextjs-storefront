@@ -1,4 +1,4 @@
-import type { Maybe, ProductOptionSelectionInput, Wishlist } from '@/lib/gql/types'
+import type { Maybe, ProductOptionSelectionInput, CrWishlist } from '@/lib/gql/types'
 export interface WishlistProductInput {
   options: ProductOptionSelectionInput[]
   productCode: string
@@ -8,15 +8,15 @@ export interface WishlistProductInput {
 
 export interface RemoveWishlistItemInput {
   product: WishlistProductInput
-  currentWishlist?: Maybe<Wishlist>
+  currentWishlist?: Maybe<CrWishlist>
 }
 export interface WishlistParams extends WishlistProductInput {
-  currentWishlist?: Maybe<Wishlist>
+  currentWishlist?: Maybe<CrWishlist>
 }
 export interface WishlistItemInWishlistParams {
   productCode: string
   variationProductCode?: string
-  userWishlist?: Maybe<Wishlist>
+  userWishlist?: Maybe<CrWishlist>
 }
 
 export interface WishlistHookParams {

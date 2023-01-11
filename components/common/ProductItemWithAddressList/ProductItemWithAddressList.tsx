@@ -1,15 +1,19 @@
-import React, { useState } from 'react'
+import React from 'react'
 
 import { Divider, Box, MenuItem, Card, Link } from '@mui/material'
 import { useTranslation } from 'next-i18next'
 
 import { KiboSelect, ProductItem } from '@/components/common'
-import { orderGetters, productGetters } from '@/lib/getters'
+import { orderGetters, productGetters, checkoutGetters } from '@/lib/getters'
+import type { CustomDestinationInput, MultiShipAddress } from '@/lib/types'
 
-import type { Maybe, CrOrderItem, CrProduct, Contact } from '@/lib/gql/types'
+import type { Maybe, CrOrderItem, CrProduct, Checkout } from '@/lib/gql/types'
 
 export type ProductItemWithAddressListProps = {
-  items: Maybe<CrOrderItem>[]
+  checkout: Checkout
+  multiShipAddresses: MultiShipAddress[]
+  onSelectCreateOrSetDestinationAddress: (id: string, destinationIdOrAddressId: string) => void
+  onUpdateDestinationAddress: (params: { destinationInput: CustomDestinationInput }) => void
 }
 
 const styles = {
@@ -46,85 +50,45 @@ const styles = {
   },
   splitShipment: {
     mt: 'auto',
+    ':before': {
+      content: "'+'",
+    },
   },
 }
 const ProductItemWithAddressList = (props: ProductItemWithAddressListProps) => {
-  const { items } = props
+  const {
+    checkout,
+    multiShipAddresses,
+    onSelectCreateOrSetDestinationAddress,
+    onUpdateDestinationAddress,
+  } = props
 
   const { t } = useTranslation('common')
-
-  const destinationContacts: Contact[] = [
-    {
-      id: 1,
-      email: 'amolp@dev.com',
-      firstName: 'ram',
-      middleNameOrInitial: null,
-      lastNameOrSurname: 'nam',
-      companyOrOrganization: null,
-      phoneNumbers: {
-        home: '3354533453',
-        mobile: null,
-        work: null,
+  const handleEditDestination = (item: Maybe<CrOrderItem>) => {
+    const contact = multiShipAddresses?.find(
+      (address) => address.destinationId === item?.destinationId
+    )
+    onUpdateDestinationAddress({
+      destinationInput: {
+        ...contact?.address,
+        destinationId: item?.destinationId as string,
+        itemId: item?.id as string,
       },
-      address: {
-        address1: 'street',
-        address2: 'apartment',
-        address3: null,
-        address4: null,
-        cityOrTown: 'city',
-        stateOrProvince: 'state',
-        postalOrZipCode: '23423',
-        countryCode: 'US',
-        addressType: null,
-        isValidated: false,
-      },
-    },
-    {
-      id: 2,
-      email: 'jon@doe.com',
-      firstName: 'jon',
-      middleNameOrInitial: null,
-      lastNameOrSurname: 'doe',
-      companyOrOrganization: null,
-      phoneNumbers: {
-        home: '5555555555',
-        mobile: null,
-        work: null,
-      },
-      address: {
-        address1: 'street1',
-        address2: 'apartment1',
-        address3: null,
-        address4: null,
-        cityOrTown: 'city1',
-        stateOrProvince: 'state1',
-        postalOrZipCode: '222222',
-        countryCode: 'US',
-        addressType: null,
-        isValidated: false,
-      },
-    },
-  ]
-
-  const [selectedAddresses, setSelectedAddresses] = useState<{ [key: string]: string }>({})
-  const handleSelectShippingAddress = (id: number, value: string) => {
-    // need to modify as per API response
-    setSelectedAddresses({ ...selectedAddresses, [id]: value })
+    })
   }
-  const handleEditAddress = () => {
-    // need to handle
-    console.log('edit address')
-  }
-  const handleAddAddress = () => {
-    console.log('add address')
+  const handleAddDestination = (item: Maybe<CrOrderItem>) => {
+    onUpdateDestinationAddress({
+      destinationInput: { itemId: item?.id as string },
+    })
   }
   const handleSplitAddress = () => {
-    console.log('split multi address')
+    // @to-do split address need to be implemented when api will be available
+    console.log('split address')
   }
 
   return (
     <>
-      {items?.map((item: Maybe<CrOrderItem>, index: number) => {
+      {checkout?.items?.map((item: Maybe<CrOrderItem>) => {
         const product = item?.product as CrProduct
         return (
           <Card key={item?.id} sx={{ ...styles.card }}>
@@ -146,15 +110,22 @@ const ProductItemWithAddressList = (props: ProductItemWithAddressListProps) => {
             <Box sx={{ ...styles.subContainer, display: 'flex', flexDirection: 'column' }}>
               <KiboSelect
                 name="multiShipAddresses"
-                onChange={(_name, value) => handleSelectShippingAddress(index, value)}
+                onChange={(_name, value) =>
+                  onSelectCreateOrSetDestinationAddress(item?.id as string, value)
+                }
                 placeholder={t('select-a-saved-address')}
-                value={selectedAddresses[index]}
+                value={item?.destinationId as string}
               >
-                {destinationContacts?.map((contact: Contact) => {
-                  const formattedAddress = `${contact?.address?.address1}, ${contact?.address?.address2}, ${contact?.address?.cityOrTown}, ${contact?.address?.stateOrProvince}, ${contact?.address?.postalOrZipCode}, ${contact?.address?.countryCode} `
+                {multiShipAddresses?.map((multiShipAddress) => {
+                  const destinationOrAddressId = multiShipAddress?.destinationId
+                    ? multiShipAddress?.destinationId
+                    : multiShipAddress?.address?.id
                   return (
-                    <MenuItem key={contact.id} value={`${contact.id}`}>
-                      {formattedAddress}
+                    <MenuItem
+                      key={`${multiShipAddress?.address?.id}-${multiShipAddress?.destinationId}`}
+                      value={`${destinationOrAddressId}`}
+                    >
+                      {checkoutGetters.formatDestinationAddress(multiShipAddress?.address)}
                     </MenuItem>
                   )
                 })}
@@ -165,7 +136,7 @@ const ProductItemWithAddressList = (props: ProductItemWithAddressListProps) => {
                   variant="caption"
                   color="text.primary"
                   sx={{ padding: '5px' }}
-                  onClick={handleEditAddress}
+                  onClick={() => handleEditDestination(item)}
                 >
                   {t('edit-address')}
                 </Link>
@@ -179,14 +150,13 @@ const ProductItemWithAddressList = (props: ProductItemWithAddressListProps) => {
                   variant="caption"
                   color="text.primary"
                   sx={{ padding: '5px' }}
-                  onClick={handleAddAddress}
+                  onClick={() => handleAddDestination(item)}
                 >
                   {t('add-new-address')}
                 </Link>
               </Box>
               {orderGetters.getProductQuantity(item as CrOrderItem) > 1 && (
                 <Box sx={{ ...styles.splitShipment }}>
-                  +
                   <Link
                     component="button"
                     variant="caption"

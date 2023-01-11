@@ -7,7 +7,7 @@ import Actions from '@/components/dialogs/AddToCartConfirmation/Actions/Actions'
 import Content from '@/components/dialogs/AddToCartConfirmation/Content/Content'
 import Title from '@/components/dialogs/AddToCartConfirmation/Title/Title'
 
-import type { CartItem as CartItemType } from '@/lib/gql/types'
+import type { CrCartItem as CartItemType } from '@/lib/gql/types'
 
 interface CartDetailsProps {
   cartItem: CartItemType

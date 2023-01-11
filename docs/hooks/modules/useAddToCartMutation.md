@@ -16,7 +16,7 @@
 
 [Mutation hook] useAddToCartMutation uses the graphQL mutation
 
-<b>addItemToCurrentCart(cartItemInput: CartItemInput): CartItem</b>
+<b>addItemToCurrentCart(cartItemInput: CrCartItemInput): CartItem</b>
 
 Description : Add the product items to the cart with selected quantity
 

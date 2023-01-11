@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 
 import { Stack, Button } from '@mui/material'
 import { useTranslation } from 'next-i18next'
@@ -7,36 +7,32 @@ import AddressForm from '@/components/common/AddressForm/AddressForm'
 import KiboDialog from '@/components/common/KiboDialog/KiboDialog'
 import { useModalContext } from '@/context'
 import type { Address, ContactForm } from '@/lib/types'
-
 interface AddressFormDialogProps {
-  isAddressFormValid: boolean
   isUserLoggedIn: boolean
   setAutoFocus: boolean
-  validateForm: boolean
   formTitle?: string
   contact?: ContactForm
   onSaveAddress: (data: Address) => void
-  onFormStatusChange: (status: boolean) => void
-  onAddressValidationAndSave: () => void
 }
-
 const AddressFormDialog = (props: AddressFormDialogProps) => {
   const { closeModal } = useModalContext()
   const { t } = useTranslation('common')
   const isAddressFormInDialog = true
-
   const {
     formTitle = t('add-new-address'),
     contact,
-    isAddressFormValid,
     isUserLoggedIn,
     setAutoFocus,
-    validateForm,
     onSaveAddress,
-    onFormStatusChange,
-    onAddressValidationAndSave,
   } = props
-
+  const [isDialogAddressFormValid, setIsAddressFormDialogValid] = useState<boolean>(false)
+  const [validateDialogForm, setValidateDialogForm] = useState<boolean>(false)
+  const handleFormStatusChange = (status: boolean) => {
+    setIsAddressFormDialogValid(status)
+  }
+  const handleAddressValidationAndSave = () => {
+    setValidateDialogForm(true)
+  }
   return (
     <KiboDialog
       showCloseButton
@@ -50,10 +46,10 @@ const AddressFormDialog = (props: AddressFormDialogProps) => {
             contact={contact}
             isUserLoggedIn={isUserLoggedIn}
             setAutoFocus={setAutoFocus}
-            validateForm={validateForm}
+            validateForm={validateDialogForm}
             isAddressFormInDialog={isAddressFormInDialog}
             onSaveAddress={onSaveAddress}
-            onFormStatusChange={onFormStatusChange}
+            onFormStatusChange={handleFormStatusChange}
           />
           <Stack pl={1} gap={2} sx={{ width: '100%' }}>
             <Button variant="contained" color="secondary" onClick={closeModal}>
@@ -62,8 +58,8 @@ const AddressFormDialog = (props: AddressFormDialogProps) => {
             <Button
               variant="contained"
               color="primary"
-              {...(!isAddressFormValid && { disabled: true })}
-              onClick={onAddressValidationAndSave}
+              disabled={!isDialogAddressFormValid}
+              onClick={handleAddressValidationAndSave}
             >
               {t('save')}
             </Button>

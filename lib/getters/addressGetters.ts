@@ -1,7 +1,7 @@
 import type { LocationCustom, SavedBillingAddress } from '@/lib/types'
 
 import type {
-  Contact,
+  CrContact,
   CrAddress,
   CrPhone,
   CuAddress,
@@ -11,7 +11,7 @@ import type {
 
 type GenericAddress = CuAddress | CrAddress | null
 type GenericPhone = CuPhone | CrPhone | null
-type GenericContact = CustomerContact | Contact
+type GenericContact = CustomerContact | CrContact
 
 // billing
 const getContactNumbers = (contactNumbers?: GenericPhone) => {
@@ -62,6 +62,12 @@ const getStorePickupAddress = (
 ): CrAddress =>
   pickupAddresses?.find((store) => store.code === fulfillmentLocationCode)?.fullAddress as CrAddress
 
+const getFormattedAddress = (contact?: GenericContact) => {
+  return `${getAddress1(contact?.address)} ${getAddress2(contact?.address)} ${getCityOrTown(
+    contact?.address
+  )} ${getStateOrProvince(contact?.address)} ${getPostalOrZipCode(contact?.address)}`
+}
+
 export const addressGetters = {
   getAddress,
   getAddress1,
@@ -79,4 +85,5 @@ export const addressGetters = {
   getPhoneNumbers,
   getEmail,
   getContactId,
+  getFormattedAddress,
 }

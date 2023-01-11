@@ -12,20 +12,14 @@ import * as yup from 'yup'
 import { KiboTextBox } from '@/components/common'
 import { LoginDialog } from '@/components/layout'
 import { useAuthContext, useCheckoutStepContext, STEP_STATUS, useModalContext } from '@/context'
-import { PersonalInfo, useUpdateCheckoutPersonalInfoMutation } from '@/hooks'
-import { FormStates } from '@/lib/constants'
+import type { PersonalDetails } from '@/lib/types'
 
-import type { Order, OrderInput, Maybe } from '@/lib/gql/types'
-export interface PersonalDetails {
-  email: Maybe<string> | undefined
-}
+import type { Maybe, CrOrder, Checkout } from '@/lib/gql/types'
 
-export interface Action {
-  type: FormStates.COMPLETE | FormStates.INCOMPLETE | FormStates.VALIDATE
-}
-interface DetailsProps {
+interface DetailsProps<T> {
   setAutoFocus?: boolean
-  checkout: Order | undefined
+  checkout: T
+  updateCheckoutPersonalInfo: (params: { email: Maybe<string> | undefined }) => Promise<void>
 }
 
 const commonStyle = {
@@ -60,11 +54,11 @@ const useDetailsSchema = () => {
   })
 }
 
-const DetailsStep = (props: DetailsProps) => {
-  const { setAutoFocus = true, checkout } = props
+const DetailsStep = <T extends CrOrder | Checkout>(props: DetailsProps<T>) => {
+  const { setAutoFocus = true, checkout, updateCheckoutPersonalInfo } = props
 
   const { t } = useTranslation('common')
-  const updateCheckoutPersonalInfo = useUpdateCheckoutPersonalInfoMutation()
+
   const { isAuthenticated, setAuthError } = useAuthContext()
   const { showModal } = useModalContext()
   const {
@@ -97,23 +91,9 @@ const DetailsStep = (props: DetailsProps) => {
     shouldFocusError: true,
   })
 
-  const updatePersonalInfo = async (formData: PersonalDetails) => {
-    const { email } = formData
-
-    const personalInfo: PersonalInfo = {
-      orderId: checkout?.id as string,
-      updateMode: 'ApplyToOriginal',
-      orderInput: {
-        ...(checkout as OrderInput),
-        email,
-      },
-    }
-    await updateCheckoutPersonalInfo.mutateAsync(personalInfo)
-  }
-
   const onValid = async (formData: PersonalDetails) => {
     try {
-      await updatePersonalInfo(formData)
+      await updateCheckoutPersonalInfo(formData)
       setStepStatusComplete()
       setStepNext()
     } catch (error) {
@@ -178,7 +158,7 @@ const DetailsStep = (props: DetailsProps) => {
               onBlur={field.onBlur}
               onChange={(_name, value) => field.onChange(value)}
               error={!!errors?.email}
-              helperText={errors?.email?.message}
+              helperText={errors?.email?.message as string}
             />
           )}
         />

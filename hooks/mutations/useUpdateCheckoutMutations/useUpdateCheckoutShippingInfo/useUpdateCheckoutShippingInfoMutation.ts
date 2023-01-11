@@ -11,14 +11,14 @@ import {
 } from '@/lib/helpers/buildCheckoutShippingParams'
 import { checkoutKeys } from '@/lib/react-query/queryKeys'
 
-import type { FulfillmentInfoInput } from '@/lib/gql/types'
+import type { CrFulfillmentInfoInput } from '@/lib/gql/types'
 
 /**
  * @hidden
  */
 export interface ShippingInfo {
   orderId: string
-  fulfillmentInfoInput: FulfillmentInfoInput
+  fulfillmentInfoInput: CrFulfillmentInfoInput
 }
 
 const updateShippingInfo = async (params: CheckoutShippingParams) => {

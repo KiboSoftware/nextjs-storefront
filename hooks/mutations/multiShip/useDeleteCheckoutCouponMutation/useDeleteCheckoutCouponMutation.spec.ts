@@ -4,22 +4,13 @@ import { useDeleteCheckoutCouponMutation } from './useDeleteCheckoutCouponMutati
 import { checkoutMock } from '@/__mocks__/stories'
 import { createQueryClientWrapper } from '@/__test__/utils/renderWithQueryClient'
 
-describe('[hooks] useUpdateCheckoutCouponMutation', () => {
-  beforeEach(() => {
-    jest.clearAllMocks()
-  })
-  afterEach(() => {
-    jest.clearAllMocks()
-  })
-
-  it('should use useUpdateCheckoutCouponMutation ', async () => {
+describe('[hooks] useDeleteCheckoutCouponMutation', () => {
+  it('should remove deleted coupon', async () => {
     renderHook(
       async () => {
-        const updateCheckoutCoupon = useDeleteCheckoutCouponMutation()
-        const response = await updateCheckoutCoupon.mutateAsync({
-          checkoutId: 'fskd657657',
-          couponCode: '10OFF',
-        })
+        const deleteCheckoutCoupon = useDeleteCheckoutCouponMutation()
+        const variables = { checkoutId: '43245kjg5j43543hj', couponCode: 'OFF10' }
+        const response = await deleteCheckoutCoupon.mutateAsync(variables)
         expect(response).toStrictEqual(checkoutMock)
       },
       {

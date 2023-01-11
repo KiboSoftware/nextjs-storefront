@@ -10,7 +10,6 @@ import { productSearch, categoryTreeSearchByCode } from '@/lib/api/operations'
 import getCategoryTree from '@/lib/api/operations/get-category-tree'
 import { productSearchGetters, facetGetters } from '@/lib/getters'
 import type { CategorySearchParams, CategoryTreeResponse } from '@/lib/types'
-import nextI18NextConfig from '@/next-i18next.config'
 
 import type { PrCategory, ProductSearchResult, Facet, Product, FacetValue } from '@/lib/gql/types'
 import type { NextPage, GetServerSidePropsContext, GetServerSideProps } from 'next'

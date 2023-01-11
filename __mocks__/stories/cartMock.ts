@@ -1,6 +1,6 @@
-import type { Cart } from '@/lib/gql/types'
+import type { CrCart } from '@/lib/gql/types'
 
-export const cartResponse: Cart = {
+export const cartResponse: CrCart = {
   id: '13bdd5a61958150001dc971f000074e7',
   invalidCoupons: [],
   couponCodes: ['10OFF', 'FREE10'],
@@ -472,9 +472,9 @@ export const cartResponse: Cart = {
   ],
 }
 
-export const cartMock: { currentCart: Cart } = {
+export const cartMock: { currentCart: CrCart } = {
   currentCart: cartResponse,
 }
-export const cartCouponMock: { updateCartCoupon: Cart } = {
+export const cartCouponMock: { updateCartCoupon: CrCart } = {
   updateCartCoupon: cartResponse,
 }

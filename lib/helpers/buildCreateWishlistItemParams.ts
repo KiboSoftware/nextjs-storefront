@@ -1,9 +1,9 @@
 import getConfig from 'next/config'
 
-import type { WishlistInput } from '@/lib/gql/types'
+import type { CrWishlistInput } from '@/lib/gql/types'
 export const buildCreateWishlistItemParams = (
   customerAccountId: number
-): { wishlistInput: WishlistInput } => {
+): { wishlistInput: CrWishlistInput } => {
   const { publicRuntimeConfig } = getConfig()
 
   return {

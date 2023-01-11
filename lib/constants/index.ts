@@ -112,3 +112,4 @@ export const OrderReturnType = {
 }
 
 export const SUBSCRIPTION_FREQUENCY = 'system~subscription-frequency'
+export const CheckoutUpdateMode = { APPLY_TO_ORIGINAL: 'ApplyToOriginal' }

@@ -44,9 +44,10 @@ export const checkoutLineItemFragment = /* GraphQL */ `
 `
 
 export const baseCheckoutFragment = /* GraphQL */ `
-  fragment baseCheckoutFragment on Order {
+  fragment baseCheckoutFragment on CrOrder {
     id
     email
+    continuityOrderOrdinal
     totalCollected
     amountAvailableForRefund
     amountRemainingForPayment
@@ -132,7 +133,7 @@ export const baseCheckoutFragment = /* GraphQL */ `
   }
 `
 export const billingContactFragment = /* GraphQL */ `
-  fragment billingContactFragment on Contact {
+  fragment billingContactFragment on CrContact {
     id
     firstName
     middleNameOrInitial
@@ -156,7 +157,7 @@ export const billingContactFragment = /* GraphQL */ `
 `
 
 export const fullfillmentInfoFragment = /* GraphQL */ `
-  fragment fullfillmentInfoFragment on FulfillmentInfo {
+  fragment fullfillmentInfoFragment on CrFulfillmentInfo {
     shippingMethodCode
     shippingMethodName
     fulfillmentContact {
@@ -184,7 +185,7 @@ export const fullfillmentInfoFragment = /* GraphQL */ `
 `
 
 export const checkoutPaymentFragment = /* GraphQL */ `
-  fragment checkoutPaymentFragment on Payment {
+  fragment checkoutPaymentFragment on CrPayment {
     id
     paymentType
     status
@@ -227,5 +228,57 @@ export const shipmentItemFragment = /* GraphQL */ `
         value
       }
     }
+  }
+`
+
+export const checkoutGroupingsFragment = /* GraphQL */ `
+  fragment checkoutGroupingsFragment on CheckoutGrouping {
+    id
+    destinationId
+    orderItemIds
+    fulfillmentMethod
+    shippingMethodCode
+    shippingMethodName
+    dutyTotal
+    shippingSubTotal
+    itemLevelShippingDiscountTotal
+    orderLevelShippingDiscountTotal
+    shippingTaxTotal
+    shippingTotal
+    handlingSubTotal
+    itemLevelHandlingDiscountTotal
+    orderLevelHandlingDiscountTotal
+    handlingTaxTotal
+    handlingTotal
+  }
+`
+export const baseMultiShipCheckoutFragment = /* GraphQL */ `
+  fragment baseMultiShipCheckoutFragment on Checkout {
+    id
+    email
+    siteId
+    tenantId
+    number
+    originalCartId
+    submittedDate
+    type
+    feeTotal
+    subTotal
+    itemTaxTotal
+    itemTotal
+    shippingSubTotal
+    shippingTaxTotal
+    itemLevelShippingDiscountTotal
+    orderLevelShippingDiscountTotal
+    shippingTotal
+    handlingSubTotal
+    itemLevelHandlingDiscountTotal
+    orderLevelHandlingDiscountTotal
+    handlingTaxTotal
+    handlingTotal
+    total
+    amountRemainingForPayment
+    itemLevelProductDiscountTotal
+    orderLevelProductDiscountTotal
   }
 `

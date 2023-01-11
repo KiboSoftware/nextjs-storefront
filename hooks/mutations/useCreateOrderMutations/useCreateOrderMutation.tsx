@@ -8,7 +8,7 @@ import { createOrderMutation } from '@/lib/gql/mutations'
 import { buildCreateOrderParams } from '@/lib/helpers'
 import { checkoutKeys } from '@/lib/react-query/queryKeys'
 
-import type { Order, OrderActionInput } from '@/lib/gql/types'
+import type { CrOrder, OrderActionInput } from '@/lib/gql/types'
 
 /**
  * @hidden
@@ -18,7 +18,7 @@ export interface OrderInfo {
   orderActionInput: OrderActionInput
 }
 
-const createOrder = async (checkout: Order) => {
+const createOrder = async (checkout: CrOrder) => {
   const orderInfo: OrderInfo = buildCreateOrderParams(checkout)
 
   const client = makeGraphQLClient()

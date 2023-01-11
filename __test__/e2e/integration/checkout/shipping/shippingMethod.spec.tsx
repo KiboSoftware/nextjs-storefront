@@ -5,13 +5,21 @@ import { fireEvent, render, screen, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 
 import { shippingRateMock } from '@/__mocks__/stories/shippingRateMock'
-import { ShippingMethodProps } from '@/components/checkout/Shipping/OrderItems/ShippingMethod'
-import * as stories from '@/components/checkout/Shipping/OrderItems/ShippingMethod.stories'
+import { ShippingMethodProps } from '@/components/checkout/ShippingMethod/ShippingMethod'
+import * as stories from '@/components/checkout/ShippingMethod/ShippingMethod.stories'
 
 import type { Maybe, CrOrderItem } from '@/lib/gql/types'
 
 const scrollIntoViewMock = jest.fn()
 window.HTMLElement.prototype.scrollIntoView = scrollIntoViewMock
+
+jest.mock('next-i18next', () => ({
+  useTranslation: () => ({
+    i18n: { language: 'en' },
+    t: (key: string, options?: { val: number | string }) =>
+      key === 'currency' ? `$${options?.val}` : key,
+  }),
+}))
 
 const { Common } = composeStories(stories)
 const onChangeMock = jest.fn()
@@ -65,7 +73,7 @@ describe('[component] - ShippingMethod', () => {
       pickupItems: [],
       orderShipmentMethods: shippingRateMock.orderShipmentMethods,
       selectedShippingMethodCode: '',
-      onShippingMethodChange: (name: string, value: string) => ({ name, value }),
+      onShippingMethodChange: (value: string, name?: string) => ({ value, name }),
     }
 
     const { user } = setup(params)
@@ -87,7 +95,7 @@ describe('[component] - ShippingMethod', () => {
       pickupItems: Common.args?.pickupItems as Maybe<CrOrderItem>[],
       orderShipmentMethods: shippingRateMock.orderShipmentMethods,
       selectedShippingMethodCode: '',
-      onShippingMethodChange: (name: string, value: string) => ({ name, value }),
+      onShippingMethodChange: (value: string, name?: string) => ({ name, value }),
     }
 
     setup(params)
@@ -101,7 +109,7 @@ describe('[component] - ShippingMethod', () => {
       pickupItems: Common.args?.pickupItems as Maybe<CrOrderItem>[],
       orderShipmentMethods: shippingRateMock.orderShipmentMethods,
       selectedShippingMethodCode: '',
-      onShippingMethodChange: (name: string, value: string) => ({ name, value }),
+      onShippingMethodChange: (value: string, name?: string) => ({ name, value }),
     }
 
     setup(params)
@@ -117,7 +125,7 @@ describe('[component] - ShippingMethod', () => {
       pickupItems: Common.args?.pickupItems as Maybe<CrOrderItem>[],
       orderShipmentMethods: shippingRateMock.orderShipmentMethods,
       selectedShippingMethodCode: '',
-      onShippingMethodChange: (name: string, value: string) => ({ name, value }),
+      onShippingMethodChange: (value: string, name?: string) => ({ name, value }),
     }
     const { user } = setup(params)
     const changeStore = params?.pickupItems[0]?.purchaseLocation

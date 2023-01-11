@@ -1,5 +1,5 @@
 const addToCartMutation = /* GraphQL */ `
-  mutation addToCart($productToAdd: CartItemInput!) {
+  mutation addToCart($productToAdd: CrCartItemInput!) {
     addItemToCurrentCart(cartItemInput: $productToAdd) {
       id
       total

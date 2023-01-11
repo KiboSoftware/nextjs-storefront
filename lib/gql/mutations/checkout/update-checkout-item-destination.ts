@@ -1,8 +1,8 @@
 import {
-  baseCheckoutFragment,
   checkoutLineItemFragment,
-  checkoutPaymentFragment,
-  fullfillmentInfoFragment,
+  destinationContactFragment,
+  baseMultiShipCheckoutFragment,
+  checkoutGroupingsFragment,
 } from '../../fragments'
 const updateCheckoutItemDestination = /* GraphQL */ `
   mutation updateCheckoutItemDestination(
@@ -15,22 +15,27 @@ const updateCheckoutItemDestination = /* GraphQL */ `
       itemId: $itemId
       destinationId: $destinationId
     ) {
-      ...baseCheckoutFragment
+      ...baseMultiShipCheckoutFragment
+      couponCodes
       items {
+        destinationId
         ...checkoutLineItemFragment
       }
-      fulfillmentInfo {
-        ...fullfillmentInfoFragment
+      destinations {
+        id
+        destinationContact {
+          ...destinationContactFragment
+        }
       }
-      payments {
-        ...checkoutPaymentFragment
+      groupings {
+        ...checkoutGroupingsFragment
       }
     }
   }
-  ${baseCheckoutFragment}
   ${checkoutLineItemFragment}
-  ${fullfillmentInfoFragment}
-  ${checkoutPaymentFragment}
+  ${destinationContactFragment}
+  ${baseMultiShipCheckoutFragment}
+  ${checkoutGroupingsFragment}
 `
 
 export default updateCheckoutItemDestination

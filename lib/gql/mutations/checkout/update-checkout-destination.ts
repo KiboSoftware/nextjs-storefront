@@ -1,10 +1,10 @@
-import { destinationContact } from '../../fragments/destinationContact'
+import { destinationContactFragment } from '../../fragments'
 
 const updateCheckoutDestination = /* GraphQL */ `
   mutation updateCheckoutDestination(
     $checkoutId: String!
     $destinationId: String!
-    $destinationInput: DestinationInput
+    $destinationInput: CrDestinationInput
   ) {
     updateCheckoutDestination(
       checkoutId: $checkoutId
@@ -12,13 +12,13 @@ const updateCheckoutDestination = /* GraphQL */ `
       destinationInput: $destinationInput
     ) {
       destinationContact {
-        ...destinationContact
+        ...destinationContactFragment
       }
       id
       isDestinationCommercial
     }
   }
-  ${destinationContact}
+  ${destinationContactFragment}
 `
 
 export default updateCheckoutDestination

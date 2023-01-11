@@ -8,7 +8,7 @@ import * as stories from '@/components/order/ViewOrderDetails/ViewOrderDetails.s
 import { FulfillmentOptions } from '@/lib/constants'
 import { cardGetters, orderGetters } from '@/lib/getters'
 
-import type { Order, PaymentCard } from '@/lib/gql/types'
+import type { CrOrder, CrPaymentCard } from '@/lib/gql/types'
 
 const { Common } = composeStories(stories)
 
@@ -20,7 +20,7 @@ describe('[components] - ViewOrderDetails Integration', () => {
   it('should render component', async () => {
     setup(false)
 
-    const order = Common.args?.order as Order
+    const order = Common.args?.order as CrOrder
     const shipItems =
       Common.args?.order?.items?.filter(
         (item) => item?.fulfillmentMethod === FulfillmentOptions.SHIP
@@ -47,10 +47,10 @@ describe('[components] - ViewOrderDetails Integration', () => {
 
     payments?.map((payment) => {
       const cardNumberPartOrMask = cardGetters.getCardNumberPartOrMask(
-        payment?.billingInfo?.card as PaymentCard
+        payment?.billingInfo?.card as CrPaymentCard
       )
-      const expireMonth = cardGetters.getExpireMonth(payment?.billingInfo?.card as PaymentCard)
-      const expireYear = cardGetters.getExpireYear(payment?.billingInfo?.card as PaymentCard)
+      const expireMonth = cardGetters.getExpireMonth(payment?.billingInfo?.card as CrPaymentCard)
+      const expireYear = cardGetters.getExpireYear(payment?.billingInfo?.card as CrPaymentCard)
       expect(screen.getByText(/Ending/i)).toBeVisible()
       expect(screen.getByText(/Exp/i)).toBeVisible()
       expect(screen.getByText(cardNumberPartOrMask)).toBeVisible()
@@ -67,7 +67,7 @@ describe('[components] - ViewOrderDetails Integration', () => {
   it('should render component for Order status', () => {
     setup(true)
 
-    const order = Common.args?.order as Order
+    const order = Common.args?.order as CrOrder
     expect(screen.getByText(/order-number/i)).toBeVisible()
     expect(screen.getByText(/order-date/i)).toBeVisible()
     expect(screen.getByText(/shipped-to/i)).toBeVisible()
