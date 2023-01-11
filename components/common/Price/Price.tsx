@@ -77,7 +77,7 @@ const PriceRangeTypography = ({ priceRange }: { priceRange: PriceRange }) => {
 
   return (
     <Box display="flex" alignItems="center" gap={1} data-testid="price-range">
-      <Price price={lower?.price} {...(lower?.salePrice && { price: lower?.salePrice })} />
+      <Price price={lower?.price} {...(lower?.salePrice && { salePrice: lower?.salePrice })} />
       <Typography variant="body2">-</Typography>
       <Price price={upper?.price} {...(upper?.salePrice && { salePrice: upper?.salePrice })} />
     </Box>
