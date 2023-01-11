@@ -21,6 +21,7 @@ import { customerAccountCardsMock } from '../stories/customerAccountCardsMock'
 import { locationCollectionMock } from '../stories/locationCollectionMock'
 import { orderCollection } from '../stories/orderCollection'
 import { orderCouponMock } from '../stories/orderMock'
+import { productPriceMock } from '../stories/productPriceMock'
 import { productSearchResultMock } from '../stories/productSearchResultMock'
 import { searchSuggestionMock } from '../stories/searchSuggestionResultMock'
 import { subscriptionCollectionMock } from '../stories/subscriptionCollectionMock'
@@ -176,6 +177,9 @@ export const accountHandlers = [
 export const productHandlers = [
   graphql.mutation('configureProduct', (_req, res, ctx) => {
     return res(ctx.data(configuredProductMock))
+  }),
+  graphql.query('getProductPrice', (_req, res, ctx) => {
+    return res(ctx.data({ products: productPriceMock }))
   }),
 ]
 

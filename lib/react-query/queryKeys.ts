@@ -86,3 +86,9 @@ export const returnsKeys = {
 export const subscriptionKeys = {
   all: ['subscriptions'] as const,
 }
+
+export const productKeys = {
+  all: ['product'] as const,
+  productParams: (productCode: string, useSubscriptionPricing: boolean) =>
+    [productCode, useSubscriptionPricing] as const,
+}
