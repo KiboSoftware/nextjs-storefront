@@ -330,6 +330,8 @@ const PaymentStep = (props: PaymentStepProps) => {
       pciHost,
       apiHost
     )
+
+    console.log('sgfdgdhdfhgf', tokenizedCardResponse)
     if (!tokenizedCardResponse) return
 
     cancelAddingNewPaymentMethod()
