@@ -150,11 +150,11 @@ const StandardShipCheckoutTemplate = (props: StandardShipCheckoutProps) => {
           userShippingAddress={userShippingAddress}
           isAuthenticated={isAuthenticated}
         />
-        {/* <PaymentStep
+        <PaymentStep
           checkout={checkout as CrOrder}
           onVoidPayment={handleVoidPayment}
           onAddPayment={handleAddPayment}
-        /> */}
+        />
         <ReviewStep
           checkout={checkout as CrOrder}
           isMultiShipEnabled={isMultiShipEnabled}

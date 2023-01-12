@@ -117,6 +117,14 @@ export const checkoutHandlers = [
     )
   }),
 
+  graphql.mutation('updateCheckoutPaymentActionMutation', (_req, res, ctx) => {
+    return res(
+      ctx.data({
+        updateCheckoutPaymentAction: checkoutMock,
+      })
+    )
+  }),
+
   // Shipping Step
   graphql.mutation('updateCheckout', (_req, res, ctx) => {
     return res(ctx.data(checkoutMock))

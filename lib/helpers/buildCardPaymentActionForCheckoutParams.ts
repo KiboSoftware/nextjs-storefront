@@ -1,11 +1,17 @@
 import { orderGetters, cardGetters } from '@/lib/getters'
 import type { CardTypeForCheckout, TokenizedCard } from '@/lib/types'
 
-import type { CrBillingInfo, CrContact, CrOrder, PaymentActionInput } from '@/lib/gql/types'
+import type {
+  Checkout,
+  CrBillingInfo,
+  CrContact,
+  CrOrder,
+  PaymentActionInput,
+} from '@/lib/gql/types'
 
 export const buildCardPaymentActionForCheckoutParams = (
   currencyCode: string,
-  checkout: CrOrder,
+  checkout: CrOrder | Checkout,
   creditCardData: CardTypeForCheckout,
   tokenizedData: TokenizedCard,
   billingAddress: CrContact,

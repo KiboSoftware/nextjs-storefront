@@ -211,8 +211,6 @@ const CartTemplate = (props: CartTemplateProps) => {
     ),
   }
 
-  console.log('length', cart?.items?.length)
-
   return (
     <Grid container>
       {/* Header section */}
