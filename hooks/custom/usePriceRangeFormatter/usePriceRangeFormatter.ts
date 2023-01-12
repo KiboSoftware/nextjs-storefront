@@ -1,9 +1,20 @@
+/**
+ * @module usePriceRangeFormatter
+ */
 import { useMemo } from 'react'
 
 import { useTranslation } from 'next-i18next'
 
 import { ProductPriceRange } from '@/lib/gql/types'
 
+/**
+ * [Custom Hook] It will format the price range object with translations
+ *
+ * @param priceRange Excepts price range object received from server
+ *
+ * @returns Translated price range object
+ *
+ */
 export const usePriceRangeFormatter = (priceRange: ProductPriceRange) => {
   const { t } = useTranslation('common')
 
