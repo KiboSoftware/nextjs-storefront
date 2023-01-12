@@ -1,13 +1,22 @@
-import React from 'react'
+import React, { ReactNode } from 'react'
 
 import { Card, Stack, Typography, CardContent, Button } from '@mui/material'
+import dayjs, { Dayjs } from 'dayjs'
 import { useTranslation } from 'next-i18next'
 
 import { ProductItem } from '@/components/common'
-import { ConfirmationDialog, EditSubscriptionFrequencyDialog } from '@/components/dialogs'
+import {
+  ConfirmationDialog,
+  EditSubscriptionFrequencyDialog,
+  EditOrderDateDialog,
+} from '@/components/dialogs'
 import { ProductOption } from '@/components/product'
 import { useModalContext, useSnackbarContext } from '@/context'
-import { useSkipNextSubscriptionMutation, useOrderSubscriptionNowMutation } from '@/hooks'
+import {
+  useSkipNextSubscriptionMutation,
+  useOrderSubscriptionNowMutation,
+  useUpdateSubscriptionNextOrderDate,
+} from '@/hooks'
 import { subscriptionGetters, productGetters } from '@/lib/getters'
 import { uiHelpers } from '@/lib/helpers'
 
@@ -68,6 +77,7 @@ const SubscriptionItem = (props: SubscriptionItemProps) => {
 
   const { skipNextSubscription } = useSkipNextSubscriptionMutation()
   const { orderSubscriptionNow } = useOrderSubscriptionNowMutation()
+  const { updateSubscriptionNextOrderDate } = useUpdateSubscriptionNextOrderDate()
 
   const handleEditFrequency = (subscriptionId: string, subscriptionItems: SbSubscriptionItem[]) => {
     const values = subscriptionGetters.getFrequencyValues(subscriptionItems[0].product)
@@ -75,6 +85,25 @@ const SubscriptionItem = (props: SubscriptionItemProps) => {
     showModal({
       Component: EditSubscriptionFrequencyDialog,
       props: { subscriptionId: subscriptionId, values: values },
+    })
+  }
+
+  const handleOrderDateUpdate = async (subscriptionId: string, orderDate: string) => {
+    const params = {
+      subscriptionId: subscriptionId,
+      subscriptionNextOrderDateInput: {
+        nextOrderDate: orderDate,
+      },
+    }
+
+    await updateSubscriptionNextOrderDate.mutateAsync(params)
+    showSnackbar(t('next-order-date') + orderDate, 'success')
+  }
+
+  const handleShowDialog = (component: any, params: any) => {
+    showModal({
+      Component: component,
+      props: { ...params },
     })
   }
 
@@ -243,7 +272,18 @@ const SubscriptionItem = (props: SubscriptionItemProps) => {
               </Button>
             </Stack>
             <Stack direction={'row'} sx={{ whiteSpace: 'nowrap' }} gap={2}>
-              <Button variant="contained" color="secondary" sx={{ ...style.button }}>
+              <Button
+                variant="contained"
+                color="secondary"
+                sx={{ ...style.button }}
+                onClick={() =>
+                  handleShowDialog(EditOrderDateDialog, {
+                    subscriptionId: subscriptionDetailsData?.id as string,
+                    orderDate: subscriptionGetters.nextOrderItemDate(subscriptionDetailsData),
+                    onOrderDateUpdate: handleOrderDateUpdate,
+                  })
+                }
+              >
                 {t('edit-order-date')}
               </Button>
               <Button variant="contained" color="secondary" sx={{ ...style.button }}>
