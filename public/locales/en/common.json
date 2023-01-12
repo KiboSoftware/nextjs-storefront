@@ -306,5 +306,11 @@
   "place-an-order-of-this-subscription-now": "Place an order of this subscription now?",
   "skip-next-subscription-confirmation": "Are you sure you want to skip next subscription order?",
   "next-order-skip": "Skipped next subscription order. Next order will be placed on ",
-  "yes": "Yes"
+  "yes": "Yes",
+  "select-next-order-date": "Select next order date",
+  "date-must-be-in-the-future": "Date must be in the future",
+  "next-order-date": "Nex order date: ",
+  "enter-date-in-format": "Enter date in format MM/DD/YYYY",
+  "order-date-is-required": "Order date is required",
+  "order-date-must-be-valid": "Order date must be valid"
 }

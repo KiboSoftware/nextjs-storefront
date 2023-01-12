@@ -8,3 +8,4 @@ export { default as ConfirmationDialog } from './ConfirmationDialog/Confirmation
 export { default as OrderReturnItemsDialog } from './OrderReturnItemsDialog/OrderReturnItemsDialog'
 export { default as EditSubscriptionFrequencyDialog } from './EditSubscriptionFrequencyDialog/EditSubscriptionFrequencyDialog'
 export { default as AddressFormDialog } from './AddressFormDialog/AddressFormDialog'
+export { default as EditOrderDateDialog } from './EditOrderDateDialog/EditOrderDateDialog'
