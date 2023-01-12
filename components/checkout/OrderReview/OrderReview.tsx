@@ -67,7 +67,7 @@ const StyledActions = styled(Link)(({ theme }: { theme: Theme }) => ({
 }))
 
 const OrderReview = (props: OrderReviewProps) => {
-  const { checkout, isMultiShipEnabled = true } = props
+  const { checkout, isMultiShipEnabled } = props
 
   const { steps, setActiveStep } = useCheckoutStepContext()
   const { t } = useTranslation('common')

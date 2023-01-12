@@ -26,20 +26,13 @@ function ProductDetailSkeleton() {
           </Skeleton>
         </Box>
 
-        <Box paddingY={1}>
-          <Skeleton variant="rectangular" height={55} width={'50%'} />
-        </Box>
-
-        <Box paddingY={1}>
-          <Skeleton variant="rectangular" height={55} width={'50%'} />
-        </Box>
-        <Box paddingY={1}>
-          <Skeleton variant="rectangular" height={55} width={'50%'} />
-        </Box>
-
-        <Box paddingY={1}>
-          <Skeleton variant="rectangular" height={55} width={'50%'} />
-        </Box>
+        {Array(4)
+          .fill(1)
+          .map((each) => (
+            <Box paddingY={1} key={each}>
+              <Skeleton variant="rectangular" height={55} width={'50%'} />
+            </Box>
+          ))}
       </Grid>
     </Grid>
   )
