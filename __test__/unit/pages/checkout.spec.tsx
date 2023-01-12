@@ -58,7 +58,7 @@ describe('[pages] Checkout', () => {
         .fn()
         .mockImplementationOnce(async () => mockCheckout)
       const expectedProps = {
-        props: { checkoutId, checkout: mockCheckout, isMultiShipEnabled: true },
+        props: { checkoutId, checkout: mockCheckout, isMultiShipEnabled: false },
       }
 
       const ssrProps = await getServerSideProps({ params: { checkoutId } } as any)
