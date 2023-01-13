@@ -1,14 +1,18 @@
 import React from 'react'
 
 import { composeStories } from '@storybook/testing-react'
-import { render, screen, waitFor, cleanup } from '@testing-library/react'
+import { render, screen, cleanup } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 
+// eslint-disable-next-line import/order
+import PaymentStep from './PaymentStep'
 // eslint-disable-next-line import/order
 import * as stories from './PaymentStep.stories' // import all stories from the stories file
 const { Common } = composeStories(stories)
 
 import { orderMock } from '@/__mocks__/stories'
+import { createQueryClientWrapper } from '@/__test__/utils'
+import { CheckoutStepProvider, STEP_STATUS } from '@/context'
 import { tokenizeCreditCardPayment } from '@/lib/helpers'
 import { Address, CardForm } from '@/lib/types'
 
@@ -149,7 +153,7 @@ describe('[components] PaymentStep', () => {
       expect(await screen.findByTestId('address-form-mock')).toBeVisible()
     })
 
-    it('should call handleTokenization', async () => {
+    it('should call handleTokenization and saveCardDataToOrder', async () => {
       const { user } = setup({
         checkout: { ...orderMock.checkout, payments: [] },
       })
@@ -169,11 +173,95 @@ describe('[components] PaymentStep', () => {
       await user.click(screen.getByRole('button', { name: /save-payment-method/ }))
 
       expect(tokenizeCreditCardPayment).toHaveBeenCalled()
-      await waitFor(() => {
-        expect(screen.getByTestId('saved-payment-method-view-mock')).toBeVisible()
+
+      expect(screen.getAllByTestId('saved-payment-method-view-mock').length).toBe(1)
+    })
+  })
+
+  describe('No Saved Customer Address but Previously saved Payment Info is available', () => {
+    it('should call handleInitialCardDetailsLoad', () => {
+      setup({
+        checkout: orderMock.checkout,
       })
 
       expect(screen.getAllByTestId('saved-payment-method-view-mock').length).toBe(1)
+    })
+  })
+
+  describe(' Saved Customer Address and Previously saved Payment Info is available', () => {
+    let mockIsAuthenticated = false
+    const userMock = {
+      id: 0,
+    }
+    jest.mock('@/context/AuthContext', () => ({
+      useAuthContext: () => {
+        return {
+          isAuthenticated: mockIsAuthenticated,
+          user: userMock,
+        }
+      },
+    }))
+    it('should call handleInitialCardDetailsLoad and add a new Card details', async () => {
+      mockIsAuthenticated = true
+      userMock.id = 1012
+      const { user } = setup({
+        checkout: orderMock.checkout,
+      })
+
+      expect(screen.getAllByTestId('saved-payment-method-view-mock').length).toBe(1)
+
+      const addPaymentMethodButton = screen.getByRole('button', {
+        name: /add-payment-method/i,
+      })
+
+      await user.click(addPaymentMethodButton)
+
+      // mocking card and address form function calls
+      await user.click(screen.getByRole('button', { name: /Change Card Form Status/ }))
+      await user.click(screen.getByRole('button', { name: /Change Address Form Status/ }))
+      await user.click(screen.getByRole('button', { name: /Save Card Data/ }))
+      await user.click(screen.getByRole('button', { name: /Save Address/ }))
+
+      await user.click(screen.getByRole('button', { name: /save-payment-method/ }))
+
+      expect(tokenizeCreditCardPayment).toHaveBeenCalled()
+
+      expect(screen.getAllByTestId('saved-payment-method-view-mock').length).toBe(2)
+    })
+
+    it('should call saveCardDataToOrder function', () => {
+      const onVoidPaymentMock = jest.fn()
+      const onAddPaymentMock = jest.fn()
+      mockIsAuthenticated = true
+      userMock.id = 1012
+
+      jest.mock('@/context/AuthContext', () => ({
+        useAuthContext: () => {
+          return {
+            isAuthenticated: mockIsAuthenticated,
+            user: userMock,
+          }
+        },
+      }))
+      render(
+        <CheckoutStepProvider
+          steps={['details', 'shipping', 'payment', 'review']}
+          initialActiveStep={2}
+          currentStepStatus={STEP_STATUS.SUBMIT}
+        >
+          <PaymentStep
+            checkout={orderMock.checkout}
+            onVoidPayment={onVoidPaymentMock}
+            onAddPayment={onAddPaymentMock}
+          />
+        </CheckoutStepProvider>,
+        {
+          wrapper: createQueryClientWrapper(),
+        }
+      )
+
+      expect(onVoidPaymentMock).toBeCalled()
+      expect(onAddPaymentMock).toBeCalled()
     })
   })
 })
