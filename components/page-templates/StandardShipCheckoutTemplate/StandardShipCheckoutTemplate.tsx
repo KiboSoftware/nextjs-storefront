@@ -12,11 +12,15 @@ import {
   useDeleteOrderCouponMutation,
   useUpdateCheckoutPersonalInfoMutation,
   PersonalInfo,
+  useUpdateCheckoutBillingInfoMutation,
+  useCreateCheckoutPaymentMethodMutation,
+  useUpdateOrderPaymentActionMutation,
+  useCreateOrderMutation,
 } from '@/hooks'
-import { userGetters } from '@/lib/getters'
+import { orderGetters, userGetters } from '@/lib/getters'
 import type { PersonalDetails } from '@/lib/types'
 
-import type { CustomerContact, CrOrder, CrOrderInput } from '@/lib/gql/types'
+import type { CustomerContact, CrOrder, CrOrderInput, PaymentActionInput } from '@/lib/gql/types'
 
 interface StandardShipCheckoutProps {
   checkout: CrOrder
@@ -85,6 +89,50 @@ const StandardShipCheckoutTemplate = (props: StandardShipCheckoutProps) => {
     await updateStandardCheckoutPersonalInfo.mutateAsync(personalInfo)
   }
 
+  // Payment Step
+
+  const updateOrderPaymentAction = useUpdateOrderPaymentActionMutation()
+  const createOrderPaymentMethod = useCreateCheckoutPaymentMethodMutation()
+  const updateCheckoutBillingInfo = useUpdateCheckoutBillingInfoMutation()
+
+  const handleVoidPayment = async (
+    id: string,
+    paymentId: string,
+    paymentAction: PaymentActionInput
+  ) => {
+    await updateOrderPaymentAction.mutateAsync({
+      orderId: id as string,
+      paymentId,
+      paymentAction,
+    })
+  }
+
+  const handleAddPayment = async (id: string, paymentAction: PaymentActionInput) => {
+    await createOrderPaymentMethod.mutateAsync({ orderId: id, paymentAction })
+    await updateCheckoutBillingInfo.mutateAsync({
+      orderId: id,
+      billingInfoInput: { ...paymentAction.newBillingInfo },
+    })
+  }
+
+  //Review Step
+  const createOrder = useCreateOrderMutation()
+
+  const orderDetails = orderGetters.getCheckoutDetails(checkout as CrOrder)
+
+  const personalDetails = {
+    ...orderDetails.personalDetails,
+    showAccountFields: false,
+    password: '',
+  }
+
+  const handleCreateOrder = (checkout: CrOrder) => {
+    console.log('handleCreateOrder called standard :')
+    createOrder.mutateAsync(checkout)
+  }
+
+  const { shipItems, pickupItems } = orderGetters.getCheckoutDetails(checkout as CrOrder)
+
   return (
     <>
       <CheckoutUITemplate
@@ -102,8 +150,20 @@ const StandardShipCheckoutTemplate = (props: StandardShipCheckoutProps) => {
           userShippingAddress={userShippingAddress}
           isAuthenticated={isAuthenticated}
         />
-        <PaymentStep checkout={checkout} />
-        <ReviewStep checkout={checkout as CrOrder} onBackButtonClick={handleBack} />
+        {/* <PaymentStep
+          checkout={checkout as CrOrder}
+          onVoidPayment={handleVoidPayment}
+          onAddPayment={handleAddPayment}
+        /> */}
+        <ReviewStep
+          checkout={checkout as CrOrder}
+          isMultiShipEnabled={isMultiShipEnabled}
+          shipItems={shipItems}
+          pickupItems={pickupItems}
+          personalDetails={personalDetails}
+          orderSummaryProps={orderDetails?.orderSummary}
+          onCreateOrder={handleCreateOrder}
+        />
       </CheckoutUITemplate>
     </>
   )

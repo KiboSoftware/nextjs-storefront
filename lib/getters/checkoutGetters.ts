@@ -1,28 +1,16 @@
 import { format } from 'date-fns'
 import lodash from 'lodash'
 
-import { FulfillmentOptions } from '@/lib/constants'
-import type { ShipOption, MultiShipAddress } from '@/lib/types'
+import { FulfillmentOptions } from '../constants'
 
-import type {
-  CrOrderItem,
-  Checkout,
-  Maybe,
-  CrDestination,
-  CrContact,
-  Scalars,
-} from '@/lib/gql/types'
+import type { MultiShipAddress, ShipOption } from '../types'
+import type { CrOrderItem, Checkout, Maybe, CrDestination, CrContact } from '@/lib/gql/types'
 
 interface DestinationItemGroup {
   destinationId: string
   groupingId: string
   destination: Maybe<CrDestination> | undefined
   items: Maybe<CrOrderItem>[] | undefined
-}
-
-interface CheckoutShippingAddresses {
-  checkout: Checkout
-  savedShippingAddresses: CrContact[]
 }
 
 const buildItemsGroupFromCheckoutGroupings = (checkout: Checkout) => {
@@ -50,7 +38,13 @@ const formatDestinationAddress = (contact: CrContact) => {
   return `${firstName} ${lastNameOrSurname}, ${address?.address1}, ${address?.address2}, ${address?.cityOrTown}, ${address?.stateOrProvince}, ${address?.postalOrZipCode}, ${address?.countryCode} `
 }
 
-const getMultiShipAddresses = ({ checkout, savedShippingAddresses }: CheckoutShippingAddresses) => {
+const getMultiShipAddresses = ({
+  checkout,
+  savedShippingAddresses,
+}: {
+  checkout: Checkout
+  savedShippingAddresses: CrContact[]
+}) => {
   const destinationAddresses = checkout?.destinations?.map((destination) => {
     return {
       destinationId: destination?.id,
@@ -119,7 +113,26 @@ const getPickupItems = (checkout: Checkout): CrOrderItem[] => {
 const getShipItems = (checkout: Checkout): CrOrderItem[] =>
   getItemsByFulfillment(checkout, FulfillmentOptions.SHIP)
 
-const getFormattedDate = (dateInput: Scalars['DateTime']) => {
+const getCheckoutDetails = (checkout: Checkout) => {
+  return {
+    shipItems: getShipItems(checkout),
+    pickupItems: getPickupItems(checkout),
+  }
+}
+const getTaxTotal = (checkout: Checkout) => {
+  return checkout?.itemTaxTotal + checkout?.shippingTaxTotal + checkout?.handlingTaxTotal
+}
+
+const getOrderAddresses = (checkout: Checkout) => {
+  const destinationIds = checkout?.groupings?.map((group) => group?.destinationId)
+  const destinations = checkout.destinations?.filter((destination) =>
+    destinationIds?.includes(destination?.id)
+  )
+  const addresses = destinations?.map((destination) => destination?.destinationContact)
+  return addresses
+}
+
+const getFormattedDate = (dateInput: string | number | Date) => {
   return dateInput ? format(new Date(dateInput), 'MMMM dd, yyyy, hh:mm a zzz') : ''
 }
 
@@ -133,5 +146,8 @@ export const checkoutGetters = {
   getShippingMethodCode,
   getShipItems,
   getPickupItems,
+  getCheckoutDetails,
+  getTaxTotal,
+  getOrderAddresses,
   getFormattedDate,
 }
