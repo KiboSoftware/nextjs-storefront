@@ -1,6 +1,6 @@
 import { format } from 'date-fns'
 
-import { SUBSCRIPTION_FREQUENCY } from '../constants'
+import { ProductAttribute } from '../constants'
 import { addressGetters } from '@/lib/getters'
 
 import type { SbContact, SbProduct, Subscription } from '@/lib/gql/types'
@@ -40,8 +40,9 @@ const getSubscriptionDetails = (subscription: any) => {
 const getFrequencyValues = (product: SbProduct | null | undefined) => {
   if (!product) return
 
-  return product?.properties?.find((property) => property?.attributeFQN === SUBSCRIPTION_FREQUENCY)
-    ?.values
+  return product?.properties?.find(
+    (property) => property?.attributeFQN === ProductAttribute.SUBSCRIPTION_FREQUENCY
+  )?.values
 }
 
 const getFormattedAddress = (subscription: Subscription) => {

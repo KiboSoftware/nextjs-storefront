@@ -111,5 +111,14 @@ export const OrderReturnType = {
   REFUND: 'Refund',
 }
 
-export const SUBSCRIPTION_FREQUENCY = 'system~subscription-frequency'
+export const ProductAttribute = {
+  SUBSCRIPTION_FREQUENCY: 'system~subscription-frequency',
+  SUBSCRIPTION_Mode: 'system~subscription-mode',
+}
+
 export const CheckoutUpdateMode = { APPLY_TO_ORIGINAL: 'ApplyToOriginal' }
+
+export enum PurchaseTypes {
+  SUBSCRIPTION = 'Subscription',
+  ONETIMEPURCHASE = 'One-time purchase',
+}

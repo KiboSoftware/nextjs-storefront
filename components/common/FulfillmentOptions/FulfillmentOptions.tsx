@@ -66,6 +66,7 @@ const FulfillmentOptions = (props: FulfillmentOptionsProps) => {
   return (
     <Box data-testid="fulfillmentOptions">
       <KiboRadio
+        title="Fulfillment Options:"
         radioOptions={radioOptions}
         selected={selected}
         onChange={onFulfillmentOptionChange}
