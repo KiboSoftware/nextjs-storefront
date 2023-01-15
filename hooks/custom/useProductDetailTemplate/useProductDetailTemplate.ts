@@ -103,17 +103,22 @@ export const useProductDetailTemplate = (props: UseProductDetailTemplateProps) =
     })
 
     try {
-      const { options, variationProductCode, purchasableState, productImages }: ConfiguredProduct =
-        await configureProduct.mutateAsync({
-          productCode,
-          updatedOptions: updatedOptions.map((option) => {
-            return {
-              attributeFQN: option.attributeFQN,
-              shopperEnteredValue: option.shopperEnteredValue,
-              value: option.value,
-            }
-          }),
-        })
+      const {
+        options,
+        variationProductCode,
+        purchasableState,
+        productImages,
+        inventoryInfo,
+      }: ConfiguredProduct = await configureProduct.mutateAsync({
+        productCode,
+        updatedOptions: updatedOptions.map((option) => {
+          return {
+            attributeFQN: option.attributeFQN,
+            shopperEnteredValue: option.shopperEnteredValue,
+            value: option.value,
+          }
+        }),
+      })
 
       const responseOptions = options
         ?.filter((option) => option?.values?.some((val) => val?.isSelected))
@@ -132,6 +137,7 @@ export const useProductDetailTemplate = (props: UseProductDetailTemplateProps) =
         variationProductCode: variationProductCode,
         options: options,
         purchasableState: purchasableState,
+        inventoryInfo,
         content: {
           ...currentProduct.content,
           productImages: productImages,

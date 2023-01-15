@@ -98,10 +98,6 @@ const ProductDetailTemplate = (props: ProductDetailTemplateProps) => {
     product,
     purchaseLocation,
   })
-  const { data: locationInventory } = useProductLocationInventoryQueries(
-    product?.productCode as string,
-    selectedFulfillmentOption?.location?.code as string
-  )
 
   // Getters
   const {
@@ -124,13 +120,18 @@ const ProductDetailTemplate = (props: ProductDetailTemplateProps) => {
     fulfillmentMethod: selectedFulfillmentOption?.method,
     purchaseLocationCode: selectedFulfillmentOption?.location?.code as string,
   })
+  const { data: locationInventory } = useProductLocationInventoryQueries(
+    (variationProductCode || productCode) as string,
+    selectedFulfillmentOption?.location?.code as string
+  )
+
   const quantityLeft = productGetters.getAvailableItemCount(
     currentProduct,
     locationInventory,
     selectedFulfillmentOption?.method
   )
   const fulfillmentOptions = productGetters.getProductFulfillmentOptions(
-    product,
+    currentProduct,
     {
       name: selectedFulfillmentOption?.location?.name,
     },
