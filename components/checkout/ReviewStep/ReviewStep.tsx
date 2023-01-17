@@ -26,7 +26,6 @@ import {
   ReviewProductItemsWithAddresses,
 } from '@/components/common'
 import type { OrderPriceProps } from '@/components/common/OrderPrice/OrderPrice'
-import { CommonCheckout } from '@/components/page-templates/CheckoutUITemplate/CheckoutUITemplate'
 import { useCheckoutStepContext, useAuthContext } from '@/context'
 import { isPasswordValid } from '@/lib/helpers/validations/validations'
 
@@ -41,7 +40,7 @@ export interface PersonalDetails {
 }
 
 interface ReviewStepProps {
-  checkout: CommonCheckout<CrOrder, Checkout>
+  checkout: CrOrder | Checkout
   shipItems: any
   pickupItems: any
   personalDetails: any
@@ -191,6 +190,16 @@ const ReviewStep = (props: ReviewStepProps) => {
         </Stack>
       )}
 
+      {!isMultiShipEnabled && pickupItems && pickupItems.length > 0 && (
+        <Stack gap={4}>
+          <Typography variant="h3" component="h3" sx={{ fontWeight: 'bold' }} color="text.primary">
+            {t('pickup-in-store')}
+          </Typography>
+          <ProductItemList items={pickupItems} />
+          <Divider sx={{ mt: '1.438rem', mb: '1.188rem' }} />
+        </Stack>
+      )}
+
       {/* multiShip array will be used later after API is handled instead on shipItems */}
       {isMultiShipEnabled && shipItems && shipItems.length > 0 && (
         <Stack gap={4}>
@@ -199,16 +208,6 @@ const ReviewStep = (props: ReviewStepProps) => {
           </Typography>
           <ReviewProductItemsWithAddresses items={shipItems} />
           <Divider sx={{ mb: '1.438rem' }} />
-        </Stack>
-      )}
-
-      {!isMultiShipEnabled && pickupItems && pickupItems.length > 0 && (
-        <Stack gap={4}>
-          <Typography variant="h3" component="h3" sx={{ fontWeight: 'bold' }} color="text.primary">
-            {t('pickup-in-store')}
-          </Typography>
-          <ProductItemList items={pickupItems} />
-          <Divider sx={{ mt: '1.438rem', mb: '1.188rem' }} />
         </Stack>
       )}
 
@@ -224,6 +223,7 @@ const ReviewStep = (props: ReviewStepProps) => {
               data-testid="termsConditions"
               size="medium"
               color="primary"
+              value={isAgreeWithTermsAndConditions}
               onChange={handleAgreeTermsConditions}
             />
           }
@@ -247,6 +247,7 @@ const ReviewStep = (props: ReviewStepProps) => {
                       size="medium"
                       color="primary"
                       disabled={isAuthenticated}
+                      value={field.value}
                       onChange={(_name, value) => field.onChange(value)}
                     />
                   }
@@ -262,7 +263,7 @@ const ReviewStep = (props: ReviewStepProps) => {
             <Controller
               name="firstName"
               control={control}
-              defaultValue={personalDetails?.firstName}
+              defaultValue={personalDetails?.firstName || ''}
               render={({ field }) => (
                 <KiboTextBox
                   value={field.value}
@@ -279,7 +280,7 @@ const ReviewStep = (props: ReviewStepProps) => {
             <Controller
               name="lastNameOrSurname"
               control={control}
-              defaultValue={personalDetails?.lastNameOrSurname}
+              defaultValue={personalDetails?.lastNameOrSurname || ''}
               render={({ field }) => (
                 <KiboTextBox
                   value={field.value}
@@ -296,7 +297,7 @@ const ReviewStep = (props: ReviewStepProps) => {
             <Controller
               name="password"
               control={control}
-              defaultValue={personalDetails?.password}
+              defaultValue={personalDetails?.password || ''}
               render={({ field }) => (
                 <KiboTextBox
                   value={field.value}

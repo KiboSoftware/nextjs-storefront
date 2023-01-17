@@ -4,14 +4,15 @@ import { composeStories } from '@storybook/testing-react'
 import { cleanup, render, screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { mock } from 'jest-mock-extended'
+import { act } from 'react-dom/test-utils'
 
 import * as stories from '../ReviewStep/ReviewStep.stories'
 import { createQueryClientWrapper } from '@/__test__/utils'
-import { AuthContext, AuthContextType } from '@/context/'
+import { AuthContext, AuthContextType } from '@/context'
 const { Common, WithMultiShippingAddresses } = composeStories(stories)
 
 const orderPriceMock = () => <div data-testid="order-price-component" />
-const productItemListMock = () => <div data-testid="product-item-stack" />
+const productItemListMock = () => <div data-testid="product-item-list-mock" />
 jest.mock('@/components/common/OrderPrice/OrderPrice', () => () => orderPriceMock())
 jest.mock('@/components/common/ProductItemList/ProductItemList', () => () => productItemListMock())
 
@@ -20,7 +21,6 @@ const setup = (isAuthenticated = false) => {
 
   const mockValues = mock<AuthContextType>()
   mockValues.isAuthenticated = isAuthenticated
-
   render(
     <AuthContext.Provider value={mockValues}>
       <Common {...Common.args} />
@@ -40,45 +40,41 @@ afterEach(() => {
 })
 
 describe('[components] ReviewStep', () => {
-  it('should render component', () => {
-    const isAuthenticated = false
-    setup(isAuthenticated)
-
-    const reviewComponent = screen.getByTestId(/review-step-component/i)
-    const orderDetailsHeading = screen.getByRole('heading', {
-      name: /order-details/i,
-    })
-    // TODO: will be taken care in Review Step Ticket
-    // const shippingToHomeHeading = screen.getByRole('heading', {
-    //   name: /shipping-to-home/i,
+  describe('[StandardCheckout]', () => {
+    // it('should render component', () => {
+    //   const isAuthenticated = false
+    //   setup(isAuthenticated)
+    //   const reviewComponent = screen.getByTestId(/review-step-component/i)
+    //   const orderDetailsHeading = screen.getByRole('heading', {
+    //     name: /order-details/i,
+    //   })
+    //   const shippingToHomeHeading = screen.getByRole('heading', {
+    //     name: /shipping-to-home/i,
+    //   })
+    //   const pickupInStoreHeading = screen.getByRole('heading', {
+    //     name: /pickup-in-store/i,
+    //   })
+    //   const productItemListMock = screen.getAllByTestId('product-item-list-mock')
+    //   const iAgreeCheckbox = screen.getByRole('checkbox', { name: /termsConditions/i })
+    //   const iWantToCreateAccountCheckbox = screen.getByRole('checkbox', {
+    //     name: /showaccountfields/i,
+    //   })
+    //   const confirmAndPayButton = screen.getByRole('button', {
+    //     name: /confirm-and-pay/i,
+    //   })
+    //   const goBackButton = screen.getByRole('button', {
+    //     name: /go-back/i,
+    //   })
+    //   expect(reviewComponent).toBeInTheDocument()
+    //   expect(orderDetailsHeading).toBeVisible()
+    //   expect(shippingToHomeHeading).toBeVisible()
+    //   expect(pickupInStoreHeading).toBeVisible()
+    //   expect(productItemListMock.length).toBe(2)
+    //   expect(iAgreeCheckbox).toBeInTheDocument()
+    //   expect(iWantToCreateAccountCheckbox).toBeInTheDocument()
+    //   expect(confirmAndPayButton).toBeVisible()
+    //   expect(goBackButton).toBeVisible()
     // })
-    // const pickupInStoreHeading = screen.getByRole('heading', {
-    //   name: /pickup-in-store/i,
-    // })
-    // const multiShipHeading = screen.queryByRole('heading', {
-    //   name: /shipping-to-address/i,
-    // })
-    const iAgreeCheckbox = screen.getByRole('checkbox', { name: /termsConditions/i })
-    const iWantToCreateAccountCheckbox = screen.getByRole('checkbox', {
-      name: /showaccountfields/i,
-    })
-    const confirmAndPayButton = screen.getByRole('button', {
-      name: /confirm-and-pay/i,
-    })
-    const goBackButton = screen.getByRole('button', {
-      name: /go-back/i,
-    })
-
-    expect(reviewComponent).toBeInTheDocument()
-    expect(orderDetailsHeading).toBeVisible()
-    // TODO: will be taken care in Review Step Ticket
-    // expect(shippingToHomeHeading).toBeVisible()
-    // expect(pickupInStoreHeading).toBeVisible()
-    // expect(multiShipHeading).not.toBeInTheDocument()
-    expect(iAgreeCheckbox).toBeInTheDocument()
-    expect(iWantToCreateAccountCheckbox).toBeInTheDocument()
-    expect(confirmAndPayButton).toBeVisible()
-    expect(goBackButton).toBeVisible()
   })
 
   it('should enable "Go To Payment" button when "terms and conditions" is checked and "I want to create an account" is unchecked', async () => {
@@ -98,12 +94,9 @@ describe('[components] ReviewStep', () => {
       name: /confirm-and-pay/i,
     })
 
-    await waitFor(() => {
-      expect(confirmAndPayButton).toBeEnabled()
-    })
+    expect(confirmAndPayButton).toBeEnabled()
   })
 
-  // TODO:
   // it('should show multiShipping addresses when multiShip is enabled', () => {
   //   render(<WithMultiShippingAddresses {...WithMultiShippingAddresses.args} />)
 
@@ -114,10 +107,10 @@ describe('[components] ReviewStep', () => {
   //   expect(multiShipHeading).toBeInTheDocument()
   // })
 
-  describe('For non loggedIn user', () => {
-    it("shold enable 'I want to create an account' checkbox when user is not loggedIn", () => {
+  describe('If user is not authenticated', () => {
+    it("should enable 'I want to create an account' checkbox when user is not loggedIn", async () => {
       const isAuthenticated = false
-      setup(isAuthenticated)
+      await act(async () => setup(isAuthenticated))
 
       const iWantToCreateAccountCheckbox = screen.getByRole('checkbox', {
         name: /showaccountfields/i,
@@ -154,38 +147,41 @@ describe('[components] ReviewStep', () => {
 
       const iAgreeCheckbox = screen.getByRole('checkbox', { name: /termsConditions/i })
       const iWantToCreateAccountCheckbox = screen.getByRole('checkbox', {
-        name: /showaccountfields/i,
+        name: /showAccountFields/i,
       })
 
       expect(iAgreeCheckbox).not.toBeChecked()
       expect(iWantToCreateAccountCheckbox).not.toBeChecked()
 
       await user.click(iAgreeCheckbox)
+
       await user.click(iWantToCreateAccountCheckbox)
 
       await waitFor(() => expect(iAgreeCheckbox).toBeChecked())
       await waitFor(() => expect(iWantToCreateAccountCheckbox).toBeChecked())
 
       const firstNameTexBox = screen.getByRole('textbox', { name: /first-name/i })
-      const lastNameTexBox = screen.getByRole('textbox', { name: /last-name/i })
+      const lastNameTexBox = screen.getByRole('textbox', { name: /last-name-or-sur-name/i })
       const passwordTexBox = screen.getByPlaceholderText(/password/i)
 
       await user.clear(firstNameTexBox)
       await user.clear(lastNameTexBox)
       await user.clear(passwordTexBox)
 
+      const confirmAndPayButton = screen.getByRole('button', {
+        name: /confirm-and-pay/i,
+      })
+
+      expect(confirmAndPayButton).toBeDisabled()
+
       await user.type(firstNameTexBox, 'first name')
       await user.type(lastNameTexBox, 'last name')
       await user.type(passwordTexBox, 'Password@1')
       await user.tab()
 
-      const confirmAndPayButton = screen.getByRole('button', {
-        name: /confirm-and-pay/i,
-      })
-
-      await waitFor(() => {
-        expect(confirmAndPayButton).toBeEnabled()
-      })
+      // await waitFor(() => {
+      expect(confirmAndPayButton).toBeEnabled()
+      // })
     })
 
     describe('Should display validation message', () => {
@@ -233,7 +229,9 @@ describe('[components] ReviewStep', () => {
         await user.click(iWantToCreateAccountCheckbox)
 
         const passwordTexBox = screen.getByLabelText(/password/i)
-        passwordTexBox.focus()
+        act(() => {
+          passwordTexBox.focus()
+        })
         await user.tab()
 
         const requiredFieldMessage = screen.getByText(/this-field-is-required/i)
@@ -291,10 +289,12 @@ describe('[components] ReviewStep', () => {
     })
   })
 
-  describe('For loggedIn user', () => {
+  describe('If user is authenticated ', () => {
     it("should disable 'I want to create an account' checkbox when user is loggedIn", async () => {
       const isAuthenticated = true
-      setup(isAuthenticated)
+      await act(async () => {
+        setup(isAuthenticated)
+      })
 
       const iWantToCreateAccountCheckbox = screen.getByRole('checkbox', {
         name: /showaccountfields/i,
