@@ -182,20 +182,17 @@ describe('[component] - SubscriptionItem', () => {
       )
     })
 
-    it('should save frequency when user clicks on save button', async () => {})
+    // it('should save frequency when user clicks on save button', async () => {})
   })
 
   describe('edit-order-date', () => {
-    it('should open edit-order-date Dialog when user clicks on edit-order-date button', async () => {})
-
-    it('should save Order Date when user clicks on save button', async () => {})
+    // it('should open edit-order-date Dialog when user clicks on edit-order-date button', async () => {})
+    // it('should save Order Date when user clicks on save button', async () => {})
   })
 
   describe('edit-shipping-address', () => {
-    it('should open Popover when user clicks on edit-shipping-address button', async () => {})
-
-    it('should save Shipping Address when user enters new address and clicks on save button', async () => {})
-
-    it('should save Shipping Address when user selects existing Shipping Address', async () => {})
+    // it('should open Popover when user clicks on edit-shipping-address button', async () => {})
+    // it('should save Shipping Address when user enters new address and clicks on save button', async () => {})
+    // it('should save Shipping Address when user selects existing Shipping Address', async () => {})
   })
 })
