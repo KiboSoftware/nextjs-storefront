@@ -5,7 +5,7 @@ import { productPriceMock } from '@/__mocks__/stories/productPriceMock'
 import { createQueryClientWrapper } from '@/__test__/utils/renderWithQueryClient'
 
 describe('[hooks] useProductPriceQueries', () => {
-  it('should return product search result when facet filters is selected', async () => {
+  it('should return product price', async () => {
     const { result, waitFor } = renderHook(() => useProductPriceQueries('Bot-123', false), {
       wrapper: createQueryClientWrapper(),
     })
