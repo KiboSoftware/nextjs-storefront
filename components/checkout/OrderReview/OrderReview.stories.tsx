@@ -3,6 +3,7 @@ import React from 'react'
 import { ComponentStory, ComponentMeta } from '@storybook/react'
 
 import OrderReview from './OrderReview'
+import { checkoutMock } from '@/__mocks__/stories'
 import { orderMock } from '@/__mocks__/stories/orderMock'
 
 // Common
@@ -24,6 +25,6 @@ Common.args = {
 //With multi-ship enabled
 export const WithMultiShippingAddresses = Template.bind({})
 WithMultiShippingAddresses.args = {
-  checkout: orderMock.checkout,
+  checkout: checkoutMock.checkout,
   isMultiShipEnabled: true,
 }

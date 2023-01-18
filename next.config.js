@@ -104,5 +104,6 @@ module.exports = {
     pageSize: 100,
     cacheKey: 'categoryTree',
     cacheTimeOut: 10000,
+    isMultiShipEnabled: false,
   },
 }

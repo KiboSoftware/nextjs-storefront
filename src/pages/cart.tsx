@@ -9,8 +9,8 @@ import type { NextPage, GetServerSidePropsContext } from 'next'
 export async function getServerSideProps(context: GetServerSidePropsContext) {
   const { locale, req, res } = context
   const response = await getCart(req, res)
-  const { publicRuntimeConfig } = getConfig()
-  const isMultiShipEnabled = publicRuntimeConfig.isMultiShipEnabled
+  const { serverRuntimeConfig } = getConfig()
+  const isMultiShipEnabled = serverRuntimeConfig.isMultiShipEnabled
 
   return {
     props: {
