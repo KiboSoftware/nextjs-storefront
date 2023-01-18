@@ -1,8 +1,9 @@
 import React, { useState } from 'react'
 
 import { Card, Stack, Typography, CardContent, Button } from '@mui/material'
-import { useTranslation } from 'next-i18next'
 import Popover from '@mui/material/Popover'
+import { useTranslation } from 'next-i18next'
+
 import { ProductItem } from '@/components/common'
 import {
   ConfirmationDialog,
@@ -21,7 +22,6 @@ import {
 } from '@/hooks'
 import { subscriptionGetters, productGetters } from '@/lib/getters'
 import { uiHelpers, buildSubscriptionFulfillmentInfoParams } from '@/lib/helpers'
-
 import type { Address } from '@/lib/types'
 
 import type { CrProduct, Subscription, SbSubscriptionItem } from '@/lib/gql/types'
