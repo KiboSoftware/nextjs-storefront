@@ -9,26 +9,23 @@ import dayjs, { Dayjs } from 'dayjs'
 import { useTranslation } from 'next-i18next'
 
 import { KiboDialog, KiboTextBox } from '@/components/common'
-import { useModalContext } from '@/context/ModalContext'
 
 interface EditOrderDateDialogProps {
   subscriptionId: string
   orderDate: Dayjs
   onOrderDateUpdate: (subscriptionId: string, orderDate: string) => void
+  onClose: () => void
 }
 
 const EditOrderDateDialog = (props: EditOrderDateDialogProps) => {
-  const { subscriptionId, orderDate, onOrderDateUpdate } = props
+  const { subscriptionId, orderDate, onOrderDateUpdate, onClose } = props
 
   const [selectedOrderDate, setSelectedOrderDate] = useState<Dayjs | null>(dayjs(orderDate))
 
   const { t } = useTranslation('common')
-  const { closeModal } = useModalContext()
 
   const handleOrderDateUpdate = () => {
     const nextOrderDate: string = dayjs(selectedOrderDate).format('MM/DD/YYYY')
-
-    closeModal()
     onOrderDateUpdate(subscriptionId, nextOrderDate)
   }
 
@@ -52,7 +49,7 @@ const EditOrderDateDialog = (props: EditOrderDateDialogProps) => {
           sx={{ width: '100%' }}
           variant="contained"
           color="secondary"
-          onClick={() => closeModal()}
+          onClick={() => onClose()}
         >
           {t('cancel')}
         </Button>
@@ -96,7 +93,7 @@ const EditOrderDateDialog = (props: EditOrderDateDialogProps) => {
         </>
       }
       customMaxWidth="30rem"
-      onClose={closeModal}
+      onClose={onClose}
     />
   )
 }

@@ -26,6 +26,8 @@ const getSubscriptionsQuery = /* GraphQL */ `
               countryCode
             }
           }
+          shippingMethodCode
+          shippingMethodName
         }
         frequency {
           unit

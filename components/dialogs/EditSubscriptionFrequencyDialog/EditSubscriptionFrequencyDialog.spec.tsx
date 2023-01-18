@@ -72,10 +72,16 @@ afterEach(() => {
 })
 
 describe('[components] EditSubscriptionFrequencyDialog', () => {
+  const onFrequencySave = jest.fn()
+
   const setup = () => {
-    return render(<Common {...Common.args} />, {
+    render(<Common {...Common.args} onFrequencySave={onFrequencySave} />, {
       wrapper: ModalContextProvider,
     })
+
+    return {
+      onFrequencySave,
+    }
   }
 
   it('should render component', async () => {
@@ -125,8 +131,8 @@ describe('[components] EditSubscriptionFrequencyDialog', () => {
     expect(confirmButtton).toBeEnabled()
   })
 
-  it('should save frequency and display SnackBar when user selects frequency and clicks on Confirm button', async () => {
-    setup()
+  it('should call callback function when user selects frequency and clicks on Confirm button', async () => {
+    const { onFrequencySave } = setup()
 
     // Select Frequency
     const kiboSelectBtn = screen.getByRole('button', {
@@ -146,8 +152,13 @@ describe('[components] EditSubscriptionFrequencyDialog', () => {
     expect(confirmlButton).toBeEnabled()
     await user.click(confirmlButton)
 
-    expect(closeModalMock).toHaveBeenCalledTimes(1)
-    expect(showSnackbarMock).toHaveBeenCalledTimes(1)
+    expect(onFrequencySave).toHaveBeenCalledWith({
+      subscriptionId: '1',
+      frequencyInput: {
+        value: 45,
+        unit: 'Day',
+      },
+    })
   })
 
   it('should close modal when user clicks on Cancel button', async () => {
