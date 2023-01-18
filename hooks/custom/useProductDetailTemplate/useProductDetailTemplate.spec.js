@@ -15,6 +15,7 @@ jest.mock('@/hooks', () => ({
           variationProductCode: mockConfigureProductOptionsResponse.variationProductCode,
           productImages: mockConfigureProductOptionsResponse.productImages,
           purchasableState: mockConfigureProductOptionsResponse.purchasableState,
+          inventoryInfo: mockConfigureProductOptionsResponse.inventoryInfo,
         }),
       isLoading: false,
       isSuccess: true,
@@ -59,6 +60,7 @@ describe('[component] Product Detail Template data: useProductDetailTemplate', (
         productImages: mockConfigureProductOptionsResponse.productImages,
       },
       purchasableState: mockConfigureProductOptionsResponse.purchasableState,
+      inventoryInfo: mockConfigureProductOptionsResponse.inventoryInfo,
     })
   })
 
