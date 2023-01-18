@@ -4,6 +4,7 @@ import { ComponentStory, ComponentMeta } from '@storybook/react'
 
 import SubscriptionItem from './SubscriptionItem'
 import { subscriptionItemMock } from '@/__mocks__/stories/subscriptionCollectionMock'
+import { DialogRoot, ModalContextProvider, SnackbarContextProvider, SnackbarRoot } from '@/context'
 
 export default {
   title: 'Subscription/SubscriptionItem',
@@ -14,7 +15,15 @@ export default {
   },
 } as ComponentMeta<typeof SubscriptionItem>
 
-const Template: ComponentStory<typeof SubscriptionItem> = (args) => <SubscriptionItem {...args} />
+const Template: ComponentStory<typeof SubscriptionItem> = ({ ...args }) => (
+  <ModalContextProvider>
+    <SnackbarContextProvider>
+      <DialogRoot />
+      <SnackbarRoot />
+      <SubscriptionItem {...args} />
+    </SnackbarContextProvider>
+  </ModalContextProvider>
+)
 
 export const Common = Template.bind({})
 

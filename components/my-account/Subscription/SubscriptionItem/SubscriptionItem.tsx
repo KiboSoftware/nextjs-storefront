@@ -16,15 +16,15 @@ import { useModalContext, useSnackbarContext } from '@/context'
 import {
   useSkipNextSubscriptionMutation,
   useOrderSubscriptionNowMutation,
-  useUpdateSubscriptionFulfillmentInfoMutation,
   useEditSubscriptionFrequencyMutation,
   useUpdateSubscriptionNextOrderDateMutation,
+  useUpdateSubscriptionFulfillmentInfoMutation,
 } from '@/hooks'
 import { subscriptionGetters, productGetters } from '@/lib/getters'
 import { uiHelpers, buildSubscriptionFulfillmentInfoParams } from '@/lib/helpers'
 import type { Address } from '@/lib/types'
 
-import type { CrProduct, Subscription, SbSubscriptionItem } from '@/lib/gql/types'
+import type { CrProduct, Subscription } from '@/lib/gql/types'
 
 interface SubscriptionItemProps {
   subscriptionDetailsData: Subscription
@@ -98,45 +98,21 @@ const SubscriptionItem = (props: SubscriptionItemProps) => {
   }
 
   // Ship An Item Now
-  const handleShipItemNow = (param: { id: string }) => {
-    showModal({
-      Component: ConfirmationDialog,
-      props: {
-        onConfirm: () =>
-          orderSubscriptionNow.mutateAsync({
-            subscriptionId: param.id,
-          }),
-        contentText: t('place-an-order-of-this-subscription-now'),
-        primaryButtonText: t('confirm'),
-      },
-    })
+  const handleShipItemNow = async () => {
+    await orderSubscriptionNow.mutateAsync({ subscriptionId: subscriptionDetailsData.id as string })
+    closeModal()
+    showSnackbar(t('item-ordered-successfully'), 'success')
   }
 
   // Skip Shipment
-  const handleSkipNextSubscription = (subscriptionId: string) => {
-    showModal({
-      Component: ConfirmationDialog,
-      props: {
-        onConfirm: () => confirmSkipNextSubscription(subscriptionId),
-        contentText: t('skip-next-subscription-confirmation'),
-        primaryButtonText: t('yes'),
-      },
-    })
-  }
+  const confirmSkipNextSubscription = async () => {
+    const skipSubscriptionResponse = await skipNextSubscription.mutateAsync(
+      subscriptionDetailsData.id as string
+    )
 
-  const confirmSkipNextSubscription = async (subscriptionId: string) => {
-    try {
-      const skipSubscriptionResponse = await skipNextSubscription.mutateAsync(
-        subscriptionId as string
-      )
-      if (skipSubscriptionResponse?.id) {
-        const { nextOrderDate } =
-          subscriptionGetters.getSubscriptionDetails(skipSubscriptionResponse)
-        showSnackbar(t('next-order-skip') + nextOrderDate, 'success')
-      }
-      return false
-    } catch (err) {
-      console.error(err)
+    if (skipSubscriptionResponse?.id) {
+      const { nextOrderDate } = subscriptionGetters.getSubscriptionDetails(skipSubscriptionResponse)
+      showSnackbar(t('next-order-skip') + nextOrderDate, 'success')
     }
   }
 
@@ -277,7 +253,13 @@ const SubscriptionItem = (props: SubscriptionItemProps) => {
                 variant="contained"
                 color="secondary"
                 sx={{ ...style.button }}
-                onClick={() => handleShipItemNow({ id: subscriptionDetailsData?.id as string })}
+                onClick={() =>
+                  handleShowDialog(ConfirmationDialog, {
+                    contentText: t('place-an-order-of-this-subscription-now'),
+                    primaryButtonText: t('confirm'),
+                    onConfirm: handleShipItemNow,
+                  })
+                }
               >
                 {t('ship-an-item-now')}
               </Button>
@@ -290,7 +272,13 @@ const SubscriptionItem = (props: SubscriptionItemProps) => {
                 variant="contained"
                 color="secondary"
                 sx={{ ...style.button }}
-                onClick={() => handleSkipNextSubscription(subscriptionDetailsData?.id as string)}
+                onClick={() =>
+                  handleShowDialog(ConfirmationDialog, {
+                    contentText: t('skip-next-subscription-confirmation'),
+                    primaryButtonText: t('yes'),
+                    onConfirm: confirmSkipNextSubscription,
+                  })
+                }
               >
                 {t('skip-shipment')}
               </Button>
