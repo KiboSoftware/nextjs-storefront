@@ -1,488 +1,410 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 
-import '@testing-library/jest-dom'
-import { InputLabel, FormControl, Select, MenuItem } from '@mui/material'
-import { composeStories } from '@storybook/testing-react'
-import { render, screen } from '@testing-library/react'
-import userEvent from '@testing-library/user-event'
+import { Card, Stack, Typography, CardContent, Button, MenuItem } from '@mui/material'
+import Popover from '@mui/material/Popover'
+import { useTranslation } from 'next-i18next'
 
-import * as stories from './SubscriptionItem.stories'
-import { subscriptionMock } from '@/__mocks__/stories'
-import { subscriptionItemMock } from '@/__mocks__/stories'
-import { createQueryClientWrapper } from '@/__test__/utils'
-import { subscriptionGetters } from '@/lib/getters'
+import { ProductItem, KiboSelect } from '@/components/common'
+import {
+  ConfirmationDialog,
+  EditSubscriptionFrequencyDialog,
+  EditOrderDateDialog,
+  AddressFormDialog,
+} from '@/components/dialogs'
+import { ProductOption } from '@/components/product'
+import { useModalContext, useSnackbarContext } from '@/context'
+import {
+  useSkipNextSubscriptionMutation,
+  useOrderSubscriptionNowMutation,
+  useEditSubscriptionFrequencyMutation,
+  useUpdateSubscriptionNextOrderDateMutation,
+  useUpdateSubscriptionFulfillmentInfoMutation,
+} from '@/hooks'
+import { subscriptionGetters, productGetters } from '@/lib/getters'
+import { uiHelpers, buildSubscriptionFulfillmentInfoParams } from '@/lib/helpers'
 import type { Address } from '@/lib/types'
-const { Common } = composeStories(stories)
-const subscriptionItem = subscriptionItemMock?.items
 
-// Types
-interface OnFrequencySave {
-  subscriptionId: string
-  frequencyInput: {
-    value: number
-    unit: string
-  }
-}
-interface EditSubscriptionFrequencyDialogProps {
-  onFrequencySave: (params: OnFrequencySave) => void
-  onClose: () => void
+import type { CrProduct, Subscription, SbContact } from '@/lib/gql/types'
+
+export interface FulfillmentInfo {
+  formattedAddress: string
+  fulfillmentContact: SbContact
 }
 
-interface EditOrderDateDialogProps {
-  onOrderDateUpdate: (subscriptionId: string, orderDate: string) => void
-  onClose: () => void
+interface SubscriptionItemProps {
+  subscriptionDetailsData: Subscription
+  fulfillmentInfoList: FulfillmentInfo[]
 }
 
-interface AddressFormDialogProps {
-  onSaveAddress: (data: Address) => void
-}
-
-interface ConfirmationDialogProps {
-  onConfirm: () => void
-}
-
-interface KiboSelectProps {
-  children: React.ReactNode
-  onChange: (name: string, value: string) => void
-  value: string
-  placeholder: string
-}
-
-// Mock
-jest.mock('@/components/dialogs', () => ({
-  __esModule: true,
-  ConfirmationDialog: (props: ConfirmationDialogProps) => {
-    return (
-      <div>
-        <h1>confirmation-dialog</h1>
-        <button onClick={() => props.onConfirm()}>Confirm</button>
-      </div>
-    )
+const style = {
+  wrapIcon: {
+    display: 'flex',
+    alignItems: 'center',
+    flexWrap: 'wrap',
+    cursor: 'pointer',
   },
-  EditSubscriptionFrequencyDialog: (props: EditSubscriptionFrequencyDialogProps) => {
-    const params = {
-      subscriptionId: '',
-      frequencyInput: {
-        unit: 'Day',
-        value: 5,
-      },
-    }
-
-    return (
-      <div>
-        <h1>edit-subscription-frequency-dialog</h1>
-        <button onClick={() => props.onFrequencySave(params)}>Confirm</button>
-        <button onClick={props.onClose}>Close</button>
-      </div>
-    )
+  button: {
+    width: '100%',
+    mt: '5%',
+    ml: '0.5%',
+    px: {
+      xs: 1,
+      sm: 4,
+    },
   },
-  EditOrderDateDialog: (props: EditOrderDateDialogProps) => {
-    return (
-      <div>
-        <h1>edit-order-date-dialog</h1>
-        <button onClick={() => props.onOrderDateUpdate('1', '01/01/2030')}>Confirm</button>
-        <button onClick={props.onClose}>Close</button>
-      </div>
-    )
+  card: {
+    maxWidth: '100%',
+    border: 1,
+    borderRadius: 1,
+    mt: '1%',
   },
-  AddressFormDialog: (props: AddressFormDialogProps) => {
-    const params = {
-      contact: {
-        firstName: 'firstName',
-        lastNameOrSurname: 'lastNameOrSurname',
-        middleNameOrInitial: 'middleNameOrInitial',
-        email: 'abc@mail.com',
-        address: {
-          address1: 'address1',
-          address2: 'address2',
-          cityOrTown: 'cityOrTown',
-          countryCode: 'US',
-          postalOrZipCode: '12345',
-          stateOrProvince: 'stateOrProvince',
-        },
-        phoneNumbers: {
-          home: '123456789',
-        },
-      },
-    }
-
-    return (
-      <div>
-        <h1>address-form-dialog</h1>
-        <button onClick={() => props.onSaveAddress(params)}>Confirm</button>
-      </div>
-    )
+  subscriptionNumber: {
+    pt: {
+      xs: '2%',
+      md: '0',
+    },
+    justifyContent: {
+      xs: 'flex-start',
+      md: 'space-between',
+    },
   },
-}))
+  subscriptionItem: {
+    pt: {
+      xs: '2%',
+      md: '1%',
+    },
+    justifyContent: 'space-between',
+  },
+}
 
-jest.mock('@/components/common/KiboSelect/KiboSelect', () => ({
-  __esModule: true,
-  default: ({ children, onChange, value = '', placeholder }: KiboSelectProps) => (
-    <FormControl fullWidth>
-      <InputLabel id="demo-simple-select-label">select-shipping-address</InputLabel>
-      <Select
-        data-testid="KiboSelect"
-        labelId="KiboSelect"
-        value={value}
-        label="Shipping Address"
-        onChange={(event) => onChange(event.target.name, event.target.value)}
-      >
-        <MenuItem value={''} disabled sx={{ display: 'none' }}>
-          {placeholder}
-        </MenuItem>
-        {children}
-      </Select>
-    </FormControl>
-  ),
-}))
+const SubscriptionItem = (props: SubscriptionItemProps) => {
+  const { subscriptionDetailsData, fulfillmentInfoList } = props
 
-// Clear all mocks
-afterEach(() => {
-  jest.resetModules()
-  jest.clearAllMocks()
-})
+  const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | undefined>(undefined)
+  const [fulfillmentInfo, setFulfillmentInfo] = useState<FulfillmentInfo | undefined>(undefined)
 
-describe('[component] - SubscriptionItem', () => {
-  const setup = () => {
-    const user = userEvent.setup()
-    render(<Common />, {
-      wrapper: createQueryClientWrapper(),
+  const { getProductLink } = uiHelpers()
+  const { t } = useTranslation('common')
+  const { showModal, closeModal } = useModalContext()
+  const { showSnackbar } = useSnackbarContext()
+
+  const { orderSubscriptionNow } = useOrderSubscriptionNowMutation()
+  const { skipNextSubscription } = useSkipNextSubscriptionMutation()
+  const { editSubscriptionFrequencyMutation } = useEditSubscriptionFrequencyMutation()
+  const { updateSubscriptionNextOrderDateMutation } = useUpdateSubscriptionNextOrderDateMutation()
+  const { updateSubscriptionFulfillmentInfoMutation } =
+    useUpdateSubscriptionFulfillmentInfoMutation()
+
+  const handleShowDialog = (component: any, params: any) => {
+    setAnchorEl(undefined)
+
+    showModal({
+      Component: component,
+      props: { ...params },
     })
-    return {
-      user,
+  }
+
+  // Ship An Item Now
+  const handleShipItemNow = async () => {
+    await orderSubscriptionNow.mutateAsync({ subscriptionId: subscriptionDetailsData.id as string })
+    closeModal()
+    showSnackbar(t('item-ordered-successfully'), 'success')
+  }
+
+  // Skip Shipment
+  const confirmSkipNextSubscription = async () => {
+    const skipSubscriptionResponse = await skipNextSubscription.mutateAsync(
+      subscriptionDetailsData.id as string
+    )
+
+    if (skipSubscriptionResponse?.id) {
+      const { nextOrderDate } = subscriptionGetters.getSubscriptionDetails(skipSubscriptionResponse)
+      showSnackbar(t('next-order-skip') + nextOrderDate, 'success')
     }
   }
 
-  it('should render component', () => {
-    setup()
-    const subscriptionNumber = screen.getByText(/subscription-number/i)
-    const status = screen.getByText(/status/i)
-    const shipmentFrequency = screen.getByText(/shipment-frequency/i)
-    const nextArrivalDate = screen.getByText(/estimated-next-arrival-date/i)
-    const shipItemNowButton = screen.getByRole('button', {
-      name: /ship-an-item-now/i,
-    })
-    const skipShipmentButton = screen.getByRole('button', {
-      name: /skip-shipment/i,
-    })
-    const editFrequencyButton = screen.getByRole('button', {
-      name: /edit-frequency/i,
-    })
-    const editOrderDateButton = screen.getByRole('button', {
-      name: /edit-order-date/i,
-    })
-    const cancelAnItemButton = screen.getByRole('button', {
-      name: /cancel-an-item/i,
-    })
-    const editBillingInformationButton = screen.getByRole('button', {
-      name: /edit-billing-information/i,
-    })
-    const editShippingAddressButton = screen.getByRole('button', {
-      name: /edit-shipping-address/i,
-    })
-    const pauseSubscriptionButton = screen.getByRole('button', {
-      name: /pause-subscription/i,
-    })
-
-    expect(
-      screen.getByText(subscriptionGetters.getSubscriberName(subscriptionItem))
-    ).toBeInTheDocument()
-    expect(
-      screen.getByText(subscriptionGetters.getSubscriberAddress(subscriptionItem))
-    ).toBeInTheDocument()
-    expect(subscriptionNumber).toBeInTheDocument()
-    expect(
-      screen.getByText(subscriptionGetters.getSubscriptionNumber(subscriptionItem))
-    ).toBeVisible()
-    expect(status).toBeInTheDocument()
-    expect(
-      screen.getByText(subscriptionGetters.getSubscriptionNumber(subscriptionItem))
-    ).toBeVisible()
-    expect(shipmentFrequency).toBeInTheDocument()
-    expect(
-      screen.getByText(subscriptionGetters.getSubscriptionNumber(subscriptionItem))
-    ).toBeVisible()
-    expect(nextArrivalDate).toBeInTheDocument()
-    expect(
-      screen.getByText(subscriptionGetters.getSubscriptionNumber(subscriptionItem))
-    ).toBeVisible()
-    expect(skipShipmentButton).toBeVisible()
-    expect(shipItemNowButton).toBeVisible()
-    expect(editFrequencyButton).toBeVisible()
-    expect(editOrderDateButton).toBeVisible()
-    expect(cancelAnItemButton).toBeVisible()
-    expect(editBillingInformationButton).toBeVisible()
-    expect(editShippingAddressButton).toBeVisible()
-    expect(pauseSubscriptionButton).toBeVisible()
-  })
-
-  describe('ship-an-item-now', () => {
-    it('should open Confirmation Dialog when user clicks on ship-an-item-now button', async () => {
-      const { user } = setup()
-
-      const shipAnItemNowButton = screen.getByRole('button', {
-        name: /ship-an-item-now/i,
-      })
-
-      // Act
-      await user.click(shipAnItemNowButton)
-
-      // Assert
-      expect(screen.getByRole('heading', { level: 1 })).toHaveTextContent('confirmation-dialog')
-    })
-
-    it('should Ship Item when user clicks on Confirm button', async () => {
-      const { user } = setup()
-
-      const shipAnItemNowButton = screen.getByRole('button', {
-        name: /ship-an-item-now/i,
-      })
-
-      // Act
-      await user.click(shipAnItemNowButton)
-      const confirmButton = screen.getByRole('button', { name: /confirm/i })
-      await user.click(confirmButton)
-
-      // Assert
-      const snackbar = screen.getByText('item-ordered-successfully')
-      expect(snackbar).toBeVisible()
-    })
-  })
-
-  describe('skip-shipment', () => {
-    it('should open Confirmation Dialog when user clicks on skip-shipment button', async () => {
-      const { user } = setup()
-
-      const skipShipmentButton = screen.getByRole('button', {
-        name: /skip-shipment/i,
-      })
-
-      // Act
-      await user.click(skipShipmentButton)
-
-      // Assert
-      expect(screen.getByRole('heading', { level: 1 })).toHaveTextContent('confirmation-dialog')
-    })
-
-    it('should Skip Shipment when user clicks on Confirm button', async () => {
-      const { user } = setup()
-
-      const skipShipmentButton = screen.getByRole('button', {
-        name: /skip-shipment/i,
-      })
-
-      // Act
-      await user.click(skipShipmentButton)
-      const confirmButton = screen.getByRole('button', { name: /confirm/i })
-      await user.click(confirmButton)
-
-      // Assert
-      const { nextOrderDate } = subscriptionGetters.getSubscriptionDetails(
-        subscriptionMock.subscription
-      )
-      const snackbar = screen.getByText('next-order-skip' + nextOrderDate)
-      expect(snackbar).toBeVisible()
-    })
-  })
-
-  describe('edit-subscription-frequency', () => {
-    it('should open edit-subscription-frequency Dialog when user clicks on edit-frequency button', async () => {
-      const { user } = setup()
-
-      const editFrequencyButton = screen.getByRole('button', {
-        name: /edit-frequency/i,
-      })
-
-      // Act
-      await user.click(editFrequencyButton)
-
-      // Assert
-      expect(screen.getByRole('heading', { level: 1 })).toHaveTextContent(
-        'edit-subscription-frequency-dialog'
-      )
-    })
-
-    it('should save frequency when user clicks on Confirm button', async () => {
-      const { user } = setup()
-
-      const editFrequencyButton = screen.getByRole('button', {
-        name: /edit-frequency/i,
-      })
-
-      // Act
-      await user.click(editFrequencyButton)
-      const confirmButton = screen.getByRole('button', { name: /confirm/i })
-      await user.click(confirmButton)
-
-      // Assert
-      const snackbar = screen.getByText('subscription-frequency-updated-successfully')
-      expect(snackbar).toBeVisible()
-    })
-
-    it('should close dialog when user clicks on Close button', async () => {
-      const { user } = setup()
-
-      const editFrequencyButton = screen.getByRole('button', {
-        name: /edit-frequency/i,
-      })
-
-      // Act
-      await user.click(editFrequencyButton)
-
-      const closeButton = screen.getByRole('button', { name: /close/i })
-      await user.click(closeButton)
-
-      // Assert
-    })
-  })
-
-  describe('edit-order-date', () => {
-    it('should open edit-order-date Dialog when user clicks on edit-order-date button', async () => {
-      const { user } = setup()
-
-      const editOrderDateButton = screen.getByRole('button', {
-        name: /edit-order-date/i,
-      })
-
-      // Act
-      await user.click(editOrderDateButton)
-
-      // Assert
-      expect(screen.getByRole('heading', { level: 1 })).toHaveTextContent('edit-order-date-dialog')
-    })
-
-    it('should save Order Date when user clicks on Confirm button', async () => {
-      const { user } = setup()
-
-      const editOrderDateButton = screen.getByRole('button', {
-        name: /edit-order-date/i,
-      })
-
-      // Act
-      await user.click(editOrderDateButton)
-      const confirmButton = screen.getByRole('button', { name: /confirm/i })
-      await user.click(confirmButton)
-
-      // Assert
-      const snackbar = screen.getByText('next-order-date01/01/2030')
-      expect(snackbar).toBeVisible()
-    })
-
-    it('should close dialog when user clicks on Close button', async () => {
-      const { user } = setup()
-
-      const editOrderDateButton = screen.getByRole('button', {
-        name: /edit-order-date/i,
-      })
-
-      // Act
-      await user.click(editOrderDateButton)
-
-      const closeButton = screen.getByRole('button', { name: /close/i })
-      await user.click(closeButton)
-
-      // Assert
-    })
-  })
-
-  describe('edit-shipping-address', () => {
-    it('should open Popover when user clicks on edit-shipping-address button', async () => {
-      const { user } = setup()
-
-      const editShippingAddressButton = screen.getByRole('button', {
-        name: /edit-shipping-address/i,
-      })
-
-      // Act
-      await user.click(editShippingAddressButton)
-      const addNewAddressButton = screen.getByRole('button', {
-        name: /add-new-address/i,
-      })
-
-      // Assert
-      const kiboSelectMock = screen.getByRole('button', { expanded: false })
-      // const kiboSelectMock = screen.getByRole('button', { name: /select-shipping-address/i })
-      expect(kiboSelectMock).toBeVisible()
-      expect(addNewAddressButton).toBeVisible()
-
-      await user.click(kiboSelectMock)
-
-      Common.args?.fulfillmentInfoList?.map((fulfillmentInfo) => {
-        const fulfillmentContact = screen.getByText(`${fulfillmentInfo.formattedAddress}`)
-        expect(fulfillmentContact).toBeVisible()
-      })
-    })
-
-    it('should open address-form Dialog when user clicks on add-new-address button', async () => {
-      const { user } = setup()
-
-      const editShippingAddressButton = screen.getByRole('button', {
-        name: /edit-shipping-address/i,
-      })
-
-      // Act
-      await user.click(editShippingAddressButton)
-
-      const addNewAddressButton = screen.getByRole('button', {
-        name: /add-new-address/i,
-      })
-      expect(addNewAddressButton).toBeVisible()
-      await user.click(addNewAddressButton)
-
-      // Assert
-      expect(screen.getByRole('heading', { level: 1 })).toHaveTextContent('address-form-dialog')
-    })
-
-    it('should save Shipping Address when user enters new address and clicks on save button', async () => {
-      const { user } = setup()
-
-      const editShippingAddressButton = screen.getByRole('button', {
-        name: /edit-shipping-address/i,
-      })
-
-      // Act
-      await user.click(editShippingAddressButton)
-
-      const addNewAddressButton = screen.getByRole('button', {
-        name: /add-new-address/i,
-      })
-      expect(addNewAddressButton).toBeVisible()
-
-      await user.click(addNewAddressButton)
-      const confirmButton = screen.getByRole('button', { name: /confirm/i })
-      await user.click(confirmButton)
-
-      // Assert
-      const snackbar = screen.getByText('address-updated-successfully')
-      expect(snackbar).toBeVisible()
-    })
-
-    it('should save Shipping Address when user selects existing Shipping Address', async () => {
-      const { user } = setup()
-
-      const editShippingAddressButton = screen.getByRole('button', {
-        name: /edit-shipping-address/i,
-      })
-
-      // Act
-      await user.click(editShippingAddressButton)
-
-      const kiboSelectMock = screen.getByRole('button', { expanded: false })
-      await user.click(kiboSelectMock)
-
-      const formattedAddress =
-        Common.args &&
-        Common.args?.fulfillmentInfoList &&
-        Common.args?.fulfillmentInfoList[0] &&
-        Common.args.fulfillmentInfoList[0]?.formattedAddress
-
-      const fulfillmentOption = screen.getByText(new RegExp(String(formattedAddress)))
-
-      await user.click(fulfillmentOption)
-
-      // Assert
-      const snackbar = screen.getByText('address-updated-successfully')
-      expect(snackbar).toBeVisible()
-    })
-  })
-})
+  // Edit Frequency
+  const frequencyValues = subscriptionGetters.getFrequencyValues(
+    subscriptionDetailsData &&
+      subscriptionDetailsData.items &&
+      subscriptionDetailsData.items[0] &&
+      subscriptionDetailsData.items[0].product
+  )
+
+  const handleFrequencySave = async (params: any) => {
+    await editSubscriptionFrequencyMutation.mutateAsync(params)
+    closeModal()
+    showSnackbar(t('subscription-frequency-updated-successfully'), 'success')
+  }
+
+  // Edit Order Date
+  const handleOrderDateUpdate = async (subscriptionId: string, orderDate: string) => {
+    const params = {
+      subscriptionId: subscriptionId,
+      subscriptionNextOrderDateInput: {
+        nextOrderDate: orderDate,
+      },
+    }
+
+    await updateSubscriptionNextOrderDateMutation.mutateAsync(params)
+    closeModal()
+    showSnackbar(t('next-order-date') + orderDate, 'success')
+  }
+
+  // Cancel An Item
+  // Edit Billing Information
+
+  // Edit Shipping Address
+  const open = Boolean(anchorEl)
+  const id = open ? 'simple-popover' : undefined
+
+  const handlePopupOpen = (event: React.MouseEvent<HTMLButtonElement>) => {
+    setAnchorEl(event.currentTarget)
+  }
+
+  const handlePopupClose = () => {
+    setAnchorEl(undefined)
+  }
+
+  const handleAddNewAddress = async (data: Address) => {
+    const params = buildSubscriptionFulfillmentInfoParams(subscriptionDetailsData, data)
+    await updateSubscriptionFulfillmentInfoMutation.mutateAsync(params)
+
+    closeModal()
+    showSnackbar(t('address-updated-successfully'), 'success')
+  }
+
+  // Pause Subscription
+
+  useEffect(() => {
+    const updateAddress = async () => {
+      const contact = fulfillmentInfo?.fulfillmentContact
+
+      if (contact) {
+        await handleAddNewAddress({ contact } as Address)
+        setAnchorEl(undefined)
+        showSnackbar(t('address-updated-successfully'), 'success')
+      }
+    }
+
+    updateAddress()
+  }, [fulfillmentInfo])
+
+  return (
+    <Card sx={{ ...style.card }}>
+      <CardContent sx={{ bgcolor: 'grey.100' }}>
+        <Stack
+          direction={{ xs: 'column', md: 'row' }}
+          spacing={{ xs: '0', md: '5' }}
+          justifyContent={'space-between'}
+        >
+          <Stack direction="column">
+            <Typography variant="h4" sx={{ fontWeight: 'bold' }}>
+              {subscriptionGetters.getSubscriberName(subscriptionDetailsData)}
+            </Typography>
+            <Typography variant="h4">
+              {subscriptionGetters.getSubscriberAddress(subscriptionDetailsData)}
+            </Typography>
+          </Stack>
+          <Stack direction="column" sx={{ ...style.subscriptionNumber }}>
+            <Stack direction="row">
+              <ProductOption
+                option={{
+                  name: t('subscription-number'),
+                  value: subscriptionGetters.getSubscriptionNumber(subscriptionDetailsData),
+                }}
+                variant="h4"
+                align="right"
+              />
+            </Stack>
+            <Stack direction="row" sx={{ xs: { pl: '0' } }}>
+              <ProductOption
+                option={{
+                  name: t('status'),
+                  value: subscriptionGetters.getSubscriptionStatus(subscriptionDetailsData),
+                }}
+                variant="h4"
+                align="right"
+              />
+            </Stack>
+          </Stack>
+        </Stack>
+      </CardContent>
+      <CardContent>
+        <Stack direction={{ xs: 'column-reverse', md: 'row' }} sx={{ ...style.subscriptionItem }}>
+          <Stack direction="column" sx={{ pt: { xs: '5 %' } }}>
+            <Stack direction="row" sx={{ mt: { md: '3%' } }}>
+              {subscriptionDetailsData?.items &&
+                subscriptionDetailsData?.items?.map((subscribedProductItem) => (
+                  <ProductItem
+                    key={subscribedProductItem?.id as string}
+                    image={productGetters.handleProtocolRelativeUrl(
+                      productGetters.getProductImage(subscribedProductItem?.product as CrProduct)
+                    )}
+                    name={productGetters.getName(subscribedProductItem?.product as CrProduct)}
+                    options={productGetters.getOptions(subscribedProductItem?.product as CrProduct)}
+                    link={getProductLink(subscribedProductItem?.product?.productCode as string)}
+                  />
+                ))}
+            </Stack>
+            <Stack direction="row">
+              <Typography sx={{ pr: { xs: '5%', md: '20%' } }}>
+                {t('shipment-frequency')}
+              </Typography>
+              <Typography fontWeight="bold" pl="6%" sx={{ display: 'flex' }}>
+                {subscriptionGetters.getSubscriptionFrequency(subscriptionDetailsData)}
+              </Typography>
+            </Stack>
+            <Stack direction="row">
+              <Typography>{t('estimated-next-arrival-date')}</Typography>
+              <Typography sx={{ fontWeight: 'bold', pl: '10px' }}>
+                {subscriptionGetters.nextOrderItemDate(subscriptionDetailsData)}
+              </Typography>
+            </Stack>
+          </Stack>
+          <Stack
+            direction="column"
+            sx={{
+              pb: { xs: '5%', lg: '0' },
+              justifyContent: 'flex-end',
+            }}
+          >
+            <Stack direction={'row'} sx={{ whiteSpace: 'nowrap' }} gap={2}>
+              <Button
+                variant="contained"
+                color="secondary"
+                sx={{ ...style.button }}
+                onClick={() =>
+                  handleShowDialog(ConfirmationDialog, {
+                    contentText: t('place-an-order-of-this-subscription-now'),
+                    primaryButtonText: t('confirm'),
+                    onConfirm: handleShipItemNow,
+                  })
+                }
+              >
+                {t('ship-an-item-now')}
+              </Button>
+              <Button variant="contained" color="secondary" sx={{ ...style.button }}>
+                {t('cancel-an-item')}
+              </Button>
+            </Stack>
+            <Stack direction={'row'} sx={{ whiteSpace: 'nowrap' }} gap={2}>
+              <Button
+                variant="contained"
+                color="secondary"
+                sx={{ ...style.button }}
+                onClick={() =>
+                  handleShowDialog(ConfirmationDialog, {
+                    contentText: t('skip-next-subscription-confirmation'),
+                    primaryButtonText: t('yes'),
+                    onConfirm: confirmSkipNextSubscription,
+                  })
+                }
+              >
+                {t('skip-shipment')}
+              </Button>
+              <Button variant="contained" color="secondary" sx={{ ...style.button }}>
+                {t('edit-billing-information')}
+              </Button>
+            </Stack>
+            <Stack direction={'row'} sx={{ whiteSpace: 'nowrap' }} gap={2}>
+              <Button
+                variant="contained"
+                color="secondary"
+                sx={{ ...style.button }}
+                onClick={() =>
+                  handleShowDialog(EditSubscriptionFrequencyDialog, {
+                    subscriptionId: subscriptionDetailsData?.id as string,
+                    values: frequencyValues,
+                    onFrequencySave: handleFrequencySave,
+                    onClose: () => closeModal(),
+                  })
+                }
+              >
+                {t('edit-frequency')}
+              </Button>
+              <Button
+                variant="contained"
+                color="secondary"
+                sx={{ ...style.button }}
+                onClick={handlePopupOpen}
+              >
+                {t('edit-shipping-address')}
+              </Button>
+
+              <Popover
+                id={id}
+                open={open}
+                anchorEl={anchorEl}
+                onClose={handlePopupClose}
+                anchorOrigin={{
+                  vertical: 'bottom',
+                  horizontal: 'left',
+                }}
+              >
+                <div style={{ padding: '20px' }}>
+                  <KiboSelect
+                    name="shippingAddress"
+                    onChange={(name: string, value: string) =>
+                      setFulfillmentInfo(
+                        fulfillmentInfoList.find((item) => item.formattedAddress === value)
+                      )
+                    }
+                    placeholder={t('select-shipping-address')}
+                    value={fulfillmentInfo?.formattedAddress}
+                  >
+                    {fulfillmentInfoList?.map((item) => {
+                      return (
+                        <MenuItem key={item.formattedAddress} value={`${item.formattedAddress}`}>
+                          {item.formattedAddress}
+                        </MenuItem>
+                      )
+                    })}
+                  </KiboSelect>
+
+                  <Button
+                    variant="contained"
+                    color="primary"
+                    sx={{ ...style.button }}
+                    onClick={() =>
+                      handleShowDialog(AddressFormDialog, {
+                        subscriptionId: subscriptionDetailsData?.id as string,
+                        isUserLoggedIn: true,
+                        setAutoFocus: true,
+                        onSaveAddress: handleAddNewAddress,
+                      })
+                    }
+                  >
+                    {t('add-new-address')}
+                  </Button>
+                </div>
+              </Popover>
+            </Stack>
+            <Stack direction={'row'} sx={{ whiteSpace: 'nowrap' }} gap={2}>
+              <Button
+                variant="contained"
+                color="secondary"
+                sx={{ ...style.button }}
+                onClick={() =>
+                  handleShowDialog(EditOrderDateDialog, {
+                    subscriptionId: subscriptionDetailsData?.id as string,
+                    orderDate: subscriptionGetters.nextOrderItemDate(subscriptionDetailsData),
+                    onOrderDateUpdate: handleOrderDateUpdate,
+                    onClose: () => closeModal(),
+                  })
+                }
+              >
+                {t('edit-order-date')}
+              </Button>
+              <Button variant="contained" color="secondary" sx={{ ...style.button }}>
+                {t('pause-subscription')}
+              </Button>
+            </Stack>
+          </Stack>
+        </Stack>
+      </CardContent>
+    </Card>
+  )
+}
+
+export default SubscriptionItem
