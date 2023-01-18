@@ -32,7 +32,7 @@ export default {
   ],
 } as ComponentMeta<typeof CheckoutUITemplate>
 
-const handleBackButtonClick = () => undefined
+const handleCreateOrder = () => undefined
 
 const Template: ComponentStory<typeof CheckoutUITemplate> = (args) => (
   <CheckoutStepProvider steps={['details', 'shipping', 'payment', 'review']} initialActiveStep={1}>
@@ -47,7 +47,15 @@ const Template: ComponentStory<typeof CheckoutUITemplate> = (args) => (
         isAuthenticated={true}
       />
       <PaymentStep checkout={orderMock.checkout} />
-      <ReviewStep checkout={orderMock.checkout} onBackButtonClick={handleBackButtonClick} />
+      <ReviewStep
+        checkout={orderMock.checkout}
+        shipItems={undefined}
+        pickupItems={undefined}
+        personalDetails={undefined}
+        orderSummaryProps={undefined}
+        isMultiShipEnabled={false}
+        onCreateOrder={handleCreateOrder}
+      />
     </CheckoutUITemplate>
   </CheckoutStepProvider>
 )

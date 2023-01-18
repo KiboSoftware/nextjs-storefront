@@ -15,6 +15,7 @@ jest.mock('@/hooks', () => ({
           variationProductCode: mockConfigureProductOptionsResponse.variationProductCode,
           productImages: mockConfigureProductOptionsResponse.productImages,
           purchasableState: mockConfigureProductOptionsResponse.purchasableState,
+          inventoryInfo: mockConfigureProductOptionsResponse.inventoryInfo,
         }),
       isLoading: false,
       isSuccess: true,
@@ -49,18 +50,20 @@ describe('[component] Product Detail Template data: useProductDetailTemplate', (
   //       'test-shopperEnteredValue'
   //     )
   //   )
-
-  //   expect(result.current.currentProduct).toStrictEqual({
-  //     ...product,
-  //     options: mockConfigureProductOptionsResponse.options,
-  //     variationProductCode: mockConfigureProductOptionsResponse.variationProductCode,
-  //     content: {
-  //       ...product.content,
-  //       productImages: mockConfigureProductOptionsResponse.productImages,
-  //     },
-  //     purchasableState: mockConfigureProductOptionsResponse.purchasableState,
-  //   })
-  // })
+/*
+    expect(result.current.currentProduct).toStrictEqual({
+      ...product,
+      options: mockConfigureProductOptionsResponse.options,
+      variationProductCode: mockConfigureProductOptionsResponse.variationProductCode,
+      content: {
+        ...product.content,
+        productImages: mockConfigureProductOptionsResponse.productImages,
+      },
+      purchasableState: mockConfigureProductOptionsResponse.purchasableState,
+      inventoryInfo: mockConfigureProductOptionsResponse.inventoryInfo,
+    })
+  })
+*/
 
   it('should handle product quantity', () => {
     const { result } = setup()

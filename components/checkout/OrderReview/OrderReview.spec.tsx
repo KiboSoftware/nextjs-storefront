@@ -52,7 +52,7 @@ describe('[components] OrderReview', () => {
     setup()
 
     const addressDetailComponent = screen.getAllByTestId('address-details-view-mock')
-    expect(addressDetailComponent).toHaveLength(2)
+    expect(addressDetailComponent.length).toBe(2)
   })
 
   it('should display the personal details', () => {

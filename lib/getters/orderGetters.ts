@@ -131,7 +131,7 @@ const getBillingDetails = (order: CrOrder): BillingDetails => {
   return {
     firstName: addressGetters.getFirstName(contact),
     lastNameOrSurname: addressGetters.getLastNameOrSurname(contact),
-    billingAddress: addressGetters.getAddress(contact.address as CrAddress),
+    billingAddress: addressGetters.getAddress(contact?.address as CrAddress),
   }
 }
 

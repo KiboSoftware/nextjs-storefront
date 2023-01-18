@@ -54,6 +54,7 @@ jest.mock('next/config', () => {
     serverRuntimeConfig: {
       cacheKey: 'categoryTree',
       cacheTimeOut: 10000,
+      isMultiShipEnabled: true,
     },
   })
 })

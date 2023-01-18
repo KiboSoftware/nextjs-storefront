@@ -15,7 +15,6 @@ import {
   SxProps,
 } from '@mui/material'
 import { useTranslation } from 'next-i18next'
-import getConfig from 'next/config'
 import { useForm, Controller } from 'react-hook-form'
 import * as yup from 'yup'
 
@@ -28,12 +27,9 @@ import {
 } from '@/components/common'
 import type { OrderPriceProps } from '@/components/common/OrderPrice/OrderPrice'
 import { useCheckoutStepContext, useAuthContext } from '@/context'
-import { useCreateOrderMutation } from '@/hooks'
-import { orderGetters } from '@/lib/getters'
-import { buildCreateOrderParams } from '@/lib/helpers/buildCreateOrderParams'
 import { isPasswordValid } from '@/lib/helpers/validations/validations'
 
-import type { CrOrder, Maybe } from '@/lib/gql/types'
+import type { CrOrder, Maybe, Checkout } from '@/lib/gql/types'
 
 export interface PersonalDetails {
   email: Maybe<string> | undefined
@@ -44,8 +40,13 @@ export interface PersonalDetails {
 }
 
 interface ReviewStepProps {
-  checkout: CrOrder
-  onBackButtonClick: () => void
+  checkout: CrOrder | Checkout
+  shipItems: any
+  pickupItems: any
+  personalDetails: any
+  orderSummaryProps: any
+  isMultiShipEnabled: boolean
+  onCreateOrder: (params: any) => void
 }
 
 const buttonStyle = {
@@ -94,28 +95,23 @@ const useDetailsSchema = () => {
 }
 
 const ReviewStep = (props: ReviewStepProps) => {
-  const { checkout, onBackButtonClick } = props
-  const { publicRuntimeConfig } = getConfig()
+  const {
+    checkout,
+    personalDetails,
+    orderSummaryProps,
+    shipItems,
+    pickupItems,
+    onCreateOrder,
+    isMultiShipEnabled,
+  } = props
 
   const { t } = useTranslation('common')
   const theme = useTheme()
   const { isAuthenticated, createAccount } = useAuthContext()
   const [isAgreeWithTermsAndConditions, setAgreeWithTermsAndConditions] = useState<boolean>(false)
 
-  const createOrder = useCreateOrderMutation()
-  const { setStepNext, setStepStatusComplete } = useCheckoutStepContext()
-  const { shipItems, pickupItems, orderSummary } = orderGetters.getCheckoutDetails(checkout)
-  const { subTotal, shippingTotal, taxTotal, total } = orderSummary
-
-  const fulfillmentInfo = checkout?.fulfillmentInfo
-  const fulfillmentContact = fulfillmentInfo && fulfillmentInfo?.fulfillmentContact
-  const personalDetails = {
-    email: checkout && checkout.email,
-    showAccountFields: false,
-    firstName: (fulfillmentContact && fulfillmentContact.firstName) || '',
-    lastNameOrSurname: (fulfillmentContact && fulfillmentContact.lastNameOrSurname) || '',
-    password: '',
-  }
+  const { setStepNext, setStepBack, setStepStatusComplete } = useCheckoutStepContext()
+  const { subTotal, shippingTotal, taxTotal, total } = orderSummaryProps
 
   const {
     formState: { errors, isValid },
@@ -147,7 +143,7 @@ const ReviewStep = (props: ReviewStepProps) => {
     setAgreeWithTermsAndConditions(event.target.checked)
 
   const onValid = async (formData: PersonalDetails) => {
-    await createOrder.mutateAsync(checkout)
+    onCreateOrder(checkout)
 
     if (formData?.showAccountFields) {
       await createAccount({
@@ -161,6 +157,7 @@ const ReviewStep = (props: ReviewStepProps) => {
     setStepStatusComplete()
     setStepNext()
   }
+
   const onInvalidForm = () => console.log('Invalid Form')
   const handleComplete = () => handleSubmit(onValid, onInvalidForm)()
 
@@ -175,11 +172,9 @@ const ReviewStep = (props: ReviewStepProps) => {
     total: t('currency', { val: total }),
   }
 
-  const isMultiShipEnabled = publicRuntimeConfig.isMultiShipEnabled
-
   return (
     <Box data-testid={'review-step-component'}>
-      <Typography variant="h2" component="h2" fontWeight={'bold'} color="text.primary">
+      <Typography variant="h2" component="h2" sx={{ fontWeight: 'bold' }} color="text.primary">
         {t('order-details')}
       </Typography>
 
@@ -187,7 +182,7 @@ const ReviewStep = (props: ReviewStepProps) => {
 
       {!isMultiShipEnabled && shipItems && shipItems.length > 0 && (
         <Stack gap={4}>
-          <Typography variant="h3" component="h3" fontWeight={'bold'} color="text.primary">
+          <Typography variant="h3" component="h3" sx={{ fontWeight: 'bold' }} color="text.primary">
             {t('shipping-to-home')}
           </Typography>
           <ProductItemList items={shipItems} />
@@ -195,24 +190,24 @@ const ReviewStep = (props: ReviewStepProps) => {
         </Stack>
       )}
 
-      {/* multiShip array will be used later after API is handled instead on shipItems */}
-      {isMultiShipEnabled && shipItems && shipItems.length > 0 && (
-        <Stack gap={4}>
-          <Typography variant="h3" component="h3" fontWeight={'bold'} color="text.primary">
-            {t('shipping-to-address')}
-          </Typography>
-          <ReviewProductItemsWithAddresses items={shipItems} />
-          <Divider sx={{ mb: '1.438rem' }} />
-        </Stack>
-      )}
-
       {!isMultiShipEnabled && pickupItems && pickupItems.length > 0 && (
         <Stack gap={4}>
-          <Typography variant="h3" component="h3" fontWeight={'bold'} color="text.primary">
+          <Typography variant="h3" component="h3" sx={{ fontWeight: 'bold' }} color="text.primary">
             {t('pickup-in-store')}
           </Typography>
           <ProductItemList items={pickupItems} />
           <Divider sx={{ mt: '1.438rem', mb: '1.188rem' }} />
+        </Stack>
+      )}
+
+      {/* multiShip array will be used later after API is handled instead on shipItems */}
+      {isMultiShipEnabled && shipItems && shipItems.length > 0 && (
+        <Stack gap={4}>
+          <Typography variant="h3" component="h3" fontWeight={600} color="text.primary">
+            {t('shipping-to-address')}
+          </Typography>
+          <ReviewProductItemsWithAddresses items={shipItems} />
+          <Divider sx={{ mb: '1.438rem' }} />
         </Stack>
       )}
 
@@ -228,6 +223,7 @@ const ReviewStep = (props: ReviewStepProps) => {
               data-testid="termsConditions"
               size="medium"
               color="primary"
+              value={isAgreeWithTermsAndConditions}
               onChange={handleAgreeTermsConditions}
             />
           }
@@ -251,6 +247,7 @@ const ReviewStep = (props: ReviewStepProps) => {
                       size="medium"
                       color="primary"
                       disabled={isAuthenticated}
+                      value={field.value}
                       onChange={(_name, value) => field.onChange(value)}
                     />
                   }
@@ -266,7 +263,7 @@ const ReviewStep = (props: ReviewStepProps) => {
             <Controller
               name="firstName"
               control={control}
-              defaultValue={personalDetails?.firstName}
+              defaultValue={personalDetails?.firstName || ''}
               render={({ field }) => (
                 <KiboTextBox
                   value={field.value}
@@ -283,7 +280,7 @@ const ReviewStep = (props: ReviewStepProps) => {
             <Controller
               name="lastNameOrSurname"
               control={control}
-              defaultValue={personalDetails?.lastNameOrSurname}
+              defaultValue={personalDetails?.lastNameOrSurname || ''}
               render={({ field }) => (
                 <KiboTextBox
                   value={field.value}
@@ -300,7 +297,7 @@ const ReviewStep = (props: ReviewStepProps) => {
             <Controller
               name="password"
               control={control}
-              defaultValue={personalDetails?.password}
+              defaultValue={personalDetails?.password || ''}
               render={({ field }) => (
                 <KiboTextBox
                   value={field.value}
@@ -310,7 +307,7 @@ const ReviewStep = (props: ReviewStepProps) => {
                   onBlur={field.onBlur}
                   onChange={(_name, value) => field.onChange(value)}
                   error={!!errors?.password}
-                  helperText={errors?.password?.message}
+                  helperText={errors?.password?.message as string}
                   type="password"
                   placeholder="password"
                 />
@@ -339,7 +336,7 @@ const ReviewStep = (props: ReviewStepProps) => {
           sx={{
             ...styles.goBackButtonStyle,
           }}
-          onClick={onBackButtonClick}
+          onClick={() => setStepBack()}
         >
           {t('go-back')}
         </Button>

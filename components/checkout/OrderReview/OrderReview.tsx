@@ -15,19 +15,24 @@ import {
 } from '@mui/material'
 import { useTranslation } from 'next-i18next'
 
-// Need to be handled with API later
-import { userAddressResponse } from '@/__mocks__/stories/userAddressMock'
 import { AddressDetailsView, PromoCodeBadge } from '@/components/common'
 import { useCheckoutStepContext } from '@/context'
 import { useStoreLocationsQueries } from '@/hooks'
-import { orderGetters } from '@/lib/getters'
+import { checkoutGetters, orderGetters } from '@/lib/getters'
 import { storeLocationGetters } from '@/lib/getters/storeLocationGetters'
 
-import type { CrOrder, Maybe, Location, CustomerContact } from '@/lib/gql/types'
+import type { CrOrder, Maybe, Location, CustomerContact, Checkout } from '@/lib/gql/types'
 
 interface OrderReviewProps {
-  checkout: CrOrder
+  checkout: CrOrder | Checkout
   isMultiShipEnabled?: boolean
+}
+
+interface OrderInfoHeaderProps {
+  headerName: string
+  dataStep: string
+  handleEditAction: (event: MouseEvent<HTMLElement>) => void
+  children: React.ReactNode
 }
 
 const style = {
@@ -49,15 +54,6 @@ const StyledOrderReview = styled(Box)(({ theme }: { theme: Theme }) => ({
   maxWidth: '26.75rem',
   padding: '1.375rem',
 }))
-const StyledRow = styled(Box)(() => ({
-  display: 'flex',
-  marginBottom: '2.375rem',
-}))
-const StyledLabel = styled(Typography)(({ theme }: { theme: Theme }) => ({
-  flex: '75%',
-  color: theme?.palette.text.primary,
-  fontWeight: 600,
-}))
 
 const StyledActions = styled(Link)(({ theme }: { theme: Theme }) => ({
   textAlign: 'right',
@@ -66,6 +62,33 @@ const StyledActions = styled(Link)(({ theme }: { theme: Theme }) => ({
   fontSize: theme?.typography.body1.fontSize,
 }))
 
+const OrderInfoHeader = (props: OrderInfoHeaderProps) => {
+  const { headerName, dataStep, handleEditAction, children } = props
+  const { t } = useTranslation('common')
+
+  return (
+    <Stack pb={2}>
+      <Box display="flex">
+        <Typography variant="subtitle2" fontWeight={600}>
+          {headerName}
+        </Typography>
+        <StyledActions
+          data-step={dataStep}
+          variant="caption"
+          color="text.primary"
+          onClick={handleEditAction}
+        >
+          <Typography sx={{ cursor: 'pointer' }} component="span" fontWeight={600}>
+            {t('edit')}
+          </Typography>
+        </StyledActions>
+      </Box>
+
+      {children}
+    </Stack>
+  )
+}
+
 const OrderReview = (props: OrderReviewProps) => {
   const { checkout, isMultiShipEnabled } = props
 
@@ -73,7 +96,7 @@ const OrderReview = (props: OrderReviewProps) => {
   const { t } = useTranslation('common')
 
   const { personalDetails, shippingDetails, billingDetails, paymentMethods, pickupItems } =
-    orderGetters.getCheckoutDetails(checkout)
+    orderGetters.getCheckoutDetails(checkout as CrOrder) // TODO: change orderGetters type and remove checkoutGetters.getCheckoutDetails
 
   const fulfillmentLocationCodes = pickupItems
     .map((pickupItem) => `code eq ${pickupItem?.fulfillmentLocationCode}`)
@@ -110,8 +133,9 @@ const OrderReview = (props: OrderReviewProps) => {
     if (!expanded) return
   }
 
-  // Need to be handled with API later
-  const multiShippingAddressesList = userAddressResponse?.items as CustomerContact[]
+  const multiShippingAddressesList = checkoutGetters.getOrderAddresses(
+    checkout as Checkout
+  ) as CustomerContact[]
 
   return (
     <Accordion
@@ -140,30 +164,23 @@ const OrderReview = (props: OrderReviewProps) => {
       <AccordionDetails data-testid="accordion-details" sx={{ ...style.accordionDetails }}>
         <Divider sx={{ marginX: '20px' }} />
         <StyledOrderReview>
-          <StyledRow sx={{ marginBottom: '0.563rem' }}>
-            <Typography variant="subtitle2" fontWeight={600}>
-              {t('personal-details')}
-            </Typography>
-            <StyledActions
-              data-testid={'edit-personal-details'}
-              data-step={t('details')}
-              variant="caption"
-              color="text.primary"
-              onClick={handleEditAction}
-            >
-              <Typography sx={{ cursor: 'pointer' }} component="span" fontWeight={600}>
-                {t('edit')}
-              </Typography>
-            </StyledActions>
-          </StyledRow>
+          <OrderInfoHeader
+            headerName={t('personal-details')}
+            dataStep={t('details')}
+            handleEditAction={handleEditAction}
+          >
+            <Box display={'inline'} pt={1}>
+              <Typography variant="body1">{userName} </Typography>
+              <Typography variant="body1">{shippingPhoneHome}</Typography>
+            </Box>
+          </OrderInfoHeader>
 
-          <StyledRow sx={{ display: 'inline' }}>
-            <Typography variant="body1">{userName} </Typography>
-            <Typography variant="body1">{shippingPhoneHome}</Typography>
-          </StyledRow>
-
-          {!isMultiShipEnabled && (
-            <StyledRow sx={{ marginTop: '2.375rem' }}>
+          <OrderInfoHeader
+            headerName={t('shipping-details')}
+            dataStep={t('shipping')}
+            handleEditAction={handleEditAction}
+          >
+            {!isMultiShipEnabled && (
               <AddressDetailsView
                 {...shippingPersonalDetails}
                 address1={shippingAddress?.address1 as string}
@@ -171,47 +188,14 @@ const OrderReview = (props: OrderReviewProps) => {
                 cityOrTown={shippingAddress?.cityOrTown as string}
                 stateOrProvince={shippingAddress?.stateOrProvince as string}
                 postalOrZipCode={shippingAddress?.postalOrZipCode as string}
-                withoutRadioTitle={t('shipping-details')}
               />
+            )}
 
-              <StyledActions
-                data-testid={'edit-shipping-details'}
-                data-step={t('shipping')}
-                variant="caption"
-                color="text.primary"
-                onClick={handleEditAction}
-              >
-                <Typography sx={{ cursor: 'pointer' }} component="span" fontWeight={600}>
-                  {t('edit')}
-                </Typography>
-              </StyledActions>
-            </StyledRow>
-          )}
-
-          {isMultiShipEnabled &&
-            multiShippingAddressesList &&
-            multiShippingAddressesList.length > 0 && (
-              <>
-                <StyledRow sx={{ marginTop: '2.375rem', marginBottom: '0.25rem' }}>
-                  <Typography variant="subtitle2" fontWeight={600}>
-                    {t('shipping-details')}
-                  </Typography>
-
-                  <StyledActions
-                    data-testid={'edit-shipping-details'}
-                    data-step={t('shipping')}
-                    variant="caption"
-                    color="text.primary"
-                    onClick={handleEditAction}
-                  >
-                    <Typography sx={{ cursor: 'pointer' }} component="span" fontWeight={600}>
-                      {t('edit')}
-                    </Typography>
-                  </StyledActions>
-                </StyledRow>
-
-                <StyledRow sx={{ flexWrap: 'wrap', flexDirection: 'column', marginBottom: '0rem' }}>
-                  {multiShippingAddressesList?.map((multiAddress) => {
+            {isMultiShipEnabled &&
+              multiShippingAddressesList &&
+              multiShippingAddressesList.length > 0 && (
+                <Box sx={{ flexWrap: 'wrap', flexDirection: 'column', marginBottom: '0rem' }}>
+                  {multiShippingAddressesList?.map((multiAddress: CustomerContact) => {
                     return (
                       <Box key={multiAddress?.id}>
                         <AddressDetailsView
@@ -226,74 +210,60 @@ const OrderReview = (props: OrderReviewProps) => {
                       </Box>
                     )
                   })}
-                </StyledRow>
-              </>
-            )}
+                </Box>
+              )}
+          </OrderInfoHeader>
 
-          <StyledRow>
-            <AddressDetailsView
-              {...billingPersonalDetails}
-              address1={billingAddress?.address1 as string}
-              address2={billingAddress?.address2 as string}
-              cityOrTown={billingAddress?.cityOrTown as string}
-              stateOrProvince={billingAddress?.stateOrProvince as string}
-              postalOrZipCode={billingAddress?.postalOrZipCode as string}
-              withoutRadioTitle={t('billing-address')}
-            />
-            <StyledActions
-              data-testid={'edit-billing-address'}
-              data-step={t('payment')}
-              variant="caption"
-              color="text.primary"
-              onClick={handleEditAction}
-            >
-              <Typography sx={{ cursor: 'pointer' }} component="span" fontWeight={600}>
-                {t('edit')}
-              </Typography>
-            </StyledActions>
-          </StyledRow>
+          <OrderInfoHeader
+            headerName={t('billing-address')}
+            dataStep={t('payment')}
+            handleEditAction={handleEditAction}
+          >
+            <>
+              <AddressDetailsView
+                {...billingPersonalDetails}
+                address1={billingAddress?.address1 as string}
+                address2={billingAddress?.address2 as string}
+                cityOrTown={billingAddress?.cityOrTown as string}
+                stateOrProvince={billingAddress?.stateOrProvince as string}
+                postalOrZipCode={billingAddress?.postalOrZipCode as string}
+              />
 
-          <Stack sx={{ marginBottom: '1rem' }}>
-            {storeLocations?.map((storeLocation) => (
-              <Stack direction="column" sx={{ marginBottom: '20px' }} key={storeLocation?.code}>
-                <AddressDetailsView
-                  firstName={storeLocation?.name}
-                  address1={storeLocation?.address1}
-                  address2={storeLocation?.address2}
-                  cityOrTown={storeLocation?.city}
-                  postalOrZipCode={storeLocation?.zip}
-                  stateOrProvince={storeLocation?.state}
-                  withoutRadioTitle={t('store-pickup-details')}
-                />
+              <Stack sx={{ marginBottom: '1rem' }}>
+                {storeLocations?.map((storeLocation) => (
+                  <Stack direction="column" sx={{ marginBottom: '20px' }} key={storeLocation?.code}>
+                    <AddressDetailsView
+                      firstName={storeLocation?.name}
+                      address1={storeLocation?.address1}
+                      address2={storeLocation?.address2}
+                      cityOrTown={storeLocation?.city}
+                      postalOrZipCode={storeLocation?.zip}
+                      stateOrProvince={storeLocation?.state}
+                      withoutRadioTitle={t('store-pickup-details')}
+                    />
+                  </Stack>
+                ))}
               </Stack>
+            </>
+          </OrderInfoHeader>
+
+          <OrderInfoHeader
+            headerName={t('payment-method')}
+            dataStep={t('payment')}
+            handleEditAction={handleEditAction}
+          >
+            {paymentMethods?.map((paymentMethod) => (
+              <Box
+                display="inline"
+                pt={1}
+                key={`${paymentMethod?.cardNumberPartOrMask}-${paymentMethod?.expiry}`}
+              >
+                <Typography variant="body1">{paymentMethod?.cardType}</Typography>
+                <Typography variant="body1">{paymentMethod?.cardNumberPartOrMask}</Typography>
+                <Typography variant="body1">{paymentMethod?.expiry} XXX</Typography>
+              </Box>
             ))}
-          </Stack>
-
-          <StyledRow sx={{ marginBottom: '1rem' }}>
-            <StyledLabel variant="h4">{t('payment-method')}</StyledLabel>
-            <StyledActions
-              data-testid={'edit-payment-method'}
-              data-step={t('payment')}
-              variant="caption"
-              color="text.primary"
-              onClick={handleEditAction}
-            >
-              <Typography sx={{ cursor: 'pointer' }} component="span" fontWeight={600}>
-                {t('edit')}
-              </Typography>
-            </StyledActions>
-          </StyledRow>
-
-          {paymentMethods?.map((paymentMethod) => (
-            <StyledRow
-              sx={{ display: 'inline' }}
-              key={`${paymentMethod?.cardNumberPartOrMask}-${paymentMethod?.expiry}`}
-            >
-              <Typography variant="body1">{paymentMethod?.cardType}</Typography>
-              <Typography variant="body1">{paymentMethod?.cardNumberPartOrMask}</Typography>
-              <Typography variant="body1">{paymentMethod?.expiry} XXX</Typography>
-            </StyledRow>
-          ))}
+          </OrderInfoHeader>
 
           <Divider sx={{ marginTop: '1.25rem', marginBottom: '1.813rem' }} />
           <PromoCodeBadge
