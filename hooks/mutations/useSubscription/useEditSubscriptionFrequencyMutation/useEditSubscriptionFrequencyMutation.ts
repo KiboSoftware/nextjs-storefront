@@ -23,7 +23,7 @@ const editSubscriptionFrequency = async (params: EditSubscriptionFrequencyProps)
     variables: params,
   })
 
-  return response.updateSubscriptionFrequency.frequency
+  return response.subscription.frequency
 }
 
 /**
@@ -42,9 +42,11 @@ const editSubscriptionFrequency = async (params: EditSubscriptionFrequencyProps)
 export const useEditSubscriptionFrequencyMutation = () => {
   const queryClient = useQueryClient()
 
-  return useMutation(editSubscriptionFrequency, {
-    onSuccess: () => {
-      queryClient.invalidateQueries(subscriptionKeys.all)
-    },
-  })
+  return {
+    editSubscriptionFrequencyMutation: useMutation(editSubscriptionFrequency, {
+      onSuccess: () => {
+        queryClient.invalidateQueries(subscriptionKeys.all)
+      },
+    }),
+  }
 }

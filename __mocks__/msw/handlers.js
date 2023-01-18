@@ -359,13 +359,18 @@ export const subscriptionHandlers = [
   graphql.query('getSubscriptions', (_req, res, ctx) => {
     return res(ctx.data(subscriptionCollectionMock))
   }),
+
   graphql.mutation('updateSubscriptionFrequency', (_req, res, ctx) => {
+    return res(ctx.data(subscriptionMock))
+  }),
+
+  graphql.mutation('updateSubscriptionNextOrderDate', (_req, res, ctx) => {
     return res(ctx.data(subscriptionMock))
   }),
 
   graphql.mutation('orderSubscriptionNow', (_req, res, ctx) => {
     return res(ctx.data(orderSubscriptionNowMock))
-  })
+  }),
 ]
 
 export const handlers = [

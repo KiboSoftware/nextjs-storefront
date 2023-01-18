@@ -312,5 +312,6 @@
   "next-order-date": "Nex order date: ",
   "enter-date-in-format": "Enter date in format MM/DD/YYYY",
   "order-date-is-required": "Order date is required",
-  "order-date-must-be-valid": "Order date must be valid"
+  "order-date-must-be-valid": "Order date must be valid",
+  "address-updated-successfully": "Address updated successfully"
 }
