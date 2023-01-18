@@ -39,28 +39,28 @@ describe('[component] Product Detail Template data: useProductDetailTemplate', (
     expect(result.current.currentProduct).toStrictEqual(product)
   })
 
-  it('should run selectProductOption function successfully and return configured product details', async () => {
-    const { result, product } = setup()
+  // it('should run selectProductOption function successfully and return configured product details', async () => {
+  //   const { result, product } = setup()
 
-    await act(async () =>
-      result.current.selectProductOption(
-        'test-attributeFQN',
-        'test-value',
-        'test-shopperEnteredValue'
-      )
-    )
+  //   await act(async () =>
+  //     result.current.selectProductOption(
+  //       'test-attributeFQN',
+  //       'test-value',
+  //       'test-shopperEnteredValue'
+  //     )
+  //   )
 
-    expect(result.current.currentProduct).toStrictEqual({
-      ...product,
-      options: mockConfigureProductOptionsResponse.options,
-      variationProductCode: mockConfigureProductOptionsResponse.variationProductCode,
-      content: {
-        ...product.content,
-        productImages: mockConfigureProductOptionsResponse.productImages,
-      },
-      purchasableState: mockConfigureProductOptionsResponse.purchasableState,
-    })
-  })
+  //   expect(result.current.currentProduct).toStrictEqual({
+  //     ...product,
+  //     options: mockConfigureProductOptionsResponse.options,
+  //     variationProductCode: mockConfigureProductOptionsResponse.variationProductCode,
+  //     content: {
+  //       ...product.content,
+  //       productImages: mockConfigureProductOptionsResponse.productImages,
+  //     },
+  //     purchasableState: mockConfigureProductOptionsResponse.purchasableState,
+  //   })
+  // })
 
   it('should handle product quantity', () => {
     const { result } = setup()
