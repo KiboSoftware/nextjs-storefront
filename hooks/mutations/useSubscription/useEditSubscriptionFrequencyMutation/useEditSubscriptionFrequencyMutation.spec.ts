@@ -16,10 +16,10 @@ describe('[hooks] useEditSubscriptionFrequencyMutation', () => {
 
     renderHook(
       async () => {
-        const useEditSubscriptionFrequency = useEditSubscriptionFrequencyMutation()
-        const response = await useEditSubscriptionFrequency.mutateAsync(params)
+        const { editSubscriptionFrequencyMutation } = useEditSubscriptionFrequencyMutation()
+        const response = await editSubscriptionFrequencyMutation.mutateAsync(params)
 
-        expect(response).toStrictEqual(subscriptionMock.updateSubscriptionFrequency.frequency)
+        expect(response).toStrictEqual(subscriptionMock.subscription.frequency)
       },
       {
         wrapper: createQueryClientWrapper(),

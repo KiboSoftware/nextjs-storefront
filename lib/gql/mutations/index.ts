@@ -39,3 +39,4 @@ export { default as deleteCheckoutCouponMutation } from './coupon/delete-checkou
 export { default as orderSubscriptionNow } from './subscription/orderSubscriptionNow'
 export { default as skipNextSubscriptionMutation } from './subscription/skip-next-subscription-mutation'
 export { default as updateSubscriptionNextOrderDateMutation } from './subscription/update-subscription-next-order-date-mutation'
+export { default as updateSubscriptioFulfillmentInfoMutation } from './subscription/update-subscription-fulfillment-info-mutation'

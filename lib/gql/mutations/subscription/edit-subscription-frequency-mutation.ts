@@ -3,7 +3,10 @@ const EditSubscriptionFrequencyMutation = /* GraphQL */ `
     $subscriptionId: String!
     $frequencyInput: SBFrequencyInput
   ) {
-    updateSubscriptionFrequency(subscriptionId: $subscriptionId, frequencyInput: $frequencyInput) {
+    subscription: updateSubscriptionFrequency(
+      subscriptionId: $subscriptionId
+      frequencyInput: $frequencyInput
+    ) {
       frequency {
         unit
         value

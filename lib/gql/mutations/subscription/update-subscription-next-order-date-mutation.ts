@@ -3,7 +3,7 @@ const updateSubscriptionNextOrderDateMutation = /* GraphQL */ `
     $subscriptionId: String!
     $subscriptionNextOrderDateInput: SubscriptionNextOrderDateInput
   ) {
-    updateSubscriptionNextOrderDate(
+    subscription: updateSubscriptionNextOrderDate(
       subscriptionId: $subscriptionId
       subscriptionNextOrderDateInput: $subscriptionNextOrderDateInput
     ) {
