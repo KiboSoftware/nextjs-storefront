@@ -3,7 +3,7 @@ import { useIsFetching } from 'react-query'
 
 function GlobalFetchingIndicator() {
   const isLoadingFetching = useIsFetching()
-  if (isLoadingFetching) {
+  if (isLoadingFetching > 1) {
     NProgress.start()
   } else {
     NProgress.done()

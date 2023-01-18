@@ -29,6 +29,7 @@ export * from './custom/usePaymentTypes/usePaymentTypes'
 export * from './custom/useProductDetailTemplate/useProductDetailTemplate'
 export * from './custom/useCurrentLocation/useCurrentLocation'
 export * from './custom/useWishlist/useWishlist'
+export * from './custom/usePriceRangeFormatter/usePriceRangeFormatter'
 
 // Mutation hooks
 export * from './mutations/useUpdateCheckoutMutations/useUpdateCheckoutPersonalInfo/useUpdateCheckoutPersonalInfoMutation'

@@ -100,6 +100,7 @@ jest.mock('@/hooks', () => ({
   useProductsQueries: jest.fn(() => mockProductSearch),
   useStoreLocationsQueries: jest.fn(() => ({ mockLocationsResponse })),
   useProductLocationInventoryQueries: jest.fn(() => mockInventory),
+  usePriceRangeFormatter: jest.fn(() => '$100 - $200'),
 }))
 
 const setup = () => {

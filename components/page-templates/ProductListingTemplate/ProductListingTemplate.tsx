@@ -11,7 +11,7 @@ import { ProductCard, ProductQuickViewDialog } from '@/components/product'
 import { CategoryFacet, CategoryFilterByMobile, FacetList } from '@/components/product-listing'
 import { CategoryFacetData } from '@/components/product-listing/CategoryFacet/CategoryFacet'
 import { useModalContext } from '@/context'
-import { useUpdateRoutes, useWishlist } from '@/hooks'
+import { usePriceRangeFormatter, useUpdateRoutes, useWishlist } from '@/hooks'
 import { productGetters } from '@/lib/getters'
 import { uiHelpers } from '@/lib/helpers'
 import type { BreadCrumb as BreadCrumbType, ProductCustom } from '@/lib/types'
@@ -199,6 +199,7 @@ const ProductListingTemplate = (props: ProductListingTemplateProps) => {
 
   const { t } = useTranslation('common')
   const { showModal } = useModalContext()
+
   const handleFilterBy = () => setFilterBy(!showFilterBy)
 
   const handleClearAllFilters = () => {
@@ -395,6 +396,7 @@ const ProductListingTemplate = (props: ProductListingTemplateProps) => {
                               val: productGetters.getPrice(product).special,
                             }),
                           })}
+                          priceRange={productGetters.getPriceRange(product)}
                           title={productGetters.getName(product) as string}
                           rating={productGetters.getRating(product)}
                           isInWishlist={checkProductInWishlist({

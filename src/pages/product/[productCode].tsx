@@ -2,7 +2,7 @@ import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
 import getConfig from 'next/config'
 import { useRouter } from 'next/router'
 
-import { ProductDetailTemplate } from '@/components/page-templates'
+import { ProductDetailTemplate, ProductDetailSkeleton } from '@/components/page-templates'
 import getCategoryTree from '@/lib/api/operations/get-category-tree'
 import getProduct from '@/lib/api/operations/get-product'
 import search from '@/lib/api/operations/get-product-search'
@@ -47,7 +47,7 @@ const ProductDetailPage: NextPage = (props: any) => {
   const { isFallback } = useRouter()
 
   if (isFallback) {
-    return <>Fallback</>
+    return <ProductDetailSkeleton />
   }
 
   const breadcrumbs = product ? productGetters.getBreadcrumbs(product) : []

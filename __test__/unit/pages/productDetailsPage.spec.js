@@ -82,6 +82,11 @@ jest.mock(
   '@/components/page-templates/ProductDetail/ProductDetailTemplate.tsx',
   () => () => ProductDetailTemplateMock()
 )
+const ProductDetailSkeletonMock = () => <div data-testid="productDetailSkeleton-mock" />
+jest.mock(
+  '@/components/page-templates/ProductDetail/ProductDetailSkeleton.tsx',
+  () => () => ProductDetailSkeletonMock()
+)
 
 describe('[page] Product Details Page', () => {
   it('should run getStaticProps method', () => {
@@ -130,6 +135,6 @@ describe('[page] Product Details Page', () => {
     nextRouter.useRouter.mockImplementation(() => ({ isFallback: true }))
     render(<ProductDetailPage />)
 
-    expect(screen.getByText(/Fallback/)).toBeVisible()
+    expect(screen.getByTestId(/productDetailSkeleton-mock/)).toBeVisible()
   })
 })
