@@ -314,5 +314,6 @@
   "order-date-is-required": "Order date is required",
   "order-date-must-be-valid": "Order date must be valid",
   "address-updated-successfully": "Address updated successfully",
-  "item-ordered-successfully": "Item ordered successfully"
+  "item-ordered-successfully": "Item ordered successfully",
+  "select-shipping-address": "Select shipping address"
 }

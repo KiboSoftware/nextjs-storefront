@@ -81,12 +81,12 @@ export const subscriptionCollectionMock: { subscriptions: SubscriptionCollection
         ],
         fulfillmentInfo: {
           fulfillmentContact: {
-            firstName: 'test',
-            lastNameOrSurname: 'tests',
+            firstName: 'Gopal',
+            lastNameOrSurname: 'Nichal',
             address: {
-              address1: 'drivewood',
-              address2: null,
-              cityOrTown: 'houston',
+              address1: 'MG Road',
+              address2: 'Koregoan Park',
+              cityOrTown: 'Pune',
               stateOrProvince: 'TX',
               postalOrZipCode: '77025',
               countryCode: 'US',
@@ -161,11 +161,11 @@ export const subscriptionCollectionMock: { subscriptions: SubscriptionCollection
         ],
         fulfillmentInfo: {
           fulfillmentContact: {
-            firstName: 'test',
-            lastNameOrSurname: 'test 2',
+            firstName: 'Rohit',
+            lastNameOrSurname: 'Hedda',
             address: {
               address1: 'drivewood',
-              address2: null,
+              address2: 'new york',
               cityOrTown: 'houston',
               stateOrProvince: 'TX',
               postalOrZipCode: '77027',
