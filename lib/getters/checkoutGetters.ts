@@ -14,23 +14,38 @@ interface DestinationItemGroup {
 }
 
 const buildItemsGroupFromCheckoutGroupings = (checkout: Checkout) => {
-  const checkoutGroupings = checkout?.groupings?.reduce((sortedGroups: any, group: any) => {
-    const groupItems = checkout?.items?.filter((item) =>
-      group?.orderItemIds?.includes(item?.id as string)
+  // const checkoutGroupings = checkout?.groupings?.reduce((sortedGroups: any, group: any) => {
+  //   const groupItems = checkout?.items?.filter((item) =>
+  //     group?.orderItemIds?.includes(item?.id as string)
+  //   )
+  //   const sortedGroup: DestinationItemGroup = {
+  //     destinationId: group?.destinationId as string,
+  //     groupingId: group?.id as string,
+  //     destination: checkout?.destinations?.find(
+  //       (destination) => destination?.id === group?.destinationId
+  //     ),
+  //     items: groupItems,
+  //   }
+
+  //   return [...sortedGroups, sortedGroup]
+  // }, [])
+
+  // return checkoutGroupings
+  return getShipItems(checkout).map((item: CrOrderItem) => {
+    const destination = checkout.destinations?.find(
+      (destination) => destination?.id === item.destinationId
     )
-    const sortedGroup: DestinationItemGroup = {
-      destinationId: group?.destinationId as string,
-      groupingId: group?.id as string,
-      destination: checkout?.destinations?.find(
-        (destination) => destination?.id === group?.destinationId
-      ),
-      items: groupItems,
+    return {
+      groupingId: checkout.groupings?.find((group) => group?.destinationId === item.destinationId)
+        ?.id as string,
+      destinationId: item.destinationId,
+      destination: {
+        id: destination?.id,
+        destinationContact: destination?.destinationContact,
+      },
+      items: [item],
     }
-
-    return [...sortedGroups, sortedGroup]
-  }, [])
-
-  return checkoutGroupings
+  })
 }
 
 const formatDestinationAddress = (contact: CrContact) => {
@@ -92,7 +107,10 @@ const getInitialShippingOption = (checkout: Checkout, shippingOptions: ShipOptio
 const getCheckoutItemCount = (checkout: Checkout) => checkout?.items?.length
 const checkMultiShipPaymentValid = (checkout: Checkout) => {
   const groupingWithoutShippingRates = checkout?.groupings?.find(
-    (grouping) => !grouping?.shippingMethodCode && !grouping?.shippingMethodName
+    (grouping) =>
+      grouping?.fulfillmentMethod === FulfillmentOptions.SHIP &&
+      !grouping?.shippingMethodCode &&
+      !grouping?.shippingMethodName
   )
   return !groupingWithoutShippingRates
 }

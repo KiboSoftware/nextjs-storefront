@@ -64,6 +64,7 @@ const ProductItemWithAddressList = (props: ProductItemWithAddressListProps) => {
   } = props
 
   const { t } = useTranslation('common')
+  const shipItems = checkoutGetters.getShipItems(checkout)
   const handleEditDestination = (item: Maybe<CrOrderItem>) => {
     const contact = multiShipAddresses?.find(
       (address) => address.destinationId === item?.destinationId
@@ -88,7 +89,7 @@ const ProductItemWithAddressList = (props: ProductItemWithAddressListProps) => {
 
   return (
     <>
-      {checkout?.items?.map((item: Maybe<CrOrderItem>) => {
+      {shipItems?.map((item: Maybe<CrOrderItem>) => {
         const product = item?.product as CrProduct
         return (
           <Card key={item?.id} sx={{ ...styles.card }}>
