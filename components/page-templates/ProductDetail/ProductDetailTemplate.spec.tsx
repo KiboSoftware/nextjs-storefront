@@ -10,6 +10,7 @@ import {
   wishlistMock,
   productSearchResultMock,
 } from '@/__mocks__/stories'
+import { PurchaseTypes } from '@/lib/constants'
 
 const { Common, WithMoreDetails } = composeStories(stories)
 
@@ -57,6 +58,43 @@ jest.mock(
   '@/components/product/ProductInformation/ProductInformation',
   () => () => ProductInformationMock()
 )
+
+const radioOptions = [
+  {
+    value: PurchaseTypes.SUBSCRIPTION,
+    name: PurchaseTypes.SUBSCRIPTION,
+    label: <p data-testid="subscription">{PurchaseTypes.SUBSCRIPTION}</p>,
+  },
+  {
+    value: PurchaseTypes.ONETIMEPURCHASE,
+    name: PurchaseTypes.ONETIMEPURCHASE,
+    label: <p data-testid="onetimepurchase">{PurchaseTypes.ONETIMEPURCHASE}</p>,
+  },
+]
+
+jest.mock('../../common/KiboRadio/KiboRadio', () => ({
+  __esModule: true,
+  default: ({
+    handlePurchaseTypeSelection,
+  }: {
+    handlePurchaseTypeSelection: (prop: { option: string }) => void
+  }) => (
+    <div data-testid="purchase-types">
+      <input
+        type="radio"
+        name="subscription"
+        value={PurchaseTypes.SUBSCRIPTION}
+        onClick={() => handlePurchaseTypeSelection({ option: PurchaseTypes.SUBSCRIPTION })}
+      />
+      <input
+        type="radio"
+        name="onetime_purchase"
+        value={PurchaseTypes.ONETIMEPURCHASE}
+        onClick={() => handlePurchaseTypeSelection({ option: PurchaseTypes.ONETIMEPURCHASE })}
+      />
+    </div>
+  ),
+}))
 
 const mockProduct = Common?.args?.product
 const mockWishlist = wishlistMock?.items[0]

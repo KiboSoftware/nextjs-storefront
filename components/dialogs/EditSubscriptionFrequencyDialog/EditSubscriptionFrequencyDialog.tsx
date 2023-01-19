@@ -4,6 +4,7 @@ import { Stack, Button, MenuItem } from '@mui/material'
 import { useTranslation } from 'next-i18next'
 
 import { KiboSelect, KiboDialog } from '@/components/common'
+import { subscriptionGetters } from '@/lib/getters'
 
 import type { SbProductPropertyValue } from '@/lib/gql/types'
 
@@ -30,18 +31,9 @@ const EditSubscriptionFrequencyDialog = (props: EditSubscriptionFrequencyDialogP
   const { t } = useTranslation('common')
 
   const updateFrequency = async () => {
-    const [value, unit] = selectedFrequency.split(' ')
-
-    // API accepts unit as singluar ex. day or month
-    const isUnitPlural = unit.charAt(unit.length - 1).toLowerCase() === 's'
-    const unitSingular = isUnitPlural ? unit.slice(0, unit.length - 1) : unit
-
     const params = {
       subscriptionId,
-      frequencyInput: {
-        value: +value,
-        unit: unitSingular,
-      },
+      frequencyInput: subscriptionGetters.getSubscriptionFrequencyUnit(selectedFrequency),
     }
 
     await onFrequencySave(params)

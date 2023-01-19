@@ -45,12 +45,8 @@ import {
   useProductLocationInventoryQueries,
   usePriceRangeFormatter,
 } from '@/hooks'
-import {
-  FulfillmentOptions as FulfillmentOptionsConstant,
-  ProductAttribute,
-  PurchaseTypes,
-} from '@/lib/constants'
-import { productGetters, wishlistGetters } from '@/lib/getters'
+import { FulfillmentOptions as FulfillmentOptionsConstant, PurchaseTypes } from '@/lib/constants'
+import { productGetters, subscriptionGetters, wishlistGetters } from '@/lib/getters'
 import { uiHelpers } from '@/lib/helpers'
 import type { ProductCustom, BreadCrumb, LocationCustom } from '@/lib/types'
 
@@ -157,9 +153,8 @@ const ProductDetailTemplate = (props: ProductDetailTemplateProps) => {
   const [purchaseType, setPurchaseType] = useState<string>(PurchaseTypes.ONETIMEPURCHASE)
   const [selectedFrequency, setSelectedFrequency] = useState<string>('')
 
-  const isSubscriptionModeAvailable = product?.properties?.some(
-    (property) => property?.attributeFQN === ProductAttribute.SUBSCRIPTION_Mode
-  )
+  const isSubscriptionModeAvailable = subscriptionGetters.isSubscriptionModeAvailable(product)
+  const subscriptionFrequency = subscriptionGetters.getFrequencyValues(product as ProductCustom)
 
   const purchaseTypeRadioOptions = [
     {
@@ -186,6 +181,11 @@ const ProductDetailTemplate = (props: ProductDetailTemplateProps) => {
           purchaseLocationCode: selectedFulfillmentOption?.location?.code as string,
         },
         quantity,
+        ...(purchaseType === PurchaseTypes.SUBSCRIPTION && {
+          subscription: {
+            frequency: subscriptionGetters.getSubscriptionFrequencyUnit(selectedFrequency),
+          },
+        }),
       })
 
       if (cartResponse.id) {
@@ -259,11 +259,17 @@ const ProductDetailTemplate = (props: ProductDetailTemplateProps) => {
 
   const handlePurchaseTypeSelection = (option: string) => {
     setPurchaseType(option)
+    if (purchaseType === PurchaseTypes.SUBSCRIPTION) {
+      setSelectedFulfillmentOption({
+        ...selectedFulfillmentOption,
+        method: FulfillmentOptionsConstant.SHIP,
+      })
+      // TODO: Call API to get subscription price
+    }
   }
 
-  const handleFrequencyChange = async (name: string, value: string) => setSelectedFrequency(value)
+  const handleFrequencyChange = async (_name: string, value: string) => setSelectedFrequency(value)
 
-  console.log(product)
   return (
     <Grid container>
       {!isQuickViewModal && (
@@ -405,10 +411,10 @@ const ProductDetailTemplate = (props: ProductDetailTemplateProps) => {
               value={selectedFrequency}
               label={t('subscription-frequency')}
             >
-              {['sds', 'sdfs']?.map((value) => {
+              {subscriptionFrequency?.map((property) => {
                 return (
-                  <MenuItem key={value} value={`${value}`}>
-                    {`${value}`}
+                  <MenuItem key={property?.stringValue} value={`${property?.stringValue}`}>
+                    {`${property?.stringValue}`}
                   </MenuItem>
                 )
               })}
