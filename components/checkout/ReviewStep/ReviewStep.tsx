@@ -275,17 +275,6 @@ const ReviewStep = (props: ReviewStepProps) => {
         </Stack>
       )}
 
-      {/* multiShip array will be used later after API is handled instead on shipItems */}
-      {isMultiShipEnabled && shipItems && shipItems.length > 0 && (
-        <Stack gap={4}>
-          <Typography variant="h3" component="h3" fontWeight={600} color="text.primary">
-            {t('shipping-to-address')}
-          </Typography>
-          <ReviewProductItemsWithAddresses items={shipItems} />
-          <Divider sx={{ mb: '1.438rem' }} />
-        </Stack>
-      )}
-
       <OrderPrice {...orderPriceProps} />
 
       <Box sx={{ mt: '31px', mb: '35px' }}>
