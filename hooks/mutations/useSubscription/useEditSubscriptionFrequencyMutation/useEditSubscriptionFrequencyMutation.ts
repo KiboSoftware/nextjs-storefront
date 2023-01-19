@@ -29,7 +29,7 @@ const editSubscriptionFrequency = async (params: EditSubscriptionFrequencyProps)
 /**
  * [Mutation hook] useEditSubscriptionFrequencyMutation uses the graphQL mutation
  *
- * <b>updateSubscriptionFrequency(subscriptionId: String!, frequencyInput: SBFrequencyInput ): Subscription</b>
+ * <b>editSubscriptionFrequency(subscriptionId: String!, frequencyInput: SBFrequencyInput ): Subscription</b>
  *
  * Description : Updates Subscription Frequency
  *
@@ -37,7 +37,7 @@ const editSubscriptionFrequency = async (params: EditSubscriptionFrequencyProps)
  *
  * On success, calls invalidateQueries on subscriptionKeys and fetches the updated result.
  *
- * @returns 'response.updateSubscriptionFrequency.frequency', which returns updated Subscription Frequency
+ * @returns 'response.subscription.frequency', which returns updated Subscription Frequency
  */
 export const useEditSubscriptionFrequencyMutation = () => {
   const queryClient = useQueryClient()
