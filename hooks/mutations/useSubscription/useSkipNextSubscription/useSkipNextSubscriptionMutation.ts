@@ -15,7 +15,7 @@ const skipNextSubscription = async (subscriptionId?: string | null) => {
     variables: { subscriptionId },
   })
 
-  return response?.skipNextSubscription
+  return response?.subscription
 }
 
 /**

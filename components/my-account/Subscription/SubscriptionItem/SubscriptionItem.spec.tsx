@@ -1,16 +1,17 @@
 import React from 'react'
 
 import '@testing-library/jest-dom'
+import { InputLabel, FormControl, Select, MenuItem } from '@mui/material'
 import { composeStories } from '@storybook/testing-react'
 import { render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 
 import * as stories from './SubscriptionItem.stories'
+import { subscriptionMock } from '@/__mocks__/stories'
 import { subscriptionItemMock } from '@/__mocks__/stories'
 import { createQueryClientWrapper } from '@/__test__/utils'
 import { subscriptionGetters } from '@/lib/getters'
 import type { Address } from '@/lib/types'
-
 const { Common } = composeStories(stories)
 const subscriptionItem = subscriptionItemMock?.items
 
@@ -38,6 +39,13 @@ interface AddressFormDialogProps {
 
 interface ConfirmationDialogProps {
   onConfirm: () => void
+}
+
+interface KiboSelectProps {
+  children: React.ReactNode
+  onChange: (name: string, value: string) => void
+  value: string
+  placeholder: string
 }
 
 // Mock
@@ -105,6 +113,27 @@ jest.mock('@/components/dialogs', () => ({
       </div>
     )
   },
+}))
+
+jest.mock('@/components/common/KiboSelect/KiboSelect', () => ({
+  __esModule: true,
+  default: ({ children, onChange, value = '', placeholder }: KiboSelectProps) => (
+    <FormControl fullWidth>
+      <InputLabel id="demo-simple-select-label">select-shipping-address</InputLabel>
+      <Select
+        data-testid="KiboSelect"
+        labelId="KiboSelect"
+        value={value}
+        label="Shipping Address"
+        onChange={(event) => onChange(event.target.name, event.target.value)}
+      >
+        <MenuItem value={''} disabled sx={{ display: 'none' }}>
+          {placeholder}
+        </MenuItem>
+        {children}
+      </Select>
+    </FormControl>
+  ),
 }))
 
 // Clear all mocks
@@ -199,7 +228,6 @@ describe('[component] - SubscriptionItem', () => {
       await user.click(shipAnItemNowButton)
 
       // Assert
-      // expect(screen.getByRole('dialog')).toBeVisible()
       expect(screen.getByRole('heading', { level: 1 })).toHaveTextContent('confirmation-dialog')
     })
 
@@ -216,25 +244,8 @@ describe('[component] - SubscriptionItem', () => {
       await user.click(confirmButton)
 
       // Assert
-      // expect(screen.getByRole('dialog')).toBeVisible()
       const snackbar = screen.getByText('item-ordered-successfully')
       expect(snackbar).toBeVisible()
-    })
-
-    it('should close dialog when user clicks on Close button', async () => {
-      const { user } = setup()
-
-      const shipAnItemNowButton = screen.getByRole('button', {
-        name: /ship-an-item-now/i,
-      })
-
-      // Act
-      await user.click(shipAnItemNowButton)
-      const closeButton = screen.getByRole('button', { name: /close/i })
-      await user.click(closeButton)
-
-      // Assert
-      // Verify that dialog is not visible
     })
   })
 
@@ -250,7 +261,6 @@ describe('[component] - SubscriptionItem', () => {
       await user.click(skipShipmentButton)
 
       // Assert
-      // expect(screen.getByRole('dialog')).toBeVisible()
       expect(screen.getByRole('heading', { level: 1 })).toHaveTextContent('confirmation-dialog')
     })
 
@@ -267,25 +277,11 @@ describe('[component] - SubscriptionItem', () => {
       await user.click(confirmButton)
 
       // Assert
-      // expect(screen.getByRole('dialog')).toBeVisible()
-      const snackbar = screen.getByText('item-ordered-successfully')
+      const { nextOrderDate } = subscriptionGetters.getSubscriptionDetails(
+        subscriptionMock.subscription
+      )
+      const snackbar = screen.getByText('next-order-skip' + nextOrderDate)
       expect(snackbar).toBeVisible()
-    })
-
-    it('should close dialog when user clicks on Close button', async () => {
-      const { user } = setup()
-
-      const skipShipmentButton = screen.getByRole('button', {
-        name: /skip-shipment/i,
-      })
-
-      // Act
-      await user.click(skipShipmentButton)
-      const closeButton = screen.getByRole('button', { name: /close/i })
-      await user.click(closeButton)
-
-      // Assert
-      // Verify that dialog is not visible
     })
   })
 
@@ -301,7 +297,6 @@ describe('[component] - SubscriptionItem', () => {
       await user.click(editFrequencyButton)
 
       // Assert
-      //expect(screen.getByRole('dialog')).toBeVisible()
       expect(screen.getByRole('heading', { level: 1 })).toHaveTextContent(
         'edit-subscription-frequency-dialog'
       )
@@ -320,7 +315,6 @@ describe('[component] - SubscriptionItem', () => {
       await user.click(confirmButton)
 
       // Assert
-      //expect(screen.getByRole('dialog')).toBeVisible()
       const snackbar = screen.getByText('subscription-frequency-updated-successfully')
       expect(snackbar).toBeVisible()
     })
@@ -339,7 +333,6 @@ describe('[component] - SubscriptionItem', () => {
       await user.click(closeButton)
 
       // Assert
-      // Verify that dialog is not visible
     })
   })
 
@@ -355,7 +348,6 @@ describe('[component] - SubscriptionItem', () => {
       await user.click(editOrderDateButton)
 
       // Assert
-      //expect(screen.getByRole('dialog')).toBeVisible()
       expect(screen.getByRole('heading', { level: 1 })).toHaveTextContent('edit-order-date-dialog')
     })
 
@@ -390,7 +382,6 @@ describe('[component] - SubscriptionItem', () => {
       await user.click(closeButton)
 
       // Assert
-      // Verify that dialog is not visible
     })
   })
 
@@ -409,7 +400,17 @@ describe('[component] - SubscriptionItem', () => {
       })
 
       // Assert
+      const kiboSelectMock = screen.getByRole('button', { expanded: false })
+      // const kiboSelectMock = screen.getByRole('button', { name: /select-shipping-address/i })
+      expect(kiboSelectMock).toBeVisible()
       expect(addNewAddressButton).toBeVisible()
+
+      await user.click(kiboSelectMock)
+
+      Common.args?.fulfillmentInfoList?.map((fulfillmentInfo) => {
+        const fulfillmentContact = screen.getByText(`${fulfillmentInfo.formattedAddress}`)
+        expect(fulfillmentContact).toBeVisible()
+      })
     })
 
     it('should open address-form Dialog when user clicks on add-new-address button', async () => {
@@ -429,7 +430,6 @@ describe('[component] - SubscriptionItem', () => {
       await user.click(addNewAddressButton)
 
       // Assert
-      //expect(screen.getByRole('dialog')).toBeVisible()
       expect(screen.getByRole('heading', { level: 1 })).toHaveTextContent('address-form-dialog')
     })
 
@@ -449,10 +449,6 @@ describe('[component] - SubscriptionItem', () => {
       expect(addNewAddressButton).toBeVisible()
 
       await user.click(addNewAddressButton)
-
-      //expect(screen.getByRole('dialog')).toBeVisible()
-      expect(screen.getByRole('heading', { level: 1 })).toHaveTextContent('address-form-dialog')
-
       const confirmButton = screen.getByRole('button', { name: /confirm/i })
       await user.click(confirmButton)
 
@@ -461,6 +457,32 @@ describe('[component] - SubscriptionItem', () => {
       expect(snackbar).toBeVisible()
     })
 
-    // it('should save Shipping Address when user selects existing Shipping Address', async () => {})
+    it('should save Shipping Address when user selects existing Shipping Address', async () => {
+      const { user } = setup()
+
+      const editShippingAddressButton = screen.getByRole('button', {
+        name: /edit-shipping-address/i,
+      })
+
+      // Act
+      await user.click(editShippingAddressButton)
+
+      const kiboSelectMock = screen.getByRole('button', { expanded: false })
+      await user.click(kiboSelectMock)
+
+      const formattedAddress =
+        Common.args &&
+        Common.args?.fulfillmentInfoList &&
+        Common.args?.fulfillmentInfoList[0] &&
+        Common.args.fulfillmentInfoList[0]?.formattedAddress
+
+      const fulfillmentOption = screen.getByText(new RegExp(String(formattedAddress)))
+
+      await user.click(fulfillmentOption)
+
+      // Assert
+      const snackbar = screen.getByText('address-updated-successfully')
+      expect(snackbar).toBeVisible()
+    })
   })
 })

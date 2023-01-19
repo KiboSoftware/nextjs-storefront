@@ -2,13 +2,15 @@ import React, { useCallback } from 'react'
 
 import { ArrowBackIos } from '@mui/icons-material'
 import { Stack, Typography } from '@mui/material'
+import lodash from 'lodash'
 import { useTranslation } from 'next-i18next'
 
 import { SubscriptionItem } from '@/components/my-account'
+import type { FulfillmentInfo } from '@/components/my-account/Subscription/SubscriptionItem/SubscriptionItem'
 import { useSubscriptionsQueries } from '@/hooks'
+import { subscriptionGetters } from '@/lib/getters'
 
 import type { Subscription } from '@/lib/gql/types'
-
 interface SubscriptionListProps {
   onAccountTitleClick: () => void
 }
@@ -24,12 +26,17 @@ const style = {
 
 const SubscriptionList = (props: SubscriptionListProps) => {
   const { onAccountTitleClick } = props
+  const { t } = useTranslation('common')
 
   const { data: subscriptionDetails } = useSubscriptionsQueries()
 
-  const { t } = useTranslation('common')
-
   const handleAccountTitleClick = useCallback(() => onAccountTitleClick(), [onAccountTitleClick])
+
+  // To display all the unique subscription addresses
+  const duplicateFulfillments = subscriptionDetails?.items?.map((subscription) =>
+    subscriptionGetters.getFormattedAddress(subscription as Subscription)
+  )
+  const fulfillmentInfoList = lodash.uniqBy(duplicateFulfillments, 'formattedAddress')
 
   return (
     <>
@@ -48,6 +55,7 @@ const SubscriptionList = (props: SubscriptionListProps) => {
           <SubscriptionItem
             key={subscriptionItemData?.id as string}
             subscriptionDetailsData={subscriptionItemData as Subscription}
+            fulfillmentInfoList={fulfillmentInfoList as FulfillmentInfo[]}
           />
         ))}
       {subscriptionDetails?.totalCount === 0 && (

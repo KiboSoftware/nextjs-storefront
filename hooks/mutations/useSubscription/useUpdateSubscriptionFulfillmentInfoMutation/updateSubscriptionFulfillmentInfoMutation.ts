@@ -25,7 +25,7 @@ const updateSubscriptionFulfillmentInfo = async (
     variables: params,
   })
 
-  return response.subscription.updateSubscriptionFulfillmentInfo
+  return response.subscription.fulfillmentInfo
 }
 
 /**

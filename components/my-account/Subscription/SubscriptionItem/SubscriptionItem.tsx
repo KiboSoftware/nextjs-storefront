@@ -1,10 +1,10 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 
-import { Card, Stack, Typography, CardContent, Button } from '@mui/material'
+import { Card, Stack, Typography, CardContent, Button, MenuItem } from '@mui/material'
 import Popover from '@mui/material/Popover'
 import { useTranslation } from 'next-i18next'
 
-import { ProductItem } from '@/components/common'
+import { ProductItem, KiboSelect } from '@/components/common'
 import {
   ConfirmationDialog,
   EditSubscriptionFrequencyDialog,
@@ -24,10 +24,16 @@ import { subscriptionGetters, productGetters } from '@/lib/getters'
 import { uiHelpers, buildSubscriptionFulfillmentInfoParams } from '@/lib/helpers'
 import type { Address } from '@/lib/types'
 
-import type { CrProduct, Subscription } from '@/lib/gql/types'
+import type { CrProduct, Subscription, SbContact } from '@/lib/gql/types'
+
+export interface FulfillmentInfo {
+  formattedAddress: string
+  fulfillmentContact: SbContact
+}
 
 interface SubscriptionItemProps {
   subscriptionDetailsData: Subscription
+  fulfillmentInfoList: FulfillmentInfo[]
 }
 
 const style = {
@@ -72,9 +78,10 @@ const style = {
 }
 
 const SubscriptionItem = (props: SubscriptionItemProps) => {
-  const { subscriptionDetailsData } = props
+  const { subscriptionDetailsData, fulfillmentInfoList } = props
 
-  const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null)
+  const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | undefined>(undefined)
+  const [fulfillmentInfo, setFulfillmentInfo] = useState<FulfillmentInfo | undefined>(undefined)
 
   const { getProductLink } = uiHelpers()
   const { t } = useTranslation('common')
@@ -89,7 +96,7 @@ const SubscriptionItem = (props: SubscriptionItemProps) => {
     useUpdateSubscriptionFulfillmentInfoMutation()
 
   const handleShowDialog = (component: any, params: any) => {
-    setAnchorEl(null)
+    setAnchorEl(undefined)
 
     showModal({
       Component: component,
@@ -156,7 +163,7 @@ const SubscriptionItem = (props: SubscriptionItemProps) => {
   }
 
   const handlePopupClose = () => {
-    setAnchorEl(null)
+    setAnchorEl(undefined)
   }
 
   const handleAddNewAddress = async (data: Address) => {
@@ -168,6 +175,20 @@ const SubscriptionItem = (props: SubscriptionItemProps) => {
   }
 
   // Pause Subscription
+
+  useEffect(() => {
+    const updateAddress = async () => {
+      const contact = fulfillmentInfo?.fulfillmentContact
+
+      if (contact) {
+        await handleAddNewAddress({ contact } as Address)
+        setAnchorEl(undefined)
+        showSnackbar(t('address-updated-successfully'), 'success')
+      }
+    }
+
+    updateAddress()
+  }, [fulfillmentInfo])
 
   return (
     <Card sx={{ ...style.card }}>
@@ -321,21 +342,42 @@ const SubscriptionItem = (props: SubscriptionItemProps) => {
                   horizontal: 'left',
                 }}
               >
-                <Button
-                  variant="contained"
-                  color="primary"
-                  sx={{ ...style.button }}
-                  onClick={() =>
-                    handleShowDialog(AddressFormDialog, {
-                      subscriptionId: subscriptionDetailsData?.id as string,
-                      isUserLoggedIn: true,
-                      setAutoFocus: true,
-                      onSaveAddress: handleAddNewAddress,
-                    })
-                  }
-                >
-                  {t('add-new-address')}
-                </Button>
+                <div style={{ padding: '20px' }}>
+                  <KiboSelect
+                    name="shippingAddress"
+                    onChange={(name: string, value: string) =>
+                      setFulfillmentInfo(
+                        fulfillmentInfoList.find((item) => item.formattedAddress === value)
+                      )
+                    }
+                    placeholder={t('select-shipping-address')}
+                    value={fulfillmentInfo?.formattedAddress}
+                  >
+                    {fulfillmentInfoList?.map((item) => {
+                      return (
+                        <MenuItem key={item.formattedAddress} value={`${item.formattedAddress}`}>
+                          {item.formattedAddress}
+                        </MenuItem>
+                      )
+                    })}
+                  </KiboSelect>
+
+                  <Button
+                    variant="contained"
+                    color="primary"
+                    sx={{ ...style.button }}
+                    onClick={() =>
+                      handleShowDialog(AddressFormDialog, {
+                        subscriptionId: subscriptionDetailsData?.id as string,
+                        isUserLoggedIn: true,
+                        setAutoFocus: true,
+                        onSaveAddress: handleAddNewAddress,
+                      })
+                    }
+                  >
+                    {t('add-new-address')}
+                  </Button>
+                </div>
               </Popover>
             </Stack>
             <Stack direction={'row'} sx={{ whiteSpace: 'nowrap' }} gap={2}>
