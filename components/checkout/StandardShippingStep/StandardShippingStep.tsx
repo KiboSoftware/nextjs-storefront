@@ -11,7 +11,7 @@ import { useUpdateCheckoutShippingInfoMutation, useShippingMethodsQueries } from
 import { DefaultId } from '@/lib/constants'
 import { orderGetters, userGetters } from '@/lib/getters'
 
-import type { CrOrder, CrOrderItem, CrContact, CustomerContact } from '@/lib/gql/types'
+import type { CrOrder, CrContact, CustomerContact } from '@/lib/gql/types'
 
 const buttonStyle = {
   width: '100%',

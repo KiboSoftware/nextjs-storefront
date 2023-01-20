@@ -1,6 +1,6 @@
 import React from 'react'
 
-import { Stack, Divider, Theme, SxProps } from '@mui/material'
+import { Stack, Divider } from '@mui/material'
 
 import { AddressCard, ProductItem } from '..'
 import { addressGetters, orderGetters, productGetters } from '@/lib/getters'

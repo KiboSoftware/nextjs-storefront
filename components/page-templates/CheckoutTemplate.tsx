@@ -1,6 +1,6 @@
 import React from 'react'
 
-const CheckoutTemplate = ({ checkout }: { checkout: any }) => {
+const CheckoutTemplate = () => {
   return <h1>Checkout</h1>
 }
 

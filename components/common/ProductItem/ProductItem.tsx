@@ -10,8 +10,6 @@ import {
   useTheme,
   Link as MuiLink,
   Stack,
-  Theme,
-  SxProps,
 } from '@mui/material'
 import { useTranslation } from 'next-i18next'
 import Link from 'next/link'

@@ -10,8 +10,6 @@ const { Common } = composeStories(stories)
 const onChangeMock = jest.fn()
 const onBlurMock = jest.fn()
 const onFormStatusChangeMock = jest.fn()
-const onInvalidFormMock = jest.fn()
-const onHandleSubmitMock = jest.fn()
 
 const setup = () => {
   const user = userEvent.setup()

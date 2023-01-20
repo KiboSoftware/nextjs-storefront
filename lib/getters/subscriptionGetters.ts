@@ -1,10 +1,9 @@
 import { format } from 'date-fns'
-import lodash from 'lodash'
 
 import { SUBSCRIPTION_FREQUENCY } from '../constants'
 import { addressGetters } from '@/lib/getters'
 
-import type { SbContact, SbProduct, SbProductProperty, Subscription } from '@/lib/gql/types'
+import type { SbContact, SbProduct, Subscription } from '@/lib/gql/types'
 
 const getSubscriberName = (subscription: Subscription) =>
   `${subscription?.fulfillmentInfo?.fulfillmentContact?.firstName} ${subscription?.fulfillmentInfo?.fulfillmentContact?.lastNameOrSurname}`
