@@ -21,7 +21,7 @@ const skipNextSubscription = async (subscriptionId?: string | null) => {
 /**
  * [Mutation hook] useSkipNextSubscriptionMutation uses the graphQL mutation
  *
- * <b>skipNextSubscription(subscriptionId: string | null): Subscription</b>
+ * <b>skipNextSubscription(subscriptionId: string): Subscription</b>
  *
  * Description : Skip the next subscription order according to the frequency unit and value.
  *

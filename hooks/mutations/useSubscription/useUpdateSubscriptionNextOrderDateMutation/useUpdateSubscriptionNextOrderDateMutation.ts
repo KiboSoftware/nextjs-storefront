@@ -28,7 +28,7 @@ const updateSubscriptionNextOrderDate = async (params: UpdateSubscriptionNextOrd
 /**
  * [Mutation hook] useUpdateSubscriptionNextOrderDateMutation uses the graphQL mutation
  *
- * <b>updateSubscriptionNextOrderDate(subscriptionId: String!, subscriptionNextOrderDateInput: { nextOrderDate: string  }): Subscription</b>
+ * <b>updateSubscriptionNextOrderDate(subscriptionId: String!, subscriptionNextOrderDateInput: SubscriptionNextOrderDateInput): Subscription</b>
  *
  * Description : Update subscription next order date.
  *

@@ -29,7 +29,7 @@ const editSubscriptionFrequency = async (params: EditSubscriptionFrequencyProps)
 /**
  * [Mutation hook] useEditSubscriptionFrequencyMutation uses the graphQL mutation
  *
- * <b>editSubscriptionFrequency(subscriptionId: String!, frequencyInput: SBFrequencyInput ): Subscription</b>
+ * <b>updateSubscriptionFrequency(subscriptionId: String! frequencyInput: SBFrequencyInput): Subscription</b>
  *
  * Description : Updates Subscription Frequency
  *

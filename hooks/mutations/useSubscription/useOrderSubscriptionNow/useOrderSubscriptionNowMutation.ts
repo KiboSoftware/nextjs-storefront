@@ -31,7 +31,7 @@ const orderSubscriptionNowMutation = async (props: OrderSubscriptionNowInputPara
 /**
  * [Mutation hook] useOrderSubscriptionNowMutation uses the graphQL mutation
  *
- * <b>orderSubscriptionNowMutation(subscriptionId: String!): Subscription</b>
+ * <b>orderSubscriptionNow(subscriptionId: String! ): Subscription</b>
  *
  * Description : Order a subscription for a product
  *
