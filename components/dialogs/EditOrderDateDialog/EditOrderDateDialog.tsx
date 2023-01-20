@@ -78,13 +78,17 @@ const EditOrderDateDialog = (props: EditOrderDateDialogProps) => {
             <Stack spacing={3}>
               <DatePicker
                 disablePast
-                label={t('order-date')}
                 openTo="year"
                 views={['year', 'month', 'day']}
                 value={selectedOrderDate}
                 onChange={(newValue) => setSelectedOrderDate(newValue)}
                 renderInput={(params) => (
-                  <TextField {...params} error={error.isError} helperText={error.message} />
+                  <TextField
+                    {...params}
+                    error={error.isError}
+                    helperText={error.message}
+                    size="small"
+                  />
                 )}
               />
             </Stack>
