@@ -124,6 +124,7 @@
   "no-previously-saved-payment-methods": "No previously saved payment methods.",
   "add-payment-method": "Add Payment Method",
   "save-payment-method": "Save Payment Method",
+  "save-payment-method-checkbox": "Save Payment Method",
   "payment-method": "Payment Method",
 
   "your-default-shipping-address": "Your default shipping address",

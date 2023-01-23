@@ -19,7 +19,7 @@ describe('[hooks] useUpdateCheckoutPaymentActionMutation', () => {
         const updateCheckoutPaymentActionResponse = await updateCheckoutPaymentAction.mutateAsync({
           checkoutId: '12345',
           paymentId: '45678',
-          paymentAction: {
+          paymentActionInput: {
             currencyCode: 'US',
             amount: 220,
             newBillingInfo: {

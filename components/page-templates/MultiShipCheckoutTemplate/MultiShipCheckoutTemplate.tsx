@@ -140,12 +140,12 @@ const MultiShipCheckoutTemplate = (props: MultiShipCheckoutProps) => {
   const handleVoidPayment = async (
     id: string,
     paymentId: string,
-    paymentAction: PaymentActionInput
+    paymentActionInput: PaymentActionInput
   ) => {
     await updateMultiShipCheckoutPaymentAction.mutateAsync({
       checkoutId: id as string,
       paymentId,
-      paymentAction,
+      paymentActionInput,
     })
   }
 
@@ -204,6 +204,7 @@ const MultiShipCheckoutTemplate = (props: MultiShipCheckoutProps) => {
         {/* @to-do Use below steps for future development */}
         <PaymentStep
           checkout={checkout as Checkout}
+          isMultiShipEnabled={isMultiShipEnabled}
           onVoidPayment={handleVoidPayment}
           onAddPayment={handleAddPayment}
         />

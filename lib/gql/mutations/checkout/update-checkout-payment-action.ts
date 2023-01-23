@@ -2,12 +2,12 @@ const updateCheckoutPaymentActionMutation = /* GraphQL */ `
   mutation updateCheckoutPaymentAction(
     $checkoutId: String!
     $paymentId: String!
-    $paymentAction: PaymentActionInput
+    $paymentActionInput: PaymentActionInput
   ) {
     updateCheckoutPaymentAction(
       checkoutId: $checkoutId
       paymentId: $paymentId
-      paymentActionInput: $paymentAction
+      paymentActionInput: $paymentActionInput
     ) {
       id
       originalCartId

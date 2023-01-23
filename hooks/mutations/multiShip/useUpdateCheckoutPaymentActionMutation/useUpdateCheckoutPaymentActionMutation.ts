@@ -14,7 +14,7 @@ import type { PaymentActionInput } from '@/lib/gql/types'
 export interface UpdateCheckoutPaymentActionInput {
   checkoutId: string
   paymentId: string
-  paymentAction: PaymentActionInput
+  paymentActionInput: PaymentActionInput
 }
 
 const updateCheckoutPayment = async (props: UpdateCheckoutPaymentActionInput) => {
