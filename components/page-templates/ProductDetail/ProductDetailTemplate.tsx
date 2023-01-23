@@ -44,6 +44,7 @@ import {
   useWishlist,
   useProductLocationInventoryQueries,
   usePriceRangeFormatter,
+  useProductPriceQueries,
 } from '@/hooks'
 import { FulfillmentOptions as FulfillmentOptionsConstant, PurchaseTypes } from '@/lib/constants'
 import { productGetters, subscriptionGetters, wishlistGetters } from '@/lib/getters'
@@ -56,6 +57,8 @@ import type {
   ProductOption,
   ProductOptionValue,
   CrProduct,
+  ProductPrice,
+  ProductPriceRange,
 } from '@/lib/gql/types'
 
 interface ProductDetailTemplateProps {
@@ -88,6 +91,16 @@ const ProductDetailTemplate = (props: ProductDetailTemplateProps) => {
   const { getProductLink } = uiHelpers()
   const { product, breadcrumbs = [], isQuickViewModal = false, children } = props
   const { t } = useTranslation('common')
+
+  const [purchaseType, setPurchaseType] = useState<string>(PurchaseTypes.ONETIMEPURCHASE)
+  const [selectedFrequency, setSelectedFrequency] = useState<string>('')
+
+  const isSubscriptionModeAvailable = subscriptionGetters.isSubscriptionModeAvailable(product)
+  const { data: subscriptionPrice } = useProductPriceQueries(
+    product?.productCode as string,
+    isSubscriptionModeAvailable
+  )
+
   const { showModal, closeModal } = useModalContext()
   const { addToCart } = useAddToCartMutation()
   const { data: purchaseLocation } = usePurchaseLocationQueries()
@@ -113,7 +126,7 @@ const ProductDetailTemplate = (props: ProductDetailTemplateProps) => {
     variationProductCode,
     fulfillmentMethod,
     productPrice,
-    productPriceRange,
+    productSubscriptionPrice,
     productRating,
     description,
     shortDescription,
@@ -122,11 +135,14 @@ const ProductDetailTemplate = (props: ProductDetailTemplateProps) => {
     optionsVisibility,
     properties,
     isValidForAddToCart,
-  } = productGetters.getProductDetails({
-    ...currentProduct,
-    fulfillmentMethod: selectedFulfillmentOption?.method,
-    purchaseLocationCode: selectedFulfillmentOption?.location?.code as string,
-  })
+  } = productGetters.getProductDetails(
+    {
+      ...currentProduct,
+      fulfillmentMethod: selectedFulfillmentOption?.method,
+      purchaseLocationCode: selectedFulfillmentOption?.location?.code as string,
+    },
+    subscriptionPrice?.price as ProductPrice
+  )
   const { data: locationInventory } = useProductLocationInventoryQueries(
     (variationProductCode || productCode) as string,
     selectedFulfillmentOption?.location?.code as string
@@ -150,10 +166,6 @@ const ProductDetailTemplate = (props: ProductDetailTemplateProps) => {
     variationProductCode,
   })
 
-  const [purchaseType, setPurchaseType] = useState<string>(PurchaseTypes.ONETIMEPURCHASE)
-  const [selectedFrequency, setSelectedFrequency] = useState<string>('')
-
-  const isSubscriptionModeAvailable = subscriptionGetters.isSubscriptionModeAvailable(product)
   const subscriptionFrequency = subscriptionGetters.getFrequencyValues(product as ProductCustom)
 
   const purchaseTypeRadioOptions = [
@@ -264,7 +276,6 @@ const ProductDetailTemplate = (props: ProductDetailTemplateProps) => {
         ...selectedFulfillmentOption,
         method: FulfillmentOptionsConstant.SHIP,
       })
-      // TODO: Call API to get subscription price
     }
   }
 
@@ -284,14 +295,28 @@ const ProductDetailTemplate = (props: ProductDetailTemplateProps) => {
         <Typography variant="h1" gutterBottom>
           {productName}
         </Typography>
-        <Price
-          price={t<string>('currency', { val: productPrice.regular })}
-          {...(productPrice.special && {
-            salePrice: t<string>('currency', { val: productPrice.special }),
-          })}
-          priceRange={usePriceRangeFormatter(productPriceRange)}
-        />
 
+        <Price
+          price={t<string>('currency', {
+            val:
+              purchaseType === PurchaseTypes.SUBSCRIPTION
+                ? productSubscriptionPrice.regular
+                : productPrice.regular,
+          })}
+          {...((productSubscriptionPrice.special || productPrice.special) && {
+            salePrice: t<string>('currency', {
+              val:
+                purchaseType === PurchaseTypes.SUBSCRIPTION
+                  ? productSubscriptionPrice.special
+                  : productPrice.special,
+            }),
+          })}
+          priceRange={usePriceRangeFormatter(
+            productPrice.special as ProductPriceRange,
+            subscriptionPrice?.priceRange as ProductPriceRange,
+            purchaseType
+          )}
+        />
         <Box paddingY={1} display={shortDescription ? 'block' : 'none'}>
           <Box
             data-testid="short-description"

@@ -14,6 +14,7 @@ import type {
   LocationInventory,
   CrProduct,
   CrProductOption,
+  ProductPrice,
 } from '@/lib/gql/types'
 
 type ProductOptionsReturnType<T> = T extends ProductCustom
@@ -51,6 +52,15 @@ const getPrice = (product: GenericProduct): { regular: number; special: number }
   return {
     regular: product?.price?.price as number,
     special: product?.price?.salePrice as number,
+  }
+}
+
+const getSubscriptionPrice = (
+  subscriptionPrice?: ProductPrice
+): { regular: number; special: number } => {
+  return {
+    regular: subscriptionPrice?.price as number,
+    special: subscriptionPrice?.salePrice as number,
   }
 }
 
@@ -187,7 +197,7 @@ const getIsPackagedStandAlone = (product: ProductCustom): boolean => {
 const isVariationProduct = (product: Product): boolean =>
   Boolean(product?.options?.filter((option) => option?.isRequired === true).length)
 
-const getProductDetails = (product: ProductCustom) => {
+const getProductDetails = (product: ProductCustom, subscriptionPrice?: ProductPrice) => {
   const productOptions = getSegregatedOptions(product)
 
   return {
@@ -196,6 +206,7 @@ const getProductDetails = (product: ProductCustom) => {
     variationProductCode: getVariationProductCodeOrProductCode(product),
     fulfillmentMethod: getSelectedFulfillmentOption(product),
     productPrice: getPrice(product),
+    productSubscriptionPrice: getSubscriptionPrice(subscriptionPrice),
     productPriceRange: getPriceRange(product),
     productRating: getRating(product),
     description: getDescription(product),

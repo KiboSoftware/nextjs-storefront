@@ -51,8 +51,10 @@ const getFrequencyValues = (product: SbProduct | ProductCustom | null | undefine
 const isSubscriptionModeAvailable = (product: ProductCustom | null | undefined) => {
   if (!product) return false
 
-  return product?.properties?.some(
-    (property) => property?.attributeFQN === ProductAttribute.SUBSCRIPTION_Mode
+  return (
+    product?.properties?.some(
+      (property) => property?.attributeFQN === ProductAttribute.SUBSCRIPTION_Mode
+    ) || false
   )
 }
 

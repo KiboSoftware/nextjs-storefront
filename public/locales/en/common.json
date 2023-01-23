@@ -317,5 +317,7 @@
   "address-updated-successfully": "Address updated successfully",
   "item-ordered-successfully": "Item ordered successfully",
   "select-shipping-address": "Select shipping address",
-  "subscription-frequency": "Subscription frequency"
+  "subscription-frequency": "Subscription frequency",
+
+  "fulfillment-options": "Fulfillment Options:"
 }

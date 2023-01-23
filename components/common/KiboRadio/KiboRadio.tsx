@@ -46,7 +46,7 @@ export const KiboRadio = (props: KiboRadioProps) => {
     <FormControl>
       <FormLabel
         id="kibo-radio-buttons-group-label"
-        sx={{ fontSize: 'subtitle2', color: 'text.primary', pb: 1 }}
+        sx={{ fontSize: 'body2', color: 'text.primary', pb: 1 }}
       >
         {title}
       </FormLabel>
