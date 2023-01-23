@@ -157,7 +157,7 @@ const MultiShippingStep = (props: MultiShippingStepProps) => {
     const { destinationId } = params
     const checkoutId = checkout?.id as string
 
-    for (const item of shipItems as CrOrderItem[]) {
+    for (const item of shipItems) {
       const itemId = item?.id as string
       await updateItemDestination({
         itemId,

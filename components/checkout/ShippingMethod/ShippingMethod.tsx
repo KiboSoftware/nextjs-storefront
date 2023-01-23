@@ -91,7 +91,7 @@ const PickupItemList = (pickupProps: PickupItemListProps) => {
     pickupItems as CrOrderItem[]
   )
   const { data: locations } = useStoreLocationsQueries({ filter: fulfillmentLocationCodes })
-  const storePickupAddress = storeLocationGetters.getLocations(locations as Maybe<Location>[])
+  const storePickupAddress = storeLocationGetters.getLocations(locations)
 
   return (
     <Box data-testid="pickup-items">

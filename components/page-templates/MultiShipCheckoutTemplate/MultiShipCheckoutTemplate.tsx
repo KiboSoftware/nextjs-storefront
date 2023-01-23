@@ -143,7 +143,7 @@ const MultiShipCheckoutTemplate = (props: MultiShipCheckoutProps) => {
     paymentActionInput: PaymentActionInput
   ) => {
     await updateMultiShipCheckoutPaymentAction.mutateAsync({
-      checkoutId: id as string,
+      checkoutId: id,
       paymentId,
       paymentActionInput,
     })

@@ -27,7 +27,6 @@ import {
 } from '@/components/common'
 import type { OrderPriceProps } from '@/components/common/OrderPrice/OrderPrice'
 import { useCheckoutStepContext, useAuthContext } from '@/context'
-import { useCreateOrderMutation } from '@/hooks'
 import { addressGetters, checkoutGetters, orderGetters, productGetters } from '@/lib/getters'
 import { isPasswordValid } from '@/lib/helpers/validations/validations'
 

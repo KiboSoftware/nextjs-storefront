@@ -311,7 +311,7 @@ const PaymentStep = (props: PaymentStepProps) => {
 
     if (checkout?.id) {
       paymentAction = { ...paymentAction, actionName: '' }
-      onAddPayment(checkout.id as string, paymentAction)
+      onAddPayment(checkout.id, paymentAction)
       setStepStatusComplete()
       setStepNext()
     }
