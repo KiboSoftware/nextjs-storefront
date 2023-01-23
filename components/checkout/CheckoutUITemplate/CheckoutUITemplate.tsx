@@ -56,7 +56,7 @@ const CheckoutUITemplate = <T extends CrOrder | Checkout>(props: CheckoutUITempl
 
     discountedSubtotal:
       discountedSubtotal > 0 && discountedSubtotal !== subTotal
-        ? t('currency', { val: subTotal - discountedSubtotal })
+        ? t('currency', { val: discountedSubtotal })
         : '',
     shippingTotal: checkout?.shippingTotal
       ? t('currency', { val: checkout?.shippingTotal })
