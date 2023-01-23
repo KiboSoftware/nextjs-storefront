@@ -57,9 +57,7 @@ describe('[component]', () => {
     setup()
 
     // Arrange
-    const orderDateInput = screen.getByRole('textbox', {
-      name: /order-date/i,
-    })
+    const orderDateInput = screen.getByRole('textbox')
     const message = screen.getByText(/date-must-be-in-the-future/i)
     const cancelButton = screen.getByRole('button', { name: /cancel/i })
     const confirmButton = screen.getByRole('button', { name: /confirm/i })
@@ -76,9 +74,7 @@ describe('[component]', () => {
       setup()
 
       // Arrange
-      const orderDateInput = screen.getByRole('textbox', {
-        name: /order-date/i,
-      })
+      const orderDateInput = screen.getByRole('textbox')
 
       // Act
       await user.clear(orderDateInput)
@@ -92,9 +88,7 @@ describe('[component]', () => {
       setup()
 
       // Arrange
-      const orderDateInput = screen.getByRole('textbox', {
-        name: /order-date/i,
-      })
+      const orderDateInput = screen.getByRole('textbox')
 
       // Act
       await user.clear(orderDateInput)
@@ -109,9 +103,7 @@ describe('[component]', () => {
       setup()
 
       // Arrange
-      const orderDateInput = screen.getByRole('textbox', {
-        name: /order-date/i,
-      })
+      const orderDateInput = screen.getByRole('textbox')
 
       // Act
       await user.clear(orderDateInput)
@@ -126,9 +118,7 @@ describe('[component]', () => {
       setup()
 
       // Arrange
-      const orderDateInput = screen.getByRole('textbox', {
-        name: /order-date/i,
-      })
+      const orderDateInput = screen.getByRole('textbox')
       const confirmButton = screen.getByRole('button', { name: /confirm/i })
 
       // Act
@@ -152,9 +142,7 @@ describe('[component]', () => {
     const { onOrderDateUpdateMock } = setup()
 
     // Arrange
-    const orderDateInput = screen.getByRole('textbox', {
-      name: /order-date/i,
-    })
+    const orderDateInput = screen.getByRole('textbox')
     const confirmButton = screen.getByRole('button', { name: /confirm/i })
 
     // Act
