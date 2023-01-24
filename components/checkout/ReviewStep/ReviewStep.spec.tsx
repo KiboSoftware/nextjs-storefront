@@ -37,40 +37,40 @@ const setup = (isAuthenticated = false) => {
 
 describe('[components] ReviewStep', () => {
   describe('[StandardCheckout]', () => {
-    // it('should render component', () => {
-    //   const isAuthenticated = false
-    //   setup(isAuthenticated)
-    //   const reviewComponent = screen.getByTestId(/review-step-component/i)
-    //   const orderDetailsHeading = screen.getByRole('heading', {
-    //     name: /order-details/i,
-    //   })
-    //   const shippingToHomeHeading = screen.getByRole('heading', {
-    //     name: /shipping-to-home/i,
-    //   })
-    //   const pickupInStoreHeading = screen.getByRole('heading', {
-    //     name: /pickup-in-store/i,
-    //   })
-    //   const productItemListMock = screen.getAllByTestId('product-item-list-mock')
-    //   const iAgreeCheckbox = screen.getByRole('checkbox', { name: /termsConditions/i })
-    //   const iWantToCreateAccountCheckbox = screen.getByRole('checkbox', {
-    //     name: /showaccountfields/i,
-    //   })
-    //   const confirmAndPayButton = screen.getByRole('button', {
-    //     name: /confirm-and-pay/i,
-    //   })
-    //   const goBackButton = screen.getByRole('button', {
-    //     name: /go-back/i,
-    //   })
-    //   expect(reviewComponent).toBeInTheDocument()
-    //   expect(orderDetailsHeading).toBeVisible()
-    //   expect(shippingToHomeHeading).toBeVisible()
-    //   expect(pickupInStoreHeading).toBeVisible()
-    //   expect(productItemListMock.length).toBe(2)
-    //   expect(iAgreeCheckbox).toBeInTheDocument()
-    //   expect(iWantToCreateAccountCheckbox).toBeInTheDocument()
-    //   expect(confirmAndPayButton).toBeVisible()
-    //   expect(goBackButton).toBeVisible()
-    // })
+    it('should render component', () => {
+      const isAuthenticated = false
+      setup(isAuthenticated)
+      const reviewComponent = screen.getByTestId(/review-step-component/i)
+      const orderDetailsHeading = screen.getByRole('heading', {
+        name: /order-details/i,
+      })
+      const shippingToHomeHeading = screen.getByRole('heading', {
+        name: /shipping-to-home/i,
+      })
+      const pickupInStoreHeading = screen.getByRole('heading', {
+        name: /pickup-in-store/i,
+      })
+      const productItemListMock = screen.getAllByTestId('product-item-list-mock')
+      const iAgreeCheckbox = screen.getByRole('checkbox', { name: /termsConditions/i })
+      const iWantToCreateAccountCheckbox = screen.getByRole('checkbox', {
+        name: /showaccountfields/i,
+      })
+      const confirmAndPayButton = screen.getByRole('button', {
+        name: /confirm-and-pay/i,
+      })
+      const goBackButton = screen.getByRole('button', {
+        name: /go-back/i,
+      })
+      expect(reviewComponent).toBeInTheDocument()
+      expect(orderDetailsHeading).toBeVisible()
+      expect(shippingToHomeHeading).toBeVisible()
+      expect(pickupInStoreHeading).toBeVisible()
+      expect(productItemListMock.length).toBe(2)
+      expect(iAgreeCheckbox).toBeInTheDocument()
+      expect(iWantToCreateAccountCheckbox).toBeInTheDocument()
+      expect(confirmAndPayButton).toBeVisible()
+      expect(goBackButton).toBeVisible()
+    })
   })
 
   it('should enable "Go To Payment" button when "terms and conditions" is checked and "I want to create an account" is unchecked', async () => {
@@ -92,16 +92,6 @@ describe('[components] ReviewStep', () => {
 
     expect(confirmAndPayButton).toBeEnabled()
   })
-
-  // it('should show multiShipping addresses when multiShip is enabled', () => {
-  //   render(<WithMultiShippingAddresses {...WithMultiShippingAddresses.args} />)
-
-  //   const multiShipHeading = screen.getByRole('heading', {
-  //     name: /shipping-to-address/i,
-  //   })
-
-  //   expect(multiShipHeading).toBeInTheDocument()
-  // })
 
   describe('If user is not authenticated', () => {
     it("should enable 'I want to create an account' checkbox when user is not loggedIn", async () => {

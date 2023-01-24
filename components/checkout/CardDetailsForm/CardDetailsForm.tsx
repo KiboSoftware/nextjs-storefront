@@ -114,7 +114,7 @@ const CardDetailsForm = (props: CardDetailsFormProps) => {
               helperText={errors?.cardNumber?.message as unknown as string}
               icon={
                 <Box pr={1}>
-                  <KiboImage src={cardTypeLogo} alt={'cardType'} width={35} height={35} />
+                  <KiboImage src={cardTypeLogo} alt={'cardType'} width={24} height={24} />
                 </Box>
               }
               {...(cardValue && { disabled: true })}
@@ -153,7 +153,11 @@ const CardDetailsForm = (props: CardDetailsFormProps) => {
               onBlur={field.onBlur}
               error={!!errors?.cvv}
               helperText={errors?.cvv?.message as unknown as string}
-              icon={<Help color="disabled" />}
+              icon={
+                <Box pr={1} pt={0.5}>
+                  <Help color="disabled" />
+                </Box>
+              }
               {...(cardValue && { disabled: true })}
             />
           )}

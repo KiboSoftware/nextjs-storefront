@@ -239,7 +239,7 @@ const ReviewStep = (props: ReviewStepProps) => {
                       options={productGetters.getOptions(product)}
                       price={productGetters.getPrice(product).regular?.toString()}
                       salePrice={productGetters.getPrice(product).special?.toString()}
-                      // expectedDeliveryDate={expectedDeliveryDate}
+                      expectedDeliveryDate={item?.expectedDeliveryDate}
                       data-testid="product-item-multi-ship"
                     />
                   </Stack>
