@@ -1,6 +1,9 @@
+import React from 'react'
+
 import { composeStories } from '@storybook/testing-react'
 import { render, within, screen } from '@testing-library/react'
 import '@testing-library/jest-dom'
+import userEvent from '@testing-library/user-event'
 
 import * as stories from './ProductDetailTemplate.stories' // import all stories from the stories file
 import {
@@ -9,10 +12,13 @@ import {
   userResponseMock,
   wishlistMock,
   productSearchResultMock,
+  fulfillmentOptionsMock,
 } from '@/__mocks__/stories'
-import { PurchaseTypes } from '@/lib/constants'
+import { productPriceMock } from '@/__mocks__/stories/productPriceMock'
 
-const { Common, WithMoreDetails } = composeStories(stories)
+const { Common, WithMoreDetails, WithSubscription } = composeStories(stories)
+
+const user = userEvent.setup()
 
 const ColorSelectorMock = () => <div data-testid="color-selector-mock" />
 jest.mock('@/components/product/ColorSelector/ColorSelector', () => () => ColorSelectorMock())
@@ -47,54 +53,11 @@ jest.mock(
   () => () => QuantitySelectorMock()
 )
 
-const FulfillmentOptionsMock = () => <div data-testid="fulfillment-options-mock" />
-jest.mock(
-  '@/components/common/FulfillmentOptions/FulfillmentOptions',
-  () => () => FulfillmentOptionsMock()
-)
-
 const ProductInformationMock = () => <div data-testid="product-information-mock" />
 jest.mock(
   '@/components/product/ProductInformation/ProductInformation',
   () => () => ProductInformationMock()
 )
-
-const radioOptions = [
-  {
-    value: PurchaseTypes.SUBSCRIPTION,
-    name: PurchaseTypes.SUBSCRIPTION,
-    label: <p data-testid="subscription">{PurchaseTypes.SUBSCRIPTION}</p>,
-  },
-  {
-    value: PurchaseTypes.ONETIMEPURCHASE,
-    name: PurchaseTypes.ONETIMEPURCHASE,
-    label: <p data-testid="onetimepurchase">{PurchaseTypes.ONETIMEPURCHASE}</p>,
-  },
-]
-
-jest.mock('../../common/KiboRadio/KiboRadio', () => ({
-  __esModule: true,
-  default: ({
-    handlePurchaseTypeSelection,
-  }: {
-    handlePurchaseTypeSelection: (prop: { option: string }) => void
-  }) => (
-    <div data-testid="purchase-types">
-      <input
-        type="radio"
-        name="subscription"
-        value={PurchaseTypes.SUBSCRIPTION}
-        onClick={() => handlePurchaseTypeSelection({ option: PurchaseTypes.SUBSCRIPTION })}
-      />
-      <input
-        type="radio"
-        name="onetime_purchase"
-        value={PurchaseTypes.ONETIMEPURCHASE}
-        onClick={() => handlePurchaseTypeSelection({ option: PurchaseTypes.ONETIMEPURCHASE })}
-      />
-    </div>
-  ),
-}))
 
 const mockProduct = Common?.args?.product
 const mockWishlist = wishlistMock?.items[0]
@@ -104,6 +67,7 @@ const mockUser = userResponseMock
 const mockProductSearch = productSearchResultMock
 const mockLocationsResponse = locationCollectionMock.spLocations
 const mockInventory = locationInventoryCollectionMock
+const mockProductPrice = productPriceMock
 
 jest.mock('@/hooks', () => ({
   useProductDetailTemplate: jest.fn(() => {
@@ -137,6 +101,7 @@ jest.mock('@/hooks', () => ({
   useStoreLocationsQueries: jest.fn(() => ({ mockLocationsResponse })),
   useProductLocationInventoryQueries: jest.fn(() => mockInventory),
   usePriceRangeFormatter: jest.fn(() => '$100 - $200'),
+  useProductPriceQueries: jest.fn(() => ({ mockProductPrice })),
 }))
 
 const setup = () => {
@@ -225,11 +190,18 @@ describe('[component] Product Detail Template component', () => {
     expect(QuantitySelector).toBeVisible()
   })
 
-  it('should render the FulfillmentOptions component', () => {
+  it('should render the fulfillment Options', () => {
     setup()
+    const mockFulfillmentOptions = fulfillmentOptionsMock || []
 
-    const FulfillmentOptions = screen.getByTestId('fulfillment-options-mock')
-    expect(FulfillmentOptions).toBeVisible()
+    const sthBtn = screen.getByRole('radio', {
+      name: new RegExp(`${mockFulfillmentOptions[0]?.shortName}`),
+    })
+    const pickupBtn = screen.getByRole('radio', {
+      name: new RegExp(`${mockFulfillmentOptions[1]?.shortName}`),
+    })
+    expect(sthBtn).toBeInTheDocument()
+    expect(pickupBtn).toBeInTheDocument()
   })
 
   it('should render the Add to Cart Button', () => {
@@ -285,5 +257,34 @@ describe('[component] Product Detail Template component', () => {
     })
 
     expect(moreDetail).toBeInTheDocument()
+  })
+
+  it('should be selected one-time purchase option by default and fulfillment option should be visible', async () => {
+    render(<WithSubscription {...WithSubscription?.args} />)
+
+    const onetimePurchaseBtn = screen.getByRole('radio', { name: /one\-time purchase/i })
+    const subscriptionBtn = screen.getByRole('radio', { name: /subscription/i })
+    expect(onetimePurchaseBtn).toBeInTheDocument()
+    expect(subscriptionBtn).toBeInTheDocument()
+    expect(onetimePurchaseBtn).toBeChecked()
+    const fulfillmentOptions = screen.getByText(/fulfillment-options/i)
+    expect(fulfillmentOptions).toBeInTheDocument()
+  })
+
+  it('should select subscription option and display subscription frequency, hide the fulfillment option', async () => {
+    render(<WithSubscription {...WithSubscription?.args} />)
+    const subscriptionBtn = screen.getByRole('radio', { name: /subscription/i })
+    await user.click(subscriptionBtn)
+    expect(subscriptionBtn).toBeChecked()
+
+    const selectButton = await screen.findByLabelText(/subscription-frequency/i)
+    expect(selectButton).toBeVisible()
+    await user.click(selectButton)
+
+    const listbox = within(screen.getByRole('listbox'))
+    expect(listbox.getByRole('option', { name: '45 Days' })).toBeVisible()
+
+    const fulfillmentOptions = screen.queryByText(/fulfillment-options/i)
+    expect(fulfillmentOptions).not.toBeInTheDocument()
   })
 })

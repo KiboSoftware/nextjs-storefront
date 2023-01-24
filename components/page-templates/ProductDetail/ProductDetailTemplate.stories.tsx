@@ -58,3 +58,44 @@ WithMoreDetails.args = {
   product: ProductCustomMock,
   isQuickViewModal: true,
 }
+
+export const WithSubscription = Template.bind({})
+WithSubscription.args = {
+  product: {
+    ...ProductCustomMock,
+    properties: [
+      {
+        attributeFQN: 'system~subscription-mode',
+        isHidden: false,
+        values: [
+          {
+            value: 'SAOT',
+            stringValue: 'Subscription and one-time purchase',
+          },
+        ],
+      },
+      {
+        attributeFQN: 'system~subscription-frequency',
+        isHidden: false,
+        values: [
+          {
+            value: 'D15',
+            stringValue: '15 Days',
+          },
+          {
+            value: 'D45',
+            stringValue: '45 Days',
+          },
+          {
+            value: 'M3',
+            stringValue: '3 months',
+          },
+          {
+            value: 'W1',
+            stringValue: '1 week',
+          },
+        ],
+      },
+    ],
+  },
+}

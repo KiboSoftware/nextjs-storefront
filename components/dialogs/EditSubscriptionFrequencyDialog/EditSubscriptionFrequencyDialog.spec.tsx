@@ -78,7 +78,7 @@ describe('[components] EditSubscriptionFrequencyDialog', () => {
     const cancelButton = screen.getByRole('button', {
       name: /cancel/i,
     })
-    const confirmButtton = screen.getByRole('button', {
+    const confirmButton = screen.getByRole('button', {
       name: /confirm/i,
     })
 
@@ -92,18 +92,18 @@ describe('[components] EditSubscriptionFrequencyDialog', () => {
     })
 
     expect(cancelButton).toBeVisible()
-    expect(confirmButtton).toBeVisible()
-    expect(confirmButtton).toBeDisabled()
+    expect(confirmButton).toBeVisible()
+    expect(confirmButton).toBeDisabled()
   })
 
-  it('sholud only enable Confirm button when user selects frequency', async () => {
+  it('should only enable Confirm button when user selects frequency', async () => {
     setup()
 
-    const confirmButtton = screen.getByRole('button', {
+    const confirmButton = screen.getByRole('button', {
       name: /confirm/i,
     })
-    expect(confirmButtton).toBeVisible()
-    expect(confirmButtton).toBeDisabled()
+    expect(confirmButton).toBeVisible()
+    expect(confirmButton).toBeDisabled()
 
     // Act
     const kiboSelectBtn = screen.getByRole('button', {
@@ -115,7 +115,7 @@ describe('[components] EditSubscriptionFrequencyDialog', () => {
     await user.click(within(listbox).getByRole('option', { name: '45 Days' }))
 
     //Assert
-    expect(confirmButtton).toBeEnabled()
+    expect(confirmButton).toBeEnabled()
   })
 
   it('should call callback function when user selects frequency and clicks on Confirm button', async () => {
@@ -130,14 +130,14 @@ describe('[components] EditSubscriptionFrequencyDialog', () => {
     const listbox = await screen.findByRole('listbox')
     await user.click(within(listbox).getByRole('option', { name: '45 Days' }))
 
-    // Click on Confrim button
-    const confirmlButton = screen.getByRole('button', {
+    // Click on Confirm button
+    const confirmButton = screen.getByRole('button', {
       name: /confirm/i,
     })
 
-    expect(confirmlButton).toBeVisible()
-    expect(confirmlButton).toBeEnabled()
-    await user.click(confirmlButton)
+    expect(confirmButton).toBeVisible()
+    expect(confirmButton).toBeEnabled()
+    await user.click(confirmButton)
 
     expect(onFrequencySaveMock).toHaveBeenCalledWith({
       subscriptionId: '1',

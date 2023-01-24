@@ -318,4 +318,5 @@ export const productGetters = {
   isVariationProduct,
   getProductImage,
   getProductDetails,
+  getSubscriptionPrice,
 }

@@ -195,7 +195,7 @@ const ProductDetailTemplate = (props: ProductDetailTemplateProps) => {
         quantity,
         ...(purchaseType === PurchaseTypes.SUBSCRIPTION && {
           subscription: {
-            frequency: subscriptionGetters.getSubscriptionFrequencyUnit(selectedFrequency),
+            frequency: subscriptionGetters.getFrequencyUnitAndValue(selectedFrequency),
           },
         }),
       })
@@ -430,7 +430,7 @@ const ProductDetailTemplate = (props: ProductDetailTemplateProps) => {
         <Box paddingY={1}>
           {purchaseType === PurchaseTypes.SUBSCRIPTION && (
             <KiboSelect
-              name="selectSubscriptionFrequency"
+              name={t('subscription-frequency')}
               onChange={handleFrequencyChange}
               placeholder={t('select-subscription-frequency')}
               value={selectedFrequency}

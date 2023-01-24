@@ -31,6 +31,17 @@ describe('[getters] productGetters', () => {
     })
   })
 
+  it('should return the product subscription price', () => {
+    ProductCustomMock.price = {
+      price: 100,
+      salePrice: 50,
+    }
+    expect(productGetters.getSubscriptionPrice(ProductCustomMock?.price)).toStrictEqual({
+      regular: 100,
+      special: 50,
+    })
+  })
+
   it('should return the product breadcrumbs', () => {
     const breadcrumbs = [
       {

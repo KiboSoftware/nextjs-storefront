@@ -58,7 +58,7 @@ const isSubscriptionModeAvailable = (product: ProductCustom | null | undefined) 
   )
 }
 
-const getSubscriptionFrequencyUnit = (selectedFrequency: string) => {
+const getFrequencyUnitAndValue = (selectedFrequency: string) => {
   const [value, unit] = selectedFrequency.split(' ')
 
   // API accepts unit as singular ex. day or month
@@ -93,5 +93,5 @@ export const subscriptionGetters = {
   getFrequencyValues,
   getFormattedAddress,
   isSubscriptionModeAvailable,
-  getSubscriptionFrequencyUnit,
+  getFrequencyUnitAndValue,
 }

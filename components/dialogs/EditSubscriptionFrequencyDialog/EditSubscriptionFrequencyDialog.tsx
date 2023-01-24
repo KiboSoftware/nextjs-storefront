@@ -33,7 +33,7 @@ const EditSubscriptionFrequencyDialog = (props: EditSubscriptionFrequencyDialogP
   const updateFrequency = async () => {
     const params = {
       subscriptionId,
-      frequencyInput: subscriptionGetters.getSubscriptionFrequencyUnit(selectedFrequency),
+      frequencyInput: subscriptionGetters.getFrequencyUnitAndValue(selectedFrequency),
     }
 
     await onFrequencySave(params)
