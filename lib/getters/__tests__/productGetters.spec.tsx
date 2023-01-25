@@ -1,5 +1,5 @@
-import { ProductCustomMock } from '../../../__mocks__/stories/ProductCustomMock'
 import { productGetters } from '../productGetters'
+import { ProductCustomMock, ProductSubscriptionMock } from '@/__mocks__/stories/ProductCustomMock'
 
 import type { ProductOption } from '@/lib/gql/types'
 
@@ -32,11 +32,11 @@ describe('[getters] productGetters', () => {
   })
 
   it('should return the product subscription price', () => {
-    ProductCustomMock.price = {
+    ProductSubscriptionMock.price = {
       price: 100,
       salePrice: 50,
     }
-    expect(productGetters.getSubscriptionPrice(ProductCustomMock?.price)).toStrictEqual({
+    expect(productGetters.getSubscriptionPrice(ProductSubscriptionMock?.price)).toStrictEqual({
       regular: 100,
       special: 50,
     })

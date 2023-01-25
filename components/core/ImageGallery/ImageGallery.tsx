@@ -190,7 +190,7 @@ const ImageGallery = (props: ImageGalleryProps) => {
                         productGetters.handleProtocolRelativeUrl(image?.imageUrl as string) ||
                         placeholderImageUrl
                       }
-                      alt={image?.altText as string}
+                      alt={(image?.altText as string) || t('product-image-alt')}
                       layout="fill"
                       objectFit="contain"
                       errorimage={placeholderImageUrl}

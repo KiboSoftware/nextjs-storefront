@@ -56,7 +56,7 @@ export const useProductPriceQueries = (
     productKeys.productParams(productCode, useSubscriptionPricing),
     () => fetchProductPrice(productCode, useSubscriptionPricing),
     {
-      enabled: !!(productCode && useProductPriceQueries),
+      enabled: !!(productCode && useSubscriptionPricing),
       refetchOnWindowFocus: true,
     }
   )

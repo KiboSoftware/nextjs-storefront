@@ -271,7 +271,7 @@ const ProductDetailTemplate = (props: ProductDetailTemplateProps) => {
 
   const handlePurchaseTypeSelection = (option: string) => {
     setPurchaseType(option)
-    if (purchaseType === PurchaseTypes.SUBSCRIPTION) {
+    if (option === PurchaseTypes.SUBSCRIPTION) {
       setSelectedFulfillmentOption({
         ...selectedFulfillmentOption,
         method: FulfillmentOptionsConstant.SHIP,

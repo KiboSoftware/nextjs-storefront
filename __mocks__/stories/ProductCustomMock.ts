@@ -219,58 +219,6 @@ export const ProductCustomMock: ProductCustom = {
         },
       ],
     },
-    {
-      attributeFQN: 'system~subscription-mode',
-      attributeDetail: {
-        name: 'Subscription Mode',
-        dataTypeSequence: 0,
-      },
-      isMultiValue: false,
-      values: [
-        {
-          stringValue: 'Subscription and one-time purchase',
-          value: 'SAOT',
-        },
-      ],
-    },
-    {
-      attributeFQN: 'system~subscription-frequency',
-      attributeDetail: {
-        name: 'Subscription Frequency',
-        dataTypeSequence: 0,
-      },
-      isMultiValue: true,
-      values: [
-        {
-          stringValue: '15 Days',
-          value: 'D15',
-        },
-        {
-          stringValue: '45 Days',
-          value: 'D45',
-        },
-        {
-          stringValue: '60 Days',
-          value: 'D60',
-        },
-        {
-          stringValue: '1 month',
-          value: 'M1',
-        },
-        {
-          stringValue: '3 months',
-          value: 'M3',
-        },
-        {
-          stringValue: '4 months',
-          value: 'M4',
-        },
-        {
-          stringValue: '1 week',
-          value: 'W1',
-        },
-      ],
-    },
   ],
   content: {
     productFullDescription: '<br>',
@@ -458,4 +406,54 @@ export const ProductCustomMock: ProductCustom = {
     onlineSoftStockAvailable: 100,
     onlineStockAvailable: 100,
   },
+}
+
+export const ProductSubscriptionMock: ProductCustom = {
+  ...ProductCustomMock,
+  properties: [
+    {
+      attributeFQN: 'system~subscription-mode',
+      isHidden: false,
+      values: [
+        {
+          value: 'SAOT',
+          stringValue: 'Subscription and one-time purchase',
+        },
+      ],
+    },
+    {
+      attributeFQN: 'system~subscription-frequency',
+      isHidden: false,
+      values: [
+        {
+          stringValue: '15 Days',
+          value: 'D15',
+        },
+        {
+          stringValue: '45 Days',
+          value: 'D45',
+        },
+        {
+          stringValue: '60 Days',
+          value: 'D60',
+        },
+        {
+          stringValue: '1 month',
+          value: 'M1',
+        },
+        {
+          stringValue: '3 months',
+          value: 'M3',
+        },
+        {
+          stringValue: '4 months',
+          value: 'M4',
+        },
+        {
+          stringValue: '1 week',
+          value: 'W1',
+        },
+      ],
+    },
+  ],
 }
