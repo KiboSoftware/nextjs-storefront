@@ -1,21 +1,23 @@
 import { QueryClient } from 'react-query'
 
-const queryClientHandler = (error: unknown) => {
+const queryClientHandler = (error: unknown, showSnackbar: any) => {
   const id = 'react-query-error'
   const title = error instanceof Error ? error.message : 'Unable to connect server'
   const status = 'error'
 
   console.log(`id: ${id}, title: ${title}, status: ${status}`)
+
+  showSnackbar('Something went wrong', status)
 }
 
-export const generateQueryClient = (): QueryClient => {
+export const generateQueryClient = (showSnackbar?: any): QueryClient => {
   return new QueryClient({
     defaultOptions: {
       queries: {
-        onError: queryClientHandler,
+        onError: (error) => queryClientHandler(error, showSnackbar),
       },
       mutations: {
-        onError: queryClientHandler,
+        onError: (error) => queryClientHandler(error, showSnackbar),
       },
     },
   })

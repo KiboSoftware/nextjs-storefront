@@ -3,7 +3,7 @@ const getCartQuery = /* GraphQL */ `
   ${cartDetails}
 
   query cart {
-    currentCart {
+    currentCar {
       ...cartDetails
     }
   }

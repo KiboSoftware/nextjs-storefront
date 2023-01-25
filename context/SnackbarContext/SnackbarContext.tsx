@@ -2,6 +2,9 @@ import { createContext, ReactNode, useContext, useState, forwardRef } from 'reac
 
 import MuiAlert, { AlertColor, AlertProps } from '@mui/material/Alert'
 import Snackbar from '@mui/material/Snackbar'
+import { QueryClientProvider } from 'react-query'
+
+import { generateQueryClient } from '@/lib/react-query/queryClient'
 
 interface SnackbarContextType {
   snackbarInfo: SnackbarStateType
@@ -35,6 +38,7 @@ export const SnackbarContextProvider = ({ children }: SnackbarContextProviderPro
     message: '',
     type: 'info',
   })
+  const [queryClient] = useState(() => generateQueryClient)
 
   const showSnackbar = (message: string, type: AlertColor) => {
     setSnackbarInfo({
@@ -62,7 +66,11 @@ export const SnackbarContextProvider = ({ children }: SnackbarContextProviderPro
     showSnackbar,
     hideSnackbar,
   }
-  return <SnackbarContext.Provider value={values}>{children}</SnackbarContext.Provider>
+  return (
+    <QueryClientProvider client={queryClient(showSnackbar)}>
+      <SnackbarContext.Provider value={values}>{children}</SnackbarContext.Provider>
+    </QueryClientProvider>
+  )
 }
 
 export const useSnackbarContext = () => {
