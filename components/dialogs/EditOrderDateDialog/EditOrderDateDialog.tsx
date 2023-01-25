@@ -41,28 +41,26 @@ const EditOrderDateDialog = (props: EditOrderDateDialogProps) => {
   })()
 
   const Actions = (
-    <>
-      <Stack gap={2} width="100%">
-        <Button
-          name="cancel"
-          sx={{ width: '100%' }}
-          variant="contained"
-          color="secondary"
-          onClick={() => onClose()}
-        >
-          {t('cancel')}
-        </Button>
-        <Button
-          name="confirm"
-          sx={{ width: '100%' }}
-          variant="contained"
-          disabled={error.isError}
-          onClick={handleOrderDateUpdate}
-        >
-          {t('confirm')}
-        </Button>
-      </Stack>
-    </>
+    <Stack gap={2} width="100%">
+      <Button
+        name="cancel"
+        sx={{ width: '100%' }}
+        variant="contained"
+        color="secondary"
+        onClick={() => onClose()}
+      >
+        {t('cancel')}
+      </Button>
+      <Button
+        name="confirm"
+        sx={{ width: '100%' }}
+        variant="contained"
+        disabled={error.isError}
+        onClick={handleOrderDateUpdate}
+      >
+        {t('confirm')}
+      </Button>
+    </Stack>
   )
 
   return (
@@ -73,27 +71,25 @@ const EditOrderDateDialog = (props: EditOrderDateDialogProps) => {
       showContentBottomDivider={true}
       Actions={Actions}
       Content={
-        <>
-          <LocalizationProvider dateAdapter={AdapterDayjs}>
-            <Stack spacing={3}>
-              <DatePicker
-                disablePast
-                openTo="year"
-                views={['year', 'month', 'day']}
-                value={selectedOrderDate}
-                onChange={(newValue) => setSelectedOrderDate(newValue)}
-                renderInput={(params) => (
-                  <TextField
-                    {...params}
-                    error={error.isError}
-                    helperText={error.message}
-                    size="small"
-                  />
-                )}
-              />
-            </Stack>
-          </LocalizationProvider>
-        </>
+        <LocalizationProvider dateAdapter={AdapterDayjs}>
+          <Stack spacing={3}>
+            <DatePicker
+              disablePast
+              openTo="year"
+              views={['year', 'month', 'day']}
+              value={selectedOrderDate}
+              onChange={(newValue) => setSelectedOrderDate(newValue)}
+              renderInput={(params) => (
+                <TextField
+                  {...params}
+                  error={error.isError}
+                  helperText={error.message}
+                  size="small"
+                />
+              )}
+            />
+          </Stack>
+        </LocalizationProvider>
       }
       customMaxWidth="30rem"
       onClose={onClose}

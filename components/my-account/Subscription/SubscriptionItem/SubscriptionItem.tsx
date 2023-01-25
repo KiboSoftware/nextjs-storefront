@@ -22,14 +22,9 @@ import {
 } from '@/hooks'
 import { subscriptionGetters, productGetters } from '@/lib/getters'
 import { uiHelpers, buildSubscriptionFulfillmentInfoParams } from '@/lib/helpers'
-import type { Address } from '@/lib/types'
+import type { Address, FulfillmentInfo } from '@/lib/types'
 
-import type { CrProduct, Subscription, SbContact } from '@/lib/gql/types'
-
-export interface FulfillmentInfo {
-  formattedAddress: string
-  fulfillmentContact: SbContact
-}
+import type { CrProduct, Subscription } from '@/lib/gql/types'
 
 interface SubscriptionItemProps {
   subscriptionDetailsData: Subscription

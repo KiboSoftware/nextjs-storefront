@@ -6,9 +6,10 @@ import lodash from 'lodash'
 import { useTranslation } from 'next-i18next'
 
 import { SubscriptionItem } from '@/components/my-account'
-import type { FulfillmentInfo } from '@/components/my-account/Subscription/SubscriptionItem/SubscriptionItem'
+import type {} from '@/components/my-account/Subscription/SubscriptionItem/SubscriptionItem'
 import { useSubscriptionsQueries } from '@/hooks'
 import { subscriptionGetters } from '@/lib/getters'
+import type { FulfillmentInfo } from '@/lib/types'
 
 import type { Subscription } from '@/lib/gql/types'
 interface SubscriptionListProps {
