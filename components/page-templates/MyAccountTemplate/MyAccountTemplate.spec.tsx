@@ -5,17 +5,13 @@ import '@testing-library/jest-dom'
 import { composeStories } from '@storybook/testing-react'
 import { render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
+import mockRouter from 'next-router-mock'
 
 import * as stories from './MyAccountTemplate.stories' // import all stories from the stories file
 const { Common } = composeStories(stories)
 
 const FullWidthDividerMock = () => <div data-testid="full-width-divider-component" />
 jest.mock('../../common/FullWidthDivider/FullWidthDivider', () => () => FullWidthDividerMock())
-const useRouter = jest.spyOn(require('next/router'), 'useRouter')
-const push = jest.fn()
-useRouter.mockImplementation(() => ({
-  push,
-}))
 
 describe('[component] - MyAccountTemplate', () => {
   const setup = () => {
@@ -55,7 +51,11 @@ describe('[component] - MyAccountTemplate', () => {
 
     await user.click(orderHistory)
 
-    expect(push).toHaveBeenCalledWith('/my-account/order-history?filters=M-6')
+    expect(mockRouter).toMatchObject({
+      asPath: '/my-account/order-history?filters=M-6',
+      pathname: '/my-account/order-history',
+      query: { filters: 'M-6' },
+    })
   })
 
   it('should redirect to my-subscription page when users click on My Subscription link', async () => {
@@ -65,6 +65,10 @@ describe('[component] - MyAccountTemplate', () => {
 
     await user.click(mySubscription)
 
-    expect(push).toHaveBeenCalledWith('/my-account/subscription')
+    expect(mockRouter).toMatchObject({
+      asPath: '/my-account/subscription',
+      pathname: '/my-account/subscription',
+      query: {},
+    })
   })
 })

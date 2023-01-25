@@ -1,7 +1,7 @@
 import React from 'react'
 
 import { composeStories } from '@storybook/testing-react'
-import { render, screen, waitFor, cleanup } from '@testing-library/react'
+import { render, screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import getConfig from 'next/config'
 
@@ -56,8 +56,6 @@ const setup = (param: { checkout: CrOrder }) => {
     user,
   }
 }
-
-afterEach(() => cleanup())
 
 describe('[components] PaymentStep', () => {
   describe('Unauthenticated user', () => {

@@ -5,13 +5,6 @@ import { checkoutMock } from '@/__mocks__/stories'
 import { createQueryClientWrapper } from '@/__test__/utils/renderWithQueryClient'
 
 describe('[hooks] useUpdateCheckoutCouponMutation', () => {
-  beforeEach(() => {
-    jest.clearAllMocks()
-  })
-  afterEach(() => {
-    jest.clearAllMocks()
-  })
-
   it('should use useUpdateCheckoutCouponMutation ', async () => {
     renderHook(
       async () => {

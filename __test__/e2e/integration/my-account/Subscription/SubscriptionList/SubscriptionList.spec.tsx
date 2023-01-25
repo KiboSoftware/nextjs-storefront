@@ -5,7 +5,6 @@ import { composeStories } from '@storybook/testing-react'
 import { screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 
-import { createMockRouter } from '@/__test__/utils'
 import { renderWithQueryClient } from '@/__test__/utils/renderWithQueryClient'
 import * as stories from '@/components/my-account/Subscription/SubscriptionList/SubscriptionList.stories' // import all stories from the stories file
 import { DialogRoot, ModalContextProvider } from '@/context'
@@ -15,7 +14,6 @@ const { Common } = composeStories(stories)
 const setup = () => {
   const user = userEvent.setup()
   const mockOnAccountTitleClick = jest.fn()
-  const router = createMockRouter()
 
   renderWithQueryClient(
     <ModalContextProvider>
@@ -27,7 +25,6 @@ const setup = () => {
   return {
     user,
     mockOnAccountTitleClick,
-    router,
   }
 }
 

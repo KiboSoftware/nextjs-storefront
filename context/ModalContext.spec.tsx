@@ -47,13 +47,6 @@ describe('[context] - ModalContext', () => {
   })
 
   describe('when using useAuthContext hook', () => {
-    beforeEach(() => {
-      jest.clearAllMocks()
-    })
-    afterEach(() => {
-      jest.clearAllMocks()
-    })
-
     it('should show modal when click showModal', async () => {
       const { user } = setup(<TestComponent />)
       const showModalButton = screen.getByRole('button', { name: 'Show Modal' })

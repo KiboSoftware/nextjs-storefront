@@ -1,9 +1,8 @@
 import '@testing-library/jest-dom'
 import { render, screen } from '@testing-library/react'
-import { RouterContext } from 'next/dist/shared/lib/router-context'
 
 import { categoryTreeDataMock } from '@/__mocks__/stories/categoryTreeDataMock'
-import { createMockRouter, createQueryClientWrapper } from '@/__test__/utils'
+import { createQueryClientWrapper } from '@/__test__/utils'
 import CategoryPage, { getServerSideProps } from '@/pages/category/[categoryCode]'
 const mockCategoryTreeData = categoryTreeDataMock
 const mockProductSearchData = {
@@ -106,16 +105,9 @@ describe('[page] Category Page', () => {
   })
 
   it('should render the Category page template', () => {
-    const router = createMockRouter({ query: { categoryCode: '41' } })
-
-    render(
-      <RouterContext.Provider value={router}>
-        <CategoryPage />
-      </RouterContext.Provider>,
-      {
-        wrapper: createQueryClientWrapper(),
-      }
-    )
+    render(<CategoryPage />, {
+      wrapper: createQueryClientWrapper(),
+    })
 
     const productListingTemplate = screen.getByTestId('productListingTemplate-mock')
     expect(productListingTemplate).toBeVisible()

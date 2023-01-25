@@ -30,13 +30,6 @@ jest.mock('@/context/AuthContext', () => ({
 }))
 
 describe('[component] - ProductListingTemplate integration', () => {
-  beforeEach(() => {
-    jest.clearAllMocks()
-  })
-  afterEach(() => {
-    jest.clearAllMocks()
-  })
-
   it('should display login when add to wishlist button clicks ', async () => {
     mockIsAuthenticated = false
     const { user } = setup()

@@ -1,9 +1,8 @@
 import '@testing-library/jest-dom'
 import { render, screen } from '@testing-library/react'
-import { RouterContext } from 'next/dist/shared/lib/router-context'
 
 import { cartMock } from '@/__mocks__/stories/cartMock'
-import { createMockRouter, createQueryClientWrapper } from '@/__test__/utils'
+import { createQueryClientWrapper } from '@/__test__/utils'
 import CartPage, { getServerSideProps } from '@/pages/cart'
 
 const mockCart = cartMock
@@ -76,15 +75,9 @@ describe('[page] Cart Page', () => {
   })
 
   it('should render the cart template and order summary', () => {
-    const router = createMockRouter()
-    render(
-      <RouterContext.Provider value={router}>
-        <CartPage />
-      </RouterContext.Provider>,
-      {
-        wrapper: createQueryClientWrapper(),
-      }
-    )
+    render(<CartPage />, {
+      wrapper: createQueryClientWrapper(),
+    })
 
     const cartTemplate = screen.getByTestId('cart-template-mock')
     expect(cartTemplate).toBeVisible()

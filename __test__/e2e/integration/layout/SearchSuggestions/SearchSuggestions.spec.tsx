@@ -4,18 +4,13 @@ import '@testing-library/jest-dom'
 import { composeStories } from '@storybook/testing-react'
 import { screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
+import mockRouter from 'next-router-mock'
 
 import { searchSuggestionResultMock } from '@/__mocks__/stories/searchSuggestionResultMock'
 import { renderWithQueryClient } from '@/__test__/utils/renderWithQueryClient'
 import * as stories from '@/components/layout/SearchSuggestions/SearchSuggestions.stories'
 
 const { Common } = composeStories(stories)
-
-const useRouter = jest.spyOn(require('next/router'), 'useRouter')
-const push = jest.fn()
-useRouter.mockImplementation(() => ({
-  push,
-}))
 
 describe('[components] - SearchSuggestions Integration', () => {
   const userEnteredText = 'T'
@@ -150,7 +145,11 @@ describe('[components] - SearchSuggestions Integration', () => {
     await user.type(input, 'T')
     await user.type(input, '{enter}')
 
-    expect(push).toHaveBeenCalledWith({ pathname: '/search', query: { search: 'T' } })
+    expect(mockRouter).toMatchObject({
+      asPath: '/search?search=T',
+      pathname: '/search',
+      query: { search: 'T' },
+    })
     expect(screen.queryByRole('contentinfo')).not.toBeInTheDocument()
   })
 })

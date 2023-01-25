@@ -7,13 +7,6 @@ import * as stories from './MobileHeader.stories' // import all stories from the
 
 const { Common } = composeStories(stories)
 
-const useRouter = jest.spyOn(require('next/router'), 'useRouter')
-const push = jest.fn()
-useRouter.mockImplementation(() => ({
-  push,
-  pathname: '/',
-}))
-
 jest.mock('@mui/material', () => ({
   ...jest.requireActual('@mui/material'),
   useMediaQuery: jest.fn().mockReturnValue(false),

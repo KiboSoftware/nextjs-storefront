@@ -5,13 +5,6 @@ import { cartItemMock } from '@/__mocks__/stories/cartItemMock'
 import { createQueryClientWrapper } from '@/__test__/utils/renderWithQueryClient'
 
 describe('[hooks] useUpdateCartItemQuantityMutation', () => {
-  beforeEach(() => {
-    jest.clearAllMocks()
-  })
-  afterEach(() => {
-    jest.clearAllMocks()
-  })
-
   it('should use useUpdateCartItemQuantityMutation when updateCartItemQuantity', async () => {
     renderHook(
       async () => {

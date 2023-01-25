@@ -53,10 +53,6 @@ jest.mock('@/components/common/KiboDialog/KiboDialog', () => ({
   },
 }))
 
-afterEach(() => {
-  jest.clearAllMocks()
-})
-
 describe('[components] EditSubscriptionFrequencyDialog', () => {
   const onFrequencySaveMock = jest.fn()
   const onCloseMock = jest.fn()

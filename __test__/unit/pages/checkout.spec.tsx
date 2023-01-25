@@ -9,13 +9,6 @@ const mockOperations = operations as {
   getCheckout(checkoutId: string, req: any, res: any): Promise<CrOrder>
   getMultiShipCheckout(checkoutId: string, req: any, res: any): Promise<Checkout>
 }
-jest.mock('next/router', () => ({
-  useRouter() {
-    return {
-      query: { checkoutId: '13cbf88a39c9fb00010137fd0000678b' },
-    }
-  },
-}))
 
 jest.mock('@/lib/api/operations', () => ({
   __esModule: true,

@@ -1,17 +1,16 @@
 import React from 'react'
 
 import { composeStories } from '@storybook/testing-react'
-import { cleanup, screen, waitFor } from '@testing-library/react'
+import { screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import * as cookienext from 'cookies-next'
 import { graphql } from 'msw'
-import { RouterContext } from 'next/dist/shared/lib/router-context'
 
 import { server } from '@/__mocks__/msw/server'
 import { cartItemMock } from '@/__mocks__/stories/cartItemMock'
 import { cartCouponMock, cartMock } from '@/__mocks__/stories/cartMock'
 import { fulfillmentOptionsMock } from '@/__mocks__/stories/fulfillmentOptionsMock'
-import { createMockRouter, renderWithQueryClient } from '@/__test__/utils'
+import { renderWithQueryClient } from '@/__test__/utils'
 import { CartTemplateProps } from '@/components/page-templates/CartTemplate/CartTemplate'
 import * as stories from '@/components/page-templates/CartTemplate/CartTemplate.stories'
 import { DialogRoot, ModalContextProvider } from '@/context'
@@ -24,16 +23,13 @@ const mockFulfillmentOptions = fulfillmentOptionsMock || []
 
 const setup = (params?: CartTemplateProps) => {
   const user = userEvent.setup()
-  const router = createMockRouter()
   const props = params ? params : Common.args
 
   renderWithQueryClient(
-    <RouterContext.Provider value={router}>
-      <ModalContextProvider>
-        <DialogRoot />
-        <Common {...props} />
-      </ModalContextProvider>
-    </RouterContext.Provider>
+    <ModalContextProvider>
+      <DialogRoot />
+      <Common {...props} />
+    </ModalContextProvider>
   )
   return {
     user,
@@ -41,12 +37,6 @@ const setup = (params?: CartTemplateProps) => {
 }
 
 describe('[components] CartTemplate integration', () => {
-  server.resetHandlers()
-  afterEach(() => {
-    jest.clearAllMocks()
-    cleanup()
-  })
-
   it('should render component', async () => {
     setup()
     const items = Common.args?.cart?.items || []

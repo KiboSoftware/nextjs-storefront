@@ -1,8 +1,7 @@
 import '@testing-library/jest-dom'
 import { render, screen } from '@testing-library/react'
-import { RouterContext } from 'next/dist/shared/lib/router-context'
 
-import { createMockRouter, createQueryClientWrapper } from '@/__test__/utils'
+import { createQueryClientWrapper } from '@/__test__/utils'
 import SearchPage, { getServerSideProps } from '@/pages/search'
 
 const mockProductSearchData = {
@@ -96,15 +95,9 @@ describe('[page] Search Page', () => {
   })
 
   it('should render the Search page template', () => {
-    const router = createMockRouter({ query: { search: 'jacket' } })
-    render(
-      <RouterContext.Provider value={router}>
-        <SearchPage />
-      </RouterContext.Provider>,
-      {
-        wrapper: createQueryClientWrapper(),
-      }
-    )
+    render(<SearchPage />, {
+      wrapper: createQueryClientWrapper(),
+    })
 
     const productListingTemplate = screen.getByTestId('productListingTemplate-mock')
     expect(productListingTemplate).toBeVisible()

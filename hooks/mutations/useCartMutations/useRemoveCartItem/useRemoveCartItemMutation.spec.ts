@@ -4,13 +4,6 @@ import { useRemoveCartItemMutation } from './useRemoveCartItemMutation'
 import { createQueryClientWrapper } from '@/__test__/utils/renderWithQueryClient'
 
 describe('[hooks] useRemoveCartItemMutation', () => {
-  beforeEach(() => {
-    jest.clearAllMocks()
-  })
-  afterEach(() => {
-    jest.clearAllMocks()
-  })
-
   it('should use useRemoveCartItemMutation when removeCartItem', async () => {
     renderHook(
       async () => {

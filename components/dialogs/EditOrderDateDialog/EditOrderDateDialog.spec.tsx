@@ -29,12 +29,6 @@ jest.mock('@/components/common/KiboDialog/KiboDialog', () => ({
   },
 }))
 
-// Clear all mocks
-afterEach(() => {
-  jest.resetModules()
-  jest.clearAllMocks()
-})
-
 const setup = () => {
   const onOrderDateUpdateMock = jest.fn()
   const onCloseMock = jest.fn()

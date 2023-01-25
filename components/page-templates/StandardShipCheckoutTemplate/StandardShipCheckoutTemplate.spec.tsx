@@ -82,16 +82,6 @@ jest.mock(
   () => () => StandardShippingStepMock()
 )
 
-jest.mock('next/router', () => ({
-  useRouter: () => ({
-    query: { checkoutId: '12345' },
-  }),
-}))
-
-beforeAll(() => server.listen())
-afterEach(() => server.resetHandlers())
-afterAll(() => server.close())
-
 describe('[component] - StandardShipCheckout template', () => {
   it('should render component', async () => {
     render(<Common {...Common?.args} />)

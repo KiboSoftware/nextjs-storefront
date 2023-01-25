@@ -30,13 +30,6 @@ jest.mock('@/lib/helpers/cookieHelper', () => ({
 }))
 
 describe('[context] - AuthContext', () => {
-  beforeEach(() => {
-    jest.clearAllMocks()
-  })
-  afterEach(() => {
-    jest.clearAllMocks()
-  })
-
   const setup = (ui: any) => {
     const user = userEvent.setup()
     renderWithQueryClient(<AuthContextProvider>{ui}</AuthContextProvider>)
@@ -83,13 +76,6 @@ describe('[context] - AuthContext', () => {
   })
 
   describe('when using useAuthContext hook', () => {
-    beforeEach(() => {
-      jest.clearAllMocks()
-    })
-    afterEach(() => {
-      jest.clearAllMocks()
-    })
-
     it('should set isAuthenticated to true when successfully logged in', async () => {
       const { user } = setup(<TestComponent />)
       const loginButton = screen.getByRole('button', { name: 'Log in' })

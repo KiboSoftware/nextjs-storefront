@@ -1,8 +1,7 @@
 import '@testing-library/jest-dom'
 import { render, screen } from '@testing-library/react'
-import { RouterContext } from 'next/dist/shared/lib/router-context'
 
-import { createMockRouter, createQueryClientWrapper } from '@/__test__/utils'
+import { createQueryClientWrapper } from '@/__test__/utils'
 import OrderHistoryPage, { getServerSideProps } from '@/pages/my-account/order-history/index'
 
 jest.mock('next-i18next/serverSideTranslations', () => ({
@@ -42,16 +41,9 @@ describe('[page] Order History Page', () => {
   })
 
   it('should render the Order History page template', () => {
-    const router = createMockRouter()
-
-    render(
-      <RouterContext.Provider value={router}>
-        <OrderHistoryPage />
-      </RouterContext.Provider>,
-      {
-        wrapper: createQueryClientWrapper(),
-      }
-    )
+    render(<OrderHistoryPage />, {
+      wrapper: createQueryClientWrapper(),
+    })
 
     const orderHistoryTemplate = screen.getByTestId('orderHistoryTemplate-mock')
     expect(orderHistoryTemplate).toBeVisible()

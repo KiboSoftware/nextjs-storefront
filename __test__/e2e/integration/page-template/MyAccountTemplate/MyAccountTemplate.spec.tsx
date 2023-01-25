@@ -1,5 +1,5 @@
 import { composeStories } from '@storybook/testing-react'
-import { fireEvent, render, screen, waitFor, within, cleanup } from '@testing-library/react'
+import { fireEvent, render, screen, waitFor, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { graphql } from 'msw'
 
@@ -26,13 +26,7 @@ const setup = () => {
     user,
   }
 }
-beforeEach(() => {
-  server.resetHandlers()
-})
-afterEach(() => {
-  cleanup()
-  server.resetHandlers()
-})
+
 jest.mock('@/lib/helpers/tokenizeCreditCardPayment', () => {
   return {
     tokenizeCreditCardPayment: jest.fn().mockImplementation(() => {
