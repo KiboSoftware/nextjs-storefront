@@ -15,19 +15,19 @@ const skipNextSubscription = async (subscriptionId?: string | null) => {
     variables: { subscriptionId },
   })
 
-  return response?.skipNextSubscription
+  return response?.subscription
 }
 
 /**
  * [Mutation hook] useSkipNextSubscriptionMutation uses the graphQL mutation
  *
- * <b>skipNextSubscription(subscriptionId: String!): Subscription</b>
+ * <b>skipNextSubscription(subscriptionId: string): Subscription</b>
  *
  * Description : Skip the next subscription order according to the frequency unit and value.
  *
  * Parameters passed to function skipNextSubscription(subscriptionId?: string | null) => expects subscriptionId
  *
- * @returns 'response?.skipNextSubscription' which contains next order date when the order will be placed
+ * @returns 'response?.subscription' which contains next order date when the order will be placed
  */
 export const useSkipNextSubscriptionMutation = () => {
   const queryClient = useQueryClient()

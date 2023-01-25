@@ -11,8 +11,6 @@ import CheckoutUITemplate from './CheckoutUITemplate'
 import { orderMock, checkoutMock } from '@/__mocks__/stories'
 import { CheckoutStepProvider } from '@/context'
 
-import { Checkout, CrOrder } from '@/lib/gql/types'
-
 export default {
   title: 'Page Templates/Checkout UI Template',
   component: CheckoutUITemplate,

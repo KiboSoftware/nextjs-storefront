@@ -4,26 +4,30 @@ import { Stack, Button, MenuItem } from '@mui/material'
 import { useTranslation } from 'next-i18next'
 
 import { KiboSelect, KiboDialog } from '@/components/common'
-import { useModalContext } from '@/context/ModalContext'
-import { useSnackbarContext } from '@/context/SnackbarContext/SnackbarContext'
-import { useEditSubscriptionFrequencyMutation } from '@/hooks'
 
 import type { SbProductPropertyValue } from '@/lib/gql/types'
+
+export interface OnFrequencySave {
+  subscriptionId: string
+  frequencyInput: {
+    value: number
+    unit: string
+  }
+}
 
 interface EditSubscriptionFrequencyDialogProps {
   subscriptionId: string
   values: SbProductPropertyValue[]
+  onFrequencySave: (params: OnFrequencySave) => void
+  onClose: () => void
 }
 
 const EditSubscriptionFrequencyDialog = (props: EditSubscriptionFrequencyDialogProps) => {
-  const { subscriptionId, values } = props
+  const { subscriptionId, values, onFrequencySave, onClose } = props
 
   const [selectedFrequency, setSelectedFrequency] = useState<string>('')
 
   const { t } = useTranslation('common')
-  const { closeModal } = useModalContext()
-  const editSubscriptionFrequency = useEditSubscriptionFrequencyMutation()
-  const { showSnackbar } = useSnackbarContext()
 
   const updateFrequency = async () => {
     const [value, unit] = selectedFrequency.split(' ')
@@ -40,9 +44,7 @@ const EditSubscriptionFrequencyDialog = (props: EditSubscriptionFrequencyDialogP
       },
     }
 
-    await editSubscriptionFrequency.mutateAsync(params)
-    closeModal()
-    showSnackbar(t('subscription-frequency-updated-successfully'), 'success')
+    await onFrequencySave(params)
   }
 
   const handleFrequencyChange = async (name: string, value: string) => setSelectedFrequency(value)
@@ -55,7 +57,7 @@ const EditSubscriptionFrequencyDialog = (props: EditSubscriptionFrequencyDialogP
           sx={{ width: '100%' }}
           variant="contained"
           color="secondary"
-          onClick={() => closeModal()}
+          onClick={() => onClose()}
         >
           {t('cancel')}
         </Button>
@@ -96,7 +98,7 @@ const EditSubscriptionFrequencyDialog = (props: EditSubscriptionFrequencyDialogP
         </KiboSelect>
       }
       customMaxWidth="30rem"
-      onClose={closeModal}
+      onClose={onClose}
     />
   )
 }

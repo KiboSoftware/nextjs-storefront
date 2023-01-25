@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 
 import { useRouter } from 'next/router'
 
-import { DetailsStep, ReviewStep, PaymentStep, StandardShippingStep } from '@/components/checkout'
+import { DetailsStep, ReviewStep, StandardShippingStep } from '@/components/checkout'
 import { CheckoutUITemplate } from '@/components/page-templates'
 import { useCheckoutStepContext, useAuthContext } from '@/context'
 import {

@@ -53,29 +53,26 @@ jest.mock('@/components/common/KiboDialog/KiboDialog', () => ({
   },
 }))
 
-const closeModalMock = jest.fn()
-jest.mock('@/context/ModalContext', () => ({
-  useModalContext: () => {
-    return { closeModal: closeModalMock }
-  },
-}))
-
-const showSnackbarMock = jest.fn()
-jest.mock('@/context/SnackbarContext/SnackbarContext', () => ({
-  useSnackbarContext: () => {
-    return { showSnackbar: showSnackbarMock }
-  },
-}))
-
 afterEach(() => {
   jest.clearAllMocks()
 })
 
 describe('[components] EditSubscriptionFrequencyDialog', () => {
+  const onFrequencySaveMock = jest.fn()
+  const onCloseMock = jest.fn()
+
   const setup = () => {
-    return render(<Common {...Common.args} />, {
-      wrapper: ModalContextProvider,
-    })
+    render(
+      <Common {...Common.args} onFrequencySave={onFrequencySaveMock} onClose={onCloseMock} />,
+      {
+        wrapper: ModalContextProvider,
+      }
+    )
+
+    return {
+      onFrequencySaveMock,
+      onCloseMock,
+    }
   }
 
   it('should render component', async () => {
@@ -125,8 +122,8 @@ describe('[components] EditSubscriptionFrequencyDialog', () => {
     expect(confirmButtton).toBeEnabled()
   })
 
-  it('should save frequency and display SnackBar when user selects frequency and clicks on Confirm button', async () => {
-    setup()
+  it('should call callback function when user selects frequency and clicks on Confirm button', async () => {
+    const { onFrequencySaveMock } = setup()
 
     // Select Frequency
     const kiboSelectBtn = screen.getByRole('button', {
@@ -146,12 +143,17 @@ describe('[components] EditSubscriptionFrequencyDialog', () => {
     expect(confirmlButton).toBeEnabled()
     await user.click(confirmlButton)
 
-    expect(closeModalMock).toHaveBeenCalledTimes(1)
-    expect(showSnackbarMock).toHaveBeenCalledTimes(1)
+    expect(onFrequencySaveMock).toHaveBeenCalledWith({
+      subscriptionId: '1',
+      frequencyInput: {
+        value: 45,
+        unit: 'Day',
+      },
+    })
   })
 
   it('should close modal when user clicks on Cancel button', async () => {
-    setup()
+    const { onCloseMock } = setup()
 
     const cancelButton = screen.getByRole('button', {
       name: /cancel/i,
@@ -159,6 +161,6 @@ describe('[components] EditSubscriptionFrequencyDialog', () => {
     expect(cancelButton).toBeVisible()
     await user.click(cancelButton)
 
-    expect(closeModalMock).toHaveBeenCalledTimes(1)
+    expect(onCloseMock).toHaveBeenCalledTimes(1)
   })
 })

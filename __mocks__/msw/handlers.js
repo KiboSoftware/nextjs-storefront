@@ -363,13 +363,26 @@ export const subscriptionHandlers = [
   graphql.query('getSubscriptions', (_req, res, ctx) => {
     return res(ctx.data(subscriptionCollectionMock))
   }),
+
+  graphql.mutation('orderSubscriptionNow', (_req, res, ctx) => {
+    return res(ctx.data(orderSubscriptionNowMock))
+  }),
+
+  graphql.mutation('skipNextSubscription', (_req, res, ctx) => {
+    return res(ctx.data(subscriptionMock))
+  }),
+
   graphql.mutation('updateSubscriptionFrequency', (_req, res, ctx) => {
     return res(ctx.data(subscriptionMock))
   }),
 
-  graphql.mutation('orderSubscriptionNow', (_req, res, ctx) => {
-    return res(ctx.data(orderSubscriptionNowMock))
-  })
+  graphql.mutation('updateSubscriptionNextOrderDate', (_req, res, ctx) => {
+    return res(ctx.data(subscriptionMock))
+  }),
+
+  graphql.mutation('updateSubscriptionFulfillmentInfo', (_req, res, ctx) => {
+    return res(ctx.data(subscriptionMock))
+  }),
 ]
 
 export const handlers = [

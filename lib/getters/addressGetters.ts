@@ -7,11 +7,14 @@ import type {
   CuAddress,
   CuPhone,
   CustomerContact,
+  SbContact,
+  SbPhone,
+  SbAddress,
 } from '@/lib/gql/types'
 
-type GenericAddress = CuAddress | CrAddress | null
-type GenericPhone = CuPhone | CrPhone | null
-type GenericContact = CustomerContact | CrContact
+type GenericAddress = CuAddress | CrAddress | SbAddress | null
+type GenericPhone = CuPhone | CrPhone | SbPhone | null
+type GenericContact = CustomerContact | CrContact | SbContact
 
 // billing
 const getContactNumbers = (contactNumbers?: GenericPhone) => {

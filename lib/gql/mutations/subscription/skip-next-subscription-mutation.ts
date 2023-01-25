@@ -2,7 +2,7 @@ import { baseSkipSubscriptionFragment, subscriptionItemFragment } from '@/lib/gq
 
 const skipNextSubscriptionMutation = /* GraphQL */ `
   mutation skipNextSubscription($subscriptionId: String!) {
-    skipNextSubscription(subscriptionId: $subscriptionId) {
+    subscription: skipNextSubscription(subscriptionId: $subscriptionId) {
       ...baseSkipSubscriptionFragment
       items {
         ...subscriptionItemFragment
