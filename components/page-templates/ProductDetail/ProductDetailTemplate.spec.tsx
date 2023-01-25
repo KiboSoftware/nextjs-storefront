@@ -6,15 +6,7 @@ import '@testing-library/jest-dom'
 import userEvent from '@testing-library/user-event'
 
 import * as stories from './ProductDetailTemplate.stories' // import all stories from the stories file
-import {
-  locationCollectionMock,
-  locationInventoryCollectionMock,
-  userResponseMock,
-  wishlistMock,
-  productSearchResultMock,
-  fulfillmentOptionsMock,
-} from '@/__mocks__/stories'
-import { productPriceMock } from '@/__mocks__/stories/productPriceMock'
+import { wishlistMock, fulfillmentOptionsMock } from '@/__mocks__/stories'
 
 const { Common, WithMoreDetails, WithSubscription } = composeStories(stories)
 
@@ -60,42 +52,6 @@ jest.mock(
 )
 
 const mockWishlist = wishlistMock?.items[0]
-
-// jest.mock('@/hooks', () => ({
-//   useProductDetailTemplate: jest.fn(() => {
-//     return {
-//       currentProduct: mockProduct,
-//       setSelectedFulfillmentOption: jest.fn(),
-//     }
-//   }),
-//   useAddToCartMutation: jest.fn(() => {
-//     return {
-//       addToCart: mockProduct,
-//     }
-//   }),
-//   useUserQueries: jest.fn(() => {
-//     return {
-//       customerAccount: mockUser,
-//     }
-//   }),
-//   useWishlist: jest.fn(() => {
-//     return {
-//       addOrRemoveWishlistItem: jest.fn(() => true),
-//       checkProductInWishlist: jest.fn(() => true),
-//     }
-//   }),
-//   useWishlistQueries: jest.fn(() => mockWishlist),
-//   useCreateWishlistMutation: jest.fn(() => mockCreateWishlist),
-//   useAddToWishlistMutation: jest.fn(() => mockWishlist?.items[0]),
-//   useRemoveWishlistItemMutation: jest.fn(() => true),
-//   usePurchaseLocationQueries: jest.fn(() => ({})),
-//   useModalContext: jest.fn(() => ({})),
-//   useProductsQueries: jest.fn(() => mockProductSearch),
-//   useStoreLocationsQueries: jest.fn(() => ({ mockLocationsResponse })),
-//   useProductLocationInventoryQueries: jest.fn(() => mockInventory),
-//   usePriceRangeFormatter: jest.fn(() => '$100 - $200'),
-//   useProductPriceQueries: jest.fn(() => ({ mockProductPrice })),
-// }))
 
 const setup = () => {
   render(<Common {...Common?.args} />)
