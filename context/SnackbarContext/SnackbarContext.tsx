@@ -22,7 +22,7 @@ interface SnackbarContextProviderProps {
   children: ReactNode
 }
 
-const SnackbarContext = createContext({
+export const SnackbarContext = createContext({
   snackbarInfo: {
     visible: false,
     message: '',
@@ -67,9 +67,9 @@ export const SnackbarContextProvider = ({ children }: SnackbarContextProviderPro
     hideSnackbar,
   }
   return (
-    <QueryClientProvider client={queryClient(showSnackbar)}>
-      <SnackbarContext.Provider value={values}>{children}</SnackbarContext.Provider>
-    </QueryClientProvider>
+    <SnackbarContext.Provider value={values}>
+      <QueryClientProvider client={queryClient(showSnackbar)}>{children}</QueryClientProvider>
+    </SnackbarContext.Provider>
   )
 }
 

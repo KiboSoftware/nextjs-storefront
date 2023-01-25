@@ -14,6 +14,7 @@ import { useQueryClient } from 'react-query'
 
 import { LoginData } from '@/components/layout/Login/LoginContent/LoginContent'
 import type { RegisterAccountInputData } from '@/components/layout/RegisterAccount/Content/Content'
+import { useSnackbarContext } from '@/context'
 import { useUserAccountRegistrationMutations, useUserMutations, useUserQueries } from '@/hooks'
 import { removeClientCookie, storeClientCookie } from '@/lib/helpers/cookieHelper'
 import { cartKeys, loginKeys, wishlistKeys } from '@/lib/react-query/queryKeys'
@@ -25,8 +26,6 @@ export interface AuthContextType {
   user?: CustomerAccount
   login: (params: LoginData, onSuccessCallBack: () => void) => any
   createAccount: (params: RegisterAccountInputData, onSuccessCallBack?: () => void) => any
-  setAuthError: Dispatch<SetStateAction<string>>
-  authError: string
   logout: () => void
 }
 interface AuthContextProviderProps {
@@ -36,10 +35,8 @@ interface AuthContextProviderProps {
 const initialState = {
   isAuthenticated: false,
   user: undefined,
-  authError: '',
   login: () => null,
   createAccount: () => null,
-  setAuthError: () => '',
   logout: () => '',
 }
 
@@ -49,9 +46,9 @@ AuthContext.displayName = 'AuthContext'
 export const AuthContextProvider = ({ children }: AuthContextProviderProps) => {
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false)
   const [user, setUser] = useState<CustomerAccount | undefined>(undefined)
-  const [authError, setAuthError] = useState<string>('')
   const { publicRuntimeConfig } = getConfig()
   const authCookieName = publicRuntimeConfig.userCookieKey.toLowerCase()
+  const { showSnackbar } = useSnackbarContext()
 
   const router = useRouter()
   const { mutate } = useUserMutations()
@@ -79,13 +76,6 @@ export const AuthContextProvider = ({ children }: AuthContextProviderProps) => {
         password: params?.password,
       }
       registerUserAccount(createAccountAndLoginMutationVars, {
-        onError: (error: any) => {
-          //@TO BE DONE GLOBALLY
-          const errorMessage = error?.response?.errors
-            ? error?.response?.errors[0]?.message
-            : 'Something Wrong !'
-          setAuthError(errorMessage)
-        },
         onSuccess: (account: any) => {
           handleOnSuccess(account, onSuccessCallBack)
         },
@@ -97,19 +87,11 @@ export const AuthContextProvider = ({ children }: AuthContextProviderProps) => {
 
   // login user
   const login = (params: LoginData, onSuccessCallBack: () => void) => {
-    setAuthError('')
     const userCredentials = {
       username: params?.formData?.email,
       password: params?.formData?.password,
     }
     mutate(userCredentials, {
-      onError: (error: any) => {
-        //@TO BE DONE GLOBALLY
-        const errMessage = error?.response?.errors
-          ? error?.response?.errors[0]?.message
-          : 'Something Wrong !'
-        setAuthError(errMessage)
-      },
       onSuccess: (account: any) => {
         handleOnSuccess(account, onSuccessCallBack)
       },
@@ -124,7 +106,7 @@ export const AuthContextProvider = ({ children }: AuthContextProviderProps) => {
       queryClient.removeQueries(cartKeys.all)
       queryClient.removeQueries(loginKeys.user)
     } catch (err) {
-      setAuthError('Logout Failed')
+      showSnackbar('Logout Failed', 'error')
     }
   }
 
@@ -146,8 +128,6 @@ export const AuthContextProvider = ({ children }: AuthContextProviderProps) => {
   const values = {
     isAuthenticated,
     user,
-    authError,
-    setAuthError,
     login,
     createAccount,
     setUser,
