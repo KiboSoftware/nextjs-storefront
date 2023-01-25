@@ -201,7 +201,6 @@ const MultiShipCheckoutTemplate = (props: MultiShipCheckoutProps) => {
           createCheckoutDestination={createCheckoutDestination}
           onUpdateCheckoutShippingMethod={updateCheckoutShippingMethod}
         />
-        {/* @to-do Use below steps for future development */}
         <PaymentStep
           checkout={checkout as Checkout}
           isMultiShipEnabled={isMultiShipEnabled}

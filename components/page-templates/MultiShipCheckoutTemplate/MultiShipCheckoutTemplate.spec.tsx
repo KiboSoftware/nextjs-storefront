@@ -120,16 +120,36 @@ jest.mock('../../checkout/MultiShippingStep/MultiShippingStep', () => ({
   ),
 }))
 
+const PaymentStepMock = () => <div data-testid="payment-step-mock" />
+jest.mock('@/components/checkout/PaymentStep/PaymentStep', () => () => PaymentStepMock())
+
+const ReviewStepMock = () => <div data-testid="review-step-mock" />
+jest.mock('@/components/checkout/ReviewStep/ReviewStep', () => () => ReviewStepMock())
+
+jest.mock('next/router', () => ({
+  useRouter: () => ({
+    query: { checkoutId: '12345' },
+  }),
+}))
+
+beforeAll(() => server.listen())
+afterEach(() => server.resetHandlers())
+afterAll(() => server.close())
+
 describe('[component] - MultiShipCheckout template', () => {
   it('should render component', async () => {
     render(<Common {...Common?.args} />)
     const checkoutUITemplate = screen.getByTestId('checkout-ui-template-mock')
     const detailsStep = screen.getByTestId('details-step-mock')
     const multiShippingStep = screen.getByTestId('multi-shipping-step-mock')
+    const paymentStep = screen.getByTestId('payment-step-mock')
+    const reviewStep = screen.getByTestId('review-step-mock')
 
     expect(checkoutUITemplate).toBeVisible()
     expect(detailsStep).toBeVisible()
     expect(multiShippingStep).toBeVisible()
+    expect(paymentStep).toBeVisible()
+    expect(reviewStep).toBeVisible()
   })
 
   it('should handle handleApplyCouponCode with invalid coupons', async () => {
