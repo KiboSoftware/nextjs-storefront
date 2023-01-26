@@ -1,15 +1,13 @@
 import { useState, useRef } from 'react'
 
-import {
-  ArrowBackIos,
-  ArrowForwardIos,
-  Clear,
-  KeyboardArrowDown,
-  KeyboardArrowUp,
-  Replay,
-  ZoomIn,
-  ZoomOut,
-} from '@mui/icons-material'
+import ArrowBackIos from '@mui/icons-material/ArrowBackIos'
+import ArrowForwardIos from '@mui/icons-material/ArrowForwardIos'
+import Clear from '@mui/icons-material/Clear'
+import KeyboardArrowDown from '@mui/icons-material/KeyboardArrowDown'
+import KeyboardArrowUp from '@mui/icons-material/KeyboardArrowUp'
+import Replay from '@mui/icons-material/Replay'
+import ZoomIn from '@mui/icons-material/ZoomIn'
+import ZoomOut from '@mui/icons-material/ZoomOut'
 import { IconButton, Stack, Typography } from '@mui/material'
 import { Box } from '@mui/system'
 import { useTranslation } from 'next-i18next'

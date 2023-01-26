@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from 'react'
 
 import { yupResolver } from '@hookform/resolvers/yup'
-import { Visibility, VisibilityOff } from '@mui/icons-material'
+import Visibility from '@mui/icons-material/Visibility'
+import VisibilityOff from '@mui/icons-material/VisibilityOff'
 import { styled, FormControl, Box, Stack, Button } from '@mui/material'
 import { useTranslation } from 'next-i18next'
 import { useForm, Controller } from 'react-hook-form'

@@ -1,6 +1,7 @@
 import React, { useCallback } from 'react'
 
-import { AccountCircle, ChevronLeft } from '@mui/icons-material'
+import AccountCircle from '@mui/icons-material/AccountCircle'
+import ChevronLeft from '@mui/icons-material/ChevronLeft'
 import ChevronRightIcon from '@mui/icons-material/ChevronRight'
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore'
 import {

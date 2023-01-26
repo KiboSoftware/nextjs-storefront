@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 
-import { Delete } from '@mui/icons-material'
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline'
+import Delete from '@mui/icons-material/Delete'
 import {
   Box,
   Typography,

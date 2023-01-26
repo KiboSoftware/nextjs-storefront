@@ -1,6 +1,8 @@
 import React, { ReactNode, useState } from 'react'
 
-import { ArrowBackIos, ArrowForward, Close } from '@mui/icons-material'
+import ArrowBackIos from '@mui/icons-material/ArrowBackIos'
+import ArrowForward from '@mui/icons-material/ArrowForward'
+import Close from '@mui/icons-material/Close'
 import {
   Box,
   Divider,

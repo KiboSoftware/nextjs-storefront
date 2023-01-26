@@ -1,6 +1,6 @@
 import React, { useCallback } from 'react'
 
-import { ArrowBackIos } from '@mui/icons-material'
+import ArrowBackIos from '@mui/icons-material/ArrowBackIos'
 import { Stack, Typography } from '@mui/material'
 import lodash from 'lodash'
 import { useTranslation } from 'next-i18next'

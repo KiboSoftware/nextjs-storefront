@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react'
 
-import { Add, ArrowBackIos } from '@mui/icons-material'
+import Add from '@mui/icons-material/Add'
+import ArrowBackIos from '@mui/icons-material/ArrowBackIos'
 import { Stack, Typography, Divider, Box, useMediaQuery, useTheme, Button } from '@mui/material'
 import { useTranslation } from 'next-i18next'
 
