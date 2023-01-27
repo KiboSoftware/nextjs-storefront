@@ -39,12 +39,6 @@ jest.mock('@/context/AuthContext', () => ({
 }))
 
 describe('[component] - ProductDetailTemplate integration', () => {
-  beforeEach(() => {
-    jest.clearAllMocks()
-  })
-  afterEach(() => {
-    jest.clearAllMocks()
-  })
   it('should handle quantity selector ', async () => {
     const { user } = setup()
 

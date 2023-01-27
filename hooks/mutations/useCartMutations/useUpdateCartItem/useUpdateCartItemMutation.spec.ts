@@ -7,13 +7,6 @@ import { createQueryClientWrapper } from '@/__test__/utils/renderWithQueryClient
 import type { CrCartItemInput } from '@/lib/gql/types'
 
 describe('[hooks] useUpdateCartItemMutation', () => {
-  beforeEach(() => {
-    jest.clearAllMocks()
-  })
-  afterEach(() => {
-    jest.clearAllMocks()
-  })
-
   it('should use useUpdateCartItemMutation for updateCartItem', async () => {
     renderHook(
       async () => {

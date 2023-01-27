@@ -1,7 +1,7 @@
 import React from 'react'
 
 import { composeStories } from '@storybook/testing-react'
-import { cleanup, render, screen, waitFor } from '@testing-library/react'
+import { render, screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { mock } from 'jest-mock-extended'
 import { act } from 'react-dom/test-utils'
@@ -34,10 +34,6 @@ const setup = (isAuthenticated = false) => {
     user,
   }
 }
-
-afterEach(() => {
-  cleanup()
-})
 
 describe('[components] ReviewStep', () => {
   describe('[StandardCheckout]', () => {

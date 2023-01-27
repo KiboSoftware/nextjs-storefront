@@ -1,6 +1,6 @@
 import React from 'react'
 
-import { cleanup, screen, waitFor } from '@testing-library/react'
+import { screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { mock } from 'jest-mock-extended'
 import { graphql } from 'msw'
@@ -14,14 +14,6 @@ import { CheckoutStepProvider } from '@/context/CheckoutStepContext/CheckoutStep
 
 const scrollIntoViewMock = jest.fn()
 window.HTMLElement.prototype.scrollIntoView = scrollIntoViewMock
-
-jest.mock('next/router', () => ({
-  useRouter() {
-    return {
-      query: { checkoutId: '13cbf88a39c9fb00010137fd0000678b' },
-    }
-  },
-}))
 
 jest.mock('@/lib/helpers/tokenizeCreditCardPayment', () => {
   return {
@@ -54,10 +46,6 @@ const setup = (initialActiveStep = 0, isAuthenticated = false) => {
     user,
   }
 }
-
-afterEach(() => {
-  cleanup()
-})
 
 describe('[components] StandardShip Checkout integration', () => {
   describe('Displaying as active step', () => {

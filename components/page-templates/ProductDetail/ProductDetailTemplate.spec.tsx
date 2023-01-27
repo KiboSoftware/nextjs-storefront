@@ -1,5 +1,5 @@
 import { composeStories } from '@storybook/testing-react'
-import { render, within, screen, cleanup } from '@testing-library/react'
+import { render, within, screen } from '@testing-library/react'
 import '@testing-library/jest-dom'
 
 import * as stories from './ProductDetailTemplate.stories' // import all stories from the stories file
@@ -12,8 +12,6 @@ import {
 } from '@/__mocks__/stories'
 
 const { Common, WithMoreDetails } = composeStories(stories)
-
-afterEach(cleanup)
 
 const ColorSelectorMock = () => <div data-testid="color-selector-mock" />
 jest.mock('@/components/product/ColorSelector/ColorSelector', () => () => ColorSelectorMock())

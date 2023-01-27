@@ -125,6 +125,4 @@ const loginInputs = async (user: any) => {
 
   await user.type(emailInput, 'example@example.com')
   await user.type(passwordInput, 'abc')
-
-  await user.tab()
 }

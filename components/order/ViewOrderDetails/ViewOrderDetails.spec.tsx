@@ -1,7 +1,7 @@
 import React, { ReactNode } from 'react'
 
 import { composeStories } from '@storybook/testing-react'
-import { render, screen, cleanup } from '@testing-library/react'
+import { render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 
 import * as stories from './ViewOrderDetails.stories'
@@ -46,8 +46,6 @@ const returnItemSetup = () => {
     user,
   }
 }
-
-afterEach(() => cleanup())
 
 describe('[component] - ViewOrderDetails', () => {
   it('should render component', () => {

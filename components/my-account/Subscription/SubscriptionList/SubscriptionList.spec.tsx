@@ -2,7 +2,7 @@ import React from 'react'
 
 import '@testing-library/jest-dom'
 import { composeStories } from '@storybook/testing-react'
-import { render, cleanup, screen, waitFor } from '@testing-library/react'
+import { render, screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { graphql } from 'msw'
 
@@ -19,10 +19,6 @@ jest.mock('../SubscriptionItem/SubscriptionItem.tsx', () => ({
 }))
 
 const { Common, NoSubscription } = composeStories(stories)
-
-beforeEach(() => {
-  cleanup()
-})
 
 const noSubscriptionSetup = () => {
   const user = userEvent.setup()

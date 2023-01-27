@@ -5,13 +5,6 @@ import { cartCouponMock } from '@/__mocks__/stories/cartMock'
 import { createQueryClientWrapper } from '@/__test__/utils/renderWithQueryClient'
 
 describe('[hooks] useUpdateCartCouponMutation', () => {
-  beforeEach(() => {
-    jest.clearAllMocks()
-  })
-  afterEach(() => {
-    jest.clearAllMocks()
-  })
-
   it('should use useUpdateCartCouponMutation ', async () => {
     renderHook(
       async () => {

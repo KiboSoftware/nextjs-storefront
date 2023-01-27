@@ -7,13 +7,6 @@ import { HeaderContextProvider, useHeaderContext } from './HeaderContext'
 import { renderWithQueryClient } from '@/__test__/utils/renderWithQueryClient'
 
 describe('[context] - HeaderContext', () => {
-  beforeEach(() => {
-    jest.clearAllMocks()
-  })
-  afterEach(() => {
-    jest.clearAllMocks()
-  })
-
   const setup = (ui: any) => {
     const user = userEvent.setup()
     renderWithQueryClient(<HeaderContextProvider>{ui}</HeaderContextProvider>)

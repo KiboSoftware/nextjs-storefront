@@ -273,15 +273,14 @@ const CartTemplate = (props: CartTemplateProps) => {
             {t('empty-cart-message')}
           </Typography>
           <Box maxWidth="23.5rem">
-            <Link href="/" passHref>
-              <Button
-                variant="contained"
-                color="primary"
-                sx={{ width: '100%', marginTop: '3.063rem' }}
-              >
-                {t('shop-now')}
-              </Button>
-            </Link>
+            <Button
+              variant="contained"
+              color="primary"
+              sx={{ width: '100%', marginTop: '3.063rem' }}
+              onClick={() => router.push('/')}
+            >
+              {t('shop-now')}
+            </Button>
           </Box>
         </Box>
       )}

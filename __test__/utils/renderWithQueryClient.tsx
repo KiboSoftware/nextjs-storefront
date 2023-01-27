@@ -1,6 +1,7 @@
 import { ReactElement } from 'react'
 
 import { render, RenderResult } from '@testing-library/react'
+import { MemoryRouterProvider } from 'next-router-mock/MemoryRouterProvider'
 import { QueryClient, QueryClientProvider, setLogger } from 'react-query'
 
 import { generateQueryClient } from '../../lib/react-query/queryClient'
@@ -24,7 +25,11 @@ const generateTestQueryClient = () => {
 
 export const renderWithQueryClient = (ui: ReactElement, client?: QueryClient): RenderResult => {
   const queryClient = client ?? generateTestQueryClient()
-  return render(<QueryClientProvider client={queryClient}>{ui}</QueryClientProvider>)
+  return render(
+    <QueryClientProvider client={queryClient}>
+      <MemoryRouterProvider>{ui}</MemoryRouterProvider>
+    </QueryClientProvider>
+  )
 }
 
 export const createQueryClientWrapper = () => {

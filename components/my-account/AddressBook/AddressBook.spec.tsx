@@ -22,10 +22,6 @@ const setup = () => {
   }
 }
 
-afterEach(() => {
-  cleanup()
-})
-
 describe('[components] AddressBook', () => {
   it('should render all saved addresses', () => {
     setup()

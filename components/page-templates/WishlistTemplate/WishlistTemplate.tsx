@@ -3,7 +3,7 @@ import React, { useState } from 'react'
 import FavoriteRoundedIcon from '@mui/icons-material/FavoriteRounded'
 import { Grid, Typography, Box, Divider, useTheme, Button } from '@mui/material'
 import { useTranslation } from 'next-i18next'
-import Link from 'next/link'
+import { useRouter } from 'next/router'
 
 import { ProductCard } from '@/components/product'
 import { useWishlist, useWishlistQueries } from '@/hooks'
@@ -21,10 +21,13 @@ const styles = {
 }
 const WishlistTemplate = (props: { customerAccount: CustomerAccount }) => {
   const { customerAccount } = props
+
+  const theme = useTheme()
+  const router = useRouter()
+
   const { t } = useTranslation('common')
   const { getProductLink } = uiHelpers()
   const { addOrRemoveWishlistItem } = useWishlist({ isRemovedFromWishlist: true, delay: 1000 })
-  const theme = useTheme()
   const { data: wishlists } = useWishlistQueries()
   const [removedProductCode, setRemovedProductCode] = useState<string>('')
 
@@ -129,15 +132,14 @@ const WishlistTemplate = (props: { customerAccount: CustomerAccount }) => {
           <Box>
             <Typography variant="subtitle2">{t('empty-wishlist-message')}</Typography>
             <Box maxWidth="23.5rem">
-              <Link href="/" passHref>
-                <Button
-                  variant="contained"
-                  color="primary"
-                  sx={{ width: '100%', marginTop: '3.063rem' }}
-                >
-                  {t('shop-now')}
-                </Button>
-              </Link>
+              <Button
+                variant="contained"
+                color="primary"
+                sx={{ width: '100%', marginTop: '3.063rem' }}
+                onClick={() => router.push('/')}
+              >
+                {t('shop-now')}
+              </Button>
             </Box>
           </Box>
         )}

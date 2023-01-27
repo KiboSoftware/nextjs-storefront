@@ -120,16 +120,6 @@ jest.mock('../../checkout/MultiShippingStep/MultiShippingStep', () => ({
   ),
 }))
 
-jest.mock('next/router', () => ({
-  useRouter: () => ({
-    query: { checkoutId: '12345' },
-  }),
-}))
-
-beforeAll(() => server.listen())
-afterEach(() => server.resetHandlers())
-afterAll(() => server.close())
-
 describe('[component] - MultiShipCheckout template', () => {
   it('should render component', async () => {
     render(<Common {...Common?.args} />)

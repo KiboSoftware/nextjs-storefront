@@ -2,15 +2,14 @@
 import { screen } from '@testing-library/react'
 import '@testing-library/jest-dom'
 import userEvent from '@testing-library/user-event'
-import singletonRouter from 'next/router'
+import mockRouter from 'next-router-mock'
 
 import CartIcon from './CartIcon'
-import { createMockRouter, renderWithQueryClient } from '@/__test__/utils'
+import { renderWithQueryClient } from '@/__test__/utils'
 import { ModalContextProvider, DialogRoot } from '@/context'
 
 const setup = () => {
   const user = userEvent.setup()
-  const router = createMockRouter()
 
   renderWithQueryClient(
     <ModalContextProvider>
@@ -20,7 +19,6 @@ const setup = () => {
   )
   return {
     user,
-    router,
   }
 }
 
@@ -36,9 +34,10 @@ describe('[component] CartIcon component', () => {
 
     await user.click(screen.getByText(/cart/))
 
-    expect(singletonRouter).toMatchObject({
+    expect(mockRouter).toMatchObject({
       asPath: '/cart',
       pathname: '/cart',
+      query: {},
     })
   })
 })

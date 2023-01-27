@@ -3,9 +3,8 @@ import React from 'react'
 import { composeStories } from '@storybook/testing-react'
 import { render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
-import singletonRouter from 'next/router'
+import mockRouter from 'next-router-mock'
 
-import { createMockRouter } from '@/__test__/utils/createMockRouter'
 import * as stories from '@/components/dialogs/AddToCartConfirmation/AddToCartDialog/AddToCartDialog.stories' // import all stories from the stories file
 import { DialogRoot, ModalContextProvider, useModalContext } from '@/context'
 
@@ -30,7 +29,6 @@ const TestComponent = () => {
 
 const setup = () => {
   const user = userEvent.setup()
-  const router = createMockRouter()
 
   render(
     <ModalContextProvider>
@@ -40,7 +38,6 @@ const setup = () => {
 
   return {
     user,
-    router,
   }
 }
 
@@ -109,10 +106,10 @@ describe('[components] Add To Cart Dialog integration', () => {
 
     await user.click(goToCartButton)
 
-    singletonRouter.push('/cart')
-    expect(singletonRouter).toMatchObject({
+    expect(mockRouter).toMatchObject({
       asPath: '/cart',
       pathname: '/cart',
+      query: {},
     })
 
     expect(dialog).not.toBeVisible()

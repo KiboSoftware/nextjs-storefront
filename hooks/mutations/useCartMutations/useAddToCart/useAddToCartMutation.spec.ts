@@ -22,13 +22,6 @@ const productInput = {
 }
 
 describe('[hooks] useAddToCartMutation', () => {
-  beforeEach(() => {
-    jest.clearAllMocks()
-  })
-  afterEach(() => {
-    jest.clearAllMocks()
-  })
-
   it('should use useAddToCartMutation when addToCart', () => {
     renderHook(
       async () => {

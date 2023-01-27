@@ -1,8 +1,7 @@
 import '@testing-library/jest-dom'
 import { render, screen } from '@testing-library/react'
-import { RouterContext } from 'next/dist/shared/lib/router-context'
 
-import { createMockRouter, createQueryClientWrapper } from '@/__test__/utils'
+import { createQueryClientWrapper } from '@/__test__/utils'
 import MyAccountPage, { getServerSideProps } from '@/pages/my-account/index'
 
 jest.mock('next-i18next/serverSideTranslations', () => ({
@@ -42,16 +41,9 @@ describe('[page] MyAccount Page', () => {
   })
 
   it('should render the MyAccount page template', () => {
-    const router = createMockRouter()
-
-    render(
-      <RouterContext.Provider value={router}>
-        <MyAccountPage />
-      </RouterContext.Provider>,
-      {
-        wrapper: createQueryClientWrapper(),
-      }
-    )
+    render(<MyAccountPage />, {
+      wrapper: createQueryClientWrapper(),
+    })
 
     const myAccountTemplate = screen.getByTestId('MyAccountTemplate-mock')
     expect(myAccountTemplate).toBeVisible()

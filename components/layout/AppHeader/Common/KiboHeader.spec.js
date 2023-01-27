@@ -3,26 +3,16 @@ import { composeStories } from '@storybook/testing-react'
 import { cleanup, render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import '@testing-library/jest-dom'
+import mockRouter from 'next-router-mock'
 
 import * as stories from './KiboHeader.stories' // import all stories from the stories file
 
 const { Common } = composeStories(stories)
 
-const useRouter = jest.spyOn(require('next/router'), 'useRouter')
-const push = jest.fn()
-useRouter.mockImplementation(() => ({
-  push,
-  pathname: '/',
-}))
-
 jest.mock('@mui/material', () => ({
   ...jest.requireActual('@mui/material'),
   useMediaQuery: jest.fn().mockReturnValue(true),
 }))
-
-afterEach(() => {
-  cleanup()
-})
 
 describe('[component] KiboHeader component', () => {
   it('should render the component', () => {
@@ -82,6 +72,10 @@ describe('[component] KiboHeader component', () => {
     const cartIcon = screen.getByTestId('ShoppingCartIcon')
     await user.click(cartIcon)
 
-    expect(push).toHaveBeenCalledWith('/cart')
+    expect(mockRouter).toMatchObject({
+      asPath: '/cart',
+      pathname: '/cart',
+      query: {},
+    })
   })
 })

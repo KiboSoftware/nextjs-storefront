@@ -1,8 +1,7 @@
 import '@testing-library/jest-dom'
 import { render, screen } from '@testing-library/react'
-import { RouterContext } from 'next/dist/shared/lib/router-context'
 
-import { createMockRouter, createQueryClientWrapper } from '@/__test__/utils'
+import { createQueryClientWrapper } from '@/__test__/utils'
 import WishlistPage, { getServerSideProps } from '@/pages/wishlist'
 
 const WishlistTemplateMock = () => <div data-testid="wishlistTemplate-mock" />
@@ -58,32 +57,20 @@ describe('[page] Wishlist Page', () => {
   })
 
   it('should render the Wishlist page template', () => {
-    const router = createMockRouter()
     mockIsAuthenticated = false
-    render(
-      <RouterContext.Provider value={router}>
-        <WishlistPage />
-      </RouterContext.Provider>,
-      {
-        wrapper: createQueryClientWrapper(),
-      }
-    )
+    render(<WishlistPage />, {
+      wrapper: createQueryClientWrapper(),
+    })
 
     const loginDialog = screen.getByTestId('loginDialog-mock')
     expect(loginDialog).toBeVisible()
   })
 
   it('should render the Wishlist page template', () => {
-    const router = createMockRouter()
     mockIsAuthenticated = true
-    render(
-      <RouterContext.Provider value={router}>
-        <WishlistPage />
-      </RouterContext.Provider>,
-      {
-        wrapper: createQueryClientWrapper(),
-      }
-    )
+    render(<WishlistPage />, {
+      wrapper: createQueryClientWrapper(),
+    })
 
     const wishlistTemplate = screen.getByTestId('wishlistTemplate-mock')
     expect(wishlistTemplate).toBeVisible()

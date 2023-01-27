@@ -136,12 +136,6 @@ jest.mock('@/components/common/KiboSelect/KiboSelect', () => ({
   ),
 }))
 
-// Clear all mocks
-afterEach(() => {
-  jest.resetModules()
-  jest.clearAllMocks()
-})
-
 describe('[component] - SubscriptionItem', () => {
   const setup = () => {
     const user = userEvent.setup()

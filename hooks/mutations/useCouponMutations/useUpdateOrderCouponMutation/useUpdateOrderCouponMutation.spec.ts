@@ -5,13 +5,6 @@ import { orderCouponMock } from '@/__mocks__/stories/orderMock'
 import { createQueryClientWrapper } from '@/__test__/utils/renderWithQueryClient'
 
 describe('[hooks] useUpdateOrderCouponMutation', () => {
-  beforeEach(() => {
-    jest.clearAllMocks()
-  })
-  afterEach(() => {
-    jest.clearAllMocks()
-  })
-
   it('should use useUpdateOrderCouponMutation ', async () => {
     renderHook(
       async () => {

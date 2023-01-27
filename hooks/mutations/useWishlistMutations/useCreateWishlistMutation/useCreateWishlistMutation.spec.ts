@@ -7,13 +7,6 @@ import { createQueryClientWrapper } from '@/__test__/utils/renderWithQueryClient
 const mockWishlist = wishlistMock.items[0]
 
 describe('[hooks] useCreateWishlistMutation', () => {
-  beforeEach(() => {
-    jest.clearAllMocks()
-  })
-  afterEach(() => {
-    jest.clearAllMocks()
-  })
-
   const { id, name, customerAccountId } = mockWishlist
 
   it('should create wishlist', async () => {

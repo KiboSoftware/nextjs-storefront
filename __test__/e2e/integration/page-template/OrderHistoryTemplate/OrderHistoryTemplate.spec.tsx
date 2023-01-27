@@ -3,10 +3,8 @@ import React from 'react'
 import { composeStories } from '@storybook/testing-react'
 import { render, screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
-import { RouterContext } from 'next/dist/shared/lib/router-context'
 
 import { orderCollection } from '@/__mocks__/stories'
-import { createMockRouter } from '@/__test__/utils'
 import * as stories from '@/components/page-templates/OrderHistoryTemplate/OrderHistoryTemplate.stories'
 import { FacetTypeForHistory } from '@/lib/constants'
 import { orderGetters } from '@/lib/getters'
@@ -19,18 +17,12 @@ const order = orderCollection?.orders?.items || []
 const setup = () => {
   const user = userEvent.setup()
   const mockOnAccountTitleClick = jest.fn()
-  const router = createMockRouter()
 
-  render(
-    <RouterContext.Provider value={router}>
-      <Common {...Common.args} onAccountTitleClick={mockOnAccountTitleClick} />
-    </RouterContext.Provider>
-  )
+  render(<Common {...Common.args} onAccountTitleClick={mockOnAccountTitleClick} />)
 
   return {
     user,
     mockOnAccountTitleClick,
-    router,
   }
 }
 

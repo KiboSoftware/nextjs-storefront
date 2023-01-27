@@ -5,13 +5,6 @@ import { orderSubscriptionNowMock } from '@/__mocks__/stories'
 import { createQueryClientWrapper } from '@/__test__/utils/renderWithQueryClient'
 
 describe('[hooks] useOrderSubscriptionNowMutation', () => {
-  beforeEach(() => {
-    jest.clearAllMocks()
-  })
-  afterEach(() => {
-    jest.clearAllMocks()
-  })
-
   it('should use useOrderSubscriptionNowMutation', () => {
     renderHook(
       async () => {
