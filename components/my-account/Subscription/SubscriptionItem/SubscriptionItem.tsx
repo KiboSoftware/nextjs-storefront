@@ -19,6 +19,7 @@ import {
   useEditSubscriptionFrequencyMutation,
   useUpdateSubscriptionNextOrderDateMutation,
   useUpdateSubscriptionFulfillmentInfoMutation,
+  usePerformSubscriptionActionMutation,
 } from '@/hooks'
 import { subscriptionGetters, productGetters } from '@/lib/getters'
 import { uiHelpers, buildSubscriptionFulfillmentInfoParams } from '@/lib/helpers'
@@ -85,6 +86,7 @@ const SubscriptionItem = (props: SubscriptionItemProps) => {
 
   const { orderSubscriptionNow } = useOrderSubscriptionNowMutation()
   const { skipNextSubscription } = useSkipNextSubscriptionMutation()
+  const { performSubscriptionAction } = usePerformSubscriptionActionMutation()
   const { editSubscriptionFrequencyMutation } = useEditSubscriptionFrequencyMutation()
   const { updateSubscriptionNextOrderDateMutation } = useUpdateSubscriptionNextOrderDateMutation()
   const { updateSubscriptionFulfillmentInfoMutation } =
@@ -170,6 +172,25 @@ const SubscriptionItem = (props: SubscriptionItemProps) => {
   }
 
   // Pause Subscription
+  const confirmPauseSubscription = async () => {
+    const params = {
+      subscriptionId: '149ceaac15c2eb00016c498e000045a4',
+      subscriptionActionInput: {
+        actionName: 'Pause',
+        reasons: {
+          actionName: 'Pause',
+        },
+      },
+    }
+    const pauseSubscriptionResponse = await performSubscriptionAction.mutateAsync(params)
+    console.log('pauseSubscriptionResponse', pauseSubscriptionResponse)
+    // showSnackbar(t('subscription-paused'), 'success')
+
+    // if (pauseSubscriptionResponse?.id) {
+    //   subscriptionGetters.getSubscriptionReasons(pauseSubscriptionResponse)
+    //   showSnackbar(t('subscription-paused'), 'success')
+    // }
+  }
 
   useEffect(() => {
     const updateAddress = async () => {
@@ -391,7 +412,19 @@ const SubscriptionItem = (props: SubscriptionItemProps) => {
               >
                 {t('edit-order-date')}
               </Button>
-              <Button variant="contained" color="secondary" sx={{ ...style.button }}>
+              <Button
+                variant="contained"
+                color="secondary"
+                sx={{ ...style.button }}
+                onClick={() =>
+                  handleShowDialog(ConfirmationDialog, {
+                    contentText: t('pause-subscription-confirmation'),
+                    primaryButtonText: t('yes'),
+                    onConfirm: confirmPauseSubscription,
+                    onClose: () => closeModal(),
+                  })
+                }
+              >
                 {t('pause-subscription')}
               </Button>
             </Stack>
