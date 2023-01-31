@@ -8,7 +8,7 @@ import PaymentStep from '../PaymentStep/PaymentStep'
 import ReviewStep from '../ReviewStep/ReviewStep'
 import StandardShippingStep from '../StandardShippingStep/StandardShippingStep'
 import CheckoutUITemplate from './CheckoutUITemplate'
-import { orderMock, checkoutMock } from '@/__mocks__/stories'
+import { checkoutMock, orderMock } from '@/__mocks__/stories'
 import { CheckoutStepProvider } from '@/context'
 
 export default {
@@ -31,6 +31,9 @@ export default {
 } as ComponentMeta<typeof CheckoutUITemplate>
 
 const handleCreateOrder = () => undefined
+const handleUpdateCheckoutPersonalInfo = async () => undefined
+const handleVoidPayment = () => 'onVoidPayment'
+const handleAddPayment = () => 'onAddPayment'
 
 const Template: ComponentStory<typeof CheckoutUITemplate> = (args) => (
   <CheckoutStepProvider steps={['details', 'shipping', 'payment', 'review']} initialActiveStep={1}>
@@ -44,7 +47,11 @@ const Template: ComponentStory<typeof CheckoutUITemplate> = (args) => (
         userShippingAddress={[]}
         isAuthenticated={true}
       />
-      <PaymentStep checkout={orderMock.checkout} />
+      <PaymentStep
+        checkout={orderMock.checkout}
+        onVoidPayment={handleVoidPayment}
+        onAddPayment={handleAddPayment}
+      />
       <ReviewStep
         checkout={orderMock.checkout}
         shipItems={undefined}
@@ -58,7 +65,11 @@ const Template: ComponentStory<typeof CheckoutUITemplate> = (args) => (
   </CheckoutStepProvider>
 )
 
-const handleUpdateCheckoutPersonalInfo = async () => undefined
+export const Common = Template.bind({})
+Common.args = {
+  checkout: orderMock?.checkout,
+}
+
 const handleUpdateCheckoutShippingMethod = async () => undefined
 const handleCreateCheckoutDestination = () => undefined
 const MultiShipTemplate: ComponentStory<typeof CheckoutUITemplate> = (args) => (
@@ -77,16 +88,15 @@ const MultiShipTemplate: ComponentStory<typeof CheckoutUITemplate> = (args) => (
         createCheckoutDestination={handleCreateCheckoutDestination}
         onUpdateCheckoutShippingMethod={handleUpdateCheckoutShippingMethod}
       />
-      {/* <PaymentStep checkout={checkoutMock.checkout} />
-      <ReviewStep checkout={checkoutMock.checkout} onBackButtonClick={() => null} /> */}
+      <PaymentStep
+        checkout={orderMock.checkout}
+        onVoidPayment={handleVoidPayment}
+        onAddPayment={handleAddPayment}
+      />
+      {/* <ReviewStep checkout={checkoutMock.checkout} onBackButtonClick={() => null} /> */}
     </CheckoutUITemplate>
   </CheckoutStepProvider>
 )
-
-export const Common = Template.bind({})
-Common.args = {
-  checkout: orderMock?.checkout,
-}
 
 export const MultiShip = MultiShipTemplate.bind({})
 MultiShip.args = {

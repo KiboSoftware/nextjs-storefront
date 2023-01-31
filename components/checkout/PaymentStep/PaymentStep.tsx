@@ -10,6 +10,7 @@ import {
   RadioGroup,
   Typography,
   Button,
+  Box,
 } from '@mui/material'
 import { useTranslation } from 'next-i18next'
 import getConfig from 'next/config'
@@ -17,14 +18,7 @@ import getConfig from 'next/config'
 import { CardDetailsForm, SavedPaymentMethodView } from '@/components/checkout'
 import { AddressForm } from '@/components/common'
 import { useCheckoutStepContext, STEP_STATUS, useAuthContext } from '@/context'
-import {
-  useCustomerCardsQueries,
-  useCustomerContactsQueries,
-  useUpdateCheckoutBillingInfoMutation,
-  useCreateCheckoutPaymentMethodMutation,
-  useUpdateOrderPaymentActionMutation,
-  usePaymentTypes,
-} from '@/hooks'
+import { useCustomerCardsQueries, useCustomerContactsQueries, usePaymentTypes } from '@/hooks'
 import { PaymentType, PaymentWorkflow } from '@/lib/constants'
 import { addressGetters, cardGetters, orderGetters, userGetters } from '@/lib/getters'
 import { tokenizeCreditCardPayment } from '@/lib/helpers'
@@ -46,11 +40,15 @@ import type {
   PaymentActionInput,
   CrPayment,
   Maybe,
+  Checkout,
 } from '@/lib/gql/types'
 
 interface PaymentStepProps {
-  checkout: CrOrder | undefined
+  checkout: CrOrder | Checkout
   contact?: ContactForm
+  isMultiShipEnabled?: boolean
+  onVoidPayment: (id: string, paymentId: string, paymentAction: PaymentActionInput) => void
+  onAddPayment: (id: string, paymentAction: PaymentActionInput) => void
 }
 
 interface PaymentMethod {
@@ -62,11 +60,6 @@ const StyledHeadings = styled(Typography)(() => ({
   width: '100%',
   paddingLeft: '0.5rem',
   fontWeight: 'bold',
-}))
-
-const StyledFormControlLabel = styled(FormControlLabel)(() => ({
-  width: '100%',
-  paddingLeft: '0.5rem',
 }))
 
 const formControlLabelStyle = {
@@ -115,7 +108,7 @@ const initialBillingAddressData: Address = {
 }
 
 const PaymentStep = (props: PaymentStepProps) => {
-  const { checkout } = props
+  const { checkout, isMultiShipEnabled, onVoidPayment, onAddPayment } = props
 
   // hooks
   const { isAuthenticated, user } = useAuthContext()
@@ -130,11 +123,6 @@ const PaymentStep = (props: PaymentStepProps) => {
 
   const { data: customerContactsCollection, isSuccess: isCustomerContactsSuccess } =
     useCustomerContactsQueries(user?.id as number)
-
-  // update checkout payment and billing info
-  const createOrderPaymentMethod = useCreateCheckoutPaymentMethodMutation()
-  const updateCheckoutBillingInfo = useUpdateCheckoutBillingInfoMutation()
-  const updateOrderPaymentAction = useUpdateOrderPaymentActionMutation()
 
   // checkout context handling
   const {
@@ -184,7 +172,7 @@ const PaymentStep = (props: PaymentStepProps) => {
 
   const handleSameAsShippingAddressCheckbox = (value: boolean) => {
     const contact = value
-      ? checkout?.fulfillmentInfo?.fulfillmentContact
+      ? (checkout as CrOrder)?.fulfillmentInfo?.fulfillmentContact
       : initialBillingAddressData
     setBillingFormAddress({
       ...billingFormAddress,
@@ -295,7 +283,7 @@ const PaymentStep = (props: PaymentStepProps) => {
 
       paymentAction = buildCardPaymentActionForCheckoutParams(
         'US',
-        { ...checkout } as CrOrder,
+        checkout,
         cardDetails,
         tokenizedData,
         selectedPaymentMethod?.billingAddressInfo?.contact as CrContact,
@@ -318,21 +306,12 @@ const PaymentStep = (props: PaymentStepProps) => {
 
     selectedCards?.forEach(async (card: Maybe<CrPayment>) => {
       paymentAction = { ...paymentAction, actionName: 'VoidPayment' }
-      await updateOrderPaymentAction.mutateAsync({
-        orderId: checkout?.id as string,
-        paymentId: card?.id as string,
-        paymentAction,
-      })
+      onVoidPayment(checkout?.id as string, card?.id as string, paymentAction)
     })
 
     if (checkout?.id) {
       paymentAction = { ...paymentAction, actionName: '' }
-      await createOrderPaymentMethod.mutateAsync({ orderId: checkout.id, paymentAction })
-      await updateCheckoutBillingInfo.mutateAsync({
-        orderId: checkout.id,
-        billingInfoInput: { ...paymentAction.newBillingInfo },
-      })
-
+      onAddPayment(checkout.id, paymentAction)
       setStepStatusComplete()
       setStepNext()
     }
@@ -347,6 +326,7 @@ const PaymentStep = (props: PaymentStepProps) => {
       pciHost,
       apiHost
     )
+
     if (!tokenizedCardResponse) return
 
     cancelAddingNewPaymentMethod()
@@ -379,14 +359,13 @@ const PaymentStep = (props: PaymentStepProps) => {
       card?.billingAddressInfo?.contact.address as CrAddress
     )
     return (
-      <>
+      <Box key={card?.cardInfo?.id as string}>
         {defaultCustomerAccountCard.cardInfo?.id === card.cardInfo?.id && (
           <Typography variant="h4" fontWeight={'bold'}>
             {t('primary')}
           </Typography>
         )}
         <SavedPaymentMethodView
-          key={card?.cardInfo?.id as string}
           radio
           displayRowDirection={false}
           displayTitle={false}
@@ -403,31 +382,42 @@ const PaymentStep = (props: PaymentStepProps) => {
           stateOrProvince={addressGetters.getStateOrProvince(address)}
           onPaymentCardSelection={handleRadioSavedCardSelection}
         />
-      </>
+      </Box>
     )
   }
 
   const handleInitialCardDetailsLoad = () => {
-    const savedInfo =
+    // get card and billing address formatted data from server
+    const accountPaymentDetails =
       userGetters.getSavedCardsAndBillingDetails(
         customerCardsCollection,
         customerContactsCollection
       ) || []
 
-    const defaultCard = userGetters.getDefaultPaymentBillingMethod(savedInfo)
+    // find default payment details from server data
+    const defaultCard = userGetters.getDefaultPaymentBillingMethod(accountPaymentDetails)
+
+    // if defaultCard is available, set as selected radio
     cardGetters.getCardId(defaultCard?.cardInfo) &&
       setSelectedPaymentBillingRadio(defaultCard.cardInfo?.id as string)
 
-    const selectedCards = orderGetters.getSelectedPaymentMethods(checkout, PaymentType.CREDITCARD)
+    // get previously saved checkout payments
+    const checkoutPayments = orderGetters.getSelectedPaymentMethods(
+      checkout,
+      PaymentType.CREDITCARD
+    )
 
-    selectedCards?.forEach((card: Maybe<CrPayment>) => {
+    // if checkoutPayment details are not present in accountPaymentDetails, push it and set it as selected radio
+    checkoutPayments?.forEach((card: Maybe<CrPayment>) => {
       const cardDetails = card?.billingInfo?.card
       const billingAddress = card?.billingInfo?.billingContact
       Boolean(
-        !savedInfo?.length ||
-          !savedInfo?.some((each) => each.cardInfo?.id === cardDetails?.paymentServiceCardId)
+        !accountPaymentDetails?.length ||
+          !accountPaymentDetails?.some(
+            (each) => each.cardInfo?.id === cardDetails?.paymentServiceCardId
+          )
       ) &&
-        savedInfo?.push({
+        accountPaymentDetails?.push({
           cardInfo: {
             cardNumberPart: cardDetails?.cardNumberPartOrMask as string,
             id: cardDetails?.paymentServiceCardId as string,
@@ -446,8 +436,8 @@ const PaymentStep = (props: PaymentStepProps) => {
       setSelectedPaymentBillingRadio(cardDetails?.paymentServiceCardId as string)
     })
 
-    if (savedInfo?.length) {
-      setSavedPaymentBillingDetails(savedInfo)
+    if (accountPaymentDetails?.length) {
+      setSavedPaymentBillingDetails(accountPaymentDetails)
       setNewPaymentMethod(PaymentType.CREDITCARD)
     }
   }
@@ -562,11 +552,15 @@ const PaymentStep = (props: PaymentStepProps) => {
 
       {/* Save Payment Method for later checkbox */}
       {shouldShowCardForm() && isAuthenticated && (
-        <StyledFormControlLabel
+        <FormControlLabel
+          sx={{
+            width: '100%',
+            paddingLeft: '0.5rem',
+          }}
           control={
             <Checkbox onChange={handleSavePaymentMethodCheckbox} data-testid="save-payment" />
           }
-          label={`${t('save-payment-method')}`}
+          label={`${t('save-payment-method-checkbox')}`}
         />
       )}
 
@@ -576,11 +570,17 @@ const PaymentStep = (props: PaymentStepProps) => {
           <StyledHeadings variant="h2" sx={{ paddingTop: '3.125rem' }}>
             {t('billing-address')}
           </StyledHeadings>
-          <StyledFormControlLabel
-            control={<Checkbox />}
-            label={`${t('billing-address-same-as-shipping')}`}
-            onChange={(_, value) => handleSameAsShippingAddressCheckbox(value)}
-          />
+          {!isMultiShipEnabled && (
+            <FormControlLabel
+              sx={{
+                width: '100%',
+                paddingLeft: '0.5rem',
+              }}
+              control={<Checkbox name={`${t('billing-address-same-as-shipping')}`} />}
+              label={`${t('billing-address-same-as-shipping')}`}
+              onChange={(_, value) => handleSameAsShippingAddressCheckbox(value)}
+            />
+          )}
           <AddressForm
             contact={billingFormAddress.contact}
             setAutoFocus={false}

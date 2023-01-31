@@ -151,11 +151,13 @@ const ShippingGroupsWithMethod = (props: ShippingGroupsWithMethodProps) => {
                 >
                   {t('ship-to')}
                 </Typography>
-                <Typography variant="body1" component="span">
-                  {checkoutGetters.formatDestinationAddress(
-                    destinationItemGroup?.destination?.destinationContact
-                  )}
-                </Typography>
+                {destinationItemGroup?.destination?.destinationContact && (
+                  <Typography variant="body1" component="span">
+                    {checkoutGetters.formatDestinationAddress(
+                      destinationItemGroup?.destination?.destinationContact
+                    )}
+                  </Typography>
+                )}
               </Box>
               <KiboSelect
                 name="shippingMethods"

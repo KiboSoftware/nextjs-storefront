@@ -147,8 +147,7 @@ const ProductItem = (props: ProductItemProps) => {
           </CardContent>
         </Stack>
       </Box>
-      {/* ToBe: Address part should not be part of this component, need to handle it in separate comp and reuse it here. 
-      Will handle if while developing the multiple address feature */}
+
       {isPickupItem && (
         <>
           <Box sx={{ display: 'inline-flex' }} px={2}>

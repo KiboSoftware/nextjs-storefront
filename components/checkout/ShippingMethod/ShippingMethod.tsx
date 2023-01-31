@@ -4,23 +4,25 @@ import { Typography, Box, MenuItem, Divider } from '@mui/material'
 import { useTranslation } from 'next-i18next'
 
 import { KiboSelect, Price, ProductItemList } from '@/components/common'
-import { orderGetters } from '@/lib/getters'
+import { useStoreLocationsQueries } from '@/hooks'
+import { orderGetters, storeLocationGetters } from '@/lib/getters'
 
-import type { Maybe, CrOrderItem, CrShippingRate } from '@/lib/gql/types'
+import type { Maybe, CrOrderItem, CrShippingRate, Location } from '@/lib/gql/types'
 export type ShippingMethodProps = {
-  shipItems: Maybe<CrOrderItem>[]
-  pickupItems: Maybe<CrOrderItem>[]
-  orderShipmentMethods: Maybe<CrShippingRate>[]
-  selectedShippingMethodCode: string
-  onShippingMethodChange: (value: string, name?: string) => void
+  shipItems?: Maybe<CrOrderItem>[]
+  pickupItems?: Maybe<CrOrderItem>[]
+  orderShipmentMethods?: Maybe<CrShippingRate>[]
+  selectedShippingMethodCode?: string
+  showTitle?: boolean
+  onShippingMethodChange?: (value: string, name?: string) => void
   onStoreLocatorClick?: () => void
 }
 export type ShipItemListProps = {
   shipItems: Maybe<CrOrderItem>[]
-  orderShipmentMethods: Maybe<CrShippingRate>[]
-  selectedShippingMethod: string
   setSelectedShippingMethod: (shippingMethod: string) => void
-  onShippingMethodChange: (value: string, name?: string) => void
+  orderShipmentMethods?: Maybe<CrShippingRate>[]
+  selectedShippingMethod?: string
+  onShippingMethodChange?: (value: string, name?: string) => void
 }
 export type PickupItemListProps = {
   pickupItems: Maybe<CrOrderItem>[]
@@ -46,7 +48,7 @@ const ShipItemList = (shipProps: ShipItemListProps) => {
 
   const handleShippingMethodChange = (name: string, value: string) => {
     setSelectedShippingMethod(value)
-    onShippingMethodChange(value, name)
+    onShippingMethodChange && onShippingMethodChange(value, name)
   }
   return (
     <Box data-testid="ship-items">
@@ -84,6 +86,13 @@ const PickupItemList = (pickupProps: PickupItemListProps) => {
   const { t } = useTranslation('common')
   const expectedDeliveryDate = orderGetters.getExpectedDeliveryDate(pickupItems as CrOrderItem[])
   const isPickupItem = pickupItems.length > 0
+
+  const fulfillmentLocationCodes = orderGetters.getFulfillmentLocationCodes(
+    pickupItems as CrOrderItem[]
+  )
+  const { data: locations } = useStoreLocationsQueries({ filter: fulfillmentLocationCodes })
+  const storePickupAddress = storeLocationGetters.getLocations(locations)
+
   return (
     <Box data-testid="pickup-items">
       <Divider orientation="horizontal" flexItem />
@@ -95,6 +104,7 @@ const PickupItemList = (pickupProps: PickupItemListProps) => {
       <Box>
         <ProductItemList
           items={pickupItems}
+          storePickupAddresses={storePickupAddress}
           isPickupItem={isPickupItem}
           expectedDeliveryDate={expectedDeliveryDate}
           onClickChangeStore={onClickChangeStore}
@@ -108,6 +118,7 @@ const ShippingMethod = (props: ShippingMethodProps) => {
     shipItems,
     pickupItems,
     orderShipmentMethods,
+    showTitle = true,
     selectedShippingMethodCode,
     onShippingMethodChange,
     onStoreLocatorClick,
@@ -128,14 +139,16 @@ const ShippingMethod = (props: ShippingMethodProps) => {
 
   return (
     <Box data-testid="shipping-method" ref={shippingMethodRef}>
-      <Typography variant="h2" component="h2" pt={2}>
-        {t('shipping-method')}
-      </Typography>
+      {showTitle && (
+        <Typography variant="h2" component="h2" pt={2}>
+          {t('shipping-method')}
+        </Typography>
+      )}
       {shipItems?.length ? (
         <ShipItemList
-          onShippingMethodChange={onShippingMethodChange}
-          orderShipmentMethods={orderShipmentMethods}
-          selectedShippingMethod={selectedShippingMethod}
+          {...(onShippingMethodChange && { onShippingMethodChange })}
+          {...(orderShipmentMethods && { orderShipmentMethods })}
+          {...(selectedShippingMethod && { selectedShippingMethod })}
           setSelectedShippingMethod={setSelectedShippingMethod}
           shipItems={shipItems}
         />

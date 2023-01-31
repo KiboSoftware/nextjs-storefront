@@ -15,8 +15,8 @@ import {
   useCreateCheckoutDestinationMutations,
   useCheckoutShippingMethodsQuery,
   useCreateCheckoutShippingMethodMutation,
-  // useUpdateMultiShipCheckoutPaymentActionMutation,
-  // useCreateMultiShipCheckoutPaymentActionMutation,
+  useUpdateMultiShipCheckoutPaymentActionMutation,
+  useCreateMultiShipCheckoutPaymentActionMutation,
   useCreateMultiShipCheckoutMutation,
 } from '@/hooks'
 import { checkoutGetters, userGetters } from '@/lib/getters'
@@ -134,27 +134,27 @@ const MultiShipCheckoutTemplate = (props: MultiShipCheckoutProps) => {
   }
 
   // Payment Step
-  // const updateMultiShipCheckoutPaymentAction = useUpdateMultiShipCheckoutPaymentActionMutation()
-  // const createMultiShipCheckoutPaymentAction = useCreateMultiShipCheckoutPaymentActionMutation()
+  const updateMultiShipCheckoutPaymentAction = useUpdateMultiShipCheckoutPaymentActionMutation()
+  const createMultiShipCheckoutPaymentAction = useCreateMultiShipCheckoutPaymentActionMutation()
 
-  // const handleVoidPayment = async (
-  //   id: string,
-  //   paymentId: string,
-  //   paymentAction: PaymentActionInput
-  // ) => {
-  //   await updateMultiShipCheckoutPaymentAction.mutateAsync({
-  //     checkoutId: id as string,
-  //     paymentId,
-  //     paymentAction,
-  //   })
-  // }
+  const handleVoidPayment = async (
+    id: string,
+    paymentId: string,
+    paymentActionInput: PaymentActionInput
+  ) => {
+    await updateMultiShipCheckoutPaymentAction.mutateAsync({
+      checkoutId: id,
+      paymentId,
+      paymentActionInput,
+    })
+  }
 
-  // const handleAddPayment = async (id: string, paymentAction: PaymentActionInput) => {
-  //   await createMultiShipCheckoutPaymentAction.mutateAsync({
-  //     checkoutId: id,
-  //     paymentAction,
-  //   })
-  // }
+  const handleAddPayment = async (id: string, paymentAction: PaymentActionInput) => {
+    await createMultiShipCheckoutPaymentAction.mutateAsync({
+      checkoutId: id,
+      paymentAction,
+    })
+  }
 
   // Review Step
   const createOrder = useCreateMultiShipCheckoutMutation()
@@ -201,12 +201,12 @@ const MultiShipCheckoutTemplate = (props: MultiShipCheckoutProps) => {
           createCheckoutDestination={createCheckoutDestination}
           onUpdateCheckoutShippingMethod={updateCheckoutShippingMethod}
         />
-        {/* @to-do Use below steps for future development */}
-        {/* <PaymentStep
+        <PaymentStep
           checkout={checkout as Checkout}
+          isMultiShipEnabled={isMultiShipEnabled}
           onVoidPayment={handleVoidPayment}
           onAddPayment={handleAddPayment}
-        /> */}
+        />
         <ReviewStep
           checkout={checkout as Checkout}
           isMultiShipEnabled={isMultiShipEnabled}

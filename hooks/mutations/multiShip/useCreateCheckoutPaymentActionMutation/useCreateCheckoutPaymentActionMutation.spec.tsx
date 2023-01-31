@@ -1,6 +1,6 @@
 import { renderHook } from '@testing-library/react-hooks'
 
-import { useCreateCheckoutPaymentActionMutations } from './useCreateCheckoutPaymentActionMutations'
+import { useCreateCheckoutPaymentActionMutations } from './useCreateCheckoutPaymentActionMutation'
 import { checkoutMock } from '@/__mocks__/stories'
 import { createQueryClientWrapper } from '@/__test__/utils/renderWithQueryClient'
 

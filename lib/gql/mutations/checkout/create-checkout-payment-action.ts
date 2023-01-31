@@ -1,4 +1,4 @@
-const checkoutPaymentActionMutation = /* GraphQL */ `
+const createCheckoutPaymentActionMutation = /* GraphQL */ `
   mutation checkoutPaymentAction($checkoutId: String!, $paymentAction: PaymentActionInput) {
     createCheckoutPaymentAction(checkoutId: $checkoutId, paymentActionInput: $paymentAction) {
       id
@@ -13,4 +13,4 @@ const checkoutPaymentActionMutation = /* GraphQL */ `
   }
 `
 
-export default checkoutPaymentActionMutation
+export default createCheckoutPaymentActionMutation

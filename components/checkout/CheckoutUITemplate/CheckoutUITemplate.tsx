@@ -35,7 +35,7 @@ const CheckoutUITemplate = <T extends CrOrder | Checkout>(props: CheckoutUITempl
   const reviewStepIndex = steps.findIndex(
     (step: string) => step.toLowerCase() === t('review').toLowerCase()
   )
-  const handleBack = useCallback(() => setStepBack(), [])
+  const handleBack = () => setStepBack()
   const handleSubmit = useCallback(() => setStepStatusSubmit(), [])
 
   const subTotal = (checkout as CrOrder)?.subtotal || (checkout as Checkout)?.subTotal

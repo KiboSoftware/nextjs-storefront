@@ -53,6 +53,7 @@ describe('[component] Product Detail Template data: useProductDetailTemplate', (
 /*
     expect(result.current.currentProduct).toStrictEqual({
       ...product,
+      inventoryInfo: mockConfigureProductOptionsResponse.inventoryInfo,
       options: mockConfigureProductOptionsResponse.options,
       variationProductCode: mockConfigureProductOptionsResponse.variationProductCode,
       content: {

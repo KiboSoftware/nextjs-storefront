@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 
 import { useRouter } from 'next/router'
 
-import { DetailsStep, ReviewStep, StandardShippingStep } from '@/components/checkout'
+import { DetailsStep, PaymentStep, ReviewStep, StandardShippingStep } from '@/components/checkout'
 import { CheckoutUITemplate } from '@/components/page-templates'
 import { useCheckoutStepContext, useAuthContext } from '@/context'
 import {
@@ -150,11 +150,11 @@ const StandardShipCheckoutTemplate = (props: StandardShipCheckoutProps) => {
           userShippingAddress={userShippingAddress}
           isAuthenticated={isAuthenticated}
         />
-        {/* <PaymentStep
+        <PaymentStep
           checkout={checkout as CrOrder}
           onVoidPayment={handleVoidPayment}
           onAddPayment={handleAddPayment}
-        /> */}
+        />
         <ReviewStep
           checkout={checkout as CrOrder}
           isMultiShipEnabled={isMultiShipEnabled}

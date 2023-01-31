@@ -10,7 +10,7 @@ import { locationKeys } from '@/lib/react-query/queryKeys'
 import type { Maybe, Location } from '@/lib/gql/types'
 
 interface LocationType {
-  data: { locations?: Maybe<Location>[] }
+  data: Maybe<Location>[]
   isLoading: boolean
   isSuccess: boolean
   isError: boolean

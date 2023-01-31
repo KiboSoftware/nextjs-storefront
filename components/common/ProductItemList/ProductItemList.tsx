@@ -33,6 +33,14 @@ const ProductItemList = (props: ProductItemListProps) => {
     return addressGetters.getStorePickupAddress(storePickupAddresses, fulfillmentLocationCode)
   }
 
+  const getPurchaseLocation = (item: Maybe<CrOrderItem>) => {
+    return (
+      // we can use fulfillmentLocationCode or purchase location
+      orderGetters.getPurchaseLocation(item as CrOrderItem) ||
+      storePickupAddresses?.find((store) => store.code === item?.fulfillmentLocationCode)?.name
+    )
+  }
+
   return (
     <Stack
       direction="column"
@@ -47,7 +55,7 @@ const ProductItemList = (props: ProductItemListProps) => {
             <ProductItem
               id={orderGetters.getCartItemId(item as CrOrderItem)}
               qty={orderGetters.getProductQuantity(item as CrOrderItem)}
-              purchaseLocation={orderGetters.getPurchaseLocation(item as CrOrderItem)}
+              purchaseLocation={getPurchaseLocation(item)}
               productCode={productGetters.getProductId(product)}
               image={productGetters.getProductImage(product)}
               name={productGetters.getName(product)}

@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react'
 
-import { Stack, Button, Typography, SxProps } from '@mui/material'
+import { Stack, Button, Typography, SxProps, Box } from '@mui/material'
 import { Theme } from '@mui/material/styles'
 import { useTranslation } from 'next-i18next'
 import getConfig from 'next/config'
@@ -157,7 +157,7 @@ const MultiShippingStep = (props: MultiShippingStepProps) => {
     const { destinationId } = params
     const checkoutId = checkout?.id as string
 
-    for (const item of checkout?.items as CrOrderItem[]) {
+    for (const item of shipItems) {
       const itemId = item?.id as string
       await updateItemDestination({
         itemId,
@@ -181,7 +181,7 @@ const MultiShippingStep = (props: MultiShippingStepProps) => {
 
         setShouldShowAddAddressButton(true)
         setValidateForm(false)
-        setStepStatusIncomplete()
+        if (!isMultiShipPaymentStepValid) setStepStatusIncomplete()
       }
     } catch (error) {
       console.error(error)
@@ -327,7 +327,7 @@ const MultiShippingStep = (props: MultiShippingStepProps) => {
 
   useEffect(() => {
     isMultiShipPaymentStepValid ? setStepStatusValid() : setStepStatusIncomplete()
-  }, [isMultiShipPaymentStepValid])
+  }, [isMultiShipPaymentStepValid, checkout])
 
   return (
     <Stack data-testid="checkout-shipping" gap={2} ref={shippingAddressRef}>
@@ -423,6 +423,14 @@ const MultiShippingStep = (props: MultiShippingStepProps) => {
                 onUpdateDestinationAddress={createOrUpdateDestination}
                 onSelectCreateOrSetDestinationAddress={handleCreateOrSetDestinationAddress}
               />
+
+              <Box paddingY={2}>
+                <ShippingMethod
+                  pickupItems={pickupItems}
+                  showTitle={false}
+                  onStoreLocatorClick={handleStoreLocatorClick}
+                />
+              </Box>
               <Button
                 variant="contained"
                 color="primary"

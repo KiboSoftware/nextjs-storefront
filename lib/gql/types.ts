@@ -11511,7 +11511,6 @@ export type QueryProductArgs = {
   skipInventoryCheck?: InputMaybe<Scalars['Boolean']>
   sliceValue?: InputMaybe<Scalars['String']>
   supressOutOfStock404?: InputMaybe<Scalars['Boolean']>
-  useSubscriptionPricing?: InputMaybe<Scalars['Boolean']>
   variationProductCode?: InputMaybe<Scalars['String']>
   variationProductCodeFilter?: InputMaybe<Scalars['String']>
 }

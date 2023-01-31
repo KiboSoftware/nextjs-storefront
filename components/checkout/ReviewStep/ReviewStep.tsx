@@ -22,14 +22,15 @@ import {
   KiboTextBox,
   OrderPrice,
   PasswordValidation,
+  ProductItem,
   ProductItemList,
-  ReviewProductItemsWithAddresses,
 } from '@/components/common'
 import type { OrderPriceProps } from '@/components/common/OrderPrice/OrderPrice'
 import { useCheckoutStepContext, useAuthContext } from '@/context'
+import { addressGetters, checkoutGetters, orderGetters, productGetters } from '@/lib/getters'
 import { isPasswordValid } from '@/lib/helpers/validations/validations'
 
-import type { CrOrder, Maybe, Checkout } from '@/lib/gql/types'
+import type { CrOrder, Maybe, Checkout, CrOrderItem, CrProduct, CrContact } from '@/lib/gql/types'
 
 export interface PersonalDetails {
   email: Maybe<string> | undefined
@@ -180,6 +181,78 @@ const ReviewStep = (props: ReviewStepProps) => {
 
       <Divider color={theme.palette.primary.main} sx={{ mt: '1.688rem', mb: '1.438rem' }} />
 
+      {/* MultiShip Checkout */}
+      {isMultiShipEnabled && shipItems && shipItems.length > 0 && (
+        <Stack gap={4}>
+          <Typography variant="h3" component="h3" fontWeight={600} color="text.primary">
+            {t('shipping-to-address')}
+          </Typography>
+          {/* <ReviewProductItemsWithAddresses items={shipItems} /> */}
+
+          <Stack
+            direction="column"
+            divider={<Divider orientation="horizontal" flexItem />}
+            spacing={2}
+            data-testid="product-item-stack-multi-ship"
+          >
+            {shipItems?.map((item: Maybe<CrOrderItem>) => {
+              const product = item?.product as CrProduct
+              const destination = (checkout as unknown as Checkout).destinations?.find(
+                (destination) => destination?.id === item?.destinationId
+              )
+              const formattedAddress = destination
+                ? addressGetters.getFormattedAddress(destination?.destinationContact as CrContact)
+                : ''
+              return (
+                <>
+                  <Typography variant="h4" component="h4" fontWeight={'bold'} color="text.primary">
+                    {t('ship-to')}
+                    <Typography
+                      variant="h4"
+                      component="span"
+                      color="text.primary"
+                      sx={{ textTransform: 'capitalize' }}
+                    >
+                      {`${formattedAddress}`}
+                    </Typography>
+                  </Typography>
+
+                  <Typography
+                    variant="h4"
+                    component="h4"
+                    marginTop="0"
+                    fontWeight="bold"
+                    color="primary"
+                  >
+                    {t('est-arrival')}{' '}
+                    {checkoutGetters.getFormattedDate(item?.expectedDeliveryDate)}
+                  </Typography>
+
+                  <Stack key={item?.id}>
+                    <ProductItem
+                      id={orderGetters.getCartItemId(item as CrOrderItem)}
+                      qty={orderGetters.getProductQuantity(item as CrOrderItem)}
+                      purchaseLocation={orderGetters.getPurchaseLocation(item as CrOrderItem)}
+                      productCode={productGetters.getProductId(product)}
+                      image={productGetters.getProductImage(product)}
+                      name={productGetters.getName(product)}
+                      options={productGetters.getOptions(product)}
+                      price={productGetters.getPrice(product).regular?.toString()}
+                      salePrice={productGetters.getPrice(product).special?.toString()}
+                      expectedDeliveryDate={item?.expectedDeliveryDate}
+                      data-testid="product-item-multi-ship"
+                    />
+                  </Stack>
+                </>
+              )
+            })}
+          </Stack>
+
+          <Divider sx={{ mb: '1.438rem' }} />
+        </Stack>
+      )}
+
+      {/* Standard Checkout */}
       {!isMultiShipEnabled && shipItems && shipItems.length > 0 && (
         <Stack gap={4}>
           <Typography variant="h3" component="h3" sx={{ fontWeight: 'bold' }} color="text.primary">
@@ -190,24 +263,14 @@ const ReviewStep = (props: ReviewStepProps) => {
         </Stack>
       )}
 
-      {!isMultiShipEnabled && pickupItems && pickupItems.length > 0 && (
+      {/* Standard and MultiShip Checkout */}
+      {pickupItems && pickupItems.length > 0 && (
         <Stack gap={4}>
           <Typography variant="h3" component="h3" sx={{ fontWeight: 'bold' }} color="text.primary">
             {t('pickup-in-store')}
           </Typography>
           <ProductItemList items={pickupItems} />
-          <Divider sx={{ mt: '1.438rem', mb: '1.188rem' }} />
-        </Stack>
-      )}
-
-      {/* multiShip array will be used later after API is handled instead on shipItems */}
-      {isMultiShipEnabled && shipItems && shipItems.length > 0 && (
-        <Stack gap={4}>
-          <Typography variant="h3" component="h3" fontWeight={600} color="text.primary">
-            {t('shipping-to-address')}
-          </Typography>
-          <ReviewProductItemsWithAddresses items={shipItems} />
-          <Divider sx={{ mb: '1.438rem' }} />
+          <Divider sx={{ mt: '1.ZZ438rem', mb: '1.188rem' }} />
         </Stack>
       )}
 

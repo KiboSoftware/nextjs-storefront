@@ -30,6 +30,7 @@ export const checkoutLineItemFragment = /* GraphQL */ `
   fragment checkoutLineItemFragment on CrOrderItem {
     fulfillmentLocationCode
     fulfillmentMethod
+    purchaseLocation
     id
     total
     subtotal
