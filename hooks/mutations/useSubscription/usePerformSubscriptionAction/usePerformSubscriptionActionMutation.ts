@@ -7,17 +7,11 @@ import { makeGraphQLClient } from '@/lib/gql/client'
 import { performSubscriptionActionMutation } from '@/lib/gql/mutations'
 import { subscriptionKeys } from '@/lib/react-query/queryKeys'
 
+import { SubscriptionActionInput } from '@/lib/gql/types'
+
 interface performSubscriptionActionProps {
   subscriptionId: string
   subscriptionActionInput: SubscriptionActionInput
-}
-interface SubscriptionActionInput {
-  actionName: string
-  reason?: SubscriptionReasonInput
-}
-
-interface SubscriptionReasonInput {
-  actionName: string
 }
 
 const performSubscriptionAction = async (params: performSubscriptionActionProps) => {
@@ -32,7 +26,7 @@ const performSubscriptionAction = async (params: performSubscriptionActionProps)
 }
 
 /**
- * [Mutation hook] usePauseSubscriptionMutation uses the graphQL mutation
+ * [Mutation hook] usePerformSubscriptionActionMutation uses the graphQL mutation
  *
  * <b>performSubscriptionAction(subscriptionId: string): Subscription</b>
  *
@@ -46,7 +40,7 @@ export const usePerformSubscriptionActionMutation = () => {
   const queryClient = useQueryClient()
 
   return {
-    performSubscriptionAction: useMutation(performSubscriptionAction, {
+    performSubscriptionActionMutation: useMutation(performSubscriptionAction, {
       onSuccess: () => {
         queryClient.invalidateQueries(subscriptionKeys.all)
       },

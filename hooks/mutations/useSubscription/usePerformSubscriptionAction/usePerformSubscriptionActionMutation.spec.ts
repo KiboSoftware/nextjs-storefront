@@ -17,8 +17,8 @@ describe('[hooks] usePerformSubscriptionActionMutation', () => {
     }
     renderHook(
       async () => {
-        const { performSubscriptionAction } = usePerformSubscriptionActionMutation()
-        const response = await performSubscriptionAction.mutateAsync(params)
+        const { performSubscriptionActionMutation } = usePerformSubscriptionActionMutation()
+        const response = await performSubscriptionActionMutation.mutateAsync(params)
         expect(response).toStrictEqual(subscriptionPauseMock.subscription)
       },
       {

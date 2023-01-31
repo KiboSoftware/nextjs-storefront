@@ -86,7 +86,7 @@ const SubscriptionItem = (props: SubscriptionItemProps) => {
 
   const { orderSubscriptionNow } = useOrderSubscriptionNowMutation()
   const { skipNextSubscription } = useSkipNextSubscriptionMutation()
-  const { performSubscriptionAction } = usePerformSubscriptionActionMutation()
+  const { performSubscriptionActionMutation } = usePerformSubscriptionActionMutation()
   const { editSubscriptionFrequencyMutation } = useEditSubscriptionFrequencyMutation()
   const { updateSubscriptionNextOrderDateMutation } = useUpdateSubscriptionNextOrderDateMutation()
   const { updateSubscriptionFulfillmentInfoMutation } =
@@ -172,9 +172,9 @@ const SubscriptionItem = (props: SubscriptionItemProps) => {
   }
 
   // Pause Subscription
-  const confirmPauseSubscription = async () => {
+  const confirmPauseSubscription = async (subscriptionId: string) => {
     const params = {
-      subscriptionId: '149ceaac15c2eb00016c498e000045a4',
+      subscriptionId: subscriptionId,
       subscriptionActionInput: {
         actionName: 'Pause',
         reasons: {
@@ -182,14 +182,8 @@ const SubscriptionItem = (props: SubscriptionItemProps) => {
         },
       },
     }
-    const pauseSubscriptionResponse = await performSubscriptionAction.mutateAsync(params)
-    console.log('pauseSubscriptionResponse', pauseSubscriptionResponse)
-    // showSnackbar(t('subscription-paused'), 'success')
-
-    // if (pauseSubscriptionResponse?.id) {
-    //   subscriptionGetters.getSubscriptionReasons(pauseSubscriptionResponse)
-    //   showSnackbar(t('subscription-paused'), 'success')
-    // }
+    const pauseSubscriptionResponse = await performSubscriptionActionMutation.mutateAsync(params)
+    showSnackbar(t('subscription-paused'), 'success')
   }
 
   useEffect(() => {
