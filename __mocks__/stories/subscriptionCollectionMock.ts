@@ -1,4 +1,4 @@
-import type { SubscriptionCollection, Subscription } from '@/lib/gql/types'
+import type { SubscriptionCollection, Subscription, SubscriptionReason } from '@/lib/gql/types'
 
 export const subscriptionCollectionMock: { subscriptions: SubscriptionCollection } = {
   subscriptions: {
@@ -333,5 +333,14 @@ export const noSubscriptionMock: { subscriptions: SubscriptionCollection } = {
     pageCount: 1,
     totalCount: 0,
     items: [],
+  },
+}
+
+export const deleteSubscriptionMock: { subscription: SubscriptionReason } = {
+  subscription: {
+    actionName: 'cancel',
+    description: 'cancel',
+    reasonCode: 'cancel',
+    moreInfo: 'cancel',
   },
 }

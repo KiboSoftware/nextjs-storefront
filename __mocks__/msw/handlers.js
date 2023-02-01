@@ -9,6 +9,7 @@ import {
   checkoutMock,
   checkoutGroupRatesMock,
   orderSubscriptionNowMock,
+  deleteSubscriptionMock,
 } from '../stories'
 import { cartItemMock } from '../stories/cartItemMock'
 import { cartCouponMock, cartMock } from '../stories/cartMock'
@@ -378,6 +379,10 @@ export const subscriptionHandlers = [
 
   graphql.mutation('skipNextSubscription', (_req, res, ctx) => {
     return res(ctx.data(subscriptionMock))
+  }),
+
+  graphql.mutation('deleteSubscriptionItem', (_req, res, ctx) => {
+    return res(ctx.data(deleteSubscriptionMock))
   }),
 
   graphql.mutation('updateSubscriptionFrequency', (_req, res, ctx) => {

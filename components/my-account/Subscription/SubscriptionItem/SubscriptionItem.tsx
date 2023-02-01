@@ -20,6 +20,7 @@ import {
   useUpdateSubscriptionNextOrderDateMutation,
   useUpdateSubscriptionFulfillmentInfoMutation,
   usePerformSubscriptionActionMutation,
+  useDeleteSubscriptionMutation,
 } from '@/hooks'
 import { subscriptionGetters, productGetters } from '@/lib/getters'
 import {
@@ -92,6 +93,7 @@ const SubscriptionItem = (props: SubscriptionItemProps) => {
   const { skipNextSubscription } = useSkipNextSubscriptionMutation()
   const { performSubscriptionActionMutation } = usePerformSubscriptionActionMutation()
   const { editSubscriptionFrequencyMutation } = useEditSubscriptionFrequencyMutation()
+  const { deleteSubscription } = useDeleteSubscriptionMutation()
   const { updateSubscriptionNextOrderDateMutation } = useUpdateSubscriptionNextOrderDateMutation()
   const { updateSubscriptionFulfillmentInfoMutation } =
     useUpdateSubscriptionFulfillmentInfoMutation()
@@ -153,6 +155,23 @@ const SubscriptionItem = (props: SubscriptionItemProps) => {
   }
 
   // Cancel An Item
+  const confirmDeleteSubscription = async (subscriptionId: string, subscriptionItemId: string) => {
+    const params = {
+      subscriptionId: subscriptionId,
+      subscriptionItemId: subscriptionItemId,
+      subscriptionReasonInput: {
+        actionName: 'cancel',
+        reasonCode: 'cancel',
+        description: 'cancel',
+        moreInfo: 'cancel',
+      },
+    }
+
+    await deleteSubscription.mutateAsync(params)
+    closeModal()
+    showSnackbar(t('subscription-cancelled-successfully'), 'success')
+  }
+
   // Edit Billing Information
 
   // Edit Shipping Address
@@ -290,7 +309,18 @@ const SubscriptionItem = (props: SubscriptionItemProps) => {
               >
                 {t('ship-an-item-now')}
               </Button>
-              <Button variant="contained" color="secondary" sx={{ ...style.button }}>
+              <Button
+                variant="contained"
+                color="secondary"
+                sx={{ ...style.button }}
+                onClick={() =>
+                  handleShowDialog(ConfirmationDialog, {
+                    contentText: t('cancel-subscription-confirmation'),
+                    primaryButtonText: t('yes'),
+                    onConfirm: confirmDeleteSubscription,
+                  })
+                }
+              >
                 {t('cancel-an-item')}
               </Button>
             </Stack>
