@@ -9,7 +9,8 @@ import PaymentStep from './PaymentStep'
 import * as stories from './PaymentStep.stories' // import all stories from the stories file
 const { Common } = composeStories(stories)
 
-import { customerAccountCardsMock, orderMock, userAddressMock } from '@/__mocks__/stories'
+import { orderMock, userAddressMock } from '@/__mocks__/stories'
+import { getAccountCardId, getBillingAddresses } from '@/__test__/e2e/helper'
 import { renderWithQueryClient } from '@/__test__/utils'
 import { AuthContext, CheckoutStepProvider, STEP_STATUS } from '@/context'
 import { PaymentType } from '@/lib/constants'
@@ -117,7 +118,7 @@ jest.mock('../../checkout/SavedPaymentMethodView/SavedPaymentMethodView', () => 
 }))
 
 const tokenizedCardResponseData = {
-  id: 'bb1d6066919911eda1eb0242ac120002',
+  id: '7d1a8a7b9c57487da07b8c0a2e6d0e1f',
   numberPart: '************1111',
 }
 
@@ -126,26 +127,6 @@ jest.mock('@/lib/helpers', () => ({
 }))
 
 afterEach(() => cleanup())
-
-const getBillingAddresses = () => {
-  return userAddressMock?.customerAccountContacts?.items?.filter(
-    (item) => item?.accountId === 1012 && item?.types?.find((type) => type?.name === 'Billing')
-  )
-}
-
-const getBillingAddressAssociatedCard = (contactId: number) => {
-  return customerAccountCardsMock.customerAccountCards.items?.find(
-    (item) => item?.contactId === contactId
-  )
-}
-
-const getAccountCardId = (): string => {
-  const addresses = getBillingAddresses()
-
-  const contactId = addresses?.length && addresses[0]?.id
-
-  return getBillingAddressAssociatedCard(contactId as number)?.id as string
-}
 
 const userContextValues = (isAuthenticated: boolean, userId: number) => ({
   isAuthenticated: isAuthenticated,
@@ -236,7 +217,6 @@ describe('[components] PaymentStep', () => {
 
         expect(screen.getAllByTestId('saved-payment-method-view-mock').length).toBe(1)
 
-        //TODO
         expect(await screen.findByTestId('selectedPaymentRadio')).toHaveTextContent(
           tokenizedCardResponseData.id
         )

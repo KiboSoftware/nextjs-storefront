@@ -1,8 +1,10 @@
 import { screen, waitFor, within } from '@testing-library/react'
 
+import { customerAccountCardsMock, userAddressMock } from '@/__mocks__/stories'
+
 export const addNewCard = async (user: any) => {
   await addCardDetails(user)
-  await addBillingAddress(user)
+  await addAddress(user)
 
   const saveMethod = screen.getByRole('button', {
     name: /save-payment-method/i,
@@ -15,7 +17,7 @@ export const addNewCard = async (user: any) => {
   await user.click(saveMethod)
 }
 
-const addCardDetails = async (user: any) => {
+export const addCardDetails = async (user: any) => {
   // Card form values
   const cardNumber = screen.getByRole('textbox', {
     name: /card-number/i,
@@ -33,7 +35,7 @@ const addCardDetails = async (user: any) => {
   await user.tab()
 }
 
-export const addBillingAddress = async (user: any) => {
+export const addAddress = async (user: any) => {
   const firstName = screen.getByRole('textbox', { name: /first-name/i })
   const lastNameOrSurname = screen.getByRole('textbox', { name: /last-name-or-sur-name/i })
   const address1 = screen.getByRole('textbox', { name: /address1/i })
@@ -57,4 +59,24 @@ export const addBillingAddress = async (user: any) => {
   const listbox = within(screen.getByRole('listbox'))
   await user.click(listbox.getByText(/US/i))
   await user.tab()
+}
+
+export const getBillingAddresses = () => {
+  return userAddressMock?.customerAccountContacts?.items?.filter(
+    (item) => item?.accountId === 1012 && item?.types?.find((type) => type?.name === 'Billing')
+  )
+}
+
+export const getBillingAddressAssociatedCard = (contactId: number) => {
+  return customerAccountCardsMock.customerAccountCards.items?.find(
+    (item) => item?.contactId === contactId
+  )
+}
+
+export const getAccountCardId = (): string => {
+  const addresses = getBillingAddresses()
+
+  const contactId = addresses?.length && addresses[0]?.id
+
+  return getBillingAddressAssociatedCard(contactId as number)?.id as string
 }

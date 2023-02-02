@@ -114,7 +114,7 @@ const SavedPaymentMethodView = (props: SavedPaymentMethodViewProps) => {
     {
       value: id as string,
       label: <PaymentBillingComponent />,
-      name: 'payment-billing-view',
+      name: id as string,
     },
   ]
 

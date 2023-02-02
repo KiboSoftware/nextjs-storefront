@@ -3,6 +3,7 @@ import React from 'react'
 import { ComponentStory, ComponentMeta } from '@storybook/react'
 
 import DetailsStep from './DetailsStep'
+import { orderMock } from '@/__mocks__/stories'
 import { CheckoutStepProvider } from '@/context'
 
 // Common
@@ -22,7 +23,7 @@ const Template: ComponentStory<typeof DetailsStep> = (args) => (
 export const Common = Template.bind({})
 Common.args = {
   setAutoFocus: false,
-  checkout: undefined,
+  checkout: orderMock.checkout,
 }
 
 // With account fields

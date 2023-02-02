@@ -100,7 +100,8 @@ const getMultiShipAddresses = ({
 }
 
 const getInitialShippingOption = (checkout: Checkout, shippingOptions: ShipOption[]) =>
-  checkout?.groupings && checkout?.groupings?.length > 1
+  checkout?.groupings &&
+  checkout?.groupings.filter((group) => group?.fulfillmentMethod === 'Ship')?.length > 1
     ? shippingOptions[1]?.value
     : shippingOptions[0]?.value
 

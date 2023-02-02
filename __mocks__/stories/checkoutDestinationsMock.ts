@@ -6,14 +6,14 @@ export const checkoutDestinationsMock: { checkoutDestinations: CrDestination[] }
       destinationContact: {
         id: 1487,
         email: 'geetanshu1211@gmail.com',
-        firstName: 'Subha',
+        firstName: 'Johnny',
         middleNameOrInitial: null,
-        lastNameOrSurname: 'Chaudhari',
+        lastNameOrSurname: 'Depp',
         phoneNumbers: {
           home: '7654323456',
         },
         address: {
-          address1: 'Niainital',
+          address1: 'Test',
           address2: '',
           address3: null,
           cityOrTown: 'WC',

@@ -73,10 +73,6 @@ const StandardShipCheckoutTemplate = (props: StandardShipCheckoutProps) => {
     }
   }
 
-  const userShippingAddress = userGetters?.getUserShippingAddress(
-    savedUserAddressData?.items as CustomerContact[]
-  )
-
   const updateStandardCheckoutPersonalInfo = useUpdateCheckoutPersonalInfoMutation()
 
   const updateCheckoutPersonalInfo = async (formData: PersonalDetails) => {
@@ -127,7 +123,6 @@ const StandardShipCheckoutTemplate = (props: StandardShipCheckoutProps) => {
   }
 
   const handleCreateOrder = (checkout: CrOrder) => {
-    console.log('handleCreateOrder called standard :')
     createOrder.mutateAsync(checkout)
   }
 
@@ -147,7 +142,7 @@ const StandardShipCheckoutTemplate = (props: StandardShipCheckoutProps) => {
         />
         <StandardShippingStep
           checkout={checkout as CrOrder}
-          userShippingAddress={userShippingAddress}
+          savedUserAddressData={savedUserAddressData}
           isAuthenticated={isAuthenticated}
         />
         <PaymentStep

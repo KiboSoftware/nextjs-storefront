@@ -261,7 +261,7 @@ const ReviewStep = (props: ReviewStepProps) => {
           <Typography variant="h3" component="h3" sx={{ fontWeight: 'bold' }} color="text.primary">
             {t('shipping-to-home')}
           </Typography>
-          <ProductItemList items={shipItems} />
+          <ProductItemList items={shipItems} testId={'review-ship-items'} />
           <Divider sx={{ mb: '1.438rem' }} />
         </Stack>
       )}
@@ -272,7 +272,7 @@ const ReviewStep = (props: ReviewStepProps) => {
           <Typography variant="h3" component="h3" sx={{ fontWeight: 'bold' }} color="text.primary">
             {t('pickup-in-store')}
           </Typography>
-          <ProductItemList items={pickupItems} />
+          <ProductItemList items={pickupItems} testId={'review-pickup-items'} />
           <Divider sx={{ mt: '1.ZZ438rem', mb: '1.188rem' }} />
         </Stack>
       )}

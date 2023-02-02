@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect, useRef, useState } from 'react'
 
 import { Stack, Button, Typography, SxProps } from '@mui/material'
@@ -11,7 +12,12 @@ import { useUpdateCheckoutShippingInfoMutation, useShippingMethodsQueries } from
 import { DefaultId } from '@/lib/constants'
 import { orderGetters, userGetters } from '@/lib/getters'
 
-import type { CrOrder, CrContact, CustomerContact } from '@/lib/gql/types'
+import type {
+  CrOrder,
+  CrContact,
+  CustomerContact,
+  CustomerContactCollection,
+} from '@/lib/gql/types'
 
 const buttonStyle = {
   width: '100%',
@@ -23,17 +29,18 @@ const buttonStyle = {
 interface ShippingProps {
   setAutoFocus?: boolean
   checkout: CrOrder
-  userShippingAddress?: CustomerContact[]
+  savedUserAddressData?: CustomerContactCollection
   isAuthenticated: boolean
 }
 
 const StandardShippingStep = (props: ShippingProps) => {
-  const { checkout, userShippingAddress: addresses, isAuthenticated } = props
+  const { checkout, savedUserAddressData: addresses, isAuthenticated } = props
 
   const checkoutShippingContact = orderGetters.getShippingContact(checkout)
   const checkoutShippingMethodCode = orderGetters.getShippingMethodCode(checkout)
+  // getting shipping address from all addresses returned from server
   const userShippingAddress = isAuthenticated
-    ? userGetters.getUserShippingAddress(addresses as CustomerContact[])
+    ? userGetters.getUserShippingAddress(addresses?.items as CustomerContact[])
     : []
   if (checkoutShippingContact && checkoutShippingContact.id === null) {
     checkoutShippingContact.id = DefaultId.ADDRESSID
@@ -56,6 +63,7 @@ const StandardShippingStep = (props: ShippingProps) => {
       userShippingAddress as CustomerContact[]
     )
   )
+
   const [shouldShowAddAddressButton, setShouldShowAddAddressButton] = useState<boolean>(
     Boolean(savedShippingAddresses?.length)
   )
@@ -160,34 +168,39 @@ const StandardShippingStep = (props: ShippingProps) => {
   const getSavedShippingAddressView = (
     address: CustomerContact,
     isPrimary?: boolean
-  ): React.ReactNode => (
-    <AddressDetailsView
-      key={address?.id as number}
-      radio={true}
-      id={address?.id as number}
-      isPrimary={isPrimary}
-      firstName={address?.firstName as string}
-      middleNameOrInitial={address?.middleNameOrInitial as string}
-      lastNameOrSurname={address?.lastNameOrSurname as string}
-      address1={address?.address?.address1 as string}
-      address2={address?.address?.address2 as string}
-      cityOrTown={address?.address?.cityOrTown as string}
-      stateOrProvince={address?.address?.stateOrProvince as string}
-      postalOrZipCode={address?.address?.postalOrZipCode as string}
-      selected={selectedShippingAddressId?.toString()}
-      handleRadioChange={handleAddressSelect}
-    />
-  )
+  ): React.ReactNode => {
+    return (
+      <AddressDetailsView
+        key={address?.id as number}
+        radio={true}
+        id={address?.id as number}
+        isPrimary={isPrimary}
+        firstName={address?.firstName as string}
+        middleNameOrInitial={address?.middleNameOrInitial as string}
+        lastNameOrSurname={address?.lastNameOrSurname as string}
+        address1={address?.address?.address1 as string}
+        address2={address?.address?.address2 as string}
+        cityOrTown={address?.address?.cityOrTown as string}
+        stateOrProvince={address?.address?.stateOrProvince as string}
+        postalOrZipCode={address?.address?.postalOrZipCode as string}
+        selected={selectedShippingAddressId?.toString()}
+        handleRadioChange={handleAddressSelect}
+      />
+    )
+  }
 
   useEffect(() => {
-    if (isNewAddressAdded)
-      setSavedShippingAddresses(
-        userGetters.getAllShippingAddresses(
-          checkoutShippingContact,
-          userShippingAddress as CustomerContact[]
-        )
+    setSavedShippingAddresses(
+      userGetters.getAllShippingAddresses(
+        checkoutShippingContact,
+        userShippingAddress as CustomerContact[]
       )
-  }, [checkoutShippingContact, isNewAddressAdded])
+    )
+  }, [
+    JSON.stringify(checkoutShippingContact),
+    JSON.stringify(userShippingAddress),
+    isNewAddressAdded,
+  ])
 
   useEffect(() => {
     if (selectedShippingAddressId) setCheckoutId(checkout.id)
@@ -231,7 +244,7 @@ const StandardShippingStep = (props: ShippingProps) => {
                   {t('previously-saved-shipping-addresses')}
                 </Typography>
                 {previouslySavedShippingAddress?.map((address) => {
-                  return address && getSavedShippingAddressView(address)
+                  return getSavedShippingAddressView(address)
                 })}
               </>
             )}
