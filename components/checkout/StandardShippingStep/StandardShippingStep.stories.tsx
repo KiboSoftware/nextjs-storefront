@@ -31,11 +31,8 @@ const Template: ComponentStory<typeof StandardShippingStep> = (args) => (
 // Default
 export const Common = Template.bind({})
 
-const userShippingAddress = userGetters.getUserShippingAddress(
-  userAddressResponse?.items as CustomerContact[]
-)
 Common.args = {
-  userShippingAddress,
+  savedUserAddressData: userAddressResponse,
   setAutoFocus: false,
   checkout: orderMock.checkout,
   isAuthenticated: true,

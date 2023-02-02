@@ -15,6 +15,7 @@ export type ProductItemListProps = {
   showAddress?: boolean
   storePickupAddresses?: LocationCustom[]
   width?: string
+  testId?: string
   onClickChangeStore?: () => void
 }
 
@@ -26,6 +27,7 @@ const ProductItemList = (props: ProductItemListProps) => {
     showAddress = false,
     storePickupAddresses = [],
     width,
+    testId = 'product-item-stack',
     onClickChangeStore,
   } = props
 
@@ -42,16 +44,11 @@ const ProductItemList = (props: ProductItemListProps) => {
   }
 
   return (
-    <Stack
-      direction="column"
-      divider={<Divider orientation="horizontal" flexItem />}
-      spacing={2}
-      data-testid="product-item-stack"
-    >
+    <Stack direction="column" divider={<Divider orientation="horizontal" flexItem />} spacing={2}>
       {items?.map((item: Maybe<CrOrderItem>) => {
         const product = item?.product as CrProduct
         return (
-          <Stack key={item?.id}>
+          <Stack key={item?.id} data-testid={testId}>
             <ProductItem
               id={orderGetters.getCartItemId(item as CrOrderItem)}
               qty={orderGetters.getProductQuantity(item as CrOrderItem)}

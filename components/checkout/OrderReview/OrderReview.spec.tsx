@@ -70,7 +70,7 @@ describe('[components] OrderReview', () => {
 
     const cardType = screen.getByText(paymentMethods[0].cardType)
     const cardNumberPartOrMask = screen.getByText(paymentMethods[0].cardNumberPartOrMask)
-    const expiry = screen.getByText(`${paymentMethods[0].expiry} XXX`)
+    const expiry = screen.getByText(`${paymentMethods[0].expiry}`)
 
     expect(userName).toBeVisible()
     expect(userPhoneHome).toBeVisible()

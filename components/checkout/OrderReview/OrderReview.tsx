@@ -67,7 +67,7 @@ const OrderInfoHeader = (props: OrderInfoHeaderProps) => {
   const { t } = useTranslation('common')
 
   return (
-    <Stack pb={2}>
+    <Stack pb={2} data-testid={`${headerName}`}>
       <Box display="flex">
         <Typography variant="subtitle2" fontWeight={600}>
           {headerName}
@@ -228,22 +228,6 @@ const OrderReview = (props: OrderReviewProps) => {
                 stateOrProvince={billingAddress?.stateOrProvince as string}
                 postalOrZipCode={billingAddress?.postalOrZipCode as string}
               />
-
-              <Stack sx={{ marginBottom: '1rem' }}>
-                {storeLocations?.map((storeLocation) => (
-                  <Stack direction="column" sx={{ marginBottom: '20px' }} key={storeLocation?.code}>
-                    <AddressDetailsView
-                      firstName={storeLocation?.name}
-                      address1={storeLocation?.address1}
-                      address2={storeLocation?.address2}
-                      cityOrTown={storeLocation?.city}
-                      postalOrZipCode={storeLocation?.zip}
-                      stateOrProvince={storeLocation?.state}
-                      withoutRadioTitle={t('store-pickup-details')}
-                    />
-                  </Stack>
-                ))}
-              </Stack>
             </>
           </OrderInfoHeader>
 
@@ -260,7 +244,7 @@ const OrderReview = (props: OrderReviewProps) => {
               >
                 <Typography variant="body1">{paymentMethod?.cardType}</Typography>
                 <Typography variant="body1">{paymentMethod?.cardNumberPartOrMask}</Typography>
-                <Typography variant="body1">{paymentMethod?.expiry} XXX</Typography>
+                <Typography variant="body1">{paymentMethod?.expiry}</Typography>
               </Box>
             ))}
           </OrderInfoHeader>

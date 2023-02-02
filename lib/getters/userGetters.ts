@@ -89,13 +89,18 @@ const getAllShippingAddresses = (
     return []
   }
 
-  const existingAddressId = userShippingAddress?.findIndex(
-    (address) => address?.id === checkoutShippingContact?.id
-  )
+  // If checkout has fulfillmentInfo and it is one of the account saved addresses
+  const existingAddressId = checkoutShippingContact
+    ? userShippingAddress?.findIndex((address) => address?.id === checkoutShippingContact?.id)
+    : -1
 
   if (existingAddressId < 0) {
-    userShippingAddress?.unshift(checkoutShippingContact as CustomerContact)
+    if (checkoutShippingContact) {
+      // If no, add it to userShippingAddress
+      userShippingAddress?.unshift(checkoutShippingContact as CustomerContact)
+    }
   } else {
+    // If yes, update the entry
     userShippingAddress[existingAddressId] = {
       ...userShippingAddress[existingAddressId],
       ...(checkoutShippingContact as CustomerContact),

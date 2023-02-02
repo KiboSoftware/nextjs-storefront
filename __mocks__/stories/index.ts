@@ -1,4 +1,3 @@
-export * from './shippingRateMock'
 export * from './orderMock'
 export * from './LocationInventoryCollectionMock'
 export * from './locationCollectionMock'

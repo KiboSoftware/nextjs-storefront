@@ -294,4 +294,5 @@ export const orderGetters = {
   getSelectedPaymentMethods,
   getShippingMethodCode,
   getLocationCode,
+  getPaymentMethods,
 }

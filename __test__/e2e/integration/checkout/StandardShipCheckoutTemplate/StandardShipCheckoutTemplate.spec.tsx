@@ -1,16 +1,20 @@
 import React from 'react'
 
-import { screen, waitFor } from '@testing-library/react'
+import { cleanup, fireEvent, screen, waitFor, within, act } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
-import { mock } from 'jest-mock-extended'
 import { graphql } from 'msw'
 
 import { server } from '@/__mocks__/msw/server'
-import { orderCouponMock, orderMock } from '@/__mocks__/stories'
+import { orderMock, shippingRateMock, userAddressMock } from '@/__mocks__/stories'
+import { addAddress, getAccountCardId, getBillingAddresses } from '@/__test__/e2e/helper'
 import { renderWithQueryClient } from '@/__test__/utils/renderWithQueryClient'
 import { StandardShipCheckoutTemplate } from '@/components/page-templates'
-import { AuthContext, AuthContextType } from '@/context/'
+import { AuthContext } from '@/context/'
 import { CheckoutStepProvider } from '@/context/CheckoutStepContext/CheckoutStepContext'
+import { PaymentType } from '@/lib/constants'
+import { addressGetters, cardGetters, orderGetters, userGetters } from '@/lib/getters'
+
+import { CrContact, CustomerContact } from '@/lib/gql/types'
 
 const scrollIntoViewMock = jest.fn()
 window.HTMLElement.prototype.scrollIntoView = scrollIntoViewMock
@@ -19,26 +23,42 @@ jest.mock('@/lib/helpers/tokenizeCreditCardPayment', () => {
   return {
     tokenizeCreditCardPayment: jest.fn().mockImplementation(() => {
       return {
-        id: 'hdah7d87ewbeed7wd8w8',
+        id: '7d1a8a7b9c57487da07b8c0a2e6d0e1f',
         numberPart: '************1111',
       }
     }),
   }
 })
 
-const setup = (initialActiveStep = 0, isAuthenticated = false) => {
+const userContextValues = (isAuthenticated: boolean, userId: number) => ({
+  isAuthenticated: isAuthenticated,
+  user: {
+    id: userId,
+  },
+  login: jest.fn(),
+  createAccount: jest.fn(),
+  setAuthError: jest.fn(),
+  authError: '',
+  logout: jest.fn(),
+})
+
+afterEach(() => cleanup())
+
+const setup = ({
+  initialActiveStep = 0,
+  isAuthenticated = false,
+  userId = 0,
+  checkout = orderMock.checkout,
+}) => {
   const user = userEvent.setup()
 
-  const mockValues = mock<AuthContextType>()
-  mockValues.isAuthenticated = isAuthenticated
-
   renderWithQueryClient(
-    <AuthContext.Provider value={mockValues}>
+    <AuthContext.Provider value={userContextValues(isAuthenticated, userId)}>
       <CheckoutStepProvider
         steps={['details', 'shipping', 'payment', 'review']}
         initialActiveStep={initialActiveStep}
       >
-        <StandardShipCheckoutTemplate checkout={orderMock.checkout} isMultiShipEnabled={false} />
+        <StandardShipCheckoutTemplate checkout={checkout} isMultiShipEnabled={false} />
       </CheckoutStepProvider>
     </AuthContext.Provider>
   )
@@ -47,94 +67,370 @@ const setup = (initialActiveStep = 0, isAuthenticated = false) => {
   }
 }
 
-describe('[components] StandardShip Checkout integration', () => {
-  describe('Displaying as active step', () => {
-    it('should display Details Step as active step', () => {
-      const initialActiveStep = 0
-      setup(initialActiveStep)
+describe('[integration] StandardShipCheckoutTemplate', () => {
+  describe('Authenticated user with no checkout details', () => {
+    it.only('should handle standard checkout flow', async () => {
+      const { user } = setup({
+        isAuthenticated: true,
+        userId: 1012,
+      })
 
-      const kiboStepper = screen.getByTestId('kibo-stepper')
-      const detailsStep = screen.getByTestId('checkout-details')
-      const shippingStep = screen.queryByTestId('checkout-shipping')
-      const paymentStep = screen.queryByTestId('checkout-payment')
-      const reviewStep = screen.queryByTestId('checkout-review')
+      // details step
+      const goToShippingButton = screen.getByRole('button', { name: /go-to-shipping/ })
 
-      const goToShippingButton = screen.getByRole('button', { name: /go-to-shipping/i })
-      const backButton = screen.getByRole('button', { name: /back/i })
+      const personalDetailsHeader = screen.getByRole('heading', { name: /personal-details/ })
 
-      expect(kiboStepper).toBeVisible()
-      expect(detailsStep).toBeVisible()
-      expect(shippingStep).not.toBeInTheDocument()
-      expect(paymentStep).not.toBeInTheDocument()
-      expect(reviewStep).not.toBeInTheDocument()
+      expect(personalDetailsHeader).toBeVisible()
+      expect(goToShippingButton).toBeDisabled()
 
-      expect(goToShippingButton).toBeVisible()
-      expect(backButton).toBeVisible()
-      expect(backButton).toBeDisabled()
-    })
-  })
-
-  describe('StandardShip Details Step', () => {
-    it('should enable Shipping Step when user clicks on "Go To Shipping" button', async () => {
-      const initialActiveStep = 0
-      const { user } = setup(initialActiveStep)
-
-      const email = 'standardship@test.com'
       const emailInput = screen.getByRole('textbox', { name: /your-email/i })
+
+      expect(emailInput).toHaveValue('amolp@dev.com')
+
       await user.clear(emailInput)
-      await user.type(emailInput, email)
 
-      await waitFor(async () => {
-        const goToShippingButton = screen.getByRole('button', {
-          name: /go-to-shipping/i,
-        })
+      await user.type(emailInput, 'test@email.com')
 
-        await user.click(goToShippingButton)
-        const shippingComponent = await screen.findByTestId('checkout-shipping')
-
-        expect(shippingComponent).toBeVisible()
-      })
-    })
-  })
-
-  describe('StandardShip Shipping Step', () => {
-    it('should enable Details Step when user clicks on Go Back button', async () => {
-      const initialActiveStep = 1
-      const { user } = setup(initialActiveStep)
-
-      const goBackButton = screen.getByRole('button', {
-        name: /go-back/i,
-      })
-
-      await user.click(goBackButton)
-
-      const detailsStep = await screen.findByTestId('checkout-details')
-
-      expect(detailsStep).toBeVisible()
-    })
-
-    it('should apply a coupon when click apply button', async () => {
       server.use(
         graphql.query('getCheckout', (_req, res, ctx) => {
-          return res(ctx.data({ checkout: orderCouponMock.updateOrderCoupon }))
+          return res(
+            ctx.data({
+              checkout: {
+                ...orderMock.checkout,
+                email: 'test@email.com',
+              },
+            })
+          )
         })
       )
-      const initialActiveStep = 1
-      const { user } = setup(initialActiveStep)
-      const promoCode = '10OFF'
-      const PromoCodeInput = screen.getByPlaceholderText('promo-code')
-
-      const PromoCodeApply = screen.getByRole('button', {
-        name: /apply/i,
-      })
-
-      await user.type(PromoCodeInput, promoCode)
-
-      await user.click(PromoCodeApply)
       await waitFor(() => {
-        const appliedPromoCode = screen.getByText(promoCode)
-        expect(appliedPromoCode).toBeVisible()
+        expect(emailInput).toHaveValue('test@email.com')
       })
+
+      await waitFor(() => {
+        expect(goToShippingButton).toBeEnabled()
+      })
+
+      server.use(
+        graphql.query('getCheckout', (_req, res, ctx) => {
+          return res(
+            ctx.data({
+              checkout: {
+                ...orderMock.checkout,
+                email: 'test@email.com',
+              },
+            })
+          )
+        })
+      )
+
+      await user.click(goToShippingButton)
+
+      // Shipping Step
+
+      const shippingHeader = screen.getByRole('heading', { level: 2, name: 'shipping' })
+
+      expect(shippingHeader).toBeVisible()
+
+      const goToPaymentButton = screen.getByRole('button', { name: /go-to-payment/ })
+
+      expect(goToPaymentButton).toBeDisabled()
+
+      expect(screen.getAllByRole('radio').length).toBe(3)
+
+      const selectedRadio = screen.getByRole('radio', {
+        name: addressGetters.getFormattedAddress(
+          orderMock.checkout.fulfillmentInfo?.fulfillmentContact as CrContact
+        ),
+      })
+
+      expect(selectedRadio).toBeChecked()
+
+      // clicking different radio
+
+      const savedShippingAddress = userGetters.getUserShippingAddress(
+        userAddressMock?.customerAccountContacts?.items as CustomerContact[]
+      )?.[0]
+
+      const anotherRadioOption = screen.getByRole('radio', {
+        name: addressGetters.getFormattedAddress(savedShippingAddress),
+      })
+
+      await user.click(anotherRadioOption)
+
+      expect(anotherRadioOption).toBeChecked()
+
+      // add new address
+      const addNewAddress = screen.getByRole('button', { name: 'add-new-address' })
+
+      await user.click(addNewAddress)
+
+      await addAddress(user)
+
+      const updatedFulfillmentMock = {
+        ...orderMock.checkout.fulfillmentInfo,
+        fulfillmentContact: {
+          email: 'test@email.com',
+          firstName: 'jon',
+          id: 1,
+          middleNameOrInitial: null,
+          lastNameOrSurname: 'doe',
+          companyOrOrganization: null,
+          phoneNumbers: {
+            home: '9938938494',
+            mobile: null,
+            work: null,
+          },
+          address: {
+            address1: '400, Lamar Street',
+            address2: '23/1',
+            address3: null,
+            address4: null,
+            cityOrTown: 'Austin',
+            stateOrProvince: 'TX',
+            postalOrZipCode: '98984',
+            countryCode: 'US',
+            addressType: null,
+            isValidated: false,
+          },
+        },
+      }
+
+      server.use(
+        graphql.query('getCheckout', (_req, res, ctx) => {
+          return res(
+            ctx.data({
+              checkout: {
+                ...orderMock.checkout,
+                email: 'test@email.com',
+                fulfillmentInfo: {
+                  ...orderMock.checkout.fulfillmentInfo,
+                  ...updatedFulfillmentMock,
+                },
+              },
+            })
+          )
+        })
+      )
+
+      await user.click(screen.getByRole('button', { name: 'save-shipping-address' }))
+
+      const newAddressRadio = await screen.findByRole('radio', {
+        name: addressGetters.getFormattedAddress(updatedFulfillmentMock.fulfillmentContact),
+      })
+
+      await waitFor(() => {
+        expect(newAddressRadio).toBeChecked()
+      })
+
+      await user.click(selectedRadio)
+
+      expect(selectedRadio).toBeChecked()
+
+      // Shipping Method selection
+
+      const shippingMethodSelect = screen.getByRole('button', { name: 'Select Shipping Option' })
+
+      fireEvent.mouseDown(shippingMethodSelect)
+
+      const option = within(screen.getByRole('listbox')).getByText(
+        `${shippingRateMock.orderShipmentMethods?.[0]?.shippingMethodName as string} currency`
+      )
+
+      server.use(
+        graphql.query('getCheckout', (_req, res, ctx) => {
+          return res(
+            ctx.data({
+              checkout: {
+                ...orderMock.checkout,
+                email: 'test@email.com',
+                fulfillmentInfo: {
+                  ...orderMock.checkout.fulfillmentInfo,
+                  ...updatedFulfillmentMock,
+                  shippingMethodCode: 'f863f9f5d4cf4f088105ae3200fd4f9b',
+                  shippingMethodName: 'Second Day Air',
+                },
+              },
+            })
+          )
+        })
+      )
+
+      await user.click(option)
+
+      await waitFor(() => {
+        expect(goToPaymentButton).toBeEnabled()
+      })
+
+      await user.click(goToPaymentButton)
+
+      // Payment Step
+      const paymentHeader = screen.getByRole('heading', { level: 2, name: 'payment-method' })
+
+      expect(paymentHeader).toBeVisible()
+
+      const addresses = getBillingAddresses()
+      const checkoutPayments = orderGetters.getSelectedPaymentMethods(
+        orderMock.checkout,
+        PaymentType.CREDITCARD
+      )
+
+      const checkoutPaymentsLength = checkoutPayments?.length as number
+      const totalAddressCount = (addresses?.length as number) + checkoutPaymentsLength
+
+      await waitFor(() => {
+        expect(screen.getAllByRole('radio').length).toBe(totalAddressCount)
+      })
+
+      expect(
+        screen.getByRole('radio', {
+          name: checkoutPayments?.[0]?.billingInfo?.card?.paymentServiceCardId as string,
+        })
+      ).toBeChecked()
+
+      const cardId = getAccountCardId()
+
+      const anotherPaymentRadio = screen.getByRole('radio', { name: cardId })
+
+      await user.click(anotherPaymentRadio)
+
+      expect(anotherPaymentRadio).toBeChecked()
+
+      expect(screen.getByRole('button', { name: /review-order/ })).toBeEnabled()
+
+      await user.click(screen.getByRole('button', { name: /review-order/ }))
+
+      // Review Step
+      const orderDetailsHeader = screen.getByRole('heading', { level: 2, name: 'order-details' })
+      expect(orderDetailsHeader).toBeVisible()
+
+      const shipToHomeHeader = screen.getByRole('heading', { level: 3, name: 'shipping-to-home' })
+      const pickupHeader = screen.getByRole('heading', { level: 3, name: 'pickup-in-store' })
+
+      expect(shipToHomeHeader).toBeVisible()
+      expect(pickupHeader).toBeVisible()
+      expect(screen.getAllByTestId('review-ship-items').length).toBe(2)
+      expect(screen.getAllByTestId('review-pickup-items').length).toBe(1)
+
+      //review personal details
+      const ReviewPersonalDetails = screen.getByTestId(/personal-details/)
+      const personalDetailsReviewHeader = screen.getByRole('heading', {
+        name: /personal-details/,
+        level: 6,
+      })
+
+      expect(ReviewPersonalDetails).toContainElement(personalDetailsReviewHeader)
+
+      expect(within(ReviewPersonalDetails).getByText('test@email.com')).toBeVisible()
+      expect(
+        within(ReviewPersonalDetails).getByText(
+          addressGetters.getPhoneNumbers(updatedFulfillmentMock.fulfillmentContact as CrContact)
+            .home
+        )
+      ).toBeVisible()
+
+      //review shipping details
+
+      const ReviewShippingDetails = screen.getByTestId(/shipping-details/)
+      const shippingDetailsReviewHeader = screen.getByRole('heading', {
+        name: /shipping-details/,
+        level: 6,
+      })
+
+      expect(ReviewShippingDetails).toContainElement(shippingDetailsReviewHeader)
+
+      const contact = updatedFulfillmentMock.fulfillmentContact
+
+      expect(
+        within(ReviewShippingDetails).getByText(addressGetters.getFullName(contact))
+      ).toBeVisible()
+      expect(
+        within(ReviewShippingDetails).getByText(addressGetters.getAddress1(contact.address))
+      ).toBeVisible()
+      expect(
+        within(ReviewShippingDetails).getByText(addressGetters.getAddress2(contact.address))
+      ).toBeVisible()
+      expect(
+        within(ReviewShippingDetails).getByText(addressGetters.getCityOrTown(contact.address))
+      ).toBeVisible()
+      expect(
+        within(ReviewShippingDetails).getByText(addressGetters.getStateOrProvince(contact.address))
+      ).toBeVisible()
+      expect(
+        within(ReviewShippingDetails).getByText(addressGetters.getPostalOrZipCode(contact.address))
+      ).toBeVisible()
+
+      //review billing details
+      const ReviewBillingDetails = screen.getByTestId(/billing-address/)
+      const billingDetailsReviewHeader = screen.getByRole('heading', {
+        name: /billing-address/,
+        level: 6,
+      })
+
+      expect(ReviewBillingDetails).toContainElement(billingDetailsReviewHeader)
+
+      const billingContact = orderMock.checkout.billingInfo?.billingContact
+
+      expect(
+        within(ReviewBillingDetails).getByText(
+          addressGetters.getFullName(billingContact as CrContact)
+        )
+      ).toBeVisible()
+      expect(
+        within(ReviewBillingDetails).getByText(addressGetters.getAddress1(billingContact?.address))
+      ).toBeVisible()
+      expect(
+        within(ReviewBillingDetails).getByText(addressGetters.getAddress2(billingContact?.address))
+      ).toBeVisible()
+      expect(
+        within(ReviewBillingDetails).getByText(
+          addressGetters.getCityOrTown(billingContact?.address)
+        )
+      ).toBeVisible()
+      expect(
+        within(ReviewBillingDetails).getByText(
+          addressGetters.getStateOrProvince(billingContact?.address)
+        )
+      ).toBeVisible()
+      expect(
+        within(ReviewBillingDetails).getByText(
+          addressGetters.getPostalOrZipCode(billingContact?.address)
+        )
+      ).toBeVisible()
+
+      //review Payment details
+      const ReviewPaymentDetails = screen.getByTestId(/payment-method/)
+      const paymentMethodReviewHeader = screen.getByRole('heading', {
+        name: /payment-method/,
+        level: 6,
+      })
+
+      expect(ReviewPaymentDetails).toContainElement(paymentMethodReviewHeader)
+
+      const card = orderGetters.getPaymentMethods(orderMock.checkout)?.[0]
+
+      expect(within(ReviewPaymentDetails).getByText(cardGetters.getCardType(card))).toBeVisible()
+      expect(within(ReviewPaymentDetails).getByText(card.cardNumberPartOrMask)).toBeVisible()
+
+      expect(within(ReviewPaymentDetails).getByText(card.expiry)).toBeVisible()
+
+      const iAgreeCheckbox = screen.getByRole('checkbox', { name: /termsConditions/i })
+
+      expect(iAgreeCheckbox).not.toBeChecked()
+
+      await user.click(iAgreeCheckbox)
+
+      const confirmAndPayButton = screen.getByRole('button', {
+        name: /confirm-and-pay/i,
+      })
+
+      expect(confirmAndPayButton).toBeEnabled()
+
+      await user.click(confirmAndPayButton)
+
+      expect(
+        screen.getByRole('heading', { name: /your-order-was-placed-successfully/, level: 1 })
+      ).toBeVisible()
     })
   })
 })

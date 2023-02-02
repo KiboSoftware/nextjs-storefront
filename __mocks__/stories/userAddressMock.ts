@@ -64,9 +64,9 @@ export const userAddressResponse: CustomerContactCollection = {
       label: null,
       id: 1487,
       email: 'geetanshu1211@gmail.com',
-      firstName: 'Subha',
+      firstName: 'Johnny',
       middleNameOrInitial: null,
-      lastNameOrSurname: 'Chaudhari',
+      lastNameOrSurname: 'Depp',
       companyOrOrganization: null,
       phoneNumbers: {
         home: '7654323456',
@@ -74,7 +74,7 @@ export const userAddressResponse: CustomerContactCollection = {
         work: null,
       },
       address: {
-        address1: 'Niainital',
+        address1: 'Test',
         address2: '',
         address3: null,
         address4: null,

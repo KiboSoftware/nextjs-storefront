@@ -8,7 +8,7 @@ import PaymentStep from '../PaymentStep/PaymentStep'
 import ReviewStep from '../ReviewStep/ReviewStep'
 import StandardShippingStep from '../StandardShippingStep/StandardShippingStep'
 import CheckoutUITemplate from './CheckoutUITemplate'
-import { checkoutMock, orderMock } from '@/__mocks__/stories'
+import { checkoutMock, orderMock, userAddressResponse } from '@/__mocks__/stories'
 import { CheckoutStepProvider } from '@/context'
 
 export default {
@@ -44,7 +44,7 @@ const Template: ComponentStory<typeof CheckoutUITemplate> = (args) => (
       />
       <StandardShippingStep
         checkout={orderMock.checkout}
-        userShippingAddress={[]}
+        savedUserAddressData={userAddressResponse}
         isAuthenticated={true}
       />
       <PaymentStep

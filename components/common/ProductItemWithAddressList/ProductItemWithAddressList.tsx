@@ -109,38 +109,43 @@ const ProductItemWithAddressList = (props: ProductItemWithAddressListProps) => {
             </Box>
 
             <Box sx={{ ...styles.subContainer, display: 'flex', flexDirection: 'column' }}>
-              <KiboSelect
-                name="multiShipAddresses"
-                onChange={(_name, value) =>
-                  onSelectCreateOrSetDestinationAddress(item?.id as string, value)
-                }
-                placeholder={t('select-a-saved-address')}
-                value={item?.destinationId as string}
-              >
-                {multiShipAddresses?.map((multiShipAddress) => {
-                  const destinationOrAddressId = multiShipAddress?.destinationId
-                    ? multiShipAddress?.destinationId
-                    : multiShipAddress?.address?.id
-                  return (
-                    <MenuItem
-                      key={`${multiShipAddress?.address?.id}-${multiShipAddress?.destinationId}`}
-                      value={`${destinationOrAddressId}`}
-                    >
-                      {checkoutGetters.formatDestinationAddress(multiShipAddress?.address)}
-                    </MenuItem>
-                  )
-                })}
-              </KiboSelect>
-              <Box sx={{ ...styles.addressAction }}>
-                <Link
-                  component="button"
-                  variant="caption"
-                  color="text.primary"
-                  sx={{ padding: '5px' }}
-                  onClick={() => handleEditDestination(item)}
+              {multiShipAddresses?.length ? (
+                <KiboSelect
+                  name="multiShipAddresses"
+                  onChange={(_name, value) =>
+                    onSelectCreateOrSetDestinationAddress(item?.id as string, value)
+                  }
+                  placeholder={t('select-a-saved-address')}
+                  value={item?.destinationId as string}
+                  data-testId="multiShipAddresses"
                 >
-                  {t('edit-address')}
-                </Link>
+                  {multiShipAddresses?.map((multiShipAddress) => {
+                    const destinationOrAddressId = multiShipAddress?.destinationId
+                      ? multiShipAddress?.destinationId
+                      : multiShipAddress?.address?.id
+                    return (
+                      <MenuItem
+                        key={`${multiShipAddress?.address?.id}-${multiShipAddress?.destinationId}`}
+                        value={`${destinationOrAddressId}`}
+                      >
+                        {checkoutGetters.formatDestinationAddress(multiShipAddress?.address)}
+                      </MenuItem>
+                    )
+                  })}
+                </KiboSelect>
+              ) : null}
+              <Box sx={{ ...styles.addressAction }}>
+                {multiShipAddresses.length ? (
+                  <Link
+                    component="button"
+                    variant="caption"
+                    color="text.primary"
+                    sx={{ padding: '5px' }}
+                    onClick={() => handleEditDestination(item)}
+                  >
+                    {t('edit-address')}
+                  </Link>
+                ) : null}
                 <Divider
                   variant="middle"
                   orientation="vertical"

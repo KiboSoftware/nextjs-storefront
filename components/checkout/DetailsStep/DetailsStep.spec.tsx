@@ -3,47 +3,122 @@
 import React from 'react'
 
 import { composeStories } from '@storybook/testing-react'
-import { render, screen } from '@testing-library/react'
+import { screen, act } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 
 import * as stories from './DetailsStep.stories'
+import { orderMock } from '@/__mocks__/stories'
+import { renderWithQueryClient } from '@/__test__/utils'
+import { AuthContext, DialogRoot, ModalContextProvider } from '@/context'
 
 const { Common } = composeStories(stories)
 
-const onChangMock = jest.fn()
-const KiboTextBoxMock = () => <input data-testid="text-box-mock" onChange={onChangMock} />
-jest.mock('../../common/KiboTextBox/KiboTextBox', () => () => KiboTextBoxMock())
+const userContextValues = (isAuthenticated: boolean, userId: number) => ({
+  isAuthenticated: isAuthenticated,
+  user: {
+    id: userId,
+  },
+  login: jest.fn(),
+  createAccount: jest.fn(),
+  setAuthError: jest.fn(),
+  authError: '',
+  logout: jest.fn(),
+})
+
+const setup = (param: { isAuthenticated: boolean; userId: number }) => {
+  const user = userEvent.setup()
+  const { isAuthenticated, userId } = param
+  renderWithQueryClient(
+    <ModalContextProvider>
+      <AuthContext.Provider value={userContextValues(isAuthenticated, userId)}>
+        <DialogRoot />
+        <Common {...Common.args} />
+      </AuthContext.Provider>
+    </ModalContextProvider>
+  )
+  return {
+    user,
+  }
+}
 
 describe('[components] Details', () => {
-  const setup = (args = Common.args) => {
-    const user = userEvent.setup()
-    render(<Common {...args} />)
-    return {
-      user,
-    }
-  }
+  describe('Authenticated user', () => {
+    it('should render features section', () => {
+      setup({ isAuthenticated: true, userId: 1012 })
 
-  it('should render component', () => {
-    setup()
+      const personalDetailsHeader = screen.getByRole('heading', { name: /personal-details/i })
+      const enjoyPerksText = screen.getByText(/enjoy-these-perks-with-your-free-account/i)
+      const fasterCheckoutText = screen.getByText(/faster-checkout/i)
+      const earnCreditsText = screen.getByText(/earn-credits-with-every-purchase/i)
+      const fullRewardsText = screen.getByText(/full-rewards-program-benifits/i)
+      const manageYourWishList = screen.getByText(/manage-your-wishlist/i)
 
-    const signInButton = screen.getByRole('button', { name: /sign-into-your-account/i })
-    const orFillTheDetailsText = screen.getByText(/or-fill-the-details-below/i)
-    const enjoyPerksText = screen.getByText(/enjoy-these-perks-with-your-free-account/i)
-    const fasterCheckoutText = screen.getByText(/faster-checkout/i)
-    const earnCreditsText = screen.getByText(/earn-credits-with-every-purchase/i)
-    const fullRewardsText = screen.getByText(/full-rewards-program-benifits/i)
-    const manageYourWishList = screen.getByText(/manage-your-wishlist/i)
+      expect(personalDetailsHeader).toBeVisible()
+      expect(enjoyPerksText).toBeVisible()
+      expect(fasterCheckoutText).toBeVisible()
+      expect(earnCreditsText).toBeVisible()
+      expect(fullRewardsText).toBeVisible()
+      expect(manageYourWishList).toBeVisible()
+    })
+    it('should render email input & should not render sign-into-your-account button', async () => {
+      setup({ isAuthenticated: true, userId: 1012 })
+      await act(() => {
+        const emailTitle = screen.getByText(/your-email/i)
+        const emailInput = screen.getByRole('textbox', { name: /your-email/i })
 
-    const emailInput = screen.getByTestId(/text-box-mock/i)
+        expect(emailTitle).toBeVisible()
+        expect(emailInput).toBeVisible()
+        expect(
+          screen.queryByRole('button', { name: /sign-into-your-account/i })
+        ).not.toBeInTheDocument()
+        expect(screen.queryByText(/or-fill-the-details-below/i)).not.toBeInTheDocument()
+      })
+    })
 
-    expect(signInButton).toBeVisible()
-    expect(orFillTheDetailsText).toBeVisible()
-    expect(enjoyPerksText).toBeVisible()
-    expect(fasterCheckoutText).toBeVisible()
-    expect(earnCreditsText).toBeVisible()
-    expect(fullRewardsText).toBeVisible()
-    expect(manageYourWishList).toBeVisible()
+    it('should fill email textbox with checkout email value if present', async () => {
+      setup({ isAuthenticated: true, userId: 1012 })
+      await act(() => {
+        const emailInput = screen.getByRole('textbox', { name: /your-email/i })
+        expect(emailInput).toHaveValue(orderMock?.checkout?.email as string)
+      })
+    })
 
-    expect(emailInput).toBeVisible()
+    it('email should display required field error when user focus out (blur event) the email field', async () => {
+      const { user } = setup({ isAuthenticated: true, userId: 1012 })
+      let emailError = screen.queryByText(/this\-field\-is\-required/i)
+      expect(emailError).not.toBeInTheDocument()
+      const emailInput = screen.getByRole('textbox', { name: /your-email/i })
+      await act(async () => {
+        emailInput.focus()
+        await user.clear(emailInput)
+        await user.tab()
+      })
+      emailError = screen.getByText(/this\-field\-is\-required/i)
+      expect(emailError).toBeVisible()
+    })
+  })
+
+  describe('Anonymous user', () => {
+    it('should render email input & sign-into-your-account button', async () => {
+      setup({ isAuthenticated: false, userId: 0 })
+      await act(() => {
+        const emailTitle = screen.getByText(/your-email/i)
+        const emailInput = screen.getByRole('textbox', { name: /your-email/i })
+
+        expect(emailTitle).toBeVisible()
+        expect(emailInput).toBeVisible()
+        expect(screen.queryByRole('button', { name: /sign-into-your-account/i })).toBeVisible()
+        expect(screen.queryByText(/or-fill-the-details-below/i)).toBeVisible()
+      })
+    })
+
+    it('should open login dialog after clicking on sign-into-your-account-button', async () => {
+      const { user } = setup({ isAuthenticated: false, userId: 0 })
+      await act(async () => {
+        const signInButton = screen.getByRole('button', { name: /sign-into-your-account/i })
+        await user.click(signInButton)
+      })
+      expect(screen.getByRole('dialog', { name: /log-in/i })).toBeVisible()
+    })
   })
 })
