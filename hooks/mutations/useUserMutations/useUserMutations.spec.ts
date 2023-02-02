@@ -1,8 +1,8 @@
 import { renderHook } from '@testing-library/react-hooks'
 
-import { loginUserMock } from '../../../__mocks__/stories/userMock'
-import { createQueryClientWrapper } from '../../../__test__/utils/renderWithQueryClient'
 import { useUserMutations } from './useUserMutations'
+import { loginUserMock } from '@/__mocks__/stories/userMock'
+import { createQueryClientWrapper } from '@/__test__/utils/renderWithQueryClient'
 
 describe('[hooks] useUserMutations', () => {
   it('should use useUserMutations', async () => {
