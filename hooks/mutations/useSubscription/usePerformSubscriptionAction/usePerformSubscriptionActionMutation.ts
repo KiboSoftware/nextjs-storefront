@@ -21,7 +21,6 @@ const performSubscriptionAction = async (params: performSubscriptionActionProps)
     document: performSubscriptionActionMutation,
     variables: params,
   })
-  console.log('response', response)
   return response?.subscription
 }
 

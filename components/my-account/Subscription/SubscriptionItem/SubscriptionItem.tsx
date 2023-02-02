@@ -182,7 +182,7 @@ const SubscriptionItem = (props: SubscriptionItemProps) => {
         },
       },
     }
-    const pauseSubscriptionResponse = await performSubscriptionActionMutation.mutateAsync(params)
+    await performSubscriptionActionMutation.mutateAsync(params)
     showSnackbar(t('subscription-paused'), 'success')
   }
 
