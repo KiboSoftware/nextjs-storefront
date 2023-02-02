@@ -2,8 +2,8 @@ import React, { useEffect, useRef, useState } from 'react'
 
 import { Stack, Button, Typography, SxProps, Box } from '@mui/material'
 import { Theme } from '@mui/material/styles'
-import getConfig from 'next/config'
 import { useTranslation } from 'next-i18next'
+import getConfig from 'next/config'
 
 import { ShippingMethod } from '@/components/checkout'
 import {
@@ -23,7 +23,13 @@ import {
 import { userGetters, checkoutGetters } from '@/lib/getters'
 import type { CustomDestinationInput, MultiShipAddress, ShipOption } from '@/lib/types'
 
-import type { CrContact, CustomerContact, Checkout, CheckoutGroupRates } from '@/lib/gql/types'
+import type {
+  CrOrderItem,
+  CrContact,
+  CustomerContact,
+  Checkout,
+  CheckoutGroupRates,
+} from '@/lib/gql/types'
 
 const buttonStyle = {
   width: '100%',

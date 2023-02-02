@@ -36,7 +36,7 @@ describe('[getters] productGetters', () => {
       price: 100,
       salePrice: 50,
     }
-    expect(productGetters.getPDPProductPrice(ProductSubscriptionMock?.price)).toStrictEqual({
+    expect(productGetters.getSubscriptionPrice(ProductSubscriptionMock?.price)).toStrictEqual({
       regular: 100,
       special: 50,
     })

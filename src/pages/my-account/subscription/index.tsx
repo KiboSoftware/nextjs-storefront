@@ -1,8 +1,8 @@
 import { useCallback } from 'react'
 
+import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
 import getConfig from 'next/config'
 import { useRouter } from 'next/router'
-import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
 
 import { SubscriptionList } from '@/components/my-account'
 

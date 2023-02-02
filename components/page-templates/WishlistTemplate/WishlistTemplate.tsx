@@ -2,8 +2,8 @@ import React, { useState } from 'react'
 
 import FavoriteRoundedIcon from '@mui/icons-material/FavoriteRounded'
 import { Grid, Typography, Box, Divider, useTheme, Button } from '@mui/material'
-import { useRouter } from 'next/router'
 import { useTranslation } from 'next-i18next'
+import { useRouter } from 'next/router'
 
 import { ProductCard } from '@/components/product'
 import { useWishlist, useWishlistQueries } from '@/hooks'

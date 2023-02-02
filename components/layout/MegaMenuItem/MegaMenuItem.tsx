@@ -1,8 +1,8 @@
 import React from 'react'
 
 import { List, ListItem, ListItemText, Stack, Theme, styled } from '@mui/material'
-import Link from 'next/link'
 import { useTranslation } from 'next-i18next'
+import Link from 'next/link'
 
 import { uiHelpers } from '@/lib/helpers'
 

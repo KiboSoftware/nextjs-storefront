@@ -9,8 +9,8 @@ import {
   Link as MuiLink,
   Typography,
 } from '@mui/material'
-import { useRouter } from 'next/router'
 import { useTranslation } from 'next-i18next'
+import { useRouter } from 'next/router'
 
 import { HeaderAction } from '@/components/common'
 import { CategoryNestedNavigation } from '@/components/layout'

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 
 import { StarRounded } from '@mui/icons-material'
 import FavoriteBorderRoundedIcon from '@mui/icons-material/FavoriteBorderRounded'
@@ -15,8 +15,8 @@ import {
   Theme,
   MenuItem,
 } from '@mui/material'
-import Link from 'next/link'
 import { useTranslation } from 'next-i18next'
+import Link from 'next/link'
 
 import {
   FulfillmentOptions,
@@ -58,6 +58,7 @@ import type {
   ProductOptionValue,
   CrProduct,
   ProductPrice,
+  ProductPriceRange,
 } from '@/lib/gql/types'
 
 interface ProductDetailTemplateProps {
@@ -93,12 +94,11 @@ const ProductDetailTemplate = (props: ProductDetailTemplateProps) => {
 
   const [purchaseType, setPurchaseType] = useState<string>(PurchaseTypes.ONETIMEPURCHASE)
   const [selectedFrequency, setSelectedFrequency] = useState<string>('')
-  const [isSubscriptionPricingSelected, setIsSubscriptionPricingSelected] = useState<boolean>(false)
 
   const isSubscriptionModeAvailable = subscriptionGetters.isSubscriptionModeAvailable(product)
-  const { data: productPriceResponse } = useProductPriceQueries(
+  const { data: subscriptionPrice } = useProductPriceQueries(
     product?.productCode as string,
-    isSubscriptionPricingSelected
+    isSubscriptionModeAvailable
   )
 
   const { showModal, closeModal } = useModalContext()
@@ -126,7 +126,7 @@ const ProductDetailTemplate = (props: ProductDetailTemplateProps) => {
     variationProductCode,
     fulfillmentMethod,
     productPrice,
-    productPriceRange,
+    productSubscriptionPrice,
     productRating,
     description,
     shortDescription,
@@ -141,7 +141,7 @@ const ProductDetailTemplate = (props: ProductDetailTemplateProps) => {
       fulfillmentMethod: selectedFulfillmentOption?.method,
       purchaseLocationCode: selectedFulfillmentOption?.location?.code as string,
     },
-    productPriceResponse?.price as ProductPrice
+    subscriptionPrice?.price as ProductPrice
   )
   const { data: locationInventory } = useProductLocationInventoryQueries(
     (variationProductCode || productCode) as string,
@@ -272,13 +272,10 @@ const ProductDetailTemplate = (props: ProductDetailTemplateProps) => {
   const handlePurchaseTypeSelection = (option: string) => {
     setPurchaseType(option)
     if (option === PurchaseTypes.SUBSCRIPTION) {
-      setIsSubscriptionPricingSelected(true)
       setSelectedFulfillmentOption({
         ...selectedFulfillmentOption,
         method: FulfillmentOptionsConstant.SHIP,
       })
-    } else {
-      setIsSubscriptionPricingSelected(false)
     }
   }
 
@@ -298,12 +295,27 @@ const ProductDetailTemplate = (props: ProductDetailTemplateProps) => {
         <Typography variant="h1" gutterBottom>
           {productName}
         </Typography>
+
         <Price
-          price={t<string>('currency', { val: productPrice.regular })}
-          {...(productPrice.special && {
-            salePrice: t<string>('currency', { val: productPrice.special }),
+          price={t<string>('currency', {
+            val:
+              purchaseType === PurchaseTypes.SUBSCRIPTION
+                ? productSubscriptionPrice.regular
+                : productPrice.regular,
           })}
-          priceRange={usePriceRangeFormatter(productPriceRange)}
+          {...((productSubscriptionPrice.special || productPrice.special) && {
+            salePrice: t<string>('currency', {
+              val:
+                purchaseType === PurchaseTypes.SUBSCRIPTION
+                  ? productSubscriptionPrice.special
+                  : productPrice.special,
+            }),
+          })}
+          priceRange={usePriceRangeFormatter(
+            productPrice.special as ProductPriceRange,
+            subscriptionPrice?.priceRange as ProductPriceRange,
+            purchaseType
+          )}
         />
         <Box paddingY={1} display={shortDescription ? 'block' : 'none'}>
           <Box

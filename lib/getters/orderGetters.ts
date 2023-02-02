@@ -1,16 +1,16 @@
 import { format } from 'date-fns'
 
-import { addressGetters } from './addressGetters'
-import { cardGetters } from './cardGetters'
 import { FulfillmentOptions } from '../constants'
-
-import type {
+import {
   ShippingDetails,
   BillingDetails,
   CheckoutDetails,
   OrderSummary,
   PaymentMethod,
 } from '../types/OrderGettersTypes'
+import { addressGetters } from './addressGetters'
+import { cardGetters } from './cardGetters'
+
 import type {
   CrOrderItem,
   CrOrder,

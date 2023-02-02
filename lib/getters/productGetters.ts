@@ -55,12 +55,12 @@ const getPrice = (product: GenericProduct): { regular: number; special: number }
   }
 }
 
-const getPDPProductPrice = (
-  pdpProductPrice?: ProductPrice
+const getSubscriptionPrice = (
+  subscriptionPrice?: ProductPrice
 ): { regular: number; special: number } => {
   return {
-    regular: pdpProductPrice?.price as number,
-    special: pdpProductPrice?.salePrice as number,
+    regular: subscriptionPrice?.price as number,
+    special: subscriptionPrice?.salePrice as number,
   }
 }
 
@@ -197,7 +197,7 @@ const getIsPackagedStandAlone = (product: ProductCustom): boolean => {
 const isVariationProduct = (product: Product): boolean =>
   Boolean(product?.options?.filter((option) => option?.isRequired === true).length)
 
-const getProductDetails = (product: ProductCustom, pdpProductPrice?: ProductPrice) => {
+const getProductDetails = (product: ProductCustom, subscriptionPrice?: ProductPrice) => {
   const productOptions = getSegregatedOptions(product)
 
   return {
@@ -205,7 +205,8 @@ const getProductDetails = (product: ProductCustom, pdpProductPrice?: ProductPric
     productCode: getProductId(product),
     variationProductCode: getVariationProductCodeOrProductCode(product),
     fulfillmentMethod: getSelectedFulfillmentOption(product),
-    productPrice: pdpProductPrice ? getPDPProductPrice(pdpProductPrice) : getPrice(product),
+    productPrice: getPrice(product),
+    productSubscriptionPrice: getSubscriptionPrice(subscriptionPrice),
     productPriceRange: getPriceRange(product),
     productRating: getRating(product),
     description: getDescription(product),
@@ -317,5 +318,5 @@ export const productGetters = {
   isVariationProduct,
   getProductImage,
   getProductDetails,
-  getPDPProductPrice,
+  getSubscriptionPrice,
 }
