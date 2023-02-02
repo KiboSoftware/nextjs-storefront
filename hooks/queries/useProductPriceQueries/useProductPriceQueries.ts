@@ -4,9 +4,9 @@
 import { useQuery } from 'react-query'
 
 import { makeGraphQLClient } from '@/lib/gql/client'
+import { getProductPriceQuery } from '@/lib/gql/queries'
 import { productKeys } from '@/lib/react-query/queryKeys'
 
-import { getProductPriceQuery } from '@/lib/gql/queries'
 import type { ProductPrice } from '@/lib/gql/types'
 /**
  * @hidden
@@ -18,7 +18,7 @@ export interface useProductPriceResponse {
   isFetching: boolean
 }
 
-const fetchProductPrice = async (productCode: String, useSubscriptionPricing?: Boolean) => {
+const fetchProductPrice = async (productCode: string, useSubscriptionPricing?: boolean) => {
   const client = makeGraphQLClient()
   const response = await client.request({
     document: getProductPriceQuery,

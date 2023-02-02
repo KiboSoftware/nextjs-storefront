@@ -1,5 +1,5 @@
-import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
 import getConfig from 'next/config'
+import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
 
 import { CartTemplate } from '@/components/page-templates'
 import { getCart } from '@/lib/api/operations/'

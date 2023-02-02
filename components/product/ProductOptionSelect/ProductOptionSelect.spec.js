@@ -3,8 +3,8 @@ import { render, screen, within, fireEvent } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 
 import '@testing-library/jest-dom'
-import { productOptionSelectValuesMock } from '../../../__mocks__/stories/productOptionSelectMock'
 import * as stories from './ProductOptionSelect.stories' // import all stories from the stories file
+import { productOptionSelectValuesMock } from '../../../__mocks__/stories/productOptionSelectMock'
 
 const { Common } = composeStories(stories)
 

@@ -15,9 +15,9 @@ import {
   Link,
   Grid,
 } from '@mui/material'
-import { useTranslation } from 'next-i18next'
 import getConfig from 'next/config'
 import { useRouter } from 'next/router'
+import { useTranslation } from 'next-i18next'
 
 import { MyProfile, PaymentMethod, AddressBook } from '@/components/my-account'
 import { useAuthContext } from '@/context'
