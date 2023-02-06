@@ -32,7 +32,7 @@ import { userAddressMock } from '../stories/userAddressMock'
 import { userMock, loginUserMock, registerUserMock } from '../stories/userMock'
 import { wishlistMock } from '../stories/wishlistMock'
 import { subscriptionMock } from '@/__mocks__/stories/subscriptionMock'
-import { subscriptionPauseMock } from '@/__mocks__/stories/pauseSubscriptionMock'
+import { subscriptionPauseMock } from '@/__mocks__/stories'
 
 const baseUrl = 'http://localhost:3000'
 const mockCreateCustomerAccount = {

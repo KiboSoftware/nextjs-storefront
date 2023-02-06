@@ -1,7 +1,7 @@
 import { renderHook } from '@testing-library/react-hooks'
 
 import { usePerformSubscriptionActionMutation } from './usePerformSubscriptionActionMutation'
-import { subscriptionPauseMock } from '@/__mocks__/stories/pauseSubscriptionMock'
+import { subscriptionPauseMock } from '@/__mocks__/stories'
 import { createQueryClientWrapper } from '@/__test__/utils/renderWithQueryClient'
 
 describe('[hooks] usePerformSubscriptionActionMutation', () => {
