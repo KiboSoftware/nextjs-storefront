@@ -27,6 +27,7 @@ import {
   uiHelpers,
   buildSubscriptionFulfillmentInfoParams,
   buildPauseSubscriptionParams,
+  buildCancelSubscriptionParams,
 } from '@/lib/helpers'
 import type { Address, FulfillmentInfo } from '@/lib/types'
 
@@ -156,17 +157,7 @@ const SubscriptionItem = (props: SubscriptionItemProps) => {
 
   // Cancel An Item
   const confirmDeleteSubscription = async (subscriptionId: string, subscriptionItemId: string) => {
-    const params = {
-      subscriptionId: subscriptionId,
-      subscriptionItemId: subscriptionItemId,
-      subscriptionReasonInput: {
-        actionName: 'cancel',
-        reasonCode: 'cancel',
-        description: 'cancel',
-        moreInfo: 'cancel',
-      },
-    }
-
+    const params = buildCancelSubscriptionParams(subscriptionId, subscriptionItemId)
     await deleteSubscription.mutateAsync(params)
     closeModal()
     showSnackbar(t('subscription-cancelled-successfully'), 'success')

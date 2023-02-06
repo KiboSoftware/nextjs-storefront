@@ -9,3 +9,19 @@ export const buildPauseSubscriptionParams = (subscriptionId: string) => {
     },
   }
 }
+
+export const buildCancelSubscriptionParams = (
+  subscriptionId: string,
+  subscriptionItemId: string
+) => {
+  return {
+    subscriptionId: subscriptionId,
+    subscriptionItemId: subscriptionItemId,
+    subscriptionReasonInput: {
+      actionName: 'cancel',
+      reasonCode: 'cancel',
+      description: 'cancel',
+      moreInfo: 'cancel',
+    },
+  }
+}

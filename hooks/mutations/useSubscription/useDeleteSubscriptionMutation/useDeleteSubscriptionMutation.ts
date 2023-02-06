@@ -7,7 +7,7 @@ import { makeGraphQLClient } from '@/lib/gql/client'
 import { deleteSubscriptionMutation } from '@/lib/gql/mutations'
 import { subscriptionKeys } from '@/lib/react-query/queryKeys'
 
-import { SubscriptionReasonInput } from '@/lib/gql/types'
+import type { SubscriptionReasonInput } from '@/lib/gql/types'
 
 interface DeleteSubscriptionProps {
   subscriptionId: string
@@ -29,13 +29,15 @@ const deleteSubscription = async (params: DeleteSubscriptionProps) => {
 /**
  * [Mutation hook] useDeleteSubscriptionMutation uses the graphQL mutation
  *
- * <b>deleteSubscription(subscriptionId: string): Subscription</b>
+ * <b>deleteSubscription(subscriptionId: string subscriptionItemId: string subscriptionReasonInput: SubscriptionReasonInput): Subscription</b>
  *
  * Description : Delete subscription order according to the actionName.
  *
- * Parameters passed to function skipNextSubscription(subscriptionId?: string | null) => expects subscriptionId
+ * Parameters passed to function deleteSubscription(props: DeleteSubscriptionProps) => expects object of type 'DeleteSubscriptionProps' containing subscriptionId, subscriptionItemId and subscriptionReasonInput
  *
- * @returns 'response?.subscription' which contains next order date when the order will be placed
+ * On success, calls invalidateQueries on subscriptionKeys and fetches the updated result.
+ *
+ * @returns 'response?.subscription' which contains object of Subscription
  */
 export const useDeleteSubscriptionMutation = () => {
   const queryClient = useQueryClient()
