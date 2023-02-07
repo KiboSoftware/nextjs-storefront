@@ -36,4 +36,4 @@ On success, calls invalidateQueries loginKeys.user and fetches the updated resul
 
 #### Defined in
 
-[mutations/useProfile/useUpdateUserData/useUpdateUserData.ts:45](https://github.com/KiboSoftware/nextjs-storefront/blob/973d553/hooks/mutations/useProfile/useUpdateUserData/useUpdateUserData.ts#L45)
+[mutations/useProfile/useUpdateUserData/useUpdateUserData.ts:45](https://github.com/KiboSoftware/nextjs-storefront/blob/561a164/hooks/mutations/useProfile/useUpdateUserData/useUpdateUserData.ts#L45)

@@ -34,4 +34,4 @@ Parameters passed to internal function configureProduct(params: ConfigureProduct
 
 #### Defined in
 
-[mutations/useProductMutations/useProductMutation.ts:51](https://github.com/KiboSoftware/nextjs-storefront/blob/973d553/hooks/mutations/useProductMutations/useProductMutation.ts#L51)
+[mutations/useProductMutations/useProductMutation.ts:51](https://github.com/KiboSoftware/nextjs-storefront/blob/561a164/hooks/mutations/useProductMutations/useProductMutation.ts#L51)

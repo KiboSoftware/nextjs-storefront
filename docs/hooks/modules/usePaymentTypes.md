@@ -34,4 +34,4 @@ Return function and value:
 
 #### Defined in
 
-[custom/usePaymentTypes/usePaymentTypes.ts:15](https://github.com/KiboSoftware/nextjs-storefront/blob/973d553/hooks/custom/usePaymentTypes/usePaymentTypes.ts#L15)
+[custom/usePaymentTypes/usePaymentTypes.ts:15](https://github.com/KiboSoftware/nextjs-storefront/blob/561a164/hooks/custom/usePaymentTypes/usePaymentTypes.ts#L15)

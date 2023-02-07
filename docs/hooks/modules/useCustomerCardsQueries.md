@@ -38,4 +38,4 @@ On success, returns the card collection of customer's account
 
 #### Defined in
 
-[queries/useCustomerCardsQueries/useCustomerCardsQueries.ts:48](https://github.com/KiboSoftware/nextjs-storefront/blob/973d553/hooks/queries/useCustomerCardsQueries/useCustomerCardsQueries.ts#L48)
+[queries/useCustomerCardsQueries/useCustomerCardsQueries.ts:48](https://github.com/KiboSoftware/nextjs-storefront/blob/561a164/hooks/queries/useCustomerCardsQueries/useCustomerCardsQueries.ts#L48)

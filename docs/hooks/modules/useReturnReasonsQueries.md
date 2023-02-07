@@ -32,4 +32,4 @@ On success, returns with return reasons list and 'refetchOnWindowFocus' set to f
 
 #### Defined in
 
-[queries/useReturnReasonsQueries/useReturnReasonsQueries.ts:44](https://github.com/KiboSoftware/nextjs-storefront/blob/973d553/hooks/queries/useReturnReasonsQueries/useReturnReasonsQueries.ts#L44)
+[queries/useReturnReasonsQueries/useReturnReasonsQueries.ts:44](https://github.com/KiboSoftware/nextjs-storefront/blob/561a164/hooks/queries/useReturnReasonsQueries/useReturnReasonsQueries.ts#L44)

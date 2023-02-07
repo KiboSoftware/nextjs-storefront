@@ -1,3 +1,6 @@
+/**
+ * @module useUpdateCheckoutCouponMutation
+ */
 import { useMutation, useQueryClient } from 'react-query'
 
 import { makeGraphQLClient } from '@/lib/gql/client'
@@ -21,6 +24,19 @@ const updateCheckoutCoupon = async (params: UpdateCheckoutCouponParams) => {
   return response?.updateCheckoutCoupon
 }
 
+/**
+ * [Mutation hook] useUpdateCheckoutCouponMutation uses the graphQL mutation
+ *
+ * <b>updateCheckoutCoupon(checkoutId: String!, couponCode: String!): Checkout</b>
+ *
+ * Description : Applies or updates the coupon to the checkout page.
+ *
+ * Parameters passed to function updateCheckoutCoupon(params: UpdateCheckoutCouponParams) => expects checkoutId and couponCode
+ *
+ * On success, calls invalidateQueries on checkoutKeys and fetches the updated result.
+ *
+ * @returns 'response?.updateCheckoutCoupon' which applies the coupon on checkout page(if coupon is valid)
+ */
 export const useUpdateCheckoutCouponMutation = () => {
   const queryClient = useQueryClient()
   return useMutation(updateCheckoutCoupon, {
