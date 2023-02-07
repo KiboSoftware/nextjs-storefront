@@ -1,9 +1,10 @@
 import { format } from 'date-fns'
 
-import { SUBSCRIPTION_FREQUENCY } from '../constants'
+import { ProductAttribute } from '../constants'
 import { addressGetters } from '@/lib/getters'
+import type { ProductCustom } from '@/lib/types'
 
-import type { SbContact, SbProduct, Subscription } from '@/lib/gql/types'
+import type { SbContact, SbProduct, Subscription, SbProductProperty } from '@/lib/gql/types'
 
 const getSubscriberName = (subscription: Subscription) =>
   `${subscription?.fulfillmentInfo?.fulfillmentContact?.firstName} ${subscription?.fulfillmentInfo?.fulfillmentContact?.lastNameOrSurname}`
@@ -37,11 +38,37 @@ const getSubscriptionDetails = (subscription: any) => {
   }
 }
 
-const getFrequencyValues = (product: SbProduct | null | undefined) => {
+const getFrequencyValues = (product: SbProduct | ProductCustom | null | undefined) => {
   if (!product) return
 
-  return product?.properties?.find((property) => property?.attributeFQN === SUBSCRIPTION_FREQUENCY)
-    ?.values
+  return (
+    (product?.properties as SbProductProperty[])?.find(
+      (property) => property?.attributeFQN === ProductAttribute.SUBSCRIPTION_FREQUENCY
+    )?.values || []
+  )
+}
+
+const isSubscriptionModeAvailable = (product: ProductCustom | null | undefined) => {
+  if (!product) return false
+
+  return (
+    product?.properties?.some(
+      (property) => property?.attributeFQN === ProductAttribute.SUBSCRIPTION_Mode
+    ) || false
+  )
+}
+
+const getFrequencyUnitAndValue = (selectedFrequency: string) => {
+  const [value, unit] = selectedFrequency.split(' ')
+
+  // API accepts unit as singular ex. day or month
+  const isUnitPlural = unit.charAt(unit.length - 1).toLowerCase() === 's'
+  const unitSingular = isUnitPlural ? unit.slice(0, unit.length - 1) : unit
+
+  return {
+    value: +value,
+    unit: unitSingular,
+  }
 }
 
 const getFormattedAddress = (subscription: Subscription) => {
@@ -65,4 +92,6 @@ export const subscriptionGetters = {
   getSubscriptionDetails,
   getFrequencyValues,
   getFormattedAddress,
+  isSubscriptionModeAvailable,
+  getFrequencyUnitAndValue,
 }

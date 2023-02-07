@@ -21,6 +21,7 @@ describe('usePriceRangeFormatter', () => {
         salePrice: 180,
       },
     }
+
     const { result } = renderHook(() => usePriceRangeFormatter(priceRange))
     expect(result.current).toEqual({
       lower: {

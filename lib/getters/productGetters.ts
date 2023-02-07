@@ -14,6 +14,7 @@ import type {
   LocationInventory,
   CrProduct,
   CrProductOption,
+  ProductPrice,
 } from '@/lib/gql/types'
 
 type ProductOptionsReturnType<T> = T extends ProductCustom
@@ -51,6 +52,15 @@ const getPrice = (product: GenericProduct): { regular: number; special: number }
   return {
     regular: product?.price?.price as number,
     special: product?.price?.salePrice as number,
+  }
+}
+
+const getPDPProductPrice = (
+  pdpProductPrice?: ProductPrice
+): { regular: number; special: number } => {
+  return {
+    regular: pdpProductPrice?.price as number,
+    special: pdpProductPrice?.salePrice as number,
   }
 }
 
@@ -187,7 +197,7 @@ const getIsPackagedStandAlone = (product: ProductCustom): boolean => {
 const isVariationProduct = (product: Product): boolean =>
   Boolean(product?.options?.filter((option) => option?.isRequired === true).length)
 
-const getProductDetails = (product: ProductCustom) => {
+const getProductDetails = (product: ProductCustom, pdpProductPrice?: ProductPrice) => {
   const productOptions = getSegregatedOptions(product)
 
   return {
@@ -195,7 +205,7 @@ const getProductDetails = (product: ProductCustom) => {
     productCode: getProductId(product),
     variationProductCode: getVariationProductCodeOrProductCode(product),
     fulfillmentMethod: getSelectedFulfillmentOption(product),
-    productPrice: getPrice(product),
+    productPrice: pdpProductPrice ? getPDPProductPrice(pdpProductPrice) : getPrice(product),
     productPriceRange: getPriceRange(product),
     productRating: getRating(product),
     description: getDescription(product),
@@ -307,4 +317,5 @@ export const productGetters = {
   isVariationProduct,
   getProductImage,
   getProductDetails,
+  getPDPProductPrice,
 }

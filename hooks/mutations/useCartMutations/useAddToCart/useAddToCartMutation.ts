@@ -8,7 +8,7 @@ import { addToCartMutation } from '@/lib/gql/mutations'
 import { buildAddToCartParams } from '@/lib/helpers/buildAddToCartParams'
 import { cartKeys } from '@/lib/react-query/queryKeys'
 
-import type { ProductOption } from '@/lib/gql/types'
+import type { ProductOption, CrSubscriptionInfo } from '@/lib/gql/types'
 
 /**
  * @hidden
@@ -23,14 +23,15 @@ export interface AddToCartProductInput {
 interface AddToCartInputParams {
   product: AddToCartProductInput
   quantity: number
+  subscription?: CrSubscriptionInfo
 }
 
 const addToCart = async (props: AddToCartInputParams) => {
   const client = makeGraphQLClient()
-  const { product, quantity } = props
+  const { product, quantity, subscription } = props
 
   const variables = {
-    productToAdd: buildAddToCartParams(product, quantity),
+    productToAdd: buildAddToCartParams(product, quantity, subscription),
   }
 
   const response = await client.request({

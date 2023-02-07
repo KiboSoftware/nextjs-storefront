@@ -4,27 +4,28 @@
 import { useQuery } from 'react-query'
 
 import { makeGraphQLClient } from '@/lib/gql/client'
+import { getProductPriceQuery } from '@/lib/gql/queries'
 import { productKeys } from '@/lib/react-query/queryKeys'
 
-import { getProductPriceQuery } from '@/lib/gql/queries'
-import type { ProductPrice } from '@/lib/gql/types'
+import type { Product } from '@/lib/gql/types'
 /**
  * @hidden
  */
 export interface useProductPriceResponse {
-  data: ProductPrice
+  data: Product
   isLoading: boolean
   isSuccess: boolean
   isFetching: boolean
 }
 
-const fetchProductPrice = async (productCode: String, useSubscriptionPricing?: Boolean) => {
+const fetchProductPrice = async (productCode: string, useSubscriptionPricing?: boolean) => {
   const client = makeGraphQLClient()
   const response = await client.request({
     document: getProductPriceQuery,
     variables: { productCode, useSubscriptionPricing },
   })
-  return response.products
+
+  return response.product
 }
 
 /**
@@ -39,7 +40,7 @@ const fetchProductPrice = async (productCode: String, useSubscriptionPricing?: B
  * @param productCode unique product code for which inventory needed to be fetched
  * @param useSubscriptionPricing used to check if the product has subscription price or not
  *
- * @returns 'response?.products', which contains list of product price.
+ * @returns 'response?.product', which contains list of product price.
  */
 
 export const useProductPriceQueries = (
@@ -55,7 +56,8 @@ export const useProductPriceQueries = (
     productKeys.productParams(productCode, useSubscriptionPricing),
     () => fetchProductPrice(productCode, useSubscriptionPricing),
     {
-      refetchOnWindowFocus: false,
+      enabled: !!productCode,
+      refetchOnWindowFocus: true,
     }
   )
 

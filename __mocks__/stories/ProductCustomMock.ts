@@ -407,3 +407,53 @@ export const ProductCustomMock: ProductCustom = {
     onlineStockAvailable: 100,
   },
 }
+
+export const ProductSubscriptionMock: ProductCustom = {
+  ...ProductCustomMock,
+  properties: [
+    {
+      attributeFQN: 'system~subscription-mode',
+      isHidden: false,
+      values: [
+        {
+          value: 'SAOT',
+          stringValue: 'Subscription and one-time purchase',
+        },
+      ],
+    },
+    {
+      attributeFQN: 'system~subscription-frequency',
+      isHidden: false,
+      values: [
+        {
+          stringValue: '15 Days',
+          value: 'D15',
+        },
+        {
+          stringValue: '45 Days',
+          value: 'D45',
+        },
+        {
+          stringValue: '60 Days',
+          value: 'D60',
+        },
+        {
+          stringValue: '1 month',
+          value: 'M1',
+        },
+        {
+          stringValue: '3 months',
+          value: 'M3',
+        },
+        {
+          stringValue: '4 months',
+          value: 'M4',
+        },
+        {
+          stringValue: '1 week',
+          value: 'W1',
+        },
+      ],
+    },
+  ],
+}

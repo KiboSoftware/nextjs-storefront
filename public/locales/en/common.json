@@ -316,5 +316,8 @@
   "order-date-must-be-valid": "Order date must be valid",
   "address-updated-successfully": "Address updated successfully",
   "item-ordered-successfully": "Item ordered successfully",
-  "select-shipping-address": "Select shipping address"
+  "select-shipping-address": "Select shipping address",
+  "subscription-frequency": "Subscription frequency",
+
+  "fulfillment-options": "Fulfillment Options:"
 }

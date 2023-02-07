@@ -15,7 +15,7 @@ import * as stories from '@/components/page-templates/ProductDetail/ProductDetai
 import { DialogRoot, ModalContextProvider } from '@/context'
 import { productGetters } from '@/lib/getters'
 
-const { Common } = composeStories(stories)
+const { Common, WithSubscription } = composeStories(stories)
 const mockedProduct = ProductCustomMock
 const mockFulfillmentOptions = fulfillmentOptionsMock || []
 
@@ -170,7 +170,6 @@ describe('[component] - ProductDetailTemplate integration', () => {
     })
 
     await user.click(shipRadio)
-
     expect(shipRadio).toBeChecked()
 
     const addToCartButton = screen.getByRole('button', {
@@ -189,6 +188,67 @@ describe('[component] - ProductDetailTemplate integration', () => {
       name: /added-to-cart/i,
     })
 
+    expect(dialogHeader).toBeVisible()
+  })
+
+  it('should add item to cart for one-time purchase option if subscription is enabled', async () => {
+    const user = userEvent.setup()
+    renderWithQueryClient(
+      <ModalContextProvider>
+        <DialogRoot />
+        <WithSubscription {...WithSubscription?.args} />
+      </ModalContextProvider>
+    )
+
+    const onetimePurchaseBtn = screen.getByRole('radio', { name: /one\-time purchase/i })
+    await user.click(onetimePurchaseBtn)
+    expect(onetimePurchaseBtn).toBeChecked()
+
+    const shipRadio = screen.getByRole('radio', {
+      name: /Ship/i,
+    })
+    await user.click(shipRadio)
+
+    const addToCartButton = await screen.findByRole('button', {
+      name: /add-to-cart/i,
+    })
+    await user.click(addToCartButton)
+
+    const dialogHeader = within(screen.getByTestId('title-component')).getByRole('heading', {
+      name: /added-to-cart/i,
+    })
+    expect(dialogHeader).toBeVisible()
+  })
+
+  it('should add ship to home item to cart for subscription option if subscription is enabled', async () => {
+    const user = userEvent.setup()
+    renderWithQueryClient(
+      <ModalContextProvider>
+        <DialogRoot />
+        <WithSubscription {...WithSubscription?.args} />
+      </ModalContextProvider>
+    )
+
+    const subscriptionRadio = screen.getByRole('radio', { name: /subscription/i })
+    await user.click(subscriptionRadio)
+    expect(subscriptionRadio).toBeChecked()
+
+    const selectButton = await screen.findByLabelText(/subscription-frequency/i)
+    expect(selectButton).toBeVisible()
+    await user.click(selectButton)
+
+    const listbox = within(screen.getByRole('listbox'))
+    expect(listbox.getByRole('option', { name: '45 Days' })).toBeVisible()
+    await user.click(listbox.getByText(/45 Days/i))
+    await user.tab()
+
+    const addToCartButton = await screen.findByRole('button', {
+      name: /add-to-cart/i,
+    })
+    await user.click(addToCartButton)
+    const dialogHeader = within(screen.getByTestId('title-component')).getByRole('heading', {
+      name: /added-to-cart/i,
+    })
     expect(dialogHeader).toBeVisible()
   })
 

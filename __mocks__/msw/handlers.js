@@ -187,7 +187,7 @@ export const productHandlers = [
     return res(ctx.data(configuredProductMock))
   }),
   graphql.query('getProductPrice', (_req, res, ctx) => {
-    return res(ctx.data({ products: productPriceMock }))
+    return res(ctx.data({ product: productPriceMock }))
   }),
 ]
 

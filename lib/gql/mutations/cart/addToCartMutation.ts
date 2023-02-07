@@ -34,6 +34,12 @@ const addToCartMutation = /* GraphQL */ `
         }
       }
       quantity
+      subscription {
+        frequency {
+          unit
+          value
+        }
+      }
     }
   }
 `

@@ -3,7 +3,7 @@ import React from 'react'
 import { ComponentStory, ComponentMeta } from '@storybook/react'
 
 import ProductDetailTemplate from './ProductDetailTemplate'
-import { ProductCustomMock } from '@/__mocks__/stories'
+import { ProductCustomMock, ProductSubscriptionMock } from '@/__mocks__/stories'
 
 export default {
   title: 'Page Templates/Product Detail',
@@ -57,4 +57,9 @@ export const WithMoreDetails = Template.bind({})
 WithMoreDetails.args = {
   product: ProductCustomMock,
   isQuickViewModal: true,
+}
+
+export const WithSubscription = Template.bind({})
+WithSubscription.args = {
+  product: ProductSubscriptionMock,
 }

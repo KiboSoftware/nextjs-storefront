@@ -3,9 +3,9 @@
  */
 import { useMutation, useQueryClient } from 'react-query'
 
-import { loginKeys } from '../../../../lib/react-query/queryKeys'
 import { makeGraphQLClient } from '@/lib/gql/client'
 import { updateCustomerData } from '@/lib/gql/mutations/user/updateAccount'
+import { loginKeys } from '@/lib/react-query/queryKeys'
 
 import { CustomerAccountInput } from '@/lib/gql/types'
 
