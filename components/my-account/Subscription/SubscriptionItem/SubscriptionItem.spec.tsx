@@ -279,6 +279,39 @@ describe('[component] - SubscriptionItem', () => {
     })
   })
 
+  describe('pause-shipment', () => {
+    it('should open Confirmation Dialog when user clicks on pause button', async () => {
+      const { user } = setup()
+
+      const pauseButton = screen.getByRole('button', {
+        name: /pause-subscription/i,
+      })
+
+      // Act
+      await user.click(pauseButton)
+
+      // Assert
+      expect(screen.getByRole('heading', { level: 1 })).toHaveTextContent('confirmation-dialog')
+    })
+
+    it('should pause when user clicks on Confirm button', async () => {
+      const { user } = setup()
+
+      const pauseButton = screen.getByRole('button', {
+        name: /pause-subscription/i,
+      })
+
+      // Act
+      await user.click(pauseButton)
+      const confirmButton = screen.getByRole('button', { name: /confirm/i })
+      await user.click(confirmButton)
+
+      // Assert
+      const snackbar = screen.getByText('subscription-paused')
+      expect(snackbar).toBeVisible()
+    })
+  })
+
   describe('edit-subscription-frequency', () => {
     it('should open edit-subscription-frequency Dialog when user clicks on edit-frequency button', async () => {
       const { user } = setup()

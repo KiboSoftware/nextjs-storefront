@@ -22,7 +22,11 @@ import {
   usePerformSubscriptionActionMutation,
 } from '@/hooks'
 import { subscriptionGetters, productGetters } from '@/lib/getters'
-import { uiHelpers, buildSubscriptionFulfillmentInfoParams } from '@/lib/helpers'
+import {
+  uiHelpers,
+  buildSubscriptionFulfillmentInfoParams,
+  buildSubscriptionParams,
+} from '@/lib/helpers'
 import type { Address, FulfillmentInfo } from '@/lib/types'
 
 import type { CrProduct, Subscription } from '@/lib/gql/types'
@@ -173,15 +177,7 @@ const SubscriptionItem = (props: SubscriptionItemProps) => {
 
   // Pause Subscription
   const confirmPauseSubscription = async (subscriptionId: string) => {
-    const params = {
-      subscriptionId: subscriptionId,
-      subscriptionActionInput: {
-        actionName: 'Pause',
-        reasons: {
-          actionName: 'Pause',
-        },
-      },
-    }
+    const params = buildSubscriptionParams(subscriptionId)
     await performSubscriptionActionMutation.mutateAsync(params)
     showSnackbar(t('subscription-paused'), 'success')
   }
