@@ -30,13 +30,9 @@ const Template: ComponentStory<typeof MultiShippingStep> = (args) => <MultiShipp
 // Default
 export const Common = Template.bind({})
 
-const userSavedShippingAddress = userGetters.getUserShippingAddress(
-  userAddressResponse?.items as CustomerContact[]
-)
-
 Common.args = {
   checkout: checkoutMock.checkout,
   isAuthenticated: true,
-  userSavedShippingAddress,
+  savedUserAddressData: userAddressResponse,
   shippingMethods: checkoutGroupRatesMock?.checkoutShippingMethods,
 }

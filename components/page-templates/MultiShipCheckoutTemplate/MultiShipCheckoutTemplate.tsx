@@ -19,6 +19,7 @@ import {
   useCreateMultiShipCheckoutPaymentActionMutation,
   useCreateMultiShipCheckoutMutation,
 } from '@/hooks'
+import { FulfillmentOptions } from '@/lib/constants'
 import { checkoutGetters, userGetters } from '@/lib/getters'
 import type { PersonalDetails } from '@/lib/types'
 
@@ -52,12 +53,15 @@ const MultiShipCheckoutTemplate = (props: MultiShipCheckoutProps) => {
   // Hooks
   const { data: checkout } = useMultiShipCheckoutQueries({
     checkoutId: checkoutId as string,
-    isMultiship: isMultiShipEnabled,
+    isMultiShip: isMultiShipEnabled,
     initialCheckout,
   })
   const { data: shippingMethods } = useCheckoutShippingMethodsQuery(
     checkoutId as string,
-    checkout?.groupings && (checkout?.groupings[0]?.destinationId as string)
+    checkout?.groupings &&
+      (checkout?.groupings?.filter(
+        (group) => group?.fulfillmentMethod === FulfillmentOptions.SHIP
+      )[0]?.destinationId as string)
   )
 
   const updateMultiShipCheckoutPersonalInfo = useUpdateMultiShipCheckoutPersonalInfoMutation()
@@ -69,7 +73,10 @@ const MultiShipCheckoutTemplate = (props: MultiShipCheckoutProps) => {
   const updateCheckoutPersonalInfo = async (formData: PersonalDetails) => {
     const { email } = formData
     const personalInfo: MultiShipPersonalInfo = {
-      checkout: checkout as Checkout,
+      checkout: {
+        ...checkout,
+        items: checkout?.items?.map((each) => (each!.destinationId = null)),
+      } as Checkout,
       email: email as string,
     }
     await updateMultiShipCheckoutPersonalInfo.mutateAsync(personalInfo)
@@ -77,10 +84,6 @@ const MultiShipCheckoutTemplate = (props: MultiShipCheckoutProps) => {
 
   const { isAuthenticated, user } = useAuthContext()
   const { data: savedUserAddressData } = useCustomerContactsQueries(user?.id as number)
-
-  const userShippingAddress = userGetters?.getUserShippingAddress(
-    savedUserAddressData?.items as CustomerContact[]
-  )
 
   const getShippingRateFromMethodGroupByMethodCode = async (
     shippingMethodCode: string,
@@ -195,7 +198,7 @@ const MultiShipCheckoutTemplate = (props: MultiShipCheckoutProps) => {
         <MultiShippingStep
           key={checkout?.groupings?.map((group) => group?.id).join('')}
           checkout={checkout as Checkout}
-          userSavedShippingAddress={userShippingAddress}
+          savedUserAddressData={savedUserAddressData}
           isAuthenticated={isAuthenticated}
           shippingMethods={shippingMethods}
           createCheckoutDestination={createCheckoutDestination}

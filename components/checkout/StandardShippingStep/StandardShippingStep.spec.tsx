@@ -1,16 +1,14 @@
 import React from 'react'
 
 import { composeStories } from '@storybook/testing-react'
-import { screen, waitFor, fireEvent, within } from '@testing-library/react'
+import { screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
-import { graphql } from 'msw'
 
 import * as stories from './StandardShippingStep.stories'
-import { server } from '@/__mocks__/msw/server'
 import { orderMock, shippingRateMock, userAddressResponse } from '@/__mocks__/stories'
 import { renderWithQueryClient } from '@/__test__/utils'
 import { AuthContext } from '@/context'
-import { addressGetters, userGetters } from '@/lib/getters'
+import { userGetters } from '@/lib/getters'
 import { Address } from '@/lib/types'
 
 import { CrOrder, CustomerContact, CustomerContactCollection } from '@/lib/gql/types'
@@ -19,6 +17,50 @@ const { Common } = composeStories(stories)
 
 const scrollIntoViewMock = jest.fn()
 window.HTMLElement.prototype.scrollIntoView = scrollIntoViewMock
+
+jest.mock('../../checkout/ShippingMethod/ShippingMethod', () => ({
+  __esModule: true,
+  default: ({
+    id,
+    selected,
+    onShippingMethodChange,
+  }: {
+    id: number
+    selected: string
+    onShippingMethodChange: (shippingMethodCode: string) => void
+  }) => (
+    <div data-testid="addressDetailsView-mock">
+      <p data-testid="selectedAddressDetailsView">{selected}</p>
+      <button
+        onClick={() =>
+          onShippingMethodChange(
+            shippingRateMock.orderShipmentMethods?.[0].shippingMethodCode as string
+          )
+        }
+      >
+        handleSaveShippingMethod
+      </button>
+    </div>
+  ),
+}))
+
+jest.mock('../../common/AddressDetailsView/AddressDetailsView', () => ({
+  __esModule: true,
+  default: ({
+    id,
+    selected,
+    handleRadioChange,
+  }: {
+    id: number
+    selected: string
+    handleRadioChange: (addressId: string) => void
+  }) => (
+    <div data-testid="addressDetailsView-mock">
+      <p data-testId="selectedAddressDetailsView">{selected}</p>
+      <button onClick={() => handleRadioChange(String(id))}>handleAddressSelect</button>
+    </div>
+  ),
+}))
 
 jest.mock('../../common/AddressForm/AddressForm', () => ({
   __esModule: true,
@@ -105,180 +147,125 @@ const setup = (param: {
   }
 }
 
-const updatedFulfillmentMock = {
-  ...orderMock.checkout.fulfillmentInfo,
-  fulfillmentContact: {
-    email: 'test@email.com',
-    firstName: 'jon',
-    id: 1,
-    middleNameOrInitial: null,
-    lastNameOrSurname: 'doe',
-    companyOrOrganization: null,
-    phoneNumbers: {
-      home: '9938938494',
-      mobile: null,
-      work: null,
-    },
-    address: {
-      address1: '400, Lamar Street',
-      address2: '23/1',
-      address3: null,
-      address4: null,
-      cityOrTown: 'Austin',
-      stateOrProvince: 'TX',
-      postalOrZipCode: '98984',
-      countryCode: 'US',
-      addressType: null,
-      isValidated: false,
-    },
-  },
-}
+describe('[components] StandardShippingStep', () => {
+  describe('There are no previously saved shipping addresses to choose from', () => {
+    it('should not display previously saved shipping address radio buttons', () => {
+      setup({
+        checkout: {
+          ...orderMock.checkout,
+          fulfillmentInfo: { ...orderMock.checkout.fulfillmentInfo, fulfillmentContact: null },
+        },
+        isAuthenticated: true,
+        userId: 0,
+      })
 
-const selectDefaultShippingAddress = async (user: any) => {
-  const defaultAddress = userAddressResponse.items?.find((each) =>
-    each?.types?.find((type) => type?.isPrimary)
-  )
+      expect(screen.queryByTestId('addressDetailsView-mock')).not.toBeInTheDocument()
+    })
 
-  const defaultAddressRadioName = `${addressGetters.getAddress1(
-    defaultAddress?.address
-  )},${addressGetters.getAddress2(defaultAddress?.address)},${addressGetters.getCityOrTown(
-    defaultAddress?.address
-  )},${addressGetters.getStateOrProvince(
-    defaultAddress?.address
-  )},${addressGetters.getPostalOrZipCode(defaultAddress?.address)}`
+    it('should display shipping address form', async () => {
+      setup({
+        checkout: {
+          ...orderMock.checkout,
+          fulfillmentInfo: { ...orderMock.checkout.fulfillmentInfo, fulfillmentContact: null },
+        },
+        isAuthenticated: true,
+        userId: 0,
+      })
 
-  const defaultAddressRadio = screen.getByRole('radio', {
-    name: defaultAddressRadioName,
+      expect(screen.getByTestId('address-form-mock')).toBeVisible()
+      expect(screen.getByRole('button', { name: /save-shipping-address/ })).toBeVisible()
+      expect(screen.getByRole('button', { name: /cancel/ })).toBeVisible()
+    })
   })
 
-  expect(defaultAddressRadio).not.toBeChecked()
+  describe('There are previously saved shipping address in account but not in checkout', () => {
+    it('should display shipping address(saved in account) radio buttons and select a radio button to select Shipping Methods', async () => {
+      const { user } = setup({
+        checkout: {
+          ...orderMock.checkout,
+          fulfillmentInfo: { ...orderMock.checkout.fulfillmentInfo, fulfillmentContact: null },
+        },
+        isAuthenticated: true,
+        userId: 0,
+        savedUserAddressData: userAddressResponse,
+      })
 
-  await user.click(defaultAddressRadio)
-
-  expect(defaultAddressRadio).toBeChecked()
-}
-
-const selectShippingMethod = async (user: any) => {
-  const shippingMethodSelect = screen.getByRole('button', { name: 'Select Shipping Option' })
-
-  fireEvent.mouseDown(shippingMethodSelect)
-
-  const option = within(screen.getByRole('listbox')).getByText(
-    `${shippingRateMock.orderShipmentMethods?.[0]?.shippingMethodName as string} currency`
-  )
-
-  server.use(
-    graphql.query('getCheckout', (_req, res, ctx) => {
-      return res(
-        ctx.data({
-          checkout: {
-            ...orderMock.checkout,
-            email: 'test@email.com',
-            fulfillmentInfo: {
-              ...orderMock.checkout.fulfillmentInfo,
-              ...updatedFulfillmentMock,
-              shippingMethodCode: 'f863f9f5d4cf4f088105ae3200fd4f9b',
-              shippingMethodName: 'Second Day Air',
-            },
-          },
-        })
+      expect(screen.getAllByTestId('addressDetailsView-mock').length).toBe(
+        userGetters.getUserShippingAddress(userAddressResponse.items as CustomerContact[])?.length
       )
+
+      // selecting a radioAddress
+      const firstRadioAddress = screen.getAllByRole('button', { name: /handleAddressSelect/ })[0]
+
+      await user.click(firstRadioAddress)
+
+      const selected = userGetters.getUserShippingAddress(
+        userAddressResponse?.items as CustomerContact[]
+      )?.[0].id
+
+      expect(screen.getAllByTestId(/selectedAddressDetailsView/)?.[0].textContent).toBe(
+        selected?.toString()
+      )
+
+      const firstShippingMethod = screen.getAllByRole('button', {
+        name: /handleSaveShippingMethod/,
+      })[0]
+
+      await user.click(firstShippingMethod)
+
+      expect(scrollIntoViewMock).toBeCalled()
     })
-  )
+  })
 
-  await user.click(option)
-}
-
-describe('[components] StandardShippingStep', () => {
-  describe('Authenticated User', () => {
-    describe('There are no previously saved shipping addresses to choose from', () => {
-      it('should not display previously saved shipping address radio buttons', () => {
-        setup({
-          checkout: {
-            ...orderMock.checkout,
-            fulfillmentInfo: { ...orderMock.checkout.fulfillmentInfo, fulfillmentContact: null },
-          },
-          isAuthenticated: true,
-          userId: 0,
-        })
-
-        expect(screen.queryByRole('radio')).not.toBeInTheDocument()
+  describe('There are previously saved shipping address in account and checkout', () => {
+    it('should display shipping address radio buttons(saved in account and checkout)', async () => {
+      setup({
+        checkout: {
+          ...orderMock.checkout,
+        },
+        isAuthenticated: true,
+        userId: 0,
+        savedUserAddressData: userAddressResponse,
       })
 
-      it('should display shipping address form', async () => {
-        setup({
-          checkout: {
-            ...orderMock.checkout,
-            fulfillmentInfo: { ...orderMock.checkout.fulfillmentInfo, fulfillmentContact: null },
-          },
-          isAuthenticated: true,
-          userId: 0,
-        })
+      const radioCount =
+        (userGetters.getUserShippingAddress(userAddressResponse.items as CustomerContact[])
+          ?.length as number) + 1
 
-        expect(screen.getByTestId('address-form-mock')).toBeVisible()
-        expect(screen.getByRole('button', { name: /save-shipping-address/ })).toBeVisible()
-        expect(screen.getByRole('button', { name: /cancel/ })).toBeVisible()
-      })
-    })
-
-    describe('There are previously saved shipping address in account but not in checkout', () => {
-      it('should display shipping address(saved in account) radio buttons and select a radio button to select Shipping Methods', async () => {
-        const { user } = setup({
-          checkout: {
-            ...orderMock.checkout,
-            fulfillmentInfo: { ...orderMock.checkout.fulfillmentInfo, fulfillmentContact: null },
-          },
-          isAuthenticated: true,
-          userId: 0,
-          savedUserAddressData: userAddressResponse,
-        })
-
-        expect(screen.getAllByRole('radio').length).toBe(
-          userGetters.getUserShippingAddress(userAddressResponse.items as CustomerContact[])?.length
-        )
-
-        await selectDefaultShippingAddress(user)
-
-        await selectShippingMethod(user)
-
-        expect(scrollIntoViewMock).toBeCalled()
+      await waitFor(() => {
+        expect(screen.getAllByTestId('addressDetailsView-mock').length).toBe(radioCount)
       })
     })
 
-    describe('There are previously saved shipping address in account and checkout', () => {
-      it('should display shipping address radio buttons(saved in account and checkout)', async () => {
-        setup({
-          checkout: {
-            ...orderMock.checkout,
-          },
-          isAuthenticated: true,
-          userId: 0,
-          savedUserAddressData: userAddressResponse,
-        })
-
-        const radioCount =
-          (userGetters.getUserShippingAddress(userAddressResponse.items as CustomerContact[])
-            ?.length as number) + 1
-
-        await waitFor(() => {
-          expect(screen.getAllByRole('radio').length).toBe(radioCount)
-        })
+    it('should select a shipping address radio button and shippingMethod should be selected', async () => {
+      const { user } = setup({
+        checkout: {
+          ...orderMock.checkout,
+        },
+        isAuthenticated: true,
+        userId: 0,
+        savedUserAddressData: userAddressResponse,
       })
 
-      it('should select a shipping address radio button and shippingMethod should be selected', async () => {
-        const { user } = setup({
-          checkout: {
-            ...orderMock.checkout,
-          },
-          isAuthenticated: true,
-          userId: 0,
-          savedUserAddressData: userAddressResponse,
-        })
+      const firstRadioAddress = screen.getAllByRole('button', { name: /handleAddressSelect/ })[0]
 
-        await selectDefaultShippingAddress(user)
+      await user.click(firstRadioAddress)
 
-        await selectShippingMethod(user)
+      const selected = userGetters.getUserShippingAddress(
+        userAddressResponse?.items as CustomerContact[]
+      )?.[0].id
 
+      expect(screen.getAllByTestId(/selectedAddressDetailsView/)?.[0].textContent).toBe(
+        selected?.toString()
+      )
+
+      const firstShippingMethod = screen.getAllByRole('button', {
+        name: /handleSaveShippingMethod/,
+      })[0]
+
+      await user.click(firstShippingMethod)
+
+      await waitFor(() => {
         expect(scrollIntoViewMock).toBeCalled()
       })
     })

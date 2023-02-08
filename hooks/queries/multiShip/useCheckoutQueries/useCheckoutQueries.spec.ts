@@ -8,7 +8,7 @@ describe('[hooks] MultiShip useCheckoutQueries', () => {
   it('should return multiShip checkout details when user provides valid checkoutId', async () => {
     const checkoutId = '137a979305c65d00010800230000678b'
     const { result, waitFor } = renderHook(
-      () => useMultiShipCheckoutQueries({ checkoutId, isMultiship: true }),
+      () => useMultiShipCheckoutQueries({ checkoutId, isMultiShip: true }),
       {
         wrapper: createQueryClientWrapper(),
       }

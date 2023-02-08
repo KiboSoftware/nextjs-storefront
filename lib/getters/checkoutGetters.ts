@@ -4,33 +4,9 @@ import lodash from 'lodash'
 import { FulfillmentOptions, DateFormat } from '../constants'
 
 import type { MultiShipAddress, ShipOption } from '../types'
-import type { CrOrderItem, Checkout, Maybe, CrDestination, CrContact } from '@/lib/gql/types'
-
-interface DestinationItemGroup {
-  destinationId: string
-  groupingId: string
-  destination: Maybe<CrDestination> | undefined
-  items: Maybe<CrOrderItem>[] | undefined
-}
+import type { CrOrderItem, Checkout, CrContact } from '@/lib/gql/types'
 
 const buildItemsGroupFromCheckoutGroupings = (checkout: Checkout) => {
-  // const checkoutGroupings = checkout?.groupings?.reduce((sortedGroups: any, group: any) => {
-  //   const groupItems = checkout?.items?.filter((item) =>
-  //     group?.orderItemIds?.includes(item?.id as string)
-  //   )
-  //   const sortedGroup: DestinationItemGroup = {
-  //     destinationId: group?.destinationId as string,
-  //     groupingId: group?.id as string,
-  //     destination: checkout?.destinations?.find(
-  //       (destination) => destination?.id === group?.destinationId
-  //     ),
-  //     items: groupItems,
-  //   }
-
-  //   return [...sortedGroups, sortedGroup]
-  // }, [])
-
-  // return checkoutGroupings
   return getShipItems(checkout).map((item: CrOrderItem) => {
     const destination = checkout.destinations?.find(
       (destination) => destination?.id === item.destinationId
@@ -60,40 +36,31 @@ const getMultiShipAddresses = ({
   checkout: Checkout
   savedShippingAddresses: CrContact[]
 }) => {
-  const destinationAddresses = checkout?.destinations?.map((destination) => {
-    return {
-      destinationId: destination?.id,
-      address: destination?.destinationContact, //address property added to match with my account addresses
-    }
-  }) as MultiShipAddress[]
+  const destinationAddresses = (checkout?.destinations || []).map((destination) => ({
+    destinationId: destination?.id,
+    address: destination?.destinationContact,
+  })) as MultiShipAddress[]
 
-  const destinationAddressIds = Array.from(
-    new Set(
-      destinationAddresses
-        ?.map((destinationAddress) => destinationAddress?.address?.id)
-        .filter(Boolean)
-    )
+  const destinationAddressIds = new Set(
+    destinationAddresses
+      .map((destinationAddress) => destinationAddress?.address?.id)
+      .filter(Boolean)
   )
 
-  const savedAddresses = savedShippingAddresses
-    ?.filter((shippingAddress) => {
-      if (destinationAddressIds?.includes(shippingAddress?.id)) return false
-
-      const matchedShippingAddress = checkout?.destinations?.find(
+  const savedAddresses = (savedShippingAddresses || [])
+    .filter((shippingAddress) => !destinationAddressIds.has(shippingAddress?.id))
+    .filter((shippingAddress) => {
+      const matchedShippingAddress = (checkout?.destinations || []).find(
         (destination) =>
           destination?.destinationContact?.firstName === shippingAddress?.firstName &&
           lodash.isEqual(destination?.destinationContact?.address, shippingAddress?.address)
       )
       return !matchedShippingAddress
     })
-    ?.map((savedShippingAddress) => {
-      if (savedShippingAddress?.address) {
-        return {
-          destinationId: '',
-          address: savedShippingAddress,
-        }
-      }
-    })
+    .map((savedShippingAddress) => ({
+      destinationId: '',
+      address: savedShippingAddress,
+    }))
     .filter(Boolean)
 
   return [...destinationAddresses, ...savedAddresses]
@@ -101,7 +68,8 @@ const getMultiShipAddresses = ({
 
 const getInitialShippingOption = (checkout: Checkout, shippingOptions: ShipOption[]) =>
   checkout?.groupings &&
-  checkout?.groupings.filter((group) => group?.fulfillmentMethod === 'Ship')?.length > 1
+  checkout?.groupings.filter((group) => group?.fulfillmentMethod === FulfillmentOptions.SHIP)
+    ?.length > 1
     ? shippingOptions[1]?.value
     : shippingOptions[0]?.value
 
@@ -155,6 +123,13 @@ const getFormattedDate = (dateInput: string | number | Date) => {
   return dateInput ? format(new Date(dateInput), DateFormat.DATE_FORMAT_WITH_TIME) : ''
 }
 
+const isSingleShippingItem = (checkout: Checkout) => {
+  return (
+    checkout.items?.filter((item) => item?.fulfillmentMethod === FulfillmentOptions.SHIP).length ===
+    1
+  )
+}
+
 export const checkoutGetters = {
   buildItemsGroupFromCheckoutGroupings,
   formatDestinationAddress,
@@ -169,4 +144,5 @@ export const checkoutGetters = {
   getTaxTotal,
   getOrderAddresses,
   getFormattedDate,
+  isSingleShippingItem,
 }

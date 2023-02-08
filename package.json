@@ -60,7 +60,6 @@
     "@emotion/eslint-plugin": "^11.7.0",
     "@graphql-codegen/typescript": "^2.4.1",
     "@graphql-codegen/typescript-operations": "^2.2.1",
-    "@playwright/test": "^1.18.1",
     "@storybook/addon-a11y": "^6.4.20",
     "@storybook/addon-actions": "^6.4.17",
     "@storybook/addon-essentials": "^6.4.17",

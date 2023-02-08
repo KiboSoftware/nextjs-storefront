@@ -448,3 +448,163 @@ export const checkoutMock: { checkout: Checkout } = {
 export const checkoutCouponMock: { updateCheckoutCoupon: Checkout } = {
   updateCheckoutCoupon: checkoutResponse,
 }
+
+export const extraCheckoutShipItem = {
+  destinationId: null,
+  fulfillmentLocationCode: 'WRH001',
+  fulfillmentMethod: 'Ship',
+  purchaseLocation: null,
+  id: '6c3e5c13910d41a0a994afa200a09472',
+  total: 12,
+  subtotal: 12,
+  discountTotal: 0,
+  quantity: 1,
+  product: {
+    productCode: 'PET2',
+    name: 'Bobby Tug Rope',
+    description:
+      'The Bobby Tug Rope is the perfect toy to help your dog socialize and get activity at the same time. Forget throwing your dog a bone, toss him a Bobby Tug Rope for a good time!',
+    imageUrl: '//cdn-sb.mozu.com/30294-50525/cms/50525/files/9f3d88a7-ac89-44b2-9f71-8ca7190ac0ac',
+    options: [],
+    properties: [
+      {
+        attributeFQN: 'tenant~product-crosssell',
+        name: 'Product Cross-Sells',
+        values: [
+          {
+            value: 'PET1',
+          },
+          {
+            value: 'PET3',
+          },
+          {
+            value: 'PET4',
+          },
+        ],
+      },
+      {
+        attributeFQN: 'tenant~popularity',
+        name: 'Popularity',
+        values: [
+          {
+            value: 1,
+          },
+        ],
+      },
+      {
+        attributeFQN: 'tenant~rating',
+        name: 'Rating',
+        values: [
+          {
+            value: 1,
+          },
+        ],
+      },
+      {
+        attributeFQN: 'tenant~product-upsell',
+        name: 'Product Upsells',
+        values: [
+          {
+            value: 'PET1',
+          },
+          {
+            value: 'PET4',
+          },
+          {
+            value: 'PET5',
+          },
+          {
+            value: 'SHOE12',
+          },
+        ],
+      },
+      {
+        attributeFQN: 'tenant~color-filter',
+        name: 'color filter',
+        values: [
+          {
+            value: 'Green',
+          },
+          {
+            value: 'Pink',
+          },
+        ],
+      },
+      {
+        attributeFQN: 'tenant~isrecommended',
+        name: 'isRecommended',
+        values: [
+          {
+            value: 'DogOwner',
+          },
+          {
+            value: 'Summer',
+          },
+          {
+            value: 'Winter',
+          },
+        ],
+      },
+      {
+        attributeFQN: 'tenant~video-url',
+        name: 'video-url',
+        values: [
+          {
+            value: 'https://www.youtube.com/watch?v=iz7wtTO7roQ',
+          },
+        ],
+      },
+      {
+        attributeFQN: 'tenant~color',
+        name: 'Color',
+        values: [
+          {
+            value: 'Green',
+          },
+        ],
+      },
+      {
+        attributeFQN: 'tenant~bundle-extras-in-cart',
+        name: 'Bundle Extras In Cart',
+        values: [
+          {
+            value: false,
+          },
+        ],
+      },
+    ],
+    sku: null,
+    price: {
+      price: 12,
+      salePrice: null,
+    },
+    categories: [
+      {
+        id: 13,
+      },
+      {
+        id: 23,
+      },
+    ],
+  },
+}
+
+export const extraGrouping = {
+  id: '87cb1a00471a4294997aaa40cc389f12',
+  destinationId: null,
+  orderItemIds: ['6c3e5c13910d41a0a994afa200a09472'],
+  fulfillmentMethod: 'Ship',
+  shippingMethodCode: null,
+  shippingMethodName: null,
+  dutyTotal: 0,
+  shippingSubTotal: 0,
+  itemLevelShippingDiscountTotal: 0,
+  orderLevelShippingDiscountTotal: 0,
+  shippingTaxTotal: 0,
+  shippingTotal: 0,
+  handlingSubTotal: 0,
+  itemLevelHandlingDiscountTotal: 0,
+  orderLevelHandlingDiscountTotal: 0,
+  handlingTaxTotal: 0,
+  handlingTotal: 0,
+}
