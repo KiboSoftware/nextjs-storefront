@@ -1,9 +1,9 @@
 import React from 'react'
 
 import { Box, Container, Typography } from '@mui/material'
-import { useTranslation } from 'next-i18next'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
+import { useTranslation } from 'next-i18next'
 
 import { KiboLogo } from '@/components/common'
 import { useCheckoutQueries, useMultiShipCheckoutQueries } from '@/hooks'
@@ -25,7 +25,7 @@ const CheckoutHeader = ({ isMultiShipEnabled }: { isMultiShipEnabled: boolean })
   const { checkoutId } = router.query
   const { data: multishipCheckout } = useMultiShipCheckoutQueries({
     checkoutId: checkoutId as string,
-    isMultiship: isMultiShipEnabled,
+    isMultiShip: isMultiShipEnabled,
   })
 
   const { data: checkout } = useCheckoutQueries({

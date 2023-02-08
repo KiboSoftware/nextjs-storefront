@@ -1,15 +1,26 @@
 import React from 'react'
 
-import { composeStories } from '@storybook/testing-react'
-import { render, screen } from '@testing-library/react'
+import { screen, waitFor, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
+import { graphql } from 'msw'
 
-import * as stories from './MultiShippingStep.stories'
-import { DialogRoot, ModalContextProvider, CheckoutStepProvider } from '@/context'
+import MultiShippingStep from './MultiShippingStep'
+import { server } from '@/__mocks__/msw/server'
+import { checkoutGroupRatesMock, checkoutMock, userAddressResponse } from '@/__mocks__/stories'
+import { renderWithQueryClient } from '@/__test__/utils'
+import { DialogRoot, ModalContextProvider, CheckoutStepProvider, AuthContext } from '@/context'
+import { useMultiShipCheckoutQueries } from '@/hooks'
 import type { CustomDestinationInput } from '@/lib/types'
 
-import type { CrContact } from '@/lib/gql/types'
-const { Common } = composeStories(stories)
+import type {
+  Checkout,
+  CheckoutGrouping,
+  CheckoutGroupRates,
+  CrContact,
+  CrOrderItem,
+  CustomerContactCollection,
+} from '@/lib/gql/types'
+
 const scrollIntoViewMock = jest.fn()
 window.HTMLElement.prototype.scrollIntoView = scrollIntoViewMock
 const contactMock = {
@@ -34,20 +45,14 @@ const contactMock = {
     addressType: 'Residential',
   },
 }
+
+const newDestinationId = '96729d68f0c045fc919cd7b1c43e3371'
 const createCheckoutDestinationMock = {
   mutateAsync: jest.fn().mockImplementation(() => ({
-    id: 'testId',
+    id: newDestinationId,
   })),
 }
 
-const TestComponent = () => {
-  return (
-    <div>
-      <DialogRoot />
-      <Common {...Common.args} createCheckoutDestination={createCheckoutDestinationMock} />
-    </div>
-  )
-}
 const onUpdateCheckoutShippingMethodMock = jest.fn()
 
 jest.mock('../../common/AddressForm/AddressForm', () => ({
@@ -99,7 +104,15 @@ jest.mock('../../common/AddressDetailsView/AddressDetailsView', () => ({
       <button
         type="button"
         data-testid="handleRadioChange"
-        onClick={() => handleRadioChange('bf92ade4f3514c08bbeeaf6400833d00')}
+        onClick={() =>
+          handleRadioChange(
+            String(
+              userAddressResponse.items?.find((item) =>
+                item?.types?.some((type) => type?.name === 'Shipping')
+              )?.id
+            )
+          )
+        }
       >
         Handle Radio Change
       </button>
@@ -126,24 +139,26 @@ jest.mock('../../common/ProductItemWithAddressList/ProductItemWithAddressList', 
           })
         }
       >
-        Create Or Update Destination
-      </button>
-      <button
-        type="button"
-        data-testid="setDestinationAddress"
-        onClick={() =>
-          onSelectCreateOrSetDestinationAddress('mockId', 'bf92ade4f3514c08bbeeaf6400833d00')
-        }
-      >
-        Create Destination Address
+        Add Destination
       </button>
 
       <button
         type="button"
-        data-testid="createDestinationAddress"
+        data-testid="createOrUpdateDestination"
+        onClick={() =>
+          onUpdateDestinationAddress({
+            destinationInput: { itemId: 'mockItemId' },
+          })
+        }
+      >
+        Update Destination
+      </button>
+      <button
+        type="button"
+        data-testid="setDestinationAddress"
         onClick={() => onSelectCreateOrSetDestinationAddress('mockId', '1441')}
       >
-        Set Destination Address
+        Select Address
       </button>
     </div>
   ),
@@ -151,212 +166,317 @@ jest.mock('../../common/ProductItemWithAddressList/ProductItemWithAddressList', 
 
 jest.mock('../../common/ShippingGroupsWithMethod/ShippingGroupsWithMethod', () => ({
   __esModule: true,
-  default: () => <div data-testid="shipping-groups-with-method"></div>,
+  default: ({
+    onUpdateCheckoutShippingMethod,
+  }: {
+    onUpdateCheckoutShippingMethod: (params: {
+      shippingMethodGroup: CheckoutGroupRates
+      shippingMethodCode: string
+    }) => void
+  }) => (
+    <div data-testid="shipping-groups-with-method">
+      <button
+        onClick={() =>
+          onUpdateCheckoutShippingMethod({
+            shippingMethodCode: 'test-code',
+            shippingMethodGroup: checkoutGroupRatesMock?.checkoutShippingMethods[0],
+          })
+        }
+      >
+        Update Checkout Shipping Method
+      </button>
+    </div>
+  ),
 }))
 
-const updateCheckoutItemDestinationMock = jest.fn()
-const updateCheckoutDestinationMock = jest.fn()
-
-jest.mock('@/hooks', () => ({
-  useUpdateCheckoutItemDestinationMutations: jest.fn(() => {
-    return {
-      mutateAsync: updateCheckoutItemDestinationMock,
-    }
-  }),
-  useUpdateCheckoutDestinationMutations: jest.fn(() => {
-    return {
-      mutateAsync: updateCheckoutDestinationMock,
-    }
-  }),
-}))
-
-describe('[components] MultiShippingStep', () => {
-  const setup = () => {
-    render(
-      <CheckoutStepProvider steps={['details', 'shipping', 'payment', 'review']}>
-        <Common {...Common.args} />
-      </CheckoutStepProvider>
-    )
-  }
-
-  it('should render component', async () => {
-    setup()
-    const shippingHeading = screen.getAllByRole('heading', {
-      name: /shipping/i,
-    })
-    const shipToHome = screen.getByRole('radio', {
-      name: /Ship To Home/i,
-    })
-    const shipToMoreThanOneAddress = screen.getByRole('radio', {
-      name: /Ship to more than one address/i,
-    })
-
-    expect(shippingHeading[0]).toBeVisible()
-    expect(shipToHome).toBeInTheDocument()
-    expect(shipToMoreThanOneAddress).toBeInTheDocument()
-  })
+const userContextValues = (isAuthenticated: boolean, userId: number) => ({
+  isAuthenticated: isAuthenticated,
+  user: {
+    id: userId,
+  },
+  login: jest.fn(),
+  createAccount: jest.fn(),
+  setAuthError: jest.fn(),
+  authError: '',
+  logout: jest.fn(),
 })
 
-describe('Ship To Multi Address', () => {
-  const setup = () => {
-    render(
-      <ModalContextProvider>
-        <CheckoutStepProvider steps={['details', 'shipping', 'payment', 'review']}>
-          <TestComponent />
-        </CheckoutStepProvider>
-      </ModalContextProvider>
-    )
-  }
+const TestComponent = ({ param }: { param: any }) => {
+  const { data: checkout } = useMultiShipCheckoutQueries({
+    checkoutId: 'test-checkout-id' as string,
+    isMultiShip: true,
+  })
+  const {
+    isAuthenticated,
+    savedUserAddressData = userAddressResponse,
+    shippingMethods = checkoutGroupRatesMock?.checkoutShippingMethods,
+  } = param
+  return (
+    <MultiShippingStep
+      checkout={checkout as Checkout}
+      isAuthenticated={isAuthenticated}
+      savedUserAddressData={savedUserAddressData}
+      shippingMethods={shippingMethods}
+      onUpdateCheckoutShippingMethod={onUpdateCheckoutShippingMethodMock}
+      createCheckoutDestination={createCheckoutDestinationMock}
+    />
+  )
+}
+
+const setup = (param: {
+  isAuthenticated: boolean
+  userId: number
+  savedUserAddressData?: CustomerContactCollection
+  shippingMethods?: CheckoutGroupRates[]
+}) => {
   const user = userEvent.setup()
-  it('should render component when initial Shipping Option is ShipToMultiAddress', async () => {
-    setup()
-    const continueButton = screen.getByRole('button', { name: 'continue' })
+  const { isAuthenticated, userId } = param
+  const steps = ['details', 'shipping', 'payment', 'review']
 
-    expect(screen.getByTestId('product-item-with-address-list-mock')).toBeVisible()
-    expect(continueButton).toBeInTheDocument()
-  })
-
-  it('should render ShippingGroupsMethod component when users click on continue button', async () => {
-    setup()
-
-    const user = userEvent.setup()
-    const continueButton = screen.getByRole('button', { name: 'continue' })
-
-    await user.click(continueButton)
-
-    expect(screen.getByTestId('shipping-groups-with-method')).toBeVisible()
-    expect(screen.queryByTestId('product-item-with-address-list-mock')).not.toBeInTheDocument()
-  })
-
-  it('should call handleCreateOrSetDestinationAddress method', async () => {
-    setup()
-    const setDestinationAddress = screen.getByRole('button', {
-      name: /Set Destination Address/i,
-    })
-
-    await user.click(setDestinationAddress)
-
-    expect(updateCheckoutItemDestinationMock).toBeCalled()
-
-    const createDestinationAddress = screen.getByRole('button', {
-      name: /Create Destination Address/i,
-    })
-
-    await user.click(createDestinationAddress)
-    expect(createCheckoutDestinationMock.mutateAsync).toBeCalled()
-    expect(updateCheckoutItemDestinationMock).toBeCalled()
-  })
-
-  it('should call createOrUpdateDestination and  handleUpdateDestinationAddress method', async () => {
-    setup()
-    const createOrUpdateDestination = screen.getByRole('button', {
-      name: /Create Or Update Destination/i,
-    })
-
-    await user.click(createOrUpdateDestination)
-
-    const dialog = screen.getByRole('dialog')
-
-    expect(dialog).toBeVisible()
-
-    await user.click(screen.getByRole('button', { name: /On Save Address/i }))
-
-    expect(createCheckoutDestinationMock.mutateAsync).toBeCalled()
-    expect(createCheckoutDestinationMock.mutateAsync).toHaveReturnedWith({ id: 'testId' })
-    expect(updateCheckoutItemDestinationMock).toBeCalled()
-  })
-})
-
-describe('Ship To Home', () => {
-  const setup = () => {
-    render(
-      <CheckoutStepProvider steps={['details', 'shipping', 'payment', 'review']}>
-        <Common
-          {...Common.args}
-          createCheckoutDestination={createCheckoutDestinationMock}
-          onUpdateCheckoutShippingMethod={onUpdateCheckoutShippingMethodMock}
-        />
+  renderWithQueryClient(
+    <ModalContextProvider>
+      <CheckoutStepProvider steps={steps} initialActiveStep={1}>
+        <AuthContext.Provider value={userContextValues(isAuthenticated, userId)}>
+          <DialogRoot />
+          <TestComponent param={param} />
+        </AuthContext.Provider>
       </CheckoutStepProvider>
-    )
+    </ModalContextProvider>
+  )
+
+  return {
+    user,
   }
-  it('should render component when initial Shipping Option is ShipToMultiAddress', async () => {
-    setup()
-    const shippingHeading = screen.getAllByRole('heading', {
-      name: /shipping/i,
-    })
-    expect(shippingHeading[0]).toBeVisible()
+}
+
+const addressFormIsVisibleAssertion = () => {
+  expect(screen.getByTestId('address-form-component')).toBeVisible()
+  expect(screen.getByRole('button', { name: 'save-shipping-address' })).toBeVisible()
+  expect(screen.getByRole('button', { name: 'cancel' })).toBeVisible()
+}
+
+const addressFormIsHiddenAssertion = () => {
+  expect(screen.queryByTestId('address-form-component')).not.toBeInTheDocument()
+  expect(screen.queryByRole('button', { name: 'save-shipping-address' })).not.toBeInTheDocument()
+  expect(screen.queryByRole('button', { name: 'cancel' })).not.toBeInTheDocument()
+}
+
+const goToShipToMoreThanOneAddressView = async (user: any) => {
+  const shipToHome = screen.getByRole('radio', { name: 'Ship to Home' })
+  const shipToMoreAddress = screen.getByRole('radio', {
+    name: 'Ship to more than one address',
   })
+  expect(shipToHome).toBeChecked()
+  expect(shipToMoreAddress).toBeInTheDocument()
 
-  it('should render previously saved shipping address and Address Detail view component when initial Shipping Option is ShipToMultiAddress', async () => {
-    setup()
-    const user = userEvent.setup()
-    const shipToHome = screen.getByRole('radio', {
-      name: /Ship To Home/i,
+  // addressFormIsVisibleAssertion()
+
+  await user.click(shipToMoreAddress)
+
+  addressFormIsHiddenAssertion()
+
+  expect(screen.getByTestId('product-item-with-address-list-mock')).toBeVisible()
+}
+
+describe('[component] MultiShippingStep', () => {
+  describe('Authenticated User', () => {
+    describe('No saved address available', () => {
+      describe('there are only one item with ship fulfillment', () => {
+        server.use(
+          graphql.query('getMultiShipCheckout', (_req, res, ctx) => {
+            return res(
+              ctx.data({
+                checkout: {
+                  ...checkoutMock.checkout,
+                  destinations: [],
+                  items: [
+                    { ...(checkoutMock.checkout.items?.[0] as CrOrderItem), destinationId: null },
+                  ],
+                  groupings: [
+                    {
+                      ...(checkoutMock.checkout.groupings?.[0] as CheckoutGrouping),
+                      destinationId: null,
+                    },
+                  ],
+                },
+              })
+            )
+          })
+        )
+        it('should render shipping address form and handle saving new address', async () => {
+          const { user } = setup({
+            isAuthenticated: true,
+            userId: 0, // user that has no address saved.
+            savedUserAddressData: { ...userAddressResponse, items: [] },
+          })
+
+          expect(screen.getByTestId('address-form-component')).toBeVisible()
+          expect(screen.getByRole('button', { name: 'save-shipping-address' })).toBeVisible()
+          expect(screen.getByRole('button', { name: 'cancel' })).toBeVisible()
+
+          await user.click(screen.getByRole('button', { name: 'On Save Address' })) // Mocked call
+
+          expect(createCheckoutDestinationMock.mutateAsync).toBeCalled()
+
+          await waitFor(() => {
+            expect(screen.getByRole('button', { name: 'add-new-address' })).toBeVisible()
+          })
+        })
+      })
+
+      describe('there are more than one item with ship fulfillment', () => {
+        server.use(
+          graphql.query('getMultiShipCheckout', (_req, res, ctx) => {
+            return res(
+              ctx.data({
+                checkout: {
+                  ...checkoutMock.checkout,
+                  destinations: [],
+                  items: [
+                    { ...(checkoutMock.checkout.items?.[0] as CrOrderItem), destinationId: null },
+                    { ...(checkoutMock.checkout.items?.[1] as CrOrderItem), destinationId: null },
+                  ],
+                  groupings: [
+                    {
+                      ...(checkoutMock.checkout.groupings?.[0] as CheckoutGrouping),
+                      destinationId: null,
+                    },
+                  ],
+                },
+              })
+            )
+          })
+        )
+        it('should render ship option radio and select Ship to more than one address radio to render multiShip view', async () => {
+          const { user } = setup({
+            isAuthenticated: true,
+            userId: 0, // user that has no address saved.
+            savedUserAddressData: { ...userAddressResponse, items: [] },
+          })
+
+          addressFormIsVisibleAssertion()
+
+          await goToShipToMoreThanOneAddressView(user)
+
+          expect(screen.queryByTestId('shipping-groups-with-method')).not.toBeInTheDocument()
+          expect(screen.getByRole('button', { name: 'continue' })).toBeVisible()
+
+          await user.click(screen.getByRole('button', { name: 'continue' }))
+
+          expect(screen.getByTestId('shipping-groups-with-method')).toBeVisible()
+        })
+
+        it('should handle Add address for every shipping items', async () => {
+          const { user } = setup({
+            isAuthenticated: true,
+            userId: 0, // user that has no address saved.
+            savedUserAddressData: { ...userAddressResponse, items: [] },
+          })
+
+          await goToShipToMoreThanOneAddressView(user)
+
+          await user.click(screen.getByRole('button', { name: 'Add Destination' }))
+
+          expect(screen.getByRole('dialog')).toBeVisible()
+
+          expect(within(screen.getByRole('dialog')).getByText('add-new-address')).toBeVisible()
+        })
+
+        it('should handle shippingMethod selection for every ship items', async () => {
+          const { user } = setup({
+            isAuthenticated: true,
+            userId: 0, // user that has no address saved.
+            savedUserAddressData: { ...userAddressResponse, items: [] },
+          })
+
+          addressFormIsVisibleAssertion()
+
+          await goToShipToMoreThanOneAddressView(user)
+
+          await user.click(screen.getByRole('button', { name: 'continue' }))
+
+          expect(screen.getByTestId('shipping-groups-with-method')).toBeVisible()
+
+          await user.click(screen.getByRole('button', { name: 'Update Checkout Shipping Method' }))
+
+          expect(onUpdateCheckoutShippingMethodMock).toBeCalledWith({
+            shippingMethodCode: 'test-code',
+            shippingMethodGroup: checkoutGroupRatesMock?.checkoutShippingMethods[0],
+          })
+        })
+      })
     })
-    await user.click(shipToHome)
-    expect(screen.getByText(/previously-saved-shipping-addresses/i)).toBeVisible()
-    expect(screen.getAllByTestId(/address-details-view/i)[0]).toBeVisible()
-  })
 
-  it('should render shipping method component when initial Shipping Option is ShipToMultiAddress', async () => {
-    setup()
-    const user = userEvent.setup()
-    const shipToHome = screen.getByRole('radio', {
-      name: /Ship To Home/i,
+    describe('Saved addresses are available', () => {
+      server.use(
+        graphql.query('getMultiShipCheckout', (_req, res, ctx) => {
+          return res(
+            ctx.data({
+              checkout: {
+                ...checkoutMock.checkout,
+                destinations: [],
+                items: [
+                  { ...(checkoutMock.checkout.items?.[0] as CrOrderItem), destinationId: null },
+                  { ...(checkoutMock.checkout.items?.[1] as CrOrderItem), destinationId: null },
+                ],
+                groupings: [
+                  {
+                    ...(checkoutMock.checkout.groupings?.[0] as CheckoutGrouping),
+                    destinationId: null,
+                  },
+                ],
+              },
+            })
+          )
+        })
+      )
+      it('should render shipping address type radio and Saved addresses radio', async () => {
+        setup({
+          isAuthenticated: true,
+          userId: 1012, // user that has no address saved.
+        })
+
+        const shipToHome = screen.getByRole('radio', { name: 'Ship to Home' })
+        const shipToMoreAddress = screen.getByRole('radio', {
+          name: 'Ship to more than one address',
+        })
+        expect(shipToHome).toBeChecked()
+        expect(shipToMoreAddress).toBeInTheDocument()
+
+        expect(screen.queryByTestId('address-form-component')).not.toBeInTheDocument()
+
+        const addressDetailsViewCount = userAddressResponse.items?.filter((item) =>
+          item?.types?.some((type) => type?.name === 'Shipping')
+        ).length
+
+        expect(screen.getAllByTestId('address-details-view').length).toBe(addressDetailsViewCount)
+      })
+
+      it('should handle address change for shipToHome', async () => {
+        const { user } = setup({
+          isAuthenticated: true,
+          userId: 1012, // user that has no address saved.
+        })
+
+        expect(screen.getByRole('radio', { name: 'Ship to Home' })).toBeChecked()
+
+        await user.click(screen.getAllByRole('button', { name: 'Handle Radio Change' })[0])
+
+        expect(createCheckoutDestinationMock.mutateAsync).toBeCalled()
+      })
+
+      it('should handle address change in multiShip', async () => {
+        const { user } = setup({
+          isAuthenticated: true,
+          userId: 0, // user that has no address saved.
+        })
+
+        await goToShipToMoreThanOneAddressView(user)
+
+        await user.click(screen.getByRole('button', { name: 'Select Address' }))
+
+        expect(createCheckoutDestinationMock.mutateAsync).toBeCalled()
+      })
     })
-    await user.click(shipToHome)
-    const addNewAddress = screen.getByRole('button', { name: /add-new-address/i })
-
-    expect(screen.getByTestId(/shipping-method/i)).toBeVisible()
-
-    const handleSaveShipping = screen.getByRole('button', { name: /Handle Save Shipping/i })
-    await user.click(handleSaveShipping)
-    expect(onUpdateCheckoutShippingMethodMock).toHaveBeenCalled()
-    expect(addNewAddress).toBeVisible()
-  })
-
-  it('should render Address Form component when users click on add new address button', async () => {
-    setup()
-    const user = userEvent.setup()
-    const shipToHome = screen.getByRole('radio', {
-      name: /Ship To Home/i,
-    })
-    await user.click(shipToHome)
-    const addNewAddress = screen.getByRole('button', { name: /add-new-address/i })
-
-    await user.click(addNewAddress)
-
-    const cancelButton = screen.getByRole('button', { name: /cancel/i })
-    const saveShippingAddressButton = screen.getByRole('button', { name: /save-shipping-address/i })
-
-    expect(screen.getByTestId(/address-form-component/i)).toBeVisible()
-    expect(saveShippingAddressButton).toBeVisible()
-    expect(saveShippingAddressButton).toBeDisabled()
-    expect(cancelButton).toBeVisible()
-
-    await user.click(screen.getByRole('button', { name: /On Save Address/i }))
-
-    expect(createCheckoutDestinationMock.mutateAsync).toHaveBeenCalledWith({
-      checkoutId: Common.args?.checkout?.id,
-      destinationInput: {
-        destinationContact: contactMock,
-      },
-    })
-  })
-
-  it('should call handleAddressSelect', async () => {
-    setup()
-    const user = userEvent.setup()
-    const shipToHome = screen.getByRole('radio', {
-      name: /Ship To Home/i,
-    })
-
-    await user.click(shipToHome)
-    expect(screen.getByText(/previously-saved-shipping-addresses/i)).toBeVisible()
-    expect(screen.getAllByTestId(/address-details-view/i)[0]).toBeVisible()
-
-    await user.click(screen.getAllByRole('button', { name: /Handle Radio Change/ })[0])
-
-    expect(updateCheckoutItemDestinationMock).toBeCalled()
   })
 })

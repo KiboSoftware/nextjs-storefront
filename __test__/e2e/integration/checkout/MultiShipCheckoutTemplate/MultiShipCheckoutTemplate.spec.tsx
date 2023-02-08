@@ -3,27 +3,29 @@ import React from 'react'
 import { cleanup, fireEvent, screen, waitFor, within, act } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { graphql } from 'msw'
+import mockRouter from 'next-router-mock'
 
 import { server } from '@/__mocks__/msw/server'
-import { checkoutMock, orderMock, shippingRateMock, userAddressMock } from '@/__mocks__/stories'
-import { addAddress, getAccountCardId, getBillingAddresses } from '@/__test__/e2e/helper'
+import {
+  checkoutGroupRatesMock,
+  checkoutMock,
+  extraCheckoutShipItem,
+  extraGrouping,
+} from '@/__mocks__/stories'
+import { addAddress } from '@/__test__/e2e/helper'
 import { renderWithQueryClient } from '@/__test__/utils/renderWithQueryClient'
 import { MultiShipCheckoutTemplate } from '@/components/page-templates'
 import { AuthContext, DialogRoot, ModalContextProvider } from '@/context/'
 import { CheckoutStepProvider } from '@/context/CheckoutStepContext/CheckoutStepContext'
-import { PaymentType } from '@/lib/constants'
-import {
-  addressGetters,
-  cardGetters,
-  checkoutGetters,
-  orderGetters,
-  userGetters,
-} from '@/lib/getters'
+import { FulfillmentOptions } from '@/lib/constants'
+import { checkoutGetters } from '@/lib/getters'
 
-import { CrContact, CustomerContact } from '@/lib/gql/types'
+import { Checkout, CheckoutGrouping, CrDestination, CrOrderItem } from '@/lib/gql/types'
 
 const scrollIntoViewMock = jest.fn()
 window.HTMLElement.prototype.scrollIntoView = scrollIntoViewMock
+
+jest.mock('next/router', () => require('next-router-mock'))
 
 jest.mock('@/lib/helpers/tokenizeCreditCardPayment', () => {
   return {
@@ -58,6 +60,13 @@ const setup = ({
 }) => {
   const user = userEvent.setup()
 
+  mockRouter.push({
+    pathname: '/checkout/14e11efc4376e9000197126600007656',
+    query: {
+      checkoutId: checkoutMock.checkout.id as string,
+    },
+  })
+
   renderWithQueryClient(
     <ModalContextProvider>
       <AuthContext.Provider value={userContextValues(isAuthenticated, userId)}>
@@ -76,410 +85,709 @@ const setup = ({
   }
 }
 
-const getRadioName = (value: any) => {
-  return checkoutGetters.formatDestinationAddress(value?.address)
+const handleShippingMethod = async (user: any, checkoutData: Checkout) => {
+  server.use(
+    graphql.query('getCheckoutShippingMethods', (_req, res, ctx) => {
+      return res(
+        ctx.data({
+          checkoutShippingMethods: [
+            {
+              groupingId: checkoutMock.checkout.groupings?.[0]?.id,
+              shippingRates: [
+                {
+                  shippingMethodCode: 'e9379142190e459fb542a60701452ef1',
+                  shippingMethodName: 'Flat Rate',
+                  shippingZoneCode: 'United States',
+                  isValid: true,
+                  messages: [],
+                  data: null,
+                  currencyCode: null,
+                  price: 15,
+                },
+                {
+                  shippingMethodCode: 'fedex_FEDEX_2_DAY',
+                  shippingMethodName: 'FedEx 2Day®',
+                  shippingZoneCode: 'United States',
+                  isValid: true,
+                  messages: [],
+                  data: null,
+                  currencyCode: null,
+                  price: 33.24,
+                },
+                {
+                  shippingMethodCode: 'fedex_FEDEX_EXPRESS_SAVER',
+                  shippingMethodName: 'FedEx Express Saver®',
+                  shippingZoneCode: 'United States',
+                  isValid: true,
+                  messages: [],
+                  data: null,
+                  currencyCode: null,
+                  price: 30.76,
+                },
+                {
+                  shippingMethodCode: 'fedex_FEDEX_GROUND',
+                  shippingMethodName: 'FedEx Ground®',
+                  shippingZoneCode: 'United States',
+                  isValid: true,
+                  messages: [],
+                  data: null,
+                  currencyCode: null,
+                  price: 15.84,
+                },
+                {
+                  shippingMethodCode: 'ups_UPS_GROUND',
+                  shippingMethodName: 'UPS Ground',
+                  shippingZoneCode: 'United States',
+                  isValid: true,
+                  messages: [],
+                  data: null,
+                  currencyCode: null,
+                  price: 9.88,
+                },
+                {
+                  shippingMethodCode: 'ups_UPS_NEXT_DAY_AIR',
+                  shippingMethodName: 'UPS Next Day Air®',
+                  shippingZoneCode: 'United States',
+                  isValid: true,
+                  messages: [],
+                  data: null,
+                  currencyCode: null,
+                  price: 28.99,
+                },
+              ],
+            },
+          ],
+        })
+      )
+    })
+  )
+
+  expect(screen.getByRole('heading', { name: 'shipping-method' })).toBeVisible()
+
+  const shippingMethodSelect = await screen.findByRole('button', { name: 'Select Shipping Option' })
+
+  fireEvent.mouseDown(shippingMethodSelect)
+
+  const shippingRate = checkoutGroupRatesMock.checkoutShippingMethods?.[0]?.shippingRates?.[0]
+
+  const option = within(screen.getByRole('listbox')).getByText(
+    `${shippingRate?.shippingMethodName as string} currency`
+  )
+
+  server.use(
+    graphql.query('getMultiShipCheckout', (_req, res, ctx) => {
+      checkoutData = {
+        ...checkoutData,
+        email: 'guest@email.com',
+      }
+      return res(
+        ctx.data({
+          checkout: {
+            ...checkoutData,
+            groupings: [
+              {
+                ...(checkoutMock.checkout.groupings?.[0] as CheckoutGrouping),
+                destinationId: 'd3d30be35aa54ef7a0bdafa10094f988',
+                shippingMethodCode: shippingRate?.shippingMethodCode,
+                shippingMethodName: shippingRate?.shippingMethodName,
+              },
+              {
+                ...(checkoutMock.checkout.groupings?.[1] as CheckoutGrouping),
+                destinationId: null,
+                fulfillmentMethod: 'Pickup',
+              },
+            ],
+          },
+        })
+      )
+    })
+  )
+
+  await user.click(option)
 }
 
-describe('[integration] StandardShipCheckoutTemplate', () => {
-  describe('Authenticated user with no checkout details', () => {
-    it.only('should handle standard checkout flow', async () => {
-      const { user } = setup({
-        isAuthenticated: true,
-        userId: 1012,
-      })
+const handleDetailsStep = async (user: any, checkoutData: Checkout) => {
+  const goToShippingButton = screen.getByRole('button', { name: /go-to-shipping/ })
 
-      // details step
-      const goToShippingButton = screen.getByRole('button', { name: /go-to-shipping/ })
+  const personalDetailsHeader = screen.getByRole('heading', { name: /personal-details/ })
 
-      const personalDetailsHeader = screen.getByRole('heading', { name: /personal-details/ })
+  expect(personalDetailsHeader).toBeVisible()
+  expect(goToShippingButton).toBeDisabled()
+  const emailInput = screen.getByRole('textbox', { name: /your-email/i })
 
-      expect(personalDetailsHeader).toBeVisible()
-      expect(goToShippingButton).toBeDisabled()
+  expect(emailInput).toHaveValue(checkoutData.email as string)
 
-      const emailInput = screen.getByRole('textbox', { name: /your-email/i })
-
-      expect(emailInput).toHaveValue('test1@gmail.com')
-
-      await user.clear(emailInput)
-
-      await user.type(emailInput, 'test@email.com')
-
-      server.use(
-        graphql.query('getMultiShipCheckout', (_req, res, ctx) => {
-          return res(
-            ctx.data({
-              checkout: {
-                ...checkoutMock.checkout,
-                email: 'test@email.com',
-              },
-            })
-          )
-        })
-      )
-      await waitFor(() => {
-        expect(emailInput).toHaveValue('test@email.com')
-      })
-
-      await waitFor(() => {
-        expect(goToShippingButton).toBeEnabled()
-      })
-
-      server.use(
-        graphql.query('getMultiShipCheckout', (_req, res, ctx) => {
-          return res(
-            ctx.data({
-              checkout: {
-                ...checkoutMock.checkout,
-                email: 'test@email.com',
-              },
-            })
-          )
-        })
-      )
-
-      await user.click(goToShippingButton)
-
-      // Shipping Step
-
-      const shippingHeader = screen.getByRole('heading', { level: 2, name: 'shipping' })
-
-      expect(shippingHeader).toBeVisible()
-
-      const goToPaymentButton = screen.getByRole('button', { name: /go-to-payment/ })
-
-      expect(goToPaymentButton).toBeDisabled()
-
-      const shipToHomeRadio = screen.getByRole('radio', { name: /Ship to Home/ })
-      expect(shipToHomeRadio).toBeInTheDocument()
-
-      const shipToMultipleRadio = screen.getByRole('radio', {
-        name: /Ship to more than one address/,
-      })
-      expect(shipToMultipleRadio).toBeChecked()
-
-      checkoutMock.checkout.items?.forEach(async (item) => {
-        expect(screen.getByText(item?.product?.name as string)).toBeVisible()
-
-        const addressSelectDropdown = screen.getAllByTestId('multiShipAddresses')[0]
-        await user.click(addressSelectDropdown)
-
-        userAddressMock.customerAccountContacts.items
-          ?.filter((item) => item?.types?.find((type) => type?.name === 'Shipping'))
-          .forEach((each) => {
-            const radioName = getRadioName(each)
-            const option = within(screen.getByRole('listbox')).getByText(radioName)
-            expect(option).toBeVisible()
+  await act(async () => {
+    server.use(
+      graphql.query('getMultiShipCheckout', (_req, res, ctx) => {
+        checkoutData = {
+          ...checkoutData,
+          email: 'guest@email.com',
+        }
+        return res.once(
+          ctx.data({
+            checkout: checkoutData,
           })
+        )
       })
-      expect(screen.getAllByRole('button', { name: 'add-new-address' }).length).toBe(
-        checkoutMock.checkout.items?.length
+    )
+
+    await user.clear(emailInput)
+
+    await user.type(emailInput, 'guest@email.com')
+  })
+
+  await waitFor(() => {
+    expect(emailInput).toHaveValue('guest@email.com')
+  })
+
+  await waitFor(() => {
+    expect(goToShippingButton).toBeEnabled()
+  })
+
+  await user.click(goToShippingButton)
+}
+
+const handleSingleShipToHomeItem = async (user: any, checkoutData: Checkout) => {
+  const shipToHome = screen.queryByRole('radio', { name: 'Ship to Home' })
+  const shipToMoreAddress = screen.queryByRole('radio', {
+    name: 'Ship to more than one address',
+  })
+  expect(shipToHome).not.toBeInTheDocument()
+  expect(shipToMoreAddress).not.toBeInTheDocument()
+
+  // Check go to payment button visibility
+  const goToPaymentButton = screen.getByRole('button', { name: /go-to-payment/ })
+  expect(goToPaymentButton).toBeDisabled()
+
+  const saveShippingAddress = await screen.findByRole('button', { name: /save-shipping-address/ })
+
+  expect(saveShippingAddress).toBeDisabled()
+
+  await addAddress(user)
+
+  expect(saveShippingAddress).toBeEnabled()
+
+  const newDestination = {
+    id: 'd3d30be35aa54ef7a0bdafa10094f988',
+    destinationContact: {
+      id: null,
+      email: null,
+      firstName: 'John',
+      middleNameOrInitial: null,
+      lastNameOrSurname: 'Doe',
+      phoneNumbers: {
+        home: '9938938494',
+      },
+      address: {
+        address1: '400, Lamar Street',
+        address2: '23/1',
+        address3: null,
+        address4: null,
+        cityOrTown: 'Austin',
+        stateOrProvince: 'TX',
+        postalOrZipCode: '98984',
+        countryCode: 'US',
+        isValidated: false,
+        addressType: null,
+      },
+    },
+  }
+
+  server.use(
+    graphql.mutation('createCheckoutDestination', (_req, res, ctx) => {
+      return res.once(
+        ctx.data({
+          createCheckoutDestination: {
+            ...newDestination,
+            isDestinationCommercial: null,
+          },
+        })
       )
+    })
+  )
 
-      expect(screen.getAllByRole('button', { name: 'edit-address' }).length).toBe(
-        checkoutMock.checkout.items?.length
+  server.use(
+    graphql.query('getMultiShipCheckout', (_req, res, ctx) => {
+      checkoutData = {
+        ...checkoutData,
+        email: 'guest@email.com',
+        items: [
+          {
+            ...(checkoutMock.checkout.items?.[0] as CrOrderItem),
+            destinationId: newDestination.id,
+          },
+          {
+            ...(checkoutMock.checkout.items?.[1] as CrOrderItem),
+            destinationId: null,
+            fulfillmentMethod: 'Pickup',
+          },
+        ],
+        destinations: [newDestination],
+        groupings: [
+          {
+            ...(checkoutMock.checkout.groupings?.[0] as CheckoutGrouping),
+            destinationId: newDestination.id,
+          },
+          {
+            ...(checkoutMock.checkout.groupings?.[1] as CheckoutGrouping),
+            destinationId: null,
+            fulfillmentMethod: 'Pickup',
+          },
+        ],
+      }
+      return res(
+        ctx.data({
+          checkout: checkoutData,
+        })
       )
+    })
+  )
 
-      await user.click(screen.getAllByRole('button', { name: 'add-new-address' })[0])
+  await user.click(saveShippingAddress)
 
-      await waitFor(() => {
-        expect(screen.getByRole('dialog')).toBeVisible()
+  expect(
+    await screen.findByRole('heading', { name: 'previously-saved-shipping-addresses', level: 4 })
+  ).toBeVisible()
+
+  await waitFor(() => {
+    expect(screen.getByRole('button', { name: 'add-new-address' })).toBeVisible()
+  })
+
+  const newSavedAddressDetailsRadio = `400, Lamar Street,23/1,Austin,TX,98984`
+
+  expect(screen.getByRole('radio', { name: newSavedAddressDetailsRadio })).toBeChecked()
+
+  await handleShippingMethod(user, checkoutData)
+
+  await waitFor(() => {
+    expect(goToPaymentButton).toBeEnabled()
+  })
+
+  await user.click(goToPaymentButton)
+}
+
+const handleMultiShipToHomeItems = async (user: any, checkoutData: Checkout) => {
+  const shipToHome = screen.queryByRole('radio', { name: 'Ship to Home' })
+  const shipToMoreAddress = screen.queryByRole('radio', {
+    name: 'Ship to more than one address',
+  })
+  expect(shipToHome).toBeInTheDocument()
+  expect(shipToMoreAddress).toBeChecked()
+
+  // Check go to payment button visibility
+  const goToPaymentButton = screen.getByRole('button', { name: /go-to-payment/ })
+  expect(goToPaymentButton).toBeDisabled()
+
+  checkoutData.items?.forEach((item) => {
+    expect(screen.getByText(item?.product?.name as string)).toBeVisible()
+  })
+
+  const shipItems = checkoutGetters.getShipItems(checkoutData)
+
+  expect(
+    screen.queryByRole('button', {
+      name: 'select-a-saved-address',
+    })
+  ).not.toBeInTheDocument()
+
+  expect(screen.getAllByRole('button', { name: 'add-new-address' }).length).toBe(shipItems.length)
+  expect(screen.queryByRole('button', { name: 'edit-address' })).not.toBeInTheDocument()
+
+  await user.click(screen.getAllByRole('button', { name: 'add-new-address' })[0])
+
+  const saveShippingAddress = await screen.findByRole('button', { name: /save/ })
+
+  expect(saveShippingAddress).toBeDisabled()
+
+  await addAddress(user)
+
+  expect(saveShippingAddress).toBeEnabled()
+
+  const newDestination = {
+    id: 'd3d30be35aa54ef7a0bdafa10094f988',
+    destinationContact: {
+      id: null,
+      email: null,
+      firstName: 'John',
+      middleNameOrInitial: null,
+      lastNameOrSurname: 'Doe',
+      phoneNumbers: {
+        home: '9938938494',
+      },
+      address: {
+        address1: '400, Lamar Street',
+        address2: '23/1',
+        address3: null,
+        address4: null,
+        cityOrTown: 'Austin',
+        stateOrProvince: 'TX',
+        postalOrZipCode: '98984',
+        countryCode: 'US',
+        isValidated: false,
+        addressType: null,
+      },
+    },
+  }
+
+  server.use(
+    graphql.mutation('createCheckoutDestination', (_req, res, ctx) => {
+      return res.once(
+        ctx.data({
+          createCheckoutDestination: {
+            ...newDestination,
+            isDestinationCommercial: null,
+          },
+        })
+      )
+    })
+  )
+
+  server.use(
+    graphql.query('getMultiShipCheckout', (_req, res, ctx) => {
+      checkoutData = {
+        ...checkoutData,
+        email: 'guest@email.com',
+        items: [
+          {
+            ...(checkoutMock.checkout.items?.[0] as CrOrderItem),
+            destinationId: newDestination.id,
+          },
+          {
+            ...(checkoutMock.checkout.items?.[1] as CrOrderItem),
+            destinationId: null,
+            fulfillmentMethod: 'Pickup',
+          },
+          extraCheckoutShipItem,
+        ],
+        destinations: [newDestination],
+        groupings: [
+          {
+            ...(checkoutMock.checkout.groupings?.[0] as CheckoutGrouping),
+            destinationId: newDestination.id,
+          },
+          {
+            ...(checkoutMock.checkout.groupings?.[1] as CheckoutGrouping),
+            destinationId: null,
+            fulfillmentMethod: 'Pickup',
+          },
+          extraGrouping,
+        ],
+      }
+      return res(
+        ctx.data({
+          checkout: checkoutData,
+        })
+      )
+    })
+  )
+
+  await user.click(saveShippingAddress)
+
+  expect(screen.getByTestId('checkout-shipping')).toMatchSnapshot()
+
+  const shippingAddressFirstSelect = screen.getAllByRole('button', {
+    name: 'John Doe, 400, Lamar Street, 23/1, Austin, TX, 98984, US',
+  })
+
+  expect(shippingAddressFirstSelect[0]).toBeVisible()
+
+  server.use(
+    graphql.query('getMultiShipCheckout', (_req, res, ctx) => {
+      checkoutData = {
+        ...checkoutData,
+        email: 'guest@email.com',
+        items: [
+          {
+            ...(checkoutMock.checkout.items?.[0] as CrOrderItem),
+            destinationId: newDestination.id,
+          },
+          {
+            ...(checkoutMock.checkout.items?.[1] as CrOrderItem),
+            destinationId: null,
+            fulfillmentMethod: 'Pickup',
+          },
+          extraCheckoutShipItem,
+        ],
+        destinations: [newDestination],
+        groupings: [
+          {
+            ...(checkoutMock.checkout.groupings?.[0] as CheckoutGrouping),
+            destinationId: newDestination.id,
+          },
+          {
+            ...(checkoutMock.checkout.groupings?.[1] as CheckoutGrouping),
+            destinationId: null,
+            fulfillmentMethod: 'Pickup',
+          },
+          extraGrouping,
+        ],
+      }
+      return res(
+        ctx.data({
+          checkout: checkoutData,
+        })
+      )
+    })
+  )
+
+  const shippingMethodSecondSelect = screen.getByRole('button', {
+    name: 'select-a-saved-address',
+  })
+
+  expect(shippingMethodSecondSelect).toBeVisible()
+
+  // fireEvent.mouseDown(shippingMethodSecondSelect)
+
+  // const option = within(screen.getByRole('listbox')).getByText(
+  //   'John Doe, 400, Lamar Street, 23/1, Austin, TX, 98984, US'
+  // )
+
+  // await user.click(option)
+
+  // TODO
+  // const newDestination = {
+  //   id: 'd3d30be35aa54ef7a0bdafa10094f988',
+  //   destinationContact: {
+  //     id: null,
+  //     email: null,
+  //     firstName: 'John',
+  //     middleNameOrInitial: null,
+  //     lastNameOrSurname: 'Doe',
+  //     phoneNumbers: {
+  //       home: '9938938494',
+  //     },
+  //     address: {
+  //       address1: '400, Lamar Street',
+  //       address2: '23/1',
+  //       address3: null,
+  //       address4: null,
+  //       cityOrTown: 'Austin',
+  //       stateOrProvince: 'TX',
+  //       postalOrZipCode: '98984',
+  //       countryCode: 'US',
+  //       isValidated: false,
+  //       addressType: null,
+  //     },
+  //   },
+  // }
+
+  // server.use(
+  //   graphql.mutation('createCheckoutDestination', (_req, res, ctx) => {
+  //     return res.once(
+  //       ctx.data({
+  //         createCheckoutDestination: {
+  //           ...newDestination,
+  //           isDestinationCommercial: null,
+  //         },
+  //       })
+  //     )
+  //   })
+  // )
+
+  // server.use(
+  //   graphql.query('getMultiShipCheckout', (_req, res, ctx) => {
+  //     checkoutData = {
+  //       ...checkoutData,
+  //       email: 'guest@email.com',
+  //       items: [
+  //         {
+  //           ...(checkoutMock.checkout.items?.[0] as CrOrderItem),
+  //           destinationId: newDestination.id,
+  //         },
+  //         {
+  //           ...(checkoutMock.checkout.items?.[1] as CrOrderItem),
+  //           destinationId: null,
+  //           fulfillmentMethod: 'Pickup',
+  //         },
+  //       ],
+  //       destinations: [newDestination],
+  //       groupings: [
+  //         {
+  //           ...(checkoutMock.checkout.groupings?.[0] as CheckoutGrouping),
+  //           destinationId: newDestination.id,
+  //         },
+  //         {
+  //           ...(checkoutMock.checkout.groupings?.[1] as CheckoutGrouping),
+  //           destinationId: null,
+  //           fulfillmentMethod: 'Pickup',
+  //         },
+  //       ],
+  //     }
+  //     return res(
+  //       ctx.data({
+  //         checkout: checkoutData,
+  //       })
+  //     )
+  //   })
+  // )
+
+  // await user.click(saveShippingAddress)
+
+  // expect(
+  //   await screen.findByRole('heading', { name: 'previously-saved-shipping-addresses', level: 4 })
+  // ).toBeVisible()
+
+  // await waitFor(() => {
+  //   expect(screen.getByRole('button', { name: 'add-new-address' })).toBeVisible()
+  // })
+
+  // const newSavedAddressDetailsRadio = `400, Lamar Street,23/1,Austin,TX,98984`
+
+  // expect(screen.getByRole('radio', { name: newSavedAddressDetailsRadio })).toBeChecked()
+
+  // await handleShippingMethod(user, checkoutData)
+
+  // await waitFor(() => {
+  //   expect(goToPaymentButton).toBeEnabled()
+  // })
+
+  // await user.click(goToPaymentButton)
+}
+
+describe('[integration] MultiShipCheckoutTemplate', () => {
+  describe('Authenticated user', () => {
+    describe("user doesn't have any saved addresses", () => {
+      describe('checking out for one single ship to home and one pickup in store item', () => {
+        const checkoutData: Checkout = {
+          ...checkoutMock.checkout,
+          destinations: [],
+          items: [
+            { ...(checkoutMock.checkout.items?.[0] as CrOrderItem), destinationId: null },
+            {
+              ...(checkoutMock.checkout.items?.[1] as CrOrderItem),
+              destinationId: null,
+              fulfillmentMethod: 'Pickup',
+            },
+          ],
+          groupings: [
+            {
+              ...(checkoutMock.checkout.groupings?.[0] as CheckoutGrouping),
+              destinationId: null,
+            },
+            {
+              ...(checkoutMock.checkout.groupings?.[1] as CheckoutGrouping),
+              destinationId: null,
+              fulfillmentMethod: 'Pickup',
+            },
+          ],
+        }
+        beforeEach(() => {
+          server.use(
+            graphql.query('getMultiShipCheckout', (_req, res, ctx) => {
+              return res(
+                ctx.data({
+                  checkout: checkoutData,
+                })
+              )
+            })
+          )
+        })
+
+        it('should handle the checkout flow', async () => {
+          const { user } = setup({
+            isAuthenticated: true,
+          })
+
+          await handleDetailsStep(user, checkoutData)
+
+          await handleSingleShipToHomeItem(user, checkoutData)
+        })
       })
 
-      // expect(screen.getAllByRole('radio').length).toBe(3)
-
-      // const selectedRadio = screen.getByRole('radio', {
-      //   name: addressGetters.getFormattedAddress(
-      //     orderMock.checkout.fulfillmentInfo?.fulfillmentContact as CrContact
-      //   ),
-      // })
-
-      // expect(selectedRadio).toBeChecked()
-
-      // // clicking different radio
-
-      // const savedShippingAddress = userGetters.getUserShippingAddress(
-      //   userAddressMock?.customerAccountContacts?.items as CustomerContact[]
-      // )?.[0]
-
-      // const anotherRadioOption = screen.getByRole('radio', {
-      //   name: addressGetters.getFormattedAddress(savedShippingAddress),
-      // })
-
-      // await user.click(anotherRadioOption)
-
-      // expect(anotherRadioOption).toBeChecked()
-
-      // add new address
-      // const addNewAddress = screen.getByRole('button', { name: 'add-new-address' })
-
-      // await user.click(addNewAddress)
-
-      // await addAddress(user)
-
-      // const updatedFulfillmentMock = {
-      //   ...orderMock.checkout.fulfillmentInfo,
-      //   fulfillmentContact: {
-      //     email: 'test@email.com',
-      //     firstName: 'jon',
-      //     id: 1,
-      //     middleNameOrInitial: null,
-      //     lastNameOrSurname: 'doe',
-      //     companyOrOrganization: null,
-      //     phoneNumbers: {
-      //       home: '9938938494',
-      //       mobile: null,
-      //       work: null,
-      //     },
-      //     address: {
-      //       address1: '400, Lamar Street',
-      //       address2: '23/1',
-      //       address3: null,
-      //       address4: null,
-      //       cityOrTown: 'Austin',
-      //       stateOrProvince: 'TX',
-      //       postalOrZipCode: '98984',
-      //       countryCode: 'US',
-      //       addressType: null,
-      //       isValidated: false,
-      //     },
-      //   },
-      // }
-
-      // server.use(
-      //   graphql.query('getCheckout', (_req, res, ctx) => {
-      //     return res(
-      //       ctx.data({
-      //         checkout: {
-      //           ...orderMock.checkout,
-      //           email: 'test@email.com',
-      //           fulfillmentInfo: {
-      //             ...orderMock.checkout.fulfillmentInfo,
-      //             ...updatedFulfillmentMock,
-      //           },
-      //         },
-      //       })
-      //     )
-      //   })
-      // )
-
-      // await user.click(screen.getByRole('button', { name: 'save-shipping-address' }))
-
-      // const newAddressRadio = await screen.findByRole('radio', {
-      //   name: addressGetters.getFormattedAddress(updatedFulfillmentMock.fulfillmentContact),
-      // })
-
-      // await waitFor(() => {
-      //   expect(newAddressRadio).toBeChecked()
-      // })
-
-      // await user.click(selectedRadio)
-
-      // expect(selectedRadio).toBeChecked()
-
-      // Shipping Method selection
-
-      // const shippingMethodSelect = screen.getByRole('button', { name: 'Select Shipping Option' })
-
-      // fireEvent.mouseDown(shippingMethodSelect)
-
-      // const option = within(screen.getByRole('listbox')).getByText(
-      //   `${shippingRateMock.orderShipmentMethods?.[0]?.shippingMethodName as string} currency`
-      // )
-
-      // server.use(
-      //   graphql.query('getCheckout', (_req, res, ctx) => {
-      //     return res(
-      //       ctx.data({
-      //         checkout: {
-      //           ...orderMock.checkout,
-      //           email: 'test@email.com',
-      //           fulfillmentInfo: {
-      //             ...orderMock.checkout.fulfillmentInfo,
-      //             ...updatedFulfillmentMock,
-      //             shippingMethodCode: 'f863f9f5d4cf4f088105ae3200fd4f9b',
-      //             shippingMethodName: 'Second Day Air',
-      //           },
-      //         },
-      //       })
-      //     )
-      //   })
-      // )
-
-      // await user.click(option)
-
-      // await waitFor(() => {
-      //   expect(goToPaymentButton).toBeEnabled()
-      // })
-
-      // await user.click(goToPaymentButton)
-
-      // Payment Step
-      // const paymentHeader = screen.getByRole('heading', { level: 2, name: 'payment-method' })
-
-      // expect(paymentHeader).toBeVisible()
-
-      // const addresses = getBillingAddresses()
-      // const checkoutPayments = orderGetters.getSelectedPaymentMethods(
-      //   orderMock.checkout,
-      //   PaymentType.CREDITCARD
-      // )
-
-      // const checkoutPaymentsLength = checkoutPayments?.length as number
-      // const totalAddressCount = (addresses?.length as number) + checkoutPaymentsLength
-
-      // await waitFor(() => {
-      //   expect(screen.getAllByRole('radio').length).toBe(totalAddressCount)
-      // })
-
-      // expect(
-      //   screen.getByRole('radio', {
-      //     name: checkoutPayments?.[0]?.billingInfo?.card?.paymentServiceCardId as string,
-      //   })
-      // ).toBeChecked()
-
-      // const cardId = getAccountCardId()
-
-      // const anotherPaymentRadio = screen.getByRole('radio', { name: cardId })
-
-      // await user.click(anotherPaymentRadio)
-
-      // expect(anotherPaymentRadio).toBeChecked()
-
-      // expect(screen.getByRole('button', { name: /review-order/ })).toBeEnabled()
-
-      // await user.click(screen.getByRole('button', { name: /review-order/ }))
-
-      // // Review Step
-      // const orderDetailsHeader = screen.getByRole('heading', { level: 2, name: 'order-details' })
-      // expect(orderDetailsHeader).toBeVisible()
-
-      // const shipToHomeHeader = screen.getByRole('heading', { level: 3, name: 'shipping-to-home' })
-      // const pickupHeader = screen.getByRole('heading', { level: 3, name: 'pickup-in-store' })
-
-      // expect(shipToHomeHeader).toBeVisible()
-      // expect(pickupHeader).toBeVisible()
-      // expect(screen.getAllByTestId('review-ship-items').length).toBe(2)
-      // expect(screen.getAllByTestId('review-pickup-items').length).toBe(1)
-
-      //review personal details
-      // const ReviewPersonalDetails = screen.getByTestId(/personal-details/)
-      // const personalDetailsReviewHeader = screen.getByRole('heading', {
-      //   name: /personal-details/,
-      //   level: 6,
-      // })
-
-      // expect(ReviewPersonalDetails).toContainElement(personalDetailsReviewHeader)
-
-      // expect(within(ReviewPersonalDetails).getByText('test@email.com')).toBeVisible()
-      // expect(
-      //   within(ReviewPersonalDetails).getByText(
-      //     addressGetters.getPhoneNumbers(updatedFulfillmentMock.fulfillmentContact as CrContact)
-      //       .home
-      //   )
-      // ).toBeVisible()
-
-      // //review shipping details
-
-      // const ReviewShippingDetails = screen.getByTestId(/shipping-details/)
-      // const shippingDetailsReviewHeader = screen.getByRole('heading', {
-      //   name: /shipping-details/,
-      //   level: 6,
-      // })
-
-      // expect(ReviewShippingDetails).toContainElement(shippingDetailsReviewHeader)
-
-      // const contact = updatedFulfillmentMock.fulfillmentContact
-
-      // expect(
-      //   within(ReviewShippingDetails).getByText(addressGetters.getFullName(contact))
-      // ).toBeVisible()
-      // expect(
-      //   within(ReviewShippingDetails).getByText(addressGetters.getAddress1(contact.address))
-      // ).toBeVisible()
-      // expect(
-      //   within(ReviewShippingDetails).getByText(addressGetters.getAddress2(contact.address))
-      // ).toBeVisible()
-      // expect(
-      //   within(ReviewShippingDetails).getByText(addressGetters.getCityOrTown(contact.address))
-      // ).toBeVisible()
-      // expect(
-      //   within(ReviewShippingDetails).getByText(addressGetters.getStateOrProvince(contact.address))
-      // ).toBeVisible()
-      // expect(
-      //   within(ReviewShippingDetails).getByText(addressGetters.getPostalOrZipCode(contact.address))
-      // ).toBeVisible()
-
-      //review billing details
-      // const ReviewBillingDetails = screen.getByTestId(/billing-address/)
-      // const billingDetailsReviewHeader = screen.getByRole('heading', {
-      //   name: /billing-address/,
-      //   level: 6,
-      // })
-
-      // expect(ReviewBillingDetails).toContainElement(billingDetailsReviewHeader)
-
-      // const billingContact = orderMock.checkout.billingInfo?.billingContact
-
-      // expect(
-      //   within(ReviewBillingDetails).getByText(
-      //     addressGetters.getFullName(billingContact as CrContact)
-      //   )
-      // ).toBeVisible()
-      // expect(
-      //   within(ReviewBillingDetails).getByText(addressGetters.getAddress1(billingContact?.address))
-      // ).toBeVisible()
-      // expect(
-      //   within(ReviewBillingDetails).getByText(addressGetters.getAddress2(billingContact?.address))
-      // ).toBeVisible()
-      // expect(
-      //   within(ReviewBillingDetails).getByText(
-      //     addressGetters.getCityOrTown(billingContact?.address)
-      //   )
-      // ).toBeVisible()
-      // expect(
-      //   within(ReviewBillingDetails).getByText(
-      //     addressGetters.getStateOrProvince(billingContact?.address)
-      //   )
-      // ).toBeVisible()
-      // expect(
-      //   within(ReviewBillingDetails).getByText(
-      //     addressGetters.getPostalOrZipCode(billingContact?.address)
-      //   )
-      // ).toBeVisible()
-
-      //review Payment details
-      // const ReviewPaymentDetails = screen.getByTestId(/payment-method/)
-      // const paymentMethodReviewHeader = screen.getByRole('heading', {
-      //   name: /payment-method/,
-      //   level: 6,
-      // })
-
-      // expect(ReviewPaymentDetails).toContainElement(paymentMethodReviewHeader)
-
-      // const card = orderGetters.getPaymentMethods(orderMock.checkout)?.[0]
-
-      // expect(within(ReviewPaymentDetails).getByText(cardGetters.getCardType(card))).toBeVisible()
-      // expect(within(ReviewPaymentDetails).getByText(card.cardNumberPartOrMask)).toBeVisible()
-
-      // expect(within(ReviewPaymentDetails).getByText(card.expiry)).toBeVisible()
-
-      // const iAgreeCheckbox = screen.getByRole('checkbox', { name: /termsConditions/i })
-
-      // expect(iAgreeCheckbox).not.toBeChecked()
-
-      // await user.click(iAgreeCheckbox)
-
-      // const confirmAndPayButton = screen.getByRole('button', {
-      //   name: /confirm-and-pay/i,
-      // })
-
-      // expect(confirmAndPayButton).toBeEnabled()
-
-      // await user.click(confirmAndPayButton)
-
-      // expect(
-      //   screen.getByRole('heading', { name: /your-order-was-placed-successfully/, level: 1 })
-      // ).toBeVisible()
+      describe('checking out for more than one single ship to home', () => {
+        const checkoutData: Checkout = {
+          ...checkoutMock.checkout,
+          destinations: [],
+          items: [
+            { ...(checkoutMock.checkout.items?.[0] as CrOrderItem), destinationId: null },
+            {
+              ...(checkoutMock.checkout.items?.[1] as CrOrderItem),
+              destinationId: null,
+              fulfillmentMethod: 'Pickup',
+            },
+            extraCheckoutShipItem,
+          ],
+          groupings: [
+            {
+              ...(checkoutMock.checkout.groupings?.[0] as CheckoutGrouping),
+              destinationId: null,
+            },
+            {
+              ...(checkoutMock.checkout.groupings?.[1] as CheckoutGrouping),
+              destinationId: null,
+              fulfillmentMethod: 'Pickup',
+            },
+            extraGrouping,
+          ],
+        }
+
+        beforeEach(() => {
+          server.use(
+            graphql.query('getMultiShipCheckout', (_req, res, ctx) => {
+              return res(
+                ctx.data({
+                  checkout: checkoutData,
+                })
+              )
+            })
+          )
+        })
+
+        it('should handle checkout flow', async () => {
+          const { user } = setup({
+            isAuthenticated: true,
+          })
+
+          await handleDetailsStep(user, checkoutData)
+
+          await handleMultiShipToHomeItems(user, checkoutData)
+        })
+      })
     })
   })
 })
+
+const NoSavedDestinationMultipleItemCheckoutData = {
+  ...checkoutMock.checkout,
+  destinations: [],
+  items: [
+    { ...(checkoutMock.checkout.items?.[0] as CrOrderItem), destinationId: null },
+    { ...(checkoutMock.checkout.items?.[1] as CrOrderItem), destinationId: null },
+  ],
+  groupings: [
+    {
+      ...(checkoutMock.checkout.groupings?.[0] as CheckoutGrouping),
+      destinationId: null,
+    },
+  ],
+}
+
+const SameDestinationMultipleItemCheckoutData = {
+  ...checkoutMock.checkout,
+  destinations: [
+    {
+      ...(checkoutMock.checkout.destinations?.[0] as CrDestination),
+    },
+  ],
+  items: [
+    {
+      ...(checkoutMock.checkout.items?.[0] as CrOrderItem),
+      destinationId: 'bf92ade4f3514c08bbeeaf6400833d00',
+    },
+    {
+      ...(checkoutMock.checkout.items?.[1] as CrOrderItem),
+      destinationId: 'bf92ade4f3514c08bbeeaf6400833d00',
+    },
+  ],
+  groupings: [
+    {
+      ...(checkoutMock.checkout.groupings?.[0] as CheckoutGrouping),
+      destinationId: 'bf92ade4f3514c08bbeeaf6400833d00',
+    },
+  ],
+}
+
+const DifferentDestinationMultipleItemCheckoutData = {
+  ...checkoutMock.checkout,
+}

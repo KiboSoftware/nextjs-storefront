@@ -1,0 +1,724 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`[integration] MultiShipCheckoutTemplate Authenticated user user doesn't have any saved addresses checking out for more than one single ship to home should handle checkout flow 1`] = `
+<div
+  class="css-1ucnu3w-MuiStack-root"
+  data-testid="checkout-shipping"
+>
+  <h2
+    class="MuiTypography-root MuiTypography-h2 css-1hvcrwh-MuiTypography-root"
+  >
+    shipping
+  </h2>
+  <div
+    class="MuiFormControl-root css-1nrlq1o-MuiFormControl-root"
+  >
+    <label
+      class="MuiFormLabel-root MuiFormLabel-colorPrimary css-1qjyvzj-MuiFormLabel-root"
+      id="kibo-radio-buttons-group-label"
+    />
+    <div
+      aria-labelledby="kibo-radio"
+      class="MuiFormGroup-root css-dmmspl-MuiFormGroup-root"
+      role="radiogroup"
+    >
+      <div
+        class="MuiBox-root css-0"
+      >
+        <label
+          class="MuiFormControlLabel-root MuiFormControlLabel-labelPlacementEnd css-1xvfq35-MuiFormControlLabel-root"
+        >
+          <span
+            class="MuiButtonBase-root MuiRadio-root MuiRadio-colorPrimary PrivateSwitchBase-root MuiRadio-root MuiRadio-colorPrimary MuiRadio-root MuiRadio-colorPrimary css-vqmohf-MuiButtonBase-root-MuiRadio-root"
+          >
+            <input
+              aria-label="Ship to Home"
+              class="PrivateSwitchBase-input css-1m9pwf3"
+              name="radio-buttons-group"
+              type="radio"
+              value="ShipToHome"
+            />
+            <span
+              class="css-hyxlzm"
+            >
+              <svg
+                aria-hidden="true"
+                class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium css-1hbvpl3-MuiSvgIcon-root"
+                data-testid="RadioButtonUncheckedIcon"
+                focusable="false"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8z"
+                />
+              </svg>
+              <svg
+                aria-hidden="true"
+                class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium css-1hhw7if-MuiSvgIcon-root"
+                data-testid="RadioButtonCheckedIcon"
+                focusable="false"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  d="M8.465 8.465C9.37 7.56 10.62 7 12 7C14.76 7 17 9.24 17 12C17 13.38 16.44 14.63 15.535 15.535C14.63 16.44 13.38 17 12 17C9.24 17 7 14.76 7 12C7 10.62 7.56 9.37 8.465 8.465Z"
+                />
+              </svg>
+            </span>
+            <span
+              class="MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root"
+            />
+          </span>
+          <p
+            class="MuiTypography-root MuiTypography-body2 css-e784if-MuiTypography-root"
+          >
+            Ship to Home
+          </p>
+        </label>
+      </div>
+      <div
+        class="MuiBox-root css-0"
+      >
+        <label
+          class="MuiFormControlLabel-root MuiFormControlLabel-labelPlacementEnd css-1xvfq35-MuiFormControlLabel-root"
+        >
+          <span
+            class="MuiButtonBase-root MuiRadio-root MuiRadio-colorPrimary PrivateSwitchBase-root MuiRadio-root MuiRadio-colorPrimary Mui-checked MuiRadio-root MuiRadio-colorPrimary css-vqmohf-MuiButtonBase-root-MuiRadio-root"
+          >
+            <input
+              aria-label="Ship to more than one address"
+              checked=""
+              class="PrivateSwitchBase-input css-1m9pwf3"
+              name="radio-buttons-group"
+              type="radio"
+              value="ShipToMultiAddress"
+            />
+            <span
+              class="css-hyxlzm"
+            >
+              <svg
+                aria-hidden="true"
+                class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium css-1hbvpl3-MuiSvgIcon-root"
+                data-testid="RadioButtonUncheckedIcon"
+                focusable="false"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8z"
+                />
+              </svg>
+              <svg
+                aria-hidden="true"
+                class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium css-11zohuh-MuiSvgIcon-root"
+                data-testid="RadioButtonCheckedIcon"
+                focusable="false"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  d="M8.465 8.465C9.37 7.56 10.62 7 12 7C14.76 7 17 9.24 17 12C17 13.38 16.44 14.63 15.535 15.535C14.63 16.44 13.38 17 12 17C9.24 17 7 14.76 7 12C7 10.62 7.56 9.37 8.465 8.465Z"
+                />
+              </svg>
+            </span>
+            <span
+              class="MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root"
+            />
+          </span>
+          <p
+            class="MuiTypography-root MuiTypography-body2 css-e784if-MuiTypography-root"
+          >
+            Ship to more than one address
+          </p>
+        </label>
+      </div>
+    </div>
+  </div>
+  <div
+    class="css-nen11g-MuiStack-root"
+  >
+    <div
+      class="MuiPaper-root MuiPaper-elevation MuiPaper-rounded MuiPaper-elevation1 MuiCard-root css-1tr35dy-MuiPaper-root-MuiCard-root"
+    >
+      <div
+        class="MuiBox-root css-1rz4jpb"
+      >
+        <div
+          class="MuiBox-root css-0"
+        >
+          <div
+            class="MuiBox-root css-1s3znt2"
+          >
+            <div
+              class="MuiBox-root css-jxlxss"
+            >
+              <a
+                href="/checkout/14e11efc4376e9000197126600007656"
+              >
+                <img
+                  alt="Garmin VIRB Elite Action Camera"
+                  data-nimg="fill"
+                  decoding="async"
+                  errorimage="[object Object]"
+                  loading="lazy"
+                  src="https://d1slj7rdbjyb5l.cloudfront.net/17194-21127/cms/21127/files/6e0389db-5b78-490d-88b0-28af87528c5b"
+                  style="position: absolute; height: 100%; width: 100%; left: 0px; top: 0px; right: 0px; bottom: 0px; object-fit: contain; color: transparent;"
+                />
+              </a>
+            </div>
+            <div
+              class="css-1wnqfd2-MuiStack-root"
+            >
+              <div
+                class="MuiCardContent-root css-17mr6s4-MuiCardContent-root"
+              >
+                <h4
+                  class="MuiTypography-root MuiTypography-h4 css-17aczqq-MuiTypography-root"
+                  data-testid="productName"
+                >
+                  Garmin VIRB Elite Action Camera
+                </h4>
+                <div
+                  class="MuiBox-root css-0"
+                  data-testid="productDetails"
+                >
+                  <div
+                    class="MuiBox-root css-1p1uql4"
+                  >
+                    <div
+                      class="MuiBox-root css-1mfjwn9"
+                    >
+                      <p
+                        class="MuiTypography-root MuiTypography-body2 MuiTypography-alignLeft css-1qkqsg9-MuiTypography-root"
+                      >
+                        details
+                      </p>
+                      <svg
+                        aria-hidden="true"
+                        class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium css-i4bv87-MuiSvgIcon-root"
+                        data-testid="KeyboardArrowUpIcon"
+                        focusable="false"
+                        viewBox="0 0 24 24"
+                      >
+                        <path
+                          d="M7.41 15.41 12 10.83l4.59 4.58L18 14l-6-6-6 6z"
+                        />
+                      </svg>
+                    </div>
+                  </div>
+                  <div
+                    class="MuiCollapse-root MuiCollapse-vertical MuiCollapse-entered css-pwcg7p-MuiCollapse-root"
+                    style="min-height: 0px;"
+                  >
+                    <div
+                      class="MuiCollapse-wrapper MuiCollapse-vertical css-smkl36-MuiCollapse-wrapper"
+                    >
+                      <div
+                        class="MuiCollapse-wrapperInner MuiCollapse-vertical css-9l5vo-MuiCollapse-wrapperInner"
+                      >
+                        <div
+                          class="MuiBox-root css-at6cth"
+                          data-testid="productOption"
+                        >
+                          <span
+                            class="MuiTypography-root MuiTypography-body2 css-1xp7nh2-MuiTypography-root"
+                          >
+                            qty
+                            :
+                          </span>
+                          4
+                        </div>
+                        <div
+                          class="MuiBox-root css-at6cth"
+                          data-testid="productOption"
+                        >
+                          <span
+                            class="MuiTypography-root MuiTypography-body2 css-1xp7nh2-MuiTypography-root"
+                          >
+                            price
+                            :
+                          </span>
+                          <div
+                            class="MuiBox-root css-ecs8mw"
+                          >
+                            <p
+                              class="MuiTypography-root MuiTypography-body2 css-1754ti5-MuiTypography-root"
+                              data-testid="price-text"
+                            >
+                              currency
+                            </p>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div
+        class="MuiBox-root css-llixk5"
+      >
+        <div
+          class="MuiFormControl-root MuiFormControl-fullWidth css-9ceflp-MuiFormControl-root"
+        >
+          <div
+            class="MuiInputBase-root MuiOutlinedInput-root MuiInputBase-colorPrimary MuiInputBase-formControl MuiInputBase-sizeSmall MuiInputBase-hiddenLabel css-cmcm3a-MuiInputBase-root-MuiOutlinedInput-root"
+          >
+            <div
+              aria-expanded="false"
+              aria-haspopup="listbox"
+              aria-labelledby="mui-component-select-multiShipAddresses"
+              class="MuiSelect-select MuiSelect-outlined MuiInputBase-input MuiOutlinedInput-input MuiInputBase-inputSizeSmall MuiInputBase-inputHiddenLabel css-jedpe8-MuiSelect-select-MuiInputBase-input-MuiOutlinedInput-input"
+              id="mui-component-select-multiShipAddresses"
+              role="button"
+              tabindex="0"
+            >
+              John Doe, 400, Lamar Street, 23/1, Austin, TX, 98984, US 
+            </div>
+            <input
+              aria-hidden="false"
+              class="MuiSelect-nativeInput css-yf8vq0-MuiSelect-nativeInput"
+              name="multiShipAddresses"
+              tabindex="-1"
+              value="d3d30be35aa54ef7a0bdafa10094f988"
+            />
+            <svg
+              aria-hidden="true"
+              class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium MuiSelect-icon MuiSelect-iconOutlined css-hfutr2-MuiSvgIcon-root-MuiSelect-icon"
+              data-testid="ArrowDropDownIcon"
+              focusable="false"
+              viewBox="0 0 24 24"
+            >
+              <path
+                d="M7 10l5 5 5-5z"
+              />
+            </svg>
+            <fieldset
+              aria-hidden="true"
+              class="MuiOutlinedInput-notchedOutline css-1d3z3hw-MuiOutlinedInput-notchedOutline"
+            >
+              <legend
+                class="css-ihdtdm"
+              >
+                <span
+                  class="notranslate"
+                >
+                  ​
+                </span>
+              </legend>
+            </fieldset>
+          </div>
+        </div>
+        <div
+          class="MuiBox-root css-ckyhk3"
+        >
+          <button
+            class="MuiTypography-root MuiTypography-caption MuiLink-root MuiLink-underlineAlways MuiLink-button css-1jxhcea-MuiTypography-root-MuiLink-root"
+          >
+            edit-address
+          </button>
+          <hr
+            class="MuiDivider-root MuiDivider-middle MuiDivider-vertical css-89vgrq-MuiDivider-root"
+          />
+          <button
+            class="MuiTypography-root MuiTypography-caption MuiLink-root MuiLink-underlineAlways MuiLink-button css-1jxhcea-MuiTypography-root-MuiLink-root"
+          >
+            add-new-address
+          </button>
+        </div>
+        <div
+          class="MuiBox-root css-1jevcu9"
+        >
+          <button
+            class="MuiTypography-root MuiTypography-caption MuiLink-root MuiLink-underlineAlways MuiLink-button css-15bo006-MuiTypography-root-MuiLink-root"
+          >
+            split-into-multiple-shipments
+          </button>
+        </div>
+      </div>
+    </div>
+    <div
+      class="MuiPaper-root MuiPaper-elevation MuiPaper-rounded MuiPaper-elevation1 MuiCard-root css-1tr35dy-MuiPaper-root-MuiCard-root"
+    >
+      <div
+        class="MuiBox-root css-1rz4jpb"
+      >
+        <div
+          class="MuiBox-root css-0"
+        >
+          <div
+            class="MuiBox-root css-1s3znt2"
+          >
+            <div
+              class="MuiBox-root css-jxlxss"
+            >
+              <a
+                href="/checkout/14e11efc4376e9000197126600007656"
+              >
+                <img
+                  alt="Bobby Tug Rope"
+                  data-nimg="fill"
+                  decoding="async"
+                  errorimage="[object Object]"
+                  loading="lazy"
+                  src="https://cdn-sb.mozu.com/30294-50525/cms/50525/files/9f3d88a7-ac89-44b2-9f71-8ca7190ac0ac"
+                  style="position: absolute; height: 100%; width: 100%; left: 0px; top: 0px; right: 0px; bottom: 0px; object-fit: contain; color: transparent;"
+                />
+              </a>
+            </div>
+            <div
+              class="css-1wnqfd2-MuiStack-root"
+            >
+              <div
+                class="MuiCardContent-root css-17mr6s4-MuiCardContent-root"
+              >
+                <h4
+                  class="MuiTypography-root MuiTypography-h4 css-17aczqq-MuiTypography-root"
+                  data-testid="productName"
+                >
+                  Bobby Tug Rope
+                </h4>
+                <div
+                  class="MuiBox-root css-0"
+                  data-testid="productDetails"
+                >
+                  <div
+                    class="MuiBox-root css-1p1uql4"
+                  >
+                    <div
+                      class="MuiBox-root css-1mfjwn9"
+                    >
+                      <p
+                        class="MuiTypography-root MuiTypography-body2 MuiTypography-alignLeft css-1qkqsg9-MuiTypography-root"
+                      >
+                        details
+                      </p>
+                      <svg
+                        aria-hidden="true"
+                        class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium css-i4bv87-MuiSvgIcon-root"
+                        data-testid="KeyboardArrowUpIcon"
+                        focusable="false"
+                        viewBox="0 0 24 24"
+                      >
+                        <path
+                          d="M7.41 15.41 12 10.83l4.59 4.58L18 14l-6-6-6 6z"
+                        />
+                      </svg>
+                    </div>
+                  </div>
+                  <div
+                    class="MuiCollapse-root MuiCollapse-vertical MuiCollapse-entered css-pwcg7p-MuiCollapse-root"
+                    style="min-height: 0px;"
+                  >
+                    <div
+                      class="MuiCollapse-wrapper MuiCollapse-vertical css-smkl36-MuiCollapse-wrapper"
+                    >
+                      <div
+                        class="MuiCollapse-wrapperInner MuiCollapse-vertical css-9l5vo-MuiCollapse-wrapperInner"
+                      >
+                        <div
+                          class="MuiBox-root css-at6cth"
+                          data-testid="productOption"
+                        >
+                          <span
+                            class="MuiTypography-root MuiTypography-body2 css-1xp7nh2-MuiTypography-root"
+                          >
+                            qty
+                            :
+                          </span>
+                          1
+                        </div>
+                        <div
+                          class="MuiBox-root css-at6cth"
+                          data-testid="productOption"
+                        >
+                          <span
+                            class="MuiTypography-root MuiTypography-body2 css-1xp7nh2-MuiTypography-root"
+                          >
+                            price
+                            :
+                          </span>
+                          <div
+                            class="MuiBox-root css-ecs8mw"
+                          >
+                            <p
+                              class="MuiTypography-root MuiTypography-body2 css-1754ti5-MuiTypography-root"
+                              data-testid="price-text"
+                            >
+                              currency
+                            </p>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div
+        class="MuiBox-root css-llixk5"
+      >
+        <div
+          class="MuiFormControl-root MuiFormControl-fullWidth css-9ceflp-MuiFormControl-root"
+        >
+          <div
+            class="MuiInputBase-root MuiOutlinedInput-root MuiInputBase-colorPrimary MuiInputBase-formControl MuiInputBase-sizeSmall MuiInputBase-hiddenLabel css-cmcm3a-MuiInputBase-root-MuiOutlinedInput-root"
+          >
+            <div
+              aria-expanded="false"
+              aria-haspopup="listbox"
+              aria-labelledby="mui-component-select-multiShipAddresses"
+              class="MuiSelect-select MuiSelect-outlined MuiInputBase-input MuiOutlinedInput-input MuiInputBase-inputSizeSmall MuiInputBase-inputHiddenLabel css-jedpe8-MuiSelect-select-MuiInputBase-input-MuiOutlinedInput-input"
+              id="mui-component-select-multiShipAddresses"
+              role="button"
+              tabindex="0"
+            >
+              select-a-saved-address
+            </div>
+            <input
+              aria-hidden="false"
+              class="MuiSelect-nativeInput css-yf8vq0-MuiSelect-nativeInput"
+              name="multiShipAddresses"
+              tabindex="-1"
+              value=""
+            />
+            <svg
+              aria-hidden="true"
+              class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium MuiSelect-icon MuiSelect-iconOutlined css-hfutr2-MuiSvgIcon-root-MuiSelect-icon"
+              data-testid="ArrowDropDownIcon"
+              focusable="false"
+              viewBox="0 0 24 24"
+            >
+              <path
+                d="M7 10l5 5 5-5z"
+              />
+            </svg>
+            <fieldset
+              aria-hidden="true"
+              class="MuiOutlinedInput-notchedOutline css-1d3z3hw-MuiOutlinedInput-notchedOutline"
+            >
+              <legend
+                class="css-ihdtdm"
+              >
+                <span
+                  class="notranslate"
+                >
+                  ​
+                </span>
+              </legend>
+            </fieldset>
+          </div>
+        </div>
+        <div
+          class="MuiBox-root css-ckyhk3"
+        >
+          <button
+            class="MuiTypography-root MuiTypography-caption MuiLink-root MuiLink-underlineAlways MuiLink-button css-1jxhcea-MuiTypography-root-MuiLink-root"
+          >
+            edit-address
+          </button>
+          <hr
+            class="MuiDivider-root MuiDivider-middle MuiDivider-vertical css-89vgrq-MuiDivider-root"
+          />
+          <button
+            class="MuiTypography-root MuiTypography-caption MuiLink-root MuiLink-underlineAlways MuiLink-button css-1jxhcea-MuiTypography-root-MuiLink-root"
+          >
+            add-new-address
+          </button>
+        </div>
+      </div>
+    </div>
+    <div
+      class="MuiBox-root css-1sf3xto"
+    >
+      <div
+        class="MuiBox-root css-0"
+        data-testid="shipping-method"
+      >
+        <div
+          class="MuiBox-root css-0"
+          data-testid="pickup-items"
+        >
+          <hr
+            class="MuiDivider-root MuiDivider-fullWidth MuiDivider-flexItem css-yk10cl-MuiDivider-root"
+          />
+          <div
+            class="MuiBox-root css-ekan51"
+          >
+            <p
+              class="MuiTypography-root MuiTypography-body1 css-d39zkq-MuiTypography-root"
+              data-testid="pickup-title"
+            >
+              pickup
+            </p>
+          </div>
+          <div
+            class="MuiBox-root css-0"
+          >
+            <div
+              class="css-1p5q5e5-MuiStack-root"
+            >
+              <div
+                class="css-nen11g-MuiStack-root"
+                data-testid="product-item-stack"
+              >
+                <div
+                  class="MuiBox-root css-0"
+                >
+                  <div
+                    class="MuiBox-root css-1s3znt2"
+                  >
+                    <div
+                      class="MuiBox-root css-jxlxss"
+                    >
+                      <a
+                        href="/checkout/14e11efc4376e9000197126600007656"
+                      >
+                        <img
+                          alt="Wide-Mouth Loop-Top Watter Bottle"
+                          data-nimg="fill"
+                          decoding="async"
+                          errorimage="[object Object]"
+                          loading="lazy"
+                          src="https://d1slj7rdbjyb5l.cloudfront.net/17194-21127/cms/21127/files/4bc1243b-4b46-4672-8276-cb3d03204c83"
+                          style="position: absolute; height: 100%; width: 100%; left: 0px; top: 0px; right: 0px; bottom: 0px; object-fit: contain; color: transparent;"
+                        />
+                      </a>
+                    </div>
+                    <div
+                      class="css-1wnqfd2-MuiStack-root"
+                    >
+                      <div
+                        class="MuiCardContent-root css-17mr6s4-MuiCardContent-root"
+                      >
+                        <h4
+                          class="MuiTypography-root MuiTypography-h4 css-17aczqq-MuiTypography-root"
+                          data-testid="productName"
+                        >
+                          Wide-Mouth Loop-Top Watter Bottle
+                        </h4>
+                        <div
+                          class="MuiBox-root css-0"
+                          data-testid="productDetails"
+                        >
+                          <div
+                            class="MuiBox-root css-1p1uql4"
+                          >
+                            <div
+                              class="MuiBox-root css-1mfjwn9"
+                            >
+                              <p
+                                class="MuiTypography-root MuiTypography-body2 MuiTypography-alignLeft css-1qkqsg9-MuiTypography-root"
+                              >
+                                details
+                              </p>
+                              <svg
+                                aria-hidden="true"
+                                class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium css-i4bv87-MuiSvgIcon-root"
+                                data-testid="KeyboardArrowUpIcon"
+                                focusable="false"
+                                viewBox="0 0 24 24"
+                              >
+                                <path
+                                  d="M7.41 15.41 12 10.83l4.59 4.58L18 14l-6-6-6 6z"
+                                />
+                              </svg>
+                            </div>
+                          </div>
+                          <div
+                            class="MuiCollapse-root MuiCollapse-vertical MuiCollapse-entered css-pwcg7p-MuiCollapse-root"
+                            style="min-height: 0px;"
+                          >
+                            <div
+                              class="MuiCollapse-wrapper MuiCollapse-vertical css-smkl36-MuiCollapse-wrapper"
+                            >
+                              <div
+                                class="MuiCollapse-wrapperInner MuiCollapse-vertical css-9l5vo-MuiCollapse-wrapperInner"
+                              >
+                                <div
+                                  class="MuiBox-root css-at6cth"
+                                  data-testid="productOption"
+                                >
+                                  <span
+                                    class="MuiTypography-root MuiTypography-body2 css-1xp7nh2-MuiTypography-root"
+                                  >
+                                    qty
+                                    :
+                                  </span>
+                                  5
+                                </div>
+                                <div
+                                  class="MuiBox-root css-at6cth"
+                                  data-testid="productOption"
+                                >
+                                  <span
+                                    class="MuiTypography-root MuiTypography-body2 css-1xp7nh2-MuiTypography-root"
+                                  >
+                                    price
+                                    :
+                                  </span>
+                                  <div
+                                    class="MuiBox-root css-ecs8mw"
+                                  >
+                                    <p
+                                      class="MuiTypography-root MuiTypography-body2 css-1754ti5-MuiTypography-root"
+                                      data-testid="price-text"
+                                    >
+                                      currency
+                                    </p>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div
+                    class="MuiBox-root css-oudrid"
+                  >
+                    <div
+                      class="MuiBox-root css-at6cth"
+                      data-testid="productOption"
+                    >
+                      <span
+                        class="MuiTypography-root MuiTypography-caption css-zvf9zx-MuiTypography-root"
+                      >
+                        pickup
+                        :
+                      </span>
+                    </div>
+                  </div>
+                  <div
+                    class="MuiBox-root css-gajhq5"
+                  >
+                    <button
+                      class="MuiTypography-root MuiTypography-caption MuiLink-root MuiLink-underlineAlways MuiLink-button css-1u1wg0f-MuiTypography-root-MuiLink-root"
+                    >
+                      select-store
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <button
+      class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium css-1fq3mw3-MuiButtonBase-root-MuiButton-root"
+      tabindex="0"
+      type="button"
+    >
+      continue
+      <span
+        class="MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root"
+      />
+    </button>
+  </div>
+</div>
+`;

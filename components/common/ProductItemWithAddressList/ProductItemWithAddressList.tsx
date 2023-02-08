@@ -116,13 +116,13 @@ const ProductItemWithAddressList = (props: ProductItemWithAddressListProps) => {
                     onSelectCreateOrSetDestinationAddress(item?.id as string, value)
                   }
                   placeholder={t('select-a-saved-address')}
-                  value={item?.destinationId as string}
-                  data-testId="multiShipAddresses"
+                  value={item?.destinationId || ''}
                 >
                   {multiShipAddresses?.map((multiShipAddress) => {
                     const destinationOrAddressId = multiShipAddress?.destinationId
                       ? multiShipAddress?.destinationId
                       : multiShipAddress?.address?.id
+
                     return (
                       <MenuItem
                         key={`${multiShipAddress?.address?.id}-${multiShipAddress?.destinationId}`}
