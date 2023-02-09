@@ -279,7 +279,7 @@ describe('[component] - SubscriptionItem', () => {
     })
   })
 
-  describe('pause-shipment', () => {
+  describe('pause-subscription', () => {
     it('should open Confirmation Dialog when user clicks on pause button', async () => {
       const { user } = setup()
 

@@ -1,7 +1,7 @@
 import { renderHook } from '@testing-library/react-hooks'
 
 import { usePerformSubscriptionActionMutation } from './usePerformSubscriptionActionMutation'
-import { subscriptionPauseMock } from '@/__mocks__/stories'
+import { subscriptionMock } from '@/__mocks__/stories'
 import { createQueryClientWrapper } from '@/__test__/utils/renderWithQueryClient'
 
 describe('[hooks] usePerformSubscriptionActionMutation', () => {
@@ -19,7 +19,7 @@ describe('[hooks] usePerformSubscriptionActionMutation', () => {
       async () => {
         const { performSubscriptionActionMutation } = usePerformSubscriptionActionMutation()
         const response = await performSubscriptionActionMutation.mutateAsync(params)
-        expect(response).toStrictEqual(subscriptionPauseMock.subscription)
+        expect(response).toStrictEqual(subscriptionMock.subscription)
       },
       {
         wrapper: createQueryClientWrapper(),

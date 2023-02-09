@@ -1,4 +1,4 @@
-export const buildSubscriptionParams = (subscriptionId: string) => {
+export const buildPauseSubscriptionParams = (subscriptionId: string) => {
   return {
     subscriptionId: subscriptionId,
     subscriptionActionInput: {

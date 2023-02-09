@@ -1,5 +1,3 @@
-import type { SubscriptionReason } from '@/lib/gql/types'
-
 export const subscriptionMock = {
   subscription: {
     id: '149ceaac15c2eb00016c498e000045a4',
@@ -39,11 +37,5 @@ export const subscriptionMock = {
       value: 1,
     },
     nextOrderDate: 1683072000000,
-  },
-}
-
-export const subscriptionPauseMock: { subscription: SubscriptionReason } = {
-  subscription: {
-    actionName: 'Pause',
   },
 }

@@ -25,7 +25,7 @@ import { subscriptionGetters, productGetters } from '@/lib/getters'
 import {
   uiHelpers,
   buildSubscriptionFulfillmentInfoParams,
-  buildSubscriptionParams,
+  buildPauseSubscriptionParams,
 } from '@/lib/helpers'
 import type { Address, FulfillmentInfo } from '@/lib/types'
 
@@ -177,7 +177,7 @@ const SubscriptionItem = (props: SubscriptionItemProps) => {
 
   // Pause Subscription
   const confirmPauseSubscription = async (subscriptionId: string) => {
-    const params = buildSubscriptionParams(subscriptionId)
+    const params = buildPauseSubscriptionParams(subscriptionId)
     await performSubscriptionActionMutation.mutateAsync(params)
     showSnackbar(t('subscription-paused'), 'success')
   }
