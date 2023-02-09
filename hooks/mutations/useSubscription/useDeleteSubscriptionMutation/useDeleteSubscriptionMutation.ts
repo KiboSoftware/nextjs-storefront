@@ -1,5 +1,5 @@
 /**
- * @module useSkipNextSubscriptionMutation
+ * @module useDeleteSubscriptionMutation
  */
 import { useMutation, useQueryClient } from 'react-query'
 
