@@ -134,7 +134,7 @@ const ShippingGroupsWithMethod = (props: ShippingGroupsWithMethodProps) => {
 
       {destinationItemGroups?.map((destinationItemGroup, index: number) => {
         return (
-          <Card key={destinationItemGroup?.destinationId} sx={{ ...styles.card }}>
+          <Card key={destinationItemGroup?.groupingId} sx={{ ...styles.card }}>
             <Box sx={{ ...styles.subContainer }}>
               <Typography variant="subtitle1" component="span">
                 {t('shipments-of', {
@@ -160,7 +160,7 @@ const ShippingGroupsWithMethod = (props: ShippingGroupsWithMethodProps) => {
                 )}
               </Box>
               <KiboSelect
-                name="shippingMethods"
+                name={`shippingMethods-${destinationItemGroup?.groupingId}`}
                 placeholder={t('select-shipping-option')}
                 sx={{ ...styles.shippingMethods }}
                 onChange={(_name, value) =>

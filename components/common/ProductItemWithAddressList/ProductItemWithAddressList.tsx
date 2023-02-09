@@ -101,7 +101,7 @@ const ProductItemWithAddressList = (props: ProductItemWithAddressListProps) => {
                 productCode={productGetters.getProductId(product)}
                 image={productGetters.getProductImage(product)}
                 name={productGetters.getName(product)}
-                options={productGetters.getOptions(product)}
+                options={productGetters.getOptions(product) || []}
                 price={productGetters.getPrice(product).regular?.toString()}
                 salePrice={productGetters.getPrice(product).special?.toString()}
                 data-testid="product-item-address"
@@ -111,7 +111,7 @@ const ProductItemWithAddressList = (props: ProductItemWithAddressListProps) => {
             <Box sx={{ ...styles.subContainer, display: 'flex', flexDirection: 'column' }}>
               {multiShipAddresses?.length ? (
                 <KiboSelect
-                  name="multiShipAddresses"
+                  name={`${productGetters.getProductId(product)}`}
                   onChange={(_name, value) =>
                     onSelectCreateOrSetDestinationAddress(item?.id as string, value)
                   }

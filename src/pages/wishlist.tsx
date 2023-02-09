@@ -1,5 +1,5 @@
-import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
 import getConfig from 'next/config'
+import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
 
 import { LoginDialog } from '@/components/layout'
 import { WishlistTemplate } from '@/components/page-templates'

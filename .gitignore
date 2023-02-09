@@ -45,3 +45,6 @@ storybook-static
 /.vscode/
 
 test-report.xml
+/test-results/
+/playwright-report/
+/playwright/.cache/

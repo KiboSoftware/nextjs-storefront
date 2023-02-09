@@ -2,8 +2,8 @@ import React from 'react'
 
 import { ComponentStory, ComponentMeta } from '@storybook/react'
 
-import { imageGalleryData } from '../../../__mocks__/stories/imageGalleryDataMock'
 import ImageGallery from './ImageGallery'
+import { imageGalleryData } from '../../../__mocks__/stories/imageGalleryDataMock'
 
 export default {
   title: 'Core/ImageGallery',

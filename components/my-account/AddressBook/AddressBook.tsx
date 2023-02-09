@@ -247,6 +247,7 @@ const AddressBook = (props: AddressBookProps) => {
         <Box pb={'1.813rem'}>
           <Grid item xs={12} md={6} pl={1} pb={2.5} pr={6.5}>
             <KiboSelect
+              name="address-type"
               sx={{ typography: 'body2', width: '100%' }}
               value={addressType}
               onChange={(_name, value) => setAddressType(value)}
