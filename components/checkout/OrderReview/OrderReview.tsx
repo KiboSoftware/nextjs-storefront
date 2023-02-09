@@ -15,7 +15,7 @@ import {
 } from '@mui/material'
 import { useTranslation } from 'next-i18next'
 
-import { AddressDetailsView, PromoCodeBadge } from '@/components/common'
+import { AddressCard, AddressDetailsView, PromoCodeBadge } from '@/components/common'
 import { useCheckoutStepContext } from '@/context'
 import { useStoreLocationsQueries } from '@/hooks'
 import { checkoutGetters, orderGetters } from '@/lib/getters'
@@ -68,21 +68,23 @@ const OrderInfoHeader = (props: OrderInfoHeaderProps) => {
 
   return (
     <Stack pb={2} data-testid={`${headerName}`}>
-      <Box display="flex">
-        <Typography variant="subtitle2" fontWeight={600}>
-          {headerName}
-        </Typography>
-        <StyledActions
-          data-step={dataStep}
-          variant="caption"
-          color="text.primary"
-          onClick={handleEditAction}
-        >
-          <Typography sx={{ cursor: 'pointer' }} component="span" fontWeight={600}>
-            {t('edit')}
+      {children && (
+        <Box display="flex">
+          <Typography variant="subtitle2" fontWeight={600}>
+            {headerName}
           </Typography>
-        </StyledActions>
-      </Box>
+          <StyledActions
+            data-step={dataStep}
+            variant="caption"
+            color="text.primary"
+            onClick={handleEditAction}
+          >
+            <Typography sx={{ cursor: 'pointer' }} component="span" fontWeight={600}>
+              {t('edit')}
+            </Typography>
+          </StyledActions>
+        </Box>
+      )}
 
       {children}
     </Stack>

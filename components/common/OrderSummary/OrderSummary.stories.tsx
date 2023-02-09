@@ -5,8 +5,8 @@ import React from 'react'
 import { Button } from '@mui/material'
 import { ComponentStory, ComponentMeta } from '@storybook/react'
 
-import PromoCodeBadge from '../PromoCodeBadge/PromoCodeBadge'
 import OrderSummary from './OrderSummary'
+import PromoCodeBadge from '../PromoCodeBadge/PromoCodeBadge'
 
 const styles = {
   checkOutButtonStyle: {

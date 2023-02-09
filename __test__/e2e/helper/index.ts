@@ -35,7 +35,7 @@ export const addCardDetails = async (user: any) => {
   await user.tab()
 }
 
-export const addAddress = async (user: any) => {
+export const addAddress = async (user: any, addAnotherAddress?: boolean) => {
   const firstName = screen.getByRole('textbox', { name: /first-name/i })
   const lastNameOrSurname = screen.getByRole('textbox', { name: /last-name-or-sur-name/i })
   const address1 = screen.getByRole('textbox', { name: /address1/i })
@@ -46,19 +46,35 @@ export const addAddress = async (user: any) => {
   const phoneNumberHome = screen.getByRole('textbox', { name: /phone-number/i })
   const countryCode = screen.getByRole('button', { name: 'country-code' })
 
-  await user.type(firstName, 'John')
-  await user.type(lastNameOrSurname, 'Doe')
-  await user.type(address1, '400, Lamar Street')
-  await user.type(address2, '23/1')
-  await user.type(cityOrTown, 'Austin')
-  await user.type(stateOrProvince, 'TX')
-  await user.type(postalOrZipCode, '98984')
-  await user.type(phoneNumberHome, '9938938494')
-  await user.click(countryCode)
+  if (addAnotherAddress) {
+    await user.type(firstName, 'Mike')
+    await user.type(lastNameOrSurname, 'Tyson')
+    await user.type(address1, '100, Lamar Street')
+    await user.type(address2, '13/1')
+    await user.type(cityOrTown, 'Austin')
+    await user.type(stateOrProvince, 'TX')
+    await user.type(postalOrZipCode, '98984')
+    await user.type(phoneNumberHome, '9999999999')
+    await user.click(countryCode)
 
-  const listbox = within(screen.getByRole('listbox'))
-  await user.click(listbox.getByText(/US/i))
-  await user.tab()
+    const listbox = within(screen.getByRole('listbox'))
+    await user.click(listbox.getByText(/US/i))
+    await user.tab()
+  } else {
+    await user.type(firstName, 'John')
+    await user.type(lastNameOrSurname, 'Doe')
+    await user.type(address1, '400, Lamar Street')
+    await user.type(address2, '23/1')
+    await user.type(cityOrTown, 'Austin')
+    await user.type(stateOrProvince, 'TX')
+    await user.type(postalOrZipCode, '98984')
+    await user.type(phoneNumberHome, '9938938494')
+    await user.click(countryCode)
+
+    const listbox = within(screen.getByRole('listbox'))
+    await user.click(listbox.getByText(/US/i))
+    await user.tab()
+  }
 }
 
 export const getBillingAddresses = () => {

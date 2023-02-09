@@ -59,9 +59,10 @@ const MultiShipCheckoutTemplate = (props: MultiShipCheckoutProps) => {
   const { data: shippingMethods } = useCheckoutShippingMethodsQuery(
     checkoutId as string,
     checkout?.groupings &&
-      (checkout?.groupings?.filter(
-        (group) => group?.fulfillmentMethod === FulfillmentOptions.SHIP
-      )[0]?.destinationId as string)
+      (checkout?.groupings
+        ?.filter((group) => group?.fulfillmentMethod === FulfillmentOptions.SHIP)
+        .map((each) => each?.destinationId)
+        .join(',') as string)
   )
 
   const updateMultiShipCheckoutPersonalInfo = useUpdateMultiShipCheckoutPersonalInfoMutation()
@@ -73,10 +74,7 @@ const MultiShipCheckoutTemplate = (props: MultiShipCheckoutProps) => {
   const updateCheckoutPersonalInfo = async (formData: PersonalDetails) => {
     const { email } = formData
     const personalInfo: MultiShipPersonalInfo = {
-      checkout: {
-        ...checkout,
-        items: checkout?.items?.map((each) => (each!.destinationId = null)),
-      } as Checkout,
+      checkout: checkout as Checkout,
       email: email as string,
     }
     await updateMultiShipCheckoutPersonalInfo.mutateAsync(personalInfo)
@@ -190,6 +188,7 @@ const MultiShipCheckoutTemplate = (props: MultiShipCheckoutProps) => {
         handleApplyCouponCode={handleApplyCouponCode}
         handleRemoveCouponCode={handleRemoveCouponCode}
         promoError={promoError}
+        isMultiShipEnabled={true}
       >
         <DetailsStep
           checkout={checkout as Checkout}
