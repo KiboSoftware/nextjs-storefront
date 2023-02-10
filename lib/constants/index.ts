@@ -122,3 +122,8 @@ export enum PurchaseTypes {
   SUBSCRIPTION = 'Subscription',
   ONETIMEPURCHASE = 'One-time purchase',
 }
+
+export const Mode = {
+  EDIT: 'Edit',
+  ADDNEW: 'AddNew',
+}

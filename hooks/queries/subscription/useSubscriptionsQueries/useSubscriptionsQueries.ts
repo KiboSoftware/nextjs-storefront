@@ -19,6 +19,7 @@ const getSubscriptions = async () => {
     document: getSubscriptionsQuery,
     variables: {},
   })
+
   return response?.subscriptions
 }
 

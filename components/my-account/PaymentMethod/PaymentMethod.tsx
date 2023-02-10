@@ -9,14 +9,8 @@ import { CardDetailsForm, SavedPaymentMethodView } from '@/components/checkout'
 import { AddressForm, AddressDetailsView } from '@/components/common'
 import { ConfirmationDialog } from '@/components/dialogs'
 import { useModalContext } from '@/context'
-import {
-  useCreateCustomerCardsMutation,
-  useDeleteCustomerCardsMutation,
-  useUpdateCustomerCardsMutation,
-  useCreateCustomerAddressMutation,
-  useUpdateCustomerAddressMutation,
-  useDeleteCustomerAddressMutation,
-} from '@/hooks'
+import { useDeleteCustomerCardsMutation, useDeleteCustomerAddressMutation } from '@/hooks'
+import { Mode } from '@/lib/constants'
 import { AddressType } from '@/lib/constants'
 import { addressGetters, cardGetters, userGetters } from '@/lib/getters'
 import { tokenizeCreditCardPayment } from '@/lib/helpers'
@@ -37,10 +31,33 @@ import type {
   CustomerContactInput,
 } from '@/lib/gql/types'
 
+export interface AddressType {
+  accountId: number
+  contactId: number
+  customerContactInput: CustomerContactInput
+}
+
+export interface CardType {
+  accountId: number
+  cardId: string
+  cardInput: {
+    id: string | undefined
+    contactId: number
+    cardType: string
+    cardNumberPart: string
+    expireMonth: number
+    expireYear: number
+    isDefaultPayMethod: boolean
+  }
+}
+
 interface PaymentMethodProps {
   user: CustomerAccount
   cards: CardCollection
   contacts: CustomerContactCollection
+  mode?: 'Edit' | 'AddNew'
+  onSave: (address: AddressType, card: CardType, isUpdatingAddress: boolean) => void
+  onClose?: () => void
 }
 
 const initialCardFormData: CardForm = {
@@ -82,29 +99,22 @@ const styles = {
   },
 }
 const PaymentMethod = (props: PaymentMethodProps) => {
-  const { user, cards, contacts } = props
+  const { user, cards, contacts, mode = Mode.EDIT, onSave, onClose } = props
   const { t } = useTranslation('common')
 
   const { showModal } = useModalContext()
 
   const savedCardsAndContacts = userGetters.getSavedCardsAndBillingDetails(cards, contacts)
-
   const savedAddresses = userGetters.getSavedAddresses(contacts)
-
   const billingAddresses = userGetters.getUserBillingAddresses(savedAddresses)
-
-  const { addSavedCardDetails } = useCreateCustomerCardsMutation()
-  const { updateSavedCardDetails } = useUpdateCustomerCardsMutation()
   const { deleteSavedCardDetails } = useDeleteCustomerCardsMutation()
 
-  const { addSavedAddressDetails } = useCreateCustomerAddressMutation()
-  const { updateSavedAddressDetails } = useUpdateCustomerAddressMutation()
   const { deleteSavedAddressDetails } = useDeleteCustomerAddressMutation()
 
   const [cardFormDetails, setCardFormDetails] = useState<CardForm>(initialCardFormData)
   const [billingFormAddress, setBillingFormAddress] = useState<Address>(initialBillingAddressData)
   const [validateForm, setValidateForm] = useState<boolean>(false)
-  const [isAddingNewPayment, setIsAddingNewPayment] = useState<boolean>(false)
+  const [isAddingNewPayment, setIsAddingNewPayment] = useState<boolean>(mode === Mode.ADDNEW)
   const [showBillingFormAddress, setShowBillingFormAddress] = useState<boolean>(false)
 
   const [isDefaultPaymentMethod, setIsDefaultPaymentMethod] = useState<boolean>(false)
@@ -194,10 +204,19 @@ const PaymentMethod = (props: PaymentMethodProps) => {
 
   const cancelAddingNewPaymentMethod = () => {
     setValidateForm(false)
-    setIsAddingNewPayment(false)
-    setShowBillingFormAddress(false)
+
     setCardFormDetails(initialCardFormData)
     setBillingFormAddress(initialBillingAddressData)
+
+    if (mode === Mode.EDIT) {
+      setIsAddingNewPayment(false)
+      setShowBillingFormAddress(false)
+    }
+
+    if (mode === Mode.ADDNEW) {
+      if (showBillingFormAddress) setShowBillingFormAddress(false)
+      if (!showBillingFormAddress) onClose && onClose()
+    }
   }
 
   const handleSaveNewPaymentMethod = async (event: { detail: number }) => {
@@ -217,7 +236,7 @@ const PaymentMethod = (props: PaymentMethodProps) => {
     setBillingFormAddress(initialBillingAddressData)
   }
 
-  const handleSaveAddress = async () => {
+  const getAddress = async () => {
     const addressData = {
       accountId: user.id,
       contactId: 0,
@@ -229,16 +248,7 @@ const PaymentMethod = (props: PaymentMethodProps) => {
 
     if (billingFormAddress.contact.id) {
       addressData.contactId = billingFormAddress.contact.id
-      const input = addressData.customerContactInput.types?.find(
-        (t) => t?.name === AddressType.BILLING
-      )
-      if (input) {
-        input.isPrimary = isDefaultPaymentMethod
-      }
-      const response = await updateSavedAddressDetails.mutateAsync({ ...addressData })
-      return response
     } else {
-      // add new contact
       addressData.customerContactInput.types = [
         {
           name: AddressType.BILLING,
@@ -246,19 +256,20 @@ const PaymentMethod = (props: PaymentMethodProps) => {
         },
       ]
       addressData.customerContactInput.accountId = user.id
-      const response = await addSavedAddressDetails.mutateAsync({ ...addressData })
-      return response
     }
+
+    return { ...addressData }
   }
 
   const handleCardAndBillingAddress = async (tokenizedCardResponse?: TokenizedCard) => {
-    // save address
-    const response = await handleSaveAddress()
-    const addressId = response.id
-    // save card
-    const cardInputFormat = {
-      id: tokenizedCardResponse?.id,
-      contactId: addressId,
+    const isUpdatingAddress = billingFormAddress.contact.id ? true : false
+    const address = await getAddress()
+    const accountId = user.id
+    const cardId = cardGetters.getCardId(cardFormDetails)
+
+    const cardInput = {
+      id: cardId ? cardId : tokenizedCardResponse?.id,
+      contactId: 0,
       cardType: cardGetters.getCardType(cardFormDetails),
       cardNumberPart: cardGetters.getCardNumber(cardFormDetails),
       expireMonth: cardGetters.getExpireMonth(cardFormDetails),
@@ -266,22 +277,7 @@ const PaymentMethod = (props: PaymentMethodProps) => {
       isDefaultPayMethod: isDefaultPaymentMethod,
     }
 
-    if (cardGetters.getCardId(cardFormDetails)) {
-      // update scenario
-      cardInputFormat.id = cardGetters.getCardId(cardFormDetails) // existing card id is not preserved due to generate tokenizeCard
-      updateSavedCardDetails.mutateAsync({
-        accountId: user.id,
-        cardId: cardGetters.getCardId(cardFormDetails),
-        cardInput: cardInputFormat,
-      })
-    } else {
-      // add new scenario
-      addSavedCardDetails.mutateAsync({
-        accountId: user.id,
-        cardInput: cardInputFormat,
-      })
-    }
-
+    await onSave(address, { accountId, cardId, cardInput }, isUpdatingAddress)
     cancelAddingNewPaymentMethod()
   }
 
@@ -444,7 +440,7 @@ const PaymentMethod = (props: PaymentMethodProps) => {
                 variant="contained"
                 color="inherit"
                 onClick={handleAddNewBillingAddress}
-                sx={{ maxWidth: '26.313rem' }}
+                sx={{ maxWidth: '26rem' }}
               >
                 {t('add-new-address')}
               </Button>

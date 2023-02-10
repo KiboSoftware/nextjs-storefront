@@ -9,3 +9,4 @@ export { default as OrderReturnItemsDialog } from './OrderReturnItemsDialog/Orde
 export { default as EditSubscriptionFrequencyDialog } from './EditSubscriptionFrequencyDialog/EditSubscriptionFrequencyDialog'
 export { default as AddressFormDialog } from './AddressFormDialog/AddressFormDialog'
 export { default as EditOrderDateDialog } from './EditOrderDateDialog/EditOrderDateDialog'
+export { default as EditBillingAddress } from './EditBillingAddress/EditBillingAddress'

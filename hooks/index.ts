@@ -97,3 +97,4 @@ export * from './mutations/useSubscription/useDeleteSubscriptionMutation/useDele
 
 export * from './mutations/multiShip/useCreateCheckoutPaymentActionMutation/useCreateCheckoutPaymentActionMutation'
 export * from './mutations/multiShip/useUpdateCheckoutPaymentActionMutation/useUpdateCheckoutPaymentActionMutation'
+export * from './mutations/useSubscription/useUpdateSubscriptionPayment/useUpdateSubscriptionPayment'

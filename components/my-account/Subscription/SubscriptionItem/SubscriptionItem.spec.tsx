@@ -5,13 +5,19 @@ import { InputLabel, FormControl, Select, MenuItem } from '@mui/material'
 import { composeStories } from '@storybook/testing-react'
 import { render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
+import { graphql } from 'msw'
 
 import * as stories from './SubscriptionItem.stories'
-import { subscriptionMock } from '@/__mocks__/stories'
+import { server } from '@/__mocks__/msw/server'
+import { subscriptionMock, customerAccountCardsMock, userAddressMock } from '@/__mocks__/stories'
 import { subscriptionItemMock } from '@/__mocks__/stories'
 import { createQueryClientWrapper } from '@/__test__/utils'
-import { subscriptionGetters } from '@/lib/getters'
-import type { Address } from '@/lib/types'
+import { AddressType, CardType } from '@/components/my-account/PaymentMethod/PaymentMethod'
+import { subscriptionGetters, userGetters } from '@/lib/getters'
+import type { Address, PaymentAndBilling } from '@/lib/types'
+
+import { CardCollection, CustomerContactCollection } from '@/lib/gql/types'
+
 const { Common } = composeStories(stories)
 const subscriptionItem = subscriptionItemMock?.items
 
@@ -23,6 +29,7 @@ interface OnFrequencySave {
     unit: string
   }
 }
+
 interface EditSubscriptionFrequencyDialogProps {
   onFrequencySave: (params: OnFrequencySave) => void
   onClose: () => void
@@ -46,6 +53,11 @@ interface KiboSelectProps {
   onChange: (name: string, value: string) => void
   value: string
   placeholder: string
+}
+
+interface EditBillingAddressProps {
+  onSave: (address: AddressType, card: CardType) => void
+  onClose: () => void
 }
 
 // Mock
@@ -113,18 +125,67 @@ jest.mock('@/components/dialogs', () => ({
       </div>
     )
   },
+  EditBillingAddress: (props: EditBillingAddressProps) => {
+    const address: AddressType = {
+      accountId: 1334,
+      contactId: 1354,
+      customerContactInput: {
+        accountId: 1334,
+        types: [{ name: 'Billing', isPrimary: false }],
+        id: 1354,
+        email: null,
+        firstName: 'Kevin',
+        middleNameOrInitial: null,
+        lastNameOrSurname: 'Watts',
+        phoneNumbers: { home: '123456789', mobile: null, work: null },
+        address: {
+          address1: 'Street 1',
+          address2: 'Apt 1',
+          address3: null,
+          address4: null,
+          cityOrTown: 'Pune',
+          stateOrProvince: 'MH',
+          postalOrZipCode: '12345',
+          countryCode: 'US',
+          addressType: 'Residential',
+          isValidated: false,
+        },
+      },
+    }
+
+    const card: CardType = {
+      accountId: 1334,
+      cardId: '',
+      cardInput: {
+        id: 'de6f29bebe9a43d1bead2480bb244418',
+        contactId: 0,
+        cardType: 'VISA',
+        cardNumberPart: '4111111111111111',
+        expireMonth: 1,
+        expireYear: 2030,
+        isDefaultPayMethod: false,
+      },
+    }
+
+    return (
+      <div>
+        <h1>edit-billing-address-mock</h1>
+        <button onClick={() => props.onSave(address, card)}>confirm</button>
+      </div>
+    )
+  },
 }))
 
 jest.mock('@/components/common/KiboSelect/KiboSelect', () => ({
   __esModule: true,
   default: ({ children, onChange, value = '', placeholder }: KiboSelectProps) => (
     <FormControl fullWidth>
-      <InputLabel id="demo-simple-select-label">select-shipping-address</InputLabel>
+      <InputLabel id="demo-simple-select-label">select-address</InputLabel>
       <Select
         data-testid="KiboSelect"
-        labelId="KiboSelect"
+        //labelId="KiboSelect"
         value={value}
-        label="Shipping Address"
+        label="kibo-select" //Shipping Address
         onChange={(event) => onChange(event.target.name, event.target.value)}
       >
         <MenuItem value={''} disabled sx={{ display: 'none' }}>
@@ -139,6 +200,16 @@ jest.mock('@/components/common/KiboSelect/KiboSelect', () => ({
 describe('[component] - SubscriptionItem', () => {
   const setup = () => {
     const user = userEvent.setup()
+
+    server.use(
+      graphql.mutation('customerAccountCards', (_req, res, ctx) => {
+        return res(ctx.data(customerAccountCardsMock))
+      }),
+      graphql.mutation('getUserAddresses', (_req, res, ctx) => {
+        return res(ctx.data(userAddressMock))
+      })
+    )
+
     render(<Common />, {
       wrapper: createQueryClientWrapper(),
     })
@@ -445,6 +516,123 @@ describe('[component] - SubscriptionItem', () => {
     })
   })
 
+  describe('edit-billing-information', () => {
+    function getRegExp(card: any) {
+      const starLength = (card.formattedAddress.match(/\*/g) || []).length
+      const leftStr = card.formattedAddress.substr(0, starLength)
+      const rightStr = card.formattedAddress.substr(card.formattedAddress.lastIndexOf('*') + 1)
+      const str = `${leftStr}.*${rightStr.replace('  ', ' ')}`
+
+      return new RegExp(str, 'i')
+    }
+
+    it('should open Popover when user clicks on edit-billing-information button', async () => {
+      const { user } = setup()
+
+      const editBillingInformationButton = screen.getByRole('button', {
+        name: /edit-billing-information/i,
+      })
+
+      // Act
+      await user.click(editBillingInformationButton)
+      const addNewAddressButton = screen.getByRole('button', {
+        name: /add-new-address/i,
+      })
+
+      // Assert
+      const kiboSelectMock = screen.getByRole('button', { expanded: false })
+
+      expect(kiboSelectMock).toBeVisible()
+      expect(addNewAddressButton).toBeVisible()
+
+      await user.click(kiboSelectMock)
+
+      const cards: CardCollection = customerAccountCardsMock.customerAccountCards
+      const contacts: CustomerContactCollection = userAddressMock.customerAccountContacts
+
+      const savedCardsAndContacts = userGetters.getSavedCardsAndBillingDetails(cards, contacts)
+      const savedCards = savedCardsAndContacts?.map((card: PaymentAndBilling) =>
+        subscriptionGetters.getFormattedBillingAddress('card-ending-in', card)
+      )
+
+      savedCards.map((card) => {
+        const cardWithBillingAddress = screen.getByText(getRegExp(card))
+        expect(cardWithBillingAddress).toBeVisible()
+      })
+    })
+
+    it('should open address-form Dialog when user clicks on add-new-address button', async () => {
+      const { user } = setup()
+
+      const editBillingInformationButton = screen.getByRole('button', {
+        name: /edit-billing-information/i,
+      })
+
+      // Act
+      await user.click(editBillingInformationButton)
+      const addNewAddressButton = screen.getByRole('button', {
+        name: /add-new-address/i,
+      })
+      await user.click(addNewAddressButton)
+
+      // Assert
+      const editBillingAddress = screen.getByText('edit-billing-address-mock')
+      expect(editBillingAddress).toBeVisible()
+    })
+
+    it('should save Billing Address when user enters new address and clicks on save button', async () => {
+      const { user } = setup()
+
+      const editBillingInformationButton = screen.getByRole('button', {
+        name: /edit-billing-information/i,
+      })
+
+      // Act
+      await user.click(editBillingInformationButton)
+
+      const addNewAddressButton = screen.getByRole('button', { name: /add-new-address/i })
+      await user.click(addNewAddressButton)
+
+      const confirmButton = screen.getByRole('button', { name: /confirm/i })
+      await user.click(confirmButton)
+
+      // Assert
+      const snackbar = screen.getByText('address-updated-successfully')
+      expect(snackbar).toBeVisible()
+    })
+
+    it('should save Billing Address when user selects existing Billing Address', async () => {
+      const { user } = setup()
+
+      const editBillingInformationButton = screen.getByRole('button', {
+        name: /edit-billing-information/i,
+      })
+
+      // Act
+      await user.click(editBillingInformationButton)
+
+      const kiboSelectMock = screen.getByRole('button', { expanded: false })
+      expect(kiboSelectMock).toBeVisible()
+      await user.click(kiboSelectMock)
+
+      const cards: CardCollection = customerAccountCardsMock.customerAccountCards
+      const contacts: CustomerContactCollection = userAddressMock.customerAccountContacts
+
+      const savedCardsAndContacts = userGetters.getSavedCardsAndBillingDetails(cards, contacts)
+      const savedCards = savedCardsAndContacts?.map((card: PaymentAndBilling) =>
+        subscriptionGetters.getFormattedBillingAddress('card-ending-in', card)
+      )
+
+      const cardWithBillingAddress = screen.getByText(getRegExp(savedCards[0]))
+      expect(cardWithBillingAddress).toBeVisible()
+      await user.click(cardWithBillingAddress)
+
+      // Assert
+      const snackbar = screen.getByText('address-updated-successfully')
+      expect(snackbar).toBeVisible()
+    })
+  })
+
   describe('edit-shipping-address', () => {
     it('should open Popover when user clicks on edit-shipping-address button', async () => {
       const { user } = setup()
@@ -461,7 +649,7 @@ describe('[component] - SubscriptionItem', () => {
 
       // Assert
       const kiboSelectMock = screen.getByRole('button', { expanded: false })
-      // const kiboSelectMock = screen.getByRole('button', { name: /select-shipping-address/i })
+      // const kiboSelectMock = screen.getByRole('button', { name: /select-address/i })
       expect(kiboSelectMock).toBeVisible()
       expect(addNewAddressButton).toBeVisible()
 

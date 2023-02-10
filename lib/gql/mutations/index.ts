@@ -44,3 +44,4 @@ export { default as performSubscriptionActionMutation } from './subscription/pau
 export { default as deleteSubscriptionMutation } from './subscription/delete-subscription-mutation'
 export { default as updateSubscriptionNextOrderDateMutation } from './subscription/update-subscription-next-order-date-mutation'
 export { default as updateSubscriptioFulfillmentInfoMutation } from './subscription/update-subscription-fulfillment-info-mutation'
+export { default as updateSubscriptioPaymentMutation } from './subscription/update-subscription-payment-mutation'

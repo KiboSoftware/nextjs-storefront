@@ -10,6 +10,7 @@ export interface KiboSelectProps {
   label?: string
   children: React.ReactNode
   sx?: SxProps<Theme>
+  disabled?: boolean
   onChange: (name: string, value: string) => void
   onBlur?: (name: string, value: string) => void
 }

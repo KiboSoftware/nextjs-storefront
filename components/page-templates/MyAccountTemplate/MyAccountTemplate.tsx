@@ -20,8 +20,15 @@ import getConfig from 'next/config'
 import { useRouter } from 'next/router'
 
 import { MyProfile, PaymentMethod, AddressBook } from '@/components/my-account'
+import { AddressType, CardType } from '@/components/my-account/PaymentMethod/PaymentMethod'
 import { useAuthContext } from '@/context'
 import { useCustomerCardsQueries, useCustomerContactsQueries } from '@/hooks'
+import {
+  useCreateCustomerCardsMutation,
+  useUpdateCustomerCardsMutation,
+  useCreateCustomerAddressMutation,
+  useUpdateCustomerAddressMutation,
+} from '@/hooks'
 
 import type { CustomerAccount } from '@/lib/gql/types'
 
@@ -89,6 +96,11 @@ const MyAccountTemplate = () => {
   const { data: cards } = useCustomerCardsQueries(user?.id as number)
   const { data: contacts } = useCustomerContactsQueries(user?.id as number)
 
+  const { addSavedCardDetails } = useCreateCustomerCardsMutation()
+  const { updateSavedCardDetails } = useUpdateCustomerCardsMutation()
+  const { addSavedAddressDetails } = useCreateCustomerAddressMutation()
+  const { updateSavedAddressDetails } = useUpdateCustomerAddressMutation()
+
   const handleGoToOrderHistory = () => {
     router.push('/my-account/order-history?filters=M-6')
   }
@@ -96,6 +108,25 @@ const MyAccountTemplate = () => {
   const handleGoToSubscription = useCallback(() => {
     router.push('/my-account/subscription')
   }, [router])
+
+  const handleSave = async (address: AddressType, card: CardType, isUpdatingAddress: boolean) => {
+    let response
+
+    // Add update address
+    if (isUpdatingAddress) response = await updateSavedAddressDetails.mutateAsync(address)
+    if (!isUpdatingAddress) response = await addSavedAddressDetails.mutateAsync(address)
+
+    const params = {
+      accountId: card.accountId,
+      cardId: card.cardId,
+      cardInput: card.cardInput,
+    }
+    params.cardInput.contactId = response.id
+
+    // Add update card
+    if (card.cardId) await updateSavedCardDetails.mutateAsync(params)
+    if (!card.cardId) await addSavedCardDetails.mutateAsync(params)
+  }
 
   const accordionData = [
     {
@@ -114,7 +145,14 @@ const MyAccountTemplate = () => {
       id: 'payment-method-accordion',
       controls: 'payment-method-content',
       header: t('payment-method'),
-      component: <PaymentMethod user={user as CustomerAccount} cards={cards} contacts={contacts} />,
+      component: (
+        <PaymentMethod
+          user={user as CustomerAccount}
+          cards={cards}
+          contacts={contacts}
+          onSave={handleSave}
+        />
+      ),
     },
   ]
 

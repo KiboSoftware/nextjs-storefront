@@ -28,6 +28,11 @@ export const subscriptionMock = {
           addressType: null,
           isValidated: false,
         },
+        phoneNumbers: {
+          home: '123456',
+          mobile: null,
+          work: null,
+        },
       },
       shippingMethodCode: '691f94b2b57e47239456ada600cdcc9e',
       shippingMethodName: 'Flat Rate',
