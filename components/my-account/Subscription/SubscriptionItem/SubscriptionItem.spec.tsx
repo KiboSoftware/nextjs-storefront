@@ -279,6 +279,39 @@ describe('[component] - SubscriptionItem', () => {
     })
   })
 
+  describe('cancel-subscription', () => {
+    it('should open Confirmation Dialog when user clicks on cancel button', async () => {
+      const { user } = setup()
+
+      const cancelButton = screen.getByRole('button', {
+        name: /cancel-subscription/i,
+      })
+
+      // Act
+      await user.click(cancelButton)
+
+      // Assert
+      expect(screen.getByRole('heading', { level: 1 })).toHaveTextContent('confirmation-dialog')
+    })
+
+    it('should cancel when user clicks on Confirm button', async () => {
+      const { user } = setup()
+
+      const cancelButton = screen.getByRole('button', {
+        name: /cancel-subscription/i,
+      })
+
+      // Act
+      await user.click(cancelButton)
+      const confirmButton = screen.getByRole('button', { name: /confirm/i })
+      await user.click(confirmButton)
+
+      // Assert
+      const snackbar = screen.getByText('subscription-paused')
+      expect(snackbar).toBeVisible()
+    })
+  })
+
   describe('pause-subscription', () => {
     it('should open Confirmation Dialog when user clicks on pause button', async () => {
       const { user } = setup()

@@ -2,7 +2,7 @@ import { renderHook } from '@testing-library/react-hooks'
 
 import { useDeleteSubscriptionMutation } from './useDeleteSubscriptionMutation'
 import { createQueryClientWrapper } from '@/__test__/utils/renderWithQueryClient'
-import { deleteSubscriptionMock } from '@/__mocks__/stories'
+import { subscriptionMock } from '@/__mocks__/stories'
 
 describe('[hooks] useDeleteSubscriptionMutation', () => {
   it('should return subscription details when subscriptionID is passed', async () => {
@@ -20,7 +20,7 @@ describe('[hooks] useDeleteSubscriptionMutation', () => {
       async () => {
         const { deleteSubscription } = useDeleteSubscriptionMutation()
         const response = await deleteSubscription.mutateAsync(params)
-        expect(response).toStrictEqual(deleteSubscriptionMock.subscription)
+        expect(response).toStrictEqual(subscriptionMock.subscription)
       },
       {
         wrapper: createQueryClientWrapper(),
