@@ -391,6 +391,10 @@ export const subscriptionHandlers = [
   graphql.mutation('updateSubscriptionFulfillmentInfo', (_req, res, ctx) => {
     return res(ctx.data(subscriptionMock))
   }),
+
+  graphql.mutation('performSubscriptionAction', (_req, res, ctx) => {
+    return res(ctx.data(subscriptionMock))
+  }),
 ]
 
 export const handlers = [

@@ -1,5 +1,3 @@
-import { Subscription } from '@/lib/gql/types'
-
 export const subscriptionMock = {
   subscription: {
     id: '149ceaac15c2eb00016c498e000045a4',

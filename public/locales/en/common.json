@@ -306,6 +306,8 @@
   "subscription-frequency-updated-successfully": "Subscription frequency updated successfully",
   "place-an-order-of-this-subscription-now": "Place an order of this subscription now?",
   "skip-next-subscription-confirmation": "Are you sure you want to skip next subscription order?",
+  "pause-subscription-confirmation": "Are you sure you want to pause subscription order?",
+  "subscription-paused": "Your subscription has been paused.",
   "next-order-skip": "Skipped next subscription order. Next order will be placed on ",
   "yes": "Yes",
   "select-next-order-date": "Select next order date",

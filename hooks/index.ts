@@ -90,6 +90,7 @@ export * from './queries/subscription/useSubscriptionsQueries/useSubscriptionsQu
 export * from './mutations/useSubscription/useOrderSubscriptionNow/useOrderSubscriptionNowMutation'
 export * from './mutations/useSubscription/useEditSubscriptionFrequencyMutation/useEditSubscriptionFrequencyMutation'
 export * from './mutations/useSubscription/useSkipNextSubscription/useSkipNextSubscriptionMutation'
+export * from './mutations/useSubscription/usePerformSubscriptionAction/usePerformSubscriptionActionMutation'
 export * from './mutations/useSubscription/useUpdateSubscriptionNextOrderDateMutation/useUpdateSubscriptionNextOrderDateMutation'
 export * from './mutations/useSubscription/useUpdateSubscriptionFulfillmentInfoMutation/updateSubscriptionFulfillmentInfoMutation'
 

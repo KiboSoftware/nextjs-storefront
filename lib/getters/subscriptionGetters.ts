@@ -82,6 +82,8 @@ const getFormattedAddress = (subscription: Subscription) => {
   }
 }
 
+const getSubscriptionReasons = (subscription: Subscription) => subscription?.reasons
+
 export const subscriptionGetters = {
   getSubscriberName,
   getSubscriberAddress,
@@ -94,4 +96,5 @@ export const subscriptionGetters = {
   getFormattedAddress,
   isSubscriptionModeAvailable,
   getFrequencyUnitAndValue,
+  getSubscriptionReasons,
 }
