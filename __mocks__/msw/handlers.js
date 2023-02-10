@@ -382,7 +382,7 @@ export const subscriptionHandlers = [
   }),
 
   graphql.mutation('deleteSubscriptionItem', (_req, res, ctx) => {
-    return res(ctx.data(deleteSubscriptionMock))
+    return res(ctx.data(subscriptionMock))
   }),
 
   graphql.mutation('updateSubscriptionFrequency', (_req, res, ctx) => {
