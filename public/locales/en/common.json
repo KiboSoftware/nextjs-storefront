@@ -308,6 +308,7 @@
   "skip-next-subscription-confirmation": "Are you sure you want to skip next subscription order?",
   "pause-subscription-confirmation": "Are you sure you want to pause subscription order?",
   "subscription-paused": "Your subscription has been paused.",
+  "cancel-subscription-confirmation": "Are you sure you want to cancel this subscription ?",
   "next-order-skip": "Skipped next subscription order. Next order will be placed on ",
   "yes": "Yes",
   "select-next-order-date": "Select next order date",
@@ -321,5 +322,6 @@
   "select-shipping-address": "Select shipping address",
   "subscription-frequency": "Subscription frequency",
 
-  "fulfillment-options": "Fulfillment Options:"
+  "fulfillment-options": "Fulfillment Options:",
+  "subscription-cancelled-successfully": "Your subscription item has been cancelled."
 }
