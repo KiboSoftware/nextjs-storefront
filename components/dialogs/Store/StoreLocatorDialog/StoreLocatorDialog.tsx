@@ -2,8 +2,8 @@ import React, { useState } from 'react'
 
 import FmdGoodIcon from '@mui/icons-material/FmdGood'
 import { Box, Button, Typography } from '@mui/material'
-import { useTranslation } from 'next-i18next'
 import getConfig from 'next/config'
+import { useTranslation } from 'next-i18next'
 
 import { KiboDialog } from '@/components/common'
 import { SearchStore } from '@/components/dialogs'
@@ -124,7 +124,9 @@ const StoreLocatorDialog = (props: StoreLocatorProps) => {
           sx={{ width: '100%' }}
           variant="contained"
           disabled={showProductAndInventory && locationInventory?.length === 0}
-          onClick={() => handleSetStore(selectedStore)}
+          onClick={() => {
+            handleSetStore(selectedStore), closeModal()
+          }}
         >
           {t('set-store')}
         </Button>

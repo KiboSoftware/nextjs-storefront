@@ -1,4 +1,4 @@
-import React, { ReactNode, useState } from 'react'
+import React, { ReactNode, useEffect, useState } from 'react'
 
 import { ArrowBackIos, ArrowForward, Close } from '@mui/icons-material'
 import {
@@ -97,6 +97,10 @@ const CategoryNestedNavigation = (props: CategoryNestedNavigationProps) => {
       })
     }
   }
+
+  useEffect(() => {
+    if (categoryTree) setActiveCategory(categoryTree)
+  }, [categoryTree])
 
   return (
     <List

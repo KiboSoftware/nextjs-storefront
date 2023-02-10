@@ -15,8 +15,8 @@ import {
   Theme,
   MenuItem,
 } from '@mui/material'
-import { useTranslation } from 'next-i18next'
 import Link from 'next/link'
+import { useTranslation } from 'next-i18next'
 
 import {
   FulfillmentOptions,
@@ -236,6 +236,7 @@ const ProductDetailTemplate = (props: ProductDetailTemplateProps) => {
         showProductAndInventory: true,
         product: product as CrProduct,
         quantity: quantity,
+        isQuickViewModal: isQuickViewModal,
         isNested: isQuickViewModal,
         NestedDialog: isQuickViewModal ? ProductQuickViewDialog : null,
         nestedDialogProps: { product: currentProduct, isQuickViewModal: true },
@@ -253,7 +254,6 @@ const ProductDetailTemplate = (props: ProductDetailTemplateProps) => {
             method: FulfillmentOptionsConstant.PICKUP,
             location: selectedStore,
           })
-          closeModal()
         },
       },
     })
