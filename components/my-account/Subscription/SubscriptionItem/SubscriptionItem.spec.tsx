@@ -12,9 +12,8 @@ import { server } from '@/__mocks__/msw/server'
 import { subscriptionMock, customerAccountCardsMock, userAddressMock } from '@/__mocks__/stories'
 import { subscriptionItemMock } from '@/__mocks__/stories'
 import { createQueryClientWrapper } from '@/__test__/utils'
-import { AddressType, CardType } from '@/components/my-account/PaymentMethod/PaymentMethod'
 import { subscriptionGetters, userGetters } from '@/lib/getters'
-import type { Address, PaymentAndBilling } from '@/lib/types'
+import type { Address, PaymentAndBilling, BillingAddress, CardType } from '@/lib/types'
 
 import { CardCollection, CustomerContactCollection } from '@/lib/gql/types'
 
@@ -56,7 +55,7 @@ interface KiboSelectProps {
 }
 
 interface EditBillingAddressProps {
-  onSave: (address: AddressType, card: CardType) => void
+  onSave: (address: BillingAddress, card: CardType) => void
   onClose: () => void
 }
 
@@ -126,7 +125,7 @@ jest.mock('@/components/dialogs', () => ({
     )
   },
   EditBillingAddress: (props: EditBillingAddressProps) => {
-    const address: AddressType = {
+    const address: BillingAddress = {
       accountId: 1334,
       contactId: 1354,
       customerContactInput: {

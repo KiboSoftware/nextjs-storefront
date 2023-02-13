@@ -21,7 +21,6 @@ import {
   EditBillingAddress,
   AddressFormDialog,
 } from '@/components/dialogs'
-import { AddressType, CardType } from '@/components/my-account/PaymentMethod/PaymentMethod'
 import { ProductOption } from '@/components/product'
 import { useModalContext, useSnackbarContext } from '@/context'
 import { useAuthContext } from '@/context'
@@ -53,6 +52,8 @@ import type {
   BillingInfo,
   PaymentAndBilling,
   SavedCard,
+  BillingAddress,
+  CardType,
 } from '@/lib/types'
 
 import type {
@@ -237,7 +238,7 @@ const SubscriptionItem = (props: SubscriptionItemProps) => {
     showSnackbar(t('address-updated-successfully'), 'success')
   }
 
-  const handleAddNewCard = async (address: AddressType, card: CardType) => {
+  const handleAddNewCard = async (address: BillingAddress, card: CardType) => {
     // Add address
     const addressResponse = await addSavedAddressDetails.mutateAsync(address)
 

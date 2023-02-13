@@ -21,6 +21,8 @@ import type {
   PaymentAndBilling,
   SavedCard,
   TokenizedCard,
+  BillingAddress,
+  CardType,
 } from '@/lib/types'
 
 import type {
@@ -31,32 +33,12 @@ import type {
   CustomerContactInput,
 } from '@/lib/gql/types'
 
-export interface AddressType {
-  accountId: number
-  contactId: number
-  customerContactInput: CustomerContactInput
-}
-
-export interface CardType {
-  accountId: number
-  cardId: string
-  cardInput: {
-    id: string | undefined
-    contactId: number
-    cardType: string
-    cardNumberPart: string
-    expireMonth: number
-    expireYear: number
-    isDefaultPayMethod: boolean
-  }
-}
-
 interface PaymentMethodProps {
   user: CustomerAccount
   cards: CardCollection
   contacts: CustomerContactCollection
   mode?: 'Edit' | 'AddNew'
-  onSave: (address: AddressType, card: CardType, isUpdatingAddress: boolean) => void
+  onSave: (address: BillingAddress, card: CardType, isUpdatingAddress: boolean) => void
   onClose?: () => void
 }
 

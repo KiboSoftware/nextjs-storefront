@@ -20,7 +20,6 @@ import getConfig from 'next/config'
 import { useRouter } from 'next/router'
 
 import { MyProfile, PaymentMethod, AddressBook } from '@/components/my-account'
-import { AddressType, CardType } from '@/components/my-account/PaymentMethod/PaymentMethod'
 import { useAuthContext } from '@/context'
 import { useCustomerCardsQueries, useCustomerContactsQueries } from '@/hooks'
 import {
@@ -29,6 +28,7 @@ import {
   useCreateCustomerAddressMutation,
   useUpdateCustomerAddressMutation,
 } from '@/hooks'
+import type { BillingAddress, CardType } from '@/lib/types'
 
 import type { CustomerAccount } from '@/lib/gql/types'
 
@@ -109,7 +109,11 @@ const MyAccountTemplate = () => {
     router.push('/my-account/subscription')
   }, [router])
 
-  const handleSave = async (address: AddressType, card: CardType, isUpdatingAddress: boolean) => {
+  const handleSave = async (
+    address: BillingAddress,
+    card: CardType,
+    isUpdatingAddress: boolean
+  ) => {
     let response
 
     // Add update address
