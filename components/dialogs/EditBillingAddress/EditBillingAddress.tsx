@@ -30,6 +30,7 @@ const EditBillingAddress = (props: EditBillingAddressProps) => {
           cards={cards}
           contacts={contacts}
           mode={'AddNew'}
+          isAddressFormInDialog={true}
           onSave={onSave}
           onClose={onClose}
         />

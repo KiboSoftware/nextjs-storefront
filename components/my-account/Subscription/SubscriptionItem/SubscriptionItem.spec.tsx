@@ -554,7 +554,7 @@ describe('[component] - SubscriptionItem', () => {
         subscriptionGetters.getFormattedBillingAddress('card-ending-in', card)
       )
 
-      savedCards.map((card) => {
+      savedCards.forEach((card) => {
         const cardWithBillingAddress = screen.getByText(getRegExp(card))
         expect(cardWithBillingAddress).toBeVisible()
       })

@@ -22,8 +22,7 @@ import {
   AddressFormDialog,
 } from '@/components/dialogs'
 import { ProductOption } from '@/components/product'
-import { useModalContext, useSnackbarContext } from '@/context'
-import { useAuthContext } from '@/context'
+import { useModalContext, useSnackbarContext, useAuthContext } from '@/context'
 import {
   useSkipNextSubscriptionMutation,
   useOrderSubscriptionNowMutation,
@@ -254,7 +253,7 @@ const SubscriptionItem = (props: SubscriptionItemProps) => {
     await saveCard(addressResponse, cardResponse)
   }
 
-  const handleUpdateCard = async (selectedValue: string) => {
+  const handleUpdateCard = (selectedValue: string) => {
     const selectedCard = savedCards.find(
       (card) => card?.formattedAddress === selectedValue
     ) as BillingInfo
@@ -263,7 +262,7 @@ const SubscriptionItem = (props: SubscriptionItemProps) => {
     const contact = selectedCard?.billingAddressInfo
 
     if (contact) {
-      await saveCard(contact, card as SavedCard)
+      saveCard(contact, card as SavedCard)
       setBillingAnchorEl(undefined)
       showSnackbar(t('address-updated-successfully'), 'success')
     }

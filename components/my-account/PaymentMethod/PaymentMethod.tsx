@@ -10,8 +10,7 @@ import { AddressForm, AddressDetailsView } from '@/components/common'
 import { ConfirmationDialog } from '@/components/dialogs'
 import { useModalContext } from '@/context'
 import { useDeleteCustomerCardsMutation, useDeleteCustomerAddressMutation } from '@/hooks'
-import { Mode } from '@/lib/constants'
-import { AddressType } from '@/lib/constants'
+import { Mode, AddressType } from '@/lib/constants'
 import { addressGetters, cardGetters, userGetters } from '@/lib/getters'
 import { tokenizeCreditCardPayment } from '@/lib/helpers'
 import type {
@@ -38,6 +37,7 @@ interface PaymentMethodProps {
   cards: CardCollection
   contacts: CustomerContactCollection
   mode?: 'Edit' | 'AddNew'
+  isAddressFormInDialog?: boolean
   onSave: (address: BillingAddress, card: CardType, isUpdatingAddress: boolean) => void
   onClose?: () => void
 }
@@ -81,7 +81,15 @@ const styles = {
   },
 }
 const PaymentMethod = (props: PaymentMethodProps) => {
-  const { user, cards, contacts, mode = Mode.EDIT, onSave, onClose } = props
+  const {
+    user,
+    cards,
+    contacts,
+    mode = Mode.EDIT,
+    isAddressFormInDialog = false,
+    onSave,
+    onClose,
+  } = props
   const { t } = useTranslation('common')
 
   const { showModal } = useModalContext()
@@ -259,7 +267,7 @@ const PaymentMethod = (props: PaymentMethodProps) => {
       isDefaultPayMethod: isDefaultPaymentMethod,
     }
 
-    await onSave(address, { accountId, cardId, cardInput }, isUpdatingAddress)
+    onSave(address, { accountId, cardId, cardInput }, isUpdatingAddress)
     cancelAddingNewPaymentMethod()
   }
 
@@ -407,6 +415,7 @@ const PaymentMethod = (props: PaymentMethodProps) => {
                   onSaveAddress={handleBillingFormAddress}
                   validateForm={validateForm}
                   onFormStatusChange={handleBillingFormValidDetails}
+                  isAddressFormInDialog={isAddressFormInDialog}
                 />
                 <FormControlLabel
                   sx={{ width: '100%', pl: '0.5rem' }}

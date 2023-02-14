@@ -2,8 +2,7 @@ import { format } from 'date-fns'
 
 import { ProductAttribute } from '../constants'
 import { addressGetters } from '@/lib/getters'
-import type { ProductCustom } from '@/lib/types'
-import type { PaymentAndBilling } from '@/lib/types'
+import type { ProductCustom, PaymentAndBilling } from '@/lib/types'
 
 import type { SbContact, SbProduct, Subscription, SbProductProperty } from '@/lib/gql/types'
 

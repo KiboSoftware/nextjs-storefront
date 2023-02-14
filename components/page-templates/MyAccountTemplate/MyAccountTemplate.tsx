@@ -21,8 +21,9 @@ import { useRouter } from 'next/router'
 
 import { MyProfile, PaymentMethod, AddressBook } from '@/components/my-account'
 import { useAuthContext } from '@/context'
-import { useCustomerCardsQueries, useCustomerContactsQueries } from '@/hooks'
 import {
+  useCustomerCardsQueries,
+  useCustomerContactsQueries,
   useCreateCustomerCardsMutation,
   useUpdateCustomerCardsMutation,
   useCreateCustomerAddressMutation,
@@ -117,8 +118,11 @@ const MyAccountTemplate = () => {
     let response
 
     // Add update address
-    if (isUpdatingAddress) response = await updateSavedAddressDetails.mutateAsync(address)
-    if (!isUpdatingAddress) response = await addSavedAddressDetails.mutateAsync(address)
+    if (isUpdatingAddress) {
+      response = await updateSavedAddressDetails.mutateAsync(address)
+    } else {
+      response = await addSavedAddressDetails.mutateAsync(address)
+    }
 
     const params = {
       accountId: card.accountId,
@@ -128,8 +132,11 @@ const MyAccountTemplate = () => {
     params.cardInput.contactId = response.id
 
     // Add update card
-    if (card.cardId) await updateSavedCardDetails.mutateAsync(params)
-    if (!card.cardId) await addSavedCardDetails.mutateAsync(params)
+    if (card.cardId) {
+      await updateSavedCardDetails.mutateAsync(params)
+    } else {
+      await addSavedCardDetails.mutateAsync(params)
+    }
   }
 
   const accordionData = [
