@@ -3,7 +3,7 @@ const checkoutResponse: CrOrder = {
   id: '137a94b6402be000013718d80000678b',
   email: 'amolp@dev.com',
   total: 125,
-  continuityOrderOrdinal:1,
+  continuityOrderOrdinal: 1,
   shippingTotal: 0,
   discountTotal: 0,
   subtotal: 125,
@@ -334,7 +334,7 @@ const checkoutResponse: CrOrder = {
           },
           address: {
             address1: '4861 Sunny Day Drive',
-            address2: '',
+            address2: '32',
             address3: '',
             address4: '',
             cityOrTown: 'Irvine',
