@@ -20,11 +20,10 @@ import {
   useCreateMultiShipCheckoutMutation,
 } from '@/hooks'
 import { FulfillmentOptions } from '@/lib/constants'
-import { checkoutGetters, userGetters } from '@/lib/getters'
+import { checkoutGetters } from '@/lib/getters'
 import type { PersonalDetails } from '@/lib/types'
 
 import type {
-  CustomerContact,
   Checkout,
   CheckoutGroupRates,
   CrShippingRate,
@@ -59,10 +58,10 @@ const MultiShipCheckoutTemplate = (props: MultiShipCheckoutProps) => {
   const { data: shippingMethods } = useCheckoutShippingMethodsQuery(
     checkoutId as string,
     checkout?.groupings &&
-      (checkout?.groupings
+      checkout?.groupings
         ?.filter((group) => group?.fulfillmentMethod === FulfillmentOptions.SHIP)
         .map((each) => each?.destinationId)
-        .join(',') as string)
+        .join(',')
   )
 
   const updateMultiShipCheckoutPersonalInfo = useUpdateMultiShipCheckoutPersonalInfoMutation()

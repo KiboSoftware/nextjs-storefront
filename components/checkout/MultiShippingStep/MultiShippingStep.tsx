@@ -1,4 +1,4 @@
-import React, { useEffect, useLayoutEffect, useRef, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 
 import { Stack, Button, Typography, SxProps, Box } from '@mui/material'
 import { Theme } from '@mui/material/styles'
@@ -441,7 +441,7 @@ const MultiShippingStep = (props: MultiShippingStepProps) => {
             <>
               <ProductItemWithAddressList
                 checkout={checkout}
-                multiShipAddresses={multiShipAddresses as MultiShipAddress[]}
+                multiShipAddresses={multiShipAddresses}
                 onUpdateDestinationAddress={createOrUpdateDestination}
                 onSelectCreateOrSetDestinationAddress={handleCreateOrSetDestinationAddress}
               />

@@ -15,7 +15,7 @@ import {
 } from '@mui/material'
 import { useTranslation } from 'next-i18next'
 
-import { AddressCard, AddressDetailsView, PromoCodeBadge } from '@/components/common'
+import { AddressDetailsView, PromoCodeBadge } from '@/components/common'
 import { useCheckoutStepContext } from '@/context'
 import { useStoreLocationsQueries } from '@/hooks'
 import { checkoutGetters, orderGetters } from '@/lib/getters'

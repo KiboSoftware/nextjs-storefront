@@ -17,10 +17,10 @@ import {
   useUpdateOrderPaymentActionMutation,
   useCreateOrderMutation,
 } from '@/hooks'
-import { orderGetters, userGetters } from '@/lib/getters'
+import { orderGetters } from '@/lib/getters'
 import type { PersonalDetails } from '@/lib/types'
 
-import type { CustomerContact, CrOrder, CrOrderInput, PaymentActionInput } from '@/lib/gql/types'
+import type { CrOrder, CrOrderInput, PaymentActionInput } from '@/lib/gql/types'
 
 interface StandardShipCheckoutProps {
   checkout: CrOrder
