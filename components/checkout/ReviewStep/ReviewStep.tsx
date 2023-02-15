@@ -190,7 +190,6 @@ const ReviewStep = (props: ReviewStepProps) => {
           <Typography variant="h3" component="h3" fontWeight={600} color="text.primary">
             {t('shipping-to-address')}
           </Typography>
-          {/* <ReviewProductItemsWithAddresses items={shipItems} /> */}
 
           <Stack
             direction="column"
@@ -243,7 +242,6 @@ const ReviewStep = (props: ReviewStepProps) => {
                       price={productGetters.getPrice(product).regular?.toString()}
                       salePrice={productGetters.getPrice(product).special?.toString()}
                       expectedDeliveryDate={item?.expectedDeliveryDate}
-                      data-testid="product-item-multi-ship"
                     />
                   </Stack>
                 </>

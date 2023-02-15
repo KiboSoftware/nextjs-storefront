@@ -243,6 +243,7 @@ const OrderReview = (props: OrderReviewProps) => {
                 display="inline"
                 pt={1}
                 key={`${paymentMethod?.cardNumberPartOrMask}-${paymentMethod?.expiry}`}
+                data-testid="payment-info"
               >
                 <Typography variant="body1">{paymentMethod?.cardType}</Typography>
                 <Typography variant="body1">{paymentMethod?.cardNumberPartOrMask}</Typography>

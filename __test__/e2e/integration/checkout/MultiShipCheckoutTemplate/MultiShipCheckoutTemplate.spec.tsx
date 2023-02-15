@@ -13,24 +13,21 @@ import {
   extraGrouping,
   orderMock,
 } from '@/__mocks__/stories'
-import {
-  addAddress,
-  addNewCard,
-  getAccountCardId,
-  getBillingAddresses,
-} from '@/__test__/e2e/helper'
+import { addAddress, addNewCard } from '@/__test__/e2e/helper'
 import { renderWithQueryClient } from '@/__test__/utils/renderWithQueryClient'
 import { MultiShipCheckoutTemplate } from '@/components/page-templates'
 import { AuthContext, DialogRoot, ModalContextProvider } from '@/context/'
 import { CheckoutStepProvider } from '@/context/CheckoutStepContext/CheckoutStepContext'
-import { FulfillmentOptions, PaymentType } from '@/lib/constants'
-import { addressGetters, cardGetters, checkoutGetters, orderGetters } from '@/lib/getters'
+import { PaymentType } from '@/lib/constants'
+import { addressGetters, checkoutGetters, orderGetters, productGetters } from '@/lib/getters'
 
 import {
   Checkout,
   CheckoutGrouping,
-  CrDestination,
+  CrContact,
   CrOrderItem,
+  CrPayment,
+  CrProduct,
   CustomerContact,
 } from '@/lib/gql/types'
 
@@ -97,7 +94,7 @@ const setup = ({
   }
 }
 
-const handleShippingMethod = async (user: any, checkoutData: Checkout) => {
+const handleShippingMethod = async (user: any, checkoutData: Checkout): Promise<Checkout> => {
   server.use(
     graphql.query('getCheckoutShippingMethods', (_req, res, ctx) => {
       return res(
@@ -186,39 +183,39 @@ const handleShippingMethod = async (user: any, checkoutData: Checkout) => {
     `${shippingRate?.shippingMethodName as string} currency`
   )
 
+  checkoutData = {
+    ...checkoutData,
+    groupings: [
+      {
+        ...(checkoutMock.checkout.groupings?.[0] as CheckoutGrouping),
+        destinationId: 'd3d30be35aa54ef7a0bdafa10094f988',
+        shippingMethodCode: shippingRate?.shippingMethodCode,
+        shippingMethodName: shippingRate?.shippingMethodName,
+      },
+      {
+        ...(checkoutMock.checkout.groupings?.[1] as CheckoutGrouping),
+        destinationId: null,
+        fulfillmentMethod: 'Pickup',
+      },
+    ],
+  }
+
   server.use(
     graphql.query('getMultiShipCheckout', (_req, res, ctx) => {
-      checkoutData = {
-        ...checkoutData,
-        email: 'guest@email.com',
-      }
       return res(
         ctx.data({
-          checkout: {
-            ...checkoutData,
-            groupings: [
-              {
-                ...(checkoutMock.checkout.groupings?.[0] as CheckoutGrouping),
-                destinationId: 'd3d30be35aa54ef7a0bdafa10094f988',
-                shippingMethodCode: shippingRate?.shippingMethodCode,
-                shippingMethodName: shippingRate?.shippingMethodName,
-              },
-              {
-                ...(checkoutMock.checkout.groupings?.[1] as CheckoutGrouping),
-                destinationId: null,
-                fulfillmentMethod: 'Pickup',
-              },
-            ],
-          },
+          checkout: checkoutData,
         })
       )
     })
   )
 
   await user.click(option)
+
+  return checkoutData
 }
 
-const handleMultiShippingMethod = async (user: any, checkoutData: Checkout) => {
+const handleMultiShippingMethod = async (user: any, checkoutData: Checkout): Promise<Checkout> => {
   expect(screen.getByRole('heading', { name: 'shipping-method' })).toBeVisible()
 
   const firstShippingMethodSelect = screen.getAllByRole('button', {
@@ -285,44 +282,45 @@ const handleMultiShippingMethod = async (user: any, checkoutData: Checkout) => {
     },
   }
 
+  checkoutData = {
+    ...checkoutData,
+    email: 'guest@email.com',
+    items: [
+      {
+        ...(checkoutMock.checkout.items?.[0] as CrOrderItem),
+        destinationId: newDestination.id,
+      },
+      {
+        ...(checkoutMock.checkout.items?.[1] as CrOrderItem),
+        destinationId: null,
+        fulfillmentMethod: 'Pickup',
+      },
+      { ...extraCheckoutShipItem, destinationId: anotherNewDestination.id },
+    ],
+    destinations: [newDestination, anotherNewDestination],
+    groupings: [
+      {
+        ...(checkoutMock.checkout.groupings?.[0] as CheckoutGrouping),
+        destinationId: newDestination.id,
+        shippingMethodCode: firstShippingRate?.shippingMethodCode,
+        shippingMethodName: firstShippingRate?.shippingMethodName,
+      },
+      {
+        ...(checkoutMock.checkout.groupings?.[1] as CheckoutGrouping),
+        destinationId: null,
+        fulfillmentMethod: 'Pickup',
+      },
+      {
+        ...extraGrouping,
+        destinationId: anotherNewDestination.id,
+      },
+    ],
+  }
   server.use(
     graphql.query('getMultiShipCheckout', (_req, res, ctx) => {
       return res(
         ctx.data({
-          checkout: {
-            ...checkoutData,
-            email: 'guest@email.com',
-            items: [
-              {
-                ...(checkoutMock.checkout.items?.[0] as CrOrderItem),
-                destinationId: newDestination.id,
-              },
-              {
-                ...(checkoutMock.checkout.items?.[1] as CrOrderItem),
-                destinationId: null,
-                fulfillmentMethod: 'Pickup',
-              },
-              { ...extraCheckoutShipItem, destinationId: anotherNewDestination.id },
-            ],
-            destinations: [newDestination, anotherNewDestination],
-            groupings: [
-              {
-                ...(checkoutMock.checkout.groupings?.[0] as CheckoutGrouping),
-                destinationId: newDestination.id,
-                shippingMethodCode: firstShippingRate?.shippingMethodCode,
-                shippingMethodName: firstShippingRate?.shippingMethodName,
-              },
-              {
-                ...(checkoutMock.checkout.groupings?.[1] as CheckoutGrouping),
-                destinationId: null,
-                fulfillmentMethod: 'Pickup',
-              },
-              {
-                ...extraGrouping,
-                destinationId: anotherNewDestination.id,
-              },
-            ],
-          },
+          checkout: checkoutData,
         })
       )
     })
@@ -342,46 +340,48 @@ const handleMultiShippingMethod = async (user: any, checkoutData: Checkout) => {
     `${secondShippingRate?.shippingMethodName as string} currency`
   )
 
+  checkoutData = {
+    ...checkoutData,
+    email: 'guest@email.com',
+    items: [
+      {
+        ...(checkoutMock.checkout.items?.[0] as CrOrderItem),
+        destinationId: newDestination.id,
+      },
+      {
+        ...(checkoutMock.checkout.items?.[1] as CrOrderItem),
+        destinationId: null,
+        fulfillmentMethod: 'Pickup',
+      },
+      { ...extraCheckoutShipItem, destinationId: anotherNewDestination.id },
+    ],
+    destinations: [newDestination, anotherNewDestination],
+    groupings: [
+      {
+        ...(checkoutMock.checkout.groupings?.[0] as CheckoutGrouping),
+        destinationId: newDestination.id,
+        shippingMethodCode: firstShippingRate?.shippingMethodCode,
+        shippingMethodName: firstShippingRate?.shippingMethodName,
+      },
+      {
+        ...(checkoutMock.checkout.groupings?.[1] as CheckoutGrouping),
+        destinationId: null,
+        fulfillmentMethod: 'Pickup',
+      },
+      {
+        ...extraGrouping,
+        destinationId: anotherNewDestination.id,
+        shippingMethodCode: secondShippingRate?.shippingMethodCode,
+        shippingMethodName: secondShippingRate?.shippingMethodName,
+      },
+    ],
+  }
+
   server.use(
     graphql.query('getMultiShipCheckout', (_req, res, ctx) => {
       return res(
         ctx.data({
-          checkout: {
-            ...checkoutData,
-            email: 'guest@email.com',
-            items: [
-              {
-                ...(checkoutMock.checkout.items?.[0] as CrOrderItem),
-                destinationId: newDestination.id,
-              },
-              {
-                ...(checkoutMock.checkout.items?.[1] as CrOrderItem),
-                destinationId: null,
-                fulfillmentMethod: 'Pickup',
-              },
-              { ...extraCheckoutShipItem, destinationId: anotherNewDestination.id },
-            ],
-            destinations: [newDestination, anotherNewDestination],
-            groupings: [
-              {
-                ...(checkoutMock.checkout.groupings?.[0] as CheckoutGrouping),
-                destinationId: newDestination.id,
-                shippingMethodCode: firstShippingRate?.shippingMethodCode,
-                shippingMethodName: firstShippingRate?.shippingMethodName,
-              },
-              {
-                ...(checkoutMock.checkout.groupings?.[1] as CheckoutGrouping),
-                destinationId: null,
-                fulfillmentMethod: 'Pickup',
-              },
-              {
-                ...extraGrouping,
-                destinationId: anotherNewDestination.id,
-                shippingMethodCode: secondShippingRate?.shippingMethodCode,
-                shippingMethodName: secondShippingRate?.shippingMethodName,
-              },
-            ],
-          },
+          checkout: checkoutData,
         })
       )
     })
@@ -390,9 +390,11 @@ const handleMultiShippingMethod = async (user: any, checkoutData: Checkout) => {
   await act(async () => {
     await user.click(secondOption)
   })
+
+  return checkoutData
 }
 
-const handleDetailsStep = async (user: any, checkoutData: Checkout) => {
+const handleDetailsStep = async (user: any, checkoutData: Checkout): Promise<Checkout> => {
   const goToShippingButton = screen.getByRole('button', { name: /go-to-shipping/ })
 
   const personalDetailsHeader = screen.getByRole('heading', { name: /personal-details/ })
@@ -403,13 +405,14 @@ const handleDetailsStep = async (user: any, checkoutData: Checkout) => {
 
   expect(emailInput).toHaveValue(checkoutData.email as string)
 
+  checkoutData = {
+    ...checkoutData,
+    email: 'guest@email.com',
+  }
+
   await act(async () => {
     server.use(
       graphql.query('getMultiShipCheckout', (_req, res, ctx) => {
-        checkoutData = {
-          ...checkoutData,
-          email: 'guest@email.com',
-        }
         return res.once(
           ctx.data({
             checkout: checkoutData,
@@ -432,6 +435,7 @@ const handleDetailsStep = async (user: any, checkoutData: Checkout) => {
   })
 
   await user.click(goToShippingButton)
+  return checkoutData
 }
 
 const handleSingleShipToHomeItem = async (user: any, checkoutData: Checkout) => {
@@ -493,35 +497,35 @@ const handleSingleShipToHomeItem = async (user: any, checkoutData: Checkout) => 
     })
   )
 
+  checkoutData = {
+    ...checkoutData,
+    items: [
+      {
+        ...(checkoutMock.checkout.items?.[0] as CrOrderItem),
+        destinationId: newDestination.id,
+      },
+      {
+        ...(checkoutMock.checkout.items?.[1] as CrOrderItem),
+        destinationId: null,
+        fulfillmentMethod: 'Pickup',
+      },
+    ],
+    destinations: [newDestination],
+    groupings: [
+      {
+        ...(checkoutMock.checkout.groupings?.[0] as CheckoutGrouping),
+        destinationId: newDestination.id,
+      },
+      {
+        ...(checkoutMock.checkout.groupings?.[1] as CheckoutGrouping),
+        destinationId: null,
+        fulfillmentMethod: 'Pickup',
+      },
+    ],
+  }
+
   server.use(
     graphql.query('getMultiShipCheckout', (_req, res, ctx) => {
-      checkoutData = {
-        ...checkoutData,
-        email: 'guest@email.com',
-        items: [
-          {
-            ...(checkoutMock.checkout.items?.[0] as CrOrderItem),
-            destinationId: newDestination.id,
-          },
-          {
-            ...(checkoutMock.checkout.items?.[1] as CrOrderItem),
-            destinationId: null,
-            fulfillmentMethod: 'Pickup',
-          },
-        ],
-        destinations: [newDestination],
-        groupings: [
-          {
-            ...(checkoutMock.checkout.groupings?.[0] as CheckoutGrouping),
-            destinationId: newDestination.id,
-          },
-          {
-            ...(checkoutMock.checkout.groupings?.[1] as CheckoutGrouping),
-            destinationId: null,
-            fulfillmentMethod: 'Pickup',
-          },
-        ],
-      }
       return res(
         ctx.data({
           checkout: checkoutData,
@@ -544,16 +548,18 @@ const handleSingleShipToHomeItem = async (user: any, checkoutData: Checkout) => 
 
   expect(screen.getByRole('radio', { name: newSavedAddressDetailsRadio })).toBeChecked()
 
-  await handleShippingMethod(user, checkoutData)
+  checkoutData = await handleShippingMethod(user, checkoutData)
 
   await waitFor(() => {
     expect(goToPaymentButton).toBeEnabled()
   })
 
   await user.click(goToPaymentButton)
+
+  return checkoutData
 }
 
-const handleMultiShipToHomeItems = async (user: any, checkoutData: Checkout) => {
+const handleMultiShipToHomeItems = async (user: any, checkoutData: Checkout): Promise<Checkout> => {
   const shipToHome = screen.queryByRole('radio', { name: 'Ship to Home' })
   const shipToMoreAddress = screen.queryByRole('radio', {
     name: 'Ship to more than one address',
@@ -671,39 +677,40 @@ const handleMultiShipToHomeItems = async (user: any, checkoutData: Checkout) => 
     })
   )
 
+  checkoutData = {
+    ...checkoutData,
+    items: [
+      {
+        ...(checkoutMock.checkout.items?.[0] as CrOrderItem),
+        destinationId: newDestination.id,
+      },
+      {
+        ...(checkoutMock.checkout.items?.[1] as CrOrderItem),
+        destinationId: null,
+        fulfillmentMethod: 'Pickup',
+      },
+      extraCheckoutShipItem,
+    ],
+    destinations: [newDestination],
+    groupings: [
+      {
+        ...(checkoutMock.checkout.groupings?.[0] as CheckoutGrouping),
+        destinationId: newDestination.id,
+      },
+      {
+        ...(checkoutMock.checkout.groupings?.[1] as CheckoutGrouping),
+        destinationId: null,
+        fulfillmentMethod: 'Pickup',
+      },
+      extraGrouping,
+    ],
+  }
+
   server.use(
     graphql.query('getMultiShipCheckout', (_req, res, ctx) => {
       return res(
         ctx.data({
-          checkout: {
-            ...checkoutData,
-            email: 'guest@email.com',
-            items: [
-              {
-                ...(checkoutMock.checkout.items?.[0] as CrOrderItem),
-                destinationId: newDestination.id,
-              },
-              {
-                ...(checkoutMock.checkout.items?.[1] as CrOrderItem),
-                destinationId: null,
-                fulfillmentMethod: 'Pickup',
-              },
-              extraCheckoutShipItem,
-            ],
-            destinations: [newDestination],
-            groupings: [
-              {
-                ...(checkoutMock.checkout.groupings?.[0] as CheckoutGrouping),
-                destinationId: newDestination.id,
-              },
-              {
-                ...(checkoutMock.checkout.groupings?.[1] as CheckoutGrouping),
-                destinationId: null,
-                fulfillmentMethod: 'Pickup',
-              },
-              extraGrouping,
-            ],
-          },
+          checkout: checkoutData,
         })
       )
     })
@@ -726,39 +733,40 @@ const handleMultiShipToHomeItems = async (user: any, checkoutData: Checkout) => 
 
   fireEvent.mouseDown(shippingMethodSecondDefault)
 
+  checkoutData = {
+    ...checkoutData,
+    items: [
+      {
+        ...(checkoutMock.checkout.items?.[0] as CrOrderItem),
+        destinationId: newDestination.id,
+      },
+      {
+        ...(checkoutMock.checkout.items?.[1] as CrOrderItem),
+        destinationId: null,
+        fulfillmentMethod: 'Pickup',
+      },
+      { ...extraCheckoutShipItem, destinationId: newDestination.id },
+    ],
+    destinations: [newDestination],
+    groupings: [
+      {
+        ...(checkoutMock.checkout.groupings?.[0] as CheckoutGrouping),
+        destinationId: newDestination.id,
+      },
+      {
+        ...(checkoutMock.checkout.groupings?.[1] as CheckoutGrouping),
+        destinationId: null,
+        fulfillmentMethod: 'Pickup',
+      },
+      { ...extraGrouping, destinationId: newDestination.id },
+    ],
+  }
+
   server.use(
     graphql.query('getMultiShipCheckout', (_req, res, ctx) => {
       return res(
         ctx.data({
-          checkout: {
-            ...checkoutData,
-            email: 'guest@email.com',
-            items: [
-              {
-                ...(checkoutMock.checkout.items?.[0] as CrOrderItem),
-                destinationId: newDestination.id,
-              },
-              {
-                ...(checkoutMock.checkout.items?.[1] as CrOrderItem),
-                destinationId: null,
-                fulfillmentMethod: 'Pickup',
-              },
-              { ...extraCheckoutShipItem, destinationId: newDestination.id },
-            ],
-            destinations: [newDestination],
-            groupings: [
-              {
-                ...(checkoutMock.checkout.groupings?.[0] as CheckoutGrouping),
-                destinationId: newDestination.id,
-              },
-              {
-                ...(checkoutMock.checkout.groupings?.[1] as CheckoutGrouping),
-                destinationId: null,
-                fulfillmentMethod: 'Pickup',
-              },
-              { ...extraGrouping, destinationId: newDestination.id },
-            ],
-          },
+          checkout: checkoutData,
         })
       )
     })
@@ -828,39 +836,41 @@ const handleMultiShipToHomeItems = async (user: any, checkoutData: Checkout) => 
     })
   )
 
+  checkoutData = {
+    ...checkoutData,
+    email: 'guest@email.com',
+    items: [
+      {
+        ...(checkoutMock.checkout.items?.[0] as CrOrderItem),
+        destinationId: newDestination.id,
+      },
+      {
+        ...(checkoutMock.checkout.items?.[1] as CrOrderItem),
+        destinationId: null,
+        fulfillmentMethod: 'Pickup',
+      },
+      { ...extraCheckoutShipItem, destinationId: anotherNewDestination.id },
+    ],
+    destinations: [newDestination, anotherNewDestination],
+    groupings: [
+      {
+        ...(checkoutMock.checkout.groupings?.[0] as CheckoutGrouping),
+        destinationId: newDestination.id,
+      },
+      {
+        ...(checkoutMock.checkout.groupings?.[1] as CheckoutGrouping),
+        destinationId: null,
+        fulfillmentMethod: 'Pickup',
+      },
+      { ...extraGrouping, destinationId: anotherNewDestination.id },
+    ],
+  }
+
   server.use(
     graphql.query('getMultiShipCheckout', (_req, res, ctx) => {
       return res(
         ctx.data({
-          checkout: {
-            ...checkoutData,
-            email: 'guest@email.com',
-            items: [
-              {
-                ...(checkoutMock.checkout.items?.[0] as CrOrderItem),
-                destinationId: newDestination.id,
-              },
-              {
-                ...(checkoutMock.checkout.items?.[1] as CrOrderItem),
-                destinationId: null,
-                fulfillmentMethod: 'Pickup',
-              },
-              { ...extraCheckoutShipItem, destinationId: anotherNewDestination.id },
-            ],
-            destinations: [newDestination, anotherNewDestination],
-            groupings: [
-              {
-                ...(checkoutMock.checkout.groupings?.[0] as CheckoutGrouping),
-                destinationId: newDestination.id,
-              },
-              {
-                ...(checkoutMock.checkout.groupings?.[1] as CheckoutGrouping),
-                destinationId: null,
-                fulfillmentMethod: 'Pickup',
-              },
-              { ...extraGrouping, destinationId: anotherNewDestination.id },
-            ],
-          },
+          checkout: checkoutData,
         })
       )
     })
@@ -878,12 +888,14 @@ const handleMultiShipToHomeItems = async (user: any, checkoutData: Checkout) => 
 
   await user.click(screen.getByRole('button', { name: 'continue' }))
 
-  await handleMultiShippingMethod(user, checkoutData)
+  checkoutData = await handleMultiShippingMethod(user, checkoutData)
 
   await user.click(screen.getByRole('button', { name: 'go-to-payment' }))
+
+  return checkoutData
 }
 
-const handlePaymentStep = async (user: any, checkoutData: Checkout) => {
+const handlePaymentStep = async (user: any, checkoutData: Checkout): Promise<Checkout> => {
   const paymentHeader = screen.getByRole('heading', { level: 2, name: 'payment-method' })
 
   expect(paymentHeader).toBeVisible()
@@ -907,210 +919,127 @@ const handlePaymentStep = async (user: any, checkoutData: Checkout) => {
 
   expect(screen.getByRole('button', { name: /review-order/ })).toBeEnabled()
 
-  const newDestination = {
-    id: 'd3d30be35aa54ef7a0bdafa10094f988',
-    destinationContact: {
-      id: null,
-      email: null,
-      firstName: 'John',
-      middleNameOrInitial: null,
-      lastNameOrSurname: 'Doe',
-      phoneNumbers: {
-        home: '9938938494',
-      },
-      address: {
-        address1: '400, Lamar Street',
-        address2: '23/1',
-        address3: null,
-        address4: null,
-        cityOrTown: 'Austin',
-        stateOrProvince: 'TX',
-        postalOrZipCode: '98984',
-        countryCode: 'US',
-        isValidated: false,
-        addressType: null,
-      },
-    },
+  checkoutData = {
+    ...checkoutData,
+    payments: orderMock.checkout.payments,
   }
-
-  const anotherNewDestination = {
-    id: '2eb59e34ef954ced8cefafa200bd1488',
-    destinationContact: {
-      id: null,
-      email: null,
-      firstName: 'Mike',
-      middleNameOrInitial: null,
-      lastNameOrSurname: 'Tyson',
-      phoneNumbers: {
-        home: '9999999999',
-      },
-      address: {
-        address1: '100, Lamar Street',
-        address2: '13/1',
-        address3: null,
-        address4: null,
-        cityOrTown: 'Austin',
-        stateOrProvince: 'TX',
-        postalOrZipCode: '98984',
-        countryCode: 'US',
-        isValidated: false,
-        addressType: null,
-      },
-    },
-  }
-
   server.use(
     graphql.query('getMultiShipCheckout', (_req, res, ctx) => {
       return res(
         ctx.data({
-          checkout: {
-            ...checkoutData,
-            email: 'guest@email.com',
-            items: [
-              {
-                ...(checkoutMock.checkout.items?.[0] as CrOrderItem),
-                destinationId: newDestination.id,
-              },
-              {
-                ...(checkoutMock.checkout.items?.[1] as CrOrderItem),
-                destinationId: null,
-                fulfillmentMethod: 'Pickup',
-              },
-              { ...extraCheckoutShipItem, destinationId: anotherNewDestination.id },
-            ],
-            destinations: [newDestination, anotherNewDestination],
-            groupings: [
-              {
-                ...(checkoutMock.checkout.groupings?.[0] as CheckoutGrouping),
-                destinationId: newDestination.id,
-              },
-              {
-                ...(checkoutMock.checkout.groupings?.[1] as CheckoutGrouping),
-                destinationId: null,
-                fulfillmentMethod: 'Pickup',
-              },
-              { ...extraGrouping, destinationId: anotherNewDestination.id },
-            ],
-            payments: orderMock.checkout.payments,
-          },
+          checkout: checkoutData,
         })
       )
     })
   )
 
   await user.click(screen.getByRole('button', { name: /review-order/ }))
+  return checkoutData
 }
 
 const handleReviewStep = async (user: any, checkoutData: Checkout) => {
-  const orderDetailsHeader = screen.getByRole('heading', { level: 2, name: 'order-details' })
-  expect(orderDetailsHeader).toBeVisible()
+  const personalDetailsSection = screen.getByTestId('personal-details')
+  expect(within(personalDetailsSection).getByText(checkoutData.email as string)).toBeVisible()
 
-  const shipToHomeHeader = screen.getByRole('heading', { level: 3, name: 'shipping-to-address' })
-  const pickupHeader = screen.getByRole('heading', { level: 3, name: 'pickup-in-store' })
-
-  expect(shipToHomeHeader).toBeVisible()
-  expect(pickupHeader).toBeVisible()
-  const { shipItems, pickupItems } = checkoutGetters.getCheckoutDetails(checkoutData)
-  expect(screen.getAllByTestId('product-item-multi-ship').length).toBe(shipItems.length)
-  expect(screen.getAllByTestId('review-pickup-items').length).toBe(pickupItems.length)
-
-  //review personal details
-  const ReviewPersonalDetails = screen.getByTestId(/personal-details/)
-  const personalDetailsReviewHeader = screen.getByRole('heading', {
-    name: /personal-details/,
-    level: 6,
-  })
-
-  expect(ReviewPersonalDetails).toContainElement(personalDetailsReviewHeader)
-
-  expect(within(ReviewPersonalDetails).getByText('guest@email.com')).toBeVisible()
-  // expect(
-  //   within(ReviewPersonalDetails).getByText(
-  //     addressGetters.getPhoneNumbers(updatedFulfillmentMock.fulfillmentContact as CrContact).home
-  //   )
-  // ).toBeVisible()
-
-  //review shipping details
-
-  const ReviewShippingDetails = screen.getByTestId(/shipping-details/)
-  const shippingDetailsReviewHeader = screen.getByRole('heading', {
-    name: /shipping-details/,
-    level: 6,
-  })
-
-  expect(ReviewShippingDetails).toContainElement(shippingDetailsReviewHeader)
-
+  // shipping address
   const multiShippingAddressesList = checkoutGetters.getOrderAddresses(
     checkoutData
   ) as CustomerContact[]
+  const shippingDetailsSection = screen.getByTestId('shipping-details')
 
-  multiShippingAddressesList.map((contact) => {
+  const shippingAddressCard = within(shippingDetailsSection).getAllByTestId('address-card')
+  expect(shippingAddressCard.length).toBe(multiShippingAddressesList.length)
+
+  multiShippingAddressesList.forEach((multiAddress, index) => {
+    expect(shippingAddressCard[index]).toBeVisible()
     expect(
-      within(ReviewShippingDetails).getByText(addressGetters.getFullName(contact))
+      within(shippingAddressCard[index]).getByText(
+        `${multiAddress.firstName} ${multiAddress.lastNameOrSurname}`
+      )
     ).toBeVisible()
     expect(
-      within(ReviewShippingDetails).getByText(addressGetters.getAddress1(contact.address))
+      within(shippingAddressCard[index]).getByText(multiAddress?.address?.address1 as string)
     ).toBeVisible()
     expect(
-      within(ReviewShippingDetails).getByText(addressGetters.getAddress2(contact.address))
+      within(shippingAddressCard[index]).getByText(multiAddress?.address?.address2 as string)
     ).toBeVisible()
     expect(
-      within(ReviewShippingDetails).getByText(addressGetters.getCityOrTown(contact.address))
+      within(shippingAddressCard[index]).getByText(multiAddress?.address?.cityOrTown as string)
     ).toBeVisible()
     expect(
-      within(ReviewShippingDetails).getByText(addressGetters.getStateOrProvince(contact.address))
+      within(shippingAddressCard[index]).getByText(multiAddress?.address?.stateOrProvince as string)
     ).toBeVisible()
     expect(
-      within(ReviewShippingDetails).getByText(addressGetters.getPostalOrZipCode(contact.address))
+      within(shippingAddressCard[index]).getByText(multiAddress?.address?.postalOrZipCode as string)
     ).toBeVisible()
   })
 
-  //review billing details
-  const ReviewBillingDetails = screen.getByTestId(/billing-address/)
-  const billingDetailsReviewHeader = screen.getByRole('heading', {
-    name: /billing-address/,
-    level: 6,
+  // billing address
+  const billingAddressSection = screen.getByTestId('billing-address')
+  const selectedPayment = orderGetters.getSelectedPaymentMethods(
+    checkoutData,
+    PaymentType.CREDITCARD
+  )?.[0] as CrPayment
+  const billingContact = selectedPayment?.billingInfo?.billingContact
+
+  const billingAddressCard = within(billingAddressSection).getByTestId('address-card')
+  expect(billingAddressCard).toBeVisible()
+  expect(
+    within(billingAddressCard).getByText(
+      `${billingContact?.firstName} ${billingContact?.lastNameOrSurname}`
+    )
+  ).toBeVisible()
+  expect(
+    within(billingAddressCard).getByText(billingContact?.address?.address1 as string)
+  ).toBeVisible()
+  expect(
+    within(billingAddressCard).getByText(billingContact?.address?.address2 as string)
+  ).toBeVisible()
+  expect(
+    within(billingAddressCard).getByText(billingContact?.address?.cityOrTown as string)
+  ).toBeVisible()
+  expect(
+    within(billingAddressCard).getByText(billingContact?.address?.stateOrProvince as string)
+  ).toBeVisible()
+  expect(
+    within(billingAddressCard).getByText(billingContact?.address?.postalOrZipCode as string)
+  ).toBeVisible()
+
+  //payment-method
+  const paymentMethodSection = screen.getByTestId('payment-method')
+  const paymentCard = within(paymentMethodSection).getByTestId('payment-info')
+  expect(paymentCard).toBeVisible()
+
+  expect(
+    within(paymentCard).getByText(selectedPayment.billingInfo?.card?.paymentOrCardType as string)
+  ).toBeVisible()
+  expect(
+    within(paymentCard).getByText(selectedPayment.billingInfo?.card?.cardNumberPartOrMask as string)
+  ).toBeVisible()
+
+  expect(
+    within(paymentCard).getByText(
+      `${selectedPayment.billingInfo?.card?.expireMonth} / ${selectedPayment.billingInfo?.card?.expireYear}`
+    )
+  ).toBeVisible()
+
+  // ship items
+  const shipItemsSection = screen.getByTestId('product-item-stack-multi-ship')
+
+  const { shipItems } = checkoutGetters.getCheckoutDetails(checkoutData)
+
+  shipItems.forEach((item) => {
+    const destination = checkoutData.destinations?.find(
+      (destination) => destination?.id === item?.destinationId
+    )
+    const formattedAddress = destination
+      ? addressGetters.getFormattedAddress(destination?.destinationContact as CrContact)
+      : ''
+    expect(within(shipItemsSection).getByText(formattedAddress))
+    expect(
+      within(shipItemsSection).getByText(productGetters.getName(item.product as CrProduct))
+    ).toBeVisible()
   })
-
-  expect(ReviewBillingDetails).toContainElement(billingDetailsReviewHeader)
-
-  const { billingDetails } = orderGetters.getCheckoutDetails(checkoutData as any)
-  const { billingAddress } = billingDetails
-
-  expect(
-    within(ReviewBillingDetails).getByText(addressGetters.getFullName(billingDetails))
-  ).toBeVisible()
-  expect(
-    within(ReviewBillingDetails).getByText(addressGetters.getAddress1(billingAddress))
-  ).toBeVisible()
-  expect(
-    within(ReviewBillingDetails).getByText(addressGetters.getAddress2(billingAddress))
-  ).toBeVisible()
-  expect(
-    within(ReviewBillingDetails).getByText(addressGetters.getCityOrTown(billingAddress))
-  ).toBeVisible()
-  expect(
-    within(ReviewBillingDetails).getByText(addressGetters.getStateOrProvince(billingAddress))
-  ).toBeVisible()
-  expect(
-    within(ReviewBillingDetails).getByText(addressGetters.getPostalOrZipCode(billingAddress))
-  ).toBeVisible()
-
-  //review Payment details
-  const ReviewPaymentDetails = screen.getByTestId(/payment-method/)
-  const paymentMethodReviewHeader = screen.getByRole('heading', {
-    name: /payment-method/,
-    level: 6,
-  })
-
-  expect(ReviewPaymentDetails).toContainElement(paymentMethodReviewHeader)
-
-  const card = orderGetters.getPaymentMethods(checkoutData as any)?.[0]
-
-  expect(within(ReviewPaymentDetails).getByText(cardGetters.getCardType(card))).toBeVisible()
-  expect(within(ReviewPaymentDetails).getByText(card.cardNumberPartOrMask)).toBeVisible()
-
-  expect(within(ReviewPaymentDetails).getByText(card.expiry)).toBeVisible()
 
   const iAgreeCheckbox = screen.getByRole('checkbox', { name: /termsConditions/i })
 
@@ -1135,35 +1064,37 @@ describe('[integration] MultiShipCheckoutTemplate', () => {
   describe('Authenticated user', () => {
     describe("user doesn't have any saved addresses", () => {
       describe('checking out for one single ship to home and one pickup in store item', () => {
-        const checkoutData: Checkout = {
-          ...checkoutMock.checkout,
-          destinations: [],
-          items: [
-            { ...(checkoutMock.checkout.items?.[0] as CrOrderItem), destinationId: null },
-            {
-              ...(checkoutMock.checkout.items?.[1] as CrOrderItem),
-              destinationId: null,
-              fulfillmentMethod: 'Pickup',
-            },
-          ],
-          groupings: [
-            {
-              ...(checkoutMock.checkout.groupings?.[0] as CheckoutGrouping),
-              destinationId: null,
-            },
-            {
-              ...(checkoutMock.checkout.groupings?.[1] as CheckoutGrouping),
-              destinationId: null,
-              fulfillmentMethod: 'Pickup',
-            },
-          ],
+        const checkoutData = {
+          mock: {
+            ...checkoutMock.checkout,
+            destinations: [],
+            items: [
+              { ...(checkoutMock.checkout.items?.[0] as CrOrderItem), destinationId: null },
+              {
+                ...(checkoutMock.checkout.items?.[1] as CrOrderItem),
+                destinationId: null,
+                fulfillmentMethod: 'Pickup',
+              },
+            ],
+            groupings: [
+              {
+                ...(checkoutMock.checkout.groupings?.[0] as CheckoutGrouping),
+                destinationId: null,
+              },
+              {
+                ...(checkoutMock.checkout.groupings?.[1] as CheckoutGrouping),
+                destinationId: null,
+                fulfillmentMethod: 'Pickup',
+              },
+            ],
+          } as Checkout,
         }
         beforeEach(() => {
           server.use(
             graphql.query('getMultiShipCheckout', (_req, res, ctx) => {
               return res(
                 ctx.data({
-                  checkout: checkoutData,
+                  checkout: checkoutData.mock,
                 })
               )
             })
@@ -1175,41 +1106,43 @@ describe('[integration] MultiShipCheckoutTemplate', () => {
             isAuthenticated: true,
           })
 
-          await handleDetailsStep(user, checkoutData)
+          checkoutData.mock = await handleDetailsStep(user, checkoutData.mock)
 
-          await handleSingleShipToHomeItem(user, checkoutData)
+          checkoutData.mock = await handleSingleShipToHomeItem(user, checkoutData.mock)
 
-          await handlePaymentStep(user, checkoutData)
+          checkoutData.mock = await handlePaymentStep(user, checkoutData.mock)
 
-          // await handleReviewStep(user, checkoutData)
+          await handleReviewStep(user, checkoutData.mock)
         })
       })
 
       describe('checking out for more than one single ship to home', () => {
-        const checkoutData: Checkout = {
-          ...checkoutMock.checkout,
-          destinations: [],
-          items: [
-            { ...(checkoutMock.checkout.items?.[0] as CrOrderItem), destinationId: null },
-            {
-              ...(checkoutMock.checkout.items?.[1] as CrOrderItem),
-              destinationId: null,
-              fulfillmentMethod: 'Pickup',
-            },
-            extraCheckoutShipItem,
-          ],
-          groupings: [
-            {
-              ...(checkoutMock.checkout.groupings?.[0] as CheckoutGrouping),
-              destinationId: null,
-            },
-            {
-              ...(checkoutMock.checkout.groupings?.[1] as CheckoutGrouping),
-              destinationId: null,
-              fulfillmentMethod: 'Pickup',
-            },
-            extraGrouping,
-          ],
+        const checkoutData = {
+          mock: {
+            ...checkoutMock.checkout,
+            destinations: [],
+            items: [
+              { ...(checkoutMock.checkout.items?.[0] as CrOrderItem), destinationId: null },
+              {
+                ...(checkoutMock.checkout.items?.[1] as CrOrderItem),
+                destinationId: null,
+                fulfillmentMethod: 'Pickup',
+              },
+              extraCheckoutShipItem,
+            ],
+            groupings: [
+              {
+                ...(checkoutMock.checkout.groupings?.[0] as CheckoutGrouping),
+                destinationId: null,
+              },
+              {
+                ...(checkoutMock.checkout.groupings?.[1] as CheckoutGrouping),
+                destinationId: null,
+                fulfillmentMethod: 'Pickup',
+              },
+              extraGrouping,
+            ],
+          } as Checkout,
         }
 
         beforeEach(() => {
@@ -1217,7 +1150,7 @@ describe('[integration] MultiShipCheckoutTemplate', () => {
             graphql.query('getMultiShipCheckout', (_req, res, ctx) => {
               return res(
                 ctx.data({
-                  checkout: checkoutData,
+                  checkout: checkoutData.mock,
                 })
               )
             })
@@ -1229,11 +1162,13 @@ describe('[integration] MultiShipCheckoutTemplate', () => {
             isAuthenticated: true,
           })
 
-          await handleDetailsStep(user, checkoutData)
+          checkoutData.mock = await handleDetailsStep(user, checkoutData.mock)
 
-          await handleMultiShipToHomeItems(user, checkoutData)
+          checkoutData.mock = await handleMultiShipToHomeItems(user, checkoutData.mock)
 
-          await handlePaymentStep(user, checkoutData)
+          checkoutData.mock = await handlePaymentStep(user, checkoutData.mock)
+
+          await handleReviewStep(user, checkoutData.mock)
         })
       })
     })
