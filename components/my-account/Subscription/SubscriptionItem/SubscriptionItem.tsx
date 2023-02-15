@@ -1,6 +1,15 @@
 import React, { useEffect, useState } from 'react'
 
-import { Card, Stack, Typography, CardContent, Button, MenuItem } from '@mui/material'
+import {
+  Card,
+  Stack,
+  Typography,
+  CardContent,
+  Button,
+  MenuItem,
+  useTheme,
+  useMediaQuery,
+} from '@mui/material'
 import Popover from '@mui/material/Popover'
 import { useTranslation } from 'next-i18next'
 
@@ -9,29 +18,51 @@ import {
   ConfirmationDialog,
   EditSubscriptionFrequencyDialog,
   EditOrderDateDialog,
+  EditBillingAddress,
   AddressFormDialog,
 } from '@/components/dialogs'
 import { ProductOption } from '@/components/product'
-import { useModalContext, useSnackbarContext } from '@/context'
+import { useModalContext, useSnackbarContext, useAuthContext } from '@/context'
 import {
   useSkipNextSubscriptionMutation,
   useOrderSubscriptionNowMutation,
   useEditSubscriptionFrequencyMutation,
   useUpdateSubscriptionNextOrderDateMutation,
   useUpdateSubscriptionFulfillmentInfoMutation,
+  useUpdateSubscriptionPaymentMutation,
+  useCustomerCardsQueries,
+  useCustomerContactsQueries,
+  useCreateCustomerCardsMutation,
+  useCreateCustomerAddressMutation,
   usePerformSubscriptionActionMutation,
   useDeleteSubscriptionMutation,
 } from '@/hooks'
-import { subscriptionGetters, productGetters } from '@/lib/getters'
+import { subscriptionGetters, productGetters, userGetters } from '@/lib/getters'
 import {
   uiHelpers,
   buildSubscriptionFulfillmentInfoParams,
+  buildUpdateSubscriptionPaymentParams,
   buildPauseSubscriptionParams,
   buildCancelSubscriptionParams,
 } from '@/lib/helpers'
-import type { Address, FulfillmentInfo } from '@/lib/types'
+import type {
+  Address,
+  FulfillmentInfo,
+  BillingInfo,
+  PaymentAndBilling,
+  SavedCard,
+  BillingAddress,
+  CardType,
+} from '@/lib/types'
 
-import type { CrProduct, Subscription } from '@/lib/gql/types'
+import type {
+  CrProduct,
+  Subscription,
+  SbContact,
+  Card as CardGqlType,
+  CustomerContact,
+  CustomerAccount,
+} from '@/lib/gql/types'
 
 interface SubscriptionItemProps {
   subscriptionDetailsData: Subscription
@@ -82,11 +113,17 @@ const style = {
 const SubscriptionItem = (props: SubscriptionItemProps) => {
   const { subscriptionDetailsData, fulfillmentInfoList } = props
 
-  const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | undefined>(undefined)
-  const [fulfillmentInfo, setFulfillmentInfo] = useState<FulfillmentInfo | undefined>(undefined)
+  const [shippingAnchorEl, setShippingAnchorEl] = useState<HTMLButtonElement | undefined>(undefined)
+  const [shippingAddress, setShippingAddress] = useState<FulfillmentInfo | undefined>(undefined)
+
+  const [billingAnchorEl, setBillingAnchorEl] = useState<HTMLButtonElement | undefined>(undefined)
+  const [billingAddress, setBillingAddress] = useState<BillingInfo | undefined>(undefined)
+
+  const { user } = useAuthContext()
 
   const { getProductLink } = uiHelpers()
   const { t } = useTranslation('common')
+
   const { showModal, closeModal } = useModalContext()
   const { showSnackbar } = useSnackbarContext()
 
@@ -98,9 +135,18 @@ const SubscriptionItem = (props: SubscriptionItemProps) => {
   const { updateSubscriptionNextOrderDateMutation } = useUpdateSubscriptionNextOrderDateMutation()
   const { updateSubscriptionFulfillmentInfoMutation } =
     useUpdateSubscriptionFulfillmentInfoMutation()
+  const { updateSubscriptionPaymentMutation } = useUpdateSubscriptionPaymentMutation()
+  const { data: cards } = useCustomerCardsQueries(user?.id as number)
+  const { data: contacts } = useCustomerContactsQueries(user?.id as number)
+  const { addSavedCardDetails } = useCreateCustomerCardsMutation()
+  const { addSavedAddressDetails } = useCreateCustomerAddressMutation()
+
+  const Theme = useTheme()
+  const mobileView = useMediaQuery(Theme.breakpoints.down('md'))
 
   const handleShowDialog = (component: any, params: any) => {
-    setAnchorEl(undefined)
+    setShippingAnchorEl(undefined)
+    setBillingAnchorEl(undefined)
 
     showModal({
       Component: component,
@@ -164,20 +210,86 @@ const SubscriptionItem = (props: SubscriptionItemProps) => {
   }
 
   // Edit Billing Information
+  const isBillingPopupOpen = Boolean(billingAnchorEl)
+  const billingPopupId = isBillingPopupOpen ? 'simple-billing-popover' : undefined
+
+  const savedCardsAndContacts = userGetters.getSavedCardsAndBillingDetails(cards, contacts)
+  const savedCards = savedCardsAndContacts?.map((card: PaymentAndBilling) =>
+    subscriptionGetters.getFormattedBillingAddress(t('card-ending-in'), card)
+  )
+
+  const handleBillingPopupOpen = async (event: React.MouseEvent<HTMLButtonElement>) => {
+    setBillingAnchorEl(event.currentTarget)
+  }
+
+  const handleBillingPopupClose = () => setBillingAnchorEl(undefined)
+
+  const saveCard = async (contact: SbContact | CustomerContact, card: SavedCard | CardGqlType) => {
+    const params = buildUpdateSubscriptionPaymentParams(
+      user as CustomerAccount,
+      subscriptionDetailsData,
+      contact,
+      card
+    )
+
+    await updateSubscriptionPaymentMutation.mutateAsync(params)
+    closeModal()
+    showSnackbar(t('address-updated-successfully'), 'success')
+  }
+
+  const handleAddNewCard = async (address: BillingAddress, card: CardType) => {
+    // Add address
+    const addressResponse = await addSavedAddressDetails.mutateAsync(address)
+
+    const params = {
+      accountId: card.accountId,
+      cardId: card.cardId,
+      cardInput: card.cardInput,
+    }
+    params.cardInput.contactId = addressResponse.id
+
+    // Add card
+    const cardResponse = await addSavedCardDetails.mutateAsync(params)
+    await saveCard(addressResponse, cardResponse)
+  }
+
+  const handleUpdateCard = (selectedValue: string) => {
+    const selectedCard = savedCards.find(
+      (card) => card?.formattedAddress === selectedValue
+    ) as BillingInfo
+
+    const card = selectedCard?.cardInfo
+    const contact = selectedCard?.billingAddressInfo
+
+    if (contact) {
+      saveCard(contact, card as SavedCard)
+      setBillingAnchorEl(undefined)
+      showSnackbar(t('address-updated-successfully'), 'success')
+    }
+  }
+
+  const setCurrentCardAsDefault = () => {
+    const currentCardId = subscriptionDetailsData?.payment?.billingInfo?.card?.paymentServiceCardId
+    const currentCard = savedCards.find((card) => card.cardInfo?.id === currentCardId)
+
+    if (currentCard) setBillingAddress(currentCard as BillingInfo)
+  }
+
+  const handleCloseModal = () => closeModal()
 
   // Edit Shipping Address
-  const open = Boolean(anchorEl)
-  const id = open ? 'simple-popover' : undefined
+  const isShippingPopupOpen = Boolean(shippingAnchorEl)
+  const shippingPopupId = isShippingPopupOpen ? 'simple-shipping-popover' : undefined
 
-  const handlePopupOpen = (event: React.MouseEvent<HTMLButtonElement>) => {
-    setAnchorEl(event.currentTarget)
+  const handleShippingPopupOpen = (event: React.MouseEvent<HTMLButtonElement>) => {
+    setShippingAnchorEl(event.currentTarget)
   }
 
-  const handlePopupClose = () => {
-    setAnchorEl(undefined)
+  const handleShippingPopupClose = () => {
+    setShippingAnchorEl(undefined)
   }
 
-  const handleAddNewAddress = async (data: Address) => {
+  const saveShippingAddress = async (data: Address) => {
     const params = buildSubscriptionFulfillmentInfoParams(subscriptionDetailsData, data)
     await updateSubscriptionFulfillmentInfoMutation.mutateAsync(params)
 
@@ -191,20 +303,33 @@ const SubscriptionItem = (props: SubscriptionItemProps) => {
     await performSubscriptionActionMutation.mutateAsync(params)
     showSnackbar(t('subscription-paused'), 'success')
   }
+  const handleAddNewShippingAddress = async (data: Address) => saveShippingAddress(data)
 
-  useEffect(() => {
-    const updateAddress = async () => {
-      const contact = fulfillmentInfo?.fulfillmentContact
+  const handleUpdateShippingAddress = async (selectedValue: string) => {
+    const selectedAddress = fulfillmentInfoList.find(
+      (item) => item.formattedAddress === selectedValue
+    )
+    const contact = selectedAddress?.fulfillmentContact
 
-      if (contact) {
-        await handleAddNewAddress({ contact } as Address)
-        setAnchorEl(undefined)
-        showSnackbar(t('address-updated-successfully'), 'success')
-      }
+    if (contact) {
+      await saveShippingAddress({ contact } as Address)
+      setShippingAnchorEl(undefined)
+      showSnackbar(t('address-updated-successfully'), 'success')
     }
+  }
 
-    updateAddress()
-  }, [fulfillmentInfo])
+  const setCurrentShippingAddressAsDefault = () => {
+    const currentShippingAddress = subscriptionGetters.getFormattedAddress(subscriptionDetailsData)
+    if (currentShippingAddress) setShippingAddress(currentShippingAddress)
+  }
+
+  // Pause Subscription
+  useEffect(() => {
+    setCurrentCardAsDefault()
+    setCurrentShippingAddressAsDefault()
+  }, [])
+  useEffect(() => setCurrentCardAsDefault(), [subscriptionDetailsData?.payment])
+  useEffect(() => setCurrentShippingAddressAsDefault(), [subscriptionDetailsData?.fulfillmentInfo])
 
   return (
     <Card sx={{ ...style.card }}>
@@ -330,9 +455,65 @@ const SubscriptionItem = (props: SubscriptionItemProps) => {
               >
                 {t('skip-shipment')}
               </Button>
-              <Button variant="contained" color="secondary" sx={{ ...style.button }}>
+              <Button
+                variant="contained"
+                color="secondary"
+                sx={{ ...style.button }}
+                onClick={handleBillingPopupOpen}
+              >
                 {t('edit-billing-information')}
               </Button>
+
+              <Popover
+                id={billingPopupId}
+                open={isBillingPopupOpen}
+                anchorEl={billingAnchorEl}
+                onClose={handleBillingPopupClose}
+                anchorOrigin={{
+                  vertical: 'bottom',
+                  horizontal: 'left',
+                }}
+              >
+                <div style={{ padding: '20px' }}>
+                  <KiboSelect
+                    name="billingAddress"
+                    onChange={(name: string, value: string) => handleUpdateCard(value)}
+                    placeholder={t('select-billing-address')}
+                    value={billingAddress?.formattedAddress}
+                    disabled={updateSubscriptionPaymentMutation.isLoading}
+                  >
+                    {savedCards?.map((card) => {
+                      return (
+                        <MenuItem
+                          key={card.formattedAddress}
+                          value={`${card.formattedAddress}`}
+                          sx={{ fontSize: mobileView ? '0.75rem' : '1rem' }}
+                        >
+                          {card.formattedAddress}
+                        </MenuItem>
+                      )
+                    })}
+                  </KiboSelect>
+
+                  <Button
+                    variant="contained"
+                    color="primary"
+                    sx={{ ...style.button }}
+                    onClick={() =>
+                      handleShowDialog(EditBillingAddress, {
+                        user,
+                        cards,
+                        contacts,
+                        onSave: handleAddNewCard,
+                        onClose: handleCloseModal,
+                      })
+                    }
+                    disabled={updateSubscriptionPaymentMutation.isLoading}
+                  >
+                    {t('add-new-address')}
+                  </Button>
+                </div>
+              </Popover>
             </Stack>
             <Stack direction={'row'} sx={{ whiteSpace: 'nowrap' }} gap={2}>
               <Button
@@ -354,16 +535,16 @@ const SubscriptionItem = (props: SubscriptionItemProps) => {
                 variant="contained"
                 color="secondary"
                 sx={{ ...style.button }}
-                onClick={handlePopupOpen}
+                onClick={handleShippingPopupOpen}
               >
                 {t('edit-shipping-address')}
               </Button>
 
               <Popover
-                id={id}
-                open={open}
-                anchorEl={anchorEl}
-                onClose={handlePopupClose}
+                id={shippingPopupId}
+                open={isShippingPopupOpen}
+                anchorEl={shippingAnchorEl}
+                onClose={handleShippingPopupClose}
                 anchorOrigin={{
                   vertical: 'bottom',
                   horizontal: 'left',
@@ -372,13 +553,10 @@ const SubscriptionItem = (props: SubscriptionItemProps) => {
                 <div style={{ padding: '20px' }}>
                   <KiboSelect
                     name="shippingAddress"
-                    onChange={(name: string, value: string) =>
-                      setFulfillmentInfo(
-                        fulfillmentInfoList.find((item) => item.formattedAddress === value)
-                      )
-                    }
+                    onChange={(name: string, value: string) => handleUpdateShippingAddress(value)}
                     placeholder={t('select-shipping-address')}
-                    value={fulfillmentInfo?.formattedAddress}
+                    value={shippingAddress?.formattedAddress}
+                    disabled={updateSubscriptionFulfillmentInfoMutation.isLoading}
                   >
                     {fulfillmentInfoList?.map((item) => {
                       return (
@@ -398,9 +576,10 @@ const SubscriptionItem = (props: SubscriptionItemProps) => {
                         subscriptionId: subscriptionDetailsData?.id as string,
                         isUserLoggedIn: true,
                         setAutoFocus: true,
-                        onSaveAddress: handleAddNewAddress,
+                        onSaveAddress: handleAddNewShippingAddress,
                       })
                     }
+                    disabled={updateSubscriptionFulfillmentInfoMutation.isLoading}
                   >
                     {t('add-new-address')}
                   </Button>

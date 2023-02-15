@@ -151,7 +151,7 @@ export const accountHandlers = [
   }),
 
   graphql.mutation('createCustomerAccountContact', (_req, res, ctx) => {
-    return res(ctx.data({ mockCreateCustomerAccount }))
+    return res(ctx.data({ ...mockCreateCustomerAccount }))
   }),
 
   graphql.mutation('updateCustomerAccountContact', (_req, res, ctx) => {
@@ -390,6 +390,10 @@ export const subscriptionHandlers = [
   }),
 
   graphql.mutation('updateSubscriptionNextOrderDate', (_req, res, ctx) => {
+    return res(ctx.data(subscriptionMock))
+  }),
+
+  graphql.mutation('updateSubscriptionPayment', (_req, res, ctx) => {
     return res(ctx.data(subscriptionMock))
   }),
 

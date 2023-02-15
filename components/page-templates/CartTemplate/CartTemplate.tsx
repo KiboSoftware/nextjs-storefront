@@ -7,8 +7,8 @@ import {
   Stack,
   Button,
   useTheme,
-  useMediaQuery,
   Divider,
+  useMediaQuery,
 } from '@mui/material'
 import { useTranslation } from 'next-i18next'
 import Link from 'next/link'

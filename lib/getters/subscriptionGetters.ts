@@ -2,7 +2,7 @@ import { format } from 'date-fns'
 
 import { ProductAttribute } from '../constants'
 import { addressGetters } from '@/lib/getters'
-import type { ProductCustom } from '@/lib/types'
+import type { ProductCustom, PaymentAndBilling } from '@/lib/types'
 
 import type { SbContact, SbProduct, Subscription, SbProductProperty } from '@/lib/gql/types'
 
@@ -20,8 +20,10 @@ const getSubscriberAddress = (subscription: Subscription): string =>
 const getSubscriptionFrequency = (subscription: Subscription) =>
   `${subscription?.frequency?.value} ${subscription?.frequency?.unit}`
 
-const nextOrderItemDate = (subscription: Subscription) =>
-  format(new Date(subscription?.nextOrderDate), 'MMMM dd, yyyy')
+const nextOrderItemDate = (subscription: Subscription) => {
+  if (!subscription) return
+  return format(new Date(subscription?.nextOrderDate), 'MMMM dd, yyyy')
+}
 
 const getSubscriptionNumber = (subscription: Subscription) => subscription?.number
 
@@ -72,6 +74,8 @@ const getFrequencyUnitAndValue = (selectedFrequency: string) => {
 }
 
 const getFormattedAddress = (subscription: Subscription) => {
+  if (!subscription) return
+
   const formattedAddress = addressGetters.getFormattedAddress(
     subscription.fulfillmentInfo?.fulfillmentContact as SbContact
   )
@@ -83,6 +87,19 @@ const getFormattedAddress = (subscription: Subscription) => {
 }
 
 const getSubscriptionReasons = (subscription: Subscription) => subscription?.reasons
+const getFormattedBillingAddress = (text: string, card: PaymentAndBilling) => {
+  const formattedAddress = addressGetters.getFormattedAddress(
+    card.billingAddressInfo?.contact as SbContact
+  )
+
+  const cardNumberPart = card.cardInfo?.cardNumberPart
+
+  return {
+    formattedAddress: `${text} ${cardNumberPart}, ${formattedAddress}`,
+    cardInfo: card.cardInfo,
+    billingAddressInfo: card.billingAddressInfo?.contact as SbContact,
+  }
+}
 
 export const subscriptionGetters = {
   getSubscriberName,
@@ -97,4 +114,5 @@ export const subscriptionGetters = {
   isSubscriptionModeAvailable,
   getFrequencyUnitAndValue,
   getSubscriptionReasons,
+  getFormattedBillingAddress,
 }

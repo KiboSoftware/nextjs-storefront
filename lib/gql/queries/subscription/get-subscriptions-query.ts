@@ -17,6 +17,7 @@ const getSubscriptionsQuery = /* GraphQL */ `
           fulfillmentContact {
             firstName
             lastNameOrSurname
+            email
             address {
               address1
               address2
@@ -24,6 +25,11 @@ const getSubscriptionsQuery = /* GraphQL */ `
               stateOrProvince
               postalOrZipCode
               countryCode
+            }
+            phoneNumbers {
+              home
+              mobile
+              work
             }
           }
           shippingMethodCode
@@ -34,6 +40,46 @@ const getSubscriptionsQuery = /* GraphQL */ `
           value
         }
         nextOrderDate
+        payment {
+          amountCredited
+          amountCollected
+          amountRequested
+          paymentType
+          paymentServiceTransactionId
+          billingInfo {
+            card {
+              paymentOrCardType
+              expireMonth
+              expireYear
+              paymentServiceCardId
+            }
+            billingContact {
+              id
+              email
+              firstName
+              middleNameOrInitial
+              lastNameOrSurname
+              companyOrOrganization
+              phoneNumbers {
+                home
+                mobile
+                work
+              }
+              address {
+                address1
+                address2
+                address3
+                address4
+                cityOrTown
+                stateOrProvince
+                postalOrZipCode
+                countryCode
+                addressType
+                isValidated
+              }
+            }
+          }
+        }
       }
     }
   }

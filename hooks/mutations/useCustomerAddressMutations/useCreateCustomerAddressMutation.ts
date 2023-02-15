@@ -23,7 +23,6 @@ const addCustomerAccountContactDetails = async (
     document: createCustomerAccountContact,
     variables: params,
   })
-
   return response?.createCustomerAccountContact
 }
 

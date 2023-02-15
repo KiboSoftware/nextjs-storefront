@@ -15,14 +15,15 @@ import type { CardForm } from '@/lib/types'
 
 export const prepareCardDataParams = (props: CardForm) => {
   const { cardNumber, expiryDate, cvv } = props
-  const cardType = creditCardType(cardNumber as string)
+  const cardType =
+    props.cardType || creditCardType(cardNumber as string)?.[0]?.type.toUpperCase() || ''
   const expiryMonth = expiryDate?.split('/')[0]
   const expiryYear = expiryDate?.split('/')[1]
 
   return {
     cardNumber: cardNumber,
     cvv: cvv,
-    cardType: cardType.length ? cardType[0].type.toUpperCase() : '',
+    cardType: cardType,
     expireMonth: Number(expiryMonth),
     expireYear: Number(expiryYear),
   }

@@ -1,4 +1,4 @@
-import type { CrContact } from '../gql/types'
+import type { CrContact, CustomerContactInput } from '../gql/types'
 
 export interface CardTypeForCheckout {
   paymentType: string
@@ -83,4 +83,24 @@ export interface Address {
 export interface SavedBillingAddress {
   contact: CrContact
   isSameBillingShippingAddress?: boolean
+}
+
+export interface BillingAddress {
+  accountId: number
+  contactId: number
+  customerContactInput: CustomerContactInput
+}
+
+export interface CardType {
+  accountId: number
+  cardId: string
+  cardInput: {
+    id: string | undefined
+    contactId: number
+    cardType: string
+    cardNumberPart: string
+    expireMonth: number
+    expireYear: number
+    isDefaultPayMethod: boolean
+  }
 }
