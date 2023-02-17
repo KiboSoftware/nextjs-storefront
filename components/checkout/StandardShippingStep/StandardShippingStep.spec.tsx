@@ -18,17 +18,14 @@ const { Common } = composeStories(stories)
 const scrollIntoViewMock = jest.fn()
 window.HTMLElement.prototype.scrollIntoView = scrollIntoViewMock
 
+interface ShippingMethodProps {
+  id: number
+  selected: string
+  onShippingMethodChange: (shippingMethodCode: string) => void
+}
 jest.mock('../../checkout/ShippingMethod/ShippingMethod', () => ({
   __esModule: true,
-  default: ({
-    id,
-    selected,
-    onShippingMethodChange,
-  }: {
-    id: number
-    selected: string
-    onShippingMethodChange: (shippingMethodCode: string) => void
-  }) => (
+  default: ({ selected, onShippingMethodChange }: ShippingMethodProps) => (
     <div data-testid="addressDetailsView-mock">
       <p data-testid="selectedAddressDetailsView">{selected}</p>
       <button
@@ -44,17 +41,14 @@ jest.mock('../../checkout/ShippingMethod/ShippingMethod', () => ({
   ),
 }))
 
+interface AddressDetailsViewProps {
+  id: number
+  selected: string
+  handleRadioChange: (addressId: string) => void
+}
 jest.mock('../../common/AddressDetailsView/AddressDetailsView', () => ({
   __esModule: true,
-  default: ({
-    id,
-    selected,
-    handleRadioChange,
-  }: {
-    id: number
-    selected: string
-    handleRadioChange: (addressId: string) => void
-  }) => (
+  default: ({ id, selected, handleRadioChange }: AddressDetailsViewProps) => (
     <div data-testid="addressDetailsView-mock">
       <p data-testId="selectedAddressDetailsView">{selected}</p>
       <button onClick={() => handleRadioChange(String(id))}>handleAddressSelect</button>
@@ -62,21 +56,17 @@ jest.mock('../../common/AddressDetailsView/AddressDetailsView', () => ({
   ),
 }))
 
+interface AddressFormProps {
+  validateForm: boolean
+  onSaveAddress: (address: Address) => void
+  onFormStatusChange: (isValid: boolean) => void
+}
 jest.mock('../../common/AddressForm/AddressForm', () => ({
   __esModule: true,
-  default: ({
-    onSaveAddress,
-    onFormStatusChange,
-  }: {
-    onSaveAddress: (address: Address) => void
-    onFormStatusChange: (isValid: boolean) => void
-  }) => (
+  default: ({ validateForm, onSaveAddress, onFormStatusChange }: AddressFormProps) => (
     <div data-testid="address-form-mock">
-      <button
-        type="button"
-        data-testid="changeBillingFormStatus"
-        onClick={() => onFormStatusChange(true)}
-      >
+      <p data-testid="isValidateForm">{validateForm ? 'validatedForm' : 'invalidatedForm'}</p>
+      <button type="button" data-testid="changeFormStatus" onClick={() => onFormStatusChange(true)}>
         Change Address Form Status
       </button>
       <button
@@ -163,7 +153,7 @@ describe('[components] StandardShippingStep', () => {
     })
 
     it('should display shipping address form', async () => {
-      setup({
+      const { user } = setup({
         checkout: {
           ...orderMock.checkout,
           fulfillmentInfo: { ...orderMock.checkout.fulfillmentInfo, fulfillmentContact: null },
@@ -176,10 +166,30 @@ describe('[components] StandardShippingStep', () => {
       expect(screen.getByRole('button', { name: /save-shipping-address/ })).toBeVisible()
       expect(screen.getByRole('button', { name: /cancel/ })).toBeVisible()
     })
+
+    it('should handle AddressForm properly', async () => {
+      const { user } = setup({
+        checkout: {
+          ...orderMock.checkout,
+          fulfillmentInfo: { ...orderMock.checkout.fulfillmentInfo, fulfillmentContact: null },
+        },
+        isAuthenticated: true,
+        userId: 0,
+      })
+
+      expect(screen.getByTestId('address-form-mock')).toBeVisible()
+      expect(screen.getByTestId('isValidateForm')).toHaveTextContent('invalidatedForm')
+
+      await user.click(screen.getByTestId('changeFormStatus'))
+
+      await user.click(screen.getByRole('button', { name: /save-shipping-address/ }))
+
+      expect(screen.getByTestId('isValidateForm')).toHaveTextContent('validatedForm')
+    })
   })
 
   describe('There are previously saved shipping address in account but not in checkout', () => {
-    it('should display shipping address(saved in account) radio buttons and select a radio button to select Shipping Methods', async () => {
+    it('should select a shipping address radio button and shippingMethod should be selected', async () => {
       const { user } = setup({
         checkout: {
           ...orderMock.checkout,
