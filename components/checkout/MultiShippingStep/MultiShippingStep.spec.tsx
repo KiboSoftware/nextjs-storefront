@@ -120,15 +120,16 @@ jest.mock('../../common/AddressDetailsView/AddressDetailsView', () => ({
   ),
 }))
 
+interface ProductItemWithAddressListProps {
+  onUpdateDestinationAddress: (params: { destinationInput: CustomDestinationInput }) => void
+  onSelectCreateOrSetDestinationAddress: (id: string, value: string) => void
+}
 jest.mock('../../common/ProductItemWithAddressList/ProductItemWithAddressList', () => ({
   __esModule: true,
   default: ({
     onUpdateDestinationAddress,
     onSelectCreateOrSetDestinationAddress,
-  }: {
-    onUpdateDestinationAddress: (params: { destinationInput: CustomDestinationInput }) => void
-    onSelectCreateOrSetDestinationAddress: (id: string, value: string) => void
-  }) => (
+  }: ProductItemWithAddressListProps) => (
     <div data-testid="product-item-with-address-list-mock">
       <button
         type="button"
@@ -164,16 +165,16 @@ jest.mock('../../common/ProductItemWithAddressList/ProductItemWithAddressList', 
   ),
 }))
 
+interface ShippingGroupsWithMethodProps {
+  onUpdateCheckoutShippingMethod: (params: {
+    shippingMethodGroup: CheckoutGroupRates
+    shippingMethodCode: string
+  }) => void
+}
+
 jest.mock('../../common/ShippingGroupsWithMethod/ShippingGroupsWithMethod', () => ({
   __esModule: true,
-  default: ({
-    onUpdateCheckoutShippingMethod,
-  }: {
-    onUpdateCheckoutShippingMethod: (params: {
-      shippingMethodGroup: CheckoutGroupRates
-      shippingMethodCode: string
-    }) => void
-  }) => (
+  default: ({ onUpdateCheckoutShippingMethod }: ShippingGroupsWithMethodProps) => (
     <div data-testid="shipping-groups-with-method">
       <button
         onClick={() =>
