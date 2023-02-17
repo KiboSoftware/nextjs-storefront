@@ -1,7 +1,7 @@
 import React from 'react'
 
 import { ComponentStory, ComponentMeta } from '@storybook/react'
-// import { graphql } from 'msw'
+import { graphql } from 'msw'
 
 import PaymentStep from './PaymentStep'
 import {
@@ -79,19 +79,19 @@ WithSavedPayment.args = {
   onVoidPayment: handleVoidPayment,
   onAddPayment: handleAddPayment,
 }
-// WithSavedPayment.parameters = {
-//   msw: {
-//     handlers: {
-//       cards: graphql.query('customerAccountCards', (_req, res, ctx) => {
-//         return res(ctx.data(customerAccountCardsMock))
-//       }),
+WithSavedPayment.parameters = {
+  msw: {
+    handlers: {
+      cards: graphql.query('customerAccountCards', (_req, res, ctx) => {
+        return res(ctx.data(customerAccountCardsMock))
+      }),
 
-//       contacts: graphql.query('getUserAddresses', (_req, res, ctx) => {
-//         return res(ctx.data(userAddressMock))
-//       }),
-//     },
-//   },
-// }
+      contacts: graphql.query('getUserAddresses', (_req, res, ctx) => {
+        return res(ctx.data(userAddressMock))
+      }),
+    },
+  },
+}
 
 export const MultiShip = LoggedInNoData.bind({})
 

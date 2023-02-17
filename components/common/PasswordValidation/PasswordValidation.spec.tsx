@@ -4,7 +4,7 @@ import { composeStories } from '@storybook/testing-react'
 import { render, screen } from '@testing-library/react'
 
 import * as stories from './PasswordValidation.stories'
-import theme from '../../../styles/theme'
+import theme from '@/styles/theme'
 
 const { Common } = composeStories(stories)
 

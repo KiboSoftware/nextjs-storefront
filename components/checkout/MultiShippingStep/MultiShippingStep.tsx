@@ -22,10 +22,9 @@ import {
 } from '@/hooks'
 import { FulfillmentOptions } from '@/lib/constants'
 import { userGetters, checkoutGetters } from '@/lib/getters'
-import type { CustomDestinationInput, MultiShipAddress, ShipOption } from '@/lib/types'
+import type { CustomDestinationInput, ShipOption } from '@/lib/types'
 
 import type {
-  CrOrderItem,
   CrContact,
   CustomerContact,
   Checkout,
@@ -343,10 +342,10 @@ const MultiShippingStep = (props: MultiShippingStepProps) => {
   }, [isMultiShipPaymentStepValid, checkout])
 
   useEffect(() => {
-    if (
-      (checkout?.groupings?.filter((group) => group?.fulfillmentMethod === FulfillmentOptions.SHIP)
-        .length as number) < 2
-    ) {
+    const shipItems = checkout?.groupings?.filter(
+      (group) => group?.fulfillmentMethod === FulfillmentOptions.SHIP
+    )
+    if ((shipItems?.length as number) < 2) {
       setShippingOption(shipToHome)
     }
   }, [checkout?.groupings?.length])
