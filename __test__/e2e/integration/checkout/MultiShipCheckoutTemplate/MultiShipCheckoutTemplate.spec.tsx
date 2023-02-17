@@ -1,6 +1,6 @@
 import React from 'react'
 
-import { cleanup, fireEvent, screen, waitFor, within, act } from '@testing-library/react'
+import { fireEvent, screen, waitFor, within, act } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { graphql } from 'msw'
 import mockRouter from 'next-router-mock'
@@ -34,8 +34,6 @@ import {
 const scrollIntoViewMock = jest.fn()
 window.HTMLElement.prototype.scrollIntoView = scrollIntoViewMock
 
-jest.mock('next/router', () => require('next-router-mock'))
-
 jest.mock('@/lib/helpers/tokenizeCreditCardPayment', () => {
   return {
     tokenizeCreditCardPayment: jest.fn().mockImplementation(() => {
@@ -58,8 +56,6 @@ const userContextValues = (isAuthenticated: boolean, userId: number) => ({
   authError: '',
   logout: jest.fn(),
 })
-
-afterEach(() => cleanup())
 
 const setup = ({
   initialActiveStep = 0,
@@ -94,78 +90,80 @@ const setup = ({
   }
 }
 
+const checkoutShippingMethodsMock = [
+  {
+    groupingId: checkoutMock.checkout.groupings?.[0]?.id,
+    shippingRates: [
+      {
+        shippingMethodCode: 'e9379142190e459fb542a60701452ef1',
+        shippingMethodName: 'Flat Rate',
+        shippingZoneCode: 'United States',
+        isValid: true,
+        messages: [],
+        data: null,
+        currencyCode: null,
+        price: 15,
+      },
+      {
+        shippingMethodCode: 'fedex_FEDEX_2_DAY',
+        shippingMethodName: 'FedEx 2Day®',
+        shippingZoneCode: 'United States',
+        isValid: true,
+        messages: [],
+        data: null,
+        currencyCode: null,
+        price: 33.24,
+      },
+      {
+        shippingMethodCode: 'fedex_FEDEX_EXPRESS_SAVER',
+        shippingMethodName: 'FedEx Express Saver®',
+        shippingZoneCode: 'United States',
+        isValid: true,
+        messages: [],
+        data: null,
+        currencyCode: null,
+        price: 30.76,
+      },
+      {
+        shippingMethodCode: 'fedex_FEDEX_GROUND',
+        shippingMethodName: 'FedEx Ground®',
+        shippingZoneCode: 'United States',
+        isValid: true,
+        messages: [],
+        data: null,
+        currencyCode: null,
+        price: 15.84,
+      },
+      {
+        shippingMethodCode: 'ups_UPS_GROUND',
+        shippingMethodName: 'UPS Ground',
+        shippingZoneCode: 'United States',
+        isValid: true,
+        messages: [],
+        data: null,
+        currencyCode: null,
+        price: 9.88,
+      },
+      {
+        shippingMethodCode: 'ups_UPS_NEXT_DAY_AIR',
+        shippingMethodName: 'UPS Next Day Air®',
+        shippingZoneCode: 'United States',
+        isValid: true,
+        messages: [],
+        data: null,
+        currencyCode: null,
+        price: 28.99,
+      },
+    ],
+  },
+]
+
 const handleShippingMethod = async (user: any, checkoutData: Checkout): Promise<Checkout> => {
   server.use(
     graphql.query('getCheckoutShippingMethods', (_req, res, ctx) => {
       return res(
         ctx.data({
-          checkoutShippingMethods: [
-            {
-              groupingId: checkoutMock.checkout.groupings?.[0]?.id,
-              shippingRates: [
-                {
-                  shippingMethodCode: 'e9379142190e459fb542a60701452ef1',
-                  shippingMethodName: 'Flat Rate',
-                  shippingZoneCode: 'United States',
-                  isValid: true,
-                  messages: [],
-                  data: null,
-                  currencyCode: null,
-                  price: 15,
-                },
-                {
-                  shippingMethodCode: 'fedex_FEDEX_2_DAY',
-                  shippingMethodName: 'FedEx 2Day®',
-                  shippingZoneCode: 'United States',
-                  isValid: true,
-                  messages: [],
-                  data: null,
-                  currencyCode: null,
-                  price: 33.24,
-                },
-                {
-                  shippingMethodCode: 'fedex_FEDEX_EXPRESS_SAVER',
-                  shippingMethodName: 'FedEx Express Saver®',
-                  shippingZoneCode: 'United States',
-                  isValid: true,
-                  messages: [],
-                  data: null,
-                  currencyCode: null,
-                  price: 30.76,
-                },
-                {
-                  shippingMethodCode: 'fedex_FEDEX_GROUND',
-                  shippingMethodName: 'FedEx Ground®',
-                  shippingZoneCode: 'United States',
-                  isValid: true,
-                  messages: [],
-                  data: null,
-                  currencyCode: null,
-                  price: 15.84,
-                },
-                {
-                  shippingMethodCode: 'ups_UPS_GROUND',
-                  shippingMethodName: 'UPS Ground',
-                  shippingZoneCode: 'United States',
-                  isValid: true,
-                  messages: [],
-                  data: null,
-                  currencyCode: null,
-                  price: 9.88,
-                },
-                {
-                  shippingMethodCode: 'ups_UPS_NEXT_DAY_AIR',
-                  shippingMethodName: 'UPS Next Day Air®',
-                  shippingZoneCode: 'United States',
-                  isValid: true,
-                  messages: [],
-                  data: null,
-                  currencyCode: null,
-                  price: 28.99,
-                },
-              ],
-            },
-          ],
+          checkoutShippingMethods: checkoutShippingMethodsMock,
         })
       )
     })
@@ -1061,116 +1059,112 @@ const handleReviewStep = async (user: any, checkoutData: Checkout) => {
 }
 
 describe('[integration] MultiShipCheckoutTemplate', () => {
-  describe('Authenticated user', () => {
-    describe("user doesn't have any saved addresses", () => {
-      describe('checking out for one single ship to home and one pickup in store item', () => {
-        const checkoutData = {
-          mock: {
-            ...checkoutMock.checkout,
-            destinations: [],
-            items: [
-              { ...(checkoutMock.checkout.items?.[0] as CrOrderItem), destinationId: null },
-              {
-                ...(checkoutMock.checkout.items?.[1] as CrOrderItem),
-                destinationId: null,
-                fulfillmentMethod: 'Pickup',
-              },
-            ],
-            groupings: [
-              {
-                ...(checkoutMock.checkout.groupings?.[0] as CheckoutGrouping),
-                destinationId: null,
-              },
-              {
-                ...(checkoutMock.checkout.groupings?.[1] as CheckoutGrouping),
-                destinationId: null,
-                fulfillmentMethod: 'Pickup',
-              },
-            ],
-          } as Checkout,
-        }
-        beforeEach(() => {
-          server.use(
-            graphql.query('getMultiShipCheckout', (_req, res, ctx) => {
-              return res(
-                ctx.data({
-                  checkout: checkoutData.mock,
-                })
-              )
+  describe('checking out for one single ship to home and one pickup in store item', () => {
+    const checkoutData = {
+      mock: {
+        ...checkoutMock.checkout,
+        destinations: [],
+        items: [
+          { ...(checkoutMock.checkout.items?.[0] as CrOrderItem), destinationId: null },
+          {
+            ...(checkoutMock.checkout.items?.[1] as CrOrderItem),
+            destinationId: null,
+            fulfillmentMethod: 'Pickup',
+          },
+        ],
+        groupings: [
+          {
+            ...(checkoutMock.checkout.groupings?.[0] as CheckoutGrouping),
+            destinationId: null,
+          },
+          {
+            ...(checkoutMock.checkout.groupings?.[1] as CheckoutGrouping),
+            destinationId: null,
+            fulfillmentMethod: 'Pickup',
+          },
+        ],
+      } as Checkout,
+    }
+    beforeEach(() => {
+      server.use(
+        graphql.query('getMultiShipCheckout', (_req, res, ctx) => {
+          return res(
+            ctx.data({
+              checkout: checkoutData.mock,
             })
           )
         })
+      )
+    })
 
-        it('should handle the checkout flow', async () => {
-          const { user } = setup({
-            isAuthenticated: true,
-          })
-
-          checkoutData.mock = await handleDetailsStep(user, checkoutData.mock)
-
-          checkoutData.mock = await handleSingleShipToHomeItem(user, checkoutData.mock)
-
-          checkoutData.mock = await handlePaymentStep(user, checkoutData.mock)
-
-          await handleReviewStep(user, checkoutData.mock)
-        })
+    it('should handle the checkout flow', async () => {
+      const { user } = setup({
+        isAuthenticated: true,
       })
 
-      describe('checking out for more than one single ship to home', () => {
-        const checkoutData = {
-          mock: {
-            ...checkoutMock.checkout,
-            destinations: [],
-            items: [
-              { ...(checkoutMock.checkout.items?.[0] as CrOrderItem), destinationId: null },
-              {
-                ...(checkoutMock.checkout.items?.[1] as CrOrderItem),
-                destinationId: null,
-                fulfillmentMethod: 'Pickup',
-              },
-              extraCheckoutShipItem,
-            ],
-            groupings: [
-              {
-                ...(checkoutMock.checkout.groupings?.[0] as CheckoutGrouping),
-                destinationId: null,
-              },
-              {
-                ...(checkoutMock.checkout.groupings?.[1] as CheckoutGrouping),
-                destinationId: null,
-                fulfillmentMethod: 'Pickup',
-              },
-              extraGrouping,
-            ],
-          } as Checkout,
-        }
+      checkoutData.mock = await handleDetailsStep(user, checkoutData.mock)
 
-        beforeEach(() => {
-          server.use(
-            graphql.query('getMultiShipCheckout', (_req, res, ctx) => {
-              return res(
-                ctx.data({
-                  checkout: checkoutData.mock,
-                })
-              )
+      checkoutData.mock = await handleSingleShipToHomeItem(user, checkoutData.mock)
+
+      checkoutData.mock = await handlePaymentStep(user, checkoutData.mock)
+
+      await handleReviewStep(user, checkoutData.mock)
+    })
+  })
+
+  describe('checking out for more than one single ship to home', () => {
+    const checkoutData = {
+      mock: {
+        ...checkoutMock.checkout,
+        destinations: [],
+        items: [
+          { ...(checkoutMock.checkout.items?.[0] as CrOrderItem), destinationId: null },
+          {
+            ...(checkoutMock.checkout.items?.[1] as CrOrderItem),
+            destinationId: null,
+            fulfillmentMethod: 'Pickup',
+          },
+          extraCheckoutShipItem,
+        ],
+        groupings: [
+          {
+            ...(checkoutMock.checkout.groupings?.[0] as CheckoutGrouping),
+            destinationId: null,
+          },
+          {
+            ...(checkoutMock.checkout.groupings?.[1] as CheckoutGrouping),
+            destinationId: null,
+            fulfillmentMethod: 'Pickup',
+          },
+          extraGrouping,
+        ],
+      } as Checkout,
+    }
+
+    beforeEach(() => {
+      server.use(
+        graphql.query('getMultiShipCheckout', (_req, res, ctx) => {
+          return res(
+            ctx.data({
+              checkout: checkoutData.mock,
             })
           )
         })
+      )
+    })
 
-        it('should handle checkout flow', async () => {
-          const { user } = setup({
-            isAuthenticated: true,
-          })
-
-          checkoutData.mock = await handleDetailsStep(user, checkoutData.mock)
-
-          checkoutData.mock = await handleMultiShipToHomeItems(user, checkoutData.mock)
-
-          checkoutData.mock = await handlePaymentStep(user, checkoutData.mock)
-
-          await handleReviewStep(user, checkoutData.mock)
-        })
+    it('should handle checkout flow', async () => {
+      const { user } = setup({
+        isAuthenticated: true,
       })
+
+      checkoutData.mock = await handleDetailsStep(user, checkoutData.mock)
+
+      checkoutData.mock = await handleMultiShipToHomeItems(user, checkoutData.mock)
+
+      checkoutData.mock = await handlePaymentStep(user, checkoutData.mock)
+
+      await handleReviewStep(user, checkoutData.mock)
     })
   })
 })
