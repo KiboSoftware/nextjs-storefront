@@ -1,7 +1,7 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect, useRef, useState } from 'react'
 
-import { Stack, Button, Typography, SxProps } from '@mui/material'
+import { Stack, Button, Typography, SxProps, Grid, Box } from '@mui/material'
 import { Theme } from '@mui/material/styles'
 import { useTranslation } from 'next-i18next'
 
@@ -18,13 +18,6 @@ import type {
   CustomerContact,
   CustomerContactCollection,
 } from '@/lib/gql/types'
-
-const buttonStyle = {
-  width: '100%',
-  maxWidth: '421px',
-  height: '42px',
-  fontSize: (theme: Theme) => theme.typography.subtitle1,
-} as SxProps<Theme> | undefined
 
 interface ShippingProps {
   setAutoFocus?: boolean
@@ -280,25 +273,28 @@ const StandardShippingStep = (props: ShippingProps) => {
             onSaveAddress={handleSaveAddress}
             onFormStatusChange={handleFormStatusChange}
           />
-          <Stack pl={1} gap={2} sx={{ width: { xs: '100%', md: '50%' } }}>
-            <Button
-              variant="contained"
-              color="secondary"
-              onClick={() => setShouldShowAddAddressButton(true)}
-            >
-              {t('cancel')}
-            </Button>
-            <Button
-              variant="contained"
-              color="inherit"
-              sx={{ ...buttonStyle }}
-              style={{ textTransform: 'none' }}
-              onClick={handleAddressValidationAndSave}
-              {...(!isAddressFormValid && { disabled: true })}
-            >
-              {t('save-shipping-address')}
-            </Button>
-          </Stack>
+          <Box m={1} maxWidth={'872px'} data-testid="address-form">
+            <Grid container>
+              <Grid item xs={6} gap={2} display={'flex'} direction={'column'}>
+                <Button
+                  variant="contained"
+                  color="secondary"
+                  onClick={() => setShouldShowAddAddressButton(true)}
+                >
+                  {t('cancel')}
+                </Button>
+                <Button
+                  variant="contained"
+                  color="inherit"
+                  style={{ textTransform: 'none' }}
+                  onClick={handleAddressValidationAndSave}
+                  {...(!isAddressFormValid && { disabled: true })}
+                >
+                  {t('save-shipping-address')}
+                </Button>
+              </Grid>
+            </Grid>
+          </Box>
         </>
       )}
     </Stack>

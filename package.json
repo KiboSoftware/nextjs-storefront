@@ -94,18 +94,19 @@
     "jest-environment-jsdom": "29.3.1",
     "jest-mock-extended": "^3.0.1",
     "jest-sonar-reporter": "^2.0.0",
-    "msw": "^0.49.1",
-    "msw-storybook-addon": "^1.6.3",
-    "next-router-mock": "^0.9.1-beta.0",
-    "prettier": "^2.5.1",
+    "msw": "^0.49.3",
+    "msw-storybook-addon": "^1.7.0",
+    "next-router-mock": "^0.9.1",
+    "prettier": "^2.5.0",
     "pretty-quick": "^3.1.3",
     "storybook-addon-material-ui5": "^1.0.0",
     "storybook-addon-next": "^1.3.1",
+    "strict-event-emitter": "^0.4.6",
     "ts-jest": "^29.0.3",
     "tsconfig-paths-webpack-plugin": "^3.5.2",
     "typedoc": "^0.23.21",
     "typedoc-plugin-markdown": "^3.13.6",
-    "typescript": "^4.7.4"
+    "typescript": "^4.9.5"
   },
   "msw": {
     "workerDirectory": "public"

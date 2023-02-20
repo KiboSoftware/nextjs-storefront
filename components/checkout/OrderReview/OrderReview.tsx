@@ -17,11 +17,9 @@ import { useTranslation } from 'next-i18next'
 
 import { AddressDetailsView, PromoCodeBadge } from '@/components/common'
 import { useCheckoutStepContext } from '@/context'
-import { useStoreLocationsQueries } from '@/hooks'
 import { checkoutGetters, orderGetters } from '@/lib/getters'
-import { storeLocationGetters } from '@/lib/getters/storeLocationGetters'
 
-import type { CrOrder, Maybe, Location, CustomerContact, Checkout } from '@/lib/gql/types'
+import type { CrOrder, CustomerContact, Checkout } from '@/lib/gql/types'
 
 interface OrderReviewProps {
   checkout: CrOrder | Checkout
@@ -97,15 +95,8 @@ const OrderReview = (props: OrderReviewProps) => {
   const { steps, setActiveStep } = useCheckoutStepContext()
   const { t } = useTranslation('common')
 
-  const { personalDetails, shippingDetails, billingDetails, paymentMethods, pickupItems } =
+  const { personalDetails, shippingDetails, billingDetails, paymentMethods } =
     orderGetters.getCheckoutDetails(checkout as CrOrder) // TODO: change orderGetters type and remove checkoutGetters.getCheckoutDetails
-
-  const fulfillmentLocationCodes = pickupItems
-    .map((pickupItem) => `code eq ${pickupItem?.fulfillmentLocationCode}`)
-    .join(' or ')
-
-  const { data: locations } = useStoreLocationsQueries({ filter: fulfillmentLocationCodes })
-  const storeLocations = storeLocationGetters.getLocations(locations as Maybe<Location>[])
 
   const { email: userName } = personalDetails
   const { shippingPhoneHome, shippingAddress } = shippingDetails
