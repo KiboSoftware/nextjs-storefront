@@ -56,6 +56,26 @@ jest.mock('../../common/AddressDetailsView/AddressDetailsView', () => ({
   ),
 }))
 
+const onSaveAddressParam = {
+  contact: {
+    email: 'amolp@dev.com',
+    firstName: 'jon',
+    lastNameOrSurname: 'doe',
+    phoneNumbers: {
+      home: '3354533453',
+    },
+    address: {
+      address1: 'street',
+      address2: 'apartment',
+      cityOrTown: 'city',
+      stateOrProvince: 'state',
+      postalOrZipCode: '23423',
+      countryCode: 'US',
+      isValidated: false,
+    },
+  },
+  isAddressValid: true,
+}
 interface AddressFormProps {
   validateForm: boolean
   onSaveAddress: (address: Address) => void
@@ -72,28 +92,7 @@ jest.mock('../../common/AddressForm/AddressForm', () => ({
       <button
         type="button"
         data-testid="saveAddressButton"
-        onClick={() =>
-          onSaveAddress({
-            contact: {
-              email: 'amolp@dev.com',
-              firstName: 'jon',
-              lastNameOrSurname: 'doe',
-              phoneNumbers: {
-                home: '3354533453',
-              },
-              address: {
-                address1: 'street',
-                address2: 'apartment',
-                cityOrTown: 'city',
-                stateOrProvince: 'state',
-                postalOrZipCode: '23423',
-                countryCode: 'US',
-                isValidated: false,
-              },
-            },
-            isAddressValid: true,
-          })
-        }
+        onClick={() => onSaveAddress(onSaveAddressParam)}
       >
         Save Address
       </button>
