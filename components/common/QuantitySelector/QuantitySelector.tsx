@@ -1,6 +1,7 @@
 import React, { ChangeEvent, useState } from 'react'
 
-import { Add, Remove } from '@mui/icons-material'
+import Add from '@mui/icons-material/Add'
+import Remove from '@mui/icons-material/Remove'
 import { Stack, TextField, IconButton, Typography } from '@mui/material'
 import { useTranslation } from 'next-i18next'
 

@@ -1,4 +1,4 @@
-import { AccountCircle } from '@mui/icons-material'
+import AccountCircle from '@mui/icons-material/AccountCircle'
 import {
   Box,
   Divider,

@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 
-import { ArrowBackIos } from '@mui/icons-material'
+import ArrowBackIos from '@mui/icons-material/ArrowBackIos'
 import { Divider, Grid, Typography, Box, Stack, Button, MenuItem } from '@mui/material'
 import { useTranslation } from 'next-i18next'
 

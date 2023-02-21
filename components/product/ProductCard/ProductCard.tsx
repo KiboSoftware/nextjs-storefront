@@ -1,8 +1,8 @@
 import React, { MouseEvent } from 'react'
 
-import { StarRounded } from '@mui/icons-material'
 import FavoriteBorderRoundedIcon from '@mui/icons-material/FavoriteBorderRounded'
 import FavoriteRoundedIcon from '@mui/icons-material/FavoriteRounded'
+import StarRounded from '@mui/icons-material/StarRounded'
 import { Card, Typography, Rating, CardMedia, Box, Stack, Skeleton, Button } from '@mui/material'
 import Link from 'next/link'
 import { useTranslation } from 'next-i18next'

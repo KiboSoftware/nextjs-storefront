@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from 'react'
 
-import { Add, ChevronLeft, Remove } from '@mui/icons-material'
+import Add from '@mui/icons-material/Add'
+import ChevronLeft from '@mui/icons-material/ChevronLeft'
+import Remove from '@mui/icons-material/Remove'
 import { Box, Button, FormLabel, Typography, SxProps, Divider, styled } from '@mui/material'
 import { Theme } from '@mui/material/styles'
 import Link from 'next/link'

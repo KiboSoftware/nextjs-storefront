@@ -2,7 +2,10 @@
 import React, { useEffect } from 'react'
 
 import { yupResolver } from '@hookform/resolvers/yup'
-import { AccessTime, CardGiftcard, EmojiEvents, FavoriteBorder } from '@mui/icons-material'
+import AccessTime from '@mui/icons-material/AccessTime'
+import CardGiftcard from '@mui/icons-material/CardGiftcard'
+import EmojiEvents from '@mui/icons-material/EmojiEvents'
+import FavoriteBorder from '@mui/icons-material/FavoriteBorder'
 import { Box, Stack, Button, IconButton, Typography, Grid, SxProps } from '@mui/material'
 import { Theme } from '@mui/material/styles'
 import { useTranslation } from 'next-i18next'
