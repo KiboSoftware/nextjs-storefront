@@ -5,7 +5,7 @@
 import { useMutation, useQueryClient } from 'react-query'
 
 import { makeGraphQLClient } from '@/lib/gql/client'
-import { updateSubscriptioPaymentMutation } from '@/lib/gql/mutations'
+import { updateSubscriptionPaymentMutation } from '@/lib/gql/mutations'
 import { subscriptionKeys } from '@/lib/react-query/queryKeys'
 
 import type { SbPaymentInput } from '@/lib/gql/types'
@@ -19,7 +19,7 @@ const updateSubscriptionPayment = async (params: UpdateSubscriptionPaymentProps)
   const client = makeGraphQLClient()
 
   const response = await client.request({
-    document: updateSubscriptioPaymentMutation,
+    document: updateSubscriptionPaymentMutation,
     variables: params,
   })
 

@@ -46,20 +46,12 @@ const Template: ComponentStory<typeof SubscriptionItem> = ({ ...args }) => (
 export const Common = Template.bind({})
 
 Common.args = {
-  subscriptionDetailsData: subscriptionItemMock?.items,
+  subscriptionDetailsData: {
+    ...subscriptionItemMock?.items,
+  },
   fulfillmentInfoList: subscriptionCollectionMock?.subscriptions?.items?.map((subscription) =>
     subscriptionGetters.getFormattedAddress(subscription as Subscription)
   ) as FulfillmentInfo[],
-}
-
-Common.parameters = {
-  msw: {
-    handlers: {
-      customerAccountCards: graphql.query('customerAccountCards', (_req, res, ctx) => {
-        return res(ctx.data(customerAccountCardsMock))
-      }),
-    },
-  },
 }
 
 Common.parameters = {

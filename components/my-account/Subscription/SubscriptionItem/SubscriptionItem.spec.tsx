@@ -182,7 +182,6 @@ jest.mock('@/components/common/KiboSelect/KiboSelect', () => ({
       <InputLabel id="demo-simple-select-label">select-address</InputLabel>
       <Select
         data-testid="KiboSelect"
-        //labelId="KiboSelect"
         value={value}
         label="kibo-select" //Shipping Address
         onChange={(event) => onChange(event.target.name, event.target.value)}
@@ -217,7 +216,7 @@ describe('[component] - SubscriptionItem', () => {
     }
   }
 
-  it('should render component', () => {
+  it.only('should render component', () => {
     setup()
     const subscriptionNumber = screen.getByText(/subscription-number/i)
     const status = screen.getByText(/status/i)
@@ -648,7 +647,6 @@ describe('[component] - SubscriptionItem', () => {
 
       // Assert
       const kiboSelectMock = screen.getByRole('button', { expanded: false })
-      // const kiboSelectMock = screen.getByRole('button', { name: /select-address/i })
       expect(kiboSelectMock).toBeVisible()
       expect(addNewAddressButton).toBeVisible()
 

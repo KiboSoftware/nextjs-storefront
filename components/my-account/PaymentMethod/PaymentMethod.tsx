@@ -10,7 +10,7 @@ import { AddressForm, AddressDetailsView } from '@/components/common'
 import { ConfirmationDialog } from '@/components/dialogs'
 import { useModalContext } from '@/context'
 import { useDeleteCustomerCardsMutation, useDeleteCustomerAddressMutation } from '@/hooks'
-import { Mode, AddressType } from '@/lib/constants'
+import { DisplayMode, AddressType } from '@/lib/constants'
 import { addressGetters, cardGetters, userGetters } from '@/lib/getters'
 import { tokenizeCreditCardPayment } from '@/lib/helpers'
 import type {
@@ -36,7 +36,7 @@ interface PaymentMethodProps {
   user: CustomerAccount
   cards: CardCollection
   contacts: CustomerContactCollection
-  mode?: 'Edit' | 'AddNew'
+  displayMode?: 'Edit' | 'AddNew'
   isAddressFormInDialog?: boolean
   onSave: (address: BillingAddress, card: CardType, isUpdatingAddress: boolean) => void
   onClose?: () => void
@@ -85,7 +85,7 @@ const PaymentMethod = (props: PaymentMethodProps) => {
     user,
     cards,
     contacts,
-    mode = Mode.EDIT,
+    displayMode = DisplayMode.EDIT,
     isAddressFormInDialog = false,
     onSave,
     onClose,
@@ -104,7 +104,9 @@ const PaymentMethod = (props: PaymentMethodProps) => {
   const [cardFormDetails, setCardFormDetails] = useState<CardForm>(initialCardFormData)
   const [billingFormAddress, setBillingFormAddress] = useState<Address>(initialBillingAddressData)
   const [validateForm, setValidateForm] = useState<boolean>(false)
-  const [isAddingNewPayment, setIsAddingNewPayment] = useState<boolean>(mode === Mode.ADDNEW)
+  const [isAddingNewPayment, setIsAddingNewPayment] = useState<boolean>(
+    displayMode === DisplayMode.ADDNEW
+  )
   const [showBillingFormAddress, setShowBillingFormAddress] = useState<boolean>(false)
 
   const [isDefaultPaymentMethod, setIsDefaultPaymentMethod] = useState<boolean>(false)
@@ -198,12 +200,10 @@ const PaymentMethod = (props: PaymentMethodProps) => {
     setCardFormDetails(initialCardFormData)
     setBillingFormAddress(initialBillingAddressData)
 
-    if (mode === Mode.EDIT) {
+    if (displayMode === DisplayMode.EDIT) {
       setIsAddingNewPayment(false)
       setShowBillingFormAddress(false)
-    }
-
-    if (mode === Mode.ADDNEW) {
+    } else {
       if (showBillingFormAddress) setShowBillingFormAddress(false)
       if (!showBillingFormAddress) onClose && onClose()
     }
@@ -379,7 +379,9 @@ const PaymentMethod = (props: PaymentMethodProps) => {
             {!showBillingFormAddress && (
               <>
                 {billingAddresses?.length ? (
-                  <Typography variant="h4">{t('select-billing-address')}</Typography>
+                  <Typography variant="h4" fontWeight={'bold'}>
+                    {t('select-billing-address')}
+                  </Typography>
                 ) : (
                   handleAddNewBillingAddress()
                 )}
@@ -408,7 +410,9 @@ const PaymentMethod = (props: PaymentMethodProps) => {
 
             {showBillingFormAddress && (
               <>
-                <Typography variant="h2">{t('billing-address')}</Typography>
+                <Typography variant="h3" fontWeight={'bold'}>
+                  {t('billing-address')}
+                </Typography>
                 <AddressForm
                   setAutoFocus={false}
                   isUserLoggedIn={true}

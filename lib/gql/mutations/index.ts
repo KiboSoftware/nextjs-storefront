@@ -43,5 +43,5 @@ export { default as skipNextSubscriptionMutation } from './subscription/skip-nex
 export { default as performSubscriptionActionMutation } from './subscription/pause-subscription-mutation'
 export { default as deleteSubscriptionMutation } from './subscription/delete-subscription-mutation'
 export { default as updateSubscriptionNextOrderDateMutation } from './subscription/update-subscription-next-order-date-mutation'
-export { default as updateSubscriptioFulfillmentInfoMutation } from './subscription/update-subscription-fulfillment-info-mutation'
-export { default as updateSubscriptioPaymentMutation } from './subscription/update-subscription-payment-mutation'
+export { default as updateSubscriptionFulfillmentInfoMutation } from './subscription/update-subscription-fulfillment-info-mutation'
+export { default as updateSubscriptionPaymentMutation } from './subscription/update-subscription-payment-mutation'

@@ -20,7 +20,7 @@ const EditBillingAddress = (props: EditBillingAddressProps) => {
   return (
     <KiboDialog
       showCloseButton
-      Title={t('edit-billing-address')}
+      Title={t('edit-billing-information')}
       showContentTopDivider={true}
       showContentBottomDivider={false}
       Actions={''}
@@ -29,7 +29,7 @@ const EditBillingAddress = (props: EditBillingAddressProps) => {
           user={user as CustomerAccount}
           cards={cards}
           contacts={contacts}
-          mode={'AddNew'}
+          displayMode={'AddNew'}
           isAddressFormInDialog={true}
           onSave={onSave}
           onClose={onClose}

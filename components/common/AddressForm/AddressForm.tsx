@@ -223,7 +223,7 @@ const AddressForm = (props: AddressFormProps) => {
           />
         </Grid>
 
-        <Grid item xs={12} md={isAddressFormInDialog ? 9 : 6}>
+        <Grid item xs={12} md={isAddressFormInDialog ? 8 : 6}>
           <Controller
             name="address.stateOrProvince"
             control={control}
@@ -244,7 +244,7 @@ const AddressForm = (props: AddressFormProps) => {
           />
         </Grid>
 
-        <Grid item xs={12} md={isAddressFormInDialog ? 3 : 6}>
+        <Grid item xs={12} md={isAddressFormInDialog ? 4 : 6}>
           <Controller
             name="address.postalOrZipCode"
             control={control}

@@ -76,9 +76,9 @@ const getFrequencyUnitAndValue = (selectedFrequency: string) => {
 const getFormattedAddress = (subscription: Subscription) => {
   if (!subscription) return
 
-  const formattedAddress = addressGetters.getFormattedAddress(
-    subscription.fulfillmentInfo?.fulfillmentContact as SbContact
-  )
+  const formattedAddress = addressGetters
+    .getFormattedAddress(subscription.fulfillmentInfo?.fulfillmentContact as SbContact)
+    .trim()
 
   return {
     formattedAddress,
