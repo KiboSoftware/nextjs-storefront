@@ -43,24 +43,7 @@ const setup = (param: { isAuthenticated: boolean; userId: number }) => {
 
 describe('[components] Details', () => {
   describe('Authenticated user', () => {
-    it('should render features section', () => {
-      setup({ isAuthenticated: true, userId: 1012 })
-
-      const personalDetailsHeader = screen.getByRole('heading', { name: /personal-details/i })
-      const enjoyPerksText = screen.getByText(/enjoy-these-perks-with-your-free-account/i)
-      const fasterCheckoutText = screen.getByText(/faster-checkout/i)
-      const earnCreditsText = screen.getByText(/earn-credits-with-every-purchase/i)
-      const fullRewardsText = screen.getByText(/full-rewards-program-benifits/i)
-      const manageYourWishList = screen.getByText(/manage-your-wishlist/i)
-
-      expect(personalDetailsHeader).toBeVisible()
-      expect(enjoyPerksText).toBeVisible()
-      expect(fasterCheckoutText).toBeVisible()
-      expect(earnCreditsText).toBeVisible()
-      expect(fullRewardsText).toBeVisible()
-      expect(manageYourWishList).toBeVisible()
-    })
-    it('should render email input & should not render sign-into-your-account button', async () => {
+    it('should render email input, features section & should not render sign-into-your-account button', async () => {
       setup({ isAuthenticated: true, userId: 1012 })
       await act(() => {
         const emailTitle = screen.getByText(/your-email/i)
@@ -68,6 +51,21 @@ describe('[components] Details', () => {
 
         expect(emailTitle).toBeVisible()
         expect(emailInput).toBeVisible()
+
+        const personalDetailsHeader = screen.getByRole('heading', { name: /personal-details/i })
+        const enjoyPerksText = screen.getByText(/enjoy-these-perks-with-your-free-account/i)
+        const fasterCheckoutText = screen.getByText(/faster-checkout/i)
+        const earnCreditsText = screen.getByText(/earn-credits-with-every-purchase/i)
+        const fullRewardsText = screen.getByText(/full-rewards-program-benifits/i)
+        const manageYourWishList = screen.getByText(/manage-your-wishlist/i)
+
+        expect(personalDetailsHeader).toBeVisible()
+        expect(enjoyPerksText).toBeVisible()
+        expect(fasterCheckoutText).toBeVisible()
+        expect(earnCreditsText).toBeVisible()
+        expect(fullRewardsText).toBeVisible()
+        expect(manageYourWishList).toBeVisible()
+
         expect(
           screen.queryByRole('button', { name: /sign-into-your-account/i })
         ).not.toBeInTheDocument()
@@ -88,11 +86,9 @@ describe('[components] Details', () => {
       let emailError = screen.queryByText(/this\-field\-is\-required/i)
       expect(emailError).not.toBeInTheDocument()
       const emailInput = screen.getByRole('textbox', { name: /your-email/i })
-      await act(async () => {
-        emailInput.focus()
-        await user.clear(emailInput)
-        await user.tab()
-      })
+      emailInput.focus()
+      await user.clear(emailInput)
+      await user.tab()
       emailError = screen.getByText(/this\-field\-is\-required/i)
       expect(emailError).toBeVisible()
     })
@@ -114,10 +110,8 @@ describe('[components] Details', () => {
 
     it('should open login dialog after clicking on sign-into-your-account-button', async () => {
       const { user } = setup({ isAuthenticated: false, userId: 0 })
-      await act(async () => {
-        const signInButton = screen.getByRole('button', { name: /sign-into-your-account/i })
-        await user.click(signInButton)
-      })
+      const signInButton = screen.getByRole('button', { name: /sign-into-your-account/i })
+      await user.click(signInButton)
       expect(screen.getByRole('dialog', { name: /log-in/i })).toBeVisible()
     })
   })

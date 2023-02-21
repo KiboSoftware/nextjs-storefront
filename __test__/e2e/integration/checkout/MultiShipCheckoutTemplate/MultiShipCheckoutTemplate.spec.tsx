@@ -45,6 +45,58 @@ jest.mock('@/lib/helpers/tokenizeCreditCardPayment', () => {
   }
 })
 
+const newDestination = {
+  id: 'd3d30be35aa54ef7a0bdafa10094f988',
+  destinationContact: {
+    id: null,
+    email: null,
+    firstName: 'John',
+    middleNameOrInitial: null,
+    lastNameOrSurname: 'Doe',
+    phoneNumbers: {
+      home: '9938938494',
+    },
+    address: {
+      address1: '400, Lamar Street',
+      address2: '23/1',
+      address3: null,
+      address4: null,
+      cityOrTown: 'Austin',
+      stateOrProvince: 'TX',
+      postalOrZipCode: '98984',
+      countryCode: 'US',
+      isValidated: false,
+      addressType: null,
+    },
+  },
+}
+
+const anotherNewDestination = {
+  id: '2eb59e34ef954ced8cefafa200bd1488',
+  destinationContact: {
+    id: null,
+    email: null,
+    firstName: 'Mike',
+    middleNameOrInitial: null,
+    lastNameOrSurname: 'Tyson',
+    phoneNumbers: {
+      home: '9999999999',
+    },
+    address: {
+      address1: '100, Lamar Street',
+      address2: '13/1',
+      address3: null,
+      address4: null,
+      cityOrTown: 'Austin',
+      stateOrProvince: 'TX',
+      postalOrZipCode: '98984',
+      countryCode: 'US',
+      isValidated: false,
+      addressType: null,
+    },
+  },
+}
+
 const userContextValues = (isAuthenticated: boolean, userId: number) => ({
   isAuthenticated: isAuthenticated,
   user: {
@@ -228,58 +280,6 @@ const handleMultiShippingMethod = async (user: any, checkoutData: Checkout): Pro
     `${firstShippingRate?.shippingMethodName as string} currency`
   )
 
-  const newDestination = {
-    id: 'd3d30be35aa54ef7a0bdafa10094f988',
-    destinationContact: {
-      id: null,
-      email: null,
-      firstName: 'John',
-      middleNameOrInitial: null,
-      lastNameOrSurname: 'Doe',
-      phoneNumbers: {
-        home: '9938938494',
-      },
-      address: {
-        address1: '400, Lamar Street',
-        address2: '23/1',
-        address3: null,
-        address4: null,
-        cityOrTown: 'Austin',
-        stateOrProvince: 'TX',
-        postalOrZipCode: '98984',
-        countryCode: 'US',
-        isValidated: false,
-        addressType: null,
-      },
-    },
-  }
-
-  const anotherNewDestination = {
-    id: '2eb59e34ef954ced8cefafa200bd1488',
-    destinationContact: {
-      id: null,
-      email: null,
-      firstName: 'Mike',
-      middleNameOrInitial: null,
-      lastNameOrSurname: 'Tyson',
-      phoneNumbers: {
-        home: '9999999999',
-      },
-      address: {
-        address1: '100, Lamar Street',
-        address2: '13/1',
-        address3: null,
-        address4: null,
-        cityOrTown: 'Austin',
-        stateOrProvince: 'TX',
-        postalOrZipCode: '98984',
-        countryCode: 'US',
-        isValidated: false,
-        addressType: null,
-      },
-    },
-  }
-
   checkoutData = {
     ...checkoutData,
     email: 'guest@email.com',
@@ -456,32 +456,6 @@ const handleSingleShipToHomeItem = async (user: any, checkoutData: Checkout) => 
 
   expect(saveShippingAddress).toBeEnabled()
 
-  const newDestination = {
-    id: 'd3d30be35aa54ef7a0bdafa10094f988',
-    destinationContact: {
-      id: null,
-      email: null,
-      firstName: 'John',
-      middleNameOrInitial: null,
-      lastNameOrSurname: 'Doe',
-      phoneNumbers: {
-        home: '9938938494',
-      },
-      address: {
-        address1: '400, Lamar Street',
-        address2: '23/1',
-        address3: null,
-        address4: null,
-        cityOrTown: 'Austin',
-        stateOrProvince: 'TX',
-        postalOrZipCode: '98984',
-        countryCode: 'US',
-        isValidated: false,
-        addressType: null,
-      },
-    },
-  }
-
   server.use(
     graphql.mutation('createCheckoutDestination', (_req, res, ctx) => {
       return res.once(
@@ -594,32 +568,6 @@ const handleMultiShipToHomeItems = async (user: any, checkoutData: Checkout): Pr
   await addAddress(user)
 
   expect(saveShippingAddress).toBeEnabled()
-
-  const newDestination = {
-    id: 'd3d30be35aa54ef7a0bdafa10094f988',
-    destinationContact: {
-      id: null,
-      email: null,
-      firstName: 'John',
-      middleNameOrInitial: null,
-      lastNameOrSurname: 'Doe',
-      phoneNumbers: {
-        home: '9938938494',
-      },
-      address: {
-        address1: '400, Lamar Street',
-        address2: '23/1',
-        address3: null,
-        address4: null,
-        cityOrTown: 'Austin',
-        stateOrProvince: 'TX',
-        postalOrZipCode: '98984',
-        countryCode: 'US',
-        isValidated: false,
-        addressType: null,
-      },
-    },
-  }
 
   server.use(
     graphql.mutation('createCheckoutDestination', (_req, res, ctx) => {
@@ -794,32 +742,6 @@ const handleMultiShipToHomeItems = async (user: any, checkoutData: Checkout): Pr
   await user.click(screen.getAllByRole('button', { name: 'add-new-address' })[1])
 
   await addAddress(user, true)
-
-  const anotherNewDestination = {
-    id: '2eb59e34ef954ced8cefafa200bd1488',
-    destinationContact: {
-      id: null,
-      email: null,
-      firstName: 'Mike',
-      middleNameOrInitial: null,
-      lastNameOrSurname: 'Tyson',
-      phoneNumbers: {
-        home: '9999999999',
-      },
-      address: {
-        address1: '100, Lamar Street',
-        address2: '13/1',
-        address3: null,
-        address4: null,
-        cityOrTown: 'Austin',
-        stateOrProvince: 'TX',
-        postalOrZipCode: '98984',
-        countryCode: 'US',
-        isValidated: false,
-        addressType: null,
-      },
-    },
-  }
 
   server.use(
     graphql.mutation('createCheckoutDestination', (_req, res, ctx) => {
