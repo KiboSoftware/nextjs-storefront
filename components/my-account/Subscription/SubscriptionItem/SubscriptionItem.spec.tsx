@@ -653,8 +653,11 @@ describe('[component] - SubscriptionItem', () => {
       await user.click(kiboSelectMock)
 
       Common.args?.fulfillmentInfoList?.map((fulfillmentInfo) => {
-        const fulfillmentContact = screen.getByText(`${fulfillmentInfo.formattedAddress}`)
-        expect(fulfillmentContact).toBeVisible()
+        const fulfillmentOption = screen.getByRole('option', {
+          name: new RegExp(String(fulfillmentInfo.formattedAddress)),
+        })
+
+        expect(fulfillmentOption).toBeVisible()
       })
     })
 
@@ -718,10 +721,12 @@ describe('[component] - SubscriptionItem', () => {
       const formattedAddress =
         Common.args &&
         Common.args?.fulfillmentInfoList &&
-        Common.args?.fulfillmentInfoList[0] &&
-        Common.args.fulfillmentInfoList[0]?.formattedAddress
+        Common.args?.fulfillmentInfoList[1] &&
+        Common.args.fulfillmentInfoList[1]?.formattedAddress
 
-      const fulfillmentOption = screen.getByText(new RegExp(String(formattedAddress)))
+      const fulfillmentOption = screen.getByRole('option', {
+        name: new RegExp(String(formattedAddress)),
+      })
 
       await user.click(fulfillmentOption)
 
