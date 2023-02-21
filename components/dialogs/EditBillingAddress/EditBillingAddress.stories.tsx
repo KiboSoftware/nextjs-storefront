@@ -27,7 +27,7 @@ Common.args = {
         expireMonth: 5,
         expireYear: 2025,
         cardNumberPart: '************5555',
-        contactId: 1356,
+        contactId: 1308,
         isDefaultPayMethod: false,
       },
       {
