@@ -2,6 +2,12 @@ export const cartItemDetails = /* GraphQL */ `
   fragment cartItemDetails on CrCartItem {
     id
     fulfillmentMethod
+    subscription {
+      frequency {
+        unit
+        value
+      }
+    }
     purchaseLocation
     fulfillmentLocationCode
     productDiscounts {

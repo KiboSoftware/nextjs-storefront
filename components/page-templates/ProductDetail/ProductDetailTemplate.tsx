@@ -36,7 +36,7 @@ import {
   ProductQuickViewDialog,
   ProductVariantSizeSelector,
 } from '@/components/product'
-import { useModalContext } from '@/context/ModalContext'
+import { useModalContext } from '@/context'
 import {
   useProductDetailTemplate,
   usePurchaseLocationQueries,
@@ -106,6 +106,7 @@ const ProductDetailTemplate = (props: ProductDetailTemplateProps) => {
   const { data: purchaseLocation } = usePurchaseLocationQueries()
 
   const { addOrRemoveWishlistItem, checkProductInWishlist } = useWishlist()
+
   const {
     currentProduct,
     quantity,
@@ -134,7 +135,7 @@ const ProductDetailTemplate = (props: ProductDetailTemplateProps) => {
     productOptions,
     optionsVisibility,
     properties,
-    isValidForAddToCart,
+    isValidForOneTime,
   } = productGetters.getProductDetails(
     {
       ...currentProduct,
@@ -160,6 +161,17 @@ const ProductDetailTemplate = (props: ProductDetailTemplateProps) => {
     },
     locationInventory
   )
+
+  const isValidForAddToCart = () => {
+    if (quantityLeft < 1) {
+      return false
+    }
+    if (purchaseType === PurchaseTypes.SUBSCRIPTION) {
+      return !!selectedFrequency
+    } else {
+      return isValidForOneTime
+    }
+  }
 
   const isProductInWishlist = checkProductInWishlist({
     productCode,
@@ -462,7 +474,7 @@ const ProductDetailTemplate = (props: ProductDetailTemplateProps) => {
             color="primary"
             fullWidth
             onClick={() => handleAddToCart()}
-            {...(!(isValidForAddToCart && quantityLeft > 0) && { disabled: true })}
+            {...(!isValidForAddToCart() && { disabled: true })}
           >
             {t('add-to-cart')}
           </Button>

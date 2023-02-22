@@ -83,7 +83,7 @@ const getProductGallery = (product: Product | ProductCustom) => {
 const getProductImage = (product: CrProduct): string => product?.imageUrl || DefaultImage
 
 const handleProtocolRelativeUrl = (url: string) => {
-  if (typeof url === 'string' && !url.startsWith('https')) {
+  if (typeof url === 'string' && !url?.startsWith('http')) {
     return `https:${url}`
   }
   return url
@@ -169,7 +169,7 @@ const getSegregatedOptions = (product: ProductCustom) => {
   }
 }
 
-const validateAddToCart = (product: ProductCustom): boolean => {
+const validateAddToCartForOneTime = (product: ProductCustom): boolean => {
   if (product.fulfillmentMethod === FulfillmentOptions.SHIP) {
     return Boolean(product?.purchasableState?.isPurchasable)
   }
@@ -221,7 +221,7 @@ const getProductDetails = (product: ProductCustom, pdpProductPrice?: ProductPric
     },
 
     properties: getProperties(product) as ProductProperties[],
-    isValidForAddToCart: validateAddToCart(product),
+    isValidForOneTime: validateAddToCartForOneTime(product),
     productOptions,
     isPackagedStandAlone: getIsPackagedStandAlone(product),
   }

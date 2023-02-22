@@ -1,8 +1,9 @@
 import getConfig from 'next/config'
 
 import { FulfillmentOptions } from '../constants'
+import { subscriptionGetters } from './subscriptionGetters'
 
-import type { Maybe, CrCart, CrCartItem, Location, Product } from '../gql/types'
+import type { Maybe, CrCart, CrCartItem, Location, Product, CrSubscriptionInfo } from '../gql/types'
 import type { FulfillmentOption } from '../types'
 
 const { publicRuntimeConfig } = getConfig()
@@ -22,9 +23,12 @@ const getCartItemFulfillmentLocation = (
 }
 
 const getProductFulfillmentOptions = (
-  product: Product,
+  cartItem: CrCartItem,
   location: Location
 ): FulfillmentOption[] => {
+  const product = cartItem?.product
+  const subscription = cartItem?.subscription
+
   const fulfillmentOptions = publicRuntimeConfig.fulfillmentOptions
   return fulfillmentOptions.map((option: FulfillmentOption) => ({
     value: option.value,
@@ -34,10 +38,16 @@ const getProductFulfillmentOptions = (
     fulfillmentLocation: location?.name,
     required: option.isRequired,
     shortName: option.shortName,
-    disabled:
-      product?.fulfillmentTypesSupported?.filter(
-        (type) => type.toLowerCase() === option?.value?.toLowerCase()
-      ).length === 0,
+    disabled: (() => {
+      if (option.shortName === FulfillmentOptions.PICKUP && subscription) {
+        return true
+      }
+      return (
+        product?.fulfillmentTypesSupported?.filter(
+          (type) => type.toLowerCase() === option?.value?.toLowerCase()
+        ).length === 0
+      )
+    })(),
     details: (() => {
       if (option.shortName === FulfillmentOptions.SHIP) return option.details // checking if Directship
       if (location?.name) return `${option.details}: ${location.name}`
@@ -46,9 +56,14 @@ const getProductFulfillmentOptions = (
   }))
 }
 
+const getSubscriptionDetails = (cartItem: Maybe<CrCartItem>) => {
+  return subscriptionGetters.getSubscriptionFrequency(cartItem?.subscription as CrSubscriptionInfo)
+}
+
 export const cartGetters = {
   getCartItemCount,
   getCartItems,
   getCartItemFulfillmentLocation,
   getProductFulfillmentOptions,
+  getSubscriptionDetails,
 }

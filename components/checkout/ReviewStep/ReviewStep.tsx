@@ -131,13 +131,16 @@ const ReviewStep = (props: ReviewStepProps) => {
   const showAccountFields: boolean = watch(['showAccountFields']).join('') === 'true'
   const userEnteredPassword: string = watch(['password']).join('')
   const isEnabled = () => {
-    const isUserEnteredPasswordValid = showAccountFields
-      ? isPasswordValid(userEnteredPassword)
-      : true
+    if (showAccountFields) {
+      const isUserEnteredPasswordValid = showAccountFields
+        ? isPasswordValid(userEnteredPassword)
+        : true
 
-    const isFormValid = showAccountFields ? isValid && isUserEnteredPasswordValid : true
+      const isFormValid = showAccountFields ? isValid && isUserEnteredPasswordValid : true
 
-    return isAgreeWithTermsAndConditions && isFormValid
+      return isAgreeWithTermsAndConditions && isFormValid
+    }
+    return isAgreeWithTermsAndConditions
   }
 
   const handleAgreeTermsConditions = (event: React.ChangeEvent<HTMLInputElement>) =>
