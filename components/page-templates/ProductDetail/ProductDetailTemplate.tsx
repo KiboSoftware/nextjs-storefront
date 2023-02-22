@@ -27,7 +27,6 @@ import {
 } from '@/components/common'
 import { KiboBreadcrumbs, ImageGallery } from '@/components/core'
 import { AddToCartDialog, StoreLocatorDialog } from '@/components/dialogs'
-import { LoginDialog } from '@/components/layout'
 import {
   ColorSelector,
   ProductInformation,
@@ -284,20 +283,15 @@ const ProductDetailTemplate = (props: ProductDetailTemplateProps) => {
   }
 
   const handlePurchaseTypeSelection = (option: string) => {
+    setPurchaseType(option)
     if (option === PurchaseTypes.SUBSCRIPTION) {
-      if (!isAuthenticated) {
-        showModal({ Component: LoginDialog })
-      } else {
-        setPurchaseType(option)
-        setIsSubscriptionPricingSelected(true)
-        setSelectedFulfillmentOption({
-          ...selectedFulfillmentOption,
-          method: FulfillmentOptionsConstant.SHIP,
-        })
-      }
+      setIsSubscriptionPricingSelected(true)
+      setSelectedFulfillmentOption({
+        ...selectedFulfillmentOption,
+        method: FulfillmentOptionsConstant.SHIP,
+      })
     } else {
       setIsSubscriptionPricingSelected(false)
-      setPurchaseType(option)
     }
   }
 

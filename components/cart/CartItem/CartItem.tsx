@@ -126,14 +126,16 @@ const CartItem = (props: CartItemProps) => {
                 link={getProductLink(cartItem?.product?.productCode as string)}
                 subscriptionFrequency={subscriptionDetails as string}
               >
-                <Box pb={1}>
-                  <ProductOption
-                    option={{
-                      name: t('subscription-frequency'),
-                      value: cartGetters.getSubscriptionDetails(cartItem),
-                    }}
-                  />
-                </Box>
+                {subscriptionDetails && (
+                  <Box pb={1}>
+                    <ProductOption
+                      option={{
+                        name: t('subscription-frequency'),
+                        value: subscriptionDetails,
+                      }}
+                    />
+                  </Box>
+                )}
 
                 <Box>
                   <Price
