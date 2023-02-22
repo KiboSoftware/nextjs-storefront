@@ -3,8 +3,8 @@ import React from 'react'
 import { composeStories } from '@storybook/testing-react'
 import { render, screen } from '@testing-library/react'
 
-import * as stories from './Price.stories' // import all stories from the stories file
 import theme from '../../../styles/theme'
+import * as stories from './Price.stories' // import all stories from the stories file
 
 const { PriceOnly, WithSalePrice, WithPriceRange } = composeStories(stories)
 

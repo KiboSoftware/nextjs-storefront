@@ -2,8 +2,8 @@ import React, { useState } from 'react'
 
 import FmdGoodIcon from '@mui/icons-material/FmdGood'
 import { Box, Button, Typography } from '@mui/material'
-import getConfig from 'next/config'
 import { useTranslation } from 'next-i18next'
+import getConfig from 'next/config'
 
 import { KiboDialog } from '@/components/common'
 import { SearchStore } from '@/components/dialogs'

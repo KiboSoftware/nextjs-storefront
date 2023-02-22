@@ -3,8 +3,8 @@ import React, { useEffect, useState } from 'react'
 import FavoriteBorderRoundedIcon from '@mui/icons-material/FavoriteBorderRounded'
 import FavoriteRoundedIcon from '@mui/icons-material/FavoriteRounded'
 import { Box, Button, Popover, Theme, Typography, useMediaQuery, useTheme } from '@mui/material'
-import { useRouter } from 'next/router'
 import { useTranslation } from 'next-i18next'
+import { useRouter } from 'next/router'
 interface WishlistPopoverProps {
   isInWishlist: boolean
 }
