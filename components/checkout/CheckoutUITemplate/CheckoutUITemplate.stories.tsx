@@ -2,12 +2,12 @@ import React from 'react'
 
 import { ComponentStory, ComponentMeta } from '@storybook/react'
 
+import CheckoutUITemplate from './CheckoutUITemplate'
 import DetailsStep from '../DetailsStep/DetailsStep'
 import MultiShippingStep from '../MultiShippingStep/MultiShippingStep'
 import PaymentStep from '../PaymentStep/PaymentStep'
 import ReviewStep from '../ReviewStep/ReviewStep'
 import StandardShippingStep from '../StandardShippingStep/StandardShippingStep'
-import CheckoutUITemplate from './CheckoutUITemplate'
 import { checkoutMock, orderMock } from '@/__mocks__/stories'
 import { CheckoutStepProvider } from '@/context'
 
