@@ -1,7 +1,7 @@
 import { format } from 'date-fns'
 import lodash from 'lodash'
 
-import { FulfillmentOptions } from '../constants'
+import { FulfillmentOptions, DateFormat } from '../constants'
 
 import type { MultiShipAddress, ShipOption } from '../types'
 import type { CrOrderItem, Checkout, Maybe, CrDestination, CrContact } from '@/lib/gql/types'
@@ -151,7 +151,7 @@ const getOrderAddresses = (checkout: Checkout) => {
 }
 
 const getFormattedDate = (dateInput: string | number | Date) => {
-  return dateInput ? format(new Date(dateInput), 'MMMM dd, yyyy, hh:mm a zzz') : ''
+  return dateInput ? format(new Date(dateInput), DateFormat.DATE_FORMAT_WITH_TIME) : ''
 }
 
 export const checkoutGetters = {

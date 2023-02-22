@@ -1,6 +1,6 @@
 import { format } from 'date-fns'
 
-import { FulfillmentOptions } from '../constants'
+import { FulfillmentOptions, DateFormat } from '../constants'
 import {
   ShippingDetails,
   BillingDetails,
@@ -176,13 +176,13 @@ const capitalizeWord = (word?: string) =>
 const getSubmittedDate = (order: CrOrder, withTimestamp?: boolean) =>
   order?.submittedDate
     ? withTimestamp
-      ? (format(new Date(order?.submittedDate), 'MMMM dd, yyyy, hh:mm a zzz') as string)
-      : (format(new Date(order?.submittedDate), 'MMMM dd, yyyy') as string)
+      ? (format(new Date(order?.submittedDate), DateFormat.DATE_FORMAT_WITH_TIME) as string)
+      : (format(new Date(order?.submittedDate), DateFormat.DATE_FORMAT) as string)
     : (order?.submittedDate as string)
 
 const getExpectedDeliveryDate = (items: CrOrderItem[]) => {
   return items[0]?.expectedDeliveryDate
-    ? format(new Date(items[0]?.expectedDeliveryDate), 'MMMM dd, yyyy, hh:mm a zzz')
+    ? format(new Date(items[0]?.expectedDeliveryDate), DateFormat.DATE_FORMAT_WITH_TIME)
     : items[0]?.expectedDeliveryDate
 }
 
