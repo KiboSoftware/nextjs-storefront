@@ -6,8 +6,8 @@ import '@testing-library/jest-dom'
 import userEvent from '@testing-library/user-event'
 import { act } from 'react-dom/test-utils'
 
-import { imageGalleryData } from '../../../__mocks__/stories/imageGalleryDataMock'
 import * as stories from './ImageGallery.stories'
+import { imageGalleryData } from '../../../__mocks__/stories/imageGalleryDataMock'
 
 const { Gallery, Zoomed } = composeStories(stories)
 

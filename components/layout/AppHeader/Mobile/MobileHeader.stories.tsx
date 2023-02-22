@@ -2,8 +2,8 @@ import React from 'react'
 
 import { ComponentStory, ComponentMeta } from '@storybook/react'
 
-import KiboHeader from '../Common/KiboHeader'
 import MobileHeader from './MobileHeader'
+import KiboHeader from '../Common/KiboHeader'
 import { DialogRoot, HeaderContextProvider, ModalContextProvider } from '@/context'
 
 // This component is used inside KiboHeader.

@@ -2,8 +2,8 @@ import React from 'react'
 
 import { ComponentStory, ComponentMeta } from '@storybook/react'
 
-import PromoCodeBadge from '../PromoCodeBadge/PromoCodeBadge'
 import OrderPrice from './OrderPrice'
+import PromoCodeBadge from '../PromoCodeBadge/PromoCodeBadge'
 
 export default {
   title: 'Common/OrderPrice',
