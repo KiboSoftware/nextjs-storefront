@@ -182,7 +182,6 @@ jest.mock('@/components/common/KiboSelect/KiboSelect', () => ({
       <InputLabel id="demo-simple-select-label">select-address</InputLabel>
       <Select
         data-testid="KiboSelect"
-        //labelId="KiboSelect"
         value={value}
         label="kibo-select" //Shipping Address
         onChange={(event) => onChange(event.target.name, event.target.value)}
@@ -648,15 +647,17 @@ describe('[component] - SubscriptionItem', () => {
 
       // Assert
       const kiboSelectMock = screen.getByRole('button', { expanded: false })
-      // const kiboSelectMock = screen.getByRole('button', { name: /select-address/i })
       expect(kiboSelectMock).toBeVisible()
       expect(addNewAddressButton).toBeVisible()
 
       await user.click(kiboSelectMock)
 
       Common.args?.fulfillmentInfoList?.map((fulfillmentInfo) => {
-        const fulfillmentContact = screen.getByText(`${fulfillmentInfo.formattedAddress}`)
-        expect(fulfillmentContact).toBeVisible()
+        const fulfillmentOption = screen.getByRole('option', {
+          name: new RegExp(String(fulfillmentInfo.formattedAddress)),
+        })
+
+        expect(fulfillmentOption).toBeVisible()
       })
     })
 
@@ -720,10 +721,12 @@ describe('[component] - SubscriptionItem', () => {
       const formattedAddress =
         Common.args &&
         Common.args?.fulfillmentInfoList &&
-        Common.args?.fulfillmentInfoList[0] &&
-        Common.args.fulfillmentInfoList[0]?.formattedAddress
+        Common.args?.fulfillmentInfoList[1] &&
+        Common.args.fulfillmentInfoList[1]?.formattedAddress
 
-      const fulfillmentOption = screen.getByText(new RegExp(String(formattedAddress)))
+      const fulfillmentOption = screen.getByRole('option', {
+        name: new RegExp(String(formattedAddress)),
+      })
 
       await user.click(fulfillmentOption)
 

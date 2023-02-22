@@ -46,9 +46,14 @@ const getSavedCardsAndBillingDetails = (
 
   return cards?.map((card: Card) => {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const { accountId, types, ...rest } = contacts?.find(
+    const selectedContact = contacts?.find(
       (contact) => contact.id === card.contactId
     ) as CustomerContact
+
+    const { accountId, types, ...rest } = selectedContact
+      ? selectedContact
+      : { accountId: 0, types: undefined }
+
     return {
       cardInfo: {
         ...cardGetters.getCardDetails(card as SavedCard),

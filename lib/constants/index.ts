@@ -123,7 +123,12 @@ export enum PurchaseTypes {
   ONETIMEPURCHASE = 'One-time purchase',
 }
 
-export const Mode = {
+export const DisplayMode = {
   EDIT: 'Edit',
   ADDNEW: 'AddNew',
+}
+
+export enum DateFormat {
+  DATE_FORMAT = 'MMMM dd, yyyy',
+  DATE_FORMAT_WITH_TIME = 'MMMM dd, yyyy, hh:mm a zzz',
 }

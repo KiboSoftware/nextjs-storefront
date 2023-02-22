@@ -233,6 +233,7 @@ const SubscriptionItem = (props: SubscriptionItemProps) => {
     )
 
     await updateSubscriptionPaymentMutation.mutateAsync(params)
+
     closeModal()
     showSnackbar(t('address-updated-successfully'), 'success')
   }
@@ -471,7 +472,11 @@ const SubscriptionItem = (props: SubscriptionItemProps) => {
                 onClose={handleBillingPopupClose}
                 anchorOrigin={{
                   vertical: 'bottom',
-                  horizontal: 'left',
+                  horizontal: 'right',
+                }}
+                transformOrigin={{
+                  vertical: 'top',
+                  horizontal: 'right',
                 }}
               >
                 <div style={{ padding: '20px' }}>
@@ -547,7 +552,11 @@ const SubscriptionItem = (props: SubscriptionItemProps) => {
                 onClose={handleShippingPopupClose}
                 anchorOrigin={{
                   vertical: 'bottom',
-                  horizontal: 'left',
+                  horizontal: 'right',
+                }}
+                transformOrigin={{
+                  vertical: 'top',
+                  horizontal: 'right',
                 }}
               >
                 <div style={{ padding: '20px' }}>

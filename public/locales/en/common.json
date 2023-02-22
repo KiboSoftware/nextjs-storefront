@@ -323,6 +323,5 @@
   "subscription-frequency": "Subscription frequency",
   "fulfillment-options": "Fulfillment Options:",
   "subscription-cancelled-successfully": "Your subscription item has been cancelled.",
-  "card-ending-in": "Card ",
-  "edit-billing-address": "Edit billing address"
+  "card-ending-in": "Card "
 }

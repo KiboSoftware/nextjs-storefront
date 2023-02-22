@@ -1,6 +1,6 @@
 import { format } from 'date-fns'
 
-import { ProductAttribute } from '../constants'
+import { ProductAttribute, DateFormat } from '../constants'
 import { addressGetters } from '@/lib/getters'
 import type { ProductCustom, PaymentAndBilling } from '@/lib/types'
 
@@ -22,7 +22,7 @@ const getSubscriptionFrequency = (subscription: Subscription) =>
 
 const nextOrderItemDate = (subscription: Subscription) => {
   if (!subscription) return
-  return format(new Date(subscription?.nextOrderDate), 'MMMM dd, yyyy')
+  return format(new Date(subscription?.nextOrderDate), DateFormat.DATE_FORMAT)
 }
 
 const getSubscriptionNumber = (subscription: Subscription) => subscription?.number
@@ -76,9 +76,9 @@ const getFrequencyUnitAndValue = (selectedFrequency: string) => {
 const getFormattedAddress = (subscription: Subscription) => {
   if (!subscription) return
 
-  const formattedAddress = addressGetters.getFormattedAddress(
-    subscription.fulfillmentInfo?.fulfillmentContact as SbContact
-  )
+  const formattedAddress = addressGetters
+    .getFormattedAddress(subscription.fulfillmentInfo?.fulfillmentContact as SbContact)
+    .trim()
 
   return {
     formattedAddress,

@@ -5,7 +5,7 @@
 import { useMutation, useQueryClient } from 'react-query'
 
 import { makeGraphQLClient } from '@/lib/gql/client'
-import { updateSubscriptioFulfillmentInfoMutation } from '@/lib/gql/mutations'
+import { updateSubscriptionFulfillmentInfoMutation } from '@/lib/gql/mutations'
 import { subscriptionKeys } from '@/lib/react-query/queryKeys'
 
 import type { SbFulfillmentInfoInput } from '@/lib/gql/types'
@@ -21,7 +21,7 @@ const updateSubscriptionFulfillmentInfo = async (
   const client = makeGraphQLClient()
 
   const response = await client.request({
-    document: updateSubscriptioFulfillmentInfoMutation,
+    document: updateSubscriptionFulfillmentInfoMutation,
     variables: params,
   })
 
