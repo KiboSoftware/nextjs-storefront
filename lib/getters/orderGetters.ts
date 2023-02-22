@@ -1,7 +1,5 @@
 import { format } from 'date-fns'
 
-import { addressGetters } from './addressGetters'
-import { cardGetters } from './cardGetters'
 import { FulfillmentOptions, DateFormat } from '../constants'
 import {
   ShippingDetails,
@@ -10,6 +8,8 @@ import {
   OrderSummary,
   PaymentMethod,
 } from '../types/OrderGettersTypes'
+import { addressGetters } from './addressGetters'
+import { cardGetters } from './cardGetters'
 
 import type {
   CrOrderItem,

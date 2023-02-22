@@ -13,8 +13,8 @@ import {
 import Tabs, { tabsClasses } from '@mui/material/Tabs'
 import { usePopupState, bindHover, bindPopover } from 'material-ui-popup-state/hooks'
 import HoverPopover from 'material-ui-popup-state/HoverPopover'
-import Link from 'next/link'
 import { useTranslation } from 'next-i18next'
+import Link from 'next/link'
 
 import { KiboImage } from '@/components/common'
 import { MegaMenuItem } from '@/components/layout'

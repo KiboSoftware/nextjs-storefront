@@ -2,8 +2,8 @@ import React, { useEffect, useRef, useState } from 'react'
 
 import { Stack, Button, Typography, SxProps, Box } from '@mui/material'
 import { Theme } from '@mui/material/styles'
-import getConfig from 'next/config'
 import { useTranslation } from 'next-i18next'
+import getConfig from 'next/config'
 
 import { ShippingMethod } from '@/components/checkout'
 import {

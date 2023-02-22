@@ -1,8 +1,8 @@
 import { useEffect, useState } from 'react'
 
+import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
 import getConfig from 'next/config'
 import { useRouter } from 'next/router'
-import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
 
 import { ProductListingTemplate } from '@/components/page-templates'
 import { useProductSearchQueries } from '@/hooks'

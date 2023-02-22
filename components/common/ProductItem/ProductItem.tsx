@@ -11,8 +11,8 @@ import {
   Link as MuiLink,
   Stack,
 } from '@mui/material'
-import Link from 'next/link'
 import { useTranslation } from 'next-i18next'
+import Link from 'next/link'
 
 import { KiboImage, Price } from '@/components/common'
 import { ProductOption, ProductOptionList } from '@/components/product'
