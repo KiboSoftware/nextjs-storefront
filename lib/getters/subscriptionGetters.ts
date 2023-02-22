@@ -24,7 +24,7 @@ const getSubscriberAddress = (subscription: Subscription): string =>
   } ${getAddress(subscription)?.postalOrZipCode} ${getAddress(subscription)?.countryCode}`
 
 const getSubscriptionFrequency = (subscription: Subscription | CrSubscriptionInfo) =>
-  `${subscription?.frequency?.value} ${subscription?.frequency?.unit}`
+  subscription?.frequency && `${subscription?.frequency?.value} ${subscription?.frequency?.unit}`
 
 const nextOrderItemDate = (subscription: Subscription) => {
   if (!subscription) return

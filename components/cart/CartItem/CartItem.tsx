@@ -109,6 +109,7 @@ const CartItem = (props: CartItemProps) => {
   const handleFulfillmentOptionChange = (fulfillmentMethod: string, cartItemId: string) =>
     onFulfillmentOptionChange(fulfillmentMethod, cartItemId)
   const handleProductPickupLocation = (cartItemId: string) => onProductPickupLocation(cartItemId)
+  const subscriptionDetails = cartGetters.getSubscriptionDetails(cartItem)
 
   return (
     <>
@@ -124,14 +125,16 @@ const CartItem = (props: CartItemProps) => {
                 options={productGetters.getOptions(cartItem?.product as CrProduct)}
                 link={getProductLink(cartItem?.product?.productCode as string)}
               >
-                <Box pb={1}>
-                  <ProductOption
-                    option={{
-                      name: t('subscription-frequency'),
-                      value: cartGetters.getSubscriptionDetails(cartItem),
-                    }}
-                  />
-                </Box>
+                {subscriptionDetails && (
+                  <Box pb={1}>
+                    <ProductOption
+                      option={{
+                        name: t('subscription-frequency'),
+                        value: subscriptionDetails,
+                      }}
+                    />
+                  </Box>
+                )}
 
                 <Box>
                   <Price

@@ -27,7 +27,6 @@ import {
 } from '@/components/common'
 import { KiboBreadcrumbs, ImageGallery } from '@/components/core'
 import { AddToCartDialog, StoreLocatorDialog } from '@/components/dialogs'
-import { LoginDialog } from '@/components/layout'
 import {
   ColorSelector,
   ProductInformation,
@@ -37,7 +36,7 @@ import {
   ProductQuickViewDialog,
   ProductVariantSizeSelector,
 } from '@/components/product'
-import { useAuthContext, useModalContext } from '@/context'
+import { useModalContext } from '@/context'
 import {
   useProductDetailTemplate,
   usePurchaseLocationQueries,
@@ -107,7 +106,6 @@ const ProductDetailTemplate = (props: ProductDetailTemplateProps) => {
   const { data: purchaseLocation } = usePurchaseLocationQueries()
 
   const { addOrRemoveWishlistItem, checkProductInWishlist } = useWishlist()
-  const { isAuthenticated } = useAuthContext()
 
   const {
     currentProduct,
@@ -284,20 +282,15 @@ const ProductDetailTemplate = (props: ProductDetailTemplateProps) => {
   }
 
   const handlePurchaseTypeSelection = (option: string) => {
+    setPurchaseType(option)
     if (option === PurchaseTypes.SUBSCRIPTION) {
-      if (!isAuthenticated) {
-        showModal({ Component: LoginDialog })
-      } else {
-        setPurchaseType(option)
-        setIsSubscriptionPricingSelected(true)
-        setSelectedFulfillmentOption({
-          ...selectedFulfillmentOption,
-          method: FulfillmentOptionsConstant.SHIP,
-        })
-      }
+      setIsSubscriptionPricingSelected(true)
+      setSelectedFulfillmentOption({
+        ...selectedFulfillmentOption,
+        method: FulfillmentOptionsConstant.SHIP,
+      })
     } else {
       setIsSubscriptionPricingSelected(false)
-      setPurchaseType(option)
     }
   }
 
