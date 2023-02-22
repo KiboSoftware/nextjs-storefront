@@ -49,6 +49,7 @@ const FulfillmentOptions = (props: FulfillmentOptionsProps) => {
     return {
       value: option.shortName as string,
       name: option.shortName as string,
+      disabled: option?.disabled,
       label: (
         <FulfillmentOptionLabel
           label={option?.label as string}

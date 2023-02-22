@@ -14,7 +14,8 @@ import { useTranslation } from 'next-i18next'
 
 import { CartItemActions, CartItemActionsMobile } from '@/components/cart'
 import { FulfillmentOptions, Price, ProductItem, QuantitySelector } from '@/components/common'
-import { productGetters } from '@/lib/getters'
+import { ProductOption } from '@/components/product'
+import { cartGetters, productGetters } from '@/lib/getters'
 import { uiHelpers } from '@/lib/helpers'
 import type { FulfillmentOption } from '@/lib/types'
 
@@ -123,6 +124,15 @@ const CartItem = (props: CartItemProps) => {
                 options={productGetters.getOptions(cartItem?.product as CrProduct)}
                 link={getProductLink(cartItem?.product?.productCode as string)}
               >
+                <Box pb={1}>
+                  <ProductOption
+                    option={{
+                      name: t('subscription-frequency'),
+                      value: cartGetters.getSubscriptionDetails(cartItem),
+                    }}
+                  />
+                </Box>
+
                 <Box>
                   <Price
                     variant="body2"

@@ -6,10 +6,10 @@ import { FulfillmentOptions } from '@/lib/constants'
 import { cartGetters } from '@/lib/getters/cartGetters'
 import { FulfillmentOption } from '@/lib/types'
 
-import type { CrCartItem as CartItemType, Location, Maybe, Product } from '@/lib/gql/types'
+import type { CrCartItem, Location, Maybe, Product } from '@/lib/gql/types'
 
 interface CartItemListProps {
-  cartItems: Maybe<CartItemType>[]
+  cartItems: Maybe<CrCartItem>[]
   fulfillmentLocations: Location[]
   purchaseLocation: Location
   onCartItemQuantityUpdate: (cartItemId: string, quantity: number) => void
@@ -38,19 +38,17 @@ const CartItemList = (props: CartItemListProps) => {
 
   const handleCartItemActionSelection = () => onCartItemActionSelection()
 
-  const handleSupportedFulfillmentOptions = (
-    cartItem: Maybe<CartItemType>
-  ): FulfillmentOption[] => {
+  const handleSupportedFulfillmentOptions = (cartItem: CrCartItem): FulfillmentOption[] => {
     const location =
       cartItem?.fulfillmentLocationCode && cartItem?.fulfillmentMethod === FulfillmentOptions.PICKUP
         ? cartGetters.getCartItemFulfillmentLocation(cartItem, fulfillmentLocations)
         : purchaseLocation
-    return cartGetters.getProductFulfillmentOptions(cartItem?.product as Product, location)
+    return cartGetters.getProductFulfillmentOptions(cartItem, location)
   }
 
   return (
     <>
-      {cartItems?.map((item: Maybe<CartItemType>, index: number) => (
+      {cartItems?.map((item: Maybe<CrCartItem>, index: number) => (
         <Box key={`${item?.id}-${index}`}>
           <CartItem
             cartItem={item}
@@ -59,7 +57,7 @@ const CartItemList = (props: CartItemListProps) => {
             onQuantityUpdate={handleQuantityUpdate}
             onCartItemDelete={handleCartItemDelete}
             onCartItemActionSelection={handleCartItemActionSelection}
-            fulfillmentOptions={handleSupportedFulfillmentOptions(item)}
+            fulfillmentOptions={handleSupportedFulfillmentOptions(item as CrCartItem)}
             onFulfillmentOptionChange={onFulfillmentOptionSelection}
             onProductPickupLocation={onProductPickupLocation}
           />

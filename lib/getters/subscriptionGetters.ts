@@ -4,7 +4,13 @@ import { ProductAttribute, DateFormat } from '../constants'
 import { addressGetters } from '@/lib/getters'
 import type { ProductCustom, PaymentAndBilling } from '@/lib/types'
 
-import type { SbContact, SbProduct, Subscription, SbProductProperty } from '@/lib/gql/types'
+import type {
+  SbContact,
+  SbProduct,
+  Subscription,
+  SbProductProperty,
+  CrSubscriptionInfo,
+} from '@/lib/gql/types'
 
 const getSubscriberName = (subscription: Subscription) =>
   `${subscription?.fulfillmentInfo?.fulfillmentContact?.firstName} ${subscription?.fulfillmentInfo?.fulfillmentContact?.lastNameOrSurname}`
@@ -17,7 +23,7 @@ const getSubscriberAddress = (subscription: Subscription): string =>
     getAddress(subscription)?.stateOrProvince
   } ${getAddress(subscription)?.postalOrZipCode} ${getAddress(subscription)?.countryCode}`
 
-const getSubscriptionFrequency = (subscription: Subscription) =>
+const getSubscriptionFrequency = (subscription: Subscription | CrSubscriptionInfo) =>
   `${subscription?.frequency?.value} ${subscription?.frequency?.unit}`
 
 const nextOrderItemDate = (subscription: Subscription) => {

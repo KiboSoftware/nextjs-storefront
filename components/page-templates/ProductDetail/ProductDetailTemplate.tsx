@@ -15,8 +15,8 @@ import {
   Theme,
   MenuItem,
 } from '@mui/material'
-import { useTranslation } from 'next-i18next'
 import Link from 'next/link'
+import { useTranslation } from 'next-i18next'
 
 import {
   FulfillmentOptions,
@@ -27,6 +27,7 @@ import {
 } from '@/components/common'
 import { KiboBreadcrumbs, ImageGallery } from '@/components/core'
 import { AddToCartDialog, StoreLocatorDialog } from '@/components/dialogs'
+import { LoginDialog } from '@/components/layout'
 import {
   ColorSelector,
   ProductInformation,
@@ -36,7 +37,7 @@ import {
   ProductQuickViewDialog,
   ProductVariantSizeSelector,
 } from '@/components/product'
-import { useModalContext } from '@/context/ModalContext'
+import { useAuthContext, useModalContext } from '@/context'
 import {
   useProductDetailTemplate,
   usePurchaseLocationQueries,
@@ -106,6 +107,8 @@ const ProductDetailTemplate = (props: ProductDetailTemplateProps) => {
   const { data: purchaseLocation } = usePurchaseLocationQueries()
 
   const { addOrRemoveWishlistItem, checkProductInWishlist } = useWishlist()
+  const { isAuthenticated } = useAuthContext()
+
   const {
     currentProduct,
     quantity,
@@ -134,7 +137,7 @@ const ProductDetailTemplate = (props: ProductDetailTemplateProps) => {
     productOptions,
     optionsVisibility,
     properties,
-    isValidForAddToCart,
+    isValidForOneTime,
   } = productGetters.getProductDetails(
     {
       ...currentProduct,
@@ -160,6 +163,17 @@ const ProductDetailTemplate = (props: ProductDetailTemplateProps) => {
     },
     locationInventory
   )
+
+  const isValidForAddToCart = () => {
+    if (quantityLeft < 1) {
+      return false
+    }
+    if (purchaseType === PurchaseTypes.SUBSCRIPTION) {
+      return !!selectedFrequency
+    } else {
+      return isValidForOneTime
+    }
+  }
 
   const isProductInWishlist = checkProductInWishlist({
     productCode,
@@ -270,15 +284,20 @@ const ProductDetailTemplate = (props: ProductDetailTemplateProps) => {
   }
 
   const handlePurchaseTypeSelection = (option: string) => {
-    setPurchaseType(option)
     if (option === PurchaseTypes.SUBSCRIPTION) {
-      setIsSubscriptionPricingSelected(true)
-      setSelectedFulfillmentOption({
-        ...selectedFulfillmentOption,
-        method: FulfillmentOptionsConstant.SHIP,
-      })
+      if (!isAuthenticated) {
+        showModal({ Component: LoginDialog })
+      } else {
+        setPurchaseType(option)
+        setIsSubscriptionPricingSelected(true)
+        setSelectedFulfillmentOption({
+          ...selectedFulfillmentOption,
+          method: FulfillmentOptionsConstant.SHIP,
+        })
+      }
     } else {
       setIsSubscriptionPricingSelected(false)
+      setPurchaseType(option)
     }
   }
 
@@ -462,7 +481,7 @@ const ProductDetailTemplate = (props: ProductDetailTemplateProps) => {
             color="primary"
             fullWidth
             onClick={() => handleAddToCart()}
-            {...(!(isValidForAddToCart && quantityLeft > 0) && { disabled: true })}
+            {...(!isValidForAddToCart() && { disabled: true })}
           >
             {t('add-to-cart')}
           </Button>
