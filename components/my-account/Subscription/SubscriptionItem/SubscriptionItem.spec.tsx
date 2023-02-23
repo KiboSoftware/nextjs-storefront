@@ -223,7 +223,7 @@ describe('[component] - SubscriptionItem', () => {
     const shipmentFrequency = screen.getByText(/shipment-frequency/i)
     const nextArrivalDate = screen.getByText(/estimated-next-arrival-date/i)
     const shipItemNowButton = screen.getByRole('button', {
-      name: /ship-an-item-now/i,
+      name: /ship-now/i,
     })
     const skipShipmentButton = screen.getByRole('button', {
       name: /skip-shipment/i,
@@ -235,7 +235,7 @@ describe('[component] - SubscriptionItem', () => {
       name: /edit-order-date/i,
     })
     const cancelAnItemButton = screen.getByRole('button', {
-      name: /cancel-an-item/i,
+      name: /cancel-subscription/i,
     })
     const editBillingInformationButton = screen.getByRole('button', {
       name: /edit-billing-information/i,
@@ -279,12 +279,12 @@ describe('[component] - SubscriptionItem', () => {
     expect(pauseSubscriptionButton).toBeVisible()
   })
 
-  describe('ship-an-item-now', () => {
-    it('should open Confirmation Dialog when user clicks on ship-an-item-now button', async () => {
+  describe('ship-now', () => {
+    it('should open Confirmation Dialog when user clicks on ship-now button', async () => {
       const { user } = setup()
 
       const shipAnItemNowButton = screen.getByRole('button', {
-        name: /ship-an-item-now/i,
+        name: /ship-now/i,
       })
 
       // Act
@@ -298,7 +298,7 @@ describe('[component] - SubscriptionItem', () => {
       const { user } = setup()
 
       const shipAnItemNowButton = screen.getByRole('button', {
-        name: /ship-an-item-now/i,
+        name: /ship-now/i,
       })
 
       // Act
@@ -307,7 +307,7 @@ describe('[component] - SubscriptionItem', () => {
       await user.click(confirmButton)
 
       // Assert
-      const snackbar = screen.getByText('item-ordered-successfully')
+      const snackbar = screen.getByText('ordered-successfully')
       expect(snackbar).toBeVisible()
     })
   })
@@ -353,7 +353,7 @@ describe('[component] - SubscriptionItem', () => {
       const { user } = setup()
 
       const cancelSubscriptionButton = screen.getByRole('button', {
-        name: /cancel-an-item/i,
+        name: /cancel-subscription/i,
       })
 
       // Act
@@ -367,7 +367,7 @@ describe('[component] - SubscriptionItem', () => {
       const { user } = setup()
 
       const cancelSubscriptionButton = screen.getByRole('button', {
-        name: /cancel-an-item/i,
+        name: /cancel-subscription/i,
       })
 
       // Act

@@ -10,7 +10,7 @@ describe('[hooks] usePerformSubscriptionActionMutation', () => {
       subscriptionId: '149ceaac15c2eb00016c498e000045a4',
       subscriptionActionInput: {
         actionName: 'Pause',
-        reasons: {
+        reason: {
           actionName: 'Pause',
         },
       },

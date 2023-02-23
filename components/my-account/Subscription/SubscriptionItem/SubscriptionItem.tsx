@@ -38,13 +38,13 @@ import {
   usePerformSubscriptionActionMutation,
   useDeleteSubscriptionMutation,
 } from '@/hooks'
+import { ActionName, OrderStatus } from '@/lib/constants'
 import { subscriptionGetters, productGetters, userGetters } from '@/lib/getters'
 import {
   uiHelpers,
   buildSubscriptionFulfillmentInfoParams,
   buildUpdateSubscriptionPaymentParams,
-  buildPauseSubscriptionParams,
-  buildCancelSubscriptionParams,
+  buildPauseAndCancelSubscriptionParams,
 } from '@/lib/helpers'
 import type {
   Address,
@@ -133,7 +133,8 @@ const SubscriptionItem = (props: SubscriptionItemProps) => {
   const { skipNextSubscription } = useSkipNextSubscriptionMutation()
   const { performSubscriptionActionMutation } = usePerformSubscriptionActionMutation()
   const { editSubscriptionFrequencyMutation } = useEditSubscriptionFrequencyMutation()
-  const { deleteSubscription } = useDeleteSubscriptionMutation()
+  // To-Do: Cancel item and Activate Subscription will handle later
+  // const { deleteSubscription } = useDeleteSubscriptionMutation()
   const { updateSubscriptionNextOrderDateMutation } = useUpdateSubscriptionNextOrderDateMutation()
   const { updateSubscriptionFulfillmentInfoMutation } =
     useUpdateSubscriptionFulfillmentInfoMutation()
@@ -156,11 +157,11 @@ const SubscriptionItem = (props: SubscriptionItemProps) => {
     })
   }
 
-  // Ship An Item Now
-  const handleShipItemNow = async () => {
+  // Ship Now
+  const handleShipNow = async () => {
     await orderSubscriptionNow.mutateAsync({ subscriptionId: subscriptionDetailsData.id as string })
     closeModal()
-    showSnackbar(t('item-ordered-successfully'), 'success')
+    showSnackbar(t('ordered-successfully'), 'success')
   }
 
   // Skip Shipment
@@ -204,10 +205,16 @@ const SubscriptionItem = (props: SubscriptionItemProps) => {
   }
 
   // Cancel An Item
-  const confirmDeleteSubscription = async (subscriptionId: string, subscriptionItemId: string) => {
-    const params = buildCancelSubscriptionParams(subscriptionId, subscriptionItemId)
-    await deleteSubscription.mutateAsync(params)
-    closeModal()
+  // const confirmDeleteSubscription = async (subscriptionId: string, subscriptionItemId: string) => {
+  //   const params = buildCancelSubscriptionParams(subscriptionId, subscriptionItemId)
+  //   await deleteSubscription.mutateAsync(params)
+  //   closeModal()
+  // }
+
+  // Cancel subscription
+  const confirmCancelSubscription = async () => {
+    const params = buildPauseAndCancelSubscriptionParams(subscriptionDetailsData, ActionName.CANCEL)
+    await performSubscriptionActionMutation.mutateAsync(params)
     showSnackbar(t('subscription-cancelled-successfully'), 'success')
   }
 
@@ -310,8 +317,8 @@ const SubscriptionItem = (props: SubscriptionItemProps) => {
   }
 
   // Pause Subscription
-  const confirmPauseSubscription = async (subscriptionId: string) => {
-    const params = buildPauseSubscriptionParams(subscriptionId)
+  const confirmPauseSubscription = async () => {
+    const params = buildPauseAndCancelSubscriptionParams(subscriptionDetailsData, ActionName.PAUSE)
     await performSubscriptionActionMutation.mutateAsync(params)
     showSnackbar(t('subscription-paused'), 'success')
   }
@@ -335,7 +342,9 @@ const SubscriptionItem = (props: SubscriptionItemProps) => {
     if (currentShippingAddress) setShippingAddress(currentShippingAddress)
   }
 
-  // Pause Subscription
+  const isSubscriptionCanceled =
+    subscriptionGetters.getSubscriptionStatus(subscriptionDetailsData) === OrderStatus.CANCELED
+
   useEffect(() => {
     setCurrentCardAsDefault()
     setCurrentShippingAddressAsDefault()
@@ -386,7 +395,7 @@ const SubscriptionItem = (props: SubscriptionItemProps) => {
       <CardContent>
         <Stack direction={{ xs: 'column-reverse', md: 'row' }} sx={{ ...style.subscriptionItem }}>
           <Stack direction="column" sx={{ pt: { xs: '5 %' } }}>
-            <Stack direction="row" sx={{ mt: { md: '3%' } }}>
+            <Stack direction="column" sx={{ mt: { md: '3%' } }}>
               {subscriptionDetailsData?.items &&
                 subscriptionDetailsData?.items?.map((subscribedProductItem) => (
                   <ProductItem
@@ -408,18 +417,20 @@ const SubscriptionItem = (props: SubscriptionItemProps) => {
                 {subscriptionGetters.getSubscriptionFrequency(subscriptionDetailsData)}
               </Typography>
             </Stack>
-            <Stack direction="row">
-              <Typography>{t('estimated-next-arrival-date')}</Typography>
-              <Typography sx={{ fontWeight: 'bold', pl: '10px' }}>
-                {subscriptionGetters.nextOrderItemDate(subscriptionDetailsData)}
-              </Typography>
-            </Stack>
+            {subscriptionDetailsData?.nextOrderDate && 
+              <Stack direction="row">
+                <Typography>{t('estimated-next-arrival-date')}</Typography>
+                <Typography sx={{ fontWeight: 'bold', pl: '10px' }}>
+                  {subscriptionGetters.nextOrderItemDate(subscriptionDetailsData)}
+                </Typography>
+              </Stack>
+            }
           </Stack>
           <Stack
             direction="column"
             sx={{
-              pb: { xs: '5%', lg: '0' },
-              justifyContent: 'flex-end',
+              pb: { xs: '5%', lg: '2%' },
+              justifyContent: 'flex-start',
             }}
           >
             <Stack direction={'row'} sx={{ whiteSpace: 'nowrap' }} gap={2}>
@@ -427,29 +438,31 @@ const SubscriptionItem = (props: SubscriptionItemProps) => {
                 variant="contained"
                 color="secondary"
                 sx={{ ...style.button }}
+                disabled={isSubscriptionCanceled}
                 onClick={() =>
                   handleShowDialog(ConfirmationDialog, {
                     contentText: t('place-an-order-of-this-subscription-now'),
                     primaryButtonText: t('confirm'),
-                    onConfirm: handleShipItemNow,
+                    onConfirm: handleShipNow,
                   })
                 }
               >
-                {t('ship-an-item-now')}
+                {t('ship-now')}
               </Button>
               <Button
                 variant="contained"
                 color="secondary"
                 sx={{ ...style.button }}
+                disabled={isSubscriptionCanceled}
                 onClick={() =>
                   handleShowDialog(ConfirmationDialog, {
                     contentText: t('cancel-subscription-confirmation'),
                     primaryButtonText: t('yes'),
-                    onConfirm: confirmDeleteSubscription,
+                    onConfirm: confirmCancelSubscription,
                   })
                 }
               >
-                {t('cancel-an-item')}
+                {t('cancel-subscription')}
               </Button>
             </Stack>
             <Stack direction={'row'} sx={{ whiteSpace: 'nowrap' }} gap={2}>
@@ -457,6 +470,7 @@ const SubscriptionItem = (props: SubscriptionItemProps) => {
                 variant="contained"
                 color="secondary"
                 sx={{ ...style.button }}
+                disabled={isSubscriptionCanceled}
                 onClick={() =>
                   handleShowDialog(ConfirmationDialog, {
                     contentText: t('skip-next-subscription-confirmation'),
@@ -471,6 +485,7 @@ const SubscriptionItem = (props: SubscriptionItemProps) => {
                 variant="contained"
                 color="secondary"
                 sx={{ ...style.button }}
+                disabled={isSubscriptionCanceled}
                 onClick={handleBillingPopupOpen}
               >
                 {t('edit-billing-information')}
@@ -524,7 +539,7 @@ const SubscriptionItem = (props: SubscriptionItemProps) => {
                         onClose: handleCloseModal,
                       })
                     }
-                    disabled={updateSubscriptionPaymentMutation.isLoading}
+                    disabled={updateSubscriptionPaymentMutation.isLoading || isSubscriptionCanceled}
                   >
                     {t('add-new-address')}
                   </Button>
@@ -536,6 +551,7 @@ const SubscriptionItem = (props: SubscriptionItemProps) => {
                 variant="contained"
                 color="secondary"
                 sx={{ ...style.button }}
+                disabled={isSubscriptionCanceled}
                 onClick={() =>
                   handleShowDialog(EditSubscriptionFrequencyDialog, {
                     subscriptionId: subscriptionDetailsData?.id as string,
@@ -551,6 +567,7 @@ const SubscriptionItem = (props: SubscriptionItemProps) => {
                 variant="contained"
                 color="secondary"
                 sx={{ ...style.button }}
+                disabled={isSubscriptionCanceled}
                 onClick={handleShippingPopupOpen}
               >
                 {t('edit-shipping-address')}
@@ -599,7 +616,9 @@ const SubscriptionItem = (props: SubscriptionItemProps) => {
                         onSaveAddress: handleAddNewShippingAddress,
                       })
                     }
-                    disabled={updateSubscriptionFulfillmentInfoMutation.isLoading}
+                    disabled={
+                      updateSubscriptionFulfillmentInfoMutation.isLoading || isSubscriptionCanceled
+                    }
                   >
                     {t('add-new-address')}
                   </Button>
@@ -611,6 +630,7 @@ const SubscriptionItem = (props: SubscriptionItemProps) => {
                 variant="contained"
                 color="secondary"
                 sx={{ ...style.button }}
+                disabled={isSubscriptionCanceled}
                 onClick={() =>
                   handleShowDialog(EditOrderDateDialog, {
                     subscriptionId: subscriptionDetailsData?.id as string,
@@ -626,9 +646,11 @@ const SubscriptionItem = (props: SubscriptionItemProps) => {
                 variant="contained"
                 color="secondary"
                 sx={{ ...style.button }}
+                disabled={isSubscriptionCanceled}
                 onClick={() =>
                   handleShowDialog(ConfirmationDialog, {
                     contentText: t('pause-subscription-confirmation'),
+                    subscriptionId: subscriptionDetailsData?.id as string,
                     primaryButtonText: t('yes'),
                     onConfirm: confirmPauseSubscription,
                     onClose: () => closeModal(),

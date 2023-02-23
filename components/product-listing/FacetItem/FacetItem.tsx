@@ -49,6 +49,12 @@ const FacetItem = (props: FacetItemProps) => {
   const handleFacetSelection = (selectedFacetItem: string) =>
     onFacetItemSelection && onFacetItemSelection(selectedFacetItem, isApplied)
 
+  const isHtml = (str: string) => {
+    if (!str) return ''
+    const tempElement = document.createElement('div')
+    tempElement.innerHTML = str
+    return tempElement.innerText
+  }
   return (
     <Stack
       direction="row"
@@ -59,7 +65,7 @@ const FacetItem = (props: FacetItemProps) => {
       <FormControlLabel
         data-testid="label"
         sx={{ ...style.formControlLabel }}
-        label={facetItemLabel ? facetItemLabel : ''}
+        label={isHtml(facetItemLabel)}
         control={<Checkbox size="small" checked={isApplied} onChange={handleChange} />}
       />
       {showSearchAndCount && (

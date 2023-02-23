@@ -36,6 +36,7 @@ export interface ProductItemProps {
   link?: string
   children?: ReactNode
   width?: string
+  subscriptionFrequency?: string
   onStoreLocatorClick?: () => void
 }
 
@@ -64,6 +65,7 @@ const ProductItem = (props: ProductItemProps) => {
     link,
     children,
     width = '25%',
+    subscriptionFrequency,
     onStoreLocatorClick,
   } = props
   const { t } = useTranslation('common')
@@ -132,6 +134,16 @@ const ProductItem = (props: ProductItemProps) => {
                     }}
                     variant="body2"
                   />
+                )}
+                {subscriptionFrequency && (
+                  <Box pb={1}>
+                    <ProductOption
+                      option={{
+                        name: t('subscription-frequency'),
+                        value: subscriptionFrequency,
+                      }}
+                    />
+                  </Box>
                 )}
               </Collapse>
               {isPickupItem && expectedDeliveryDate && (

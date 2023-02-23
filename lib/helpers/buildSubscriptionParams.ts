@@ -1,22 +1,27 @@
-export const buildPauseSubscriptionParams = (subscriptionId: string) => {
+import { SbSubscriptionItem, Subscription } from '../gql/types'
+
+export const buildPauseAndCancelSubscriptionParams = (
+  subscriptionDetailsData: Subscription,
+  actionName: string
+) => {
   return {
-    subscriptionId: subscriptionId,
+    subscriptionId: subscriptionDetailsData.id as string,
     subscriptionActionInput: {
-      actionName: 'Pause',
-      reasons: {
-        actionName: 'Pause',
+      actionName: actionName,
+      reason: {
+        actionName: actionName,
       },
     },
   }
 }
 
 export const buildCancelSubscriptionParams = (
-  subscriptionId: string,
-  subscriptionItemId: string
+  subscriptionDetailsData: Subscription,
+  subscriptionItem: SbSubscriptionItem[]
 ) => {
   return {
-    subscriptionId: subscriptionId,
-    subscriptionItemId: subscriptionItemId,
+    subscriptionId: subscriptionDetailsData?.id as string,
+    subscriptionItemId: subscriptionItem[0]?.id as string,
     subscriptionReasonInput: {
       actionName: 'cancel',
       reasonCode: 'cancel',

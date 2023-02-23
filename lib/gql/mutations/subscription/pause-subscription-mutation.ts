@@ -7,7 +7,7 @@ const performSubscriptionActionMutation = /* GraphQL */ `
       subscriptionId: $subscriptionId
       subscriptionActionInput: $subscriptionActionInput
     ) {
-      actionName
+      id
       reasons {
         actionName
       }
