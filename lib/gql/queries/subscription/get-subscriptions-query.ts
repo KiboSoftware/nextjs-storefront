@@ -52,6 +52,7 @@ const getSubscriptionsQuery = /* GraphQL */ `
               expireMonth
               expireYear
               paymentServiceCardId
+              cardNumberPartOrMask
             }
             billingContact {
               id
