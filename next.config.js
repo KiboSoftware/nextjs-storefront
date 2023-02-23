@@ -21,6 +21,7 @@ module.exports = {
       'cdn-sb.mozu.com',
       'encrypted-tbn0.gstatic.com',
       'images.ctfassets.net',
+      'cdn.builder.io',
     ],
   },
   publicRuntimeConfig: {

@@ -62,6 +62,7 @@ import type {
   Card as CardGqlType,
   CustomerContact,
   CustomerAccount,
+  SbSubscriptionItem,
 } from '@/lib/gql/types'
 
 interface SubscriptionItemProps {
@@ -202,8 +203,8 @@ const SubscriptionItem = (props: SubscriptionItemProps) => {
   }
 
   // Cancel An Item
-  const confirmDeleteSubscription = async (subscriptionId: string, subscriptionItemId: string) => {
-    const params = buildCancelSubscriptionParams(subscriptionId, subscriptionItemId)
+  const confirmDeleteSubscription = async (subscriptionItemId: SbSubscriptionItem) => {
+    const params = buildCancelSubscriptionParams(subscriptionDetailsData, subscriptionItemId)
     await deleteSubscription.mutateAsync(params)
     closeModal()
     showSnackbar(t('subscription-cancelled-successfully'), 'success')
@@ -299,8 +300,8 @@ const SubscriptionItem = (props: SubscriptionItemProps) => {
   }
 
   // Pause Subscription
-  const confirmPauseSubscription = async (subscriptionId: string) => {
-    const params = buildPauseSubscriptionParams(subscriptionId)
+  const confirmPauseSubscription = async () => {
+    const params = buildPauseSubscriptionParams(subscriptionDetailsData)
     await performSubscriptionActionMutation.mutateAsync(params)
     showSnackbar(t('subscription-paused'), 'success')
   }
@@ -324,7 +325,6 @@ const SubscriptionItem = (props: SubscriptionItemProps) => {
     if (currentShippingAddress) setShippingAddress(currentShippingAddress)
   }
 
-  // Pause Subscription
   useEffect(() => {
     setCurrentCardAsDefault()
     setCurrentShippingAddressAsDefault()
@@ -432,6 +432,7 @@ const SubscriptionItem = (props: SubscriptionItemProps) => {
                 sx={{ ...style.button }}
                 onClick={() =>
                   handleShowDialog(ConfirmationDialog, {
+                    subscriptionId: subscriptionDetailsData?.id as string,
                     contentText: t('cancel-subscription-confirmation'),
                     primaryButtonText: t('yes'),
                     onConfirm: confirmDeleteSubscription,
@@ -618,6 +619,7 @@ const SubscriptionItem = (props: SubscriptionItemProps) => {
                 onClick={() =>
                   handleShowDialog(ConfirmationDialog, {
                     contentText: t('pause-subscription-confirmation'),
+                    subscriptionId: subscriptionDetailsData?.id as string,
                     primaryButtonText: t('yes'),
                     onConfirm: confirmPauseSubscription,
                     onClose: () => closeModal(),
