@@ -1,7 +1,8 @@
 import { ParsedUrlQuery } from 'querystring'
 
-import { fetcher } from '@/lib/api/util'
-import { getCategoryTreeQuery } from '@/lib/gql/queries'
+// import { fetcher } from '@/lib/api/util'
+// import { getCategoryTreeQuery } from '@/lib/gql/queries'
+import getCategoryTree from './get-category-tree'
 
 import type { Maybe, PrCategory } from '@/lib/gql/types'
 
@@ -40,17 +41,12 @@ export const selectCategoryFromTree = (
 export default async function search(searchParams: ParsedUrlQuery) {
   try {
     const { categoryCode } = searchParams
-    const response = await fetcher(
-      { query: getCategoryTreeQuery, variables: { categoryCode } },
-      null
-    )
-    const categoryTree = response?.data?.categoriesTree?.items
-    if (categoryCode && categoryTree) {
-      const category = selectCategoryFromTree(categoryTree, categoryCode)
-      response.data.categoriesTree.items = category ? [category] : []
+    const categoryTree = await getCategoryTree()
+    if (!categoryCode) {
+      return { categories: categoryTree || [] }
     }
-    const categories = response?.data?.categoriesTree?.items
-    return { categories }
+    const category = selectCategoryFromTree(categoryTree || [], categoryCode)
+    return { categories: category ? [category] : [] }
   } catch (error) {
     console.error(error)
   }

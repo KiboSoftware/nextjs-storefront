@@ -207,6 +207,7 @@ const ProductDetailTemplate = (props: ProductDetailTemplateProps) => {
         quantity,
         ...(purchaseType === PurchaseTypes.SUBSCRIPTION && {
           subscription: {
+            required: true,
             frequency: subscriptionGetters.getFrequencyUnitAndValue(selectedFrequency),
           },
         }),
