@@ -10,6 +10,8 @@ import type {
   Subscription,
   SbProductProperty,
   CrSubscriptionInfo,
+  CustomerContact,
+  SbBillingInfo,
 } from '@/lib/gql/types'
 
 const getSubscriberName = (subscription: Subscription) =>
@@ -92,8 +94,26 @@ const getFormattedAddress = (subscription: Subscription) => {
   }
 }
 
+const getFormattedSubscriptionShippingAddress = (customerContacts: CustomerContact) => {
+  if (!customerContacts) return
+
+  const formattedAddress = addressGetters.getFormattedAddress(customerContacts as SbContact).trim()
+
+  return {
+    formattedAddress,
+    fulfillmentContact: {
+      firstName: customerContacts.firstName,
+      lastNameOrSurname: customerContacts.lastNameOrSurname,
+      email: customerContacts.email,
+      address: { ...customerContacts.address },
+      phoneNumbers: { ...customerContacts.phoneNumbers },
+    },
+  }
+}
+
 const getSubscriptionReasons = (subscription: Subscription) => subscription?.reasons
-const getFormattedBillingAddress = (text: string, card: PaymentAndBilling) => {
+
+const getFormattedSavedCardBillingAddress = (text: string, card: PaymentAndBilling) => {
   const formattedAddress = addressGetters.getFormattedAddress(
     card.billingAddressInfo?.contact as SbContact
   )
@@ -107,6 +127,20 @@ const getFormattedBillingAddress = (text: string, card: PaymentAndBilling) => {
   }
 }
 
+const getFormattedSubscriptionBillingAddress = (text: string, billingInfo: SbBillingInfo) => {
+  const formattedAddress = addressGetters.getFormattedAddress(
+    billingInfo.billingContact as SbContact
+  )
+
+  const cardNumberPart = billingInfo.card?.cardNumberPartOrMask
+
+  return {
+    formattedAddress: `${text} ${cardNumberPart}, ${formattedAddress}`,
+    cardInfo: billingInfo.card,
+    billingAddressInfo: billingInfo.billingContact as SbContact,
+  }
+}
+
 export const subscriptionGetters = {
   getSubscriberName,
   getSubscriberAddress,
@@ -116,9 +150,11 @@ export const subscriptionGetters = {
   getSubscriptionFrequency,
   getSubscriptionDetails,
   getFrequencyValues,
-  getFormattedAddress,
   isSubscriptionModeAvailable,
   getFrequencyUnitAndValue,
   getSubscriptionReasons,
-  getFormattedBillingAddress,
+  getFormattedAddress,
+  getFormattedSubscriptionShippingAddress,
+  getFormattedSavedCardBillingAddress,
+  getFormattedSubscriptionBillingAddress,
 }

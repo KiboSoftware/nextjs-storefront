@@ -123,9 +123,9 @@ export enum PurchaseTypes {
   ONETIMEPURCHASE = 'One-time purchase',
 }
 
-export const DisplayMode = {
-  EDIT: 'Edit',
-  ADDNEW: 'AddNew',
+export enum DisplayMode {
+  EDIT = 'Edit',
+  ADDNEW = 'AddNew',
 }
 
 export enum DateFormat {

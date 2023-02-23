@@ -550,7 +550,7 @@ describe('[component] - SubscriptionItem', () => {
 
       const savedCardsAndContacts = userGetters.getSavedCardsAndBillingDetails(cards, contacts)
       const savedCards = savedCardsAndContacts?.map((card: PaymentAndBilling) =>
-        subscriptionGetters.getFormattedBillingAddress('card-ending-in', card)
+        subscriptionGetters.getFormattedSavedCardBillingAddress('card-ending-in', card)
       )
 
       savedCards.forEach((card) => {
@@ -618,7 +618,7 @@ describe('[component] - SubscriptionItem', () => {
 
       const savedCardsAndContacts = userGetters.getSavedCardsAndBillingDetails(cards, contacts)
       const savedCards = savedCardsAndContacts?.map((card: PaymentAndBilling) =>
-        subscriptionGetters.getFormattedBillingAddress('card-ending-in', card)
+        subscriptionGetters.getFormattedSavedCardBillingAddress('card-ending-in', card)
       )
 
       const cardWithBillingAddress = screen.getByText(getRegExp(savedCards[0]))

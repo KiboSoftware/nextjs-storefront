@@ -2,6 +2,7 @@ import { useTranslation } from 'next-i18next'
 
 import KiboDialog from '@/components/common/KiboDialog/KiboDialog'
 import { PaymentMethod } from '@/components/my-account'
+import { DisplayMode } from '@/lib/constants'
 
 import type { CustomerAccount, CustomerContactCollection, CardCollection } from '@/lib/gql/types'
 
@@ -29,7 +30,7 @@ const EditBillingAddress = (props: EditBillingAddressProps) => {
           user={user as CustomerAccount}
           cards={cards}
           contacts={contacts}
-          displayMode={'AddNew'}
+          displayMode={DisplayMode.ADDNEW}
           isAddressFormInDialog={true}
           onSave={onSave}
           onClose={onClose}

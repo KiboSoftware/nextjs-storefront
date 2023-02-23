@@ -27,7 +27,7 @@ export const buildUpdateSubscriptionPaymentParams = (
     address,
   } = contact
 
-  const { id: cardId, expireMonth, expireYear, cardType } = card
+  const { id: cardId, expireMonth, expireYear, cardType, cardNumberPart } = card
 
   return {
     subscriptionId: subscription.id as string,
@@ -52,6 +52,7 @@ export const buildUpdateSubscriptionPaymentParams = (
           expireMonth: expireMonth as number,
           expireYear: expireYear as number,
           paymentServiceCardId: cardId,
+          cardNumberPartOrMask: cardNumberPart,
         },
       },
     },

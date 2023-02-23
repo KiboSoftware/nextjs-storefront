@@ -11,6 +11,7 @@ import {
   useMediaQuery,
 } from '@mui/material'
 import Popover from '@mui/material/Popover'
+import lodash from 'lodash'
 import { useTranslation } from 'next-i18next'
 
 import { ProductItem, KiboSelect } from '@/components/common'
@@ -62,6 +63,7 @@ import type {
   Card as CardGqlType,
   CustomerContact,
   CustomerAccount,
+  SbBillingInfo,
 } from '@/lib/gql/types'
 
 interface SubscriptionItemProps {
@@ -213,10 +215,22 @@ const SubscriptionItem = (props: SubscriptionItemProps) => {
   const isBillingPopupOpen = Boolean(billingAnchorEl)
   const billingPopupId = isBillingPopupOpen ? 'simple-billing-popover' : undefined
 
-  const savedCardsAndContacts = userGetters.getSavedCardsAndBillingDetails(cards, contacts)
-  const savedCards = savedCardsAndContacts?.map((card: PaymentAndBilling) =>
-    subscriptionGetters.getFormattedBillingAddress(t('card-ending-in'), card)
+  // Get saved cards
+  const savedCards = userGetters.getSavedCardsAndBillingDetails(cards, contacts)
+  const formattedSavedCards = savedCards?.map((card: PaymentAndBilling) =>
+    subscriptionGetters.getFormattedSavedCardBillingAddress(t('card-ending-in'), card)
   )
+
+  // Get subscription card
+  const subscriptionCard = subscriptionDetailsData?.payment?.billingInfo
+  const formatedSubscriptionCard = subscriptionGetters.getFormattedSubscriptionBillingAddress(
+    t('card-ending-in'),
+    subscriptionCard as SbBillingInfo
+  )
+
+  // Get unique cards
+  const duplicateCards = [...formattedSavedCards, formatedSubscriptionCard]
+  const uniqueCards = lodash.uniqBy(duplicateCards, 'formattedAddress')
 
   const handleBillingPopupOpen = async (event: React.MouseEvent<HTMLButtonElement>) => {
     setBillingAnchorEl(event.currentTarget)
@@ -255,7 +269,7 @@ const SubscriptionItem = (props: SubscriptionItemProps) => {
   }
 
   const handleUpdateCard = (selectedValue: string) => {
-    const selectedCard = savedCards.find(
+    const selectedCard = formattedSavedCards.find(
       (card) => card?.formattedAddress === selectedValue
     ) as BillingInfo
 
@@ -270,10 +284,7 @@ const SubscriptionItem = (props: SubscriptionItemProps) => {
   }
 
   const setCurrentCardAsDefault = () => {
-    const currentCardId = subscriptionDetailsData?.payment?.billingInfo?.card?.paymentServiceCardId
-    const currentCard = savedCards.find((card) => card.cardInfo?.id === currentCardId)
-
-    if (currentCard) setBillingAddress(currentCard as BillingInfo)
+    if (formatedSubscriptionCard) setBillingAddress(formatedSubscriptionCard as BillingInfo)
   }
 
   const handleCloseModal = () => closeModal()
@@ -487,7 +498,7 @@ const SubscriptionItem = (props: SubscriptionItemProps) => {
                     value={billingAddress?.formattedAddress}
                     disabled={updateSubscriptionPaymentMutation.isLoading}
                   >
-                    {savedCards?.map((card) => {
+                    {uniqueCards?.map((card) => {
                       return (
                         <MenuItem
                           key={card.formattedAddress}
