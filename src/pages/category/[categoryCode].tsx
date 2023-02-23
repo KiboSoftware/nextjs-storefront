@@ -12,7 +12,7 @@ import { productSearchGetters, facetGetters } from '@/lib/getters'
 import type { CategorySearchParams, CategoryTreeResponse } from '@/lib/types'
 
 import type { PrCategory, ProductSearchResult, Facet, Product, FacetValue } from '@/lib/gql/types'
-import type { NextPage, GetServerSidePropsContext, GetServerSideProps } from 'next'
+import type { NextPage } from 'next'
 
 interface CategoryPageType {
   results: ProductSearchResult
@@ -20,16 +20,30 @@ interface CategoryPageType {
   category: { categories: PrCategory[] }
 }
 
-export const getServerSideProps: GetServerSideProps = async (
-  context: GetServerSidePropsContext
-) => {
-  const { locale, res } = context
-  const response = await productSearch(context.query as unknown as CategorySearchParams)
+export async function getStaticPaths() {
+  const walk = (category: any, categoryCodes: string[] = []) => {
+    if (category.isDisplayed) {
+      categoryCodes.push(category.categoryCode)
+    }
+    const { childrenCategories = [] } = category
+    for (const child of childrenCategories) {
+      walk(child, categoryCodes)
+    }
+    return categoryCodes
+  }
 
   const categoriesTree: CategoryTreeResponse = await getCategoryTree()
-  const category = await categoryTreeSearchByCode(context.query)
+  const getAllCategoryCodes = (categoryTree: any) => categoryTree.flatMap((c: any) => walk(c))
+  const paths = getAllCategoryCodes(categoriesTree).map((code: string) => `/category/${code}`)
+  return { paths, fallback: true }
+}
 
-  res.setHeader('Cache-Control', 'public, s-maxage=10, stale-while-revalidate=59')
+export const getStaticProps: any = async (context: any) => {
+  const { locale } = context
+  const response = await productSearch(context.params as unknown as CategorySearchParams)
+
+  const categoriesTree: CategoryTreeResponse = await getCategoryTree()
+  const category = await categoryTreeSearchByCode(context.params)
 
   return {
     props: {
@@ -38,10 +52,11 @@ export const getServerSideProps: GetServerSideProps = async (
       category,
       ...(await serverSideTranslations(locale as string, ['common'])),
     },
+    revalidate: 60,
   }
 }
 
-const CategoryPage: NextPage<CategoryPageType> = (props) => {
+const CategoryPage: NextPage<CategoryPageType> = (props: any) => {
   const router = useRouter()
   const { publicRuntimeConfig } = getConfig()
 
@@ -104,22 +119,20 @@ const CategoryPage: NextPage<CategoryPageType> = (props) => {
   }, [router.query])
 
   return (
-    <>
-      <ProductListingTemplate
-        productListingHeader={categoryPageHeading as string}
-        categoryFacet={categoryFacet}
-        facetList={facetList}
-        sortingValues={sortingValues}
-        products={products}
-        totalResults={productSearchResult?.totalCount}
-        pageSize={productSearchResult?.pageSize}
-        breadCrumbsList={breadcrumbs}
-        isLoading={isFetching}
-        appliedFilters={appliedFilters as FacetValue[]}
-        onSortItemSelection={changeSorting}
-        onPaginationChange={changePagination}
-      />
-    </>
+    <ProductListingTemplate
+      productListingHeader={categoryPageHeading as string}
+      categoryFacet={categoryFacet}
+      facetList={facetList}
+      sortingValues={sortingValues}
+      products={products}
+      totalResults={productSearchResult?.totalCount}
+      pageSize={productSearchResult?.pageSize}
+      breadCrumbsList={breadcrumbs}
+      isLoading={isFetching}
+      appliedFilters={appliedFilters as FacetValue[]}
+      onSortItemSelection={changeSorting}
+      onPaginationChange={changePagination}
+    />
   )
 }
 
