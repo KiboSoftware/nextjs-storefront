@@ -279,7 +279,7 @@
   "choose-a-response": "Choose a response",
 
   "my-subscription": "My Subscription",
-  "ship-an-item-now": "Ship an item now",
+  "ship-now": "Ship now",
   "skip-shipment": "Skip Shipment",
   "edit-frequency": "Edit Frequency",
   "edit-order-date": "Edit Order Date",
@@ -318,7 +318,7 @@
   "order-date-is-required": "Order date is required",
   "order-date-must-be-valid": "Order date must be valid",
   "address-updated-successfully": "Address updated successfully",
-  "item-ordered-successfully": "Item ordered successfully",
+  "ordered-successfully": "Ordered successfully",
   "select-shipping-address": "Select shipping address",
   "subscription-frequency": "Subscription frequency",
   "fulfillment-options": "Fulfillment Options:",

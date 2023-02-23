@@ -131,7 +131,8 @@ const SubscriptionItem = (props: SubscriptionItemProps) => {
   const { skipNextSubscription } = useSkipNextSubscriptionMutation()
   const { performSubscriptionActionMutation } = usePerformSubscriptionActionMutation()
   const { editSubscriptionFrequencyMutation } = useEditSubscriptionFrequencyMutation()
-  const { deleteSubscription } = useDeleteSubscriptionMutation()
+  // To-Do: Cancel item and Activate Subscription will handle later
+  // const { deleteSubscription } = useDeleteSubscriptionMutation()
   const { updateSubscriptionNextOrderDateMutation } = useUpdateSubscriptionNextOrderDateMutation()
   const { updateSubscriptionFulfillmentInfoMutation } =
     useUpdateSubscriptionFulfillmentInfoMutation()
@@ -154,11 +155,11 @@ const SubscriptionItem = (props: SubscriptionItemProps) => {
     })
   }
 
-  // Ship An Item Now
-  const handleShipItemNow = async () => {
+  // Ship Now
+  const handleShipNow = async () => {
     await orderSubscriptionNow.mutateAsync({ subscriptionId: subscriptionDetailsData.id as string })
     closeModal()
-    showSnackbar(t('item-ordered-successfully'), 'success')
+    showSnackbar(t('ordered-successfully'), 'success')
   }
 
   // Skip Shipment
@@ -200,6 +201,13 @@ const SubscriptionItem = (props: SubscriptionItemProps) => {
     closeModal()
     showSnackbar(t('next-order-date') + orderDate, 'success')
   }
+
+  // Cancel An Item
+  // const confirmDeleteSubscription = async (subscriptionId: string, subscriptionItemId: string) => {
+  //   const params = buildCancelSubscriptionParams(subscriptionId, subscriptionItemId)
+  //   await deleteSubscription.mutateAsync(params)
+  //   closeModal()
+  // }
 
   // Cancel subscription
   const confirmCancelSubscription = async () => {
@@ -398,12 +406,14 @@ const SubscriptionItem = (props: SubscriptionItemProps) => {
                 {subscriptionGetters.getSubscriptionFrequency(subscriptionDetailsData)}
               </Typography>
             </Stack>
-            <Stack direction="row">
-              <Typography>{t('estimated-next-arrival-date')}</Typography>
-              <Typography sx={{ fontWeight: 'bold', pl: '10px' }}>
-                {subscriptionGetters.nextOrderItemDate(subscriptionDetailsData)}
-              </Typography>
-            </Stack>
+            {subscriptionDetailsData?.nextOrderDate && 
+              <Stack direction="row">
+                <Typography>{t('estimated-next-arrival-date')}</Typography>
+                <Typography sx={{ fontWeight: 'bold', pl: '10px' }}>
+                  {subscriptionGetters.nextOrderItemDate(subscriptionDetailsData)}
+                </Typography>
+              </Stack>
+            }
           </Stack>
           <Stack
             direction="column"
@@ -422,11 +432,11 @@ const SubscriptionItem = (props: SubscriptionItemProps) => {
                   handleShowDialog(ConfirmationDialog, {
                     contentText: t('place-an-order-of-this-subscription-now'),
                     primaryButtonText: t('confirm'),
-                    onConfirm: handleShipItemNow,
+                    onConfirm: handleShipNow,
                   })
                 }
               >
-                {t('ship-an-item-now')}
+                {t('ship-now')}
               </Button>
               <Button
                 variant="contained"
