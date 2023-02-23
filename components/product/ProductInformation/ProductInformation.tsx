@@ -57,7 +57,7 @@ const ProductInformation = (props: ProductInformationProps) => {
         py={2}
         data-testid="product-content"
       />
-      <StyledAccordion>
+      <StyledAccordion expanded>
         <AccordionSummary data-testid="accordian" expandIcon={<ExpandMore />}>
           <Typography variant="subtitle2" fontWeight={700}>
             {t('product-specs')}
