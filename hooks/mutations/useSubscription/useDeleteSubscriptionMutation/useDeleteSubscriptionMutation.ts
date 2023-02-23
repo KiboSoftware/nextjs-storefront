@@ -29,7 +29,7 @@ const deleteSubscription = async (params: DeleteSubscriptionProps) => {
 /**
  * [Mutation hook] useDeleteSubscriptionMutation uses the graphQL mutation
  *
- * <b>deleteSubscription(subscriptionId: string subscriptionItemId: string subscriptionReasonInput: SubscriptionReasonInput): Subscription</b>
+ * <b>deleteSubscription(subscriptionId: string, subscriptionItemId: string, subscriptionReasonInput: SubscriptionReasonInput): Subscription</b>
  *
  * Description : Delete subscription order according to the actionName.
  *

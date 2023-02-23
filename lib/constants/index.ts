@@ -21,6 +21,7 @@ export enum OrderStatus {
   ABANDONED = 'Abandoned',
   COMPLETED = 'Completed',
   CREATED = 'Created',
+  CANCELED = 'Cancelled',
 }
 
 const currentYear = new Date().getFullYear()
@@ -131,4 +132,9 @@ export const DisplayMode = {
 export enum DateFormat {
   DATE_FORMAT = 'MMMM dd, yyyy',
   DATE_FORMAT_WITH_TIME = 'MMMM dd, yyyy, hh:mm a zzz',
+}
+
+export enum ActionName {
+  PAUSE = 'Pause',
+  CANCEL = 'Cancel',
 }

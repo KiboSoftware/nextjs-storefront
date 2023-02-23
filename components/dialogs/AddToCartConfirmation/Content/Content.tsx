@@ -5,6 +5,7 @@ import { useTranslation } from 'next-i18next'
 
 import { OrderPrice, ProductItem } from '@/components/common'
 import type { OrderPriceProps } from '@/components/common/OrderPrice/OrderPrice'
+import { cartGetters } from '@/lib/getters'
 
 import type { CrCartItem, CrProductOption } from '@/lib/gql/types'
 interface CartContentProps {
@@ -25,6 +26,7 @@ const Content = (props: CartContentProps) => {
     tax: t('currency', { val: itemTaxTotal }),
     total: t('currency', { val: total }),
   }
+  const subscriptionDetails = cartGetters.getSubscriptionDetails(cartItem)
 
   return (
     <Box sx={{ width: '100%' }} data-testid="content-component">
@@ -39,6 +41,7 @@ const Content = (props: CartContentProps) => {
               (cartItem.product?.price?.salePrice).toString()) ||
             undefined
           }
+          subscriptionFrequency={subscriptionDetails as string}
         />
       </Box>
       <Divider />

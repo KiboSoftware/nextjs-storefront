@@ -235,7 +235,7 @@ describe('[component] - SubscriptionItem', () => {
       name: /edit-order-date/i,
     })
     const cancelAnItemButton = screen.getByRole('button', {
-      name: /cancel-an-item/i,
+      name: /cancel-subscription/i,
     })
     const editBillingInformationButton = screen.getByRole('button', {
       name: /edit-billing-information/i,
@@ -353,7 +353,7 @@ describe('[component] - SubscriptionItem', () => {
       const { user } = setup()
 
       const cancelSubscriptionButton = screen.getByRole('button', {
-        name: /cancel-an-item/i,
+        name: /cancel-subscription/i,
       })
 
       // Act
@@ -367,7 +367,7 @@ describe('[component] - SubscriptionItem', () => {
       const { user } = setup()
 
       const cancelSubscriptionButton = screen.getByRole('button', {
-        name: /cancel-an-item/i,
+        name: /cancel-subscription/i,
       })
 
       // Act
