@@ -1,7 +1,7 @@
 import getConfig from 'next/config'
 
-import { subscriptionGetters } from './subscriptionGetters'
 import { FulfillmentOptions } from '../constants'
+import { subscriptionGetters } from './subscriptionGetters'
 
 import type { Maybe, CrCart, CrCartItem, Location, CrSubscriptionInfo } from '../gql/types'
 import type { FulfillmentOption } from '../types'
