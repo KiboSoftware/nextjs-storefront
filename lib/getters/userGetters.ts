@@ -32,7 +32,7 @@ const getAddresses = (addresses: CustomerContact[], addressType: string): Custom
 const getUserShippingAddress = (addresses: CustomerContact[]): CustomerContact[] | undefined =>
   getAddresses(addresses, AddressType.SHIPPING)
 
-const getUserBillingAddresses = (addresses: CustomerContact[]): CustomerContact[] | undefined =>
+const getUserBillingAddresses = (addresses: CustomerContact[]): CustomerContact[] =>
   getAddresses(addresses, AddressType.BILLING)
 
 const getSavedCardsAndBillingDetails = (
@@ -40,9 +40,11 @@ const getSavedCardsAndBillingDetails = (
   customerAccountContacts: CustomerContactCollection
 ): PaymentAndBilling[] => {
   const cards: Card[] = getSavedCards(customerAccountCards)
-  const contacts: CustomerContact[] = getSavedAddresses(customerAccountContacts)
+  const contacts: CustomerContact[] = getUserBillingAddresses(
+    customerAccountContacts.items as CustomerContact[]
+  )
 
-  if (!(cards && contacts)) return []
+  if (!cards) return []
 
   return cards?.map((card: Card) => {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars

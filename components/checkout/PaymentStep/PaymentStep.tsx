@@ -182,6 +182,7 @@ const PaymentStep = (props: PaymentStepProps) => {
   }
 
   const handleBillingFormAddress = (address: Address) => {
+    console.log('handleBillingFormAddress', address)
     setBillingFormAddress(address)
   }
 
@@ -331,6 +332,7 @@ const PaymentStep = (props: PaymentStepProps) => {
 
     cancelAddingNewPaymentMethod()
 
+    console.log('handleTokenization', billingFormAddress)
     setSavedPaymentBillingDetails([
       ...savedPaymentBillingDetails,
       {

@@ -30,7 +30,7 @@ export default {
   ],
 } as ComponentMeta<typeof CheckoutUITemplate>
 
-const handleCreateOrder = () => undefined
+const handleCreateOrder = async () => undefined
 const handleUpdateCheckoutPersonalInfo = async () => undefined
 const handleVoidPayment = () => 'onVoidPayment'
 const handleAddPayment = () => 'onAddPayment'

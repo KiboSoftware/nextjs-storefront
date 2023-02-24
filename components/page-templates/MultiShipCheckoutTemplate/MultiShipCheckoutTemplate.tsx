@@ -174,8 +174,8 @@ const MultiShipCheckoutTemplate = (props: MultiShipCheckoutProps) => {
     total: checkout?.total,
   }
 
-  const handleCreateOrder = (checkout: Checkout) => {
-    createOrder.mutateAsync(checkout)
+  const handleCreateOrder = async (checkout: Checkout) => {
+    await createOrder.mutateAsync(checkout)
   }
 
   const { shipItems, pickupItems } = checkoutGetters.getCheckoutDetails(checkout as Checkout)
