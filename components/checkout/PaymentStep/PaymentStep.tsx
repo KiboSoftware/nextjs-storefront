@@ -47,8 +47,8 @@ interface PaymentStepProps {
   checkout: CrOrder | Checkout
   contact?: ContactForm
   isMultiShipEnabled?: boolean
-  onVoidPayment: (id: string, paymentId: string, paymentAction: PaymentActionInput) => void
-  onAddPayment: (id: string, paymentAction: PaymentActionInput) => void
+  onVoidPayment: (id: string, paymentId: string, paymentAction: PaymentActionInput) => Promise<void>
+  onAddPayment: (id: string, paymentAction: PaymentActionInput) => Promise<void>
 }
 
 interface PaymentMethod {
@@ -307,12 +307,12 @@ const PaymentStep = (props: PaymentStepProps) => {
 
     selectedCards?.forEach(async (card: Maybe<CrPayment>) => {
       paymentAction = { ...paymentAction, actionName: 'VoidPayment' }
-      onVoidPayment(checkout?.id as string, card?.id as string, paymentAction)
+      await onVoidPayment(checkout?.id as string, card?.id as string, paymentAction)
     })
 
     if (checkout?.id) {
       paymentAction = { ...paymentAction, actionName: '' }
-      onAddPayment(checkout.id, paymentAction)
+      await onAddPayment(checkout.id, paymentAction)
       setStepStatusComplete()
       setStepNext()
     }
