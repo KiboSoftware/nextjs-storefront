@@ -159,8 +159,8 @@ const getCheckoutDetails = (order: CrOrder): CheckoutDetails => {
 }
 
 const getSelectedPaymentMethods = (order?: CrOrder | Checkout, paymentType?: string) => {
-  return order?.payments?.filter(
-    (each) => each?.paymentType === paymentType && each?.status === 'New'
+  return order?.payments?.find(
+    (each) => each?.paymentType === paymentType && each?.status?.toLowerCase() === 'new'
   )
 }
 

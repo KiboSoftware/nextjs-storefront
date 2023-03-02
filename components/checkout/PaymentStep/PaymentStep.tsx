@@ -19,7 +19,7 @@ import { CardDetailsForm, SavedPaymentMethodView } from '@/components/checkout'
 import { AddressForm } from '@/components/common'
 import { useCheckoutStepContext, STEP_STATUS, useAuthContext } from '@/context'
 import { useCustomerCardsQueries, useCustomerContactsQueries, usePaymentTypes } from '@/hooks'
-import { PaymentType, PaymentWorkflow } from '@/lib/constants'
+import { CurrencyCode, PaymentType, PaymentWorkflow } from '@/lib/constants'
 import { addressGetters, cardGetters, orderGetters, userGetters } from '@/lib/getters'
 import { tokenizeCreditCardPayment } from '@/lib/helpers'
 import { buildCardPaymentActionForCheckoutParams } from '@/lib/helpers/buildCardPaymentActionForCheckoutParams'
@@ -182,7 +182,6 @@ const PaymentStep = (props: PaymentStepProps) => {
   }
 
   const handleBillingFormAddress = (address: Address) => {
-    console.log('handleBillingFormAddress', address)
     setBillingFormAddress(address)
   }
 
@@ -283,38 +282,58 @@ const PaymentStep = (props: PaymentStepProps) => {
       )
 
       paymentAction = buildCardPaymentActionForCheckoutParams(
-        'US',
+        CurrencyCode.US,
         checkout,
         cardDetails,
         tokenizedData,
         selectedPaymentMethod?.billingAddressInfo?.contact as CrContact,
         isSameAsShipping
       )
-    }
 
-    const selectedCards = orderGetters.getSelectedPaymentMethods(checkout, PaymentType.CREDITCARD)
-
-    if (
-      selectedCards?.some(
-        (card: Maybe<CrPayment>) =>
-          card?.billingInfo?.card?.paymentServiceCardId === selectedPaymentBillingRadio
+      const paymentsWithNewStatus = orderGetters.getSelectedPaymentMethods(
+        checkout,
+        PaymentType.CREDITCARD
       )
-    ) {
-      setStepStatusComplete()
-      setStepNext()
-      return
-    }
 
-    selectedCards?.forEach(async (card: Maybe<CrPayment>) => {
-      paymentAction = { ...paymentAction, actionName: 'VoidPayment' }
-      await onVoidPayment(checkout?.id as string, card?.id as string, paymentAction)
-    })
+      if (
+        paymentsWithNewStatus?.billingInfo?.card?.paymentServiceCardId ===
+        selectedPaymentBillingRadio
+      ) {
+        setStepStatusComplete()
+        setStepNext()
+        return
+      }
 
-    if (checkout?.id) {
-      paymentAction = { ...paymentAction, actionName: '' }
-      await onAddPayment(checkout.id, paymentAction)
-      setStepStatusComplete()
-      setStepNext()
+      if (paymentsWithNewStatus) {
+        const card = paymentsWithNewStatus?.billingInfo?.card
+        cardDetails.cardType = card?.paymentOrCardType as string
+        cardDetails.expireMonth = card?.expireMonth as number
+        cardDetails.expireYear = card?.expireYear as number
+        cardDetails.paymentType = paymentsWithNewStatus?.paymentType as string
+
+        let paymentActionToBeVoided = buildCardPaymentActionForCheckoutParams(
+          CurrencyCode.US,
+          checkout,
+          cardDetails,
+          tokenizedData,
+          paymentsWithNewStatus?.billingInfo?.billingContact as CrContact,
+          isSameAsShipping
+        )
+
+        paymentActionToBeVoided = { ...paymentActionToBeVoided, actionName: 'VoidPayment' }
+        await onVoidPayment(
+          checkout?.id as string,
+          paymentsWithNewStatus?.id as string,
+          paymentActionToBeVoided
+        )
+      }
+
+      if (checkout?.id) {
+        paymentAction = { ...paymentAction, actionName: '' }
+        await onAddPayment(checkout.id, paymentAction)
+        setStepStatusComplete()
+        setStepNext()
+      }
     }
   }
 
@@ -332,7 +351,6 @@ const PaymentStep = (props: PaymentStepProps) => {
 
     cancelAddingNewPaymentMethod()
 
-    console.log('handleTokenization', billingFormAddress)
     setSavedPaymentBillingDetails([
       ...savedPaymentBillingDetails,
       {
@@ -404,39 +422,37 @@ const PaymentStep = (props: PaymentStepProps) => {
       setSelectedPaymentBillingRadio(defaultCard.cardInfo?.id as string)
 
     // get previously saved checkout payments
-    const checkoutPayments = orderGetters.getSelectedPaymentMethods(
+    const checkoutPaymentWithNewStatus = orderGetters.getSelectedPaymentMethods(
       checkout,
       PaymentType.CREDITCARD
     )
 
     // if checkoutPayment details are not present in accountPaymentDetails, push it and set it as selected radio
-    checkoutPayments?.forEach((card: Maybe<CrPayment>) => {
-      const cardDetails = card?.billingInfo?.card
-      const billingAddress = card?.billingInfo?.billingContact
-      Boolean(
-        !accountPaymentDetails?.length ||
-          !accountPaymentDetails?.some(
-            (each) => each.cardInfo?.id === cardDetails?.paymentServiceCardId
-          )
-      ) &&
-        accountPaymentDetails?.push({
-          cardInfo: {
-            cardNumberPart: cardDetails?.cardNumberPartOrMask as string,
-            id: cardDetails?.paymentServiceCardId as string,
-            expireMonth: cardDetails?.expireMonth,
-            expireYear: cardDetails?.expireYear,
-            paymentType: PaymentType.CREDITCARD,
-            cardType: cardDetails?.paymentOrCardType as string,
+    const cardDetails = checkoutPaymentWithNewStatus?.billingInfo?.card
+    const billingAddress = checkoutPaymentWithNewStatus?.billingInfo?.billingContact
+    Boolean(
+      !accountPaymentDetails?.length ||
+        !accountPaymentDetails?.some(
+          (each) => each.cardInfo?.id === cardDetails?.paymentServiceCardId
+        )
+    ) &&
+      accountPaymentDetails?.push({
+        cardInfo: {
+          cardNumberPart: cardDetails?.cardNumberPartOrMask as string,
+          id: cardDetails?.paymentServiceCardId as string,
+          expireMonth: cardDetails?.expireMonth,
+          expireYear: cardDetails?.expireYear,
+          paymentType: PaymentType.CREDITCARD,
+          cardType: cardDetails?.paymentOrCardType as string,
+        },
+        billingAddressInfo: {
+          contact: {
+            ...billingAddress,
           },
-          billingAddressInfo: {
-            contact: {
-              ...billingAddress,
-            },
-          },
-        })
+        },
+      })
 
-      setSelectedPaymentBillingRadio(cardDetails?.paymentServiceCardId as string)
-    })
+    setSelectedPaymentBillingRadio(cardDetails?.paymentServiceCardId as string)
 
     if (accountPaymentDetails?.length) {
       setSavedPaymentBillingDetails(accountPaymentDetails)
@@ -499,9 +515,7 @@ const PaymentStep = (props: PaymentStepProps) => {
         <>
           <Stack gap={2} width="100%" data-testid="saved-payment-methods">
             {savedPaymentBillingDetails?.length ? (
-              savedPaymentBillingDetails.map((card) => {
-                return getSavedPaymentMethodView(card)
-              })
+              savedPaymentBillingDetails.map((card) => getSavedPaymentMethodView(card))
             ) : (
               <Typography variant="h4">{t('no-previously-saved-payment-methods')}</Typography>
             )}

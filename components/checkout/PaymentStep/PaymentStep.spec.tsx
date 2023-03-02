@@ -379,7 +379,7 @@ describe('[components] PaymentStep', () => {
           PaymentType.CREDITCARD
         )
 
-        const cardId = checkoutPayments?.[0]?.billingInfo?.card?.paymentServiceCardId as string
+        const cardId = checkoutPayments?.billingInfo?.card?.paymentServiceCardId as string
 
         const selectedIds = await screen.findAllByTestId('selectedPaymentRadio')
 
@@ -437,7 +437,7 @@ describe('[components] PaymentStep', () => {
         PaymentType.CREDITCARD
       )
 
-      const cardId = checkoutPayments?.[0]?.billingInfo?.card?.paymentServiceCardId as string
+      const cardId = checkoutPayments?.billingInfo?.card?.paymentServiceCardId as string
 
       const selectedIds = await screen.findAllByTestId('selectedPaymentRadio')
 
