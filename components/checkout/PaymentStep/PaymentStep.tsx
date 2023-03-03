@@ -428,31 +428,33 @@ const PaymentStep = (props: PaymentStepProps) => {
     )
 
     // if checkoutPayment details are not present in accountPaymentDetails, push it and set it as selected radio
-    const cardDetails = checkoutPaymentWithNewStatus?.billingInfo?.card
-    const billingAddress = checkoutPaymentWithNewStatus?.billingInfo?.billingContact
-    Boolean(
-      !accountPaymentDetails?.length ||
-        !accountPaymentDetails?.some(
-          (each) => each.cardInfo?.id === cardDetails?.paymentServiceCardId
-        )
-    ) &&
-      accountPaymentDetails?.push({
-        cardInfo: {
-          cardNumberPart: cardDetails?.cardNumberPartOrMask as string,
-          id: cardDetails?.paymentServiceCardId as string,
-          expireMonth: cardDetails?.expireMonth,
-          expireYear: cardDetails?.expireYear,
-          paymentType: PaymentType.CREDITCARD,
-          cardType: cardDetails?.paymentOrCardType as string,
-        },
-        billingAddressInfo: {
-          contact: {
-            ...billingAddress,
+    if (checkoutPaymentWithNewStatus) {
+      const cardDetails = checkoutPaymentWithNewStatus?.billingInfo?.card
+      const billingAddress = checkoutPaymentWithNewStatus?.billingInfo?.billingContact
+      Boolean(
+        !accountPaymentDetails?.length ||
+          !accountPaymentDetails?.some(
+            (each) => each.cardInfo?.id === cardDetails?.paymentServiceCardId
+          )
+      ) &&
+        accountPaymentDetails?.push({
+          cardInfo: {
+            cardNumberPart: cardDetails?.cardNumberPartOrMask as string,
+            id: cardDetails?.paymentServiceCardId as string,
+            expireMonth: cardDetails?.expireMonth,
+            expireYear: cardDetails?.expireYear,
+            paymentType: PaymentType.CREDITCARD,
+            cardType: cardDetails?.paymentOrCardType as string,
           },
-        },
-      })
+          billingAddressInfo: {
+            contact: {
+              ...billingAddress,
+            },
+          },
+        })
 
-    setSelectedPaymentBillingRadio(cardDetails?.paymentServiceCardId as string)
+      setSelectedPaymentBillingRadio(cardDetails?.paymentServiceCardId as string)
+    }
 
     if (accountPaymentDetails?.length) {
       setSavedPaymentBillingDetails(accountPaymentDetails)

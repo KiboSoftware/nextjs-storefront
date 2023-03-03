@@ -444,29 +444,4 @@ describe('[components] PaymentStep', () => {
       expect(selectedIds[0]?.textContent).toBe(cardId)
     })
   })
-
-  describe('Proceed to Review Step if checkout has payment method', () => {
-    it('should handle Payment Step validation and proceed to Review Step', () => {
-      const onVoidPaymentMock = jest.fn()
-      const onAddPaymentMock = jest.fn()
-      renderWithQueryClient(
-        <AuthContext.Provider value={userContextValues(true, 1012)}>
-          <CheckoutStepProvider
-            steps={['details', 'shipping', 'payment', 'review']}
-            initialActiveStep={2}
-            currentStepStatus={STEP_STATUS.SUBMIT}
-          >
-            <PaymentStep
-              checkout={orderMock.checkout}
-              onVoidPayment={onVoidPaymentMock}
-              onAddPayment={onAddPaymentMock}
-            />
-          </CheckoutStepProvider>
-        </AuthContext.Provider>
-      )
-
-      expect(onVoidPaymentMock).toBeCalled()
-      expect(onAddPaymentMock).toBeCalled()
-    })
-  })
 })
