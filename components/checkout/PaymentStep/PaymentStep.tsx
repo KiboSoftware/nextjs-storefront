@@ -33,15 +33,7 @@ import type {
   CardTypeForCheckout,
 } from '@/lib/types'
 
-import type {
-  CrContact,
-  CrAddress,
-  CrOrder,
-  PaymentActionInput,
-  CrPayment,
-  Maybe,
-  Checkout,
-} from '@/lib/gql/types'
+import type { CrContact, CrAddress, CrOrder, PaymentActionInput, Checkout } from '@/lib/gql/types'
 
 interface PaymentStepProps {
   checkout: CrOrder | Checkout

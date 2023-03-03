@@ -4,14 +4,13 @@ import { composeStories } from '@storybook/testing-react'
 import { screen, cleanup, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 
-import PaymentStep from './PaymentStep'
 // eslint-disable-next-line import/order
 import * as stories from './PaymentStep.stories' // import all stories from the stories file
 const { Common } = composeStories(stories)
 
 import { customerAccountCardsMock, orderMock, userAddressMock } from '@/__mocks__/stories'
 import { renderWithQueryClient } from '@/__test__/utils'
-import { AuthContext, CheckoutStepProvider, STEP_STATUS } from '@/context'
+import { AuthContext } from '@/context'
 import { PaymentType } from '@/lib/constants'
 import { orderGetters } from '@/lib/getters'
 import { tokenizeCreditCardPayment } from '@/lib/helpers'
