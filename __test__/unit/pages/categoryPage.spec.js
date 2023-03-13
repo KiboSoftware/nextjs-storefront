@@ -3,7 +3,7 @@ import { render, screen } from '@testing-library/react'
 
 import { categoryTreeDataMock } from '@/__mocks__/stories/categoryTreeDataMock'
 import { createQueryClientWrapper } from '@/__test__/utils'
-import CategoryPage, { getServerSideProps } from '@/pages/category/[categoryCode]'
+import CategoryPage, { getStaticProps } from '@/pages/category/[categoryCode]'
 const mockCategoryTreeData = categoryTreeDataMock
 const mockProductSearchData = {
   totalCount: 1,
@@ -19,6 +19,9 @@ const mockProductSearchData = {
   ],
   facets: [],
 }
+const mockCategoryTreeByCode = categoryTreeDataMock?.categoriesTree?.items.find(
+  (category) => category.categoryCode === '40'
+)
 
 jest.mock('@/lib/api/util', () => ({
   fetcher: jest.fn(() => {
@@ -26,6 +29,7 @@ jest.mock('@/lib/api/util', () => ({
       data: {
         products: mockProductSearchData,
         categoriesTree: { items: mockCategoryTreeData.categoriesTree?.items },
+        categories: [mockCategoryTreeByCode],
       },
     })
   }),
@@ -74,19 +78,15 @@ jest.mock('next/config', () => {
 })
 
 describe('[page] Category Page', () => {
-  it('should run getServerSideProps method', async () => {
+  it('should run getStaticProps method', async () => {
     const context = {
-      query: {
+      params: {
         categoryCode: '40',
       },
       locale: 'mock-locale',
-      res: { setHeader: jest.fn() },
     }
 
-    const response = await getServerSideProps(context)
-    const mockCategoryTreeByCode = categoryTreeDataMock?.categoriesTree?.items.find(
-      (category) => category.categoryCode === '40'
-    )
+    const response = await getStaticProps(context)
 
     expect(response).toStrictEqual({
       props: {
@@ -101,6 +101,7 @@ describe('[page] Category Page', () => {
           userConfig: { i18n: [{}] },
         },
       },
+      revalidate: 60,
     })
   })
 
