@@ -1,8 +1,7 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect, useRef, useState } from 'react'
 
-import { Stack, Button, Typography, SxProps, Grid, Box } from '@mui/material'
-import { Theme } from '@mui/material/styles'
+import { Stack, Button, Typography, Grid, Box } from '@mui/material'
 import { useTranslation } from 'next-i18next'
 
 import { ShippingMethod } from '@/components/checkout'
