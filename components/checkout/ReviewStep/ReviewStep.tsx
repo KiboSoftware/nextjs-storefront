@@ -190,7 +190,6 @@ const ReviewStep = (props: ReviewStepProps) => {
           <Typography variant="h3" component="h3" fontWeight={600} color="text.primary">
             {t('shipping-to-address')}
           </Typography>
-          {/* <ReviewProductItemsWithAddresses items={shipItems} /> */}
 
           <Stack
             direction="column"
@@ -243,7 +242,6 @@ const ReviewStep = (props: ReviewStepProps) => {
                       price={productGetters.getPrice(product).regular?.toString()}
                       salePrice={productGetters.getPrice(product).special?.toString()}
                       expectedDeliveryDate={item?.expectedDeliveryDate}
-                      data-testid="product-item-multi-ship"
                     />
                   </Stack>
                 </>
@@ -261,7 +259,7 @@ const ReviewStep = (props: ReviewStepProps) => {
           <Typography variant="h3" component="h3" sx={{ fontWeight: 'bold' }} color="text.primary">
             {t('shipping-to-home')}
           </Typography>
-          <ProductItemList items={shipItems} />
+          <ProductItemList items={shipItems} testId={'review-ship-items'} />
           <Divider sx={{ mb: '1.438rem' }} />
         </Stack>
       )}
@@ -272,7 +270,7 @@ const ReviewStep = (props: ReviewStepProps) => {
           <Typography variant="h3" component="h3" sx={{ fontWeight: 'bold' }} color="text.primary">
             {t('pickup-in-store')}
           </Typography>
-          <ProductItemList items={pickupItems} />
+          <ProductItemList items={pickupItems} testId={'review-pickup-items'} />
           <Divider sx={{ mt: '1.ZZ438rem', mb: '1.188rem' }} />
         </Stack>
       )}

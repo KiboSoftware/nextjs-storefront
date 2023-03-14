@@ -2,13 +2,13 @@ import React from 'react'
 
 import { ComponentStory, ComponentMeta } from '@storybook/react'
 
+import CheckoutUITemplate from './CheckoutUITemplate'
 import DetailsStep from '../DetailsStep/DetailsStep'
 import MultiShippingStep from '../MultiShippingStep/MultiShippingStep'
 import PaymentStep from '../PaymentStep/PaymentStep'
 import ReviewStep from '../ReviewStep/ReviewStep'
 import StandardShippingStep from '../StandardShippingStep/StandardShippingStep'
-import CheckoutUITemplate from './CheckoutUITemplate'
-import { checkoutMock, orderMock } from '@/__mocks__/stories'
+import { checkoutMock, orderMock, userAddressResponse } from '@/__mocks__/stories'
 import { CheckoutStepProvider } from '@/context'
 
 export default {
@@ -44,7 +44,7 @@ const Template: ComponentStory<typeof CheckoutUITemplate> = (args) => (
       />
       <StandardShippingStep
         checkout={orderMock.checkout}
-        userShippingAddress={[]}
+        savedUserAddressData={userAddressResponse}
         isAuthenticated={true}
       />
       <PaymentStep
@@ -82,7 +82,7 @@ const MultiShipTemplate: ComponentStory<typeof CheckoutUITemplate> = (args) => (
       <MultiShippingStep
         key={checkoutMock.checkout?.groupings?.map((group) => group?.id).join('')}
         checkout={checkoutMock.checkout}
-        userSavedShippingAddress={[]}
+        savedUserAddressData={userAddressResponse}
         isAuthenticated={true}
         shippingMethods={[]}
         createCheckoutDestination={handleCreateCheckoutDestination}

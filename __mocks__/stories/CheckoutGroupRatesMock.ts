@@ -21,14 +21,14 @@ export const checkoutGroupRatesMock: { checkoutShippingMethods: CheckoutGroupRat
       groupingId: '4c74f3cd4b6e4ca98bd4e94c991ebe0a',
       shippingRates: [
         {
-          shippingMethodCode: '691f94b2b57e47239456ada600cdcc9e',
-          shippingMethodName: 'Flat Rate',
-          shippingZoneCode: 'Americas',
+          shippingMethodCode: 'fedex_FEDEX_2_DAY',
+          shippingMethodName: 'FedEx 2Day',
+          shippingZoneCode: 'United States',
           isValid: true,
           messages: [],
           data: null,
           currencyCode: null,
-          price: 15,
+          price: 33.24,
         },
       ],
     },

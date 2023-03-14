@@ -14,6 +14,7 @@ import type { Checkout, CrOrder } from '@/lib/gql/types'
 interface CheckoutUITemplateProps<T> {
   checkout: T
   promoError: string
+  isMultiShipEnabled?: boolean
   handleApplyCouponCode: (couponCode: string) => void
   handleRemoveCouponCode: (couponCode: string) => void
   children?: React.ReactNode
@@ -24,7 +25,14 @@ const buttonStyle = {
 } as SxProps<Theme> | undefined
 
 const CheckoutUITemplate = <T extends CrOrder | Checkout>(props: CheckoutUITemplateProps<T>) => {
-  const { checkout, handleApplyCouponCode, handleRemoveCouponCode, promoError, children } = props
+  const {
+    checkout,
+    handleApplyCouponCode,
+    handleRemoveCouponCode,
+    promoError,
+    isMultiShipEnabled = false,
+    children,
+  } = props
   const { t } = useTranslation('common')
   const { activeStep, stepStatus, steps, setStepStatusSubmit, setStepBack } =
     useCheckoutStepContext()
@@ -127,7 +135,9 @@ const CheckoutUITemplate = <T extends CrOrder | Checkout>(props: CheckoutUITempl
                 )}
               </OrderSummary>
             )}
-            {activeStep === reviewStepIndex && <OrderReview checkout={checkout as CrOrder} />}
+            {activeStep === reviewStepIndex && (
+              <OrderReview checkout={checkout as CrOrder} isMultiShipEnabled={isMultiShipEnabled} />
+            )}
           </Box>
         </Stack>
       )}

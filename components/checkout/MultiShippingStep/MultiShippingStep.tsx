@@ -2,8 +2,8 @@ import React, { useEffect, useRef, useState } from 'react'
 
 import { Stack, Button, Typography, SxProps, Box } from '@mui/material'
 import { Theme } from '@mui/material/styles'
-import { useTranslation } from 'next-i18next'
 import getConfig from 'next/config'
+import { useTranslation } from 'next-i18next'
 
 import { ShippingMethod } from '@/components/checkout'
 import {
@@ -20,15 +20,16 @@ import {
   useUpdateCheckoutItemDestinationMutations,
   useUpdateCheckoutDestinationMutations,
 } from '@/hooks'
+import { FulfillmentOptions } from '@/lib/constants'
 import { userGetters, checkoutGetters } from '@/lib/getters'
-import type { CustomDestinationInput, MultiShipAddress, ShipOption } from '@/lib/types'
+import type { CustomDestinationInput, ShipOption } from '@/lib/types'
 
 import type {
-  CrOrderItem,
   CrContact,
   CustomerContact,
   Checkout,
   CheckoutGroupRates,
+  CustomerContactCollection,
 } from '@/lib/gql/types'
 
 const buttonStyle = {
@@ -42,7 +43,7 @@ const buttonStyle = {
 interface MultiShippingStepProps {
   setAutoFocus?: boolean
   checkout: Checkout
-  userSavedShippingAddress?: CustomerContact[]
+  savedUserAddressData?: CustomerContactCollection
   isAuthenticated: boolean
   shippingMethods: CheckoutGroupRates[]
   checkoutId?: string
@@ -70,7 +71,7 @@ interface CustomDestinationContact {
 const MultiShippingStep = (props: MultiShippingStepProps) => {
   const {
     checkout,
-    userSavedShippingAddress: addresses,
+    savedUserAddressData,
     isAuthenticated,
     shippingMethods,
     createCheckoutDestination,
@@ -86,20 +87,28 @@ const MultiShippingStep = (props: MultiShippingStepProps) => {
 
   const checkoutShippingMethodCode = checkoutGetters.getShippingMethodCode({ ...checkout })
   const userShippingAddress = isAuthenticated
-    ? userGetters.getUserShippingAddress(addresses as CustomerContact[])
+    ? userGetters.getUserShippingAddress(savedUserAddressData?.items as CustomerContact[])
     : []
   const shipItems = checkoutGetters.getShipItems(checkout)
   const pickupItems = checkoutGetters.getPickupItems(checkout)
+
+  const updateCheckoutItemDestination = useUpdateCheckoutItemDestinationMutations()
+  const updateCheckoutDestination = useUpdateCheckoutDestinationMutations()
+
   const initialShippingOption = checkoutGetters?.getInitialShippingOption(checkout, shipOptions)
+  const isSingleShippingItem = checkoutGetters.isSingleShippingItem(checkout)
   const multiShipAddresses = checkoutGetters.getMultiShipAddresses({
     checkout,
     savedShippingAddresses: userShippingAddress as CrContact[],
   })
+
   const isMultiShipPaymentStepValid = checkoutGetters.checkMultiShipPaymentValid(checkout)
 
   const [validateForm, setValidateForm] = useState<boolean>(false)
   const [isAddressFormValid, setIsAddressFormValid] = useState<boolean>(false)
-  const [shouldShowAddAddressButton, setShouldShowAddAddressButton] = useState<boolean>(true)
+  const [shouldShowAddAddressButton, setShouldShowAddAddressButton] = useState<boolean>(
+    !!multiShipAddresses.length
+  )
   const [shippingOption, setShippingOption] = useState<string>(initialShippingOption)
   const [showMultiShipContinueButton, setShowMultiShipContinueButton] = useState<boolean>(true)
 
@@ -115,8 +124,6 @@ const MultiShippingStep = (props: MultiShippingStepProps) => {
     setStepStatusIncomplete,
   } = useCheckoutStepContext()
 
-  const updateCheckoutItemDestination = useUpdateCheckoutItemDestinationMutations()
-  const updateCheckoutDestination = useUpdateCheckoutDestinationMutations()
   // end hooks
 
   const handleAddressValidationAndSave = () => setValidateForm(true)
@@ -233,7 +240,9 @@ const MultiShippingStep = (props: MultiShippingStepProps) => {
   const onChangeShippingOption = async (option: string) => {
     const groupings = checkout?.groupings
     if (groupings && groupings?.length > 1 && option === shipToHome) {
-      const defaultDestinationId = groupings[0]?.destinationId as string
+      const defaultDestinationId = checkout?.groupings?.find(
+        (group) => group?.fulfillmentMethod === FulfillmentOptions.SHIP
+      )?.destinationId as string
       await updateSameDestinationForAllItems({ destinationId: defaultDestinationId })
     }
 
@@ -245,7 +254,10 @@ const MultiShippingStep = (props: MultiShippingStepProps) => {
     isPrimary?: boolean
   ): React.ReactNode => {
     const { destinationId, address } = contact
-    const selectedDestinationId = checkout?.groupings && checkout?.groupings[0]?.destinationId
+    const selectedDestinationId = checkout?.groupings?.find(
+      (group) => group?.fulfillmentMethod === FulfillmentOptions.SHIP
+    )?.destinationId
+
     return (
       <AddressDetailsView
         key={destinationId + address?.id}
@@ -329,12 +341,21 @@ const MultiShippingStep = (props: MultiShippingStepProps) => {
     isMultiShipPaymentStepValid ? setStepStatusValid() : setStepStatusIncomplete()
   }, [isMultiShipPaymentStepValid, checkout])
 
+  useEffect(() => {
+    const shipItems = checkout?.groupings?.filter(
+      (group) => group?.fulfillmentMethod === FulfillmentOptions.SHIP
+    )
+    if ((shipItems?.length as number) < 2) {
+      setShippingOption(shipToHome)
+    }
+  }, [checkout?.groupings?.length])
+
   return (
     <Stack data-testid="checkout-shipping" gap={2} ref={shippingAddressRef}>
       <Typography variant="h2" component="h2" sx={{ fontWeight: 'bold' }}>
         {!showMultiShipContinueButton ? t('shipping-address') : t('shipping')}
       </Typography>
-      {showMultiShipContinueButton && (
+      {showMultiShipContinueButton && !isSingleShippingItem && (
         <KiboRadio
           radioOptions={radioOptions}
           selected={shippingOption}
@@ -419,7 +440,7 @@ const MultiShippingStep = (props: MultiShippingStepProps) => {
             <>
               <ProductItemWithAddressList
                 checkout={checkout}
-                multiShipAddresses={multiShipAddresses as MultiShipAddress[]}
+                multiShipAddresses={multiShipAddresses}
                 onUpdateDestinationAddress={createOrUpdateDestination}
                 onSelectCreateOrSetDestinationAddress={handleCreateOrSetDestinationAddress}
               />

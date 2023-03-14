@@ -262,6 +262,7 @@ const ProductListingTemplate = (props: ProductListingTemplateProps) => {
                 <Box sx={{ ...styles.sorting }}>
                   <Suspense fallback={<Skeleton variant="rectangular" height={36} />}>
                     <KiboSelect
+                      name="sort"
                       sx={{ typography: 'body2' }}
                       value={sortingValues?.selected}
                       onChange={(_name, value) => onSortItemSelection(value)}

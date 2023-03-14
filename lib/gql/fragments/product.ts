@@ -77,6 +77,7 @@ fragment productInfo on Product {
         variationProductCode
         productUsage
         isPackagedStandAlone
+        fulfillmentTypesSupported
         categories {
           categoryCode
           categoryId

@@ -17,11 +17,9 @@ import { useTranslation } from 'next-i18next'
 
 import { AddressDetailsView, PromoCodeBadge } from '@/components/common'
 import { useCheckoutStepContext } from '@/context'
-import { useStoreLocationsQueries } from '@/hooks'
 import { checkoutGetters, orderGetters } from '@/lib/getters'
-import { storeLocationGetters } from '@/lib/getters/storeLocationGetters'
 
-import type { CrOrder, Maybe, Location, CustomerContact, Checkout } from '@/lib/gql/types'
+import type { CrOrder, CustomerContact, Checkout } from '@/lib/gql/types'
 
 interface OrderReviewProps {
   checkout: CrOrder | Checkout
@@ -67,22 +65,24 @@ const OrderInfoHeader = (props: OrderInfoHeaderProps) => {
   const { t } = useTranslation('common')
 
   return (
-    <Stack pb={2}>
-      <Box display="flex">
-        <Typography variant="subtitle2" fontWeight={600}>
-          {headerName}
-        </Typography>
-        <StyledActions
-          data-step={dataStep}
-          variant="caption"
-          color="text.primary"
-          onClick={handleEditAction}
-        >
-          <Typography sx={{ cursor: 'pointer' }} component="span" fontWeight={600}>
-            {t('edit')}
+    <Stack pb={2} data-testid={`${headerName}`}>
+      {children && (
+        <Box display="flex">
+          <Typography variant="subtitle2" fontWeight={600}>
+            {headerName}
           </Typography>
-        </StyledActions>
-      </Box>
+          <StyledActions
+            data-step={dataStep}
+            variant="caption"
+            color="text.primary"
+            onClick={handleEditAction}
+          >
+            <Typography sx={{ cursor: 'pointer' }} component="span" fontWeight={600}>
+              {t('edit')}
+            </Typography>
+          </StyledActions>
+        </Box>
+      )}
 
       {children}
     </Stack>
@@ -95,15 +95,8 @@ const OrderReview = (props: OrderReviewProps) => {
   const { steps, setActiveStep } = useCheckoutStepContext()
   const { t } = useTranslation('common')
 
-  const { personalDetails, shippingDetails, billingDetails, paymentMethods, pickupItems } =
+  const { personalDetails, shippingDetails, billingDetails, paymentMethods } =
     orderGetters.getCheckoutDetails(checkout as CrOrder) // TODO: change orderGetters type and remove checkoutGetters.getCheckoutDetails
-
-  const fulfillmentLocationCodes = pickupItems
-    .map((pickupItem) => `code eq ${pickupItem?.fulfillmentLocationCode}`)
-    .join(' or ')
-
-  const { data: locations } = useStoreLocationsQueries({ filter: fulfillmentLocationCodes })
-  const storeLocations = storeLocationGetters.getLocations(locations as Maybe<Location>[])
 
   const { email: userName } = personalDetails
   const { shippingPhoneHome, shippingAddress } = shippingDetails
@@ -228,22 +221,6 @@ const OrderReview = (props: OrderReviewProps) => {
                 stateOrProvince={billingAddress?.stateOrProvince as string}
                 postalOrZipCode={billingAddress?.postalOrZipCode as string}
               />
-
-              <Stack sx={{ marginBottom: '1rem' }}>
-                {storeLocations?.map((storeLocation) => (
-                  <Stack direction="column" sx={{ marginBottom: '20px' }} key={storeLocation?.code}>
-                    <AddressDetailsView
-                      firstName={storeLocation?.name}
-                      address1={storeLocation?.address1}
-                      address2={storeLocation?.address2}
-                      cityOrTown={storeLocation?.city}
-                      postalOrZipCode={storeLocation?.zip}
-                      stateOrProvince={storeLocation?.state}
-                      withoutRadioTitle={t('store-pickup-details')}
-                    />
-                  </Stack>
-                ))}
-              </Stack>
             </>
           </OrderInfoHeader>
 
@@ -257,10 +234,11 @@ const OrderReview = (props: OrderReviewProps) => {
                 display="inline"
                 pt={1}
                 key={`${paymentMethod?.cardNumberPartOrMask}-${paymentMethod?.expiry}`}
+                data-testid="payment-info"
               >
                 <Typography variant="body1">{paymentMethod?.cardType}</Typography>
                 <Typography variant="body1">{paymentMethod?.cardNumberPartOrMask}</Typography>
-                <Typography variant="body1">{paymentMethod?.expiry} XXX</Typography>
+                <Typography variant="body1">{paymentMethod?.expiry}</Typography>
               </Box>
             ))}
           </OrderInfoHeader>

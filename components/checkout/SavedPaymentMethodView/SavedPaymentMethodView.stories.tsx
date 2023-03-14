@@ -30,6 +30,7 @@ export const Radio = Template.bind({})
 
 Radio.args = {
   ...Common.args,
+  id: 'payment-billing-view',
   radio: true,
   displayRowDirection: false,
   displayTitle: false,

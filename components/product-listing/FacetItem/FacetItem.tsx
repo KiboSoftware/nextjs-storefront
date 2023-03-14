@@ -53,8 +53,9 @@ const FacetItem = (props: FacetItemProps) => {
     if (!str) return ''
     const tempElement = document.createElement('div')
     tempElement.innerHTML = str
-    return tempElement.innerText
+    return tempElement.textContent as string
   }
+  
   return (
     <Stack
       direction="row"
@@ -70,7 +71,7 @@ const FacetItem = (props: FacetItemProps) => {
           <Checkbox
             size="small"
             inputProps={{
-              'aria-label': facetItemLabel,
+              'aria-label': isHtml(facetItemLabel),
             }}
             checked={isApplied}
             onChange={handleChange}

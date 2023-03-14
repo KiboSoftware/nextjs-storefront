@@ -85,7 +85,7 @@ describe('[component] - ShippingMethod', () => {
     // Locate the corresponding popup (`listbox`) of options.
     const optionsPopupEl = await screen.findByRole('listbox')
     // Click an option in the popup.
-    await user.click(within(optionsPopupEl).getByRole('option', { name: 'Flat Rate $15' }))
+    await user.click(within(optionsPopupEl).getByRole('option', { name: 'Second Day Air $15' }))
     expect(onChangeMock).toBeCalled()
   })
 

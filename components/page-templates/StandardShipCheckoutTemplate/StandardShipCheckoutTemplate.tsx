@@ -17,10 +17,10 @@ import {
   useUpdateOrderPaymentActionMutation,
   useCreateOrderMutation,
 } from '@/hooks'
-import { orderGetters, userGetters } from '@/lib/getters'
+import { orderGetters } from '@/lib/getters'
 import type { PersonalDetails } from '@/lib/types'
 
-import type { CustomerContact, CrOrder, CrOrderInput, PaymentActionInput } from '@/lib/gql/types'
+import type { CrOrder, CrOrderInput, PaymentActionInput } from '@/lib/gql/types'
 
 interface StandardShipCheckoutProps {
   checkout: CrOrder
@@ -73,10 +73,6 @@ const StandardShipCheckoutTemplate = (props: StandardShipCheckoutProps) => {
     }
   }
 
-  const userShippingAddress = userGetters?.getUserShippingAddress(
-    savedUserAddressData?.items as CustomerContact[]
-  )
-
   const updateStandardCheckoutPersonalInfo = useUpdateCheckoutPersonalInfoMutation()
 
   const updateCheckoutPersonalInfo = async (formData: PersonalDetails) => {
@@ -126,6 +122,7 @@ const StandardShipCheckoutTemplate = (props: StandardShipCheckoutProps) => {
     password: '',
   }
 
+
   const handleCreateOrder = async (checkout: CrOrder) => {
     await createOrder.mutateAsync(checkout)
   }
@@ -146,7 +143,7 @@ const StandardShipCheckoutTemplate = (props: StandardShipCheckoutProps) => {
         />
         <StandardShippingStep
           checkout={checkout as CrOrder}
-          userShippingAddress={userShippingAddress}
+          savedUserAddressData={savedUserAddressData}
           isAuthenticated={isAuthenticated}
         />
         <PaymentStep

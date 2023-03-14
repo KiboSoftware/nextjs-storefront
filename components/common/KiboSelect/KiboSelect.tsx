@@ -1,7 +1,7 @@
 import { InputLabel, MenuItem, OutlinedInput, SxProps, Theme } from '@mui/material'
 import { FormControl, FormHelperText, Select } from '@mui/material'
 export interface KiboSelectProps {
-  name?: string
+  name: string
   value?: string
   required?: boolean
   helperText?: string
@@ -28,7 +28,7 @@ const MenuProps = {
 
 const KiboSelect = (props: KiboSelectProps) => {
   const {
-    name = 'kibo-select',
+    name,
     value = '',
     required = false,
     helperText = '',

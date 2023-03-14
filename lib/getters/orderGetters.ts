@@ -1,6 +1,8 @@
 import { format } from 'date-fns'
 
-import { FulfillmentOptions, DateFormat } from '../constants'
+import { addressGetters } from './addressGetters'
+import { cardGetters } from './cardGetters'
+import { FulfillmentOptions, DateFormat, PaymentType } from '../constants'
 import {
   ShippingDetails,
   BillingDetails,
@@ -8,8 +10,6 @@ import {
   OrderSummary,
   PaymentMethod,
 } from '../types/OrderGettersTypes'
-import { addressGetters } from './addressGetters'
-import { cardGetters } from './cardGetters'
 
 import type {
   CrOrderItem,
@@ -127,8 +127,9 @@ const getShippingDetails = (order: CrOrder): ShippingDetails => {
 }
 
 const getBillingDetails = (order: CrOrder): BillingDetails => {
-  const contact = order?.billingInfo?.billingContact as CrContact
-
+  const activePayment = getSelectedPaymentMethods(order, PaymentType.CREDITCARD)
+  const contact =
+    order?.billingInfo?.billingContact || (activePayment?.billingInfo?.billingContact as CrContact)
   return {
     firstName: addressGetters.getFirstName(contact),
     lastNameOrSurname: addressGetters.getLastNameOrSurname(contact),
@@ -294,4 +295,5 @@ export const orderGetters = {
   getSelectedPaymentMethods,
   getShippingMethodCode,
   getLocationCode,
+  getPaymentMethods,
 }
