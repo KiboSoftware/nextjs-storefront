@@ -53,8 +53,8 @@ const LoggedInWithData: ComponentStory<typeof PaymentStep> = (args) => (
   </AuthContext.Provider>
 )
 
-const handleVoidPayment = () => 'onVoidPayment'
-const handleAddPayment = () => 'onAddPayment'
+const handleVoidPayment = async () => undefined
+const handleAddPayment = async () => undefined
 
 export const Common = Template.bind({})
 Common.args = {

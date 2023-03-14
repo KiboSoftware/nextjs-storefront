@@ -138,3 +138,7 @@ export enum ActionName {
   PAUSE = 'Pause',
   CANCEL = 'Cancel',
 }
+
+export const CurrencyCode = {
+  US: 'US',
+}

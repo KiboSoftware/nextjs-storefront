@@ -1,3 +1,5 @@
+import { useMemo } from 'react'
+
 import { Typography, Box } from '@mui/material'
 import { useTranslation } from 'next-i18next'
 
@@ -16,6 +18,7 @@ interface PaymentCardDetailsViewProps {
 const PaymentCard = (props: PaymentCardDetailsViewProps) => {
   const { title, cardNumberPart, expireMonth, expireYear, cardType } = props
   const { t } = useTranslation('common')
+  const cardTypeMemoized = useMemo(() => getCreditCardLogo(cardType as string), [cardType])
 
   return (
     <>
@@ -26,12 +29,9 @@ const PaymentCard = (props: PaymentCardDetailsViewProps) => {
       )}
       <Box display="flex" pt={1} gap={2}>
         <Box minWidth={45}>
-          <KiboImage
-            src={getCreditCardLogo(cardType as string)}
-            alt={cardType!}
-            width={45}
-            height={35}
-          />
+          {cardTypeMemoized && (
+            <KiboImage src={cardTypeMemoized} alt={cardType!} width={45} height={35} />
+          )}
         </Box>
         <Box>
           <Box display="flex">
