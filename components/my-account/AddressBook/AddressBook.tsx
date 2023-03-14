@@ -152,6 +152,13 @@ const AddressBook = (props: AddressBookProps) => {
   const handleAddressValidationAndSave = () => setValidateForm(true)
 
   const handleSaveAddress = async (address: Address) => {
+    address = {
+      ...address,
+      contact: {
+        ...address.contact,
+        email: user.emailAddress as string,
+      },
+    }
     const params = buildAddressParams({
       accountId: user?.id,
       address,

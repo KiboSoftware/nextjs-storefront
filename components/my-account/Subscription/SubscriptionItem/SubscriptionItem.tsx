@@ -36,7 +36,6 @@ import {
   useCreateCustomerCardsMutation,
   useCreateCustomerAddressMutation,
   usePerformSubscriptionActionMutation,
-  useDeleteSubscriptionMutation,
 } from '@/hooks'
 import { ActionName, OrderStatus } from '@/lib/constants'
 import { subscriptionGetters, productGetters, userGetters } from '@/lib/getters'
@@ -417,14 +416,14 @@ const SubscriptionItem = (props: SubscriptionItemProps) => {
                 {subscriptionGetters.getSubscriptionFrequency(subscriptionDetailsData)}
               </Typography>
             </Stack>
-            {subscriptionDetailsData?.nextOrderDate && 
+            {subscriptionDetailsData?.nextOrderDate && (
               <Stack direction="row">
                 <Typography>{t('estimated-next-arrival-date')}</Typography>
                 <Typography sx={{ fontWeight: 'bold', pl: '10px' }}>
                   {subscriptionGetters.nextOrderItemDate(subscriptionDetailsData)}
                 </Typography>
               </Stack>
-            }
+            )}
           </Stack>
           <Stack
             direction="column"

@@ -126,9 +126,8 @@ const StandardShipCheckoutTemplate = (props: StandardShipCheckoutProps) => {
     password: '',
   }
 
-  const handleCreateOrder = (checkout: CrOrder) => {
-    console.log('handleCreateOrder called standard :')
-    createOrder.mutateAsync(checkout)
+  const handleCreateOrder = async (checkout: CrOrder) => {
+    await createOrder.mutateAsync(checkout)
   }
 
   const { shipItems, pickupItems } = orderGetters.getCheckoutDetails(checkout as CrOrder)

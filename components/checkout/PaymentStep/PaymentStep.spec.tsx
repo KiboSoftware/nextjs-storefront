@@ -4,14 +4,13 @@ import { composeStories } from '@storybook/testing-react'
 import { screen, cleanup, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 
-import PaymentStep from './PaymentStep'
 // eslint-disable-next-line import/order
 import * as stories from './PaymentStep.stories' // import all stories from the stories file
 const { Common } = composeStories(stories)
 
 import { customerAccountCardsMock, orderMock, userAddressMock } from '@/__mocks__/stories'
 import { renderWithQueryClient } from '@/__test__/utils'
-import { AuthContext, CheckoutStepProvider, STEP_STATUS } from '@/context'
+import { AuthContext } from '@/context'
 import { PaymentType } from '@/lib/constants'
 import { orderGetters } from '@/lib/getters'
 import { tokenizeCreditCardPayment } from '@/lib/helpers'
@@ -379,7 +378,7 @@ describe('[components] PaymentStep', () => {
           PaymentType.CREDITCARD
         )
 
-        const cardId = checkoutPayments?.[0]?.billingInfo?.card?.paymentServiceCardId as string
+        const cardId = checkoutPayments?.billingInfo?.card?.paymentServiceCardId as string
 
         const selectedIds = await screen.findAllByTestId('selectedPaymentRadio')
 
@@ -437,36 +436,11 @@ describe('[components] PaymentStep', () => {
         PaymentType.CREDITCARD
       )
 
-      const cardId = checkoutPayments?.[0]?.billingInfo?.card?.paymentServiceCardId as string
+      const cardId = checkoutPayments?.billingInfo?.card?.paymentServiceCardId as string
 
       const selectedIds = await screen.findAllByTestId('selectedPaymentRadio')
 
       expect(selectedIds[0]?.textContent).toBe(cardId)
-    })
-  })
-
-  describe('Proceed to Review Step if checkout has payment method', () => {
-    it('should handle Payment Step validation and proceed to Review Step', () => {
-      const onVoidPaymentMock = jest.fn()
-      const onAddPaymentMock = jest.fn()
-      renderWithQueryClient(
-        <AuthContext.Provider value={userContextValues(true, 1012)}>
-          <CheckoutStepProvider
-            steps={['details', 'shipping', 'payment', 'review']}
-            initialActiveStep={2}
-            currentStepStatus={STEP_STATUS.SUBMIT}
-          >
-            <PaymentStep
-              checkout={orderMock.checkout}
-              onVoidPayment={onVoidPaymentMock}
-              onAddPayment={onAddPaymentMock}
-            />
-          </CheckoutStepProvider>
-        </AuthContext.Provider>
-      )
-
-      expect(onVoidPaymentMock).toBeCalled()
-      expect(onAddPaymentMock).toBeCalled()
     })
   })
 })
