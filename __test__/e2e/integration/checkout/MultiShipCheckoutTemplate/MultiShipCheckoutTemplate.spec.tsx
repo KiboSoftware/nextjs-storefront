@@ -899,7 +899,7 @@ const handleReviewStep = async (user: any, checkoutData: Checkout) => {
   const selectedPayment = orderGetters.getSelectedPaymentMethods(
     checkoutData,
     PaymentType.CREDITCARD
-  )?.[0] as CrPayment
+  )
   const billingContact = selectedPayment?.billingInfo?.billingContact
 
   const billingAddressCard = within(billingAddressSection).getByTestId('address-card')
@@ -931,15 +931,17 @@ const handleReviewStep = async (user: any, checkoutData: Checkout) => {
   expect(paymentCard).toBeVisible()
 
   expect(
-    within(paymentCard).getByText(selectedPayment.billingInfo?.card?.paymentOrCardType as string)
+    within(paymentCard).getByText(selectedPayment?.billingInfo?.card?.paymentOrCardType as string)
   ).toBeVisible()
   expect(
-    within(paymentCard).getByText(selectedPayment.billingInfo?.card?.cardNumberPartOrMask as string)
+    within(paymentCard).getByText(
+      selectedPayment?.billingInfo?.card?.cardNumberPartOrMask as string
+    )
   ).toBeVisible()
 
   expect(
     within(paymentCard).getByText(
-      `${selectedPayment.billingInfo?.card?.expireMonth} / ${selectedPayment.billingInfo?.card?.expireYear}`
+      `${selectedPayment?.billingInfo?.card?.expireMonth} / ${selectedPayment?.billingInfo?.card?.expireYear}`
     )
   ).toBeVisible()
 

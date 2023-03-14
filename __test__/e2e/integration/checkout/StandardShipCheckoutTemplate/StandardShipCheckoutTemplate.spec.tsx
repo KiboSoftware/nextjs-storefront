@@ -268,8 +268,7 @@ const handlePaymentStep = async (user: any) => {
     PaymentType.CREDITCARD
   )
 
-  const checkoutPaymentsLength = checkoutPayments?.length as number
-  const totalAddressCount = (addresses?.length as number) + checkoutPaymentsLength
+  const totalAddressCount = (addresses?.length as number) + 1
 
   await waitFor(() => {
     expect(screen.getAllByRole('radio').length).toBe(totalAddressCount)
@@ -277,7 +276,7 @@ const handlePaymentStep = async (user: any) => {
 
   expect(
     screen.getByRole('radio', {
-      name: checkoutPayments?.[0]?.billingInfo?.card?.paymentServiceCardId as string,
+      name: checkoutPayments?.billingInfo?.card?.paymentServiceCardId as string,
     })
   ).toBeChecked()
 

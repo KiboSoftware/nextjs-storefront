@@ -127,7 +127,7 @@ const getShippingDetails = (order: CrOrder): ShippingDetails => {
 }
 
 const getBillingDetails = (order: CrOrder): BillingDetails => {
-  const activePayment = getSelectedPaymentMethods(order, PaymentType.CREDITCARD)?.[0] as CrPayment
+  const activePayment = getSelectedPaymentMethods(order, PaymentType.CREDITCARD)
   const contact =
     order?.billingInfo?.billingContact || (activePayment?.billingInfo?.billingContact as CrContact)
   return {
