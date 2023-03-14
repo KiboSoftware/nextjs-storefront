@@ -1,6 +1,6 @@
 import React from 'react'
 
-import { Visibility } from '@mui/icons-material'
+import Visibility from '@mui/icons-material/Visibility'
 import { ComponentStory, ComponentMeta } from '@storybook/react'
 
 import KiboTextBox, { KiboTextBoxProps } from './KiboTextBox'

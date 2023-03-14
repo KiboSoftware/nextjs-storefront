@@ -1,6 +1,6 @@
 import React from 'react'
 
-import { ArrowForwardIos } from '@mui/icons-material'
+import ArrowForwardIos from '@mui/icons-material/ArrowForwardIos'
 import { Box, Stack, Typography, useMediaQuery, useTheme, Divider } from '@mui/material'
 import { useTranslation } from 'next-i18next'
 

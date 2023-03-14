@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 
 import { yupResolver } from '@hookform/resolvers/yup'
-import { Help } from '@mui/icons-material'
+import Help from '@mui/icons-material/Help'
 import { styled, FormControl, Box } from '@mui/material'
 import creditCardType from 'credit-card-type'
 import { useTranslation } from 'next-i18next'

@@ -1,6 +1,8 @@
 import React from 'react'
 
-import { AccountCircle, LocationOn, ShoppingCart } from '@mui/icons-material'
+import AccountCircle from '@mui/icons-material/AccountCircle'
+import LocationOn from '@mui/icons-material/LocationOn'
+import ShoppingCart from '@mui/icons-material/ShoppingCart'
 import { ComponentStory, ComponentMeta } from '@storybook/react'
 
 import HeaderAction from './HeaderAction'

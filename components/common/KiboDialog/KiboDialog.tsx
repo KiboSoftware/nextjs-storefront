@@ -1,6 +1,6 @@
 import React, { ReactNode } from 'react'
 
-import { Close } from '@mui/icons-material'
+import Close from '@mui/icons-material/Close'
 import {
   Dialog,
   DialogTitle,

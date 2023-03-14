@@ -1,6 +1,7 @@
 import React, { RefObject } from 'react'
 
-import { Search, Close } from '@mui/icons-material'
+import Close from '@mui/icons-material/Close'
+import Search from '@mui/icons-material/Search'
 import { IconButton, InputBase, Paper } from '@mui/material'
 import { useTranslation } from 'next-i18next'
 

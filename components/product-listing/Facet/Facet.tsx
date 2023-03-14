@@ -1,6 +1,8 @@
 import React, { useState, useEffect, useRef } from 'react'
 
-import { Add, ExpandMore, Remove } from '@mui/icons-material'
+import Add from '@mui/icons-material/Add'
+import ExpandMore from '@mui/icons-material/ExpandMore'
+import Remove from '@mui/icons-material/Remove'
 import {
   Accordion,
   AccordionDetails,

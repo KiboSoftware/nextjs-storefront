@@ -1,6 +1,8 @@
 import React, { Suspense, useState } from 'react'
 
-import { Add, Apps, List } from '@mui/icons-material'
+import Add from '@mui/icons-material/Add'
+import Apps from '@mui/icons-material/Apps'
+import List from '@mui/icons-material/List'
 import { Grid, MenuItem, Typography, Box, Button, SxProps, Skeleton, Link } from '@mui/material'
 import { Theme } from '@mui/material/styles'
 import { useTranslation } from 'next-i18next'
