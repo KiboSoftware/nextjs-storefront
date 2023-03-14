@@ -30,10 +30,10 @@ export default {
   ],
 } as ComponentMeta<typeof CheckoutUITemplate>
 
-const handleCreateOrder = () => undefined
+const handleCreateOrder = async () => undefined
 const handleUpdateCheckoutPersonalInfo = async () => undefined
-const handleVoidPayment = () => 'onVoidPayment'
-const handleAddPayment = () => 'onAddPayment'
+const handleVoidPayment = async () => undefined
+const handleAddPayment = async () => undefined
 
 const Template: ComponentStory<typeof CheckoutUITemplate> = (args) => (
   <CheckoutStepProvider steps={['details', 'shipping', 'payment', 'review']} initialActiveStep={1}>

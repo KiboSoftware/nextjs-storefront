@@ -47,7 +47,7 @@ interface ReviewStepProps {
   personalDetails: any
   orderSummaryProps: any
   isMultiShipEnabled: boolean
-  onCreateOrder: (params: any) => void
+  onCreateOrder: (params: any) => Promise<void>
 }
 
 const buttonStyle = {
@@ -147,7 +147,7 @@ const ReviewStep = (props: ReviewStepProps) => {
     setAgreeWithTermsAndConditions(event.target.checked)
 
   const onValid = async (formData: PersonalDetails) => {
-    onCreateOrder(checkout)
+    await onCreateOrder(checkout)
 
     if (formData?.showAccountFields) {
       await createAccount({
