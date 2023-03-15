@@ -1,6 +1,6 @@
 import React from 'react'
 
-import { CheckCircle } from '@mui/icons-material'
+import CheckCircle from '@mui/icons-material/CheckCircle'
 import { Stack, Typography } from '@mui/material'
 import { useTranslation } from 'next-i18next'
 

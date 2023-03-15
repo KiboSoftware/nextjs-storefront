@@ -1,6 +1,6 @@
 import React, { MouseEvent } from 'react'
 
-import { ExpandMore } from '@mui/icons-material'
+import ExpandMore from '@mui/icons-material/ExpandMore'
 import {
   Typography,
   Box,

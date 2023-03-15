@@ -1,6 +1,6 @@
 import React from 'react'
 
-import { CheckCircle } from '@mui/icons-material'
+import CheckCircle from '@mui/icons-material/CheckCircle'
 import { Typography, Box, styled, Theme } from '@mui/material'
 import { useTranslation } from 'next-i18next'
 interface StyledThemeProps {

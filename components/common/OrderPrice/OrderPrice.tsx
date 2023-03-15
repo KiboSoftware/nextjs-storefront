@@ -1,6 +1,6 @@
 import React, { ReactNode } from 'react'
 
-import { Info } from '@mui/icons-material'
+import Info from '@mui/icons-material/Info'
 import { Typography, Box, Divider } from '@mui/material'
 
 import { Price } from '@/components/common'
