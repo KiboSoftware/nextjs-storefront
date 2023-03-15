@@ -25,6 +25,7 @@ export type ShipItemListProps = {
   onShippingMethodChange?: (value: string, name?: string) => void
 }
 export type PickupItemListProps = {
+  isShipItemsPresent: boolean
   pickupItems: Maybe<CrOrderItem>[]
   onClickChangeStore?: () => void
 }
@@ -82,7 +83,7 @@ const ShipItemList = (shipProps: ShipItemListProps) => {
   )
 }
 const PickupItemList = (pickupProps: PickupItemListProps) => {
-  const { pickupItems, onClickChangeStore } = pickupProps
+  const { isShipItemsPresent, pickupItems, onClickChangeStore } = pickupProps
   const { t } = useTranslation('common')
   const expectedDeliveryDate = orderGetters.getExpectedDeliveryDate(pickupItems as CrOrderItem[])
   const isPickupItem = pickupItems.length > 0
@@ -95,18 +96,24 @@ const PickupItemList = (pickupProps: PickupItemListProps) => {
 
   return (
     <Box data-testid="pickup-items">
-      <Divider orientation="horizontal" flexItem />
-      <Box pt={2} pb={3}>
-        <Typography sx={styles.shippingType} py={2} data-testid="pickup-title">
-          {t('pickup')}
-        </Typography>
-      </Box>
+      {isShipItemsPresent && (
+        <>
+          <Divider orientation="horizontal" flexItem />
+          <Box pt={2} pb={3}>
+            <Typography sx={styles.shippingType} py={2} data-testid="pickup-title">
+              {t('pickup')}
+            </Typography>
+          </Box>
+        </>
+      )}
+
       <Box>
         <ProductItemList
           items={pickupItems}
           storePickupAddresses={storePickupAddress}
           isPickupItem={isPickupItem}
           expectedDeliveryDate={expectedDeliveryDate}
+          hideChangeStore={true}
           onClickChangeStore={onClickChangeStore}
         />
       </Box>
@@ -152,14 +159,14 @@ const ShippingMethod = (props: ShippingMethodProps) => {
           setSelectedShippingMethod={setSelectedShippingMethod}
           shipItems={shipItems}
         />
-      ) : (
-        ''
-      )}
+      ) : null}
       {pickupItems?.length ? (
-        <PickupItemList pickupItems={pickupItems} onClickChangeStore={onStoreLocatorClick} />
-      ) : (
-        ''
-      )}
+        <PickupItemList
+          isShipItemsPresent={Boolean(shipItems?.length)}
+          pickupItems={pickupItems}
+          onClickChangeStore={onStoreLocatorClick}
+        />
+      ) : null}
     </Box>
   )
 }

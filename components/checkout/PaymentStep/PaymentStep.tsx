@@ -217,6 +217,7 @@ const PaymentStep = (props: PaymentStepProps) => {
 
   const cancelAddingNewPaymentMethod = () => {
     setIsAddingNewPayment(false)
+    setNewPaymentMethod('')
   }
 
   const handleCardFormValidDetails = (isValid: boolean) => {
