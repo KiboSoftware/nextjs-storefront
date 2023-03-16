@@ -63,7 +63,7 @@ The following data is required to configure the storefront to communicate with y
 - `clientId` - Unique Application (Client) ID of your Application
 - `sharedSecret` - Secret API key used to authenticate application. Viewable from your [Kibo eCommerce Dev Center](https://mozu.com/login)
 
-Visit [Kibo documentation](https://apidocs.kibong-perf.com/?spec=graphql#auth) for more details on API authentication
+Visit [Kibo documentation](https://docs.kibocommerce.com/help) for more details on API authentication
 
 ## Useful Commands
 
