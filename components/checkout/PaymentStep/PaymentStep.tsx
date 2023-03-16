@@ -342,7 +342,7 @@ const PaymentStep = (props: PaymentStepProps) => {
 
     if (!tokenizedCardResponse) return
 
-    cancelAddingNewPaymentMethod()
+    setIsAddingNewPayment(false)
 
     setSavedPaymentBillingDetails([
       ...savedPaymentBillingDetails,
@@ -482,12 +482,15 @@ const PaymentStep = (props: PaymentStepProps) => {
     cardFormDetails.cardNumber,
     billingFormAddress.contact.firstName,
   ])
-
   // handling review order button status (enabled/disabled)
   useEffect(() => {
     if (selectedPaymentBillingRadio) {
+      console.log(stepStatus, isAddingNewPayment)
+
       isAddingNewPayment ? setStepStatusIncomplete() : setStepStatusValid()
     } else {
+      console.log(stepStatus, isAddingNewPayment)
+
       setStepStatusIncomplete()
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps

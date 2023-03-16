@@ -354,7 +354,7 @@ const MultiShippingStep = (props: MultiShippingStepProps) => {
     if (!shipItems.length) setStepStatusValid()
   }, [shipItems.length])
 
-  if (!shipItems.length) {
+  if (!shipItems.length && pickupItems.length) {
     return (
       <>
         <Typography variant="h2" component="h2" sx={{ fontWeight: 'bold' }}>

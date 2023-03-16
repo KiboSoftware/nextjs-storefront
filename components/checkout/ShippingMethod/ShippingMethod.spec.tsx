@@ -82,8 +82,12 @@ describe('[component] - ShippingMethod', () => {
     const shipItemTitle = screen.queryByTestId('ship-title')
     expect(shipItemTitle).not.toBeInTheDocument()
 
-    const pickupItemTitle = screen.getByTestId('pickup-title')
-    expect(pickupItemTitle).toBeInTheDocument()
+    const pickupItemTitle = screen.queryByTestId('pickup-title')
+    expect(pickupItemTitle).not.toBeInTheDocument()
+
+    expect(screen.getAllByTestId('product-item-component').length).toBe(
+      (Common.args?.pickupItems as CrOrderItem[])?.length
+    )
   })
 
   it('should render both shipItems and pickupItems when both are there', () => {

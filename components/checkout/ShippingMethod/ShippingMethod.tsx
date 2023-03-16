@@ -7,7 +7,7 @@ import { KiboSelect, Price, ProductItemList } from '@/components/common'
 import { useStoreLocationsQueries } from '@/hooks'
 import { orderGetters, storeLocationGetters } from '@/lib/getters'
 
-import type { Maybe, CrOrderItem, CrShippingRate, Location } from '@/lib/gql/types'
+import type { Maybe, CrOrderItem, CrShippingRate } from '@/lib/gql/types'
 export type ShippingMethodProps = {
   shipItems?: Maybe<CrOrderItem>[]
   pickupItems?: Maybe<CrOrderItem>[]

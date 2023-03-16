@@ -204,7 +204,7 @@ const userContextValues = (isAuthenticated: boolean, userId: number) => ({
 
 const TestComponent = ({ param }: { param: any }) => {
   const { data: checkout } = useMultiShipCheckoutQueries({
-    checkoutId: 'test-checkout-id' as string,
+    checkoutId: 'test-checkout-id-1' as string,
     isMultiShip: true,
   })
   const {
