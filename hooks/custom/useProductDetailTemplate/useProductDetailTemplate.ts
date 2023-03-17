@@ -47,7 +47,7 @@ export const useProductDetailTemplate = (props: UseProductDetailTemplateProps) =
 
   useEffect(() => {
     setCurrentProduct(product)
-  }, [product.productCode])
+  }, [product?.productCode])
 
   useEffect(() => {
     if (purchaseLocation?.name || selectedFulfillmentOption?.location?.name) {
