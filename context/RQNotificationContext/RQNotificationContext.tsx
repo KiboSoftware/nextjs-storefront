@@ -18,7 +18,7 @@ interface SnackbarStateType {
   type: AlertColor
 }
 
-interface SnackbarContextProviderProps {
+interface RQNotificationContextProviderProps {
   children: ReactNode
 }
 
@@ -32,7 +32,7 @@ export const SnackbarContext = createContext({
   hideSnackbar: () => null,
 } as SnackbarContextType)
 
-export const SnackbarContextProvider = ({ children }: SnackbarContextProviderProps) => {
+export const RQNotificationContextProvider = ({ children }: RQNotificationContextProviderProps) => {
   const [snackbarInfo, setSnackbarInfo] = useState<SnackbarStateType>({
     visible: false,
     message: '',

@@ -13,7 +13,7 @@ import {
 import {
   DialogRoot,
   ModalContextProvider,
-  SnackbarContextProvider,
+  RQNotificationContextProvider,
   SnackbarRoot,
   AuthContextProvider,
 } from '@/context'
@@ -33,13 +33,13 @@ export default {
 
 const Template: ComponentStory<typeof SubscriptionItem> = ({ ...args }) => (
   <ModalContextProvider>
-    <SnackbarContextProvider>
+    <RQNotificationContextProvider>
       <AuthContextProvider>
         <DialogRoot />
         <SnackbarRoot />
         <SubscriptionItem {...args} />
       </AuthContextProvider>
-    </SnackbarContextProvider>
+    </RQNotificationContextProvider>
   </ModalContextProvider>
 )
 

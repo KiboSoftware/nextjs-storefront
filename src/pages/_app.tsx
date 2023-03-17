@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React from 'react'
 
 import { CacheProvider, EmotionCache } from '@emotion/react'
 import CssBaseline from '@mui/material/CssBaseline'
@@ -10,11 +10,10 @@ import Head from 'next/head'
 import 'next-i18next.config'
 import Router from 'next/router'
 import NProgress from 'nprogress'
-import { Hydrate, QueryClientProvider } from 'react-query'
+import { Hydrate } from 'react-query'
 import '../../styles/global.css'
 
 import createEmotionCache from '../../lib/createEmotionCache'
-import { generateQueryClient } from '../../lib/react-query/queryClient'
 import theme from '../../styles/theme'
 import { GlobalFetchingIndicator } from '@/components/common'
 import { KiboHeader, DefaultLayout, Footer } from '@/components/layout'
@@ -24,7 +23,7 @@ import {
   DialogRoot,
   HeaderContextProvider,
   SnackbarRoot,
-  SnackbarContextProvider,
+  RQNotificationContextProvider,
 } from '@/context'
 import { footerConfig as footerProps } from '@/lib/constants'
 import type { NextPageWithLayout } from '@/lib/types'
@@ -55,7 +54,7 @@ const App = (props: KiboAppProps) => {
       <ThemeProvider theme={theme}>
         {/* CssBaseline kickstart an elegant, consistent, and simple baseline to build upon. */}
         <CssBaseline />
-        <SnackbarContextProvider>
+        <RQNotificationContextProvider>
           <ModalContextProvider>
             <AuthContextProvider>
               <HeaderContextProvider>
@@ -91,7 +90,7 @@ const App = (props: KiboAppProps) => {
               </HeaderContextProvider>
             </AuthContextProvider>
           </ModalContextProvider>
-        </SnackbarContextProvider>
+        </RQNotificationContextProvider>
       </ThemeProvider>
     </CacheProvider>
   )

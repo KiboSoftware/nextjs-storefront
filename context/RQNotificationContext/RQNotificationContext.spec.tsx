@@ -1,7 +1,11 @@
 import { render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 
-import { SnackbarRoot, SnackbarContextProvider, useSnackbarContext } from './SnackbarContext'
+import {
+  SnackbarRoot,
+  RQNotificationContextProvider,
+  useSnackbarContext,
+} from './RQNotificationContext'
 
 const TestComponent = () => {
   const { snackbarInfo, showSnackbar, hideSnackbar } = useSnackbarContext()
@@ -30,7 +34,7 @@ const TestComponent = () => {
 describe('[context] - SnackbarContext', () => {
   const setup = (ui: any) => {
     const user = userEvent.setup()
-    render(<SnackbarContextProvider>{ui}</SnackbarContextProvider>)
+    render(<RQNotificationContextProvider>{ui}</RQNotificationContextProvider>)
     return {
       user,
     }
