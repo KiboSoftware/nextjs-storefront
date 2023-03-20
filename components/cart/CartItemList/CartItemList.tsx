@@ -49,9 +49,9 @@ const CartItemList = (props: CartItemListProps) => {
 
   return (
     <TransitionGroup>
-      {cartItems?.map((item: Maybe<CrCartItem>, index: number) => (
+      {cartItems?.map((item: Maybe<CrCartItem>) => (
         <Collapse
-          key={`${item?.id}-${index}`}
+          key={`${item?.id}`}
           sx={{
             '.MuiCollapse-wrapperInner': {
               width: '100%',
