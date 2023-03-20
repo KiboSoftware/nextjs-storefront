@@ -92,11 +92,6 @@ const ProductDetailTemplate = (props: ProductDetailTemplateProps) => {
   const { product, breadcrumbs = [], isQuickViewModal = false, children } = props
   const { t } = useTranslation('common')
 
-  const [showLoadingButton, setShowLoadingButton] = useState({
-    cart: false,
-    wishlist: false,
-    oneClickCheckout: false,
-  })
   const [purchaseType, setPurchaseType] = useState<string>(PurchaseTypes.ONETIMEPURCHASE)
   const [selectedFrequency, setSelectedFrequency] = useState<string>('')
   const [isSubscriptionPricingSelected, setIsSubscriptionPricingSelected] = useState<boolean>(false)
@@ -111,7 +106,7 @@ const ProductDetailTemplate = (props: ProductDetailTemplateProps) => {
   const { addToCart } = useAddToCartMutation()
   const { data: purchaseLocation } = usePurchaseLocationQueries()
 
-  const { addOrRemoveWishlistItem, checkProductInWishlist } = useWishlist()
+  const { addOrRemoveWishlistItem, checkProductInWishlist, isWishlistLoading } = useWishlist()
 
   const {
     currentProduct,
@@ -201,10 +196,6 @@ const ProductDetailTemplate = (props: ProductDetailTemplateProps) => {
 
   // methods
   const handleAddToCart = async () => {
-    setShowLoadingButton({
-      ...showLoadingButton,
-      cart: true,
-    })
     try {
       const cartResponse = await addToCart.mutateAsync({
         product: {
@@ -234,10 +225,6 @@ const ProductDetailTemplate = (props: ProductDetailTemplateProps) => {
     } catch (err) {
       console.log(err)
     }
-    setShowLoadingButton({
-      ...showLoadingButton,
-      cart: false,
-    })
   }
 
   const handleFulfillmentOptionChange = (value: string) => {
@@ -287,20 +274,12 @@ const ProductDetailTemplate = (props: ProductDetailTemplateProps) => {
   }
 
   const handleWishList = async () => {
-    setShowLoadingButton({
-      ...showLoadingButton,
-      wishlist: true,
-    })
     try {
       if (!wishlistGetters.isAvailableToAddToWishlist(currentProduct)) return
       await addOrRemoveWishlistItem({ product: currentProduct })
     } catch (error) {
       console.log('Error: add or remove wishlist item from PDP', error)
     }
-    setShowLoadingButton({
-      ...showLoadingButton,
-      wishlist: false,
-    })
   }
 
   const handlePurchaseTypeSelection = (option: string) => {
@@ -496,7 +475,7 @@ const ProductDetailTemplate = (props: ProductDetailTemplateProps) => {
             color="primary"
             fullWidth
             onClick={() => handleAddToCart()}
-            loading={showLoadingButton.cart}
+            loading={addToCart.isLoading}
             {...(!isValidForAddToCart() && { disabled: true })}
           >
             {t('add-to-cart')}
@@ -507,7 +486,7 @@ const ProductDetailTemplate = (props: ProductDetailTemplateProps) => {
               color="secondary"
               fullWidth
               onClick={handleWishList}
-              loading={showLoadingButton.wishlist}
+              loading={isWishlistLoading}
               sx={{ padding: '0.375rem 0.5rem' }}
               {...(!wishlistGetters.isAvailableToAddToWishlist(currentProduct) && {
                 disabled: true,

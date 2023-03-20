@@ -51,7 +51,6 @@ const CartItemList = (props: CartItemListProps) => {
     <TransitionGroup>
       {cartItems?.map((item: Maybe<CrCartItem>, index: number) => (
         <Collapse
-          // orientation="horizontal"
           key={`${item?.id}-${index}`}
           sx={{
             '.MuiCollapse-wrapperInner': {

@@ -123,5 +123,6 @@ export const useWishlist = (params?: WishlistHookParams) => {
   return {
     addOrRemoveWishlistItem,
     checkProductInWishlist,
+    isWishlistLoading: addToWishlist.isLoading || removeWishlistItem.isLoading,
   }
 }

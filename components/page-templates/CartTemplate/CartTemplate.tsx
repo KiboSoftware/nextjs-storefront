@@ -41,23 +41,6 @@ export interface CartTemplateProps {
   cart: CrCart
 }
 
-const styles = {
-  container: {
-    paddingBlock: 2,
-  },
-  heading: {
-    pt: 1,
-    pb: 3,
-  },
-  divider: {
-    height: '1px',
-  },
-  checkoutButtonStyle: {
-    borderRadius: '0.25rem',
-    height: '42px',
-  },
-}
-
 const CartTemplate = (props: CartTemplateProps) => {
   const { isMultiShipEnabled } = props
   const { data: cart } = useCartQueries(props?.cart)
