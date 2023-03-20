@@ -860,8 +860,9 @@ const handlePaymentStep = async (user: any, checkoutData: Checkout): Promise<Che
 const handleReviewStep = async (user: any, checkoutData: Checkout) => {
   expect(screen.getByRole('heading', { name: 'order-details', level: 2 })).toBeVisible()
   expect(screen.getByTestId('review-step-component')).toBeVisible()
-  // const personalDetailsSection = screen.getByTestId('personal-details')
-  // expect(within(personalDetailsSection).getByText(checkoutData.email as string)).toBeVisible()
+
+  const personalDetailsSection = screen.getByTestId('personal-details')
+  expect(within(personalDetailsSection).getByText(checkoutData.email as string)).toBeVisible()
 
   // shipping address
   const multiShippingAddressesList = checkoutGetters.getOrderAddresses(
@@ -1023,7 +1024,7 @@ describe('[integration] MultiShipCheckoutTemplate', () => {
       )
     })
 
-    it.only('should handle the checkout flow', async () => {
+    it('should handle the checkout flow', async () => {
       const { user } = setup({
         isAuthenticated: true,
       })

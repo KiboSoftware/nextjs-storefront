@@ -485,12 +485,8 @@ const PaymentStep = (props: PaymentStepProps) => {
   // handling review order button status (enabled/disabled)
   useEffect(() => {
     if (selectedPaymentBillingRadio) {
-      console.log(stepStatus, isAddingNewPayment)
-
       isAddingNewPayment ? setStepStatusIncomplete() : setStepStatusValid()
     } else {
-      console.log(stepStatus, isAddingNewPayment)
-
       setStepStatusIncomplete()
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps

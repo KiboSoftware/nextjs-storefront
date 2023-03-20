@@ -16,7 +16,7 @@ export type ProductItemListProps = {
   storePickupAddresses?: LocationCustom[]
   width?: string
   testId?: string
-  hideChangeStore?: boolean
+  isShowChangeStore?: boolean
   onClickChangeStore?: () => void
 }
 
@@ -29,7 +29,7 @@ const ProductItemList = (props: ProductItemListProps) => {
     storePickupAddresses = [],
     width,
     testId = 'product-item-stack',
-    hideChangeStore = false,
+    isShowChangeStore = true,
     onClickChangeStore,
   } = props
 
@@ -63,7 +63,7 @@ const ProductItemList = (props: ProductItemListProps) => {
               salePrice={productGetters.getPrice(product).special?.toString()}
               isPickupItem={isPickupItem}
               expectedDeliveryDate={expectedDeliveryDate}
-              hideChangeStore={hideChangeStore}
+              isShowChangeStore={isShowChangeStore}
               onStoreLocatorClick={onClickChangeStore}
               data-testid="product-item"
               width={width}
