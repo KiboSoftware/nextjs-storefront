@@ -7,6 +7,8 @@ import { makeGraphQLClient } from '@/lib/gql/client'
 import { deleteCustomerAccountContact } from '@/lib/gql/mutations'
 import { customerAccountContactsKeys } from '@/lib/react-query/queryKeys'
 
+import { CustomerContact } from '@/lib/gql/types'
+
 interface DeleteCustomerAccountContactDetailsParams {
   accountId: number
   contactId: number
@@ -44,7 +46,30 @@ export const useDeleteCustomerAddressMutation = () => {
 
   return {
     deleteSavedAddressDetails: useMutation(deleteCustomerAccountContactDetails, {
-      onSuccess: () => {
+      onMutate: async (deletedAddress) => {
+        await queryClient.cancelQueries(customerAccountContactsKeys.all)
+
+        const previousAddresses: any = queryClient.getQueryData(
+          customerAccountContactsKeys.addressById(deletedAddress.accountId)
+        )
+
+        const newAddresses = {
+          ...previousAddresses,
+          items: previousAddresses?.items?.filter(
+            (item: CustomerContact) => item.id !== deletedAddress.contactId
+          ),
+        }
+        queryClient.setQueryData(
+          customerAccountContactsKeys.addressById(deletedAddress.accountId),
+          newAddresses
+        )
+
+        return { previousAddresses }
+      },
+      onError: (_err, _newCart, context: any) => {
+        queryClient.setQueryData(customerAccountContactsKeys.all, context?.previousCart)
+      },
+      onSettled: () => {
         queryClient.invalidateQueries(customerAccountContactsKeys.all)
       },
     }),
