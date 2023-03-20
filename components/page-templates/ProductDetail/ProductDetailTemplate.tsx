@@ -3,6 +3,7 @@ import React, { useState } from 'react'
 import FavoriteBorderRoundedIcon from '@mui/icons-material/FavoriteBorderRounded'
 import FavoriteRoundedIcon from '@mui/icons-material/FavoriteRounded'
 import StarRounded from '@mui/icons-material/StarRounded'
+import { LoadingButton } from '@mui/lab'
 import {
   Box,
   Grid,
@@ -91,6 +92,11 @@ const ProductDetailTemplate = (props: ProductDetailTemplateProps) => {
   const { product, breadcrumbs = [], isQuickViewModal = false, children } = props
   const { t } = useTranslation('common')
 
+  const [showLoadingButton, setShowLoadingButton] = useState({
+    cart: false,
+    wishlist: false,
+    oneClickCheckout: false,
+  })
   const [purchaseType, setPurchaseType] = useState<string>(PurchaseTypes.ONETIMEPURCHASE)
   const [selectedFrequency, setSelectedFrequency] = useState<string>('')
   const [isSubscriptionPricingSelected, setIsSubscriptionPricingSelected] = useState<boolean>(false)
@@ -195,6 +201,10 @@ const ProductDetailTemplate = (props: ProductDetailTemplateProps) => {
 
   // methods
   const handleAddToCart = async () => {
+    setShowLoadingButton({
+      ...showLoadingButton,
+      cart: true,
+    })
     try {
       const cartResponse = await addToCart.mutateAsync({
         product: {
@@ -224,6 +234,10 @@ const ProductDetailTemplate = (props: ProductDetailTemplateProps) => {
     } catch (err) {
       console.log(err)
     }
+    setShowLoadingButton({
+      ...showLoadingButton,
+      cart: false,
+    })
   }
 
   const handleFulfillmentOptionChange = (value: string) => {
@@ -273,13 +287,20 @@ const ProductDetailTemplate = (props: ProductDetailTemplateProps) => {
   }
 
   const handleWishList = async () => {
+    setShowLoadingButton({
+      ...showLoadingButton,
+      wishlist: true,
+    })
     try {
       if (!wishlistGetters.isAvailableToAddToWishlist(currentProduct)) return
-
       await addOrRemoveWishlistItem({ product: currentProduct })
     } catch (error) {
       console.log('Error: add or remove wishlist item from PDP', error)
     }
+    setShowLoadingButton({
+      ...showLoadingButton,
+      wishlist: false,
+    })
   }
 
   const handlePurchaseTypeSelection = (option: string) => {
@@ -470,21 +491,23 @@ const ProductDetailTemplate = (props: ProductDetailTemplateProps) => {
           </MuiLink>
         </Box>
         <Box paddingY={1} display="flex" flexDirection={'column'} gap={2}>
-          <Button
+          <LoadingButton
             variant="contained"
             color="primary"
             fullWidth
             onClick={() => handleAddToCart()}
+            loading={showLoadingButton.cart}
             {...(!isValidForAddToCart() && { disabled: true })}
           >
             {t('add-to-cart')}
-          </Button>
+          </LoadingButton>
           <Box display="flex" gap={3}>
-            <Button
+            <LoadingButton
               variant="contained"
               color="secondary"
               fullWidth
               onClick={handleWishList}
+              loading={showLoadingButton.wishlist}
               sx={{ padding: '0.375rem 0.5rem' }}
               {...(!wishlistGetters.isAvailableToAddToWishlist(currentProduct) && {
                 disabled: true,
@@ -496,7 +519,7 @@ const ProductDetailTemplate = (props: ProductDetailTemplateProps) => {
                 <FavoriteBorderRoundedIcon sx={{ color: 'grey.600', marginRight: '14px' }} />
               )}
               {t('add-to-wishlist')}
-            </Button>
+            </LoadingButton>
             <Button variant="contained" color="inherit" fullWidth>
               {t('one-click-checkout')}
             </Button>

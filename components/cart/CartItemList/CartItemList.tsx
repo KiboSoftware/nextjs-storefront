@@ -1,4 +1,5 @@
-import { Box } from '@mui/material'
+import { Box, Collapse } from '@mui/material'
+import { TransitionGroup } from 'react-transition-group'
 
 import { CartItem } from '@/components/cart'
 import { FullWidthDivider } from '@/components/common'
@@ -13,7 +14,7 @@ interface CartItemListProps {
   fulfillmentLocations: Location[]
   purchaseLocation: Location
   onCartItemQuantityUpdate: (cartItemId: string, quantity: number) => void
-  onCartItemDelete: (cartItemId: string) => void
+  onCartItemDelete: (cartItemId: string) => Promise<void>
   onCartItemActionSelection: () => void
   onFulfillmentOptionSelection: (fulfillmentMethod: string, cartItemId: string) => void
   onProductPickupLocation: (cartItemId: string) => void
@@ -34,7 +35,7 @@ const CartItemList = (props: CartItemListProps) => {
   const handleQuantityUpdate = (cartItemId: string, quantity: number) =>
     onCartItemQuantityUpdate(cartItemId, quantity)
 
-  const handleCartItemDelete = (cartItemId: string) => onCartItemDelete(cartItemId)
+  const handleCartItemDelete = async (cartItemId: string) => await onCartItemDelete(cartItemId)
 
   const handleCartItemActionSelection = () => onCartItemActionSelection()
 
@@ -47,9 +48,17 @@ const CartItemList = (props: CartItemListProps) => {
   }
 
   return (
-    <>
+    <TransitionGroup>
       {cartItems?.map((item: Maybe<CrCartItem>, index: number) => (
-        <Box key={`${item?.id}-${index}`}>
+        <Collapse
+          // orientation="horizontal"
+          key={`${item?.id}-${index}`}
+          sx={{
+            '.MuiCollapse-wrapperInner': {
+              width: '100%',
+            },
+          }}
+        >
           <CartItem
             cartItem={item}
             key={item?.id}
@@ -64,9 +73,9 @@ const CartItemList = (props: CartItemListProps) => {
           <Box sx={{ display: { xs: 'block', sm: 'block', md: 'none' } }}>
             <FullWidthDivider />
           </Box>
-        </Box>
+        </Collapse>
       ))}
-    </>
+    </TransitionGroup>
   )
 }
 
