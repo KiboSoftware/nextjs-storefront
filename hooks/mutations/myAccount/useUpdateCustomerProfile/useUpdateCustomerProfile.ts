@@ -1,5 +1,5 @@
 /**
- * @module useUpdateUserDataMutations
+ * @module useUpdateCustomerProfile 
  */
 import { useMutation, useQueryClient } from 'react-query'
 
@@ -7,14 +7,14 @@ import { makeGraphQLClient } from '@/lib/gql/client'
 import { updateCustomerData } from '@/lib/gql/mutations/user/updateAccount'
 import { loginKeys } from '@/lib/react-query/queryKeys'
 
-import { CustomerAccountInput } from '@/lib/gql/types'
+import type { CustomerAccountInput } from '@/lib/gql/types'
 
-interface UpdateUserDataProps {
+interface UpdateCustomerProfileProps {
   accountId: number
   customerAccountInput: CustomerAccountInput
 }
 
-const updateUserDetails = async (props: UpdateUserDataProps) => {
+const updateCustomerProfile = async (props: UpdateCustomerProfileProps) => {
   const client = makeGraphQLClient()
   const { accountId, customerAccountInput } = props
 
@@ -29,23 +29,23 @@ const updateUserDetails = async (props: UpdateUserDataProps) => {
 }
 
 /**
- * [Mutation hook] useUpdateUserDataMutations uses the graphQL mutation
+ * [Mutation hook] useUpdateCustomerProfile uses the graphQL mutation
  *
  * <b>updateCustomerAccount(accountId: Int!, customerAccountInput: CustomerAccountInput): CustomerAccount</b>
  *
  * Description : Update the existing customer's profile information like first name, last name and email address.
  *
- * Parameters passed to internal function updateUserDetails(props: UpdateUserDataProps) => expects object containing accountId and customerAccountInput to update the profile details.
+ * Parameters passed to internal function updateCustomerProfile(props: UpdateCustomerProfileProps) => expects object containing accountId and customerAccountInput to update the profile details.
  *
  * On success, calls invalidateQueries loginKeys.user and fetches the updated result.
  *
  * @returns 'response', which has updated customer's profile details like userName, firstName, lastName, emailAddress etc.
  */
 
-export const useUpdateUserDataMutations = () => {
+export const useUpdateCustomerProfile = () => {
   const queryClient = useQueryClient()
   return {
-    updateUserData: useMutation(updateUserDetails, {
+    updateUserData: useMutation(updateCustomerProfile, {
       onSuccess: () => {
         queryClient.invalidateQueries(loginKeys.user)
       },
