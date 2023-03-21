@@ -1,28 +1,53 @@
 // Query hooks
-export * from './queries/useCheckoutQueries/useCheckoutQueries'
-export * from './queries/useSearchSuggestionsQueries/useSearchSuggestionsQueries'
-export * from './queries/useCategoryTreeQueries/useCategoryTreeQueries'
-export * from './queries/useUserQueries/useUserQueries'
-export * from './queries/useProductsQueries/useProductsQueries'
-export * from './queries/useProductSearchQueries/useProductSearchQueries'
-export * from './queries/useCartQueries/useCartQueries'
-export * from './queries/useStoreLocationsQueries/useStoreLocationsQueries'
-export * from './queries/usePurchaseLocationQueries/usePurchaseLocationQueries'
-export * from './queries/useShippingMethodsQueries/useShippingMethodsQueries'
-export * from './queries/useWishlistQueries/useWishlistQueries'
-export * from './queries/useCustomerCardsQueries/useCustomerCardsQueries'
-export * from './queries/useCustomerContactsQueries/useCustomerContactsQueries'
-export * from './queries/useUserOrderQueries/useUserOrderQueries'
-export * from './queries/useProductLocationInventoryQueries/useProductLocationInventoryQueries'
-export * from './queries/useReturnReasonsQueries/useReturnReasonsQueries'
-export * from './queries/useReturnsQueries/useReturnsQueries'
-export * from './queries/useProductPriceQueries/useProductPriceQueries'
+
+// address
+export * from './queries/address/useCustomerContactsQueries/useCustomerContactsQueries'
+
+// card
+export * from './queries/card/useCustomerCardsQueries/useCustomerCardsQueries'
+
+// cart
+export * from './queries/cart/useCartQueries/useCartQueries'
+
+// category
+export * from './queries/category/useCategoryTreeQueries/useCategoryTreeQueries'
+
+// locations
+export * from './queries/locations/useStoreLocationsQueries/useStoreLocationsQueries'
+export * from './queries/locations/usePurchaseLocationQueries/usePurchaseLocationQueries'
+
+// MultishipCheckout
+export * from './queries/multishipCheckout/useCheckoutQueries/useCheckoutQueries'
+export * from './queries/multishipCheckout/useCheckoutDestinationQueries/useCheckoutDestinationQueries'
+export * from './queries/multishipCheckout/useCheckoutShippingMethodsQuery/useCheckoutShippingMethodsQuery'
+export * from './queries/multishipCheckout/useCheckoutDestinationsQueries/useCheckoutDestinationsQueries'
+
+// product
+export * from './queries/product/useProductsQueries/useProductsQueries'
+export * from './queries/product/useProductLocationInventoryQueries/useProductLocationInventoryQueries'
+export * from './queries/product/useProductPriceQueries/useProductPriceQueries'
+
+//returns
+export * from './queries/returns/useReturnReasonsQueries/useReturnReasonsQueries'
+export * from './queries/returns/useReturnsQueries/useReturnsQueries'
+
+// search
+export * from './queries/search/useSearchSuggestionsQueries/useSearchSuggestionsQueries'
+export * from './queries/search/useProductSearchQueries/useProductSearchQueries'
+
+// standardCheckout
+export * from './queries/standardCheckout/useCheckoutQueries/useCheckoutQueries'
+export * from './queries/standardCheckout/useShippingMethodsQueries/useShippingMethodsQueries'
+
+// myAccount
+export * from './queries/myAccount/useUserOrderQueries/useUserOrderQueries'
+export * from './queries/myAccount/useUserQueries/useUserQueries'
+
+// subscription
 export * from './queries/subscription/useSubscriptionsQueries/useSubscriptionsQueries'
 
-// Multiship Query
-export * from './queries/multiShip/useCheckoutQueries/useCheckoutQueries'
-export * from './queries/multiShip/useCheckoutDestinationQueries/useCheckoutDestinationQueries'
-export * from './queries/multiShip/useCheckoutShippingMethodsQuery/useCheckoutShippingMethodsQuery'
+// wishlist
+export * from './queries/wishlist/useWishlistQueries/useWishlistQueries'
 
 // Custom hooks
 export * from './custom/useDebounce/useDebounce'
@@ -33,11 +58,7 @@ export * from './custom/useCurrentLocation/useCurrentLocation'
 export * from './custom/useWishlist/useWishlist'
 export * from './custom/usePriceRangeFormatter/usePriceRangeFormatter'
 
-// -----------------------------------------------------------------------------------------------
-// -----------------------------------------------------------------------------------------------
-// ------------------------------ Updated Mutation Imports ------------------------------------------------
-// -----------------------------------------------------------------------------------------------
-// -----------------------------------------------------------------------------------------------
+// Mutations
 
 // Address
 export * from './mutations/address/create/useCreateCustomerAddress'

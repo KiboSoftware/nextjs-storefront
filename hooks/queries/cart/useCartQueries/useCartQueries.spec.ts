@@ -1,6 +1,6 @@
 import { renderHook } from '@testing-library/react-hooks'
 
-import { createQueryClientWrapper } from '../../../__test__/utils/renderWithQueryClient'
+import { createQueryClientWrapper } from '../../../../__test__/utils/renderWithQueryClient'
 import { useCartQueries } from './useCartQueries'
 import { cartMock } from '@/__mocks__/stories/cartMock'
 
