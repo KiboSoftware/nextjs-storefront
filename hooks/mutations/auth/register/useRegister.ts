@@ -3,14 +3,13 @@
  */
 import { useMutation, useQueryClient } from 'react-query'
 
-import { makeGraphQLClient } from '@/lib/gql/client'
+import { makeGraphQLClient, REGISTER_USER_ENDPOINT } from '@/lib/gql/client'
 import { createAccountAndLoginMutation } from '@/lib/gql/mutations/user/createAccount'
 import { loginKeys } from '@/lib/react-query/queryKeys'
 
 import { CustomerAccountAndAuthInfoInput } from '@/lib/gql/types'
 
-const client = makeGraphQLClient()
-
+const client = makeGraphQLClient(REGISTER_USER_ENDPOINT)
 const registerUser = async (customerAccountAndAuthInfoInput: CustomerAccountAndAuthInfoInput) => {
   const response = await client.request({
     document: createAccountAndLoginMutation,

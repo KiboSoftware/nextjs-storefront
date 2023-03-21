@@ -16,7 +16,7 @@ import { LoginData } from '@/components/layout/Login/LoginContent/LoginContent'
 import type { RegisterAccountInputData } from '@/components/layout/RegisterAccount/Content/Content'
 import { useSnackbarContext } from '@/context'
 import { useRegister, useLogin, useGetCurrentCustomer } from '@/hooks'
-import { removeClientCookie, storeClientCookie } from '@/lib/helpers/cookieHelper'
+import { removeClientCookie } from '@/lib/helpers'
 import { cartKeys, loginKeys, wishlistKeys } from '@/lib/react-query/queryKeys'
 
 import type { CustomerAccount } from '@/lib/gql/types'
@@ -57,7 +57,8 @@ export const AuthContextProvider = ({ children }: AuthContextProviderProps) => {
   const queryClient = useQueryClient()
 
   const handleOnSuccess = (account: any, onSuccessCallBack?: () => void) => {
-    setCookieAndUser(account)
+    setUser(account?.customerAccount)
+
     queryClient.invalidateQueries(cartKeys.all)
     onSuccessCallBack && onSuccessCallBack()
     queryClient.removeQueries(wishlistKeys.all)
@@ -110,20 +111,7 @@ export const AuthContextProvider = ({ children }: AuthContextProviderProps) => {
     }
   }
 
-  const setCookieAndUser = (account: any) => {
-    // set cookie
-    const cookie = {
-      accessToken: account?.accessToken,
-      accessTokenExpiration: account?.accessTokenExpiration,
-      refreshToken: account?.refreshToken,
-      refreshTokenExpiration: account?.refreshTokenExpiration,
-      userId: account?.userId,
-    }
-    storeClientCookie(authCookieName, cookie)
-    setUser(account?.customerAccount)
-  }
-
-  const { data: customerAccount } = useGetCurrentCustomer()
+  const { data: customerAccount } = useUserQueries()
 
   const values = {
     isAuthenticated,
