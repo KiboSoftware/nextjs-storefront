@@ -17,16 +17,21 @@ export default async function registerUserHandler(req: NextApiRequest, res: Next
 
     // set HTTP cookie
     const account = response?.data?.account
+    const userId = response?.data?.account?.customerAccount?.userId
+
     const cookieValue = {
       accessToken: account?.accessToken,
       accessTokenExpiration: account?.accessTokenExpiration,
       refreshToken: account?.refreshToken,
       refreshTokenExpiration: account?.refreshTokenExpiration,
-      userId: account?.userId,
+      userId: userId,
     }
     const encodedValue = Buffer.from(JSON.stringify(cookieValue)).toString('base64')
-    res.setHeader('Set-Cookie', `${cookieName}=${encodedValue}; HttpOnly;  Max-Age=${maxCookieAge}`)
 
+    res.setHeader(
+      'Set-Cookie',
+      `${cookieName}=${encodedValue}; HttpOnly; Max-Age=${maxCookieAge}; path=/`
+    )
     res.status(200).json(response)
   } catch (error) {
     console.error(error)

@@ -15,7 +15,14 @@ import { useQueryClient } from 'react-query'
 import { LoginData } from '@/components/layout/Login/LoginContent/LoginContent'
 import type { RegisterAccountInputData } from '@/components/layout/RegisterAccount/Content/Content'
 import { useSnackbarContext } from '@/context'
-import { useRegister, useLogin, useGetCurrentCustomer } from '@/hooks'
+import {
+  useRegister,
+  useLogin,
+  useGetCurrentCustomer,
+  useUserAccountRegistrationMutations,
+  useUserMutations,
+  useUserQueries,
+} from '@/hooks'
 import { removeClientCookie } from '@/lib/helpers'
 import { cartKeys, loginKeys, wishlistKeys } from '@/lib/react-query/queryKeys'
 
