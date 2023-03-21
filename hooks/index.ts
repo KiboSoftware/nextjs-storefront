@@ -54,12 +54,12 @@ export * from './mutations/card/update/useUpdateCustomerCardsMutation'
 export * from './mutations/card/delete/useDeleteCustomerCardsMutation'
 
 // Cart
-export * from './mutations/cart/useAddToCart/useAddToCartMutation'
-export * from './mutations/cart/useRemoveCartItem/useRemoveCartItemMutation'
-export * from './mutations/cart/useUpdateCartItem/useUpdateCartItemMutation'
-export * from './mutations/cart/useUpdateCartItemQuantity/useUpdateCartItemQuantityMutation'
-export * from './mutations/cart/useUpdateCartCouponMutation/useUpdateCartCouponMutation'
-export * from './mutations/cart/useDeleteCartCouponMutation/useDeleteCartCouponMutation'
+export * from './mutations/cart/useAddCartItem/useAddCartItem'
+export * from './mutations/cart/useDeleteCartItem/useDeleteCartItem'
+export * from './mutations/cart/useUpdateCartItem/useUpdateCartItem'
+export * from './mutations/cart/useUpdateCartItemQuantity/useUpdateCartItemQuantity'
+export * from './mutations/cart/useUpdateCartCoupon/useUpdateCartCoupon'
+export * from './mutations/cart/useDeleteCartCoupon/useDeleteCartCoupon'
 
 // Multiship
 // Destinations

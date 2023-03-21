@@ -1,5 +1,5 @@
 /**
- * @module useUpdateCartCouponMutation
+ * @module useUpdateCartCoupon
  */
 import { useMutation, useQueryClient } from 'react-query'
 
@@ -29,7 +29,7 @@ const updateCartCoupon = async (params: UpdateCartCouponParams) => {
 }
 
 /**
- * [Mutation hook] useUpdateCartCouponMutation uses the graphQL mutation
+ * [Mutation hook] useUpdateCartCoupon uses the graphQL mutation
  *
  * <b>updateCartCoupon(cartId: String!, couponCode: String!): Cart</b>
  *
@@ -41,7 +41,7 @@ const updateCartCoupon = async (params: UpdateCartCouponParams) => {
  *
  * @returns 'response?.updateCartCoupon' which applies the coupon on cart page(if coupon is valid)
  */
-export const useUpdateCartCouponMutation = () => {
+export const useUpdateCartCoupon = () => {
   const queryClient = useQueryClient()
   return useMutation(updateCartCoupon, {
     onSuccess: () => {

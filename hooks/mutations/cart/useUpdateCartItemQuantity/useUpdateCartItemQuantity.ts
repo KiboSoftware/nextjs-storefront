@@ -1,5 +1,5 @@
 /**
- * @module useUpdateCartItemQuantityMutation
+ * @module useUpdateCartItemQuantity
  */
 import { useMutation, useQueryClient } from 'react-query'
 
@@ -31,7 +31,7 @@ const updateCartItemQuantity = async (params: UpdateCartItemQuantityParams) => {
 }
 
 /**
- * [Mutation hook] useUpdateCartItemQuantityMutation uses the graphQL mutation
+ * [Mutation hook] useUpdateCartItemQuantity uses the graphQL mutation
  *
  * <b>updateCurrentCartItemQuantity(cartItemId: String!, quantity: Int!): CartItem</b>
  *
@@ -43,7 +43,7 @@ const updateCartItemQuantity = async (params: UpdateCartItemQuantityParams) => {
  *
  * @returns 'response?.updateCartItemQuantity' which contains updated quantity for the items present in the cart
  */
-export const useUpdateCartItemQuantityMutation = () => {
+export const useUpdateCartItemQuantity = () => {
   const queryClient = useQueryClient()
   return {
     updateCartItemQuantity: useMutation(updateCartItemQuantity, {

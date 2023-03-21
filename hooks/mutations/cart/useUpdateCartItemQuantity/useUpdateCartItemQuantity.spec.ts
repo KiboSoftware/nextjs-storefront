@@ -1,14 +1,14 @@
 import { renderHook } from '@testing-library/react-hooks'
 
-import { useUpdateCartItemQuantityMutation } from './useUpdateCartItemQuantityMutation'
+import { useUpdateCartItemQuantity } from './useUpdateCartItemQuantity'
 import { cartItemMock } from '@/__mocks__/stories/cartItemMock'
 import { createQueryClientWrapper } from '@/__test__/utils/renderWithQueryClient'
 
-describe('[hooks] useUpdateCartItemQuantityMutation', () => {
-  it('should use useUpdateCartItemQuantityMutation when updateCartItemQuantity', async () => {
+describe('[hooks] useUpdateCartItemQuantity', () => {
+  it('should use useUpdateCartItemQuantity when updateCartItemQuantity', async () => {
     renderHook(
       async () => {
-        const { updateCartItemQuantity } = useUpdateCartItemQuantityMutation()
+        const { updateCartItemQuantity } = useUpdateCartItemQuantity()
         const response = await updateCartItemQuantity.mutateAsync({
           cartItemId: 'fjsdhfjsdh53472bkjsdffdf',
           quantity: 2,

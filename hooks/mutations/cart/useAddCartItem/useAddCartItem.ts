@@ -1,5 +1,5 @@
 /**
- * @module useAddToCartMutation
+ * @module useAddCartItem
  */
 import { useMutation, useQueryClient } from 'react-query'
 
@@ -20,13 +20,14 @@ export interface AddToCartProductInput {
   fulfillmentMethod?: string
   purchaseLocationCode?: string
 }
-interface AddToCartInputParams {
+
+interface AddCartItemParams {
   product: AddToCartProductInput
   quantity: number
   subscription?: CrSubscriptionInfo
 }
 
-const addToCart = async (props: AddToCartInputParams) => {
+const addToCart = async (props: AddCartItemParams) => {
   const client = makeGraphQLClient()
   const { product, quantity, subscription } = props
 
@@ -42,19 +43,19 @@ const addToCart = async (props: AddToCartInputParams) => {
   return response?.addItemToCurrentCart
 }
 /**
- * [Mutation hook] useAddToCartMutation uses the graphQL mutation
+ * [Mutation hook] useAddCartItem uses the graphQL mutation
  *
  * <b>addItemToCurrentCart(cartItemInput: CrCartItemInput): CartItem</b>
  *
  * Description : Add the product items to the cart with selected quantity
  *
- * Parameters passed to function addToCart(props: AddToCartInputParams) => expects object of type 'AddToCartInputParams' containing product and quantity
+ * Parameters passed to function addToCart(props: AddCartItemParams) => expects object of type 'AddCartItemParams' containing product and quantity
  *
  * On success, calls invalidateQueries on cartKeys and fetches the updated result.
  *
  * @returns 'response?.addItemToCurrentCart' which contains object of product items added to cart and it's quantity
  */
-export const useAddToCartMutation = () => {
+export const useAddCartItem = () => {
   const queryClient = useQueryClient()
   return {
     addToCart: useMutation(addToCart, {

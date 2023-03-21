@@ -1,5 +1,5 @@
 /**
- * @module useUpdateCartItemMutation
+ * @module useUpdateCartItem
  */
 import { useMutation, useQueryClient } from 'react-query'
 
@@ -32,7 +32,7 @@ const updateCartItem = async (props: UpdateCartItemParams) => {
 }
 
 /**
- * [Mutation hook] useUpdateCartItemMutation uses the graphQL mutation
+ * [Mutation hook] useUpdateCartItem uses the graphQL mutation
  *
  * <b>updateCurrentCartItem(cartItemId: String!, cartItemInput: CrCartItemInput): CartItem</b>
  *
@@ -44,7 +44,7 @@ const updateCartItem = async (props: UpdateCartItemParams) => {
  *
  * @returns 'response?.updateCurrentCartItem' which contains the updated fulfillmentMethod and fulfillmentLocationCode
  */
-export const useUpdateCartItemMutation = () => {
+export const useUpdateCartItem = () => {
   const queryClient = useQueryClient()
   return {
     updateCartItem: useMutation(updateCartItem, {

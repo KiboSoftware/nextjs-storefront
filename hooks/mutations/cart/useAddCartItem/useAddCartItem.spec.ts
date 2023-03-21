@@ -1,6 +1,6 @@
 import { renderHook } from '@testing-library/react-hooks'
 
-import { useAddToCartMutation } from './useAddToCartMutation'
+import { useAddCartItem } from './useAddCartItem'
 import { cartItemMock } from '@/__mocks__/stories/cartItemMock'
 import { createQueryClientWrapper } from '@/__test__/utils/renderWithQueryClient'
 
@@ -21,11 +21,11 @@ const productInput = {
   variationProductCode: 'MS-BTL-002-8',
 }
 
-describe('[hooks] useAddToCartMutation', () => {
-  it('should use useAddToCartMutation when addToCart', () => {
+describe('[hooks] useAddCartItem', () => {
+  it('should use useAddCartItem when addToCart', () => {
     renderHook(
       async () => {
-        const { addToCart } = useAddToCartMutation()
+        const { addToCart } = useAddCartItem()
         const addResponse = await addToCart.mutateAsync({
           product: productInput,
           quantity: 6,

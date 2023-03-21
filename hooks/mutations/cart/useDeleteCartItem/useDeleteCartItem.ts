@@ -1,5 +1,5 @@
 /**
- * @module useRemoveCartItemMutation
+ * @module useDeleteCartItem
  */
 import { useMutation, useQueryClient } from 'react-query'
 
@@ -9,11 +9,11 @@ import { cartKeys } from '@/lib/react-query/queryKeys'
 
 import type { CrCartItem } from '@/lib/gql/types'
 
-interface RemoveCartItemParams {
+interface DeleteCartItemParams {
   cartItemId: string
 }
 
-const removeCartItem = async (params: RemoveCartItemParams) => {
+const removeCartItem = async (params: DeleteCartItemParams) => {
   const client = makeGraphQLClient()
   const { cartItemId } = params
 
@@ -29,19 +29,19 @@ const removeCartItem = async (params: RemoveCartItemParams) => {
 }
 
 /**
- * [Mutation hook] useRemoveCartItemMutation uses the graphQL mutation
+ * [Mutation hook] useDeleteCartItem uses the graphQL mutation
  *
  * <b>deleteCurrentCartItem(cartItemId: String!): Boolean</b>
  *
  * Description : Removes the product item from the cart
  *
- * Parameters passed to function removeCartItem(params: RemoveCartItemParams) => expects object of type RemoveCartItemParams containing cartItemId of the product to be deleted
+ * Parameters passed to function removeCartItem(params: DeleteCartItemParams) => expects object of type DeleteCartItemParams containing cartItemId of the product to be deleted
  *
  * On success, calls invalidateQueries on cartKeys and fetches the updated result
  *
  * @returns 'response?.deleteCartItemMutation' returns 'true' if product is deleted
  */
-export const useRemoveCartItemMutation = () => {
+export const useDeleteCartItem = () => {
   const queryClient = useQueryClient()
   return {
     removeCartItem: useMutation(removeCartItem, {
