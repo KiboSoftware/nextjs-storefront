@@ -40,9 +40,9 @@ jest.mock('@/hooks', () => ({
       },
     }
   },
-  useRemoveWishlistItemMutation: () => {
+  useDeleteWishlistItem: () => {
     return {
-      removeWishlistItem: {
+      deleteWishlistItem: {
         mutateAsync: () => Promise.resolve({ deleteWishlistItem: true }),
       },
     }

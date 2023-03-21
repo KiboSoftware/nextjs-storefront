@@ -6,7 +6,7 @@ export interface WishlistProductInput {
   variationProductCode?: string
 }
 
-export interface RemoveWishlistItemInput {
+export interface DeleteWishlistItemInput {
   product: WishlistProductInput
   currentWishlist?: Maybe<CrWishlist>
 }

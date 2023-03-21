@@ -1,19 +1,19 @@
 /**
- * @module useRemoveWishlistItemMutation
+ * @module useDeleteWishlistItem
  */
 import { useMutation, useQueryClient } from 'react-query'
 
 import { makeGraphQLClient } from '@/lib/gql/client'
 import { deleteWishlistItemMutation } from '@/lib/gql/mutations'
-import { buildRemoveWishlistItemParams } from '@/lib/helpers'
+import { buildDeleteWishlistItemParams } from '@/lib/helpers'
 import { wishlistKeys } from '@/lib/react-query/queryKeys'
-import type { RemoveWishlistItemInput, WishlistHookParams } from '@/lib/types'
+import type { DeleteWishlistItemInput, WishlistHookParams } from '@/lib/types'
 
-const removeWishlistItem = async (props: RemoveWishlistItemInput) => {
+const deleteWishlistItem = async (props: DeleteWishlistItemInput) => {
   const client = makeGraphQLClient()
   const { product, currentWishlist } = props
 
-  const variables = buildRemoveWishlistItemParams({ product, currentWishlist })
+  const variables = buildDeleteWishlistItemParams({ product, currentWishlist })
   const response = await client.request({
     document: deleteWishlistItemMutation,
     variables,
@@ -22,12 +22,12 @@ const removeWishlistItem = async (props: RemoveWishlistItemInput) => {
 }
 
 /**
- * [Mutation hook] useRemoveCartItemMutation uses the graphql mutation
+ * [Mutation hook] useDeleteWishlistItem uses the graphql mutation
  * <b>deleteWishlistItem(wishlistId: String!, wishlistItemId: String!): Boolean</b>
  *
  * Description : Deletes item from wishlist based on wishlistId and wishlistItemId.
  *
- * Parameters passed to function removeWishlistItem(props: RemoveWishlistItemInput) => expects params as product and currentWishlist.
+ * Parameters passed to function deleteWishlistItem(props: DeleteWishlistItemInput) => expects params as product and currentWishlist.
  *
  * On success, calls invalidateQueries on wishlistKeys, clears timeout and fetches the updated result
  *
@@ -36,10 +36,10 @@ const removeWishlistItem = async (props: RemoveWishlistItemInput) => {
  * @returns response?.deleteWishlistItem, which contains True/False value to identify if wishlist item has been deleted or not.
  */
 
-export const useRemoveWishlistItemMutation = (params?: WishlistHookParams) => {
+export const useDeleteWishlistItem = (params?: WishlistHookParams) => {
   const queryClient = useQueryClient()
   return {
-    removeWishlistItem: useMutation(removeWishlistItem, {
+    deleteWishlistItem: useMutation(deleteWishlistItem, {
       onSuccess: () => {
         const cleanTimeout = (cleanTimeoutId: any) => clearTimeout(cleanTimeoutId)
 

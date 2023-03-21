@@ -1,5 +1,5 @@
 /**
- * @module useCreateWishlistMutation
+ * @module useCreateWishlist
  */
 import getConfig from 'next/config'
 import { useMutation, useQueryClient } from 'react-query'
@@ -28,7 +28,7 @@ const createWishlist = async (customerAccountId: number) => {
 }
 
 /**
- * [Mutation hook] useCreateWishlistMutation uses the graphQL mutation
+ * [Mutation hook] useCreateWishlist uses the graphQL mutation
  *
  * <b>createWishlist(wishlistInput: WishlistInput): Wishlist</b>
  *
@@ -41,7 +41,7 @@ const createWishlist = async (customerAccountId: number) => {
  * @returns 'response?.createWishlistItem', which contains wishlist created for user.
  */
 
-export const useCreateWishlistMutation = () => {
+export const useCreateWishlist = () => {
   const queryClient = useQueryClient()
 
   return {

@@ -1,5 +1,5 @@
 /**
- * @module useAddToWishlistMutation
+ * @module useAddToWishlistItem
  */
 import { useMutation, useQueryClient } from 'react-query'
 
@@ -30,7 +30,7 @@ const addToWishlist = async (props: WishlistItemInputParams) => {
 }
 
 /**
- * [Mutation hook] useAddToWishlistMutation uses the graphQL mutation
+ * [Mutation hook] useAddToWishlistItem uses the graphQL mutation
  *
  * <b>createWishlistItem(wishlistId: String!, wishlistItemInput: WishlistItemInput): WishlistItem</b>
  *
@@ -43,7 +43,7 @@ const addToWishlist = async (props: WishlistItemInputParams) => {
  * @returns 'response?.createWishlistItem', which contains wishlist items for current user
  */
 
-export const useAddToWishlistMutation = () => {
+export const useAddToWishlistItem = () => {
   const queryClient = useQueryClient()
 
   return {

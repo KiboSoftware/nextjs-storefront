@@ -1,6 +1,6 @@
 import { renderHook } from '@testing-library/react-hooks'
 
-import { useAddToWishlistMutation } from './useAddToWishlistMutation'
+import { useAddToWishlistItem } from './useAddToWishlistItem'
 import { wishlistMock } from '@/__mocks__/stories/wishlistMock'
 import { createQueryClientWrapper } from '@/__test__/utils/renderWithQueryClient'
 
@@ -17,11 +17,11 @@ const addToWishlistItemInput = {
   currentWishlist: mockWishlist,
 }
 
-describe('[hooks] useAddToWishlistMutation', () => {
+describe('[hooks] useAddToWishlistItem', () => {
   it('should add item to wishlist', async () => {
     renderHook(
       async () => {
-        const { addToWishlist } = useAddToWishlistMutation()
+        const { addToWishlist } = useAddToWishlistItem()
         const response = await addToWishlist.mutateAsync({
           ...addToWishlistItemInput,
           currentWishlist: mockWishlist,

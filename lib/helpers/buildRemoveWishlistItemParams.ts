@@ -1,8 +1,8 @@
 import { CrWishlistItem, Maybe } from '../gql/types'
-import type { RemoveWishlistItemInput } from '@/lib/types'
+import type { DeleteWishlistItemInput } from '@/lib/types'
 
-export const buildRemoveWishlistItemParams = (
-  params: RemoveWishlistItemInput
+export const buildDeleteWishlistItemParams = (
+  params: DeleteWishlistItemInput
 ): { wishlistId: string; wishlistItemId: string } => {
   const { product, currentWishlist } = params
   const removedItem = currentWishlist?.items?.find((item: Maybe<CrWishlistItem>) => {

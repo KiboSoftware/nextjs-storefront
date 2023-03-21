@@ -1,12 +1,12 @@
 import { renderHook } from '@testing-library/react-hooks'
 
-import { useRemoveWishlistItemMutation } from './useRemoveWishlistItemMutation'
+import { useDeleteWishlistItem } from './useDeleteWishlistItem'
 import { wishlistMock } from '@/__mocks__/stories/wishlistMock'
 import { createQueryClientWrapper } from '@/__test__/utils/renderWithQueryClient'
 
 const mockWishlist = wishlistMock.items[0]
 
-const removeWishlistItemInput = {
+const deleteWishlistItemInput = {
   product: {
     productCode: 'MS-BTL-005',
     isPackagedStandAlone: true,
@@ -16,7 +16,7 @@ const removeWishlistItemInput = {
   currentWishlist: mockWishlist,
 }
 
-describe('[hooks] useRemoveWishlistItemMutation', () => {
+describe('[hooks] useDeleteWishlistItem', () => {
   beforeAll(() => {
     jest.useFakeTimers()
   })
@@ -31,10 +31,10 @@ describe('[hooks] useRemoveWishlistItemMutation', () => {
 
   it('should remove wishlist item from wishlist page', async () => {
     const { result } = renderHook(
-      () => useRemoveWishlistItemMutation({ isRemovedFromWishlist: true, delay: 1000 }),
+      () => useDeleteWishlistItem({ isRemovedFromWishlist: true, delay: 1000 }),
       { wrapper: createQueryClientWrapper() }
     )
-    const response = await result.current.removeWishlistItem.mutateAsync(removeWishlistItemInput)
+    const response = await result.current.deleteWishlistItem.mutateAsync(deleteWishlistItemInput)
     expect(response).toBeTruthy()
   })
 })

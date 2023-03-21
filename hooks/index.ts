@@ -101,9 +101,9 @@ export * from './mutations/standardCheckout/useDeleteOrderCouponMutation/useDele
 
 // wishlist
 
-export * from './mutations/wishlist/useAddToWishlistMutation/useAddToWishlistMutation'
-export * from './mutations/wishlist/useRemoveWishlistItemMutation/useRemoveWishlistItemMutation'
-export * from './mutations/wishlist/useCreateWishlistMutation/useCreateWishlistMutation'
+export * from './mutations/wishlist/useAddToWishlistItem/useAddToWishlistItem'
+export * from './mutations/wishlist/useDeleteWishlistItem/useDeleteWishlistItem'
+export * from './mutations/wishlist/useCreateWishlist/useCreateWishlist'
 
 //Subscription
 export * from './mutations/subscription/useOrderSubscriptionNow/useOrderSubscriptionNowMutation'
