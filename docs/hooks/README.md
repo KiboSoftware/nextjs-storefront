@@ -16,7 +16,7 @@ next-storefront
 - [useCheckoutShippingMethodsQuery](modules/useCheckoutShippingMethodsQuery.md)
 - [useCreateCheckoutDestinationMutations](modules/useCreateCheckoutDestinationMutations.md)
 - [useCreateCheckoutPaymentActionMutations](modules/useCreateCheckoutPaymentActionMutations.md)
-- [useCreateCheckoutPaymentMethodMutation](modules/useCreateCheckoutPaymentMethodMutation.md)
+- [useCreateOrderPaymentMethodMutation](modules/useCreateOrderPaymentMethodMutation.md)
 - [useCreateCheckoutShippingMethodMutation](modules/useCreateCheckoutShippingMethodMutation.md)
 - [useCreateCustomerAddressMutation](modules/useCreateCustomerAddressMutation.md)
 - [useCreateCustomerCardsMutation](modules/useCreateCustomerCardsMutation.md)

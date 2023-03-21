@@ -15,7 +15,7 @@ import { useQueryClient } from 'react-query'
 import { LoginData } from '@/components/layout/Login/LoginContent/LoginContent'
 import type { RegisterAccountInputData } from '@/components/layout/RegisterAccount/Content/Content'
 import { useSnackbarContext } from '@/context'
-import { useUserAccountRegistrationMutations, useUserMutations, useUserQueries } from '@/hooks'
+import { useRegister, useLogin, useUserQueries } from '@/hooks'
 import { removeClientCookie, storeClientCookie } from '@/lib/helpers/cookieHelper'
 import { cartKeys, loginKeys, wishlistKeys } from '@/lib/react-query/queryKeys'
 
@@ -51,8 +51,8 @@ export const AuthContextProvider = ({ children }: AuthContextProviderProps) => {
   const { showSnackbar } = useSnackbarContext()
 
   const router = useRouter()
-  const { mutate } = useUserMutations()
-  const { mutate: registerUserAccount } = useUserAccountRegistrationMutations()
+  const { mutate } = useLogin()
+  const { mutate: registerUserAccount } = useRegister()
 
   const queryClient = useQueryClient()
 

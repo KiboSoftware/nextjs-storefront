@@ -19,7 +19,7 @@ const loginUser = async (customerUserAuthInfoInput: CustomerUserAuthInfoInput) =
 }
 
 /**
- * [Mutation hook] useUserMutations uses the graphQL mutation
+ * [Mutation hook] useLogin uses the graphQL mutation
  *
  * <b>createCustomerAuthTicket(customerUserAuthInfoInput: CustomerUserAuthInfoInput): CustomerAuthTicket</b>
  *
@@ -32,7 +32,7 @@ const loginUser = async (customerUserAuthInfoInput: CustomerUserAuthInfoInput) =
  * @returns 'response?.account', which contains information related to logged in user account
  */
 
-export const useUserMutations = () => {
+export const useLogin = () => {
   const queryClient = useQueryClient()
   const {
     mutate,

@@ -10,6 +10,7 @@ import { loginKeys } from '@/lib/react-query/queryKeys'
 import { CustomerAccountAndAuthInfoInput } from '@/lib/gql/types'
 
 const client = makeGraphQLClient()
+
 const registerUser = async (customerAccountAndAuthInfoInput: CustomerAccountAndAuthInfoInput) => {
   const response = await client.request({
     document: createAccountAndLoginMutation,
@@ -19,7 +20,7 @@ const registerUser = async (customerAccountAndAuthInfoInput: CustomerAccountAndA
 }
 
 /**
- * [Mutation hook] useUserAccountRegistrationMutations uses the graphQL mutation
+ * [Mutation hook] useRegister uses the graphQL mutation
  *
  * <b>createCustomerAccountAndLogin(customerAccountAndAuthInfoInput: CustomerAccountAndAuthInfoInput): CustomerAuthTicket</b>
  *
@@ -32,7 +33,7 @@ const registerUser = async (customerAccountAndAuthInfoInput: CustomerAccountAndA
  * @returns 'response?.account', which contains auth related information for user
  */
 
-export const useUserAccountRegistrationMutations = () => {
+export const useRegister = () => {
   const queryClient = useQueryClient()
   const {
     mutate,

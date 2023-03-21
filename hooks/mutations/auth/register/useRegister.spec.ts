@@ -1,11 +1,11 @@
 import { renderHook } from '@testing-library/react-hooks'
 
-import { useUserAccountRegistrationMutations } from './useUserAccountRegistrationMutations'
+import { useRegister } from './useRegister'
 import { registerUserMock } from '@/__mocks__/stories/userMock'
 import { createQueryClientWrapper } from '@/__test__/utils/renderWithQueryClient'
 
-describe('[hooks] useUserAccountRegistrationMutations', () => {
-  it('should use useUserAccountRegistrationMutations', async () => {
+describe('[hooks] useRegister', () => {
+  it('should use useRegister', async () => {
     const createAccountAndLoginMutationVars = {
       account: {
         id: 0,
@@ -19,7 +19,7 @@ describe('[hooks] useUserAccountRegistrationMutations', () => {
 
     renderHook(
       async () => {
-        const { mutateAsync } = useUserAccountRegistrationMutations()
+        const { mutateAsync } = useRegister()
         const response = await mutateAsync(createAccountAndLoginMutationVars)
         expect(response).toStrictEqual(registerUserMock.account)
       },

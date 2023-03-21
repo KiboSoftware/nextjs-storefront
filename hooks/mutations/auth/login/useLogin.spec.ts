@@ -1,11 +1,11 @@
 import { renderHook } from '@testing-library/react-hooks'
 
-import { useUserMutations } from './useUserMutations'
+import { useLogin } from './useLogin'
 import { loginUserMock } from '@/__mocks__/stories/userMock'
 import { createQueryClientWrapper } from '@/__test__/utils/renderWithQueryClient'
 
-describe('[hooks] useUserMutations', () => {
-  it('should use useUserMutations', async () => {
+describe('[hooks] useLogin', () => {
+  it('should use useLogin', async () => {
     const userCredentials = {
       username: 'abcd@email.com',
       password: '',
@@ -13,7 +13,7 @@ describe('[hooks] useUserMutations', () => {
 
     renderHook(
       async () => {
-        const { mutateAsync } = useUserMutations()
+        const { mutateAsync } = useLogin()
         const response = await mutateAsync(userCredentials)
 
         expect(response).toStrictEqual(loginUserMock.account)

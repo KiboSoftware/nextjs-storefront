@@ -13,7 +13,7 @@ import {
   useUpdateCheckoutPersonalInfoMutation,
   PersonalInfo,
   useUpdateCheckoutBillingInfoMutation,
-  useCreateCheckoutPaymentMethodMutation,
+  useCreateOrderPaymentMethodMutation,
   useUpdateOrderPaymentActionMutation,
   useCreateOrderMutation,
 } from '@/hooks'
@@ -88,7 +88,7 @@ const StandardShipCheckoutTemplate = (props: StandardShipCheckoutProps) => {
   // Payment Step
 
   const updateOrderPaymentAction = useUpdateOrderPaymentActionMutation()
-  const createOrderPaymentMethod = useCreateCheckoutPaymentMethodMutation()
+  const createOrderPaymentMethod = useCreateOrderPaymentMethodMutation()
   const updateCheckoutBillingInfo = useUpdateCheckoutBillingInfoMutation()
 
   const handleVoidPayment = async (
@@ -121,7 +121,6 @@ const StandardShipCheckoutTemplate = (props: StandardShipCheckoutProps) => {
     showAccountFields: false,
     password: '',
   }
-
 
   const handleCreateOrder = async (checkout: CrOrder) => {
     await createOrder.mutateAsync(checkout)

@@ -1,12 +1,12 @@
 import { renderHook } from '@testing-library/react-hooks'
 
-import { useCreateCheckoutPaymentMethodMutation } from './useCreateCheckoutPaymentMethodMutation'
+import { useCreateOrderPaymentMethodMutation } from './useCreateOrderPaymentMethodMutation'
 import { billingInfoInputMock } from '@/__mocks__/stories/billingInfoInputMock'
 import { createOrderPaymentActionMock } from '@/__mocks__/stories/createOrderPaymentActionMock'
 import { createQueryClientWrapper } from '@/__test__/utils/renderWithQueryClient'
 
-describe('[hooks] useCreateCheckoutPaymentMethodMutation', () => {
-  it('should use useCreateCheckoutPaymentMethodMutation', async () => {
+describe('[hooks] useCreateOrderPaymentMethodMutation', () => {
+  it('should use useCreateOrderPaymentMethodMutation', async () => {
     const createCheckoutPaymentMethodParams = {
       orderId: '13eaad5a5526f20001d2fab9000074e7',
       paymentAction: {
@@ -21,7 +21,7 @@ describe('[hooks] useCreateCheckoutPaymentMethodMutation', () => {
 
     renderHook(
       async () => {
-        const createCheckoutPaymentMethod = useCreateCheckoutPaymentMethodMutation()
+        const createCheckoutPaymentMethod = useCreateOrderPaymentMethodMutation()
         const response = await createCheckoutPaymentMethod.mutateAsync(
           createCheckoutPaymentMethodParams
         )

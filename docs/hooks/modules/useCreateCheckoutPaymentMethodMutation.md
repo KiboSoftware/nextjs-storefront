@@ -1,20 +1,20 @@
-[next-storefront](../README.md) / useCreateCheckoutPaymentMethodMutation
+[next-storefront](../README.md) / useCreateOrderPaymentMethodMutation
 
-# Module: useCreateCheckoutPaymentMethodMutation
+# Module: useCreateOrderPaymentMethodMutation
 
 ## Table of contents
 
 ### Functions
 
-- [useCreateCheckoutPaymentMethodMutation](useCreateCheckoutPaymentMethodMutation.md#usecreatecheckoutpaymentmethodmutation)
+- [useCreateOrderPaymentMethodMutation](useCreateOrderPaymentMethodMutation.md#usecreatecheckoutpaymentmethodmutation)
 
 ## Functions
 
-### useCreateCheckoutPaymentMethodMutation
+### useCreateOrderPaymentMethodMutation
 
-▸ **useCreateCheckoutPaymentMethodMutation**(): `UseMutationResult`<`any`, `unknown`, `PaymentMethodInput`, `unknown`\>
+▸ **useCreateOrderPaymentMethodMutation**(): `UseMutationResult`<`any`, `unknown`, `PaymentMethodInput`, `unknown`\>
 
-[Mutation hook] useCreateCheckoutPaymentMethodMutation uses the graphQL mutation
+[Mutation hook] useCreateOrderPaymentMethodMutation uses the graphQL mutation
 
 <b>createOrderPaymentAction(orderId: String!, paymentActionInput: PaymentActionInput): Order</b>
 
@@ -32,4 +32,4 @@ On success, calls invalidateQueries on checkoutKeys and fetches the updated resu
 
 #### Defined in
 
-[mutations/useUpdateCheckoutMutations/useCreateCheckoutPaymentMethod/useCreateCheckoutPaymentMethodMutation.ts:45](https://github.com/KiboSoftware/nextjs-storefront/blob/561a164/hooks/mutations/useUpdateCheckoutMutations/useCreateCheckoutPaymentMethod/useCreateCheckoutPaymentMethodMutation.ts#L45)
+[mutations/useUpdateCheckoutMutations/useCreateCheckoutPaymentMethod/useCreateOrderPaymentMethodMutation.ts:45](https://github.com/KiboSoftware/nextjs-storefront/blob/561a164/hooks/mutations/useUpdateCheckoutMutations/useCreateCheckoutPaymentMethod/useCreateOrderPaymentMethodMutation.ts#L45)

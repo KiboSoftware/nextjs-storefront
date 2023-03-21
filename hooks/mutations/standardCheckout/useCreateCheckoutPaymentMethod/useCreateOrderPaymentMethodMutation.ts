@@ -1,5 +1,5 @@
 /**
- * @module useCreateCheckoutPaymentMethodMutation
+ * @module useCreateOrderPaymentMethodMutation
  */
 import { useMutation, useQueryClient } from 'react-query'
 
@@ -29,7 +29,7 @@ const updatePaymentMethod = async (params: PaymentMethodInput) => {
 }
 
 /**
- * [Mutation hook] useCreateCheckoutPaymentMethodMutation uses the graphQL mutation
+ * [Mutation hook] useCreateOrderPaymentMethodMutation uses the graphQL mutation
  *
  * <b>createOrderPaymentAction(orderId: String!, paymentActionInput: PaymentActionInput): Order</b>
  *
@@ -42,7 +42,7 @@ const updatePaymentMethod = async (params: PaymentMethodInput) => {
  * @returns 'response?.createOrderPaymentAction', which contains details of payment method user used for checkout
  */
 
-export const useCreateCheckoutPaymentMethodMutation = () => {
+export const useCreateOrderPaymentMethodMutation = () => {
   const queryClient = useQueryClient()
 
   return useMutation(updatePaymentMethod, {
