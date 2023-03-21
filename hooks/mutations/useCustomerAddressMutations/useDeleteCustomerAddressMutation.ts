@@ -66,8 +66,8 @@ export const useDeleteCustomerAddressMutation = () => {
 
         return { previousAddresses }
       },
-      onError: (_err, _newCart, context: any) => {
-        queryClient.setQueryData(customerAccountContactsKeys.all, context?.previousCart)
+      onError: (_err, _newAddress, context: any) => {
+        queryClient.setQueryData(customerAccountContactsKeys.all, context?.previousAddresses)
       },
       onSettled: () => {
         queryClient.invalidateQueries(customerAccountContactsKeys.all)
