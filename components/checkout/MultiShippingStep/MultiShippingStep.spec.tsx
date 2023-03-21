@@ -9,7 +9,7 @@ import { server } from '@/__mocks__/msw/server'
 import { checkoutGroupRatesMock, checkoutMock, userAddressResponse } from '@/__mocks__/stories'
 import { renderWithQueryClient } from '@/__test__/utils'
 import { DialogRoot, ModalContextProvider, CheckoutStepProvider, AuthContext } from '@/context'
-import { useMultiShipCheckoutQueries } from '@/hooks'
+import { useGetCurrentCheckout } from '@/hooks'
 import type { CustomDestinationInput } from '@/lib/types'
 
 import type {
@@ -203,7 +203,7 @@ const userContextValues = (isAuthenticated: boolean, userId: number) => ({
 })
 
 const TestComponent = ({ param }: { param: any }) => {
-  const { data: checkout } = useMultiShipCheckoutQueries({
+  const { data: checkout } = useGetCurrentCheckout({
     checkoutId: '148a06a207b12d0001492285000045a4' as string,
     isMultiShip: true,
   })

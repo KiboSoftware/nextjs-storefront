@@ -6,8 +6,8 @@ import { DetailsStep, PaymentStep, ReviewStep, StandardShippingStep } from '@/co
 import { CheckoutUITemplate } from '@/components/page-templates'
 import { useAuthContext } from '@/context'
 import {
-  useCheckoutQueries,
-  useCustomerContactsQueries,
+  useGetCurrentOrder,
+  useGetCustomerAddresses,
   useUpdateOrderCoupon,
   useDeleteOrderCoupon,
   useUpdateOrderPersonalInfo,
@@ -33,14 +33,14 @@ const StandardShipCheckoutTemplate = (props: StandardShipCheckoutProps) => {
   const [promoError, setPromoError] = useState<string>('')
   const { checkoutId } = router.query
 
-  const { data: checkout } = useCheckoutQueries({
+  const { data: checkout } = useGetCurrentOrder({
     checkoutId: checkoutId as string,
     isMultiship: isMultiShipEnabled,
     initialCheckout,
   })
 
   const { isAuthenticated, user } = useAuthContext()
-  const { data: savedUserAddressData } = useCustomerContactsQueries(user?.id as number)
+  const { data: savedUserAddressData } = useGetCustomerAddresses(user?.id as number)
   const updateOrderCoupon = useUpdateOrderCoupon()
   const deleteOrderCoupon = useDeleteOrderCoupon()
 

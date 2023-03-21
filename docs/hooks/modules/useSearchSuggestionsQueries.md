@@ -1,20 +1,20 @@
-[next-storefront](../README.md) / useSearchSuggestionsQueries
+[next-storefront](../README.md) / useGetSearchSuggestions
 
-# Module: useSearchSuggestionsQueries
+# Module: useGetSearchSuggestions
 
 ## Table of contents
 
 ### Functions
 
-- [useSearchSuggestionsQueries](useSearchSuggestionsQueries.md#usesearchsuggestionsqueries)
+- [useGetSearchSuggestions](useGetSearchSuggestions.md#usesearchsuggestionsqueries)
 
 ## Functions
 
-### useSearchSuggestionsQueries
+### useGetSearchSuggestions
 
-▸ **useSearchSuggestionsQueries**(`searchTerm`): `SearchSuggestionResultType`
+▸ **useGetSearchSuggestions**(`searchTerm`): `SearchSuggestionResultType`
 
-[Query hook] useSearchSuggestionsQueries uses the graphQL query
+[Query hook] useGetSearchSuggestions uses the graphQL query
 
 <b>suggestionSearch(query: String, groups: String, pageSize: Int, mid: String, filter: String): SearchSuggestionResult</b>
 
@@ -39,4 +39,4 @@ On success, returns the received search suggestions.
 
 #### Defined in
 
-[queries/useSearchSuggestionsQueries/useSearchSuggestionsQueries.ts:47](https://github.com/KiboSoftware/nextjs-storefront/blob/561a164/hooks/queries/useSearchSuggestionsQueries/useSearchSuggestionsQueries.ts#L47)
+[queries/useGetSearchSuggestions/useGetSearchSuggestions.ts:47](https://github.com/KiboSoftware/nextjs-storefront/blob/561a164/hooks/queries/useGetSearchSuggestions/useGetSearchSuggestions.ts#L47)

@@ -1,20 +1,20 @@
-[next-storefront](../README.md) / useCheckoutQueries
+[next-storefront](../README.md) / useGetCurrentOrder
 
-# Module: useCheckoutQueries
+# Module: useGetCurrentOrder
 
 ## Table of contents
 
 ### Functions
 
-- [useCheckoutQueries](useCheckoutQueries.md#usecheckoutqueries)
+- [useGetCurrentOrder](useGetCurrentOrder.md#usecheckoutqueries)
 
 ## Functions
 
-### useCheckoutQueries
+### useGetCurrentOrder
 
-▸ **useCheckoutQueries**(`__namedParameters`): `UseCheckoutResponse`
+▸ **useGetCurrentOrder**(`__namedParameters`): `UseCheckoutResponse`
 
-[Query hook] useCheckoutQueries uses the graphQL query
+[Query hook] useGetCurrentOrder uses the graphQL query
 
 <b>checkout(checkoutId: String!): Checkout</b>
 
@@ -38,4 +38,4 @@ On success, returns the checkout
 
 #### Defined in
 
-[queries/useCheckoutQueries/useCheckoutQueries.ts:53](https://github.com/KiboSoftware/nextjs-storefront/blob/561a164/hooks/queries/useCheckoutQueries/useCheckoutQueries.ts#L53)
+[queries/useGetCurrentOrder/useGetCurrentOrder.ts:53](https://github.com/KiboSoftware/nextjs-storefront/blob/561a164/hooks/queries/useGetCurrentOrder/useGetCurrentOrder.ts#L53)

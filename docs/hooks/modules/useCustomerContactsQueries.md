@@ -1,20 +1,20 @@
-[next-storefront](../README.md) / useCustomerContactsQueries
+[next-storefront](../README.md) / useGetCustomerAddresses
 
-# Module: useCustomerContactsQueries
+# Module: useGetCustomerAddresses
 
 ## Table of contents
 
 ### Functions
 
-- [useCustomerContactsQueries](useCustomerContactsQueries.md#usecustomercontactsqueries)
+- [useGetCustomerAddresses](useGetCustomerAddresses.md#usecustomercontactsqueries)
 
 ## Functions
 
-### useCustomerContactsQueries
+### useGetCustomerAddresses
 
-▸ **useCustomerContactsQueries**(`accountId`): `UseCustomerContactsResponse`
+▸ **useGetCustomerAddresses**(`accountId`): `UseCustomerContactsResponse`
 
-[Query hook] useCustomerContactsQueries uses the graphQL query
+[Query hook] useGetCustomerAddresses uses the graphQL query
 
 <b>customerAccountContacts(accountId: Int!,startIndex: Int,pageSize: Int): CustomerContactCollection</b>
 
@@ -38,4 +38,4 @@ On success, returns the saved addresses with 'refetchOnWindowFocus' set to false
 
 #### Defined in
 
-[queries/useCustomerContactsQueries/useCustomerContactsQueries.ts:48](https://github.com/KiboSoftware/nextjs-storefront/blob/561a164/hooks/queries/useCustomerContactsQueries/useCustomerContactsQueries.ts#L48)
+[queries/useGetCustomerAddresses/useGetCustomerAddresses.ts:48](https://github.com/KiboSoftware/nextjs-storefront/blob/561a164/hooks/queries/useGetCustomerAddresses/useGetCustomerAddresses.ts#L48)

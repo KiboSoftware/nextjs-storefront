@@ -1,20 +1,20 @@
-[next-storefront](../README.md) / useUserQueries
+[next-storefront](../README.md) / useGetCurrentCustomer
 
-# Module: useUserQueries
+# Module: useGetCurrentCustomer
 
 ## Table of contents
 
 ### Functions
 
-- [useUserQueries](useUserQueries.md#useuserqueries)
+- [useGetCurrentCustomer](useGetCurrentCustomer.md#useuserqueries)
 
 ## Functions
 
-### useUserQueries
+### useGetCurrentCustomer
 
-▸ **useUserQueries**(): `UserResultType`
+▸ **useGetCurrentCustomer**(): `UserResultType`
 
-[Query hook] useUserQueries uses the graphQL query
+[Query hook] useGetCurrentCustomer uses the graphQL query
 
 <b>getCurrentAccount: CustomerAccount</b>
 
@@ -34,4 +34,4 @@ On success, returns the customer account
 
 #### Defined in
 
-[queries/useUserQueries/useUserQueries.ts:49](https://github.com/KiboSoftware/nextjs-storefront/blob/561a164/hooks/queries/useUserQueries/useUserQueries.ts#L49)
+[queries/useGetCurrentCustomer/useGetCurrentCustomer.ts:49](https://github.com/KiboSoftware/nextjs-storefront/blob/561a164/hooks/queries/useGetCurrentCustomer/useGetCurrentCustomer.ts#L49)

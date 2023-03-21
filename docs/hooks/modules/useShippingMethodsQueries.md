@@ -1,20 +1,20 @@
-[next-storefront](../README.md) / useShippingMethodsQueries
+[next-storefront](../README.md) / useGetShippingMethods
 
-# Module: useShippingMethodsQueries
+# Module: useGetShippingMethods
 
 ## Table of contents
 
 ### Functions
 
-- [useShippingMethodsQueries](useShippingMethodsQueries.md#useshippingmethodsqueries)
+- [useGetShippingMethods](useGetShippingMethods.md#useshippingmethodsqueries)
 
 ## Functions
 
-### useShippingMethodsQueries
+### useGetShippingMethods
 
-▸ **useShippingMethodsQueries**(`checkoutId`, `isNewAddressAdded?`, `selectedShippingAddressId?`): `UseShippingMethodsResponse`
+▸ **useGetShippingMethods**(`checkoutId`, `isNewAddressAdded?`, `selectedShippingAddressId?`): `UseShippingMethodsResponse`
 
-[Query hook] useShippingMethodsQueries uses the graphQL query
+[Query hook] useGetShippingMethods uses the graphQL query
 
 <b>orderShipmentMethods(orderId: String!): [ShippingRate]</b>
 
@@ -40,4 +40,4 @@ On success, returns the received list of shipping methods.
 
 #### Defined in
 
-[queries/useShippingMethodsQueries/useShippingMethodsQueries.tsx:48](https://github.com/KiboSoftware/nextjs-storefront/blob/561a164/hooks/queries/useShippingMethodsQueries/useShippingMethodsQueries.tsx#L48)
+[queries/useGetShippingMethods/useGetShippingMethods.tsx:48](https://github.com/KiboSoftware/nextjs-storefront/blob/561a164/hooks/queries/useGetShippingMethods/useGetShippingMethods.tsx#L48)

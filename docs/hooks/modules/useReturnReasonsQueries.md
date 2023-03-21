@@ -1,20 +1,20 @@
-[next-storefront](../README.md) / useReturnReasonsQueries
+[next-storefront](../README.md) / useGetReturnReasons
 
-# Module: useReturnReasonsQueries
+# Module: useGetReturnReasons
 
 ## Table of contents
 
 ### Functions
 
-- [useReturnReasonsQueries](useReturnReasonsQueries.md#usereturnreasonsqueries)
+- [useGetReturnReasons](useGetReturnReasons.md#usereturnreasonsqueries)
 
 ## Functions
 
-### useReturnReasonsQueries
+### useGetReturnReasons
 
-▸ **useReturnReasonsQueries**(): `UseReturnReasonsResponse`
+▸ **useGetReturnReasons**(): `UseReturnReasonsResponse`
 
-[Query hook] useReturnReasonsQueries uses the graphQL query
+[Query hook] useGetReturnReasons uses the graphQL query
 
 <b>returnReasons: ReasonCollection</b>
 
@@ -32,4 +32,4 @@ On success, returns with return reasons list and 'refetchOnWindowFocus' set to f
 
 #### Defined in
 
-[queries/useReturnReasonsQueries/useReturnReasonsQueries.ts:44](https://github.com/KiboSoftware/nextjs-storefront/blob/561a164/hooks/queries/useReturnReasonsQueries/useReturnReasonsQueries.ts#L44)
+[queries/useGetReturnReasons/useGetReturnReasons.ts:44](https://github.com/KiboSoftware/nextjs-storefront/blob/561a164/hooks/queries/useGetReturnReasons/useGetReturnReasons.ts#L44)

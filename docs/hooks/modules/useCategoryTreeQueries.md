@@ -1,20 +1,20 @@
-[next-storefront](../README.md) / useCategoryTreeQueries
+[next-storefront](../README.md) / useGetCategoryTree
 
-# Module: useCategoryTreeQueries
+# Module: useGetCategoryTree
 
 ## Table of contents
 
 ### Functions
 
-- [useCategoryTreeQueries](useCategoryTreeQueries.md#usecategorytreequeries)
+- [useGetCategoryTree](useGetCategoryTree.md#usecategorytreequeries)
 
 ## Functions
 
-### useCategoryTreeQueries
+### useGetCategoryTree
 
-▸ **useCategoryTreeQueries**(`initialData`): `UseCategoryResponse`
+▸ **useGetCategoryTree**(`initialData`): `UseCategoryResponse`
 
-[Query hook] useCategoryTreeQueries fetches the data from the GET api call to the <b>/api/category-tree</b>
+[Query hook] useGetCategoryTree fetches the data from the GET api call to the <b>/api/category-tree</b>
 
 Description : Fetches categories and all related sub categories for the storefront
 
@@ -36,4 +36,4 @@ category and related children catagories
 
 #### Defined in
 
-[queries/useCategoryTreeQueries/useCategoryTreeQueries.ts:40](https://github.com/KiboSoftware/nextjs-storefront/blob/561a164/hooks/queries/useCategoryTreeQueries/useCategoryTreeQueries.ts#L40)
+[queries/useGetCategoryTree/useGetCategoryTree.ts:40](https://github.com/KiboSoftware/nextjs-storefront/blob/561a164/hooks/queries/useGetCategoryTree/useGetCategoryTree.ts#L40)

@@ -1,20 +1,20 @@
-[next-storefront](../README.md) / useCartQueries
+[next-storefront](../README.md) / useGetCart
 
-# Module: useCartQueries
+# Module: useGetCart
 
 ## Table of contents
 
 ### Functions
 
-- [useCartQueries](useCartQueries.md#usecartqueries)
+- [useGetCart](useGetCart.md#usecartqueries)
 
 ## Functions
 
-### useCartQueries
+### useGetCart
 
-▸ **useCartQueries**(`initialData`): `UseCartType`
+▸ **useGetCart**(`initialData`): `UseCartType`
 
-[Query hook] useCartQueries uses the graphQL query
+[Query hook] useGetCart uses the graphQL query
 
 <b>currentCart: Cart</b>
 
@@ -38,4 +38,4 @@ On success, returns the current cart items with 'refetchOnWindowFocus' set to fa
 
 #### Defined in
 
-[queries/useCartQueries/useCartQueries.ts:45](https://github.com/KiboSoftware/nextjs-storefront/blob/561a164/hooks/queries/useCartQueries/useCartQueries.ts#L45)
+[queries/useGetCart/useGetCart.ts:45](https://github.com/KiboSoftware/nextjs-storefront/blob/561a164/hooks/queries/useGetCart/useGetCart.ts#L45)

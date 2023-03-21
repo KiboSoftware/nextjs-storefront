@@ -27,12 +27,12 @@ jest.mock('@/hooks', () => ({
       },
     }
   },
-  useUserQueries: () => {
+  useGetCurrentCustomer: () => {
     return {
       customerAccount: mockUser,
     }
   },
-  useWishlistQueries: () => mockWishlist,
+  useGetWishlist: () => mockWishlist,
   useAddToWishlistMutation: () => {
     return {
       addToWishlist: {

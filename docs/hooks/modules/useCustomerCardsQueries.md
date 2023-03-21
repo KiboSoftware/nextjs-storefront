@@ -1,20 +1,20 @@
-[next-storefront](../README.md) / useCustomerCardsQueries
+[next-storefront](../README.md) / useGetCards
 
-# Module: useCustomerCardsQueries
+# Module: useGetCards
 
 ## Table of contents
 
 ### Functions
 
-- [useCustomerCardsQueries](useCustomerCardsQueries.md#usecustomercardsqueries)
+- [useGetCards](useGetCards.md#usecustomercardsqueries)
 
 ## Functions
 
-### useCustomerCardsQueries
+### useGetCards
 
-▸ **useCustomerCardsQueries**(`accountId`): `UseCustomerCardsResponse`
+▸ **useGetCards**(`accountId`): `UseCustomerCardsResponse`
 
-[Query hook] useCustomerCardsQueries uses the graphQL query
+[Query hook] useGetCards uses the graphQL query
 
 <b>customerAccountCards(accountId: Int!): CardCollection</b>
 
@@ -38,4 +38,4 @@ On success, returns the card collection of customer's account
 
 #### Defined in
 
-[queries/useCustomerCardsQueries/useCustomerCardsQueries.ts:48](https://github.com/KiboSoftware/nextjs-storefront/blob/561a164/hooks/queries/useCustomerCardsQueries/useCustomerCardsQueries.ts#L48)
+[queries/useGetCards/useGetCards.ts:48](https://github.com/KiboSoftware/nextjs-storefront/blob/561a164/hooks/queries/useGetCards/useGetCards.ts#L48)

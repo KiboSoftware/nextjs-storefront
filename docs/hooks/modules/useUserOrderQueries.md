@@ -1,20 +1,20 @@
-[next-storefront](../README.md) / useUserOrderQueries
+[next-storefront](../README.md) / useGetCustomerOrders
 
-# Module: useUserOrderQueries
+# Module: useGetCustomerOrders
 
 ## Table of contents
 
 ### Functions
 
-- [useUserOrderQueries](useUserOrderQueries.md#useuserorderqueries)
+- [useGetCustomerOrders](useGetCustomerOrders.md#useuserorderqueries)
 
 ## Functions
 
-### useUserOrderQueries
+### useGetCustomerOrders
 
-▸ **useUserOrderQueries**(`param`): `UseUserOrderType`
+▸ **useGetCustomerOrders**(`param`): `UseUserOrderType`
 
-[Query hook] useUserOrderQueries uses the graphQL query
+[Query hook] useGetCustomerOrders uses the graphQL query
 
 <b>orders(startIndex: Int, pageSize: Int, sortBy: String, filter: String): OrderCollection</b>
 
@@ -38,4 +38,4 @@ On success, returns the list of orders
 
 #### Defined in
 
-[queries/useUserOrderQueries/useUserOrderQueries.ts:58](https://github.com/KiboSoftware/nextjs-storefront/blob/561a164/hooks/queries/useUserOrderQueries/useUserOrderQueries.ts#L58)
+[queries/useGetCustomerOrders/useGetCustomerOrders.ts:58](https://github.com/KiboSoftware/nextjs-storefront/blob/561a164/hooks/queries/useGetCustomerOrders/useGetCustomerOrders.ts#L58)

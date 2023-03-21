@@ -25,7 +25,7 @@ const dataMock = {
 }
 
 jest.mock('@/hooks', () => ({
-  usePurchaseLocationQueries: jest.fn().mockImplementation(() => ({
+  useGetPurchaseLocation: jest.fn().mockImplementation(() => ({
     data: dataMock,
   })),
 }))

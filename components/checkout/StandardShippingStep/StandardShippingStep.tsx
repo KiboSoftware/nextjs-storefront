@@ -7,7 +7,7 @@ import { useTranslation } from 'next-i18next'
 import { ShippingMethod } from '@/components/checkout'
 import { AddressDetailsView, AddressForm } from '@/components/common'
 import { useCheckoutStepContext, STEP_STATUS } from '@/context'
-import { useUpdateOrderShippingInfo, useShippingMethodsQueries } from '@/hooks'
+import { useUpdateOrderShippingInfo, useGetShippingMethods } from '@/hooks'
 import { DefaultId } from '@/lib/constants'
 import { orderGetters, userGetters } from '@/lib/getters'
 
@@ -79,7 +79,7 @@ const StandardShippingStep = (props: ShippingProps) => {
     setStepStatusIncomplete,
   } = useCheckoutStepContext()
   const updateCheckoutShippingInfo = useUpdateOrderShippingInfo()
-  const { data: shippingMethods } = useShippingMethodsQueries(
+  const { data: shippingMethods } = useGetShippingMethods(
     checkoutId,
     isNewAddressAdded,
     selectedShippingAddressId

@@ -6,14 +6,14 @@ import { DetailsStep, MultiShippingStep, PaymentStep, ReviewStep } from '@/compo
 import { CheckoutUITemplate } from '@/components/page-templates'
 import { useAuthContext } from '@/context'
 import {
-  useCustomerContactsQueries,
+  useGetCustomerAddresses,
   useDeleteCheckoutCoupon,
-  useMultiShipCheckoutQueries,
+  useGetCurrentCheckout,
   useUpdateCheckoutPersonalInfo,
   useUpdateCheckoutCoupon,
   MultiShipPersonalInfo,
   useCreateDestination,
-  useCheckoutShippingMethodsQuery,
+  useGetCheckoutShippingMethods,
   useCreateCheckoutShippingMethod,
   useVoidCheckoutPayment,
   useAddCheckoutPayment,
@@ -50,12 +50,12 @@ const MultiShipCheckoutTemplate = (props: MultiShipCheckoutProps) => {
   const [promoError, setPromoError] = useState<string>('')
 
   // Hooks
-  const { data: checkout } = useMultiShipCheckoutQueries({
+  const { data: checkout } = useGetCurrentCheckout({
     checkoutId: checkoutId as string,
     isMultiShip: isMultiShipEnabled,
     initialCheckout,
   })
-  const { data: shippingMethods } = useCheckoutShippingMethodsQuery(
+  const { data: shippingMethods } = useGetCheckoutShippingMethods(
     checkoutId as string,
     checkout?.groupings &&
       checkout?.groupings
@@ -80,7 +80,7 @@ const MultiShipCheckoutTemplate = (props: MultiShipCheckoutProps) => {
   }
 
   const { isAuthenticated, user } = useAuthContext()
-  const { data: savedUserAddressData } = useCustomerContactsQueries(user?.id as number)
+  const { data: savedUserAddressData } = useGetCustomerAddresses(user?.id as number)
 
   const getShippingRateFromMethodGroupByMethodCode = async (
     shippingMethodCode: string,

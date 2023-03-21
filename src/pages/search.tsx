@@ -6,7 +6,7 @@ import { useTranslation } from 'next-i18next'
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
 
 import { ProductListingTemplate } from '@/components/page-templates'
-import { useProductSearchQueries } from '@/hooks'
+import { useGetSearchedProducts } from '@/hooks'
 import { productSearch } from '@/lib/api/operations'
 import { facetGetters, productSearchGetters } from '@/lib/getters'
 import type { CategorySearchParams } from '@/lib/types'
@@ -42,7 +42,7 @@ const SearchPage: NextPage<SearchPageType> = (props) => {
     router.query as unknown as CategorySearchParams
   )
 
-  const { data: searchPageResults, isFetching } = useProductSearchQueries(
+  const { data: searchPageResults, isFetching } = useGetSearchedProducts(
     searchParams,
     props.results
   )

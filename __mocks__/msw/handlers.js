@@ -284,7 +284,7 @@ export const storeHandlers = [
 ]
 
 export const wishlistHandlers = [
-  // useWishlistQueries
+  // useGetWishlist
   graphql.query('wishlists', (_req, res, ctx) => {
     return res(ctx.data({ wishlists: wishlistMock }))
   }),

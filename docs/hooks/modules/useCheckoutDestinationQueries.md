@@ -1,20 +1,20 @@
-[next-storefront](../README.md) / useCheckoutDestinationQueries
+[next-storefront](../README.md) / useGetDestination
 
-# Module: useCheckoutDestinationQueries
+# Module: useGetDestination
 
 ## Table of contents
 
 ### Functions
 
-- [useCheckoutDestinationQueries](useCheckoutDestinationQueries.md#usecheckoutdestinationqueries)
+- [useGetDestination](useGetDestination.md#usecheckoutdestinationqueries)
 
 ## Functions
 
-### useCheckoutDestinationQueries
+### useGetDestination
 
-▸ **useCheckoutDestinationQueries**(`params`): `UseDestinationResponse`
+▸ **useGetDestination**(`params`): `UseDestinationResponse`
 
-[Query hook] useCheckoutDestinationQueries uses the graphQL query
+[Query hook] useGetDestination uses the graphQL query
 
 <b>checkoutDestination(checkoutId: String!, destinationId: String!): CrDestination</b>
 
@@ -36,4 +36,4 @@ Parameters passed to function getCheckoutDestination(params: UseDestination) => 
 
 #### Defined in
 
-[queries/multiShip/useCheckoutDestinationQueries/useCheckoutDestinationQueries.tsx:49](https://github.com/KiboSoftware/nextjs-storefront/blob/561a164/hooks/queries/multiShip/useCheckoutDestinationQueries/useCheckoutDestinationQueries.tsx#L49)
+[queries/multiShip/useGetDestination/useGetDestination.tsx:49](https://github.com/KiboSoftware/nextjs-storefront/blob/561a164/hooks/queries/multiShip/useGetDestination/useGetDestination.tsx#L49)

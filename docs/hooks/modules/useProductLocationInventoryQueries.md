@@ -1,20 +1,20 @@
-[next-storefront](../README.md) / useProductLocationInventoryQueries
+[next-storefront](../README.md) / useGetProductInventory
 
-# Module: useProductLocationInventoryQueries
+# Module: useGetProductInventory
 
 ## Table of contents
 
 ### Functions
 
-- [useProductLocationInventoryQueries](useProductLocationInventoryQueries.md#useproductlocationinventoryqueries)
+- [useGetProductInventory](useGetProductInventory.md#useproductlocationinventoryqueries)
 
 ## Functions
 
-### useProductLocationInventoryQueries
+### useGetProductInventory
 
-▸ **useProductLocationInventoryQueries**(`productCode`, `locationCodes`): `UseProductLocationInventoryType`
+▸ **useGetProductInventory**(`productCode`, `locationCodes`): `UseProductLocationInventoryType`
 
-[Query hook] useProductLocationInventoryQueries uses the graphQL query
+[Query hook] useGetProductInventory uses the graphQL query
 
 <b>productLocationInventory(productCode: String!, locationCodes: String): LocationInventoryCollection</b>
 
@@ -39,4 +39,4 @@ On success, returns the inventory details with 'refetchOnWindowFocus' set to fal
 
 #### Defined in
 
-[queries/useProductLocationInventoryQueries/useProductLocationInventoryQueries.ts:49](https://github.com/KiboSoftware/nextjs-storefront/blob/561a164/hooks/queries/useProductLocationInventoryQueries/useProductLocationInventoryQueries.ts#L49)
+[queries/useGetProductInventory/useGetProductInventory.ts:49](https://github.com/KiboSoftware/nextjs-storefront/blob/561a164/hooks/queries/useGetProductInventory/useGetProductInventory.ts#L49)

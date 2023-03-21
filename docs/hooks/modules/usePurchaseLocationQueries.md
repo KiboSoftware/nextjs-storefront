@@ -1,20 +1,20 @@
-[next-storefront](../README.md) / usePurchaseLocationQueries
+[next-storefront](../README.md) / useGetPurchaseLocation
 
-# Module: usePurchaseLocationQueries
+# Module: useGetPurchaseLocation
 
 ## Table of contents
 
 ### Functions
 
-- [usePurchaseLocationQueries](usePurchaseLocationQueries.md#usepurchaselocationqueries)
+- [useGetPurchaseLocation](useGetPurchaseLocation.md#usepurchaselocationqueries)
 
 ## Functions
 
-### usePurchaseLocationQueries
+### useGetPurchaseLocation
 
-▸ **usePurchaseLocationQueries**(): `LocationType`
+▸ **useGetPurchaseLocation**(): `LocationType`
 
-[Query hook] usePurchaseLocationQueries uses the graphQL query
+[Query hook] useGetPurchaseLocation uses the graphQL query
 
 <b>spLocations(startIndex: Int, pageSize: Int, sortBy: String, filter: String, includeAttributeDefinition: Boolean): LocationCollection</b>
 
@@ -34,4 +34,4 @@ On success, returns the first location detail from location list.
 
 #### Defined in
 
-[queries/usePurchaseLocationQueries/usePurchaseLocationQueries.ts:50](https://github.com/KiboSoftware/nextjs-storefront/blob/561a164/hooks/queries/usePurchaseLocationQueries/usePurchaseLocationQueries.ts#L50)
+[queries/useGetPurchaseLocation/useGetPurchaseLocation.ts:50](https://github.com/KiboSoftware/nextjs-storefront/blob/561a164/hooks/queries/useGetPurchaseLocation/useGetPurchaseLocation.ts#L50)

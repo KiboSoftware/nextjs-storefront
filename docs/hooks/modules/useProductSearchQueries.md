@@ -1,20 +1,20 @@
-[next-storefront](../README.md) / useProductSearchQueries
+[next-storefront](../README.md) / useGetSearchedProducts
 
-# Module: useProductSearchQueries
+# Module: useGetSearchedProducts
 
 ## Table of contents
 
 ### Functions
 
-- [useProductSearchQueries](useProductSearchQueries.md#useproductsearchqueries)
+- [useGetSearchedProducts](useGetSearchedProducts.md#useproductsearchqueries)
 
 ## Functions
 
-### useProductSearchQueries
+### useGetSearchedProducts
 
-▸ **useProductSearchQueries**(`searchParams`, `initialData?`): `UseProductSearchResponse`
+▸ **useGetSearchedProducts**(`searchParams`, `initialData?`): `UseProductSearchResponse`
 
-[Query hook] useProductSearchQueries uses the graphQL query
+[Query hook] useGetSearchedProducts uses the graphQL query
 
 <b>ProductSearch(query: String, startIndex: Int, filter: String, pageSize: Int, sortBy: String, facet: String, facetHierValue: String, facetTemplate: String, facetValueFilter: String): ProductSearchResult</b>
 
@@ -39,4 +39,4 @@ On success, returns the product list with 'refetchOnWindowFocus' set to false fo
 
 #### Defined in
 
-[queries/useProductSearchQueries/useProductSearchQueries.ts:51](https://github.com/KiboSoftware/nextjs-storefront/blob/561a164/hooks/queries/useProductSearchQueries/useProductSearchQueries.ts#L51)
+[queries/useGetSearchedProducts/useGetSearchedProducts.ts:51](https://github.com/KiboSoftware/nextjs-storefront/blob/561a164/hooks/queries/useGetSearchedProducts/useGetSearchedProducts.ts#L51)

@@ -1,20 +1,20 @@
-[next-storefront](../README.md) / useStoreLocationsQueries
+[next-storefront](../README.md) / useGetStoreLocations
 
-# Module: useStoreLocationsQueries
+# Module: useGetStoreLocations
 
 ## Table of contents
 
 ### Functions
 
-- [useStoreLocationsQueries](useStoreLocationsQueries.md#usestorelocationsqueries)
+- [useGetStoreLocations](useGetStoreLocations.md#usestorelocationsqueries)
 
 ## Functions
 
-### useStoreLocationsQueries
+### useGetStoreLocations
 
-▸ **useStoreLocationsQueries**(`searchParams`): `LocationType`
+▸ **useGetStoreLocations**(`searchParams`): `LocationType`
 
-[Query hook] useStoreLocationsQueries uses the graphQL query
+[Query hook] useGetStoreLocations uses the graphQL query
 
 <b>spLocations(startIndex: Int, pageSize: Int, sortBy: String, filter: String, includeAttributeDefinition: Boolean): LocationCollection</b>
 
@@ -40,4 +40,4 @@ On success, returns the list of location
 
 #### Defined in
 
-[queries/useStoreLocationsQueries/useStoreLocationsQueries.ts:46](https://github.com/KiboSoftware/nextjs-storefront/blob/561a164/hooks/queries/useStoreLocationsQueries/useStoreLocationsQueries.ts#L46)
+[queries/useGetStoreLocations/useGetStoreLocations.ts:46](https://github.com/KiboSoftware/nextjs-storefront/blob/561a164/hooks/queries/useGetStoreLocations/useGetStoreLocations.ts#L46)

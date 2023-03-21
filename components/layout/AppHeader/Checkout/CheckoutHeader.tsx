@@ -6,7 +6,7 @@ import { useRouter } from 'next/router'
 import { useTranslation } from 'next-i18next'
 
 import { KiboLogo } from '@/components/common'
-import { useCheckoutQueries, useMultiShipCheckoutQueries } from '@/hooks'
+import { useGetCurrentOrder, useGetCurrentCheckout } from '@/hooks'
 
 const checkoutHeaderStyles = {
   container: {
@@ -23,12 +23,12 @@ const CheckoutHeader = ({ isMultiShipEnabled }: { isMultiShipEnabled: boolean })
   const { t } = useTranslation()
   const router = useRouter()
   const { checkoutId } = router.query
-  const { data: multishipCheckout } = useMultiShipCheckoutQueries({
+  const { data: multishipCheckout } = useGetCurrentCheckout({
     checkoutId: checkoutId as string,
     isMultiShip: isMultiShipEnabled,
   })
 
-  const { data: checkout } = useCheckoutQueries({
+  const { data: checkout } = useGetCurrentOrder({
     checkoutId: checkoutId as string,
     isMultiship: isMultiShipEnabled,
   })

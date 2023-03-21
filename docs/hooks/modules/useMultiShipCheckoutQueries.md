@@ -1,20 +1,20 @@
-[next-storefront](../README.md) / useMultiShipCheckoutQueries
+[next-storefront](../README.md) / useGetCurrentCheckout
 
-# Module: useMultiShipCheckoutQueries
+# Module: useGetCurrentCheckout
 
 ## Table of contents
 
 ### Functions
 
-- [useMultiShipCheckoutQueries](useMultiShipCheckoutQueries.md#usemultishipcheckoutqueries)
+- [useGetCurrentCheckout](useGetCurrentCheckout.md#usemultishipcheckoutqueries)
 
 ## Functions
 
-### useMultiShipCheckoutQueries
+### useGetCurrentCheckout
 
-▸ **useMultiShipCheckoutQueries**(`__namedParameters`): `UseMultiShipCheckoutResponse`
+▸ **useGetCurrentCheckout**(`__namedParameters`): `UseMultiShipCheckoutResponse`
 
-[Query hook] useMultiShipCheckoutQueries uses the graphQL query
+[Query hook] useGetCurrentCheckout uses the graphQL query
 
 <b>checkout(checkoutId: String!): Checkout</b>
 

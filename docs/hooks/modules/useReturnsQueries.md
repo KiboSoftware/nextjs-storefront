@@ -1,20 +1,20 @@
-[next-storefront](../README.md) / useReturnsQueries
+[next-storefront](../README.md) / useGetReturns
 
-# Module: useReturnsQueries
+# Module: useGetReturns
 
 ## Table of contents
 
 ### Functions
 
-- [useReturnsQueries](useReturnsQueries.md#usereturnsqueries)
+- [useGetReturns](useGetReturns.md#usereturnsqueries)
 
 ## Functions
 
-### useReturnsQueries
+### useGetReturns
 
-▸ **useReturnsQueries**(`searchParams`): `UseReturnsResponse`
+▸ **useGetReturns**(`searchParams`): `UseReturnsResponse`
 
-[Query hook] useReturnsQueries uses the graphQL query
+[Query hook] useGetReturns uses the graphQL query
 
 <b>returns(startIndex: Int, pageSize: Int, sortBy: String, filter: String, q: String): ReturnCollection</b>
 
@@ -39,4 +39,4 @@ On success, returns items that are returned and 'refetchOnWindowFocus' set to fa
 
 #### Defined in
 
-[queries/useReturnsQueries/useReturnsQueries.ts:48](https://github.com/KiboSoftware/nextjs-storefront/blob/561a164/hooks/queries/useReturnsQueries/useReturnsQueries.ts#L48)
+[queries/useGetReturns/useGetReturns.ts:48](https://github.com/KiboSoftware/nextjs-storefront/blob/561a164/hooks/queries/useGetReturns/useGetReturns.ts#L48)

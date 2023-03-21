@@ -1,20 +1,20 @@
-[next-storefront](../README.md) / useCheckoutShippingMethodsQuery
+[next-storefront](../README.md) / useGetCheckoutShippingMethods
 
-# Module: useCheckoutShippingMethodsQuery
+# Module: useGetCheckoutShippingMethods
 
 ## Table of contents
 
 ### Functions
 
-- [useCheckoutShippingMethodsQuery](useCheckoutShippingMethodsQuery.md#usecheckoutshippingmethodsquery)
+- [useGetCheckoutShippingMethods](useGetCheckoutShippingMethods.md#usecheckoutshippingmethodsquery)
 
 ## Functions
 
-### useCheckoutShippingMethodsQuery
+### useGetCheckoutShippingMethods
 
-▸ **useCheckoutShippingMethodsQuery**(`checkoutId`, `selectedShippingAddressId?`): `UseCheckoutShippingMethodsResponse`
+▸ **useGetCheckoutShippingMethods**(`checkoutId`, `selectedShippingAddressId?`): `UseCheckoutShippingMethodsResponse`
 
-[Query hook] useCheckoutShippingMethodsQuery uses the graphQL query
+[Query hook] useGetCheckoutShippingMethods uses the graphQL query
 
 <b>checkoutShippingMethods(checkoutId: String!): [CheckoutGroupRates]</b>
 
@@ -37,4 +37,4 @@ Parameters passed to function loadShippingMethods(checkoutId: string) => expects
 
 #### Defined in
 
-[queries/multiShip/useCheckoutShippingMethodsQuery/useCheckoutShippingMethodsQuery.ts:45](https://github.com/KiboSoftware/nextjs-storefront/blob/561a164/hooks/queries/multiShip/useCheckoutShippingMethodsQuery/useCheckoutShippingMethodsQuery.ts#L45)
+[queries/multiShip/useGetCheckoutShippingMethods/useGetCheckoutShippingMethods.ts:45](https://github.com/KiboSoftware/nextjs-storefront/blob/561a164/hooks/queries/multiShip/useGetCheckoutShippingMethods/useGetCheckoutShippingMethods.ts#L45)

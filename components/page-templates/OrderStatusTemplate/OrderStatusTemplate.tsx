@@ -6,7 +6,7 @@ import { useTranslation } from 'next-i18next'
 import KiboBreadcrumbs from '@/components/core/Breadcrumbs/KiboBreadcrumbs'
 import { ViewOrderDetails, ViewOrderStatus } from '@/components/order'
 import type { OrderStatusFormDataProps } from '@/components/order/ViewOrderStatus/ViewOrderStatus'
-import { useUserOrderQueries } from '@/hooks'
+import { useGetCustomerOrders } from '@/hooks'
 
 import type { CrOrder } from '@/lib/gql/types'
 
@@ -25,7 +25,7 @@ const OrderStatusTemplate = () => {
   })
 
   const { t } = useTranslation('common')
-  const { data: orderCollection, isFetching } = useUserOrderQueries(queryFilters)
+  const { data: orderCollection, isFetching } = useGetCustomerOrders(queryFilters)
   const { items = [], pageCount } = orderCollection
   const order = items && (items[0] as CrOrder)
   const breadCrumbsList = [

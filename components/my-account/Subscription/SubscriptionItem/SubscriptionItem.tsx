@@ -31,8 +31,8 @@ import {
   useUpdateSubscriptionNextOrderDate,
   useUpdateSubscriptionShippingInfo,
   useUpdateSubscriptionPayment,
-  useCustomerCardsQueries,
-  useCustomerContactsQueries,
+  useGetCards,
+  useGetCustomerAddresses,
   useCreateCustomerCard,
   useCreateCustomerAddress,
   useUpdateSubscriptionState,
@@ -137,8 +137,8 @@ const SubscriptionItem = (props: SubscriptionItemProps) => {
   const { updateSubscriptionNextOrderDate } = useUpdateSubscriptionNextOrderDate()
   const { updateSubscriptionShippingInfo } = useUpdateSubscriptionShippingInfo()
   const { updateSubscriptionPayment } = useUpdateSubscriptionPayment()
-  const { data: cards } = useCustomerCardsQueries(user?.id as number)
-  const { data: contacts } = useCustomerContactsQueries(user?.id as number)
+  const { data: cards } = useGetCards(user?.id as number)
+  const { data: contacts } = useGetCustomerAddresses(user?.id as number)
   const { addSavedCardDetails } = useCreateCustomerCard()
   const { addSavedAddressDetails } = useCreateCustomerAddress()
 
@@ -614,9 +614,7 @@ const SubscriptionItem = (props: SubscriptionItemProps) => {
                         onSaveAddress: handleAddNewShippingAddress,
                       })
                     }
-                    disabled={
-                      updateSubscriptionShippingInfo.isLoading || isSubscriptionCanceled
-                    }
+                    disabled={updateSubscriptionShippingInfo.isLoading || isSubscriptionCanceled}
                   >
                     {t('add-new-address')}
                   </Button>

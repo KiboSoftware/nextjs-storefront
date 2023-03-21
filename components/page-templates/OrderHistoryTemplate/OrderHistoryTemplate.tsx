@@ -7,7 +7,7 @@ import { useTranslation } from 'next-i18next'
 
 import { FilterOrders, FilterTiles, FullWidthDivider } from '@/components/common'
 import { OrderHistoryItem, ViewOrderDetails, OrderReturnItems } from '@/components/order'
-import { useUpdateRoutes, useUserOrderQueries } from '@/hooks'
+import { useUpdateRoutes, useGetCustomerOrders } from '@/hooks'
 import { facetGetters, orderGetters } from '@/lib/getters'
 
 import type { CrOrder } from '@/lib/gql/types'
@@ -42,7 +42,7 @@ const OrderHistoryTemplate = (props: OrderHistoryProps) => {
     isRefetching: true,
   })
 
-  const { data: orderCollection, isFetching } = useUserOrderQueries(updateQueryFilters)
+  const { data: orderCollection, isFetching } = useGetCustomerOrders(updateQueryFilters)
   const { items = [] } = orderCollection
 
   const [showFilterBy, setFilterBy] = useState<boolean>(false)

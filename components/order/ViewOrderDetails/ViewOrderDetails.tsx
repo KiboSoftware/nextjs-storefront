@@ -7,7 +7,7 @@ import { useTranslation } from 'next-i18next'
 import { SavedPaymentMethodView } from '@/components/checkout'
 import { AddressCard, OrderSummary, ProductItemList } from '@/components/common'
 import { ProductOption } from '@/components/product'
-import { useStoreLocationsQueries } from '@/hooks'
+import { useGetStoreLocations } from '@/hooks'
 import { OrderStatus } from '@/lib/constants'
 import { addressGetters, orderGetters, storeLocationGetters } from '@/lib/getters'
 
@@ -60,7 +60,7 @@ const ViewOrderDetails = (props: ViewOrderDetailsProps) => {
   const fulfillmentLocationCodes = orderGetters.getFulfillmentLocationCodes(pickupItems)
   const shippedTo = orderGetters.getShippedTo(order)
 
-  const { data: locations } = useStoreLocationsQueries({ filter: fulfillmentLocationCodes })
+  const { data: locations } = useGetStoreLocations({ filter: fulfillmentLocationCodes })
   const storePickupAddress = storeLocationGetters.getLocations(locations as Maybe<Location>[])
 
   const orderSummeryArgs = {

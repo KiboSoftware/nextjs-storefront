@@ -5,7 +5,7 @@ import { HeaderAction } from '@/components/common'
 import { MyStoreDialog, StoreLocatorDialog } from '@/components/dialogs'
 import { useModalContext } from '@/context'
 import { useHeaderContext } from '@/context/HeaderContext'
-import { usePurchaseLocationQueries } from '@/hooks'
+import { useGetPurchaseLocation } from '@/hooks'
 import { storeLocationGetters } from '@/lib/getters'
 import { setPurchaseLocationCookie } from '@/lib/helpers'
 import type { IconProps, LocationCustom } from '@/lib/types'
@@ -13,7 +13,7 @@ import type { IconProps, LocationCustom } from '@/lib/types'
 const StoreFinderIcon = ({ size }: IconProps) => {
   const { toggleStoreLocator } = useHeaderContext()
 
-  const { data: location } = usePurchaseLocationQueries()
+  const { data: location } = useGetPurchaseLocation()
 
   const { showModal, closeModal } = useModalContext()
 

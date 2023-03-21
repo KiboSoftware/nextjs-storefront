@@ -18,7 +18,7 @@ import { useTranslation } from 'next-i18next'
 import { CardDetailsForm, SavedPaymentMethodView } from '@/components/checkout'
 import { AddressForm } from '@/components/common'
 import { useCheckoutStepContext, STEP_STATUS, useAuthContext } from '@/context'
-import { useCustomerCardsQueries, useCustomerContactsQueries, usePaymentTypes } from '@/hooks'
+import { useGetCards, useGetCustomerAddresses, usePaymentTypes } from '@/hooks'
 import { CurrencyCode, PaymentType, PaymentWorkflow } from '@/lib/constants'
 import { addressGetters, cardGetters, orderGetters, userGetters } from '@/lib/getters'
 import { tokenizeCreditCardPayment } from '@/lib/helpers'
@@ -110,11 +110,12 @@ const PaymentStep = (props: PaymentStepProps) => {
   const paymentMethods = loadPaymentTypes()
 
   // getting saved card and billing details
-  const { data: customerCardsCollection, isSuccess: isCustomerCardsSuccess } =
-    useCustomerCardsQueries(user?.id as number)
+  const { data: customerCardsCollection, isSuccess: isCustomerCardsSuccess } = useGetCards(
+    user?.id as number
+  )
 
   const { data: customerContactsCollection, isSuccess: isCustomerContactsSuccess } =
-    useCustomerContactsQueries(user?.id as number)
+    useGetCustomerAddresses(user?.id as number)
 
   // checkout context handling
   const {

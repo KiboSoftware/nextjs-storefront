@@ -23,8 +23,8 @@ import { useTranslation } from 'next-i18next'
 import { MyProfile, PaymentMethod, AddressBook } from '@/components/my-account'
 import { useAuthContext } from '@/context'
 import {
-  useCustomerCardsQueries,
-  useCustomerContactsQueries,
+  useGetCards,
+  useGetCustomerAddresses,
   useCreateCustomerCard,
   useUpdateCustomerCard,
   useCreateCustomerAddress,
@@ -95,8 +95,8 @@ const MyAccountTemplate = () => {
   const mdScreen = useMediaQuery(theme.breakpoints.up('md'))
   const { user, logout } = useAuthContext()
 
-  const { data: cards } = useCustomerCardsQueries(user?.id as number)
-  const { data: contacts } = useCustomerContactsQueries(user?.id as number)
+  const { data: cards } = useGetCards(user?.id as number)
+  const { data: contacts } = useGetCustomerAddresses(user?.id as number)
 
   const { addSavedCardDetails } = useCreateCustomerCard()
   const { updateSavedCardDetails } = useUpdateCustomerCard()

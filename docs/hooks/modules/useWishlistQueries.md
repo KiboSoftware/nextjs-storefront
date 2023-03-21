@@ -1,20 +1,20 @@
-[next-storefront](../README.md) / useWishlistQueries
+[next-storefront](../README.md) / useGetWishlist
 
-# Module: useWishlistQueries
+# Module: useGetWishlist
 
 ## Table of contents
 
 ### Functions
 
-- [useWishlistQueries](useWishlistQueries.md#usewishlistqueries)
+- [useGetWishlist](useGetWishlist.md#usewishlistqueries)
 
 ## Functions
 
-### useWishlistQueries
+### useGetWishlist
 
-▸ **useWishlistQueries**(): `UseWishlistResponse`
+▸ **useGetWishlist**(): `UseWishlistResponse`
 
-[Query hook] useWishlistQueries uses the graphQL query
+[Query hook] useGetWishlist uses the graphQL query
 
 <b>wishlists(startIndex: Int, pageSize: Int, sortBy: String, filter: String): WishlistCollection</b>
 
@@ -32,4 +32,4 @@ On success, returns the first item of wishlists as it will always have single it
 
 #### Defined in
 
-[queries/useWishlistQueries/useWishlistQueries.ts:46](https://github.com/KiboSoftware/nextjs-storefront/blob/561a164/hooks/queries/useWishlistQueries/useWishlistQueries.ts#L46)
+[queries/useGetWishlist/useGetWishlist.ts:46](https://github.com/KiboSoftware/nextjs-storefront/blob/561a164/hooks/queries/useGetWishlist/useGetWishlist.ts#L46)

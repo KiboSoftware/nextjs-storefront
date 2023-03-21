@@ -8,7 +8,7 @@ import { KiboImage, KiboSelect, ReturnItemList } from '@/components/common'
 import { OrderReturnItemsDialog } from '@/components/dialogs'
 import { ProductOption } from '@/components/product'
 import { useModalContext } from '@/context'
-import { useReturnReasonsQueries, useCreateOrderReturnItemsMutation } from '@/hooks'
+import { useGetReturnReasons, useCreateOrderReturnItemsMutation } from '@/hooks'
 import { OrderStatus, OrderReturnType } from '@/lib/constants'
 import { orderGetters, productGetters } from '@/lib/getters'
 import type { CreateOrderReturnItemsInputParams } from '@/lib/types'
@@ -46,7 +46,7 @@ const OrderReturnItems = (props: OrderReturnItemsProps) => {
 
   const { showModal, closeModal } = useModalContext()
 
-  const { data: returnReasons } = useReturnReasonsQueries()
+  const { data: returnReasons } = useGetReturnReasons()
   const { createReturnItems } = useCreateOrderReturnItemsMutation()
 
   const orderNumber = orderGetters.getOrderNumber(order)

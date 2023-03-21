@@ -19,10 +19,10 @@ import { PromoCodeBadge, OrderSummary } from '@/components/common'
 import { StoreLocatorDialog } from '@/components/dialogs'
 import { useModalContext } from '@/context'
 import {
-  useCartQueries,
+  useGetCart,
   useInitiateOrder,
-  useStoreLocationsQueries,
-  usePurchaseLocationQueries,
+  useGetStoreLocations,
+  useGetPurchaseLocation,
   useUpdateCartItemQuantity,
   useDeleteCartItem,
   useUpdateCartItem,
@@ -43,7 +43,7 @@ export interface CartTemplateProps {
 
 const CartTemplate = (props: CartTemplateProps) => {
   const { isMultiShipEnabled } = props
-  const { data: cart } = useCartQueries(props?.cart)
+  const { data: cart } = useGetCart(props?.cart)
 
   const { t } = useTranslation('common')
   const theme = useTheme()
@@ -65,8 +65,8 @@ const CartTemplate = (props: CartTemplateProps) => {
   const cartTotal = orderGetters.getTotal(cart)
   const locationCodes = orderGetters.getFulfillmentLocationCodes(cartItems as CrCartItem[])
 
-  const { data: locations } = useStoreLocationsQueries({ filter: locationCodes })
-  const { data: purchaseLocation } = usePurchaseLocationQueries()
+  const { data: locations } = useGetStoreLocations({ filter: locationCodes })
+  const { data: purchaseLocation } = useGetPurchaseLocation()
   const updateCartCoupon = useUpdateCartCoupon()
   const deleteCartCoupon = useDeleteCartCoupon()
   const [promoError, setPromoError] = useState<string>('')

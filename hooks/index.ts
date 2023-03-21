@@ -1,53 +1,53 @@
 // Query hooks
 
 // address
-export * from './queries/address/useCustomerContactsQueries/useCustomerContactsQueries'
+export * from './queries/address/useGetCustomerAddresses/useGetCustomerAddresses'
 
 // card
-export * from './queries/card/useCustomerCardsQueries/useCustomerCardsQueries'
+export * from './queries/card/useGetCards/useGetCards'
 
 // cart
-export * from './queries/cart/useCartQueries/useCartQueries'
+export * from './queries/cart/useGetCart/useGetCart'
 
 // category
-export * from './queries/category/useCategoryTreeQueries/useCategoryTreeQueries'
+export * from './queries/category/useGetCategoryTree/useGetCategoryTree'
 
 // locations
-export * from './queries/locations/useStoreLocationsQueries/useStoreLocationsQueries'
-export * from './queries/locations/usePurchaseLocationQueries/usePurchaseLocationQueries'
+export * from './queries/locations/useGetStoreLocations/useGetStoreLocations'
+export * from './queries/locations/useGetPurchaseLocation/useGetPurchaseLocation'
 
 // MultishipCheckout
-export * from './queries/multishipCheckout/useCheckoutQueries/useCheckoutQueries'
-export * from './queries/multishipCheckout/useCheckoutDestinationQueries/useCheckoutDestinationQueries'
-export * from './queries/multishipCheckout/useCheckoutShippingMethodsQuery/useCheckoutShippingMethodsQuery'
-export * from './queries/multishipCheckout/useCheckoutDestinationsQueries/useCheckoutDestinationsQueries'
+export * from './queries/multishipCheckout/useGetCurrentCheckout/useGetCurrentCheckout'
+export * from './queries/multishipCheckout/useGetDestination/useGetDestination'
+export * from './queries/multishipCheckout/useGetCheckoutShippingMethods/useGetCheckoutShippingMethods'
+export * from './queries/multishipCheckout/useGetDestinations/useGetDestinations'
 
 // product
-export * from './queries/product/useProductsQueries/useProductsQueries'
-export * from './queries/product/useProductLocationInventoryQueries/useProductLocationInventoryQueries'
-export * from './queries/product/useProductPriceQueries/useProductPriceQueries'
+export * from './queries/product/useGetProducts/useGetProducts'
+export * from './queries/product/useGetProductInventory/useGetProductInventory'
+export * from './queries/product/useGetProductPrice/useGetProductPrice'
 
 //returns
-export * from './queries/returns/useReturnReasonsQueries/useReturnReasonsQueries'
-export * from './queries/returns/useReturnsQueries/useReturnsQueries'
+export * from './queries/returns/useGetReturnReasons/useGetReturnReasons'
+export * from './queries/returns/useGetReturns/useGetReturns'
 
 // search
-export * from './queries/search/useSearchSuggestionsQueries/useSearchSuggestionsQueries'
-export * from './queries/search/useProductSearchQueries/useProductSearchQueries'
+export * from './queries/search/useGetSearchSuggestions/useGetSearchSuggestions'
+export * from './queries/search/useGetSearchedProducts/useGetSearchedProducts'
 
 // standardCheckout
-export * from './queries/standardCheckout/useCheckoutQueries/useCheckoutQueries'
-export * from './queries/standardCheckout/useShippingMethodsQueries/useShippingMethodsQueries'
+export * from './queries/standardCheckout/useGetCurrentOrder/useGetCurrentOrder'
+export * from './queries/standardCheckout/useGetShippingMethods/useGetShippingMethods'
 
 // myAccount
-export * from './queries/myAccount/useUserOrderQueries/useUserOrderQueries'
-export * from './queries/myAccount/useUserQueries/useUserQueries'
+export * from './queries/myAccount/useGetCustomerOrders/useGetCustomerOrders'
+export * from './queries/myAccount/useGetCurrentCustomer/useGetCurrentCustomer'
 
 // subscription
-export * from './queries/subscription/useSubscriptionsQueries/useSubscriptionsQueries'
+export * from './queries/subscription/useGetSubscriptions/useGetSubscriptions'
 
 // wishlist
-export * from './queries/wishlist/useWishlistQueries/useWishlistQueries'
+export * from './queries/wishlist/useGetWishlist/useGetWishlist'
 
 // Custom hooks
 export * from './custom/useDebounce/useDebounce'
