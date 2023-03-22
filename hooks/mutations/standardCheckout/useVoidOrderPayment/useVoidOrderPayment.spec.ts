@@ -1,14 +1,15 @@
 import { renderHook } from '@testing-library/react-hooks'
 
-import { useCreateOrderPaymentMethodMutation } from './useCreateOrderPaymentMethodMutation'
+import { useVoidOrderPayment } from './useVoidOrderPayment'
 import { billingInfoInputMock } from '@/__mocks__/stories/billingInfoInputMock'
 import { createOrderPaymentActionMock } from '@/__mocks__/stories/createOrderPaymentActionMock'
 import { createQueryClientWrapper } from '@/__test__/utils/renderWithQueryClient'
 
-describe('[hooks] useCreateOrderPaymentMethodMutation', () => {
-  it('should use useCreateOrderPaymentMethodMutation', async () => {
-    const createCheckoutPaymentMethodParams = {
+describe('[hooks] useVoidOrderPayment', () => {
+  it('should use useVoidOrderPayment', async () => {
+    const updateOrderPaymentActionMutationParams = {
       orderId: '13eaad5a5526f20001d2fab9000074e7',
+      paymentId: '13eaad5a56753dfg0001d2fab9000074e7',
       paymentAction: {
         currencyCode: 'US',
         amount: 220,
@@ -21,9 +22,9 @@ describe('[hooks] useCreateOrderPaymentMethodMutation', () => {
 
     renderHook(
       async () => {
-        const createCheckoutPaymentMethod = useCreateOrderPaymentMethodMutation()
+        const createCheckoutPaymentMethod = useVoidOrderPayment()
         const response = await createCheckoutPaymentMethod.mutateAsync(
-          createCheckoutPaymentMethodParams
+          updateOrderPaymentActionMutationParams
         )
 
         expect(response).toStrictEqual(createOrderPaymentActionMock.createOrderPaymentAction)

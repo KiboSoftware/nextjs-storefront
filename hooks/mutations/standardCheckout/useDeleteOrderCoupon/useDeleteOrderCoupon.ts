@@ -1,5 +1,5 @@
 /**
- * @module useDeleteOrderCouponMutation
+ * @module useDeleteOrderCoupon
  */
 import { useMutation, useQueryClient } from 'react-query'
 
@@ -29,7 +29,7 @@ const deleteOrderCoupon = async (params: DeleteCartCouponParams) => {
 }
 
 /**
- * [Mutation hook] useDeleteOrderCouponMutation uses the graphQL mutation
+ * [Mutation hook] useDeleteOrderCoupon uses the graphQL mutation
  *
  * <b>deleteOrderCoupons(orderId: String!, updateMode: String, version: String): Order</b>
  *
@@ -41,7 +41,7 @@ const deleteOrderCoupon = async (params: DeleteCartCouponParams) => {
  *
  * @returns 'response?.deleteOrderCoupon' which removes the applied coupon on checkout page
  */
-export const useDeleteOrderCouponMutation = () => {
+export const useDeleteOrderCoupon = () => {
   const queryClient = useQueryClient()
   return useMutation(deleteOrderCoupon, {
     onSuccess: () => {

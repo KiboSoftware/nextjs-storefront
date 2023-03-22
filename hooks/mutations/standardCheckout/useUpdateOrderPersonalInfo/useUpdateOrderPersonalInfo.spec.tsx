@@ -1,11 +1,11 @@
 import { renderHook } from '@testing-library/react-hooks'
 
-import { useUpdateCheckoutPersonalInfoMutation } from './useUpdateCheckoutPersonalInfoMutation'
+import { useUpdateOrderPersonalInfo } from './useUpdateOrderPersonalInfo'
 import { orderMock } from '@/__mocks__/stories/orderMock'
 import { createQueryClientWrapper } from '@/__test__/utils/renderWithQueryClient'
 
-describe('[hooks] useUpdateCheckoutPersonalInfoMutation', () => {
-  it('should use useUpdateCheckoutPersonalInfoMutation', async () => {
+describe('[hooks] useUpdateOrderPersonalInfo', () => {
+  it('should use useUpdateOrderPersonalInfo', async () => {
     const checkoutDetails = {
       checkout: orderMock.checkout,
       email: 'amol23@kibo.com',
@@ -13,7 +13,7 @@ describe('[hooks] useUpdateCheckoutPersonalInfoMutation', () => {
 
     renderHook(
       async () => {
-        const updatePersonalInfoMutation = useUpdateCheckoutPersonalInfoMutation()
+        const updatePersonalInfoMutation = useUpdateOrderPersonalInfo()
         const response = await updatePersonalInfoMutation.mutateAsync(checkoutDetails)
 
         expect(response).toStrictEqual(orderMock.checkout)

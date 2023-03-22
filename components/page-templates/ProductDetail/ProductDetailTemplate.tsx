@@ -41,7 +41,7 @@ import { useModalContext } from '@/context'
 import {
   useProductDetailTemplate,
   usePurchaseLocationQueries,
-  useAddToCartMutation,
+  useAddCartItem,
   useWishlist,
   useProductLocationInventoryQueries,
   usePriceRangeFormatter,
@@ -103,7 +103,7 @@ const ProductDetailTemplate = (props: ProductDetailTemplateProps) => {
   )
 
   const { showModal, closeModal } = useModalContext()
-  const { addToCart } = useAddToCartMutation()
+  const { addToCart } = useAddCartItem()
   const { data: purchaseLocation } = usePurchaseLocationQueries()
 
   const { addOrRemoveWishlistItem, checkProductInWishlist, isWishlistLoading } = useWishlist()

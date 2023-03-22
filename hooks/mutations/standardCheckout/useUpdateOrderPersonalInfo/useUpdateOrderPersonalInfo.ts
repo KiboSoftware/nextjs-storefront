@@ -1,5 +1,5 @@
 /**
- * @module useUpdateCheckoutPersonalInfoMutation
+ * @module useUpdateOrderPersonalInfo
  */
 import { useMutation, useQueryClient } from 'react-query'
 
@@ -38,7 +38,7 @@ const updatePersonalInfo = async ({ checkout, email }: PersonalInfo) => {
 }
 
 /**
- * [Mutation hook] useUpdateCheckoutPersonalInfoMutation uses the graphQL mutation
+ * [Mutation hook] useUpdateOrderPersonalInfo uses the graphQL mutation
  *
  * <b>updateOrder(orderId: String!,updateMode: String, version: String, orderInput: OrderInput): Order</b>
  *
@@ -51,7 +51,7 @@ const updatePersonalInfo = async ({ checkout, email }: PersonalInfo) => {
  * @returns 'response?.checkout', which contains updated checkout information
  */
 
-export const useUpdateCheckoutPersonalInfoMutation = () => {
+export const useUpdateOrderPersonalInfo = () => {
   const queryClient = useQueryClient()
 
   return useMutation(updatePersonalInfo, {

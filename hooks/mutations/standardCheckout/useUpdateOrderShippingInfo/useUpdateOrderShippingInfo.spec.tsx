@@ -1,16 +1,16 @@
 import { renderHook } from '@testing-library/react-hooks'
 
-import { useUpdateCheckoutShippingInfoMutation } from './useUpdateCheckoutShippingInfoMutation'
+import { useUpdateOrderShippingInfo } from './useUpdateCheckoutShippingInfoMutation'
 import { orderMock } from '@/__mocks__/stories/orderMock'
 import { createQueryClientWrapper } from '@/__test__/utils/renderWithQueryClient'
 
-describe('[hooks] useUpdateCheckoutShippingInfoMutation', () => {
-  it('should use useUpdateCheckoutShippingInfoMutation', async () => {
+describe('[hooks] useUpdateOrderShippingInfo', () => {
+  it('should use useUpdateOrderShippingInfo', async () => {
     const expectedFulfillmentContact = orderMock?.checkout?.fulfillmentInfo?.fulfillmentContact
 
     renderHook(
       async () => {
-        const updateShippingInfoMutation = useUpdateCheckoutShippingInfoMutation()
+        const updateShippingInfoMutation = useUpdateOrderShippingInfo()
         const response = await updateShippingInfoMutation.mutateAsync({
           checkout: orderMock.checkout,
         })

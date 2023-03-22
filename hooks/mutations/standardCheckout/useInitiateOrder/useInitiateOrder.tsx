@@ -1,5 +1,5 @@
 /**
- * @module useCreateFromCartMutation
+ * @module useInitiateOrder
  */
 import { useMutation } from 'react-query'
 
@@ -18,7 +18,7 @@ const getOrCreateCheckout = async (cartId?: string | null) => {
 }
 
 /**
- * [Mutation hook] useCreateFromCartMutation uses the graphQL mutation
+ * [Mutation hook] useInitiateOrder uses the graphQL mutation
  *
  * <b>createOrder(cartId: String, quoteId: String, orderInput: OrderInput): Order</b>
  *
@@ -28,7 +28,7 @@ const getOrCreateCheckout = async (cartId?: string | null) => {
  *
  * @returns 'response?.checkout' which contains data for checkout pages(product items, fulfillment method etc.;)
  */
-export const useCreateFromCartMutation = () => {
+export const useInitiateOrder = () => {
   return {
     createFromCart: useMutation(getOrCreateCheckout),
   }

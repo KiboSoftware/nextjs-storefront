@@ -4,18 +4,18 @@ import { useRouter } from 'next/router'
 
 import { DetailsStep, PaymentStep, ReviewStep, StandardShippingStep } from '@/components/checkout'
 import { CheckoutUITemplate } from '@/components/page-templates'
-import { useCheckoutStepContext, useAuthContext } from '@/context'
+import { useAuthContext } from '@/context'
 import {
   useCheckoutQueries,
   useCustomerContactsQueries,
-  useUpdateOrderCouponMutation,
-  useDeleteOrderCouponMutation,
-  useUpdateCheckoutPersonalInfoMutation,
+  useUpdateOrderCoupon,
+  useDeleteOrderCoupon,
+  useUpdateOrderPersonalInfo,
   PersonalInfo,
-  useUpdateCheckoutBillingInfoMutation,
-  useCreateOrderPaymentMethodMutation,
-  useUpdateOrderPaymentActionMutation,
-  useCreateOrderMutation,
+  useUpdateOrderBillingInfo,
+  useAddOrderPaymentInfo,
+  useVoidOrderPayment,
+  useCreateOrder,
 } from '@/hooks'
 import { orderGetters } from '@/lib/getters'
 import type { PersonalDetails } from '@/lib/types'
@@ -41,12 +41,8 @@ const StandardShipCheckoutTemplate = (props: StandardShipCheckoutProps) => {
 
   const { isAuthenticated, user } = useAuthContext()
   const { data: savedUserAddressData } = useCustomerContactsQueries(user?.id as number)
-  const updateOrderCoupon = useUpdateOrderCouponMutation()
-  const deleteOrderCoupon = useDeleteOrderCouponMutation()
-
-  const { setStepBack } = useCheckoutStepContext()
-
-  const handleBack = () => setStepBack()
+  const updateOrderCoupon = useUpdateOrderCoupon()
+  const deleteOrderCoupon = useDeleteOrderCoupon()
 
   const handleApplyCouponCode = async (couponCode: string) => {
     try {
@@ -73,7 +69,7 @@ const StandardShipCheckoutTemplate = (props: StandardShipCheckoutProps) => {
     }
   }
 
-  const updateStandardCheckoutPersonalInfo = useUpdateCheckoutPersonalInfoMutation()
+  const updateStandardCheckoutPersonalInfo = useUpdateOrderPersonalInfo()
 
   const updateCheckoutPersonalInfo = async (formData: PersonalDetails) => {
     const { email } = formData
@@ -87,9 +83,9 @@ const StandardShipCheckoutTemplate = (props: StandardShipCheckoutProps) => {
 
   // Payment Step
 
-  const updateOrderPaymentAction = useUpdateOrderPaymentActionMutation()
-  const createOrderPaymentMethod = useCreateOrderPaymentMethodMutation()
-  const updateCheckoutBillingInfo = useUpdateCheckoutBillingInfoMutation()
+  const updateOrderPaymentAction = useVoidOrderPayment()
+  const createOrderPaymentMethod = useAddOrderPaymentInfo()
+  const updateCheckoutBillingInfo = useUpdateOrderBillingInfo()
 
   const handleVoidPayment = async (
     id: string,
@@ -112,7 +108,7 @@ const StandardShipCheckoutTemplate = (props: StandardShipCheckoutProps) => {
   }
 
   //Review Step
-  const createOrder = useCreateOrderMutation()
+  const createOrder = useCreateOrder()
 
   const orderDetails = orderGetters.getCheckoutDetails(checkout as CrOrder)
 

@@ -20,14 +20,14 @@ import { StoreLocatorDialog } from '@/components/dialogs'
 import { useModalContext } from '@/context'
 import {
   useCartQueries,
-  useCreateFromCartMutation,
+  useInitiateOrder,
   useStoreLocationsQueries,
   usePurchaseLocationQueries,
-  useUpdateCartItemQuantityMutation,
-  useRemoveCartItemMutation,
-  useUpdateCartItemMutation,
-  useUpdateCartCouponMutation,
-  useDeleteCartCouponMutation,
+  useUpdateCartItemQuantity,
+  useDeleteCartItem,
+  useUpdateCartItem,
+  useUpdateCartCoupon,
+  useDeleteCartCoupon,
   useCreateMultiShipCheckoutFromCartMutation,
 } from '@/hooks'
 import { FulfillmentOptions } from '@/lib/constants'
@@ -49,11 +49,11 @@ const CartTemplate = (props: CartTemplateProps) => {
   const theme = useTheme()
   const isMobileViewport = useMediaQuery(theme.breakpoints.down('md'))
   const router = useRouter()
-  const { createFromCart } = useCreateFromCartMutation()
+  const { createFromCart } = useInitiateOrder()
   const { createMultiShipCheckoutFromCart } = useCreateMultiShipCheckoutFromCartMutation()
-  const { updateCartItemQuantity } = useUpdateCartItemQuantityMutation()
-  const { removeCartItem } = useRemoveCartItemMutation()
-  const { updateCartItem } = useUpdateCartItemMutation()
+  const { updateCartItemQuantity } = useUpdateCartItemQuantity()
+  const { removeCartItem } = useDeleteCartItem()
+  const { updateCartItem } = useUpdateCartItem()
   const { showModal, closeModal } = useModalContext()
 
   const cartItemCount = cartGetters.getCartItemCount(cart)
@@ -67,8 +67,8 @@ const CartTemplate = (props: CartTemplateProps) => {
 
   const { data: locations } = useStoreLocationsQueries({ filter: locationCodes })
   const { data: purchaseLocation } = usePurchaseLocationQueries()
-  const updateCartCoupon = useUpdateCartCouponMutation()
-  const deleteCartCoupon = useDeleteCartCouponMutation()
+  const updateCartCoupon = useUpdateCartCoupon()
+  const deleteCartCoupon = useDeleteCartCoupon()
   const [promoError, setPromoError] = useState<string>('')
   const [showLoadingButton, setShowLoadingButton] = useState<boolean>(false)
 

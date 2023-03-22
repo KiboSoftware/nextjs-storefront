@@ -1,5 +1,5 @@
 /**
- * @module useUpdateOrderCouponMutation
+ * @module useUpdateOrderCoupon
  */
 import { useMutation, useQueryClient } from 'react-query'
 
@@ -30,7 +30,7 @@ const updateOrderCoupon = async (params: UpdateOrderCouponParams) => {
 }
 
 /**
- * [Mutation hook] useUpdateOrderCouponMutation uses the graphQL mutation
+ * [Mutation hook] useUpdateOrderCoupon uses the graphQL mutation
  *
  * <b>updateOrderCoupon(orderId: String!, couponCode: String!, updateMode: String, version: String): Order</b>
  *
@@ -42,7 +42,7 @@ const updateOrderCoupon = async (params: UpdateOrderCouponParams) => {
  *
  * @returns 'response?.updateOrderCoupon' which applies the coupon on checkout page((if coupon is valid))
  */
-export const useUpdateOrderCouponMutation = () => {
+export const useUpdateOrderCoupon = () => {
   const queryClient = useQueryClient()
   return useMutation(updateOrderCoupon, {
     onSuccess: () => {

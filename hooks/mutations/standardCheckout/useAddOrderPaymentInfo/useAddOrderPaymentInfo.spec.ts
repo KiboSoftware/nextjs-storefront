@@ -1,15 +1,14 @@
 import { renderHook } from '@testing-library/react-hooks'
 
-import { useUpdateOrderPaymentActionMutation } from './useUpdateOrderPaymentActionMutation'
+import { useAddOrderPaymentInfo } from './useAddOrderPaymentInfo'
 import { billingInfoInputMock } from '@/__mocks__/stories/billingInfoInputMock'
 import { createOrderPaymentActionMock } from '@/__mocks__/stories/createOrderPaymentActionMock'
 import { createQueryClientWrapper } from '@/__test__/utils/renderWithQueryClient'
 
-describe('[hooks] useUpdateOrderPaymentActionMutation', () => {
-  it('should use useUpdateOrderPaymentActionMutation', async () => {
-    const updateOrderPaymentActionMutationParams = {
+describe('[hooks] useAddOrderPaymentInfo', () => {
+  it('should use useAddOrderPaymentInfo', async () => {
+    const createCheckoutPaymentMethodParams = {
       orderId: '13eaad5a5526f20001d2fab9000074e7',
-      paymentId: '13eaad5a56753dfg0001d2fab9000074e7',
       paymentAction: {
         currencyCode: 'US',
         amount: 220,
@@ -22,9 +21,9 @@ describe('[hooks] useUpdateOrderPaymentActionMutation', () => {
 
     renderHook(
       async () => {
-        const createCheckoutPaymentMethod = useUpdateOrderPaymentActionMutation()
+        const createCheckoutPaymentMethod = useAddOrderPaymentInfo()
         const response = await createCheckoutPaymentMethod.mutateAsync(
-          updateOrderPaymentActionMutationParams
+          createCheckoutPaymentMethodParams
         )
 
         expect(response).toStrictEqual(createOrderPaymentActionMock.createOrderPaymentAction)

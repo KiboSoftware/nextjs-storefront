@@ -1,5 +1,5 @@
 /**
- * @module useUpdateCheckoutBillingInfoMutation
+ * @module useUpdateOrderBillingInfo
  */
 import { useMutation, useQueryClient } from 'react-query'
 
@@ -29,7 +29,7 @@ const updateBillingInfo = async (params: UpdateBillingInfoInput) => {
 }
 
 /**
- * [Mutation hook] useUpdateCheckoutBillingInfoMutation uses the graphQL mutation
+ * [Mutation hook] useUpdateOrderBillingInfo uses the graphQL mutation
  *
  * <b>updateOrderBillingInfo(orderId: String!, updateMode: String, version: String, billingInfoInput: BillingInfoInput): BillingInfo</b>
  *
@@ -42,7 +42,7 @@ const updateBillingInfo = async (params: UpdateBillingInfoInput) => {
  * @returns 'response?.updateOrderBillingInfo', which contains updated billing details of user
  */
 
-export const useUpdateCheckoutBillingInfoMutation = () => {
+export const useUpdateOrderBillingInfo = () => {
   const queryClient = useQueryClient()
 
   return useMutation(updateBillingInfo, {

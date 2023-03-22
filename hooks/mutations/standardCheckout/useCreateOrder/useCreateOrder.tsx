@@ -1,5 +1,5 @@
 /**
- * @module useCreateOrderMutation
+ * @module useCreateOrder
  */
 import { useMutation, useQueryClient } from 'react-query'
 
@@ -32,7 +32,7 @@ const createOrder = async (checkout: CrOrder) => {
 }
 
 /**
- * [Mutation hook] useCreateOrderMutation uses the graphQL mutation
+ * [Mutation hook] useCreateOrder uses the graphQL mutation
  *
  * <b>createOrderAction(orderId: String!, orderActionInput: OrderActionInput): Order</b>
  *
@@ -44,7 +44,7 @@ const createOrder = async (checkout: CrOrder) => {
  *
  * @returns 'response?.createOrderAction' which contains Order number, payment status, product items with totals, shipping and billing details, fulfillment methods.
  */
-export const useCreateOrderMutation = () => {
+export const useCreateOrder = () => {
   const queryClient = useQueryClient()
 
   return useMutation(createOrder, {

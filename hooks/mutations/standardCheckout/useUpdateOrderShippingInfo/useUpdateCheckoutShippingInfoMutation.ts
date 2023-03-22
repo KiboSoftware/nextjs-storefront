@@ -1,5 +1,5 @@
 /**
- * @module useUpdateCheckoutShippingInfoMutation
+ * @module useUpdateOrderShippingInfo
  */
 import { useMutation, useQueryClient } from 'react-query'
 
@@ -35,7 +35,7 @@ const updateShippingInfo = async (params: CheckoutShippingParams) => {
 }
 
 /**
- * [Mutation hook] useUpdateCheckoutShippingInfoMutation uses the graphQL mutation
+ * [Mutation hook] useUpdateOrderShippingInfo uses the graphQL mutation
  *
  * <b>updateOrderFulfillmentInfo(orderId: String!, updateMode: String, version: String, fulfillmentInfoInput: FulfillmentInfoInput): FulfillmentInfo</b>
  *
@@ -48,7 +48,7 @@ const updateShippingInfo = async (params: CheckoutShippingParams) => {
  * @returns 'response?.updateOrderBillingInfo', which contains updated shipping checkout information
  */
 
-export const useUpdateCheckoutShippingInfoMutation = () => {
+export const useUpdateOrderShippingInfo = () => {
   const queryClient = useQueryClient()
 
   return useMutation(updateShippingInfo, {
