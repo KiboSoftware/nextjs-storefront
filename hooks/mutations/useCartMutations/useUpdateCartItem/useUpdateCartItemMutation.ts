@@ -48,24 +48,26 @@ export const useUpdateCartItemMutation = () => {
   const queryClient = useQueryClient()
   return {
     updateCartItem: useMutation(updateCartItem, {
-      onMutate: async (mutatedCartItem) => {
-        await queryClient.cancelQueries()
+      onMutate: async (modifiedCartItem) => {
+        await queryClient.cancelQueries(cartKeys.all)
+
         const previousCart: CrCart | undefined = queryClient.getQueryData(cartKeys.all)
-        const cart = { ...previousCart }
-        const cartItem = cart?.items?.find(
-          (item: Maybe<CrCartItem>) => item?.id === mutatedCartItem?.cartItemId
-        )
-        if (cartItem?.id) {
-          cartItem.fulfillmentMethod = mutatedCartItem.cartItemInput.fulfillmentMethod
-          cartItem.fulfillmentLocationCode = mutatedCartItem.cartItemInput.fulfillmentLocationCode
+
+        const cart = {
+          ...previousCart,
+          items: previousCart?.items?.map((item: Maybe<CrCartItem>) => {
+            if (item?.id === modifiedCartItem?.cartItemId) {
+              item.fulfillmentMethod = modifiedCartItem.cartItemInput.fulfillmentMethod
+              item.fulfillmentLocationCode = modifiedCartItem.cartItemInput.fulfillmentLocationCode
+            }
+          }),
         }
+
         queryClient.setQueryData(cartKeys.all, cart)
         return { previousCart }
       },
-      onError: (_err, _cart, context: any) => {
-        queryClient.setQueryData(cartKeys.all, context?.previousCart)
-      },
-      onSettled: () => {
+      onSettled: (_data, error, _, context) => {
+        if (error) queryClient.setQueryData(cartKeys.all, context?.previousCart)
         queryClient.invalidateQueries(cartKeys.all)
       },
     }),

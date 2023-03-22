@@ -47,7 +47,9 @@ export const useDeleteCustomerAddressMutation = () => {
   return {
     deleteSavedAddressDetails: useMutation(deleteCustomerAccountContactDetails, {
       onMutate: async (deletedAddress) => {
-        await queryClient.cancelQueries(customerAccountContactsKeys.all)
+        await queryClient.cancelQueries(
+          customerAccountContactsKeys.addressById(deletedAddress.accountId)
+        )
 
         const previousAddresses: any = queryClient.getQueryData(
           customerAccountContactsKeys.addressById(deletedAddress.accountId)
@@ -59,6 +61,7 @@ export const useDeleteCustomerAddressMutation = () => {
             (item: CustomerContact) => item.id !== deletedAddress.contactId
           ),
         }
+
         queryClient.setQueryData(
           customerAccountContactsKeys.addressById(deletedAddress.accountId),
           newAddresses
@@ -66,11 +69,16 @@ export const useDeleteCustomerAddressMutation = () => {
 
         return { previousAddresses }
       },
-      onError: (_err, _newAddress, context: any) => {
-        queryClient.setQueryData(customerAccountContactsKeys.all, context?.previousAddresses)
-      },
-      onSettled: () => {
-        queryClient.invalidateQueries(customerAccountContactsKeys.all)
+      onSettled: (deletedAddress, error, _, context) => {
+        if (error) {
+          queryClient.setQueryData(
+            customerAccountContactsKeys.addressById(deletedAddress.accountId),
+            context?.previousAddresses
+          )
+        }
+        queryClient.invalidateQueries(
+          customerAccountContactsKeys.addressById(deletedAddress.accountId)
+        )
       },
     }),
   }

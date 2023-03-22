@@ -59,10 +59,8 @@ export const useRemoveCartItemMutation = () => {
 
         return { previousCart }
       },
-      onError: (_err, _newCart, context: any) => {
-        queryClient.setQueryData(cartKeys.all, context?.previousCart)
-      },
-      onSettled: () => {
+      onSettled: (_data, error, _, context) => {
+        if (error) queryClient.setQueryData(cartKeys.all, context?.previousCart)
         queryClient.invalidateQueries(cartKeys.all)
       },
     }),

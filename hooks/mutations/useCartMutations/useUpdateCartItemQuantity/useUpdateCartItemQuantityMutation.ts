@@ -7,7 +7,7 @@ import { makeGraphQLClient } from '@/lib/gql/client'
 import { updateCartItemQuantityMutation } from '@/lib/gql/mutations'
 import { cartKeys } from '@/lib/react-query/queryKeys'
 
-import type { CrCartItem } from '@/lib/gql/types'
+import type { CrCartItem, Maybe } from '@/lib/gql/types'
 
 interface UpdateCartItemQuantityParams {
   cartItemId: string
@@ -49,23 +49,25 @@ export const useUpdateCartItemQuantityMutation = () => {
     updateCartItemQuantity: useMutation(updateCartItemQuantity, {
       // When mutate is called:
       onMutate: async (modifiedCartItem) => {
-        await queryClient.cancelQueries()
+        await queryClient.cancelQueries(cartKeys.all)
 
         const previousCart: any = queryClient.getQueryData(cartKeys.all)
-        const cart = { ...previousCart }
-        const cartItem = cart?.items?.find(
-          (item: CrCartItem) => item.id === modifiedCartItem.cartItemId
-        )
 
-        if (cartItem?.id) cartItem.quantity = modifiedCartItem.quantity
+        const cart = {
+          ...previousCart,
+          items: previousCart?.items?.map((item: Maybe<CrCartItem>) => {
+            if (item?.id === modifiedCartItem?.cartItemId) {
+              item.quantity = modifiedCartItem.quantity
+            }
+          }),
+        }
+
         queryClient.setQueryData(cartKeys.all, cart)
 
         return { previousCart }
       },
-      onError: (_err, _newCart, context: any) => {
-        queryClient.setQueryData(cartKeys.all, context?.previousCart)
-      },
-      onSettled: () => {
+      onSettled: (_data, error, _, context) => {
+        if (error) queryClient.setQueryData(cartKeys.all, context?.previousCart)
         queryClient.invalidateQueries(cartKeys.all)
       },
     }),
