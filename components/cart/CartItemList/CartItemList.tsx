@@ -14,7 +14,7 @@ interface CartItemListProps {
   fulfillmentLocations: Location[]
   purchaseLocation: Location
   onCartItemQuantityUpdate: (cartItemId: string, quantity: number) => void
-  onCartItemDelete: (cartItemId: string) => Promise<void>
+  onCartItemDelete: (cartItemId: string) => void
   onCartItemActionSelection: () => void
   onFulfillmentOptionSelection: (fulfillmentMethod: string, cartItemId: string) => void
   onProductPickupLocation: (cartItemId: string) => void
@@ -35,7 +35,7 @@ const CartItemList = (props: CartItemListProps) => {
   const handleQuantityUpdate = (cartItemId: string, quantity: number) =>
     onCartItemQuantityUpdate(cartItemId, quantity)
 
-  const handleCartItemDelete = async (cartItemId: string) => await onCartItemDelete(cartItemId)
+  const handleCartItemDelete = (cartItemId: string) => onCartItemDelete(cartItemId)
 
   const handleCartItemActionSelection = () => onCartItemActionSelection()
 

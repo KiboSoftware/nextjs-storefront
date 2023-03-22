@@ -53,17 +53,23 @@ export const useUpdateCartItemMutation = () => {
 
         const previousCart: CrCart | undefined = queryClient.getQueryData(cartKeys.all)
 
-        const cart = {
-          ...previousCart,
-          items: previousCart?.items?.map((item: Maybe<CrCartItem>) => {
-            if (item?.id === modifiedCartItem?.cartItemId) {
-              item.fulfillmentMethod = modifiedCartItem.cartItemInput.fulfillmentMethod
-              item.fulfillmentLocationCode = modifiedCartItem.cartItemInput.fulfillmentLocationCode
-            }
-          }),
-        }
+        queryClient.setQueryData(cartKeys.all, (oldCart: any) => {
+          const newCart = {
+            ...oldCart,
+            items: oldCart?.items?.map((item: Maybe<CrCartItem>) => {
+              if (item?.id === modifiedCartItem?.cartItemId) {
+                return {
+                  ...item,
+                  fulfillmentMethod: modifiedCartItem.cartItemInput.fulfillmentMethod,
+                  fulfillmentLocationCode: modifiedCartItem.cartItemInput.fulfillmentLocationCode,
+                }
+              }
+              return item
+            }),
+          }
+          return newCart
+        })
 
-        queryClient.setQueryData(cartKeys.all, cart)
         return { previousCart }
       },
       onSettled: (_data, error, _, context) => {

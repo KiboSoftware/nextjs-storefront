@@ -48,22 +48,29 @@ export const useUpdateCartItemQuantityMutation = () => {
   return {
     updateCartItemQuantity: useMutation(updateCartItemQuantity, {
       // When mutate is called:
-      onMutate: async (modifiedCartItem) => {
+      onMutate: async (modifiedCartItem: any) => {
         await queryClient.cancelQueries(cartKeys.all)
 
-        const previousCart: any = queryClient.getQueryData(cartKeys.all)
+        const previousCart = queryClient.getQueryData(cartKeys.all)
 
-        const cart = {
-          ...previousCart,
-          items: previousCart?.items?.map((item: Maybe<CrCartItem>) => {
-            if (item?.id === modifiedCartItem?.cartItemId) {
-              item.quantity = modifiedCartItem.quantity
-            }
-          }),
-        }
+        // Create an optimistic update by updating the cart in the cache immediately
+        queryClient.setQueryData(cartKeys.all, (oldCart: any) => {
+          const newCart = {
+            ...oldCart,
+            items: oldCart?.items?.map((item: Maybe<CrCartItem>) => {
+              if (item?.id === modifiedCartItem?.cartItemId) {
+                return {
+                  ...item,
+                  quantity: modifiedCartItem.quantity,
+                }
+              }
+              return item
+            }),
+          }
+          return newCart
+        })
 
-        queryClient.setQueryData(cartKeys.all, cart)
-
+        // Return a context object with the previous cart data to use in the onSettled callback
         return { previousCart }
       },
       onSettled: (_data, error, _, context) => {
