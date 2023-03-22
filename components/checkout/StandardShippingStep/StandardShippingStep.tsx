@@ -1,8 +1,7 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect, useRef, useState } from 'react'
 
-import { Stack, Button, Typography, SxProps, Grid, Box } from '@mui/material'
-import { Theme } from '@mui/material/styles'
+import { Stack, Button, Typography, Grid, Box } from '@mui/material'
 import { useTranslation } from 'next-i18next'
 
 import { ShippingMethod } from '@/components/checkout'
@@ -213,6 +212,29 @@ const StandardShippingStep = (props: ShippingProps) => {
       : setStepStatusIncomplete()
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedShippingAddressId, checkout, shouldShowAddAddressButton])
+
+  useEffect(() => {
+    if (!shipItems.length) setStepStatusValid()
+  }, [shipItems.length])
+
+  if (!shipItems.length) {
+    return (
+      <>
+        <Typography variant="h2" component="h2" sx={{ fontWeight: 'bold' }}>
+          {t('pickup')}
+        </Typography>
+        <ShippingMethod
+          showTitle={false}
+          shipItems={shipItems}
+          pickupItems={pickupItems}
+          orderShipmentMethods={[...shippingMethods]}
+          selectedShippingMethodCode={checkoutShippingMethodCode}
+          onShippingMethodChange={handleSaveShippingMethod}
+          onStoreLocatorClick={handleStoreLocatorClick}
+        />
+      </>
+    )
+  }
 
   return (
     <Stack data-testid="checkout-shipping" gap={2} ref={shippingAddressRef}>

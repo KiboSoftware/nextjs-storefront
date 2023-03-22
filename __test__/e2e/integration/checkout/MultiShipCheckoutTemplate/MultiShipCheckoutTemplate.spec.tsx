@@ -858,6 +858,9 @@ const handlePaymentStep = async (user: any, checkoutData: Checkout): Promise<Che
 }
 
 const handleReviewStep = async (user: any, checkoutData: Checkout) => {
+  expect(screen.getByRole('heading', { name: 'order-details', level: 2 })).toBeVisible()
+  expect(screen.getByTestId('review-step-component')).toBeVisible()
+
   const personalDetailsSection = screen.getByTestId('personal-details')
   expect(within(personalDetailsSection).getByText(checkoutData.email as string)).toBeVisible()
 

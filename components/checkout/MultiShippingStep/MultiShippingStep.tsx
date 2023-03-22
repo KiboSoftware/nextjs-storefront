@@ -350,6 +350,26 @@ const MultiShippingStep = (props: MultiShippingStepProps) => {
     }
   }, [checkout?.groupings?.length])
 
+  useEffect(() => {
+    if (!shipItems.length) setStepStatusValid()
+  }, [shipItems.length])
+
+  if (!shipItems.length && pickupItems.length) {
+    return (
+      <>
+        <Typography variant="h2" component="h2" sx={{ fontWeight: 'bold' }}>
+          {t('pickup')}
+        </Typography>
+        <ShippingMethod
+          showTitle={false}
+          shipItems={shipItems}
+          pickupItems={pickupItems}
+          onStoreLocatorClick={handleStoreLocatorClick}
+        />
+      </>
+    )
+  }
+
   return (
     <Stack data-testid="checkout-shipping" gap={2} ref={shippingAddressRef}>
       <Typography variant="h2" component="h2" sx={{ fontWeight: 'bold' }}>

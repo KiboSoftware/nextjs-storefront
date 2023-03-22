@@ -152,7 +152,7 @@ describe('[components] StandardShippingStep', () => {
     })
 
     it('should display shipping address form', async () => {
-      const { user } = setup({
+      setup({
         checkout: {
           ...orderMock.checkout,
           fulfillmentInfo: { ...orderMock.checkout.fulfillmentInfo, fulfillmentContact: null },

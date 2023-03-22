@@ -118,20 +118,4 @@ describe('[component] - ShippingMethod', () => {
     expect(products.length).toBe(3)
     expect(headings.length).toBe(4)
   })
-
-  it('should call onStoreLocatorClickMock when click onStoreLocatorClick for pickupitems only', async () => {
-    const params = {
-      shipItems: Common.args?.shipItems as Maybe<CrOrderItem>[],
-      pickupItems: Common.args?.pickupItems as Maybe<CrOrderItem>[],
-      orderShipmentMethods: shippingRateMock.orderShipmentMethods,
-      selectedShippingMethodCode: '',
-      onShippingMethodChange: (value: string, name?: string) => ({ name, value }),
-    }
-    const { user } = setup(params)
-    const changeStore = params?.pickupItems[0]?.purchaseLocation
-      ? screen.getByText(/change-store/i)
-      : screen.getByText(/select-store/i)
-    await user.click(changeStore)
-    expect(onStoreLocatorClickMock).toHaveBeenCalled()
-  })
 })
