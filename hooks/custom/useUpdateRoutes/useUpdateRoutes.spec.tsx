@@ -18,7 +18,7 @@ describe('useUpdateRoutes', () => {
         query: { categoryCode: '41', filters: 'Tenant~color:blue' },
       },
       undefined,
-      { scroll: false }
+      { scroll: false, shallow: true }
     )
   })
 
