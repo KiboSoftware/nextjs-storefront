@@ -17,8 +17,8 @@ import { AddressFormDialog } from '@/components/dialogs'
 import { useCheckoutStepContext, STEP_STATUS } from '@/context'
 import { useModalContext } from '@/context/ModalContext'
 import {
-  useUpdateCheckoutItemDestinationMutations,
-  useUpdateCheckoutDestinationMutations,
+  useUpdateItemDestination,
+  useUpdateDestination,
 } from '@/hooks'
 import { FulfillmentOptions } from '@/lib/constants'
 import { userGetters, checkoutGetters } from '@/lib/getters'
@@ -92,8 +92,8 @@ const MultiShippingStep = (props: MultiShippingStepProps) => {
   const shipItems = checkoutGetters.getShipItems(checkout)
   const pickupItems = checkoutGetters.getPickupItems(checkout)
 
-  const updateCheckoutItemDestination = useUpdateCheckoutItemDestinationMutations()
-  const updateCheckoutDestination = useUpdateCheckoutDestinationMutations()
+  const updateCheckoutItemDestination = useUpdateItemDestination()
+  const updateCheckoutDestination = useUpdateDestination()
 
   const initialShippingOption = checkoutGetters?.getInitialShippingOption(checkout, shipOptions)
   const isSingleShippingItem = checkoutGetters.isSingleShippingItem(checkout)

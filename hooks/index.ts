@@ -63,19 +63,19 @@ export * from './mutations/cart/useDeleteCartCoupon/useDeleteCartCoupon'
 
 // Multiship
 // Destinations
-export * from './mutations/multishipCheckout/useCreateCheckoutDestinationMutations/useCreateCheckoutDestinationMutations'
-export * from './mutations/multishipCheckout/useUpdateCheckoutItemDestinationMutations/useUpdateCheckoutItemDestinationMutations'
-export * from './mutations/multishipCheckout/useUpdateCheckoutDestinationMutations/useUpdateCheckoutDestinationMutations'
+export * from './mutations/multishipCheckout/useCreateDestination/useCreateDestination'
+export * from './mutations/multishipCheckout/useUpdateItemDestination/useUpdateItemDestination'
+export * from './mutations/multishipCheckout/useUpdateDestination/useUpdateDestination'
 // Coupon
-export * from './mutations/multishipCheckout/useUpdateCheckoutCouponMutation/useUpdateCheckoutCouponMutation'
-export * from './mutations/multishipCheckout/useDeleteCheckoutCouponMutation/useDeleteCheckoutCouponMutation'
+export * from './mutations/multishipCheckout/useUpdateCheckoutCoupon/useUpdateCheckoutCoupon'
+export * from './mutations/multishipCheckout/useDeleteCheckoutCoupon/useDeleteCheckoutCoupon'
 
-export * from './mutations/multishipCheckout/useCreateCheckoutActionMutation/useCreateCheckoutActionMutation'
-export * from './mutations/multishipCheckout/useUpdateCheckoutPersonalInfoMutation/useUpdateCheckoutPersonalInfoMutation'
-export * from './mutations/multishipCheckout/useCreateCheckoutFromCartMutation/useCreateCheckoutFromCartMutation'
-export * from './mutations/multishipCheckout/useCreateCheckoutShippingMethodMutation/useCreateCheckoutShippingMethodMutation'
-export * from './mutations/multishipCheckout/useCreateCheckoutPaymentActionMutation/useCreateCheckoutPaymentActionMutation'
-export * from './mutations/multishipCheckout/useUpdateCheckoutPaymentActionMutation/useUpdateCheckoutPaymentActionMutation'
+export * from './mutations/multishipCheckout/useCreateCheckout/useCreateCheckout'
+export * from './mutations/multishipCheckout/useUpdateCheckoutPersonalInfo/useUpdateCheckoutPersonalInfo'
+export * from './mutations/multishipCheckout/useInitiateCheckout/useInitiateCheckout'
+export * from './mutations/multishipCheckout/useCreateCheckoutShippingMethod/useCreateCheckoutShippingMethod'
+export * from './mutations/multishipCheckout/useAddCheckoutPayment/useAddCheckoutPayment'
+export * from './mutations/multishipCheckout/useVoidCheckoutPayment/useVoidCheckoutPayment'
 
 // My Account
 export * from './mutations/myAccount/useUpdateCustomerProfile/useUpdateCustomerProfile'

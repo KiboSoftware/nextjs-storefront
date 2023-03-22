@@ -28,7 +28,7 @@ import {
   useUpdateCartItem,
   useUpdateCartCoupon,
   useDeleteCartCoupon,
-  useCreateMultiShipCheckoutFromCartMutation,
+  useInitiateCheckout,
 } from '@/hooks'
 import { FulfillmentOptions } from '@/lib/constants'
 import { orderGetters, cartGetters } from '@/lib/getters'
@@ -50,7 +50,7 @@ const CartTemplate = (props: CartTemplateProps) => {
   const isMobileViewport = useMediaQuery(theme.breakpoints.down('md'))
   const router = useRouter()
   const { createFromCart } = useInitiateOrder()
-  const { createMultiShipCheckoutFromCart } = useCreateMultiShipCheckoutFromCartMutation()
+  const { createMultiShipCheckoutFromCart } = useInitiateCheckout()
   const { updateCartItemQuantity } = useUpdateCartItemQuantity()
   const { removeCartItem } = useDeleteCartItem()
   const { updateCartItem } = useUpdateCartItem()
