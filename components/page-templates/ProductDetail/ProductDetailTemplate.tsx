@@ -247,7 +247,7 @@ const ProductDetailTemplate = (props: ProductDetailTemplateProps) => {
       props: {
         title: title,
         showProductAndInventory: true,
-        product: product as CrProduct,
+        product: currentProduct as CrProduct,
         quantity: quantity,
         isQuickViewModal: isQuickViewModal,
         isNested: isQuickViewModal,

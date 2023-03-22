@@ -54,7 +54,7 @@ const StoreLocatorDialog = (props: StoreLocatorProps) => {
     locations as Maybe<Location>[]
   )
   const { data: locationInventory } = useProductLocationInventoryQueries(
-    product?.productCode as string,
+    (product?.variationProductCode || product?.productCode) as string,
     locationCodes
   )
 
