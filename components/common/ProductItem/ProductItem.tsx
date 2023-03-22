@@ -38,7 +38,7 @@ export interface ProductItemProps {
   children?: ReactNode
   width?: string
   subscriptionFrequency?: string
-  isShowChangeStore?: boolean
+  showChangeStoreLink?: boolean
   onStoreLocatorClick?: () => void
 }
 
@@ -68,7 +68,7 @@ const ProductItem = (props: ProductItemProps) => {
     children,
     width = '25%',
     subscriptionFrequency,
-    isShowChangeStore,
+    showChangeStoreLink,
     onStoreLocatorClick,
   } = props
   const { t } = useTranslation('common')
@@ -171,7 +171,7 @@ const ProductItem = (props: ProductItemProps) => {
               variant="caption"
             />
           </Box>
-          {isShowChangeStore && (
+          {showChangeStoreLink && (
             <Box px={2}>
               <MuiLink
                 component="button"

@@ -113,7 +113,7 @@ const PickupItemList = (pickupProps: PickupItemListProps) => {
           storePickupAddresses={storePickupAddress}
           isPickupItem={isPickupItem}
           expectedDeliveryDate={expectedDeliveryDate}
-          isShowChangeStore={false}
+          showChangeStoreLink={false}
           onClickChangeStore={onClickChangeStore}
         />
       </Box>

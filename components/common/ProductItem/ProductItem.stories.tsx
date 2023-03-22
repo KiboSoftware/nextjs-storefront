@@ -89,7 +89,7 @@ WithChangeStoreOption.args = {
   isPickupItem: true,
   purchaseLocation: 'Down Store',
   expectedDeliveryDate: 'Mon 12/20',
-  isShowChangeStore: true,
+  showChangeStoreLink: true,
   onStoreLocatorClick: () => {
     console.log('change store clicked')
   },
