@@ -28,10 +28,10 @@ If an error occurred, it will reject the promise with error.
 
 The promise with current Geo location coordinates
 
-| Name                 | Type                                       |
-| :------------------- | :----------------------------------------- |
+| Name | Type |
+| :------ | :------ |
 | `getCurrentLocation` | () => `Promise`<`GeolocationCoordinates`\> |
 
 #### Defined in
 
-[custom/useCurrentLocation/useCurrentLocation.ts:17](https://github.com/KiboSoftware/nextjs-storefront/blob/561a164/hooks/custom/useCurrentLocation/useCurrentLocation.ts#L17)
+[custom/useCurrentLocation/useCurrentLocation.ts:17](https://github.com/KiboSoftware/nextjs-storefront/blob/474c22ea/hooks/custom/useCurrentLocation/useCurrentLocation.ts#L17)

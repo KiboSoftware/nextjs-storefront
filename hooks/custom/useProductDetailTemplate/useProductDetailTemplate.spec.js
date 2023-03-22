@@ -7,7 +7,7 @@ import { ProductCustomMock } from '@/__mocks__/stories/ProductCustomMock'
 
 const mockConfigureProductOptionsResponse = configuredProductMock.configureProduct
 jest.mock('@/hooks', () => ({
-  useProductMutation: () => ({
+  useConfigureProduct: () => ({
     configureProduct: {
       mutateAsync: () =>
         Promise.resolve({

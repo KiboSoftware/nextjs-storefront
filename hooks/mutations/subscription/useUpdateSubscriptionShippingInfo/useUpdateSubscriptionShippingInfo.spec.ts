@@ -1,6 +1,6 @@
 import { renderHook } from '@testing-library/react-hooks'
 
-import { useUpdateSubscriptionFulfillmentInfoMutation } from './useUpdateSubscriptionShippingInfo'
+import { useUpdateSubscriptionShippingInfo } from './useUpdateSubscriptionShippingInfo'
 import { subscriptionMock } from '@/__mocks__/stories/subscriptionMock'
 import { createQueryClientWrapper } from '@/__test__/utils/renderWithQueryClient'
 
@@ -39,9 +39,9 @@ describe('[hooks] updateSubscriptionFulfillmentInfo', () => {
 
     renderHook(
       async () => {
-        const { updateSubscriptionFulfillmentInfoMutation } =
-          useUpdateSubscriptionFulfillmentInfoMutation()
-        const response = await updateSubscriptionFulfillmentInfoMutation.mutateAsync(params)
+        const { updateSubscriptionShippingInfo } =
+        useUpdateSubscriptionShippingInfo()
+        const response = await updateSubscriptionShippingInfo.mutateAsync(params)
 
         expect(response).toStrictEqual(subscriptionMock.subscription.fulfillmentInfo)
       },

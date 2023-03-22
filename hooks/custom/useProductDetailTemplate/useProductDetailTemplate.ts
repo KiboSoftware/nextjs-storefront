@@ -3,7 +3,7 @@
  */
 import { useEffect, useState } from 'react'
 
-import { useProductMutation } from '@/hooks'
+import { useConfigureProduct } from '@/hooks'
 import { productGetters } from '@/lib/getters'
 import type { LocationCustom, ProductCustom } from '@/lib/types'
 
@@ -63,7 +63,7 @@ export const useProductDetailTemplate = (props: UseProductDetailTemplateProps) =
   const productCode = productGetters.getProductId(currentProduct)
 
   // mutations
-  const { configureProduct } = useProductMutation()
+  const { configureProduct } = useConfigureProduct()
 
   // handle product options selection
   const updateShopperEnteredValues = (option: ProductOptionSelectionInput) => {
