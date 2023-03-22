@@ -1,6 +1,6 @@
 import { renderHook } from '@testing-library/react-hooks'
 
-import { useDeleteSubscriptionMutation } from './useDeleteSubscriptionMutation'
+import { useDeleteSubscriptionMutation } from './useDeleteSubscription'
 import { createQueryClientWrapper } from '@/__test__/utils/renderWithQueryClient'
 import { subscriptionMock } from '@/__mocks__/stories'
 

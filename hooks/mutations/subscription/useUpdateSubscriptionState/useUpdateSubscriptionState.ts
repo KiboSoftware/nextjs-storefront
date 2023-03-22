@@ -1,5 +1,5 @@
 /**
- * @module usePerformSubscriptionActionMutation
+ * @module useUpdateSubscriptionState
  */
 import { useMutation, useQueryClient } from 'react-query'
 
@@ -24,7 +24,7 @@ const performSubscriptionAction = async (params: PerformSubscriptionActionProps)
   return response?.subscription
 }
 /**
- * [Mutation hook] usePerformSubscriptionActionMutation uses the graphQL mutation
+ * [Mutation hook] useUpdateSubscriptionState uses the graphQL mutation
  *
  * <b>performSubscriptionAction(subscriptionId: string subscriptionActionInput: SubscriptionActionInput): Subscription</b>
  *
@@ -36,11 +36,11 @@ const performSubscriptionAction = async (params: PerformSubscriptionActionProps)
  *
  * @returns 'response?.subscription' which contains object of Subscription
  */
-export const usePerformSubscriptionActionMutation = () => {
+export const useUpdateSubscriptionState = () => {
   const queryClient = useQueryClient()
 
   return {
-    performSubscriptionActionMutation: useMutation(performSubscriptionAction, {
+    updateSubscriptionState: useMutation(performSubscriptionAction, {
       onSuccess: () => {
         queryClient.invalidateQueries(subscriptionKeys.all)
       },

@@ -1,5 +1,5 @@
 /**
- * @module useSkipNextSubscriptionMutation
+ * @module useSkipNextSubscription
  */
 import { useMutation, useQueryClient } from 'react-query'
 
@@ -19,7 +19,7 @@ const skipNextSubscription = async (subscriptionId?: string | null) => {
 }
 
 /**
- * [Mutation hook] useSkipNextSubscriptionMutation uses the graphQL mutation
+ * [Mutation hook] useSkipNextSubscription uses the graphQL mutation
  *
  * <b>skipNextSubscription(subscriptionId: string): Subscription</b>
  *
@@ -29,7 +29,7 @@ const skipNextSubscription = async (subscriptionId?: string | null) => {
  *
  * @returns 'response?.subscription' which contains next order date when the order will be placed
  */
-export const useSkipNextSubscriptionMutation = () => {
+export const useSkipNextSubscription = () => {
   const queryClient = useQueryClient()
 
   return {

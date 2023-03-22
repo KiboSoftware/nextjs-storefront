@@ -40,18 +40,18 @@ export * from './custom/usePriceRangeFormatter/usePriceRangeFormatter'
 // -----------------------------------------------------------------------------------------------
 
 // Address
-export * from './mutations/address/create/useCreateCustomerAddressMutation'
-export * from './mutations/address/update/useUpdateCustomerAddressMutation'
-export * from './mutations/address/delete/useDeleteCustomerAddressMutation'
+export * from './mutations/address/create/useCreateCustomerAddress'
+export * from './mutations/address/update/useUpdateCustomerAddress'
+export * from './mutations/address/delete/useDeleteCustomerAddress'
 
 // Auth
 export * from './mutations/auth/login/useLogin'
 export * from './mutations/auth/register/useRegister'
 
 // Cards
-export * from './mutations/card/create/useCreateCustomerCardsMutation'
-export * from './mutations/card/update/useUpdateCustomerCardsMutation'
-export * from './mutations/card/delete/useDeleteCustomerCardsMutation'
+export * from './mutations/card/create/useCreateCustomerCard'
+export * from './mutations/card/update/useUpdateCustomerCard'
+export * from './mutations/card/delete/useDeleteCustomerCard'
 
 // Cart
 export * from './mutations/cart/useAddCartItem/useAddCartItem'
@@ -82,10 +82,10 @@ export * from './mutations/myAccount/useUpdateCustomerProfile/useUpdateCustomerP
 export * from './mutations/myAccount/useChangePassword/useChangePassword'
 
 // Product
-export * from './mutations/product/configure/useProductMutation'
+export * from './mutations/product/configure/useConfigureProduct'
 
 // Returns
-export * from './mutations/returns/useCreateOrderReturnItemsMutation/useCreateOrderReturnItemsMutation'
+export * from './mutations/returns/useCreateOrderReturn/useCreateOrderReturn'
 
 // Standard Checkout
 export * from './mutations/standardCheckout/useUpdateCheckoutPersonalInfo/useUpdateCheckoutPersonalInfoMutation'
@@ -104,11 +104,11 @@ export * from './mutations/wishlist/useDeleteWishlistItem/useDeleteWishlistItem'
 export * from './mutations/wishlist/useCreateWishlist/useCreateWishlist'
 
 //Subscription
-export * from './mutations/subscription/useOrderSubscriptionNow/useOrderSubscriptionNowMutation'
-export * from './mutations/subscription/useEditSubscriptionFrequencyMutation/useEditSubscriptionFrequencyMutation'
-export * from './mutations/subscription/useSkipNextSubscription/useSkipNextSubscriptionMutation'
-export * from './mutations/subscription/usePerformSubscriptionAction/usePerformSubscriptionActionMutation'
-export * from './mutations/subscription/useUpdateSubscriptionNextOrderDateMutation/useUpdateSubscriptionNextOrderDateMutation'
-export * from './mutations/subscription/useUpdateSubscriptionFulfillmentInfoMutation/updateSubscriptionFulfillmentInfoMutation'
-export * from './mutations/subscription/useDeleteSubscriptionMutation/useDeleteSubscriptionMutation'
+export * from './mutations/subscription/useOrderSubscriptionNow/useOrderSubscriptionNow'
+export * from './mutations/subscription/useUpdateSubscriptionFrequency/useUpdateSubscriptionFrequency'
+export * from './mutations/subscription/useSkipNextSubscription/useSkipNextSubscription'
+export * from './mutations/subscription/useUpdateSubscriptionState/useUpdateSubscriptionState'
+export * from './mutations/subscription/useUpdateSubscriptionNextOrderDate/useUpdateSubscriptionNextOrderDate'
+export * from './mutations/subscription/useUpdateSubscriptionShippingInfo/useUpdateSubscriptionShippingInfo'
+export * from './mutations/subscription/useDeleteSubscription/useDeleteSubscription'
 export * from './mutations/subscription/useUpdateSubscriptionPayment/useUpdateSubscriptionPayment'

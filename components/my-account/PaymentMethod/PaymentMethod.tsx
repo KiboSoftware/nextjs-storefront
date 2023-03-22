@@ -9,7 +9,7 @@ import { CardDetailsForm, SavedPaymentMethodView } from '@/components/checkout'
 import { AddressForm, AddressDetailsView } from '@/components/common'
 import { ConfirmationDialog } from '@/components/dialogs'
 import { useModalContext } from '@/context'
-import { useDeleteCustomerCardsMutation, useDeleteCustomerAddressMutation } from '@/hooks'
+import { useDeleteCustomerCard, useDeleteCustomerAddress } from '@/hooks'
 import { DisplayMode, AddressType } from '@/lib/constants'
 import { addressGetters, cardGetters, userGetters } from '@/lib/getters'
 import { tokenizeCreditCardPayment } from '@/lib/helpers'
@@ -97,9 +97,9 @@ const PaymentMethod = (props: PaymentMethodProps) => {
   const savedCardsAndContacts = userGetters.getSavedCardsAndBillingDetails(cards, contacts)
   const savedAddresses = userGetters.getSavedAddresses(contacts)
   const billingAddresses = userGetters.getUserBillingAddresses(savedAddresses)
-  const { deleteSavedCardDetails } = useDeleteCustomerCardsMutation()
-
-  const { deleteSavedAddressDetails } = useDeleteCustomerAddressMutation()
+  
+  const { deleteSavedCardDetails } = useDeleteCustomerCard()
+  const { deleteSavedAddressDetails } = useDeleteCustomerAddress()
 
   const [cardFormDetails, setCardFormDetails] = useState<CardForm>(initialCardFormData)
   const [billingFormAddress, setBillingFormAddress] = useState<Address>(initialBillingAddressData)

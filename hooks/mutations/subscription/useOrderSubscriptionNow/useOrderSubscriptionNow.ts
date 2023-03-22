@@ -1,5 +1,5 @@
 /**
- * @module useOrderSubscriptionNowMutation
+ * @module useOrderSubscriptionNow
  */
 
 import { useMutation, useQueryClient } from 'react-query'
@@ -29,7 +29,7 @@ const orderSubscriptionNowMutation = async (props: OrderSubscriptionNowInputPara
 }
 
 /**
- * [Mutation hook] useOrderSubscriptionNowMutation uses the graphQL mutation
+ * [Mutation hook] useOrderSubscriptionNow uses the graphQL mutation
  *
  * <b>orderSubscriptionNow(subscriptionId: String! ): Subscription</b>
  *
@@ -41,7 +41,7 @@ const orderSubscriptionNowMutation = async (props: OrderSubscriptionNowInputPara
  *
  * @returns 'response?.orderSubscriptionNow' which contains object of Subscription
  */
-export const useOrderSubscriptionNowMutation = () => {
+export const useOrderSubscriptionNow = () => {
   const queryClient = useQueryClient()
   return {
     orderSubscriptionNow: useMutation(orderSubscriptionNowMutation, {

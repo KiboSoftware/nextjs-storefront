@@ -21,9 +21,9 @@ import { AddressCard, AddressForm, KiboSelect } from '@/components/common'
 import { ConfirmationDialog } from '@/components/dialogs'
 import { useModalContext } from '@/context'
 import {
-  useCreateCustomerAddressMutation,
-  useUpdateCustomerAddressMutation,
-  useDeleteCustomerAddressMutation,
+  useCreateCustomerAddress,
+  useUpdateCustomerAddress,
+  useDeleteCustomerAddress,
 } from '@/hooks'
 import { AddressType } from '@/lib/constants'
 import { userGetters } from '@/lib/getters'
@@ -129,9 +129,9 @@ const AddressBook = (props: AddressBookProps) => {
 
   const { t } = useTranslation('common')
   const { showModal, closeModal } = useModalContext()
-  const { addSavedAddressDetails } = useCreateCustomerAddressMutation()
-  const { updateSavedAddressDetails } = useUpdateCustomerAddressMutation()
-  const { deleteSavedAddressDetails } = useDeleteCustomerAddressMutation()
+  const { addSavedAddressDetails } = useCreateCustomerAddress()
+  const { updateSavedAddressDetails } = useUpdateCustomerAddress()
+  const { deleteSavedAddressDetails } = useDeleteCustomerAddress()
 
   const shippingAddresses = userGetters.getUserShippingAddress(contacts?.items as CustomerContact[])
   const billingAddresses = userGetters.getUserBillingAddresses(contacts?.items as CustomerContact[])

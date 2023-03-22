@@ -25,10 +25,10 @@ import { useAuthContext } from '@/context'
 import {
   useCustomerCardsQueries,
   useCustomerContactsQueries,
-  useCreateCustomerCardsMutation,
-  useUpdateCustomerCardsMutation,
-  useCreateCustomerAddressMutation,
-  useUpdateCustomerAddressMutation,
+  useCreateCustomerCard,
+  useUpdateCustomerCard,
+  useCreateCustomerAddress,
+  useUpdateCustomerAddress,
 } from '@/hooks'
 import type { BillingAddress, CardType } from '@/lib/types'
 
@@ -98,10 +98,10 @@ const MyAccountTemplate = () => {
   const { data: cards } = useCustomerCardsQueries(user?.id as number)
   const { data: contacts } = useCustomerContactsQueries(user?.id as number)
 
-  const { addSavedCardDetails } = useCreateCustomerCardsMutation()
-  const { updateSavedCardDetails } = useUpdateCustomerCardsMutation()
-  const { addSavedAddressDetails } = useCreateCustomerAddressMutation()
-  const { updateSavedAddressDetails } = useUpdateCustomerAddressMutation()
+  const { addSavedCardDetails } = useCreateCustomerCard()
+  const { updateSavedCardDetails } = useUpdateCustomerCard()
+  const { addSavedAddressDetails } = useCreateCustomerAddress()
+  const { updateSavedAddressDetails } = useUpdateCustomerAddress()
 
   const handleGoToOrderHistory = () => {
     router.push('/my-account/order-history?filters=M-6')

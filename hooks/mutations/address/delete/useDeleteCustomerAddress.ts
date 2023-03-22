@@ -1,5 +1,5 @@
 /**
- * @module useDeleteCustomerAddressMutation
+ * @module useDeleteCustomerAddress
  */
 import { useMutation, useQueryClient } from 'react-query'
 
@@ -28,7 +28,7 @@ const deleteCustomerAccountContactDetails = async (
 }
 
 /**
- * [Mutation hook] useDeleteCustomerAddressMutation uses the graphQL mutation
+ * [Mutation hook] useDeleteCustomerAddress uses the graphQL mutation
  *
  * <b>deleteCustomerAccountContact(accountId: Int!, contactId: Int!): Boolean</b>
  *
@@ -41,7 +41,7 @@ const deleteCustomerAccountContactDetails = async (
  * @returns 'response?.deleteCustomerAccountContact', which contains True/False value to identify if customer's contact has been deleted or not.
  */
 
-export const useDeleteCustomerAddressMutation = () => {
+export const useDeleteCustomerAddress = () => {
   const queryClient = useQueryClient()
 
   return {

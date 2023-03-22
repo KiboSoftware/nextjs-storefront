@@ -1,5 +1,5 @@
 /**
- * @module useUpdateCustomerCardsMutation
+ * @module useUpdateCustomerCard
  */
 import { useMutation, useQueryClient } from 'react-query'
 
@@ -27,7 +27,7 @@ const updateCustomerAccountCardDetails = async (params: UpdateCustomerAccountCar
 }
 
 /**
- * [Mutation hook] useUpdateCustomerCardsMutation uses the graphQL mutation
+ * [Mutation hook] useUpdateCustomerCard uses the graphQL mutation
  *
  * <b>updateCustomerAccountCard(accountId: Int!, cardId: String!, cardInput: CardInput): Card</b>
  *
@@ -40,7 +40,7 @@ const updateCustomerAccountCardDetails = async (params: UpdateCustomerAccountCar
  * @returns 'response?.updateCustomerAccountCard', which has updated customer's card details like nameOnCard, cardType, contactId etc.
  */
 
-export const useUpdateCustomerCardsMutation = () => {
+export const useUpdateCustomerCard = () => {
   const queryClient = useQueryClient()
 
   return {

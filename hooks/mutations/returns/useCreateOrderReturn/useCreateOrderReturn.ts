@@ -1,5 +1,5 @@
 /**
- * @module useCreateOrderReturnItemsMutation
+ * @module useCreateOrderReturn
  */
 import { useMutation } from 'react-query'
 
@@ -31,7 +31,7 @@ const createOrderReturnItems = async (params: CreateOrderReturnItemsInputParams)
 }
 
 /**
- * [Mutation hook] useCreateOrderReturnItemsMutation uses the graphQL mutation
+ * [Mutation hook] useCreateOrderReturn uses the graphQL mutation
  *
  * <b>createReturn(returnObjInput: ReturnObjInput): ReturnObj</b>
  *
@@ -42,7 +42,7 @@ const createOrderReturnItems = async (params: CreateOrderReturnItemsInputParams)
  *
  * @returns 'response?.createReturn' which places the return order containing return reasons and return type with items to be returned
  */
-export const useCreateOrderReturnItemsMutation = () => {
+export const useCreateOrderReturn = () => {
   return {
     createReturnItems: useMutation(createOrderReturnItems),
   }

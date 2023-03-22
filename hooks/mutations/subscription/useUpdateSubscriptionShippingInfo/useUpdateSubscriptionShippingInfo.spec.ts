@@ -1,6 +1,6 @@
 import { renderHook } from '@testing-library/react-hooks'
 
-import { useUpdateSubscriptionFulfillmentInfoMutation } from './updateSubscriptionFulfillmentInfoMutation'
+import { useUpdateSubscriptionFulfillmentInfoMutation } from './useUpdateSubscriptionShippingInfo'
 import { subscriptionMock } from '@/__mocks__/stories/subscriptionMock'
 import { createQueryClientWrapper } from '@/__test__/utils/renderWithQueryClient'
 

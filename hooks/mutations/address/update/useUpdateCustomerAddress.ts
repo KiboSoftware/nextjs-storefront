@@ -1,5 +1,5 @@
 /**
- * @module useUpdateCustomerAddressMutation
+ * @module useUpdateCustomerAddress
  */
 import { useMutation, useQueryClient } from 'react-query'
 
@@ -31,7 +31,7 @@ const updateCustomerAccountContactDetails = async (
 }
 
 /**
- * [Mutation hook] useUpdateCustomerAddressMutation uses the graphQL mutation
+ * [Mutation hook] useUpdateCustomerAddress uses the graphQL mutation
  *
  * <b>updateCustomerAccountContact(accountId: Int!, contactId: Int!, userId: String, customerContactInput: CustomerContactInput): CustomerContact</b>
  *
@@ -44,7 +44,7 @@ const updateCustomerAccountContactDetails = async (
  * @returns 'response?.updateCustomerAccountContact', which contains list of Customer's contact details.
  */
 
-export const useUpdateCustomerAddressMutation = () => {
+export const useUpdateCustomerAddress = () => {
   const queryClient = useQueryClient()
 
   return {

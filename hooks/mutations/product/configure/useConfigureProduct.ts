@@ -1,5 +1,5 @@
 /**
- * @module useProductMutation
+ * @module useConfigureProduct
  */
 import { useMutation } from 'react-query'
 
@@ -37,7 +37,7 @@ const configureProduct = async (configureProductDetails: ConfigureProductDetails
 }
 
 /**
- * [Mutation hook] useProductMutation uses the graphQL mutation
+ * [Mutation hook] useConfigureProduct uses the graphQL mutation
  *
  * </b>configureProduct(productCode: String!, includeOptionDetails: Boolean, skipInventoryCheck: Boolean, quantity: Int, purchaseLocation: String, variationProductCodeFilter: String, productOptionSelectionsInput: ProductOptionSelectionsInput): ConfiguredProduct</b>
  *
@@ -48,7 +48,7 @@ const configureProduct = async (configureProductDetails: ConfigureProductDetails
  * @returns 'response?.configureProduct', which has product details like productCode, purchaseLocation, options, productImages etc.
  */
 
-export const useProductMutation = () => {
+export const useConfigureProduct = () => {
   return {
     configureProduct: useMutation(configureProduct),
   }

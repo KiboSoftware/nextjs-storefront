@@ -1,16 +1,16 @@
 import { renderHook } from '@testing-library/react-hooks'
 
-import { useCreateOrderReturnItemsMutation } from './useCreateOrderReturnItemsMutation'
+import { useCreateOrderReturn } from './useCreateOrderReturn'
 import { createReturnMock } from '@/__mocks__/stories'
 import { createQueryClientWrapper } from '@/__test__/utils/renderWithQueryClient'
 
-describe('[hooks] useCreateOrderReturnItemsMutation', () => {
-  it('should use useCreateOrderReturnItemsMutation', async () => {
+describe('[hooks] useCreateOrderReturn', () => {
+  it('should use useCreateOrderReturn', async () => {
     const expectedReturn = createReturnMock?.createReturn
 
     renderHook(
       async () => {
-        const { createReturnItems } = useCreateOrderReturnItemsMutation()
+        const { createReturnItems } = useCreateOrderReturn()
         const response = await createReturnItems.mutateAsync({
           returnType: 'Replace',
           reason: 'Damaged',

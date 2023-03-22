@@ -26,7 +26,7 @@ const updateSubscriptionNextOrderDate = async (params: UpdateSubscriptionNextOrd
 }
 
 /**
- * [Mutation hook] useUpdateSubscriptionNextOrderDateMutation uses the graphQL mutation
+ * [Mutation hook] useUpdateSubscriptionNextOrderDate uses the graphQL mutation
  *
  * <b>updateSubscriptionNextOrderDate(subscriptionId: String!, subscriptionNextOrderDateInput: SubscriptionNextOrderDateInput): Subscription</b>
  *
@@ -36,11 +36,11 @@ const updateSubscriptionNextOrderDate = async (params: UpdateSubscriptionNextOrd
  *
  * @returns 'response?.subscription.nextOrderDate' which contains next order date when the order will be placed
  */
-export const useUpdateSubscriptionNextOrderDateMutation = () => {
+export const useUpdateSubscriptionNextOrderDate = () => {
   const queryClient = useQueryClient()
 
   return {
-    updateSubscriptionNextOrderDateMutation: useMutation(updateSubscriptionNextOrderDate, {
+    updateSubscriptionNextOrderDate: useMutation(updateSubscriptionNextOrderDate, {
       onSuccess: () => {
         queryClient.invalidateQueries(subscriptionKeys.all)
       },

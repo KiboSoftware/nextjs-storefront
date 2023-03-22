@@ -25,17 +25,17 @@ import {
 import { ProductOption } from '@/components/product'
 import { useModalContext, useSnackbarContext, useAuthContext } from '@/context'
 import {
-  useSkipNextSubscriptionMutation,
-  useOrderSubscriptionNowMutation,
-  useEditSubscriptionFrequencyMutation,
-  useUpdateSubscriptionNextOrderDateMutation,
-  useUpdateSubscriptionFulfillmentInfoMutation,
-  useUpdateSubscriptionPaymentMutation,
+  useSkipNextSubscription,
+  useOrderSubscriptionNow,
+  useUpdateSubscriptionFrequency,
+  useUpdateSubscriptionNextOrderDate,
+  useUpdateSubscriptionShippingInfo,
+  useUpdateSubscriptionPayment,
   useCustomerCardsQueries,
   useCustomerContactsQueries,
-  useCreateCustomerCardsMutation,
-  useCreateCustomerAddressMutation,
-  usePerformSubscriptionActionMutation,
+  useCreateCustomerCard,
+  useCreateCustomerAddress,
+  useUpdateSubscriptionState,
 } from '@/hooks'
 import { ActionName, OrderStatus } from '@/lib/constants'
 import { subscriptionGetters, productGetters, userGetters } from '@/lib/getters'
@@ -128,20 +128,19 @@ const SubscriptionItem = (props: SubscriptionItemProps) => {
   const { showModal, closeModal } = useModalContext()
   const { showSnackbar } = useSnackbarContext()
 
-  const { orderSubscriptionNow } = useOrderSubscriptionNowMutation()
-  const { skipNextSubscription } = useSkipNextSubscriptionMutation()
-  const { performSubscriptionActionMutation } = usePerformSubscriptionActionMutation()
-  const { editSubscriptionFrequencyMutation } = useEditSubscriptionFrequencyMutation()
+  const { orderSubscriptionNow } = useOrderSubscriptionNow()
+  const { skipNextSubscription } = useSkipNextSubscription()
+  const { updateSubscriptionState } = useUpdateSubscriptionState()
+  const { updateSubscriptionFrequency } = useUpdateSubscriptionFrequency()
   // To-Do: Cancel item and Activate Subscription will handle later
-  // const { deleteSubscription } = useDeleteSubscriptionMutation()
-  const { updateSubscriptionNextOrderDateMutation } = useUpdateSubscriptionNextOrderDateMutation()
-  const { updateSubscriptionFulfillmentInfoMutation } =
-    useUpdateSubscriptionFulfillmentInfoMutation()
-  const { updateSubscriptionPaymentMutation } = useUpdateSubscriptionPaymentMutation()
+  // const { deleteSubscription } = useDeleteSubscription()
+  const { updateSubscriptionNextOrderDate } = useUpdateSubscriptionNextOrderDate()
+  const { updateSubscriptionShippingInfo } = useUpdateSubscriptionShippingInfo()
+  const { updateSubscriptionPayment } = useUpdateSubscriptionPayment()
   const { data: cards } = useCustomerCardsQueries(user?.id as number)
   const { data: contacts } = useCustomerContactsQueries(user?.id as number)
-  const { addSavedCardDetails } = useCreateCustomerCardsMutation()
-  const { addSavedAddressDetails } = useCreateCustomerAddressMutation()
+  const { addSavedCardDetails } = useCreateCustomerCard()
+  const { addSavedAddressDetails } = useCreateCustomerAddress()
 
   const Theme = useTheme()
   const mobileView = useMediaQuery(Theme.breakpoints.down('md'))
@@ -184,7 +183,7 @@ const SubscriptionItem = (props: SubscriptionItemProps) => {
   )
 
   const handleFrequencySave = async (params: any) => {
-    await editSubscriptionFrequencyMutation.mutateAsync(params)
+    await updateSubscriptionFrequency.mutateAsync(params)
     closeModal()
     showSnackbar(t('subscription-frequency-updated-successfully'), 'success')
   }
@@ -198,7 +197,7 @@ const SubscriptionItem = (props: SubscriptionItemProps) => {
       },
     }
 
-    await updateSubscriptionNextOrderDateMutation.mutateAsync(params)
+    await updateSubscriptionNextOrderDate.mutateAsync(params)
     closeModal()
     showSnackbar(t('next-order-date') + orderDate, 'success')
   }
@@ -213,7 +212,7 @@ const SubscriptionItem = (props: SubscriptionItemProps) => {
   // Cancel subscription
   const confirmCancelSubscription = async () => {
     const params = buildPauseAndCancelSubscriptionParams(subscriptionDetailsData, ActionName.CANCEL)
-    await performSubscriptionActionMutation.mutateAsync(params)
+    await updateSubscriptionState.mutateAsync(params)
     showSnackbar(t('subscription-cancelled-successfully'), 'success')
   }
 
@@ -252,7 +251,7 @@ const SubscriptionItem = (props: SubscriptionItemProps) => {
       card
     )
 
-    await updateSubscriptionPaymentMutation.mutateAsync(params)
+    await updateSubscriptionPayment.mutateAsync(params)
 
     closeModal()
     showSnackbar(t('address-updated-successfully'), 'success')
@@ -309,7 +308,7 @@ const SubscriptionItem = (props: SubscriptionItemProps) => {
 
   const saveShippingAddress = async (data: Address) => {
     const params = buildSubscriptionFulfillmentInfoParams(subscriptionDetailsData, data)
-    await updateSubscriptionFulfillmentInfoMutation.mutateAsync(params)
+    await updateSubscriptionShippingInfo.mutateAsync(params)
 
     closeModal()
     showSnackbar(t('address-updated-successfully'), 'success')
@@ -318,7 +317,7 @@ const SubscriptionItem = (props: SubscriptionItemProps) => {
   // Pause Subscription
   const confirmPauseSubscription = async () => {
     const params = buildPauseAndCancelSubscriptionParams(subscriptionDetailsData, ActionName.PAUSE)
-    await performSubscriptionActionMutation.mutateAsync(params)
+    await updateSubscriptionState.mutateAsync(params)
     showSnackbar(t('subscription-paused'), 'success')
   }
   const handleAddNewShippingAddress = async (data: Address) => saveShippingAddress(data)
@@ -510,7 +509,7 @@ const SubscriptionItem = (props: SubscriptionItemProps) => {
                     onChange={(name: string, value: string) => handleUpdateCard(value)}
                     placeholder={t('select-billing-address')}
                     value={billingAddress?.formattedAddress}
-                    disabled={updateSubscriptionPaymentMutation.isLoading}
+                    disabled={updateSubscriptionPayment.isLoading}
                   >
                     {uniqueCards?.map((card) => {
                       return (
@@ -538,7 +537,7 @@ const SubscriptionItem = (props: SubscriptionItemProps) => {
                         onClose: handleCloseModal,
                       })
                     }
-                    disabled={updateSubscriptionPaymentMutation.isLoading || isSubscriptionCanceled}
+                    disabled={updateSubscriptionPayment.isLoading || isSubscriptionCanceled}
                   >
                     {t('add-new-address')}
                   </Button>
@@ -592,7 +591,7 @@ const SubscriptionItem = (props: SubscriptionItemProps) => {
                     onChange={(name: string, value: string) => handleUpdateShippingAddress(value)}
                     placeholder={t('select-shipping-address')}
                     value={shippingAddress?.formattedAddress}
-                    disabled={updateSubscriptionFulfillmentInfoMutation.isLoading}
+                    disabled={updateSubscriptionShippingInfo.isLoading}
                   >
                     {fulfillmentInfoList?.map((item) => {
                       return (
@@ -616,7 +615,7 @@ const SubscriptionItem = (props: SubscriptionItemProps) => {
                       })
                     }
                     disabled={
-                      updateSubscriptionFulfillmentInfoMutation.isLoading || isSubscriptionCanceled
+                      updateSubscriptionShippingInfo.isLoading || isSubscriptionCanceled
                     }
                   >
                     {t('add-new-address')}

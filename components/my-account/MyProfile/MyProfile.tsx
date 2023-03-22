@@ -6,7 +6,7 @@ import { Box, Stack, Typography } from '@mui/material'
 import { useTranslation } from 'next-i18next'
 
 import { ProfileDetailsForm } from '@/components/my-account'
-import { useUpdateUserDataMutations, useUpdateUserPasswordMutations } from '@/hooks'
+import { useUpdateCustomerProfile , useChangePassword } from '@/hooks'
 import { userGetters } from '@/lib/getters'
 import { UpdateProfileDataParam, PasswordTypes } from '@/lib/types'
 
@@ -24,8 +24,8 @@ interface MyProfileProps {
 const MyProfile = (props: MyProfileProps) => {
   const { user } = props
   const { t } = useTranslation('common')
-  const { updateUserData } = useUpdateUserDataMutations()
-  const { updateUserPasswordData } = useUpdateUserPasswordMutations()
+  const { updateUserData } = useUpdateCustomerProfile ()
+  const { updateUserPasswordData } = useChangePassword()
 
   const [currentEditableField, setCurrentEditableField] = useState<number | null>(null)
 

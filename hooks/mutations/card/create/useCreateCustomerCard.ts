@@ -1,5 +1,5 @@
 /**
- * @module useCreateCustomerCardsMutation
+ * @module useCreateCustomerCard
  */
 import { useMutation, useQueryClient } from 'react-query'
 
@@ -26,7 +26,7 @@ const addCustomerAccountCardDetails = async (params: AddCustomerAccountCardDetai
 }
 
 /**
- * [Mutation hook] useCreateCustomerCardsMutation uses the graphQL mutation
+ * [Mutation hook] useCreateCustomerCard uses the graphQL mutation
  *
  * <b>createCustomerAccountCard(accountId: Int!, cardInput: CardInput): Card</b>
  *
@@ -39,7 +39,7 @@ const addCustomerAccountCardDetails = async (params: AddCustomerAccountCardDetai
  * @returns 'response?.createCustomerAccountCard', which has customer's card details like nameOnCard, cardType, contactId etc.
  */
 
-export const useCreateCustomerCardsMutation = () => {
+export const useCreateCustomerCard = () => {
   const queryClient = useQueryClient()
 
   return {

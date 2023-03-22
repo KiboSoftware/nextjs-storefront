@@ -1,11 +1,11 @@
 import { renderHook } from '@testing-library/react-hooks'
 
-import { useUpdateSubscriptionNextOrderDateMutation } from './useUpdateSubscriptionNextOrderDateMutation'
+import { useUpdateSubscriptionNextOrderDate } from './useUpdateSubscriptionNextOrderDate'
 import { subscriptionMock } from '@/__mocks__/stories/subscriptionMock'
 import { createQueryClientWrapper } from '@/__test__/utils/renderWithQueryClient'
 
-describe('[hooks] useUpdateSubscriptionNextOrderDateMutation', () => {
-  it('should use useUpdateSubscriptionNextOrderDateMutation', async () => {
+describe('[hooks] useUpdateSubscriptionNextOrderDate', () => {
+  it('should use useUpdateSubscriptionNextOrderDate', async () => {
     const params = {
       subscriptionId: '149ceaac15c2eb00016c498e000045a4',
       subscriptionNextOrderDateInput: {
@@ -15,9 +15,8 @@ describe('[hooks] useUpdateSubscriptionNextOrderDateMutation', () => {
 
     renderHook(
       async () => {
-        const { updateSubscriptionNextOrderDateMutation } =
-          useUpdateSubscriptionNextOrderDateMutation()
-        const response = await updateSubscriptionNextOrderDateMutation.mutateAsync(params)
+        const { updateSubscriptionNextOrderDate } = useUpdateSubscriptionNextOrderDate()
+        const response = await updateSubscriptionNextOrderDate.mutateAsync(params)
 
         expect(response).toStrictEqual(subscriptionMock.subscription.nextOrderDate)
       },
