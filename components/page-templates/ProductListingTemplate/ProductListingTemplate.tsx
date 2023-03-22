@@ -203,6 +203,11 @@ const ProductListingTemplate = (props: ProductListingTemplateProps) => {
   const { showModal } = useModalContext()
 
   const handleFilterBy = () => setFilterBy(!showFilterBy)
+  const showFacetList = facetList && facetList?.length > 0
+
+  const showCategoryFacet =
+    categoryFacet.header ||
+    (categoryFacet?.childrenCategories && categoryFacet?.childrenCategories?.length > 0)
 
   const handleClearAllFilters = () => {
     updateRoute('')
@@ -315,19 +320,21 @@ const ProductListingTemplate = (props: ProductListingTemplateProps) => {
           </Box>
           <FullWidthDivider />
           <Box sx={{ ...styles.mainSection }}>
-            <Box sx={{ ...styles.sideBar }}>
-              {(categoryFacet.header ||
-                (categoryFacet?.childrenCategories &&
-                  categoryFacet?.childrenCategories?.length > 0)) && (
-                <CategoryFacet categoryFacet={categoryFacet} breadcrumbs={breadCrumbsList} />
-              )}
-              <FacetList
-                facetList={facetList}
-                onFilterByClose={handleFilterBy}
-                appliedFilters={appliedFilters}
-                onSelectedTileRemoval={handleSelectedTileRemoval}
-              />
-            </Box>
+            {(showFacetList || showCategoryFacet) && (
+              <Box sx={{ ...styles.sideBar }}>
+                {showCategoryFacet && (
+                  <CategoryFacet categoryFacet={categoryFacet} breadcrumbs={breadCrumbsList} />
+                )}
+                {showFacetList && (
+                  <FacetList
+                    facetList={facetList}
+                    onFilterByClose={handleFilterBy}
+                    appliedFilters={appliedFilters}
+                    onSelectedTileRemoval={handleSelectedTileRemoval}
+                  />
+                )}
+              </Box>
+            )}
             <Box sx={{ width: '100%' }}>
               {!isLoading && (
                 <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>

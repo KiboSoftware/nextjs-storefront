@@ -77,7 +77,7 @@ const SearchPage: NextPage<SearchPageType> = (props) => {
         },
       },
       undefined,
-      { scroll: false }
+      { scroll: false, shallow: true }
     )
   }
 
@@ -92,7 +92,7 @@ const SearchPage: NextPage<SearchPageType> = (props) => {
         },
       },
       undefined,
-      { scroll: false }
+      { scroll: false, shallow: true }
     )
   }
 

@@ -95,7 +95,7 @@ const CategoryPage: NextPage<CategoryPageType> = (props: any) => {
         },
       },
       undefined,
-      { scroll: false }
+      { scroll: false, shallow: true }
     )
   }
 
@@ -110,7 +110,7 @@ const CategoryPage: NextPage<CategoryPageType> = (props: any) => {
         },
       },
       undefined,
-      { scroll: false }
+      { scroll: false, shallow: true }
     )
   }
 

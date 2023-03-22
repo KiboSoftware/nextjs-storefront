@@ -40,7 +40,7 @@ export const useUpdateRoutes = () => {
         },
       },
       undefined,
-      { scroll: false }
+      { scroll: false, shallow: true }
     )
   }
 
