@@ -41,7 +41,7 @@ export const useDeleteCustomerCard = () => {
   const queryClient = useQueryClient()
 
   return {
-    deleteSavedCardDetails: useMutation(deleteCustomerAccountCardDetails, {
+    deleteCustomerCard: useMutation(deleteCustomerAccountCardDetails, {
       onSuccess: () => {
         queryClient.invalidateQueries(customerAccountCardsKeys.all)
       },

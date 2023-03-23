@@ -43,7 +43,7 @@ export const useCreateCustomerCard = () => {
   const queryClient = useQueryClient()
 
   return {
-    addSavedCardDetails: useMutation(addCustomerAccountCardDetails, {
+    createCustomerCard: useMutation(addCustomerAccountCardDetails, {
       onSuccess: () => {
         queryClient.invalidateQueries(customerAccountCardsKeys.all)
       },

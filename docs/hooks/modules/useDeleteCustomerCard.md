@@ -30,9 +30,9 @@ On success, calls invalidateQueries all customerAccountCardsKeys and fetches the
 
 'response?.deleteCustomerAccountCard', which contains True/False value to identify if customer's card has been deleted or not.
 
-| Name | Type |
-| :------ | :------ |
-| `deleteSavedCardDetails` | `UseMutationResult`<`any`, `unknown`, `DeleteCustomerAccountCardDetailsParams`, `unknown`\> |
+| Name                 | Type                                                                                        |
+| :------------------- | :------------------------------------------------------------------------------------------ |
+| `deleteCustomerCard` | `UseMutationResult`<`any`, `unknown`, `DeleteCustomerAccountCardDetailsParams`, `unknown`\> |
 
 #### Defined in
 

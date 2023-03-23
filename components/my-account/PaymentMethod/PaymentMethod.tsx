@@ -97,9 +97,9 @@ const PaymentMethod = (props: PaymentMethodProps) => {
   const savedCardsAndContacts = userGetters.getSavedCardsAndBillingDetails(cards, contacts)
   const savedAddresses = userGetters.getSavedAddresses(contacts)
   const billingAddresses = userGetters.getUserBillingAddresses(savedAddresses)
-  
-  const { deleteSavedCardDetails } = useDeleteCustomerCard()
-  const { deleteSavedAddressDetails } = useDeleteCustomerAddress()
+
+  const { deleteCustomerCard } = useDeleteCustomerCard()
+  const { deleteCustomerAddress } = useDeleteCustomerAddress()
 
   const [cardFormDetails, setCardFormDetails] = useState<CardForm>(initialCardFormData)
   const [billingFormAddress, setBillingFormAddress] = useState<Address>(initialBillingAddressData)
@@ -188,10 +188,10 @@ const PaymentMethod = (props: PaymentMethodProps) => {
         accountId: user.id,
         contactId: card.contactId,
       }
-      await deleteSavedAddressDetails.mutateAsync(addressData)
+      await deleteCustomerAddress.mutateAsync(addressData)
     }
 
-    await deleteSavedCardDetails.mutateAsync({ accountId: user.id, cardId: card.id as string })
+    await deleteCustomerCard.mutateAsync({ accountId: user.id, cardId: card.id as string })
   }
 
   const cancelAddingNewPaymentMethod = () => {

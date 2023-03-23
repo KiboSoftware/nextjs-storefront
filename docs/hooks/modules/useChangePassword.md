@@ -28,9 +28,9 @@ Parameters passed to internal function updateUserPassword(props: ChangePasswordP
 
 'response', that is True/False value to identify if password has been changed or not.
 
-| Name | Type |
-| :------ | :------ |
-| `updateUserPasswordData` | `UseMutationResult`<`any`, `unknown`, `ChangePasswordProps`, `unknown`\> |
+| Name             | Type                                                                     |
+| :--------------- | :----------------------------------------------------------------------- |
+| `changePassword` | `UseMutationResult`<`any`, `unknown`, `ChangePasswordProps`, `unknown`\> |
 
 #### Defined in
 

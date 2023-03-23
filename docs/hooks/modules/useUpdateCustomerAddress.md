@@ -30,9 +30,9 @@ On success, calls invalidateQueries all customerAccountContactsKeys and fetches 
 
 'response?.updateCustomerAccountContact', which contains list of Customer's contact details.
 
-| Name | Type |
-| :------ | :------ |
-| `updateSavedAddressDetails` | `UseMutationResult`<`any`, `unknown`, `UpdateCustomerAccountContactDetailsParams`, `unknown`\> |
+| Name                    | Type                                                                                           |
+| :---------------------- | :--------------------------------------------------------------------------------------------- |
+| `updateCustomerAddress` | `UseMutationResult`<`any`, `unknown`, `UpdateCustomerAccountContactDetailsParams`, `unknown`\> |
 
 #### Defined in
 

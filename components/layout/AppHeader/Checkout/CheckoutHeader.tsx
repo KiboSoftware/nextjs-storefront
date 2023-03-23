@@ -28,11 +28,11 @@ const CheckoutHeader = ({ isMultiShipEnabled }: { isMultiShipEnabled: boolean })
     isMultiShip: isMultiShipEnabled,
   })
 
-  const { data: checkout } = useGetCurrentOrder({
+  const { data: order } = useGetCurrentOrder({
     checkoutId: checkoutId as string,
     isMultiship: isMultiShipEnabled,
   })
-  const numberOfItems = multishipCheckout?.items?.length || checkout?.items?.length
+  const numberOfItems = multishipCheckout?.items?.length || order?.items?.length
 
   return (
     <>

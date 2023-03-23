@@ -30,9 +30,9 @@ On success, calls invalidateQueries all customerAccountCardsKeys and fetches the
 
 'response?.updateCustomerAccountCard', which has updated customer's card details like nameOnCard, cardType, contactId etc.
 
-| Name | Type |
-| :------ | :------ |
-| `updateSavedCardDetails` | `UseMutationResult`<`any`, `unknown`, `UpdateCustomerAccountCardDetailsParams`, `unknown`\> |
+| Name                 | Type                                                                                        |
+| :------------------- | :------------------------------------------------------------------------------------------ |
+| `updateCustomerCard` | `UseMutationResult`<`any`, `unknown`, `UpdateCustomerAccountCardDetailsParams`, `unknown`\> |
 
 #### Defined in
 

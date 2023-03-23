@@ -44,7 +44,7 @@ export const useCreateCustomerAddress = () => {
   const queryClient = useQueryClient()
 
   return {
-    addSavedAddressDetails: useMutation(addCustomerAccountContactDetails, {
+    createCustomerAddress: useMutation(addCustomerAccountContactDetails, {
       onSuccess: () => {
         queryClient.invalidateQueries(customerAccountContactsKeys.all)
       },

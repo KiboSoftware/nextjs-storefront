@@ -30,9 +30,9 @@ On success, calls invalidateQueries all customerAccountContactsKeys and fetches 
 
 'response?.deleteCustomerAccountContact', which contains True/False value to identify if customer's contact has been deleted or not.
 
-| Name | Type |
-| :------ | :------ |
-| `deleteSavedAddressDetails` | `UseMutationResult`<`any`, `unknown`, `DeleteCustomerAccountContactDetailsParams`, `unknown`\> |
+| Name                    | Type                                                                                           |
+| :---------------------- | :--------------------------------------------------------------------------------------------- |
+| `deleteCustomerAddress` | `UseMutationResult`<`any`, `unknown`, `DeleteCustomerAccountContactDetailsParams`, `unknown`\> |
 
 #### Defined in
 

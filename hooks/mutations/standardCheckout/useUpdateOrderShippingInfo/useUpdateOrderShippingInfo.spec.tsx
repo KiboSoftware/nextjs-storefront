@@ -1,6 +1,6 @@
 import { renderHook } from '@testing-library/react-hooks'
 
-import { useUpdateOrderShippingInfo } from './useUpdateCheckoutShippingInfoMutation'
+import { useUpdateOrderShippingInfo } from './useUpdateOrderShippingInfo'
 import { orderMock } from '@/__mocks__/stories/orderMock'
 import { createQueryClientWrapper } from '@/__test__/utils/renderWithQueryClient'
 

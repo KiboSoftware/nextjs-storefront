@@ -45,7 +45,7 @@ export const useDeleteCustomerAddress = () => {
   const queryClient = useQueryClient()
 
   return {
-    deleteSavedAddressDetails: useMutation(deleteCustomerAccountContactDetails, {
+    deleteCustomerAddress: useMutation(deleteCustomerAccountContactDetails, {
       onMutate: async (deletedAddress) => {
         await queryClient.cancelQueries(
           customerAccountContactsKeys.addressById(deletedAddress.accountId)

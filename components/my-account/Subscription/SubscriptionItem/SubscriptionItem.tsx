@@ -139,8 +139,8 @@ const SubscriptionItem = (props: SubscriptionItemProps) => {
   const { updateSubscriptionPayment } = useUpdateSubscriptionPayment()
   const { data: cards } = useGetCards(user?.id as number)
   const { data: contacts } = useGetCustomerAddresses(user?.id as number)
-  const { addSavedCardDetails } = useCreateCustomerCard()
-  const { addSavedAddressDetails } = useCreateCustomerAddress()
+  const { createCustomerCard } = useCreateCustomerCard()
+  const { createCustomerAddress } = useCreateCustomerAddress()
 
   const Theme = useTheme()
   const mobileView = useMediaQuery(Theme.breakpoints.down('md'))
@@ -259,7 +259,7 @@ const SubscriptionItem = (props: SubscriptionItemProps) => {
 
   const handleAddNewCard = async (address: BillingAddress, card: CardType) => {
     // Add address
-    const addressResponse = await addSavedAddressDetails.mutateAsync(address)
+    const addressResponse = await createCustomerAddress.mutateAsync(address)
 
     const params = {
       accountId: card.accountId,
@@ -269,7 +269,7 @@ const SubscriptionItem = (props: SubscriptionItemProps) => {
     params.cardInput.contactId = addressResponse.id
 
     // Add card
-    const cardResponse = await addSavedCardDetails.mutateAsync(params)
+    const cardResponse = await createCustomerCard.mutateAsync(params)
     await saveCard(addressResponse, cardResponse)
   }
 

@@ -9,8 +9,8 @@ describe('[hooks] useInitiateOrder', () => {
     renderHook(
       async () => {
         const cartId = '137a94b6402be000013718d80000678b'
-        const { createFromCart } = useInitiateOrder()
-        const response = await createFromCart.mutateAsync(cartId)
+        const { initiateOrder } = useInitiateOrder()
+        const response = await initiateOrder.mutateAsync(cartId)
         expect(response).toStrictEqual(orderMock.checkout)
       },
       {

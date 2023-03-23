@@ -98,10 +98,10 @@ const MyAccountTemplate = () => {
   const { data: cards } = useGetCards(user?.id as number)
   const { data: contacts } = useGetCustomerAddresses(user?.id as number)
 
-  const { addSavedCardDetails } = useCreateCustomerCard()
-  const { updateSavedCardDetails } = useUpdateCustomerCard()
-  const { addSavedAddressDetails } = useCreateCustomerAddress()
-  const { updateSavedAddressDetails } = useUpdateCustomerAddress()
+  const { createCustomerCard } = useCreateCustomerCard()
+  const { updateCustomerCard } = useUpdateCustomerCard()
+  const { createCustomerAddress } = useCreateCustomerAddress()
+  const { updateCustomerAddress } = useUpdateCustomerAddress()
 
   const handleGoToOrderHistory = () => {
     router.push('/my-account/order-history?filters=M-6')
@@ -120,9 +120,9 @@ const MyAccountTemplate = () => {
 
     // Add update address
     if (isUpdatingAddress) {
-      response = await updateSavedAddressDetails.mutateAsync(address)
+      response = await updateCustomerAddress.mutateAsync(address)
     } else {
-      response = await addSavedAddressDetails.mutateAsync(address)
+      response = await createCustomerAddress.mutateAsync(address)
     }
 
     const params = {
@@ -134,9 +134,9 @@ const MyAccountTemplate = () => {
 
     // Add update card
     if (card.cardId) {
-      await updateSavedCardDetails.mutateAsync(params)
+      await updateCustomerCard.mutateAsync(params)
     } else {
-      await addSavedCardDetails.mutateAsync(params)
+      await createCustomerCard.mutateAsync(params)
     }
   }
 

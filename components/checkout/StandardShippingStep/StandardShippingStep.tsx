@@ -78,7 +78,7 @@ const StandardShippingStep = (props: ShippingProps) => {
     setStepStatusComplete,
     setStepStatusIncomplete,
   } = useCheckoutStepContext()
-  const updateCheckoutShippingInfo = useUpdateOrderShippingInfo()
+  const updateOrderShippingInfo = useUpdateOrderShippingInfo()
   const { data: shippingMethods } = useGetShippingMethods(
     checkoutId,
     isNewAddressAdded,
@@ -89,7 +89,7 @@ const StandardShippingStep = (props: ShippingProps) => {
 
   const handleSaveAddress = async ({ contact }: { contact: CrContact }) => {
     try {
-      await updateCheckoutShippingInfo.mutateAsync({ checkout, contact })
+      await updateOrderShippingInfo.mutateAsync({ checkout, contact })
       setCheckoutId(checkout?.id)
       setSelectedShippingAddressId((contact?.id as number) || DefaultId.ADDRESSID)
       setShouldShowAddAddressButton(true)
@@ -107,7 +107,7 @@ const StandardShippingStep = (props: ShippingProps) => {
     )?.shippingMethodName as string
 
     try {
-      await updateCheckoutShippingInfo.mutateAsync({
+      await updateOrderShippingInfo.mutateAsync({
         checkout,
         contact: undefined,
         email: undefined,

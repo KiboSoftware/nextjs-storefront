@@ -134,15 +134,15 @@ const MultiShipCheckoutTemplate = (props: MultiShipCheckoutProps) => {
   }
 
   // Payment Step
-  const updateMultiShipCheckoutPaymentAction = useVoidCheckoutPayment()
-  const createMultiShipCheckoutPaymentAction = useAddCheckoutPayment()
+  const voidCheckoutPayment = useVoidCheckoutPayment()
+  const addCheckoutPayment = useAddCheckoutPayment()
 
   const handleVoidPayment = async (
     id: string,
     paymentId: string,
     paymentActionInput: PaymentActionInput
   ) => {
-    await updateMultiShipCheckoutPaymentAction.mutateAsync({
+    await voidCheckoutPayment.mutateAsync({
       checkoutId: id,
       paymentId,
       paymentActionInput,
@@ -150,14 +150,14 @@ const MultiShipCheckoutTemplate = (props: MultiShipCheckoutProps) => {
   }
 
   const handleAddPayment = async (id: string, paymentAction: PaymentActionInput) => {
-    await createMultiShipCheckoutPaymentAction.mutateAsync({
+    await addCheckoutPayment.mutateAsync({
       checkoutId: id,
       paymentAction,
     })
   }
 
   // Review Step
-  const createOrder = useCreateCheckout()
+  const createCheckout = useCreateCheckout()
 
   const personalDetails = {
     email: checkout && checkout.email,
@@ -174,8 +174,8 @@ const MultiShipCheckoutTemplate = (props: MultiShipCheckoutProps) => {
     total: checkout?.total,
   }
 
-  const handleCreateOrder = async (checkout: Checkout) => {
-    await createOrder.mutateAsync(checkout)
+  const handleCreateCheckout = async (checkout: Checkout) => {
+    await createCheckout.mutateAsync(checkout)
   }
 
   const { shipItems, pickupItems } = checkoutGetters.getCheckoutDetails(checkout as Checkout)
@@ -215,7 +215,7 @@ const MultiShipCheckoutTemplate = (props: MultiShipCheckoutProps) => {
           pickupItems={pickupItems}
           personalDetails={personalDetails}
           orderSummaryProps={orderSummaryProps}
-          onCreateOrder={handleCreateOrder}
+          onCreateOrder={handleCreateCheckout}
         />
       </CheckoutUITemplate>
     </>

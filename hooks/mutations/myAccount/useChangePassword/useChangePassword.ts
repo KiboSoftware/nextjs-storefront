@@ -12,7 +12,7 @@ interface ChangePasswordProps {
   passwordInfoInput: PasswordInfoInput
 }
 
-const updateUserPassword = async (props: ChangePasswordProps) => {
+const changePassword = async (props: ChangePasswordProps) => {
   const client = makeGraphQLClient()
   const { accountId, passwordInfoInput } = props
 
@@ -33,13 +33,13 @@ const updateUserPassword = async (props: ChangePasswordProps) => {
  *
  * Description : Update the existing customer's account password by passing old password and new password.
  *
- * Parameters passed to internal function updateUserPassword(props: ChangePasswordProps) => expects object containing accountId and passwordInfoInput to update the password.
+ * Parameters passed to internal function changePassword(props: ChangePasswordProps) => expects object containing accountId and passwordInfoInput to update the password.
  *
  * @returns 'response', that is True/False value to identify if password has been changed or not.
  */
 
 export const useChangePassword = () => {
   return {
-    updateUserPasswordData: useMutation(updateUserPassword),
+    changePassword: useMutation(changePassword),
   }
 }

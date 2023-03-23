@@ -30,6 +30,6 @@ const getOrCreateCheckout = async (cartId?: string | null) => {
  */
 export const useInitiateOrder = () => {
   return {
-    createFromCart: useMutation(getOrCreateCheckout),
+    initiateOrder: useMutation(getOrCreateCheckout),
   }
 }

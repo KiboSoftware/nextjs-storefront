@@ -30,6 +30,6 @@ const createCheckout = async (cartId?: string | null) => {
  */
 export const useInitiateCheckout = () => {
   return {
-    createMultiShipCheckoutFromCart: useMutation(createCheckout),
+    initiateCheckout: useMutation(createCheckout),
   }
 }

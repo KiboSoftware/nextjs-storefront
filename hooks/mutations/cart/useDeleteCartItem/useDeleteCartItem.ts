@@ -13,7 +13,7 @@ interface DeleteCartItemParams {
   cartItemId: string
 }
 
-const removeCartItem = async (params: DeleteCartItemParams) => {
+const deleteCartItem = async (params: DeleteCartItemParams) => {
   const client = makeGraphQLClient()
   const { cartItemId } = params
 
@@ -35,7 +35,7 @@ const removeCartItem = async (params: DeleteCartItemParams) => {
  *
  * Description : Removes the product item from the cart
  *
- * Parameters passed to function removeCartItem(params: DeleteCartItemParams) => expects object of type DeleteCartItemParams containing cartItemId of the product to be deleted
+ * Parameters passed to function deleteCartItem(params: DeleteCartItemParams) => expects object of type DeleteCartItemParams containing cartItemId of the product to be deleted
  *
  * On success, calls invalidateQueries on cartKeys and fetches the updated result
  *
@@ -44,7 +44,7 @@ const removeCartItem = async (params: DeleteCartItemParams) => {
 export const useDeleteCartItem = () => {
   const queryClient = useQueryClient()
   return {
-    removeCartItem: useMutation(removeCartItem, {
+    deleteCartItem: useMutation(deleteCartItem, {
       onMutate: async (deleteCartItem) => {
         await queryClient.cancelQueries(cartKeys.all)
 

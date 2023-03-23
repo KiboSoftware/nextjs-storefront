@@ -48,7 +48,7 @@ export const useUpdateCustomerAddress = () => {
   const queryClient = useQueryClient()
 
   return {
-    updateSavedAddressDetails: useMutation(updateCustomerAccountContactDetails, {
+    updateCustomerAddress: useMutation(updateCustomerAccountContactDetails, {
       onSuccess: () => {
         queryClient.invalidateQueries(customerAccountContactsKeys.all)
       },

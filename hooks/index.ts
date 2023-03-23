@@ -110,7 +110,7 @@ export * from './mutations/returns/useCreateOrderReturn/useCreateOrderReturn'
 
 // Standard Checkout
 export * from './mutations/standardCheckout/useUpdateOrderPersonalInfo/useUpdateOrderPersonalInfo'
-export * from './mutations/standardCheckout/useUpdateOrderShippingInfo/useUpdateCheckoutShippingInfoMutation'
+export * from './mutations/standardCheckout/useUpdateOrderShippingInfo/useUpdateOrderShippingInfo'
 export * from './mutations/standardCheckout/useUpdateOrderBillingInfo/useUpdateOrderBillingInfo'
 export * from './mutations/standardCheckout/useVoidOrderPayment/useVoidOrderPayment'
 export * from './mutations/standardCheckout/useAddOrderPaymentInfo/useAddOrderPaymentInfo'

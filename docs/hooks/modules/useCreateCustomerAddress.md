@@ -28,11 +28,11 @@ On success, calls invalidateQueries all customerAccountContactsKeys and fetches 
 
 `Object`
 
-'response?.createCustomerAccountContact', which contains Customer's contact details like accountId,  Address, firstName, LastName etc.
+'response?.createCustomerAccountContact', which contains Customer's contact details like accountId, Address, firstName, LastName etc.
 
-| Name | Type |
-| :------ | :------ |
-| `addSavedAddressDetails` | `UseMutationResult`<`any`, `unknown`, `CreateCustomerAccountContactDetailsParams`, `unknown`\> |
+| Name                    | Type                                                                                           |
+| :---------------------- | :--------------------------------------------------------------------------------------------- |
+| `createCustomerAddress` | `UseMutationResult`<`any`, `unknown`, `CreateCustomerAccountContactDetailsParams`, `unknown`\> |
 
 #### Defined in
 

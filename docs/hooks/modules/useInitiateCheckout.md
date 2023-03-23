@@ -28,9 +28,9 @@ Parameters passed to function createCheckout(cartId?: string | null) => expects 
 
 'response?.checkout' which contains which contains data for checkout pages(product items, fulfillment method etc.;)
 
-| Name | Type |
-| :------ | :------ |
-| `createMultiShipCheckoutFromCart` | `UseMutationResult`<`any`, `unknown`, `undefined` \| ``null`` \| `string`, `unknown`\> |
+| Name               | Type                                                                                 |
+| :----------------- | :----------------------------------------------------------------------------------- |
+| `initiateCheckout` | `UseMutationResult`<`any`, `unknown`, `undefined` \| `null` \| `string`, `unknown`\> |
 
 #### Defined in
 

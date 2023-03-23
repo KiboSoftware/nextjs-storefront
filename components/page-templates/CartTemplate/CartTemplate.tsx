@@ -49,10 +49,10 @@ const CartTemplate = (props: CartTemplateProps) => {
   const theme = useTheme()
   const isMobileViewport = useMediaQuery(theme.breakpoints.down('md'))
   const router = useRouter()
-  const { createFromCart } = useInitiateOrder()
-  const { createMultiShipCheckoutFromCart } = useInitiateCheckout()
+  const { initiateOrder } = useInitiateOrder()
+  const { initiateCheckout } = useInitiateCheckout()
   const { updateCartItemQuantity } = useUpdateCartItemQuantity()
-  const { removeCartItem } = useDeleteCartItem()
+  const { deleteCartItem } = useDeleteCartItem()
   const { updateCartItem } = useUpdateCartItem()
   const { showModal, closeModal } = useModalContext()
 
@@ -105,7 +105,7 @@ const CartTemplate = (props: CartTemplateProps) => {
     }
   }
   const handleDeleteItem = async (cartItemId: string) => {
-    await removeCartItem.mutateAsync({ cartItemId })
+    await deleteCartItem.mutateAsync({ cartItemId })
   }
   const handleItemActions = () => {
     // your code here
@@ -158,12 +158,12 @@ const CartTemplate = (props: CartTemplateProps) => {
   const handleGotoCheckout = async () => {
     setShowLoadingButton(true)
     try {
-      const createFromCartResponse = isMultiShipEnabled
-        ? await createMultiShipCheckoutFromCart.mutateAsync(cart?.id)
-        : await createFromCart.mutateAsync(cart?.id)
+      const initiateOrderResponse = isMultiShipEnabled
+        ? await initiateCheckout.mutateAsync(cart?.id)
+        : await initiateOrder.mutateAsync(cart?.id)
 
-      if (createFromCartResponse?.id) {
-        router.push(`/checkout/${createFromCartResponse.id}`)
+      if (initiateOrderResponse?.id) {
+        router.push(`/checkout/${initiateOrderResponse.id}`)
       }
     } catch (err) {
       console.error(err)

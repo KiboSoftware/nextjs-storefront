@@ -28,9 +28,9 @@ Parameters passed to function getOrCreateCheckout(cartId?: string | null) => exp
 
 'response?.checkout' which contains data for checkout pages(product items, fulfillment method etc.;)
 
-| Name | Type |
-| :------ | :------ |
-| `createFromCart` | `UseMutationResult`<`any`, `unknown`, `undefined` \| ``null`` \| `string`, `unknown`\> |
+| Name            | Type                                                                                 |
+| :-------------- | :----------------------------------------------------------------------------------- |
+| `initiateOrder` | `UseMutationResult`<`any`, `unknown`, `undefined` \| `null` \| `string`, `unknown`\> |
 
 #### Defined in
 

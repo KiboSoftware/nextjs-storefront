@@ -33,7 +33,7 @@ const StandardShipCheckoutTemplate = (props: StandardShipCheckoutProps) => {
   const [promoError, setPromoError] = useState<string>('')
   const { checkoutId } = router.query
 
-  const { data: checkout } = useGetCurrentOrder({
+  const { data: order } = useGetCurrentOrder({
     checkoutId: checkoutId as string,
     isMultiship: isMultiShipEnabled,
     initialCheckout,
@@ -75,7 +75,7 @@ const StandardShipCheckoutTemplate = (props: StandardShipCheckoutProps) => {
     const { email } = formData
 
     const personalInfo: PersonalInfo = {
-      checkout: checkout as CrOrderInput,
+      checkout: order as CrOrderInput,
       email: email as string,
     }
     await updateStandardCheckoutPersonalInfo.mutateAsync(personalInfo)
@@ -83,16 +83,16 @@ const StandardShipCheckoutTemplate = (props: StandardShipCheckoutProps) => {
 
   // Payment Step
 
-  const updateOrderPaymentAction = useVoidOrderPayment()
-  const createOrderPaymentMethod = useAddOrderPaymentInfo()
-  const updateCheckoutBillingInfo = useUpdateOrderBillingInfo()
+  const voidOrderPayment = useVoidOrderPayment()
+  const addOrderPayment = useAddOrderPaymentInfo()
+  const updateOrderBillingInfo = useUpdateOrderBillingInfo()
 
   const handleVoidPayment = async (
     id: string,
     paymentId: string,
     paymentAction: PaymentActionInput
   ) => {
-    await updateOrderPaymentAction.mutateAsync({
+    await voidOrderPayment.mutateAsync({
       orderId: id as string,
       paymentId,
       paymentAction,
@@ -100,8 +100,8 @@ const StandardShipCheckoutTemplate = (props: StandardShipCheckoutProps) => {
   }
 
   const handleAddPayment = async (id: string, paymentAction: PaymentActionInput) => {
-    await createOrderPaymentMethod.mutateAsync({ orderId: id, paymentAction })
-    await updateCheckoutBillingInfo.mutateAsync({
+    await addOrderPayment.mutateAsync({ orderId: id, paymentAction })
+    await updateOrderBillingInfo.mutateAsync({
       orderId: id,
       billingInfoInput: { ...paymentAction.newBillingInfo },
     })
@@ -110,7 +110,7 @@ const StandardShipCheckoutTemplate = (props: StandardShipCheckoutProps) => {
   //Review Step
   const createOrder = useCreateOrder()
 
-  const orderDetails = orderGetters.getCheckoutDetails(checkout as CrOrder)
+  const orderDetails = orderGetters.getCheckoutDetails(order as CrOrder)
 
   const personalDetails = {
     ...orderDetails.personalDetails,
@@ -118,36 +118,36 @@ const StandardShipCheckoutTemplate = (props: StandardShipCheckoutProps) => {
     password: '',
   }
 
-  const handleCreateOrder = async (checkout: CrOrder) => {
-    await createOrder.mutateAsync(checkout)
+  const handleCreateOrder = async (order: CrOrder) => {
+    await createOrder.mutateAsync(order)
   }
 
-  const { shipItems, pickupItems } = orderGetters.getCheckoutDetails(checkout as CrOrder)
+  const { shipItems, pickupItems } = orderGetters.getCheckoutDetails(order as CrOrder)
 
   return (
     <>
       <CheckoutUITemplate
-        checkout={checkout as CrOrder}
+        checkout={order as CrOrder}
         handleApplyCouponCode={handleApplyCouponCode}
         handleRemoveCouponCode={handleRemoveCouponCode}
         promoError={promoError}
       >
         <DetailsStep
-          checkout={checkout as CrOrder}
+          checkout={order as CrOrder}
           updateCheckoutPersonalInfo={updateCheckoutPersonalInfo}
         />
         <StandardShippingStep
-          checkout={checkout as CrOrder}
+          checkout={order as CrOrder}
           savedUserAddressData={savedUserAddressData}
           isAuthenticated={isAuthenticated}
         />
         <PaymentStep
-          checkout={checkout as CrOrder}
+          checkout={order as CrOrder}
           onVoidPayment={handleVoidPayment}
           onAddPayment={handleAddPayment}
         />
         <ReviewStep
-          checkout={checkout as CrOrder}
+          checkout={order as CrOrder}
           isMultiShipEnabled={isMultiShipEnabled}
           shipItems={shipItems}
           pickupItems={pickupItems}
