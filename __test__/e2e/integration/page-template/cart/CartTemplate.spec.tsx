@@ -41,14 +41,6 @@ const setup = () => {
   }
 }
 
-// beforeEach(() => {
-//   server.use(
-//     graphql.query('cart', (_req, res, ctx) => {
-//       return res(ctx.data(cartMock))
-//     })
-//   )
-// })
-
 describe('[components] CartTemplate integration', () => {
   it('should render component', async () => {
     setup()
@@ -117,80 +109,38 @@ describe('[components] CartTemplate integration', () => {
 
   it('should select ship to home item into the cart', async () => {
     const { user } = setup()
+    const item = mockCartItems[1]
     const shipRadio = screen.getAllByRole('radio', {
       name: new RegExp(`${mockFulfillmentOptions[0].shortName}`),
     })
-    server.use(
-      graphql.query('cart', (_req, res, ctx) => {
-        return res.once(
-          ctx.data({
-            currentCart: {
-              ...cartMock.currentCart,
-              items: mockCartItems?.map((each, index) => {
-                if (index === 1) {
-                  each.fulfillmentMethod = 'Ship'
-                }
-                return each
-              }),
-            },
-          })
-        )
-      })
-    )
+    item.fulfillmentMethod = 'Ship'
     await user.click(shipRadio[1])
     await waitFor(() => expect(shipRadio[1]).toBeChecked())
   })
 
-  it('should selected pickup item into the cart and show store selector dialog', async () => {
+  it('should select pickup item into the cart and show store selector dialog', async () => {
     const { user } = setup()
     const pickupRadio = screen.getAllByRole('radio', {
       name: new RegExp(`${mockFulfillmentOptions[1].shortName}`),
     })
-    server.use(
-      graphql.query('cart', (_req, res, ctx) => {
-        return res.once(
-          ctx.data({
-            currentCart: {
-              ...cartMock.currentCart,
-              items: mockCartItems?.map((each, index) => {
-                if (index === 0) {
-                  each.fulfillmentMethod = 'Pickup'
-                }
-                return each
-              }),
-            },
-          })
-        )
-      })
-    )
+
     await user.click(pickupRadio[0])
-    const selectStore = screen.queryAllByText('select-store')
-    await waitFor(() => expect(selectStore[0]).toBeInTheDocument())
+    const selectStore = screen.queryByRole('heading', { name: 'select-store', level: 3 })
+    await waitFor(() => expect(selectStore).toBeInTheDocument())
   })
 
-  it('should selected pickup item into the cart with purchase location from cookie', async () => {
+  it('should select pickup radio of item in cart if global store is selected', async () => {
     cookienext.setCookie('kibo_purchase_location', 'IlJJQ0hNT05EIg==')
-    const updatedCartMock = { ...cartMock }
-    const updatedCartItemMock = { ...cartItemMock }
-    updatedCartItemMock.fulfillmentLocationCode = 'Richmond'
-    updatedCartItemMock.fulfillmentMethod = 'Pickup'
-    updatedCartMock?.currentCart?.items?.shift()
-    updatedCartMock?.currentCart?.items?.unshift(updatedCartItemMock)
-    server.use(
-      graphql.query('cart', (_req, res, ctx) => {
-        return res(ctx.data(updatedCartMock))
-      })
-    )
-
     const { user } = setup()
-
+    const updatedCartItemsMock = [...mockCartItems]
+    updatedCartItemsMock[0].fulfillmentMethod = 'Pickup'
+    updatedCartItemsMock[0].fulfillmentLocationCode = 'Richmond'
     const pickupRadio = await screen.findAllByRole('radio', {
       name: new RegExp(`${mockFulfillmentOptions[1].shortName}`),
     })
-
     await user.click(pickupRadio[0])
     await waitFor(() => expect(pickupRadio[0]).toBeChecked())
-  }, 50000)
+  })
 
   it('should apply a coupon when click apply button', async () => {
     server.use(
