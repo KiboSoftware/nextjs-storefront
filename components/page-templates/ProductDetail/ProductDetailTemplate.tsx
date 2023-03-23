@@ -3,6 +3,7 @@ import React, { useState } from 'react'
 import FavoriteBorderRoundedIcon from '@mui/icons-material/FavoriteBorderRounded'
 import FavoriteRoundedIcon from '@mui/icons-material/FavoriteRounded'
 import StarRounded from '@mui/icons-material/StarRounded'
+import { LoadingButton } from '@mui/lab'
 import {
   Box,
   Grid,
@@ -105,7 +106,7 @@ const ProductDetailTemplate = (props: ProductDetailTemplateProps) => {
   const { addToCart } = useAddToCartMutation()
   const { data: purchaseLocation } = usePurchaseLocationQueries()
 
-  const { addOrRemoveWishlistItem, checkProductInWishlist } = useWishlist()
+  const { addOrRemoveWishlistItem, checkProductInWishlist, isWishlistLoading } = useWishlist()
 
   const {
     currentProduct,
@@ -275,7 +276,6 @@ const ProductDetailTemplate = (props: ProductDetailTemplateProps) => {
   const handleWishList = async () => {
     try {
       if (!wishlistGetters.isAvailableToAddToWishlist(currentProduct)) return
-
       await addOrRemoveWishlistItem({ product: currentProduct })
     } catch (error) {
       console.log('Error: add or remove wishlist item from PDP', error)
@@ -470,21 +470,23 @@ const ProductDetailTemplate = (props: ProductDetailTemplateProps) => {
           </MuiLink>
         </Box>
         <Box paddingY={1} display="flex" flexDirection={'column'} gap={2}>
-          <Button
+          <LoadingButton
             variant="contained"
             color="primary"
             fullWidth
             onClick={() => handleAddToCart()}
+            loading={addToCart.isLoading}
             {...(!isValidForAddToCart() && { disabled: true })}
           >
             {t('add-to-cart')}
-          </Button>
+          </LoadingButton>
           <Box display="flex" gap={3}>
-            <Button
+            <LoadingButton
               variant="contained"
               color="secondary"
               fullWidth
               onClick={handleWishList}
+              loading={isWishlistLoading}
               sx={{ padding: '0.375rem 0.5rem' }}
               {...(!wishlistGetters.isAvailableToAddToWishlist(currentProduct) && {
                 disabled: true,
@@ -496,7 +498,7 @@ const ProductDetailTemplate = (props: ProductDetailTemplateProps) => {
                 <FavoriteBorderRoundedIcon sx={{ color: 'grey.600', marginRight: '14px' }} />
               )}
               {t('add-to-wishlist')}
-            </Button>
+            </LoadingButton>
             <Button variant="contained" color="inherit" fullWidth>
               {t('one-click-checkout')}
             </Button>

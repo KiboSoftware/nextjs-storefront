@@ -7,7 +7,7 @@ import { makeGraphQLClient } from '@/lib/gql/client'
 import { updateCartItemQuantityMutation } from '@/lib/gql/mutations'
 import { cartKeys } from '@/lib/react-query/queryKeys'
 
-import type { CrCartItem } from '@/lib/gql/types'
+import type { CrCartItem, Maybe } from '@/lib/gql/types'
 
 interface UpdateCartItemQuantityParams {
   cartItemId: string
@@ -48,24 +48,33 @@ export const useUpdateCartItemQuantityMutation = () => {
   return {
     updateCartItemQuantity: useMutation(updateCartItemQuantity, {
       // When mutate is called:
-      onMutate: async (modifiedCartItem) => {
-        await queryClient.cancelQueries()
+      onMutate: async (modifiedCartItem: any) => {
+        await queryClient.cancelQueries(cartKeys.all)
 
-        const previousCart: any = queryClient.getQueryData(cartKeys.all)
-        const cart = { ...previousCart }
-        const cartItem = cart?.items?.find(
-          (item: CrCartItem) => item.id === modifiedCartItem.cartItemId
-        )
+        const previousCart = queryClient.getQueryData(cartKeys.all)
 
-        if (cartItem?.id) cartItem.quantity = modifiedCartItem.quantity
-        queryClient.setQueryData(cartKeys.all, cart)
+        // Create an optimistic update by updating the cart in the cache immediately
+        queryClient.setQueryData(cartKeys.all, (oldCart: any) => {
+          const newCart = {
+            ...oldCart,
+            items: oldCart?.items?.map((item: Maybe<CrCartItem>) => {
+              if (item?.id === modifiedCartItem?.cartItemId) {
+                return {
+                  ...item,
+                  quantity: modifiedCartItem.quantity,
+                }
+              }
+              return item
+            }),
+          }
+          return newCart
+        })
 
+        // Return a context object with the previous cart data to use in the onSettled callback
         return { previousCart }
       },
-      onError: (_err, _newCart, context: any) => {
-        queryClient.setQueryData(cartKeys.all, context?.previousCart)
-      },
-      onSettled: () => {
+      onSettled: (_data, error, _, context) => {
+        if (error) queryClient.setQueryData(cartKeys.all, context?.previousCart)
         queryClient.invalidateQueries(cartKeys.all)
       },
     }),

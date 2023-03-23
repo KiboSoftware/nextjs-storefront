@@ -1,5 +1,5 @@
 import { createTheme, responsiveFontSizes } from '@mui/material/styles'
-
+import type {} from '@mui/lab/themeAugmentation'
 declare module '@mui/material/styles/createPalette' {
   interface PaletteOptions {
     red?: PaletteColorOptions
@@ -31,6 +31,42 @@ export const red = {
   300: '#fc825e',
   100: '#fec9b9',
   50: '#fbe8e6',
+}
+
+const buttonStyleOverrides = {
+  root: {
+    textTransform: 'capitalize' as any,
+
+    '&:hover': {
+      boxShadow: 'none',
+    },
+  },
+  containedPrimary: ({ ownerState, theme }: { ownerState: any; theme: any }) => ({
+    ...(ownerState.disabled && {
+      backgroundColor: `${theme.palette.primary.light} !important`,
+      color: `${theme.palette.common.white} !important`,
+    }),
+  }),
+  containedSecondary: {
+    backgroundColor: grey[50],
+    borderColor: grey[500],
+    borderWidth: 1,
+    borderStyle: 'solid',
+    boxShadow: 'none',
+    '&:hover': {
+      backgroundColor: grey[300],
+    },
+  },
+  containedInherit: {
+    backgroundColor: '#000',
+    borderWidth: 1,
+    borderStyle: 'solid',
+    boxShadow: 'none',
+    color: '#fff',
+    '&:hover': {
+      backgroundColor: grey[900],
+    },
+  },
 }
 // Create a base theme instance and define the basic design options
 let theme = createTheme({
@@ -100,39 +136,12 @@ let theme = createTheme({
   components: {
     MuiButton: {
       styleOverrides: {
-        root: {
-          textTransform: 'capitalize',
-
-          '&:hover': {
-            boxShadow: 'none',
-          },
-        },
-        containedPrimary: ({ ownerState, theme }) => ({
-          ...(ownerState.disabled && {
-            backgroundColor: `${theme.palette.primary.light} !important`,
-            color: `${theme.palette.common.white} !important`,
-          }),
-        }),
-        containedSecondary: {
-          backgroundColor: grey[50],
-          borderColor: grey[500],
-          borderWidth: 1,
-          borderStyle: 'solid',
-          boxShadow: 'none',
-          '&:hover': {
-            backgroundColor: grey[300],
-          },
-        },
-        containedInherit: {
-          backgroundColor: '#000',
-          borderWidth: 1,
-          borderStyle: 'solid',
-          boxShadow: 'none',
-          color: '#fff',
-          '&:hover': {
-            backgroundColor: grey[900],
-          },
-        },
+        ...buttonStyleOverrides,
+      },
+    },
+    MuiLoadingButton: {
+      styleOverrides: {
+        ...buttonStyleOverrides,
       },
     },
     MuiSnackbar: {

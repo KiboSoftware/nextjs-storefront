@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
 
+import { LoadingButton } from '@mui/lab'
 import {
   Grid,
   Typography,
@@ -10,7 +11,6 @@ import {
   Divider,
   useMediaQuery,
 } from '@mui/material'
-import Link from 'next/link'
 import { useRouter } from 'next/router'
 import { useTranslation } from 'next-i18next'
 
@@ -39,23 +39,6 @@ import type { Maybe, CrCart, Location, CrCartItemInput, CrCartItem } from '@/lib
 export interface CartTemplateProps {
   isMultiShipEnabled: boolean
   cart: CrCart
-}
-
-const styles = {
-  container: {
-    paddingBlock: 2,
-  },
-  heading: {
-    pt: 1,
-    pb: 3,
-  },
-  divider: {
-    height: '1px',
-  },
-  checkoutButtonStyle: {
-    borderRadius: '0.25rem',
-    height: '42px',
-  },
 }
 
 const CartTemplate = (props: CartTemplateProps) => {
@@ -87,6 +70,7 @@ const CartTemplate = (props: CartTemplateProps) => {
   const updateCartCoupon = useUpdateCartCouponMutation()
   const deleteCartCoupon = useDeleteCartCouponMutation()
   const [promoError, setPromoError] = useState<string>('')
+  const [showLoadingButton, setShowLoadingButton] = useState<boolean>(false)
 
   const handleApplyPromoCode = async (couponCode: string) => {
     try {
@@ -172,6 +156,7 @@ const CartTemplate = (props: CartTemplateProps) => {
   }
 
   const handleGotoCheckout = async () => {
+    setShowLoadingButton(true)
     try {
       const createFromCartResponse = isMultiShipEnabled
         ? await createMultiShipCheckoutFromCart.mutateAsync(cart?.id)
@@ -180,9 +165,9 @@ const CartTemplate = (props: CartTemplateProps) => {
       if (createFromCartResponse?.id) {
         router.push(`/checkout/${createFromCartResponse.id}`)
       }
-      return false
     } catch (err) {
       console.error(err)
+      setShowLoadingButton(false)
     }
   }
 
@@ -250,16 +235,17 @@ const CartTemplate = (props: CartTemplateProps) => {
           <Grid item xs={12} md={4} sx={{ paddingRight: { xs: 0, md: 2 } }}>
             <OrderSummary {...orderSummaryArgs}>
               <Stack direction="column" gap={2}>
-                <Button
-                  disabled={!cartItemCount}
+                <LoadingButton
                   variant="contained"
+                  color="primary"
                   name="goToCart"
-                  sx={{ ...styles.checkoutButtonStyle }}
                   fullWidth
                   onClick={handleGotoCheckout}
+                  loading={showLoadingButton}
+                  disabled={!cartItemCount || showLoadingButton}
                 >
                   {t('go-to-checkout')}
-                </Button>
+                </LoadingButton>
               </Stack>
             </OrderSummary>
           </Grid>

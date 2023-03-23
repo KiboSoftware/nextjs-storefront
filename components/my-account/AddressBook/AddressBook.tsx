@@ -12,8 +12,10 @@ import {
   FormControlLabel,
   MenuItem,
   Grid,
+  Collapse,
 } from '@mui/material'
 import { useTranslation } from 'next-i18next'
+import { TransitionGroup } from 'react-transition-group'
 
 import { AddressCard, AddressForm, KiboSelect } from '@/components/common'
 import { ConfirmationDialog } from '@/components/dialogs'
@@ -212,29 +214,49 @@ const AddressBook = (props: AddressBookProps) => {
     <Box data-testid={'address-book-component'}>
       {!isAddNewAddress && !isEditAddress && (
         <Box>
-          {shippingAddresses?.map((item: CustomerContact, index: number) => (
-            <Box paddingY={1} key={`${item?.id}address`}>
-              <AccountAddress
-                customerContact={item}
-                isPrimaryAddress={index === 0}
-                addressType={AddressType.SHIPPING}
-                editAddress={handleEditAddress}
-                deleteAddress={handleConfirmDeleteAddress}
-              />
-            </Box>
-          ))}
+          <TransitionGroup>
+            {shippingAddresses?.map((item: CustomerContact, index: number) => (
+              <Collapse
+                key={`${item?.id}address`}
+                sx={{
+                  '.MuiCollapse-wrapperInner': {
+                    width: '100%',
+                  },
+                }}
+              >
+                <Box paddingY={1}>
+                  <AccountAddress
+                    customerContact={item}
+                    isPrimaryAddress={index === 0}
+                    addressType={AddressType.SHIPPING}
+                    editAddress={handleEditAddress}
+                    deleteAddress={handleConfirmDeleteAddress}
+                  />
+                </Box>
+              </Collapse>
+            ))}
 
-          {billingAddresses?.map((item: CustomerContact, index: number) => (
-            <Box paddingY={1} key={item?.id + 'address'}>
-              <AccountAddress
-                customerContact={item}
-                isPrimaryAddress={index === 0}
-                addressType={AddressType.BILLING}
-                editAddress={handleEditAddress}
-                deleteAddress={handleConfirmDeleteAddress}
-              />
-            </Box>
-          ))}
+            {billingAddresses?.map((item: CustomerContact, index: number) => (
+              <Collapse
+                key={`${item?.id}address`}
+                sx={{
+                  '.MuiCollapse-wrapperInner': {
+                    width: '100%',
+                  },
+                }}
+              >
+                <Box paddingY={1}>
+                  <AccountAddress
+                    customerContact={item}
+                    isPrimaryAddress={index === 0}
+                    addressType={AddressType.BILLING}
+                    editAddress={handleEditAddress}
+                    deleteAddress={handleConfirmDeleteAddress}
+                  />
+                </Box>
+              </Collapse>
+            ))}
+          </TransitionGroup>
         </Box>
       )}
       {!isAddNewAddress && !isEditAddress && (

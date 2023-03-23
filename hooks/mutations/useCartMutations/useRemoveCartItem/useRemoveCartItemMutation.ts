@@ -46,20 +46,21 @@ export const useRemoveCartItemMutation = () => {
   return {
     removeCartItem: useMutation(removeCartItem, {
       onMutate: async (deleteCartItem) => {
-        await queryClient.cancelQueries()
+        await queryClient.cancelQueries(cartKeys.all)
 
         const previousCart: any = queryClient.getQueryData(cartKeys.all)
-        const newCart = previousCart?.items?.filter(
-          (item: CrCartItem) => item.id !== deleteCartItem.cartItemId
-        )
+        const newCart = {
+          ...previousCart,
+          items: previousCart?.items?.filter(
+            (item: CrCartItem) => item.id !== deleteCartItem.cartItemId
+          ),
+        }
         queryClient.setQueryData(cartKeys.all, newCart)
 
         return { previousCart }
       },
-      onError: (_err, _newCart, context: any) => {
-        queryClient.setQueryData(cartKeys.all, context?.previousCart)
-      },
-      onSettled: () => {
+      onSettled: (_data, error, _, context) => {
+        if (error) queryClient.setQueryData(cartKeys.all, context?.previousCart)
         queryClient.invalidateQueries(cartKeys.all)
       },
     }),

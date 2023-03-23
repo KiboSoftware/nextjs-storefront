@@ -1,4 +1,5 @@
-import { Box } from '@mui/material'
+import { Box, Collapse } from '@mui/material'
+import { TransitionGroup } from 'react-transition-group'
 
 import { CartItem } from '@/components/cart'
 import { FullWidthDivider } from '@/components/common'
@@ -47,9 +48,16 @@ const CartItemList = (props: CartItemListProps) => {
   }
 
   return (
-    <>
-      {cartItems?.map((item: Maybe<CrCartItem>, index: number) => (
-        <Box key={`${item?.id}-${index}`}>
+    <TransitionGroup>
+      {cartItems?.map((item: Maybe<CrCartItem>) => (
+        <Collapse
+          key={`${item?.id}`}
+          sx={{
+            '.MuiCollapse-wrapperInner': {
+              width: '100%',
+            },
+          }}
+        >
           <CartItem
             cartItem={item}
             key={item?.id}
@@ -64,9 +72,9 @@ const CartItemList = (props: CartItemListProps) => {
           <Box sx={{ display: { xs: 'block', sm: 'block', md: 'none' } }}>
             <FullWidthDivider />
           </Box>
-        </Box>
+        </Collapse>
       ))}
-    </>
+    </TransitionGroup>
   )
 }
 

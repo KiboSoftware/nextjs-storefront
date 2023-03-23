@@ -238,15 +238,14 @@ const PaymentMethod = (props: PaymentMethodProps) => {
 
     if (billingFormAddress.contact.id) {
       addressData.contactId = billingFormAddress.contact.id
-    } else {
-      addressData.customerContactInput.types = [
-        {
-          name: AddressType.BILLING,
-          isPrimary: isDefaultPaymentMethod,
-        },
-      ]
-      addressData.customerContactInput.accountId = user.id
     }
+    addressData.customerContactInput.types = [
+      {
+        name: AddressType.BILLING,
+        isPrimary: isDefaultPaymentMethod,
+      },
+    ]
+    addressData.customerContactInput.accountId = user.id
 
     return { ...addressData }
   }
