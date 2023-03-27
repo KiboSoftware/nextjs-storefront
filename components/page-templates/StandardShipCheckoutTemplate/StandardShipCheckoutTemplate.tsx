@@ -41,8 +41,8 @@ const StandardShipCheckoutTemplate = (props: StandardShipCheckoutProps) => {
 
   const { isAuthenticated, user } = useAuthContext()
   const { data: savedUserAddressData } = useGetCustomerAddresses(user?.id as number)
-  const updateOrderCoupon = useUpdateOrderCoupon()
-  const deleteOrderCoupon = useDeleteOrderCoupon()
+  const {updateOrderCoupon} = useUpdateOrderCoupon()
+  const {deleteOrderCoupon} = useDeleteOrderCoupon()
 
   const handleApplyCouponCode = async (couponCode: string) => {
     try {
@@ -69,7 +69,7 @@ const StandardShipCheckoutTemplate = (props: StandardShipCheckoutProps) => {
     }
   }
 
-  const updateStandardCheckoutPersonalInfo = useUpdateOrderPersonalInfo()
+  const {updateOrderPersonalInfo} = useUpdateOrderPersonalInfo()
 
   const updateCheckoutPersonalInfo = async (formData: PersonalDetails) => {
     const { email } = formData
@@ -78,14 +78,14 @@ const StandardShipCheckoutTemplate = (props: StandardShipCheckoutProps) => {
       checkout: order as CrOrderInput,
       email: email as string,
     }
-    await updateStandardCheckoutPersonalInfo.mutateAsync(personalInfo)
+    await updateOrderPersonalInfo.mutateAsync(personalInfo)
   }
 
   // Payment Step
 
-  const voidOrderPayment = useVoidOrderPayment()
-  const addOrderPayment = useAddOrderPaymentInfo()
-  const updateOrderBillingInfo = useUpdateOrderBillingInfo()
+  const {voidOrderPayment} = useVoidOrderPayment()
+  const {addOrderPayment} = useAddOrderPaymentInfo()
+  const {updateOrderBillingInfo} = useUpdateOrderBillingInfo()
 
   const handleVoidPayment = async (
     id: string,
@@ -108,7 +108,7 @@ const StandardShipCheckoutTemplate = (props: StandardShipCheckoutProps) => {
   }
 
   //Review Step
-  const createOrder = useCreateOrder()
+  const {createOrder} = useCreateOrder()
 
   const orderDetails = orderGetters.getCheckoutDetails(order as CrOrder)
 

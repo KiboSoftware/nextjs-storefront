@@ -116,9 +116,9 @@ const ViewOrderDetails = (props: ViewOrderDetailsProps) => {
             <ProductOption
               option={{
                 name: t('order-total'),
-                value: `${t('currency', { val: orderTotal })} ${t('item-quantity', {
+                value: `${t('currency', { val: orderTotal })} (${t('item-quantity', {
                   count: order.items?.length,
-                })}`,
+                })})`,
               }}
               variant="body1"
             />

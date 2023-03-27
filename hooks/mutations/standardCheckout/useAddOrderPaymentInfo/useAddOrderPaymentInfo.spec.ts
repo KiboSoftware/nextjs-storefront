@@ -7,7 +7,7 @@ import { createQueryClientWrapper } from '@/__test__/utils/renderWithQueryClient
 
 describe('[hooks] useAddOrderPaymentInfo', () => {
   it('should use useAddOrderPaymentInfo', async () => {
-    const createCheckoutPaymentMethodParams = {
+    const createOrderPaymentActionParams = {
       orderId: '13eaad5a5526f20001d2fab9000074e7',
       paymentAction: {
         currencyCode: 'US',
@@ -21,9 +21,9 @@ describe('[hooks] useAddOrderPaymentInfo', () => {
 
     renderHook(
       async () => {
-        const createCheckoutPaymentMethod = useAddOrderPaymentInfo()
-        const response = await createCheckoutPaymentMethod.mutateAsync(
-          createCheckoutPaymentMethodParams
+        const {addOrderPayment} = useAddOrderPaymentInfo()
+        const response = await addOrderPayment.mutateAsync(
+          createOrderPaymentActionParams
         )
 
         expect(response).toStrictEqual(createOrderPaymentActionMock.createOrderPaymentAction)

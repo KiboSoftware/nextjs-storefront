@@ -51,9 +51,11 @@ const updateShippingInfo = async (params: CheckoutShippingParams) => {
 export const useUpdateOrderShippingInfo = () => {
   const queryClient = useQueryClient()
 
-  return useMutation(updateShippingInfo, {
-    onSuccess: () => {
-      queryClient.invalidateQueries(checkoutKeys.all)
-    },
-  })
+  return {
+    updateOrderShippingInfo: useMutation(updateShippingInfo, {
+      onSuccess: () => {
+        queryClient.invalidateQueries(checkoutKeys.all)
+      },
+    })
+  }
 }

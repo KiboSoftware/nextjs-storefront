@@ -46,9 +46,11 @@ const setCheckoutShippingMethod = async (
 export const useCreateCheckoutShippingMethod = () => {
   const queryClient = useQueryClient()
 
-  return useMutation(setCheckoutShippingMethod, {
-    onSuccess: () => {
-      queryClient.invalidateQueries(checkoutKeys.all)
-    },
-  })
+  return {
+    createCheckoutShippingMethod: useMutation(setCheckoutShippingMethod, {
+      onSuccess: () => {
+        queryClient.invalidateQueries(checkoutKeys.all)
+      },
+    })
+  }
 }

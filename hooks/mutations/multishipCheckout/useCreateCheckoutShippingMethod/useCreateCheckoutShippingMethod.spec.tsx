@@ -8,8 +8,8 @@ describe('[hooks] useCreateCheckoutShippingMethod', () => {
   it('should create checkout shipping method', async () => {
     renderHook(
       async () => {
-        const createCheckoutPayment = useCreateCheckoutShippingMethod()
-        const response = await createCheckoutPayment.mutateAsync({
+        const {createCheckoutShippingMethod} = useCreateCheckoutShippingMethod()
+        const response = await createCheckoutShippingMethod.mutateAsync({
           checkoutId: '137a94b6402be000013718d80000678b',
           checkoutGroupShippingMethodInput: [
             {

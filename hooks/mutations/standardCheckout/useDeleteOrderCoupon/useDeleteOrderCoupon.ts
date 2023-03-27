@@ -43,9 +43,11 @@ const deleteOrderCoupon = async (params: DeleteCartCouponParams) => {
  */
 export const useDeleteOrderCoupon = () => {
   const queryClient = useQueryClient()
-  return useMutation(deleteOrderCoupon, {
-    onSuccess: () => {
-      queryClient.invalidateQueries(checkoutKeys.all)
-    },
-  })
+  return {
+    deleteOrderCoupon: useMutation(deleteOrderCoupon, {
+      onSuccess: () => {
+        queryClient.invalidateQueries(checkoutKeys.all)
+      },
+    })
+  }
 }

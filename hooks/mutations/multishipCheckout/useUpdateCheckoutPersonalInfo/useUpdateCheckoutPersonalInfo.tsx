@@ -53,9 +53,11 @@ const updatePersonalInfo = async ({ checkout, email }: MultiShipPersonalInfo) =>
 export const useUpdateCheckoutPersonalInfo = () => {
   const queryClient = useQueryClient()
 
-  return useMutation(updatePersonalInfo, {
-    onSuccess: () => {
-      queryClient.invalidateQueries(checkoutKeys.all)
-    },
-  })
+  return {
+    updateMultiShipCheckoutPersonalInfo: useMutation(updatePersonalInfo, {
+      onSuccess: () => {
+        queryClient.invalidateQueries(checkoutKeys.all)
+      },
+    })
+  }
 }

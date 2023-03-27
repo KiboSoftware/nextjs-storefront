@@ -45,9 +45,11 @@ const updateBillingInfo = async (params: UpdateBillingInfoInput) => {
 export const useUpdateOrderBillingInfo = () => {
   const queryClient = useQueryClient()
 
-  return useMutation(updateBillingInfo, {
-    onSuccess: () => {
-      queryClient.invalidateQueries(checkoutKeys.all)
-    },
-  })
+  return {
+    updateOrderBillingInfo: useMutation(updateBillingInfo, {
+      onSuccess: () => {
+        queryClient.invalidateQueries(checkoutKeys.all)
+      },
+    })
+  }
 }

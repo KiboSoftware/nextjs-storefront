@@ -39,9 +39,11 @@ const updateCheckoutCoupon = async (params: UpdateCheckoutCouponParams) => {
  */
 export const useUpdateCheckoutCoupon = () => {
   const queryClient = useQueryClient()
-  return useMutation(updateCheckoutCoupon, {
-    onSuccess: () => {
-      queryClient.invalidateQueries(checkoutKeys.all)
-    },
-  })
+  return {
+    updateCheckoutCoupon: useMutation(updateCheckoutCoupon, {
+      onSuccess: () => {
+        queryClient.invalidateQueries(checkoutKeys.all)
+      },
+    })
+  }
 }

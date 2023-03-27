@@ -44,9 +44,11 @@ const updateCheckoutPayment = async (props: UpdateCheckoutPaymentActionInput) =>
 export const useVoidCheckoutPayment = () => {
   const queryClient = useQueryClient()
 
-  return useMutation(updateCheckoutPayment, {
-    onSuccess: () => {
-      queryClient.invalidateQueries(checkoutKeys.all)
-    },
-  })
+  return {
+    voidCheckoutPayment: useMutation(updateCheckoutPayment, {
+      onSuccess: () => {
+        queryClient.invalidateQueries(checkoutKeys.all)
+      },
+    })
+  }
 }

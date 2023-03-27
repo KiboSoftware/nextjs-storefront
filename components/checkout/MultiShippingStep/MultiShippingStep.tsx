@@ -92,8 +92,8 @@ const MultiShippingStep = (props: MultiShippingStepProps) => {
   const shipItems = checkoutGetters.getShipItems(checkout)
   const pickupItems = checkoutGetters.getPickupItems(checkout)
 
-  const updateCheckoutItemDestination = useUpdateItemDestination()
-  const updateCheckoutDestination = useUpdateDestination()
+  const {updateCheckoutItemDestination} = useUpdateItemDestination()
+  const {updateCheckoutDestination} = useUpdateDestination()
 
   const initialShippingOption = checkoutGetters?.getInitialShippingOption(checkout, shipOptions)
   const isSingleShippingItem = checkoutGetters.isSingleShippingItem(checkout)

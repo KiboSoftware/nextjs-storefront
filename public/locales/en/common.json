@@ -165,10 +165,8 @@
   "shopping-cart": "Shopping Cart",
   "save-for-later": "Save for Later",
   "add-to-favorites": "Add to Favorites",
-  "cart-item-count": "{{count}} items",
   "empty-cart-message": "You haven’t added any items to your shopping cart yet. Shop now to add your favorite items to your cart.",
 
-  "checkout": "Checkout ({{numberOfItems}} items)",
   "payment": "Payment",
   "review": "Review",
   "password-requirements": "Password Requirements",
@@ -323,5 +321,6 @@
   "subscription-frequency": "Subscription frequency",
   "fulfillment-options": "Fulfillment Options:",
   "subscription-cancelled-successfully": "Your subscription item has been cancelled.",
-  "card-ending-in": "Card "
+  "card-ending-in": "Card ",
+  "customer-name": "Customer Name"
 }

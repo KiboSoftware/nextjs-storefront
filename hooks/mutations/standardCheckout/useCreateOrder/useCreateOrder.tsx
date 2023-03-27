@@ -47,9 +47,11 @@ const createOrder = async (checkout: CrOrder) => {
 export const useCreateOrder = () => {
   const queryClient = useQueryClient()
 
-  return useMutation(createOrder, {
-    onSuccess: () => {
-      queryClient.removeQueries([checkoutKeys.all])
-    },
-  })
+  return {
+    createOrder: useMutation(createOrder, {
+      onSuccess: () => {
+        queryClient.removeQueries([checkoutKeys.all])
+      },
+    })
+  }
 }

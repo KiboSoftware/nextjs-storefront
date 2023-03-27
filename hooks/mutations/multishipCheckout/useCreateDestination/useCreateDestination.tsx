@@ -44,10 +44,12 @@ const addCheckoutDestination = async (params: AddCheckoutDestinationParams) => {
 export const useCreateDestination = () => {
   const queryClient = useQueryClient()
 
-  return useMutation(addCheckoutDestination, {
-    onSuccess: () => {
-      queryClient.invalidateQueries(checkoutDestinationKeys.all)
-      queryClient.invalidateQueries(checkoutKeys.all)
-    },
-  })
+  return {
+    createCheckoutDestination: useMutation(addCheckoutDestination, {
+      onSuccess: () => {
+        queryClient.invalidateQueries(checkoutDestinationKeys.all)
+        queryClient.invalidateQueries(checkoutKeys.all)
+      },
+    })
+  }
 }

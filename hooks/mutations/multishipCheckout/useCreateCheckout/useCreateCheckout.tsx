@@ -48,9 +48,11 @@ const createCheckout = async (checkout: Checkout) => {
 export const useCreateCheckout = () => {
   const queryClient = useQueryClient()
 
-  return useMutation(createCheckout, {
-    onSuccess: () => {
-      queryClient.removeQueries([checkoutKeys.all])
-    },
-  })
+  return {
+    createCheckout: useMutation(createCheckout, {
+      onSuccess: () => {
+        queryClient.removeQueries([checkoutKeys.all])
+      },
+    })
+  }
 }

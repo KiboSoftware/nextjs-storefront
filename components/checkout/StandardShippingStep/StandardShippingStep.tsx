@@ -78,7 +78,7 @@ const StandardShippingStep = (props: ShippingProps) => {
     setStepStatusComplete,
     setStepStatusIncomplete,
   } = useCheckoutStepContext()
-  const updateOrderShippingInfo = useUpdateOrderShippingInfo()
+  const {updateOrderShippingInfo} = useUpdateOrderShippingInfo()
   const { data: shippingMethods } = useGetShippingMethods(
     checkoutId,
     isNewAddressAdded,

@@ -13,8 +13,8 @@ describe('[hooks] useUpdateOrderPersonalInfo', () => {
 
     renderHook(
       async () => {
-        const updatePersonalInfoMutation = useUpdateOrderPersonalInfo()
-        const response = await updatePersonalInfoMutation.mutateAsync(checkoutDetails)
+        const {updateOrderPersonalInfo} = useUpdateOrderPersonalInfo()
+        const response = await updateOrderPersonalInfo.mutateAsync(checkoutDetails)
 
         expect(response).toStrictEqual(orderMock.checkout)
       },

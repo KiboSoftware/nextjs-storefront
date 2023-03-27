@@ -10,7 +10,7 @@ describe('[hooks] useUpdateDestination', () => {
 
     renderHook(
       async () => {
-        const updateCheckoutDestination = useUpdateDestination()
+        const {updateCheckoutDestination} = useUpdateDestination()
         const response = await updateCheckoutDestination.mutateAsync({
           checkoutId: '',
           destinationId: '',

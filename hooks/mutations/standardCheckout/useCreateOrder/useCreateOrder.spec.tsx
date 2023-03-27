@@ -10,7 +10,7 @@ describe('[hooks] useCreateOrder', () => {
 
     renderHook(
       async () => {
-        const createOrder = useCreateOrder()
+        const {createOrder} = useCreateOrder()
         const response = await createOrder.mutateAsync(expectedOrder)
 
         expect(response).toEqual(expectedOrder)

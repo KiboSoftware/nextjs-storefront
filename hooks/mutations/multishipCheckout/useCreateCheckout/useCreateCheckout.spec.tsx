@@ -8,8 +8,8 @@ describe('[hooks] useCreateCheckout', () => {
   it('should use useCreateCheckout', async () => {
     renderHook(
       async () => {
-        const createMultiShipCheckout = useCreateCheckout()
-        const response = await createMultiShipCheckout.mutateAsync(checkoutMock?.checkout)
+        const { createCheckout } = useCreateCheckout()
+        const response = await createCheckout.mutateAsync(checkoutMock?.checkout)
 
         expect(response).toEqual(checkoutMock)
       },

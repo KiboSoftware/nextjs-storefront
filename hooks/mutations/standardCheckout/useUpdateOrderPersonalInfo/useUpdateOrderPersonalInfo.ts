@@ -54,9 +54,11 @@ const updatePersonalInfo = async ({ checkout, email }: PersonalInfo) => {
 export const useUpdateOrderPersonalInfo = () => {
   const queryClient = useQueryClient()
 
-  return useMutation(updatePersonalInfo, {
-    onSuccess: () => {
-      queryClient.removeQueries([checkoutKeys.all])
-    },
-  })
+  return {
+    updateOrderPersonalInfo: useMutation(updatePersonalInfo, {
+      onSuccess: () => {
+        queryClient.removeQueries([checkoutKeys.all])
+      },
+    })
+  }
 }

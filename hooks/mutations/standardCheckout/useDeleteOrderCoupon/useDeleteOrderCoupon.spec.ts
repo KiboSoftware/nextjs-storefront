@@ -7,7 +7,7 @@ describe('[hooks] useDeleteOrderCoupon', () => {
   it('should remove deleted coupon', async () => {
     renderHook(
       async () => {
-        const deleteOrderCoupon = useDeleteOrderCoupon()
+        const {deleteOrderCoupon} = useDeleteOrderCoupon()
         const variables = { checkoutId: '43245kjg5j43543hj', couponCode: 'OFF10' }
         const response = await deleteOrderCoupon.mutateAsync(variables)
         expect(response).toStrictEqual('1234')

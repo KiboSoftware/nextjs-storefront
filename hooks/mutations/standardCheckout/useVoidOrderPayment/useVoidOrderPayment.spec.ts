@@ -7,7 +7,7 @@ import { createQueryClientWrapper } from '@/__test__/utils/renderWithQueryClient
 
 describe('[hooks] useVoidOrderPayment', () => {
   it('should use useVoidOrderPayment', async () => {
-    const updateOrderPaymentActionMutationParams = {
+    const updateOrderPaymentActionParams = {
       orderId: '13eaad5a5526f20001d2fab9000074e7',
       paymentId: '13eaad5a56753dfg0001d2fab9000074e7',
       paymentAction: {
@@ -22,9 +22,9 @@ describe('[hooks] useVoidOrderPayment', () => {
 
     renderHook(
       async () => {
-        const createCheckoutPaymentMethod = useVoidOrderPayment()
-        const response = await createCheckoutPaymentMethod.mutateAsync(
-          updateOrderPaymentActionMutationParams
+        const {voidOrderPayment} = useVoidOrderPayment()
+        const response = await voidOrderPayment.mutateAsync(
+          updateOrderPaymentActionParams
         )
 
         expect(response).toStrictEqual(createOrderPaymentActionMock.createOrderPaymentAction)

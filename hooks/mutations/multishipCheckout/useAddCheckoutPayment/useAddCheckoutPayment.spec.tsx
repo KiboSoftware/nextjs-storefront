@@ -8,8 +8,8 @@ describe('[hooks] useAddCheckoutPayment', () => {
   it('should use useAddCheckoutPayment', async () => {
     renderHook(
       async () => {
-        const createCheckoutPayment = useAddCheckoutPayment()
-        const response = await createCheckoutPayment.mutateAsync({
+        const { addCheckoutPayment } = useAddCheckoutPayment()
+        const response = await addCheckoutPayment.mutateAsync({
           checkoutId: '137a94b6402be000013718d80000678b',
           paymentAction: {},
         })

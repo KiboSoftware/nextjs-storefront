@@ -43,9 +43,11 @@ const setCheckoutItemDestination = async (params: UseCheckoutItemDestination) =>
 export const useUpdateItemDestination = () => {
   const queryClient = useQueryClient()
 
-  return useMutation(setCheckoutItemDestination, {
-    onSuccess: () => {
-      queryClient.invalidateQueries(checkoutKeys.all)
-    },
-  })
+  return {
+    updateCheckoutItemDestination:  useMutation(setCheckoutItemDestination, {
+      onSuccess: () => {
+        queryClient.invalidateQueries(checkoutKeys.all)
+      },
+    })
+  }
 }

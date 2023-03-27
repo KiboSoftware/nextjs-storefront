@@ -67,8 +67,8 @@ const CartTemplate = (props: CartTemplateProps) => {
 
   const { data: locations } = useGetStoreLocations({ filter: locationCodes })
   const { data: purchaseLocation } = useGetPurchaseLocation()
-  const updateCartCoupon = useUpdateCartCoupon()
-  const deleteCartCoupon = useDeleteCartCoupon()
+  const {updateCartCoupon} = useUpdateCartCoupon()
+  const {deleteCartCoupon} = useDeleteCartCoupon()
   const [promoError, setPromoError] = useState<string>('')
   const [showLoadingButton, setShowLoadingButton] = useState<boolean>(false)
 
@@ -205,7 +205,7 @@ const CartTemplate = (props: CartTemplateProps) => {
             {t('shopping-cart')}
           </Typography>
           <Typography variant="h1" fontWeight={'normal'}>
-            ({t('cart-item-count', { count: cartItemCount })})
+            ({t('item-quantity', {count: cartItemCount})})
           </Typography>
         </Box>
       </Grid>

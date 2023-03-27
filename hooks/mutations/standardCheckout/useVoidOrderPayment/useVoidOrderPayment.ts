@@ -46,9 +46,11 @@ const updateOrderPaymentActionMutation = async (params: UpdateOrderPaymentAction
 export const useVoidOrderPayment = () => {
   const queryClient = useQueryClient()
 
-  return useMutation(updateOrderPaymentActionMutation, {
-    onSuccess: () => {
-      queryClient.removeQueries([checkoutKeys.all])
-    },
-  })
+  return {
+    voidOrderPayment: useMutation(updateOrderPaymentActionMutation, {
+      onSuccess: () => {
+        queryClient.removeQueries([checkoutKeys.all])
+      },
+    })
+  }
 }

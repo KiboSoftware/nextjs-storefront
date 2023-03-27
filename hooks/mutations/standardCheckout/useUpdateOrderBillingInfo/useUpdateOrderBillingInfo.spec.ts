@@ -7,7 +7,7 @@ import { createQueryClientWrapper } from '@/__test__/utils/renderWithQueryClient
 
 describe('[hooks] useUpdateOrderBillingInfo', () => {
   it('should use useUpdateOrderBillingInfo', async () => {
-    const updateBillingInfoMutationParams = {
+    const updateBillingInfoParams = {
       orderId: '13eaad5a5526f20001d2fab9000074e7',
       billingInfoInput: {
         ...billingInfoInputMock,
@@ -16,9 +16,9 @@ describe('[hooks] useUpdateOrderBillingInfo', () => {
 
     renderHook(
       async () => {
-        const updateBillingInfoMutation = useUpdateOrderBillingInfo()
-        const response = await updateBillingInfoMutation.mutateAsync(
-          updateBillingInfoMutationParams
+        const {updateOrderBillingInfo} = useUpdateOrderBillingInfo()
+        const response = await updateOrderBillingInfo.mutateAsync(
+          updateBillingInfoParams
         )
 
         expect(response).toStrictEqual(updateOrderBillingInfoMock.updateOrderBillingInfo)

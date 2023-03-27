@@ -43,9 +43,11 @@ const updateCartCoupon = async (params: UpdateCartCouponParams) => {
  */
 export const useUpdateCartCoupon = () => {
   const queryClient = useQueryClient()
-  return useMutation(updateCartCoupon, {
-    onSuccess: () => {
-      queryClient.invalidateQueries(cartKeys.all)
-    },
-  })
+  return {
+    updateCartCoupon: useMutation(updateCartCoupon, {
+      onSuccess: () => {
+        queryClient.invalidateQueries(cartKeys.all)
+      },
+    })
+  }
 }

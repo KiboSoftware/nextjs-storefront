@@ -45,9 +45,11 @@ const updatePaymentMethod = async (params: PaymentMethodInput) => {
 export const useAddOrderPaymentInfo = () => {
   const queryClient = useQueryClient()
 
-  return useMutation(updatePaymentMethod, {
-    onSuccess: () => {
-      queryClient.invalidateQueries(checkoutKeys.all)
-    },
-  })
+  return {
+    addOrderPayment: useMutation(updatePaymentMethod, {
+      onSuccess: () => {
+        queryClient.invalidateQueries(checkoutKeys.all)
+      },
+    })
+  }
 }
