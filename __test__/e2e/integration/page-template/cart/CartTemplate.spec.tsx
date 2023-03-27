@@ -45,7 +45,7 @@ describe('[components] CartTemplate integration', () => {
     setup()
     const items = Common.args?.cart?.items || []
     const cartTitle = screen.getByText(/shopping-cart/i)
-    const cartItemCount = screen.getByText(/item-quantity/i)
+    const cartItemCount = screen.getAllByText(/item-quantity/i)
     const orderSummaryHeading = screen.getByText('order-summary')
 
     const gotToCheckout = screen.getByRole('button', {
@@ -57,7 +57,7 @@ describe('[components] CartTemplate integration', () => {
       expect(screen.getAllByText(details as string)[index]).toBeVisible()
     })
     expect(cartTitle).toBeVisible()
-    expect(cartItemCount).toBeVisible()
+    expect(cartItemCount[0]).toBeVisible()
     expect(orderSummaryHeading).toBeVisible()
 
     expect(gotToCheckout).toBeVisible()

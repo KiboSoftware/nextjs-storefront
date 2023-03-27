@@ -8,7 +8,7 @@ describe('[hooks] useUpdateOrderCoupon', () => {
   it('should use useUpdateOrderCoupon ', async () => {
     renderHook(
       async () => {
-        const updateOrderCoupon = useUpdateOrderCoupon()
+        const { updateOrderCoupon } = useUpdateOrderCoupon()
         const response = await updateOrderCoupon.mutateAsync({
           checkoutId: 'fskd657657',
           couponCode: '10OFF',
