@@ -1,5 +1,5 @@
-import { format } from 'date-fns'
-import lodash from 'lodash'
+import format from 'date-fns/format'
+import isEqual from 'lodash/isEqual'
 
 import { FulfillmentOptions, DateFormat } from '../constants'
 
@@ -53,7 +53,7 @@ const getMultiShipAddresses = ({
       const matchedShippingAddress = (checkout?.destinations || []).find(
         (destination) =>
           destination?.destinationContact?.firstName === shippingAddress?.firstName &&
-          lodash.isEqual(destination?.destinationContact?.address, shippingAddress?.address)
+          isEqual(destination?.destinationContact?.address, shippingAddress?.address)
       )
       return !matchedShippingAddress
     })

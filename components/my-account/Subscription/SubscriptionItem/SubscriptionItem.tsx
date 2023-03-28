@@ -11,7 +11,7 @@ import {
   useMediaQuery,
 } from '@mui/material'
 import Popover from '@mui/material/Popover'
-import lodash from 'lodash'
+import uniqBy from 'lodash/uniqBy'
 import { useTranslation } from 'next-i18next'
 
 import { ProductItem, KiboSelect } from '@/components/common'
@@ -236,7 +236,7 @@ const SubscriptionItem = (props: SubscriptionItemProps) => {
 
   // Get unique cards
   const duplicateCards = [...formattedSavedCards, formatedSubscriptionCard]
-  const uniqueCards = lodash.uniqBy(duplicateCards, 'formattedAddress')
+  const uniqueCards = uniqBy(duplicateCards, 'formattedAddress')
 
   const handleBillingPopupOpen = async (event: React.MouseEvent<HTMLButtonElement>) => {
     setBillingAnchorEl(event.currentTarget)
