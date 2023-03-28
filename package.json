@@ -18,7 +18,8 @@
     "test-watch": "jest --watch",
     "prettier:format": "prettier --write .",
     "prepare": "husky install",
-    "generate-docs:hooks": "npx typedoc --entryPointStrategy expand hooks/ --out docs/hooks --readme none --exclude \"**/*+(.spec)+(.ts|.tsx)\" --exclude \"**/index.ts\" "
+    "generate-docs:hooks": "npx typedoc --entryPointStrategy expand hooks/ --out docs/hooks --readme none --exclude \"**/*+(.spec)+(.ts|.tsx)\" --exclude \"**/index.ts\" ",
+    "analyze": "cross-env ANALYZE=true next build"
   },
   "dependencies": {
     "@emotion/cache": "latest",
@@ -59,6 +60,7 @@
     "@emotion/eslint-plugin": "^11.7.0",
     "@graphql-codegen/typescript": "^2.4.1",
     "@graphql-codegen/typescript-operations": "^2.2.1",
+    "@next/bundle-analyzer": "^13.2.4",
     "@storybook/addon-a11y": "^6.4.20",
     "@storybook/addon-actions": "^6.4.17",
     "@storybook/addon-essentials": "^6.4.17",
@@ -80,6 +82,8 @@
     "@typescript-eslint/eslint-plugin": "^5.5.0",
     "@typescript-eslint/parser": "^5.5.0",
     "@vercel/fetch": "^6.1.1",
+    "babel-plugin-direct-import": "^1.0.0",
+    "cross-env": "^7.0.3",
     "eslint": "^8.7.0",
     "eslint-config-next": "13.0.5",
     "eslint-config-prettier": "^8.3.0",
