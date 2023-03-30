@@ -14,8 +14,6 @@ const userContextValues = {
   isAuthenticated: false,
   login: jest.fn(),
   createAccount: jest.fn(),
-  setAuthError: jest.fn(),
-  authError: '',
   logout: jest.fn(),
 }
 

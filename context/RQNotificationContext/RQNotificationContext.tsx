@@ -2,6 +2,9 @@ import { createContext, ReactNode, useContext, useState, forwardRef } from 'reac
 
 import MuiAlert, { AlertColor, AlertProps } from '@mui/material/Alert'
 import Snackbar from '@mui/material/Snackbar'
+import { QueryClientProvider } from 'react-query'
+
+import { generateQueryClient } from '@/lib/react-query/queryClient'
 
 interface SnackbarContextType {
   snackbarInfo: SnackbarStateType
@@ -15,11 +18,11 @@ interface SnackbarStateType {
   type: AlertColor
 }
 
-interface SnackbarContextProviderProps {
+interface RQNotificationContextProviderProps {
   children: ReactNode
 }
 
-const SnackbarContext = createContext({
+export const SnackbarContext = createContext({
   snackbarInfo: {
     visible: false,
     message: '',
@@ -29,12 +32,13 @@ const SnackbarContext = createContext({
   hideSnackbar: () => null,
 } as SnackbarContextType)
 
-export const SnackbarContextProvider = ({ children }: SnackbarContextProviderProps) => {
+export const RQNotificationContextProvider = ({ children }: RQNotificationContextProviderProps) => {
   const [snackbarInfo, setSnackbarInfo] = useState<SnackbarStateType>({
     visible: false,
     message: '',
     type: 'info',
   })
+  const [queryClient] = useState(() => generateQueryClient)
 
   const showSnackbar = (message: string, type: AlertColor) => {
     setSnackbarInfo({
@@ -62,7 +66,11 @@ export const SnackbarContextProvider = ({ children }: SnackbarContextProviderPro
     showSnackbar,
     hideSnackbar,
   }
-  return <SnackbarContext.Provider value={values}>{children}</SnackbarContext.Provider>
+  return (
+    <SnackbarContext.Provider value={values}>
+      <QueryClientProvider client={queryClient(showSnackbar)}>{children}</QueryClientProvider>
+    </SnackbarContext.Provider>
+  )
 }
 
 export const useSnackbarContext = () => {

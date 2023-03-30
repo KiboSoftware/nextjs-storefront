@@ -8,6 +8,7 @@ import { AuthContextProvider, useAuthContext } from './AuthContext'
 import { server } from '@/__mocks__/msw/server'
 import { renderWithQueryClient } from '@/__test__/utils/renderWithQueryClient'
 import * as cookieHelper from '@/lib/helpers/cookieHelper'
+import { generateQueryClient } from '@/lib/react-query/queryClient'
 
 const mockOnSuccessCallBack = jest.fn()
 const loginInputs = {
@@ -30,15 +31,35 @@ jest.mock('@/lib/helpers/cookieHelper', () => ({
 }))
 
 describe('[context] - AuthContext', () => {
+  beforeEach(() => {
+    jest.clearAllMocks()
+  })
+  afterEach(() => {
+    jest.clearAllMocks()
+  })
+
+  const showSnackbarMock = jest.fn()
+
+  const generateTestQueryClient = () => {
+    const client = generateQueryClient(showSnackbarMock)
+    const options = client.getDefaultOptions()
+    options.queries = { ...options.queries, retry: false }
+
+    return client
+  }
+
   const setup = (ui: any) => {
     const user = userEvent.setup()
-    renderWithQueryClient(<AuthContextProvider>{ui}</AuthContextProvider>)
+    renderWithQueryClient(
+      <AuthContextProvider>{ui}</AuthContextProvider>,
+      generateTestQueryClient()
+    )
     return {
       user,
     }
   }
   const TestComponent = () => {
-    const { isAuthenticated, authError, user, login, createAccount, logout } = useAuthContext()
+    const { isAuthenticated, user, login, createAccount, logout } = useAuthContext()
     const loginUser = () => {
       login(loginInputs, mockOnSuccessCallBack)
     }
@@ -49,7 +70,6 @@ describe('[context] - AuthContext', () => {
     return (
       <div>
         <div data-testid="is-logged-in">{isAuthenticated.toString()}</div>
-        <div data-testid="auth-error">{authError}</div>
         <div data-testid="user-first-name">{user?.firstName}</div>
         <button name="login-button" onClick={loginUser}>
           Log in
@@ -68,11 +88,9 @@ describe('[context] - AuthContext', () => {
     setup(<TestComponent />)
     const isLoggedIn = screen.getByTestId('is-logged-in')
     const userFirstName = screen.getByTestId('user-first-name')
-    const authError = screen.getByTestId('auth-error')
 
     expect(isLoggedIn).toHaveTextContent('false')
     expect(userFirstName).toHaveTextContent('')
-    expect(authError).toHaveTextContent('')
   })
 
   describe('when using useAuthContext hook', () => {
@@ -84,10 +102,8 @@ describe('[context] - AuthContext', () => {
       const userFirstName = screen.getByTestId('user-first-name')
 
       await user.click(loginButton)
-      const authError = await screen.findByTestId('auth-error')
       await waitFor(() => expect(isLoggedIn).toHaveTextContent('true'))
       await waitFor(() => expect(userFirstName).toHaveTextContent('Suman'))
-      await waitFor(() => expect(authError).toHaveTextContent(''))
       await waitFor(() => expect(storeClientCookieFn).toHaveBeenCalled())
       await waitFor(() => expect(mockOnSuccessCallBack).toHaveBeenCalled())
     })
@@ -99,10 +115,8 @@ describe('[context] - AuthContext', () => {
       const userFirstName = screen.getByTestId('user-first-name')
 
       await user.click(registerButton)
-      const authError = await screen.findByTestId('auth-error')
       await waitFor(() => expect(isLoggedIn).toHaveTextContent('true'))
       await waitFor(() => expect(userFirstName).toHaveTextContent('Sunil'))
-      await waitFor(() => expect(authError).toHaveTextContent(''))
       await waitFor(() => expect(storeClientCookieSpy).toHaveBeenCalled())
       await waitFor(() => expect(mockOnSuccessCallBack).toHaveBeenCalled())
     })
@@ -122,11 +136,10 @@ describe('[context] - AuthContext', () => {
 
       await user.click(loginButton)
       const isLoggedIn = await screen.findByTestId('is-logged-in')
-      const authError = await screen.findByTestId('auth-error')
       expect(isLoggedIn).toHaveTextContent('false')
       expect(userFirstName).toHaveTextContent('')
-      expect(authError).toHaveTextContent('Something Wrong !')
       expect(mockOnSuccessCallBack).not.toBeCalled()
+      expect(showSnackbarMock).toHaveBeenCalled()
     })
 
     it('should show error when create account fails', async () => {
@@ -143,11 +156,10 @@ describe('[context] - AuthContext', () => {
       const userFirstName = screen.getByTestId('user-first-name')
       await user.click(registerButton)
       const isLoggedIn = await screen.findByTestId('is-logged-in')
-      const authError = await screen.findByTestId('auth-error')
       expect(isLoggedIn).toHaveTextContent('false')
       expect(userFirstName).toHaveTextContent('')
-      expect(authError).toHaveTextContent('Something Wrong !')
       expect(mockOnSuccessCallBack).not.toBeCalled()
+      expect(showSnackbarMock).toHaveBeenCalled()
     })
 
     it('should logout when click logout', async () => {

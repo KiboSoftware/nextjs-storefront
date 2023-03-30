@@ -41,7 +41,7 @@ const RegisterAccountDialog = () => {
   const { t } = useTranslation('common')
   const theme = useTheme()
   const mdScreen = useMediaQuery(theme.breakpoints.up('md'))
-  const { createAccount, authError } = useAuthContext()
+  const { createAccount } = useAuthContext()
   const { showModal, closeModal } = useModalContext()
 
   const handleUserRegistration = (params: RegisterAccountInputData) => {
@@ -75,13 +75,7 @@ const RegisterAccountDialog = () => {
   return (
     <KiboDialog
       Title={Title}
-      Content={
-        <Content
-          setAutoFocus={true}
-          onRegisterNow={handleUserRegistration}
-          errorMessage={authError}
-        />
-      }
+      Content={<Content setAutoFocus={true} onRegisterNow={handleUserRegistration} />}
       Actions={Actions}
       isDialogCentered={true}
       customMaxWidth={customMaxWidth}

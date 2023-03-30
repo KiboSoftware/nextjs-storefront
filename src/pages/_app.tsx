@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React from 'react'
 
 import { CacheProvider, EmotionCache } from '@emotion/react'
 import CssBaseline from '@mui/material/CssBaseline'
@@ -10,11 +10,10 @@ import Head from 'next/head'
 import 'next-i18next.config'
 import Router from 'next/router'
 import NProgress from 'nprogress'
-import { Hydrate, QueryClientProvider } from 'react-query'
+import { Hydrate } from 'react-query'
 import '../../styles/global.css'
 
 import createEmotionCache from '../../lib/createEmotionCache'
-import { generateQueryClient } from '../../lib/react-query/queryClient'
 import theme from '../../styles/theme'
 import { GlobalFetchingIndicator } from '@/components/common'
 import { KiboHeader, DefaultLayout, Footer } from '@/components/layout'
@@ -24,7 +23,7 @@ import {
   DialogRoot,
   HeaderContextProvider,
   SnackbarRoot,
-  SnackbarContextProvider,
+  RQNotificationContextProvider,
 } from '@/context'
 import { footerConfig as footerProps } from '@/lib/constants'
 import type { NextPageWithLayout } from '@/lib/types'
@@ -44,7 +43,6 @@ Router.events.on('routeChangeError', () => NProgress.done())
 
 const App = (props: KiboAppProps) => {
   const { Component, emotionCache = clientSideEmotionCache, pageProps } = props
-  const [queryClient] = useState(() => generateQueryClient())
   const getLayout = Component.getLayout ?? ((page) => <DefaultLayout>{page}</DefaultLayout>)
 
   return (
@@ -56,45 +54,43 @@ const App = (props: KiboAppProps) => {
       <ThemeProvider theme={theme}>
         {/* CssBaseline kickstart an elegant, consistent, and simple baseline to build upon. */}
         <CssBaseline />
-        <QueryClientProvider client={queryClient}>
-          <SnackbarContextProvider>
-            <ModalContextProvider>
-              <AuthContextProvider>
-                <HeaderContextProvider>
-                  <Hydrate state={pageProps.dehydratedState}>
-                    <GlobalFetchingIndicator />
-                    <KiboHeader
-                      navLinks={[
-                        {
-                          link: '/order-status',
-                          text: 'order-status',
-                        },
-                        {
-                          link: '/wishlist',
-                          text: 'wishlist',
-                        },
-                        {
-                          link: '#',
-                          text: 'Nav Link 2',
-                        },
-                        {
-                          link: '#',
-                          text: 'Nav Link 3',
-                        },
-                      ]}
-                      categoriesTree={pageProps.categoriesTree || []}
-                      isSticky={true}
-                    />
-                    <DialogRoot />
-                    <SnackbarRoot />
-                    {getLayout(<Component {...pageProps} />)}
-                    <Footer {...footerProps} />
-                  </Hydrate>
-                </HeaderContextProvider>
-              </AuthContextProvider>
-            </ModalContextProvider>
-          </SnackbarContextProvider>
-        </QueryClientProvider>
+        <RQNotificationContextProvider>
+          <ModalContextProvider>
+            <AuthContextProvider>
+              <HeaderContextProvider>
+                <Hydrate state={pageProps.dehydratedState}>
+                  <GlobalFetchingIndicator />
+                  <KiboHeader
+                    navLinks={[
+                      {
+                        link: '/order-status',
+                        text: 'order-status',
+                      },
+                      {
+                        link: '/wishlist',
+                        text: 'wishlist',
+                      },
+                      {
+                        link: '#',
+                        text: 'Nav Link 2',
+                      },
+                      {
+                        link: '#',
+                        text: 'Nav Link 3',
+                      },
+                    ]}
+                    categoriesTree={pageProps.categoriesTree || []}
+                    isSticky={true}
+                  />
+                  <DialogRoot />
+                  <SnackbarRoot />
+                  {getLayout(<Component {...pageProps} />)}
+                  <Footer {...footerProps} />
+                </Hydrate>
+              </HeaderContextProvider>
+            </AuthContextProvider>
+          </ModalContextProvider>
+        </RQNotificationContextProvider>
       </ThemeProvider>
     </CacheProvider>
   )

@@ -232,7 +232,7 @@ const KiboHeader = (props: KiboHeaderProps) => {
   const { navLinks, categoriesTree: initialCategoryTree, isSticky } = props
   const { data: categoriesTree } = useCategoryTreeQueries(initialCategoryTree)
   const { headerState, toggleMobileSearchPortal, toggleHamburgerMenu } = useHeaderContext()
-  const { isAuthenticated, setAuthError } = useAuthContext()
+  const { isAuthenticated } = useAuthContext()
   const { showModal } = useModalContext()
   const router = useRouter()
   const theme = useTheme()
@@ -251,7 +251,6 @@ const KiboHeader = (props: KiboHeaderProps) => {
   const isMultiShipEnabled = publicRuntimeConfig.isMultiShipEnabled
 
   const handleAccountIconClick = () => {
-    setAuthError('')
     isHamburgerMenuVisible && toggleHamburgerMenu()
     if (!isAuthenticated) {
       showModal({ Component: LoginDialog })

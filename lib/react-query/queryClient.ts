@@ -1,21 +1,33 @@
 import { QueryClient } from 'react-query'
 
-const queryClientHandler = (error: unknown) => {
-  const id = 'react-query-error'
-  const title = error instanceof Error ? error.message : 'Unable to connect server'
-  const status = 'error'
+const getErrorMessage = (code: string) => {
+  const messages: any = {
+    GRAPHQL_VALIDATION_FAILED: 'Something went wrong',
+    UNAUTHENTICATED: 'Invalid Credentials',
+  }
 
-  console.log(`id: ${id}, title: ${title}, status: ${status}`)
+  return messages[code] || 'Unable to connect server'
 }
 
-export const generateQueryClient = (): QueryClient => {
+const queryClientHandler = (error: any, showSnackbar: any) => {
+  const id = 'react-query-error'
+  const code = error?.response?.errors ? error?.response?.errors[0]?.extensions?.code : null
+
+  const status = 'error'
+
+  console.log(`id: ${id}, title: ${code}, status: ${status}`)
+
+  showSnackbar(getErrorMessage(code), status)
+}
+
+export const generateQueryClient = (showSnackbar?: any): QueryClient => {
   return new QueryClient({
     defaultOptions: {
       queries: {
-        onError: queryClientHandler,
+        onError: (error) => queryClientHandler(error, showSnackbar),
       },
       mutations: {
-        onError: queryClientHandler,
+        onError: (error) => queryClientHandler(error, showSnackbar),
       },
     },
   })
