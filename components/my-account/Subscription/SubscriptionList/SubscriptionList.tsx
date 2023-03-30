@@ -2,7 +2,7 @@ import React, { useCallback } from 'react'
 
 import ArrowBackIos from '@mui/icons-material/ArrowBackIos'
 import { Stack, Typography } from '@mui/material'
-import lodash from 'lodash'
+import uniqBy from 'lodash/uniqBy'
 import { useTranslation } from 'next-i18next'
 
 import { SubscriptionItem } from '@/components/my-account'
@@ -56,7 +56,7 @@ const SubscriptionList = (props: SubscriptionListProps) => {
     ? [...duplicateFulfillments, ...formatedSubscriptionShippingAddress]
     : [...duplicateFulfillments]
 
-  const fulfillmentInfoList = lodash.uniqBy(duplicateFulfillments, 'formattedAddress')
+  const fulfillmentInfoList = uniqBy(duplicateFulfillments, 'formattedAddress')
 
   return (
     <>
