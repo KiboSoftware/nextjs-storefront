@@ -90,6 +90,8 @@
   "filter-orders": "Filter Orders",
   "order-history": "Order History",
   "your-order": "Your Order",
+  "orders": "Orders",
+  "quick-order": "Quick Order",
   "thank-you": "Thank You!",
   "order-details": "Order Details",
   "your-order-was-placed-successfully": "Your order was placed successfully",
@@ -126,6 +128,10 @@
   "save-payment-method": "Save Payment Method",
   "save-payment-method-checkbox": "Save Payment Method",
   "payment-method": "Payment Method",
+  "account-information": "Account Information",
+  "account-hierarchy": "Account Hierarchy",
+  "shipping-information": "Shipping Information",
+  "custom-attributes": "Custom Attributes",
 
   "your-default-shipping-address": "Your default shipping address",
   "previously-saved-shipping-addresses": "Previously saved shipping addresses",
@@ -187,7 +193,9 @@
   "full-rewards-program-benefits": "Full Rewards Program Benefits",
   "manage-your-wishlist": "Manage your wishlist",
   "i-want-to-create-an-account": "I want to create an account",
+  "email-address": "Email address",
   "first-name": "First name",
+  "role": "Role",
   "last-name-or-sur-name": "Last name",
   "password": "Password",
   "go-to-shipping": "Go to Shipping",
@@ -323,5 +331,14 @@
   "subscription-frequency": "Subscription frequency",
   "fulfillment-options": "Fulfillment Options:",
   "subscription-cancelled-successfully": "Your subscription item has been cancelled.",
-  "card-ending-in": "Card "
+  "card-ending-in": "Card ",
+
+  "users": "Users",
+  "add-user": "Add User",
+  "active": "Active",
+  "in-active": "In Active",
+
+  "returns": "Returns",
+  "quotes": "Quotes",
+  "lists": "Lists"
 }

@@ -37,6 +37,7 @@ export { default as createMultiShipCheckoutFromCartMutation } from './checkout/c
 export { default as createCheckoutShippingMethod } from './checkout/create-checkout-shipping-method'
 export { default as updateCheckoutCouponMutation } from './coupon/update-checkout-coupon'
 export { default as deleteCheckoutCouponMutation } from './coupon/delete-checkout-coupon'
+
 // subscription
 export { default as orderSubscriptionNow } from './subscription/orderSubscriptionNow'
 export { default as skipNextSubscriptionMutation } from './subscription/skip-next-subscription-mutation'
@@ -45,3 +46,8 @@ export { default as deleteSubscriptionMutation } from './subscription/delete-sub
 export { default as updateSubscriptionNextOrderDateMutation } from './subscription/update-subscription-next-order-date-mutation'
 export { default as updateSubscriptionFulfillmentInfoMutation } from './subscription/update-subscription-fulfillment-info-mutation'
 export { default as updateSubscriptionPaymentMutation } from './subscription/update-subscription-payment-mutation'
+
+// B2B Users
+export { default as addCustomerB2bUserMutation } from './user/addCustomerB2bUser'
+export { default as updateCustomerB2bUserMutation } from './user/updateCustomerB2bUser'
+export { default as removeCustomerB2bUserMutation } from './user/removeCustomerB2bUser'

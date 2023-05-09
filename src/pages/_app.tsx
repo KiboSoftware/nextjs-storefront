@@ -24,6 +24,7 @@ import {
   HeaderContextProvider,
   SnackbarRoot,
   RQNotificationContextProvider,
+  CustomerB2bUserContextProvider,
 } from '@/context'
 import { footerConfig as footerProps } from '@/lib/constants'
 import type { NextPageWithLayout } from '@/lib/types'
@@ -56,39 +57,41 @@ const App = (props: KiboAppProps) => {
         <CssBaseline />
         <RQNotificationContextProvider>
           <ModalContextProvider>
-            <AuthContextProvider>
-              <HeaderContextProvider>
-                <Hydrate state={pageProps.dehydratedState}>
-                  <GlobalFetchingIndicator />
-                  <KiboHeader
-                    navLinks={[
-                      {
-                        link: '/order-status',
-                        text: 'order-status',
-                      },
-                      {
-                        link: '/wishlist',
-                        text: 'wishlist',
-                      },
-                      {
-                        link: '#',
-                        text: 'Nav Link 2',
-                      },
-                      {
-                        link: '#',
-                        text: 'Nav Link 3',
-                      },
-                    ]}
-                    categoriesTree={pageProps.categoriesTree || []}
-                    isSticky={true}
-                  />
-                  <DialogRoot />
-                  <SnackbarRoot />
-                  {getLayout(<Component {...pageProps} />)}
-                  <Footer {...footerProps} />
-                </Hydrate>
-              </HeaderContextProvider>
-            </AuthContextProvider>
+            <CustomerB2bUserContextProvider>
+              <AuthContextProvider>
+                <HeaderContextProvider>
+                  <Hydrate state={pageProps.dehydratedState}>
+                    <GlobalFetchingIndicator />
+                    <KiboHeader
+                      navLinks={[
+                        {
+                          link: '/order-status',
+                          text: 'order-status',
+                        },
+                        {
+                          link: '/wishlist',
+                          text: 'wishlist',
+                        },
+                        {
+                          link: '#',
+                          text: 'Nav Link 2',
+                        },
+                        {
+                          link: '#',
+                          text: 'Nav Link 3',
+                        },
+                      ]}
+                      categoriesTree={pageProps.categoriesTree || []}
+                      isSticky={true}
+                    />
+                    <DialogRoot />
+                    <SnackbarRoot />
+                    {getLayout(<Component {...pageProps} />)}
+                    <Footer {...footerProps} />
+                  </Hydrate>
+                </HeaderContextProvider>
+              </AuthContextProvider>
+            </CustomerB2bUserContextProvider>
           </ModalContextProvider>
         </RQNotificationContextProvider>
       </ThemeProvider>

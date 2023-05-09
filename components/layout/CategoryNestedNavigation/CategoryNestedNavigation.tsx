@@ -117,18 +117,18 @@ const CategoryNestedNavigation = (props: CategoryNestedNavigationProps) => {
           <ListSubheader component="div" sx={{ flex: 1, paddingX: 1 }}>
             {subHeader.backLink}
           </ListSubheader>
-          <IconButton
+          {/* <IconButton
             size="small"
             aria-label="close-button"
             sx={{ marginRight: 1 }}
             onClick={() => onCloseMenu(false)}
           >
             <Close />
-          </IconButton>
+          </IconButton> */}
         </Box>
       }
     >
-      {children && subHeader.label === initialSubHeader.label && (
+      {/* {children && subHeader.label === initialSubHeader.label && (
         <ListItemButton sx={{ backgroundColor: 'grey.300', paddingBlock: '4px' }}>
           <ListItemText primary={children} />
         </ListItemButton>
@@ -136,7 +136,7 @@ const CategoryNestedNavigation = (props: CategoryNestedNavigationProps) => {
       <ListItem sx={styles.listHeader}>
         <ListItemText primary={<Typography variant="h2">{subHeader.label}</Typography>} />
       </ListItem>
-      <Divider />
+      <Divider /> */}
       {activeCategory?.map((category: Maybe<PrCategory>) => {
         return (
           <Slide

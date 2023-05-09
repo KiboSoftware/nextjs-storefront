@@ -6,6 +6,19 @@ declare module '@mui/material/styles/createPalette' {
   }
 }
 
+declare module '@mui/material/Button' {
+  interface ButtonPropsVariantOverrides {
+    primary: true
+    outlined: true
+  }
+}
+
+declare module '@mui/material/Switch' {
+  interface SwitchPropsVariantOverrides {
+    primary: true
+  }
+}
+
 export const grey = {
   900: '#2B2B2B',
   // Fill Form Label Text, information text
@@ -14,6 +27,7 @@ export const grey = {
   600: '#7C7C7C',
   // Thin borders, placeholder text
   500: '#C7C7C7',
+  400: '#CDCDCD',
   // Header Accent Color, page separator bar
   300: '#EAEAEA',
   // Order Summary Background
@@ -137,6 +151,84 @@ let theme = createTheme({
     MuiButton: {
       styleOverrides: {
         ...buttonStyleOverrides,
+      },
+      variants: [
+        {
+          props: { variant: 'primary' },
+          style: {
+            backgroundColor: grey[900],
+            borderWidth: 1,
+            borderStyle: 'solid',
+            boxShadow: 'none',
+            fontWeight: 400,
+            color: '#FFFFFF',
+            '&:hover': {
+              backgroundColor: grey[700],
+            },
+            '&:disabled': {
+              backgroundColor: grey[400],
+              color: '#FFFFFF',
+            },
+          },
+        },
+        {
+          props: { variant: 'outlined' },
+          style: {
+            backgroundColor: grey[50],
+            borderWidth: 1,
+            boxShadow: 'none',
+            border: `1px solid ${grey[400]}`,
+            fontWeight: 400,
+            color: '#000000',
+          },
+        },
+      ],
+    },
+    MuiSwitch: {
+      styleOverrides: {
+        root: {
+          width: 30,
+          height: 18,
+          padding: 0,
+          '& .MuiSwitch-switchBase': {
+            padding: 0,
+            margin: '2px -3px',
+            transitionDuration: '300ms',
+            '&.Mui-checked': {
+              transform: 'translateX(16px)',
+              color: '#fff',
+              '& + .MuiSwitch-track': {
+                backgroundColor: '#2EA195',
+                opacity: 1,
+                border: 0,
+              },
+              '&.Mui-disabled + .MuiSwitch-track': {
+                opacity: 0.5,
+              },
+            },
+            '&.Mui-focusVisible .MuiSwitch-thumb': {
+              color: '#33cf4d',
+              border: '6px solid #fff',
+            },
+            '&.Mui-disabled .MuiSwitch-thumb': {
+              color: grey[600],
+            },
+            '&.Mui-disabled + .MuiSwitch-track': {
+              opacity: 0.7,
+            },
+          },
+          '& .MuiSwitch-thumb': {
+            boxSizing: 'border-box',
+            width: 14,
+            height: 14,
+          },
+          '& .MuiSwitch-track': {
+            borderRadius: 26 / 2,
+            backgroundColor: '#E9E9EA',
+            opacity: 1,
+            transition: 'background-color 500',
+          },
+        },
       },
     },
     MuiLoadingButton: {

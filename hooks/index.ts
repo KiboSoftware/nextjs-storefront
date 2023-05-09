@@ -18,6 +18,9 @@ export * from './queries/useReturnReasonsQueries/useReturnReasonsQueries'
 export * from './queries/useReturnsQueries/useReturnsQueries'
 export * from './queries/useProductPriceQueries/useProductPriceQueries'
 
+// B2B User Queries
+export * from './queries/useB2BUserQueries/useB2BUserQueries'
+
 // Multiship Query
 export * from './queries/multiShip/useCheckoutQueries/useCheckoutQueries'
 export * from './queries/multiShip/useCheckoutDestinationQueries/useCheckoutDestinationQueries'
