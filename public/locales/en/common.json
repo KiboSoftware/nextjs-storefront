@@ -166,7 +166,8 @@
   "save-for-later": "Save for Later",
   "add-to-favorites": "Add to Favorites",
   "empty-cart-message": "You haven’t added any items to your shopping cart yet. Shop now to add your favorite items to your cart.",
-
+  "checkout_one": "Checkout ({{count}} item)",
+  "checkout_other": "Checkout ({{count}} items)",
   "payment": "Payment",
   "review": "Review",
   "password-requirements": "Password Requirements",
