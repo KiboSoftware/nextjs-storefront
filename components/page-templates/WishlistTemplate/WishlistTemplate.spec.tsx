@@ -22,7 +22,7 @@ jest.mock('@/hooks', () => ({
       checkProductInWishlist: jest.fn(() => true),
     }
   }),
-  useWishlistQueries: jest.fn(() => mockWishlist),
+  useGetWishlist: jest.fn(() => mockWishlist),
 }))
 
 const setup = () => {

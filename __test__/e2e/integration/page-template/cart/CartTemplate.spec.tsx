@@ -7,13 +7,12 @@ import * as cookienext from 'cookies-next'
 import { graphql } from 'msw'
 
 import { server } from '@/__mocks__/msw/server'
-import { cartItemMock } from '@/__mocks__/stories/cartItemMock'
 import { cartCouponMock, cartMock } from '@/__mocks__/stories/cartMock'
 import { fulfillmentOptionsMock } from '@/__mocks__/stories/fulfillmentOptionsMock'
 import { renderWithQueryClient } from '@/__test__/utils'
 import * as stories from '@/components/page-templates/CartTemplate/CartTemplate.stories'
 import { DialogRoot, ModalContextProvider } from '@/context'
-import { useCartQueries } from '@/hooks'
+import { useGetCart } from '@/hooks'
 
 import type { CrCartItem } from '@/lib/gql/types'
 
@@ -22,7 +21,7 @@ const mockCartItems = (cartMock.currentCart.items || []) as CrCartItem[]
 const mockFulfillmentOptions = fulfillmentOptionsMock || []
 
 const TestComponent = () => {
-  const { data: cart } = useCartQueries(cartMock.currentCart)
+  const { data: cart } = useGetCart(cartMock.currentCart)
 
   return <Common isMultiShipEnabled={false} cart={cart} />
 }
@@ -46,7 +45,7 @@ describe('[components] CartTemplate integration', () => {
     setup()
     const items = Common.args?.cart?.items || []
     const cartTitle = screen.getByText(/shopping-cart/i)
-    const cartItemCount = screen.getByText(/cart-item-count/i)
+    const cartItemCount = screen.getAllByText(/item-quantity/i)
     const orderSummaryHeading = screen.getByText('order-summary')
 
     const gotToCheckout = screen.getByRole('button', {
@@ -58,7 +57,7 @@ describe('[components] CartTemplate integration', () => {
       expect(screen.getAllByText(details as string)[index]).toBeVisible()
     })
     expect(cartTitle).toBeVisible()
-    expect(cartItemCount).toBeVisible()
+    expect(cartItemCount[0]).toBeVisible()
     expect(orderSummaryHeading).toBeVisible()
 
     expect(gotToCheckout).toBeVisible()

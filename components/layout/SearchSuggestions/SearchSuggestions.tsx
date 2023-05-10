@@ -20,7 +20,7 @@ import { useRouter } from 'next/router'
 import { useTranslation } from 'next-i18next'
 
 import { SearchBar } from '@/components/common'
-import { useDebounce, useSearchSuggestionsQueries } from '@/hooks'
+import { useDebounce, useGetSearchSuggestions } from '@/hooks'
 
 const style = {
   paper: {
@@ -100,7 +100,7 @@ const SearchSuggestions = (props: SearchSuggestionsProps) => {
     handleClose()
   }
 
-  const searchSuggestionResult = useSearchSuggestionsQueries(
+  const searchSuggestionResult = useGetSearchSuggestions(
     useDebounce(searchTerm.trim(), publicRuntimeConfig.debounceTimeout)
   )
 

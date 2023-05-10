@@ -19,16 +19,16 @@ import { PromoCodeBadge, OrderSummary } from '@/components/common'
 import { StoreLocatorDialog } from '@/components/dialogs'
 import { useModalContext } from '@/context'
 import {
-  useCartQueries,
-  useCreateFromCartMutation,
-  useStoreLocationsQueries,
-  usePurchaseLocationQueries,
-  useUpdateCartItemQuantityMutation,
-  useRemoveCartItemMutation,
-  useUpdateCartItemMutation,
-  useUpdateCartCouponMutation,
-  useDeleteCartCouponMutation,
-  useCreateMultiShipCheckoutFromCartMutation,
+  useGetCart,
+  useInitiateOrder,
+  useGetStoreLocations,
+  useGetPurchaseLocation,
+  useUpdateCartItemQuantity,
+  useDeleteCartItem,
+  useUpdateCartItem,
+  useUpdateCartCoupon,
+  useDeleteCartCoupon,
+  useInitiateCheckout,
 } from '@/hooks'
 import { FulfillmentOptions } from '@/lib/constants'
 import { orderGetters, cartGetters } from '@/lib/getters'
@@ -43,17 +43,17 @@ export interface CartTemplateProps {
 
 const CartTemplate = (props: CartTemplateProps) => {
   const { isMultiShipEnabled } = props
-  const { data: cart } = useCartQueries(props?.cart)
+  const { data: cart } = useGetCart(props?.cart)
 
   const { t } = useTranslation('common')
   const theme = useTheme()
   const isMobileViewport = useMediaQuery(theme.breakpoints.down('md'))
   const router = useRouter()
-  const { createFromCart } = useCreateFromCartMutation()
-  const { createMultiShipCheckoutFromCart } = useCreateMultiShipCheckoutFromCartMutation()
-  const { updateCartItemQuantity } = useUpdateCartItemQuantityMutation()
-  const { removeCartItem } = useRemoveCartItemMutation()
-  const { updateCartItem } = useUpdateCartItemMutation()
+  const { initiateOrder } = useInitiateOrder()
+  const { initiateCheckout } = useInitiateCheckout()
+  const { updateCartItemQuantity } = useUpdateCartItemQuantity()
+  const { deleteCartItem } = useDeleteCartItem()
+  const { updateCartItem } = useUpdateCartItem()
   const { showModal, closeModal } = useModalContext()
 
   const cartItemCount = cartGetters.getCartItemCount(cart)
@@ -65,10 +65,10 @@ const CartTemplate = (props: CartTemplateProps) => {
   const cartTotal = orderGetters.getTotal(cart)
   const locationCodes = orderGetters.getFulfillmentLocationCodes(cartItems as CrCartItem[])
 
-  const { data: locations } = useStoreLocationsQueries({ filter: locationCodes })
-  const { data: purchaseLocation } = usePurchaseLocationQueries()
-  const updateCartCoupon = useUpdateCartCouponMutation()
-  const deleteCartCoupon = useDeleteCartCouponMutation()
+  const { data: locations } = useGetStoreLocations({ filter: locationCodes })
+  const { data: purchaseLocation } = useGetPurchaseLocation()
+  const {updateCartCoupon} = useUpdateCartCoupon()
+  const {deleteCartCoupon} = useDeleteCartCoupon()
   const [promoError, setPromoError] = useState<string>('')
   const [showLoadingButton, setShowLoadingButton] = useState<boolean>(false)
 
@@ -105,7 +105,7 @@ const CartTemplate = (props: CartTemplateProps) => {
     }
   }
   const handleDeleteItem = async (cartItemId: string) => {
-    await removeCartItem.mutateAsync({ cartItemId })
+    await deleteCartItem.mutateAsync({ cartItemId })
   }
   const handleItemActions = () => {
     // your code here
@@ -158,12 +158,12 @@ const CartTemplate = (props: CartTemplateProps) => {
   const handleGotoCheckout = async () => {
     setShowLoadingButton(true)
     try {
-      const createFromCartResponse = isMultiShipEnabled
-        ? await createMultiShipCheckoutFromCart.mutateAsync(cart?.id)
-        : await createFromCart.mutateAsync(cart?.id)
+      const initiateOrderResponse = isMultiShipEnabled
+        ? await initiateCheckout.mutateAsync(cart?.id)
+        : await initiateOrder.mutateAsync(cart?.id)
 
-      if (createFromCartResponse?.id) {
-        router.push(`/checkout/${createFromCartResponse.id}`)
+      if (initiateOrderResponse?.id) {
+        router.push(`/checkout/${initiateOrderResponse.id}`)
       }
     } catch (err) {
       console.error(err)
@@ -205,7 +205,7 @@ const CartTemplate = (props: CartTemplateProps) => {
             {t('shopping-cart')}
           </Typography>
           <Typography variant="h1" fontWeight={'normal'}>
-            ({t('cart-item-count', { count: cartItemCount })})
+            ({t('item-quantity', {count: cartItemCount})})
           </Typography>
         </Box>
       </Grid>

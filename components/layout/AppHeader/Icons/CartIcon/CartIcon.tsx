@@ -3,14 +3,14 @@ import { useRouter } from 'next/router'
 import { useTranslation } from 'next-i18next'
 
 import { HeaderAction } from '@/components/common'
-import { useCartQueries } from '@/hooks'
+import { useGetCart } from '@/hooks'
 import { cartGetters } from '@/lib/getters'
 import type { IconProps } from '@/lib/types'
 
 const CartIcon = ({ size }: IconProps) => {
   const { t } = useTranslation('common')
 
-  const { data: cart } = useCartQueries({})
+  const { data: cart } = useGetCart({})
   const itemCount = cartGetters.getCartItemCount(cart)
 
   const router = useRouter()

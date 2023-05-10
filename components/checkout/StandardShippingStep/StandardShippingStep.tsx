@@ -7,7 +7,7 @@ import { useTranslation } from 'next-i18next'
 import { ShippingMethod } from '@/components/checkout'
 import { AddressDetailsView, AddressForm } from '@/components/common'
 import { useCheckoutStepContext, STEP_STATUS } from '@/context'
-import { useUpdateCheckoutShippingInfoMutation, useShippingMethodsQueries } from '@/hooks'
+import { useUpdateOrderShippingInfo, useGetShippingMethods } from '@/hooks'
 import { DefaultId } from '@/lib/constants'
 import { orderGetters, userGetters } from '@/lib/getters'
 
@@ -78,8 +78,8 @@ const StandardShippingStep = (props: ShippingProps) => {
     setStepStatusComplete,
     setStepStatusIncomplete,
   } = useCheckoutStepContext()
-  const updateCheckoutShippingInfo = useUpdateCheckoutShippingInfoMutation()
-  const { data: shippingMethods } = useShippingMethodsQueries(
+  const {updateOrderShippingInfo} = useUpdateOrderShippingInfo()
+  const { data: shippingMethods } = useGetShippingMethods(
     checkoutId,
     isNewAddressAdded,
     selectedShippingAddressId
@@ -89,7 +89,7 @@ const StandardShippingStep = (props: ShippingProps) => {
 
   const handleSaveAddress = async ({ contact }: { contact: CrContact }) => {
     try {
-      await updateCheckoutShippingInfo.mutateAsync({ checkout, contact })
+      await updateOrderShippingInfo.mutateAsync({ checkout, contact })
       setCheckoutId(checkout?.id)
       setSelectedShippingAddressId((contact?.id as number) || DefaultId.ADDRESSID)
       setShouldShowAddAddressButton(true)
@@ -107,7 +107,7 @@ const StandardShippingStep = (props: ShippingProps) => {
     )?.shippingMethodName as string
 
     try {
-      await updateCheckoutShippingInfo.mutateAsync({
+      await updateOrderShippingInfo.mutateAsync({
         checkout,
         contact: undefined,
         email: undefined,

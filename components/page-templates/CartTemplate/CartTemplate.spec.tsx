@@ -42,7 +42,7 @@ describe('[components] CartTemplate', () => {
     setup()
 
     const cartTitle = screen.getByText(/shopping-cart/i)
-    const cartItemCount = screen.getByText(/cart-item-count/i)
+    const cartItemCount = screen.getByText(/item-quantity/i)
     const cartItemList = screen.getByTestId('cart-item-list-mock')
     const orderSummary = screen.getByTestId('cart-item-list-mock')
 

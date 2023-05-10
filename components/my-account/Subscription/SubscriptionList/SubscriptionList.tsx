@@ -8,7 +8,7 @@ import { useTranslation } from 'next-i18next'
 import { SubscriptionItem } from '@/components/my-account'
 import { useAuthContext } from '@/context'
 import type {} from '@/components/my-account/Subscription/SubscriptionItem/SubscriptionItem'
-import { useSubscriptionsQueries, useCustomerContactsQueries } from '@/hooks'
+import { useGetSubscriptions, useGetCustomerAddresses } from '@/hooks'
 import { subscriptionGetters, userGetters } from '@/lib/getters'
 import type { FulfillmentInfo } from '@/lib/types'
 
@@ -31,8 +31,8 @@ const SubscriptionList = (props: SubscriptionListProps) => {
   const { t } = useTranslation('common')
   const { user } = useAuthContext()
 
-  const { data: subscriptionDetails } = useSubscriptionsQueries()
-  const { data: contacts } = useCustomerContactsQueries(user?.id as number)
+  const { data: subscriptionDetails } = useGetSubscriptions()
+  const { data: contacts } = useGetCustomerAddresses(user?.id as number)
 
   const handleAccountTitleClick = useCallback(() => onAccountTitleClick(), [onAccountTitleClick])
 

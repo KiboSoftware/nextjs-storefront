@@ -4,7 +4,7 @@ import { Typography, Box, MenuItem, Divider } from '@mui/material'
 import { useTranslation } from 'next-i18next'
 
 import { KiboSelect, Price, ProductItemList } from '@/components/common'
-import { useStoreLocationsQueries } from '@/hooks'
+import { useGetStoreLocations } from '@/hooks'
 import { orderGetters, storeLocationGetters } from '@/lib/getters'
 
 import type { Maybe, CrOrderItem, CrShippingRate } from '@/lib/gql/types'
@@ -91,7 +91,7 @@ const PickupItemList = (pickupProps: PickupItemListProps) => {
   const fulfillmentLocationCodes = orderGetters.getFulfillmentLocationCodes(
     pickupItems as CrOrderItem[]
   )
-  const { data: locations } = useStoreLocationsQueries({ filter: fulfillmentLocationCodes })
+  const { data: locations } = useGetStoreLocations({ filter: fulfillmentLocationCodes })
   const storePickupAddress = storeLocationGetters.getLocations(locations)
 
   return (

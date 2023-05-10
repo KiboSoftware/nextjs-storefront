@@ -6,7 +6,7 @@ import { useRouter } from 'next/router'
 import { useTranslation } from 'next-i18next'
 
 import { ProductCard } from '@/components/product'
-import { useWishlist, useWishlistQueries } from '@/hooks'
+import { useWishlist, useGetWishlist } from '@/hooks'
 import { productGetters } from '@/lib/getters'
 import { uiHelpers } from '@/lib/helpers'
 import type { WishlistProductInput, ProductCustom } from '@/lib/types'
@@ -28,7 +28,7 @@ const WishlistTemplate = (props: { customerAccount: CustomerAccount }) => {
   const { t } = useTranslation('common')
   const { getProductLink } = uiHelpers()
   const { addOrRemoveWishlistItem } = useWishlist({ isRemovedFromWishlist: true, delay: 1000 })
-  const { data: wishlists } = useWishlistQueries()
+  const { data: wishlists } = useGetWishlist()
   const [removedProductCode, setRemovedProductCode] = useState<string>('')
 
   const handleAddOrRemoveWishlistItem = async (product: WishlistProductInput) => {

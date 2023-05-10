@@ -23,12 +23,12 @@ import { useTranslation } from 'next-i18next'
 import { MyProfile, PaymentMethod, AddressBook } from '@/components/my-account'
 import { useAuthContext } from '@/context'
 import {
-  useCustomerCardsQueries,
-  useCustomerContactsQueries,
-  useCreateCustomerCardsMutation,
-  useUpdateCustomerCardsMutation,
-  useCreateCustomerAddressMutation,
-  useUpdateCustomerAddressMutation,
+  useGetCards,
+  useGetCustomerAddresses,
+  useCreateCustomerCard,
+  useUpdateCustomerCard,
+  useCreateCustomerAddress,
+  useUpdateCustomerAddress,
 } from '@/hooks'
 import type { BillingAddress, CardType } from '@/lib/types'
 
@@ -95,13 +95,13 @@ const MyAccountTemplate = () => {
   const mdScreen = useMediaQuery(theme.breakpoints.up('md'))
   const { user, logout } = useAuthContext()
 
-  const { data: cards } = useCustomerCardsQueries(user?.id as number)
-  const { data: contacts } = useCustomerContactsQueries(user?.id as number)
+  const { data: cards } = useGetCards(user?.id as number)
+  const { data: contacts } = useGetCustomerAddresses(user?.id as number)
 
-  const { addSavedCardDetails } = useCreateCustomerCardsMutation()
-  const { updateSavedCardDetails } = useUpdateCustomerCardsMutation()
-  const { addSavedAddressDetails } = useCreateCustomerAddressMutation()
-  const { updateSavedAddressDetails } = useUpdateCustomerAddressMutation()
+  const { createCustomerCard } = useCreateCustomerCard()
+  const { updateCustomerCard } = useUpdateCustomerCard()
+  const { createCustomerAddress } = useCreateCustomerAddress()
+  const { updateCustomerAddress } = useUpdateCustomerAddress()
 
   const handleGoToOrderHistory = () => {
     router.push('/my-account/order-history?filters=M-6')
@@ -120,9 +120,9 @@ const MyAccountTemplate = () => {
 
     // Add update address
     if (isUpdatingAddress) {
-      response = await updateSavedAddressDetails.mutateAsync(address)
+      response = await updateCustomerAddress.mutateAsync(address)
     } else {
-      response = await addSavedAddressDetails.mutateAsync(address)
+      response = await createCustomerAddress.mutateAsync(address)
     }
 
     const params = {
@@ -134,9 +134,9 @@ const MyAccountTemplate = () => {
 
     // Add update card
     if (card.cardId) {
-      await updateSavedCardDetails.mutateAsync(params)
+      await updateCustomerCard.mutateAsync(params)
     } else {
-      await addSavedCardDetails.mutateAsync(params)
+      await createCustomerCard.mutateAsync(params)
     }
   }
 

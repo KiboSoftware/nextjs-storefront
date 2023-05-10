@@ -19,7 +19,7 @@ const mockWishlist = wishlistMock?.items[0]
 const mockUser = userResponseMock
 
 jest.mock('@/hooks', () => ({
-  useCreateWishlistMutation: () => {
+  useCreateWishlist: () => {
     const { id, name, customerAccountId } = mockWishlist
     return {
       createWishlist: {
@@ -27,22 +27,22 @@ jest.mock('@/hooks', () => ({
       },
     }
   },
-  useUserQueries: () => {
+  useGetCurrentCustomer: () => {
     return {
       customerAccount: mockUser,
     }
   },
-  useWishlistQueries: () => mockWishlist,
-  useAddToWishlistMutation: () => {
+  useGetWishlist: () => mockWishlist,
+  useAddToWishlistItem: () => {
     return {
       addToWishlist: {
         mutateAsync: () => Promise.resolve({ createWishlistItem: mockWishlist?.items[0] }),
       },
     }
   },
-  useRemoveWishlistItemMutation: () => {
+  useDeleteWishlistItem: () => {
     return {
-      removeWishlistItem: {
+      deleteWishlistItem: {
         mutateAsync: () => Promise.resolve({ deleteWishlistItem: true }),
       },
     }

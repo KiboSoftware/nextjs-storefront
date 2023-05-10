@@ -6,18 +6,18 @@ import { DetailsStep, MultiShippingStep, PaymentStep, ReviewStep } from '@/compo
 import { CheckoutUITemplate } from '@/components/page-templates'
 import { useAuthContext } from '@/context'
 import {
-  useCustomerContactsQueries,
-  useDeleteCheckoutCouponMutation,
-  useMultiShipCheckoutQueries,
-  useUpdateMultiShipCheckoutPersonalInfoMutation,
-  useUpdateCheckoutCouponMutation,
+  useGetCustomerAddresses,
+  useDeleteCheckoutCoupon,
+  useGetCurrentCheckout,
+  useUpdateCheckoutPersonalInfo,
+  useUpdateCheckoutCoupon,
   MultiShipPersonalInfo,
-  useCreateCheckoutDestinationMutations,
-  useCheckoutShippingMethodsQuery,
-  useCreateCheckoutShippingMethodMutation,
-  useUpdateMultiShipCheckoutPaymentActionMutation,
-  useCreateMultiShipCheckoutPaymentActionMutation,
-  useCreateMultiShipCheckoutMutation,
+  useCreateDestination,
+  useGetCheckoutShippingMethods,
+  useCreateCheckoutShippingMethod,
+  useVoidCheckoutPayment,
+  useAddCheckoutPayment,
+  useCreateCheckout,
 } from '@/hooks'
 import { FulfillmentOptions } from '@/lib/constants'
 import { checkoutGetters } from '@/lib/getters'
@@ -50,12 +50,12 @@ const MultiShipCheckoutTemplate = (props: MultiShipCheckoutProps) => {
   const [promoError, setPromoError] = useState<string>('')
 
   // Hooks
-  const { data: checkout } = useMultiShipCheckoutQueries({
+  const { data: checkout } = useGetCurrentCheckout({
     checkoutId: checkoutId as string,
     isMultiShip: isMultiShipEnabled,
     initialCheckout,
   })
-  const { data: shippingMethods } = useCheckoutShippingMethodsQuery(
+  const { data: shippingMethods } = useGetCheckoutShippingMethods(
     checkoutId as string,
     checkout?.groupings &&
       checkout?.groupings
@@ -64,11 +64,11 @@ const MultiShipCheckoutTemplate = (props: MultiShipCheckoutProps) => {
         .join(',')
   )
 
-  const updateMultiShipCheckoutPersonalInfo = useUpdateMultiShipCheckoutPersonalInfoMutation()
-  const createCheckoutDestination = useCreateCheckoutDestinationMutations()
-  const createCheckoutShippingMethod = useCreateCheckoutShippingMethodMutation()
-  const updateCheckoutCoupon = useUpdateCheckoutCouponMutation()
-  const deleteCheckoutCoupon = useDeleteCheckoutCouponMutation()
+  const {updateMultiShipCheckoutPersonalInfo} = useUpdateCheckoutPersonalInfo()
+  const {createCheckoutDestination} = useCreateDestination()
+  const {createCheckoutShippingMethod} = useCreateCheckoutShippingMethod()
+  const {updateCheckoutCoupon} = useUpdateCheckoutCoupon()
+  const {deleteCheckoutCoupon} = useDeleteCheckoutCoupon()
 
   const updateCheckoutPersonalInfo = async (formData: PersonalDetails) => {
     const { email } = formData
@@ -80,7 +80,7 @@ const MultiShipCheckoutTemplate = (props: MultiShipCheckoutProps) => {
   }
 
   const { isAuthenticated, user } = useAuthContext()
-  const { data: savedUserAddressData } = useCustomerContactsQueries(user?.id as number)
+  const { data: savedUserAddressData } = useGetCustomerAddresses(user?.id as number)
 
   const getShippingRateFromMethodGroupByMethodCode = async (
     shippingMethodCode: string,
@@ -134,15 +134,15 @@ const MultiShipCheckoutTemplate = (props: MultiShipCheckoutProps) => {
   }
 
   // Payment Step
-  const updateMultiShipCheckoutPaymentAction = useUpdateMultiShipCheckoutPaymentActionMutation()
-  const createMultiShipCheckoutPaymentAction = useCreateMultiShipCheckoutPaymentActionMutation()
+  const {voidCheckoutPayment} = useVoidCheckoutPayment()
+  const { addCheckoutPayment } = useAddCheckoutPayment()
 
   const handleVoidPayment = async (
     id: string,
     paymentId: string,
     paymentActionInput: PaymentActionInput
   ) => {
-    await updateMultiShipCheckoutPaymentAction.mutateAsync({
+    await voidCheckoutPayment.mutateAsync({
       checkoutId: id,
       paymentId,
       paymentActionInput,
@@ -150,14 +150,14 @@ const MultiShipCheckoutTemplate = (props: MultiShipCheckoutProps) => {
   }
 
   const handleAddPayment = async (id: string, paymentAction: PaymentActionInput) => {
-    await createMultiShipCheckoutPaymentAction.mutateAsync({
+    await addCheckoutPayment.mutateAsync({
       checkoutId: id,
       paymentAction,
     })
   }
 
   // Review Step
-  const createOrder = useCreateMultiShipCheckoutMutation()
+  const { createCheckout } = useCreateCheckout()
 
   const personalDetails = {
     email: checkout && checkout.email,
@@ -174,8 +174,8 @@ const MultiShipCheckoutTemplate = (props: MultiShipCheckoutProps) => {
     total: checkout?.total,
   }
 
-  const handleCreateOrder = async (checkout: Checkout) => {
-    await createOrder.mutateAsync(checkout)
+  const handleCreateCheckout = async (checkout: Checkout) => {
+    await createCheckout.mutateAsync(checkout)
   }
 
   const { shipItems, pickupItems } = checkoutGetters.getCheckoutDetails(checkout as Checkout)
@@ -215,7 +215,7 @@ const MultiShipCheckoutTemplate = (props: MultiShipCheckoutProps) => {
           pickupItems={pickupItems}
           personalDetails={personalDetails}
           orderSummaryProps={orderSummaryProps}
-          onCreateOrder={handleCreateOrder}
+          onCreateOrder={handleCreateCheckout}
         />
       </CheckoutUITemplate>
     </>

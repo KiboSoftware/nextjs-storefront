@@ -5,10 +5,10 @@ import { WishlistPopover } from '@/components/dialogs'
 import { LoginDialog } from '@/components/layout'
 import { useAuthContext, useModalContext } from '@/context'
 import {
-  useWishlistQueries,
-  useAddToWishlistMutation,
-  useRemoveWishlistItemMutation,
-  useCreateWishlistMutation,
+  useGetWishlist,
+  useAddToWishlistItem,
+  useDeleteWishlistItem,
+  useCreateWishlist,
 } from '@/hooks'
 import { wishlistGetters } from '@/lib/getters'
 import { buildAddOrRemoveWishlistItemParams, buildWishlistParams } from '@/lib/helpers'
@@ -33,10 +33,10 @@ import type {
 export const useWishlist = (params?: WishlistHookParams) => {
   const { showModal } = useModalContext()
 
-  const { data: wishlist } = useWishlistQueries()
-  const { addToWishlist } = useAddToWishlistMutation()
-  const { removeWishlistItem } = useRemoveWishlistItemMutation(params)
-  const { createWishlist } = useCreateWishlistMutation()
+  const { data: wishlist } = useGetWishlist()
+  const { addToWishlist } = useAddToWishlistItem()
+  const { deleteWishlistItem } = useDeleteWishlistItem(params)
+  const { createWishlist } = useCreateWishlist()
   const { isAuthenticated, user: customerAccount } = useAuthContext()
 
   const checkProductInWishlist = (props: WishlistItemInWishlistParams) => {
@@ -74,7 +74,7 @@ export const useWishlist = (params?: WishlistHookParams) => {
         customerAccountId: customerAccount?.id as number,
       })
     } else {
-      await removeWishlistItem.mutateAsync(variables)
+      await deleteWishlistItem.mutateAsync(variables)
     }
 
     showModal({
@@ -123,6 +123,6 @@ export const useWishlist = (params?: WishlistHookParams) => {
   return {
     addOrRemoveWishlistItem,
     checkProductInWishlist,
-    isWishlistLoading: addToWishlist.isLoading || removeWishlistItem.isLoading,
+    isWishlistLoading: addToWishlist.isLoading || deleteWishlistItem.isLoading,
   }
 }

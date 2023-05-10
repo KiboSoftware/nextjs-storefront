@@ -13,7 +13,7 @@ const searchBarMock = () => <input data-testid="search-bar-component" name="sear
 jest.mock('@/components/common/SearchBar/SearchBar', () => () => searchBarMock())
 jest.mock('@/hooks', () => ({
   useDebounce: jest.fn(() => ''),
-  useSearchSuggestionsQueries: jest.fn(() => ''),
+  useGetSearchSuggestions: jest.fn(() => ''),
 }))
 
 describe('[components] - SearchSuggestions', () => {

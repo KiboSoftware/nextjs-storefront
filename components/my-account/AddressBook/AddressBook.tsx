@@ -21,9 +21,9 @@ import { AddressCard, AddressForm, KiboSelect } from '@/components/common'
 import { ConfirmationDialog } from '@/components/dialogs'
 import { useModalContext } from '@/context'
 import {
-  useCreateCustomerAddressMutation,
-  useUpdateCustomerAddressMutation,
-  useDeleteCustomerAddressMutation,
+  useCreateCustomerAddress,
+  useUpdateCustomerAddress,
+  useDeleteCustomerAddress,
 } from '@/hooks'
 import { AddressType } from '@/lib/constants'
 import { userGetters } from '@/lib/getters'
@@ -129,9 +129,9 @@ const AddressBook = (props: AddressBookProps) => {
 
   const { t } = useTranslation('common')
   const { showModal, closeModal } = useModalContext()
-  const { addSavedAddressDetails } = useCreateCustomerAddressMutation()
-  const { updateSavedAddressDetails } = useUpdateCustomerAddressMutation()
-  const { deleteSavedAddressDetails } = useDeleteCustomerAddressMutation()
+  const { createCustomerAddress } = useCreateCustomerAddress()
+  const { updateCustomerAddress } = useUpdateCustomerAddress()
+  const { deleteCustomerAddress } = useDeleteCustomerAddress()
 
   const shippingAddresses = userGetters.getUserShippingAddress(contacts?.items as CustomerContact[])
   const billingAddresses = userGetters.getUserBillingAddresses(contacts?.items as CustomerContact[])
@@ -170,12 +170,10 @@ const AddressBook = (props: AddressBookProps) => {
 
     try {
       if (address?.contact?.id) {
-        await updateSavedAddressDetails.mutateAsync(
-          params as UpdateCustomerAccountContactDetailsParams
-        )
+        await updateCustomerAddress.mutateAsync(params as UpdateCustomerAccountContactDetailsParams)
         setIsEditAddress(false)
       } else {
-        await addSavedAddressDetails.mutateAsync(params)
+        await createCustomerAddress.mutateAsync(params)
         setIsAddNewAddress(false)
       }
 
@@ -203,7 +201,7 @@ const AddressBook = (props: AddressBookProps) => {
 
   const handleDeleteAddress = async (deleteAddressProps: DeleteAddressParams) => {
     try {
-      await deleteSavedAddressDetails.mutateAsync(deleteAddressProps)
+      await deleteCustomerAddress.mutateAsync(deleteAddressProps)
       closeModal()
     } catch (error) {
       console.log('Error: delete saved address from my account', error)

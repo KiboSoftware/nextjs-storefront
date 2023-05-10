@@ -33,7 +33,7 @@ import {
   CheckoutHeader,
 } from '@/components/layout'
 import { useAuthContext, useHeaderContext, useModalContext } from '@/context'
-import { useCategoryTreeQueries } from '@/hooks'
+import { useGetCategoryTree } from '@/hooks'
 import type { NavigationLink } from '@/lib/types'
 
 import type { Maybe, PrCategory } from '@/lib/gql/types'
@@ -230,7 +230,7 @@ function HideOnScroll(props: HideOnScrollProps) {
 
 const KiboHeader = (props: KiboHeaderProps) => {
   const { navLinks, categoriesTree: initialCategoryTree, isSticky } = props
-  const { data: categoriesTree } = useCategoryTreeQueries(initialCategoryTree)
+  const { data: categoriesTree } = useGetCategoryTree(initialCategoryTree)
   const { headerState, toggleMobileSearchPortal, toggleHamburgerMenu } = useHeaderContext()
   const { isAuthenticated } = useAuthContext()
   const { showModal } = useModalContext()

@@ -5,7 +5,7 @@ import { useRouter } from 'next/router'
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
 
 import { ProductListingTemplate } from '@/components/page-templates'
-import { useProductSearchQueries } from '@/hooks'
+import { useGetSearchedProducts } from '@/hooks'
 import { productSearch, categoryTreeSearchByCode } from '@/lib/api/operations'
 import getCategoryTree from '@/lib/api/operations/get-category-tree'
 import { productSearchGetters, facetGetters } from '@/lib/getters'
@@ -64,7 +64,7 @@ const CategoryPage: NextPage<CategoryPageType> = (props: any) => {
   const [searchParams, setSearchParams] = useState<CategorySearchParams>(
     router.query as unknown as CategorySearchParams
   )
-  const { data: productSearchResult, isFetching } = useProductSearchQueries(
+  const { data: productSearchResult, isFetching } = useGetSearchedProducts(
     searchParams,
     props.results
   )
