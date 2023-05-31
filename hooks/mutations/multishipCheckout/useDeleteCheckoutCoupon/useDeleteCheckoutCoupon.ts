@@ -44,6 +44,6 @@ export const useDeleteCheckoutCoupon = () => {
       onSuccess: () => {
         queryClient.invalidateQueries(checkoutKeys.all)
       },
-    })
+    }),
   }
 }

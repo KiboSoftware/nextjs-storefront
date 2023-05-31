@@ -20,7 +20,7 @@
 
 Description : Updates user personal info at checkout
 
-Parameters passed to function updatePersonalInfo({ checkout, email }: PersonalInfo) => expects object of type ' PersonalInfo' containing  checkout and email
+Parameters passed to function updatePersonalInfo({ checkout, email }: PersonalInfo) => expects object of type ' PersonalInfo' containing checkout and email
 
 On success, calls invalidateQueries on checkoutKeys and fetches the updated result.
 

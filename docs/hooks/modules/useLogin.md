@@ -30,14 +30,14 @@ On success, calls invalidateQueries on loginKeys and fetches the updated result.
 
 'response?.account', which contains information related to logged in user account
 
-| Name | Type |
-| :------ | :------ |
-| `data` | `any` |
-| `error` | `unknown` |
-| `isError` | `boolean` |
-| `isLoading` | `boolean` |
-| `isSuccess` | `boolean` |
-| `mutate` | `UseMutateFunction`<`any`, `unknown`, `CustomerUserAuthInfoInput`, `void`\> |
+| Name          | Type                                                                             |
+| :------------ | :------------------------------------------------------------------------------- |
+| `data`        | `any`                                                                            |
+| `error`       | `unknown`                                                                        |
+| `isError`     | `boolean`                                                                        |
+| `isLoading`   | `boolean`                                                                        |
+| `isSuccess`   | `boolean`                                                                        |
+| `mutate`      | `UseMutateFunction`<`any`, `unknown`, `CustomerUserAuthInfoInput`, `void`\>      |
 | `mutateAsync` | `UseMutateAsyncFunction`<`any`, `unknown`, `CustomerUserAuthInfoInput`, `void`\> |
 
 #### Defined in

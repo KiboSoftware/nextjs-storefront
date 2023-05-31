@@ -10,7 +10,7 @@ describe('[hooks] useCreateDestination', () => {
 
     renderHook(
       async () => {
-        const {createCheckoutDestination} = useCreateDestination()
+        const { createCheckoutDestination } = useCreateDestination()
         const response = await createCheckoutDestination.mutateAsync({
           checkoutId: '',
           destinationInput: {},

@@ -50,7 +50,7 @@ describe('[component] Product Detail Template data: useProductDetailTemplate', (
   //       'test-shopperEnteredValue'
   //     )
   //   )
-/*
+  /*
     expect(result.current.currentProduct).toStrictEqual({
       ...product,
       inventoryInfo: mockConfigureProductOptionsResponse.inventoryInfo,

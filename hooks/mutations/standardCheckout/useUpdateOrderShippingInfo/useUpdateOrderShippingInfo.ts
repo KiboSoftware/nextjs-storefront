@@ -56,6 +56,6 @@ export const useUpdateOrderShippingInfo = () => {
       onSuccess: () => {
         queryClient.invalidateQueries(checkoutKeys.all)
       },
-    })
+    }),
   }
 }

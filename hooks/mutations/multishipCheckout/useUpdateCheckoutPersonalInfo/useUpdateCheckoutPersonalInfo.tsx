@@ -58,6 +58,6 @@ export const useUpdateCheckoutPersonalInfo = () => {
       onSuccess: () => {
         queryClient.invalidateQueries(checkoutKeys.all)
       },
-    })
+    }),
   }
 }

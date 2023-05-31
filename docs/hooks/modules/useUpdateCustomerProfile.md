@@ -30,8 +30,8 @@ On success, calls invalidateQueries loginKeys.user and fetches the updated resul
 
 'response', which has updated customer's profile details like userName, firstName, lastName, emailAddress etc.
 
-| Name | Type |
-| :------ | :------ |
+| Name             | Type                                                                            |
+| :--------------- | :------------------------------------------------------------------------------ |
 | `updateUserData` | `UseMutationResult`<`any`, `unknown`, `UpdateCustomerProfileProps`, `unknown`\> |
 
 #### Defined in

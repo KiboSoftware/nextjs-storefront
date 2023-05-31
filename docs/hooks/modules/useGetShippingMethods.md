@@ -26,11 +26,11 @@ On success, returns the received list of shipping methods.
 
 #### Parameters
 
-| Name | Type | Description |
-| :------ | :------ | :------ |
-| `checkoutId` | `undefined` \| ``null`` \| `string` | Accepts created checkout id |
-| `isNewAddressAdded?` | `boolean` | - |
-| `selectedShippingAddressId?` | `number` | - |
+| Name                         | Type                              | Description                 |
+| :--------------------------- | :-------------------------------- | :-------------------------- |
+| `checkoutId`                 | `undefined` \| `null` \| `string` | Accepts created checkout id |
+| `isNewAddressAdded?`         | `boolean`                         | -                           |
+| `selectedShippingAddressId?` | `number`                          | -                           |
 
 #### Returns
 

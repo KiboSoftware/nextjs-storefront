@@ -44,10 +44,10 @@ export const useUpdateItemDestination = () => {
   const queryClient = useQueryClient()
 
   return {
-    updateCheckoutItemDestination:  useMutation(setCheckoutItemDestination, {
+    updateCheckoutItemDestination: useMutation(setCheckoutItemDestination, {
       onSuccess: () => {
         queryClient.invalidateQueries(checkoutKeys.all)
       },
-    })
+    }),
   }
 }

@@ -64,11 +64,11 @@ const MultiShipCheckoutTemplate = (props: MultiShipCheckoutProps) => {
         .join(',')
   )
 
-  const {updateMultiShipCheckoutPersonalInfo} = useUpdateCheckoutPersonalInfo()
-  const {createCheckoutDestination} = useCreateDestination()
-  const {createCheckoutShippingMethod} = useCreateCheckoutShippingMethod()
-  const {updateCheckoutCoupon} = useUpdateCheckoutCoupon()
-  const {deleteCheckoutCoupon} = useDeleteCheckoutCoupon()
+  const { updateMultiShipCheckoutPersonalInfo } = useUpdateCheckoutPersonalInfo()
+  const { createCheckoutDestination } = useCreateDestination()
+  const { createCheckoutShippingMethod } = useCreateCheckoutShippingMethod()
+  const { updateCheckoutCoupon } = useUpdateCheckoutCoupon()
+  const { deleteCheckoutCoupon } = useDeleteCheckoutCoupon()
 
   const updateCheckoutPersonalInfo = async (formData: PersonalDetails) => {
     const { email } = formData
@@ -134,7 +134,7 @@ const MultiShipCheckoutTemplate = (props: MultiShipCheckoutProps) => {
   }
 
   // Payment Step
-  const {voidCheckoutPayment} = useVoidCheckoutPayment()
+  const { voidCheckoutPayment } = useVoidCheckoutPayment()
   const { addCheckoutPayment } = useAddCheckoutPayment()
 
   const handleVoidPayment = async (

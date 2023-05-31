@@ -24,10 +24,10 @@ On success, returns the product list with 'refetchOnWindowFocus' set to false fo
 
 #### Parameters
 
-| Name | Type | Description |
-| :------ | :------ | :------ |
-| `productCode` | `string` | unique product code for which inventory needed to be fetched |
-| `useSubscriptionPricing` | `boolean` | used to check if the product has subscription price or not |
+| Name                     | Type      | Description                                                  |
+| :----------------------- | :-------- | :----------------------------------------------------------- |
+| `productCode`            | `string`  | unique product code for which inventory needed to be fetched |
+| `useSubscriptionPricing` | `boolean` | used to check if the product has subscription price or not   |
 
 #### Returns
 

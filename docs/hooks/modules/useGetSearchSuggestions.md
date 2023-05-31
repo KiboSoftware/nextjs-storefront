@@ -27,8 +27,8 @@ On success, returns the received search suggestions.
 
 #### Parameters
 
-| Name | Type | Description |
-| :------ | :------ | :------ |
+| Name         | Type     | Description                                              |
+| :----------- | :------- | :------------------------------------------------------- |
 | `searchTerm` | `string` | Expect user entered search keyword to search the result. |
 
 #### Returns

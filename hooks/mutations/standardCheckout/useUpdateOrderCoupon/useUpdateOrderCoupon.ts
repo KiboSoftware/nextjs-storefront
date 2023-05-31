@@ -49,6 +49,6 @@ export const useUpdateOrderCoupon = () => {
       onSuccess: () => {
         queryClient.invalidateQueries(checkoutKeys.all)
       },
-    })
+    }),
   }
 }

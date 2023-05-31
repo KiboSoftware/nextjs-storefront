@@ -24,8 +24,8 @@ Parameters passed to function getCheckout(checkoutId: string) => expects checkou
 
 #### Parameters
 
-| Name | Type |
-| :------ | :------ |
+| Name             | Type                   |
+| :--------------- | :--------------------- |
 | `«destructured»` | `UseMultiShipCheckout` |
 
 #### Returns

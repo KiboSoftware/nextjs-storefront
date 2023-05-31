@@ -28,8 +28,8 @@ Parameters passed to internal function configureProduct(params: ConfigureProduct
 
 'response?.configureProduct', which has product details like productCode, purchaseLocation, options, productImages etc.
 
-| Name | Type |
-| :------ | :------ |
+| Name               | Type                                                                         |
+| :----------------- | :--------------------------------------------------------------------------- |
 | `configureProduct` | `UseMutationResult`<`any`, `unknown`, `ConfigureProductDetails`, `unknown`\> |
 
 #### Defined in

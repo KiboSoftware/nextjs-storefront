@@ -28,9 +28,9 @@ Parameters passed to function skipNextSubscription(subscriptionId?: string | nul
 
 'response?.subscription' which contains next order date when the order will be placed
 
-| Name | Type |
-| :------ | :------ |
-| `skipNextSubscription` | `UseMutationResult`<`any`, `unknown`, `undefined` \| ``null`` \| `string`, `unknown`\> |
+| Name                   | Type                                                                                 |
+| :--------------------- | :----------------------------------------------------------------------------------- |
+| `skipNextSubscription` | `UseMutationResult`<`any`, `unknown`, `undefined` \| `null` \| `string`, `unknown`\> |
 
 #### Defined in
 

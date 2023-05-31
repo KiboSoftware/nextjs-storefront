@@ -27,10 +27,10 @@ On success, returns the list of location
 
 #### Parameters
 
-| Name | Type | Description |
-| :------ | :------ | :------ |
-| `searchParams` | `Object` | Expect 'location code' or 'geo near(${latitude}, ${longitude}, ${defaultRange})' inside the filter value |
-| `searchParams.filter` | `string` | - |
+| Name                  | Type     | Description                                                                                              |
+| :-------------------- | :------- | :------------------------------------------------------------------------------------------------------- |
+| `searchParams`        | `Object` | Expect 'location code' or 'geo near(${latitude}, ${longitude}, ${defaultRange})' inside the filter value |
+| `searchParams.filter` | `string` | -                                                                                                        |
 
 #### Returns
 

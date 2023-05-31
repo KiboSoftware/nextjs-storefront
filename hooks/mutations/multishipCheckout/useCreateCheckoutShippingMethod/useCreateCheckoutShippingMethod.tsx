@@ -51,6 +51,6 @@ export const useCreateCheckoutShippingMethod = () => {
       onSuccess: () => {
         queryClient.invalidateQueries(checkoutKeys.all)
       },
-    })
+    }),
   }
 }

@@ -59,6 +59,6 @@ export const useUpdateOrderPersonalInfo = () => {
       onSuccess: () => {
         queryClient.removeQueries([checkoutKeys.all])
       },
-    })
+    }),
   }
 }

@@ -26,8 +26,8 @@ On success, returns the list of orders
 
 #### Parameters
 
-| Name | Type | Description |
-| :------ | :------ | :------ |
+| Name    | Type           | Description                                                                                                                                 |
+| :------ | :------------- | :------------------------------------------------------------------------------------------------------------------------------------------ |
 | `param` | `UseUserOrder` | Accepts a UseUserOrder value as filters (duration like M-1, M-6, Y-2022 etc) or order number and billing email including status (ABANDONED) |
 
 #### Returns

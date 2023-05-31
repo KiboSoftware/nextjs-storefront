@@ -30,8 +30,8 @@ On success, calls invalidateQueries on subscriptionKeys and fetches the updated 
 
 'response.updateSubscriptionFulfillmentInfo', which returns updated Subscription FulfillmentInfo
 
-| Name | Type |
-| :------ | :------ |
+| Name                             | Type                                                                                     |
+| :------------------------------- | :--------------------------------------------------------------------------------------- |
 | `updateSubscriptionShippingInfo` | `UseMutationResult`<`any`, `unknown`, `UpdateSubscriptionShippingInfoProps`, `unknown`\> |
 
 #### Defined in

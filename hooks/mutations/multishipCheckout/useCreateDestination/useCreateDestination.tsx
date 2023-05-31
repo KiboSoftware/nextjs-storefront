@@ -50,6 +50,6 @@ export const useCreateDestination = () => {
         queryClient.invalidateQueries(checkoutDestinationKeys.all)
         queryClient.invalidateQueries(checkoutKeys.all)
       },
-    })
+    }),
   }
 }

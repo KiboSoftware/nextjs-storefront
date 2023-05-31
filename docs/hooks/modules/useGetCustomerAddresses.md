@@ -26,8 +26,8 @@ On success, returns the saved addresses with 'refetchOnWindowFocus' set to false
 
 #### Parameters
 
-| Name | Type | Description |
-| :------ | :------ | :------ |
+| Name        | Type     | Description                                                                     |
+| :---------- | :------- | :------------------------------------------------------------------------------ |
 | `accountId` | `number` | stores the user id of the user whose saved address details needed to be fetched |
 
 #### Returns

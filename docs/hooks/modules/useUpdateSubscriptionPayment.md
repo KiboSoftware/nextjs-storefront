@@ -16,7 +16,7 @@
 
 [Mutation hook] useUpdateSubscriptionPayment uses the graphQL mutation
 
-<b>updateSubscriptionPayment(subscriptionId: String!  paymentInput: SbPaymentInput ): Subscription</b>
+<b>updateSubscriptionPayment(subscriptionId: String! paymentInput: SbPaymentInput ): Subscription</b>
 
 Description : Updates Subscription Payment
 
@@ -30,8 +30,8 @@ On success, calls invalidateQueries on subscriptionKeys and fetches the updated 
 
 'response.subscription', which returns updated Subscription
 
-| Name | Type |
-| :------ | :------ |
+| Name                        | Type                                                                                |
+| :-------------------------- | :---------------------------------------------------------------------------------- |
 | `updateSubscriptionPayment` | `UseMutationResult`<`any`, `unknown`, `UpdateSubscriptionPaymentProps`, `unknown`\> |
 
 #### Defined in

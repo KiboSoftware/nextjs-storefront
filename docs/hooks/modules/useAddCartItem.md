@@ -30,8 +30,8 @@ On success, calls invalidateQueries on cartKeys and fetches the updated result.
 
 'response?.addItemToCurrentCart' which contains object of product items added to cart and it's quantity
 
-| Name | Type |
-| :------ | :------ |
+| Name        | Type                                                                   |
+| :---------- | :--------------------------------------------------------------------- |
 | `addToCart` | `UseMutationResult`<`any`, `unknown`, `AddCartItemParams`, `unknown`\> |
 
 #### Defined in

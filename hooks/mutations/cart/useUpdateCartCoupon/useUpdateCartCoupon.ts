@@ -48,6 +48,6 @@ export const useUpdateCartCoupon = () => {
       onSuccess: () => {
         queryClient.invalidateQueries(cartKeys.all)
       },
-    })
+    }),
   }
 }

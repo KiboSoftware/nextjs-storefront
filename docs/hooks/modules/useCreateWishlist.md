@@ -30,8 +30,8 @@ On success, calls invalidateQueries on wishlistKeys and fetches the updated resu
 
 'response?.createWishlistItem', which contains wishlist created for user.
 
-| Name | Type |
-| :------ | :------ |
+| Name             | Type                                                        |
+| :--------------- | :---------------------------------------------------------- |
 | `createWishlist` | `UseMutationResult`<`any`, `unknown`, `number`, `unknown`\> |
 
 #### Defined in

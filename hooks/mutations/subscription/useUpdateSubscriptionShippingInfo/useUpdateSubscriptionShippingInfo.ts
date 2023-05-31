@@ -15,9 +15,7 @@ interface UpdateSubscriptionShippingInfoProps {
   fulfillmentInfoInput: SbFulfillmentInfoInput
 }
 
-const updateSubscriptionFulfillmentInfo = async (
-  params: UpdateSubscriptionShippingInfoProps
-) => {
+const updateSubscriptionFulfillmentInfo = async (params: UpdateSubscriptionShippingInfoProps) => {
   const client = makeGraphQLClient()
 
   const response = await client.request({

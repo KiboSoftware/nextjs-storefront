@@ -24,8 +24,8 @@ Parameters passed to function getCheckoutDestinations(params: UseDestinations) =
 
 #### Parameters
 
-| Name | Type | Description |
-| :------ | :------ | :------ |
+| Name     | Type              | Description       |
+| :------- | :---------------- | :---------------- |
 | `params` | `UseDestinations` | stores checkoutId |
 
 #### Returns

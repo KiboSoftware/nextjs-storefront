@@ -52,6 +52,6 @@ export const useCreateOrder = () => {
       onSuccess: () => {
         queryClient.removeQueries([checkoutKeys.all])
       },
-    })
+    }),
   }
 }

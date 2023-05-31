@@ -24,10 +24,10 @@ Parameters passed to function loadShippingMethods(checkoutId: string) => expects
 
 #### Parameters
 
-| Name | Type | Description |
-| :------ | :------ | :------ |
-| `checkoutId` | `undefined` \| ``null`` \| `string` | stores checkoutId |
-| `selectedShippingAddressId?` | ``null`` \| `string` | stores the id of selected shipping address |
+| Name                         | Type                              | Description                                |
+| :--------------------------- | :-------------------------------- | :----------------------------------------- |
+| `checkoutId`                 | `undefined` \| `null` \| `string` | stores checkoutId                          |
+| `selectedShippingAddressId?` | `null` \| `string`                | stores the id of selected shipping address |
 
 #### Returns
 

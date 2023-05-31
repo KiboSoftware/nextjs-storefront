@@ -1,5 +1,5 @@
 /**
- * @module useUpdateCustomerProfile 
+ * @module useUpdateCustomerProfile
  */
 import { useMutation, useQueryClient } from 'react-query'
 

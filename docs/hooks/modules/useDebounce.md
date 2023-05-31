@@ -24,10 +24,10 @@ clearTimeout(handler) will cancel the timeout if value changes. Timeout gets cle
 
 #### Parameters
 
-| Name | Type | Description |
-| :------ | :------ | :------ |
+| Name    | Type     | Description                                              |
+| :------ | :------- | :------------------------------------------------------- |
 | `value` | `string` | Excepts user entered value on search suggestions feature |
-| `delay` | `number` | Expect debounce timeout value |
+| `delay` | `number` | Expect debounce timeout value                            |
 
 #### Returns
 

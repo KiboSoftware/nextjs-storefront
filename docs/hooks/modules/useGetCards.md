@@ -26,8 +26,8 @@ On success, returns the card collection of customer's account
 
 #### Parameters
 
-| Name | Type | Description |
-| :------ | :------ | :------ |
+| Name        | Type     | Description                                                                  |
+| :---------- | :------- | :--------------------------------------------------------------------------- |
 | `accountId` | `number` | stores the user id of the user whose saved card details needed to be fetched |
 
 #### Returns

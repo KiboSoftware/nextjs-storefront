@@ -26,10 +26,10 @@ On success, returns items that are returned and 'refetchOnWindowFocus' set to fa
 
 #### Parameters
 
-| Name | Type | Description |
-| :------ | :------ | :------ |
-| `searchParams` | `Object` | can be used to filter out the results |
-| `searchParams.filter` | `string` | - |
+| Name                  | Type     | Description                           |
+| :-------------------- | :------- | :------------------------------------ |
+| `searchParams`        | `Object` | can be used to filter out the results |
+| `searchParams.filter` | `string` | -                                     |
 
 #### Returns
 

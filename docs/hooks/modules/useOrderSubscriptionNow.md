@@ -30,8 +30,8 @@ On success, calls invalidateQueries on subscriptionKeys and fetches the updated 
 
 'response?.orderSubscriptionNow' which contains object of Subscription
 
-| Name | Type |
-| :------ | :------ |
+| Name                   | Type                                                                                 |
+| :--------------------- | :----------------------------------------------------------------------------------- |
 | `orderSubscriptionNow` | `UseMutationResult`<`any`, `unknown`, `OrderSubscriptionNowInputParams`, `unknown`\> |
 
 #### Defined in

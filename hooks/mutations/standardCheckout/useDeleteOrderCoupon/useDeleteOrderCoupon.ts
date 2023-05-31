@@ -48,6 +48,6 @@ export const useDeleteOrderCoupon = () => {
       onSuccess: () => {
         queryClient.invalidateQueries(checkoutKeys.all)
       },
-    })
+    }),
   }
 }

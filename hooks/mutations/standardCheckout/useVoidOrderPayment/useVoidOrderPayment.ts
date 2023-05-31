@@ -51,6 +51,6 @@ export const useVoidOrderPayment = () => {
       onSuccess: () => {
         queryClient.removeQueries([checkoutKeys.all])
       },
-    })
+    }),
   }
 }
