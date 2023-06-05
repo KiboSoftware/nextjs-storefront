@@ -26,9 +26,9 @@ On success, returns the inventory details with 'refetchOnWindowFocus' set to fal
 
 #### Parameters
 
-| Name | Type | Description |
-| :------ | :------ | :------ |
-| `productCode` | `string` | unique product code for which inventory needed to be fetched |
+| Name            | Type     | Description                                                                 |
+| :-------------- | :------- | :-------------------------------------------------------------------------- |
+| `productCode`   | `string` | unique product code for which inventory needed to be fetched                |
 | `locationCodes` | `string` | location codes could be single string value or comma separated string value |
 
 #### Returns

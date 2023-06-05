@@ -20,7 +20,7 @@
 
 Description : Add item to wishlist for current user
 
-Parameters passed to function addToWishlist(props: WishlistItemInputParams) => expects object of type ' WishlistItemInputParams' containing  product ,customerAccountId ,currentWishlist
+Parameters passed to function addToWishlist(props: WishlistItemInputParams) => expects object of type ' WishlistItemInputParams' containing product ,customerAccountId ,currentWishlist
 
 On success, calls invalidateQueries on wishlistKeys and fetches the updated result.
 
@@ -30,8 +30,8 @@ On success, calls invalidateQueries on wishlistKeys and fetches the updated resu
 
 'response?.createWishlistItem', which contains wishlist items for current user
 
-| Name | Type |
-| :------ | :------ |
+| Name            | Type                                                                         |
+| :-------------- | :--------------------------------------------------------------------------- |
 | `addToWishlist` | `UseMutationResult`<`any`, `unknown`, `WishlistItemInputParams`, `unknown`\> |
 
 #### Defined in

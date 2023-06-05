@@ -23,7 +23,7 @@
 
 [queries/subscription/useGetSubscriptions/useGetSubscriptions.ts:10](https://github.com/KiboSoftware/nextjs-storefront/blob/474c22ea/hooks/queries/subscription/useGetSubscriptions/useGetSubscriptions.ts#L10)
 
-___
+---
 
 ### isFetching
 
@@ -33,7 +33,7 @@ ___
 
 [queries/subscription/useGetSubscriptions/useGetSubscriptions.ts:13](https://github.com/KiboSoftware/nextjs-storefront/blob/474c22ea/hooks/queries/subscription/useGetSubscriptions/useGetSubscriptions.ts#L13)
 
-___
+---
 
 ### isLoading
 
@@ -43,7 +43,7 @@ ___
 
 [queries/subscription/useGetSubscriptions/useGetSubscriptions.ts:11](https://github.com/KiboSoftware/nextjs-storefront/blob/474c22ea/hooks/queries/subscription/useGetSubscriptions/useGetSubscriptions.ts#L11)
 
-___
+---
 
 ### isSuccess
 

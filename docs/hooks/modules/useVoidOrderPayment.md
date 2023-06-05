@@ -20,7 +20,7 @@
 
 Description : Updates user payment action for order at checkout
 
-Parameters passed to function updateOrderPaymentActionMutation(params: UpdateOrderPaymentActionParams) => expects object of type ' UpdateOrderPaymentActionParams' containing  orderId, paymentId,paymentAction
+Parameters passed to function updateOrderPaymentActionMutation(params: UpdateOrderPaymentActionParams) => expects object of type ' UpdateOrderPaymentActionParams' containing orderId, paymentId,paymentAction
 
 On success, calls invalidateQueries on checkoutKeys and fetches the updated result.
 

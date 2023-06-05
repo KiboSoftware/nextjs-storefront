@@ -20,7 +20,7 @@
 
 Description : Update subscription next order date.
 
-Parameters passed to function updateSubscriptionNextOrderDate(subscriptionId: string, subscriptionNextOrderDateInput: { nextOrderDate: string  }) => expects subscriptionId and nextOrderDate
+Parameters passed to function updateSubscriptionNextOrderDate(subscriptionId: string, subscriptionNextOrderDateInput: { nextOrderDate: string }) => expects subscriptionId and nextOrderDate
 
 #### Returns
 
@@ -28,8 +28,8 @@ Parameters passed to function updateSubscriptionNextOrderDate(subscriptionId: st
 
 'response?.subscription.nextOrderDate' which contains next order date when the order will be placed
 
-| Name | Type |
-| :------ | :------ |
+| Name                              | Type                                                                                      |
+| :-------------------------------- | :---------------------------------------------------------------------------------------- |
 | `updateSubscriptionNextOrderDate` | `UseMutationResult`<`any`, `unknown`, `UpdateSubscriptionNextOrderDateProps`, `unknown`\> |
 
 #### Defined in

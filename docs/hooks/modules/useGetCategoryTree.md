@@ -24,8 +24,8 @@ On success, returns the category data items
 
 #### Parameters
 
-| Name | Type | Description |
-| :------ | :------ | :------ |
+| Name          | Type                     | Description                                                                                                                                   |
+| :------------ | :----------------------- | :-------------------------------------------------------------------------------------------------------------------------------------------- |
 | `initialData` | `Maybe`<`PrCategory`\>[] | stores the category data for the storefront present on server side. Used to check if the data has got stale, if not; cached data is returned. |
 
 #### Returns

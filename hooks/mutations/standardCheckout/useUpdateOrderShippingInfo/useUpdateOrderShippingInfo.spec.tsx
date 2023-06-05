@@ -10,7 +10,7 @@ describe('[hooks] useUpdateOrderShippingInfo', () => {
 
     renderHook(
       async () => {
-        const {updateOrderShippingInfo} = useUpdateOrderShippingInfo()
+        const { updateOrderShippingInfo } = useUpdateOrderShippingInfo()
         const response = await updateOrderShippingInfo.mutateAsync({
           checkout: orderMock.checkout,
         })

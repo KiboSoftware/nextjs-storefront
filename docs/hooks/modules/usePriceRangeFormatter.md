@@ -12,19 +12,19 @@
 
 ### usePriceRangeFormatter
 
-▸ **usePriceRangeFormatter**(`priceRange`): `undefined` \| { `lower`: { `price`: ``null`` \| `string` ; `salePrice`: ``null`` \| `string`  } ; `upper`: { `price`: ``null`` \| `string` ; `salePrice`: ``null`` \| `string`  }  }
+▸ **usePriceRangeFormatter**(`priceRange`): `undefined` \| { `lower`: { `price`: `null` \| `string` ; `salePrice`: `null` \| `string` } ; `upper`: { `price`: `null` \| `string` ; `salePrice`: `null` \| `string` } }
 
 [Custom Hook] It will format the price range object with translations
 
 #### Parameters
 
-| Name | Type | Description |
-| :------ | :------ | :------ |
+| Name         | Type                | Description                                     |
+| :----------- | :------------------ | :---------------------------------------------- |
 | `priceRange` | `ProductPriceRange` | Excepts price range object received from server |
 
 #### Returns
 
-`undefined` \| { `lower`: { `price`: ``null`` \| `string` ; `salePrice`: ``null`` \| `string`  } ; `upper`: { `price`: ``null`` \| `string` ; `salePrice`: ``null`` \| `string`  }  }
+`undefined` \| { `lower`: { `price`: `null` \| `string` ; `salePrice`: `null` \| `string` } ; `upper`: { `price`: `null` \| `string` ; `salePrice`: `null` \| `string` } }
 
 Translated price range object
 

@@ -49,6 +49,6 @@ export const useVoidCheckoutPayment = () => {
       onSuccess: () => {
         queryClient.invalidateQueries(checkoutKeys.all)
       },
-    })
+    }),
   }
 }

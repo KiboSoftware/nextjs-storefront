@@ -50,6 +50,6 @@ export const useUpdateOrderBillingInfo = () => {
       onSuccess: () => {
         queryClient.invalidateQueries(checkoutKeys.all)
       },
-    })
+    }),
   }
 }

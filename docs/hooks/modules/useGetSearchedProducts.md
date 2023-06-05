@@ -26,10 +26,10 @@ On success, returns the product list with 'refetchOnWindowFocus' set to false fo
 
 #### Parameters
 
-| Name | Type | Description |
-| :------ | :------ | :------ |
-| `searchParams` | `CategorySearchParams` | get required values from route.query and used inside the search params |
-| `initialData?` | `ProductSearchResult` | stores the data for cart present on server side. Used to check if the data has got stale, if not; data is not fetched again. |
+| Name           | Type                   | Description                                                                                                                  |
+| :------------- | :--------------------- | :--------------------------------------------------------------------------------------------------------------------------- |
+| `searchParams` | `CategorySearchParams` | get required values from route.query and used inside the search params                                                       |
+| `initialData?` | `ProductSearchResult`  | stores the data for cart present on server side. Used to check if the data has got stale, if not; data is not fetched again. |
 
 #### Returns
 

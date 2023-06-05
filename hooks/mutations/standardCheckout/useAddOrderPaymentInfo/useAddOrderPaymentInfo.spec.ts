@@ -21,10 +21,8 @@ describe('[hooks] useAddOrderPaymentInfo', () => {
 
     renderHook(
       async () => {
-        const {addOrderPayment} = useAddOrderPaymentInfo()
-        const response = await addOrderPayment.mutateAsync(
-          createOrderPaymentActionParams
-        )
+        const { addOrderPayment } = useAddOrderPaymentInfo()
+        const response = await addOrderPayment.mutateAsync(createOrderPaymentActionParams)
 
         expect(response).toStrictEqual(createOrderPaymentActionMock.createOrderPaymentAction)
       },

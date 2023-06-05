@@ -39,8 +39,7 @@ describe('[hooks] updateSubscriptionFulfillmentInfo', () => {
 
     renderHook(
       async () => {
-        const { updateSubscriptionShippingInfo } =
-        useUpdateSubscriptionShippingInfo()
+        const { updateSubscriptionShippingInfo } = useUpdateSubscriptionShippingInfo()
         const response = await updateSubscriptionShippingInfo.mutateAsync(params)
 
         expect(response).toStrictEqual(subscriptionMock.subscription.fulfillmentInfo)

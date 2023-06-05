@@ -30,8 +30,8 @@ On success, calls invalidateQueries on subscriptionKeys and fetches the updated 
 
 'response?.subscription' which contains object of Subscription
 
-| Name | Type |
-| :------ | :------ |
+| Name                      | Type                                                                                |
+| :------------------------ | :---------------------------------------------------------------------------------- |
 | `updateSubscriptionState` | `UseMutationResult`<`any`, `unknown`, `PerformSubscriptionActionProps`, `unknown`\> |
 
 #### Defined in

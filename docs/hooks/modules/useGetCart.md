@@ -26,8 +26,8 @@ On success, returns the current cart items with 'refetchOnWindowFocus' set to fa
 
 #### Parameters
 
-| Name | Type | Description |
-| :------ | :------ | :------ |
+| Name          | Type     | Description                                                                                                                  |
+| :------------ | :------- | :--------------------------------------------------------------------------------------------------------------------------- |
 | `initialData` | `CrCart` | stores the data for cart present on server side. Used to check if the data has got stale, if not; data is not fetched again. |
 
 #### Returns

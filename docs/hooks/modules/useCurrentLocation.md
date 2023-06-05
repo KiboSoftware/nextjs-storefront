@@ -28,8 +28,8 @@ If an error occurred, it will reject the promise with error.
 
 The promise with current Geo location coordinates
 
-| Name | Type |
-| :------ | :------ |
+| Name                 | Type                                       |
+| :------------------- | :----------------------------------------- |
 | `getCurrentLocation` | () => `Promise`<`GeolocationCoordinates`\> |
 
 #### Defined in

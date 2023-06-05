@@ -25,8 +25,8 @@ On success, calls invalidateQueries on wishlistKeys, clears timeout and fetches 
 
 #### Parameters
 
-| Name | Type | Description |
-| :------ | :------ | :------ |
+| Name      | Type                 | Description                        |
+| :-------- | :------------------- | :--------------------------------- |
 | `params?` | `WishlistHookParams` | Accepts a WishlistHookParams value |
 
 #### Returns
@@ -35,8 +35,8 @@ On success, calls invalidateQueries on wishlistKeys, clears timeout and fetches 
 
 response?.deleteWishlistItem, which contains True/False value to identify if wishlist item has been deleted or not.
 
-| Name | Type |
-| :------ | :------ |
+| Name                 | Type                                                                         |
+| :------------------- | :--------------------------------------------------------------------------- |
 | `deleteWishlistItem` | `UseMutationResult`<`any`, `unknown`, `DeleteWishlistItemInput`, `unknown`\> |
 
 #### Defined in

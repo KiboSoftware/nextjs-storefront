@@ -29,8 +29,8 @@ Parameters passed to function createOrderReturnItems(params: CreateOrderReturnIt
 
 'response?.createReturn' which places the return order containing return reasons and return type with items to be returned
 
-| Name | Type |
-| :------ | :------ |
+| Name                | Type                                                                                   |
+| :------------------ | :------------------------------------------------------------------------------------- |
 | `createReturnItems` | `UseMutationResult`<`any`, `unknown`, `CreateOrderReturnItemsInputParams`, `unknown`\> |
 
 #### Defined in

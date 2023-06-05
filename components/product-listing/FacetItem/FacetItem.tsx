@@ -55,7 +55,7 @@ const FacetItem = (props: FacetItemProps) => {
     tempElement.innerHTML = str
     return tempElement.textContent as string
   }
-  
+
   return (
     <Stack
       direction="row"

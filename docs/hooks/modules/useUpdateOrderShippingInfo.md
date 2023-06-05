@@ -20,7 +20,7 @@
 
 Description : Updates user shipping(fulfillment) info at checkout
 
-Parameters passed to function updateShippingInfo(params: CheckoutShippingParams) => expects object of type ' ShippingInfo' containing  orderId and fulfillmentInfoInput
+Parameters passed to function updateShippingInfo(params: CheckoutShippingParams) => expects object of type ' ShippingInfo' containing orderId and fulfillmentInfoInput
 
 On success, calls invalidateQueries on checkoutKeys and fetches the updated result.
 

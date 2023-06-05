@@ -30,8 +30,8 @@ On success, calls invalidateQueries on cartKeys and fetches the updated result
 
 'response?.updateCurrentCartItem' which contains the updated fulfillmentMethod and fulfillmentLocationCode
 
-| Name | Type |
-| :------ | :------ |
+| Name             | Type                                                                  |
+| :--------------- | :-------------------------------------------------------------------- |
 | `updateCartItem` | `UseMutationResult`<`any`, `unknown`, `UpdateCartItemParams`, `any`\> |
 
 #### Defined in

@@ -30,8 +30,8 @@ On success, calls invalidateQueries on subscriptionKeys and fetches the updated 
 
 'response.subscription.frequency', which returns updated Subscription Frequency
 
-| Name | Type |
-| :------ | :------ |
+| Name                          | Type                                                                                |
+| :---------------------------- | :---------------------------------------------------------------------------------- |
 | `updateSubscriptionFrequency` | `UseMutationResult`<`any`, `unknown`, `EditSubscriptionFrequencyProps`, `unknown`\> |
 
 #### Defined in

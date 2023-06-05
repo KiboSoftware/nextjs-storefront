@@ -53,6 +53,6 @@ export const useCreateCheckout = () => {
       onSuccess: () => {
         queryClient.removeQueries([checkoutKeys.all])
       },
-    })
+    }),
   }
 }

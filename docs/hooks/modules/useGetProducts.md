@@ -26,8 +26,8 @@ On success, returns the product list with 'refetchOnWindowFocus' set to false fo
 
 #### Parameters
 
-| Name | Type | Description |
-| :------ | :------ | :------ |
+| Name           | Type       | Description                                                                                         |
+| :------------- | :--------- | :-------------------------------------------------------------------------------------------------- |
 | `productCodes` | `string`[] | Accept array of product code and converting it to string with separated by 'or' to be used further. |
 
 #### Returns

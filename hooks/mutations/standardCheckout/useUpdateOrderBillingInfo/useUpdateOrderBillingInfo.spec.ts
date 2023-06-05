@@ -16,10 +16,8 @@ describe('[hooks] useUpdateOrderBillingInfo', () => {
 
     renderHook(
       async () => {
-        const {updateOrderBillingInfo} = useUpdateOrderBillingInfo()
-        const response = await updateOrderBillingInfo.mutateAsync(
-          updateBillingInfoParams
-        )
+        const { updateOrderBillingInfo } = useUpdateOrderBillingInfo()
+        const response = await updateOrderBillingInfo.mutateAsync(updateBillingInfoParams)
 
         expect(response).toStrictEqual(updateOrderBillingInfoMock.updateOrderBillingInfo)
       },

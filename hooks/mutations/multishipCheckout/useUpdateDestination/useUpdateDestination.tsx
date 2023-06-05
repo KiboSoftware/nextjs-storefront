@@ -50,6 +50,6 @@ export const useUpdateDestination = () => {
       onSuccess: () => {
         queryClient.invalidateQueries(checkoutKeys.all)
       },
-    })
+    }),
   }
 }

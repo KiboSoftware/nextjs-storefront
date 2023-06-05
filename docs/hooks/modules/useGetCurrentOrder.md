@@ -26,8 +26,8 @@ On success, returns the checkout
 
 #### Parameters
 
-| Name | Type |
-| :------ | :------ |
+| Name             | Type          |
+| :--------------- | :------------ |
 | `«destructured»` | `UseCheckout` |
 
 #### Returns

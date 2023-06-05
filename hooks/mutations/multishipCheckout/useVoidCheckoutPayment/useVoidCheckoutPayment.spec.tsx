@@ -15,7 +15,7 @@ describe('[hooks] useVoidCheckoutPayment', () => {
   it('should update checkout payment method', () => {
     renderHook(
       async () => {
-        const {voidCheckoutPayment} = useVoidCheckoutPayment()
+        const { voidCheckoutPayment } = useVoidCheckoutPayment()
         const updateCheckoutPaymentActionResponse = await voidCheckoutPayment.mutateAsync({
           checkoutId: '12345',
           paymentId: '45678',
