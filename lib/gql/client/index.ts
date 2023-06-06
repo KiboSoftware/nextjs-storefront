@@ -14,6 +14,10 @@ export const LOGIN_ENDPOINT = `${
   process.env.NEXT_PUBLIC_URL ? process.env.NEXT_PUBLIC_URL : ''
 }/api/user/login`
 
+export const LOGOUT_ENDPOINT = `${
+  process.env.NEXT_PUBLIC_URL ? process.env.NEXT_PUBLIC_URL : ''
+}/api/user/logout`
+
 export const REGISTER_USER_ENDPOINT = `${
   process.env.NEXT_PUBLIC_URL ? process.env.NEXT_PUBLIC_URL : ''
 }/api/user/register`
