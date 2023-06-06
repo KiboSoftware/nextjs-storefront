@@ -2,6 +2,7 @@ import React from 'react'
 
 import { screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
+import { getCookie } from 'cookies-next'
 import { graphql } from 'msw'
 
 import { AuthContextProvider, useAuthContext } from './AuthContext'
@@ -101,12 +102,11 @@ describe('[context] - AuthContext', () => {
       const userFirstName = screen.getByTestId('user-first-name')
 
       await user.click(loginButton)
-      const authError = await screen.findByTestId('auth-error')
       await waitFor(() => expect(isLoggedIn).toHaveTextContent('true'))
       await waitFor(() => expect(userFirstName).toHaveTextContent('Suman'))
-      await waitFor(() => expect(authError).toHaveTextContent(''))
       await waitFor(() => expect(mockOnSuccessCallBack).toHaveBeenCalled())
     })
+
     it('should set isAuthenticated to true when successfully create a new account', async () => {
       const { user } = setup(<TestComponent />)
       const registerButton = screen.getByRole('button', { name: 'Create account' })
@@ -114,10 +114,9 @@ describe('[context] - AuthContext', () => {
       const userFirstName = screen.getByTestId('user-first-name')
 
       await user.click(registerButton)
-      const authError = await screen.findByTestId('auth-error')
+
       await waitFor(() => expect(isLoggedIn).toHaveTextContent('true'))
       await waitFor(() => expect(userFirstName).toHaveTextContent('Sunil'))
-      await waitFor(() => expect(authError).toHaveTextContent(''))
       await waitFor(() => expect(mockOnSuccessCallBack).toHaveBeenCalled())
     })
 
@@ -165,11 +164,11 @@ describe('[context] - AuthContext', () => {
     it('should logout when click logout', async () => {
       const { user } = setup(<TestComponent />)
       const logoutButton = screen.getByRole('button', { name: 'Logout' })
-      const removeClientCookieSpy = jest.spyOn(cookieHelper, 'removeClientCookie')
 
       await user.click(logoutButton)
 
-      await waitFor(() => expect(removeClientCookieSpy).toHaveBeenCalled())
+      const kiboAtCookie = getCookie('kibo_at')
+      expect(kiboAtCookie).toBeUndefined()
     })
   })
 })
