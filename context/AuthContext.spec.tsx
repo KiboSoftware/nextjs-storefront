@@ -8,7 +8,6 @@ import { graphql } from 'msw'
 import { AuthContextProvider, useAuthContext } from './AuthContext'
 import { server } from '@/__mocks__/msw/server'
 import { renderWithQueryClient } from '@/__test__/utils/renderWithQueryClient'
-import * as cookieHelper from '@/lib/helpers/cookieHelper'
 import { generateQueryClient } from '@/lib/react-query/queryClient'
 
 const mockOnSuccessCallBack = jest.fn()

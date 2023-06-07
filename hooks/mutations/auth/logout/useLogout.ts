@@ -1,6 +1,7 @@
 /**
  * @module useLogin
  */
+import fetch from 'node-fetch'
 import { useMutation, useQueryClient } from 'react-query'
 
 import { LOGOUT_ENDPOINT } from '@/lib/gql/client'
