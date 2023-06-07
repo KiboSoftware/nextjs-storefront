@@ -9,7 +9,6 @@ import {
   checkoutMock,
   checkoutGroupRatesMock,
   orderSubscriptionNowMock,
-  deleteSubscriptionMock,
 } from '../stories'
 import { cartItemMock } from '../stories/cartItemMock'
 import { cartCouponMock, cartMock } from '../stories/cartMock'
