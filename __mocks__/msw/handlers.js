@@ -9,7 +9,6 @@ import {
   checkoutMock,
   checkoutGroupRatesMock,
   orderSubscriptionNowMock,
-  deleteSubscriptionMock,
 } from '../stories'
 import { cartItemMock } from '../stories/cartItemMock'
 import { cartCouponMock, cartMock } from '../stories/cartMock'
@@ -217,11 +216,10 @@ export const userHandlers = [
     return res(ctx.data(userMock))
   }),
 
-  // login
   graphql.mutation('login', (_req, res, ctx) => {
     return res(ctx.data(loginUserMock))
   }),
-  // create account or registration
+
   graphql.mutation('registerUser', (_req, res, ctx) => {
     return res(ctx.data(registerUserMock))
   }),

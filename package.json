@@ -43,6 +43,7 @@
     "next": "~13.0.5",
     "next-i18next": "^10.2.0",
     "node-cache": "^5.1.2",
+    "node-fetch": "^2.6.11",
     "nprogress": "^0.2.0",
     "react": "18.2.0",
     "react-dom": "18.2.0",
@@ -55,9 +56,9 @@
     "yup": "^0.32.11"
   },
   "devDependencies": {
-    "@graphql-codegen/cli": "^2.3.0",
     "@emotion/babel-plugin": "^11.10.5",
     "@emotion/eslint-plugin": "^11.7.0",
+    "@graphql-codegen/cli": "^2.3.0",
     "@graphql-codegen/typescript": "^2.4.1",
     "@graphql-codegen/typescript-operations": "^2.2.1",
     "@next/bundle-analyzer": "^13.2.4",

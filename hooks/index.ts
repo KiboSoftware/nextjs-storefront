@@ -67,6 +67,7 @@ export * from './mutations/address/delete/useDeleteCustomerAddress'
 
 // Auth
 export * from './mutations/auth/login/useLogin'
+export * from './mutations/auth/logout/useLogout'
 export * from './mutations/auth/register/useRegister'
 
 // Cards

@@ -1,22 +1,12 @@
-import {
-  ReactNode,
-  createContext,
-  Dispatch,
-  SetStateAction,
-  useState,
-  useContext,
-  useEffect,
-} from 'react'
+import { ReactNode, createContext, useState, useContext, useEffect } from 'react'
 
-import getConfig from 'next/config'
 import { useRouter } from 'next/router'
 import { useQueryClient } from 'react-query'
 
 import { LoginData } from '@/components/layout/Login/LoginContent/LoginContent'
 import type { RegisterAccountInputData } from '@/components/layout/RegisterAccount/Content/Content'
 import { useSnackbarContext } from '@/context'
-import { useRegister, useLogin, useGetCurrentCustomer } from '@/hooks'
-import { removeClientCookie, storeClientCookie } from '@/lib/helpers/cookieHelper'
+import { useRegister, useLogin, useLogout, useGetCurrentCustomer } from '@/hooks'
 import { cartKeys, loginKeys, wishlistKeys } from '@/lib/react-query/queryKeys'
 
 import type { CustomerAccount } from '@/lib/gql/types'
@@ -46,18 +36,24 @@ AuthContext.displayName = 'AuthContext'
 export const AuthContextProvider = ({ children }: AuthContextProviderProps) => {
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false)
   const [user, setUser] = useState<CustomerAccount | undefined>(undefined)
-  const { publicRuntimeConfig } = getConfig()
-  const authCookieName = publicRuntimeConfig.userCookieKey.toLowerCase()
   const { showSnackbar } = useSnackbarContext()
 
   const router = useRouter()
+
   const { mutate } = useLogin()
+  const { mutate: logOutUser } = useLogout(() => {
+    setUser(undefined)
+    router.push('/')
+    queryClient.removeQueries(cartKeys.all)
+    queryClient.removeQueries(loginKeys.user)
+  })
   const { mutate: registerUserAccount } = useRegister()
 
   const queryClient = useQueryClient()
 
   const handleOnSuccess = (account: any, onSuccessCallBack?: () => void) => {
-    setCookieAndUser(account)
+    setUser(account?.customerAccount)
+
     queryClient.invalidateQueries(cartKeys.all)
     onSuccessCallBack && onSuccessCallBack()
     queryClient.removeQueries(wishlistKeys.all)
@@ -101,26 +97,10 @@ export const AuthContextProvider = ({ children }: AuthContextProviderProps) => {
   // Logout user
   const logout = async (): Promise<void> => {
     try {
-      removeClientCookie(authCookieName)
-      router.push('/')
-      queryClient.removeQueries(cartKeys.all)
-      queryClient.removeQueries(loginKeys.user)
-    } catch (err) {
+      logOutUser()
+    } catch (err: any) {
       showSnackbar('Logout Failed', 'error')
     }
-  }
-
-  const setCookieAndUser = (account: any) => {
-    // set cookie
-    const cookie = {
-      accessToken: account?.accessToken,
-      accessTokenExpiration: account?.accessTokenExpiration,
-      refreshToken: account?.refreshToken,
-      refreshTokenExpiration: account?.refreshTokenExpiration,
-      userId: account?.userId,
-    }
-    storeClientCookie(authCookieName, cookie)
-    setUser(account?.customerAccount)
   }
 
   const { data: customerAccount } = useGetCurrentCustomer()

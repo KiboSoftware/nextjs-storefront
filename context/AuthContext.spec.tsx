@@ -2,12 +2,12 @@ import React from 'react'
 
 import { screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
+import { getCookie } from 'cookies-next'
 import { graphql } from 'msw'
 
 import { AuthContextProvider, useAuthContext } from './AuthContext'
 import { server } from '@/__mocks__/msw/server'
 import { renderWithQueryClient } from '@/__test__/utils/renderWithQueryClient'
-import * as cookieHelper from '@/lib/helpers/cookieHelper'
 import { generateQueryClient } from '@/lib/react-query/queryClient'
 
 const mockOnSuccessCallBack = jest.fn()
@@ -97,27 +97,25 @@ describe('[context] - AuthContext', () => {
     it('should set isAuthenticated to true when successfully logged in', async () => {
       const { user } = setup(<TestComponent />)
       const loginButton = screen.getByRole('button', { name: 'Log in' })
-      const storeClientCookieFn = jest.spyOn(cookieHelper, 'storeClientCookie')
       const isLoggedIn = await screen.findByTestId('is-logged-in')
       const userFirstName = screen.getByTestId('user-first-name')
 
       await user.click(loginButton)
       await waitFor(() => expect(isLoggedIn).toHaveTextContent('true'))
       await waitFor(() => expect(userFirstName).toHaveTextContent('Suman'))
-      await waitFor(() => expect(storeClientCookieFn).toHaveBeenCalled())
       await waitFor(() => expect(mockOnSuccessCallBack).toHaveBeenCalled())
     })
+
     it('should set isAuthenticated to true when successfully create a new account', async () => {
       const { user } = setup(<TestComponent />)
       const registerButton = screen.getByRole('button', { name: 'Create account' })
-      const storeClientCookieSpy = jest.spyOn(cookieHelper, 'storeClientCookie')
       const isLoggedIn = await screen.findByTestId('is-logged-in')
       const userFirstName = screen.getByTestId('user-first-name')
 
       await user.click(registerButton)
+
       await waitFor(() => expect(isLoggedIn).toHaveTextContent('true'))
       await waitFor(() => expect(userFirstName).toHaveTextContent('Sunil'))
-      await waitFor(() => expect(storeClientCookieSpy).toHaveBeenCalled())
       await waitFor(() => expect(mockOnSuccessCallBack).toHaveBeenCalled())
     })
 
@@ -165,11 +163,11 @@ describe('[context] - AuthContext', () => {
     it('should logout when click logout', async () => {
       const { user } = setup(<TestComponent />)
       const logoutButton = screen.getByRole('button', { name: 'Logout' })
-      const removeClientCookieSpy = jest.spyOn(cookieHelper, 'removeClientCookie')
 
       await user.click(logoutButton)
 
-      await waitFor(() => expect(removeClientCookieSpy).toHaveBeenCalled())
+      const kiboAtCookie = getCookie('kibo_at')
+      expect(kiboAtCookie).toBeUndefined()
     })
   })
 })
