@@ -1,6 +1,8 @@
 import getConfig from 'next/config'
+
 import { fetcher } from '../util'
 import getUserClaimsFromRequest from '../util/getUserClaimsFromRequest'
+
 import type { NextApiRequest, NextApiResponse } from 'next'
 const config = getConfig()
 const maxCookieAge = config?.publicRuntimeConfig?.maxCookieAge
