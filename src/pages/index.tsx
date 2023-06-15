@@ -10,13 +10,15 @@ import type { GetServerSidePropsContext } from 'next'
 
 interface HomePageProps {
   carouselItem: any
+  req: any
 }
 export async function getServerSideProps(context: GetServerSidePropsContext) {
-  const { locale } = context
+  const { locale, req } = context
   const categoriesTree: CategoryTreeResponse = await getCategoryTree()
 
   return {
     props: {
+      req,
       categoriesTree,
       carouselItem: homePageResultMock,
       ...(await serverSideTranslations(locale as string, ['common'])),
@@ -25,7 +27,8 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
 }
 
 const Home: NextPageWithLayout<HomePageProps> = (props) => {
-  const { carouselItem } = props
+  const { carouselItem, req } = props
+  console.log(`req: `, JSON.stringify(req))
   return (
     <>
       <KiboHeroCarousel carouselItem={carouselItem || []}></KiboHeroCarousel>

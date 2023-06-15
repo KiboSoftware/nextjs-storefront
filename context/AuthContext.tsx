@@ -52,7 +52,7 @@ export const AuthContextProvider = ({ children }: AuthContextProviderProps) => {
   const queryClient = useQueryClient()
 
   const handleOnSuccess = (account: any, onSuccessCallBack?: () => void) => {
-    setUser(account?.customerAccount)
+    if (account?.customerAccount) setUser(account?.customerAccount)
 
     queryClient.invalidateQueries(cartKeys.all)
     onSuccessCallBack && onSuccessCallBack()
