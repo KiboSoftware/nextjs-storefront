@@ -1,4 +1,4 @@
-import { renderHook } from '@testing-library/react-hooks'
+import { renderHook } from '@testing-library/react'
 
 import { useOrderSubscriptionNow } from './useOrderSubscriptionNow'
 import { orderSubscriptionNowMock } from '@/__mocks__/stories'
@@ -12,8 +12,6 @@ describe('[hooks] useOrderSubscriptionNow', () => {
         const response = await orderSubscriptionNow.mutateAsync({
           subscriptionId: '12345',
         })
-
-        console.table(response)
 
         expect(response).toStrictEqual(orderSubscriptionNowMock.orderSubscriptionNow)
       },

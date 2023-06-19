@@ -1,4 +1,4 @@
-import { renderHook } from '@testing-library/react-hooks'
+import { renderHook, act, waitFor } from '@testing-library/react'
 
 import { useUpdateCartItemQuantity } from './useUpdateCartItemQuantity'
 import { cartItemMock } from '@/__mocks__/stories/cartItemMock'
@@ -6,18 +6,19 @@ import { createQueryClientWrapper } from '@/__test__/utils/renderWithQueryClient
 
 describe('[hooks] useUpdateCartItemQuantity', () => {
   it('should use useUpdateCartItemQuantity when updateCartItemQuantity', async () => {
-    renderHook(
-      async () => {
-        const { updateCartItemQuantity } = useUpdateCartItemQuantity()
-        const response = await updateCartItemQuantity.mutateAsync({
-          cartItemId: 'fjsdhfjsdh53472bkjsdffdf',
-          quantity: 2,
-        })
-        expect(response).toStrictEqual(cartItemMock)
-      },
-      {
-        wrapper: createQueryClientWrapper(),
-      }
-    )
+    const { result } = renderHook(() => useUpdateCartItemQuantity(), {
+      wrapper: createQueryClientWrapper(),
+    })
+
+    act(() => {
+      result.current.updateCartItemQuantity.mutate({
+        cartItemId: 'fjsdhfjsdh53472bkjsdffdf',
+        quantity: 2,
+      })
+    })
+
+    await waitFor(() => {
+      expect(result.current.updateCartItemQuantity.data).toEqual(cartItemMock)
+    })
   })
 })

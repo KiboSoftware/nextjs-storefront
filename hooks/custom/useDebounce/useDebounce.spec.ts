@@ -1,7 +1,6 @@
 import { useState } from 'react'
 
-import { act } from '@testing-library/react'
-import { renderHook } from '@testing-library/react-hooks'
+import { renderHook, act, waitFor } from '@testing-library/react'
 
 import { useDebounce } from './useDebounce'
 
@@ -26,7 +25,7 @@ describe('[hooks] useDebounce', () => {
     let data
     const userEnteredText = 'Test'
 
-    const { result, waitFor } = renderHook(() => {
+    const { result } = renderHook(() => {
       const [searchTerm, setSearchTerm] = useState(userEnteredText)
       jest.fn((v) => setSearchTerm(v))
 

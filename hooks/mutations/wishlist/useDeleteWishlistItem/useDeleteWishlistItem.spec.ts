@@ -1,4 +1,4 @@
-import { renderHook } from '@testing-library/react-hooks'
+import { renderHook, act, waitFor } from '@testing-library/react'
 
 import { useDeleteWishlistItem } from './useDeleteWishlistItem'
 import { wishlistMock } from '@/__mocks__/stories/wishlistMock'
@@ -34,7 +34,13 @@ describe('[hooks] useDeleteWishlistItem', () => {
       () => useDeleteWishlistItem({ isRemovedFromWishlist: true, delay: 1000 }),
       { wrapper: createQueryClientWrapper() }
     )
-    const response = await result.current.deleteWishlistItem.mutateAsync(deleteWishlistItemInput)
-    expect(response).toBeTruthy()
+
+    act(() => {
+      result.current.deleteWishlistItem.mutateAsync(deleteWishlistItemInput)
+    })
+
+    await waitFor(() => {
+      expect(result.current.deleteWishlistItem.data).toBe(true)
+    })
   })
 })

@@ -1,4 +1,4 @@
-import { renderHook } from '@testing-library/react-hooks'
+import { renderHook } from '@testing-library/react'
 
 import { useDeleteCheckoutCoupon } from './useDeleteCheckoutCoupon'
 import { checkoutMock } from '@/__mocks__/stories'

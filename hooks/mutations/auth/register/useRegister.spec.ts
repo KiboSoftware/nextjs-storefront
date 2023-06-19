@@ -1,4 +1,4 @@
-import { renderHook } from '@testing-library/react-hooks'
+import { renderHook } from '@testing-library/react'
 
 import { useRegister } from './useRegister'
 import { registerUserMock } from '@/__mocks__/stories/userMock'

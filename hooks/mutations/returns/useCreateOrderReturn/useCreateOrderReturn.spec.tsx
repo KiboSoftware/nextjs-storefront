@@ -1,4 +1,4 @@
-import { renderHook } from '@testing-library/react-hooks'
+import { renderHook } from '@testing-library/react'
 
 import { useCreateOrderReturn } from './useCreateOrderReturn'
 import { createReturnMock } from '@/__mocks__/stories'

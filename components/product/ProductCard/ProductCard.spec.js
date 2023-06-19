@@ -1,7 +1,7 @@
 import React from 'react'
 
 import { composeStories } from '@storybook/testing-react'
-import { render, screen } from '@testing-library/react'
+import { render, screen, waitFor, act } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 
 import * as stories from './ProductCard.stories' // import all stories from the stories file
@@ -162,9 +162,13 @@ describe('[components] Product Card Component', () => {
       const { user } = wishlistSetup()
       const inWishlistIcon = screen.getByTestId('FavoriteRoundedIcon')
 
-      await user.click(inWishlistIcon)
+      act(() => {
+        user.click(inWishlistIcon)
+      })
 
-      expect(onAddOrRemoveWishlistItemMock).toBeCalled()
+      await waitFor(() => {
+        expect(onAddOrRemoveWishlistItemMock).toBeCalled()
+      })
     })
   })
 
@@ -183,9 +187,13 @@ describe('[components] Product Card Component', () => {
       const { user } = quickViewSetup()
 
       const quickViewButton = screen.getByRole('button', { name: /quick-view/i })
-      await user.click(quickViewButton)
+      act(() => {
+        user.click(quickViewButton)
+      })
 
-      expect(onClickQuickViewModalMock).toBeCalled()
+      await waitFor(() => {
+        expect(onClickQuickViewModalMock).toBeCalled()
+      })
     })
   })
 })

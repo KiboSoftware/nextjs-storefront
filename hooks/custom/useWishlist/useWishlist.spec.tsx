@@ -1,4 +1,4 @@
-import { renderHook } from '@testing-library/react-hooks'
+import { renderHook } from '@testing-library/react'
 
 import { useWishlist } from './useWishlist'
 import { userResponseMock } from '@/__mocks__/stories/userMock'

@@ -1,4 +1,4 @@
-import { renderHook } from '@testing-library/react-hooks'
+import { renderHook } from '@testing-library/react'
 
 import { useUpdateCartCoupon } from './useUpdateCartCoupon'
 import { cartCouponMock } from '@/__mocks__/stories/cartMock'

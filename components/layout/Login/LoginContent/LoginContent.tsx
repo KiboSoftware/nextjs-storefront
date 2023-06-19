@@ -4,15 +4,7 @@ import React, { SyntheticEvent, useState } from 'react'
 import { yupResolver } from '@hookform/resolvers/yup'
 import Visibility from '@mui/icons-material/Visibility'
 import VisibilityOff from '@mui/icons-material/VisibilityOff'
-import {
-  Box,
-  FormControl,
-  Button,
-  Link,
-  Checkbox,
-  FormControlLabel,
-  Typography,
-} from '@mui/material'
+import { Box, FormControl, Button, Link, Checkbox, FormControlLabel } from '@mui/material'
 import { useTranslation } from 'next-i18next'
 import { useForm, Controller } from 'react-hook-form'
 import * as yup from 'yup'

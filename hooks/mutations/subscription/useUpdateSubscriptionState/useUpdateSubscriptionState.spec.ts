@@ -1,4 +1,4 @@
-import { renderHook } from '@testing-library/react-hooks'
+import { renderHook } from '@testing-library/react'
 
 import { useUpdateSubscriptionState } from './useUpdateSubscriptionState'
 import { subscriptionMock } from '@/__mocks__/stories'

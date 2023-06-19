@@ -51,8 +51,6 @@ jest.mock(
   () => () => ProductInformationMock()
 )
 
-const mockWishlist = wishlistMock?.items[0]
-
 const setup = () => {
   render(<Common {...Common?.args} />)
 }
