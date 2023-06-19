@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
 
+import getConfig from 'next/config'
 import { useRouter } from 'next/router'
 
 import { DetailsStep, PaymentStep, ReviewStep, StandardShippingStep } from '@/components/checkout'
@@ -32,6 +33,9 @@ const StandardShipCheckoutTemplate = (props: StandardShipCheckoutProps) => {
   const router = useRouter()
   const [promoError, setPromoError] = useState<string>('')
   const { checkoutId } = router.query
+
+  const { publicRuntimeConfig } = getConfig()
+  const allowInvalidAddresses = publicRuntimeConfig.allowInvalidAddresses
 
   const { data: order } = useGetCurrentOrder({
     checkoutId: checkoutId as string,
@@ -73,6 +77,10 @@ const StandardShipCheckoutTemplate = (props: StandardShipCheckoutProps) => {
 
   const updateCheckoutPersonalInfo = async (formData: PersonalDetails) => {
     const { email } = formData
+
+    if (allowInvalidAddresses && order?.fulfillmentInfo?.fulfillmentContact?.address) {
+      order.fulfillmentInfo.fulfillmentContact.address.isValidated = true
+    }
 
     const personalInfo: PersonalInfo = {
       checkout: order as CrOrderInput,

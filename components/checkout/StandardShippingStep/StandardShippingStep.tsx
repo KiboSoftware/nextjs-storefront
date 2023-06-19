@@ -55,7 +55,7 @@ const StandardShippingStep = (props: ShippingProps) => {
   }
   const shipItems = orderGetters.getShipItems(checkout)
   const pickupItems = orderGetters.getPickupItems(checkout)
-  const handlingAmount = orderGetters.getHandlingTotal(checkout)
+ 
 
   const [isAddressSavedToAccount, setIsAddressSavedToAccount] = useState<boolean>(false)
   const [validateForm, setValidateForm] = useState<boolean>(false)
@@ -352,7 +352,6 @@ const StandardShippingStep = (props: ShippingProps) => {
             <ShippingMethod
               shipItems={shipItems}
               pickupItems={pickupItems}
-              handlingAmount={handlingAmount}
               orderShipmentMethods={[...shippingMethods]}
               selectedShippingMethodCode={checkoutShippingMethodCode}
               onShippingMethodChange={handleSaveShippingMethod}

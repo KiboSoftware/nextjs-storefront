@@ -15,6 +15,7 @@ import { useTranslation } from 'next-i18next'
 import { HeaderAction } from '@/components/common'
 import { CategoryNestedNavigation } from '@/components/layout'
 import { useAuthContext } from '@/context'
+import { uiHelpers } from '@/lib/helpers'
 import type { NavigationLink } from '@/lib/types'
 
 import type { Maybe, PrCategory } from '@/lib/gql/types'
@@ -63,6 +64,7 @@ const HamburgerMenu = (props: HamburgerMenuProps) => {
     navLinks,
     onAccountIconClick,
   } = props
+  const { getCategoryLink } = uiHelpers()
   const { t } = useTranslation('common')
   const { isAuthenticated, user } = useAuthContext()
   const router = useRouter()
@@ -71,9 +73,10 @@ const HamburgerMenu = (props: HamburgerMenuProps) => {
     setIsDrawerOpen(open)
   }
 
-  const handleCategoryClick = (categoryCode: string) => {
+  const handleCategoryClick = (categoryCode: string, slug?: string) => {
     toggleDrawer(false)
-    router.push('/category/' + categoryCode)
+    const link = getCategoryLink(categoryCode as string, slug as string)
+    router.push(link)
   }
 
   const handleNavLinks = (link: string) => {

@@ -1,7 +1,9 @@
 import { ReactNode, createContext, useState, useContext, useEffect } from 'react'
 
+import getConfig from 'next/config'
 import { useRouter } from 'next/router'
 import { useQueryClient } from 'react-query'
+
 
 import { LoginData } from '@/components/layout/Login/LoginContent/LoginContent'
 import type { RegisterAccountInputData } from '@/components/layout/RegisterAccount/Content/Content'
@@ -52,14 +54,17 @@ export const AuthContextProvider = ({ children }: AuthContextProviderProps) => {
   const queryClient = useQueryClient()
 
   const handleOnSuccess = (account: any, onSuccessCallBack?: () => void) => {
-    setUser(account?.customerAccount)
+    if (account?.customerAccount) setUser(account?.customerAccount)
 
     queryClient.invalidateQueries(cartKeys.all)
     onSuccessCallBack && onSuccessCallBack()
     queryClient.removeQueries(wishlistKeys.all)
   }
   // register user
-  const createAccount = (params: RegisterAccountInputData, onSuccessCallBack?: () => void) => {
+  const createAccount = async (
+    params: RegisterAccountInputData,
+    onSuccessCallBack?: () => void
+  ) => {
     try {
       const createAccountAndLoginMutationVars = {
         account: {
@@ -71,13 +76,13 @@ export const AuthContextProvider = ({ children }: AuthContextProviderProps) => {
         },
         password: params?.password,
       }
-      registerUserAccount(createAccountAndLoginMutationVars, {
+      await registerUserAccount(createAccountAndLoginMutationVars, {
         onSuccess: (account: any) => {
           handleOnSuccess(account, onSuccessCallBack)
         },
       })
     } catch (err: any) {
-      throw new Error(err)
+      showSnackbar('Registration Failed', 'error')
     }
   }
 
@@ -129,7 +134,8 @@ export const AuthContextProvider = ({ children }: AuthContextProviderProps) => {
 
 export const useAuthContext = () => {
   const context = useContext(AuthContext)
+  const { showSnackbar } = useSnackbarContext()
 
-  if (context === undefined) throw new Error('useContext must be inside a Provider with a value')
+  if (context === undefined) showSnackbar('Auth Context not found', 'warning')
   return context
 }

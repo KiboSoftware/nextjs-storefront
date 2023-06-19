@@ -44,7 +44,6 @@ const ShipItemList = (shipProps: ShipItemListProps) => {
     orderShipmentMethods,
     shipItems,
     selectedShippingMethod,
-    handlingAmount = 0,
     onShippingMethodChange,
     setSelectedShippingMethod,
   } = shipProps
@@ -130,7 +129,6 @@ const ShippingMethod = (props: ShippingMethodProps) => {
     orderShipmentMethods,
     showTitle = true,
     selectedShippingMethodCode,
-    handlingAmount,
     onShippingMethodChange,
     onStoreLocatorClick,
   } = props

@@ -1,5 +1,7 @@
 import { createContext, ReactNode, useContext, useState } from 'react'
 
+import { useSnackbarContext } from './RQNotificationContext/RQNotificationContext'
+
 interface HeaderState {
   isHamburgerMenuVisible?: boolean
   isSearchBarVisible?: boolean
@@ -78,6 +80,8 @@ export const HeaderContextProvider = ({ children }: HeaderContextProviderProps) 
 
 export const useHeaderContext = () => {
   const context = useContext(HeaderContext)
-  if (context === undefined) throw new Error('useContext must be inside a Provider with a value')
+  const { showSnackbar } = useSnackbarContext()
+
+  if (context === undefined) showSnackbar('Header Context not found', 'warning')
   return context
 }

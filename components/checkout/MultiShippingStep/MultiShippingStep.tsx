@@ -77,7 +77,7 @@ const MultiShippingStep = (props: MultiShippingStepProps) => {
 
   const { showModal, closeModal } = useModalContext()
   const { t } = useTranslation('common')
-  const shippingAddressRef = useRef()
+  const shippingAddressRef = useRef<HTMLDivElement>(null)
 
   const { publicRuntimeConfig } = getConfig()
   const shipOptions = publicRuntimeConfig.shipOptions

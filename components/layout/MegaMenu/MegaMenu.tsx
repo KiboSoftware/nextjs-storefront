@@ -116,7 +116,10 @@ const MegaMenuCategory = (props: MegaMenuCategoryProps) => {
         selected={popupState.isOpen && category?.categoryCode === activeCategory}
       >
         <StyledLink
-          href={getCategoryLink(category?.categoryCode as string)}
+          href={getCategoryLink(
+            category?.categoryCode as string,
+            category?.content?.slug as string
+          )}
           passHref
           onClick={closeBackDrop}
         >
@@ -145,6 +148,7 @@ const MegaMenuCategory = (props: MegaMenuCategoryProps) => {
                     title={cat?.content?.name as string}
                     categoryChildren={cat?.childrenCategories as PrCategory[]}
                     categoryCode={cat?.categoryCode as string}
+                    seoFriendlyUrl={cat?.content?.slug as string}
                     onBackDropClose={closeBackDrop}
                   />
                 )

@@ -5,8 +5,9 @@ import { Box, Button, Checkbox, FormControlLabel, Stack, Typography } from '@mui
 import getConfig from 'next/config'
 import { useTranslation } from 'next-i18next'
 
+
 import { CardDetailsForm, SavedPaymentMethodView } from '@/components/checkout'
-import { AddressForm, AddressDetailsView } from '@/components/common'
+import { AddressForm, AddressDetailsView, PaginationCustom } from '@/components/common'
 import { ConfirmationDialog } from '@/components/dialogs'
 import { useModalContext } from '@/context'
 import { useDeleteCustomerCard, useDeleteCustomerAddress } from '@/hooks'
@@ -93,8 +94,14 @@ const PaymentMethod = (props: PaymentMethodProps) => {
   const { t } = useTranslation('common')
 
   const { showModal } = useModalContext()
+  const { publicRuntimeConfig } = getConfig()
+  const paymentMethodPageSize = publicRuntimeConfig?.paymentMethodPageSize
 
+  const [paymentMethodStartIndex, setPaymentMethodStartIndex] = useState<number>(0)
   const savedCardsAndContacts = userGetters.getSavedCardsAndBillingDetails(cards, contacts)
+  const [displaySavedCardsAndContacts, setSavedCardsAndContacts] = useState<PaymentAndBilling[]>(
+    savedCardsAndContacts?.slice(paymentMethodStartIndex, paymentMethodPageSize) as PaymentAndBilling[]
+  )
   const savedAddresses = userGetters.getSavedAddresses(contacts)
   const billingAddresses = userGetters.getUserBillingAddresses(savedAddresses)
 
@@ -160,6 +167,7 @@ const PaymentMethod = (props: PaymentMethodProps) => {
       expireYear: cardGetters.getExpireYear(cardAndAddressDetails.cardInfo),
       expiryDate: cardGetters.getExpireDate(cardAndAddressDetails.cardInfo),
       cardType: cardGetters.getCardType(cardAndAddressDetails.cardInfo),
+      isDefaultPayMethod: cardGetters.getIsDefaultPayMethod(cardAndAddressDetails.cardInfo),
       isDataUpdated: false,
     })
 
@@ -283,6 +291,19 @@ const PaymentMethod = (props: PaymentMethodProps) => {
 
     handleCardAndBillingAddress(tokenizedCardResponse)
   }
+  const handlePaymentMethodPagination = (value: any) => {
+    const { startIndex } = value
+    const slicedValues = savedCardsAndContacts.slice(startIndex, startIndex + paymentMethodPageSize)
+    setPaymentMethodStartIndex(startIndex)
+    setSavedCardsAndContacts(slicedValues)
+    window.scrollTo({ top: 0, behavior: 'smooth' })
+  }
+  useEffect(() => {
+    setSavedCardsAndContacts(
+      savedCardsAndContacts.slice(paymentMethodStartIndex, paymentMethodStartIndex + paymentMethodPageSize)
+    )
+    window.scrollTo({ top: 0, behavior: 'smooth' })
+  }, [savedCardsAndContacts.length])
 
   // when payment card and billing address info is available, handleTokenization
   useEffect(() => {
@@ -305,11 +326,11 @@ const PaymentMethod = (props: PaymentMethodProps) => {
     <Box width="100%">
       {!isAddingNewPayment && (
         <Stack gap={2}>
-          {!savedCardsAndContacts?.length && (
-            <Typography variant="body1">{t('no-saved-addresses-yet')}</Typography>
+          {!displaySavedCardsAndContacts?.length && (
+            <Typography variant="body1">{t('no-saved-payments-yet')}</Typography>
           )}
 
-          {savedCardsAndContacts?.map((each) => (
+          {displaySavedCardsAndContacts?.map((each) => (
             <Stack key={each?.cardInfo?.id as string} data-testid="saved-cards-and-contacts">
               {each.cardInfo?.isDefaultPayMethod && (
                 <Typography variant="body1" fontWeight={700}>
@@ -358,6 +379,16 @@ const PaymentMethod = (props: PaymentMethodProps) => {
           >
             {t('add-payment-method')}
           </Button>
+          {displaySavedCardsAndContacts?.length > 0 && 
+            <Box display={'flex'} justifyContent={'center'} width="100%" py={10}>
+              <PaginationCustom
+                count={Math.ceil(savedCardsAndContacts.length / paymentMethodPageSize)}
+                startIndex={paymentMethodStartIndex}
+                pageSize={paymentMethodPageSize}
+                onPaginationChange={handlePaymentMethodPagination}
+              />
+            </Box>
+          }
         </Stack>
       )}
 
@@ -370,6 +401,7 @@ const PaymentMethod = (props: PaymentMethodProps) => {
               },
             })}
             validateForm={validateForm}
+            showCvv={false}
             onSaveCardData={handleCardFormData}
             onFormStatusChange={handleCardFormValidDetails}
           />
@@ -420,19 +452,23 @@ const PaymentMethod = (props: PaymentMethodProps) => {
                   onFormStatusChange={handleBillingFormValidDetails}
                   isAddressFormInDialog={isAddressFormInDialog}
                 />
-                <FormControlLabel
-                  sx={{ width: '100%', pl: '0.5rem' }}
-                  control={<Checkbox />}
-                  label={`${t('make-this-my-default-payment')}`}
-                  onChange={(_, value) => setIsDefaultPaymentMethod(value)}
-                />
               </>
+            )}
+
+            {Boolean(savedCardsAndContacts?.length) && (
+              <FormControlLabel
+                sx={{ width: '100%', pl: '0.5rem' }}
+                defaultChecked={cardFormDetails.isDefaultPayMethod}
+                control={<Checkbox defaultChecked={cardFormDetails.isDefaultPayMethod} />}
+                label={`${t('make-this-my-default-payment')}`}
+                onChange={(_, value) => setIsDefaultPaymentMethod(value)}
+              />
             )}
 
             {!showBillingFormAddress && (
               <Button
                 variant="contained"
-                color="inherit"
+                color="secondary"
                 onClick={handleAddNewBillingAddress}
                 sx={{ maxWidth: '26rem' }}
               >
