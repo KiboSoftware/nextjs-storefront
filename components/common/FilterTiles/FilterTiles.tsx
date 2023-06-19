@@ -13,6 +13,7 @@ const styles = {
   filterTiles: {
     display: 'inline-flex',
     margin: '0 1rem 1rem 0',
+    textTransform: 'capitalize',
   },
   closeIcon: {
     '& .MuiChip-deleteIcon': {

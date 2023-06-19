@@ -15,9 +15,10 @@ import {
 } from '@mui/material'
 import { useTranslation } from 'next-i18next'
 
-import { AddressDetailsView, PromoCodeBadge } from '@/components/common'
+import { AddressDetailsView, KiboImage, PromoCodeBadge } from '@/components/common'
 import { useCheckoutStepContext } from '@/context'
 import { checkoutGetters, orderGetters } from '@/lib/getters'
+import { getCreditCardLogo } from '@/lib/helpers'
 
 import type { CrOrder, CustomerContact, Checkout } from '@/lib/gql/types'
 
@@ -245,9 +246,18 @@ const OrderReview = (props: OrderReviewProps) => {
                 key={`${paymentMethod?.cardNumberPartOrMask}-${paymentMethod?.expiry}`}
                 data-testid="payment-info"
               >
-                <Typography variant="body1">{paymentMethod?.cardType}</Typography>
-                <Typography variant="body1">{paymentMethod?.cardNumberPartOrMask}</Typography>
-                <Typography variant="body1">{paymentMethod?.expiry}</Typography>
+                <Box display={'flex'} gap={3}>
+                  <KiboImage
+                    src={getCreditCardLogo(paymentMethod?.cardType as string)}
+                    alt={paymentMethod?.cardType}
+                    width={45}
+                    height={35}
+                  />
+                  <Stack>
+                    <Typography variant="body1">{paymentMethod?.cardNumberPartOrMask}</Typography>
+                    <Typography variant="body1">{paymentMethod?.expiry}</Typography>
+                  </Stack>
+                </Box>
               </Box>
             ))}
           </OrderInfoHeader>

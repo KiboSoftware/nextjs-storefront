@@ -9,3 +9,5 @@ export { default as OrderStatusTemplate } from './OrderStatusTemplate/OrderStatu
 export { default as StandardShipCheckoutTemplate } from './StandardShipCheckoutTemplate/StandardShipCheckoutTemplate'
 export { default as MultiShipCheckoutTemplate } from './MultiShipCheckoutTemplate/MultiShipCheckoutTemplate'
 export { default as CheckoutUITemplate } from '../checkout/CheckoutUITemplate/CheckoutUITemplate'
+export { default as ResetPasswordConfirmationTemplate } from './ResetPasswordConfirmationTemplate/ResetPasswordConfirmationTemplate'
+

@@ -38,8 +38,8 @@ const CategoryFacet = dynamic(() =>
 const FacetList = dynamic(() => import('@/components/product-listing').then((mod) => mod.FacetList))
 const FilterTiles = dynamic(() => import('@/components/common').then((mod) => mod.FilterTiles))
 const KiboSelect = dynamic(() => import('@/components/common').then((mod) => mod.KiboSelect))
-const PaginationCustom = dynamic(() =>
-  import('@/components/common').then((mod) => mod.PaginationCustom)
+const KiboPagination = dynamic(() =>
+  import('@/components/common').then((mod) => mod.KiboPagination)
 )
 
 interface SortingValues {
@@ -62,7 +62,8 @@ export interface ProductListingTemplateProps {
   pageCount: number
   startIndex: number
   onSortItemSelection: (value: string) => void
-  onPaginationChange: (params: CategorySearchParams) => void
+  onPaginationChange: (params?: CategorySearchParams) => void
+  onInfiniteScroll?: () => void
   showQuickViewButton?: boolean
   isQuickViewModal?: boolean
 }
@@ -84,6 +85,7 @@ const ProductListingTemplate = (props: ProductListingTemplateProps) => {
     startIndex,
     onSortItemSelection,
     onPaginationChange,
+    onInfiniteScroll,
     showQuickViewButton = true,
   } = props
   const { publicRuntimeConfig } = getConfig()
@@ -341,17 +343,28 @@ const ProductListingTemplate = (props: ProductListingTemplateProps) => {
                       n: `${totalResults}`,
                     })}
                   </Box>
-                  {pageSize < totalResults && (
+                  {pageSize < totalResults && onInfiniteScroll && (
                     <Box sx={{ ...PLPStyles.productResults }}>
                       <Button
                         id="show-more-button"
                         sx={{ ...PLPStyles.showMoreButton }}
                         variant="contained"
-                        onClick={onPaginationChange}
+                        onClick={onInfiniteScroll}
                         color="inherit"
                       >
                         {t('show-more')}
                       </Button>
+                    </Box>
+                  )}
+
+                  {!isLoading && onPaginationChange && (
+                    <Box display={'flex'} justifyContent={'center'} width="100%" py={10}>
+                      <KiboPagination
+                        count={pageCount}
+                        startIndex={startIndex}
+                        pageSize={productPerPage}
+                        onPaginationChange={onPaginationChange}
+                      />
                     </Box>
                   )}
                 </Box>

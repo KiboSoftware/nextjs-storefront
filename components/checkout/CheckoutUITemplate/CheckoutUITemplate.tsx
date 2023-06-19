@@ -2,12 +2,12 @@ import React, { useCallback } from 'react'
 
 import { Box, Stack, Button, SxProps } from '@mui/material'
 import { Theme } from '@mui/material/styles'
+import getConfig from 'next/config'
 import dynamic from 'next/dynamic'
 import { useRouter } from 'next/router'
 import { useTranslation } from 'next-i18next'
 import { ReCaptchaProvider } from 'next-recaptcha-v3'
 
-import getConfig from 'next/config'
 
 import { KiboStepper } from '@/components/checkout'
 import { OrderSummary } from '@/components/common'
@@ -70,7 +70,7 @@ const CheckoutUITemplate = <T extends CrOrder | Checkout>(props: CheckoutUITempl
   const orderSummaryArgs = {
     nameLabel: t('order-summary'),
     subTotalLabel: `Cart Subtotal of (${checkout?.items?.length} items)`,
-    shippingTotalLabel: t('standard-shopping'),
+    shippingTotalLabel: t('standard-shipping'),
     taxLabel: t('tax'),
     totalLabel: t('order-total'),
     subTotal: t('currency', { val: subTotal }),

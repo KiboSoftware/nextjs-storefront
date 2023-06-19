@@ -18,7 +18,7 @@ const Content = (props: CartContentProps) => {
   const { t } = useTranslation('common')
   const orderPriceProps: OrderPriceProps = {
     subTotalLabel: `${t('cart-sub-total')} (${t('item-quantity', { count: quantity })})`,
-    shippingTotalLabel: t('standard-shopping'),
+    shippingTotalLabel: t('standard-shipping'),
     taxLabel: t('estimated-tax'),
     totalLabel: t('total'),
     subTotal: t('currency', { val: subtotal }),

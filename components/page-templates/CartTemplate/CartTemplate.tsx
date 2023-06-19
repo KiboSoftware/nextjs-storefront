@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
 
+import KeyboardArrowLeft from '@mui/icons-material/KeyboardArrowLeft'
 import { LoadingButton } from '@mui/lab'
 import {
   Grid,
@@ -196,6 +197,10 @@ const CartTemplate = (props: CartTemplateProps) => {
     ),
   }
 
+  const handleContinueShopping = () => {
+    router.back()
+  }
+
   return (
     <Grid container>
       {/* Header section */}
@@ -230,6 +235,16 @@ const CartTemplate = (props: CartTemplateProps) => {
               onFulfillmentOptionSelection={handleFulfillmentOptionSelection}
               onProductPickupLocation={handleProductPickupLocation}
             />
+            <Box py={5}>
+              <Button
+                variant="contained"
+                color="secondary"
+                onClick={handleContinueShopping}
+                startIcon={<KeyboardArrowLeft fontSize="small" sx={{ color: 'text.secondary' }} />}
+              >
+                {t('continue-shopping')}
+              </Button>
+            </Box>
           </Grid>
           {/* Order Summary */}
           <Grid item xs={12} md={4} sx={{ paddingRight: { xs: 0, md: 2 } }}>

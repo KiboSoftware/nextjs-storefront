@@ -1,5 +1,7 @@
 import React, { useState, useEffect, ChangeEvent } from 'react'
 
+import { yupResolver } from '@hookform/resolvers/yup'
+import Help from '@mui/icons-material/Help'
 import {
   Stack,
   Checkbox,
@@ -11,11 +13,14 @@ import {
   Typography,
   Button,
   Box,
+  Tooltip,
 } from '@mui/material'
 import getConfig from 'next/config'
 import dynamic from 'next/dynamic'
 import { useTranslation } from 'next-i18next'
 import { useReCaptcha } from 'next-recaptcha-v3'
+import { Controller, useForm } from 'react-hook-form'
+import * as yup from 'yup'
 
 import { SavedPaymentMethodView } from '@/components/checkout'
 import { useCheckoutStepContext, STEP_STATUS, useAuthContext, useSnackbarContext } from '@/context'
@@ -27,8 +32,11 @@ import {
 } from '@/hooks'
 import { CurrencyCode, PaymentType, PaymentWorkflow } from '@/lib/constants'
 import { addressGetters, cardGetters, orderGetters, userGetters } from '@/lib/getters'
-import { tokenizeCreditCardPayment } from '@/lib/helpers'
-import { buildCardPaymentActionForCheckoutParams } from '@/lib/helpers'
+import {
+  buildCardPaymentActionForCheckoutParams,
+  reTokenizeCreditCardPayment,
+  tokenizeCreditCardPayment,
+} from '@/lib/helpers'
 import type {
   Address,
   CardForm,
@@ -49,6 +57,9 @@ import type {
 } from '@/lib/gql/types'
 
 const AddressForm = dynamic(() => import('@/components/common').then((mod) => mod.AddressForm), {
+  ssr: false,
+})
+const KiboTextBox = dynamic(() => import('@/components/common').then((mod) => mod.KiboTextBox), {
   ssr: false,
 })
 const CardDetailsForm = dynamic(
@@ -160,11 +171,36 @@ const PaymentStep = (props: PaymentStepProps) => {
   const [billingFormAddress, setBillingFormAddress] = useState<Address>(initialBillingAddressData)
   const [validateForm, setValidateForm] = useState<boolean>(false)
   const [isAddingNewPayment, setIsAddingNewPayment] = useState<boolean>(false)
-
+  const [isCVVAddedForNewPayment, setIsCVVAddedForNewPayment] = useState<boolean>(false)
   const [selectedPaymentBillingRadio, setSelectedPaymentBillingRadio] = useState('')
   const [savedPaymentBillingDetails, setSavedPaymentBillingDetails] = useState<PaymentAndBilling[]>(
     []
   )
+
+  const [cvv, setCvv] = useState<string>('')
+
+  const useDetailsSchema = () => {
+    return yup.object().shape({
+      cvv: yup
+        .string()
+        .required(t('cvv-is-required'))
+        .matches(/^\d{3,4}$/g, t('invalid-cvv')),
+    })
+  }
+
+  const defaultCvv = {
+    cvv: '',
+  }
+  const {
+    formState: { errors, isValid },
+    control,
+  } = useForm({
+    mode: 'all',
+    reValidateMode: 'onBlur',
+    defaultValues: defaultCvv,
+    resolver: yupResolver(useDetailsSchema()),
+    shouldFocusError: true,
+  })
 
   // default card details if payment method is card
   const defaultCustomerAccountCard = userGetters.getDefaultPaymentBillingMethod(
@@ -173,7 +209,10 @@ const PaymentStep = (props: PaymentStepProps) => {
 
   // handle saved payment method radio selection to select different payment method
   const handleRadioSavedCardSelection = (value: string) => {
+    setStepStatusIncomplete()
     setSelectedPaymentBillingRadio(value)
+    setCvv('')
+    setIsCVVAddedForNewPayment(false)
   }
 
   const handleSavePaymentMethodCheckbox = () => {
@@ -188,6 +227,8 @@ const PaymentStep = (props: PaymentStepProps) => {
       ...cardFormDetails,
       ...cardData,
     })
+
+    setCvv(cardData.cvv as string)
   }
 
   const handleSameAsShippingAddressCheckbox = (value: boolean) => {
@@ -285,6 +326,8 @@ const PaymentStep = (props: PaymentStepProps) => {
   const cancelAddingNewPaymentMethod = () => {
     setIsAddingNewPayment(false)
     setNewPaymentMethod('')
+    setBillingFormAddress(initialBillingAddressData)
+    setCardFormDetails(initialCardFormData)
   }
 
   const handleCardFormValidDetails = (isValid: boolean) => {
@@ -321,7 +364,18 @@ const PaymentStep = (props: PaymentStepProps) => {
         paymentType,
         cardNumberPart,
         id,
+        cardholderName,
       } = cardGetters.getCardDetails(selectedPaymentMethod?.cardInfo as SavedCard)
+
+      if (!isCVVAddedForNewPayment) {
+        await handleReTokenization({
+          id,
+          cardType,
+          cvv,
+          cardNumber: cardNumberPart,
+          cardholderName,
+        })
+      }
 
       const cardDetails: CardTypeForCheckout = {
         cardType,
@@ -434,6 +488,13 @@ const PaymentStep = (props: PaymentStepProps) => {
     setValidateForm(false)
   }
 
+  const handleReTokenization = async (card: CardForm) => {
+    const { publicRuntimeConfig } = getConfig()
+    const pciHost = publicRuntimeConfig?.pciHost
+    const apiHost = publicRuntimeConfig?.apiHost as string
+    await reTokenizeCreditCardPayment(card, pciHost, apiHost)
+  }
+
   const getSavedPaymentMethodView = (card: PaymentAndBilling): React.ReactNode => {
     const address = addressGetters.getAddress(
       card?.billingAddressInfo?.contact.address as CrAddress
@@ -454,7 +515,7 @@ const PaymentStep = (props: PaymentStepProps) => {
           cardNumberPart={cardGetters.getCardNumberPart(card?.cardInfo)}
           expireMonth={cardGetters.getExpireMonth(card?.cardInfo)}
           expireYear={cardGetters.getExpireYear(card?.cardInfo)}
-          cardType={cardGetters.getCardType(card?.cardInfo)}
+          cardType={cardGetters.getCardType(card?.cardInfo).toUpperCase()}
           address1={addressGetters.getAddress1(address)}
           address2={addressGetters.getAddress2(address)}
           cityOrTown={addressGetters.getCityOrTown(address)}
@@ -462,12 +523,49 @@ const PaymentStep = (props: PaymentStepProps) => {
           stateOrProvince={addressGetters.getStateOrProvince(address)}
           onPaymentCardSelection={handleRadioSavedCardSelection}
         />
+        {selectedPaymentBillingRadio === card?.cardInfo?.id && !isCVVAddedForNewPayment && (
+          <Box pl={4} pt={2} width={'40%'}>
+            <FormControl sx={{ width: '100%' }}>
+              <Controller
+                name="cvv"
+                control={control}
+                defaultValue={defaultCvv?.cvv}
+                render={({ field }) => {
+                  return (
+                    <KiboTextBox
+                      type="password"
+                      value={field.value || ''}
+                      label={t('security-code')}
+                      placeholder={t('security-code-placeholder')}
+                      required={true}
+                      onChange={(_, value) => {
+                        field.onChange(value)
+                        setCvv(value)
+                      }}
+                      onBlur={field.onBlur}
+                      error={!!errors?.cvv}
+                      helperText={errors?.cvv?.message as unknown as string}
+                      icon={
+                        <Box pr={1} pt={0.5} sx={{ cursor: 'pointer' }}>
+                          <Tooltip title={t('cvv-tooltip-text')} placement="top">
+                            <Help color="disabled" />
+                          </Tooltip>
+                        </Box>
+                      }
+                    />
+                  )
+                }}
+              />
+            </FormControl>
+          </Box>
+        )}
       </Box>
     )
   }
 
   const handleInitialCardDetailsLoad = () => {
     // get card and billing address formatted data from server
+    setStepStatusIncomplete()
     const accountPaymentDetails =
       userGetters.getSavedCardsAndBillingDetails(
         customerCardsCollection,
@@ -566,7 +664,7 @@ const PaymentStep = (props: PaymentStepProps) => {
   // handling review order button status (enabled/disabled)
   useEffect(() => {
     if (selectedPaymentBillingRadio) {
-      isAddingNewPayment ? setStepStatusIncomplete() : setStepStatusValid()
+      isAddingNewPayment || !cvv ? setStepStatusIncomplete() : setStepStatusValid()
     } else {
       setStepStatusIncomplete()
     }
@@ -579,6 +677,10 @@ const PaymentStep = (props: PaymentStepProps) => {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [stepStatus])
+
+  useEffect(() => {
+    isValid ? setStepStatusValid() : setStepStatusIncomplete()
+  }, [isValid])
 
   return (
     <Stack data-testid="checkout-payment">

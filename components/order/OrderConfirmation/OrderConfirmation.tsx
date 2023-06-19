@@ -1,6 +1,6 @@
 import React, { useRef } from 'react'
 
-import { Print } from '@mui/icons-material'
+import Print from '@mui/icons-material/Print'
 import { Box, Container, Divider, Grid, IconButton, Stack, Typography } from '@mui/material'
 import { useTranslation } from 'next-i18next'
 import { useReactToPrint } from 'react-to-print'

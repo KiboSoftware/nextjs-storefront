@@ -128,9 +128,10 @@ export const CheckoutStepProvider = (props: CheckoutStepProviderProps) => {
 }
 
 export const useCheckoutStepContext = () => {
+  const { showSnackbar } = useSnackbarContext()
   const context = useContext<CheckoutStepContextType>(CheckoutStepContext)
   if (context === undefined) {
-    throw new Error(`useCheckoutStepContext must be used within a CheckoutStepProvider`)
+    showSnackbar("CheckoutStep Context not found", "warning")
   }
   return context
 }

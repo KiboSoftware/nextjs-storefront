@@ -4,7 +4,7 @@ import { Stack, Typography, Link, styled } from '@mui/material'
 import { useTranslation } from 'next-i18next'
 
 import { KiboDialog } from '@/components/common'
-import { RegisterAccountDialog } from '@/components/layout'
+import { RegisterAccountDialog, ResetPasswordDialog } from '@/components/layout'
 import LoginContent, { LoginData } from '@/components/layout/Login/LoginContent/LoginContent'
 import { useAuthContext } from '@/context'
 import { useModalContext } from '@/context/ModalContext'
@@ -50,7 +50,7 @@ const LoginDialog = () => {
   }
 
   const onForgotPassword = () => {
-    // do your stuff
+    showModal({ Component: ResetPasswordDialog })
   }
 
   const handleLogin = (params: LoginData) => {

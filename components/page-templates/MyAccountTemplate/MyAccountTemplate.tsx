@@ -151,6 +151,7 @@ const MyAccountTemplate = () => {
 
   const { executeRecaptcha } = useReCaptcha()
   const { showSnackbar } = useSnackbarContext()
+  
   const submitFormWithRecaptcha = (
     address: BillingAddress,
     card: CardType,
