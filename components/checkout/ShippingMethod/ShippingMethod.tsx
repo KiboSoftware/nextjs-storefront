@@ -11,6 +11,7 @@ import type { Maybe, CrOrderItem, CrShippingRate } from '@/lib/gql/types'
 export type ShippingMethodProps = {
   shipItems?: Maybe<CrOrderItem>[]
   pickupItems?: Maybe<CrOrderItem>[]
+  handlingAmount?: number
   orderShipmentMethods?: Maybe<CrShippingRate>[]
   selectedShippingMethodCode?: string
   showTitle?: boolean
@@ -19,9 +20,10 @@ export type ShippingMethodProps = {
 }
 export type ShipItemListProps = {
   shipItems: Maybe<CrOrderItem>[]
-  setSelectedShippingMethod: (shippingMethod: string) => void
+  handlingAmount?: number
   orderShipmentMethods?: Maybe<CrShippingRate>[]
   selectedShippingMethod?: string
+  setSelectedShippingMethod: (shippingMethod: string) => void
   onShippingMethodChange?: (value: string, name?: string) => void
 }
 export type PickupItemListProps = {
@@ -39,10 +41,11 @@ const styles = {
 }
 const ShipItemList = (shipProps: ShipItemListProps) => {
   const {
-    onShippingMethodChange,
     orderShipmentMethods,
     shipItems,
     selectedShippingMethod,
+    handlingAmount = 0,
+    onShippingMethodChange,
     setSelectedShippingMethod,
   } = shipProps
   const { t } = useTranslation('common')
@@ -127,6 +130,7 @@ const ShippingMethod = (props: ShippingMethodProps) => {
     orderShipmentMethods,
     showTitle = true,
     selectedShippingMethodCode,
+    handlingAmount,
     onShippingMethodChange,
     onStoreLocatorClick,
   } = props

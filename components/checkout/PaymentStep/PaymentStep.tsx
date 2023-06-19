@@ -13,16 +13,22 @@ import {
   Box,
 } from '@mui/material'
 import getConfig from 'next/config'
+import dynamic from 'next/dynamic'
 import { useTranslation } from 'next-i18next'
+import { useReCaptcha } from 'next-recaptcha-v3'
 
-import { CardDetailsForm, SavedPaymentMethodView } from '@/components/checkout'
-import { AddressForm } from '@/components/common'
-import { useCheckoutStepContext, STEP_STATUS, useAuthContext } from '@/context'
-import { useGetCards, useGetCustomerAddresses, usePaymentTypes } from '@/hooks'
+import { SavedPaymentMethodView } from '@/components/checkout'
+import { useCheckoutStepContext, STEP_STATUS, useAuthContext, useSnackbarContext } from '@/context'
+import {
+  useGetCards,
+  useGetCustomerAddresses,
+  usePaymentTypes,
+  useValidateCustomerAddress,
+} from '@/hooks'
 import { CurrencyCode, PaymentType, PaymentWorkflow } from '@/lib/constants'
 import { addressGetters, cardGetters, orderGetters, userGetters } from '@/lib/getters'
 import { tokenizeCreditCardPayment } from '@/lib/helpers'
-import { buildCardPaymentActionForCheckoutParams } from '@/lib/helpers/buildCardPaymentActionForCheckoutParams'
+import { buildCardPaymentActionForCheckoutParams } from '@/lib/helpers'
 import type {
   Address,
   CardForm,
@@ -33,7 +39,22 @@ import type {
   CardTypeForCheckout,
 } from '@/lib/types'
 
-import type { CrContact, CrAddress, CrOrder, PaymentActionInput, Checkout } from '@/lib/gql/types'
+import type {
+  CrContact,
+  CrAddress,
+  CrOrder,
+  PaymentActionInput,
+  Checkout,
+  CuAddress,
+} from '@/lib/gql/types'
+
+const AddressForm = dynamic(() => import('@/components/common').then((mod) => mod.AddressForm), {
+  ssr: false,
+})
+const CardDetailsForm = dynamic(
+  () => import('@/components/checkout').then((mod) => mod.CardDetailsForm),
+  { ssr: false }
+)
 
 interface PaymentStepProps {
   checkout: CrOrder | Checkout
@@ -83,6 +104,7 @@ const initialBillingAddressData: Address = {
   contact: {
     firstName: '',
     lastNameOrSurname: '',
+    email: '',
     address: {
       address1: '',
       address2: '',
@@ -104,7 +126,12 @@ const PaymentStep = (props: PaymentStepProps) => {
 
   // hooks
   const { isAuthenticated, user } = useAuthContext()
+  const { validateCustomerAddress } = useValidateCustomerAddress()
+
   const { t } = useTranslation('common')
+
+  const { executeRecaptcha } = useReCaptcha()
+  const { showSnackbar } = useSnackbarContext()
 
   const { loadPaymentTypes } = usePaymentTypes()
   const paymentMethods = loadPaymentTypes()
@@ -164,24 +191,63 @@ const PaymentStep = (props: PaymentStepProps) => {
   }
 
   const handleSameAsShippingAddressCheckbox = (value: boolean) => {
-    const contact = value
-      ? (checkout as CrOrder)?.fulfillmentInfo?.fulfillmentContact
-      : initialBillingAddressData
+    let address = initialBillingAddressData
+    if (value) {
+      address = {
+        contact: (checkout as CrOrder)?.fulfillmentInfo?.fulfillmentContact as ContactForm,
+      }
+    } else if (billingFormAddress.isDataUpdated) {
+      address = billingFormAddress
+    }
+
     setBillingFormAddress({
-      ...billingFormAddress,
-      contact: { ...(contact as ContactForm) },
+      ...address,
       isSameBillingShippingAddress: value,
     })
   }
 
   const handleBillingFormAddress = (address: Address) => {
-    setBillingFormAddress(address)
+    const updatedAddress = {
+      contact: {
+        ...address.contact,
+      },
+      email: checkout?.email,
+      isDataUpdated: address.isDataUpdated,
+    } as Address
+    setBillingFormAddress(updatedAddress)
   }
 
   // when adding new payment method, set payment method type (ex: credit card / check)
   const handlePaymentMethodSelection = (event: ChangeEvent<HTMLInputElement>) => {
     setIsAddingNewPayment(true)
     setNewPaymentMethod(event.target.value)
+  }
+
+  const submitFormWithRecaptcha = () => {
+    if (!executeRecaptcha) {
+      console.log('Execute recaptcha not yet available')
+      return
+    }
+    executeRecaptcha('enquiryFormSubmit').then((gReCaptchaToken: any) => {
+      fetch('/api/captcha', {
+        method: 'POST',
+        headers: {
+          Accept: 'application/json, text/plain, */*',
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          gRecaptchaToken: gReCaptchaToken,
+        }),
+      })
+        .then((res) => res.json())
+        .then(async (res) => {
+          if (res?.status === 'success') {
+            await saveCardDataToOrder()
+          } else {
+            showSnackbar(res.message, 'error')
+          }
+        })
+    })
   }
 
   const shouldShowPreviouslySavedPayments = () => {
@@ -456,6 +522,20 @@ const PaymentStep = (props: PaymentStepProps) => {
     }
   }
 
+  const handleValidateBillingAddress = async (address: CuAddress) => {
+    try {
+      await validateCustomerAddress.mutateAsync({
+        addressValidationRequestInput: {
+          address,
+        },
+      })
+      handleTokenization({ ...cardFormDetails })
+    } catch (error) {
+      setValidateForm(false)
+      console.error(error)
+    }
+  }
+
   // handle initial load of cards and contacts
   useEffect(() => {
     // handle saved payment methods in account
@@ -474,7 +554,7 @@ const PaymentStep = (props: PaymentStepProps) => {
       cardFormDetails.cardNumber &&
       billingFormAddress.contact.firstName
     ) {
-      handleTokenization({ ...cardFormDetails })
+      handleValidateBillingAddress({ ...billingFormAddress.contact.address })
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [
@@ -495,7 +575,7 @@ const PaymentStep = (props: PaymentStepProps) => {
 
   useEffect(() => {
     if (stepStatus === STEP_STATUS.SUBMIT) {
-      saveCardDataToOrder()
+      submitFormWithRecaptcha()
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [stepStatus])

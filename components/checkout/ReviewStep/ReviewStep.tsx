@@ -14,23 +14,24 @@ import {
   FormControl,
   SxProps,
 } from '@mui/material'
+import dynamic from 'next/dynamic'
 import { useTranslation } from 'next-i18next'
 import { useForm, Controller } from 'react-hook-form'
 import * as yup from 'yup'
 
-import {
-  KiboTextBox,
-  OrderPrice,
-  PasswordValidation,
-  ProductItem,
-  ProductItemList,
-} from '@/components/common'
+import { OrderPrice, ProductItem, ProductItemList } from '@/components/common'
 import type { OrderPriceProps } from '@/components/common/OrderPrice/OrderPrice'
 import { useCheckoutStepContext, useAuthContext } from '@/context'
 import { addressGetters, checkoutGetters, orderGetters, productGetters } from '@/lib/getters'
 import { isPasswordValid } from '@/lib/helpers/validations/validations'
 
 import type { CrOrder, Maybe, Checkout, CrOrderItem, CrProduct, CrContact } from '@/lib/gql/types'
+
+const PasswordValidation = dynamic(
+  () => import('@/components/common').then((mod) => mod.PasswordValidation),
+  { ssr: false }
+)
+const KiboTextBox = dynamic(() => import('@/components/common').then((mod) => mod.KiboTextBox))
 
 export interface PersonalDetails {
   email: Maybe<string> | undefined
@@ -112,7 +113,7 @@ const ReviewStep = (props: ReviewStepProps) => {
   const [isAgreeWithTermsAndConditions, setAgreeWithTermsAndConditions] = useState<boolean>(false)
 
   const { setStepNext, setStepBack, setStepStatusComplete } = useCheckoutStepContext()
-  const { subTotal, shippingTotal, taxTotal, total } = orderSummaryProps
+  const { subTotal, shippingTotal, taxTotal, total, discountedSubtotal } = orderSummaryProps
 
   const {
     formState: { errors, isValid },
@@ -147,19 +148,22 @@ const ReviewStep = (props: ReviewStepProps) => {
     setAgreeWithTermsAndConditions(event.target.checked)
 
   const onValid = async (formData: PersonalDetails) => {
-    await onCreateOrder(checkout)
+    try {
+      if (formData?.showAccountFields) {
+        await createAccount({
+          email: checkout.email as string,
+          firstName: formData.firstName,
+          lastNameOrSurname: formData.lastNameOrSurname,
+          password: formData.password,
+        })
+      }
+      await onCreateOrder(checkout)
 
-    if (formData?.showAccountFields) {
-      await createAccount({
-        email: checkout.email as string,
-        firstName: formData.firstName,
-        lastNameOrSurname: formData.lastNameOrSurname,
-        password: formData.password,
-      })
+      setStepStatusComplete()
+      setStepNext()
+    } catch (e) {
+      console.log('error', e)
     }
-
-    setStepStatusComplete()
-    setStepNext()
   }
 
   const onInvalidForm = () => console.log('Invalid Form')
@@ -171,6 +175,10 @@ const ReviewStep = (props: ReviewStepProps) => {
     taxLabel: t('estimated-tax'),
     totalLabel: t('total'),
     subTotal: t('currency', { val: subTotal }),
+    discountedSubtotal:
+      discountedSubtotal > 0 && discountedSubtotal !== subTotal
+        ? t('currency', { val: discountedSubtotal })
+        : '',
     shippingTotal: shippingTotal ? t('currency', { val: shippingTotal }) : t('free'),
     tax: t('currency', { val: taxTotal }),
     total: t('currency', { val: total }),
