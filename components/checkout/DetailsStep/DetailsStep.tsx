@@ -22,6 +22,7 @@ import type { Maybe, CrOrder, Checkout } from '@/lib/gql/types'
 interface DetailsProps<T> {
   setAutoFocus?: boolean
   checkout: T
+  perks?: any
   updateCheckoutPersonalInfo: (params: { email: Maybe<string> | undefined }) => Promise<void>
 }
 
@@ -58,7 +59,12 @@ const useDetailsSchema = () => {
 }
 
 const DetailsStep = <T extends CrOrder | Checkout>(props: DetailsProps<T>) => {
-  const { setAutoFocus = true, checkout, updateCheckoutPersonalInfo } = props
+  const {
+    setAutoFocus = true,
+    checkout,
+    perks = <DefaultPerks />,
+    updateCheckoutPersonalInfo,
+  } = props
 
   const { t } = useTranslation('common')
 
@@ -73,7 +79,7 @@ const DetailsStep = <T extends CrOrder | Checkout>(props: DetailsProps<T>) => {
   } = useCheckoutStepContext()
 
   const personalDetails = {
-    email: checkout && checkout.email,
+    email: (checkout && checkout.email) || '',
   }
 
   const openLoginModal = () => {
@@ -165,39 +171,45 @@ const DetailsStep = <T extends CrOrder | Checkout>(props: DetailsProps<T>) => {
           )}
         />
       </Box>
-
-      <Stack gap={2}>
-        {t('enjoy-these-perks-with-your-free-account')}
-
-        <Grid container>
-          <Grid item xs={12}>
-            <IconButton aria-label={t('faster-checkout')}>
-              <AccessTime fontSize="medium" />
-            </IconButton>
-            {t('faster-checkout')}
-          </Grid>
-          <Grid item xs={12}>
-            <IconButton aria-label={t('earn-credits-with-every-purchase')}>
-              <EmojiEvents fontSize="medium" />
-            </IconButton>
-            {t('earn-credits-with-every-purchase')}
-          </Grid>
-          <Grid item xs={12}>
-            <IconButton aria-label={t('full-rewards-program-benifits')}>
-              <CardGiftcard fontSize="medium" />
-            </IconButton>
-            {t('full-rewards-program-benifits')}
-          </Grid>
-          <Grid item xs={12}>
-            <IconButton aria-label={t('manage-your-wishlist')}>
-              <FavoriteBorder fontSize="medium" />
-            </IconButton>
-            {t('manage-your-wishlist')}
-          </Grid>
-        </Grid>
-      </Stack>
+      {perks}
     </Stack>
   )
 }
 
 export default DetailsStep
+
+const DefaultPerks = () => {
+  const { t } = useTranslation('common')
+
+  return (
+    <Stack gap={2}>
+      {t('enjoy-these-perks-with-your-free-account')}
+      <Grid container>
+        <Grid item xs={12}>
+          <IconButton aria-label={t('faster-checkout')}>
+            <AccessTime fontSize="medium" />
+          </IconButton>
+          {t('faster-checkout')}
+        </Grid>
+        <Grid item xs={12}>
+          <IconButton aria-label={t('earn-credits-with-every-purchase')}>
+            <EmojiEvents fontSize="medium" />
+          </IconButton>
+          {t('earn-credits-with-every-purchase')}
+        </Grid>
+        <Grid item xs={12}>
+          <IconButton aria-label={t('full-rewards-program-benifits')}>
+            <CardGiftcard fontSize="medium" />
+          </IconButton>
+          {t('full-rewards-program-benifits')}
+        </Grid>
+        <Grid item xs={12}>
+          <IconButton aria-label={t('manage-your-wishlist')}>
+            <FavoriteBorder fontSize="medium" />
+          </IconButton>
+          {t('manage-your-wishlist')}
+        </Grid>
+      </Grid>
+    </Stack>
+  )
+}

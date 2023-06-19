@@ -2,12 +2,22 @@ import React, { useCallback } from 'react'
 
 import { Box, Stack, Button, SxProps } from '@mui/material'
 import { Theme } from '@mui/material/styles'
+import dynamic from 'next/dynamic'
+import { useRouter } from 'next/router'
 import { useTranslation } from 'next-i18next'
+import { ReCaptchaProvider } from 'next-recaptcha-v3'
 
-import { KiboStepper, OrderReview } from '@/components/checkout'
-import { OrderSummary, PromoCodeBadge } from '@/components/common'
-import { OrderConfirmation } from '@/components/order'
+import getConfig from 'next/config'
+
+import { KiboStepper } from '@/components/checkout'
+import { OrderSummary } from '@/components/common'
 import { useCheckoutStepContext, STEP_STATUS } from '@/context'
+import { checkoutGetters, orderGetters } from '@/lib/getters'
+
+const OrderReview = dynamic(() => import('@/components/checkout').then((mod) => mod.OrderReview))
+const PromoCodeBadge = dynamic(() =>
+  import('@/components/common').then((mod) => mod.PromoCodeBadge)
+)
 
 import type { Checkout, CrOrder } from '@/lib/gql/types'
 
@@ -47,12 +57,15 @@ const CheckoutUITemplate = <T extends CrOrder | Checkout>(props: CheckoutUITempl
   const handleSubmit = useCallback(() => setStepStatusSubmit(), [])
 
   const subTotal = (checkout as CrOrder)?.subtotal || (checkout as Checkout)?.subTotal
+  const shippingTotal = orderGetters.getShippingTotal(checkout)
 
   const discountedSubtotal =
-    (checkout as CrOrder)?.discountedSubtotal ||
-    (checkout as Checkout).itemLevelProductDiscountTotal +
-      (checkout as Checkout)?.orderLevelProductDiscountTotal
-  const tax = (checkout as CrOrder)?.taxTotal || (checkout as CrOrder)?.itemTaxTotal
+    orderGetters.getDiscountedSubtotal(checkout as CrOrder) ||
+    checkoutGetters.getDiscountedSubtotal(checkout as Checkout)
+  const taxTotal =
+    orderGetters.getTaxTotal(checkout as CrOrder) ||
+    checkoutGetters.getTaxTotal(checkout as Checkout)
+  const total = orderGetters.getTotal(checkout)
 
   const orderSummaryArgs = {
     nameLabel: t('order-summary'),
@@ -66,11 +79,11 @@ const CheckoutUITemplate = <T extends CrOrder | Checkout>(props: CheckoutUITempl
       discountedSubtotal > 0 && discountedSubtotal !== subTotal
         ? t('currency', { val: discountedSubtotal })
         : '',
-    shippingTotal: checkout?.shippingTotal
-      ? t('currency', { val: checkout?.shippingTotal })
-      : t('free'),
-    tax: t('currency', { val: tax || 0 }),
-    total: t('currency', { val: checkout?.total }),
+    shippingTotal: t('currency', {
+      val: shippingTotal,
+    }),
+    tax: t('currency', { val: taxTotal || 0 }),
+    total: t('currency', { val: total }),
     checkoutLabel: t('go-to-checkout'),
     shippingLabel: t('go-to-shipping'),
     backLabel: t('go-back'),
@@ -86,66 +99,87 @@ const CheckoutUITemplate = <T extends CrOrder | Checkout>(props: CheckoutUITempl
   }
   const showCheckoutSteps = activeStep !== steps.length
 
+  const router = useRouter()
+  if (!showCheckoutSteps) {
+    router.push(
+      { pathname: '/order-confirmation', query: { checkoutId: checkout.id } },
+      { pathname: '/order-confirmation' }
+    )
+  }
+
+  const { publicRuntimeConfig } = getConfig()
+  const reCaptchaKey = publicRuntimeConfig.recaptcha.recaptchaKey
+
   return (
     <>
-      {showCheckoutSteps && (
-        <Stack
-          sx={{ paddingTop: '20px', paddingBottom: { md: '40px' } }}
-          direction={{ xs: 'column', md: 'row' }}
-          gap={2}
-        >
-          <Stack sx={{ width: '100%', maxWidth: '872px' }} gap={1}>
-            <KiboStepper isSticky={true}>{children}</KiboStepper>
-          </Stack>
-          <Box
-            sx={{
-              width: '100%',
-              maxWidth: 428,
-              height: 'fit-content',
-              marginLeft: { lg: '1rem' },
-              position: { md: 'sticky' },
-              top: '80px',
-            }}
+      <ReCaptchaProvider reCaptchaKey={reCaptchaKey}>
+        {showCheckoutSteps && (
+          <Stack
+            sx={{ paddingTop: '20px', paddingBottom: { md: '40px' } }}
+            direction={{ xs: 'column', md: 'row' }}
+            gap={2}
           >
-            {activeStep != reviewStepIndex && (
-              <OrderSummary {...orderSummaryArgs}>
-                {activeStep < buttonLabels.length && (
-                  <Stack direction="column" gap={2}>
-                    <Button
-                      variant="contained"
-                      color="primary"
-                      sx={{ ...buttonStyle }}
-                      fullWidth
-                      onClick={handleSubmit}
-                      disabled={stepStatus !== STEP_STATUS.VALID || activeStep === steps.length - 1}
-                    >
-                      {buttonLabels[activeStep]}
-                    </Button>
-                    <Button
-                      variant="contained"
-                      color="secondary"
-                      sx={{ ...buttonStyle }}
-                      fullWidth
-                      onClick={handleBack}
-                      disabled={activeStep === detailsStepIndex}
-                    >
-                      {t('go-back')}
-                    </Button>
-                  </Stack>
-                )}
-              </OrderSummary>
-            )}
-            {activeStep === reviewStepIndex && (
-              <OrderReview checkout={checkout as CrOrder} isMultiShipEnabled={isMultiShipEnabled} />
-            )}
-          </Box>
-        </Stack>
-      )}
-      {!showCheckoutSteps && (
+            <Stack sx={{ width: '100%', maxWidth: '872px' }} gap={1}>
+              <KiboStepper isSticky={true}>{children}</KiboStepper>
+            </Stack>
+            <Box
+              sx={{
+                width: '100%',
+                maxWidth: 428,
+                height: 'fit-content',
+                marginLeft: { lg: '1rem' },
+                position: { md: 'sticky' },
+                top: '80px',
+              }}
+            >
+              {activeStep != reviewStepIndex && (
+                <OrderSummary {...orderSummaryArgs}>
+                  {activeStep < buttonLabels.length && (
+                    <Stack direction="column" gap={2}>
+                      <Button
+                        variant="contained"
+                        color="primary"
+                        sx={{ ...buttonStyle }}
+                        fullWidth
+                        onClick={handleSubmit}
+                        disabled={
+                          stepStatus !== STEP_STATUS.VALID || activeStep === steps.length - 1
+                        }
+                      >
+                        {buttonLabels[activeStep]}
+                      </Button>
+                      <Button
+                        variant="contained"
+                        color="secondary"
+                        sx={{ ...buttonStyle }}
+                        fullWidth
+                        onClick={handleBack}
+                        disabled={activeStep === detailsStepIndex}
+                      >
+                        {t('go-back')}
+                      </Button>
+                    </Stack>
+                  )}
+                </OrderSummary>
+              )}
+              {activeStep === reviewStepIndex && (
+                <OrderReview
+                  checkout={checkout as CrOrder}
+                  isMultiShipEnabled={isMultiShipEnabled}
+                  handleApplyCouponCode={handleApplyCouponCode}
+                  handleRemoveCouponCode={handleRemoveCouponCode}
+                  promoError={promoError}
+                />
+              )}
+            </Box>
+          </Stack>
+        )}
+        {/* {!showCheckoutSteps && (
         <Stack sx={{ paddingY: 8 }}>
           <OrderConfirmation order={checkout as CrOrder} />
         </Stack>
-      )}
+      )} */}
+      </ReCaptchaProvider>
     </>
   )
 }

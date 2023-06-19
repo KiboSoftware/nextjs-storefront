@@ -4,7 +4,7 @@ import ArrowBackIos from '@mui/icons-material/ArrowBackIos'
 import { Divider, Grid, Typography, Box, Stack, Button, MenuItem } from '@mui/material'
 import { useTranslation } from 'next-i18next'
 
-import { KiboImage, KiboSelect, ReturnItemList } from '@/components/common'
+import { KiboImage, KiboRadio, KiboSelect, ReturnItemList } from '@/components/common'
 import { OrderReturnItemsDialog } from '@/components/dialogs'
 import { ProductOption } from '@/components/product'
 import { useModalContext } from '@/context'
@@ -43,6 +43,7 @@ const OrderReturnItems = (props: OrderReturnItemsProps) => {
   const [selectedReturnItems, setSelectedReturnItems] = useState<Maybe<CrOrderItem>[]>([])
   const [selectedReturnReason, setSelectedReturnReason] = useState<string>('')
   const [isReturnRequestSuccessful, setIsReturnRequestSuccessful] = useState<boolean>(false)
+  const [selectedReturnType, setSelectedReturnType] = useState<string>(OrderReturnType.REFUND)
 
   const { showModal, closeModal } = useModalContext()
 
@@ -54,6 +55,23 @@ const OrderReturnItems = (props: OrderReturnItemsProps) => {
   const submittedDate = orderGetters.getSubmittedDate(order)
   const pickupItems = orderGetters.getPickupItems(order)
   const shipItems = orderGetters.getShipItems(order)
+
+  const radioOptions = [
+    {
+      value: OrderReturnType.REFUND,
+      name: OrderReturnType.REFUND,
+      label: <Typography variant="body2">{OrderReturnType.REFUND}</Typography>,
+    },
+    {
+      value: OrderReturnType.REPLACE,
+      name: OrderReturnType.REPLACE,
+      label: <Typography variant="body2">{OrderReturnType.REPLACE}</Typography>,
+    },
+  ]
+
+  const handleReturnOption = (value: string) => {
+    setSelectedReturnType(value)
+  }
 
   const handleReturnItems = (orderItemId: string) => {
     const selectedReturnItem = selectedReturnItems?.find(
@@ -73,7 +91,7 @@ const OrderReturnItems = (props: OrderReturnItemsProps) => {
 
   const handleConfirmReturnRequest = async () => {
     const createReturnItemsParams: CreateOrderReturnItemsInputParams = {
-      returnType: OrderReturnType.REFUND,
+      returnType: selectedReturnType,
       reason: selectedReturnReason,
       originalOrderId: order?.id as string,
       items: selectedReturnItems,
@@ -135,6 +153,13 @@ const OrderReturnItems = (props: OrderReturnItemsProps) => {
           </Box>
           <Divider sx={{ ...styles.divider }} />
           {/* Return reason & comment */}
+          <Box>
+            <KiboRadio
+              radioOptions={radioOptions}
+              selected={selectedReturnType}
+              onChange={handleReturnOption}
+            />
+          </Box>
           <Box>
             <Typography pt={2} pb={0.5}>
               {t('reason-for-your-return')}

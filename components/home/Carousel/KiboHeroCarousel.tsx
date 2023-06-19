@@ -1,5 +1,8 @@
 import React from 'react'
 
+import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos'
+import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos'
+import MinimizeIcon from '@mui/icons-material/Minimize'
 import {
   Button,
   useMediaQuery,
@@ -8,11 +11,13 @@ import {
   Typography,
   useTheme,
   CardMedia,
+  Skeleton,
 } from '@mui/material'
 import { styled } from '@mui/system'
 import { useRouter } from 'next/router'
 import Carousel from 'react-material-ui-carousel'
 
+import { heroCarouselStyles } from './KiboHeroCarousel.style'
 import { KiboImage } from '@/components/common'
 
 interface ItemProps {
@@ -32,61 +37,35 @@ export interface HeroCarouselProps {
 const MainStyle = styled('div')({
   display: 'flex',
   color: 'grey.700',
+  minHeight: '600px',
 })
 
 const KiboHeroCarousel = ({ carouselItem }: HeroCarouselProps) => {
   return (
     <>
-      {carouselItem?.length > 0 && (
+      {carouselItem?.length > 0 ? (
         <MainStyle>
-          <Carousel navButtonsAlwaysVisible={true} swipe={true} sx={{ width: '100%' }}>
-            {carouselItem?.map((item: ItemProps, index: any) => {
-              return <HeroItem {...item} key={index} />
+          <Carousel
+            navButtonsAlwaysVisible={true}
+            index={carouselItem?.length - 1}
+            autoPlay={false}
+            swipe={true}
+            sx={{ width: '100%' }}
+            height="600"
+            IndicatorIcon={<MinimizeIcon />}
+            NextIcon={<ArrowForwardIosIcon />}
+            PrevIcon={<ArrowBackIosIcon />}
+          >
+            {carouselItem?.map((item: ItemProps) => {
+              return <HeroItem {...item} key={item.imageUrl} />
             })}
           </Carousel>
         </MainStyle>
+      ) : (
+        <HeroItemSkeleton />
       )}
     </>
   )
-}
-
-const styles = {
-  contentStyle: {
-    display: 'flex',
-    flexDirection: 'column',
-    justifyContent: 'space-between',
-    height: '600px',
-    width: '100%',
-    margin: '0px',
-    padding: '0px',
-    outline: 'none',
-    borderRadius: '0px',
-  },
-  cardStyle: {
-    display: 'flex',
-    flexDirection: 'column',
-    marginBottom: '5%',
-    backgroundColor: 'common.white',
-    opacity: '0.99',
-    color: 'common.black',
-    justifyContent: 'center',
-    width: { xs: '80%', md: '50%' },
-    gap: 2,
-  },
-  nameStyle: {
-    width: '100%',
-    textAlign: 'center',
-    fontWeight: 600,
-  },
-  desStyle: {
-    width: '100%',
-    textAlign: 'center',
-  },
-  subTitleStyle: {
-    width: '100%',
-    textAlign: 'center',
-    fontWeight: 800,
-  },
 }
 
 function HeroItem(props: ItemProps) {
@@ -106,7 +85,7 @@ function HeroItem(props: ItemProps) {
   } = props
 
   return (
-    <Card sx={styles.contentStyle}>
+    <Card sx={heroCarouselStyles.contentStyle}>
       <CardMedia
         sx={{
           width: '100%',
@@ -119,29 +98,36 @@ function HeroItem(props: ItemProps) {
       >
         <KiboImage
           src={mobileView ? mobileImageUrl : imageUrl}
-          alt={imageUrl ? imageAlt : 'product-image-alt'}
+          alt={imageAlt || 'carousel-image'}
+          sizes="(max-width: 1200px) 92vw, 1152px"
+          loading="eager"
           layout="fill"
           objectFit="cover"
           data-testid="product-image"
+          priority
         />
 
-        <CardContent
-          sx={{
-            display: 'flex',
-            justifyContent: 'center',
-          }}
-        >
-          <CardContent sx={styles.cardStyle}>
-            <Typography variant="h2" sx={styles.nameStyle}>
+        <CardContent sx={heroCarouselStyles.cardStyle}>
+          {title && (
+            <Typography variant="h2" sx={heroCarouselStyles.nameStyle}>
               {title}
             </Typography>
-            <Typography variant="h1" sx={styles.subTitleStyle}>
+          )}
+          {subtitle && (
+            <Typography variant="h1" sx={heroCarouselStyles.subTitleStyle}>
               {subtitle}
             </Typography>
-            <Typography style={{ fontSize: mobileView ? '0.75rem' : '1rem' }} sx={styles.desStyle}>
+          )}
+          {description && (
+            <Typography
+              style={{ fontSize: mobileView ? '0.75rem' : '1rem' }}
+              sx={heroCarouselStyles.desStyle}
+            >
               {description}
             </Typography>
+          )}
 
+          {buttonText && (
             <Button
               variant="contained"
               sx={{ fontSize: mobileView ? '0.5rem' : '1rem' }}
@@ -151,8 +137,27 @@ function HeroItem(props: ItemProps) {
             >
               {buttonText}
             </Button>
-          </CardContent>
+          )}
         </CardContent>
+      </CardMedia>
+    </Card>
+  )
+}
+
+const HeroItemSkeleton = () => {
+  return (
+    <Card sx={heroCarouselStyles.contentStyle}>
+      <CardMedia
+        sx={{
+          width: '100%',
+          height: '100%',
+          position: 'relative',
+          display: 'flex',
+          flexDirection: 'column',
+          justifyContent: { xs: 'end', md: 'center' },
+        }}
+      >
+        <Skeleton height={'100%'} width="100%" />
       </CardMedia>
     </Card>
   )

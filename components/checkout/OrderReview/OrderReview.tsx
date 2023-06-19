@@ -24,6 +24,9 @@ import type { CrOrder, CustomerContact, Checkout } from '@/lib/gql/types'
 interface OrderReviewProps {
   checkout: CrOrder | Checkout
   isMultiShipEnabled?: boolean
+  promoError: string
+  handleApplyCouponCode: (couponCode: string) => void
+  handleRemoveCouponCode: (couponCode: string) => void
 }
 
 interface OrderInfoHeaderProps {
@@ -90,7 +93,13 @@ const OrderInfoHeader = (props: OrderInfoHeaderProps) => {
 }
 
 const OrderReview = (props: OrderReviewProps) => {
-  const { checkout, isMultiShipEnabled } = props
+  const {
+    checkout,
+    isMultiShipEnabled,
+    handleApplyCouponCode,
+    handleRemoveCouponCode,
+    promoError,
+  } = props
 
   const { steps, setActiveStep } = useCheckoutStepContext()
   const { t } = useTranslation('common')
@@ -245,10 +254,11 @@ const OrderReview = (props: OrderReviewProps) => {
 
           <Divider sx={{ marginTop: '1.25rem', marginBottom: '1.813rem' }} />
           <PromoCodeBadge
-            onApplyCouponCode={() => ''}
-            onRemoveCouponCode={() => ''}
-            promoList={[]}
-            promoError={false}
+            onApplyCouponCode={handleApplyCouponCode}
+            onRemoveCouponCode={handleRemoveCouponCode}
+            promoList={checkout?.couponCodes as string[]}
+            promoError={!!promoError}
+            helpText={promoError}
           />
         </StyledOrderReview>
       </AccordionDetails>

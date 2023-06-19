@@ -1,21 +1,35 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect, useRef, useState } from 'react'
 
-import { Stack, Button, Typography, Grid, Box } from '@mui/material'
+import { Stack, Button, Typography, Grid, Box, FormControlLabel, Checkbox } from '@mui/material'
+import dynamic from 'next/dynamic'
 import { useTranslation } from 'next-i18next'
+import { useReCaptcha } from 'next-recaptcha-v3'
 
-import { ShippingMethod } from '@/components/checkout'
+const ShippingMethod = dynamic(() =>
+  import('@/components/checkout').then((mod) => mod.ShippingMethod)
+)
+
 import { AddressDetailsView, AddressForm } from '@/components/common'
-import { useCheckoutStepContext, STEP_STATUS } from '@/context'
-import { useUpdateOrderShippingInfo, useGetShippingMethods } from '@/hooks'
+import { useCheckoutStepContext, STEP_STATUS, useSnackbarContext, useAuthContext } from '@/context'
+import {
+  useUpdateOrderShippingInfo,
+  useGetShippingMethods,
+  useValidateCustomerAddress,
+  useCreateCustomerAddress,
+} from '@/hooks'
 import { DefaultId } from '@/lib/constants'
+import { AddressType } from '@/lib/constants'
 import { orderGetters, userGetters } from '@/lib/getters'
+import { buildAddressParams } from '@/lib/helpers'
+import { Address } from '@/lib/types'
 
 import type {
   CrOrder,
   CrContact,
   CustomerContact,
   CustomerContactCollection,
+  CuAddress,
 } from '@/lib/gql/types'
 
 interface ShippingProps {
@@ -27,7 +41,9 @@ interface ShippingProps {
 
 const StandardShippingStep = (props: ShippingProps) => {
   const { checkout, savedUserAddressData: addresses, isAuthenticated } = props
-
+  const { executeRecaptcha } = useReCaptcha()
+  const { showSnackbar } = useSnackbarContext()
+  const { user } = useAuthContext()
   const checkoutShippingContact = orderGetters.getShippingContact(checkout)
   const checkoutShippingMethodCode = orderGetters.getShippingMethodCode(checkout)
   // getting shipping address from all addresses returned from server
@@ -39,7 +55,9 @@ const StandardShippingStep = (props: ShippingProps) => {
   }
   const shipItems = orderGetters.getShipItems(checkout)
   const pickupItems = orderGetters.getPickupItems(checkout)
+  const handlingAmount = orderGetters.getHandlingTotal(checkout)
 
+  const [isAddressSavedToAccount, setIsAddressSavedToAccount] = useState<boolean>(false)
   const [validateForm, setValidateForm] = useState<boolean>(false)
   const [checkoutId, setCheckoutId] = useState<string | null | undefined>(undefined)
   const [isAddressFormValid, setIsAddressFormValid] = useState<boolean>(false)
@@ -69,7 +87,7 @@ const StandardShippingStep = (props: ShippingProps) => {
   )
 
   const { t } = useTranslation('common')
-  const shippingAddressRef = useRef()
+  const shippingAddressRef = useRef<HTMLDivElement>(null)
 
   const {
     stepStatus,
@@ -84,11 +102,38 @@ const StandardShippingStep = (props: ShippingProps) => {
     isNewAddressAdded,
     selectedShippingAddressId
   )
+  const { validateCustomerAddress } = useValidateCustomerAddress()
+  const { createCustomerAddress } = useCreateCustomerAddress()
 
   const handleAddressValidationAndSave = () => setValidateForm(true)
 
-  const handleSaveAddress = async ({ contact }: { contact: CrContact }) => {
+  const handleSaveAddressToAccount = async (contact: CrContact) => {
+    const address = {
+      contact: {
+        ...contact,
+        email: user?.emailAddress as string,
+      },
+    } as Address
+
+    const params = buildAddressParams({
+      accountId: user?.id as number,
+      address,
+      isDefaultAddress: false,
+      addressType: AddressType.SHIPPING,
+    })
+
+    await createCustomerAddress.mutateAsync(params)
+    setIsAddressSavedToAccount(false)
+  }
+
+  const handleSaveAddressToCheckout = async ({ contact }: { contact: CrContact }) => {
     try {
+      await validateCustomerAddress.mutateAsync({
+        addressValidationRequestInput: { address: contact?.address as CuAddress },
+      })
+      if (isAddressSavedToAccount) {
+        await handleSaveAddressToAccount(contact)
+      }
       await updateOrderShippingInfo.mutateAsync({ checkout, contact })
       setCheckoutId(checkout?.id)
       setSelectedShippingAddressId((contact?.id as number) || DefaultId.ADDRESSID)
@@ -96,9 +141,38 @@ const StandardShippingStep = (props: ShippingProps) => {
       setValidateForm(false)
       setIsNewAddressAdded(true)
       setStepStatusIncomplete()
-    } catch (error) {
+    } catch (error: any) {
+      setValidateForm(false)
       console.error(error)
     }
+  }
+
+  const submitFormWithRecaptcha = ({ contact }: { contact: CrContact }) => {
+    if (!executeRecaptcha) {
+      console.log('Execute recaptcha not yet available')
+      return
+    }
+    executeRecaptcha('enquiryFormSubmit').then((gReCaptchaToken) => {
+      fetch('/api/captcha', {
+        method: 'POST',
+        headers: {
+          Accept: 'application/json, text/plain, */*',
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          ...contact,
+          gRecaptchaToken: gReCaptchaToken,
+        }),
+      })
+        .then((res) => res.json())
+        .then(async (res) => {
+          if (res?.status === 'success') {
+            await handleSaveAddressToCheckout({ contact })
+          } else {
+            showSnackbar(res.message, 'error')
+          }
+        })
+    })
   }
 
   const handleSaveShippingMethod = async (shippingMethodCode: string) => {
@@ -148,11 +222,12 @@ const StandardShippingStep = (props: ShippingProps) => {
           ...(selectedAddress?.phoneNumbers as any),
         },
       }
-      handleSaveAddress({ contact })
+      handleSaveAddressToCheckout({ contact })
     }
   }
 
   const handleAddNewAddress = () => {
+    setValidateForm(false)
     setShouldShowAddAddressButton(false)
     setIsNewAddressAdded(false)
   }
@@ -277,6 +352,7 @@ const StandardShippingStep = (props: ShippingProps) => {
             <ShippingMethod
               shipItems={shipItems}
               pickupItems={pickupItems}
+              handlingAmount={handlingAmount}
               orderShipmentMethods={[...shippingMethods]}
               selectedShippingMethodCode={checkoutShippingMethodCode}
               onShippingMethodChange={handleSaveShippingMethod}
@@ -292,9 +368,25 @@ const StandardShippingStep = (props: ShippingProps) => {
             saveAddressLabel={t('save-shipping-address')}
             setAutoFocus={true}
             validateForm={validateForm}
-            onSaveAddress={handleSaveAddress}
+            onSaveAddress={submitFormWithRecaptcha}
             onFormStatusChange={handleFormStatusChange}
           />
+
+          {isAuthenticated && (
+            <FormControlLabel
+              label={t('save-address-to-account')}
+              control={
+                <Checkbox
+                  sx={{ marginLeft: '0.5rem' }}
+                  inputProps={{
+                    'aria-label': t('save-address-to-account'),
+                  }}
+                  onChange={() => setIsAddressSavedToAccount(!isAddressSavedToAccount)}
+                />
+              }
+            />
+          )}
+
           <Box m={1} maxWidth={'872px'} data-testid="address-form">
             <Grid container>
               <Grid item xs={6} gap={2} display={'flex'} direction={'column'}>

@@ -19,9 +19,10 @@ import {
 import getConfig from 'next/config'
 import { useRouter } from 'next/router'
 import { useTranslation } from 'next-i18next'
+import { useReCaptcha } from 'next-recaptcha-v3'
 
 import { MyProfile, PaymentMethod, AddressBook } from '@/components/my-account'
-import { useAuthContext } from '@/context'
+import { useAuthContext, useSnackbarContext } from '@/context'
 import {
   useGetCards,
   useGetCustomerAddresses,
@@ -29,10 +30,11 @@ import {
   useUpdateCustomerCard,
   useCreateCustomerAddress,
   useUpdateCustomerAddress,
+  useValidateCustomerAddress,
 } from '@/hooks'
 import type { BillingAddress, CardType } from '@/lib/types'
 
-import type { CustomerAccount } from '@/lib/gql/types'
+import type { CuAddress, CustomerAccount } from '@/lib/gql/types'
 
 const style = {
   accordion: {
@@ -102,6 +104,7 @@ const MyAccountTemplate = () => {
   const { updateCustomerCard } = useUpdateCustomerCard()
   const { createCustomerAddress } = useCreateCustomerAddress()
   const { updateCustomerAddress } = useUpdateCustomerAddress()
+  const { validateCustomerAddress } = useValidateCustomerAddress()
 
   const handleGoToOrderHistory = () => {
     router.push('/my-account/order-history?filters=M-6')
@@ -116,28 +119,68 @@ const MyAccountTemplate = () => {
     card: CardType,
     isUpdatingAddress: boolean
   ) => {
-    let response
-
-    // Add update address
-    if (isUpdatingAddress) {
-      response = await updateCustomerAddress.mutateAsync(address)
-    } else {
-      response = await createCustomerAddress.mutateAsync(address)
+    try {
+      let response
+      await validateCustomerAddress.mutateAsync({
+        addressValidationRequestInput: {
+          address: address?.customerContactInput?.address as CuAddress,
+        },
+      })
+      // Add update address
+      if (isUpdatingAddress) {
+        response = await updateCustomerAddress.mutateAsync(address)
+      } else {
+        response = await createCustomerAddress.mutateAsync(address)
+      }
+      const params = {
+        accountId: card.accountId,
+        cardId: card.cardId,
+        cardInput: card.cardInput,
+      }
+      params.cardInput.contactId = response.id
+      // Add update card
+      if (card.cardId) {
+        await updateCustomerCard.mutateAsync(params)
+      } else {
+        await createCustomerCard.mutateAsync(params)
+      }
+    } catch (error: any) {
+      console.error(error)
     }
+  }
 
-    const params = {
-      accountId: card.accountId,
-      cardId: card.cardId,
-      cardInput: card.cardInput,
+  const { executeRecaptcha } = useReCaptcha()
+  const { showSnackbar } = useSnackbarContext()
+  const submitFormWithRecaptcha = (
+    address: BillingAddress,
+    card: CardType,
+    isUpdatingAddress: boolean
+  ) => {
+    if (!executeRecaptcha) {
+      console.log('Execute recaptcha not yet available')
+      return
     }
-    params.cardInput.contactId = response.id
-
-    // Add update card
-    if (card.cardId) {
-      await updateCustomerCard.mutateAsync(params)
-    } else {
-      await createCustomerCard.mutateAsync(params)
-    }
+    executeRecaptcha('enquiryFormSubmit').then((gReCaptchaToken: any) => {
+      fetch('/api/captcha', {
+        method: 'POST',
+        headers: {
+          Accept: 'application/json, text/plain, */*',
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          ...address,
+          gRecaptchaToken: gReCaptchaToken,
+        }),
+      })
+        .then((res) => res.json())
+        .then(async (res) => {
+          if (res?.status === 'success') {
+            await handleSave(address, card, isUpdatingAddress)
+          } else {
+            showSnackbar(res.message, 'error')
+          }
+        })
+    })
   }
 
   const accordionData = [
@@ -162,7 +205,7 @@ const MyAccountTemplate = () => {
           user={user as CustomerAccount}
           cards={cards}
           contacts={contacts}
-          onSave={handleSave}
+          onSave={submitFormWithRecaptcha}
         />
       ),
     },
