@@ -364,7 +364,7 @@ const AddressBook = (props: AddressBookProps) => {
                 </Box>
               </Collapse>
             ))}
-            {displayShippingAddresses?.length > 0 && (
+            {displayShippingAddresses?.length > 5 && (
               <Box display={'flex'} justifyContent={'center'} width="100%" py={10}>
                 <KiboPagination
                   count={Math.ceil(shippingAddresses?.length / shippingAddressPageSize)}
@@ -394,7 +394,7 @@ const AddressBook = (props: AddressBookProps) => {
                 </Box>
               </Collapse>
             ))}
-            {displayBillingAddresses?.length > 0 && (
+            {displayBillingAddresses?.length > 5 && (
               <Box display={'flex'} justifyContent={'center'} width="100%" py={10}>
                 <KiboPagination
                   count={Math.ceil(billingAddresses?.length / billingAddressPageSize)}

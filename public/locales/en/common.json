@@ -130,6 +130,7 @@
   "your-default-shipping-address": "Your default shipping address",
   "previously-saved-shipping-addresses": "Previously saved shipping addresses",
   "no-saved-addresses-yet": "No saved addresses yet!",
+  "no-saved-payments-yet": "No saved payment methods yet!",
   "primary": "Primary",
 
   "time-filter": "Time Filter",

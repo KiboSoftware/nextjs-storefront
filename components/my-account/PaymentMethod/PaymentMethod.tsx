@@ -384,7 +384,7 @@ const PaymentMethod = (props: PaymentMethodProps) => {
           >
             {t('add-payment-method')}
           </Button>
-          {displaySavedCardsAndContacts?.length > 0 && (
+          {displaySavedCardsAndContacts?.length > 5 && (
             <Box display={'flex'} justifyContent={'center'} width="100%" py={10}>
               <KiboPagination
                 count={Math.ceil(savedCardsAndContacts.length / paymentMethodPageSize)}

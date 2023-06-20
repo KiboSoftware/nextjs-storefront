@@ -96,6 +96,7 @@ export const PLPStyles = {
   categoryFacetHeader: {
     fontWeight: 'bold',
     color: 'text.primary',
+    marginBottom: '0.5rem',
   },
   categoryFacetHeaderLoading: {
     height: { md: '2.25rem', xs: '1.5rem' },

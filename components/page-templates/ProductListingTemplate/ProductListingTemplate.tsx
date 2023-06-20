@@ -9,6 +9,7 @@ import dynamic from 'next/dynamic'
 import { useTranslation } from 'next-i18next'
 
 import { PLPStyles } from './ProductListingTemplate.styles'
+import { FullWidthDivider } from '@/components/common'
 import { KiboBreadcrumbs } from '@/components/core'
 import { ProductCardListViewProps } from '@/components/product/ProductCardListView/ProductCardListView'
 import { FacetSkeleton } from '@/components/product-listing'
@@ -176,10 +177,13 @@ const ProductListingTemplate = (props: ProductListingTemplateProps) => {
         <KiboBreadcrumbs breadcrumbs={breadCrumbsList} />
       </Box>
 
-      {productListingHeader ? (
-        <Typography variant="h1" sx={{ ...PLPStyles.categoryFacetHeader }}>
-          {productListingHeader}
-        </Typography>
+      {productListingHeader && !showFilterBy ? (
+        <>
+          <Typography variant="h1" sx={{ ...PLPStyles.categoryFacetHeader }}>
+            {productListingHeader}
+          </Typography>
+          <FullWidthDivider />
+        </>
       ) : null}
 
       {!showFilterBy && (
@@ -222,30 +226,36 @@ const ProductListingTemplate = (props: ProductListingTemplateProps) => {
                     <Box onClick={() => setIsListView(false)}>
                       <Apps fontSize="medium" {...(!isListView && { color: 'primary' })} />
                     </Box>
-                    <Box display="flex" pr={4} ml="auto">
-                      <Typography variant="body1" color="text.primary" sx={{ marginRight: '1rem' }}>
-                        {t('view')}
-                      </Typography>
-                      {productsPerPageArray.length > 1 && (
-                        <Breadcrumbs separator={'|'}>
-                          {productsPerPageArray?.map((item: number) => {
-                            return (
-                              <Typography
-                                key={item}
-                                variant="body2"
-                                color={item == productPerPage ? 'text.primary' : 'text.secondary'}
-                                fontWeight={item == productPerPage ? 'bold' : 'normal'}
-                                aria-label="breadcrumb-link"
-                                sx={{ cursor: 'pointer' }}
-                                onClick={() => handleProductPerPage(item)}
-                              >
-                                {item}
-                              </Typography>
-                            )
-                          })}
-                        </Breadcrumbs>
-                      )}
-                    </Box>
+                    {!isLoading && onPaginationChange && (
+                      <Box display="flex" pr={4} ml="auto">
+                        <Typography
+                          variant="body1"
+                          color="text.primary"
+                          sx={{ marginRight: '1rem' }}
+                        >
+                          {t('view')}
+                        </Typography>
+                        {productsPerPageArray.length > 1 && (
+                          <Breadcrumbs separator={'|'}>
+                            {productsPerPageArray?.map((item: number) => {
+                              return (
+                                <Typography
+                                  key={item}
+                                  variant="body2"
+                                  color={item == productPerPage ? 'text.primary' : 'text.secondary'}
+                                  fontWeight={item == productPerPage ? 'bold' : 'normal'}
+                                  aria-label="breadcrumb-link"
+                                  sx={{ cursor: 'pointer' }}
+                                  onClick={() => handleProductPerPage(item)}
+                                >
+                                  {item}
+                                </Typography>
+                              )
+                            })}
+                          </Breadcrumbs>
+                        )}
+                      </Box>
+                    )}
                   </Box>
 
                   <Box sx={{ ...PLPStyles.navBarSort }}>
@@ -310,7 +320,7 @@ const ProductListingTemplate = (props: ProductListingTemplateProps) => {
                         justifyContent="center"
                         item
                         lg={3}
-                        md={3}
+                        md={4}
                         sm={4}
                         xs={6}
                       >
@@ -325,8 +335,10 @@ const ProductListingTemplate = (props: ProductListingTemplateProps) => {
                       item
                       display={'flex'}
                       justifyContent={'center'}
-                      xs={12}
+                      lg={isListView ? 12 : 3}
+                      md={isListView ? 12 : 4}
                       sm={isListView ? 12 : 4}
+                      xs={isListView ? 12 : 6}
                     >
                       {isListView ? (
                         <ProductCardListView {...productCardProps(product)} />
