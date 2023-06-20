@@ -4,6 +4,7 @@ import {
   checkoutGroupingsFragment,
   baseMultiShipCheckoutFragment,
   checkoutPaymentFragment,
+  auditInfoFragment,
 } from '../../fragments'
 
 const getMultiShipCheckoutQuery = /* GraphQL */ `
@@ -27,6 +28,9 @@ const getMultiShipCheckoutQuery = /* GraphQL */ `
       payments {
         ...checkoutPaymentFragment
       }
+      auditInfo {
+        ...auditInfoFragment
+      }
     }
   }
   ${checkoutLineItemFragment}
@@ -34,5 +38,6 @@ const getMultiShipCheckoutQuery = /* GraphQL */ `
   ${checkoutGroupingsFragment}
   ${baseMultiShipCheckoutFragment}
   ${checkoutPaymentFragment}
+  ${auditInfoFragment}
 `
 export default getMultiShipCheckoutQuery

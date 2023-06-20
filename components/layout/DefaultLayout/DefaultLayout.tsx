@@ -3,6 +3,7 @@ import React, { ReactElement, useEffect } from 'react'
 import { Container } from '@mui/material'
 import CssBaseline from '@mui/material/CssBaseline'
 import { ThemeProvider } from '@mui/material/styles'
+import { HydrationBoundary } from '@tanstack/react-query'
 import creditCardType from 'credit-card-type'
 import dynamic from 'next/dynamic'
 import Router from 'next/router'
@@ -69,21 +70,23 @@ const DefaultLayout = ({ pageProps, children }: { pageProps: any; children: Reac
         <ModalContextProvider>
           <AuthContextProvider>
             <HeaderContextProvider>
-              <GlobalFetchingIndicator />
-              <KiboHeader
-                navLinks={[
-                  {
-                    link: '/order-status',
-                    text: 'order-status',
-                  },
-                ]}
-                categoriesTree={pageProps.categoriesTree || []}
-                isSticky={true}
-              />
-              <DialogRoot />
-              <SnackbarRoot />
-              <Container maxWidth={'lg'}>{children}</Container>
-              <Footer content={pageProps.footer} />
+              <HydrationBoundary state={pageProps.dehydratedState}>
+                <GlobalFetchingIndicator />
+                <KiboHeader
+                  navLinks={[
+                    {
+                      link: '/order-status',
+                      text: 'order-status',
+                    },
+                  ]}
+                  categoriesTree={pageProps.categoriesTree || []}
+                  isSticky={true}
+                />
+                <DialogRoot />
+                <SnackbarRoot />
+                <Container maxWidth={'lg'}>{children}</Container>
+                <Footer content={pageProps.footer} />
+              </HydrationBoundary>
             </HeaderContextProvider>
           </AuthContextProvider>
         </ModalContextProvider>

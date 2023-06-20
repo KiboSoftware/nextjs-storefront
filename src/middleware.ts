@@ -3,8 +3,12 @@ import { NextResponse, NextRequest } from 'next/server'
 const checkIsAuthenticated = (req: NextRequest) => {
   const cookie = req.headers.get('cookie')
   const cookieValue = cookie?.split('kibo_at=')[1]
-  const decodedCookie = JSON.parse(atob(cookieValue as string))
-  return decodedCookie?.userId
+  const encodedValue = cookieValue?.split(';')[0]
+  if (encodedValue) {
+    const decodedCookie = JSON.parse(atob(encodedValue))
+    return decodedCookie?.userId
+  }
+  return null
 }
 
 export function middleware(request: NextRequest) {

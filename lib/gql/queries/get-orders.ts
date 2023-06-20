@@ -1,3 +1,4 @@
+import { auditInfoFragment } from '../fragments'
 import { baseOrderFragment, orderItemFragment, orderPaymentFragment } from '../fragments/orders'
 
 const getOrdersQuery = /* GraphQL */ `
@@ -12,12 +13,16 @@ const getOrdersQuery = /* GraphQL */ `
         payments {
           ...orderPaymentFragment
         }
+        auditInfo {
+          ...auditInfoFragment
+        }
       }
     }
   }
   ${orderItemFragment}
   ${baseOrderFragment}
   ${orderPaymentFragment}
+  ${auditInfoFragment}
 `
 
 export default getOrdersQuery

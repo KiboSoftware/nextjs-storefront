@@ -1,32 +1,21 @@
 import React from 'react'
 
 import { CacheProvider, EmotionCache } from '@emotion/react'
-import CssBaseline from '@mui/material/CssBaseline'
-import { ThemeProvider } from '@mui/material/styles'
 // eslint-disable-next-line import/order
-import { HydrationBoundary } from '@tanstack/react-query'
 import { AppProps } from 'next/app'
+import dynamic from 'next/dynamic'
 import Head from 'next/head'
-import 'next-i18next.config'
-import Router from 'next/router'
 import { appWithTranslation } from 'next-i18next'
+import 'next-i18next.config'
+// eslint-disable-next-line import/order
+import Router from 'next/router'
 import NProgress from 'nprogress'
-import '../../styles/global.css'
 
-import createEmotionCache from '../../lib/createEmotionCache'
-import theme from '../../styles/theme'
-import { GlobalFetchingIndicator } from '@/components/common'
-import { KiboHeader, DefaultLayout, Footer } from '@/components/layout'
-import {
-  AuthContextProvider,
-  ModalContextProvider,
-  DialogRoot,
-  HeaderContextProvider,
-  SnackbarRoot,
-  RQNotificationContextProvider,
-} from '@/context'
-import { footerConfig as footerProps } from '@/lib/constants'
+import { RQNotificationContextProvider } from '@/context'
+import createEmotionCache from '@/lib/createEmotionCache'
+const DefaultLayout = dynamic(() => import('@/components/layout').then((mod) => mod.DefaultLayout))
 import type { NextPageWithLayout } from '@/lib/types'
+import '@/styles/global.css'
 
 // Client-side cache, shared for the whole session of the user in the browser.
 const clientSideEmotionCache = createEmotionCache()
@@ -43,55 +32,24 @@ Router.events.on('routeChangeError', () => NProgress.done())
 
 const App = (props: KiboAppProps) => {
   const { Component, emotionCache = clientSideEmotionCache, pageProps } = props
-  const getLayout = Component.getLayout ?? ((page) => <DefaultLayout>{page}</DefaultLayout>)
+  const getLayout =
+    Component.getLayout ?? ((page) => <DefaultLayout pageProps={pageProps}>{page}</DefaultLayout>)
 
   return (
     <CacheProvider value={emotionCache}>
       <Head>
-        <title>Kibo Commerce - NextJS</title>
+        <title>KiboCommerce</title>
         <meta name="viewport" content="initial-scale=1, width=device-width" />
+        <meta name="title" content="Kibo Commerce | Unified Commerce Platform for D2C Retailers" />
+        <meta
+          name="description"
+          content="Kibo Commerce is a unified commerce platform that helps D2C retailers manage orders, products, customers, and more in a single place."
+        />
       </Head>
-      <ThemeProvider theme={theme}>
-        {/* CssBaseline kickstart an elegant, consistent, and simple baseline to build upon. */}
-        <CssBaseline />
-        <RQNotificationContextProvider>
-          <ModalContextProvider>
-            <AuthContextProvider>
-              <HeaderContextProvider>
-                <HydrationBoundary state={pageProps.dehydratedState}>
-                  <GlobalFetchingIndicator />
-                  <KiboHeader
-                    navLinks={[
-                      {
-                        link: '/order-status',
-                        text: 'order-status',
-                      },
-                      {
-                        link: '/wishlist',
-                        text: 'wishlist',
-                      },
-                      {
-                        link: '#',
-                        text: 'Nav Link 2',
-                      },
-                      {
-                        link: '#',
-                        text: 'Nav Link 3',
-                      },
-                    ]}
-                    categoriesTree={pageProps.categoriesTree || []}
-                    isSticky={true}
-                  />
-                  <DialogRoot />
-                  <SnackbarRoot />
-                  {getLayout(<Component {...pageProps} />)}
-                  <Footer {...footerProps} />
-                </HydrationBoundary>
-              </HeaderContextProvider>
-            </AuthContextProvider>
-          </ModalContextProvider>
-        </RQNotificationContextProvider>
-      </ThemeProvider>
+      {/* CssBaseline kickstart an elegant, consistent, and simple baseline to build upon. */}
+      <RQNotificationContextProvider>
+        {getLayout(<Component {...pageProps} />)}
+      </RQNotificationContextProvider>
     </CacheProvider>
   )
 }

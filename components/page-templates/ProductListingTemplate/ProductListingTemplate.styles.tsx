@@ -132,4 +132,10 @@ export const PLPStyles = {
     color: 'grey.600',
     whiteSpace: 'nowrap',
   },
+  plpGrid: {
+    width: {
+      xs: '100%',
+      md: '80%',
+    },
+  },
 }

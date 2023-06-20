@@ -5,9 +5,8 @@ import { Box, Button, Checkbox, FormControlLabel, Stack, Typography } from '@mui
 import getConfig from 'next/config'
 import { useTranslation } from 'next-i18next'
 
-
 import { CardDetailsForm, SavedPaymentMethodView } from '@/components/checkout'
-import { AddressForm, AddressDetailsView, PaginationCustom } from '@/components/common'
+import { AddressForm, AddressDetailsView, KiboPagination } from '@/components/common'
 import { ConfirmationDialog } from '@/components/dialogs'
 import { useModalContext } from '@/context'
 import { useDeleteCustomerCard, useDeleteCustomerAddress } from '@/hooks'
@@ -100,7 +99,10 @@ const PaymentMethod = (props: PaymentMethodProps) => {
   const [paymentMethodStartIndex, setPaymentMethodStartIndex] = useState<number>(0)
   const savedCardsAndContacts = userGetters.getSavedCardsAndBillingDetails(cards, contacts)
   const [displaySavedCardsAndContacts, setSavedCardsAndContacts] = useState<PaymentAndBilling[]>(
-    savedCardsAndContacts?.slice(paymentMethodStartIndex, paymentMethodPageSize) as PaymentAndBilling[]
+    savedCardsAndContacts?.slice(
+      paymentMethodStartIndex,
+      paymentMethodPageSize
+    ) as PaymentAndBilling[]
   )
   const savedAddresses = userGetters.getSavedAddresses(contacts)
   const billingAddresses = userGetters.getUserBillingAddresses(savedAddresses)
@@ -300,7 +302,10 @@ const PaymentMethod = (props: PaymentMethodProps) => {
   }
   useEffect(() => {
     setSavedCardsAndContacts(
-      savedCardsAndContacts.slice(paymentMethodStartIndex, paymentMethodStartIndex + paymentMethodPageSize)
+      savedCardsAndContacts.slice(
+        paymentMethodStartIndex,
+        paymentMethodStartIndex + paymentMethodPageSize
+      )
     )
     window.scrollTo({ top: 0, behavior: 'smooth' })
   }, [savedCardsAndContacts.length])
@@ -379,16 +384,16 @@ const PaymentMethod = (props: PaymentMethodProps) => {
           >
             {t('add-payment-method')}
           </Button>
-          {displaySavedCardsAndContacts?.length > 0 && 
+          {displaySavedCardsAndContacts?.length > 0 && (
             <Box display={'flex'} justifyContent={'center'} width="100%" py={10}>
-              <PaginationCustom
+              <KiboPagination
                 count={Math.ceil(savedCardsAndContacts.length / paymentMethodPageSize)}
                 startIndex={paymentMethodStartIndex}
                 pageSize={paymentMethodPageSize}
                 onPaginationChange={handlePaymentMethodPagination}
               />
             </Box>
-          }
+          )}
         </Stack>
       )}
 

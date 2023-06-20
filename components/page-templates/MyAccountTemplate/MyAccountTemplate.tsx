@@ -88,14 +88,19 @@ const style = {
   },
 }
 
-const MyAccountTemplate = () => {
+interface MyAccountTemplateProps {
+  user?: CustomerAccount
+}
+
+const MyAccountTemplate = (props: MyAccountTemplateProps) => {
+  const { user } = props
   const { t } = useTranslation('common')
   const { publicRuntimeConfig } = getConfig()
   const isSubscriptionEnabled = publicRuntimeConfig.isSubscriptionEnabled
   const router = useRouter()
   const theme = useTheme()
   const mdScreen = useMediaQuery(theme.breakpoints.up('md'))
-  const { user, logout } = useAuthContext()
+  const { logout } = useAuthContext()
 
   const { data: cards } = useGetCards(user?.id as number)
   const { data: contacts } = useGetCustomerAddresses(user?.id as number)
@@ -151,7 +156,7 @@ const MyAccountTemplate = () => {
 
   const { executeRecaptcha } = useReCaptcha()
   const { showSnackbar } = useSnackbarContext()
-  
+
   const submitFormWithRecaptcha = (
     address: BillingAddress,
     card: CardType,

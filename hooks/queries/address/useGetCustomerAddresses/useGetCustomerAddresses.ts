@@ -18,12 +18,15 @@ export interface UseCustomerContactsResponse {
   isSuccess: boolean
 }
 
+const { publicRuntimeConfig } = getConfig()
+const customerAddressesPageSize = publicRuntimeConfig.customerAddressesPageSize
+
 const loadCustomerAccountContacts = async (accountId: number) => {
   const client = makeGraphQLClient()
 
   const response = await client.request({
     document: getUserAddressesQuery,
-    variables: { accountId },
+    variables: { accountId, pageSize: customerAddressesPageSize },
   })
 
   return response?.customerAccountContacts

@@ -8,7 +8,6 @@ import { useRouter } from 'next/router'
 import { useTranslation } from 'next-i18next'
 import { ReCaptchaProvider } from 'next-recaptcha-v3'
 
-
 import { KiboStepper } from '@/components/checkout'
 import { OrderSummary } from '@/components/common'
 import { useCheckoutStepContext, STEP_STATUS } from '@/context'
@@ -57,7 +56,7 @@ const CheckoutUITemplate = <T extends CrOrder | Checkout>(props: CheckoutUITempl
   const handleSubmit = useCallback(() => setStepStatusSubmit(), [])
 
   const subTotal = (checkout as CrOrder)?.subtotal || (checkout as Checkout)?.subTotal
-  const shippingTotal = orderGetters.getShippingTotal(checkout)
+  const shippingTotal = orderGetters.getShippingHandlingTotal(checkout)
 
   const discountedSubtotal =
     orderGetters.getDiscountedSubtotal(checkout as CrOrder) ||

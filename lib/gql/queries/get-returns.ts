@@ -21,9 +21,24 @@ const getReturnsQuery = /* GraphQL */ `
         returnType
         refundAmount
         items {
-          id
-          orderItemId
           orderLineId
+          product {
+            name
+            imageUrl
+          }
+          returnType
+          refundAmount
+          refundStatus
+          receiveStatus
+          replaceStatus
+          returnProcessingFeeApplied
+          orderItemId
+          quantityRefunded
+          quantityReplaced
+          reasons {
+            reason
+            quantity
+          }
         }
       }
     }

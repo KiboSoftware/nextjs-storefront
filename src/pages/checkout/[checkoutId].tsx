@@ -7,9 +7,9 @@ import {
   MultiShipCheckoutTemplate,
 } from '@/components/page-templates'
 import { CheckoutStepProvider } from '@/context/CheckoutStepContext/CheckoutStepContext'
-import { getCheckout, getMultiShipCheckout } from '@/lib/api/operations'
+import { getCheckout, getMultiShipCheckout, updateOrder } from '@/lib/api/operations'
 
-import type { Checkout, CrOrder } from '@/lib/gql/types'
+import type { Checkout, CrOrder, CrOrderInput } from '@/lib/gql/types'
 import type { NextPage, GetServerSidePropsContext } from 'next'
 
 interface CheckoutPageProps {
@@ -30,6 +30,11 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
   if (!checkout) {
     return { notFound: true }
   }
+
+  const ipAddress = req.headers['x-forwarded-for'] as string
+  checkout.ipAddress = ipAddress?.split(',')[0]
+
+  updateOrder(checkoutId, { ...checkout, ipAddress } as CrOrderInput, req, res)
 
   return {
     props: {

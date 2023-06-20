@@ -5,7 +5,7 @@ import { useMutation, useQueryClient } from '@tanstack/react-query'
 
 import { makeGraphQLClient } from '@/lib/gql/client'
 import { updateCustomerAccountContact } from '@/lib/gql/mutations'
-import { customerAccountContactsKeys } from '@/lib/react-query/queryKeys'
+import { checkoutKeys, customerAccountContactsKeys } from '@/lib/react-query/queryKeys'
 
 import type { CustomerContactInput } from '@/lib/gql/types'
 /**

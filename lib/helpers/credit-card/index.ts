@@ -2,21 +2,16 @@ import creditCardType from 'credit-card-type'
 
 import AMEX from '@/assets/american-express.svg'
 import DEFAULT from '@/assets/default-card.svg'
-import DINERSCLUB from '@/assets/diners-club.svg'
 import DISCOVER from '@/assets/discover.svg'
-import ELO from '@/assets/elo.svg'
-import HIPERCARD from '@/assets/hiper-card.svg'
 import JCB from '@/assets/jcb.svg'
-import MAESTRO from '@/assets/maestro.svg'
 import MASTERCARD from '@/assets/mastercard.svg'
-import UNIONPAY from '@/assets/union-pay.svg'
 import VISA from '@/assets/visa.svg'
 import type { CardForm } from '@/lib/types'
 
 export const prepareCardDataParams = (props: CardForm) => {
   const { cardNumber, expiryDate, cvv } = props
   const cardType =
-    props.cardType || creditCardType(cardNumber as string)?.[0]?.type.toUpperCase() || ''
+    props.cardType || creditCardType(cardNumber as string)?.[0]?.niceType.toUpperCase() || ''
   const expiryMonth = expiryDate?.split('/')[0]
   const expiryYear = expiryDate?.split('/')[1]
 
@@ -32,15 +27,10 @@ export const prepareCardDataParams = (props: CardForm) => {
 export const getCreditCardLogo = (name: string): any => {
   const logos: any = {
     DISCOVER: DISCOVER,
-    ELO: ELO,
-    HIPERCARD: HIPERCARD,
     JCB: JCB,
-    MAESTRO: MAESTRO,
-    MASTERCARD: MASTERCARD,
-    UNIONPAY: UNIONPAY,
+    MC: MASTERCARD,
     VISA: VISA,
-    'AMERICAN-EXPRESS': AMEX,
-    'DINERS-CLUB': DINERSCLUB,
+    AMEX: AMEX,
   }
   return logos[name] || DEFAULT
 }
@@ -57,8 +47,22 @@ export const validateExpiryDate = (validExpiryDate: string | undefined) => {
   return someDay >= currentDate
 }
 
-export const getCardType = (cardNumber: string | undefined) => {
+export const isCardNumberValid = (cardNumber: string | undefined) => {
   if (cardNumber === undefined) return false
 
-  return creditCardType(cardNumber).length !== 0
+  const cardDetails = creditCardType(cardNumber)
+  return cardDetails.length !== 0 && cardDetails[0].lengths.includes(cardNumber.length)
+}
+
+export const isCardTypeValid = (cardNumber: string | undefined) => {
+  if (!cardNumber) return false
+  const supportedCards: any = {
+    DISCOVER: DISCOVER,
+    JCB: JCB,
+    MC: MASTERCARD,
+    VISA: VISA,
+    AMEX: AMEX,
+  }
+  console.log(creditCardType(cardNumber))
+  return Boolean(supportedCards[creditCardType(cardNumber)[0].niceType.toUpperCase()])
 }
