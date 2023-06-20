@@ -107,7 +107,7 @@ const CheckoutUITemplate = <T extends CrOrder | Checkout>(props: CheckoutUITempl
   }
 
   const { publicRuntimeConfig } = getConfig()
-  const reCaptchaKey = publicRuntimeConfig.recaptcha.recaptchaKey
+  const reCaptchaKey = publicRuntimeConfig.recaptcha.reCaptchaKey
 
   return (
     <>

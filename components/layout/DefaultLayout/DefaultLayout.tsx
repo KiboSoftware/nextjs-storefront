@@ -82,7 +82,7 @@ const DefaultLayout = ({ pageProps, children }: { pageProps: any; children: Reac
               />
               <DialogRoot />
               <SnackbarRoot />
-              <Container maxWidth={'lg'}>{children}</Container>
+              <Container maxWidth={'xl'}>{children}</Container>
               <Footer content={pageProps.footer} />
             </HeaderContextProvider>
           </AuthContextProvider>

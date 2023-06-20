@@ -32,9 +32,13 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
   }
 
   const ipAddress = req.headers['x-forwarded-for'] as string
-  checkout.ipAddress = ipAddress?.split(',')[0]
 
-  updateOrder(checkoutId, { ...checkout, ipAddress } as CrOrderInput, req, res)
+  updateOrder(
+    checkoutId,
+    { ...checkout, ipAddress: ipAddress?.split(',')[0] } as CrOrderInput,
+    req,
+    res
+  )
 
   return {
     props: {

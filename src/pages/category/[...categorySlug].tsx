@@ -127,7 +127,10 @@ const CategoryPage: NextPage<CategoryPageType> = (props: any) => {
   } = useGetSearchedProducts(
     {
       ...searchParams,
-      pageSize: searchParams.pageSize || publicRuntimeConfig.productListing.pageSize[0],
+      pageSize:
+        searchParams.pageSize ||
+        publicRuntimeConfig.productListing.pageSize ||
+        publicRuntimeConfig.productListing.pageSize[0],
     },
     props.results
   )
@@ -211,7 +214,7 @@ const CategoryPage: NextPage<CategoryPageType> = (props: any) => {
         <meta name="title" content={props?.metaInformation?.metaTagTitle} />
         <meta name="description" content={props?.metaInformation?.metaTagDescription} />
         <meta name="keywords" content={props?.metaInformation?.metaTagKeywords} />
-        <link rel="canonical" href={`https://${currentUrl}${props?.metaInformation?.canonical}`} />
+        {/* <link rel="canonical" href={`https://${currentUrl}${props?.metaInformation?.canonical}`} /> */}
       </Head>
       <ProductListingTemplate
         productListingHeader={categoryPageHeading as string}
