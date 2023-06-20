@@ -30,10 +30,10 @@ const getAddresses = (addresses: CustomerContact[], addressType: string): Custom
 }
 
 const getUserShippingAddress = (addresses: CustomerContact[]): CustomerContact[] | undefined =>
-  getAddresses(addresses, AddressType.SHIPPING) || []
+  getAddresses(addresses, AddressType.SHIPPING)
 
 const getUserBillingAddresses = (addresses: CustomerContact[]): CustomerContact[] =>
-  getAddresses(addresses, AddressType.BILLING) || []
+  getAddresses(addresses, AddressType.BILLING)
 
 const getSavedCardsAndBillingDetails = (
   customerAccountCards: CardCollection,

@@ -41,7 +41,7 @@ const createCheckout = async (checkout: Checkout) => {
  *
  * Parameters passed to function createCheckout(checkout: Checkout)
  *
- * On success, calls removeQueries on checkoutKeys and fetches the updated result.
+ * On success, calls invalidateQueries on checkoutKeys and fetches the updated result.
  *
  * @returns 'response?.createCheckoutAction' which contains multi ship items order details including orderId, shipping details, items etc.
  */
@@ -51,7 +51,7 @@ export const useCreateCheckout = () => {
   return {
     createCheckout: useMutation(createCheckout, {
       onSuccess: () => {
-        queryClient.removeQueries([checkoutKeys.all])
+        queryClient.invalidateQueries(checkoutKeys.all)
       },
     }),
   }

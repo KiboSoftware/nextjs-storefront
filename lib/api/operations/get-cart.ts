@@ -1,12 +1,15 @@
-import { ServerResponse } from 'http'
+import { NextApiRequest, NextApiResponse } from 'next'
 
+import { getAdditionalHeader } from '../util'
 import getUserClaimsFromRequest from '../util/getUserClaimsFromRequest'
 import { fetcher } from '@/lib/api/util'
 import { getCartQuery } from '@/lib/gql/queries'
-import type { KiboRequest } from '@/lib/types'
 
-export default async function getCart(req: KiboRequest, res: ServerResponse) {
+export default async function getCart(req: NextApiRequest, res: NextApiResponse) {
   const userClaims = await getUserClaimsFromRequest(req, res)
-  const response = await fetcher({ query: getCartQuery, variables: {} }, { userClaims })
+
+  const headers = getAdditionalHeader(req)
+
+  const response = await fetcher({ query: getCartQuery, variables: {} }, { userClaims, headers })
   return response?.data
 }

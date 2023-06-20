@@ -42,7 +42,7 @@ const getCurrentCart = async () => {
  *
  * @returns 'response?.currentCart' which contains all the updated items present in cart
  */
-export const useGetCart = (initialData: CrCart): UseCartType => {
+export const useGetCart = (initialData?: CrCart): UseCartType => {
   try {
     const {
       data = {},

@@ -49,7 +49,7 @@ export const useVoidOrderPayment = () => {
   return {
     voidOrderPayment: useMutation(updateOrderPaymentActionMutation, {
       onSuccess: () => {
-        queryClient.removeQueries([checkoutKeys.all])
+        queryClient.invalidateQueries(checkoutKeys.all)
       },
     }),
   }

@@ -12,7 +12,7 @@ function getFacetValueFilter(categoryCode: string, filters: Array<string> = []) 
 
 export const buildProductSearchParams = ({
   categoryCode = '',
-  pageSize = 16,
+  pageSize,
   filters = [],
   startIndex = 0,
   sort = '',
@@ -31,7 +31,7 @@ export const buildProductSearchParams = ({
   const facetValueFilter = getFacetValueFilter(categoryCode, filters)
   return {
     query: search,
-    startIndex,
+    startIndex: Number(startIndex),
     pageSize: Number(pageSize),
     sortBy: sort,
     facet,

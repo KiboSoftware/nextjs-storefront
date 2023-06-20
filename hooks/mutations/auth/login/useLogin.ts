@@ -44,7 +44,7 @@ export const useLogin = () => {
     isSuccess,
   } = useMutation(loginUser, {
     onMutate: () => {
-      queryClient.cancelQueries(loginKeys.user)
+      queryClient.invalidateQueries(loginKeys.user)
     },
     retry: 0,
   })

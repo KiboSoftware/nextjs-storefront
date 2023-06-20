@@ -21,6 +21,7 @@ import type { CardForm } from '@/lib/types'
 export interface CardDetailsFormProps {
   cardValue?: CardForm
   validateForm: boolean
+  showCvv?: boolean
   onSaveCardData: (cardData: CardForm) => void
   onFormStatusChange?: (status: boolean) => void
 }
@@ -42,8 +43,7 @@ const useCardSchema = (showCvv: boolean) => {
           )
           .test('card-type', t('card-not-supported'), (value: string) => isCardTypeValid(value))
       } else {
-        return schema
-          .required(t('card-number-required'))
+        return schema.required(t('card-number-required'))
       }
     }),
     expiryDate: yup
@@ -146,37 +146,38 @@ const CardDetailsForm = (props: CardDetailsFormProps) => {
             />
           )}
         />
-
-{showCvv && (
-        <Controller
-          name="cvv"
-          control={control}
-          defaultValue={cardValue?.cvv}
-          render={({ field }) => {
-            return !cardValue ? (
-            <KiboTextBox
-              type="password"
-              value={field.value || ''}
-              label={t('security-code')}
-              placeholder={t('security-code-placeholder')}
-              required={true}
-              onChange={(_name, value) => field.onChange(value)}
-              onBlur={field.onBlur}
-              error={!!errors?.cvv}
-              helperText={errors?.cvv?.message as unknown as string}
-              icon={
-                <Box pr={1} pt={0.5} sx={{ cursor: 'pointer' }}>
-                <Tooltip title={t('cvv-tooltip-text')} placement="top">
-                  <Help color="disabled" />
-                </Tooltip>
-              </Box>
-              }
-            />
-            ) : (
-              <></>
-            )
-          }}
-        />
+        {showCvv && (
+          <Controller
+            name="cvv"
+            control={control}
+            defaultValue={cardValue?.cvv}
+            render={({ field }) => {
+              return !cardValue ? (
+                <KiboTextBox
+                  type="password"
+                  value={field.value || ''}
+                  label={t('security-code')}
+                  placeholder={t('security-code-placeholder')}
+                  required={true}
+                  onChange={(_name, value) => field.onChange(value)}
+                  onBlur={field.onBlur}
+                  error={!!errors?.cvv}
+                  helperText={errors?.cvv?.message as unknown as string}
+                  icon={
+                    <Box pr={1} pt={0.5} sx={{ cursor: 'pointer' }}>
+                      <Tooltip title={t('cvv-tooltip-text')} placement="top">
+                        <Help color="disabled" />
+                      </Tooltip>
+                    </Box>
+                  }
+                  // {...(cardValue && { disabled: true })}
+                />
+              ) : (
+                <></>
+              )
+            }}
+          />
+        )}
       </FormControl>
     </StyledCardDiv>
   )

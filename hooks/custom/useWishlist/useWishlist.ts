@@ -1,9 +1,10 @@
 /**
  * @module useWishlist
  */
-import { WishlistPopover } from '@/components/dialogs'
+import { useTranslation } from 'next-i18next'
+
 import { LoginDialog } from '@/components/layout'
-import { useAuthContext, useModalContext } from '@/context'
+import { useAuthContext, useModalContext, useSnackbarContext } from '@/context'
 import {
   useGetWishlist,
   useAddToWishlistItem,
@@ -15,7 +16,6 @@ import { buildAddOrRemoveWishlistItemParams, buildWishlistParams } from '@/lib/h
 import type {
   WishlistParams,
   WishlistItemInWishlistParams,
-  WishlistHookParams,
   WishlistProductInput,
   ProductCustom,
 } from '@/lib/types'
@@ -30,14 +30,16 @@ import type {
  * @param params Expects a nullable prop of type 'WishlistHookParams' containing isRemovedFromWishlist and delay
  */
 
-export const useWishlist = (params?: WishlistHookParams) => {
+export const useWishlist = () => {
   const { showModal } = useModalContext()
 
-  const { data: wishlist } = useGetWishlist()
+  const { data: wishlists } = useGetWishlist()
   const { addToWishlist } = useAddToWishlistItem()
-  const { deleteWishlistItem } = useDeleteWishlistItem(params)
+  const { deleteWishlistItem } = useDeleteWishlistItem()
   const { createWishlist } = useCreateWishlist()
   const { isAuthenticated, user: customerAccount } = useAuthContext()
+  const { showSnackbar } = useSnackbarContext()
+  const { t } = useTranslation('common')
 
   const checkProductInWishlist = (props: WishlistItemInWishlistParams) => {
     const { productCode, variationProductCode, userWishlist } = props
@@ -46,7 +48,7 @@ export const useWishlist = (params?: WishlistHookParams) => {
         productCode,
         variationProductCode,
       },
-      currentWishlist: userWishlist ? userWishlist : wishlist,
+      currentWishlist: userWishlist ? userWishlist : wishlists,
     })
   }
 
@@ -73,16 +75,18 @@ export const useWishlist = (params?: WishlistHookParams) => {
         ...variables,
         customerAccountId: customerAccount?.id as number,
       })
+      showSnackbar(t('added-to-wishlist'), 'success')
     } else {
       await deleteWishlistItem.mutateAsync(variables)
+      showSnackbar(t('removed-from-wishlist'), 'success')
     }
 
-    showModal({
-      Component: WishlistPopover,
-      props: {
-        isInWishlist: !isProductInWishlist,
-      },
-    })
+    // showModal({
+    //   Component: WishlistPopover,
+    //   props: {
+    //     isInWishlist: !isProductInWishlist,
+    //   },
+    // })
     return !isProductInWishlist
   }
 
@@ -108,12 +112,12 @@ export const useWishlist = (params?: WishlistHookParams) => {
         options,
       }
 
-      if (!wishlist?.id) {
+      if (!wishlists?.id) {
         const response = await createWishlist.mutateAsync(customerAccount?.id as number)
         if (response?.id)
           return updateWishlistItem({ ...updateWishlistItemParams, currentWishlist: response })
       } else {
-        return updateWishlistItem({ ...updateWishlistItemParams, currentWishlist: wishlist })
+        return updateWishlistItem({ ...updateWishlistItemParams, currentWishlist: wishlists })
       }
     } catch (error) {
       console.log('Error: add or remove wishlist item from custom useWishlist', error)
@@ -121,6 +125,7 @@ export const useWishlist = (params?: WishlistHookParams) => {
   }
 
   return {
+    wishlists,
     addOrRemoveWishlistItem,
     checkProductInWishlist,
     isWishlistLoading: addToWishlist.isLoading || deleteWishlistItem.isLoading,

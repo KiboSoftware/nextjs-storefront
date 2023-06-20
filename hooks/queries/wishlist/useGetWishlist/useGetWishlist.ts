@@ -46,6 +46,7 @@ const getWishlists = async (): Promise<CrWishlist> => {
 export const useGetWishlist = (): UseWishlistResponse => {
   const { data, isLoading, isSuccess, isFetching } = useQuery(wishlistKeys.all, getWishlists, {
     refetchOnWindowFocus: false,
+    cacheTime: 0,
   })
 
   return { data, isLoading, isSuccess, isFetching }

@@ -49,7 +49,7 @@ export const useAddToWishlistItem = () => {
   return {
     addToWishlist: useMutation(addToWishlist, {
       onSuccess: () => {
-        queryClient.removeQueries(wishlistKeys.all)
+        queryClient.invalidateQueries(wishlistKeys.all)
       },
     }),
   }

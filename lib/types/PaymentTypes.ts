@@ -33,6 +33,8 @@ export interface CardForm {
   isCardInfoSaved?: boolean
   id?: string
   isDataUpdated?: boolean
+  isDefaultPayMethod?: boolean
+  cardholderName?: string
 }
 
 export interface SavedCard {

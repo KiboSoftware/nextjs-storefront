@@ -62,7 +62,7 @@ export interface ProductListingTemplateProps {
   pageCount: number
   startIndex: number
   onSortItemSelection: (value: string) => void
-  onPaginationChange: (params?: CategorySearchParams) => void
+  onPaginationChange?: (params?: CategorySearchParams) => void
   onInfiniteScroll?: () => void
   showQuickViewButton?: boolean
   isQuickViewModal?: boolean
@@ -93,9 +93,10 @@ const ProductListingTemplate = (props: ProductListingTemplateProps) => {
   const productPerPage = pageSize || productsPerPageArray[0]
 
   const handleProductPerPage = (size: number) => {
-    onPaginationChange({
-      pageSize: Number(size),
-    })
+    onPaginationChange &&
+      onPaginationChange({
+        pageSize: Number(size),
+      })
   }
 
   const { getProductLink } = uiHelpers()
@@ -225,23 +226,25 @@ const ProductListingTemplate = (props: ProductListingTemplateProps) => {
                       <Typography variant="body1" color="text.primary" sx={{ marginRight: '1rem' }}>
                         {t('view')}
                       </Typography>
-                      <Breadcrumbs separator={'|'}>
-                        {productsPerPageArray?.map((item: number) => {
-                          return (
-                            <Typography
-                              key={item}
-                              variant="body2"
-                              color={item == productPerPage ? 'text.primary' : 'text.secondary'}
-                              fontWeight={item == productPerPage ? 'bold' : 'normal'}
-                              aria-label="breadcrumb-link"
-                              sx={{ cursor: 'pointer' }}
-                              onClick={() => handleProductPerPage(item)}
-                            >
-                              {item}
-                            </Typography>
-                          )
-                        })}
-                      </Breadcrumbs>
+                      {productsPerPageArray.length > 1 && (
+                        <Breadcrumbs separator={'|'}>
+                          {productsPerPageArray?.map((item: number) => {
+                            return (
+                              <Typography
+                                key={item}
+                                variant="body2"
+                                color={item == productPerPage ? 'text.primary' : 'text.secondary'}
+                                fontWeight={item == productPerPage ? 'bold' : 'normal'}
+                                aria-label="breadcrumb-link"
+                                sx={{ cursor: 'pointer' }}
+                                onClick={() => handleProductPerPage(item)}
+                              >
+                                {item}
+                              </Typography>
+                            )
+                          })}
+                        </Breadcrumbs>
+                      )}
                     </Box>
                   </Box>
 

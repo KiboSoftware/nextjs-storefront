@@ -42,7 +42,7 @@ const OrderConfirmation = ({ order }: { order: CrOrder }) => {
     totalLabel: t('total-price'),
     subTotal: t('currency', { val: orderGetters.getSubtotal(order) }),
     discountedSubtotal: discountedSubtotal > 0 ? t('currency', { val: discountedSubtotal }) : '',
-    shippingTotal: t('currency', { val: orderGetters.getShippingTotal(order) || 0 }),
+    shippingTotal: t('currency', { val: orderGetters.getShippingHandlingTotal(order) || 0 }),
     tax: t('currency', { val: orderGetters.getTaxTotal(order) }),
     total: t('currency', { val: orderTotal }),
   }

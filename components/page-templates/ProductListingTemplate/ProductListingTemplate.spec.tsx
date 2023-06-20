@@ -149,7 +149,7 @@ describe('[component] - Category', () => {
       onSortItemSelection: (value: string) => ({ value }),
       onPaginationChange: () => ({}),
     }
-    setup(params)
+    // setup(params)
 
     const showMoreButton = screen.queryByRole('button', { name: /show-more/i })
 

@@ -1,3 +1,4 @@
+import { getAdditionalHeader } from '../util'
 import getUserClaimsFromRequest from '../util/getUserClaimsFromRequest'
 import { fetcher } from '@/lib/api/util'
 import { getMultiShipCheckoutQuery as query } from '@/lib/gql/queries'
@@ -14,7 +15,10 @@ export default async function getMultiShipCheckout(
   }
 
   const userClaims = await getUserClaimsFromRequest(req, res)
-  const response = await fetcher({ query, variables }, { userClaims })
+
+  const headers = getAdditionalHeader(req)
+
+  const response = await fetcher({ query, variables }, { userClaims, headers })
 
   return response.data?.checkout
 }

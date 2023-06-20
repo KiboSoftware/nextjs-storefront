@@ -5,7 +5,7 @@ import { useMutation, useQueryClient } from 'react-query'
 
 import { makeGraphQLClient } from '@/lib/gql/client'
 import { updateCustomerAccountContact } from '@/lib/gql/mutations'
-import { customerAccountContactsKeys } from '@/lib/react-query/queryKeys'
+import { checkoutKeys, customerAccountContactsKeys } from '@/lib/react-query/queryKeys'
 
 import type { CustomerContactInput } from '@/lib/gql/types'
 /**
@@ -51,6 +51,7 @@ export const useUpdateCustomerAddress = () => {
     updateCustomerAddress: useMutation(updateCustomerAccountContactDetails, {
       onSuccess: () => {
         queryClient.invalidateQueries(customerAccountContactsKeys.all)
+        queryClient.invalidateQueries(checkoutKeys.all)
       },
     }),
   }

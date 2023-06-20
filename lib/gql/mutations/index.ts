@@ -45,3 +45,9 @@ export { default as deleteSubscriptionMutation } from './subscription/delete-sub
 export { default as updateSubscriptionNextOrderDateMutation } from './subscription/update-subscription-next-order-date-mutation'
 export { default as updateSubscriptionFulfillmentInfoMutation } from './subscription/update-subscription-fulfillment-info-mutation'
 export { default as updateSubscriptionPaymentMutation } from './subscription/update-subscription-payment-mutation'
+
+// Address validation
+export { default as validateCustomerAddress } from './address/validate-customer-address'
+
+// Account password
+export { default as updateForgottenAccountPassword } from './user/updateForgottenAccountPassword'

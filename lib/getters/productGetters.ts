@@ -1,6 +1,6 @@
 import getConfig from 'next/config'
 
-import { FulfillmentOptions } from '../constants'
+import { FulfillmentOptions, ProductAvailabilityStatus } from '../constants'
 import { buildBreadcrumbsParams, uiHelpers } from '@/lib/helpers'
 import type { ProductCustom, BreadCrumb, ProductProperties, FulfillmentOption } from '@/lib/types'
 import DefaultImage from '@/public/product_placeholder.svg'
@@ -15,6 +15,8 @@ import type {
   CrProduct,
   CrProductOption,
   ProductPrice,
+  PrPackageMeasurements,
+  ProductInventoryInfo,
 } from '@/lib/gql/types'
 
 type ProductOptionsReturnType<T> = T extends ProductCustom
@@ -26,6 +28,9 @@ type ProductOptionsReturnType<T> = T extends ProductCustom
 const { publicRuntimeConfig } = getConfig()
 
 type GenericProduct = Product | ProductCustom | CrProduct
+
+const badgeAttributeFQN = publicRuntimeConfig.badgeAttributeFQN.toLowerCase()
+const occasionAttributeFQN = publicRuntimeConfig.occasionAttributeFQN.toLowerCase()
 
 const getName = (product: GenericProduct): string => {
   if ('name' in product) {
@@ -40,6 +45,8 @@ const getName = (product: GenericProduct): string => {
 }
 
 const getProductId = (product: GenericProduct): string => product?.productCode || ''
+const getVariationProductCode = (product: GenericProduct): string =>
+  product?.variationProductCode || ''
 
 const getRating = (product: Product | ProductCustom) => {
   const attr = product?.properties?.find(
@@ -70,6 +77,12 @@ const getPriceRange = (product: Product | ProductCustom): ProductPriceRange =>
 const getCoverImage = (product: Product | ProductCustom): string =>
   product?.content?.productImages?.[0]?.imageUrl || ''
 
+const getCoverImageAlt = (product: Product | ProductCustom): string =>
+  product?.content?.productImages?.[0]?.altText || ''
+
+const getSeoFriendlyUrl = (product: Product | ProductCustom): string =>
+  product?.content?.seoFriendlyUrl || ''
+
 const getDescription = (product: Product | ProductCustom): string =>
   product?.content?.productFullDescription || ''
 
@@ -97,22 +110,70 @@ const getBreadcrumbs = (product: Product | ProductCustom): BreadCrumb[] => {
   }
   const productCrumbs = buildBreadcrumbsParams(product?.categories[0]).map((b) => ({
     ...b,
-    link: getCategoryLink(b?.link as string),
+    link: getCategoryLink(b?.link as string, b.seoFriendlyUrl as string),
   }))
 
   return [...homeCrumb, ...productCrumbs]
 }
 
-const getProperties = (product: ProductCustom) => {
+const getProperties = (product: Product | ProductCustom) => {
   return product?.properties
     ?.filter((attr) => !attr?.isHidden)
     .map((attr: ProductProperty | null) => {
       return {
+        attributeFQN: attr?.attributeFQN,
         name: attr?.attributeDetail?.name,
         value: attr?.values?.map((v) => v?.value).join(', '),
       }
     })
 }
+
+const getProductMeasurement = (measurements: PrPackageMeasurements): string =>
+  measurements?.packageLength?.value +
+  ' ' +
+  measurements?.packageLength?.unit +
+  ' x ' +
+  measurements?.packageWidth?.value +
+  ' ' +
+  measurements?.packageWidth?.unit +
+  ' x ' +
+  measurements?.packageHeight?.value +
+  ' ' +
+  measurements?.packageHeight?.unit
+
+const getProductAvailability = (inventoryInfo: ProductInventoryInfo): string => {
+  if (inventoryInfo?.onlineStockAvailable) {
+    return ProductAvailabilityStatus.INSTOCK
+  } else if (
+    inventoryInfo?.outOfStockBehavior === 'AllowBackOrder' ||
+    (inventoryInfo?.onlineStockAvailable && inventoryInfo?.onlineStockAvailable > 0)
+  ) {
+    return ProductAvailabilityStatus.BACKORDER
+  } else {
+    return ProductAvailabilityStatus.OUTOFSTOCK
+  }
+  return ''
+}
+
+export const getProductCharacteristics = (
+  properties: ProductProperties[],
+  product: Product | ProductCustom
+): ProductProperties[] => {
+  return properties
+    .filter(
+      (prop) => prop.value !== 'false' && prop.attributeFQN?.toLowerCase() === occasionAttributeFQN
+    )
+    .concat({
+      name: 'Size',
+      value: getProductMeasurement(product?.measurements as PrPackageMeasurements),
+    })
+    .concat({ name: 'Product Code', value: product?.productCode as string })
+    .concat({ name: 'UPC', value: product?.upc as string })
+    .reverse()
+}
+
+export const getBadgeAttribute = (properties: ProductProperties[]): string =>
+  properties?.find((prop) => prop.attributeFQN?.toLowerCase() === badgeAttributeFQN)?.value || ''
 
 const getOptionSelectedValue = (option: ProductOption) => {
   const selectedValue = option?.values?.find((value) => value?.isSelected)
@@ -199,6 +260,7 @@ const isVariationProduct = (product: Product): boolean =>
 
 const getProductDetails = (product: ProductCustom, pdpProductPrice?: ProductPrice) => {
   const productOptions = getSegregatedOptions(product)
+  const productProperties = getProperties(product) as ProductProperties[]
 
   return {
     productName: getName(product),
@@ -220,10 +282,12 @@ const getProductDetails = (product: ProductCustom, pdpProductPrice?: ProductPric
       textbox: productOptions && productOptions.textBoxOptions.length,
     },
 
-    properties: getProperties(product) as ProductProperties[],
+    properties: productProperties,
     isValidForOneTime: validateAddToCartForOneTime(product),
     productOptions,
     isPackagedStandAlone: getIsPackagedStandAlone(product),
+    badgeAttribute: getBadgeAttribute(productProperties),
+    availabilityAttribute: getProductAvailability(product?.inventoryInfo as ProductInventoryInfo),
   }
 }
 const getProductFulfillmentOptions = (
@@ -311,6 +375,7 @@ export const productGetters = {
   getOptions,
   getCoverImage,
   getProductId,
+  getVariationProductCode,
   handleProtocolRelativeUrl,
   getProductFulfillmentOptions,
   getAvailableItemCount,
@@ -318,4 +383,10 @@ export const productGetters = {
   getProductImage,
   getProductDetails,
   getPDPProductPrice,
+  getShortDescription,
+  getBadgeAttribute,
+  getProperties,
+  getProductCharacteristics,
+  getCoverImageAlt,
+  getSeoFriendlyUrl,
 }

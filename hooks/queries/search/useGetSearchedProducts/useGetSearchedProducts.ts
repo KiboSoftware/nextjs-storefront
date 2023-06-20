@@ -19,6 +19,7 @@ export interface UseProductSearchResponse {
   isLoading: boolean
   isSuccess: boolean
   isFetching: boolean
+  isError: boolean
 }
 
 const fetchProductSearch = async (searchParams: CategorySearchParams) => {
@@ -52,7 +53,7 @@ export const useGetSearchedProducts = (
   searchParams: CategorySearchParams,
   initialData?: ProductSearchResult
 ): UseProductSearchResponse => {
-  const { data, isLoading, isSuccess, isFetching } = useQuery(
+  const { data, isLoading, isSuccess, isFetching, isError } = useQuery(
     productSearchResultKeys.searchParams(searchParams),
     () => fetchProductSearch(searchParams),
     {
@@ -61,5 +62,5 @@ export const useGetSearchedProducts = (
     }
   )
 
-  return { data, isLoading, isSuccess, isFetching }
+  return { data, isLoading, isSuccess, isFetching, isError }
 }

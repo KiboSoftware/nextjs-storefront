@@ -19,7 +19,6 @@ import { useTranslation } from 'next-i18next'
 import { useReCaptcha } from 'next-recaptcha-v3'
 import { TransitionGroup } from 'react-transition-group'
 
-
 import { AddressCard, AddressForm, KiboSelect, KiboPagination } from '@/components/common'
 import { ConfirmationDialog } from '@/components/dialogs'
 import { useModalContext, useSnackbarContext } from '@/context'
@@ -45,7 +44,6 @@ import type {
 interface AddressBookProps {
   user: CustomerAccount
   contacts: CustomerContactCollection
-  showForm: boolean
 }
 
 interface AccountAddressProps {
@@ -132,12 +130,12 @@ const AccountAddress = (props: AccountAddressProps) => {
 }
 
 const AddressBook = (props: AddressBookProps) => {
-  const { user, contacts, showForm } = props
+  const { user, contacts } = props
 
   const { publicRuntimeConfig } = getConfig()
   const shippingAddressPageSize = publicRuntimeConfig.shippingAddressPageSize
   const billingAddressPageSize = publicRuntimeConfig.billingAddressPageSize
-  const [isAddNewAddress, setIsAddNewAddress] = useState<boolean>(showForm)
+  const [isAddNewAddress, setIsAddNewAddress] = useState<boolean>(false)
   const [isEditAddress, setIsEditAddress] = useState<boolean>(false)
   const [validateForm, setValidateForm] = useState<boolean>(false)
   const [isDefaultAddress, setIsDefaultAddress] = useState<boolean>(false)

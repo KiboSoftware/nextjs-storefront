@@ -30,6 +30,9 @@ const getExpireMonth = (creditCardData?: GenericCard | CrPaymentCard): number =>
 const getExpireYear = (creditCardData?: GenericCard | CrPaymentCard): number =>
   creditCardData?.expireYear || 0
 
+const getCardHolderName = (creditCardData?: GenericCard | CrPaymentCard): string =>
+  (creditCardData?.nameOnCard as string) || ''
+
 const getCardDetails = (card: GenericCard) => {
   return {
     cardNumberPart: getCardNumberPart(card),
@@ -40,6 +43,7 @@ const getCardDetails = (card: GenericCard) => {
     isDefaultPayMethod: getIsDefaultPayMethod(card),
     isCardInfoSaved: getIsCardInfoSaved(card as SavedCard),
     paymentType: getPaymentType(card as SavedCard),
+    cardholderName: getCardHolderName(card as SavedCard),
   }
 }
 
@@ -48,8 +52,8 @@ const getTokenizedCardNumberMask = (tokenizedData: TokenizedCard): string =>
 
 const getTokenizedId = (tokenizedData: TokenizedCard) => tokenizedData?.id || ''
 
-const getPaymentServiceCardId = (card: CrPaymentCard) => card.paymentServiceCardId || ''
-const getCardNumberPartOrMask = (card: CrPaymentCard) => card.cardNumberPartOrMask || ''
+const getPaymentServiceCardId = (card: CrPaymentCard) => card?.paymentServiceCardId || ''
+const getCardNumberPartOrMask = (card: CrPaymentCard) => card?.cardNumberPartOrMask || ''
 
 export const cardGetters = {
   getCardId,

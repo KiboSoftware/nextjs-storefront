@@ -33,6 +33,4 @@ const Home: NextPageWithLayout<HomePageProps> = (props) => {
   )
 }
 
-Home.getLayout = FullWidthLayout
-
 export default Home
