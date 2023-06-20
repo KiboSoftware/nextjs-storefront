@@ -1,7 +1,7 @@
 import React from 'react'
 
 import { composeStories } from '@storybook/testing-react'
-import { render, screen } from '@testing-library/react'
+import { render, screen, act, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 
 import * as stories from './PaymentCardDetailsView.stories' // import all stories from the stories file
@@ -21,9 +21,13 @@ describe('[component] - PaymentCardDetailsView', () => {
 
     const radio = screen.getByRole('radio', { name: Radio.args.cardNumberPart })
 
-    await user.click(radio)
+    act(() => {
+      user.click(radio)
+    })
 
-    expect(mockOnPaymentCardSelection).toBeCalled()
+    await waitFor(() => {
+      expect(mockOnPaymentCardSelection).toBeCalled()
+    })
   })
 
   it('should render component if radio is false', () => {

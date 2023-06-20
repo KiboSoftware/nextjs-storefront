@@ -1,6 +1,6 @@
 import React from 'react'
 
-import { screen, waitFor, within } from '@testing-library/react'
+import { screen, waitFor, within, act } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { graphql } from 'msw'
 
@@ -256,10 +256,17 @@ const addressFormIsVisibleAssertion = () => {
   expect(screen.getByRole('button', { name: 'cancel' })).toBeVisible()
 }
 
-const addressFormIsHiddenAssertion = () => {
-  expect(screen.queryByTestId('address-form-component')).not.toBeInTheDocument()
-  expect(screen.queryByRole('button', { name: 'save-shipping-address' })).not.toBeInTheDocument()
-  expect(screen.queryByRole('button', { name: 'cancel' })).not.toBeInTheDocument()
+const addressFormIsHiddenAssertion = async () => {
+  await waitFor(() => {
+    expect(screen.queryByTestId('address-form-component')).not.toBeInTheDocument()
+  })
+  await waitFor(() => {
+    expect(screen.queryByRole('button', { name: 'save-shipping-address' })).not.toBeInTheDocument()
+  })
+
+  await waitFor(() => {
+    expect(screen.queryByRole('button', { name: 'cancel' })).not.toBeInTheDocument()
+  })
 }
 
 const goToShipToMoreThanOneAddressView = async (user: any) => {
@@ -272,11 +279,15 @@ const goToShipToMoreThanOneAddressView = async (user: any) => {
 
   // addressFormIsVisibleAssertion()
 
-  await user.click(shipToMoreAddress)
+  act(() => {
+    user.click(shipToMoreAddress)
+  })
 
-  addressFormIsHiddenAssertion()
+  await addressFormIsHiddenAssertion()
 
-  expect(screen.getByTestId('product-item-with-address-list-mock')).toBeVisible()
+  await waitFor(() => {
+    expect(screen.getByTestId('product-item-with-address-list-mock')).toBeVisible()
+  })
 }
 
 describe('[component] MultiShippingStep', () => {
@@ -315,9 +326,13 @@ describe('[component] MultiShippingStep', () => {
           expect(screen.getByRole('button', { name: 'save-shipping-address' })).toBeVisible()
           expect(screen.getByRole('button', { name: 'cancel' })).toBeVisible()
 
-          await user.click(screen.getByRole('button', { name: 'On Save Address' })) // Mocked call
+          act(() => {
+            user.click(screen.getByRole('button', { name: 'On Save Address' }))
+          })
 
-          expect(createCheckoutDestinationMock.mutateAsync).toBeCalled()
+          await waitFor(() => {
+            expect(createCheckoutDestinationMock.mutateAsync).toBeCalled()
+          })
 
           await waitFor(() => {
             expect(screen.getByRole('button', { name: 'add-new-address' })).toBeVisible()
@@ -348,6 +363,7 @@ describe('[component] MultiShippingStep', () => {
             )
           })
         )
+
         it('should render ship option radio and select Ship to more than one address radio to render multiShip view', async () => {
           const { user } = setup({
             isAuthenticated: true,
@@ -355,16 +371,24 @@ describe('[component] MultiShippingStep', () => {
             savedUserAddressData: { ...userAddressResponse, items: [] },
           })
 
-          addressFormIsVisibleAssertion()
-
+          await addressFormIsVisibleAssertion()
           await goToShipToMoreThanOneAddressView(user)
 
-          expect(screen.queryByTestId('shipping-groups-with-method')).not.toBeInTheDocument()
-          expect(screen.getByRole('button', { name: 'continue' })).toBeVisible()
+          await waitFor(() => {
+            expect(screen.queryByTestId('shipping-groups-with-method')).not.toBeInTheDocument()
+          })
 
-          await user.click(screen.getByRole('button', { name: 'continue' }))
+          await waitFor(() => {
+            expect(screen.getByRole('button', { name: 'continue' })).toBeVisible()
+          })
 
-          expect(screen.getByTestId('shipping-groups-with-method')).toBeVisible()
+          act(() => {
+            user.click(screen.getByRole('button', { name: 'continue' }))
+          })
+
+          await waitFor(() => {
+            expect(screen.getByTestId('shipping-groups-with-method')).toBeVisible()
+          })
         })
 
         it('should handle Add address for every shipping items', async () => {
@@ -376,11 +400,17 @@ describe('[component] MultiShippingStep', () => {
 
           await goToShipToMoreThanOneAddressView(user)
 
-          await user.click(screen.getByRole('button', { name: 'Add Destination' }))
+          act(() => {
+            user.click(screen.getByRole('button', { name: 'Add Destination' }))
+          })
 
-          expect(screen.getByRole('dialog')).toBeVisible()
+          await waitFor(() => {
+            expect(screen.getByRole('dialog')).toBeVisible()
+          })
 
-          expect(within(screen.getByRole('dialog')).getByText('add-new-address')).toBeVisible()
+          await waitFor(() => {
+            expect(within(screen.getByRole('dialog')).getByText('add-new-address')).toBeVisible()
+          })
         })
 
         it('should handle shippingMethod selection for every ship items', async () => {
@@ -394,15 +424,23 @@ describe('[component] MultiShippingStep', () => {
 
           await goToShipToMoreThanOneAddressView(user)
 
-          await user.click(screen.getByRole('button', { name: 'continue' }))
+          act(() => {
+            user.click(screen.getByRole('button', { name: 'continue' }))
+          })
 
-          expect(screen.getByTestId('shipping-groups-with-method')).toBeVisible()
+          await waitFor(() => {
+            expect(screen.getByTestId('shipping-groups-with-method')).toBeVisible()
+          })
 
-          await user.click(screen.getByRole('button', { name: 'Update Checkout Shipping Method' }))
+          act(() => {
+            user.click(screen.getByRole('button', { name: 'Update Checkout Shipping Method' }))
+          })
 
-          expect(onUpdateCheckoutShippingMethodMock).toBeCalledWith({
-            shippingMethodCode: 'test-code',
-            shippingMethodGroup: checkoutGroupRatesMock?.checkoutShippingMethods[0],
+          await waitFor(() => {
+            expect(onUpdateCheckoutShippingMethodMock).toBeCalledWith({
+              shippingMethodCode: 'test-code',
+              shippingMethodGroup: checkoutGroupRatesMock?.checkoutShippingMethods[0],
+            })
           })
         })
       })
@@ -461,9 +499,13 @@ describe('[component] MultiShippingStep', () => {
 
         expect(screen.getByRole('radio', { name: 'Ship to Home' })).toBeChecked()
 
-        await user.click(screen.getAllByRole('button', { name: 'Handle Radio Change' })[0])
+        act(() => {
+          user.click(screen.getAllByRole('button', { name: 'Handle Radio Change' })[0])
+        })
 
-        expect(createCheckoutDestinationMock.mutateAsync).toBeCalled()
+        await waitFor(() => {
+          expect(createCheckoutDestinationMock.mutateAsync).toBeCalled()
+        })
       })
 
       it('should handle address change in multiShip', async () => {
@@ -474,9 +516,13 @@ describe('[component] MultiShippingStep', () => {
 
         await goToShipToMoreThanOneAddressView(user)
 
-        await user.click(screen.getByRole('button', { name: 'Select Address' }))
+        act(() => {
+          user.click(screen.getByRole('button', { name: 'Select Address' }))
+        })
 
-        expect(createCheckoutDestinationMock.mutateAsync).toBeCalled()
+        await waitFor(() => {
+          expect(createCheckoutDestinationMock.mutateAsync).toBeCalled()
+        })
       })
     })
   })

@@ -1,7 +1,7 @@
 import React from 'react'
 
 import { composeStories } from '@storybook/testing-react'
-import { screen, waitFor } from '@testing-library/react'
+import { screen, waitFor, act } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 
 import * as stories from './StandardShippingStep.stories'
@@ -179,11 +179,14 @@ describe('[components] StandardShippingStep', () => {
       expect(screen.getByTestId('address-form-mock')).toBeVisible()
       expect(screen.getByTestId('isValidateForm')).toHaveTextContent('invalidatedForm')
 
-      await user.click(screen.getByTestId('changeFormStatus'))
+      await act(async () => {
+        await user.click(screen.getByTestId('changeFormStatus'))
+        user.click(screen.getByRole('button', { name: /save-shipping-address/ }))
+      })
 
-      await user.click(screen.getByRole('button', { name: /save-shipping-address/ }))
-
-      expect(screen.getByTestId('isValidateForm')).toHaveTextContent('validatedForm')
+      await waitFor(() => {
+        expect(screen.getByTestId('isValidateForm')).toHaveTextContent('validatedForm')
+      })
     })
   })
 
@@ -206,23 +209,30 @@ describe('[components] StandardShippingStep', () => {
       // selecting a radioAddress
       const firstRadioAddress = screen.getAllByRole('button', { name: /handleAddressSelect/ })[0]
 
-      await user.click(firstRadioAddress)
+      await act(() => {
+        user.click(firstRadioAddress)
+      })
 
-      const selected = userGetters.getUserShippingAddress(
-        userAddressResponse?.items as CustomerContact[]
-      )?.[0].id
+      await waitFor(() => {
+        const selected = userGetters.getUserShippingAddress(
+          userAddressResponse?.items as CustomerContact[]
+        )?.[0].id
 
-      expect(screen.getAllByTestId(/selectedAddressDetailsView/)?.[0].textContent).toBe(
-        selected?.toString()
-      )
+        expect(screen.getAllByTestId(/selectedAddressDetailsView/)?.[0].textContent).toBe(
+          selected?.toString()
+        )
+      })
 
       const firstShippingMethod = screen.getAllByRole('button', {
         name: /handleSaveShippingMethod/,
       })[0]
 
-      await user.click(firstShippingMethod)
-
-      expect(scrollIntoViewMock).toBeCalled()
+      act(() => {
+        user.click(firstShippingMethod)
+      })
+      await waitFor(() => {
+        expect(scrollIntoViewMock).toBeCalled()
+      })
     })
   })
 
@@ -258,21 +268,27 @@ describe('[components] StandardShippingStep', () => {
 
       const firstRadioAddress = screen.getAllByRole('button', { name: /handleAddressSelect/ })[0]
 
-      await user.click(firstRadioAddress)
+      act(() => {
+        user.click(firstRadioAddress)
+      })
 
-      const selected = userGetters.getUserShippingAddress(
-        userAddressResponse?.items as CustomerContact[]
-      )?.[0].id
+      await waitFor(() => {
+        const selected = userGetters.getUserShippingAddress(
+          userAddressResponse?.items as CustomerContact[]
+        )?.[0].id
 
-      expect(screen.getAllByTestId(/selectedAddressDetailsView/)?.[0].textContent).toBe(
-        selected?.toString()
-      )
+        expect(screen.getAllByTestId(/selectedAddressDetailsView/)?.[0].textContent).toBe(
+          selected?.toString()
+        )
+      })
 
       const firstShippingMethod = screen.getAllByRole('button', {
         name: /handleSaveShippingMethod/,
       })[0]
 
-      await user.click(firstShippingMethod)
+      act(() => {
+        user.click(firstShippingMethod)
+      })
 
       await waitFor(() => {
         expect(scrollIntoViewMock).toBeCalled()

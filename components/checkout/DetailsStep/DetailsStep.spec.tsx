@@ -3,7 +3,7 @@
 import React from 'react'
 
 import { composeStories } from '@storybook/testing-react'
-import { screen, act } from '@testing-library/react'
+import { screen, act, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 
 import * as stories from './DetailsStep.stories'
@@ -86,11 +86,17 @@ describe('[components] Details', () => {
       let emailError = screen.queryByText(/this\-field\-is\-required/i)
       expect(emailError).not.toBeInTheDocument()
       const emailInput = screen.getByRole('textbox', { name: /your-email/i })
-      emailInput.focus()
-      await user.clear(emailInput)
-      await user.tab()
-      emailError = screen.getByText(/this\-field\-is\-required/i)
-      expect(emailError).toBeVisible()
+
+      act(() => {
+        emailInput.focus()
+        user.clear(emailInput)
+        user.tab()
+      })
+
+      await waitFor(() => {
+        emailError = screen.getByText(/this\-field\-is\-required/i)
+        expect(emailError).toBeVisible()
+      })
     })
   })
 
@@ -111,8 +117,14 @@ describe('[components] Details', () => {
     it('should open login dialog after clicking on sign-into-your-account-button', async () => {
       const { user } = setup({ isAuthenticated: false, userId: 0 })
       const signInButton = screen.getByRole('button', { name: /sign-into-your-account/i })
-      await user.click(signInButton)
-      expect(screen.getByRole('dialog', { name: /log-in/i })).toBeVisible()
+
+      act(() => {
+        user.click(signInButton)
+      })
+
+      await waitFor(() => {
+        expect(screen.getByRole('dialog', { name: /log-in/i })).toBeVisible()
+      })
     })
   })
 })
