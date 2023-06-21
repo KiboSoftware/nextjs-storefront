@@ -1,7 +1,7 @@
 import React from 'react'
 
 import { composeStories } from '@storybook/testing-react'
-import { render, screen } from '@testing-library/react'
+import { render, screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 
 import * as stories from './MyProfile.stories'
@@ -47,38 +47,46 @@ describe('[components] MyProfile', () => {
     const { user } = setup()
 
     const editName = screen.getAllByText(/edit/i)
-    await user.click(editName[0])
+    user.click(editName[0])
 
-    const firstNameInput = screen.getByRole('textbox', { name: 'first-name' })
-    const lastNameInput = screen.getByRole('textbox', { name: 'last-name-or-sur-name' })
+    await waitFor(() => {
+      const firstNameInput = screen.getByRole('textbox', { name: 'first-name' })
+      expect(firstNameInput).toBeVisible()
+    })
 
-    expect(firstNameInput).toBeVisible()
-    expect(lastNameInput).toBeVisible()
+    await waitFor(() => {
+      const lastNameInput = screen.getByRole('textbox', { name: 'last-name-or-sur-name' })
+      expect(lastNameInput).toBeVisible()
+    })
   })
 
   it(`should render email form if 'edit' button is clicked`, async () => {
     const { user } = setup()
 
     const editName = screen.getAllByText(/edit/i)
-    await user.click(editName[1])
+    user.click(editName[1])
 
-    const emailInput = screen.getByRole('textbox', { name: 'email' })
-
-    expect(emailInput).toBeVisible()
+    await waitFor(() => {
+      const emailInput = screen.getByRole('textbox', { name: 'email' })
+      expect(emailInput).toBeVisible()
+    })
   })
 
   it(`should render password form if 'edit' button is clicked`, async () => {
     const { user } = setup()
 
     const editName = screen.getAllByText(/edit/i)
-    await user.click(editName[2])
+    user.click(editName[2])
 
-    const currentPassword = await screen.findByLabelText('current-password')
-    const newPassword = await screen.findByLabelText('new-password')
-    const confirmPassword = await screen.findByLabelText('confirm-password')
+    await waitFor(() => {
+      const currentPassword = screen.getByLabelText('current-password')
+      expect(currentPassword).toBeVisible()
+    })
 
-    expect(currentPassword).toBeVisible()
+    const newPassword = screen.getByLabelText('new-password')
     expect(newPassword).toBeVisible()
+
+    const confirmPassword = screen.getByLabelText('confirm-password')
     expect(confirmPassword).toBeVisible()
   })
 })

@@ -1,12 +1,12 @@
 import React from 'react'
 
 import { composeStories } from '@storybook/testing-react'
-import { render, within, screen } from '@testing-library/react'
+import { render, within, screen, waitFor } from '@testing-library/react'
 import '@testing-library/jest-dom'
 import userEvent from '@testing-library/user-event'
 
 import * as stories from './ProductDetailTemplate.stories' // import all stories from the stories file
-import { wishlistMock, fulfillmentOptionsMock } from '@/__mocks__/stories'
+import { fulfillmentOptionsMock } from '@/__mocks__/stories'
 
 const { Common, WithMoreDetails, WithSubscription } = composeStories(stories)
 
@@ -139,17 +139,23 @@ describe('[component] Product Detail Template component', () => {
   it('should select subscription option and display subscription frequency, hide the fulfillment option', async () => {
     render(<WithSubscription {...WithSubscription?.args} />)
     const subscriptionBtn = screen.getByRole('radio', { name: /subscription/i })
-    await user.click(subscriptionBtn)
-    expect(subscriptionBtn).toBeChecked()
+
+    user.click(subscriptionBtn)
+    await waitFor(() => expect(subscriptionBtn).toBeChecked())
 
     const selectButton = await screen.findByLabelText(/subscription-frequency/i)
     expect(selectButton).toBeVisible()
-    await user.click(selectButton)
 
-    const listbox = within(screen.getByRole('listbox'))
-    expect(listbox.getByRole('option', { name: '45 Days' })).toBeVisible()
+    user.click(selectButton)
 
-    const fulfillmentOptions = screen.queryByText(/fulfillment-options/i)
-    expect(fulfillmentOptions).not.toBeInTheDocument()
+    await waitFor(() => {
+      const listbox = within(screen.getByRole('listbox'))
+      expect(listbox.getByRole('option', { name: '45 Days' })).toBeVisible()
+    })
+
+    await waitFor(() => {
+      const fulfillmentOptions = screen.queryByText(/fulfillment-options/i)
+      expect(fulfillmentOptions).not.toBeInTheDocument()
+    })
   })
 })

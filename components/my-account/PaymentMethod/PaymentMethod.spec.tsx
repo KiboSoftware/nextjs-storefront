@@ -1,5 +1,5 @@
 import { composeStories } from '@storybook/testing-react'
-import { render, screen } from '@testing-library/react'
+import { render, screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 
 import * as stories from './PaymentMethod.stories'
@@ -42,9 +42,12 @@ describe('[component] - PaymentMethod (has saved payment methods)', () => {
 
     const savedPaymentMethods = screen.getByTestId('saved-payment-method-view')
 
-    await user.click(screen.getByRole('button', { name: 'add-payment-method' }))
+    user.click(screen.getByRole('button', { name: 'add-payment-method' }))
 
-    expect(savedPaymentMethods).not.toBeVisible()
+    await waitFor(() => {
+      expect(savedPaymentMethods).not.toBeVisible()
+    })
+
     expect(screen.getByTestId('card-details-form')).toBeVisible()
   })
 
@@ -53,28 +56,34 @@ describe('[component] - PaymentMethod (has saved payment methods)', () => {
 
     const savedPaymentMethods = screen.getByTestId('saved-payment-method-view')
 
-    await user.click(screen.getByTestId('payment-method-edit-link'))
-
-    expect(savedPaymentMethods).not.toBeVisible()
+    user.click(screen.getByTestId('payment-method-edit-link'))
+    await waitFor(() => {
+      expect(savedPaymentMethods).not.toBeVisible()
+    })
     expect(screen.getByTestId('card-details-form')).toBeVisible()
   })
 
   it(`should render saved billing address radios if contacts are available`, async () => {
     render(<Common {...Common.args} />)
 
-    await user.click(screen.getByRole('button', { name: 'add-payment-method' }))
-
-    expect(screen.getByTestId('address-details-view')).toBeVisible()
+    user.click(screen.getByRole('button', { name: 'add-payment-method' }))
+    await waitFor(() => {
+      expect(screen.getByTestId('address-details-view')).toBeVisible()
+    })
   })
 
   it(`should render  address form if 'Add new address' button is clicked`, async () => {
     render(<Common {...Common.args} />)
 
-    await user.click(screen.getByRole('button', { name: 'add-payment-method' }))
+    user.click(screen.getByRole('button', { name: 'add-payment-method' }))
 
-    await user.click(screen.getByRole('button', { name: 'add-new-address' }))
+    await waitFor(() => {
+      user.click(screen.getByRole('button', { name: 'add-new-address' }))
+    })
 
-    expect(screen.getByTestId('address-form')).toBeVisible()
+    await waitFor(() => {
+      expect(screen.getByTestId('address-form')).toBeVisible()
+    })
   })
 })
 
@@ -91,10 +100,17 @@ describe('[component] - PaymentMethod (no saved payment methods and billing addr
 
     const savedPaymentMethods = screen.queryByTestId('saved-payment-method-view')
 
-    await user.click(screen.getByRole('button', { name: 'add-payment-method' }))
+    user.click(screen.getByRole('button', { name: 'add-payment-method' }))
 
-    expect(savedPaymentMethods).not.toBeInTheDocument()
-    expect(screen.getByTestId('card-details-form')).toBeVisible()
-    expect(screen.getByTestId('address-form')).toBeVisible()
+    await waitFor(() => {
+      expect(savedPaymentMethods).not.toBeInTheDocument()
+    })
+
+    await waitFor(() => {
+      expect(screen.getByTestId('card-details-form')).toBeVisible()
+    })
+    await waitFor(() => {
+      expect(screen.getByTestId('address-form')).toBeVisible()
+    })
   })
 })

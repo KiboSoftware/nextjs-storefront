@@ -1,5 +1,5 @@
 import { composeStories } from '@storybook/testing-react'
-import { render, screen } from '@testing-library/react'
+import { render, screen, waitFor } from '@testing-library/react'
 import '@testing-library/jest-dom'
 import userEvent from '@testing-library/user-event'
 
@@ -41,10 +41,14 @@ describe('[component] ColorSelector component', () => {
 
     const option = screen.getByTestId(/colorvalue-green/i)
 
-    await user.click(option)
+    user.click(option)
 
-    expect(onColorChangeMock).toHaveBeenCalled()
-    expect(onColorChangeMock).toHaveBeenCalledWith(Common.args.attributeFQN, 'green')
+    await waitFor(() => {
+      expect(onColorChangeMock).toHaveBeenCalled()
+    })
+    await waitFor(() => {
+      expect(onColorChangeMock).toHaveBeenCalledWith(Common.args.attributeFQN, 'green')
+    })
   })
 
   it('should not call selectOption method when option is disabled', async () => {
@@ -53,9 +57,11 @@ describe('[component] ColorSelector component', () => {
 
     const disabledOption = screen.getByTestId(/colorvalue-red/i)
 
-    await user.click(disabledOption)
+    user.click(disabledOption)
 
-    expect(onColorChangeMock).toHaveBeenCalledTimes(0)
+    await waitFor(() => {
+      expect(onColorChangeMock).toHaveBeenCalledTimes(0)
+    })
   })
 
   it('should not call selectOption method when option is selected', async () => {
@@ -64,8 +70,10 @@ describe('[component] ColorSelector component', () => {
 
     const selectedOption = screen.getByTestId(/colorvalue-yellow/i)
 
-    await user.click(selectedOption)
+    user.click(selectedOption)
 
-    expect(onColorChangeMock).toHaveBeenCalledTimes(0)
+    await waitFor(() => {
+      expect(onColorChangeMock).toHaveBeenCalledTimes(0)
+    })
   })
 })

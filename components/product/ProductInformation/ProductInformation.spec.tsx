@@ -1,7 +1,7 @@
 import React from 'react'
 
 import { composeStories } from '@storybook/testing-react'
-import { render, screen } from '@testing-library/react'
+import { render, screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 
 import * as stories from './ProductInformation.stories'
@@ -42,19 +42,31 @@ describe('[component] - ProductInformation', () => {
 
     const accordian = screen.getByTestId('accordian')
     expect(accordian).toHaveAttribute('aria-expanded', 'false')
-    await user.click(accordian)
-    expect(accordian).toHaveAttribute('aria-expanded', 'true')
-    const productItemOptions = screen.getByTestId('product-option-list-component')
-    expect(productItemOptions).toBeVisible()
+
+    user.click(accordian)
+
+    await waitFor(() => {
+      expect(accordian).toHaveAttribute('aria-expanded', 'true')
+    })
+    await waitFor(() => {
+      const productItemOptions = screen.getByTestId('product-option-list-component')
+      expect(productItemOptions).toBeVisible()
+    })
   })
 
   it('should close accordion when accordion is already open and the user clicks on accordion header', async () => {
     const { user } = setup()
 
     const accordian = screen.getByTestId('accordian')
-    await user.click(accordian)
-    expect(accordian).toHaveAttribute('aria-expanded', 'true')
-    await user.click(accordian)
-    expect(accordian).toHaveAttribute('aria-expanded', 'false')
+
+    user.click(accordian)
+    await waitFor(() => {
+      expect(accordian).toHaveAttribute('aria-expanded', 'true')
+    })
+
+    user.click(accordian)
+    await waitFor(() => {
+      expect(accordian).toHaveAttribute('aria-expanded', 'false')
+    })
   })
 })

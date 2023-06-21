@@ -1,6 +1,6 @@
 import '@testing-library/jest-dom'
 import { composeStories } from '@storybook/testing-react'
-import { render, screen } from '@testing-library/react'
+import { render, screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import mockRouter from 'next-router-mock'
 
@@ -46,6 +46,7 @@ describe('[component] Wishlist Template component', () => {
     expect(wishlistItemsQuantity).toBeVisible()
     expect(userName).toBeVisible()
   })
+
   it('should render empty wishlist when no item present', async () => {
     const user = userEvent.setup()
 
@@ -57,10 +58,12 @@ describe('[component] Wishlist Template component', () => {
     expect(emptyWishlist).toBeVisible()
     expect(shopNowButton).toBeVisible()
 
-    await user.click(shopNowButton)
+    user.click(shopNowButton)
 
-    expect(mockRouter).toMatchObject({
-      pathname: '/',
+    await waitFor(() => {
+      expect(mockRouter).toMatchObject({
+        pathname: '/',
+      })
     })
   })
 })

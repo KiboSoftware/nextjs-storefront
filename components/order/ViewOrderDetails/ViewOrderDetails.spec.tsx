@@ -1,7 +1,7 @@
 import React, { ReactNode } from 'react'
 
 import { composeStories } from '@storybook/testing-react'
-import { render, screen } from '@testing-library/react'
+import { render, screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 
 import * as stories from './ViewOrderDetails.stories'
@@ -89,7 +89,9 @@ describe('[component] - ViewOrderDetails', () => {
 
     expect(orderSummaryContent).toContainElement(returnItemButton)
 
-    await user.click(returnItemButton)
-    expect(onReturnItemsVisibleMock).toHaveBeenCalled()
+    user.click(returnItemButton)
+    await waitFor(() => {
+      expect(onReturnItemsVisibleMock).toHaveBeenCalled()
+    })
   })
 })

@@ -1,7 +1,7 @@
 import React from 'react'
 
 import { composeStories } from '@storybook/testing-react'
-import { render, screen } from '@testing-library/react'
+import { render, screen, waitFor } from '@testing-library/react'
 
 import * as stories from './OrderStatusTemplate.stories'
 
@@ -23,15 +23,22 @@ jest.mock('@mui/material', () => ({
 }))
 
 describe('[component] - OrderStatusTemplate', () => {
-  it('should render component', () => {
+  it('should render component', async () => {
     render(<Common />)
 
-    const kiboBreadcrumbs = screen.queryByTestId('kibo-breadcrumbs-mock')
-    const viewOrderDetails = screen.queryByTestId('view-order-details-mock')
-    const viewOrderStatus = screen.queryByTestId('view-order-status-mock')
+    await waitFor(() => {
+      const kiboBreadcrumbs = screen.queryByTestId('kibo-breadcrumbs-mock')
+      expect(kiboBreadcrumbs).toBeVisible()
+    })
 
-    expect(kiboBreadcrumbs).toBeVisible()
-    expect(viewOrderStatus).toBeVisible()
-    expect(viewOrderDetails).not.toBeInTheDocument()
+    await waitFor(() => {
+      const viewOrderDetails = screen.queryByTestId('view-order-details-mock')
+      expect(viewOrderDetails).not.toBeInTheDocument()
+    })
+
+    await waitFor(() => {
+      const viewOrderStatus = screen.queryByTestId('view-order-status-mock')
+      expect(viewOrderStatus).toBeVisible()
+    })
   })
 })

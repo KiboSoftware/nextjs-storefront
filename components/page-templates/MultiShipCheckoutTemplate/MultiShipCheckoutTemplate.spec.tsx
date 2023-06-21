@@ -1,7 +1,7 @@
 import React, { ReactNode } from 'react'
 
 import { composeStories } from '@storybook/testing-react'
-import { render, screen } from '@testing-library/react'
+import { render, screen, waitFor, act } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { Maybe } from 'graphql/jsutils/Maybe'
 import { graphql } from 'msw'
@@ -173,9 +173,11 @@ describe('[component] - MultiShipCheckout template', () => {
 
     render(<Common {...Common?.args} />)
 
-    await user.click(screen.getByTestId(/apply-coupon-button/))
+    user.click(screen.getByTestId(/apply-coupon-button/))
 
-    expect(screen.getByTestId('promoError')).toHaveTextContent('Not a valid coupon')
+    await waitFor(() => {
+      expect(screen.getByTestId('promoError')).toHaveTextContent('Not a valid coupon')
+    })
   })
 
   it('should handle handleRemoveCouponCode function successfully', async () => {
@@ -197,9 +199,11 @@ describe('[component] - MultiShipCheckout template', () => {
       })
     )
 
-    await user.click(screen.getByTestId(/remove-coupon-button/))
+    user.click(screen.getByTestId(/remove-coupon-button/))
 
-    expect(screen.getByTestId('coupon-count')).toHaveTextContent('0')
+    await waitFor(() => {
+      expect(screen.getByTestId('coupon-count')).toHaveTextContent('0')
+    })
   })
 
   it('should handle updateCheckoutPersonalInfo', async () => {
@@ -220,9 +224,11 @@ describe('[component] - MultiShipCheckout template', () => {
       })
     )
 
-    await user.click(screen.getByTestId(/updateCheckoutPersonalInfo/))
+    user.click(screen.getByTestId(/updateCheckoutPersonalInfo/))
 
-    expect(screen.getByTestId('updated-email')).toHaveTextContent('john.doe@gmail.com')
+    await waitFor(() => {
+      expect(screen.getByTestId('updated-email')).toHaveTextContent('john.doe@gmail.com')
+    })
   })
 
   it('should handle updateCheckoutShippingMethod', async () => {
@@ -251,8 +257,10 @@ describe('[component] - MultiShipCheckout template', () => {
       })
     )
 
-    await user.click(screen.getByTestId(/updateCheckoutShippingMethod/))
+    user.click(screen.getByTestId(/updateCheckoutShippingMethod/))
 
-    expect(screen.getByTestId('updated-shipping-method')).toHaveTextContent('method2')
+    await waitFor(() => {
+      expect(screen.getByTestId('updated-shipping-method')).toHaveTextContent('method2')
+    })
   })
 })

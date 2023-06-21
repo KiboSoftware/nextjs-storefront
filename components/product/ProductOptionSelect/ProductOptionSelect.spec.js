@@ -1,5 +1,5 @@
 import { composeStories } from '@storybook/testing-react'
-import { render, screen, within, fireEvent } from '@testing-library/react'
+import { render, screen, within, fireEvent, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 
 import '@testing-library/jest-dom'
@@ -27,8 +27,10 @@ describe('[component] ProductOptionSelect component', () => {
 
     const listbox = within(screen.getByRole('listbox'))
 
-    await user.click(listbox.getByText(mockOption.stringValue))
+    user.click(listbox.getByText(mockOption.stringValue))
 
-    expect(onDropdownChangeMock).toBeCalledWith('test-attributeFQN', mockOption.value)
+    await waitFor(() => {
+      expect(onDropdownChangeMock).toBeCalledWith('test-attributeFQN', mockOption.value)
+    })
   })
 })

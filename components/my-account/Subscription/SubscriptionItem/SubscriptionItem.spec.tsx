@@ -3,7 +3,7 @@ import React from 'react'
 import '@testing-library/jest-dom'
 import { InputLabel, FormControl, Select, MenuItem } from '@mui/material'
 import { composeStories } from '@storybook/testing-react'
-import { render, screen } from '@testing-library/react'
+import { render, screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { graphql } from 'msw'
 
@@ -288,10 +288,12 @@ describe('[component] - SubscriptionItem', () => {
       })
 
       // Act
-      await user.click(shipAnItemNowButton)
+      user.click(shipAnItemNowButton)
 
       // Assert
-      expect(screen.getByRole('heading', { level: 1 })).toHaveTextContent('confirmation-dialog')
+      await waitFor(() => {
+        expect(screen.getByRole('heading', { level: 1 })).toHaveTextContent('confirmation-dialog')
+      })
     })
 
     it('should Ship Item when user clicks on Confirm button', async () => {
@@ -302,13 +304,17 @@ describe('[component] - SubscriptionItem', () => {
       })
 
       // Act
-      await user.click(shipAnItemNowButton)
-      const confirmButton = screen.getByRole('button', { name: /confirm/i })
-      await user.click(confirmButton)
+      user.click(shipAnItemNowButton)
+      await waitFor(() => {
+        const confirmButton = screen.getByRole('button', { name: /confirm/i })
+        user.click(confirmButton)
+      })
 
       // Assert
-      const snackbar = screen.getByText('ordered-successfully')
-      expect(snackbar).toBeVisible()
+      await waitFor(() => {
+        const snackbar = screen.getByText('ordered-successfully')
+        expect(snackbar).toBeVisible()
+      })
     })
   })
 
@@ -321,10 +327,12 @@ describe('[component] - SubscriptionItem', () => {
       })
 
       // Act
-      await user.click(skipShipmentButton)
+      user.click(skipShipmentButton)
 
       // Assert
-      expect(screen.getByRole('heading', { level: 1 })).toHaveTextContent('confirmation-dialog')
+      await waitFor(() => {
+        expect(screen.getByRole('heading', { level: 1 })).toHaveTextContent('confirmation-dialog')
+      })
     })
 
     it('should Skip Shipment when user clicks on Confirm button', async () => {
@@ -335,16 +343,20 @@ describe('[component] - SubscriptionItem', () => {
       })
 
       // Act
-      await user.click(skipShipmentButton)
-      const confirmButton = screen.getByRole('button', { name: /confirm/i })
-      await user.click(confirmButton)
+      user.click(skipShipmentButton)
+      await waitFor(() => {
+        const confirmButton = screen.getByRole('button', { name: /confirm/i })
+        user.click(confirmButton)
+      })
 
       // Assert
-      const { nextOrderDate } = subscriptionGetters.getSubscriptionDetails(
-        subscriptionMock.subscription
-      )
-      const snackbar = screen.getByText('next-order-skip' + nextOrderDate)
-      expect(snackbar).toBeVisible()
+      await waitFor(() => {
+        const { nextOrderDate } = subscriptionGetters.getSubscriptionDetails(
+          subscriptionMock.subscription
+        )
+        const snackbar = screen.getByText('next-order-skip' + nextOrderDate)
+        expect(snackbar).toBeVisible()
+      })
     })
   })
 
@@ -357,10 +369,12 @@ describe('[component] - SubscriptionItem', () => {
       })
 
       // Act
-      await user.click(cancelSubscriptionButton)
+      user.click(cancelSubscriptionButton)
 
       // Assert
-      expect(screen.getByRole('heading', { level: 1 })).toHaveTextContent('confirmation-dialog')
+      await waitFor(() => {
+        expect(screen.getByRole('heading', { level: 1 })).toHaveTextContent('confirmation-dialog')
+      })
     })
 
     it('should cancel subscription when user clicks on Confirm button', async () => {
@@ -371,13 +385,17 @@ describe('[component] - SubscriptionItem', () => {
       })
 
       // Act
-      await user.click(cancelSubscriptionButton)
-      const confirmButton = screen.getByRole('button', { name: /confirm/i })
-      await user.click(confirmButton)
+      user.click(cancelSubscriptionButton)
+      await waitFor(() => {
+        const confirmButton = screen.getByRole('button', { name: /confirm/i })
+        user.click(confirmButton)
+      })
 
       // Assert
-      const snackbar = screen.getByText('subscription-cancelled-successfully')
-      expect(snackbar).toBeVisible()
+      await waitFor(() => {
+        const snackbar = screen.getByText('subscription-cancelled-successfully')
+        expect(snackbar).toBeVisible()
+      })
     })
   })
 
@@ -390,10 +408,12 @@ describe('[component] - SubscriptionItem', () => {
       })
 
       // Act
-      await user.click(pauseButton)
+      user.click(pauseButton)
 
       // Assert
-      expect(screen.getByRole('heading', { level: 1 })).toHaveTextContent('confirmation-dialog')
+      await waitFor(() => {
+        expect(screen.getByRole('heading', { level: 1 })).toHaveTextContent('confirmation-dialog')
+      })
     })
 
     it('should pause when user clicks on Confirm button', async () => {
@@ -404,13 +424,17 @@ describe('[component] - SubscriptionItem', () => {
       })
 
       // Act
-      await user.click(pauseButton)
-      const confirmButton = screen.getByRole('button', { name: /confirm/i })
-      await user.click(confirmButton)
+      user.click(pauseButton)
+      await waitFor(() => {
+        const confirmButton = screen.getByRole('button', { name: /confirm/i })
+        user.click(confirmButton)
+      })
 
       // Assert
-      const snackbar = screen.getByText('subscription-paused')
-      expect(snackbar).toBeVisible()
+      await waitFor(() => {
+        const snackbar = screen.getByText('subscription-paused')
+        expect(snackbar).toBeVisible()
+      })
     })
   })
 
@@ -423,12 +447,14 @@ describe('[component] - SubscriptionItem', () => {
       })
 
       // Act
-      await user.click(editFrequencyButton)
+      user.click(editFrequencyButton)
 
       // Assert
-      expect(screen.getByRole('heading', { level: 1 })).toHaveTextContent(
-        'edit-subscription-frequency-dialog'
-      )
+      await waitFor(() => {
+        expect(screen.getByRole('heading', { level: 1 })).toHaveTextContent(
+          'edit-subscription-frequency-dialog'
+        )
+      })
     })
 
     it('should save frequency when user clicks on Confirm button', async () => {
@@ -439,13 +465,17 @@ describe('[component] - SubscriptionItem', () => {
       })
 
       // Act
-      await user.click(editFrequencyButton)
-      const confirmButton = screen.getByRole('button', { name: /confirm/i })
-      await user.click(confirmButton)
+      user.click(editFrequencyButton)
+      await waitFor(() => {
+        const confirmButton = screen.getByRole('button', { name: /confirm/i })
+        user.click(confirmButton)
+      })
 
       // Assert
-      const snackbar = screen.getByText('subscription-frequency-updated-successfully')
-      expect(snackbar).toBeVisible()
+      await waitFor(() => {
+        const snackbar = screen.getByText('subscription-frequency-updated-successfully')
+        expect(snackbar).toBeVisible()
+      })
     })
 
     it('should close dialog when user clicks on Close button', async () => {
@@ -456,10 +486,12 @@ describe('[component] - SubscriptionItem', () => {
       })
 
       // Act
-      await user.click(editFrequencyButton)
+      user.click(editFrequencyButton)
 
-      const closeButton = screen.getByRole('button', { name: /close/i })
-      await user.click(closeButton)
+      await waitFor(() => {
+        const closeButton = screen.getByRole('button', { name: /close/i })
+        user.click(closeButton)
+      })
 
       // Assert
     })
@@ -474,10 +506,14 @@ describe('[component] - SubscriptionItem', () => {
       })
 
       // Act
-      await user.click(editOrderDateButton)
+      user.click(editOrderDateButton)
 
       // Assert
-      expect(screen.getByRole('heading', { level: 1 })).toHaveTextContent('edit-order-date-dialog')
+      await waitFor(() => {
+        expect(screen.getByRole('heading', { level: 1 })).toHaveTextContent(
+          'edit-order-date-dialog'
+        )
+      })
     })
 
     it('should save Order Date when user clicks on Confirm button', async () => {
@@ -488,13 +524,18 @@ describe('[component] - SubscriptionItem', () => {
       })
 
       // Act
-      await user.click(editOrderDateButton)
-      const confirmButton = screen.getByRole('button', { name: /confirm/i })
-      await user.click(confirmButton)
+      user.click(editOrderDateButton)
+
+      await waitFor(() => {
+        const confirmButton = screen.getByRole('button', { name: /confirm/i })
+        user.click(confirmButton)
+      })
 
       // Assert
-      const snackbar = screen.getByText('next-order-date01/01/2030')
-      expect(snackbar).toBeVisible()
+      await waitFor(() => {
+        const snackbar = screen.getByText('next-order-date01/01/2030')
+        expect(snackbar).toBeVisible()
+      })
     })
 
     it('should close dialog when user clicks on Close button', async () => {
@@ -505,10 +546,12 @@ describe('[component] - SubscriptionItem', () => {
       })
 
       // Act
-      await user.click(editOrderDateButton)
+      user.click(editOrderDateButton)
 
-      const closeButton = screen.getByRole('button', { name: /close/i })
-      await user.click(closeButton)
+      await waitFor(() => {
+        const closeButton = screen.getByRole('button', { name: /close/i })
+        user.click(closeButton)
+      })
 
       // Assert
     })
@@ -532,30 +575,34 @@ describe('[component] - SubscriptionItem', () => {
       })
 
       // Act
-      await user.click(editBillingInformationButton)
-      const addNewAddressButton = screen.getByRole('button', {
-        name: /add-new-address/i,
+      user.click(editBillingInformationButton)
+
+      await waitFor(() => {
+        const addNewAddressButton = screen.getByRole('button', {
+          name: /add-new-address/i,
+        })
+        expect(addNewAddressButton).toBeVisible()
       })
 
       // Assert
       const kiboSelectMock = screen.getByRole('button', { expanded: false })
-
       expect(kiboSelectMock).toBeVisible()
-      expect(addNewAddressButton).toBeVisible()
 
-      await user.click(kiboSelectMock)
+      user.click(kiboSelectMock)
 
-      const cards: CardCollection = customerAccountCardsMock.customerAccountCards
-      const contacts: CustomerContactCollection = userAddressMock.customerAccountContacts
+      await waitFor(() => {
+        const cards: CardCollection = customerAccountCardsMock.customerAccountCards
+        const contacts: CustomerContactCollection = userAddressMock.customerAccountContacts
 
-      const savedCardsAndContacts = userGetters.getSavedCardsAndBillingDetails(cards, contacts)
-      const savedCards = savedCardsAndContacts?.map((card: PaymentAndBilling) =>
-        subscriptionGetters.getFormattedSavedCardBillingAddress('card-ending-in', card)
-      )
+        const savedCardsAndContacts = userGetters.getSavedCardsAndBillingDetails(cards, contacts)
+        const savedCards = savedCardsAndContacts?.map((card: PaymentAndBilling) =>
+          subscriptionGetters.getFormattedSavedCardBillingAddress('card-ending-in', card)
+        )
 
-      savedCards.forEach((card) => {
-        const cardWithBillingAddress = screen.getByText(getRegExp(card))
-        expect(cardWithBillingAddress).toBeVisible()
+        savedCards.forEach((card) => {
+          const cardWithBillingAddress = screen.getByText(getRegExp(card))
+          expect(cardWithBillingAddress).toBeVisible()
+        })
       })
     })
 
@@ -567,15 +614,19 @@ describe('[component] - SubscriptionItem', () => {
       })
 
       // Act
-      await user.click(editBillingInformationButton)
-      const addNewAddressButton = screen.getByRole('button', {
-        name: /add-new-address/i,
+      user.click(editBillingInformationButton)
+      await waitFor(() => {
+        const addNewAddressButton = screen.getByRole('button', {
+          name: /add-new-address/i,
+        })
+        user.click(addNewAddressButton)
       })
-      await user.click(addNewAddressButton)
 
       // Assert
-      const editBillingAddress = screen.getByText('edit-billing-address-mock')
-      expect(editBillingAddress).toBeVisible()
+      await waitFor(() => {
+        const editBillingAddress = screen.getByText('edit-billing-address-mock')
+        expect(editBillingAddress).toBeVisible()
+      })
     })
 
     it('should save Billing Address when user enters new address and clicks on save button', async () => {
@@ -586,17 +637,23 @@ describe('[component] - SubscriptionItem', () => {
       })
 
       // Act
-      await user.click(editBillingInformationButton)
+      user.click(editBillingInformationButton)
 
-      const addNewAddressButton = screen.getByRole('button', { name: /add-new-address/i })
-      await user.click(addNewAddressButton)
+      await waitFor(() => {
+        const addNewAddressButton = screen.getByRole('button', { name: /add-new-address/i })
+        user.click(addNewAddressButton)
+      })
 
-      const confirmButton = screen.getByRole('button', { name: /confirm/i })
-      await user.click(confirmButton)
+      await waitFor(() => {
+        const confirmButton = screen.getByRole('button', { name: /confirm/i })
+        user.click(confirmButton)
+      })
 
       // Assert
-      const snackbar = screen.getByText('address-updated-successfully')
-      expect(snackbar).toBeVisible()
+      await waitFor(() => {
+        const snackbar = screen.getByText('address-updated-successfully')
+        expect(snackbar).toBeVisible()
+      })
     })
 
     it('should save Billing Address when user selects existing Billing Address', async () => {
@@ -607,27 +664,34 @@ describe('[component] - SubscriptionItem', () => {
       })
 
       // Act
-      await user.click(editBillingInformationButton)
+      user.click(editBillingInformationButton)
 
-      const kiboSelectMock = screen.getByRole('button', { expanded: false })
-      expect(kiboSelectMock).toBeVisible()
-      await user.click(kiboSelectMock)
+      await waitFor(() => {
+        const kiboSelectMock = screen.getByRole('button', { expanded: false })
+        expect(kiboSelectMock).toBeVisible()
+        user.click(kiboSelectMock)
+      })
 
-      const cards: CardCollection = customerAccountCardsMock.customerAccountCards
-      const contacts: CustomerContactCollection = userAddressMock.customerAccountContacts
+      await waitFor(() => {
+        const cards: CardCollection = customerAccountCardsMock.customerAccountCards
+        const contacts: CustomerContactCollection = userAddressMock.customerAccountContacts
 
-      const savedCardsAndContacts = userGetters.getSavedCardsAndBillingDetails(cards, contacts)
-      const savedCards = savedCardsAndContacts?.map((card: PaymentAndBilling) =>
-        subscriptionGetters.getFormattedSavedCardBillingAddress('card-ending-in', card)
-      )
+        const savedCardsAndContacts = userGetters.getSavedCardsAndBillingDetails(cards, contacts)
+        const savedCards = savedCardsAndContacts?.map((card: PaymentAndBilling) =>
+          subscriptionGetters.getFormattedSavedCardBillingAddress('card-ending-in', card)
+        )
 
-      const cardWithBillingAddress = screen.getByText(getRegExp(savedCards[0]))
-      expect(cardWithBillingAddress).toBeVisible()
-      await user.click(cardWithBillingAddress)
+        const cardWithBillingAddress = screen.getByText(getRegExp(savedCards[0]))
+        expect(cardWithBillingAddress).toBeVisible()
+
+        user.click(cardWithBillingAddress)
+      })
 
       // Assert
-      const snackbar = screen.getByText('address-updated-successfully')
-      expect(snackbar).toBeVisible()
+      await waitFor(() => {
+        const snackbar = screen.getByText('address-updated-successfully')
+        expect(snackbar).toBeVisible()
+      })
     })
   })
 
@@ -640,24 +704,29 @@ describe('[component] - SubscriptionItem', () => {
       })
 
       // Act
-      await user.click(editShippingAddressButton)
-      const addNewAddressButton = screen.getByRole('button', {
-        name: /add-new-address/i,
+      user.click(editShippingAddressButton)
+      await waitFor(() => {
+        const addNewAddressButton = screen.getByRole('button', {
+          name: /add-new-address/i,
+        })
+
+        expect(addNewAddressButton).toBeVisible()
       })
 
       // Assert
       const kiboSelectMock = screen.getByRole('button', { expanded: false })
       expect(kiboSelectMock).toBeVisible()
-      expect(addNewAddressButton).toBeVisible()
 
-      await user.click(kiboSelectMock)
+      user.click(kiboSelectMock)
 
-      Common.args?.fulfillmentInfoList?.map((fulfillmentInfo) => {
-        const fulfillmentOption = screen.getByRole('option', {
-          name: new RegExp(String(fulfillmentInfo.formattedAddress)),
+      await waitFor(() => {
+        Common.args?.fulfillmentInfoList?.map((fulfillmentInfo) => {
+          const fulfillmentOption = screen.getByRole('option', {
+            name: new RegExp(String(fulfillmentInfo.formattedAddress)),
+          })
+
+          expect(fulfillmentOption).toBeVisible()
         })
-
-        expect(fulfillmentOption).toBeVisible()
       })
     })
 
@@ -669,16 +738,20 @@ describe('[component] - SubscriptionItem', () => {
       })
 
       // Act
-      await user.click(editShippingAddressButton)
+      user.click(editShippingAddressButton)
 
-      const addNewAddressButton = screen.getByRole('button', {
-        name: /add-new-address/i,
+      await waitFor(() => {
+        const addNewAddressButton = screen.getByRole('button', {
+          name: /add-new-address/i,
+        })
+        expect(addNewAddressButton).toBeVisible()
+        user.click(addNewAddressButton)
       })
-      expect(addNewAddressButton).toBeVisible()
-      await user.click(addNewAddressButton)
 
       // Assert
-      expect(screen.getByRole('heading', { level: 1 })).toHaveTextContent('address-form-dialog')
+      await waitFor(() => {
+        expect(screen.getByRole('heading', { level: 1 })).toHaveTextContent('address-form-dialog')
+      })
     })
 
     it('should save Shipping Address when user enters new address and clicks on save button', async () => {
@@ -689,20 +762,27 @@ describe('[component] - SubscriptionItem', () => {
       })
 
       // Act
-      await user.click(editShippingAddressButton)
+      user.click(editShippingAddressButton)
 
-      const addNewAddressButton = screen.getByRole('button', {
-        name: /add-new-address/i,
+      await waitFor(() => {
+        const addNewAddressButton = screen.getByRole('button', {
+          name: /add-new-address/i,
+        })
+        expect(addNewAddressButton).toBeVisible()
+
+        user.click(addNewAddressButton)
       })
-      expect(addNewAddressButton).toBeVisible()
 
-      await user.click(addNewAddressButton)
-      const confirmButton = screen.getByRole('button', { name: /confirm/i })
-      await user.click(confirmButton)
+      await waitFor(() => {
+        const confirmButton = screen.getByRole('button', { name: /confirm/i })
+        user.click(confirmButton)
+      })
 
       // Assert
-      const snackbar = screen.getByText('address-updated-successfully')
-      expect(snackbar).toBeVisible()
+      await waitFor(() => {
+        const snackbar = screen.getByText('address-updated-successfully')
+        expect(snackbar).toBeVisible()
+      })
     })
 
     it('should save Shipping Address when user selects existing Shipping Address', async () => {
@@ -713,26 +793,32 @@ describe('[component] - SubscriptionItem', () => {
       })
 
       // Act
-      await user.click(editShippingAddressButton)
+      user.click(editShippingAddressButton)
 
-      const kiboSelectMock = screen.getByRole('button', { expanded: false })
-      await user.click(kiboSelectMock)
-
-      const formattedAddress =
-        Common.args &&
-        Common.args?.fulfillmentInfoList &&
-        Common.args?.fulfillmentInfoList[1] &&
-        Common.args.fulfillmentInfoList[1]?.formattedAddress
-
-      const fulfillmentOption = screen.getByRole('option', {
-        name: new RegExp(String(formattedAddress)),
+      await waitFor(() => {
+        const kiboSelectMock = screen.getByRole('button', { expanded: false })
+        user.click(kiboSelectMock)
       })
 
-      await user.click(fulfillmentOption)
+      await waitFor(() => {
+        const formattedAddress =
+          Common.args &&
+          Common.args?.fulfillmentInfoList &&
+          Common.args?.fulfillmentInfoList[1] &&
+          Common.args.fulfillmentInfoList[1]?.formattedAddress
+
+        const fulfillmentOption = screen.getByRole('option', {
+          name: new RegExp(String(formattedAddress)),
+        })
+
+        user.click(fulfillmentOption)
+      })
 
       // Assert
-      const snackbar = screen.getByText('address-updated-successfully')
-      expect(snackbar).toBeVisible()
+      await waitFor(() => {
+        const snackbar = screen.getByText('address-updated-successfully')
+        expect(snackbar).toBeVisible()
+      })
     })
   })
 })

@@ -1,7 +1,7 @@
 import React, { ReactNode } from 'react'
 
 import { composeStories } from '@storybook/testing-react'
-import { render, screen } from '@testing-library/react'
+import { render, screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { graphql } from 'msw'
 
@@ -132,9 +132,11 @@ describe('[component] - StandardShipCheckout template', () => {
       })
     )
     render(<Common {...Common?.args} />)
-    await user.click(screen.getByTestId(/apply-coupon-button/))
+    user.click(screen.getByTestId(/apply-coupon-button/))
 
-    expect(screen.getByTestId('promoError')).toHaveTextContent('Not a valid coupon')
+    await waitFor(() => {
+      expect(screen.getByTestId('promoError')).toHaveTextContent('Not a valid coupon')
+    })
   })
 
   it('should handle handleRemoveCouponCode', async () => {
@@ -153,9 +155,12 @@ describe('[component] - StandardShipCheckout template', () => {
         )
       })
     )
-    await user.click(screen.getByTestId(/remove-coupon-button/))
 
-    expect(screen.getByTestId('coupon-count')).toHaveTextContent('1')
+    user.click(screen.getByTestId(/remove-coupon-button/))
+
+    await waitFor(() => {
+      expect(screen.getByTestId('coupon-count')).toHaveTextContent('1')
+    })
   })
 
   it('should handle updateCheckoutPersonalInfo', async () => {
@@ -174,8 +179,11 @@ describe('[component] - StandardShipCheckout template', () => {
         )
       })
     )
-    await user.click(screen.getByTestId(/updateCheckoutPersonalInfo/))
 
-    expect(screen.getByTestId('updated-email')).toHaveTextContent('john.doe@gmail.com')
+    user.click(screen.getByTestId(/updateCheckoutPersonalInfo/))
+
+    await waitFor(() => {
+      expect(screen.getByTestId('updated-email')).toHaveTextContent('john.doe@gmail.com')
+    })
   })
 })
