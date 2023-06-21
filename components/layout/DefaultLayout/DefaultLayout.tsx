@@ -76,13 +76,19 @@ const DefaultLayout = ({ pageProps, children }: { pageProps: any; children: Reac
                     link: '/order-status',
                     text: 'order-status',
                   },
+                  {
+                    link: '/wishlist',
+                    text: 'wishlist',
+                  },
                 ]}
                 categoriesTree={pageProps.categoriesTree || []}
                 isSticky={true}
               />
               <DialogRoot />
               <SnackbarRoot />
-              <Container maxWidth={'xl'}>{children}</Container>
+              <Container maxWidth={'xl'} sx={{ mt: 4 }}>
+                {children}
+              </Container>
               <Footer content={pageProps.footer} />
             </HeaderContextProvider>
           </AuthContextProvider>
