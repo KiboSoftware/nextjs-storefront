@@ -5,7 +5,7 @@ import { ComponentStory, ComponentMeta } from '@storybook/react'
 import MyAccountTemplate from './MyAccountTemplate'
 
 export default {
-  title: 'MyAccountTemplate/MyAccountTemplate',
+  title: 'Page Templates/MyAccountTemplate',
   component: MyAccountTemplate,
   parameters: {
     layout: 'fullscreen',

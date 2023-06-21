@@ -6,7 +6,7 @@ import OrderHistoryTemplate from './OrderHistoryTemplate'
 
 // Common
 export default {
-  title: 'OrderHistoryTemplate/OrderHistoryTemplate',
+  title: 'Page Templates/OrderHistoryTemplate',
   component: OrderHistoryTemplate,
   argTypes: {
     onAccountTitleClick: { action: 'onAccountTitleClick' },
