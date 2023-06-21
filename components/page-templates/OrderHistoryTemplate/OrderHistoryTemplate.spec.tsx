@@ -37,23 +37,22 @@ jest.mock('@mui/material', () => ({
 describe('[component] - OrderHistoryTemplate', () => {
   it('should render component', async () => {
     render(<Common {...Common?.args} />)
-    await waitFor(async () => {
-      const orders = orderCollection.orders
-      const itemsLength = orders.items ? orders.items.length : 0
 
-      const accountTitleText = screen.getByText('my-account')
-      const orderHistoryText = screen.getByText('order-history')
-      const filterOrderText = screen.getByText('filter-orders')
-      const filterTiles = screen.getByTestId('filter-tiles-mock')
-      const orderHistoryItem = screen.getAllByTestId('order-history-item-mock')
-      const viewOrderDetails = screen.queryByTestId('view-order-details-mock')
+    const orders = orderCollection.orders
+    const itemsLength = orders.items ? orders.items.length : 0
 
-      expect(accountTitleText).toBeVisible()
-      await waitFor(() => expect(orderHistoryText).toBeVisible())
-      await waitFor(() => expect(filterOrderText).toBeVisible())
-      await waitFor(() => expect(filterTiles).toBeVisible())
-      await waitFor(() => expect(orderHistoryItem).toHaveLength(itemsLength))
-      await waitFor(() => expect(viewOrderDetails).not.toBeInTheDocument())
-    })
+    const accountTitleText = screen.getByText('my-account')
+    const orderHistoryText = screen.getByText('order-history')
+    const filterOrderText = screen.getByText('filter-orders')
+    const filterTiles = screen.getByTestId('filter-tiles-mock')
+    const orderHistoryItem = await screen.findAllByTestId('order-history-item-mock')
+    const viewOrderDetails = screen.queryByTestId('view-order-details-mock')
+
+    expect(accountTitleText).toBeVisible()
+    await waitFor(() => expect(orderHistoryText).toBeVisible())
+    await waitFor(() => expect(filterOrderText).toBeVisible())
+    await waitFor(() => expect(filterTiles).toBeVisible())
+    await waitFor(() => expect(orderHistoryItem).toHaveLength(itemsLength))
+    await waitFor(() => expect(viewOrderDetails).not.toBeInTheDocument())
   })
 })

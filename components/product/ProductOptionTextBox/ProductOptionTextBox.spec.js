@@ -1,5 +1,5 @@
 import { composeStories } from '@storybook/testing-react'
-import { fireEvent, render, screen } from '@testing-library/react'
+import { fireEvent, render, screen, waitFor } from '@testing-library/react'
 import '@testing-library/jest-dom'
 import userEvent from '@testing-library/user-event'
 
@@ -29,10 +29,15 @@ describe('[component] ProductOptionTextBox component', () => {
     const { user } = setup()
 
     const textbox = screen.getByRole('textbox')
-    await user.type(textbox, 'Test')
+
+    user.type(textbox, 'Test')
     fireEvent.blur(textbox)
 
-    expect(textbox).toHaveValue('Test')
-    expect(mockedOnBlur).toHaveBeenCalled()
+    await waitFor(() => {
+      expect(textbox).toHaveValue('Test')
+    })
+    await waitFor(() => {
+      expect(mockedOnBlur).toHaveBeenCalled()
+    })
   })
 })

@@ -1,7 +1,7 @@
 import React from 'react'
 
 import { composeStories } from '@storybook/testing-react'
-import { screen, cleanup, waitFor } from '@testing-library/react'
+import { screen, cleanup, waitFor, act } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 
 // eslint-disable-next-line import/order
@@ -185,10 +185,16 @@ describe('[components] PaymentStep', () => {
         expect(screen.queryByTestId('card-form-mock')).not.toBeInTheDocument()
         expect(screen.queryByTestId('address-form-mock')).not.toBeInTheDocument()
 
-        await user.click(creditCardPaymentMethodRadio)
+        act(() => {
+          user.click(creditCardPaymentMethodRadio)
+        })
 
-        expect(await screen.findByTestId('card-form-mock')).toBeVisible()
-        expect(await screen.findByTestId('address-form-mock')).toBeVisible()
+        await waitFor(async () => {
+          expect(await screen.findByTestId('card-form-mock')).toBeVisible()
+        })
+        await waitFor(async () => {
+          expect(await screen.findByTestId('address-form-mock')).toBeVisible()
+        })
       })
 
       it('should add new card and billing address and that should be selected by default', async () => {
@@ -232,15 +238,27 @@ describe('[components] PaymentStep', () => {
           name: 'Credit / Debit Card',
         })
 
-        await user.click(creditCardPaymentMethodRadio)
+        act(() => {
+          user.click(creditCardPaymentMethodRadio)
+        })
 
-        expect(await screen.findByTestId('card-form-mock')).toBeVisible()
-        expect(await screen.findByTestId('address-form-mock')).toBeVisible()
+        await waitFor(async () => {
+          expect(await screen.findByTestId('card-form-mock')).toBeVisible()
+        })
+        await waitFor(async () => {
+          expect(await screen.findByTestId('address-form-mock')).toBeVisible()
+        })
 
-        await user.click(screen.getByRole('button', { name: /cancel/i }))
+        act(() => {
+          user.click(screen.getByRole('button', { name: /cancel/i }))
+        })
 
-        expect(screen.queryByTestId('card-form-mock')).not.toBeInTheDocument()
-        expect(screen.queryByTestId('address-form-mock')).not.toBeInTheDocument()
+        await waitFor(() => {
+          expect(screen.queryByTestId('card-form-mock')).not.toBeInTheDocument()
+        })
+        await waitFor(() => {
+          expect(screen.queryByTestId('address-form-mock')).not.toBeInTheDocument()
+        })
       })
 
       it('should display save-payment-method and billing-address-same-as-shipping checkbox', async () => {
@@ -250,20 +268,26 @@ describe('[components] PaymentStep', () => {
           userId: 0,
         })
 
-        await user.click(
-          await screen.findByRole('radio', {
-            name: 'Credit / Debit Card',
-          })
-        )
-        const savePaymentMethodCheckbox = screen.getByRole('checkbox', {
-          name: 'save-payment-method-checkbox',
+        const cardOptions = await screen.findByRole('radio', {
+          name: 'Credit / Debit Card',
         })
-        const BillingSameAsShippingCheckbox = screen.getByRole('checkbox', {
-          name: 'billing-address-same-as-shipping',
+        act(() => {
+          user.click(cardOptions)
         })
 
-        expect(savePaymentMethodCheckbox).toBeInTheDocument()
-        expect(BillingSameAsShippingCheckbox).toBeInTheDocument()
+        await waitFor(() => {
+          const savePaymentMethodCheckbox = screen.getByRole('checkbox', {
+            name: 'save-payment-method-checkbox',
+          })
+          expect(savePaymentMethodCheckbox).toBeInTheDocument()
+        })
+
+        await waitFor(() => {
+          const BillingSameAsShippingCheckbox = screen.getByRole('checkbox', {
+            name: 'billing-address-same-as-shipping',
+          })
+          expect(BillingSameAsShippingCheckbox).toBeInTheDocument()
+        })
       })
     })
 
@@ -376,13 +400,13 @@ describe('[components] PaymentStep', () => {
           name: /handlePaymentCardSelection/,
         })
 
-        await user.click(paymentCardSelectionButtons[0])
+        act(() => {
+          user.click(paymentCardSelectionButtons[0])
+        })
 
-        const selectedIds = await screen.findAllByTestId('selectedPaymentRadio')
-
-        const cardId = getAccountCardId()
-
-        await waitFor(() => {
+        await waitFor(async () => {
+          const selectedIds = await screen.findAllByTestId('selectedPaymentRadio')
+          const cardId = getAccountCardId()
           expect(selectedIds[0]?.textContent).toBe(cardId)
         })
       })

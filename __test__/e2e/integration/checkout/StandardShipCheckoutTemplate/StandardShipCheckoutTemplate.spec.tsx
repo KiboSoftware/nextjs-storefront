@@ -421,7 +421,7 @@ const handleReviewStep = async (user: any) => {
 
 describe('[integration] StandardShipCheckoutTemplate', () => {
   describe('Authenticated user with no checkout details', () => {
-    it.only('should handle standard checkout flow', async () => {
+    it('should handle standard checkout flow', async () => {
       const { user } = setup({
         isAuthenticated: true,
         userId: 1012,

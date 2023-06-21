@@ -1,4 +1,4 @@
-import { renderHook } from '@testing-library/react-hooks'
+import { renderHook } from '@testing-library/react'
 
 import { useConfigureProduct } from './useConfigureProduct'
 import { configuredProductMock } from '@/__mocks__/stories/configuredProductMock'

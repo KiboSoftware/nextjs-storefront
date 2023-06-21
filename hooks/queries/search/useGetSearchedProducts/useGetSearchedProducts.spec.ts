@@ -1,4 +1,4 @@
-import { renderHook } from '@testing-library/react-hooks'
+import { renderHook, waitFor } from '@testing-library/react'
 
 import { useGetSearchedProducts } from './useGetSearchedProducts'
 import { productSearchResultMock } from '@/__mocks__/stories/productSearchResultMock'
@@ -6,7 +6,7 @@ import { createQueryClientWrapper } from '@/__test__/utils/renderWithQueryClient
 
 describe('[hooks] useGetSearchedProducts', () => {
   it('should return product search result when facet filters is selected', async () => {
-    const { result, waitFor } = renderHook(
+    const { result } = renderHook(
       () =>
         useGetSearchedProducts(
           { categoryCode: '41', filters: ['Tenant~color:black,Tenant~color:blue'] },
@@ -17,7 +17,6 @@ describe('[hooks] useGetSearchedProducts', () => {
       }
     )
 
-    await waitFor(() => result.current.isSuccess)
-    expect(result.current.data).toEqual(productSearchResultMock)
+    await waitFor(() => expect(result.current.data).toEqual(productSearchResultMock))
   })
 })

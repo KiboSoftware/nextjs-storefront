@@ -2,7 +2,7 @@ import React from 'react'
 
 import '@testing-library/jest-dom'
 import { composeStories } from '@storybook/testing-react'
-import { render, screen } from '@testing-library/react'
+import { render, screen, act, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 
 import * as stories from '@/components/cart/CartItem/CartItem.stories'
@@ -37,12 +37,22 @@ describe('[components] - CartItem Integration', () => {
     const productName = screen.getByText(name)
     const fulfillmentOptions = screen.getByTestId('fulfillmentOptions')
     const increaseButton = screen.getByRole('button', { name: 'increase' })
-    await user.click(increaseButton)
+
+    act(() => {
+      user.click(increaseButton)
+    })
+
     const decreaseButton = screen.getByRole('button', { name: 'decrease' })
-    await user.click(decreaseButton)
+    act(() => {
+      user.click(decreaseButton)
+    })
+
     const actionsIcon = screen.getByRole('button', { name: 'more' })
-    await user.click(actionsIcon)
-    // // assert
+    act(() => {
+      user.click(actionsIcon)
+    })
+
+    // assert
     expect(img).toBeInTheDocument()
     expect(fulfillmentOptions).toBeInTheDocument()
     expect(productName).toBeInTheDocument()
@@ -56,14 +66,24 @@ describe('[components] - CartItem Integration', () => {
     const radio = screen.getByRole('radio', {
       name: /Pickup/i,
     })
-    await user.click(radio)
-    expect(mockOnFulfillmentOptionChange).toBeCalled()
+    act(() => {
+      user.click(radio)
+    })
+
+    await waitFor(() => {
+      expect(mockOnFulfillmentOptionChange).toBeCalled()
+    })
   })
 
   it('should handle Change Store', async () => {
     const { user, mockOnProductPickupLocation } = setup()
     const store = screen.getByText(/change-store/i)
-    await user.click(store)
-    expect(mockOnProductPickupLocation).toBeCalled()
+    act(() => {
+      user.click(store)
+    })
+
+    await waitFor(() => {
+      expect(mockOnProductPickupLocation).toBeCalled()
+    })
   })
 })

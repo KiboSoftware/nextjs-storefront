@@ -2,7 +2,7 @@ import React from 'react'
 
 import '@testing-library/jest-dom'
 import { composeStories } from '@storybook/testing-react'
-import { render, screen } from '@testing-library/react'
+import { render, screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 
 import * as stories from './Facet.stories'
@@ -93,18 +93,32 @@ describe('[components] - FacetItem', () => {
     expect(viewMore).toBeInTheDocument()
     expect(viewLess).not.toBeInTheDocument()
 
-    if (viewMore) await user.click(viewMore)
-    viewMore = screen.queryByText(/view-more/i, { selector: 'button' })
-    viewLess = screen.queryByText(/view-less/i, { selector: 'button' })
+    if (viewMore) {
+      user.click(viewMore as HTMLElement)
 
-    expect(viewMore).not.toBeInTheDocument()
-    expect(viewLess).toBeInTheDocument()
+      await waitFor(() => {
+        viewMore = screen.queryByText(/view-more/i, { selector: 'button' })
+        expect(viewMore).not.toBeInTheDocument()
+      })
 
-    if (viewLess) await user.click(viewLess)
-    viewMore = screen.getByText(/view-more/i, { selector: 'button' })
-    viewLess = screen.queryByText(/view-less/i, { selector: 'button' })
+      await waitFor(() => {
+        viewLess = screen.queryByText(/view-less/i, { selector: 'button' })
+        expect(viewLess).toBeInTheDocument()
+      })
+    }
 
-    expect(viewMore).toBeInTheDocument()
-    expect(viewLess).not.toBeInTheDocument()
+    if (viewLess) {
+      user.click(viewLess as HTMLElement)
+
+      await waitFor(() => {
+        viewMore = screen.getByText(/view-more/i, { selector: 'button' })
+        expect(viewMore).toBeInTheDocument()
+      })
+
+      await waitFor(() => {
+        viewLess = screen.queryByText(/view-less/i, { selector: 'button' })
+        expect(viewLess).not.toBeInTheDocument()
+      })
+    }
   })
 })

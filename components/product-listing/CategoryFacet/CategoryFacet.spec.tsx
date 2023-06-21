@@ -2,7 +2,7 @@ import React from 'react'
 
 import '@testing-library/jest-dom'
 import { composeStories } from '@storybook/testing-react'
-import { render, screen } from '@testing-library/react'
+import { render, screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 
 import * as stories from './CategoryFacet.stories' // import all stories from the stories file
@@ -67,7 +67,9 @@ describe('[component] - CategoryFacet', () => {
     )
 
     const viewMoreButton = screen.getByRole('button', { name: /view-more/i })
-    await user.click(viewMoreButton)
+
+    user.click(viewMoreButton)
+
     const childrenCategoriesLabelsAfterClick =
       CategoryFacetDesktop?.args?.categoryFacet?.childrenCategories?.map(
         (category) => category.label
@@ -77,19 +79,22 @@ describe('[component] - CategoryFacet', () => {
       childrenCategoriesLabelsAfterClick.join('|'),
       'i'
     )
-    const childrenCategoriesLabelsListAfterClick = screen.getAllByText(
-      childrenCategoriesLabelsRegexAfterClick
-    )
 
-    expect(childrenCategoriesLabelsListAfterClick).toHaveLength(
-      CategoryFacetDesktop.args?.categoryFacet?.childrenCategories?.length || 0
-    )
+    await waitFor(() => {
+      const childrenCategoriesLabelsListAfterClick = screen.getAllByText(
+        childrenCategoriesLabelsRegexAfterClick
+      )
 
-    childrenCategoriesLabelsListAfterClick?.map((childrenCategory) => {
-      const categoryCode = CategoryFacetDesktop?.args?.categoryFacet?.childrenCategories?.find(
-        (category) => childrenCategory.textContent?.includes(category?.label as string)
-      )?.value
-      expect(childrenCategory).toHaveAttribute('href', `/category/${categoryCode}`)
+      expect(childrenCategoriesLabelsListAfterClick).toHaveLength(
+        CategoryFacetDesktop.args?.categoryFacet?.childrenCategories?.length || 0
+      )
+
+      childrenCategoriesLabelsListAfterClick?.map((childrenCategory) => {
+        const categoryCode = CategoryFacetDesktop?.args?.categoryFacet?.childrenCategories?.find(
+          (category) => childrenCategory.textContent?.includes(category?.label as string)
+        )?.value
+        expect(childrenCategory).toHaveAttribute('href', `/category/${categoryCode}`)
+      })
     })
   })
 

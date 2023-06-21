@@ -60,11 +60,19 @@ describe('[component] - Category', () => {
     const sortingValuesRegex = new RegExp(sortingValues?.join('|'), 'i')
     const selectButton = screen.getByRole('button', { name: sortingValues[0] })
 
-    await user.click(selectButton)
-    const listbox = within(screen.getByRole('listbox'))
-    const listValues = listbox.getAllByText(sortingValuesRegex)
+    user.click(selectButton)
+
+    await waitFor(() => {
+      const listbox = within(screen.getByRole('listbox'))
+      const listValues = listbox.getAllByText(sortingValuesRegex)
+      expect(listValues.map((list) => list.textContent)).toEqual(sortingValues)
+    })
+
     const totalResults = screen.getByText(/results/i)
+    expect(totalResults).toBeInTheDocument()
+
     const itemsCount = screen.getByText(/products-to-show/i)
+    expect(itemsCount).toBeInTheDocument()
 
     expect(breadCrumbComponent).toBeInTheDocument()
     expect(header).toHaveTextContent(Category.args?.productListingHeader || '')
@@ -73,9 +81,6 @@ describe('[component] - Category', () => {
     expect(categoryFacetComponent).toBeInTheDocument()
     expect(filtersFacetComponent).toBeInTheDocument()
     expect(showMoreButton).toBeVisible()
-    expect(listValues.map((list) => list.textContent)).toEqual(sortingValues)
-    expect(totalResults).toBeInTheDocument()
-    expect(itemsCount).toBeInTheDocument()
   })
 
   it('should call onPaginationChange when user clicks on show more button', async () => {

@@ -1,4 +1,4 @@
-import { renderHook } from '@testing-library/react-hooks'
+import { renderHook, waitFor, act } from '@testing-library/react'
 
 import { useUpdateCartItem } from './useUpdateCartItem'
 import { cartItemMock } from '@/__mocks__/stories/cartItemMock'
@@ -8,20 +8,19 @@ import type { CrCartItemInput } from '@/lib/gql/types'
 
 describe('[hooks] useUpdateCartItem', () => {
   it('should use useUpdateCartItem for updateCartItem', async () => {
-    renderHook(
-      async () => {
-        const { updateCartItem } = useUpdateCartItem()
+    const { result } = renderHook(() => useUpdateCartItem(), {
+      wrapper: createQueryClientWrapper(),
+    })
 
-        const updateResponse = await updateCartItem.mutateAsync({
-          cartItemId: '1beef214158842d7a305ae68009d4d4c',
-          cartItemInput: cartItemMock as CrCartItemInput,
-        })
+    act(() => {
+      result.current.updateCartItem.mutate({
+        cartItemId: '1beef214158842d7a305ae68009d4d4c',
+        cartItemInput: cartItemMock as CrCartItemInput,
+      })
+    })
 
-        expect(updateResponse).toStrictEqual(cartItemMock)
-      },
-      {
-        wrapper: createQueryClientWrapper(),
-      }
-    )
+    await waitFor(() => {
+      expect(result.current.updateCartItem.data).toEqual(cartItemMock)
+    })
   })
 })

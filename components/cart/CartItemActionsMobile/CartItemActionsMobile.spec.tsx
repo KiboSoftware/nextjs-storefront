@@ -1,7 +1,7 @@
 import React from 'react'
 
 import { composeStories } from '@storybook/testing-react'
-import { render, screen } from '@testing-library/react'
+import { render, screen, act, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 
 import * as stories from './CartItemActionsMobile.stories' // import all stories from the stories file
@@ -12,7 +12,9 @@ describe('[component] - CartItemActionsMobile', () => {
   const setup = () => {
     const onMenuItemSelectionMock = jest.fn()
     const user = userEvent.setup()
+
     render(<CartAction onMenuItemSelection={onMenuItemSelectionMock} />)
+
     return { onMenuItemSelectionMock, user }
   }
 
@@ -27,36 +29,50 @@ describe('[component] - CartItemActionsMobile', () => {
     const { user } = setup()
 
     const buttonElement = screen.getByRole('button')
-    await user.click(buttonElement)
+    act(() => {
+      user.click(buttonElement)
+    })
 
-    const items = screen.getAllByRole('menuitem')
+    const items = await screen.findAllByRole('menuitem')
     const menuItems = items.map((item) => item.textContent)
 
-    expect(menuItems).toStrictEqual(CartAction?.args?.actions)
+    await waitFor(() => {
+      expect(menuItems).toStrictEqual(CartAction?.args?.actions)
+    })
   })
 
   it('should call onMenuItemClick function when user selects any menu item', async () => {
     const { onMenuItemSelectionMock, user } = setup()
     const buttonElement = screen.getByRole('button')
-    await user.click(buttonElement)
+    act(() => {
+      user.click(buttonElement)
+    })
 
-    const items = screen.getAllByRole('menuitem')
+    const items = await screen.findAllByRole('menuitem')
     items[0].click()
 
-    expect(onMenuItemSelectionMock).toHaveBeenCalledWith(items[0].textContent)
+    await waitFor(() => {
+      expect(onMenuItemSelectionMock).toHaveBeenCalledWith(items[0].textContent)
+    })
   })
 
   it('should hide popover menu when user selects menu item', async () => {
     const { user } = setup()
     const buttonElement = screen.getByRole('button')
-    await user.click(buttonElement)
+    act(() => {
+      user.click(buttonElement)
+    })
 
-    const menu = screen.getByRole('menu')
-    const menuItems = screen.getAllByRole('menuitem')
+    const menu = await screen.findByRole('menu')
+    const menuItems = await screen.findAllByRole('menuitem')
 
     const menuItem = menuItems[0]
-    await user.click(menuItem)
+    act(() => {
+      user.click(menuItem)
+    })
 
-    expect(menu).not.toBeVisible()
+    await waitFor(() => {
+      expect(menu).not.toBeVisible()
+    })
   })
 })

@@ -1,4 +1,4 @@
-import { renderHook } from '@testing-library/react-hooks'
+import { renderHook } from '@testing-library/react'
 
 import { useUpdateItemDestination } from './useUpdateItemDestination'
 import { checkoutMock } from '@/__mocks__/stories'

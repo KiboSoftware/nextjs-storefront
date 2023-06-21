@@ -1,6 +1,6 @@
 import React, { useEffect, ReactNode } from 'react'
 
-import { screen } from '@testing-library/react'
+import { screen, act, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 
 import CheckoutUITemplate from './CheckoutUITemplate'
@@ -203,11 +203,17 @@ describe('Display Checkout steps', () => {
       expect(goToShippingButton).toBeEnabled()
 
       // Act
-      await user.click(goToShippingButton)
+      act(() => {
+        user.click(goToShippingButton)
+      })
 
       // Assertion
-      expect(screen.getByText(/Shipping Step/i)).toBeVisible()
-      expect(screen.getByRole('button', { name: /go-to-payment/i })).toBeVisible()
+      await waitFor(() => {
+        expect(screen.getByText(/Shipping Step/i)).toBeVisible()
+      })
+      await waitFor(() => {
+        expect(screen.getByRole('button', { name: /go-to-payment/i })).toBeVisible()
+      })
     })
 
     it('should go-back button disabled', () => {
@@ -277,11 +283,17 @@ describe('Display Checkout steps', () => {
       expect(goToPaymentButton).toBeEnabled()
 
       // Act
-      await user.click(goToPaymentButton)
+      act(() => {
+        user.click(goToPaymentButton)
+      })
 
       // Assertion
-      expect(screen.getByText(/Payment Step/i)).toBeVisible()
-      expect(screen.getByRole('button', { name: /review-order/i })).toBeVisible()
+      await waitFor(() => {
+        expect(screen.getByText(/Payment Step/i)).toBeVisible()
+      })
+      await waitFor(() => {
+        expect(screen.getByRole('button', { name: /review-order/i })).toBeVisible()
+      })
     })
 
     it('should make Details Step as active step when user clicks on go-back button', async () => {
@@ -296,11 +308,17 @@ describe('Display Checkout steps', () => {
       expect(goBackButton).toBeEnabled()
 
       // Act
-      await user.click(goBackButton)
+      act(() => {
+        user.click(goBackButton)
+      })
 
       // Assertion
-      expect(screen.getByText(/Details Step/i)).toBeVisible()
-      expect(screen.getByRole('button', { name: /go-to-shipping/i })).toBeVisible()
+      await waitFor(() => {
+        expect(screen.getByText(/Details Step/i)).toBeVisible()
+      })
+      await waitFor(() => {
+        expect(screen.getByRole('button', { name: /go-to-shipping/i })).toBeVisible()
+      })
     })
   })
 
@@ -357,10 +375,14 @@ describe('Display Checkout steps', () => {
       expect(goToReviewButton).toBeEnabled()
 
       // Act
-      await user.click(goToReviewButton)
+      act(() => {
+        user.click(goToReviewButton)
+      })
 
       // Assertion
-      expect(screen.getByText(/Review Step/i)).toBeVisible()
+      await waitFor(() => {
+        expect(screen.getByText(/Review Step/i)).toBeVisible()
+      })
     })
 
     it('should make Shipping Step as active step when user clicks on go-back button', async () => {
@@ -375,11 +397,17 @@ describe('Display Checkout steps', () => {
       expect(goBackButton).toBeEnabled()
 
       // Act
-      await user.click(goBackButton)
+      act(() => {
+        user.click(goBackButton)
+      })
 
       // Assertion
-      expect(screen.getByText(/Shipping Step/i)).toBeVisible()
-      expect(screen.getByRole('button', { name: /go-to-payment/i })).toBeVisible()
+      await waitFor(() => {
+        expect(screen.getByText(/Shipping Step/i)).toBeVisible()
+      })
+      await waitFor(() => {
+        expect(screen.getByRole('button', { name: /go-to-payment/i })).toBeVisible()
+      })
     })
   })
 

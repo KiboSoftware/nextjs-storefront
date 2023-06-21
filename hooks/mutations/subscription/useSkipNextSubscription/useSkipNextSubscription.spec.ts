@@ -1,4 +1,4 @@
-import { renderHook } from '@testing-library/react-hooks'
+import { renderHook } from '@testing-library/react'
 
 import { useSkipNextSubscription } from './useSkipNextSubscription'
 import { subscriptionMock } from '@/__mocks__/stories/subscriptionMock'

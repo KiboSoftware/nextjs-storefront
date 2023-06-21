@@ -3,7 +3,7 @@ import React from 'react'
 
 import '@testing-library/jest-dom'
 import { composeStories } from '@storybook/testing-react'
-import { render, screen } from '@testing-library/react'
+import { render, screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import mockRouter from 'next-router-mock'
 
@@ -49,12 +49,14 @@ describe('[component] - MyAccountTemplate', () => {
 
     const orderHistory = screen.getByText(/order-history/i)
 
-    await user.click(orderHistory)
+    user.click(orderHistory)
 
-    expect(mockRouter).toMatchObject({
-      asPath: '/my-account/order-history?filters=M-6',
-      pathname: '/my-account/order-history',
-      query: { filters: 'M-6' },
+    await waitFor(() => {
+      expect(mockRouter).toMatchObject({
+        asPath: '/my-account/order-history?filters=M-6',
+        pathname: '/my-account/order-history',
+        query: { filters: 'M-6' },
+      })
     })
   })
 
@@ -63,12 +65,14 @@ describe('[component] - MyAccountTemplate', () => {
 
     const mySubscription = screen.getByText(/my-subscription/i)
 
-    await user.click(mySubscription)
+    user.click(mySubscription)
 
-    expect(mockRouter).toMatchObject({
-      asPath: '/my-account/subscription',
-      pathname: '/my-account/subscription',
-      query: {},
+    await waitFor(() => {
+      expect(mockRouter).toMatchObject({
+        asPath: '/my-account/subscription',
+        pathname: '/my-account/subscription',
+        query: {},
+      })
     })
   })
 })

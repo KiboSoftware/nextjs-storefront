@@ -7,7 +7,7 @@ import { FulfillmentOptions } from '@/lib/constants'
 import { cartGetters } from '@/lib/getters/cartGetters'
 import { FulfillmentOption } from '@/lib/types'
 
-import type { CrCartItem, Location, Maybe, Product } from '@/lib/gql/types'
+import type { CrCartItem, Location, Maybe } from '@/lib/gql/types'
 
 interface CartItemListProps {
   cartItems: Maybe<CrCartItem>[]

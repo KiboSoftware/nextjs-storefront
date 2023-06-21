@@ -1,7 +1,7 @@
 import React from 'react'
 
 import { composeStories } from '@storybook/testing-react'
-import { cleanup, render, screen } from '@testing-library/react'
+import { render, screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 
 import * as stories from './AddressBook.stories'
@@ -38,9 +38,11 @@ describe('[components] AddressBook', () => {
   it(`should render address form if 'Add New Address' button is clicked`, async () => {
     const { user } = setup()
 
-    await user.click(screen.getByRole('button', { name: 'add-new-address' }))
+    user.click(screen.getByRole('button', { name: 'add-new-address' }))
 
-    expect(screen.getByTestId('address-form-component')).toBeVisible()
+    await waitFor(() => {
+      expect(screen.getByTestId('address-form-component')).toBeVisible()
+    })
   })
 
   it(`should render addressForm if 'Edit' is clicked`, async () => {
@@ -49,9 +51,13 @@ describe('[components] AddressBook', () => {
     const addNewAddress = screen.getByRole('button', { name: 'add-new-address' })
 
     const editAddresses = screen.getAllByText('edit')
-    await user.click(editAddresses[0])
+    user.click(editAddresses[0])
 
-    expect(addNewAddress).not.toBeVisible()
-    expect(screen.getByTestId('address-form-component')).toBeVisible()
+    await waitFor(() => {
+      expect(addNewAddress).not.toBeVisible()
+    })
+    await waitFor(() => {
+      expect(screen.getByTestId('address-form-component')).toBeVisible()
+    })
   })
 })

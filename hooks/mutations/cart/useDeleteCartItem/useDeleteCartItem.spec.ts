@@ -1,21 +1,22 @@
-import { renderHook } from '@testing-library/react-hooks'
+import { renderHook, act, waitFor } from '@testing-library/react'
 
 import { useDeleteCartItem } from './useDeleteCartItem'
 import { createQueryClientWrapper } from '@/__test__/utils/renderWithQueryClient'
 
 describe('[hooks] useDeleteCartItem', () => {
   it('should use useDeleteCartItem when deleteCartItem', async () => {
-    renderHook(
-      async () => {
-        const { deleteCartItem } = useDeleteCartItem()
-        const response = await deleteCartItem.mutateAsync({
-          cartItemId: 'fjsdhfjsdh53472bkjsdffdf',
-        })
-        expect(response).toEqual(true)
-      },
-      {
-        wrapper: createQueryClientWrapper(),
-      }
-    )
+    const { result } = renderHook(() => useDeleteCartItem(), {
+      wrapper: createQueryClientWrapper(),
+    })
+
+    act(() => {
+      result.current.deleteCartItem.mutate({
+        cartItemId: 'fjsdhfjsdh53472bkjsdffdf',
+      })
+    })
+
+    await waitFor(() => {
+      expect(result.current.deleteCartItem.data).toEqual(true)
+    })
   })
 })

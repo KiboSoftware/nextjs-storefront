@@ -1,5 +1,5 @@
 import { composeStories } from '@storybook/testing-react'
-import { fireEvent, render, screen, waitFor, within } from '@testing-library/react'
+import { fireEvent, render, screen, waitFor, within, act } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { graphql } from 'msw'
 
@@ -257,7 +257,7 @@ describe('[component] - PaymentMethod (has saved payment methods)', () => {
         )
       })
     )
-    await waitFor(() => {
+    act(() => {
       user.click(savePaymentMethodButton)
     })
   })
