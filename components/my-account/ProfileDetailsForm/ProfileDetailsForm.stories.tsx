@@ -6,7 +6,7 @@ import ProfileDetailsForm from './ProfileDetailsForm'
 
 export default {
   component: ProfileDetailsForm,
-  title: 'My Profile/ProfileDetailsForm',
+  title: 'My Account/ProfileDetailsForm',
   argTypes: {
     onCancel: { action: 'onCancel' },
     onSaveProfileData: { action: 'onSaveProfileData' },
