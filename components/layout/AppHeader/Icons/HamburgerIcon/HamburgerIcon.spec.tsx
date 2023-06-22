@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
-import { screen } from '@testing-library/react'
+import { screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import '@testing-library/jest-dom'
 import { mock } from 'jest-mock-extended'
@@ -34,8 +34,10 @@ describe('[component] AccountIcon component', () => {
   it('should call toggleHamburgerMenu function', async () => {
     const { user, mockValues } = setup()
 
-    await user.click(screen.getByTestId('MenuIcon'))
+    user.click(screen.getByTestId('MenuIcon'))
 
-    expect(mockValues.toggleHamburgerMenu).toBeCalled()
+    await waitFor(() => {
+      expect(mockValues.toggleHamburgerMenu).toBeCalled()
+    })
   })
 })

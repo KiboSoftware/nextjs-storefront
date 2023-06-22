@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
 import { composeStories } from '@storybook/testing-react'
-import { cleanup, render, screen } from '@testing-library/react'
+import { render, screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import '@testing-library/jest-dom'
 import mockRouter from 'next-router-mock'
@@ -15,32 +15,42 @@ jest.mock('@mui/material', () => ({
 }))
 
 describe('[component] KiboHeader component', () => {
-  it('should render the component', () => {
+  it('should render the component', async () => {
     render(<Common {...Common.args} />)
 
-    expect(screen.getByTestId(/top-bar/)).toBeVisible()
+    await waitFor(() => {
+      expect(screen.getByTestId(/top-bar/)).toBeVisible()
+    })
+
     expect(screen.getByTestId(/header-action-area/)).toBeVisible()
     expect(screen.getByTestId(/mega-menu-container/)).toBeVisible()
   })
 
-  it('should render the navlinks', () => {
+  it('should render the navlinks', async () => {
     render(<Common {...Common.args} />)
 
-    Common?.args?.navLinks?.forEach((each) => {
-      expect(screen.getAllByText(new RegExp(each.text))[0]).toBeVisible()
+    await waitFor(() => {
+      Common?.args?.navLinks?.forEach((each) => {
+        expect(screen.getAllByText(new RegExp(each.text))[0]).toBeVisible()
+      })
     })
   })
 
-  it('should render the logo', () => {
+  it('should render the logo', async () => {
     render(<Common {...Common.args} />)
 
-    expect(screen.getAllByAltText(/kibo-logo/i)[0]).toBeVisible()
+    await waitFor(() => {
+      expect(screen.getAllByAltText(/kibo-logo/i)[0]).toBeVisible()
+    })
   })
 
-  it('should render header actions', () => {
+  it('should render header actions', async () => {
     render(<Common {...Common.args} />)
 
-    expect(screen.getByTestId('FmdGoodIcon')).toBeVisible()
+    await waitFor(() => {
+      expect(screen.getByTestId('FmdGoodIcon')).toBeVisible()
+    })
+
     expect(screen.getByText(/find-a-store/i)).toBeVisible()
     expect(screen.getAllByTestId('AccountCircleIcon')[0]).toBeVisible()
     expect(screen.getAllByText(/my-account/i)[0]).toBeVisible()
@@ -49,20 +59,24 @@ describe('[component] KiboHeader component', () => {
     expect(screen.getByText(/cart/i)).toBeVisible()
   })
 
-  it('should render the searchbox', () => {
+  it('should render the searchbox', async () => {
     render(<Common {...Common.args} />)
 
-    expect(
-      screen.getByRole('textbox', {
-        name: /search-input/i,
-      })
-    ).toBeVisible()
+    await waitFor(() => {
+      expect(
+        screen.getByRole('textbox', {
+          name: /search-input/i,
+        })
+      ).toBeVisible()
+    })
   })
 
-  it('should render the megamenu section', () => {
+  it('should render the megamenu section', async () => {
     render(<Common {...Common.args} />)
 
-    expect(screen.getByTestId('megamenu-container')).toBeVisible()
+    await waitFor(() => {
+      expect(screen.getByTestId('megamenu-container')).toBeVisible()
+    })
   })
 
   it('should redirect to cart page when users clicks on cart icon', async () => {
@@ -70,12 +84,14 @@ describe('[component] KiboHeader component', () => {
     render(<Common {...Common.args} />)
 
     const cartIcon = screen.getByTestId('ShoppingCartIcon')
-    await user.click(cartIcon)
+    user.click(cartIcon)
 
-    expect(mockRouter).toMatchObject({
-      asPath: '/cart',
-      pathname: '/cart',
-      query: {},
+    await waitFor(() => {
+      expect(mockRouter).toMatchObject({
+        asPath: '/cart',
+        pathname: '/cart',
+        query: {},
+      })
     })
   })
 })

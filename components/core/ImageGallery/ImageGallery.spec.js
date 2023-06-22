@@ -1,7 +1,7 @@
 import React from 'react'
 
 import { composeStories } from '@storybook/testing-react'
-import { render, screen } from '@testing-library/react'
+import { render, screen, waitFor } from '@testing-library/react'
 import '@testing-library/jest-dom'
 import userEvent from '@testing-library/user-event'
 import { act } from 'react-dom/test-utils'
@@ -121,7 +121,7 @@ describe('[component] ImageGallery component', () => {
         name: /down/i,
       })
 
-      await user.click(downArrowButton)
+      user.click(downArrowButton)
 
       const upArrowButton = await screen.findByRole('button', {
         name: /up/i,
@@ -140,11 +140,13 @@ describe('[component] ImageGallery component', () => {
         else expect(thumbnail).toHaveAttribute('aria-selected', 'false')
       })
 
-      await user.click(thumbnails[1])
+      user.click(thumbnails[1])
 
-      thumbnails.forEach((thumbnail, i) => {
-        if (i === 1) expect(thumbnail).toHaveAttribute('aria-selected', 'true')
-        else expect(thumbnail).toHaveAttribute('aria-selected', 'false')
+      await waitFor(() => {
+        thumbnails.forEach((thumbnail, i) => {
+          if (i === 1) expect(thumbnail).toHaveAttribute('aria-selected', 'true')
+          else expect(thumbnail).toHaveAttribute('aria-selected', 'false')
+        })
       })
     })
 
@@ -202,13 +204,17 @@ describe('[component] ImageGallery component', () => {
         name: /next/i,
       })
 
-      await user.click(nextButton)
+      user.click(nextButton)
 
-      expect(thumbnails[1]).toHaveAttribute('aria-selected', 'true')
+      await waitFor(() => {
+        expect(thumbnails[1]).toHaveAttribute('aria-selected', 'true')
+      })
 
-      await user.click(previousButton)
+      user.click(previousButton)
 
-      expect(thumbnails[0]).toHaveAttribute('aria-selected', 'true')
+      await waitFor(() => {
+        expect(thumbnails[0]).toHaveAttribute('aria-selected', 'true')
+      })
     })
 
     it('should render zoom controls and call the respective functions', () => {

@@ -1,5 +1,5 @@
 import { composeStories } from '@storybook/testing-react'
-import { render, screen } from '@testing-library/react'
+import { render, screen, waitFor } from '@testing-library/react'
 import '@testing-library/jest-dom'
 import userEvent from '@testing-library/user-event'
 
@@ -48,9 +48,11 @@ describe('[component] KiboTextbox component', () => {
       name: WithLabel.args.label,
     })
 
-    await user.type(input, 'Test')
+    user.type(input, 'Test')
 
-    expect(onChangeMock).toHaveBeenCalledTimes(4)
+    await waitFor(() => {
+      expect(onChangeMock).toHaveBeenCalledTimes(4)
+    })
   })
 
   it('should render endAdornment icon when icon is provided and should call onIconClick when icon is clicked', async () => {
@@ -59,9 +61,12 @@ describe('[component] KiboTextbox component', () => {
     render(<WithIcon {...WithIcon.args} onIconClick={onIconClickMock} />)
     const icon = screen.getByRole('button')
 
-    await user.click(icon)
-
-    expect(icon).toBeVisible()
-    expect(onIconClickMock).toHaveBeenCalled()
+    user.click(icon)
+    await waitFor(() => {
+      expect(icon).toBeVisible()
+    })
+    await waitFor(() => {
+      expect(onIconClickMock).toHaveBeenCalled()
+    })
   })
 })

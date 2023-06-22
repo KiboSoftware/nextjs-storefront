@@ -1,6 +1,6 @@
 import React from 'react'
 
-import { render, screen } from '@testing-library/react'
+import { render, screen, waitFor, act } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 
 import QuantitySelector from './QuantitySelector'
@@ -74,10 +74,12 @@ describe('[components] - QuantitySelector', () => {
 
     // act
     const increaseButton = screen.getByRole('button', { name: 'increase' })
-    await user.click(increaseButton)
+    user.click(increaseButton)
 
     // assert
-    expect(onIncreaseMock).toHaveBeenCalledTimes(1)
+    await waitFor(() => {
+      expect(onIncreaseMock).toHaveBeenCalledTimes(1)
+    })
   })
 
   it('should call onDecrease action when user clicks on Decrease(-) button and Quantity > 1', async () => {
@@ -87,10 +89,12 @@ describe('[components] - QuantitySelector', () => {
 
     // act
     const decreaseButton = screen.getByRole('button', { name: 'decrease' })
-    await user.click(decreaseButton)
+    user.click(decreaseButton)
 
     // assert
-    expect(onDecreaseMock).toHaveBeenCalledTimes(1)
+    await waitFor(() => {
+      expect(onDecreaseMock).toHaveBeenCalledTimes(1)
+    })
   })
 
   it('should display qty label', () => {
@@ -115,9 +119,14 @@ describe('[components] - QuantitySelector', () => {
     const { user } = setup()
 
     const input = screen.getByRole('textbox')
-    await user.type(input, '4')
-    await user.tab()
 
-    expect(onQuantityUpdateMock).toHaveBeenCalled()
+    await act(async () => {
+      await user.type(input, '4')
+      user.tab()
+    })
+
+    await waitFor(() => {
+      expect(onQuantityUpdateMock).toHaveBeenCalled()
+    })
   })
 })

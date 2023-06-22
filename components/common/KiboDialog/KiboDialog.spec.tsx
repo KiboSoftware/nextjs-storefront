@@ -1,7 +1,7 @@
 import React from 'react'
 
 import { composeStories } from '@storybook/testing-react'
-import { render, screen } from '@testing-library/react'
+import { render, screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 
 import * as stories from './KiboDialog.stories' // import all stories from the stories file
@@ -52,10 +52,16 @@ describe('[components] Dialog Component', () => {
     const closeIconButton = screen.getByRole('button', {
       name: /close/i,
     })
-    await user.click(closeIconButton)
+    user.click(closeIconButton)
 
-    expect(dialog).toBeVisible()
-    expect(closeIconButton).toBeVisible()
-    expect(onCloseMock).toHaveBeenCalled()
+    await waitFor(() => {
+      expect(dialog).toBeVisible()
+    })
+    await waitFor(() => {
+      expect(closeIconButton).toBeVisible()
+    })
+    await waitFor(() => {
+      expect(onCloseMock).toHaveBeenCalled()
+    })
   })
 })

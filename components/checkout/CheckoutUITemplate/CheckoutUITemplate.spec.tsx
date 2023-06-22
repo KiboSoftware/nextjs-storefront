@@ -176,8 +176,10 @@ describe('Display Checkout steps', () => {
       const applyCouponCodeButton = screen.getByRole('button', { name: /Apply coupon code/i })
       expect(applyCouponCodeButton).toBeEnabled()
 
-      await user.click(applyCouponCodeButton)
-      expect(handleApplyCouponCodeMock).toHaveBeenCalledWith(VALID_COUPON_CODE)
+      user.click(applyCouponCodeButton)
+      await waitFor(() => {
+        expect(handleApplyCouponCodeMock).toHaveBeenCalledWith(VALID_COUPON_CODE)
+      })
     })
 
     it('should able to remove coupon code', async () => {
@@ -187,8 +189,10 @@ describe('Display Checkout steps', () => {
       const removeCouponCodeButton = screen.getByRole('button', { name: /Remove coupon code/i })
       expect(removeCouponCodeButton).toBeEnabled()
 
-      await user.click(removeCouponCodeButton)
-      expect(handleRemoveCouponCodeMock).toHaveBeenCalledWith(VALID_COUPON_CODE)
+      user.click(removeCouponCodeButton)
+      await waitFor(() => {
+        expect(handleRemoveCouponCodeMock).toHaveBeenCalledWith(VALID_COUPON_CODE)
+      })
     })
 
     it('should make Shipping Step as active step when user clicks on go-to-shipping button', async () => {
@@ -203,9 +207,7 @@ describe('Display Checkout steps', () => {
       expect(goToShippingButton).toBeEnabled()
 
       // Act
-      act(() => {
-        user.click(goToShippingButton)
-      })
+      user.click(goToShippingButton)
 
       // Assertion
       await waitFor(() => {
@@ -256,8 +258,10 @@ describe('Display Checkout steps', () => {
       const applyCouponCodeButton = screen.getByRole('button', { name: /Apply coupon code/i })
       expect(applyCouponCodeButton).toBeEnabled()
 
-      await user.click(applyCouponCodeButton)
-      expect(handleApplyCouponCodeMock).toHaveBeenCalledWith(VALID_COUPON_CODE)
+      user.click(applyCouponCodeButton)
+      await waitFor(() => {
+        expect(handleApplyCouponCodeMock).toHaveBeenCalledWith(VALID_COUPON_CODE)
+      })
     })
 
     it('should able to remove coupon code', async () => {
@@ -267,8 +271,10 @@ describe('Display Checkout steps', () => {
       const removeCouponCodeButton = screen.getByRole('button', { name: /Remove coupon code/i })
       expect(removeCouponCodeButton).toBeEnabled()
 
-      await user.click(removeCouponCodeButton)
-      expect(handleRemoveCouponCodeMock).toHaveBeenCalledWith(VALID_COUPON_CODE)
+      user.click(removeCouponCodeButton)
+      await waitFor(() => {
+        expect(handleRemoveCouponCodeMock).toHaveBeenCalledWith(VALID_COUPON_CODE)
+      })
     })
 
     it('should make Payment Step as active step when user clicks on go-to-payment button', async () => {
@@ -283,9 +289,7 @@ describe('Display Checkout steps', () => {
       expect(goToPaymentButton).toBeEnabled()
 
       // Act
-      act(() => {
-        user.click(goToPaymentButton)
-      })
+      user.click(goToPaymentButton)
 
       // Assertion
       await waitFor(() => {
@@ -308,9 +312,7 @@ describe('Display Checkout steps', () => {
       expect(goBackButton).toBeEnabled()
 
       // Act
-      act(() => {
-        user.click(goBackButton)
-      })
+      user.click(goBackButton)
 
       // Assertion
       await waitFor(() => {
@@ -348,8 +350,10 @@ describe('Display Checkout steps', () => {
       const applyCouponCodeButton = screen.getByRole('button', { name: /Apply coupon code/i })
       expect(applyCouponCodeButton).toBeEnabled()
 
-      await user.click(applyCouponCodeButton)
-      expect(handleApplyCouponCodeMock).toHaveBeenCalledWith(VALID_COUPON_CODE)
+      user.click(applyCouponCodeButton)
+      await waitFor(() => {
+        expect(handleApplyCouponCodeMock).toHaveBeenCalledWith(VALID_COUPON_CODE)
+      })
     })
 
     it('should able to remove coupon code', async () => {
@@ -359,8 +363,10 @@ describe('Display Checkout steps', () => {
       const removeCouponCodeButton = screen.getByRole('button', { name: /Remove coupon code/i })
       expect(removeCouponCodeButton).toBeEnabled()
 
-      await user.click(removeCouponCodeButton)
-      expect(handleRemoveCouponCodeMock).toHaveBeenCalledWith(VALID_COUPON_CODE)
+      user.click(removeCouponCodeButton)
+      await waitFor(() => {
+        expect(handleRemoveCouponCodeMock).toHaveBeenCalledWith(VALID_COUPON_CODE)
+      })
     })
 
     it('should make Review Step as active step when user clicks on review-order button', async () => {
@@ -375,9 +381,7 @@ describe('Display Checkout steps', () => {
       expect(goToReviewButton).toBeEnabled()
 
       // Act
-      act(() => {
-        user.click(goToReviewButton)
-      })
+      user.click(goToReviewButton)
 
       // Assertion
       await waitFor(() => {
@@ -397,9 +401,7 @@ describe('Display Checkout steps', () => {
       expect(goBackButton).toBeEnabled()
 
       // Act
-      act(() => {
-        user.click(goBackButton)
-      })
+      user.click(goBackButton)
 
       // Assertion
       await waitFor(() => {

@@ -29,7 +29,8 @@ describe('[Component] - ReturnItemList', () => {
     const user = userEvent.setup()
     const checkbox = screen.getAllByRole('checkbox')
     expect(checkbox[0]).not.toBeChecked()
-    await user.click(checkbox[0])
+
+    user.click(checkbox[0])
     await waitFor(() => {
       expect(checkbox[0]).toBeChecked()
     })

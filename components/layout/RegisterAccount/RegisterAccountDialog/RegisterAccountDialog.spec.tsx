@@ -32,14 +32,10 @@ jest.mock('@/components/common/KiboDialog/KiboDialog', () => ({
   },
 }))
 
-const renderComponent = () => {
-  return render(<Common {...Common.args} />, { wrapper: ModalContextProvider })
-}
-
 describe('[components] Register Account Dialog', () => {
   const setup = () => {
     const user = userEvent.setup()
-    renderComponent()
+    render(<Common {...Common.args} />, { wrapper: ModalContextProvider })
     return { user }
   }
 
@@ -51,7 +47,7 @@ describe('[components] Register Account Dialog', () => {
     const registerAccountContentComponent = screen.getByTestId('register-account-content-component')
     const loginToYourAccountLink = screen.getByText(/login-to-your-account/i)
 
-    await user.click(loginToYourAccountLink)
+    user.click(loginToYourAccountLink)
 
     expect(registerAccountDialog).toBeVisible()
     expect(registerAccountTitle).toBeVisible()

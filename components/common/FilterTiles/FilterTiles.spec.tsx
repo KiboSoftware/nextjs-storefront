@@ -1,7 +1,7 @@
 import React from 'react'
 
 import { composeStories } from '@storybook/testing-react'
-import { render, screen } from '@testing-library/react'
+import { render, screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 
 import * as stories from './FilterTiles.stories' // import all stories from the stories file
@@ -35,7 +35,9 @@ describe('[components] Fulfillment Options Component', () => {
     const { user } = setup()
     const closeIcon = screen.getAllByTestId('CloseIcon')
 
-    await user.click(closeIcon[0])
-    expect(onSelectedTileRemovalMock).toHaveBeenCalled()
+    user.click(closeIcon[0])
+    await waitFor(() => {
+      expect(onSelectedTileRemovalMock).toHaveBeenCalled()
+    })
   })
 })

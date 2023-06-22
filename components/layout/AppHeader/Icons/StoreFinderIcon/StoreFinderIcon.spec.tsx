@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
-import { screen } from '@testing-library/react'
+import { screen, waitFor } from '@testing-library/react'
 import '@testing-library/jest-dom'
 import userEvent from '@testing-library/user-event'
 
@@ -45,9 +45,11 @@ describe('[component] StoreFinderIcon component', () => {
   it('should render the myStoreModal on click', async () => {
     setup()
     const user = userEvent.setup()
-    await user.click(screen.getByText(/test-name/))
+    user.click(screen.getByText(/test-name/))
 
-    expect(screen.getByText(/my-store/)).toBeVisible()
+    await waitFor(() => {
+      expect(screen.getByText(/my-store/)).toBeVisible()
+    })
   })
 
   it('should render the storeLocatorModal on click if no store is selected', async () => {
@@ -58,8 +60,10 @@ describe('[component] StoreFinderIcon component', () => {
     }
     setup()
     const user = userEvent.setup()
-    await user.click(screen.getByText(/find-a-store/))
+    user.click(screen.getByText(/find-a-store/))
 
-    expect(screen.getByTestId(/StoreLocatorDialogMock/)).toBeVisible()
+    await waitFor(() => {
+      expect(screen.getByTestId(/StoreLocatorDialogMock/)).toBeVisible()
+    })
   })
 })

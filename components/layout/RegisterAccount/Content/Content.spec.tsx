@@ -61,7 +61,7 @@ describe('[components] Register Account(Content)', () => {
     fireEvent.change(registerAccountFormPasswordInput, { target: { value: 'Example@1234' } })
 
     await waitFor(() => expect(createAccountButton).toBeEnabled())
-    await user.click(createAccountButton)
+    user.click(createAccountButton)
     await waitFor(() => expect(onRegisterNowMock).toHaveBeenCalled())
     await waitFor(() => expect(onRegisterNowMock).toHaveBeenCalledWith(formDataMock))
   })

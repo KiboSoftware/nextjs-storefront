@@ -21,9 +21,7 @@ describe('[component] - PaymentCardDetailsView', () => {
 
     const radio = screen.getByRole('radio', { name: Radio.args.cardNumberPart })
 
-    act(() => {
-      user.click(radio)
-    })
+    user.click(radio)
 
     await waitFor(() => {
       expect(mockOnPaymentCardSelection).toBeCalled()

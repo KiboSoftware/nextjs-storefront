@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 
 import '@testing-library/jest-dom'
-import { render, screen } from '@testing-library/react'
+import { render, screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 
 import SearchBar from './SearchBar'
@@ -58,11 +58,16 @@ describe('[components] - SearchBar', () => {
     // act
     const input = screen.getByRole('textbox', { name: 'search-input' })
     expect(input).toHaveValue('')
-    await user.type(input, userEnteredText)
+    user.type(input, userEnteredText)
 
     // assert
-    expect(handleSearch).toHaveBeenCalledWith(userEnteredText)
-    expect(input).toHaveValue(userEnteredText)
+    await waitFor(() => {
+      expect(handleSearch).toHaveBeenCalledWith(userEnteredText)
+    })
+
+    await waitFor(() => {
+      expect(input).toHaveValue(userEnteredText)
+    })
   })
 
   describe('[components] - clear button', () => {
@@ -96,11 +101,16 @@ describe('[components] - SearchBar', () => {
       const input = screen.getByRole('textbox', { name: 'search-input' })
       const clearButton = screen.getByRole('button', { name: 'clear-search' })
       expect(clearButton).toBeDisabled()
-      await user.type(input, userEnteredText)
+      user.type(input, userEnteredText)
 
       // assert
-      expect(input).toHaveValue(userEnteredText)
-      expect(clearButton).toBeEnabled()
+      await waitFor(() => {
+        expect(input).toHaveValue(userEnteredText)
+      })
+
+      await waitFor(() => {
+        expect(clearButton).toBeEnabled()
+      })
     })
 
     it('should clear the search when user clicks on it', async () => {
@@ -111,13 +121,20 @@ describe('[components] - SearchBar', () => {
       const input = screen.getByRole('textbox', { name: 'search-input' })
       const clearButton = screen.getByRole('button', { name: 'clear-search' })
 
-      await user.type(input, userEnteredText)
-      expect(input).toHaveValue(userEnteredText)
-      expect(clearButton).toBeEnabled()
-      await user.click(clearButton)
+      user.type(input, userEnteredText)
+      await waitFor(() => {
+        expect(input).toHaveValue(userEnteredText)
+      })
+      await waitFor(() => {
+        expect(clearButton).toBeEnabled()
+      })
+
+      user.click(clearButton)
 
       // assert
-      expect(input).toHaveValue('')
+      await waitFor(() => {
+        expect(input).toHaveValue('')
+      })
     })
   })
 })

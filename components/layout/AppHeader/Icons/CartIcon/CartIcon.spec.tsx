@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
-import { screen } from '@testing-library/react'
+import { screen, waitFor } from '@testing-library/react'
 import '@testing-library/jest-dom'
 import userEvent from '@testing-library/user-event'
 import mockRouter from 'next-router-mock'
@@ -32,12 +32,14 @@ describe('[component] CartIcon component', () => {
   it('should change route on click of icon', async () => {
     const { user } = setup()
 
-    await user.click(screen.getByText(/cart/))
+    user.click(screen.getByText(/cart/))
 
-    expect(mockRouter).toMatchObject({
-      asPath: '/cart',
-      pathname: '/cart',
-      query: {},
+    await waitFor(() => {
+      expect(mockRouter).toMatchObject({
+        asPath: '/cart',
+        pathname: '/cart',
+        query: {},
+      })
     })
   })
 })

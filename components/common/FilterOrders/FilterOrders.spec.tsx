@@ -1,7 +1,7 @@
 import React from 'react'
 
 import { composeStories } from '@storybook/testing-react'
-import { render, screen } from '@testing-library/react'
+import { render, screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 
 import * as stories from './FilterOrders.stories'
@@ -34,21 +34,29 @@ describe('[component] - FilterOrders', () => {
       const button = screen.getByRole('button', {
         name: new RegExp(option?.label as string),
       })
-      await user.click(button)
-      expect(button).toBeEnabled()
+
+      user.click(button)
+      await waitFor(() => {
+        expect(button).toBeEnabled()
+      })
     })
     const applyButton = screen.getByRole('button', {
       name: /apply/i,
     })
-    await user.click(applyButton)
-    expect(mockOnFilterByClose).toBeCalled()
+
+    user.click(applyButton)
+    await waitFor(() => {
+      expect(mockOnFilterByClose).toBeCalled()
+    })
   })
 
   it('should remove filter tile when users clicks on cross icon', async () => {
     const { user, mockOnFilterByClose } = setup()
     const closeIcon = screen.getAllByTestId('CloseIcon')
 
-    await user.click(closeIcon[0])
-    expect(mockOnFilterByClose).toHaveBeenCalled()
+    user.click(closeIcon[0])
+    await waitFor(() => {
+      expect(mockOnFilterByClose).toHaveBeenCalled()
+    })
   })
 })

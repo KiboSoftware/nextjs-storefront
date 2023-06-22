@@ -46,7 +46,7 @@ describe('[components] Search Store', () => {
       name: /use-current-location/i,
     })
     expect(currentLocationButton).toBeVisible()
-    await user.click(currentLocationButton)
+    user.click(currentLocationButton)
 
     await waitFor(() => {
       expect(onStoreByCurrentLocationMock).toHaveBeenCalled()

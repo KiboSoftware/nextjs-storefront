@@ -1,7 +1,7 @@
 import React from 'react'
 
 import { composeStories } from '@storybook/testing-react'
-import { render, screen } from '@testing-library/react'
+import { render, screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 
 import * as stories from './FulfillmentOptions.stories' // import all stories from the stories file
@@ -53,9 +53,11 @@ describe('[components] Fulfillment Options Component', () => {
   it('should call onStoreSelection if change store or select store is clicked', async () => {
     const { user, mockOnStoreSetOrUpdate } = setup()
 
-    await user.click(screen.getAllByText(/Change-Store/i)[0])
+    user.click(screen.getAllByText(/Change-Store/i)[0])
 
-    expect(mockOnStoreSetOrUpdate).toBeCalled()
+    await waitFor(() => {
+      expect(mockOnStoreSetOrUpdate).toBeCalled()
+    })
   })
 
   it('should call onFulfillmentOptionChange if radio option selection is changed', async () => {
@@ -65,8 +67,9 @@ describe('[components] Fulfillment Options Component', () => {
       name: /ship/i,
     })
 
-    await user.click(radio)
-
-    expect(mockOnFulfillmentOptionChange).toBeCalled()
+    user.click(radio)
+    await waitFor(() => {
+      expect(mockOnFulfillmentOptionChange).toBeCalled()
+    })
   })
 })

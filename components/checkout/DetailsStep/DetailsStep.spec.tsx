@@ -118,9 +118,7 @@ describe('[components] Details', () => {
       const { user } = setup({ isAuthenticated: false, userId: 0 })
       const signInButton = screen.getByRole('button', { name: /sign-into-your-account/i })
 
-      act(() => {
-        user.click(signInButton)
-      })
+      user.click(signInButton)
 
       await waitFor(() => {
         expect(screen.getByRole('dialog', { name: /log-in/i })).toBeVisible()

@@ -1,7 +1,7 @@
 import React from 'react'
 
 import { composeStories } from '@storybook/testing-react'
-import { render, screen } from '@testing-library/react'
+import { render, screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 
 import * as stories from './StoreDetails.stories' // import all stories from the stories file
@@ -51,8 +51,12 @@ describe('[components] Store Details', () => {
     const collapsible = screen.getByTestId('collapsible')
 
     expect(screen.getByTestId('KeyboardArrowDownIcon')).toBeVisible()
-    await user.click(collapsible)
-    expect(screen.getByTestId('KeyboardArrowUpIcon')).toBeVisible()
+    user.click(collapsible)
+
+    await waitFor(() => {
+      expect(screen.getByTestId('KeyboardArrowUpIcon')).toBeVisible()
+    })
+
     expect(screen.getByText(/get-directions/i)).toBeVisible()
     expect(screen.getByText(location?.phone || '')).toBeVisible()
     expect(screen.getByTestId('address-card-mock')).toBeVisible()
@@ -69,10 +73,17 @@ describe('[components] Store Details', () => {
 
     const collapsible = screen.getByTestId('collapsible')
     expect(screen.getByTestId('KeyboardArrowDownIcon')).toBeVisible()
-    await user.click(collapsible)
-    expect(screen.getByTestId('KeyboardArrowUpIcon')).toBeVisible()
-    await user.click(collapsible)
-    expect(screen.queryByTestId('KeyboardArrowUpIcon')).not.toBeInTheDocument()
+
+    user.click(collapsible)
+    await waitFor(() => {
+      expect(screen.getByTestId('KeyboardArrowUpIcon')).toBeVisible()
+    })
+
+    user.click(collapsible)
+    await waitFor(() => {
+      expect(screen.queryByTestId('KeyboardArrowUpIcon')).not.toBeInTheDocument()
+    })
+
     expect(screen.queryByText(/get-directions/i)).not.toBeInTheDocument()
   })
 })
