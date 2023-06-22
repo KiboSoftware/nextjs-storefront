@@ -208,10 +208,7 @@ describe('[components] StandardShippingStep', () => {
 
       // selecting a radioAddress
       const firstRadioAddress = screen.getAllByRole('button', { name: /handleAddressSelect/ })[0]
-
-      await act(() => {
-        user.click(firstRadioAddress)
-      })
+      user.click(firstRadioAddress)
 
       await waitFor(() => {
         const selected = userGetters.getUserShippingAddress(
@@ -227,9 +224,7 @@ describe('[components] StandardShippingStep', () => {
         name: /handleSaveShippingMethod/,
       })[0]
 
-      act(() => {
-        user.click(firstShippingMethod)
-      })
+      user.click(firstShippingMethod)
       await waitFor(() => {
         expect(scrollIntoViewMock).toBeCalled()
       })
@@ -267,10 +262,7 @@ describe('[components] StandardShippingStep', () => {
       })
 
       const firstRadioAddress = screen.getAllByRole('button', { name: /handleAddressSelect/ })[0]
-
-      act(() => {
-        user.click(firstRadioAddress)
-      })
+      user.click(firstRadioAddress)
 
       await waitFor(() => {
         const selected = userGetters.getUserShippingAddress(
@@ -286,10 +278,7 @@ describe('[components] StandardShippingStep', () => {
         name: /handleSaveShippingMethod/,
       })[0]
 
-      act(() => {
-        user.click(firstShippingMethod)
-      })
-
+      user.click(firstShippingMethod)
       await waitFor(() => {
         expect(scrollIntoViewMock).toBeCalled()
       })

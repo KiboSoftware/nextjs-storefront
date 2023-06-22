@@ -1,7 +1,7 @@
 import React from 'react'
 
 import { composeStories } from '@storybook/testing-react'
-import { render, screen } from '@testing-library/react'
+import { render, screen, act, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 
 import * as stories from './EditOrderDateDialog.stories'
@@ -71,11 +71,15 @@ describe('[component]', () => {
       const orderDateInput = screen.getByRole('textbox')
 
       // Act
-      await user.clear(orderDateInput)
+      act(() => {
+        user.clear(orderDateInput)
+      })
 
       // Assert
-      const message = screen.getByText(/order-date-is-required/i)
-      expect(message).toBeVisible()
+      await waitFor(() => {
+        const message = screen.getByText(/order-date-is-required/i)
+        expect(message).toBeVisible()
+      })
     })
 
     it('should display invalid date message when user enters invalid date', async () => {
@@ -85,12 +89,19 @@ describe('[component]', () => {
       const orderDateInput = screen.getByRole('textbox')
 
       // Act
-      await user.clear(orderDateInput)
-      await user.type(orderDateInput, '01/01/01')
+      act(() => {
+        user.clear(orderDateInput)
+      })
+
+      await waitFor(() => {
+        user.type(orderDateInput, '01/01/01')
+      })
 
       // Assert
-      const message = screen.getByText(/order-date-must-be-valid/i)
-      expect(message).toBeVisible()
+      await waitFor(() => {
+        const message = screen.getByText(/order-date-must-be-valid/i)
+        expect(message).toBeVisible()
+      })
     })
 
     it('should display date must be in the future message when user enters todays or past date', async () => {
@@ -100,12 +111,16 @@ describe('[component]', () => {
       const orderDateInput = screen.getByRole('textbox')
 
       // Act
-      await user.clear(orderDateInput)
-      await user.type(orderDateInput, '01/01/2023')
+      act(() => {
+        user.clear(orderDateInput)
+        user.type(orderDateInput, '01/01/2023')
+      })
 
       // Assert
-      const message = screen.getByText(/date-must-be-in-the-future/i)
-      expect(message).toBeVisible()
+      await waitFor(() => {
+        const message = screen.getByText(/date-must-be-in-the-future/i)
+        expect(message).toBeVisible()
+      })
     })
 
     it('should enable Confirm button only when user enters valid future date', async () => {
@@ -115,24 +130,26 @@ describe('[component]', () => {
       const orderDateInput = screen.getByRole('textbox')
       const confirmButton = screen.getByRole('button', { name: /confirm/i })
 
-      // Act
-      await user.clear(orderDateInput) // no date
-      expect(confirmButton).toBeDisabled()
+      // Act and Assert
+      await act(async () => {
+        await user.clear(orderDateInput) // no date
+        expect(confirmButton).toBeDisabled()
 
-      await user.type(orderDateInput, '01/01/01') // invalid date
-      expect(confirmButton).toBeDisabled()
+        await user.type(orderDateInput, '01/01/01') // invalid date
+        expect(confirmButton).toBeDisabled()
 
-      await user.clear(orderDateInput)
-      await user.type(orderDateInput, '01/01/2023') // valid past date
-      expect(confirmButton).toBeDisabled()
+        await user.clear(orderDateInput)
+        await user.type(orderDateInput, '01/01/2023') // valid past date
+        expect(confirmButton).toBeDisabled()
 
-      await user.clear(orderDateInput)
-      await user.type(orderDateInput, '01/01/2030') // valid future date
-      expect(confirmButton).toBeEnabled()
+        await user.clear(orderDateInput)
+        await user.type(orderDateInput, '01/01/2030') // valid future date
+        expect(confirmButton).toBeEnabled()
+      })
     })
   })
 
-  it('should call callback function when user enters valid date and clicks on Confirm button', async () => {
+  it('should call the callback function when the user enters a valid date and clicks on the Confirm button', async () => {
     const { onOrderDateUpdateMock } = setup()
 
     // Arrange
@@ -140,14 +157,22 @@ describe('[component]', () => {
     const confirmButton = screen.getByRole('button', { name: /confirm/i })
 
     // Act
-    await user.clear(orderDateInput)
-    await user.type(orderDateInput, '01/01/2030') // valid future date
-    expect(confirmButton).toBeEnabled()
-    await user.click(confirmButton)
+    await act(() => {
+      user.clear(orderDateInput)
+      user.type(orderDateInput, '01/01/2030') // valid future date
+    })
 
-    // Assert
-    expect(onOrderDateUpdateMock).toHaveBeenCalledTimes(1)
-    expect(onOrderDateUpdateMock).toBeCalledWith('1', '01/01/2030')
+    await waitFor(() => {
+      expect(confirmButton).toBeEnabled()
+      user.click(confirmButton)
+    })
+
+    await waitFor(() => {
+      expect(onOrderDateUpdateMock).toHaveBeenCalledTimes(1)
+    })
+    await waitFor(() => {
+      expect(onOrderDateUpdateMock).toHaveBeenCalledWith('1', '01/01/2030')
+    })
   })
 
   it('should call callback function when user clicks on Cancel button', async () => {
@@ -157,9 +182,11 @@ describe('[component]', () => {
     const cancelButton = screen.getByRole('button', { name: /cancel/i })
 
     // Act
-    await user.click(cancelButton)
+    user.click(cancelButton)
 
     // Assert
-    expect(onCloseMock).toHaveBeenCalledTimes(1)
+    await waitFor(() => {
+      expect(onCloseMock).toHaveBeenCalledTimes(1)
+    })
   })
 })

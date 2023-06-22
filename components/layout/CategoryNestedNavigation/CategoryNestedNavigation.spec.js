@@ -1,5 +1,5 @@
 import { composeStories } from '@storybook/testing-react'
-import { render, screen, within } from '@testing-library/react'
+import { render, screen, within, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 
 import '@testing-library/jest-dom'
@@ -52,31 +52,34 @@ describe('[component] CategroyNestedNavigation component', () => {
     // Getting all the visible categories
     const allVisibleCategories = Common.args.categoryTree.filter((cat) => cat.isDisplayed)
 
-    await user.click(screen.getAllByTestId('ArrowForwardIcon')[0])
-
-    expect(screen.getByText(/Tents/i)).toBeVisible()
+    user.click(screen.getAllByTestId('ArrowForwardIcon')[0])
+    await waitFor(() => {
+      expect(screen.getByText(/Tents/i)).toBeVisible()
+    })
 
     // Getting all the visible children categories after clicking Camping
     let visibleCategoriesCount = allVisibleCategories[0].childrenCategories.length
 
     expect(listItems.getAllByRole('button').length - 2).toBe(visibleCategoriesCount)
 
-    await user.click(
+    user.click(
       listItems.getByRole('button', {
         name: /back\-arrow\-button/i,
       })
     )
 
-    visibleCategoriesCount = allVisibleCategories.length
-
-    expect(listItems.getAllByRole('button').length - 2).toBe(visibleCategoriesCount)
+    await waitFor(() => {
+      visibleCategoriesCount = allVisibleCategories.length
+      expect(listItems.getAllByRole('button').length - 2).toBe(visibleCategoriesCount)
+    })
   })
 
   it('should call onCategoryClickMock if childrenCategories are empty', async () => {
     const { onCategoryClickMock, user } = setup()
 
-    await user.click(screen.getByText(/Pets/i))
-
-    expect(onCategoryClickMock).toBeCalled()
+    user.click(screen.getByText(/Pets/i))
+    await waitFor(() => {
+      expect(onCategoryClickMock).toBeCalled()
+    })
   })
 })

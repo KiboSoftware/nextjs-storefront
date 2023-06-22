@@ -1,7 +1,7 @@
 import React from 'react'
 
 import { composeStories } from '@storybook/testing-react'
-import { render, screen } from '@testing-library/react'
+import { render, screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 
 import * as stories from './Actions.stories' // import all stories from the stories file
@@ -42,10 +42,15 @@ describe('[components] Add To Cart Dialog Actions', () => {
     const goToCartButton = screen.getByRole('button', {
       name: /go-to-cart/i,
     })
-    await user.click(goToCartButton)
+    user.click(goToCartButton)
 
-    expect(goToCartButton).toBeVisible()
-    expect(onGoToCartMock).toHaveBeenCalled()
+    await waitFor(() => {
+      expect(goToCartButton).toBeVisible()
+    })
+
+    await waitFor(() => {
+      expect(onGoToCartMock).toHaveBeenCalled()
+    })
   })
 
   it('should call onContinueShopping habdler when user clicks on "Continue Shopping" button', async () => {
@@ -55,9 +60,14 @@ describe('[components] Add To Cart Dialog Actions', () => {
       name: /continue-shopping/i,
     })
 
-    await user.click(continueShoppingButton)
+    user.click(continueShoppingButton)
 
-    expect(continueShoppingButton).toBeVisible()
-    expect(onContinueShoppingMock).toHaveBeenCalled()
+    await waitFor(() => {
+      expect(continueShoppingButton).toBeVisible()
+    })
+
+    await waitFor(() => {
+      expect(onContinueShoppingMock).toHaveBeenCalled()
+    })
   })
 })

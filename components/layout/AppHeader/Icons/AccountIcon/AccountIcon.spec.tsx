@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
-import { screen } from '@testing-library/react'
+import { screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import '@testing-library/jest-dom'
 import { mock } from 'jest-mock-extended'
@@ -47,8 +47,9 @@ describe('[component] AccountIcon component', () => {
   it('should call handleAccountIconClick function', async () => {
     const { user, handleAccountIconClickMock } = setup()
 
-    await user.click(screen.getByText(/my-account/))
-
-    expect(handleAccountIconClickMock).toBeCalled()
+    user.click(screen.getByText(/my-account/))
+    await waitFor(() => {
+      expect(handleAccountIconClickMock).toBeCalled()
+    })
   })
 })

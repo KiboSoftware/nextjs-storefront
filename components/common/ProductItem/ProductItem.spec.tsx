@@ -1,7 +1,7 @@
 import React from 'react'
 
 import { composeStories } from '@storybook/testing-react'
-import { render, screen } from '@testing-library/react'
+import { render, screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 
 import * as stories from './ProductItem.stories'
@@ -85,8 +85,10 @@ describe('[component] - ProductItem with Price and Pickup Item', () => {
       ? screen.getByText(/change-store/i)
       : screen.getByText(/select-store/i)
 
-    await user.click(changeStore)
-    expect(onStoreLocatorClickMock).toHaveBeenCalled()
+    user.click(changeStore)
+    await waitFor(() => {
+      expect(onStoreLocatorClickMock).toHaveBeenCalled()
+    })
   })
 
   it('should not show details when no label(price,qty) or options is present', () => {

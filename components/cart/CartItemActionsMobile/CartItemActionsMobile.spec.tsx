@@ -29,9 +29,7 @@ describe('[component] - CartItemActionsMobile', () => {
     const { user } = setup()
 
     const buttonElement = screen.getByRole('button')
-    act(() => {
-      user.click(buttonElement)
-    })
+    user.click(buttonElement)
 
     const items = await screen.findAllByRole('menuitem')
     const menuItems = items.map((item) => item.textContent)
@@ -44,12 +42,16 @@ describe('[component] - CartItemActionsMobile', () => {
   it('should call onMenuItemClick function when user selects any menu item', async () => {
     const { onMenuItemSelectionMock, user } = setup()
     const buttonElement = screen.getByRole('button')
+
     act(() => {
       user.click(buttonElement)
     })
 
     const items = await screen.findAllByRole('menuitem')
-    items[0].click()
+
+    act(() => {
+      items[0].click()
+    })
 
     await waitFor(() => {
       expect(onMenuItemSelectionMock).toHaveBeenCalledWith(items[0].textContent)
@@ -59,17 +61,14 @@ describe('[component] - CartItemActionsMobile', () => {
   it('should hide popover menu when user selects menu item', async () => {
     const { user } = setup()
     const buttonElement = screen.getByRole('button')
-    act(() => {
-      user.click(buttonElement)
-    })
+
+    user.click(buttonElement)
 
     const menu = await screen.findByRole('menu')
     const menuItems = await screen.findAllByRole('menuitem')
 
     const menuItem = menuItems[0]
-    act(() => {
-      user.click(menuItem)
-    })
+    user.click(menuItem)
 
     await waitFor(() => {
       expect(menu).not.toBeVisible()

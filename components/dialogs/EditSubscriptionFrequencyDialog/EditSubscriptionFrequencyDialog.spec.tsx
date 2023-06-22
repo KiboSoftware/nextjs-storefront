@@ -2,7 +2,7 @@ import React from 'react'
 
 import { InputLabel, FormControl, Select } from '@mui/material'
 import { composeStories } from '@storybook/testing-react'
-import { render, screen, within } from '@testing-library/react'
+import { render, screen, waitFor, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 
 import * as stories from './EditSubscriptionFrequencyDialog.stories'
@@ -85,10 +85,12 @@ describe('[components] EditSubscriptionFrequencyDialog', () => {
     // Assertions
     expect(kiboSelectMock).toBeVisible()
 
-    await user.click(kiboSelectMock)
-    Common.args?.values?.map((value) => {
-      const frequency = screen.getByText(`${value.stringValue}`)
-      expect(frequency).toBeVisible()
+    user.click(kiboSelectMock)
+    await waitFor(() => {
+      Common.args?.values?.map((value) => {
+        const frequency = screen.getByText(`${value.stringValue}`)
+        expect(frequency).toBeVisible()
+      })
     })
 
     expect(cancelButton).toBeVisible()
@@ -109,13 +111,15 @@ describe('[components] EditSubscriptionFrequencyDialog', () => {
     const kiboSelectBtn = screen.getByRole('button', {
       name: /​/i,
     })
-    await user.click(kiboSelectBtn)
+    user.click(kiboSelectBtn)
 
     const listbox = await screen.findByRole('listbox')
-    await user.click(within(listbox).getByRole('option', { name: '45 Days' }))
+    user.click(within(listbox).getByRole('option', { name: '45 Days' }))
 
     //Assert
-    expect(confirmButton).toBeEnabled()
+    await waitFor(() => {
+      expect(confirmButton).toBeEnabled()
+    })
   })
 
   it('should call callback function when user selects frequency and clicks on Confirm button', async () => {
@@ -125,26 +129,27 @@ describe('[components] EditSubscriptionFrequencyDialog', () => {
     const kiboSelectBtn = screen.getByRole('button', {
       name: /​/i,
     })
-    await user.click(kiboSelectBtn)
+    user.click(kiboSelectBtn)
 
     const listbox = await screen.findByRole('listbox')
-    await user.click(within(listbox).getByRole('option', { name: '45 Days' }))
+    user.click(within(listbox).getByRole('option', { name: '45 Days' }))
 
     // Click on Confirm button
-    const confirmButton = screen.getByRole('button', {
+    const confirmButton = await screen.findByRole('button', {
       name: /confirm/i,
     })
-
     expect(confirmButton).toBeVisible()
     expect(confirmButton).toBeEnabled()
-    await user.click(confirmButton)
 
-    expect(onFrequencySaveMock).toHaveBeenCalledWith({
-      subscriptionId: '1',
-      frequencyInput: {
-        value: 45,
-        unit: 'Day',
-      },
+    user.click(confirmButton)
+    await waitFor(() => {
+      expect(onFrequencySaveMock).toHaveBeenCalledWith({
+        subscriptionId: '1',
+        frequencyInput: {
+          value: 45,
+          unit: 'Day',
+        },
+      })
     })
   })
 
@@ -155,8 +160,10 @@ describe('[components] EditSubscriptionFrequencyDialog', () => {
       name: /cancel/i,
     })
     expect(cancelButton).toBeVisible()
-    await user.click(cancelButton)
+    user.click(cancelButton)
 
-    expect(onCloseMock).toHaveBeenCalledTimes(1)
+    await waitFor(() => {
+      expect(onCloseMock).toHaveBeenCalledTimes(1)
+    })
   })
 })

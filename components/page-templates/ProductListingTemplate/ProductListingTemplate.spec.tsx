@@ -87,17 +87,22 @@ describe('[component] - Category', () => {
     const { user, onPaginationChangeMock } = setup()
 
     const showMoreButton = screen.getByRole('button', { name: /show-more/i })
-    await user.click(showMoreButton)
-    expect(onPaginationChangeMock).toHaveBeenCalled()
+    user.click(showMoreButton)
+
+    await waitFor(() => {
+      expect(onPaginationChangeMock).toHaveBeenCalled()
+    })
   })
 
   it('should hide filter by button when user clicks on filter By button', async () => {
     const { user } = setup()
 
     const filterByButton = screen.getByRole('button', { name: /filter-by/i })
-    await user.click(filterByButton)
+    user.click(filterByButton)
 
-    expect(filterByButton).not.toBeVisible()
+    await waitFor(() => {
+      expect(filterByButton).not.toBeVisible()
+    })
   })
 
   it('should call onSortItemSelection function when user clicks on sorting', async () => {
@@ -107,12 +112,16 @@ describe('[component] - Category', () => {
       Category?.args?.sortingValues?.options?.map((sort) => sort.value) || []
     const selectButton = screen.getByRole('button', { name: sortingValuesOptions[0] })
 
-    await user.click(selectButton)
-    const listbox = within(screen.getByRole('listbox'))
-    const sortingValues = Category?.args?.sortingValues?.options || []
-    await user.click(listbox.getByText(sortingValues[1].value))
+    user.click(selectButton)
 
-    expect(selectButton).toHaveTextContent(sortingValues[0].value)
+    await waitFor(() => {
+      const listbox = within(screen.getByRole('listbox'))
+      const sortingValues = Category?.args?.sortingValues?.options || []
+
+      user.click(listbox.getByText(sortingValues[1].value))
+      expect(selectButton).toHaveTextContent(sortingValues[0].value)
+    })
+
     await waitFor(() => {
       expect(onSortItemSelectionMock).toHaveBeenCalled()
     })

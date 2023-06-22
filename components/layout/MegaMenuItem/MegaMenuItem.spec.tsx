@@ -2,7 +2,7 @@ import React from 'react'
 
 import '@testing-library/jest-dom'
 import { composeStories } from '@storybook/testing-react'
-import { render, screen } from '@testing-library/react'
+import { render, screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 
 import * as stories from './MegaMenuItem.stories'
@@ -41,8 +41,8 @@ describe('[components] - MegaMenuItem', () => {
     const { user } = setup()
 
     const menuLink = screen.getByText('shop-all')
-    await user.click(menuLink)
-    expect(closeBackDropMock).toBeCalled()
+    user.click(menuLink)
+    await waitFor(() => expect(closeBackDropMock).toBeCalled())
 
     const categoryChildren = Common.args?.categoryChildren
     categoryChildren?.map(async (cat) => {

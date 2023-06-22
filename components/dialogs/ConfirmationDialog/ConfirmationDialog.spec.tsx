@@ -1,7 +1,7 @@
 import React from 'react'
 
 import { composeStories } from '@storybook/testing-react'
-import { render, screen } from '@testing-library/react'
+import { render, screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 
 import * as stories from './ConfirmationDialog.stories'
@@ -27,8 +27,10 @@ describe('[components] ConfirmationDialog', () => {
 
     expect(title).toBeVisible()
 
-    await user.click(screen.getByRole('button', { name: 'Delete' }))
+    user.click(screen.getByRole('button', { name: 'Delete' }))
 
-    expect(onDeleteMock).toBeCalled()
+    await waitFor(() => {
+      expect(onDeleteMock).toBeCalled()
+    })
   })
 })

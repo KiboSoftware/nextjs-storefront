@@ -4,7 +4,7 @@ import React from 'react'
 
 import '@testing-library/jest-dom/extend-expect'
 import { composeStories } from '@storybook/testing-react'
-import { render, screen } from '@testing-library/react'
+import { render, screen, waitFor, act } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 
 import * as stories from './PromoCodeBadge.stories' // import all stories from the stories file
@@ -46,7 +46,8 @@ describe('PromoCode Component', () => {
   it('should enable button', async () => {
     const { user } = setup()
     const PromoCode = screen.getByRole('textbox')
-    await user.click(PromoCode, 'SAVE50')
+
+    user.click(PromoCode, 'SAVE50')
     expect(PromoCode).toBeInTheDocument('SAVE50')
     const ApplyButton = screen.getByTestId('promo-button')
     expect(ApplyButton).toBeInTheDocument()
@@ -64,10 +65,15 @@ describe('PromoCode Component', () => {
     const input = screen.getByRole('textbox')
     const ApplyButton = screen.getByTestId('promo-button')
     expect(ApplyButton).toBeDisabled()
-    await user.type(input, userEnteredText)
+    user.type(input, userEnteredText)
 
-    expect(input).toHaveValue(userEnteredText)
-    expect(ApplyButton).toBeEnabled()
+    await waitFor(() => {
+      expect(input).toHaveValue(userEnteredText)
+    })
+
+    await waitFor(() => {
+      expect(ApplyButton).toBeEnabled()
+    })
   })
 
   it('should disable Apply button when a user enters Promo code and apply it', async () => {
@@ -76,34 +82,54 @@ describe('PromoCode Component', () => {
     const PromoCodebutton = screen.getByRole('button', {
       name: /apply/i,
     })
-    await user.type(input, userEnteredText)
-    await user.click(PromoCodebutton)
-    expect(PromoCodebutton).toBeDisabled()
+
+    await act(async () => {
+      await user.type(input, userEnteredText)
+      user.click(PromoCodebutton)
+    })
+
+    await waitFor(() => {
+      expect(PromoCodebutton).toBeDisabled()
+    })
   })
 
   it('should display promocode when a user enter and apply it', async () => {
     const { user } = setup()
     const input = screen.getByRole('textbox')
     const PromoCodebutton = screen.getByRole('button', { name: /apply/i })
-    await user.type(input, userEnteredText)
-    expect(input).toHaveValue(userEnteredText)
 
-    await user.click(PromoCodebutton)
-    expect(screen.getByTestId('promotype')).toBeInTheDocument('SAVE50')
+    user.type(input, userEnteredText)
+    await waitFor(() => {
+      expect(input).toHaveValue(userEnteredText)
+    })
+
+    user.click(PromoCodebutton)
+    await waitFor(() => {
+      expect(screen.getByTestId('promotype')).toBeInTheDocument('SAVE50')
+    })
   })
+
   it('should display multiple promocode when a user enter and apply it', async () => {
     const promoCode = '10OFF'
     const params = { ...PromocodeBadgeComponent.args, promoList: [promoCode] }
     const { user } = setup(params)
     const input = screen.getByRole('textbox')
     const PromoCodebutton = screen.getByRole('button', { name: /apply/i })
-    await user.type(input, userEnteredText)
-    await user.click(PromoCodebutton)
 
-    const appliedPromoCode = screen.getByText(promoCode)
-    const appliedPromoCode2 = screen.getByText('T')
-    expect(appliedPromoCode).toBeVisible()
-    expect(appliedPromoCode2).toBeVisible()
+    await act(async () => {
+      await user.type(input, userEnteredText)
+      user.click(PromoCodebutton)
+    })
+
+    await waitFor(() => {
+      const appliedPromoCode = screen.getByText(promoCode)
+      expect(appliedPromoCode).toBeVisible()
+    })
+
+    await waitFor(() => {
+      const appliedPromoCode2 = screen.getByText('T')
+      expect(appliedPromoCode2).toBeVisible()
+    })
   })
 
   it('should display an error message when the user applies the same promo code more than once', async () => {
@@ -111,10 +137,16 @@ describe('PromoCode Component', () => {
     const { user } = setup(params)
     const input = screen.getByRole('textbox')
     const PromoCodebutton = screen.getByRole('button', { name: /apply/i })
-    await user.type(input, '10OFF')
-    await user.click(PromoCodebutton)
-    const errorMessage = screen.getByText('promo-code-already-in-use')
-    expect(errorMessage).toBeVisible()
+
+    await act(async () => {
+      await user.type(input, '10OFF')
+      user.click(PromoCodebutton)
+    })
+
+    await waitFor(() => {
+      const errorMessage = screen.getByText('promo-code-already-in-use')
+      expect(errorMessage).toBeVisible()
+    })
   })
 
   it('shoul remove a coupon when click cross icon', async () => {
@@ -122,8 +154,12 @@ describe('PromoCode Component', () => {
     const params = { ...PromocodeBadgeComponent.args, promoList: [promoCode] }
     const { user } = setup(params)
     const removeIcon = screen.getAllByLabelText('remove-promo-code')
-    await user.click(removeIcon[0])
-    const removedPromoCode = screen.queryByText(promoCode)
-    expect(removedPromoCode).not.toBeInTheDocument()
+
+    user.click(removeIcon[0])
+
+    await waitFor(() => {
+      const removedPromoCode = screen.queryByText(promoCode)
+      expect(removedPromoCode).not.toBeInTheDocument()
+    })
   })
 })

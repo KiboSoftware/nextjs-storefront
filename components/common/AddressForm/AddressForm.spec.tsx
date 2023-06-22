@@ -45,7 +45,7 @@ describe('[components] - AddressForm', () => {
     // act
     const textBoxList = screen.getAllByRole('textbox')
 
-    await user.type(textBoxList[0], 'Shane')
+    user.type(textBoxList[0], 'Shane')
 
     await waitFor(() => expect(textBoxList[0]).toHaveValue('Shane'))
 

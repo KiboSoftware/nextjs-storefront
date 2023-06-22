@@ -185,9 +185,7 @@ describe('[components] PaymentStep', () => {
         expect(screen.queryByTestId('card-form-mock')).not.toBeInTheDocument()
         expect(screen.queryByTestId('address-form-mock')).not.toBeInTheDocument()
 
-        act(() => {
-          user.click(creditCardPaymentMethodRadio)
-        })
+        user.click(creditCardPaymentMethodRadio)
 
         await waitFor(async () => {
           expect(await screen.findByTestId('card-form-mock')).toBeVisible()
@@ -238,9 +236,7 @@ describe('[components] PaymentStep', () => {
           name: 'Credit / Debit Card',
         })
 
-        act(() => {
-          user.click(creditCardPaymentMethodRadio)
-        })
+        user.click(creditCardPaymentMethodRadio)
 
         await waitFor(async () => {
           expect(await screen.findByTestId('card-form-mock')).toBeVisible()
@@ -249,9 +245,7 @@ describe('[components] PaymentStep', () => {
           expect(await screen.findByTestId('address-form-mock')).toBeVisible()
         })
 
-        act(() => {
-          user.click(screen.getByRole('button', { name: /cancel/i }))
-        })
+        user.click(screen.getByRole('button', { name: /cancel/i }))
 
         await waitFor(() => {
           expect(screen.queryByTestId('card-form-mock')).not.toBeInTheDocument()
@@ -271,9 +265,8 @@ describe('[components] PaymentStep', () => {
         const cardOptions = await screen.findByRole('radio', {
           name: 'Credit / Debit Card',
         })
-        act(() => {
-          user.click(cardOptions)
-        })
+
+        user.click(cardOptions)
 
         await waitFor(() => {
           const savePaymentMethodCheckbox = screen.getByRole('checkbox', {
@@ -334,7 +327,6 @@ describe('[components] PaymentStep', () => {
         await user.click(await screen.findByRole('button', { name: /Change Address Form Status/ }))
         await user.click(await screen.findByRole('button', { name: /Save Card Data/ }))
         await user.click(await screen.findByRole('button', { name: /Save Address/ }))
-
         await user.click(await screen.findByRole('button', { name: /save-payment-method/ }))
 
         expect(tokenizeCreditCardPayment).toHaveBeenCalled()
@@ -400,9 +392,7 @@ describe('[components] PaymentStep', () => {
           name: /handlePaymentCardSelection/,
         })
 
-        act(() => {
-          user.click(paymentCardSelectionButtons[0])
-        })
+        user.click(paymentCardSelectionButtons[0])
 
         await waitFor(async () => {
           const selectedIds = await screen.findAllByTestId('selectedPaymentRadio')

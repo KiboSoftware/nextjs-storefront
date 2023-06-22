@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
 import { composeStories } from '@storybook/testing-react'
-import { render, screen } from '@testing-library/react'
+import { render, screen, waitFor } from '@testing-library/react'
 import '@testing-library/jest-dom'
 
 import * as stories from './MobileHeader.stories' // import all stories from the stories file
@@ -13,10 +13,13 @@ jest.mock('@mui/material', () => ({
 }))
 
 describe('[component] MobileHeader component', () => {
-  it('should render the component', () => {
+  it('should render the component', async () => {
     render(<Common {...Common.args} />)
 
-    expect(screen.getByTestId(/top-bar/)).not.toBeVisible()
+    await waitFor(() => {
+      expect(screen.getByTestId(/top-bar/)).not.toBeVisible()
+    })
+
     expect(screen.queryByTestId(/header-action-area/)).not.toBeInTheDocument()
     expect(screen.getByTestId(/mega-menu-container/)).not.toBeVisible()
     expect(screen.getByTestId(/mobile-header/)).toBeVisible()

@@ -41,9 +41,7 @@ describe('[components] KiboStepper', () => {
 
     const firstStepHeading = screen.getByRole('heading', { name: /details/i })
 
-    act(() => {
-      user.click(firstStepHeading)
-    })
+    user.click(firstStepHeading)
 
     await waitFor(() => {
       const personalDatailsHeading = screen.getByText('Details step content goes here...')
