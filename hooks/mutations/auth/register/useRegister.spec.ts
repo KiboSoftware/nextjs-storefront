@@ -19,8 +19,8 @@ describe('[hooks] useRegister', () => {
 
     renderHook(
       async () => {
-        const { mutateAsync } = useRegister()
-        const response = await mutateAsync(createAccountAndLoginMutationVars)
+        const { registerUserAccount } = useRegister()
+        const response = await registerUserAccount.mutateAsync(createAccountAndLoginMutationVars)
         expect(response).toStrictEqual(registerUserMock.account)
       },
       {

@@ -1,11 +1,10 @@
 /**
  * @module useRegister
  */
-import { useMutation, useQueryClient } from 'react-query'
+import { useMutation } from 'react-query'
 
 import { makeGraphQLClient, REGISTER_USER_ENDPOINT } from '@/lib/gql/client'
 import { createAccountAndLoginMutation } from '@/lib/gql/mutations/user/createAccount'
-import { loginKeys } from '@/lib/react-query/queryKeys'
 
 import { CustomerAccountAndAuthInfoInput } from '@/lib/gql/types'
 
@@ -33,29 +32,7 @@ const registerUser = async (customerAccountAndAuthInfoInput: CustomerAccountAndA
  */
 
 export const useRegister = () => {
-  const queryClient = useQueryClient()
-  const {
-    mutate,
-    mutateAsync,
-    data = {},
-    isLoading,
-    isError,
-    error,
-    isSuccess,
-  } = useMutation(registerUser, {
-    onMutate: () => {
-      queryClient.invalidateQueries(loginKeys.user)
-    },
-    retry: 0,
-  })
-
   return {
-    mutate,
-    mutateAsync,
-    data,
-    isLoading,
-    isSuccess,
-    isError,
-    error,
+    registerUserAccount: useMutation(registerUser),
   }
 }

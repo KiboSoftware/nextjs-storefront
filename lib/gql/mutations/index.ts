@@ -12,6 +12,7 @@ export { default as deleteWishlistItemMutation } from './wishlist/deleteWishlist
 export { default as setBillingInfo } from './checkout/set-billing-info'
 export { default as addPaymentMethodToCheckout } from './checkout/add-payment-method-to-checkout'
 export { default as updateOrderPaymentAction } from './checkout/update-order-payment-action'
+export { default as updateUserOrder } from './checkout/update-user-order'
 export { default as createCustomerAccountCard } from './my-account/create-customer-account-card'
 export { default as updateCustomerAccountCard } from './my-account/update-customer-account-card'
 export { default as deleteCustomerAccountCard } from './my-account/delete-customer-account-card'
