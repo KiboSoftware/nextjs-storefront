@@ -15,7 +15,7 @@ import {
 } from '@mui/material'
 import { useTranslation } from 'next-i18next'
 
-import { AddressDetailsView, KiboImage, PromoCodeBadge } from '@/components/common'
+import { AddressCard, KiboImage, PromoCodeBadge } from '@/components/common'
 import { useCheckoutStepContext } from '@/context'
 import { checkoutGetters, orderGetters } from '@/lib/getters'
 import { getCreditCardLogo } from '@/lib/helpers'
@@ -184,7 +184,7 @@ const OrderReview = (props: OrderReviewProps) => {
             handleEditAction={handleEditAction}
           >
             {!isMultiShipEnabled && (
-              <AddressDetailsView
+              <AddressCard
                 {...shippingPersonalDetails}
                 address1={shippingAddress?.address1 as string}
                 address2={shippingAddress?.address2 as string}
@@ -201,7 +201,7 @@ const OrderReview = (props: OrderReviewProps) => {
                   {multiShippingAddressesList?.map((multiAddress: CustomerContact) => {
                     return (
                       <Box key={multiAddress?.id}>
-                        <AddressDetailsView
+                        <AddressCard
                           firstName={multiAddress?.firstName as string}
                           lastNameOrSurname={multiAddress?.lastNameOrSurname as string}
                           address1={multiAddress?.address?.address1 as string}
@@ -223,7 +223,7 @@ const OrderReview = (props: OrderReviewProps) => {
             handleEditAction={handleEditAction}
           >
             <>
-              <AddressDetailsView
+              <AddressCard
                 {...billingPersonalDetails}
                 address1={billingAddress?.address1 as string}
                 address2={billingAddress?.address2 as string}

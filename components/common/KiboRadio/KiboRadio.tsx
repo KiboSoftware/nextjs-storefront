@@ -21,8 +21,8 @@ interface KiboRadioProps {
     value: string
     name: string
     disabled?: boolean
+    optionIndicator?: string // use this to assign a specific property to an option. e.g: isPrimary
   }[]
-  optionIndicator?: string // use this to assign a specific property to an option. e.g: isPrimary
   sx?: SxProps<Theme>
   onChange: (value: string) => void
 }
@@ -34,7 +34,7 @@ export const KiboRadio = (props: KiboRadioProps) => {
     selected = '',
     sx,
     align = 'center',
-    optionIndicator,
+    // optionIndicator,
     onChange,
   } = props
 
@@ -59,11 +59,11 @@ export const KiboRadio = (props: KiboRadioProps) => {
         {radioOptions?.map((radio, index) => {
           return (
             <Box key={radio.value + index}>
-              {optionIndicator && (
+              {radio.optionIndicator && (
                 <Typography
-                  sx={{ fontSize: 'subtitle2', color: 'text.primary', fontWeight: 700, pl: '18%' }}
+                  sx={{ fontSize: 'subtitle2', color: 'text.primary', fontWeight: 700, pl: 4 }}
                 >
-                  {optionIndicator}
+                  {radio.optionIndicator}
                 </Typography>
               )}
               <FormControlLabel

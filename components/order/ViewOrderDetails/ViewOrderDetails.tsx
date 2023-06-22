@@ -4,8 +4,8 @@ import ArrowBackIos from '@mui/icons-material/ArrowBackIos'
 import { Divider, Grid, Typography, Box, Stack, Button } from '@mui/material'
 import { useTranslation } from 'next-i18next'
 
-import { SavedPaymentMethodView } from '@/components/checkout'
 import { AddressCard, OrderSummary, ProductItemList } from '@/components/common'
+import PaymentBillingCard from '@/components/common/PaymentBillingCard/PaymentBillingCard'
 import { ProductOption } from '@/components/product'
 import { useGetStoreLocations } from '@/hooks'
 import { OrderStatus, ReturnStatus } from '@/lib/constants'
@@ -197,11 +197,11 @@ const ViewOrderDetails = (props: ViewOrderDetailsProps) => {
                 {t('payment-information')}
               </Typography>
               {payment ? (
-                <SavedPaymentMethodView
-                  id={cardDetails.paymentServiceCardId}
+                <PaymentBillingCard
                   cardNumberPart={cardDetails.cardNumberPartOrMask}
                   expireMonth={cardDetails.expireMonth}
                   expireYear={cardDetails.expireYear}
+                  cardType={cardDetails.cardType}
                   address1={address.address1}
                   address2={address.address2}
                   cityOrTown={address.cityOrTown}
