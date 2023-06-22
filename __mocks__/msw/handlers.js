@@ -217,7 +217,6 @@ export const userHandlers = [
   }),
 
   graphql.mutation('login', (_req, res, ctx) => {
-    console.log('-----------------login--------------------')
     return res(ctx.data(loginUserMock))
   }),
 
