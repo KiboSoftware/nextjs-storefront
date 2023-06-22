@@ -63,6 +63,5 @@ export const isCardTypeValid = (cardNumber: string | undefined) => {
     VISA: VISA,
     AMEX: AMEX,
   }
-  console.log(creditCardType(cardNumber))
   return Boolean(supportedCards[creditCardType(cardNumber)[0].niceType.toUpperCase()])
 }

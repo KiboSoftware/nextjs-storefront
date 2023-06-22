@@ -135,8 +135,7 @@ const AddressBook = (props: AddressBookProps) => {
   const { publicRuntimeConfig } = getConfig()
   const shippingAddressPageSize = publicRuntimeConfig.shippingAddressPageSize
   const billingAddressPageSize = publicRuntimeConfig.billingAddressPageSize
-  const [isAddNewAddress, setIsAddNewAddress] = useState<boolean>(false)
-  const [isEditAddress, setIsEditAddress] = useState<boolean>(false)
+  const [isAddressModified, setIsAddressModified] = useState<boolean>(false)
   const [validateForm, setValidateForm] = useState<boolean>(false)
   const [isDefaultAddress, setIsDefaultAddress] = useState<boolean>(false)
   const [editAddress, setEditAddress] = useState<CustomerContact>()
@@ -181,7 +180,7 @@ const AddressBook = (props: AddressBookProps) => {
     }
   }
   const handleNewAddress = () => {
-    setIsAddNewAddress(true)
+    setIsAddressModified(true)
     setEditAddress(undefined)
     setAddressType(AddressType.SHIPPING)
   }
@@ -190,7 +189,7 @@ const AddressBook = (props: AddressBookProps) => {
     if (contact?.types) {
       setIsDefaultAddress(contact?.types[0]?.isPrimary as boolean)
       setAddressType(contact?.types[0]?.name as string)
-      setIsEditAddress(true)
+      setIsAddressModified(true)
     }
     setEditAddress(contact)
   }
@@ -246,10 +245,10 @@ const AddressBook = (props: AddressBookProps) => {
       })
       if (address?.contact?.id) {
         await updateCustomerAddress.mutateAsync(params as UpdateCustomerAccountContactDetailsParams)
-        setIsEditAddress(false)
+        setIsAddressModified(false)
       } else {
         await createCustomerAddress.mutateAsync(params)
-        setIsAddNewAddress(false)
+        setIsAddressModified(false)
       }
 
       setValidateForm(false)
@@ -260,8 +259,7 @@ const AddressBook = (props: AddressBookProps) => {
   }
 
   const handleCancelUpdateAddress = () => {
-    setIsAddNewAddress(false)
-    setIsEditAddress(false)
+    setIsAddressModified(false)
   }
 
   const handleConfirmDeleteAddress = (deleteAddressProps: DeleteAddressParams) => {
@@ -320,7 +318,7 @@ const AddressBook = (props: AddressBookProps) => {
         shippingAddressStartIndex + shippingAddressPageSize
       ) as CustomerContact[]
     )
-  }, [shippingAddresses?.length])
+  }, [JSON.stringify(shippingAddresses)])
 
   useEffect(() => {
     setDisplayBillingAddresses(
@@ -329,19 +327,18 @@ const AddressBook = (props: AddressBookProps) => {
         billingAddressStartIndex + billingAddressPageSize
       ) as CustomerContact[]
     )
-  }, [billingAddresses?.length])
+  }, [JSON.stringify(billingAddresses)])
 
   return (
     <Box data-testid={'address-book-component'}>
       <Box pb={2}>
-        {!isAddNewAddress &&
-          !isEditAddress &&
+        {!isAddressModified &&
           !displayShippingAddresses?.length &&
           !displayBillingAddresses?.length && (
             <Typography variant="body1">{t('no-saved-addresses-yet')}</Typography>
           )}
       </Box>
-      {!isAddNewAddress && !isEditAddress && (
+      {!isAddressModified && (
         <Box>
           <TransitionGroup>
             {displayShippingAddresses?.map((item: CustomerContact, index: number) => (
@@ -364,7 +361,7 @@ const AddressBook = (props: AddressBookProps) => {
                 </Box>
               </Collapse>
             ))}
-            {displayShippingAddresses?.length > 5 && (
+            {displayShippingAddresses?.length > 0 && shippingAddresses.length > 5 && (
               <Box display={'flex'} justifyContent={'center'} width="100%" py={10}>
                 <KiboPagination
                   count={Math.ceil(shippingAddresses?.length / shippingAddressPageSize)}
@@ -394,7 +391,7 @@ const AddressBook = (props: AddressBookProps) => {
                 </Box>
               </Collapse>
             ))}
-            {displayBillingAddresses?.length > 5 && (
+            {displayBillingAddresses?.length > 5 && billingAddresses.length > 5 && (
               <Box display={'flex'} justifyContent={'center'} width="100%" py={10}>
                 <KiboPagination
                   count={Math.ceil(billingAddresses?.length / billingAddressPageSize)}
@@ -407,7 +404,7 @@ const AddressBook = (props: AddressBookProps) => {
           </TransitionGroup>
         </Box>
       )}
-      {!isAddNewAddress && !isEditAddress && (
+      {!isAddressModified && (
         <Button
           variant="contained"
           color="inherit"
@@ -420,7 +417,7 @@ const AddressBook = (props: AddressBookProps) => {
         </Button>
       )}
 
-      {(isAddNewAddress || isEditAddress) && (
+      {isAddressModified && (
         <Box pb={'1.813rem'}>
           <Grid item xs={12} md={6} pl={1} pb={2.5} pr={6.5}>
             <KiboSelect

@@ -309,7 +309,7 @@ const PaymentMethod = (props: PaymentMethodProps) => {
       )
     )
     window.scrollTo({ top: 0, behavior: 'smooth' })
-  }, [savedCardsAndContacts.length])
+  }, [JSON.stringify(savedCardsAndContacts)])
 
   // when payment card and billing address info is available, handleTokenization
   useEffect(() => {
@@ -382,7 +382,7 @@ const PaymentMethod = (props: PaymentMethodProps) => {
           >
             {t('add-payment-method')}
           </Button>
-          {displaySavedCardsAndContacts?.length > 5 && (
+          {displaySavedCardsAndContacts?.length > 0 && savedCardsAndContacts.length > 5 && (
             <Box display={'flex'} justifyContent={'center'} width="100%" py={10}>
               <KiboPagination
                 count={Math.ceil(savedCardsAndContacts.length / paymentMethodPageSize)}
