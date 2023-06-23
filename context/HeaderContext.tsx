@@ -46,7 +46,6 @@ export const HeaderContextProvider = ({ children }: HeaderContextProviderProps) 
     setHeaderState({ ...headerState, isSearchBarVisible: value })
 
   const toggleHamburgerMenu = () => {
-    console.log('toggle', headerState.isHamburgerMenuVisible)
     setHeaderState({
       ...headerState,
       isMobileSearchPortalVisible: false,

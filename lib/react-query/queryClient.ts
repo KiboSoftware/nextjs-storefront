@@ -20,8 +20,6 @@ const queryClientHandler = (error: any, showSnackbar: any) => {
 
   const status = 'error'
 
-  console.log(`id: ${id}, title: ${code}, status: ${status}`)
-
   showSnackbar(getErrorMessage(code, message), status)
 }
 
