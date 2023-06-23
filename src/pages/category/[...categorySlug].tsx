@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 
 import getConfig from 'next/config'
 import ErrorPage from 'next/error'
@@ -26,6 +26,14 @@ import type { NextPage } from 'next'
 interface CategoryPageType {
   results: ProductSearchResult
   categoriesTree?: PrCategory[]
+  seoFriendlyUrl?: string
+  categoryCode?: string
+  metaInformation?: {
+    metaTagTitle: string
+    metaTagDescription: string
+    metaTagKeywords: string
+    canonical: string
+  }
   category: { categories: PrCategory[] }
 }
 
@@ -83,22 +91,26 @@ export const getStaticProps: any = async (context: any) => {
 
   const categories = await categoryTreeSearchByCode({ categoryCode }, categoriesTree)
 
+  console.log('fsgsdfgdshgsgh', categories)
+
   return {
     props: {
       results: response?.data?.products || [],
       categoriesTree,
-      categories,
+      category: categories,
       categoryCode,
       seoFriendlyUrl: categories?.seoFriendlyUrl,
       metaInformation: categories?.metaInformation,
       ...(await serverSideTranslations(locale as string, ['common'])),
-    },
+    } as CategoryPageType,
     revalidate: 60,
   }
 }
 
-const CategoryPage: NextPage<CategoryPageType> = (props: any) => {
+const CategoryPage: NextPage<CategoryPageType> = (props) => {
   const router = useRouter()
+  const previousQueryRef = useRef(router.query)
+
   const slugArray = router?.query?.categorySlug ? router.query?.categorySlug : []
   const slug = slugArray[0]
   const code = slugArray?.length === 1 ? slugArray[0] : slugArray[1]
@@ -114,10 +126,15 @@ const CategoryPage: NextPage<CategoryPageType> = (props: any) => {
   } as unknown as CategorySearchParams)
 
   useEffect(() => {
-    setSearchParams({
-      categoryCode: code,
-      ...router.query,
-    } as unknown as CategorySearchParams)
+    const hasQueryChanged =
+      JSON.stringify(router.query) !== JSON.stringify(previousQueryRef.current)
+    const hasCategoryChanged = code !== searchParams.categoryCode
+    if (hasQueryChanged || hasCategoryChanged) {
+      setSearchParams({
+        categoryCode: code,
+        ...router.query,
+      } as unknown as CategorySearchParams)
+    }
   }, [router.query, code])
 
   const {
@@ -139,7 +156,7 @@ const CategoryPage: NextPage<CategoryPageType> = (props: any) => {
     return <ErrorPage statusCode={404} />
   }
 
-  const breadcrumbs = facetGetters.getBreadcrumbs(props.categories)
+  const breadcrumbs = facetGetters.getBreadcrumbs(props.category)
 
   const facetList = productSearchResult?.facets as Facet[]
   const products = productSearchResult?.items as Product[]
@@ -214,7 +231,7 @@ const CategoryPage: NextPage<CategoryPageType> = (props: any) => {
         <meta name="title" content={props?.metaInformation?.metaTagTitle} />
         <meta name="description" content={props?.metaInformation?.metaTagDescription} />
         <meta name="keywords" content={props?.metaInformation?.metaTagKeywords} />
-        {/* <link rel="canonical" href={`https://${currentUrl}${props?.metaInformation?.canonical}`} /> */}
+        <link rel="canonical" href={`https://${currentUrl}${props?.metaInformation?.canonical}`} />
       </Head>
       <ProductListingTemplate
         productListingHeader={categoryPageHeading as string}
