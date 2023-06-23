@@ -5,6 +5,7 @@ import { screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import * as cookienext from 'cookies-next'
 import { graphql } from 'msw'
+import { act } from 'react-dom/test-utils'
 
 import { server } from '@/__mocks__/msw/server'
 import { cartCouponMock, cartMock } from '@/__mocks__/stories/cartMock'
@@ -71,18 +72,17 @@ describe('[components] CartTemplate integration', () => {
     const itemQty = item.quantity
 
     const inputs = screen.getAllByRole('textbox', { name: 'quantity' })
-
     expect(inputs[0]).toHaveValue(itemQty.toString())
-
-    item.quantity = itemQty - 1
 
     const minusButton = screen.getAllByRole('button', { name: 'decrease' })
     const button = minusButton[0]
 
-    await user.click(button)
+    user.click(button)
 
-    const newInputs = screen.getAllByRole('textbox', { name: 'quantity' })
-    expect(newInputs[0]).toHaveValue((itemQty - 1).toString())
+    await waitFor(() => {
+      const newInputs = screen.getAllByRole('textbox', { name: 'quantity' })
+      expect(newInputs[0]).toHaveValue((itemQty - 1).toString())
+    })
   })
 
   it('should update quantity  when click "+" button', async () => {
@@ -94,16 +94,15 @@ describe('[components] CartTemplate integration', () => {
     const inputs = screen.getAllByRole('textbox', { name: 'quantity' })
     expect(inputs[1]).toHaveValue(itemQty.toString())
 
-    item.quantity = itemQty + 1
-
     const plusButton = screen.getAllByRole('button', { name: 'increase' })
     const button = plusButton[1]
 
-    await user.click(button)
+    user.click(button)
 
-    const newInputs = screen.getAllByRole('textbox', { name: 'quantity' })
-
-    expect(newInputs[1]).toHaveValue((itemQty + 1).toString())
+    await waitFor(() => {
+      const newInputs = screen.getAllByRole('textbox', { name: 'quantity' })
+      expect(newInputs[1]).toHaveValue((itemQty + 1).toString())
+    })
   })
 
   it('should select ship to home item into the cart', async () => {
@@ -113,7 +112,8 @@ describe('[components] CartTemplate integration', () => {
       name: new RegExp(`${mockFulfillmentOptions[0].shortName}`),
     })
     item.fulfillmentMethod = 'Ship'
-    await user.click(shipRadio[1])
+
+    user.click(shipRadio[1])
     await waitFor(() => expect(shipRadio[1]).toBeChecked())
   })
 
@@ -123,9 +123,12 @@ describe('[components] CartTemplate integration', () => {
       name: new RegExp(`${mockFulfillmentOptions[1].shortName}`),
     })
 
-    await user.click(pickupRadio[0])
-    const selectStore = screen.queryByRole('heading', { name: 'select-store', level: 3 })
-    await waitFor(() => expect(selectStore).toBeInTheDocument())
+    user.click(pickupRadio[0])
+
+    await waitFor(() => {
+      const selectStore = screen.queryByRole('heading', { name: 'select-store', level: 3 })
+      expect(selectStore).toBeInTheDocument()
+    })
   })
 
   it('should select pickup radio of item in cart if global store is selected', async () => {
@@ -137,7 +140,8 @@ describe('[components] CartTemplate integration', () => {
     const pickupRadio = await screen.findAllByRole('radio', {
       name: new RegExp(`${mockFulfillmentOptions[1].shortName}`),
     })
-    await user.click(pickupRadio[0])
+
+    user.click(pickupRadio[0])
     await waitFor(() => expect(pickupRadio[0]).toBeChecked())
   })
 
@@ -159,9 +163,10 @@ describe('[components] CartTemplate integration', () => {
       name: /apply/i,
     })
 
-    await user.type(PromoCodeInput, promoCode)
-
-    await user.click(PromoCodeApply)
+    await act(async () => {
+      await user.type(PromoCodeInput, promoCode)
+      await user.click(PromoCodeApply)
+    })
 
     await waitFor(async () => {
       const appliedPromoCode = screen.getByText(promoCode)
@@ -186,7 +191,8 @@ describe('[components] CartTemplate integration', () => {
     const promoCode = '10OFF'
 
     const removeIcon = screen.getAllByLabelText('remove-promo-code')
-    await user.click(removeIcon[0])
+
+    user.click(removeIcon[0])
     await waitFor(() => {
       const removedPromoCode = screen.queryByText(promoCode)
       expect(removedPromoCode).not.toBeInTheDocument()
@@ -217,9 +223,10 @@ describe('[components] CartTemplate integration', () => {
       name: /apply/i,
     })
 
-    await user.type(PromoCodeInput, promoCode)
-
-    await user.click(PromoCodeApply)
+    await act(async () => {
+      await user.type(PromoCodeInput, promoCode)
+      await user.click(PromoCodeApply)
+    })
 
     await waitFor(() => {
       const errorMessage = screen.getByText('Invalid coupon code')
@@ -245,7 +252,8 @@ describe('[components] CartTemplate integration', () => {
         )
       })
     )
-    await user.click(deleteButton[0])
+
+    user.click(deleteButton[0])
     expect(cartItem).toHaveLength(itemCount)
   })
 })

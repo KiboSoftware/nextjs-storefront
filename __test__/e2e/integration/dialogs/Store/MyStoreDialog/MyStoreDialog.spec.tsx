@@ -49,10 +49,11 @@ describe('[components] My Store Dialog integration', () => {
     const { user } = setup()
 
     const showModalButton = screen.getByRole('button', { name: 'Show Modal' })
-    await user.click(showModalButton)
+    user.click(showModalButton)
+
     const location = storeLocationGetters.getLocation(Common.args?.location as Maybe<Location>)
 
-    expect(screen.getByText(location?.name || '')).toBeVisible()
+    expect(await screen.findByText(location?.name || '')).toBeVisible()
     expect(screen.getByText(location?.streetAddress?.trim() || '')).toBeVisible()
     expect(screen.getByText(location?.cityState || '')).toBeVisible()
     expect(screen.getByText(/available/i)).toBeVisible()
@@ -63,14 +64,19 @@ describe('[components] My Store Dialog integration', () => {
     const { user } = setup()
 
     const showModalButton = screen.getByRole('button', { name: 'Show Modal' })
-    await user.click(showModalButton)
-    const dialog = screen.getByRole('dialog')
+
+    user.click(showModalButton)
+    const dialog = await screen.findByRole('dialog')
+    expect(dialog).toBeVisible()
+
     const closeIconButton = screen.getByRole('button', {
       name: /close/i,
     })
-    await user.click(closeIconButton)
+    user.click(closeIconButton)
 
-    expect(dialog).not.toBeVisible()
+    await waitFor(() => {
+      expect(dialog).not.toBeVisible()
+    })
     expect(closeIconButton).not.toBeVisible()
   })
 
@@ -78,17 +84,15 @@ describe('[components] My Store Dialog integration', () => {
     const { user } = setup()
 
     const showModalButton = screen.getByRole('button', { name: 'Show Modal' })
-    await user.click(showModalButton)
-    const dialog = screen.getByRole('dialog')
-    const changeStoreButton = screen.getByRole('button', {
+
+    user.click(showModalButton)
+    expect(await screen.findByRole('dialog')).toBeVisible()
+
+    const changeStoreButton = await screen.findByRole('button', {
       name: /change-store/i,
     })
+    user.click(changeStoreButton)
 
-    expect(dialog).toBeVisible()
-    expect(changeStoreButton).toBeVisible()
-    await user.click(changeStoreButton)
-    await waitFor(() => {
-      expect(screen.getByText(/select-store/i)).toBeVisible()
-    })
+    expect(await screen.findByText(/select-store/i)).toBeVisible()
   })
 })

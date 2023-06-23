@@ -38,19 +38,13 @@ describe('[components] - CartItem Integration', () => {
     const fulfillmentOptions = screen.getByTestId('fulfillmentOptions')
     const increaseButton = screen.getByRole('button', { name: 'increase' })
 
-    act(() => {
-      user.click(increaseButton)
-    })
-
+    user.click(increaseButton)
     const decreaseButton = screen.getByRole('button', { name: 'decrease' })
-    act(() => {
-      user.click(decreaseButton)
-    })
 
+    user.click(decreaseButton)
     const actionsIcon = screen.getByRole('button', { name: 'more' })
-    act(() => {
-      user.click(actionsIcon)
-    })
+
+    user.click(actionsIcon)
 
     // assert
     expect(img).toBeInTheDocument()
@@ -66,9 +60,8 @@ describe('[components] - CartItem Integration', () => {
     const radio = screen.getByRole('radio', {
       name: /Pickup/i,
     })
-    act(() => {
-      user.click(radio)
-    })
+
+    user.click(radio)
 
     await waitFor(() => {
       expect(mockOnFulfillmentOptionChange).toBeCalled()
@@ -78,9 +71,8 @@ describe('[components] - CartItem Integration', () => {
   it('should handle Change Store', async () => {
     const { user, mockOnProductPickupLocation } = setup()
     const store = screen.getByText(/change-store/i)
-    act(() => {
-      user.click(store)
-    })
+
+    user.click(store)
 
     await waitFor(() => {
       expect(mockOnProductPickupLocation).toBeCalled()
