@@ -1,7 +1,7 @@
 import React, { ReactNode } from 'react'
 
 import { composeStories } from '@storybook/testing-react'
-import { render, screen, waitFor } from '@testing-library/react'
+import { act, render, screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 
 import * as stories from './ViewOrderDetails.stories'
@@ -23,10 +23,10 @@ const ProductItemListMock = () => <div data-testid="product-item-list-component"
 jest.mock('@/components/common/ProductItemList/ProductItemList', () => () => ProductItemListMock())
 const productOptionMock = () => <div data-testid="product-option-component" />
 jest.mock('@/components/product/ProductOption/ProductOption', () => () => productOptionMock())
-const savedPaymentMethodViewMock = () => <div data-testid="saved-payment-method-view-component" />
+const PaymentBillingCardMock = () => <div data-testid="payment-billing-card-component" />
 jest.mock(
-  '@/components/checkout/SavedPaymentMethodView/SavedPaymentMethodView',
-  () => () => savedPaymentMethodViewMock()
+  '@/components/common/PaymentBillingCard/PaymentBillingCard',
+  () => () => PaymentBillingCardMock()
 )
 
 const setup = (isOrderStatus: boolean, title: string) => {
@@ -61,7 +61,7 @@ describe('[component] - ViewOrderDetails', () => {
     expect(screen.getByTestId('order-summary-component')).toBeVisible()
     expect(screen.getAllByTestId('product-item-list-component')).toHaveLength(2)
     expect(screen.getAllByTestId('product-option-component')).toHaveLength(3)
-    expect(screen.getByTestId('saved-payment-method-view-component')).toBeVisible()
+    expect(screen.getByTestId('payment-billing-card-component')).toBeVisible()
     expect(screen.getByText('payment-information')).toBeVisible()
   })
 
@@ -81,7 +81,7 @@ describe('[component] - ViewOrderDetails', () => {
     expect(screen.queryByText(/return-items/i)).not.toBeInTheDocument()
   })
 
-  it('should render return item button and handleReturnItems function should be called', async () => {
+  it("should render 'return item' button and onClick, handleReturnItems function should be called", async () => {
     const { user } = returnItemSetup()
 
     const orderSummaryContent = screen.getByTestId('order-summary-component')
@@ -90,8 +90,9 @@ describe('[component] - ViewOrderDetails', () => {
     expect(orderSummaryContent).toContainElement(returnItemButton)
 
     user.click(returnItemButton)
+
     await waitFor(() => {
-      expect(onReturnItemsVisibleMock).toHaveBeenCalled()
+      expect(onReturnItemsVisibleMock).toHaveBeenCalledWith(true)
     })
   })
 })

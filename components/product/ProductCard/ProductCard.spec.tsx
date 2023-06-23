@@ -51,7 +51,7 @@ describe('[components] Product Card Component', () => {
     it('should render title', () => {
       setup()
 
-      const title = screen.getByText(Common.args.title)
+      const title = screen.getByText(Common.args?.title as string)
 
       expect(title).toBeVisible()
     })
@@ -59,7 +59,7 @@ describe('[components] Product Card Component', () => {
     it('should render price', () => {
       setup()
 
-      const price = screen.getByText(Common.args.price)
+      const price = screen.getByText(Common.args?.price as string)
 
       expect(price).toBeVisible()
     })
@@ -95,7 +95,7 @@ describe('[components] Product Card Component', () => {
     it('should render sale price text', () => {
       render(<WithSalePrice {...WithSalePrice.args} />)
 
-      const salePrice = screen.getByText(WithSalePrice.args.salePrice)
+      const salePrice = screen.getByText(WithSalePrice.args?.salePrice as string)
 
       expect(salePrice).toBeVisible()
     })
@@ -107,7 +107,7 @@ describe('[components] Product Card Component', () => {
 
       const filledRating = screen.getAllByTestId('filled-rating')
 
-      expect(filledRating).toHaveLength(WithRating.args.rating * 2)
+      expect(filledRating).toHaveLength((WithRating.args?.rating as number) * 2)
     })
   })
 
@@ -117,7 +117,7 @@ describe('[components] Product Card Component', () => {
 
       const image = screen.getByTestId('product-image')
 
-      expect(image).toHaveAttribute('alt', 'no-image-alt')
+      expect(image).toHaveAttribute('alt', 'product-image-alt')
     })
   })
 
@@ -131,22 +131,18 @@ describe('[components] Product Card Component', () => {
     })
   })
   describe('Wishlist Product Card', () => {
-    it('should render Product Card with wishlist icon and shop now button', async () => {
+    it('should render Product Card with wishlist icon', async () => {
       wishlistSetup()
 
       const inWishlistIcon = screen.getByTestId('FavoriteRoundedIcon')
       const notInWishlistIcon = screen.queryByTestId('FavoriteBorderRoundedIcon')
-      const shopNowButton = screen.getAllByRole('button', {
-        name: /shop-now/i,
-      })
 
       expect(inWishlistIcon).toBeVisible()
       expect(notInWishlistIcon).not.toBeInTheDocument()
-      expect(shopNowButton[0]).toBeVisible()
     })
 
     it('should render Product Card without in wishlist icon and shop now button', async () => {
-      render(<WithWishlist {...WithWishlist.args} isInWishlist={false} isShopNow={false} />)
+      render(<WithWishlist {...WithWishlist.args} isInWishlist={false} />)
       const inWishlistIcon = screen.queryByTestId('FavoriteRoundedIcon')
       const notInWishlistIcon = screen.getByTestId('FavoriteBorderRoundedIcon')
       const shopNowButton = screen.queryByRole('link', {

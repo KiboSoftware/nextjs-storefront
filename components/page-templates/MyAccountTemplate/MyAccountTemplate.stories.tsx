@@ -12,6 +12,15 @@ export default {
   },
 } as ComponentMeta<typeof MyAccountTemplate>
 
+const userMock = {
+  user: {
+    id: 1012,
+  },
+}
+
 const Template: ComponentStory<typeof MyAccountTemplate> = () => <MyAccountTemplate />
 
 export const Common = Template.bind({})
+Common.args = {
+  user: userMock.user,
+}

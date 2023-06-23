@@ -2,8 +2,9 @@ import React, { MouseEvent } from 'react'
 
 import FavoriteBorderRounded from '@mui/icons-material/FavoriteBorderRounded'
 import FavoriteRounded from '@mui/icons-material/FavoriteRounded'
+import StarRounded from '@mui/icons-material/StarRounded'
 import { LoadingButton } from '@mui/lab'
-import { Card, Typography, CardMedia, Box, Stack, Skeleton, Button } from '@mui/material'
+import { Card, Typography, CardMedia, Box, Stack, Skeleton, Button, Rating } from '@mui/material'
 import Link from 'next/link'
 import { useTranslation } from 'next-i18next'
 
@@ -31,7 +32,6 @@ export interface ProductCardProps {
   isInWishlist?: boolean
   isInCart?: boolean
   isLoading?: boolean
-  isShopNow?: boolean
   isShowWishlistIcon?: boolean
   product?: Product
   showQuickViewButton?: boolean
@@ -66,7 +66,6 @@ const ProductCard = (props: ProductCardProps) => {
     imageHeight = 180,
     imageAltText = 'product-image-alt',
     isLoading = false,
-    isShopNow = false,
     isInWishlist = false,
     isShowWishlistIcon = true,
     badge,
@@ -166,6 +165,16 @@ const ProductCard = (props: ProductCardProps) => {
                   salePrice={salePrice}
                   priceRange={productPriceRange}
                   variant="body1"
+                />
+                <Rating
+                  name="read-only"
+                  value={rating}
+                  precision={0.5}
+                  readOnly
+                  size="small"
+                  icon={<StarRounded color="primary" data-testid="filled-rating" />}
+                  emptyIcon={<StarRounded data-testid="empty-rating" />}
+                  data-testid="product-rating"
                 />
                 {isShowWishlistIcon && (
                   <Box pt={2} textAlign={'center'} sx={{ opacity: 0 }} className="quick-actions">

@@ -52,7 +52,6 @@ const WishlistTemplate = () => {
                   <ProductCard
                     key={item?.id}
                     isInWishlist={true}
-                    isShopNow={true}
                     showQuickViewButton={false}
                     productCode={productGetters.getProductId(item?.product as Product)}
                     variationProductCode={productGetters.getVariationProductCode(
