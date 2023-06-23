@@ -8,6 +8,9 @@ const createOrderMutation = /* GraphQL */ `
       submittedDate
       total
       status
+      email
+      id
+      userId
     }
   }
 `

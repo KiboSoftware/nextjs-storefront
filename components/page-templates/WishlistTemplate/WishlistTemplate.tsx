@@ -1,41 +1,27 @@
-import React, { useState } from 'react'
+import React from 'react'
 
-import FavoriteRoundedIcon from '@mui/icons-material/FavoriteRounded'
-import { Grid, Typography, Box, Divider, useTheme, Button } from '@mui/material'
+import { Grid, Typography, Box, Button } from '@mui/material'
 import { useRouter } from 'next/router'
 import { useTranslation } from 'next-i18next'
 
 import { ProductCard } from '@/components/product'
-import { useWishlist, useGetWishlist, useProductCardActions } from '@/hooks'
+import { useWishlist, useProductCardActions } from '@/hooks'
 import { productGetters } from '@/lib/getters'
 import { uiHelpers } from '@/lib/helpers'
 import type { WishlistProductInput, ProductCustom } from '@/lib/types'
 
-import type { Maybe, CrWishlistItem, CustomerAccount, Product } from '@/lib/gql/types'
+import type { Maybe, CrWishlistItem, Product } from '@/lib/gql/types'
 
-const styles = {
-  removedItemStyle: {
-    opacity: 0.15,
-    pointerEvents: 'none',
-  },
-}
-const WishlistTemplate = (props: { customerAccount: CustomerAccount }) => {
-  const { customerAccount } = props
-
-  const theme = useTheme()
+const WishlistTemplate = () => {
   const router = useRouter()
 
   const { t } = useTranslation('common')
   const { getProductLink } = uiHelpers()
   const { addOrRemoveWishlistItem, wishlists } = useWishlist()
   const { handleAddToCart, openProductQuickViewModal } = useProductCardActions()
-  // const { data: wishlists } = useGetWishlist()
-  const [removedProductCode, setRemovedProductCode] = useState<string>('')
 
   const handleAddOrRemoveWishlistItem = async (product: WishlistProductInput) => {
     try {
-      const { productCode } = product
-      setRemovedProductCode(productCode)
       await addOrRemoveWishlistItem({ product })
     } catch (error) {
       console.log('Error: add or remove wishlist item from wishlist template', error)
@@ -69,12 +55,7 @@ const WishlistTemplate = (props: { customerAccount: CustomerAccount }) => {
                 xs={12}
                 spacing={3}
               >
-                <Box
-                // sx={{
-                //   ...(item?.product?.productCode === removedProductCode &&
-                //     styles?.removedItemStyle),
-                // }}
-                >
+                <Box>
                   <ProductCard
                     key={item?.id}
                     isInWishlist={true}
@@ -108,18 +89,6 @@ const WishlistTemplate = (props: { customerAccount: CustomerAccount }) => {
                     }
                   />
                 </Box>
-                {/* {item?.product?.productCode === removedProductCode && (
-                  <Typography
-                    variant="subtitle2"
-                    sx={{
-                      position: 'absolute',
-                      paddingTop: '7.625rem',
-                      zIndex: 3,
-                    }}
-                  >
-                    {t('removed')}!
-                  </Typography>
-                )} */}
               </Grid>
             ))
           ) : (

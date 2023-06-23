@@ -29,9 +29,6 @@ const { publicRuntimeConfig } = getConfig()
 
 type GenericProduct = Product | ProductCustom | CrProduct
 
-const badgeAttributeFQN = publicRuntimeConfig.badgeAttributeFQN.toLowerCase()
-const occasionAttributeFQN = publicRuntimeConfig.occasionAttributeFQN.toLowerCase()
-
 const getName = (product: GenericProduct): string => {
   if ('name' in product) {
     return product.name || ''
@@ -159,6 +156,8 @@ export const getProductCharacteristics = (
   properties: ProductProperties[],
   product: Product | ProductCustom
 ): ProductProperties[] => {
+  const occasionAttributeFQN = publicRuntimeConfig?.occasionAttributeFQN.toLowerCase()
+
   return properties
     .filter(
       (prop) => prop.value !== 'false' && prop.attributeFQN?.toLowerCase() === occasionAttributeFQN
@@ -172,8 +171,13 @@ export const getProductCharacteristics = (
     .reverse()
 }
 
-export const getBadgeAttribute = (properties: ProductProperties[]): string =>
-  properties?.find((prop) => prop.attributeFQN?.toLowerCase() === badgeAttributeFQN)?.value || ''
+export const getBadgeAttribute = (properties: ProductProperties[]): string => {
+  const badgeAttributeFQN = publicRuntimeConfig?.badgeAttributeFQN.toLowerCase()
+
+  return (
+    properties?.find((prop) => prop.attributeFQN?.toLowerCase() === badgeAttributeFQN)?.value || ''
+  )
+}
 
 const getOptionSelectedValue = (option: ProductOption) => {
   const selectedValue = option?.values?.find((value) => value?.isSelected)

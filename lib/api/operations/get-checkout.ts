@@ -1,14 +1,14 @@
-import { getAdditionalHeader } from '../util'
-import getUserClaimsFromRequest from '../util/getUserClaimsFromRequest'
-import { fetcher } from '@/lib/api/util'
+import { NextApiRequest, NextApiResponse } from 'next'
+
+import { fetcher, getAdditionalHeader, getUserClaimsFromRequest } from '@/lib/api/util'
 import { getCheckoutQuery as query } from '@/lib/gql/queries'
 
 import type { CrOrder } from '@/lib/gql/types'
 
 export default async function getCheckout(
   checkoutId: string,
-  req: any,
-  res: any
+  req: NextApiRequest,
+  res: NextApiResponse
 ): Promise<CrOrder> {
   const variables = {
     checkoutId,

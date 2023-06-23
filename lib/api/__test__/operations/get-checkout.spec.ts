@@ -1,3 +1,5 @@
+import { NextApiRequest, NextApiResponse } from 'next'
+
 import { getCheckout } from '@/lib/api/operations'
 import * as util from '@/lib/api/util'
 import { getCheckoutQuery } from '@/lib/gql/queries'
@@ -27,7 +29,9 @@ describe('[operations] Get Checkout', () => {
       .mockImplementationOnce(async () => ({ data: { checkout: 'checkout' } }))
 
     const checkoutId = '12345'
-    const response = await getCheckout(checkoutId, { userClaims: 'test' }, '')
+    const req = {} as NextApiRequest
+    const res = {} as NextApiResponse
+    const response = await getCheckout(checkoutId, req, res)
 
     expect(util.fetcher).toBeCalledWith(
       { query: getCheckoutQuery, variables: { checkoutId } },

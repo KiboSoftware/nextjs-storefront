@@ -6,7 +6,7 @@ import { OrderConfirmation } from '@/components/order'
 import { getCheckout, getMultiShipCheckout } from '@/lib/api/operations/'
 
 import { CrOrder } from '@/lib/gql/types'
-import type { NextPage, GetServerSidePropsContext } from 'next'
+import type { NextPage, GetServerSidePropsContext, NextApiRequest, NextApiResponse } from 'next'
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
   const { locale, req, res, query } = context
@@ -14,8 +14,8 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
   const { publicRuntimeConfig } = getConfig()
   const isMultiShipEnabled = publicRuntimeConfig.isMultiShipEnabled
   const checkout = isMultiShipEnabled
-    ? await getMultiShipCheckout(checkoutId, req, res)
-    : await getCheckout(checkoutId, req, res)
+    ? await getMultiShipCheckout(checkoutId, req as NextApiRequest, res as NextApiResponse)
+    : await getCheckout(checkoutId, req as NextApiRequest, res as NextApiResponse)
   if (!checkout) {
     return { notFound: true }
   }

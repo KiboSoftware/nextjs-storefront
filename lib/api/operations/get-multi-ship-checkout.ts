@@ -1,3 +1,5 @@
+import { NextApiRequest, NextApiResponse } from 'next'
+
 import { getAdditionalHeader } from '../util'
 import getUserClaimsFromRequest from '../util/getUserClaimsFromRequest'
 import { fetcher } from '@/lib/api/util'
@@ -7,8 +9,8 @@ import type { Checkout } from '@/lib/gql/types'
 
 export default async function getMultiShipCheckout(
   checkoutId: string,
-  req: any,
-  res: any
+  req: NextApiRequest,
+  res: NextApiResponse
 ): Promise<Checkout> {
   const variables = {
     checkoutId,

@@ -5,6 +5,7 @@ describe('[helpers] buildProductSearchParams function', () => {
     const searchParams = {
       filters: ['tenant~brand:adidas,tenant~color:grey'],
       categoryCode: '30',
+      pageSize: 16,
     }
     const buildProductSearchParamsMock = {
       query: '',

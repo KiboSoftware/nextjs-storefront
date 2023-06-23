@@ -487,6 +487,7 @@ const PaymentStep = (props: PaymentStepProps) => {
 
     setSelectedPaymentBillingRadio(tokenizedCardResponse.id as string)
     setValidateForm(false)
+    setIsCVVAddedForNewPayment(true)
   }
 
   const handleReTokenization = async (card: CardForm) => {

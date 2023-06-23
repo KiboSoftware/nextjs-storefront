@@ -391,7 +391,7 @@ const AddressBook = (props: AddressBookProps) => {
                 </Box>
               </Collapse>
             ))}
-            {displayBillingAddresses?.length > 5 && billingAddresses.length > 5 && (
+            {displayBillingAddresses?.length > 0 && billingAddresses?.length > 5 && (
               <Box display={'flex'} justifyContent={'center'} width="100%" py={10}>
                 <KiboPagination
                   count={Math.ceil(billingAddresses?.length / billingAddressPageSize)}

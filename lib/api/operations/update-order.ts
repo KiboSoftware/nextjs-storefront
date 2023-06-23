@@ -1,3 +1,5 @@
+import { NextApiRequest, NextApiResponse } from 'next'
+
 import { getAdditionalHeader } from '../util'
 import getUserClaimsFromRequest from '../util/getUserClaimsFromRequest'
 import { fetcher } from '@/lib/api/util'
@@ -9,8 +11,8 @@ import type { CrOrder, CrOrderInput } from '@/lib/gql/types'
 export default async function updateOrder(
   orderId: string,
   orderInput: CrOrderInput,
-  req: any,
-  res: any
+  req: NextApiRequest,
+  res: NextApiResponse
 ): Promise<CrOrder> {
   const variables = {
     orderId: orderId,
