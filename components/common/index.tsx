@@ -23,7 +23,6 @@ export { default as QuantitySelector } from './QuantitySelector/QuantitySelector
 export { default as SearchBar } from './SearchBar/SearchBar'
 export { default as OrderPrice } from './OrderPrice/OrderPrice'
 export { default as AddressList } from './AddressList/AddressList'
-export { default as AddressDetailsView } from './AddressDetailsView/AddressDetailsView'
 export { default as GlobalFetchingIndicator } from './GlobalFetchingIndicator/GlobalFetchingIndicator'
 export { default as ReturnItemList } from './ReturnItemList/ReturnItemList'
 export { default as ProductItemWithAddressList } from './ProductItemWithAddressList/ProductItemWithAddressList'

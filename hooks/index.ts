@@ -123,6 +123,7 @@ export * from './mutations/standardCheckout/useCreateOrder/useCreateOrder'
 export * from './mutations/standardCheckout/useInitiateOrder/useInitiateOrder'
 export * from './mutations/standardCheckout/useUpdateOrderCoupon/useUpdateOrderCoupon'
 export * from './mutations/standardCheckout/useDeleteOrderCoupon/useDeleteOrderCoupon'
+export * from './mutations/standardCheckout/useUpdateUserOrder/useUpdateUserOrder'
 
 // Wishlist
 export * from './mutations/wishlist/useAddToWishlistItem/useAddToWishlistItem'

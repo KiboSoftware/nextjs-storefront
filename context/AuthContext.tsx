@@ -3,7 +3,6 @@ import { ReactNode, createContext, useState, useContext, useEffect } from 'react
 import { useQueryClient } from '@tanstack/react-query'
 import { useRouter } from 'next/router'
 
-
 import { LoginData } from '@/components/layout/Login/LoginContent/LoginContent'
 import type { RegisterAccountInputData } from '@/components/layout/RegisterAccount/Content/Content'
 import { useSnackbarContext } from '@/context'
@@ -48,7 +47,7 @@ export const AuthContextProvider = ({ children }: AuthContextProviderProps) => {
     queryClient.removeQueries({ queryKey: cartKeys.all })
     queryClient.removeQueries({ queryKey: loginKeys.user })
   })
-  const { mutate: registerUserAccount } = useRegister()
+  const { registerUserAccount } = useRegister()
 
   const queryClient = useQueryClient()
 
@@ -75,11 +74,12 @@ export const AuthContextProvider = ({ children }: AuthContextProviderProps) => {
         },
         password: params?.password,
       }
-      await registerUserAccount(createAccountAndLoginMutationVars, {
-        onSuccess: (account: any) => {
-          handleOnSuccess(account, onSuccessCallBack)
-        },
-      })
+      const account = await registerUserAccount.mutateAsync(createAccountAndLoginMutationVars)
+      if (account.userId) {
+        handleOnSuccess(account, onSuccessCallBack)
+        return account
+      }
+      return null
     } catch (err: any) {
       showSnackbar('Registration Failed', 'error')
     }

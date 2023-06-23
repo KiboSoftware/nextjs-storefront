@@ -22,7 +22,8 @@ import { useReCaptcha } from 'next-recaptcha-v3'
 import { Controller, useForm } from 'react-hook-form'
 import * as yup from 'yup'
 
-import { SavedPaymentMethodView } from '@/components/checkout'
+import { KiboRadio } from '@/components/common'
+import PaymentBillingCard from '@/components/common/PaymentBillingCard/PaymentBillingCard'
 import { useCheckoutStepContext, STEP_STATUS, useAuthContext, useSnackbarContext } from '@/context'
 import {
   useGetCards,
@@ -495,74 +496,6 @@ const PaymentStep = (props: PaymentStepProps) => {
     await reTokenizeCreditCardPayment(card, pciHost, apiHost)
   }
 
-  const getSavedPaymentMethodView = (card: PaymentAndBilling): React.ReactNode => {
-    const address = addressGetters.getAddress(
-      card?.billingAddressInfo?.contact.address as CrAddress
-    )
-    return (
-      <Box key={card?.cardInfo?.id as string}>
-        {defaultCustomerAccountCard.cardInfo?.id === card.cardInfo?.id && (
-          <Typography variant="h4" fontWeight={'bold'}>
-            {t('primary')}
-          </Typography>
-        )}
-        <SavedPaymentMethodView
-          radio
-          displayRowDirection={false}
-          displayTitle={false}
-          selected={selectedPaymentBillingRadio}
-          id={cardGetters.getCardId(card?.cardInfo)}
-          cardNumberPart={cardGetters.getCardNumberPart(card?.cardInfo)}
-          expireMonth={cardGetters.getExpireMonth(card?.cardInfo)}
-          expireYear={cardGetters.getExpireYear(card?.cardInfo)}
-          cardType={cardGetters.getCardType(card?.cardInfo).toUpperCase()}
-          address1={addressGetters.getAddress1(address)}
-          address2={addressGetters.getAddress2(address)}
-          cityOrTown={addressGetters.getCityOrTown(address)}
-          postalOrZipCode={addressGetters.getPostalOrZipCode(address)}
-          stateOrProvince={addressGetters.getStateOrProvince(address)}
-          onPaymentCardSelection={handleRadioSavedCardSelection}
-        />
-        {selectedPaymentBillingRadio === card?.cardInfo?.id && !isCVVAddedForNewPayment && (
-          <Box pl={4} pt={2} width={'40%'}>
-            <FormControl sx={{ width: '100%' }}>
-              <Controller
-                name="cvv"
-                control={control}
-                defaultValue={defaultCvv?.cvv}
-                render={({ field }) => {
-                  return (
-                    <KiboTextBox
-                      type="password"
-                      value={field.value || ''}
-                      label={t('security-code')}
-                      placeholder={t('security-code-placeholder')}
-                      required={true}
-                      onChange={(_, value) => {
-                        field.onChange(value)
-                        setCvv(value)
-                      }}
-                      onBlur={field.onBlur}
-                      error={!!errors?.cvv}
-                      helperText={errors?.cvv?.message as unknown as string}
-                      icon={
-                        <Box pr={1} pt={0.5} sx={{ cursor: 'pointer' }}>
-                          <Tooltip title={t('cvv-tooltip-text')} placement="top">
-                            <Help color="disabled" />
-                          </Tooltip>
-                        </Box>
-                      }
-                    />
-                  )
-                }}
-              />
-            </FormControl>
-          </Box>
-        )}
-      </Box>
-    )
-  }
-
   const handleInitialCardDetailsLoad = () => {
     // get card and billing address formatted data from server
     setStepStatusIncomplete()
@@ -692,7 +625,81 @@ const PaymentStep = (props: PaymentStepProps) => {
         <>
           <Stack gap={2} width="100%" data-testid="saved-payment-methods">
             {savedPaymentBillingDetails?.length ? (
-              savedPaymentBillingDetails.map((card) => getSavedPaymentMethodView(card))
+              <>
+                <KiboRadio
+                  radioOptions={savedPaymentBillingDetails?.map((card) => {
+                    const address = addressGetters.getAddress(
+                      card?.billingAddressInfo?.contact.address as CrAddress
+                    )
+                    return {
+                      value: cardGetters.getCardId(card?.cardInfo),
+                      name: cardGetters.getCardId(card?.cardInfo),
+                      optionIndicator:
+                        defaultCustomerAccountCard.cardInfo?.id === card.cardInfo?.id
+                          ? t('primary')
+                          : '',
+                      label: (
+                        <>
+                          <PaymentBillingCard
+                            cardNumberPart={cardGetters.getCardNumberPart(card?.cardInfo)}
+                            expireMonth={cardGetters.getExpireMonth(card?.cardInfo)}
+                            expireYear={cardGetters.getExpireYear(card?.cardInfo)}
+                            cardType={cardGetters.getCardType(card?.cardInfo).toUpperCase()}
+                            address1={addressGetters.getAddress1(address)}
+                            address2={addressGetters.getAddress2(address)}
+                            cityOrTown={addressGetters.getCityOrTown(address)}
+                            postalOrZipCode={addressGetters.getPostalOrZipCode(address)}
+                            stateOrProvince={addressGetters.getStateOrProvince(address)}
+                          />
+                          {selectedPaymentBillingRadio === card?.cardInfo?.id &&
+                            !isCVVAddedForNewPayment && (
+                              <Box pt={2} width={'50%'}>
+                                <FormControl sx={{ width: '100%' }}>
+                                  <Controller
+                                    name="cvv"
+                                    control={control}
+                                    defaultValue={defaultCvv?.cvv}
+                                    render={({ field }) => {
+                                      return (
+                                        <KiboTextBox
+                                          type="password"
+                                          value={field.value || ''}
+                                          label={t('security-code')}
+                                          placeholder={t('security-code-placeholder')}
+                                          required={true}
+                                          onChange={(_, value) => {
+                                            field.onChange(value)
+                                            setCvv(value)
+                                          }}
+                                          onBlur={field.onBlur}
+                                          error={!!errors?.cvv}
+                                          helperText={errors?.cvv?.message as unknown as string}
+                                          icon={
+                                            <Box pr={1} pt={0.5} sx={{ cursor: 'pointer' }}>
+                                              <Tooltip
+                                                title={t('cvv-tooltip-text')}
+                                                placement="top"
+                                              >
+                                                <Help color="disabled" />
+                                              </Tooltip>
+                                            </Box>
+                                          }
+                                        />
+                                      )
+                                    }}
+                                  />
+                                </FormControl>
+                              </Box>
+                            )}
+                        </>
+                      ),
+                    }
+                  })}
+                  selected={selectedPaymentBillingRadio}
+                  align="flex-start"
+                  onChange={handleRadioSavedCardSelection}
+                />
+              </>
             ) : (
               <Typography variant="h4">{t('no-previously-saved-payment-methods')}</Typography>
             )}

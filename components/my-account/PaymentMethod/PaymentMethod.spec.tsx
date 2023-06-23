@@ -21,10 +21,7 @@ const AddressFormMock = () => <div data-testid="address-form" />
 jest.mock('@/components/common/AddressForm/AddressForm', () => () => AddressFormMock())
 
 const AddressDetailsViewMock = () => <div data-testid="address-details-view" />
-jest.mock(
-  '@/components/common/AddressDetailsView/AddressDetailsView',
-  () => () => AddressDetailsViewMock()
-)
+jest.mock('@/components/common/AddressCard/AddressCard', () => () => AddressDetailsViewMock())
 
 const user = userEvent.setup()
 

@@ -6,11 +6,11 @@ import dynamic from 'next/dynamic'
 import { useTranslation } from 'next-i18next'
 import { useReCaptcha } from 'next-recaptcha-v3'
 
-const ShippingMethod = dynamic(() =>
-  import('@/components/checkout').then((mod) => mod.ShippingMethod)
-)
-
-import { AddressDetailsView, AddressForm } from '@/components/common'
+// const ShippingMethod = dynamic(() =>
+//   import('@/components/checkout').then((mod) => mod.ShippingMethod)
+// )
+import { ShippingMethod } from '@/components/checkout'
+import { AddressCard, AddressForm, KiboRadio } from '@/components/common'
 import { useCheckoutStepContext, STEP_STATUS, useSnackbarContext, useAuthContext } from '@/context'
 import {
   useUpdateOrderShippingInfo,
@@ -55,7 +55,6 @@ const StandardShippingStep = (props: ShippingProps) => {
   }
   const shipItems = orderGetters.getShipItems(checkout)
   const pickupItems = orderGetters.getPickupItems(checkout)
- 
 
   const [isAddressSavedToAccount, setIsAddressSavedToAccount] = useState<boolean>(false)
   const [validateForm, setValidateForm] = useState<boolean>(false)
@@ -232,30 +231,6 @@ const StandardShippingStep = (props: ShippingProps) => {
     setIsNewAddressAdded(false)
   }
 
-  const getSavedShippingAddressView = (
-    address: CustomerContact,
-    isPrimary?: boolean
-  ): React.ReactNode => {
-    return (
-      <AddressDetailsView
-        key={address?.id as number}
-        radio={true}
-        id={address?.id as number}
-        isPrimary={isPrimary}
-        firstName={address?.firstName as string}
-        middleNameOrInitial={address?.middleNameOrInitial as string}
-        lastNameOrSurname={address?.lastNameOrSurname as string}
-        address1={address?.address?.address1 as string}
-        address2={address?.address?.address2 as string}
-        cityOrTown={address?.address?.cityOrTown as string}
-        stateOrProvince={address?.address?.stateOrProvince as string}
-        postalOrZipCode={address?.address?.postalOrZipCode as string}
-        selected={selectedShippingAddressId?.toString()}
-        handleRadioChange={handleAddressSelect}
-      />
-    )
-  }
-
   useEffect(() => {
     setSavedShippingAddresses(
       userGetters.getAllShippingAddresses(
@@ -324,7 +299,36 @@ const StandardShippingStep = (props: ShippingProps) => {
                 <Typography variant="h4" fontWeight={'bold'}>
                   {t('your-default-shipping-address')}
                 </Typography>
-                {getSavedShippingAddressView(defaultShippingAddress, true)}
+                <KiboRadio
+                  radioOptions={[
+                    {
+                      value: String(defaultShippingAddress.id),
+                      name: String(defaultShippingAddress.id),
+                      optionIndicator: t('primary'),
+                      label: (
+                        <AddressCard
+                          firstName={defaultShippingAddress?.firstName as string}
+                          middleNameOrInitial={
+                            defaultShippingAddress?.middleNameOrInitial as string
+                          }
+                          lastNameOrSurname={defaultShippingAddress?.lastNameOrSurname as string}
+                          address1={defaultShippingAddress?.address?.address1 as string}
+                          address2={defaultShippingAddress?.address?.address2 as string}
+                          cityOrTown={defaultShippingAddress?.address?.cityOrTown as string}
+                          stateOrProvince={
+                            defaultShippingAddress?.address?.stateOrProvince as string
+                          }
+                          postalOrZipCode={
+                            defaultShippingAddress?.address?.postalOrZipCode as string
+                          }
+                        />
+                      ),
+                    },
+                  ]}
+                  selected={selectedShippingAddressId?.toString()}
+                  align="flex-start"
+                  onChange={handleAddressSelect}
+                />
               </>
             )}
 
@@ -333,9 +337,29 @@ const StandardShippingStep = (props: ShippingProps) => {
                 <Typography variant="h4" fontWeight={'bold'}>
                   {t('previously-saved-shipping-addresses')}
                 </Typography>
-                {previouslySavedShippingAddress?.map((address) => {
-                  return getSavedShippingAddressView(address)
-                })}
+                <KiboRadio
+                  radioOptions={previouslySavedShippingAddress?.map((address, index) => {
+                    return {
+                      value: String(address.id),
+                      name: String(address.id),
+                      label: (
+                        <AddressCard
+                          firstName={address?.firstName as string}
+                          middleNameOrInitial={address?.middleNameOrInitial as string}
+                          lastNameOrSurname={address?.lastNameOrSurname as string}
+                          address1={address?.address?.address1 as string}
+                          address2={address?.address?.address2 as string}
+                          cityOrTown={address?.address?.cityOrTown as string}
+                          stateOrProvince={address?.address?.stateOrProvince as string}
+                          postalOrZipCode={address?.address?.postalOrZipCode as string}
+                        />
+                      ),
+                    }
+                  })}
+                  selected={selectedShippingAddressId?.toString()}
+                  align="flex-start"
+                  onChange={handleAddressSelect}
+                />
               </>
             )}
 

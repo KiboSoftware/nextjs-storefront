@@ -5,8 +5,9 @@ import { Box, Button, Checkbox, FormControlLabel, Stack, Typography } from '@mui
 import getConfig from 'next/config'
 import { useTranslation } from 'next-i18next'
 
-import { CardDetailsForm, SavedPaymentMethodView } from '@/components/checkout'
-import { AddressForm, AddressDetailsView, KiboPagination } from '@/components/common'
+import { CardDetailsForm } from '@/components/checkout'
+import { AddressForm, KiboPagination, AddressCard, KiboRadio } from '@/components/common'
+import PaymentBillingCard from '@/components/common/PaymentBillingCard/PaymentBillingCard'
 import { ConfirmationDialog } from '@/components/dialogs'
 import { useModalContext } from '@/context'
 import { useDeleteCustomerCard, useDeleteCustomerAddress } from '@/hooks'
@@ -308,7 +309,7 @@ const PaymentMethod = (props: PaymentMethodProps) => {
       )
     )
     window.scrollTo({ top: 0, behavior: 'smooth' })
-  }, [savedCardsAndContacts.length])
+  }, [JSON.stringify(savedCardsAndContacts)])
 
   // when payment card and billing address info is available, handleTokenization
   useEffect(() => {
@@ -343,10 +344,7 @@ const PaymentMethod = (props: PaymentMethodProps) => {
                 </Typography>
               )}
               <Box display="flex" justifyContent={'space-between'}>
-                <SavedPaymentMethodView
-                  displayRowDirection={false}
-                  displayTitle={false}
-                  id={cardGetters.getCardId(each.cardInfo)}
+                <PaymentBillingCard
                   cardNumberPart={cardGetters.getCardNumberPart(each.cardInfo)}
                   expireMonth={cardGetters.getExpireMonth(each.cardInfo)}
                   expireYear={cardGetters.getExpireYear(each.cardInfo)}
@@ -384,7 +382,7 @@ const PaymentMethod = (props: PaymentMethodProps) => {
           >
             {t('add-payment-method')}
           </Button>
-          {displaySavedCardsAndContacts?.length > 5 && (
+          {displaySavedCardsAndContacts?.length > 0 && savedCardsAndContacts.length > 5 && (
             <Box display={'flex'} justifyContent={'center'} width="100%" py={10}>
               <KiboPagination
                 count={Math.ceil(savedCardsAndContacts.length / paymentMethodPageSize)}
@@ -421,26 +419,31 @@ const PaymentMethod = (props: PaymentMethodProps) => {
                 ) : (
                   handleAddNewBillingAddress()
                 )}
-                {billingAddresses?.map((address, index) => {
-                  return (
-                    <AddressDetailsView
-                      key={address.id}
-                      radio={true}
-                      id={address.id as number}
-                      isPrimary={index === 0}
-                      firstName={address.firstName as string}
-                      middleNameOrInitial={address.middleNameOrInitial as string}
-                      lastNameOrSurname={address.lastNameOrSurname as string}
-                      address1={address.address?.address1 as string}
-                      address2={address.address?.address2 as string}
-                      cityOrTown={address.address?.cityOrTown as string}
-                      stateOrProvince={address.address?.stateOrProvince as string}
-                      postalOrZipCode={address.address?.postalOrZipCode as string}
-                      selected={billingFormAddress.contact.id}
-                      handleRadioChange={handleAddressRadioSelection}
-                    />
-                  )
-                })}
+
+                <KiboRadio
+                  radioOptions={billingAddresses?.map((address, index) => {
+                    return {
+                      value: String(address.id),
+                      name: String(address.id),
+                      optionIndicator: index === 0 ? t('primary') : '',
+                      label: (
+                        <AddressCard
+                          firstName={address.firstName as string}
+                          middleNameOrInitial={address.middleNameOrInitial as string}
+                          lastNameOrSurname={address.lastNameOrSurname as string}
+                          address1={address.address?.address1 as string}
+                          address2={address.address?.address2 as string}
+                          cityOrTown={address.address?.cityOrTown as string}
+                          stateOrProvince={address.address?.stateOrProvince as string}
+                          postalOrZipCode={address.address?.postalOrZipCode as string}
+                        />
+                      ),
+                    }
+                  })}
+                  selected={String(billingFormAddress.contact.id)}
+                  align="flex-start"
+                  onChange={handleAddressRadioSelection}
+                />
               </>
             )}
 
