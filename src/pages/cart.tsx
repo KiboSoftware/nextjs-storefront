@@ -1,11 +1,15 @@
 import getConfig from 'next/config'
+import dynamic from 'next/dynamic'
 import Head from 'next/head'
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
 
-import { CartTemplate } from '@/components/page-templates'
 import { getCart } from '@/lib/api/operations/'
 
 import type { NextPage, GetServerSidePropsContext, NextApiRequest, NextApiResponse } from 'next'
+
+const CartTemplate = dynamic(() =>
+  import('@/components/page-templates').then((mod) => mod.CartTemplate)
+)
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
   const { locale, req, res } = context

@@ -64,7 +64,7 @@ export const getStaticProps: any = async (context: any) => {
   const { locale, params, req } = context
   const { serverRuntimeConfig } = getConfig()
   const { categorySlug } = params
-  if (!categorySlug.length || categorySlug.length > 2) {
+  if (!categorySlug?.length || categorySlug?.length > 2) {
     return { notFound: true }
   }
   const [_, categoryCode] =
@@ -118,7 +118,7 @@ const CategoryPage: NextPage<CategoryPageType> = (props: any) => {
       categoryCode: code,
       ...router.query,
     } as unknown as CategorySearchParams)
-  }, [router.query])
+  }, [router.query, code])
 
   const {
     data: productSearchResult,

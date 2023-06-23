@@ -18,7 +18,7 @@ export default async function getMultiShipCheckout(
 
   const userClaims = await getUserClaimsFromRequest(req, res)
 
-  const headers = getAdditionalHeader(req)
+  const headers = req ? getAdditionalHeader(req) : {}
 
   const response = await fetcher({ query, variables }, { userClaims, headers })
 

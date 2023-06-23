@@ -20,7 +20,7 @@ export default async function updateOrder(
     orderInput,
   }
 
-  const headers = getAdditionalHeader(req)
+  const headers = req ? getAdditionalHeader(req) : {}
 
   const userClaims = await getUserClaimsFromRequest(req, res)
   const response = await fetcher({ query, variables }, { userClaims, headers })

@@ -7,7 +7,7 @@ import { getCustomerAccountsQuery } from '@/lib/gql/queries'
 export default async function getCustomerAccount(userId: string, req: NextApiRequest) {
   const variables = { filter: `userId eq ${userId}` }
 
-  const headers = getAdditionalHeader(req)
+  const headers = req ? getAdditionalHeader(req) : {}
 
   const response = await fetcher(
     { query: getCustomerAccountsQuery, variables: variables },

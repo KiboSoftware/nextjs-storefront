@@ -9,7 +9,7 @@ export default async function getProduct(productCode: string, req: NextApiReques
     productCode,
   }
 
-  const headers = getAdditionalHeader(req)
+  const headers = req ? getAdditionalHeader(req) : {}
 
   const response = await fetcher({ query: getProductQuery, variables }, { headers })
   return response.data?.product

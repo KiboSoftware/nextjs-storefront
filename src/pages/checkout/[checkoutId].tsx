@@ -31,7 +31,7 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
     return { notFound: true }
   }
 
-  const ipAddress = req.headers['x-forwarded-for'] as string
+  const ipAddress = req?.headers['x-forwarded-for'] as string
 
   updateOrder(
     checkoutId,

@@ -27,10 +27,12 @@ jest.mock('next-i18next/serverSideTranslations', () => ({
   }),
 }))
 
-jest.mock('@/components/page-templates/CartTemplate/CartTemplate', () => ({
-  __esModule: true,
-  default: () => <div data-testid="cart-template-mock" />,
-}))
+jest.mock('next/dynamic', () => {
+  const CartTemplate = () => <div data-testid="cart-template-mock" />
+  CartTemplate.displayName = 'CartTemplate'
+
+  return jest.fn().mockImplementation(() => CartTemplate)
+})
 
 jest.mock('@/lib/api/util/getUserClaimsFromRequest.ts', () => jest.fn(() => null))
 

@@ -9,7 +9,7 @@ export default async function getSearchSuggestions(searchKey: string, req: NextA
     const variables = {
       searchKey,
     }
-    const headers = getAdditionalHeader(req)
+    const headers = req ? getAdditionalHeader(req) : {}
     const response = await fetcher({ query: getSearchSuggestionsQuery, variables }, { headers })
     return response.data?.suggestionGroups
   } catch (error) {

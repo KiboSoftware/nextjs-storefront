@@ -8,7 +8,7 @@ import { getCartQuery } from '@/lib/gql/queries'
 export default async function getCart(req: NextApiRequest, res: NextApiResponse) {
   const userClaims = await getUserClaimsFromRequest(req, res)
 
-  const headers = getAdditionalHeader(req)
+  const headers = req ? getAdditionalHeader(req) : {}
 
   const response = await fetcher({ query: getCartQuery, variables: {} }, { userClaims, headers })
   return response?.data

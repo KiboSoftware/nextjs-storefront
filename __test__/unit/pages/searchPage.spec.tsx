@@ -1,35 +1,18 @@
 import '@testing-library/jest-dom'
 import { render, screen } from '@testing-library/react'
+import { NextApiRequest } from 'next'
 
-import { categoryTreeDataMock } from '@/__mocks__/stories/categoryTreeDataMock'
+import { productSearchResultMock } from '@/__mocks__/stories'
 import { createQueryClientWrapper } from '@/__test__/utils'
-import CategoryPage, { getStaticProps } from '@/pages/category/[categoryCode]'
-const mockCategoryTreeData = categoryTreeDataMock
-const mockProductSearchData = {
-  totalCount: 1,
-  pageSize: 20,
-  pageCount: 3,
-  startIndex: 0,
-  items: [
-    {
-      productCode: 'Jacket12',
-      productUsage: 'Configurable',
-      isPackagedStandAlone: false,
-    },
-  ],
-  facets: [],
-}
-const mockCategoryTreeByCode = categoryTreeDataMock?.categoriesTree?.items.find(
-  (category) => category.categoryCode === '40'
-)
+import SearchPage, { getServerSideProps } from '@/pages/search'
 
-jest.mock('@/lib/api/util', () => ({
-  fetcher: jest.fn(() => {
+const mockProductSearchData = productSearchResultMock
+
+jest.mock('@/lib/api/operations', () => ({
+  productSearch: jest.fn(() => {
     return Promise.resolve({
       data: {
         products: mockProductSearchData,
-        categoriesTree: { items: mockCategoryTreeData.categoriesTree?.items },
-        categories: [mockCategoryTreeByCode],
       },
     })
   }),
@@ -47,11 +30,12 @@ jest.mock('next-i18next/serverSideTranslations', () => ({
   }),
 }))
 
-const ProductListingTemplateMock = () => <div data-testid="productListingTemplate-mock" />
-jest.mock(
-  '@/components/page-templates/ProductListingTemplate/ProductListingTemplate.tsx',
-  () => () => ProductListingTemplateMock()
-)
+jest.mock('next/dynamic', () => {
+  const ProductListingTemplate = () => <div data-testid="productListingTemplate-mock" />
+  ProductListingTemplate.displayName = 'ProductListingTemplate'
+
+  return jest.fn().mockImplementation(() => ProductListingTemplate)
+})
 
 jest.mock('@/lib/api/util/getUserClaimsFromRequest.ts', () => jest.fn(() => null))
 
@@ -77,36 +61,33 @@ jest.mock('next/config', () => {
   })
 })
 
-describe('[page] Category Page', () => {
-  it('should run getStaticProps method', async () => {
+describe('[page] Search Page', () => {
+  it('should run getServerSideProps method', async () => {
     const context = {
-      params: {
-        categoryCode: '40',
+      query: {
+        search: 'jacket',
       },
       locale: 'mock-locale',
+      req: {} as NextApiRequest,
+      res: { setHeader: jest.fn() },
     }
 
-    const response = await getStaticProps(context)
+    const response = await getServerSideProps(context as any)
 
     expect(response).toStrictEqual({
       props: {
         results: mockProductSearchData,
-        categoriesTree: mockCategoryTreeData.categoriesTree.items,
-        category: {
-          categories: [mockCategoryTreeByCode],
-        },
         _nextI18Next: {
           initialI18nStore: { 'mock-locale': [{}], en: [{}] },
           initialLocale: 'mock-locale',
           userConfig: { i18n: [{}] },
         },
       },
-      revalidate: 60,
     })
   })
 
-  it('should render the Category page template', () => {
-    render(<CategoryPage />, {
+  it('should render the Search page template', () => {
+    render(<SearchPage results={mockProductSearchData} />, {
       wrapper: createQueryClientWrapper(),
     })
 

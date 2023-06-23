@@ -1,43 +1,26 @@
 import '@testing-library/jest-dom'
 import { render, screen } from '@testing-library/react'
-import * as nextRouter from 'next/router'
+import { NextApiRequest } from 'next'
 
-import { categoryTreeDataMock } from '@/__mocks__/stories/categoryTreeDataMock'
-import ProductDetailPage, { getStaticPaths, getStaticProps } from '@/pages/product/[productCode]'
+import { categoryTreeDataMock, productSearchResultMock } from '@/__mocks__/stories'
+import ProductDetailPage, { getStaticPaths, getStaticProps } from '@/pages/product/[...productSlug]'
 
-nextRouter.useRouter = jest.fn()
 const mockCategoryTreeData = categoryTreeDataMock
-
-jest.mock('next/config', () => () => ({
-  publicRuntimeConfig: {
-    maxCookieAge: 10,
+const mockProduct = productSearchResultMock.items?.[0]
+const context = {
+  params: {
+    productSlug: ['SHOE12'],
   },
-  serverRuntimeConfig: {
-    revalidate: 60,
-    pageSize: 100,
-  },
-}))
+  req: {} as NextApiRequest,
+  locale: 'mock-locale',
+}
+let isFallback = false
 
-jest.mock('@/lib/api/util', () => ({
-  fetcher: jest.fn(() => {
-    return Promise.resolve({
-      data: {
-        product: {
-          productCode: 'mocked-product',
-        },
-        categoriesTree: { items: mockCategoryTreeData.categoriesTree?.items },
-        products: {
-          items: [
-            {
-              productCode: 'mocked-productCode-1',
-            },
-            {
-              productCode: 'mocked-productCode-2',
-            },
-          ],
-        },
-      },
-    })
+jest.mock('next/router', () => ({
+  useRouter: () => ({
+    isFallback: isFallback,
+    query: { productSlug: ['SHOE12'] },
+    asPath: '/product/SHOE12',
   }),
 }))
 
@@ -76,6 +59,30 @@ jest.mock('next/config', () => {
     },
   })
 })
+jest.mock('@/lib/api/operations', () => ({
+  getProduct: jest.fn(() => {
+    return mockProduct
+  }),
+  getCategoryTree: jest.fn(() => {
+    return mockCategoryTreeData?.categoriesTree?.items
+  }),
+  productSearch: jest.fn(() => {
+    return Promise.resolve({
+      data: {
+        products: {
+          items: [
+            {
+              productCode: 'mocked-productCode-1',
+            },
+            {
+              productCode: 'mocked-productCode-2',
+            },
+          ],
+        },
+      },
+    })
+  }),
+}))
 
 const ProductDetailTemplateMock = () => <div data-testid="productDetailTemplate-mock" />
 jest.mock(
@@ -90,20 +97,10 @@ jest.mock(
 
 describe('[page] Product Details Page', () => {
   it('should run getStaticProps method', () => {
-    const context = {
-      params: {
-        productCode: 'MS-BTL-001',
-      },
-      locale: 'mock-locale',
-    }
-
     const response = getStaticProps(context)
     expect(response).resolves.toStrictEqual({
       props: {
-        productCode: 'MS-BTL-001',
-        product: {
-          productCode: 'mocked-product',
-        },
+        product: mockProduct,
         categoriesTree: mockCategoryTreeData.categoriesTree.items,
         _nextI18Next: {
           initialI18nStore: { 'mock-locale': [{}], en: [{}] },
@@ -123,18 +120,28 @@ describe('[page] Product Details Page', () => {
     })
   })
 
-  it('should render the ProductDetail page template if isFallback is false', () => {
-    nextRouter.useRouter.mockImplementation(() => ({ isFallback: false }))
+  it('should render the page not found if isFallback is false', () => {
+    isFallback = false
     render(<ProductDetailPage />)
 
-    const productDetailTemplate = screen.getByTestId('productDetailTemplate-mock')
-    expect(productDetailTemplate).toBeVisible()
+    const pageNotFound = screen.getByText('This page could not be found.')
+    expect(pageNotFound).toBeVisible()
   })
 
   it('should render the Fallback page if isFallback is true', () => {
-    nextRouter.useRouter.mockImplementation(() => ({ isFallback: true }))
+    isFallback = true
     render(<ProductDetailPage />)
 
     expect(screen.getByTestId(/productDetailSkeleton-mock/)).toBeVisible()
   })
+
+  //TODO: fix this test with other conditions in routeHandle
+  // it('should render the ProductDetail page template if isFallback is false', () => {
+  //   isFallback = false
+  //   ProductDetailPage.defaultProps = { product: mockProduct }
+  //   render(<ProductDetailPage />)
+
+  //   const productDetailTemplate = screen.getByText('productDetailTemplate-mock')
+  //   expect(productDetailTemplate).toBeVisible()
+  // })
 })

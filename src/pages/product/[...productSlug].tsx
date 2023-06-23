@@ -5,8 +5,7 @@ import { NextRouter, useRouter } from 'next/router'
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
 
 import { ProductDetailTemplate, ProductDetailSkeleton } from '@/components/page-templates'
-import { getCategoryTree, productSearch } from '@/lib/api/operations'
-import getProduct from '@/lib/api/operations/get-product'
+import { getProduct, getCategoryTree, productSearch } from '@/lib/api/operations'
 import { productGetters } from '@/lib/getters'
 import { uiHelpers } from '@/lib/helpers'
 import type { CategorySearchParams } from '@/lib/types'
@@ -61,7 +60,7 @@ const routeHandle = (router: NextRouter, product: Product) => {
   const firstQueryParam = router?.query?.productSlug?.length && router.query?.productSlug[0]
   const { productSlug } = router.query
   const { seoFriendlyUrl } = product?.content || {}
-
+  console.log(router.asPath, 'router.asPath')
   let correctPath = router.asPath
 
   if (seoFriendlyUrl) {
@@ -87,7 +86,7 @@ const routeHandle = (router: NextRouter, product: Product) => {
 }
 
 const ProductDetailPage: NextPage = (props: any) => {
-  const { product, section } = props
+  const { product } = props
 
   const { publicRuntimeConfig } = getConfig()
   const currentUrl = publicRuntimeConfig?.currentUrl

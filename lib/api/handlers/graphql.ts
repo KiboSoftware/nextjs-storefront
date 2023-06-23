@@ -1,6 +1,4 @@
-import { fetcher } from '../util'
-import { getAdditionalHeader } from '../util'
-import getUserClaimsFromRequest from '../util/getUserClaimsFromRequest'
+import { fetcher, getAdditionalHeader, getUserClaimsFromRequest } from '../util'
 
 import type { NextApiRequest, NextApiResponse } from 'next'
 
