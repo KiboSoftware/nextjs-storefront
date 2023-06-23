@@ -12,7 +12,7 @@ describe('[component] KiboTextbox component', () => {
   it('should render the component', () => {
     render(<WithLabel {...WithLabel.args} />)
     const input = screen.getByRole('textbox', {
-      name: WithLabel.args.label,
+      name: WithLabel.args?.label,
     })
 
     expect(input).toBeVisible()
@@ -20,24 +20,24 @@ describe('[component] KiboTextbox component', () => {
 
   it('should render the component with placeholder', () => {
     render(<WithPlaceholder {...WithPlaceholder.args} />)
-    const input = screen.getByPlaceholderText(WithPlaceholder.args.placeholder)
+    const input = screen.getByPlaceholderText(WithPlaceholder.args?.placeholder as string)
 
     expect(input).toBeVisible()
   })
 
   it('should render the component with error when props error is true', () => {
     render(<WithError {...WithError.args} />)
-    const input = screen.getByLabelText(WithError.args.label)
+    const input = screen.getByLabelText(WithError.args?.label as string)
 
     expect(input).toHaveAttribute('aria-invalid', 'true')
   })
 
   it('should render the error helper text when props error is true', () => {
     render(<WithErrorDescription {...WithErrorDescription.args} />)
-    const helperText = screen.getByText(WithErrorDescription.args.helperText)
+    const helperText = screen.getByText(WithErrorDescription.args?.helperText as string)
 
     expect(helperText).toBeVisible()
-    expect(helperText).toHaveAttribute('aria-errormessage', WithErrorDescription.args.helperText)
+    expect(helperText).toHaveAttribute('aria-errormessage', WithErrorDescription.args?.helperText)
   })
 
   it('should call onChange method when user input data', async () => {
@@ -45,7 +45,7 @@ describe('[component] KiboTextbox component', () => {
     const user = userEvent.setup()
     render(<WithLabel {...WithLabel.args} onChange={onChangeMock} />)
     const input = screen.getByRole('textbox', {
-      name: WithLabel.args.label,
+      name: WithLabel.args?.label,
     })
 
     user.type(input, 'Test')

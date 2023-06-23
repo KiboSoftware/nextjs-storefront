@@ -4,12 +4,11 @@ import { Variant } from '@mui/material/styles/createTypography'
 import type { CrAddress } from '@/lib/gql/types'
 
 interface AddressProps extends CrAddress {
+  title?: string
+  variant?: Variant
   firstName?: string
   middleNameOrInitial?: string
   lastNameOrSurname?: string
-  title?: string
-  radio?: boolean
-  variant?: Variant
 }
 
 const AddressCard = (props: AddressProps) => {

@@ -12,15 +12,18 @@ describe('[component] KiboSelect component', () => {
     const select = screen.getByRole('button')
 
     expect(select).toBeVisible()
-    expect(select).toHaveTextContent(WithCustomPlaceholder.args.placeholder)
+    expect(select).toHaveTextContent(WithCustomPlaceholder.args?.placeholder as string)
   })
 
   it('should display the error description if passed when error is true', () => {
     render(<WithErrorDescription {...WithErrorDescription.args} />)
-    const helperText = screen.getByText(WithErrorDescription.args.helperText)
+    const helperText = screen.getByText(WithErrorDescription.args?.helperText as string)
 
     expect(helperText).toBeVisible()
-    expect(helperText).toHaveAttribute('aria-errormessage', WithErrorDescription.args.helperText)
+    expect(helperText).toHaveAttribute(
+      'aria-errormessage',
+      WithErrorDescription.args?.helperText as string
+    )
   })
 
   it('should call onChange method if option selected ', () => {

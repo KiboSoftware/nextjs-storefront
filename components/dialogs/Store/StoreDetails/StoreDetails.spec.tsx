@@ -45,7 +45,7 @@ describe('[components] Store Details', () => {
     expect(screen.getByText(`${inventory?.stockAvailable} available`)).toBeVisible()
   })
 
-  it('should expand store info', async () => {
+  it('should expand store info on click if not expanded', async () => {
     const { user } = setup()
     const location = Common.args?.location
     const collapsible = screen.getByTestId('collapsible')
@@ -68,22 +68,28 @@ describe('[components] Store Details', () => {
     expect(screen.queryByTestId('KeyboardArrowDownIcon')).not.toBeInTheDocument()
   })
 
-  it('should collapse store info', async () => {
+  it('should collapse store info on click if expanded', async () => {
     const { user } = setup()
 
     const collapsible = screen.getByTestId('collapsible')
     expect(screen.getByTestId('KeyboardArrowDownIcon')).toBeVisible()
 
+    // expand
     user.click(collapsible)
     await waitFor(() => {
       expect(screen.getByTestId('KeyboardArrowUpIcon')).toBeVisible()
     })
+    await waitFor(() => {
+      expect(screen.getByText(/get-directions/)).toBeInTheDocument()
+    })
 
+    // collapse
     user.click(collapsible)
     await waitFor(() => {
       expect(screen.queryByTestId('KeyboardArrowUpIcon')).not.toBeInTheDocument()
     })
-
-    expect(screen.queryByText(/get-directions/i)).not.toBeInTheDocument()
+    await waitFor(() => {
+      expect(screen.queryByText(/get-directions/)).not.toBeInTheDocument()
+    })
   })
 })

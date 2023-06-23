@@ -31,12 +31,14 @@ describe('[components] Fulfillment Options Component', () => {
   it('should render component', () => {
     setup()
 
-    const radioLabels = screen.getAllByRole('radio')
-    const shipLabel = screen.getByText(Common.args.fulfillmentOptions[0].label)
-    const pickupLabel = screen.getByText(Common.args.fulfillmentOptions[1].label)
+    const fulfillmentOptions = Common?.args?.fulfillmentOptions
 
-    const shipDetails = screen.getByText(Common.args.fulfillmentOptions[0].details)
-    const pickupDetails = screen.getByText(Common.args.fulfillmentOptions[1].details)
+    const radioLabels = screen.getAllByRole('radio')
+    const shipLabel = screen.getByText(fulfillmentOptions?.[0].label as string)
+    const pickupLabel = screen.getByText(fulfillmentOptions?.[1].label as string)
+
+    const shipDetails = screen.getByText(fulfillmentOptions?.[0].details as string)
+    const pickupDetails = screen.getByText(fulfillmentOptions?.[1].details as string)
 
     const changeStoreText = screen.getByText(/Change-Store/i)
     const selectStoreTexts = screen.queryAllByText(/Select-Store/i)

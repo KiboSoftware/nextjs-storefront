@@ -2,7 +2,7 @@ import { AddToCartDialog } from '@/components/dialogs'
 import { ProductQuickViewDialog } from '@/components/product'
 import { useModalContext } from '@/context'
 import { useAddCartItem, useWishlist } from '@/hooks'
-import { ProductCustom } from '@/lib/types'
+import { ProductCustom, WishlistProductInput } from '@/lib/types'
 
 export const useProductCardActions = () => {
   const { showModal } = useModalContext()
@@ -36,7 +36,7 @@ export const useProductCardActions = () => {
     })
   }
 
-  const handleWishList = async (product: ProductCustom) => {
+  const handleWishList = async (product: ProductCustom | WishlistProductInput) => {
     try {
       await addOrRemoveWishlistItem({ product })
     } catch (error) {

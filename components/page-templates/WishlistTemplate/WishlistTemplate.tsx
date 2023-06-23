@@ -17,16 +17,9 @@ const WishlistTemplate = () => {
 
   const { t } = useTranslation('common')
   const { getProductLink } = uiHelpers()
-  const { addOrRemoveWishlistItem, wishlists } = useWishlist()
-  const { handleAddToCart, openProductQuickViewModal } = useProductCardActions()
+  const { wishlists } = useWishlist()
+  const { handleAddToCart, openProductQuickViewModal, handleWishList } = useProductCardActions()
 
-  const handleAddOrRemoveWishlistItem = async (product: WishlistProductInput) => {
-    try {
-      await addOrRemoveWishlistItem({ product })
-    } catch (error) {
-      console.log('Error: add or remove wishlist item from wishlist template', error)
-    }
-  }
   return (
     <Grid container data-testid="wishlist-template">
       <>
@@ -81,7 +74,7 @@ const WishlistTemplate = () => {
                     title={productGetters.getName(item?.product as ProductCustom) as string}
                     rating={productGetters.getRating(item?.product as ProductCustom)}
                     onAddOrRemoveWishlistItem={() =>
-                      handleAddOrRemoveWishlistItem(item?.product as WishlistProductInput)
+                      handleWishList(item?.product as WishlistProductInput)
                     }
                     onClickAddToCart={handleAddToCart}
                     onClickQuickViewModal={() =>

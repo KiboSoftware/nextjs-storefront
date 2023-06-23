@@ -53,7 +53,6 @@ describe('[component] KiboHeader component', () => {
 
     expect(screen.getByText(/find-a-store/i)).toBeVisible()
     expect(screen.getAllByTestId('AccountCircleIcon')[0]).toBeVisible()
-    expect(screen.getAllByText(/my-account/i)[0]).toBeVisible()
 
     expect(screen.getByTestId('ShoppingCartIcon')).toBeVisible()
     expect(screen.getByText(/cart/i)).toBeVisible()

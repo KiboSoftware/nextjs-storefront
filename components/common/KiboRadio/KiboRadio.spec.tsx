@@ -15,7 +15,7 @@ describe('[component] - KiboRadio', () => {
     const radioLabels = screen.getAllByRole('radio')
 
     expect(radioLabels.length).toBe(3)
-    expect(screen.getByText(Common.args.title)).toBeVisible()
+    expect(screen.getByText(Common.args?.title as string)).toBeVisible()
   })
 
   it('should call onChange when other options are clicked', async () => {

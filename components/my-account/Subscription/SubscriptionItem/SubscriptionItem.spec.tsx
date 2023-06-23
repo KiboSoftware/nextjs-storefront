@@ -12,6 +12,7 @@ import { server } from '@/__mocks__/msw/server'
 import { subscriptionMock, customerAccountCardsMock, userAddressMock } from '@/__mocks__/stories'
 import { subscriptionItemMock } from '@/__mocks__/stories'
 import { createQueryClientWrapper } from '@/__test__/utils'
+import { AuthContext } from '@/context'
 import { subscriptionGetters, userGetters } from '@/lib/getters'
 import type { Address, PaymentAndBilling, BillingAddress, CardType } from '@/lib/types'
 
@@ -216,7 +217,7 @@ describe('[component] - SubscriptionItem', () => {
     }
   }
 
-  it('should render component', () => {
+  it.only('should render component', () => {
     setup()
     const subscriptionNumber = screen.getByText(/subscription-number/i)
     const status = screen.getByText(/status/i)

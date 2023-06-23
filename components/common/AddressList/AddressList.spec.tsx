@@ -7,6 +7,8 @@ import * as stories from './AddressList.stories' // import all stories from the 
 import { userAddressResponse } from '@/__mocks__/stories/userAddressMock'
 import { userGetters } from '@/lib/getters'
 
+import { CustomerContact } from '@/lib/gql/types'
+
 const { Common, Radio } = composeStories(stories)
 
 const KiboAddressListMock = () => <div data-testid="address-card-list-mock" />
@@ -14,10 +16,12 @@ jest.mock('@/components/common/AddressCard/AddressCard', () => () => KiboAddress
 
 const KiboRadioAddressListMock = () => <div data-testid="address-card-list-radio-mock" />
 jest.mock('@/components/common/KiboRadio/KiboRadio', () => () => KiboRadioAddressListMock())
-const userShippingAddress = userGetters.getUserShippingAddress(userAddressResponse?.items)
+const userShippingAddress = userGetters.getUserShippingAddress(
+  userAddressResponse?.items as CustomerContact[]
+)
 
 describe('[component] - AddressList', () => {
-  const addressCount = userShippingAddress?.length
+  const addressCount = userShippingAddress?.length as number
   it('should render the component without radio when radio prop is false', () => {
     render(<Common {...Common.args} />)
     const addressList = screen.getAllByTestId('address-card-list-mock')

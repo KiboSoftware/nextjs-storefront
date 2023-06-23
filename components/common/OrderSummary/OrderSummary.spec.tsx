@@ -15,7 +15,7 @@ jest.mock('@/components/common/OrderPrice/OrderPrice', () => () => orderPriceMoc
 describe('checkout Component', () => {
   it('should render order summary heading', () => {
     render(<Checkout {...Checkout.args} />)
-    const orderSummaryHeading = screen.getByText(Checkout.args.nameLabel)
+    const orderSummaryHeading = screen.getByText(Checkout.args?.nameLabel as string)
     const orderPriceComponent = screen.getByTestId('order-price-component')
     expect(orderSummaryHeading).toBeVisible()
     expect(orderPriceComponent).toBeInTheDocument()

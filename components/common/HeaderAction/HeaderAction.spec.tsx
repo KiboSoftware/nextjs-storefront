@@ -10,19 +10,19 @@ const { MyAccount, Location } = composeStories(stories)
 describe('[component] - HeaderAction', () => {
   it('should render title', () => {
     render(<MyAccount />)
-    expect(screen.getByText(MyAccount.args.title)).toBeVisible()
+    expect(screen.getByText(MyAccount.args?.title as string)).toBeVisible()
   })
 
   it('should render subtitle', () => {
     render(<MyAccount />)
-    expect(screen.getByText(MyAccount.args.subtitle)).toBeVisible()
+    expect(screen.getByText(MyAccount.args?.subtitle as string)).toBeVisible()
   })
 
   it('should call headerAction when clicked', () => {
     const handleClick = jest.fn()
     render(<Location onClick={handleClick} />)
 
-    const element = screen.getByText(Location.args.title)
+    const element = screen.getByText(Location.args?.title as string)
     element.click()
 
     expect(handleClick).toHaveBeenCalled()
