@@ -91,8 +91,6 @@ export const getStaticProps: any = async (context: any) => {
 
   const categories = await categoryTreeSearchByCode({ categoryCode }, categoriesTree)
 
-  console.log('fsgsdfgdshgsgh', categories)
-
   return {
     props: {
       results: response?.data?.products || [],

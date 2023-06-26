@@ -12,7 +12,7 @@ export interface PromoCodeBadgeProps {
   onApplyCouponCode: (promo: string) => void
   onRemoveCouponCode: (promo: string) => void
   promoList?: string[] | null
-  promoError: boolean
+  promoError?: boolean
   helpText?: string
 }
 const styles = {

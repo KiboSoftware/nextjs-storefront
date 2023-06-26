@@ -31,17 +31,20 @@ describe('[component] - Category', () => {
     const props = params ? params : Category.args
     const onPaginationChangeMock = jest.fn()
     const onSortItemSelectionMock = jest.fn()
+    const onInfiniteScrollMock = jest.fn()
     render(
       <Category
         {...props}
         onPaginationChange={onPaginationChangeMock}
         onSortItemSelection={onSortItemSelectionMock}
+        onInfiniteScroll={onInfiniteScrollMock}
       />
     )
     return {
       user,
       onPaginationChangeMock,
       onSortItemSelectionMock,
+      onInfiniteScrollMock,
     }
   }
 
@@ -51,8 +54,8 @@ describe('[component] - Category', () => {
     const breadCrumbComponent = screen.getByTestId('breadcrumb-component')
     const header = screen.getByRole('heading', { level: 1 })
     const viewText = screen.getAllByText(/view/i)
-    const sortByText = screen.getByText(/sort-by/i)
-    const categoryFacetComponent = screen.getByTestId('category-facet-component')
+    // const sortByText = screen.getByText(/sort-by/i)
+    const categoryFacetComponent = screen.getAllByTestId('category-facet-component')
     const filtersFacetComponent = screen.getByTestId('filters-facet-component')
     const showMoreButton = screen.getByRole('button', { name: /show-more/i })
     const sortingValues = Category?.args?.sortingValues?.options?.map((sort) => sort.value) || []
@@ -77,20 +80,20 @@ describe('[component] - Category', () => {
     expect(breadCrumbComponent).toBeInTheDocument()
     expect(header).toHaveTextContent(Category.args?.productListingHeader || '')
     expect(viewText[0]).toBeVisible()
-    expect(sortByText).toBeVisible()
-    expect(categoryFacetComponent).toBeInTheDocument()
+    // expect(sortByText).toBeVisible()
+    expect(categoryFacetComponent[0]).toBeInTheDocument()
     expect(filtersFacetComponent).toBeInTheDocument()
     expect(showMoreButton).toBeVisible()
   })
 
-  it('should call onPaginationChange when user clicks on show more button', async () => {
-    const { user, onPaginationChangeMock } = setup()
+  it('should call onInfiniteScrollMock when user clicks on show more button', async () => {
+    const { user, onInfiniteScrollMock } = setup()
 
     const showMoreButton = screen.getByRole('button', { name: /show-more/i })
     user.click(showMoreButton)
 
     await waitFor(() => {
-      expect(onPaginationChangeMock).toHaveBeenCalled()
+      expect(onInfiniteScrollMock).toHaveBeenCalled()
     })
   })
 

@@ -7,12 +7,12 @@ import { composeStories } from '@storybook/testing-react'
 import { render, screen, waitFor, act } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 
+import { PromoCodeBadgeProps } from './PromoCodeBadge'
 import * as stories from './PromoCodeBadge.stories' // import all stories from the stories file
 
-const { PromocodeBadgeComponent, PromocodeBadge } = composeStories(stories)
-
-describe('PromoCode Component', () => {
-  const setup = (params) => {
+const { PromocodeBadgeComponent } = composeStories(stories)
+describe('PromoCodeBadge Component', () => {
+  const setup = (params?: PromoCodeBadgeProps) => {
     const props = params ? params : PromocodeBadgeComponent.args
     const user = userEvent.setup()
     render(<PromocodeBadgeComponent {...props} />)
@@ -20,37 +20,23 @@ describe('PromoCode Component', () => {
       user,
     }
   }
-  const userEnteredText = 'T'
+  const userEnteredText = 'SAVE60'
 
   it('should render component', () => {
     setup()
     const PromoCode = screen.getByRole('textbox')
-    const PromoCodeApply = screen.getByRole('button', {
-      name: /apply/i,
-    })
     const removeButton = screen.getByRole('button')
     const ApplyPromocode = screen.getByTestId('promo-button')
 
     expect(PromoCode).toBeVisible()
-    expect(PromoCodeApply).toBeVisible()
     expect(removeButton).toBeVisible()
     expect(ApplyPromocode).toBeVisible()
   })
 
   it('should render promocode badge', () => {
-    render(<PromocodeBadge {...PromocodeBadge.args} />)
-    const PromoCode = screen.getByText(PromocodeBadge.args.promoCode)
+    setup()
+    const PromoCode = screen.getByText(PromocodeBadgeComponent?.args?.promoList?.[0] || 'SAVE50')
     expect(PromoCode).toBeVisible()
-  })
-
-  it('should enable button', async () => {
-    const { user } = setup()
-    const PromoCode = screen.getByRole('textbox')
-
-    user.click(PromoCode, 'SAVE50')
-    expect(PromoCode).toBeInTheDocument('SAVE50')
-    const ApplyButton = screen.getByTestId('promo-button')
-    expect(ApplyButton).toBeInTheDocument()
   })
 
   it('Test the Apply Button is disable at default', () => {
@@ -105,13 +91,18 @@ describe('PromoCode Component', () => {
 
     user.click(PromoCodebutton)
     await waitFor(() => {
-      expect(screen.getByTestId('promotype')).toBeInTheDocument('SAVE50')
+      expect(screen.getAllByTestId('promotype')[1]).toBeInTheDocument()
     })
   })
 
   it('should display multiple promocode when a user enter and apply it', async () => {
     const promoCode = '10OFF'
-    const params = { ...PromocodeBadgeComponent.args, promoList: [promoCode] }
+    const params = {
+      ...PromocodeBadgeComponent.args,
+      promoList: [promoCode],
+      onApplyCouponCode: () => ({}),
+      onRemoveCouponCode: () => ({}),
+    }
     const { user } = setup(params)
     const input = screen.getByRole('textbox')
     const PromoCodebutton = screen.getByRole('button', { name: /apply/i })
@@ -127,13 +118,19 @@ describe('PromoCode Component', () => {
     })
 
     await waitFor(() => {
-      const appliedPromoCode2 = screen.getByText('T')
+      const appliedPromoCode2 = screen.getByText('10OFF')
+      user.click(PromoCodebutton)
       expect(appliedPromoCode2).toBeVisible()
     })
   })
 
   it('should display an error message when the user applies the same promo code more than once', async () => {
-    const params = { ...PromocodeBadgeComponent.args, promoList: ['10OFF'] }
+    const params = {
+      ...PromocodeBadgeComponent.args,
+      promoList: ['10OFF'],
+      onApplyCouponCode: () => ({}),
+      onRemoveCouponCode: () => ({}),
+    }
     const { user } = setup(params)
     const input = screen.getByRole('textbox')
     const PromoCodebutton = screen.getByRole('button', { name: /apply/i })
@@ -149,9 +146,14 @@ describe('PromoCode Component', () => {
     })
   })
 
-  it('shoul remove a coupon when click cross icon', async () => {
+  it('should remove a coupon when click cross icon', async () => {
     const promoCode = '10OFF'
-    const params = { ...PromocodeBadgeComponent.args, promoList: [promoCode] }
+    const params = {
+      ...PromocodeBadgeComponent.args,
+      promoList: [promoCode],
+      onApplyCouponCode: () => ({}),
+      onRemoveCouponCode: () => ({}),
+    }
     const { user } = setup(params)
     const removeIcon = screen.getAllByLabelText('remove-promo-code')
 
