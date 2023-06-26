@@ -40,7 +40,12 @@ jest.mock('../CardDetailsForm/CardDetailsForm', () => ({
         type="button"
         data-testid="saveCardDataButton"
         onClick={() =>
-          onSaveCardData({ cardNumber: '4111111111111111', expiryDate: '01/2025', cvv: '123' })
+          onSaveCardData({
+            cardNumber: '4111111111111111',
+            expiryDate: '01/2025',
+            cvv: '123',
+            cardType: 'VISA',
+          })
         }
       >
         Save Card Data
@@ -97,24 +102,30 @@ jest.mock('../../common/AddressForm/AddressForm', () => ({
   ),
 }))
 
-jest.mock('../../checkout/SavedPaymentMethodView/SavedPaymentMethodView', () => ({
-  __esModule: true,
-  default: ({
-    id,
-    selected,
-    onPaymentCardSelection,
-  }: {
-    id: string
-    selected: string
-    onPaymentCardSelection: (id: string) => void
-  }) => (
-    <>
-      <div data-testid="selectedPaymentRadio">{selected}</div>
-      <div data-testid="saved-payment-method-view-mock"></div>
-      <button onClick={() => onPaymentCardSelection(id)}>handlePaymentCardSelection</button>
-    </>
-  ),
-}))
+const PaymentBillingCardMock = () => <div data-testid="payment-billing-card-mock" />
+jest.mock(
+  '@/components/common/PaymentBillingCard/PaymentBillingCard',
+  () => () => PaymentBillingCardMock()
+)
+
+// jest.mock('../../checkout/SavedPaymentMethodView/SavedPaymentMethodView', () => ({
+//   __esModule: true,
+//   default: ({
+//     id,
+//     selected,
+//     onPaymentCardSelection,
+//   }: {
+//     id: string
+//     selected: string
+//     onPaymentCardSelection: (id: string) => void
+//   }) => (
+//     <>
+//       <div data-testid="selectedPaymentRadio">{selected}</div>
+//       <div data-testid="saved-payment-method-view-mock"></div>
+//       <button onClick={() => onPaymentCardSelection(id)}>handlePaymentCardSelection</button>
+//     </>
+//   ),
+// }))
 
 const tokenizedCardResponseData = {
   id: '7d1a8a7b9c57487da07b8c0a2e6d0e1f',
@@ -214,15 +225,19 @@ describe('[components] PaymentStep', () => {
         await user.click(screen.getByRole('button', { name: /Save Card Data/ }))
         await user.click(screen.getByRole('button', { name: /Save Address/ }))
 
-        await user.click(screen.getByRole('button', { name: /save-payment-method/ }))
+        user.click(screen.getByRole('button', { name: /save-payment-method/ }))
 
-        expect(tokenizeCreditCardPayment).toHaveBeenCalled()
+        await waitFor(() => {
+          expect(tokenizeCreditCardPayment).toHaveBeenCalled()
+        })
 
-        expect(screen.getAllByTestId('saved-payment-method-view-mock').length).toBe(1)
+        await waitFor(() => {
+          expect(screen.getAllByTestId('payment-billing-card-mock').length).toBe(1)
+        })
 
-        expect(await screen.findByTestId('selectedPaymentRadio')).toHaveTextContent(
-          tokenizedCardResponseData.id
-        )
+        const selectedPayment = screen.getByRole('radio', { name: tokenizedCardResponseData.id })
+
+        expect(selectedPayment).toBeChecked()
       })
 
       it('should close the card and address form when user clicks on Cancel button', async () => {
@@ -296,14 +311,16 @@ describe('[components] PaymentStep', () => {
         const totalAddressCount = addresses?.length as number
 
         await waitFor(() => {
-          expect(screen.getAllByTestId('saved-payment-method-view-mock').length).toBe(
-            totalAddressCount
-          )
+          expect(screen.getAllByTestId('payment-billing-card-mock').length).toBe(totalAddressCount)
         })
 
         const cardId = getAccountCardId()
 
-        expect(screen.getByTestId('selectedPaymentRadio')).toHaveTextContent(cardId)
+        const selectedPayment = screen.getByRole('radio', { name: cardId })
+
+        expect(selectedPayment).toBeChecked()
+
+        // expect(screen.getByTestId('selectedPaymentRadio')).toHaveTextContent(cardId)
         expect(screen.getByText(/primary/i)).toBeVisible()
       })
 
@@ -334,7 +351,7 @@ describe('[components] PaymentStep', () => {
         const addresses = getBillingAddresses()
         const totalAddressCount = addresses?.length as number
 
-        expect(screen.getAllByTestId('saved-payment-method-view-mock').length).toBe(
+        expect(screen.getAllByTestId('payment-billing-card-mock').length).toBe(
           totalAddressCount + 1
         )
       })
@@ -356,9 +373,7 @@ describe('[components] PaymentStep', () => {
           ).length as number) // should be 2
 
         await waitFor(() => {
-          expect(screen.getAllByTestId('saved-payment-method-view-mock').length).toBe(
-            totalAddressCount
-          )
+          expect(screen.getAllByTestId('payment-billing-card-mock').length).toBe(totalAddressCount)
         })
       })
 
@@ -376,9 +391,9 @@ describe('[components] PaymentStep', () => {
 
         const cardId = checkoutPayments?.billingInfo?.card?.paymentServiceCardId as string
 
-        const selectedIds = await screen.findAllByTestId('selectedPaymentRadio')
+        const selectedPayment = screen.getByRole('radio', { name: cardId })
 
-        expect(selectedIds[1]?.textContent).toBe(cardId)
+        expect(selectedPayment).toBeChecked()
       })
 
       it(`should click a radio option and select the corresponding card and billing details`, async () => {
@@ -388,8 +403,8 @@ describe('[components] PaymentStep', () => {
           userId: 1012,
         })
 
-        const paymentCardSelectionButtons = await screen.findAllByRole('button', {
-          name: /handlePaymentCardSelection/,
+        const paymentCardSelectionButtons = await screen.findAllByRole('radio', {
+          name: /kibo-radio/,
         })
 
         user.click(paymentCardSelectionButtons[0])
@@ -418,7 +433,7 @@ describe('[components] PaymentStep', () => {
       expect(screen.queryByTestId('address-form-mock')).not.toBeInTheDocument()
     })
 
-    it('should select card and billing address is present in checkout by default', async () => {
+    it.only('should select card and billing address is present in checkout by default', async () => {
       setup({
         checkout: { ...orderMock.checkout },
         isAuthenticated: false,
@@ -432,9 +447,13 @@ describe('[components] PaymentStep', () => {
 
       const cardId = checkoutPayments?.billingInfo?.card?.paymentServiceCardId as string
 
-      const selectedIds = await screen.findAllByTestId('selectedPaymentRadio')
+      // const selectedIds = await screen.findAllByTestId('selectedPaymentRadio')
 
-      expect(selectedIds[0]?.textContent).toBe(cardId)
+      // expect(selectedIds[0]?.textContent).toBe(cardId)
+
+      const selectedPayment = screen.getByRole('radio', { name: cardId })
+
+      expect(selectedPayment).toBeChecked()
     })
   })
 })

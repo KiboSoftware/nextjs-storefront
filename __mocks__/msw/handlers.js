@@ -176,7 +176,17 @@ export const accountHandlers = [
   }),
 
   graphql.mutation('updateCustomerAccountCard', (_req, res, ctx) => {
-    return res(ctx.data(updateCustomerAccountCardMock))
+    return res(
+      ctx.data({
+        validateCustomerAddress: {
+          addressCandidates: 'mock-validated-response',
+        },
+      })
+    )
+  }),
+
+  graphql.mutation('validateCustomerAddress', (_req, res, ctx) => {
+    return res(ctx.data('mock-validated-data'))
   }),
 
   graphql.mutation('deleteCustomerAccountCard', (_req, res, ctx) => {

@@ -26,8 +26,8 @@ interface ShippingMethodProps {
 jest.mock('../../checkout/ShippingMethod/ShippingMethod', () => ({
   __esModule: true,
   default: ({ selected, onShippingMethodChange }: ShippingMethodProps) => (
-    <div data-testid="addressDetailsView-mock">
-      <p data-testid="selectedAddressDetailsView">{selected}</p>
+    <div data-testid="ShippingMethod-mock">
+      <p data-testid="selectedShippingMethod">{selected}</p>
       <button
         onClick={() =>
           onShippingMethodChange(
@@ -55,6 +55,9 @@ interface AddressDetailsViewProps {
 //     </div>
 //   ),
 // }))
+
+const AddressCardMock = () => <div data-testid="address-card-mock" />
+jest.mock('@/components/common/AddressCard/AddressCard', () => () => AddressCardMock())
 
 const onSaveAddressParam = {
   contact: {
@@ -148,7 +151,7 @@ describe('[components] StandardShippingStep', () => {
         userId: 0,
       })
 
-      expect(screen.queryByTestId('addressDetailsView-mock')).not.toBeInTheDocument()
+      expect(screen.queryByTestId('address-card-mock')).not.toBeInTheDocument()
     })
 
     it('should display shipping address form', async () => {
@@ -202,12 +205,12 @@ describe('[components] StandardShippingStep', () => {
         savedUserAddressData: userAddressResponse,
       })
 
-      expect(screen.getAllByTestId('addressDetailsView-mock').length).toBe(
+      expect(screen.getAllByTestId('address-card-mock').length).toBe(
         userGetters.getUserShippingAddress(userAddressResponse.items as CustomerContact[])?.length
       )
 
       // selecting a radioAddress
-      const firstRadioAddress = screen.getAllByRole('button', { name: /handleAddressSelect/ })[0]
+      const firstRadioAddress = screen.getAllByRole('radio')[0]
       user.click(firstRadioAddress)
 
       await waitFor(() => {
@@ -215,9 +218,12 @@ describe('[components] StandardShippingStep', () => {
           userAddressResponse?.items as CustomerContact[]
         )?.[0].id
 
-        expect(screen.getAllByTestId(/selectedAddressDetailsView/)?.[0].textContent).toBe(
-          selected?.toString()
-        )
+        // expect(screen.getAllByTestId(/selectedAddressDetailsView/)?.[0].textContent).toBe(
+        //   selected?.toString()
+        // )
+        const selectedPayment = screen.getByRole('radio', { name: String(selected) })
+
+        expect(selectedPayment).toBeChecked()
       })
 
       const firstShippingMethod = screen.getAllByRole('button', {
@@ -247,7 +253,7 @@ describe('[components] StandardShippingStep', () => {
           ?.length as number) + 1
 
       await waitFor(() => {
-        expect(screen.getAllByTestId('addressDetailsView-mock').length).toBe(radioCount)
+        expect(screen.getAllByTestId('address-card-mock').length).toBe(radioCount)
       })
     })
 
@@ -261,7 +267,7 @@ describe('[components] StandardShippingStep', () => {
         savedUserAddressData: userAddressResponse,
       })
 
-      const firstRadioAddress = screen.getAllByRole('button', { name: /handleAddressSelect/ })[0]
+      const firstRadioAddress = screen.getAllByRole('radio')[0]
       user.click(firstRadioAddress)
 
       await waitFor(() => {
@@ -269,9 +275,13 @@ describe('[components] StandardShippingStep', () => {
           userAddressResponse?.items as CustomerContact[]
         )?.[0].id
 
-        expect(screen.getAllByTestId(/selectedAddressDetailsView/)?.[0].textContent).toBe(
-          selected?.toString()
-        )
+        // expect(screen.getAllByTestId(/selectedAddressDetailsView/)?.[0].textContent).toBe(
+        //   selected?.toString()
+        // )
+
+        const selectedPayment = screen.getByRole('radio', { name: String(selected) })
+
+        expect(selectedPayment).toBeChecked()
       })
 
       const firstShippingMethod = screen.getAllByRole('button', {

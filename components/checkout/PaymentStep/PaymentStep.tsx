@@ -23,7 +23,7 @@ import { Controller, useForm } from 'react-hook-form'
 import * as yup from 'yup'
 
 import { KiboRadio } from '@/components/common'
-import PaymentBillingCard from '@/components/common/PaymentBillingCard/PaymentBillingCard'
+import { PaymentBillingCard } from '@/components/common'
 import { useCheckoutStepContext, STEP_STATUS, useAuthContext, useSnackbarContext } from '@/context'
 import {
   useGetCards,
@@ -244,6 +244,7 @@ const PaymentStep = (props: PaymentStepProps) => {
 
     setBillingFormAddress({
       ...address,
+      isAddressValid: true,
       isSameBillingShippingAddress: value,
     })
   }
@@ -254,6 +255,7 @@ const PaymentStep = (props: PaymentStepProps) => {
         ...address.contact,
       },
       email: checkout?.email,
+      isAddressValid: true,
       isDataUpdated: address.isDataUpdated,
     } as Address
     setBillingFormAddress(updatedAddress)
@@ -498,20 +500,14 @@ const PaymentStep = (props: PaymentStepProps) => {
   }
 
   const handleInitialCardDetailsLoad = () => {
-    // get card and billing address formatted data from server
     setStepStatusIncomplete()
+
+    // get card and billing address formatted data from server
     const accountPaymentDetails =
       userGetters.getSavedCardsAndBillingDetails(
         customerCardsCollection,
         customerContactsCollection
       ) || []
-
-    // find default payment details from server data
-    const defaultCard = userGetters.getDefaultPaymentBillingMethod(accountPaymentDetails)
-
-    // if defaultCard is available, set as selected radio
-    cardGetters.getCardId(defaultCard?.cardInfo) &&
-      setSelectedPaymentBillingRadio(defaultCard.cardInfo?.id as string)
 
     // get previously saved checkout payments
     const checkoutPaymentWithNewStatus = orderGetters.getSelectedPaymentMethods(
@@ -547,6 +543,14 @@ const PaymentStep = (props: PaymentStepProps) => {
 
       setSelectedPaymentBillingRadio(cardDetails?.paymentServiceCardId as string)
     }
+
+    // find default payment details from server data
+    const defaultCard = userGetters.getDefaultPaymentBillingMethod(accountPaymentDetails)
+
+    // if defaultCard is available, set as selected radio
+    cardGetters.getCardId(defaultCard?.cardInfo) &&
+      selectedPaymentBillingRadio === '' &&
+      setSelectedPaymentBillingRadio(defaultCard.cardInfo?.id as string)
 
     if (accountPaymentDetails?.length) {
       setSavedPaymentBillingDetails(accountPaymentDetails)
@@ -615,6 +619,11 @@ const PaymentStep = (props: PaymentStepProps) => {
   useEffect(() => {
     isValid ? setStepStatusValid() : setStepStatusIncomplete()
   }, [isValid])
+
+  console.log(
+    'savedPaymentBillingDetails====================================================',
+    savedPaymentBillingDetails.length
+  )
 
   return (
     <Stack data-testid="checkout-payment">
