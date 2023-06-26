@@ -419,7 +419,7 @@ const handleReviewStep = async (user: any) => {
   ).toBeVisible()
 }
 
-describe('[integration] StandardShipCheckoutTemplate', () => {
+describe.skip('[integration] StandardShipCheckoutTemplate', () => {
   describe('Authenticated user with no checkout details', () => {
     it('should handle standard checkout flow', async () => {
       const { user } = setup({

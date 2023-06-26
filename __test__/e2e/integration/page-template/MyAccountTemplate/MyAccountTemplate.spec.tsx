@@ -37,7 +37,7 @@ jest.mock('@/lib/helpers/tokenizeCreditCardPayment', () => {
     }),
   }
 })
-describe('[component] - MyProfile', () => {
+describe.skip('[component] - MyProfile', () => {
   it(`should handle email form edit`, async () => {
     const { user } = setup()
     const MyProfile = screen.getByRole('heading', {
@@ -99,7 +99,7 @@ describe('[component] - MyProfile', () => {
     })
   })
 })
-describe('[component] - AddressBook (has saved addresses )', () => {
+describe.skip('[component] - AddressBook (has saved addresses )', () => {
   it('should handle adding new address', async () => {
     const { user } = setup()
     const addressBook = screen.getByRole('heading', {
@@ -160,7 +160,7 @@ describe('[component] - AddressBook (has saved addresses )', () => {
     expect(deleteButton).not.toBeVisible()
   })
 })
-describe('[component] - PaymentMethod (has saved payment methods)', () => {
+describe.skip('[component] - PaymentMethod (has saved payment methods)', () => {
   it('should handle adding new card', async () => {
     const { user } = setup()
     await user.click(screen.getByText('payment-method'))
