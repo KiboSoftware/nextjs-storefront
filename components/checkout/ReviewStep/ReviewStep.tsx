@@ -43,9 +43,9 @@ export interface PersonalDetails {
 
 interface ReviewStepProps {
   checkout: CrOrder | Checkout
-  shipItems: any
-  pickupItems: any
-  personalDetails: any
+  shipItems?: Maybe<CrOrderItem>[]
+  pickupItems?: Maybe<CrOrderItem>[]
+  personalDetails?: any
   orderSummaryProps: any
   isMultiShipEnabled: boolean
   onCreateOrder: (params: any) => Promise<void>
@@ -133,8 +133,9 @@ const ReviewStep = (props: ReviewStepProps) => {
 
   const showAccountFields: boolean = watch(['showAccountFields']).join('') === 'true'
   const userEnteredPassword: string = watch(['password']).join('')
+
   const isEnabled = () => {
-    if (showAccountFields) {
+    if (showAccountFields && !isAuthenticated) {
       const isUserEnteredPasswordValid = showAccountFields
         ? isPasswordValid(userEnteredPassword)
         : true
@@ -292,113 +293,112 @@ const ReviewStep = (props: ReviewStepProps) => {
 
       <OrderPrice {...orderPriceProps} />
 
-      {!isAuthenticated && (
-        <Box sx={{ mt: '31px', mb: '35px' }}>
-          <FormControlLabel
-            control={
-              <Checkbox
-                inputProps={{
-                  'aria-label': 'termsConditions',
-                }}
-                data-testid="termsConditions"
-                size="medium"
-                color="primary"
-                value={isAgreeWithTermsAndConditions}
-                onChange={handleAgreeTermsConditions}
-              />
-            }
-            label={`${t('terms-conditions')}`}
-          />
+      <Box sx={{ mt: '31px', mb: '35px' }}>
+        <FormControlLabel
+          control={
+            <Checkbox
+              inputProps={{
+                'aria-label': 'termsConditions',
+              }}
+              data-testid="termsConditions"
+              size="medium"
+              color="primary"
+              value={isAgreeWithTermsAndConditions}
+              onChange={handleAgreeTermsConditions}
+            />
+          }
+          label={`${t('terms-conditions')}`}
+        />
 
-          <Box>
-            <FormControl>
-              <Controller
-                name="showAccountFields"
-                control={control}
-                defaultValue={personalDetails?.showAccountFields}
-                render={({ field }) => (
-                  <FormControlLabel
-                    control={
-                      <Checkbox
-                        inputProps={{
-                          'aria-label': 'showAccountFields',
-                        }}
-                        data-testid="showAccountFields"
-                        size="medium"
-                        color="primary"
-                        disabled={isAuthenticated}
-                        value={field.value}
-                        onChange={(_name, value) => field.onChange(value)}
-                      />
-                    }
-                    label={t('i-want-to-create-an-account').toString()}
-                  />
-                )}
-              />
-            </FormControl>
-          </Box>
-
-          {getValues()?.showAccountFields && (
-            <FormControl>
-              <Controller
-                name="firstName"
-                control={control}
-                defaultValue={personalDetails?.firstName || ''}
-                render={({ field }) => (
-                  <KiboTextBox
-                    value={field.value}
-                    label={t('first-name')}
-                    required
-                    sx={{ ...commonStyle }}
-                    onBlur={field.onBlur}
-                    onChange={(_name, value) => field.onChange(value)}
-                    error={!!errors?.firstName}
-                    helperText={errors?.firstName?.message as string}
-                  />
-                )}
-              />
-              <Controller
-                name="lastNameOrSurname"
-                control={control}
-                defaultValue={personalDetails?.lastNameOrSurname || ''}
-                render={({ field }) => (
-                  <KiboTextBox
-                    value={field.value}
-                    label={t('last-name-or-sur-name')}
-                    required
-                    sx={{ ...commonStyle }}
-                    onBlur={field.onBlur}
-                    onChange={(_name, value) => field.onChange(value)}
-                    error={!!errors?.lastNameOrSurname}
-                    helperText={errors?.lastNameOrSurname?.message as string}
-                  />
-                )}
-              />
-              <Controller
-                name="password"
-                control={control}
-                defaultValue={personalDetails?.password || ''}
-                render={({ field }) => (
-                  <KiboTextBox
-                    value={field.value}
-                    label={t('password')}
-                    required
-                    sx={{ ...commonStyle }}
-                    onBlur={field.onBlur}
-                    onChange={(_name, value) => field.onChange(value)}
-                    error={!!errors?.password}
-                    helperText={errors?.password?.message as string}
-                    type="password"
-                    placeholder="password"
-                  />
-                )}
-              />
-
-              <PasswordValidation password={userEnteredPassword} />
-            </FormControl>
-          )}
+        <Box>
+          <FormControl>
+            <Controller
+              name="showAccountFields"
+              control={control}
+              defaultValue={personalDetails?.showAccountFields}
+              render={({ field }) => (
+                <FormControlLabel
+                  control={
+                    <Checkbox
+                      inputProps={{
+                        'aria-label': 'showAccountFields',
+                      }}
+                      data-testid="showAccountFields"
+                      size="medium"
+                      color="primary"
+                      disabled={isAuthenticated}
+                      value={field.value}
+                      onChange={(_name, value) => field.onChange(value)}
+                    />
+                  }
+                  label={t('i-want-to-create-an-account').toString()}
+                />
+              )}
+            />
+          </FormControl>
         </Box>
-      )}
+
+        {getValues()?.showAccountFields && (
+          <FormControl>
+            <Controller
+              name="firstName"
+              control={control}
+              defaultValue={personalDetails?.firstName || ''}
+              render={({ field }) => (
+                <KiboTextBox
+                  value={field.value}
+                  label={t('first-name')}
+                  required
+                  sx={{ ...commonStyle }}
+                  onBlur={field.onBlur}
+                  onChange={(_name, value) => field.onChange(value)}
+                  error={!!errors?.firstName}
+                  helperText={errors?.firstName?.message as string}
+                />
+              )}
+            />
+            <Controller
+              name="lastNameOrSurname"
+              control={control}
+              defaultValue={personalDetails?.lastNameOrSurname || ''}
+              render={({ field }) => (
+                <KiboTextBox
+                  value={field.value}
+                  label={t('last-name-or-sur-name')}
+                  required
+                  sx={{ ...commonStyle }}
+                  onBlur={field.onBlur}
+                  onChange={(_name, value) => field.onChange(value)}
+                  error={!!errors?.lastNameOrSurname}
+                  helperText={errors?.lastNameOrSurname?.message as string}
+                />
+              )}
+            />
+            <Controller
+              name="password"
+              control={control}
+              defaultValue={personalDetails?.password || ''}
+              render={({ field }) => (
+                <KiboTextBox
+                  value={field.value}
+                  label={t('password')}
+                  required
+                  sx={{ ...commonStyle }}
+                  onBlur={field.onBlur}
+                  onChange={(_name, value) => field.onChange(value)}
+                  error={!!errors?.password}
+                  helperText={errors?.password?.message as string}
+                  type="password"
+                  placeholder="password"
+                />
+              )}
+            />
+
+            <PasswordValidation password={userEnteredPassword} />
+          </FormControl>
+        )}
+      </Box>
+
       <Stack alignItems="left">
         <Button
           variant="contained"

@@ -1,15 +1,14 @@
 import React from 'react'
 
 import { composeStories } from '@storybook/testing-react'
-import { render, screen, waitFor } from '@testing-library/react'
+import { render, screen, act, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { mock } from 'jest-mock-extended'
-import { act } from 'react-dom/test-utils'
 
 import * as stories from '../ReviewStep/ReviewStep.stories'
 import { createQueryClientWrapper } from '@/__test__/utils'
 import { AuthContext, AuthContextType } from '@/context'
-const { Common, WithMultiShippingAddresses } = composeStories(stories)
+const { Common } = composeStories(stories)
 
 const orderPriceMock = () => <div data-testid="order-price-component" />
 const productItemListMock = () => <div data-testid="product-item-list-mock" />
@@ -34,6 +33,28 @@ const setup = (isAuthenticated = false) => {
     user,
   }
 }
+
+jest.mock('next/config', () => {
+  return () => ({
+    publicRuntimeConfig: {
+      maxCookieAge: 0,
+      productListing: {
+        sortOptions: [
+          { value: 'Best Match', id: '' },
+          { value: 'Price: Low to High', id: 'price asc' },
+          { value: 'Price: High to Low', id: 'price desc' },
+          { value: 'Latest', id: 'createDate desc' },
+          { value: 'Oldest', id: 'createDate asc' },
+        ],
+        pageSize: 16,
+      },
+    },
+    serverRuntimeConfig: {
+      cacheKey: 'categoryTree',
+      cacheTimeOut: 10000,
+    },
+  })
+})
 
 describe('[components] ReviewStep', () => {
   describe('[StandardCheckout]', () => {
@@ -82,21 +103,23 @@ describe('[components] ReviewStep', () => {
       name: /showaccountfields/i,
     })
 
-    await user.click(iAgreeCheckbox)
-    expect(iAgreeCheckbox).toBeChecked()
+    user.click(iAgreeCheckbox)
+    await waitFor(() => {
+      expect(iAgreeCheckbox).toBeChecked()
+    })
+
     expect(iWantToCreateAccountCheckbox).not.toBeChecked()
 
     const confirmAndPayButton = screen.getByRole('button', {
       name: /confirm-and-pay/i,
     })
-
     expect(confirmAndPayButton).toBeEnabled()
   })
 
   describe('If user is not authenticated', () => {
     it("should enable 'I want to create an account' checkbox when user is not loggedIn", async () => {
       const isAuthenticated = false
-      await act(async () => setup(isAuthenticated))
+      setup(isAuthenticated)
 
       const iWantToCreateAccountCheckbox = screen.getByRole('checkbox', {
         name: /showaccountfields/i,
@@ -110,16 +133,17 @@ describe('[components] ReviewStep', () => {
       const { user } = setup(isAuthenticated)
 
       const iWantToCreateAccount = screen.getByRole('checkbox', { name: /showaccountfields/i })
-      await user.click(iWantToCreateAccount)
+      user.click(iWantToCreateAccount)
 
-      const firstNameLabel = screen.getByLabelText(/last-name/i)
+      const firstNameLabel = await screen.findByLabelText(/last-name/i)
+      expect(firstNameLabel).toBeVisible()
+
       const lastNameLabel = screen.getByLabelText(/last-name/i)
       const passwordLabel = screen.getByLabelText(/password/i)
       const firstNameTexBox = screen.getByRole('textbox', { name: /first-name/i })
       const lastNameTexBox = screen.getByRole('textbox', { name: /last-name/i })
       const passwordTexBox = screen.getByPlaceholderText(/password/i)
 
-      expect(firstNameLabel).toBeVisible()
       expect(lastNameLabel).toBeVisible()
       expect(passwordLabel).toBeVisible()
       expect(firstNameTexBox).toBeVisible()
@@ -127,6 +151,7 @@ describe('[components] ReviewStep', () => {
       expect(passwordTexBox).toBeVisible()
     })
 
+    //TODO: solve act issue and some issue with test case, its not taking the user entered password
     it('should enable "Go To Payment" button only when user checks both "terms and conditions" and "I want to create an account" checkboxes and fills valid account information ', async () => {
       const isAuthenticated = false
       const { user } = setup(isAuthenticated)
@@ -178,11 +203,11 @@ describe('[components] ReviewStep', () => {
         const iWantToCreateAccountCheckbox = screen.getByRole('checkbox', {
           name: /showaccountfields/i,
         })
-        await user.click(iWantToCreateAccountCheckbox)
+        user.click(iWantToCreateAccountCheckbox)
 
-        const firstNameTexBox = screen.getByRole('textbox', { name: /first-name/i })
-        await user.clear(firstNameTexBox)
-        await user.tab()
+        const firstNameTexBox = await screen.findByRole('textbox', { name: /first-name/i })
+        user.clear(firstNameTexBox)
+        user.tab()
 
         const requiredFieldMessage = await screen.findByText(/this-field-is-required/i)
         expect(requiredFieldMessage).toBeVisible()
@@ -195,13 +220,13 @@ describe('[components] ReviewStep', () => {
         const iWantToCreateAccountCheckbox = screen.getByRole('checkbox', {
           name: /showaccountfields/i,
         })
-        await user.click(iWantToCreateAccountCheckbox)
+        user.click(iWantToCreateAccountCheckbox)
 
-        const lastNameTexBox = screen.getByRole('textbox', { name: /last-name/i })
-        await user.clear(lastNameTexBox)
-        await user.tab()
+        const lastNameTexBox = await screen.findByRole('textbox', { name: /last-name/i })
+        user.clear(lastNameTexBox)
+        user.tab()
 
-        const requiredFieldMessage = screen.getByText(/this-field-is-required/i)
+        const requiredFieldMessage = await screen.findByText(/this-field-is-required/i)
         expect(requiredFieldMessage).toBeVisible()
       })
 
@@ -212,16 +237,16 @@ describe('[components] ReviewStep', () => {
         const iWantToCreateAccountCheckbox = screen.getByRole('checkbox', {
           name: /showaccountfields/i,
         })
-        await user.click(iWantToCreateAccountCheckbox)
+        user.click(iWantToCreateAccountCheckbox)
 
-        const passwordTexBox = screen.getByLabelText(/password/i)
-        act(() => {
-          passwordTexBox.focus()
+        await waitFor(() => {
+          const passwordTexBox = screen.getByLabelText(/password/i)
+          user.clear(passwordTexBox)
+          user.tab()
+
+          const requiredFieldMessage = screen.getByText(/this-field-is-required/i)
+          expect(requiredFieldMessage).toBeVisible()
         })
-        await user.tab()
-
-        const requiredFieldMessage = screen.getByText(/this-field-is-required/i)
-        expect(requiredFieldMessage).toBeVisible()
       })
     })
 
@@ -233,13 +258,15 @@ describe('[components] ReviewStep', () => {
         const iWantToCreateAccountCheckbox = screen.getByRole('checkbox', {
           name: /showaccountfields/i,
         })
-        await user.click(iWantToCreateAccountCheckbox)
-
-        const firstNameTexBox = screen.getByRole('textbox', { name: /first-name/i })
-        await user.clear(firstNameTexBox)
-        await user.type(firstNameTexBox, 'First Name')
-
-        expect(firstNameTexBox).toHaveValue('First Name')
+        user.click(iWantToCreateAccountCheckbox)
+        const firstNameTexBox = await screen.findByRole('textbox', { name: /first-name/i })
+        await waitFor(() => {
+          user.clear(firstNameTexBox)
+          user.type(firstNameTexBox, 'First Name')
+        })
+        await waitFor(() => {
+          expect(firstNameTexBox).toHaveValue('First Name')
+        })
       })
 
       it('should display user entered value when user enters Last Name', async () => {
@@ -249,13 +276,16 @@ describe('[components] ReviewStep', () => {
         const iWantToCreateAccountCheckbox = screen.getByRole('checkbox', {
           name: /showaccountfields/i,
         })
-        await user.click(iWantToCreateAccountCheckbox)
+        user.click(iWantToCreateAccountCheckbox)
 
-        const lastNameTexBox = screen.getByRole('textbox', { name: /last-name/i })
-        await user.clear(lastNameTexBox)
-        await user.type(lastNameTexBox, 'Last Name')
-
-        expect(lastNameTexBox).toHaveValue('Last Name')
+        const lastNameTexBox = await screen.findByRole('textbox', { name: /last-name/i })
+        await waitFor(() => {
+          user.clear(lastNameTexBox)
+          user.type(lastNameTexBox, 'Last Name')
+        })
+        await waitFor(() => {
+          expect(lastNameTexBox).toHaveValue('Last Name')
+        })
       })
 
       it('should display user entered value when user enters Password', async () => {
@@ -265,12 +295,15 @@ describe('[components] ReviewStep', () => {
         const iWantToCreateAccountCheckbox = screen.getByRole('checkbox', {
           name: /showaccountfields/i,
         })
-        await user.click(iWantToCreateAccountCheckbox)
+        user.click(iWantToCreateAccountCheckbox)
 
-        const passwordTexBox = screen.getByPlaceholderText(/password/i)
-        await user.type(passwordTexBox, 'Password@1')
-
-        expect(passwordTexBox).toHaveValue('Password@1')
+        const passwordTexBox = await screen.findByPlaceholderText(/password/i)
+        await waitFor(() => {
+          user.type(passwordTexBox, 'Password@1')
+        })
+        await waitFor(() => {
+          expect(passwordTexBox).toHaveValue('Password@1')
+        })
       })
     })
   })
