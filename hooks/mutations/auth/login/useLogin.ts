@@ -1,7 +1,7 @@
 /**
  * @module useLogin
  */
-import { useMutation, useQueryClient } from 'react-query'
+import { useMutation, useQueryClient } from '@tanstack/react-query'
 
 import { makeGraphQLClient, LOGIN_ENDPOINT } from '@/lib/gql/client'
 import { loginMutation } from '@/lib/gql/mutations/user/login'
@@ -38,13 +38,14 @@ export const useLogin = () => {
     mutate,
     mutateAsync,
     data = {},
-    isLoading,
+    isPending,
     isError,
     error,
     isSuccess,
-  } = useMutation(loginUser, {
+  } = useMutation({
+    mutationFn: loginUser,
     onMutate: () => {
-      queryClient.cancelQueries(loginKeys.user)
+      queryClient.cancelQueries({ queryKey: loginKeys.user })
     },
     retry: 0,
   })
@@ -53,7 +54,7 @@ export const useLogin = () => {
     mutate,
     mutateAsync,
     data,
-    isLoading,
+    isPending,
     isSuccess,
     isError,
     error,

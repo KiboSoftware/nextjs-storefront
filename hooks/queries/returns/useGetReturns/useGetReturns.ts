@@ -1,7 +1,7 @@
 /**
  * @module useGetReturns
  */
-import { useQuery } from 'react-query'
+import { useQuery } from '@tanstack/react-query'
 
 import { makeGraphQLClient } from '@/lib/gql/client'
 import { getReturnsQuery } from '@/lib/gql/queries'
@@ -46,13 +46,11 @@ const getReturns = async (param: { filter: string }): Promise<ReturnCollection> 
  */
 
 export const useGetReturns = (searchParams: { filter: string }): UseReturnsResponse => {
-  const { data, isLoading, isSuccess, isFetching } = useQuery(
-    returnsKeys.all,
-    () => getReturns(searchParams),
-    {
-      refetchOnWindowFocus: false,
-    }
-  )
+  const { data, isLoading, isSuccess, isFetching } = useQuery({
+    queryKey: returnsKeys.all,
+    queryFn: () => getReturns(searchParams),
+    refetchOnWindowFocus: false,
+  })
 
   return { data, isLoading, isSuccess, isFetching }
 }

@@ -1,7 +1,7 @@
 /**
  * @module useVoidOrderPayment
  */
-import { useMutation, useQueryClient } from 'react-query'
+import { useMutation, useQueryClient } from '@tanstack/react-query'
 
 import { makeGraphQLClient } from '@/lib/gql/client'
 import { updateOrderPaymentAction } from '@/lib/gql/mutations'
@@ -47,9 +47,10 @@ export const useVoidOrderPayment = () => {
   const queryClient = useQueryClient()
 
   return {
-    voidOrderPayment: useMutation(updateOrderPaymentActionMutation, {
+    voidOrderPayment: useMutation({
+      mutationFn: updateOrderPaymentActionMutation,
       onSuccess: () => {
-        queryClient.removeQueries([checkoutKeys.all])
+        queryClient.removeQueries({ queryKey: checkoutKeys.all })
       },
     }),
   }

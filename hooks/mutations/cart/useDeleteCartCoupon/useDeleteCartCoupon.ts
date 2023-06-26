@@ -1,7 +1,7 @@
 /**
  * @module useDeleteCartCoupon
  */
-import { useMutation, useQueryClient } from 'react-query'
+import { useMutation, useQueryClient } from '@tanstack/react-query'
 
 import { makeGraphQLClient } from '@/lib/gql/client'
 import { deleteCartCouponMutation } from '@/lib/gql/mutations'
@@ -44,9 +44,10 @@ const deleteCartCoupon = async (params: DeleteCartCouponParams) => {
 export const useDeleteCartCoupon = () => {
   const queryClient = useQueryClient()
   return {
-    deleteCartCoupon: useMutation(deleteCartCoupon, {
+    deleteCartCoupon: useMutation({
+      mutationFn: deleteCartCoupon,
       onSuccess: () => {
-        queryClient.invalidateQueries(cartKeys.all)
+        queryClient.invalidateQueries({ queryKey: cartKeys.all })
       },
     }),
   }

@@ -1,7 +1,7 @@
 /**
  * @module useAddCartItem
  */
-import { useMutation, useQueryClient } from 'react-query'
+import { useMutation, useQueryClient } from '@tanstack/react-query'
 
 import { makeGraphQLClient } from '@/lib/gql/client'
 import { addToCartMutation } from '@/lib/gql/mutations'
@@ -58,9 +58,10 @@ const addToCart = async (props: AddCartItemParams) => {
 export const useAddCartItem = () => {
   const queryClient = useQueryClient()
   return {
-    addToCart: useMutation(addToCart, {
+    addToCart: useMutation({
+      mutationFn: addToCart,
       onSuccess: () => {
-        queryClient.invalidateQueries(cartKeys.all)
+        queryClient.invalidateQueries({ queryKey: cartKeys.all })
       },
     }),
   }

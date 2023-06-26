@@ -1,7 +1,7 @@
 /**
  * @module useRegister
  */
-import { useMutation, useQueryClient } from 'react-query'
+import { useMutation, useQueryClient } from '@tanstack/react-query'
 
 import { makeGraphQLClient, REGISTER_USER_ENDPOINT } from '@/lib/gql/client'
 import { createAccountAndLoginMutation } from '@/lib/gql/mutations/user/createAccount'
@@ -38,13 +38,14 @@ export const useRegister = () => {
     mutate,
     mutateAsync,
     data = {},
-    isLoading,
+    isPending,
     isError,
     error,
     isSuccess,
-  } = useMutation(registerUser, {
+  } = useMutation({
+    mutationFn: registerUser,
     onMutate: () => {
-      queryClient.invalidateQueries(loginKeys.user)
+      queryClient.invalidateQueries({ queryKey: loginKeys.user })
     },
     retry: 0,
   })
@@ -53,7 +54,7 @@ export const useRegister = () => {
     mutate,
     mutateAsync,
     data,
-    isLoading,
+    isPending,
     isSuccess,
     isError,
     error,

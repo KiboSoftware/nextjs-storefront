@@ -2,7 +2,7 @@
  * @module useUpdateSubscriptionPayment
  */
 
-import { useMutation, useQueryClient } from 'react-query'
+import { useMutation, useQueryClient } from '@tanstack/react-query'
 
 import { makeGraphQLClient } from '@/lib/gql/client'
 import { updateSubscriptionPaymentMutation } from '@/lib/gql/mutations'
@@ -43,9 +43,10 @@ export const useUpdateSubscriptionPayment = () => {
   const queryClient = useQueryClient()
 
   return {
-    updateSubscriptionPayment: useMutation(updateSubscriptionPayment, {
+    updateSubscriptionPayment: useMutation({
+      mutationFn: updateSubscriptionPayment,
       onSuccess: () => {
-        queryClient.invalidateQueries(subscriptionKeys.all)
+        queryClient.invalidateQueries({ queryKey: subscriptionKeys.all })
       },
     }),
   }

@@ -1,7 +1,7 @@
 /**
  * @module useGetProducts
  */
-import { useQuery } from 'react-query'
+import { useQuery } from '@tanstack/react-query'
 
 import { makeGraphQLClient } from '@/lib/gql/client'
 import { searchProductsQuery } from '@/lib/gql/queries'
@@ -56,13 +56,11 @@ export const useGetProducts = (productCodes: Array<string>): UseProductsResponse
     filter: productCodeFilter.join(' or '),
     pageSize: productCodes?.length,
   }) as CategorySearchParams
-  const { data, isLoading, isSuccess, isFetching } = useQuery(
-    productSearchResultKeys.searchParams(searchParams),
-    () => fetchProductSearch(searchParams),
-    {
-      enabled: !!searchParams.filter,
-    }
-  )
+  const { data, isLoading, isSuccess, isFetching } = useQuery({
+    queryKey: productSearchResultKeys.searchParams(searchParams),
+    queryFn: () => fetchProductSearch(searchParams),
+    enabled: !!searchParams.filter,
+  })
 
   return { data, isLoading, isSuccess, isFetching }
 }

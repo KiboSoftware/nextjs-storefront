@@ -1,4 +1,4 @@
-import { renderHook } from '@testing-library/react'
+import { renderHook, waitFor } from '@testing-library/react'
 
 import { useUpdateOrderBillingInfo } from './useUpdateOrderBillingInfo'
 import { billingInfoInputMock } from '@/__mocks__/stories/billingInfoInputMock'
@@ -14,16 +14,16 @@ describe('[hooks] useUpdateOrderBillingInfo', () => {
       },
     }
 
-    renderHook(
-      async () => {
-        const { updateOrderBillingInfo } = useUpdateOrderBillingInfo()
-        const response = await updateOrderBillingInfo.mutateAsync(updateBillingInfoParams)
+    const { result } = renderHook(() => useUpdateOrderBillingInfo(), {
+      wrapper: createQueryClientWrapper(),
+    })
 
-        expect(response).toStrictEqual(updateOrderBillingInfoMock.updateOrderBillingInfo)
-      },
-      {
-        wrapper: createQueryClientWrapper(),
-      }
-    )
+    result.current.updateOrderBillingInfo.mutateAsync(updateBillingInfoParams)
+
+    await waitFor(() => {
+      expect(result.current.updateOrderBillingInfo.data).toStrictEqual(
+        updateOrderBillingInfoMock.updateOrderBillingInfo
+      )
+    })
   })
 })

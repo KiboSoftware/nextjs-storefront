@@ -1,7 +1,7 @@
 /**
  * @module useGetCustomerAddresses
  */
-import { useQuery } from 'react-query'
+import { useQuery } from '@tanstack/react-query'
 
 import { makeGraphQLClient } from '@/lib/gql/client'
 import { getUserAddressesQuery } from '@/lib/gql/queries'
@@ -50,14 +50,12 @@ export const useGetCustomerAddresses = (accountId: number): UseCustomerContactsR
     data = [],
     isLoading,
     isSuccess,
-  } = useQuery(
-    customerAccountContactsKeys.addressById(accountId),
-    () => loadCustomerAccountContacts(accountId),
-    {
-      refetchOnWindowFocus: false,
-      enabled: !!accountId,
-    }
-  )
+  } = useQuery({
+    queryKey: customerAccountContactsKeys.addressById(accountId),
+    queryFn: () => loadCustomerAccountContacts(accountId),
+    refetchOnWindowFocus: false,
+    enabled: !!accountId,
+  })
 
   return { data, isLoading, isSuccess }
 }

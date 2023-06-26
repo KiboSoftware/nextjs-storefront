@@ -509,7 +509,7 @@ const SubscriptionItem = (props: SubscriptionItemProps) => {
                     onChange={(name: string, value: string) => handleUpdateCard(value)}
                     placeholder={t('select-billing-address')}
                     value={billingAddress?.formattedAddress}
-                    disabled={updateSubscriptionPayment.isLoading}
+                    disabled={updateSubscriptionPayment.isPending}
                   >
                     {uniqueCards?.map((card) => {
                       return (
@@ -537,7 +537,7 @@ const SubscriptionItem = (props: SubscriptionItemProps) => {
                         onClose: handleCloseModal,
                       })
                     }
-                    disabled={updateSubscriptionPayment.isLoading || isSubscriptionCanceled}
+                    disabled={updateSubscriptionPayment.isPending || isSubscriptionCanceled}
                   >
                     {t('add-new-address')}
                   </Button>
@@ -591,7 +591,7 @@ const SubscriptionItem = (props: SubscriptionItemProps) => {
                     onChange={(name: string, value: string) => handleUpdateShippingAddress(value)}
                     placeholder={t('select-shipping-address')}
                     value={shippingAddress?.formattedAddress}
-                    disabled={updateSubscriptionShippingInfo.isLoading}
+                    disabled={updateSubscriptionShippingInfo.isPending}
                   >
                     {fulfillmentInfoList?.map((item) => {
                       return (
@@ -614,7 +614,7 @@ const SubscriptionItem = (props: SubscriptionItemProps) => {
                         onSaveAddress: handleAddNewShippingAddress,
                       })
                     }
-                    disabled={updateSubscriptionShippingInfo.isLoading || isSubscriptionCanceled}
+                    disabled={updateSubscriptionShippingInfo.isPending || isSubscriptionCanceled}
                   >
                     {t('add-new-address')}
                   </Button>

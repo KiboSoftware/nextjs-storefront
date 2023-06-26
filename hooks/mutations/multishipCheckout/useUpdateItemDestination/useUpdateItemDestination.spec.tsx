@@ -1,4 +1,4 @@
-import { renderHook } from '@testing-library/react'
+import { renderHook, waitFor } from '@testing-library/react'
 
 import { useUpdateItemDestination } from './useUpdateItemDestination'
 import { checkoutMock } from '@/__mocks__/stories'
@@ -6,20 +6,18 @@ import { createQueryClientWrapper } from '@/__test__/utils/renderWithQueryClient
 
 describe('[hooks] useUpdateItemDestination', () => {
   it('should update checkout item destination', async () => {
-    renderHook(
-      async () => {
-        const { updateCheckoutItemDestination } = useUpdateItemDestination()
-        const response = await updateCheckoutItemDestination.mutateAsync({
-          checkoutId: '',
-          itemId: '',
-          destinationId: '',
-        })
+    const { result } = renderHook(() => useUpdateItemDestination(), {
+      wrapper: createQueryClientWrapper(),
+    })
 
-        expect(response).toEqual(checkoutMock.checkout)
-      },
-      {
-        wrapper: createQueryClientWrapper(),
-      }
-    )
+    result.current.updateCheckoutItemDestination.mutateAsync({
+      checkoutId: '',
+      itemId: '',
+      destinationId: '',
+    })
+
+    await waitFor(() => {
+      expect(result.current.updateCheckoutItemDestination.data).toEqual(checkoutMock.checkout)
+    })
   })
 })

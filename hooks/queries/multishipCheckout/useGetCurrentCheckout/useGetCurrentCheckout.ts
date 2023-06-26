@@ -1,7 +1,7 @@
 /**
  * @module useGetCurrentCheckout
  */
-import { useQuery } from 'react-query'
+import { useQuery } from '@tanstack/react-query'
 
 import { makeGraphQLClient } from '@/lib/gql/client'
 import { getMultiShipCheckoutQuery } from '@/lib/gql/queries'
@@ -56,7 +56,9 @@ export const useGetCurrentCheckout = ({
     data = [],
     isLoading,
     isSuccess,
-  } = useQuery(checkoutKeys.detail(id), () => getCheckout(checkoutId), {
+  } = useQuery({
+    queryKey: checkoutKeys.detail(id),
+    queryFn: () => getCheckout(checkoutId),
     initialData: initialCheckout,
     enabled: !!isMultiShip,
   })

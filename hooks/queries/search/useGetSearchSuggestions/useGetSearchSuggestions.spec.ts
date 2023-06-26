@@ -10,7 +10,8 @@ describe('[hooks] useGetSearchSuggestions', () => {
       wrapper: createQueryClientWrapper(),
     })
 
-    await waitFor(() => result.current.isSuccess)
-    expect(result.current.data).toEqual(searchSuggestionResultMock)
+    await waitFor(() => {
+      expect(result.current.data).toEqual(searchSuggestionResultMock)
+    })
   })
 })

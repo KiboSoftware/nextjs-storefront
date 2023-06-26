@@ -1,4 +1,4 @@
-import { renderHook } from '@testing-library/react'
+import { renderHook, waitFor } from '@testing-library/react'
 
 import { useVoidOrderPayment } from './useVoidOrderPayment'
 import { billingInfoInputMock } from '@/__mocks__/stories/billingInfoInputMock'
@@ -20,16 +20,16 @@ describe('[hooks] useVoidOrderPayment', () => {
       },
     }
 
-    renderHook(
-      async () => {
-        const { voidOrderPayment } = useVoidOrderPayment()
-        const response = await voidOrderPayment.mutateAsync(updateOrderPaymentActionParams)
+    const { result } = renderHook(() => useVoidOrderPayment(), {
+      wrapper: createQueryClientWrapper(),
+    })
 
-        expect(response).toStrictEqual(createOrderPaymentActionMock.createOrderPaymentAction)
-      },
-      {
-        wrapper: createQueryClientWrapper(),
-      }
-    )
+    result.current.voidOrderPayment.mutateAsync(updateOrderPaymentActionParams)
+
+    await waitFor(() => {
+      expect(result.current.voidOrderPayment.data).toStrictEqual(
+        createOrderPaymentActionMock.createOrderPaymentAction
+      )
+    })
   })
 })

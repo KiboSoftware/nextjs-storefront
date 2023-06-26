@@ -1,4 +1,4 @@
-import { renderHook } from '@testing-library/react'
+import { renderHook, waitFor } from '@testing-library/react'
 
 import { useConfigureProduct } from './useConfigureProduct'
 import { configuredProductMock } from '@/__mocks__/stories/configuredProductMock'
@@ -6,7 +6,11 @@ import { createQueryClientWrapper } from '@/__test__/utils/renderWithQueryClient
 
 describe('[hooks] useConfigureProduct', () => {
   it('should use useConfigureProduct', async () => {
-    const configureProductDetails = {
+    const { result } = renderHook(() => useConfigureProduct(), {
+      wrapper: createQueryClientWrapper(),
+    })
+
+    result.current.configureProduct.mutateAsync({
       updatedOptions: [
         {
           attributeFQN: 'tenant~size',
@@ -14,17 +18,12 @@ describe('[hooks] useConfigureProduct', () => {
         },
       ],
       productCode: 'BackP_001',
-    }
+    })
 
-    renderHook(
-      async () => {
-        const { configureProduct } = useConfigureProduct()
-        const response = await configureProduct.mutateAsync(configureProductDetails)
-        expect(response).toStrictEqual(configuredProductMock.configureProduct)
-      },
-      {
-        wrapper: createQueryClientWrapper(),
-      }
-    )
+    await waitFor(() => {
+      expect(result.current.configureProduct.data).toStrictEqual(
+        configuredProductMock.configureProduct
+      )
+    })
   })
 })

@@ -1,9 +1,9 @@
 /**
  * @module useGetPurchaseLocation
  */
+import { useQuery } from '@tanstack/react-query'
 import { getCookie } from 'cookies-next'
 import getConfig from 'next/config'
-import { useQuery } from 'react-query'
 
 import { makeGraphQLClient } from '@/lib/gql/client'
 import { getSpLocationsQuery } from '@/lib/gql/queries'
@@ -62,7 +62,9 @@ export const useGetPurchaseLocation = (): LocationType => {
     isLoading,
     isSuccess,
     isError,
-  } = useQuery(locationKeys.purchaseLocationParams(param), () => getPurchaseLocation(param), {
+  } = useQuery({
+    queryKey: locationKeys.purchaseLocationParams(param),
+    queryFn: () => getPurchaseLocation(param),
     enabled: !!param,
   })
 

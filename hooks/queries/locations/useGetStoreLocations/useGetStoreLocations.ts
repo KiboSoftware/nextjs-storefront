@@ -1,7 +1,7 @@
 /**
  * @module useGetStoreLocations
  */
-import { useQuery } from 'react-query'
+import { useQuery } from '@tanstack/react-query'
 
 import { makeGraphQLClient } from '@/lib/gql/client'
 import { getSpLocationsQuery } from '@/lib/gql/queries'
@@ -49,7 +49,9 @@ export const useGetStoreLocations = (searchParams: { filter: string }): Location
     isLoading,
     isSuccess,
     isError,
-  } = useQuery(locationKeys.locationsParams(searchParams), () => getStoreLocations(searchParams), {
+  } = useQuery({
+    queryKey: locationKeys.locationsParams(searchParams),
+    queryFn: () => getStoreLocations(searchParams),
     enabled: !!searchParams.filter,
   })
 

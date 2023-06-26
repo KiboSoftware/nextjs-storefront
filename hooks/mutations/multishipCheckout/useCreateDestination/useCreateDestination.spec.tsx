@@ -1,4 +1,4 @@
-import { renderHook } from '@testing-library/react'
+import { renderHook, waitFor } from '@testing-library/react'
 
 import { useCreateDestination } from './useCreateDestination'
 import { checkoutDestinationsMock } from '@/__mocks__/stories'
@@ -8,19 +8,17 @@ describe('[hooks] useCreateDestination', () => {
   it('should create checkout destination', async () => {
     const checkoutDestination = checkoutDestinationsMock.checkoutDestinations[0]
 
-    renderHook(
-      async () => {
-        const { createCheckoutDestination } = useCreateDestination()
-        const response = await createCheckoutDestination.mutateAsync({
-          checkoutId: '',
-          destinationInput: {},
-        })
+    const { result } = renderHook(() => useCreateDestination(), {
+      wrapper: createQueryClientWrapper(),
+    })
 
-        expect(response).toEqual(checkoutDestination)
-      },
-      {
-        wrapper: createQueryClientWrapper(),
-      }
-    )
+    result.current.createCheckoutDestination.mutateAsync({
+      checkoutId: '',
+      destinationInput: {},
+    })
+
+    await waitFor(() => {
+      expect(result.current.createCheckoutDestination.data).toEqual(checkoutDestination)
+    })
   })
 })

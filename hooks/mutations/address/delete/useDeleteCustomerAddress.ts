@@ -1,7 +1,7 @@
 /**
  * @module useDeleteCustomerAddress
  */
-import { useMutation, useQueryClient } from 'react-query'
+import { useMutation, useQueryClient } from '@tanstack/react-query'
 
 import { makeGraphQLClient } from '@/lib/gql/client'
 import { deleteCustomerAccountContact } from '@/lib/gql/mutations'
@@ -45,11 +45,12 @@ export const useDeleteCustomerAddress = () => {
   const queryClient = useQueryClient()
 
   return {
-    deleteCustomerAddress: useMutation(deleteCustomerAccountContactDetails, {
+    deleteCustomerAddress: useMutation({
+      mutationFn: deleteCustomerAccountContactDetails,
       onMutate: async (deletedAddress) => {
-        await queryClient.cancelQueries(
-          customerAccountContactsKeys.addressById(deletedAddress.accountId)
-        )
+        await queryClient.cancelQueries({
+          queryKey: customerAccountContactsKeys.addressById(deletedAddress.accountId),
+        })
 
         const previousAddresses: any = queryClient.getQueryData(
           customerAccountContactsKeys.addressById(deletedAddress.accountId)
@@ -76,9 +77,9 @@ export const useDeleteCustomerAddress = () => {
             context?.previousAddresses
           )
         }
-        queryClient.invalidateQueries(
-          customerAccountContactsKeys.addressById(deletedAddress.accountId)
-        )
+        queryClient.invalidateQueries({
+          queryKey: customerAccountContactsKeys.addressById(deletedAddress.accountId),
+        })
       },
     }),
   }

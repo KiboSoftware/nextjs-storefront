@@ -10,11 +10,9 @@ describe('[hooks] useUpdateCartItemQuantity', () => {
       wrapper: createQueryClientWrapper(),
     })
 
-    act(() => {
-      result.current.updateCartItemQuantity.mutate({
-        cartItemId: 'fjsdhfjsdh53472bkjsdffdf',
-        quantity: 2,
-      })
+    result.current.updateCartItemQuantity.mutate({
+      cartItemId: 'fjsdhfjsdh53472bkjsdffdf',
+      quantity: 2,
     })
 
     await waitFor(() => {

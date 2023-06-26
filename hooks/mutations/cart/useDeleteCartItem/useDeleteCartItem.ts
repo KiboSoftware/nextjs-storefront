@@ -1,7 +1,7 @@
 /**
  * @module useDeleteCartItem
  */
-import { useMutation, useQueryClient } from 'react-query'
+import { useMutation, useQueryClient } from '@tanstack/react-query'
 
 import { makeGraphQLClient } from '@/lib/gql/client'
 import { deleteCartItemMutation } from '@/lib/gql/mutations'
@@ -44,9 +44,10 @@ const deleteCartItem = async (params: DeleteCartItemParams) => {
 export const useDeleteCartItem = () => {
   const queryClient = useQueryClient()
   return {
-    deleteCartItem: useMutation(deleteCartItem, {
+    deleteCartItem: useMutation({
+      mutationFn: deleteCartItem,
       onMutate: async (deleteCartItem) => {
-        await queryClient.cancelQueries(cartKeys.all)
+        await queryClient.cancelQueries({ queryKey: cartKeys.all })
 
         const previousCart: any = queryClient.getQueryData(cartKeys.all)
         const newCart = {
@@ -61,7 +62,7 @@ export const useDeleteCartItem = () => {
       },
       onSettled: (_data, error, _, context) => {
         if (error) queryClient.setQueryData(cartKeys.all, context?.previousCart)
-        queryClient.invalidateQueries(cartKeys.all)
+        queryClient.invalidateQueries({ queryKey: cartKeys.all })
       },
     }),
   }

@@ -2,7 +2,7 @@
  * @module useOrderSubscriptionNow
  */
 
-import { useMutation, useQueryClient } from 'react-query'
+import { useMutation, useQueryClient } from '@tanstack/react-query'
 
 import { makeGraphQLClient } from '@/lib/gql/client'
 import { orderSubscriptionNow } from '@/lib/gql/mutations'
@@ -44,9 +44,10 @@ const orderSubscriptionNowMutation = async (props: OrderSubscriptionNowInputPara
 export const useOrderSubscriptionNow = () => {
   const queryClient = useQueryClient()
   return {
-    orderSubscriptionNow: useMutation(orderSubscriptionNowMutation, {
+    orderSubscriptionNow: useMutation({
+      mutationFn: orderSubscriptionNowMutation,
       onSuccess: () => {
-        queryClient.invalidateQueries(subscriptionKeys.all)
+        queryClient.invalidateQueries({ queryKey: subscriptionKeys.all })
       },
     }),
   }

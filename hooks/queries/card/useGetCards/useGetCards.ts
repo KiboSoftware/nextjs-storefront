@@ -1,7 +1,7 @@
 /**
  * @module useGetCards
  */
-import { useQuery } from 'react-query'
+import { useQuery } from '@tanstack/react-query'
 
 import { makeGraphQLClient } from '@/lib/gql/client'
 import { getCustomerAccountCards } from '@/lib/gql/queries'
@@ -50,13 +50,11 @@ export const useGetCards = (accountId: number): UseCustomerCardsResponse => {
     data = [],
     isLoading,
     isSuccess,
-  } = useQuery(
-    customerAccountCardsKeys?.cardById(accountId),
-    () => loadCustomerAccountCards(accountId),
-    {
-      enabled: !!accountId,
-    }
-  )
+  } = useQuery({
+    queryKey: customerAccountCardsKeys?.cardById(accountId),
+    queryFn: () => loadCustomerAccountCards(accountId),
+    enabled: !!accountId,
+  })
 
   return { data, isLoading, isSuccess }
 }

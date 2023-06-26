@@ -1,7 +1,7 @@
 /**
  * @module useAddCheckoutPayment
  */
-import { useMutation, useQueryClient } from 'react-query'
+import { useMutation, useQueryClient } from '@tanstack/react-query'
 
 import { makeGraphQLClient } from '@/lib/gql/client'
 import { createCheckoutPaymentActionMutation } from '@/lib/gql/mutations'
@@ -45,9 +45,10 @@ export const useAddCheckoutPayment = () => {
   const queryClient = useQueryClient()
 
   return {
-    addCheckoutPayment: useMutation(createCheckoutPayment, {
+    addCheckoutPayment: useMutation({
+      mutationFn: createCheckoutPayment,
       onSuccess: () => {
-        queryClient.invalidateQueries(checkoutKeys.all)
+        queryClient.invalidateQueries({ queryKey: checkoutKeys.all })
       },
     }),
   }

@@ -1,4 +1,4 @@
-import { renderHook } from '@testing-library/react'
+import { renderHook, waitFor } from '@testing-library/react'
 
 import { useCreateWishlist } from './useCreateWishlist'
 import { wishlistMock } from '@/__mocks__/stories/wishlistMock'
@@ -10,15 +10,19 @@ describe('[hooks] useCreateWishlist', () => {
   const { id, name, customerAccountId } = mockWishlist
 
   it('should create wishlist', async () => {
-    renderHook(
-      async () => {
-        const { createWishlist } = useCreateWishlist()
-        const response = await createWishlist.mutateAsync(customerAccountId)
-        expect(response).toStrictEqual({ id, name, customerAccountId, items: [] })
-      },
-      {
-        wrapper: createQueryClientWrapper(),
-      }
-    )
+    const { result } = renderHook(() => useCreateWishlist(), {
+      wrapper: createQueryClientWrapper(),
+    })
+
+    result.current.createWishlist.mutateAsync(customerAccountId)
+
+    await waitFor(() => {
+      expect(result.current.createWishlist.data).toStrictEqual({
+        id,
+        name,
+        customerAccountId,
+        items: [],
+      })
+    })
   })
 })

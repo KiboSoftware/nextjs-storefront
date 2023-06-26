@@ -1,4 +1,4 @@
-import { renderHook } from '@testing-library/react'
+import { renderHook, waitFor } from '@testing-library/react'
 
 import { useCreateOrderReturn } from './useCreateOrderReturn'
 import { createReturnMock } from '@/__mocks__/stories'
@@ -8,21 +8,20 @@ describe('[hooks] useCreateOrderReturn', () => {
   it('should use useCreateOrderReturn', async () => {
     const expectedReturn = createReturnMock?.createReturn
 
-    renderHook(
-      async () => {
-        const { createReturnItems } = useCreateOrderReturn()
-        const response = await createReturnItems.mutateAsync({
-          returnType: 'Replace',
-          reason: 'Damaged',
-          originalOrderId: '',
-          items: [],
-          locationCode: '',
-        })
-        expect(response).toEqual(expectedReturn)
-      },
-      {
-        wrapper: createQueryClientWrapper(),
-      }
-    )
+    const { result } = renderHook(() => useCreateOrderReturn(), {
+      wrapper: createQueryClientWrapper(),
+    })
+
+    result.current.createReturnItems.mutateAsync({
+      returnType: 'Replace',
+      reason: 'Damaged',
+      originalOrderId: '',
+      items: [],
+      locationCode: '',
+    })
+
+    await waitFor(() => {
+      expect(result.current.createReturnItems.data).toEqual(expectedReturn)
+    })
   })
 })

@@ -1,4 +1,4 @@
-import { renderHook } from '@testing-library/react'
+import { renderHook, waitFor } from '@testing-library/react'
 
 import { useCreateOrder } from './useCreateOrder'
 import { orderMock } from '@/__mocks__/stories/orderMock'
@@ -8,16 +8,14 @@ describe('[hooks] useCreateOrder', () => {
   it('should use useCreateOrder', async () => {
     const expectedOrder = orderMock?.checkout
 
-    renderHook(
-      async () => {
-        const { createOrder } = useCreateOrder()
-        const response = await createOrder.mutateAsync(expectedOrder)
+    const { result } = renderHook(() => useCreateOrder(), {
+      wrapper: createQueryClientWrapper(),
+    })
 
-        expect(response).toEqual(expectedOrder)
-      },
-      {
-        wrapper: createQueryClientWrapper(),
-      }
-    )
+    result.current.createOrder.mutateAsync(expectedOrder)
+
+    await waitFor(() => {
+      expect(result.current.createOrder.data).toEqual(expectedOrder)
+    })
   })
 })

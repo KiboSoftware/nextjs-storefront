@@ -1,4 +1,4 @@
-import { useQuery } from 'react-query'
+import { useQuery } from '@tanstack/react-query'
 
 import { makeGraphQLClient } from '@/lib/gql/client'
 import { getSubscriptionsQuery } from '@/lib/gql/queries'
@@ -29,7 +29,9 @@ export const useGetSubscriptions = (): SubscriptionType => {
     isLoading,
     isSuccess,
     isFetching,
-  } = useQuery(subscriptionKeys.all, getSubscriptions, {
+  } = useQuery({
+    queryKey: subscriptionKeys.all,
+    queryFn: () => getSubscriptions(),
     refetchOnWindowFocus: false,
   })
 

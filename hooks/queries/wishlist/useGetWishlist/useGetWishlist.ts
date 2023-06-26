@@ -1,7 +1,7 @@
 /**
  * @module useGetWishlist
  */
-import { useQuery } from 'react-query'
+import { useQuery } from '@tanstack/react-query'
 
 import { makeGraphQLClient } from '@/lib/gql/client'
 import { getWishlistQuery } from '@/lib/gql/queries'
@@ -44,7 +44,9 @@ const getWishlists = async (): Promise<CrWishlist> => {
  */
 
 export const useGetWishlist = (): UseWishlistResponse => {
-  const { data, isLoading, isSuccess, isFetching } = useQuery(wishlistKeys.all, getWishlists, {
+  const { data, isLoading, isSuccess, isFetching } = useQuery({
+    queryKey: wishlistKeys.all,
+    queryFn: getWishlists,
     refetchOnWindowFocus: false,
   })
 

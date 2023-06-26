@@ -1,7 +1,7 @@
 /**
  * @module useGetReturnReasons
  */
-import { useQuery } from 'react-query'
+import { useQuery } from '@tanstack/react-query'
 
 import { makeGraphQLClient } from '@/lib/gql/client'
 import { getReturnReasonsQuery } from '@/lib/gql/queries'
@@ -42,13 +42,11 @@ const getReturnReasons = async (): Promise<ReturnReason> => {
  * @returns 'response?.returnReasons?.items', which contains list of return reason listed.
  */
 export const useGetReturnReasons = (): UseReturnReasonsResponse => {
-  const { data, isLoading, isSuccess, isFetching } = useQuery(
-    returnReasonsKeys.all,
-    getReturnReasons,
-    {
-      refetchOnWindowFocus: false,
-    }
-  )
+  const { data, isLoading, isSuccess, isFetching } = useQuery({
+    queryKey: returnReasonsKeys.all,
+    queryFn: getReturnReasons,
+    refetchOnWindowFocus: false,
+  })
 
   return { data, isLoading, isSuccess, isFetching }
 }

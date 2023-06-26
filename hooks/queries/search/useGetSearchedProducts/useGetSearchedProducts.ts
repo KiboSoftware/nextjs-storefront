@@ -1,7 +1,7 @@
 /**
  * @module useGetSearchedProducts
  */
-import { useQuery } from 'react-query'
+import { useQuery } from '@tanstack/react-query'
 
 import { makeGraphQLClient } from '@/lib/gql/client'
 import { searchProductsQuery } from '@/lib/gql/queries'
@@ -52,14 +52,12 @@ export const useGetSearchedProducts = (
   searchParams: CategorySearchParams,
   initialData?: ProductSearchResult
 ): UseProductSearchResponse => {
-  const { data, isLoading, isSuccess, isFetching } = useQuery(
-    productSearchResultKeys.searchParams(searchParams),
-    () => fetchProductSearch(searchParams),
-    {
-      initialData,
-      refetchOnWindowFocus: false,
-    }
-  )
+  const { data, isLoading, isSuccess, isFetching } = useQuery({
+    queryKey: productSearchResultKeys.searchParams(searchParams),
+    queryFn: () => fetchProductSearch(searchParams),
+    initialData,
+    refetchOnWindowFocus: false,
+  })
 
   return { data, isLoading, isSuccess, isFetching }
 }

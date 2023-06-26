@@ -4,13 +4,13 @@ import { CacheProvider, EmotionCache } from '@emotion/react'
 import CssBaseline from '@mui/material/CssBaseline'
 import { ThemeProvider } from '@mui/material/styles'
 // eslint-disable-next-line import/order
-import { appWithTranslation } from 'next-i18next'
+import { HydrationBoundary } from '@tanstack/react-query'
 import { AppProps } from 'next/app'
 import Head from 'next/head'
 import 'next-i18next.config'
 import Router from 'next/router'
+import { appWithTranslation } from 'next-i18next'
 import NProgress from 'nprogress'
-import { Hydrate } from 'react-query'
 import '../../styles/global.css'
 
 import createEmotionCache from '../../lib/createEmotionCache'
@@ -58,7 +58,7 @@ const App = (props: KiboAppProps) => {
           <ModalContextProvider>
             <AuthContextProvider>
               <HeaderContextProvider>
-                <Hydrate state={pageProps.dehydratedState}>
+                <HydrationBoundary state={pageProps.dehydratedState}>
                   <GlobalFetchingIndicator />
                   <KiboHeader
                     navLinks={[
@@ -86,7 +86,7 @@ const App = (props: KiboAppProps) => {
                   <SnackbarRoot />
                   {getLayout(<Component {...pageProps} />)}
                   <Footer {...footerProps} />
-                </Hydrate>
+                </HydrationBoundary>
               </HeaderContextProvider>
             </AuthContextProvider>
           </ModalContextProvider>

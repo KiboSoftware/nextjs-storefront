@@ -1,4 +1,4 @@
-import { renderHook } from '@testing-library/react'
+import { renderHook, waitFor } from '@testing-library/react'
 
 import { useVoidCheckoutPayment } from './useVoidCheckoutPayment'
 import { billingInfoInputMock, checkoutMock } from '@/__mocks__/stories'
@@ -12,28 +12,26 @@ describe('[hooks] useVoidCheckoutPayment', () => {
     jest.clearAllMocks()
   })
 
-  it('should update checkout payment method', () => {
-    renderHook(
-      async () => {
-        const { voidCheckoutPayment } = useVoidCheckoutPayment()
-        const updateCheckoutPaymentActionResponse = await voidCheckoutPayment.mutateAsync({
-          checkoutId: '12345',
-          paymentId: '45678',
-          paymentActionInput: {
-            currencyCode: 'US',
-            amount: 220,
-            newBillingInfo: {
-              ...billingInfoInputMock,
-            },
-            actionName: '',
-          },
-        })
+  it('should update checkout payment method', async () => {
+    const { result } = renderHook(() => useVoidCheckoutPayment(), {
+      wrapper: createQueryClientWrapper(),
+    })
 
-        expect(updateCheckoutPaymentActionResponse).toStrictEqual(checkoutMock)
+    result.current.voidCheckoutPayment.mutateAsync({
+      checkoutId: '12345',
+      paymentId: '45678',
+      paymentActionInput: {
+        currencyCode: 'US',
+        amount: 220,
+        newBillingInfo: {
+          ...billingInfoInputMock,
+        },
+        actionName: '',
       },
-      {
-        wrapper: createQueryClientWrapper(),
-      }
-    )
+    })
+
+    await waitFor(() => {
+      expect(result.current.voidCheckoutPayment.data).toStrictEqual(checkoutMock)
+    })
   })
 })

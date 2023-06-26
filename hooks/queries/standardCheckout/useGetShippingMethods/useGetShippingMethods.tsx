@@ -1,7 +1,7 @@
 /**
  * @module useGetShippingMethods
  */
-import { useQuery } from 'react-query'
+import { useQuery } from '@tanstack/react-query'
 
 import { makeGraphQLClient } from '@/lib/gql/client'
 import { getShippingRates } from '@/lib/gql/queries'
@@ -54,18 +54,16 @@ export const useGetShippingMethods = (
     data = [],
     isLoading,
     isSuccess,
-  } = useQuery(
-    shippingMethodKeys.detail(
+  } = useQuery({
+    queryKey: shippingMethodKeys.detail(
       checkoutId as string,
       isNewAddressAdded?.toString(),
       selectedShippingAddressId
     ),
-    () => loadShippingMethods(checkoutId as string),
-    {
-      cacheTime: 0,
-      enabled: !!(checkoutId && (isNewAddressAdded?.toString() || selectedShippingAddressId)),
-    }
-  )
+    queryFn: () => loadShippingMethods(checkoutId as string),
+    // cacheTime: 0,
+    enabled: !!(checkoutId && (isNewAddressAdded?.toString() || selectedShippingAddressId)),
+  })
 
   return { data, isLoading, isSuccess }
 }

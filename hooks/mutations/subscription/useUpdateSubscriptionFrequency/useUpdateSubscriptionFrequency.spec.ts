@@ -1,4 +1,4 @@
-import { renderHook } from '@testing-library/react'
+import { renderHook, waitFor } from '@testing-library/react'
 
 import { useUpdateSubscriptionFrequency } from './useUpdateSubscriptionFrequency'
 import { subscriptionMock } from '@/__mocks__/stories/subscriptionMock'
@@ -14,16 +14,16 @@ describe('[hooks] useUpdateSubscriptionFrequency', () => {
       },
     }
 
-    renderHook(
-      async () => {
-        const { updateSubscriptionFrequency } = useUpdateSubscriptionFrequency()
-        const response = await updateSubscriptionFrequency.mutateAsync(params)
+    const { result } = renderHook(() => useUpdateSubscriptionFrequency(), {
+      wrapper: createQueryClientWrapper(),
+    })
 
-        expect(response).toStrictEqual(subscriptionMock.subscription.frequency)
-      },
-      {
-        wrapper: createQueryClientWrapper(),
-      }
-    )
+    result.current.updateSubscriptionFrequency.mutateAsync(params)
+
+    await waitFor(() => {
+      expect(result.current.updateSubscriptionFrequency.data).toStrictEqual(
+        subscriptionMock.subscription.frequency
+      )
+    })
   })
 })

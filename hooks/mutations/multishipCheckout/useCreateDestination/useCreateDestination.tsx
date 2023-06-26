@@ -1,7 +1,7 @@
 /**
  * @module useCreateDestination
  */
-import { useMutation, useQueryClient } from 'react-query'
+import { useMutation, useQueryClient } from '@tanstack/react-query'
 
 import { makeGraphQLClient } from '@/lib/gql/client'
 import { createCheckoutDestination } from '@/lib/gql/mutations'
@@ -45,10 +45,11 @@ export const useCreateDestination = () => {
   const queryClient = useQueryClient()
 
   return {
-    createCheckoutDestination: useMutation(addCheckoutDestination, {
+    createCheckoutDestination: useMutation({
+      mutationFn: addCheckoutDestination,
       onSuccess: () => {
-        queryClient.invalidateQueries(checkoutDestinationKeys.all)
-        queryClient.invalidateQueries(checkoutKeys.all)
+        queryClient.invalidateQueries({ queryKey: checkoutDestinationKeys.all })
+        queryClient.invalidateQueries({ queryKey: checkoutKeys.all })
       },
     }),
   }

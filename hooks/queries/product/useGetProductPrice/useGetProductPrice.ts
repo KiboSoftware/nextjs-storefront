@@ -1,7 +1,7 @@
 /**
  * @module useGetProductPrice
  */
-import { useQuery } from 'react-query'
+import { useQuery } from '@tanstack/react-query'
 
 import { makeGraphQLClient } from '@/lib/gql/client'
 import { getProductPriceQuery } from '@/lib/gql/queries'
@@ -52,14 +52,12 @@ export const useGetProductPrice = (
     isLoading,
     isSuccess,
     isFetching,
-  } = useQuery(
-    productKeys.productParams(productCode, useSubscriptionPricing),
-    () => fetchProductPrice(productCode, useSubscriptionPricing),
-    {
-      enabled: !!productCode,
-      refetchOnWindowFocus: true,
-    }
-  )
+  } = useQuery({
+    queryKey: productKeys.productParams(productCode, useSubscriptionPricing),
+    queryFn: () => fetchProductPrice(productCode, useSubscriptionPricing),
+    enabled: !!productCode,
+    refetchOnWindowFocus: true,
+  })
 
   return { data, isLoading, isSuccess, isFetching }
 }

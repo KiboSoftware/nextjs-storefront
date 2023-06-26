@@ -1,7 +1,7 @@
 /**
  * @module useUpdateOrderShippingInfo
  */
-import { useMutation, useQueryClient } from 'react-query'
+import { useMutation, useQueryClient } from '@tanstack/react-query'
 
 import { makeGraphQLClient } from '@/lib/gql/client'
 import { setShippingInfo } from '@/lib/gql/mutations'
@@ -52,9 +52,10 @@ export const useUpdateOrderShippingInfo = () => {
   const queryClient = useQueryClient()
 
   return {
-    updateOrderShippingInfo: useMutation(updateShippingInfo, {
+    updateOrderShippingInfo: useMutation({
+      mutationFn: updateShippingInfo,
       onSuccess: () => {
-        queryClient.invalidateQueries(checkoutKeys.all)
+        queryClient.invalidateQueries({ queryKey: checkoutKeys.all })
       },
     }),
   }

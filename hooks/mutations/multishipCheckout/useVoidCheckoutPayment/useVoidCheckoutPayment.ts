@@ -1,7 +1,7 @@
 /**
  * @module useVoidCheckoutPayment
  */
-import { useMutation, useQueryClient } from 'react-query'
+import { useMutation, useQueryClient } from '@tanstack/react-query'
 
 import { makeGraphQLClient } from '@/lib/gql/client'
 import { updateCheckoutPaymentActionMutation } from '@/lib/gql/mutations'
@@ -19,7 +19,6 @@ export interface UpdateCheckoutPaymentActionInput {
 
 const updateCheckoutPayment = async (props: UpdateCheckoutPaymentActionInput) => {
   const client = makeGraphQLClient()
-
   const response = await client.request({
     document: updateCheckoutPaymentActionMutation,
     variables: props,
@@ -45,9 +44,10 @@ export const useVoidCheckoutPayment = () => {
   const queryClient = useQueryClient()
 
   return {
-    voidCheckoutPayment: useMutation(updateCheckoutPayment, {
+    voidCheckoutPayment: useMutation({
+      mutationFn: updateCheckoutPayment,
       onSuccess: () => {
-        queryClient.invalidateQueries(checkoutKeys.all)
+        queryClient.invalidateQueries({ queryKey: checkoutKeys.all })
       },
     }),
   }

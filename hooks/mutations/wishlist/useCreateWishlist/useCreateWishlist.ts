@@ -1,8 +1,8 @@
 /**
  * @module useCreateWishlist
  */
+import { useMutation, useQueryClient } from '@tanstack/react-query'
 import getConfig from 'next/config'
-import { useMutation, useQueryClient } from 'react-query'
 
 import { makeGraphQLClient } from '@/lib/gql/client'
 import { createWishlistMutation } from '@/lib/gql/mutations'
@@ -45,9 +45,10 @@ export const useCreateWishlist = () => {
   const queryClient = useQueryClient()
 
   return {
-    createWishlist: useMutation(createWishlist, {
+    createWishlist: useMutation({
+      mutationFn: createWishlist,
       onSuccess: () => {
-        queryClient.invalidateQueries(wishlistKeys.all)
+        queryClient.invalidateQueries({ queryKey: wishlistKeys.all })
       },
     }),
   }

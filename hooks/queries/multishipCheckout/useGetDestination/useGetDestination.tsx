@@ -1,7 +1,7 @@
 /**
  * @module useGetDestination
  */
-import { useQuery } from 'react-query'
+import { useQuery } from '@tanstack/react-query'
 
 import { makeGraphQLClient } from '@/lib/gql/client'
 import { getCheckoutDestinationQuery } from '@/lib/gql/queries'
@@ -52,9 +52,10 @@ export const useGetDestination = (params: UseDestination): UseDestinationRespons
     data = [],
     isLoading,
     isSuccess,
-  } = useQuery(checkoutDestinationKeys.destinationId(destinationId), () =>
-    getCheckoutDestination(params)
-  )
+  } = useQuery({
+    queryKey: checkoutDestinationKeys.destinationId(destinationId),
+    queryFn: () => getCheckoutDestination(params),
+  })
 
   return { data, isLoading, isSuccess }
 }

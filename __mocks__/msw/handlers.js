@@ -32,6 +32,7 @@ import { userAddressMock } from '../stories/userAddressMock'
 import { userMock, loginUserMock, registerUserMock } from '../stories/userMock'
 import { wishlistMock } from '../stories/wishlistMock'
 import { subscriptionMock } from '@/__mocks__/stories/subscriptionMock'
+import { LOGOUT_ENDPOINT } from '@/lib/gql/client'
 
 const baseUrl = 'http://localhost:3000'
 const mockCreateCustomerAccount = {
@@ -137,6 +138,15 @@ export const checkoutHandlers = [
   graphql.mutation('createCheckoutShippingMethod', (_req, res, ctx) => {
     return res(ctx.data(checkoutMock))
   }),
+
+  // Checkot
+  graphql.mutation('createCheckout', (_req, res, ctx) => {
+    return res(ctx.data(orderMock))
+  }),
+
+  graphql.mutation('updateCheckoutPaymentAction', (_req, res, ctx) => {
+    return res(ctx.data({ updateCheckoutPaymentAction: checkoutMock }))
+  }),
 ]
 
 export const accountHandlers = [
@@ -222,6 +232,10 @@ export const userHandlers = [
 
   graphql.mutation('registerUser', (_req, res, ctx) => {
     return res(ctx.data(registerUserMock))
+  }),
+
+  rest.post(LOGOUT_ENDPOINT, (_req, res, ctx) => {
+    return res(ctx.status(200), ctx.json('true'))
   }),
 ]
 

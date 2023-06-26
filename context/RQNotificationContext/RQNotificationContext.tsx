@@ -2,7 +2,7 @@ import { createContext, ReactNode, useContext, useState, forwardRef } from 'reac
 
 import MuiAlert, { AlertColor, AlertProps } from '@mui/material/Alert'
 import Snackbar from '@mui/material/Snackbar'
-import { QueryClientProvider } from 'react-query'
+import { QueryClientProvider } from '@tanstack/react-query'
 
 import { generateQueryClient } from '@/lib/react-query/queryClient'
 

@@ -1,4 +1,4 @@
-import { renderHook } from '@testing-library/react'
+import { renderHook, waitFor } from '@testing-library/react'
 
 import { useLogin } from './useLogin'
 import { loginUserMock } from '@/__mocks__/stories/userMock'
@@ -11,16 +11,13 @@ describe('[hooks] useLogin', () => {
       password: '',
     }
 
-    renderHook(
-      async () => {
-        const { mutateAsync } = useLogin()
-        const response = await mutateAsync(userCredentials)
+    const { result } = renderHook(() => useLogin(), {
+      wrapper: createQueryClientWrapper(),
+    })
 
-        expect(response).toStrictEqual(loginUserMock.account)
-      },
-      {
-        wrapper: createQueryClientWrapper(),
-      }
-    )
+    result.current.mutateAsync(userCredentials)
+    await waitFor(() => {
+      expect(result.current.data).toStrictEqual(loginUserMock.account)
+    })
   })
 })

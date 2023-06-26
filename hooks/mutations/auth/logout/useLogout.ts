@@ -1,8 +1,8 @@
 /**
  * @module useLogin
  */
+import { useMutation, useQueryClient } from '@tanstack/react-query'
 import fetch from 'node-fetch'
-import { useMutation, useQueryClient } from 'react-query'
 
 import { LOGOUT_ENDPOINT } from '@/lib/gql/client'
 import { loginKeys } from '@/lib/react-query/queryKeys'
@@ -39,13 +39,14 @@ export const useLogout = (callbackFn: () => void) => {
     mutate,
     mutateAsync,
     data = {},
-    isLoading,
+    isPending,
     isError,
     error,
     isSuccess,
-  } = useMutation(logoutUser, {
+  } = useMutation({
+    mutationFn: logoutUser,
     onMutate: () => {
-      queryClient.cancelQueries(loginKeys.user)
+      queryClient.cancelQueries({ queryKey: loginKeys.user })
     },
     onSuccess: () => {
       if (callbackFn) callbackFn()
@@ -57,7 +58,7 @@ export const useLogout = (callbackFn: () => void) => {
     mutate,
     mutateAsync,
     data,
-    isLoading,
+    isPending,
     isSuccess,
     isError,
     error,

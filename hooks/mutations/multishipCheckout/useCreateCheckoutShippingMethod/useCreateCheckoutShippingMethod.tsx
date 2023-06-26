@@ -1,7 +1,7 @@
 /**
  * @module useCreateCheckoutShippingMethod
  */
-import { useMutation, useQueryClient } from 'react-query'
+import { useMutation, useQueryClient } from '@tanstack/react-query'
 
 import { makeGraphQLClient } from '@/lib/gql/client'
 import { createCheckoutShippingMethod } from '@/lib/gql/mutations'
@@ -47,9 +47,10 @@ export const useCreateCheckoutShippingMethod = () => {
   const queryClient = useQueryClient()
 
   return {
-    createCheckoutShippingMethod: useMutation(setCheckoutShippingMethod, {
+    createCheckoutShippingMethod: useMutation({
+      mutationFn: setCheckoutShippingMethod,
       onSuccess: () => {
-        queryClient.invalidateQueries(checkoutKeys.all)
+        queryClient.invalidateQueries({ queryKey: checkoutKeys.all })
       },
     }),
   }

@@ -1,7 +1,7 @@
 /**
  * @module useUpdateItemDestination
  */
-import { useMutation, useQueryClient } from 'react-query'
+import { useMutation, useQueryClient } from '@tanstack/react-query'
 
 import { makeGraphQLClient } from '@/lib/gql/client'
 import { updateCheckoutItemDestination } from '@/lib/gql/mutations'
@@ -44,9 +44,10 @@ export const useUpdateItemDestination = () => {
   const queryClient = useQueryClient()
 
   return {
-    updateCheckoutItemDestination: useMutation(setCheckoutItemDestination, {
+    updateCheckoutItemDestination: useMutation({
+      mutationFn: setCheckoutItemDestination,
       onSuccess: () => {
-        queryClient.invalidateQueries(checkoutKeys.all)
+        queryClient.invalidateQueries({ queryKey: checkoutKeys.all })
       },
     }),
   }

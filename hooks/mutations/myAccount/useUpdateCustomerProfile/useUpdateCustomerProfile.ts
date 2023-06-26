@@ -1,7 +1,7 @@
 /**
  * @module useUpdateCustomerProfile
  */
-import { useMutation, useQueryClient } from 'react-query'
+import { useMutation, useQueryClient } from '@tanstack/react-query'
 
 import { makeGraphQLClient } from '@/lib/gql/client'
 import { updateCustomerData } from '@/lib/gql/mutations/user/updateAccount'
@@ -45,9 +45,10 @@ const updateCustomerProfile = async (props: UpdateCustomerProfileProps) => {
 export const useUpdateCustomerProfile = () => {
   const queryClient = useQueryClient()
   return {
-    updateUserData: useMutation(updateCustomerProfile, {
+    updateUserData: useMutation({
+      mutationFn: updateCustomerProfile,
       onSuccess: () => {
-        queryClient.invalidateQueries(loginKeys.user)
+        queryClient.invalidateQueries({ queryKey: loginKeys.user })
       },
     }),
   }

@@ -1,7 +1,7 @@
 /**
  * @module useUpdateCheckoutPersonalInfo
  */
-import { useMutation, useQueryClient } from 'react-query'
+import { useMutation, useQueryClient } from '@tanstack/react-query'
 
 import { makeGraphQLClient } from '@/lib/gql/client'
 import { setMultiShipPersonalInfo } from '@/lib/gql/mutations'
@@ -54,9 +54,10 @@ export const useUpdateCheckoutPersonalInfo = () => {
   const queryClient = useQueryClient()
 
   return {
-    updateMultiShipCheckoutPersonalInfo: useMutation(updatePersonalInfo, {
+    updateMultiShipCheckoutPersonalInfo: useMutation({
+      mutationFn: updatePersonalInfo,
       onSuccess: () => {
-        queryClient.invalidateQueries(checkoutKeys.all)
+        queryClient.invalidateQueries({ queryKey: checkoutKeys.all })
       },
     }),
   }

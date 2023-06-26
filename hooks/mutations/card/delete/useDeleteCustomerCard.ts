@@ -1,7 +1,7 @@
 /**
  * @module useDeleteCustomerCard
  */
-import { useMutation, useQueryClient } from 'react-query'
+import { useMutation, useQueryClient } from '@tanstack/react-query'
 
 import { makeGraphQLClient } from '@/lib/gql/client'
 import { deleteCustomerAccountCard } from '@/lib/gql/mutations'
@@ -41,9 +41,10 @@ export const useDeleteCustomerCard = () => {
   const queryClient = useQueryClient()
 
   return {
-    deleteCustomerCard: useMutation(deleteCustomerAccountCardDetails, {
+    deleteCustomerCard: useMutation({
+      mutationFn: deleteCustomerAccountCardDetails,
       onSuccess: () => {
-        queryClient.invalidateQueries(customerAccountCardsKeys.all)
+        queryClient.invalidateQueries({ queryKey: customerAccountCardsKeys.all })
       },
     }),
   }

@@ -1,7 +1,7 @@
 /**
  * @module useDeleteWishlistItem
  */
-import { useMutation, useQueryClient } from 'react-query'
+import { useMutation, useQueryClient } from '@tanstack/react-query'
 
 import { makeGraphQLClient } from '@/lib/gql/client'
 import { deleteWishlistItemMutation } from '@/lib/gql/mutations'
@@ -39,17 +39,18 @@ const deleteWishlistItem = async (props: DeleteWishlistItemInput) => {
 export const useDeleteWishlistItem = (params?: WishlistHookParams) => {
   const queryClient = useQueryClient()
   return {
-    deleteWishlistItem: useMutation(deleteWishlistItem, {
+    deleteWishlistItem: useMutation({
+      mutationFn: deleteWishlistItem,
       onSuccess: () => {
         const cleanTimeout = (cleanTimeoutId: any) => clearTimeout(cleanTimeoutId)
 
         if (params?.isRemovedFromWishlist) {
           const timeoutId = setTimeout(() => {
-            queryClient.invalidateQueries(wishlistKeys.all)
+            queryClient.invalidateQueries({ queryKey: wishlistKeys.all })
             cleanTimeout(timeoutId)
           }, params?.delay)
         } else {
-          queryClient.invalidateQueries(wishlistKeys.all)
+          queryClient.invalidateQueries({ queryKey: wishlistKeys.all })
         }
       },
     }),
