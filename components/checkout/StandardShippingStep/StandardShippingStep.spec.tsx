@@ -46,15 +46,15 @@ interface AddressDetailsViewProps {
   selected: string
   handleRadioChange: (addressId: string) => void
 }
-jest.mock('../../common/AddressDetailsView/AddressDetailsView', () => ({
-  __esModule: true,
-  default: ({ id, selected, handleRadioChange }: AddressDetailsViewProps) => (
-    <div data-testid="addressDetailsView-mock">
-      <p data-testid="selectedAddressDetailsView">{selected}</p>
-      <button onClick={() => handleRadioChange(String(id))}>handleAddressSelect</button>
-    </div>
-  ),
-}))
+// jest.mock('../../common/AddressDetailsView/AddressDetailsView', () => ({
+//   __esModule: true,
+//   default: ({ id, selected, handleRadioChange }: AddressDetailsViewProps) => (
+//     <div data-testid="addressDetailsView-mock">
+//       <p data-testid="selectedAddressDetailsView">{selected}</p>
+//       <button onClick={() => handleRadioChange(String(id))}>handleAddressSelect</button>
+//     </div>
+//   ),
+// }))
 
 const onSaveAddressParam = {
   contact: {

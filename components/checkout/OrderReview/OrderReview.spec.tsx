@@ -10,11 +10,8 @@ import type { CrOrder } from '@/lib/gql/types'
 
 const { Common, WithMultiShippingAddresses } = composeStories(stories)
 
-const AddressDetailsViewMock = () => <div data-testid="address-details-view-mock" />
-jest.mock(
-  '@/components/common/AddressDetailsView/AddressDetailsView',
-  () => () => AddressDetailsViewMock()
-)
+const AddressDetailsViewMock = () => <div data-testid="address-card-mock" />
+jest.mock('@/components/common/AddressCard/AddressCard', () => () => AddressDetailsViewMock())
 
 describe('[components] OrderReview', () => {
   const setup = () => {
@@ -44,14 +41,14 @@ describe('[components] OrderReview', () => {
   it('should display address details more than two times when multiShip is enabled', () => {
     render(<WithMultiShippingAddresses {...WithMultiShippingAddresses.args} />)
 
-    const addressDetailComponent = screen.getAllByTestId('address-details-view-mock')
+    const addressDetailComponent = screen.getAllByTestId('address-card-mock')
     expect(addressDetailComponent.length).toBeGreaterThan(2)
   })
 
   it('should display address details two times when multiShip is disabled', () => {
     setup()
 
-    const addressDetailComponent = screen.getAllByTestId('address-details-view-mock')
+    const addressDetailComponent = screen.getAllByTestId('address-card-mock')
     expect(addressDetailComponent.length).toBe(2)
   })
 
@@ -68,7 +65,7 @@ describe('[components] OrderReview', () => {
     const userName = screen.getByText(email as string)
     const userPhoneHome = screen.getByText(shippingPhoneHome)
 
-    const cardType = screen.getByText(paymentMethods[0].cardType)
+    const cardType = screen.getByAltText(paymentMethods[0].cardType)
     const cardNumberPartOrMask = screen.getByText(paymentMethods[0].cardNumberPartOrMask)
     const expiry = screen.getByText(`${paymentMethods[0].expiry}`)
 
