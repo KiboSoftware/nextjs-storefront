@@ -1,6 +1,8 @@
 import { ProductCustomMock } from '../../../__mocks__/stories/ProductCustomMock'
 import { buildBreadcrumbsParams } from '../buildBreadcrumbsParams'
 
+import { PrCategory } from '@/lib/gql/types'
+
 describe('[helpers] buildBreadcrumbsParams function', () => {
   it('should return the breadcrumbs', () => {
     const breadcrumbs = [
@@ -15,6 +17,8 @@ describe('[helpers] buildBreadcrumbsParams function', () => {
         link: `42`,
       },
     ]
-    expect(buildBreadcrumbsParams(ProductCustomMock.categories[0])).toStrictEqual(breadcrumbs)
+    expect(buildBreadcrumbsParams(ProductCustomMock.categories?.[0] as PrCategory)).toStrictEqual(
+      breadcrumbs
+    )
   })
 })

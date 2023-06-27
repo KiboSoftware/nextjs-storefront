@@ -139,13 +139,17 @@ export const checkoutHandlers = [
     return res(ctx.data(checkoutMock))
   }),
 
-  // Checkot
+  // Checkout
   graphql.mutation('createCheckout', (_req, res, ctx) => {
     return res(ctx.data(orderMock))
   }),
 
   graphql.mutation('updateCheckoutPaymentAction', (_req, res, ctx) => {
-    return res(ctx.data({ updateCheckoutPaymentAction: checkoutMock }))
+    return res(ctx.data(orderMock))
+  }),
+
+  graphql.mutation('updateUserOrder', (_req, res, ctx) => {
+    return res(ctx.data(orderMock))
   }),
 ]
 
@@ -246,6 +250,14 @@ export const userHandlers = [
 
   graphql.mutation('resetAccountPassword', (_req, res, ctx) => {
     return res(ctx.data({ resetCustomerAccountPassword: true }))
+  }),
+
+  graphql.mutation('updateForgottenAccountPassword', (_req, res, ctx) => {
+    return res(
+      ctx.data({
+        updatePassword: 'updatePassword-response',
+      })
+    )
   }),
 
   rest.post(LOGOUT_ENDPOINT, (_req, res, ctx) => {
