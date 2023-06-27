@@ -35,9 +35,7 @@ describe('[hooks] useDeleteWishlistItem', () => {
       { wrapper: createQueryClientWrapper() }
     )
 
-    act(() => {
-      result.current.deleteWishlistItem.mutateAsync(deleteWishlistItemInput)
-    })
+    result.current.deleteWishlistItem.mutateAsync(deleteWishlistItemInput)
 
     await waitFor(() => {
       expect(result.current.deleteWishlistItem.data).toBe(true)

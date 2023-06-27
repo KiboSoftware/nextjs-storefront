@@ -1,4 +1,4 @@
-import { renderHook } from '@testing-library/react'
+import { renderHook, waitFor } from '@testing-library/react'
 
 import { useRegister } from './useRegister'
 import { registerUserMock } from '@/__mocks__/stories/userMock'
@@ -17,15 +17,13 @@ describe('[hooks] useRegister', () => {
       password: '',
     }
 
-    renderHook(
-      async () => {
-        const { mutateAsync } = useRegister()
-        const response = await mutateAsync(createAccountAndLoginMutationVars)
-        expect(response).toStrictEqual(registerUserMock.account)
-      },
-      {
-        wrapper: createQueryClientWrapper(),
-      }
-    )
+    const { result } = renderHook(() => useRegister(), {
+      wrapper: createQueryClientWrapper(),
+    })
+
+    result.current.mutateAsync(createAccountAndLoginMutationVars)
+    await waitFor(() => {
+      expect(result.current.data).toStrictEqual(registerUserMock.account)
+    })
   })
 })

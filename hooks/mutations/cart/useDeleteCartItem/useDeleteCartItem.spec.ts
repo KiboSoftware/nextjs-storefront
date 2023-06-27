@@ -9,10 +9,8 @@ describe('[hooks] useDeleteCartItem', () => {
       wrapper: createQueryClientWrapper(),
     })
 
-    act(() => {
-      result.current.deleteCartItem.mutate({
-        cartItemId: 'fjsdhfjsdh53472bkjsdffdf',
-      })
+    result.current.deleteCartItem.mutateAsync({
+      cartItemId: 'fjsdhfjsdh53472bkjsdffdf',
     })
 
     await waitFor(() => {

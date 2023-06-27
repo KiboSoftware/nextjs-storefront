@@ -1,4 +1,4 @@
-import { renderHook } from '@testing-library/react'
+import { renderHook, waitFor } from '@testing-library/react'
 
 import { useDeleteSubscriptionMutation } from './useDeleteSubscription'
 import { subscriptionMock } from '@/__mocks__/stories'
@@ -16,15 +16,14 @@ describe('[hooks] useDeleteSubscriptionMutation', () => {
         moreInfo: 'cancel',
       },
     }
-    renderHook(
-      async () => {
-        const { deleteSubscription } = useDeleteSubscriptionMutation()
-        const response = await deleteSubscription.mutateAsync(params)
-        expect(response).toStrictEqual(subscriptionMock.subscription)
-      },
-      {
-        wrapper: createQueryClientWrapper(),
-      }
-    )
+    const { result } = renderHook(() => useDeleteSubscriptionMutation(), {
+      wrapper: createQueryClientWrapper(),
+    })
+
+    result.current.deleteSubscription.mutateAsync(params)
+
+    await waitFor(() => {
+      expect(result.current.deleteSubscription.data).toStrictEqual(subscriptionMock.subscription)
+    })
   })
 })

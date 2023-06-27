@@ -1,7 +1,7 @@
 /**
  * @module useChangePassword
  */
-import { useMutation } from 'react-query'
+import { useMutation } from '@tanstack/react-query'
 
 import { makeGraphQLClient } from '@/lib/gql/client'
 import { updatePassword } from '@/lib/gql/mutations/user/updatePassword'
@@ -40,6 +40,6 @@ const changePassword = async (props: ChangePasswordProps) => {
 
 export const useChangePassword = () => {
   return {
-    changePassword: useMutation(changePassword),
+    changePassword: useMutation({ mutationFn: changePassword }),
   }
 }

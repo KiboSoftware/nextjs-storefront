@@ -1,7 +1,7 @@
 /**
  * @module useSkipNextSubscription
  */
-import { useMutation, useQueryClient } from 'react-query'
+import { useMutation, useQueryClient } from '@tanstack/react-query'
 
 import { makeGraphQLClient } from '@/lib/gql/client'
 import { skipNextSubscriptionMutation } from '@/lib/gql/mutations'
@@ -33,9 +33,10 @@ export const useSkipNextSubscription = () => {
   const queryClient = useQueryClient()
 
   return {
-    skipNextSubscription: useMutation(skipNextSubscription, {
+    skipNextSubscription: useMutation({
+      mutationFn: skipNextSubscription,
       onSuccess: () => {
-        queryClient.invalidateQueries(subscriptionKeys.all)
+        queryClient.invalidateQueries({ queryKey: subscriptionKeys.all })
       },
     }),
   }

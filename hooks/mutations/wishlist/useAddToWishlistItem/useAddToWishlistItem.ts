@@ -1,7 +1,7 @@
 /**
  * @module useAddToWishlistItem
  */
-import { useMutation, useQueryClient } from 'react-query'
+import { useMutation, useQueryClient } from '@tanstack/react-query'
 
 import { makeGraphQLClient } from '@/lib/gql/client'
 import { createWishlistItemMutation } from '@/lib/gql/mutations'
@@ -47,9 +47,10 @@ export const useAddToWishlistItem = () => {
   const queryClient = useQueryClient()
 
   return {
-    addToWishlist: useMutation(addToWishlist, {
+    addToWishlist: useMutation({
+      mutationFn: addToWishlist,
       onSuccess: () => {
-        queryClient.removeQueries(wishlistKeys.all)
+        queryClient.removeQueries({ queryKey: wishlistKeys.all })
       },
     }),
   }

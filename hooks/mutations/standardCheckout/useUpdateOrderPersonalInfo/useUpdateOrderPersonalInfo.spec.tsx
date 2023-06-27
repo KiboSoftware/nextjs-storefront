@@ -1,4 +1,4 @@
-import { renderHook } from '@testing-library/react'
+import { renderHook, waitFor } from '@testing-library/react'
 
 import { useUpdateOrderPersonalInfo } from './useUpdateOrderPersonalInfo'
 import { orderMock } from '@/__mocks__/stories/orderMock'
@@ -11,16 +11,14 @@ describe('[hooks] useUpdateOrderPersonalInfo', () => {
       email: 'amol23@kibo.com',
     }
 
-    renderHook(
-      async () => {
-        const { updateOrderPersonalInfo } = useUpdateOrderPersonalInfo()
-        const response = await updateOrderPersonalInfo.mutateAsync(checkoutDetails)
+    const { result } = renderHook(() => useUpdateOrderPersonalInfo(), {
+      wrapper: createQueryClientWrapper(),
+    })
 
-        expect(response).toStrictEqual(orderMock.checkout)
-      },
-      {
-        wrapper: createQueryClientWrapper(),
-      }
-    )
+    result.current.updateOrderPersonalInfo.mutateAsync(checkoutDetails)
+
+    await waitFor(() => {
+      expect(result.current.updateOrderPersonalInfo.data).toStrictEqual(orderMock.checkout)
+    })
   })
 })

@@ -1,4 +1,4 @@
-import { renderHook } from '@testing-library/react'
+import { renderHook, waitFor } from '@testing-library/react'
 
 import { useUpdateSubscriptionNextOrderDate } from './useUpdateSubscriptionNextOrderDate'
 import { subscriptionMock } from '@/__mocks__/stories/subscriptionMock'
@@ -13,16 +13,16 @@ describe('[hooks] useUpdateSubscriptionNextOrderDate', () => {
       },
     }
 
-    renderHook(
-      async () => {
-        const { updateSubscriptionNextOrderDate } = useUpdateSubscriptionNextOrderDate()
-        const response = await updateSubscriptionNextOrderDate.mutateAsync(params)
+    const { result } = renderHook(() => useUpdateSubscriptionNextOrderDate(), {
+      wrapper: createQueryClientWrapper(),
+    })
 
-        expect(response).toStrictEqual(subscriptionMock.subscription.nextOrderDate)
-      },
-      {
-        wrapper: createQueryClientWrapper(),
-      }
-    )
+    result.current.updateSubscriptionNextOrderDate.mutateAsync(params)
+
+    await waitFor(() => {
+      expect(result.current.updateSubscriptionNextOrderDate.data).toStrictEqual(
+        subscriptionMock.subscription.nextOrderDate
+      )
+    })
   })
 })

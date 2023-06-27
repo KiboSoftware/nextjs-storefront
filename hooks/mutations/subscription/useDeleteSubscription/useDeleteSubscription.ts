@@ -1,7 +1,7 @@
 /**
  * @module useDeleteSubscriptionMutation
  */
-import { useMutation, useQueryClient } from 'react-query'
+import { useMutation, useQueryClient } from '@tanstack/react-query'
 
 import { makeGraphQLClient } from '@/lib/gql/client'
 import { deleteSubscriptionMutation } from '@/lib/gql/mutations'
@@ -43,9 +43,10 @@ export const useDeleteSubscriptionMutation = () => {
   const queryClient = useQueryClient()
 
   return {
-    deleteSubscription: useMutation(deleteSubscription, {
+    deleteSubscription: useMutation({
+      mutationFn: deleteSubscription,
       onSuccess: () => {
-        queryClient.invalidateQueries(subscriptionKeys.all)
+        queryClient.invalidateQueries({ queryKey: subscriptionKeys.all })
       },
     }),
   }

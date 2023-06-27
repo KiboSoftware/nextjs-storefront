@@ -1,4 +1,4 @@
-import { QueryClient } from 'react-query'
+import { QueryClient, MutationCache, QueryCache } from '@tanstack/react-query'
 
 const getErrorMessage = (code: string) => {
   const messages: any = {
@@ -21,16 +21,15 @@ const queryClientHandler = (error: any, showSnackbar: any) => {
 }
 
 export const generateQueryClient = (showSnackbar?: any): QueryClient => {
-  return new QueryClient({
-    defaultOptions: {
-      queries: {
-        onError: (error) => queryClientHandler(error, showSnackbar),
-      },
-      mutations: {
-        onError: (error) => queryClientHandler(error, showSnackbar),
-      },
-    },
+  const mutationCache = new MutationCache({
+    onError: (error) => queryClientHandler(error, showSnackbar),
   })
+
+  const queryCache = new QueryCache({
+    onError: (error) => queryClientHandler(error, showSnackbar),
+  })
+
+  return new QueryClient({ mutationCache, queryCache })
 }
 
 export const queryClient = generateQueryClient()

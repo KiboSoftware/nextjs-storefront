@@ -1,7 +1,7 @@
 /**
  * @module useUpdateCheckoutCoupon
  */
-import { useMutation, useQueryClient } from 'react-query'
+import { useMutation, useQueryClient } from '@tanstack/react-query'
 
 import { makeGraphQLClient } from '@/lib/gql/client'
 import { updateCheckoutCouponMutation } from '@/lib/gql/mutations'
@@ -40,9 +40,10 @@ const updateCheckoutCoupon = async (params: UpdateCheckoutCouponParams) => {
 export const useUpdateCheckoutCoupon = () => {
   const queryClient = useQueryClient()
   return {
-    updateCheckoutCoupon: useMutation(updateCheckoutCoupon, {
+    updateCheckoutCoupon: useMutation({
+      mutationFn: updateCheckoutCoupon,
       onSuccess: () => {
-        queryClient.invalidateQueries(checkoutKeys.all)
+        queryClient.invalidateQueries({ queryKey: checkoutKeys.all })
       },
     }),
   }

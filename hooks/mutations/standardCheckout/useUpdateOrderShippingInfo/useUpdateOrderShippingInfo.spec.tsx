@@ -1,4 +1,4 @@
-import { renderHook } from '@testing-library/react'
+import { renderHook, waitFor } from '@testing-library/react'
 
 import { useUpdateOrderShippingInfo } from './useUpdateOrderShippingInfo'
 import { orderMock } from '@/__mocks__/stories/orderMock'
@@ -8,18 +8,18 @@ describe('[hooks] useUpdateOrderShippingInfo', () => {
   it('should use useUpdateOrderShippingInfo', async () => {
     const expectedFulfillmentContact = orderMock?.checkout?.fulfillmentInfo?.fulfillmentContact
 
-    renderHook(
-      async () => {
-        const { updateOrderShippingInfo } = useUpdateOrderShippingInfo()
-        const response = await updateOrderShippingInfo.mutateAsync({
-          checkout: orderMock.checkout,
-        })
+    const { result } = renderHook(() => useUpdateOrderShippingInfo(), {
+      wrapper: createQueryClientWrapper(),
+    })
 
-        expect(response.fulfillmentContact).toEqual(expectedFulfillmentContact)
-      },
-      {
-        wrapper: createQueryClientWrapper(),
-      }
-    )
+    result.current.updateOrderShippingInfo.mutateAsync({
+      checkout: orderMock.checkout,
+    })
+
+    await waitFor(() => {
+      expect(result.current.updateOrderShippingInfo.data.fulfillmentContact).toEqual(
+        expectedFulfillmentContact
+      )
+    })
   })
 })

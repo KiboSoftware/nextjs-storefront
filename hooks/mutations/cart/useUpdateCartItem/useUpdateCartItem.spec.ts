@@ -1,4 +1,4 @@
-import { renderHook, waitFor, act } from '@testing-library/react'
+import { renderHook, waitFor } from '@testing-library/react'
 
 import { useUpdateCartItem } from './useUpdateCartItem'
 import { cartItemMock } from '@/__mocks__/stories/cartItemMock'
@@ -12,11 +12,9 @@ describe('[hooks] useUpdateCartItem', () => {
       wrapper: createQueryClientWrapper(),
     })
 
-    act(() => {
-      result.current.updateCartItem.mutate({
-        cartItemId: '1beef214158842d7a305ae68009d4d4c',
-        cartItemInput: cartItemMock as CrCartItemInput,
-      })
+    result.current.updateCartItem.mutate({
+      cartItemId: '1beef214158842d7a305ae68009d4d4c',
+      cartItemInput: cartItemMock as CrCartItemInput,
     })
 
     await waitFor(() => {

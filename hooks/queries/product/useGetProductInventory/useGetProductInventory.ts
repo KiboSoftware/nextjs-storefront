@@ -1,7 +1,7 @@
 /**
  * @module useGetProductInventory
  */
-import { useQuery } from 'react-query'
+import { useQuery } from '@tanstack/react-query'
 
 import { makeGraphQLClient } from '@/lib/gql/client'
 import { getProductLocationInventoryQuery } from '@/lib/gql/queries'
@@ -54,14 +54,12 @@ export const useGetProductInventory = (
     data = [],
     isLoading,
     isSuccess,
-  } = useQuery(
-    inventoryKeys.inventoryParams(productCode, locationCodes),
-    () => loadProductLocationInventory(productCode, locationCodes),
-    {
-      refetchOnWindowFocus: false,
-      enabled: !!(productCode && locationCodes),
-    }
-  )
+  } = useQuery({
+    queryKey: inventoryKeys.inventoryParams(productCode, locationCodes),
+    queryFn: () => loadProductLocationInventory(productCode, locationCodes),
+    refetchOnWindowFocus: false,
+    enabled: !!(productCode && locationCodes),
+  })
 
   return { data, isLoading, isSuccess }
 }

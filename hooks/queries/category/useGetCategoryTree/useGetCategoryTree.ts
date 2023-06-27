@@ -1,8 +1,8 @@
 /**
  * @module useGetCategoryTree
  */
+import { useQuery } from '@tanstack/react-query'
 import fetch from 'isomorphic-unfetch'
-import { useQuery } from 'react-query'
 
 import { CATEGORY_TREE_ENDPOINT } from '@/lib/gql/client'
 import { categoryTreeKeys } from '@/lib/react-query/queryKeys'
@@ -42,7 +42,9 @@ export const useGetCategoryTree = (initialData: Maybe<PrCategory>[]): UseCategor
     data = [],
     isLoading,
     isSuccess,
-  } = useQuery(categoryTreeKeys.all, fetchCategoryTree, {
+  } = useQuery({
+    queryKey: categoryTreeKeys.all,
+    queryFn: fetchCategoryTree,
     refetchOnMount: initialData ? false : true,
   })
 

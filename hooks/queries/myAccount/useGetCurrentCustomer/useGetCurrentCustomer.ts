@@ -1,7 +1,7 @@
 /**
  * @module useGetCurrentCustomer
  */
-import { useQuery } from 'react-query'
+import { useQuery } from '@tanstack/react-query'
 
 import { makeGraphQLClient } from '@/lib/gql/client'
 import { getCurrentUser } from '@/lib/gql/mutations/user/getUser'
@@ -47,7 +47,11 @@ const loadUser = async () => {
  */
 
 export const useGetCurrentCustomer = (): UserResultType => {
-  const { data, isLoading, isSuccess, isError, error } = useQuery(loginKeys.user, loadUser)
+  const { data, isLoading, isSuccess, isError, error } = useQuery({
+    queryKey: loginKeys.user,
+    queryFn: loadUser,
+  })
+
   return {
     data,
     isLoading,

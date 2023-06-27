@@ -1,22 +1,23 @@
-import { renderHook } from '@testing-library/react'
+import { renderHook, waitFor } from '@testing-library/react'
 
 import { useLogout } from './useLogout'
 import { createQueryClientWrapper } from '@/__test__/utils/renderWithQueryClient'
 
 describe('[hooks] useLogout', () => {
   it('should use useLogout', async () => {
-    renderHook(
-      async () => {
-        const { mutateAsync } = useLogout(() => {
-          console.log('logged out successfully')
-        })
-        const response = await mutateAsync()
+    const callbackFn = jest.fn()
 
-        expect(response).toStrictEqual(true)
-      },
-      {
-        wrapper: createQueryClientWrapper(),
-      }
-    )
+    const { result } = renderHook(() => useLogout(callbackFn), {
+      wrapper: createQueryClientWrapper(),
+    })
+
+    result.current.mutateAsync()
+
+    await waitFor(() => {
+      expect(result.current.data).toStrictEqual('true')
+    })
+    await waitFor(() => {
+      expect(callbackFn).toHaveBeenCalledTimes(1)
+    })
   })
 })

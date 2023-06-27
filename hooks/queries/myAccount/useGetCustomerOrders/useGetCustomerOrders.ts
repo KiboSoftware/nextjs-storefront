@@ -1,7 +1,7 @@
 /**
  * @module useGetCustomerOrders
  */
-import { useQuery } from 'react-query'
+import { useQuery } from '@tanstack/react-query'
 
 import { makeGraphQLClient } from '@/lib/gql/client'
 import { getOrdersQuery } from '@/lib/gql/queries'
@@ -61,17 +61,15 @@ export const useGetCustomerOrders = (param: UseUserOrder): UseUserOrderType => {
     isLoading,
     isSuccess,
     isFetching,
-  } = useQuery(
-    ordersKeys.all,
-    () => {
+  } = useQuery({
+    queryKey: ordersKeys.all,
+    queryFn: () => {
       if (param.orderNumber === '' && param.billingEmail === '') return []
       return getOrders(param)
     },
-    {
-      enabled: param?.isRefetching,
-      refetchOnWindowFocus: false,
-    }
-  )
+    enabled: param?.isRefetching,
+    refetchOnWindowFocus: false,
+  })
 
   return { data, isLoading, isSuccess, isFetching }
 }

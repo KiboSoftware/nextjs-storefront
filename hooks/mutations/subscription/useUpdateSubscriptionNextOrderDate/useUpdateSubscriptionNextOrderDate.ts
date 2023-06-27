@@ -1,7 +1,7 @@
 /**
  * @module useUpdateSubscriptionNextOrderDate
  */
-import { useMutation, useQueryClient } from 'react-query'
+import { useMutation, useQueryClient } from '@tanstack/react-query'
 
 import { makeGraphQLClient } from '@/lib/gql/client'
 import { updateSubscriptionNextOrderDateMutation } from '@/lib/gql/mutations'
@@ -40,9 +40,10 @@ export const useUpdateSubscriptionNextOrderDate = () => {
   const queryClient = useQueryClient()
 
   return {
-    updateSubscriptionNextOrderDate: useMutation(updateSubscriptionNextOrderDate, {
+    updateSubscriptionNextOrderDate: useMutation({
+      mutationFn: updateSubscriptionNextOrderDate,
       onSuccess: () => {
-        queryClient.invalidateQueries(subscriptionKeys.all)
+        queryClient.invalidateQueries({ queryKey: subscriptionKeys.all })
       },
     }),
   }

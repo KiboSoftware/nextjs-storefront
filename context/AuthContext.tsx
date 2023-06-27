@@ -1,7 +1,7 @@
 import { ReactNode, createContext, useState, useContext, useEffect } from 'react'
 
+import { useQueryClient } from '@tanstack/react-query'
 import { useRouter } from 'next/router'
-import { useQueryClient } from 'react-query'
 
 import { LoginData } from '@/components/layout/Login/LoginContent/LoginContent'
 import type { RegisterAccountInputData } from '@/components/layout/RegisterAccount/Content/Content'
@@ -44,8 +44,8 @@ export const AuthContextProvider = ({ children }: AuthContextProviderProps) => {
   const { mutate: logOutUser } = useLogout(() => {
     setUser(undefined)
     router.push('/')
-    queryClient.removeQueries(cartKeys.all)
-    queryClient.removeQueries(loginKeys.user)
+    queryClient.removeQueries({ queryKey: cartKeys.all })
+    queryClient.removeQueries({ queryKey: loginKeys.user })
   })
   const { mutate: registerUserAccount } = useRegister()
 
@@ -54,9 +54,9 @@ export const AuthContextProvider = ({ children }: AuthContextProviderProps) => {
   const handleOnSuccess = (account: any, onSuccessCallBack?: () => void) => {
     setUser(account?.customerAccount)
 
-    queryClient.invalidateQueries(cartKeys.all)
+    queryClient.invalidateQueries({ queryKey: cartKeys.all })
     onSuccessCallBack && onSuccessCallBack()
-    queryClient.removeQueries(wishlistKeys.all)
+    queryClient.removeQueries({ queryKey: wishlistKeys.all })
   }
   // register user
   const createAccount = (params: RegisterAccountInputData, onSuccessCallBack?: () => void) => {

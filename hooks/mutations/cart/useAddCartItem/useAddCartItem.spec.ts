@@ -1,4 +1,4 @@
-import { renderHook } from '@testing-library/react'
+import { renderHook, waitFor } from '@testing-library/react'
 
 import { useAddCartItem } from './useAddCartItem'
 import { cartItemMock } from '@/__mocks__/stories/cartItemMock'
@@ -22,20 +22,17 @@ const productInput = {
 }
 
 describe('[hooks] useAddCartItem', () => {
-  it('should use useAddCartItem when addToCart', () => {
-    renderHook(
-      async () => {
-        const { addToCart } = useAddCartItem()
-        const addResponse = await addToCart.mutateAsync({
-          product: productInput,
-          quantity: 6,
-        })
+  it('should use useAddCartItem when addToCart', async () => {
+    const { result } = renderHook(() => useAddCartItem(), {
+      wrapper: createQueryClientWrapper(),
+    })
 
-        expect(addResponse).toStrictEqual(cartItemMock)
-      },
-      {
-        wrapper: createQueryClientWrapper(),
-      }
-    )
+    result.current.addToCart.mutateAsync({
+      product: productInput,
+      quantity: 6,
+    })
+    await waitFor(() => {
+      expect(result.current.addToCart.data).toStrictEqual(cartItemMock)
+    })
   })
 })

@@ -1,7 +1,7 @@
 /**
  * @module useCreateCustomerAddress
  */
-import { useMutation, useQueryClient } from 'react-query'
+import { useMutation, useQueryClient } from '@tanstack/react-query'
 
 import { makeGraphQLClient } from '@/lib/gql/client'
 import { createCustomerAccountContact } from '@/lib/gql/mutations'
@@ -44,9 +44,10 @@ export const useCreateCustomerAddress = () => {
   const queryClient = useQueryClient()
 
   return {
-    createCustomerAddress: useMutation(addCustomerAccountContactDetails, {
+    createCustomerAddress: useMutation({
+      mutationFn: addCustomerAccountContactDetails,
       onSuccess: () => {
-        queryClient.invalidateQueries(customerAccountContactsKeys.all)
+        queryClient.invalidateQueries({ queryKey: customerAccountContactsKeys.all })
       },
     }),
   }

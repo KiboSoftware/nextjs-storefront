@@ -1,14 +1,13 @@
 /**
  * @module useInitiateCheckout
  */
-import { useMutation } from 'react-query'
+import { useMutation } from '@tanstack/react-query'
 
 import { makeGraphQLClient } from '@/lib/gql/client'
 import { createMultiShipCheckoutFromCartMutation } from '@/lib/gql/mutations'
 
 const createCheckout = async (cartId?: string | null) => {
   const client = makeGraphQLClient()
-
   const response = await client.request({
     document: createMultiShipCheckoutFromCartMutation,
     variables: { cartId },
@@ -30,6 +29,6 @@ const createCheckout = async (cartId?: string | null) => {
  */
 export const useInitiateCheckout = () => {
   return {
-    initiateCheckout: useMutation(createCheckout),
+    initiateCheckout: useMutation({ mutationFn: createCheckout }),
   }
 }

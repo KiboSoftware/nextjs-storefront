@@ -1,7 +1,7 @@
 /**
  * @module useCreateOrderReturn
  */
-import { useMutation } from 'react-query'
+import { useMutation } from '@tanstack/react-query'
 
 import { makeGraphQLClient } from '@/lib/gql/client'
 import { createReturnItemMutation } from '@/lib/gql/mutations'
@@ -44,6 +44,6 @@ const createOrderReturnItems = async (params: CreateOrderReturnItemsInputParams)
  */
 export const useCreateOrderReturn = () => {
   return {
-    createReturnItems: useMutation(createOrderReturnItems),
+    createReturnItems: useMutation({ mutationFn: createOrderReturnItems }),
   }
 }

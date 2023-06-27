@@ -1,20 +1,21 @@
-import { renderHook } from '@testing-library/react'
+import { renderHook, waitFor } from '@testing-library/react'
 
 import { useDeleteOrderCoupon } from './useDeleteOrderCoupon'
 import { createQueryClientWrapper } from '@/__test__/utils/renderWithQueryClient'
 
 describe('[hooks] useDeleteOrderCoupon', () => {
   it('should remove deleted coupon', async () => {
-    renderHook(
-      async () => {
-        const { deleteOrderCoupon } = useDeleteOrderCoupon()
-        const variables = { checkoutId: '43245kjg5j43543hj', couponCode: 'OFF10' }
-        const response = await deleteOrderCoupon.mutateAsync(variables)
-        expect(response).toStrictEqual('1234')
-      },
-      {
-        wrapper: createQueryClientWrapper(),
-      }
-    )
+    const { result } = renderHook(() => useDeleteOrderCoupon(), {
+      wrapper: createQueryClientWrapper(),
+    })
+
+    result.current.deleteOrderCoupon.mutateAsync({
+      checkoutId: '43245kjg5j43543hj',
+      couponCode: 'OFF10',
+    })
+
+    await waitFor(() => {
+      expect(result.current.deleteOrderCoupon.data).toStrictEqual('1234')
+    })
   })
 })

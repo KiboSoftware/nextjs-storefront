@@ -475,7 +475,7 @@ const ProductDetailTemplate = (props: ProductDetailTemplateProps) => {
             color="primary"
             fullWidth
             onClick={() => handleAddToCart()}
-            loading={addToCart.isLoading}
+            loading={addToCart.isPending}
             {...(!isValidForAddToCart() && { disabled: true })}
           >
             {t('add-to-cart')}

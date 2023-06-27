@@ -1,5 +1,5 @@
+import { useIsFetching } from '@tanstack/react-query'
 import NProgress from 'nprogress'
-import { useIsFetching } from 'react-query'
 
 function GlobalFetchingIndicator() {
   const isLoadingFetching = useIsFetching()

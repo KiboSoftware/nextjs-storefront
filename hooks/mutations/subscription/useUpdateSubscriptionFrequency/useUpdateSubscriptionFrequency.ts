@@ -2,7 +2,7 @@
  * @module useUpdateSubscriptionFrequency
  */
 
-import { useMutation, useQueryClient } from 'react-query'
+import { useMutation, useQueryClient } from '@tanstack/react-query'
 
 import { makeGraphQLClient } from '@/lib/gql/client'
 import { editSubscriptionFrequencyMutation } from '@/lib/gql/mutations'
@@ -43,9 +43,10 @@ export const useUpdateSubscriptionFrequency = () => {
   const queryClient = useQueryClient()
 
   return {
-    updateSubscriptionFrequency: useMutation(editSubscriptionFrequency, {
+    updateSubscriptionFrequency: useMutation({
+      mutationFn: editSubscriptionFrequency,
       onSuccess: () => {
-        queryClient.invalidateQueries(subscriptionKeys.all)
+        queryClient.invalidateQueries({ queryKey: subscriptionKeys.all })
       },
     }),
   }

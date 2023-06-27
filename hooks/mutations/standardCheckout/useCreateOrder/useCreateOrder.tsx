@@ -1,7 +1,7 @@
 /**
  * @module useCreateOrder
  */
-import { useMutation, useQueryClient } from 'react-query'
+import { useMutation, useQueryClient } from '@tanstack/react-query'
 
 import { makeGraphQLClient } from '@/lib/gql/client'
 import { createOrderMutation } from '@/lib/gql/mutations'
@@ -48,9 +48,10 @@ export const useCreateOrder = () => {
   const queryClient = useQueryClient()
 
   return {
-    createOrder: useMutation(createOrder, {
+    createOrder: useMutation({
+      mutationFn: createOrder,
       onSuccess: () => {
-        queryClient.removeQueries([checkoutKeys.all])
+        queryClient.removeQueries({ queryKey: checkoutKeys.all })
       },
     }),
   }

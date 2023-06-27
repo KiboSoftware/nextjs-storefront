@@ -1,7 +1,7 @@
 /**
  * @module useAddOrderPaymentInfo
  */
-import { useMutation, useQueryClient } from 'react-query'
+import { useMutation, useQueryClient } from '@tanstack/react-query'
 
 import { makeGraphQLClient } from '@/lib/gql/client'
 import { addPaymentMethodToCheckout } from '@/lib/gql/mutations'
@@ -46,9 +46,10 @@ export const useAddOrderPaymentInfo = () => {
   const queryClient = useQueryClient()
 
   return {
-    addOrderPayment: useMutation(updatePaymentMethod, {
+    addOrderPayment: useMutation({
+      mutationFn: updatePaymentMethod,
       onSuccess: () => {
-        queryClient.invalidateQueries(checkoutKeys.all)
+        queryClient.invalidateQueries({ queryKey: checkoutKeys.all })
       },
     }),
   }

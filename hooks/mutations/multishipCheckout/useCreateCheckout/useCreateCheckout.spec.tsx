@@ -1,4 +1,4 @@
-import { renderHook } from '@testing-library/react'
+import { renderHook, waitFor } from '@testing-library/react'
 
 import { useCreateCheckout } from './useCreateCheckout'
 import { checkoutMock } from '@/__mocks__/stories'
@@ -6,16 +6,14 @@ import { createQueryClientWrapper } from '@/__test__/utils/renderWithQueryClient
 
 describe('[hooks] useCreateCheckout', () => {
   it('should use useCreateCheckout', async () => {
-    renderHook(
-      async () => {
-        const { createCheckout } = useCreateCheckout()
-        const response = await createCheckout.mutateAsync(checkoutMock?.checkout)
+    const { result } = renderHook(() => useCreateCheckout(), {
+      wrapper: createQueryClientWrapper(),
+    })
 
-        expect(response).toEqual(checkoutMock)
-      },
-      {
-        wrapper: createQueryClientWrapper(),
-      }
-    )
+    result.current.createCheckout.mutateAsync(checkoutMock?.checkout)
+
+    await waitFor(() => {
+      expect(result.current.createCheckout.data).toEqual(checkoutMock)
+    })
   })
 })

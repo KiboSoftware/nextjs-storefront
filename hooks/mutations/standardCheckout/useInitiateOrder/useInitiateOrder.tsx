@@ -1,7 +1,7 @@
 /**
  * @module useInitiateOrder
  */
-import { useMutation } from 'react-query'
+import { useMutation } from '@tanstack/react-query'
 
 import { makeGraphQLClient } from '@/lib/gql/client'
 import { getOrCreateCheckoutFromCartMutation } from '@/lib/gql/queries'
@@ -30,6 +30,6 @@ const getOrCreateCheckout = async (cartId?: string | null) => {
  */
 export const useInitiateOrder = () => {
   return {
-    initiateOrder: useMutation(getOrCreateCheckout),
+    initiateOrder: useMutation({ mutationFn: getOrCreateCheckout }),
   }
 }

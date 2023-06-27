@@ -1,7 +1,7 @@
 /**
  * @module useGetCart
  */
-import { useQuery } from 'react-query'
+import { useQuery } from '@tanstack/react-query'
 
 import { makeGraphQLClient } from '@/lib/gql/client'
 import { getCartQuery } from '@/lib/gql/queries'
@@ -48,7 +48,9 @@ export const useGetCart = (initialData: CrCart): UseCartType => {
       data = {},
       isLoading,
       isSuccess,
-    } = useQuery(cartKeys.all, getCurrentCart, {
+    } = useQuery({
+      queryKey: cartKeys.all,
+      queryFn: getCurrentCart,
       initialData,
       refetchOnWindowFocus: false,
     })

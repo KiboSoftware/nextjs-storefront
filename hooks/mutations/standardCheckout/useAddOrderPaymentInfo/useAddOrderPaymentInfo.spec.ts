@@ -1,4 +1,4 @@
-import { renderHook } from '@testing-library/react'
+import { renderHook, waitFor } from '@testing-library/react'
 
 import { useAddOrderPaymentInfo } from './useAddOrderPaymentInfo'
 import { billingInfoInputMock } from '@/__mocks__/stories/billingInfoInputMock'
@@ -19,16 +19,16 @@ describe('[hooks] useAddOrderPaymentInfo', () => {
       },
     }
 
-    renderHook(
-      async () => {
-        const { addOrderPayment } = useAddOrderPaymentInfo()
-        const response = await addOrderPayment.mutateAsync(createOrderPaymentActionParams)
+    const { result } = renderHook(() => useAddOrderPaymentInfo(), {
+      wrapper: createQueryClientWrapper(),
+    })
 
-        expect(response).toStrictEqual(createOrderPaymentActionMock.createOrderPaymentAction)
-      },
-      {
-        wrapper: createQueryClientWrapper(),
-      }
-    )
+    result.current.addOrderPayment.mutateAsync(createOrderPaymentActionParams)
+
+    await waitFor(() => {
+      expect(result.current.addOrderPayment.data).toStrictEqual(
+        createOrderPaymentActionMock.createOrderPaymentAction
+      )
+    })
   })
 })

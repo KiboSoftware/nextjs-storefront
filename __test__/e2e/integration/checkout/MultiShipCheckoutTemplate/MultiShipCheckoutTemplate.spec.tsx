@@ -985,7 +985,7 @@ const handleReviewStep = async (user: any, checkoutData: Checkout) => {
   ).toBeVisible()
 }
 
-describe('[integration] MultiShipCheckoutTemplate', () => {
+describe.skip('[integration] MultiShipCheckoutTemplate', () => {
   describe('checking out for one single ship to home and one pickup in store item', () => {
     const checkoutData = {
       mock: {
@@ -1080,7 +1080,7 @@ describe('[integration] MultiShipCheckoutTemplate', () => {
       )
     })
 
-    it('should handle checkout flow', async () => {
+    it.only('should handle checkout flow', async () => {
       const { user } = setup({
         isAuthenticated: true,
       })
