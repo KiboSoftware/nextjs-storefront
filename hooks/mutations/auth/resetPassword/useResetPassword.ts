@@ -1,7 +1,7 @@
 /**
  * @module useResetPassword
  */
-import { useMutation } from 'react-query'
+import { useMutation } from '@tanstack/react-query'
 
 import { makeGraphQLClient } from '@/lib/gql/client'
 import { resetAccountPassword } from '@/lib/gql/mutations/user/resetAccountPassword'
@@ -40,6 +40,8 @@ const resetPassword = async (props: resetPasswordProps) => {
 
 export const useResetPassword = () => {
   return {
-    resetPassword: useMutation(resetPassword),
+    resetPassword: useMutation({
+      mutationFn: resetPassword,
+    }),
   }
 }

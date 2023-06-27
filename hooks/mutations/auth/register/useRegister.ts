@@ -33,6 +33,8 @@ const registerUser = async (customerAccountAndAuthInfoInput: CustomerAccountAndA
 
 export const useRegister = () => {
   return {
-    registerUserAccount: useMutation(registerUser),
+    registerUserAccount: useMutation({
+      mutationFn: registerUser,
+    }),
   }
 }

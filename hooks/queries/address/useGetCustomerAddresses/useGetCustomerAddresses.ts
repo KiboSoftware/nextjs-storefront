@@ -2,6 +2,7 @@
  * @module useGetCustomerAddresses
  */
 import { useQuery } from '@tanstack/react-query'
+import getConfig from 'next/config'
 
 import { makeGraphQLClient } from '@/lib/gql/client'
 import { getUserAddressesQuery } from '@/lib/gql/queries'

@@ -1,7 +1,7 @@
 /**
  * @module useUpdateUserOrder
  */
-import { useMutation, useQueryClient } from 'react-query'
+import { useMutation, useQueryClient } from '@tanstack/react-query'
 
 import { makeGraphQLClient } from '@/lib/gql/client'
 import { updateUserOrder } from '@/lib/gql/mutations'
@@ -38,9 +38,10 @@ export const useUpdateUserOrder = () => {
   const queryClient = useQueryClient()
 
   return {
-    updateUserOrder: useMutation(updateUserId, {
+    updateUserOrder: useMutation({
+      mutationFn: updateUserId,
       onSuccess: () => {
-        queryClient.invalidateQueries(checkoutKeys.all)
+        queryClient.invalidateQueries({ queryKey: checkoutKeys.all })
       },
     }),
   }

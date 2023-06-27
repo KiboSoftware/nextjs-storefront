@@ -44,7 +44,7 @@ export const useProductCardActions = () => {
     }
   }
 
-  const isATCLoading = addToCart.isLoading
+  const isATCLoading = addToCart.isPending
 
   return {
     handleAddToCart,

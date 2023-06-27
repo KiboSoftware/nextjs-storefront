@@ -48,7 +48,6 @@ export const useGetWishlist = (): UseWishlistResponse => {
     queryKey: wishlistKeys.all,
     queryFn: getWishlists,
     refetchOnWindowFocus: false,
-    cacheTime: 0,
   })
 
   return { data, isLoading, isSuccess, isFetching }

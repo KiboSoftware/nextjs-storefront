@@ -7,7 +7,6 @@ import { HydrationBoundary } from '@tanstack/react-query'
 import creditCardType from 'credit-card-type'
 import dynamic from 'next/dynamic'
 import Router from 'next/router'
-import { Hydrate } from 'react-query'
 
 const Footer = dynamic(() => import('@/components/layout').then((mod) => mod.Footer), {
   ssr: false,
@@ -64,38 +63,36 @@ const DefaultLayout = ({ pageProps, children }: { pageProps: any; children: Reac
     }
   }, [])
   return (
-    <Hydrate state={pageProps.dehydratedState}>
+    <HydrationBoundary state={pageProps.dehydratedState}>
       <ThemeProvider theme={theme}>
         <CssBaseline />
         <ModalContextProvider>
           <AuthContextProvider>
             <HeaderContextProvider>
-              <HydrationBoundary state={pageProps.dehydratedState}>
-                <GlobalFetchingIndicator />
-                <KiboHeader
-                  navLinks={[
-                    {
-                      link: '/order-status',
-                      text: 'order-status',
-                    },
-                    {
-                      link: '/wishlist',
-                      text: 'wishlist',
-                    },
-                  ]}
-                  categoriesTree={pageProps.categoriesTree || []}
-                  isSticky={true}
-                />
-                <DialogRoot />
-                <SnackbarRoot />
-                <Container maxWidth={'lg'}>{children}</Container>
-                <Footer content={pageProps.footer} />
-              </HydrationBoundary>
+              <GlobalFetchingIndicator />
+              <KiboHeader
+                navLinks={[
+                  {
+                    link: '/order-status',
+                    text: 'order-status',
+                  },
+                  {
+                    link: '/wishlist',
+                    text: 'wishlist',
+                  },
+                ]}
+                categoriesTree={pageProps.categoriesTree || []}
+                isSticky={true}
+              />
+              <DialogRoot />
+              <SnackbarRoot />
+              <Container maxWidth={'xl'}>{children}</Container>
+              <Footer content={pageProps.footer} />
             </HeaderContextProvider>
           </AuthContextProvider>
         </ModalContextProvider>
       </ThemeProvider>
-    </Hydrate>
+    </HydrationBoundary>
   )
 }
 
