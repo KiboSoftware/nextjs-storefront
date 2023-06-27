@@ -217,7 +217,7 @@ describe('[component] - SubscriptionItem', () => {
     }
   }
 
-  it.only('should render component', () => {
+  it('should render component', () => {
     setup()
     const subscriptionNumber = screen.getByText(/subscription-number/i)
     const status = screen.getByText(/status/i)

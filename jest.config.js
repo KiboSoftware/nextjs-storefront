@@ -49,6 +49,9 @@ const customJestConfig = {
     '^.+\\.(js|jsx|ts|tsx)$': ['@swc/jest'],
   },
   transformIgnorePatterns: ['/node_modules/', '^.+\\.module\\.(css|sass|scss)$'],
+  testPathIgnorePatterns: [
+    '/__test__/e2e/integration/', // Ignore the integration folder
+  ],
   setupFilesAfterEnv: ['./jestSetup.js'],
 }
 

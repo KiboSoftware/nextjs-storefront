@@ -156,7 +156,7 @@ export const getProductCharacteristics = (
   properties: ProductProperties[],
   product: Product | ProductCustom
 ): ProductProperties[] => {
-  const occasionAttributeFQN = publicRuntimeConfig?.occasionAttributeFQN.toLowerCase()
+  const occasionAttributeFQN = publicRuntimeConfig?.occasionAttributeFQN?.toLowerCase()
 
   return properties
     .filter(
@@ -172,7 +172,7 @@ export const getProductCharacteristics = (
 }
 
 export const getBadgeAttribute = (properties: ProductProperties[]): string => {
-  const badgeAttributeFQN = publicRuntimeConfig?.badgeAttributeFQN.toLowerCase()
+  const badgeAttributeFQN = publicRuntimeConfig?.badgeAttributeFQN?.toLowerCase()
 
   return (
     properties?.find((prop) => prop.attributeFQN?.toLowerCase() === badgeAttributeFQN)?.value || ''
