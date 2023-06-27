@@ -1,7 +1,6 @@
 import getConfig from 'next/config'
 
-import { fetcher } from '../util'
-import { getAdditionalHeader } from '../util'
+import { fetcher, getAdditionalHeader } from '../util'
 import getUserClaimsFromRequest from '../util/getUserClaimsFromRequest'
 
 import type { NextApiRequest, NextApiResponse } from 'next'

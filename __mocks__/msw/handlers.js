@@ -244,6 +244,10 @@ export const userHandlers = [
     return res(ctx.data(registerUserMock))
   }),
 
+  graphql.mutation('resetAccountPassword', (_req, res, ctx) => {
+    return res(ctx.data({ resetCustomerAccountPassword: true }))
+  }),
+
   rest.post(LOGOUT_ENDPOINT, (_req, res, ctx) => {
     return res(ctx.status(200), ctx.json('true'))
   }),

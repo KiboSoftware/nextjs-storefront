@@ -149,7 +149,6 @@ const getProductAvailability = (inventoryInfo: ProductInventoryInfo): string => 
   } else {
     return ProductAvailabilityStatus.OUTOFSTOCK
   }
-  return ''
 }
 
 export const getProductCharacteristics = (

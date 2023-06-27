@@ -2,7 +2,6 @@ import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
 
 import { homePageResultMock } from '@/__mocks__/stories'
 import KiboHeroCarousel from '@/components/home/Carousel/KiboHeroCarousel'
-import { FullWidthLayout } from '@/components/layout'
 import getCategoryTree from '@/lib/api/operations/get-category-tree'
 import type { CategoryTreeResponse, NextPageWithLayout } from '@/lib/types'
 

@@ -1,7 +1,7 @@
 /**
  * @module useRegister
  */
-import { useMutation, useQueryClient } from '@tanstack/react-query'
+import { useMutation } from '@tanstack/react-query'
 
 import { makeGraphQLClient, REGISTER_USER_ENDPOINT } from '@/lib/gql/client'
 import { createAccountAndLoginMutation } from '@/lib/gql/mutations/user/createAccount'

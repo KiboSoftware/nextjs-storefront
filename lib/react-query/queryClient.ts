@@ -10,7 +10,6 @@ const getErrorMessage = (code: string, message: string) => {
 }
 
 const queryClientHandler = (error: any, showSnackbar: any) => {
-  const id = 'react-query-error'
   const code = error?.response?.errors
     ? error?.response?.errors[0]?.extensions?.response?.body?.errorCode
     : null
