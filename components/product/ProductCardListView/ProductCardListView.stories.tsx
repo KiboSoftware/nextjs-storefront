@@ -16,66 +16,28 @@ const Template: ComponentStory<typeof ProductCardListView> = (args) => (
 export const Common = Template.bind({})
 // More on args: https://storybook.js.org/docs/react/writing-stories/args
 Common.args = {
-  imageUrl: `https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR-FMCFLCcOwFxZ3FNt8RKne3iqrwqY8OOnCw&usqp=CAU`,
+  title: 'Test Product',
   link: '/product/test-123',
-  price: '$19.98',
-  title: 'This is a product',
-}
-
-export const WithSalePrice = Template.bind({})
-// More on args: https://storybook.js.org/docs/react/writing-stories/args
-WithSalePrice.args = {
   imageUrl: `https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR-FMCFLCcOwFxZ3FNt8RKne3iqrwqY8OOnCw&usqp=CAU`,
-  link: '/product/test-123',
+  imageAltText: 'Product image alt text',
   price: '$19.98',
   salePrice: '$8.99',
-  title: 'This is a product',
-}
-
-export const WithRating = Template.bind({})
-// More on args: https://storybook.js.org/docs/react/writing-stories/args
-WithRating.args = {
-  imageUrl: `https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR-FMCFLCcOwFxZ3FNt8RKne3iqrwqY8OOnCw&usqp=CAU`,
-  link: '/product/test-123',
-  price: '$19.98',
-  title: 'This is a product',
-  rating: 3.5,
-}
-
-export const NoImage = Template.bind({})
-// More on args: https://storybook.js.org/docs/react/writing-stories/args
-NoImage.args = {
-  link: '/product/test-123',
-  price: '$19.99',
-  title: 'This is a No image product',
+  productCode: 'test-123',
+  productDescription: 'This is a product description',
+  isLoading: false,
+  isShopNow: true,
+  isShowWishlistIcon: true,
+  showQuickViewButton: true,
+  badge: 'New',
+  onAddOrRemoveWishlistItem: () => console.log('add or remove wishlist item clicked'),
+  onClickQuickViewModal: () => console.log('quick-view button clicked'),
+  onClickAddToCart: () => console.log('add to cart button clicked'),
 }
 
 export const LoadingProductCard = Template.bind({})
-// More on args: https://storybook.js.org/docs/react/writing-stories/args
 LoadingProductCard.args = {
   link: '/product/test-123',
   title: 'This is a No image product',
   price: '$19.99',
   isLoading: true,
-}
-
-export const WithWishlist = Template.bind({})
-WithWishlist.args = {
-  imageUrl: `https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR-FMCFLCcOwFxZ3FNt8RKne3iqrwqY8OOnCw&usqp=CAU`,
-  link: '/product/test-123',
-  price: '$19.98',
-  title: 'This is a product',
-  isInWishlist: true,
-  onAddOrRemoveWishlistItem: () => console.log('add or remove wishlist icon clicked'),
-}
-
-export const WithQuickViewButton = Template.bind({})
-WithQuickViewButton.args = {
-  imageUrl: `https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR-FMCFLCcOwFxZ3FNt8RKne3iqrwqY8OOnCw&usqp=CAU`,
-  link: '/product/test-123',
-  price: '$19.98',
-  salePrice: '$8.99',
-  title: 'This is a product',
-  showQuickViewButton: true,
-  onClickQuickViewModal: () => console.log('quick-view button clicked'),
 }
