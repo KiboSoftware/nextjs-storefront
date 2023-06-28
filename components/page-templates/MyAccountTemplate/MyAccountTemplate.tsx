@@ -246,6 +246,17 @@ const MyAccountTemplate = () => {
           <Typography variant="h3">{t('order-history')}</Typography>
           <ChevronRightIcon />
         </Box>
+        <Divider sx={{ borderColor: 'grey.500' }} />
+        <Box
+          sx={{
+            ...style.myAccountChildren,
+            ...style.orderHistory,
+          }}
+          onClick={() => router.push('/my-account/lists')}
+        >
+          <Typography variant="h3">{t('lists')}</Typography>
+          <ChevronRightIcon />
+        </Box>
         <Divider sx={{ backgroundColor: 'grey.300', ...style.divider }} />
         <Box sx={{ ...style.myAccountChildren, cursor: 'pointer' }} onClick={logout}>
           <Typography variant="h3">{t('logout')}</Typography>
