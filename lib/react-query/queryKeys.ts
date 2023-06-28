@@ -62,6 +62,7 @@ export const locationKeys = {
 
 export const wishlistKeys = {
   all: ['wishlist'] as const,
+  allWishlists: ['wishlists'],
 }
 
 export const ordersKeys = {
