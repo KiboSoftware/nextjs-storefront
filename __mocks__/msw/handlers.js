@@ -252,12 +252,9 @@ export const userHandlers = [
     return res(ctx.data({ resetCustomerAccountPassword: true }))
   }),
 
+  //useUpdateForgottenPassword
   graphql.mutation('updateForgottenAccountPassword', (_req, res, ctx) => {
-    return res(
-      ctx.data({
-        updatePassword: 'updatePassword-response',
-      })
-    )
+    return res(ctx.data({ updatePassword: true }))
   }),
 
   rest.post(LOGOUT_ENDPOINT, (_req, res, ctx) => {

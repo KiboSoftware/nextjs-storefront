@@ -15,7 +15,7 @@ describe('[hooks] useUpdateForgottenPassword', () => {
       newPassword: 'test-password',
     })
     await waitFor(() => {
-      expect(result.current.updateForgottenPassword.data).toStrictEqual('updatePassword-response')
+      expect(result.current.updateForgottenPassword.data).toStrictEqual(true)
     })
   })
 })
