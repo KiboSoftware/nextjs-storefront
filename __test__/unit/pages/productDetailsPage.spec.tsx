@@ -24,6 +24,7 @@ jest.mock('next/router', () => ({
     isFallback: isFallback,
     query: { productSlug: ['SHOE12'] },
     asPath: '/product/SHOE12',
+    replace: jest.fn(),
   }),
 }))
 
@@ -147,13 +148,12 @@ describe('[page] Product Details Page', () => {
     expect(screen.getByTestId(/productDetailSkeleton-mock/)).toBeVisible()
   })
 
-  //TODO: fix this test with other conditions in routeHandle
-  // it('should render the ProductDetail page template if isFallback is false', () => {
-  //   isFallback = false
-  //   ProductDetailPage.defaultProps = { product: mockProduct }
-  //   render(<ProductDetailPage />)
+  it('should render the ProductDetail page template if isFallback is false', () => {
+    isFallback = false
+    ProductDetailPage.defaultProps = { product: mockProduct }
+    render(<ProductDetailPage />)
 
-  //   const productDetailTemplate = screen.getByText('productDetailTemplate-mock')
-  //   expect(productDetailTemplate).toBeVisible()
-  // })
+    const productDetailTemplate = screen.getByTestId('productDetailTemplate-mock')
+    expect(productDetailTemplate).toBeVisible()
+  })
 })
