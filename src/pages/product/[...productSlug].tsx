@@ -60,7 +60,6 @@ const routeHandle = (router: NextRouter, product: Product) => {
   const firstQueryParam = router?.query?.productSlug?.length && router.query?.productSlug[0]
   const { productSlug } = router.query
   const { seoFriendlyUrl } = product?.content || {}
-  console.log(router.asPath, 'router.asPath')
   let correctPath = router.asPath
 
   if (seoFriendlyUrl) {

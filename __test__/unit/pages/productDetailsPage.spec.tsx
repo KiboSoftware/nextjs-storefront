@@ -76,9 +76,15 @@ jest.mock('@/lib/api/operations', () => ({
           items: [
             {
               productCode: 'mocked-productCode-1',
+              content: {
+                seoFriendlyUrl: 'mocked-seoFriendlyUrl-1',
+              },
             },
             {
               productCode: 'mocked-productCode-2',
+              content: {
+                seoFriendlyUrl: 'mocked-seoFriendlyUrl-2',
+              },
             },
           ],
         },
@@ -118,7 +124,10 @@ describe('[page] Product Details Page', () => {
   it('should run getStaticPaths method', () => {
     const response = getStaticPaths()
     expect(response).resolves.toStrictEqual({
-      paths: [`/product/mocked-productCode-1`, `/product/mocked-productCode-2`],
+      paths: [
+        `/product/mocked-seoFriendlyUrl-1/mocked-productCode-1`,
+        `/product/mocked-seoFriendlyUrl-2/mocked-productCode-2`,
+      ],
       fallback: true,
     })
   })
