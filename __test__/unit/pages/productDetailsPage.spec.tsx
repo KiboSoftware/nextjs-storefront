@@ -3,7 +3,10 @@ import { render, screen } from '@testing-library/react'
 import { NextApiRequest } from 'next'
 
 import { categoryTreeDataMock, productSearchResultMock } from '@/__mocks__/stories'
-import ProductDetailPage, { getStaticPaths, getStaticProps } from '@/pages/product/[...productSlug]'
+import ProductDetailPage, {
+  getStaticPaths,
+  getStaticProps,
+} from '@/src/pages/product/[...productSlug]'
 
 const mockCategoryTreeData = categoryTreeDataMock
 const mockProduct = productSearchResultMock.items?.[0]
