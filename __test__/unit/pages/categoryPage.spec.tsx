@@ -130,6 +130,19 @@ describe('[page] Category Page', () => {
       revalidate: 60,
     })
   })
+
+  it.only('should return 404 if category slugs length > 2', async () => {
+    const context = {
+      params: {
+        categorySlug: ['en', 'gift-card', '40'],
+      },
+      req: {} as NextApiRequest,
+      locale: 'mock-locale',
+    }
+    const response = await getStaticProps(context)
+    expect(response).toStrictEqual({ notFound: true })
+  })
+
   it('should render the Category page template', () => {
     render(<CategoryPage {...categoryTypeProps} />, {
       wrapper: createQueryClientWrapper(),
