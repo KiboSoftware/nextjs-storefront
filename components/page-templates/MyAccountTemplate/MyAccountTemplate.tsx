@@ -65,6 +65,13 @@ const style = {
     cursor: 'pointer',
     alignItems: 'center',
   },
+  accountCircleBox: {
+    display: { xs: 'flex' },
+    flexDirection: { xs: 'column', md: 'row' },
+    justifyContent: { xs: 'center', md: 'start' },
+    alignItems: 'center',
+    margin: { xs: '1rem', md: '2rem 0' },
+  },
   accountCircle: {
     fontSize: {
       md: '2.7rem',
@@ -107,10 +114,6 @@ const MyAccountTemplate = () => {
     router.push('/my-account/order-history?filters=M-6')
   }
 
-  const handleGoToSubscription = useCallback(() => {
-    router.push('/my-account/subscription')
-  }, [router])
-
   const handleSave = async (
     address: BillingAddress,
     card: CardType,
@@ -142,21 +145,36 @@ const MyAccountTemplate = () => {
 
   const accordionData = [
     {
-      id: 'my-profile-accordion',
-      controls: 'my-profile-content',
-      header: t('my-profile'),
+      id: 'account-information-accordion',
+      controls: 'account-information-content',
+      header: t('account-information'),
       component: <MyProfile user={user as CustomerAccount} />,
+      path: null,
     },
     {
-      id: 'address-book-accordion',
-      controls: 'address-book-content',
-      header: t('address-book'),
+      id: 'account-hierarchy-accordion',
+      controls: 'account-hierarchy-content',
+      header: t('account-hierarchy'),
+      component: null,
+      path: null,
+    },
+    {
+      id: 'users-accordion',
+      controls: 'users-content',
+      header: t('users'),
+      component: null,
+      path: '/my-account/users',
+    },
+    {
+      id: 'shipping-information-accordion',
+      controls: 'shipping-information-content',
+      header: t('shipping-information'),
       component: <AddressBook user={user as CustomerAccount} contacts={contacts} />,
     },
     {
-      id: 'payment-method-accordion',
-      controls: 'payment-method-content',
-      header: t('payment-method'),
+      id: 'payment-information-accordion',
+      controls: 'payment-information-content',
+      header: t('payment-information'),
       component: (
         <PaymentMethod
           user={user as CustomerAccount}
@@ -165,6 +183,13 @@ const MyAccountTemplate = () => {
           onSave={handleSave}
         />
       ),
+    },
+    {
+      id: 'custom-attributes-accordion',
+      controls: 'custom-attributes-content',
+      header: t('custom-attributes'),
+      component: null,
+      path: null,
     },
   ]
 
@@ -177,6 +202,15 @@ const MyAccountTemplate = () => {
             {t('back')}
           </Link>
         )}
+        <Box sx={{ ...style.accountCircleBox }}>
+          <AccountCircle sx={{ ...style.accountCircle }} />
+          <Typography
+            variant={mdScreen ? 'h1' : 'h2'}
+            sx={{ paddingLeft: { md: '0.5rem', xs: 0 } }}
+          >
+            {t('KiboUSA')}
+          </Typography>
+        </Box>
         <Box
           sx={{
             display: { md: 'flex', xs: 'block' },
@@ -184,14 +218,14 @@ const MyAccountTemplate = () => {
             ...style.myAccountChildren,
           }}
         >
-          <Box sx={{ display: { xs: 'flex' }, justifyContent: { xs: 'center' } }}>
+          {/* <Box sx={{ display: { xs: 'flex' }, justifyContent: { xs: 'center' } }}>
             <AccountCircle sx={{ ...style.accountCircle }} />
-          </Box>
+          </Box> */}
           <Typography
             variant={mdScreen ? 'h1' : 'h2'}
             sx={{ paddingLeft: { md: '0.5rem', xs: 0 } }}
           >
-            {t('my-account')}
+            {t('account')}
           </Typography>
         </Box>
         <Divider sx={{ borderColor: 'grey.500' }} />
@@ -201,14 +235,15 @@ const MyAccountTemplate = () => {
             <Box key={data.id}>
               <Accordion disableGutters sx={{ ...style.accordion }}>
                 <AccordionSummary
-                  expandIcon={<ExpandMoreIcon sx={{ ...style.expandedIcon }} />}
+                  onClick={() => data.path && router.push(data.path)}
+                  expandIcon={data.component && <ExpandMoreIcon sx={{ ...style.expandedIcon }} />}
                   aria-controls={data.controls}
                   id={data.id}
                   sx={{ ...style.accordionSummary }}
                 >
                   <Typography variant="h3">{data.header}</Typography>
                 </AccordionSummary>
-                <AccordionDetails>{data.component}</AccordionDetails>
+                {data.component && <AccordionDetails>{data.component}</AccordionDetails>}
               </Accordion>
               <Divider sx={{ borderColor: 'grey.500' }} />
             </Box>
@@ -216,24 +251,19 @@ const MyAccountTemplate = () => {
         })}
 
         <Box sx={{ ...style.myAccountChildren }}>
-          <Typography variant={mdScreen ? 'h1' : 'h2'}>{t('order-details')}</Typography>
+          <Typography variant={mdScreen ? 'h1' : 'h2'}>{t('orders')}</Typography>
         </Box>
 
-        {/* code for subscription below */}
         <Divider sx={{ borderColor: 'grey.500' }} />
-        {isSubscriptionEnabled && (
-          <Box
-            sx={{
-              ...style.myAccountChildren,
-              ...style.orderHistory,
-            }}
-            onClick={handleGoToSubscription}
-          >
-            <Typography variant="h3">{t('my-subscription')}</Typography>
-            <ChevronRightIcon />
-          </Box>
-        )}
-        {/* code for subscription ends here */}
+        <Box
+          sx={{
+            ...style.myAccountChildren,
+            ...style.orderHistory,
+          }}
+        >
+          <Typography variant="h3">{t('quick-order')}</Typography>
+          <ChevronRightIcon />
+        </Box>
 
         <Divider sx={{ borderColor: 'grey.500' }} />
         <Box
@@ -246,6 +276,40 @@ const MyAccountTemplate = () => {
           <Typography variant="h3">{t('order-history')}</Typography>
           <ChevronRightIcon />
         </Box>
+
+        <Divider sx={{ borderColor: 'grey.500' }} />
+        <Box
+          sx={{
+            ...style.myAccountChildren,
+            ...style.orderHistory,
+          }}
+        >
+          <Typography variant="h3">{t('returns')}</Typography>
+          <ChevronRightIcon />
+        </Box>
+
+        <Divider sx={{ borderColor: 'grey.500' }} />
+        <Box
+          sx={{
+            ...style.myAccountChildren,
+            ...style.orderHistory,
+          }}
+        >
+          <Typography variant="h3">{t('quotes')}</Typography>
+          <ChevronRightIcon />
+        </Box>
+
+        <Divider sx={{ borderColor: 'grey.500' }} />
+        <Box
+          sx={{
+            ...style.myAccountChildren,
+            ...style.orderHistory,
+          }}
+        >
+          <Typography variant="h3">{t('lists')}</Typography>
+          <ChevronRightIcon />
+        </Box>
+
         <Divider sx={{ backgroundColor: 'grey.300', ...style.divider }} />
         <Box sx={{ ...style.myAccountChildren, cursor: 'pointer' }} onClick={logout}>
           <Typography variant="h3">{t('logout')}</Typography>
