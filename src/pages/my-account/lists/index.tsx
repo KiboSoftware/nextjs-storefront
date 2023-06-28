@@ -10,6 +10,8 @@ import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
 // import CreateWishlist from '@/components/wishlist/CreateWishlist/createWishlist'
 // import Wishlist from '@/components/wishlist/wishlist'
 
+import Lists from '@/components/my-account/Lists/Lists'
+
 import type { GetServerSideProps, GetServerSidePropsContext, NextPage } from 'next'
 
 export const getServerSideProps: GetServerSideProps = async (
@@ -50,8 +52,8 @@ const ListsPage: NextPage = () => {
   const [editForm, setEditForm] = useState(false)
   const router = useRouter()
   const theme = useTheme()
-  const mdScreen = useMediaQuery<any>(theme.breakpoints.up('md'))
-  const smScreen = useMediaQuery<any>(theme.breakpoints.up('sm'))
+  const mdScreen = useMediaQuery<boolean>(theme.breakpoints.up('md'))
+  const smScreen = useMediaQuery<boolean>(theme.breakpoints.up('sm'))
 
   if (!openForm) {
     return (
@@ -107,8 +109,7 @@ const ListsPage: NextPage = () => {
               </Button>
             </div>
           )}
-          {/* <Wishlist handleEditForm={setEditForm} /> */}
-          <h1>Wishlist</h1>
+          <Lists handleEditForm={setEditForm} />
         </Grid>
         {/* <ReactQueryDevtools initialIsOpen={false} /> */}
       </Grid>
@@ -120,7 +121,7 @@ const ListsPage: NextPage = () => {
       <Grid xs={12}>
         {/* <CreateWishlist handleCreateWishlist={setOpenForm} /> */}
         {/* <ReactQueryDevtools initialIsOpen={false} /> */}
-        <h1>Create Wishlist</h1>
+        <h1>Work In Progress</h1>
       </Grid>
     </Grid>
   )
