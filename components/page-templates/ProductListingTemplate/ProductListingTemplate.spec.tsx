@@ -11,41 +11,19 @@ import { categoryFacetDataMock } from '@/__mocks__/stories/categoryFacetDataMock
 const { Category } = composeStories(stories)
 
 const KiboBreadcrumbsMock = () => <div data-testid="breadcrumb-component" />
-//const CategoryFacetMock = () => <div data-testid="category-facet-component" />
-// const FiltersFacetMock = () => <div data-testid="filters-facet-component" />
-// const CategoryFilterByMobileMock = () => <div data-testid="category-filterby-mobile-component" />
-// const ProductCardMock = () => <div data-testid="product-card-component" />
+const CategoryFacetMock = () => <div data-testid="category-facet-component" />
+const FiltersFacetMock = () => <div data-testid="filters-facet-component" />
+const CategoryFilterByMobileMock = () => <div data-testid="category-filterby-mobile-component" />
+const ProductCardMock = () => <div data-testid="product-card-component" />
 
-jest.mock('next/dynamic', () => {
-  const CategoryFacet = () => <div data-testid="category-facet-component" />
-  CategoryFacet.displayName = 'CategoryFacet'
-  return jest.fn().mockImplementation(() => CategoryFacet)
-})
-jest.mock('next/dynamic', () => {
-  const FacetList = () => <div data-testid="filters-facet-component" />
-  FacetList.displayName = 'FacetList'
-  return jest.fn().mockImplementation(() => FacetList)
-})
-jest.mock('next/dynamic', () => {
-  const CategoryFilterByMobile = () => <div data-testid="category-filterby-mobile-component" />
-  CategoryFilterByMobile.displayName = 'CategoryFilterByMobile'
-  return jest.fn().mockImplementation(() => CategoryFilterByMobile)
-})
-
-jest.mock('next/dynamic', () => {
-  const ProductCard = () => <div data-testid="product-card-component" />
-  ProductCard.displayName = 'ProductCard'
-  return jest.fn().mockImplementation(() => ProductCard)
-})
-
-// jest.mock('../../product-listing/CategoryFacet/CategoryFacet', () => () => CategoryFacetMock())
-// jest.mock(
-//   '../../product-listing/CategoryFilterByMobile/CategoryFilterByMobile',
-//   () => () => CategoryFilterByMobileMock()
-// )
-// jest.mock('../../product-listing/FacetList/FacetList', () => () => FiltersFacetMock())
+jest.mock('../../product-listing/CategoryFacet/CategoryFacet', () => () => CategoryFacetMock())
+jest.mock(
+  '../../product-listing/CategoryFilterByMobile/CategoryFilterByMobile',
+  () => () => CategoryFilterByMobileMock()
+)
+jest.mock('../../product-listing/FacetList/FacetList', () => () => FiltersFacetMock())
 jest.mock('../../core/Breadcrumbs/KiboBreadcrumbs', () => () => KiboBreadcrumbsMock())
-// jest.mock('../../product/ProductCard/ProductCard', () => () => ProductCardMock())
+jest.mock('../../product/ProductCard/ProductCard', () => () => ProductCardMock())
 
 jest.mock('next/config', () => {
   return () => ({
@@ -71,7 +49,7 @@ jest.mock('next/config', () => {
   })
 })
 
-describe('[component] - Category', () => {
+describe('[component] - Product Listing Template', () => {
   const setup = (params?: ProductListingTemplateProps) => {
     const user = userEvent.setup()
     const props = params ? params : Category.args
@@ -94,14 +72,14 @@ describe('[component] - Category', () => {
     }
   }
 
-  it.skip('should render component', async () => {
+  it('should render component', async () => {
     const { user } = setup()
 
     const breadCrumbComponent = screen.getByTestId('breadcrumb-component')
     const header = screen.getByRole('heading', { level: 1 })
     const viewText = screen.getAllByText(/view/i)
-    // const sortByText = screen.getByText(/sort-by/i)
-    // const categoryFacetComponent = screen.getAllByTestId('category-facet-component')
+    const sortByText = screen.getByText(/sort-by/i)
+    const categoryFacetComponent = screen.getAllByTestId('category-facet-component')
     const filtersFacetComponent = screen.getByTestId('filters-facet-component')
     const showMoreButton = screen.getByRole('button', { name: /show-more/i })
     const sortingValues = Category?.args?.sortingValues?.options?.map((sort) => sort.value) || []
@@ -126,8 +104,8 @@ describe('[component] - Category', () => {
     expect(breadCrumbComponent).toBeInTheDocument()
     expect(header).toHaveTextContent(Category.args?.productListingHeader || '')
     expect(viewText[0]).toBeVisible()
-    // expect(sortByText).toBeVisible()
-    // expect(categoryFacetComponent[0]).toBeInTheDocument()
+    expect(sortByText).toBeVisible()
+    expect(categoryFacetComponent[0]).toBeInTheDocument()
     expect(filtersFacetComponent).toBeInTheDocument()
     expect(showMoreButton).toBeVisible()
   })
@@ -154,7 +132,7 @@ describe('[component] - Category', () => {
     })
   })
 
-  it.skip('should call onSortItemSelection function when user clicks on sorting', async () => {
+  it('should call onSortItemSelection function when user clicks on sorting', async () => {
     const { user, onSortItemSelectionMock } = setup()
 
     const sortingValuesOptions =
@@ -184,29 +162,30 @@ describe('[component] - Category', () => {
   })
 
   it('shoutd hide the show more button when pageSize is greater than or equal to totalResults', () => {
-    const params = {
-      breadCrumbsList: [
-        {
-          text: 'Home',
-          link: '/',
-        },
-        {
-          text: 'Mens',
-          link: '/mens',
-        },
-        {
-          text: 'Pants',
-          link: '/mens/pants',
-        },
-      ],
-      productListingHeader: 'Apparel',
-      categoryFacet: categoryFacetDataMock,
-      totalResults: 30,
-      appliedFilters: [],
-      pageSize: 30,
-      onSortItemSelection: (value: string) => ({ value }),
-      onPaginationChange: () => ({}),
-    }
+    // const params = {
+    //   breadCrumbsList: [
+    //     {
+    //       text: 'Home',
+    //       link: '/',
+    //     },
+    //     {
+    //       text: 'Mens',
+    //       link: '/mens',
+    //     },
+    //     {
+    //       text: 'Pants',
+    //       link: '/mens/pants',
+    //     },
+    //   ],
+    //   productListingHeader: 'Apparel',
+    //   categoryFacet: categoryFacetDataMock,
+    //   totalResults: 30,
+    //   appliedFilters: [],
+    //   pageSize: 30,
+    //   onSortItemSelection: (value: string) => ({ value }),
+    //   onPaginationChange: (value: string) => ({ value }),
+    // }
+    //TODO: write separate test for pagination
     // setup(params)
 
     const showMoreButton = screen.queryByRole('button', { name: /show-more/i })

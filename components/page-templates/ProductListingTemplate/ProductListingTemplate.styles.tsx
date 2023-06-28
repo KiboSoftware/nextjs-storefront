@@ -103,6 +103,7 @@ export const PLPStyles = {
     width: { md: '15.625rem', xs: '10.75rem' },
   },
   sorting: {
+    display: 'flex',
     minWidth: { md: '11.875rem', xs: '9.313rem' },
     marginTop: { xs: '0.5rem', md: '0' },
   },

@@ -5,14 +5,21 @@ import Apps from '@mui/icons-material/Apps'
 import ReorderRounded from '@mui/icons-material/ReorderRounded'
 import { Grid, MenuItem, Box, Button, Link, Typography, Breadcrumbs, Stack } from '@mui/material'
 import getConfig from 'next/config'
-import dynamic from 'next/dynamic'
 import { useTranslation } from 'next-i18next'
 
 import { PLPStyles } from './ProductListingTemplate.styles'
-import { FullWidthDivider } from '@/components/common'
+import { FilterTiles, FullWidthDivider, KiboPagination, KiboSelect } from '@/components/common'
 import { KiboBreadcrumbs } from '@/components/core'
-import { ProductCardListViewProps } from '@/components/product/ProductCardListView/ProductCardListView'
-import { FacetSkeleton } from '@/components/product-listing'
+import { ProductCard } from '@/components/product'
+import ProductCardListView, {
+  ProductCardListViewProps,
+} from '@/components/product/ProductCardListView/ProductCardListView'
+import {
+  CategoryFacet,
+  CategoryFilterByMobile,
+  FacetList,
+  FacetSkeleton,
+} from '@/components/product-listing'
 import type { CategoryFacetData } from '@/components/product-listing/CategoryFacet/CategoryFacet'
 import { useProductCardActions, useUpdateRoutes } from '@/hooks'
 import { productGetters } from '@/lib/getters'
@@ -25,23 +32,6 @@ import type {
 } from '@/lib/types'
 
 import type { Facet as FacetType, FacetValue, Product } from '@/lib/gql/types'
-
-const ProductCardListView = dynamic(() =>
-  import('@/components/product').then((mod) => mod.ProductCardListView)
-)
-const ProductCard = dynamic(() => import('@/components/product').then((mod) => mod.ProductCard))
-const CategoryFilterByMobile = dynamic(() =>
-  import('@/components/product-listing').then((mod) => mod.CategoryFilterByMobile)
-)
-const CategoryFacet = dynamic(() =>
-  import('@/components/product-listing').then((mod) => mod.CategoryFacet)
-)
-const FacetList = dynamic(() => import('@/components/product-listing').then((mod) => mod.FacetList))
-const FilterTiles = dynamic(() => import('@/components/common').then((mod) => mod.FilterTiles))
-const KiboSelect = dynamic(() => import('@/components/common').then((mod) => mod.KiboSelect))
-const KiboPagination = dynamic(() =>
-  import('@/components/common').then((mod) => mod.KiboPagination)
-)
 
 interface SortingValues {
   value: string
@@ -119,7 +109,6 @@ const ProductListingTemplate = (props: ProductListingTemplateProps) => {
   // const { showModal } = useModalContext()
 
   const handleFilterBy = () => setFilterBy(!showFilterBy)
-  const showFacetList = facetList && facetList?.length > 0
 
   const showCategoryFacet =
     categoryFacet.header ||
@@ -260,6 +249,14 @@ const ProductListingTemplate = (props: ProductListingTemplateProps) => {
 
                   <Box sx={{ ...PLPStyles.navBarSort }}>
                     <Box sx={{ ...PLPStyles.sorting }}>
+                      <Typography
+                        component="span"
+                        variant="body2"
+                        pt={0.4}
+                        sx={{ ...PLPStyles.navBarLabel }}
+                      >
+                        {t('sort-by')}
+                      </Typography>
                       <KiboSelect
                         name="sort-plp"
                         sx={{ typography: 'body2' }}
