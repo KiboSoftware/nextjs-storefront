@@ -3,7 +3,7 @@ import getConfig from 'next/config'
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
 
 import { OrderConfirmation } from '@/components/order'
-import { getCheckout, getMultiShipCheckout } from '@/lib/api/operations/'
+import { getCheckout, getMultiShipCheckout } from '@/lib/api/operations'
 
 import { CrOrder } from '@/lib/gql/types'
 import type { NextPage, GetServerSidePropsContext, NextApiRequest, NextApiResponse } from 'next'
