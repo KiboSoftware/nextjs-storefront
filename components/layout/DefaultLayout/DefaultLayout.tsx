@@ -5,13 +5,10 @@ import CssBaseline from '@mui/material/CssBaseline'
 import { ThemeProvider } from '@mui/material/styles'
 import { HydrationBoundary } from '@tanstack/react-query'
 import creditCardType from 'credit-card-type'
-import dynamic from 'next/dynamic'
 import Router from 'next/router'
 
-const Footer = dynamic(() => import('@/components/layout').then((mod) => mod.Footer), {
-  ssr: false,
-})
 import { GlobalFetchingIndicator } from '@/components/common'
+import { Footer } from '@/components/layout'
 import { KiboHeader } from '@/components/layout'
 import {
   AuthContextProvider,

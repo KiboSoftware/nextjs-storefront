@@ -1,15 +1,12 @@
 import { useEffect, useState } from 'react'
 
 import getConfig from 'next/config'
-import dynamic from 'next/dynamic'
 import Head from 'next/head'
 import { useRouter } from 'next/router'
 import { useTranslation } from 'next-i18next'
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
 
-const ProductListingTemplate = dynamic(() =>
-  import('@/components/page-templates').then((mod) => mod.ProductListingTemplate)
-)
+import { ProductListingTemplate } from '@/components/page-templates'
 import { useGetSearchedProducts } from '@/hooks'
 import { productSearch } from '@/lib/api/operations'
 import { facetGetters, productSearchGetters } from '@/lib/getters'

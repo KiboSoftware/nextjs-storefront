@@ -16,12 +16,13 @@ import {
   Tooltip,
 } from '@mui/material'
 import getConfig from 'next/config'
-import dynamic from 'next/dynamic'
 import { useTranslation } from 'next-i18next'
 import { useReCaptcha } from 'next-recaptcha-v3'
 import { Controller, useForm } from 'react-hook-form'
 import * as yup from 'yup'
 
+import { CardDetailsForm } from '@/components/checkout'
+import { AddressForm, KiboTextBox } from '@/components/common'
 import { KiboRadio } from '@/components/common'
 import { PaymentBillingCard } from '@/components/common'
 import { useCheckoutStepContext, STEP_STATUS, useAuthContext, useSnackbarContext } from '@/context'
@@ -56,17 +57,6 @@ import type {
   Checkout,
   CuAddress,
 } from '@/lib/gql/types'
-
-const AddressForm = dynamic(() => import('@/components/common').then((mod) => mod.AddressForm), {
-  ssr: false,
-})
-const KiboTextBox = dynamic(() => import('@/components/common').then((mod) => mod.KiboTextBox), {
-  ssr: false,
-})
-const CardDetailsForm = dynamic(
-  () => import('@/components/checkout').then((mod) => mod.CardDetailsForm),
-  { ssr: false }
-)
 
 interface PaymentStepProps {
   checkout: CrOrder | Checkout

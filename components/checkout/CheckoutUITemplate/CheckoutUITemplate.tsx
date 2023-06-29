@@ -3,20 +3,14 @@ import React, { useCallback } from 'react'
 import { Box, Stack, Button, SxProps } from '@mui/material'
 import { Theme } from '@mui/material/styles'
 import getConfig from 'next/config'
-import dynamic from 'next/dynamic'
 import { useRouter } from 'next/router'
 import { useTranslation } from 'next-i18next'
 import { ReCaptchaProvider } from 'next-recaptcha-v3'
 
-import { KiboStepper } from '@/components/checkout'
-import { OrderSummary } from '@/components/common'
+import { KiboStepper, OrderReview } from '@/components/checkout'
+import { OrderSummary, PromoCodeBadge } from '@/components/common'
 import { useCheckoutStepContext, STEP_STATUS } from '@/context'
 import { checkoutGetters, orderGetters } from '@/lib/getters'
-
-const OrderReview = dynamic(() => import('@/components/checkout').then((mod) => mod.OrderReview))
-const PromoCodeBadge = dynamic(() =>
-  import('@/components/common').then((mod) => mod.PromoCodeBadge)
-)
 
 import type { Checkout, CrOrder } from '@/lib/gql/types'
 

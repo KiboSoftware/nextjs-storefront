@@ -14,17 +14,17 @@ import {
   FormControl,
   SxProps,
 } from '@mui/material'
-import dynamic from 'next/dynamic'
 import { useTranslation } from 'next-i18next'
 import { useForm, Controller } from 'react-hook-form'
 import * as yup from 'yup'
 
-import { OrderPrice, ProductItem, ProductItemList } from '@/components/common'
-const PasswordValidation = dynamic(
-  () => import('@/components/common').then((mod) => mod.PasswordValidation),
-  { ssr: false }
-)
-const KiboTextBox = dynamic(() => import('@/components/common').then((mod) => mod.KiboTextBox))
+import {
+  OrderPrice,
+  ProductItem,
+  ProductItemList,
+  PasswordValidation,
+  KiboTextBox,
+} from '@/components/common'
 import type { OrderPriceProps } from '@/components/common/OrderPrice/OrderPrice'
 import { useCheckoutStepContext, useAuthContext } from '@/context'
 import { useUpdateUserOrder } from '@/hooks'

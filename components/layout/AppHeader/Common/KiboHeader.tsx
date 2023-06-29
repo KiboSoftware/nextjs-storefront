@@ -16,49 +16,27 @@ import {
   styled,
 } from '@mui/material'
 import getConfig from 'next/config'
-import dynamic from 'next/dynamic'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
 import { useTranslation } from 'next-i18next'
 
-import { KiboLogo } from '@/components/common'
-import { AccountIcon, CartIcon, StoreFinderIcon } from '@/components/layout'
+import { HeaderAction, KiboLogo } from '@/components/common'
+import {
+  MegaMenu,
+  SearchSuggestions,
+  MobileHeader,
+  StoreFinderIcon,
+  AccountIcon,
+  CartIcon,
+  HamburgerMenu,
+  LoginDialog,
+  CheckoutHeader,
+} from '@/components/layout'
 import { useAuthContext, useHeaderContext, useModalContext } from '@/context'
 import { useGetCategoryTree } from '@/hooks'
 import type { NavigationLink } from '@/lib/types'
 
 import type { Maybe, PrCategory } from '@/lib/gql/types'
-
-const HeaderAction = dynamic(() => import('@/components/common').then((mod) => mod.HeaderAction), {
-  ssr: false,
-})
-const MegaMenu = dynamic(() => import('@/components/layout').then((mod) => mod.MegaMenu), {
-  ssr: false,
-})
-const HamburgerMenu = dynamic(
-  () => import('@/components/layout').then((mod) => mod.HamburgerMenu),
-  {
-    ssr: false,
-  }
-)
-const SearchSuggestions = dynamic(
-  () => import('@/components/layout').then((mod) => mod.SearchSuggestions),
-  {
-    ssr: false,
-  }
-)
-const MobileHeader = dynamic(() => import('@/components/layout').then((mod) => mod.MobileHeader), {
-  ssr: false,
-})
-const LoginDialog = dynamic(() => import('@/components/layout').then((mod) => mod.LoginDialog), {
-  ssr: false,
-})
-const CheckoutHeader = dynamic(
-  () => import('@/components/layout').then((mod) => mod.CheckoutHeader),
-  {
-    ssr: false,
-  }
-)
 
 interface KiboHeaderProps {
   navLinks: NavigationLink[]

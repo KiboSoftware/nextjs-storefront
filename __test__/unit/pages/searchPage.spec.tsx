@@ -30,12 +30,11 @@ jest.mock('next-i18next/serverSideTranslations', () => ({
   }),
 }))
 
-jest.mock('next/dynamic', () => {
-  const ProductListingTemplate = () => <div data-testid="productListingTemplate-mock" />
-  ProductListingTemplate.displayName = 'ProductListingTemplate'
-
-  return jest.fn().mockImplementation(() => ProductListingTemplate)
-})
+const ProductListingTemplate = () => <div data-testid="productListingTemplate-mock" />
+jest.mock(
+  '@/components/page-templates/ProductListingTemplate/ProductListingTemplate.tsx',
+  () => () => ProductListingTemplate()
+)
 
 jest.mock('@/lib/api/util/getUserClaimsFromRequest.ts', () => jest.fn(() => null))
 
