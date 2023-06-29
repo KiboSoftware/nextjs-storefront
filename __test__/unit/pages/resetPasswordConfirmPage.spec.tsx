@@ -37,14 +37,13 @@ jest.mock('next-i18next/serverSideTranslations', () => ({
   }),
 }))
 
-jest.mock('next/dynamic', () => {
-  const ResetPasswordConfirmationTemplate = () => (
-    <div data-testid="reset-password-confirm-template-mock" />
-  )
-  ResetPasswordConfirmationTemplate.displayName = 'ResetPasswordConfirmationTemplate'
-
-  return jest.fn().mockImplementation(() => ResetPasswordConfirmationTemplate)
-})
+const ResetPasswordConfirmationTemplate = () => (
+  <div data-testid="reset-password-confirm-template-mock" />
+)
+jest.mock(
+  '@/components/page-templates/ResetPasswordConfirmationTemplate/ResetPasswordConfirmationTemplate.tsx',
+  () => () => ResetPasswordConfirmationTemplate()
+)
 
 jest.mock('@/lib/api/util/getUserClaimsFromRequest.ts', () => jest.fn(() => null))
 

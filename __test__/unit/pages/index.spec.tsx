@@ -1,6 +1,6 @@
 import { categoryTreeDataMock } from '@/__mocks__/stories/categoryTreeDataMock'
 import { homePageResultMock } from '@/__mocks__/stories/homePageResultMock'
-import { getServerSideProps } from '@/pages/index'
+import { getStaticProps } from '@/pages/index'
 
 const mockCategoryTreeData = categoryTreeDataMock
 const mockHomePageResult = homePageResultMock || []
@@ -51,13 +51,13 @@ jest.mock('next-i18next/serverSideTranslations', () => ({
 }))
 
 describe('Home', () => {
-  it('should run getServerSideProps method', () => {
+  it('should run getStaticProps method', () => {
     const context = {
       params: {},
       locale: 'mock-locale',
     }
 
-    const response = getServerSideProps(context)
+    const response = getStaticProps(context)
     expect(response).resolves.toStrictEqual({
       props: {
         _nextI18Next: {

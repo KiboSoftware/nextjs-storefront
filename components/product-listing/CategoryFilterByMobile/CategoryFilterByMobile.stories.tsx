@@ -40,5 +40,6 @@ SkeletonLoading.parameters = {
 }
 SkeletonLoading.args = {
   isLoading: true,
+  header: 'Apparel',
   facetList: productSearchResultMock?.facets as Facet[],
 }

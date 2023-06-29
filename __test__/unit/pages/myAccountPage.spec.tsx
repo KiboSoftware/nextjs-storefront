@@ -35,12 +35,11 @@ jest.mock('next-i18next/serverSideTranslations', () => ({
   }),
 }))
 
-jest.mock('next/dynamic', () => {
-  const MyAccountTemplate = () => <div data-testid="MyAccountTemplate-mock" />
-  MyAccountTemplate.displayName = 'MyAccountTemplate'
-
-  return jest.fn().mockImplementation(() => MyAccountTemplate)
-})
+const MyAccountTemplateMock = () => <div data-testid="MyAccountTemplate-mock" />
+jest.mock(
+  '@/components/page-templates/MyAccountTemplate/MyAccountTemplate.tsx',
+  () => () => MyAccountTemplateMock()
+)
 
 describe('[page] MyAccount Page', () => {
   it('should run getServerSideProps method', async () => {
