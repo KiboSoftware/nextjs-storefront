@@ -2,13 +2,10 @@ import dynamic from 'next/dynamic'
 import { useRouter } from 'next/router'
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
 
+import { ResetPasswordConfirmationTemplate } from '@/components/page-templates'
 import { getCustomerAccount } from '@/lib/api/operations'
 
 import type { NextPage } from 'next'
-
-const ResetPasswordConfirmationTemplate = dynamic(() =>
-  import('@/components/page-templates').then((mod) => mod.ResetPasswordConfirmationTemplate)
-)
 
 export async function getServerSideProps(context: any) {
   const { locale, query, req } = context

@@ -3,7 +3,6 @@ import React from 'react'
 import { CacheProvider, EmotionCache } from '@emotion/react'
 // eslint-disable-next-line import/order
 import { AppProps } from 'next/app'
-import dynamic from 'next/dynamic'
 import Head from 'next/head'
 import { appWithTranslation } from 'next-i18next'
 import 'next-i18next.config'
@@ -11,10 +10,11 @@ import 'next-i18next.config'
 import Router from 'next/router'
 import NProgress from 'nprogress'
 
+import { DefaultLayout } from '@/components/layout'
 import { RQNotificationContextProvider } from '@/context'
 import createEmotionCache from '@/lib/createEmotionCache'
-const DefaultLayout = dynamic(() => import('@/components/layout').then((mod) => mod.DefaultLayout))
 import type { NextPageWithLayout } from '@/lib/types'
+
 import '@/styles/global.css'
 
 // Client-side cache, shared for the whole session of the user in the browser.

@@ -6,10 +6,10 @@ import dynamic from 'next/dynamic'
 import { useTranslation } from 'next-i18next'
 import { useReCaptcha } from 'next-recaptcha-v3'
 
-// const ShippingMethod = dynamic(() =>
-//   import('@/components/checkout').then((mod) => mod.ShippingMethod)
-// )
-import { ShippingMethod } from '@/components/checkout'
+const ShippingMethod = dynamic(() =>
+  import('@/components/checkout').then((mod) => mod.ShippingMethod)
+)
+
 import { AddressCard, AddressForm, KiboRadio } from '@/components/common'
 import { useCheckoutStepContext, STEP_STATUS, useSnackbarContext, useAuthContext } from '@/context'
 import {

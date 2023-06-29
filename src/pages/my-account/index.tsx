@@ -1,12 +1,8 @@
 import getConfig from 'next/config'
-import dynamic from 'next/dynamic'
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
 import { ReCaptchaProvider } from 'next-recaptcha-v3'
 
-const MyAccountTemplate = dynamic(() =>
-  import('@/components/page-templates').then((mod) => mod.MyAccountTemplate)
-)
-
+import { MyAccountTemplate } from '@/components/page-templates'
 import { useAuthContext } from '@/context'
 import { decodeParseCookieValue } from '@/lib/helpers'
 
