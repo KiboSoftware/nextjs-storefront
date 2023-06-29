@@ -27,6 +27,12 @@ fragment wishlistItem on CrWishlistItem {
 export const wishlist = /* GraphQL */ `
   fragment wishlist on CrWishlist {
     customerAccountId
+    auditInfo {
+      createDate
+      createBy
+      updateDate
+      updateBy
+    }
     name
     id
     items {
