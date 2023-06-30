@@ -60,7 +60,7 @@ describe('[components] Register Account Dialog', () => {
   it('email should display required field error when user focus out (blur event) the email field', async () => {
     setup()
 
-    let emailError = screen.queryByText(/this\-field\-is\-required/i)
+    let emailError = screen.queryByText(/this-field-is-required/i)
     expect(emailError).not.toBeInTheDocument()
 
     const emailInput = screen.getByRole('textbox', { name: /email/i })
@@ -70,7 +70,7 @@ describe('[components] Register Account Dialog', () => {
       fireEvent.blur(emailInput, { target: { value: '' } })
     })
 
-    emailError = screen.getByText(/this\-field\-is\-required/i)
+    emailError = screen.getByText(/this-field-is-required/i)
     expect(emailError).toBeVisible()
   })
 

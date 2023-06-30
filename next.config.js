@@ -137,7 +137,7 @@ module.exports = {
   serverRuntimeConfig: {
     currentUrl: process.env.CURRENT_DOMAIN,
     revalidate: process.env.GLOBAL_PAGE_REVALIDATE || 30,
-    pageSize: 500,
+    pageSize: 1000,
     cacheKey: 'categoryTree',
     cacheTimeOut: 10000,
     isMultiShipEnabled: false,

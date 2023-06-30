@@ -77,7 +77,7 @@ describe('[components] Login Dialog', () => {
   it("should display 'This field is required' error when user focus out (blur event) the Email field", async () => {
     const { user } = setup()
 
-    let emailError = screen.queryByText(/this\-field\-is\-required/i)
+    let emailError = screen.queryByText(/this-field-is-required/i)
     expect(emailError).not.toBeInTheDocument()
 
     const emailInput = screen.getByRole('textbox', { name: 'email' })
@@ -87,14 +87,14 @@ describe('[components] Login Dialog', () => {
       fireEvent.blur(emailInput, { target: { value: '' } })
     })
 
-    emailError = screen.getByText(/this\-field\-is\-required/i)
+    emailError = screen.getByText(/this-field-is-required/i)
     expect(emailError).toBeVisible()
   })
 
   it("should display 'Email must be a valid email' error when user enters invalid email", async () => {
     const { user } = setup()
 
-    let emailError = screen.queryByText(/email\-must\-be\-a\-valid\-email/i)
+    let emailError = screen.queryByText(/email-must-be-a-valid-email/i)
     expect(emailError).not.toBeInTheDocument()
 
     const emailInput = screen.getByRole('textbox', { name: 'email' })
@@ -104,7 +104,7 @@ describe('[components] Login Dialog', () => {
       await user.type(emailInput, 'xyz@ds')
     })
 
-    emailError = screen.getByText(/email\-must\-be\-a\-valid\-email/i)
+    emailError = screen.getByText(/email-must-be-a-valid-email/i)
     expect(emailError).toBeVisible()
   })
 

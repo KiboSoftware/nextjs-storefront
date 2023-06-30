@@ -15,7 +15,6 @@ import {
   ModalContextProvider,
   RQNotificationContextProvider,
   SnackbarRoot,
-  AuthContextProvider,
   AuthContext,
 } from '@/context'
 import { subscriptionGetters } from '@/lib/getters'

@@ -53,9 +53,9 @@ describe('[components] My Store Dialog integration', () => {
 
     const location = storeLocationGetters.getLocation(Common.args?.location as Maybe<Location>)
 
-    expect(await screen.findByText(location?.name || '')).toBeVisible()
-    expect(screen.getByText(location?.streetAddress?.trim() || '')).toBeVisible()
-    expect(screen.getByText(location?.cityState || '')).toBeVisible()
+    expect(await screen.findByText(location?.name as string)).toBeVisible()
+    expect(screen.getByText(location?.streetAddress?.trim() as string)).toBeVisible()
+    expect(screen.getByText(location?.cityState as string)).toBeVisible()
     expect(screen.getByText(/available/i)).toBeVisible()
     expect(screen.getByText(/store-info/i)).toBeVisible()
   })
