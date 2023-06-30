@@ -248,7 +248,7 @@ const OrderReview = (props: OrderReviewProps) => {
               >
                 <Box display={'flex'} gap={3}>
                   <KiboImage
-                    src={getCreditCardLogo(paymentMethod?.cardType as string)}
+                    src={getCreditCardLogo(paymentMethod?.cardType)}
                     alt={paymentMethod?.cardType}
                     width={45}
                     height={35}

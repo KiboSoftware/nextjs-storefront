@@ -11,11 +11,11 @@ import type { AddressValidationRequestInput } from '@/lib/gql/types'
 /**
  * @hidden
  */
-export interface validateCustomerAddressParams {
+export interface ValidateCustomerAddressParams {
   addressValidationRequestInput: AddressValidationRequestInput
 }
 
-const validateCustomerAddressDetails = async (params: validateCustomerAddressParams) => {
+const validateCustomerAddressDetails = async (params: ValidateCustomerAddressParams) => {
   const client = makeGraphQLClient()
 
   const response = await client.request({
@@ -33,7 +33,7 @@ const validateCustomerAddressDetails = async (params: validateCustomerAddressPar
  *
  * Description : Validate the customer's address.
  *
- * Parameters passed to function validateCustomerAddressDetails(params: validateCustomerAddressParams) => expects object of type validateCustomerAddressParams containing addressValidationRequestInput.
+ * Parameters passed to function validateCustomerAddressDetails(params: ValidateCustomerAddressParams) => expects object of type ValidateCustomerAddressParams containing addressValidationRequestInput.
  *
  * On success, calls invalidateQueries all addressKeys and fetches the updated result.
  *

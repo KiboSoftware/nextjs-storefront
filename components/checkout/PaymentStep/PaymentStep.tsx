@@ -22,9 +22,7 @@ import { Controller, useForm } from 'react-hook-form'
 import * as yup from 'yup'
 
 import { CardDetailsForm } from '@/components/checkout'
-import { AddressForm, KiboTextBox } from '@/components/common'
-import { KiboRadio } from '@/components/common'
-import { PaymentBillingCard } from '@/components/common'
+import { AddressForm, KiboTextBox, KiboRadio, PaymentBillingCard } from '@/components/common'
 import { useCheckoutStepContext, STEP_STATUS, useAuthContext, useSnackbarContext } from '@/context'
 import {
   useGetCards,

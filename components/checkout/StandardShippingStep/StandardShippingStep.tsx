@@ -14,8 +14,7 @@ import {
   useValidateCustomerAddress,
   useCreateCustomerAddress,
 } from '@/hooks'
-import { DefaultId } from '@/lib/constants'
-import { AddressType } from '@/lib/constants'
+import { DefaultId, AddressType } from '@/lib/constants'
 import { orderGetters, userGetters } from '@/lib/getters'
 import { buildAddressParams } from '@/lib/helpers'
 import { Address } from '@/lib/types'

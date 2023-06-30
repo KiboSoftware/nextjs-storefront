@@ -35,7 +35,7 @@ describe('PromoCodeBadge Component', () => {
 
   it('should render promocode badge', () => {
     setup()
-    const PromoCode = screen.getByText(PromocodeBadgeComponent?.args?.promoList?.[0] || 'SAVE50')
+    const PromoCode = screen.getByText(PromocodeBadgeComponent?.args?.promoList?.[0] as string)
     expect(PromoCode).toBeVisible()
   })
 
