@@ -29,9 +29,10 @@ Common.args = {
   isShowWishlistIcon: true,
   showQuickViewButton: true,
   badge: 'New',
-  onAddOrRemoveWishlistItem: () => console.log('add or remove wishlist item clicked'),
+  onAddOrRemoveWishlistItem: () =>
+    Promise.resolve(console.log('add or remove wishlist item clicked')),
   onClickQuickViewModal: () => console.log('quick-view button clicked'),
-  onClickAddToCart: () => console.log('add to cart button clicked'),
+  onClickAddToCart: () => Promise.resolve(console.log('add to cart button clicked')),
 }
 
 export const LoadingProductCard = Template.bind({})

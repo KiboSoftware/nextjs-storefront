@@ -38,9 +38,9 @@ export interface ProductCardListViewProps {
   showQuickViewButton?: boolean
   badge?: string
   isATCLoading?: boolean
-  onAddOrRemoveWishlistItem?: () => void
+  onAddOrRemoveWishlistItem?: () => Promise<void>
   onClickQuickViewModal?: () => void
-  onClickAddToCart?: (payload: any) => void
+  onClickAddToCart?: (payload: any) => Promise<void>
 }
 
 const ProductCardSkeleton = () => {
