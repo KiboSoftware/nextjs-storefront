@@ -1,7 +1,7 @@
 import getConfig from 'next/config'
 import ErrorPage from 'next/error'
 import Head from 'next/head'
-import { useRouter } from 'next/router'
+import { useRouter, NextRouter } from 'next/router'
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
 
 import { ProductDetailTemplate, ProductDetailSkeleton } from '@/components/page-templates'
@@ -56,52 +56,7 @@ export async function getStaticPaths() {
   return { paths, fallback: true }
 }
 
-// const routeHandle = (router: NextRouter, product: Product) => {
-//   const firstQueryParam = router?.query?.productSlug?.length && router.query?.productSlug[0]
-//   const { productSlug } = router.query
-//   const { seoFriendlyUrl } = product?.content || {}
-//   let correctPath = router.asPath
-
-//   if (seoFriendlyUrl) {
-//     // if seoFriendlyUrl is set in admin, we need to add it to the path
-//     if (productSlug?.length === 1) {
-//       correctPath = correctPath.replace(
-//         `/${firstQueryParam}`,
-//         `/${seoFriendlyUrl}/${firstQueryParam}`
-//       )
-//       router.replace(router.asPath, correctPath)
-//     } else if (seoFriendlyUrl !== firstQueryParam) {
-//       // if seoFriendlyUrl is set in admin and it is different from the first path param, we need to replace it with correct one
-//       correctPath = correctPath.replace(`/${firstQueryParam}/`, `/${seoFriendlyUrl}/`)
-//       router.replace(router.asPath, correctPath)
-//     }
-//   } else {
-//     // if seoFriendlyUrl is not set, we need to remove it from the path
-//     if (productSlug?.length === 2) {
-//       correctPath = correctPath.replace(`/${firstQueryParam}`, '')
-//       router.replace(router.asPath, correctPath)
-//     }
-//   }
-// }
-
-const ProductDetailPage: NextPage = (props: any) => {
-  const { product } = props
-
-  const { publicRuntimeConfig } = getConfig()
-  const currentUrl = publicRuntimeConfig?.currentUrl
-
-  const router = useRouter()
-  const { getProductLink } = uiHelpers()
-  const { isFallback } = router
-
-  if (isFallback) {
-    return <ProductDetailSkeleton />
-  }
-
-  if (!product && !isFallback) {
-    return <ErrorPage statusCode={404} />
-  }
-
+const routeHandle = (router: NextRouter, product: Product) => {
   const firstQueryParam = router?.query?.productSlug?.length && router.query?.productSlug[0]
   const { productSlug } = router.query
   const { seoFriendlyUrl } = product?.content || {}
@@ -126,6 +81,29 @@ const ProductDetailPage: NextPage = (props: any) => {
       correctPath = correctPath.replace(`/${firstQueryParam}`, '')
       router.replace(router.asPath, correctPath)
     }
+  }
+}
+
+const ProductDetailPage: NextPage = (props: any) => {
+  const { product } = props
+
+  const { publicRuntimeConfig } = getConfig()
+  const currentUrl = publicRuntimeConfig?.currentUrl
+
+  const router = useRouter()
+  const { getProductLink } = uiHelpers()
+  const { isFallback } = router
+
+  if (isFallback) {
+    return <ProductDetailSkeleton />
+  }
+
+  if (!product && !isFallback) {
+    return <ErrorPage statusCode={404} />
+  }
+
+  if (typeof window !== 'undefined') {
+    routeHandle(router, product)
   }
 
   const breadcrumbs = product ? productGetters.getBreadcrumbs(product) : []
