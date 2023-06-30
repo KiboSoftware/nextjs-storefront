@@ -5,7 +5,7 @@ const checkIsAuthenticated = (req: NextRequest) => {
   const cookieValue = cookie?.split('kibo_at=')[1]
   const encodedValue = cookieValue?.split(';')[0]
   if (encodedValue) {
-    const decodedCookie = JSON.parse(atob(encodedValue))
+    const decodedCookie = JSON.parse(Buffer.from(encodedValue, 'base64').toString('utf8'))
     return decodedCookie?.userId
   }
   return null
