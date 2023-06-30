@@ -41,7 +41,7 @@ const walk = (category: Maybe<PrCategory>, categoryCodes: any[] = []) => {
   if (category?.isDisplayed) {
     categoryCodes.push({
       categoryCode: category.categoryCode,
-      slug: category.content?.slug || '',
+      slug: category.content?.slug as string,
     })
   }
   const { childrenCategories = [] } = category as PrCategory
@@ -144,8 +144,8 @@ const CategoryPage: NextPage<CategoryPageType> = (props) => {
       ...searchParams,
       pageSize:
         searchParams.pageSize ||
-        publicRuntimeConfig.productListing.pageSize ||
-        publicRuntimeConfig.productListing.pageSize[0],
+        (publicRuntimeConfig.productListing.pageSize ??
+          publicRuntimeConfig.productListing.pageSize[0]),
     },
     props.results
   )

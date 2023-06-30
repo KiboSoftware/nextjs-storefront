@@ -181,9 +181,9 @@ const capitalizeWord = (word?: string) =>
 const getSubmittedDate = (order: CrOrder, withTimestamp?: boolean) =>
   order?.submittedDate
     ? withTimestamp
-      ? (format(new Date(order?.submittedDate), DateFormat.DATE_FORMAT_WITH_TIME) as string)
-      : (format(new Date(order?.submittedDate), DateFormat.DATE_FORMAT) as string)
-    : (format(new Date(order?.auditInfo?.createDate), DateFormat.DATE_FORMAT) as string)
+      ? format(new Date(order?.submittedDate), DateFormat.DATE_FORMAT_WITH_TIME)
+      : format(new Date(order?.submittedDate), DateFormat.DATE_FORMAT)
+    : format(new Date(order?.auditInfo?.createDate), DateFormat.DATE_FORMAT)
 
 const getExpectedDeliveryDate = (items: CrOrderItem[]) => {
   return items[0]?.expectedDeliveryDate

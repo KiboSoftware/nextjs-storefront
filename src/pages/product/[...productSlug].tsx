@@ -1,7 +1,7 @@
 import getConfig from 'next/config'
 import ErrorPage from 'next/error'
 import Head from 'next/head'
-import { NextRouter, useRouter } from 'next/router'
+import { useRouter } from 'next/router'
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
 
 import { ProductDetailTemplate, ProductDetailSkeleton } from '@/components/page-templates'
@@ -50,7 +50,7 @@ export async function getStaticPaths() {
     items?.map((item: Product) => {
       const urlSegment = productGetters.getSeoFriendlyUrl(item)
       const productId = productGetters.getProductId(item)
-      const path = `/product${urlSegment ? `/${urlSegment}` : ''}/${productId}`
+      const path = '/product' + (urlSegment ? '/' + urlSegment : '') + '/' + productId
       paths.push(path)
     })
   return { paths, fallback: true }

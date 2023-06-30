@@ -49,7 +49,7 @@ const SearchPage: NextPage<SearchPageType> = (props) => {
   const { data: searchPageResults, isFetching } = useGetSearchedProducts(
     {
       ...searchParams,
-      pageSize: searchParams.pageSize || publicRuntimeConfig.productListing.pageSize[0],
+      pageSize: searchParams.pageSize ?? publicRuntimeConfig.productListing.pageSize[0],
     },
     props.results
   )
@@ -89,16 +89,13 @@ const SearchPage: NextPage<SearchPageType> = (props) => {
   }
 
   const changePagination = (value: any) => {
-    router.push(
-      {
-        pathname: router?.pathname,
-        query: {
-          ...router.query,
-          ...value,
-        },
+    router.push({
+      pathname: router?.pathname,
+      query: {
+        ...router.query,
+        ...value,
       },
-      undefined
-    )
+    })
   }
 
   useEffect(() => {

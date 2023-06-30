@@ -7,7 +7,6 @@ import userEvent from '@testing-library/user-event'
 
 import { ProductListingTemplateProps } from './ProductListingTemplate'
 import * as stories from './ProductListingTemplate.stories' // import all stories from the stories file
-import { categoryFacetDataMock } from '@/__mocks__/stories/categoryFacetDataMock'
 const { Category } = composeStories(stories)
 
 const KiboBreadcrumbsMock = () => <div data-testid="breadcrumb-component" />
@@ -161,7 +160,7 @@ describe('[component] - Product Listing Template', () => {
     expect(showMoreButton).toBeVisible()
   })
 
-  it('shoutd hide the show more button when pageSize is greater than or equal to totalResults', () => {
+  it('should hide the show more button when pageSize is greater than or equal to totalResults', () => {
     // const params = {
     //   breadCrumbsList: [
     //     {

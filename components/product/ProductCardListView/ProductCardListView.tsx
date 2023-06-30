@@ -15,7 +15,6 @@ import DefaultImage from '@/public/product_placeholder.svg'
 
 import type { ProductPriceRange } from '@/lib/gql/types'
 
-
 export interface ProductCardListViewProps {
   title?: string
   link: string
@@ -77,7 +76,7 @@ const ProductCardListView = (props: ProductCardListViewProps) => {
     variationProductCode,
     onAddOrRemoveWishlistItem,
     onClickQuickViewModal,
-    onClickAddToCart
+    onClickAddToCart,
   } = props
 
   const productPriceRange = usePriceRangeFormatter(priceRange as ProductPriceRange)
@@ -86,11 +85,11 @@ const ProductCardListView = (props: ProductCardListViewProps) => {
 
   const handleAddOrRemoveWishlistItem = (event: MouseEvent<HTMLElement>) => {
     event.preventDefault()
-    onAddOrRemoveWishlistItem && onAddOrRemoveWishlistItem()
+    onAddOrRemoveWishlistItem?.()
   }
   const handleOpenProductQuickViewModal = (event: MouseEvent<HTMLElement>) => {
     event.preventDefault()
-    onClickQuickViewModal && onClickQuickViewModal()
+    onClickQuickViewModal?.()
   }
 
   const handleAddToCart = (event: MouseEvent<HTMLElement>) => {
@@ -104,7 +103,7 @@ const ProductCardListView = (props: ProductCardListViewProps) => {
       },
       quantity: 1,
     }
-    onClickAddToCart && onClickAddToCart(payload)
+    onClickAddToCart?.(payload)
   }
 
   if (isLoading) return <ProductCardSkeleton />
@@ -161,7 +160,7 @@ const ProductCardListView = (props: ProductCardListViewProps) => {
                 }}
               >
                 <KiboImage
-                  src={imageUrl || placeholderImageUrl}
+                  src={imageUrl ?? placeholderImageUrl}
                   alt={imageUrl ? imageAltText : 'no-image-alt'}
                   fill
                   objectFit="contain"
@@ -212,11 +211,7 @@ const ProductCardListView = (props: ProductCardListViewProps) => {
                     </Box>
                   ) : null}
                   {/* <QuantitySelector /> */}
-                  <Button
-                    variant="contained"
-                    color="primary"
-                    onClick={handleAddToCart}
-                  >
+                  <Button variant="contained" color="primary" onClick={handleAddToCart}>
                     {t('add-to-cart')}
                   </Button>
                 </Box>

@@ -52,11 +52,11 @@ export interface ProductListingTemplateProps {
   pageSize: number
   pageCount: number
   startIndex: number
+  showQuickViewButton?: boolean
+  isQuickViewModal?: boolean
   onSortItemSelection: (value: string) => void
   onPaginationChange?: (params?: CategorySearchParams) => void
   onInfiniteScroll?: () => void
-  showQuickViewButton?: boolean
-  isQuickViewModal?: boolean
 }
 
 // Component
@@ -83,12 +83,10 @@ const ProductListingTemplate = (props: ProductListingTemplateProps) => {
   const productsPerPageArray = publicRuntimeConfig.productListing.pageSize
   const productPerPage = pageSize || productsPerPageArray[0]
 
-  const handleProductPerPage = (size: number) => {
-    onPaginationChange &&
-      onPaginationChange({
-        pageSize: Number(size),
-      })
-  }
+  const handleProductPerPage = (size: number) =>
+    onPaginationChange?.({
+      pageSize: Number(size),
+    })
 
   const { getProductLink } = uiHelpers()
   const { updateRoute } = useUpdateRoutes()
@@ -145,7 +143,7 @@ const ProductListingTemplate = (props: ProductListingTemplateProps) => {
         }),
       }),
       priceRange: productGetters.getPriceRange(product),
-      title: productGetters.getName(product) as string,
+      title: productGetters.getName(product),
       rating: productGetters.getRating(product),
       isInWishlist: checkProductInWishlist({
         productCode,

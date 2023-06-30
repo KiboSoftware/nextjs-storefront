@@ -8,8 +8,7 @@ import creditCardType from 'credit-card-type'
 import Router from 'next/router'
 
 import { GlobalFetchingIndicator } from '@/components/common'
-import { Footer } from '@/components/layout'
-import { KiboHeader } from '@/components/layout'
+import { Footer, KiboHeader } from '@/components/layout'
 import {
   AuthContextProvider,
   ModalContextProvider,
@@ -26,19 +25,6 @@ creditCardType.updateCard('mastercard', {
 creditCardType.updateCard('american-express', {
   niceType: 'AMEX',
 })
-
-// const nonSupportedCards = [
-//   'diners-club',
-//   'elo',
-//   'hiper',
-//   'hipercard',
-//   'jcb',
-//   'maestro',
-//   'mir',
-//   'unionpay',
-// ]
-
-// nonSupportedCards.forEach((card) => creditCardType.removeCard(card))
 
 const DefaultLayout = ({ pageProps, children }: { pageProps: any; children: ReactElement }) => {
   useEffect(() => {

@@ -93,7 +93,7 @@ const AccountAddress = (props: AccountAddressProps) => {
               {t('billing-address')}
             </Typography>
           )}
-          {customerContact && customerContact?.types && customerContact?.types[0]?.isPrimary && (
+          {customerContact?.types?.[0]?.isPrimary && (
             <Typography variant="h4" fontWeight="500">
               {t('primary')}
             </Typography>
@@ -151,20 +151,17 @@ const AddressBook = (props: AddressBookProps) => {
   const { showSnackbar } = useSnackbarContext()
 
   const shippingAddresses =
-    userGetters.getUserShippingAddress(contacts?.items as CustomerContact[]) || []
+    userGetters.getUserShippingAddress(contacts?.items as CustomerContact[]) ?? []
   const billingAddresses =
-    userGetters.getUserBillingAddresses(contacts?.items as CustomerContact[]) || []
+    userGetters.getUserBillingAddresses(contacts?.items as CustomerContact[]) ?? []
 
   const [shippingAddressStartIndex, setShippingAddressStartIndex] = useState<number>(0)
   const [billingAddressStartIndex, setBillingAddressStartIndex] = useState<number>(0)
   const [displayShippingAddresses, setDisplayShippingAddresses] = useState<CustomerContact[]>(
-    shippingAddresses?.slice(
-      shippingAddressStartIndex,
-      shippingAddressPageSize
-    ) as CustomerContact[]
+    shippingAddresses?.slice(shippingAddressStartIndex, shippingAddressPageSize)
   )
   const [displayBillingAddresses, setDisplayBillingAddresses] = useState<CustomerContact[]>(
-    billingAddresses.slice(billingAddressStartIndex, billingAddressPageSize) as CustomerContact[]
+    billingAddresses.slice(billingAddressStartIndex, billingAddressPageSize)
   )
 
   const scrollToShippingAddressHeading = () => {
@@ -294,10 +291,7 @@ const AddressBook = (props: AddressBookProps) => {
     const { startIndex } = value
     setShippingAddressStartIndex(startIndex)
     setDisplayShippingAddresses(
-      shippingAddresses?.slice(
-        startIndex,
-        startIndex + shippingAddressPageSize
-      ) as CustomerContact[]
+      shippingAddresses?.slice(startIndex, startIndex + shippingAddressPageSize)
     )
     scrollToShippingAddressHeading()
   }
@@ -306,7 +300,7 @@ const AddressBook = (props: AddressBookProps) => {
     const { startIndex } = value
     setBillingAddressStartIndex(startIndex)
     setDisplayBillingAddresses(
-      billingAddresses.slice(startIndex, startIndex + billingAddressPageSize) as CustomerContact[]
+      billingAddresses.slice(startIndex, startIndex + billingAddressPageSize)
     )
     scrollToBillingAddressHeading()
   }
@@ -316,7 +310,7 @@ const AddressBook = (props: AddressBookProps) => {
       shippingAddresses?.slice(
         shippingAddressStartIndex,
         shippingAddressStartIndex + shippingAddressPageSize
-      ) as CustomerContact[]
+      )
     )
   }, [JSON.stringify(shippingAddresses)])
 
@@ -325,7 +319,7 @@ const AddressBook = (props: AddressBookProps) => {
       billingAddresses.slice(
         billingAddressStartIndex,
         billingAddressStartIndex + billingAddressPageSize
-      ) as CustomerContact[]
+      )
     )
   }, [JSON.stringify(billingAddresses)])
 

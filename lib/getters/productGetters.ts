@@ -31,19 +31,19 @@ type GenericProduct = Product | ProductCustom | CrProduct
 
 const getName = (product: GenericProduct): string => {
   if ('name' in product) {
-    return product.name || ''
+    return product.name as string
   }
 
   if ('content' in product) {
-    return product?.content?.productName || ''
+    return product?.content?.productName as string
   }
 
   return ''
 }
 
-const getProductId = (product: GenericProduct): string => product?.productCode || ''
+const getProductId = (product: GenericProduct): string => product?.productCode as string
 const getVariationProductCode = (product: GenericProduct): string =>
-  product?.variationProductCode || ''
+  product?.variationProductCode as string
 
 const getRating = (product: Product | ProductCustom) => {
   const attr = product?.properties?.find(
@@ -72,19 +72,19 @@ const getPriceRange = (product: Product | ProductCustom): ProductPriceRange =>
   product?.priceRange as ProductPriceRange
 
 const getCoverImage = (product: Product | ProductCustom): string =>
-  product?.content?.productImages?.[0]?.imageUrl || ''
+  product?.content?.productImages?.[0]?.imageUrl as string
 
 const getCoverImageAlt = (product: Product | ProductCustom): string =>
-  product?.content?.productImages?.[0]?.altText || ''
+  product?.content?.productImages?.[0]?.altText as string
 
 const getSeoFriendlyUrl = (product: Product | ProductCustom): string =>
-  product?.content?.seoFriendlyUrl || ''
+  product?.content?.seoFriendlyUrl as string
 
 const getDescription = (product: Product | ProductCustom): string =>
-  product?.content?.productFullDescription || ''
+  product?.content?.productFullDescription as string
 
 const getShortDescription = (product: Product | ProductCustom): string =>
-  product?.content?.productShortDescription || ''
+  product?.content?.productShortDescription as string
 
 const getProductGallery = (product: Product | ProductCustom) => {
   return product?.content?.productImages
@@ -173,9 +173,8 @@ export const getProductCharacteristics = (
 export const getBadgeAttribute = (properties: ProductProperties[]): string => {
   const badgeAttributeFQN = publicRuntimeConfig?.badgeAttributeFQN?.toLowerCase()
 
-  return (
-    properties?.find((prop) => prop.attributeFQN?.toLowerCase() === badgeAttributeFQN)?.value || ''
-  )
+  return properties?.find((prop) => prop.attributeFQN?.toLowerCase() === badgeAttributeFQN)
+    ?.value as string
 }
 
 const getOptionSelectedValue = (option: ProductOption) => {
@@ -184,7 +183,8 @@ const getOptionSelectedValue = (option: ProductOption) => {
   return result?.toString()
 }
 
-export const getOptionName = (option: ProductOption): string => option?.attributeDetail?.name || ''
+export const getOptionName = (option: ProductOption): string =>
+  option?.attributeDetail?.name as string
 
 export const getOptions = <T extends ProductCustom | CrProduct>(
   product: T

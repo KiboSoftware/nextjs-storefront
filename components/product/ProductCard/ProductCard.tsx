@@ -79,11 +79,11 @@ const ProductCard = (props: ProductCardProps) => {
   const { t } = useTranslation('common')
   const handleAddOrRemoveWishlistItem = (event: MouseEvent<HTMLElement>) => {
     event.preventDefault()
-    onAddOrRemoveWishlistItem && onAddOrRemoveWishlistItem()
+    onAddOrRemoveWishlistItem?.()
   }
   const handleOpenProductQuickViewModal = (event: MouseEvent<HTMLElement>) => {
     event.preventDefault()
-    onClickQuickViewModal && onClickQuickViewModal()
+    onClickQuickViewModal?.()
   }
   const handleAddToCart = (event: any) => {
     event.preventDefault()

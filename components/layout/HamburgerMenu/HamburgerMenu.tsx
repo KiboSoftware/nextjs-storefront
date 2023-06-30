@@ -75,7 +75,7 @@ const HamburgerMenu = (props: HamburgerMenuProps) => {
 
   const handleCategoryClick = (categoryCode: string, slug?: string) => {
     toggleDrawer(false)
-    const link = getCategoryLink(categoryCode as string, slug as string)
+    const link = getCategoryLink(categoryCode, slug as string)
     router.push(link)
   }
 
