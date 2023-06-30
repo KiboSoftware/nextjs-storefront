@@ -96,7 +96,7 @@ const ProductCard = (props: ProductCardProps) => {
       },
       quantity: 1,
     }
-    onClickAddToCart && onClickAddToCart(payload)
+    onClickAddToCart?.(payload)
   }
   if (isLoading) return <ProductCardSkeleton />
   else

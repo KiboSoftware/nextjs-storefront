@@ -74,7 +74,7 @@ const DetailsStep = <T extends CrOrder | Checkout>(props: DetailsProps<T>) => {
   } = useCheckoutStepContext()
 
   const personalDetails = {
-    email: checkout.email || '',
+    email: checkout.email ?? '',
   }
 
   const openLoginModal = () => {
