@@ -36,6 +36,7 @@ import {
   buildCardPaymentActionForCheckoutParams,
   reTokenizeCreditCardPayment,
   tokenizeCreditCardPayment,
+  validateGoogleReCaptcha,
 } from '@/lib/helpers'
 import type {
   Address,
@@ -260,25 +261,14 @@ const PaymentStep = (props: PaymentStepProps) => {
       console.log('Execute recaptcha not yet available')
       return
     }
-    executeRecaptcha('enquiryFormSubmit').then((gReCaptchaToken: any) => {
-      fetch('/api/captcha', {
-        method: 'POST',
-        headers: {
-          Accept: 'application/json, text/plain, */*',
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          gRecaptchaToken: gReCaptchaToken,
-        }),
-      })
-        .then((res) => res.json())
-        .then(async (res) => {
-          if (res?.status === 'success') {
-            await saveCardDataToOrder()
-          } else {
-            showSnackbar(res.message, 'error')
-          }
-        })
+    executeRecaptcha('enquiryFormSubmit').then(async (gReCaptchaToken: any) => {
+      const captcha = await validateGoogleReCaptcha(gReCaptchaToken)
+
+      if (captcha?.status === 'success') {
+        await saveCardDataToOrder()
+      } else {
+        showSnackbar(captcha.message, 'error')
+      }
     })
   }
 

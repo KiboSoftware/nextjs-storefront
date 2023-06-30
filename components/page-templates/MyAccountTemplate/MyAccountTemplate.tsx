@@ -32,6 +32,7 @@ import {
   useUpdateCustomerAddress,
   useValidateCustomerAddress,
 } from '@/hooks'
+import { validateGoogleReCaptcha } from '@/lib/helpers'
 import type { BillingAddress, CardType } from '@/lib/types'
 
 import type { CuAddress, CustomerAccount } from '@/lib/gql/types'
@@ -166,26 +167,14 @@ const MyAccountTemplate = (props: MyAccountTemplateProps) => {
       console.log('Execute recaptcha not yet available')
       return
     }
-    executeRecaptcha('enquiryFormSubmit').then((gReCaptchaToken: any) => {
-      fetch('/api/captcha', {
-        method: 'POST',
-        headers: {
-          Accept: 'application/json, text/plain, */*',
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          ...address,
-          gRecaptchaToken: gReCaptchaToken,
-        }),
-      })
-        .then((res) => res.json())
-        .then(async (res) => {
-          if (res?.status === 'success') {
-            await handleSave(address, card, isUpdatingAddress)
-          } else {
-            showSnackbar(res.message, 'error')
-          }
-        })
+    executeRecaptcha('enquiryFormSubmit').then(async (gReCaptchaToken: any) => {
+      const captcha = await validateGoogleReCaptcha(gReCaptchaToken)
+
+      if (captcha?.status === 'success') {
+        await handleSave(address, card, isUpdatingAddress)
+      } else {
+        showSnackbar(captcha.message, 'error')
+      }
     })
   }
 

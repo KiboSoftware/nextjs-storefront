@@ -16,7 +16,7 @@ import {
 } from '@/hooks'
 import { DefaultId, AddressType } from '@/lib/constants'
 import { orderGetters, userGetters } from '@/lib/getters'
-import { buildAddressParams } from '@/lib/helpers'
+import { buildAddressParams, validateGoogleReCaptcha } from '@/lib/helpers'
 import { Address } from '@/lib/types'
 
 import type {
@@ -146,26 +146,14 @@ const StandardShippingStep = (props: ShippingProps) => {
       console.log('Execute recaptcha not yet available')
       return
     }
-    executeRecaptcha('enquiryFormSubmit').then((gReCaptchaToken) => {
-      fetch('/api/captcha', {
-        method: 'POST',
-        headers: {
-          Accept: 'application/json, text/plain, */*',
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          ...contact,
-          gRecaptchaToken: gReCaptchaToken,
-        }),
-      })
-        .then((res) => res.json())
-        .then(async (res) => {
-          if (res?.status === 'success') {
-            await handleSaveAddressToCheckout({ contact })
-          } else {
-            showSnackbar(res.message, 'error')
-          }
-        })
+    executeRecaptcha('enquiryFormSubmit').then(async (gReCaptchaToken) => {
+      const captcha = await validateGoogleReCaptcha(gReCaptchaToken)
+
+      if (captcha?.status === 'success') {
+        await handleSaveAddressToCheckout({ contact })
+      } else {
+        showSnackbar(captcha.message, 'error')
+      }
     })
   }
 
