@@ -15,7 +15,6 @@ import DefaultImage from '@/public/product_placeholder.svg'
 
 import type { ProductPriceRange } from '@/lib/gql/types'
 
-
 export interface ProductCardListViewProps {
   title?: string
   link: string
@@ -39,9 +38,9 @@ export interface ProductCardListViewProps {
   showQuickViewButton?: boolean
   badge?: string
   isATCLoading?: boolean
-  onAddOrRemoveWishlistItem?: () => void
+  onAddOrRemoveWishlistItem?: () => Promise<void>
   onClickQuickViewModal?: () => void
-  onClickAddToCart?: (payload: any) => void
+  onClickAddToCart?: (payload: any) => Promise<void>
 }
 
 const ProductCardSkeleton = () => {
@@ -77,7 +76,7 @@ const ProductCardListView = (props: ProductCardListViewProps) => {
     variationProductCode,
     onAddOrRemoveWishlistItem,
     onClickQuickViewModal,
-    onClickAddToCart
+    onClickAddToCart,
   } = props
 
   const productPriceRange = usePriceRangeFormatter(priceRange as ProductPriceRange)
@@ -212,11 +211,7 @@ const ProductCardListView = (props: ProductCardListViewProps) => {
                     </Box>
                   ) : null}
                   {/* <QuantitySelector /> */}
-                  <Button
-                    variant="contained"
-                    color="primary"
-                    onClick={handleAddToCart}
-                  >
+                  <Button variant="contained" color="primary" onClick={handleAddToCart}>
                     {t('add-to-cart')}
                   </Button>
                 </Box>
