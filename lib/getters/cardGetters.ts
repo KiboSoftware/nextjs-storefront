@@ -11,7 +11,7 @@ const getExpireDate = (creditCardData?: GenericCard): string =>
   `${getExpireMonth(creditCardData)}/${getExpireYear(creditCardData)}`
 
 const getCardType = (creditCardData?: GenericCard | CrPaymentCard): string =>
-  (creditCardData as GenericCard)?.cardType ||
+  (creditCardData as GenericCard)?.cardType ??
   ((creditCardData as CrPaymentCard)?.paymentOrCardType as string)
 
 const getCardId = (creditCardData?: GenericCard): string => creditCardData?.id as string
@@ -33,7 +33,7 @@ const getExpireYear = (creditCardData?: GenericCard | CrPaymentCard): number =>
   creditCardData?.expireYear || 0
 
 const getCardHolderName = (creditCardData?: GenericCard | CrPaymentCard): string =>
-  creditCardData?.nameOnCard as string as string
+  creditCardData?.nameOnCard as string
 
 const getCardDetails = (card: GenericCard) => {
   return {

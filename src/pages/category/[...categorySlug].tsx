@@ -143,9 +143,9 @@ const CategoryPage: NextPage<CategoryPageType> = (props) => {
     {
       ...searchParams,
       pageSize:
-        searchParams.pageSize ||
-        (publicRuntimeConfig.productListing.pageSize ??
-          publicRuntimeConfig.productListing.pageSize[0]),
+        searchParams.pageSize ??
+        publicRuntimeConfig.productListing.pageSize ??
+        publicRuntimeConfig.productListing.pageSize[0],
     },
     props.results
   )

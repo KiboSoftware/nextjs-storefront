@@ -100,10 +100,7 @@ const PaymentMethod = (props: PaymentMethodProps) => {
   const [paymentMethodStartIndex, setPaymentMethodStartIndex] = useState<number>(0)
   const savedCardsAndContacts = userGetters.getSavedCardsAndBillingDetails(cards, contacts)
   const [displaySavedCardsAndContacts, setSavedCardsAndContacts] = useState<PaymentAndBilling[]>(
-    savedCardsAndContacts?.slice(
-      paymentMethodStartIndex,
-      paymentMethodPageSize
-    ) as PaymentAndBilling[]
+    savedCardsAndContacts?.slice(paymentMethodStartIndex, paymentMethodPageSize)
   )
   const savedAddresses = userGetters.getSavedAddresses(contacts)
   const billingAddresses = userGetters.getUserBillingAddresses(savedAddresses)
