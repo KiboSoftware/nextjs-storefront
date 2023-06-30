@@ -164,6 +164,8 @@ const AddressBook = (props: AddressBookProps) => {
     billingAddresses.slice(billingAddressStartIndex, billingAddressPageSize)
   )
 
+  const [isAddressFormValid, setIsAddressFormValid] = useState<boolean>(false)
+
   const scrollToShippingAddressHeading = () => {
     const shippingAddressHeading = document.getElementById('shipping-address')
     if (shippingAddressHeading) {
@@ -274,6 +276,8 @@ const AddressBook = (props: AddressBookProps) => {
       return true
     return false
   }
+
+  const handleFormStatusChange = (status: boolean) => setIsAddressFormValid(status)
 
   const handleShippingAddressPagination = (value: any) => {
     const { startIndex } = value
@@ -426,6 +430,7 @@ const AddressBook = (props: AddressBookProps) => {
             isUserLoggedIn={true}
             validateForm={validateForm}
             onSaveAddress={submitFormWithRecaptcha}
+            onFormStatusChange={handleFormStatusChange}
             contact={editAddress as ContactForm}
           />
 
@@ -448,7 +453,12 @@ const AddressBook = (props: AddressBookProps) => {
             <Button variant="contained" color="secondary" onClick={handleCancelUpdateAddress}>
               {t('cancel')}
             </Button>
-            <Button variant="contained" color="primary" onClick={handleAddressValidationAndSave}>
+            <Button
+              variant="contained"
+              color="primary"
+              onClick={handleAddressValidationAndSave}
+              {...(!isAddressFormValid && { disabled: true })}
+            >
               {t('save')}
             </Button>
           </Stack>
