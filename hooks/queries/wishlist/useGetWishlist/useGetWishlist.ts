@@ -5,6 +5,7 @@ import { useQuery } from '@tanstack/react-query'
 
 import { makeGraphQLClient } from '@/lib/gql/client'
 import { getWishlistQuery } from '@/lib/gql/queries'
+import { queryClient } from '@/lib/react-query/queryClient'
 import { wishlistKeys } from '@/lib/react-query/queryKeys'
 
 import type { CrWishlist } from '@/lib/gql/types'
@@ -26,53 +27,14 @@ export interface GetAllWishlistsProps {
   startIndex: number
 }
 
-const getWishlists = async (): Promise<CrWishlist> => {
+const getWishlists = async (params?: GetAllWishlistsProps) => {
   const client = makeGraphQLClient()
   const response = await client.request({
     document: getWishlistQuery,
-    variables: {},
+    variables: params ? params : {},
   })
 
-  return response?.wishlists?.items[0]
-}
-
-const getAllWishlists = async (props: GetAllWishlistsProps) => {
-  const { filter = '', pageSize = 5, sortBy = '', startIndex = 0 } = props
-  const client = makeGraphQLClient()
-  const response = await client.request({
-    document: getWishlistQuery,
-    variables: {
-      filter,
-      pageSize,
-      sortBy,
-      startIndex,
-    },
-  })
-  return response?.wishlists
-}
-
-/**
- * [Query hook] useGetWishlist uses the graphQL query
- *
- * <b>wishlists(startIndex: Int, pageSize: Int, sortBy: String, filter: String): WishlistCollection</b>
- *
- * Description : Fetches the all wishlists for logged in user. To authenticate the user, request header taking token from the cookie.
- *
- * Parameters passed to function getWishlists()
- *
- * On success, returns the first item of wishlists as it will always have single item with respect to customer account id.
- *
- * @returns 'response?.wishlists?.items[0], which contains the first wishlist item'
- */
-
-export const useGetWishlist = (): UseWishlistResponse => {
-  const { data, isLoading, isSuccess, isFetching } = useQuery({
-    queryKey: wishlistKeys.all,
-    queryFn: getWishlists,
-    refetchOnWindowFocus: false,
-  })
-
-  return { data, isLoading, isSuccess, isFetching }
+  return params ? response.wishlists : response?.wishlists?.items[0]
 }
 
 /**
@@ -89,21 +51,20 @@ export const useGetWishlist = (): UseWishlistResponse => {
  * @returns 'response?.wishlists, which contains the all wishlists item'
  */
 
-export const useGetAllWishlists = (props: GetAllWishlistsProps) => {
-  const { filter = '', pageSize = 5, sortBy = '', startIndex = 0 } = props
-  const pageKey = [startIndex.toString(), pageSize.toString(), sortBy, filter]
-  const nextPageKey = [(startIndex + pageSize).toString(), pageSize.toString(), sortBy, filter]
-  const { data, isPending, isSuccess, isFetching } = useQuery({
-    queryKey: wishlistKeys.allWishlists.concat(pageKey),
-    queryFn: () => getAllWishlists(props),
+export const useGetWishlist = (params?: GetAllWishlistsProps) => {
+  const { data, isPending, isSuccess, isFetching, isLoading } = useQuery({
+    queryKey: params ? wishlistKeys.page(params) : wishlistKeys.all,
+    queryFn: () => getWishlists(params),
     refetchOnWindowFocus: false,
   })
 
   useQuery({
-    queryKey: wishlistKeys.allWishlists.concat(nextPageKey),
-    queryFn: () => getAllWishlists({ ...props, startIndex: startIndex + pageSize }),
-    refetchOnWindowFocus: false,
+    queryKey: params
+      ? wishlistKeys.page({ ...params, startIndex: params.startIndex + params.pageSize })
+      : wishlistKeys.all,
+    queryFn: () =>
+      params && getWishlists({ ...params, startIndex: params.startIndex + params.pageSize }),
   })
 
-  return { data, isPending, isSuccess, isFetching }
+  return { data, isPending, isSuccess, isFetching, isLoading }
 }
