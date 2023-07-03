@@ -99,6 +99,11 @@ module.exports = {
       },
     ],
     isSubscriptionEnabled: true,
+    b2bUserListing: {
+      defaultStartIndex: 0,
+      defaultPageSize: 5,
+      defaultPage: 1,
+    },
   },
   serverRuntimeConfig: {
     revalidate: process.env.GLOBAL_PAGE_REVALIDATE || 30,

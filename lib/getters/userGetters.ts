@@ -2,6 +2,7 @@ import { cardGetters } from './cardGetters'
 import { AddressType, PaymentType } from '@/lib/constants'
 
 import type {
+  B2BUser,
   Card,
   CardCollection,
   CrContact,
@@ -137,6 +138,8 @@ const getCustomerAccountDetails = (user: CustomerAccount) => {
   }
 }
 
+const getCustomerB2BUsers = (items: B2BUser[]) => items
+
 export const userGetters = {
   getUserShippingAddress,
   getUserBillingAddresses,
@@ -152,4 +155,5 @@ export const userGetters = {
   getAllShippingAddresses,
   getDefaultShippingAddress,
   getOtherShippingAddress,
+  getCustomerB2BUsers,
 }

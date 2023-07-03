@@ -42,6 +42,7 @@ export * from './queries/standardCheckout/useGetShippingMethods/useGetShippingMe
 // myAccount
 export * from './queries/myAccount/useGetCustomerOrders/useGetCustomerOrders'
 export * from './queries/myAccount/useGetCurrentCustomer/useGetCurrentCustomer'
+export * from './queries/myAccount/useGetB2BUserQuery/useGetB2BUserQuery'
 
 // subscription
 export * from './queries/subscription/useGetSubscriptions/useGetSubscriptions'

@@ -9,6 +9,7 @@ import {
   checkoutMock,
   checkoutGroupRatesMock,
   orderSubscriptionNowMock,
+  customerB2BUserForPage0Mock,
 } from '../stories'
 import { cartItemMock } from '../stories/cartItemMock'
 import { cartCouponMock, cartMock } from '../stories/cartMock'
@@ -418,6 +419,12 @@ export const subscriptionHandlers = [
   }),
 ]
 
+export const b2bAccountUsersHandlers = [
+  graphql.query('b2bAccountUsers', (_req, res, ctx) => {
+    return res(ctx.data({ b2bAccountUsers: customerB2BUserForPage0Mock }))
+  }),
+]
+
 export const handlers = [
   ...checkoutHandlers,
   ...searchSuggestionHandlers,
@@ -432,4 +439,5 @@ export const handlers = [
   ...orderHandlers,
   ...inventoryHandlers,
   ...subscriptionHandlers,
+  ...b2bAccountUsersHandlers,
 ]

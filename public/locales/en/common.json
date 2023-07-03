@@ -194,6 +194,8 @@
   "i-want-to-create-an-account": "I want to create an account",
   "first-name": "First name",
   "last-name-or-sur-name": "Last name",
+  "email-address": "Email address",
+  "role": "Role",
   "password": "Password",
   "go-to-shipping": "Go to Shipping",
   "go-to-payment": "Go to Payment",
@@ -333,6 +335,11 @@
 
   "users": "Users",
   "add-user": "Add User",
+  "user-search-placeholder": "Search user by first name, last name, or email address.",
+  "active": "Active",
+  "in-active": "In Active",
+  "displaying": "Displaying",
+  "delete-user-confirmation-text": "Are you sure want to delete this user?",
   "returns": "Returns",
   "quotes": "Quotes",
   "lists": "Lists"

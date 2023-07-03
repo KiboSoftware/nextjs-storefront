@@ -1,4 +1,4 @@
-import React, { useCallback } from 'react'
+import React from 'react'
 
 import AccountCircle from '@mui/icons-material/AccountCircle'
 import ChevronLeft from '@mui/icons-material/ChevronLeft'
@@ -16,7 +16,6 @@ import {
   Link,
   Grid,
 } from '@mui/material'
-import getConfig from 'next/config'
 import { useRouter } from 'next/router'
 import { useTranslation } from 'next-i18next'
 
@@ -95,8 +94,6 @@ const style = {
 
 const MyAccountTemplate = () => {
   const { t } = useTranslation('common')
-  const { publicRuntimeConfig } = getConfig()
-  const isSubscriptionEnabled = publicRuntimeConfig.isSubscriptionEnabled
   const router = useRouter()
   const theme = useTheme()
   const mdScreen = useMediaQuery(theme.breakpoints.up('md'))
@@ -218,9 +215,6 @@ const MyAccountTemplate = () => {
             ...style.myAccountChildren,
           }}
         >
-          {/* <Box sx={{ display: { xs: 'flex' }, justifyContent: { xs: 'center' } }}>
-            <AccountCircle sx={{ ...style.accountCircle }} />
-          </Box> */}
           <Typography
             variant={mdScreen ? 'h1' : 'h2'}
             sx={{ paddingLeft: { md: '0.5rem', xs: 0 } }}
