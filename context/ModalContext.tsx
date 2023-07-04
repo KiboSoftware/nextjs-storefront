@@ -1,7 +1,5 @@
 import { createContext, ReactNode, useContext, useState } from 'react'
 
-import { useSnackbarContext } from './RQNotificationContext/RQNotificationContext'
-
 interface ModalContextType {
   Component: any
   props?: any
@@ -66,9 +64,7 @@ export const ModalContextProvider = ({ children }: ModalContextProviderProps) =>
 
 export const useModalContext = () => {
   const context = useContext(ModalContext)
-  const { showSnackbar } = useSnackbarContext()
-
-  if (context === undefined) showSnackbar('Modal Context not found', 'warning')
+  if (context === undefined) throw new Error('useContext must be inside a Provider with a value')
   return context
 }
 

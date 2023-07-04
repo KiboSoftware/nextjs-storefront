@@ -1,7 +1,5 @@
 import React, { useMemo, useReducer, useContext, createContext } from 'react'
 
-import { useSnackbarContext } from '@/context'
-
 export type State = {
   activeStep: number
   steps: string[]
@@ -130,10 +128,9 @@ export const CheckoutStepProvider = (props: CheckoutStepProviderProps) => {
 }
 
 export const useCheckoutStepContext = () => {
-  const { showSnackbar } = useSnackbarContext()
   const context = useContext<CheckoutStepContextType>(CheckoutStepContext)
   if (context === undefined) {
-    showSnackbar('CheckoutStep Context not found', 'warning')
+    throw new Error(`useCheckoutStepContext must be used within a CheckoutStepProvider`)
   }
   return context
 }

@@ -155,12 +155,8 @@ export const getProductCharacteristics = (
   properties: ProductProperties[],
   product: Product | ProductCustom
 ): ProductProperties[] => {
-  const occasionAttributeFQN = publicRuntimeConfig?.occasionAttributeFQN?.toLowerCase()
-
   return properties
-    .filter(
-      (prop) => prop.value !== 'false' && prop.attributeFQN?.toLowerCase() === occasionAttributeFQN
-    )
+    .filter((prop) => prop.value !== 'false')
     .concat({
       name: 'Size',
       value: getProductMeasurement(product?.measurements as PrPackageMeasurements),
@@ -290,7 +286,7 @@ const getProductDetails = (product: ProductCustom, pdpProductPrice?: ProductPric
     productOptions,
     isPackagedStandAlone: getIsPackagedStandAlone(product),
     badgeAttribute: getBadgeAttribute(productProperties),
-    availabilityAttribute: getProductAvailability(product?.inventoryInfo as ProductInventoryInfo),
+    availability: getProductAvailability(product?.inventoryInfo as ProductInventoryInfo),
   }
 }
 const getProductFulfillmentOptions = (

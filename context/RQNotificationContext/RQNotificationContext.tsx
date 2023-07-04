@@ -84,7 +84,7 @@ export const RQNotificationContextProvider = ({ children }: RQNotificationContex
 
 export const useSnackbarContext = () => {
   const context = useContext(SnackbarContext)
-  if (context === undefined) console.log('Something went wrong')
+  if (context === undefined) throw new Error('useContext must be inside a Provider with a value')
   return context
 }
 

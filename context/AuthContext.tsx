@@ -5,7 +5,6 @@ import { useRouter } from 'next/router'
 
 import { LoginData } from '@/components/layout/Login/LoginContent/LoginContent'
 import type { RegisterAccountInputData } from '@/components/layout/RegisterAccount/Content/Content'
-import { useSnackbarContext } from '@/context'
 import { useRegister, useLogin, useLogout, useGetCurrentCustomer } from '@/hooks'
 import { cartKeys, loginKeys, wishlistKeys } from '@/lib/react-query/queryKeys'
 
@@ -36,7 +35,6 @@ AuthContext.displayName = 'AuthContext'
 export const AuthContextProvider = ({ children }: AuthContextProviderProps) => {
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false)
   const [user, setUser] = useState<CustomerAccount | undefined>(undefined)
-  const { showSnackbar } = useSnackbarContext()
 
   const router = useRouter()
 
@@ -81,7 +79,7 @@ export const AuthContextProvider = ({ children }: AuthContextProviderProps) => {
       }
       return null
     } catch (err: any) {
-      showSnackbar('Registration Failed', 'error')
+      throw new Error(err)
     }
   }
 
@@ -103,7 +101,7 @@ export const AuthContextProvider = ({ children }: AuthContextProviderProps) => {
     try {
       logOutUser()
     } catch (err: any) {
-      showSnackbar('Logout Failed', 'error')
+      throw new Error(err)
     }
   }
 
@@ -133,8 +131,7 @@ export const AuthContextProvider = ({ children }: AuthContextProviderProps) => {
 
 export const useAuthContext = () => {
   const context = useContext(AuthContext)
-  const { showSnackbar } = useSnackbarContext()
 
-  if (context === undefined) showSnackbar('Auth Context not found', 'warning')
+  if (context === undefined) throw new Error('useContext must be inside a Provider with a value')
   return context
 }
