@@ -14,6 +14,7 @@ import {
   useMediaQuery,
   useTheme,
 } from '@mui/material'
+import { useTranslation } from 'next-i18next'
 
 const tableCellStyles = {
   padding: '5px 10px',
@@ -36,12 +37,13 @@ const IconButtonStyles = {
 const ListItemOptions = (props: any) => {
   const theme = useTheme()
   const mdScreen = useMediaQuery(theme.breakpoints.up('md'))
+  const { t } = useTranslation('common')
 
   if (mdScreen)
     return (
       <Box style={{ justifyContent: 'flex-end', display: 'flex' }}>
-        <Button sx={IconButtonStyles}>Initiate Quote</Button>
-        <Button sx={IconButtonStyles}>Add to Cart</Button>
+        <Button sx={IconButtonStyles}>{t('initiate-quote')}</Button>
+        <Button sx={IconButtonStyles}>{t('add-to-cart')}</Button>
         <IconButton sx={IconButtonStyles}>
           <Edit />
         </IconButton>
@@ -62,6 +64,7 @@ const ListItemOptions = (props: any) => {
 
 const ListTable = (props: any) => {
   const { rows } = props
+  const { t } = useTranslation('common')
   const theme = useTheme()
   const mdScreen = useMediaQuery(theme.breakpoints.up('md'))
   return (
@@ -70,13 +73,15 @@ const ListTable = (props: any) => {
         <TableHead>
           <TableRow style={{ backgroundColor: '#f7f7f7', padding: '10px 0' }}>
             <TableCell style={{ padding: '10px 10px', width: mdScreen ? '25%' : '50%' }}>
-              List Name
+              {t('list-name')}
             </TableCell>
             <TableCell style={{ padding: '10px 10px', width: mdScreen ? '15%' : '30%' }}>
-              Date Created
+              {t('date-created')}
             </TableCell>
             {mdScreen && (
-              <TableCell style={{ padding: '10px 10px', width: '20%' }}>Created By</TableCell>
+              <TableCell style={{ padding: '10px 10px', width: '20%' }}>
+                {t('created-by')}
+              </TableCell>
             )}
             <TableCell
               style={{ padding: '10px 10px', width: mdScreen ? '25%' : '10%' }}

@@ -323,5 +323,14 @@
   "fulfillment-options": "Fulfillment Options:",
   "subscription-cancelled-successfully": "Your subscription item has been cancelled.",
   "card-ending-in": "Card ",
-  "customer-name": "Customer Name"
+  "customer-name": "Customer Name",
+
+  "lists": "Lists",
+  "list-name": "List Name",
+  "create-new-list": "Create New List",
+  "show-only-my-lists": "Show only lists created by me",
+  "search-by-name": "Search by name",
+  "date-created": "Date Created",
+  "created-by": "Created By",
+  "initiate-quote": "Initiate Quote"
 }

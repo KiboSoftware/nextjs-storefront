@@ -4,6 +4,7 @@ import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline'
 import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos'
 import { Grid, Button, useMediaQuery, useTheme, IconButton } from '@mui/material'
 import { useRouter } from 'next/router'
+import { useTranslation } from 'next-i18next'
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
 // import { ReactQueryDevtools } from 'react-query/devtools'
 
@@ -54,6 +55,7 @@ const ListsPage: NextPage = () => {
   const theme = useTheme()
   const mdScreen = useMediaQuery<boolean>(theme.breakpoints.up('md'))
   const smScreen = useMediaQuery<boolean>(theme.breakpoints.up('sm'))
+  const { t } = useTranslation('common')
 
   if (!openForm) {
     return (
@@ -71,7 +73,7 @@ const ListsPage: NextPage = () => {
                   }}
                 >
                   <ArrowBackIosIcon style={{ width: '14px', color: '#000' }} />
-                  My Account
+                  {t('my-account')}
                 </IconButton>
               ) : null}
               <h1
@@ -105,7 +107,7 @@ const ListsPage: NextPage = () => {
                 startIcon={<AddCircleOutlineIcon />}
                 style={smScreen ? {} : { width: '100%' }}
               >
-                Create New List
+                {t('create-new-list')}
               </Button>
             </div>
           )}

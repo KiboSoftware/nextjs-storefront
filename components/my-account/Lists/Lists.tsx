@@ -14,6 +14,7 @@ import {
   useTheme,
 } from '@mui/material'
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
+import { useTranslation } from 'next-i18next'
 
 import { ListTable } from '@/components/common'
 import { useAuthContext } from '@/context'
@@ -47,6 +48,8 @@ const Lists = (props: any) => {
   // screen size declared
   const theme = useTheme()
   const mdScreen = useMediaQuery<boolean>(theme.breakpoints.up('md'))
+
+  const { t } = useTranslation('common')
 
   // on changing page number
   useEffect(() => {
@@ -85,7 +88,7 @@ const Lists = (props: any) => {
     return (
       <Box style={{ padding: '10px 10px 10px 0' }}>
         <FormControlLabel
-          label="Show only lists created by me"
+          label={t('show-only-my-lists')}
           control={<Checkbox onChange={filterChange} sx={{ fontSize: '16px' }} />}
         />
         {!mdScreen && (
@@ -97,7 +100,7 @@ const Lists = (props: any) => {
               }}
             >
               <Input
-                placeholder="Search by name"
+                placeholder={t('search-by-name')}
                 sx={{
                   height: '32px',
                   fontSize: '14px',
