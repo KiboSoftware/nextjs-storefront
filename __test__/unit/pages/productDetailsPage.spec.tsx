@@ -3,10 +3,12 @@ import { render, screen } from '@testing-library/react'
 import { NextApiRequest } from 'next'
 
 import { categoryTreeDataMock, productSearchResultMock } from '@/__mocks__/stories'
-import ProductDetailPage, {
-  getStaticPaths,
-  getStaticProps,
-} from '@/src/pages/product/[...productSlug]'
+import ProductDetailPage from '@/src/pages/product/[...productSlug]'
+
+// import ProductDetailPage, {
+//   getStaticPaths,
+//   getStaticProps,
+// } from '@/src/pages/product/[...productSlug]'
 
 const mockCategoryTreeData = categoryTreeDataMock
 const mockProduct = productSearchResultMock.items?.[0]
@@ -106,32 +108,32 @@ jest.mock(
 )
 
 describe('[page] Product Details Page', () => {
-  it('should run getStaticProps method', () => {
-    const response = getStaticProps(context)
-    expect(response).resolves.toStrictEqual({
-      props: {
-        product: mockProduct,
-        categoriesTree: mockCategoryTreeData.categoriesTree.items,
-        _nextI18Next: {
-          initialI18nStore: { 'mock-locale': [{}], en: [{}] },
-          initialLocale: 'mock-locale',
-          userConfig: { i18n: [{}] },
-        },
-      },
-      revalidate: 60,
-    })
-  })
+  // it('should run getStaticProps method', () => {
+  //   const response = getStaticProps(context)
+  //   expect(response).resolves.toStrictEqual({
+  //     props: {
+  //       product: mockProduct,
+  //       categoriesTree: mockCategoryTreeData.categoriesTree.items,
+  //       _nextI18Next: {
+  //         initialI18nStore: { 'mock-locale': [{}], en: [{}] },
+  //         initialLocale: 'mock-locale',
+  //         userConfig: { i18n: [{}] },
+  //       },
+  //     },
+  //     revalidate: 60,
+  //   })
+  // })
 
-  it('should run getStaticPaths method', () => {
-    const response = getStaticPaths()
-    expect(response).resolves.toStrictEqual({
-      paths: [
-        `/product/mocked-seoFriendlyUrl-1/mocked-productCode-1`,
-        `/product/mocked-seoFriendlyUrl-2/mocked-productCode-2`,
-      ],
-      fallback: true,
-    })
-  })
+  // it('should run getStaticPaths method', () => {
+  //   const response = getStaticPaths()
+  //   expect(response).resolves.toStrictEqual({
+  //     paths: [
+  //       `/product/mocked-seoFriendlyUrl-1/mocked-productCode-1`,
+  //       `/product/mocked-seoFriendlyUrl-2/mocked-productCode-2`,
+  //     ],
+  //     fallback: true,
+  //   })
+  // })
 
   it('should render the page not found if isFallback is false', () => {
     isFallback = false

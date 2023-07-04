@@ -133,7 +133,7 @@ const ProductListingTemplate = (props: ProductListingTemplateProps) => {
       imageUrl:
         productGetters.getCoverImage(product) &&
         productGetters.handleProtocolRelativeUrl(productGetters.getCoverImage(product)),
-      link: getProductLink(productCode),
+      link: getProductLink(productCode, product?.content?.seoFriendlyUrl as string),
       price: t<string>('currency', {
         val: productGetters.getPrice(product).regular,
       }),
