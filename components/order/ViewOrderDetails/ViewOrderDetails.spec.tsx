@@ -21,8 +21,8 @@ jest.mock('@/components/common/OrderSummary/OrderSummary', () => ({
 }))
 const ProductItemListMock = () => <div data-testid="product-item-list-component" />
 jest.mock('@/components/common/ProductItemList/ProductItemList', () => () => ProductItemListMock())
-const productOptionMock = () => <div data-testid="product-option-component" />
-jest.mock('@/components/product/ProductOption/ProductOption', () => () => productOptionMock())
+const KeyValueDisplayMock = () => <div data-testid="key-value-display-component" />
+jest.mock('@/components/common/KeyValueDisplay/KeyValueDisplay', () => () => KeyValueDisplayMock())
 const PaymentBillingCardMock = () => <div data-testid="payment-billing-card-component" />
 jest.mock(
   '@/components/common/PaymentBillingCard/PaymentBillingCard',
@@ -60,7 +60,7 @@ describe('[component] - ViewOrderDetails', () => {
     expect(screen.getByTestId('address-card-component')).toBeInTheDocument()
     expect(screen.getByTestId('order-summary-component')).toBeVisible()
     expect(screen.getAllByTestId('product-item-list-component')).toHaveLength(2)
-    expect(screen.getAllByTestId('product-option-component')).toHaveLength(3)
+    expect(screen.getAllByTestId('key-value-display-component')).toHaveLength(3)
     expect(screen.getByTestId('payment-billing-card-component')).toBeVisible()
     expect(screen.getByText('payment-information')).toBeVisible()
   })

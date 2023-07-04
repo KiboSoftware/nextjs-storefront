@@ -183,7 +183,7 @@ const getSubmittedDate = (order: CrOrder, withTimestamp?: boolean) =>
     ? withTimestamp
       ? format(new Date(order?.submittedDate), DateFormat.DATE_FORMAT_WITH_TIME)
       : format(new Date(order?.submittedDate), DateFormat.DATE_FORMAT)
-    : format(new Date(order?.auditInfo?.createDate), DateFormat.DATE_FORMAT)
+    : order?.submittedDate
 
 const getExpectedDeliveryDate = (items: CrOrderItem[]) => {
   return items[0]?.expectedDeliveryDate

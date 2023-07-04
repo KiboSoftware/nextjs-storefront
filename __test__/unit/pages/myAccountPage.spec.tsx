@@ -16,10 +16,6 @@ jest.mock('@/lib/helpers/cookieHelper', () => ({
   decodeParseCookieValue: jest.fn(() => 'kibo_at'),
 }))
 
-jest.mock('@/context/AuthContext', () => ({
-  useAuthContext: () => ({ user: mockCustomerAccount }),
-}))
-
 const mockNextI18Next = {
   initialI18nStore: { 'mock-locale': [{}], en: [{}] },
   initialLocale: 'mock-locale',
@@ -64,6 +60,10 @@ describe('[page] MyAccount Page', () => {
   it('should render the MyAccount page template', () => {
     mockIsAuthenticated = true
     MyAccountPage.defaultProps = { isAuthenticated: mockIsAuthenticated }
+    jest.mock('@/context/AuthContext', () => ({
+      useAuthContext: () => ({ user: mockCustomerAccount }),
+    }))
+
     render(<MyAccountPage />, {
       wrapper: createQueryClientWrapper(),
     })
@@ -75,6 +75,9 @@ describe('[page] MyAccount Page', () => {
   it('should not render MyAccountTemplate if not authenticated', () => {
     mockIsAuthenticated = false
     MyAccountPage.defaultProps = { isAuthenticated: mockIsAuthenticated }
+    jest.mock('@/context/AuthContext', () => ({
+      useAuthContext: () => ({ user: null }),
+    }))
     render(<MyAccountPage />, {
       wrapper: createQueryClientWrapper(),
     })

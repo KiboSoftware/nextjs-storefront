@@ -3,6 +3,7 @@ import { ReactNode, createContext, useState, useContext, useEffect } from 'react
 import { useQueryClient } from '@tanstack/react-query'
 import { useRouter } from 'next/router'
 
+import { useSnackbarContext } from './RQNotificationContext/RQNotificationContext'
 import { LoginData } from '@/components/layout/Login/LoginContent/LoginContent'
 import type { RegisterAccountInputData } from '@/components/layout/RegisterAccount/Content/Content'
 import { useRegister, useLogin, useLogout, useGetCurrentCustomer } from '@/hooks'
@@ -35,6 +36,7 @@ AuthContext.displayName = 'AuthContext'
 export const AuthContextProvider = ({ children }: AuthContextProviderProps) => {
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false)
   const [user, setUser] = useState<CustomerAccount | undefined>(undefined)
+  const { showSnackbar } = useSnackbarContext()
 
   const router = useRouter()
 
@@ -79,7 +81,7 @@ export const AuthContextProvider = ({ children }: AuthContextProviderProps) => {
       }
       return null
     } catch (err: any) {
-      throw new Error(err)
+      showSnackbar('Registration Failed', 'error')
     }
   }
 
@@ -101,7 +103,7 @@ export const AuthContextProvider = ({ children }: AuthContextProviderProps) => {
     try {
       logOutUser()
     } catch (err: any) {
-      throw new Error(err)
+      showSnackbar('Logout Failed', 'error')
     }
   }
 
