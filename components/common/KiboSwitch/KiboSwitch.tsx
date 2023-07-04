@@ -1,7 +1,7 @@
 import styled from '@emotion/styled'
 import { FormControlLabel, InputLabel, Switch, SwitchProps, Theme, useTheme } from '@mui/material'
 
-interface KiboSwitchProps {
+export interface KiboSwitchProps {
   checked: boolean
   onLabel: string
   offLabel: string
@@ -69,7 +69,6 @@ const KiboSwitch = (props: KiboSwitchProps) => {
     <>
       <InputLabel style={{ fontSize: '12px' }}>{title}</InputLabel>
       <FormControlLabel
-        title={title}
         control={
           <CustomSwitch theme={theme} sx={{ m: 1 }} checked={checked} onChange={handleChange} />
         }
