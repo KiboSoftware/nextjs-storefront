@@ -190,7 +190,9 @@ const UsersPage: NextPage = () => {
         </SearchBoxContainer>
 
         {isLoading ? (
-          <CircularProgress />
+          <Box style={{ width: '100%', display: 'flex', justifyContent: 'center' }}>
+            <CircularProgress />
+          </Box>
         ) : (
           <>
             <UserTable
