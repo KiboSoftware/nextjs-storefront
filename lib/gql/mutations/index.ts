@@ -45,3 +45,10 @@ export { default as deleteSubscriptionMutation } from './subscription/delete-sub
 export { default as updateSubscriptionNextOrderDateMutation } from './subscription/update-subscription-next-order-date-mutation'
 export { default as updateSubscriptionFulfillmentInfoMutation } from './subscription/update-subscription-fulfillment-info-mutation'
 export { default as updateSubscriptionPaymentMutation } from './subscription/update-subscription-payment-mutation'
+
+// Customer B2B User
+export { default as addCustomerB2bUserMutation } from './my-account/users/add-customer-b2b-user'
+export { default as removeCustomerB2bUserMutation } from './my-account/users/remove-customer-b2b-user'
+export { default as updateCustomerB2bUserMutation } from './my-account/users/update-customer-b2b-user'
+export { default as deleteB2bAccountRoleMutation } from './my-account/users/delete-b2b-account-role'
+export { default as addRoleToCustomerB2bAccountMutation } from './my-account/users/add-role-to-customer-b2b-account'

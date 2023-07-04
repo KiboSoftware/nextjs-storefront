@@ -135,3 +135,10 @@ export * from './mutations/subscription/useUpdateSubscriptionNextOrderDate/useUp
 export * from './mutations/subscription/useUpdateSubscriptionShippingInfo/useUpdateSubscriptionShippingInfo'
 export * from './mutations/subscription/useDeleteSubscription/useDeleteSubscription'
 export * from './mutations/subscription/useUpdateSubscriptionPayment/useUpdateSubscriptionPayment'
+
+// B2B Users
+export * from './mutations/myAccount/users/useCreateCustomerB2bUser/useCreateCustomerB2bUser'
+export * from './mutations/myAccount/users/useRemoveCustomerB2bUser/useRemoveCustomerB2bUser'
+export * from './mutations/myAccount/users/useUpdateCustomerB2bUser/useUpdateCustomerB2bUser'
+export * from './mutations/myAccount/users/useAddRoleToCustomerB2bAccount/useAddRoleToCustomerB2bAccount'
+export * from './mutations/myAccount/users/useDeleteB2bAccountRole/useDeleteB2bAccountRole'

@@ -23,9 +23,13 @@ import { useTranslation } from 'next-i18next'
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
 
 import { SearchBar } from '@/components/common'
+import { ConfirmationDialog } from '@/components/dialogs'
 import { UserTable } from '@/components/my-account'
-import { useAuthContext } from '@/context'
-import { useDebounce, useGetB2BUserQueries } from '@/hooks'
+import UserForm from '@/components/my-account/User/UserForm/UserForm'
+import { useAuthContext, useModalContext } from '@/context'
+import { useDebounce, useGetB2BUserQueries, useRemoveCustomerB2bUserMutation } from '@/hooks'
+
+import { Maybe } from '@/lib/gql/types'
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
   const { locale } = context
@@ -77,8 +81,12 @@ const UsersPage: NextPage = () => {
   const theme = useTheme()
   const { user } = useAuthContext()
   const { t } = useTranslation('common')
+  const { showModal } = useModalContext()
   const mdScreen = useMediaQuery(theme.breakpoints.up('md'))
   const { publicRuntimeConfig } = getConfig()
+
+  const [isUserFormOpen, setUserFormOpen] = useState(false)
+  const [editUserId, setEditUserId] = useState<Maybe<string> | undefined>(undefined)
 
   const [paginationState, setPaginationState] = useState({
     searchTerm: '',
@@ -94,6 +102,11 @@ const UsersPage: NextPage = () => {
     searchTerm: useDebounce(paginationState.searchTerm, publicRuntimeConfig.debounceTimeout),
   })
 
+  const { removeCustomerB2bUser } = useRemoveCustomerB2bUserMutation({
+    removeCustomerB2bAccountUser: true,
+    delay: 1000,
+  })
+
   const getPerPageItemText = () => {
     if (!data) return `${mdScreen && t('displaying')} 0 - 0 of 0`
     const { startIndex, pageSize, totalCount } = data
@@ -102,6 +115,38 @@ const UsersPage: NextPage = () => {
     return `${mdScreen && t('displaying')} ${startRange} - ${
       endRange > totalCount ? totalCount : endRange
     } of ${totalCount}`
+  }
+
+  const confirmDelete = (id: string | undefined | null) => {
+    showModal({
+      Component: ConfirmationDialog,
+      props: {
+        contentText: t('delete-user-confirmation-text'),
+        primaryButtonText: 'Delete',
+        onConfirm: () => {
+          const accountId = user?.id
+          const queryVars = { accountId, userId: id }
+          removeCustomerB2bUser.mutateAsync({ ...queryVars })
+        },
+      },
+    })
+  }
+
+  const AddUserButton = () => {
+    return (
+      <Button
+        variant="primary"
+        disabled={isUserFormOpen}
+        onClick={() => setUserFormOpen(true)}
+        disableElevation
+        id="formOpenButton"
+      >
+        <span style={{ display: 'flex', alignItems: 'center' }}>
+          <AddCircleOutlineIcon style={{ marginRight: '8px', width: '19px' }} />
+          <span style={{ paddingTop: '2px', fontWeight: '400' }}>{t('add-user')}</span>
+        </span>
+      </Button>
+    )
   }
 
   return (
@@ -121,12 +166,11 @@ const UsersPage: NextPage = () => {
         </Box>
         <Grid container>
           <Grid item xs={12} md={12}>
-            <Button variant="primary" disableElevation id="formOpenButton">
-              <span style={{ display: 'flex', alignItems: 'center' }}>
-                <AddCircleOutlineIcon style={{ marginRight: '8px', width: '19px' }} />
-                <span style={{ paddingTop: '2px', fontWeight: '400' }}>{t('add-user')}</span>
-              </span>
-            </Button>
+            {mdScreen && <AddUserButton />}
+            {!mdScreen && !isUserFormOpen && <AddUserButton />}
+            {isUserFormOpen && (
+              <UserForm isEditMode={false} closeUserForm={() => setUserFormOpen(false)} />
+            )}
           </Grid>
         </Grid>
       </Grid>
@@ -149,7 +193,12 @@ const UsersPage: NextPage = () => {
           <CircularProgress />
         ) : (
           <>
-            <UserTable b2bAccountUsers={data?.items} />
+            <UserTable
+              b2bAccountUsers={data?.items}
+              deleteUser={confirmDelete}
+              editUserId={editUserId}
+              setEditUserId={(id: Maybe<string> | undefined) => setEditUserId(id)}
+            />
             <PaginationContainer>
               <Pagination
                 count={data?.pageCount || 0}

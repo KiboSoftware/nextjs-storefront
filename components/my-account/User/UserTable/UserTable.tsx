@@ -15,10 +15,15 @@ import {
 } from '@mui/material'
 import { useTranslation } from 'next-i18next'
 
-import { B2BUser } from '@/lib/gql/types'
+import UserForm from '../UserForm/UserForm'
+
+import { B2BUser, Maybe } from '@/lib/gql/types'
 
 interface UserTableProps {
   b2bAccountUsers: B2BUser[] | undefined
+  deleteUser: (id: Maybe<string> | undefined) => void
+  editUserId: Maybe<string> | undefined
+  setEditUserId: (id: Maybe<string> | undefined) => void
 }
 
 const UserStatusCircle = styled('div', {
@@ -43,7 +48,7 @@ const style = {
 }
 
 const UserTable = (props: UserTableProps) => {
-  const { b2bAccountUsers } = props
+  const { b2bAccountUsers, deleteUser, editUserId, setEditUserId } = props
 
   const { t } = useTranslation('common')
   const theme = useTheme()
@@ -68,36 +73,55 @@ const UserTable = (props: UserTableProps) => {
       </TableHead>
       <TableBody>
         {b2bAccountUsers &&
-          b2bAccountUsers.map((b2bUser) => (
-            <TableRow key={b2bUser?.userId}>
-              <TableCell colSpan={2} sx={style.emailAddressCell}>
-                {b2bUser?.emailAddress}
-              </TableCell>
-              {mdScreen && <TableCell sx={{ flex: 1 }}>{b2bUser?.firstName}</TableCell>}
-              {mdScreen && <TableCell sx={{ flex: 1 }}>{b2bUser?.lastName}</TableCell>}
-              <TableCell sx={{ flex: 1 }}>
-                {(b2bUser?.roles && b2bUser?.roles.length && b2bUser?.roles[0]?.roleName) || 'N/A'}
-              </TableCell>
-              {mdScreen && (
+          b2bAccountUsers.map((b2bUser) =>
+            editUserId && editUserId === b2bUser?.userId ? (
+              <TableRow key={b2bUser?.userId}>
+                <TableCell colSpan={6} style={{ width: '100%' }}>
+                  <UserForm
+                    isEditMode={true}
+                    b2BUser={b2bUser}
+                    closeUserForm={() => setEditUserId(undefined)}
+                  />
+                </TableCell>
+              </TableRow>
+            ) : (
+              <TableRow key={b2bUser?.userId}>
+                <TableCell colSpan={2} sx={style.emailAddressCell}>
+                  {b2bUser?.emailAddress}
+                </TableCell>
+                {mdScreen && <TableCell sx={{ flex: 1 }}>{b2bUser?.firstName}</TableCell>}
+                {mdScreen && <TableCell sx={{ flex: 1 }}>{b2bUser?.lastName}</TableCell>}
                 <TableCell sx={{ flex: 1 }}>
-                  <Box sx={{ display: 'flex', justifyContent: 'start', alignItems: 'center' }}>
-                    <UserStatusCircle
-                      color={
-                        b2bUser.isActive ? theme.palette.primary.main : theme.palette.grey[600]
-                      }
-                    ></UserStatusCircle>
-                    <Typography>{b2bUser.isActive ? 'Active' : 'Inactive'}</Typography>
+                  {(b2bUser?.roles && b2bUser?.roles.length && b2bUser?.roles[0]?.roleName) ||
+                    'N/A'}
+                </TableCell>
+                {mdScreen && (
+                  <TableCell sx={{ flex: 1 }}>
+                    <Box sx={{ display: 'flex', justifyContent: 'start', alignItems: 'center' }}>
+                      <UserStatusCircle
+                        color={
+                          b2bUser.isActive ? theme.palette.primary.main : theme.palette.grey[600]
+                        }
+                      ></UserStatusCircle>
+                      <Typography>{b2bUser.isActive ? t('active') : t('in-active')}</Typography>
+                    </Box>
+                  </TableCell>
+                )}
+                <TableCell sx={{ flex: 1 }}>
+                  <Box sx={{ display: 'flex', justifyContent: 'end', alignItems: 'center' }}>
+                    <EditIcon
+                      onClick={() => setEditUserId(b2bUser?.userId)}
+                      style={{ marginRight: '16px', cursor: 'pointer' }}
+                    />
+                    <RemoveCircleIcon
+                      onClick={() => deleteUser(b2bUser?.userId)}
+                      style={{ cursor: 'pointer' }}
+                    />
                   </Box>
                 </TableCell>
-              )}
-              <TableCell sx={{ flex: 1 }}>
-                <Box sx={{ display: 'flex', justifyContent: 'end', alignItems: 'center' }}>
-                  <EditIcon style={{ marginRight: '16px', cursor: 'pointer' }} />
-                  <RemoveCircleIcon style={{ cursor: 'pointer' }} />
-                </Box>
-              </TableCell>
-            </TableRow>
-          ))}
+              </TableRow>
+            )
+          )}
       </TableBody>
     </Table>
   )

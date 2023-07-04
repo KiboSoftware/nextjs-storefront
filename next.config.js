@@ -104,6 +104,28 @@ module.exports = {
       defaultPageSize: 5,
       defaultPage: 1,
     },
+    b2bUserRoles: [
+      { roleName: 'Admin', roleId: 1 },
+      { roleName: 'Purchaser', roleId: 2 },
+      { roleName: 'Nonpurchaser', roleId: 3 },
+    ],
+    userFormRadioOptions: [
+      {
+        label: 'Admin',
+        name: 'role',
+        value: 'Admin',
+      },
+      {
+        label: 'Purchaser',
+        name: 'role',
+        value: 'Purchaser',
+      },
+      {
+        label: 'Non Purchaser',
+        name: 'role',
+        value: 'Nonpurchaser',
+      },
+    ],
   },
   serverRuntimeConfig: {
     revalidate: process.env.GLOBAL_PAGE_REVALIDATE || 30,
