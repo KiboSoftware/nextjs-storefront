@@ -14,6 +14,7 @@ import {
   useTheme,
 } from '@mui/material'
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
+import getConfig from 'next/config'
 import { useTranslation } from 'next-i18next'
 
 import { ListTable } from '@/components/common'
@@ -36,13 +37,15 @@ interface ListsState {
 }
 
 const Lists = (props: any) => {
+  const { publicRuntimeConfig } = getConfig()
+
   // declaring states
   const [page, setPage] = useState<number>(1)
   const [state, setState] = useState<ListsState>({
-    startIndex: 0,
-    pageSize: 5,
-    sortBy: 'createDate desc',
-    filter: '',
+    startIndex: publicRuntimeConfig.b2bList.startIndex,
+    pageSize: publicRuntimeConfig.b2bList.pageSize,
+    sortBy: publicRuntimeConfig.b2bList.sortBy,
+    filter: publicRuntimeConfig.b2bList.filter,
   })
 
   // screen size declared

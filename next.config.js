@@ -105,6 +105,12 @@ module.exports = {
       startIndex: 0,
       pageSize: 5,
     },
+    b2bList: {
+      startIndex: 0,
+      pageSize: 5,
+      sortBy: 'createDate desc',
+      filter: '',
+    },
   },
   serverRuntimeConfig: {
     revalidate: process.env.GLOBAL_PAGE_REVALIDATE || 30,
