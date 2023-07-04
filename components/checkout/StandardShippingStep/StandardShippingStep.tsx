@@ -3,11 +3,10 @@ import React, { useEffect, useRef, useState } from 'react'
 
 import { Stack, Button, Typography, Grid, Box, FormControlLabel, Checkbox } from '@mui/material'
 import { useTranslation } from 'next-i18next'
-import { useReCaptcha } from 'next-recaptcha-v3'
 
 import { ShippingMethod } from '@/components/checkout'
 import { AddressCard, AddressForm, KiboRadio } from '@/components/common'
-import { useCheckoutStepContext, STEP_STATUS, useSnackbarContext, useAuthContext } from '@/context'
+import { useCheckoutStepContext, STEP_STATUS, useAuthContext } from '@/context'
 import {
   useUpdateOrderShippingInfo,
   useGetShippingMethods,
@@ -16,7 +15,7 @@ import {
 } from '@/hooks'
 import { DefaultId, AddressType } from '@/lib/constants'
 import { orderGetters, userGetters } from '@/lib/getters'
-import { buildAddressParams, validateGoogleReCaptcha } from '@/lib/helpers'
+import { buildAddressParams } from '@/lib/helpers'
 import { Address } from '@/lib/types'
 
 import type {
@@ -36,8 +35,9 @@ interface ShippingProps {
 
 const StandardShippingStep = (props: ShippingProps) => {
   const { checkout, savedUserAddressData: addresses, isAuthenticated } = props
-  const { executeRecaptcha } = useReCaptcha()
-  const { showSnackbar } = useSnackbarContext()
+  // Use this to submit the form with reCaptcha: Don't delete this code
+  // const { executeRecaptcha } = useReCaptcha()
+  // const { showSnackbar } = useSnackbarContext()
   const { user } = useAuthContext()
   const checkoutShippingContact = orderGetters.getShippingContact(checkout)
   const checkoutShippingMethodCode = orderGetters.getShippingMethodCode(checkout)
@@ -141,21 +141,24 @@ const StandardShippingStep = (props: ShippingProps) => {
     }
   }
 
-  const submitFormWithRecaptcha = ({ contact }: { contact: CrContact }) => {
-    if (!executeRecaptcha) {
-      console.log('Execute recaptcha not yet available')
-      return
-    }
-    executeRecaptcha('enquiryFormSubmit').then(async (gReCaptchaToken) => {
-      const captcha = await validateGoogleReCaptcha(gReCaptchaToken)
+  // Use this function to submit the form with reCaptcha: Don't delete this code
+  // This code is commented out because we are not using reCaptcha for now
+  // In order to use this you need to pass this function to AddressForm component as a onSaveAddress
+  // const submitFormWithRecaptcha = ({ contact }: { contact: CrContact }) => {
+  //   if (!executeRecaptcha) {
+  //     console.log('Execute recaptcha not yet available')
+  //     return
+  //   }
+  //   executeRecaptcha('enquiryFormSubmit').then(async (gReCaptchaToken) => {
+  //     const captcha = await validateGoogleReCaptcha(gReCaptchaToken)
 
-      if (captcha?.status === 'success') {
-        await handleSaveAddressToCheckout({ contact })
-      } else {
-        showSnackbar(captcha.message, 'error')
-      }
-    })
-  }
+  //     if (captcha?.status === 'success') {
+  //       await handleSaveAddressToCheckout({ contact })
+  //     } else {
+  //       showSnackbar(captcha.message, 'error')
+  //     }
+  //   })
+  // }
 
   const handleSaveShippingMethod = async (shippingMethodCode: string) => {
     const shippingMethodName = shippingMethods.find(
@@ -374,7 +377,7 @@ const StandardShippingStep = (props: ShippingProps) => {
             saveAddressLabel={t('save-shipping-address')}
             setAutoFocus={true}
             validateForm={validateForm}
-            onSaveAddress={submitFormWithRecaptcha}
+            onSaveAddress={handleSaveAddressToCheckout}
             onFormStatusChange={handleFormStatusChange}
           />
 

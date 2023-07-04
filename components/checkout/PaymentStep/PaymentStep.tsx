@@ -34,7 +34,6 @@ import { CurrencyCode, PaymentType, PaymentWorkflow } from '@/lib/constants'
 import { addressGetters, cardGetters, orderGetters, userGetters } from '@/lib/getters'
 import {
   buildCardPaymentActionForCheckoutParams,
-  reTokenizeCreditCardPayment,
   tokenizeCreditCardPayment,
   validateGoogleReCaptcha,
 } from '@/lib/helpers'
@@ -133,6 +132,9 @@ const PaymentStep = (props: PaymentStepProps) => {
 
   const { executeRecaptcha } = useReCaptcha()
   const { showSnackbar } = useSnackbarContext()
+
+  const { publicRuntimeConfig } = getConfig()
+  const reCaptchaKey = publicRuntimeConfig.recaptcha.reCaptchaKey
 
   const { loadPaymentTypes } = usePaymentTypes()
   const paymentMethods = loadPaymentTypes()
@@ -349,7 +351,7 @@ const PaymentStep = (props: PaymentStepProps) => {
       } = cardGetters.getCardDetails(selectedPaymentMethod?.cardInfo as SavedCard)
 
       if (!isCVVAddedForNewPayment) {
-        await handleReTokenization({
+        await handleTokenization({
           id,
           cardType,
           cvv,
@@ -470,13 +472,6 @@ const PaymentStep = (props: PaymentStepProps) => {
     setIsCVVAddedForNewPayment(true)
   }
 
-  const handleReTokenization = async (card: CardForm) => {
-    const { publicRuntimeConfig } = getConfig()
-    const pciHost = publicRuntimeConfig?.pciHost
-    const apiHost = publicRuntimeConfig?.apiHost as string
-    await reTokenizeCreditCardPayment(card, pciHost, apiHost)
-  }
-
   const handleInitialCardDetailsLoad = () => {
     setStepStatusIncomplete()
 
@@ -589,7 +584,7 @@ const PaymentStep = (props: PaymentStepProps) => {
 
   useEffect(() => {
     if (stepStatus === STEP_STATUS.SUBMIT) {
-      submitFormWithRecaptcha()
+      reCaptchaKey ? submitFormWithRecaptcha() : saveCardDataToOrder()
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [stepStatus])
@@ -597,11 +592,6 @@ const PaymentStep = (props: PaymentStepProps) => {
   useEffect(() => {
     isValid ? setStepStatusValid() : setStepStatusIncomplete()
   }, [isValid])
-
-  console.log(
-    'savedPaymentBillingDetails====================================================',
-    savedPaymentBillingDetails.length
-  )
 
   return (
     <Stack data-testid="checkout-payment">

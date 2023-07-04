@@ -30,3 +30,4 @@ export { default as ShippingGroupsWithMethod } from './ShippingGroupsWithMethod/
 export { default as KiboPagination } from './KiboPagination/KiboPagination'
 export { default as PaymentBillingCard } from './PaymentBillingCard/PaymentBillingCard'
 export { default as Address } from './PaymentBillingCard/PaymentBillingCard'
+export { default as KeyValueDisplay } from './KeyValueDisplay/KeyValueDisplay'

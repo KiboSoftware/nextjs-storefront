@@ -103,77 +103,74 @@ const CheckoutUITemplate = <T extends CrOrder | Checkout>(props: CheckoutUITempl
   const { publicRuntimeConfig } = getConfig()
   const reCaptchaKey = publicRuntimeConfig.recaptcha.reCaptchaKey
 
-  return (
-    <>
-      <ReCaptchaProvider reCaptchaKey={reCaptchaKey}>
-        {showCheckoutSteps && (
-          <Stack
-            sx={{ paddingTop: '20px', paddingBottom: { md: '40px' } }}
-            direction={{ xs: 'column', md: 'row' }}
-            gap={2}
-          >
-            <Stack sx={{ width: '100%', maxWidth: '872px' }} gap={1}>
-              <KiboStepper isSticky={true}>{children}</KiboStepper>
-            </Stack>
-            <Box
-              sx={{
-                width: '100%',
-                maxWidth: 428,
-                height: 'fit-content',
-                marginLeft: { lg: '1rem' },
-                position: { md: 'sticky' },
-                top: '80px',
-              }}
-            >
-              {activeStep != reviewStepIndex && (
-                <OrderSummary {...orderSummaryArgs}>
-                  {activeStep < buttonLabels.length && (
-                    <Stack direction="column" gap={2}>
-                      <Button
-                        variant="contained"
-                        color="primary"
-                        sx={{ ...buttonStyle }}
-                        fullWidth
-                        onClick={handleSubmit}
-                        disabled={
-                          stepStatus !== STEP_STATUS.VALID || activeStep === steps.length - 1
-                        }
-                      >
-                        {buttonLabels[activeStep]}
-                      </Button>
-                      <Button
-                        variant="contained"
-                        color="secondary"
-                        sx={{ ...buttonStyle }}
-                        fullWidth
-                        onClick={handleBack}
-                        disabled={activeStep === detailsStepIndex}
-                      >
-                        {t('go-back')}
-                      </Button>
-                    </Stack>
-                  )}
-                </OrderSummary>
-              )}
-              {activeStep === reviewStepIndex && (
-                <OrderReview
-                  checkout={checkout as CrOrder}
-                  isMultiShipEnabled={isMultiShipEnabled}
-                  handleApplyCouponCode={handleApplyCouponCode}
-                  handleRemoveCouponCode={handleRemoveCouponCode}
-                  promoError={promoError}
-                />
-              )}
-            </Box>
-          </Stack>
+  const commonElements = showCheckoutSteps ? (
+    <Stack
+      sx={{ paddingTop: '20px', paddingBottom: { md: '40px' } }}
+      direction={{ xs: 'column', md: 'row' }}
+      gap={2}
+    >
+      <Stack sx={{ width: '100%', maxWidth: '872px' }} gap={1}>
+        <KiboStepper isSticky={true}>{children}</KiboStepper>
+      </Stack>
+      <Box
+        sx={{
+          width: '100%',
+          maxWidth: 428,
+          height: 'fit-content',
+          marginLeft: { lg: '1rem' },
+          position: { md: 'sticky' },
+          top: '80px',
+        }}
+      >
+        {activeStep != reviewStepIndex && (
+          <OrderSummary {...orderSummaryArgs}>
+            {activeStep < buttonLabels.length && (
+              <Stack direction="column" gap={2}>
+                <Button
+                  variant="contained"
+                  color="primary"
+                  sx={{ ...buttonStyle }}
+                  fullWidth
+                  onClick={handleSubmit}
+                  disabled={stepStatus !== STEP_STATUS.VALID || activeStep === steps.length - 1}
+                >
+                  {buttonLabels[activeStep]}
+                </Button>
+                <Button
+                  variant="contained"
+                  color="secondary"
+                  sx={{ ...buttonStyle }}
+                  fullWidth
+                  onClick={handleBack}
+                  disabled={activeStep === detailsStepIndex}
+                >
+                  {t('go-back')}
+                </Button>
+              </Stack>
+            )}
+          </OrderSummary>
         )}
-        {/* {!showCheckoutSteps && (
-        <Stack sx={{ paddingY: 8 }}>
-          <OrderConfirmation order={checkout as CrOrder} />
-        </Stack>
-      )} */}
-      </ReCaptchaProvider>
-    </>
+        {activeStep === reviewStepIndex && (
+          <OrderReview
+            checkout={checkout as CrOrder}
+            isMultiShipEnabled={isMultiShipEnabled}
+            handleApplyCouponCode={handleApplyCouponCode}
+            handleRemoveCouponCode={handleRemoveCouponCode}
+            promoError={promoError}
+          />
+        )}
+      </Box>
+    </Stack>
+  ) : null
+
+  return (
+    <React.Fragment>
+      {reCaptchaKey ? (
+        <ReCaptchaProvider reCaptchaKey={reCaptchaKey}>{commonElements}</ReCaptchaProvider>
+      ) : (
+        commonElements
+      )}
+    </React.Fragment>
   )
 }
 export default CheckoutUITemplate

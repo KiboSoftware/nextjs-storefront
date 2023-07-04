@@ -4,9 +4,8 @@ import ArrowBackIos from '@mui/icons-material/ArrowBackIos'
 import { Divider, Grid, Typography, Box, Stack, Button } from '@mui/material'
 import { useTranslation } from 'next-i18next'
 
-import { AddressCard, OrderSummary, ProductItemList } from '@/components/common'
+import { AddressCard, OrderSummary, ProductItemList, KeyValueDisplay } from '@/components/common'
 import PaymentBillingCard from '@/components/common/PaymentBillingCard/PaymentBillingCard'
-import { ProductOption } from '@/components/product'
 import { useGetStoreLocations } from '@/hooks'
 import { OrderStatus, ReturnStatus } from '@/lib/constants'
 import { addressGetters, orderGetters, storeLocationGetters } from '@/lib/getters'
@@ -120,15 +119,15 @@ const ViewOrderDetails = (props: ViewOrderDetailsProps) => {
         {/* Order Details Section */}
         <Grid item xs={12} md={7}>
           <Box sx={{ ...styles.container }}>
-            <ProductOption
+            <KeyValueDisplay
               option={{ name: t('order-number'), value: orderNumber }}
               variant="body1"
             />
-            <ProductOption
+            <KeyValueDisplay
               option={{ name: t('order-date'), value: submittedDate }}
               variant="body1"
             />
-            <ProductOption
+            <KeyValueDisplay
               option={{
                 name: t('order-total'),
                 value: `${t('currency', { val: orderTotal })} (${t('item-quantity', {
@@ -138,7 +137,10 @@ const ViewOrderDetails = (props: ViewOrderDetailsProps) => {
               variant="body1"
             />
             {isOrderStatus && (
-              <ProductOption option={{ name: t('shipped-to'), value: shippedTo }} variant="body1" />
+              <KeyValueDisplay
+                option={{ name: t('shipped-to'), value: shippedTo }}
+                variant="body1"
+              />
             )}
           </Box>
           <Divider sx={{ ...styles.divider }} />

@@ -4,9 +4,14 @@ import ArrowBackIos from '@mui/icons-material/ArrowBackIos'
 import { Divider, Grid, Typography, Box, Stack, Button, MenuItem } from '@mui/material'
 import { useTranslation } from 'next-i18next'
 
-import { KiboImage, KiboRadio, KiboSelect, ReturnItemList } from '@/components/common'
+import {
+  KiboImage,
+  KiboRadio,
+  KiboSelect,
+  ReturnItemList,
+  KeyValueDisplay,
+} from '@/components/common'
 import { OrderReturnItemsDialog } from '@/components/dialogs'
-import { ProductOption } from '@/components/product'
 import { useModalContext } from '@/context'
 import { useGetReturnReasons, useCreateOrderReturn } from '@/hooks'
 import { OrderStatus, OrderReturnType } from '@/lib/constants'
@@ -133,15 +138,15 @@ const OrderReturnItems = (props: OrderReturnItemsProps) => {
         </Grid>
         <Grid item xs={12} md={7}>
           <Box sx={{ ...styles.container }}>
-            <ProductOption
+            <KeyValueDisplay
               option={{ name: t('order-number'), value: orderNumber }}
               variant="body1"
             />
-            <ProductOption
+            <KeyValueDisplay
               option={{ name: t('order-date'), value: submittedDate }}
               variant="body1"
             />
-            <ProductOption
+            <KeyValueDisplay
               option={{
                 name: t('order-total'),
                 value: `${t('currency', { val: orderTotal })} (${t('item-quantity', {

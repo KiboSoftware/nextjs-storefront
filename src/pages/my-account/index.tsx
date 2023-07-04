@@ -32,14 +32,14 @@ const MyAccountPage: NextPage = (props: any) => {
   const { publicRuntimeConfig } = getConfig()
   const { reCaptchaKey } = publicRuntimeConfig.recaptcha
 
-  return (
-    <>
-      {serverSideIsAuthenticated && customerAccount ? (
-        <ReCaptchaProvider reCaptchaKey={reCaptchaKey}>
-          <MyAccountTemplate user={customerAccount} />
-        </ReCaptchaProvider>
-      ) : null}
-    </>
+  if (!serverSideIsAuthenticated && !customerAccount) return null
+
+  return reCaptchaKey ? (
+    <ReCaptchaProvider reCaptchaKey={reCaptchaKey}>
+      <MyAccountTemplate user={customerAccount} />
+    </ReCaptchaProvider>
+  ) : (
+    <MyAccountTemplate user={customerAccount} />
   )
 }
 

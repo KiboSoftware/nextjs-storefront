@@ -1,6 +1,6 @@
 import { Variant } from '@mui/material/styles/createTypography'
 
-import { ProductOption } from '@/components/product'
+import { KeyValueDisplay } from '@/components/common'
 
 import type { CrProductOption } from '@/lib/gql/types'
 
@@ -16,7 +16,7 @@ const ProductOptionList = (props: ProductOptionListProps) => {
   return (
     <>
       {options.map((option: CrProductOption) => (
-        <ProductOption
+        <KeyValueDisplay
           key={`${option?.name}-${option.value}`}
           option={option}
           variant={variant}

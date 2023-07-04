@@ -135,6 +135,7 @@ const AddressBook = (props: AddressBookProps) => {
   const { publicRuntimeConfig } = getConfig()
   const shippingAddressPageSize = publicRuntimeConfig.shippingAddressPageSize
   const billingAddressPageSize = publicRuntimeConfig.billingAddressPageSize
+  const reCaptchaKey = publicRuntimeConfig.recaptcha.reCaptchaKey
   const [isAddressModified, setIsAddressModified] = useState<boolean>(false)
   const [validateForm, setValidateForm] = useState<boolean>(false)
   const [isDefaultAddress, setIsDefaultAddress] = useState<boolean>(false)
@@ -429,7 +430,9 @@ const AddressBook = (props: AddressBookProps) => {
             setAutoFocus={true}
             isUserLoggedIn={true}
             validateForm={validateForm}
-            onSaveAddress={submitFormWithRecaptcha}
+            onSaveAddress={(address) =>
+              reCaptchaKey ? submitFormWithRecaptcha(address) : handleSaveAddress(address)
+            }
             onFormStatusChange={handleFormStatusChange}
             contact={editAddress as ContactForm}
           />

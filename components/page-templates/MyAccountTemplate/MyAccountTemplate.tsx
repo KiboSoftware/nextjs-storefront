@@ -98,6 +98,7 @@ const MyAccountTemplate = (props: MyAccountTemplateProps) => {
   const { t } = useTranslation('common')
   const { publicRuntimeConfig } = getConfig()
   const isSubscriptionEnabled = publicRuntimeConfig.isSubscriptionEnabled
+  const reCaptchaKey = publicRuntimeConfig.recaptcha.reCaptchaKey
   const router = useRouter()
   const theme = useTheme()
   const mdScreen = useMediaQuery(theme.breakpoints.up('md'))
@@ -200,7 +201,11 @@ const MyAccountTemplate = (props: MyAccountTemplateProps) => {
           user={user as CustomerAccount}
           cards={cards}
           contacts={contacts}
-          onSave={submitFormWithRecaptcha}
+          onSave={(address, card, isUpdatingAddress) =>
+            reCaptchaKey
+              ? submitFormWithRecaptcha(address, card, isUpdatingAddress)
+              : handleSave(address, card, isUpdatingAddress)
+          }
         />
       ),
     },

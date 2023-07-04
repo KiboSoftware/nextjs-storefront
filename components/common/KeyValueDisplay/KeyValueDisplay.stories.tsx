@@ -2,14 +2,14 @@ import React from 'react'
 
 import { ComponentStory, ComponentMeta } from '@storybook/react'
 
-import ProductOption from './ProductOption'
+import KeyValueDisplay from './KeyValueDisplay'
 
 import type { CrProductOption } from '@/lib/gql/types'
 
 export default {
-  title: 'Product/ProductOption',
-  component: ProductOption,
-} as ComponentMeta<typeof ProductOption>
+  title: 'Common/KeyValueDisplay',
+  component: KeyValueDisplay,
+} as ComponentMeta<typeof KeyValueDisplay>
 
 const productOption: CrProductOption = {
   attributeFQN: 'Tenant~color',
@@ -18,7 +18,7 @@ const productOption: CrProductOption = {
 }
 
 // Default Line Item
-const Template: ComponentStory<typeof ProductOption> = (args) => <ProductOption {...args} />
+const Template: ComponentStory<typeof KeyValueDisplay> = (args) => <KeyValueDisplay {...args} />
 
 export const Common = Template.bind({})
 Common.args = {
