@@ -49,21 +49,21 @@ const addNewListButtonStyles = {
 }
 
 const ListsPage: NextPage = () => {
-  const [openForm, setOpenForm] = useState(false)
-  const [editForm, setEditForm] = useState(false)
+  const [state, setState] = useState({
+    openCreateForm: false,
+    openEditForm: false,
+  })
   const router = useRouter()
   const theme = useTheme()
   const mdScreen = useMediaQuery<boolean>(theme.breakpoints.up('md'))
   const smScreen = useMediaQuery<boolean>(theme.breakpoints.up('sm'))
   const { t } = useTranslation('common')
 
-  if (!openForm) {
+  if (!state.openCreateForm) {
     return (
       <Grid spacing={2} marginTop={2}>
         <Grid xs={12}>
-          {editForm ? (
-            <></>
-          ) : (
+          {!state.openEditForm && (
             <div>
               {mdScreen ? (
                 <IconButton
@@ -86,7 +86,7 @@ const ListsPage: NextPage = () => {
                 }}
               >
                 {mdScreen ? (
-                  <span style={{ fontSize: '28px', marginRight: 'auto' }}> Lists </span>
+                  <span style={{ fontSize: '28px', marginRight: 'auto' }}> {t('lists')} </span>
                 ) : (
                   <>
                     <IconButton
@@ -102,7 +102,7 @@ const ListsPage: NextPage = () => {
                 )}
               </h1>
               <Button
-                onClick={() => setOpenForm(true)}
+                onClick={() => setState({ ...state, openCreateForm: true })}
                 sx={addNewListButtonStyles}
                 startIcon={<AddCircleOutlineIcon />}
                 style={smScreen ? {} : { width: '100%' }}
@@ -111,7 +111,7 @@ const ListsPage: NextPage = () => {
               </Button>
             </div>
           )}
-          <Lists handleEditForm={setEditForm} />
+          <Lists handleEditForm={(val: boolean) => setState({ ...state, openEditForm: val })} />
         </Grid>
         {/* <ReactQueryDevtools initialIsOpen={false} /> */}
       </Grid>
