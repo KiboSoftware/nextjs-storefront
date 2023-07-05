@@ -36,7 +36,12 @@ interface ListsState {
   sortBy: string
 }
 
-const Lists = (props: any) => {
+interface ListsProps {
+  handleEditForm: (param: boolean) => void
+}
+
+const Lists = (props: ListsProps) => {
+  const { handleEditForm } = props
   const { publicRuntimeConfig } = getConfig()
 
   // declaring states
