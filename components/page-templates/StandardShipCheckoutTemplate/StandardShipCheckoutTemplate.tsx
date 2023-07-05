@@ -128,6 +128,11 @@ const StandardShipCheckoutTemplate = (props: StandardShipCheckoutProps) => {
 
   const handleCreateOrder = async (order: CrOrder) => {
     await createOrder.mutateAsync(order)
+
+    router.push(
+      { pathname: '/order-confirmation', query: { checkoutId: order.id } },
+      { pathname: '/order-confirmation' }
+    )
   }
 
   const { shipItems, pickupItems } = orderGetters.getCheckoutDetails(order as CrOrder)

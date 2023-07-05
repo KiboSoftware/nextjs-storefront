@@ -92,14 +92,6 @@ const CheckoutUITemplate = <T extends CrOrder | Checkout>(props: CheckoutUITempl
   }
   const showCheckoutSteps = activeStep !== steps.length
 
-  const router = useRouter()
-  if (!showCheckoutSteps) {
-    router.push(
-      { pathname: '/order-confirmation', query: { checkoutId: checkout.id } },
-      { pathname: '/order-confirmation' }
-    )
-  }
-
   const { publicRuntimeConfig } = getConfig()
   const reCaptchaKey = publicRuntimeConfig.recaptcha.reCaptchaKey
 
