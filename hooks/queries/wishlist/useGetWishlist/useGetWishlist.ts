@@ -5,7 +5,6 @@ import { useQuery } from '@tanstack/react-query'
 
 import { makeGraphQLClient } from '@/lib/gql/client'
 import { getWishlistQuery } from '@/lib/gql/queries'
-import { queryClient } from '@/lib/react-query/queryClient'
 import { wishlistKeys } from '@/lib/react-query/queryKeys'
 
 import type { CrWishlist } from '@/lib/gql/types'
