@@ -6,7 +6,7 @@ Demo: <a href="https://nextjs-storefront-kibo-commerce.vercel.app">https://nextj
 
 </p>
 
-### Features
+### Features.
 
 - Performant by default
 - SEO Ready
