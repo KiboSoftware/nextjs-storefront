@@ -63,12 +63,12 @@ const ListItemOptions = (props: any) => {
 }
 
 const ListTable = (props: any) => {
-  const { rows } = props
+  const { rows, isLoading } = props
   const { t } = useTranslation('common')
   const theme = useTheme()
   const mdScreen = useMediaQuery(theme.breakpoints.up('md'))
   return (
-    <TableContainer>
+    <TableContainer sx={{ opacity: isLoading ? '0.5' : '1' }}>
       <Table style={{ tableLayout: 'fixed' }}>
         <TableHead>
           <TableRow style={{ backgroundColor: '#f7f7f7', padding: '10px 0' }}>

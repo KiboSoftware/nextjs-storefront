@@ -11,7 +11,7 @@ import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
 // import CreateWishlist from '@/components/wishlist/CreateWishlist/createWishlist'
 // import Wishlist from '@/components/wishlist/wishlist'
 
-import Lists from '@/components/my-account/Lists/Lists'
+import ViewLists from '@/components/my-account/Lists/ViewLists/ViewLists'
 
 import type { GetServerSideProps, GetServerSidePropsContext, NextPage } from 'next'
 
@@ -50,8 +50,8 @@ const addNewListButtonStyles = {
 
 const ListsPage: NextPage = () => {
   const [state, setState] = useState({
-    openCreateForm: false,
-    openEditForm: false,
+    isCreateFormOpen: false,
+    isEditFormOpen: false,
   })
   const router = useRouter()
   const theme = useTheme()
@@ -59,11 +59,11 @@ const ListsPage: NextPage = () => {
   const smScreen = useMediaQuery<boolean>(theme.breakpoints.up('sm'))
   const { t } = useTranslation('common')
 
-  if (!state.openCreateForm) {
+  if (!state.isCreateFormOpen) {
     return (
       <Grid spacing={2} marginTop={2}>
         <Grid xs={12}>
-          {!state.openEditForm && (
+          {!state.isCreateFormOpen && (
             <div>
               {mdScreen ? (
                 <IconButton
@@ -102,7 +102,7 @@ const ListsPage: NextPage = () => {
                 )}
               </h1>
               <Button
-                onClick={() => setState({ ...state, openCreateForm: true })}
+                onClick={() => setState({ ...state, isCreateFormOpen: true })}
                 sx={addNewListButtonStyles}
                 startIcon={<AddCircleOutlineIcon />}
                 style={smScreen ? {} : { width: '100%' }}
@@ -111,7 +111,9 @@ const ListsPage: NextPage = () => {
               </Button>
             </div>
           )}
-          <Lists handleEditForm={(val: boolean) => setState({ ...state, openEditForm: val })} />
+          <ViewLists
+            handleEditForm={(val: boolean) => setState({ ...state, isEditFormOpen: val })}
+          />
         </Grid>
         {/* <ReactQueryDevtools initialIsOpen={false} /> */}
       </Grid>

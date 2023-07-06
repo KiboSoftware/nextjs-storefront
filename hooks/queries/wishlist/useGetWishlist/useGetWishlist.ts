@@ -19,14 +19,14 @@ export interface UseWishlistResponse {
   isFetching: boolean
 }
 
-export interface GetAllWishlistsProps {
+export interface PageProps {
   filter: string
   pageSize: number
   sortBy: string
   startIndex: number
 }
 
-const getWishlists = async (params?: GetAllWishlistsProps) => {
+const getWishlists = async (params?: PageProps) => {
   const client = makeGraphQLClient()
   const response = await client.request({
     document: getWishlistQuery,
@@ -50,11 +50,12 @@ const getWishlists = async (params?: GetAllWishlistsProps) => {
  * @returns 'response?.wishlists, which contains the all wishlists item'
  */
 
-export const useGetWishlist = (params?: GetAllWishlistsProps) => {
+export const useGetWishlist = (params?: PageProps) => {
   const { data, isPending, isSuccess, isFetching, isLoading } = useQuery({
     queryKey: params ? wishlistKeys.page(params) : wishlistKeys.all,
     queryFn: () => getWishlists(params),
     refetchOnWindowFocus: false,
+    // placeholderData: (previousData) => previousData || undefined,
   })
 
   useQuery({

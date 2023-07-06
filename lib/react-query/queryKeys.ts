@@ -1,4 +1,4 @@
-import { GetAllWishlistsProps } from '@/hooks'
+import { PageProps } from '@/hooks'
 
 import type { CategorySearchParams } from '../types'
 
@@ -64,7 +64,7 @@ export const locationKeys = {
 
 export const wishlistKeys = {
   all: ['wishlist'] as const,
-  page: (key: GetAllWishlistsProps) =>
+  page: (key: PageProps) =>
     [
       'wishlist',
       { startIndex: key.startIndex },
