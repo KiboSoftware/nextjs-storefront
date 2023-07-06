@@ -50,7 +50,7 @@ const CheckoutUITemplate = <T extends CrOrder | Checkout>(props: CheckoutUITempl
   const handleSubmit = useCallback(() => setStepStatusSubmit(), [])
 
   const subTotal = (checkout as CrOrder)?.subtotal || (checkout as Checkout)?.subTotal
-  const shippingTotal = orderGetters.getShippingHandlingTotal(checkout)
+  const shippingTotal = orderGetters.getShippingTotal(checkout as CrOrder)
 
   const discountedSubtotal =
     orderGetters.getDiscountedSubtotal(checkout as CrOrder) ||

@@ -62,7 +62,7 @@ const ViewOrderDetails = (props: ViewOrderDetailsProps) => {
   const pickupItems = orderGetters.getPickupItems(order)
   const shipItems = orderGetters.getShipItems(order)
   const fulfillmentContactAddress = orderGetters.getShippingAddress(order)
-  const payment = orderGetters.getOrderPayment(order)
+  const payment = orderGetters.getFinalOrderPayment(order)
   const fulfillmentLocationCodes = orderGetters.getFulfillmentLocationCodes(pickupItems)
   const shippedTo = orderGetters.getShippedTo(order)
   const orderStatus = orderGetters.getOrderStatus(order)
@@ -85,8 +85,8 @@ const ViewOrderDetails = (props: ViewOrderDetailsProps) => {
     totalLabel: t('total-price'),
     subTotal: t('currency', { val: orderGetters.getSubtotal(order) }),
     discountedSubtotal: t('currency', { val: orderGetters.getDiscountedSubtotal(order) }),
-    shippingTotal: orderGetters.getShippingHandlingTotal(order)
-      ? t('currency', { val: orderGetters.getShippingHandlingTotal(order) })
+    shippingTotal: orderGetters.getShippingTotal(order)
+      ? t('currency', { val: orderGetters.getShippingTotal(order) })
       : t('free'),
     tax: t('currency', { val: orderGetters.getTaxTotal(order) }),
     total: t('currency', { val: orderTotal }),

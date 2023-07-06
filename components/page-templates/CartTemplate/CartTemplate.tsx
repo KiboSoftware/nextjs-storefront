@@ -61,7 +61,7 @@ const CartTemplate = (props: CartTemplateProps) => {
   const cartItems = cartGetters.getCartItems(cart)
   const cartSubTotal = orderGetters.getSubtotal(cart)
   const cartDiscountedSubTotal = orderGetters.getDiscountedSubtotal(cart)
-  const cartShippingTotal = orderGetters.getShippingHandlingTotal(cart)
+  const cartShippingTotal = orderGetters.getShippingTotal(cart)
   const cartTaxTotal = orderGetters.getTaxTotal(cart)
   const cartTotal = orderGetters.getTotal(cart)
   const locationCodes = orderGetters.getFulfillmentLocationCodes(cartItems as CrCartItem[])

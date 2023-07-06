@@ -29,9 +29,7 @@ import type {
 const getCheckoutItemCount = (order: CrOrder) => order?.items?.length
 const getEmail = (order: CrOrder) => order?.email
 const getTotal = (order: CrOrder | CrCart | Checkout): number => order?.total as number
-const getShippingHandlingTotal = (order: CrOrder | CrCart | Checkout) => {
-  return (order?.handlingTotal as number) + (order?.shippingTotal as number) || 0
-}
+const getShippingTotal = (order: CrOrder | CrCart) => order?.shippingTotal || 0
 const getTaxTotal = (order: CrOrder | CrCart) => order?.taxTotal || 0
 const getSubtotal = (order: CrOrder | CrCart): number => order?.subtotal as number
 
@@ -142,7 +140,7 @@ const getBillingDetails = (order: CrOrder): BillingDetails => {
 
 const getOrderSummary = (order: CrOrder): OrderSummary => {
   return {
-    shippingTotal: getShippingHandlingTotal(order),
+    shippingTotal: getShippingTotal(order),
     subTotal: getSubtotal(order),
     taxTotal: getTaxTotal(order),
     total: getTotal(order),
@@ -227,7 +225,7 @@ const getOrderPaymentBillingInfo = (billingInfo: CrBillingInfo) => {
     billingContact: getPaymentBillingDetails(billingInfo?.billingContact as CrContact),
   }
 }
-const getOrderPayments = (order: CrOrder) => {
+const getNewOrderPayments = (order: CrOrder) => {
   const payments: CrPayment[] =
     (order?.payments?.filter(
       (payment) => payment?.status?.toLowerCase() === 'new'
@@ -240,7 +238,7 @@ const getOrderPayments = (order: CrOrder) => {
   })
 }
 
-const getOrderPayment = (order: CrOrder) => {
+const getFinalOrderPayment = (order: CrOrder) => {
   if (!order?.payments?.length) return
 
   const latestPayment = order?.payments && order?.payments[order?.payments?.length - 1]
@@ -265,7 +263,7 @@ const getOrderHistoryDetails = (order: CrOrder) => {
   const productNames = getProductNames(order)
   const orderTotal = getOrderTotal(order)
   const orderStatus = getOrderStatus(order)
-  const orderPayments = getOrderPayments(order)
+  const orderPayments = getNewOrderPayments(order)
   const shipTo = getShippedTo(order)
   const shippingAddress = getShippingAddress(order)
 
@@ -292,7 +290,7 @@ export const orderGetters = {
   getSubmittedDate,
   getProductNames,
   getExpectedDeliveryDate,
-  getOrderPayments,
+  getNewOrderPayments,
   getShippedTo,
   getShippingAddress,
   getOrderHistoryDetails,
@@ -300,7 +298,7 @@ export const orderGetters = {
   getOrderNumber,
   getEmail,
   getTotal,
-  getShippingHandlingTotal,
+  getShippingTotal,
   getTaxTotal,
   getSubtotal,
   getDiscountedSubtotal,
@@ -317,5 +315,5 @@ export const orderGetters = {
   getLocationCode,
   getPaymentMethods,
   getOrderStatus,
-  getOrderPayment,
+  getFinalOrderPayment,
 }
