@@ -2,7 +2,7 @@ import getConfig from 'next/config'
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
 import { ReCaptchaProvider } from 'next-recaptcha-v3'
 
-import { MyAccountTemplate } from '@/components/page-templates'
+import { B2BTemplate, MyAccountTemplate } from '@/components/page-templates'
 import { useAuthContext } from '@/context'
 import { decodeParseCookieValue } from '@/lib/helpers'
 
@@ -34,12 +34,14 @@ const MyAccountPage: NextPage = (props: any) => {
 
   if (!serverSideIsAuthenticated && !customerAccount) return null
 
+  const isB2bTemplate = true
+
+  const template = isB2bTemplate ? <MyAccountTemplate user={customerAccount} /> : <B2BTemplate />
+
   return reCaptchaKey ? (
-    <ReCaptchaProvider reCaptchaKey={reCaptchaKey}>
-      <MyAccountTemplate user={customerAccount} />
-    </ReCaptchaProvider>
+    <ReCaptchaProvider reCaptchaKey={reCaptchaKey}>{template}</ReCaptchaProvider>
   ) : (
-    <MyAccountTemplate user={customerAccount} />
+    template
   )
 }
 
