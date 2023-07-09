@@ -38,8 +38,7 @@ const schema = yup.object().shape({
     postalOrZipCode: yup
       .string()
       .required('This field is required')
-      .min(4, 'should be at least 4 digits')
-      .max(5, 'should not be more than 5 digits'),
+      .matches(/^\d{5}(?:-\d{4})?$/, 'Please provide valid zip code'),
     countryCode: yup.string().required('This field is required'),
   }),
   phoneNumbers: yup.object().shape({
@@ -269,7 +268,9 @@ const AddressForm = (props: AddressFormProps) => {
           <Controller
             name="address.countryCode"
             control={control}
-            defaultValue={contact?.address?.countryCode}
+            defaultValue={
+              contact?.address?.countryCode || countries.length === 1 ? countries[0] : ''
+            }
             render={({ field }) => (
               <div>
                 <KiboSelect

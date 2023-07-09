@@ -45,7 +45,7 @@ const CheckoutHeader = ({ isMultiShipEnabled }: { isMultiShipEnabled: boolean })
 
         <Box>
           <Typography variant={'h2'} component="div">
-            {t('checkout', { count: numberOfItems })}
+          {t('checkout', { count: numberOfItems })}
           </Typography>
         </Box>
       </Container>

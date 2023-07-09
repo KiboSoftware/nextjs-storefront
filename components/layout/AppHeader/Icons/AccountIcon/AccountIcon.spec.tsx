@@ -35,19 +35,20 @@ describe('[component] AccountIcon component', () => {
   it('should render the component for unauthenticated user', () => {
     setup()
 
-    expect(screen.getByText(/my-account/)).toBeVisible()
+    expect(screen.getAllByTestId('AccountCircleIcon')[0]).toBeVisible()
   })
 
   it('should render the component for authenticated user and display firstName', () => {
     const { currentUser } = setup(true)
 
+    expect(screen.getAllByTestId('AccountCircleIcon')[0]).toBeVisible()
     expect(screen.getByText(`hi, ${currentUser.firstName}`)).toBeVisible()
   })
 
   it('should call handleAccountIconClick function', async () => {
     const { user, handleAccountIconClickMock } = setup()
 
-    user.click(screen.getByText(/my-account/))
+    user.click(screen.getAllByTestId('AccountCircleIcon')[0])
     await waitFor(() => {
       expect(handleAccountIconClickMock).toBeCalled()
     })

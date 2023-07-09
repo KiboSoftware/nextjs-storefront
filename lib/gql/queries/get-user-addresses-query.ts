@@ -5,6 +5,8 @@ const getUserAddressesQuery = /* GraphQL */ `
     customerAccountContacts(accountId: $accountId, startIndex: $startIndex, pageSize: $pageSize) {
       pageCount
       totalCount
+      startIndex
+      pageSize
       items {
         ...userContactFields
       }

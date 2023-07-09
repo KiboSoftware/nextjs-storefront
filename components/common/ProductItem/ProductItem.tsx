@@ -15,8 +15,8 @@ import {
 import Link from 'next/link'
 import { useTranslation } from 'next-i18next'
 
-import { KiboImage, Price } from '@/components/common'
-import { ProductOption, ProductOptionList } from '@/components/product'
+import { KiboImage, Price, KeyValueDisplay } from '@/components/common'
+import { ProductOptionList } from '@/components/product'
 import { productGetters } from '@/lib/getters'
 import DefaultImage from '@/public/product_placeholder.svg'
 
@@ -121,9 +121,9 @@ const ProductItem = (props: ProductItemProps) => {
               <Collapse in={mdScreen ? true : expanded} timeout="auto" unmountOnExit>
                 {options && <ProductOptionList options={options} />}
 
-                {qty && <ProductOption option={{ name: t('qty'), value: qty }} variant="body2" />}
+                {qty && <KeyValueDisplay option={{ name: t('qty'), value: qty }} variant="body2" />}
                 {(price || salePrice) && (
-                  <ProductOption
+                  <KeyValueDisplay
                     option={{
                       name: t('price'),
                       value: (
@@ -140,7 +140,7 @@ const ProductItem = (props: ProductItemProps) => {
                 )}
                 {subscriptionFrequency && (
                   <Box pb={1}>
-                    <ProductOption
+                    <KeyValueDisplay
                       option={{
                         name: t('subscription-frequency'),
                         value: subscriptionFrequency,
@@ -151,7 +151,7 @@ const ProductItem = (props: ProductItemProps) => {
               </Collapse>
               {isPickupItem && expectedDeliveryDate && (
                 <Box color={theme.palette.primary.main} data-testid="pickup-info">
-                  <ProductOption
+                  <KeyValueDisplay
                     option={{ name: t('estimated-pickup'), value: expectedDeliveryDate }}
                     variant="body2"
                     fontWeight="bold"
@@ -166,7 +166,7 @@ const ProductItem = (props: ProductItemProps) => {
       {isPickupItem && (
         <>
           <Box sx={{ display: 'inline-flex' }} px={2}>
-            <ProductOption
+            <KeyValueDisplay
               option={{ name: t('pickup'), value: purchaseLocation }}
               variant="caption"
             />

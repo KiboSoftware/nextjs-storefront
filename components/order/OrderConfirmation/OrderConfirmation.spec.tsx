@@ -9,8 +9,8 @@ const orderSummaryMock = () => <div data-testid="order-summary-component" />
 jest.mock('@/components/common/OrderSummary/OrderSummary', () => () => orderSummaryMock())
 const productItemListMock = () => <div data-testid="product-item-list-component" />
 jest.mock('@/components/common/ProductItemList/ProductItemList', () => () => productItemListMock())
-const productOptionListMock = () => <div data-testid="product-option-list-component" />
-jest.mock('@/components/product/ProductOption/ProductOption', () => () => productOptionListMock())
+const KeyValueDisplayMock = () => <div data-testid="key-value-display-component" />
+jest.mock('@/components/common/KeyValueDisplay/KeyValueDisplay', () => () => KeyValueDisplayMock())
 
 describe('[component] - ViewOrderDetails', () => {
   const setup = () => {
@@ -32,6 +32,6 @@ describe('[component] - ViewOrderDetails', () => {
     expect(screen.getByText(/order-details/i)).toBeVisible()
     expect(screen.getByTestId('order-summary-component')).toBeVisible()
     expect(screen.getAllByTestId('product-item-list-component')).toHaveLength(2)
-    expect(screen.getAllByTestId('product-option-list-component')).toHaveLength(2)
+    expect(screen.getAllByTestId('key-value-display-component')).toHaveLength(2)
   })
 })

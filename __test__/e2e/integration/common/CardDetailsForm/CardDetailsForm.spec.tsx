@@ -1,5 +1,5 @@
 import { composeStories } from '@storybook/testing-react'
-import { render, screen } from '@testing-library/react'
+import { render, screen, act } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 
 import * as stories from '@/components/checkout/CardDetailsForm/CardDetailsForm.stories'
@@ -14,7 +14,6 @@ const onSaveCardDataMock = jest.fn().mockImplementation(() => {
     Common.args.validateForm = true
   }
 })
-const setValidateFormMock = jest.fn()
 
 const setup = () => {
   const user = userEvent.setup()
@@ -43,10 +42,12 @@ describe('[components] - CardDetailsForm integration', () => {
     const cvv = screen.getByPlaceholderText(/security-code-placeholder/i)
 
     // provide values
-    await user.type(cardNumber, '4111111111111111')
-    await user.type(expiryDate, '01/2026')
-    await user.type(cvv, '123')
-    await user.tab()
+    await act(async () => {
+      await user.type(cardNumber, '4111111111111111')
+      await user.type(expiryDate, '01/2026')
+      await user.type(cvv, '123')
+      await user.tab()
+    })
 
     expect(onFormStatusChangeMock).toHaveBeenLastCalledWith(true)
   })
@@ -60,10 +61,12 @@ describe('[components] - CardDetailsForm integration', () => {
     const cvv = screen.getByPlaceholderText(/security-code-placeholder/i)
 
     // provide values
-    await user.type(cardNumber, '4111111111111111')
-    await user.type(expiryDate, '01/2026')
-    await user.type(cvv, '123')
-    await user.tab()
+    await act(async () => {
+      await user.type(cardNumber, '4111111111111111')
+      await user.type(expiryDate, '01/2026')
+      await user.type(cvv, '123')
+      await user.tab()
+    })
 
     expect(onSaveCardDataMock).toHaveBeenCalled()
   })

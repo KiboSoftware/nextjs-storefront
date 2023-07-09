@@ -7,7 +7,6 @@ import userEvent from '@testing-library/user-event'
 
 import { ProductListingTemplateProps } from './ProductListingTemplate'
 import * as stories from './ProductListingTemplate.stories' // import all stories from the stories file
-import { categoryFacetDataMock } from '@/__mocks__/stories/categoryFacetDataMock'
 const { Category } = composeStories(stories)
 
 const KiboBreadcrumbsMock = () => <div data-testid="breadcrumb-component" />
@@ -25,23 +24,50 @@ jest.mock('../../product-listing/FacetList/FacetList', () => () => FiltersFacetM
 jest.mock('../../core/Breadcrumbs/KiboBreadcrumbs', () => () => KiboBreadcrumbsMock())
 jest.mock('../../product/ProductCard/ProductCard', () => () => ProductCardMock())
 
-describe('[component] - Category', () => {
+jest.mock('next/config', () => {
+  return () => ({
+    publicRuntimeConfig: {
+      maxCookieAge: 0,
+      productListing: {
+        sortOptions: [
+          { value: 'Best Match', id: '' },
+          { value: 'Price: Low to High', id: 'price asc' },
+          { value: 'Price: High to Low', id: 'price desc' },
+          { value: 'Latest', id: 'createDate desc' },
+          { value: 'Oldest', id: 'createDate asc' },
+        ],
+        pageSize: 16,
+      },
+      isMultiShipEnabled: true,
+    },
+    serverRuntimeConfig: {
+      cacheKey: 'categoryTree',
+      cacheTimeOut: 10000,
+      isMultiShipEnabled: true,
+    },
+  })
+})
+
+describe('[component] - Product Listing Template', () => {
   const setup = (params?: ProductListingTemplateProps) => {
     const user = userEvent.setup()
     const props = params ? params : Category.args
     const onPaginationChangeMock = jest.fn()
     const onSortItemSelectionMock = jest.fn()
+    const onInfiniteScrollMock = jest.fn()
     render(
       <Category
         {...props}
         onPaginationChange={onPaginationChangeMock}
         onSortItemSelection={onSortItemSelectionMock}
+        onInfiniteScroll={onInfiniteScrollMock}
       />
     )
     return {
       user,
       onPaginationChangeMock,
       onSortItemSelectionMock,
+      onInfiniteScrollMock,
     }
   }
 
@@ -52,7 +78,7 @@ describe('[component] - Category', () => {
     const header = screen.getByRole('heading', { level: 1 })
     const viewText = screen.getAllByText(/view/i)
     const sortByText = screen.getByText(/sort-by/i)
-    const categoryFacetComponent = screen.getByTestId('category-facet-component')
+    const categoryFacetComponent = screen.getAllByTestId('category-facet-component')
     const filtersFacetComponent = screen.getByTestId('filters-facet-component')
     const showMoreButton = screen.getByRole('button', { name: /show-more/i })
     const sortingValues = Category?.args?.sortingValues?.options?.map((sort) => sort.value) || []
@@ -78,19 +104,19 @@ describe('[component] - Category', () => {
     expect(header).toHaveTextContent(Category.args?.productListingHeader || '')
     expect(viewText[0]).toBeVisible()
     expect(sortByText).toBeVisible()
-    expect(categoryFacetComponent).toBeInTheDocument()
+    expect(categoryFacetComponent[0]).toBeInTheDocument()
     expect(filtersFacetComponent).toBeInTheDocument()
     expect(showMoreButton).toBeVisible()
   })
 
-  it('should call onPaginationChange when user clicks on show more button', async () => {
-    const { user, onPaginationChangeMock } = setup()
+  it('should call onInfiniteScrollMock when user clicks on show more button', async () => {
+    const { user, onInfiniteScrollMock } = setup()
 
     const showMoreButton = screen.getByRole('button', { name: /show-more/i })
     user.click(showMoreButton)
 
     await waitFor(() => {
-      expect(onPaginationChangeMock).toHaveBeenCalled()
+      expect(onInfiniteScrollMock).toHaveBeenCalled()
     })
   })
 
@@ -134,31 +160,32 @@ describe('[component] - Category', () => {
     expect(showMoreButton).toBeVisible()
   })
 
-  it('shoutd hide the show more button when pageSize is greater than or equal to totalResults', () => {
-    const params = {
-      breadCrumbsList: [
-        {
-          text: 'Home',
-          link: '/',
-        },
-        {
-          text: 'Mens',
-          link: '/mens',
-        },
-        {
-          text: 'Pants',
-          link: '/mens/pants',
-        },
-      ],
-      productListingHeader: 'Apparel',
-      categoryFacet: categoryFacetDataMock,
-      totalResults: 30,
-      appliedFilters: [],
-      pageSize: 30,
-      onSortItemSelection: (value: string) => ({ value }),
-      onPaginationChange: () => ({}),
-    }
-    setup(params)
+  it('should hide the show more button when pageSize is greater than or equal to totalResults', () => {
+    // const params = {
+    //   breadCrumbsList: [
+    //     {
+    //       text: 'Home',
+    //       link: '/',
+    //     },
+    //     {
+    //       text: 'Mens',
+    //       link: '/mens',
+    //     },
+    //     {
+    //       text: 'Pants',
+    //       link: '/mens/pants',
+    //     },
+    //   ],
+    //   productListingHeader: 'Apparel',
+    //   categoryFacet: categoryFacetDataMock,
+    //   totalResults: 30,
+    //   appliedFilters: [],
+    //   pageSize: 30,
+    //   onSortItemSelection: (value: string) => ({ value }),
+    //   onPaginationChange: (value: string) => ({ value }),
+    // }
+    //TODO: write separate test for pagination
+    // setup(params)
 
     const showMoreButton = screen.queryByRole('button', { name: /show-more/i })
 

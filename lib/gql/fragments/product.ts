@@ -32,6 +32,9 @@ fragment productContent on Product {
     productShortDescription
     seoFriendlyUrl
     productName
+    metaTagTitle
+    metaTagDescription
+    metaTagKeywords
     productImages {
       imageUrl
       imageLabel
@@ -78,6 +81,7 @@ fragment productInfo on Product {
         productUsage
         isPackagedStandAlone
         fulfillmentTypesSupported
+        upc
         categories {
           categoryCode
           categoryId
@@ -99,6 +103,24 @@ fragment productInfo on Product {
         }
         purchasableState {
           isPurchasable
+        }
+        measurements {
+          packageLength {
+            unit
+            value
+          }
+          packageWidth {
+            unit
+            value
+          }
+          packageHeight {
+            unit
+            value
+          }
+          packageWeight {
+            unit
+            value
+          }
         }
         ...productPrices
         ...productAttributes

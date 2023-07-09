@@ -73,6 +73,7 @@ describe('[components] Register Account Dialog', () => {
     emailError = screen.getByText(/this\-field\-is\-required/i)
     expect(emailError).toBeVisible()
   })
+
   it('Should display required message onBlur of create Account inputs', async () => {
     // arrange
     setup()
@@ -81,6 +82,7 @@ describe('[components] Register Account Dialog', () => {
     const allInputs = screen.getAllByRole('textbox')
     const passwordInput = screen.getByLabelText(/password/i)
     allInputs.push(passwordInput)
+
     await act(async () => {
       allInputs.forEach((input) => {
         input.focus()

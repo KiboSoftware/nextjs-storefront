@@ -22,6 +22,7 @@ import type { Maybe, CrOrder, Checkout } from '@/lib/gql/types'
 interface DetailsProps<T> {
   setAutoFocus?: boolean
   checkout: T
+  perks?: any
   updateCheckoutPersonalInfo: (params: { email: Maybe<string> | undefined }) => Promise<void>
 }
 
@@ -58,7 +59,7 @@ const useDetailsSchema = () => {
 }
 
 const DetailsStep = <T extends CrOrder | Checkout>(props: DetailsProps<T>) => {
-  const { setAutoFocus = true, checkout, updateCheckoutPersonalInfo } = props
+  const { setAutoFocus = true, checkout, perks = null, updateCheckoutPersonalInfo } = props
 
   const { t } = useTranslation('common')
 
@@ -73,7 +74,7 @@ const DetailsStep = <T extends CrOrder | Checkout>(props: DetailsProps<T>) => {
   } = useCheckoutStepContext()
 
   const personalDetails = {
-    email: checkout && checkout.email,
+    email: checkout.email ?? '',
   }
 
   const openLoginModal = () => {
@@ -165,10 +166,8 @@ const DetailsStep = <T extends CrOrder | Checkout>(props: DetailsProps<T>) => {
           )}
         />
       </Box>
-
       <Stack gap={2}>
         {t('enjoy-these-perks-with-your-free-account')}
-
         <Grid container>
           <Grid item xs={12}>
             <IconButton aria-label={t('faster-checkout')}>

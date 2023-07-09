@@ -2,12 +2,15 @@ import React, { useCallback } from 'react'
 
 import { Box, Stack, Button, SxProps } from '@mui/material'
 import { Theme } from '@mui/material/styles'
+import getConfig from 'next/config'
+import { useRouter } from 'next/router'
 import { useTranslation } from 'next-i18next'
+import { ReCaptchaProvider } from 'next-recaptcha-v3'
 
 import { KiboStepper, OrderReview } from '@/components/checkout'
 import { OrderSummary, PromoCodeBadge } from '@/components/common'
-import { OrderConfirmation } from '@/components/order'
 import { useCheckoutStepContext, STEP_STATUS } from '@/context'
+import { checkoutGetters, orderGetters } from '@/lib/getters'
 
 import type { Checkout, CrOrder } from '@/lib/gql/types'
 
@@ -47,17 +50,20 @@ const CheckoutUITemplate = <T extends CrOrder | Checkout>(props: CheckoutUITempl
   const handleSubmit = useCallback(() => setStepStatusSubmit(), [])
 
   const subTotal = (checkout as CrOrder)?.subtotal || (checkout as Checkout)?.subTotal
+  const shippingTotal = orderGetters.getShippingTotal(checkout as CrOrder)
 
   const discountedSubtotal =
-    (checkout as CrOrder)?.discountedSubtotal ||
-    (checkout as Checkout).itemLevelProductDiscountTotal +
-      (checkout as Checkout)?.orderLevelProductDiscountTotal
-  const tax = (checkout as CrOrder)?.taxTotal || (checkout as CrOrder)?.itemTaxTotal
+    orderGetters.getDiscountedSubtotal(checkout as CrOrder) ||
+    checkoutGetters.getDiscountedSubtotal(checkout as Checkout)
+  const taxTotal =
+    orderGetters.getTaxTotal(checkout as CrOrder) ||
+    checkoutGetters.getTaxTotal(checkout as Checkout)
+  const total = orderGetters.getTotal(checkout)
 
   const orderSummaryArgs = {
     nameLabel: t('order-summary'),
     subTotalLabel: `Cart Subtotal of (${checkout?.items?.length} items)`,
-    shippingTotalLabel: t('standard-shopping'),
+    shippingTotalLabel: t('standard-shipping'),
     taxLabel: t('tax'),
     totalLabel: t('order-total'),
     subTotal: t('currency', { val: subTotal }),
@@ -66,11 +72,11 @@ const CheckoutUITemplate = <T extends CrOrder | Checkout>(props: CheckoutUITempl
       discountedSubtotal > 0 && discountedSubtotal !== subTotal
         ? t('currency', { val: discountedSubtotal })
         : '',
-    shippingTotal: checkout?.shippingTotal
-      ? t('currency', { val: checkout?.shippingTotal })
-      : t('free'),
-    tax: t('currency', { val: tax || 0 }),
-    total: t('currency', { val: checkout?.total }),
+    shippingTotal: t('currency', {
+      val: shippingTotal,
+    }),
+    tax: t('currency', { val: taxTotal || 0 }),
+    total: t('currency', { val: total }),
     checkoutLabel: t('go-to-checkout'),
     shippingLabel: t('go-to-shipping'),
     backLabel: t('go-back'),
@@ -86,67 +92,77 @@ const CheckoutUITemplate = <T extends CrOrder | Checkout>(props: CheckoutUITempl
   }
   const showCheckoutSteps = activeStep !== steps.length
 
+  const { publicRuntimeConfig } = getConfig()
+  const reCaptchaKey = publicRuntimeConfig.recaptcha.reCaptchaKey
+
+  const commonElements = showCheckoutSteps ? (
+    <Stack
+      sx={{ paddingTop: '20px', paddingBottom: { md: '40px' } }}
+      direction={{ xs: 'column', md: 'row' }}
+      gap={2}
+    >
+      <Stack sx={{ width: '100%', maxWidth: '872px' }} gap={1}>
+        <KiboStepper isSticky={true}>{children}</KiboStepper>
+      </Stack>
+      <Box
+        sx={{
+          width: '100%',
+          maxWidth: 428,
+          height: 'fit-content',
+          marginLeft: { lg: '1rem' },
+          position: { md: 'sticky' },
+          top: '80px',
+        }}
+      >
+        {activeStep != reviewStepIndex && (
+          <OrderSummary {...orderSummaryArgs}>
+            {activeStep < buttonLabels.length && (
+              <Stack direction="column" gap={2}>
+                <Button
+                  variant="contained"
+                  color="primary"
+                  sx={{ ...buttonStyle }}
+                  fullWidth
+                  onClick={handleSubmit}
+                  disabled={stepStatus !== STEP_STATUS.VALID || activeStep === steps.length - 1}
+                >
+                  {buttonLabels[activeStep]}
+                </Button>
+                <Button
+                  variant="contained"
+                  color="secondary"
+                  sx={{ ...buttonStyle }}
+                  fullWidth
+                  onClick={handleBack}
+                  disabled={activeStep === detailsStepIndex}
+                >
+                  {t('go-back')}
+                </Button>
+              </Stack>
+            )}
+          </OrderSummary>
+        )}
+        {activeStep === reviewStepIndex && (
+          <OrderReview
+            checkout={checkout as CrOrder}
+            isMultiShipEnabled={isMultiShipEnabled}
+            handleApplyCouponCode={handleApplyCouponCode}
+            handleRemoveCouponCode={handleRemoveCouponCode}
+            promoError={promoError}
+          />
+        )}
+      </Box>
+    </Stack>
+  ) : null
+
   return (
-    <>
-      {showCheckoutSteps && (
-        <Stack
-          sx={{ paddingTop: '20px', paddingBottom: { md: '40px' } }}
-          direction={{ xs: 'column', md: 'row' }}
-          gap={2}
-        >
-          <Stack sx={{ width: '100%', maxWidth: '872px' }} gap={1}>
-            <KiboStepper isSticky={true}>{children}</KiboStepper>
-          </Stack>
-          <Box
-            sx={{
-              width: '100%',
-              maxWidth: 428,
-              height: 'fit-content',
-              marginLeft: { lg: '1rem' },
-              position: { md: 'sticky' },
-              top: '80px',
-            }}
-          >
-            {activeStep != reviewStepIndex && (
-              <OrderSummary {...orderSummaryArgs}>
-                {activeStep < buttonLabels.length && (
-                  <Stack direction="column" gap={2}>
-                    <Button
-                      variant="contained"
-                      color="primary"
-                      sx={{ ...buttonStyle }}
-                      fullWidth
-                      onClick={handleSubmit}
-                      disabled={stepStatus !== STEP_STATUS.VALID || activeStep === steps.length - 1}
-                    >
-                      {buttonLabels[activeStep]}
-                    </Button>
-                    <Button
-                      variant="contained"
-                      color="secondary"
-                      sx={{ ...buttonStyle }}
-                      fullWidth
-                      onClick={handleBack}
-                      disabled={activeStep === detailsStepIndex}
-                    >
-                      {t('go-back')}
-                    </Button>
-                  </Stack>
-                )}
-              </OrderSummary>
-            )}
-            {activeStep === reviewStepIndex && (
-              <OrderReview checkout={checkout as CrOrder} isMultiShipEnabled={isMultiShipEnabled} />
-            )}
-          </Box>
-        </Stack>
+    <React.Fragment>
+      {reCaptchaKey ? (
+        <ReCaptchaProvider reCaptchaKey={reCaptchaKey}>{commonElements}</ReCaptchaProvider>
+      ) : (
+        commonElements
       )}
-      {!showCheckoutSteps && (
-        <Stack sx={{ paddingY: 8 }}>
-          <OrderConfirmation order={checkout as CrOrder} />
-        </Stack>
-      )}
-    </>
+    </React.Fragment>
   )
 }
 export default CheckoutUITemplate

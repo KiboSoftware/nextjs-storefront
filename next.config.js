@@ -22,9 +22,40 @@ module.exports = {
       'encrypted-tbn0.gstatic.com',
       'images.ctfassets.net',
       'cdn.builder.io',
+      'http',
+    ],
+    remotePatterns: [
+      {
+        protocol: 'http',
+        hostname: 'cdn-sb.mozu.com',
+        port: '',
+        pathname: '**',
+      },
+      {
+        protocol: 'http',
+        hostname: 'http',
+        port: '',
+        pathname: '**',
+      },
+    ],
+    deviceSizes: [
+      100, 240, 340, 380, 400, 450, 500, 550, 600, 640, 750, 828, 1080, 1200, 1920, 2048, 3840,
     ],
   },
   publicRuntimeConfig: {
+    currentUrl: process.env.CURRENT_DOMAIN,
+    recaptcha: {
+      reCaptchaKey: process.env.RECAPTCHA_KEY,
+      reCaptchaSecret: process.env.RECAPTCHA_SECRET,
+      reCaptchaThreshold: process.env.RECAPTCHA_THRESHOLD,
+    },
+    allowInvalidAddresses: true,
+    customerAddressesPageSize: 50,
+    shippingAddressPageSize: 5,
+    billingAddressPageSize: 5,
+    paymentMethodPageSize: 5,
+    badgeAttributeFQN: 'Tenant~badge',
+    occasionAttributeFQN: 'Tenant~occasion',
     colorAttributeFQN: 'Tenant~Color',
     sizeAttributeFQN: 'Tenant~Size',
     paymentTypes: [
@@ -43,7 +74,10 @@ module.exports = {
         { value: 'Latest', id: 'createDate desc' },
         { value: 'Oldest', id: 'createDate asc' },
       ],
+      // For Infinite Scroll use this.
       pageSize: 16,
+      // For Pagination use this.
+      // pageSize: [15, 30, 50],
     },
     orderHistory: {
       startIndex: 0,
@@ -101,11 +135,21 @@ module.exports = {
     isSubscriptionEnabled: true,
   },
   serverRuntimeConfig: {
+    currentUrl: process.env.CURRENT_DOMAIN,
     revalidate: process.env.GLOBAL_PAGE_REVALIDATE || 30,
     pageSize: 1000,
     cacheKey: 'categoryTree',
     cacheTimeOut: 10000,
     isMultiShipEnabled: false,
+    recaptcha: {
+      reCaptchaKey: process.env.RECAPTCHA_KEY,
+      reCaptchaSecret: process.env.RECAPTCHA_SECRET,
+      reCaptchaThreshold: process.env.RECAPTCHA_THRESHOLD,
+    },
   },
   staticPageGenerationTimeout: 1000,
+  experimental: {
+    workerThreads: false,
+    cpus: 1,
+  },
 }

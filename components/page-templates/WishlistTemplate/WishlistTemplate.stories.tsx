@@ -15,7 +15,7 @@ export default {
   },
 } as ComponentMeta<typeof WishlistTemplate>
 
-const Template: ComponentStory<typeof WishlistTemplate> = (args) => <WishlistTemplate {...args} />
+const Template: ComponentStory<typeof WishlistTemplate> = () => <WishlistTemplate />
 
 export const Common = Template.bind({})
 Common.args = {

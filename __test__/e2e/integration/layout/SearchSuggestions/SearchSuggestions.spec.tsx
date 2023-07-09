@@ -1,155 +1,96 @@
-import React from 'react'
+/* eslint-disable  testing-library/no-unnecessary-act */
 
-import '@testing-library/jest-dom'
+import React, { ReactNode } from 'react'
+
 import { composeStories } from '@storybook/testing-react'
-import { screen, waitFor } from '@testing-library/react'
-import userEvent from '@testing-library/user-event'
-import mockRouter from 'next-router-mock'
+import { render, screen, act, fireEvent } from '@testing-library/react'
 
-import { searchSuggestionResultMock } from '@/__mocks__/stories/searchSuggestionResultMock'
-import { renderWithQueryClient } from '@/__test__/utils/renderWithQueryClient'
-import * as stories from '@/components/layout/SearchSuggestions/SearchSuggestions.stories'
+import * as stories from '@/components/layout/RegisterAccount/RegisterAccountDialog/RegisterAccountDialog.stories'
+import { AuthContext } from '@/context'
 
 const { Common } = composeStories(stories)
 
-describe('[components] - SearchSuggestions Integration', () => {
-  const userEnteredText = 'T'
-  const searchSuggestions = searchSuggestionResultMock
+const userContextValues = {
+  isAuthenticated: false,
+  login: jest.fn(),
+  createAccount: jest.fn(),
+  logout: jest.fn(),
+}
 
-  const setup = () => {
-    const user = userEvent.setup()
-    renderWithQueryClient(<Common />)
+const wrapper = ({ children }: { children: ReactNode }) => (
+  <AuthContext.Provider value={userContextValues}>{children}</AuthContext.Provider>
+)
 
-    return {
-      searchSuggestions,
-      user,
-    }
-  }
+const renderComponent = () => {
+  return render(<Common {...Common.args} />, { wrapper })
+}
 
-  it('should render component', async () => {
+describe('[components] Register Account Dialog', () => {
+  const setup = () => renderComponent()
+
+  it('should render component', () => {
+    setup()
+    const registerAccountFormEmailLabel = screen.getByText(/email/i)
+    const registerAccountFormEmailInput = screen.getByRole('textbox', { name: /email/i })
+
+    const registerAccountFormFirstNameLabel = screen.queryByText(/first-name/i)
+    const registerAccountFormFirstNameInput = screen.queryByRole('textbox', { name: /first-name/i })
+    const registerAccountFormLastNameLabel = screen.queryByText(/last-name/i)
+    const registerAccountFormLastNameInput = screen.queryByRole('textbox', { name: /last-name/i })
+    const registerAccountFormPasswordLabel = screen.queryByText(/password/i)
+    const registerAccountFormPasswordInput = screen.getByLabelText(/password/i)
+
+    const createAccountButton = screen.getByRole('button', { name: /create-an-account/i })
+
+    expect(registerAccountFormEmailLabel).toBeVisible()
+    expect(registerAccountFormEmailInput).toBeVisible()
+
+    expect(registerAccountFormFirstNameLabel).toBeInTheDocument()
+    expect(registerAccountFormFirstNameInput).toBeInTheDocument()
+
+    expect(registerAccountFormLastNameLabel).toBeInTheDocument()
+    expect(registerAccountFormLastNameInput).toBeInTheDocument()
+
+    expect(registerAccountFormPasswordLabel).toBeInTheDocument()
+    expect(registerAccountFormPasswordInput).toBeInTheDocument()
+
+    expect(createAccountButton).toBeInTheDocument()
+  })
+
+  it('email should display required field error when user focus out (blur event) the email field', async () => {
     setup()
 
-    const input = screen.getByRole('textbox', { name: 'search-input' })
-    const backdrop = screen.getByTestId('backdrop')
+    let emailError = screen.queryByText(/this-field-is-required/i)
+    expect(emailError).not.toBeInTheDocument()
 
-    expect(input).toBeVisible()
-    expect(screen.queryByRole('contentinfo')).not.toBeInTheDocument()
-    expect(backdrop).not.toBeVisible()
-  })
+    const emailInput = screen.getByRole('textbox', { name: /email/i })
 
-  it('should display user-entered text in search bar when a user enters it', async () => {
-    const { user } = setup()
-
-    const input = screen.getByRole('textbox', { name: 'search-input' })
-    expect(input).toHaveValue('')
-
-    await user.type(input, userEnteredText)
-    expect(input).toHaveValue(userEnteredText)
-  })
-
-  it('should display search suggestion with href attribute present when user enter the text on search bar', async () => {
-    const { user } = setup()
-
-    const input = screen.getByRole('textbox', { name: 'search-input' })
-    await user.type(input, userEnteredText)
-
-    const suggestionModal = await screen.findByRole('contentinfo')
-    const suggestions = await screen.findByText('suggestions')
-    const categories = await screen.findByText('categories')
-    expect(suggestionModal).toBeVisible()
-    expect(suggestions).toBeVisible()
-    expect(categories).toBeVisible()
-
-    const PagesSuggestionGroup =
-      searchSuggestions.suggestionGroups?.filter((sg) => sg?.name === 'pages') || []
-    PagesSuggestionGroup[0]?.suggestions?.map(async (s) => {
-      expect(screen.getByText(s?.suggestion?.productName)).toBeVisible()
-      const button = await screen.findByRole('button')
-      expect(button).toHaveAttribute('href', `/product/${s?.suggestion.productCode}`)
+    await act(async () => {
+      emailInput.focus()
+      fireEvent.blur(emailInput, { target: { value: '' } })
     })
 
-    const CategoriesSuggestionGroup =
-      searchSuggestions.suggestionGroups?.filter((sg) => sg?.name === 'categories') || []
-    CategoriesSuggestionGroup[0]?.suggestions?.map(async (s) => {
-      expect(screen.getByText(s?.suggestion?.productName)).toBeVisible()
+    emailError = screen.getByText(/this-field-is-required/i)
+    expect(emailError).toBeVisible()
+  })
 
-      const button = await screen.findByRole('button')
-      expect(button).toHaveAttribute('href', `/category/${s?.suggestion.categoryCode}`)
+  it('Should display required message onBlur of create Account inputs', async () => {
+    // arrange
+    setup()
+    const emptyInput = { target: { value: '' } }
+
+    const allInputs = screen.getAllByRole('textbox')
+    const passwordInput = screen.getByLabelText(/password/i)
+    allInputs.push(passwordInput)
+
+    await act(async () => {
+      allInputs.forEach((input) => {
+        input.focus()
+        fireEvent.blur(input, emptyInput)
+      })
     })
-  })
 
-  it('should display backdrop when search suggestion opens', async () => {
-    const { user } = setup()
-
-    const input = screen.getByRole('textbox', { name: 'search-input' })
-    await user.type(input, userEnteredText)
-
-    const suggestions = await screen.findByText('suggestions')
-    expect(suggestions).toBeVisible()
-    const backdrop = await screen.findByTestId('backdrop')
-    expect(backdrop).toBeVisible()
-  })
-
-  it('should clear the search input and close the search suggestion when user clicks on cross button', async () => {
-    const { user } = setup()
-
-    const input = screen.getByRole('textbox', { name: 'search-input' })
-    const clearButton = screen.getByRole('button', { name: 'clear-search' })
-    await user.type(input, userEnteredText)
-
-    expect(clearButton).toBeEnabled()
-    await user.click(clearButton)
-
-    expect(input).toHaveValue('')
-    await waitFor(() => expect(screen.queryByRole('contentinfo')).not.toBeInTheDocument())
-  })
-
-  it('should close search suggestion when user clears the search text', async () => {
-    const { user } = setup()
-
-    const input = screen.getByRole('textbox', { name: 'search-input' })
-    await user.type(input, userEnteredText)
-
-    const suggestionModal = await screen.findByRole('contentinfo')
-    expect(suggestionModal).toBeVisible()
-
-    await user.clear(input)
-    expect(input).toHaveValue('')
-    await waitFor(() => expect(screen.queryByRole('contentinfo')).not.toBeInTheDocument())
-  })
-
-  it('should close search suggestion when user clicks on backdrop', async () => {
-    const { user } = setup()
-
-    const input = screen.getByRole('textbox', { name: 'search-input' })
-    const backdrop = await screen.findByTestId('backdrop')
-    await user.type(input, userEnteredText)
-
-    await user.click(backdrop)
-    await waitFor(() => expect(screen.queryByRole('contentinfo')).not.toBeInTheDocument())
-  })
-
-  it('should not open Search suggestion when a user enters white/blank space', async () => {
-    const { user } = setup()
-
-    const input = screen.getByRole('textbox', { name: 'search-input' })
-    await user.type(input, '  ')
-
-    expect(screen.queryByRole('contentinfo')).not.toBeInTheDocument()
-  })
-
-  it('should close the Search suggestion when a user press enter', async () => {
-    const { user } = setup()
-
-    const input = screen.getByRole('textbox', { name: 'search-input' })
-    await user.type(input, 'T')
-    await user.type(input, '{enter}')
-
-    expect(mockRouter).toMatchObject({
-      asPath: '/search?search=T',
-      pathname: '/search',
-      query: { search: 'T' },
-    })
-    expect(screen.queryByRole('contentinfo')).not.toBeInTheDocument()
+    const validationMessage = screen.getAllByText(/this-field-is-required/i)
+    expect(validationMessage).toHaveLength(4)
   })
 })

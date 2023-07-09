@@ -1,8 +1,6 @@
 import { ParsedUrlQuery } from 'querystring'
 
-// import { fetcher } from '@/lib/api/util'
-// import { getCategoryTreeQuery } from '@/lib/gql/queries'
-import getCategoryTree from './get-category-tree'
+import { uiHelpers } from '@/lib/helpers'
 
 import type { Maybe, PrCategory } from '@/lib/gql/types'
 
@@ -12,13 +10,23 @@ const addParent = (category: PrCategory, newParent: PrCategory): void => {
 }
 
 let targetCategory: PrCategory
+let metaInformation: any
+let seoFriendlyUrl: string
 export const selectCategoryFromTree = (
   categoryTree: Array<PrCategory>,
   categoryCode: string | string[]
-): PrCategory => {
+): any => {
+  const { getCategoryLink } = uiHelpers()
   const findCategoryById = (category: Maybe<PrCategory>, code: string | string[]) => {
     if (category?.categoryCode === code) {
       targetCategory = Object.assign({}, category)
+      seoFriendlyUrl = category.content?.slug as string
+      metaInformation = {
+        metaTagTitle: category?.content?.metaTagTitle,
+        metaTagDescription: category?.content?.metaTagDescription,
+        metaTagKeywords: category?.content?.metaTagKeywords,
+        canonical: getCategoryLink(category.categoryCode, category.content?.slug as string),
+      }
       return true
     }
     return category?.childrenCategories?.find((childCategory: Maybe<PrCategory>) => {
@@ -35,18 +43,25 @@ export const selectCategoryFromTree = (
       continue
     }
   }
-  return targetCategory
+
+  return { targetCategory, metaInformation, seoFriendlyUrl }
 }
 
-export default async function search(searchParams: ParsedUrlQuery) {
+export default async function categoryTreeSearchByCode(
+  searchParams: ParsedUrlQuery,
+  categoryTree: PrCategory[]
+) {
   try {
     const { categoryCode } = searchParams
-    const categoryTree = await getCategoryTree()
     if (!categoryCode) {
       return { categories: categoryTree || [] }
     }
     const category = selectCategoryFromTree(categoryTree || [], categoryCode)
-    return { categories: category ? [category] : [] }
+    return {
+      categories: category?.targetCategory ? [category?.targetCategory] : [],
+      metaInformation: category?.metaInformation,
+      seoFriendlyUrl: category?.seoFriendlyUrl,
+    }
   } catch (error) {
     console.error(error)
   }

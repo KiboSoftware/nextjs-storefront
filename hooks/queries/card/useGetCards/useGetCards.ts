@@ -54,6 +54,7 @@ export const useGetCards = (accountId: number): UseCustomerCardsResponse => {
     queryKey: customerAccountCardsKeys?.cardById(accountId),
     queryFn: () => loadCustomerAccountCards(accountId),
     enabled: !!accountId,
+    refetchOnWindowFocus: false,
   })
 
   return { data, isLoading, isSuccess }

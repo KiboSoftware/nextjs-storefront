@@ -26,8 +26,8 @@ export default {
 
 const Template: ComponentStory<typeof KiboBreadcrumbs> = (args) => <KiboBreadcrumbs {...args} />
 
-export const common = Template.bind({})
-common.args = {
+export const Common = Template.bind({})
+Common.args = {
   breadcrumbs: breadcrumbList,
   separator: '|',
 }

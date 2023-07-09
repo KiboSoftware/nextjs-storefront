@@ -45,7 +45,7 @@ export const useLogin = () => {
   } = useMutation({
     mutationFn: loginUser,
     onMutate: () => {
-      queryClient.cancelQueries({ queryKey: loginKeys.user })
+      queryClient.invalidateQueries({ queryKey: loginKeys.user })
     },
     retry: 0,
   })

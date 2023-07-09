@@ -1,7 +1,6 @@
 export { default as ColorSelector } from './ColorSelector/ColorSelector'
 export { default as ProductCard } from './ProductCard/ProductCard'
 export { default as ProductInformation } from './ProductInformation/ProductInformation'
-export { default as ProductOption } from './ProductOption/ProductOption'
 export { default as ProductOptionCheckbox } from './ProductOptionCheckbox/ProductOptionCheckbox'
 export { default as ProductOptionList } from './ProductOptionList/ProductOptionList'
 export { default as ProductOptionSelect } from './ProductOptionSelect/ProductOptionSelect'
@@ -9,3 +8,4 @@ export { default as ProductOptionTextBox } from './ProductOptionTextBox/ProductO
 export { default as ProductRecommendations } from './ProductRecommendations/ProductRecommendations'
 export { default as ProductVariantSizeSelector } from './ProductVariantSizeSelector/ProductVariantSizeSelector'
 export { default as ProductQuickViewDialog } from './ProductQuickViewModal/ProductQuickViewDialog'
+export { default as ProductCardListView } from './ProductCardListView/ProductCardListView'

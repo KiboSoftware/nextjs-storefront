@@ -10,7 +10,7 @@ import type { IconProps } from '@/lib/types'
 const CartIcon = ({ size }: IconProps) => {
   const { t } = useTranslation('common')
 
-  const { data: cart } = useGetCart({})
+  const { data: cart } = useGetCart()
   const itemCount = cartGetters.getCartItemCount(cart)
 
   const router = useRouter()

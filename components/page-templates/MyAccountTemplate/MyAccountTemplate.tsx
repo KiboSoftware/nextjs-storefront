@@ -19,9 +19,10 @@ import {
 import getConfig from 'next/config'
 import { useRouter } from 'next/router'
 import { useTranslation } from 'next-i18next'
+import { useReCaptcha } from 'next-recaptcha-v3'
 
 import { MyProfile, PaymentMethod, AddressBook } from '@/components/my-account'
-import { useAuthContext } from '@/context'
+import { useAuthContext, useSnackbarContext } from '@/context'
 import {
   useGetCards,
   useGetCustomerAddresses,
@@ -29,10 +30,12 @@ import {
   useUpdateCustomerCard,
   useCreateCustomerAddress,
   useUpdateCustomerAddress,
+  useValidateCustomerAddress,
 } from '@/hooks'
+import { validateGoogleReCaptcha } from '@/lib/helpers'
 import type { BillingAddress, CardType } from '@/lib/types'
 
-import type { CustomerAccount } from '@/lib/gql/types'
+import type { CuAddress, CustomerAccount } from '@/lib/gql/types'
 
 const style = {
   accordion: {
@@ -86,14 +89,20 @@ const style = {
   },
 }
 
-const MyAccountTemplate = () => {
+interface MyAccountTemplateProps {
+  user?: CustomerAccount
+}
+
+const MyAccountTemplate = (props: MyAccountTemplateProps) => {
+  const { user } = props
   const { t } = useTranslation('common')
   const { publicRuntimeConfig } = getConfig()
   const isSubscriptionEnabled = publicRuntimeConfig.isSubscriptionEnabled
+  const reCaptchaKey = publicRuntimeConfig.recaptcha.reCaptchaKey
   const router = useRouter()
   const theme = useTheme()
   const mdScreen = useMediaQuery(theme.breakpoints.up('md'))
-  const { user, logout } = useAuthContext()
+  const { logout } = useAuthContext()
 
   const { data: cards } = useGetCards(user?.id as number)
   const { data: contacts } = useGetCustomerAddresses(user?.id as number)
@@ -102,6 +111,7 @@ const MyAccountTemplate = () => {
   const { updateCustomerCard } = useUpdateCustomerCard()
   const { createCustomerAddress } = useCreateCustomerAddress()
   const { updateCustomerAddress } = useUpdateCustomerAddress()
+  const { validateCustomerAddress } = useValidateCustomerAddress()
 
   const handleGoToOrderHistory = () => {
     router.push('/my-account/order-history?filters=M-6')
@@ -116,28 +126,57 @@ const MyAccountTemplate = () => {
     card: CardType,
     isUpdatingAddress: boolean
   ) => {
-    let response
-
-    // Add update address
-    if (isUpdatingAddress) {
-      response = await updateCustomerAddress.mutateAsync(address)
-    } else {
-      response = await createCustomerAddress.mutateAsync(address)
+    try {
+      let response
+      await validateCustomerAddress.mutateAsync({
+        addressValidationRequestInput: {
+          address: address?.customerContactInput?.address as CuAddress,
+        },
+      })
+      // Add update address
+      if (isUpdatingAddress) {
+        response = await updateCustomerAddress.mutateAsync(address)
+      } else {
+        response = await createCustomerAddress.mutateAsync(address)
+      }
+      const params = {
+        accountId: card.accountId,
+        cardId: card.cardId,
+        cardInput: card.cardInput,
+      }
+      params.cardInput.contactId = response.id
+      // Add update card
+      if (card.cardId) {
+        await updateCustomerCard.mutateAsync(params)
+      } else {
+        await createCustomerCard.mutateAsync(params)
+      }
+    } catch (error: any) {
+      console.error(error)
     }
+  }
 
-    const params = {
-      accountId: card.accountId,
-      cardId: card.cardId,
-      cardInput: card.cardInput,
-    }
-    params.cardInput.contactId = response.id
+  const { executeRecaptcha } = useReCaptcha()
+  const { showSnackbar } = useSnackbarContext()
 
-    // Add update card
-    if (card.cardId) {
-      await updateCustomerCard.mutateAsync(params)
-    } else {
-      await createCustomerCard.mutateAsync(params)
+  const submitFormWithRecaptcha = (
+    address: BillingAddress,
+    card: CardType,
+    isUpdatingAddress: boolean
+  ) => {
+    if (!executeRecaptcha) {
+      console.log('Execute recaptcha not yet available')
+      return
     }
+    executeRecaptcha('enquiryFormSubmit').then(async (gReCaptchaToken: any) => {
+      const captcha = await validateGoogleReCaptcha(gReCaptchaToken)
+
+      if (captcha?.status === 'success') {
+        await handleSave(address, card, isUpdatingAddress)
+      } else {
+        showSnackbar(captcha.message, 'error')
+      }
+    })
   }
 
   const accordionData = [
@@ -162,7 +201,11 @@ const MyAccountTemplate = () => {
           user={user as CustomerAccount}
           cards={cards}
           contacts={contacts}
-          onSave={handleSave}
+          onSave={(address, card, isUpdatingAddress) =>
+            reCaptchaKey
+              ? submitFormWithRecaptcha(address, card, isUpdatingAddress)
+              : handleSave(address, card, isUpdatingAddress)
+          }
         />
       ),
     },

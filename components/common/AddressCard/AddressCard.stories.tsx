@@ -15,6 +15,8 @@ export const Common = Template.bind({})
 
 Common.args = {
   title: 'Billing Address',
+  firstName: 'John',
+  lastNameOrSurname: 'Doe',
   address1: '1234, My Address',
   address2: '1104',
   cityOrTown: 'Austin',

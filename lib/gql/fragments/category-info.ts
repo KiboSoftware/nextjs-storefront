@@ -8,6 +8,14 @@ export const categoryInfo = /* GraphQL */ `
       name
       slug
       description
+      metaTagTitle
+      metaTagDescription
+      metaTagKeywords
+      categoryImages {
+        imageUrl
+        cmsId
+        altText
+      }
     }
   }
 `

@@ -3,11 +3,12 @@ import { render, screen } from '@testing-library/react'
 import * as operations from '@/lib/api/operations'
 import CheckoutPage, { getServerSideProps } from '@/pages/checkout/[checkoutId]'
 
-import type { Checkout, CrOrder } from '@/lib/gql/types'
+import type { Checkout, CrOrder, CrOrderInput } from '@/lib/gql/types'
 
 const mockOperations = operations as {
   getCheckout(checkoutId: string, req: any, res: any): Promise<CrOrder>
   getMultiShipCheckout(checkoutId: string, req: any, res: any): Promise<Checkout>
+  updateOrder(checkoutId: string, orderInput: CrOrderInput, req: any, res: any): Promise<CrOrder>
 }
 
 jest.mock('@/lib/api/operations', () => ({
@@ -41,31 +42,55 @@ jest.mock('next-i18next/serverSideTranslations', () => ({
   serverSideTranslations: jest.fn(),
 }))
 
+jest.mock('@/lib/api/util/getUserClaimsFromRequest.ts', () => null)
+
 describe('[pages] Checkout', () => {
   describe('when getServerSide props is called', () => {
     it('should return checkout props for valid checkout Id', async () => {
       const checkoutId = '12345'
+      const context = {
+        params: { checkoutId },
+        locale: 'mock-locale',
+        req: {
+          headers: { 'x-forwarded-for': '127.0.0.0' },
+          cookies: {
+            kibo_at: '',
+          },
+        },
+      }
       const mockCheckout = { id: checkoutId }
       mockOperations.getCheckout = jest.fn().mockImplementationOnce(async () => mockCheckout)
       mockOperations.getMultiShipCheckout = jest
         .fn()
         .mockImplementationOnce(async () => mockCheckout)
+      mockOperations.updateOrder = jest.fn().mockImplementationOnce(async () => mockCheckout)
+
       const expectedProps = {
         props: { checkoutId, checkout: mockCheckout, isMultiShipEnabled: false },
       }
 
-      const ssrProps = await getServerSideProps({ params: { checkoutId } } as any)
+      const ssrProps = await getServerSideProps(context as any)
 
       expect(ssrProps).toEqual(expectedProps)
     })
 
     it('should return not found for invalid checkout Id', async () => {
-      const checkoutId = '1'
+      const context = {
+        params: { checkoutId: '1' },
+        locale: 'mock-locale',
+        req: {
+          headers: { 'x-forwarded-for': '127.0.0.0' },
+          cookies: {
+            kibo_at: '',
+          },
+        },
+      }
       mockOperations.getCheckout = jest.fn().mockImplementationOnce(async () => null)
       mockOperations.getMultiShipCheckout = jest.fn().mockImplementationOnce(async () => null)
+      mockOperations.updateOrder = jest.fn().mockImplementationOnce(async () => null)
 
       const expectedProps = { notFound: true }
-      const ssrProps = await getServerSideProps({ params: { checkoutId } } as any)
+      const ssrProps = await getServerSideProps(context as any)
 
       expect(ssrProps).toEqual(expectedProps)
     })

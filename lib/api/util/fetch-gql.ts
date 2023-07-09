@@ -13,6 +13,7 @@ const fetcher = async ({ query, variables }: any, options: any) => {
       Authorization: `Bearer ${authToken}`,
       'x-vol-user-claims': options?.userClaims,
       'Content-Type': 'application/json',
+      ...options.headers,
     },
     body: JSON.stringify({
       query,

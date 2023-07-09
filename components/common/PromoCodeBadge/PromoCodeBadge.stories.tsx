@@ -2,7 +2,6 @@ import React, { useState } from 'react'
 
 import { ComponentStory, ComponentMeta } from '@storybook/react'
 
-import PromoBadge from './PromoBadge'
 import PromoCodeBadge from './PromoCodeBadge'
 
 export default {
@@ -31,14 +30,12 @@ const Template: ComponentStory<typeof PromoCodeBadge> = (args) => {
     </>
   )
 }
-const BadgeTemplate: ComponentStory<typeof PromoBadge> = (args) => <PromoBadge {...args} />
 
 export const PromocodeBadgeComponent = Template.bind({})
 export const PromocodeErrorComponent = Template.bind({})
-export const PromocodeBadge = BadgeTemplate.bind({})
 
-PromocodeBadge.args = {
-  promoCode: 'SAVE50',
+PromocodeBadgeComponent.args = {
+  promoList: ['SAVE50'],
 }
 
 PromocodeErrorComponent.args = {

@@ -15,7 +15,7 @@ import {
   ModalContextProvider,
   RQNotificationContextProvider,
   SnackbarRoot,
-  AuthContextProvider,
+  AuthContext,
 } from '@/context'
 import { subscriptionGetters } from '@/lib/getters'
 import type { FulfillmentInfo } from '@/lib/types'
@@ -31,14 +31,22 @@ export default {
   },
 } as ComponentMeta<typeof SubscriptionItem>
 
+const userContextValues = {
+  isAuthenticated: false,
+  user: { id: 1012 },
+  login: jest.fn(),
+  createAccount: jest.fn(),
+  logout: jest.fn(),
+}
+
 const Template: ComponentStory<typeof SubscriptionItem> = ({ ...args }) => (
   <ModalContextProvider>
     <RQNotificationContextProvider>
-      <AuthContextProvider>
+      <AuthContext.Provider value={userContextValues}>
         <DialogRoot />
         <SnackbarRoot />
         <SubscriptionItem {...args} />
-      </AuthContextProvider>
+      </AuthContext.Provider>
     </RQNotificationContextProvider>
   </ModalContextProvider>
 )

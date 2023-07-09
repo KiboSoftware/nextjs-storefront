@@ -21,8 +21,8 @@ export default function KiboBreadcrumbs({
       <Breadcrumbs separator={separator} {...rest}>
         {breadcrumbs?.map((item: BreadCrumbType, index) => {
           return (
-            <Link href={item.link as string} key={index} passHref>
-              <Typography variant="body2" color="text.primary" aria-label="breadcrumb-link">
+            <Link href={item.link as string} key={index} passHref aria-label="breadcrumb-link">
+              <Typography variant="body2" color="text.primary">
                 {item.text}
               </Typography>
             </Link>

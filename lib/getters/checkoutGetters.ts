@@ -130,6 +130,10 @@ const isSingleShippingItem = (checkout: Checkout) => {
   )
 }
 
+const getDiscountedSubtotal = (checkout: Checkout) => {
+  return checkout.itemLevelProductDiscountTotal + checkout?.orderLevelProductDiscountTotal
+}
+
 export const checkoutGetters = {
   buildItemsGroupFromCheckoutGroupings,
   formatDestinationAddress,
@@ -145,4 +149,5 @@ export const checkoutGetters = {
   getOrderAddresses,
   getFormattedDate,
   isSingleShippingItem,
+  getDiscountedSubtotal,
 }

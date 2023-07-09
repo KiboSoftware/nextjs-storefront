@@ -25,7 +25,7 @@ import type { Maybe, PrCategory } from '@/lib/gql/types'
 interface CategoryNestedNavigationProps {
   categoryTree: Maybe<PrCategory>[]
   children?: ReactNode
-  onCategoryClick: (categoryCode: string) => void
+  onCategoryClick: (categoryCode: string, slug?: string) => void
   onCloseMenu: (isOpen: boolean) => void
 }
 
@@ -73,7 +73,10 @@ const CategoryNestedNavigation = (props: CategoryNestedNavigationProps) => {
         categoryCode: selectedCategory?.categoryCode as string,
       })
     } else {
-      onCategoryClick(clickedCategory?.categoryCode || '')
+      onCategoryClick(
+        clickedCategory?.categoryCode as string,
+        clickedCategory?.content?.slug as string
+      )
     }
   }
 
@@ -150,7 +153,12 @@ const CategoryNestedNavigation = (props: CategoryNestedNavigationProps) => {
                 <ListItemText
                   primary={category?.content?.name}
                   sx={{ ...styles.listContent }}
-                  onClick={() => onCategoryClick(category?.categoryCode || '')}
+                  onClick={() =>
+                    onCategoryClick(
+                      category?.categoryCode as string,
+                      category?.content?.slug as string
+                    )
+                  }
                 />
                 {category?.childrenCategories?.length ? (
                   <ArrowForward fontSize="small" onClick={() => handleCategoryClick(category)} />

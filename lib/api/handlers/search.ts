@@ -6,7 +6,7 @@ import type { NextApiRequest, NextApiResponse } from 'next'
 export default async function searchHandler(req: NextApiRequest, res: NextApiResponse) {
   try {
     // get variables
-    const response = await productSearch(req.query as unknown as CategorySearchParams)
+    const response = await productSearch(req.query as unknown as CategorySearchParams, req)
     res.status(200).json({ results: response?.data?.products })
   } catch (error) {
     console.error(error)

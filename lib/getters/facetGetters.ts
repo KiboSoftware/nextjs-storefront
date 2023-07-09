@@ -17,7 +17,7 @@ const getBreadcrumbs = (searchData: { categories: PrCategory[] }): BreadCrumb[] 
   }
   const categoryCrumbs = buildBreadcrumbsParams(searchData?.categories[0]).map((b) => ({
     ...b,
-    link: getCategoryLink(b?.link as string),
+    link: getCategoryLink(b?.link as string, b.seoFriendlyUrl as string),
   }))
 
   return [...homeCrumb, ...categoryCrumbs]

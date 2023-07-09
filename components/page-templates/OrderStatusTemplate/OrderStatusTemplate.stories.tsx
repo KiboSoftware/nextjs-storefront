@@ -6,7 +6,7 @@ import OrderStatusTemplate from './OrderStatusTemplate'
 
 // Common
 export default {
-  title: 'OrderStatusTemplate/OrderStatusTemplate',
+  title: 'Page Templates/OrderStatusTemplate',
   component: OrderStatusTemplate,
 } as ComponentMeta<typeof OrderStatusTemplate>
 

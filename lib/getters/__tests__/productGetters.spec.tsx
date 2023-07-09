@@ -50,11 +50,13 @@ describe('[getters] productGetters', () => {
       },
       {
         text: 'Biking',
-        link: `/category/30`,
+        link: `/category/biking/30`,
+        seoFriendlyUrl: 'biking',
       },
       {
         text: 'Mountain',
-        link: `/category/42`,
+        link: `/category/mountain/42`,
+        seoFriendlyUrl: 'mountain',
       },
     ]
     expect(productGetters.getBreadcrumbs(ProductCustomMock)).toStrictEqual(breadcrumbs)
