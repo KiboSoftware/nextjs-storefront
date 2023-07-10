@@ -23,19 +23,11 @@ import { useReCaptcha } from 'next-recaptcha-v3'
 
 import { MyProfile, PaymentMethod, AddressBook } from '@/components/my-account'
 import { useAuthContext, useSnackbarContext } from '@/context'
-import {
-  useGetCards,
-  useGetCustomerAddresses,
-  useCreateCustomerCard,
-  useUpdateCustomerCard,
-  useCreateCustomerAddress,
-  useUpdateCustomerAddress,
-  useValidateCustomerAddress,
-} from '@/hooks'
+import { useCardContactActions } from '@/hooks'
 import { validateGoogleReCaptcha } from '@/lib/helpers'
 import type { BillingAddress, CardType } from '@/lib/types'
 
-import type { CuAddress, CustomerAccount } from '@/lib/gql/types'
+import type { CustomerAccount } from '@/lib/gql/types'
 
 const style = {
   accordion: {
@@ -104,14 +96,7 @@ const MyAccountTemplate = (props: MyAccountTemplateProps) => {
   const mdScreen = useMediaQuery(theme.breakpoints.up('md'))
   const { logout } = useAuthContext()
 
-  const { data: cards } = useGetCards(user?.id as number)
-  const { data: contacts } = useGetCustomerAddresses(user?.id as number)
-
-  const { createCustomerCard } = useCreateCustomerCard()
-  const { updateCustomerCard } = useUpdateCustomerCard()
-  const { createCustomerAddress } = useCreateCustomerAddress()
-  const { updateCustomerAddress } = useUpdateCustomerAddress()
-  const { validateCustomerAddress } = useValidateCustomerAddress()
+  const { cards, contacts, handleSave } = useCardContactActions(user?.id as number)
 
   const handleGoToOrderHistory = () => {
     router.push('/my-account/order-history?filters=M-6')
@@ -120,41 +105,6 @@ const MyAccountTemplate = (props: MyAccountTemplateProps) => {
   const handleGoToSubscription = useCallback(() => {
     router.push('/my-account/subscription')
   }, [router])
-
-  const handleSave = async (
-    address: BillingAddress,
-    card: CardType,
-    isUpdatingAddress: boolean
-  ) => {
-    try {
-      let response
-      await validateCustomerAddress.mutateAsync({
-        addressValidationRequestInput: {
-          address: address?.customerContactInput?.address as CuAddress,
-        },
-      })
-      // Add update address
-      if (isUpdatingAddress) {
-        response = await updateCustomerAddress.mutateAsync(address)
-      } else {
-        response = await createCustomerAddress.mutateAsync(address)
-      }
-      const params = {
-        accountId: card.accountId,
-        cardId: card.cardId,
-        cardInput: card.cardInput,
-      }
-      params.cardInput.contactId = response.id
-      // Add update card
-      if (card.cardId) {
-        await updateCustomerCard.mutateAsync(params)
-      } else {
-        await createCustomerCard.mutateAsync(params)
-      }
-    } catch (error: any) {
-      console.error(error)
-    }
-  }
 
   const { executeRecaptcha } = useReCaptcha()
   const { showSnackbar } = useSnackbarContext()
@@ -179,7 +129,7 @@ const MyAccountTemplate = (props: MyAccountTemplateProps) => {
     })
   }
 
-  const accordionData = [
+  const shopperAccountActionList = [
     {
       id: 'my-profile-accordion',
       controls: 'my-profile-content',
@@ -239,7 +189,7 @@ const MyAccountTemplate = (props: MyAccountTemplateProps) => {
         </Box>
         <Divider sx={{ borderColor: 'grey.500' }} />
 
-        {accordionData.map((data) => {
+        {shopperAccountActionList.map((data) => {
           return (
             <Box key={data.id}>
               <Accordion disableGutters sx={{ ...style.accordion }}>

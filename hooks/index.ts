@@ -58,6 +58,7 @@ export * from './custom/useCurrentLocation/useCurrentLocation'
 export * from './custom/useWishlist/useWishlist'
 export * from './custom/useProductCardActions/useProductCardActions'
 export * from './custom/usePriceRangeFormatter/usePriceRangeFormatter'
+export * from './custom/useCardContactActions/useCardContactActions'
 
 // Mutations
 
