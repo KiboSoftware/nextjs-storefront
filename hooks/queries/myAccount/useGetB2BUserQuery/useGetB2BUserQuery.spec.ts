@@ -9,11 +9,11 @@ describe('[hooks] useGetB2BUserQuery', () => {
     const { result } = renderHook(
       () =>
         useGetB2BUserQueries({
-          b2bAccountId: 1001,
+          accountId: 1001,
           filter: '',
           pageSize: 5,
           startIndex: 0,
-          searchTerm: '',
+          q: '',
         }),
       {
         wrapper: createQueryClientWrapper(),

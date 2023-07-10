@@ -27,9 +27,23 @@ import { ConfirmationDialog } from '@/components/dialogs'
 import { UserTable } from '@/components/my-account'
 import UserForm from '@/components/my-account/User/UserForm/UserForm'
 import { useAuthContext, useModalContext } from '@/context'
-import { useDebounce, useGetB2BUserQueries, useRemoveCustomerB2bUserMutation } from '@/hooks'
+import {
+  useAddRoleToCustomerB2bAccountMutation,
+  useCreateCustomerB2bUserMutation,
+  useDebounce,
+  useDeleteB2bAccountRoleMutation,
+  useGetB2BUserQueries,
+  useRemoveCustomerB2bUserMutation,
+  useUpdateCustomerB2bUserMutation,
+} from '@/hooks'
+import '@tanstack/react-query-devtools'
+import { buildB2bUserRoleParams } from '@/lib/helpers/buildB2bUserRoleParams'
+import { buildCreateCustomerB2bUserParams } from '@/lib/helpers/buildCreateCustomerB2bUserParams'
+import { buildUpdateCustomerB2bUserParams } from '@/lib/helpers/buildUpdateCustomerB2bUserParams'
+import { getPerPageItemText } from '@/lib/helpers/getPerPageItemText'
+import { B2BUserInput, CustomerB2BUserRole } from '@/lib/types/CustomerB2BUser'
 
-import { Maybe } from '@/lib/gql/types'
+import { B2BUser } from '@/lib/gql/types'
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
   const { locale } = context
@@ -78,51 +92,43 @@ const style = {
 }
 
 const UsersPage: NextPage = () => {
+  const { publicRuntimeConfig } = getConfig()
+  const userRoles = publicRuntimeConfig.b2bUserRoles
+
   const theme = useTheme()
   const { user } = useAuthContext()
   const { t } = useTranslation('common')
   const { showModal } = useModalContext()
   const mdScreen = useMediaQuery(theme.breakpoints.up('md'))
-  const { publicRuntimeConfig } = getConfig()
 
-  const [isUserFormOpen, setUserFormOpen] = useState(false)
-  const [editUserId, setEditUserId] = useState<Maybe<string> | undefined>(undefined)
+  const [isUserFormOpen, setIsUserFormOpen] = useState<boolean>(false)
 
   const [paginationState, setPaginationState] = useState({
     searchTerm: '',
-    page: publicRuntimeConfig.b2bUserListing.defaultPage,
     pageSize: publicRuntimeConfig.b2bUserListing.defaultPageSize,
     startIndex: publicRuntimeConfig.b2bUserListing.defaultStartIndex,
   })
 
   const { data, isLoading } = useGetB2BUserQueries({
-    b2bAccountId: user?.id,
+    accountId: user?.id as number,
+    filter: publicRuntimeConfig.b2bUserListing.defaultFilter,
     pageSize: paginationState.pageSize,
     startIndex: paginationState.startIndex,
-    searchTerm: useDebounce(paginationState.searchTerm, publicRuntimeConfig.debounceTimeout),
+    q: useDebounce(paginationState.searchTerm, publicRuntimeConfig.debounceTimeout),
   })
 
-  const { removeCustomerB2bUser } = useRemoveCustomerB2bUserMutation({
-    removeCustomerB2bAccountUser: true,
-    delay: 1000,
-  })
-
-  const getPerPageItemText = () => {
-    if (!data) return `${mdScreen && t('displaying')} 0 - 0 of 0`
-    const { startIndex, pageSize, totalCount } = data
-    const startRange = startIndex + 1
-    const endRange = startIndex + pageSize
-    return `${mdScreen && t('displaying')} ${startRange} - ${
-      endRange > totalCount ? totalCount : endRange
-    } of ${totalCount}`
-  }
+  const { removeCustomerB2bUser } = useRemoveCustomerB2bUserMutation()
+  const { createCustomerB2bUser } = useCreateCustomerB2bUserMutation()
+  const { addRoleToCustomerB2bAccount } = useAddRoleToCustomerB2bAccountMutation()
+  const { updateCustomerB2bUser } = useUpdateCustomerB2bUserMutation()
+  const { deleteB2bAccountUserRole } = useDeleteB2bAccountRoleMutation()
 
   const confirmDelete = (id: string | undefined | null) => {
     showModal({
       Component: ConfirmationDialog,
       props: {
         contentText: t('delete-user-confirmation-text'),
-        primaryButtonText: 'Delete',
+        primaryButtonText: t('delete'),
         onConfirm: () => {
           const accountId = user?.id
           const queryVars = { accountId, userId: id }
@@ -132,12 +138,73 @@ const UsersPage: NextPage = () => {
     })
   }
 
+  const handleSearch = (searchText: string) => {
+    setPaginationState({
+      ...paginationState,
+      searchTerm: searchText,
+      startIndex: publicRuntimeConfig.b2bUserListing.defaultStartIndex,
+    })
+  }
+
+  const handlePageChange = (event: ChangeEvent<any>, page: number) =>
+    setPaginationState({
+      ...paginationState,
+      startIndex: (data?.pageSize || 0) * (page - 1),
+    })
+
+  const onAddUser = async (formValues: B2BUserInput) => {
+    const variables = buildCreateCustomerB2bUserParams({ user, values: formValues })
+    const createUserResponse = await createCustomerB2bUser.mutateAsync({
+      ...variables,
+    })
+    if (createUserResponse?.userId) {
+      addRoleToB2bUser(createUserResponse, formValues)
+    }
+  }
+
+  const onUpdateUser = async (formValues: B2BUserInput, b2BUser?: B2BUser | undefined) => {
+    const variables = buildUpdateCustomerB2bUserParams({ user, b2BUser, values: formValues })
+    const updateUserResponse = await updateCustomerB2bUser.mutateAsync({
+      ...variables,
+    })
+    const previousRoles = b2BUser?.roles as CustomerB2BUserRole[]
+    if (
+      updateUserResponse &&
+      previousRoles &&
+      previousRoles.length &&
+      formValues.role !== previousRoles[0]?.roleName
+    ) {
+      await deleteB2bAccountUserRole.mutateAsync(
+        buildB2bUserRoleParams({
+          user,
+          b2BUser,
+          values: { role: previousRoles[0]?.roleName },
+          roles: userRoles,
+        })
+      )
+    }
+    addRoleToB2bUser(updateUserResponse, formValues)
+  }
+
+  const addRoleToB2bUser = async (b2BUser: B2BUser, formValues: any) => {
+    const addRoleToCustomerB2bAccountVariables = buildB2bUserRoleParams({
+      user,
+      b2BUser: b2BUser,
+      values: formValues,
+      roles: userRoles,
+    })
+    console.log(addRoleToCustomerB2bAccountVariables)
+    await addRoleToCustomerB2bAccount.mutateAsync({
+      ...addRoleToCustomerB2bAccountVariables,
+    })
+  }
+
   const AddUserButton = () => {
     return (
       <Button
         variant="primary"
         disabled={isUserFormOpen}
-        onClick={() => setUserFormOpen(true)}
+        onClick={() => setIsUserFormOpen(true)}
         disableElevation
         id="formOpenButton"
       >
@@ -169,7 +236,11 @@ const UsersPage: NextPage = () => {
             {mdScreen && <AddUserButton />}
             {!mdScreen && !isUserFormOpen && <AddUserButton />}
             {isUserFormOpen && (
-              <UserForm isEditMode={false} closeUserForm={() => setUserFormOpen(false)} />
+              <UserForm
+                isEditMode={false}
+                onSave={onAddUser}
+                onClose={() => setIsUserFormOpen(false)}
+              />
             )}
           </Grid>
         </Grid>
@@ -177,12 +248,7 @@ const UsersPage: NextPage = () => {
       <Grid item>
         <SearchBoxContainer>
           <SearchBar
-            onSearch={(searchText) =>
-              setPaginationState({
-                ...paginationState,
-                searchTerm: searchText,
-              })
-            }
+            onSearch={handleSearch}
             placeHolder={t('user-search-placeholder')}
             searchTerm={paginationState.searchTerm}
             showClearButton={true}
@@ -196,24 +262,20 @@ const UsersPage: NextPage = () => {
         ) : (
           <>
             <UserTable
-              b2bAccountUsers={data?.items}
-              deleteUser={confirmDelete}
-              editUserId={editUserId}
-              setEditUserId={(id: Maybe<string> | undefined) => setEditUserId(id)}
+              b2bUsers={data?.items as B2BUser[]}
+              onSave={onUpdateUser}
+              onDelete={confirmDelete}
             />
             <PaginationContainer>
               <Pagination
                 count={data?.pageCount || 0}
                 shape={`rounded`}
-                onChange={(event: ChangeEvent<any>, page: number) =>
-                  setPaginationState({
-                    ...paginationState,
-                    startIndex: (data?.pageSize || 0) * (page - 1),
-                  })
-                }
+                onChange={handlePageChange}
                 size="small"
               />
-              <Typography sx={style.perPageItemText}>{getPerPageItemText()}</Typography>
+              <Typography sx={style.perPageItemText}>
+                {getPerPageItemText({ data, mdScreen, displayText: t('displaying') })}
+              </Typography>
             </PaginationContainer>
           </>
         )}

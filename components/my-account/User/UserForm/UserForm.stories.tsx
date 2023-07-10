@@ -9,10 +9,6 @@ export default {
   title: 'My Account/UserForm',
 } as ComponentMeta<typeof UserForm>
 
-// const customerB2BUsers: B2BUser[] = userGetters.getCustomerB2BUsers(
-//     customerB2BUserForPage0Mock?.items as B2BUser[]
-// )
-
 const Template: ComponentStory<typeof UserForm> = (args) => <UserForm {...args} />
 
 // My Account

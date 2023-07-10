@@ -38,8 +38,11 @@ export const useAddRoleToCustomerB2bAccountMutation = () => {
   return {
     addRoleToCustomerB2bAccount: useMutation({
       mutationFn: addRoleToCustomerB2bAccount,
-      onSuccess: () => {
-        queryClient.refetchQueries(customerB2BUserKeys.all)
+      onSuccess: () => queryClient.invalidateQueries(customerB2BUserKeys.all),
+      onError(error, variables, context) {
+        console.log('error', error)
+        console.log('variables', variables)
+        console.log('context', context)
       },
     }),
   }

@@ -1,11 +1,16 @@
-export const buildCreateCustomerB2bUserParams = (params: any) => {
+import { MutationCreateCustomerB2bAccountUserArgs } from '../gql/types'
+import { CreateCustomerB2bUserParams } from '../types/CustomerB2BUser'
+
+export const buildCreateCustomerB2bUserParams = (
+  params: CreateCustomerB2bUserParams
+): MutationCreateCustomerB2bAccountUserArgs => {
   const {
-    user: { id },
+    user,
     values: { firstName, lastName, emailAddress },
   } = params
 
   const createCustomerB2bUserParam = {
-    accountId: id,
+    accountId: user?.id as number,
     b2BUserAndAuthInfoInput: {
       b2BUser: {
         firstName,

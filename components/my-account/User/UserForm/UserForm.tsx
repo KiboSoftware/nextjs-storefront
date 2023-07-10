@@ -11,22 +11,14 @@ import * as yup from 'yup'
 
 import { KiboRadio, KiboSwitch, KiboTextBox } from '@/components/common'
 import { useAuthContext } from '@/context'
-import {
-  useAddRoleToCustomerB2bAccountMutation,
-  useCreateCustomerB2bUserMutation,
-  useDeleteB2bAccountRoleMutation,
-  useUpdateCustomerB2bUserMutation,
-} from '@/hooks'
-import { buildB2bUserRoleParams } from '@/lib/helpers/buildB2bUserRoleParams'
-import { buildCreateCustomerB2bUserParams } from '@/lib/helpers/buildCreateCustomerB2bUserParams'
-import { buildUpdateCustomerB2bUserParams } from '@/lib/helpers/buildUpdateCustomerB2bUserParams'
 
-import { B2BUser } from '@/lib/gql/types'
+import { B2BUser, B2BUserInput } from '@/lib/gql/types'
 
 interface UserFormProps {
   isEditMode: boolean
   b2BUser?: B2BUser | any
-  closeUserForm: () => void
+  onClose: () => void
+  onSave: (formValues: B2BUserInput, b2BUser?: B2BUser) => void
 }
 
 export const useFormSchema = () => {
@@ -38,11 +30,12 @@ export const useFormSchema = () => {
       .matches(/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i, t('invalid-email-error')),
     firstName: yup.string().required(t('firstname-error')),
     lastName: yup.string().required(t('lastname-error')),
+    // role: yup.string().required()
   })
 }
 
 const UserForm = (props: UserFormProps) => {
-  const { isEditMode, b2BUser, closeUserForm } = props
+  const { isEditMode, b2BUser, onClose, onSave } = props
 
   const { publicRuntimeConfig } = getConfig()
 
@@ -50,13 +43,7 @@ const UserForm = (props: UserFormProps) => {
   const theme = useTheme()
   const mdScreen = useMediaQuery(theme.breakpoints.up('md'))
   const userSchema = useFormSchema()
-  const { user } = useAuthContext()
-  const userRoles = publicRuntimeConfig.b2bUserRoles
   const userFormRadioOptions = publicRuntimeConfig.userFormRadioOptions
-  const { createCustomerB2bUser } = useCreateCustomerB2bUserMutation()
-  const { addRoleToCustomerB2bAccount } = useAddRoleToCustomerB2bAccountMutation()
-  const { updateCustomerB2bUser } = useUpdateCustomerB2bUserMutation()
-  const { deleteB2bAccountUserRole } = useDeleteB2bAccountRoleMutation()
 
   const [isLoading, setLoading] = useState(false)
   const {
@@ -75,34 +62,12 @@ const UserForm = (props: UserFormProps) => {
     setLoading(true)
     const formValues = getValues()
     if (isEditMode) {
-      const variables = buildUpdateCustomerB2bUserParams({ user, b2BUser, values: formValues })
-      const updateUserResponse = await updateCustomerB2bUser.mutateAsync({
-        ...variables,
-      })
-      const previousRole = b2BUser?.roles[0]?.roleName
-      if (updateUserResponse && b2BUser?.roles.length && formValues.role !== previousRole) {
-        await deleteB2bAccountUserRole.mutateAsync(
-          buildB2bUserRoleParams({
-            user,
-            b2BUser,
-            values: { role: previousRole },
-            roles: userRoles,
-          })
-        )
-      }
-      addRoleToB2bUser(updateUserResponse, formValues)
+      onSave(formValues, b2BUser)
     } else {
-      const variables = buildCreateCustomerB2bUserParams({ user, values: formValues })
-      const createUserResponse = await createCustomerB2bUser.mutateAsync({
-        ...variables,
-      })
-      if (createUserResponse?.userId) {
-        addRoleToB2bUser(createUserResponse, formValues)
-      }
+      onSave(formValues)
     }
     setLoading(false)
     cancelAction()
-    // }
   }
 
   useEffect(() => {
@@ -115,20 +80,8 @@ const UserForm = (props: UserFormProps) => {
     setValue('role', roles && roles.length ? roles[0]?.roleName : '')
   }, [b2BUser])
 
-  const addRoleToB2bUser = async (b2BUser: B2BUser, formValues: any) => {
-    const addRoleToCustomerB2bAccountVariables = buildB2bUserRoleParams({
-      user,
-      b2BUser: b2BUser,
-      values: formValues,
-      roles: userRoles,
-    })
-
-    await addRoleToCustomerB2bAccount.mutateAsync({
-      ...addRoleToCustomerB2bAccountVariables,
-    })
-  }
   const cancelAction = () => {
-    closeUserForm()
+    onClose()
     reset()
   }
 
@@ -138,15 +91,32 @@ const UserForm = (props: UserFormProps) => {
       <form
         onSubmit={handleSubmit(onSubmit)}
         id="addUserForm"
-        style={{ display: 'flex', paddingLeft: '16px', paddingRight: '16px' }}
+        data-testid="user-form"
+        style={{
+          display: 'flex',
+          // paddingLeft: '16px', paddingRight: '16px'
+        }}
       >
-        <Grid container spacing={8} style={{ marginTop: '5px' }}>
+        <Grid
+          container
+          spacing={8}
+          style={{
+            marginTop: '5px',
+            marginLeft: 0,
+            display: 'flex',
+            justifyContent: 'space-between',
+          }}
+        >
           <Grid
             item
             xs={12}
-            md={3.5}
-            sx={{ paddingTop: { xs: '10px !important', md: '64px' } }}
-            style={{ display: 'flex', alignItems: 'center' }}
+            md={isEditMode && mdScreen ? 3 : 3.5}
+            sx={{
+              paddingTop: { xs: '10px !important', md: '64px' },
+              display: 'flex',
+              alignItems: 'center',
+              paddingLeft: '0 !important',
+            }}
           >
             <Controller
               name="emailAddress"
@@ -172,9 +142,13 @@ const UserForm = (props: UserFormProps) => {
           <Grid
             item
             xs={12}
-            md={1.5}
-            sx={{ paddingTop: { xs: '10px !important', md: '64px' } }}
-            style={{ display: 'flex', alignItems: 'center' }}
+            md={isEditMode && mdScreen ? 1.5 : 2}
+            sx={{
+              paddingTop: { xs: '10px !important', md: '64px' },
+              display: 'flex',
+              alignItems: 'center',
+              paddingLeft: '0 !important',
+            }}
           >
             <Controller
               name="firstName"
@@ -194,9 +168,13 @@ const UserForm = (props: UserFormProps) => {
           <Grid
             item
             xs={12}
-            md={1.5}
-            sx={{ paddingTop: { xs: '10px !important', md: '64px' } }}
-            style={{ display: 'flex', alignItems: 'center' }}
+            md={isEditMode && mdScreen ? 1.5 : 2}
+            sx={{
+              paddingTop: { xs: '10px !important', md: '64px' },
+              display: 'flex',
+              alignItems: 'center',
+              paddingLeft: '0 !important',
+            }}
           >
             <Controller
               name="lastName"
@@ -213,7 +191,17 @@ const UserForm = (props: UserFormProps) => {
               )}
             />
           </Grid>
-          <Grid item xs={12} md={2} sx={{ paddingTop: { xs: '10px !important', md: '64px' } }}>
+          <Grid
+            item
+            xs={12}
+            md={2}
+            sx={{
+              paddingTop: { xs: '10px !important', md: '64px' },
+              display: 'flex',
+              alignItems: 'center',
+              paddingLeft: '0 !important',
+            }}
+          >
             <Controller
               name="role"
               control={control}
@@ -230,13 +218,13 @@ const UserForm = (props: UserFormProps) => {
               )}
             />
           </Grid>
-          <Grid
-            item
-            xs={12}
-            md={1}
-            sx={{ paddingTop: { sm: '0 !important', md: '50px !important' } }}
-          >
-            {isEditMode && (
+          {isEditMode && (
+            <Grid
+              item
+              xs={12}
+              md={isEditMode && mdScreen ? 1.8 : 1}
+              sx={{ paddingTop: { sm: '0 !important', md: '50px !important' } }}
+            >
               <Controller
                 name="isActive"
                 control={control}
@@ -250,14 +238,19 @@ const UserForm = (props: UserFormProps) => {
                   />
                 )}
               />
-            )}
-          </Grid>
+            </Grid>
+          )}
           <Grid
             item
             xs={12}
-            md={2.5}
-            sx={{ paddingTop: { xs: '10px !important', md: '64px' } }}
-            style={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end' }}
+            md={isEditMode && mdScreen ? 1.3 : 2}
+            sx={{
+              paddingTop: { xs: '10px !important', md: '64px' },
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'flex-end',
+              paddingLeft: '0 !important',
+            }}
           >
             {isEditMode && mdScreen && (
               <>
@@ -276,6 +269,7 @@ const UserForm = (props: UserFormProps) => {
                 <Button
                   variant="contained"
                   disableElevation
+                  data-testid="submit-button"
                   style={{ height: '37px' }}
                   type="submit"
                 >
@@ -298,7 +292,8 @@ const UserForm = (props: UserFormProps) => {
                 <Button
                   variant="outlined"
                   type="reset"
-                  onClick={closeUserForm}
+                  data-testid="reset-button"
+                  onClick={onClose}
                   style={{ marginRight: '8px' }}
                 >
                   {t('cancel')}
@@ -306,7 +301,7 @@ const UserForm = (props: UserFormProps) => {
                 <Button
                   variant="contained"
                   disableElevation
-                  style={{ height: '37px', width: '90px' }}
+                  style={{ height: '37px', width: '140px' }}
                   type="submit"
                 >
                   {isLoading ? (
@@ -353,7 +348,7 @@ const UserForm = (props: UserFormProps) => {
                     t('save')
                   )}
                 </Button>
-                <Button variant="outlined" type="reset" onClick={closeUserForm}>
+                <Button variant="outlined" type="reset" onClick={onClose}>
                   {t('cancel')}
                 </Button>
               </Grid>

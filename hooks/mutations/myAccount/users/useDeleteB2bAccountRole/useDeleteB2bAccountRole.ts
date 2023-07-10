@@ -38,9 +38,7 @@ export const useDeleteB2bAccountRoleMutation = () => {
   return {
     deleteB2bAccountUserRole: useMutation({
       mutationFn: deleteB2bAccountUserRole,
-      onSuccess: () => {
-        queryClient.refetchQueries(customerB2BUserKeys.all)
-      },
+      onSuccess: () => queryClient.invalidateQueries(customerB2BUserKeys.all),
     }),
   }
 }

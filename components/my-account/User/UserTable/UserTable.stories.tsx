@@ -22,7 +22,7 @@ const Template: ComponentStory<typeof UserTable> = (args) => <UserTable {...args
 // My Account
 export const Table = Template.bind({})
 Table.args = {
-  b2bAccountUsers: customerB2BUsers.map((customer: B2BUser, index: number) => ({
+  b2bUsers: customerB2BUsers.map((customer: B2BUser, index: number) => ({
     ...customer,
     id: index,
   })),

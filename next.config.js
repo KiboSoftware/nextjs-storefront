@@ -100,6 +100,7 @@ module.exports = {
     ],
     isSubscriptionEnabled: true,
     b2bUserListing: {
+      defaultFilter: 'isRemoved eq false',
       defaultStartIndex: 0,
       defaultPageSize: 5,
       defaultPage: 1,

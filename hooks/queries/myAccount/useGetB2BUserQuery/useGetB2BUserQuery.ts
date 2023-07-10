@@ -1,98 +1,86 @@
 /**
  * @module useGetB2BUserQuery
  */
-import { QueryClient, useInfiniteQuery, useQuery } from '@tanstack/react-query'
+import { QueryClient, useQuery } from '@tanstack/react-query'
 
 import { makeGraphQLClient } from '@/lib/gql/client'
 import { customerB2BUserKeys } from '@/lib/react-query/queryKeys'
 
-import type { B2BUser } from '@/lib/gql/types'
+import type { B2BAccountCollection, QueryB2bAccountUsersArgs } from '@/lib/gql/types'
 import { getCustomerB2BAccountUsersQuery } from '@/lib/gql/queries'
-import React from 'react'
+import { B2BUserResultType, QueryB2BUserArgs } from '@/lib/types/CustomerB2BUser'
 
 /**
  * @hidden
  */
 
-interface B2bAccountUsersParams {
-  b2bAccountId: number | undefined
-  filter?: string
-  pageSize: number
-  startIndex: number
-  searchTerm?: string
-}
-
-export interface B2BUserResultType {
-  data?: {
-    items: B2BUser[]
-    totalCount: number
-    startIndex: number
-    pageSize: number
-    pageCount: number
-  }
-  isLoading: boolean
-  isSuccess: boolean
-  isError: boolean
-  error: any
-}
-
 const client = makeGraphQLClient()
 
 const loadCustomerB2BUsers = async ({
-  b2bAccountId,
+  accountId,
   filter,
   pageSize,
   startIndex,
-  searchTerm,
-}: B2bAccountUsersParams) => {
-  filter = 'isRemoved eq false'
+  q,
+}: QueryB2bAccountUsersArgs): Promise<B2BAccountCollection> => {
   const response = await client.request({
     document: getCustomerB2BAccountUsersQuery,
-    variables: { b2bAccountId, filter, pageSize, startIndex, q: searchTerm },
+    variables: { b2bAccountId: accountId, filter, pageSize, startIndex, q },
   })
 
   return response?.b2bAccountUsers
 }
 
+/**
+ * [Query hook] useGetB2BUserQueries uses the graphQL query
+ *
+ * <b>B2bAccountUsers({b2bAccountId: Int, filter: String, pageSize: Int, startIndex: Int, q: string}): ProductSearchResult</b>
+ *
+ * Description : Fetches the B2B Users list based on accountId, filter, pagesize, startIndex and q where q is the search query.
+ *
+ * Parameters passed to function loadCustomerB2BUsers({accountId, filter, pageSize, startIndex, q}: QueryB2bAccountUsersArgs) => expects object of type QueryB2bAccountUsersArgs containing accountId, filter, pagesize, startIndex and q.
+ *
+ * @returns 'response?.b2bAccountUsers', which contains list of B2B Users based on search request.
+ */
+
 const prefetchB2bUsers = async ({
-  b2bAccountId,
+  accountId,
   filter,
   pageSize,
   startIndex,
-  searchTerm,
-}: B2bAccountUsersParams) => {
+  q,
+}: QueryB2BUserArgs) => {
   const queryClient = new QueryClient()
   // The results of this query will be cached like a normal query
   await queryClient.prefetchQuery({
-    queryKey: customerB2BUserKeys.search(startIndex + 5, pageSize, searchTerm),
+    queryKey: customerB2BUserKeys.search(startIndex + 5, pageSize, q, filter),
     queryFn: () =>
       loadCustomerB2BUsers({
-        b2bAccountId,
+        accountId,
         filter,
         pageSize,
         startIndex: startIndex + 5,
-        searchTerm,
+        q,
       }),
   })
 }
 
 export const useGetB2BUserQueries = ({
-  b2bAccountId,
+  accountId,
   filter,
   pageSize,
   startIndex,
-  searchTerm,
-}: B2bAccountUsersParams): B2BUserResultType => {
+  q,
+}: QueryB2BUserArgs): B2BUserResultType => {
   const { isLoading, isSuccess, isError, error, data, ...result } = useQuery({
-    queryKey: customerB2BUserKeys.search(startIndex, pageSize, searchTerm),
-    queryFn: () => loadCustomerB2BUsers({ b2bAccountId, filter, pageSize, startIndex, searchTerm }),
-    enabled: !!b2bAccountId,
-    refetchOnWindowFocus: false,
+    queryKey: customerB2BUserKeys.search(startIndex, pageSize, q, filter),
+    queryFn: () => loadCustomerB2BUsers({ accountId, filter, pageSize, startIndex, q }),
+    enabled: !!accountId,
     placeholderData: (previousData) => previousData || undefined,
   })
 
   // WIP -> Prefetch users
-  // if (result.isFetched) prefetchB2bUsers({ b2bAccountId, filter, pageSize, startIndex, searchTerm })
+  // if (result.isFetched) prefetchB2bUsers({ accountId, filter, pageSize, startIndex, q })
   return {
     data,
     isLoading,

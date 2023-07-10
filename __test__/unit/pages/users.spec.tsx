@@ -78,7 +78,10 @@ describe('[page] Users Page', () => {
       }
     )
 
-    queryClient.setQueryData(customerB2BUserKeys.search(0, 5, ''), customerB2BUserForPage0Mock)
+    queryClient.setQueryData(
+      customerB2BUserKeys.search(0, 5, '', 'isRemoved eq false'),
+      customerB2BUserForPage0Mock
+    )
     await waitFor(() => {
       const userTable = screen.getByTestId('user-table-mock')
       expect(userTable).toBeVisible()

@@ -51,9 +51,6 @@ const CustomSwitch = styled((props: SwitchProps) => (
     borderRadius: 26 / 2,
     backgroundColor: theme.palette.mode === 'light' ? '#E9E9EA' : '#39393D',
     opacity: 1,
-    transition: theme.transitions.create(['background-color'], {
-      duration: 500,
-    }),
   },
 }))
 

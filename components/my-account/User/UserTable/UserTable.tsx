@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 
 import { Edit as EditIcon, RemoveCircle as RemoveCircleIcon } from '@mui/icons-material'
 import {
@@ -16,14 +16,14 @@ import {
 import { useTranslation } from 'next-i18next'
 
 import UserForm from '../UserForm/UserForm'
+import { B2BUserInput } from '@/lib/types/CustomerB2BUser'
 
-import { B2BUser, Maybe } from '@/lib/gql/types'
+import { B2BUser } from '@/lib/gql/types'
 
 interface UserTableProps {
-  b2bAccountUsers: B2BUser[] | undefined
-  deleteUser: (id: Maybe<string> | undefined) => void
-  editUserId: Maybe<string> | undefined
-  setEditUserId: (id: Maybe<string> | undefined) => void
+  b2bUsers: B2BUser[] | undefined
+  onDelete: (id: string | undefined) => void
+  onSave: (formValues: B2BUserInput, b2BUser?: B2BUser | undefined) => void
 }
 
 const UserStatusCircle = styled('div', {
@@ -41,21 +41,22 @@ const UserStatusCircle = styled('div', {
 const style = {
   emailAddressCell: {
     flex: { md: 1, xs: 0.5 },
-    maxWidth: { xs: '150px', md: '100%' },
+    maxWidth: { xs: '120px', sm: '130px', md: '100%' },
     overflow: { xs: 'hidden' },
     textOverflow: { xs: 'ellipsis' },
   },
 }
 
 const UserTable = (props: UserTableProps) => {
-  const { b2bAccountUsers, deleteUser, editUserId, setEditUserId } = props
+  const { b2bUsers, onDelete, onSave } = props
 
   const { t } = useTranslation('common')
   const theme = useTheme()
   const mdScreen = useMediaQuery(theme.breakpoints.up('md'))
+  const [editUserId, setEditUserId] = useState<string | undefined>(undefined)
 
   return (
-    <Table style={{ minHeight: b2bAccountUsers && b2bAccountUsers.length ? 0 : '345px' }}>
+    <Table style={{ minHeight: b2bUsers && b2bUsers.length ? 0 : '345px' }}>
       <TableHead>
         <TableRow style={{ backgroundColor: theme.palette.grey[100] }}>
           <TableCell
@@ -72,15 +73,16 @@ const UserTable = (props: UserTableProps) => {
         </TableRow>
       </TableHead>
       <TableBody>
-        {b2bAccountUsers &&
-          b2bAccountUsers.map((b2bUser) =>
+        {b2bUsers &&
+          b2bUsers.map((b2bUser) =>
             editUserId && editUserId === b2bUser?.userId ? (
               <TableRow key={b2bUser?.userId}>
-                <TableCell colSpan={6} style={{ width: '100%' }}>
+                <TableCell colSpan={7} style={{ width: '100%', padding: 0 }}>
                   <UserForm
                     isEditMode={true}
                     b2BUser={b2bUser}
-                    closeUserForm={() => setEditUserId(undefined)}
+                    onClose={() => setEditUserId(undefined)}
+                    onSave={onSave}
                   />
                 </TableCell>
               </TableRow>
@@ -110,11 +112,11 @@ const UserTable = (props: UserTableProps) => {
                 <TableCell sx={{ flex: 1 }}>
                   <Box sx={{ display: 'flex', justifyContent: 'end', alignItems: 'center' }}>
                     <EditIcon
-                      onClick={() => setEditUserId(b2bUser?.userId)}
+                      onClick={() => setEditUserId(b2bUser?.userId as string)}
                       style={{ marginRight: '16px', cursor: 'pointer' }}
                     />
                     <RemoveCircleIcon
-                      onClick={() => deleteUser(b2bUser?.userId)}
+                      onClick={() => onDelete(b2bUser?.userId as string)}
                       style={{ cursor: 'pointer' }}
                     />
                   </Box>

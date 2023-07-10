@@ -34,8 +34,8 @@ export const loginKeys = {
 
 export const customerB2BUserKeys = {
   all: ['b2bUsers'] as any,
-  search: (index: number, pageSize: number, searchTerm: string | undefined) =>
-    [...customerB2BUserKeys.all, index, pageSize, searchTerm] as const,
+  search: (index: number, pageSize: number, searchTerm: string | undefined, filter: string) =>
+    [...customerB2BUserKeys.all, index, pageSize, searchTerm, filter] as const,
 }
 
 export const productSearchResultKeys = {

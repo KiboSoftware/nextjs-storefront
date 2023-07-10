@@ -1,7 +1,7 @@
 import { renderHook, waitFor } from '@testing-library/react'
 
 import { useAddRoleToCustomerB2bAccountMutation } from './useAddRoleToCustomerB2bAccount'
-import { customerB2BUserForPage0Mock } from '@/__mocks__/stories/customerB2BUserMock'
+import { customerB2BUserForPage0Mock } from '@/__mocks__/stories'
 import { createQueryClientWrapper } from '@/__test__/utils/renderWithQueryClient'
 
 const mockB2BUserAccount =

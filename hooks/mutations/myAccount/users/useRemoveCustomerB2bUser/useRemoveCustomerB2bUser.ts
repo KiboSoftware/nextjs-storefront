@@ -39,19 +39,7 @@ export const useRemoveCustomerB2bUserMutation = (param?: CustomerB2BUserParams) 
   return {
     removeCustomerB2bUser: useMutation({
       mutationFn: removeCustomerB2bUser,
-      retry: 0,
-      onSuccess: () => {
-        const cleanTimeout = (cleanTimeoutId: any) => clearTimeout(cleanTimeoutId)
-
-        if (param?.removeCustomerB2bAccountUser) {
-          const timeoutId = setTimeout(() => {
-            queryClient.invalidateQueries({ queryKey: customerB2BUserKeys.all })
-            cleanTimeout(timeoutId)
-          }, param?.delay)
-        } else {
-          queryClient.invalidateQueries({ queryKey: customerB2BUserKeys.all })
-        }
-      },
+      onSuccess: () => queryClient.invalidateQueries({ queryKey: customerB2BUserKeys.all }),
     }),
   }
 }

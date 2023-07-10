@@ -1,6 +1,8 @@
 import { buildB2bUserRoleParams } from '../buildB2bUserRoleParams'
 import { customerB2BUserForPage0Mock } from '@/__mocks__/stories'
 
+import { B2BUser } from '@/lib/gql/types'
+
 const mockB2BUserAccount =
   customerB2BUserForPage0Mock?.items && customerB2BUserForPage0Mock?.items[0]
 
@@ -25,7 +27,7 @@ describe('[helpers] buildB2bUserRoleInput function', () => {
     }
 
     expect(
-      buildB2bUserRoleParams({ user, b2BUser: mockB2BUserAccount, roles, values })
+      buildB2bUserRoleParams({ user, b2BUser: mockB2BUserAccount as B2BUser, roles, values })
     ).toStrictEqual({
       accountId: 1001,
       userId: 'db9c337e8fdf4304b9b3482f4bd3e321',

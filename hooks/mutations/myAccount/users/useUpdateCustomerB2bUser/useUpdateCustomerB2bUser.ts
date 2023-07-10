@@ -39,9 +39,7 @@ export const useUpdateCustomerB2bUserMutation = () => {
   return {
     updateCustomerB2bUser: useMutation({
       mutationFn: updateCustomerB2bUser,
-      onMutate: () => {},
-      retry: 0,
-      onSuccess: () => queryClient.refetchQueries(customerB2BUserKeys.all),
+      onSuccess: () => queryClient.invalidateQueries(customerB2BUserKeys.all),
     }),
   }
 }

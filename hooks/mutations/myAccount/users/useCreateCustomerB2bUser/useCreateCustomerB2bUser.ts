@@ -41,7 +41,7 @@ export const useCreateCustomerB2bUserMutation = () => {
     createCustomerB2bUser: useMutation({
       mutationFn: createCustomerB2bUser,
       onSuccess: () => {
-        queryClient.refetchQueries(customerB2BUserKeys.all)
+        queryClient.invalidateQueries(customerB2BUserKeys.all)
       },
     }),
   }
