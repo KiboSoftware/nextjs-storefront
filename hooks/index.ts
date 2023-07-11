@@ -42,13 +42,15 @@ export * from './queries/standardCheckout/useGetShippingMethods/useGetShippingMe
 // myAccount
 export * from './queries/myAccount/useGetCustomerOrders/useGetCustomerOrders'
 export * from './queries/myAccount/useGetCurrentCustomer/useGetCurrentCustomer'
-export * from './queries/myAccount/useGetB2BUserQuery/useGetB2BUserQuery'
 
 // subscription
 export * from './queries/subscription/useGetSubscriptions/useGetSubscriptions'
 
 // wishlist
 export * from './queries/wishlist/useGetWishlist/useGetWishlist'
+
+// b2b
+export * from './queries/b2b/useGetB2BUserQuery/useGetB2BUserQuery'
 
 // Custom hooks
 export * from './custom/useDebounce/useDebounce'
@@ -142,9 +144,9 @@ export * from './mutations/subscription/useUpdateSubscriptionShippingInfo/useUpd
 export * from './mutations/subscription/useDeleteSubscription/useDeleteSubscription'
 export * from './mutations/subscription/useUpdateSubscriptionPayment/useUpdateSubscriptionPayment'
 
-// B2B Users
-export * from './mutations/myAccount/users/useCreateCustomerB2bUser/useCreateCustomerB2bUser'
-export * from './mutations/myAccount/users/useRemoveCustomerB2bUser/useRemoveCustomerB2bUser'
-export * from './mutations/myAccount/users/useUpdateCustomerB2bUser/useUpdateCustomerB2bUser'
-export * from './mutations/myAccount/users/useAddRoleToCustomerB2bAccount/useAddRoleToCustomerB2bAccount'
-export * from './mutations/myAccount/users/useDeleteB2bAccountRole/useDeleteB2bAccountRole'
+// b2b
+export * from './mutations/b2b/useCreateCustomerB2bUser/useCreateCustomerB2bUser'
+export * from './mutations/b2b/useRemoveCustomerB2bUser/useRemoveCustomerB2bUser'
+export * from './mutations/b2b/useUpdateCustomerB2bUser/useUpdateCustomerB2bUser'
+export * from './mutations/b2b/useAddRoleToCustomerB2bAccount/useAddRoleToCustomerB2bAccount'
+export * from './mutations/b2b/useDeleteB2bAccountRole/useDeleteB2bAccountRole'

@@ -48,11 +48,11 @@ export { default as updateSubscriptionFulfillmentInfoMutation } from './subscrip
 export { default as updateSubscriptionPaymentMutation } from './subscription/update-subscription-payment-mutation'
 
 // Customer B2B User
-export { default as addCustomerB2bUserMutation } from './my-account/users/add-customer-b2b-user'
-export { default as removeCustomerB2bUserMutation } from './my-account/users/remove-customer-b2b-user'
-export { default as updateCustomerB2bUserMutation } from './my-account/users/update-customer-b2b-user'
-export { default as deleteB2bAccountRoleMutation } from './my-account/users/delete-b2b-account-role'
-export { default as addRoleToCustomerB2bAccountMutation } from './my-account/users/add-role-to-customer-b2b-account'
+export { default as addCustomerB2bUserMutation } from './b2b/add-customer-b2b-user'
+export { default as removeCustomerB2bUserMutation } from './b2b/remove-customer-b2b-user'
+export { default as updateCustomerB2bUserMutation } from './b2b/update-customer-b2b-user'
+export { default as deleteB2bAccountRoleMutation } from './b2b/delete-b2b-account-role'
+export { default as addRoleToCustomerB2bAccountMutation } from './b2b/add-role-to-customer-b2b-account'
 // Address validation
 export { default as validateCustomerAddress } from './address/validate-customer-address'
 

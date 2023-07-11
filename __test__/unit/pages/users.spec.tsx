@@ -2,7 +2,7 @@ import '@testing-library/jest-dom'
 import { render, screen, waitFor } from '@testing-library/react'
 
 import { createQueryClientWrapper } from '@/__test__/utils'
-import UsersPage, { getServerSideProps } from '@/pages/my-account/users'
+import UsersPage, { getServerSideProps } from '@/pages/my-account/b2b/users'
 import { customerB2BUserForPage0Mock } from '@/__mocks__/stories'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { customerB2BUserKeys } from '@/lib/react-query/queryKeys'
