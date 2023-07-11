@@ -58,27 +58,33 @@ describe('[components] Store Locator Dialog integration', () => {
     const { user } = setup()
 
     const showModalButton = screen.getByRole('button', { name: 'Show Modal' })
-    await user.click(showModalButton)
+    user.click(showModalButton)
 
-    expect(screen.getByText(/zip-code/i)).toBeVisible()
-    expect(screen.getAllByRole('button', { name: /search/i })).toHaveLength(3)
-    expect(screen.getByText(/use-current-location/i)).toBeVisible()
-    expect(screen.getByText(/find-stores-within-miles/i)).toBeVisible()
+    expect(await screen.findByText(/zip-code/i)).toBeVisible()
+    expect(await screen.findAllByRole('button', { name: /search/i })).toHaveLength(3)
+    expect(await screen.findByText(/use-current-location/i)).toBeVisible()
+    expect(await screen.findByText(/find-stores-within-miles/i)).toBeVisible()
   })
 
   it('should close dialog when user clicks on closeIcon button', async () => {
     const { user } = setup()
 
     const showModalButton = screen.getByRole('button', { name: 'Show Modal' })
-    await user.click(showModalButton)
+    user.click(showModalButton)
 
-    const dialog = screen.getByRole('dialog')
-    const closeIconButton = screen.getByRole('button', {
+    const dialog = await screen.findByRole('dialog')
+    expect(dialog).toBeVisible()
+
+    const closeIconButton = await screen.findByRole('button', {
       name: /close/i,
     })
-    await user.click(closeIconButton)
+    expect(closeIconButton).toBeVisible()
 
-    expect(dialog).not.toBeVisible()
+    user.click(closeIconButton)
+
+    await waitFor(() => {
+      expect(dialog).not.toBeVisible()
+    })
     expect(closeIconButton).not.toBeVisible()
   })
 
@@ -87,42 +93,45 @@ describe('[components] Store Locator Dialog integration', () => {
     const userEnteredText = '87110'
 
     const showModalButton = screen.getByRole('button', { name: 'Show Modal' })
-    await user.click(showModalButton)
 
-    const input = screen.getByRole('textbox', { name: 'search-input' })
+    user.click(showModalButton)
+    const input = await screen.findByRole('textbox', { name: 'search-input' })
     expect(input).toHaveValue('')
-    await user.type(input, userEnteredText)
-    expect(input).toHaveValue(userEnteredText)
+
+    user.type(input, userEnteredText)
+    await waitFor(() => {
+      expect(input).toHaveValue(userEnteredText)
+    })
 
     const searchStoreButton = screen.getAllByRole('button', {
       name: /search/i,
-    })
-    expect(searchStoreButton[2]).toBeVisible()
-    await user.click(searchStoreButton[2])
+    })[2]
+    user.click(searchStoreButton)
 
-    await waitFor(() => {
-      const radio = screen.getByRole('radio', {
-        name: /Richmond/i,
-      })
-      expect(radio).toBeInTheDocument()
+    const radio = await screen.findByRole('radio', {
+      name: /Richmond/i,
     })
+    expect(radio).toBeInTheDocument()
   })
 
   it('should set the location when user select the radio button', async () => {
     const { user } = setup()
 
     const showModalButton = screen.getByRole('button', { name: 'Show Modal' })
-    await user.click(showModalButton)
+    user.click(showModalButton)
 
-    const dialog = screen.getByRole('dialog')
-    const setStoreButton = screen.getByRole('button', {
+    const dialog = await screen.findByRole('dialog')
+    expect(dialog).toBeVisible()
+
+    const setStoreButton = await screen.findByRole('button', {
       name: /set-store/i,
     })
-
-    expect(dialog).toBeVisible()
     expect(setStoreButton).toBeVisible()
-    await user.click(setStoreButton)
-    expect(handleSetStoreMock).toHaveBeenCalled()
+
+    user.click(setStoreButton)
+    await waitFor(() => {
+      expect(handleSetStoreMock).toHaveBeenCalled()
+    })
   })
 
   it('should display product details and with available stock if inventory available for searched location', async () => {
@@ -130,19 +139,19 @@ describe('[components] Store Locator Dialog integration', () => {
     const userEnteredText = '87110'
 
     const showModalButton = screen.getByRole('button', { name: 'Show Modal' })
-    await user.click(showModalButton)
 
-    const input = screen.getByRole('textbox', { name: 'search-input' })
-    await user.type(input, userEnteredText)
-    expect(input).toHaveValue(userEnteredText)
+    user.click(showModalButton)
+    const input = await screen.findByRole('textbox', { name: 'search-input' })
 
-    const searchStoreButton = screen.getAllByRole('button', {
+    user.type(input, userEnteredText)
+    await waitFor(() => {
+      expect(input).toHaveValue(userEnteredText)
+    })
+
+    const searchStoreButton = await screen.findAllByRole('button', {
       name: /search/i,
     })
-    await user.click(searchStoreButton[2])
-
-    await waitFor(() => {
-      expect(screen.getByText(`${inventory?.stockAvailable} available`)).toBeVisible()
-    })
+    user.click(searchStoreButton[2])
+    expect(await screen.findByText(`${inventory?.stockAvailable} available`)).toBeVisible()
   })
 })

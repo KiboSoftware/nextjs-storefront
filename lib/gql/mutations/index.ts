@@ -12,6 +12,7 @@ export { default as deleteWishlistItemMutation } from './wishlist/deleteWishlist
 export { default as setBillingInfo } from './checkout/set-billing-info'
 export { default as addPaymentMethodToCheckout } from './checkout/add-payment-method-to-checkout'
 export { default as updateOrderPaymentAction } from './checkout/update-order-payment-action'
+export { default as updateUserOrder } from './checkout/update-user-order'
 export { default as createCustomerAccountCard } from './my-account/create-customer-account-card'
 export { default as updateCustomerAccountCard } from './my-account/update-customer-account-card'
 export { default as deleteCustomerAccountCard } from './my-account/delete-customer-account-card'
@@ -52,3 +53,8 @@ export { default as removeCustomerB2bUserMutation } from './my-account/users/rem
 export { default as updateCustomerB2bUserMutation } from './my-account/users/update-customer-b2b-user'
 export { default as deleteB2bAccountRoleMutation } from './my-account/users/delete-b2b-account-role'
 export { default as addRoleToCustomerB2bAccountMutation } from './my-account/users/add-role-to-customer-b2b-account'
+// Address validation
+export { default as validateCustomerAddress } from './address/validate-customer-address'
+
+// Account password
+export { default as updateForgottenAccountPassword } from './user/updateForgottenAccountPassword'

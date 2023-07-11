@@ -148,6 +148,7 @@ const SearchSuggestions = (props: SearchSuggestionsProps) => {
                 code={product?.suggestion?.categoryCode}
                 name={product?.suggestion?.content?.name}
                 path={'/category/'}
+                onSearchSuggestionClose={handleClose}
               />
             ))}
           </List>

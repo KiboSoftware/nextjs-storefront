@@ -7,8 +7,8 @@ import * as stories from './ProductOptionList.stories'
 
 const { Common } = composeStories(stories)
 
-const productOptionMock = () => <div data-testid="product-option-component" />
-jest.mock('@/components/product/ProductOption/ProductOption', () => () => productOptionMock())
+const KeyValueDisplayMock = () => <div data-testid="key-value-display-component" />
+jest.mock('@/components/common/KeyValueDisplay/KeyValueDisplay', () => () => KeyValueDisplayMock())
 
 describe('[component] - ProductOptionList', () => {
   const setup = () => {
@@ -18,7 +18,7 @@ describe('[component] - ProductOptionList', () => {
   it('should render component', () => {
     setup()
 
-    const productItemOptions = screen.getAllByTestId('product-option-component')
+    const productItemOptions = screen.getAllByTestId('key-value-display-component')
     const items = Common.args?.options || []
 
     const count = items.length || 0

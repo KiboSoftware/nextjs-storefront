@@ -6,7 +6,7 @@ import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { makeGraphQLClient } from '@/lib/gql/client'
 import { createOrderMutation } from '@/lib/gql/mutations'
 import { buildCreateOrderParams } from '@/lib/helpers'
-import { checkoutKeys } from '@/lib/react-query/queryKeys'
+import { cartKeys, checkoutKeys } from '@/lib/react-query/queryKeys'
 
 import type { CrOrder, OrderActionInput } from '@/lib/gql/types'
 
@@ -51,6 +51,7 @@ export const useCreateOrder = () => {
     createOrder: useMutation({
       mutationFn: createOrder,
       onSuccess: () => {
+        queryClient.invalidateQueries({ queryKey: cartKeys.all })
         queryClient.removeQueries({ queryKey: checkoutKeys.all })
       },
     }),

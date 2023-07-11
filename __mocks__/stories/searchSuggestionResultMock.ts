@@ -284,7 +284,7 @@ export const searchSuggestionResultMock: SearchSuggestionResult = {
             categoryId: 0,
             categoryType: 0,
             categoryCode: 'DogGear',
-            content: { name: 'Dog Gear' },
+            content: { name: 'Dog Gear', slug: 'pets' },
             isDisplayed: true,
             count: 0,
             updateDate: '0001-01-01T00:00:00.000Z',

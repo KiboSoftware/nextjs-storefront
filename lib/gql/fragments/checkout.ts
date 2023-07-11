@@ -53,14 +53,22 @@ export const baseCheckoutFragment = /* GraphQL */ `
     amountAvailableForRefund
     amountRemainingForPayment
     amountRefunded
+    handlingAmount
+    handlingSubTotal
+    handlingTotal
+    handlingTaxTotal
     total
     shippingTotal
+    shippingTaxTotal
+    shippingSubTotal
     discountTotal
     discountedSubtotal
+    discountedTotal
     subtotal
     taxTotal
     orderNumber
     couponCodes
+    currencyCode
     invalidCoupons {
       couponCode
       reason

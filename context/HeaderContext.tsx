@@ -44,7 +44,6 @@ export const HeaderContextProvider = ({ children }: HeaderContextProviderProps) 
     setHeaderState({ ...headerState, isSearchBarVisible: value })
 
   const toggleHamburgerMenu = () => {
-    console.log('toggle', headerState.isHamburgerMenuVisible)
     setHeaderState({
       ...headerState,
       isMobileSearchPortalVisible: false,
@@ -78,6 +77,7 @@ export const HeaderContextProvider = ({ children }: HeaderContextProviderProps) 
 
 export const useHeaderContext = () => {
   const context = useContext(HeaderContext)
+
   if (context === undefined) throw new Error('useContext must be inside a Provider with a value')
   return context
 }

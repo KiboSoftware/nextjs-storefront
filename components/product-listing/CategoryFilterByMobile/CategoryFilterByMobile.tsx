@@ -115,26 +115,34 @@ const CategoryFilterByMobile = (props: CategoryFilterByMobileProps) => {
           onFilterByClose={onFilterByClose}
           onSelectedTileRemoval={onSelectedTileRemoval}
         />
-        <Box sx={{ ...styles.buttons }}>
-          <Button
-            variant="contained"
-            color="secondary"
-            sx={{ ...styles.clearAll }}
-            disabled={!appliedFilters?.length}
-            onClick={onClearAllFilters}
-          >
-            {t('clear-all')}
-          </Button>
-          <Button
-            variant="contained"
-            color="primary"
-            sx={{ ...styles.viewResults }}
-            disabled={!appliedFilters?.length}
-            onClick={onFilterByClose}
-          >
-            {t('view-results')}
-          </Button>
-        </Box>
+        {isLoading && (
+          <Box sx={{ ...styles.buttons }}>
+            <Skeleton variant="rectangular" height={23} width={'7.063rem'} />
+            <Skeleton variant="rectangular" height={23} width={'7.063rem'} />
+          </Box>
+        )}
+        {!isLoading && (
+          <Box sx={{ ...styles.buttons }}>
+            <Button
+              variant="contained"
+              color="secondary"
+              sx={{ ...styles.clearAll }}
+              disabled={!appliedFilters?.length}
+              onClick={onClearAllFilters}
+            >
+              {t('clear-all')}
+            </Button>
+            <Button
+              variant="contained"
+              color="primary"
+              sx={{ ...styles.viewResults }}
+              disabled={!appliedFilters?.length}
+              onClick={onFilterByClose}
+            >
+              {t('view-results')}
+            </Button>
+          </Box>
+        )}
         <Box sx={{ ...styles.lowerTotal }}>
           {isLoading && <Skeleton variant="rectangular" height={23} width={74} />}
           {!isLoading && <Box>{t('results', { count: totalResults })}</Box>}

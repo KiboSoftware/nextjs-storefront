@@ -6,7 +6,7 @@ import { useTranslation } from 'next-i18next'
 import KiboImage from '../KiboImage/KiboImage'
 import { getCreditCardLogo } from '@/lib/helpers/credit-card'
 
-interface PaymentCardDetailsViewProps {
+interface PaymentCardProps {
   title?: string
   cardNumberPart: string
   expireMonth: number
@@ -15,7 +15,7 @@ interface PaymentCardDetailsViewProps {
   radio?: boolean
 }
 
-const PaymentCard = (props: PaymentCardDetailsViewProps) => {
+const PaymentCard = (props: PaymentCardProps) => {
   const { title, cardNumberPart, expireMonth, expireYear, cardType } = props
   const { t } = useTranslation('common')
   const cardTypeMemoized = useMemo(() => getCreditCardLogo(cardType as string), [cardType])
@@ -30,7 +30,7 @@ const PaymentCard = (props: PaymentCardDetailsViewProps) => {
       <Box display="flex" pt={1} gap={2}>
         <Box minWidth={45}>
           {cardTypeMemoized && (
-            <KiboImage src={cardTypeMemoized} alt={cardType!} width={45} height={35} />
+            <KiboImage src={cardTypeMemoized} alt={cardType as string} width={45} height={35} />
           )}
         </Box>
         <Box>

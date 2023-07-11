@@ -1,6 +1,6 @@
 import React, { RefObject } from 'react'
 
-import Close from '@mui/icons-material/Close'
+import Clear from '@mui/icons-material/Clear'
 import Search from '@mui/icons-material/Search'
 import { IconButton, InputBase, Paper } from '@mui/material'
 import { useTranslation } from 'next-i18next'
@@ -84,7 +84,7 @@ const SearchBar = (props: SearchProps) => {
               disabled={searchTerm.length === 0}
               aria-label={clearSearchAriaLabel}
             >
-              <Close fontSize="small" />
+              {searchTerm.length === 0 ? <Search fontSize="medium" /> : <Clear fontSize="medium" />}
             </IconButton>
           ),
         })}

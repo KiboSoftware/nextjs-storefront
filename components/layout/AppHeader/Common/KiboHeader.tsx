@@ -37,6 +37,7 @@ import { useGetCategoryTree } from '@/hooks'
 import type { NavigationLink } from '@/lib/types'
 
 import type { Maybe, PrCategory } from '@/lib/gql/types'
+
 interface KiboHeaderProps {
   navLinks: NavigationLink[]
   categoriesTree: Maybe<PrCategory>[]

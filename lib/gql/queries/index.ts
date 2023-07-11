@@ -1,4 +1,4 @@
-import { getProductPriceQuery } from '@/lib/gql/queries'
+import { default as getProductPriceQuery } from './get-product-price'
 export { default as searchProductsQuery } from './product-search'
 export { default as getOrCreateCheckoutFromCartMutation } from './checkout/get-or-create-checkout-from-cart-mutation'
 export { default as getCheckoutQuery } from './checkout/get-checkout-query'
@@ -20,6 +20,7 @@ export { default as getCheckoutDestinationQuery } from './checkout/get-checkout-
 export { default as getSubscriptionsQuery } from './subscription/get-subscriptions-query'
 export { default as getCustomerB2BAccountUsersQuery } from './get-customer-b2b-users'
 
+export { default as getCustomerAccountsQuery } from './get-customer-accounts'
 //multiship
 export { default as getMultiShipCheckoutQuery } from './checkout/get-multi-ship-checkout-query'
 export { default as getCheckoutShippingMethodsQuery } from './checkout/get-multi-ship-checkout-shipping-methods'

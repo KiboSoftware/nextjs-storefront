@@ -25,6 +25,7 @@ export interface OrderSummary {
   taxTotal: number
   total: number
   totalCollected: number
+  discountedSubtotal: number
 }
 export interface PaymentMethod {
   cardType: string

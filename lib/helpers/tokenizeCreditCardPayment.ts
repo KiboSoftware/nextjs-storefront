@@ -6,17 +6,28 @@ export const tokenizeCreditCardPayment = async (
   apiHost: string
 ) => {
   try {
-    const url = `https://${pciHost}/payments/commerce/payments/cards/`
-    const tenantId = apiHost.split('-')[0].split('t')[1].toString()
     const { cardNumber, cardType, cvv } = creditCardData
-    const ccData = { cardNumber, cardType, cvv, persistCard: true }
+    const ccData = {
+      cardNumber,
+      cardType,
+      cvv,
+      persistCard: true,
+      cardholderName: creditCardData?.cardholderName,
+      cardId: creditCardData?.id,
+    }
+
+    const url = `https://${pciHost}/payments/commerce/payments/cards/`
+    const tenantAndSite = apiHost.split('.')[0]
+    const tenantId = tenantAndSite.split('-')[0].split('t')[1].toString()
+    const siteId = tenantAndSite.split('-')[1].split('s')[1].toString()
 
     const res = await fetch(url, {
-      method: 'POST',
+      method: creditCardData?.id ? 'PUT' : 'POST',
       headers: {
         accept: 'application/json',
         'x-vol-tenant': tenantId,
         'Content-Type': 'application/json',
+        'x-vol-site': siteId,
       },
       body: JSON.stringify(ccData),
     })

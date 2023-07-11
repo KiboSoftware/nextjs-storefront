@@ -1,6 +1,6 @@
 import getConfig from 'next/config'
 
-import { fetcher } from '../util'
+import { fetcher, getAdditionalHeader } from '../util'
 import getUserClaimsFromRequest from '../util/getUserClaimsFromRequest'
 
 import type { NextApiRequest, NextApiResponse } from 'next'
@@ -13,7 +13,10 @@ export default async function registerUserHandler(req: NextApiRequest, res: Next
   try {
     const { query, variables } = req.body
     const userClaims = await getUserClaimsFromRequest(req, res)
-    const response = await fetcher({ query, variables }, { userClaims })
+
+    const headers = getAdditionalHeader(req)
+
+    const response = await fetcher({ query, variables }, { userClaims, headers })
 
     // set HTTP cookie
     const account = response?.data?.account

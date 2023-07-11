@@ -26,7 +26,7 @@ import { productPriceMock } from '../stories/productPriceMock'
 import { productSearchResultMock } from '../stories/productSearchResultMock'
 import { searchSuggestionMock } from '../stories/searchSuggestionResultMock'
 import { subscriptionCollectionMock } from '../stories/subscriptionCollectionMock'
-import { updateCustomerAccountCardMock } from '../stories/updateCustomerAccountCardMock'
+// import { updateCustomerAccountCardMock } from '../stories/updateCustomerAccountCardMock'
 import { updateCustomerAccountContactMock } from '../stories/updateCustomerAccountContact'
 import { updateOrderBillingInfoMock } from '../stories/updateOrderBillingInfoMock'
 import { userAddressMock } from '../stories/userAddressMock'
@@ -119,10 +119,10 @@ export const checkoutHandlers = [
     )
   }),
 
-  graphql.mutation('updateCheckoutPaymentActionMutation', (_req, res, ctx) => {
+  graphql.mutation('updateCheckoutPaymentAction', (_req, res, ctx) => {
     return res(
       ctx.data({
-        updateCheckoutPaymentAction: checkoutMock,
+        updateCheckoutPaymentAction: checkoutMock.checkout,
       })
     )
   }),
@@ -140,13 +140,17 @@ export const checkoutHandlers = [
     return res(ctx.data(checkoutMock))
   }),
 
-  // Checkot
+  // Checkout
   graphql.mutation('createCheckout', (_req, res, ctx) => {
     return res(ctx.data(orderMock))
   }),
 
   graphql.mutation('updateCheckoutPaymentAction', (_req, res, ctx) => {
-    return res(ctx.data({ updateCheckoutPaymentAction: checkoutMock }))
+    return res(ctx.data(orderMock))
+  }),
+
+  graphql.mutation('updateUserOrder', (_req, res, ctx) => {
+    return res(ctx.data(orderMock))
   }),
 ]
 
@@ -177,7 +181,23 @@ export const accountHandlers = [
   }),
 
   graphql.mutation('updateCustomerAccountCard', (_req, res, ctx) => {
-    return res(ctx.data(updateCustomerAccountCardMock))
+    return res(
+      ctx.data({
+        validateCustomerAddress: {
+          addressCandidates: 'mock-validated-response',
+        },
+      })
+    )
+  }),
+
+  graphql.mutation('validateCustomerAddress', (_req, res, ctx) => {
+    return res(
+      ctx.data({
+        validateCustomerAddress: {
+          addressCandidates: 'mock-validated-data',
+        },
+      })
+    )
   }),
 
   graphql.mutation('deleteCustomerAccountCard', (_req, res, ctx) => {
@@ -233,6 +253,15 @@ export const userHandlers = [
 
   graphql.mutation('registerUser', (_req, res, ctx) => {
     return res(ctx.data(registerUserMock))
+  }),
+
+  graphql.mutation('resetAccountPassword', (_req, res, ctx) => {
+    return res(ctx.data({ resetCustomerAccountPassword: true }))
+  }),
+
+  //useUpdateForgottenPassword
+  graphql.mutation('updateForgottenAccountPassword', (_req, res, ctx) => {
+    return res(ctx.data({ updatePassword: true }))
   }),
 
   rest.post(LOGOUT_ENDPOINT, (_req, res, ctx) => {

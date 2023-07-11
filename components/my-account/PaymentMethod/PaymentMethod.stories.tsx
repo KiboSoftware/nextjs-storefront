@@ -7,7 +7,7 @@ import { customerAccountCardsMock } from '@/__mocks__/stories/customerAccountCar
 import { userAddressMock } from '@/__mocks__/stories/userAddressMock'
 import { DialogRoot, ModalContextProvider } from '@/context'
 export default {
-  title: 'My Profile/PaymentMethod',
+  title: 'My Account/PaymentMethod',
   component: PaymentMethod,
 } as ComponentMeta<typeof PaymentMethod>
 

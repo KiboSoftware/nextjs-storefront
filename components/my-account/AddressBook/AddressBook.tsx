@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline'
 import Delete from '@mui/icons-material/Delete'
@@ -14,20 +14,23 @@ import {
   Grid,
   Collapse,
 } from '@mui/material'
+import getConfig from 'next/config'
 import { useTranslation } from 'next-i18next'
+import { useReCaptcha } from 'next-recaptcha-v3'
 import { TransitionGroup } from 'react-transition-group'
 
-import { AddressCard, AddressForm, KiboSelect } from '@/components/common'
+import { AddressCard, AddressForm, KiboSelect, KiboPagination } from '@/components/common'
 import { ConfirmationDialog } from '@/components/dialogs'
-import { useModalContext } from '@/context'
+import { useModalContext, useSnackbarContext } from '@/context'
 import {
   useCreateCustomerAddress,
   useUpdateCustomerAddress,
   useDeleteCustomerAddress,
+  useValidateCustomerAddress,
 } from '@/hooks'
 import { AddressType } from '@/lib/constants'
 import { userGetters } from '@/lib/getters'
-import { buildAddressParams } from '@/lib/helpers'
+import { buildAddressParams, validateGoogleReCaptcha } from '@/lib/helpers'
 import type { Address, ContactForm, DeleteAddressParams } from '@/lib/types'
 
 import type { UpdateCustomerAccountContactDetailsParams } from '@/hooks'
@@ -80,12 +83,21 @@ const AccountAddress = (props: AccountAddressProps) => {
     <Box>
       {isPrimaryAddress && (
         <Stack>
-          <Typography variant="h3" sx={{ pb: '1rem', fontWeight: '700' }}>
-            {addressType === AddressType.SHIPPING ? t('shipping-address') : t('billing-address')}
-          </Typography>
-          <Typography variant="h4" fontWeight="500">
-            {t('primary')}
-          </Typography>
+          {addressType === AddressType.SHIPPING && (
+            <Typography id="shipping-address" variant="h3" sx={{ pb: '1rem', fontWeight: '700' }}>
+              {t('shipping-address')}
+            </Typography>
+          )}
+          {addressType === AddressType.BILLING && (
+            <Typography id="billing-address" variant="h3" sx={{ pb: '1rem', fontWeight: '700' }}>
+              {t('billing-address')}
+            </Typography>
+          )}
+          {customerContact?.types?.[0]?.isPrimary && (
+            <Typography variant="h4" fontWeight="500">
+              {t('primary')}
+            </Typography>
+          )}
         </Stack>
       )}
       <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
@@ -120,8 +132,11 @@ const AccountAddress = (props: AccountAddressProps) => {
 const AddressBook = (props: AddressBookProps) => {
   const { user, contacts } = props
 
-  const [isAddNewAddress, setIsAddNewAddress] = useState<boolean>(false)
-  const [isEditAddress, setIsEditAddress] = useState<boolean>(false)
+  const { publicRuntimeConfig } = getConfig()
+  const shippingAddressPageSize = publicRuntimeConfig.shippingAddressPageSize
+  const billingAddressPageSize = publicRuntimeConfig.billingAddressPageSize
+  const reCaptchaKey = publicRuntimeConfig.recaptcha.reCaptchaKey
+  const [isAddressModified, setIsAddressModified] = useState<boolean>(false)
   const [validateForm, setValidateForm] = useState<boolean>(false)
   const [isDefaultAddress, setIsDefaultAddress] = useState<boolean>(false)
   const [editAddress, setEditAddress] = useState<CustomerContact>()
@@ -132,12 +147,40 @@ const AddressBook = (props: AddressBookProps) => {
   const { createCustomerAddress } = useCreateCustomerAddress()
   const { updateCustomerAddress } = useUpdateCustomerAddress()
   const { deleteCustomerAddress } = useDeleteCustomerAddress()
+  const { validateCustomerAddress } = useValidateCustomerAddress()
+  const { executeRecaptcha } = useReCaptcha()
+  const { showSnackbar } = useSnackbarContext()
 
-  const shippingAddresses = userGetters.getUserShippingAddress(contacts?.items as CustomerContact[])
-  const billingAddresses = userGetters.getUserBillingAddresses(contacts?.items as CustomerContact[])
+  const shippingAddresses =
+    userGetters.getUserShippingAddress(contacts?.items as CustomerContact[]) ?? []
+  const billingAddresses =
+    userGetters.getUserBillingAddresses(contacts?.items as CustomerContact[]) ?? []
 
+  const [shippingAddressStartIndex, setShippingAddressStartIndex] = useState<number>(0)
+  const [billingAddressStartIndex, setBillingAddressStartIndex] = useState<number>(0)
+  const [displayShippingAddresses, setDisplayShippingAddresses] = useState<CustomerContact[]>(
+    shippingAddresses?.slice(shippingAddressStartIndex, shippingAddressPageSize)
+  )
+  const [displayBillingAddresses, setDisplayBillingAddresses] = useState<CustomerContact[]>(
+    billingAddresses.slice(billingAddressStartIndex, billingAddressPageSize)
+  )
+
+  const [isAddressFormValid, setIsAddressFormValid] = useState<boolean>(false)
+
+  const scrollToShippingAddressHeading = () => {
+    const shippingAddressHeading = document.getElementById('shipping-address')
+    if (shippingAddressHeading) {
+      shippingAddressHeading.scrollIntoView({ behavior: 'smooth' })
+    }
+  }
+  const scrollToBillingAddressHeading = () => {
+    const billingAddressHeading = document.getElementById('billing-address')
+    if (billingAddressHeading) {
+      billingAddressHeading.scrollIntoView({ behavior: 'smooth' })
+    }
+  }
   const handleNewAddress = () => {
-    setIsAddNewAddress(true)
+    setIsAddressModified(true)
     setEditAddress(undefined)
     setAddressType(AddressType.SHIPPING)
   }
@@ -146,12 +189,28 @@ const AddressBook = (props: AddressBookProps) => {
     if (contact?.types) {
       setIsDefaultAddress(contact?.types[0]?.isPrimary as boolean)
       setAddressType(contact?.types[0]?.name as string)
-      setIsEditAddress(true)
+      setIsAddressModified(true)
     }
     setEditAddress(contact)
   }
 
   const handleAddressValidationAndSave = () => setValidateForm(true)
+
+  const submitFormWithRecaptcha = (address: Address) => {
+    if (!executeRecaptcha) {
+      console.log('Execute recaptcha not yet available')
+      return
+    }
+    executeRecaptcha('enquiryFormSubmit').then(async (gReCaptchaToken) => {
+      const captcha = await validateGoogleReCaptcha(gReCaptchaToken)
+
+      if (captcha?.status === 'success') {
+        await handleSaveAddress(address)
+      } else {
+        showSnackbar(captcha.message, 'error')
+      }
+    })
+  }
 
   const handleSaveAddress = async (address: Address) => {
     address = {
@@ -169,23 +228,26 @@ const AddressBook = (props: AddressBookProps) => {
     })
 
     try {
+      await validateCustomerAddress.mutateAsync({
+        addressValidationRequestInput: { address: address?.contact?.address as CuAddress },
+      })
       if (address?.contact?.id) {
         await updateCustomerAddress.mutateAsync(params as UpdateCustomerAccountContactDetailsParams)
-        setIsEditAddress(false)
+        setIsAddressModified(false)
       } else {
         await createCustomerAddress.mutateAsync(params)
-        setIsAddNewAddress(false)
+        setIsAddressModified(false)
       }
 
       setValidateForm(false)
     } catch (error) {
-      console.log('Error: add/edit saved address from my account', error)
+      setValidateForm(false)
+      console.error('Error: add/edit saved address from my account', error)
     }
   }
 
   const handleCancelUpdateAddress = () => {
-    setIsAddNewAddress(false)
-    setIsEditAddress(false)
+    setIsAddressModified(false)
   }
 
   const handleConfirmDeleteAddress = (deleteAddressProps: DeleteAddressParams) => {
@@ -208,12 +270,65 @@ const AddressBook = (props: AddressBookProps) => {
     }
   }
 
+  const shouldShowDefaultCheckbox = () => {
+    if (addressType === AddressType.SHIPPING && shippingAddresses && shippingAddresses.length > 0)
+      return true
+    if (addressType === AddressType.BILLING && billingAddresses && billingAddresses.length > 0)
+      return true
+    return false
+  }
+
+  const handleFormStatusChange = (status: boolean) => setIsAddressFormValid(status)
+
+  const handleShippingAddressPagination = (value: any) => {
+    const { startIndex } = value
+    setShippingAddressStartIndex(startIndex)
+    setDisplayShippingAddresses(
+      shippingAddresses?.slice(startIndex, startIndex + shippingAddressPageSize)
+    )
+    scrollToShippingAddressHeading()
+  }
+
+  const handleBillingAddressPagination = (value: any) => {
+    const { startIndex } = value
+    setBillingAddressStartIndex(startIndex)
+    setDisplayBillingAddresses(
+      billingAddresses.slice(startIndex, startIndex + billingAddressPageSize)
+    )
+    scrollToBillingAddressHeading()
+  }
+
+  useEffect(() => {
+    setDisplayShippingAddresses(
+      shippingAddresses?.slice(
+        shippingAddressStartIndex,
+        shippingAddressStartIndex + shippingAddressPageSize
+      )
+    )
+  }, [JSON.stringify(shippingAddresses)])
+
+  useEffect(() => {
+    setDisplayBillingAddresses(
+      billingAddresses.slice(
+        billingAddressStartIndex,
+        billingAddressStartIndex + billingAddressPageSize
+      )
+    )
+  }, [JSON.stringify(billingAddresses)])
+
   return (
     <Box data-testid={'address-book-component'}>
-      {!isAddNewAddress && !isEditAddress && (
+      <Box pb={2}>
+        {!isAddressModified &&
+          !displayShippingAddresses?.length &&
+          !displayBillingAddresses?.length && (
+            <Typography variant="body1">{t('no-saved-addresses-yet')}</Typography>
+          )}
+      </Box>
+      {!isAddressModified && (
         <Box>
           <TransitionGroup>
-            {shippingAddresses?.map((item: CustomerContact, index: number) => (
+            {displayShippingAddresses?.map((item: CustomerContact, index: number) => (
               <Collapse
                 key={`${item?.id}address`}
                 sx={{
@@ -233,8 +348,17 @@ const AddressBook = (props: AddressBookProps) => {
                 </Box>
               </Collapse>
             ))}
-
-            {billingAddresses?.map((item: CustomerContact, index: number) => (
+            {displayShippingAddresses?.length > 0 && shippingAddresses.length > 5 && (
+              <Box display={'flex'} justifyContent={'center'} width="100%" py={10}>
+                <KiboPagination
+                  count={Math.ceil(shippingAddresses?.length / shippingAddressPageSize)}
+                  startIndex={shippingAddressStartIndex}
+                  pageSize={shippingAddressPageSize}
+                  onPaginationChange={handleShippingAddressPagination}
+                />
+              </Box>
+            )}
+            {displayBillingAddresses?.map((item: CustomerContact, index: number) => (
               <Collapse
                 key={`${item?.id}address`}
                 sx={{
@@ -254,10 +378,20 @@ const AddressBook = (props: AddressBookProps) => {
                 </Box>
               </Collapse>
             ))}
+            {displayBillingAddresses?.length > 0 && billingAddresses?.length > 5 && (
+              <Box display={'flex'} justifyContent={'center'} width="100%" py={10}>
+                <KiboPagination
+                  count={Math.ceil(billingAddresses?.length / billingAddressPageSize)}
+                  startIndex={billingAddressStartIndex}
+                  pageSize={billingAddressPageSize}
+                  onPaginationChange={handleBillingAddressPagination}
+                />
+              </Box>
+            )}
           </TransitionGroup>
         </Box>
       )}
-      {!isAddNewAddress && !isEditAddress && (
+      {!isAddressModified && (
         <Button
           variant="contained"
           color="inherit"
@@ -270,7 +404,7 @@ const AddressBook = (props: AddressBookProps) => {
         </Button>
       )}
 
-      {(isAddNewAddress || isEditAddress) && (
+      {isAddressModified && (
         <Box pb={'1.813rem'}>
           <Grid item xs={12} md={6} pl={1} pb={2.5} pr={6.5}>
             <KiboSelect
@@ -296,28 +430,38 @@ const AddressBook = (props: AddressBookProps) => {
             setAutoFocus={true}
             isUserLoggedIn={true}
             validateForm={validateForm}
-            onSaveAddress={handleSaveAddress}
+            onSaveAddress={(address) =>
+              reCaptchaKey ? submitFormWithRecaptcha(address) : handleSaveAddress(address)
+            }
+            onFormStatusChange={handleFormStatusChange}
             contact={editAddress as ContactForm}
           />
 
-          <FormControlLabel
-            label={t('make-this-my-default-address')}
-            control={
-              <Checkbox
-                sx={{ marginLeft: '0.5rem' }}
-                inputProps={{
-                  'aria-label': t('make-this-my-default-address'),
-                }}
-                checked={isDefaultAddress}
-                onChange={() => setIsDefaultAddress(!isDefaultAddress)}
-              />
-            }
-          />
+          {shouldShowDefaultCheckbox() && (
+            <FormControlLabel
+              label={t('make-this-my-default-address')}
+              control={
+                <Checkbox
+                  sx={{ marginLeft: '0.5rem' }}
+                  inputProps={{
+                    'aria-label': t('make-this-my-default-address'),
+                  }}
+                  checked={isDefaultAddress}
+                  onChange={() => setIsDefaultAddress(!isDefaultAddress)}
+                />
+              }
+            />
+          )}
           <Stack pl={1} gap={2} sx={{ width: { xs: '100%', md: '50%', maxWidth: '26.313rem' } }}>
             <Button variant="contained" color="secondary" onClick={handleCancelUpdateAddress}>
               {t('cancel')}
             </Button>
-            <Button variant="contained" color="primary" onClick={handleAddressValidationAndSave}>
+            <Button
+              variant="contained"
+              color="primary"
+              onClick={handleAddressValidationAndSave}
+              {...(!isAddressFormValid && { disabled: true })}
+            >
               {t('save')}
             </Button>
           </Stack>

@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useCallback } from 'react'
 
 import AccountCircle from '@mui/icons-material/AccountCircle'
 import ChevronLeft from '@mui/icons-material/ChevronLeft'
@@ -16,19 +16,15 @@ import {
   Link,
   Grid,
 } from '@mui/material'
+import getConfig from 'next/config'
 import { useRouter } from 'next/router'
 import { useTranslation } from 'next-i18next'
+import { useReCaptcha } from 'next-recaptcha-v3'
 
 import { MyProfile, PaymentMethod, AddressBook } from '@/components/my-account'
-import { useAuthContext } from '@/context'
-import {
-  useGetCards,
-  useGetCustomerAddresses,
-  useCreateCustomerCard,
-  useUpdateCustomerCard,
-  useCreateCustomerAddress,
-  useUpdateCustomerAddress,
-} from '@/hooks'
+import { useAuthContext, useSnackbarContext } from '@/context'
+import { useCardContactActions } from '@/hooks'
+import { validateGoogleReCaptcha } from '@/lib/helpers'
 import type { BillingAddress, CardType } from '@/lib/types'
 
 import type { CustomerAccount } from '@/lib/gql/types'
@@ -64,13 +60,6 @@ const style = {
     cursor: 'pointer',
     alignItems: 'center',
   },
-  accountCircleBox: {
-    display: { xs: 'flex' },
-    flexDirection: { xs: 'column', md: 'row' },
-    justifyContent: { xs: 'center', md: 'start' },
-    alignItems: 'center',
-    margin: { xs: '1rem', md: '2rem 0' },
-  },
   accountCircle: {
     fontSize: {
       md: '2.7rem',
@@ -92,101 +81,83 @@ const style = {
   },
 }
 
-const MyAccountTemplate = () => {
+interface MyAccountTemplateProps {
+  user?: CustomerAccount
+}
+
+const MyAccountTemplate = (props: MyAccountTemplateProps) => {
+  const { user } = props
   const { t } = useTranslation('common')
+  const { publicRuntimeConfig } = getConfig()
+  const isSubscriptionEnabled = publicRuntimeConfig.isSubscriptionEnabled
+  const reCaptchaKey = publicRuntimeConfig.recaptcha.reCaptchaKey
   const router = useRouter()
   const theme = useTheme()
   const mdScreen = useMediaQuery(theme.breakpoints.up('md'))
-  const { user, logout } = useAuthContext()
+  const { logout } = useAuthContext()
 
-  const { data: cards } = useGetCards(user?.id as number)
-  const { data: contacts } = useGetCustomerAddresses(user?.id as number)
-
-  const { createCustomerCard } = useCreateCustomerCard()
-  const { updateCustomerCard } = useUpdateCustomerCard()
-  const { createCustomerAddress } = useCreateCustomerAddress()
-  const { updateCustomerAddress } = useUpdateCustomerAddress()
+  const { cards, contacts, handleSave } = useCardContactActions(user?.id as number)
 
   const handleGoToOrderHistory = () => {
     router.push('/my-account/order-history?filters=M-6')
   }
 
-  const handleSave = async (
+  const handleGoToSubscription = useCallback(() => {
+    router.push('/my-account/subscription')
+  }, [router])
+
+  const { executeRecaptcha } = useReCaptcha()
+  const { showSnackbar } = useSnackbarContext()
+
+  const submitFormWithRecaptcha = (
     address: BillingAddress,
     card: CardType,
     isUpdatingAddress: boolean
   ) => {
-    let response
-
-    // Add update address
-    if (isUpdatingAddress) {
-      response = await updateCustomerAddress.mutateAsync(address)
-    } else {
-      response = await createCustomerAddress.mutateAsync(address)
+    if (!executeRecaptcha) {
+      console.log('Execute recaptcha not yet available')
+      return
     }
+    executeRecaptcha('enquiryFormSubmit').then(async (gReCaptchaToken: any) => {
+      const captcha = await validateGoogleReCaptcha(gReCaptchaToken)
 
-    const params = {
-      accountId: card.accountId,
-      cardId: card.cardId,
-      cardInput: card.cardInput,
-    }
-    params.cardInput.contactId = response.id
-
-    // Add update card
-    if (card.cardId) {
-      await updateCustomerCard.mutateAsync(params)
-    } else {
-      await createCustomerCard.mutateAsync(params)
-    }
+      if (captcha?.status === 'success') {
+        await handleSave(address, card, isUpdatingAddress)
+      } else {
+        showSnackbar(captcha.message, 'error')
+      }
+    })
   }
 
-  const accordionData = [
+  const shopperAccountActionList = [
     {
-      id: 'account-information-accordion',
-      controls: 'account-information-content',
-      header: t('account-information'),
+      id: 'my-profile-accordion',
+      controls: 'my-profile-content',
+      header: t('my-profile'),
       component: <MyProfile user={user as CustomerAccount} />,
-      path: null,
     },
     {
-      id: 'account-hierarchy-accordion',
-      controls: 'account-hierarchy-content',
-      header: t('account-hierarchy'),
-      component: null,
-      path: null,
-    },
-    {
-      id: 'users-accordion',
-      controls: 'users-content',
-      header: t('users'),
-      component: null,
-      path: '/my-account/users',
-    },
-    {
-      id: 'shipping-information-accordion',
-      controls: 'shipping-information-content',
-      header: t('shipping-information'),
+      id: 'address-book-accordion',
+      controls: 'address-book-content',
+      header: t('address-book'),
       component: <AddressBook user={user as CustomerAccount} contacts={contacts} />,
     },
     {
-      id: 'payment-information-accordion',
-      controls: 'payment-information-content',
-      header: t('payment-information'),
+      id: 'payment-method-accordion',
+      controls: 'payment-method-content',
+      header: t('payment-method'),
       component: (
         <PaymentMethod
           user={user as CustomerAccount}
           cards={cards}
           contacts={contacts}
-          onSave={handleSave}
+          onSave={(address, card, isUpdatingAddress) =>
+            reCaptchaKey
+              ? submitFormWithRecaptcha(address, card, isUpdatingAddress)
+              : handleSave(address, card, isUpdatingAddress)
+          }
         />
       ),
-    },
-    {
-      id: 'custom-attributes-accordion',
-      controls: 'custom-attributes-content',
-      header: t('custom-attributes'),
-      component: null,
-      path: null,
     },
   ]
 
@@ -199,15 +170,6 @@ const MyAccountTemplate = () => {
             {t('back')}
           </Link>
         )}
-        <Box sx={{ ...style.accountCircleBox }}>
-          <AccountCircle sx={{ ...style.accountCircle }} />
-          <Typography
-            variant={mdScreen ? 'h1' : 'h2'}
-            sx={{ paddingLeft: { md: '0.5rem', xs: 0 } }}
-          >
-            {t('KiboUSA')}
-          </Typography>
-        </Box>
         <Box
           sx={{
             display: { md: 'flex', xs: 'block' },
@@ -215,29 +177,31 @@ const MyAccountTemplate = () => {
             ...style.myAccountChildren,
           }}
         >
+          <Box sx={{ display: { xs: 'flex' }, justifyContent: { xs: 'center' } }}>
+            <AccountCircle sx={{ ...style.accountCircle }} />
+          </Box>
           <Typography
             variant={mdScreen ? 'h1' : 'h2'}
             sx={{ paddingLeft: { md: '0.5rem', xs: 0 } }}
           >
-            {t('account')}
+            {t('my-account')}
           </Typography>
         </Box>
         <Divider sx={{ borderColor: 'grey.500' }} />
 
-        {accordionData.map((data) => {
+        {shopperAccountActionList.map((data) => {
           return (
             <Box key={data.id}>
               <Accordion disableGutters sx={{ ...style.accordion }}>
                 <AccordionSummary
-                  onClick={() => data.path && router.push(data.path)}
-                  expandIcon={data.component && <ExpandMoreIcon sx={{ ...style.expandedIcon }} />}
+                  expandIcon={<ExpandMoreIcon sx={{ ...style.expandedIcon }} />}
                   aria-controls={data.controls}
                   id={data.id}
                   sx={{ ...style.accordionSummary }}
                 >
                   <Typography variant="h3">{data.header}</Typography>
                 </AccordionSummary>
-                {data.component && <AccordionDetails>{data.component}</AccordionDetails>}
+                <AccordionDetails>{data.component}</AccordionDetails>
               </Accordion>
               <Divider sx={{ borderColor: 'grey.500' }} />
             </Box>
@@ -245,19 +209,24 @@ const MyAccountTemplate = () => {
         })}
 
         <Box sx={{ ...style.myAccountChildren }}>
-          <Typography variant={mdScreen ? 'h1' : 'h2'}>{t('orders')}</Typography>
+          <Typography variant={mdScreen ? 'h1' : 'h2'}>{t('order-details')}</Typography>
         </Box>
 
+        {/* code for subscription below */}
         <Divider sx={{ borderColor: 'grey.500' }} />
-        <Box
-          sx={{
-            ...style.myAccountChildren,
-            ...style.orderHistory,
-          }}
-        >
-          <Typography variant="h3">{t('quick-order')}</Typography>
-          <ChevronRightIcon />
-        </Box>
+        {isSubscriptionEnabled && (
+          <Box
+            sx={{
+              ...style.myAccountChildren,
+              ...style.orderHistory,
+            }}
+            onClick={handleGoToSubscription}
+          >
+            <Typography variant="h3">{t('my-subscription')}</Typography>
+            <ChevronRightIcon />
+          </Box>
+        )}
+        {/* code for subscription ends here */}
 
         <Divider sx={{ borderColor: 'grey.500' }} />
         <Box
@@ -270,40 +239,6 @@ const MyAccountTemplate = () => {
           <Typography variant="h3">{t('order-history')}</Typography>
           <ChevronRightIcon />
         </Box>
-
-        <Divider sx={{ borderColor: 'grey.500' }} />
-        <Box
-          sx={{
-            ...style.myAccountChildren,
-            ...style.orderHistory,
-          }}
-        >
-          <Typography variant="h3">{t('returns')}</Typography>
-          <ChevronRightIcon />
-        </Box>
-
-        <Divider sx={{ borderColor: 'grey.500' }} />
-        <Box
-          sx={{
-            ...style.myAccountChildren,
-            ...style.orderHistory,
-          }}
-        >
-          <Typography variant="h3">{t('quotes')}</Typography>
-          <ChevronRightIcon />
-        </Box>
-
-        <Divider sx={{ borderColor: 'grey.500' }} />
-        <Box
-          sx={{
-            ...style.myAccountChildren,
-            ...style.orderHistory,
-          }}
-        >
-          <Typography variant="h3">{t('lists')}</Typography>
-          <ChevronRightIcon />
-        </Box>
-
         <Divider sx={{ backgroundColor: 'grey.300', ...style.divider }} />
         <Box sx={{ ...style.myAccountChildren, cursor: 'pointer' }} onClick={logout}>
           <Typography variant="h3">{t('logout')}</Typography>

@@ -32,6 +32,7 @@ const getTotal = (order: CrOrder | CrCart | Checkout): number => order?.total as
 const getShippingTotal = (order: CrOrder | CrCart) => order?.shippingTotal || 0
 const getTaxTotal = (order: CrOrder | CrCart) => order?.taxTotal || 0
 const getSubtotal = (order: CrOrder | CrCart): number => order?.subtotal as number
+
 const getDiscountedSubtotal = (order: CrOrder | CrCart): number => {
   if (order?.discountedSubtotal && order?.discountedSubtotal != order?.subtotal)
     return order?.discountedSubtotal
@@ -144,6 +145,7 @@ const getOrderSummary = (order: CrOrder): OrderSummary => {
     taxTotal: getTaxTotal(order),
     total: getTotal(order),
     totalCollected: getTotalCollected(order),
+    discountedSubtotal: getDiscountedSubtotal(order),
   }
 }
 
@@ -177,9 +179,9 @@ const capitalizeWord = (word?: string) =>
 const getSubmittedDate = (order: CrOrder, withTimestamp?: boolean) =>
   order?.submittedDate
     ? withTimestamp
-      ? (format(new Date(order?.submittedDate), DateFormat.DATE_FORMAT_WITH_TIME) as string)
-      : (format(new Date(order?.submittedDate), DateFormat.DATE_FORMAT) as string)
-    : (order?.submittedDate as string)
+      ? format(new Date(order?.submittedDate), DateFormat.DATE_FORMAT_WITH_TIME)
+      : format(new Date(order?.submittedDate), DateFormat.DATE_FORMAT)
+    : order?.submittedDate
 
 const getExpectedDeliveryDate = (items: CrOrderItem[]) => {
   return items[0]?.expectedDeliveryDate
@@ -201,6 +203,7 @@ const getOrderPaymentCardDetails = (card: CrPaymentCard) => {
     cardNumberPartOrMask: cardGetters.getCardNumberPartOrMask(card),
     expireMonth: cardGetters.getExpireMonth(card),
     expireYear: cardGetters.getExpireYear(card),
+    cardType: cardGetters.getCardType(card),
   }
 }
 
@@ -218,17 +221,32 @@ const getPaymentBillingDetails = (data?: CustomerContact | CrContact) => {
 const getOrderPaymentBillingInfo = (billingInfo: CrBillingInfo) => {
   return {
     ...billingInfo,
-    card: getOrderPaymentCardDetails(billingInfo.card as CrPaymentCard),
-    billingContact: getPaymentBillingDetails(billingInfo.billingContact as CrContact),
+    card: getOrderPaymentCardDetails(billingInfo?.card as CrPaymentCard),
+    billingContact: getPaymentBillingDetails(billingInfo?.billingContact as CrContact),
   }
 }
-const getOrderPayments = (order: CrOrder) =>
-  order?.payments?.map((payment) => {
+const getNewOrderPayments = (order: CrOrder) => {
+  const payments: CrPayment[] =
+    (order?.payments?.filter(
+      (payment) => payment?.status?.toLowerCase() === 'new'
+    ) as CrPayment[]) || []
+  return payments?.map((payment) => {
     return {
       ...payment,
       billingInfo: getOrderPaymentBillingInfo(payment?.billingInfo as CrBillingInfo),
     }
   })
+}
+
+const getFinalOrderPayment = (order: CrOrder) => {
+  if (!order?.payments?.length) return
+
+  const latestPayment = order?.payments && order?.payments[order?.payments?.length - 1]
+  return {
+    payment: latestPayment,
+    billingInfo: getOrderPaymentBillingInfo(latestPayment?.billingInfo as CrBillingInfo),
+  }
+}
 
 const getShippedTo = (order: CrOrder) =>
   order?.fulfillmentInfo?.fulfillmentContact
@@ -245,7 +263,7 @@ const getOrderHistoryDetails = (order: CrOrder) => {
   const productNames = getProductNames(order)
   const orderTotal = getOrderTotal(order)
   const orderStatus = getOrderStatus(order)
-  const orderPayments = getOrderPayments(order)
+  const orderPayments = getNewOrderPayments(order)
   const shipTo = getShippedTo(order)
   const shippingAddress = getShippingAddress(order)
 
@@ -272,7 +290,7 @@ export const orderGetters = {
   getSubmittedDate,
   getProductNames,
   getExpectedDeliveryDate,
-  getOrderPayments,
+  getNewOrderPayments,
   getShippedTo,
   getShippingAddress,
   getOrderHistoryDetails,
@@ -296,4 +314,6 @@ export const orderGetters = {
   getShippingMethodCode,
   getLocationCode,
   getPaymentMethods,
+  getOrderStatus,
+  getFinalOrderPayment,
 }

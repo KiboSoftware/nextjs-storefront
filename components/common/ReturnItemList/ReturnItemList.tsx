@@ -13,6 +13,7 @@ export type ReturnItemListProps = {
   isPickupItem?: boolean
   storePickupAddresses?: LocationCustom[]
   isCheckboxDisabled?: boolean
+  showCheckbox?: boolean
   onItemSelection?: (orderItemId: string) => void
 }
 
@@ -25,7 +26,13 @@ const styles = {
   },
 }
 const ReturnItemList = (props: ReturnItemListProps) => {
-  const { items, isPickupItem = false, isCheckboxDisabled = false, onItemSelection } = props
+  const {
+    items,
+    isPickupItem = false,
+    isCheckboxDisabled = false,
+    showCheckbox = true,
+    onItemSelection,
+  } = props
 
   const handleSelectItem = (event: ChangeEvent<HTMLInputElement>) =>
     onItemSelection && onItemSelection(event.target.value)
@@ -36,12 +43,14 @@ const ReturnItemList = (props: ReturnItemListProps) => {
         const product = item?.product as CrProduct
         return (
           <Stack key={item?.id} direction="row">
-            <Checkbox
-              value={item?.id}
-              onChange={handleSelectItem}
-              disabled={isCheckboxDisabled}
-              sx={{ ...styles.checkbox }}
-            />
+            {showCheckbox && (
+              <Checkbox
+                value={item?.id}
+                onChange={handleSelectItem}
+                disabled={isCheckboxDisabled}
+                sx={{ ...styles.checkbox }}
+              />
+            )}
             <ProductItem
               id={orderGetters.getCartItemId(item as CrOrderItem)}
               qty={orderGetters.getProductQuantity(item as CrOrderItem)}

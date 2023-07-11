@@ -19,14 +19,15 @@ import { useForm, Controller } from 'react-hook-form'
 import * as yup from 'yup'
 
 import {
-  KiboTextBox,
   OrderPrice,
-  PasswordValidation,
   ProductItem,
   ProductItemList,
+  PasswordValidation,
+  KiboTextBox,
 } from '@/components/common'
 import type { OrderPriceProps } from '@/components/common/OrderPrice/OrderPrice'
 import { useCheckoutStepContext, useAuthContext } from '@/context'
+import { useUpdateUserOrder } from '@/hooks'
 import { addressGetters, checkoutGetters, orderGetters, productGetters } from '@/lib/getters'
 import { isPasswordValid } from '@/lib/helpers/validations/validations'
 
@@ -42,9 +43,9 @@ export interface PersonalDetails {
 
 interface ReviewStepProps {
   checkout: CrOrder | Checkout
-  shipItems: any
-  pickupItems: any
-  personalDetails: any
+  shipItems?: Maybe<CrOrderItem>[]
+  pickupItems?: Maybe<CrOrderItem>[]
+  personalDetails?: any
   orderSummaryProps: any
   isMultiShipEnabled: boolean
   onCreateOrder: (params: any) => Promise<void>
@@ -109,10 +110,12 @@ const ReviewStep = (props: ReviewStepProps) => {
   const { t } = useTranslation('common')
   const theme = useTheme()
   const { isAuthenticated, createAccount } = useAuthContext()
-  const [isAgreeWithTermsAndConditions, setAgreeWithTermsAndConditions] = useState<boolean>(false)
+  const { updateUserOrder } = useUpdateUserOrder()
+  const [isAgreeWithTermsAndConditions, setAgreeWithTermsAndConditions] =
+    useState<boolean>(isAuthenticated)
 
   const { setStepNext, setStepBack, setStepStatusComplete } = useCheckoutStepContext()
-  const { subTotal, shippingTotal, taxTotal, total } = orderSummaryProps
+  const { subTotal, shippingTotal, taxTotal, total, discountedSubtotal } = orderSummaryProps
 
   const {
     formState: { errors, isValid },
@@ -130,8 +133,9 @@ const ReviewStep = (props: ReviewStepProps) => {
 
   const showAccountFields: boolean = watch(['showAccountFields']).join('') === 'true'
   const userEnteredPassword: string = watch(['password']).join('')
+
   const isEnabled = () => {
-    if (showAccountFields) {
+    if (showAccountFields && !isAuthenticated) {
       const isUserEnteredPasswordValid = showAccountFields
         ? isPasswordValid(userEnteredPassword)
         : true
@@ -147,19 +151,27 @@ const ReviewStep = (props: ReviewStepProps) => {
     setAgreeWithTermsAndConditions(event.target.checked)
 
   const onValid = async (formData: PersonalDetails) => {
-    await onCreateOrder(checkout)
+    try {
+      if (formData?.showAccountFields) {
+        const account = await createAccount({
+          email: checkout.email as string,
+          firstName: formData.firstName,
+          lastNameOrSurname: formData.lastNameOrSurname,
+          password: formData.password,
+        })
 
-    if (formData?.showAccountFields) {
-      await createAccount({
-        email: checkout.email as string,
-        firstName: formData.firstName,
-        lastNameOrSurname: formData.lastNameOrSurname,
-        password: formData.password,
-      })
+        if (account.userId) {
+          updateUserOrder.mutateAsync(checkout.id as string)
+        }
+      }
+
+      await onCreateOrder(checkout)
+
+      setStepStatusComplete()
+      setStepNext()
+    } catch (e) {
+      console.log('error', e)
     }
-
-    setStepStatusComplete()
-    setStepNext()
   }
 
   const onInvalidForm = () => console.log('Invalid Form')
@@ -171,7 +183,11 @@ const ReviewStep = (props: ReviewStepProps) => {
     taxLabel: t('estimated-tax'),
     totalLabel: t('total'),
     subTotal: t('currency', { val: subTotal }),
-    shippingTotal: shippingTotal ? t('currency', { val: shippingTotal }) : t('free'),
+    discountedSubtotal:
+      discountedSubtotal > 0 && discountedSubtotal !== subTotal
+        ? t('currency', { val: discountedSubtotal })
+        : '',
+    shippingTotal: t('currency', { val: shippingTotal || 0 }),
     tax: t('currency', { val: taxTotal }),
     total: t('currency', { val: total }),
   }
@@ -382,6 +398,7 @@ const ReviewStep = (props: ReviewStepProps) => {
           </FormControl>
         )}
       </Box>
+
       <Stack alignItems="left">
         <Button
           variant="contained"

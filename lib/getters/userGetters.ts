@@ -45,7 +45,7 @@ const getSavedCardsAndBillingDetails = (
     customerAccountContacts.items as CustomerContact[]
   )
 
-  if (!cards) return []
+  if (!cards?.length) return []
 
   return cards?.map((card: Card) => {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars

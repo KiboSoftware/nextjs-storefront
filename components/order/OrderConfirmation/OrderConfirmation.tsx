@@ -1,7 +1,9 @@
-import React from 'react'
+import React, { useRef } from 'react'
 
-import { Box, Container, Divider, Grid, Stack, Typography } from '@mui/material'
+import Print from '@mui/icons-material/Print'
+import { Box, Container, Divider, Grid, IconButton, Stack, Typography } from '@mui/material'
 import { useTranslation } from 'next-i18next'
+import { useReactToPrint } from 'react-to-print'
 
 import { OrderSummary, ProductItemList } from '@/components/common'
 import { ProductOptionList } from '@/components/product'
@@ -11,6 +13,7 @@ import type { CrOrder } from '@/lib/gql/types'
 
 const OrderConfirmation = ({ order }: { order: CrOrder }) => {
   const { t } = useTranslation('common')
+  const componentRef = useRef(null)
 
   const orderTotal = orderGetters.getTotal(order)
   const orderNumber = orderGetters.getOrderNumber(order)
@@ -30,6 +33,7 @@ const OrderConfirmation = ({ order }: { order: CrOrder }) => {
     },
   ]
 
+  const discountedSubtotal = orderGetters.getDiscountedSubtotal(order)
   const orderSummeryArgs = {
     nameLabel: t('order-summary'),
     subTotalLabel: `${t('subtotal')} (${t('item-quantity', { count: order.items?.length })})`,
@@ -37,19 +41,33 @@ const OrderConfirmation = ({ order }: { order: CrOrder }) => {
     taxLabel: t('estimated-tax'),
     totalLabel: t('total-price'),
     subTotal: t('currency', { val: orderGetters.getSubtotal(order) }),
-    discountedSubtotal: t('currency', { val: orderGetters.getDiscountedSubtotal(order) }),
-    shippingTotal: orderGetters.getShippingTotal(order)
-      ? t('currency', { val: orderGetters.getShippingTotal(order) })
-      : t('free'),
+    discountedSubtotal: discountedSubtotal > 0 ? t('currency', { val: discountedSubtotal }) : '',
+    shippingTotal: t('currency', { val: orderGetters.getShippingTotal(order) || 0 }),
     tax: t('currency', { val: orderGetters.getTaxTotal(order) }),
     total: t('currency', { val: orderTotal }),
   }
 
+  const handlePrint = useReactToPrint({
+    content: () => componentRef.current,
+  })
+
   return (
     <Grid container data-testid="order-confirmation">
-      <Grid item xs={12} sx={{ display: 'flex', flexDirection: 'column', gap: 5 }}>
+      <Grid item xs={12}>
+        <Box display={'flex'} justifyContent={'flex-end'} width="100%">
+          <IconButton onClick={handlePrint}>
+            <Print />
+          </IconButton>
+        </Box>
+      </Grid>
+      <Grid
+        item
+        xs={12}
+        sx={{ display: 'flex', flexDirection: 'column', gap: 5, pt: 1 }}
+        ref={componentRef}
+      >
         <Container maxWidth="xs">
-          <Stack width={'100%'} alignItems="center" gap={3}>
+          <Stack width={'100%'} alignItems="center" gap={3} pt={0}>
             <Typography variant="h1">{t('thank-you')}</Typography>
             <Box display="flex" gap={3}>
               <Typography variant="h2" fontWeight={'normal'}>

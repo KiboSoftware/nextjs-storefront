@@ -91,7 +91,7 @@ const style = {
   },
 }
 
-const UsersPage: NextPage = () => {
+const B2BUsersPage: NextPage = () => {
   const { publicRuntimeConfig } = getConfig()
   const userRoles = publicRuntimeConfig.b2bUserRoles
 
@@ -284,4 +284,4 @@ const UsersPage: NextPage = () => {
   )
 }
 
-export default UsersPage
+export default B2BUsersPage

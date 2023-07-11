@@ -51,7 +51,7 @@ const OrderReturnItemsDialog = (props: OrderReturnItemsDialogProps) => {
             {reason}
           </Typography>
         </Box>
-        <ReturnItemList items={orderItems} />
+        <ReturnItemList items={orderItems} showCheckbox={false} />
       </Stack>
     ),
     showContentTopDivider: true,

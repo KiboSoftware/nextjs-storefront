@@ -14,7 +14,7 @@ import Popover from '@mui/material/Popover'
 import uniqBy from 'lodash/uniqBy'
 import { useTranslation } from 'next-i18next'
 
-import { ProductItem, KiboSelect } from '@/components/common'
+import { ProductItem, KiboSelect, KeyValueDisplay } from '@/components/common'
 import {
   ConfirmationDialog,
   EditSubscriptionFrequencyDialog,
@@ -22,7 +22,6 @@ import {
   EditBillingAddress,
   AddressFormDialog,
 } from '@/components/dialogs'
-import { ProductOption } from '@/components/product'
 import { useModalContext, useSnackbarContext, useAuthContext } from '@/context'
 import {
   useSkipNextSubscription,
@@ -368,7 +367,7 @@ const SubscriptionItem = (props: SubscriptionItemProps) => {
           </Stack>
           <Stack direction="column" sx={{ ...style.subscriptionNumber }}>
             <Stack direction="row">
-              <ProductOption
+              <KeyValueDisplay
                 option={{
                   name: t('subscription-number'),
                   value: subscriptionGetters.getSubscriptionNumber(subscriptionDetailsData),
@@ -378,7 +377,7 @@ const SubscriptionItem = (props: SubscriptionItemProps) => {
               />
             </Stack>
             <Stack direction="row" sx={{ xs: { pl: '0' } }}>
-              <ProductOption
+              <KeyValueDisplay
                 option={{
                   name: t('status'),
                   value: subscriptionGetters.getSubscriptionStatus(subscriptionDetailsData),

@@ -7,8 +7,8 @@ import * as stories from './OrderReturnItems.stories'
 
 const { Common } = composeStories(stories)
 
-const productOptionMock = () => <div data-testid="product-option-component" />
-jest.mock('@/components/product/ProductOption/ProductOption', () => () => productOptionMock())
+const KeyValueDisplayMock = () => <div data-testid="key-value-display-component" />
+jest.mock('@/components/common/KeyValueDisplay/KeyValueDisplay', () => () => KeyValueDisplayMock())
 
 const KiboSelectMock = () => <div data-testid="kibo-select-component" />
 jest.mock('@/components/common/KiboSelect/KiboSelect', () => () => KiboSelectMock())
@@ -29,7 +29,7 @@ describe('[component] - OrderReturnItems', () => {
     const chooseItemsHeading = screen.getByText(/choose-items-to-return/i)
     const returnReasonHeading = screen.getByText(/reason-for-your-return/i)
     const kiboSelect = screen.getByTestId('kibo-select-component')
-    const productOptions = screen.getAllByTestId('product-option-component')
+    const keyValueDisplays = screen.getAllByTestId('key-value-display-component')
     const returnItemList = screen.getAllByTestId('return-item-list-component')
 
     expect(orderDetails).toBeVisible()
@@ -37,7 +37,7 @@ describe('[component] - OrderReturnItems', () => {
     expect(chooseItemsHeading).toBeVisible()
     expect(returnReasonHeading).toBeVisible()
     expect(kiboSelect).toBeInTheDocument()
-    expect(productOptions[0]).toBeInTheDocument()
+    expect(keyValueDisplays[0]).toBeInTheDocument()
     expect(returnItemList[0]).toBeInTheDocument()
   })
 })

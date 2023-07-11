@@ -19,6 +19,13 @@ fragment wishlistItem on CrWishlistItem {
             price
             salePrice
         }
+        properties {
+          attributeFQN
+          values {
+            value
+            stringValue
+          }
+       }
     }
 }
 
