@@ -34,33 +34,23 @@ describe('[component] - MyAccountTemplate', () => {
   it('should render component', async () => {
     setup()
 
-    const myAccount = screen.getAllByText(/account/i)[0]
-    const accountInformation = screen.getByText(/account-information/i)
-    const accountHierarchy = screen.getByText(/account-hierarchy/i)
-    const users = screen.getByText(/users/i)
-    const shippingInformation = screen.getByText(/shipping-information/i)
-    const paymentInformation = screen.getAllByText(/payment-information/)[0]
-    const customAttributes = screen.getAllByText(/custom-attributes/i)[0]
-    const quickOrder = screen.getByText(/quick-order/i)
+    const myAccount = screen.getByText(/my-account/i)
+    const myProfile = screen.getByText(/my-profile/i)
+    const addressBook = screen.getByText(/address-book/i)
+    const paymentMethod = screen.getAllByText(/payment-method/)[0]
+    const orderDetails = screen.getByText(/order-details/i)
     const orderHistory = screen.getByText(/order-history/i)
-    const returns = screen.getByText(/returns/i)
-    const quotes = screen.getByText(/quotes/i)
-    const lists = screen.getByText(/lists/i)
     const logout = screen.getByText(/logout/i)
+    const mySubscription = screen.getByText(/my-subscription/i)
 
     expect(myAccount).toBeInTheDocument()
-    expect(accountInformation).toBeInTheDocument()
-    expect(accountHierarchy).toBeInTheDocument()
-    expect(users).toBeInTheDocument()
-    expect(shippingInformation).toBeInTheDocument()
-    expect(paymentInformation).toBeInTheDocument()
-    expect(customAttributes).toBeInTheDocument()
-    expect(quickOrder).toBeInTheDocument()
+    expect(myProfile).toBeInTheDocument()
+    expect(addressBook).toBeInTheDocument()
+    expect(paymentMethod).toBeInTheDocument()
+    expect(orderDetails).toBeInTheDocument()
     expect(orderHistory).toBeInTheDocument()
-    expect(returns).toBeInTheDocument()
-    expect(quotes).toBeInTheDocument()
-    expect(lists).toBeInTheDocument()
     expect(logout).toBeInTheDocument()
+    expect(mySubscription).toBeInTheDocument()
   })
 
   it('should redirect to order-history page when users click on Order History link', async () => {
@@ -79,17 +69,17 @@ describe('[component] - MyAccountTemplate', () => {
     })
   })
 
-  it('should redirect to users page when users click on Users link', async () => {
+  it('should redirect to my-subscription page when users click on My Subscription link', async () => {
     const { user } = setup()
 
-    const users = screen.getByText(/users/i)
+    const mySubscription = screen.getByText(/my-subscription/i)
 
-    user.click(users)
+    user.click(mySubscription)
 
     await waitFor(() => {
       expect(mockRouter).toMatchObject({
-        asPath: '/my-account/users',
-        pathname: '/my-account/users',
+        asPath: '/my-account/subscription',
+        pathname: '/my-account/subscription',
         query: {},
       })
     })
