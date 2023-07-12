@@ -10,7 +10,7 @@ import { B2BUser } from '@/lib/gql/types'
 
 export default {
   component: UserTable,
-  title: 'My Account/UserTable',
+  title: 'My Account/B2B/UserTable',
 } as ComponentMeta<typeof UserTable>
 
 const customerB2BUsers: B2BUser[] = userGetters.getCustomerB2BUsers(

@@ -36,7 +36,7 @@ describe('[component] User Table', () => {
   it('should render only email and role column on mobile screen', async () => {
     render(<Table />)
 
-    expect(screen.getByText('email-address')).toBeInTheDocument()
+    expect(screen.getByText('email')).toBeInTheDocument()
     expect(screen.getByText('role')).toBeInTheDocument()
     expect(screen.getByText('first-name')).toBeInTheDocument()
     expect(screen.getByText('last-name-or-sur-name')).toBeInTheDocument()

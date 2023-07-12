@@ -63,10 +63,14 @@ const UserTable = (props: UserTableProps) => {
             colSpan={2}
             sx={{ flex: 1, width: { xs: '150px' }, overflow: { xs: 'hidden' } }}
           >
-            {mdScreen ? t('email-address') : t('email')}
+            {t('email')}
           </TableCell>
-          {mdScreen && <TableCell>{t('first-name')}</TableCell>}
-          {mdScreen && <TableCell>{t('last-name-or-sur-name')}</TableCell>}
+          {mdScreen && (
+            <>
+              <TableCell>{t('first-name')}</TableCell>
+              <TableCell>{t('last-name-or-sur-name')}</TableCell>
+            </>
+          )}
           <TableCell>{t('role')}</TableCell>
           {mdScreen && <TableCell>{t('status')}</TableCell>}
           <TableCell></TableCell>
@@ -91,8 +95,12 @@ const UserTable = (props: UserTableProps) => {
                 <TableCell colSpan={2} sx={style.emailAddressCell}>
                   {b2bUser?.emailAddress}
                 </TableCell>
-                {mdScreen && <TableCell sx={{ flex: 1 }}>{b2bUser?.firstName}</TableCell>}
-                {mdScreen && <TableCell sx={{ flex: 1 }}>{b2bUser?.lastName}</TableCell>}
+                {mdScreen && (
+                  <>
+                    <TableCell sx={{ flex: 1 }}>{b2bUser?.firstName}</TableCell>
+                    <TableCell sx={{ flex: 1 }}>{b2bUser?.lastName}</TableCell>
+                  </>
+                )}
                 <TableCell sx={{ flex: 1 }}>
                   {(b2bUser?.roles && b2bUser?.roles.length && b2bUser?.roles[0]?.roleName) ||
                     'N/A'}

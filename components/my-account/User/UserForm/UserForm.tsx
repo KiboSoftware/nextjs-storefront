@@ -48,7 +48,6 @@ const UserForm = (props: UserFormProps) => {
   const [isLoading, setLoading] = useState(false)
   const {
     getValues,
-    setValue,
     handleSubmit,
     formState: { errors },
     control,
@@ -70,15 +69,16 @@ const UserForm = (props: UserFormProps) => {
     cancelAction()
   }
 
-  useEffect(() => {
-    if (!b2BUser) return
+  if (b2BUser) {
     const { firstName, lastName, emailAddress, isActive, roles } = b2BUser
-    setValue('emailAddress', emailAddress)
-    setValue('firstName', firstName)
-    setValue('lastName', lastName)
-    setValue('isActive', isActive)
-    setValue('role', roles && roles.length ? roles[0]?.roleName : '')
-  }, [b2BUser])
+    reset({
+      emailAddress,
+      firstName,
+      lastName,
+      isActive,
+      role: roles && roles.length ? roles[0]?.roleName : '',
+    })
+  }
 
   const cancelAction = () => {
     onClose()
