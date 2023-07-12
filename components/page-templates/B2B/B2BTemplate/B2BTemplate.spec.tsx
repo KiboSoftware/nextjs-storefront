@@ -10,11 +10,11 @@ import mockRouter from 'next-router-mock'
 import * as stories from './B2BTemplate.stories' // import all stories from the stories file
 const { Common } = composeStories(stories)
 
-const FullWidthDividerMock = () => <div data-testid="full-width-divider-component" />
-jest.mock('../../common/FullWidthDivider/FullWidthDivider', () => () => FullWidthDividerMock())
+// const FullWidthDividerMock = () => <div data-testid="full-width-divider-component" />
+// jest.mock('../../common/FullWidthDivider/FullWidthDivider', () => () => FullWidthDividerMock())
 
-const MyProfileMock = () => <div data-testid="my-profile-component" />
-jest.mock('../../my-account/MyProfile/MyProfile', () => () => MyProfileMock())
+// const MyProfileMock = () => <div data-testid="my-profile-component" />
+// jest.mock('../../my-account/MyProfile/MyProfile', () => () => MyProfileMock())
 
 const PaymentMethodMock = () => <div data-testid="payment-method-component" />
 jest.mock('../../my-account/PaymentMethod/PaymentMethod', () => () => PaymentMethodMock())
