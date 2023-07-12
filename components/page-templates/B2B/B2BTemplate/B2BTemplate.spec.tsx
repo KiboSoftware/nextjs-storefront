@@ -16,11 +16,11 @@ const { Common } = composeStories(stories)
 // const MyProfileMock = () => <div data-testid="my-profile-component" />
 // jest.mock('../../my-account/MyProfile/MyProfile', () => () => MyProfileMock())
 
-const PaymentMethodMock = () => <div data-testid="payment-method-component" />
-jest.mock('../../my-account/PaymentMethod/PaymentMethod', () => () => PaymentMethodMock())
+// const PaymentMethodMock = () => <div data-testid="payment-method-component" />
+// jest.mock('../../my-account/PaymentMethod/PaymentMethod', () => () => PaymentMethodMock())
 
-const AddressBookMock = () => <div data-testid="address-book-component" />
-jest.mock('../../my-account/AddressBook/AddressBook', () => () => AddressBookMock())
+// const AddressBookMock = () => <div data-testid="address-book-component" />
+// jest.mock('../../my-account/AddressBook/AddressBook', () => () => AddressBookMock())
 
 describe('[component] - MyAccountTemplate', () => {
   const setup = () => {
