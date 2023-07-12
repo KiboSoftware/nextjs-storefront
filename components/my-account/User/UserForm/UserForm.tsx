@@ -9,8 +9,8 @@ import { useTranslation } from 'next-i18next'
 import { useForm, Controller } from 'react-hook-form'
 import * as yup from 'yup'
 
+import userFormStyles from './UserForm.styles'
 import { KiboRadio, KiboSwitch, KiboTextBox } from '@/components/common'
-import { useAuthContext } from '@/context'
 
 import { B2BUser, B2BUserInput } from '@/lib/gql/types'
 
@@ -30,7 +30,6 @@ export const useFormSchema = () => {
       .matches(/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i, t('invalid-email-error')),
     firstName: yup.string().required(t('firstname-error')),
     lastName: yup.string().required(t('lastname-error')),
-    // role: yup.string().required()
   })
 }
 
@@ -39,6 +38,7 @@ const UserForm = (props: UserFormProps) => {
 
   const { publicRuntimeConfig } = getConfig()
 
+  const classes = userFormStyles()
   const { t } = useTranslation('common')
   const theme = useTheme()
   const mdScreen = useMediaQuery(theme.breakpoints.up('md'))
@@ -54,7 +54,7 @@ const UserForm = (props: UserFormProps) => {
     control,
     reset,
   } = useForm({
-    defaultValues: { role: '', emailAddress: '', firstName: '', lastName: '', isActive: true },
+    defaultValues: { role: 'Admin', emailAddress: '', firstName: '', lastName: '', isActive: true },
     resolver: yupResolver(userSchema),
   })
   const onSubmit = async () => {
@@ -92,10 +92,7 @@ const UserForm = (props: UserFormProps) => {
         onSubmit={handleSubmit(onSubmit)}
         id="addUserForm"
         data-testid="user-form"
-        style={{
-          display: 'flex',
-          // paddingLeft: '16px', paddingRight: '16px'
-        }}
+        style={{ display: 'flex' }}
       >
         <Grid
           container
@@ -111,12 +108,7 @@ const UserForm = (props: UserFormProps) => {
             item
             xs={12}
             md={isEditMode && mdScreen ? 3 : 3.5}
-            sx={{
-              paddingTop: { xs: '10px !important', md: '64px' },
-              display: 'flex',
-              alignItems: 'center',
-              paddingLeft: '0 !important',
-            }}
+            className={classes.textBoxGridStyle}
           >
             <Controller
               name="emailAddress"
@@ -143,12 +135,7 @@ const UserForm = (props: UserFormProps) => {
             item
             xs={12}
             md={isEditMode && mdScreen ? 1.5 : 2}
-            sx={{
-              paddingTop: { xs: '10px !important', md: '64px' },
-              display: 'flex',
-              alignItems: 'center',
-              paddingLeft: '0 !important',
-            }}
+            className={classes.textBoxGridStyle}
           >
             <Controller
               name="firstName"
@@ -169,12 +156,7 @@ const UserForm = (props: UserFormProps) => {
             item
             xs={12}
             md={isEditMode && mdScreen ? 1.5 : 2}
-            sx={{
-              paddingTop: { xs: '10px !important', md: '64px' },
-              display: 'flex',
-              alignItems: 'center',
-              paddingLeft: '0 !important',
-            }}
+            className={classes.textBoxGridStyle}
           >
             <Controller
               name="lastName"
@@ -191,17 +173,7 @@ const UserForm = (props: UserFormProps) => {
               )}
             />
           </Grid>
-          <Grid
-            item
-            xs={12}
-            md={2}
-            sx={{
-              paddingTop: { xs: '10px !important', md: '64px' },
-              display: 'flex',
-              alignItems: 'center',
-              paddingLeft: '0 !important',
-            }}
-          >
+          <Grid item xs={12} md={2} className={classes.textBoxGridStyle}>
             <Controller
               name="role"
               control={control}
@@ -211,7 +183,7 @@ const UserForm = (props: UserFormProps) => {
                   {...field}
                   align="center"
                   onChange={(value) => field.onChange(value)}
-                  title={mdScreen ? '' : 'Role'}
+                  title={t('role')}
                   radioOptions={userFormRadioOptions}
                   selected={getValues('role')}
                 />
@@ -223,7 +195,10 @@ const UserForm = (props: UserFormProps) => {
               item
               xs={12}
               md={isEditMode && mdScreen ? 1.8 : 1}
-              sx={{ paddingTop: { sm: '0 !important', md: '50px !important' } }}
+              sx={{
+                paddingTop: { sm: '0 !important', md: '50px !important' },
+                paddingLeft: { xs: '0 !important' },
+              }}
             >
               <Controller
                 name="isActive"
@@ -244,115 +219,42 @@ const UserForm = (props: UserFormProps) => {
             item
             xs={12}
             md={isEditMode && mdScreen ? 1.3 : 2}
-            sx={{
-              paddingTop: { xs: '10px !important', md: '64px' },
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'flex-end',
-              paddingLeft: '0 !important',
-            }}
+            className={classes.buttonGridStyle}
           >
-            {isEditMode && mdScreen && (
-              <>
-                <Button
-                  variant="outlined"
-                  type="reset"
-                  onClick={cancelAction}
-                  style={{
-                    backgroundColor: theme.palette.grey[600],
-                    color: theme.palette.secondary.light,
-                    marginRight: '8px',
-                  }}
-                >
-                  <ClearIcon />
-                </Button>
-                <Button
-                  variant="contained"
-                  disableElevation
-                  data-testid="submit-button"
-                  style={{ height: '37px' }}
-                  type="submit"
-                >
-                  {isLoading ? (
-                    <CircularProgress
-                      style={{
-                        color: theme.palette.secondary.light,
-                        height: '25px',
-                        width: '25px',
-                      }}
-                    />
-                  ) : (
-                    <CheckIcon />
-                  )}
-                </Button>
-              </>
-            )}
-            {!isEditMode && mdScreen && (
-              <>
-                <Button
-                  variant="outlined"
-                  type="reset"
-                  data-testid="reset-button"
-                  onClick={onClose}
-                  style={{ marginRight: '8px' }}
-                >
-                  {t('cancel')}
-                </Button>
-                <Button
-                  variant="contained"
-                  disableElevation
-                  style={{ height: '37px', width: '140px' }}
-                  type="submit"
-                >
-                  {isLoading ? (
-                    <CircularProgress
-                      size={'small'}
-                      style={{
-                        color: theme.palette.secondary.light,
-                        height: '25px',
-                        width: '25px',
-                      }}
-                    />
-                  ) : (
-                    t('add-user')
-                  )}
-                </Button>
-              </>
-            )}
+            <Button
+              variant="outlined"
+              name="reset"
+              type="reset"
+              onClick={cancelAction}
+              className={
+                (isEditMode && mdScreen && classes.cancelButtonInDesktopEditMode) ||
+                (!isEditMode && mdScreen && classes.cancelButtonInDesktop) ||
+                classes.cancelButtonInMobile
+              }
+            >
+              {isEditMode && mdScreen ? <ClearIcon /> : t('cancel')}
+            </Button>
 
-            {!mdScreen && (
-              <Grid
-                style={{
-                  display: 'flex',
-                  justifyContent: 'center',
-                  flexDirection: 'column',
-                  width: '100%',
-                }}
-              >
-                <Button
-                  variant="contained"
-                  disableElevation
-                  style={{ height: '37px', marginBottom: '10px' }}
-                  type="submit"
-                >
-                  {isLoading ? (
-                    <CircularProgress
-                      size={'small'}
-                      style={{
-                        color: theme.palette.secondary.light,
-                        height: '25px',
-                        width: '25px',
-                      }}
-                    />
-                  ) : (
-                    t('save')
-                  )}
-                </Button>
-                <Button variant="outlined" type="reset" onClick={onClose}>
-                  {t('cancel')}
-                </Button>
-              </Grid>
-            )}
+            <Button
+              variant="contained"
+              name="submit"
+              disableElevation
+              data-testid="submit-button"
+              className={
+                (isEditMode && mdScreen && classes.submitButtonInDesktopEditMode) ||
+                (!isEditMode && mdScreen && classes.submitButtonInDesktop) ||
+                classes.submitButtonInMobile
+              }
+              type="submit"
+            >
+              {isLoading ? (
+                <CircularProgress className={classes.circularProgress} />
+              ) : (
+                (isEditMode && mdScreen && <CheckIcon />) ||
+                (!isEditMode && mdScreen && t('add-user')) ||
+                t('save')
+              )}
+            </Button>
           </Grid>
         </Grid>
       </form>

@@ -38,9 +38,9 @@ import {
   useUpdateCustomerB2bUserMutation,
 } from '@/hooks'
 import '@tanstack/react-query-devtools'
-import { buildB2bUserRoleParams } from '@/lib/helpers/buildB2bUserRoleParams'
-import { buildCreateCustomerB2bUserParams } from '@/lib/helpers/buildCreateCustomerB2bUserParams'
-import { buildUpdateCustomerB2bUserParams } from '@/lib/helpers/buildUpdateCustomerB2bUserParams'
+import { buildB2bUserRoleParams } from '@/lib/helpers'
+import { buildCreateCustomerB2bUserParams } from '@/lib/helpers'
+import { buildUpdateCustomerB2bUserParams } from '@/lib/helpers'
 import { getPerPageItemText } from '@/lib/helpers/getPerPageItemText'
 import { B2BUserInput, CustomerB2BUserRole } from '@/lib/types/CustomerB2BUser'
 
@@ -174,7 +174,6 @@ const UsersTemplate = (props: UsersTemplateProps) => {
       values: formValues,
       roles: userRoles,
     })
-    console.log(addRoleToCustomerB2bAccountVariables)
     await addRoleToCustomerB2bAccount.mutateAsync({
       ...addRoleToCustomerB2bAccountVariables,
     })

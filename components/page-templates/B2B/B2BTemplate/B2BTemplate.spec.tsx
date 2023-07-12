@@ -88,8 +88,8 @@ describe('[component] - MyAccountTemplate', () => {
 
     await waitFor(() => {
       expect(mockRouter).toMatchObject({
-        asPath: '/my-account/users',
-        pathname: '/my-account/users',
+        asPath: '/my-account/b2b/users',
+        pathname: '/my-account/b2b/users',
         query: {},
       })
     })

@@ -95,7 +95,7 @@ const B2BTemplate = (props: B2BTemplateProps) => {
       controls: 'users-content',
       header: t('users'),
       component: null,
-      path: '/my-account/users',
+      path: '/my-account/b2b/users',
     },
     {
       id: 'shipping-information-accordion',
