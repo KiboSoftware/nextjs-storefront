@@ -7,6 +7,10 @@ const createOrderMutation = /* GraphQL */ `
       paymentStatus
       submittedDate
       total
+      status
+      email
+      id
+      userId
     }
   }
 `

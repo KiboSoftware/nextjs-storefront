@@ -13,7 +13,7 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
 
   const { publicRuntimeConfig } = getConfig()
   const authCookieName = publicRuntimeConfig.userCookieKey.toLowerCase()
-  const cookies = req.cookies
+  const cookies = req?.cookies
   const authTicket = decodeParseCookieValue(cookies[authCookieName])
 
   return {

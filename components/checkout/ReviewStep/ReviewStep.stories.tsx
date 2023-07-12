@@ -28,17 +28,21 @@ Common.args = {
   checkout: orderMock.checkout,
   isMultiShipEnabled: false,
   personalDetails: {
-    showAccountFields: false,
+    email: 'john.doe@kibo.com',
+    showAccountFields: true,
     firstName: 'John',
     lastNameOrSurname: 'Doe',
+    password: '',
   },
   shipItems,
   pickupItems,
   orderSummaryProps: {
-    subTotal: '219.99',
-    shippingTotal: '0',
-    taxTotal: '13.73',
-    total: '233.72',
+    subTotal: 219.99,
+    shippingTotal: 0,
+    taxTotal: 13.73,
+    total: 233.72,
+    discountedSubtotal: 0,
+    totalCollected: 233.72,
   },
 }
 

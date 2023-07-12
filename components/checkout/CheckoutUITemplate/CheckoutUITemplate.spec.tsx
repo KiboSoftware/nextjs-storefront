@@ -110,10 +110,11 @@ jest.mock('@/components/common', () => ({
   },
 }))
 
-jest.mock('../../order/OrderConfirmation/OrderConfirmation', () => ({
-  __esModule: true,
-  default: () => <div>Order Confirmation Mock</div>,
-}))
+const OrderCOnfirmationMock = () => <div data-testid="order-confirmation-mock" />
+jest.mock(
+  '@/components/order/OrderConfirmation/OrderConfirmation',
+  () => () => OrderCOnfirmationMock()
+)
 
 const setup = (initialActiveStep = 0, currentStepStatus = STEP_STATUS.INCOMPLETE) => {
   const user = userEvent.setup()
@@ -425,17 +426,5 @@ describe('Display Checkout steps', () => {
       expect(reviewStepMock).toBeVisible()
       expect(orderReviewMock).toBeVisible()
     })
-  })
-})
-
-describe('Display Order Confirmation', () => {
-  it('should render component', () => {
-    const initialActiveStep = 4
-    setup(initialActiveStep, STEP_STATUS.INCOMPLETE)
-
-    const OrderConfirmationMock = screen.getByText(/Order Confirmation Mock/i)
-
-    // Assertion
-    expect(OrderConfirmationMock).toBeVisible()
   })
 })

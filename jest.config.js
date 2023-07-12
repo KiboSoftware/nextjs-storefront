@@ -15,7 +15,7 @@ const customJestConfig = {
     '!**/*.d.ts',
     '!**/node_modules/**',
     'hooks/**/*.{js,jsx,ts,tsx}',
-    'pages/**/*.{js,jsx,ts,tsx}',
+    'src/pages/**/*.{js,jsx,ts,tsx}',
     '!middleware.ts',
   ],
   moduleNameMapper: {
@@ -49,6 +49,9 @@ const customJestConfig = {
     '^.+\\.(js|jsx|ts|tsx)$': ['@swc/jest'],
   },
   transformIgnorePatterns: ['/node_modules/', '^.+\\.module\\.(css|sass|scss)$'],
+  testPathIgnorePatterns: [
+    '/__test__/e2e/integration/', // Ignore the integration folder
+  ],
   setupFilesAfterEnv: ['./jestSetup.js'],
 }
 

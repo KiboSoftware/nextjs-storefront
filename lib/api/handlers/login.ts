@@ -1,6 +1,6 @@
 import getConfig from 'next/config'
 
-import { fetcher } from '../util'
+import { fetcher, getAdditionalHeader } from '../util'
 import getUserClaimsFromRequest from '../util/getUserClaimsFromRequest'
 
 import type { NextApiRequest, NextApiResponse } from 'next'
@@ -13,7 +13,8 @@ export default async function loginHandler(req: NextApiRequest, res: NextApiResp
   try {
     const { query, variables } = req.body
     const userClaims = await getUserClaimsFromRequest(req, res)
-    const response = await fetcher({ query, variables }, { userClaims })
+    const headers = getAdditionalHeader(req)
+    const response = await fetcher({ query, variables }, { userClaims, headers })
 
     // set HTTP cookie
     const account = response?.data?.account
@@ -27,12 +28,25 @@ export default async function loginHandler(req: NextApiRequest, res: NextApiResp
       userId: userId,
     }
     const encodedValue = Buffer.from(JSON.stringify(cookieValue)).toString('base64')
-
-    res.setHeader(
-      'Set-Cookie',
-      `${cookieName}=${encodedValue}; HttpOnly; Max-Age=${maxCookieAge}; path=/`
-    )
-    res.status(200).json(response)
+    // set cookie
+    if (userId) {
+      res.setHeader(
+        'Set-Cookie',
+        `${cookieName}=${encodedValue}; HttpOnly; Max-Age=${maxCookieAge}; path=/`
+      )
+    }
+    // response object
+    const successResponse = {
+      data: {
+        account: {
+          customerAccount: response?.data?.account?.customerAccount,
+        },
+      },
+    }
+    // response status
+    const loginResponse = userId ? successResponse : response
+    // send response
+    res.status(200).json(loginResponse)
   } catch (error) {
     console.error(error)
     const message = 'An unexpected error ocurred'

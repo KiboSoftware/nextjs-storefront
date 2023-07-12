@@ -69,9 +69,7 @@ describe('[components] Login Dialog', () => {
     expect(closeIconButton).toBeVisible()
     expect(passwordInput).toHaveAttribute('type', 'password')
 
-    await act(async () => {
-      await user.click(eyeIcon)
-    })
+    user.click(eyeIcon)
 
     await waitFor(() => expect(passwordInput).toHaveAttribute('type', 'text'))
   })

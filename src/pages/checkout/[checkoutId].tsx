@@ -7,10 +7,10 @@ import {
   MultiShipCheckoutTemplate,
 } from '@/components/page-templates'
 import { CheckoutStepProvider } from '@/context/CheckoutStepContext/CheckoutStepContext'
-import { getCheckout, getMultiShipCheckout } from '@/lib/api/operations'
+import { getCheckout, getMultiShipCheckout, updateOrder } from '@/lib/api/operations'
 
-import type { Checkout, CrOrder } from '@/lib/gql/types'
-import type { NextPage, GetServerSidePropsContext } from 'next'
+import type { Checkout, CrOrder, CrOrderInput } from '@/lib/gql/types'
+import type { NextPage, GetServerSidePropsContext, NextApiRequest, NextApiResponse } from 'next'
 
 interface CheckoutPageProps {
   checkoutId: string
@@ -24,12 +24,21 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
   const { publicRuntimeConfig } = getConfig()
   const isMultiShipEnabled = publicRuntimeConfig.isMultiShipEnabled
   const checkout = isMultiShipEnabled
-    ? await getMultiShipCheckout(checkoutId, req, res)
-    : await getCheckout(checkoutId, req, res)
+    ? await getMultiShipCheckout(checkoutId, req as NextApiRequest, res as NextApiResponse)
+    : await getCheckout(checkoutId, req as NextApiRequest, res as NextApiResponse)
 
   if (!checkout) {
     return { notFound: true }
   }
+
+  const ipAddress = req?.headers['x-forwarded-for'] as string
+
+  updateOrder(
+    checkoutId,
+    { ...checkout, ipAddress: ipAddress?.split(',')[0] } as CrOrderInput,
+    req as NextApiRequest,
+    res as NextApiResponse
+  )
 
   return {
     props: {

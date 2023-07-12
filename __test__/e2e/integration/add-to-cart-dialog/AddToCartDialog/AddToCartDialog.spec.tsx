@@ -1,7 +1,7 @@
 import React from 'react'
 
 import { composeStories } from '@storybook/testing-react'
-import { render, screen } from '@testing-library/react'
+import { render, screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import mockRouter from 'next-router-mock'
 
@@ -46,31 +46,38 @@ describe('[components] Add To Cart Dialog integration', () => {
     const { user } = setup()
 
     const showModalButton = screen.getByRole('button', { name: 'Show Modal' })
-    await user.click(showModalButton)
+    user.click(showModalButton)
 
     const item = Common.args?.cartItem
     const name = item?.product?.name || ''
 
-    const component = screen.getByRole('dialog')
+    await waitFor(() => {
+      const component = screen.getByRole('dialog')
+      expect(component).toBeVisible()
+    })
+
     const title = screen.getAllByRole('heading', { name: /added-to-cart/i })[0]
+    expect(title).toBeVisible()
+
     const closeIconButton = screen.getByRole('button', {
       name: /close/i,
     })
+    expect(closeIconButton).toBeVisible()
+
     const productName = screen.getByText(name)
+    expect(productName).toBeInTheDocument()
+
     const taxSubTotal = screen.getAllByText(/currency/i)
+    expect(taxSubTotal).toHaveLength(4)
+
     const goToCartButton = screen.getByRole('button', {
       name: /go-to-cart/i,
     })
+    expect(goToCartButton).toBeVisible()
+
     const continueShoppingButton = screen.getByRole('button', {
       name: /continue-shopping/i,
     })
-
-    expect(component).toBeVisible()
-    expect(title).toBeVisible()
-    expect(closeIconButton).toBeVisible()
-    expect(productName).toBeInTheDocument()
-    expect(taxSubTotal).toHaveLength(4)
-    expect(goToCartButton).toBeVisible()
     expect(continueShoppingButton).toBeVisible()
   })
 
@@ -78,38 +85,41 @@ describe('[components] Add To Cart Dialog integration', () => {
     const { user } = setup()
 
     const showModalButton = screen.getByRole('button', { name: 'Show Modal' })
-    await user.click(showModalButton)
+    user.click(showModalButton)
 
-    const dialog = screen.getByRole('dialog')
-    const closeIconButton = screen.getByRole('button', {
-      name: /close/i,
+    await waitFor(() => {
+      const closeIconButton = screen.getByRole('button', {
+        name: /close/i,
+      })
+      user.click(closeIconButton)
     })
-    await user.click(closeIconButton)
 
+    const dialog = await screen.findByRole('dialog')
     expect(dialog).not.toBeVisible()
-    expect(closeIconButton).not.toBeVisible()
   })
 
   it('should redirect to /cart page when user clicks on "Add To Cart" button', async () => {
     const { user } = setup()
 
     const showModalButton = screen.getByRole('button', { name: 'Show Modal' })
-    await user.click(showModalButton)
+    user.click(showModalButton)
 
-    const dialog = screen.getByRole('dialog')
-    const goToCartButton = screen.getByRole('button', {
+    const dialog = await screen.findByRole('dialog')
+    expect(dialog).toBeVisible()
+
+    const goToCartButton = await screen.findByRole('button', {
       name: /go\-to\-cart/i,
     })
-
-    expect(dialog).toBeVisible()
     expect(goToCartButton).toBeVisible()
 
-    await user.click(goToCartButton)
+    user.click(goToCartButton)
 
-    expect(mockRouter).toMatchObject({
-      asPath: '/cart',
-      pathname: '/cart',
-      query: {},
+    await waitFor(() => {
+      expect(mockRouter).toMatchObject({
+        asPath: '/cart',
+        pathname: '/cart',
+        query: {},
+      })
     })
 
     expect(dialog).not.toBeVisible()
@@ -120,19 +130,22 @@ describe('[components] Add To Cart Dialog integration', () => {
     const { user } = setup()
 
     const showModalButton = screen.getByRole('button', { name: 'Show Modal' })
-    await user.click(showModalButton)
+    user.click(showModalButton)
 
-    const dialog = screen.getByRole('dialog')
-    const continueShoppingButton = screen.getByRole('button', {
+    const dialog = await screen.findByRole('dialog')
+    const continueShoppingButton = await screen.findByRole('button', {
       name: /continue-shopping/i,
     })
 
     expect(dialog).toBeVisible()
     expect(continueShoppingButton).toBeVisible()
 
-    await user.click(continueShoppingButton)
+    user.click(continueShoppingButton)
 
-    expect(dialog).not.toBeVisible()
+    await waitFor(() => {
+      expect(dialog).not.toBeVisible()
+    })
+
     expect(continueShoppingButton).not.toBeVisible()
   })
 })

@@ -21,9 +21,11 @@ describe('[hooks] useRegister', () => {
       wrapper: createQueryClientWrapper(),
     })
 
-    result.current.mutateAsync(createAccountAndLoginMutationVars)
+    const response = await result.current.registerUserAccount.mutateAsync(
+      createAccountAndLoginMutationVars
+    )
     await waitFor(() => {
-      expect(result.current.data).toStrictEqual(registerUserMock.account)
+      expect(response).toStrictEqual(registerUserMock.account)
     })
   })
 })

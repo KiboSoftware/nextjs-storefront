@@ -56,7 +56,9 @@ export * from './custom/usePaymentTypes/usePaymentTypes'
 export * from './custom/useProductDetailTemplate/useProductDetailTemplate'
 export * from './custom/useCurrentLocation/useCurrentLocation'
 export * from './custom/useWishlist/useWishlist'
+export * from './custom/useProductCardActions/useProductCardActions'
 export * from './custom/usePriceRangeFormatter/usePriceRangeFormatter'
+export * from './custom/useCardContactActions/useCardContactActions'
 
 // Mutations
 
@@ -64,11 +66,14 @@ export * from './custom/usePriceRangeFormatter/usePriceRangeFormatter'
 export * from './mutations/address/create/useCreateCustomerAddress'
 export * from './mutations/address/update/useUpdateCustomerAddress'
 export * from './mutations/address/delete/useDeleteCustomerAddress'
+export * from './mutations/address/validate/useValidateCustomerAddress'
 
 // Auth
 export * from './mutations/auth/login/useLogin'
 export * from './mutations/auth/logout/useLogout'
 export * from './mutations/auth/register/useRegister'
+export * from './mutations/auth/forgetPassword/useUpdateForgottenPassword'
+export * from './mutations/auth/resetPassword/useResetPassword'
 
 // Cards
 export * from './mutations/card/create/useCreateCustomerCard'
@@ -119,6 +124,7 @@ export * from './mutations/standardCheckout/useCreateOrder/useCreateOrder'
 export * from './mutations/standardCheckout/useInitiateOrder/useInitiateOrder'
 export * from './mutations/standardCheckout/useUpdateOrderCoupon/useUpdateOrderCoupon'
 export * from './mutations/standardCheckout/useDeleteOrderCoupon/useDeleteOrderCoupon'
+export * from './mutations/standardCheckout/useUpdateUserOrder/useUpdateUserOrder'
 
 // Wishlist
 export * from './mutations/wishlist/useAddToWishlistItem/useAddToWishlistItem'

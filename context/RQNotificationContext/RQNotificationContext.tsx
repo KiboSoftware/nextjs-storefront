@@ -1,4 +1,12 @@
-import { createContext, ReactNode, useContext, useState, forwardRef } from 'react'
+import {
+  createContext,
+  ReactNode,
+  useContext,
+  useState,
+  forwardRef,
+  useMemo,
+  useCallback,
+} from 'react'
 
 import MuiAlert, { AlertColor, AlertProps } from '@mui/material/Alert'
 import Snackbar from '@mui/material/Snackbar'
@@ -38,16 +46,15 @@ export const RQNotificationContextProvider = ({ children }: RQNotificationContex
     message: '',
     type: 'info',
   })
-  const [queryClient] = useState(() => generateQueryClient)
 
-  const showSnackbar = (message: string, type: AlertColor) => {
+  const showSnackbar = useCallback((message: string, type: AlertColor) => {
     setSnackbarInfo({
       ...snackbarInfo,
       visible: true,
       message,
       type,
     })
-  }
+  }, [])
 
   const hideSnackbar = (event?: React.SyntheticEvent | Event, reason?: string) => {
     if (reason === 'clickaway') {
@@ -61,6 +68,8 @@ export const RQNotificationContextProvider = ({ children }: RQNotificationContex
     })
   }
 
+  const queryClient = useMemo(() => generateQueryClient(showSnackbar), [showSnackbar])
+
   const values = {
     snackbarInfo,
     showSnackbar,
@@ -68,7 +77,7 @@ export const RQNotificationContextProvider = ({ children }: RQNotificationContex
   }
   return (
     <SnackbarContext.Provider value={values}>
-      <QueryClientProvider client={queryClient(showSnackbar)}>{children}</QueryClientProvider>
+      <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
     </SnackbarContext.Provider>
   )
 }
@@ -90,7 +99,7 @@ export const SnackbarRoot = () => {
     <Snackbar
       open={snackbarInfo.visible}
       anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
-      autoHideDuration={6000}
+      autoHideDuration={3000}
       onClose={hideSnackbar}
     >
       <Alert onClose={hideSnackbar} severity={snackbarInfo.type} sx={{ width: '100%' }}>

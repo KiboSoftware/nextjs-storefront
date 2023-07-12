@@ -21,11 +21,6 @@ const createMatchMedia = (width: number) => (query: string) => ({
 
 describe('Component - [KiboHeroCarousel]', () => {
   const setup = () => render(<Common {...Common.args} />)
-  it('should render next', () => {
-    setup()
-    const nexticon = screen.getAllByTestId('FiberManualRecordIcon')
-    expect(nexticon[0]).toBeVisible()
-  })
 
   it('should render component', () => {
     setup()

@@ -3,6 +3,7 @@ import { useTranslation } from 'next-i18next'
 import KiboDialog from '@/components/common/KiboDialog/KiboDialog'
 import { PaymentMethod } from '@/components/my-account'
 import { DisplayMode } from '@/lib/constants'
+import { BillingAddress, CardType } from '@/lib/types'
 
 import type { CustomerAccount, CustomerContactCollection, CardCollection } from '@/lib/gql/types'
 
@@ -10,7 +11,7 @@ interface EditBillingAddressProps {
   user: { id: number }
   cards: CardCollection
   contacts: CustomerContactCollection
-  onSave: () => void
+  onSave: (address: BillingAddress, card: CardType, isUpdatingAddress: boolean) => void
   onClose: () => void
 }
 

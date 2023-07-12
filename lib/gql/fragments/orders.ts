@@ -64,6 +64,8 @@ export const orderItemFragment = /* GraphQL */ `
     discountTotal
     quantity
     fulfillmentLocationCode
+    lineId
+    originalCartItemId
     product {
       ...orderItemProductFragment
     }
@@ -118,6 +120,7 @@ export const orderPaymentFragment = /* GraphQL */ `
     id
     paymentType
     paymentWorkflow
+    status
     billingInfo {
       billingContact {
         ...contactForOrdersFragment
@@ -130,6 +133,35 @@ export const orderPaymentFragment = /* GraphQL */ `
         cardNumberPartOrMask
         expireMonth
         expireYear
+        isCardInfoSaved
+      }
+    }
+  }
+`
+export const orderShipmentFragment = /* GraphQL */ `
+  fragment orderShipmentFragment on CrShipment {
+    id
+    externalShipmentId
+    number
+    orderId
+    orderNumber
+    packages {
+      shipmentId
+      code
+      carrier
+      packageId
+      trackingNumber
+      trackingNumbers
+      trackings {
+        number
+        attributes
+      }
+      status
+      returnCarrier
+      returnTrackingNumbers
+      returnTrackings {
+        number
+        attributes
       }
     }
   }

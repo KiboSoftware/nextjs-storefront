@@ -1,5 +1,7 @@
 import React, { useState, useEffect, ChangeEvent } from 'react'
 
+import { yupResolver } from '@hookform/resolvers/yup'
+import Help from '@mui/icons-material/Help'
 import {
   Stack,
   Checkbox,
@@ -11,18 +13,30 @@ import {
   Typography,
   Button,
   Box,
+  Tooltip,
 } from '@mui/material'
 import getConfig from 'next/config'
 import { useTranslation } from 'next-i18next'
+import { useReCaptcha } from 'next-recaptcha-v3'
+import { Controller, useForm } from 'react-hook-form'
+import * as yup from 'yup'
 
-import { CardDetailsForm, SavedPaymentMethodView } from '@/components/checkout'
-import { AddressForm } from '@/components/common'
-import { useCheckoutStepContext, STEP_STATUS, useAuthContext } from '@/context'
-import { useGetCards, useGetCustomerAddresses, usePaymentTypes } from '@/hooks'
+import { CardDetailsForm } from '@/components/checkout'
+import { AddressForm, KiboTextBox, KiboRadio, PaymentBillingCard } from '@/components/common'
+import { useCheckoutStepContext, STEP_STATUS, useAuthContext, useSnackbarContext } from '@/context'
+import {
+  useGetCards,
+  useGetCustomerAddresses,
+  usePaymentTypes,
+  useValidateCustomerAddress,
+} from '@/hooks'
 import { CurrencyCode, PaymentType, PaymentWorkflow } from '@/lib/constants'
 import { addressGetters, cardGetters, orderGetters, userGetters } from '@/lib/getters'
-import { tokenizeCreditCardPayment } from '@/lib/helpers'
-import { buildCardPaymentActionForCheckoutParams } from '@/lib/helpers/buildCardPaymentActionForCheckoutParams'
+import {
+  buildCardPaymentActionForCheckoutParams,
+  tokenizeCreditCardPayment,
+  validateGoogleReCaptcha,
+} from '@/lib/helpers'
 import type {
   Address,
   CardForm,
@@ -33,7 +47,14 @@ import type {
   CardTypeForCheckout,
 } from '@/lib/types'
 
-import type { CrContact, CrAddress, CrOrder, PaymentActionInput, Checkout } from '@/lib/gql/types'
+import type {
+  CrContact,
+  CrAddress,
+  CrOrder,
+  PaymentActionInput,
+  Checkout,
+  CuAddress,
+} from '@/lib/gql/types'
 
 interface PaymentStepProps {
   checkout: CrOrder | Checkout
@@ -83,6 +104,7 @@ const initialBillingAddressData: Address = {
   contact: {
     firstName: '',
     lastNameOrSurname: '',
+    email: '',
     address: {
       address1: '',
       address2: '',
@@ -104,7 +126,15 @@ const PaymentStep = (props: PaymentStepProps) => {
 
   // hooks
   const { isAuthenticated, user } = useAuthContext()
+  const { validateCustomerAddress } = useValidateCustomerAddress()
+
   const { t } = useTranslation('common')
+
+  const { executeRecaptcha } = useReCaptcha()
+  const { showSnackbar } = useSnackbarContext()
+
+  const { publicRuntimeConfig } = getConfig()
+  const reCaptchaKey = publicRuntimeConfig.recaptcha.reCaptchaKey
 
   const { loadPaymentTypes } = usePaymentTypes()
   const paymentMethods = loadPaymentTypes()
@@ -133,11 +163,36 @@ const PaymentStep = (props: PaymentStepProps) => {
   const [billingFormAddress, setBillingFormAddress] = useState<Address>(initialBillingAddressData)
   const [validateForm, setValidateForm] = useState<boolean>(false)
   const [isAddingNewPayment, setIsAddingNewPayment] = useState<boolean>(false)
-
+  const [isCVVAddedForNewPayment, setIsCVVAddedForNewPayment] = useState<boolean>(false)
   const [selectedPaymentBillingRadio, setSelectedPaymentBillingRadio] = useState('')
   const [savedPaymentBillingDetails, setSavedPaymentBillingDetails] = useState<PaymentAndBilling[]>(
     []
   )
+
+  const [cvv, setCvv] = useState<string>('')
+
+  const useDetailsSchema = () => {
+    return yup.object().shape({
+      cvv: yup
+        .string()
+        .required(t('cvv-is-required'))
+        .matches(/^\d{3,4}$/g, t('invalid-cvv')),
+    })
+  }
+
+  const defaultCvv = {
+    cvv: '',
+  }
+  const {
+    formState: { errors, isValid },
+    control,
+  } = useForm({
+    mode: 'all',
+    reValidateMode: 'onBlur',
+    defaultValues: defaultCvv,
+    resolver: yupResolver(useDetailsSchema()),
+    shouldFocusError: true,
+  })
 
   // default card details if payment method is card
   const defaultCustomerAccountCard = userGetters.getDefaultPaymentBillingMethod(
@@ -146,7 +201,10 @@ const PaymentStep = (props: PaymentStepProps) => {
 
   // handle saved payment method radio selection to select different payment method
   const handleRadioSavedCardSelection = (value: string) => {
+    setStepStatusIncomplete()
     setSelectedPaymentBillingRadio(value)
+    setCvv('')
+    setIsCVVAddedForNewPayment(false)
   }
 
   const handleSavePaymentMethodCheckbox = () => {
@@ -161,27 +219,59 @@ const PaymentStep = (props: PaymentStepProps) => {
       ...cardFormDetails,
       ...cardData,
     })
+
+    setCvv(cardData.cvv as string)
   }
 
   const handleSameAsShippingAddressCheckbox = (value: boolean) => {
-    const contact = value
-      ? (checkout as CrOrder)?.fulfillmentInfo?.fulfillmentContact
-      : initialBillingAddressData
+    let address = initialBillingAddressData
+    if (value) {
+      address = {
+        contact: (checkout as CrOrder)?.fulfillmentInfo?.fulfillmentContact as ContactForm,
+      }
+    } else if (billingFormAddress.isDataUpdated) {
+      address = billingFormAddress
+    }
+
     setBillingFormAddress({
-      ...billingFormAddress,
-      contact: { ...(contact as ContactForm) },
+      ...address,
+      isAddressValid: true,
       isSameBillingShippingAddress: value,
     })
   }
 
   const handleBillingFormAddress = (address: Address) => {
-    setBillingFormAddress(address)
+    const updatedAddress = {
+      contact: {
+        ...address.contact,
+      },
+      email: checkout?.email,
+      isAddressValid: true,
+      isDataUpdated: address.isDataUpdated,
+    } as Address
+    setBillingFormAddress(updatedAddress)
   }
 
   // when adding new payment method, set payment method type (ex: credit card / check)
   const handlePaymentMethodSelection = (event: ChangeEvent<HTMLInputElement>) => {
     setIsAddingNewPayment(true)
     setNewPaymentMethod(event.target.value)
+  }
+
+  const submitFormWithRecaptcha = () => {
+    if (!executeRecaptcha) {
+      console.log('Execute recaptcha not yet available')
+      return
+    }
+    executeRecaptcha('enquiryFormSubmit').then(async (gReCaptchaToken: any) => {
+      const captcha = await validateGoogleReCaptcha(gReCaptchaToken)
+
+      if (captcha?.status === 'success') {
+        await saveCardDataToOrder()
+      } else {
+        showSnackbar(captcha.message, 'error')
+      }
+    })
   }
 
   const shouldShowPreviouslySavedPayments = () => {
@@ -219,6 +309,8 @@ const PaymentStep = (props: PaymentStepProps) => {
   const cancelAddingNewPaymentMethod = () => {
     setIsAddingNewPayment(false)
     setNewPaymentMethod('')
+    setBillingFormAddress(initialBillingAddressData)
+    setCardFormDetails(initialCardFormData)
   }
 
   const handleCardFormValidDetails = (isValid: boolean) => {
@@ -255,7 +347,18 @@ const PaymentStep = (props: PaymentStepProps) => {
         paymentType,
         cardNumberPart,
         id,
+        cardholderName,
       } = cardGetters.getCardDetails(selectedPaymentMethod?.cardInfo as SavedCard)
+
+      if (!isCVVAddedForNewPayment) {
+        await handleTokenization({
+          id,
+          cardType,
+          cvv,
+          cardNumber: cardNumberPart,
+          cardholderName,
+        })
+      }
 
       const cardDetails: CardTypeForCheckout = {
         cardType,
@@ -366,54 +469,18 @@ const PaymentStep = (props: PaymentStepProps) => {
 
     setSelectedPaymentBillingRadio(tokenizedCardResponse.id as string)
     setValidateForm(false)
-  }
-
-  const getSavedPaymentMethodView = (card: PaymentAndBilling): React.ReactNode => {
-    const address = addressGetters.getAddress(
-      card?.billingAddressInfo?.contact.address as CrAddress
-    )
-    return (
-      <Box key={card?.cardInfo?.id as string}>
-        {defaultCustomerAccountCard.cardInfo?.id === card.cardInfo?.id && (
-          <Typography variant="h4" fontWeight={'bold'}>
-            {t('primary')}
-          </Typography>
-        )}
-        <SavedPaymentMethodView
-          radio
-          displayRowDirection={false}
-          displayTitle={false}
-          selected={selectedPaymentBillingRadio}
-          id={cardGetters.getCardId(card?.cardInfo)}
-          cardNumberPart={cardGetters.getCardNumberPart(card?.cardInfo)}
-          expireMonth={cardGetters.getExpireMonth(card?.cardInfo)}
-          expireYear={cardGetters.getExpireYear(card?.cardInfo)}
-          cardType={cardGetters.getCardType(card?.cardInfo)}
-          address1={addressGetters.getAddress1(address)}
-          address2={addressGetters.getAddress2(address)}
-          cityOrTown={addressGetters.getCityOrTown(address)}
-          postalOrZipCode={addressGetters.getPostalOrZipCode(address)}
-          stateOrProvince={addressGetters.getStateOrProvince(address)}
-          onPaymentCardSelection={handleRadioSavedCardSelection}
-        />
-      </Box>
-    )
+    setIsCVVAddedForNewPayment(true)
   }
 
   const handleInitialCardDetailsLoad = () => {
+    setStepStatusIncomplete()
+
     // get card and billing address formatted data from server
     const accountPaymentDetails =
       userGetters.getSavedCardsAndBillingDetails(
         customerCardsCollection,
         customerContactsCollection
       ) || []
-
-    // find default payment details from server data
-    const defaultCard = userGetters.getDefaultPaymentBillingMethod(accountPaymentDetails)
-
-    // if defaultCard is available, set as selected radio
-    cardGetters.getCardId(defaultCard?.cardInfo) &&
-      setSelectedPaymentBillingRadio(defaultCard.cardInfo?.id as string)
 
     // get previously saved checkout payments
     const checkoutPaymentWithNewStatus = orderGetters.getSelectedPaymentMethods(
@@ -450,9 +517,31 @@ const PaymentStep = (props: PaymentStepProps) => {
       setSelectedPaymentBillingRadio(cardDetails?.paymentServiceCardId as string)
     }
 
+    // find default payment details from server data
+    const defaultCard = userGetters.getDefaultPaymentBillingMethod(accountPaymentDetails)
+
+    // if defaultCard is available, set as selected radio
+    cardGetters.getCardId(defaultCard?.cardInfo) &&
+      selectedPaymentBillingRadio === '' &&
+      setSelectedPaymentBillingRadio(defaultCard.cardInfo?.id as string)
+
     if (accountPaymentDetails?.length) {
       setSavedPaymentBillingDetails(accountPaymentDetails)
       setNewPaymentMethod(PaymentType.CREDITCARD)
+    }
+  }
+
+  const handleValidateBillingAddress = async (address: CuAddress) => {
+    try {
+      await validateCustomerAddress.mutateAsync({
+        addressValidationRequestInput: {
+          address,
+        },
+      })
+      handleTokenization({ ...cardFormDetails })
+    } catch (error) {
+      setValidateForm(false)
+      console.error(error)
     }
   }
 
@@ -474,7 +563,7 @@ const PaymentStep = (props: PaymentStepProps) => {
       cardFormDetails.cardNumber &&
       billingFormAddress.contact.firstName
     ) {
-      handleTokenization({ ...cardFormDetails })
+      handleValidateBillingAddress({ ...billingFormAddress.contact.address })
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [
@@ -486,7 +575,7 @@ const PaymentStep = (props: PaymentStepProps) => {
   // handling review order button status (enabled/disabled)
   useEffect(() => {
     if (selectedPaymentBillingRadio) {
-      isAddingNewPayment ? setStepStatusIncomplete() : setStepStatusValid()
+      isAddingNewPayment || !cvv ? setStepStatusIncomplete() : setStepStatusValid()
     } else {
       setStepStatusIncomplete()
     }
@@ -495,10 +584,14 @@ const PaymentStep = (props: PaymentStepProps) => {
 
   useEffect(() => {
     if (stepStatus === STEP_STATUS.SUBMIT) {
-      saveCardDataToOrder()
+      reCaptchaKey ? submitFormWithRecaptcha() : saveCardDataToOrder()
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [stepStatus])
+
+  useEffect(() => {
+    isValid ? setStepStatusValid() : setStepStatusIncomplete()
+  }, [isValid])
 
   return (
     <Stack data-testid="checkout-payment">
@@ -510,7 +603,81 @@ const PaymentStep = (props: PaymentStepProps) => {
         <>
           <Stack gap={2} width="100%" data-testid="saved-payment-methods">
             {savedPaymentBillingDetails?.length ? (
-              savedPaymentBillingDetails.map((card) => getSavedPaymentMethodView(card))
+              <>
+                <KiboRadio
+                  radioOptions={savedPaymentBillingDetails?.map((card) => {
+                    const address = addressGetters.getAddress(
+                      card?.billingAddressInfo?.contact.address as CrAddress
+                    )
+                    return {
+                      value: cardGetters.getCardId(card?.cardInfo),
+                      name: cardGetters.getCardId(card?.cardInfo),
+                      optionIndicator:
+                        defaultCustomerAccountCard.cardInfo?.id === card.cardInfo?.id
+                          ? t('primary')
+                          : '',
+                      label: (
+                        <>
+                          <PaymentBillingCard
+                            cardNumberPart={cardGetters.getCardNumberPart(card?.cardInfo)}
+                            expireMonth={cardGetters.getExpireMonth(card?.cardInfo)}
+                            expireYear={cardGetters.getExpireYear(card?.cardInfo)}
+                            cardType={cardGetters.getCardType(card?.cardInfo).toUpperCase()}
+                            address1={addressGetters.getAddress1(address)}
+                            address2={addressGetters.getAddress2(address)}
+                            cityOrTown={addressGetters.getCityOrTown(address)}
+                            postalOrZipCode={addressGetters.getPostalOrZipCode(address)}
+                            stateOrProvince={addressGetters.getStateOrProvince(address)}
+                          />
+                          {selectedPaymentBillingRadio === card?.cardInfo?.id &&
+                            !isCVVAddedForNewPayment && (
+                              <Box pt={2} width={'50%'}>
+                                <FormControl sx={{ width: '100%' }}>
+                                  <Controller
+                                    name="cvv"
+                                    control={control}
+                                    defaultValue={defaultCvv?.cvv}
+                                    render={({ field }) => {
+                                      return (
+                                        <KiboTextBox
+                                          type="password"
+                                          value={field.value || ''}
+                                          label={t('security-code')}
+                                          placeholder={t('security-code-placeholder')}
+                                          required={true}
+                                          onChange={(_, value) => {
+                                            field.onChange(value)
+                                            setCvv(value)
+                                          }}
+                                          onBlur={field.onBlur}
+                                          error={!!errors?.cvv}
+                                          helperText={errors?.cvv?.message as unknown as string}
+                                          icon={
+                                            <Box pr={1} pt={0.5} sx={{ cursor: 'pointer' }}>
+                                              <Tooltip
+                                                title={t('cvv-tooltip-text')}
+                                                placement="top"
+                                              >
+                                                <Help color="disabled" />
+                                              </Tooltip>
+                                            </Box>
+                                          }
+                                        />
+                                      )
+                                    }}
+                                  />
+                                </FormControl>
+                              </Box>
+                            )}
+                        </>
+                      ),
+                    }
+                  })}
+                  selected={selectedPaymentBillingRadio}
+                  align="flex-start"
+                  onChange={handleRadioSavedCardSelection}
+                />
+              </>
             ) : (
               <Typography variant="h4">{t('no-previously-saved-payment-methods')}</Typography>
             )}

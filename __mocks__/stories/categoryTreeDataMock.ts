@@ -212,6 +212,9 @@ export const categoryTreeDataMock: { categoriesTree: CategoryCollection } = {
           name: 'Womens',
           slug: 'womens',
           description: '',
+          metaTagTitle: 'metaTagTitle',
+          metaTagDescription: 'metaTagDescription',
+          metaTagKeywords: 'metaTagKeywords',
         },
         childrenCategories: [
           {

@@ -6,10 +6,12 @@ import * as stories from './PaymentMethod.stories'
 
 const { Common, NoSavedCards } = composeStories(stories)
 
-const SavedPaymentMethodViewMock = () => <div data-testid="saved-payment-method-view" />
+window.scrollTo = jest.fn()
+
+const PaymentBillingCardMock = () => <div data-testid="payment-billing-card" />
 jest.mock(
-  '@/components/checkout/SavedPaymentMethodView/SavedPaymentMethodView',
-  () => () => SavedPaymentMethodViewMock()
+  '@/components/common/PaymentBillingCard/PaymentBillingCard',
+  () => () => PaymentBillingCardMock()
 )
 const CardDetailsFormMock = () => <div data-testid="card-details-form" />
 jest.mock(
@@ -21,10 +23,7 @@ const AddressFormMock = () => <div data-testid="address-form" />
 jest.mock('@/components/common/AddressForm/AddressForm', () => () => AddressFormMock())
 
 const AddressDetailsViewMock = () => <div data-testid="address-details-view" />
-jest.mock(
-  '@/components/common/AddressDetailsView/AddressDetailsView',
-  () => () => AddressDetailsViewMock()
-)
+jest.mock('@/components/common/AddressCard/AddressCard', () => () => AddressDetailsViewMock())
 
 const user = userEvent.setup()
 
@@ -32,7 +31,7 @@ describe('[component] - PaymentMethod (has saved payment methods)', () => {
   it('should render already saved payment details ', () => {
     render(<Common {...Common.args} />)
 
-    expect(screen.getAllByTestId('saved-payment-method-view')).toHaveLength(
+    expect(screen.getAllByTestId('payment-billing-card')).toHaveLength(
       Common.args?.cards?.items?.length as number
     )
   })
@@ -40,7 +39,7 @@ describe('[component] - PaymentMethod (has saved payment methods)', () => {
   it(`should render cardDetailsForm if 'Add Payment Method' button is clicked`, async () => {
     render(<Common {...Common.args} />)
 
-    const savedPaymentMethods = screen.getByTestId('saved-payment-method-view')
+    const savedPaymentMethods = screen.getByTestId('payment-billing-card')
 
     user.click(screen.getByRole('button', { name: 'add-payment-method' }))
 
@@ -54,7 +53,7 @@ describe('[component] - PaymentMethod (has saved payment methods)', () => {
   it(`should render cardDetailsForm if 'Edit' is clicked`, async () => {
     render(<Common {...Common.args} />)
 
-    const savedPaymentMethods = screen.getByTestId('saved-payment-method-view')
+    const savedPaymentMethods = screen.getByTestId('payment-billing-card')
 
     user.click(screen.getByTestId('payment-method-edit-link'))
     await waitFor(() => {
@@ -91,14 +90,14 @@ describe('[component] - PaymentMethod (no saved payment methods and billing addr
   it('should not render already saved payment details', () => {
     render(<NoSavedCards {...NoSavedCards.args} />)
 
-    expect(screen.queryByTestId('saved-payment-method-view')).not.toBeInTheDocument()
-    expect(screen.getByText('no-saved-addresses-yet')).toBeVisible()
+    expect(screen.queryByTestId('payment-billing-card')).not.toBeInTheDocument()
+    expect(screen.getByText('no-saved-payments-yet')).toBeVisible()
   })
 
   it(`should render cardDetailsForm and address form if 'Add Payment Method' button is clicked`, async () => {
     render(<NoSavedCards {...NoSavedCards.args} />)
 
-    const savedPaymentMethods = screen.queryByTestId('saved-payment-method-view')
+    const savedPaymentMethods = screen.queryByTestId('payment-billing-card')
 
     user.click(screen.getByRole('button', { name: 'add-payment-method' }))
 

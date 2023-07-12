@@ -4,6 +4,7 @@ import { Stack, Divider } from '@mui/material'
 
 import { AddressCard, ProductItem } from '..'
 import { addressGetters, orderGetters, productGetters } from '@/lib/getters'
+import { uiHelpers } from '@/lib/helpers'
 import type { LocationCustom } from '@/lib/types'
 
 import type { Maybe, CrOrderItem, CrAddress, CrProduct } from '@/lib/gql/types'
@@ -45,6 +46,8 @@ const ProductItemList = (props: ProductItemListProps) => {
     )
   }
 
+  const { getProductLink } = uiHelpers()
+
   return (
     <Stack direction="column" divider={<Divider orientation="horizontal" flexItem />} spacing={2}>
       {items?.map((item: Maybe<CrOrderItem>) => {
@@ -55,6 +58,7 @@ const ProductItemList = (props: ProductItemListProps) => {
               id={orderGetters.getCartItemId(item as CrOrderItem)}
               qty={orderGetters.getProductQuantity(item as CrOrderItem)}
               purchaseLocation={getPurchaseLocation(item)}
+              link={getProductLink(productGetters.getProductId(item?.product as CrProduct))}
               productCode={productGetters.getProductId(product)}
               image={productGetters.getProductImage(product)}
               name={productGetters.getName(product)}

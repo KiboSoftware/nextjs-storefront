@@ -31,7 +31,7 @@ describe('[hooks] useVoidCheckoutPayment', () => {
     })
 
     await waitFor(() => {
-      expect(result.current.voidCheckoutPayment.data).toStrictEqual(checkoutMock)
+      expect(result.current.voidCheckoutPayment.data).toStrictEqual(checkoutMock.checkout)
     })
   })
 })

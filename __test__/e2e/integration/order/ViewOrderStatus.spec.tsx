@@ -1,7 +1,7 @@
 import React from 'react'
 
 import { composeStories } from '@storybook/testing-react'
-import { render, screen } from '@testing-library/react'
+import { render, screen, act, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 
 import * as stories from '@/components/order/ViewOrderStatus/ViewOrderStatus.stories' // import all stories from the stories file
@@ -21,10 +21,13 @@ describe('[component] - ViewOrderStatus', () => {
     const { user } = setup()
 
     const orderNumberTextBox = screen.getByRole('textbox', { name: /order-number/i })
-    await user.click(orderNumberTextBox)
-    await user.tab()
 
-    const orderNumberErrorMessage = screen.getByText(/order-number-is-required/i)
+    await act(async () => {
+      await user.click(orderNumberTextBox)
+      await user.tab()
+    })
+
+    const orderNumberErrorMessage = await screen.findByText(/order-number-is-required/i)
 
     expect(orderNumberErrorMessage).toBeVisible()
   })
@@ -33,11 +36,13 @@ describe('[component] - ViewOrderStatus', () => {
     const { user } = setup()
 
     const billingEmailTextBox = screen.getByRole('textbox', { name: /billing-email/i })
-    await user.click(billingEmailTextBox)
-    await user.tab()
 
-    const billingEmailErrorMessage = screen.getByText(/billing-email-is-required/i)
+    await act(async () => {
+      await user.click(billingEmailTextBox)
+      await user.tab()
+    })
 
+    const billingEmailErrorMessage = await screen.findByText(/billing-email-is-required/i)
     expect(billingEmailErrorMessage).toBeVisible()
   })
 
@@ -45,10 +50,9 @@ describe('[component] - ViewOrderStatus', () => {
     const { user } = setup()
 
     const billingEmailTextBox = screen.getByRole('textbox', { name: /billing-email/i })
-    await user.type(billingEmailTextBox, 'gmail.com')
+    user.type(billingEmailTextBox, 'gmail.com')
 
-    const billingEmailErrorMessage = screen.getByText(/billing-email-must-be-a-valid-email/i)
-
+    const billingEmailErrorMessage = await screen.findByText(/billing-email-must-be-a-valid-email/i)
     expect(billingEmailErrorMessage).toBeVisible()
   })
 
@@ -69,11 +73,17 @@ describe('[component] - ViewOrderStatus', () => {
     const orderNumberTextBox = screen.getByRole('textbox', { name: /order-number/i })
     const billingEmailTextBox = screen.getByRole('textbox', { name: /billing-email/i })
 
-    await user.type(orderNumberTextBox, testOrderNumber)
-    await user.type(billingEmailTextBox, testBuinessEmail)
-    const checkOrderStatusButton = screen.getByRole('button', { name: /check-order-status/i })
+    await act(async () => {
+      await user.type(orderNumberTextBox, testOrderNumber)
+      await user.type(billingEmailTextBox, testBuinessEmail)
+    })
 
-    expect(checkOrderStatusButton).toBeEnabled()
+    await waitFor(() => {
+      const checkOrderStatusButton = screen.getByRole('button', {
+        name: /check-order-status/i,
+      })
+      expect(checkOrderStatusButton).toBeEnabled()
+    })
   })
 
   it('should call "onOrderStatusSubmit" callback function when user clicks on "Check Order Status" button', async () => {
@@ -85,17 +95,21 @@ describe('[component] - ViewOrderStatus', () => {
     const orderNumberTextBox = screen.getByRole('textbox', { name: /order-number/i })
     const billingEmailTextBox = screen.getByRole('textbox', { name: /billing-email/i })
 
-    await user.type(orderNumberTextBox, testOrderNumber)
-    await user.type(billingEmailTextBox, testBuinessEmail)
-    const checkOrderStatusButton = screen.getByRole('button', { name: /check-order-status/i })
+    await act(async () => {
+      await user.type(orderNumberTextBox, testOrderNumber)
+      await user.type(billingEmailTextBox, testBuinessEmail)
+    })
 
-    expect(checkOrderStatusButton).toBeEnabled()
+    await waitFor(() => {
+      const checkOrderStatusButton = screen.getByRole('button', { name: /check-order-status/i })
+      user.click(checkOrderStatusButton)
+    })
 
-    await user.click(checkOrderStatusButton)
-
-    expect(onOrderStatusSubmitMock).toHaveBeenCalledWith({
-      orderNumber: testOrderNumber,
-      billingEmail: testBuinessEmail,
+    await waitFor(() => {
+      expect(onOrderStatusSubmitMock).toHaveBeenCalledWith({
+        orderNumber: testOrderNumber,
+        billingEmail: testBuinessEmail,
+      })
     })
   })
 })

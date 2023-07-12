@@ -1,21 +1,29 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect, useRef, useState } from 'react'
 
-import { Stack, Button, Typography, Grid, Box } from '@mui/material'
+import { Stack, Button, Typography, Grid, Box, FormControlLabel, Checkbox } from '@mui/material'
 import { useTranslation } from 'next-i18next'
 
 import { ShippingMethod } from '@/components/checkout'
-import { AddressDetailsView, AddressForm } from '@/components/common'
-import { useCheckoutStepContext, STEP_STATUS } from '@/context'
-import { useUpdateOrderShippingInfo, useGetShippingMethods } from '@/hooks'
-import { DefaultId } from '@/lib/constants'
+import { AddressCard, AddressForm, KiboRadio } from '@/components/common'
+import { useCheckoutStepContext, STEP_STATUS, useAuthContext } from '@/context'
+import {
+  useUpdateOrderShippingInfo,
+  useGetShippingMethods,
+  useValidateCustomerAddress,
+  useCreateCustomerAddress,
+} from '@/hooks'
+import { DefaultId, AddressType } from '@/lib/constants'
 import { orderGetters, userGetters } from '@/lib/getters'
+import { buildAddressParams } from '@/lib/helpers'
+import { Address } from '@/lib/types'
 
 import type {
   CrOrder,
   CrContact,
   CustomerContact,
   CustomerContactCollection,
+  CuAddress,
 } from '@/lib/gql/types'
 
 interface ShippingProps {
@@ -27,7 +35,10 @@ interface ShippingProps {
 
 const StandardShippingStep = (props: ShippingProps) => {
   const { checkout, savedUserAddressData: addresses, isAuthenticated } = props
-
+  // Use this to submit the form with reCaptcha: Don't delete this code
+  // const { executeRecaptcha } = useReCaptcha()
+  // const { showSnackbar } = useSnackbarContext()
+  const { user } = useAuthContext()
   const checkoutShippingContact = orderGetters.getShippingContact(checkout)
   const checkoutShippingMethodCode = orderGetters.getShippingMethodCode(checkout)
   // getting shipping address from all addresses returned from server
@@ -40,6 +51,7 @@ const StandardShippingStep = (props: ShippingProps) => {
   const shipItems = orderGetters.getShipItems(checkout)
   const pickupItems = orderGetters.getPickupItems(checkout)
 
+  const [isAddressSavedToAccount, setIsAddressSavedToAccount] = useState<boolean>(false)
   const [validateForm, setValidateForm] = useState<boolean>(false)
   const [checkoutId, setCheckoutId] = useState<string | null | undefined>(undefined)
   const [isAddressFormValid, setIsAddressFormValid] = useState<boolean>(false)
@@ -69,7 +81,7 @@ const StandardShippingStep = (props: ShippingProps) => {
   )
 
   const { t } = useTranslation('common')
-  const shippingAddressRef = useRef()
+  const shippingAddressRef = useRef<HTMLDivElement>(null)
 
   const {
     stepStatus,
@@ -84,11 +96,38 @@ const StandardShippingStep = (props: ShippingProps) => {
     isNewAddressAdded,
     selectedShippingAddressId
   )
+  const { validateCustomerAddress } = useValidateCustomerAddress()
+  const { createCustomerAddress } = useCreateCustomerAddress()
 
   const handleAddressValidationAndSave = () => setValidateForm(true)
 
-  const handleSaveAddress = async ({ contact }: { contact: CrContact }) => {
+  const handleSaveAddressToAccount = async (contact: CrContact) => {
+    const address = {
+      contact: {
+        ...contact,
+        email: user?.emailAddress as string,
+      },
+    } as Address
+
+    const params = buildAddressParams({
+      accountId: user?.id as number,
+      address,
+      isDefaultAddress: false,
+      addressType: AddressType.SHIPPING,
+    })
+
+    await createCustomerAddress.mutateAsync(params)
+    setIsAddressSavedToAccount(false)
+  }
+
+  const handleSaveAddressToCheckout = async ({ contact }: { contact: CrContact }) => {
     try {
+      await validateCustomerAddress.mutateAsync({
+        addressValidationRequestInput: { address: contact?.address as CuAddress },
+      })
+      if (isAddressSavedToAccount) {
+        await handleSaveAddressToAccount(contact)
+      }
       await updateOrderShippingInfo.mutateAsync({ checkout, contact })
       setCheckoutId(checkout?.id)
       setSelectedShippingAddressId((contact?.id as number) || DefaultId.ADDRESSID)
@@ -96,10 +135,30 @@ const StandardShippingStep = (props: ShippingProps) => {
       setValidateForm(false)
       setIsNewAddressAdded(true)
       setStepStatusIncomplete()
-    } catch (error) {
+    } catch (error: any) {
+      setValidateForm(false)
       console.error(error)
     }
   }
+
+  // Use this function to submit the form with reCaptcha: Don't delete this code
+  // This code is commented out because we are not using reCaptcha for now
+  // In order to use this you need to pass this function to AddressForm component as a onSaveAddress
+  // const submitFormWithRecaptcha = ({ contact }: { contact: CrContact }) => {
+  //   if (!executeRecaptcha) {
+  //     console.log('Execute recaptcha not yet available')
+  //     return
+  //   }
+  //   executeRecaptcha('enquiryFormSubmit').then(async (gReCaptchaToken) => {
+  //     const captcha = await validateGoogleReCaptcha(gReCaptchaToken)
+
+  //     if (captcha?.status === 'success') {
+  //       await handleSaveAddressToCheckout({ contact })
+  //     } else {
+  //       showSnackbar(captcha.message, 'error')
+  //     }
+  //   })
+  // }
 
   const handleSaveShippingMethod = async (shippingMethodCode: string) => {
     const shippingMethodName = shippingMethods.find(
@@ -148,37 +207,14 @@ const StandardShippingStep = (props: ShippingProps) => {
           ...(selectedAddress?.phoneNumbers as any),
         },
       }
-      handleSaveAddress({ contact })
+      handleSaveAddressToCheckout({ contact })
     }
   }
 
   const handleAddNewAddress = () => {
+    setValidateForm(false)
     setShouldShowAddAddressButton(false)
     setIsNewAddressAdded(false)
-  }
-
-  const getSavedShippingAddressView = (
-    address: CustomerContact,
-    isPrimary?: boolean
-  ): React.ReactNode => {
-    return (
-      <AddressDetailsView
-        key={address?.id as number}
-        radio={true}
-        id={address?.id as number}
-        isPrimary={isPrimary}
-        firstName={address?.firstName as string}
-        middleNameOrInitial={address?.middleNameOrInitial as string}
-        lastNameOrSurname={address?.lastNameOrSurname as string}
-        address1={address?.address?.address1 as string}
-        address2={address?.address?.address2 as string}
-        cityOrTown={address?.address?.cityOrTown as string}
-        stateOrProvince={address?.address?.stateOrProvince as string}
-        postalOrZipCode={address?.address?.postalOrZipCode as string}
-        selected={selectedShippingAddressId?.toString()}
-        handleRadioChange={handleAddressSelect}
-      />
-    )
   }
 
   useEffect(() => {
@@ -249,7 +285,36 @@ const StandardShippingStep = (props: ShippingProps) => {
                 <Typography variant="h4" fontWeight={'bold'}>
                   {t('your-default-shipping-address')}
                 </Typography>
-                {getSavedShippingAddressView(defaultShippingAddress, true)}
+                <KiboRadio
+                  radioOptions={[
+                    {
+                      value: String(defaultShippingAddress.id),
+                      name: String(defaultShippingAddress.id),
+                      optionIndicator: t('primary'),
+                      label: (
+                        <AddressCard
+                          firstName={defaultShippingAddress?.firstName as string}
+                          middleNameOrInitial={
+                            defaultShippingAddress?.middleNameOrInitial as string
+                          }
+                          lastNameOrSurname={defaultShippingAddress?.lastNameOrSurname as string}
+                          address1={defaultShippingAddress?.address?.address1 as string}
+                          address2={defaultShippingAddress?.address?.address2 as string}
+                          cityOrTown={defaultShippingAddress?.address?.cityOrTown as string}
+                          stateOrProvince={
+                            defaultShippingAddress?.address?.stateOrProvince as string
+                          }
+                          postalOrZipCode={
+                            defaultShippingAddress?.address?.postalOrZipCode as string
+                          }
+                        />
+                      ),
+                    },
+                  ]}
+                  selected={selectedShippingAddressId?.toString()}
+                  align="flex-start"
+                  onChange={handleAddressSelect}
+                />
               </>
             )}
 
@@ -258,9 +323,29 @@ const StandardShippingStep = (props: ShippingProps) => {
                 <Typography variant="h4" fontWeight={'bold'}>
                   {t('previously-saved-shipping-addresses')}
                 </Typography>
-                {previouslySavedShippingAddress?.map((address) => {
-                  return getSavedShippingAddressView(address)
-                })}
+                <KiboRadio
+                  radioOptions={previouslySavedShippingAddress?.map((address, index) => {
+                    return {
+                      value: String(address.id),
+                      name: String(address.id),
+                      label: (
+                        <AddressCard
+                          firstName={address?.firstName as string}
+                          middleNameOrInitial={address?.middleNameOrInitial as string}
+                          lastNameOrSurname={address?.lastNameOrSurname as string}
+                          address1={address?.address?.address1 as string}
+                          address2={address?.address?.address2 as string}
+                          cityOrTown={address?.address?.cityOrTown as string}
+                          stateOrProvince={address?.address?.stateOrProvince as string}
+                          postalOrZipCode={address?.address?.postalOrZipCode as string}
+                        />
+                      ),
+                    }
+                  })}
+                  selected={selectedShippingAddressId?.toString()}
+                  align="flex-start"
+                  onChange={handleAddressSelect}
+                />
               </>
             )}
 
@@ -292,9 +377,25 @@ const StandardShippingStep = (props: ShippingProps) => {
             saveAddressLabel={t('save-shipping-address')}
             setAutoFocus={true}
             validateForm={validateForm}
-            onSaveAddress={handleSaveAddress}
+            onSaveAddress={handleSaveAddressToCheckout}
             onFormStatusChange={handleFormStatusChange}
           />
+
+          {isAuthenticated && (
+            <FormControlLabel
+              label={t('save-address-to-account')}
+              control={
+                <Checkbox
+                  sx={{ marginLeft: '0.5rem' }}
+                  inputProps={{
+                    'aria-label': t('save-address-to-account'),
+                  }}
+                  onChange={() => setIsAddressSavedToAccount(!isAddressSavedToAccount)}
+                />
+              }
+            />
+          )}
+
           <Box m={1} maxWidth={'872px'} data-testid="address-form">
             <Grid container>
               <Grid item xs={6} gap={2} display={'flex'} direction={'column'}>

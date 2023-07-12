@@ -102,3 +102,7 @@ export const productKeys = {
   productParams: (productCode: string, useSubscriptionPricing: boolean) =>
     [productCode, useSubscriptionPricing] as const,
 }
+
+export const addressKeys = {
+  all: ['address'] as const,
+}

@@ -4,14 +4,20 @@ import ArrowBackIos from '@mui/icons-material/ArrowBackIos'
 import { Divider, Grid, Typography, Box, Stack, Button } from '@mui/material'
 import { useTranslation } from 'next-i18next'
 
-import { SavedPaymentMethodView } from '@/components/checkout'
-import { AddressCard, OrderSummary, ProductItemList } from '@/components/common'
-import { ProductOption } from '@/components/product'
+import { AddressCard, OrderSummary, ProductItemList, KeyValueDisplay } from '@/components/common'
+import PaymentBillingCard from '@/components/common/PaymentBillingCard/PaymentBillingCard'
 import { useGetStoreLocations } from '@/hooks'
-import { OrderStatus } from '@/lib/constants'
+import { OrderStatus, ReturnStatus } from '@/lib/constants'
 import { addressGetters, orderGetters, storeLocationGetters } from '@/lib/getters'
 
-import type { Maybe, CrOrder, Location, InputMaybe, CrAddressInput } from '@/lib/gql/types'
+import type {
+  Maybe,
+  CrOrder,
+  Location,
+  InputMaybe,
+  CrAddressInput,
+  CrPaymentCard,
+} from '@/lib/gql/types'
 
 interface ViewOrderDetailsProps {
   order: CrOrder
@@ -56,12 +62,20 @@ const ViewOrderDetails = (props: ViewOrderDetailsProps) => {
   const pickupItems = orderGetters.getPickupItems(order)
   const shipItems = orderGetters.getShipItems(order)
   const fulfillmentContactAddress = orderGetters.getShippingAddress(order)
-  const payments = orderGetters.getOrderPayments(order)
+  const payment = orderGetters.getFinalOrderPayment(order)
   const fulfillmentLocationCodes = orderGetters.getFulfillmentLocationCodes(pickupItems)
   const shippedTo = orderGetters.getShippedTo(order)
+  const orderStatus = orderGetters.getOrderStatus(order)
 
   const { data: locations } = useGetStoreLocations({ filter: fulfillmentLocationCodes })
   const storePickupAddress = storeLocationGetters.getLocations(locations as Maybe<Location>[])
+
+  const cardDetails = orderGetters?.getOrderPaymentCardDetails(
+    payment?.billingInfo?.card as CrPaymentCard
+  )
+  const address = addressGetters.getAddress(
+    payment?.billingInfo?.billingContact?.address as InputMaybe<CrAddressInput>
+  )
 
   const orderSummeryArgs = {
     nameLabel: t('order-summary'),
@@ -105,15 +119,15 @@ const ViewOrderDetails = (props: ViewOrderDetailsProps) => {
         {/* Order Details Section */}
         <Grid item xs={12} md={7}>
           <Box sx={{ ...styles.container }}>
-            <ProductOption
+            <KeyValueDisplay
               option={{ name: t('order-number'), value: orderNumber }}
               variant="body1"
             />
-            <ProductOption
+            <KeyValueDisplay
               option={{ name: t('order-date'), value: submittedDate }}
               variant="body1"
             />
-            <ProductOption
+            <KeyValueDisplay
               option={{
                 name: t('order-total'),
                 value: `${t('currency', { val: orderTotal })} (${t('item-quantity', {
@@ -123,7 +137,10 @@ const ViewOrderDetails = (props: ViewOrderDetailsProps) => {
               variant="body1"
             />
             {isOrderStatus && (
-              <ProductOption option={{ name: t('shipped-to'), value: shippedTo }} variant="body1" />
+              <KeyValueDisplay
+                option={{ name: t('shipped-to'), value: shippedTo }}
+                variant="body1"
+              />
             )}
           </Box>
           <Divider sx={{ ...styles.divider }} />
@@ -136,7 +153,7 @@ const ViewOrderDetails = (props: ViewOrderDetailsProps) => {
                 </Typography>
                 <Box sx={{ ...styles.heading }}>
                   <Typography variant="h4" fontWeight={700}>
-                    {t('delivered')}
+                    {orderStatus}
                   </Typography>
                   <Typography variant="h4" color="primary">
                     {orderGetters.getExpectedDeliveryDate(shipItems)}
@@ -181,28 +198,23 @@ const ViewOrderDetails = (props: ViewOrderDetailsProps) => {
               <Typography variant="h3" fontWeight={'bold'}>
                 {t('payment-information')}
               </Typography>
-              {payments?.map((payment) => {
-                const cardDetails = orderGetters?.getOrderPaymentCardDetails(
-                  payment?.billingInfo?.card
-                )
-                const address = addressGetters.getAddress(
-                  payment?.billingInfo?.billingContact?.address as InputMaybe<CrAddressInput>
-                )
-                return (
-                  <SavedPaymentMethodView
-                    key={payment?.id}
-                    id={cardDetails.paymentServiceCardId}
-                    cardNumberPart={cardDetails.cardNumberPartOrMask}
-                    expireMonth={cardDetails.expireMonth}
-                    expireYear={cardDetails.expireYear}
-                    address1={address.address1}
-                    address2={address.address2}
-                    cityOrTown={address.cityOrTown}
-                    postalOrZipCode={address?.postalOrZipCode}
-                    stateOrProvince={address.stateOrProvince}
-                  />
-                )
-              })}
+              {payment ? (
+                <PaymentBillingCard
+                  cardNumberPart={cardDetails.cardNumberPartOrMask}
+                  expireMonth={cardDetails.expireMonth}
+                  expireYear={cardDetails.expireYear}
+                  cardType={cardDetails.cardType}
+                  address1={address.address1}
+                  address2={address.address2}
+                  cityOrTown={address.cityOrTown}
+                  postalOrZipCode={address?.postalOrZipCode}
+                  stateOrProvince={address.stateOrProvince}
+                />
+              ) : (
+                <>
+                  <Typography>{t('no-payment-details-found')}</Typography>
+                </>
+              )}
             </Box>
           )}
         </Grid>
@@ -218,6 +230,7 @@ const ViewOrderDetails = (props: ViewOrderDetailsProps) => {
                   fullWidth
                   sx={{ mt: '0.75rem' }}
                   onClick={() => onReturnItemsVisible && onReturnItemsVisible(true)}
+                  disabled={order?.returnStatus !== ReturnStatus.NONE}
                 >
                   {t('return-items')}
                 </Button>

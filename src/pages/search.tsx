@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 
 import getConfig from 'next/config'
+import Head from 'next/head'
 import { useRouter } from 'next/router'
 import { useTranslation } from 'next-i18next'
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
@@ -12,19 +13,24 @@ import { facetGetters, productSearchGetters } from '@/lib/getters'
 import type { CategorySearchParams } from '@/lib/types'
 
 import type { Facet, FacetValue, Product, ProductSearchResult } from '@/lib/gql/types'
-import type { NextPage, GetServerSidePropsContext, GetServerSideProps } from 'next'
+import type { NextPage, GetServerSidePropsContext, GetServerSideProps, NextApiRequest } from 'next'
 
 interface SearchPageType {
   results: ProductSearchResult
 }
+const { publicRuntimeConfig } = getConfig()
 
 export const getServerSideProps: GetServerSideProps = async (
   context: GetServerSidePropsContext
 ) => {
-  const response = await productSearch(context.query as unknown as CategorySearchParams)
+  const response = await productSearch(
+    context.query as unknown as CategorySearchParams,
+    context.req as NextApiRequest
+  )
   const { locale, res } = context
 
   res.setHeader('Cache-Control', 'public, s-maxage=10, stale-while-revalidate=59')
+
   return {
     props: {
       results: response?.data?.products || [],
@@ -36,21 +42,22 @@ export const getServerSideProps: GetServerSideProps = async (
 const SearchPage: NextPage<SearchPageType> = (props) => {
   const { t } = useTranslation('common')
   const router = useRouter()
-  const { publicRuntimeConfig } = getConfig()
-
   const [searchParams, setSearchParams] = useState<CategorySearchParams>(
     router.query as unknown as CategorySearchParams
   )
 
   const { data: searchPageResults, isFetching } = useGetSearchedProducts(
-    searchParams,
+    {
+      ...searchParams,
+      pageSize: searchParams.pageSize ?? publicRuntimeConfig.productListing.pageSize[0],
+    },
     props.results
   )
 
   const breadcrumbs = [{ text: 'Home', link: '/' }]
   const searchPageHeading = router?.query?.search
     ? t('search-results', {
-        m: `${searchPageResults?.totalCount}`,
+        m: `${searchPageResults?.totalCount || 0}`,
         n: `"${router?.query?.search}"`,
       })
     : breadcrumbs[breadcrumbs.length - 1].text
@@ -81,19 +88,14 @@ const SearchPage: NextPage<SearchPageType> = (props) => {
     )
   }
 
-  const changePagination = () => {
-    const pageSize = searchPageResults?.pageSize + publicRuntimeConfig.productListing.pageSize
-    router.push(
-      {
-        pathname: router?.pathname,
-        query: {
-          ...router.query,
-          pageSize,
-        },
+  const changePagination = (value: any) => {
+    router.push({
+      pathname: router?.pathname,
+      query: {
+        ...router.query,
+        ...value,
       },
-      undefined,
-      { scroll: false, shallow: true }
-    )
+    })
   }
 
   useEffect(() => {
@@ -101,6 +103,9 @@ const SearchPage: NextPage<SearchPageType> = (props) => {
   }, [router.query])
   return (
     <>
+      <Head>
+        <meta name="robots" content="noindex,nofollow" />
+      </Head>
       <ProductListingTemplate
         productListingHeader={searchPageHeading as string}
         categoryFacet={categoryFacet}
@@ -109,6 +114,8 @@ const SearchPage: NextPage<SearchPageType> = (props) => {
         products={products}
         totalResults={searchPageResults?.totalCount}
         pageSize={searchPageResults?.pageSize}
+        pageCount={searchPageResults?.pageCount}
+        startIndex={searchPageResults?.startIndex}
         breadCrumbsList={breadcrumbs}
         isLoading={isFetching}
         appliedFilters={appliedFilters as FacetValue[]}

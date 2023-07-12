@@ -1,5 +1,5 @@
 import { composeStories } from '@storybook/testing-react'
-import { render, screen, act, fireEvent } from '@testing-library/react'
+import { render, screen, act, fireEvent, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 
 import * as stories from '@/components/common/AddressForm/AddressForm.stories'
@@ -50,12 +50,12 @@ describe('[components] - AddressForm integration', () => {
 
       // act
       const firstName = screen.getByRole('textbox', { name: /first-name/i })
-      await act(async () => {
-        await user.type(firstName, contact.firstName)
-      })
+      user.type(firstName, contact.firstName)
 
       // assert
-      expect(firstName).toHaveValue(contact.firstName)
+      await waitFor(() => {
+        expect(firstName).toHaveValue(contact.firstName)
+      })
     })
 
     it('lastNameOrSurname', async () => {
@@ -64,12 +64,12 @@ describe('[components] - AddressForm integration', () => {
 
       // act
       const lastNameOrSurname = screen.getByRole('textbox', { name: /last-name-or-sur-name/i })
-      await act(async () => {
-        await user.type(lastNameOrSurname, contact.lastNameOrSurname)
-      })
+      user.type(lastNameOrSurname, contact.lastNameOrSurname)
 
       // assert
-      expect(lastNameOrSurname).toHaveValue(contact.lastNameOrSurname)
+      await waitFor(() => {
+        expect(lastNameOrSurname).toHaveValue(contact.lastNameOrSurname)
+      })
     })
 
     it('address1', async () => {
@@ -78,12 +78,12 @@ describe('[components] - AddressForm integration', () => {
 
       // act
       const address1 = screen.getByRole('textbox', { name: /address1/i })
-      await act(async () => {
-        await user.type(address1, contact.address.address1)
-      })
+      user.type(address1, contact.address.address1)
 
       // assert
-      expect(address1).toHaveValue(contact.address.address1)
+      await waitFor(() => {
+        expect(address1).toHaveValue(contact.address.address1)
+      })
     })
 
     it('address2', async () => {
@@ -92,12 +92,12 @@ describe('[components] - AddressForm integration', () => {
 
       // act
       const address2 = screen.getByRole('textbox', { name: /address2/i })
-      await act(async () => {
-        await user.type(address2, contact.address.address2)
-      })
+      user.type(address2, contact.address.address2)
 
       // assert
-      expect(address2).toHaveValue(contact.address.address2)
+      await waitFor(() => {
+        expect(address2).toHaveValue(contact.address.address2)
+      })
     })
 
     it('cityOrTown', async () => {
@@ -106,12 +106,12 @@ describe('[components] - AddressForm integration', () => {
 
       // act
       const cityOrTown = screen.getByRole('textbox', { name: /city/i })
-      await act(async () => {
-        await user.type(cityOrTown, contact.address.cityOrTown)
-      })
+      user.type(cityOrTown, contact.address.cityOrTown)
 
       // assert
-      expect(cityOrTown).toHaveValue(contact.address.cityOrTown)
+      await waitFor(() => {
+        expect(cityOrTown).toHaveValue(contact.address.cityOrTown)
+      })
     })
 
     it('stateOrProvince', async () => {
@@ -120,12 +120,12 @@ describe('[components] - AddressForm integration', () => {
 
       // act
       const stateOrProvince = screen.getByRole('textbox', { name: /state-or-province/i })
-      await act(async () => {
-        await user.type(stateOrProvince, contact.address.stateOrProvince)
-      })
+      user.type(stateOrProvince, contact.address.stateOrProvince)
 
       // assert
-      expect(stateOrProvince).toHaveValue(contact.address.stateOrProvince)
+      await waitFor(() => {
+        expect(stateOrProvince).toHaveValue(contact.address.stateOrProvince)
+      })
     })
 
     it('postalOrZipCode', async () => {
@@ -134,12 +134,12 @@ describe('[components] - AddressForm integration', () => {
 
       // act
       const postalOrZipCode = screen.getByRole('textbox', { name: /postal-or-zip-code/i })
-      await act(async () => {
-        await user.type(postalOrZipCode, contact.address.postalOrZipCode)
-      })
+      user.type(postalOrZipCode, contact.address.postalOrZipCode)
 
       // assert
-      expect(postalOrZipCode).toHaveValue(contact.address.postalOrZipCode)
+      await waitFor(() => {
+        expect(postalOrZipCode).toHaveValue(contact.address.postalOrZipCode)
+      })
     })
 
     it('phoneNumbers.home', async () => {
@@ -148,12 +148,12 @@ describe('[components] - AddressForm integration', () => {
 
       // act
       const phoneNumberHome = screen.getByRole('textbox', { name: /phone-number/i })
-      await act(async () => {
-        await user.type(phoneNumberHome, contact.phoneNumbers.home)
-      })
+      user.type(phoneNumberHome, contact.phoneNumbers.home)
 
       // assert
-      expect(phoneNumberHome).toHaveValue(contact.phoneNumbers.home)
+      await waitFor(() => {
+        expect(phoneNumberHome).toHaveValue(contact.phoneNumbers.home)
+      })
     })
   })
 
@@ -208,7 +208,7 @@ describe('[components] - AddressForm integration', () => {
       // arrange
       setup({ isAddressFormInDialog: true })
 
-      // // act
+      // act
       const classElements = document.getElementsByClassName('MuiGrid-grid-md-12')
 
       // asert

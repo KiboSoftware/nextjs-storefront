@@ -1,5 +1,6 @@
 import type { CrOrder } from '@/lib/gql/types'
 const checkoutResponse: CrOrder = {
+  returnStatus: 'None', // TODO: may need to remove
   id: '137a94b6402be000013718d80000678b',
   email: 'amolp@dev.com',
   total: 125,
@@ -371,7 +372,7 @@ const checkoutResponse: CrOrder = {
   totalCollected: 0,
 }
 export const orderMock: { checkout: CrOrder } = {
-  checkout: checkoutResponse,
+  checkout: { ...checkoutResponse, status: 'Delivered' },
 }
 export const orderCouponMock: { updateOrderCoupon: CrOrder } = {
   updateOrderCoupon: checkoutResponse,

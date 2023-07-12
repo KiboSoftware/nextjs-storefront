@@ -19,7 +19,7 @@ const getUserClaimsFromRequest = async (
   if (req.headers['x-vol-exclude-user-claims']) {
     return
   }
-  const cookies = req.cookies
+  const cookies = req?.cookies
   let authTicket = decodeParseCookieValue(cookies[authCookieName])
 
   if (authTicket && isShopperAuthExpired(authTicket) === false) {

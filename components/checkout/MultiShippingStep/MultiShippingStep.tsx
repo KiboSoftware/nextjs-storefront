@@ -7,7 +7,7 @@ import { useTranslation } from 'next-i18next'
 
 import { ShippingMethod } from '@/components/checkout'
 import {
-  AddressDetailsView,
+  AddressCard,
   AddressForm,
   KiboRadio,
   ProductItemWithAddressList,
@@ -77,7 +77,7 @@ const MultiShippingStep = (props: MultiShippingStepProps) => {
 
   const { showModal, closeModal } = useModalContext()
   const { t } = useTranslation('common')
-  const shippingAddressRef = useRef()
+  const shippingAddressRef = useRef<HTMLDivElement>(null)
 
   const { publicRuntimeConfig } = getConfig()
   const shipOptions = publicRuntimeConfig.shipOptions
@@ -246,35 +246,6 @@ const MultiShippingStep = (props: MultiShippingStepProps) => {
     setShippingOption(option)
   }
 
-  const getSavedShippingAddressView = (
-    contact: ShippingDestination,
-    isPrimary?: boolean
-  ): React.ReactNode => {
-    const { destinationId, address } = contact
-    const selectedDestinationId = checkout?.groupings?.find(
-      (group) => group?.fulfillmentMethod === FulfillmentOptions.SHIP
-    )?.destinationId
-
-    return (
-      <AddressDetailsView
-        key={destinationId + address?.id}
-        radio={true}
-        id={destinationId || (address?.id as number)}
-        isPrimary={isPrimary}
-        firstName={address?.firstName as string}
-        middleNameOrInitial={address?.middleNameOrInitial as string}
-        lastNameOrSurname={address?.lastNameOrSurname as string}
-        address1={address?.address?.address1 as string}
-        address2={address?.address?.address2 as string}
-        cityOrTown={address?.address?.cityOrTown as string}
-        stateOrProvince={address?.address?.stateOrProvince as string}
-        postalOrZipCode={address?.address?.postalOrZipCode as string}
-        selected={selectedDestinationId as string}
-        handleRadioChange={handleAddressSelect}
-      />
-    )
-  }
-
   const handleCreateDestinationAddress = async (shippingAddressId: string) => {
     const existingAddress = userShippingAddress?.find(
       (shippingAddress) => shippingAddress?.id?.toString() === shippingAddressId
@@ -367,6 +338,10 @@ const MultiShippingStep = (props: MultiShippingStepProps) => {
     )
   }
 
+  const selectedShippingAddress = checkout?.groupings?.find(
+    (group) => group?.fulfillmentMethod === FulfillmentOptions.SHIP
+  )?.destinationId as string
+
   return (
     <Stack data-testid="checkout-shipping" gap={2} ref={shippingAddressRef}>
       <Typography variant="h2" component="h2" sx={{ fontWeight: 'bold' }}>
@@ -390,9 +365,33 @@ const MultiShippingStep = (props: MultiShippingStepProps) => {
                     <Typography variant="h4" fontWeight={'bold'}>
                       {t('previously-saved-shipping-addresses')}
                     </Typography>
-                    {multiShipAddresses?.map((address) => {
+                    <KiboRadio
+                      radioOptions={multiShipAddresses?.map((contact) => {
+                        const { destinationId, address } = contact
+                        return {
+                          value: destinationId || String(address?.id),
+                          name: destinationId || String(address?.id),
+                          label: (
+                            <AddressCard
+                              firstName={address?.firstName as string}
+                              middleNameOrInitial={address?.middleNameOrInitial as string}
+                              lastNameOrSurname={address?.lastNameOrSurname as string}
+                              address1={address?.address?.address1 as string}
+                              address2={address?.address?.address2 as string}
+                              cityOrTown={address?.address?.cityOrTown as string}
+                              stateOrProvince={address?.address?.stateOrProvince as string}
+                              postalOrZipCode={address?.address?.postalOrZipCode as string}
+                            />
+                          ),
+                        }
+                      })}
+                      selected={selectedShippingAddress}
+                      align="flex-start"
+                      onChange={handleAddressSelect}
+                    />
+                    {/* {multiShipAddresses?.map((address) => {
                       return address && getSavedShippingAddressView(address)
-                    })}
+                    })} */}
                   </>
                 )}
 

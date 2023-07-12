@@ -1,6 +1,6 @@
 import '@testing-library/jest-dom'
 import { composeStories } from '@storybook/testing-react'
-import { render, screen } from '@testing-library/react'
+import { render, screen, act } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 
 import * as stories from '../../../../../components/product-listing/Facet/Facet.stories'
@@ -28,11 +28,14 @@ describe('[components] - Facet integration', () => {
     const count = items.filter((item) => item?.label?.toLowerCase().includes(searchTerm)).length
 
     const viewMore = screen.getByText(/view-more/i, { selector: 'button' })
-    await user.type(input, searchTerm)
-    await user.click(viewMore)
-    const filteredItemsCount = screen.queryAllByTestId('label').length
+
+    await act(async () => {
+      await user.type(input, searchTerm)
+      await user.click(viewMore)
+    })
 
     // assert
+    const filteredItemsCount = screen.queryAllByTestId('label').length
     expect(filteredItemsCount).toBe(count)
   })
 })

@@ -12,6 +12,7 @@ interface MegaMenuItemProps {
   title: string
   categoryChildren: Maybe<PrCategory>[]
   categoryCode: string
+  seoFriendlyUrl: string
   onBackDropClose: () => void
 }
 
@@ -21,7 +22,7 @@ const StyledLink = styled(Link)(({ theme }: { theme: Theme }) => ({
 }))
 
 const MegaMenuItem = (props: MegaMenuItemProps) => {
-  const { title, categoryChildren, categoryCode, onBackDropClose } = props
+  const { title, categoryChildren, categoryCode, seoFriendlyUrl, onBackDropClose } = props
   const { t } = useTranslation('common')
 
   const { getCategoryLink } = uiHelpers()
@@ -35,14 +36,14 @@ const MegaMenuItem = (props: MegaMenuItemProps) => {
           />
         </ListItem>
         <ListItem sx={{ cursor: 'pointer' }} onClick={onBackDropClose}>
-          <StyledLink href={getCategoryLink(categoryCode)} passHref>
+          <StyledLink href={getCategoryLink(categoryCode, seoFriendlyUrl)} passHref>
             {t('shop-all')}
           </StyledLink>
         </ListItem>
         {categoryChildren?.map((cat) => (
           <ListItem key={cat?.categoryId} role="group" onClick={onBackDropClose}>
             <StyledLink
-              href={getCategoryLink(cat?.categoryCode as string)}
+              href={getCategoryLink(cat?.categoryCode as string, cat?.content?.slug as string)}
               passHref
               data-testid="categoryLink"
             >

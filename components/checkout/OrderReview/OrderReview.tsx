@@ -15,15 +15,19 @@ import {
 } from '@mui/material'
 import { useTranslation } from 'next-i18next'
 
-import { AddressDetailsView, PromoCodeBadge } from '@/components/common'
+import { AddressCard, KiboImage, PromoCodeBadge } from '@/components/common'
 import { useCheckoutStepContext } from '@/context'
 import { checkoutGetters, orderGetters } from '@/lib/getters'
+import { getCreditCardLogo } from '@/lib/helpers'
 
 import type { CrOrder, CustomerContact, Checkout } from '@/lib/gql/types'
 
 interface OrderReviewProps {
   checkout: CrOrder | Checkout
   isMultiShipEnabled?: boolean
+  promoError: string
+  handleApplyCouponCode: (couponCode: string) => void
+  handleRemoveCouponCode: (couponCode: string) => void
 }
 
 interface OrderInfoHeaderProps {
@@ -90,7 +94,13 @@ const OrderInfoHeader = (props: OrderInfoHeaderProps) => {
 }
 
 const OrderReview = (props: OrderReviewProps) => {
-  const { checkout, isMultiShipEnabled } = props
+  const {
+    checkout,
+    isMultiShipEnabled,
+    handleApplyCouponCode,
+    handleRemoveCouponCode,
+    promoError,
+  } = props
 
   const { steps, setActiveStep } = useCheckoutStepContext()
   const { t } = useTranslation('common')
@@ -174,7 +184,7 @@ const OrderReview = (props: OrderReviewProps) => {
             handleEditAction={handleEditAction}
           >
             {!isMultiShipEnabled && (
-              <AddressDetailsView
+              <AddressCard
                 {...shippingPersonalDetails}
                 address1={shippingAddress?.address1 as string}
                 address2={shippingAddress?.address2 as string}
@@ -191,7 +201,7 @@ const OrderReview = (props: OrderReviewProps) => {
                   {multiShippingAddressesList?.map((multiAddress: CustomerContact) => {
                     return (
                       <Box key={multiAddress?.id}>
-                        <AddressDetailsView
+                        <AddressCard
                           firstName={multiAddress?.firstName as string}
                           lastNameOrSurname={multiAddress?.lastNameOrSurname as string}
                           address1={multiAddress?.address?.address1 as string}
@@ -213,7 +223,7 @@ const OrderReview = (props: OrderReviewProps) => {
             handleEditAction={handleEditAction}
           >
             <>
-              <AddressDetailsView
+              <AddressCard
                 {...billingPersonalDetails}
                 address1={billingAddress?.address1 as string}
                 address2={billingAddress?.address2 as string}
@@ -236,19 +246,29 @@ const OrderReview = (props: OrderReviewProps) => {
                 key={`${paymentMethod?.cardNumberPartOrMask}-${paymentMethod?.expiry}`}
                 data-testid="payment-info"
               >
-                <Typography variant="body1">{paymentMethod?.cardType}</Typography>
-                <Typography variant="body1">{paymentMethod?.cardNumberPartOrMask}</Typography>
-                <Typography variant="body1">{paymentMethod?.expiry}</Typography>
+                <Box display={'flex'} gap={3}>
+                  <KiboImage
+                    src={getCreditCardLogo(paymentMethod?.cardType)}
+                    alt={paymentMethod?.cardType}
+                    width={45}
+                    height={35}
+                  />
+                  <Stack>
+                    <Typography variant="body1">{paymentMethod?.cardNumberPartOrMask}</Typography>
+                    <Typography variant="body1">{paymentMethod?.expiry}</Typography>
+                  </Stack>
+                </Box>
               </Box>
             ))}
           </OrderInfoHeader>
 
           <Divider sx={{ marginTop: '1.25rem', marginBottom: '1.813rem' }} />
           <PromoCodeBadge
-            onApplyCouponCode={() => ''}
-            onRemoveCouponCode={() => ''}
-            promoList={[]}
-            promoError={false}
+            onApplyCouponCode={handleApplyCouponCode}
+            onRemoveCouponCode={handleRemoveCouponCode}
+            promoList={checkout?.couponCodes as string[]}
+            promoError={!!promoError}
+            helpText={promoError}
           />
         </StyledOrderReview>
       </AccordionDetails>

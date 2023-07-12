@@ -64,7 +64,6 @@ WithWishlist.args = {
   price: '$19.98',
   title: 'This is a product',
   isInWishlist: true,
-  isShopNow: true,
   onAddOrRemoveWishlistItem: () => console.log('add or remove wishlist icon clicked'),
 }
 

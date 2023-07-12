@@ -15,7 +15,7 @@ const AccountIcon = ({ size, onAccountIconClick }: AccountIconProps) => {
 
   return (
     <HeaderAction
-      title={isAuthenticated ? `${t('hi')}, ${user?.firstName}` : t('my-account')}
+      title={isAuthenticated && user?.firstName ? `${t('hi')}, ${user?.firstName}` : ''}
       subtitle={isAuthenticated ? t('go-to-my-account') : t('log-in')}
       icon={AccountCircleIcon}
       iconFontSize={size}

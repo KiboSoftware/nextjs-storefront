@@ -24,6 +24,10 @@ export enum OrderStatus {
   CANCELED = 'Cancelled',
 }
 
+export enum ReturnStatus {
+  NONE = 'None',
+}
+
 const currentYear = new Date().getFullYear()
 export const FacetListForHistory = [
   { label: 'last-30-days', filterValue: 'M-1', isApplied: false, isDisplayed: true, count: 0 },
@@ -140,5 +144,21 @@ export enum ActionName {
 }
 
 export const CurrencyCode = {
-  US: 'US',
+  US: 'USD',
+}
+
+export enum MenuItems {
+  AccountSettings = 'account-settings',
+  Wishlist = 'wishlist',
+  OrderHistory = 'order-history',
+  Returns = 'returns',
+  PaymentMethods = 'payment-methods',
+  AddressBook = 'address-book',
+}
+
+export enum ProductAvailabilityStatus {
+  INSTOCK = 'In Stock',
+  PREORDER = 'Preorder',
+  BACKORDER = 'Backorder',
+  OUTOFSTOCK = 'Out of Stock',
 }

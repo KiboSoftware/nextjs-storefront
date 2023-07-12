@@ -3,9 +3,9 @@ import { ReactNode, createContext, useState, useContext, useEffect } from 'react
 import { useQueryClient } from '@tanstack/react-query'
 import { useRouter } from 'next/router'
 
+import { useSnackbarContext } from './RQNotificationContext/RQNotificationContext'
 import { LoginData } from '@/components/layout/Login/LoginContent/LoginContent'
 import type { RegisterAccountInputData } from '@/components/layout/RegisterAccount/Content/Content'
-import { useSnackbarContext } from '@/context'
 import { useRegister, useLogin, useLogout, useGetCurrentCustomer } from '@/hooks'
 import { cartKeys, loginKeys, wishlistKeys } from '@/lib/react-query/queryKeys'
 
@@ -47,19 +47,22 @@ export const AuthContextProvider = ({ children }: AuthContextProviderProps) => {
     queryClient.removeQueries({ queryKey: cartKeys.all })
     queryClient.removeQueries({ queryKey: loginKeys.user })
   })
-  const { mutate: registerUserAccount } = useRegister()
+  const { registerUserAccount } = useRegister()
 
   const queryClient = useQueryClient()
 
   const handleOnSuccess = (account: any, onSuccessCallBack?: () => void) => {
-    setUser(account?.customerAccount)
+    if (account?.customerAccount) setUser(account?.customerAccount)
 
     queryClient.invalidateQueries({ queryKey: cartKeys.all })
     onSuccessCallBack && onSuccessCallBack()
     queryClient.removeQueries({ queryKey: wishlistKeys.all })
   }
   // register user
-  const createAccount = (params: RegisterAccountInputData, onSuccessCallBack?: () => void) => {
+  const createAccount = async (
+    params: RegisterAccountInputData,
+    onSuccessCallBack?: () => void
+  ) => {
     try {
       const createAccountAndLoginMutationVars = {
         account: {
@@ -71,13 +74,14 @@ export const AuthContextProvider = ({ children }: AuthContextProviderProps) => {
         },
         password: params?.password,
       }
-      registerUserAccount(createAccountAndLoginMutationVars, {
-        onSuccess: (account: any) => {
-          handleOnSuccess(account, onSuccessCallBack)
-        },
-      })
+      const account = await registerUserAccount.mutateAsync(createAccountAndLoginMutationVars)
+      if (account.userId) {
+        handleOnSuccess(account, onSuccessCallBack)
+        return account
+      }
+      return null
     } catch (err: any) {
-      throw new Error(err)
+      showSnackbar('Registration Failed', 'error')
     }
   }
 

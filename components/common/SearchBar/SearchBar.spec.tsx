@@ -1,10 +1,13 @@
 import React, { useState } from 'react'
 
 import '@testing-library/jest-dom'
+import { composeStories } from '@storybook/testing-react'
 import { render, screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 
-import SearchBar from './SearchBar'
+import * as stories from './SearchBar.stories'
+
+const { Common } = composeStories(stories)
 
 describe('[components] - SearchBar', () => {
   const userEnteredText = 'T'
@@ -18,7 +21,7 @@ describe('[components] - SearchBar', () => {
       handleSearch = jest.fn((v) => setSearchTerm(v))
       handleEnterSearch = jest.fn()
       return (
-        <SearchBar
+        <Common
           placeHolder="Search Brand"
           searchTerm={searchTerm}
           onSearch={handleSearch}
