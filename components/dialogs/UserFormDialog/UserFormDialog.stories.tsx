@@ -18,7 +18,7 @@ const customerB2BUsers: B2BUser[] = userGetters.getCustomerB2BUsers(
   customerB2BUserForPage0Mock?.items as B2BUser[]
 )
 
-export const Template: ComponentStory<typeof UserFormDialog> = ({ ...args }) => (
+const Template: ComponentStory<typeof UserFormDialog> = ({ ...args }) => (
   <UserFormDialog {...args} />
 )
 
@@ -34,9 +34,8 @@ Common.args = {
 
 export const WithProps = Template.bind({})
 WithProps.args = {
+  ...Common.args,
   isEditMode: true,
   formTitle: 'Edit user',
   b2BUser: customerB2BUsers[0],
-  onSave: (data: B2BUser) => console.log(data),
-  isUserFormInDialog: true,
 }

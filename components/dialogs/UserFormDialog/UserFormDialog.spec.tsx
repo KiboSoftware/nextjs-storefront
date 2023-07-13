@@ -23,13 +23,9 @@ describe('[components]  UserFormDialog Dialog', () => {
     const closeIcon = screen.getByRole('button', { name: 'close' })
     const userFormDialogComponent = screen.getByTestId('user-form-mock')
     const dialogHeading = screen.getByRole('heading', { name: 'Add a new user' })
-    // const saveButton = await screen.findByTestId('submit-button')
-    // const cancelButton = await screen.findByTestId('reset-button')
 
     expect(closeIcon).toBeVisible()
     expect(dialogHeading).toBeVisible()
     expect(userFormDialogComponent).toBeVisible()
-    // expect(saveButton).toBeVisible()
-    // expect(cancelButton).toBeVisible()
   })
 })

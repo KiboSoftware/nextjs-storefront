@@ -1,7 +1,6 @@
 import '@testing-library/jest-dom'
 import { composeStories } from '@storybook/testing-react'
-import { fireEvent, render, screen, within } from '@testing-library/react'
-import userEvent from '@testing-library/user-event'
+import { render, screen, within } from '@testing-library/react'
 
 import * as stories from './UserTable.stories' // import all stories from the stories file
 
@@ -49,25 +48,26 @@ describe('[component] User Table', () => {
 
     const rows = await screen.findAllByRole('row')
 
-    rows.forEach(async (row, index) => {
-      if (index === 0) return
-      const rowData = data && (data[index - 1] as B2BUser)
+    rows.map(async (row, index) => {
+      if (index > 0) {
+        const rowData = data && data[index - 1]
 
-      const cells = await within(row).findAllByLabelText('td')
+        const cells = await within(row).findAllByLabelText('td')
 
-      const emailCell = cells[0]
-      const firstNameCell = cells[1]
-      const lastNameCell = cells[2]
-      const roleCell = cells[3]
-      const statusCell = cells[4]
+        const emailCell = cells[0]
+        const firstNameCell = cells[1]
+        const lastNameCell = cells[2]
+        const roleCell = cells[3]
+        const statusCell = cells[4]
 
-      expect(emailCell).toHaveTextContent(rowData?.emailAddress?.toString() ?? '')
-      expect(firstNameCell).toHaveTextContent(rowData?.firstName ?? '')
-      expect(lastNameCell).toHaveTextContent(rowData?.lastName ?? '')
-      expect(roleCell).toHaveTextContent(
-        rowData?.roles?.length ? rowData?.roles[0]?.roleName ?? '' : 'N/A'
-      )
-      expect(statusCell).toHaveTextContent(rowData?.isActive ? 'active' : 'in-active')
+        expect(emailCell).toHaveTextContent(rowData?.emailAddress?.toString() ?? '')
+        expect(firstNameCell).toHaveTextContent(rowData?.firstName ?? '')
+        expect(lastNameCell).toHaveTextContent(rowData?.lastName ?? '')
+        expect(roleCell).toHaveTextContent(
+          rowData?.roles?.length ? rowData?.roles[0]?.roleName ?? '' : 'N/A'
+        )
+        expect(statusCell).toHaveTextContent(rowData?.isActive ? 'active' : 'in-active')
+      }
     })
   })
 

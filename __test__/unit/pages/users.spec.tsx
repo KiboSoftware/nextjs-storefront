@@ -55,7 +55,7 @@ describe('[page] Users Page', () => {
     render(<UsersPage />, {
       wrapper: createQueryClientWrapper(),
     })
-    const loader = await screen.getByRole('progressbar')
+    const loader = screen.getByRole('progressbar')
     expect(loader).toBeVisible()
   })
 
@@ -63,7 +63,7 @@ describe('[page] Users Page', () => {
     render(<UsersPage />, {
       wrapper: createQueryClientWrapper(),
     })
-    const searchBar = await screen.getByPlaceholderText('user-search-placeholder')
+    const searchBar = screen.getByPlaceholderText('user-search-placeholder')
     expect(searchBar).toBeVisible()
   })
 

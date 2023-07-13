@@ -6,7 +6,7 @@ import KiboDialog from '@/components/common/KiboDialog/KiboDialog'
 import UserForm from '@/components/my-account/User/UserForm/UserForm'
 import { useModalContext } from '@/context'
 
-import { B2BUser } from '@/lib/gql/types'
+import { B2BUser, B2BUserInput } from '@/lib/gql/types'
 interface UserFormDialogProps {
   isEditMode: boolean
   isUserFormInDialog?: boolean
@@ -27,7 +27,7 @@ const UserFormDialog = (props: UserFormDialogProps) => {
     onClose,
   } = props
 
-  const handleSave = (formData: B2BUser) => {
+  const handleSave = (formData: B2BUserInput) => {
     onSave(formData)
   }
 
