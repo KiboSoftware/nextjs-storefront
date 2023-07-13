@@ -37,7 +37,7 @@ const getWishlists = async (params?: PageProps) => {
 }
 
 /**
- * [Query hook] useAllGetWishlist uses the graphQL query
+ * [Query hook] useFetWishlists uses the graphQL query
  *
  * <b>wishlists(startIndex: Int, pageSize: Int, sortBy: String, filter: String): WishlistCollection</b>
  *
@@ -45,9 +45,11 @@ const getWishlists = async (params?: PageProps) => {
  *
  * Parameters passed to function getAllWishlists()
  *
- * On success, returns the all wishlists with respect to customer account id.
+ * On success, returns the all wishlists with respect to customer account id if params passed correctly.
  *
  * @returns 'response?.wishlists, which contains the all wishlists item'
+ *
+ * @returns 'response?.wishlists.item[0] || [] if no params passed
  */
 
 export const useGetWishlist = (params?: PageProps) => {
@@ -55,7 +57,6 @@ export const useGetWishlist = (params?: PageProps) => {
     queryKey: params ? wishlistKeys.page(params) : wishlistKeys.all,
     queryFn: () => getWishlists(params),
     refetchOnWindowFocus: false,
-    // placeholderData: (previousData) => previousData || undefined,
   })
 
   useQuery({
