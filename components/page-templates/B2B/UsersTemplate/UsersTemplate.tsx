@@ -38,15 +38,22 @@ import {
   useRemoveCustomerB2bUserMutation,
   useUpdateCustomerB2bUserMutation,
 } from '@/hooks'
-import { buildB2bUserRoleParams } from '@/lib/helpers'
-import { buildCreateCustomerB2bUserParams } from '@/lib/helpers'
-import { buildUpdateCustomerB2bUserParams } from '@/lib/helpers'
-import { getPerPageItemText } from '@/lib/helpers/getPerPageItemText'
+import {
+  buildB2bUserRoleParams,
+  buildCreateCustomerB2bUserParams,
+  buildUpdateCustomerB2bUserParams,
+  getPerPageItemText,
+} from '@/lib/helpers'
 import { B2BUserInput, CustomerB2BUserRole } from '@/lib/types/CustomerB2BUser'
 
 import { B2BUser } from '@/lib/gql/types'
 interface UsersTemplateProps {
   children?: React.ReactNode
+}
+
+interface AddUserButtonProps {
+  isUserFormOpen: boolean
+  onClick: () => void
 }
 
 const BackButtonLink = styled(Link)(({ theme }: { theme: Theme }) => ({
@@ -71,6 +78,25 @@ const PaginationContainer = styled(Box)(({ theme }: { theme: Theme }) => ({
   alignItems: 'center',
   margin: '20px 0',
 }))
+
+const AddUserButton = (props: AddUserButtonProps) => {
+  const { isUserFormOpen, onClick } = props
+  const { t } = useTranslation('common')
+  return (
+    <Button
+      variant="primary"
+      disabled={isUserFormOpen}
+      onClick={onClick}
+      disableElevation
+      id="formOpenButton"
+    >
+      <span style={{ display: 'flex', alignItems: 'center' }}>
+        <AddCircleOutlineIcon style={{ marginRight: '8px', width: '19px' }} />
+        <span style={{ paddingTop: '2px', fontWeight: '400' }}>{t('add-user')}</span>
+      </span>
+    </Button>
+  )
+}
 
 const UsersTemplate = (props: UsersTemplateProps) => {
   const { publicRuntimeConfig } = getConfig()
@@ -130,7 +156,7 @@ const UsersTemplate = (props: UsersTemplateProps) => {
   const handlePageChange = (event: ChangeEvent<any>, page: number) =>
     setPaginationState({
       ...paginationState,
-      startIndex: (data?.pageSize || 0) * (page - 1),
+      startIndex: (data?.pageSize ?? 0) * (page - 1),
     })
 
   const onAddUser = async (formValues: B2BUserInput) => {
@@ -159,7 +185,10 @@ const UsersTemplate = (props: UsersTemplateProps) => {
         buildB2bUserRoleParams({
           user,
           b2BUser,
-          values: { role: previousRoles[0]?.roleName },
+          values: {
+            ...formValues,
+            role: previousRoles[0]?.roleName,
+          },
           roles: userRoles,
         })
       )
@@ -197,23 +226,6 @@ const UsersTemplate = (props: UsersTemplateProps) => {
     })
   }
 
-  const AddUserButton = () => {
-    return (
-      <Button
-        variant="primary"
-        disabled={isUserFormOpen}
-        onClick={onAddUserButtonClick}
-        disableElevation
-        id="formOpenButton"
-      >
-        <span style={{ display: 'flex', alignItems: 'center' }}>
-          <AddCircleOutlineIcon style={{ marginRight: '8px', width: '19px' }} />
-          <span style={{ paddingTop: '2px', fontWeight: '400' }}>{t('add-user')}</span>
-        </span>
-      </Button>
-    )
-  }
-
   return (
     <Grid>
       <Grid item style={{ marginTop: '10px', marginBottom: '40px' }}>
@@ -231,8 +243,12 @@ const UsersTemplate = (props: UsersTemplateProps) => {
         </Box>
         <Grid container>
           <Grid item xs={12} md={12}>
-            {mdScreen && <AddUserButton />}
-            {!mdScreen && !isUserFormOpen && <AddUserButton />}
+            {mdScreen && (
+              <AddUserButton isUserFormOpen={isUserFormOpen} onClick={onAddUserButtonClick} />
+            )}
+            {!mdScreen && !isUserFormOpen && (
+              <AddUserButton isUserFormOpen={isUserFormOpen} onClick={onAddUserButtonClick} />
+            )}
             {isUserFormOpen && (
               <UserForm
                 isEditMode={false}
@@ -266,7 +282,7 @@ const UsersTemplate = (props: UsersTemplateProps) => {
             />
             <PaginationContainer>
               <Pagination
-                count={data?.pageCount || 0}
+                count={data?.pageCount ?? 0}
                 shape={`rounded`}
                 onChange={handlePageChange}
                 size="small"

@@ -77,7 +77,7 @@ const UserTable = (props: UserTableProps) => {
   }
 
   return (
-    <Table style={{ minHeight: b2bUsers && b2bUsers.length ? 0 : '345px' }}>
+    <Table style={{ minHeight: b2bUsers?.length ? 0 : '345px' }}>
       <TableHead>
         <TableRow style={{ backgroundColor: theme.palette.grey[100] }}>
           <TableCell
@@ -98,61 +98,59 @@ const UserTable = (props: UserTableProps) => {
         </TableRow>
       </TableHead>
       <TableBody>
-        {b2bUsers &&
-          b2bUsers.map((b2bUser) =>
-            editUserId && editUserId === b2bUser?.userId ? (
-              <TableRow key={b2bUser?.userId}>
-                <TableCell colSpan={7} style={{ width: '100%', padding: 0 }}>
-                  <UserForm
-                    isEditMode={true}
-                    b2BUser={b2bUser}
-                    onClose={() => setEditUserId(undefined)}
-                    onSave={onSave}
-                  />
-                </TableCell>
-              </TableRow>
-            ) : (
-              <TableRow key={b2bUser?.userId}>
-                <TableCell colSpan={2} sx={style.emailAddressCell}>
-                  {b2bUser?.emailAddress}
-                </TableCell>
-                {mdScreen && (
-                  <>
-                    <TableCell sx={{ flex: 1 }}>{b2bUser?.firstName}</TableCell>
-                    <TableCell sx={{ flex: 1 }}>{b2bUser?.lastName}</TableCell>
-                  </>
-                )}
+        {b2bUsers?.map((b2bUser) =>
+          editUserId && editUserId === b2bUser?.userId ? (
+            <TableRow key={b2bUser?.userId}>
+              <TableCell colSpan={7} style={{ width: '100%', padding: 0 }}>
+                <UserForm
+                  isEditMode={true}
+                  b2BUser={b2bUser}
+                  onClose={() => setEditUserId(undefined)}
+                  onSave={onSave}
+                />
+              </TableCell>
+            </TableRow>
+          ) : (
+            <TableRow key={b2bUser?.userId}>
+              <TableCell colSpan={2} sx={style.emailAddressCell}>
+                {b2bUser?.emailAddress}
+              </TableCell>
+              {mdScreen && (
+                <>
+                  <TableCell sx={{ flex: 1 }}>{b2bUser?.firstName}</TableCell>
+                  <TableCell sx={{ flex: 1 }}>{b2bUser?.lastName}</TableCell>
+                </>
+              )}
+              <TableCell sx={{ flex: 1 }}>
+                {(b2bUser?.roles && b2bUser?.roles.length && b2bUser?.roles[0]?.roleName) || 'N/A'}
+              </TableCell>
+              {mdScreen && (
                 <TableCell sx={{ flex: 1 }}>
-                  {(b2bUser?.roles && b2bUser?.roles.length && b2bUser?.roles[0]?.roleName) ||
-                    'N/A'}
-                </TableCell>
-                {mdScreen && (
-                  <TableCell sx={{ flex: 1 }}>
-                    <Box sx={{ display: 'flex', justifyContent: 'start', alignItems: 'center' }}>
-                      <UserStatusCircle
-                        color={
-                          b2bUser.isActive ? theme.palette.primary.main : theme.palette.grey[600]
-                        }
-                      ></UserStatusCircle>
-                      <Typography>{b2bUser.isActive ? t('active') : t('in-active')}</Typography>
-                    </Box>
-                  </TableCell>
-                )}
-                <TableCell sx={{ flex: 1 }}>
-                  <Box sx={{ display: 'flex', justifyContent: 'end', alignItems: 'center' }}>
-                    <EditIcon
-                      onClick={() => onEditUserButtonClick(b2bUser)}
-                      style={{ marginRight: '16px', cursor: 'pointer' }}
-                    />
-                    <RemoveCircleIcon
-                      onClick={() => onDelete(b2bUser?.userId as string)}
-                      style={{ cursor: 'pointer' }}
-                    />
+                  <Box sx={{ display: 'flex', justifyContent: 'start', alignItems: 'center' }}>
+                    <UserStatusCircle
+                      color={
+                        b2bUser.isActive ? theme.palette.primary.main : theme.palette.grey[600]
+                      }
+                    ></UserStatusCircle>
+                    <Typography>{b2bUser.isActive ? t('active') : t('in-active')}</Typography>
                   </Box>
                 </TableCell>
-              </TableRow>
-            )
-          )}
+              )}
+              <TableCell sx={{ flex: 1 }}>
+                <Box sx={{ display: 'flex', justifyContent: 'end', alignItems: 'center' }}>
+                  <EditIcon
+                    onClick={() => onEditUserButtonClick(b2bUser)}
+                    style={{ marginRight: '16px', cursor: 'pointer' }}
+                  />
+                  <RemoveCircleIcon
+                    onClick={() => onDelete(b2bUser?.userId as string)}
+                    style={{ cursor: 'pointer' }}
+                  />
+                </Box>
+              </TableCell>
+            </TableRow>
+          )
+        )}
       </TableBody>
     </Table>
   )

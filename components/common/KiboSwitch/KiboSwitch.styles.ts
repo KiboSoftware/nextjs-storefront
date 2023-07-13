@@ -14,7 +14,7 @@ const kiboSwitchStyle = makeStyles((theme: Theme) => ({
         transform: 'translateX(16px)',
         color: '#fff',
         '& + .MuiSwitch-track': {
-          backgroundColor: theme.palette.mode === 'dark' ? '#2EA195' : '#2EA195',
+          backgroundColor: '#2EA195',
           opacity: 1,
           border: 0,
         },

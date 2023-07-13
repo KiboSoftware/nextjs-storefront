@@ -81,7 +81,7 @@ const UserForm = (props: UserFormProps) => {
       firstName,
       lastName,
       isActive,
-      role: roles && roles.length ? roles[0]?.roleName : '',
+      role: roles?.length ? roles[0]?.roleName : '',
     })
   }, [b2BUser])
 

@@ -72,11 +72,11 @@ export const useGetB2BUserQueries = ({
   startIndex,
   q,
 }: QueryB2BUserArgs): B2BUserResultType => {
-  const { isLoading, isSuccess, isError, error, data, ...result } = useQuery({
+  const { isLoading, isSuccess, isError, error, data } = useQuery({
     queryKey: customerB2BUserKeys.search(startIndex, pageSize, q, filter),
     queryFn: () => loadCustomerB2BUsers({ accountId, filter, pageSize, startIndex, q }),
     enabled: !!accountId,
-    placeholderData: (previousData) => previousData || undefined,
+    placeholderData: (previousData) => previousData ?? undefined,
   })
 
   // WIP -> Prefetch users

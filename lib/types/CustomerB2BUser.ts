@@ -1,12 +1,12 @@
 import type { B2BAccountCollection, B2BUser, CustomerAccount } from '@/lib/gql/types'
 export interface B2BUserInput {
-  firstName?: string | undefined | null
-  lastName?: string | undefined | null
-  emailAddress?: string | undefined | null
-  userName?: string | undefined | null
-  localeCode?: string | undefined | null
-  isActive?: boolean | undefined | null
-  role?: string | undefined | null
+  firstName?: string | null
+  lastName?: string | null
+  emailAddress?: string | null
+  userName?: string | null
+  localeCode?: string | null
+  isActive?: boolean | null
+  role?: string | null
 }
 
 export interface QueryB2BUserArgs {
