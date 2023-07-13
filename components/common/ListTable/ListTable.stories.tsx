@@ -11,13 +11,7 @@ function getDate(date: number) {
   return dateString
 }
 
-const rows = wishlistMock.items.map((item: any) => {
-  return {
-    ...item,
-    createBy: item.auditInfo.createBy,
-    createDate: getDate(item.auditInfo.createDate),
-  }
-})
+const rows = wishlistMock.items
 
 export default {
   title: 'Common/ListTable',

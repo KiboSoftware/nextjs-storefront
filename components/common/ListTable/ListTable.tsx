@@ -1,10 +1,12 @@
-import React from 'react'
+import React, { MouseEvent, MouseEventHandler, useState } from 'react'
 
 import { Delete, Edit, FolderCopySharp, MoreVert } from '@mui/icons-material'
 import {
   Box,
   Button,
   IconButton,
+  Menu,
+  MenuItem,
   Table,
   TableBody,
   TableCell,
@@ -15,6 +17,8 @@ import {
   useTheme,
 } from '@mui/material'
 import { useTranslation } from 'next-i18next'
+
+import { CrWishlist, Maybe } from '@/lib/gql/types'
 
 const tableCellStyles = {
   padding: '5px 10px',
@@ -34,36 +38,77 @@ const IconButtonStyles = {
   },
 }
 
-const ListItemOptions = (props: any) => {
-  const theme = useTheme()
-  const mdScreen = useMediaQuery(theme.breakpoints.up('md'))
-  const { t } = useTranslation('common')
+interface ListItemOptionsProps {
+  id: Maybe<string> | undefined
+  onEditList: (param: Maybe<string>) => void
+  onCopyList: (param: Maybe<string>) => void
+  onDeleteList: (param: Maybe<string>) => void
+}
 
-  if (mdScreen)
+const ListItemOptions = (props: ListItemOptionsProps) => {
+  const { id, onEditList, onCopyList, onDeleteList } = props
+  const theme = useTheme()
+  const mdScreen = useMediaQuery<boolean>(theme.breakpoints.up('md'))
+  const { t } = useTranslation('common')
+  const options = [
+    { name: 'Edit', onClick: onEditList },
+    { name: 'Add to cart', onClick: () => console.log('Work in progress') },
+    { name: 'Initiate Quote', onClick: () => console.log('Work in progress') },
+    { name: 'Duplicate', onClick: (id: any) => onCopyList(id) },
+    { name: 'Delete', onClick: (id: any) => onDeleteList(id) },
+  ]
+  const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null)
+
+  if (!mdScreen)
     return (
-      <Box style={{ justifyContent: 'flex-end', display: 'flex' }}>
-        <Button sx={IconButtonStyles}>{t('initiate-quote')}</Button>
-        <Button sx={IconButtonStyles}>{t('add-to-cart')}</Button>
-        <IconButton sx={IconButtonStyles}>
-          <Edit />
+      <>
+        <IconButton
+          style={{ padding: '0px' }}
+          onClick={(e: MouseEvent<HTMLElement>) => setAnchorEl(e.currentTarget)}
+        >
+          <MoreVert />
         </IconButton>
-        <IconButton sx={IconButtonStyles}>
-          <FolderCopySharp />
-        </IconButton>
-        <IconButton sx={IconButtonStyles}>
-          <Delete />
-        </IconButton>
-      </Box>
+        <Menu anchorEl={anchorEl} open={Boolean(anchorEl)} onClose={() => setAnchorEl(null)}>
+          {/* {options.map((o, i) => (
+            <MenuItem
+              key={id || i}
+              id={id}
+              onClick={o.onClick}
+              style={i !== options.length - 1 ? { borderBottom: '0.5px solid #EAEAEA' } : {}}
+            >
+              <span>{o.name}</span>
+            </MenuItem>
+          ))} */}
+        </Menu>
+      </>
     )
   return (
-    <IconButton style={{ padding: '0px' }}>
-      <MoreVert />
-    </IconButton>
+    <Box style={{ justifyContent: 'flex-end', display: 'flex' }}>
+      <Button sx={IconButtonStyles}>{t('initiate-quote')}</Button>
+      <Button sx={IconButtonStyles}>{t('add-to-cart')}</Button>
+      <IconButton sx={IconButtonStyles}>
+        <Edit />
+      </IconButton>
+      <IconButton sx={IconButtonStyles}>
+        <FolderCopySharp />
+      </IconButton>
+      <IconButton sx={IconButtonStyles}>
+        <Delete />
+      </IconButton>
+    </Box>
   )
 }
 
-const ListTable = (props: any) => {
-  const { rows, isLoading } = props
+interface ListTableProps {
+  rows: CrWishlist[]
+  isLoading: boolean
+  onCopyList: (param: any) => void
+  onEditList: (param: any) => void
+  onDeleteList: (param: any) => void
+}
+
+const ListTable = (props: ListTableProps) => {
+  const { rows, isLoading, onCopyList, onDeleteList, onEditList } = props
   const { t } = useTranslation('common')
   const theme = useTheme()
   const mdScreen = useMediaQuery(theme.breakpoints.up('md'))
@@ -89,7 +134,7 @@ const ListTable = (props: any) => {
           </TableRow>
         </TableHead>
         <TableBody>
-          {rows.map((item: any) => {
+          {rows.map((item: CrWishlist) => {
             return (
               <TableRow key={item.id}>
                 <TableCell style={{ ...tableCellStyles, width: mdScreen ? '25%' : '50%' }}>
@@ -99,22 +144,29 @@ const ListTable = (props: any) => {
                     <Box>
                       {item.name}
                       <br />
-                      <p style={{ margin: '5px 0', color: '#cdcdcd' }}>{item.createBy}</p>
+                      <p style={{ margin: '5px 0', color: '#cdcdcd' }}>
+                        {item.auditInfo?.createBy}
+                      </p>
                     </Box>
                   )}
                 </TableCell>
                 <TableCell style={{ ...tableCellStyles, width: mdScreen ? '15%' : '30%' }}>
-                  {item.createDate}
+                  {item.auditInfo?.createDate}
                 </TableCell>
                 {mdScreen ? (
                   <TableCell style={{ ...tableCellStyles, width: '20%' }}>
-                    {item.createBy}
+                    {item.auditInfo?.createBy}
                   </TableCell>
                 ) : (
                   <></>
                 )}
                 <TableCell style={{ ...tableCellStyles, width: mdScreen ? '25%' : '10%' }}>
-                  <ListItemOptions />
+                  <ListItemOptions
+                    id={item.id}
+                    onEditList={onEditList}
+                    onCopyList={onCopyList}
+                    onDeleteList={onDeleteList}
+                  />
                 </TableCell>
               </TableRow>
             )

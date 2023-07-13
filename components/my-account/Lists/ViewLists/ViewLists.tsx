@@ -4,7 +4,6 @@ import { Search } from '@mui/icons-material'
 import {
   Box,
   Checkbox,
-  CircularProgress,
   FormControl,
   FormControlLabel,
   Input,
@@ -52,7 +51,7 @@ const Lists = (props: ListsProps) => {
     sortBy: publicRuntimeConfig.b2bList.sortBy,
     filter: publicRuntimeConfig.b2bList.filter,
   })
-  const [rows, setRows] = useState([])
+  const [rows, setRows] = useState<CrWishlist[]>([])
 
   // screen size declared
   const theme = useTheme()
@@ -66,16 +65,21 @@ const Lists = (props: ListsProps) => {
   const { data, isPending } = useGetWishlist(paginationState)
   useEffect(() => {
     if (data) {
-      const newRows = data.items.map((item: CrWishlist) => {
-        return {
-          ...item,
-          createDate: item.auditInfo && formatDate(item.auditInfo.createDate),
-          createBy: item.auditInfo && item.auditInfo.createBy,
-        }
-      })
-      setRows(newRows)
+      setRows(data.items)
     }
   }, [data])
+
+  const onEditList = (id: any) => {
+    console.log(id, ' edit clicked')
+  }
+
+  const onCopyList = (id: any) => {
+    console.log(id, ' edit clicked')
+  }
+
+  const onDeleteList = (id: any) => {
+    console.log(id, ' edit clicked')
+  }
 
   const handleFilterChange = (e: ChangeEvent<HTMLInputElement>) => {
     setPaginationState({
@@ -118,7 +122,13 @@ const Lists = (props: ListsProps) => {
           </FormControl>
         </>
       )}
-      <ListTable rows={rows} isLoading={isPending} />
+      <ListTable
+        rows={rows}
+        isLoading={isPending}
+        onCopyList={onCopyList}
+        onDeleteList={onDeleteList}
+        onEditList={onEditList}
+      />
       <Pagination
         count={data ? data.pageCount : 1}
         shape={`rounded`}

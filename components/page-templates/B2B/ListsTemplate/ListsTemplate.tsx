@@ -1,3 +1,5 @@
+// Figma- https://www.figma.com/file/bKJuIwUx6VXmubHZo4rCBq/B2B?type=design&node-id=4-10&mode=design&t=X8mxlj1ofQdYh19o-0
+
 import { useState } from 'react'
 
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline'
@@ -5,27 +7,8 @@ import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos'
 import { Grid, Button, useMediaQuery, useTheme, IconButton } from '@mui/material'
 import { useRouter } from 'next/router'
 import { useTranslation } from 'next-i18next'
-import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
-// import { ReactQueryDevtools } from 'react-query/devtools'
-
-// import CreateWishlist from '@/components/wishlist/CreateWishlist/createWishlist'
-// import Wishlist from '@/components/wishlist/wishlist'
 
 import ViewLists from '@/components/my-account/Lists/ViewLists/ViewLists'
-
-import type { GetServerSideProps, GetServerSidePropsContext, NextPage } from 'next'
-
-export const getServerSideProps: GetServerSideProps = async (
-  context: GetServerSidePropsContext
-) => {
-  const { locale } = context
-
-  return {
-    props: {
-      ...(await serverSideTranslations(locale as string, ['common'])),
-    },
-  }
-}
 
 const addNewListButtonStyles = {
   display: 'flex',
@@ -48,7 +31,7 @@ const addNewListButtonStyles = {
   },
 }
 
-const ListsPage: NextPage = () => {
+const ListsPage = () => {
   const [state, setState] = useState({
     isCreateFormOpen: false,
     isEditFormOpen: false,
@@ -63,7 +46,7 @@ const ListsPage: NextPage = () => {
     return (
       <Grid spacing={2} marginTop={2}>
         <Grid xs={12}>
-          {!state.isCreateFormOpen && (
+          {!(state.isCreateFormOpen || state.isEditFormOpen) && (
             <div>
               {mdScreen ? (
                 <IconButton
@@ -115,7 +98,6 @@ const ListsPage: NextPage = () => {
             handleEditForm={(val: boolean) => setState({ ...state, isEditFormOpen: val })}
           />
         </Grid>
-        {/* <ReactQueryDevtools initialIsOpen={false} /> */}
       </Grid>
     )
   }
@@ -123,9 +105,7 @@ const ListsPage: NextPage = () => {
   return (
     <Grid spacing={2} marginTop={2}>
       <Grid xs={12}>
-        {/* <CreateWishlist handleCreateWishlist={setOpenForm} /> */}
-        {/* <ReactQueryDevtools initialIsOpen={false} /> */}
-        <h1>Work In Progress</h1>
+        <h1> Create List Work In Progress</h1>
       </Grid>
     </Grid>
   )
