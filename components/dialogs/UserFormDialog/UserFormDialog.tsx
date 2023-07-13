@@ -17,10 +17,7 @@ interface UserFormDialogProps {
 const UserFormDialog = (props: UserFormDialogProps) => {
   const { closeModal } = useModalContext()
   const { t } = useTranslation('common')
-  const isAddressFormInDialog = true
   const { formTitle = t('add-new-user'), b2BUser, isEditMode, onSave, onClose } = props
-
-  const [validateDialogForm, setValidateDialogForm] = useState<boolean>(false)
 
   const handleSave = (formData: B2BUser) => {
     onSave(formData)
