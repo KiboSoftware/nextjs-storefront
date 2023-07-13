@@ -26,7 +26,7 @@ const getWishlists = async (): Promise<CrWishlist> => {
     variables: {},
   })
 
-  return response?.wishlists?.items[0]
+  return response?.wishlists?.items[0] || []
 }
 
 /**
