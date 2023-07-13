@@ -16,6 +16,7 @@ import { B2BUser, B2BUserInput } from '@/lib/gql/types'
 
 interface UserFormProps {
   isEditMode: boolean
+  isUserFormInDialog?: boolean
   b2BUser?: B2BUser | any
   onClose: () => void
   onSave: (formValues: B2BUserInput, b2BUser?: B2BUser) => void
@@ -34,7 +35,7 @@ export const useFormSchema = () => {
 }
 
 const UserForm = (props: UserFormProps) => {
-  const { isEditMode, b2BUser, onClose, onSave } = props
+  const { isEditMode, isUserFormInDialog, b2BUser, onClose, onSave } = props
 
   const { publicRuntimeConfig } = getConfig()
 
@@ -46,6 +47,9 @@ const UserForm = (props: UserFormProps) => {
   const userFormRadioOptions = publicRuntimeConfig.userFormRadioOptions
 
   const [isLoading, setLoading] = useState(false)
+
+  const isDesktopView = !isEditMode && mdScreen
+  const isDesktopEditView = isEditMode && mdScreen
   const {
     getValues,
     handleSubmit,
@@ -69,7 +73,8 @@ const UserForm = (props: UserFormProps) => {
     cancelAction()
   }
 
-  if (b2BUser) {
+  useEffect(() => {
+    if (!b2BUser) return
     const { firstName, lastName, emailAddress, isActive, roles } = b2BUser
     reset({
       emailAddress,
@@ -78,7 +83,7 @@ const UserForm = (props: UserFormProps) => {
       isActive,
       role: roles && roles.length ? roles[0]?.roleName : '',
     })
-  }
+  }, [b2BUser])
 
   const cancelAction = () => {
     onClose()
@@ -107,7 +112,7 @@ const UserForm = (props: UserFormProps) => {
           <Grid
             item
             xs={12}
-            md={isEditMode && mdScreen ? 3 : 3.5}
+            md={isUserFormInDialog ? 12 : isDesktopEditView ? 3 : 3.5}
             className={classes.textBoxGridStyle}
           >
             <Controller
@@ -134,7 +139,7 @@ const UserForm = (props: UserFormProps) => {
           <Grid
             item
             xs={12}
-            md={isEditMode && mdScreen ? 1.5 : 2}
+            md={isUserFormInDialog ? 12 : isDesktopEditView ? 1.5 : 2}
             className={classes.textBoxGridStyle}
           >
             <Controller
@@ -155,7 +160,7 @@ const UserForm = (props: UserFormProps) => {
           <Grid
             item
             xs={12}
-            md={isEditMode && mdScreen ? 1.5 : 2}
+            md={isUserFormInDialog ? 12 : isDesktopEditView ? 1.5 : 2}
             className={classes.textBoxGridStyle}
           >
             <Controller
@@ -173,7 +178,7 @@ const UserForm = (props: UserFormProps) => {
               )}
             />
           </Grid>
-          <Grid item xs={12} md={2} className={classes.textBoxGridStyle}>
+          <Grid item xs={12} md={isUserFormInDialog ? 12 : 2} className={classes.textBoxGridStyle}>
             <Controller
               name="role"
               control={control}
@@ -194,7 +199,7 @@ const UserForm = (props: UserFormProps) => {
             <Grid
               item
               xs={12}
-              md={isEditMode && mdScreen ? 1.8 : 1}
+              md={isUserFormInDialog ? 12 : isDesktopEditView ? 1.8 : 1}
               sx={{
                 paddingTop: { sm: '0 !important', md: '50px !important' },
                 paddingLeft: { xs: '0 !important' },
@@ -218,31 +223,34 @@ const UserForm = (props: UserFormProps) => {
           <Grid
             item
             xs={12}
-            md={isEditMode && mdScreen ? 1.3 : 2}
-            className={classes.buttonGridStyle}
+            md={isUserFormInDialog ? 12 : isDesktopEditView ? 1.3 : 2}
+            className={isUserFormInDialog ? classes.buttonGridDialogStyle : classes.buttonGridStyle}
           >
             <Button
               variant="outlined"
-              name="reset"
+              data-testid="reset-button"
               type="reset"
               onClick={cancelAction}
               className={
-                (isEditMode && mdScreen && classes.cancelButtonInDesktopEditMode) ||
-                (!isEditMode && mdScreen && classes.cancelButtonInDesktop) ||
+                (isDesktopEditView &&
+                  !isUserFormInDialog &&
+                  classes.cancelButtonInDesktopEditMode) ||
+                (isDesktopView && !isUserFormInDialog && classes.cancelButtonInDesktop) ||
                 classes.cancelButtonInMobile
               }
             >
-              {isEditMode && mdScreen ? <ClearIcon /> : t('cancel')}
+              {isDesktopEditView && !isUserFormInDialog ? <ClearIcon /> : t('cancel')}
             </Button>
 
             <Button
               variant="contained"
-              name="submit"
               disableElevation
               data-testid="submit-button"
               className={
-                (isEditMode && mdScreen && classes.submitButtonInDesktopEditMode) ||
-                (!isEditMode && mdScreen && classes.submitButtonInDesktop) ||
+                (isDesktopEditView &&
+                  !isUserFormInDialog &&
+                  classes.submitButtonInDesktopEditMode) ||
+                (isDesktopView && !isUserFormInDialog && classes.submitButtonInDesktop) ||
                 classes.submitButtonInMobile
               }
               type="submit"
@@ -250,8 +258,8 @@ const UserForm = (props: UserFormProps) => {
               {isLoading ? (
                 <CircularProgress className={classes.circularProgress} />
               ) : (
-                (isEditMode && mdScreen && <CheckIcon />) ||
-                (!isEditMode && mdScreen && t('add-user')) ||
+                (isDesktopEditView && !isUserFormInDialog && <CheckIcon />) ||
+                (isDesktopView && t('add-user')) ||
                 t('save')
               )}
             </Button>

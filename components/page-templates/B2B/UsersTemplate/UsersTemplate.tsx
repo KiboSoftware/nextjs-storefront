@@ -188,6 +188,7 @@ const UsersTemplate = (props: UsersTemplateProps) => {
       Component: UserFormDialog,
       props: {
         isEditMode: false,
+        isUserFormInDialog: true,
         formTitle: t('add-new-user'),
         b2BUser: undefined,
         onSave: (b2BUserInput: B2BUserInput) => onAddUser(b2BUserInput),

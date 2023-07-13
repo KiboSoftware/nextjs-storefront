@@ -16,6 +16,14 @@ const userFormStyles = makeStyles((theme: Theme) => ({
       flexDirection: 'row',
     },
   },
+  buttonGridDialogStyle: {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'flex-end',
+    paddingLeft: '0 !important',
+    paddingTop: '10px !important',
+    flexDirection: 'column-reverse',
+  },
   textBoxGridStyle: {
     paddingTop: '64px',
     display: 'flex',

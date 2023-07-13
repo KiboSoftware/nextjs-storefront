@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React from 'react'
 
 import { useTranslation } from 'next-i18next'
 
@@ -9,6 +9,7 @@ import { useModalContext } from '@/context'
 import { B2BUser } from '@/lib/gql/types'
 interface UserFormDialogProps {
   isEditMode: boolean
+  isUserFormInDialog?: boolean
   formTitle?: string
   b2BUser?: B2BUser
   onSave: (data: B2BUser) => void
@@ -17,7 +18,14 @@ interface UserFormDialogProps {
 const UserFormDialog = (props: UserFormDialogProps) => {
   const { closeModal } = useModalContext()
   const { t } = useTranslation('common')
-  const { formTitle = t('add-new-user'), b2BUser, isEditMode, onSave, onClose } = props
+  const {
+    formTitle = t('add-new-user'),
+    b2BUser,
+    isEditMode,
+    isUserFormInDialog = true,
+    onSave,
+    onClose,
+  } = props
 
   const handleSave = (formData: B2BUser) => {
     onSave(formData)
@@ -31,12 +39,13 @@ const UserFormDialog = (props: UserFormDialogProps) => {
     <KiboDialog
       showCloseButton
       Title={formTitle}
-      showContentTopDivider={true}
+      showContentTopDivider={false}
       showContentBottomDivider={false}
       Actions={''}
       Content={
         <UserForm
           isEditMode={isEditMode}
+          isUserFormInDialog={isUserFormInDialog}
           b2BUser={b2BUser}
           onSave={handleSave}
           onClose={handleClose}

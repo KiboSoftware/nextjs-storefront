@@ -67,6 +67,7 @@ const UserTable = (props: UserTableProps) => {
       Component: UserFormDialog,
       props: {
         isEditMode: true,
+        isUserFormInDialog: true,
         formTitle: t('edit-user'),
         b2BUser,
         onSave: (b2BUserInput: B2BUserInput) => onSave(b2BUserInput),
