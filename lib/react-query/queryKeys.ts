@@ -31,6 +31,13 @@ export const categoryTreeKeys = {
 export const loginKeys = {
   user: ['user'] as const,
 }
+
+export const customerB2BUserKeys = {
+  all: ['b2bUsers'] as any,
+  search: (index: number, pageSize: number, searchTerm: string | undefined, filter: string) =>
+    [...customerB2BUserKeys.all, index, pageSize, searchTerm, filter] as const,
+}
+
 export const productSearchResultKeys = {
   all: ['productSearch'] as const,
   searchParams: (params: CategorySearchParams) => [...productSearchResultKeys.all, params] as const,

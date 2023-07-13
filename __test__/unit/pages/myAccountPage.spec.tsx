@@ -65,10 +65,11 @@ describe('[page] MyAccount Page', () => {
     }))
 
     render(<MyAccountPage />, {
-      wrapper: createQueryClientWrapper(),
+      wrapper: MyAccountTemplateMock,
     })
 
     const myAccountTemplate = screen.getByTestId('MyAccountTemplate-mock')
+    console.log(myAccountTemplate.innerHTML)
     expect(myAccountTemplate).toBeVisible()
   })
 

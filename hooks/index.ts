@@ -49,6 +49,9 @@ export * from './queries/subscription/useGetSubscriptions/useGetSubscriptions'
 // wishlist
 export * from './queries/wishlist/useGetWishlist/useGetWishlist'
 
+// b2b
+export * from './queries/b2b/useGetB2BUserQuery/useGetB2BUserQuery'
+
 // Custom hooks
 export * from './custom/useDebounce/useDebounce'
 export * from './custom/useUpdateRoutes/useUpdateRoutes'
@@ -140,3 +143,10 @@ export * from './mutations/subscription/useUpdateSubscriptionNextOrderDate/useUp
 export * from './mutations/subscription/useUpdateSubscriptionShippingInfo/useUpdateSubscriptionShippingInfo'
 export * from './mutations/subscription/useDeleteSubscription/useDeleteSubscription'
 export * from './mutations/subscription/useUpdateSubscriptionPayment/useUpdateSubscriptionPayment'
+
+// b2b
+export * from './mutations/b2b/useCreateCustomerB2bUser/useCreateCustomerB2bUser'
+export * from './mutations/b2b/useRemoveCustomerB2bUser/useRemoveCustomerB2bUser'
+export * from './mutations/b2b/useUpdateCustomerB2bUser/useUpdateCustomerB2bUser'
+export * from './mutations/b2b/useAddRoleToCustomerB2bAccount/useAddRoleToCustomerB2bAccount'
+export * from './mutations/b2b/useDeleteB2bAccountRole/useDeleteB2bAccountRole'

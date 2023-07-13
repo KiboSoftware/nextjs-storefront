@@ -21,7 +21,6 @@ const style = {
     p: '2px 4px',
     display: 'flex',
     alignItems: 'center',
-    maxWidth: { xs: '100%', md: 651 },
     borderRadius: 0,
   },
   inputBase: {

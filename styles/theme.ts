@@ -6,6 +6,13 @@ declare module '@mui/material/styles/createPalette' {
   }
 }
 
+declare module '@mui/material/Button' {
+  interface ButtonPropsVariantOverrides {
+    primary: true
+    outlined: true
+  }
+}
+
 export const grey = {
   900: '#2B2B2B',
   // Fill Form Label Text, information text
@@ -15,6 +22,8 @@ export const grey = {
   // Thin borders, placeholder text
   500: '#C7C7C7',
   // Header Accent Color, page separator bar
+  400: '#CDCDCD',
+  // Button background and border color
   300: '#EAEAEA',
   // Order Summary Background
   100: '#F7F7F7',
@@ -119,6 +128,7 @@ let theme = createTheme({
     },
     secondary: {
       main: '#c0e3df',
+      light: '#FFFFFF',
     },
     text: {
       primary: grey[900],
@@ -138,6 +148,37 @@ let theme = createTheme({
       styleOverrides: {
         ...buttonStyleOverrides,
       },
+      variants: [
+        {
+          props: { variant: 'primary' },
+          style: {
+            backgroundColor: grey[900],
+            borderWidth: 1,
+            borderStyle: 'solid',
+            boxShadow: 'none',
+            fontWeight: 400,
+            color: '#FFFFFF',
+            '&:hover': {
+              backgroundColor: grey[700],
+            },
+            '&:disabled': {
+              backgroundColor: grey[400],
+              color: '#FFFFFF',
+            },
+          },
+        },
+        {
+          props: { variant: 'outlined' },
+          style: {
+            backgroundColor: grey[50],
+            borderWidth: 1,
+            boxShadow: 'none',
+            border: `1px solid ${grey[400]}`,
+            fontWeight: 400,
+            color: '#000000',
+          },
+        },
+      ],
     },
     MuiLoadingButton: {
       styleOverrides: {
@@ -148,6 +189,16 @@ let theme = createTheme({
       styleOverrides: {
         root: {
           zIndex: 2000,
+        },
+      },
+    },
+    MuiPagination: {
+      styleOverrides: {
+        root: {
+          '& .Mui-selected': {
+            backgroundColor: `${grey[900]} !important`,
+            color: '#FFFFFF',
+          },
         },
       },
     },

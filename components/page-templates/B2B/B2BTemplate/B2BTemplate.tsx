@@ -1,8 +1,36 @@
 // Figma: https://www.figma.com/file/bKJuIwUx6VXmubHZo4rCBq/B2B?type=design&node-id=13-139&mode=design&t=jgLpcUITQZiMxaTj-0
 
-import { useCardContactActions } from '@/hooks'
+import React from 'react'
 
-import { CustomerAccount } from '@/lib/gql/types'
+import AccountCircle from '@mui/icons-material/AccountCircle'
+import ChevronLeft from '@mui/icons-material/ChevronLeft'
+import ChevronRightIcon from '@mui/icons-material/ChevronRight'
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore'
+import {
+  Accordion,
+  AccordionDetails,
+  AccordionSummary,
+  Box,
+  Divider,
+  Typography,
+  useMediaQuery,
+  useTheme,
+  Link,
+  Grid,
+} from '@mui/material'
+import getConfig from 'next/config'
+import { useRouter } from 'next/router'
+import { useTranslation } from 'next-i18next'
+import { useReCaptcha } from 'next-recaptcha-v3'
+
+import { B2BTemplateStyle } from './B2BTemplate.styles'
+import { MyProfile, PaymentMethod, AddressBook } from '@/components/my-account'
+import { useAuthContext, useSnackbarContext } from '@/context'
+import { useCardContactActions } from '@/hooks'
+import { validateGoogleReCaptcha } from '@/lib/helpers'
+import type { BillingAddress, CardType } from '@/lib/types'
+
+import type { CustomerAccount } from '@/lib/gql/types'
 
 interface B2BTemplateProps {
   user?: CustomerAccount
@@ -11,16 +39,219 @@ interface B2BTemplateProps {
 
 const B2BTemplate = (props: B2BTemplateProps) => {
   const { user } = props
+  const { t } = useTranslation('common')
+  const { publicRuntimeConfig } = getConfig()
+  const reCaptchaKey = publicRuntimeConfig.recaptcha.reCaptchaKey
+  const router = useRouter()
+  const theme = useTheme()
+  const mdScreen = useMediaQuery(theme.breakpoints.up('md'))
+  const { logout } = useAuthContext()
+  const { executeRecaptcha } = useReCaptcha()
+  const { showSnackbar } = useSnackbarContext()
+
   const { cards, contacts, handleSave } = useCardContactActions(user?.id as number)
 
+  const handleGoToOrderHistory = () => {
+    router.push('/my-account/order-history?filters=M-6')
+  }
+
+  const submitFormWithRecaptcha = async (
+    address: BillingAddress,
+    card: CardType,
+    isUpdatingAddress: boolean
+  ) => {
+    if (!executeRecaptcha) {
+      console.log('Execute recaptcha not yet available')
+      return
+    }
+    executeRecaptcha('enquiryFormSubmit').then(async (gReCaptchaToken: any) => {
+      const captcha = await validateGoogleReCaptcha(gReCaptchaToken)
+
+      if (captcha?.status === 'success') {
+        await handleSave(address, card, isUpdatingAddress)
+      } else {
+        showSnackbar(captcha.message, 'error')
+      }
+    })
+  }
+
+  const shopperAccountActionList = [
+    {
+      id: 'account-information-accordion',
+      controls: 'account-information-content',
+      header: t('account-information'),
+      component: <MyProfile user={user as CustomerAccount} />,
+      path: null,
+    },
+    {
+      id: 'account-hierarchy-accordion',
+      controls: 'account-hierarchy-content',
+      header: t('account-hierarchy'),
+      component: null,
+      path: null,
+    },
+    {
+      id: 'users-accordion',
+      controls: 'users-content',
+      header: t('users'),
+      component: null,
+      path: '/my-account/b2b/users',
+    },
+    {
+      id: 'shipping-information-accordion',
+      controls: 'shipping-information-content',
+      header: t('shipping-information'),
+      component: <AddressBook user={user as CustomerAccount} contacts={contacts} />,
+    },
+    {
+      id: 'payment-information-accordion',
+      controls: 'payment-information-content',
+      header: t('payment-information'),
+      component: (
+        <PaymentMethod
+          user={user as CustomerAccount}
+          cards={cards}
+          contacts={contacts}
+          onSave={(address, card, isUpdatingAddress) =>
+            reCaptchaKey
+              ? submitFormWithRecaptcha(address, card, isUpdatingAddress)
+              : handleSave(address, card, isUpdatingAddress)
+          }
+        />
+      ),
+    },
+    {
+      id: 'custom-attributes-accordion',
+      controls: 'custom-attributes-content',
+      header: t('custom-attributes'),
+      component: null,
+      path: null,
+    },
+  ]
+
   return (
-    <>
-      {/*
+    <Grid container>
+      <Grid item md={8} xs={12}>
+        {!mdScreen && (
+          <Link aria-label={t('back')} sx={{ ...B2BTemplateStyle.backButton }} href="/">
+            <ChevronLeft />
+            {t('back')}
+          </Link>
+        )}
+        <Box sx={{ ...B2BTemplateStyle.accountCircleBox }}>
+          <AccountCircle sx={{ ...B2BTemplateStyle.accountCircle }} />
+          <Typography
+            variant={mdScreen ? 'h1' : 'h2'}
+            sx={{ paddingLeft: { md: '0.5rem', xs: 0 } }}
+          >
+            {t('KiboUSA')}
+          </Typography>
+        </Box>
+        <Box
+          sx={{
+            display: { md: 'flex', xs: 'block' },
+            alignItems: 'center',
+            ...B2BTemplateStyle.myAccountChildren,
+          }}
+        >
+          <Typography
+            variant={mdScreen ? 'h1' : 'h2'}
+            sx={{ paddingLeft: { md: '0.5rem', xs: 0 } }}
+          >
+            {t('account')}
+          </Typography>
+        </Box>
+        <Divider sx={{ borderColor: 'grey.500' }} />
 
-        Add your code here
+        {shopperAccountActionList.map((data) => {
+          return (
+            <Box key={data.id}>
+              <Accordion disableGutters sx={{ ...B2BTemplateStyle.accordion }}>
+                <AccordionSummary
+                  onClick={() => data.path && router.push(data.path)}
+                  expandIcon={
+                    data.component && <ExpandMoreIcon sx={{ ...B2BTemplateStyle.expandedIcon }} />
+                  }
+                  aria-controls={data.controls}
+                  id={data.id}
+                  sx={{ ...B2BTemplateStyle.accordionSummary }}
+                >
+                  <Typography variant="h3">{data.header}</Typography>
+                </AccordionSummary>
+                {data.component && <AccordionDetails>{data.component}</AccordionDetails>}
+              </Accordion>
+              <Divider sx={{ borderColor: 'grey.500' }} />
+            </Box>
+          )
+        })}
 
-      */}
-    </>
+        <Box sx={{ ...B2BTemplateStyle.myAccountChildren }}>
+          <Typography variant={mdScreen ? 'h1' : 'h2'}>{t('orders')}</Typography>
+        </Box>
+
+        <Divider sx={{ borderColor: 'grey.500' }} />
+        <Box
+          sx={{
+            ...B2BTemplateStyle.myAccountChildren,
+            ...B2BTemplateStyle.orderHistory,
+          }}
+        >
+          <Typography variant="h3">{t('quick-order')}</Typography>
+          <ChevronRightIcon />
+        </Box>
+
+        <Divider sx={{ borderColor: 'grey.500' }} />
+        <Box
+          sx={{
+            ...B2BTemplateStyle.myAccountChildren,
+            ...B2BTemplateStyle.orderHistory,
+          }}
+          onClick={handleGoToOrderHistory}
+        >
+          <Typography variant="h3">{t('order-history')}</Typography>
+          <ChevronRightIcon />
+        </Box>
+
+        <Divider sx={{ borderColor: 'grey.500' }} />
+        <Box
+          sx={{
+            ...B2BTemplateStyle.myAccountChildren,
+            ...B2BTemplateStyle.orderHistory,
+          }}
+        >
+          <Typography variant="h3">{t('returns')}</Typography>
+          <ChevronRightIcon />
+        </Box>
+
+        <Divider sx={{ borderColor: 'grey.500' }} />
+        <Box
+          sx={{
+            ...B2BTemplateStyle.myAccountChildren,
+            ...B2BTemplateStyle.orderHistory,
+          }}
+        >
+          <Typography variant="h3">{t('quotes')}</Typography>
+          <ChevronRightIcon />
+        </Box>
+
+        <Divider sx={{ borderColor: 'grey.500' }} />
+        <Box
+          sx={{
+            ...B2BTemplateStyle.myAccountChildren,
+            ...B2BTemplateStyle.orderHistory,
+          }}
+        >
+          <Typography variant="h3">{t('lists')}</Typography>
+          <ChevronRightIcon />
+        </Box>
+
+        <Divider sx={{ backgroundColor: 'grey.300', ...B2BTemplateStyle.divider }} />
+        <Box sx={{ ...B2BTemplateStyle.myAccountChildren, cursor: 'pointer' }} onClick={logout}>
+          <Typography variant="h3">{t('logout')}</Typography>
+        </Box>
+        <Divider sx={{ borderColor: 'grey.500' }} />
+      </Grid>
+    </Grid>
   )
 }
 
