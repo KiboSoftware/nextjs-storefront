@@ -16,32 +16,20 @@ import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
 import getConfig from 'next/config'
 import { useTranslation } from 'next-i18next'
 
-import { ListTable } from '@/components/common'
+import { ListTable } from '@/components/my-account'
+import { styles } from '@/components/my-account/Lists/ViewLists/ViewLists.style'
 import { useAuthContext } from '@/context'
 import { PageProps, useGetWishlist } from '@/hooks'
-import formatDate from '@/lib/helpers/formatDate'
 
-import { CrWishlist } from '@/lib/gql/types'
-
-const styles = {
-  customInput: {
-    height: '32px',
-    fontSize: '14px',
-    padding: '8px 12px',
-    border: '1px solid #cdcdcd',
-    borderRadius: '4px',
-    width: '100%',
-    margin: '16px 0',
-    borderBottom: 'none',
-  },
-}
+import { CrWishlist, Maybe } from '@/lib/gql/types'
 
 interface ListsProps {
-  handleEditForm: (param: boolean) => void
+  onEditFormToggle: (param: boolean) => void
+  isEditFormOpen: boolean
 }
 
 const Lists = (props: ListsProps) => {
-  const { handleEditForm } = props
+  const { onEditFormToggle, isEditFormOpen } = props
   const { publicRuntimeConfig } = getConfig()
 
   // declaring states
@@ -69,18 +57,22 @@ const Lists = (props: ListsProps) => {
     }
   }, [data])
 
-  const onEditList = (id: any) => {
+  // edit list function
+  const onEditList = (id: Maybe<string>) => {
     console.log(id, ' edit clicked')
   }
 
-  const onCopyList = (id: any) => {
-    console.log(id, ' edit clicked')
+  // copy list function
+  const onCopyList = (id: Maybe<string>) => {
+    console.log(id, ' copy clicked')
   }
 
-  const onDeleteList = (id: any) => {
-    console.log(id, ' edit clicked')
+  // delete list function
+  const onDeleteList = (id: Maybe<string>) => {
+    console.log(id, ' delete clicked')
   }
 
+  // handle filter for current user list
   const handleFilterChange = (e: ChangeEvent<HTMLInputElement>) => {
     setPaginationState({
       startIndex: publicRuntimeConfig.b2bList.startIndex,

@@ -9,38 +9,22 @@ import { useRouter } from 'next/router'
 import { useTranslation } from 'next-i18next'
 
 import ViewLists from '@/components/my-account/Lists/ViewLists/ViewLists'
-
-const addNewListButtonStyles = {
-  display: 'flex',
-  flexDirection: 'row',
-  justifyContent: 'center',
-  alignItems: 'center',
-  padding: '8px 16px',
-  gap: '8px',
-  height: '37px',
-  backgroundColor: '#2b2b2b',
-  borderRadius: '4px',
-  color: '#ffffff',
-  fontWeight: '400',
-  fontSize: '18px',
-  marginBottom: '24px',
-  marginTop: '32px',
-  '&:hover': {
-    color: '#fff',
-    backgroundColor: '#2b2b2b',
-  },
-}
+import { styles } from '@/components/page-templates/B2B/ListsTemplate/ListTemplate.styles'
 
 const ListsPage = () => {
   const [state, setState] = useState({
     isCreateFormOpen: false,
     isEditFormOpen: false,
   })
+
   const router = useRouter()
   const theme = useTheme()
   const mdScreen = useMediaQuery<boolean>(theme.breakpoints.up('md'))
   const smScreen = useMediaQuery<boolean>(theme.breakpoints.up('sm'))
   const { t } = useTranslation('common')
+
+  const onEditFormToggle = (val: boolean) => setState({ ...state, isEditFormOpen: val })
+  const onCreateFormToggle = () => setState({ ...state, isCreateFormOpen: !state.isCreateFormOpen })
 
   if (!state.isCreateFormOpen) {
     return (
@@ -80,13 +64,13 @@ const ListsPage = () => {
                     >
                       <ArrowBackIosIcon style={{ width: '14px', color: '#000' }} />
                     </IconButton>
-                    <span style={{ marginLeft: 'auto', marginRight: 'auto' }}> Lists </span>
+                    <span style={{ marginLeft: 'auto', marginRight: 'auto' }}> {t('lists')} </span>
                   </>
                 )}
               </h1>
               <Button
-                onClick={() => setState({ ...state, isCreateFormOpen: true })}
-                sx={addNewListButtonStyles}
+                onClick={onCreateFormToggle}
+                sx={styles.addNewListButtonStyles}
                 startIcon={<AddCircleOutlineIcon />}
                 style={smScreen ? {} : { width: '100%' }}
               >
@@ -94,18 +78,16 @@ const ListsPage = () => {
               </Button>
             </div>
           )}
-          <ViewLists
-            handleEditForm={(val: boolean) => setState({ ...state, isEditFormOpen: val })}
-          />
+          <ViewLists onEditFormToggle={onEditFormToggle} isEditFormOpen={state.isEditFormOpen} />
         </Grid>
       </Grid>
     )
   }
 
   return (
-    <Grid spacing={2} marginTop={2}>
-      <Grid xs={12}>
-        <h1> Create List Work In Progress</h1>
+    <Grid container spacing={2} marginTop={2}>
+      <Grid item xs={12}>
+        Create List Work In Progress
       </Grid>
     </Grid>
   )
