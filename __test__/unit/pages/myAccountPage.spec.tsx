@@ -37,6 +37,12 @@ jest.mock(
   () => () => MyAccountTemplateMock()
 )
 
+const B2BTemplateMock = () => <div data-testid="B2BTemplate-mock" />
+jest.mock(
+  '@/components/page-templates/B2B/B2BTemplate/B2BTemplate.tsx',
+  () => () => B2BTemplateMock()
+)
+
 describe('[page] MyAccount Page', () => {
   it('should run getServerSideProps method', async () => {
     const context = {
@@ -85,5 +91,17 @@ describe('[page] MyAccount Page', () => {
 
     const myAccountTemplate = screen.queryByTestId('MyAccountTemplate-mock')
     expect(myAccountTemplate).not.toBeInTheDocument()
+  })
+
+  it('renders B2BTemplate when isB2bTemplate is true', () => {
+    const props = { isAuthenticated: true }
+    MyAccountPage.defaultProps = props
+    jest.mock('@/context/AuthContext', () => ({
+      useAuthContext: () => ({ user: null }),
+    }))
+    render(<MyAccountPage />)
+
+    const b2bTemplate = screen.getByTestId('B2BTemplate-mock')
+    expect(b2bTemplate).toBeInTheDocument()
   })
 })
