@@ -16,6 +16,8 @@ import {
 import { useTranslation } from 'next-i18next'
 
 import UserForm from '../UserForm/UserForm'
+import UserFormDialog from '@/components/dialogs/UserFormDialog/UserFormDialog'
+import { useModalContext } from '@/context'
 import { B2BUserInput } from '@/lib/types/CustomerB2BUser'
 
 import { B2BUser } from '@/lib/gql/types'
@@ -51,9 +53,27 @@ const UserTable = (props: UserTableProps) => {
   const { b2bUsers, onDelete, onSave } = props
 
   const { t } = useTranslation('common')
+  const { showModal } = useModalContext()
   const theme = useTheme()
   const mdScreen = useMediaQuery(theme.breakpoints.up('md'))
   const [editUserId, setEditUserId] = useState<string | undefined>(undefined)
+
+  const onEditUserButtonClick = (b2BUser: B2BUser) => {
+    if (mdScreen) {
+      setEditUserId(b2BUser.userId as string)
+      return
+    }
+    showModal({
+      Component: UserFormDialog,
+      props: {
+        isEditMode: true,
+        formTitle: t('edit-user'),
+        b2BUser,
+        onSave: (b2BUserInput: B2BUserInput) => onSave(b2BUserInput),
+        onClose: () => setEditUserId(undefined),
+      },
+    })
+  }
 
   return (
     <Table style={{ minHeight: b2bUsers && b2bUsers.length ? 0 : '345px' }}>
@@ -120,7 +140,7 @@ const UserTable = (props: UserTableProps) => {
                 <TableCell sx={{ flex: 1 }}>
                   <Box sx={{ display: 'flex', justifyContent: 'end', alignItems: 'center' }}>
                     <EditIcon
-                      onClick={() => setEditUserId(b2bUser?.userId as string)}
+                      onClick={() => onEditUserButtonClick(b2bUser)}
                       style={{ marginRight: '16px', cursor: 'pointer' }}
                     />
                     <RemoveCircleIcon

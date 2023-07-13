@@ -25,6 +25,7 @@ import { useTranslation } from 'next-i18next'
 import { UsersTemplateStyle } from './UsersTemplate.styles'
 import { SearchBar } from '@/components/common'
 import { ConfirmationDialog } from '@/components/dialogs'
+import UserFormDialog from '@/components/dialogs/UserFormDialog/UserFormDialog'
 import { UserTable } from '@/components/my-account'
 import UserForm from '@/components/my-account/User/UserForm/UserForm'
 import { useAuthContext, useModalContext } from '@/context'
@@ -37,7 +38,6 @@ import {
   useRemoveCustomerB2bUserMutation,
   useUpdateCustomerB2bUserMutation,
 } from '@/hooks'
-import '@tanstack/react-query-devtools'
 import { buildB2bUserRoleParams } from '@/lib/helpers'
 import { buildCreateCustomerB2bUserParams } from '@/lib/helpers'
 import { buildUpdateCustomerB2bUserParams } from '@/lib/helpers'
@@ -179,12 +179,29 @@ const UsersTemplate = (props: UsersTemplateProps) => {
     })
   }
 
+  const onAddUserButtonClick = () => {
+    if (mdScreen) {
+      setIsUserFormOpen(true)
+      return
+    }
+    showModal({
+      Component: UserFormDialog,
+      props: {
+        isEditMode: false,
+        formTitle: t('add-new-user'),
+        b2BUser: undefined,
+        onSave: (b2BUserInput: B2BUserInput) => onAddUser(b2BUserInput),
+        onClose: () => setIsUserFormOpen(false),
+      },
+    })
+  }
+
   const AddUserButton = () => {
     return (
       <Button
         variant="primary"
         disabled={isUserFormOpen}
-        onClick={() => setIsUserFormOpen(true)}
+        onClick={onAddUserButtonClick}
         disableElevation
         id="formOpenButton"
       >

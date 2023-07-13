@@ -337,6 +337,8 @@
 
   "users": "Users",
   "add-user": "Add User",
+  "edit-user": "Edit user",
+  "add-new-user": "Add a new user",
   "user-search-placeholder": "Search user by first name, last name, or email address.",
   "invalid-email-error": "Invalid email address",
   "no-email-error": "Please enter a valid email address",
