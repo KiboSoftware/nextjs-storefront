@@ -33,7 +33,7 @@ const getWishlists = async (params?: PageProps) => {
     variables: params ? params : {},
   })
 
-  return params ? response.wishlists : response?.wishlists?.items[0]
+  return params ? response.wishlists : response?.wishlists?.items[0] || []
 }
 
 /**
