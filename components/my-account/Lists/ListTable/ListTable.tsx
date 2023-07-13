@@ -18,27 +18,10 @@ import {
 } from '@mui/material'
 import { useTranslation } from 'next-i18next'
 
+import { styles } from '@/components/my-account/Lists/ListTable/ListTable.style'
 import formatDate from '@/lib/helpers/formatDate'
 
 import { CrWishlist, Maybe } from '@/lib/gql/types'
-
-const tableCellStyles = {
-  padding: '5px 10px',
-  overflow: 'hidden',
-  textOverflow: 'ellipsis',
-}
-
-const IconButtonStyles = {
-  fontWeight: '400',
-  lineHeight: '19px',
-  fontSize: '16px',
-  color: '#000000',
-  textDecoration: 'underline',
-  '&:hover': {
-    textDecoration: 'underline',
-    background: '#fff',
-  },
-}
 
 interface ListItemOptionsProps {
   id: Maybe<string>
@@ -96,15 +79,15 @@ const ListItemOptions = (props: ListItemOptionsProps) => {
 
   return (
     <Box style={{ justifyContent: 'flex-end', display: 'flex' }}>
-      <Button sx={IconButtonStyles}>{t('initiate-quote')}</Button>
-      <Button sx={IconButtonStyles}>{t('add-to-cart')}</Button>
-      <IconButton sx={IconButtonStyles} onClick={() => onEditList(id)}>
+      <Button sx={styles.iconButtonStyles}>{t('initiate-quote')}</Button>
+      <Button sx={styles.iconButtonStyles}>{t('add-to-cart')}</Button>
+      <IconButton sx={styles.iconButtonStyles} onClick={() => onEditList(id)}>
         <Edit />
       </IconButton>
-      <IconButton sx={IconButtonStyles} onClick={() => onCopyList(id)}>
+      <IconButton sx={styles.iconButtonStyles} onClick={() => onCopyList(id)}>
         <FolderCopySharp />
       </IconButton>
-      <IconButton sx={IconButtonStyles} onClick={() => onDeleteList(id)}>
+      <IconButton sx={styles.iconButtonStyles} onClick={() => onDeleteList(id)}>
         <Delete />
       </IconButton>
     </Box>
@@ -143,7 +126,7 @@ const ListTable = (props: ListTableProps) => {
           {rows.map((item: CrWishlist) => {
             return (
               <TableRow key={item.id}>
-                <TableCell style={{ ...tableCellStyles, width: mdScreen ? '25%' : '50%' }}>
+                <TableCell style={{ ...styles.tableCellStyles, width: mdScreen ? '25%' : '50%' }}>
                   {mdScreen ? (
                     item.name
                   ) : (
@@ -156,17 +139,17 @@ const ListTable = (props: ListTableProps) => {
                     </Box>
                   )}
                 </TableCell>
-                <TableCell style={{ ...tableCellStyles, width: mdScreen ? '15%' : '30%' }}>
+                <TableCell style={{ ...styles.tableCellStyles, width: mdScreen ? '15%' : '30%' }}>
                   {formatDate(item.auditInfo?.createDate)}
                 </TableCell>
                 {mdScreen ? (
-                  <TableCell style={{ ...tableCellStyles, width: '20%' }}>
+                  <TableCell style={{ ...styles.tableCellStyles, width: '20%' }}>
                     {item.auditInfo?.createBy}
                   </TableCell>
                 ) : (
                   <></>
                 )}
-                <TableCell style={{ ...tableCellStyles, width: mdScreen ? '25%' : '10%' }}>
+                <TableCell style={{ ...styles.tableCellStyles, width: mdScreen ? '25%' : '10%' }}>
                   <ListItemOptions
                     id={item.id || ''}
                     onDeleteList={onDeleteList}
