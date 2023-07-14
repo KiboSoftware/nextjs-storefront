@@ -1,7 +1,7 @@
 import React from 'react'
 
 
-import { composeStories } from '@storybook/testin
+import { composeStories } from '@storybook/testing'
 import { render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 
