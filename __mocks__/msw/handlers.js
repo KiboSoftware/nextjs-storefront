@@ -10,6 +10,8 @@ import {
   checkoutGroupRatesMock,
   orderSubscriptionNowMock,
   customerB2BUserForPage0Mock,
+  customerB2BUserForPage1Mock,
+  customerB2BUserForPage2Mock,
 } from '../stories'
 import { cartItemMock } from '../stories/cartItemMock'
 import { cartCouponMock, cartMock } from '../stories/cartMock'
@@ -450,7 +452,12 @@ export const subscriptionHandlers = [
 
 export const b2bAccountUsersHandlers = [
   graphql.query('b2bAccountUsers', (_req, res, ctx) => {
-    return res(ctx.data({ b2bAccountUsers: customerB2BUserForPage0Mock }))
+    const { startIndex } = _req.variables
+    if (startIndex == 0) {
+      return res(ctx.data({ b2bAccountUsers: customerB2BUserForPage0Mock }))
+    } else if (startIndex == 5) {
+      return res(ctx.data({ b2bAccountUsers: customerB2BUserForPage1Mock }))
+    } else return res(ctx.data({ b2bAccountUsers: customerB2BUserForPage2Mock }))
   }),
 
   // useCreateCustomerB2bUserMutation

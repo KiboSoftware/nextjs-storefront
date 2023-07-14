@@ -208,11 +208,11 @@ const UsersTemplate = (props: UsersTemplateProps) => {
     })
   }
 
-  const onAddUserButtonClick = () => {
-    if (mdScreen) {
-      setIsUserFormOpen(true)
-      return
-    }
+  const handleAddUserDesktopButtonClick = () => {
+    setIsUserFormOpen(true)
+  }
+
+  const handleAddUserMobileButtonClick = () => {
     showModal({
       Component: UserFormDialog,
       props: {
@@ -243,11 +243,19 @@ const UsersTemplate = (props: UsersTemplateProps) => {
         </Box>
         <Grid container>
           <Grid item xs={12} md={12}>
+            {/* Button visible only in desktop view and on click, form will open below the button */}
             {mdScreen && (
-              <AddUserButton isUserFormOpen={isUserFormOpen} onClick={onAddUserButtonClick} />
+              <AddUserButton
+                isUserFormOpen={isUserFormOpen}
+                onClick={handleAddUserDesktopButtonClick}
+              />
             )}
+            {/* Button visible only in mobile view, when form is not open and on click, form will open in dialog */}
             {!mdScreen && !isUserFormOpen && (
-              <AddUserButton isUserFormOpen={isUserFormOpen} onClick={onAddUserButtonClick} />
+              <AddUserButton
+                isUserFormOpen={isUserFormOpen}
+                onClick={handleAddUserMobileButtonClick}
+              />
             )}
             {isUserFormOpen && (
               <UserForm

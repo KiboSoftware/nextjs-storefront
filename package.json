@@ -15,7 +15,7 @@
     "build-storybook": "build-storybook -s ./public",
     "validate-types": "tsc --noEmit --declaration",
     "test": "jest",
-    "test:single": "jest components/my-account/User/UserTable/UserTable.spec.tsx",
+    "test:single": "jest hooks/queries/b2b/useGetB2BUserQuery/useGetB2BUserQuery.spec.ts",
     "test-report-coverage": "jest --silent --coverage --testResultsProcessor=jest-sonar-reporter",
     "test-watch": "jest --watch",
     "prettier:format": "prettier --write .",

@@ -51,7 +51,7 @@ export const customerB2BUserForPage0Mock: B2BUserCollection = {
   totalCount: 13,
   startIndex: 0,
   pageSize: 5,
-  pageCount: 1,
+  pageCount: 3,
 }
 
 export const customerB2BUserForPage1Mock: B2BUserCollection = {
@@ -112,9 +112,9 @@ export const customerB2BUserForPage1Mock: B2BUserCollection = {
     },
   ],
   totalCount: 13,
-  startIndex: 0,
+  startIndex: 5,
   pageSize: 5,
-  pageCount: 1,
+  pageCount: 3,
 }
 
 export const customerB2BUserForPage2Mock: B2BUserCollection = {
@@ -150,7 +150,7 @@ export const customerB2BUserForPage2Mock: B2BUserCollection = {
     },
   ],
   totalCount: 13,
-  startIndex: 0,
+  startIndex: 10,
   pageSize: 5,
-  pageCount: 1,
+  pageCount: 3,
 }
