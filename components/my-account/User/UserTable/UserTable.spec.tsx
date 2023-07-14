@@ -8,9 +8,21 @@ import { B2BUser } from '@/lib/gql/types'
 
 const { Table } = composeStories(stories)
 
-const UserFormMock = () => <div data-testid="user-form-mock"></div>
+const onDeleteMock = jest.fn()
+const onCloseMock = jest.fn()
 
-jest.mock('@/components/my-account/User/UserForm/UserForm', () => () => UserFormMock())
+const UserFormMock = ({ onClose }: { onClose: () => void }) => (
+  <div data-testid="user-form-mock">
+    <button data-testid="delete-user-mock-button" onClick={onClose}>
+      Cancel
+    </button>
+  </div>
+)
+
+jest.mock(
+  '@/components/my-account/User/UserForm/UserForm',
+  () => () => UserFormMock({ onClose: onCloseMock })
+)
 
 jest.mock('@mui/material', () => {
   const originalModule = jest.requireActual('@mui/material')
@@ -87,43 +99,34 @@ describe('[component] User Table', () => {
     expect(userForm).toBeVisible()
   })
 
-  // it('should Save the record when user clicks on Save button', async () => {
-  //   const onSave = jest.fn()
-  //   render(<Table {...Table.args} onSave={onSave} />)
-  //   const rows = await screen.findAllByRole('row')
-  //   const editIconInRowOne = within(rows[1]).getByTestId('EditIcon')
+  it('should call onDelete when user clicks on delete icon', async () => {
+    render(<Table {...Table.args} onDelete={onDeleteMock} />)
 
-  //   userEvent.click(editIconInRowOne)
+    const rows = await screen.findAllByRole('row')
+    const deleteIconInRowOne = within(rows[1]).getByTestId('RemoveCircleIcon')
 
-  //   // const form = await screen.findByRole('form')
-  //   const submitButton = await screen.getByRole('button', { name: 'submit' })
-  //   console.log(submitButton)
-  //   // fireEvent.submit(form)
+    // Act
+    fireEvent.click(deleteIconInRowOne)
 
-  //   expect(onSave).toHaveBeenCalled()
-  // })
+    // Assert
+    expect(onDeleteMock).toHaveBeenCalled()
+  })
 
-  // it('should Close the Edit mode when user clicks on Close button', async () => {
-  //   const onClose = jest.fn()
-  //   render(<Table {...Table.args} />)
-  //   const rows = await screen.findAllByRole('row')
-  //   const editIconInRowOne = within(rows[1]).getByTestId('EditIcon')
+  it('should call onClose when user clicks on Close button', async () => {
+    render(<Table {...Table.args} />)
+    const rows = await screen.findAllByRole('row')
+    const editIconInRowOne = within(rows[1]).getByTestId('EditIcon')
 
-  //   userEvent.click(editIconInRowOne)
+    fireEvent.click(editIconInRowOne)
 
-  //   // const form = await screen.findByRole('form')
-  //   const submitButton = await screen.findAllByRole('button')
-  //   console.log(submitButton)
-  //   // const resetButton = document.createElement('button')
-  //   // resetButton.type = 'reset'
-  //   // resetButton.onclick = onClose
-  //   // resetButton.textContent = 'Cancel'
-  //   // form.appendChild(resetButton)
+    const userForm = within(rows[1]).getByTestId('user-form-mock')
+    expect(userForm).toBeVisible()
 
-  //   // fireEvent.click(resetButton)
-  //   // const emailInput = await screen.findByLabelText('email-address')
-  //   // expect(emailInput).toBe('')
-  //   const email = within(rows[1]).getAllByRole('cell')[1]
-  //   expect(email).toHaveTextContent('kushagra.agarwal@outlook.com')
-  // })
+    const cancelButton = within(userForm).getByTestId('delete-user-mock-button')
+    expect(cancelButton).toBeVisible()
+
+    fireEvent.click(cancelButton)
+
+    expect(onCloseMock).toHaveBeenCalled()
+  })
 })
