@@ -6,7 +6,6 @@ import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { makeGraphQLClient } from '@/lib/gql/client'
 import { customerB2BUserKeys } from '@/lib/react-query/queryKeys'
 
-// import { addRoleToCustomerB2bAccount } from '@/lib/gql/types'
 import { addRoleToCustomerB2bAccountMutation } from '@/lib/gql/mutations'
 
 const client = makeGraphQLClient()
@@ -39,11 +38,6 @@ export const useAddRoleToCustomerB2bAccountMutation = () => {
     addRoleToCustomerB2bAccount: useMutation({
       mutationFn: addRoleToCustomerB2bAccount,
       onSuccess: () => queryClient.invalidateQueries(customerB2BUserKeys.all),
-      onError(error, variables, context) {
-        console.log('error', error)
-        console.log('variables', variables)
-        console.log('context', context)
-      },
     }),
   }
 }
