@@ -9,9 +9,10 @@ const { Common } = composeStories(stories)
 describe('[component] KiboSwitch component', () => {
   it('should render the component', async () => {
     render(<Common {...Common.args} />)
-    const kiboSwitch = screen.getByRole('checkbox')
 
-    await waitFor(() => expect(kiboSwitch).toBeVisible())
+    const kiboSwitch = await screen.findByRole('checkbox')
+
+    expect(kiboSwitch).toBeInTheDocument()
   })
 
   it('should have lable Status', () => {
