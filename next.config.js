@@ -1,5 +1,7 @@
 /** @type {import('next').NextConfig} */
+// eslint-disable-next-line @typescript-eslint/no-var-requires
 const { i18n } = require('./next-i18next.config')
+
 const LOCATION_COOKIE = 'kibo_purchase_location'
 const DEFAULT_WISHLIST_NAME = 'default-wishlist'
 
@@ -133,6 +135,16 @@ module.exports = {
       },
     ],
     isSubscriptionEnabled: true,
+    b2bUserListing: {
+      startIndex: 0,
+      pageSize: 5,
+    },
+    b2bList: {
+      startIndex: 0,
+      pageSize: 5,
+      sortBy: 'createDate desc',
+      filter: '',
+    },
   },
   serverRuntimeConfig: {
     currentUrl: process.env.CURRENT_DOMAIN,
