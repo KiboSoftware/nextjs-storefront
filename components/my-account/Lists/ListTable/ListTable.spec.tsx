@@ -29,9 +29,4 @@ describe('[component] - ListTable', () => {
       expect(tableRows.length).toEqual(Table.args.rows.length + 1)
     }
   })
-  it('should open edit form for the list', () => {
-    setup()
-    const editBtn = screen.getAllByTestId('editBtn')
-    console.log(editBtn)
-  })
 })
