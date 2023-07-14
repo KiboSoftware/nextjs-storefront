@@ -1,12 +1,16 @@
 import '@testing-library/jest-dom'
 import { composeStories } from '@storybook/testing-react'
-import { render, screen, within } from '@testing-library/react'
+import { fireEvent, render, screen, within } from '@testing-library/react'
 
 import * as stories from './UserTable.stories' // import all stories from the stories file
 
 import { B2BUser } from '@/lib/gql/types'
 
 const { Table } = composeStories(stories)
+
+const UserFormMock = () => <div data-testid="user-form-mock"></div>
+
+jest.mock('@/components/my-account/User/UserForm/UserForm', () => () => UserFormMock())
 
 jest.mock('@mui/material', () => {
   const originalModule = jest.requireActual('@mui/material')
@@ -35,11 +39,11 @@ describe('[component] User Table', () => {
   it('should render only email and role column on mobile screen', async () => {
     render(<Table />)
 
-    expect(screen.getByText('email')).toBeInTheDocument()
-    expect(screen.getByText('role')).toBeInTheDocument()
-    expect(screen.getByText('first-name')).toBeInTheDocument()
-    expect(screen.getByText('last-name-or-sur-name')).toBeInTheDocument()
-    expect(screen.getByText('status')).toBeInTheDocument()
+    expect(screen.getByText('email')).toBeVisible()
+    expect(screen.getByText('role')).toBeVisible()
+    expect(screen.getByText('first-name')).toBeVisible()
+    expect(screen.getByText('last-name-or-sur-name')).toBeVisible()
+    expect(screen.getByText('status')).toBeVisible()
   })
 
   it('should render correct data in table', async () => {
@@ -71,21 +75,17 @@ describe('[component] User Table', () => {
     })
   })
 
-  // it('should show record in Edit mode when user clicks on Edit icon', async () => {
-  //   render(<Table {...Table.args} />)
+  it('should show user form when user clicks on Edit icon', async () => {
+    render(<Table {...Table.args} />)
 
-  //   const rows = await screen.findAllByRole('row')
-  //   const editIconInRowOne = within(rows[1]).getByTestId('EditIcon')
+    const rows = await screen.findAllByRole('row')
+    const editIconInRowOne = within(rows[1]).getByTestId('EditIcon')
 
-  //   userEvent.click(editIconInRowOne)
+    fireEvent.click(editIconInRowOne)
 
-  //   const emailInput = await screen.findByLabelText('email-address')
-  //   const firstNameInput = await screen.findByLabelText('first-name')
-  //   const lastNameInput = await screen.findByLabelText('last-name-or-sur-name')
-  //   expect(emailInput).toHaveValue('kushagra.agarwal@outlook.com')
-  //   expect(firstNameInput).toHaveValue('Kushagra')
-  //   expect(lastNameInput).toHaveValue('Agarwal')
-  // })
+    const userForm = within(rows[1]).getByTestId('user-form-mock')
+    expect(userForm).toBeVisible()
+  })
 
   // it('should Save the record when user clicks on Save button', async () => {
   //   const onSave = jest.fn()
