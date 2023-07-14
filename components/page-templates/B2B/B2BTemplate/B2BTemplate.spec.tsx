@@ -5,10 +5,22 @@ import '@testing-library/jest-dom'
 import { composeStories } from '@storybook/testing-react'
 import { render, screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
+import mediaQuery from 'css-mediaquery'
 import mockRouter from 'next-router-mock'
 
 import * as stories from './B2BTemplate.stories' // import all stories from the stories file
 const { Common } = composeStories(stories)
+
+const createMatchMedia = (width: number) => (query: string) => ({
+  matches: mediaQuery.match(query, { width }),
+  addListener: () => jest.fn(),
+  removeListener: () => jest.fn(),
+  media: query,
+  onchange: null,
+  addEventListener: jest.fn(),
+  removeEventListener: jest.fn(),
+  dispatchEvent: jest.fn(),
+})
 
 jest.mock('@mui/material', () => {
   const originalModule = jest.requireActual('@mui/material')
@@ -78,6 +90,14 @@ describe('[component] - MyAccountTemplate', () => {
     expect(quotes).toBeInTheDocument()
     expect(lists).toBeInTheDocument()
     expect(logout).toBeInTheDocument()
+  })
+
+  it('should render component in mobile screen', async () => {
+    window.matchMedia = createMatchMedia(450)
+    setup()
+
+    const backButton = screen.getByText(/back/i)
+    expect(backButton).toBeVisible()
   })
 
   it('should redirect to order-history page when users click on Order History link', async () => {

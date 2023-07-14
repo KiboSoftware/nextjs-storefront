@@ -46,7 +46,7 @@ export const B2BTemplateStyle = {
     typography: 'body2',
     textDecoration: 'none',
     color: 'text.primary',
-    display: 'flex',
+    display: { xs: 'flex', md: 'none' },
     alignItems: 'center',
     padding: '1rem 0.5rem',
     cursor: 'pointer',

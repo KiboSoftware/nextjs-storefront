@@ -157,12 +157,10 @@ const B2BTemplate = (props: B2BTemplateProps) => {
   return (
     <Grid container>
       <Grid item md={8} xs={12}>
-        {!mdScreen && (
-          <Link aria-label={t('back')} sx={{ ...B2BTemplateStyle.backButton }} href="/">
-            <ChevronLeft />
-            {t('back')}
-          </Link>
-        )}
+        <Link aria-label={t('back')} sx={{ ...B2BTemplateStyle.backButton }} href="/">
+          <ChevronLeft />
+          {t('back')}
+        </Link>
         <Box sx={{ ...B2BTemplateStyle.accountCircleBox }}>
           <AccountCircle sx={{ ...B2BTemplateStyle.accountCircle }} />
           <Typography
