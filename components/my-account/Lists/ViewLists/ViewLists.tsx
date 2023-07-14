@@ -4,6 +4,7 @@ import { Search } from '@mui/icons-material'
 import {
   Box,
   Checkbox,
+  CircularProgress,
   FormControl,
   FormControlLabel,
   Input,
@@ -12,7 +13,6 @@ import {
   useMediaQuery,
   useTheme,
 } from '@mui/material'
-import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
 import getConfig from 'next/config'
 import { useTranslation } from 'next-i18next'
 
@@ -88,6 +88,14 @@ const Lists = (props: ListsProps) => {
     setPaginationState({ ...paginationState, startIndex: newStartIndex })
   }
 
+  if (rows.length === 0) {
+    return (
+      <Box style={{ display: 'flex', justifyContent: 'center' }}>
+        <CircularProgress />
+      </Box>
+    )
+  }
+
   return (
     <Box style={{ padding: '10px 10px 10px 0', opacity: isPending ? '0.5' : '1' }}>
       <FormControlLabel
@@ -128,7 +136,6 @@ const Lists = (props: ListsProps) => {
         sx={{ marginTop: '15px' }}
         onChange={handlePageChange}
       />
-      <ReactQueryDevtools initialIsOpen={false} />
     </Box>
   )
 }

@@ -5,23 +5,23 @@ import { ComponentStory, ComponentMeta } from '@storybook/react'
 import ListTable from './ListTable'
 import { wishlistMock } from '@/__mocks__/stories'
 
-function getDate(date: number) {
-  const d = new Date(date)
-  const dateString = `${d.getDate()}/${d.getMonth()}/${d.getFullYear()}`
-  return dateString
-}
-
 const rows = wishlistMock.items
 
 export default {
-  title: 'Common/ListTable',
+  title: 'My Account/ List Table',
   component: ListTable,
+  argTypes: {
+    onEditList: { action: 'onEditList' },
+    onCreateList: { action: 'onCreateList' },
+    onDeleteList: { action: 'onDeleteList' },
+  },
 } as ComponentMeta<typeof ListTable>
 
-export const Template: ComponentStory<typeof ListTable> = (args) => <ListTable {...args} />
+const Template: ComponentStory<typeof ListTable> = (args) => <ListTable {...args} />
 
-export const Common = Template.bind({})
+export const Table = Template.bind({})
 
-Common.args = {
+Table.args = {
   rows,
+  isLoading: false,
 }
