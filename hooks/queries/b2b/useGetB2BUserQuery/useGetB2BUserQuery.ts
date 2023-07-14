@@ -43,27 +43,29 @@ const loadCustomerB2BUsers = async ({
  * @returns 'response?.b2bAccountUsers', which contains list of B2B Users based on search request.
  */
 
-const prefetchB2bUsers = async ({
-  accountId,
-  filter,
-  pageSize,
-  startIndex,
-  q,
-}: QueryB2BUserArgs) => {
-  const queryClient = new QueryClient()
-  // The results of this query will be cached like a normal query
-  await queryClient.prefetchQuery({
-    queryKey: customerB2BUserKeys.search(startIndex + 5, pageSize, q, filter),
-    queryFn: () =>
-      loadCustomerB2BUsers({
-        accountId,
-        filter,
-        pageSize,
-        startIndex: startIndex + 5,
-        q,
-      }),
-  })
-}
+// WIP -> Prefetch users
+
+// const prefetchB2bUsers = async ({
+//   accountId,
+//   filter,
+//   pageSize,
+//   startIndex,
+//   q,
+// }: QueryB2BUserArgs) => {
+//   const queryClient = new QueryClient()
+//   // The results of this query will be cached like a normal query
+//   await queryClient.prefetchQuery({
+//     queryKey: customerB2BUserKeys.search(startIndex + 5, pageSize, q, filter),
+//     queryFn: () =>
+//       loadCustomerB2BUsers({
+//         accountId,
+//         filter,
+//         pageSize,
+//         startIndex: startIndex + 5,
+//         q,
+//       }),
+//   })
+// }
 
 export const useGetB2BUserQueries = ({
   accountId,
@@ -80,6 +82,7 @@ export const useGetB2BUserQueries = ({
   })
 
   // WIP -> Prefetch users
+
   // if (result.isFetched) prefetchB2bUsers({ accountId, filter, pageSize, startIndex, q })
   return {
     data,
