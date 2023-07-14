@@ -81,7 +81,11 @@ const ListItemOptions = (props: ListItemOptionsProps) => {
     <Box style={{ justifyContent: 'flex-end', display: 'flex' }}>
       <Button sx={styles.iconButtonStyles}>{t('initiate-quote')}</Button>
       <Button sx={styles.iconButtonStyles}>{t('add-to-cart')}</Button>
-      <IconButton sx={styles.iconButtonStyles} onClick={() => onEditList(id)}>
+      <IconButton
+        sx={styles.iconButtonStyles}
+        onClick={() => onEditList(id)}
+        data-testId={'editBtn'}
+      >
         <Edit />
       </IconButton>
       <IconButton sx={styles.iconButtonStyles} onClick={() => onCopyList(id)}>

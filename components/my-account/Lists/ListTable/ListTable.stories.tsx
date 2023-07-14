@@ -6,7 +6,6 @@ import ListTable from './ListTable'
 import { wishlistMock } from '@/__mocks__/stories'
 
 import { Maybe } from '@/lib/gql/types'
-
 const rows = wishlistMock.items
 
 export default {
@@ -26,7 +25,4 @@ export const Table = Template.bind({})
 Table.args = {
   rows,
   isLoading: false,
-  onEditList: (id: Maybe<string>) => console.log(id),
-  onDeleteList: (id: Maybe<string>) => console.log(id),
-  onCopyList: (id: Maybe<string>) => console.log(id),
 }
