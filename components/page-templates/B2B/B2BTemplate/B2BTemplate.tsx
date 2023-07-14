@@ -37,6 +37,31 @@ interface B2BTemplateProps {
   children?: React.ReactNode
 }
 
+interface B2BTemplateListItemProps {
+  heading: string
+  onClick?: () => void
+}
+
+export const B2BTemplateListItem = ({ heading, onClick }: B2BTemplateListItemProps) => {
+  const { t } = useTranslation('common')
+
+  return (
+    <>
+      <Divider sx={{ borderColor: 'grey.500' }} />
+      <Box
+        sx={{
+          ...B2BTemplateStyle.myAccountChildren,
+          ...B2BTemplateStyle.orderHistory,
+        }}
+        onClick={onClick}
+      >
+        <Typography variant="h3">{t(heading)}</Typography>
+        <ChevronRightIcon />
+      </Box>
+    </>
+  )
+}
+
 const B2BTemplate = (props: B2BTemplateProps) => {
   const { user } = props
   const { t } = useTranslation('common')
@@ -189,61 +214,11 @@ const B2BTemplate = (props: B2BTemplateProps) => {
           <Typography variant={mdScreen ? 'h1' : 'h2'}>{t('orders')}</Typography>
         </Box>
 
-        <Divider sx={{ borderColor: 'grey.500' }} />
-        <Box
-          sx={{
-            ...B2BTemplateStyle.myAccountChildren,
-            ...B2BTemplateStyle.orderHistory,
-          }}
-        >
-          <Typography variant="h3">{t('quick-order')}</Typography>
-          <ChevronRightIcon />
-        </Box>
-
-        <Divider sx={{ borderColor: 'grey.500' }} />
-        <Box
-          sx={{
-            ...B2BTemplateStyle.myAccountChildren,
-            ...B2BTemplateStyle.orderHistory,
-          }}
-          onClick={handleGoToOrderHistory}
-        >
-          <Typography variant="h3">{t('order-history')}</Typography>
-          <ChevronRightIcon />
-        </Box>
-
-        <Divider sx={{ borderColor: 'grey.500' }} />
-        <Box
-          sx={{
-            ...B2BTemplateStyle.myAccountChildren,
-            ...B2BTemplateStyle.orderHistory,
-          }}
-        >
-          <Typography variant="h3">{t('returns')}</Typography>
-          <ChevronRightIcon />
-        </Box>
-
-        <Divider sx={{ borderColor: 'grey.500' }} />
-        <Box
-          sx={{
-            ...B2BTemplateStyle.myAccountChildren,
-            ...B2BTemplateStyle.orderHistory,
-          }}
-        >
-          <Typography variant="h3">{t('quotes')}</Typography>
-          <ChevronRightIcon />
-        </Box>
-
-        <Divider sx={{ borderColor: 'grey.500' }} />
-        <Box
-          sx={{
-            ...B2BTemplateStyle.myAccountChildren,
-            ...B2BTemplateStyle.orderHistory,
-          }}
-        >
-          <Typography variant="h3">{t('lists')}</Typography>
-          <ChevronRightIcon />
-        </Box>
+        <B2BTemplateListItem heading="quick-order" />
+        <B2BTemplateListItem heading="order-history" onClick={handleGoToOrderHistory} />
+        <B2BTemplateListItem heading="returns" />
+        <B2BTemplateListItem heading="quotes" />
+        <B2BTemplateListItem heading="lists" />
 
         <Divider sx={{ backgroundColor: 'grey.300', ...B2BTemplateStyle.divider }} />
         <Box sx={{ ...B2BTemplateStyle.myAccountChildren, cursor: 'pointer' }} onClick={logout}>
