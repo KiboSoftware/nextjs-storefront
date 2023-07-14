@@ -10,6 +10,17 @@ import mockRouter from 'next-router-mock'
 import * as stories from './B2BTemplate.stories' // import all stories from the stories file
 const { Common } = composeStories(stories)
 
+jest.mock('@mui/material', () => {
+  const originalModule = jest.requireActual('@mui/material')
+  return {
+    ...originalModule,
+    useTheme: jest.fn().mockReturnValue({
+      breakpoints: { up: jest.fn((size) => `(max-width: ${size})`) },
+    }),
+    useMediaQuery: jest.fn().mockReturnValue(true),
+  }
+})
+
 const FullWidthDividerMock = () => <div data-testid="full-width-divider-component" />
 jest.mock('../../../common/FullWidthDivider/FullWidthDivider', () => () => FullWidthDividerMock())
 
@@ -21,6 +32,12 @@ jest.mock('../../../my-account/PaymentMethod/PaymentMethod', () => () => Payment
 
 const AddressBookMock = () => <div data-testid="address-book-component" />
 jest.mock('../../../my-account/AddressBook/AddressBook', () => () => AddressBookMock())
+
+jest.mock('next-recaptcha-v3', () => ({
+  useReCaptcha: () => ({
+    executeRecaptcha: (action: string) => Promise<string>,
+  }),
+}))
 
 describe('[component] - MyAccountTemplate', () => {
   const setup = () => {
