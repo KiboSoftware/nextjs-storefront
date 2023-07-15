@@ -36,7 +36,12 @@ const userFormStyles = makeStyles((theme: Theme) => ({
   cancelButtonInDesktopEditMode: {
     backgroundColor: theme.palette.grey[600],
     color: theme.palette.secondary.light,
+    border: `1px solid ${theme.palette.grey[600]}`,
     marginRight: '8px',
+    '&:hover': {
+      backgroundColor: theme.palette.grey[700],
+      border: `1px solid ${theme.palette.grey[700]}`,
+    },
   },
   cancelButtonInDesktop: {
     marginRight: '8px',

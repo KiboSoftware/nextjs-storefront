@@ -53,7 +53,7 @@ const UserTable = (props: UserTableProps) => {
   const { b2bUsers, onDelete, onSave } = props
 
   const { t } = useTranslation('common')
-  const { showModal } = useModalContext()
+  const { showModal, closeModal } = useModalContext()
   const theme = useTheme()
   const mdScreen = useMediaQuery(theme.breakpoints.up('md'))
   const [editUserId, setEditUserId] = useState<string | undefined>(undefined)
@@ -71,7 +71,10 @@ const UserTable = (props: UserTableProps) => {
         formTitle: t('edit-user'),
         b2BUser,
         onSave: (b2BUserInput: B2BUserInput) => onSave(b2BUserInput),
-        onClose: () => setEditUserId(undefined),
+        onClose: () => {
+          setEditUserId(undefined)
+          closeModal()
+        },
       },
     })
   }
@@ -98,6 +101,13 @@ const UserTable = (props: UserTableProps) => {
         </TableRow>
       </TableHead>
       <TableBody>
+        {!b2bUsers?.length ? (
+          <TableRow key="no-record-found">
+            <TableCell colSpan={7} style={{ width: '100%', padding: 0 }}>
+              <Typography style={{ textAlign: 'center' }}>No record found</Typography>
+            </TableCell>
+          </TableRow>
+        ) : null}
         {b2bUsers?.map((b2bUser) =>
           editUserId && editUserId === b2bUser?.userId ? (
             <TableRow key={b2bUser?.userId}>
