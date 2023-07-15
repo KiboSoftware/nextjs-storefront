@@ -4,9 +4,8 @@ import { useTranslation } from 'next-i18next'
 
 import KiboDialog from '@/components/common/KiboDialog/KiboDialog'
 import UserForm from '@/components/my-account/User/UserForm/UserForm'
-import { useModalContext } from '@/context'
 
-import { B2BUser, B2BUserInput } from '@/lib/gql/types'
+import { B2BUser } from '@/lib/gql/types'
 interface UserFormDialogProps {
   isEditMode: boolean
   isUserFormInDialog?: boolean
@@ -16,7 +15,6 @@ interface UserFormDialogProps {
   onClose: () => void
 }
 const UserFormDialog = (props: UserFormDialogProps) => {
-  const { closeModal } = useModalContext()
   const { t } = useTranslation('common')
   const {
     formTitle = t('add-new-user'),
@@ -27,14 +25,6 @@ const UserFormDialog = (props: UserFormDialogProps) => {
     onClose,
   } = props
 
-  const handleSave = (formData: B2BUserInput) => {
-    onSave(formData)
-  }
-
-  const handleClose = () => {
-    onClose()
-    closeModal()
-  }
   return (
     <KiboDialog
       showCloseButton
@@ -47,12 +37,12 @@ const UserFormDialog = (props: UserFormDialogProps) => {
           isEditMode={isEditMode}
           isUserFormInDialog={isUserFormInDialog}
           b2BUser={b2BUser}
-          onSave={handleSave}
-          onClose={handleClose}
+          onSave={onSave}
+          onClose={onClose}
         />
       }
       customMaxWidth="35rem"
-      onClose={closeModal}
+      onClose={onClose}
     />
   )
 }
