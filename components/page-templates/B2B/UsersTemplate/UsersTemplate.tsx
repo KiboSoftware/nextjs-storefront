@@ -12,6 +12,7 @@ import {
   CircularProgress,
   Grid,
   Pagination,
+  SxProps,
   Theme,
   Typography,
   styled,
@@ -54,6 +55,7 @@ interface UsersTemplateProps {
 interface AddUserButtonProps {
   isUserFormOpen: boolean
   onClick: () => void
+  sx?: SxProps<Theme>
 }
 
 const BackButtonLink = styled(Link)(({ theme }: { theme: Theme }) => ({
@@ -80,7 +82,7 @@ const PaginationContainer = styled(Box)(({ theme }: { theme: Theme }) => ({
 }))
 
 const AddUserButton = (props: AddUserButtonProps) => {
-  const { isUserFormOpen, onClick } = props
+  const { isUserFormOpen, onClick, sx } = props
   const { t } = useTranslation('common')
   return (
     <Button
@@ -89,6 +91,7 @@ const AddUserButton = (props: AddUserButtonProps) => {
       onClick={onClick}
       disableElevation
       id="formOpenButton"
+      sx={sx}
     >
       <span style={{ display: 'flex', alignItems: 'center' }}>
         <AddCircleOutlineIcon style={{ marginRight: '8px', width: '19px' }} />
@@ -244,15 +247,15 @@ const UsersTemplate = (props: UsersTemplateProps) => {
         <Grid container>
           <Grid item xs={12} md={12}>
             {/* Button visible only in desktop view and on click, form will open below the button */}
-            {mdScreen && (
-              <AddUserButton
-                isUserFormOpen={isUserFormOpen}
-                onClick={handleAddUserDesktopButtonClick}
-              />
-            )}
+            <AddUserButton
+              sx={{ display: { xs: 'none', md: 'block' } }}
+              isUserFormOpen={isUserFormOpen}
+              onClick={handleAddUserDesktopButtonClick}
+            />
             {/* Button visible only in mobile view, when form is not open and on click, form will open in dialog */}
-            {!mdScreen && !isUserFormOpen && (
+            {!isUserFormOpen && (
               <AddUserButton
+                sx={{ display: { xs: 'block', md: 'none' } }}
                 isUserFormOpen={isUserFormOpen}
                 onClick={handleAddUserMobileButtonClick}
               />
@@ -277,7 +280,7 @@ const UsersTemplate = (props: UsersTemplateProps) => {
           />
         </SearchBoxContainer>
 
-        {isLoading ? (
+        {!user && isLoading ? (
           <Box style={{ width: '100%', display: 'flex', justifyContent: 'center' }}>
             <CircularProgress />
           </Box>

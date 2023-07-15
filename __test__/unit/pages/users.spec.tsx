@@ -19,8 +19,11 @@ jest.mock('next-i18next/serverSideTranslations', () => ({
   }),
 }))
 
-const UserTableMock = () => <div data-testid="user-table-mock" />
-jest.mock('@/components/my-account/User/UserTable/UserTable.tsx', () => () => UserTableMock())
+const UsersTemplateMock = () => <div data-testid="users-template-mock" />
+jest.mock(
+  '@/components/page-templates/B2B/UsersTemplate/UsersTemplate',
+  () => () => UsersTemplateMock()
+)
 
 jest.mock('@/context/AuthContext', () => ({
   useAuthContext: () => ({ user: { id: 1001 } }),
@@ -51,40 +54,12 @@ describe('[page] Users Page', () => {
     })
   })
 
-  it('should render loader if b2b account user list not available', async () => {
+  it('should render the SubscriptionPage', () => {
     render(<UsersPage />, {
       wrapper: createQueryClientWrapper(),
     })
-    const loader = screen.getByRole('progressbar')
-    expect(loader).toBeVisible()
-  })
 
-  it('should check if search bar is available', async () => {
-    render(<UsersPage />, {
-      wrapper: createQueryClientWrapper(),
-    })
-    const searchBar = screen.getByPlaceholderText('user-search-placeholder')
-    expect(searchBar).toBeVisible()
-  })
-
-  it('should render user table', async () => {
-    const queryClient = new QueryClient()
-    render(
-      <QueryClientProvider client={queryClient}>
-        <UsersPage />
-      </QueryClientProvider>,
-      {
-        wrapper: createQueryClientWrapper(),
-      }
-    )
-
-    queryClient.setQueryData(
-      customerB2BUserKeys.search(0, 5, '', 'isRemoved eq false'),
-      customerB2BUserForPage0Mock
-    )
-    await waitFor(() => {
-      const userTable = screen.getByTestId('user-table-mock')
-      expect(userTable).toBeVisible()
-    })
+    const usersTemplate = screen.getByTestId('users-template-mock')
+    expect(usersTemplate).toBeVisible()
   })
 })
