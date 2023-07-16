@@ -21,6 +21,7 @@ import { useRouter } from 'next/router'
 import { useTranslation } from 'next-i18next'
 import { useReCaptcha } from 'next-recaptcha-v3'
 
+import { MyAccountTemplateStyle } from './MyAccountTemplate.styles'
 import { MyProfile, PaymentMethod, AddressBook } from '@/components/my-account'
 import { useAuthContext, useSnackbarContext } from '@/context'
 import { useCardContactActions } from '@/hooks'
@@ -28,58 +29,6 @@ import { validateGoogleReCaptcha } from '@/lib/helpers'
 import type { BillingAddress, CardType } from '@/lib/types'
 
 import type { CustomerAccount } from '@/lib/gql/types'
-
-const style = {
-  accordion: {
-    ':before': {
-      backgroundColor: 'transparent',
-    },
-    boxShadow: 0,
-    borderRadius: 0,
-  },
-
-  accordionDetails: {
-    pt: 0,
-    p: { md: 0 },
-  },
-  myAccountChildren: {
-    paddingLeft: { md: 0, xs: '1rem' },
-    paddingRight: { md: 0, xs: '1rem' },
-    marginTop: '0.75rem',
-    marginBottom: '0.75rem',
-  },
-  accordionSummary: {
-    padding: { md: 0 },
-  },
-  expandedIcon: {
-    color: 'text.primary',
-  },
-  orderHistory: {
-    display: 'flex',
-    justifyContent: 'space-between',
-    cursor: 'pointer',
-    alignItems: 'center',
-  },
-  accountCircle: {
-    fontSize: {
-      md: '2.7rem',
-      xs: '3.3rem',
-    },
-  },
-  backButton: {
-    typography: 'body2',
-    textDecoration: 'none',
-    color: 'text.primary',
-    display: 'flex',
-    alignItems: 'center',
-    padding: '1rem 0.5rem',
-    cursor: 'pointer',
-  },
-  divider: {
-    height: '1.188rem',
-    borderColor: 'transparent',
-  },
-}
 
 interface MyAccountTemplateProps {
   user?: CustomerAccount
@@ -165,7 +114,7 @@ const MyAccountTemplate = (props: MyAccountTemplateProps) => {
     <Grid container>
       <Grid item md={8} xs={12}>
         {!mdScreen && (
-          <Link aria-label={t('back')} sx={{ ...style.backButton }} href="/">
+          <Link aria-label={t('back')} sx={{ ...MyAccountTemplateStyle.backButton }} href="/">
             <ChevronLeft />
             {t('back')}
           </Link>
@@ -174,11 +123,11 @@ const MyAccountTemplate = (props: MyAccountTemplateProps) => {
           sx={{
             display: { md: 'flex', xs: 'block' },
             alignItems: 'center',
-            ...style.myAccountChildren,
+            ...MyAccountTemplateStyle.myAccountChildren,
           }}
         >
           <Box sx={{ display: { xs: 'flex' }, justifyContent: { xs: 'center' } }}>
-            <AccountCircle sx={{ ...style.accountCircle }} />
+            <AccountCircle sx={{ ...MyAccountTemplateStyle.accountCircle }} />
           </Box>
           <Typography
             variant={mdScreen ? 'h1' : 'h2'}
@@ -192,12 +141,12 @@ const MyAccountTemplate = (props: MyAccountTemplateProps) => {
         {shopperAccountActionList.map((data) => {
           return (
             <Box key={data.id}>
-              <Accordion disableGutters sx={{ ...style.accordion }}>
+              <Accordion disableGutters sx={{ ...MyAccountTemplateStyle.accordion }}>
                 <AccordionSummary
-                  expandIcon={<ExpandMoreIcon sx={{ ...style.expandedIcon }} />}
+                  expandIcon={<ExpandMoreIcon sx={{ ...MyAccountTemplateStyle.expandedIcon }} />}
                   aria-controls={data.controls}
                   id={data.id}
-                  sx={{ ...style.accordionSummary }}
+                  sx={{ ...MyAccountTemplateStyle.accordionSummary }}
                 >
                   <Typography variant="h3">{data.header}</Typography>
                 </AccordionSummary>
@@ -208,7 +157,7 @@ const MyAccountTemplate = (props: MyAccountTemplateProps) => {
           )
         })}
 
-        <Box sx={{ ...style.myAccountChildren }}>
+        <Box sx={{ ...MyAccountTemplateStyle.myAccountChildren }}>
           <Typography variant={mdScreen ? 'h1' : 'h2'}>{t('order-details')}</Typography>
         </Box>
 
@@ -217,8 +166,8 @@ const MyAccountTemplate = (props: MyAccountTemplateProps) => {
         {isSubscriptionEnabled && (
           <Box
             sx={{
-              ...style.myAccountChildren,
-              ...style.orderHistory,
+              ...MyAccountTemplateStyle.myAccountChildren,
+              ...MyAccountTemplateStyle.orderHistory,
             }}
             onClick={handleGoToSubscription}
           >
@@ -231,16 +180,19 @@ const MyAccountTemplate = (props: MyAccountTemplateProps) => {
         <Divider sx={{ borderColor: 'grey.500' }} />
         <Box
           sx={{
-            ...style.myAccountChildren,
-            ...style.orderHistory,
+            ...MyAccountTemplateStyle.myAccountChildren,
+            ...MyAccountTemplateStyle.orderHistory,
           }}
           onClick={handleGoToOrderHistory}
         >
           <Typography variant="h3">{t('order-history')}</Typography>
           <ChevronRightIcon />
         </Box>
-        <Divider sx={{ backgroundColor: 'grey.300', ...style.divider }} />
-        <Box sx={{ ...style.myAccountChildren, cursor: 'pointer' }} onClick={logout}>
+        <Divider sx={{ backgroundColor: 'grey.300', ...MyAccountTemplateStyle.divider }} />
+        <Box
+          sx={{ ...MyAccountTemplateStyle.myAccountChildren, cursor: 'pointer' }}
+          onClick={logout}
+        >
           <Typography variant="h3">{t('logout')}</Typography>
         </Box>
         <Divider sx={{ borderColor: 'grey.500' }} />

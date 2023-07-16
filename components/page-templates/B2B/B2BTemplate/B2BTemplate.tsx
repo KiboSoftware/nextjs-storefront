@@ -24,6 +24,7 @@ import { useTranslation } from 'next-i18next'
 import { useReCaptcha } from 'next-recaptcha-v3'
 
 import { B2BTemplateStyle } from './B2BTemplate.styles'
+import { MyAccountTemplateStyle } from '../../MyAccountTemplate/MyAccountTemplate.styles'
 import { MyProfile, PaymentMethod, AddressBook } from '@/components/my-account'
 import { useAuthContext, useSnackbarContext } from '@/context'
 import { useCardContactActions } from '@/hooks'
@@ -50,8 +51,8 @@ export const B2BTemplateListItem = ({ heading, onClick }: B2BTemplateListItemPro
       <Divider sx={{ borderColor: 'grey.500' }} />
       <Box
         sx={{
-          ...B2BTemplateStyle.myAccountChildren,
-          ...B2BTemplateStyle.orderHistory,
+          ...MyAccountTemplateStyle.myAccountChildren,
+          ...MyAccountTemplateStyle.orderHistory,
         }}
         onClick={onClick}
       >
@@ -174,7 +175,7 @@ const B2BTemplate = (props: B2BTemplateProps) => {
           sx={{
             display: { md: 'flex', xs: 'block' },
             alignItems: 'center',
-            ...B2BTemplateStyle.myAccountChildren,
+            ...MyAccountTemplateStyle.myAccountChildren,
           }}
         >
           <Typography
@@ -189,15 +190,17 @@ const B2BTemplate = (props: B2BTemplateProps) => {
         {shopperAccountActionList.map((data) => {
           return (
             <Box key={data.id}>
-              <Accordion disableGutters sx={{ ...B2BTemplateStyle.accordion }}>
+              <Accordion disableGutters sx={{ ...MyAccountTemplateStyle.accordion }}>
                 <AccordionSummary
                   onClick={() => data.path && router.push(data.path)}
                   expandIcon={
-                    data.component && <ExpandMoreIcon sx={{ ...B2BTemplateStyle.expandedIcon }} />
+                    data.component && (
+                      <ExpandMoreIcon sx={{ ...MyAccountTemplateStyle.expandedIcon }} />
+                    )
                   }
                   aria-controls={data.controls}
                   id={data.id}
-                  sx={{ ...B2BTemplateStyle.accordionSummary }}
+                  sx={{ ...MyAccountTemplateStyle.accordionSummary }}
                 >
                   <Typography variant="h3">{data.header}</Typography>
                 </AccordionSummary>
@@ -208,7 +211,7 @@ const B2BTemplate = (props: B2BTemplateProps) => {
           )
         })}
 
-        <Box sx={{ ...B2BTemplateStyle.myAccountChildren }}>
+        <Box sx={{ ...MyAccountTemplateStyle.myAccountChildren }}>
           <Typography variant={mdScreen ? 'h1' : 'h2'}>{t('orders')}</Typography>
         </Box>
 
@@ -219,7 +222,10 @@ const B2BTemplate = (props: B2BTemplateProps) => {
         <B2BTemplateListItem heading="lists" />
 
         <Divider sx={{ backgroundColor: 'grey.300', ...B2BTemplateStyle.divider }} />
-        <Box sx={{ ...B2BTemplateStyle.myAccountChildren, cursor: 'pointer' }} onClick={logout}>
+        <Box
+          sx={{ ...MyAccountTemplateStyle.myAccountChildren, cursor: 'pointer' }}
+          onClick={logout}
+        >
           <Typography variant="h3">{t('logout')}</Typography>
         </Box>
         <Divider sx={{ borderColor: 'grey.500' }} />
