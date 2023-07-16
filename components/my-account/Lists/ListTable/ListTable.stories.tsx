@@ -5,6 +5,7 @@ import { ComponentStory, ComponentMeta } from '@storybook/react'
 import ListTable from './ListTable'
 import { wishlistMock } from '@/__mocks__/stories'
 
+import { Maybe } from '@/lib/gql/types'
 const rows = wishlistMock.items
 
 export default {
