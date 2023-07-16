@@ -20,12 +20,13 @@ describe('[component] - ListTable', () => {
     const table = screen.getByRole('table')
     expect(table).toBeVisible()
   })
-  it('should check for number of rows in list table', () => {
+  it('should check for number of rows in list table and rows are visible', () => {
     setup()
     const tableRows = screen.getAllByRole('row')
     if (Table.args?.rows) {
       // adding one to length because using TableRow in the TableHead
       expect(tableRows.length).toEqual(Table.args.rows.length + 1)
     }
+    tableRows.forEach((row) => expect(row).toBeVisible())
   })
 })
