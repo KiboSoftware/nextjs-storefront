@@ -28,7 +28,6 @@ Common.args = {
   isEditMode: false,
   b2BUser: undefined,
   onSave: (data: B2BUser) => console.log(data),
-  isUserFormInDialog: true,
 }
 
 export const WithProps = Template.bind({})
