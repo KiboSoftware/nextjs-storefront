@@ -1,7 +1,7 @@
 /**
  * @module useGetB2BUserQuery
  */
-import { QueryClient, useQuery } from '@tanstack/react-query'
+import { useQuery } from '@tanstack/react-query'
 
 import { makeGraphQLClient } from '@/lib/gql/client'
 import { customerB2BUserKeys } from '@/lib/react-query/queryKeys'

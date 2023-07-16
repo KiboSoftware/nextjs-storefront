@@ -1,5 +1,5 @@
 import { composeStories } from '@storybook/testing-react'
-import { fireEvent, render, screen, waitFor } from '@testing-library/react'
+import { fireEvent, render, screen } from '@testing-library/react'
 import '@testing-library/jest-dom'
 
 import * as stories from './KiboSwitch.stories' // import all stories from the stories file

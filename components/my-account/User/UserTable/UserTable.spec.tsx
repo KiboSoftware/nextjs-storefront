@@ -64,7 +64,7 @@ describe('[component] User Table', () => {
 
     const rows = await screen.findAllByRole('row')
 
-    rows.map(async (row, index) => {
+    rows.forEach(async (row, index) => {
       if (index > 0) {
         const rowData = data && data[index - 1]
 

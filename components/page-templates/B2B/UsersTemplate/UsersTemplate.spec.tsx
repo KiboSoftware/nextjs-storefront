@@ -3,10 +3,9 @@ import React from 'react'
 
 import '@testing-library/jest-dom'
 import { composeStories } from '@storybook/testing-react'
-import { fireEvent, render, screen, waitFor } from '@testing-library/react'
+import { fireEvent, render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import mediaQuery from 'css-mediaquery'
-import mockRouter from 'next-router-mock'
 
 import * as stories from './UsersTemplate.stories' // import all stories from the stories file
 import { createQueryClientWrapper } from '@/__test__/utils'
@@ -74,9 +73,6 @@ jest.mock(
 const UserTableMock = () => <div data-testid="user-table-mock"></div>
 jest.mock('../../../my-account/User/UserTable/UserTable', () => () => UserTableMock())
 
-// const PaginationMock = () => <div data-testid="pagination-mock"></div>
-// jest.mock('@mui/material', () => () => PaginationMock())
-
 jest.mock('@/components/dialogs', () => ({
   __esModule: true,
   UserFormDialog: (props: UserFormDialogProps) => {
@@ -106,13 +102,6 @@ describe('[component] - UsersTemplate', () => {
       user,
     }
   }
-
-  // it('should render loader if b2b account user list not available', async () => {
-  //     render(<Common />)
-
-  //     const loader = await screen.getByRole('progressbar')
-  //     expect(loader).toBeVisible()
-  // })
 
   it('should render component', async () => {
     render(<Common />, {
@@ -152,10 +141,6 @@ describe('[component] - UsersTemplate', () => {
 
     const addUserButton = screen.getAllByText('add-user')[1]
     fireEvent.click(addUserButton)
-
-    // const userFormDialog = await screen.findByRole('heading', { level: 1 })
-    // console.log(userFormDialog)
-    // expect(userFormDialog).toBeVisible()
   })
 
   it('should run handleSearch method when user types in search field', async () => {
@@ -171,7 +156,5 @@ describe('[component] - UsersTemplate', () => {
 
     const searchBarInput = screen.getByRole('textbox', { name: 'search-input' })
     expect(searchBarInput).toBeVisible()
-    // userEvent.type(searchBarInput, 'Kushagra')
-    // expect(handleSearch).toHaveBeenCalled()
   })
 })
