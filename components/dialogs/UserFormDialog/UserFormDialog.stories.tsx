@@ -26,7 +26,6 @@ const Template: ComponentStory<typeof UserFormDialog> = ({ ...args }) => (
 export const Common = Template.bind({})
 Common.args = {
   isEditMode: false,
-  formTitle: 'Add a new user',
   b2BUser: undefined,
   onSave: (data: B2BUser) => console.log(data),
   isUserFormInDialog: true,
