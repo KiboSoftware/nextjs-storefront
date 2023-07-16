@@ -11,11 +11,11 @@ const onClose = jest.fn()
 
 const userFormMock = ({ onSave, onClose }: { onSave: () => void; onClose: () => void }) => (
   <div data-testid="user-form-mock">
-    <button onClick={() => onClose()} data-testid="reset-mock-button">
-      Reset
+    <button onClick={() => onClose()} data-testid="cancel-mock-button">
+      Cancel
     </button>
-    <button onClick={() => onSave()} data-testid="submit-mock-button">
-      Submit
+    <button onClick={() => onSave()} data-testid="save-mock-button">
+      Save
     </button>
   </div>
 )
@@ -44,19 +44,37 @@ describe('[components]  UserFormDialog Dialog', () => {
     expect(userFormDialogComponent).toBeVisible()
   })
 
-  it('should save on clicking submit button', async () => {
+  it('should render with the correct form title', () => {
+    const formTitle = 'Edit User'
+    render(<Common {...Common.args} formTitle={formTitle} />)
+
+    const titleElement = screen.getByText(formTitle)
+    expect(titleElement).toBeInTheDocument()
+  })
+
+  it('should render save and cancel text on button when isUserFormInDialog is true', () => {
+    render(<Common {...Common.args} isUserFormInDialog={false} />)
+
+    const cancelText = screen.getByText('Cancel')
+    expect(cancelText).toBeInTheDocument()
+
+    const saveText = screen.getByText('Save')
+    expect(saveText).toBeInTheDocument()
+  })
+
+  it('should save on clicking save button', async () => {
     setup({ ...Common.args, isUserFormInDialog: true })
 
-    const submitButton = screen.getByTestId('submit-mock-button')
-    userEvent.click(submitButton)
+    const saveButton = screen.getByTestId('save-mock-button')
+    userEvent.click(saveButton)
     await waitFor(() => expect(onSave).toHaveBeenCalled())
   })
 
-  it('should close on clicking reset button', async () => {
+  it('should close on clicking cancel button', async () => {
     setup({ ...Common.args, isUserFormInDialog: true })
 
-    const resetButton = screen.getByTestId('reset-mock-button')
-    userEvent.click(resetButton)
+    const cancelButton = screen.getByTestId('cancel-mock-button')
+    userEvent.click(cancelButton)
     await waitFor(() => expect(onClose).toHaveBeenCalled())
   })
 })
