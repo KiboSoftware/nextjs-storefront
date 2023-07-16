@@ -64,11 +64,11 @@ describe('[component] User Table', () => {
 
     const rows = await screen.findAllByRole('row')
 
-    rows.forEach(async (row, index) => {
-      if (index > 0) {
-        const rowData = data && data[index - 1]
+    await Promise.all(
+      rows.slice(1).map(async (row, index) => {
+        const rowData = data && data[index]
 
-        const cells = await within(row).findAllByLabelText('td')
+        const cells = await within(row).findAllByRole('cell')
 
         const emailCell = cells[0]
         const firstNameCell = cells[1]
@@ -83,8 +83,8 @@ describe('[component] User Table', () => {
           rowData?.roles?.length ? rowData?.roles[0]?.roleName ?? '' : 'N/A'
         )
         expect(statusCell).toHaveTextContent(rowData?.isActive ? 'active' : 'in-active')
-      }
-    })
+      })
+    )
   })
 
   it('should show user form when user clicks on Edit icon', async () => {
