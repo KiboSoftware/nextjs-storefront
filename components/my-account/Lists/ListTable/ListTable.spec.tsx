@@ -1,7 +1,6 @@
 import React from 'react'
 
-
-import { composeStories } from '@storybook/testin
+import { composeStories } from '@storybook/testing-react'
 import { render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 
@@ -28,10 +27,5 @@ describe('[component] - ListTable', () => {
       // adding one to length because using TableRow in the TableHead
       expect(tableRows.length).toEqual(Table.args.rows.length + 1)
     }
-  })
-  it('should open edit form for the list', () => {
-    setup()
-    const editBtn = screen.getAllByTestId('editBtn')
-    console.log(editBtn)
   })
 })
