@@ -23,28 +23,22 @@ import formatDate from '@/lib/helpers/formatDate'
 
 import { CrWishlist, Maybe } from '@/lib/gql/types'
 
-interface ListItemOptionsProps {
-  id: Maybe<string>
-  onDeleteList: (param: Maybe<string>) => void
-  onCopyList: (param: Maybe<string>) => void
-  onEditList: (param: Maybe<string>) => void
-}
-
 interface ListTableProps {
   rows: CrWishlist[]
-  onDeleteList: (param: Maybe<string>) => void
-  onCopyList: (param: Maybe<string>) => void
-  onEditList: (param: Maybe<string>) => void
+  onDeleteList: (param: Maybe<string> | undefined) => void
+  onCopyList: (param: Maybe<string> | undefined) => void
+  onEditList: (param: Maybe<string> | undefined) => void
   isLoading: boolean
 }
 
-const ListItemOptions = (props: ListItemOptionsProps) => {
-  const { id, onDeleteList, onCopyList, onEditList } = props
+const ListTable = (props: ListTableProps) => {
+  const { rows, onDeleteList, onCopyList, onEditList, isLoading } = props
+  // state for mobile menu
   const [anchorEl, setAnchorEL] = useState<HTMLElement | null>(null)
 
+  const { t } = useTranslation('common')
   const theme = useTheme()
   const mdScreen = useMediaQuery(theme.breakpoints.up('md'))
-  const { t } = useTranslation('common')
 
   const options = [
     { name: 'Edit', onClick: onEditList },
@@ -53,57 +47,6 @@ const ListItemOptions = (props: ListItemOptionsProps) => {
     { name: 'Duplicate', onClick: onCopyList },
     { name: 'Delete', onClick: onDeleteList },
   ]
-
-  if (!mdScreen)
-    return (
-      <>
-        <IconButton style={{ padding: '0px' }} onClick={(e) => setAnchorEL(e.currentTarget)}>
-          <MoreVert />
-        </IconButton>
-        <Menu anchorEl={anchorEl} open={Boolean(anchorEl)} onClose={() => setAnchorEL(null)}>
-          {options.map((option, i) => (
-            <MenuItem
-              key={option.name}
-              onClick={() => {
-                option.onClick(id)
-                setAnchorEL(null)
-              }}
-              style={i !== options.length - 1 ? { borderBottom: '0.5px solid #EAEAEA' } : {}}
-            >
-              {option.name}
-            </MenuItem>
-          ))}
-        </Menu>
-      </>
-    )
-
-  return (
-    <Box style={{ justifyContent: 'flex-end', display: 'flex' }}>
-      <Button sx={styles.iconButtonStyles}>{t('initiate-quote')}</Button>
-      <Button sx={styles.iconButtonStyles}>{t('add-to-cart')}</Button>
-      <IconButton
-        sx={styles.iconButtonStyles}
-        onClick={() => onEditList(id)}
-        data-testId={'editBtn'}
-      >
-        <Edit />
-      </IconButton>
-      <IconButton sx={styles.iconButtonStyles} onClick={() => onCopyList(id)}>
-        <FolderCopySharp />
-      </IconButton>
-      <IconButton sx={styles.iconButtonStyles} onClick={() => onDeleteList(id)}>
-        <Delete />
-      </IconButton>
-    </Box>
-  )
-}
-
-const ListTable = (props: ListTableProps) => {
-  const { rows, onDeleteList, onCopyList, onEditList, isLoading } = props
-
-  const { t } = useTranslation('common')
-  const theme = useTheme()
-  const mdScreen = useMediaQuery(theme.breakpoints.up('md'))
 
   return (
     <TableContainer sx={{ opacity: isLoading ? '0.5' : '1' }}>
@@ -146,20 +89,65 @@ const ListTable = (props: ListTableProps) => {
                 <TableCell style={{ ...styles.tableCellStyles, width: mdScreen ? '15%' : '30%' }}>
                   {formatDate(item.auditInfo?.createDate)}
                 </TableCell>
-                {mdScreen ? (
+                {mdScreen && (
                   <TableCell style={{ ...styles.tableCellStyles, width: '20%' }}>
                     {item.auditInfo?.createBy}
                   </TableCell>
-                ) : (
-                  <></>
                 )}
                 <TableCell style={{ ...styles.tableCellStyles, width: mdScreen ? '25%' : '10%' }}>
-                  <ListItemOptions
-                    id={item.id || ''}
-                    onDeleteList={onDeleteList}
-                    onCopyList={onCopyList}
-                    onEditList={onEditList}
-                  />
+                  {mdScreen ? (
+                    <Box style={{ justifyContent: 'flex-end', display: 'flex' }}>
+                      <Button sx={styles.iconButtonStyles}>{t('initiate-quote')}</Button>
+                      <Button sx={styles.iconButtonStyles}>{t('add-to-cart')}</Button>
+                      <IconButton
+                        sx={styles.iconButtonStyles}
+                        onClick={() => onEditList(item.id)}
+                        data-testId="editBtn"
+                      >
+                        <Edit />
+                      </IconButton>
+                      <IconButton sx={styles.iconButtonStyles} onClick={() => onCopyList(item.id)}>
+                        <FolderCopySharp />
+                      </IconButton>
+                      <IconButton
+                        sx={styles.iconButtonStyles}
+                        onClick={() => onDeleteList(item.id)}
+                      >
+                        <Delete />
+                      </IconButton>
+                    </Box>
+                  ) : (
+                    <>
+                      <IconButton
+                        style={{ padding: '0px' }}
+                        onClick={(e) => setAnchorEL(e.currentTarget)}
+                      >
+                        <MoreVert />
+                      </IconButton>
+                      <Menu
+                        anchorEl={anchorEl}
+                        open={Boolean(anchorEl)}
+                        onClose={() => setAnchorEL(null)}
+                      >
+                        {options.map((option, i) => (
+                          <MenuItem
+                            key={option.name}
+                            onClick={() => {
+                              option.onClick(item.id)
+                              setAnchorEL(null)
+                            }}
+                            style={
+                              i !== options.length - 1
+                                ? { borderBottom: '0.5px solid #EAEAEA' }
+                                : {}
+                            }
+                          >
+                            {option.name}
+                          </MenuItem>
+                        ))}
+                      </Menu>
+                    </>
+                  )}
                 </TableCell>
               </TableRow>
             )

@@ -28,7 +28,7 @@ interface ListsProps {
   isEditFormOpen: boolean
 }
 
-const Lists = (props: ListsProps) => {
+const ViewLists = (props: ListsProps) => {
   const { onEditFormToggle, isEditFormOpen } = props
   const { publicRuntimeConfig } = getConfig()
 
@@ -58,17 +58,17 @@ const Lists = (props: ListsProps) => {
   }, [data])
 
   // edit list function
-  const onEditList = (id: Maybe<string>) => {
+  const onEditList = (id: Maybe<string> | undefined) => {
     console.log(id, ' edit clicked')
   }
 
   // copy list function
-  const onCopyList = (id: Maybe<string>) => {
+  const onCopyList = (id: Maybe<string> | undefined) => {
     console.log(id, ' copy clicked')
   }
 
   // delete list function
-  const onDeleteList = (id: Maybe<string>) => {
+  const onDeleteList = (id: Maybe<string> | undefined) => {
     console.log(id, ' delete clicked')
   }
 
@@ -140,4 +140,4 @@ const Lists = (props: ListsProps) => {
   )
 }
 
-export default Lists
+export default ViewLists
