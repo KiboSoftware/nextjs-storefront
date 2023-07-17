@@ -1,6 +1,6 @@
 import '@testing-library/jest-dom'
 import { composeStories } from '@storybook/testing-react'
-import { render, screen, waitFor } from '@testing-library/react'
+import { fireEvent, render, screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 
 import * as stories from './UserForm.stories' // import all stories from the stories file
@@ -56,5 +56,18 @@ describe('[component] User Form', () => {
     await waitFor(() => expect(emaiAddressField.value).toBe(b2BUser?.emailAddress))
     await waitFor(() => expect(firstNameField.value).toBe(b2BUser?.firstName))
     await waitFor(() => expect(lastNameField.value).toBe(b2BUser?.lastName))
+  })
+
+  it('should reset the form and call onClose', async () => {
+    render(<Common {...WithProps.args} onClose={onClose} />)
+
+    // Access the cancel button element
+    const cancelButton = screen.getByTestId('reset-button')
+
+    // Simulate a click on the cancel button
+    fireEvent.click(cancelButton)
+
+    // Assert that the onClose function has been called
+    expect(onClose).toHaveBeenCalled()
   })
 })
