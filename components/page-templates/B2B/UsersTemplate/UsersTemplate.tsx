@@ -102,8 +102,14 @@ const AddUserButton = (props: AddUserButtonProps) => {
 }
 
 const UsersTemplate = (props: UsersTemplateProps) => {
-  const { publicRuntimeConfig } = getConfig()
-  const userRoles = publicRuntimeConfig.b2bUserRoles
+  const {
+    publicRuntimeConfig: {
+      b2bUserRoles,
+      debounceTimeout,
+      b2bUserListing: { defaultPageSize, defaultStartIndex, defaultFilter },
+    },
+  } = getConfig()
+  const userRoles = b2bUserRoles
 
   const theme = useTheme()
   const { user } = useAuthContext()
@@ -115,16 +121,16 @@ const UsersTemplate = (props: UsersTemplateProps) => {
 
   const [paginationState, setPaginationState] = useState({
     searchTerm: '',
-    pageSize: publicRuntimeConfig.b2bUserListing.defaultPageSize,
-    startIndex: publicRuntimeConfig.b2bUserListing.defaultStartIndex,
+    pageSize: defaultPageSize,
+    startIndex: defaultStartIndex,
   })
 
   const { data, isLoading } = useGetB2BUserQueries({
     accountId: user?.id as number,
-    filter: publicRuntimeConfig.b2bUserListing.defaultFilter,
+    filter: defaultFilter,
     pageSize: paginationState.pageSize,
     startIndex: paginationState.startIndex,
-    q: useDebounce(paginationState.searchTerm, publicRuntimeConfig.debounceTimeout),
+    q: useDebounce(paginationState.searchTerm, debounceTimeout),
   })
 
   const { removeCustomerB2bUser } = useRemoveCustomerB2bUserMutation()
@@ -152,7 +158,7 @@ const UsersTemplate = (props: UsersTemplateProps) => {
     setPaginationState({
       ...paginationState,
       searchTerm: searchText,
-      startIndex: publicRuntimeConfig.b2bUserListing.defaultStartIndex,
+      startIndex: defaultStartIndex,
     })
   }
 

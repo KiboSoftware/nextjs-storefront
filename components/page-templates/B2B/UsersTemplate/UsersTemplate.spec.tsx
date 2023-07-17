@@ -4,7 +4,6 @@ import React from 'react'
 import '@testing-library/jest-dom'
 import { composeStories } from '@storybook/testing-react'
 import { fireEvent, render, screen } from '@testing-library/react'
-import userEvent from '@testing-library/user-event'
 import mediaQuery from 'css-mediaquery'
 
 import * as stories from './UsersTemplate.stories' // import all stories from the stories file
@@ -95,14 +94,6 @@ jest.mock('@/components/dialogs', () => ({
 }))
 
 describe('[component] - UsersTemplate', () => {
-  const setup = () => {
-    const user = userEvent.setup()
-    render(<Common />)
-    return {
-      user,
-    }
-  }
-
   it('should render component', async () => {
     render(<Common />, {
       wrapper: createQueryClientWrapper(),

@@ -52,7 +52,6 @@ describe('[component] User Form', () => {
     const emaiAddressField = screen.getByLabelText('email-address') as HTMLInputElement
     const firstNameField = screen.getByLabelText('first-name') as HTMLInputElement
     const lastNameField = screen.getByLabelText('last-name-or-sur-name') as HTMLInputElement
-    const resetButton = await screen.findByTestId('reset-button')
 
     await waitFor(() => expect(emaiAddressField.value).toBe(b2BUser?.emailAddress))
     await waitFor(() => expect(firstNameField.value).toBe(b2BUser?.firstName))
