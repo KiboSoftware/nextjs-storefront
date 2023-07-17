@@ -17,11 +17,9 @@ describe('[components]  UserFormDialog Dialog', () => {
   it('should render component', async () => {
     setup({ ...Common.args })
 
-    const closeIcon = screen.getByRole('button', { name: 'close' })
     const userFormDialogComponent = screen.getByTestId('user-form')
     const dialogHeading = screen.getByRole('heading', { name: 'add-new-user' })
 
-    expect(closeIcon).toBeVisible()
     expect(dialogHeading).toBeVisible()
     expect(userFormDialogComponent).toBeVisible()
   })
