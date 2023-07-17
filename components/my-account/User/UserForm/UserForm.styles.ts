@@ -17,7 +17,7 @@ const userFormStyles = makeStyles((theme: Theme) => ({
     },
   },
   kiboSwitch: {
-    paddingTop: '20px !important',
+    paddingTop: '18px !important',
     paddingLeft: '2px !important',
     [theme.breakpoints.up('md')]: {
       paddingTop: '50px !important',
@@ -37,7 +37,7 @@ const userFormStyles = makeStyles((theme: Theme) => ({
     alignItems: 'center',
     paddingLeft: '0 !important',
     [theme.breakpoints.up('xs')]: {
-      paddingTop: '10px !important',
+      paddingTop: '6px !important',
     },
   },
   cancelButtonInDesktopEditMode: {

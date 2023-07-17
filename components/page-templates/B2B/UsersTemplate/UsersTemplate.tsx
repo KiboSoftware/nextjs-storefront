@@ -48,9 +48,6 @@ import {
 import { B2BUserInput, CustomerB2BUserRole } from '@/lib/types/CustomerB2BUser'
 
 import { B2BUser } from '@/lib/gql/types'
-interface UsersTemplateProps {
-  children?: React.ReactNode
-}
 
 interface AddUserButtonProps {
   isUserFormOpen: boolean
@@ -101,7 +98,7 @@ const AddUserButton = (props: AddUserButtonProps) => {
   )
 }
 
-const UsersTemplate = (props: UsersTemplateProps) => {
+const UsersTemplate = () => {
   const {
     publicRuntimeConfig: {
       b2bUserRoles,
@@ -169,7 +166,7 @@ const UsersTemplate = (props: UsersTemplateProps) => {
       startIndex: (data?.pageSize ?? 0) * (page - 1),
     })
 
-  const onAddUser = async (formValues: B2BUserInput) => {
+  const handleAddUser = async (formValues: B2BUserInput) => {
     const variables = buildCreateCustomerB2bUserParams({ user, values: formValues })
     const createUserResponse = await createCustomerB2bUser.mutateAsync({
       ...variables,
@@ -179,7 +176,7 @@ const UsersTemplate = (props: UsersTemplateProps) => {
     }
   }
 
-  const onUpdateUser = async (formValues: B2BUserInput, b2BUser?: B2BUser | undefined) => {
+  const handleUpdateUser = async (formValues: B2BUserInput, b2BUser?: B2BUser | undefined) => {
     const variables = buildUpdateCustomerB2bUserParams({ user, b2BUser, values: formValues })
     const updateUserResponse = await updateCustomerB2bUser.mutateAsync({
       ...variables,
@@ -230,7 +227,7 @@ const UsersTemplate = (props: UsersTemplateProps) => {
         isUserFormInDialog: true,
         formTitle: t('add-new-user'),
         b2BUser: undefined,
-        onSave: (b2BUserInput: B2BUserInput) => onAddUser(b2BUserInput),
+        onSave: (b2BUserInput: B2BUserInput) => handleAddUser(b2BUserInput),
         onClose: () => {
           setIsUserFormOpen(false)
           closeModal()
@@ -277,7 +274,7 @@ const UsersTemplate = (props: UsersTemplateProps) => {
             {isUserFormOpen && (
               <UserForm
                 isEditMode={false}
-                onSave={onAddUser}
+                onSave={handleAddUser}
                 onClose={() => setIsUserFormOpen(false)}
               />
             )}
@@ -294,7 +291,7 @@ const UsersTemplate = (props: UsersTemplateProps) => {
           />
         </SearchBoxContainer>
 
-        {!user && isLoading ? (
+        {!user || isLoading ? (
           <Box style={{ width: '100%', display: 'flex', justifyContent: 'center' }}>
             <CircularProgress />
           </Box>
@@ -302,7 +299,7 @@ const UsersTemplate = (props: UsersTemplateProps) => {
           <>
             <UserTable
               b2bUsers={data?.items as B2BUser[]}
-              onSave={onUpdateUser}
+              onSave={handleUpdateUser}
               onDelete={confirmDelete}
             />
             <PaginationContainer>
