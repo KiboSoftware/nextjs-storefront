@@ -29,6 +29,7 @@ const UserFormDialog = (props: UserFormDialogProps) => {
     <KiboDialog
       showCloseButton={false}
       Title={formTitle}
+      isAlignTitleCenter={true}
       showContentTopDivider={false}
       showContentBottomDivider={false}
       Actions={''}
