@@ -93,7 +93,7 @@ const AddUserButton = (props: AddUserButtonProps) => {
       id="formOpenButton"
       sx={sx}
     >
-      <span style={{ display: 'flex', alignItems: 'center' }}>
+      <span style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
         <AddCircleOutlineIcon style={{ marginRight: '8px', width: '19px' }} />
         <span style={{ paddingTop: '2px', fontWeight: '400' }}>{t('add-user')}</span>
       </span>
@@ -114,7 +114,7 @@ const UsersTemplate = (props: UsersTemplateProps) => {
   const theme = useTheme()
   const { user } = useAuthContext()
   const { t } = useTranslation('common')
-  const { showModal } = useModalContext()
+  const { showModal, closeModal } = useModalContext()
   const mdScreen = useMediaQuery(theme.breakpoints.up('md'))
 
   const [isUserFormOpen, setIsUserFormOpen] = useState<boolean>(false)
@@ -144,7 +144,8 @@ const UsersTemplate = (props: UsersTemplateProps) => {
       Component: ConfirmationDialog,
       props: {
         contentText: t('delete-user-confirmation-text'),
-        primaryButtonText: t('delete'),
+        primaryButtonText: t('yes-remove'),
+        title: t('confirmation'),
         onConfirm: () => {
           const accountId = user?.id
           const queryVars = { accountId, userId: id }
@@ -230,14 +231,17 @@ const UsersTemplate = (props: UsersTemplateProps) => {
         formTitle: t('add-new-user'),
         b2BUser: undefined,
         onSave: (b2BUserInput: B2BUserInput) => onAddUser(b2BUserInput),
-        onClose: () => setIsUserFormOpen(false),
+        onClose: () => {
+          setIsUserFormOpen(false)
+          closeModal()
+        },
       },
     })
   }
 
   return (
     <Grid>
-      <Grid item style={{ marginTop: '10px', marginBottom: '40px' }}>
+      <Grid item style={{ marginTop: '10px', marginBottom: '20px' }}>
         <BackButtonLink aria-label={t('my-account')} href="/my-account">
           <ChevronLeftIcon />
           {mdScreen && <Typography variant="body1">{t('my-account')}</Typography>}
@@ -261,7 +265,11 @@ const UsersTemplate = (props: UsersTemplateProps) => {
             {/* Button visible only in mobile view, when form is not open and on click, form will open in dialog */}
             {!isUserFormOpen && (
               <AddUserButton
-                sx={{ display: { xs: 'block', md: 'none' } }}
+                sx={{
+                  display: { xs: 'block', md: 'none' },
+                  width: { xs: '100%' },
+                  textAlign: { xs: 'center' },
+                }}
                 isUserFormOpen={isUserFormOpen}
                 onClick={handleAddUserMobileButtonClick}
               />
