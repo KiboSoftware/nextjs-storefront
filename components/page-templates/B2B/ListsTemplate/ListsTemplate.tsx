@@ -4,7 +4,7 @@ import { useState } from 'react'
 
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline'
 import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos'
-import { Grid, Button, useMediaQuery, useTheme, IconButton } from '@mui/material'
+import { Grid, Button, useMediaQuery, useTheme, IconButton, Typography } from '@mui/material'
 import { useRouter } from 'next/router'
 import { useTranslation } from 'next-i18next'
 
@@ -87,7 +87,8 @@ const ListsPage = () => {
   return (
     <Grid container spacing={2} marginTop={2}>
       <Grid item xs={12}>
-        Create List Work In Progress
+        <Typography variant="h1">Create New List</Typography>
+        <Typography>Work in progress</Typography>
       </Grid>
     </Grid>
   )

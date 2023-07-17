@@ -97,21 +97,30 @@ const ListTable = (props: ListTableProps) => {
                 <TableCell style={{ ...styles.tableCellStyles, width: mdScreen ? '25%' : '10%' }}>
                   {mdScreen ? (
                     <Box style={{ justifyContent: 'flex-end', display: 'flex' }}>
-                      <Button sx={styles.iconButtonStyles}>{t('initiate-quote')}</Button>
-                      <Button sx={styles.iconButtonStyles}>{t('add-to-cart')}</Button>
+                      <Button sx={styles.iconButtonStyles} data-testid="initiateQuoteBtn">
+                        {t('initiate-quote')}
+                      </Button>
+                      <Button sx={styles.iconButtonStyles} data-testid="addToCartBtn">
+                        {t('add-to-cart')}
+                      </Button>
                       <IconButton
                         sx={styles.iconButtonStyles}
                         onClick={() => onEditList(item.id)}
-                        data-testId="editBtn"
+                        data-testid="editBtn"
                       >
                         <Edit />
                       </IconButton>
-                      <IconButton sx={styles.iconButtonStyles} onClick={() => onCopyList(item.id)}>
+                      <IconButton
+                        sx={styles.iconButtonStyles}
+                        onClick={() => onCopyList(item.id)}
+                        data-testid="copyBtn"
+                      >
                         <FolderCopySharp />
                       </IconButton>
                       <IconButton
                         sx={styles.iconButtonStyles}
                         onClick={() => onDeleteList(item.id)}
+                        data-testid="deleteBtn"
                       >
                         <Delete />
                       </IconButton>
@@ -121,6 +130,7 @@ const ListTable = (props: ListTableProps) => {
                       <IconButton
                         style={{ padding: '0px' }}
                         onClick={(e) => setAnchorEL(e.currentTarget)}
+                        data-testid="menuBtn"
                       >
                         <MoreVert />
                       </IconButton>
