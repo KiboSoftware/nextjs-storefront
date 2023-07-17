@@ -200,10 +200,7 @@ const UserForm = (props: UserFormProps) => {
               item
               xs={12}
               md={isUserFormInDialog ? 12 : isDesktopEditView ? 1.8 : 1}
-              sx={{
-                paddingTop: { sm: '0 !important', md: '50px !important' },
-                paddingLeft: { xs: '0 !important' },
-              }}
+              className={classes.kiboSwitch}
             >
               <Controller
                 name="isActive"

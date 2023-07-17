@@ -7,6 +7,7 @@ import { KiboDialog } from '@/components/common'
 import { useModalContext } from '@/context/ModalContext'
 
 interface ConfirmationDialogProps {
+  title?: string
   contentText: string
   primaryButtonText: string
   onConfirm: () => void
@@ -22,7 +23,7 @@ const ConfirmationDialogContent = ({ contentText }: { contentText: string }) => 
 
 // Component
 const ConfirmationDialog = (props: ConfirmationDialogProps) => {
-  const { contentText, primaryButtonText, onConfirm } = props
+  const { title, contentText, primaryButtonText, onConfirm } = props
   const { t } = useTranslation('common')
   const { closeModal } = useModalContext()
 
@@ -32,6 +33,7 @@ const ConfirmationDialog = (props: ConfirmationDialogProps) => {
   }
 
   const DialogArgs = {
+    Title: title,
     Content: <ConfirmationDialogContent contentText={contentText} />,
     Actions: (
       <Stack gap={2} width="100%">

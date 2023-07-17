@@ -6,7 +6,7 @@ export const UsersTemplateStyle = {
   },
   perPageItemText: {
     textAlign: 'end',
-    width: { xs: '10rem', md: '12rem' },
+    width: { xs: '7rem', md: '12rem' },
     fontSize: { xs: '0.9rem', md: '1rem' },
   },
 }

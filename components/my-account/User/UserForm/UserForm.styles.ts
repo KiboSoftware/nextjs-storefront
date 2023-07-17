@@ -16,6 +16,13 @@ const userFormStyles = makeStyles((theme: Theme) => ({
       flexDirection: 'row',
     },
   },
+  kiboSwitch: {
+    paddingTop: '20px !important',
+    paddingLeft: '2px !important',
+    [theme.breakpoints.up('md')]: {
+      paddingTop: '50px !important',
+    },
+  },
   buttonGridDialogStyle: {
     display: 'flex',
     alignItems: 'center',

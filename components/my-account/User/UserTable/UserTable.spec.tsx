@@ -66,7 +66,7 @@ describe('[component] User Table', () => {
 
     await Promise.all(
       rows.slice(1).map(async (row, index) => {
-        const rowData = data && data[index]
+        const rowData = data?.[index]
 
         const cells = await within(row).findAllByRole('cell')
 
