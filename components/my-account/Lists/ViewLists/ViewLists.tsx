@@ -101,6 +101,7 @@ const ViewLists = (props: ListsProps) => {
       <FormControlLabel
         label={t('show-only-my-lists')}
         control={<Checkbox onChange={handleFilterChange} sx={{ fontSize: '16px' }} />}
+        data-testid="currentUserFilterCheckbox"
       />
       {!mdScreen && (
         <>
@@ -135,6 +136,7 @@ const ViewLists = (props: ListsProps) => {
         size="small"
         sx={{ marginTop: '15px' }}
         onChange={handlePageChange}
+        data-testid="pagination"
       />
     </Box>
   )
