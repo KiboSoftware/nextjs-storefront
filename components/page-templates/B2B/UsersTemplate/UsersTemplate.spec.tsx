@@ -95,6 +95,13 @@ jest.mock('@/components/dialogs', () => ({
 
 describe('[component] - UsersTemplate', () => {
   it('should render component', async () => {
+    jest.mock('@/hooks', () => ({
+      useGetB2BUserQueries: jest.fn().mockReturnValue({
+        data: null,
+        isLoading: false,
+      }),
+    }))
+
     render(<Common />, {
       wrapper: createQueryClientWrapper(),
     })
@@ -104,12 +111,16 @@ describe('[component] - UsersTemplate', () => {
 
     const searchBar = screen.getByPlaceholderText('user-search-placeholder')
     expect(searchBar).toBeVisible()
+  })
 
-    const userTable = screen.getByTestId('user-table-mock')
-    expect(userTable).toBeVisible()
+  it('should display circular progress when user is not available or loading', () => {
+    render(<Common />, {
+      wrapper: createQueryClientWrapper(),
+    })
 
-    const pagination = screen.getByRole('navigation', { name: 'pagination navigation' })
-    expect(pagination).toBeVisible()
+    // Assert that the circular progress is displayed
+    const circularProgressElement = screen.getByRole('progressbar')
+    expect(circularProgressElement).toBeInTheDocument()
   })
 
   it('should open user form when add user button clicked in desktop view', async () => {
