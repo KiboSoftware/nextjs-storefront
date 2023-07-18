@@ -28,7 +28,7 @@ describe('[component] User Form', () => {
   })
 
   it('should show values entered by user', async () => {
-    render(<Common {...Common.args} onSave={onSave} />)
+    render(<Common {...Common.args} onSave={onSave} onClose={onClose} />)
 
     const emaiAddressField = screen.getByLabelText('email-address') as HTMLInputElement
     const firstNameField = screen.getByLabelText('first-name') as HTMLInputElement
@@ -61,7 +61,7 @@ describe('[component] User Form', () => {
   })
 
   it('should reset the form and call onClose', async () => {
-    render(<Common {...WithProps.args} onClose={onClose} />)
+    render(<Common {...WithProps.args} onSave={onSave} onClose={onClose} />)
 
     // Access the cancel button element
     const cancelButton = screen.getByTestId('reset-button')

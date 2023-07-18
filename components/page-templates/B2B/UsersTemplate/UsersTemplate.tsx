@@ -25,10 +25,8 @@ import { useTranslation } from 'next-i18next'
 
 import { UsersTemplateStyle } from './UsersTemplate.styles'
 import { SearchBar } from '@/components/common'
-import { ConfirmationDialog } from '@/components/dialogs'
-import UserFormDialog from '@/components/dialogs/UserFormDialog/UserFormDialog'
-import { UserTable } from '@/components/my-account'
-import UserForm from '@/components/my-account/User/UserForm/UserForm'
+import { ConfirmationDialog, UserFormDialog } from '@/components/dialogs'
+import { UserTable, UserForm } from '@/components/my-account'
 import { useAuthContext, useModalContext } from '@/context'
 import {
   useAddRoleToCustomerB2bAccountMutation,

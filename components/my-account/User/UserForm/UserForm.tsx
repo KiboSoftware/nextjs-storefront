@@ -3,7 +3,8 @@ import React, { useEffect, useState } from 'react'
 import { yupResolver } from '@hookform/resolvers/yup'
 import CheckIcon from '@mui/icons-material/Check'
 import ClearIcon from '@mui/icons-material/Clear'
-import { Button, CircularProgress, Grid, useMediaQuery, useTheme } from '@mui/material'
+import { LoadingButton } from '@mui/lab'
+import { Grid, useMediaQuery, useTheme } from '@mui/material'
 import getConfig from 'next/config'
 import { useTranslation } from 'next-i18next'
 import { useForm, Controller } from 'react-hook-form'
@@ -65,9 +66,9 @@ const UserForm = (props: UserFormProps) => {
     setLoading(true)
     const formValues = getValues()
     if (isEditMode) {
-      onSave(formValues, b2BUser)
+      await onSave(formValues, b2BUser)
     } else {
-      onSave(formValues)
+      await onSave(formValues)
     }
     setLoading(false)
     cancelAction()
@@ -223,7 +224,7 @@ const UserForm = (props: UserFormProps) => {
             md={isUserFormInDialog ? 12 : isDesktopEditView ? 1.3 : 2}
             className={isUserFormInDialog ? classes.buttonGridDialogStyle : classes.buttonGridStyle}
           >
-            <Button
+            <LoadingButton
               variant="outlined"
               data-testid="reset-button"
               type="reset"
@@ -237,9 +238,9 @@ const UserForm = (props: UserFormProps) => {
               }
             >
               {isDesktopEditView && !isUserFormInDialog ? <ClearIcon /> : t('cancel')}
-            </Button>
+            </LoadingButton>
 
-            <Button
+            <LoadingButton
               variant="contained"
               disableElevation
               data-testid="submit-button"
@@ -251,15 +252,13 @@ const UserForm = (props: UserFormProps) => {
                 classes.submitButtonInMobile
               }
               type="submit"
+              loading={isLoading}
+              disabled={isLoading}
             >
-              {isLoading ? (
-                <CircularProgress className={classes.circularProgress} />
-              ) : (
-                (isDesktopEditView && !isUserFormInDialog && <CheckIcon />) ||
+              {(isDesktopEditView && !isUserFormInDialog && <CheckIcon />) ||
                 (isDesktopView && t('add-user')) ||
-                t('save')
-              )}
-            </Button>
+                t('save')}
+            </LoadingButton>
           </Grid>
         </Grid>
       </form>

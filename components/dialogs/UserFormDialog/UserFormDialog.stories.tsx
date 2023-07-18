@@ -11,7 +11,10 @@ import { B2BUser } from '@/lib/gql/types'
 export default {
   title: 'Dialogs/UserFormDialog/Dialog',
   component: UserFormDialog,
-  argTypes: { onClose: { action: 'onClose' } },
+  argTypes: {
+    onClose: { action: 'onClose' },
+    onSave: { action: 'onCSave' },
+  },
 } as ComponentMeta<typeof UserFormDialog>
 
 const customerB2BUsers: B2BUser[] = userGetters.getCustomerB2BUsers(
@@ -27,7 +30,6 @@ export const Common = Template.bind({})
 Common.args = {
   isEditMode: false,
   b2BUser: undefined,
-  onSave: (data: B2BUser) => console.log(data),
 }
 
 export const WithProps = Template.bind({})

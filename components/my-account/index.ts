@@ -5,3 +5,4 @@ export { default as ProfileDetailsForm } from './ProfileDetailsForm/ProfileDetai
 export { default as SubscriptionList } from './Subscription/SubscriptionList/SubscriptionList'
 export { default as SubscriptionItem } from './Subscription/SubscriptionItem/SubscriptionItem'
 export { default as UserTable } from './User/UserTable/UserTable'
+export { default as UserForm } from './User/UserForm/UserForm'

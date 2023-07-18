@@ -80,7 +80,10 @@ const UserTable = (props: UserTableProps) => {
   }
 
   return (
-    <Table style={{ minHeight: b2bUsers?.length ? 0 : '345px' }}>
+    <Table>
+      {!b2bUsers?.length ? (
+        <caption style={{ textAlign: 'center' }}>{t('no-record-found')}</caption>
+      ) : null}
       <TableHead>
         <TableRow style={{ backgroundColor: theme.palette.grey[100] }}>
           <TableCell
@@ -101,13 +104,6 @@ const UserTable = (props: UserTableProps) => {
         </TableRow>
       </TableHead>
       <TableBody>
-        {!b2bUsers?.length ? (
-          <TableRow key="no-record-found">
-            <TableCell colSpan={7} style={{ width: '100%', padding: 0 }}>
-              <Typography style={{ textAlign: 'center' }}>No record found</Typography>
-            </TableCell>
-          </TableRow>
-        ) : null}
         {b2bUsers?.map((b2bUser) =>
           editUserId && editUserId === b2bUser?.userId ? (
             <TableRow key={b2bUser?.userId}>
