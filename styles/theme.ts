@@ -6,13 +6,6 @@ declare module '@mui/material/styles/createPalette' {
   }
 }
 
-declare module '@mui/material/Button' {
-  interface ButtonPropsVariantOverrides {
-    primary: true
-    outlined: true
-  }
-}
-
 export const grey = {
   900: '#2B2B2B',
   // Fill Form Label Text, information text
@@ -148,37 +141,6 @@ let theme = createTheme({
       styleOverrides: {
         ...buttonStyleOverrides,
       },
-      variants: [
-        {
-          props: { variant: 'primary' },
-          style: {
-            backgroundColor: grey[900],
-            borderWidth: 1,
-            borderStyle: 'solid',
-            boxShadow: 'none',
-            fontWeight: 400,
-            color: '#FFFFFF',
-            '&:hover': {
-              backgroundColor: grey[700],
-            },
-            '&:disabled': {
-              backgroundColor: grey[400],
-              color: '#FFFFFF',
-            },
-          },
-        },
-        {
-          props: { variant: 'outlined' },
-          style: {
-            backgroundColor: grey[50],
-            borderWidth: 1,
-            boxShadow: 'none',
-            border: `1px solid ${grey[400]}`,
-            fontWeight: 400,
-            color: '#000000',
-          },
-        },
-      ],
     },
     MuiLoadingButton: {
       styleOverrides: {

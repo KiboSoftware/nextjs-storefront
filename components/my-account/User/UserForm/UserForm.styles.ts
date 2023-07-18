@@ -3,7 +3,7 @@ import { makeStyles } from '@mui/styles'
 
 const userFormStyles = makeStyles((theme: Theme) => ({
   kiboSwitchGridStyle: {
-    paddingTop: '18px !important',
+    paddingTop: '16px !important',
     paddingLeft: '2px !important',
     [theme.breakpoints.up('md')]: {
       paddingTop: '50px !important',

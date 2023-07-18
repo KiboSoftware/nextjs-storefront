@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 
-import { Edit as EditIcon, RemoveCircle as RemoveCircleIcon } from '@mui/icons-material'
+import { Edit as EditIcon, Delete as DeleteIcon, Circle as CircleIcon } from '@mui/icons-material'
 import {
   Box,
   IconButton,
@@ -10,7 +10,6 @@ import {
   TableHead,
   TableRow,
   Typography,
-  styled,
   useMediaQuery,
   useTheme,
 } from '@mui/material'
@@ -19,7 +18,8 @@ import { useTranslation } from 'next-i18next'
 import UserForm from '../UserForm/UserForm'
 import { UserFormDialog } from '@/components/dialogs'
 import { useModalContext } from '@/context'
-import { B2BUserInput } from '@/lib/types/CustomerB2BUser'
+import { userGetters } from '@/lib/getters'
+import { B2BUserInput } from '@/lib/types'
 
 import { B2BUser } from '@/lib/gql/types'
 
@@ -28,18 +28,6 @@ interface UserTableProps {
   onDelete: (id: string | undefined) => void
   onSave: (formValues: B2BUserInput, b2BUser?: B2BUser | undefined) => void
 }
-
-const UserStatusCircle = styled('div', {
-  shouldForwardProp: (prop) => prop == 'color',
-})<{ color: string }>(({ color }) => ({
-  height: '12px',
-  width: '12px',
-  left: 0,
-  top: '3.5px',
-  borderRadius: '100px',
-  marginRight: '8px',
-  background: color,
-}))
 
 const style = {
   emailAddressCell: {
@@ -120,40 +108,46 @@ const UserTable = (props: UserTableProps) => {
           ) : (
             <TableRow key={b2bUser?.userId}>
               <TableCell colSpan={2} sx={style.emailAddressCell}>
-                {b2bUser?.emailAddress}
+                {userGetters.getEmailAddress(b2bUser)}
               </TableCell>
               {mdScreen && (
                 <>
-                  <TableCell sx={{ flex: 1 }}>{b2bUser?.firstName}</TableCell>
-                  <TableCell sx={{ flex: 1 }}>{b2bUser?.lastName}</TableCell>
+                  <TableCell sx={{ flex: 1 }}>{userGetters.getFirstName(b2bUser)}</TableCell>
+                  <TableCell sx={{ flex: 1 }}>{userGetters.getLastName(b2bUser)}</TableCell>
                 </>
               )}
-              <TableCell sx={{ flex: 1 }}>{b2bUser?.roles?.[0]?.roleName || 'N/A'}</TableCell>
+              <TableCell sx={{ flex: 1 }}>{userGetters.getRole(b2bUser)}</TableCell>
               {mdScreen && (
                 <TableCell sx={{ flex: 1 }}>
-                  <Box sx={{ display: 'flex', justifyContent: 'start', alignItems: 'center' }}>
-                    <UserStatusCircle
-                      color={
-                        b2bUser.isActive ? theme.palette.primary.main : theme.palette.grey[600]
-                      }
-                    ></UserStatusCircle>
-                    <Typography>{b2bUser.isActive ? t('active') : t('in-active')}</Typography>
+                  <Box
+                    sx={{ display: 'flex', justifyContent: 'start', alignItems: 'center', gap: 1 }}
+                  >
+                    {b2bUser?.isActive ? (
+                      <CircleIcon sx={{ fontSize: '14px' }} color="success" />
+                    ) : (
+                      <CircleIcon sx={{ fontSize: '14px' }} color="disabled" />
+                    )}
+                    <Typography>
+                      {userGetters.getStatus(b2bUser) ? t('active') : t('in-active')}
+                    </Typography>
                   </Box>
                 </TableCell>
               )}
               <TableCell sx={{ flex: 1 }}>
                 <Box sx={{ display: 'flex', justifyContent: 'end', alignItems: 'center' }}>
                   <IconButton
-                    sx={{ color: 'grey.900' }}
+                    aria-label="item-edit"
+                    name="item-edit"
                     onClick={() => onEditUserButtonClick(b2bUser)}
                   >
                     <EditIcon />
                   </IconButton>
                   <IconButton
-                    sx={{ color: 'grey.900' }}
+                    aria-label="item-delete"
+                    name="item-delete"
                     onClick={() => onDelete(b2bUser?.userId as string)}
                   >
-                    <RemoveCircleIcon />
+                    <DeleteIcon />
                   </IconButton>
                 </Box>
               </TableCell>

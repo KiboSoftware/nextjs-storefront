@@ -76,24 +76,6 @@ const PaginationContainer = styled(Box)(({ theme }: { theme: Theme }) => ({
   margin: '20px 0',
 }))
 
-const AddUserButton = (props: AddUserButtonProps) => {
-  const { isUserFormOpen, onClick, sx } = props
-  const { t } = useTranslation('common')
-  return (
-    <Button
-      variant="primary"
-      disabled={isUserFormOpen}
-      onClick={onClick}
-      disableElevation
-      id="formOpenButton"
-      startIcon={<AddCircleOutlineIcon />}
-      sx={sx}
-    >
-      <span>{t('add-user')}</span>
-    </Button>
-  )
-}
-
 const UsersTemplate = () => {
   const {
     publicRuntimeConfig: {
@@ -132,7 +114,7 @@ const UsersTemplate = () => {
   const { updateCustomerB2bUser } = useUpdateCustomerB2bUserMutation()
   const { deleteB2bAccountUserRole } = useDeleteB2bAccountRoleMutation()
 
-  const confirmDelete = (id: string | undefined | null) => {
+  const handleDelete = (id: string | undefined | null) => {
     showModal({
       Component: ConfirmationDialog,
       props: {
@@ -172,7 +154,7 @@ const UsersTemplate = () => {
     }
   }
 
-  const handleUpdateUser = async (formValues: B2BUserInput, b2BUser?: B2BUser | undefined) => {
+  const handleUpdateUser = async (formValues: B2BUserInput, b2BUser?: B2BUser) => {
     const variables = buildUpdateCustomerB2bUserParams({ user, b2BUser, values: formValues })
     const updateUserResponse = await updateCustomerB2bUser.mutateAsync({
       ...variables,
@@ -211,10 +193,6 @@ const UsersTemplate = () => {
     })
   }
 
-  // const handleAddUserDesktopButtonClick = () => {
-
-  // }
-
   const handleAddUserButtonClick = () => {
     if (mdScreen) {
       setIsUserFormOpen(true)
@@ -239,25 +217,27 @@ const UsersTemplate = () => {
   return (
     <Grid>
       <Grid item style={{ marginTop: '10px', marginBottom: '20px' }}>
-        <BackButtonLink aria-label={t('my-account')} href="/my-account">
-          <ChevronLeftIcon />
-          {mdScreen && <Typography variant="body1">{t('my-account')}</Typography>}
-        </BackButtonLink>
         <Box sx={UsersTemplateStyle.heading}>
-          <Typography
-            variant={mdScreen ? 'h1' : 'h2'}
-            sx={{ textAlign: { xs: 'center' }, marginTop: { xs: '-3.6rem', md: 0 } }}
-          >
-            {t('users')}
-          </Typography>
+          <BackButtonLink aria-label={t('my-account')} href="/my-account">
+            <ChevronLeftIcon />
+            {mdScreen && <Typography variant="body1">{t('my-account')}</Typography>}
+          </BackButtonLink>
+          <Typography variant={mdScreen ? 'h1' : 'h2'}>{t('users')}</Typography>
         </Box>
         <Grid container>
           <Grid item xs={12} md={12}>
-            <AddUserButton
-              sx={{ width: { xs: '100%', md: 118 } }}
-              isUserFormOpen={isUserFormOpen}
+            <Button
+              variant="contained"
+              color="inherit"
+              disabled={isUserFormOpen}
               onClick={handleAddUserButtonClick}
-            />
+              disableElevation
+              id="formOpenButton"
+              startIcon={<AddCircleOutlineIcon />}
+              sx={{ width: { xs: '100%', md: 118 } }}
+            >
+              {t('add-user')}
+            </Button>
             {isUserFormOpen && (
               <UserForm
                 isEditMode={false}
@@ -287,7 +267,7 @@ const UsersTemplate = () => {
             <UserTable
               b2bUsers={data?.items as B2BUser[]}
               onSave={handleUpdateUser}
-              onDelete={confirmDelete}
+              onDelete={handleDelete}
             />
             <PaginationContainer>
               <Pagination

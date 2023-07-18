@@ -222,17 +222,19 @@ const UserForm = (props: UserFormProps) => {
             item
             xs={12}
             md={isUserFormInDialog ? 12 : isDesktopEditView ? 1.1 : 1.4}
-            sx={{ paddingLeft: '0 !important' }}
+            sx={{ paddingLeft: '0 !important', paddingTop: { xs: '15px !important' } }}
           >
             <Box
               sx={{
                 display: 'flex',
                 flexDirection: { xs: 'column-reverse', md: 'row' },
                 justifyContent: 'space-between',
+                marginTop: { xs: 0, md: 6 },
               }}
             >
               <LoadingButton
                 variant="outlined"
+                color="inherit"
                 data-testid="reset-button"
                 type="reset"
                 onClick={cancelAction}
