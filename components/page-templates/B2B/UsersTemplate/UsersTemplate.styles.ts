@@ -1,7 +1,9 @@
 export const UsersTemplateStyle = {
   heading: {
-    display: { md: 'flex', xs: 'block' },
-    alignItems: 'center',
+    display: 'flex',
+    flexDirection: { xs: 'row', md: 'column' },
+    gap: { xs: '36%', sm: '42%', md: 2 },
+    alignItems: { xs: 'center', md: 'start' },
     margin: '1rem 0',
   },
   perPageItemText: {

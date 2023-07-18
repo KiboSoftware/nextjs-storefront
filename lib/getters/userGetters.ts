@@ -74,13 +74,14 @@ const getDefaultPaymentBillingMethod = (allPaymentAndBillingInfo: PaymentAndBill
   return allPaymentAndBillingInfo?.find((each) => each?.cardInfo?.isDefaultPayMethod) || {}
 }
 
-const getFirstName = (user: CustomerAccount) => user?.firstName || ''
+const getFirstName = (user: CustomerAccount | B2BUser | undefined | null) => user?.firstName || ''
 
-const getLastName = (user: CustomerAccount) => user?.lastName || ''
+const getLastName = (user: CustomerAccount | B2BUser | undefined | null) => user?.lastName || ''
 
 const getFullName = (user: CustomerAccount) => `${getFirstName(user)} ${getLastName(user)}`
 
-const getEmailAddress = (user: CustomerAccount) => user?.emailAddress || ''
+const getEmailAddress = (user: CustomerAccount | B2BUser | undefined | null) =>
+  user?.emailAddress || ''
 
 const getUserId = (user: CustomerAccount) => user?.id
 
@@ -140,6 +141,10 @@ const getCustomerAccountDetails = (user: CustomerAccount) => {
 
 const getCustomerB2BUsers = (items: B2BUser[]) => items
 
+const getRole = (b2BUser: B2BUser | undefined | null) => b2BUser?.roles?.[0]?.roleName || 'N/A'
+const getStatus = (b2BUser: B2BUser | undefined | null): boolean | undefined | null =>
+  b2BUser?.isActive
+
 export const userGetters = {
   getUserShippingAddress,
   getUserBillingAddresses,
@@ -156,4 +161,6 @@ export const userGetters = {
   getDefaultShippingAddress,
   getOtherShippingAddress,
   getCustomerB2BUsers,
+  getRole,
+  getStatus,
 }

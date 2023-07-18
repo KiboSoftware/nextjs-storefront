@@ -13,7 +13,7 @@ const onCloseMock = jest.fn()
 
 const UserFormMock = ({ onClose }: { onClose: () => void }) => (
   <div data-testid="user-form-mock">
-    <button data-testid="delete-user-mock-button" onClick={onClose}>
+    <button data-testid="cancel-user-mock-button" onClick={onClose}>
       Cancel
     </button>
   </div>
@@ -103,7 +103,7 @@ describe('[component] User Table', () => {
     render(<Table {...Table.args} onDelete={onDeleteMock} />)
 
     const rows = await screen.findAllByRole('row')
-    const deleteIconInRowOne = within(rows[1]).getByTestId('RemoveCircleIcon')
+    const deleteIconInRowOne = within(rows[1]).getByTestId('DeleteIcon')
 
     // Act
     fireEvent.click(deleteIconInRowOne)
@@ -122,7 +122,7 @@ describe('[component] User Table', () => {
     const userForm = within(rows[1]).getByTestId('user-form-mock')
     expect(userForm).toBeVisible()
 
-    const cancelButton = within(userForm).getByTestId('delete-user-mock-button')
+    const cancelButton = within(userForm).getByTestId('cancel-user-mock-button')
     expect(cancelButton).toBeVisible()
 
     fireEvent.click(cancelButton)
