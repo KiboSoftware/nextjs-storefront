@@ -81,7 +81,8 @@ const AddUserButton = (props: AddUserButtonProps) => {
   const { t } = useTranslation('common')
   return (
     <Button
-      variant="primary"
+      variant="contained"
+      color="inherit"
       disabled={isUserFormOpen}
       onClick={onClick}
       disableElevation
