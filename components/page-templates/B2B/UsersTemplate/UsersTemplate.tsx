@@ -86,12 +86,10 @@ const AddUserButton = (props: AddUserButtonProps) => {
       onClick={onClick}
       disableElevation
       id="formOpenButton"
+      startIcon={<AddCircleOutlineIcon />}
       sx={sx}
     >
-      <span style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-        <AddCircleOutlineIcon style={{ marginRight: '8px', width: '19px' }} />
-        <span style={{ paddingTop: '2px', fontWeight: '400' }}>{t('add-user')}</span>
-      </span>
+      <span>{t('add-user')}</span>
     </Button>
   )
 }
@@ -213,25 +211,29 @@ const UsersTemplate = () => {
     })
   }
 
-  const handleAddUserDesktopButtonClick = () => {
-    setIsUserFormOpen(true)
-  }
+  // const handleAddUserDesktopButtonClick = () => {
 
-  const handleAddUserMobileButtonClick = () => {
-    showModal({
-      Component: UserFormDialog,
-      props: {
-        isEditMode: false,
-        isUserFormInDialog: true,
-        formTitle: t('add-new-user'),
-        b2BUser: undefined,
-        onSave: (b2BUserInput: B2BUserInput) => handleAddUser(b2BUserInput),
-        onClose: () => {
-          setIsUserFormOpen(false)
-          closeModal()
+  // }
+
+  const handleAddUserButtonClick = () => {
+    if (mdScreen) {
+      setIsUserFormOpen(true)
+    } else {
+      showModal({
+        Component: UserFormDialog,
+        props: {
+          isEditMode: false,
+          isUserFormInDialog: true,
+          formTitle: t('add-new-user'),
+          b2BUser: undefined,
+          onSave: (b2BUserInput: B2BUserInput) => handleAddUser(b2BUserInput),
+          onClose: () => {
+            setIsUserFormOpen(false)
+            closeModal()
+          },
         },
-      },
-    })
+      })
+    }
   }
 
   return (
@@ -251,24 +253,11 @@ const UsersTemplate = () => {
         </Box>
         <Grid container>
           <Grid item xs={12} md={12}>
-            {/* Button visible only in desktop view and on click, form will open below the button */}
             <AddUserButton
-              sx={{ display: { xs: 'none', md: 'block' } }}
+              sx={{ width: { xs: '100%', md: 118 } }}
               isUserFormOpen={isUserFormOpen}
-              onClick={handleAddUserDesktopButtonClick}
+              onClick={handleAddUserButtonClick}
             />
-            {/* Button visible only in mobile view, when form is not open and on click, form will open in dialog */}
-            {!isUserFormOpen && (
-              <AddUserButton
-                sx={{
-                  display: { xs: 'block', md: 'none' },
-                  width: { xs: '100%' },
-                  textAlign: { xs: 'center' },
-                }}
-                isUserFormOpen={isUserFormOpen}
-                onClick={handleAddUserMobileButtonClick}
-              />
-            )}
             {isUserFormOpen && (
               <UserForm
                 isEditMode={false}

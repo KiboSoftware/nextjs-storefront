@@ -84,7 +84,7 @@ const SearchBar = (props: SearchProps) => {
               disabled={searchTerm.length === 0}
               aria-label={clearSearchAriaLabel}
             >
-              {searchTerm.length === 0 ? <Search fontSize="medium" /> : <Clear fontSize="medium" />}
+              <Clear fontSize="medium" />
             </IconButton>
           ),
         })}

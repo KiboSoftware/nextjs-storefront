@@ -4,7 +4,7 @@ import { yupResolver } from '@hookform/resolvers/yup'
 import CheckIcon from '@mui/icons-material/Check'
 import ClearIcon from '@mui/icons-material/Clear'
 import { LoadingButton } from '@mui/lab'
-import { Grid, useMediaQuery, useTheme } from '@mui/material'
+import { Box, Grid, useMediaQuery, useTheme } from '@mui/material'
 import getConfig from 'next/config'
 import { useTranslation } from 'next-i18next'
 import { useForm, Controller } from 'react-hook-form'
@@ -200,8 +200,8 @@ const UserForm = (props: UserFormProps) => {
             <Grid
               item
               xs={12}
-              md={isUserFormInDialog ? 12 : isDesktopEditView ? 1.8 : 1}
-              className={classes.kiboSwitch}
+              md={isUserFormInDialog ? 12 : isDesktopEditView ? 1.7 : 1}
+              className={classes.kiboSwitchGridStyle}
             >
               <Controller
                 name="isActive"
@@ -221,44 +221,39 @@ const UserForm = (props: UserFormProps) => {
           <Grid
             item
             xs={12}
-            md={isUserFormInDialog ? 12 : isDesktopEditView ? 1.3 : 2}
-            className={isUserFormInDialog ? classes.buttonGridDialogStyle : classes.buttonGridStyle}
+            md={isUserFormInDialog ? 12 : isDesktopEditView ? 1.1 : 1.4}
+            sx={{ paddingLeft: '0 !important' }}
           >
-            <LoadingButton
-              variant="outlined"
-              data-testid="reset-button"
-              type="reset"
-              onClick={cancelAction}
-              className={
-                (isDesktopEditView &&
-                  !isUserFormInDialog &&
-                  classes.cancelButtonInDesktopEditMode) ||
-                (isDesktopView && !isUserFormInDialog && classes.cancelButtonInDesktop) ||
-                classes.cancelButtonInMobile
-              }
+            <Box
+              sx={{
+                display: 'flex',
+                flexDirection: { xs: 'column-reverse', md: 'row' },
+                justifyContent: 'space-between',
+              }}
             >
-              {isDesktopEditView && !isUserFormInDialog ? <ClearIcon /> : t('cancel')}
-            </LoadingButton>
+              <LoadingButton
+                variant="outlined"
+                data-testid="reset-button"
+                type="reset"
+                onClick={cancelAction}
+                sx={{ marginTop: { xs: 1.5, md: 0 } }}
+              >
+                {isDesktopEditView && !isUserFormInDialog ? <ClearIcon /> : t('cancel')}
+              </LoadingButton>
 
-            <LoadingButton
-              variant="contained"
-              disableElevation
-              data-testid="submit-button"
-              className={
-                (isDesktopEditView &&
-                  !isUserFormInDialog &&
-                  classes.submitButtonInDesktopEditMode) ||
-                (isDesktopView && !isUserFormInDialog && classes.submitButtonInDesktop) ||
-                classes.submitButtonInMobile
-              }
-              type="submit"
-              loading={isLoading}
-              disabled={isLoading}
-            >
-              {(isDesktopEditView && !isUserFormInDialog && <CheckIcon />) ||
-                (isDesktopView && t('add-user')) ||
-                t('save')}
-            </LoadingButton>
+              <LoadingButton
+                variant="contained"
+                disableElevation
+                data-testid="submit-button"
+                type="submit"
+                loading={isLoading}
+                disabled={isLoading}
+              >
+                {(isDesktopEditView && !isUserFormInDialog && <CheckIcon />) ||
+                  (isDesktopView && t('add-user')) ||
+                  t('save')}
+              </LoadingButton>
+            </Box>
           </Grid>
         </Grid>
       </form>
