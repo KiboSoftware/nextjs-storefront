@@ -229,6 +229,7 @@ const UserForm = (props: UserFormProps) => {
                 display: 'flex',
                 flexDirection: { xs: 'column-reverse', md: 'row' },
                 justifyContent: 'space-between',
+                marginTop: { xs: 0, md: 6 },
               }}
             >
               <LoadingButton
