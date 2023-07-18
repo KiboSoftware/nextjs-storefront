@@ -106,7 +106,7 @@ describe('[component] - UsersTemplate', () => {
       wrapper: createQueryClientWrapper(),
     })
 
-    const addUserButton = screen.getAllByText('add-user')[0]
+    const addUserButton = screen.getByText('add-user')
     expect(addUserButton).toBeVisible()
 
     const searchBar = screen.getByPlaceholderText('user-search-placeholder')
@@ -126,7 +126,7 @@ describe('[component] - UsersTemplate', () => {
   it('should open user form when add user button clicked in desktop view', async () => {
     render(<Common />)
 
-    const addUserButton = screen.getAllByText('add-user')[0]
+    const addUserButton = screen.getByText('add-user')
     fireEvent.click(addUserButton)
 
     const userForm = screen.getByTestId('user-form-mock')
@@ -141,7 +141,7 @@ describe('[component] - UsersTemplate', () => {
       </ModalContextProvider>
     )
 
-    const addUserButton = screen.getAllByText('add-user')[1]
+    const addUserButton = screen.getByText('add-user')
     fireEvent.click(addUserButton)
   })
 
