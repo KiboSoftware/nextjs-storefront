@@ -11,6 +11,10 @@ import { B2BUser } from '@/lib/gql/types'
 export default {
   component: UserForm,
   title: 'My Account/B2B/UserForm',
+  argTypes: {
+    onClose: { action: 'onCancel' },
+    onSave: { action: 'onSave' },
+  },
 } as ComponentMeta<typeof UserForm>
 
 const customerB2BUsers: B2BUser[] = userGetters.getCustomerB2BUsers(
@@ -24,8 +28,6 @@ export const Common = Template.bind({})
 Common.args = {
   isEditMode: false,
   b2BUser: undefined,
-  onClose: () => console.log('form closed'),
-  onSave: (formValues) => console.log(formValues),
 }
 
 export const WithProps = Template.bind({})

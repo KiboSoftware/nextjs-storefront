@@ -2,8 +2,8 @@ import React from 'react'
 
 import { useTranslation } from 'next-i18next'
 
-import KiboDialog from '@/components/common/KiboDialog/KiboDialog'
-import UserForm from '@/components/my-account/User/UserForm/UserForm'
+import { KiboDialog } from '@/components/common'
+import { UserForm } from '@/components/my-account'
 
 import { B2BUser } from '@/lib/gql/types'
 interface UserFormDialogProps {
