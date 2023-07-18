@@ -8,6 +8,7 @@ import * as stories from './UserForm.stories' // import all stories from the sto
 const { Common, WithProps } = composeStories(stories)
 
 const onClose = jest.fn()
+const onSave = jest.fn()
 
 describe('[component] User Form', () => {
   it('should render user form', async () => {
@@ -27,7 +28,7 @@ describe('[component] User Form', () => {
   })
 
   it('should show values entered by user', async () => {
-    render(<Common {...Common.args} />)
+    render(<Common {...Common.args} onSave={onSave} />)
 
     const emaiAddressField = screen.getByLabelText('email-address') as HTMLInputElement
     const firstNameField = screen.getByLabelText('first-name') as HTMLInputElement
@@ -42,6 +43,7 @@ describe('[component] User Form', () => {
     await waitFor(() => expect(lastNameField.value).toBe('Shukla'))
 
     userEvent.click(submitButton)
+    await waitFor(() => expect(onSave).toHaveBeenCalledTimes(1))
   })
 
   it('should show form in edit mode', async () => {

@@ -291,7 +291,7 @@ const UsersTemplate = () => {
           />
         </SearchBoxContainer>
 
-        {!user || isLoading ? (
+        {isLoading ? (
           <Box style={{ width: '100%', display: 'flex', justifyContent: 'center' }}>
             <CircularProgress />
           </Box>
