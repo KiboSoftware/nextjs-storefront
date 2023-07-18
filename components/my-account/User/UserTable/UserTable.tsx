@@ -3,6 +3,7 @@ import React, { useState } from 'react'
 import { Edit as EditIcon, RemoveCircle as RemoveCircleIcon } from '@mui/icons-material'
 import {
   Box,
+  IconButton,
   Table,
   TableBody,
   TableCell,
@@ -16,7 +17,7 @@ import {
 import { useTranslation } from 'next-i18next'
 
 import UserForm from '../UserForm/UserForm'
-import UserFormDialog from '@/components/dialogs/UserFormDialog/UserFormDialog'
+import { UserFormDialog } from '@/components/dialogs'
 import { useModalContext } from '@/context'
 import { B2BUserInput } from '@/lib/types/CustomerB2BUser'
 
@@ -70,7 +71,7 @@ const UserTable = (props: UserTableProps) => {
         isUserFormInDialog: true,
         formTitle: t('edit-user'),
         b2BUser,
-        onSave: (b2BUserInput: B2BUserInput) => onSave(b2BUserInput),
+        onSave: (b2BUserInput: B2BUserInput) => onSave(b2BUserInput, b2BUser),
         onClose: () => {
           setEditUserId(undefined)
           closeModal()
@@ -104,7 +105,7 @@ const UserTable = (props: UserTableProps) => {
         </TableRow>
       </TableHead>
       <TableBody>
-        {b2bUsers?.map((b2bUser) =>
+        {b2bUsers?.map((b2bUser: B2BUser) =>
           editUserId && editUserId === b2bUser?.userId ? (
             <TableRow key={b2bUser?.userId}>
               <TableCell colSpan={7} style={{ width: '100%', padding: 0 }}>
@@ -127,9 +128,7 @@ const UserTable = (props: UserTableProps) => {
                   <TableCell sx={{ flex: 1 }}>{b2bUser?.lastName}</TableCell>
                 </>
               )}
-              <TableCell sx={{ flex: 1 }}>
-                {(b2bUser?.roles && b2bUser?.roles.length && b2bUser?.roles[0]?.roleName) || 'N/A'}
-              </TableCell>
+              <TableCell sx={{ flex: 1 }}>{b2bUser?.roles?.[0]?.roleName || 'N/A'}</TableCell>
               {mdScreen && (
                 <TableCell sx={{ flex: 1 }}>
                   <Box sx={{ display: 'flex', justifyContent: 'start', alignItems: 'center' }}>
@@ -144,14 +143,18 @@ const UserTable = (props: UserTableProps) => {
               )}
               <TableCell sx={{ flex: 1 }}>
                 <Box sx={{ display: 'flex', justifyContent: 'end', alignItems: 'center' }}>
-                  <EditIcon
+                  <IconButton
+                    sx={{ color: 'grey.900' }}
                     onClick={() => onEditUserButtonClick(b2bUser)}
-                    style={{ marginRight: '16px', cursor: 'pointer' }}
-                  />
-                  <RemoveCircleIcon
+                  >
+                    <EditIcon />
+                  </IconButton>
+                  <IconButton
+                    sx={{ color: 'grey.900' }}
                     onClick={() => onDelete(b2bUser?.userId as string)}
-                    style={{ cursor: 'pointer' }}
-                  />
+                  >
+                    <RemoveCircleIcon />
+                  </IconButton>
                 </Box>
               </TableCell>
             </TableRow>
