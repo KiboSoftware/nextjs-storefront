@@ -18,4 +18,3 @@ export { default as AccountIcon } from './AppHeader/Icons/AccountIcon/AccountIco
 export { default as CartIcon } from './AppHeader/Icons/CartIcon/CartIcon'
 export { default as StoreFinderIcon } from './AppHeader/Icons/StoreFinderIcon/StoreFinderIcon'
 export { default as HamburgerIcon } from './AppHeader/Icons/HamburgerIcon/HamburgerIcon'
-

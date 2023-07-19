@@ -19,7 +19,6 @@ const Template: ComponentStory<typeof ResetPasswordConfirmationTemplate> = (args
 export const Common = Template.bind({})
 
 Common.args = {
-  token: "test23e",
-  userName: 'test@kibo.com'
+  token: 'test23e',
+  userName: 'test@kibo.com',
 }
-
