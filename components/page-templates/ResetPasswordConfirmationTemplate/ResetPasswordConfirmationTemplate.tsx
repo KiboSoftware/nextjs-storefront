@@ -23,12 +23,16 @@ const usePasswordInputSchema = () => {
   const { t } = useTranslation('common')
 
   return yup.object().shape({
-    newPassword: yup.string().required(t('this-field-is-required')).test((value = '') => {
-          return isPasswordValid(value)
-    }),
-    confirmPassword: yup.string()
-          .required(t('this-field-is-required'))
-          .oneOf([yup.ref('newPassword')], t('it-should-match-your-new-password'))
+    newPassword: yup
+      .string()
+      .required(t('this-field-is-required'))
+      .test((value = '') => {
+        return isPasswordValid(value)
+      }),
+    confirmPassword: yup
+      .string()
+      .required(t('this-field-is-required'))
+      .oneOf([yup.ref('newPassword')], t('it-should-match-your-new-password')),
   })
 }
 
@@ -74,8 +78,7 @@ const ResetPasswordConfirmationTemplate = (props: ResetPasswordConfirmationTempl
         newPassword: formData.newPassword,
       })
 
-      if(updatedPassword) router.push('/')
-
+      if (updatedPassword) router.push('/')
     } catch (err) {
       console.log(err)
     }
@@ -100,46 +103,46 @@ const ResetPasswordConfirmationTemplate = (props: ResetPasswordConfirmationTempl
 
       <Box pb={4}>
         <FormControl>
-            <Controller
-              name="newPassword"
-              control={control}
-              render={({ field }) => (
-                <KiboTextBox
-                  value={field.value || ''}
-                  label={t('new-password')}
-                  required
-                  onBlur={field.onBlur}
-                  onChange={(_name, value) => field.onChange(value)}
-                  error={!!errors.newPassword}
-                  helperText={errors?.newPassword?.message as string}
-                  type={showPassword.newPassword ? 'text' : 'password'}
-                  icon={showPassword.newPassword ? <Visibility /> : <VisibilityOff />}
-                  onIconClick={() => handleClickShowPassword('newPassword')}
-                />
-              )}
-            />
+          <Controller
+            name="newPassword"
+            control={control}
+            render={({ field }) => (
+              <KiboTextBox
+                value={field.value || ''}
+                label={t('new-password')}
+                required
+                onBlur={field.onBlur}
+                onChange={(_name, value) => field.onChange(value)}
+                error={!!errors.newPassword}
+                helperText={errors?.newPassword?.message as string}
+                type={showPassword.newPassword ? 'text' : 'password'}
+                icon={showPassword.newPassword ? <Visibility /> : <VisibilityOff />}
+                onIconClick={() => handleClickShowPassword('newPassword')}
+              />
+            )}
+          />
 
-            <Controller
-              name="confirmPassword"
-              control={control}
-              render={({ field }) => (
-                <KiboTextBox
-                  value={field.value || ''}
-                  label={t('confirm-password')}
-                  required
-                  onBlur={field.onBlur}
-                  onChange={(_name, value) => field.onChange(value)}
-                  error={!!errors.confirmPassword}
-                  helperText={errors?.confirmPassword?.message as string}
-                  type={showPassword.confirmPassword ? 'text' : 'password'}
-                  icon={showPassword.confirmPassword ? <Visibility /> : <VisibilityOff />}
-                  onIconClick={() => handleClickShowPassword('confirmPassword')}
-                />
-              )}
-            />
-            <Box sx={{ paddingBlock: 2 }}>
-              <PasswordValidation password={newPassword as string} />
-            </Box>
+          <Controller
+            name="confirmPassword"
+            control={control}
+            render={({ field }) => (
+              <KiboTextBox
+                value={field.value || ''}
+                label={t('confirm-password')}
+                required
+                onBlur={field.onBlur}
+                onChange={(_name, value) => field.onChange(value)}
+                error={!!errors.confirmPassword}
+                helperText={errors?.confirmPassword?.message as string}
+                type={showPassword.confirmPassword ? 'text' : 'password'}
+                icon={showPassword.confirmPassword ? <Visibility /> : <VisibilityOff />}
+                onIconClick={() => handleClickShowPassword('confirmPassword')}
+              />
+            )}
+          />
+          <Box sx={{ paddingBlock: 2 }}>
+            <PasswordValidation password={newPassword as string} />
+          </Box>
 
           <Box maxWidth="23.5rem">
             <Button
