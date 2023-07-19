@@ -1,17 +1,6 @@
-import { GetServerSidePropsContext, NextPage } from 'next'
-import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
-
 import { UsersTemplate } from '@/components/page-templates'
 
-export async function getServerSideProps(context: GetServerSidePropsContext) {
-  const { locale } = context
-
-  return {
-    props: {
-      ...(await serverSideTranslations(locale as string, ['common'])),
-    },
-  }
-}
+import type { NextPage } from 'next'
 
 const B2BUsersPage: NextPage = (props) => {
   return (

@@ -9,7 +9,6 @@ import {
   checkoutMock,
   checkoutGroupRatesMock,
   orderSubscriptionNowMock,
-  customerB2BUserForPage0Mock,
 } from '../stories'
 import { cartItemMock } from '../stories/cartItemMock'
 import { cartCouponMock, cartMock } from '../stories/cartMock'
@@ -448,45 +447,6 @@ export const subscriptionHandlers = [
   }),
 ]
 
-export const b2bAccountUsersHandlers = [
-  graphql.query('b2bAccountUsers', (_req, res, ctx) => {
-    return res(ctx.data({ b2bAccountUsers: customerB2BUserForPage0Mock }))
-  }),
-
-  // useCreateCustomerB2bUserMutation
-  graphql.mutation('createCustomerB2bAccountUser', (_req, res, ctx) => {
-    return res(
-      ctx.data({
-        createCustomerB2bAccountUser: customerB2BUserForPage0Mock?.items[0],
-      })
-    )
-  }),
-
-  // useUpdateCustomerB2bUserMutation
-  graphql.mutation('updateCustomerB2bAccountUser', (_req, res, ctx) => {
-    return res(
-      ctx.data({
-        updateCustomerB2bAccountUser: customerB2BUserForPage0Mock?.items[0],
-      })
-    )
-  }),
-
-  // useDeleteB2bAccountUserRole
-  graphql.mutation('deleteB2bAccountRole', (_req, res, ctx) => {
-    return res(ctx.data({ deleteB2bAccountRole: true }))
-  }),
-
-  // useAddRoleToCustomerB2bAccountMutation
-  graphql.mutation('addRoleToCustomerB2bAccount', (_req, res, ctx) => {
-    return res(ctx.data({ addRoleToCustomerB2bAccount: true }))
-  }),
-
-  // useRemoveCustomerB2bUserMutation
-  graphql.mutation('removeCustomerB2bAccountUser', (_req, res, ctx) => {
-    return res(ctx.data({ removeCustomerB2bAccountUser: true }))
-  }),
-]
-
 export const handlers = [
   ...checkoutHandlers,
   ...searchSuggestionHandlers,
@@ -501,5 +461,4 @@ export const handlers = [
   ...orderHandlers,
   ...inventoryHandlers,
   ...subscriptionHandlers,
-  ...b2bAccountUsersHandlers,
 ]

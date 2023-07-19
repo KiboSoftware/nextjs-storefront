@@ -15,8 +15,6 @@ export const grey = {
   // Thin borders, placeholder text
   500: '#C7C7C7',
   // Header Accent Color, page separator bar
-  400: '#CDCDCD',
-  // Button background and border color
   300: '#EAEAEA',
   // Order Summary Background
   100: '#F7F7F7',
@@ -121,7 +119,6 @@ let theme = createTheme({
     },
     secondary: {
       main: '#c0e3df',
-      light: '#FFFFFF',
     },
     text: {
       primary: grey[900],
@@ -151,16 +148,6 @@ let theme = createTheme({
       styleOverrides: {
         root: {
           zIndex: 2000,
-        },
-      },
-    },
-    MuiPagination: {
-      styleOverrides: {
-        root: {
-          '& .Mui-selected': {
-            backgroundColor: `${grey[900]} !important`,
-            color: '#FFFFFF',
-          },
         },
       },
     },

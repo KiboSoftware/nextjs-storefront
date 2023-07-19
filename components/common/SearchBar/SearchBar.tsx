@@ -21,6 +21,7 @@ const style = {
     p: '2px 4px',
     display: 'flex',
     alignItems: 'center',
+    maxWidth: { xs: '100%', md: 651 },
     borderRadius: 0,
   },
   inputBase: {
@@ -84,7 +85,7 @@ const SearchBar = (props: SearchProps) => {
               disabled={searchTerm.length === 0}
               aria-label={clearSearchAriaLabel}
             >
-              <Clear fontSize="medium" />
+              {searchTerm.length === 0 ? <Search fontSize="medium" /> : <Clear fontSize="medium" />}
             </IconButton>
           ),
         })}

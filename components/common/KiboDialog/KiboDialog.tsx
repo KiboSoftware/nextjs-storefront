@@ -20,7 +20,6 @@ import theme from '@/styles/theme'
 export interface KiboDialogProps {
   isOpen?: boolean
   Title?: ReactNode
-  isAlignTitleCenter?: boolean
   showCloseButton?: boolean
   Content: ReactNode
   Actions?: ReactNode
@@ -90,7 +89,6 @@ const KiboDialog = (props: KiboDialogProps) => {
   const {
     isOpen = true,
     Title,
-    isAlignTitleCenter = false,
     showCloseButton = true,
     Content,
     Actions,
@@ -112,10 +110,7 @@ const KiboDialog = (props: KiboDialogProps) => {
       data-test-id="kibo-dialog"
     >
       <Container maxWidth={'xl'}>
-        <StyledDialogTitle
-          id="kibo-dialog-title"
-          textAlign={isAlignTitleCenter ? 'center' : 'left'}
-        >
+        <StyledDialogTitle id="kibo-dialog-title">
           {Title && (
             <Typography color="text.secendary" variant="h3" fontWeight={'bold'} component="span">
               {Title}

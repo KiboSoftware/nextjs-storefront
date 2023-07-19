@@ -11,6 +11,7 @@ export { default as MultiShipCheckoutTemplate } from './MultiShipCheckoutTemplat
 export { default as CheckoutUITemplate } from '../checkout/CheckoutUITemplate/CheckoutUITemplate'
 export { default as ResetPasswordConfirmationTemplate } from './ResetPasswordConfirmationTemplate/ResetPasswordConfirmationTemplate'
 
+
 // B2B
 export { default as B2BTemplate } from './B2B/B2BTemplate/B2BTemplate'
 export { default as UsersTemplate } from './B2B/UsersTemplate/UsersTemplate'
