@@ -97,28 +97,28 @@ const ListTable = (props: ListTableProps) => {
                 <TableCell style={{ ...styles.tableCellStyles, width: mdScreen ? '25%' : '10%' }}>
                   {mdScreen ? (
                     <Box style={{ justifyContent: 'flex-end', display: 'flex' }}>
-                      <Button sx={styles.iconButtonStyles} data-testid="initiateQuoteBtn">
+                      <Button variant="text" color="inherit" data-testid="initiateQuoteBtn">
                         {t('initiate-quote')}
                       </Button>
-                      <Button sx={styles.iconButtonStyles} data-testid="addToCartBtn">
+                      <Button variant="text" color="inherit" data-testid="addToCartBtn">
                         {t('add-to-cart')}
                       </Button>
                       <IconButton
-                        sx={styles.iconButtonStyles}
+                        color="inherit"
                         onClick={() => onEditList(item?.id || '')}
                         data-testid="editBtn"
                       >
                         <Edit />
                       </IconButton>
                       <IconButton
-                        sx={styles.iconButtonStyles}
+                        color="inherit"
                         onClick={() => onCopyList(item?.id || '')}
                         data-testid="copyBtn"
                       >
                         <FolderCopySharp />
                       </IconButton>
                       <IconButton
-                        sx={styles.iconButtonStyles}
+                        color="inherit"
                         onClick={() => onDeleteList(item?.id || '')}
                         data-testid="deleteBtn"
                       >
