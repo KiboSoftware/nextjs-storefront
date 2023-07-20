@@ -328,6 +328,8 @@
   "customer-name": "Customer Name",
 
   "lists": "Lists",
+  "add-list-items-to-cart": "Add list items to cart",
+  "duplicate": "duplicate",
   "list-name": "List Name",
   "create-new-list": "Create New List",
   "show-only-my-lists": "Show only lists created by me",

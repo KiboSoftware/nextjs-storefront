@@ -39,7 +39,7 @@ const ViewLists = (props: ListsProps) => {
     sortBy: publicRuntimeConfig.b2bList.sortBy,
     filter: publicRuntimeConfig.b2bList.filter,
   })
-  const [rows, setRows] = useState<CrWishlist[]>([])
+  const [rows, setRows] = useState<Array<CrWishlist>>()
 
   // screen size declared
   const theme = useTheme()
@@ -52,23 +52,23 @@ const ViewLists = (props: ListsProps) => {
   // fetching wishlist data
   const { data, isPending } = useGetWishlist(paginationState)
   useEffect(() => {
-    if (data) {
-      setRows(data.items)
+    if (data && data?.items?.length) {
+      setRows(data?.items)
     }
   }, [data])
 
   // edit list function
-  const onEditList = (id: Maybe<string> | undefined) => {
+  const handleEditList = (id: Maybe<string>) => {
     console.log(id, ' edit clicked')
   }
 
   // copy list function
-  const onCopyList = (id: Maybe<string> | undefined) => {
+  const handleCopyList = (id: Maybe<string>) => {
     console.log(id, ' copy clicked')
   }
 
   // delete list function
-  const onDeleteList = (id: Maybe<string> | undefined) => {
+  const handleDeleteList = (id: Maybe<string>) => {
     console.log(id, ' delete clicked')
   }
 
@@ -88,7 +88,7 @@ const ViewLists = (props: ListsProps) => {
     setPaginationState({ ...paginationState, startIndex: newStartIndex })
   }
 
-  if (rows.length === 0) {
+  if (!rows || rows?.length === 0) {
     return (
       <Box style={{ display: 'flex', justifyContent: 'center' }}>
         <CircularProgress />
@@ -124,11 +124,11 @@ const ViewLists = (props: ListsProps) => {
         </>
       )}
       <ListTable
-        rows={rows}
+        rows={rows || []}
         isLoading={isPending}
-        onCopyList={onCopyList}
-        onDeleteList={onDeleteList}
-        onEditList={onEditList}
+        onCopyList={handleCopyList}
+        onDeleteList={handleDeleteList}
+        onEditList={handleEditList}
       />
       <Pagination
         count={data ? data.pageCount : 1}

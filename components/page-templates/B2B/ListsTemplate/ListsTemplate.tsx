@@ -11,7 +11,7 @@ import { useTranslation } from 'next-i18next'
 import ViewLists from '@/components/my-account/Lists/ViewLists/ViewLists'
 import { styles } from '@/components/page-templates/B2B/ListsTemplate/ListTemplate.styles'
 
-const ListsPage = () => {
+const ListsTemplate = () => {
   const [state, setState] = useState({
     isCreateFormOpen: false,
     isEditFormOpen: false,
@@ -23,14 +23,18 @@ const ListsPage = () => {
   const smScreen = useMediaQuery<boolean>(theme.breakpoints.up('sm'))
   const { t } = useTranslation('common')
 
-  const onEditFormToggle = (val: boolean) => setState({ ...state, isEditFormOpen: val })
-  const onCreateFormToggle = () => setState({ ...state, isCreateFormOpen: !state.isCreateFormOpen })
+  const showCreateListButton = !(state.isCreateFormOpen || state.isEditFormOpen)
+
+  const handleEditFormToggle = (val: boolean) =>
+    setState((prevState) => ({ ...prevState, isEditFormOpen: val }))
+  const handleCreateFormToggle = () =>
+    setState((prevState) => ({ ...prevState, isCreateFormOpen: !state.isCreateFormOpen }))
 
   if (!state.isCreateFormOpen) {
     return (
-      <Grid spacing={2} marginTop={2}>
-        <Grid xs={12}>
-          {!(state.isCreateFormOpen || state.isEditFormOpen) && (
+      <Grid container spacing={2} marginTop={2}>
+        <Grid item xs={12}>
+          {showCreateListButton && (
             <div>
               {mdScreen ? (
                 <IconButton
@@ -69,7 +73,7 @@ const ListsPage = () => {
                 )}
               </h1>
               <Button
-                onClick={onCreateFormToggle}
+                onClick={handleCreateFormToggle}
                 sx={styles.addNewListButtonStyles}
                 startIcon={<AddCircleOutlineIcon />}
                 style={smScreen ? {} : { width: '100%' }}
@@ -78,7 +82,10 @@ const ListsPage = () => {
               </Button>
             </div>
           )}
-          <ViewLists onEditFormToggle={onEditFormToggle} isEditFormOpen={state.isEditFormOpen} />
+          <ViewLists
+            onEditFormToggle={handleEditFormToggle}
+            isEditFormOpen={state.isEditFormOpen}
+          />
         </Grid>
       </Grid>
     )
@@ -94,4 +101,4 @@ const ListsPage = () => {
   )
 }
 
-export default ListsPage
+export default ListsTemplate

@@ -66,7 +66,7 @@ export const wishlistKeys = {
   all: ['wishlist'] as const,
   page: (key: PageProps) =>
     [
-      'wishlist',
+      wishlistKeys.all,
       { startIndex: key.startIndex },
       { pageSize: key.pageSize },
       { filter: key.filter },
