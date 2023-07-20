@@ -138,6 +138,10 @@ module.exports = {
     b2bUserListing: {
       startIndex: 0,
       pageSize: 5,
+      defaultFilter: 'isRemoved eq false',
+      defaultStartIndex: 0,
+      defaultPageSize: 5,
+      defaultPage: 1,
     },
     b2bList: {
       startIndex: 0,
@@ -145,6 +149,28 @@ module.exports = {
       sortBy: 'createDate desc',
       filter: '',
     },
+    b2bUserRoles: [
+      { roleName: 'Admin', roleId: 1 },
+      { roleName: 'Purchaser', roleId: 2 },
+      { roleName: 'Nonpurchaser', roleId: 3 },
+    ],
+    userFormRadioOptions: [
+      {
+        label: 'Admin',
+        name: 'role',
+        value: 'Admin',
+      },
+      {
+        label: 'Purchaser',
+        name: 'role',
+        value: 'Purchaser',
+      },
+      {
+        label: 'Non Purchaser',
+        name: 'role',
+        value: 'Nonpurchaser',
+      },
+    ],
   },
   serverRuntimeConfig: {
     currentUrl: process.env.CURRENT_DOMAIN,

@@ -74,6 +74,7 @@ const KiboTextBox = (props: KiboTextBoxProps) => {
           borderWidth: '1px',
           borderStyle: 'solid',
           borderRadius: 1,
+          fontSize: { xs: '14px !important', md: '16px !important' },
           ...sx,
         }}
         value={value}

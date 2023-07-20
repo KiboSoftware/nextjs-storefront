@@ -18,6 +18,8 @@ export { default as getReturnsQuery } from './get-returns'
 export { default as getCheckoutDestinationsQuery } from './checkout/get-checkout-destinations'
 export { default as getCheckoutDestinationQuery } from './checkout/get-checkout-destination'
 export { default as getSubscriptionsQuery } from './subscription/get-subscriptions-query'
+export { default as getCustomerB2BAccountUsersQuery } from './get-customer-b2b-users'
+
 export { default as getCustomerAccountsQuery } from './get-customer-accounts'
 //multiship
 export { default as getMultiShipCheckoutQuery } from './checkout/get-multi-ship-checkout-query'

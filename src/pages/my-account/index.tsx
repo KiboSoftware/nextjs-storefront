@@ -36,7 +36,7 @@ const MyAccountPage: NextPage = (props: any) => {
 
   const isB2bTemplate = true
 
-  const template = isB2bTemplate ? <MyAccountTemplate user={customerAccount} /> : <B2BTemplate />
+  const template = isB2bTemplate ? <B2BTemplate /> : <MyAccountTemplate user={customerAccount} />
 
   return reCaptchaKey ? (
     <ReCaptchaProvider reCaptchaKey={reCaptchaKey}>{template}</ReCaptchaProvider>
