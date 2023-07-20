@@ -13,10 +13,15 @@ const setup = () => {
   return { user }
 }
 
+const ListTableMock = () => <div data-testid="view-lists-mock"></div>
+jest.mock('@/components/my-account/Lists/ViewLists/ViewLists', () => () => ListTableMock())
+
 describe('[component] - ListsTemplate', () => {
   it('should render template', () => {
     setup()
     const heading = screen.getByRole('heading')
+    const viewLists = screen.getByTestId('view-lists-mock')
     expect(heading).toBeVisible()
+    expect(viewLists).toBeVisible()
   })
 })
