@@ -60,10 +60,18 @@ const getSubscriptionDetails = (cartItem: Maybe<CrCartItem>) => {
   return subscriptionGetters.getSubscriptionFrequency(cartItem?.subscription as CrSubscriptionInfo)
 }
 
+const getLineItemPrice = (cartItem: CrCartItem) => {
+  return {
+    regular: cartItem?.total,
+    special: cartItem?.discountTotal,
+  }
+}
+
 export const cartGetters = {
   getCartItemCount,
   getCartItems,
   getCartItemFulfillmentLocation,
   getProductFulfillmentOptions,
   getSubscriptionDetails,
+  getLineItemPrice,
 }

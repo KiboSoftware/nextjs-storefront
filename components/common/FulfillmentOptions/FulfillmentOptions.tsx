@@ -6,6 +6,7 @@ import { FulfillmentOptions as FulfillmentOptionsConstant } from '@/lib/constant
 import type { FulfillmentOption } from '@/lib/types'
 
 interface FulfillmentOptionsProps {
+  title?: string
   fulfillmentOptions: FulfillmentOption[]
   selected: string
   onFulfillmentOptionChange: (value: string) => void
@@ -43,7 +44,8 @@ const FulfillmentOptionLabel = (props: FulfillmentOptionLabelProps) => {
 const FulfillmentOptions = (props: FulfillmentOptionsProps) => {
   const { t } = useTranslation('common')
 
-  const { fulfillmentOptions, selected, onFulfillmentOptionChange, onStoreSetOrUpdate } = props
+  const { title, fulfillmentOptions, selected, onFulfillmentOptionChange, onStoreSetOrUpdate } =
+    props
 
   const radioOptions = fulfillmentOptions?.map((option) => {
     return {
@@ -67,7 +69,7 @@ const FulfillmentOptions = (props: FulfillmentOptionsProps) => {
   return (
     <Box data-testid="fulfillmentOptions">
       <KiboRadio
-        title={t('fulfillment-options')}
+        title={title}
         radioOptions={radioOptions}
         selected={selected}
         onChange={onFulfillmentOptionChange}

@@ -54,6 +54,7 @@ module.exports = {
     shippingAddressPageSize: 5,
     billingAddressPageSize: 5,
     paymentMethodPageSize: 5,
+    b2bProductSearchPageSize: 16,
     badgeAttributeFQN: 'Tenant~badge',
     occasionAttributeFQN: 'Tenant~occasion',
     colorAttributeFQN: 'Tenant~Color',

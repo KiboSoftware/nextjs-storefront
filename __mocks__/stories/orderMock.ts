@@ -86,7 +86,7 @@ const checkoutResponse: CrOrder = {
         description:
           'Its tapered profile and ergonomic handle make it a joy to hold. Our smooth, threadless spout replicates our Perfect Spout, a first for any steel bottle.',
         imageUrl:
-          '//d1slj7rdbjyb5l.cloudfront.net/17194-21127/cms/21127/files/3e90a2f3-01af-4280-93f5-6d35f84f78e5',
+          '//cdn-sb.mozu.com/30294-50525/cms/50525/files/af946329-d91b-4e41-a21e-4825179c4219',
         options: [
           {
             attributeFQN: 'Tenant~color',
@@ -239,7 +239,7 @@ const checkoutResponse: CrOrder = {
         description:
           '<span style="color: rgb(51, 51, 51); font-family: verdana, sans-serif; line-height: 17px; text-align: left; "><font size="3"><i>The Wi-Fi-enabled Garmin VIRB Elite action camera harnesses the power of GPS allowing video recordings that automatically start and stop with GPS-enabled triggers you set, such as speed or altitude.</i></font></span>',
         imageUrl:
-          '//d1slj7rdbjyb5l.cloudfront.net/17194-21127/cms/21127/files/6e0389db-5b78-490d-88b0-28af87528c5b',
+          '//cdn-sb.mozu.com/30294-50525/cms/50525/files/d2249f22-a56f-42fe-be08-702801c97e4e',
         options: [
           {
             attributeFQN: 'Tenant~size',
