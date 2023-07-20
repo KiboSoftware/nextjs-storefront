@@ -13,10 +13,17 @@ import type { CrWishlist } from '@/lib/gql/types'
  * @hidden
  */
 export interface UseWishlistResponse {
-  data?: CrWishlist
+  data?: GetWishlistsResponse | CrWishlist
   isLoading: boolean
   isSuccess: boolean
   isFetching: boolean
+  isPending: boolean
+}
+
+export interface GetWishlistsResponse {
+  totalCount?: number
+  pageCount?: number
+  items?: Array<CrWishlist>
 }
 
 export interface PageProps {
@@ -33,7 +40,7 @@ const getWishlists = async (params?: PageProps) => {
     variables: params ? params : {},
   })
 
-  return params ? response.wishlists : response?.wishlists?.items[0] || []
+  return response.wishlists
 }
 
 /**
@@ -67,5 +74,7 @@ export const useGetWishlist = (params?: PageProps) => {
       params && getWishlists({ ...params, startIndex: params.startIndex + params.pageSize }),
   })
 
-  return { data, isPending, isSuccess, isFetching, isLoading }
+  const wishlistResponse = params ? data : data?.items?.[0]
+
+  return { data: wishlistResponse, isPending, isSuccess, isFetching, isLoading }
 }

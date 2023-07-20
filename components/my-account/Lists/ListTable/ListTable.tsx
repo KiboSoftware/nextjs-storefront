@@ -24,10 +24,10 @@ import formatDate from '@/lib/helpers/formatDate'
 import { CrWishlist, Maybe } from '@/lib/gql/types'
 
 interface ListTableProps {
-  rows: CrWishlist[]
-  onDeleteList: (param: Maybe<string> | undefined) => void
-  onCopyList: (param: Maybe<string> | undefined) => void
-  onEditList: (param: Maybe<string> | undefined) => void
+  rows: Maybe<Array<Maybe<CrWishlist>>>
+  onDeleteList: (param: Maybe<string>) => void
+  onCopyList: (param: Maybe<string>) => void
+  onEditList: (param: Maybe<string>) => void
   isLoading: boolean
 }
 
@@ -41,11 +41,11 @@ const ListTable = (props: ListTableProps) => {
   const mdScreen = useMediaQuery(theme.breakpoints.up('md'))
 
   const options = [
-    { name: 'Edit', onClick: onEditList },
-    { name: 'Add list items to cart', onClick: () => alert('Work in progress') },
-    { name: 'Initiate Quote', onClick: () => alert('Work in progress') },
-    { name: 'Duplicate', onClick: onCopyList },
-    { name: 'Delete', onClick: onDeleteList },
+    { name: t('edit'), onClick: onEditList },
+    { name: t('add-list-items-to-cart'), onClick: () => alert('Work in progress') },
+    { name: t('initiate-quote'), onClick: () => alert('Work in progress') },
+    { name: t('duplicate'), onClick: onCopyList },
+    { name: t('delete'), onClick: onDeleteList },
   ]
 
   return (
@@ -70,56 +70,56 @@ const ListTable = (props: ListTableProps) => {
           </TableRow>
         </TableHead>
         <TableBody>
-          {rows.map((item: CrWishlist) => {
+          {rows?.map((item: Maybe<CrWishlist>) => {
             return (
-              <TableRow key={item.id}>
+              <TableRow key={item?.id}>
                 <TableCell style={{ ...styles.tableCellStyles, width: mdScreen ? '25%' : '50%' }}>
                   {mdScreen ? (
-                    item.name
+                    item?.name
                   ) : (
                     <Box>
-                      {item.name}
+                      {item?.name}
                       <br />
                       <p style={{ margin: '5px 0', color: '#cdcdcd' }}>
-                        {item.auditInfo?.createBy}
+                        {item?.auditInfo?.createBy}
                       </p>
                     </Box>
                   )}
                 </TableCell>
                 <TableCell style={{ ...styles.tableCellStyles, width: mdScreen ? '15%' : '30%' }}>
-                  {formatDate(item.auditInfo?.createDate)}
+                  {formatDate(item?.auditInfo?.createDate)}
                 </TableCell>
                 {mdScreen && (
                   <TableCell style={{ ...styles.tableCellStyles, width: '20%' }}>
-                    {item.auditInfo?.createBy}
+                    {item?.auditInfo?.createBy}
                   </TableCell>
                 )}
                 <TableCell style={{ ...styles.tableCellStyles, width: mdScreen ? '25%' : '10%' }}>
                   {mdScreen ? (
                     <Box style={{ justifyContent: 'flex-end', display: 'flex' }}>
-                      <Button sx={styles.iconButtonStyles} data-testid="initiateQuoteBtn">
+                      <Button variant="text" color="inherit" data-testid="initiateQuoteBtn">
                         {t('initiate-quote')}
                       </Button>
-                      <Button sx={styles.iconButtonStyles} data-testid="addToCartBtn">
+                      <Button variant="text" color="inherit" data-testid="addToCartBtn">
                         {t('add-to-cart')}
                       </Button>
                       <IconButton
-                        sx={styles.iconButtonStyles}
-                        onClick={() => onEditList(item.id)}
+                        color="inherit"
+                        onClick={() => onEditList(item?.id || '')}
                         data-testid="editBtn"
                       >
                         <Edit />
                       </IconButton>
                       <IconButton
-                        sx={styles.iconButtonStyles}
-                        onClick={() => onCopyList(item.id)}
+                        color="inherit"
+                        onClick={() => onCopyList(item?.id || '')}
                         data-testid="copyBtn"
                       >
                         <FolderCopySharp />
                       </IconButton>
                       <IconButton
-                        sx={styles.iconButtonStyles}
-                        onClick={() => onDeleteList(item.id)}
+                        color="inherit"
+                        onClick={() => onDeleteList(item?.id || '')}
                         data-testid="deleteBtn"
                       >
                         <Delete />
@@ -143,7 +143,7 @@ const ListTable = (props: ListTableProps) => {
                           <MenuItem
                             key={option.name}
                             onClick={() => {
-                              option.onClick(item.id)
+                              option.onClick(item?.id || '')
                               setAnchorEL(null)
                             }}
                             style={

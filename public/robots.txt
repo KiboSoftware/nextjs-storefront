@@ -1,0 +1,49 @@
+#robots.txt for http://localhost:3000 updated 2023-07-11T11:32:49.626Z  
+
+# Googlebot
+User-agent: Googlebot
+Disallow: /
+
+# *
+User-agent: *
+Allow: /
+
+# *
+User-agent: *
+Disallow: /admin*
+Disallow: /cart*
+Disallow: /checkout*
+Disallow: /search*
+Disallow: /my-account*
+Disallow: /user*
+Disallow: /util*
+Disallow: /storefront/email/render/*
+Disallow: /print-return*
+Disallow: /guest-checkout*
+Disallow: /print-order*
+Disallow: /nomore*
+Disallow: /registrations-sign-in*
+Disallow: /home-temp*
+Disallow: /test-pricelist*
+
+# AhrefsSiteAudit
+User-agent: AhrefsSiteAudit
+Allow: /
+
+# Baiduspider
+User-agent: Baiduspider
+Disallow: /
+
+# *
+User-agent: *
+Disallow: /*
+
+# *
+User-agent: *
+Crawl-delay: 5
+
+# Host
+Host: http://localhost:3000
+
+# Sitemaps
+Sitemap: http://localhost:3000/sitemap.xml

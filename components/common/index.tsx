@@ -27,6 +27,7 @@ export { default as GlobalFetchingIndicator } from './GlobalFetchingIndicator/Gl
 export { default as ReturnItemList } from './ReturnItemList/ReturnItemList'
 export { default as ProductItemWithAddressList } from './ProductItemWithAddressList/ProductItemWithAddressList'
 export { default as ShippingGroupsWithMethod } from './ShippingGroupsWithMethod/ShippingGroupsWithMethod'
+export { default as KiboSwitch } from './KiboSwitch/KiboSwitch'
 export { default as KiboPagination } from './KiboPagination/KiboPagination'
 export { default as PaymentBillingCard } from './PaymentBillingCard/PaymentBillingCard'
 export { default as Address } from './PaymentBillingCard/PaymentBillingCard'
