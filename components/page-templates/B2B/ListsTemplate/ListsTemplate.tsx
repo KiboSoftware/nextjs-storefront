@@ -4,12 +4,12 @@ import { useState } from 'react'
 
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline'
 import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos'
-import { Grid, Button, useMediaQuery, useTheme, IconButton, Typography } from '@mui/material'
+import { Grid, Button, useMediaQuery, useTheme, IconButton, Typography, Box } from '@mui/material'
 import { useRouter } from 'next/router'
 import { useTranslation } from 'next-i18next'
 
 import ViewLists from '@/components/my-account/Lists/ViewLists/ViewLists'
-import { styles } from '@/components/page-templates/B2B/ListsTemplate/ListTemplate.styles'
+import { styles } from '@/components/page-templates/B2B/ListsTemplate/ListsTemplate.styles'
 
 const ListsTemplate = () => {
   const [state, setState] = useState({
@@ -35,7 +35,7 @@ const ListsTemplate = () => {
       <Grid container spacing={2} marginTop={2}>
         <Grid item xs={12}>
           {showCreateListButton && (
-            <div>
+            <Box>
               {mdScreen ? (
                 <IconButton
                   style={{ paddingLeft: 0, fontSize: '14px', color: '#000' }}
@@ -47,7 +47,8 @@ const ListsTemplate = () => {
                   {t('my-account')}
                 </IconButton>
               ) : null}
-              <h1
+              <Typography
+                variant="h1"
                 style={{
                   textAlign: 'center',
                   fontSize: '20px',
@@ -57,7 +58,9 @@ const ListsTemplate = () => {
                 }}
               >
                 {mdScreen ? (
-                  <span style={{ fontSize: '28px', marginRight: 'auto' }}> {t('lists')} </span>
+                  <Box component="span" style={{ fontSize: '28px', marginRight: 'auto' }}>
+                    {t('lists')}
+                  </Box>
                 ) : (
                   <>
                     <IconButton
@@ -68,19 +71,23 @@ const ListsTemplate = () => {
                     >
                       <ArrowBackIosIcon style={{ width: '14px', color: '#000' }} />
                     </IconButton>
-                    <span style={{ marginLeft: 'auto', marginRight: 'auto' }}> {t('lists')} </span>
+                    <Box component="span" style={{ marginLeft: 'auto', marginRight: 'auto' }}>
+                      {t('lists')}
+                    </Box>
                   </>
                 )}
-              </h1>
+              </Typography>
               <Button
                 onClick={handleCreateFormToggle}
                 sx={styles.addNewListButtonStyles}
+                variant="contained"
+                color="inherit"
                 startIcon={<AddCircleOutlineIcon />}
                 style={smScreen ? {} : { width: '100%' }}
               >
                 {t('create-new-list')}
               </Button>
-            </div>
+            </Box>
           )}
           <ViewLists
             onEditFormToggle={handleEditFormToggle}
