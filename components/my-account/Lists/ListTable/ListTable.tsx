@@ -24,7 +24,7 @@ import formatDate from '@/lib/helpers/formatDate'
 import { CrWishlist, Maybe } from '@/lib/gql/types'
 
 interface ListTableProps {
-  rows: Maybe<Array<Maybe<CrWishlist>>>
+  rows: Array<CrWishlist>
   onDeleteList: (param: Maybe<string>) => void
   onCopyList: (param: Maybe<string>) => void
   onEditList: (param: Maybe<string>) => void

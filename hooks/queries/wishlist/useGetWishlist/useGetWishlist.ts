@@ -7,23 +7,17 @@ import { makeGraphQLClient } from '@/lib/gql/client'
 import { getWishlistQuery } from '@/lib/gql/queries'
 import { wishlistKeys } from '@/lib/react-query/queryKeys'
 
-import type { CrWishlist } from '@/lib/gql/types'
+import type { CrWishlist, WishlistCollection } from '@/lib/gql/types'
 
 /**
  * @hidden
  */
 export interface UseWishlistResponse {
-  data?: GetWishlistsResponse | CrWishlist
+  data?: WishlistCollection | CrWishlist | []
   isLoading: boolean
   isSuccess: boolean
   isFetching: boolean
   isPending: boolean
-}
-
-export interface GetWishlistsResponse {
-  totalCount?: number
-  pageCount?: number
-  items?: Array<CrWishlist>
 }
 
 export interface PageProps {
@@ -33,14 +27,14 @@ export interface PageProps {
   startIndex: number
 }
 
-const getWishlists = async (params?: PageProps) => {
+const getWishlists = async (params?: PageProps): Promise<WishlistCollection | CrWishlist | []> => {
   const client = makeGraphQLClient()
   const response = await client.request({
     document: getWishlistQuery,
     variables: params ? params : {},
   })
 
-  return response.wishlists
+  return params ? response.wishlists : response?.wishlists?.items[0] || []
 }
 
 /**
@@ -59,11 +53,12 @@ const getWishlists = async (params?: PageProps) => {
  * @returns 'response?.wishlists.item[0] || [] if no params passed
  */
 
-export const useGetWishlist = (params?: PageProps) => {
+export const useGetWishlist = (params?: PageProps): UseWishlistResponse => {
   const { data, isPending, isSuccess, isFetching, isLoading } = useQuery({
     queryKey: params ? wishlistKeys.page(params) : wishlistKeys.all,
     queryFn: () => getWishlists(params),
     refetchOnWindowFocus: false,
+    placeholderData: (previousData) => previousData ?? undefined,
   })
 
   useQuery({
@@ -74,7 +69,5 @@ export const useGetWishlist = (params?: PageProps) => {
       params && getWishlists({ ...params, startIndex: params.startIndex + params.pageSize }),
   })
 
-  const wishlistResponse = params ? data : data?.items?.[0]
-
-  return { data: wishlistResponse, isPending, isSuccess, isFetching, isLoading }
+  return { data, isPending, isSuccess, isFetching, isLoading }
 }

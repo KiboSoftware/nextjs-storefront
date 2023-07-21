@@ -20,6 +20,8 @@ import type {
   ProductCustom,
 } from '@/lib/types'
 
+import { CrWishlist } from '@/lib/gql/types'
+
 /**
  * [Custom Hook] Updates the wishlist items and checks if the product is already in wishlist.
  *
@@ -33,7 +35,8 @@ import type {
 export const useWishlist = () => {
   const { showModal } = useModalContext()
 
-  const { data: wishlists } = useGetWishlist()
+  const response = useGetWishlist()
+  const wishlists = response.data as CrWishlist
   const { addToWishlist } = useAddToWishlistItem()
   const { deleteWishlistItem } = useDeleteWishlistItem()
   const { createWishlist } = useCreateWishlist()
