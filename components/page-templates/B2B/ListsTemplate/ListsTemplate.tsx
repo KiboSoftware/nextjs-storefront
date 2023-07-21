@@ -39,6 +39,7 @@ const ListsTemplate = () => {
               {mdScreen ? (
                 <IconButton
                   style={{ paddingLeft: 0, fontSize: '14px', color: '#000' }}
+                  data-testid="my-account-button"
                   onClick={() => {
                     router.push('/my-account')
                   }}
