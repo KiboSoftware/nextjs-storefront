@@ -846,60 +846,6 @@ export const productSearchResultMock: ProductSearchResult = {
       score: 1,
       updateDate: null,
     },
-    {
-      fulfillmentTypesSupported: ['DirectShip', 'InStorePickup'],
-      productCode: 'BCKPCK2',
-      productUsage: 'Configurable',
-      isPackagedStandAlone: false,
-      purchasableState: {
-        isPurchasable: false,
-      },
-      price: {
-        price: 145,
-        salePrice: null,
-      },
-      priceRange: null,
-      content: {
-        productFullDescription: null,
-        productShortDescription:
-          'The&nbsp;Kelty Redwing 50 offers 5 large compartments for storing all your travel items a features a comfortable fit for long outdoor activities. Never leave home without all your essentials',
-        seoFriendlyUrl: 'kelty-redwing-50',
-        productName: 'Kelty Redwing 50',
-        productImages: [
-          {
-            imageUrl: `${imageBaseURL}2f81532c-0c60-4a86-9fd7-4e7ab5c0e9dd`,
-            imageLabel: null,
-            mediaType: null,
-            productImageGroupId: 'default',
-          },
-        ],
-      },
-      options: [
-        {
-          attributeFQN: 'tenant~color',
-          attributeDetail: {
-            name: 'Color',
-            inputType: 'List',
-            dataTypeSequence: 60,
-          },
-          isProductImageGroupSelector: false,
-          isRequired: true,
-          isMultiValue: false,
-          values: [],
-        },
-      ],
-      productImageGroups: [],
-      inventoryInfo: {
-        manageStock: false,
-        onlineLocationCode: null,
-        onlineSoftStockAvailable: null,
-        onlineStockAvailable: null,
-      },
-      createDate: null,
-      personalizationScore: 1,
-      score: 1,
-      updateDate: null,
-    },
   ],
   facets: [
     {

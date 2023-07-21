@@ -176,18 +176,19 @@ const ProductCard = (props: ProductCardProps) => {
                   emptyIcon={<StarRounded data-testid="empty-rating" />}
                   data-testid="product-rating"
                 />
-                {isShowWishlistIcon && (
-                  <Box pt={2} textAlign={'center'} sx={{ opacity: 0 }} className="quick-actions">
-                    {showQuickViewButton && (
-                      <Button
-                        sx={{ mr: 2 }}
-                        variant="contained"
-                        color="primary"
-                        onClick={handleOpenProductQuickViewModal}
-                      >
-                        {t('quick-view')}
-                      </Button>
-                    )}
+                {/* {isShowWishlistIcon && ( */}
+                <Box pt={2} textAlign={'center'} sx={{ opacity: 0 }} className="quick-actions">
+                  {showQuickViewButton && (
+                    <Button
+                      sx={{ mr: 2 }}
+                      variant="contained"
+                      color="primary"
+                      onClick={handleOpenProductQuickViewModal}
+                    >
+                      {t('quick-view')}
+                    </Button>
+                  )}
+                  {isShowWishlistIcon && (
                     <LoadingButton
                       variant="contained"
                       color="primary"
@@ -196,8 +197,9 @@ const ProductCard = (props: ProductCardProps) => {
                     >
                       {t('add-to-cart')}
                     </LoadingButton>
-                  </Box>
-                )}
+                  )}
+                </Box>
+                {/* )} */}
               </Box>
             </Card>
           </Box>

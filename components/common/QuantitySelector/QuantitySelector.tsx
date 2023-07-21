@@ -74,9 +74,11 @@ const QuantitySelector = (props: QuantitySelectorProps) => {
 
   return (
     <Stack direction="row" justifyContent="flec-start" alignItems="center" spacing={1.2}>
-      <Typography variant="body2" component="span" sx={{ pr: '0.5rem' }} data-testid="label">
-        {label}:
-      </Typography>
+      {label && (
+        <Typography variant="body2" component="span" sx={{ pr: '0.5rem' }} data-testid="label">
+          {label}:
+        </Typography>
+      )}
 
       <IconButton
         onClick={onDecrease}

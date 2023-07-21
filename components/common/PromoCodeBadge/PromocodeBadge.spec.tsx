@@ -91,7 +91,7 @@ describe('PromoCodeBadge Component', () => {
 
     user.click(PromoCodebutton)
     await waitFor(() => {
-      expect(screen.getAllByTestId('promotype')[1]).toBeInTheDocument()
+      expect(screen.getAllByTestId('applied-coupon')[1]).toBeInTheDocument()
     })
   })
 

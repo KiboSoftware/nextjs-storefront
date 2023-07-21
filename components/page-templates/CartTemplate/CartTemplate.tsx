@@ -17,25 +17,20 @@ import { useTranslation } from 'next-i18next'
 
 import { CartItemList } from '@/components/cart'
 import { PromoCodeBadge, OrderSummary } from '@/components/common'
-import { StoreLocatorDialog } from '@/components/dialogs'
-import { useModalContext } from '@/context'
 import {
   useGetCart,
   useInitiateOrder,
   useGetStoreLocations,
   useGetPurchaseLocation,
-  useUpdateCartItemQuantity,
   useDeleteCartItem,
-  useUpdateCartItem,
   useUpdateCartCoupon,
   useDeleteCartCoupon,
   useInitiateCheckout,
+  useCartActions,
 } from '@/hooks'
-import { FulfillmentOptions } from '@/lib/constants'
 import { orderGetters, cartGetters } from '@/lib/getters'
-import type { LocationCustom } from '@/lib/types'
 
-import type { Maybe, CrCart, Location, CrCartItemInput, CrCartItem } from '@/lib/gql/types'
+import type { CrCart, Location, CrCartItem } from '@/lib/gql/types'
 
 export interface CartTemplateProps {
   isMultiShipEnabled: boolean
@@ -52,10 +47,7 @@ const CartTemplate = (props: CartTemplateProps) => {
   const router = useRouter()
   const { initiateOrder } = useInitiateOrder()
   const { initiateCheckout } = useInitiateCheckout()
-  const { updateCartItemQuantity } = useUpdateCartItemQuantity()
   const { deleteCartItem } = useDeleteCartItem()
-  const { updateCartItem } = useUpdateCartItem()
-  const { showModal, closeModal } = useModalContext()
 
   const cartItemCount = cartGetters.getCartItemCount(cart)
   const cartItems = cartGetters.getCartItems(cart)
@@ -98,62 +90,12 @@ const CartTemplate = (props: CartTemplateProps) => {
     }
   }
 
-  const handleItemQuantity = async (cartItemId: string, quantity: number) => {
-    try {
-      await updateCartItemQuantity.mutateAsync({ cartItemId, quantity })
-    } catch (err) {
-      console.error(err)
-    }
-  }
   const handleDeleteItem = async (cartItemId: string) => {
     await deleteCartItem.mutateAsync({ cartItemId })
   }
+
   const handleItemActions = () => {
     // your code here
-  }
-  const handleFulfillmentOptionSelection = async (
-    fulfillmentMethod: string,
-    cartItemId: string
-  ) => {
-    const locationCode =
-      fulfillmentMethod === FulfillmentOptions.PICKUP ? (purchaseLocation.code as string) : ''
-    if (fulfillmentMethod === FulfillmentOptions.PICKUP && !locationCode) {
-      handleProductPickupLocation(cartItemId)
-    } else {
-      mutateCartItem(cartItemId, fulfillmentMethod, locationCode)
-    }
-  }
-
-  const handleProductPickupLocation = (cartItemId: string) => {
-    showModal({
-      Component: StoreLocatorDialog,
-      props: {
-        handleSetStore: async (selectedStore: LocationCustom) => {
-          mutateCartItem(cartItemId, FulfillmentOptions.PICKUP, selectedStore?.code)
-          closeModal()
-        },
-      },
-    })
-  }
-
-  const mutateCartItem = async (
-    cartItemId: string,
-    fulfillmentMethod: string,
-    locationCode = ''
-  ) => {
-    try {
-      const cartItem = cartItems.find((item: Maybe<CrCartItem>) => item?.id === cartItemId)
-      await updateCartItem.mutateAsync({
-        cartItemInput: {
-          ...(cartItem as CrCartItemInput),
-          fulfillmentMethod,
-          fulfillmentLocationCode: locationCode,
-        },
-        cartItemId: cartItemId,
-      })
-    } catch (err) {
-      console.log(err)
-    }
   }
 
   const handleGotoCheckout = async () => {
@@ -201,6 +143,12 @@ const CartTemplate = (props: CartTemplateProps) => {
     router.back()
   }
 
+  const { onFulfillmentOptionChange, handleQuantityUpdate, handleProductPickupLocation } =
+    useCartActions({
+      cartItems: cartItems as CrCartItem[],
+      purchaseLocation,
+    })
+
   return (
     <Grid container>
       {/* Header section */}
@@ -229,11 +177,11 @@ const CartTemplate = (props: CartTemplateProps) => {
                 locations && Object.keys(locations).length ? (locations as Location[]) : []
               }
               purchaseLocation={purchaseLocation}
-              onCartItemQuantityUpdate={handleItemQuantity}
               onCartItemDelete={handleDeleteItem}
-              onCartItemActionSelection={handleItemActions}
-              onFulfillmentOptionSelection={handleFulfillmentOptionSelection}
+              onCartItemQuantityUpdate={handleQuantityUpdate}
+              onFulfillmentOptionChange={onFulfillmentOptionChange}
               onProductPickupLocation={handleProductPickupLocation}
+              onCartItemActionSelection={handleItemActions}
             />
             <Box py={5}>
               <Button

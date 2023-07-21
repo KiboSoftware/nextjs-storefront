@@ -7,7 +7,7 @@ export const productConfigInventoryInfo = /* GraphQL */ `
       onlineLocationCode
       onlineSoftStockAvailable
       onlineStockAvailable
-      outofStockBehavior
+      outOfStockBehavior
     }
   }
 `
