@@ -85,6 +85,7 @@ const ListsTemplate = () => {
                 color="inherit"
                 startIcon={<AddCircleOutlineIcon />}
                 style={smScreen ? {} : { width: '100%' }}
+                data-testid="create-new-list-btn"
               >
                 {t('create-new-list')}
               </Button>

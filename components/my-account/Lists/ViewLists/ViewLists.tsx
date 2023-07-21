@@ -1,4 +1,4 @@
-import React, { ChangeEvent, useEffect, useState } from 'react'
+import React, { ChangeEvent, useState } from 'react'
 
 import { Search } from '@mui/icons-material'
 import {
@@ -21,7 +21,7 @@ import { styles } from '@/components/my-account/Lists/ViewLists/ViewLists.style'
 import { useAuthContext } from '@/context'
 import { PageProps, useGetWishlist } from '@/hooks'
 
-import { CrWishlist, Maybe } from '@/lib/gql/types'
+import { CrWishlist, Maybe, WishlistCollection } from '@/lib/gql/types'
 
 interface ListsProps {
   onEditFormToggle: (param: boolean) => void
@@ -39,7 +39,6 @@ const ViewLists = (props: ListsProps) => {
     sortBy: publicRuntimeConfig.b2bList.sortBy,
     filter: publicRuntimeConfig.b2bList.filter,
   })
-  const [rows, setRows] = useState<Array<CrWishlist>>()
 
   // screen size declared
   const theme = useTheme()
@@ -50,12 +49,9 @@ const ViewLists = (props: ListsProps) => {
   const userId = user?.userId
 
   // fetching wishlist data
-  const { data, isPending } = useGetWishlist(paginationState)
-  useEffect(() => {
-    if (data && data?.items?.length) {
-      setRows(data?.items)
-    }
-  }, [data])
+  const response = useGetWishlist(paginationState)
+  const data = response.data as WishlistCollection
+  const isPending = response.isPending
 
   // edit list function
   const handleEditList = (id: Maybe<string>) => {
@@ -88,7 +84,7 @@ const ViewLists = (props: ListsProps) => {
     setPaginationState({ ...paginationState, startIndex: newStartIndex })
   }
 
-  if (!rows || rows?.length === 0) {
+  if (!data || data?.items?.length === 0) {
     return (
       <Box style={{ display: 'flex', justifyContent: 'center' }}>
         <CircularProgress />
@@ -124,7 +120,7 @@ const ViewLists = (props: ListsProps) => {
         </>
       )}
       <ListTable
-        rows={rows || []}
+        rows={data.items as Array<CrWishlist>}
         isLoading={isPending}
         onCopyList={handleCopyList}
         onDeleteList={handleDeleteList}

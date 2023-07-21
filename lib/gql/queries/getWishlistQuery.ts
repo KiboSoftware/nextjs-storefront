@@ -5,6 +5,8 @@ const getWishlistQuery = /* GraphQL */ `
     wishlists(pageSize: $pageSize, startIndex: $startIndex, sortBy: $sortBy, filter: $filter) {
       totalCount
       pageCount
+      startIndex
+      pageSize
       items {
         ...wishlist
       }
