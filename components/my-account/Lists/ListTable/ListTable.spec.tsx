@@ -56,6 +56,7 @@ describe('[component] - ListTable', () => {
     initiateQuoteBtns.forEach((btn) => expect(btn).toBeVisible())
     addToCartBtns.forEach((btn) => expect(btn).toBeVisible())
   })
+
   it('should render component on mobile', () => {
     window.matchMedia = createMatchMedia(500)
     setup()
@@ -66,29 +67,38 @@ describe('[component] - ListTable', () => {
     tableRows.forEach((row) => expect(row).toBeVisible())
     menuBtn.forEach((btn) => expect(btn).toBeVisible())
   })
+
   it('should call callback function when user clicks on Edit button', async () => {
     window.matchMedia = createMatchMedia(1024)
     const { user } = setup()
     const editBtns = screen.getAllByTestId('editBtn')
-    editBtns.forEach((btn) => user.click(btn))
+    editBtns.forEach((btn) => {
+      user.click(btn)
+    })
     await waitFor(() => {
       expect(onEditMock).toBeCalledTimes(editBtns.length)
     })
   })
+
   it('should call callback function when user clicks on Delete button', async () => {
     window.matchMedia = createMatchMedia(1024)
     const { user } = setup()
     const deleteBtns = screen.getAllByTestId('deleteBtn')
-    deleteBtns.forEach((btn) => user.click(btn))
+    deleteBtns.forEach((btn) => {
+      user.click(btn)
+    })
     await waitFor(() => {
       expect(onDeleteMock).toBeCalledTimes(deleteBtns.length)
     })
   })
+
   it('should call callback function when user clicks on Copy button', async () => {
     window.matchMedia = createMatchMedia(1024)
     const { user } = setup()
     const copyBtns = screen.getAllByTestId('copyBtn')
-    copyBtns.forEach((btn) => user.click(btn))
+    copyBtns.forEach((btn) => {
+      user.click(btn)
+    })
     await waitFor(() => {
       expect(onCopyMock).toBeCalledTimes(copyBtns.length)
     })
