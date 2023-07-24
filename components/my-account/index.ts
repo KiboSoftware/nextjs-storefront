@@ -4,5 +4,7 @@ export { default as AddressBook } from './AddressBook/AddressBook'
 export { default as ProfileDetailsForm } from './ProfileDetailsForm/ProfileDetailsForm'
 export { default as SubscriptionList } from './Subscription/SubscriptionList/SubscriptionList'
 export { default as SubscriptionItem } from './Subscription/SubscriptionItem/SubscriptionItem'
+
+export { default as ListTable } from './Lists/ListTable/ListTable'
 export { default as UserTable } from './User/UserTable/UserTable'
 export { default as UserForm } from './User/UserForm/UserForm'
