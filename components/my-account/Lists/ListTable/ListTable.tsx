@@ -42,7 +42,9 @@ const ListTable = (props: ListTableProps) => {
 
   const options = [
     { name: t('edit'), onClick: onEditList },
+    // todo
     { name: t('add-list-items-to-cart'), onClick: () => alert('Work in progress') },
+    // todo
     { name: t('initiate-quote'), onClick: () => alert('Work in progress') },
     { name: t('duplicate'), onClick: onCopyList },
     { name: t('delete'), onClick: onDeleteList },
