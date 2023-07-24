@@ -16,7 +16,7 @@ interface CartItemListProps {
   onCartItemQuantityUpdate: (cartItemId: string, quantity: number) => void
   onCartItemDelete: (cartItemId: string) => void
   onCartItemActionSelection: () => void
-  onFulfillmentOptionSelection: (fulfillmentMethod: string, cartItemId: string) => void
+  onFulfillmentOptionChange: (fulfillmentMethod: string, cartItemId: string) => void
   onProductPickupLocation: (cartItemId: string) => void
 }
 
@@ -28,7 +28,7 @@ const CartItemList = (props: CartItemListProps) => {
     onCartItemQuantityUpdate,
     onCartItemDelete,
     onCartItemActionSelection,
-    onFulfillmentOptionSelection,
+    onFulfillmentOptionChange,
     onProductPickupLocation,
   } = props
 
@@ -66,7 +66,7 @@ const CartItemList = (props: CartItemListProps) => {
             onCartItemDelete={handleCartItemDelete}
             onCartItemActionSelection={handleCartItemActionSelection}
             fulfillmentOptions={handleSupportedFulfillmentOptions(item as CrCartItem)}
-            onFulfillmentOptionChange={onFulfillmentOptionSelection}
+            onFulfillmentOptionChange={onFulfillmentOptionChange}
             onProductPickupLocation={onProductPickupLocation}
           />
           <Box sx={{ display: { xs: 'block', sm: 'block', md: 'none' } }}>

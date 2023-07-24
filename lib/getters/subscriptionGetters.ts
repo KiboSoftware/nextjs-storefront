@@ -72,7 +72,7 @@ const getFrequencyUnitAndValue = (selectedFrequency: string) => {
   const [value, unit] = selectedFrequency.split(' ')
 
   // API accepts unit as singular ex. day or month
-  const isUnitPlural = unit.charAt(unit.length - 1).toLowerCase() === 's'
+  const isUnitPlural = unit?.charAt(unit.length - 1).toLowerCase() === 's'
   const unitSingular = isUnitPlural ? unit.slice(0, unit.length - 1) : unit
 
   return {

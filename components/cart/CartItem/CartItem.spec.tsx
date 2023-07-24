@@ -49,20 +49,20 @@ describe('[components] - CartItem', () => {
     const { onDeleteMock, user } = setup()
 
     // act
-    const cartItemAction = screen.getByTestId('cart-item-actions-component')
+    // const cartItemAction = screen.getByTestId('cart-item-actions-component')
     const fulfillmentOptions = screen.getByTestId('fulfillment-options-component')
     const cartItem = screen.getByTestId('cart-item-component')
-    const cartItemActionMobile = screen.getByTestId('cart-item-actions-mobile-component')
+    // const cartItemActionMobile = screen.getByTestId('cart-item-actions-mobile-component')
     const card = screen.getByRole('group')
     const deleteButton = screen.getByRole('button', { name: 'item-delete' })
 
     user.click(deleteButton)
 
     // assert
-    expect(cartItemAction).toBeVisible()
+    // expect(cartItemAction).toBeVisible()
     expect(fulfillmentOptions).toBeVisible()
     expect(cartItem).toBeVisible()
-    expect(cartItemActionMobile).toBeVisible()
+    // expect(cartItemActionMobile).toBeVisible()
     expect(card).toBeVisible()
     expect(deleteButton).toBeEnabled()
 

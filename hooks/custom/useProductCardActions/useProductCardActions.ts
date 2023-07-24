@@ -9,11 +9,11 @@ export const useProductCardActions = () => {
   const { addToCart } = useAddCartItem()
   const { addOrRemoveWishlistItem, checkProductInWishlist } = useWishlist()
 
-  const handleAddToCart = async (payload: any) => {
+  const handleAddToCart = async (payload: any, showConfirmationModal = true) => {
     try {
       const cartResponse = await addToCart.mutateAsync(payload)
 
-      if (cartResponse.id) {
+      if (cartResponse.id && showConfirmationModal) {
         showModal({
           Component: AddToCartDialog,
           props: {
@@ -26,12 +26,13 @@ export const useProductCardActions = () => {
     }
   }
 
-  const openProductQuickViewModal = (product: ProductCustom) => {
+  const openProductQuickViewModal = (product: ProductCustom, dialogProps?: any) => {
     showModal({
       Component: ProductQuickViewDialog,
       props: {
         product,
         isQuickViewModal: true,
+        dialogProps,
       },
     })
   }
