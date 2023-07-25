@@ -26,7 +26,7 @@ import { CrWishlist, Maybe } from '@/lib/gql/types'
 interface ListTableProps {
   rows: Array<CrWishlist>
   onDeleteList: (param: Maybe<string>) => void
-  onCopyList: (param: Maybe<string>) => void
+  onCopyList: (param: string) => void
   onEditList: (param: Maybe<string>) => void
   isLoading: boolean
 }
