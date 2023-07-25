@@ -66,7 +66,7 @@ const ViewLists = (props: ListsProps) => {
   const handleCopyList = async (id: string) => {
     const newWishlist = data.items && data?.items.find((item: Maybe<CrWishlist>) => item?.id === id)
     let listName = newWishlist?.name + ' - copy'
-    while (data.items && data.items.find((item: Maybe<CrWishlist>) => item?.name == listName)) {
+    while (data.items && data?.items.find((item: Maybe<CrWishlist>) => item?.name == listName)) {
       listName += ' - copy'
     }
     setIsLoading(true)

@@ -1,7 +1,7 @@
 /**
  * @module useGetWishlist
  */
-import { useQuery } from '@tanstack/react-query'
+import { QueryObserverResult, RefetchOptions, useQuery } from '@tanstack/react-query'
 
 import { makeGraphQLClient } from '@/lib/gql/client'
 import { getWishlistQuery } from '@/lib/gql/queries'
@@ -18,7 +18,9 @@ export interface UseWishlistResponse {
   isSuccess: boolean
   isFetching: boolean
   isPending: boolean
-  refetch: any
+  refetch: (
+    options?: RefetchOptions | undefined
+  ) => Promise<QueryObserverResult<CrWishlist | WishlistCollection | [], Error>>
 }
 
 export interface PageProps {
