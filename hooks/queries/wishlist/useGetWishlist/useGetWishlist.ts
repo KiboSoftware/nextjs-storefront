@@ -18,6 +18,7 @@ export interface UseWishlistResponse {
   isSuccess: boolean
   isFetching: boolean
   isPending: boolean
+  refetch: any
 }
 
 export interface PageProps {
@@ -54,7 +55,7 @@ const getWishlists = async (params?: PageProps): Promise<WishlistCollection | Cr
  */
 
 export const useGetWishlist = (params?: PageProps): UseWishlistResponse => {
-  const { data, isPending, isSuccess, isFetching, isLoading } = useQuery({
+  const { data, isPending, isSuccess, isFetching, isLoading, refetch } = useQuery({
     queryKey: params ? wishlistKeys.page(params) : wishlistKeys.all,
     queryFn: () => getWishlists(params),
     refetchOnWindowFocus: false,
@@ -69,5 +70,5 @@ export const useGetWishlist = (params?: PageProps): UseWishlistResponse => {
       params && getWishlists({ ...params, startIndex: params.startIndex + params.pageSize }),
   })
 
-  return { data, isPending, isSuccess, isFetching, isLoading }
+  return { data, isPending, isSuccess, isFetching, isLoading, refetch }
 }
