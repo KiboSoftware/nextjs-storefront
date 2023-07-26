@@ -22,21 +22,6 @@ module.exports = {
       'encrypted-tbn0.gstatic.com',
       'images.ctfassets.net',
       'cdn.builder.io',
-      'http',
-    ],
-    remotePatterns: [
-      {
-        protocol: 'http',
-        hostname: 'cdn-sb.mozu.com',
-        port: '',
-        pathname: '**',
-      },
-      {
-        protocol: 'http',
-        hostname: 'http',
-        port: '',
-        pathname: '**',
-      },
     ],
     deviceSizes: [
       100, 240, 340, 380, 400, 450, 500, 550, 600, 640, 750, 828, 1080, 1200, 1920, 2048, 3840,
@@ -44,6 +29,11 @@ module.exports = {
   },
   publicRuntimeConfig: {
     currentUrl: process.env.CURRENT_DOMAIN,
+    metaData: {
+      siteTitle: 'Kibo Commerce',
+      defaultTitle: 'Storefront',
+      defaultDescription: 'Kibo Commerce Storefront',
+    },
     recaptcha: {
       reCaptchaKey: process.env.RECAPTCHA_KEY,
       reCaptchaSecret: process.env.RECAPTCHA_SECRET,
@@ -141,6 +131,14 @@ module.exports = {
     cacheKey: 'categoryTree',
     cacheTimeOut: 10000,
     isMultiShipEnabled: false,
+    pageConfig: {
+      productDetail: {
+        staticPathsMaxSize: 1000,
+      },
+      productListing: {
+        staticPathsMaxSize: 1000,
+      },
+    },
     recaptcha: {
       reCaptchaKey: process.env.RECAPTCHA_KEY,
       reCaptchaSecret: process.env.RECAPTCHA_SECRET,
