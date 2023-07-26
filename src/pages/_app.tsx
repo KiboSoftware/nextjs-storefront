@@ -3,6 +3,7 @@ import React from 'react'
 import { CacheProvider, EmotionCache } from '@emotion/react'
 // eslint-disable-next-line import/order
 import { AppProps } from 'next/app'
+import getConfig from 'next/config'
 import dynamic from 'next/dynamic'
 import Head from 'next/head'
 import { appWithTranslation } from 'next-i18next'
@@ -31,20 +32,22 @@ Router.events.on('routeChangeComplete', () => NProgress.done())
 Router.events.on('routeChangeError', () => NProgress.done())
 
 const App = (props: KiboAppProps) => {
+  const { publicRuntimeConfig } = getConfig()
   const { Component, emotionCache = clientSideEmotionCache, pageProps } = props
+  const { siteTitle, defaultTitle, defaultDescription } = publicRuntimeConfig?.metaData || {}
   const getLayout =
     Component.getLayout ?? ((page) => <DefaultLayout pageProps={pageProps}>{page}</DefaultLayout>)
-
+  const pageTitle = `${siteTitle} | ${pageProps?.metaData?.title || defaultTitle}`
   return (
     <CacheProvider value={emotionCache}>
       <Head>
-        <title>KiboCommerce</title>
-        <meta name="viewport" content="initial-scale=1, width=device-width" />
-        <meta name="title" content="Kibo Commerce | Unified Commerce Platform for D2C Retailers" />
-        <meta
-          name="description"
-          content="Kibo Commerce is a unified commerce platform that helps D2C retailers manage orders, products, customers, and more in a single place."
-        />
+        <title>{pageTitle}</title>
+        <meta name="title" content={pageProps?.metaData?.title || defaultTitle} />
+        <meta name="description" content={pageProps?.metaData?.description || defaultDescription} />
+        <meta name="keywords" content={pageProps?.metaData?.keywords} />
+        {pageProps?.metaData?.robots && (
+          <meta name="robots" content={pageProps?.metaData?.robots} />
+        )}
       </Head>
       {/* CssBaseline kickstart an elegant, consistent, and simple baseline to build upon. */}
       <RQNotificationContextProvider>

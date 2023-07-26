@@ -4,7 +4,7 @@ import { NextApiRequest } from 'next'
 
 import { categoryTreeDataMock, productSearchResultMock } from '@/__mocks__/stories'
 import { createQueryClientWrapper } from '@/__test__/utils'
-import CategoryPage, { getStaticProps } from '@/src/pages/category/[...categorySlug]'
+import CategoryPage, { getStaticProps } from '@/src/pages/category/[categoryCode]'
 
 import { PrCategory } from '@/lib/gql/types'
 

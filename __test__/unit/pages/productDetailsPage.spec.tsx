@@ -6,7 +6,8 @@ import { categoryTreeDataMock, productSearchResultMock } from '@/__mocks__/stori
 import ProductDetailPage, {
   getStaticPaths,
   getStaticProps,
-} from '@/src/pages/product/[...productSlug]'
+} from '@/src/pages/product/[productCode]'
+import { Product } from '@/lib/gql/types'
 
 const mockCategoryTreeData = categoryTreeDataMock
 const mockProduct = productSearchResultMock.items?.[0]
@@ -135,7 +136,7 @@ describe('[page] Product Details Page', () => {
 
   it('should render the page not found if isFallback is false', () => {
     isFallback = false
-    render(<ProductDetailPage />)
+    render(<ProductDetailPage product={undefined} />)
 
     const pageNotFound = screen.getByText('This page could not be found.')
     expect(pageNotFound).toBeVisible()
@@ -143,14 +144,14 @@ describe('[page] Product Details Page', () => {
 
   it('should render the Fallback page if isFallback is true', () => {
     isFallback = true
-    render(<ProductDetailPage />)
+    render(<ProductDetailPage product={undefined} />)
 
     expect(screen.getByTestId(/productDetailSkeleton-mock/)).toBeVisible()
   })
 
   it('should render the ProductDetail page template if isFallback is false', () => {
     isFallback = false
-    ProductDetailPage.defaultProps = { product: mockProduct }
+    ProductDetailPage.defaultProps = { product: mockProduct as Product }
     render(<ProductDetailPage />)
 
     const productDetailTemplate = screen.getByTestId('productDetailTemplate-mock')
