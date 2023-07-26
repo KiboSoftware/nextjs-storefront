@@ -133,10 +133,10 @@ module.exports = {
     isMultiShipEnabled: false,
     pageConfig: {
       productDetail: {
-        staticPathsMaxSize: 1000,
+        staticPathsMaxSize: 10,
       },
       productListing: {
-        staticPathsMaxSize: 1000,
+        staticPathsMaxSize: 10,
       },
     },
     recaptcha: {
