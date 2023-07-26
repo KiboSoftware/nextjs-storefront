@@ -17,27 +17,27 @@ import { cartGetters, productGetters } from '@/lib/getters'
 import { uiHelpers } from '@/lib/helpers'
 import { FulfillmentOption } from '@/lib/types'
 
-import { CrCartItem, CrProduct, Maybe, Location } from '@/lib/gql/types'
+import { CrCartItem, CrProduct, Maybe, Location, CrOrderItem } from '@/lib/gql/types'
 
-interface QuickOrderTableProps {
-  cartItems: CrCartItem[]
+interface B2BProductDetailsTableProps {
+  items: CrCartItem[] | CrOrderItem[]
   fulfillmentLocations: Maybe<Location>[]
   purchaseLocation: Location
   onFulfillmentOptionChange: (value: string, id: string) => void
   onStoreSetOrUpdate: (id: string) => void
   onQuantityUpdate: (cartItemId: string, quantity: number) => void
-  onCartItemDelete: (cartItemId: string) => void
+  onItemDelete: (cartItemId: string) => void
 }
 
-export default function QuickOrderTable(props: QuickOrderTableProps) {
+export default function B2BProductDetailsTable(props: B2BProductDetailsTableProps) {
   const {
-    cartItems,
+    items,
     fulfillmentLocations,
     purchaseLocation,
     onFulfillmentOptionChange,
     onStoreSetOrUpdate,
     onQuantityUpdate,
-    onCartItemDelete,
+    onItemDelete,
   } = props
 
   const { t } = useTranslation('common')
@@ -72,7 +72,9 @@ export default function QuickOrderTable(props: QuickOrderTableProps) {
     []
   )
 
-  const handleSupportedFulfillmentOptions = (cartItem: CrCartItem): FulfillmentOption[] => {
+  const handleSupportedFulfillmentOptions = (
+    cartItem: CrCartItem | CrOrderItem
+  ): FulfillmentOption[] => {
     const location =
       cartItem?.fulfillmentLocationCode &&
       cartItem?.fulfillmentMethod === FulfillmentOptionsConstant.PICKUP
@@ -84,7 +86,7 @@ export default function QuickOrderTable(props: QuickOrderTableProps) {
   return (
     <TableContainer component={Paper} sx={{ maxHeight: '50vh' }}>
       <Table sx={{ minWidth: 650 }} aria-label="quick order table" size="medium">
-        {!cartItems.length ? <caption>{t('search-to-add-products')}</caption> : null}
+        {!items.length ? <caption>{t('search-to-add-products')}</caption> : null}
         <TableHead>
           <TableRow
             sx={{
@@ -101,39 +103,35 @@ export default function QuickOrderTable(props: QuickOrderTableProps) {
           </TableRow>
         </TableHead>
         <TableBody>
-          {cartItems.map((cartItem: CrCartItem) => (
-            <TableRow key={cartItem.id} sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
+          {items.map((item: CrCartItem | CrOrderItem) => (
+            <TableRow key={item.id} sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
               <TableCell component="th" scope="row">
                 <ProductItem
                   isQuickOrder
-                  image={productGetters.getProductImage(cartItem.product as CrProduct)}
-                  name={productGetters.getName(cartItem.product as CrProduct)}
-                  productCode={productGetters.getProductId(cartItem.product as CrProduct)}
-                  options={productGetters.getOptions(cartItem.product as CrProduct)}
-                  link={getProductLink(cartItem.product?.productCode as string)}
+                  image={productGetters.getProductImage(item.product as CrProduct)}
+                  name={productGetters.getName(item.product as CrProduct)}
+                  productCode={productGetters.getProductId(item.product as CrProduct)}
+                  options={productGetters.getOptions(item.product as CrProduct)}
+                  link={getProductLink(item.product?.productCode as string)}
                 />
               </TableCell>
               <TableCell>
                 <FulfillmentOptions
-                  fulfillmentOptions={handleSupportedFulfillmentOptions(cartItem)}
-                  selected={cartItem?.fulfillmentMethod ?? ''}
+                  fulfillmentOptions={handleSupportedFulfillmentOptions(item)}
+                  selected={item?.fulfillmentMethod ?? ''}
                   onFulfillmentOptionChange={(fulfillmentMethod: string) =>
-                    onFulfillmentOptionChange(fulfillmentMethod, cartItem?.id as string)
+                    onFulfillmentOptionChange(fulfillmentMethod, item?.id as string)
                   }
-                  onStoreSetOrUpdate={() => onStoreSetOrUpdate(cartItem?.id as string)}
+                  onStoreSetOrUpdate={() => onStoreSetOrUpdate(item?.id as string)}
                 />
               </TableCell>
               <TableCell>
                 <QuantitySelector
-                  quantity={cartItem?.quantity || 1} // needs to be modified
+                  quantity={item?.quantity || 1} // needs to be modified
                   maxQuantity={100} // needs to be modified
-                  onIncrease={() =>
-                    onQuantityUpdate(cartItem?.id as string, cartItem?.quantity + 1)
-                  }
-                  onDecrease={() =>
-                    onQuantityUpdate(cartItem?.id as string, cartItem?.quantity - 1)
-                  }
-                  onQuantityUpdate={(q) => onQuantityUpdate(cartItem?.id as string, q)}
+                  onIncrease={() => onQuantityUpdate(item?.id as string, item?.quantity + 1)}
+                  onDecrease={() => onQuantityUpdate(item?.id as string, item?.quantity - 1)}
+                  onQuantityUpdate={(q) => onQuantityUpdate(item?.id as string, q)}
                 />
               </TableCell>
               <TableCell>
@@ -141,14 +139,12 @@ export default function QuickOrderTable(props: QuickOrderTableProps) {
                   variant="body2"
                   fontWeight="bold"
                   price={t('currency', {
-                    val: productGetters
-                      .getPrice(cartItem?.product as CrProduct)
-                      .regular?.toString(),
+                    val: productGetters.getPrice(item?.product as CrProduct).regular?.toString(),
                   })}
                   salePrice={
-                    productGetters.getPrice(cartItem?.product as CrProduct).special
+                    productGetters.getPrice(item?.product as CrProduct).special
                       ? t('currency', {
-                          val: productGetters.getPrice(cartItem?.product as CrProduct).special,
+                          val: productGetters.getPrice(item?.product as CrProduct).special,
                         })
                       : undefined
                   }
@@ -159,12 +155,12 @@ export default function QuickOrderTable(props: QuickOrderTableProps) {
                   variant="body2"
                   fontWeight="bold"
                   price={t('currency', {
-                    val: cartGetters.getLineItemPrice(cartItem).regular?.toString(),
+                    val: cartGetters.getLineItemPrice(item).regular?.toString(),
                   })}
                   salePrice={
-                    cartGetters.getLineItemPrice(cartItem).special
+                    cartGetters.getLineItemPrice(item).special
                       ? t('currency', {
-                          val: cartGetters.getLineItemPrice(cartItem).special,
+                          val: cartGetters.getLineItemPrice(item).special,
                         })
                       : undefined
                   }
@@ -175,7 +171,7 @@ export default function QuickOrderTable(props: QuickOrderTableProps) {
                   sx={{ p: 0.5 }}
                   aria-label="item-delete"
                   name="item-delete"
-                  onClick={() => onCartItemDelete(cartItem?.id as string)}
+                  onClick={() => onItemDelete(item?.id as string)}
                 >
                   <Delete />
                 </IconButton>

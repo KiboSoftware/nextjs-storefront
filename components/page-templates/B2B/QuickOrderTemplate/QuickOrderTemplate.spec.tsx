@@ -65,11 +65,11 @@ jest.mock('@/components/common/PromoCodeBadge/PromoCodeBadge', () => ({
   ),
 }))
 
-jest.mock('@/components/b2b/QuickOrderTable/QuickOrderTable', () => ({
+jest.mock('@/components/b2b/B2BProductDetailsTable/B2BProductDetailsTable', () => ({
   __esModule: true,
-  default: ({ cartItems }: any) => (
-    <div data-testid="quick-order-table-component">
-      <div data-testid="cartItems-length">{cartItems.length}</div>
+  default: ({ items }: any) => (
+    <div data-testid="b2b-product-details-table-component">
+      <div data-testid="cartItems-length">{items.length}</div>
     </div>
   ),
 }))
@@ -158,7 +158,7 @@ describe('[components] QuickOrderTemplate', () => {
       expect(b2bProductComponent).toBeVisible()
 
       await waitFor(() => {
-        const quickOrderTableComponent = screen.queryByTestId('quick-order-table-component')
+        const quickOrderTableComponent = screen.queryByTestId('b2b-product-details-table-component')
         expect(quickOrderTableComponent).toBeVisible()
       })
 
@@ -171,7 +171,7 @@ describe('[components] QuickOrderTemplate', () => {
     it('should add product in list when user clicks on non configurable product', async () => {
       renderWithQueryClient(<Common {...Common.args} />)
 
-      expect(screen.queryByTestId('quick-order-table-component')).toBeVisible()
+      expect(screen.queryByTestId('b2b-product-details-table-component')).toBeVisible()
 
       await addToCartTest()
     })
@@ -184,7 +184,7 @@ describe('[components] QuickOrderTemplate', () => {
         </ModalContextProvider>
       )
 
-      expect(screen.queryByTestId('quick-order-table-component')).toBeVisible()
+      expect(screen.queryByTestId('b2b-product-details-table-component')).toBeVisible()
 
       user.click(screen.getByTestId('add-configurable-product-button'))
 

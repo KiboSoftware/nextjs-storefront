@@ -5,7 +5,7 @@ import { composeStories } from '@storybook/testing-react'
 import { screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 
-import * as stories from './QuickOrderTable.stories'
+import * as stories from './B2BProductDetailsTable.stories'
 import { renderWithQueryClient } from '@/__test__/utils'
 
 const { Common } = composeStories(stories)
@@ -71,7 +71,7 @@ describe('[components] - QuickOrderTable', () => {
 
   it("should render table with 'No Products Added' caption, if cart is empty", () => {
     // arrange
-    renderWithQueryClient(<Common {...Common.args} cartItems={[]} />)
+    renderWithQueryClient(<Common {...Common.args} items={[]} />)
 
     // act
     const cartItem = screen.queryAllByTestId(/product-item-component/i)
@@ -81,7 +81,7 @@ describe('[components] - QuickOrderTable', () => {
     expect(cartItem.length).toBe(0)
   })
 
-  it('should render table with cart items', () => {
+  it('should render table with passed items', () => {
     // arrange
     renderWithQueryClient(<Common {...Common.args} />)
 
@@ -92,14 +92,14 @@ describe('[components] - QuickOrderTable', () => {
     const prices = screen.queryAllByTestId(/price-component/i)
 
     // assert
-    const count = Common.args?.cartItems?.length
+    const count = Common.args?.items?.length
     expect(productItems.length).toBe(count)
     expect(fulfillmentOptions.length).toBe(count)
     expect(quantitySelectors.length).toBe(count)
     expect(prices.length).toBe((count as number) * 2)
   })
 
-  it('should call onQuantityUpdate when cart item quantity is changed', () => {
+  it('should call onQuantityUpdate when item quantity is changed', () => {
     // arrange
     const onQuantityUpdate = jest.fn()
     renderWithQueryClient(<Common {...Common.args} onQuantityUpdate={onQuantityUpdate} />)
@@ -118,7 +118,7 @@ describe('[components] - QuickOrderTable', () => {
     })
 
     // assert
-    expect(onQuantityUpdate).toHaveBeenCalledTimes((Common.args?.cartItems?.length as number) * 3)
+    expect(onQuantityUpdate).toHaveBeenCalledTimes((Common.args?.items?.length as number) * 3)
   })
 
   it('should call onFulfillmentOptionChange when fulfillment option is changed', () => {
@@ -138,21 +138,35 @@ describe('[components] - QuickOrderTable', () => {
     })
 
     // assert
-    expect(onFulfillmentOptionChange).toHaveBeenCalledTimes(
-      Common.args?.cartItems?.length as number
-    )
+    expect(onFulfillmentOptionChange).toHaveBeenCalledTimes(Common.args?.items?.length as number)
   })
+
   it('should call onStoreSetOrUpdate callback function when user selects store locator', () => {
     // arrange
     const onStoreSetOrUpdateMock = jest.fn()
     renderWithQueryClient(<Common {...Common.args} onStoreSetOrUpdate={onStoreSetOrUpdateMock} />)
 
     // assert
-    Common.args?.cartItems?.map(async (item, index) => {
+    Common.args?.items?.map(async (item, index) => {
       user.click(screen.getAllByTestId('onStoreSetOrUpdate-button')[index])
 
       await waitFor(() => {
         expect(onStoreSetOrUpdateMock).toHaveBeenCalledWith(item.id)
+      })
+    })
+  })
+
+  it('should call onItemDelete  when user deletes an Item', () => {
+    // arrange
+    const onItemDeleteMock = jest.fn()
+    renderWithQueryClient(<Common {...Common.args} onItemDelete={onItemDeleteMock} />)
+
+    // assert
+    Common.args?.items?.map(async (item, index) => {
+      user.click(screen.getAllByRole('button', { name: 'item-delete' })[index])
+
+      await waitFor(() => {
+        expect(onItemDeleteMock).toHaveBeenCalledWith(item.id)
       })
     })
   })

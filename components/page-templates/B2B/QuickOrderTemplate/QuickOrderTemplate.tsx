@@ -5,7 +5,7 @@ import { Stack, Typography, Box, Button, Grid, useMediaQuery, Theme } from '@mui
 import { useTranslation } from 'next-i18next'
 
 import { quickOrderTemplateStyles } from './QuickOrderTemplate.style'
-import { QuickOrderTable, B2BProductSearch } from '@/components/b2b'
+import { B2BProductDetailsTable, B2BProductSearch } from '@/components/b2b'
 import { CartItemList } from '@/components/cart'
 import { KeyValueDisplay, PromoCodeBadge } from '@/components/common'
 import {
@@ -150,14 +150,14 @@ const QuickOrderTemplate = (props: QuickOrderTemplateProps) => {
         <Grid item xs={12}>
           <Stack gap={3}>
             {mdScreen ? (
-              <QuickOrderTable
-                cartItems={cartItems as CrCartItem[]}
+              <B2BProductDetailsTable
+                items={cartItems as CrCartItem[]}
                 fulfillmentLocations={fulfillmentLocations}
                 purchaseLocation={purchaseLocation}
                 onFulfillmentOptionChange={onFulfillmentOptionChange}
                 onQuantityUpdate={handleQuantityUpdate}
                 onStoreSetOrUpdate={handleProductPickupLocation}
-                onCartItemDelete={handleDeleteItem}
+                onItemDelete={handleDeleteItem}
               />
             ) : (
               <Stack spacing={2}>

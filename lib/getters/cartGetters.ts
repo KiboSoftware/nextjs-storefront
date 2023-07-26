@@ -3,17 +3,26 @@ import getConfig from 'next/config'
 import { subscriptionGetters } from './subscriptionGetters'
 import { FulfillmentOptions } from '../constants'
 
-import type { Maybe, CrCart, CrCartItem, Location, CrSubscriptionInfo } from '../gql/types'
+import type {
+  Maybe,
+  CrCart,
+  CrCartItem,
+  Location,
+  CrSubscriptionInfo,
+  CrOrderItem,
+} from '../gql/types'
 import type { FulfillmentOption } from '../types'
 
 const { publicRuntimeConfig } = getConfig()
+
+type GenericItem = CrCartItem | CrOrderItem
 
 const getCartItemCount = (cart: CrCart) => cart?.items?.length || 0
 
 const getCartItems = (cart: CrCart) => cart?.items || []
 
 const getCartItemFulfillmentLocation = (
-  cartItem: Maybe<CrCartItem>,
+  cartItem: GenericItem,
   location: Maybe<Location>[]
 ): Location => {
   return (
@@ -23,7 +32,7 @@ const getCartItemFulfillmentLocation = (
 }
 
 const getProductFulfillmentOptions = (
-  cartItem: CrCartItem,
+  cartItem: GenericItem,
   location: Location
 ): FulfillmentOption[] => {
   const product = cartItem?.product
@@ -60,7 +69,7 @@ const getSubscriptionDetails = (cartItem: Maybe<CrCartItem>) => {
   return subscriptionGetters.getSubscriptionFrequency(cartItem?.subscription as CrSubscriptionInfo)
 }
 
-const getLineItemPrice = (cartItem: CrCartItem) => {
+const getLineItemPrice = (cartItem: GenericItem) => {
   return {
     regular: cartItem?.total,
     special: cartItem?.discountTotal,
