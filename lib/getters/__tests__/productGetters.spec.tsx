@@ -50,12 +50,12 @@ describe('[getters] productGetters', () => {
       },
       {
         text: 'Biking',
-        link: `/category/biking/30`,
+        link: `/category/30`,
         seoFriendlyUrl: 'biking',
       },
       {
         text: 'Mountain',
-        link: `/category/mountain/42`,
+        link: `/category/42`,
         seoFriendlyUrl: 'mountain',
       },
     ]
