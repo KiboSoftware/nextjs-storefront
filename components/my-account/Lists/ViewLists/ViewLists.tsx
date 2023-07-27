@@ -53,7 +53,7 @@ const ViewLists = (props: ListsProps) => {
 
   // fetching wishlist data
   const response = useGetWishlist(paginationState)
-  const data = response.data as WishlistCollection
+  const wishlistsResponse = response.data as WishlistCollection
   const isPending = response.isPending
   const refetch = response.refetch
 
@@ -64,9 +64,14 @@ const ViewLists = (props: ListsProps) => {
 
   // copy list function
   const handleCopyList = async (id: string) => {
-    const newWishlist = data.items && data?.items.find((item: Maybe<CrWishlist>) => item?.id === id)
+    const newWishlist =
+      wishlistsResponse.items &&
+      wishlistsResponse?.items.find((item: Maybe<CrWishlist>) => item?.id === id)
     let listName = newWishlist?.name + ' - copy'
-    while (data.items && data?.items.find((item: Maybe<CrWishlist>) => item?.name == listName)) {
+    while (
+      wishlistsResponse.items &&
+      wishlistsResponse?.items.find((item: Maybe<CrWishlist>) => item?.name == listName)
+    ) {
       listName += ' - copy'
     }
     setIsLoading(true)
@@ -104,7 +109,7 @@ const ViewLists = (props: ListsProps) => {
     setPaginationState((currentState) => ({ ...currentState, startIndex: newStartIndex }))
   }
 
-  if (!data || data?.items?.length === 0) {
+  if (!wishlistsResponse || wishlistsResponse?.items?.length === 0) {
     return (
       <Box style={{ display: 'flex', justifyContent: 'center' }}>
         <CircularProgress />
@@ -140,14 +145,14 @@ const ViewLists = (props: ListsProps) => {
         </>
       )}
       <ListTable
-        rows={data.items as Array<CrWishlist>}
+        rows={wishlistsResponse.items as Array<CrWishlist>}
         isLoading={isPending || isLoading}
         onCopyList={handleCopyList}
         onDeleteList={handleDeleteList}
         onEditList={handleEditList}
       />
       <Pagination
-        count={data ? data.pageCount : 1}
+        count={wishlistsResponse ? wishlistsResponse.pageCount : 1}
         shape={`rounded`}
         size="small"
         sx={{ marginTop: '15px' }}
