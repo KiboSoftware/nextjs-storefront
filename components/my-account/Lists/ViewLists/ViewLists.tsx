@@ -19,7 +19,7 @@ import { useTranslation } from 'next-i18next'
 import { ListTable } from '@/components/my-account'
 import { styles } from '@/components/my-account/Lists/ViewLists/ViewLists.style'
 import { useAuthContext } from '@/context'
-import { PageProps, useCreateWishlist, useGetWishlist } from '@/hooks'
+import { PageProps, useCreateWishlist, useGetWishlist, useDeleteWishlist } from '@/hooks'
 
 
 import { CrWishlist, Maybe, WishlistCollection } from '@/lib/gql/types'
@@ -33,6 +33,7 @@ const ViewLists = (props: ListsProps) => {
   const { onEditFormToggle, isEditFormOpen } = props
   const { publicRuntimeConfig } = getConfig()
   const { createWishlist } = useCreateWishlist()
+  const { deleteWishlist } = useDeleteWishlist()
   
   // declaring states
   const [paginationState, setPaginationState] = useState<PageProps>({
@@ -54,20 +55,25 @@ const ViewLists = (props: ListsProps) => {
 
   // fetching wishlist data
   const response = useGetWishlist(paginationState)
-  const data = response.data as WishlistCollection
+  const wishlistsResponse = response.data as WishlistCollection
   const isPending = response.isPending
   const refetch = response.refetch
 
   // edit list function
-  const handleEditList = (id: Maybe<string>) => {
+  const handleEditList = (id: string) => {
     console.log(id, ' edit clicked')
   }
 
   // copy list function
   const handleCopyList = async (id: string) => {
-    const newWishlist = data.items && data?.items.find((item: Maybe<CrWishlist>) => item?.id === id)
+    const newWishlist =
+      wishlistsResponse.items &&
+      wishlistsResponse?.items.find((item: Maybe<CrWishlist>) => item?.id === id)
     let listName = newWishlist?.name + ' - copy'
-    while (data.items && data.items.find((item: Maybe<CrWishlist>) => item?.name == listName)) {
+    while (
+      wishlistsResponse.items &&
+      wishlistsResponse?.items.find((item: Maybe<CrWishlist>) => item?.name == listName)
+    ) {
       listName += ' - copy'
     }
     setIsLoading(true)
@@ -85,8 +91,12 @@ const ViewLists = (props: ListsProps) => {
   }
 
   // delete list function
-  const handleDeleteList = (id: Maybe<string>) => {
-    console.log(id, ' delete clicked')
+  const handleDeleteList = async (id: string) => {
+    setIsLoading(true)
+    await deleteWishlist.mutateAsync(id)
+    setIsLoading(false)
+    alert('wislist deleted')
+    refetch()
   }
 
   // handle filter for current user list
@@ -105,7 +115,7 @@ const ViewLists = (props: ListsProps) => {
     setPaginationState((currentState) => ({ ...currentState, startIndex: newStartIndex }))
   }
 
-  if (!data || data?.items?.length === 0) {
+  if (!wishlistsResponse || wishlistsResponse?.items?.length === 0) {
     return (
       <Box style={{ display: 'flex', justifyContent: 'center' }}>
         <CircularProgress />
@@ -141,14 +151,14 @@ const ViewLists = (props: ListsProps) => {
         </>
       )}
       <ListTable
-        rows={data.items as Array<CrWishlist>}
+        rows={wishlistsResponse.items as Array<CrWishlist>}
         isLoading={isPending || isLoading}
         onCopyList={handleCopyList}
         onDeleteList={handleDeleteList}
         onEditList={handleEditList}
       />
       <Pagination
-        count={data ? data.pageCount : 1}
+        count={wishlistsResponse ? wishlistsResponse.pageCount : 1}
         shape={`rounded`}
         size="small"
         sx={{ marginTop: '15px' }}

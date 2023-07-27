@@ -25,4 +25,21 @@ describe('[hooks] useCreateWishlist', () => {
       })
     })
   })
+
+  it('should create custom wishlist', async () => {
+    const { result } = renderHook(() => useCreateWishlist(), {
+      wrapper: createQueryClientWrapper(),
+    })
+
+    result.current.createWishlist.mutateAsync({ customerAccountId, items: [], name, id })
+
+    await waitFor(() => {
+      expect(result.current.createWishlist.data).toStrictEqual({
+        id,
+        name,
+        customerAccountId,
+        items: [],
+      })
+    })
+  })
 })
