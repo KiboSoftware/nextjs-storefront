@@ -339,6 +339,14 @@ export const wishlistHandlers = [
   graphql.mutation('createWishlistItem', (_req, res, ctx) => {
     return res(ctx.data({ createWishlistItem: wishlistMock?.items[0].items[0] }))
   }),
+  // useDeleteWishlistMutation
+  graphql.mutation('deletewishlist', (_req, res, ctx) => {
+    return res(
+      ctx.data({
+        deleteWishlist: true,
+      })
+    )
+  }),
   // useRemoveWishlistItemMutation
   graphql.mutation('deletewishlistitem', (_req, res, ctx) => {
     return res(
