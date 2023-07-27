@@ -8,6 +8,7 @@ export { default as deleteCartItemMutation } from './cart/deleteCartItemMutation
 export { default as updateCartItemMutation } from './cart/updateCartItemMutation'
 export { default as createWishlistMutation } from './wishlist/createWishlistMutation'
 export { default as createWishlistItemMutation } from './wishlist/createWishlistItemMutation'
+export { default as deleteWishlistMutation } from './wishlist/deleteWishlistMutation'
 export { default as deleteWishlistItemMutation } from './wishlist/deleteWishlistItemMutation'
 export { default as setBillingInfo } from './checkout/set-billing-info'
 export { default as addPaymentMethodToCheckout } from './checkout/add-payment-method-to-checkout'
