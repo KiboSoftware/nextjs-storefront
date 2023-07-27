@@ -13,6 +13,7 @@ import {
   useMediaQuery,
   useTheme,
 } from '@mui/material'
+import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
 import getConfig from 'next/config'
 import { useTranslation } from 'next-i18next'
 
@@ -20,7 +21,6 @@ import { ListTable } from '@/components/my-account'
 import { styles } from '@/components/my-account/Lists/ViewLists/ViewLists.style'
 import { useAuthContext } from '@/context'
 import { PageProps, useCreateWishlist, useGetWishlist, useDeleteWishlist } from '@/hooks'
-
 
 import { CrWishlist, Maybe, WishlistCollection } from '@/lib/gql/types'
 
@@ -34,7 +34,7 @@ const ViewLists = (props: ListsProps) => {
   const { publicRuntimeConfig } = getConfig()
   const { createWishlist } = useCreateWishlist()
   const { deleteWishlist } = useDeleteWishlist()
-  
+
   // declaring states
   const [paginationState, setPaginationState] = useState<PageProps>({
     startIndex: publicRuntimeConfig.b2bList.startIndex,
@@ -42,7 +42,6 @@ const ViewLists = (props: ListsProps) => {
     sortBy: publicRuntimeConfig.b2bList.sortBy,
     filter: publicRuntimeConfig.b2bList.filter,
   })
-
   const [isLoading, setIsLoading] = useState<boolean>(false)
 
   // screen size declared
