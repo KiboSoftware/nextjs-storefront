@@ -20,7 +20,7 @@ import { useTranslation } from 'next-i18next'
 import { ListTable } from '@/components/my-account'
 import { styles } from '@/components/my-account/Lists/ViewLists/ViewLists.style'
 import { useAuthContext } from '@/context'
-import { PageProps, useCreateWishlist, useGetWishlist } from '@/hooks'
+import { PageProps, useCreateWishlist, useGetWishlist, useDeleteWishlist } from '@/hooks'
 
 import { CrWishlist, Maybe, WishlistCollection } from '@/lib/gql/types'
 
@@ -33,6 +33,7 @@ const ViewLists = (props: ListsProps) => {
   const { onEditFormToggle, isEditFormOpen } = props
   const { publicRuntimeConfig } = getConfig()
   const { createWishlist } = useCreateWishlist()
+  const { deleteWishlist } = useDeleteWishlist()
 
   // declaring states
   const [paginationState, setPaginationState] = useState<PageProps>({
@@ -58,7 +59,7 @@ const ViewLists = (props: ListsProps) => {
   const refetch = response.refetch
 
   // edit list function
-  const handleEditList = (id: Maybe<string>) => {
+  const handleEditList = (id: string) => {
     console.log(id, ' edit clicked')
   }
 
@@ -89,8 +90,12 @@ const ViewLists = (props: ListsProps) => {
   }
 
   // delete list function
-  const handleDeleteList = (id: Maybe<string>) => {
-    console.log(id, ' delete clicked')
+  const handleDeleteList = async (id: string) => {
+    setIsLoading(true)
+    await deleteWishlist.mutateAsync(id)
+    setIsLoading(false)
+    alert('wislist deleted')
+    refetch()
   }
 
   // handle filter for current user list
