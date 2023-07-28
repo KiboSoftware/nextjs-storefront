@@ -13,7 +13,6 @@ import {
   useMediaQuery,
   useTheme,
 } from '@mui/material'
-import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
 import getConfig from 'next/config'
 import { useTranslation } from 'next-i18next'
 
