@@ -78,7 +78,7 @@ describe('[component] - ListsTemplate', () => {
     const createFormBtn = screen.getByTestId('create-new-list-btn')
     user.click(createFormBtn)
     await waitFor(() => {
-      const createFormHeading = screen.getByText('Create New List')
+      const createFormHeading = screen.getByText(/create-new-list/i)
       expect(createFormHeading).toBeVisible()
     })
   })
