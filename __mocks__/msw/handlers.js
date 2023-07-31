@@ -355,6 +355,10 @@ export const wishlistHandlers = [
       })
     )
   }),
+  graphql.mutation('updateWishlist', (_req, res, ctx) => {
+    const { customerAccountId, id, name } = wishlistMock?.items[0]
+    return res(ctx.data({ customerAccountId, id, name, items: [] }))
+  }),
 ]
 
 export const orderHandlers = [
