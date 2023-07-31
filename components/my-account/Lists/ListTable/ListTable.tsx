@@ -28,11 +28,12 @@ interface ListTableProps {
   onDeleteList: (param: string) => void
   onCopyList: (param: string) => void
   onEditList: (param: string) => void
+  onAddListToCart: (param: string) => void
   isLoading: boolean
 }
 
 const ListTable = (props: ListTableProps) => {
-  const { rows, onDeleteList, onCopyList, onEditList, isLoading } = props
+  const { rows, onDeleteList, onCopyList, onEditList, onAddListToCart, isLoading } = props
   // state for mobile menu
   const [anchorEl, setAnchorEL] = useState<HTMLElement | null>(null)
 
@@ -43,7 +44,7 @@ const ListTable = (props: ListTableProps) => {
   const options = [
     { name: t('edit'), onClick: onEditList },
     // todo
-    { name: t('add-list-items-to-cart'), onClick: () => alert('Work in progress') },
+    { name: t('add-list-items-to-cart'), onClick: onAddListToCart },
     // todo
     { name: t('initiate-quote'), onClick: () => alert('Work in progress') },
     { name: t('duplicate'), onClick: onCopyList },
@@ -102,7 +103,12 @@ const ListTable = (props: ListTableProps) => {
                       <Button variant="text" color="inherit" data-testid="initiateQuoteBtn">
                         {t('initiate-quote')}
                       </Button>
-                      <Button variant="text" color="inherit" data-testid="addToCartBtn">
+                      <Button
+                        variant="text"
+                        color="inherit"
+                        data-testid="addToCartBtn"
+                        onClick={() => onAddListToCart(item?.id || '')}
+                      >
                         {t('add-to-cart')}
                       </Button>
                       <IconButton

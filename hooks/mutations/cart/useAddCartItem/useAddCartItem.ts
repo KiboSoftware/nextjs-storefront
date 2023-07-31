@@ -21,7 +21,7 @@ export interface AddToCartProductInput {
   purchaseLocationCode?: string
 }
 
-interface AddCartItemParams {
+export interface AddCartItemParams {
   product: AddToCartProductInput
   quantity: number
   subscription?: CrSubscriptionInfo

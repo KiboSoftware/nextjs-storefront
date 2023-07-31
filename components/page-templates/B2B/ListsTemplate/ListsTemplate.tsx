@@ -8,6 +8,7 @@ import { Grid, Button, useMediaQuery, useTheme, IconButton, Typography, Box } fr
 import { useRouter } from 'next/router'
 import { useTranslation } from 'next-i18next'
 
+import CreateList from '@/components/my-account/Lists/CreateList/CreateList'
 import ViewLists from '@/components/my-account/Lists/ViewLists/ViewLists'
 import { styles } from '@/components/page-templates/B2B/ListsTemplate/ListsTemplate.styles'
 
@@ -104,8 +105,9 @@ const ListsTemplate = () => {
     // todo
     <Grid container spacing={2} marginTop={2}>
       <Grid item xs={12}>
-        <Typography variant="h1">Create New List</Typography>
-        <Typography>Work in progress</Typography>
+        <CreateList
+          openCreateForm={(val: boolean) => setState({ ...state, isCreateFormOpen: val })}
+        />
       </Grid>
     </Grid>
   )

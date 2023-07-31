@@ -10,6 +10,8 @@ export { default as createWishlistMutation } from './wishlist/createWishlistMuta
 export { default as createWishlistItemMutation } from './wishlist/createWishlistItemMutation'
 export { default as deleteWishlistMutation } from './wishlist/deleteWishlistMutation'
 export { default as deleteWishlistItemMutation } from './wishlist/deleteWishlistItemMutation'
+export { default as updateWishlistMutation } from './wishlist/updateWishlistMutation'
+export { default as updateWishlistItemQuantityMutation } from './wishlist/updateWishlistItemMutation'
 export { default as setBillingInfo } from './checkout/set-billing-info'
 export { default as addPaymentMethodToCheckout } from './checkout/add-payment-method-to-checkout'
 export { default as updateOrderPaymentAction } from './checkout/update-order-payment-action'

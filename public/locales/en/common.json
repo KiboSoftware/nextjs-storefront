@@ -399,5 +399,6 @@
   "product-configuration-options": "Product configuration options",
   "add-item-to-cart": "Add item to Cart",
   "add-item-to-list": "Add item to List",
-  "search-to-add-products": "Search to start adding products to this order"
+  "search-to-add-products": "Search to start adding products to this order",
+  "save-and-close": "Save & Close"
 }

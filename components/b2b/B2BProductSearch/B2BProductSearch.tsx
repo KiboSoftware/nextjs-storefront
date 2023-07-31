@@ -21,7 +21,7 @@ import { productGetters } from '@/lib/getters'
 import { CrProduct, Product } from '@/lib/gql/types'
 
 export interface B2BProductSearchProps {
-  onAddProduct: (params?: CrProduct) => void
+  onAddProduct: (params?: Product) => void
 }
 
 const B2BProductSearch = (props: B2BProductSearchProps) => {
@@ -39,6 +39,7 @@ const B2BProductSearch = (props: B2BProductSearchProps) => {
 
   const handleSearch = (_: string, userEnteredValue: string) => setSearchTerm(userEnteredValue)
   const handleProductClick = async (event: any, value: any) => {
+    console.log(value)
     if (value) {
       onAddProduct(value)
     }
@@ -77,21 +78,21 @@ const B2BProductSearch = (props: B2BProductSearchProps) => {
           ) : null}
           {!isLoading && (
             <List sx={b2bProductSearchStyle.dropDown}>
-              {b2bProductSearchResult.map((option: any) => {
+              {b2bProductSearchResult.map((option) => {
                 return (
                   <ListItemButton
-                    key={productGetters.getProductId(option as CrProduct)}
+                    key={productGetters.getProductId(option as Product)}
                     onClick={(evt) => handleProductClick(evt, option)}
                   >
                     <ProductItem
                       image={
-                        productGetters.getCoverImage(option) &&
+                        productGetters.getCoverImage(option as Product) &&
                         productGetters.handleProtocolRelativeUrl(
-                          productGetters.getCoverImage(option)
+                          productGetters.getCoverImage(option as Product)
                         )
                       }
-                      name={productGetters.getName(option as CrProduct)}
-                      productCode={productGetters.getProductId(option as CrProduct)}
+                      name={productGetters.getName(option as Product)}
+                      productCode={productGetters.getProductId(option as Product)}
                       isQuickOrder={true}
                     />
                   </ListItemButton>
