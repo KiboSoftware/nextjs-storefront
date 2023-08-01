@@ -1,7 +1,6 @@
 import React, { useState } from 'react'
 
 import { ExpandMore } from '@mui/icons-material'
-import CloseIcon from '@mui/icons-material/Close'
 import DeleteIcon from '@mui/icons-material/Delete'
 import EditIcon from '@mui/icons-material/Edit'
 import {
@@ -11,8 +10,6 @@ import {
   Button,
   Container,
   Grid,
-  IconButton,
-  Modal,
   Typography,
   useMediaQuery,
   useTheme,
@@ -59,7 +56,7 @@ const Accordion = (props: any) => {
 }
 
 const ProductView = (props: any) => {
-  const { item, closeModal } = props
+  const { item } = props
   const { product } = item
   return (
     <>

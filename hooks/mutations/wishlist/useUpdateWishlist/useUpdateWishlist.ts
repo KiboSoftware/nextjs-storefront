@@ -5,20 +5,22 @@ import { useMutation, useQueryClient } from '@tanstack/react-query'
 
 import { makeGraphQLClient } from '@/lib/gql/client'
 import { updateWishlistMutation, updateWishlistItemQuantityMutation } from '@/lib/gql/mutations'
-import {} from '@/lib/gql/mutations'
-import { buildWishlistParams } from '@/lib/helpers'
 import { wishlistKeys } from '@/lib/react-query/queryKeys'
-import type { WishlistProductInput } from '@/lib/types'
 
-import type { Maybe, CrWishlist } from '@/lib/gql/types'
+import { CrWishlistInput } from '@/lib/gql/types'
 
-interface updateWishlistItemQuantityProps {
+interface UpdateWishlistProps {
+  wishlistId: string
+  wishlistInput: CrWishlistInput
+}
+
+interface UpdateWishlistItemQuantityProps {
   wishlistItemId: string
   wishlistId: string
   quantity: number
 }
 
-const updateWishlist = async (props: any) => {
+const updateWishlist = async (props: UpdateWishlistProps) => {
   const client = makeGraphQLClient()
 
   const response = await client.request({
@@ -28,7 +30,7 @@ const updateWishlist = async (props: any) => {
   return response
 }
 
-const updateWishlistItemQuantity = async (params: updateWishlistItemQuantityProps) => {
+const updateWishlistItemQuantity = async (params: UpdateWishlistItemQuantityProps) => {
   console.log(updateWishlistItemQuantityMutation, params)
   try {
     const client = makeGraphQLClient()

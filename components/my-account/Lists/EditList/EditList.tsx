@@ -1,16 +1,25 @@
 import { useState } from 'react'
 
 import EditIcon from '@mui/icons-material/Edit'
-import { Box, Button, IconButton, Typography, useMediaQuery, useTheme } from '@mui/material'
-import { Container, Grid } from '@mui/material'
+import {
+  Container,
+  Box,
+  Button,
+  Grid,
+  IconButton,
+  Typography,
+  useMediaQuery,
+  useTheme,
+} from '@mui/material'
+import {} from '@mui/material'
 import { useTranslation } from 'next-i18next'
 import { Maybe } from 'yup/lib/types'
 
 import ProductSearch from '@/components/b2b/B2BProductSearch/B2BProductSearch'
 import ListItem from '@/components/my-account/Lists/ListItem/ListItem'
-import { useUpdateWishlistMutation } from '@/hooks'
+import { useGetWishlist, useUpdateWishlistMutation } from '@/hooks'
 
-import { CrWishlist, CrWishlistItem } from '@/lib/gql/types'
+import { CrWishlist, CrWishlistInput, CrWishlistItem, Product } from '@/lib/gql/types'
 
 export interface EditWishlistProps {
   onEditFormToggle: (param: boolean) => void
@@ -40,15 +49,17 @@ const EditList = (props: EditWishlistProps) => {
   const mdScreen = useMediaQuery<boolean>(theme.breakpoints.up('md'))
   const { t } = useTranslation('common')
   const { updateWishlist } = useUpdateWishlistMutation()
+  const { refetch } = useGetWishlist()
 
   const handleSaveWishlist = async () => {
     if (listData) listData.name = editListState.name
     const payload = {
-      wishlistId: listData?.id,
-      wishlistInput: listData,
+      wishlistId: listData?.id as string,
+      wishlistInput: listData as CrWishlistInput,
     }
     console.log('items ==>', payload)
     const response = await updateWishlist.mutateAsync(payload)
+    await refetch()
     console.log(response)
     onUpdateListData(response.updateWishlist)
     onEditFormToggle(false)
@@ -60,8 +71,8 @@ const EditList = (props: EditWishlistProps) => {
       items = items?.filter((item: Maybe<CrWishlistItem>) => item?.id !== id)
       if (listData) listData.items = items
       const payload = {
-        wishlistId: listData?.id,
-        wishlistInput: listData,
+        wishlistId: listData?.id as string,
+        wishlistInput: listData as CrWishlistInput,
       }
       const response = await updateWishlist.mutateAsync(payload)
       onUpdateListData(response.updateWishlist)
@@ -76,20 +87,22 @@ const EditList = (props: EditWishlistProps) => {
     if (currentItem) currentItem.quantity = quantity
   }
 
-  const handleProductItemClick = async (product?: any) => {
+  const handleProductItemClick = async (product?: Product) => {
     const items = listData?.items
-    const item = items?.find((i: any) => i.product.productCode === product.productCode)
+    const item = items?.find(
+      (i: Maybe<CrWishlistItem>) => i?.product?.productCode === product?.productCode
+    )
     if (item) {
       console.log('update quantity')
       item.quantity += 1
     } else {
       console.log('add new entry for item')
-      items?.push({ product: { productCode: product.productCode }, quantity: 1 })
+      items?.push({ product: { productCode: product?.productCode }, quantity: 1 })
     }
     if (listData) listData.items = items
     const payload = {
-      wishlistId: listData?.id,
-      wishlistInput: listData,
+      wishlistId: listData?.id as string,
+      wishlistInput: listData as CrWishlistInput,
     }
     const response = await updateWishlist.mutateAsync(payload)
     onUpdateListData(response.updateWishlist)
@@ -113,7 +126,7 @@ const EditList = (props: EditWishlistProps) => {
                   <form>
                     <input
                       onChange={(e) => setEditListState({ ...editListState, name: e.target.value })}
-                      value={editListState.name || ''}
+                      value={editListState.name as string}
                       style={{
                         maxWidth: '495px',
                         height: '36px',
@@ -205,20 +218,20 @@ const EditList = (props: EditWishlistProps) => {
       <Typography variant="h3" style={{ fontWeight: 'bold', margin: '20px 0' }}>
         List Items
       </Typography>
-      {listData?.items?.map((item: any, i: number) => {
+      {listData?.items?.map((item: Maybe<CrWishlistItem>) => {
         return (
           <ListItem
-            key={i}
+            key={item?.product?.productCode}
             item={{
               product: {
-                productName: item.product.name,
-                productCode: item.product.productCode,
-                price: item.product.price,
-                productImage: item.product.imageUrl,
-                productImageAltText: item.product.name,
-                lineId: item.id,
+                productName: item?.product?.name,
+                productCode: item?.product?.productCode,
+                price: item?.product?.price,
+                productImage: item?.product?.imageUrl,
+                productImageAltText: item?.product?.name,
+                lineId: item?.id,
               },
-              quantity: item.quantity,
+              quantity: item?.quantity,
             }}
             onDeleteItem={handleDeleteItem}
             onChangeQuantity={handleChangeQuantity}
