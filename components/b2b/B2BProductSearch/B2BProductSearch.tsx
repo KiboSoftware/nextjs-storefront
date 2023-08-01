@@ -18,7 +18,7 @@ import { KiboTextBox, ProductItem } from '@/components/common'
 import { useDebounce, useGetSearchedProducts } from '@/hooks'
 import { productGetters } from '@/lib/getters'
 
-import { CrProduct, Product } from '@/lib/gql/types'
+import { Product } from '@/lib/gql/types'
 
 export interface B2BProductSearchProps {
   onAddProduct: (params?: Product) => void

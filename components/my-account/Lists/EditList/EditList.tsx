@@ -11,7 +11,6 @@ import {
   useMediaQuery,
   useTheme,
 } from '@mui/material'
-import {} from '@mui/material'
 import { useTranslation } from 'next-i18next'
 import { Maybe } from 'yup/lib/types'
 
