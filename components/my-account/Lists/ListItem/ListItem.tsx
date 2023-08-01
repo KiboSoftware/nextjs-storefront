@@ -22,7 +22,10 @@ import style from '@/components/my-account/Lists/ListItem/ListItem.style'
 import labels from '@/public/locales/en/common.json'
 
 const calculateProductSubTotal = (price: any, quantity: number) => {
-  if (price) return price.salePrice ? price.salePrice * quantity : price.price * quantity
+  if (price)
+    return price.salePrice
+      ? (price.salePrice * quantity).toFixed(2)
+      : (price.price * quantity).toFixed(2)
   return 0
 }
 
