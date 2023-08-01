@@ -136,13 +136,13 @@ const EditList = (props: EditWishlistProps) => {
                         border: '1px solid #cdcdcd',
                         borderRadius: ' 4px',
                       }}
-                      id="editNameInput"
+                      data-testid="editNameInput"
                     />
                     <Button
                       variant="contained"
                       onClick={() => setEditListState({ ...editListState, openNameForm: false })}
                       style={{ marginLeft: '5px' }}
-                      id="saveNameBtn"
+                      data-testid="saveNameBtn"
                     >
                       Save
                     </Button>
@@ -154,7 +154,7 @@ const EditList = (props: EditWishlistProps) => {
                     {editListState.name}
                     <IconButton
                       onClick={() => setEditListState({ ...editListState, openNameForm: true })}
-                      id="editNameBtn"
+                      data-testid="editNameBtn"
                     >
                       <EditIcon />
                     </IconButton>
