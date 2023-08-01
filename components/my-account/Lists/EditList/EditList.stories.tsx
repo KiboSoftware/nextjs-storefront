@@ -5,7 +5,7 @@ import { ComponentStory, ComponentMeta } from '@storybook/react'
 import EditList from './EditList'
 import { wishlistMock } from '@/__mocks__/stories'
 
-const listData = wishlistMock.items[0]
+export const listData = wishlistMock.items[0]
 
 export default {
   title: 'My Account / Edit Lists',
