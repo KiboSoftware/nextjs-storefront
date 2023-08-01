@@ -107,27 +107,27 @@ const ListTable = (props: ListTableProps) => {
                         variant="text"
                         color="inherit"
                         data-testid="addToCartBtn"
-                        onClick={() => onAddListToCart(item?.id || '')}
+                        onClick={() => onAddListToCart(item?.id as string)}
                       >
                         {t('add-to-cart')}
                       </Button>
                       <IconButton
                         color="inherit"
-                        onClick={() => onEditList(item?.id || '')}
+                        onClick={() => onEditList(item?.id as string)}
                         data-testid="editBtn"
                       >
                         <Edit />
                       </IconButton>
                       <IconButton
                         color="inherit"
-                        onClick={() => onCopyList(item?.id || '')}
+                        onClick={() => onCopyList(item?.id as string)}
                         data-testid="copyBtn"
                       >
                         <FolderCopySharp />
                       </IconButton>
                       <IconButton
                         color="inherit"
-                        onClick={() => onDeleteList(item?.id || '')}
+                        onClick={() => onDeleteList(item?.id as string)}
                         data-testid="deleteBtn"
                       >
                         <Delete />
@@ -151,7 +151,7 @@ const ListTable = (props: ListTableProps) => {
                           <MenuItem
                             key={option.name}
                             onClick={() => {
-                              option.onClick(item?.id || '')
+                              option.onClick(item?.id as string)
                               setAnchorEL(null)
                             }}
                             style={

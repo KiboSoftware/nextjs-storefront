@@ -14,7 +14,14 @@ describe('[hooks] useUpdateWishlistMutation', () => {
       wrapper: createQueryClientWrapper(),
     })
 
-    result.current.updateWishlist.mutateAsync({ customerAccountId, items: [], name, id })
+    result.current.updateWishlist.mutateAsync({
+      wishlistId: id,
+      wishlistInput: {
+        name: name,
+        customerAccountId,
+        items: [],
+      },
+    })
 
     await waitFor(() => {
       expect(result.current.updateWishlist.data).toStrictEqual({
