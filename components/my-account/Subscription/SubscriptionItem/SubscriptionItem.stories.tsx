@@ -34,9 +34,9 @@ export default {
 const userContextValues = {
   isAuthenticated: false,
   user: { id: 1012 },
-  login: jest.fn(),
-  createAccount: jest.fn(),
-  logout: jest.fn(),
+  login: () => null,
+  createAccount: () => null,
+  logout: () => null,
 }
 
 const Template: ComponentStory<typeof SubscriptionItem> = ({ ...args }) => (

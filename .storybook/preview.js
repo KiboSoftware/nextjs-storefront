@@ -11,6 +11,10 @@ import { publicRuntimeConfig } from '../next.config'
 import storefrontTheme from '../styles/theme'
 import i18n from './i18n'
 import { RouterContext } from 'next/dist/shared/lib/router-context'
+import { ModalContextProvider, DialogRoot } from '@/context/ModalContext'
+import { ThemeProvider } from '@mui/material/styles'
+
+import theme from '@/styles/theme'
 
 setConfig({ publicRuntimeConfig })
 
@@ -25,7 +29,14 @@ export const decorators = [
   muiTheme([storefrontTheme]),
   (storyFn) => (
     <QueryClientProvider client={queryClient}>
-      <I18nextProvider i18n={i18n}>{storyFn()}</I18nextProvider>{' '}
+      <ThemeProvider theme={theme}>
+        <ModalContextProvider>
+          <I18nextProvider i18n={i18n}>
+            {storyFn()}
+            <DialogRoot />
+          </I18nextProvider>
+        </ModalContextProvider>
+      </ThemeProvider>
     </QueryClientProvider>
   ),
 ]
