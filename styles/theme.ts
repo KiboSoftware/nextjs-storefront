@@ -3,7 +3,21 @@ import type {} from '@mui/lab/themeAugmentation'
 declare module '@mui/material/styles/createPalette' {
   interface PaletteOptions {
     red?: PaletteColorOptions
+    themePalette?: ColorPartial
   }
+}
+
+export const themePalette = {
+  // theme blue
+  100: '#2B2A4C',
+  // theme red
+  200: '#B31312',
+  // theme light red
+  300: '#EA906C',
+  // theme grey
+  400: '#EEE2DE',
+  // deep red
+  500: '#590908',
 }
 
 export const grey = {
@@ -114,11 +128,11 @@ let theme = createTheme({
   },
   palette: {
     primary: {
-      main: '#2ea195',
-      light: '#C0E3DF',
+      main: '#B31312',
+      light: '#EA906C',
     },
     secondary: {
-      main: '#c0e3df',
+      main: '#EA906C',
     },
     text: {
       primary: grey[900],
@@ -132,6 +146,7 @@ let theme = createTheme({
     },
     grey: { ...grey },
     red: { ...red },
+    themePalette: { ...themePalette },
   },
   components: {
     MuiButton: {

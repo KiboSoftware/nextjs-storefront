@@ -59,7 +59,7 @@ interface HideOnScrollProps {
 const topHeaderStyles = {
   wrapper: {
     display: 'flex',
-    backgroundColor: 'common.black',
+    backgroundColor: 'themePalette.100',
     height: 56,
     justifyContent: 'flex-end',
     zIndex: (theme: any) => theme.zIndex.modal,
@@ -74,7 +74,7 @@ const topHeaderStyles = {
 const headerActionAreaStyles = {
   wrapper: {
     display: 'flex',
-    backgroundColor: 'grey.300',
+    backgroundColor: 'themePalette.200',
     height: 56,
   },
   container: {
