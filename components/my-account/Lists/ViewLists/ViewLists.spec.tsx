@@ -116,7 +116,6 @@ describe('[componenet] - ViewLists', () => {
     await waitFor(() => {
       const rows = within(listTable).getAllByTestId('wishlists')
       rows.forEach((row, i) => {
-        console.log(row.innerHTML)
         expect(row.innerHTML).toEqual(wishlistMock.items[i].name)
       })
     })

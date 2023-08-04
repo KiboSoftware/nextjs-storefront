@@ -86,6 +86,24 @@ const CreateList = (props: CreateListProps) => {
     setListState((currentVal) => ({ ...currentVal, name: userEnteredValue }))
   }
 
+  const handleDeleteItem = (id: string) => {
+    console.log(id)
+    const items: any = listState.items.filter((item) => {
+      return item.product.productCode !== id
+    })
+
+    console.log('onDeleteClick ==>', items, 'listItems ==> ', listState)
+    setListState((currentState) => ({ ...currentState, items: items }))
+    setProductList((currentState) =>
+      currentState.filter((item: Product) => item.productCode !== id)
+    )
+  }
+
+  const handleChangeQuantity = (id: string, quantity: number) => {
+    const item = listState.items.find((item) => item.product.productCode === id)
+    if (item?.quantity) item.quantity = quantity
+  }
+
   return (
     <>
       <Box style={{ width: '100%' }}>
@@ -190,9 +208,12 @@ const CreateList = (props: CreateListProps) => {
                 productImageAltText:
                   (product?.content?.productImages?.length as number) > 0 &&
                   product?.content?.productImages?.[0]?.altText,
+                productDescription: product.content?.productShortDescription,
               },
               quantity: 1,
             }}
+            onDeleteItem={handleDeleteItem}
+            onChangeQuantity={handleChangeQuantity}
           />
         ))}
         {!mdScreen && (

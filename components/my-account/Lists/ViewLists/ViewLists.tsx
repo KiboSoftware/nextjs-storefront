@@ -119,14 +119,12 @@ const ViewLists = (props: ListsProps) => {
     const wishlist = wishlistsResponse?.items?.find(
       (item: Maybe<CrWishlist>) => item?.id === id
     ) as CrWishlist
-    console.log(wishlist)
     setListData(wishlist)
     onEditFormToggle(true)
   }
 
   // add list to cart
   const handleAddListToCart = async (id: string) => {
-    console.log(id)
     const list = wishlistsResponse?.items?.find((item) => item?.id === id)
     setIsLoading(true)
     const promises: any[] = []
@@ -182,7 +180,6 @@ const ViewLists = (props: ListsProps) => {
         onEditFormToggle={onEditFormToggle}
         listData={listData}
         onUpdateListData={(res: CrWishlist) => {
-          console.log('response data ==> ', res)
           setListData(res)
         }}
       />
