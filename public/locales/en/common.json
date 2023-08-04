@@ -398,5 +398,6 @@
   "add-item-to-list": "Add item to List",
   "search-to-add-products": "Search to start adding products to this order",
   "save-and-close": "Save & Close",
-  "line-item": "Line Item"
+  "line-item": "Line Item",
+  "list-items": "List Items"
 }

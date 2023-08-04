@@ -67,7 +67,6 @@ const CreateList = (props: CreateListProps) => {
   }
 
   const handleAddProduct = (product?: Product) => {
-    console.log(product)
     // setting state for creation of list in backend
     const { items } = listState
     const item = {
@@ -87,12 +86,9 @@ const CreateList = (props: CreateListProps) => {
   }
 
   const handleDeleteItem = (id: string) => {
-    console.log(id)
     const items: any = listState.items.filter((item) => {
       return item.product.productCode !== id
     })
-
-    console.log('onDeleteClick ==>', items, 'listItems ==> ', listState)
     setListState((currentState) => ({ ...currentState, items: items }))
     setProductList((currentState) =>
       currentState.filter((item: Product) => item.productCode !== id)
@@ -174,7 +170,7 @@ const CreateList = (props: CreateListProps) => {
       <Box>
         <form
           onSubmit={handleSubmit}
-          style={{ margin: '10px auto', width: '360px', marginLeft: 0 }}
+          style={{ margin: '10px auto', maxWidth: '360px', marginLeft: 0 }}
           id="wishlist-form"
         >
           <Box sx={{ ...styles.listSection, flexDirection: 'column' }}>
@@ -218,7 +214,20 @@ const CreateList = (props: CreateListProps) => {
         ))}
         {!mdScreen && (
           <>
-            <Box>
+            <Box
+              sx={{
+                width: '100%',
+                position: 'fixed',
+                left: '50%',
+                bottom: '0px',
+                transform: 'translateX(-50%)',
+                padding: '15px',
+                background: 'white',
+                display: 'flex',
+                flexDirection: 'column',
+                justifyContent: 'flex-end',
+              }}
+            >
               <Button
                 variant="outlined"
                 type="button"
