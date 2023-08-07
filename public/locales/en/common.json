@@ -399,5 +399,6 @@
   "search-to-add-products": "Search to start adding products to this order",
   "save-and-close": "Save & Close",
   "line-item": "Line Item",
-  "list-items": "List Items"
+  "list-items": "List Items",
+  "delete-list-message": "Are you sure you want to delete this list?"
 }
