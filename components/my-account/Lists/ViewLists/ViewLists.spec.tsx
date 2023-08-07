@@ -1,7 +1,7 @@
 import React from 'react'
 
 import { composeStories } from '@storybook/testing-react'
-import { screen, waitFor, within } from '@testing-library/react'
+import { fireEvent, screen, waitFor, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import mediaQuery from 'css-mediaquery'
 import { graphql } from 'msw'
@@ -10,6 +10,8 @@ import * as stories from './ViewLists.stories'
 import { server } from '@/__mocks__/msw/server'
 import { wishlistMock } from '@/__mocks__/stories'
 import { renderWithQueryClient } from '@/__test__/utils'
+import { KiboDialogProps } from '@/components/common/KiboDialog/KiboDialog'
+
 const { Common } = composeStories(stories)
 
 const createMatchMedia = (width: number) => (query: string) => ({
@@ -38,6 +40,23 @@ const copiedList = {
   items: [],
 }
 
+jest.mock('@/components/common/KiboDialog/KiboDialog', () => ({
+  __esModule: true,
+  default: (props: KiboDialogProps) => {
+    const { Title, Content, Actions } = props
+    return (
+      <div data-testid="kibo-dialog">
+        {Title}
+        <br />
+        {Content}
+        <br />
+        {Actions}
+        <br />
+      </div>
+    )
+  },
+}))
+
 jest.mock('@/components/my-account/Lists/ListTable/ListTable', () => ({
   __esModule: true,
   default: ({ onDeleteList, onEditList, onCopyList, rows }: any) => (
@@ -56,7 +75,10 @@ jest.mock('@/components/my-account/Lists/ListTable/ListTable', () => ({
       >
         Copy
       </button>
-      <button data-testid="delete-list-btn" onClick={onDeleteListMock}>
+      <button
+        data-testid="delete-list-btn"
+        onClick={() => onDeleteList('13cc2e5236615b000102f572000045d7')}
+      >
         Delete
       </button>
     </div>
@@ -98,7 +120,7 @@ describe('[componenet] - ViewLists', () => {
     })
   })
 
-  it.only('should check for copy list button in ListTable', async () => {
+  it('should check for copy list button in ListTable', async () => {
     window.matchMedia = createMatchMedia(1000)
     const { user } = setup()
     const listTable = await screen.findByTestId('list-table-mock')
@@ -121,14 +143,38 @@ describe('[componenet] - ViewLists', () => {
     })
   })
 
-  it('should check for delete list button in ListTable', async () => {
+  it('should open dialog when click on delete list button', async () => {
     window.matchMedia = createMatchMedia(1000)
     const { user } = setup()
     const listTable = await screen.findByTestId('list-table-mock')
     const deleteBtn = within(listTable).getByTestId('delete-list-btn')
-    user.click(deleteBtn)
-    await waitFor(() => {
-      expect(onDeleteListMock).toBeCalledTimes(1)
-    })
+
+    fireEvent.click(deleteBtn)
+
+    const kiboDialog = screen.getByTestId('kibo-dialog')
+    expect(kiboDialog).toBeVisible()
+
+    const cancelBtn = within(kiboDialog).getByText(/cancel/i)
+    const deleteMessage = within(kiboDialog).getByText(/delete-list-message/i)
+    const deleteBtnDialog = within(kiboDialog).getByText('delete')
+    expect(cancelBtn).toBeVisible()
+    expect(deleteBtnDialog).toBeVisible()
+    expect(deleteMessage).toBeVisible()
   })
+
+  // it.only('should close dialog when clicked on cancle button', async () => {
+  //   window.matchMedia = createMatchMedia(1000)
+  //   const { user } = setup()
+  //   const listTable = await screen.findByTestId('list-table-mock')
+  //   const deleteBtn = within(listTable).getByTestId('delete-list-btn')
+
+  //   fireEvent.click(deleteBtn)
+
+  //   const kiboDialog = screen.getByTestId('kibo-dialog')
+  //   const cancelBtn = within(kiboDialog).getByText(/cancel/i)
+
+  //   fireEvent.click(cancelBtn)
+
+  //   expect(kiboDialog).not.toBeVisible()
+  // })
 })
