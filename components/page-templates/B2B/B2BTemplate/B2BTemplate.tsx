@@ -219,7 +219,7 @@ const B2BTemplate = (props: B2BTemplateProps) => {
         <B2BTemplateListItem heading="order-history" onClick={handleGoToOrderHistory} />
         <B2BTemplateListItem heading="returns" />
         <B2BTemplateListItem heading="quotes" />
-        <B2BTemplateListItem heading="lists" />
+        <B2BTemplateListItem heading="lists" onClick={() => router.push('/my-account/b2b/lists')} />
 
         <Divider sx={{ backgroundColor: 'grey.300', ...B2BTemplateStyle.divider }} />
         <Box

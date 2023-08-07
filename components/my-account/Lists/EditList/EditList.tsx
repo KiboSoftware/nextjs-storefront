@@ -56,10 +56,8 @@ const EditList = (props: EditWishlistProps) => {
       wishlistId: listData?.id as string,
       wishlistInput: listData as CrWishlistInput,
     }
-    console.log('items ==>', payload)
     const response = await updateWishlist.mutateAsync(payload)
     await refetch()
-    console.log(response)
     onUpdateListData(response.updateWishlist)
     onEditFormToggle(false)
   }
@@ -92,10 +90,8 @@ const EditList = (props: EditWishlistProps) => {
       (i: Maybe<CrWishlistItem>) => i?.product?.productCode === product?.productCode
     )
     if (item) {
-      console.log('update quantity')
       item.quantity += 1
     } else {
-      console.log('add new entry for item')
       items?.push({ product: { productCode: product?.productCode }, quantity: 1 })
     }
     if (listData) listData.items = items
@@ -218,6 +214,7 @@ const EditList = (props: EditWishlistProps) => {
         List Items
       </Typography>
       {listData?.items?.map((item: Maybe<CrWishlistItem>) => {
+        console.log(item?.product?.description)
         return (
           <ListItem
             key={item?.product?.productCode}
@@ -229,6 +226,7 @@ const EditList = (props: EditWishlistProps) => {
                 productImage: item?.product?.imageUrl,
                 productImageAltText: item?.product?.name,
                 lineId: item?.id,
+                productDescription: item?.product?.description,
               },
               quantity: item?.quantity,
             }}
@@ -262,7 +260,7 @@ const EditList = (props: EditWishlistProps) => {
               onClick={() => onEditFormToggle(false)}
               style={{ width: '100%' }}
             >
-              {t('cancle')}
+              {t('cancel')}
             </Button>
             <Button
               variant="contained"

@@ -6,6 +6,7 @@ import EditIcon from '@mui/icons-material/Edit'
 import {
   AccordionDetails,
   AccordionSummary,
+  Accordion,
   Box,
   Button,
   Container,
@@ -29,38 +30,12 @@ const calculateProductSubTotal = (price: any, quantity: number) => {
   return 0
 }
 
-const Accordion = (props: any) => {
-  return (
-    <Box>
-      <Accordion
-        disabled={props.disabled}
-        style={{
-          ...props.style,
-          border: 'none',
-          borderBottom: '1px solid #C7C7C7',
-          boxShadow: 'none',
-          borderRadius: '0px',
-        }}
-      >
-        <AccordionSummary
-          expandIcon={<ExpandMore />}
-          aria-controls="panel1a-content"
-          id="panel1a-header"
-          style={{ padding: '0px' }}
-        >
-          <Typography>{props.title}</Typography>
-        </AccordionSummary>
-        <AccordionDetails>
-          <Typography>{props.content}</Typography>
-        </AccordionDetails>
-      </Accordion>
-    </Box>
-  )
-}
-
 const ProductView = (props: any) => {
   const { item } = props
   const { product } = item
+
+  const { t } = useTranslation('common')
+
   return (
     <>
       <Container style={{ padding: '70px' }}>
@@ -81,7 +56,7 @@ const ProductView = (props: any) => {
             </Typography>
             <Box>
               <Typography data-testid="productCode">
-                Product Code: {product?.productCode}
+                {t('product-code')}: {product?.productCode}
               </Typography>
               <Typography>
                 <Typography component={'strong'}>Price: </Typography> <br />
@@ -93,27 +68,31 @@ const ProductView = (props: any) => {
                 style={{ fontStyle: 'italic', fontSize: '13px' }}
                 data-testid="productPrice"
               >
-                Line Item -{calculateProductSubTotal(product?.price, item.quantity)}
+                {t('line-item')} -{calculateProductSubTotal(product?.price, item.quantity)}
               </Typography>
             </Box>
             <Box>
-              {/* <Accordion
-                title="Description"
+              <Accordion
                 disabled={false}
-                content={props.item.product.description}
-              /> */}
-              {/* <Accordion
-                title="Properties"
-                disabled={false}
-                content={`Development in progress`}
-                style={{}}
-              /> */}
-              {/* <Accordion
-                title="Measurements"
-                disabled={false}
-                content={`Development in progress`}
-                style={{}}
-              /> */}
+                style={{
+                  border: 'none',
+                  borderBottom: '1px solid #C7C7C7',
+                  boxShadow: 'none',
+                  borderRadius: '0px',
+                }}
+              >
+                <AccordionSummary
+                  expandIcon={<ExpandMore />}
+                  aria-controls="panel1a-content"
+                  id="panel1a-header"
+                  style={{ padding: '0px' }}
+                >
+                  <Typography>{'Description'}</Typography>
+                </AccordionSummary>
+                <AccordionDetails>
+                  <Typography>{product.productDescription}</Typography>
+                </AccordionDetails>
+              </Accordion>
             </Box>
           </Grid>
         </Grid>
@@ -133,17 +112,17 @@ const WishlistItem = (props: any) => {
 
   function handleChangeQuantity(e: number) {
     setQuantityState(e)
-    onChangeQuantity(product.lineId, e)
+    onChangeQuantity(product.lineId || product.productCode, e)
   }
 
   const handleQuantityIncrease = () => {
     setQuantityState(quantityState + 1)
-    onChangeQuantity(product.lineId, quantityState)
+    onChangeQuantity(product.lineId || product.productCode, quantityState)
   }
 
   const handleQuantityDecrease = () => {
     setQuantityState(quantityState - 1)
-    onChangeQuantity(product.lineId, quantityState)
+    onChangeQuantity(product.lineId || product.productCode, quantityState)
   }
 
   function openEditModal() {
@@ -185,7 +164,7 @@ const WishlistItem = (props: any) => {
             </>
           )}
           <Box>
-            <strong>Qty: </strong>
+            <strong>{t('qty')}: </strong>
             <QuantitySelector
               quantity={quantityState}
               onIncrease={handleQuantityIncrease}
@@ -194,7 +173,7 @@ const WishlistItem = (props: any) => {
             />
           </Box>
           <Typography data-testid="productCode">
-            <strong>Product Code: </strong>
+            <strong>{t('product-code')}: </strong>
             {item?.product?.productCode}
           </Typography>
           {mdScreen ? (
@@ -230,7 +209,7 @@ const WishlistItem = (props: any) => {
               sx={style.buttons.tableAction}
               aria-label="delete"
               id={props.item.id}
-              onClick={() => onDeleteItem(product.lineId)}
+              onClick={() => onDeleteItem(product.lineId || product.productCode)}
               startIcon={<DeleteIcon />}
             >
               {mdScreen ? 'Remove' : ''}

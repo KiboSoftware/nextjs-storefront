@@ -119,14 +119,12 @@ const ViewLists = (props: ListsProps) => {
     const wishlist = wishlistsResponse?.items?.find(
       (item: Maybe<CrWishlist>) => item?.id === id
     ) as CrWishlist
-    console.log(wishlist)
     setListData(wishlist)
     onEditFormToggle(true)
   }
 
   // add list to cart
   const handleAddListToCart = async (id: string) => {
-    console.log(id)
     const list = wishlistsResponse?.items?.find((item) => item?.id === id)
     setIsLoading(true)
     const promises: any[] = []
@@ -182,7 +180,6 @@ const ViewLists = (props: ListsProps) => {
         onEditFormToggle={onEditFormToggle}
         listData={listData}
         onUpdateListData={(res: CrWishlist) => {
-          console.log('response data ==> ', res)
           setListData(res)
         }}
       />
@@ -250,19 +247,17 @@ const ViewLists = (props: ListsProps) => {
         Actions={''}
         Content={
           <Box sx={{ textAlign: 'center' }}>
-            <Typography sx={{ marginBottom: '10px' }}>
-              Are you sure you want to delete this list?
-            </Typography>
+            <Typography sx={{ marginBottom: '10px' }}>{t('delete-list-message')}</Typography>
             <Box sx={{ display: 'flex', flexDirection: 'column' }}>
               <Button variant="contained" sx={{ marginBottom: '10px' }} onClick={deleteList}>
-                Delete
+                {t('delete')}
               </Button>
               <Button
                 variant="contained"
                 color="secondary"
                 onClick={() => setShowDeleteDialog((current) => ({ ...current, show: false }))}
               >
-                Cancle
+                {t('cancel')}
               </Button>
             </Box>
           </Box>

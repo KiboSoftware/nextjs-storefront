@@ -384,11 +384,8 @@
   "removed-from-wishlist": "Removed from wishlist",
   "save-address-to-account": "Save this address to your account",
   "no-payment-details-found": "No payment details found!",
-
-  "quick-order": "Quick Order",
   "search-for-product": "Search for a product",
   "search-by-name-or-code": "Search by product name or code",
-  "initiate-quote": "Initiate Quote",
   "checkout": "Checkout",
   "no-products-found": "No products found",
   "product-header": "Product",
@@ -400,5 +397,8 @@
   "add-item-to-cart": "Add item to Cart",
   "add-item-to-list": "Add item to List",
   "search-to-add-products": "Search to start adding products to this order",
-  "save-and-close": "Save & Close"
+  "save-and-close": "Save & Close",
+  "line-item": "Line Item",
+  "list-items": "List Items",
+  "delete-list-message": "Are you sure you want to delete this list?"
 }
