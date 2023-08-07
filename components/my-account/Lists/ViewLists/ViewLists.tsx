@@ -247,19 +247,17 @@ const ViewLists = (props: ListsProps) => {
         Actions={''}
         Content={
           <Box sx={{ textAlign: 'center' }}>
-            <Typography sx={{ marginBottom: '10px' }}>
-              Are you sure you want to delete this list?
-            </Typography>
+            <Typography sx={{ marginBottom: '10px' }}>{t('delete-list-message')}</Typography>
             <Box sx={{ display: 'flex', flexDirection: 'column' }}>
               <Button variant="contained" sx={{ marginBottom: '10px' }} onClick={deleteList}>
-                Delete
+                {t('delete')}
               </Button>
               <Button
                 variant="contained"
                 color="secondary"
                 onClick={() => setShowDeleteDialog((current) => ({ ...current, show: false }))}
               >
-                Cancle
+                {t('cancel')}
               </Button>
             </Box>
           </Box>
