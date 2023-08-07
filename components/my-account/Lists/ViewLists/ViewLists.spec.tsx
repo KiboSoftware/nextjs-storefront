@@ -145,7 +145,7 @@ describe('[componenet] - ViewLists', () => {
 
   it('should open dialog when click on delete list button', async () => {
     window.matchMedia = createMatchMedia(1000)
-    const { user } = setup()
+    setup()
     const listTable = await screen.findByTestId('list-table-mock')
     const deleteBtn = within(listTable).getByTestId('delete-list-btn')
 
@@ -161,20 +161,4 @@ describe('[componenet] - ViewLists', () => {
     expect(deleteBtnDialog).toBeVisible()
     expect(deleteMessage).toBeVisible()
   })
-
-  // it.only('should close dialog when clicked on cancle button', async () => {
-  //   window.matchMedia = createMatchMedia(1000)
-  //   const { user } = setup()
-  //   const listTable = await screen.findByTestId('list-table-mock')
-  //   const deleteBtn = within(listTable).getByTestId('delete-list-btn')
-
-  //   fireEvent.click(deleteBtn)
-
-  //   const kiboDialog = screen.getByTestId('kibo-dialog')
-  //   const cancelBtn = within(kiboDialog).getByText(/cancel/i)
-
-  //   fireEvent.click(cancelBtn)
-
-  //   expect(kiboDialog).not.toBeVisible()
-  // })
 })
