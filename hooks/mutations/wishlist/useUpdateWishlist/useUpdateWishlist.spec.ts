@@ -9,7 +9,7 @@ const mockWishlist = wishlistMock.items[0]
 describe('[hooks] useUpdateWishlistMutation', () => {
   const { id, name, customerAccountId } = mockWishlist
 
-  it('should create custom wishlist', async () => {
+  it('should update wishlist', async () => {
     const { result } = renderHook(() => useUpdateWishlistMutation(), {
       wrapper: createQueryClientWrapper(),
     })
@@ -29,6 +29,25 @@ describe('[hooks] useUpdateWishlistMutation', () => {
         name,
         customerAccountId,
         items: [],
+      })
+    })
+  })
+
+  it('should update wishlistItem', async () => {
+    const { result } = renderHook(() => useUpdateWishlistMutation(), {
+      wrapper: createQueryClientWrapper(),
+    })
+
+    result.current.updateWishlistItemQuantity.mutateAsync({
+      wishlistId: id,
+      wishlistItemId: '62171e6cd0254c4bafb4b05100df8e1c',
+      quantity: 10,
+    })
+
+    await waitFor(() => {
+      expect(result.current.updateWishlistItemQuantity.data).toStrictEqual({
+        id: '62171e6cd0254c4bafb4b05100df8e1c',
+        quantity: 10,
       })
     })
   })
