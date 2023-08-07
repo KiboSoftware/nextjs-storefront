@@ -131,4 +131,20 @@ describe('[component] - MyAccountTemplate', () => {
       })
     })
   })
+
+  it('should redirect to lists page when users click on Lists link', async () => {
+    const { user } = setup()
+
+    const users = screen.getByText(/Lists/i)
+
+    user.click(users)
+
+    await waitFor(() => {
+      expect(mockRouter).toMatchObject({
+        asPath: '/my-account/b2b/lists',
+        pathname: '/my-account/b2b/lists',
+        query: {},
+      })
+    })
+  })
 })
