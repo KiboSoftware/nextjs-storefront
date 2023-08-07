@@ -20,10 +20,11 @@ export default function KiboPagination(props: KiboPaginationProps) {
   return (
     <Stack spacing={2}>
       <Pagination
+        size="small"
         count={count}
         page={currentPage}
         shape="rounded"
-        variant="outlined"
+        variant="text"
         sx={KiboPaginationStyles}
         onChange={(e, page) =>
           onPaginationChange({

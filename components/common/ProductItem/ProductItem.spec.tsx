@@ -64,7 +64,7 @@ describe('[component] - ProductItem with Price and Pickup Item', () => {
     const price = screen.getByText(WithChangeStoreOption?.args?.price || '')
 
     expect(detailsElement).toBeInTheDocument()
-    expect(screen.getByText(/estimated-pickup:/i)).toBeVisible()
+    expect(screen.getByText(/estimated-pickup/i)).toBeVisible()
     expect(screen.getByTestId('product-option-list-component')).toBeVisible()
     expect(screen.getByText(/Qty/i)).toBeInTheDocument()
     expect(screen.getByText(`${WithChangeStoreOption.args?.expectedDeliveryDate}`)).toBeVisible()

@@ -82,6 +82,16 @@ module.exports = {
       // For Pagination use this.
       // pageSize: [15, 30, 50],
     },
+    B2BQuotes: {
+      sortOptions: [
+        { value: 'First Created', id: '' },
+        { value: 'Last Created', id: 'created' },
+        { value: 'Quote name: A-Z', id: 'name asc' },
+        { value: 'Quote name: Z-A', id: 'name desc' },
+        { value: 'Quote number: Low-High', id: 'number asc' },
+        { value: 'Quote number: High-Low', id: 'number desc' },
+      ],
+    },
     orderHistory: {
       startIndex: 0,
       pageSize: 20,

@@ -5,7 +5,7 @@ import { alpha, styled } from '@mui/material/styles'
 
 export interface KiboTextBoxProps {
   label?: string
-  value?: string | null
+  value?: string | null | React.ReactNode
   required?: boolean
   error?: boolean
   helperText?: string
@@ -60,6 +60,7 @@ const KiboTextBox = (props: KiboTextBoxProps) => {
     onChange,
     onBlur,
     onIconClick,
+    onInput,
     ...rest
   } = props
 
@@ -91,6 +92,7 @@ const KiboTextBox = (props: KiboTextBoxProps) => {
           onBlur && onBlur(e.target.name, e.target.value)
         }}
         onKeyDown={onKeyDown}
+        onInput={onInput}
         {...(icon && {
           endAdornment: onIconClick ? (
             <IconButton aria-label="toggle icon visibility" size="small" onClick={onIconClick}>
