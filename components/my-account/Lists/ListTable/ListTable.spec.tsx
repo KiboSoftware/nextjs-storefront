@@ -1,7 +1,7 @@
 import React from 'react'
 
 import { composeStories } from '@storybook/testing-react'
-import { render, screen, waitFor } from '@testing-library/react'
+import { fireEvent, render, screen, waitFor, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import mediaQuery from 'css-mediaquery'
 
@@ -23,6 +23,8 @@ const createMatchMedia = (width: number) => (query: string) => ({
 const onEditMock = jest.fn()
 const onCopyMock = jest.fn()
 const onDeleteMock = jest.fn()
+const onAddListToCartMock = jest.fn()
+const onInitiateQuoteMock = jest.fn()
 
 function setup() {
   const user = userEvent.setup()
@@ -32,6 +34,8 @@ function setup() {
       onCopyList={onCopyMock}
       onEditList={onEditMock}
       onDeleteList={onDeleteMock}
+      onAddListToCart={onAddListToCartMock}
+      onInitiateQuote={onInitiateQuoteMock}
     />
   )
   return { user }
@@ -102,5 +106,73 @@ describe('[component] - ListTable', () => {
     await waitFor(() => {
       expect(onCopyMock).toBeCalledTimes(copyBtns.length)
     })
+  })
+
+  it('should call callback function when user clicks on Add To Cart button', async () => {
+    window.matchMedia = createMatchMedia(1024)
+    const { user } = setup()
+    const addToCartBtns = screen.getAllByText(/add-to-cart/i)
+    addToCartBtns.forEach((btn) => {
+      user.click(btn)
+    })
+    await waitFor(() => {
+      expect(onAddListToCartMock).toBeCalledTimes(addToCartBtns.length)
+    })
+  })
+
+  it('should call callback function when user clicks on Initiate Quote button', async () => {
+    window.matchMedia = createMatchMedia(1024)
+    const { user } = setup()
+    const initateQuotetBtns = screen.getAllByText(/initiate-quote/i)
+    initateQuotetBtns.forEach((btn) => {
+      user.click(btn)
+    })
+    await waitFor(() => {
+      expect(onInitiateQuoteMock).toBeCalledTimes(initateQuotetBtns.length)
+    })
+  })
+
+  it('should open menu on mobile', async () => {
+    window.matchMedia = createMatchMedia(500)
+    const { user } = setup()
+    const menuBtns = screen.getAllByTestId('menuBtn')
+    menuBtns.forEach((menuBtn) => expect(menuBtn).toBeVisible())
+    user.click(menuBtns[0])
+    await waitFor(() => {
+      const menus = screen.getAllByTestId('menu')
+      expect(menus[0]).toBeVisible()
+    })
+  })
+
+  it('should check for callback function in the menu', async () => {
+    window.matchMedia = createMatchMedia(500)
+    setup()
+    const menuBtns = screen.getAllByTestId('menuBtn')
+    menuBtns.forEach((menuBtn) => expect(menuBtn).toBeVisible())
+
+    fireEvent.click(menuBtns[0])
+
+    const menus = screen.getAllByTestId('menu')
+    expect(menus[0]).toBeVisible()
+    const editBtn = within(menus[0]).getByText(/edit/i)
+    const duplicateBtn = within(menus[0]).getByText(/duplicate/i)
+    const deleteBtn = within(menus[0]).getByText(/delete/i)
+    const addToCartBtn = within(menus[0]).getByText(/add-list-items-to-cart/i)
+    const initiateQuoteBtn = within(menus[0]).getByText(/initiate-quote/i)
+
+    fireEvent.click(editBtn)
+    expect(onEditMock).toBeCalled()
+
+    fireEvent.click(deleteBtn)
+    expect(onDeleteMock).toBeCalled()
+
+    fireEvent.click(duplicateBtn)
+    expect(onCopyMock).toBeCalled()
+
+    fireEvent.click(addToCartBtn)
+    expect(onAddListToCartMock).toBeCalled()
+
+    fireEvent.click(initiateQuoteBtn)
+    expect(onInitiateQuoteMock).toBeCalled()
   })
 })
