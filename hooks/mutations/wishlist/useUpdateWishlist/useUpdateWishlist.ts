@@ -32,16 +32,12 @@ const updateWishlist = async (props: UpdateWishlistProps) => {
 
 const updateWishlistItemQuantity = async (params: UpdateWishlistItemQuantityProps) => {
   console.log(updateWishlistItemQuantityMutation, params)
-  try {
-    const client = makeGraphQLClient()
-    const response = await client.request({
-      document: updateWishlistItemQuantityMutation,
-      variables: params,
-    })
-    return response
-  } catch (e) {
-    console.error(e)
-  }
+  const client = makeGraphQLClient()
+  const response = await client.request({
+    document: updateWishlistItemQuantityMutation,
+    variables: params,
+  })
+  return response
 }
 
 /**
