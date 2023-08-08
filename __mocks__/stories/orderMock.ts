@@ -1,4 +1,98 @@
 import type { CrOrder } from '@/lib/gql/types'
+
+export const cardPaymentMock = {
+  id: '44c7b0bd1ed24c97bf23adf301176865',
+  paymentServiceTransactionId: '4ab45201c58541f9ad45e2ba42a3858b',
+  orderId: '1366c6ef4decfa00013b9b2b000045a4',
+  paymentType: 'CreditCard',
+  paymentWorkflow: 'Mozu',
+  billingInfo: {
+    paymentType: 'CreditCard',
+    billingContact: {
+      email: 'marcus.fenix@cog.com',
+      firstName: 'Marcus',
+      middleNameOrInitial: '',
+      lastNameOrSurname: 'Fenix',
+      phoneNumbers: {
+        home: '1-949-307-5762',
+        mobile: '1-949-307-5762',
+        work: '',
+      },
+      address: {
+        address1: '4861 Sunny Day Drive',
+        address2: '32',
+        address3: '',
+        address4: '',
+        cityOrTown: 'Irvine',
+        stateOrProvince: 'CA',
+        postalOrZipCode: '92697',
+        countryCode: 'US',
+        addressType: 'Residential',
+        isValidated: false,
+      },
+    },
+    isSameBillingShippingAddress: false,
+    card: {
+      paymentServiceCardId: '952076ca59454ccb97cf05ee5e9c97c8',
+      isUsedRecurring: false,
+      nameOnCard: 'Marcus Fenix',
+      isCardInfoSaved: false,
+      isTokenized: true,
+      paymentOrCardType: 'VISA',
+      cardNumberPartOrMask: '************1111',
+      expireMonth: 1,
+      expireYear: 2024,
+    },
+  },
+  status: 'New',
+  isRecurring: false,
+  amountCollected: 0,
+  amountCredited: 0,
+  amountRequested: 18.97,
+}
+
+export const purchaseOrderPaymentMock = {
+  id: '8387cc9a10d64b39988eb05300caf550',
+  paymentType: 'PurchaseOrder',
+  status: 'New',
+  paymentWorkflow: 'Mozu',
+  amountCollected: 0,
+  amountCredited: 0,
+  amountRequested: 443.64,
+  billingInfo: {
+    billingContact: {
+      id: 1413,
+      firstName: 'Geetanshu',
+      middleNameOrInitial: null,
+      lastNameOrSurname: ' Chhabra',
+      email: 'geetanshu.chhabra+123@kibocommerce.com',
+      address: {
+        address1: '900 HUTCHINSON PL',
+        address2: null,
+        address3: null,
+        addressType: 'Residential',
+        stateOrProvince: 'TN',
+        postalOrZipCode: '37091',
+        cityOrTown: 'LEBANON',
+        countryCode: 'US',
+        isValidated: true,
+      },
+      phoneNumbers: {
+        home: '1234567890',
+      },
+    },
+    isSameBillingShippingAddress: true,
+    purchaseOrder: {
+      purchaseOrderNumber: '12345',
+      paymentTerm: {
+        description: '60',
+        code: '60',
+      },
+    },
+    card: null,
+  },
+}
+
 const checkoutResponse: CrOrder = {
   returnStatus: 'None', // TODO: may need to remove
   id: '137a94b6402be000013718d80000678b',
@@ -314,63 +408,13 @@ const checkoutResponse: CrOrder = {
       },
     },
   ],
-  payments: [
-    {
-      id: '44c7b0bd1ed24c97bf23adf301176865',
-      paymentServiceTransactionId: '4ab45201c58541f9ad45e2ba42a3858b',
-      orderId: '1366c6ef4decfa00013b9b2b000045a4',
-      paymentType: 'CreditCard',
-      paymentWorkflow: 'Mozu',
-      billingInfo: {
-        paymentType: 'CreditCard',
-        billingContact: {
-          email: 'marcus.fenix@cog.com',
-          firstName: 'Marcus',
-          middleNameOrInitial: '',
-          lastNameOrSurname: 'Fenix',
-          phoneNumbers: {
-            home: '1-949-307-5762',
-            mobile: '1-949-307-5762',
-            work: '',
-          },
-          address: {
-            address1: '4861 Sunny Day Drive',
-            address2: '32',
-            address3: '',
-            address4: '',
-            cityOrTown: 'Irvine',
-            stateOrProvince: 'CA',
-            postalOrZipCode: '92697',
-            countryCode: 'US',
-            addressType: 'Residential',
-            isValidated: false,
-          },
-        },
-        isSameBillingShippingAddress: false,
-        card: {
-          paymentServiceCardId: '952076ca59454ccb97cf05ee5e9c97c8',
-          isUsedRecurring: false,
-          nameOnCard: 'Marcus Fenix',
-          isCardInfoSaved: false,
-          isTokenized: true,
-          paymentOrCardType: 'VISA',
-          cardNumberPartOrMask: '************1111',
-          expireMonth: 1,
-          expireYear: 2024,
-        },
-      },
-      status: 'New',
-      isRecurring: false,
-      amountCollected: 0,
-      amountCredited: 0,
-      amountRequested: 18.97,
-    },
-  ],
+  payments: [{ ...cardPaymentMock }],
   amountAvailableForRefund: 0,
   amountRefunded: 0,
   amountRemainingForPayment: 0,
   totalCollected: 0,
 }
+
 export const orderMock: { checkout: CrOrder } = {
   checkout: { ...checkoutResponse, status: 'Delivered' },
 }

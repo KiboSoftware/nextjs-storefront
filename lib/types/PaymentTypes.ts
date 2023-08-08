@@ -106,3 +106,8 @@ export interface CardType {
     isDefaultPayMethod: boolean
   }
 }
+
+export interface PurchaseOrderFormValues {
+  purchaseOrder: string
+  paymentTerm: string
+}

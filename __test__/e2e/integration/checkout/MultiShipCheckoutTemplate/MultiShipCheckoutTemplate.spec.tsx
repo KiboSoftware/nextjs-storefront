@@ -899,10 +899,7 @@ const handleReviewStep = async (user: any, checkoutData: Checkout) => {
 
   // billing address
   const billingAddressSection = screen.getByTestId('billing-address')
-  const selectedPayment = orderGetters.getSelectedPaymentMethods(
-    checkoutData,
-    PaymentType.CREDITCARD
-  )
+  const selectedPayment = orderGetters.getSelectedPaymentType(checkoutData, PaymentType.CREDITCARD)
   const billingContact = selectedPayment?.billingInfo?.billingContact
 
   const billingAddressCard = within(billingAddressSection).getByTestId('address-card')

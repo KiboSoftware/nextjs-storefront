@@ -8,3 +8,4 @@ export { default as ShippingMethod } from '@/components/checkout/ShippingMethod/
 export { default as StandardShippingStep } from '@/components/checkout/StandardShippingStep/StandardShippingStep'
 export { default as MultiShippingStep } from '@/components/checkout/MultiShippingStep/MultiShippingStep'
 export { default as CheckoutUITemplate } from '@/components/checkout/CheckoutUITemplate/CheckoutUITemplate'
+export { default as PurchaseOrderForm } from '@/components/checkout/PurchaseOrderForm/PurchaseOrderForm'

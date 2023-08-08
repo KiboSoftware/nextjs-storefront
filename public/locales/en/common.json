@@ -422,5 +422,12 @@
   "updated-by": "Updated by",
   "field-change": "Field change",
   "changed-from": "Changed From",
-  "changed-to": "Changed To"
+  "changed-to": "Changed To",
+
+  "po-number": "PO Number",
+  "credit-limit": "Credit Limit",
+  "available-balance": "Available Balance",
+  "payment-terms": "Payment Terms",
+  "po-external-id": "PO External ID",
+  "select-payment-term": "Select a Payment Term"
 }

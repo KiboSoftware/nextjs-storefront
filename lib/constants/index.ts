@@ -14,6 +14,7 @@ export enum PaymentWorkflow {
 }
 
 export enum PaymentType {
+  PURCHASEORDER = 'PurchaseOrder',
   CREDITCARD = 'CreditCard',
 }
 

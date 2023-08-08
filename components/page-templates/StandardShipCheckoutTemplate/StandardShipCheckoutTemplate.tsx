@@ -17,6 +17,8 @@ import {
   useAddOrderPaymentInfo,
   useVoidOrderPayment,
   useCreateOrder,
+  useGetCards,
+  useGetCustomerPurchaseOrderAccount,
 } from '@/hooks'
 import { orderGetters } from '@/lib/getters'
 import type { PersonalDetails } from '@/lib/types'
@@ -44,7 +46,12 @@ const StandardShipCheckoutTemplate = (props: StandardShipCheckoutProps) => {
   })
 
   const { isAuthenticated, user } = useAuthContext()
-  const { data: savedUserAddressData } = useGetCustomerAddresses(user?.id as number)
+  const { data: addressCollection } = useGetCustomerAddresses(user?.id as number)
+  const { data: cardCollection } = useGetCards(user?.id as number)
+  const { data: customerPurchaseOrderAccount } = useGetCustomerPurchaseOrderAccount(
+    user?.id as number
+  )
+
   const { updateOrderCoupon } = useUpdateOrderCoupon()
   const { deleteOrderCoupon } = useDeleteOrderCoupon()
 
@@ -151,13 +158,17 @@ const StandardShipCheckoutTemplate = (props: StandardShipCheckoutProps) => {
         />
         <StandardShippingStep
           checkout={order as CrOrder}
-          savedUserAddressData={savedUserAddressData}
+          savedUserAddressData={addressCollection}
           isAuthenticated={isAuthenticated}
         />
         <PaymentStep
           checkout={order as CrOrder}
+          addressCollection={addressCollection}
+          cardCollection={cardCollection}
+          customerPurchaseOrderAccount={customerPurchaseOrderAccount}
           onVoidPayment={handleVoidPayment}
           onAddPayment={handleAddPayment}
+          isMultiShipEnabled={false}
         />
         <ReviewStep
           checkout={order as CrOrder}

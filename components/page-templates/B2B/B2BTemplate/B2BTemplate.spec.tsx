@@ -131,4 +131,20 @@ describe('[component] - MyAccountTemplate', () => {
       })
     })
   })
+
+  it('should redirect to quick order page when users click on Users link', async () => {
+    const { user } = setup()
+
+    const quickOrder = screen.getByText(/quick-order/i)
+
+    user.click(quickOrder)
+
+    await waitFor(() => {
+      expect(mockRouter).toMatchObject({
+        asPath: '/my-account/b2b/quick-order',
+        pathname: '/my-account/b2b/quick-order',
+        query: {},
+      })
+    })
+  })
 })

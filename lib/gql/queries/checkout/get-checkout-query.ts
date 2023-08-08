@@ -9,6 +9,7 @@ import {
 const getCheckoutQuery = /* GraphQL */ `
   query getCheckout($checkoutId: String!) {
     checkout: order(orderId: $checkoutId) {
+      siteId
       ...baseCheckoutFragment
       items {
         ...checkoutLineItemFragment
