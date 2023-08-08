@@ -70,6 +70,7 @@ const ListsTemplate = () => {
                       onClick={() => {
                         router.push('/my-account')
                       }}
+                      data-testid="my-account-button"
                     >
                       <ArrowBackIosIcon style={{ width: '14px', color: '#000' }} />
                     </IconButton>

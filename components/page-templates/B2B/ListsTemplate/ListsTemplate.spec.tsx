@@ -61,6 +61,20 @@ describe('[component] - ListsTemplate', () => {
     })
   })
 
+  it('should redirect to /my-account page in mobile view', async () => {
+    window.matchMedia = createMatchMedia(500)
+    const { user } = setup()
+    const myAccountBtn = screen.getByTestId('my-account-button')
+    expect(myAccountBtn).toBeVisible()
+    user.click(myAccountBtn)
+    await waitFor(() => {
+      expect(mockRouter).toMatchObject({
+        asPath: '/my-account',
+        pathname: '/my-account',
+      })
+    })
+  })
+
   it('should toggle edit list form', async () => {
     window.matchMedia = createMatchMedia(1024)
     const { user } = setup()
