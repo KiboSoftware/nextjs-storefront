@@ -12,8 +12,10 @@ export default {
   component: ListTable,
   argTypes: {
     onEditList: { action: 'onEditList' },
-    onCreateList: { action: 'onCreateList' },
+    onCopyList: { action: 'onCopyList' },
     onDeleteList: { action: 'onDeleteList' },
+    onAddListToCart: { action: 'onAddToListCart' },
+    onInitiateQuote: { action: 'onInitiateQuote' },
   },
 } as ComponentMeta<typeof ListTable>
 

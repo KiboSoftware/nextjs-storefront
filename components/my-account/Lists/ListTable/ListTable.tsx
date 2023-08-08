@@ -29,11 +29,20 @@ interface ListTableProps {
   onCopyList: (param: string) => void
   onEditList: (param: string) => void
   onAddListToCart: (param: string) => void
+  onInitiateQuote: (param: string) => void
   isLoading: boolean
 }
 
 const ListTable = (props: ListTableProps) => {
-  const { rows, onDeleteList, onCopyList, onEditList, onAddListToCart, isLoading } = props
+  const {
+    rows,
+    onDeleteList,
+    onCopyList,
+    onEditList,
+    onAddListToCart,
+    onInitiateQuote,
+    isLoading,
+  } = props
   // state for mobile menu
   const [anchorEl, setAnchorEL] = useState<HTMLElement | null>(null)
 
@@ -46,7 +55,7 @@ const ListTable = (props: ListTableProps) => {
     // todo
     { name: t('add-list-items-to-cart'), onClick: onAddListToCart },
     // todo
-    { name: t('initiate-quote'), onClick: () => alert('Work in progress') },
+    { name: t('initiate-quote'), onClick: onInitiateQuote },
     { name: t('duplicate'), onClick: onCopyList },
     { name: t('delete'), onClick: onDeleteList },
   ]
@@ -100,7 +109,12 @@ const ListTable = (props: ListTableProps) => {
                 <TableCell style={{ ...styles.tableCellStyles, width: mdScreen ? '25%' : '10%' }}>
                   {mdScreen ? (
                     <Box style={{ justifyContent: 'flex-end', display: 'flex' }}>
-                      <Button variant="text" color="inherit" data-testid="initiateQuoteBtn">
+                      <Button
+                        variant="text"
+                        color="inherit"
+                        data-testid="initiateQuoteBtn"
+                        onClick={() => onInitiateQuote(item?.id as string)}
+                      >
                         {t('initiate-quote')}
                       </Button>
                       <Button
@@ -146,6 +160,7 @@ const ListTable = (props: ListTableProps) => {
                         anchorEl={anchorEl}
                         open={Boolean(anchorEl)}
                         onClose={() => setAnchorEL(null)}
+                        data-testid="menu"
                       >
                         {options.map((option, i) => (
                           <MenuItem

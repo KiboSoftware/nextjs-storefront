@@ -16,7 +16,7 @@ describe('[hooks] useGetWishlist', () => {
     })
   })
 
-  it.only('should return all wishlists', async () => {
+  it('should return all wishlists', async () => {
     const { result } = renderHook(
       () => useGetWishlist({ startIndex: 0, pageSize: 5, sortBy: '', filter: '' }),
       {
