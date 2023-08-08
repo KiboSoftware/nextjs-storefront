@@ -12,6 +12,9 @@ import { CrWishlistItem } from '@/lib/gql/types'
 const { Common } = composeStories(stories)
 const { listData } = stories
 
+const onEditFormToggleMock = jest.fn()
+const onUpdateListDataMock = jest.fn()
+
 const createMatchMedia = (width: number) => (query: string) => ({
   matches: mediaQuery.match(query, { width }),
   addListener: () => jest.fn(),
@@ -25,7 +28,13 @@ const createMatchMedia = (width: number) => (query: string) => ({
 
 function setup() {
   const user = userEvent.setup()
-  render(<Common {...Common.args} />)
+  render(
+    <Common
+      {...Common.args}
+      onEditFormToggle={onEditFormToggleMock}
+      onUpdateListData={onUpdateListDataMock}
+    />
+  )
   return { user }
 }
 
@@ -62,6 +71,29 @@ describe('[componenet] - Edit list', () => {
     })
     await waitFor(() => {
       expect(screen.getByText(newListName)).toBeVisible()
+    })
+  })
+
+  it('should close edit list', async () => {
+    const { user } = setup()
+    const cancelBtn = screen.getByText(/cancel/i)
+
+    user.click(cancelBtn)
+
+    await waitFor(() => {
+      expect(onEditFormToggleMock).toBeCalled()
+    })
+  })
+
+  it.only('should save and close edit list', async () => {
+    const { user } = setup()
+    const saveAndCloseBtn = screen.getByText(/save-and-close/i)
+    user.click(saveAndCloseBtn)
+    await waitFor(() => {
+      expect(onUpdateListDataMock).toBeCalled()
+    })
+    await waitFor(() => {
+      expect(onEditFormToggleMock).toBeCalled()
     })
   })
 })
