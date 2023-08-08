@@ -107,7 +107,7 @@ const ListsTemplate = () => {
     <Grid container spacing={2} marginTop={2}>
       <Grid item xs={12}>
         <CreateList
-          openCreateForm={(val: boolean) => setState({ ...state, isCreateFormOpen: val })}
+          onCreateFormToggle={(val: boolean) => setState({ ...state, isCreateFormOpen: val })}
         />
       </Grid>
     </Grid>

@@ -15,7 +15,7 @@ import { useCreateWishlist, useGetWishlist } from '@/hooks'
 import { Product } from '@/lib/gql/types'
 
 export interface CreateListProps {
-  openCreateForm: (param: boolean) => void
+  onCreateFormToggle: (param: boolean) => void
 }
 
 interface CreateListState {
@@ -31,7 +31,7 @@ interface CreateListState {
 }
 
 const CreateList = (props: CreateListProps) => {
-  const { openCreateForm } = props
+  const { onCreateFormToggle } = props
   const [listState, setListState] = useState<CreateListState>({
     name: '',
     items: [{ product: { productCode: '' }, quantity: 0 }],
@@ -63,7 +63,7 @@ const CreateList = (props: CreateListProps) => {
       })
     await refetch()
     setListState({ name: '', items: [{ product: { productCode: '' }, quantity: 0 }] })
-    openCreateForm(false)
+    onCreateFormToggle(false)
   }
 
   const handleAddProduct = (product?: Product) => {
@@ -105,6 +105,7 @@ const CreateList = (props: CreateListProps) => {
       <Box style={{ width: '100%' }}>
         {mdScreen ? (
           <IconButton
+            data-testid="my-account-button"
             style={{ paddingLeft: 0, fontSize: '14px', color: '#000' }}
             onClick={() => {
               router.push('/my-account')
@@ -134,7 +135,7 @@ const CreateList = (props: CreateListProps) => {
                   variant="outlined"
                   type="button"
                   onClick={() => {
-                    openCreateForm(false)
+                    onCreateFormToggle(false)
                   }}
                 >
                   {t('cancel')}
@@ -154,6 +155,7 @@ const CreateList = (props: CreateListProps) => {
             <>
               <IconButton
                 style={{ paddingLeft: 0, marginLeft: 0 }}
+                data-testid="my-account-button"
                 onClick={() => {
                   router.push('/my-account')
                 }}
@@ -232,7 +234,7 @@ const CreateList = (props: CreateListProps) => {
                 variant="outlined"
                 type="button"
                 onClick={() => {
-                  openCreateForm(false)
+                  onCreateFormToggle(false)
                 }}
                 style={{ width: '100%' }}
               >
