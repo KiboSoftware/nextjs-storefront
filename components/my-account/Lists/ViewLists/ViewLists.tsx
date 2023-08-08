@@ -150,6 +150,10 @@ const ViewLists = (props: ListsProps) => {
     setIsLoading(false)
   }
 
+  const handleInitiateQuote = (id: string) => {
+    console.log('Work In Progress')
+  }
+
   // handle filter for current user list
   const handleFilterChange = (e: ChangeEvent<HTMLInputElement>) => {
     setPaginationState({
@@ -225,6 +229,7 @@ const ViewLists = (props: ListsProps) => {
               onDeleteList={handleDeleteList}
               onEditList={handleEditList}
               onAddListToCart={handleAddListToCart}
+              onInitiateQuote={handleInitiateQuote}
             />
             <Pagination
               count={wishlistsResponse ? wishlistsResponse.pageCount : 1}
