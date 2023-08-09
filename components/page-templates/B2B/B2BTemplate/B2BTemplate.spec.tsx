@@ -132,6 +132,21 @@ describe('[component] - MyAccountTemplate', () => {
     })
   })
 
+  it('should redirect to account hierarchy page when users click on Account Hierarchy link', async () => {
+    const { user } = setup()
+
+    const users = screen.getByText(/account-hierarchy/i)
+
+    user.click(users)
+
+    await waitFor(() => {
+      expect(mockRouter).toMatchObject({
+        asPath: '/my-account/b2b/account-hierarchy',
+        pathname: '/my-account/b2b/account-hierarchy',
+      })
+    })
+  })
+
   it('should redirect to quick order page when users click on Users link', async () => {
     const { user } = setup()
 

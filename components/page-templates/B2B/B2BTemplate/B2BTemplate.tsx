@@ -118,7 +118,7 @@ const B2BTemplate = (props: B2BTemplateProps) => {
       controls: 'account-hierarchy-content',
       header: t('account-hierarchy'),
       component: null,
-      path: null,
+      path: '/my-account/b2b/account-hierarchy',
     },
     {
       id: 'users-accordion',

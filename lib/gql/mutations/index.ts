@@ -58,3 +58,6 @@ export { default as validateCustomerAddress } from './address/validate-customer-
 
 // Account password
 export { default as updateForgottenAccountPassword } from './user/updateForgottenAccountPassword'
+
+// Account Hierarchy
+export { default as createCustomerB2bAccountMutation } from './b2b/account-hierarchy/create-customer-b2b-account'

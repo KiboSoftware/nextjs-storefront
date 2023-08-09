@@ -36,6 +36,7 @@ import { userMock, loginUserMock, registerUserMock } from '../stories/userMock'
 import { wishlistMock } from '../stories/wishlistMock'
 import { subscriptionMock } from '@/__mocks__/stories/subscriptionMock'
 import { LOGOUT_ENDPOINT } from '@/lib/gql/client'
+import { b2BAccountResponseMock } from '../stories/b2BAccountResponseMock'
 
 const baseUrl = 'http://localhost:3000'
 const mockCreateCustomerAccount = {
@@ -494,6 +495,11 @@ export const b2bAccountUsersHandlers = [
   // useRemoveCustomerB2bUserMutation
   graphql.mutation('removeCustomerB2bAccountUser', (_req, res, ctx) => {
     return res(ctx.data({ removeCustomerB2bAccountUser: true }))
+  }),
+
+  // useCreateCustomerB2bAccountMutation
+  graphql.mutation('createCustomerB2bAccount', (_req, res, ctx) => {
+    return res(ctx.data({ createCustomerB2bAccount: b2BAccountResponseMock }))
   }),
 ]
 
