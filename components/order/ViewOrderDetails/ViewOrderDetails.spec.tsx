@@ -6,9 +6,11 @@ import userEvent from '@testing-library/user-event'
 
 import * as stories from './ViewOrderDetails.stories'
 
-const { Common, WithReturnItemButton } = composeStories(stories)
+const { Common, WithReturnItemButton, ViewOrderDetailsWithoutPaymentDetails } =
+  composeStories(stories)
 
 const onReturnItemsVisibleMock = jest.fn()
+const onGoBackToOrderHistoryMock = jest.fn()
 
 const addressCardMock = () => <div data-testid="address-card-component" />
 jest.mock('@/components/common/AddressCard/AddressCard', () => () => addressCardMock())
@@ -30,7 +32,19 @@ jest.mock(
 )
 
 const setup = (isOrderStatus: boolean, title: string) => {
-  render(<Common {...Common.args} isOrderStatus={isOrderStatus} title={title} />)
+  const user = userEvent.setup()
+  render(
+    <Common
+      {...Common.args}
+      isOrderStatus={isOrderStatus}
+      title={title}
+      onGoBackToOrderHistory={onGoBackToOrderHistoryMock}
+    />
+  )
+  return {
+    user,
+    onGoBackToOrderHistoryMock,
+  }
 }
 const returnItemSetup = () => {
   const user = userEvent.setup()
@@ -65,6 +79,16 @@ describe('[component] - ViewOrderDetails', () => {
     expect(screen.getByText('payment-information')).toBeVisible()
   })
 
+  it('should call onGoBackToOrderHistory when user click on Order history icon', async () => {
+    const { user, onGoBackToOrderHistoryMock } = setup(false, 'view-order-details')
+
+    const orderHistory = screen.getByText(/order-history/i)
+    user.click(orderHistory)
+    await waitFor(() => {
+      expect(onGoBackToOrderHistoryMock).toBeCalled()
+    })
+  })
+
   it('should render component for Order status', () => {
     setup(true, 'view-order-status')
 
@@ -94,5 +118,17 @@ describe('[component] - ViewOrderDetails', () => {
     await waitFor(() => {
       expect(onReturnItemsVisibleMock).toHaveBeenCalledWith(true)
     })
+  })
+
+  it("should show 'No payment details found' when we don't have payments detail", async () => {
+    render(
+      <ViewOrderDetailsWithoutPaymentDetails
+        {...ViewOrderDetailsWithoutPaymentDetails.args}
+        isOrderStatus={false}
+        title={'view-order-status'}
+      />
+    )
+
+    expect(screen.getByText(/no-payment-details-found/i)).toBeInTheDocument()
   })
 })

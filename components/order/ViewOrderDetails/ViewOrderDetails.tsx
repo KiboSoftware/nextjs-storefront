@@ -77,6 +77,11 @@ const ViewOrderDetails = (props: ViewOrderDetailsProps) => {
     payment?.billingInfo?.billingContact?.address as InputMaybe<CrAddressInput>
   )
 
+  const purchaseOrderDetails = orderGetters?.getOrderPurchaseOrderDetails(
+    payment?.billingInfo?.purchaseOrder
+  )
+  const paymentType = payment?.payment?.paymentType ?? ''
+
   const orderSummeryArgs = {
     nameLabel: t('order-summary'),
     subTotalLabel: `${t('subtotal')} (${t('item-quantity', { count: order.items?.length })})`,
@@ -209,6 +214,9 @@ const ViewOrderDetails = (props: ViewOrderDetailsProps) => {
                   cityOrTown={address.cityOrTown}
                   postalOrZipCode={address?.postalOrZipCode}
                   stateOrProvince={address.stateOrProvince}
+                  paymentType={paymentType}
+                  purchaseOrderNumber={purchaseOrderDetails?.purchaseOrderNumber}
+                  paymentTerm={purchaseOrderDetails?.paymentTerm}
                 />
               ) : (
                 <>

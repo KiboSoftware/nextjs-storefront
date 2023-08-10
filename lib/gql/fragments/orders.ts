@@ -135,6 +135,13 @@ export const orderPaymentFragment = /* GraphQL */ `
         expireYear
         isCardInfoSaved
       }
+      purchaseOrder {
+        purchaseOrderNumber
+        paymentTerm {
+          code
+          description
+        }
+      }
     }
   }
 `

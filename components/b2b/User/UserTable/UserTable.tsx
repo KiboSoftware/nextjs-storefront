@@ -1,6 +1,8 @@
 import React, { useState } from 'react'
 
-import { Edit as EditIcon, Delete as DeleteIcon, Circle as CircleIcon } from '@mui/icons-material'
+import CircleIcon from '@mui/icons-material/Circle'
+import DeleteIcon from '@mui/icons-material/Delete'
+import EditIcon from '@mui/icons-material/Edit'
 import {
   Box,
   IconButton,

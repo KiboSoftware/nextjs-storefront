@@ -65,12 +65,12 @@ const UserFormMock = ({ onClose }: { onClose: () => void }) => (
   </div>
 )
 jest.mock(
-  '@/components/my-account/User/UserForm/UserForm',
+  '@/components/b2b/User/UserForm/UserForm',
   () => () => UserFormMock({ onClose: onCloseMock })
 )
 
 const UserTableMock = () => <div data-testid="user-table-mock"></div>
-jest.mock('../../../my-account/User/UserTable/UserTable', () => () => UserTableMock())
+jest.mock('../../../b2b/User/UserTable/UserTable', () => () => UserTableMock())
 
 jest.mock('@/components/dialogs', () => ({
   __esModule: true,

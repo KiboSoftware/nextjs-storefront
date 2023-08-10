@@ -1,23 +1,28 @@
 import React from 'react'
 
+import { Button } from '@mui/material'
 import { composeStories } from '@storybook/testing-react'
-import { screen, cleanup, waitFor, act } from '@testing-library/react'
+import { screen, cleanup, waitFor, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
-
 // eslint-disable-next-line import/order
+import getConfig from 'next/config'
+import PaymentStep from './PaymentStep'
 import * as stories from './PaymentStep.stories' // import all stories from the stories file
 const { Common } = composeStories(stories)
-
-import { orderMock, userAddressMock } from '@/__mocks__/stories'
-import { getAccountCardId, getBillingAddresses } from '@/__test__/e2e/helper'
+import { cardPaymentMock, orderMock, purchaseOrderPaymentMock } from '@/__mocks__/stories'
 import { renderWithQueryClient } from '@/__test__/utils'
 import { AuthContext } from '@/context'
-import { PaymentType } from '@/lib/constants'
-import { orderGetters } from '@/lib/getters'
-import { tokenizeCreditCardPayment } from '@/lib/helpers'
+import { useCheckoutStepContext, CheckoutStepProvider } from '@/context'
+import { cardGetters } from '@/lib/getters'
 import { Address, CardForm } from '@/lib/types'
 
-import { CrOrder } from '@/lib/gql/types'
+import {
+  CardCollection,
+  CrOrder,
+  CrPurchaseOrderPayment,
+  CustomerContactCollection,
+  CustomerPurchaseOrderAccount,
+} from '@/lib/gql/types'
 
 jest.mock('../CardDetailsForm/CardDetailsForm', () => ({
   __esModule: true,
@@ -45,10 +50,48 @@ jest.mock('../CardDetailsForm/CardDetailsForm', () => ({
             expiryDate: '01/2025',
             cvv: '123',
             cardType: 'VISA',
+            isDataUpdated: true,
           })
         }
       >
         Save Card Data
+      </button>
+    </div>
+  ),
+}))
+
+jest.mock('../PurchaseOrderForm/PurchaseOrderForm', () => ({
+  __esModule: true,
+  default: ({
+    onSavePurchaseData,
+    onFormStatusChange,
+  }: {
+    onSavePurchaseData: (data: CrPurchaseOrderPayment & { isDataUpdated: boolean }) => void
+    onFormStatusChange: (isValid: boolean) => void
+  }) => (
+    <div data-testid="purchase-order-form-mock">
+      <button
+        type="button"
+        data-testid="changePurchaseOrderFormStatus"
+        onClick={() => onFormStatusChange(true)}
+      >
+        Change Purchase Order Form Status
+      </button>
+      <button
+        type="button"
+        data-testid="savePurchaseOrderFormDataButton"
+        onClick={() =>
+          onSavePurchaseData({
+            paymentTerm: {
+              code: '30',
+              description: '30',
+            },
+            purchaseOrderNumber: '100',
+            isDataUpdated: true,
+          })
+        }
+      >
+        Save Purchase Order Form Data
       </button>
     </div>
   ),
@@ -93,6 +136,7 @@ jest.mock('../../common/AddressForm/AddressForm', () => ({
               },
             },
             isAddressValid: true,
+            isDataUpdated: true,
           })
         }
       >
@@ -102,42 +146,40 @@ jest.mock('../../common/AddressForm/AddressForm', () => ({
   ),
 }))
 
-const PaymentBillingCardMock = () => <div data-testid="payment-billing-card-mock" />
-jest.mock(
-  '@/components/common/PaymentBillingCard/PaymentBillingCard',
-  () => () => PaymentBillingCardMock()
-)
-
-// jest.mock('../../checkout/SavedPaymentMethodView/SavedPaymentMethodView', () => ({
+// jest.mock('../../common/PaymentBillingCard/PaymentBillingCard', () => ({
 //   __esModule: true,
 //   default: ({
-//     id,
-//     selected,
-//     onPaymentCardSelection,
+//     onSaveAddress,
+//     onFormStatusChange,
 //   }: {
-//     id: string
-//     selected: string
-//     onPaymentCardSelection: (id: string) => void
+//     onSaveAddress: (address: Address) => void
+//     onFormStatusChange: (isValid: boolean) => void
 //   }) => (
-//     <>
-//       <div data-testid="selectedPaymentRadio">{selected}</div>
-//       <div data-testid="saved-payment-method-view-mock"></div>
-//       <button onClick={() => onPaymentCardSelection(id)}>handlePaymentCardSelection</button>
-//     </>
+//     <div data-testid="pmock">
+
+//     </div>
 //   ),
 // }))
+
+// const PaymentBillingCardMock = () => <div data-testid="payment-billing-card-mock" />
+// jest.mock(
+//   '@/components/common/PaymentBillingCard/PaymentBillingCard',
+//   () => () => PaymentBillingCardMock()
+// )
 
 const tokenizedCardResponseData = {
   id: '7d1a8a7b9c57487da07b8c0a2e6d0e1f',
   numberPart: '************1111',
 }
 
-jest.mock('@/lib/helpers', () => ({
+jest.mock('@/lib/helpers/tokenizeCreditCardPayment', () => ({
   tokenizeCreditCardPayment: jest.fn(() => Promise.resolve(tokenizedCardResponseData)),
 }))
 
 afterEach(() => cleanup())
 
+const onAddPaymentMock = jest.fn()
+const onVoidPaymentMock = jest.fn()
 const userContextValues = (isAuthenticated: boolean, userId: number) => ({
   isAuthenticated: isAuthenticated,
   user: {
@@ -150,13 +192,51 @@ const userContextValues = (isAuthenticated: boolean, userId: number) => ({
   logout: jest.fn(),
 })
 
-const setup = (param: { checkout: CrOrder; isAuthenticated: boolean; userId: number }) => {
+const { publicRuntimeConfig } = getConfig()
+
+const TestComponent = (param: any) => {
+  const { stepStatus, setStepStatusSubmit } = useCheckoutStepContext()
+
+  const handleSubmit = () => {
+    setStepStatusSubmit()
+  }
+
+  return (
+    <>
+      <PaymentStep
+        checkout={param?.checkout || Common.args?.checkout}
+        cardCollection={param?.cardCollection || Common.args?.cardCollection}
+        addressCollection={param?.addressCollection || Common.args?.addressCollection}
+        customerPurchaseOrderAccount={
+          param?.customerPurchaseOrderAccount || Common.args?.customerPurchaseOrderAccount
+        }
+        onAddPayment={onAddPaymentMock}
+        onVoidPayment={onVoidPaymentMock}
+      />
+      <Button onClick={handleSubmit}>Review Order</Button>
+    </>
+  )
+}
+
+const setup = (param: {
+  checkout?: CrOrder
+  cardCollection?: CardCollection
+  addressCollection?: CustomerContactCollection
+  customerPurchaseOrderAccount?: CustomerPurchaseOrderAccount
+  isAuthenticated: boolean
+  userId: number
+}) => {
   const user = userEvent.setup()
   const { isAuthenticated, userId } = param
 
   renderWithQueryClient(
     <AuthContext.Provider value={userContextValues(isAuthenticated, userId)}>
-      <Common {...Common.args} checkout={param.checkout} />
+      <CheckoutStepProvider
+        steps={['details', 'shipping', 'payment', 'review']}
+        initialActiveStep={2}
+      >
+        <TestComponent {...param} />
+      </CheckoutStepProvider>
     </AuthContext.Provider>
   )
 
@@ -166,294 +246,245 @@ const setup = (param: { checkout: CrOrder; isAuthenticated: boolean; userId: num
 }
 
 describe('[components] PaymentStep', () => {
-  describe('Authenticated User', () => {
-    describe('There are no previously saved card and billing addresses to choose from', () => {
-      it('should not display previously saved card or billing address radio buttons', () => {
-        setup({
-          checkout: { ...orderMock.checkout, payments: [] },
-          isAuthenticated: true,
-          userId: 0,
-        })
+  describe('Authenticated user', () => {
+    it('should show Card and Purchase Order payment type radio', async () => {
+      setup({
+        checkout: { ...orderMock.checkout, payments: [] },
+        isAuthenticated: true,
+        userId: 1012,
+      })
 
-        const paymentTypes = screen.getByTestId('payment-types')
+      let paymentTypes: any = null
 
+      await waitFor(() => {
+        paymentTypes = screen.getByRole('radiogroup', { name: 'payment-types' })
         expect(paymentTypes).toBeVisible()
-        expect(screen.queryByTestId('card-form-mock')).not.toBeInTheDocument()
-        expect(screen.queryByTestId('address-form-mock')).not.toBeInTheDocument()
       })
 
-      it('should display forms to add new card and associated billing address', async () => {
+      await waitFor(() => {
+        const paymentTypeOptions = within(paymentTypes).getAllByRole('radio')
+        expect(paymentTypeOptions.length).toBe(publicRuntimeConfig.paymentTypes.length)
+      })
+    })
+
+    describe('Purchase Order', () => {
+      it('should select Purchase Order Radio if previously saved in checkout session', () => {
+        setup({
+          checkout: { ...orderMock.checkout, payments: [purchaseOrderPaymentMock] },
+          isAuthenticated: true,
+          userId: 1012,
+        })
+
+        expect(
+          screen.getByRole('radio', { name: publicRuntimeConfig.paymentTypes[0].name })
+        ).toBeChecked()
+        expect(
+          screen.getByText(purchaseOrderPaymentMock.billingInfo.purchaseOrder.purchaseOrderNumber)
+        ).toBeVisible()
+        expect(
+          screen.getByText(
+            purchaseOrderPaymentMock.billingInfo.purchaseOrder.paymentTerm.description
+          )
+        ).toBeVisible()
+      })
+
+      it(`shouldn't select Purchase Order if not saved before; Should add new purchase order.`, async () => {
         const { user } = setup({
           checkout: { ...orderMock.checkout, payments: [] },
           isAuthenticated: true,
-          userId: 0,
+          userId: 1012,
         })
 
-        const creditCardPaymentMethodRadio = screen.getByRole('radio', {
-          name: 'Credit / Debit Card',
+        const purchaseOrderRadio = screen.getByRole('radio', {
+          name: publicRuntimeConfig.paymentTypes[0].name,
+        })
+        expect(purchaseOrderRadio).not.toBeChecked()
+
+        await user.click(purchaseOrderRadio)
+
+        expect(screen.getByRole('button', { name: 'add-payment-method' })).toBeVisible()
+
+        await user.click(screen.getByRole('button', { name: 'add-payment-method' }))
+
+        await waitFor(() => {
+          expect(screen.getByTestId('purchase-order-form-mock')).toBeVisible()
         })
 
-        expect(screen.queryByTestId('card-form-mock')).not.toBeInTheDocument()
-        expect(screen.queryByTestId('address-form-mock')).not.toBeInTheDocument()
-
-        user.click(creditCardPaymentMethodRadio)
-
-        await waitFor(async () => {
-          expect(await screen.findByTestId('card-form-mock')).toBeVisible()
-        })
-        await waitFor(async () => {
-          expect(await screen.findByTestId('address-form-mock')).toBeVisible()
-        })
-      })
-
-      it('should add new card and billing address and that should be selected by default', async () => {
-        const { user } = setup({
-          checkout: { ...orderMock.checkout, payments: [] },
-          isAuthenticated: true,
-          userId: 0,
+        await waitFor(() => {
+          expect(screen.getByTestId('address-form-mock')).toBeVisible()
         })
 
-        await user.click(
-          screen.getByRole('radio', {
-            name: 'Credit / Debit Card',
-          })
-        )
-
-        // mocking card and address form function calls
-        await user.click(screen.getByRole('button', { name: /Change Card Form Status/ }))
+        await user.click(screen.getByTestId('changePurchaseOrderFormStatus'))
         await user.click(screen.getByRole('button', { name: /Change Address Form Status/ }))
-        await user.click(screen.getByRole('button', { name: /Save Card Data/ }))
-        await user.click(screen.getByRole('button', { name: /Save Address/ }))
 
         user.click(screen.getByRole('button', { name: /save-payment-method/ }))
 
-        await waitFor(() => {
-          expect(tokenizeCreditCardPayment).toHaveBeenCalled()
-        })
+        await user.click(screen.getByTestId('savePurchaseOrderFormDataButton'))
+        await user.click(screen.getByRole('button', { name: /Save Address/ }))
+
+        let purchaseOrderCard: any = null
 
         await waitFor(() => {
-          expect(screen.getAllByTestId('payment-billing-card-mock').length).toBe(1)
+          purchaseOrderCard = screen.queryByTestId('purchase-order-card')
+          expect(purchaseOrderCard).toBeVisible()
         })
-
-        const selectedPayment = screen.getByRole('radio', { name: tokenizedCardResponseData.id })
-
-        expect(selectedPayment).toBeChecked()
-      })
-
-      it('should close the card and address form when user clicks on Cancel button', async () => {
-        const { user } = setup({
-          checkout: { ...orderMock.checkout, payments: [] },
-          isAuthenticated: true,
-          userId: 0,
-        })
-
-        const creditCardPaymentMethodRadio = screen.getByRole('radio', {
-          name: 'Credit / Debit Card',
-        })
-
-        user.click(creditCardPaymentMethodRadio)
-
-        await waitFor(async () => {
-          expect(await screen.findByTestId('card-form-mock')).toBeVisible()
-        })
-        await waitFor(async () => {
-          expect(await screen.findByTestId('address-form-mock')).toBeVisible()
-        })
-
-        user.click(screen.getByRole('button', { name: /cancel/i }))
 
         await waitFor(() => {
-          expect(screen.queryByTestId('card-form-mock')).not.toBeInTheDocument()
+          expect(within(purchaseOrderCard).getByText('100')).toBeVisible()
         })
+
         await waitFor(() => {
-          expect(screen.queryByTestId('address-form-mock')).not.toBeInTheDocument()
+          expect(within(purchaseOrderCard).getByText('30')).toBeVisible()
         })
       })
 
-      it('should display save-payment-method and billing-address-same-as-shipping checkbox', async () => {
+      it('should submit purchase order data', async () => {
         const { user } = setup({
-          checkout: { ...orderMock.checkout, payments: [] },
+          checkout: { ...orderMock.checkout, payments: [purchaseOrderPaymentMock] },
           isAuthenticated: true,
-          userId: 0,
-        })
-
-        const cardOptions = await screen.findByRole('radio', {
-          name: 'Credit / Debit Card',
-        })
-
-        user.click(cardOptions)
-
-        await waitFor(() => {
-          const savePaymentMethodCheckbox = screen.getByRole('checkbox', {
-            name: 'save-payment-method-checkbox',
-          })
-          expect(savePaymentMethodCheckbox).toBeInTheDocument()
+          userId: 1012,
         })
 
         await waitFor(() => {
-          const BillingSameAsShippingCheckbox = screen.getByRole('checkbox', {
-            name: 'billing-address-same-as-shipping',
-          })
-          expect(BillingSameAsShippingCheckbox).toBeInTheDocument()
+          expect(screen.getByRole('button', { name: 'Review Order' })).toBeEnabled()
+        })
+
+        await user.click(screen.getByRole('button', { name: 'Review Order' }))
+
+        await waitFor(() => {
+          expect(onVoidPaymentMock).toBeCalled()
+        })
+
+        await waitFor(() => {
+          expect(onAddPaymentMock).toBeCalled()
         })
       })
     })
 
-    describe('There are previously saved card and billing address in account but not in checkout', () => {
-      it('should display card and billing address(saved in account) radio buttons with default payment option selected', async () => {
+    describe('cards', () => {
+      it('should select Credit Card Radio if previously saved in checkout session', () => {
         setup({
-          checkout: { ...orderMock.checkout, payments: [] },
+          checkout: { ...orderMock.checkout, payments: [cardPaymentMock] },
           isAuthenticated: true,
           userId: 1012,
         })
 
-        const addresses = getBillingAddresses()
-        const totalAddressCount = addresses?.length as number
+        expect(
+          screen.getByRole('radio', { name: publicRuntimeConfig.paymentTypes[1].name })
+        ).toBeChecked()
 
-        await waitFor(() => {
-          expect(screen.getAllByTestId('payment-billing-card-mock').length).toBe(totalAddressCount)
-        })
-
-        const cardId = getAccountCardId()
-
-        const selectedPayment = screen.getByRole('radio', { name: cardId })
-
-        expect(selectedPayment).toBeChecked()
-
-        // expect(screen.getByTestId('selectedPaymentRadio')).toHaveTextContent(cardId)
-        expect(screen.getByText(/primary/i)).toBeVisible()
+        expect(
+          screen.getByRole('radio', {
+            name: cardGetters.getPaymentServiceCardId(cardPaymentMock.billingInfo.card),
+          })
+        ).toBeChecked()
       })
 
-      it('should display add-payment-method button and after clicking show card and billing address', async () => {
+      it("shouldn't select card if not previously saved in session; no saved account cards; add new card.", async () => {
+        const { user } = setup({
+          checkout: { ...orderMock.checkout, payments: [] },
+          cardCollection: { items: [], totalCount: 0 },
+          isAuthenticated: true,
+          userId: 1012,
+        })
+
+        const cardRadio = screen.getByRole('radio', {
+          name: publicRuntimeConfig.paymentTypes[1].name,
+        })
+
+        expect(cardRadio).not.toBeChecked()
+
+        await user.click(cardRadio)
+
+        expect(screen.getByRole('button', { name: 'add-payment-method' })).toBeVisible()
+
+        await user.click(screen.getByRole('button', { name: 'add-payment-method' }))
+
+        await waitFor(() => {
+          expect(screen.getByTestId('card-form-mock')).toBeVisible()
+        })
+
+        await waitFor(() => {
+          expect(screen.getByTestId('address-form-mock')).toBeVisible()
+        })
+
+        await user.click(screen.getByTestId('changeCardFormStatus'))
+        await user.click(screen.getByRole('button', { name: /Change Address Form Status/ }))
+
+        user.click(screen.getByRole('button', { name: /save-payment-method/ }))
+
+        await user.click(screen.getByTestId('saveCardDataButton'))
+        await user.click(screen.getByRole('button', { name: /Save Address/ }))
+
+        let creditCard: any = null
+
+        await waitFor(() => {
+          creditCard = screen.queryByTestId('credit-card-view')
+          expect(creditCard).toBeVisible()
+        })
+      })
+
+      it('should show account saved cards on Credit Card radio select, if any', async () => {
         const { user } = setup({
           checkout: { ...orderMock.checkout, payments: [] },
           isAuthenticated: true,
           userId: 1012,
         })
 
-        const addPaymentMethodButton = await screen.findByRole('button', {
-          name: /add-payment-method/i,
+        const cardRadio = screen.getByRole('radio', {
+          name: publicRuntimeConfig.paymentTypes[1].name,
         })
 
-        expect(addPaymentMethodButton).toBeVisible()
+        expect(cardRadio).not.toBeChecked()
 
-        await user.click(addPaymentMethodButton)
+        await user.click(cardRadio)
 
-        // mocking card and address form function calls
-        await user.click(await screen.findByRole('button', { name: /Change Card Form Status/ }))
-        await user.click(await screen.findByRole('button', { name: /Change Address Form Status/ }))
-        await user.click(await screen.findByRole('button', { name: /Save Card Data/ }))
-        await user.click(await screen.findByRole('button', { name: /Save Address/ }))
-        await user.click(await screen.findByRole('button', { name: /save-payment-method/ }))
-
-        expect(tokenizeCreditCardPayment).toHaveBeenCalled()
-
-        const addresses = getBillingAddresses()
-        const totalAddressCount = addresses?.length as number
-
-        expect(screen.getAllByTestId('payment-billing-card-mock').length).toBe(
-          totalAddressCount + 1
-        )
+        expect(screen.getByTestId('credit-card-view')).toBeVisible()
       })
-    })
 
-    describe('There are previously saved card or billing address in account and checkout', () => {
-      it('should display card and billing address radio buttons(saved in account and checkout)', async () => {
-        setup({
-          checkout: { ...orderMock.checkout },
+      it('should submit card details to checkout session', async () => {
+        const { user } = setup({
+          checkout: { ...orderMock.checkout, payments: [cardPaymentMock] },
           isAuthenticated: true,
           userId: 1012,
         })
 
-        const totalAddressCount =
-          (orderMock?.checkout?.payments?.length as number) +
-          (userAddressMock?.customerAccountContacts?.items?.filter(
-            (item) =>
-              item?.accountId === 1012 && item?.types?.find((type) => type?.name === 'Billing')
-          ).length as number) // should be 2
+        expect(
+          screen.queryByRole('radio', {
+            name: cardGetters.getPaymentServiceCardId(cardPaymentMock.billingInfo.card),
+          })
+        ).toBeChecked()
+
+        const cvvTextbox = screen.getAllByLabelText(/security-code/i)
+        expect(cvvTextbox[1]).toBeVisible()
+        await user.type(cvvTextbox[1] as Element, '123')
+
+        expect(screen.getByRole('button', { name: 'Review Order' })).toBeEnabled()
+        await user.click(screen.getByRole('button', { name: 'Review Order' }))
 
         await waitFor(() => {
-          expect(screen.getAllByTestId('payment-billing-card-mock').length).toBe(totalAddressCount)
-        })
-      })
-
-      it('should select card and billing address present in checkout by default', async () => {
-        setup({
-          checkout: { ...orderMock.checkout },
-          isAuthenticated: true,
-          userId: 1012,
-        })
-
-        const checkoutPayments = orderGetters.getSelectedPaymentMethods(
-          orderMock.checkout,
-          PaymentType.CREDITCARD
-        )
-
-        const cardId = checkoutPayments?.billingInfo?.card?.paymentServiceCardId as string
-
-        const selectedPayment = screen.getByRole('radio', { name: cardId })
-
-        expect(selectedPayment).toBeChecked()
-      })
-
-      it(`should click a radio option and select the corresponding card and billing details`, async () => {
-        const { user } = setup({
-          checkout: { ...orderMock.checkout },
-          isAuthenticated: true,
-          userId: 1012,
-        })
-
-        const paymentCardSelectionButtons = await screen.findAllByRole('radio', {
-          name: /kibo-radio/,
-        })
-
-        user.click(paymentCardSelectionButtons[0])
-
-        await waitFor(async () => {
-          const selectedIds = await screen.findAllByTestId('selectedPaymentRadio')
-          const cardId = getAccountCardId()
-          expect(selectedIds[0]?.textContent).toBe(cardId)
+          expect(onAddPaymentMock).toBeCalled()
         })
       })
     })
   })
 
-  describe('Anonymous User', () => {
-    it('should not display previously saved card or billing address radio buttons', () => {
+  describe('Guest User', () => {
+    it('should show Card payment type radio, not purchase order', () => {
       setup({
         checkout: { ...orderMock.checkout, payments: [] },
         isAuthenticated: false,
         userId: 0,
+        customerPurchaseOrderAccount: undefined,
       })
 
-      const paymentTypes = screen.getByTestId('payment-types')
+      const paymentTypes = screen.getByRole('radiogroup', { name: 'payment-types' })
 
       expect(paymentTypes).toBeVisible()
-      expect(screen.queryByTestId('card-form-mock')).not.toBeInTheDocument()
-      expect(screen.queryByTestId('address-form-mock')).not.toBeInTheDocument()
-    })
 
-    it.only('should select card and billing address is present in checkout by default', async () => {
-      setup({
-        checkout: { ...orderMock.checkout },
-        isAuthenticated: false,
-        userId: 0,
-      })
+      const paymentTypeOptions = within(paymentTypes).getAllByRole('radio')
 
-      const checkoutPayments = orderGetters.getSelectedPaymentMethods(
-        orderMock.checkout,
-        PaymentType.CREDITCARD
-      )
-
-      const cardId = checkoutPayments?.billingInfo?.card?.paymentServiceCardId as string
-
-      // const selectedIds = await screen.findAllByTestId('selectedPaymentRadio')
-
-      // expect(selectedIds[0]?.textContent).toBe(cardId)
-
-      const selectedPayment = screen.getByRole('radio', { name: cardId })
-
-      expect(selectedPayment).toBeChecked()
+      expect(paymentTypeOptions.length).toBe(1)
     })
   })
 })

@@ -20,7 +20,7 @@ const UserFormMock = ({ onClose }: { onClose: () => void }) => (
 )
 
 jest.mock(
-  '@/components/my-account/User/UserForm/UserForm',
+  '@/components/b2b/User/UserForm/UserForm',
   () => () => UserFormMock({ onClose: onCloseMock })
 )
 

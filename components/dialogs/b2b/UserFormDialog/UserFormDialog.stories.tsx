@@ -9,7 +9,7 @@ import { userGetters } from '@/lib/getters'
 import { B2BUser } from '@/lib/gql/types'
 
 export default {
-  title: 'Dialogs/UserFormDialog/Dialog',
+  title: 'Dialogs/B2B/UserFormDialog',
   component: UserFormDialog,
   argTypes: {
     onClose: { action: 'onClose' },

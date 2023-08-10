@@ -401,6 +401,16 @@
   "line-item": "Line Item",
   "list-items": "List Items",
   "delete-list-message": "Are you sure you want to delete this list?",
+  "add-child-account": "Add Child Account",
+  "parent-account": "Parent account",
+  "company-name": "Company name",
+  "tax-id": "Tax ID",
+  "optional": "Optional",
+  "create-account": "Create Account",
+  "select-parent-account": "Select parent account",
+  "expand-all": "Expand All",
+  "collapse-all": "Collapse All",
+  "buyers": "Buyers",
   "quote-number": "Quote Number",
   "quote-name": "Quote Name",
   "expires-on": "Expires on",
@@ -425,5 +435,12 @@
   "updated-by": "Updated by",
   "field-change": "Field change",
   "changed-from": "Changed From",
-  "changed-to": "Changed To"
+  "changed-to": "Changed To",
+
+  "po-number": "PO Number",
+  "credit-limit": "Credit Limit",
+  "available-balance": "Available Balance",
+  "payment-terms": "Payment Terms",
+  "po-external-id": "PO External ID",
+  "select-payment-term": "Select a Payment Term"
 }

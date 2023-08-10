@@ -30,9 +30,9 @@ describe('[component] User Form', () => {
   it('should show values entered by user', async () => {
     render(<Common {...Common.args} onSave={onSave} onClose={onClose} />)
 
-    const emaiAddressField = screen.getByLabelText('email-address') as HTMLInputElement
-    const firstNameField = screen.getByLabelText('first-name') as HTMLInputElement
-    const lastNameField = screen.getByLabelText('last-name-or-sur-name') as HTMLInputElement
+    const emaiAddressField: HTMLInputElement = screen.getByLabelText('email-address')
+    const firstNameField: HTMLInputElement = screen.getByLabelText('first-name')
+    const lastNameField: HTMLInputElement = screen.getByLabelText('last-name-or-sur-name')
     const submitButton = await screen.findByTestId('submit-button')
 
     userEvent.type(emaiAddressField, 'aman.shukla@gmail.com')
@@ -51,9 +51,9 @@ describe('[component] User Form', () => {
 
     const b2BUser = WithProps.args?.b2BUser
 
-    const emaiAddressField = screen.getByLabelText('email-address') as HTMLInputElement
-    const firstNameField = screen.getByLabelText('first-name') as HTMLInputElement
-    const lastNameField = screen.getByLabelText('last-name-or-sur-name') as HTMLInputElement
+    const emaiAddressField: HTMLInputElement = screen.getByLabelText('email-address')
+    const firstNameField: HTMLInputElement = screen.getByLabelText('first-name')
+    const lastNameField: HTMLInputElement = screen.getByLabelText('last-name-or-sur-name')
 
     await waitFor(() => expect(emaiAddressField.value).toBe(b2BUser?.emailAddress))
     await waitFor(() => expect(firstNameField.value).toBe(b2BUser?.firstName))

@@ -27,7 +27,7 @@ const PaymentCard = (props: PaymentCardProps) => {
           {title}
         </Typography>
       )}
-      <Box display="flex" pt={1} gap={2}>
+      <Box display="flex" pt={1} gap={2} data-testid="credit-card-view">
         <Box minWidth={45}>
           {cardTypeMemoized && (
             <KiboImage src={cardTypeMemoized} alt={cardType as string} width={45} height={35} />

@@ -207,6 +207,13 @@ export const checkoutPaymentFragment = /* GraphQL */ `
         ...billingContactFragment
       }
       isSameBillingShippingAddress
+      purchaseOrder {
+        purchaseOrderNumber
+        paymentTerm {
+          description
+          code
+        }
+      }
       card {
         paymentServiceCardId
         isTokenized
@@ -214,6 +221,7 @@ export const checkoutPaymentFragment = /* GraphQL */ `
         cardNumberPartOrMask
         expireMonth
         expireYear
+        isCardInfoSaved
       }
     }
   }

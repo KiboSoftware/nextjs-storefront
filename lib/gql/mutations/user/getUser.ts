@@ -8,6 +8,8 @@ export const getCurrentUser = /* GraphQL */ `
       emailAddress
       userName
       isAnonymous
+      companyOrOrganization
+      accountType
     }
   }
 `
