@@ -7,6 +7,9 @@ import mediaQuery from 'css-mediaquery'
 import mockRouter from 'next-router-mock'
 
 import * as stories from './ListsTemplate.stories'
+import { EditListProps } from '@/components/my-account/Lists/EditList/EditList'
+import { ViewListsProps } from '@/components/my-account/Lists/ViewLists/ViewLists'
+
 const { Common } = composeStories(stories)
 
 const createMatchMedia = (width: number) => (query: string) => ({
@@ -26,16 +29,29 @@ const setup = () => {
   return { user }
 }
 
-const handleEditFormToggle = jest.fn()
-
-const ListTableMock = ({ onEditFormToggle }: { onEditFormToggle: () => void }) => (
+const ListTableMock = ({ onEditFormToggle }: { onEditFormToggle: (param: boolean) => void }) => (
   <div data-testid="view-lists-mock">
-    <button data-testid="toggle-edit-form" onClick={onEditFormToggle}></button>
+    <button data-testid="toggle-edit-form" onClick={() => onEditFormToggle(true)}></button>
   </div>
 )
+
+const EditListMock = ({ onEditFormToggle, listData, onUpdateListData }: EditListProps) => (
+  <div data-testid="edit-list-mock">
+    <button data-testid="toggle-edit-form" onClick={() => onEditFormToggle(true)}></button>
+  </div>
+)
+
 jest.mock(
   '@/components/my-account/Lists/ViewLists/ViewLists',
-  () => () => ListTableMock({ onEditFormToggle: handleEditFormToggle })
+  () =>
+    ({ onEditFormToggle, isEditFormOpen }: ViewListsProps) =>
+      isEditFormOpen
+        ? EditListMock({
+            onEditFormToggle: onEditFormToggle,
+            listData: {},
+            onUpdateListData: () => console.log('updateList'),
+          })
+        : ListTableMock({ onEditFormToggle: onEditFormToggle })
 )
 
 describe('[component] - ListsTemplate', () => {
@@ -75,14 +91,16 @@ describe('[component] - ListsTemplate', () => {
     })
   })
 
-  it('should toggle edit list form', async () => {
+  it.only('should toggle edit list form', async () => {
     window.matchMedia = createMatchMedia(1024)
     const { user } = setup()
     const viewLists = screen.getByTestId('view-lists-mock')
     const editToggleBtn = within(viewLists).getByTestId('toggle-edit-form')
+
     user.click(editToggleBtn)
+
     await waitFor(() => {
-      expect(handleEditFormToggle).toBeCalledTimes(1)
+      expect(screen.getByTestId('edit-list-mock')).toBeVisible()
     })
   })
 

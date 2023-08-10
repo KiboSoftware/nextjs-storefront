@@ -8,7 +8,7 @@ import { orderGetters } from '@/lib/getters'
 
 import type { CrOrder } from '@/lib/gql/types'
 
-const { Common, WithMultiShippingAddresses } = composeStories(stories)
+const { Common, WithMultiShippingAddresses, OrderReviewWithPurchaseOrder } = composeStories(stories)
 
 const AddressDetailsViewMock = () => <div data-testid="address-card-mock" />
 jest.mock('@/components/common/AddressCard/AddressCard', () => () => AddressDetailsViewMock())
@@ -75,5 +75,21 @@ describe('[components] OrderReview', () => {
     expect(cardType).toBeVisible()
     expect(cardNumberPartOrMask).toBeVisible()
     expect(expiry).toBeVisible()
+  })
+
+  it('should render purchase order number and payment term', () => {
+    render(<OrderReviewWithPurchaseOrder {...OrderReviewWithPurchaseOrder.args} />)
+    const checkout = OrderReviewWithPurchaseOrder.args?.checkout as CrOrder
+    const { purchaseOrderPaymentMethods } = orderGetters.getCheckoutDetails(checkout)
+
+    const purchaseOrderNumber = screen.getByText(/po-number/i)
+    const paymentTerms = screen.getByText(/payment-terms/i)
+
+    expect(purchaseOrderNumber).toBeInTheDocument()
+    expect(paymentTerms).toBeInTheDocument()
+    expect(
+      screen.getByText(purchaseOrderPaymentMethods?.[0].purchaseOrderNumber)
+    ).toBeInTheDocument()
+    expect(screen.getByText(purchaseOrderPaymentMethods?.[0].paymentTerms)).toBeInTheDocument()
   })
 })

@@ -1,3 +1,4 @@
+import { PaymentType } from '../constants'
 import { orderGetters, cardGetters } from '@/lib/getters'
 import type { CardTypeForCheckout, TokenizedCard } from '@/lib/types'
 
@@ -18,7 +19,7 @@ export const buildCardPaymentActionForCheckoutParams = (
   isBillingAddressAsShipping: boolean
 ): PaymentActionInput => {
   const billingInfo: CrBillingInfo = {
-    billingContact: { ...billingAddress, email: billingAddress.email || checkout?.email },
+    billingContact: { ...billingAddress, email: billingAddress?.email ?? checkout?.email },
     card: {
       isCardInfoSaved: creditCardData.isCardInfoSaved || false,
       paymentOrCardType: creditCardData.cardType,
@@ -36,7 +37,7 @@ export const buildCardPaymentActionForCheckoutParams = (
     amount: orderGetters.getTotal(checkout),
     newBillingInfo: {
       ...billingInfo,
-      paymentType: creditCardData.paymentType,
+      paymentType: PaymentType.CREDITCARD,
       paymentWorkflow: creditCardData.paymentWorkflow,
       isSameBillingShippingAddress: isBillingAddressAsShipping,
     },

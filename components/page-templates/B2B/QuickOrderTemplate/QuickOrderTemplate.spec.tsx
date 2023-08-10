@@ -5,6 +5,7 @@ import { composeStories } from '@storybook/testing-react'
 import { screen, waitFor, cleanup } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { graphql } from 'msw'
+import mockRouter from 'next-router-mock'
 
 import * as stories from './QuickOrderTemplate.stories'
 import { server } from '@/__mocks__/msw/server'
@@ -250,6 +251,22 @@ describe('[components] QuickOrderTemplate', () => {
 
       await waitFor(() => {
         expect(screen.queryAllByTestId('applied-coupon')).toHaveLength(couponCount - 1)
+      })
+    })
+
+    it('should redirect to checkout page when users click on checkout button', async () => {
+      renderWithQueryClient(<Common {...Common.args} />)
+
+      const checkout = screen.getByText(/checkout/i)
+
+      user.click(checkout)
+
+      await waitFor(() => {
+        expect(mockRouter).toMatchObject({
+          asPath: '/checkout/137a94b6402be000013718d80000678b',
+          pathname: '/checkout/137a94b6402be000013718d80000678b',
+          query: {},
+        })
       })
     })
   })

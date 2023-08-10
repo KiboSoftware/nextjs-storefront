@@ -14,6 +14,7 @@ export enum PaymentWorkflow {
 }
 
 export enum PaymentType {
+  PURCHASEORDER = 'PurchaseOrder',
   CREDITCARD = 'CreditCard',
 }
 
@@ -161,4 +162,11 @@ export enum ProductAvailabilityStatus {
   PREORDER = 'Preorder',
   BACKORDER = 'Backorder',
   OUTOFSTOCK = 'Out of Stock',
+}
+
+export const B2BRoles = {
+  ADMIN: 'administrators',
+  PURCHASER: 'purchaser',
+  NON_PURCHASER: 'non-purchasers',
+  BUYER: 'buyer',
 }

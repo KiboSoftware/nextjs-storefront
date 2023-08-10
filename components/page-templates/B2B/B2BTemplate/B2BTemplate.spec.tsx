@@ -132,9 +132,39 @@ describe('[component] - MyAccountTemplate', () => {
     })
   })
 
-  it('should redirect to lists page when users click on Lists link', async () => {
+  it('should redirect to account hierarchy page when users click on Account Hierarchy link', async () => {
     const { user } = setup()
 
+    const users = screen.getByText(/account-hierarchy/i)
+
+    user.click(users)
+
+    await waitFor(() => {
+      expect(mockRouter).toMatchObject({
+        asPath: '/my-account/b2b/account-hierarchy',
+        pathname: '/my-account/b2b/account-hierarchy',
+      })
+    })
+  })
+
+  it('should redirect to quick order page when users click on Users link', async () => {
+    const { user } = setup()
+
+    const quickOrder = screen.getByText(/quick-order/i)
+
+    user.click(quickOrder)
+
+    await waitFor(() => {
+      expect(mockRouter).toMatchObject({
+        asPath: '/my-account/b2b/quick-order',
+        pathname: '/my-account/b2b/quick-order',
+        query: {},
+      })
+    })
+  })
+
+  it('should redirect to lists page when users click on Lists link', async () => {
+    const { user } = setup()
     const users = screen.getByText(/Lists/i)
 
     user.click(users)
@@ -143,7 +173,6 @@ describe('[component] - MyAccountTemplate', () => {
       expect(mockRouter).toMatchObject({
         asPath: '/my-account/b2b/lists',
         pathname: '/my-account/b2b/lists',
-        query: {},
       })
     })
   })

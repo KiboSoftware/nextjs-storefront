@@ -63,6 +63,10 @@ module.exports = {
     sizeAttributeFQN: 'Tenant~Size',
     paymentTypes: [
       {
+        id: 'PurchaseOrder',
+        name: 'Purchase Order',
+      },
+      {
         id: 'CreditCard',
         name: 'Credit / Debit Card',
       },

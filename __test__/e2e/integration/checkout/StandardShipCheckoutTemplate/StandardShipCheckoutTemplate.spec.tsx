@@ -263,7 +263,7 @@ const handlePaymentStep = async (user: any) => {
   expect(paymentHeader).toBeVisible()
 
   const addresses = getBillingAddresses()
-  const checkoutPayments = orderGetters.getSelectedPaymentMethods(
+  const checkoutPayments = orderGetters.getSelectedPaymentType(
     orderMock.checkout,
     PaymentType.CREDITCARD
   )

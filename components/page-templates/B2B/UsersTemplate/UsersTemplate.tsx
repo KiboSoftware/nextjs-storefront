@@ -24,9 +24,9 @@ import Link from 'next/link'
 import { useTranslation } from 'next-i18next'
 
 import { UsersTemplateStyle } from './UsersTemplate.styles'
+import { UserTable, UserForm } from '@/components/b2b'
 import { SearchBar } from '@/components/common'
 import { ConfirmationDialog, UserFormDialog } from '@/components/dialogs'
-import { UserTable, UserForm } from '@/components/my-account'
 import { useAuthContext, useModalContext } from '@/context'
 import {
   useAddRoleToCustomerB2bAccountMutation,

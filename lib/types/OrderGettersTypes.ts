@@ -40,4 +40,5 @@ export interface CheckoutDetails {
   shippingDetails: ShippingDetails
   billingDetails: BillingDetails
   paymentMethods: PaymentMethod[]
+  purchaseOrderPaymentMethods?: any[]
 }

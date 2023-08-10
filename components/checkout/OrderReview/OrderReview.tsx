@@ -15,7 +15,7 @@ import {
 } from '@mui/material'
 import { useTranslation } from 'next-i18next'
 
-import { AddressCard, KiboImage, PromoCodeBadge } from '@/components/common'
+import { AddressCard, KeyValueDisplay, KiboImage, PromoCodeBadge } from '@/components/common'
 import { useCheckoutStepContext } from '@/context'
 import { checkoutGetters, orderGetters } from '@/lib/getters'
 import { getCreditCardLogo } from '@/lib/helpers'
@@ -105,8 +105,13 @@ const OrderReview = (props: OrderReviewProps) => {
   const { steps, setActiveStep } = useCheckoutStepContext()
   const { t } = useTranslation('common')
 
-  const { personalDetails, shippingDetails, billingDetails, paymentMethods } =
-    orderGetters.getCheckoutDetails(checkout as CrOrder) // TODO: change orderGetters type and remove checkoutGetters.getCheckoutDetails
+  const {
+    personalDetails,
+    shippingDetails,
+    billingDetails,
+    paymentMethods,
+    purchaseOrderPaymentMethods,
+  } = orderGetters.getCheckoutDetails(checkout as CrOrder) // TODO: change orderGetters type and remove checkoutGetters.getCheckoutDetails
 
   const { email: userName } = personalDetails
   const { shippingPhoneHome, shippingAddress } = shippingDetails
@@ -259,6 +264,24 @@ const OrderReview = (props: OrderReviewProps) => {
                   </Stack>
                 </Box>
               </Box>
+            ))}
+            {purchaseOrderPaymentMethods?.map((paymentMethod: any) => (
+              <Stack key={`${paymentMethod?.paymentTerms}`}>
+                <KeyValueDisplay
+                  option={{
+                    name: t('po-number'),
+                    value: paymentMethod?.purchaseOrderNumber,
+                  }}
+                  variant="body1"
+                />
+                <KeyValueDisplay
+                  option={{
+                    name: t('payment-terms'),
+                    value: paymentMethod?.paymentTerms,
+                  }}
+                  variant="body1"
+                />
+              </Stack>
             ))}
           </OrderInfoHeader>
 

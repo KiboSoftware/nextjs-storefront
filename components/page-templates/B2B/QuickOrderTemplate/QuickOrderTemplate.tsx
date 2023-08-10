@@ -1,7 +1,9 @@
 import React, { useState } from 'react'
 
 import ArrowBackIos from '@mui/icons-material/ArrowBackIos'
-import { Stack, Typography, Box, Button, Grid, useMediaQuery, Theme } from '@mui/material'
+import { LoadingButton } from '@mui/lab'
+import { Stack, Typography, Box, Grid, useMediaQuery, Theme } from '@mui/material'
+import { useRouter } from 'next/router'
 import { useTranslation } from 'next-i18next'
 
 import { quickOrderTemplateStyles } from './QuickOrderTemplate.style'
@@ -17,6 +19,8 @@ import {
   useUpdateCartCoupon,
   useDeleteCartCoupon,
   useDeleteCartItem,
+  useInitiateOrder,
+  useInitiateCheckout,
 } from '@/hooks'
 import { FulfillmentOptions as FulfillmentOptionsConstant } from '@/lib/constants'
 import { cartGetters, orderGetters, productGetters } from '@/lib/getters'
@@ -25,11 +29,13 @@ import { CrCart, CrCartItem, Location } from '@/lib/gql/types'
 
 export interface QuickOrderTemplateProps {
   cart: CrCart
+  isMultiShipEnabled: boolean
   onAccountTitleClick: () => void
 }
 
 const QuickOrderTemplate = (props: QuickOrderTemplateProps) => {
-  const { cart: cartData, onAccountTitleClick } = props
+  const { cart: cartData, onAccountTitleClick, isMultiShipEnabled = false } = props
+  const [showLoadingButton, setShowLoadingButton] = useState<boolean>(false)
   const { t } = useTranslation('common')
   const mdScreen = useMediaQuery((theme: Theme) => theme.breakpoints.up('md'))
 
@@ -37,16 +43,21 @@ const QuickOrderTemplate = (props: QuickOrderTemplateProps) => {
   const { data: cart } = useGetCart(cartData)
   const cartItems = cartGetters.getCartItems(cart)
   const cartTotal = orderGetters.getTotal(cart)
+  const router = useRouter()
 
   const locationCodes = orderGetters.getFulfillmentLocationCodes(cartItems as CrCartItem[])
   const { data: locations } = useGetStoreLocations({ filter: locationCodes })
   const fulfillmentLocations = locations && Object.keys(locations).length ? locations : []
+  const cartItemCount = cartGetters.getCartItemCount(cart)
 
   const { deleteCartItem } = useDeleteCartItem()
   const { updateCartCoupon } = useUpdateCartCoupon()
   const { deleteCartCoupon } = useDeleteCartCoupon()
 
   const { data: purchaseLocation } = useGetPurchaseLocation()
+
+  const { initiateOrder } = useInitiateOrder()
+  const { initiateCheckout } = useInitiateCheckout()
   const { openProductQuickViewModal, handleAddToCart } = useProductCardActions()
   const { onFulfillmentOptionChange, handleQuantityUpdate, handleProductPickupLocation } =
     useCartActions({
@@ -107,6 +118,22 @@ const QuickOrderTemplate = (props: QuickOrderTemplateProps) => {
     await deleteCartItem.mutateAsync({ cartItemId })
   }
 
+  const handleGotoCheckout = async () => {
+    setShowLoadingButton(true)
+    try {
+      const initiateOrderResponse = isMultiShipEnabled
+        ? await initiateCheckout.mutateAsync(cart?.id)
+        : await initiateOrder.mutateAsync(cart?.id)
+
+      if (initiateOrderResponse?.id) {
+        router.push(`/checkout/${initiateOrderResponse.id}`)
+      }
+    } catch (err) {
+      console.error(err)
+      setShowLoadingButton(false)
+    }
+  }
+
   return (
     <>
       <Grid container spacing={3}>
@@ -135,12 +162,24 @@ const QuickOrderTemplate = (props: QuickOrderTemplateProps) => {
         <Grid item sm={6} display={'flex'} justifyContent={'flex-end'}>
           {mdScreen ? (
             <Stack direction="row" gap={2}>
-              <Button variant="contained" color="secondary">
-                {t('initiate-quote')}
-              </Button>
-              <Button variant="contained" color="primary">
-                {t('checkout')}
-              </Button>
+              <Stack direction="column" gap={2}>
+                <LoadingButton variant="contained" color="secondary">
+                  {t('initiate-quote')}
+                </LoadingButton>
+              </Stack>
+              <Stack direction="column" gap={2}>
+                <LoadingButton
+                  variant="contained"
+                  color="primary"
+                  name="goToCart"
+                  fullWidth
+                  onClick={handleGotoCheckout}
+                  loading={showLoadingButton}
+                  disabled={!cartItemCount || showLoadingButton}
+                >
+                  {t('checkout')}
+                </LoadingButton>
+              </Stack>
             </Stack>
           ) : null}
         </Grid>
@@ -183,12 +222,12 @@ const QuickOrderTemplate = (props: QuickOrderTemplateProps) => {
 
             {!mdScreen && cartItems.length ? (
               <Stack spacing={2}>
-                <Button variant="contained" color="primary">
+                <LoadingButton variant="contained" color="primary" onClick={handleGotoCheckout}>
                   {t('checkout')}
-                </Button>
-                <Button variant="contained" color="secondary">
+                </LoadingButton>
+                <LoadingButton variant="contained" color="secondary">
                   {t('initiate-quote')}
-                </Button>
+                </LoadingButton>
               </Stack>
             ) : null}
           </Stack>

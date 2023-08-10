@@ -174,7 +174,7 @@ const WishlistItem = (props: any) => {
           </Box>
           <Typography data-testid="productCode">
             <strong>{t('product-code')}: </strong>
-            {item?.product?.productCode}
+            {product?.productCode}
           </Typography>
           {mdScreen ? (
             <>

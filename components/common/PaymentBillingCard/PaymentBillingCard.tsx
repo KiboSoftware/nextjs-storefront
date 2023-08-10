@@ -1,19 +1,26 @@
 import { Box } from '@mui/material'
+import { useTranslation } from 'next-i18next'
 
-import { AddressCard, PaymentCard } from '@/components/common'
+import { AddressCard, KeyValueDisplay, PaymentCard } from '@/components/common'
+import { PaymentType } from '@/lib/constants'
+
+import { CrPurchaseOrderPaymentTerm } from '@/lib/gql/types'
 
 interface PaymentBillingCardProps {
-  cardNumberPart: string
-  expireMonth: number
-  expireYear: number
+  cardNumberPart?: string
+  expireMonth?: number
+  expireYear?: number
   cardType?: string
-  address1: string
+  address1?: string
   address2?: string
-  cityOrTown: string
-  postalOrZipCode: string
-  stateOrProvince: string
+  cityOrTown?: string
+  postalOrZipCode?: string
+  stateOrProvince?: string
   firstName?: string
   lastNameOrSurname?: string
+  purchaseOrderNumber?: string
+  paymentTerm?: CrPurchaseOrderPaymentTerm
+  paymentType?: string
 }
 
 const PaymentBillingCard = (props: PaymentBillingCardProps) => {
@@ -29,7 +36,11 @@ const PaymentBillingCard = (props: PaymentBillingCardProps) => {
     stateOrProvince,
     firstName,
     lastNameOrSurname,
+    purchaseOrderNumber,
+    paymentTerm,
+    paymentType,
   } = props
+  const { t } = useTranslation('common')
 
   return (
     <Box
@@ -41,13 +52,34 @@ const PaymentBillingCard = (props: PaymentBillingCardProps) => {
         gap: 1,
       }}
     >
-      <PaymentCard
-        cardNumberPart={cardNumberPart}
-        expireMonth={expireMonth}
-        expireYear={expireYear}
-        cardType={cardType}
-        // onPaymentCardSelection={() => null}
-      />
+      {paymentType === PaymentType.CREDITCARD && (
+        <PaymentCard
+          cardNumberPart={cardNumberPart as string}
+          expireMonth={expireMonth as number}
+          expireYear={expireYear as number}
+          cardType={cardType}
+          // onPaymentCardSelection={() => null}
+        />
+      )}
+
+      {paymentType === PaymentType.PURCHASEORDER && (
+        <Box data-testid="purchase-order-card">
+          <KeyValueDisplay
+            option={{
+              name: t('po-number'),
+              value: purchaseOrderNumber,
+            }}
+            variant="body1"
+          />
+          <KeyValueDisplay
+            option={{
+              name: t('payment-terms'),
+              value: paymentTerm?.description,
+            }}
+            variant="body1"
+          />
+        </Box>
+      )}
 
       <AddressCard
         firstName={firstName}

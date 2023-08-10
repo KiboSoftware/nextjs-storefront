@@ -11,6 +11,7 @@ import { server } from '@/__mocks__/msw/server'
 import { wishlistMock } from '@/__mocks__/stories'
 import { renderWithQueryClient } from '@/__test__/utils'
 import { KiboDialogProps } from '@/components/common/KiboDialog/KiboDialog'
+import { EditListProps } from '@/components/my-account/Lists/EditList/EditList'
 
 const { Common } = composeStories(stories)
 
@@ -25,10 +26,6 @@ const createMatchMedia = (width: number) => (query: string) => ({
   dispatchEvent: jest.fn(),
 })
 
-const onDeleteListMock = jest.fn(),
-  onEditListMock = jest.fn(),
-  onCopyListMock = jest.fn()
-
 const copiedList = {
   customerAccountId: 1143,
   name: 'Wishlist 3 - copy',
@@ -39,6 +36,8 @@ const copiedList = {
   },
   items: [],
 }
+
+const onEditFormToggleMock = jest.fn()
 
 jest.mock('@/components/common/KiboDialog/KiboDialog', () => ({
   __esModule: true,
@@ -66,7 +65,7 @@ jest.mock('@/components/my-account/Lists/ListTable/ListTable', () => ({
           {row.name}
         </div>
       ))}
-      <button data-testid="edit-list-btn" onClick={onEditListMock}>
+      <button data-testid="edit-list-btn" onClick={onEditList}>
         Edit
       </button>
       <button
@@ -85,9 +84,16 @@ jest.mock('@/components/my-account/Lists/ListTable/ListTable', () => ({
   ),
 }))
 
+jest.mock('@/components/my-account/Lists/EditList/EditList', () => ({
+  __esModule: true,
+  default: ({ onEditFormToggle, listData, onUpdateListData }: EditListProps) => {
+    return <div data-testid="edit-list"></div>
+  },
+}))
+
 const setup = () => {
   const user = userEvent.setup()
-  renderWithQueryClient(<Common />)
+  renderWithQueryClient(<Common onEditFormToggle={onEditFormToggleMock} />)
   return { user }
 }
 
@@ -114,9 +120,11 @@ describe('[componenet] - ViewLists', () => {
     const { user } = setup()
     const listTable = await screen.findByTestId('list-table-mock')
     const editBtn = within(listTable).getByTestId('edit-list-btn')
+
     user.click(editBtn)
+
     await waitFor(() => {
-      expect(onEditListMock).toBeCalledTimes(1)
+      expect(onEditFormToggleMock).toBeCalled()
     })
   })
 
@@ -125,7 +133,9 @@ describe('[componenet] - ViewLists', () => {
     const { user } = setup()
     const listTable = await screen.findByTestId('list-table-mock')
     const copyBtn = within(listTable).getByTestId('copy-list-btn')
+
     user.click(copyBtn)
+
     server.use(
       graphql.query('createWishlist', (_req, res, ctx) => {
         return res.once(

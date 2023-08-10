@@ -59,6 +59,12 @@ export const customerAccountCardsKeys = {
   cardById: (accountId: number) => [...customerAccountCardsKeys.all, accountId] as const,
 }
 
+export const customerPurchaseOrderAccountKeys = {
+  all: ['customerPurchaseOrderAccount'] as const,
+  purchaseOrderAccountById: (accountId: number) =>
+    [...customerPurchaseOrderAccountKeys.all, accountId] as const,
+}
+
 export const customerAccountContactsKeys = {
   all: ['customerAccountContacts'] as const,
   addressById: (accountId: number) => [...customerAccountContactsKeys.all, accountId] as const,

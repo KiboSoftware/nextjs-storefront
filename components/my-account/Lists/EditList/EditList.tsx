@@ -20,7 +20,7 @@ import { useGetWishlist, useUpdateWishlistMutation } from '@/hooks'
 
 import { CrWishlist, CrWishlistInput, CrWishlistItem, Product } from '@/lib/gql/types'
 
-export interface EditWishlistProps {
+export interface EditListProps {
   onEditFormToggle: (param: boolean) => void
   listData: CrWishlist | undefined
   onUpdateListData: (param: CrWishlist) => void
@@ -34,7 +34,7 @@ interface EditListState {
   openNameForm: boolean
 }
 
-const EditList = (props: EditWishlistProps) => {
+const EditList = (props: EditListProps) => {
   const { onEditFormToggle, listData, onUpdateListData } = props
 
   const [editListState, setEditListState] = useState<EditListState>({

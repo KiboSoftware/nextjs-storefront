@@ -108,6 +108,23 @@ const getPaymentMethods = (order: CrOrder) => {
     }) as PaymentMethod[]
 }
 
+const getPurchaseOrderPaymentMethods = (order: CrOrder) => {
+  const payments: CrPayment[] =
+    (order?.payments?.filter(
+      (payment) => payment?.status?.toLowerCase() === 'new'
+    ) as CrPayment[]) || []
+  if (!payments) return []
+
+  return payments
+    .filter((p: CrPayment) => p?.billingInfo?.purchaseOrder)
+    .map((item: CrPayment) => {
+      return {
+        purchaseOrderNumber: item?.billingInfo?.purchaseOrder?.purchaseOrderNumber,
+        paymentTerms: item?.billingInfo?.purchaseOrder?.paymentTerm?.code,
+      }
+    })
+}
+
 const getPersonalDetails = (order: CrOrder): CrContact => {
   return {
     email: getEmail(order),
@@ -128,7 +145,7 @@ const getShippingDetails = (order: CrOrder): ShippingDetails => {
 }
 
 const getBillingDetails = (order: CrOrder): BillingDetails => {
-  const activePayment = getSelectedPaymentMethods(order, PaymentType.CREDITCARD)
+  const activePayment = getSelectedPaymentType(order, PaymentType.CREDITCARD)
   const contact =
     order?.billingInfo?.billingContact || (activePayment?.billingInfo?.billingContact as CrContact)
   return {
@@ -158,13 +175,18 @@ const getCheckoutDetails = (order: CrOrder): CheckoutDetails => {
     shippingDetails: getShippingDetails(order),
     billingDetails: getBillingDetails(order),
     paymentMethods: getPaymentMethods(order),
+    purchaseOrderPaymentMethods: getPurchaseOrderPaymentMethods(order),
   }
 }
 
-const getSelectedPaymentMethods = (order?: CrOrder | Checkout, paymentType?: string) => {
-  return order?.payments?.find(
-    (each) => each?.paymentType === paymentType && each?.status?.toLowerCase() === 'new'
-  )
+const getSelectedPaymentType = (order?: CrOrder | Checkout, paymentType?: string): CrPayment => {
+  return order?.payments?.find((each) => {
+    if (paymentType) {
+      return each?.paymentType === paymentType && each?.status?.toLowerCase() === 'new'
+    }
+
+    return each?.status?.toLowerCase() === 'new'
+  }) as CrPayment
 }
 
 const getId = (order: CrOrder) => order.id as string
@@ -204,6 +226,13 @@ const getOrderPaymentCardDetails = (card: CrPaymentCard) => {
     expireMonth: cardGetters.getExpireMonth(card),
     expireYear: cardGetters.getExpireYear(card),
     cardType: cardGetters.getCardType(card),
+  }
+}
+
+const getOrderPurchaseOrderDetails = (purchaseOrder: any) => {
+  return {
+    purchaseOrderNumber: purchaseOrder?.purchaseOrderNumber,
+    paymentTerm: purchaseOrder?.paymentTerm,
   }
 }
 
@@ -310,10 +339,11 @@ export const orderGetters = {
   getFulfillmentLocationCodes,
   getCheckoutDetails,
   getShippingContact,
-  getSelectedPaymentMethods,
+  getSelectedPaymentType,
   getShippingMethodCode,
   getLocationCode,
   getPaymentMethods,
   getOrderStatus,
   getFinalOrderPayment,
+  getOrderPurchaseOrderDetails,
 }

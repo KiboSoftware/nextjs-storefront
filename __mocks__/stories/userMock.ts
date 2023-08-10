@@ -8,6 +8,7 @@ export const userResponseMock: CustomerAccount = {
   emailAddress: 'suman@email.com',
   userName: 'suman@email.com',
   isAnonymous: false,
+  companyOrOrganization: 'ABC Enterprise',
 }
 export const userMock: { customerAccount: CustomerAccount } = {
   customerAccount: userResponseMock,

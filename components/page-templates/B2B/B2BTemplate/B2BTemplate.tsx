@@ -81,6 +81,10 @@ const B2BTemplate = (props: B2BTemplateProps) => {
     router.push('/my-account/order-history?filters=M-6')
   }
 
+  const handleGoToQuickOrder = () => {
+    router.push('/my-account/b2b/quick-order')
+  }
+
   const submitFormWithRecaptcha = async (
     address: BillingAddress,
     card: CardType,
@@ -114,7 +118,7 @@ const B2BTemplate = (props: B2BTemplateProps) => {
       controls: 'account-hierarchy-content',
       header: t('account-hierarchy'),
       component: null,
-      path: null,
+      path: '/my-account/b2b/account-hierarchy',
     },
     {
       id: 'users-accordion',
@@ -215,7 +219,7 @@ const B2BTemplate = (props: B2BTemplateProps) => {
           <Typography variant={mdScreen ? 'h1' : 'h2'}>{t('orders')}</Typography>
         </Box>
 
-        <B2BTemplateListItem heading="quick-order" />
+        <B2BTemplateListItem heading="quick-order" onClick={handleGoToQuickOrder} />
         <B2BTemplateListItem heading="order-history" onClick={handleGoToOrderHistory} />
         <B2BTemplateListItem heading="returns" />
         <B2BTemplateListItem heading="quotes" />

@@ -7,6 +7,7 @@ import PaymentStep from './PaymentStep'
 import {
   checkoutMock,
   customerAccountCardsMock,
+  customerPurchaseOrderAccountMock,
   orderMock,
   userAddressMock,
 } from '@/__mocks__/stories'
@@ -59,25 +60,24 @@ const handleAddPayment = async () => undefined
 export const Common = Template.bind({})
 Common.args = {
   checkout: orderMock.checkout,
+  cardCollection: customerAccountCardsMock.customerAccountCards,
+  addressCollection: userAddressMock.customerAccountContacts,
+  customerPurchaseOrderAccount: customerPurchaseOrderAccountMock.customerPurchaseOrderAccount,
   isMultiShipEnabled: false,
-  onVoidPayment: handleVoidPayment,
-  onAddPayment: handleAddPayment,
 }
 
 export const WithoutSavedPayment = LoggedInNoData.bind({})
 WithoutSavedPayment.args = {
   checkout: { ...orderMock.checkout, payments: [] },
-  isMultiShipEnabled: false,
-  onVoidPayment: handleVoidPayment,
-  onAddPayment: handleAddPayment,
+  cardCollection: { totalCount: 0, items: [] },
+  ...Common.args,
 }
 
 export const WithSavedPayment = LoggedInWithData.bind({})
 WithSavedPayment.args = {
   checkout: { ...orderMock.checkout },
-  isMultiShipEnabled: false,
-  onVoidPayment: handleVoidPayment,
-  onAddPayment: handleAddPayment,
+
+  ...Common.args,
 }
 WithSavedPayment.parameters = {
   msw: {

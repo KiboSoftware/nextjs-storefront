@@ -24,3 +24,9 @@ WithReturnItemButton.args = {
   order: orderReturnItemsMock.createReturn,
   title: 'view-order-details',
 }
+
+export const ViewOrderDetailsWithoutPaymentDetails = Template.bind({})
+ViewOrderDetailsWithoutPaymentDetails.args = {
+  order: { ...orderMock.checkout, payments: [] },
+  title: 'view-order-details',
+}
