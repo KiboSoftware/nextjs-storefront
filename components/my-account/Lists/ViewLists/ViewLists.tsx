@@ -32,12 +32,12 @@ import {
 
 import { CrWishlist, Maybe, ProductOption, WishlistCollection } from '@/lib/gql/types'
 
-interface ListsProps {
+export interface ViewListsProps {
   onEditFormToggle: (param: boolean) => void
   isEditFormOpen: boolean
 }
 
-const ViewLists = (props: ListsProps) => {
+const ViewLists = (props: ViewListsProps) => {
   const { onEditFormToggle, isEditFormOpen } = props
   const { publicRuntimeConfig } = getConfig()
   const { createWishlist } = useCreateWishlist()
