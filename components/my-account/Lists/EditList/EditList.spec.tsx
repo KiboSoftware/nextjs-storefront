@@ -1,11 +1,12 @@
 import React from 'react'
 
 import { composeStories } from '@storybook/testing-react'
-import { render, screen, waitFor } from '@testing-library/react'
+import { render, screen, waitFor, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import mediaQuery from 'css-mediaquery'
 
 import * as stories from './EditList.stories'
+import { B2BProductSearchProps } from '@/components/b2b/B2BProductSearch/B2BProductSearch'
 
 import { CrWishlistItem } from '@/lib/gql/types'
 
@@ -14,6 +15,30 @@ const { listData } = stories
 
 const onEditFormToggleMock = jest.fn()
 const onUpdateListDataMock = jest.fn()
+
+jest.mock('@/components/my-account/Lists/ListItem/ListItem', () => ({
+  __esModule: true,
+  default: ({ item, onChangeQuantity, onDeleteItem }: any) => {
+    return (
+      <div data-testid="list-item">
+        <div data-testid="item-code">{item?.product?.productCode}</div>
+        <div data-testid="item-name">{item?.product?.productName}</div>
+        <div data-testid="item-quantity">{item?.quantity}</div>
+      </div>
+    )
+  },
+}))
+
+jest.mock('@/components/b2b/B2BProductSearch/B2BProductSearch', () => ({
+  __esModule: true,
+  default: ({ onAddProduct }: B2BProductSearchProps) => {
+    return (
+      <div data-testid="product-search">
+        <input data-testid="search-input" />
+      </div>
+    )
+  },
+}))
 
 const createMatchMedia = (width: number) => (query: string) => ({
   matches: mediaQuery.match(query, { width }),
@@ -42,9 +67,11 @@ describe('[componenet] - Edit list', () => {
   it('should render the component', () => {
     setup()
     expect(screen.getByText(listData.name)).toBeVisible()
-    listData.items.forEach((item: CrWishlistItem) =>
-      expect(screen.getByText(item?.product?.name as string)).toBeVisible()
-    )
+    const listItems = screen.getAllByTestId('list-item')
+    listItems.forEach((item) => expect(item).toBeVisible())
+    const productSearch = screen.getByTestId('product-search')
+    expect(productSearch).toBeVisible()
+    expect(within(productSearch).getByTestId('search-input')).toBeVisible()
   })
 
   it('should change list name', async () => {
@@ -85,7 +112,7 @@ describe('[componenet] - Edit list', () => {
     })
   })
 
-  it.only('should save and close edit list', async () => {
+  it('should save and close edit list', async () => {
     const { user } = setup()
     const saveAndCloseBtn = screen.getByText(/save-and-close/i)
     user.click(saveAndCloseBtn)

@@ -1,12 +1,13 @@
 import React from 'react'
 
 import { composeStories } from '@storybook/testing-react'
-import { fireEvent, render, screen, waitFor } from '@testing-library/react'
+import { fireEvent, render, screen, waitFor, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import mediaQuery from 'css-mediaquery'
 import mockRouter from 'next-router-mock'
 
 import * as stories from './CreateList.stories'
+import { B2BProductSearchProps } from '@/components/b2b/B2BProductSearch/B2BProductSearch'
 
 const { Common } = composeStories(stories)
 
@@ -20,6 +21,17 @@ const createMatchMedia = (width: number) => (query: string) => ({
   removeEventListener: jest.fn(),
   dispatchEvent: jest.fn(),
 })
+
+jest.mock('@/components/b2b/B2BProductSearch/B2BProductSearch', () => ({
+  __esModule: true,
+  default: ({ onAddProduct }: B2BProductSearchProps) => {
+    return (
+      <div data-testid="product-search">
+        <input data-testid="search-input" />
+      </div>
+    )
+  },
+}))
 
 const onCreateFormToggleMock = jest.fn()
 
@@ -37,6 +49,9 @@ describe('[componenet] - Create List', () => {
     expect(screen.getByText(/save-and-close/i)).toBeVisible()
     expect(screen.getByText(/my-account/i)).toBeVisible()
     expect(screen.getByPlaceholderText(/name-this-list/i)).toBeVisible()
+    const productSearch = screen.getByTestId('product-search')
+    expect(productSearch).toBeVisible()
+    expect(within(productSearch).getByTestId('search-input')).toBeVisible()
   })
 
   it('should change list name input', async () => {
@@ -90,7 +105,7 @@ describe('[componenet] - Create List', () => {
     })
   })
 
-  it.only('should save and close create form', async () => {
+  it('should save and close create form', async () => {
     window.matchMedia = createMatchMedia(1024)
     setup()
     const saveAndCloseBtn = screen.getByText(/save-and-close/i)
