@@ -3,7 +3,6 @@ import React, { ChangeEvent, useState } from 'react'
 import { Search } from '@mui/icons-material'
 import {
   Box,
-  Button,
   Checkbox,
   CircularProgress,
   FormControl,
@@ -18,11 +17,11 @@ import {
 import getConfig from 'next/config'
 import { useTranslation } from 'next-i18next'
 
-import { KiboDialog } from '@/components/common'
+import { ConfirmationDialog } from '@/components/dialogs'
 import { ListTable } from '@/components/my-account'
 import EditList from '@/components/my-account/Lists/EditList/EditList'
 import { styles } from '@/components/my-account/Lists/ViewLists/ViewLists.style'
-import { useAuthContext, useSnackbarContext } from '@/context'
+import { useAuthContext, useModalContext, useSnackbarContext } from '@/context'
 import {
   PageProps,
   useCreateWishlist,
@@ -45,6 +44,7 @@ const ViewLists = (props: ListsProps) => {
   const { deleteWishlist } = useDeleteWishlist()
   const { addToCart } = useAddCartItem()
   const { showSnackbar } = useSnackbarContext()
+  const { showModal } = useModalContext()
 
   // declaring states
   const [paginationState, setPaginationState] = useState<PageProps>({
@@ -55,10 +55,6 @@ const ViewLists = (props: ListsProps) => {
   })
   const [isLoading, setIsLoading] = useState<boolean>(false)
   const [listData, setListData] = useState<CrWishlist>()
-  const [showDeleteDialog, setShowDeleteDialog] = useState({
-    show: false,
-    id: '',
-  })
 
   // screen size declared
   const theme = useTheme()
@@ -104,14 +100,19 @@ const ViewLists = (props: ListsProps) => {
 
   // delete list function
   const handleDeleteList = (id: string) => {
-    setShowDeleteDialog((current) => ({ ...current, show: true, id }))
-  }
-  const deleteList = async () => {
-    setIsLoading(true)
-    await deleteWishlist.mutateAsync(showDeleteDialog.id)
-    setIsLoading(false)
-    setShowDeleteDialog((current) => ({ ...current, show: false, id: '' }))
-    refetch()
+    showModal({
+      Component: ConfirmationDialog,
+      props: {
+        contentText: t('delete-list-message'),
+        primaryButtonText: t('delete'),
+        onConfirm: async () => {
+          setIsLoading(true)
+          await deleteWishlist.mutateAsync(id)
+          await refetch()
+          setIsLoading(false)
+        },
+      },
+    })
   }
 
   // edit list function
@@ -151,7 +152,7 @@ const ViewLists = (props: ListsProps) => {
   }
 
   const handleInitiateQuote = (id: string) => {
-    console.log('Work In Progress')
+    console.log('Work In Progress', id)
   }
 
   // handle filter for current user list
@@ -242,34 +243,6 @@ const ViewLists = (props: ListsProps) => {
           </>
         )}
       </Box>
-      <KiboDialog
-        isOpen={showDeleteDialog.show}
-        showCloseButton
-        Title={''}
-        isAlignTitleCenter={true}
-        showContentTopDivider={false}
-        showContentBottomDivider={false}
-        Actions={''}
-        Content={
-          <Box sx={{ textAlign: 'center' }}>
-            <Typography sx={{ marginBottom: '10px' }}>{t('delete-list-message')}</Typography>
-            <Box sx={{ display: 'flex', flexDirection: 'column' }}>
-              <Button variant="contained" sx={{ marginBottom: '10px' }} onClick={deleteList}>
-                {t('delete')}
-              </Button>
-              <Button
-                variant="contained"
-                color="secondary"
-                onClick={() => setShowDeleteDialog((current) => ({ ...current, show: false }))}
-              >
-                {t('cancel')}
-              </Button>
-            </Box>
-          </Box>
-        }
-        customMaxWidth="480px"
-        onClose={() => setShowDeleteDialog((current) => ({ ...current, show: false }))}
-      />
     </>
   )
 }
