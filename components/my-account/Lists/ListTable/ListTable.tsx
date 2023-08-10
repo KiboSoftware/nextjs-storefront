@@ -61,7 +61,9 @@ const ListTable = (props: ListTableProps) => {
   ]
 
   return (
-    <TableContainer sx={{ opacity: isLoading ? '0.5' : '1' }}>
+    <TableContainer
+      sx={{ opacity: isLoading ? '0.5' : '1', pointerEvents: isLoading ? 'none' : 'auto' }}
+    >
       <Table style={{ tableLayout: 'fixed' }}>
         <TableHead>
           <TableRow style={{ backgroundColor: '#f7f7f7', padding: '10px 0' }}>
