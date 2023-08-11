@@ -1,12 +1,13 @@
 import React from 'react'
 
 import { composeStories } from '@storybook/testing-react'
-import { render, screen, waitFor, within } from '@testing-library/react'
+import { fireEvent, render, screen, waitFor, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import mediaQuery from 'css-mediaquery'
 import mockRouter from 'next-router-mock'
 
 import * as stories from './ListsTemplate.stories'
+import { CreateListProps } from '@/components/my-account/Lists/CreateList/CreateList'
 import { EditListProps } from '@/components/my-account/Lists/EditList/EditList'
 import { ViewListsProps } from '@/components/my-account/Lists/ViewLists/ViewLists'
 
@@ -37,7 +38,7 @@ const ListTableMock = ({ onEditFormToggle }: { onEditFormToggle: (param: boolean
 
 const EditListMock = ({ onEditFormToggle, listData, onUpdateListData }: EditListProps) => (
   <div data-testid="edit-list-mock">
-    <button data-testid="toggle-edit-form" onClick={() => onEditFormToggle(true)}></button>
+    <button data-testid="toggle-edit-form" onClick={() => onEditFormToggle(false)}></button>
   </div>
 )
 
@@ -53,6 +54,19 @@ jest.mock(
           })
         : ListTableMock({ onEditFormToggle: onEditFormToggle })
 )
+
+jest.mock('@/components/my-account/Lists/CreateList/CreateList', () => ({
+  __esModule: true,
+  default: ({ onCreateFormToggle }: CreateListProps) => {
+    return (
+      <div data-testid="create-list">
+        <button data-testid="toggle-create-list" onClick={() => onCreateFormToggle(false)}>
+          toggle-create-list
+        </button>
+      </div>
+    )
+  },
+}))
 
 describe('[component] - ListsTemplate', () => {
   it('should render template', () => {
@@ -91,27 +105,37 @@ describe('[component] - ListsTemplate', () => {
     })
   })
 
-  it.only('should toggle edit list form', async () => {
+  it('should toggle edit list form', async () => {
     window.matchMedia = createMatchMedia(1024)
-    const { user } = setup()
+    setup()
     const viewLists = screen.getByTestId('view-lists-mock')
     const editToggleBtn = within(viewLists).getByTestId('toggle-edit-form')
 
-    user.click(editToggleBtn)
+    fireEvent.click(editToggleBtn)
 
-    await waitFor(() => {
-      expect(screen.getByTestId('edit-list-mock')).toBeVisible()
-    })
+    const editList = screen.getByTestId('edit-list-mock')
+    const editToggleBtnEditList = within(editList).getByTestId('toggle-edit-form')
+    expect(editList).toBeVisible()
+    expect(editToggleBtnEditList).toBeVisible()
+
+    fireEvent.click(editToggleBtnEditList)
+
+    expect(viewLists).toBeVisible()
   })
 
   it('should open create list form', async () => {
     window.matchMedia = createMatchMedia(1024)
-    const { user } = setup()
+    setup()
     const createFormBtn = screen.getByTestId('create-new-list-btn')
-    user.click(createFormBtn)
-    await waitFor(() => {
-      const createFormHeading = screen.getByText(/create-new-list/i)
-      expect(createFormHeading).toBeVisible()
-    })
+
+    fireEvent.click(createFormBtn)
+
+    const createList = screen.getByTestId('create-list')
+    expect(createList).toBeVisible()
+    const toggleCreateListBtn = within(createList).getByTestId('toggle-create-list')
+
+    fireEvent.click(toggleCreateListBtn)
+
+    expect(screen.getByTestId('view-lists-mock')).toBeVisible()
   })
 })
