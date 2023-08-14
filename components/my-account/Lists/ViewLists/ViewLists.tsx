@@ -69,7 +69,6 @@ const ViewLists = (props: ViewListsProps) => {
   const response = useGetWishlist(paginationState)
   const wishlistsResponse = response.data as WishlistCollection
   const isPending = response.isPending
-  const refetch = response.refetch
 
   // copy list function
   const handleCopyList = async (id: string) => {
@@ -90,8 +89,6 @@ const ViewLists = (props: ViewListsProps) => {
         name: listName,
         items: newWishlist?.items,
       })
-      showSnackbar('List Duplicated Successfully', 'success')
-      await refetch()
     } catch (e: any) {
       alert(e?.message)
     }
@@ -108,7 +105,6 @@ const ViewLists = (props: ViewListsProps) => {
         onConfirm: async () => {
           setIsLoading(true)
           await deleteWishlist.mutateAsync(id)
-          await refetch()
           setIsLoading(false)
         },
       },
