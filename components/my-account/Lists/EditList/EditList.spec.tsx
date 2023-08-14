@@ -1,14 +1,12 @@
 import React from 'react'
 
 import { composeStories } from '@storybook/testing-react'
-import { render, screen, waitFor, within } from '@testing-library/react'
+import { fireEvent, render, screen, waitFor, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import mediaQuery from 'css-mediaquery'
 
 import * as stories from './EditList.stories'
 import { B2BProductSearchProps } from '@/components/b2b/B2BProductSearch/B2BProductSearch'
-
-import { CrWishlistItem } from '@/lib/gql/types'
 
 const { Common } = composeStories(stories)
 const { listData } = stories
@@ -24,6 +22,15 @@ jest.mock('@/components/my-account/Lists/ListItem/ListItem', () => ({
         <div data-testid="item-code">{item?.product?.productCode}</div>
         <div data-testid="item-name">{item?.product?.productName}</div>
         <div data-testid="item-quantity">{item?.quantity}</div>
+        <input onChange={onChangeQuantity} data-testid="quantity-input" />
+        <button
+          onClick={() => {
+            console.log('itemid', item.product.lineId)
+            onDeleteItem(item.product.lineId || item.product.productCode)
+          }}
+        >
+          Delete
+        </button>
       </div>
     )
   },
@@ -102,6 +109,19 @@ describe('[componenet] - Edit list', () => {
   })
 
   it('should close edit list', async () => {
+    window.matchMedia = createMatchMedia(1024)
+    const { user } = setup()
+    const cancelBtn = screen.getByText(/cancel/i)
+
+    user.click(cancelBtn)
+
+    await waitFor(() => {
+      expect(onEditFormToggleMock).toBeCalled()
+    })
+  })
+
+  it('should close edit list mobile view', async () => {
+    window.matchMedia = createMatchMedia(500)
     const { user } = setup()
     const cancelBtn = screen.getByText(/cancel/i)
 
@@ -121,6 +141,49 @@ describe('[componenet] - Edit list', () => {
     })
     await waitFor(() => {
       expect(onEditFormToggleMock).toBeCalled()
+    })
+  })
+
+  it('should add product on click of product suggestion', async () => {
+    setup()
+    const searchedProduct = 'shirt'
+    const searchInput = screen.getByTestId('search-input')
+    expect(searchInput).toBeVisible()
+
+    fireEvent.input(searchInput, {
+      target: {
+        value: searchedProduct,
+      },
+    })
+
+    expect(searchInput).toHaveValue(searchedProduct)
+  })
+
+  it('should change quantity of item', async () => {
+    setup()
+    const listItem = screen.getAllByTestId('list-item')[0]
+    const quantityInput = within(listItem).getByTestId('quantity-input')
+
+    fireEvent.input(quantityInput, { target: { value: '' } })
+
+    expect(quantityInput).toHaveValue('')
+
+    fireEvent.input(quantityInput, { target: { value: '2' } })
+
+    expect(quantityInput).toHaveValue('2')
+  })
+
+  it('should delete item', async () => {
+    setup()
+    const itemsCount = listData.items.length
+    const listItems = screen.getAllByTestId('list-item')
+    console.log(listItems.length)
+    const deleteBtn = within(listItems[1]).getByRole('button', { name: /delete/i })
+
+    fireEvent.click(deleteBtn)
+
+    await waitFor(() => {
+      expect(listData.items.length).toBe(itemsCount - 1)
     })
   })
 })
