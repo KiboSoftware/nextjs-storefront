@@ -211,10 +211,9 @@ const EditList = (props: EditListProps) => {
       <br />
 
       <Typography variant="h3" style={{ fontWeight: 'bold', margin: '20px 0' }}>
-        List Items
+        {t('list-items')}
       </Typography>
       {listData?.items?.map((item: Maybe<CrWishlistItem>) => {
-        console.log(item?.product?.description)
         return (
           <ListItem
             key={item?.product?.productCode}
