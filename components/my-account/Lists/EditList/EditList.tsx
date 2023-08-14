@@ -48,7 +48,6 @@ const EditList = (props: EditListProps) => {
   const mdScreen = useMediaQuery<boolean>(theme.breakpoints.up('md'))
   const { t } = useTranslation('common')
   const { updateWishlist } = useUpdateWishlistMutation()
-  const { refetch } = useGetWishlist()
 
   const handleSaveWishlist = async () => {
     if (listData) listData.name = editListState.name
@@ -57,7 +56,6 @@ const EditList = (props: EditListProps) => {
       wishlistInput: listData as CrWishlistInput,
     }
     const response = await updateWishlist.mutateAsync(payload)
-    await refetch()
     onUpdateListData(response.updateWishlist)
     onEditFormToggle(false)
   }
