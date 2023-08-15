@@ -18,7 +18,13 @@ import ProductSearch from '@/components/b2b/B2BProductSearch/B2BProductSearch'
 import ListItem from '@/components/my-account/Lists/ListItem/ListItem'
 import { useUpdateWishlistMutation } from '@/hooks'
 
-import { CrWishlist, CrWishlistInput, CrWishlistItem, Product } from '@/lib/gql/types'
+import {
+  CrProductPrice,
+  CrWishlist,
+  CrWishlistInput,
+  CrWishlistItem,
+  Product,
+} from '@/lib/gql/types'
 
 export interface EditListProps {
   onEditFormToggle: (param: boolean) => void
@@ -217,19 +223,19 @@ const EditList = (props: EditListProps) => {
             key={item?.product?.productCode}
             item={{
               product: {
-                productName: item?.product?.name,
-                productCode: item?.product?.productCode,
-                price: item?.product?.price,
-                productImage: item?.product?.imageUrl,
-                productImageAltText: item?.product?.name,
-                lineId: item?.id,
-                productDescription: item?.product?.description,
+                productName: item?.product?.name as string,
+                productCode: item?.product?.productCode as string,
+                price: item?.product?.price as CrProductPrice,
+                productImage: item?.product?.imageUrl as string,
+                productImageAltText: item?.product?.name as string,
+                lineId: item?.id as string,
+                productDescription: item?.product?.description as string,
               },
-              quantity: item?.quantity,
+              quantity: item?.quantity as number,
             }}
             onDeleteItem={handleDeleteItem}
             onChangeQuantity={handleChangeQuantity}
-            listId={listData.id}
+            listId={listData.id as string}
           />
         )
       })}

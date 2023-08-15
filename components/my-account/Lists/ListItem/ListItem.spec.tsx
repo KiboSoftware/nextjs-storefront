@@ -1,7 +1,7 @@
 import React from 'react'
 
 import { composeStories } from '@storybook/testing-react'
-import { render, screen, waitFor, within } from '@testing-library/react'
+import { fireEvent, render, screen, waitFor, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import mediaQuery from 'css-mediaquery'
 
@@ -106,5 +106,18 @@ describe('[component] - ListItem', () => {
         (lineItem.quantity - 1).toString()
       )
     })
+  })
+
+  it('should open ProductView dialog', async () => {
+    setup()
+    const modalBtn = screen.getByTestId('product-modal-btn')
+    expect(modalBtn).toBeVisible()
+
+    fireEvent.click(modalBtn)
+
+    const productModal = screen.getByTestId('product-modal')
+    expect(productModal).toBeVisible()
+
+    expect(within(productModal).getByText(lineItem.product.name)).toBeVisible()
   })
 })

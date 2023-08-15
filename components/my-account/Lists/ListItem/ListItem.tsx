@@ -20,7 +20,58 @@ import { useTranslation } from 'next-i18next'
 
 import { KiboDialog, QuantitySelector } from '@/components/common'
 import style from '@/components/my-account/Lists/ListItem/ListItem.style'
-import labels from '@/public/locales/en/common.json'
+import { useModalContext } from '@/context'
+
+import { CrProductPrice } from '@/lib/gql/types'
+
+export interface ListItemProps {
+  item: {
+    product: {
+      productName: string
+      productCode: string
+      price: CrProductPrice
+      productImage: string
+      productImageAltText: string
+      lineId?: string
+      productDescription: string
+    }
+    quantity: number
+  }
+  onDeleteItem: (param: string) => void
+  onChangeQuantity: (param1: string, param2: number) => void
+  listId?: string
+}
+
+export interface ProductViewProps {
+  item: {
+    product: {
+      productName: string
+      productCode: string
+      price: CrProductPrice
+      productImage: string
+      productImageAltText: string
+      lineId?: string
+      productDescription: string
+    }
+    quantity: number
+  }
+}
+
+export interface ProductViewDialogProps {
+  item: {
+    product: {
+      productName: string
+      productCode: string
+      price: CrProductPrice
+      productImage: string
+      productImageAltText: string
+      lineId?: string
+      productDescription: string
+    }
+    quantity: number
+  }
+  onClose: () => void
+}
 
 const calculateProductSubTotal = (price: any, quantity: number) => {
   if (price)
@@ -30,7 +81,7 @@ const calculateProductSubTotal = (price: any, quantity: number) => {
   return 0
 }
 
-const ProductView = (props: any) => {
+const ProductView = (props: ProductViewProps) => {
   const { item } = props
   const { product } = item
 
@@ -38,7 +89,7 @@ const ProductView = (props: any) => {
 
   return (
     <>
-      <Container style={{ padding: '70px' }}>
+      <Container style={{ padding: '70px' }} data-testid="product-modal">
         <Grid container>
           <Grid item sm={3}>
             {product.productImage ? (
@@ -59,7 +110,7 @@ const ProductView = (props: any) => {
                 {t('product-code')}: {product?.productCode}
               </Typography>
               <Typography>
-                <Typography component={'strong'}>Price: </Typography> <br />
+                <Typography component={'strong'}>{t('price')}: </Typography> <br />
                 <Typography component={'span'} style={{ color: '#E42D00' }}>
                   $ {calculateProductSubTotal(product.price, item.quantity)}
                 </Typography>
@@ -87,7 +138,7 @@ const ProductView = (props: any) => {
                   id="panel1a-header"
                   style={{ padding: '0px' }}
                 >
-                  <Typography>{'Description'}</Typography>
+                  <Typography>{'description'}</Typography>
                 </AccordionSummary>
                 <AccordionDetails>
                   <Typography>{product.productDescription}</Typography>
@@ -101,14 +152,37 @@ const ProductView = (props: any) => {
   )
 }
 
-const WishlistItem = (props: any) => {
+const ProductViewDialog = (props: ProductViewDialogProps) => {
+  const { t } = useTranslation('common')
+
+  return (
+    <KiboDialog
+      showCloseButton
+      Title={t('product-configuration-option')}
+      isAlignTitleCenter={true}
+      showContentTopDivider={true}
+      showContentBottomDivider={false}
+      onClose={props.onClose}
+      Actions={''}
+      Content={
+        <Box>
+          <ProductView item={props.item} />
+        </Box>
+      }
+      customMaxWidth="800px"
+    />
+  )
+}
+
+const ListItem = (props: ListItemProps) => {
   const { item, onChangeQuantity, onDeleteItem } = props
   const { product, quantity } = item
+
+  const { showModal, closeModal } = useModalContext()
   const theme = useTheme()
-  const { t } = useTranslation()
+  const { t } = useTranslation('common')
   const mdScreen = useMediaQuery<boolean>(theme.breakpoints.up('md'))
   const [quantityState, setQuantityState] = useState(quantity)
-  const [open, setOpen] = useState(false)
 
   function handleChangeQuantity(e: number) {
     setQuantityState(e)
@@ -126,7 +200,13 @@ const WishlistItem = (props: any) => {
   }
 
   function openEditModal() {
-    setOpen(true)
+    showModal({
+      Component: ProductViewDialog,
+      props: {
+        onClose: closeModal,
+        item: item,
+      },
+    })
   }
 
   return (
@@ -153,8 +233,7 @@ const WishlistItem = (props: any) => {
           ) : (
             <>
               <Box style={{ fontSize: '14px' }}>
-                <strong>{labels.total}: </strong>$
-                {calculateProductSubTotal(product?.price, quantity)}
+                <strong>{t('total')}: </strong>${calculateProductSubTotal(product?.price, quantity)}
                 <Box style={{ color: '#7c7c7c', fontSize: '12px', marginBottom: '12px' }}>
                   <em>
                     {t('list-item')} - ${product?.price.price}
@@ -179,8 +258,7 @@ const WishlistItem = (props: any) => {
           {mdScreen ? (
             <>
               <Box>
-                <strong>{labels.total}: </strong>$
-                {calculateProductSubTotal(product?.price, quantity)}
+                <strong>{t('total')}: </strong>${calculateProductSubTotal(product?.price, quantity)}
                 <Box style={{ marginLeft: '10px', display: 'inline' }}>
                   <em style={{ color: '#7c7c7c', fontSize: '14px' }} data-testid="productPrice">
                     {t('list-item')} - ${product?.price?.price}
@@ -202,13 +280,18 @@ const WishlistItem = (props: any) => {
           }}
         >
           <div style={{ maxWidth: '100%', display: 'flex', flexDirection: 'row' }}>
-            <Button onClick={openEditModal} startIcon={<EditIcon />} sx={style.buttons.tableAction}>
+            <Button
+              onClick={openEditModal}
+              startIcon={<EditIcon />}
+              sx={style.buttons.tableAction}
+              data-testid="product-modal-btn"
+            >
               {mdScreen ? 'Edit Item' : ''}
             </Button>
             <Button
               sx={style.buttons.tableAction}
               aria-label="delete"
-              id={props.item.id}
+              id={product.lineId}
               onClick={() => onDeleteItem(product.lineId || product.productCode)}
               startIcon={<DeleteIcon />}
             >
@@ -217,23 +300,7 @@ const WishlistItem = (props: any) => {
           </div>
         </Grid>
       </Grid>
-      <KiboDialog
-        isOpen={open}
-        showCloseButton
-        Title={'Product Configuration Option'}
-        isAlignTitleCenter={true}
-        showContentTopDivider={true}
-        showContentBottomDivider={false}
-        Actions={''}
-        onClose={() => setOpen(false)}
-        Content={
-          <Box>
-            <ProductView item={item} closeModal={() => setOpen(false)} />
-          </Box>
-        }
-        customMaxWidth="800px"
-      />
     </>
   )
 }
-export default WishlistItem
+export default ListItem

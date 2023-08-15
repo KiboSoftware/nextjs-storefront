@@ -65,7 +65,6 @@ jest.mock('@/components/my-account/Lists/ListItem/ListItem', () => ({
         <input onChange={onChangeQuantity} data-testid="quantity-input" />
         <button
           onClick={() => {
-            console.log(item.product.productCode)
             onDeleteItem(item.product.productCode)
           }}
         >
