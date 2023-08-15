@@ -16,6 +16,19 @@ const { listData } = stories
 const onEditFormToggleMock = jest.fn()
 const onUpdateListDataMock = jest.fn()
 
+const nonConfigurableProductMock: Product = {
+  productCode: 'pdt1',
+  options: [
+    {
+      isRequired: false,
+    },
+  ],
+  createDate: undefined,
+  personalizationScore: 0,
+  score: 0,
+  updateDate: undefined,
+}
+
 jest.mock('@/components/my-account/Lists/ListItem/ListItem', () => ({
   __esModule: true,
   default: ({ item, onChangeQuantity, onDeleteItem }: any) => {
@@ -37,19 +50,6 @@ jest.mock('@/components/my-account/Lists/ListItem/ListItem', () => ({
     )
   },
 }))
-
-const nonConfigurableProductMock: Product = {
-  productCode: 'pdt1',
-  options: [
-    {
-      isRequired: false,
-    },
-  ],
-  createDate: undefined,
-  personalizationScore: 0,
-  score: 0,
-  updateDate: undefined,
-}
 
 jest.mock('@/components/b2b/B2BProductSearch/B2BProductSearch', () => ({
   __esModule: true,
