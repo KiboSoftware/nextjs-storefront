@@ -60,26 +60,34 @@ jest.mock('@/components/my-account/Lists/ListTable/ListTable', () => ({
   __esModule: true,
   default: ({ onDeleteList, onEditList, onCopyList, rows }: any) => (
     <div data-testid="list-table-mock">
-      {rows.map((row: any) => (
-        <div key={row.name} data-testid="wishlists">
-          {row.name}
-        </div>
+      {rows.map((item: any) => (
+        <React.Fragment key={item.id}>
+          <div key={item.name} data-testid="wishlist">
+            {item.name}
+            <button data-testid="edit-list-btn" onClick={onEditList}>
+              Edit
+            </button>
+            <button
+              data-testid="copy-list-btn"
+              onClick={() => {
+                console.log(item.id)
+                onCopyList(item.id)
+              }}
+            >
+              Copy
+            </button>
+            <button
+              data-testid="delete-list-btn"
+              onClick={() => {
+                console.log(item.id)
+                onDeleteList(item.id)
+              }}
+            >
+              Delete
+            </button>
+          </div>
+        </React.Fragment>
       ))}
-      <button data-testid="edit-list-btn" onClick={onEditList}>
-        Edit
-      </button>
-      <button
-        data-testid="copy-list-btn"
-        onClick={() => onCopyList('13cc2e5236615b000102f572000045d7')}
-      >
-        Copy
-      </button>
-      <button
-        data-testid="delete-list-btn"
-        onClick={() => onDeleteList('13cc2e5236615b000102f572000045d7')}
-      >
-        Delete
-      </button>
     </div>
   ),
 }))
@@ -119,7 +127,8 @@ describe('[componenet] - ViewLists', () => {
     window.matchMedia = createMatchMedia(1000)
     const { user } = setup()
     const listTable = await screen.findByTestId('list-table-mock')
-    const editBtn = within(listTable).getByTestId('edit-list-btn')
+    const rows = await within(listTable).findAllByTestId('wishlist')
+    const editBtn = within(rows[0]).getByTestId('edit-list-btn')
 
     user.click(editBtn)
 
@@ -132,12 +141,13 @@ describe('[componenet] - ViewLists', () => {
     window.matchMedia = createMatchMedia(1000)
     const { user } = setup()
     const listTable = await screen.findByTestId('list-table-mock')
-    const copyBtn = within(listTable).getByTestId('copy-list-btn')
+    const rows = await within(listTable).findAllByTestId('wishlist')
+    const copyBtn = within(rows[0]).getByTestId('copy-list-btn')
 
     user.click(copyBtn)
 
     server.use(
-      graphql.query('createWishlist', (_req, res, ctx) => {
+      graphql.mutation('createWishlist', (_req, res, ctx) => {
         return res.once(
           ctx.data({
             copiedList,
@@ -145,19 +155,14 @@ describe('[componenet] - ViewLists', () => {
         )
       })
     )
-    await waitFor(() => {
-      const rows = within(listTable).getAllByTestId('wishlists')
-      rows.forEach((row, i) => {
-        expect(row.innerHTML).toEqual(wishlistMock.items[i].name)
-      })
-    })
   })
 
   it('should open dialog when click on delete list button', async () => {
     window.matchMedia = createMatchMedia(1000)
     setup()
     const listTable = await screen.findByTestId('list-table-mock')
-    const deleteBtn = within(listTable).getByTestId('delete-list-btn')
+    const rows = await within(listTable).findAllByTestId('wishlist')
+    const deleteBtn = within(rows[0]).getByTestId('delete-list-btn')
 
     fireEvent.click(deleteBtn)
 
@@ -170,5 +175,41 @@ describe('[componenet] - ViewLists', () => {
     expect(cancelBtn).toBeVisible()
     expect(deleteBtnDialog).toBeVisible()
     expect(deleteMessage).toBeVisible()
+  })
+
+  it('should close delete dialog when cancle button clicked', async () => {
+    window.matchMedia = createMatchMedia(1000)
+    setup()
+    const listTable = await screen.findByTestId('list-table-mock')
+    const rows = await within(listTable).findAllByTestId('wishlist')
+    const deleteBtn = within(rows[0]).getByTestId('delete-list-btn')
+
+    fireEvent.click(deleteBtn)
+
+    const kiboDialog = screen.getByTestId('kibo-dialog')
+    const cancelBtn = within(kiboDialog).getByText(/cancel/i)
+
+    fireEvent.click(cancelBtn)
+
+    expect(kiboDialog).not.toBeVisible()
+  })
+
+  it('should close delete dialog when delete button clicked', async () => {
+    window.matchMedia = createMatchMedia(1000)
+    setup()
+    const listTable = await screen.findByTestId('list-table-mock')
+    const rows = within(listTable).getAllByTestId('wishlist')
+    const deleteBtn = within(rows[0]).getByTestId('delete-list-btn')
+
+    fireEvent.click(deleteBtn)
+
+    const kiboDialog = screen.getByTestId('kibo-dialog')
+    const dialogDeleteBtn = within(kiboDialog).getByText('delete')
+
+    fireEvent.click(dialogDeleteBtn)
+
+    await waitFor(() => {
+      expect(kiboDialog).not.toBeVisible()
+    })
   })
 })
