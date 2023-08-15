@@ -8,6 +8,8 @@ import mediaQuery from 'css-mediaquery'
 import * as stories from './EditList.stories'
 import { B2BProductSearchProps } from '@/components/b2b/B2BProductSearch/B2BProductSearch'
 
+import { Product } from '@/lib/gql/types'
+
 const { Common } = composeStories(stories)
 const { listData } = stories
 
@@ -36,12 +38,31 @@ jest.mock('@/components/my-account/Lists/ListItem/ListItem', () => ({
   },
 }))
 
+const nonConfigurableProductMock: Product = {
+  productCode: 'pdt1',
+  options: [
+    {
+      isRequired: false,
+    },
+  ],
+  createDate: undefined,
+  personalizationScore: 0,
+  score: 0,
+  updateDate: undefined,
+}
+
 jest.mock('@/components/b2b/B2BProductSearch/B2BProductSearch', () => ({
   __esModule: true,
   default: ({ onAddProduct }: B2BProductSearchProps) => {
     return (
       <div data-testid="product-search">
         <input data-testid="search-input" />
+        <button
+          data-testid="add-non-configurable-product-button"
+          onClick={() => onAddProduct(nonConfigurableProductMock)}
+        >
+          Add Configurable Product
+        </button>
       </div>
     )
   },
@@ -184,6 +205,23 @@ describe('[componenet] - Edit list', () => {
 
     await waitFor(() => {
       expect(listData.items.length).toBe(itemsCount - 1)
+    })
+  })
+
+  it('should add product to list', async () => {
+    setup()
+    const b2bSearch = screen.getByTestId('product-search')
+    const b2bSearchInput = within(b2bSearch).getByTestId('search-input')
+
+    fireEvent.change(b2bSearchInput, { target: { value: nonConfigurableProductMock.productCode } })
+
+    expect(b2bSearchInput).toHaveValue(nonConfigurableProductMock.productCode)
+    const productSuggestion = within(b2bSearch).getByTestId('add-non-configurable-product-button')
+
+    fireEvent.click(productSuggestion)
+
+    await waitFor(() => {
+      expect(screen.getByText(/pdt1/i)).toBeVisible()
     })
   })
 })
