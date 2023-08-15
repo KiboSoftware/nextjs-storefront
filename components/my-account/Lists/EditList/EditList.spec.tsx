@@ -40,7 +40,6 @@ jest.mock('@/components/my-account/Lists/ListItem/ListItem', () => ({
         <input onChange={onChangeQuantity} data-testid="quantity-input" />
         <button
           onClick={() => {
-            console.log('itemid', item.product.lineId)
             onDeleteItem(item.product.lineId || item.product.productCode)
           }}
         >
@@ -198,7 +197,6 @@ describe('[componenet] - Edit list', () => {
     setup()
     const itemsCount = listData.items.length
     const listItems = screen.getAllByTestId('list-item')
-    console.log(listItems.length)
     const deleteBtn = within(listItems[1]).getByRole('button', { name: /delete/i })
 
     fireEvent.click(deleteBtn)
