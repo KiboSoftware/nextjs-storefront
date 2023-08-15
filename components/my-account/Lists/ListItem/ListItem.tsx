@@ -89,7 +89,7 @@ const ProductView = (props: ProductViewProps) => {
 
   return (
     <>
-      <Container style={{ padding: '70px' }}>
+      <Container style={{ padding: '70px' }} data-testid="product-modal">
         <Grid container>
           <Grid item sm={3}>
             {product.productImage ? (
@@ -110,7 +110,7 @@ const ProductView = (props: ProductViewProps) => {
                 {t('product-code')}: {product?.productCode}
               </Typography>
               <Typography>
-                <Typography component={'strong'}>Price: </Typography> <br />
+                <Typography component={'strong'}>{t('price')}: </Typography> <br />
                 <Typography component={'span'} style={{ color: '#E42D00' }}>
                   $ {calculateProductSubTotal(product.price, item.quantity)}
                 </Typography>
@@ -138,7 +138,7 @@ const ProductView = (props: ProductViewProps) => {
                   id="panel1a-header"
                   style={{ padding: '0px' }}
                 >
-                  <Typography>{'Description'}</Typography>
+                  <Typography>{'description'}</Typography>
                 </AccordionSummary>
                 <AccordionDetails>
                   <Typography>{product.productDescription}</Typography>
@@ -152,23 +152,27 @@ const ProductView = (props: ProductViewProps) => {
   )
 }
 
-const ProductViewDialog = (props: ProductViewDialogProps) => (
-  <KiboDialog
-    showCloseButton
-    Title={'Product Configuration Option'}
-    isAlignTitleCenter={true}
-    showContentTopDivider={true}
-    showContentBottomDivider={false}
-    onClose={props.onClose}
-    Actions={''}
-    Content={
-      <Box>
-        <ProductView item={props.item} />
-      </Box>
-    }
-    customMaxWidth="800px"
-  />
-)
+const ProductViewDialog = (props: ProductViewDialogProps) => {
+  const { t } = useTranslation('common')
+
+  return (
+    <KiboDialog
+      showCloseButton
+      Title={t('product-configuration-option')}
+      isAlignTitleCenter={true}
+      showContentTopDivider={true}
+      showContentBottomDivider={false}
+      onClose={props.onClose}
+      Actions={''}
+      Content={
+        <Box>
+          <ProductView item={props.item} />
+        </Box>
+      }
+      customMaxWidth="800px"
+    />
+  )
+}
 
 const ListItem = (props: ListItemProps) => {
   const { item, onChangeQuantity, onDeleteItem } = props
@@ -176,7 +180,7 @@ const ListItem = (props: ListItemProps) => {
 
   const { showModal, closeModal } = useModalContext()
   const theme = useTheme()
-  const { t } = useTranslation()
+  const { t } = useTranslation('common')
   const mdScreen = useMediaQuery<boolean>(theme.breakpoints.up('md'))
   const [quantityState, setQuantityState] = useState(quantity)
 
@@ -276,7 +280,12 @@ const ListItem = (props: ListItemProps) => {
           }}
         >
           <div style={{ maxWidth: '100%', display: 'flex', flexDirection: 'row' }}>
-            <Button onClick={openEditModal} startIcon={<EditIcon />} sx={style.buttons.tableAction}>
+            <Button
+              onClick={openEditModal}
+              startIcon={<EditIcon />}
+              sx={style.buttons.tableAction}
+              data-testid="product-modal-btn"
+            >
               {mdScreen ? 'Edit Item' : ''}
             </Button>
             <Button
