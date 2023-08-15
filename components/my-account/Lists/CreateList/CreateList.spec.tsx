@@ -9,7 +9,22 @@ import mockRouter from 'next-router-mock'
 import * as stories from './CreateList.stories'
 import { B2BProductSearchProps } from '@/components/b2b/B2BProductSearch/B2BProductSearch'
 
+import { Product } from '@/lib/gql/types'
+
 const { Common } = composeStories(stories)
+
+const nonConfigurableProductMock: Product = {
+  productCode: 'pdt1',
+  options: [
+    {
+      isRequired: false,
+    },
+  ],
+  createDate: undefined,
+  personalizationScore: 0,
+  score: 0,
+  updateDate: undefined,
+}
 
 const createMatchMedia = (width: number) => (query: string) => ({
   matches: mediaQuery.match(query, { width }),
@@ -28,6 +43,34 @@ jest.mock('@/components/b2b/B2BProductSearch/B2BProductSearch', () => ({
     return (
       <div data-testid="product-search">
         <input data-testid="search-input" />
+        <button
+          data-testid="add-non-configurable-product-button"
+          onClick={() => onAddProduct(nonConfigurableProductMock)}
+        >
+          Add Configurable Product
+        </button>
+      </div>
+    )
+  },
+}))
+
+jest.mock('@/components/my-account/Lists/ListItem/ListItem', () => ({
+  __esModule: true,
+  default: ({ item, onChangeQuantity, onDeleteItem }: any) => {
+    return (
+      <div data-testid="list-item">
+        <div data-testid="item-code">{item?.product?.productCode}</div>
+        <div data-testid="item-name">{item?.product?.productName}</div>
+        <div data-testid="item-quantity">{item?.quantity}</div>
+        <input onChange={onChangeQuantity} data-testid="quantity-input" />
+        <button
+          onClick={() => {
+            console.log(item.product.productCode)
+            onDeleteItem(item.product.productCode)
+          }}
+        >
+          Delete
+        </button>
       </div>
     )
   },
@@ -124,5 +167,46 @@ describe('[componenet] - Create List', () => {
     await waitFor(() => {
       expect(onCreateFormToggleMock).toBeCalled()
     })
+  })
+
+  it('should add product to list', async () => {
+    setup()
+    const b2bSearch = screen.getByTestId('product-search')
+    const b2bSearchInput = within(b2bSearch).getByTestId('search-input')
+
+    fireEvent.change(b2bSearchInput, { target: { value: nonConfigurableProductMock.productCode } })
+
+    expect(b2bSearchInput).toHaveValue(nonConfigurableProductMock.productCode)
+    const productSuggestion = within(b2bSearch).getByTestId('add-non-configurable-product-button')
+
+    fireEvent.click(productSuggestion)
+
+    await waitFor(() => {
+      expect(screen.getByText(/pdt1/i)).toBeVisible()
+    })
+  })
+
+  it('should remove added product from list', async () => {
+    setup()
+    const b2bSearch = screen.getByTestId('product-search')
+    const b2bSearchInput = within(b2bSearch).getByTestId('search-input')
+
+    fireEvent.change(b2bSearchInput, { target: { value: nonConfigurableProductMock.productCode } })
+
+    expect(b2bSearchInput).toHaveValue(nonConfigurableProductMock.productCode)
+    const productSuggestion = within(b2bSearch).getByTestId('add-non-configurable-product-button')
+
+    fireEvent.click(productSuggestion)
+
+    await waitFor(() => {
+      expect(screen.getByText(/pdt1/i)).toBeVisible()
+    })
+
+    const listItem = screen.getAllByTestId('list-item')
+    const deleteBtn = within(listItem[0]).getByText(/delete/i)
+
+    fireEvent.click(deleteBtn)
+
+    expect(screen.queryByTestId('list-item')).not.toBeInTheDocument()
   })
 })
