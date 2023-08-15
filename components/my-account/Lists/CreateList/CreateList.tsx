@@ -12,7 +12,7 @@ import ListItem from '@/components/my-account/Lists/ListItem/ListItem'
 import { useAuthContext } from '@/context'
 import { useCreateWishlist, useGetWishlist } from '@/hooks'
 
-import { Product } from '@/lib/gql/types'
+import { CrProductPrice, Product } from '@/lib/gql/types'
 
 export interface CreateListProps {
   onCreateFormToggle: (param: boolean) => void
@@ -197,16 +197,18 @@ const CreateList = (props: CreateListProps) => {
             key={product.productCode}
             item={{
               product: {
-                productName: product?.content?.productName,
-                productCode: product.productCode,
-                price: product.price,
+                productName: product?.content?.productName as string,
+                productCode: product.productCode as string,
+                price: product.price as CrProductPrice,
                 productImage:
-                  (product?.content?.productImages?.length as number) > 0 &&
-                  product?.content?.productImages?.[0]?.imageUrl,
+                  (product?.content?.productImages?.length as number) > 0
+                    ? (product?.content?.productImages?.[0]?.imageUrl as string)
+                    : '',
                 productImageAltText:
-                  (product?.content?.productImages?.length as number) > 0 &&
-                  product?.content?.productImages?.[0]?.altText,
-                productDescription: product.content?.productShortDescription,
+                  (product?.content?.productImages?.length as number) > 0
+                    ? (product?.content?.productImages?.[0]?.altText as string)
+                    : '',
+                productDescription: product.content?.productShortDescription as string,
               },
               quantity: 1,
             }}
