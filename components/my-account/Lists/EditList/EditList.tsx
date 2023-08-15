@@ -16,7 +16,7 @@ import { Maybe } from 'yup/lib/types'
 
 import ProductSearch from '@/components/b2b/B2BProductSearch/B2BProductSearch'
 import ListItem from '@/components/my-account/Lists/ListItem/ListItem'
-import { useGetWishlist, useUpdateWishlistMutation } from '@/hooks'
+import { useUpdateWishlistMutation } from '@/hooks'
 
 import { CrWishlist, CrWishlistInput, CrWishlistItem, Product } from '@/lib/gql/types'
 
@@ -82,7 +82,7 @@ const EditList = (props: EditListProps) => {
     if (currentItem) currentItem.quantity = quantity
   }
 
-  const handleProductItemClick = async (product?: Product) => {
+  const handleAddProduct = async (product?: Product) => {
     const items = listData?.items
     const item = items?.find(
       (i: Maybe<CrWishlistItem>) => i?.product?.productCode === product?.productCode
@@ -187,7 +187,7 @@ const EditList = (props: EditListProps) => {
           </Grid>
           <Grid item xs={12}>
             <Box sx={{ maxWidth: '360px' }}>
-              <ProductSearch onAddProduct={handleProductItemClick} />
+              <ProductSearch onAddProduct={handleAddProduct} />
             </Box>
             <Grid
               container
