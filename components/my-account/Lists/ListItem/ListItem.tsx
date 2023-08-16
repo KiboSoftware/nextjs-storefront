@@ -283,13 +283,13 @@ const ListItem = (props: ListItemProps) => {
             <Button
               onClick={openEditModal}
               startIcon={<EditIcon />}
-              sx={style.buttons.tableAction}
               data-testid="product-modal-btn"
+              color="inherit"
             >
               {mdScreen ? 'Edit Item' : ''}
             </Button>
             <Button
-              sx={style.buttons.tableAction}
+              color="inherit"
               aria-label="delete"
               id={product.lineId}
               onClick={() => onDeleteItem(product.lineId ? product.lineId : product.productCode)}

@@ -104,16 +104,16 @@ const CreateList = (props: CreateListProps) => {
     <>
       <Box style={{ width: '100%' }}>
         {mdScreen ? (
-          <IconButton
+          <Button
             data-testid="my-account-button"
             style={{ paddingLeft: 0, fontSize: '14px', color: '#000' }}
             onClick={() => {
               router.push('/my-account')
             }}
+            startIcon={<ArrowBackIosIcon sx={{ width: '14px' }} />}
           >
-            <ArrowBackIosIcon style={{ width: '14px', color: '#000' }} />
             {t('my-account')}
-          </IconButton>
+          </Button>
         ) : null}
         <Typography
           variant="h1"

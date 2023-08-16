@@ -30,85 +30,81 @@ const ListsTemplate = () => {
   const handleCreateFormToggle = () =>
     setState((prevState) => ({ ...prevState, isCreateFormOpen: !state.isCreateFormOpen }))
 
-  if (!state.isCreateFormOpen) {
+  const showCreateButton = !(state.isEditFormOpen || state.isCreateFormOpen)
+
+  if (state.isCreateFormOpen)
     return (
       <Grid container spacing={2} marginTop={2}>
         <Grid item xs={12}>
-          {!state.isCreateFormOpen && (
-            <Box>
-              {mdScreen ? (
-                <IconButton
-                  style={{ paddingLeft: 0, fontSize: '14px', color: '#000' }}
-                  data-testid="my-account-button"
-                  onClick={() => {
-                    router.push('/my-account')
-                  }}
-                >
-                  <ArrowBackIosIcon style={{ width: '14px', color: '#000' }} />
-                  {t('my-account')}
-                </IconButton>
-              ) : null}
-              <Typography
-                variant="h1"
-                style={{
-                  textAlign: mdScreen ? 'left' : 'center',
-                  fontSize: mdScreen ? '28px' : '20px',
-                  display: 'flex',
-                  justifyContent: mdScreen ? 'left' : 'center',
-                  alignItems: 'center',
-                }}
-              >
-                {mdScreen ? (
-                  state.isEditFormOpen ? null : (
-                    t('lists')
-                  )
-                ) : (
-                  <>
-                    <IconButton
-                      style={{ paddingLeft: 0, marginLeft: 0 }}
-                      onClick={() => {
-                        router.push('/my-account')
-                      }}
-                      data-testid="my-account-button"
-                    >
-                      <ArrowBackIosIcon style={{ width: '14px', color: '#000' }} />
-                    </IconButton>
-                    <Box component="span" style={{ marginLeft: 'auto', marginRight: 'auto' }}>
-                      {state.isEditFormOpen ? t('edit-list') : t('lists')}
-                    </Box>
-                  </>
-                )}
-              </Typography>
-              {!(state.isEditFormOpen || state.isCreateFormOpen) && (
-                <Button
-                  onClick={handleCreateFormToggle}
-                  sx={styles.addNewListButtonStyles}
-                  variant="contained"
-                  color="inherit"
-                  startIcon={<AddCircleOutlineIcon />}
-                  style={smScreen ? {} : { width: '100%' }}
-                  data-testid="create-new-list-btn"
-                >
-                  {t('create-new-list')}
-                </Button>
-              )}
-            </Box>
-          )}
-          <ViewLists
-            onEditFormToggle={handleEditFormToggle}
-            isEditFormOpen={state.isEditFormOpen}
+          <CreateList
+            onCreateFormToggle={(val: boolean) => setState({ ...state, isCreateFormOpen: val })}
           />
         </Grid>
       </Grid>
     )
-  }
 
   return (
     <Grid container spacing={2} marginTop={2}>
       <Grid item xs={12}>
-        <CreateList
-          onCreateFormToggle={(val: boolean) => setState({ ...state, isCreateFormOpen: val })}
-        />
+        <Box>
+          {mdScreen ? (
+            <Button
+              style={{ paddingLeft: 0, fontSize: '14px', marginBottom: '20px' }}
+              color="inherit"
+              data-testid="my-account-button"
+              onClick={() => {
+                router.push('/my-account')
+              }}
+              startIcon={<ArrowBackIosIcon sx={{ width: '14px' }} />}
+            >
+              {t('my-account')}
+            </Button>
+          ) : null}
+          <Typography
+            variant="h1"
+            style={{
+              textAlign: 'center',
+              fontSize: mdScreen ? '28px' : '20px',
+              display: 'flex',
+              justifyContent: mdScreen ? 'left' : 'center',
+              alignItems: 'center',
+            }}
+          >
+            {mdScreen ? (
+              !state.isEditFormOpen && t('lists')
+            ) : (
+              <>
+                <IconButton
+                  style={{ paddingLeft: 0, marginLeft: 0 }}
+                  onClick={() => {
+                    router.push('/my-account')
+                  }}
+                  data-testid="my-account-button"
+                >
+                  <ArrowBackIosIcon style={{ width: '14px', color: '#000' }} />
+                </IconButton>
+                <Box component="span" style={{ marginLeft: 'auto', marginRight: 'auto' }}>
+                  {state.isEditFormOpen ? t('edit-list') : t('lists')}
+                </Box>
+              </>
+            )}
+          </Typography>
+          {showCreateButton && (
+            <Button
+              onClick={handleCreateFormToggle}
+              sx={styles.addNewListButtonStyles}
+              variant="contained"
+              color="inherit"
+              startIcon={<AddCircleOutlineIcon />}
+              style={smScreen ? {} : { width: '100%' }}
+              data-testid="create-new-list-btn"
+            >
+              {t('create-new-list')}
+            </Button>
+          )}
+        </Box>
+
+        <ViewLists onEditFormToggle={handleEditFormToggle} isEditFormOpen={state.isEditFormOpen} />
       </Grid>
     </Grid>
   )
