@@ -12,15 +12,17 @@ import type { CrWishlist, WishlistCollection } from '@/lib/gql/types'
 /**
  * @hidden
  */
+
+type UseWishlistResponseData = WishlistCollection | CrWishlist | []
 export interface UseWishlistResponse {
-  data?: WishlistCollection | CrWishlist | []
+  data?: UseWishlistResponseData
   isLoading: boolean
   isSuccess: boolean
   isFetching: boolean
   isPending: boolean
   refetch: (
     options?: RefetchOptions | undefined
-  ) => Promise<QueryObserverResult<CrWishlist | WishlistCollection | [], Error>>
+  ) => Promise<QueryObserverResult<UseWishlistResponseData, Error>>
 }
 
 export interface PageProps {
@@ -30,7 +32,7 @@ export interface PageProps {
   startIndex: number
 }
 
-const getWishlists = async (params?: PageProps): Promise<WishlistCollection | CrWishlist | []> => {
+const getWishlists = async (params?: PageProps): Promise<UseWishlistResponseData> => {
   const client = makeGraphQLClient()
   const response = await client.request({
     document: getWishlistQuery,

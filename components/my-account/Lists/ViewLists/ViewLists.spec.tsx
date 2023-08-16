@@ -8,7 +8,6 @@ import { graphql } from 'msw'
 
 import * as stories from './ViewLists.stories'
 import { server } from '@/__mocks__/msw/server'
-import { wishlistMock } from '@/__mocks__/stories'
 import { renderWithQueryClient } from '@/__test__/utils'
 import { KiboDialogProps } from '@/components/common/KiboDialog/KiboDialog'
 import { EditListProps } from '@/components/my-account/Lists/EditList/EditList'

@@ -186,17 +186,17 @@ const ListItem = (props: ListItemProps) => {
 
   function handleChangeQuantity(e: number) {
     setQuantityState(e)
-    onChangeQuantity(product.lineId || product.productCode, e)
+    onChangeQuantity(product.lineId ? product.lineId : product.productCode, e)
   }
 
   const handleQuantityIncrease = () => {
     setQuantityState(quantityState + 1)
-    onChangeQuantity(product.lineId || product.productCode, quantityState)
+    onChangeQuantity(product.lineId ? product.lineId : product.productCode, quantityState)
   }
 
   const handleQuantityDecrease = () => {
     setQuantityState(quantityState - 1)
-    onChangeQuantity(product.lineId || product.productCode, quantityState)
+    onChangeQuantity(product.lineId ? product.lineId : product.productCode, quantityState)
   }
 
   function openEditModal() {
@@ -292,7 +292,7 @@ const ListItem = (props: ListItemProps) => {
               sx={style.buttons.tableAction}
               aria-label="delete"
               id={product.lineId}
-              onClick={() => onDeleteItem(product.lineId || product.productCode)}
+              onClick={() => onDeleteItem(product.lineId ? product.lineId : product.productCode)}
               startIcon={<DeleteIcon />}
             >
               {mdScreen ? 'Remove' : ''}
