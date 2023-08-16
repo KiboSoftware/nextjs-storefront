@@ -216,7 +216,7 @@ const ViewLists = (props: ViewListsProps) => {
           </>
         )}
         {wishlistsResponse.items?.length === 0 ? (
-          <Typography>No List found</Typography>
+          <Typography>{t('no-list-found')}</Typography>
         ) : (
           <>
             <ListTable

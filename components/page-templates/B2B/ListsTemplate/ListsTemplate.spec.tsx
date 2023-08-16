@@ -138,4 +138,24 @@ describe('[component] - ListsTemplate', () => {
 
     expect(screen.getByTestId('view-lists-mock')).toBeVisible()
   })
+
+  it('should toggle edit list form in mobile view', async () => {
+    window.matchMedia = createMatchMedia(500)
+    setup()
+    const viewLists = screen.getByTestId('view-lists-mock')
+    const editToggleBtn = within(viewLists).getByTestId('toggle-edit-form')
+
+    fireEvent.click(editToggleBtn)
+
+    const editList = screen.getByTestId('edit-list-mock')
+    const editToggleBtnEditList = within(editList).getByTestId('toggle-edit-form')
+    const editlistHeading = screen.getByText(/edit-list/i)
+    expect(editList).toBeVisible()
+    expect(editToggleBtnEditList).toBeVisible()
+    expect(editlistHeading).toBeVisible()
+
+    fireEvent.click(editToggleBtnEditList)
+
+    expect(viewLists).toBeVisible()
+  })
 })

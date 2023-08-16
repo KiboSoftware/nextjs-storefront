@@ -168,15 +168,17 @@ describe('[componenet] - Create List', () => {
     })
   })
 
-  it('should add product to list', async () => {
+  it('should add product to new list', async () => {
     setup()
-    const b2bSearch = screen.getByTestId('product-search')
-    const b2bSearchInput = within(b2bSearch).getByTestId('search-input')
+    const productSearch = screen.getByTestId('product-search')
+    const searchInput = within(productSearch).getByTestId('search-input')
 
-    fireEvent.change(b2bSearchInput, { target: { value: nonConfigurableProductMock.productCode } })
+    fireEvent.change(searchInput, { target: { value: nonConfigurableProductMock.productCode } })
 
-    expect(b2bSearchInput).toHaveValue(nonConfigurableProductMock.productCode)
-    const productSuggestion = within(b2bSearch).getByTestId('add-non-configurable-product-button')
+    expect(searchInput).toHaveValue(nonConfigurableProductMock.productCode)
+    const productSuggestion = within(productSearch).getByTestId(
+      'add-non-configurable-product-button'
+    )
 
     fireEvent.click(productSuggestion)
 
@@ -187,13 +189,15 @@ describe('[componenet] - Create List', () => {
 
   it('should remove added product from list', async () => {
     setup()
-    const b2bSearch = screen.getByTestId('product-search')
-    const b2bSearchInput = within(b2bSearch).getByTestId('search-input')
+    const productSearch = screen.getByTestId('product-search')
+    const searchInput = within(productSearch).getByTestId('search-input')
 
-    fireEvent.change(b2bSearchInput, { target: { value: nonConfigurableProductMock.productCode } })
+    fireEvent.change(searchInput, { target: { value: nonConfigurableProductMock.productCode } })
 
-    expect(b2bSearchInput).toHaveValue(nonConfigurableProductMock.productCode)
-    const productSuggestion = within(b2bSearch).getByTestId('add-non-configurable-product-button')
+    expect(searchInput).toHaveValue(nonConfigurableProductMock.productCode)
+    const productSuggestion = within(productSearch).getByTestId(
+      'add-non-configurable-product-button'
+    )
 
     fireEvent.click(productSuggestion)
 
