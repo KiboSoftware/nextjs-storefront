@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 
 import {
   Button,
@@ -14,11 +14,15 @@ import {
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs'
 import { DatePicker } from '@mui/x-date-pickers/DatePicker'
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider'
+import dayjs from 'dayjs'
 import { useTranslation } from 'next-i18next'
 
 import { KiboDialog, KiboRadio } from '@/components/common'
+import { QuoteFilters } from '@/lib/types'
 
-interface CartDetailsProps {
+interface QuotesFilterDialogProps {
+  filters: QuoteFilters
+  onFilterAction: (val: QuoteFilters) => void
   closeModal: () => void
 }
 
@@ -27,7 +31,19 @@ interface QuotesFilterActionsProps {
   onClear: () => void
 }
 
-const FilterInput = ({ label = '' }) => {
+interface FilterInputProps {
+  label: string
+  value: string
+  handleDateChange: (date: string) => void
+}
+
+const FilterTypes = {
+  EXPIRATION_DATE: 'expirationDate',
+  CREATE_DATE: 'createDate',
+  STATUS: 'status',
+}
+
+const FilterInput = ({ label = '', value = '', handleDateChange }: FilterInputProps) => {
   return (
     <FormControl variant="standard" fullWidth>
       <InputLabel shrink htmlFor={label}>
@@ -36,8 +52,11 @@ const FilterInput = ({ label = '' }) => {
       <DatePicker
         openTo="day"
         views={['year', 'month', 'day']}
-        value={''}
-        onChange={(newValue) => console.log(newValue)}
+        inputFormat="YYYY-MM-DD"
+        value={value ? dayjs(value) : null}
+        onChange={(newValue) => {
+          handleDateChange(dayjs(newValue).format('YYYY-MM-DD'))
+        }}
         renderInput={(params) => (
           <TextField
             {...params}
@@ -55,8 +74,14 @@ const FilterInput = ({ label = '' }) => {
   )
 }
 
-const QuotesFilterContent = () => {
+interface QuotesFilterContentProps {
+  filterValues: any
+  onFilterInput: (value: string, field: string) => void
+}
+const QuotesFilterContent = (props: QuotesFilterContentProps) => {
+  const { filterValues, onFilterInput } = props
   const { t } = useTranslation('common')
+
   const statusFilterRadioOptions = [
     {
       label: <Typography variant="body2">{t('pending')}</Typography>,
@@ -79,17 +104,28 @@ const QuotesFilterContent = () => {
     <LocalizationProvider dateAdapter={AdapterDayjs}>
       <Grid container spacing={3}>
         <Grid item xs={12}>
-          <FilterInput label="Expiration Date" />
+          <FilterInput
+            label={t('expiration-date')}
+            value={filterValues[FilterTypes.EXPIRATION_DATE]}
+            handleDateChange={(value) => onFilterInput(value, FilterTypes.EXPIRATION_DATE)}
+          />
         </Grid>
         <Grid item xs={12}>
-          <FilterInput label="Date Created" />
+          <FilterInput
+            label={t('date-created')}
+            value={filterValues[FilterTypes.CREATE_DATE]}
+            handleDateChange={(value) => onFilterInput(value, FilterTypes.CREATE_DATE)}
+          />
         </Grid>
         <Grid item xs={12}>
           <KiboRadio
             name="quote-status"
             title={<InputLabel shrink>{t('status')}</InputLabel>}
             radioOptions={statusFilterRadioOptions}
-            onChange={() => null}
+            selected={filterValues[FilterTypes.STATUS]}
+            onChange={(value) => {
+              onFilterInput(value, FilterTypes.STATUS)
+            }}
           />
         </Grid>
       </Grid>
@@ -122,20 +158,37 @@ const QuotesFilterActions = (props: QuotesFilterActionsProps) => {
 }
 
 // Component
-const QuotesFilterDialog = (props: CartDetailsProps) => {
-  const { closeModal } = props
+const QuotesFilterDialog = (props: QuotesFilterDialogProps) => {
+  const { filters, onFilterAction, closeModal } = props
   const { t } = useTranslation('common')
 
+  const [filterValues, setFilterValues] = useState<QuoteFilters>(filters)
+
+  const handleFilterInput = (value: string, field: string) => {
+    setFilterValues({
+      ...filterValues,
+      [field]: value,
+    })
+  }
+
   const handleFilterApply = () => {
+    onFilterAction(filterValues)
     closeModal()
   }
+
   const handleFilterClear = () => {
-    closeModal()
+    setFilterValues({
+      ...filterValues,
+      expirationDate: '',
+      createDate: '',
+      status: '',
+    })
+    onFilterAction(filterValues)
   }
 
   const DialogArgs = {
     Title: t('apply-filter'),
-    Content: <QuotesFilterContent />,
+    Content: <QuotesFilterContent filterValues={filterValues} onFilterInput={handleFilterInput} />,
     showContentTopDivider: true,
     showContentBottomDivider: false,
     Actions: <QuotesFilterActions onApply={handleFilterApply} onClear={handleFilterClear} />,

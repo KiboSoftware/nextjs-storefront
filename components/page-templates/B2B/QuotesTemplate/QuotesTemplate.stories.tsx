@@ -2,19 +2,19 @@ import React from 'react'
 
 import { ComponentStory, ComponentMeta } from '@storybook/react'
 
-import QuotesTable from './QuotesTable'
+import QuotesTemplate from './QuotesTemplate'
 import { quotesMock } from '@/__mocks__/stories/quotesMock'
 
+// Common
 export default {
-  title: 'B2B/Quotes/QuotesTable',
-  component: QuotesTable,
+  title: 'Page Templates/B2B/QuotesTemplate',
+  component: QuotesTemplate,
   argTypes: {
-    backgroundColor: { control: 'color' },
     setQuotesSearchParam: { action: 'setQuotesSearchParam' },
   },
-} as ComponentMeta<typeof QuotesTable>
+} as ComponentMeta<typeof QuotesTemplate>
 
-const Template: ComponentStory<typeof QuotesTable> = (args) => <QuotesTable {...args} />
+const Template: ComponentStory<typeof QuotesTemplate> = (args) => <QuotesTemplate {...args} />
 
 export const Common = Template.bind({})
 
@@ -40,14 +40,13 @@ Common.args = {
   },
 }
 
-export const Mobile = Template.bind({})
-
-Mobile.args = {
-  ...Common.args,
-}
-
-Mobile.parameters = {
+export const QuotesTemplateMobile = Template.bind({})
+QuotesTemplateMobile.parameters = {
   viewport: {
     defaultViewport: 'iphone12promax',
   },
+}
+
+QuotesTemplateMobile.args = {
+  ...Common.args,
 }

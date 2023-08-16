@@ -28,3 +28,6 @@ export * from './buildUpdateCustomerB2bUserParams'
 export * from './getPerPageItemText'
 export * from './buildCreateCustomerB2bAccountParams'
 export * from './buildPurchaseOrderPaymentActionForCheckoutParams'
+
+export * from './b2b/buildQuotesFilterParam'
+export * from './b2b/parseFilterParamToObject'

@@ -51,6 +51,7 @@ export * from './queries/wishlist/useGetWishlist/useGetWishlist'
 
 // b2b
 export * from './queries/b2b/useGetB2BUserQuery/useGetB2BUserQuery'
+export * from './queries/b2b/quotes/useGetQuotes/useGetQuotes'
 
 // Custom hooks
 export * from './custom/useDebounce/useDebounce'

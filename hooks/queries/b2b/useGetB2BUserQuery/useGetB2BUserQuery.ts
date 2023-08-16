@@ -4,11 +4,11 @@
 import { useQuery } from '@tanstack/react-query'
 
 import { makeGraphQLClient } from '@/lib/gql/client'
+import { getCustomerB2BAccountUsersQuery } from '@/lib/gql/queries'
 import { customerB2BUserKeys } from '@/lib/react-query/queryKeys'
+import { B2BUserResultType, QueryB2BUserArgs } from '@/lib/types/CustomerB2BUser'
 
 import type { B2BAccountCollection, QueryB2bAccountUsersArgs } from '@/lib/gql/types'
-import { getCustomerB2BAccountUsersQuery } from '@/lib/gql/queries'
-import { B2BUserResultType, QueryB2BUserArgs } from '@/lib/types/CustomerB2BUser'
 
 /**
  * @hidden

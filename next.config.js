@@ -88,13 +88,14 @@ module.exports = {
     },
     B2BQuotes: {
       sortOptions: [
-        { value: 'First Created', id: '' },
-        { value: 'Last Created', id: 'created' },
+        { value: 'First Created', id: 'created asc' },
+        { value: 'Last Created', id: 'created desc' },
         { value: 'Quote name: A-Z', id: 'name asc' },
         { value: 'Quote name: Z-A', id: 'name desc' },
         { value: 'Quote number: Low-High', id: 'number asc' },
         { value: 'Quote number: High-Low', id: 'number desc' },
       ],
+      pageSize: 5,
     },
     orderHistory: {
       startIndex: 0,

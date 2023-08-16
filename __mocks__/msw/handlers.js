@@ -13,6 +13,7 @@ import {
   customerPurchaseOrderMock,
   customerPurchaseOrderAccountMock,
 } from '../stories'
+import { b2BAccountResponseMock } from '../stories/b2BAccountResponseMock'
 import { cartItemMock } from '../stories/cartItemMock'
 import { cartCouponMock, cartMock } from '../stories/cartMock'
 import { categoryTreeDataMock } from '../stories/categoryTreeDataMock'
@@ -26,6 +27,7 @@ import { orderCollection } from '../stories/orderCollection'
 import { orderCouponMock } from '../stories/orderMock'
 import { productPriceMock } from '../stories/productPriceMock'
 import { productSearchResultMock } from '../stories/productSearchResultMock'
+import { quotesMock } from '../stories/quotesMock'
 import { searchSuggestionMock } from '../stories/searchSuggestionResultMock'
 import { subscriptionCollectionMock } from '../stories/subscriptionCollectionMock'
 // import { updateCustomerAccountCardMock } from '../stories/updateCustomerAccountCardMock'
@@ -36,7 +38,6 @@ import { userMock, loginUserMock, registerUserMock } from '../stories/userMock'
 import { wishlistMock } from '../stories/wishlistMock'
 import { subscriptionMock } from '@/__mocks__/stories/subscriptionMock'
 import { LOGOUT_ENDPOINT } from '@/lib/gql/client'
-import { b2BAccountResponseMock } from '../stories/b2BAccountResponseMock'
 
 const baseUrl = 'http://localhost:3000'
 const mockCreateCustomerAccount = {
@@ -459,7 +460,7 @@ export const subscriptionHandlers = [
   }),
 ]
 
-export const b2bAccountUsersHandlers = [
+export const b2bHandlers = [
   graphql.query('b2bAccountUsers', (_req, res, ctx) => {
     return res(ctx.data({ b2bAccountUsers: customerB2BUserForPage0Mock }))
   }),
@@ -501,6 +502,10 @@ export const b2bAccountUsersHandlers = [
   graphql.mutation('createCustomerB2bAccount', (_req, res, ctx) => {
     return res(ctx.data({ createCustomerB2bAccount: b2BAccountResponseMock }))
   }),
+
+  graphql.query('quotes', (_req, res, ctx) => {
+    return res(ctx.data({ quotes: quotesMock }))
+  })
 ]
 
 export const handlers = [
@@ -517,5 +522,5 @@ export const handlers = [
   ...orderHandlers,
   ...inventoryHandlers,
   ...subscriptionHandlers,
-  ...b2bAccountUsersHandlers,
+  ...b2bHandlers,
 ]

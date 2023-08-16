@@ -3,7 +3,7 @@ import { format } from 'date-fns'
 import { DateFormat } from '../constants'
 import { AuditRecord, AuditRecordChangeField, Quote, QuoteCollection } from '../gql/types'
 
-const getQuotes = (collection: QuoteCollection) => collection.items as Quote[]
+const getQuotes = (collection: QuoteCollection) => collection?.items as Quote[]
 
 const getQuoteId = (quote: Quote) => quote.id as string
 const getNumber = (quote: Quote) => quote.number as number
@@ -58,6 +58,14 @@ const getQuoteDetails = (quote: Quote) => {
   }
 }
 
+const getQuotesPaginationDetails = (collection: QuoteCollection) => {
+  return {
+    count: collection?.pageCount,
+    startIndex: collection?.startIndex,
+    pageSize: collection?.pageSize,
+  }
+}
+
 export const quoteGetters = {
   getQuotes,
   getNumber,
@@ -68,4 +76,5 @@ export const quoteGetters = {
   getStatus,
   getQuoteDetails,
   getRecordDetails,
+  getQuotesPaginationDetails,
 }

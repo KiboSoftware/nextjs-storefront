@@ -3,7 +3,7 @@ import React from 'react'
 
 import '@testing-library/jest-dom'
 import { composeStories } from '@storybook/testing-react'
-import { render, screen, waitFor } from '@testing-library/react'
+import { cleanup, render, screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import mediaQuery from 'css-mediaquery'
 import mockRouter from 'next-router-mock'
@@ -50,6 +50,8 @@ jest.mock('next-recaptcha-v3', () => ({
     executeRecaptcha: (action: string) => Promise<string>,
   }),
 }))
+
+afterEach(() => cleanup())
 
 describe('[component] - MyAccountTemplate', () => {
   const setup = () => {
@@ -158,6 +160,21 @@ describe('[component] - MyAccountTemplate', () => {
       expect(mockRouter).toMatchObject({
         asPath: '/my-account/b2b/quick-order',
         pathname: '/my-account/b2b/quick-order',
+      })
+    })
+  })
+
+  it('should redirect to quotes page when clicked on Quotes', async () => {
+    const { user } = setup()
+
+    const quotes = screen.getByText(/quotes/i)
+
+    await user.click(quotes)
+
+    await waitFor(() => {
+      expect(mockRouter).toMatchObject({
+        asPath: '/my-account/b2b/quotes',
+        pathname: '/my-account/b2b/quotes',
         query: {},
       })
     })
