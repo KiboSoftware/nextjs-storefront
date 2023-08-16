@@ -24,10 +24,9 @@ const ListsTemplate = () => {
   const smScreen = useMediaQuery<boolean>(theme.breakpoints.up('sm'))
   const { t } = useTranslation('common')
 
-  const showCreateListButton = !(state.isCreateFormOpen || state.isEditFormOpen)
-
   const handleEditFormToggle = (val: boolean) =>
     setState((prevState) => ({ ...prevState, isEditFormOpen: val }))
+
   const handleCreateFormToggle = () =>
     setState((prevState) => ({ ...prevState, isCreateFormOpen: !state.isCreateFormOpen }))
 
@@ -35,7 +34,7 @@ const ListsTemplate = () => {
     return (
       <Grid container spacing={2} marginTop={2}>
         <Grid item xs={12}>
-          {showCreateListButton && (
+          {!state.isCreateFormOpen && (
             <Box>
               {mdScreen ? (
                 <IconButton
@@ -52,17 +51,17 @@ const ListsTemplate = () => {
               <Typography
                 variant="h1"
                 style={{
-                  textAlign: 'center',
-                  fontSize: '20px',
+                  textAlign: mdScreen ? 'left' : 'center',
+                  fontSize: mdScreen ? '28px' : '20px',
                   display: 'flex',
-                  justifyContent: 'center',
+                  justifyContent: mdScreen ? 'left' : 'center',
                   alignItems: 'center',
                 }}
               >
                 {mdScreen ? (
-                  <Box component="span" style={{ fontSize: '28px', marginRight: 'auto' }}>
-                    {t('lists')}
-                  </Box>
+                  state.isEditFormOpen ? null : (
+                    t('lists')
+                  )
                 ) : (
                   <>
                     <IconButton
@@ -75,22 +74,24 @@ const ListsTemplate = () => {
                       <ArrowBackIosIcon style={{ width: '14px', color: '#000' }} />
                     </IconButton>
                     <Box component="span" style={{ marginLeft: 'auto', marginRight: 'auto' }}>
-                      {t('lists')}
+                      {state.isEditFormOpen ? t('edit-list') : t('lists')}
                     </Box>
                   </>
                 )}
               </Typography>
-              <Button
-                onClick={handleCreateFormToggle}
-                sx={styles.addNewListButtonStyles}
-                variant="contained"
-                color="inherit"
-                startIcon={<AddCircleOutlineIcon />}
-                style={smScreen ? {} : { width: '100%' }}
-                data-testid="create-new-list-btn"
-              >
-                {t('create-new-list')}
-              </Button>
+              {!(state.isEditFormOpen || state.isCreateFormOpen) && (
+                <Button
+                  onClick={handleCreateFormToggle}
+                  sx={styles.addNewListButtonStyles}
+                  variant="contained"
+                  color="inherit"
+                  startIcon={<AddCircleOutlineIcon />}
+                  style={smScreen ? {} : { width: '100%' }}
+                  data-testid="create-new-list-btn"
+                >
+                  {t('create-new-list')}
+                </Button>
+              )}
             </Box>
           )}
           <ViewLists
@@ -103,7 +104,6 @@ const ListsTemplate = () => {
   }
 
   return (
-    // todo
     <Grid container spacing={2} marginTop={2}>
       <Grid item xs={12}>
         <CreateList

@@ -143,7 +143,7 @@ const EditList = (props: EditListProps) => {
                       style={{ marginLeft: '5px' }}
                       data-testid="saveNameBtn"
                     >
-                      Save
+                      {t('save')}
                     </Button>
                   </form>
                 </>
@@ -179,10 +179,10 @@ const EditList = (props: EditListProps) => {
                       onClick={() => onEditFormToggle(false)}
                       style={{ marginRight: '10px' }}
                     >
-                      Cancel
+                      {t('cancel')}
                     </Button>
                     <Button variant="contained" size="medium" onClick={handleSaveWishlist}>
-                      Save & Close
+                      {t('save-and-close')}
                     </Button>
                   </Container>
                 </Grid>
@@ -214,7 +214,7 @@ const EditList = (props: EditListProps) => {
       <br />
       <br />
 
-      <Typography variant="h3" style={{ fontWeight: 'bold', margin: '20px 0' }}>
+      <Typography variant="h3" fontWeight={'bold'}>
         {t('list-items')}
       </Typography>
       {listData?.items?.map((item: Maybe<CrWishlistItem>) => {
@@ -275,9 +275,7 @@ const EditList = (props: EditListProps) => {
             </Button>
           </Grid>
         </>
-      ) : (
-        <></>
-      )}
+      ) : null}
     </>
   )
 }
