@@ -27,6 +27,7 @@ import { orderCollection } from '../stories/orderCollection'
 import { orderCouponMock } from '../stories/orderMock'
 import { productPriceMock } from '../stories/productPriceMock'
 import { productSearchResultMock } from '../stories/productSearchResultMock'
+import { quoteMock } from '../stories/quoteMock'
 import { quotesMock } from '../stories/quotesMock'
 import { searchSuggestionMock } from '../stories/searchSuggestionResultMock'
 import { subscriptionCollectionMock } from '../stories/subscriptionCollectionMock'
@@ -502,10 +503,38 @@ export const b2bHandlers = [
   graphql.mutation('createCustomerB2bAccount', (_req, res, ctx) => {
     return res(ctx.data({ createCustomerB2bAccount: b2BAccountResponseMock }))
   }),
+  // useGetQuoteById
+  graphql.query('getQuoteByID', (_req, res, ctx) => {
+    return res(ctx.data({ quote: quoteMock?.items?.[0] }))
+  }),
+
+  //useCreateQuote
+  graphql.mutation('createQuote', (_req, res, ctx) => {
+    return res(ctx.data({ createQuote: quoteMock?.items?.[0] }))
+  }),
+
+  // useCreateQuoteItem
+  graphql.mutation('createQuoteItem', (_req, res, ctx) => {
+    return res(ctx.data({ createQuoteItem: quoteMock?.items?.[0] }))
+  }),
+
+  // useDeleteQuoteItem
+  graphql.mutation('deleteQuoteItem', (_req, res, ctx) => {
+    return res(ctx.data({ deleteQuoteItem: true }))
+  }),
 
   graphql.query('quotes', (_req, res, ctx) => {
     return res(ctx.data({ quotes: quotesMock }))
-  })
+  }),
+  //useUpdateQuoteItemQuantity
+  graphql.mutation('updateQuoteItemQuantity', (_req, res, ctx) => {
+    return res(ctx.data({ updateQuoteItemQuantity: quoteMock?.items?.[0] }))
+  }),
+
+  //useUpdateQuoteItemFulfillment
+  graphql.mutation('updateQuoteItemFulfillment', (_req, res, ctx) => {
+    return res(ctx.data({ updateQuoteItemFulfillment: quoteMock?.items?.[0] }))
+  }),
 ]
 
 export const handlers = [

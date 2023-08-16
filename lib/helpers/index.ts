@@ -31,3 +31,6 @@ export * from './buildPurchaseOrderPaymentActionForCheckoutParams'
 
 export * from './b2b/buildQuotesFilterParam'
 export * from './b2b/parseFilterParamToObject'
+export * from './buildCreateQuoteItemParams'
+export * from './buildCreateQuoteParams'
+export * from './buildUpdateQuoteItemFulfillmentParams'

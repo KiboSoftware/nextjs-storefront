@@ -61,3 +61,10 @@ export { default as updateForgottenAccountPassword } from './user/updateForgotte
 
 // Account Hierarchy
 export { default as createCustomerB2bAccountMutation } from './b2b/account-hierarchy/create-customer-b2b-account'
+//quotes
+export { default as deleteQuoteItemMutation } from './quotes/deleteQuoteItemMutation'
+export { default as createQuoteItemMutation } from './quotes/createQuoteItemMutation'
+export { default as createQuoteMutation } from './quotes/createQuoteMutation'
+export { default as updateQuoteMutation } from './quotes/updateQuoteMutation'
+export { default as updateQuoteItemQuantityMutation } from './quotes/updateQuoteItemQuantityMutation'
+export { default as updateQuoteItemFulfillmentMutation } from './quotes/updateQuoteItemFulfillmentMutation'

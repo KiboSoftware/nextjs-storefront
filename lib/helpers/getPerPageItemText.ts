@@ -1,7 +1,7 @@
-import { B2BAccountCollection } from '../gql/types'
+import { B2BAccountCollection, B2BUserCollection } from '../gql/types'
 
 interface PerPageItemTextArgs {
-  data: B2BAccountCollection | undefined
+  data: B2BAccountCollection | B2BUserCollection | undefined
   mdScreen: boolean
   displayText: string
 }

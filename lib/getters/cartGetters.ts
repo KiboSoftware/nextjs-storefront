@@ -65,7 +65,7 @@ const getProductFulfillmentOptions = (
   }))
 }
 
-const getSubscriptionDetails = (cartItem: Maybe<CrCartItem>) => {
+const getSubscriptionDetails = (cartItem: Maybe<CrCartItem> | Maybe<CrOrderItem>) => {
   return subscriptionGetters.getSubscriptionFrequency(cartItem?.subscription as CrSubscriptionInfo)
 }
 

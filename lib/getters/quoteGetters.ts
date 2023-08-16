@@ -5,22 +5,24 @@ import { AuditRecord, AuditRecordChangeField, Quote, QuoteCollection } from '../
 
 const getQuotes = (collection: QuoteCollection) => collection?.items as Quote[]
 
-const getQuoteId = (quote: Quote) => quote.id as string
-const getNumber = (quote: Quote) => quote.number as number
+const getQuoteId = (quote: Quote) => quote?.id as string
+const getNumber = (quote: Quote) => quote?.number as number
 
-const getName = (quote: Quote) => quote.name as string
+const getName = (quote: Quote) => quote?.name as string
 
 const getExpirationDate = (quote: Quote) =>
-  quote.expirationDate ? format(new Date(quote.expirationDate), DateFormat.DATE_FORMAT) : ''
+  quote?.expirationDate
+    ? format(new Date(quote?.expirationDate), DateFormat.DATE_FORMAT_WITH_SLASH)
+    : '-'
 
 const getCreatedDate = (quote: Quote) =>
-  quote.auditInfo?.createDate
-    ? format(new Date(quote.auditInfo?.createDate), DateFormat.DATE_FORMAT)
+  quote?.auditInfo?.createDate
+    ? format(new Date(quote?.auditInfo?.createDate), DateFormat.DATE_FORMAT_WITH_SLASH)
     : ''
 
-const getTotal = (quote: Quote) => quote.total
+const getTotal = (quote: Quote) => quote?.total
 
-const getStatus = (quote: Quote) => quote.status as string
+const getStatus = (quote: Quote) => quote?.status as string
 
 const getRecordType = (record: AuditRecord) => record.changes?.[0]?.type as string
 
@@ -46,6 +48,14 @@ const getRecordDetails = (record: AuditRecord) => {
   }
 }
 
+const getQuoteSubmittedDate = (quote: Quote, withTimestamp?: boolean) => {
+  return quote?.submittedDate
+    ? withTimestamp
+      ? format(new Date(quote?.submittedDate), DateFormat.DATE_FORMAT_WITH_TIME)
+      : format(new Date(quote?.submittedDate), DateFormat.DATE_FORMAT_WITH_SLASH)
+    : quote?.submittedDate
+}
+
 const getQuoteDetails = (quote: Quote) => {
   return {
     quoteId: getQuoteId(quote),
@@ -55,6 +65,7 @@ const getQuoteDetails = (quote: Quote) => {
     createdDate: getCreatedDate(quote),
     total: getTotal(quote),
     status: getStatus(quote),
+    submittedDate: getQuoteSubmittedDate(quote),
   }
 }
 
@@ -76,5 +87,7 @@ export const quoteGetters = {
   getStatus,
   getQuoteDetails,
   getRecordDetails,
+  getQuoteSubmittedDate,
+  getQuoteId,
   getQuotesPaginationDetails,
 }

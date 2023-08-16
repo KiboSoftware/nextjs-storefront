@@ -137,6 +137,7 @@ export enum DisplayMode {
 export enum DateFormat {
   DATE_FORMAT = 'MMMM dd, yyyy',
   DATE_FORMAT_WITH_TIME = 'MMMM dd, yyyy, hh:mm a zzz',
+  DATE_FORMAT_WITH_SLASH = 'MM/dd/yyyy',
 }
 
 export enum ActionName {
