@@ -171,3 +171,7 @@ export const B2BRoles = {
   NON_PURCHASER: 'non-purchasers',
   BUYER: 'buyer',
 }
+
+export enum AccountType {
+  B2B = 'B2B',
+}
