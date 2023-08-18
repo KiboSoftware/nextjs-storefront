@@ -124,3 +124,12 @@ export const productKeys = {
 export const addressKeys = {
   all: ['address'] as const,
 }
+
+export const b2bQuotesKeys = {
+  all: ['quotes'],
+  quotesParams: (params: any) => [...b2bQuotesKeys.all, { ...params }] as const,
+}
+export const quoteKeys = {
+  all: ['quote'] as const,
+  detail: (id: string) => [...quoteKeys.all, id] as const,
+}

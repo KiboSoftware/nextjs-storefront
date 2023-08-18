@@ -51,6 +51,7 @@ export * from './queries/wishlist/useGetWishlist/useGetWishlist'
 
 // b2b
 export * from './queries/b2b/useGetB2BUserQuery/useGetB2BUserQuery'
+export * from './queries/b2b/quotes/useGetQuotes/useGetQuotes'
 
 // Custom hooks
 export * from './custom/useDebounce/useDebounce'
@@ -155,3 +156,10 @@ export * from './mutations/b2b/useUpdateCustomerB2bUser/useUpdateCustomerB2bUser
 export * from './mutations/b2b/useAddRoleToCustomerB2bAccount/useAddRoleToCustomerB2bAccount'
 export * from './mutations/b2b/useDeleteB2bAccountRole/useDeleteB2bAccountRole'
 export * from './mutations/b2b/useCreateCustomerB2bAccount/useCreateCustomerB2bAccount'
+
+//quotes
+export * from './mutations/quotes/useDeleteQuoteItem/useDeleteQuoteItem'
+export * from './mutations/quotes/useCreateQuoteItem/useCreateQuoteItem'
+export * from './mutations/quotes/useCreateQuote/useCreateQuote'
+export * from './mutations/quotes/useUpdateQuoteItemFulfillment/useUpdateQuoteItemFulfillment'
+export * from './mutations/quotes/useUpdateQuoteItemQuantity/useUpdateQuoteItemQuantity'

@@ -18,10 +18,10 @@ import { cartGetters, productGetters } from '@/lib/getters'
 import { uiHelpers } from '@/lib/helpers'
 import type { FulfillmentOption } from '@/lib/types'
 
-import type { CrCartItem as CartItemType, CrProduct, Maybe } from '@/lib/gql/types'
+import type { CrCartItem as CartItemType, CrOrderItem, CrProduct, Maybe } from '@/lib/gql/types'
 
 interface CartItemProps {
-  cartItem: Maybe<CartItemType>
+  cartItem: Maybe<CartItemType> | Maybe<CrOrderItem>
   maxQuantity: number | undefined
   actions?: Array<string>
   fulfillmentOptions: FulfillmentOption[]

@@ -7,10 +7,10 @@ import { FulfillmentOptions } from '@/lib/constants'
 import { cartGetters } from '@/lib/getters/cartGetters'
 import { FulfillmentOption } from '@/lib/types'
 
-import type { CrCartItem, Location, Maybe } from '@/lib/gql/types'
+import type { CrCartItem, CrOrderItem, Location, Maybe } from '@/lib/gql/types'
 
 interface CartItemListProps {
-  cartItems: Maybe<CrCartItem>[]
+  cartItems: Maybe<CrCartItem>[] | Maybe<CrOrderItem>[]
   fulfillmentLocations: Location[]
   purchaseLocation: Location
   onCartItemQuantityUpdate: (cartItemId: string, quantity: number) => void
@@ -49,7 +49,7 @@ const CartItemList = (props: CartItemListProps) => {
 
   return (
     <TransitionGroup>
-      {cartItems?.map((item: Maybe<CrCartItem>) => (
+      {cartItems?.map((item: Maybe<CrCartItem> | Maybe<CrOrderItem>) => (
         <Collapse
           key={`${item?.id}`}
           sx={{

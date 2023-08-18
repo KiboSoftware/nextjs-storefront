@@ -10,9 +10,6 @@ describe('[hooks] useGetB2BUserQuery', () => {
       () =>
         useGetB2BUserQueries({
           accountId: 1001,
-          filter: '',
-          pageSize: 5,
-          startIndex: 0,
           q: '',
         }),
       {

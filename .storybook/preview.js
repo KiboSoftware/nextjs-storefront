@@ -70,6 +70,7 @@ export const parameters = {
   msw: {
     handlers: {
       checkout: [...handlers.checkoutHandlers],
+      b2bHandlers: [...handlers.b2bHandlers],
       searchSuggestions: [...handlers.searchSuggestionHandlers],
       user: [...handlers.userHandlers],
       cart: [...handlers.cartHandlers],

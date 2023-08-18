@@ -10,6 +10,7 @@ export default {
   component: QuotesTable,
   argTypes: {
     backgroundColor: { control: 'color' },
+    setQuotesSearchParam: { action: 'setQuotesSearchParam' },
   },
 } as ComponentMeta<typeof QuotesTable>
 
@@ -19,6 +20,13 @@ export const Common = Template.bind({})
 
 Common.args = {
   quoteCollection: quotesMock,
+  filters: {
+    expirationDate: '',
+    createDate: '',
+    status: '',
+    name: '',
+    number: '',
+  },
   sortingValues: {
     selected: '',
     options: [
