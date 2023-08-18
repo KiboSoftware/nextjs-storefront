@@ -13,9 +13,11 @@ import {
   TableContainer,
   TableHead,
   TableRow,
+  Typography,
   useMediaQuery,
   useTheme,
 } from '@mui/material'
+import { grey } from '@mui/material/colors'
 import { useTranslation } from 'next-i18next'
 
 import { styles } from '@/components/my-account/Lists/ListTable/ListTable.style'
@@ -48,9 +50,7 @@ const ListTableMobileOptions = (props: ListTableMobileOptions) => {
   const { t } = useTranslation('common')
   const options = [
     { name: t('edit'), onClick: onEditList },
-    // todo
     { name: t('add-list-items-to-cart'), onClick: onAddListToCart },
-    // todo
     { name: t('initiate-quote'), onClick: onInitiateQuote },
     { name: t('duplicate'), onClick: onCopyList },
     { name: t('delete'), onClick: onDeleteList },
@@ -83,7 +83,7 @@ const ListTableMobileOptions = (props: ListTableMobileOptions) => {
               option.onClick(itemId)
               setAnchorEL(null)
             }}
-            sx={i !== options.length - 1 ? { borderBottom: '0.5px solid #EAEAEA' } : {}}
+            sx={i !== options.length - 1 ? { borderBottom: `0.5px solid ${grey[300]}` } : {}}
           >
             {option.name}
           </MenuItem>
@@ -114,7 +114,7 @@ const ListTable = (props: ListTableProps) => {
     >
       <Table sx={{ tableLayout: 'fixed' }}>
         <TableHead>
-          <TableRow sx={{ backgroundColor: '#f7f7f7', padding: '10px 0' }}>
+          <TableRow sx={{ backgroundColor: grey[100], padding: '10px 0' }}>
             <TableCell sx={{ padding: '10px 10px', width: mdScreen ? '25%' : '50%' }}>
               {t('list-name')}
             </TableCell>
@@ -138,9 +138,9 @@ const ListTable = (props: ListTableProps) => {
                     <Box>
                       {item?.name}
                       <br />
-                      <p style={{ margin: '5px 0', color: '#cdcdcd' }}>
+                      <Typography style={{ margin: '5px 0', color: grey[400] }}>
                         {item?.auditInfo?.createBy}
-                      </p>
+                      </Typography>
                     </Box>
                   )}
                 </TableCell>
