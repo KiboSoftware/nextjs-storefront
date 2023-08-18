@@ -19,6 +19,5 @@ export default async function getCheckout(
   const headers = getAdditionalHeader(req)
 
   const response = await fetcher({ query, variables }, { userClaims, headers })
-
   return response.data?.checkout
 }

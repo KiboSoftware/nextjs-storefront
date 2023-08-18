@@ -13,6 +13,7 @@ interface ProductQuickViewDialogProps {
   product: ProductCustom
   isQuickViewModal?: boolean
   dialogProps?: any
+  quoteDetails?: any
 }
 
 const ProductQuickViewDialogFooter = (props: any) => {
@@ -20,13 +21,15 @@ const ProductQuickViewDialogFooter = (props: any) => {
     cancel,
     addItemToCart,
     addItemToList,
+    addItemToQuote,
     onClose,
     isValidateAddToCart,
     isValidateAddToWishlist,
     currentProduct,
     addToCartPayload,
+    quoteDetails,
   } = props
-  const { handleAddToCart, handleWishList } = useProductCardActions()
+  const { handleAddToCart, handleWishList, handleAddToQuote } = useProductCardActions()
   const mdScreen = useMediaQuery((theme: Theme) => theme.breakpoints.up('md'))
 
   const handleAddProductToCart = () => {
@@ -36,6 +39,12 @@ const ProductQuickViewDialogFooter = (props: any) => {
 
   const handleAddProductToList = () => {
     handleWishList(currentProduct)
+  }
+
+  const handleAddProductToQuote = () => {
+    const { quoteId, updateMode } = quoteDetails
+    handleAddToQuote(quoteId, updateMode, addToCartPayload?.product, addToCartPayload?.quantity)
+    onClose()
   }
 
   return (
@@ -70,13 +79,31 @@ const ProductQuickViewDialogFooter = (props: any) => {
           {addItemToList}
         </Button>
       )}
+      {addItemToQuote && (
+        <Button
+          variant="contained"
+          color="primary"
+          onClick={handleAddProductToQuote}
+          {...(!mdScreen && { fullWidth: true })}
+          {...(!isValidateAddToCart && { disabled: true })}
+        >
+          {addItemToQuote}
+        </Button>
+      )}
     </Stack>
   )
 }
 
 const ProductQuickViewDialog = (props: ProductQuickViewDialogProps) => {
-  const { product, isQuickViewModal, dialogProps } = props
-  const { title, cancel, addItemToCart, addItemToList, isB2B = false } = dialogProps || {} //isB2B to showDialog
+  const { product, isQuickViewModal, dialogProps, quoteDetails } = props
+  const {
+    title,
+    cancel,
+    addItemToCart,
+    addItemToList,
+    addItemToQuote,
+    isB2B = false,
+  } = dialogProps || {} //isB2B to showDialog
   const { closeModal } = useModalContext()
   const [currentProduct, setCurrentProduct] = React.useState<any>(null)
   const [addToCartPayload, setAddToCartPayload] = React.useState<any>(null)
@@ -103,16 +130,18 @@ const ProductQuickViewDialog = (props: ProductQuickViewDialogProps) => {
       Title={title}
       Actions={
         cancel &&
-        (addItemToCart || addItemToList) && (
+        (addItemToCart || addItemToList || addItemToQuote) && (
           <ProductQuickViewDialogFooter
             cancel={cancel}
             addItemToCart={addItemToCart}
             addItemToList={addItemToList}
+            addItemToQuote={addItemToQuote}
             onClose={closeModal}
             isValidateAddToCart={isValidateAddToCart}
             isValidateAddToWishlist={isValidateAddToWishlist}
             addToCartPayload={addToCartPayload}
             currentProduct={currentProduct}
+            quoteDetails={quoteDetails}
           />
         )
       }

@@ -1,4 +1,4 @@
-import React, { useCallback } from 'react'
+import React, { useCallback, useEffect } from 'react'
 
 import Delete from '@mui/icons-material/Delete'
 import Edit from '@mui/icons-material/Edit'
@@ -23,26 +23,24 @@ import {
   useMediaQuery,
   useTheme,
 } from '@mui/material'
+import getConfig from 'next/config'
 import { useTranslation } from 'next-i18next'
 
 import { KiboPagination, KiboSelect, Price, SearchBar } from '@/components/common'
 import { QuotesFilterDialog } from '@/components/dialogs'
 import { useModalContext } from '@/context'
+import { useDebounce } from '@/hooks'
 import { quoteGetters } from '@/lib/getters'
+import { buildQuotesFilterParam } from '@/lib/helpers'
+import { QuoteFilters, QuoteSortingOptions } from '@/lib/types'
 
-import { QuoteCollection } from '@/lib/gql/types'
-
-interface SortingValues {
-  value: string
-  id: string
-}
+import { QueryQuotesArgs, QuoteCollection } from '@/lib/gql/types'
 
 interface QuotesTableProps {
   quoteCollection: QuoteCollection
-  sortingValues: {
-    options: SortingValues[]
-    selected: string
-  }
+  sortingValues: QuoteSortingOptions
+  filters: QuoteFilters
+  setQuotesSearchParam: (param: QueryQuotesArgs) => void
 }
 
 const desktopColumns = [
@@ -106,12 +104,16 @@ const statusColorCode: any = {
 }
 
 const QuotesTable = (props: QuotesTableProps) => {
-  const { quoteCollection, sortingValues } = props
+  const { quoteCollection, sortingValues, filters, setQuotesSearchParam } = props
+
+  const { publicRuntimeConfig } = getConfig()
+
   const { t } = useTranslation('common')
   const theme = useTheme()
   const { showModal } = useModalContext()
   const tabAndDesktop = useMediaQuery(theme.breakpoints.up('sm'))
   const [searchTerm, setSearchTerm] = React.useState('')
+  const debouncedTerm = useDebounce(searchTerm, publicRuntimeConfig.debounceTimeout)
 
   const getStatusColorCode = useCallback((status: string) => {
     return statusColorCode[status]
@@ -120,9 +122,11 @@ const QuotesTable = (props: QuotesTableProps) => {
   // Mobile Actions
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null)
   const open = Boolean(anchorEl)
+
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
     setAnchorEl(event.currentTarget)
   }
+
   const handleClose = () => {
     setAnchorEl(null)
   }
@@ -141,8 +145,18 @@ const QuotesTable = (props: QuotesTableProps) => {
     handleClose()
   }
 
+  const handleFilterAction = (filters: QuoteFilters) => {
+    setQuotesSearchParam({ filter: buildQuotesFilterParam(filters) })
+  }
+
   const handleFilterButtonClick = () => {
-    showModal({ Component: QuotesFilterDialog })
+    showModal({
+      Component: QuotesFilterDialog,
+      props: {
+        filters: filters,
+        onFilterAction: handleFilterAction,
+      },
+    })
   }
 
   const handleQuoteSearch = (term: string) => {
@@ -151,9 +165,19 @@ const QuotesTable = (props: QuotesTableProps) => {
 
   const quotes = quoteGetters.getQuotes(quoteCollection)
 
+  const quotesPaginationDetails = quoteGetters.getQuotesPaginationDetails(quoteCollection)
+
   const columns = tabAndDesktop ? desktopColumns : mobileColumns
 
-  const onSortItemSelection = (value: any) => null
+  const onSortItemSelection = (value: any) => setQuotesSearchParam({ sortBy: value })
+
+  useEffect(() => {
+    handleFilterAction({
+      ...filters,
+      ...(!parseInt(debouncedTerm) && { name: debouncedTerm.trim(), number: '' }),
+      ...(parseInt(debouncedTerm) && { number: debouncedTerm, name: debouncedTerm }),
+    })
+  }, [debouncedTerm])
 
   return (
     <>
@@ -161,20 +185,34 @@ const QuotesTable = (props: QuotesTableProps) => {
         sx={{
           paddingInline: 0,
           display: 'flex',
-          flexDirection: 'column',
+          flexDirection: {
+            xs: 'column',
+            md: 'row',
+          },
           gap: 2,
-          pb: 1,
+          pb: 2,
         }}
       >
         <Box width="100%">
           <SearchBar searchTerm={searchTerm} onSearch={handleQuoteSearch} showClearButton />
         </Box>
-        <Box width="100%" display="flex" justifyContent={'space-between'} alignItems={'center'}>
+        <Box
+          width="100%"
+          sx={{
+            display: 'flex',
+            justifyContent: {
+              xs: 'space-between',
+              md: 'flex-end',
+            },
+            alignItems: 'center',
+            gap: 2,
+          }}
+        >
           <Box>
             <KiboSelect
               name="sort-plp"
               sx={{ typography: 'body2' }}
-              // value={sortingValues?.selected}
+              value={sortingValues?.selected}
               placeholder={t('sort-by')}
               onChange={(_name, value) => onSortItemSelection(value)}
             >
@@ -187,7 +225,7 @@ const QuotesTable = (props: QuotesTableProps) => {
           </Box>
           <Box>
             <Tooltip title="Filter list">
-              <IconButton onClick={handleFilterButtonClick}>
+              <IconButton onClick={handleFilterButtonClick} data-testid="filter-button">
                 <FilterList />
               </IconButton>
             </Tooltip>
@@ -215,11 +253,11 @@ const QuotesTable = (props: QuotesTableProps) => {
               ))}
             </TableRow>
           </TableHead>
-          {quotes.length === 0 ? (
+          {quotes?.length === 0 ? (
             <caption>{t('no-quotes-found')}</caption>
           ) : (
             <TableBody data-testid="quotes-table-body">
-              {quotes.map((quote) => {
+              {quotes?.map((quote) => {
                 const { quoteId, number, name, expirationDate, createdDate, total, status } =
                   quoteGetters.getQuoteDetails(quote)
                 return (
@@ -330,12 +368,7 @@ const QuotesTable = (props: QuotesTableProps) => {
         </Menu>
       </TableContainer>
       <Box pt={2}>
-        <KiboPagination
-          count={quoteCollection.totalCount}
-          pageSize={quoteCollection.pageSize}
-          startIndex={quoteCollection.startIndex}
-          onPaginationChange={() => null}
-        />
+        <KiboPagination {...quotesPaginationDetails} onPaginationChange={setQuotesSearchParam} />
       </Box>
     </>
   )

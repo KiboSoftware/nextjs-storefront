@@ -1,4 +1,4 @@
-import type { B2BAccountCollection, B2BUser, CustomerAccount } from '@/lib/gql/types'
+import type { B2BUserCollection, B2BUser, CustomerAccount } from '@/lib/gql/types'
 export interface B2BUserInput {
   firstName?: string | null
   lastName?: string | null
@@ -11,10 +11,10 @@ export interface B2BUserInput {
 
 export interface QueryB2BUserArgs {
   accountId: number
-  filter: string
-  pageSize: number
-  startIndex: number
-  q: string
+  filter?: string
+  pageSize?: number
+  startIndex?: number
+  q?: string
 }
 export interface CustomerB2BUserParams {
   removeCustomerB2bAccountUser?: boolean
@@ -27,7 +27,7 @@ export interface CustomerB2BUserRole {
 }
 
 export interface B2BUserResultType {
-  data?: B2BAccountCollection
+  data?: B2BUserCollection
   isLoading: boolean
   isSuccess: boolean
   isError: boolean

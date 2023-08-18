@@ -40,10 +40,7 @@ jest.mock('@mui/material', () => ({
 }))
 
 const KeyValueDisplayMock = () => <div data-testid="key-value-display-component" />
-// const PromoCodeBadgeMock = () => <div data-testid="promo-code-badge-component" />
-
 jest.mock('@/components/common/KeyValueDisplay/KeyValueDisplay', () => () => KeyValueDisplayMock())
-// jest.mock('@/components/common/PromoCodeBadge/PromoCodeBadge', () => () => PromoCodeBadgeMock())
 
 jest.mock('@/components/common/PromoCodeBadge/PromoCodeBadge', () => ({
   __esModule: true,

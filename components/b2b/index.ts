@@ -9,3 +9,4 @@ export { default as B2BProductDetailsTable } from '@/components/b2b/B2BProductDe
 export { default as QuotesCommentThread } from '@/components/b2b/QuotesCommentThread/QuotesCommentThread'
 export { default as QuotesTable } from '@/components/b2b/QuotesTable/QuotesTable'
 export { default as QuotesHistory } from '@/components/b2b/QuotesHistory/QuotesHistory'
+export { default as ProductViewDialog } from '@/components/b2b/Lists/ProductViewDialog/ProductViewDialog'

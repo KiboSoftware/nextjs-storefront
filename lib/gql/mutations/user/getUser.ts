@@ -10,6 +10,7 @@ export const getCurrentUser = /* GraphQL */ `
       isAnonymous
       companyOrOrganization
       accountType
+      companyOrOrganization
     }
   }
 `

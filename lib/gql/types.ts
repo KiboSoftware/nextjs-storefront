@@ -8955,6 +8955,20 @@ export type MutationUpdateQuoteArgs = {
   updateMode?: InputMaybe<Scalars['String']>
 }
 
+export type MutationUpdateQuoteItemQuantityArgs = {
+  quoteId: Scalars['String']
+  quoteItemId: Scalars['String']
+  quantity: Scalars['Int']
+  updateMode?: InputMaybe<Scalars['String']>
+}
+
+export type MutationUpdateQuoteItemFulfillmentArgs = {
+  quoteId: Scalars['String']
+  quoteItemId: Scalars['String']
+  updateMode?: InputMaybe<Scalars['String']>
+  orderItemInput?: InputMaybe<CrOrderItemInput>
+}
+
 export type MutationUpdateReturnArgs = {
   returnId: Scalars['String']
   returnObjInput?: InputMaybe<ReturnObjInput>

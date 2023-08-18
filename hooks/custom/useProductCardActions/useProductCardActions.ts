@@ -1,13 +1,14 @@
 import { AddToCartDialog } from '@/components/dialogs'
 import { ProductQuickViewDialog } from '@/components/product'
 import { useModalContext } from '@/context'
-import { useAddCartItem, useWishlist } from '@/hooks'
+import { useAddCartItem, useCreateQuoteItem, useWishlist } from '@/hooks'
 import { ProductCustom, WishlistProductInput } from '@/lib/types'
 
 export const useProductCardActions = () => {
   const { showModal } = useModalContext()
   const { addToCart } = useAddCartItem()
   const { addOrRemoveWishlistItem, checkProductInWishlist } = useWishlist()
+  const { createQuoteItem } = useCreateQuoteItem()
 
   const handleAddToCart = async (payload: any, showConfirmationModal = true) => {
     try {
@@ -26,13 +27,36 @@ export const useProductCardActions = () => {
     }
   }
 
-  const openProductQuickViewModal = (product: ProductCustom, dialogProps?: any) => {
+  const handleAddToQuote = async (
+    quoteId: string,
+    updateMode: string,
+    product: any,
+    quantity: number
+  ) => {
+    try {
+      await createQuoteItem.mutateAsync({
+        quoteId,
+        updateMode,
+        product,
+        quantity,
+      })
+    } catch (err) {
+      console.log(err)
+    }
+  }
+
+  const openProductQuickViewModal = (
+    product: ProductCustom,
+    dialogProps?: any,
+    quoteDetails?: any
+  ) => {
     showModal({
       Component: ProductQuickViewDialog,
       props: {
         product,
         isQuickViewModal: true,
         dialogProps,
+        quoteDetails,
       },
     })
   }
@@ -49,6 +73,7 @@ export const useProductCardActions = () => {
 
   return {
     handleAddToCart,
+    handleAddToQuote,
     openProductQuickViewModal,
     handleWishList,
     checkProductInWishlist,

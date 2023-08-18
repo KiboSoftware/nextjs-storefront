@@ -5,7 +5,12 @@ import { render, screen } from '@testing-library/react'
 
 import * as stories from './ProductQuickViewDialog.stories'
 import { ModalContextProvider } from '@/context'
-const { Common, B2BQuickViewDialogWithCart, B2BQuickViewDialogWithList } = composeStories(stories)
+const {
+  Common,
+  B2BQuickViewDialogWithCart,
+  B2BQuickViewDialogWithList,
+  B2BQuickViewDialogWithQuote,
+} = composeStories(stories)
 
 const ProductDetailTemplateMock = () => <div data-testid="product-detail-template" />
 jest.mock(
@@ -61,5 +66,22 @@ describe('[components] My ProductQuickView Dialog', () => {
     expect(title).toBeVisible()
     expect(cancel).toBeVisible()
     expect(addItemToList).toBeVisible()
+  })
+
+  it('should render component with quote', async () => {
+    render(<B2BQuickViewDialogWithQuote {...B2BQuickViewDialogWithQuote?.args} />, {
+      wrapper: ModalContextProvider,
+    })
+    const title = screen.getByText(B2BQuickViewDialogWithQuote?.args?.dialogProps?.title)
+    const cancel = screen.getByRole('button', {
+      name: B2BQuickViewDialogWithQuote?.args?.dialogProps?.cancel,
+    })
+    const addItemToQuote = screen.getByRole('button', {
+      name: B2BQuickViewDialogWithQuote?.args?.dialogProps?.addItemToQuote,
+    })
+
+    expect(title).toBeVisible()
+    expect(cancel).toBeVisible()
+    expect(addItemToQuote).toBeVisible()
   })
 })

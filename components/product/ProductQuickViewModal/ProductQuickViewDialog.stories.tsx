@@ -45,3 +45,15 @@ B2BQuickViewDialogWithList.args = {
     isB2B: true,
   },
 }
+
+export const B2BQuickViewDialogWithQuote = Template.bind({})
+B2BQuickViewDialogWithQuote.args = {
+  product: ProductCustomMock,
+  isQuickViewModal: true,
+  dialogProps: {
+    title: 'Product Quick View',
+    cancel: 'Cancel',
+    addItemToQuote: 'Add to Quote',
+    isB2B: true,
+  },
+}

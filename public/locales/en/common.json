@@ -447,5 +447,17 @@
   "product-configuration-option": "Product Configuration Option",
   "no-list-found": "No List Found",
   "edit-list": "Edit List",
-  "name-this-list": "Name this list"
+  "name-this-list": "Name this list",
+  "list-item": "List Item",
+  "expiration-date": "Expiration Date",
+  "create-a-quote": "Create a Quote",
+  "quote-details": "Quote Details",
+  "quote-summary": "Quote Summary",
+  "clear-changes": "Clear Changes",
+  "save-and-exit": "Save & Exit",
+  "submit-for-approval": "Submit For Approval",
+  "print-quote": "Print Quote",
+  "enter-quote-name": "Enter a quote name",
+  "account-name": "Account Name",
+  "add-item-to-quote": "Add Item to Quote"
 }

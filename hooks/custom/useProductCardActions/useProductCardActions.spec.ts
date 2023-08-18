@@ -4,7 +4,7 @@ import { useProductCardActions } from './useProductCardActions'
 import { AddToCartDialog } from '@/components/dialogs'
 import { ProductQuickViewDialog } from '@/components/product'
 import { useModalContext } from '@/context'
-import { useAddCartItem, useWishlist } from '@/hooks'
+import { useAddCartItem, useWishlist, useCreateQuoteItem } from '@/hooks'
 import { ProductCustom } from '@/lib/types'
 
 const showModalMock = jest.fn()
@@ -15,6 +15,9 @@ jest.mock('@/context', () => ({
 const cartResponse = { id: 'mock-cart-response-id' }
 const addToCartMutateAsyncMock = jest.fn(() => Promise.resolve(cartResponse))
 
+const quoteItemResponse = { id: 'mock-create-quote-item-response-id' }
+const createQuoteItemMutateAsyncMock = jest.fn(() => Promise.resolve(quoteItemResponse))
+
 const addOrRemoveWishlistItemMock = jest.fn()
 jest.mock('@/hooks', () => ({
   useAddCartItem: jest.fn(() => ({
@@ -23,6 +26,9 @@ jest.mock('@/hooks', () => ({
   useWishlist: jest.fn(() => ({
     addOrRemoveWishlistItem: addOrRemoveWishlistItemMock,
     checkProductInWishlist: jest.fn(),
+  })),
+  useCreateQuoteItem: jest.fn(() => ({
+    createQuoteItem: { mutateAsync: createQuoteItemMutateAsyncMock, isPending: false },
   })),
 }))
 
@@ -99,5 +105,24 @@ describe('useProductCardActions', () => {
     })
 
     expect(addOrRemoveWishlistItem).toHaveBeenCalledWith({ product })
+  })
+
+  it('should handle adding to quote', async () => {
+    const { result } = renderHook(() => useProductCardActions())
+    const { createQuoteItem } = useCreateQuoteItem()
+
+    const quoteId = '123'
+    const updateMode = 'update'
+    const quantity = 1
+    await act(async () => {
+      await result.current.handleAddToQuote(quoteId, updateMode, product, quantity)
+    })
+
+    expect(createQuoteItem.mutateAsync).toHaveBeenCalledWith({
+      product,
+      quantity,
+      quoteId,
+      updateMode,
+    })
   })
 })

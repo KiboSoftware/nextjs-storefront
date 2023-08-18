@@ -1,24 +1,14 @@
 import React, { useState } from 'react'
 
-import { ExpandMore } from '@mui/icons-material'
 import DeleteIcon from '@mui/icons-material/Delete'
 import EditIcon from '@mui/icons-material/Edit'
-import {
-  AccordionDetails,
-  AccordionSummary,
-  Accordion,
-  Box,
-  Button,
-  Container,
-  Grid,
-  Typography,
-  useMediaQuery,
-  useTheme,
-} from '@mui/material'
+import { Box, Button, Grid, Typography, useMediaQuery, useTheme } from '@mui/material'
+import { grey } from '@mui/material/colors'
 import Image from 'next/image'
 import { useTranslation } from 'next-i18next'
 
-import { KiboDialog, QuantitySelector } from '@/components/common'
+import { ProductViewDialog } from '@/components/b2b'
+import { QuantitySelector, KeyValueDisplay } from '@/components/common'
 import { useModalContext } from '@/context'
 
 import { CrProductPrice, CrWishlistItem } from '@/lib/gql/types'
@@ -45,97 +35,6 @@ const calculateProductSubTotal = (price: CrProductPrice, quantity: number) => {
       ? (price.salePrice * quantity).toFixed(2)
       : ((price.price as number) * quantity).toFixed(2)
   return 0
-}
-
-const ProductView = (props: ProductViewProps) => {
-  const { item } = props
-  const { product } = item
-
-  const { t } = useTranslation('common')
-
-  return (
-    <>
-      <Container sx={{ padding: '70px' }} data-testid="product-modal">
-        <Grid container>
-          <Grid item sm={3}>
-            {product?.imageUrl ? (
-              <Image
-                src={`https:${product.imageUrl}`}
-                alt={product?.name as string}
-                width={70}
-                height={70}
-              />
-            ) : null}
-          </Grid>
-          <Grid item sm={9}>
-            <Typography variant="h3" sx={{ fontWeight: 'bold' }}>
-              {product?.name}
-            </Typography>
-            <Box>
-              <Typography data-testid="productCode">
-                {t('product-code')}: {product?.productCode}
-              </Typography>
-              <Typography>
-                <Typography component={'strong'}>{t('price')}: </Typography> <br />
-                <Typography component={'span'} sx={{ color: '#E42D00' }}>
-                  $ {calculateProductSubTotal(product?.price as CrProductPrice, item.quantity)}
-                </Typography>
-              </Typography>
-              <Typography sx={{ fontStyle: 'italic', fontSize: '13px' }} data-testid="productPrice">
-                {t('line-item')} -
-                {calculateProductSubTotal(product?.price as CrProductPrice, item.quantity)}
-              </Typography>
-            </Box>
-            <Box>
-              <Accordion
-                disabled={false}
-                sx={{
-                  border: 'none',
-                  borderBottom: '1px solid #C7C7C7',
-                  boxShadow: 'none',
-                  borderRadius: '0px',
-                }}
-              >
-                <AccordionSummary
-                  expandIcon={<ExpandMore />}
-                  aria-controls="panel1a-content"
-                  id="panel1a-header"
-                  sx={{ padding: '0px' }}
-                >
-                  <Typography>{'description'}</Typography>
-                </AccordionSummary>
-                <AccordionDetails>
-                  <Typography>{product?.description}</Typography>
-                </AccordionDetails>
-              </Accordion>
-            </Box>
-          </Grid>
-        </Grid>
-      </Container>
-    </>
-  )
-}
-
-const ProductViewDialog = (props: ProductViewDialogProps) => {
-  const { t } = useTranslation('common')
-
-  return (
-    <KiboDialog
-      showCloseButton
-      Title={t('product-configuration-option')}
-      isAlignTitleCenter={true}
-      showContentTopDivider={true}
-      showContentBottomDivider={false}
-      onClose={props.onClose}
-      Actions={''}
-      Content={
-        <Box>
-          <ProductView item={props.item} />
-        </Box>
-      }
-      customMaxWidth="800px"
-    />
-  )
 }
 
 const ListItem = (props: ListItemProps) => {
@@ -175,7 +74,7 @@ const ListItem = (props: ListItemProps) => {
 
   return (
     <>
-      <Grid container sx={{ borderBottom: '1px solid #CDCDCD', padding: '10px 0' }}>
+      <Grid container sx={{ borderBottom: `1px solid ${grey[300]}`, padding: '10px 0' }}>
         <Grid item xs={mdScreen ? 2 : 3}>
           {product?.imageUrl ? (
             <Image
@@ -188,63 +87,89 @@ const ListItem = (props: ListItemProps) => {
         </Grid>
         <Grid item xs={mdScreen ? 8 : 7}>
           <Typography
-            sx={{ marginBottom: mdScreen ? '10px' : '8px', marginTop: '0', fontWeight: 'bold' }}
+            sx={{ marginBottom: mdScreen ? '10px' : '8px', marginTop: '0' }}
+            fontWeight={'bold'}
           >
-            <strong>{product?.name}</strong>
+            {product?.name}
           </Typography>
-          {mdScreen ? (
-            <></>
-          ) : (
+          {!mdScreen && (
             <>
-              <Box sx={{ fontSize: '14px' }}>
-                <strong>{t('total')}: </strong>$
-                {calculateProductSubTotal(product?.price as CrProductPrice, item.quantity)}
-                <Box sx={{ color: '#7c7c7c', fontSize: '12px', marginBottom: '12px' }}>
-                  <em>
-                    {t('list-item')} - ${product?.price?.price}
-                  </em>
+              <Box>
+                <KeyValueDisplay
+                  option={{
+                    name: t('total'),
+                    value: `$${calculateProductSubTotal(
+                      product?.price as CrProductPrice,
+                      item.quantity
+                    )}`,
+                  }}
+                  sx={{ fontSize: '14px' }}
+                  variant="body1"
+                />
+                <Box sx={{ marginBottom: '12px' }}>
+                  <KeyValueDisplay
+                    option={{
+                      name: t('list-item'),
+                      value: `$${product?.price?.price}`,
+                    }}
+                    sx={{ fontStyle: 'italic', display: 'inline', fontSize: '12px' }}
+                    variant="body2"
+                  />
                 </Box>
               </Box>
             </>
           )}
           <Box>
-            <strong>{t('qty')}: </strong>
-            <QuantitySelector
-              quantity={quantityState}
-              onIncrease={handleQuantityIncrease}
-              onDecrease={handleQuantityDecrease}
-              onQuantityUpdate={handleChangeQuantity}
+            <KeyValueDisplay
+              option={{
+                name: t('qty'),
+                value: (
+                  <QuantitySelector
+                    quantity={quantityState}
+                    onIncrease={handleQuantityIncrease}
+                    onDecrease={handleQuantityDecrease}
+                    onQuantityUpdate={handleChangeQuantity}
+                  />
+                ),
+              }}
+              variant="subtitle1"
             />
           </Box>
-          <Typography data-testid="productCode">
-            <strong>{t('product-code')}: </strong>
-            {product?.productCode}
-          </Typography>
-          {mdScreen ? (
-            <>
-              <Box>
-                <strong>{t('total')}: </strong>$
-                {calculateProductSubTotal(product?.price as CrProductPrice, item.quantity)}
-                <Box sx={{ marginLeft: '10px', display: 'inline' }}>
-                  <em style={{ color: '#7c7c7c', fontSize: '14px' }} data-testid="productPrice">
-                    {t('list-item')} - ${product?.price?.price}
-                  </em>
-                </Box>
-              </Box>
-            </>
-          ) : (
-            <></>
+          <Box data-testid="productCode">
+            <KeyValueDisplay
+              option={{
+                name: t('product-code'),
+                value: product?.productCode,
+              }}
+              variant="subtitle2"
+            />
+          </Box>
+
+          {mdScreen && (
+            <Box component="span">
+              <KeyValueDisplay
+                option={{
+                  name: t('total'),
+                  value: `$${calculateProductSubTotal(
+                    product?.price as CrProductPrice,
+                    item.quantity
+                  )}`,
+                }}
+                sx={{ fontSize: '14px', marginRight: '10px' }}
+                variant="body1"
+              />
+              <KeyValueDisplay
+                option={{
+                  name: t('list-item'),
+                  value: `$${product?.price?.price}`,
+                }}
+                sx={{ fontStyle: 'italic', display: 'inline', fontSize: '12px' }}
+                variant="body2"
+              />
+            </Box>
           )}
         </Grid>
-        <Grid
-          item
-          xs={2}
-          sx={{
-            display: 'flex',
-            flexDirection: 'row',
-            alignItems: mdScreen ? 'center' : 'flex-start',
-          }}
-        >
+        <Grid item xs={2} flexDirection={'row'} alignItems={mdScreen ? 'center' : 'flex-start'}>
           <Button
             onClick={openEditModal}
             startIcon={<EditIcon />}
