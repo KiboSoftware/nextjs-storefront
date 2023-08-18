@@ -62,7 +62,7 @@ const ListsTemplate = () => {
           ) : null}
           <Typography
             variant="h1"
-            style={{
+            sx={{
               textAlign: 'center',
               fontSize: mdScreen ? '28px' : '20px',
               display: 'flex',
@@ -75,15 +75,15 @@ const ListsTemplate = () => {
             ) : (
               <>
                 <IconButton
-                  style={{ paddingLeft: 0, marginLeft: 0 }}
+                  sx={{ paddingLeft: 0, marginLeft: 0 }}
                   onClick={() => {
                     router.push('/my-account')
                   }}
                   data-testid="my-account-button"
                 >
-                  <ArrowBackIosIcon style={{ width: '14px', color: '#000' }} />
+                  <ArrowBackIosIcon sx={{ width: '14px', color: '#000' }} />
                 </IconButton>
-                <Box component="span" style={{ marginLeft: 'auto', marginRight: 'auto' }}>
+                <Box component="span" sx={{ marginLeft: 'auto', marginRight: 'auto' }}>
                   {state.isEditFormOpen ? t('edit-list') : t('lists')}
                 </Box>
               </>
@@ -92,11 +92,10 @@ const ListsTemplate = () => {
           {showCreateButton && (
             <Button
               onClick={handleCreateFormToggle}
-              sx={styles.addNewListButtonStyles}
+              sx={{ ...styles.addNewListButtonStyles, width: smScreen ? 'auto' : '100%' }}
               variant="contained"
               color="inherit"
               startIcon={<AddCircleOutlineIcon />}
-              style={smScreen ? {} : { width: '100%' }}
               data-testid="create-new-list-btn"
             >
               {t('create-new-list')}
