@@ -206,7 +206,7 @@ describe('[components] - QuotesTable', () => {
       />
     )
 
-    const selectButton = screen.getByRole('button', { name: 'sort-by' })
+    const selectButton = screen.getByRole('button', { name: 'sort-plp' })
 
     fireEvent.mouseDown(selectButton)
 
