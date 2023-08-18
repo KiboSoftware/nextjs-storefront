@@ -1,11 +1,4 @@
-export const quoteAuditInfoFragment = `
-fragment quoteAuditInfoFragment on CrAuditInfo {
-    updateDate
-    createDate
-    updateBy
-    createBy
-} 
-`
+import { quoteAuditInfoFragment } from './quote-audit-info'
 
 export const quoteCommentsFragment = `
 fragment quoteCommentsFragment on QuoteComment {
@@ -28,10 +21,16 @@ fragment quoteItemFragment on Quote {
     total
     expirationDate
     comments {
-        ...quoteCommentsFragment
+        id
+        text
+        auditInfo {
+            ...quoteAuditInfoFragment
+        }
+    }
+    auditInfo {
+        ...quoteAuditInfoFragment
     }
   }
 
-
-  ${quoteCommentsFragment}
+    ${quoteAuditInfoFragment}
 `

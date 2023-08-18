@@ -76,10 +76,6 @@ const desktopColumns = [
 
 const mobileColumns = [
   {
-    field: 'status',
-    headerName: '',
-  },
-  {
     field: 'quoteNumber',
     headerName: '#',
   },
@@ -97,12 +93,6 @@ const mobileColumns = [
   },
 ]
 
-const statusColorCode: any = {
-  Pending: 'disabled',
-  InReview: 'warning',
-  ReadyForCheckout: 'success',
-}
-
 const QuotesTable = (props: QuotesTableProps) => {
   const { quoteCollection, sortingValues, filters, setQuotesSearchParam } = props
 
@@ -115,9 +105,17 @@ const QuotesTable = (props: QuotesTableProps) => {
   const [searchTerm, setSearchTerm] = React.useState('')
   const debouncedTerm = useDebounce(searchTerm, publicRuntimeConfig.debounceTimeout)
 
-  const getStatusColorCode = useCallback((status: string) => {
+  const statusColorCode: any = {
+    Pending: theme.palette.action.disabled,
+    InReview: theme.palette.warning.main,
+    ReadyForCheckout: theme.palette.info.main,
+    Completed: theme.palette.success.main,
+    Expired: theme.palette.error.main,
+  }
+
+  const getStatusColorCode = (status: string) => {
     return statusColorCode[status]
-  }, [])
+  }
 
   // Mobile Actions
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null)
@@ -263,9 +261,18 @@ const QuotesTable = (props: QuotesTableProps) => {
                 return (
                   <TableRow
                     key={quoteId}
-                    sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+                    sx={{
+                      '&:last-child td, &:last-child th': { border: 0 },
+                      borderLeftWidth: {
+                        xs: '5px',
+                        md: 0,
+                      },
+                      borderLeftStyle: 'solid',
+                      borderLeftColor: getStatusColorCode(status),
+                    }}
                   >
-                    {!tabAndDesktop ? (
+                    {/* TODO */}
+                    {/* {!tabAndDesktop ? (
                       <TableCell
                         size="small"
                         component="td"
@@ -275,13 +282,13 @@ const QuotesTable = (props: QuotesTableProps) => {
                       >
                         <FiberManualRecord fontSize="small" color={getStatusColorCode(status)} />
                       </TableCell>
-                    ) : null}
+                    ) : null} */}
                     <TableCell component="td" scope="row">
                       <Typography variant="body2" data-testid={`quote-number`}>
                         {number}
                       </Typography>
                     </TableCell>
-                    <TableCell component="td" scope="row">
+                    <TableCell component="td" scope="row" sx={{ whiteSpace: 'break-spaces' }}>
                       <Typography variant="body2" data-testid={`quote-name`}>
                         {name}
                       </Typography>
@@ -326,7 +333,12 @@ const QuotesTable = (props: QuotesTableProps) => {
                       </>
                     ) : (
                       <>
-                        <TableCell component="td" scope="row" align="right">
+                        <TableCell
+                          component="td"
+                          scope="row"
+                          align="right"
+                          sx={{ paddingInline: 0 }}
+                        >
                           <IconButton size="small" onClick={handleClick}>
                             <MoreVert fontSize="small" />
                           </IconButton>
