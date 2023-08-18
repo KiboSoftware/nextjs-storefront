@@ -15,6 +15,7 @@ import { useTranslation } from 'next-i18next'
 import { Maybe } from 'yup/lib/types'
 
 import ProductSearch from '@/components/b2b/B2BProductSearch/B2BProductSearch'
+import styles from '@/components/my-account/Lists/EditList/EditList.style'
 import ListItem from '@/components/my-account/Lists/ListItem/ListItem'
 import { useUpdateWishlistMutation } from '@/hooks'
 
@@ -109,7 +110,7 @@ const EditList = (props: EditListProps) => {
 
   return (
     <>
-      <Box style={{ marginTop: '30px' }}>
+      <Box>
         <Grid>
           <Grid
             container
@@ -118,6 +119,7 @@ const EditList = (props: EditListProps) => {
             columnSpacing={{ xs: 1, sm: 2, md: 3 }}
             justifyContent="flex-end"
             alignItems="center"
+            sx={{ marginBottom: '20px' }}
           >
             <Grid item xs={mdScreen ? 9 : 12}>
               {editListState.openNameForm ? (
@@ -126,21 +128,13 @@ const EditList = (props: EditListProps) => {
                     <input
                       onChange={(e) => setEditListState({ ...editListState, name: e.target.value })}
                       value={editListState.name as string}
-                      style={{
-                        maxWidth: '495px',
-                        height: '36px',
-                        fontSize: ' 14px',
-                        padding: '8px 12px',
-                        background: '#ffffff',
-                        border: '1px solid #cdcdcd',
-                        borderRadius: ' 4px',
-                      }}
+                      style={styles.listNameForm}
                       data-testid="editNameInput"
                     />
                     <Button
                       variant="contained"
                       onClick={() => setEditListState({ ...editListState, openNameForm: false })}
-                      style={{ marginLeft: '5px' }}
+                      sx={{ marginLeft: '5px' }}
                       data-testid="saveNameBtn"
                     >
                       {t('save')}
@@ -149,7 +143,7 @@ const EditList = (props: EditListProps) => {
                 </>
               ) : (
                 <>
-                  <Typography variant="h3">
+                  <Typography variant="h3" fontWeight={'bold'}>
                     {editListState.name}
                     <IconButton
                       onClick={() => setEditListState({ ...editListState, openNameForm: true })}
@@ -163,21 +157,14 @@ const EditList = (props: EditListProps) => {
             </Grid>
             {mdScreen ? (
               <>
-                <Grid
-                  item
-                  xs={3}
-                  style={{
-                    display: 'flex',
-                    flexDirection: 'column',
-                    justifyContent: 'flex-end',
-                  }}
-                >
-                  <Container style={{ justifyContent: 'end', display: 'flex' }}>
+                <Grid item xs={3} justifyContent="flex-end" flexDirection="column" display="flex">
+                  <Container sx={{ justifyContent: 'end', display: 'flex' }}>
                     <Button
-                      variant="outlined"
+                      variant="contained"
+                      color="secondary"
                       size="medium"
                       onClick={() => onEditFormToggle(false)}
-                      style={{ marginRight: '10px' }}
+                      sx={{ marginRight: '10px' }}
                     >
                       {t('cancel')}
                     </Button>
@@ -211,8 +198,6 @@ const EditList = (props: EditListProps) => {
           </Grid>
         </Grid>
       </Box>
-      <br />
-      <br />
 
       <Typography variant="h3" fontWeight={'bold'}>
         {t('list-items')}
@@ -221,18 +206,7 @@ const EditList = (props: EditListProps) => {
         return (
           <ListItem
             key={item?.product?.productCode}
-            item={{
-              product: {
-                productName: item?.product?.name as string,
-                productCode: item?.product?.productCode as string,
-                price: item?.product?.price as CrProductPrice,
-                productImage: item?.product?.imageUrl as string,
-                productImageAltText: item?.product?.name as string,
-                lineId: item?.id as string,
-                productDescription: item?.product?.description as string,
-              },
-              quantity: item?.quantity as number,
-            }}
+            item={item as CrWishlistItem}
             onDeleteItem={handleDeleteItem}
             onChangeQuantity={handleChangeQuantity}
             listId={listData.id as string}
@@ -241,27 +215,13 @@ const EditList = (props: EditListProps) => {
       })}
       {!mdScreen ? (
         <>
-          <Grid
-            item
-            xs={12}
-            style={{
-              width: '100%',
-              position: 'fixed',
-              left: '50%',
-              bottom: '0px',
-              transform: 'translateX(-50%)',
-              padding: '15px',
-              background: 'white',
-              display: 'flex',
-              flexDirection: 'column',
-              justifyContent: 'flex-end',
-            }}
-          >
+          <Grid item xs={12} sx={styles.mobileSaveWindow}>
             <Button
-              variant="outlined"
+              variant="contained"
+              color="secondary"
               size="medium"
               onClick={() => onEditFormToggle(false)}
-              style={{ width: '100%' }}
+              sx={{ width: '100%' }}
             >
               {t('cancel')}
             </Button>
@@ -269,7 +229,7 @@ const EditList = (props: EditListProps) => {
               variant="contained"
               size="medium"
               onClick={handleSaveWishlist}
-              style={{ width: '100%', marginTop: '8px' }}
+              sx={{ width: '100%', marginTop: '8px' }}
             >
               {t('save-and-close')}
             </Button>

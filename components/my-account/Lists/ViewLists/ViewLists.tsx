@@ -113,6 +113,7 @@ const ViewLists = (props: ViewListsProps) => {
 
   // edit list function
   const handleEditList = async (id: string) => {
+    console.log(id)
     const wishlist = wishlistsResponse?.items?.find(
       (item: Maybe<CrWishlist>) => item?.id === id
     ) as CrWishlist
@@ -169,7 +170,7 @@ const ViewLists = (props: ViewListsProps) => {
 
   if (!wishlistsResponse) {
     return (
-      <Box style={{ display: 'flex', justifyContent: 'center' }}>
+      <Box sx={{ display: 'flex', justifyContent: 'center' }}>
         <CircularProgress />
       </Box>
     )
@@ -189,7 +190,7 @@ const ViewLists = (props: ViewListsProps) => {
 
   return (
     <>
-      <Box style={{ padding: '10px 10px 10px 0' }}>
+      <Box sx={{ padding: '10px 10px 10px 0' }}>
         <FormControlLabel
           label={t('show-only-my-lists')}
           control={<Checkbox onChange={handleFilterChange} sx={{ fontSize: '16px' }} />}

@@ -12,7 +12,7 @@ import ListItem from '@/components/my-account/Lists/ListItem/ListItem'
 import { useAuthContext } from '@/context'
 import { useCreateWishlist, useGetWishlist } from '@/hooks'
 
-import { CrProductPrice, Product } from '@/lib/gql/types'
+import { CrProductPrice, CrWishlistItem, Product, ProductPrice } from '@/lib/gql/types'
 
 export interface CreateListProps {
   onCreateFormToggle: (param: boolean) => void
@@ -36,7 +36,7 @@ const CreateList = (props: CreateListProps) => {
     name: '',
     items: [{ product: { productCode: '' }, quantity: 0 }],
   })
-  const [productList, setProductList] = useState<Product[]>([])
+  const [productList, setProductList] = useState<CrWishlistItem[]>([])
 
   const theme = useTheme()
   const mdScreen = useMediaQuery<boolean>(theme.breakpoints.up('md'))
@@ -44,13 +44,11 @@ const CreateList = (props: CreateListProps) => {
   const { t } = useTranslation('common')
   const { user } = useAuthContext()
   const { createWishlist } = useCreateWishlist()
-  const { refetch } = useGetWishlist()
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault()
     const finalList = listState.items
     finalList.shift()
-    debugger
     await createWishlist
       .mutateAsync({
         customerAccountId: user?.id,
@@ -61,7 +59,6 @@ const CreateList = (props: CreateListProps) => {
         console.log(e)
         alert('error occured')
       })
-    await refetch()
     setListState({ name: '', items: [{ product: { productCode: '' }, quantity: 0 }] })
     onCreateFormToggle(false)
   }
@@ -76,9 +73,25 @@ const CreateList = (props: CreateListProps) => {
       quantity: 1,
     }
     items.push(item)
+
+    // converting product to CrWishlistItem
+    const crWishlistProduct: CrWishlistItem = {
+      quantity: 1,
+      product: {
+        productCode: product?.productCode,
+        price: product?.price as CrProductPrice,
+        imageUrl:
+          (product?.content?.productImages?.length as number) > 0
+            ? (product?.content?.productImages?.[0]?.imageUrl as string)
+            : '',
+        name: product?.content?.productName as string,
+        description: product?.content?.productFullDescription as string,
+      },
+    }
+
     setListState((currentState) => ({ ...currentState, items: items }))
     // setting state to show the products below
-    setProductList((currentVal) => [...currentVal, product as Product])
+    setProductList((currentVal) => [...currentVal, crWishlistProduct])
   }
 
   const handleListNameChange = (e: string, userEnteredValue: string) => {
@@ -91,7 +104,7 @@ const CreateList = (props: CreateListProps) => {
     })
     setListState((currentState) => ({ ...currentState, items: items }))
     setProductList((currentState) =>
-      currentState.filter((item: Product) => item.productCode !== id)
+      currentState.filter((item: CrWishlistItem) => item.product?.productCode !== id)
     )
   }
 
@@ -102,11 +115,11 @@ const CreateList = (props: CreateListProps) => {
 
   return (
     <>
-      <Box style={{ width: '100%' }}>
+      <Box sx={{ width: '100%' }}>
         {mdScreen ? (
           <Button
             data-testid="my-account-button"
-            style={{ paddingLeft: 0, fontSize: '14px', color: '#000' }}
+            sx={{ paddingLeft: 0, fontSize: '14px', color: '#000' }}
             onClick={() => {
               router.push('/my-account')
             }}
@@ -116,14 +129,9 @@ const CreateList = (props: CreateListProps) => {
           </Button>
         ) : null}
         <Typography
-          variant="h1"
-          style={{
-            textAlign: 'center',
-            fontSize: '20px',
-            display: 'flex',
-            justifyContent: 'center',
-            alignItems: 'center',
-          }}
+          variant="h3"
+          sx={{ ...styles.heading, margin: mdScreen ? '20px 0' : '0px 10px 0px 0px' }}
+          fontWeight={'bold'}
         >
           {mdScreen ? (
             <>
@@ -132,7 +140,8 @@ const CreateList = (props: CreateListProps) => {
               </Box>
               <Box sx={{ display: 'inline' }}>
                 <Button
-                  variant="outlined"
+                  variant="contained"
+                  color="secondary"
                   type="button"
                   onClick={() => {
                     onCreateFormToggle(false)
@@ -144,7 +153,7 @@ const CreateList = (props: CreateListProps) => {
                   variant="contained"
                   type="submit"
                   form="wishlist-form"
-                  style={{ boxShadow: 'none', marginLeft: '9px' }}
+                  sx={{ boxShadow: 'none', marginLeft: '9px' }}
                   disabled={listState.name.length === 0}
                 >
                   {t('save-and-close')}
@@ -154,13 +163,13 @@ const CreateList = (props: CreateListProps) => {
           ) : (
             <>
               <IconButton
-                style={{ paddingLeft: 0, marginLeft: 0 }}
+                sx={{ paddingLeft: 0, marginLeft: 0 }}
                 data-testid="my-account-button"
                 onClick={() => {
                   router.push('/my-account')
                 }}
               >
-                <ArrowBackIosIcon style={{ width: '14px', color: '#000' }} />
+                <ArrowBackIosIcon sx={{ width: '14px', color: '#000' }} />
               </IconButton>
               <Box sx={{ marginLeft: 'auto', marginRight: 'auto', display: 'inline' }}>
                 {t('create-new-list')}
@@ -170,11 +179,7 @@ const CreateList = (props: CreateListProps) => {
         </Typography>
       </Box>
       <Box>
-        <form
-          onSubmit={handleSubmit}
-          style={{ margin: '10px auto', maxWidth: '360px', marginLeft: 0 }}
-          id="wishlist-form"
-        >
+        <form onSubmit={handleSubmit} style={styles.nameForm} id="wishlist-form">
           <Box sx={{ ...styles.listSection, flexDirection: 'column' }}>
             <KiboTextBox
               placeholder={t('name-this-list')}
@@ -192,53 +197,25 @@ const CreateList = (props: CreateListProps) => {
         <Typography variant="h3" sx={{ fontWeight: 'bold' }}>
           {t('list-items')}
         </Typography>
-        {productList.map((product: Product) => (
+        {productList.map((item: CrWishlistItem) => (
           <ListItem
-            key={product.productCode}
-            item={{
-              product: {
-                productName: product?.content?.productName as string,
-                productCode: product.productCode as string,
-                price: product.price as CrProductPrice,
-                productImage:
-                  (product?.content?.productImages?.length as number) > 0
-                    ? (product?.content?.productImages?.[0]?.imageUrl as string)
-                    : '',
-                productImageAltText:
-                  (product?.content?.productImages?.length as number) > 0
-                    ? (product?.content?.productImages?.[0]?.altText as string)
-                    : '',
-                productDescription: product.content?.productShortDescription as string,
-              },
-              quantity: 1,
-            }}
+            key={item.product?.productCode as string}
+            item={item}
             onDeleteItem={handleDeleteItem}
             onChangeQuantity={handleChangeQuantity}
           />
         ))}
         {!mdScreen && (
           <>
-            <Box
-              sx={{
-                width: '100%',
-                position: 'fixed',
-                left: '50%',
-                bottom: '0px',
-                transform: 'translateX(-50%)',
-                padding: '15px',
-                background: 'white',
-                display: 'flex',
-                flexDirection: 'column',
-                justifyContent: 'flex-end',
-              }}
-            >
+            <Box sx={styles.mobileSaveWindow}>
               <Button
-                variant="outlined"
+                variant="contained"
+                color="secondary"
                 type="button"
                 onClick={() => {
                   onCreateFormToggle(false)
                 }}
-                style={{ width: '100%' }}
+                sx={{ width: '100%' }}
               >
                 {t('cancel')}
               </Button>
@@ -246,7 +223,7 @@ const CreateList = (props: CreateListProps) => {
                 variant="contained"
                 type="submit"
                 form="wishlist-form"
-                style={{ width: '100%', marginTop: '8px', boxShadow: 'none' }}
+                sx={{ width: '100%', marginTop: '8px', boxShadow: 'none' }}
                 disabled={listState.name.length === 0}
               >
                 {t('save-and-close')}

@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 
-import { Delete, Edit, FolderCopySharp, MoreVert } from '@mui/icons-material'
+import { ContentCopy, Delete, Edit, MoreVert } from '@mui/icons-material'
 import {
   Box,
   Button,
@@ -33,23 +33,19 @@ interface ListTableProps {
   isLoading: boolean
 }
 
-const ListTable = (props: ListTableProps) => {
-  const {
-    rows,
-    onDeleteList,
-    onCopyList,
-    onEditList,
-    onAddListToCart,
-    onInitiateQuote,
-    isLoading,
-  } = props
-  // state for mobile menu
+interface ListTableMobileOptions {
+  onDeleteList: (param: string) => void
+  onCopyList: (param: string) => void
+  onEditList: (param: string) => void
+  onAddListToCart: (param: string) => void
+  onInitiateQuote: (param: string) => void
+  itemId: string
+}
+
+const ListTableMobileOptions = (props: ListTableMobileOptions) => {
+  const { onDeleteList, onCopyList, onEditList, onAddListToCart, onInitiateQuote, itemId } = props
   const [anchorEl, setAnchorEL] = useState<HTMLElement | null>(null)
-
   const { t } = useTranslation('common')
-  const theme = useTheme()
-  const mdScreen = useMediaQuery(theme.breakpoints.up('md'))
-
   const options = [
     { name: t('edit'), onClick: onEditList },
     // todo
@@ -61,33 +57,81 @@ const ListTable = (props: ListTableProps) => {
   ]
 
   return (
+    <>
+      <IconButton
+        sx={{ padding: '0px' }}
+        onClick={(e) => {
+          console.log(e.currentTarget)
+          setAnchorEL(e.currentTarget)
+        }}
+        data-testid="menuBtn"
+        id={itemId}
+      >
+        <MoreVert />
+      </IconButton>
+      <Menu
+        anchorEl={anchorEl}
+        open={Boolean(anchorEl)}
+        onClose={() => setAnchorEL(null)}
+        data-testid="menu"
+      >
+        {options.map((option, i) => (
+          <MenuItem
+            key={option.name}
+            onClick={() => {
+              console.log(itemId)
+              option.onClick(itemId)
+              setAnchorEL(null)
+            }}
+            sx={i !== options.length - 1 ? { borderBottom: '0.5px solid #EAEAEA' } : {}}
+          >
+            {option.name}
+          </MenuItem>
+        ))}
+      </Menu>
+    </>
+  )
+}
+
+const ListTable = (props: ListTableProps) => {
+  const {
+    rows,
+    onDeleteList,
+    onCopyList,
+    onEditList,
+    onAddListToCart,
+    onInitiateQuote,
+    isLoading,
+  } = props
+
+  const { t } = useTranslation('common')
+  const theme = useTheme()
+  const mdScreen = useMediaQuery(theme.breakpoints.up('md'))
+
+  return (
     <TableContainer
       sx={{ opacity: isLoading ? '0.5' : '1', pointerEvents: isLoading ? 'none' : 'auto' }}
     >
-      <Table style={{ tableLayout: 'fixed' }}>
+      <Table sx={{ tableLayout: 'fixed' }}>
         <TableHead>
-          <TableRow style={{ backgroundColor: '#f7f7f7', padding: '10px 0' }}>
-            <TableCell style={{ padding: '10px 10px', width: mdScreen ? '25%' : '50%' }}>
+          <TableRow sx={{ backgroundColor: '#f7f7f7', padding: '10px 0' }}>
+            <TableCell sx={{ padding: '10px 10px', width: mdScreen ? '25%' : '50%' }}>
               {t('list-name')}
             </TableCell>
-            <TableCell style={{ padding: '10px 10px', width: mdScreen ? '15%' : '30%' }}>
+            <TableCell sx={{ padding: '10px 10px', width: mdScreen ? '15%' : '30%' }}>
               {t('date-created')}
             </TableCell>
             {mdScreen && (
-              <TableCell style={{ padding: '10px 10px', width: '20%' }}>
-                {t('created-by')}
-              </TableCell>
+              <TableCell sx={{ padding: '10px 10px', width: '20%' }}>{t('created-by')}</TableCell>
             )}
-            <TableCell
-              style={{ padding: '10px 10px', width: mdScreen ? '25%' : '10%' }}
-            ></TableCell>
+            <TableCell sx={{ padding: '10px 10px', width: mdScreen ? '25%' : '10%' }}></TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
           {rows?.map((item: Maybe<CrWishlist>) => {
             return (
               <TableRow key={item?.id}>
-                <TableCell style={{ ...styles.tableCellStyles, width: mdScreen ? '25%' : '50%' }}>
+                <TableCell sx={{ ...styles.tableCellStyles, width: mdScreen ? '25%' : '50%' }}>
                   {mdScreen ? (
                     item?.name
                   ) : (
@@ -100,17 +144,17 @@ const ListTable = (props: ListTableProps) => {
                     </Box>
                   )}
                 </TableCell>
-                <TableCell style={{ ...styles.tableCellStyles, width: mdScreen ? '15%' : '30%' }}>
+                <TableCell sx={{ ...styles.tableCellStyles, width: mdScreen ? '15%' : '30%' }}>
                   {formatDate(item?.auditInfo?.createDate)}
                 </TableCell>
                 {mdScreen && (
-                  <TableCell style={{ ...styles.tableCellStyles, width: '20%' }}>
+                  <TableCell sx={{ ...styles.tableCellStyles, width: '20%' }}>
                     {item?.auditInfo?.createBy}
                   </TableCell>
                 )}
-                <TableCell style={{ ...styles.tableCellStyles, width: mdScreen ? '25%' : '10%' }}>
+                <TableCell sx={{ ...styles.tableCellStyles, width: mdScreen ? '25%' : '10%' }}>
                   {mdScreen ? (
-                    <Box style={{ justifyContent: 'flex-end', display: 'flex' }}>
+                    <Box sx={{ justifyContent: 'flex-end', display: 'flex' }}>
                       <Button
                         variant="text"
                         color="inherit"
@@ -139,7 +183,7 @@ const ListTable = (props: ListTableProps) => {
                         onClick={() => onCopyList(item?.id as string)}
                         data-testid="copyBtn"
                       >
-                        <FolderCopySharp />
+                        <ContentCopy />
                       </IconButton>
                       <IconButton
                         color="inherit"
@@ -151,36 +195,14 @@ const ListTable = (props: ListTableProps) => {
                     </Box>
                   ) : (
                     <>
-                      <IconButton
-                        style={{ padding: '0px' }}
-                        onClick={(e) => setAnchorEL(e.currentTarget)}
-                        data-testid="menuBtn"
-                      >
-                        <MoreVert />
-                      </IconButton>
-                      <Menu
-                        anchorEl={anchorEl}
-                        open={Boolean(anchorEl)}
-                        onClose={() => setAnchorEL(null)}
-                        data-testid="menu"
-                      >
-                        {options.map((option, i) => (
-                          <MenuItem
-                            key={option.name}
-                            onClick={() => {
-                              option.onClick(item?.id as string)
-                              setAnchorEL(null)
-                            }}
-                            style={
-                              i !== options.length - 1
-                                ? { borderBottom: '0.5px solid #EAEAEA' }
-                                : {}
-                            }
-                          >
-                            {option.name}
-                          </MenuItem>
-                        ))}
-                      </Menu>
+                      <ListTableMobileOptions
+                        onDeleteList={onDeleteList}
+                        onCopyList={onCopyList}
+                        onEditList={onEditList}
+                        onAddListToCart={onAddListToCart}
+                        onInitiateQuote={onInitiateQuote}
+                        itemId={item?.id as string}
+                      />
                     </>
                   )}
                 </TableCell>

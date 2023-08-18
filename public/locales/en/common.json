@@ -446,5 +446,6 @@
 
   "product-configuration-option": "Product Configuration Option",
   "no-list-found": "No List Found",
-  "edit-list": "Edit List"
+  "edit-list": "Edit List",
+  "name-this-list": "Name this list"
 }
