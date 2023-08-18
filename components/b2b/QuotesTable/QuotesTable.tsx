@@ -29,7 +29,7 @@ import { useTranslation } from 'next-i18next'
 import { KiboPagination, KiboSelect, Price, SearchBar } from '@/components/common'
 import { QuotesFilterDialog } from '@/components/dialogs'
 import { useModalContext } from '@/context'
-import { useDebounce } from '@/hooks'
+import { useDebounce, useDeleteQuote } from '@/hooks'
 import { quoteGetters } from '@/lib/getters'
 import { buildQuotesFilterParam } from '@/lib/helpers'
 import { QuoteFilters, QuoteSortingOptions } from '@/lib/types'
@@ -113,20 +113,32 @@ const QuotesTable = (props: QuotesTableProps) => {
     Expired: theme.palette.error.main,
   }
 
+  const { deleteQuote } = useDeleteQuote()
+
   const getStatusColorCode = (status: string) => {
     return statusColorCode[status]
   }
 
   // Mobile Actions
-  const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null)
-  const open = Boolean(anchorEl)
+  const [anchorEl, setAnchorEl] = React.useState<{ element: null | HTMLElement; id: string }>({
+    element: null,
+    id: '',
+  })
 
-  const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
-    setAnchorEl(event.currentTarget)
+  const open = Boolean(anchorEl.element)
+
+  const handleClick = (event: React.MouseEvent<HTMLButtonElement>, id: string) => {
+    setAnchorEl({
+      element: event.currentTarget,
+      id,
+    })
   }
 
   const handleClose = () => {
-    setAnchorEl(null)
+    setAnchorEl({
+      element: null,
+      id: '',
+    })
   }
 
   const handleEditQuote = () => {
@@ -139,7 +151,8 @@ const QuotesTable = (props: QuotesTableProps) => {
     handleClose()
   }
 
-  const handleDeleteQuote = () => {
+  const handleDeleteQuote = (id: string) => {
+    deleteQuote.mutate(id)
     handleClose()
   }
 
@@ -325,7 +338,7 @@ const QuotesTable = (props: QuotesTableProps) => {
                             <IconButton size="small" onClick={handleEmailQuote}>
                               <Mail fontSize="small" />
                             </IconButton>
-                            <IconButton size="small" onClick={handleDeleteQuote}>
+                            <IconButton size="small" onClick={() => handleDeleteQuote(quoteId)}>
                               <Delete fontSize="small" />
                             </IconButton>
                           </Box>
@@ -333,13 +346,8 @@ const QuotesTable = (props: QuotesTableProps) => {
                       </>
                     ) : (
                       <>
-                        <TableCell
-                          component="td"
-                          scope="row"
-                          align="right"
-                          sx={{ paddingInline: 0 }}
-                        >
-                          <IconButton size="small" onClick={handleClick}>
+                        <TableCell component="td" scope="row" align="right">
+                          <IconButton size="small" onClick={(e) => handleClick(e, quoteId)}>
                             <MoreVert fontSize="small" />
                           </IconButton>
                         </TableCell>
@@ -353,7 +361,7 @@ const QuotesTable = (props: QuotesTableProps) => {
         </Table>
         <Menu
           id="basic-menu"
-          anchorEl={anchorEl}
+          anchorEl={anchorEl.element}
           open={open}
           onClose={handleClose}
           MenuListProps={{
@@ -374,7 +382,7 @@ const QuotesTable = (props: QuotesTableProps) => {
           <MenuItem onClick={handleEmailQuote}>
             <Typography variant="body2">{t('email-quote')}</Typography>
           </MenuItem>
-          <MenuItem onClick={handleDeleteQuote}>
+          <MenuItem onClick={() => handleDeleteQuote(anchorEl.id)}>
             <Typography variant="body2">{t('delete-quote')}</Typography>
           </MenuItem>
         </Menu>
