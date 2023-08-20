@@ -7,7 +7,7 @@ import { makeGraphQLClient } from '@/lib/gql/client'
 import { updateWishlistMutation, updateWishlistItemQuantityMutation } from '@/lib/gql/mutations'
 import { wishlistKeys } from '@/lib/react-query/queryKeys'
 
-import { CrWishlistInput } from '@/lib/gql/types'
+import { CrWishlist, CrWishlistInput, CrWishlistItem } from '@/lib/gql/types'
 
 interface UpdateWishlistProps {
   wishlistId: string
@@ -20,7 +20,15 @@ interface UpdateWishlistItemQuantityProps {
   quantity: number
 }
 
-const updateWishlist = async (props: UpdateWishlistProps) => {
+interface UpdateWishlistData {
+  updateWishlist: CrWishlist
+}
+
+interface UpdateWishlistItemData {
+  updateWishlistItemQuantity: CrWishlistItem
+}
+
+const updateWishlist = async (props: UpdateWishlistProps): Promise<UpdateWishlistData> => {
   const client = makeGraphQLClient()
 
   const response = await client.request({
@@ -30,7 +38,9 @@ const updateWishlist = async (props: UpdateWishlistProps) => {
   return response
 }
 
-const updateWishlistItemQuantity = async (params: UpdateWishlistItemQuantityProps) => {
+const updateWishlistItemQuantity = async (
+  params: UpdateWishlistItemQuantityProps
+): Promise<UpdateWishlistItemData> => {
   console.log(updateWishlistItemQuantityMutation, params)
   const client = makeGraphQLClient()
   const response = await client.request({

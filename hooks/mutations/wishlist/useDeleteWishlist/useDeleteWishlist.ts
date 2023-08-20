@@ -8,7 +8,11 @@ import { makeGraphQLClient } from '@/lib/gql/client'
 import { deleteWishlistMutation } from '@/lib/gql/mutations'
 import { wishlistKeys } from '@/lib/react-query/queryKeys'
 
-const deleteWishlist = async (wishlistId: string) => {
+interface DeleteWishlistData {
+  deleteWishlist: boolean
+}
+
+const deleteWishlist = async (wishlistId: string): Promise<DeleteWishlistData> => {
   const client = makeGraphQLClient()
   const variables = {
     wishlistId,
