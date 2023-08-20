@@ -460,6 +460,7 @@
   "enter-quote-name": "Enter a quote name",
   "account-name": "Account Name",
   "add-item-to-quote": "Add Item to Quote",
+  "list-added-to-cart": "List added to cart",
   "summary": "Summary",
   "duty-total": "Duty Total",
   "titleTotal": "{{title}} Total",
