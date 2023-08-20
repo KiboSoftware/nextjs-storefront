@@ -2,6 +2,7 @@ import '@testing-library/jest-dom'
 import { render, screen } from '@testing-library/react'
 
 import { createQueryClientWrapper } from '@/__test__/utils'
+import { AuthContext } from '@/context'
 import MyAccountPage, { getServerSideProps } from '@/pages/my-account/index'
 
 let mockIsAuthenticated = true
@@ -96,10 +97,24 @@ describe('[page] MyAccount Page', () => {
   it('renders B2BTemplate when isB2bTemplate is true', () => {
     const props = { isAuthenticated: true }
     MyAccountPage.defaultProps = props
-    jest.mock('@/context/AuthContext', () => ({
-      useAuthContext: () => ({ user: null }),
-    }))
-    render(<MyAccountPage />)
+
+    const values = {
+      isAuthenticated: true,
+      user: {
+        id: 1,
+        accountType: 'B2B',
+      },
+      login: jest.fn(),
+      createAccount: jest.fn(),
+      setUser: jest.fn(),
+      logout: jest.fn(),
+    }
+
+    render(
+      <AuthContext.Provider value={values}>
+        <MyAccountPage />
+      </AuthContext.Provider>
+    )
 
     const b2bTemplate = screen.getByTestId('B2BTemplate-mock')
     expect(b2bTemplate).toBeInTheDocument()

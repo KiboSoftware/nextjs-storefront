@@ -5,10 +5,10 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 
 import { makeGraphQLClient } from '@/lib/gql/client'
-
-import { MutationUpdateCustomerB2bAccountUserArgs } from '@/lib/gql/types'
 import { updateCustomerB2bUserMutation } from '@/lib/gql/mutations'
 import { customerB2BUserKeys } from '@/lib/react-query/queryKeys'
+
+import { MutationUpdateCustomerB2bAccountUserArgs } from '@/lib/gql/types'
 
 const client = makeGraphQLClient()
 

@@ -17,6 +17,7 @@ interface KiboRadioProps {
   title?: string | React.ReactNode
   selected?: string
   align?: 'baseline' | 'center' | 'flex-start'
+  row?: boolean
   radioOptions: {
     label: string | number | ReactElement<any, string | JSXElementConstructor<any>>
     value: string
@@ -36,7 +37,7 @@ export const KiboRadio = (props: KiboRadioProps) => {
     selected = '',
     sx,
     align = 'center',
-    // optionIndicator,
+    row = false,
     onChange,
   } = props
 
@@ -57,6 +58,7 @@ export const KiboRadio = (props: KiboRadioProps) => {
         name="radio-buttons-group"
         value={selected}
         onChange={handleChange}
+        row={row}
       >
         {radioOptions?.map((radio, index) => {
           return (

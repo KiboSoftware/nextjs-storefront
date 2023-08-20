@@ -84,7 +84,7 @@ describe('[component] - Product Listing Template', () => {
     const sortingValues = Category?.args?.sortingValues?.options?.map((sort) => sort.value) || []
 
     const sortingValuesRegex = new RegExp(sortingValues?.join('|'), 'i')
-    const selectButton = screen.getByRole('button', { name: sortingValues[0] })
+    const selectButton = screen.getByRole('button', { name: 'sort-plp' })
 
     user.click(selectButton)
 
@@ -134,9 +134,7 @@ describe('[component] - Product Listing Template', () => {
   it('should call onSortItemSelection function when user clicks on sorting', async () => {
     const { user, onSortItemSelectionMock } = setup()
 
-    const sortingValuesOptions =
-      Category?.args?.sortingValues?.options?.map((sort) => sort.value) || []
-    const selectButton = screen.getByRole('button', { name: sortingValuesOptions[0] })
+    const selectButton = screen.getByRole('button', { name: 'sort-plp' })
 
     user.click(selectButton)
 

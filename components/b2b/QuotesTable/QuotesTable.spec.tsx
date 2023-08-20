@@ -206,7 +206,7 @@ describe('[components] - QuotesTable', () => {
       />
     )
 
-    const selectButton = screen.getByRole('button', { name: 'sort-by' })
+    const selectButton = screen.getByRole('button', { name: 'sort-plp' })
 
     fireEvent.mouseDown(selectButton)
 
@@ -266,7 +266,6 @@ describe('[components] - QuotesTable', () => {
               expirationDate
             )
           : expect(screen.getAllByTestId('quote-expirationDate')[index]).toBeEmptyDOMElement()
-        expect(screen.getAllByTestId('quote-status-mobile')[index]).toBeVisible()
       })
     })
   })

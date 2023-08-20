@@ -1,4 +1,4 @@
-import { quoteFragment } from '../../fragments'
+import { quoteFragment } from '../../../fragments'
 
 const updateQuoteMutation = /* GraphQL */ `
   mutation updateQuote($quoteId: String!, updateMode: String, $quoteInput: QuoteInput) {

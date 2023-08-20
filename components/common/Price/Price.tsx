@@ -3,14 +3,15 @@ import { Typography, Box, SxProps, Theme } from '@mui/material'
 import type { PriceOnly, PriceRange, SalePrice } from '@/lib/types'
 interface PriceProps extends PriceOnly, SalePrice, PriceStyles {
   priceRange?: PriceRange
+  color?: string
 }
 interface PriceStyles {
   variant?: 'body2' | 'body1' | 'subtitle1'
   fontWeight?: 'bold' | 'normal'
+  color?: string
 }
 interface PriceTypographyProps extends PriceStyles {
   children: React.ReactNode
-  color?: string
   sx?: SxProps<Theme>
 }
 
@@ -52,13 +53,14 @@ const PriceTypography = (priceTypographyProps: PriceTypographyProps) => {
 }
 
 const SalePriceTypography = (salePriceTypographyProps: SalePrice & PriceStyles) => {
-  const { price, salePrice, variant, fontWeight } = salePriceTypographyProps
+  const { price, salePrice, variant, fontWeight, color } = salePriceTypographyProps
 
   return (
     <>
       <PriceTypography
         variant={variant}
         fontWeight={fontWeight}
+        color={color}
         {...(salePrice && { color: 'error' })}
         sx={{
           ...styles.price,
@@ -85,7 +87,7 @@ const PriceRangeTypography = ({ priceRange }: { priceRange: PriceRange }) => {
 }
 
 const Price = (props: PriceProps) => {
-  const { price, salePrice, priceRange, variant, fontWeight } = props
+  const { price, salePrice, priceRange, variant, fontWeight, color } = props
 
   return (
     <Box display="flex" gap="0.625rem" alignItems="center">
@@ -97,6 +99,7 @@ const Price = (props: PriceProps) => {
           salePrice={salePrice}
           variant={variant}
           fontWeight={fontWeight}
+          color={color}
         />
       )}
     </Box>

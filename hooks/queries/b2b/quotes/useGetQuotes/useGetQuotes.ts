@@ -40,6 +40,19 @@ export const useGetQuotes = (param: QueryQuotesArgs) => {
   const { isLoading, isSuccess, isError, error, data } = useQuery({
     queryKey: b2bQuotesKeys.quotesParams(param),
     queryFn: () => fetchQuotes(param),
+    placeholderData: (previousData) => previousData ?? undefined,
+  })
+
+  useQuery({
+    queryKey: b2bQuotesKeys.quotesParams({
+      ...param,
+      startIndex: (param?.startIndex as number) + (param?.pageSize as number),
+    }),
+    queryFn: () =>
+      fetchQuotes({
+        ...param,
+        startIndex: (param?.startIndex as number) + (param?.pageSize as number),
+      }),
   })
 
   return {
