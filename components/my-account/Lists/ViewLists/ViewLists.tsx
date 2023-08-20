@@ -139,7 +139,7 @@ const ViewLists = (props: ViewListsProps) => {
         )
       })
       await Promise.all(promises)
-      showSnackbar('List added to cart', 'success')
+      showSnackbar(t('list-added-to-cart'), 'success')
       setIsLoading(false)
     } catch (e: any) {
       setIsLoading(false)
