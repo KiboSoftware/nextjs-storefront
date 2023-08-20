@@ -14,7 +14,7 @@ import {
 import { useTranslation } from 'next-i18next'
 import { Maybe } from 'yup/lib/types'
 
-import ProductSearch from '@/components/b2b/B2BProductSearch/B2BProductSearch'
+import { B2BProductSearch } from '@/components/b2b'
 import styles from '@/components/my-account/Lists/EditList/EditList.style'
 import ListItem from '@/components/my-account/Lists/ListItem/ListItem'
 import { useUpdateWishlistMutation } from '@/hooks'
@@ -105,90 +105,88 @@ const EditList = (props: EditListProps) => {
   return (
     <>
       <Box>
-        <Grid>
+        <Grid
+          container
+          spacing={0.5}
+          rowSpacing={1}
+          columnSpacing={{ xs: 1, sm: 2, md: 3 }}
+          justifyContent="flex-end"
+          alignItems="center"
+          sx={{ marginBottom: '20px' }}
+        >
+          <Grid item xs={mdScreen ? 9 : 12}>
+            {editListState.openNameForm ? (
+              <>
+                <form>
+                  <input
+                    onChange={(e) => setEditListState({ ...editListState, name: e.target.value })}
+                    value={editListState.name as string}
+                    style={styles.listNameForm}
+                    data-testid="editNameInput"
+                  />
+                  <Button
+                    variant="contained"
+                    onClick={() => setEditListState({ ...editListState, openNameForm: false })}
+                    sx={{ marginLeft: '5px' }}
+                    data-testid="saveNameBtn"
+                  >
+                    {t('save')}
+                  </Button>
+                </form>
+              </>
+            ) : (
+              <>
+                <Typography variant="h3" fontWeight={'bold'}>
+                  {editListState.name}
+                  <IconButton
+                    onClick={() => setEditListState({ ...editListState, openNameForm: true })}
+                    data-testid="editNameBtn"
+                  >
+                    <EditIcon />
+                  </IconButton>
+                </Typography>
+              </>
+            )}
+          </Grid>
+          {mdScreen ? (
+            <>
+              <Grid item xs={3} justifyContent="flex-end" flexDirection="column" display="flex">
+                <Container sx={{ justifyContent: 'end', display: 'flex' }}>
+                  <Button
+                    variant="contained"
+                    color="secondary"
+                    size="medium"
+                    onClick={() => onEditFormToggle()}
+                    sx={{ marginRight: '10px' }}
+                  >
+                    {t('cancel')}
+                  </Button>
+                  <Button variant="contained" size="medium" onClick={handleSaveWishlist}>
+                    {t('save-and-close')}
+                  </Button>
+                </Container>
+              </Grid>
+            </>
+          ) : (
+            <></>
+          )}
+        </Grid>
+        <Grid item xs={12}>
+          <Box sx={{ maxWidth: '360px' }}>
+            <B2BProductSearch onAddProduct={handleAddProduct} />
+          </Box>
           <Grid
             container
             spacing={0.5}
             rowSpacing={1}
             columnSpacing={{ xs: 1, sm: 2, md: 3 }}
-            justifyContent="flex-end"
-            alignItems="center"
-            sx={{ marginBottom: '20px' }}
+            direction="row"
+            justifyContent="flex-start"
+            alignItems="top"
           >
-            <Grid item xs={mdScreen ? 9 : 12}>
-              {editListState.openNameForm ? (
-                <>
-                  <form>
-                    <input
-                      onChange={(e) => setEditListState({ ...editListState, name: e.target.value })}
-                      value={editListState.name as string}
-                      style={styles.listNameForm}
-                      data-testid="editNameInput"
-                    />
-                    <Button
-                      variant="contained"
-                      onClick={() => setEditListState({ ...editListState, openNameForm: false })}
-                      sx={{ marginLeft: '5px' }}
-                      data-testid="saveNameBtn"
-                    >
-                      {t('save')}
-                    </Button>
-                  </form>
-                </>
-              ) : (
-                <>
-                  <Typography variant="h3" fontWeight={'bold'}>
-                    {editListState.name}
-                    <IconButton
-                      onClick={() => setEditListState({ ...editListState, openNameForm: true })}
-                      data-testid="editNameBtn"
-                    >
-                      <EditIcon />
-                    </IconButton>
-                  </Typography>
-                </>
-              )}
-            </Grid>
-            {mdScreen ? (
-              <>
-                <Grid item xs={3} justifyContent="flex-end" flexDirection="column" display="flex">
-                  <Container sx={{ justifyContent: 'end', display: 'flex' }}>
-                    <Button
-                      variant="contained"
-                      color="secondary"
-                      size="medium"
-                      onClick={() => onEditFormToggle()}
-                      sx={{ marginRight: '10px' }}
-                    >
-                      {t('cancel')}
-                    </Button>
-                    <Button variant="contained" size="medium" onClick={handleSaveWishlist}>
-                      {t('save-and-close')}
-                    </Button>
-                  </Container>
-                </Grid>
-              </>
-            ) : (
-              <></>
-            )}
-          </Grid>
-          <Grid item xs={12}>
-            <Box sx={{ maxWidth: '360px' }}>
-              <ProductSearch onAddProduct={handleAddProduct} />
-            </Box>
-            <Grid
-              container
-              spacing={0.5}
-              rowSpacing={1}
-              columnSpacing={{ xs: 1, sm: 2, md: 3 }}
-              direction="row"
-              justifyContent="flex-start"
-              alignItems="top"
-            >
-              <Grid item xs={4}></Grid>
-              <Grid item xs={4}></Grid>
-              <Grid item xs={4}></Grid>
-            </Grid>
+            <Grid item xs={4}></Grid>
+            <Grid item xs={4}></Grid>
+            <Grid item xs={4}></Grid>
           </Grid>
         </Grid>
       </Box>

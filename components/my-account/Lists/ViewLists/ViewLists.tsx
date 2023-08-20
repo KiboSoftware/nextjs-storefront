@@ -60,10 +60,7 @@ const ViewLists = (props: ViewListsProps) => {
   const theme = useTheme()
   const mdScreen = useMediaQuery<boolean>(theme.breakpoints.up('md'))
   const { t } = useTranslation('common')
-  // this will be used for creating new list
   const { user } = useAuthContext()
-  const userId = user?.id
-  const userUserId = user?.userId
 
   // fetching wishlist data
   const response = useGetWishlist(paginationState)
@@ -85,7 +82,7 @@ const ViewLists = (props: ViewListsProps) => {
     setIsLoading(true)
     try {
       await createWishlist.mutateAsync({
-        customerAccountId: userId,
+        customerAccountId: user?.id,
         name: listName,
         items: newWishlist?.items,
       })
@@ -158,7 +155,7 @@ const ViewLists = (props: ViewListsProps) => {
       startIndex: publicRuntimeConfig.b2bList.startIndex,
       pageSize: publicRuntimeConfig.b2bList.pageSize,
       sortBy: publicRuntimeConfig.b2bList.sortBy,
-      filter: e.currentTarget.checked ? `createBy eq ${userUserId}` : '',
+      filter: e.currentTarget.checked ? `createBy eq ${user?.userId}` : '',
     })
   }
 
