@@ -202,7 +202,7 @@ describe('[componenet] - Edit list', () => {
     fireEvent.click(deleteBtn)
 
     await waitFor(() => {
-      console.log(itemsCount)
+      expect(listData.items.length).toBe(itemsCount - 1)
     })
   })
 
