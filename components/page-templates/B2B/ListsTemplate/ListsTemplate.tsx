@@ -24,8 +24,8 @@ const ListsTemplate = () => {
   const smScreen = useMediaQuery<boolean>(theme.breakpoints.up('sm'))
   const { t } = useTranslation('common')
 
-  const handleEditFormToggle = (val: boolean) =>
-    setState((prevState) => ({ ...prevState, isEditFormOpen: val }))
+  const handleEditFormToggle = () =>
+    setState((prevState) => ({ ...prevState, isEditFormOpen: !state.isEditFormOpen }))
 
   const handleCreateFormToggle = () =>
     setState((prevState) => ({ ...prevState, isCreateFormOpen: !state.isCreateFormOpen }))
@@ -47,7 +47,7 @@ const ListsTemplate = () => {
     <Grid container spacing={2} marginTop={2}>
       <Grid item xs={12}>
         <Box>
-          {mdScreen ? (
+          {mdScreen && (
             <Button
               style={{ paddingLeft: 0, fontSize: '14px', marginBottom: '20px' }}
               color="inherit"
@@ -59,12 +59,11 @@ const ListsTemplate = () => {
             >
               {t('my-account')}
             </Button>
-          ) : null}
+          )}
           <Typography
-            variant="h1"
+            variant={mdScreen ? 'h1' : 'h2'}
             sx={{
               textAlign: 'center',
-              fontSize: mdScreen ? '28px' : '20px',
               display: 'flex',
               justifyContent: mdScreen ? 'left' : 'center',
               alignItems: 'center',

@@ -22,7 +22,7 @@ import { useUpdateWishlistMutation } from '@/hooks'
 import { CrWishlist, CrWishlistInput, CrWishlistItem, Product } from '@/lib/gql/types'
 
 export interface EditListProps {
-  onEditFormToggle: (param: boolean) => void
+  onEditFormToggle: () => void
   listData: CrWishlist | undefined
   onUpdateListData: (param: CrWishlist) => void
 }
@@ -58,7 +58,7 @@ const EditList = (props: EditListProps) => {
     }
     const response = await updateWishlist.mutateAsync(payload)
     onUpdateListData(response.updateWishlist)
-    onEditFormToggle(false)
+    onEditFormToggle()
   }
 
   const handleDeleteItem = async (id: string) => {
@@ -157,7 +157,7 @@ const EditList = (props: EditListProps) => {
                       variant="contained"
                       color="secondary"
                       size="medium"
-                      onClick={() => onEditFormToggle(false)}
+                      onClick={() => onEditFormToggle()}
                       sx={{ marginRight: '10px' }}
                     >
                       {t('cancel')}
@@ -214,7 +214,7 @@ const EditList = (props: EditListProps) => {
               variant="contained"
               color="secondary"
               size="medium"
-              onClick={() => onEditFormToggle(false)}
+              onClick={() => onEditFormToggle()}
               sx={{ width: '100%' }}
             >
               {t('cancel')}

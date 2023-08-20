@@ -33,7 +33,7 @@ import {
 import { CrWishlist, Maybe, ProductOption, WishlistCollection } from '@/lib/gql/types'
 
 export interface ViewListsProps {
-  onEditFormToggle: (param: boolean) => void
+  onEditFormToggle: () => void
   isEditFormOpen: boolean
 }
 
@@ -118,7 +118,7 @@ const ViewLists = (props: ViewListsProps) => {
       (item: Maybe<CrWishlist>) => item?.id === id
     ) as CrWishlist
     setListData(wishlist)
-    onEditFormToggle(true)
+    onEditFormToggle()
   }
 
   // add list to cart
