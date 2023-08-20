@@ -466,5 +466,7 @@
   "titleTotal": "{{title}} Total",
   "titleSubtotal": "{{title}} Subtotal",
   "adjustment-text": "{{selectValue}} {{title}} Subtotal",
-  "titleTax": "{{title}} Tax"
+  "titleTax": "{{title}} Tax",
+  "edit-item": "Edit Item",
+  "remove": "Remove"
 }

@@ -5,14 +5,14 @@ import { Button, useMediaQuery, useTheme, IconButton, Box, Typography } from '@m
 import { useRouter } from 'next/router'
 import { useTranslation } from 'next-i18next'
 
-import ProductSearch from '@/components/b2b/B2BProductSearch/B2BProductSearch'
+import { B2BProductSearch } from '@/components/b2b'
 import { KiboTextBox } from '@/components/common'
 import styles from '@/components/my-account/Lists/CreateList/CreateList.style'
 import ListItem from '@/components/my-account/Lists/ListItem/ListItem'
 import { useAuthContext } from '@/context'
-import { useCreateWishlist, useGetWishlist } from '@/hooks'
+import { useCreateWishlist } from '@/hooks'
 
-import { CrProductPrice, CrWishlistItem, Product, ProductPrice } from '@/lib/gql/types'
+import { CrProductPrice, CrWishlistItem, Product } from '@/lib/gql/types'
 
 export interface CreateListProps {
   onCreateFormToggle: (param: boolean) => void
@@ -191,7 +191,7 @@ const CreateList = (props: CreateListProps) => {
             />
           </Box>
           <Box sx={{ maxWidth: '360px' }}>
-            <ProductSearch onAddProduct={handleAddProduct} />
+            <B2BProductSearch onAddProduct={handleAddProduct} />
           </Box>
         </form>
         <Typography variant="h3" sx={{ fontWeight: 'bold' }}>

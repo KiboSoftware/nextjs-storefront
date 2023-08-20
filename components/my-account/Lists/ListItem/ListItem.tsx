@@ -178,7 +178,7 @@ const ListItem = (props: ListItemProps) => {
             sx={{ minWidth: '20px', padding: '0px', marginRight: mdScreen ? '10px' : 0 }}
             disableTouchRipple
           >
-            {mdScreen ? 'Edit Item' : ''}
+            {mdScreen ? t('edit-item') : ''}
           </Button>
           <Button
             color="inherit"
@@ -189,7 +189,7 @@ const ListItem = (props: ListItemProps) => {
             sx={{ minWidth: '20px', padding: '0px' }}
             disableTouchRipple
           >
-            {mdScreen ? 'Remove' : ''}
+            {mdScreen ? t('remove') : ''}
           </Button>
         </Grid>
       </Grid>
