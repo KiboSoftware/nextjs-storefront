@@ -169,7 +169,7 @@ const ListItem = (props: ListItemProps) => {
             </Box>
           )}
         </Grid>
-        <Grid item xs={2} flexDirection={'row'} alignItems={mdScreen ? 'center' : 'flex-start'}>
+        <Grid item xs={2} flexDirection="row" alignItems={mdScreen ? 'center' : 'flex-start'}>
           <Button
             onClick={openEditModal}
             startIcon={<EditIcon />}
