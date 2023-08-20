@@ -19,13 +19,7 @@ import styles from '@/components/my-account/Lists/EditList/EditList.style'
 import ListItem from '@/components/my-account/Lists/ListItem/ListItem'
 import { useUpdateWishlistMutation } from '@/hooks'
 
-import {
-  CrProductPrice,
-  CrWishlist,
-  CrWishlistInput,
-  CrWishlistItem,
-  Product,
-} from '@/lib/gql/types'
+import { CrWishlist, CrWishlistInput, CrWishlistItem, Product } from '@/lib/gql/types'
 
 export interface EditListProps {
   onEditFormToggle: (param: boolean) => void
