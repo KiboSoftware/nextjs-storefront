@@ -30,15 +30,15 @@ const setup = () => {
   return { user }
 }
 
-const ListTableMock = ({ onEditFormToggle }: { onEditFormToggle: (param: boolean) => void }) => (
+const ListTableMock = ({ onEditFormToggle }: { onEditFormToggle: () => void }) => (
   <div data-testid="view-lists-mock">
-    <button data-testid="toggle-edit-form" onClick={() => onEditFormToggle(true)}></button>
+    <button data-testid="toggle-edit-form" onClick={() => onEditFormToggle()}></button>
   </div>
 )
 
 const EditListMock = ({ onEditFormToggle, listData, onUpdateListData }: EditListProps) => (
   <div data-testid="edit-list-mock">
-    <button data-testid="toggle-edit-form" onClick={() => onEditFormToggle(false)}></button>
+    <button data-testid="toggle-edit-form" onClick={() => onEditFormToggle()}></button>
   </div>
 )
 
@@ -77,7 +77,7 @@ describe('[component] - ListsTemplate', () => {
     expect(viewLists).toBeVisible()
   })
 
-  it('should redirect to /my-account page', async () => {
+  it('should redirect to /my-account page when my-account button clicked', async () => {
     window.matchMedia = createMatchMedia(1024)
     const { user } = setup()
     const myAccountBtn = screen.getByTestId('my-account-button')
@@ -91,7 +91,7 @@ describe('[component] - ListsTemplate', () => {
     })
   })
 
-  it('should redirect to /my-account page in mobile view', async () => {
+  it('should redirect to /my-account page in mobile view when my-account button clicked', async () => {
     window.matchMedia = createMatchMedia(500)
     const { user } = setup()
     const myAccountBtn = screen.getByTestId('my-account-button')
@@ -105,7 +105,7 @@ describe('[component] - ListsTemplate', () => {
     })
   })
 
-  it('should toggle edit list form', async () => {
+  it('should toggle edit list form when edit list button clicked', async () => {
     window.matchMedia = createMatchMedia(1024)
     setup()
     const viewLists = screen.getByTestId('view-lists-mock')
@@ -123,7 +123,7 @@ describe('[component] - ListsTemplate', () => {
     expect(viewLists).toBeVisible()
   })
 
-  it('should open create list form', async () => {
+  it('should open create list form when create list button clicked', async () => {
     window.matchMedia = createMatchMedia(1024)
     setup()
     const createFormBtn = screen.getByTestId('create-new-list-btn')
@@ -139,7 +139,7 @@ describe('[component] - ListsTemplate', () => {
     expect(screen.getByTestId('view-lists-mock')).toBeVisible()
   })
 
-  it('should toggle edit list form in mobile view', async () => {
+  it('should toggle edit list form in mobile view when edit list button clicked', async () => {
     window.matchMedia = createMatchMedia(500)
     setup()
     const viewLists = screen.getByTestId('view-lists-mock')
