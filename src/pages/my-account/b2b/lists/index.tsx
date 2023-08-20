@@ -13,10 +13,10 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
   }
 }
 
-const B2BListsPage: NextPage = (props) => {
+const B2BListsPage: NextPage = () => {
   return (
     <>
-      <ListsTemplate {...props} />
+      <ListsTemplate />
     </>
   )
 }
