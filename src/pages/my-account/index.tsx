@@ -4,6 +4,7 @@ import { ReCaptchaProvider } from 'next-recaptcha-v3'
 
 import { B2BTemplate, MyAccountTemplate } from '@/components/page-templates'
 import { useAuthContext } from '@/context'
+import { AccountType } from '@/lib/constants'
 import { decodeParseCookieValue } from '@/lib/helpers'
 
 import type { GetServerSideProps, GetServerSidePropsContext, NextPage } from 'next'
@@ -33,10 +34,12 @@ const MyAccountPage: NextPage = (props: any) => {
   const { reCaptchaKey } = publicRuntimeConfig.recaptcha
 
   if (!serverSideIsAuthenticated && !customerAccount) return null
-
-  const isB2bTemplate = true
-
-  const template = isB2bTemplate ? <B2BTemplate /> : <MyAccountTemplate user={customerAccount} />
+  const isB2BUser = customerAccount?.accountType?.toLowerCase() === AccountType.B2B.toLowerCase()
+  const template = isB2BUser ? (
+    <B2BTemplate user={customerAccount} />
+  ) : (
+    <MyAccountTemplate user={customerAccount} />
+  )
 
   return reCaptchaKey ? (
     <ReCaptchaProvider reCaptchaKey={reCaptchaKey}>{template}</ReCaptchaProvider>

@@ -29,7 +29,7 @@ import { useTranslation } from 'next-i18next'
 import { KiboPagination, KiboSelect, Price, SearchBar } from '@/components/common'
 import { QuotesFilterDialog } from '@/components/dialogs'
 import { useModalContext } from '@/context'
-import { useDebounce } from '@/hooks'
+import { useDebounce, useDeleteQuote } from '@/hooks'
 import { quoteGetters } from '@/lib/getters'
 import { buildQuotesFilterParam } from '@/lib/helpers'
 import { QuoteFilters, QuoteSortingOptions } from '@/lib/types'
@@ -76,10 +76,6 @@ const desktopColumns = [
 
 const mobileColumns = [
   {
-    field: 'status',
-    headerName: '',
-  },
-  {
     field: 'quoteNumber',
     headerName: '#',
   },
@@ -97,12 +93,6 @@ const mobileColumns = [
   },
 ]
 
-const statusColorCode: any = {
-  Pending: 'disabled',
-  InReview: 'warning',
-  ReadyForCheckout: 'success',
-}
-
 const QuotesTable = (props: QuotesTableProps) => {
   const { quoteCollection, sortingValues, filters, setQuotesSearchParam } = props
 
@@ -115,20 +105,40 @@ const QuotesTable = (props: QuotesTableProps) => {
   const [searchTerm, setSearchTerm] = React.useState('')
   const debouncedTerm = useDebounce(searchTerm, publicRuntimeConfig.debounceTimeout)
 
-  const getStatusColorCode = useCallback((status: string) => {
+  const statusColorCode: any = {
+    Pending: theme.palette.action.disabled,
+    InReview: theme.palette.warning.main,
+    ReadyForCheckout: theme.palette.info.main,
+    Completed: theme.palette.success.main,
+    Expired: theme.palette.error.main,
+  }
+
+  const { deleteQuote } = useDeleteQuote()
+
+  const getStatusColorCode = (status: string) => {
     return statusColorCode[status]
-  }, [])
+  }
 
   // Mobile Actions
-  const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null)
-  const open = Boolean(anchorEl)
+  const [anchorEl, setAnchorEl] = React.useState<{ element: null | HTMLElement; id: string }>({
+    element: null,
+    id: '',
+  })
 
-  const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
-    setAnchorEl(event.currentTarget)
+  const open = Boolean(anchorEl.element)
+
+  const handleClick = (event: React.MouseEvent<HTMLButtonElement>, id: string) => {
+    setAnchorEl({
+      element: event.currentTarget,
+      id,
+    })
   }
 
   const handleClose = () => {
-    setAnchorEl(null)
+    setAnchorEl({
+      element: null,
+      id: '',
+    })
   }
 
   const handleEditQuote = () => {
@@ -141,7 +151,8 @@ const QuotesTable = (props: QuotesTableProps) => {
     handleClose()
   }
 
-  const handleDeleteQuote = () => {
+  const handleDeleteQuote = (id: string) => {
+    deleteQuote.mutate(id)
     handleClose()
   }
 
@@ -263,9 +274,18 @@ const QuotesTable = (props: QuotesTableProps) => {
                 return (
                   <TableRow
                     key={quoteId}
-                    sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+                    sx={{
+                      '&:last-child td, &:last-child th': { border: 0 },
+                      borderLeftWidth: {
+                        xs: '5px',
+                        md: 0,
+                      },
+                      borderLeftStyle: 'solid',
+                      borderLeftColor: getStatusColorCode(status),
+                    }}
                   >
-                    {!tabAndDesktop ? (
+                    {/* TODO */}
+                    {/* {!tabAndDesktop ? (
                       <TableCell
                         size="small"
                         component="td"
@@ -275,13 +295,13 @@ const QuotesTable = (props: QuotesTableProps) => {
                       >
                         <FiberManualRecord fontSize="small" color={getStatusColorCode(status)} />
                       </TableCell>
-                    ) : null}
+                    ) : null} */}
                     <TableCell component="td" scope="row">
                       <Typography variant="body2" data-testid={`quote-number`}>
                         {number}
                       </Typography>
                     </TableCell>
-                    <TableCell component="td" scope="row">
+                    <TableCell component="td" scope="row" sx={{ whiteSpace: 'break-spaces' }}>
                       <Typography variant="body2" data-testid={`quote-name`}>
                         {name}
                       </Typography>
@@ -318,7 +338,7 @@ const QuotesTable = (props: QuotesTableProps) => {
                             <IconButton size="small" onClick={handleEmailQuote}>
                               <Mail fontSize="small" />
                             </IconButton>
-                            <IconButton size="small" onClick={handleDeleteQuote}>
+                            <IconButton size="small" onClick={() => handleDeleteQuote(quoteId)}>
                               <Delete fontSize="small" />
                             </IconButton>
                           </Box>
@@ -327,7 +347,7 @@ const QuotesTable = (props: QuotesTableProps) => {
                     ) : (
                       <>
                         <TableCell component="td" scope="row" align="right">
-                          <IconButton size="small" onClick={handleClick}>
+                          <IconButton size="small" onClick={(e) => handleClick(e, quoteId)}>
                             <MoreVert fontSize="small" />
                           </IconButton>
                         </TableCell>
@@ -341,7 +361,7 @@ const QuotesTable = (props: QuotesTableProps) => {
         </Table>
         <Menu
           id="basic-menu"
-          anchorEl={anchorEl}
+          anchorEl={anchorEl.element}
           open={open}
           onClose={handleClose}
           MenuListProps={{
@@ -362,7 +382,7 @@ const QuotesTable = (props: QuotesTableProps) => {
           <MenuItem onClick={handleEmailQuote}>
             <Typography variant="body2">{t('email-quote')}</Typography>
           </MenuItem>
-          <MenuItem onClick={handleDeleteQuote}>
+          <MenuItem onClick={() => handleDeleteQuote(anchorEl.id)}>
             <Typography variant="body2">{t('delete-quote')}</Typography>
           </MenuItem>
         </Menu>

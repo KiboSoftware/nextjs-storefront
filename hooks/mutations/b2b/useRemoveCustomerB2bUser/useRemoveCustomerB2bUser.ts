@@ -4,11 +4,11 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 
 import { makeGraphQLClient } from '@/lib/gql/client'
+import { removeCustomerB2bUserMutation } from '@/lib/gql/mutations'
 import { customerB2BUserKeys } from '@/lib/react-query/queryKeys'
+import { CustomerB2BUserParams } from '@/lib/types/CustomerB2BUser'
 
 import { B2BUserInput } from '@/lib/gql/types'
-import { removeCustomerB2bUserMutation } from '@/lib/gql/mutations'
-import { CustomerB2BUserParams } from '@/lib/types/CustomerB2BUser'
 
 const client = makeGraphQLClient()
 

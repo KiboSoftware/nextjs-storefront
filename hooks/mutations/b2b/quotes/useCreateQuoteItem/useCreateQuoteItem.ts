@@ -4,7 +4,7 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 
 import { makeGraphQLClient } from '@/lib/gql/client'
-import createQuoteItemMutation from '@/lib/gql/mutations/quotes/createQuoteItemMutation'
+import createQuoteItemMutation from '@/lib/gql/mutations/b2b/quotes/create-quote-item'
 import { buildCreateQuoteItemParams } from '@/lib/helpers'
 import { quoteKeys } from '@/lib/react-query/queryKeys'
 
