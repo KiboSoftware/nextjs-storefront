@@ -15,9 +15,10 @@ import {
 import { useTranslation } from 'next-i18next'
 import { Maybe } from 'yup/lib/types'
 
-import { B2BProductSearch, ListItem } from '@/components/b2b'
+import { B2BProductSearch } from '@/components/b2b'
 import { KiboTextBox } from '@/components/common'
 import styles from '@/components/my-account/Lists/EditList/EditList.style'
+import ListItem from '@/components/my-account/Lists/ListItem/ListItem'
 import { useUpdateWishlistMutation } from '@/hooks'
 
 import { CrWishlist, CrWishlistInput, CrWishlistItem, Product } from '@/lib/gql/types'
