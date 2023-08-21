@@ -102,30 +102,30 @@ describe('[componenet] - Edit list', () => {
   })
 
   it('should change list name', async () => {
-    const { user } = setup()
+    setup()
     const newListName = 'New List Name'
     const editBtn = screen.getByTestId('editNameBtn')
-    user.click(editBtn)
-    await waitFor(() => {
-      expect(editBtn).not.toBeVisible()
-    })
-    await waitFor(() => {
-      const editNameInput = screen.getByTestId('editNameInput')
-      expect(editNameInput).toBeVisible()
-      user.clear(editNameInput)
-      user.type(editNameInput, newListName)
-    })
-    await waitFor(() => {
-      const editNameInput = screen.getByTestId('editNameInput')
-      expect(editNameInput).toHaveValue(newListName)
-    })
-    await waitFor(() => {
-      const saveBtn = screen.getByTestId('saveNameBtn')
-      user.click(saveBtn)
-    })
-    await waitFor(() => {
-      expect(screen.getByText(newListName)).toBeVisible()
-    })
+
+    fireEvent.click(editBtn)
+
+    expect(editBtn).not.toBeVisible()
+
+    const editNameInput = screen.getAllByRole('textbox')[0]
+    expect(editNameInput).toBeVisible()
+
+    fireEvent.input(editNameInput, { target: { value: '' } })
+
+    expect(editNameInput).toHaveValue('')
+
+    fireEvent.input(editNameInput, { target: { value: newListName } })
+
+    expect(editNameInput).toHaveValue(newListName)
+    const saveBtn = screen.getByTestId('saveNameBtn')
+
+    fireEvent.click(saveBtn)
+
+    expect(editNameInput).not.toBeVisible()
+    expect(screen.getByText(newListName)).toBeVisible()
   })
 
   it('should close edit list', async () => {

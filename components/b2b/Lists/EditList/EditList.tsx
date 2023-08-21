@@ -124,7 +124,6 @@ const EditList = (props: EditListProps) => {
                       onChange={(e, value) => setEditListState({ ...editListState, name: value })}
                       value={editListState.name as string}
                       sx={{ ...styles.listNameForm }}
-                      data-testid="editNameInput"
                     />
                   </Box>
                   <Box component="span" sx={{ marginLeft: '5px' }}>
