@@ -134,7 +134,7 @@ const CreateList = (props: CreateListProps) => {
               <Box sx={{ fontSize: '28px', marginRight: 'auto', display: 'inline' }}>
                 {t('create-new-list')}
               </Box>
-              <Box sx={{ display: 'inline' }}>
+              <Box component="span" gap={2} display="inline-flex">
                 <Button
                   variant="contained"
                   color="secondary"
@@ -149,7 +149,6 @@ const CreateList = (props: CreateListProps) => {
                   variant="contained"
                   type="submit"
                   form="wishlist-form"
-                  sx={{ boxShadow: 'none', marginLeft: '9px' }}
                   disabled={listState.name.length === 0}
                 >
                   {t('save-and-close')}

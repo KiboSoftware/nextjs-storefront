@@ -153,21 +153,20 @@ const EditList = (props: EditListProps) => {
           </Grid>
           {mdScreen ? (
             <>
-              <Grid item xs={3} justifyContent="flex-end" flexDirection="column" display="flex">
-                <Container sx={{ justifyContent: 'end', display: 'flex' }}>
+              <Grid item xs={3} display="flex" justifyContent="end">
+                <Box component="span" display="inline-flex" gap={2}>
                   <Button
                     variant="contained"
                     color="secondary"
                     size="medium"
                     onClick={() => onEditFormToggle()}
-                    sx={{ marginRight: '10px' }}
                   >
                     {t('cancel')}
                   </Button>
                   <Button variant="contained" size="medium" onClick={handleSaveWishlist}>
                     {t('save-and-close')}
                   </Button>
-                </Container>
+                </Box>
               </Grid>
             </>
           ) : (
