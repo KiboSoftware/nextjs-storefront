@@ -1,3 +1,5 @@
+import { grey } from '@mui/material/colors'
+
 const style = {
   mobileSaveWindow: {
     width: '100%',
@@ -12,12 +14,12 @@ const style = {
     justifyContent: 'flex-end',
   },
   listNameForm: {
-    maxWidth: '495px',
+    maxWidth: '360px',
     height: '36px',
     fontSize: ' 14px',
     padding: '8px 12px',
-    background: '#ffffff',
-    border: '1px solid #cdcdcd',
+    background: '#FFF',
+    border: `1px solid ${grey[400]}`,
     borderRadius: ' 4px',
   },
 }

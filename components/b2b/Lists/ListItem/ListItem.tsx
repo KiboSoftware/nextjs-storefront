@@ -11,7 +11,7 @@ import { ProductViewDialog } from '@/components/b2b'
 import { QuantitySelector, KeyValueDisplay } from '@/components/common'
 import { useModalContext } from '@/context'
 
-import { CrProductPrice, CrWishlistItem } from '@/lib/gql/types'
+import { CrWishlistItem } from '@/lib/gql/types'
 
 export interface ListItemProps {
   item: CrWishlistItem
@@ -27,14 +27,6 @@ export interface ProductViewProps {
 export interface ProductViewDialogProps {
   item: CrWishlistItem
   onClose: () => void
-}
-
-const calculateProductSubTotal = (price: CrProductPrice, quantity: number) => {
-  if (price)
-    return price.salePrice
-      ? (price.salePrice * quantity).toFixed(2)
-      : ((price.price as number) * quantity).toFixed(2)
-  return 0
 }
 
 const ListItem = (props: ListItemProps) => {
@@ -95,17 +87,17 @@ const ListItem = (props: ListItemProps) => {
           {!mdScreen && (
             <>
               <Box>
-                <KeyValueDisplay
-                  option={{
-                    name: t('total'),
-                    value: `$${calculateProductSubTotal(
-                      product?.price as CrProductPrice,
-                      item.quantity
-                    )}`,
-                  }}
-                  sx={{ fontSize: '14px' }}
-                  variant="body1"
-                />
+                {item.subtotal && (
+                  <KeyValueDisplay
+                    option={{
+                      name: t('total'),
+                      value: `$${item.subtotal}`,
+                    }}
+                    sx={{ fontSize: '14px' }}
+                    variant="body1"
+                  />
+                )}
+
                 <Box sx={{ marginBottom: '12px' }}>
                   <KeyValueDisplay
                     option={{
@@ -147,17 +139,17 @@ const ListItem = (props: ListItemProps) => {
 
           {mdScreen && (
             <Box component="span">
-              <KeyValueDisplay
-                option={{
-                  name: t('total'),
-                  value: `$${calculateProductSubTotal(
-                    product?.price as CrProductPrice,
-                    item.quantity
-                  )}`,
-                }}
-                sx={{ fontSize: '14px', marginRight: '10px' }}
-                variant="body1"
-              />
+              {item.subtotal && (
+                <KeyValueDisplay
+                  option={{
+                    name: t('total'),
+                    value: `$${item.subtotal}`,
+                  }}
+                  sx={{ fontSize: '14px', marginRight: '10px' }}
+                  variant="body1"
+                />
+              )}
+
               <KeyValueDisplay
                 option={{
                   name: t('list-item'),

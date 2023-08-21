@@ -29,7 +29,7 @@ const nonConfigurableProductMock: Product = {
   updateDate: undefined,
 }
 
-jest.mock('@/components/my-account/Lists/ListItem/ListItem', () => ({
+jest.mock('@/components/b2b/Lists/ListItem/ListItem', () => ({
   __esModule: true,
   default: ({ item, onChangeQuantity, onDeleteItem }: any) => {
     return (

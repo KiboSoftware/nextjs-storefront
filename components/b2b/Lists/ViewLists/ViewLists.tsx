@@ -17,10 +17,9 @@ import {
 import getConfig from 'next/config'
 import { useTranslation } from 'next-i18next'
 
+import { ListTable, EditList } from '@/components/b2b'
+import { styles } from '@/components/b2b/Lists/ViewLists/ViewLists.style'
 import { ConfirmationDialog } from '@/components/dialogs'
-import { ListTable } from '@/components/my-account'
-import EditList from '@/components/my-account/Lists/EditList/EditList'
-import { styles } from '@/components/my-account/Lists/ViewLists/ViewLists.style'
 import { useAuthContext, useModalContext, useSnackbarContext } from '@/context'
 import {
   PageProps,
@@ -65,25 +64,30 @@ const ViewLists = (props: ViewListsProps) => {
   // fetching wishlist data
   const response = useGetWishlist(paginationState)
   const wishlistsResponse = response.data as WishlistCollection
-  const isPending = response.isPending
+  const { isPending } = response
 
   // copy list function
-  const handleCopyList = async (id: string) => {
-    const newWishlist =
-      wishlistsResponse.items &&
-      wishlistsResponse?.items.find((item: Maybe<CrWishlist>) => item?.id === id)
-    let listName = newWishlist?.name + ' - copy'
+  const createListName = (name: string) => {
+    let listName = name + ' - copy'
     while (
       wishlistsResponse.items &&
       wishlistsResponse?.items.find((item: Maybe<CrWishlist>) => item?.name == listName)
     ) {
       listName += ' - copy'
     }
+    return listName
+  }
+
+  const handleCopyList = (id: string) => {
+    const newWishlist =
+      wishlistsResponse.items &&
+      wishlistsResponse?.items.find((item: Maybe<CrWishlist>) => item?.id === id)
+    const newListName = createListName(newWishlist?.name as string)
     setIsLoading(true)
     try {
-      await createWishlist.mutateAsync({
+      createWishlist.mutate({
         customerAccountId: user?.id,
-        name: listName,
+        name: newListName,
         items: newWishlist?.items,
       })
     } catch (e: any) {
@@ -100,9 +104,7 @@ const ViewLists = (props: ViewListsProps) => {
         contentText: t('delete-list-message'),
         primaryButtonText: t('delete'),
         onConfirm: async () => {
-          setIsLoading(true)
-          await deleteWishlist.mutateAsync(id)
-          setIsLoading(false)
+          deleteWishlist.mutate(id)
         },
       },
     })
@@ -165,7 +167,7 @@ const ViewLists = (props: ViewListsProps) => {
     setPaginationState((currentState) => ({ ...currentState, startIndex: newStartIndex }))
   }
 
-  if (!wishlistsResponse) {
+  if (isPending) {
     return (
       <Box sx={{ display: 'flex', justifyContent: 'center' }}>
         <CircularProgress />

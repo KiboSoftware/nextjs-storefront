@@ -9,8 +9,8 @@ import { graphql } from 'msw'
 import * as stories from './ViewLists.stories'
 import { server } from '@/__mocks__/msw/server'
 import { renderWithQueryClient } from '@/__test__/utils'
+import { EditListProps } from '@/components/b2b/Lists/EditList/EditList'
 import { KiboDialogProps } from '@/components/common/KiboDialog/KiboDialog'
-import { EditListProps } from '@/components/my-account/Lists/EditList/EditList'
 
 const { Common } = composeStories(stories)
 
@@ -55,7 +55,7 @@ jest.mock('@/components/common/KiboDialog/KiboDialog', () => ({
   },
 }))
 
-jest.mock('@/components/my-account/Lists/ListTable/ListTable', () => ({
+jest.mock('@/components/b2b/Lists/ListTable/ListTable', () => ({
   __esModule: true,
   default: ({ onDeleteList, onEditList, onCopyList, rows }: any) => (
     <div data-testid="list-table-mock">
@@ -91,7 +91,7 @@ jest.mock('@/components/my-account/Lists/ListTable/ListTable', () => ({
   ),
 }))
 
-jest.mock('@/components/my-account/Lists/EditList/EditList', () => ({
+jest.mock('@/components/b2b/Lists/EditList/EditList', () => ({
   __esModule: true,
   default: ({ onEditFormToggle, listData, onUpdateListData }: EditListProps) => {
     return <div data-testid="edit-list"></div>

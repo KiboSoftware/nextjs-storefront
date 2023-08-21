@@ -20,7 +20,7 @@ import {
 import { grey } from '@mui/material/colors'
 import { useTranslation } from 'next-i18next'
 
-import { styles } from '@/components/my-account/Lists/ListTable/ListTable.style'
+import { styles } from '@/components/b2b/Lists/ListTable/ListTable.style'
 import formatDate from '@/lib/helpers/formatDate'
 
 import { CrWishlist, Maybe } from '@/lib/gql/types'

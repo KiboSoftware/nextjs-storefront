@@ -7,9 +7,9 @@ import mediaQuery from 'css-mediaquery'
 import mockRouter from 'next-router-mock'
 
 import * as stories from './ListsTemplate.stories'
-import { CreateListProps } from '@/components/my-account/Lists/CreateList/CreateList'
-import { EditListProps } from '@/components/my-account/Lists/EditList/EditList'
-import { ViewListsProps } from '@/components/my-account/Lists/ViewLists/ViewLists'
+import { CreateListProps } from '@/components/b2b/Lists/CreateList/CreateList'
+import { EditListProps } from '@/components/b2b/Lists/EditList/EditList'
+import { ViewListsProps } from '@/components/b2b/Lists/ViewLists/ViewLists'
 
 const { Common } = composeStories(stories)
 
@@ -43,7 +43,7 @@ const EditListMock = ({ onEditFormToggle, listData, onUpdateListData }: EditList
 )
 
 jest.mock(
-  '@/components/my-account/Lists/ViewLists/ViewLists',
+  '@/components/b2b/Lists/ViewLists/ViewLists',
   () =>
     ({ onEditFormToggle, isEditFormOpen }: ViewListsProps) =>
       isEditFormOpen
@@ -55,7 +55,7 @@ jest.mock(
         : ListTableMock({ onEditFormToggle: onEditFormToggle })
 )
 
-jest.mock('@/components/my-account/Lists/CreateList/CreateList', () => ({
+jest.mock('@/components/b2b/Lists/CreateList/CreateList', () => ({
   __esModule: true,
   default: ({ onCreateFormToggle }: CreateListProps) => {
     return (

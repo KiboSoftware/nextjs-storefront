@@ -132,7 +132,7 @@ describe('[component] - ListTable', () => {
     })
   })
 
-  it('should open menu on mobile', async () => {
+  it('should open menu on mobile when user clicks on the list table menu', async () => {
     window.matchMedia = createMatchMedia(500)
     const { user } = setup()
     const menuBtns = screen.getAllByTestId('menuBtn')
@@ -144,7 +144,7 @@ describe('[component] - ListTable', () => {
     })
   })
 
-  it('should check for callback function in the menu', async () => {
+  it('should check for callback function when option is clicked in the menu', async () => {
     window.matchMedia = createMatchMedia(500)
     setup()
     const menuBtns = screen.getAllByTestId('menuBtn')

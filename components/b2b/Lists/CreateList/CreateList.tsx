@@ -5,10 +5,9 @@ import { Button, useMediaQuery, useTheme, IconButton, Box, Typography } from '@m
 import { useRouter } from 'next/router'
 import { useTranslation } from 'next-i18next'
 
-import { B2BProductSearch } from '@/components/b2b'
+import { B2BProductSearch, ListItem } from '@/components/b2b'
+import styles from '@/components/b2b/Lists/CreateList/CreateList.style'
 import { KiboTextBox } from '@/components/common'
-import styles from '@/components/my-account/Lists/CreateList/CreateList.style'
-import ListItem from '@/components/my-account/Lists/ListItem/ListItem'
 import { useAuthContext } from '@/context'
 import { useCreateWishlist } from '@/hooks'
 
@@ -18,23 +17,22 @@ export interface CreateListProps {
   onCreateFormToggle: (param: boolean) => void
 }
 
+type CreateListItems = {
+  product: {
+    productCode: string
+  }
+  quantity: number
+}
 interface CreateListState {
   name: string
-  items: [
-    {
-      product: {
-        productCode: string
-      }
-      quantity: number
-    }
-  ]
+  items: CreateListItems[]
 }
 
 const CreateList = (props: CreateListProps) => {
   const { onCreateFormToggle } = props
   const [listState, setListState] = useState<CreateListState>({
     name: '',
-    items: [{ product: { productCode: '' }, quantity: 0 }],
+    items: [],
   })
   const [productList, setProductList] = useState<CrWishlistItem[]>([])
 
@@ -47,13 +45,11 @@ const CreateList = (props: CreateListProps) => {
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault()
-    const finalList = listState.items
-    finalList.shift()
     await createWishlist
       .mutateAsync({
         customerAccountId: user?.id,
         name: listState.name,
-        items: finalList,
+        items: listState.items,
       })
       .catch((e) => {
         console.log(e)
@@ -116,7 +112,7 @@ const CreateList = (props: CreateListProps) => {
   return (
     <>
       <Box sx={{ width: '100%' }}>
-        {mdScreen ? (
+        {mdScreen && (
           <Button
             data-testid="my-account-button"
             sx={{ paddingLeft: 0, fontSize: '14px', color: '#000' }}
@@ -127,7 +123,7 @@ const CreateList = (props: CreateListProps) => {
           >
             {t('my-account')}
           </Button>
-        ) : null}
+        )}
         <Typography
           variant="h3"
           sx={{ ...styles.heading, margin: mdScreen ? '20px 0' : '0px 10px 0px 0px' }}
@@ -207,7 +203,7 @@ const CreateList = (props: CreateListProps) => {
         ))}
         {!mdScreen && (
           <>
-            <Box sx={styles.mobileSaveWindow}>
+            <Box sx={styles.mobileSaveWindow} gap={2}>
               <Button
                 variant="contained"
                 color="secondary"
@@ -223,7 +219,7 @@ const CreateList = (props: CreateListProps) => {
                 variant="contained"
                 type="submit"
                 form="wishlist-form"
-                sx={{ width: '100%', marginTop: '8px', boxShadow: 'none' }}
+                sx={{ width: '100%' }}
                 disabled={listState.name.length === 0}
               >
                 {t('save-and-close')}
