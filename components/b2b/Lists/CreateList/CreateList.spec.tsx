@@ -54,7 +54,7 @@ jest.mock('@/components/b2b/B2BProductSearch/B2BProductSearch', () => ({
   },
 }))
 
-jest.mock('@/components/my-account/Lists/ListItem/ListItem', () => ({
+jest.mock('@/components/b2b/Lists/ListItem/ListItem', () => ({
   __esModule: true,
   default: ({ item, onChangeQuantity, onDeleteItem }: any) => {
     return (

@@ -5,10 +5,9 @@ import { Button, useMediaQuery, useTheme, IconButton, Box, Typography } from '@m
 import { useRouter } from 'next/router'
 import { useTranslation } from 'next-i18next'
 
-import { B2BProductSearch } from '@/components/b2b'
+import { B2BProductSearch, ListItem } from '@/components/b2b'
+import styles from '@/components/b2b/Lists/CreateList/CreateList.style'
 import { KiboTextBox } from '@/components/common'
-import styles from '@/components/my-account/Lists/CreateList/CreateList.style'
-import ListItem from '@/components/my-account/Lists/ListItem/ListItem'
 import { useAuthContext } from '@/context'
 import { useCreateWishlist } from '@/hooks'
 

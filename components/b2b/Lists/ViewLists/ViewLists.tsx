@@ -17,10 +17,9 @@ import {
 import getConfig from 'next/config'
 import { useTranslation } from 'next-i18next'
 
-import { ListTable } from '@/components/b2b'
+import { ListTable, EditList } from '@/components/b2b'
+import { styles } from '@/components/b2b/Lists/ViewLists/ViewLists.style'
 import { ConfirmationDialog } from '@/components/dialogs'
-import EditList from '@/components/my-account/Lists/EditList/EditList'
-import { styles } from '@/components/my-account/Lists/ViewLists/ViewLists.style'
 import { useAuthContext, useModalContext, useSnackbarContext } from '@/context'
 import {
   PageProps,
