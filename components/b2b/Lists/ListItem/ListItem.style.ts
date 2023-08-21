@@ -1,3 +1,5 @@
+import { grey } from '@mui/material/colors'
+
 const style = {
   buttons: {
     tableAction: {
@@ -29,7 +31,7 @@ const style = {
       display: 'flex',
       justifyContent: 'space-between',
       alignItems: 'center',
-      borderBottom: '1px solid #EAEAEA',
+      borderBottom: `1px solid ${grey[300]}`,
       padding: '10px 30px',
     },
   },
