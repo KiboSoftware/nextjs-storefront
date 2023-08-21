@@ -384,7 +384,6 @@
   "removed-from-wishlist": "Removed from wishlist",
   "save-address-to-account": "Save this address to your account",
   "no-payment-details-found": "No payment details found!",
-
   "search-for-product": "Search for a product",
   "search-by-name-or-code": "Search by product name or code",
   "checkout": "Checkout",
@@ -398,6 +397,10 @@
   "add-item-to-cart": "Add item to Cart",
   "add-item-to-list": "Add item to List",
   "search-to-add-products": "Search to start adding products to this order",
+  "save-and-close": "Save & Close",
+  "line-item": "Line Item",
+  "list-items": "List Items",
+  "delete-list-message": "Are you sure you want to delete this list?",
   "add-child-account": "Add Child Account",
   "parent-account": "Parent account",
   "company-name": "Company name",
@@ -440,6 +443,12 @@
   "payment-terms": "Payment Terms",
   "po-external-id": "PO External ID",
   "select-payment-term": "Select a Payment Term",
+
+  "product-configuration-option": "Product Configuration Option",
+  "no-list-found": "No List Found",
+  "edit-list": "Edit List",
+  "name-this-list": "Name this list",
+  "list-item": "List Item",
   "expiration-date": "Expiration Date",
   "create-a-quote": "Create a Quote",
   "quote-details": "Quote Details",
@@ -451,10 +460,13 @@
   "enter-quote-name": "Enter a quote name",
   "account-name": "Account Name",
   "add-item-to-quote": "Add Item to Quote",
+  "list-added-to-cart": "List added to cart",
   "summary": "Summary",
   "duty-total": "Duty Total",
   "titleTotal": "{{title}} Total",
   "titleSubtotal": "{{title}} Subtotal",
   "adjustment-text": "{{selectValue}} {{title}} Subtotal",
-  "titleTax": "{{title}} Tax"
+  "titleTax": "{{title}} Tax",
+  "edit-item": "Edit Item",
+  "remove": "Remove"
 }

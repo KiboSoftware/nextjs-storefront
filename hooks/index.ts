@@ -136,6 +136,8 @@ export * from './mutations/standardCheckout/useUpdateUserOrder/useUpdateUserOrde
 export * from './mutations/wishlist/useAddToWishlistItem/useAddToWishlistItem'
 export * from './mutations/wishlist/useDeleteWishlistItem/useDeleteWishlistItem'
 export * from './mutations/wishlist/useCreateWishlist/useCreateWishlist'
+export * from './mutations/wishlist/useDeleteWishlist/useDeleteWishlist'
+export * from './mutations/wishlist/useUpdateWishlist/useUpdateWishlist'
 
 //Subscription
 export * from './mutations/subscription/useOrderSubscriptionNow/useOrderSubscriptionNow'

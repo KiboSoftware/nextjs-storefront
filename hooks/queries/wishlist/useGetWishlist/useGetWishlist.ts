@@ -1,7 +1,7 @@
 /**
  * @module useGetWishlist
  */
-import { useQuery } from '@tanstack/react-query'
+import { QueryObserverResult, RefetchOptions, useQuery } from '@tanstack/react-query'
 
 import { makeGraphQLClient } from '@/lib/gql/client'
 import { getWishlistQuery } from '@/lib/gql/queries'
@@ -12,12 +12,17 @@ import type { CrWishlist, WishlistCollection } from '@/lib/gql/types'
 /**
  * @hidden
  */
+
+type UseWishlistResponseData = WishlistCollection | CrWishlist | []
 export interface UseWishlistResponse {
-  data?: WishlistCollection | CrWishlist | []
+  data?: UseWishlistResponseData
   isLoading: boolean
   isSuccess: boolean
   isFetching: boolean
   isPending: boolean
+  refetch: (
+    options?: RefetchOptions | undefined
+  ) => Promise<QueryObserverResult<UseWishlistResponseData, Error>>
 }
 
 export interface PageProps {
@@ -27,7 +32,7 @@ export interface PageProps {
   startIndex: number
 }
 
-const getWishlists = async (params?: PageProps): Promise<WishlistCollection | CrWishlist | []> => {
+const getWishlists = async (params?: PageProps): Promise<UseWishlistResponseData> => {
   const client = makeGraphQLClient()
   const response = await client.request({
     document: getWishlistQuery,
@@ -54,7 +59,7 @@ const getWishlists = async (params?: PageProps): Promise<WishlistCollection | Cr
  */
 
 export const useGetWishlist = (params?: PageProps): UseWishlistResponse => {
-  const { data, isPending, isSuccess, isFetching, isLoading } = useQuery({
+  const { data, isPending, isSuccess, isFetching, isLoading, refetch } = useQuery({
     queryKey: params ? wishlistKeys.page(params) : wishlistKeys.all,
     queryFn: () => getWishlists(params),
     refetchOnWindowFocus: false,
@@ -69,5 +74,5 @@ export const useGetWishlist = (params?: PageProps): UseWishlistResponse => {
       params && getWishlists({ ...params, startIndex: params.startIndex + params.pageSize }),
   })
 
-  return { data, isPending, isSuccess, isFetching, isLoading }
+  return { data, isPending, isSuccess, isFetching, isLoading, refetch }
 }

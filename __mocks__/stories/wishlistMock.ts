@@ -13,7 +13,7 @@ export const wishlistMock: Maybe<WishlistCollection> | any = {
       items: [
         {
           id: '3a766637bfb04a9b87efaed200e191d3',
-          quantity: 1,
+          quantity: 2,
           total: 475,
           subtotal: 475,
           product: {

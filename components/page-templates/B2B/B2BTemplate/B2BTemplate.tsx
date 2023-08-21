@@ -84,9 +84,13 @@ const B2BTemplate = (props: B2BTemplateProps) => {
   const handleGoToQuickOrder = () => {
     router.push('/my-account/b2b/quick-order')
   }
-  
+
   const handleGoToQuotes = () => {
     router.push('/my-account/b2b/quotes')
+  }
+
+  const handleGoToLists = () => {
+    router.push('/my-account/b2b/lists')
   }
 
   const submitFormWithRecaptcha = async (
@@ -227,7 +231,7 @@ const B2BTemplate = (props: B2BTemplateProps) => {
         <B2BTemplateListItem heading="order-history" onClick={handleGoToOrderHistory} />
         <B2BTemplateListItem heading="returns" />
         <B2BTemplateListItem heading="quotes" onClick={handleGoToQuotes} />
-        <B2BTemplateListItem heading="lists" />
+        <B2BTemplateListItem heading="lists" onClick={handleGoToLists} />
 
         <Divider sx={{ backgroundColor: 'grey.300', ...B2BTemplateStyle.divider }} />
         <Box
