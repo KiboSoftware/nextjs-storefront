@@ -18,23 +18,22 @@ export interface CreateListProps {
   onCreateFormToggle: (param: boolean) => void
 }
 
+type CreateListItems = {
+  product: {
+    productCode: string
+  }
+  quantity: number
+}
 interface CreateListState {
   name: string
-  items: [
-    {
-      product: {
-        productCode: string
-      }
-      quantity: number
-    }
-  ]
+  items: CreateListItems[]
 }
 
 const CreateList = (props: CreateListProps) => {
   const { onCreateFormToggle } = props
   const [listState, setListState] = useState<CreateListState>({
     name: '',
-    items: [{ product: { productCode: '' }, quantity: 0 }],
+    items: [],
   })
   const [productList, setProductList] = useState<CrWishlistItem[]>([])
 
@@ -47,13 +46,11 @@ const CreateList = (props: CreateListProps) => {
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault()
-    const finalList = listState.items
-    finalList.shift()
     await createWishlist
       .mutateAsync({
         customerAccountId: user?.id,
         name: listState.name,
-        items: finalList,
+        items: listState.items,
       })
       .catch((e) => {
         console.log(e)

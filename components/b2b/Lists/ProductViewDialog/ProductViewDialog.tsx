@@ -14,9 +14,9 @@ import { grey } from '@mui/material/colors'
 import Image from 'next/image'
 import { useTranslation } from 'next-i18next'
 
-import { KiboDialog } from '@/components/common'
+import { KeyValueDisplay, KiboDialog } from '@/components/common'
 
-import { CrProductPrice, CrWishlistItem } from '@/lib/gql/types'
+import { CrWishlistItem } from '@/lib/gql/types'
 
 export interface ProductViewDialogProps {
   item: CrWishlistItem
@@ -25,14 +25,6 @@ export interface ProductViewDialogProps {
 
 export interface ProductViewProps {
   item: CrWishlistItem
-}
-
-const calculateProductSubTotal = (price: CrProductPrice, quantity: number) => {
-  if (price)
-    return price.salePrice
-      ? (price.salePrice * quantity).toFixed(2)
-      : ((price.price as number) * quantity).toFixed(2)
-  return 0
 }
 
 const ProductView = (props: ProductViewProps) => {
@@ -64,15 +56,27 @@ const ProductView = (props: ProductViewProps) => {
                 {t('product-code')}: {product?.productCode}
               </Typography>
               <Typography>
-                <Typography component={'strong'}>{t('price')}: </Typography> <br />
-                <Typography component={'span'} sx={{ color: '#E42D00' }}>
-                  $ {calculateProductSubTotal(product?.price as CrProductPrice, item.quantity)}
-                </Typography>
+                {item.subtotal && (
+                  <KeyValueDisplay
+                    option={{
+                      name: t('total'),
+                      value: `$${item.subtotal}`,
+                    }}
+                    sx={{ fontSize: '14px' }}
+                    variant="body1"
+                  />
+                )}
               </Typography>
-              <Typography sx={{ fontStyle: 'italic', fontSize: '13px' }} data-testid="productPrice">
-                {t('line-item')} -
-                {calculateProductSubTotal(product?.price as CrProductPrice, item.quantity)}
-              </Typography>
+              <Box data-testid="productPrice">
+                <KeyValueDisplay
+                  option={{
+                    name: t('list-item'),
+                    value: `$${product?.price?.price}`,
+                  }}
+                  sx={{ fontStyle: 'italic', display: 'inline', fontSize: '12px' }}
+                  variant="body2"
+                />
+              </Box>
             </Box>
             <Box>
               <Accordion
