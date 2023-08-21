@@ -10,11 +10,13 @@ import {
   Typography,
   useMediaQuery,
   useTheme,
+  FormControl,
 } from '@mui/material'
 import { useTranslation } from 'next-i18next'
 import { Maybe } from 'yup/lib/types'
 
 import { B2BProductSearch } from '@/components/b2b'
+import { KiboTextBox } from '@/components/common'
 import styles from '@/components/my-account/Lists/EditList/EditList.style'
 import ListItem from '@/components/my-account/Lists/ListItem/ListItem'
 import { useUpdateWishlistMutation } from '@/hooks'
@@ -117,26 +119,29 @@ const EditList = (props: EditListProps) => {
           <Grid item xs={mdScreen ? 9 : 12}>
             {editListState.openNameForm ? (
               <>
-                <form>
-                  <input
-                    onChange={(e) => setEditListState({ ...editListState, name: e.target.value })}
-                    value={editListState.name as string}
-                    style={styles.listNameForm}
-                    data-testid="editNameInput"
-                  />
-                  <Button
-                    variant="contained"
-                    onClick={() => setEditListState({ ...editListState, openNameForm: false })}
-                    sx={{ marginLeft: '5px' }}
-                    data-testid="saveNameBtn"
-                  >
-                    {t('save')}
-                  </Button>
-                </form>
+                <FormControl fullWidth sx={{ flexDirection: 'row', alignItems: 'center' }}>
+                  <Box maxWidth="360px">
+                    <KiboTextBox
+                      onChange={(e, value) => setEditListState({ ...editListState, name: value })}
+                      value={editListState.name as string}
+                      sx={{ ...styles.listNameForm }}
+                      data-testid="editNameInput"
+                    />
+                  </Box>
+                  <Box component="span" sx={{ marginLeft: '5px' }}>
+                    <Button
+                      variant="contained"
+                      onClick={() => setEditListState({ ...editListState, openNameForm: false })}
+                      data-testid="saveNameBtn"
+                    >
+                      {t('save')}
+                    </Button>
+                  </Box>
+                </FormControl>
               </>
             ) : (
               <>
-                <Typography variant="h3" fontWeight={'bold'}>
+                <Typography variant="h1" fontWeight={'bold'}>
                   {editListState.name}
                   <IconButton
                     onClick={() => setEditListState({ ...editListState, openNameForm: true })}
@@ -207,7 +212,7 @@ const EditList = (props: EditListProps) => {
       })}
       {!mdScreen ? (
         <>
-          <Grid item xs={12} sx={styles.mobileSaveWindow}>
+          <Grid item xs={12} sx={styles.mobileSaveWindow} gap={2}>
             <Button
               variant="contained"
               color="secondary"
@@ -221,7 +226,7 @@ const EditList = (props: EditListProps) => {
               variant="contained"
               size="medium"
               onClick={handleSaveWishlist}
-              sx={{ width: '100%', marginTop: '8px' }}
+              sx={{ width: '100%' }}
             >
               {t('save-and-close')}
             </Button>

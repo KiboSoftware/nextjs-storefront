@@ -113,7 +113,7 @@ const CreateList = (props: CreateListProps) => {
   return (
     <>
       <Box sx={{ width: '100%' }}>
-        {mdScreen ? (
+        {mdScreen && (
           <Button
             data-testid="my-account-button"
             sx={{ paddingLeft: 0, fontSize: '14px', color: '#000' }}
@@ -124,7 +124,7 @@ const CreateList = (props: CreateListProps) => {
           >
             {t('my-account')}
           </Button>
-        ) : null}
+        )}
         <Typography
           variant="h3"
           sx={{ ...styles.heading, margin: mdScreen ? '20px 0' : '0px 10px 0px 0px' }}
@@ -204,7 +204,7 @@ const CreateList = (props: CreateListProps) => {
         ))}
         {!mdScreen && (
           <>
-            <Box sx={styles.mobileSaveWindow}>
+            <Box sx={styles.mobileSaveWindow} gap={2}>
               <Button
                 variant="contained"
                 color="secondary"
@@ -220,7 +220,7 @@ const CreateList = (props: CreateListProps) => {
                 variant="contained"
                 type="submit"
                 form="wishlist-form"
-                sx={{ width: '100%', marginTop: '8px', boxShadow: 'none' }}
+                sx={{ width: '100%' }}
                 disabled={listState.name.length === 0}
               >
                 {t('save-and-close')}

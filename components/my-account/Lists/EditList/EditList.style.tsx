@@ -12,7 +12,7 @@ const style = {
     justifyContent: 'flex-end',
   },
   listNameForm: {
-    maxWidth: '495px',
+    maxWidth: '360px',
     height: '36px',
     fontSize: ' 14px',
     padding: '8px 12px',
