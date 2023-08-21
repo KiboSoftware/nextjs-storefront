@@ -69,7 +69,6 @@ jest.mock('@/components/b2b/Lists/ListTable/ListTable', () => ({
             <button
               data-testid="copy-list-btn"
               onClick={() => {
-                console.log(item.id)
                 onCopyList(item.id)
               }}
             >
@@ -78,7 +77,6 @@ jest.mock('@/components/b2b/Lists/ListTable/ListTable', () => ({
             <button
               data-testid="delete-list-btn"
               onClick={() => {
-                console.log(item.id)
                 onDeleteList(item.id)
               }}
             >

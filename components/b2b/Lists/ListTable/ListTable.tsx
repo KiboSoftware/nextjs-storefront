@@ -61,7 +61,6 @@ const ListTableMobileOptions = (props: ListTableMobileOptions) => {
       <IconButton
         sx={{ padding: '0px' }}
         onClick={(e) => {
-          console.log(e.currentTarget)
           setAnchorEL(e.currentTarget)
         }}
         data-testid="menuBtn"
@@ -79,7 +78,6 @@ const ListTableMobileOptions = (props: ListTableMobileOptions) => {
           <MenuItem
             key={option.name}
             onClick={() => {
-              console.log(itemId)
               option.onClick(itemId)
               setAnchorEL(null)
             }}
