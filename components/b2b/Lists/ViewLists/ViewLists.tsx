@@ -112,7 +112,6 @@ const ViewLists = (props: ViewListsProps) => {
 
   // edit list function
   const handleEditList = async (id: string) => {
-    console.log(id)
     const wishlist = wishlistsResponse?.items?.find(
       (item: Maybe<CrWishlist>) => item?.id === id
     ) as CrWishlist
