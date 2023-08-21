@@ -4,7 +4,7 @@ import { useDeleteQuote } from './useDeleteQuote'
 import { createQueryClientWrapper } from '@/__test__/utils'
 
 describe('[hooks] useDeleteQuote', () => {
-  it('should use useDeleteQuoteItem when deleteCartItem', async () => {
+  it('should delete a quote', async () => {
     const { result } = renderHook(() => useDeleteQuote(), {
       wrapper: createQueryClientWrapper(),
     })

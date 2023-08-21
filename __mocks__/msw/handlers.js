@@ -528,6 +528,17 @@ export const b2bHandlers = [
     return res(ctx.data({ createQuote: quoteMock?.items?.[0] }))
   }),
 
+  graphql.mutation('updateQuotesComments', (_req, res, ctx) => {
+    return res(
+      ctx.data({
+        updateQuotesComments: {
+          id: 'test-id',
+          text: 'test comment',
+        },
+      })
+    )
+  }),
+
   // useCreateQuoteItem
   graphql.mutation('createQuoteItem', (_req, res, ctx) => {
     return res(ctx.data({ createQuoteItem: quoteMock?.items?.[0] }))
