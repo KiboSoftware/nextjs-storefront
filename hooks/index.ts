@@ -51,6 +51,7 @@ export * from './queries/wishlist/useGetWishlist/useGetWishlist'
 
 // b2b
 export * from './queries/b2b/useGetB2BUserQuery/useGetB2BUserQuery'
+export * from './queries/b2b/useGetB2BAccountHierarchy/useGetB2BAccountHierarchy'
 export * from './queries/b2b/quotes/useGetQuotes/useGetQuotes'
 
 // Custom hooks
@@ -150,12 +151,14 @@ export * from './mutations/subscription/useDeleteSubscription/useDeleteSubscript
 export * from './mutations/subscription/useUpdateSubscriptionPayment/useUpdateSubscriptionPayment'
 
 // b2b
-export * from './mutations/b2b/useCreateCustomerB2bUser/useCreateCustomerB2bUser'
-export * from './mutations/b2b/useRemoveCustomerB2bUser/useRemoveCustomerB2bUser'
-export * from './mutations/b2b/useUpdateCustomerB2bUser/useUpdateCustomerB2bUser'
-export * from './mutations/b2b/useAddRoleToCustomerB2bAccount/useAddRoleToCustomerB2bAccount'
-export * from './mutations/b2b/useDeleteB2bAccountRole/useDeleteB2bAccountRole'
-export * from './mutations/b2b/useCreateCustomerB2bAccount/useCreateCustomerB2bAccount'
+export * from './mutations/b2b/user/useCreateCustomerB2bUser/useCreateCustomerB2bUser'
+export * from './mutations/b2b/user/useRemoveCustomerB2bUser/useRemoveCustomerB2bUser'
+export * from './mutations/b2b/user/useUpdateCustomerB2bUser/useUpdateCustomerB2bUser'
+export * from './mutations/b2b/user/useAddRoleToCustomerB2bAccount/useAddRoleToCustomerB2bAccount'
+export * from './mutations/b2b/user/useDeleteB2bAccountRole/useDeleteB2bAccountRole'
+export * from './mutations/b2b/accountHierarchy/useCreateCustomerB2bAccount/useCreateCustomerB2bAccount'
+export * from './mutations/b2b/accountHierarchy/useUpdateCustomerB2bAccount/useUpdateCustomerB2bAccount'
+export * from './mutations/b2b/accountHierarchy/useChangeParentB2bAccount/useChangeB2bAccountParent'
 
 //quotes
 export * from './mutations/b2b/quotes/useDeleteQuoteItem/useDeleteQuoteItem'

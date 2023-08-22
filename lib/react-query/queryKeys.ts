@@ -35,7 +35,7 @@ export const loginKeys = {
 }
 
 export const customerB2BUserKeys = {
-  all: ['b2bUsers'] as any,
+  all: ['b2BUsers'] as any,
   search: (
     accountId: number,
     index: number,
@@ -43,6 +43,11 @@ export const customerB2BUserKeys = {
     searchTerm: string | undefined,
     filter: string
   ) => [...customerB2BUserKeys.all, accountId, index, pageSize, searchTerm, filter] as const,
+}
+
+export const accountHierarchyKeys = {
+  all: ['accountHierarchy'] as any,
+  accountHierarchy: (accountId: number) => [...accountHierarchyKeys.all, accountId] as const,
 }
 
 export const productSearchResultKeys = {

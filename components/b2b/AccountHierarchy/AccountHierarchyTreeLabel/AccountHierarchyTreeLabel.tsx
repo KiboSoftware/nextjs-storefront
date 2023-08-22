@@ -9,10 +9,29 @@ interface AccountHierarchyTreeLabelProps {
   label: string
   icons?: any
   role: string
+  mdScreen?: boolean
+  onViewAccountClick: () => void
+  onAddAccountClick: () => void
+  onEditAccountClick: () => void
+  onDisableAccountClick: () => void
+  onAccountSwap: (accountId: number, parentAccountId: number) => void
+  onBuyersBtnClick: () => void
+  onQuotesBtnClick: () => void
 }
 
 const AccountHierarchyTreeLabel = (props: AccountHierarchyTreeLabelProps) => {
-  const { label, icons, role } = props
+  const {
+    label,
+    icons,
+    role,
+    mdScreen,
+    onViewAccountClick,
+    onAddAccountClick,
+    onEditAccountClick,
+    onDisableAccountClick,
+    onBuyersBtnClick,
+    onQuotesBtnClick,
+  } = props
 
   return (
     <List dense={true}>
@@ -22,11 +41,13 @@ const AccountHierarchyTreeLabel = (props: AccountHierarchyTreeLabelProps) => {
           role !== B2BRoles.NON_PURCHASER ? (
             <AccountHierarchyActions
               role={role}
-              onBuyersClick={() => null}
-              onQuotesClick={() => null}
-              onAdd={() => null}
-              onEdit={() => null}
-              onDelete={() => null}
+              mdScreen={mdScreen}
+              onBuyersClick={() => onBuyersBtnClick()}
+              onQuotesClick={() => onQuotesBtnClick()}
+              onAdd={() => onAddAccountClick()}
+              onView={() => onViewAccountClick()}
+              onEdit={() => onEditAccountClick()}
+              onDisable={() => onDisableAccountClick()}
             />
           ) : null
         }

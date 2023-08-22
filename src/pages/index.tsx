@@ -12,7 +12,7 @@ interface HomePageProps {
 }
 export async function getStaticProps(context: GetStaticPropsContext) {
   const { locale } = context
-  const categoriesTree: CategoryTreeResponse = await getCategoryTree()
+  const categoriesTree: CategoryTreeResponse = (await getCategoryTree()) || null
 
   return {
     props: {

@@ -1,7 +1,7 @@
 import { composeStories } from '@storybook/testing-react'
 import { render, screen } from '@testing-library/react'
 
-import * as stories from './AccountHierarchyFormDialog.stories'
+import * as stories from './AccountHierarchyChangeParentDialog.stories'
 import { b2BAccountHierarchyResult } from '@/__mocks__/stories'
 import { ModalContextProvider } from '@/context'
 
@@ -10,16 +10,16 @@ const { Common } = composeStories(stories)
 const onSaveMock = jest.fn()
 const onCloseMock = jest.fn()
 
-const AccountHierarchyFormMock = ({
+const AccountHierarchyChangeParentMock = ({
   onClose,
   onSave,
 }: {
   onClose: () => void
   onSave: () => void
 }) => (
-  <div data-testid="account-hierarchy-form-mock">
-    <button data-testid="create-account-hierarchy-mock-button" onClick={onSave}>
-      Create Account
+  <div data-testid="account-hierarchy-edit-form-mock">
+    <button data-testid="update-account-hierarchy-mock-button" onClick={onSave}>
+      Update Account
     </button>
     <button data-testid="cancel-account-hierarchy-mock-button" onClick={onClose}>
       Cancel
@@ -28,17 +28,17 @@ const AccountHierarchyFormMock = ({
 )
 
 jest.mock(
-  '@/components/b2b/AccountHierarchy/AccountHierarchyForm/AccountHierarchyForm',
-  () => () => AccountHierarchyFormMock({ onClose: onCloseMock, onSave: onSaveMock })
+  '@/components/b2b/AccountHierarchy/AccountHierarchyChangeParent/AccountHierarchyChangeParent',
+  () => () => AccountHierarchyChangeParentMock({ onClose: onCloseMock, onSave: onSaveMock })
 )
 
-describe('[components]  AccountHierarchyFormDialog Dialog', () => {
+describe('[components]  AccountHierarchyChangeParentDialog Dialog', () => {
   const setup = () => {
     render(
       <Common
         {...Common.args}
         accounts={b2BAccountHierarchyResult.accounts}
-        isAddingAccountToChild={false}
+        b2BAccount={b2BAccountHierarchyResult?.accounts?.[1]}
         onSave={onSaveMock}
         onClose={onCloseMock}
       />,
@@ -54,26 +54,26 @@ describe('[components]  AccountHierarchyFormDialog Dialog', () => {
   }
 
   it('should render component', async () => {
-    render(<Common {...Common.args} formTitle="Add child account" />)
+    render(<Common {...Common.args} formTitle="Edit child account" />)
 
-    const accountHierarchyFromDialog = screen.getByTestId('account-hierarchy-form-mock')
-    expect(accountHierarchyFromDialog).toBeVisible()
+    const accountHierarchyEditFromDialog = screen.getByTestId('account-hierarchy-edit-form-mock')
+    expect(accountHierarchyEditFromDialog).toBeVisible()
 
-    const titleElement = screen.getByText('Add child account')
+    const titleElement = screen.getByText('Edit child account')
     expect(titleElement).toBeVisible()
 
-    const accountHierarchyForm = screen.getByTestId('account-hierarchy-form-mock')
-    expect(accountHierarchyForm).toBeVisible()
+    const accountHierarchyEditForm = screen.getByTestId('account-hierarchy-edit-form-mock')
+    expect(accountHierarchyEditForm).toBeVisible()
   })
 
-  it('should call callback function when user clicks on Create Account button', async () => {
+  it('should call callback function when user clicks on Update Account button', async () => {
     const { onSaveMock } = setup()
 
-    const createAccountButton = screen.getByTestId('create-account-hierarchy-mock-button')
-    expect(createAccountButton).toBeVisible()
-    expect(createAccountButton).toBeEnabled()
+    const updateAccountButton = screen.getByTestId('update-account-hierarchy-mock-button')
+    expect(updateAccountButton).toBeVisible()
+    expect(updateAccountButton).toBeEnabled()
 
-    createAccountButton.click()
+    updateAccountButton.click()
     expect(onSaveMock).toHaveBeenCalledTimes(1)
   })
 

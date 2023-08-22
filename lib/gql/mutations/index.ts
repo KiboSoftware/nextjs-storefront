@@ -64,6 +64,8 @@ export { default as updateForgottenAccountPassword } from './user/updateForgotte
 
 // Account Hierarchy
 export { default as createCustomerB2bAccountMutation } from './b2b/account-hierarchy/create-customer-b2b-account'
+export { default as updateCustomerB2bAccountMutation } from './b2b/account-hierarchy/update-customer-b2b-account'
+export { default as changeB2bAccountParentMutation } from './b2b/account-hierarchy/change-b2b-account-parent'
 
 //quotes
 export { default as deleteQuoteItemMutation } from './b2b/quotes/delete-quote-item'

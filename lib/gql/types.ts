@@ -265,6 +265,11 @@ export type B2BAccountInput = {
   users?: InputMaybe<Array<InputMaybe<B2BUserInput>>>
 }
 
+export type MutationChangeB2bAccountParentArgs = {
+  accountId: Scalars['Int']
+  parentAccountId: Scalars['Int']
+}
+
 export type B2BUser = {
   __typename?: 'B2BUser'
   _get?: Maybe<Scalars['AnyScalar']>
