@@ -30,7 +30,6 @@ const QuotesTemplate = (props: QuotesTemplateProps) => {
       const createQuoteResponse = await createQuote.mutateAsync({
         customerAccountId: user?.id as number,
       })
-      console.log('createquoteresponse', createQuoteResponse)
 
       if (createQuoteResponse?.id) {
         router.push(`/my-account/quote/${createQuoteResponse.id}`)

@@ -481,5 +481,6 @@
   "adjustment-text": "{{selectValue}} {{title}} Subtotal",
   "titleTax": "{{title}} Tax",
   "edit-item": "Edit Item",
-  "remove": "Remove"
+  "remove": "Remove",
+  "delete-quote-confirm-message": "Are you sure you want to delete this quote?"
 }

@@ -3,14 +3,17 @@ import React from 'react'
 import '@testing-library/jest-dom'
 import { useMediaQuery } from '@mui/material'
 import { composeStories } from '@storybook/testing-react'
-import { cleanup, fireEvent, screen, waitFor, within } from '@testing-library/react'
+import { fireEvent, screen, waitFor, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
+import { graphql } from 'msw'
 import getConfig from 'next/config'
 
 import * as stories from './QuotesTable.stories'
+import { server } from '@/__mocks__/msw/server'
 import { quotesMock } from '@/__mocks__/stories/quotesMock'
 import { renderWithQueryClient } from '@/__test__/utils'
 import { DialogRoot, ModalContextProvider } from '@/context'
+import { useGetQuotes } from '@/hooks'
 import { quoteGetters } from '@/lib/getters'
 
 import { Quote } from '@/lib/gql/types'
@@ -245,6 +248,51 @@ describe('[components] - QuotesTable', () => {
         expect(screen.getAllByTestId('quote-total')[index]).toHaveTextContent('currency')
         expect(screen.getAllByTestId('quote-status')[index]).toHaveTextContent(status)
       })
+    })
+
+    const TestComponent = () => {
+      const { data: quoteCollection } = useGetQuotes({
+        filter: 'test',
+      })
+
+      return (
+        <Common setQuotesSearchParam={setQuotesSearchParamMock} quoteCollection={quoteCollection} />
+      )
+    }
+
+    it('should handle deleting a quote', async () => {
+      renderWithQueryClient(<TestComponent />)
+
+      await waitFor(() => {
+        expect(screen.getAllByTestId('delete-quote').length).toBe(quotesMock.items?.length)
+      })
+
+      const [_, ...updated] = quotesMock?.items as Quote[]
+
+      server.use(
+        graphql.query('quotes', (_req, res, ctx) => {
+          return res(
+            ctx.data({
+              quotes: {
+                ...quotesMock,
+                items: updated,
+              },
+            })
+          )
+        })
+      )
+
+      expect(screen.getAllByTestId('quote-name')[0]).toHaveTextContent(
+        quotesMock?.items?.[0]?.name as string
+      )
+
+      await user.click(screen.getAllByTestId('delete-quote')[0])
+
+      await waitFor(() => {
+        expect(screen.getByText('delete-quote-confirm-message')).toBeVisible()
+      })
+
+      await user.click(screen.getByRole('button', { name: 'delete' }))
     })
   })
 

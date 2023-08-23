@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect } from 'react'
+import React, { useEffect } from 'react'
 
 import Delete from '@mui/icons-material/Delete'
 import Edit from '@mui/icons-material/Edit'
@@ -27,7 +27,7 @@ import getConfig from 'next/config'
 import { useTranslation } from 'next-i18next'
 
 import { KiboPagination, KiboSelect, Price, SearchBar } from '@/components/common'
-import { QuotesFilterDialog } from '@/components/dialogs'
+import { ConfirmationDialog, QuotesFilterDialog } from '@/components/dialogs'
 import { useModalContext } from '@/context'
 import { useDebounce, useDeleteQuote } from '@/hooks'
 import { quoteGetters } from '@/lib/getters'
@@ -152,8 +152,20 @@ const QuotesTable = (props: QuotesTableProps) => {
   }
 
   const handleDeleteQuote = (id: string) => {
-    deleteQuote.mutate(id)
-    handleClose()
+    try {
+      showModal({
+        Component: ConfirmationDialog,
+        props: {
+          onConfirm: () => {
+            deleteQuote.mutate(id, { onSettled: () => handleClose() })
+          },
+          contentText: t('delete-quote-confirm-message'),
+          primaryButtonText: t('delete'),
+        },
+      })
+    } catch (e) {
+      console.error(e)
+    }
   }
 
   const handleFilterAction = (filters: QuoteFilters) => {
@@ -338,7 +350,11 @@ const QuotesTable = (props: QuotesTableProps) => {
                             <IconButton size="small" onClick={handleEmailQuote}>
                               <Mail fontSize="small" />
                             </IconButton>
-                            <IconButton size="small" onClick={() => handleDeleteQuote(quoteId)}>
+                            <IconButton
+                              size="small"
+                              data-testid="delete-quote"
+                              onClick={() => handleDeleteQuote(quoteId)}
+                            >
                               <Delete fontSize="small" />
                             </IconButton>
                           </Box>

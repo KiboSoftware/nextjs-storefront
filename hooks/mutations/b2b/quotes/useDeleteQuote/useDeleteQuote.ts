@@ -39,7 +39,7 @@ export const useDeleteQuote = () => {
   return {
     deleteQuote: useMutation({
       mutationFn: deleteB2BQuote,
-      onSuccess: () => queryClient.invalidateQueries({ queryKey: b2bQuotesKeys.all }),
+      onSuccess: () => queryClient.invalidateQueries({ queryKey: b2bQuotesKeys.quotesParams({}) }),
     }),
   }
 }
