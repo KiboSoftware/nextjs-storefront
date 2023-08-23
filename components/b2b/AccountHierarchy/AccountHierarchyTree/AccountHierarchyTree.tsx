@@ -31,7 +31,7 @@ interface AccountHierarchyTreeProps {
   handleSwapAccount: (accountId: number, parentAccountId: number) => void
   handleDisableAccount: (b2BAccount: B2BAccount) => void
   handleBuyersBtnClick: () => void
-  handleQuotesBtnClick: () => void
+  handleQuotesBtnClick: (id: number) => void
 }
 
 const CollapseStateIndicator = ({ isCollapsed }: { isCollapsed: boolean }) => {
@@ -100,7 +100,7 @@ export default function AccountHierarchyTree(props: AccountHierarchyTreeProps) {
         onDisableAccountClick={onDisableAccountClick}
         onAccountSwap={onAccountSwap}
         onBuyersBtnClick={handleBuyersBtnClick}
-        onQuotesBtnClick={handleQuotesBtnClick}
+        onQuotesBtnClick={() => handleQuotesBtnClick(currentAccount.id)}
         icons={
           <ListItemIcon sx={{ display: 'flex' }}>
             <IconButton size="small">{handler}</IconButton>

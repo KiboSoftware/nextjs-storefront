@@ -200,6 +200,9 @@ module.exports = {
       reCaptchaSecret: process.env.RECAPTCHA_SECRET,
       reCaptchaThreshold: process.env.RECAPTCHA_THRESHOLD,
     },
+    B2BQuotes: {
+      pageSize: 5,
+    },
   },
   staticPageGenerationTimeout: 1000,
   experimental: {

@@ -1,11 +1,9 @@
 import React from 'react'
 
-import {
-  AddCircle as AddCircleIcon,
-  Delete as DeleteIcon,
-  Edit as EditIcon,
-  Visibility as VisibilitiyIcon,
-} from '@mui/icons-material'
+import AddCircle from '@mui/icons-material/AddCircle'
+import Delete from '@mui/icons-material/Delete'
+import Edit from '@mui/icons-material/Edit'
+import Visibility from '@mui/icons-material/Visibility'
 import { Box, IconButton, Typography } from '@mui/material'
 import { useTranslation } from 'next-i18next'
 
@@ -51,10 +49,18 @@ const AccountHierarchyActions = (props: AccountHierarchyActionsProps) => {
       alignItems={'center'}
       onClick={(e) => e.stopPropagation()}
     >
-      <Typography variant="caption" sx={{ textDecoration: 'underline' }} onClick={onBuyersClick}>
+      <Typography
+        variant="caption"
+        sx={{ textDecoration: 'underline', cursor: 'pointer' }}
+        onClick={onBuyersClick}
+      >
         {t('buyers')}
       </Typography>
-      <Typography variant="caption" sx={{ textDecoration: 'underline' }} onClick={onQuotesClick}>
+      <Typography
+        variant="caption"
+        sx={{ textDecoration: 'underline', cursor: 'pointer' }}
+        onClick={onQuotesClick}
+      >
         {t('quotes')}
       </Typography>
       {role === B2BRoles.ADMIN && (
@@ -66,7 +72,7 @@ const AccountHierarchyActions = (props: AccountHierarchyActionsProps) => {
             name="item-view"
             onClick={onView}
           >
-            <VisibilitiyIcon />
+            <Visibility />
           </IconButton>
           <IconButton
             size="small"
@@ -75,7 +81,7 @@ const AccountHierarchyActions = (props: AccountHierarchyActionsProps) => {
             name="item-add"
             onClick={onAdd}
           >
-            <AddCircleIcon />
+            <AddCircle />
           </IconButton>
           <IconButton
             size="small"
@@ -84,7 +90,7 @@ const AccountHierarchyActions = (props: AccountHierarchyActionsProps) => {
             name="item-edit"
             onClick={onEdit}
           >
-            <EditIcon />
+            <Edit />
           </IconButton>
           <IconButton
             size="small"
@@ -93,7 +99,7 @@ const AccountHierarchyActions = (props: AccountHierarchyActionsProps) => {
             name="item-disable"
             onClick={onDisable}
           >
-            <DeleteIcon />
+            <Delete />
           </IconButton>
         </Box>
       )}

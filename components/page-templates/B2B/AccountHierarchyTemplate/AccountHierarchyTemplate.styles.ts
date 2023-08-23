@@ -6,6 +6,7 @@ export const accountHierarchyTemplateStyles = {
     alignItems: 'center',
     flexWrap: 'wrap',
     cursor: 'pointer',
+    // paddingBottom: '30px'
   },
   accountHierarchyTextBox: {
     margin: { xs: 'auto' },

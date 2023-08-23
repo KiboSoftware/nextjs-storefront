@@ -53,6 +53,7 @@ export * from './queries/wishlist/useGetWishlist/useGetWishlist'
 export * from './queries/b2b/useGetB2BUserQuery/useGetB2BUserQuery'
 export * from './queries/b2b/useGetB2BAccountHierarchy/useGetB2BAccountHierarchy'
 export * from './queries/b2b/quotes/useGetQuotes/useGetQuotes'
+export * from './queries/b2b/useGetCustomerPurchaseOrderAccount/useGetCustomerPurchaseOrderAccount'
 
 // Custom hooks
 export * from './custom/useDebounce/useDebounce'
@@ -65,7 +66,7 @@ export * from './custom/useProductCardActions/useProductCardActions'
 export * from './custom/usePriceRangeFormatter/usePriceRangeFormatter'
 export * from './custom/useCardContactActions/useCardContactActions'
 export * from './custom/useCartActions/useCartActions'
-export * from './queries/b2b/useGetCustomerPurchaseOrderAccount/useGetCustomerPurchaseOrderAccount'
+export * from './custom/useB2BQuote/useB2BQuote'
 
 // Mutations
 

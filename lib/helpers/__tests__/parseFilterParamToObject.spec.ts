@@ -8,6 +8,7 @@ describe('parseFilterParamToObject', () => {
       number: '123',
       expirationDate: '',
       status: 'Pending',
+      others: '',
     }
 
     const result = parseFilterParamToObject(filterParam)
@@ -22,6 +23,7 @@ describe('parseFilterParamToObject', () => {
       number: '',
       expirationDate: '',
       status: '',
+      others: '',
     }
 
     const result = parseFilterParamToObject(filterParam)
@@ -29,13 +31,14 @@ describe('parseFilterParamToObject', () => {
     expect(result).toEqual(expectedFilters)
   })
 
-  it('should handle invalid filter conditions', () => {
-    const filterParam = 'invalid condition'
+  it('should handle other filter conditions', () => {
+    const filterParam = 'customerAccountId eq 1002'
     const expectedFilters = {
       name: '',
       number: '',
       expirationDate: '',
       status: '',
+      others: 'customerAccountId eq 1002',
     }
 
     const result = parseFilterParamToObject(filterParam)

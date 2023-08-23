@@ -1,3 +1,4 @@
+import { QueryQuotesArgs } from '../gql/types'
 import { PageProps } from '@/hooks'
 
 import type { CategorySearchParams } from '../types'
@@ -132,7 +133,8 @@ export const addressKeys = {
 
 export const b2bQuotesKeys = {
   all: ['quotes'],
-  quotesParams: (params: any) => [...b2bQuotesKeys.all, { ...params }] as const,
+  quotesParams: (params: QueryQuotesArgs) =>
+    [...b2bQuotesKeys.all, JSON.stringify(params)] as const,
 }
 export const quoteKeys = {
   all: ['quote'] as const,

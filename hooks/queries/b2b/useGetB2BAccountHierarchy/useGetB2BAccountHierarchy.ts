@@ -4,10 +4,9 @@
 import { useQuery } from '@tanstack/react-query'
 
 import { makeGraphQLClient } from '@/lib/gql/client'
-import { accountHierarchyKeys } from '@/lib/react-query/queryKeys'
-
-import { AccountHierarchyResultType, B2BAccountHierarchyResult } from '@/lib/types'
 import { getB2BAccountHierarchyQuery } from '@/lib/gql/queries'
+import { accountHierarchyKeys } from '@/lib/react-query/queryKeys'
+import { AccountHierarchyResultType, B2BAccountHierarchyResult } from '@/lib/types'
 
 /**
  * @hidden
@@ -36,7 +35,7 @@ const getB2BAccountHierarchy = async (accountId: number): Promise<B2BAccountHier
  * @returns 'response?.getB2BAccountHierarchy', which contains list of accounts.
  */
 
-export const useGetB2BAccountHierachyQueries = (accountId: number): AccountHierarchyResultType => {
+export const useGetB2BAccountHierarchy = (accountId: number): AccountHierarchyResultType => {
   const { isLoading, isSuccess, isError, data } = useQuery({
     queryKey: accountHierarchyKeys.accountHierarchy(accountId),
     queryFn: () => getB2BAccountHierarchy(accountId),

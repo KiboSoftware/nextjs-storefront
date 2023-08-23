@@ -1,24 +1,26 @@
-import { useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 
-import { ArrowBackIos, AddCircleOutline as AddCircleOutlineIcon } from '@mui/icons-material'
-import { Box, Button, Grid, Stack, Typography, useMediaQuery, useTheme } from '@mui/material'
+import AddCircleOutline from '@mui/icons-material/AddCircleOutline'
+import { Box, Button, Grid, useMediaQuery, useTheme } from '@mui/material'
 import { useRouter } from 'next/router'
 import { useTranslation } from 'next-i18next'
 
-import { accountHierarchyTemplateStyles } from './AccountHierarchyTemplate.styles'
-import { AccountHierarchyTree } from '@/components/b2b'
+import { AccountHierarchyTree, QuotesTable } from '@/components/b2b'
 import {
   AccountHierarchyAddFormDialog,
   AccountHierarchyChangeParentDialog,
   ConfirmationDialog,
   ViewAccountDetailsDialog,
 } from '@/components/dialogs'
+import MobileB2BLayout from '@/components/layout/MobileB2BLayout/MobileB2BLayout'
 import { useAuthContext, useModalContext } from '@/context'
 import {
+  useB2BQuote,
   useChangeB2bAccountParentMutation,
   useCreateCustomerB2bAccountMutation,
-  useGetB2BAccountHierachyQueries,
+  useGetB2BAccountHierarchy,
   useGetB2BUserQueries,
+  useGetQuotes,
   useUpdateCustomerB2bAccountMutation,
 } from '@/hooks'
 import { userGetters } from '@/lib/getters'
@@ -26,6 +28,7 @@ import {
   buildAccountHierarchy,
   buildCreateCustomerB2bAccountParams,
   buildUpdateCustomerB2bAccountParams,
+  parseFilterParamToObject,
 } from '@/lib/helpers'
 import {
   AddChildAccountProps,
@@ -36,6 +39,8 @@ import {
 
 import { B2BAccount, B2BUser } from '@/lib/gql/types'
 
+// Add this to achieve Mobile Layout
+
 const AccountHierarchyTemplate = () => {
   const theme = useTheme()
   const router = useRouter()
@@ -44,7 +49,7 @@ const AccountHierarchyTemplate = () => {
   const { showModal, closeModal } = useModalContext()
   const mdScreen = useMediaQuery(theme.breakpoints.up('md'))
 
-  const { b2BAccountHierarchy } = useGetB2BAccountHierachyQueries(user?.id as number)
+  const { b2BAccountHierarchy } = useGetB2BAccountHierarchy(user?.id as number)
   const { createCustomerB2bAccount } = useCreateCustomerB2bAccountMutation()
   const { updateCustomerB2bAccount } = useUpdateCustomerB2bAccountMutation()
   const { changeB2bAccountParent } = useChangeB2bAccountParentMutation()
@@ -63,17 +68,28 @@ const AccountHierarchyTemplate = () => {
     accounts: [],
     hierarchy: undefined,
   })
-  useEffect(() => {
-    if (!b2BAccountHierarchy) return
-    const hierarchy = buildAccountHierarchy(b2BAccountHierarchy?.accounts)
-    setAccountHierarchy({
-      accounts: b2BAccountHierarchy?.accounts,
-      hierarchy,
-    })
-  }, [b2BAccountHierarchy, data])
 
-  const onAccountTitleClick = () => {
-    router.push('/my-account')
+  // Add this to achieve Mobile Layout
+  const breadcrumbList = [
+    { key: 'accountHierarchy', backText: t('my-account'), redirectURL: '/my-account' },
+    {
+      key: 'buyers',
+      backText: t('account-hierarchy'),
+      redirectURL: '/my-account/b2b/account-hierarchy',
+    },
+    {
+      key: 'quotes',
+      backText: t('account-hierarchy'),
+      redirectURL: '/my-account/b2b/account-hierarchy',
+    },
+  ]
+  const [activeComponent, setActiveComponent] = useState('accountHierarchy')
+  const activeBreadCrumb = breadcrumbList.filter((item) => item.key === activeComponent)[0]
+
+  // Add this to achieve Mobile Layout
+  const onBackClick = () => {
+    router.push(activeBreadCrumb.redirectURL)
+    setActiveComponent('accountHierarchy')
   }
 
   const handleAddAccountFormSubmit = async (formValues: CreateCustomerB2bAccountParams) => {
@@ -185,62 +201,83 @@ const AccountHierarchyTemplate = () => {
     console.log('buyers button clicked')
   }
 
-  const handleQuotesBtnClick = () => {
-    console.log('quotes button clicked')
+  const { quotesSearchParam, sortingValues, handleQuotesSearchParam } = useB2BQuote()
+
+  const { data: quoteCollection } = useGetQuotes(quotesSearchParam)
+
+  const handleQuotesBtnClick = (id: number) => {
+    handleQuotesSearchParam({
+      filter: `customerAccountId eq ${id}`,
+    })
+    setActiveComponent('quotes')
   }
 
+  useEffect(() => {
+    if (!b2BAccountHierarchy) return
+    const hierarchy = buildAccountHierarchy(b2BAccountHierarchy?.accounts)
+    setAccountHierarchy({
+      accounts: b2BAccountHierarchy?.accounts,
+      hierarchy,
+    })
+  }, [b2BAccountHierarchy, data])
+
   return (
-    <>
-      <Grid item xs={12}>
-        <Stack sx={accountHierarchyTemplateStyles.wrapIcon} direction="row" gap={2}>
-          <Box sx={{ display: 'flex' }} onClick={onAccountTitleClick}>
-            <ArrowBackIos fontSize="inherit" sx={accountHierarchyTemplateStyles.wrapIcon} />
-            {mdScreen && <Typography variant="body2">{t('my-account')}</Typography>}
-          </Box>
-          {!mdScreen && (
-            <Box sx={accountHierarchyTemplateStyles.accountHierarchyTextBox}>
-              <Typography variant="h2" sx={accountHierarchyTemplateStyles.accountHierarchyText}>
-                {t('account-hierarchy')}
-              </Typography>
-            </Box>
-          )}
-        </Stack>
-      </Grid>
-      {mdScreen && (
-        <Grid item xs={12} sm={6}>
-          <Box sx={{ paddingTop: { md: '30px' } }}>
-            <Typography variant="h1">{t('account-hierarchy')}</Typography>
-          </Box>
-        </Grid>
-      )}
-      <Grid container>
-        <Grid item xs={12} md={12} sx={{ ...accountHierarchyTemplateStyles.buttonGroupGridStyle }}>
-          <Button
-            variant="contained"
-            color="inherit"
-            onClick={handleAddChildAccount}
-            disableElevation
-            id="formOpenButton"
-            startIcon={<AddCircleOutlineIcon />}
-            sx={{ width: { xs: '100%', md: 180 } }}
-          >
-            {t('add-child-account')}
-          </Button>
-        </Grid>
-      </Grid>
-      <AccountHierarchyTree
-        role={userGetters.getRole(data?.items?.[0] as B2BUser)}
-        accounts={accountHierarchy.accounts}
-        hierarchy={accountHierarchy.hierarchy}
-        handleViewAccount={handleViewAccount}
-        handleAddAccount={handleAddAccount}
-        handleEditAccount={handleEditAccount}
-        handleSwapAccount={handleSwapAccount}
-        handleDisableAccount={handleDisableAccount}
-        handleBuyersBtnClick={handleBuyersBtnClick}
-        handleQuotesBtnClick={handleQuotesBtnClick}
+    <Grid container gap={3}>
+      <MobileB2BLayout
+        headerText={
+          activeBreadCrumb?.key === 'accountHierarchy'
+            ? t('account-hierarchy')
+            : activeBreadCrumb?.key === 'quotes'
+            ? t('quotes')
+            : t('buyers')
+        }
+        backText={activeBreadCrumb?.backText}
+        onBackClick={onBackClick}
       />
-    </>
+
+      {activeComponent === 'accountHierarchy' && (
+        <>
+          <Grid item xs={12}>
+            <Box width={'100%'}>
+              <Button
+                variant="contained"
+                color="inherit"
+                onClick={handleAddChildAccount}
+                disableElevation
+                id="formOpenButton"
+                startIcon={<AddCircleOutline />}
+                {...(!mdScreen && { fullWidth: true })}
+              >
+                {t('add-child-account')}
+              </Button>
+            </Box>
+          </Grid>
+          <Grid item xs={12}>
+            <AccountHierarchyTree
+              role={userGetters.getRole(data?.items?.[0] as B2BUser)}
+              accounts={accountHierarchy.accounts}
+              hierarchy={accountHierarchy.hierarchy}
+              handleViewAccount={handleViewAccount}
+              handleAddAccount={handleAddAccount}
+              handleEditAccount={handleEditAccount}
+              handleSwapAccount={handleSwapAccount}
+              handleDisableAccount={handleDisableAccount}
+              handleBuyersBtnClick={handleBuyersBtnClick}
+              handleQuotesBtnClick={handleQuotesBtnClick}
+            />
+          </Grid>
+        </>
+      )}
+
+      {activeComponent === 'quotes' && (
+        <QuotesTable
+          quoteCollection={quoteCollection}
+          sortingValues={sortingValues}
+          filters={parseFilterParamToObject(quotesSearchParam.filter as string)}
+          setQuotesSearchParam={handleQuotesSearchParam}
+        />
+      )}
+    </Grid>
   )
 }
 

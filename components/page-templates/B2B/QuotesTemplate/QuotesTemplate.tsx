@@ -1,10 +1,11 @@
-import React from 'react'
+import React, { useState } from 'react'
 
-import { Box, Button, Grid, Typography } from '@mui/material'
+import { Box, Button, Grid, Typography, useMediaQuery, useTheme } from '@mui/material'
 import { useRouter } from 'next/router'
 import { useTranslation } from 'next-i18next'
 
 import { QuotesTable } from '@/components/b2b'
+import MobileB2BLayout from '@/components/layout/MobileB2BLayout/MobileB2BLayout'
 import { useAuthContext } from '@/context'
 import { useCreateQuote } from '@/hooks'
 import { QuoteFilters, QuoteSortingOptions } from '@/lib/types'
@@ -24,6 +25,17 @@ const QuotesTemplate = (props: QuotesTemplateProps) => {
   const router = useRouter()
   const { createQuote } = useCreateQuote()
   const { user } = useAuthContext()
+  const theme = useTheme()
+  const mdScreen = useMediaQuery(theme.breakpoints.up('md'))
+
+  const breadcrumbList = [{ key: 'quotes', backText: t('my-account'), redirectURL: '/my-account' }]
+  const [activeComponent, setActiveComponent] = useState('quotes')
+  const activeBreadCrumb = breadcrumbList.filter((item) => item.key === activeComponent)[0]
+
+  const onBackClick = () => {
+    router.push(activeBreadCrumb.redirectURL)
+    setActiveComponent('accountHierarchy')
+  }
 
   const handleCreateNewTemplate = async () => {
     try {
@@ -41,26 +53,36 @@ const QuotesTemplate = (props: QuotesTemplateProps) => {
   }
 
   return (
-    <Grid container spacing={4}>
-      <Grid item xs={12}>
-        <Typography variant="h1">{t('quotes')}</Typography>
-      </Grid>
-      <Grid item xs={12}>
-        <Box width={'100%'}>
-          <Button variant="contained" color="inherit" onClick={handleCreateNewTemplate}>
-            {t('create-a-quote')}
-          </Button>
-        </Box>
-      </Grid>
-      <Grid item xs={12}>
-        <QuotesTable
-          setQuotesSearchParam={setQuotesSearchParam}
-          quoteCollection={quoteCollection}
-          sortingValues={sortingValues}
-          filters={filters}
+    <>
+      <Grid container gap={3}>
+        <MobileB2BLayout
+          headerText={t('quotes')}
+          backText={activeBreadCrumb?.backText}
+          onBackClick={onBackClick}
         />
+
+        <Grid item xs={12}>
+          <Box width={'100%'}>
+            <Button
+              variant="contained"
+              color="inherit"
+              onClick={handleCreateNewTemplate}
+              {...(!mdScreen && { fullWidth: true })}
+            >
+              {t('create-a-quote')}
+            </Button>
+          </Box>
+        </Grid>
+        <Grid item xs={12}>
+          <QuotesTable
+            setQuotesSearchParam={setQuotesSearchParam}
+            quoteCollection={quoteCollection}
+            sortingValues={sortingValues}
+            filters={filters}
+          />
+        </Grid>
       </Grid>
-    </Grid>
+    </>
   )
 }
 

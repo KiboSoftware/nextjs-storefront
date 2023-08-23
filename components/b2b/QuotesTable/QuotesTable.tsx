@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 
 import Delete from '@mui/icons-material/Delete'
 import Edit from '@mui/icons-material/Edit'
@@ -26,6 +26,7 @@ import {
 import getConfig from 'next/config'
 import { useTranslation } from 'next-i18next'
 
+import { QuotesTableStyles } from './QuotesTable.styles'
 import { KiboPagination, KiboSelect, Price, SearchBar } from '@/components/common'
 import { ConfirmationDialog, QuotesFilterDialog } from '@/components/dialogs'
 import { useModalContext } from '@/context'
@@ -100,9 +101,10 @@ const QuotesTable = (props: QuotesTableProps) => {
 
   const { t } = useTranslation('common')
   const theme = useTheme()
+
   const { showModal } = useModalContext()
   const tabAndDesktop = useMediaQuery(theme.breakpoints.up('sm'))
-  const [searchTerm, setSearchTerm] = React.useState('')
+  const [searchTerm, setSearchTerm] = useState('')
   const debouncedTerm = useDebounce(searchTerm, publicRuntimeConfig.debounceTimeout)
 
   const statusColorCode: any = {
@@ -204,33 +206,11 @@ const QuotesTable = (props: QuotesTableProps) => {
 
   return (
     <>
-      <Box
-        sx={{
-          paddingInline: 0,
-          display: 'flex',
-          flexDirection: {
-            xs: 'column',
-            md: 'row',
-          },
-          gap: 2,
-          pb: 2,
-        }}
-      >
+      <Box sx={QuotesTableStyles.container}>
         <Box width="100%">
           <SearchBar searchTerm={searchTerm} onSearch={handleQuoteSearch} showClearButton />
         </Box>
-        <Box
-          width="100%"
-          sx={{
-            display: 'flex',
-            justifyContent: {
-              xs: 'space-between',
-              md: 'flex-end',
-            },
-            alignItems: 'center',
-            gap: 2,
-          }}
-        >
+        <Box sx={QuotesTableStyles.filterBar}>
           <Box>
             <KiboSelect
               name="sort-plp"
@@ -287,12 +267,7 @@ const QuotesTable = (props: QuotesTableProps) => {
                   <TableRow
                     key={quoteId}
                     sx={{
-                      '&:last-child td, &:last-child th': { border: 0 },
-                      borderLeftWidth: {
-                        xs: '5px',
-                        md: 0,
-                      },
-                      borderLeftStyle: 'solid',
+                      ...QuotesTableStyles.tableRow,
                       borderLeftColor: getStatusColorCode(status),
                     }}
                   >

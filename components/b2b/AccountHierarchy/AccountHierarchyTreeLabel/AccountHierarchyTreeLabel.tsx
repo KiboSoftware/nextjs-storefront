@@ -43,7 +43,7 @@ const AccountHierarchyTreeLabel = (props: AccountHierarchyTreeLabelProps) => {
               role={role}
               mdScreen={mdScreen}
               onBuyersClick={() => onBuyersBtnClick()}
-              onQuotesClick={() => onQuotesBtnClick()}
+              onQuotesClick={onQuotesBtnClick}
               onAdd={() => onAddAccountClick()}
               onView={() => onViewAccountClick()}
               onEdit={() => onEditAccountClick()}
