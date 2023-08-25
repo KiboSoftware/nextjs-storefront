@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 
-import { Box, Button, Grid, Typography, useMediaQuery, useTheme } from '@mui/material'
+import { Box, Button, Grid, useMediaQuery, useTheme } from '@mui/material'
 import { useRouter } from 'next/router'
 import { useTranslation } from 'next-i18next'
 
@@ -8,6 +8,7 @@ import { QuotesTable } from '@/components/b2b'
 import MobileB2BLayout from '@/components/layout/MobileB2BLayout/MobileB2BLayout'
 import { useAuthContext } from '@/context'
 import { useCreateQuote } from '@/hooks'
+import { B2BRoles } from '@/lib/constants'
 import { QuoteFilters, QuoteSortingOptions } from '@/lib/types'
 
 import { QueryQuotesArgs, QuoteCollection } from '@/lib/gql/types'
@@ -79,6 +80,7 @@ const QuotesTemplate = (props: QuotesTemplateProps) => {
             quoteCollection={quoteCollection}
             sortingValues={sortingValues}
             filters={filters}
+            showActionButtons={user?.roleName !== B2BRoles.NON_PURCHASER}
           />
         </Grid>
       </Grid>

@@ -578,6 +578,10 @@ export const b2bHandlers = [
     return res(ctx.data({ deleteQuote: true }))
   }),
 
+  graphql.mutation('updateQuoteEmail', (_req, res, ctx) => {
+    return res(ctx.data({ updateQuoteEmail: true }))
+  }),
+
   graphql.query('quotes', (_req, res, ctx) => {
     return res(ctx.data({ quotes: quotesMock }))
   }),

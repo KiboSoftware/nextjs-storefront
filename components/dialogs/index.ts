@@ -16,3 +16,4 @@ export { default as AccountHierarchyChangeParentDialog } from './b2b/AccountHier
 export { default as ViewAccountDetailsDialog } from './b2b/ViewAccountDetailsDialog/ViewAccountDetailsDialog'
 export { default as QuotesFilterDialog } from './b2b/QuotesFilterDialog/QuotesFilterDialog'
 export { default as QuoteCommentThreadDialog } from './b2b/QuotesCommentThreadDialog/QuotesCommentThreadDialog'
+export { default as EmailQuoteDialog } from './b2b/EmailQuoteDialog/EmailQuoteDialog'

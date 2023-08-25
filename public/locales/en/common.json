@@ -482,5 +482,7 @@
   "titleTax": "{{title}} Tax",
   "edit-item": "Edit Item",
   "remove": "Remove",
-  "delete-quote-confirm-message": "Are you sure you want to delete this quote?"
+  "delete-quote-confirm-message": "Are you sure you want to delete this quote?",
+  "email-input-placeholder": "Press Enter after entering email address",
+  "email-addresses": "Email address(es)"
 }

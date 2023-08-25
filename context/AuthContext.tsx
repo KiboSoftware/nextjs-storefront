@@ -18,12 +18,12 @@ import { cartKeys, loginKeys, wishlistKeys } from '@/lib/react-query/queryKeys'
 import type { CustomerAccount } from '@/lib/gql/types'
 
 type CustomerAccountWithRole = CustomerAccount & {
-  roleId: number
-  roleName: string
+  roleId?: number
+  roleName?: string
 }
 export interface AuthContextType {
   isAuthenticated: boolean
-  user?: CustomerAccount | CustomerAccountWithRole
+  user?: CustomerAccountWithRole
   login: (params: LoginData, onSuccessCallBack: () => void) => any
   createAccount: (params: RegisterAccountInputData, onSuccessCallBack?: () => void) => any
   logout: () => void
@@ -45,7 +45,7 @@ AuthContext.displayName = 'AuthContext'
 
 export const AuthContextProvider = ({ children }: AuthContextProviderProps) => {
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false)
-  const [user, setUser] = useState<CustomerAccount | CustomerAccountWithRole | undefined>(undefined)
+  const [user, setUser] = useState<CustomerAccountWithRole | undefined>(undefined)
   const { showSnackbar } = useSnackbarContext()
 
   const router = useRouter()
