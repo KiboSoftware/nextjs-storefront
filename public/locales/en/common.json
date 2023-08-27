@@ -468,5 +468,6 @@
   "adjustment-text": "{{selectValue}} {{title}} Subtotal",
   "titleTax": "{{title}} Tax",
   "edit-item": "Edit Item",
-  "remove": "Remove"
+  "remove": "Remove",
+  "no-item-in-list-text": "Use product search to start adding products to this list"
 }
