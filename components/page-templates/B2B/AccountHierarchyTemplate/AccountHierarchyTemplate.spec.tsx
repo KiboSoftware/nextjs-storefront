@@ -17,7 +17,7 @@ import { CustomerAccount } from '@/lib/gql/types'
 
 const { Common } = composeStories(stories)
 
-interface AccountHierarchyFormDialogProps {
+interface AccountHierarchyAddFormDialogProps {
   formTitle?: string
   user?: CustomerAccount
   onSave: (data: CreateCustomerB2bAccountParams) => void
@@ -44,7 +44,7 @@ const createMatchMedia = (width: number) => (query: string) => ({
   dispatchEvent: jest.fn(),
 })
 
-const AccountHierarchyMock = ({ onClose }: { onClose: () => void }) => (
+const AccountHierarchyAddFormMock = ({ onClose }: { onClose: () => void }) => (
   <div data-testid="account-hierarchy-form-mock">
     <button data-testid="cancel-account-mock-button" onClick={onClose}>
       Cancel
@@ -55,8 +55,8 @@ const AccountHierarchyMock = ({ onClose }: { onClose: () => void }) => (
   </div>
 )
 jest.mock(
-  '@/components/b2b/AccountHierarchy/AccountHierarchyForm/AccountHierarchyForm',
-  () => () => AccountHierarchyMock({ onClose: onCloseMock })
+  '@/components/b2b/AccountHierarchy/AccountHierarchyAddForm/AccountHierarchyAddForm',
+  () => () => AccountHierarchyAddFormMock({ onClose: onCloseMock })
 )
 
 const AccountHierarchyTreeMock = () => <div data-testid="account-hierarchy-tree-mock"></div>
@@ -67,7 +67,7 @@ jest.mock(
 
 jest.mock('@/components/dialogs', () => ({
   __esModule: true,
-  AccountHierarchyFormDialog: (props: AccountHierarchyFormDialogProps) => {
+  AccountHierarchyAddFormDialog: (props: AccountHierarchyAddFormDialogProps) => {
     const params = {
       parentAccount: { id: 1023, companyOrOrganization: 'Parent Account' },
       companyOrOrganization: 'ABCD',

@@ -12,6 +12,7 @@ import {
   customerB2BUserForPage0Mock,
   customerPurchaseOrderMock,
   customerPurchaseOrderAccountMock,
+  b2BAccountHierarchyResult,
 } from '../stories'
 import { b2BAccountResponseMock } from '../stories/b2BAccountResponseMock'
 import { cartItemMock } from '../stories/cartItemMock'
@@ -477,11 +478,12 @@ export const subscriptionHandlers = [
 ]
 
 export const b2bHandlers = [
+  // useGetB2BUserQuery
   graphql.query('b2bAccountUsers', (_req, res, ctx) => {
     return res(ctx.data({ b2bAccountUsers: customerB2BUserForPage0Mock }))
   }),
 
-  // useCreateCustomerB2bUserMutation
+  // useCreateCustomerB2bUser
   graphql.mutation('createCustomerB2bAccountUser', (_req, res, ctx) => {
     return res(
       ctx.data({
@@ -490,7 +492,7 @@ export const b2bHandlers = [
     )
   }),
 
-  // useUpdateCustomerB2bUserMutation
+  // useUpdateCustomerB2bUser
   graphql.mutation('updateCustomerB2bAccountUser', (_req, res, ctx) => {
     return res(
       ctx.data({
@@ -499,25 +501,48 @@ export const b2bHandlers = [
     )
   }),
 
-  // useDeleteB2bAccountUserRole
+  // useDeleteB2bAccountRole
   graphql.mutation('deleteB2bAccountRole', (_req, res, ctx) => {
     return res(ctx.data({ deleteB2bAccountRole: true }))
   }),
 
-  // useAddRoleToCustomerB2bAccountMutation
+  // useAddRoleToCustomerB2bAccount
   graphql.mutation('addRoleToCustomerB2bAccount', (_req, res, ctx) => {
     return res(ctx.data({ addRoleToCustomerB2bAccount: true }))
   }),
 
-  // useRemoveCustomerB2bUserMutation
+  // useRemoveCustomerB2bUser
   graphql.mutation('removeCustomerB2bAccountUser', (_req, res, ctx) => {
     return res(ctx.data({ removeCustomerB2bAccountUser: true }))
   }),
 
-  // useCreateCustomerB2bAccountMutation
+  // useGetB2BAccountHierarchy
+  graphql.query('getB2BAccountHierarchy', (_req, res, ctx) => {
+    return res(ctx.data({ getB2BAccountHierarchy: b2BAccountHierarchyResult }))
+  }),
+
+  // useCreateCustomerB2bAccount
   graphql.mutation('createCustomerB2bAccount', (_req, res, ctx) => {
     return res(ctx.data({ createCustomerB2bAccount: b2BAccountResponseMock }))
   }),
+
+  // useChangeB2bAccountParent
+  graphql.mutation('changeB2BAccountParent', (_req, res, ctx) => {
+    return res(
+      ctx.data({
+        changeB2bAccountParent: {
+          ...b2BAccountHierarchyResult?.accounts?.[2],
+          parentAccountId: b2BAccountHierarchyResult?.accounts?.[0]?.id,
+        },
+      })
+    )
+  }),
+
+  // useUpdateCustomerB2bAccount
+  graphql.mutation('updateCustomerB2bAccount', (_req, res, ctx) => {
+    return res(ctx.data({ updateCustomerB2bAccount: b2BAccountResponseMock }))
+  }),
+
   // useGetQuoteById
   graphql.query('getQuoteByID', (_req, res, ctx) => {
     return res(ctx.data({ quote: quoteMock?.items?.[0] }))
@@ -526,6 +551,17 @@ export const b2bHandlers = [
   //useCreateQuote
   graphql.mutation('createQuote', (_req, res, ctx) => {
     return res(ctx.data({ createQuote: quoteMock?.items?.[0] }))
+  }),
+
+  graphql.mutation('updateQuotesComments', (_req, res, ctx) => {
+    return res(
+      ctx.data({
+        updateQuotesComments: {
+          id: 'test-id',
+          text: 'test comment',
+        },
+      })
+    )
   }),
 
   // useCreateQuoteItem
@@ -540,6 +576,10 @@ export const b2bHandlers = [
 
   graphql.mutation('deleteQuote', (_req, res, ctx) => {
     return res(ctx.data({ deleteQuote: true }))
+  }),
+
+  graphql.mutation('updateQuoteEmail', (_req, res, ctx) => {
+    return res(ctx.data({ updateQuoteEmail: true }))
   }),
 
   graphql.query('quotes', (_req, res, ctx) => {

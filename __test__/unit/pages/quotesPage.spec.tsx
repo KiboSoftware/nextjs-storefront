@@ -1,11 +1,13 @@
 import '@testing-library/jest-dom'
-import { render, screen, waitFor } from '@testing-library/react'
+import { screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import getConfig from 'next/config'
 
 import { quotesMock } from '@/__mocks__/stories/quotesMock'
-import { createQueryClientWrapper, renderWithQueryClient } from '@/__test__/utils'
+import { renderWithQueryClient } from '@/__test__/utils'
 import QuotesPage, { getServerSideProps } from '@/pages/my-account/b2b/quotes/index'
+
+import { Quote } from '@/lib/gql/types'
 
 jest.mock('next-i18next/serverSideTranslations', () => ({
   serverSideTranslations: jest.fn(() => {
@@ -37,6 +39,10 @@ jest.mock('@/components/page-templates/B2B/QuotesTemplate/QuotesTemplate.tsx', (
   ),
 }))
 
+jest.mock('@/lib/api/operations', () => ({
+  getQuotes: () => ['quotesMock'],
+}))
+
 const user = userEvent.setup()
 
 const { publicRuntimeConfig } = getConfig()
@@ -50,6 +56,7 @@ describe('[page] B2B Quotes Page', () => {
     const response = await getServerSideProps(context as any)
     expect(response).toStrictEqual({
       props: {
+        quotes: ['quotesMock'],
         _nextI18Next: {
           initialI18nStore: { 'mock-locale': [{}], en: [{}] },
           initialLocale: 'mock-locale',
@@ -65,7 +72,7 @@ describe('[page] B2B Quotes Page', () => {
       selected: 'number desc',
     }
 
-    renderWithQueryClient(<QuotesPage />)
+    renderWithQueryClient(<QuotesPage quotes={quotesMock} />)
 
     const QuotesTemplate = screen.getByTestId('QuotesTemplate-mock')
 
@@ -78,6 +85,7 @@ describe('[page] B2B Quotes Page', () => {
         number: '',
         expirationDate: '',
         status: '',
+        others: '',
       })
     )
 
@@ -95,6 +103,7 @@ describe('[page] B2B Quotes Page', () => {
         number: '',
         expirationDate: '',
         status: '',
+        others: '',
       })
     )
   })

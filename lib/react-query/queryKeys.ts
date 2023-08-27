@@ -1,3 +1,4 @@
+import { QueryQuotesArgs } from '../gql/types'
 import { PageProps } from '@/hooks'
 
 import type { CategorySearchParams } from '../types'
@@ -35,7 +36,7 @@ export const loginKeys = {
 }
 
 export const customerB2BUserKeys = {
-  all: ['b2bUsers'] as any,
+  all: ['b2BUsers'] as any,
   search: (
     accountId: number,
     index: number,
@@ -43,6 +44,11 @@ export const customerB2BUserKeys = {
     searchTerm: string | undefined,
     filter: string
   ) => [...customerB2BUserKeys.all, accountId, index, pageSize, searchTerm, filter] as const,
+}
+
+export const accountHierarchyKeys = {
+  all: ['accountHierarchy'] as any,
+  accountHierarchy: (accountId: number) => [...accountHierarchyKeys.all, accountId] as const,
 }
 
 export const productSearchResultKeys = {
@@ -127,7 +133,8 @@ export const addressKeys = {
 
 export const b2bQuotesKeys = {
   all: ['quotes'],
-  quotesParams: (params: any) => [...b2bQuotesKeys.all, { ...params }] as const,
+  quotesParams: (params: QueryQuotesArgs) =>
+    [...b2bQuotesKeys.all, JSON.stringify(params)] as const,
 }
 export const quoteKeys = {
   all: ['quote'] as const,

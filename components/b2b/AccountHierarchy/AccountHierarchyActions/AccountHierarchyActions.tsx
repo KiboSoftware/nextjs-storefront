@@ -1,30 +1,47 @@
 import React from 'react'
 
-import {
-  AddCircle as AddCircleIcon,
-  Delete as DeleteIcon,
-  Edit as EditIcon,
-} from '@mui/icons-material'
+import AddCircle from '@mui/icons-material/AddCircle'
+import Delete from '@mui/icons-material/Delete'
+import Edit from '@mui/icons-material/Edit'
+import Visibility from '@mui/icons-material/Visibility'
 import { Box, IconButton, Typography } from '@mui/material'
 import { useTranslation } from 'next-i18next'
 
-import { B2BRoles } from '@/lib/constants'
+import { CartItemActionsMobile } from '@/components/cart'
+import { AccountActions, AllAccountActions, B2BRoles } from '@/lib/constants'
 
 interface AccountHierarchyActionsProps {
   role?: string
+  mdScreen?: boolean
   onBuyersClick: () => void
   onQuotesClick: () => void
   onAdd: () => void
+  onView: () => void
   onEdit: () => void
-  onDelete: () => void
+  onDisable: () => void
 }
 
 const AccountHierarchyActions = (props: AccountHierarchyActionsProps) => {
-  const { role, onAdd, onEdit, onDelete, onBuyersClick, onQuotesClick } = props
-
+  const { role, mdScreen, onAdd, onView, onEdit, onDisable, onBuyersClick, onQuotesClick } = props
   const { t } = useTranslation('common')
 
-  return (
+  const onMenuItemSelection = (option: string) => {
+    const menuItemSelectionMap = {
+      [AllAccountActions.ADD_ACCOUNT]: onAdd,
+      [AllAccountActions.VIEW_ACCOUNT]: onView,
+      [AllAccountActions.EDIT_ACCOUNT]: onEdit,
+      [AllAccountActions.DELETE_ACCOUNT]: onDisable,
+      [AllAccountActions.VIEW_BUYER_ACCOUNT]: onBuyersClick,
+      [AllAccountActions.VIEW_QUOTES]: onQuotesClick,
+    }
+
+    const selectedAction = menuItemSelectionMap[option]
+    if (selectedAction) {
+      selectedAction()
+    }
+  }
+
+  return mdScreen ? (
     <Box
       data-testid="account-actions"
       display={'flex'}
@@ -32,10 +49,18 @@ const AccountHierarchyActions = (props: AccountHierarchyActionsProps) => {
       alignItems={'center'}
       onClick={(e) => e.stopPropagation()}
     >
-      <Typography variant="caption" onClick={onBuyersClick}>
+      <Typography
+        variant="caption"
+        sx={{ textDecoration: 'underline', cursor: 'pointer' }}
+        onClick={onBuyersClick}
+      >
         {t('buyers')}
       </Typography>
-      <Typography variant="caption" onClick={onQuotesClick}>
+      <Typography
+        variant="caption"
+        sx={{ textDecoration: 'underline', cursor: 'pointer' }}
+        onClick={onQuotesClick}
+      >
         {t('quotes')}
       </Typography>
       {role === B2BRoles.ADMIN && (
@@ -43,11 +68,20 @@ const AccountHierarchyActions = (props: AccountHierarchyActionsProps) => {
           <IconButton
             size="small"
             sx={{ p: 0.5 }}
+            aria-label="item-view"
+            name="item-view"
+            onClick={onView}
+          >
+            <Visibility />
+          </IconButton>
+          <IconButton
+            size="small"
+            sx={{ p: 0.5 }}
             aria-label="item-add"
             name="item-add"
             onClick={onAdd}
           >
-            <AddCircleIcon />
+            <AddCircle />
           </IconButton>
           <IconButton
             size="small"
@@ -56,20 +90,27 @@ const AccountHierarchyActions = (props: AccountHierarchyActionsProps) => {
             name="item-edit"
             onClick={onEdit}
           >
-            <EditIcon />
+            <Edit />
           </IconButton>
           <IconButton
             size="small"
             sx={{ p: 0.5 }}
-            aria-label="item-delete"
-            name="item-delete"
-            onClick={onDelete}
+            aria-label="item-disable"
+            name="item-disable"
+            onClick={onDisable}
           >
-            <DeleteIcon />
+            <Delete />
           </IconButton>
         </Box>
       )}
     </Box>
+  ) : (
+    <CartItemActionsMobile
+      data-testid="mobile-account-actions"
+      actions={AccountActions[role as string]}
+      width="15.5rem"
+      onMenuItemSelection={onMenuItemSelection}
+    />
   )
 }
 

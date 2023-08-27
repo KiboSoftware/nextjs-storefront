@@ -7,6 +7,8 @@ import * as stories from './UserForm.stories' // import all stories from the sto
 
 const { Common, WithProps } = composeStories(stories)
 
+const user = userEvent.setup()
+
 const onClose = jest.fn()
 const onSave = jest.fn()
 
@@ -35,14 +37,14 @@ describe('[component] User Form', () => {
     const lastNameField: HTMLInputElement = screen.getByLabelText('last-name-or-sur-name')
     const submitButton = await screen.findByTestId('submit-button')
 
-    userEvent.type(emaiAddressField, 'aman.shukla@gmail.com')
+    user.type(emaiAddressField, 'aman.shukla@gmail.com')
     await waitFor(() => expect(emaiAddressField.value).toBe('aman.shukla@gmail.com'))
-    userEvent.type(firstNameField, 'Aman')
+    user.type(firstNameField, 'Aman')
     await waitFor(() => expect(firstNameField.value).toBe('Aman'))
-    userEvent.type(lastNameField, 'Shukla')
+    user.type(lastNameField, 'Shukla')
     await waitFor(() => expect(lastNameField.value).toBe('Shukla'))
 
-    userEvent.click(submitButton)
+    user.click(submitButton)
     await waitFor(() => expect(onSave).toHaveBeenCalledTimes(1))
   })
 

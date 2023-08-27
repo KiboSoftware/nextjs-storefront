@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 
 import Delete from '@mui/icons-material/Delete'
 import Edit from '@mui/icons-material/Edit'
@@ -26,20 +26,22 @@ import {
 import getConfig from 'next/config'
 import { useTranslation } from 'next-i18next'
 
+import { QuotesTableStyles } from './QuotesTable.styles'
 import { KiboPagination, KiboSelect, Price, SearchBar } from '@/components/common'
-import { QuotesFilterDialog } from '@/components/dialogs'
+import { ConfirmationDialog, EmailQuoteDialog, QuotesFilterDialog } from '@/components/dialogs'
 import { useModalContext } from '@/context'
-import { useDebounce, useDeleteQuote } from '@/hooks'
+import { useDebounce, useDeleteQuote, useEmailQuote } from '@/hooks'
 import { quoteGetters } from '@/lib/getters'
 import { buildQuotesFilterParam } from '@/lib/helpers'
 import { QuoteFilters, QuoteSortingOptions } from '@/lib/types'
 
-import { QueryQuotesArgs, QuoteCollection } from '@/lib/gql/types'
+import { QueryQuotesArgs, Quote, QuoteCollection } from '@/lib/gql/types'
 
 interface QuotesTableProps {
   quoteCollection: QuoteCollection
   sortingValues: QuoteSortingOptions
   filters: QuoteFilters
+  showActionButtons?: boolean
   setQuotesSearchParam: (param: QueryQuotesArgs) => void
 }
 
@@ -93,24 +95,41 @@ const mobileColumns = [
   },
 ]
 
+const accessHandler = {
+  canEdit: (status: string) => status === 'Pending' || status === 'ReadyForCheckout',
+  canEmail: (status: string) =>
+    status === 'Pending' ||
+    status === 'InReview' ||
+    status === 'ReadyForCheckout' ||
+    status === 'Expired',
+}
+
 const QuotesTable = (props: QuotesTableProps) => {
-  const { quoteCollection, sortingValues, filters, setQuotesSearchParam } = props
+  const {
+    quoteCollection,
+    sortingValues,
+    filters,
+    showActionButtons = true,
+    setQuotesSearchParam,
+  } = props
 
   const { publicRuntimeConfig } = getConfig()
 
   const { t } = useTranslation('common')
   const theme = useTheme()
+
   const { showModal } = useModalContext()
+  const { emailQuote } = useEmailQuote()
   const tabAndDesktop = useMediaQuery(theme.breakpoints.up('sm'))
-  const [searchTerm, setSearchTerm] = React.useState('')
+  const [searchTerm, setSearchTerm] = useState('')
   const debouncedTerm = useDebounce(searchTerm, publicRuntimeConfig.debounceTimeout)
 
   const statusColorCode: any = {
-    Pending: theme.palette.action.disabled,
-    InReview: theme.palette.warning.main,
-    ReadyForCheckout: theme.palette.info.main,
-    Completed: theme.palette.success.main,
-    Expired: theme.palette.error.main,
+    Pending: 'disabled',
+    InReview: 'warning',
+    ReadyForCheckout: 'info',
+    Completed: 'success',
+    Expired: 'error',
   }
 
   const { deleteQuote } = useDeleteQuote()
@@ -120,24 +139,27 @@ const QuotesTable = (props: QuotesTableProps) => {
   }
 
   // Mobile Actions
-  const [anchorEl, setAnchorEl] = React.useState<{ element: null | HTMLElement; id: string }>({
+  const [anchorEl, setAnchorEl] = React.useState<{
+    element: null | HTMLElement
+    quote: Quote | null
+  }>({
     element: null,
-    id: '',
+    quote: null,
   })
 
   const open = Boolean(anchorEl.element)
 
-  const handleClick = (event: React.MouseEvent<HTMLButtonElement>, id: string) => {
+  const handleClick = (event: React.MouseEvent<HTMLButtonElement>, quote: Quote | null) => {
     setAnchorEl({
       element: event.currentTarget,
-      id,
+      quote,
     })
   }
 
   const handleClose = () => {
     setAnchorEl({
       element: null,
-      id: '',
+      quote: null,
     })
   }
 
@@ -145,15 +167,31 @@ const QuotesTable = (props: QuotesTableProps) => {
     handleClose()
   }
 
-  const handleEmailQuote = () => {
-    // TODO
-    // showModal({ Component: EmailQuoteDialog })
+  const handleEmailQuote = (quoteId: string) => {
+    showModal({
+      Component: EmailQuoteDialog,
+      props: {
+        onEmailSend: (emails: string[]) => emailQuote.mutate({ quoteId, emails }),
+      },
+    })
     handleClose()
   }
 
   const handleDeleteQuote = (id: string) => {
-    deleteQuote.mutate(id)
-    handleClose()
+    try {
+      showModal({
+        Component: ConfirmationDialog,
+        props: {
+          onConfirm: () => {
+            deleteQuote.mutate(id, { onSettled: () => handleClose() })
+          },
+          contentText: t('delete-quote-confirm-message'),
+          primaryButtonText: t('delete'),
+        },
+      })
+    } catch (e) {
+      console.error(e)
+    }
   }
 
   const handleFilterAction = (filters: QuoteFilters) => {
@@ -192,33 +230,11 @@ const QuotesTable = (props: QuotesTableProps) => {
 
   return (
     <>
-      <Box
-        sx={{
-          paddingInline: 0,
-          display: 'flex',
-          flexDirection: {
-            xs: 'column',
-            md: 'row',
-          },
-          gap: 2,
-          pb: 2,
-        }}
-      >
+      <Box sx={QuotesTableStyles.container}>
         <Box width="100%">
           <SearchBar searchTerm={searchTerm} onSearch={handleQuoteSearch} showClearButton />
         </Box>
-        <Box
-          width="100%"
-          sx={{
-            display: 'flex',
-            justifyContent: {
-              xs: 'space-between',
-              md: 'flex-end',
-            },
-            alignItems: 'center',
-            gap: 2,
-          }}
-        >
+        <Box sx={QuotesTableStyles.filterBar}>
           <Box>
             <KiboSelect
               name="sort-plp"
@@ -257,11 +273,15 @@ const QuotesTable = (props: QuotesTableProps) => {
                 },
               }}
             >
-              {columns.map((column) => (
-                <TableCell component={'th'} key={column.field} sx={{ fontWeight: 700 }}>
-                  {t(column.headerName)}
-                </TableCell>
-              ))}
+              {columns
+                .filter((col) => {
+                  return showActionButtons ? col : col.field !== 'actions'
+                })
+                .map((column) => (
+                  <TableCell component={'th'} key={column.field} sx={{ fontWeight: 700 }}>
+                    {t(column.headerName)}
+                  </TableCell>
+                ))}
             </TableRow>
           </TableHead>
           {quotes?.length === 0 ? (
@@ -275,27 +295,10 @@ const QuotesTable = (props: QuotesTableProps) => {
                   <TableRow
                     key={quoteId}
                     sx={{
-                      '&:last-child td, &:last-child th': { border: 0 },
-                      borderLeftWidth: {
-                        xs: '5px',
-                        md: 0,
-                      },
-                      borderLeftStyle: 'solid',
+                      ...QuotesTableStyles.tableRow,
                       borderLeftColor: getStatusColorCode(status),
                     }}
                   >
-                    {/* TODO */}
-                    {/* {!tabAndDesktop ? (
-                      <TableCell
-                        size="small"
-                        component="td"
-                        scope="row"
-                        variant={'body'}
-                        data-testid={`quote-status-mobile`}
-                      >
-                        <FiberManualRecord fontSize="small" color={getStatusColorCode(status)} />
-                      </TableCell>
-                    ) : null} */}
                     <TableCell component="td" scope="row">
                       <Typography variant="body2" data-testid={`quote-number`}>
                         {number}
@@ -330,27 +333,40 @@ const QuotesTable = (props: QuotesTableProps) => {
                             <Typography variant="body2">{status}</Typography>
                           </Box>
                         </TableCell>
-                        <TableCell component="td" scope="row" align="right">
-                          <Box display={'flex'} justifyContent={'flex-end'}>
-                            <IconButton size="small" onClick={handleEditQuote}>
-                              <Edit fontSize="small" />
-                            </IconButton>
-                            <IconButton size="small" onClick={handleEmailQuote}>
-                              <Mail fontSize="small" />
-                            </IconButton>
-                            <IconButton size="small" onClick={() => handleDeleteQuote(quoteId)}>
-                              <Delete fontSize="small" />
-                            </IconButton>
-                          </Box>
-                        </TableCell>
+                        {showActionButtons && (
+                          <TableCell component="td" scope="row" align="right">
+                            <Box display={'flex'} justifyContent={'flex-end'}>
+                              {accessHandler.canEdit(status) && (
+                                <IconButton size="small" onClick={handleEditQuote}>
+                                  <Edit fontSize="small" />
+                                </IconButton>
+                              )}
+                              {accessHandler.canEmail(status) && (
+                                <IconButton size="small" onClick={() => handleEmailQuote(quoteId)}>
+                                  <Mail fontSize="small" />
+                                </IconButton>
+                              )}
+
+                              <IconButton
+                                size="small"
+                                data-testid="delete-quote"
+                                onClick={() => handleDeleteQuote(quoteId)}
+                              >
+                                <Delete fontSize="small" />
+                              </IconButton>
+                            </Box>
+                          </TableCell>
+                        )}
                       </>
                     ) : (
                       <>
-                        <TableCell component="td" scope="row" align="right">
-                          <IconButton size="small" onClick={(e) => handleClick(e, quoteId)}>
-                            <MoreVert fontSize="small" />
-                          </IconButton>
-                        </TableCell>
+                        {showActionButtons && (
+                          <TableCell component="td" scope="row" align="right">
+                            <IconButton size="small" onClick={(e) => handleClick(e, quote)}>
+                              <MoreVert fontSize="small" />
+                            </IconButton>
+                          </TableCell>
+                        )}
                       </>
                     )}
                   </TableRow>
@@ -376,13 +392,17 @@ const QuotesTable = (props: QuotesTableProps) => {
             horizontal: 'right',
           }}
         >
-          <MenuItem onClick={handleEditQuote}>
-            <Typography variant="body2">{t('edit-quote')}</Typography>
-          </MenuItem>
-          <MenuItem onClick={handleEmailQuote}>
-            <Typography variant="body2">{t('email-quote')}</Typography>
-          </MenuItem>
-          <MenuItem onClick={() => handleDeleteQuote(anchorEl.id)}>
+          {accessHandler.canEdit(anchorEl?.quote?.status as string) && (
+            <MenuItem onClick={handleEditQuote}>
+              <Typography variant="body2">{t('edit-quote')}</Typography>
+            </MenuItem>
+          )}
+          {accessHandler.canEmail(anchorEl?.quote?.status as string) && (
+            <MenuItem onClick={() => handleEmailQuote(anchorEl?.quote?.id as string)}>
+              <Typography variant="body2">{t('email-quote')}</Typography>
+            </MenuItem>
+          )}
+          <MenuItem onClick={() => handleDeleteQuote(anchorEl?.quote?.id as string)}>
             <Typography variant="body2">{t('delete-quote')}</Typography>
           </MenuItem>
         </Menu>

@@ -6,6 +6,7 @@ export const parseFilterParamToObject = (filterParam: string): QuoteFilters => {
     number: '',
     expirationDate: '',
     status: '',
+    others: '',
   }
 
   if (!filterParam) {
@@ -23,6 +24,8 @@ export const parseFilterParamToObject = (filterParam: string): QuoteFilters => {
       filters.expirationDate = condition.split('expirationDate ge ')[1]
     } else if (condition.includes('status eq')) {
       filters.status = condition.split('status eq ')[1]
+    } else {
+      filters.others = condition
     }
   }
 

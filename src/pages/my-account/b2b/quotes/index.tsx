@@ -1,60 +1,44 @@
-import { useState } from 'react'
-
-import { GetServerSidePropsContext, NextPage } from 'next'
-import getConfig from 'next/config'
+import { GetServerSidePropsContext, NextApiRequest, NextApiResponse, NextPage } from 'next'
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
 
 import { QuotesTemplate } from '@/components/page-templates'
-import { useGetQuotes } from '@/hooks'
+import { useB2BQuote, useGetQuotes } from '@/hooks'
+import { getQuotes } from '@/lib/api/operations'
 import { parseFilterParamToObject } from '@/lib/helpers'
 
-import { QueryQuotesArgs, QuoteCollection } from '@/lib/gql/types'
+import { QuoteCollection } from '@/lib/gql/types'
+
+interface QuotesPageProps {
+  quotes: QuoteCollection
+}
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
-  const { locale } = context
+  const { locale, req, res } = context
+
+  const quotes = await getQuotes(req as NextApiRequest, res as NextApiResponse)
 
   return {
     props: {
+      quotes,
       ...(await serverSideTranslations(locale as string, ['common'])),
     },
   }
 }
 
-const QuotesPage: NextPage = (props) => {
-  const { publicRuntimeConfig } = getConfig()
+const QuotesPage: NextPage<QuotesPageProps> = (props) => {
+  const { quotes } = props
 
-  const [quotesSearchParam, setQuotesSearchParam] = useState<QueryQuotesArgs>({
-    filter: '',
-    pageSize: parseInt(publicRuntimeConfig.B2BQuotes.pageSize) || 5,
-    sortBy: 'number desc',
-    startIndex: 0,
-    q: '',
-  })
+  const { quotesSearchParam, sortingValues, handleQuotesSearchParam } = useB2BQuote(quotes)
 
-  const sortingValues = {
-    options: publicRuntimeConfig.B2BQuotes.sortOptions,
-    selected: quotesSearchParam.sortBy as string,
-  }
-
-  const { data: quoteCollection } = useGetQuotes(quotesSearchParam)
-
-  const handleQuotesSearchParam = (param: QueryQuotesArgs) => {
-    setQuotesSearchParam((prevSearchParam) => ({
-      ...prevSearchParam,
-      ...param,
-    }))
-  }
+  const { data: quoteCollection } = useGetQuotes(quotesSearchParam, quotes)
 
   return (
-    <>
-      <QuotesTemplate
-        {...props}
-        quoteCollection={quoteCollection as QuoteCollection}
-        sortingValues={sortingValues}
-        filters={parseFilterParamToObject(quotesSearchParam.filter as string)}
-        setQuotesSearchParam={handleQuotesSearchParam}
-      />
-    </>
+    <QuotesTemplate
+      quoteCollection={quoteCollection as QuoteCollection}
+      sortingValues={sortingValues}
+      filters={parseFilterParamToObject(quotesSearchParam.filter as string)}
+      setQuotesSearchParam={handleQuotesSearchParam}
+    />
   )
 }
 

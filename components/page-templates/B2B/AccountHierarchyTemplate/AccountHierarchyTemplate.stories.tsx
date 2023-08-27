@@ -35,5 +35,3 @@ const Template: ComponentStory<typeof AccountHierarchyTemplate> = () => (
 )
 
 export const Common = Template.bind({})
-
-Common.parameters = {}

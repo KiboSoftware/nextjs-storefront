@@ -3,7 +3,6 @@ import React from 'react'
 import { ComponentStory, ComponentMeta } from '@storybook/react'
 
 import AccountHierarchyActions from './AccountHierarchyActions'
-import { userResponseMock } from '@/__mocks__/stories'
 import { B2BRoles } from '@/lib/constants'
 
 // Common
@@ -14,12 +13,11 @@ export default {
     onQuotesClick: { action: 'onQuotesClick' },
     onAdd: { action: 'onAdd' },
     onEdit: { action: 'onEdit' },
-    onDelete: { action: 'onDelete' },
+    onView: { action: 'onView' },
+    onDisable: { action: 'onDisable' },
   },
   component: AccountHierarchyActions,
 } as ComponentMeta<typeof AccountHierarchyActions>
-
-const mockUser = userResponseMock
 
 const Template: ComponentStory<typeof AccountHierarchyActions> = (args) => (
   <AccountHierarchyActions {...args} />
@@ -28,4 +26,5 @@ const Template: ComponentStory<typeof AccountHierarchyActions> = (args) => (
 export const Common = Template.bind({})
 Common.args = {
   role: B2BRoles.ADMIN,
+  mdScreen: true,
 }

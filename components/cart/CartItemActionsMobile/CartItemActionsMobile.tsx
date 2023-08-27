@@ -7,6 +7,7 @@ import { useTranslation } from 'next-i18next'
 interface CartItemActionsMobileProps {
   actions: string[]
   onMenuItemSelection: (option: string) => void
+  width?: string
 }
 
 const styles = {
@@ -19,7 +20,7 @@ const styles = {
 }
 
 const CartItemActionsMobile = (props: CartItemActionsMobileProps) => {
-  const { actions, onMenuItemSelection } = props
+  const { actions, onMenuItemSelection, width } = props
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null)
   const open = Boolean(anchorEl)
   const { t } = useTranslation('common')
@@ -60,7 +61,7 @@ const CartItemActionsMobile = (props: CartItemActionsMobileProps) => {
         onClose={handleClose}
         PaperProps={{
           style: {
-            width: '12.063rem',
+            width: width ?? '12.063rem',
           },
         }}
         anchorOrigin={{
