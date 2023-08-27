@@ -36,11 +36,12 @@ const fetchQuotes = async (param: QueryQuotesArgs): Promise<QuoteCollection> => 
  * @returns 'response?.quotes', which contains list of Quotes.
  */
 
-export const useGetQuotes = (param: QueryQuotesArgs) => {
+export const useGetQuotes = (param: QueryQuotesArgs, initialData?: any) => {
   const { isLoading, isSuccess, isError, error, data } = useQuery({
     queryKey: b2bQuotesKeys.quotesParams(param),
     queryFn: () => fetchQuotes(param),
     placeholderData: (previousData) => previousData ?? undefined,
+    initialData,
   })
 
   useQuery({

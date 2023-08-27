@@ -1,7 +1,7 @@
 import { QuoteFilters } from '@/lib/types'
 
 export const buildQuotesFilterParam = (filters: QuoteFilters): string => {
-  const conditions = []
+  const conditions = filters.others ? [filters.others] : []
 
   if (filters.name && parseInt(filters.number as string)) {
     conditions.push(`name cont ${filters.name} or number eq ${filters.number}`)

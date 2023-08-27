@@ -1,6 +1,6 @@
 import React, { ReactElement, useEffect } from 'react'
 
-import { Container } from '@mui/material'
+import { Container, Stack } from '@mui/material'
 import CssBaseline from '@mui/material/CssBaseline'
 import { ThemeProvider } from '@mui/material/styles'
 import { HydrationBoundary } from '@tanstack/react-query'
@@ -53,26 +53,28 @@ const DefaultLayout = ({ pageProps, children }: { pageProps: any; children: Reac
           <AuthContextProvider>
             <HeaderContextProvider>
               <GlobalFetchingIndicator />
-              <KiboHeader
-                navLinks={[
-                  {
-                    link: '/order-status',
-                    text: 'order-status',
-                  },
-                  {
-                    link: '/wishlist',
-                    text: 'wishlist',
-                  },
-                ]}
-                categoriesTree={pageProps.categoriesTree || []}
-                isSticky={true}
-              />
-              <DialogRoot />
-              <SnackbarRoot />
-              <Container maxWidth={'xl'} sx={{ py: 2 }}>
-                {children}
-              </Container>
-              <Footer content={pageProps.footer} />
+              <Stack height="100%">
+                <KiboHeader
+                  navLinks={[
+                    {
+                      link: '/order-status',
+                      text: 'order-status',
+                    },
+                    {
+                      link: '/wishlist',
+                      text: 'wishlist',
+                    },
+                  ]}
+                  categoriesTree={pageProps.categoriesTree || []}
+                  isSticky={true}
+                />
+                <DialogRoot />
+                <SnackbarRoot />
+                <Container maxWidth={'xl'} sx={{ py: 2, flex: '1 0 auto' }}>
+                  {children}
+                </Container>
+                <Footer content={pageProps.footer} />
+              </Stack>
             </HeaderContextProvider>
           </AuthContextProvider>
         </ModalContextProvider>

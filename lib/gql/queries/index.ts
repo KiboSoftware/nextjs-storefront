@@ -27,6 +27,7 @@ export { default as getProductPriceQuery } from './get-product-price'
 //purchase-order
 export { default as getCustomerPurchaseOrderQuery } from './get-customer-purchase-order-account'
 //b2b
+export { default as getB2BAccountHierarchyQuery } from './b2b/get-b2b-account-hierarchy'
 export { default as getCustomerB2BAccountUsersQuery } from './b2b/get-customer-b2b-users'
 export { default as getQuotes } from './b2b/get-quotes'
 export { default as getQuoteByIDQuery } from './quotes/get-quote-by-id'

@@ -1,7 +1,13 @@
 import { format } from 'date-fns'
 
 import { DateFormat } from '../constants'
-import { AuditRecord, AuditRecordChangeField, Quote, QuoteCollection } from '../gql/types'
+import {
+  AuditRecord,
+  AuditRecordChange,
+  AuditRecordChangeField,
+  Quote,
+  QuoteCollection,
+} from '../gql/types'
 
 const getQuotes = (collection: QuoteCollection) => collection?.items as Quote[]
 
@@ -24,7 +30,7 @@ const getTotal = (quote: Quote) => quote?.total
 
 const getStatus = (quote: Quote) => quote?.status as string
 
-const getRecordType = (record: AuditRecord) => record.changes?.[0]?.type as string
+const getRecordType = (change: AuditRecordChange) => change?.type as string
 
 const getRecordCreatedBy = (record: AuditRecord) => record.auditInfo?.createBy as string
 
@@ -41,10 +47,8 @@ const getRecordId = (record: AuditRecord) => record.id
 const getRecordDetails = (record: AuditRecord) => {
   return {
     id: getRecordId(record),
-    recordType: getRecordType(record),
     getRecordCreatedBy: getRecordCreatedBy(record),
     getRecordUpdateDate: getRecordUpdateDate(record),
-    changedFields: getChangedRecordFields(record),
   }
 }
 

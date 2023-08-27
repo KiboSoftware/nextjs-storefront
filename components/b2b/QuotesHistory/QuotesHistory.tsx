@@ -13,8 +13,7 @@ interface QuoteHistoryProps {
 }
 
 const QuoteHistoryItem = ({ record }: { record: AuditRecord }) => {
-  const { id, recordType, getRecordCreatedBy, getRecordUpdateDate, changedFields } =
-    quoteGetters.getRecordDetails(record)
+  const { id, getRecordCreatedBy, getRecordUpdateDate } = quoteGetters.getRecordDetails(record)
 
   const { t } = useTranslation('common')
 
@@ -31,7 +30,7 @@ const QuoteHistoryItem = ({ record }: { record: AuditRecord }) => {
           fontWeight={'bold'}
           color={'text.primary'}
           gutterBottom
-        >{`${actionText[recordType]}: ${getRecordCreatedBy}`}</Typography>
+        >{`${actionText['Update']}: ${getRecordCreatedBy}`}</Typography>
         <Typography variant="body2" color={'grey.600'}>
           {getRecordUpdateDate}
         </Typography>
@@ -53,25 +52,29 @@ const QuoteHistoryItem = ({ record }: { record: AuditRecord }) => {
           </Typography>
         </Grid>
       </Grid>
-      {changedFields.map((field) => (
-        <Grid container key={field.name} display="flex" justifyContent={'space-between'}>
-          <Grid item xs={4}>
-            <Typography variant={'body2'} sx={{ pr: 1 }} data-testid={`field-name-${id}`}>
-              {field?.name ?? '-'}
-            </Typography>
-          </Grid>
-          <Grid item xs={4}>
-            <Typography variant={'body2'} sx={{ pr: 1 }} data-testid={`old-value-${id}`}>
-              {field.oldValue ?? '-'}
-            </Typography>
-          </Grid>
-          <Grid item xs={4}>
-            <Typography variant={'body2'} sx={{ pr: 1 }} data-testid={`new-value-${id}`}>
-              {field?.newValue ?? '-'}
-            </Typography>
-          </Grid>
-        </Grid>
-      ))}
+      {record?.changes?.map((change) => {
+        return change?.fields?.map((field) => {
+          return (
+            <Grid container key={field?.name} display="flex" justifyContent={'space-between'}>
+              <Grid item xs={4}>
+                <Typography variant={'body2'} sx={{ pr: 1 }} data-testid={`field-name-${id}`}>
+                  {field?.name ?? '-'}
+                </Typography>
+              </Grid>
+              <Grid item xs={4}>
+                <Typography variant={'body2'} sx={{ pr: 1 }} data-testid={`old-value-${id}`}>
+                  {field?.oldValue ?? '-'}
+                </Typography>
+              </Grid>
+              <Grid item xs={4}>
+                <Typography variant={'body2'} sx={{ pr: 1 }} data-testid={`new-value-${id}`}>
+                  {field?.newValue ?? '-'}
+                </Typography>
+              </Grid>
+            </Grid>
+          )
+        })
+      })}
       <Box>
         <Divider />
       </Box>

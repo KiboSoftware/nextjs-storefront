@@ -6,14 +6,24 @@ import { useRouter } from 'next/router'
 import { useSnackbarContext } from './RQNotificationContext/RQNotificationContext'
 import { LoginData } from '@/components/layout/Login/LoginContent/LoginContent'
 import type { RegisterAccountInputData } from '@/components/layout/RegisterAccount/Content/Content'
-import { useRegister, useLogin, useLogout, useGetCurrentCustomer } from '@/hooks'
+import {
+  useRegister,
+  useLogin,
+  useLogout,
+  useGetCurrentCustomer,
+  useGetB2BUserQueries,
+} from '@/hooks'
 import { cartKeys, loginKeys, wishlistKeys } from '@/lib/react-query/queryKeys'
 
 import type { CustomerAccount } from '@/lib/gql/types'
 
+type CustomerAccountWithRole = CustomerAccount & {
+  roleId?: number
+  roleName?: string
+}
 export interface AuthContextType {
   isAuthenticated: boolean
-  user?: CustomerAccount
+  user?: CustomerAccountWithRole
   login: (params: LoginData, onSuccessCallBack: () => void) => any
   createAccount: (params: RegisterAccountInputData, onSuccessCallBack?: () => void) => any
   logout: () => void
@@ -35,7 +45,7 @@ AuthContext.displayName = 'AuthContext'
 
 export const AuthContextProvider = ({ children }: AuthContextProviderProps) => {
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false)
-  const [user, setUser] = useState<CustomerAccount | undefined>(undefined)
+  const [user, setUser] = useState<CustomerAccountWithRole | undefined>(undefined)
   const { showSnackbar } = useSnackbarContext()
 
   const router = useRouter()
@@ -51,8 +61,31 @@ export const AuthContextProvider = ({ children }: AuthContextProviderProps) => {
 
   const queryClient = useQueryClient()
 
+  const { data: userAccount } = useGetB2BUserQueries({
+    accountId: user?.id as number,
+    filter: `userId eq ${user?.userId}`,
+  })
+
+  useEffect(() => {
+    const roles =
+      userAccount &&
+      userAccount?.items &&
+      userAccount?.items[0] &&
+      userAccount?.items[0]?.roles &&
+      userAccount?.items[0]?.roles[0]
+
+    if (!roles) return
+
+    const { roleId, roleName } = roles
+    const userWithRole = { ...user, roleId, roleName } as CustomerAccountWithRole
+
+    setUser(userWithRole)
+  }, [userAccount])
+
   const handleOnSuccess = (account: any, onSuccessCallBack?: () => void) => {
-    if (account?.customerAccount) setUser(account?.customerAccount)
+    if (account?.customerAccount) {
+      setUser(account?.customerAccount)
+    }
 
     queryClient.invalidateQueries({ queryKey: cartKeys.all })
     onSuccessCallBack && onSuccessCallBack()

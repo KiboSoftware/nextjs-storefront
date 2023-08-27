@@ -25,6 +25,8 @@ export default function Footer(props: any) {
         borderTop: '.5rem solid',
         borderColor: 'primary.main',
         backgroundColor: 'common.black',
+        width: '100%',
+        flexShrink: 0,
       }}
     >
       <Grid container spacing={{ xs: 2, md: 3 }} sx={{ color: 'common.white' }}>

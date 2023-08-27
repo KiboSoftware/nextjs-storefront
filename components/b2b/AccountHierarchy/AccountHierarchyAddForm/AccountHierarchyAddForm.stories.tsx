@@ -2,24 +2,24 @@ import React from 'react'
 
 import { ComponentStory, ComponentMeta } from '@storybook/react'
 
-import AccountHierarchyForm from './AccountHierarchyForm'
+import AccountHierarchyAddForm from './AccountHierarchyAddForm'
 import { userResponseMock } from '@/__mocks__/stories'
 
 import { B2BAccount } from '@/lib/gql/types'
 
 export default {
-  component: AccountHierarchyForm,
-  title: 'My Account/B2B/AccountHierarchyForm',
+  component: AccountHierarchyAddForm,
+  title: 'My Account/B2B/AccountHierarchyAddForm',
   argTypes: {
     onClose: { action: 'onCancel' },
     onSave: { action: 'onSave' },
   },
-} as ComponentMeta<typeof AccountHierarchyForm>
+} as ComponentMeta<typeof AccountHierarchyAddForm>
 
 const mockUser = userResponseMock as B2BAccount
 
-const Template: ComponentStory<typeof AccountHierarchyForm> = (args) => (
-  <AccountHierarchyForm {...args} />
+const Template: ComponentStory<typeof AccountHierarchyAddForm> = (args) => (
+  <AccountHierarchyAddForm {...args} />
 )
 
 // Account Hierarchy

@@ -14,4 +14,5 @@ export interface QuoteFilters {
   status?: string
   name?: string
   number?: string
+  others?: string
 }
