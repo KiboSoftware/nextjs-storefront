@@ -56,6 +56,7 @@ describe('[component] KiboHeader component', () => {
 
     expect(screen.getByTestId('ShoppingCartIcon')).toBeVisible()
     expect(screen.getByText(/cart/i)).toBeVisible()
+    expect(screen.getByText(/b2b-account-request/i)).toBeVisible()
   })
 
   it('should render the searchbox', async () => {
@@ -89,6 +90,22 @@ describe('[component] KiboHeader component', () => {
       expect(mockRouter).toMatchObject({
         asPath: '/cart',
         pathname: '/cart',
+        query: {},
+      })
+    })
+  })
+
+  it('should redirect to b2b account request page when user clicks on B2B Account Request link', async () => {
+    const user = userEvent.setup()
+    render(<Common {...Common.args} />)
+
+    const requestAccountLink = screen.getByText(/b2b-account-request/i)
+    user.click(requestAccountLink)
+
+    await waitFor(() => {
+      expect(mockRouter).toMatchObject({
+        asPath: '/b2b-account-request',
+        pathname: '/b2b-account-request',
         query: {},
       })
     })

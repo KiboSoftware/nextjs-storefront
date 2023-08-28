@@ -11,6 +11,7 @@ interface AccountHierarchyFormDialogProps {
   isAddingAccountToChild: boolean
   b2BAccount?: B2BAccount
   formTitle?: string
+  primaryButtonText: string
   onSave: (data: CreateCustomerB2bAccountParams) => void
   onClose: () => void
 }
@@ -22,6 +23,7 @@ const AccountHierarchyFormDialog = (props: AccountHierarchyFormDialogProps) => {
     isAddingAccountToChild,
     b2BAccount,
     formTitle = t('add-child-account'),
+    primaryButtonText,
     onSave,
     onClose,
   } = props
@@ -38,6 +40,7 @@ const AccountHierarchyFormDialog = (props: AccountHierarchyFormDialogProps) => {
           accounts={accounts}
           b2BAccount={b2BAccount}
           isAddingAccountToChild={isAddingAccountToChild}
+          primaryButtonText={primaryButtonText}
           onSave={onSave}
           onClose={onClose}
         />

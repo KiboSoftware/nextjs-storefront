@@ -49,6 +49,7 @@ interface HeaderActionAreaProps {
   categoriesTree: Maybe<PrCategory>[]
   setIsBackdropOpen: Dispatch<SetStateAction<boolean>>
   onAccountIconClick: () => void
+  onAccountRequestClick: () => void
 }
 
 interface HideOnScrollProps {
@@ -148,7 +149,13 @@ const TopHeader = ({
 }
 
 const HeaderActionArea = (props: HeaderActionAreaProps) => {
-  const { isHeaderSmall, categoriesTree, setIsBackdropOpen, onAccountIconClick } = props
+  const {
+    isHeaderSmall,
+    categoriesTree,
+    setIsBackdropOpen,
+    onAccountIconClick,
+    onAccountRequestClick,
+  } = props
   const { headerState, toggleSearchBar } = useHeaderContext()
   const { isMobileSearchPortalVisible, isSearchBarVisible } = headerState
   const { t } = useTranslation('common')
@@ -212,6 +219,16 @@ const HeaderActionArea = (props: HeaderActionAreaProps) => {
             size={isHeaderSmall ? 'medium' : 'large'}
             onAccountIconClick={onAccountIconClick}
           />
+          <Typography
+            variant="body2"
+            component="span"
+            fontWeight="bold"
+            color="text.primary"
+            sx={{ display: 'flex', alignItems: 'center' }}
+            onClick={onAccountRequestClick}
+          >
+            {t('b2b-account-request')}
+          </Typography>
           <CartIcon size={isHeaderSmall ? 'medium' : 'large'} />
         </Box>
       </Container>
@@ -260,6 +277,10 @@ const KiboHeader = (props: KiboHeaderProps) => {
     }
   }
 
+  const handleB2BAccountRequestClick = () => {
+    router.push('/b2b-account-request')
+  }
+
   const getSection = (): React.ReactNode => {
     if (isCheckoutPage) return <CheckoutHeader isMultiShipEnabled={isMultiShipEnabled} />
 
@@ -271,6 +292,7 @@ const KiboHeader = (props: KiboHeaderProps) => {
         categoriesTree={categoriesTree}
         setIsBackdropOpen={setIsBackdropOpen}
         onAccountIconClick={handleAccountIconClick}
+        onAccountRequestClick={handleB2BAccountRequestClick}
       />
     )
   }

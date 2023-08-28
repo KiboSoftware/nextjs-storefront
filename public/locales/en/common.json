@@ -485,5 +485,7 @@
   "remove": "Remove",
   "delete-quote-confirm-message": "Are you sure you want to delete this quote?",
   "email-input-placeholder": "Press Enter after entering email address",
-  "email-addresses": "Email address(es)"
+  "email-addresses": "Email address(es)",
+  "b2b-account-request": "B2B Account Request",
+  "request-account": "Request Account"
 }
