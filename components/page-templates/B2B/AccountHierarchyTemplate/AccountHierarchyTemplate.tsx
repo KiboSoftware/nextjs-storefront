@@ -155,6 +155,7 @@ const AccountHierarchyTemplate = () => {
         accounts,
         b2BAccount,
         formTitle: t('edit-child-account'),
+        primaryButtonText: t('update-account'),
         onSave: (formValues: CreateCustomerB2bAccountParams) =>
           handleEditAccountFormSubmit(formValues, b2BAccount),
         onClose: () => closeModal(),

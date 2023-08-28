@@ -16,7 +16,7 @@ const onSave = jest.fn()
 
 const setup = () => {
   const user = userEvent.setup()
-  render(<Common {...Common.args} />, {
+  render(<Common {...Common.args} onClose={onClose} />, {
     wrapper: createQueryClientWrapper(),
   })
   return {
@@ -90,7 +90,7 @@ describe('[component] Account Hierarchy Form', () => {
   })
 
   it('should populate form fields when b2BAccount prop is provided', async () => {
-    render(<EditAccount onSave={onSave} />)
+    render(<EditAccount onSave={onSave} onClose={onClose} />)
     const { companyOrOrganization, taxId, users } = b2BAccountHierarchyResult.accounts[0]
     const { firstName, lastName, emailAddress } = users?.[0] as B2BUser
     const companyOrOrganizationField: HTMLInputElement = screen.getByLabelText('company-name')

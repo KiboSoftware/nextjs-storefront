@@ -26,17 +26,20 @@ const Template: ComponentStory<typeof AccountHierarchyForm> = (args) => (
 export const Common = Template.bind({})
 Common.args = {
   accounts: [mockUser],
+  primaryButtonText: 'Create Account',
   isAddingAccountToChild: false,
 }
 
 export const AddAccountToChild = Template.bind({})
 AddAccountToChild.args = {
   accounts: [mockUser],
+  primaryButtonText: 'Create Account',
   isAddingAccountToChild: true,
 }
 
 export const EditAccount = Template.bind({})
 EditAccount.args = {
   accounts: [mockUser],
+  primaryButtonText: 'Update Account',
   b2BAccount: b2BAccountHierarchyResult?.accounts?.[0],
 }
