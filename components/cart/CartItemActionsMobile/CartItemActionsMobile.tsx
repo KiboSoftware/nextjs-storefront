@@ -73,7 +73,7 @@ const CartItemActionsMobile = (props: CartItemActionsMobileProps) => {
           horizontal: 'right',
         }}
       >
-        {actions.map((action) => (
+        {actions?.map((action) => (
           <MenuItem
             key={action}
             onClick={() => handleMenuItemClick(action)}

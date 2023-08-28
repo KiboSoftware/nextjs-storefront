@@ -12,7 +12,6 @@ import {
   TableHead,
   TableRow,
   Typography,
-  useMediaQuery,
   useTheme,
 } from '@mui/material'
 import { useTranslation } from 'next-i18next'
@@ -26,9 +25,12 @@ import { B2BUserInput } from '@/lib/types'
 import { B2BUser } from '@/lib/gql/types'
 
 interface UserTableProps {
+  mdScreen: boolean
   b2bUsers: B2BUser[] | undefined
-  onDelete: (id: string | undefined) => void
-  onSave: (formValues: B2BUserInput, b2BUser?: B2BUser | undefined) => void
+  showActionButtons?: boolean
+  onView?: (b2BUser: B2BUser) => void
+  onDelete?: (id: string | undefined) => void
+  onSave?: (formValues: B2BUserInput, b2BUser?: B2BUser | undefined) => void
 }
 
 const style = {
@@ -41,12 +43,11 @@ const style = {
 }
 
 const UserTable = (props: UserTableProps) => {
-  const { b2bUsers, onDelete, onSave } = props
+  const { mdScreen, b2bUsers, showActionButtons = true, onView, onDelete, onSave } = props
 
   const { t } = useTranslation('common')
   const { showModal, closeModal } = useModalContext()
   const theme = useTheme()
-  const mdScreen = useMediaQuery(theme.breakpoints.up('md'))
   const [editUserId, setEditUserId] = useState<string | undefined>(undefined)
 
   const onEditUserButtonClick = (b2BUser: B2BUser) => {
@@ -61,7 +62,7 @@ const UserTable = (props: UserTableProps) => {
         isUserFormInDialog: true,
         formTitle: t('edit-user'),
         b2BUser,
-        onSave: (b2BUserInput: B2BUserInput) => onSave(b2BUserInput, b2BUser),
+        onSave: (b2BUserInput: B2BUserInput) => onSave?.(b2BUserInput, b2BUser),
         onClose: () => {
           setEditUserId(undefined)
           closeModal()
@@ -103,12 +104,12 @@ const UserTable = (props: UserTableProps) => {
                   isEditMode={true}
                   b2BUser={b2bUser}
                   onClose={() => setEditUserId(undefined)}
-                  onSave={onSave}
+                  onSave={(formValues: B2BUserInput) => onSave?.(formValues, b2bUser)}
                 />
               </TableCell>
             </TableRow>
           ) : (
-            <TableRow key={b2bUser?.userId}>
+            <TableRow key={b2bUser?.userId} onClick={() => !mdScreen && onView?.(b2bUser)}>
               <TableCell colSpan={2} sx={style.emailAddressCell}>
                 {userGetters.getEmailAddress(b2bUser)}
               </TableCell>
@@ -136,22 +137,24 @@ const UserTable = (props: UserTableProps) => {
                 </TableCell>
               )}
               <TableCell sx={{ flex: 1 }}>
-                <Box sx={{ display: 'flex', justifyContent: 'end', alignItems: 'center' }}>
-                  <IconButton
-                    aria-label="item-edit"
-                    name="item-edit"
-                    onClick={() => onEditUserButtonClick(b2bUser)}
-                  >
-                    <EditIcon />
-                  </IconButton>
-                  <IconButton
-                    aria-label="item-delete"
-                    name="item-delete"
-                    onClick={() => onDelete(b2bUser?.userId as string)}
-                  >
-                    <DeleteIcon />
-                  </IconButton>
-                </Box>
+                {showActionButtons && (
+                  <Box sx={{ display: 'flex', justifyContent: 'end', alignItems: 'center' }}>
+                    <IconButton
+                      aria-label="item-edit"
+                      name="item-edit"
+                      onClick={() => onEditUserButtonClick(b2bUser)}
+                    >
+                      <EditIcon />
+                    </IconButton>
+                    <IconButton
+                      aria-label="item-delete"
+                      name="item-delete"
+                      onClick={() => onDelete?.(b2bUser?.userId as string)}
+                    >
+                      <DeleteIcon />
+                    </IconButton>
+                  </Box>
+                )}
               </TableCell>
             </TableRow>
           )

@@ -1,7 +1,7 @@
 import { composeStories } from '@storybook/testing-react'
 import { render, screen } from '@testing-library/react'
 
-import * as stories from './AccountHierarchyAddFormDialog.stories'
+import * as stories from './AccountHierarchyFormDialog.stories'
 import { b2BAccountHierarchyResult } from '@/__mocks__/stories'
 import { ModalContextProvider } from '@/context'
 
@@ -10,14 +10,14 @@ const { Common } = composeStories(stories)
 const onSaveMock = jest.fn()
 const onCloseMock = jest.fn()
 
-const AccountHierarchyAddFormMock = ({
+const AccountHierarchyFormMock = ({
   onClose,
   onSave,
 }: {
   onClose: () => void
   onSave: () => void
 }) => (
-  <div data-testid="account-hierarchy-add-form-mock">
+  <div data-testid="account-hierarchy-form-mock">
     <button data-testid="create-account-hierarchy-mock-button" onClick={onSave}>
       Create Account
     </button>
@@ -28,11 +28,11 @@ const AccountHierarchyAddFormMock = ({
 )
 
 jest.mock(
-  '@/components/b2b/AccountHierarchy/AccountHierarchyAddForm/AccountHierarchyAddForm',
-  () => () => AccountHierarchyAddFormMock({ onClose: onCloseMock, onSave: onSaveMock })
+  '@/components/b2b/AccountHierarchy/AccountHierarchyForm/AccountHierarchyForm',
+  () => () => AccountHierarchyFormMock({ onClose: onCloseMock, onSave: onSaveMock })
 )
 
-describe('[components]  AccountHierarchyAddFormDialog Dialog', () => {
+describe('[components]  AccountHierarchyFormDialog Dialog', () => {
   const setup = () => {
     render(
       <Common
@@ -56,14 +56,14 @@ describe('[components]  AccountHierarchyAddFormDialog Dialog', () => {
   it('should render component', async () => {
     render(<Common {...Common.args} formTitle="Add child account" />)
 
-    const accountHierarchyFromDialog = screen.getByTestId('account-hierarchy-add-form-mock')
+    const accountHierarchyFromDialog = screen.getByTestId('account-hierarchy-form-mock')
     expect(accountHierarchyFromDialog).toBeVisible()
 
     const titleElement = screen.getByText('Add child account')
     expect(titleElement).toBeVisible()
 
-    const accountHierarchyAddForm = screen.getByTestId('account-hierarchy-add-form-mock')
-    expect(accountHierarchyAddForm).toBeVisible()
+    const accountHierarchyForm = screen.getByTestId('account-hierarchy-form-mock')
+    expect(accountHierarchyForm).toBeVisible()
   })
 
   it('should call callback function when user clicks on Create Account button', async () => {

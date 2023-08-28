@@ -14,8 +14,6 @@ const ViewAccountDetails = (props: ViewAccountDetailsProps) => {
   const { t } = useTranslation('common')
   const { b2BAccount } = props
 
-  console.log(b2BAccount)
-
   return (
     <Box>
       <Typography component="h2" sx={{ color: theme.palette.grey[600] }}>

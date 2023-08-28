@@ -5,6 +5,12 @@ const updateCustomerB2bAccountMutation = /* GraphQL */ `
       taxId
       parentAccountId
       companyOrOrganization
+      users {
+        firstName
+        lastName
+        emailAddress
+        userName
+      }
     }
   }
 `

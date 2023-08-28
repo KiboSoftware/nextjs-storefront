@@ -188,7 +188,6 @@ export const AccountActions = {
     AllAccountActions.ADD_ACCOUNT,
     AllAccountActions.VIEW_BUYER_ACCOUNT,
     AllAccountActions.VIEW_QUOTES,
-    AllAccountActions.DELETE_ACCOUNT,
   ],
   [B2BRoles.PURCHASER]: [
     AllAccountActions.VIEW_ACCOUNT,

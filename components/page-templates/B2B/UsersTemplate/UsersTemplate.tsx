@@ -12,7 +12,6 @@ import {
   CircularProgress,
   Grid,
   Pagination,
-  SxProps,
   Theme,
   Typography,
   styled,
@@ -46,12 +45,6 @@ import {
 import { B2BUserInput, CustomerB2BUserRole } from '@/lib/types/CustomerB2BUser'
 
 import { B2BUser } from '@/lib/gql/types'
-
-interface AddUserButtonProps {
-  isUserFormOpen: boolean
-  onClick: () => void
-  sx?: SxProps<Theme>
-}
 
 const BackButtonLink = styled(Link)(({ theme }: { theme: Theme }) => ({
   typography: 'body2',
@@ -265,6 +258,7 @@ const UsersTemplate = () => {
         ) : (
           <>
             <UserTable
+              mdScreen={mdScreen}
               b2bUsers={data?.items as B2BUser[]}
               onSave={handleUpdateUser}
               onDelete={handleDelete}

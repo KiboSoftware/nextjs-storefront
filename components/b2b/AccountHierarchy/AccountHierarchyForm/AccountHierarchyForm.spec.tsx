@@ -3,10 +3,13 @@ import { composeStories } from '@storybook/testing-react'
 import { render, screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 
-import * as stories from './AccountHierarchyAddForm.stories' // import all stories from the stories file
+import * as stories from './AccountHierarchyForm.stories' // import all stories from the stories file
+import { b2BAccountHierarchyResult } from '@/__mocks__/stories'
 import { createQueryClientWrapper } from '@/__test__/utils'
 
-const { Common, AddAccountToChild } = composeStories(stories)
+import { B2BUser } from '@/lib/gql/types'
+
+const { Common, AddAccountToChild, EditAccount } = composeStories(stories)
 
 const onClose = jest.fn()
 const onSave = jest.fn()
@@ -21,7 +24,7 @@ const setup = () => {
   }
 }
 
-describe('[component] Add Child Account Form', () => {
+describe('[component] Account Hierarchy Form', () => {
   it('should render component', async () => {
     setup()
 
@@ -62,8 +65,6 @@ describe('[component] Add Child Account Form', () => {
   })
 
   it('should call onSave callback function when user clicks on Create Account button', async () => {
-    const user = userEvent.setup()
-
     render(<Common {...Common.args} onSave={onSave} onClose={onClose} />)
 
     const companyNameField: HTMLInputElement = screen.getByLabelText('company-name')
@@ -73,28 +74,47 @@ describe('[component] Add Child Account Form', () => {
     const lastNameField: HTMLInputElement = screen.getByLabelText('last-name-or-sur-name')
     const submitButton = await screen.findByTestId('submit-button')
 
-    user.type(companyNameField, 'ABC Enterprise')
+    userEvent.type(companyNameField, 'ABC Enterprise')
     await waitFor(() => expect(companyNameField.value).toBe('ABC Enterprise'))
-    user.type(taxIdField, '123234')
+    userEvent.type(taxIdField, '123234')
     await waitFor(() => expect(taxIdField.value).toBe('123234'))
-    user.type(emaiAddressField, 'aman.shukla@gmail.com')
+    userEvent.type(emaiAddressField, 'aman.shukla@gmail.com')
     await waitFor(() => expect(emaiAddressField.value).toBe('aman.shukla@gmail.com'))
-    user.type(firstNameField, 'Aman')
+    userEvent.type(firstNameField, 'Aman')
     await waitFor(() => expect(firstNameField.value).toBe('Aman'))
-    user.type(lastNameField, 'Shukla')
+    userEvent.type(lastNameField, 'Shukla')
     await waitFor(() => expect(lastNameField.value).toBe('Shukla'))
 
-    user.click(submitButton)
+    userEvent.click(submitButton)
+    await waitFor(() => expect(onSave).toHaveBeenCalledTimes(1))
+  })
+
+  it('should populate form fields when b2BAccount prop is provided', async () => {
+    render(<EditAccount onSave={onSave} />)
+    const { companyOrOrganization, taxId, users } = b2BAccountHierarchyResult.accounts[0]
+    const { firstName, lastName, emailAddress } = users?.[0] as B2BUser
+    const companyOrOrganizationField: HTMLInputElement = screen.getByLabelText('company-name')
+    const taxIdField: HTMLInputElement = screen.getByLabelText('tax-id (optional)')
+    const emailAddressField: HTMLInputElement = screen.getByLabelText('email')
+    const firstNameField: HTMLInputElement = screen.getByLabelText('first-name')
+    const lastNameField: HTMLInputElement = screen.getByLabelText('last-name-or-sur-name')
+    const submitButton = await screen.findByTestId('submit-button')
+
+    expect(companyOrOrganizationField.value).toBe(companyOrOrganization)
+    expect(taxIdField.value).toBe(taxId)
+    expect(firstNameField.value).toBe(firstName)
+    expect(lastNameField.value).toBe(lastName)
+    expect(emailAddressField.value).toBe(emailAddress)
+
+    userEvent.click(submitButton)
     await waitFor(() => expect(onSave).toHaveBeenCalledTimes(1))
   })
 
   it('should call onClose callback function when user clicks on Cancel button', async () => {
-    const user = userEvent.setup()
-
     render(<Common {...Common.args} onSave={onSave} onClose={onClose} />)
 
     const cancelButton = await screen.findByTestId('cancel-button')
-    user.click(cancelButton)
+    userEvent.click(cancelButton)
     await waitFor(() => expect(onClose).toHaveBeenCalledTimes(1))
   })
 })

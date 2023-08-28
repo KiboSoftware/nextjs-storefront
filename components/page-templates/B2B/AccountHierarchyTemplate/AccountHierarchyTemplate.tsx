@@ -5,14 +5,15 @@ import { Box, Button, Grid, useMediaQuery, useTheme } from '@mui/material'
 import { useRouter } from 'next/router'
 import { useTranslation } from 'next-i18next'
 
-import { AccountHierarchyTree, QuotesTable } from '@/components/b2b'
+import { AccountHierarchyTree, QuotesTable, UserTable } from '@/components/b2b'
 import {
-  AccountHierarchyAddFormDialog,
+  AccountHierarchyFormDialog,
   AccountHierarchyChangeParentDialog,
   ConfirmationDialog,
   ViewAccountDetailsDialog,
+  ViewUserDetailDialog,
 } from '@/components/dialogs'
-import MobileB2BLayout from '@/components/layout/MobileB2BLayout/MobileB2BLayout'
+import { MobileB2BLayout } from '@/components/layout'
 import { useAuthContext, useModalContext } from '@/context'
 import {
   useB2BQuote,
@@ -22,12 +23,14 @@ import {
   useGetB2BUserQueries,
   useGetQuotes,
   useUpdateCustomerB2bAccountMutation,
+  useUpdateCustomerB2bUserMutation,
 } from '@/hooks'
 import { userGetters } from '@/lib/getters'
 import {
   buildAccountHierarchy,
   buildCreateCustomerB2bAccountParams,
   buildUpdateCustomerB2bAccountParams,
+  buildUpdateCustomerB2bUserParams,
   parseFilterParamToObject,
 } from '@/lib/helpers'
 import {
@@ -52,8 +55,9 @@ const AccountHierarchyTemplate = () => {
   const { b2BAccountHierarchy } = useGetB2BAccountHierarchy(user?.id as number)
   const { createCustomerB2bAccount } = useCreateCustomerB2bAccountMutation()
   const { updateCustomerB2bAccount } = useUpdateCustomerB2bAccountMutation()
+  const { updateCustomerB2bUser } = useUpdateCustomerB2bUserMutation()
   const { changeB2bAccountParent } = useChangeB2bAccountParentMutation()
-  const { data } = useGetB2BUserQueries({
+  const { data: currentB2bUser } = useGetB2BUserQueries({
     accountId: user?.id as number,
     filter: '',
     pageSize: 5,
@@ -86,6 +90,8 @@ const AccountHierarchyTemplate = () => {
   const [activeComponent, setActiveComponent] = useState('accountHierarchy')
   const activeBreadCrumb = breadcrumbList.filter((item) => item.key === activeComponent)[0]
 
+  const [b2bUsers, setB2bUsers] = useState<B2BUser[]>([])
+
   // Add this to achieve Mobile Layout
   const onBackClick = () => {
     router.push(activeBreadCrumb.redirectURL)
@@ -106,11 +112,21 @@ const AccountHierarchyTemplate = () => {
     formValues: CreateCustomerB2bAccountParams,
     account: B2BAccount
   ) => {
-    const variables = buildUpdateCustomerB2bAccountParams(formValues, account)
-    const updateCustomerB2BAccount = await updateCustomerB2bAccount.mutateAsync({
-      ...variables,
+    const b2BUser = account?.users?.[0]
+    const accountParams = buildUpdateCustomerB2bAccountParams(formValues, account)
+    const userParams = buildUpdateCustomerB2bUserParams({
+      user,
+      b2BUser,
+      values: { ...formValues, isActive: b2BUser?.isActive },
     })
-    if (updateCustomerB2BAccount) closeModal()
+
+    const updateCustomerB2BAccount = await updateCustomerB2bAccount.mutateAsync({
+      ...accountParams,
+    })
+    const updateCustomerB2BUser = await updateCustomerB2bUser.mutateAsync({
+      ...userParams,
+    })
+    if (updateCustomerB2BAccount && updateCustomerB2BUser) closeModal()
   }
 
   const handleB2bAccountParentChange = async (accountId: number, parentAccountId: number) => {
@@ -120,7 +136,7 @@ const AccountHierarchyTemplate = () => {
 
   const handleAddAccount = ({ isAddingAccountToChild, accounts }: AddChildAccountProps) => {
     showModal({
-      Component: AccountHierarchyAddFormDialog,
+      Component: AccountHierarchyFormDialog,
       props: {
         accounts,
         isAddingAccountToChild,
@@ -134,11 +150,24 @@ const AccountHierarchyTemplate = () => {
 
   const handleEditAccount = ({ accounts, b2BAccount }: EditChildAccountProps) => {
     showModal({
+      Component: AccountHierarchyFormDialog,
+      props: {
+        accounts,
+        b2BAccount,
+        formTitle: t('edit-child-account'),
+        onSave: (formValues: CreateCustomerB2bAccountParams) =>
+          handleEditAccountFormSubmit(formValues, b2BAccount),
+        onClose: () => closeModal(),
+      },
+    })
+  }
+
+  const handleChangeParent = ({ accounts, b2BAccount }: EditChildAccountProps) => {
+    showModal({
       Component: AccountHierarchyChangeParentDialog,
       props: {
         accounts,
         b2BAccount,
-        primaryButtonText: t('save'),
         formTitle: t('edit-child-account'),
         onSave: (accountId: number, parentAccountId: number) =>
           handleB2bAccountParentChange(accountId, parentAccountId),
@@ -170,22 +199,9 @@ const AccountHierarchyTemplate = () => {
     })
   }
 
-  const handleDisableAccount = (b2BAccount: B2BAccount) => {
-    showModal({
-      Component: ConfirmationDialog,
-      props: {
-        contentText: t('disable-account-confirm-message'),
-        primaryButtonText: t('yes-remove'),
-        title: t('confirmation'),
-        onConfirm: () => console.log('account disabled'),
-        onClose: () => closeModal(),
-      },
-    })
-  }
-
   const handleAddChildAccount = () => {
     showModal({
-      Component: AccountHierarchyAddFormDialog,
+      Component: AccountHierarchyFormDialog,
       props: {
         accounts: accountHierarchy.accounts,
         isAddingAccountToChild: false,
@@ -197,8 +213,20 @@ const AccountHierarchyTemplate = () => {
     })
   }
 
-  const handleBuyersBtnClick = () => {
-    console.log('buyers button clicked')
+  const handleViewAccountUser = (b2BUser: B2BUser) => {
+    showModal({
+      Component: ViewUserDetailDialog,
+      props: {
+        b2BUser,
+        title: t('confirmation'),
+        onClose: () => closeModal(),
+      },
+    })
+  }
+
+  const handleBuyersBtnClick = (users: B2BUser[]) => {
+    setB2bUsers(users)
+    setActiveComponent('buyers')
   }
 
   const { quotesSearchParam, sortingValues, handleQuotesSearchParam } = useB2BQuote()
@@ -219,7 +247,7 @@ const AccountHierarchyTemplate = () => {
       accounts: b2BAccountHierarchy?.accounts,
       hierarchy,
     })
-  }, [b2BAccountHierarchy, data])
+  }, [b2BAccountHierarchy, currentB2bUser])
 
   return (
     <Grid container gap={3}>
@@ -227,9 +255,7 @@ const AccountHierarchyTemplate = () => {
         headerText={
           activeBreadCrumb?.key === 'accountHierarchy'
             ? t('account-hierarchy')
-            : activeBreadCrumb?.key === 'quotes'
-            ? t('quotes')
-            : t('buyers')
+            : t(activeBreadCrumb?.key)
         }
         backText={activeBreadCrumb?.backText}
         onBackClick={onBackClick}
@@ -254,14 +280,15 @@ const AccountHierarchyTemplate = () => {
           </Grid>
           <Grid item xs={12}>
             <AccountHierarchyTree
-              role={userGetters.getRole(data?.items?.[0] as B2BUser)}
+              role={userGetters.getRole(currentB2bUser?.items?.[0] as B2BUser)}
+              customerAccount={user}
               accounts={accountHierarchy.accounts}
               hierarchy={accountHierarchy.hierarchy}
               handleViewAccount={handleViewAccount}
               handleAddAccount={handleAddAccount}
               handleEditAccount={handleEditAccount}
+              handleChangeParent={handleChangeParent}
               handleSwapAccount={handleSwapAccount}
-              handleDisableAccount={handleDisableAccount}
               handleBuyersBtnClick={handleBuyersBtnClick}
               handleQuotesBtnClick={handleQuotesBtnClick}
             />
@@ -274,7 +301,17 @@ const AccountHierarchyTemplate = () => {
           quoteCollection={quoteCollection}
           sortingValues={sortingValues}
           filters={parseFilterParamToObject(quotesSearchParam.filter as string)}
+          showActionButtons={false}
           setQuotesSearchParam={handleQuotesSearchParam}
+        />
+      )}
+
+      {activeComponent === 'buyers' && (
+        <UserTable
+          mdScreen={mdScreen}
+          b2bUsers={b2bUsers}
+          onView={handleViewAccountUser}
+          showActionButtons={false}
         />
       )}
     </Grid>
