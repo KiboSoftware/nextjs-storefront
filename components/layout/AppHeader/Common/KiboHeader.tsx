@@ -21,6 +21,7 @@ import { useRouter } from 'next/router'
 import { useTranslation } from 'next-i18next'
 
 import { HeaderAction, KiboLogo } from '@/components/common'
+import { AccountHierarchyFormDialog } from '@/components/dialogs'
 import {
   MegaMenu,
   SearchSuggestions,
@@ -33,8 +34,9 @@ import {
   CheckoutHeader,
 } from '@/components/layout'
 import { useAuthContext, useHeaderContext, useModalContext } from '@/context'
-import { useGetCategoryTree } from '@/hooks'
-import type { NavigationLink } from '@/lib/types'
+import { useCreateCustomerB2bAccountMutation, useGetCategoryTree } from '@/hooks'
+import { buildCreateCustomerB2bAccountParams } from '@/lib/helpers'
+import type { CreateCustomerB2bAccountParams, NavigationLink } from '@/lib/types'
 
 import type { Maybe, PrCategory } from '@/lib/gql/types'
 
@@ -251,7 +253,8 @@ const KiboHeader = (props: KiboHeaderProps) => {
   const { data: categoriesTree } = useGetCategoryTree(initialCategoryTree)
   const { headerState, toggleMobileSearchPortal, toggleHamburgerMenu } = useHeaderContext()
   const { isAuthenticated } = useAuthContext()
-  const { showModal } = useModalContext()
+  const { showModal, closeModal } = useModalContext()
+  const { t } = useTranslation('common')
   const router = useRouter()
   const theme = useTheme()
   const mdScreen = useMediaQuery(theme.breakpoints.up('md'))
@@ -259,6 +262,7 @@ const KiboHeader = (props: KiboHeaderProps) => {
     disableHysteresis: true,
     threshold: 0,
   })
+  const { createCustomerB2bAccount } = useCreateCustomerB2bAccountMutation()
 
   const [isBackdropOpen, setIsBackdropOpen] = useState<boolean>(false)
 
@@ -277,8 +281,24 @@ const KiboHeader = (props: KiboHeaderProps) => {
     }
   }
 
+  const handleAccountRequest = async (formValues: CreateCustomerB2bAccountParams) => {
+    const variables = buildCreateCustomerB2bAccountParams(formValues)
+    await createCustomerB2bAccount.mutateAsync(variables)
+    router.push('/')
+  }
+
   const handleB2BAccountRequestClick = () => {
-    router.push('/b2b-account-request')
+    showModal({
+      Component: AccountHierarchyFormDialog,
+      props: {
+        isAddingAccountToChild: false,
+        isRequestAccount: true,
+        primaryButtonText: t('request-account'),
+        formTitle: t('b2b-account-request'),
+        onSave: (formValues: CreateCustomerB2bAccountParams) => handleAccountRequest(formValues),
+        onClose: () => closeModal(),
+      },
+    })
   }
 
   const getSection = (): React.ReactNode => {
