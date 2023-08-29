@@ -32,6 +32,7 @@ import {
   HamburgerMenu,
   LoginDialog,
   CheckoutHeader,
+  AccountRequestIcon,
 } from '@/components/layout'
 import { useAuthContext, useHeaderContext, useModalContext } from '@/context'
 import { useCreateCustomerB2bAccountMutation, useGetCategoryTree } from '@/hooks'
@@ -221,16 +222,11 @@ const HeaderActionArea = (props: HeaderActionAreaProps) => {
             size={isHeaderSmall ? 'medium' : 'large'}
             onAccountIconClick={onAccountIconClick}
           />
-          <Typography
-            variant="body2"
-            component="span"
-            fontWeight="bold"
-            color="text.primary"
-            sx={{ display: 'flex', alignItems: 'center', cursor: 'pointer' }}
+          <AccountRequestIcon
             onClick={onAccountRequestClick}
-          >
-            {t('b2b-account-request')}
-          </Typography>
+            iconProps={{ fontSize: isHeaderSmall ? 'medium' : 'large' }}
+            buttonText={t('b2b-account-request')}
+          />
           <CartIcon size={isHeaderSmall ? 'medium' : 'large'} />
         </Box>
       </Container>
@@ -363,6 +359,14 @@ const KiboHeader = (props: KiboHeaderProps) => {
         setIsDrawerOpen={() => toggleHamburgerMenu()}
         navLinks={navLinks}
         onAccountIconClick={handleAccountIconClick}
+        requestAccountIconComponent={
+          <AccountRequestIcon
+            onClick={handleB2BAccountRequestClick}
+            iconProps={{ fontSize: 'medium' }}
+            buttonText={t('b2b-account-request')}
+            isMobileView={true}
+          />
+        }
       />
     </>
   )

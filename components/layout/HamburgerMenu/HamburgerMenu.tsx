@@ -1,3 +1,5 @@
+import React from 'react'
+
 import AccountCircle from '@mui/icons-material/AccountCircle'
 import {
   Box,
@@ -27,6 +29,7 @@ interface HamburgerMenuProps {
   marginTop?: number | string
   setIsDrawerOpen: (isDrawerOpen: boolean) => void
   onAccountIconClick: () => void
+  requestAccountIconComponent: React.ReactNode
 }
 
 const styles = {
@@ -63,6 +66,7 @@ const HamburgerMenu = (props: HamburgerMenuProps) => {
     setIsDrawerOpen,
     navLinks,
     onAccountIconClick,
+    requestAccountIconComponent,
   } = props
   const { getCategoryLink } = uiHelpers()
   const { t } = useTranslation('common')
@@ -133,6 +137,7 @@ const HamburgerMenu = (props: HamburgerMenuProps) => {
               </Box>
             ))}
           </List>
+          {requestAccountIconComponent}
         </Box>
       </SwipeableDrawer>
     </>
