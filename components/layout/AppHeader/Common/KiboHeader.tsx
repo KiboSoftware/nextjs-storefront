@@ -226,7 +226,7 @@ const HeaderActionArea = (props: HeaderActionAreaProps) => {
             component="span"
             fontWeight="bold"
             color="text.primary"
-            sx={{ display: 'flex', alignItems: 'center' }}
+            sx={{ display: 'flex', alignItems: 'center', cursor: 'pointer' }}
             onClick={onAccountRequestClick}
           >
             {t('b2b-account-request')}
@@ -284,7 +284,7 @@ const KiboHeader = (props: KiboHeaderProps) => {
   const handleAccountRequest = async (formValues: CreateCustomerB2bAccountParams) => {
     const variables = buildCreateCustomerB2bAccountParams(formValues)
     await createCustomerB2bAccount.mutateAsync(variables)
-    router.push('/')
+    closeModal()
   }
 
   const handleB2BAccountRequestClick = () => {
