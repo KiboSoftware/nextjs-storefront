@@ -7,6 +7,7 @@ import {
   Box,
   Button,
   IconButton,
+  List,
   ListItemIcon,
   Typography,
   useMediaQuery,
@@ -17,29 +18,28 @@ import Nestable from 'react-nestable'
 
 import { AccountHierarchyStyles } from './AccountHierarchyTree.styles'
 import { AccountHierarchyTreeLabel } from '@/components/b2b'
-import { AddChildAccountProps, EditChildAccountProps, HierarchyNode } from '@/lib/types'
+import { getSwapAccountParams } from '@/lib/helpers'
+import {
+  AddChildAccountProps,
+  EditChildAccountProps,
+  HierarchyNode,
+  NestableOnChangeArgs,
+} from '@/lib/types'
 
-import { B2BAccount } from '@/lib/gql/types'
+import { B2BAccount, B2BUser, CustomerAccount } from '@/lib/gql/types'
 
 interface AccountHierarchyTreeProps {
   role: string
   accounts: any[]
+  customerAccount: CustomerAccount | undefined
   hierarchy: HierarchyNode[] | undefined
   handleViewAccount: (item: B2BAccount) => void
   handleAddAccount: ({ isAddingAccountToChild, accounts }: AddChildAccountProps) => void
   handleEditAccount: ({ accounts }: EditChildAccountProps) => void
+  handleChangeParent: ({ accounts }: EditChildAccountProps) => void
   handleSwapAccount: (accountId: number, parentAccountId: number) => void
-  handleDisableAccount: (b2BAccount: B2BAccount) => void
-  handleBuyersBtnClick: () => void
+  handleBuyersBtnClick: (b2BUsers: B2BUser[]) => void
   handleQuotesBtnClick: (id: number) => void
-}
-
-const CollapseStateIndicator = ({ isCollapsed }: { isCollapsed: boolean }) => {
-  return (
-    <Box display="flex" justifyContent="center" alignItems="center">
-      {isCollapsed ? <ChevronRightIcon /> : <ExpandMoreIcon />}
-    </Box>
-  )
 }
 
 export default function AccountHierarchyTree(props: AccountHierarchyTreeProps) {
@@ -47,10 +47,11 @@ export default function AccountHierarchyTree(props: AccountHierarchyTreeProps) {
     accounts,
     hierarchy,
     role,
+    customerAccount,
     handleViewAccount,
     handleAddAccount,
     handleEditAccount,
-    handleDisableAccount,
+    handleChangeParent,
     handleSwapAccount,
     handleBuyersBtnClick,
     handleQuotesBtnClick,
@@ -61,56 +62,6 @@ export default function AccountHierarchyTree(props: AccountHierarchyTreeProps) {
 
   const { t } = useTranslation('common')
 
-  const renderItem = (props: any) => {
-    const { item, collapseIcon, handler } = props
-
-    const currentAccount: B2BAccount = accounts?.find(
-      (account: B2BAccount) => account.id === item.id
-    )
-
-    const onViewAccountClick = () => {
-      handleViewAccount(currentAccount)
-    }
-
-    const onAddAccountClick = () =>
-      handleAddAccount({
-        isAddingAccountToChild: true,
-        accounts: [currentAccount],
-      })
-
-    const onEditAccountClick = () =>
-      handleEditAccount({
-        accounts,
-        b2BAccount: currentAccount,
-      })
-
-    const onDisableAccountClick = () => handleDisableAccount(currentAccount)
-
-    const onAccountSwap = (parentAccountId: number) =>
-      handleSwapAccount(currentAccount?.id, parentAccountId)
-
-    return (
-      <AccountHierarchyTreeLabel
-        role={role}
-        mdScreen={mdScreen}
-        label={currentAccount?.companyOrOrganization as string}
-        onViewAccountClick={onViewAccountClick}
-        onAddAccountClick={onAddAccountClick}
-        onEditAccountClick={onEditAccountClick}
-        onDisableAccountClick={onDisableAccountClick}
-        onAccountSwap={onAccountSwap}
-        onBuyersBtnClick={handleBuyersBtnClick}
-        onQuotesBtnClick={() => handleQuotesBtnClick(currentAccount.id)}
-        icons={
-          <ListItemIcon sx={{ display: 'flex' }}>
-            <IconButton size="small">{handler}</IconButton>
-            {collapseIcon ? <IconButton size="small">{collapseIcon}</IconButton> : null}
-          </ListItemIcon>
-        }
-      />
-    )
-  }
-
   const handleCollapse = (collapseCase: 'ALL' | 'NONE') => {
     const instance = refNestable.current as any
     instance?.collapse(collapseCase)
@@ -118,13 +69,9 @@ export default function AccountHierarchyTree(props: AccountHierarchyTreeProps) {
 
   const refNestable = React.useRef<Nestable | null>(null)
 
-  const getSwapAccountParams = ({ items, targetPath }: any) => {
-    let parent = items
-    targetPath.forEach((h: number) => {
-      parent = parent[h] ?? parent?.children[h]
-    })
-
-    return parent?.id
+  const onAccountSwap = ({ dragItem, items, targetPath }: NestableOnChangeArgs) => {
+    const { accountId, parentAccountId } = getSwapAccountParams({ dragItem, items, targetPath })
+    handleSwapAccount(accountId, parentAccountId)
   }
 
   return (
@@ -147,22 +94,49 @@ export default function AccountHierarchyTree(props: AccountHierarchyTreeProps) {
         <Typography fontWeight="bold">{t('org-name')}</Typography>
       </Box>
 
-      <Nestable
-        ref={(el) => (refNestable.current = el)}
-        items={hierarchy as HierarchyNode[]}
-        renderItem={renderItem}
-        renderCollapseIcon={({ isCollapsed }) => (
-          <CollapseStateIndicator isCollapsed={isCollapsed} />
-        )}
-        onChange={({ dragItem, items, targetPath }) =>
-          handleSwapAccount(dragItem?.id, getSwapAccountParams({ items, targetPath }))
-        }
-        handler={
-          <Box display="flex" justifyContent="center" alignItems="center">
-            <DragIndicator />
-          </Box>
-        }
-      />
+      <List dense={true}>
+        <Nestable
+          ref={(el) => (refNestable.current = el)}
+          items={hierarchy as HierarchyNode[]}
+          renderItem={({ item, collapseIcon, handler }: any) => (
+            <AccountHierarchyTreeLabel
+              role={role}
+              mdScreen={mdScreen}
+              item={item}
+              accounts={accounts}
+              customerAccount={customerAccount}
+              handleViewAccount={handleViewAccount}
+              handleAddAccount={handleAddAccount}
+              handleEditAccount={handleEditAccount}
+              handleChangeParent={handleChangeParent}
+              handleBuyersBtnClick={handleBuyersBtnClick}
+              handleQuotesBtnClick={handleQuotesBtnClick}
+              icons={
+                <ListItemIcon sx={{ display: 'flex' }}>
+                  <IconButton size="small">{handler}</IconButton>
+                  {collapseIcon ? <IconButton size="small">{collapseIcon}</IconButton> : null}
+                </ListItemIcon>
+              }
+            />
+          )}
+          renderCollapseIcon={({ isCollapsed }) => (
+            <Box display="flex" justifyContent="center" alignItems="center">
+              {isCollapsed ? <ChevronRightIcon /> : <ExpandMoreIcon />}
+            </Box>
+          )}
+          onChange={(accountSwapArgs: NestableOnChangeArgs) => onAccountSwap(accountSwapArgs)}
+          handler={
+            <Box
+              display="flex"
+              justifyContent="center"
+              alignItems="center"
+              data-testid="drag-handler"
+            >
+              <DragIndicator />
+            </Box>
+          }
+        />
+      </List>
     </>
   )
 }

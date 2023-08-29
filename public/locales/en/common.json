@@ -419,6 +419,7 @@
   "b2b-account-id": "B2B Account ID",
   "user-first-name": "User first name",
   "user-last-name": "User last name",
+  "buyer-info": "Buyer Information",
   "org-name": "Organization name",
   "disable-account-confirm-message": "Are you sure you want to disable this account?",
   "swap-account-hierarchy": "Swap account hierarchy",

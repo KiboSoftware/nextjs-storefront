@@ -9,6 +9,7 @@ const getB2BAccountHierarchyQuery = /* GraphQL */ `
           lastName
           localeCode
           userId
+          isActive
         }
         isActive
         rootAccountId

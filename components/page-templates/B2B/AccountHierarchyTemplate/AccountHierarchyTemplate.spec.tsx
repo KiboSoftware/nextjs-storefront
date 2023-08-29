@@ -3,35 +3,18 @@ import React from 'react'
 
 import '@testing-library/jest-dom'
 import { composeStories } from '@storybook/testing-react'
-import { fireEvent, render, screen } from '@testing-library/react'
+import { fireEvent, screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import mediaQuery from 'css-mediaquery'
 import { useRouter } from 'next/router'
 
 import * as stories from './AccountHierarchyTemplate.stories' // import all stories from the stories file
-import { createQueryClientWrapper } from '@/__test__/utils'
-import { ModalContextProvider } from '@/context'
-import { CreateCustomerB2bAccountParams } from '@/lib/types'
-
-import { CustomerAccount } from '@/lib/gql/types'
+import { renderWithQueryClient } from '@/__test__/utils'
 
 const { Common } = composeStories(stories)
 
-interface AccountHierarchyAddFormDialogProps {
-  formTitle?: string
-  user?: CustomerAccount
-  onSave: (data: CreateCustomerB2bAccountParams) => void
-  onClose: () => void
-}
-
 // Mock
 const onCloseMock = jest.fn()
-
-jest.mock('next/router', () => ({
-  useRouter: () => ({
-    push: jest.fn(),
-  }),
-}))
 
 const createMatchMedia = (width: number) => (query: string) => ({
   matches: mediaQuery.match(query, { width }),
@@ -44,7 +27,7 @@ const createMatchMedia = (width: number) => (query: string) => ({
   dispatchEvent: jest.fn(),
 })
 
-const AccountHierarchyAddFormMock = ({ onClose }: { onClose: () => void }) => (
+const AccountHierarchyFormMock = ({ onClose }: { onClose: () => void }) => (
   <div data-testid="account-hierarchy-form-mock">
     <button data-testid="cancel-account-mock-button" onClick={onClose}>
       Cancel
@@ -55,35 +38,37 @@ const AccountHierarchyAddFormMock = ({ onClose }: { onClose: () => void }) => (
   </div>
 )
 jest.mock(
-  '@/components/b2b/AccountHierarchy/AccountHierarchyAddForm/AccountHierarchyAddForm',
-  () => () => AccountHierarchyAddFormMock({ onClose: onCloseMock })
+  '@/components/b2b/AccountHierarchy/AccountHierarchyForm/AccountHierarchyForm',
+  () => () => AccountHierarchyFormMock({ onClose: onCloseMock })
 )
 
-const AccountHierarchyTreeMock = () => <div data-testid="account-hierarchy-tree-mock"></div>
-jest.mock(
-  '@/components/b2b/AccountHierarchy/AccountHierarchyTree/AccountHierarchyTree',
-  () => () => AccountHierarchyTreeMock()
-)
+const UserTableMock = () => <div data-testid="user-table-mock"></div>
+jest.mock('@/components/b2b/User/UserTable/UserTable', () => () => UserTableMock())
 
-jest.mock('@/components/dialogs', () => ({
+const QuotesTableMock = () => <div data-testid="quotes-table-mock"></div>
+jest.mock('@/components/b2b/QuotesTable/QuotesTable', () => () => QuotesTableMock())
+
+jest.mock('@/components/b2b/AccountHierarchy/AccountHierarchyTree/AccountHierarchyTree', () => ({
   __esModule: true,
-  AccountHierarchyAddFormDialog: (props: AccountHierarchyAddFormDialogProps) => {
-    const params = {
-      parentAccount: { id: 1023, companyOrOrganization: 'Parent Account' },
-      companyOrOrganization: 'ABCD',
-      taxId: '123234',
-      firstName: 'Karan',
-      lastName: 'Thappar',
-      emailAddress: 'karan@gmail.com',
-    }
-
-    return (
-      <div>
-        <h1>user-form-dialog</h1>
-        <button onClick={() => props.onSave(params)}>Confirm</button>
-      </div>
-    )
-  },
+  default: ({
+    handleViewAccount,
+    handleAddAccount,
+    handleEditAccount,
+    handleChangeParent,
+    handleSwapAccount,
+    handleBuyersBtnClick,
+    handleQuotesBtnClick,
+  }: any) => (
+    <div data-testid="account-hierarchy-tree-mock">
+      <button onClick={handleViewAccount}>handleViewAccount</button>
+      <button onClick={handleAddAccount}>handleAddAccount</button>
+      <button onClick={handleEditAccount}>handleEditAccount</button>
+      <button onClick={handleChangeParent}>handleChangeParent</button>
+      <button onClick={handleSwapAccount}>handleSwapAccount</button>
+      <button onClick={handleBuyersBtnClick}>handleBuyersBtnClick</button>
+      <button onClick={handleQuotesBtnClick}>handleQuotesBtnClick</button>
+    </div>
+  ),
 }))
 
 jest.mock('next/router', () => ({
@@ -92,14 +77,7 @@ jest.mock('next/router', () => ({
 
 const setup = () => {
   const user = userEvent.setup()
-  render(
-    <ModalContextProvider>
-      <Common />
-    </ModalContextProvider>,
-    {
-      wrapper: createQueryClientWrapper(),
-    }
-  )
+  renderWithQueryClient(<Common />)
   return {
     user,
   }
@@ -107,16 +85,7 @@ const setup = () => {
 
 describe('[component] - AccountHierarchyTemplate', () => {
   it('should render component', async () => {
-    jest.mock('@/hooks', () => ({
-      useGetB2BUserQueries: jest.fn().mockReturnValue({
-        data: { id: 1023 },
-        isLoading: false,
-      }),
-    }))
-
-    render(<Common />, {
-      wrapper: createQueryClientWrapper(),
-    })
+    setup()
 
     const heading = screen.getByText('account-hierarchy')
     expect(heading).toBeVisible()
@@ -149,5 +118,91 @@ describe('[component] - AccountHierarchyTemplate', () => {
     fireEvent.click(accountTitleElement)
 
     expect(mockPush).toHaveBeenCalledWith('/my-account')
+  })
+
+  it('should show ViewAccountDetailsDialog when handleViewAccount is called', async () => {
+    const { user } = setup()
+
+    const handleViewAccountButton = screen.getByText('handleViewAccount')
+    await user.click(handleViewAccountButton)
+
+    await waitFor(() => {
+      const viewAccountDetailsDialog = screen.getByRole('dialog', { name: 'view-account' })
+      expect(viewAccountDetailsDialog).toBeVisible()
+    })
+  })
+
+  it('should show AccountHierarchyFormDialog when handleAddAccount is called', async () => {
+    const { user } = setup()
+
+    const handleAddAccountButton = screen.getByText('handleAddAccount')
+    await user.click(handleAddAccountButton)
+
+    await waitFor(() => {
+      const accountHierarchyFormDialog = screen.getByRole('dialog', { name: 'add-child-account' })
+      expect(accountHierarchyFormDialog).toBeVisible()
+    })
+  })
+
+  it('should show AccountHierarchyFormDialog when handleEditAccount is called', async () => {
+    const { user } = setup()
+
+    const handleEditAccountButton = screen.getByText('handleEditAccount')
+    await user.click(handleEditAccountButton)
+
+    await waitFor(() => {
+      const accountHierarchyFormDialog = screen.getByRole('dialog', { name: 'edit-child-account' })
+      expect(accountHierarchyFormDialog).toBeVisible()
+    })
+  })
+
+  it('should show AccountHierarchyChangeParentDialog when handleChangeParent is called', async () => {
+    const { user } = setup()
+
+    const handleChangeParentButton = screen.getByText('handleChangeParent')
+    await user.click(handleChangeParentButton)
+
+    await waitFor(() => {
+      const accountHierarchyChangeParentDialog = screen.getByRole('dialog', {
+        name: 'edit-child-account',
+      })
+      expect(accountHierarchyChangeParentDialog).toBeVisible()
+    })
+  })
+
+  it('should show ConfirmationDialog when handleSwapAccount is called', async () => {
+    const { user } = setup()
+
+    const handleSwapAccountButton = screen.getByText('handleSwapAccount')
+    await user.click(handleSwapAccountButton)
+
+    await waitFor(() => {
+      const confirmationDialog = screen.getByRole('dialog', { name: 'swap-account-hierarchy' })
+      expect(confirmationDialog).toBeVisible()
+    })
+  })
+
+  it('should show Buyers List when handleBuyersBtnClick is called', async () => {
+    const { user } = setup()
+
+    const handleBuyersBtnClickButton = screen.getByText('handleBuyersBtnClick')
+    await user.click(handleBuyersBtnClickButton)
+
+    await waitFor(() => {
+      const buyersList = screen.getByTestId('user-table-mock')
+      expect(buyersList).toBeVisible()
+    })
+  })
+
+  it('should show Quotes List when handleQuotesBtnClick is called', async () => {
+    const { user } = setup()
+
+    const handleQuotesBtnClickButton = screen.getByText('handleQuotesBtnClick')
+    await user.click(handleQuotesBtnClickButton)
+
+    await waitFor(() => {
+      const quotesList = screen.getByTestId('quotes-table-mock')
+      expect(quotesList).toBeVisible()
+    })
   })
 })
