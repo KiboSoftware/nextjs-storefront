@@ -248,17 +248,15 @@ const AccountHierarchyForm = (props: AccountHierarchyFormProps) => {
         />
 
         <Stack gap={2} sx={{ ...AccountHierarchyFormStyles.buttonStackStyle }}>
-          {onClose ? (
-            <Button
-              data-testid="cancel-button"
-              variant="contained"
-              color="secondary"
-              type="reset"
-              onClick={onClose}
-            >
-              {t('cancel')}
-            </Button>
-          ) : null}
+          <Button
+            data-testid="cancel-button"
+            variant="contained"
+            color="secondary"
+            type="reset"
+            onClick={onClose}
+          >
+            {t('cancel')}
+          </Button>
           <LoadingButton
             data-testid="submit-button"
             variant="contained"

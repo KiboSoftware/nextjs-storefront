@@ -95,7 +95,7 @@ describe('[component] KiboHeader component', () => {
     })
   })
 
-  it('should redirect to b2b account request page when user clicks on B2B Account Request link', async () => {
+  it('should open b2b account request form dialog when user clicks on B2B Account Request link', async () => {
     const user = userEvent.setup()
     render(<Common {...Common.args} />)
 
@@ -103,11 +103,8 @@ describe('[component] KiboHeader component', () => {
     user.click(requestAccountLink)
 
     await waitFor(() => {
-      expect(mockRouter).toMatchObject({
-        asPath: '/b2b-account-request',
-        pathname: '/b2b-account-request',
-        query: {},
-      })
+      const accountHierarcyFormDialog = screen.getByRole('dialog')
+      expect(accountHierarcyFormDialog).toBeVisible()
     })
   })
 })

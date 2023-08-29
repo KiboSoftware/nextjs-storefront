@@ -9,6 +9,7 @@ import { B2BAccount } from '@/lib/gql/types'
 interface AccountHierarchyFormDialogProps {
   accounts?: B2BAccount[]
   isAddingAccountToChild: boolean
+  isRequestAccount: boolean
   b2BAccount?: B2BAccount
   formTitle?: string
   primaryButtonText: string
@@ -21,6 +22,7 @@ const AccountHierarchyFormDialog = (props: AccountHierarchyFormDialogProps) => {
   const {
     accounts,
     isAddingAccountToChild,
+    isRequestAccount = false,
     b2BAccount,
     formTitle = t('add-child-account'),
     primaryButtonText,
@@ -40,6 +42,7 @@ const AccountHierarchyFormDialog = (props: AccountHierarchyFormDialogProps) => {
           accounts={accounts}
           b2BAccount={b2BAccount}
           isAddingAccountToChild={isAddingAccountToChild}
+          isRequestAccount={isRequestAccount}
           primaryButtonText={primaryButtonText}
           onSave={onSave}
           onClose={onClose}
