@@ -208,13 +208,7 @@ const CreateList = (props: CreateListProps) => {
         )}
         {!mdScreen && (
           <>
-            <Box
-              display={'flex'}
-              flexDirection={'column'}
-              gap={2}
-              marginTop={'20px'}
-              marginBottom={'-70px'}
-            >
+            <Box display={'flex'} flexDirection={'column'} gap={2} marginTop={'20px'}>
               <Button
                 variant="contained"
                 color="secondary"
