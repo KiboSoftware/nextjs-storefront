@@ -2,7 +2,6 @@ import { useState } from 'react'
 
 import EditIcon from '@mui/icons-material/Edit'
 import {
-  Container,
   Box,
   Button,
   Grid,
@@ -196,20 +195,26 @@ const EditList = (props: EditListProps) => {
       <Typography variant="h3" fontWeight={'bold'}>
         {t('list-items')}
       </Typography>
-      {listData?.items?.map((item: Maybe<CrWishlistItem>) => {
-        return (
-          <ListItem
-            key={item?.product?.productCode}
-            item={item as CrWishlistItem}
-            onDeleteItem={handleDeleteItem}
-            onChangeQuantity={handleChangeQuantity}
-            listId={listData.id as string}
-          />
-        )
-      })}
-      {!mdScreen ? (
+      {listData?.items?.length === 0 ? (
+        <Typography variant="body2" color="GrayText" marginTop="20px">
+          {t('no-item-in-list-text')}
+        </Typography>
+      ) : (
+        listData?.items?.map((item: Maybe<CrWishlistItem>) => {
+          return (
+            <ListItem
+              key={item?.product?.productCode}
+              item={item as CrWishlistItem}
+              onDeleteItem={handleDeleteItem}
+              onChangeQuantity={handleChangeQuantity}
+              listId={listData.id as string}
+            />
+          )
+        })
+      )}
+      {!mdScreen && (
         <>
-          <Grid item xs={12} sx={styles.mobileSaveWindow} gap={2}>
+          <Box display={'flex'} flexDirection={'column'} gap={2} marginTop={'20px'}>
             <Button
               variant="contained"
               color="secondary"
@@ -227,9 +232,9 @@ const EditList = (props: EditListProps) => {
             >
               {t('save-and-close')}
             </Button>
-          </Grid>
+          </Box>
         </>
-      ) : null}
+      )}
     </>
   )
 }

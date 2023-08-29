@@ -484,6 +484,7 @@
   "titleTax": "{{title}} Tax",
   "edit-item": "Edit Item",
   "remove": "Remove",
+  "no-item-in-list-text": "Use product search to start adding products to this list",
   "delete-quote-confirm-message": "Are you sure you want to delete this quote?",
   "email-input-placeholder": "Press Enter after entering email address",
   "email-addresses": "Email address(es)"

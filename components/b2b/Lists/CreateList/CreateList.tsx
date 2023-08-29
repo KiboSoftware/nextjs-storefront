@@ -111,7 +111,7 @@ const CreateList = (props: CreateListProps) => {
 
   return (
     <>
-      <Box sx={{ width: '100%' }}>
+      <Box>
         {mdScreen && (
           <Button
             data-testid="my-account-button"
@@ -192,17 +192,23 @@ const CreateList = (props: CreateListProps) => {
         <Typography variant="h3" sx={{ fontWeight: 'bold' }}>
           {t('list-items')}
         </Typography>
-        {productList.map((item: CrWishlistItem) => (
-          <ListItem
-            key={item.product?.productCode as string}
-            item={item}
-            onDeleteItem={handleDeleteItem}
-            onChangeQuantity={handleChangeQuantity}
-          />
-        ))}
+        {productList.length === 0 ? (
+          <Typography variant="body2" color="GrayText" marginTop="20px">
+            {t('no-item-in-list-text')}
+          </Typography>
+        ) : (
+          productList.map((item: CrWishlistItem) => (
+            <ListItem
+              key={item.product?.productCode as string}
+              item={item}
+              onDeleteItem={handleDeleteItem}
+              onChangeQuantity={handleChangeQuantity}
+            />
+          ))
+        )}
         {!mdScreen && (
           <>
-            <Box sx={styles.mobileSaveWindow} gap={2}>
+            <Box display={'flex'} flexDirection={'column'} gap={2} marginTop={'20px'}>
               <Button
                 variant="contained"
                 color="secondary"
