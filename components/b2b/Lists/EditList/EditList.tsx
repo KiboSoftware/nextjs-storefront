@@ -56,9 +56,13 @@ const EditList = (props: EditListProps) => {
       wishlistId: listData?.id as string,
       wishlistInput: listData as CrWishlistInput,
     }
-    const response = await updateWishlist.mutateAsync(payload)
-    onUpdateListData(response.updateWishlist)
-    onEditFormToggle()
+    try {
+      const response = await updateWishlist.mutateAsync(payload)
+      onUpdateListData(response.updateWishlist)
+      onEditFormToggle()
+    } catch (e) {
+      console.log(e)
+    }
   }
 
   const handleDeleteItem = async (id: string) => {
