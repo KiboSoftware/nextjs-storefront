@@ -39,9 +39,6 @@ const getRecordUpdateDate = (record: AuditRecord) =>
     ? format(new Date(record.auditInfo?.updateDate), DateFormat.DATE_FORMAT)
     : ''
 
-const getChangedRecordFields = (record: AuditRecord) =>
-  record.changes?.[0]?.fields as AuditRecordChangeField[]
-
 const getRecordId = (record: AuditRecord) => record.id
 
 const getRecordDetails = (record: AuditRecord) => {
@@ -94,4 +91,5 @@ export const quoteGetters = {
   getQuoteSubmittedDate,
   getQuoteId,
   getQuotesPaginationDetails,
+  getRecordType,
 }

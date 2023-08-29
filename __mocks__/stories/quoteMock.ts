@@ -274,6 +274,25 @@ export const quoteMock = {
             },
           ],
         },
+
+        {
+          type: 'Update',
+          path: 'Items#1',
+          fields: [
+            {
+              name: 'ProductCode',
+              newValue: '00011',
+            },
+            {
+              name: 'Name',
+              newValue: 'Sneaker',
+            },
+            {
+              name: 'Quantity',
+              newValue: '1',
+            },
+          ],
+        },
       ],
       auditInfo: {
         updateDate: '2023-07-25T09:53:23.635Z',

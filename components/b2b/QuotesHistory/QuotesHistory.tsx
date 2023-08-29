@@ -5,7 +5,29 @@ import { useTranslation } from 'next-i18next'
 
 import { quoteGetters } from '@/lib/getters'
 
-import { AuditRecord } from '@/lib/gql/types'
+import { AuditRecord, AuditRecordChange, AuditRecordChangeField } from '@/lib/gql/types'
+
+const ChangeDetails = ({ field }: { field: AuditRecordChangeField }) => {
+  return (
+    <Grid container key={field?.name} display="flex" justifyContent={'space-between'}>
+      <Grid item xs={4}>
+        <Typography variant={'body2'} sx={{ pr: 1 }} gutterBottom>
+          {field?.name ?? '-'}
+        </Typography>
+      </Grid>
+      <Grid item xs={4}>
+        <Typography variant={'body2'} gutterBottom sx={{ pr: 1, marginInline: 3 }}>
+          {field?.oldValue ?? '-'}
+        </Typography>
+      </Grid>
+      <Grid item xs={4}>
+        <Typography variant={'body2'} gutterBottom sx={{ pr: 1 }}>
+          {field?.newValue ?? '-'}
+        </Typography>
+      </Grid>
+    </Grid>
+  )
+}
 
 interface QuoteHistoryProps {
   // Define your props here
@@ -18,19 +40,16 @@ const QuoteHistoryItem = ({ record }: { record: AuditRecord }) => {
   const { t } = useTranslation('common')
 
   const actionText: any = {
-    Add: t('added-by'),
-    Update: t('updated-by'),
+    Add: t('added'),
+    Update: t('updated'),
   }
 
   return (
     <Stack spacing={2} pb={1} data-testid={`quote-history-item`}>
       <Box>
-        <Typography
-          variant={'body2'}
-          fontWeight={'bold'}
-          color={'text.primary'}
-          gutterBottom
-        >{`${actionText['Update']}: ${getRecordCreatedBy}`}</Typography>
+        <Typography variant={'body2'} fontWeight={'bold'} color={'text.primary'} gutterBottom>{`${t(
+          'updated-by'
+        )}: ${getRecordCreatedBy}`}</Typography>
         <Typography variant="body2" color={'grey.600'}>
           {getRecordUpdateDate}
         </Typography>
@@ -52,28 +71,20 @@ const QuoteHistoryItem = ({ record }: { record: AuditRecord }) => {
           </Typography>
         </Grid>
       </Grid>
-      {record?.changes?.map((change) => {
-        return change?.fields?.map((field) => {
-          return (
-            <Grid container key={field?.name} display="flex" justifyContent={'space-between'}>
-              <Grid item xs={4}>
-                <Typography variant={'body2'} sx={{ pr: 1 }} data-testid={`field-name-${id}`}>
-                  {field?.name ?? '-'}
-                </Typography>
-              </Grid>
-              <Grid item xs={4}>
-                <Typography variant={'body2'} sx={{ pr: 1 }} data-testid={`old-value-${id}`}>
-                  {field?.oldValue ?? '-'}
-                </Typography>
-              </Grid>
-              <Grid item xs={4}>
-                <Typography variant={'body2'} sx={{ pr: 1 }} data-testid={`new-value-${id}`}>
-                  {field?.newValue ?? '-'}
-                </Typography>
-              </Grid>
-            </Grid>
-          )
-        })
+      {record?.changes?.map((change, index) => {
+        return (
+          <Stack key={(change?.type as string) + index}>
+            <Typography variant="body2">
+              {actionText[quoteGetters.getRecordType(change as AuditRecordChange)]}
+            </Typography>
+            {change?.fields?.map((field, index) => (
+              <ChangeDetails
+                key={(field?.name as string) + index}
+                field={field as AuditRecordChangeField}
+              />
+            ))}
+          </Stack>
+        )
       })}
       <Box>
         <Divider />
@@ -85,8 +96,6 @@ const QuoteHistoryItem = ({ record }: { record: AuditRecord }) => {
 const QuoteHistory = (props: QuoteHistoryProps) => {
   const { auditHistory } = props
   const { t } = useTranslation('common')
-
-  // Your component logic here
 
   if (auditHistory.length === 0) {
     return <Typography variant="body2">{t('no-quote-history')}</Typography>
