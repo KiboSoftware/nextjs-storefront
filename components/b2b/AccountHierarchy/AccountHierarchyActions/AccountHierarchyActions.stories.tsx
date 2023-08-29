@@ -14,7 +14,6 @@ export default {
     onAdd: { action: 'onAdd' },
     onEdit: { action: 'onEdit' },
     onView: { action: 'onView' },
-    onDisable: { action: 'onDisable' },
   },
   component: AccountHierarchyActions,
 } as ComponentMeta<typeof AccountHierarchyActions>

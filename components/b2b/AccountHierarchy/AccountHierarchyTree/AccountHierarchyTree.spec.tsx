@@ -1,10 +1,12 @@
 import { composeStories } from '@storybook/testing-react'
-import { render, screen } from '@testing-library/react'
+import { render, screen, waitFor } from '@testing-library/react'
+import userEvent from '@testing-library/user-event'
 
 import * as stories from './AccountHierarchyTree.stories'
 import { b2BAccountHierarchyResult } from '@/__mocks__/stories'
 import { B2BRoles } from '@/lib/constants'
 
+const user = userEvent.setup()
 const { Admin } = composeStories(stories)
 
 const accounts = b2BAccountHierarchyResult.accounts
@@ -13,7 +15,6 @@ const hierarchy = b2BAccountHierarchyResult.hierarchy
 const AccountHierarchyTreeLabelMock = () => (
   <div data-testid="account-hierarchy-tree-label-mock"></div>
 )
-
 jest.mock(
   '@/components/b2b/AccountHierarchy/AccountHierarchyTreeLabel/AccountHierarchyTreeLabel',
   () => () => AccountHierarchyTreeLabelMock()
@@ -38,14 +39,28 @@ describe('AccountHierarchyTree', () => {
     })
   })
 
-  it('should collapse and expand all items when clicking the Collapse All and Expand All buttons', () => {
+  it('should collapse and expand all items when clicking the Collapse All and Expand All buttons', async () => {
     render(<Admin accounts={accounts} hierarchy={[hierarchy]} role={B2BRoles.ADMIN} />)
 
     // Find the Collapse All and Expand All buttons
+    const expandAllButton = screen.getByText('expand-all')
+    expect(expandAllButton).toBeVisible()
+
     const collapseAllButton = screen.getByText('collapse-all')
     expect(collapseAllButton).toBeVisible()
 
-    const expandAllButton = screen.getByText('expand-all')
-    expect(expandAllButton).toBeVisible()
+    await user.click(collapseAllButton)
+
+    await waitFor(() => {
+      expect(screen.getAllByTestId('account-hierarchy-tree-label-mock').length).toBe(1)
+    })
+
+    await user.click(expandAllButton)
+
+    await waitFor(() => {
+      expect(screen.getAllByTestId('account-hierarchy-tree-label-mock').length).toBe(
+        b2BAccountHierarchyResult.accounts.length
+      )
+    })
   })
 })

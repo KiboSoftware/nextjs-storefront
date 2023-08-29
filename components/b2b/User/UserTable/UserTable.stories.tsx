@@ -22,6 +22,16 @@ const Template: ComponentStory<typeof UserTable> = (args) => <UserTable {...args
 // My Account
 export const Table = Template.bind({})
 Table.args = {
+  mdScreen: true,
+  b2bUsers: customerB2BUsers.map((customer: B2BUser, index: number) => ({
+    ...customer,
+    id: index,
+  })),
+}
+
+export const TableMobile = Template.bind({})
+TableMobile.args = {
+  mdScreen: false,
   b2bUsers: customerB2BUsers.map((customer: B2BUser, index: number) => ({
     ...customer,
     id: index,

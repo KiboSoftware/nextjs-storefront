@@ -1,5 +1,6 @@
 import { buildUpdateCustomerB2bAccountParams } from '../buildUpdateCustomerB2bAccountParams'
 import { b2BAccountHierarchyResult } from '@/__mocks__/stories'
+import { CreateCustomerB2bAccountParams } from '@/lib/types'
 
 import { B2BUser } from '@/lib/gql/types'
 
@@ -9,11 +10,18 @@ describe('[helpers] buildUpdateCustomerB2bAccountParams function', () => {
       id: 1004,
     }
 
-    const values = { parentAccount }
-
     const { id, parentAccountId, companyOrOrganization, taxId, users } =
       b2BAccountHierarchyResult.accounts[1]
-    const { firstName, lastName, emailAddress, userName, localeCode } = users?.[0] as B2BUser
+    const { firstName, lastName, emailAddress } = users?.[0] as B2BUser
+
+    const values: CreateCustomerB2bAccountParams = {
+      parentAccount,
+      companyOrOrganization: companyOrOrganization as string,
+      taxId: taxId as string,
+      firstName: firstName as string,
+      lastName: lastName as string,
+      emailAddress: emailAddress as string,
+    }
 
     expect(
       buildUpdateCustomerB2bAccountParams(values, b2BAccountHierarchyResult?.accounts[1])
@@ -24,15 +32,7 @@ describe('[helpers] buildUpdateCustomerB2bAccountParams function', () => {
         parentAccountId,
         companyOrOrganization,
         taxId,
-        users: [
-          {
-            firstName,
-            lastName,
-            emailAddress,
-            userName,
-            localeCode,
-          },
-        ],
+        isActive: true,
       },
     })
   })

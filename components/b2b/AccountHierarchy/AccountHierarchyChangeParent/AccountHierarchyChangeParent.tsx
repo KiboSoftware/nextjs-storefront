@@ -7,7 +7,7 @@ import { useTranslation } from 'next-i18next'
 import { useForm, Controller } from 'react-hook-form'
 import * as yup from 'yup'
 
-import { AccountHierarchyFormStyles } from '../AccountHierarchyAddForm/AccountHierarchyAddForm.styles'
+import { AccountHierarchyFormStyles } from '../AccountHierarchyForm/AccountHierarchyForm.styles'
 import { KiboSelect } from '@/components/common'
 
 import { B2BAccount } from '@/lib/gql/types'

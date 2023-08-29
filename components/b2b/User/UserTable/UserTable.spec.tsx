@@ -1,28 +1,47 @@
 import '@testing-library/jest-dom'
 import { composeStories } from '@storybook/testing-react'
 import { fireEvent, render, screen, within } from '@testing-library/react'
+import userEvent from '@testing-library/user-event'
 
 import * as stories from './UserTable.stories' // import all stories from the stories file
+import { B2BUserInput } from '@/lib/types'
 
 import { B2BUser } from '@/lib/gql/types'
 
-const { Table } = composeStories(stories)
+const { Table, TableMobile } = composeStories(stories)
+
+const user = userEvent.setup()
 
 const onDeleteMock = jest.fn()
-const onCloseMock = jest.fn()
+const onSaveMock = jest.fn()
+const onViewMock = jest.fn()
 
-const UserFormMock = ({ onClose }: { onClose: () => void }) => (
-  <div data-testid="user-form-mock">
-    <button data-testid="cancel-user-mock-button" onClick={onClose}>
-      Cancel
-    </button>
-  </div>
-)
-
-jest.mock(
-  '@/components/b2b/User/UserForm/UserForm',
-  () => () => UserFormMock({ onClose: onCloseMock })
-)
+jest.mock('@/components/b2b/User/UserForm/UserForm', () => ({
+  __esModule: true,
+  default: ({
+    onSave,
+    onClose,
+  }: {
+    onSave: (formValues: B2BUserInput) => void
+    onClose: () => void
+  }) => (
+    <div data-testid="user-form-mock">
+      <button
+        onClick={() =>
+          onSave({
+            firstName: 'test-firstName',
+            lastName: 'test-lastName',
+          })
+        }
+      >
+        onSave
+      </button>
+      <button data-testid="cancel-user-mock-button" onClick={onClose}>
+        Cancel
+      </button>
+    </div>
+  ),
+}))
 
 jest.mock('@mui/material', () => {
   const originalModule = jest.requireActual('@mui/material')
@@ -87,16 +106,36 @@ describe('[component] User Table', () => {
     )
   })
 
+  it('should show No Record Found when users list is empty', () => {
+    render(<Table {...Table.args} b2bUsers={[]} />)
+
+    const noRecordFound = screen.getByText('no-record-found')
+    expect(noRecordFound).toBeVisible()
+  })
+
   it('should show user form when user clicks on Edit icon', async () => {
-    render(<Table {...Table.args} />)
+    render(<Table {...Table.args} onSave={onSaveMock} />)
 
     const rows = await screen.findAllByRole('row')
     const editIconInRowOne = within(rows[1]).getByTestId('EditIcon')
 
-    fireEvent.click(editIconInRowOne)
+    await user.click(editIconInRowOne)
 
     const userForm = within(rows[1]).getByTestId('user-form-mock')
     expect(userForm).toBeVisible()
+
+    const saveButton = within(userForm).getByRole('button', { name: 'onSave' })
+    expect(saveButton).toBeVisible()
+
+    await user.click(saveButton)
+
+    expect(onSaveMock).toHaveBeenCalledWith(
+      {
+        firstName: 'test-firstName',
+        lastName: 'test-lastName',
+      },
+      Table.args?.b2bUsers?.[0]
+    )
   })
 
   it('should call onDelete when user clicks on delete icon', async () => {
@@ -106,7 +145,7 @@ describe('[component] User Table', () => {
     const deleteIconInRowOne = within(rows[1]).getByTestId('DeleteIcon')
 
     // Act
-    fireEvent.click(deleteIconInRowOne)
+    await user.click(deleteIconInRowOne)
 
     // Assert
     expect(onDeleteMock).toHaveBeenCalled()
@@ -117,7 +156,7 @@ describe('[component] User Table', () => {
     const rows = await screen.findAllByRole('row')
     const editIconInRowOne = within(rows[1]).getByTestId('EditIcon')
 
-    fireEvent.click(editIconInRowOne)
+    await user.click(editIconInRowOne)
 
     const userForm = within(rows[1]).getByTestId('user-form-mock')
     expect(userForm).toBeVisible()
@@ -125,8 +164,40 @@ describe('[component] User Table', () => {
     const cancelButton = within(userForm).getByTestId('cancel-user-mock-button')
     expect(cancelButton).toBeVisible()
 
-    fireEvent.click(cancelButton)
+    await user.click(cancelButton)
 
-    expect(onCloseMock).toHaveBeenCalled()
+    expect(userForm).not.toBeVisible()
+  })
+
+  it('should show edit user dialog when mdScreen is false', async () => {
+    render(<TableMobile {...TableMobile.args} onSave={onSaveMock} onView={onViewMock} />)
+
+    const rows = await screen.findAllByRole('row')
+    const userActionMenu = within(rows[1]).getByTestId('EditIcon')
+    expect(userActionMenu).toBeVisible()
+
+    await user.click(userActionMenu)
+
+    const dialog = screen.getByRole('dialog', { name: 'edit-user' })
+    expect(dialog).toBeVisible()
+
+    const userForm = screen.getByTestId('user-form-mock')
+    expect(userForm).toBeVisible()
+
+    const saveButton = within(userForm).getByRole('button', { name: 'onSave' })
+    expect(saveButton).toBeVisible()
+
+    await user.click(saveButton)
+
+    expect(onSaveMock).toHaveBeenCalledWith(
+      {
+        firstName: 'test-firstName',
+        lastName: 'test-lastName',
+      },
+      Table.args?.b2bUsers?.[0]
+    )
+
+    fireEvent.click(rows[0])
+    expect(onViewMock).toHaveBeenCalled()
   })
 })

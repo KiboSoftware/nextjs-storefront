@@ -7,23 +7,24 @@ import { useTranslation } from 'next-i18next'
 import { useForm, Controller } from 'react-hook-form'
 import * as yup from 'yup'
 
-import { AccountHierarchyFormStyles } from './AccountHierarchyAddForm.styles'
+import { AccountHierarchyFormStyles } from './AccountHierarchyForm.styles'
 import { KiboSelect, KiboTextBox } from '@/components/common'
 import { CreateCustomerB2bAccountParams } from '@/lib/types'
 
-import { B2BAccount } from '@/lib/gql/types'
+import { B2BAccount, B2BUser } from '@/lib/gql/types'
 
-interface AccountHierarchyAddFormProps {
+interface AccountHierarchyFormProps {
   accounts?: B2BAccount[]
   isAddingAccountToChild: boolean
+  b2BAccount?: B2BAccount
   onSave: (data: CreateCustomerB2bAccountParams) => void
   onClose: () => void
 }
 
-const useAccountHierarchySchema = () => {
+const useAccountHierarchySchema = (b2BAccount: B2BAccount) => {
   const { t } = useTranslation('common')
   return yup.object({
-    parentAccount: yup.string().required(t('this-field-is-required')),
+    parentAccount: b2BAccount ? yup.string() : yup.string().required(t('this-field-is-required')),
     companyOrOrganization: yup.string().required(t('this-field-is-required')),
     firstName: yup.string().required(t('this-field-is-required')),
     lastName: yup.string().required(t('this-field-is-required')),
@@ -31,13 +32,13 @@ const useAccountHierarchySchema = () => {
   })
 }
 
-const AccountHierarchyAddForm = (props: AccountHierarchyAddFormProps) => {
-  const { accounts, isAddingAccountToChild, onSave, onClose } = props
+const AccountHierarchyForm = (props: AccountHierarchyFormProps) => {
+  const { accounts, isAddingAccountToChild, b2BAccount, onSave, onClose } = props
   const [isLoading, setLoading] = useState<boolean>(false)
   const [selectedParentAccount, setSelectedParentAccount] = useState<B2BAccount>()
 
   const { t } = useTranslation()
-  const accountHierarchySchema = useAccountHierarchySchema()
+  const accountHierarchySchema = useAccountHierarchySchema(b2BAccount as B2BAccount)
 
   const {
     formState: { errors, isValid },
@@ -63,11 +64,26 @@ const AccountHierarchyAddForm = (props: AccountHierarchyAddFormProps) => {
 
   useEffect(() => {
     const hasMultipleAccounts = accounts?.length && accounts.length > 1
-    if (!hasMultipleAccounts) {
+    if (!hasMultipleAccounts && !b2BAccount) {
       setValue('parentAccount', accounts?.[0]?.companyOrOrganization as string)
       setSelectedParentAccount(accounts?.[0])
     }
-  }, [accounts])
+
+    if (b2BAccount) {
+      const { parentAccountId, companyOrOrganization, taxId, users } = b2BAccount
+      const parentAccount = accounts?.find((account) => account.id === parentAccountId)
+      setValue('parentAccount', parentAccount?.companyOrOrganization as string)
+      setValue('companyOrOrganization', companyOrOrganization as string)
+      setValue('taxId', taxId as string)
+      if (users?.length) {
+        const { firstName, lastName, emailAddress } = users?.[0] as B2BUser
+        setValue('firstName', firstName as string)
+        setValue('lastName', lastName as string)
+        setValue('emailAddress', emailAddress as string)
+      }
+      setSelectedParentAccount(parentAccount)
+    }
+  }, [accounts, b2BAccount])
 
   const onSubmit = () => {
     if (isLoading || !isValid) return
@@ -87,58 +103,65 @@ const AccountHierarchyAddForm = (props: AccountHierarchyAddFormProps) => {
     setSelectedParentAccount(account)
   }
 
+  const getParentAccountField = () => {
+    if (isAddingAccountToChild)
+      return (
+        <Controller
+          name="parentAccount"
+          control={control}
+          render={({ field }) => (
+            <KiboTextBox
+              value={field.value}
+              label={t('parent-account')}
+              onChange={(_name, value) => field.onChange(value)}
+              onBlur={field.onBlur}
+              disabled
+              error={!!errors?.parentAccount}
+              helperText={errors?.parentAccount?.message as string}
+            />
+          )}
+        />
+      )
+    else
+      return (
+        <Controller
+          name="parentAccount"
+          control={control}
+          render={({ field }) => (
+            <KiboSelect
+              sx={{ marginBottom: '20px' }}
+              name="parentAccount"
+              label={t('parent-account')}
+              onChange={handleParentAccountChange}
+              placeholder={t('select-parent-account')}
+              error={!!errors?.parentAccount}
+              helperText={errors?.parentAccount?.message as string}
+              value={selectedParentAccount?.id?.toString() ?? ''}
+            >
+              {accounts?.map((account: B2BAccount) => {
+                return (
+                  <MenuItem key={account?.id} value={`${account?.id}`}>
+                    {account?.companyOrOrganization}
+                  </MenuItem>
+                )
+              })}
+            </KiboSelect>
+          )}
+        />
+      )
+  }
+
   return (
     <form data-testid="account-hierarchy-form" onSubmit={handleSubmit(onSubmit)}>
       <FormControl sx={{ width: '100%' }}>
-        {isAddingAccountToChild ? (
-          <Controller
-            name="parentAccount"
-            control={control}
-            render={({ field }) => (
-              <KiboTextBox
-                value={field.value ?? ''}
-                label={t('parent-account')}
-                onChange={(_name, value) => field.onChange(value)}
-                onBlur={field.onBlur}
-                disabled
-                error={!!errors?.parentAccount}
-                helperText={errors?.parentAccount?.message as string}
-              />
-            )}
-          />
-        ) : (
-          <Controller
-            name="parentAccount"
-            control={control}
-            render={({ field }) => (
-              <KiboSelect
-                sx={{ marginBottom: '20px' }}
-                name="parentAccount"
-                label={t('parent-account')}
-                onChange={handleParentAccountChange}
-                placeholder={t('select-parent-account')}
-                error={!!errors?.parentAccount}
-                helperText={errors?.parentAccount?.message as string}
-                value={selectedParentAccount?.id?.toString() ?? ''}
-              >
-                {accounts?.map((account: B2BAccount) => {
-                  return (
-                    <MenuItem key={account?.id} value={`${account?.id}`}>
-                      {account?.companyOrOrganization}
-                    </MenuItem>
-                  )
-                })}
-              </KiboSelect>
-            )}
-          />
-        )}
+        {!b2BAccount ? getParentAccountField() : null}
 
         <Controller
           name="companyOrOrganization"
           control={control}
           render={({ field }) => (
             <KiboTextBox
-              value={field.value ?? ''}
+              value={field.value}
               label={t('company-name')}
               onChange={(_name, value) => field.onChange(value)}
               onBlur={field.onBlur}
@@ -153,7 +176,7 @@ const AccountHierarchyAddForm = (props: AccountHierarchyAddFormProps) => {
           control={control}
           render={({ field }) => (
             <KiboTextBox
-              value={field.value ?? ''}
+              value={field.value}
               label={`${t('tax-id')} (${t('optional')})`}
               onChange={(_name, value) => field.onChange(value)}
               onBlur={field.onBlur}
@@ -168,7 +191,7 @@ const AccountHierarchyAddForm = (props: AccountHierarchyAddFormProps) => {
           control={control}
           render={({ field }) => (
             <KiboTextBox
-              value={field.value ?? ''}
+              value={field.value}
               label={t('first-name')}
               onChange={(_name, value) => field.onChange(value)}
               onBlur={field.onBlur}
@@ -182,7 +205,7 @@ const AccountHierarchyAddForm = (props: AccountHierarchyAddFormProps) => {
           control={control}
           render={({ field }) => (
             <KiboTextBox
-              value={field.value ?? ''}
+              value={field.value}
               label={t('last-name-or-sur-name')}
               onChange={(_name, value) => field.onChange(value)}
               onBlur={field.onBlur}
@@ -198,7 +221,7 @@ const AccountHierarchyAddForm = (props: AccountHierarchyAddFormProps) => {
           render={({ field }) => (
             <KiboTextBox
               type="email"
-              value={field.value ?? ''}
+              value={field.value}
               label={t('email')}
               onChange={(_name, value) => field.onChange(value)}
               onBlur={field.onBlur}
@@ -226,7 +249,7 @@ const AccountHierarchyAddForm = (props: AccountHierarchyAddFormProps) => {
             loading={isLoading}
             disabled={isLoading}
           >
-            {t('create-account')}
+            {b2BAccount ? t('update-account') : t('create-account')}
           </LoadingButton>
         </Stack>
       </FormControl>
@@ -234,4 +257,4 @@ const AccountHierarchyAddForm = (props: AccountHierarchyAddFormProps) => {
   )
 }
 
-export default AccountHierarchyAddForm
+export default AccountHierarchyForm
