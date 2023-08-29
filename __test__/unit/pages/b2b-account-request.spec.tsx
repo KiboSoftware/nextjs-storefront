@@ -16,11 +16,11 @@ jest.mock('next-i18next/serverSideTranslations', () => ({
   }),
 }))
 
-// const AccountHierarchyFormMock = () => <div data-testid="account-hierarchy-form-mock" />
-// jest.mock(
-//   '@/components/b2b/AccountHierarchy/AccountHierarchyForm/AccountHierarchyForm',
-//   () => () => AccountHierarchyFormMock()
-// )
+const AccountHierarchyFormMock = () => <div data-testid="account-hierarchy-form-mock" />
+jest.mock(
+  '@/components/b2b/AccountHierarchy/AccountHierarchyForm/AccountHierarchyForm',
+  () => () => AccountHierarchyFormMock()
+)
 
 const mockNextI18Next = {
   initialI18nStore: { 'mock-locale': [{}], en: [{}] },
@@ -51,5 +51,8 @@ describe('[page] B2B Account Request Page', () => {
     render(<B2BAccountRequestPage />, {
       wrapper: createQueryClientWrapper(),
     })
+
+    const accountForm = screen.getByTestId('account-hierarchy-form-mock')
+    expect(accountForm).toBeVisible()
   })
 })
