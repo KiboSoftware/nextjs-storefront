@@ -45,18 +45,17 @@ const CreateList = (props: CreateListProps) => {
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault()
-    await createWishlist
-      .mutateAsync({
+    try {
+      await createWishlist.mutateAsync({
         customerAccountId: user?.id,
         name: listState.name,
         items: listState.items,
       })
-      .catch((e) => {
-        console.log(e)
-        alert('error occured')
-      })
-    setListState({ name: '', items: [{ product: { productCode: '' }, quantity: 0 }] })
-    onCreateFormToggle(false)
+      setListState({ name: '', items: [] })
+      onCreateFormToggle(false)
+    } catch (e) {
+      console.log(e)
+    }
   }
 
   const handleAddProduct = (product?: Product) => {
