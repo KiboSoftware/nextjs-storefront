@@ -3,6 +3,7 @@ import React from 'react'
 import { ComponentStory, ComponentMeta } from '@storybook/react'
 
 import HamburgerMenu from './HamburgerMenu'
+import AccountRequestIcon from '../AppHeader/Icons/AccountRequestIcon/AccountRequestIcon'
 import { categoryTreeDataMock } from '@/__mocks__/stories/categoryTreeDataMock'
 
 export default {
@@ -41,4 +42,11 @@ Common.args = {
       link: '#',
     },
   ],
+  requestAccountIconComponent: (
+    <AccountRequestIcon
+      iconProps={{ fontSize: 'medium' }}
+      isMobileView={true}
+      buttonText="B2B Account Request"
+    />
+  ),
 }

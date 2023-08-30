@@ -16,15 +16,20 @@ import { B2BAccount, B2BUser } from '@/lib/gql/types'
 interface AccountHierarchyFormProps {
   accounts?: B2BAccount[]
   isAddingAccountToChild: boolean
+  isRequestAccount?: boolean
+  primaryButtonText: string
   b2BAccount?: B2BAccount
   onSave: (data: CreateCustomerB2bAccountParams) => void
-  onClose: () => void
+  onClose?: () => void
 }
 
-const useAccountHierarchySchema = (b2BAccount: B2BAccount) => {
+const useAccountHierarchySchema = (b2BAccount: B2BAccount, isRequestAccount: boolean) => {
   const { t } = useTranslation('common')
   return yup.object({
-    parentAccount: b2BAccount ? yup.string() : yup.string().required(t('this-field-is-required')),
+    parentAccount:
+      b2BAccount || isRequestAccount
+        ? yup.string()
+        : yup.string().required(t('this-field-is-required')),
     companyOrOrganization: yup.string().required(t('this-field-is-required')),
     firstName: yup.string().required(t('this-field-is-required')),
     lastName: yup.string().required(t('this-field-is-required')),
@@ -33,12 +38,23 @@ const useAccountHierarchySchema = (b2BAccount: B2BAccount) => {
 }
 
 const AccountHierarchyForm = (props: AccountHierarchyFormProps) => {
-  const { accounts, isAddingAccountToChild, b2BAccount, onSave, onClose } = props
+  const {
+    accounts,
+    isAddingAccountToChild,
+    isRequestAccount = false,
+    b2BAccount,
+    primaryButtonText,
+    onSave,
+    onClose,
+  } = props
   const [isLoading, setLoading] = useState<boolean>(false)
   const [selectedParentAccount, setSelectedParentAccount] = useState<B2BAccount>()
 
   const { t } = useTranslation()
-  const accountHierarchySchema = useAccountHierarchySchema(b2BAccount as B2BAccount)
+  const accountHierarchySchema = useAccountHierarchySchema(
+    b2BAccount as B2BAccount,
+    isRequestAccount
+  )
 
   const {
     formState: { errors, isValid },
@@ -154,7 +170,7 @@ const AccountHierarchyForm = (props: AccountHierarchyFormProps) => {
   return (
     <form data-testid="account-hierarchy-form" onSubmit={handleSubmit(onSubmit)}>
       <FormControl sx={{ width: '100%' }}>
-        {!b2BAccount ? getParentAccountField() : null}
+        {!b2BAccount && !isRequestAccount ? getParentAccountField() : null}
 
         <Controller
           name="companyOrOrganization"
@@ -249,7 +265,7 @@ const AccountHierarchyForm = (props: AccountHierarchyFormProps) => {
             loading={isLoading}
             disabled={isLoading}
           >
-            {b2BAccount ? t('update-account') : t('create-account')}
+            {primaryButtonText}
           </LoadingButton>
         </Stack>
       </FormControl>

@@ -56,6 +56,7 @@ describe('[component] KiboHeader component', () => {
 
     expect(screen.getByTestId('ShoppingCartIcon')).toBeVisible()
     expect(screen.getByText(/cart/i)).toBeVisible()
+    expect(screen.getAllByText(/b2b-account-request/i)[0]).toBeVisible()
   })
 
   it('should render the searchbox', async () => {
@@ -91,6 +92,19 @@ describe('[component] KiboHeader component', () => {
         pathname: '/cart',
         query: {},
       })
+    })
+  })
+
+  it('should open b2b account request form dialog when user clicks on B2B Account Request link', async () => {
+    const user = userEvent.setup()
+    render(<Common {...Common.args} />)
+
+    const requestAccountLink = screen.getAllByText(/b2b-account-request/i)
+    user.click(requestAccountLink[0])
+
+    await waitFor(() => {
+      const accountHierarcyFormDialog = screen.getByRole('dialog')
+      expect(accountHierarcyFormDialog).toBeVisible()
     })
   })
 })

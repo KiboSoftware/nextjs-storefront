@@ -13,7 +13,10 @@ describe('[component] HamburgerMenu component', () => {
     render(<Common {...Common.args} />)
     const menu = screen.getAllByRole('button')
 
-    expect(menu.length).toBe(16)
+    expect(menu.length).toBe(17)
+
+    const requestAccountLink = screen.getByText('B2B Account Request')
+    expect(requestAccountLink).toBeVisible()
   })
 
   it('should not render all the list-items if isDrawerOpen props is false', () => {
