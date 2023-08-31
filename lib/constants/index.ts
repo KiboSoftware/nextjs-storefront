@@ -200,3 +200,11 @@ export const AccountActions = {
 export enum AccountType {
   B2B = 'B2B',
 }
+
+export const QuoteStatus = {
+  Pending: 'Pending',
+  InReview: 'In Review',
+  ReadyForCheckout: 'Ready For Checkout',
+  Completed: 'Completed',
+  Expired: 'Expired',
+}
