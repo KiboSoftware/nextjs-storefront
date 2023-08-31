@@ -6,7 +6,7 @@ import * as stories from './AccountHierarchyTreeLabel.stories'
 import { b2BAccountHierarchyResult, userResponseMock } from '@/__mocks__/stories'
 import { renderWithQueryClient } from '@/__test__/utils'
 
-const { Admin, Purchaser, NonPurchaser } = composeStories(stories)
+const { Admin, NonPurchaser } = composeStories(stories)
 
 const handleAddAccountMock = jest.fn()
 const handleEditAccountMock = jest.fn()
@@ -15,8 +15,7 @@ const handleBuyersBtnClickMock = jest.fn()
 const handleQuotesBtnClickMock = jest.fn()
 const handleViewAccountMock = jest.fn()
 
-const companyOrOrganizationName = b2BAccountHierarchyResult?.accounts?.[0]
-  ?.companyOrOrganization as string
+const companyOrOrganizationName = b2BAccountHierarchyResult?.accounts?.[0]?.companyOrOrganization
 
 jest.mock(
   '@/components/b2b/AccountHierarchy/AccountHierarchyActions/AccountHierarchyActions',
@@ -59,11 +58,7 @@ describe('[components] AccountHierarchyTreeLabel', () => {
   it('should render all action buttons in Admin View', async () => {
     renderWithQueryClient(<Admin {...props} />)
 
-    const currentAccount = Admin?.args?.accounts?.find(
-      (account) => account.id === Admin?.args?.item?.id
-    )
-
-    const listItemIcon = screen.getByRole('listitem')
+    const listItemIcon = screen.getByTestId('account-hierarchy-actions-mock')
     expect(listItemIcon).toBeVisible()
 
     const accountAddButton = screen.getByRole('button', { name: 'Add' })
@@ -71,23 +66,23 @@ describe('[components] AccountHierarchyTreeLabel', () => {
     await user.click(accountAddButton)
     expect(handleAddAccountMock).toHaveBeenCalledWith({
       isAddingAccountToChild: true,
-      accounts: [currentAccount],
+      accounts: [Admin.args?.currentAccount],
     })
 
     const buyerButton = screen.getByRole('button', { name: 'Buyers' })
     expect(buyerButton).toBeVisible()
     await user.click(buyerButton)
-    expect(handleBuyersBtnClickMock).toHaveBeenCalledWith(currentAccount?.users)
+    expect(handleBuyersBtnClickMock).toHaveBeenCalledWith(Admin.args?.currentAccount?.users)
 
     const quoteButton = screen.getByRole('button', { name: 'Quotes' })
     expect(quoteButton).toBeVisible()
     await user.click(quoteButton)
-    expect(handleQuotesBtnClickMock).toHaveBeenCalledWith(currentAccount?.id)
+    expect(handleQuotesBtnClickMock).toHaveBeenCalledWith(Admin.args?.currentAccount?.id)
 
     const accountViewButton = screen.getByRole('button', { name: 'View' })
     expect(accountViewButton).toBeVisible()
     await user.click(accountViewButton)
-    expect(handleViewAccountMock).toHaveBeenCalledWith(currentAccount)
+    expect(handleViewAccountMock).toHaveBeenCalledWith(Admin.args?.currentAccount)
   })
 
   it("Update the parent account when the user's account differs, triggered by clicking 'Edit Account'", async () => {
@@ -97,29 +92,16 @@ describe('[components] AccountHierarchyTreeLabel', () => {
     expect(accountEditButton).toBeVisible()
     await user.click(accountEditButton)
 
-    const currentAccount = Admin?.args?.accounts?.find(
-      (account) => account.id === Admin?.args?.item?.id
-    )
-
     await waitFor(() => {
       expect(handleChangeParentMock).toHaveBeenCalledWith({
         accounts: Admin.args?.accounts,
-        b2BAccount: currentAccount,
+        b2BAccount: Admin.args?.currentAccount,
       })
     })
   })
 
   it("should handle Edit Account button click when user's account is same as the current account", async () => {
-    renderWithQueryClient(
-      <Admin
-        customerAccount={{ ...userResponseMock, id: Admin.args?.item?.id as number }}
-        {...props}
-      />
-    )
-
-    const currentAccount = Admin?.args?.accounts?.find(
-      (account) => account.id === Admin?.args?.item?.id
-    )
+    renderWithQueryClient(<Admin customerAccount={{ ...userResponseMock, id: 1174 }} {...props} />)
 
     const accountEditButton = screen.getByRole('button', { name: 'Edit' })
     expect(accountEditButton).toBeVisible()
@@ -128,7 +110,7 @@ describe('[components] AccountHierarchyTreeLabel', () => {
     await waitFor(() => {
       expect(handleEditAccountMock).toHaveBeenCalledWith({
         accounts: Admin.args?.accounts,
-        b2BAccount: currentAccount,
+        b2BAccount: Admin.args?.currentAccount,
       })
     })
   })

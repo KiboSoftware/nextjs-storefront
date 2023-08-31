@@ -35,16 +35,20 @@ import {
 } from '@/lib/helpers'
 import {
   AddChildAccountProps,
+  B2BAccountHierarchyResult,
   CreateCustomerB2bAccountParams,
   EditChildAccountProps,
-  HierarchyNode,
+  HierarchyTree,
 } from '@/lib/types'
 
-import { B2BAccount, B2BUser } from '@/lib/gql/types'
+import { B2BAccount, B2BUser, CustomerAccount } from '@/lib/gql/types'
 
-// Add this to achieve Mobile Layout
+interface AccountHierarchyTemplateProps {
+  initialData?: B2BAccountHierarchyResult
+}
 
-const AccountHierarchyTemplate = () => {
+const AccountHierarchyTemplate = (props: AccountHierarchyTemplateProps) => {
+  const { initialData } = props
   const theme = useTheme()
   const router = useRouter()
   const { user } = useAuthContext()
@@ -52,11 +56,11 @@ const AccountHierarchyTemplate = () => {
   const { showModal, closeModal } = useModalContext()
   const mdScreen = useMediaQuery(theme.breakpoints.up('md'))
 
-  const { b2BAccountHierarchy } = useGetB2BAccountHierarchy(user?.id as number)
+  const { b2BAccountHierarchy } = useGetB2BAccountHierarchy(user?.id as number, initialData)
   const { createCustomerB2bAccount } = useCreateCustomerB2bAccountMutation()
   const { updateCustomerB2bAccount } = useUpdateCustomerB2bAccountMutation()
   const { updateCustomerB2bUser } = useUpdateCustomerB2bUserMutation()
-  const { changeB2bAccountParent } = useChangeB2bAccountParentMutation()
+  const { changeB2bAccountParent } = useChangeB2bAccountParentMutation(user?.id as number)
   const { data: currentB2bUser } = useGetB2BUserQueries({
     accountId: user?.id as number,
     filter: '',
@@ -65,13 +69,9 @@ const AccountHierarchyTemplate = () => {
     q: user?.userName as string,
   })
 
-  const [accountHierarchy, setAccountHierarchy] = useState<{
-    accounts: B2BAccount[]
-    hierarchy: HierarchyNode[] | undefined
-  }>({
-    accounts: [],
-    hierarchy: undefined,
-  })
+  const [accountHierarchy, setAccountHierarchy] = useState<B2BAccountHierarchyResult>(
+    b2BAccountHierarchy as B2BAccountHierarchyResult
+  )
 
   // Add this to achieve Mobile Layout
   const breadcrumbList = [
@@ -243,7 +243,7 @@ const AccountHierarchyTemplate = () => {
 
   useEffect(() => {
     if (!b2BAccountHierarchy) return
-    const hierarchy = buildAccountHierarchy(b2BAccountHierarchy?.accounts)
+    const hierarchy = buildAccountHierarchy(b2BAccountHierarchy?.accounts) as HierarchyTree[]
     setAccountHierarchy({
       accounts: b2BAccountHierarchy?.accounts,
       hierarchy,
@@ -282,7 +282,7 @@ const AccountHierarchyTemplate = () => {
           <Grid item xs={12}>
             <AccountHierarchyTree
               role={userGetters.getRole(currentB2bUser?.items?.[0] as B2BUser)}
-              customerAccount={user}
+              customerAccount={user as CustomerAccount}
               accounts={accountHierarchy.accounts}
               hierarchy={accountHierarchy.hierarchy}
               handleViewAccount={handleViewAccount}
@@ -292,6 +292,7 @@ const AccountHierarchyTemplate = () => {
               handleSwapAccount={handleSwapAccount}
               handleBuyersBtnClick={handleBuyersBtnClick}
               handleQuotesBtnClick={handleQuotesBtnClick}
+              setAccountHierarchy={setAccountHierarchy}
             />
           </Grid>
         </>

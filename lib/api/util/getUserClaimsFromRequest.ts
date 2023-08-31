@@ -25,6 +25,7 @@ const getUserClaimsFromRequest = async (
   if (authTicket && isShopperAuthExpired(authTicket) === false) {
     return authTicket.accessToken
   }
+  const accountId = authTicket?.accountId
 
   // shopper is anonymous
   // else logged in user ticket needs to be refreshed
@@ -33,7 +34,10 @@ const getUserClaimsFromRequest = async (
   } else {
     authTicket = await shopperAuthClient.refreshUserAuth(authTicket)
   }
-  res.setHeader('Set-Cookie', authCookieName + '=' + prepareSetCookieValue(authTicket) + ';path=/')
+  res.setHeader(
+    'Set-Cookie',
+    authCookieName + '=' + prepareSetCookieValue({ ...authTicket, accountId }) + ';path=/'
+  )
 
   return authTicket.accessToken
 }

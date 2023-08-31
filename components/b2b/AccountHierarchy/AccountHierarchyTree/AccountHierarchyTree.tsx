@@ -1,38 +1,31 @@
 import * as React from 'react'
 
-import ChevronRightIcon from '@mui/icons-material/ChevronRight'
-import DragIndicator from '@mui/icons-material/DragIndicator'
-import ExpandMoreIcon from '@mui/icons-material/ExpandMore'
+import NoSsr from '@mui/base/NoSsr'
+import { Box, Button, Typography, useMediaQuery, useTheme } from '@mui/material'
 import {
-  Box,
-  Button,
-  IconButton,
-  List,
-  ListItemIcon,
-  Typography,
-  useMediaQuery,
-  useTheme,
-} from '@mui/material'
+  SimpleTreeItemWrapper,
+  SortableTree,
+  TreeItemComponentProps,
+  TreeItems,
+} from 'dnd-kit-sortable-tree'
 import { useTranslation } from 'next-i18next'
-import Nestable from 'react-nestable'
 
 import { AccountHierarchyStyles } from './AccountHierarchyTree.styles'
 import { AccountHierarchyTreeLabel } from '@/components/b2b'
-import { getSwapAccountParams } from '@/lib/helpers'
 import {
   AddChildAccountProps,
+  B2BAccountHierarchyResult,
   EditChildAccountProps,
-  HierarchyNode,
-  NestableOnChangeArgs,
+  HierarchyTree,
 } from '@/lib/types'
 
 import { B2BAccount, B2BUser, CustomerAccount } from '@/lib/gql/types'
 
 interface AccountHierarchyTreeProps {
   role: string
-  accounts: any[]
-  customerAccount: CustomerAccount | undefined
-  hierarchy: HierarchyNode[] | undefined
+  accounts: B2BAccount[]
+  customerAccount: CustomerAccount
+  hierarchy: HierarchyTree[]
   handleViewAccount: (item: B2BAccount) => void
   handleAddAccount: ({ isAddingAccountToChild, accounts }: AddChildAccountProps) => void
   handleEditAccount: ({ accounts }: EditChildAccountProps) => void
@@ -40,6 +33,7 @@ interface AccountHierarchyTreeProps {
   handleSwapAccount: (accountId: number, parentAccountId: number) => void
   handleBuyersBtnClick: (b2BUsers: B2BUser[]) => void
   handleQuotesBtnClick: (id: number) => void
+  setAccountHierarchy: (items: B2BAccountHierarchyResult) => void
 }
 
 export default function AccountHierarchyTree(props: AccountHierarchyTreeProps) {
@@ -55,6 +49,7 @@ export default function AccountHierarchyTree(props: AccountHierarchyTreeProps) {
     handleSwapAccount,
     handleBuyersBtnClick,
     handleQuotesBtnClick,
+    setAccountHierarchy,
   } = props
 
   const theme = useTheme()
@@ -62,15 +57,34 @@ export default function AccountHierarchyTree(props: AccountHierarchyTreeProps) {
 
   const { t } = useTranslation('common')
 
-  const handleCollapse = (collapseCase: 'ALL' | 'NONE') => {
-    const instance = refNestable.current as any
-    instance?.collapse(collapseCase)
+  const handleCollapse = (type: string) => {
+    const newHierarchy = hierarchy.map((item: HierarchyTree) => {
+      if (type === 'ALL') {
+        return {
+          ...item,
+          collapsed: true,
+        }
+      } else {
+        return {
+          ...item,
+          collapsed: false,
+        }
+      }
+    })
+
+    setAccountHierarchy({
+      accounts,
+      hierarchy: newHierarchy,
+    })
   }
 
-  const refNestable = React.useRef<Nestable | null>(null)
-
-  const onAccountSwap = ({ dragItem, items, targetPath }: NestableOnChangeArgs) => {
-    const { accountId, parentAccountId } = getSwapAccountParams({ dragItem, items, targetPath })
+  const onAccountSwap = ({
+    accountId,
+    parentAccountId,
+  }: {
+    accountId: number
+    parentAccountId: number
+  }) => {
     handleSwapAccount(accountId, parentAccountId)
   }
 
@@ -94,49 +108,51 @@ export default function AccountHierarchyTree(props: AccountHierarchyTreeProps) {
         <Typography fontWeight="bold">{t('org-name')}</Typography>
       </Box>
 
-      <List dense={true}>
-        <Nestable
-          ref={(el) => (refNestable.current = el)}
-          items={hierarchy as HierarchyNode[]}
-          renderItem={({ item, collapseIcon, handler }: any) => (
-            <AccountHierarchyTreeLabel
-              role={role}
-              mdScreen={mdScreen}
-              item={item}
-              accounts={accounts}
-              customerAccount={customerAccount}
-              handleViewAccount={handleViewAccount}
-              handleAddAccount={handleAddAccount}
-              handleEditAccount={handleEditAccount}
-              handleChangeParent={handleChangeParent}
-              handleBuyersBtnClick={handleBuyersBtnClick}
-              handleQuotesBtnClick={handleQuotesBtnClick}
-              icons={
-                <ListItemIcon sx={{ display: 'flex' }}>
-                  <IconButton size="small">{handler}</IconButton>
-                  {collapseIcon ? <IconButton size="small">{collapseIcon}</IconButton> : null}
-                </ListItemIcon>
-              }
-            />
-          )}
-          renderCollapseIcon={({ isCollapsed }) => (
-            <Box display="flex" justifyContent="center" alignItems="center">
-              {isCollapsed ? <ChevronRightIcon /> : <ExpandMoreIcon />}
-            </Box>
-          )}
-          onChange={(accountSwapArgs: NestableOnChangeArgs) => onAccountSwap(accountSwapArgs)}
-          handler={
-            <Box
-              display="flex"
-              justifyContent="center"
-              alignItems="center"
-              data-testid="drag-handler"
-            >
-              <DragIndicator />
-            </Box>
-          }
+      <NoSsr>
+        <SortableTree
+          items={hierarchy as TreeItems<HierarchyTree>}
+          onItemsChanged={(items, reason) => {
+            if (reason.type === 'dropped') {
+              onAccountSwap({
+                accountId: reason.draggedItem.id,
+                parentAccountId: reason.draggedItem.parentId as number,
+              })
+            } else {
+              setAccountHierarchy({
+                accounts,
+                hierarchy: items as HierarchyTree[],
+              })
+            }
+          }}
+          // eslint-disable-next-line react/display-name
+          TreeItemComponent={React.forwardRef<
+            HTMLDivElement,
+            TreeItemComponentProps<HierarchyTree>
+          >((props, ref) => {
+            const currentAccount: B2BAccount = accounts?.find(
+              (account: B2BAccount) => account.id === props.item.id
+            ) as B2BAccount
+
+            return (
+              <SimpleTreeItemWrapper {...props} ref={ref}>
+                <AccountHierarchyTreeLabel
+                  role={role}
+                  mdScreen={mdScreen}
+                  currentAccount={currentAccount}
+                  accounts={accounts}
+                  customerAccount={customerAccount}
+                  handleViewAccount={handleViewAccount}
+                  handleAddAccount={handleAddAccount}
+                  handleEditAccount={handleEditAccount}
+                  handleChangeParent={handleChangeParent}
+                  handleBuyersBtnClick={handleBuyersBtnClick}
+                  handleQuotesBtnClick={handleQuotesBtnClick}
+                />
+              </SimpleTreeItemWrapper>
+            )
+          })}
         />
-      </List>
+      </NoSsr>
     </>
   )
 }

@@ -5,6 +5,8 @@ import { ComponentStory, ComponentMeta } from '@storybook/react'
 import AccountHierarchyTree from './AccountHierarchyTree'
 import { b2BAccountHierarchyResult } from '@/__mocks__/stories'
 import { B2BRoles } from '@/lib/constants'
+import { buildAccountHierarchy } from '@/lib/helpers'
+import { HierarchyTree } from '@/lib/types'
 
 // Common
 export default {
@@ -16,7 +18,7 @@ const Template: ComponentStory<typeof AccountHierarchyTree> = (args) => (
   <AccountHierarchyTree
     {...args}
     accounts={b2BAccountHierarchyResult.accounts as []}
-    hierarchy={[b2BAccountHierarchyResult.hierarchy]}
+    hierarchy={buildAccountHierarchy(b2BAccountHierarchyResult.accounts) as HierarchyTree[]}
   />
 )
 

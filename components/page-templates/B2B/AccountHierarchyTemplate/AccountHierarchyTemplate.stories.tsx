@@ -3,6 +3,7 @@ import React from 'react'
 import { ComponentStory, ComponentMeta } from '@storybook/react'
 
 import AccountHierarchyTemplate from './AccountHierarchyTemplate'
+import { b2BAccountHierarchyResult, hierarchyTreeMock } from '@/__mocks__/stories'
 import { AuthContext, DialogRoot, ModalContextProvider } from '@/context'
 
 export default {
@@ -25,13 +26,20 @@ const userContextValues = (isAuthenticated: boolean, userId: number) => ({
   logout: () => null,
 })
 
-const Template: ComponentStory<typeof AccountHierarchyTemplate> = () => (
+const Template: ComponentStory<typeof AccountHierarchyTemplate> = (args) => (
   <ModalContextProvider>
     <AuthContext.Provider value={userContextValues(true, 1001)}>
-      <AccountHierarchyTemplate />
+      <AccountHierarchyTemplate {...args} />
       <DialogRoot />
     </AuthContext.Provider>
   </ModalContextProvider>
 )
 
 export const Common = Template.bind({})
+
+Common.args = {
+  initialData: {
+    accounts: b2BAccountHierarchyResult.accounts,
+    hierarchy: hierarchyTreeMock,
+  },
+}

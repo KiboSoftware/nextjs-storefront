@@ -1,16 +1,17 @@
+/* eslint-disable testing-library/no-node-access */
 import { composeStories } from '@storybook/testing-react'
 import { render, screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 
 import * as stories from './AccountHierarchyTree.stories'
-import { b2BAccountHierarchyResult } from '@/__mocks__/stories'
+import { b2BAccountHierarchyResult, hierarchyTreeMock } from '@/__mocks__/stories'
 import { B2BRoles } from '@/lib/constants'
 
 const user = userEvent.setup()
 const { Admin } = composeStories(stories)
 
 const accounts = b2BAccountHierarchyResult.accounts
-const hierarchy = b2BAccountHierarchyResult.hierarchy
+const hierarchy = hierarchyTreeMock
 
 const AccountHierarchyTreeLabelMock = () => (
   <div data-testid="account-hierarchy-tree-label-mock"></div>
@@ -20,16 +21,28 @@ jest.mock(
   () => () => AccountHierarchyTreeLabelMock()
 )
 
-describe('AccountHierarchyTree', () => {
+describe('[components] AccountHierarchyTree', () => {
   it('should render the tree label for the admin role', async () => {
-    render(<Admin accounts={accounts} hierarchy={[hierarchy]} role={B2BRoles.ADMIN} />)
-    // Find the tree labels
+    render(<Admin accounts={accounts} hierarchy={hierarchyTreeMock} role={B2BRoles.ADMIN} />)
+
     const treeLabels = screen.getAllByTestId('account-hierarchy-tree-label-mock')
-    expect(treeLabels).toHaveLength(4)
+
+    function calculateTotalCount(node: { children: string | any[] }) {
+      let count = 1
+
+      if (node.children && node.children.length > 0) {
+        for (const childNode of node.children) {
+          count += calculateTotalCount(childNode)
+        }
+      }
+
+      return count
+    }
+    expect(treeLabels).toHaveLength(calculateTotalCount(hierarchy[0]))
   })
 
   it('should not render account actions buttons for non-admin roles', () => {
-    render(<Admin accounts={accounts} hierarchy={[hierarchy]} role={B2BRoles.PURCHASER} />)
+    render(<Admin accounts={accounts} hierarchy={hierarchyTreeMock} role={B2BRoles.PURCHASER} />)
 
     // Find the account actions buttons (should not be rendered)
     const accountActionButtons = screen.queryAllByRole('button', { name: 'item-add' })
@@ -40,7 +53,15 @@ describe('AccountHierarchyTree', () => {
   })
 
   it('should collapse and expand all items when clicking the Collapse All and Expand All buttons', async () => {
-    render(<Admin accounts={accounts} hierarchy={[hierarchy]} role={B2BRoles.ADMIN} />)
+    const setAccountHierarchyMock = jest.fn()
+    render(
+      <Admin
+        accounts={accounts}
+        hierarchy={hierarchyTreeMock}
+        role={B2BRoles.ADMIN}
+        setAccountHierarchy={setAccountHierarchyMock}
+      />
+    )
 
     // Find the Collapse All and Expand All buttons
     const expandAllButton = screen.getByText('expand-all')
@@ -52,15 +73,13 @@ describe('AccountHierarchyTree', () => {
     await user.click(collapseAllButton)
 
     await waitFor(() => {
-      expect(screen.getAllByTestId('account-hierarchy-tree-label-mock').length).toBe(1)
+      expect(setAccountHierarchyMock).toBeCalled()
     })
 
     await user.click(expandAllButton)
 
     await waitFor(() => {
-      expect(screen.getAllByTestId('account-hierarchy-tree-label-mock').length).toBe(
-        b2BAccountHierarchyResult.accounts.length
-      )
+      expect(setAccountHierarchyMock).toBeCalled()
     })
   })
 })

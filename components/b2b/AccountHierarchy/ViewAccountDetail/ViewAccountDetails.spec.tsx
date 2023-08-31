@@ -7,6 +7,7 @@ import { b2BAccountHierarchyResult } from '@/__mocks__/stories'
 const { Common } = composeStories(stories)
 
 const b2bAccount = b2BAccountHierarchyResult?.accounts?.[1]
+
 describe('ViewAccountDetails', () => {
   it('should render component', async () => {
     render(<Common />)
@@ -23,7 +24,7 @@ describe('ViewAccountDetails', () => {
 
     const companyNameHeading = screen.getByText('company-name')
     expect(companyNameHeading).toBeVisible()
-    const companyNameValue = screen.getByText(b2bAccount?.companyOrOrganization as string)
+    const companyNameValue = screen.getByText(b2bAccount?.companyOrOrganization)
     expect(companyNameValue).toBeVisible()
 
     const taxIDHeading = screen.getByText('tax-id optional')
@@ -33,7 +34,7 @@ describe('ViewAccountDetails', () => {
 
     const firstNameHeading = screen.getByText('user-first-name')
     expect(firstNameHeading).toBeVisible()
-    const firstNameValue = screen.getByText(b2bAccount?.users?.[0]?.firstName as string)
+    const firstNameValue = screen.getByText(b2bAccount?.users?.[0]?.firstName)
     expect(firstNameValue).toBeVisible()
 
     const lastNameHeading = screen.getByText('user-last-name')
@@ -43,7 +44,7 @@ describe('ViewAccountDetails', () => {
 
     const emailAddressHeading = screen.getByText('email')
     expect(emailAddressHeading).toBeVisible()
-    const emailAddressValue = screen.getByText(b2bAccount?.users?.[0]?.emailAddress as string)
+    const emailAddressValue = screen.getByText(b2bAccount?.users?.[0]?.emailAddress)
     expect(emailAddressValue).toBeVisible()
   })
 })

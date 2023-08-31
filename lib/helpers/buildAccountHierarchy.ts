@@ -1,5 +1,5 @@
 import { B2BAccount } from '../gql/types'
-import { HierarchyNode } from '../types'
+import { HierarchyNode, HierarchyTree } from '../types'
 
 const findAndAddChildren = (group: any, hierarchy: HierarchyNode[]): HierarchyNode[] => {
   if (hierarchy?.length) {
@@ -14,12 +14,12 @@ const findAndAddChildren = (group: any, hierarchy: HierarchyNode[]): HierarchyNo
   return hierarchy
 }
 
-export const buildAccountHierarchy = (b2BAccounts: B2BAccount[]): HierarchyNode[] | undefined => {
-  const parentAccountGroup = b2BAccounts.reduce(
+export const buildAccountHierarchy = (b2BAccounts: B2BAccount[]): HierarchyTree[] | undefined => {
+  const parentAccountGroup = b2BAccounts?.reduce(
     (group: { [key: number]: any }, { id, parentAccountId }) => {
       const accountId = (parentAccountId as number) ?? 0
-      if (!group[accountId]) group[accountId] = [{ id, children: [] }]
-      else group[accountId].push({ id, children: [] })
+      if (!group[accountId]) group[accountId] = [{ id, collapsed: false, children: [] }]
+      else group[accountId].push({ id, collapsed: false, children: [] })
       return group
     },
     {}
