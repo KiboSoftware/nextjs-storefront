@@ -32,9 +32,16 @@ const ChangeDetails = ({ field }: { field: AuditRecordChangeField }) => {
 interface QuoteHistoryProps {
   // Define your props here
   auditHistory: AuditRecord[]
+  userIdAndEmails?: any
 }
 
-const QuoteHistoryItem = ({ record }: { record: AuditRecord }) => {
+const QuoteHistoryItem = ({
+  record,
+  userIdAndEmails,
+}: {
+  record: AuditRecord
+  userIdAndEmails?: any
+}) => {
   const { id, getRecordCreatedBy, getRecordUpdateDate } = quoteGetters.getRecordDetails(record)
 
   const { t } = useTranslation('common')
@@ -42,16 +49,21 @@ const QuoteHistoryItem = ({ record }: { record: AuditRecord }) => {
   const actionText: any = {
     Add: t('added'),
     Update: t('updated'),
+    Remove: t('removed'),
   }
 
   return (
     <Stack spacing={2} pb={1} data-testid={`quote-history-item`}>
-      <Box>
+      <Box display="flex" flexDirection="row">
         <Typography variant={'body2'} fontWeight={'bold'} color={'text.primary'} gutterBottom>{`${t(
           'updated-by'
-        )}: ${getRecordCreatedBy}`}</Typography>
+        )}: `}</Typography>
         <Typography variant="body2" color={'grey.600'}>
-          {getRecordUpdateDate}
+          {quoteGetters.getEmailAddressAndDate(
+            getRecordCreatedBy,
+            getRecordUpdateDate,
+            userIdAndEmails
+          )}
         </Typography>
       </Box>
       <Grid container display="flex" justifyContent={'space-between'}>
@@ -94,17 +106,17 @@ const QuoteHistoryItem = ({ record }: { record: AuditRecord }) => {
 }
 
 const QuoteHistory = (props: QuoteHistoryProps) => {
-  const { auditHistory } = props
+  const { auditHistory, userIdAndEmails } = props
   const { t } = useTranslation('common')
 
-  if (auditHistory.length === 0) {
+  if (auditHistory?.length === 0) {
     return <Typography variant="body2">{t('no-quote-history')}</Typography>
   }
 
   return (
     <>
-      {auditHistory.map((record) => (
-        <QuoteHistoryItem key={record.id} record={record} />
+      {auditHistory?.map((record) => (
+        <QuoteHistoryItem key={record.id} record={record} userIdAndEmails={userIdAndEmails} />
       ))}
     </>
   )

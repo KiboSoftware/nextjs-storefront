@@ -7,6 +7,7 @@ import { fireEvent, screen, waitFor, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { graphql } from 'msw'
 import getConfig from 'next/config'
+import mockRouter from 'next-router-mock'
 
 import * as stories from './QuotesTable.stories'
 import { server } from '@/__mocks__/msw/server'
@@ -14,6 +15,7 @@ import { quotesMock } from '@/__mocks__/stories/quotesMock'
 import { renderWithQueryClient } from '@/__test__/utils'
 import { DialogRoot, ModalContextProvider } from '@/context'
 import { useGetQuotes } from '@/hooks'
+import { QuoteStatus } from '@/lib/constants'
 import { quoteGetters } from '@/lib/getters'
 
 import { Quote } from '@/lib/gql/types'
@@ -32,6 +34,12 @@ jest.mock('@mui/material', () => ({
 }))
 
 const setQuotesSearchParamMock = jest.fn()
+
+const EmailQuoteDialogMock = () => <div data-testid="email-quote-dialog-mock" />
+jest.mock(
+  '@/components/dialogs/b2b/EmailQuoteDialog/EmailQuoteDialog.tsx',
+  () => () => EmailQuoteDialogMock()
+)
 
 describe('[components] - QuotesTable', () => {
   it("should show 'no-quotes-found' if quotes are not provided", () => {
@@ -246,7 +254,7 @@ describe('[components] - QuotesTable', () => {
           : expect(screen.getAllByTestId('quote-expirationDate')[index]).toBeEmptyDOMElement()
         expect(screen.getAllByTestId('quote-createdDate')[index]).toHaveTextContent(createdDate)
         expect(screen.getAllByTestId('quote-total')[index]).toHaveTextContent('currency')
-        expect(screen.getAllByTestId('quote-status')[index]).toHaveTextContent(status)
+        expect(screen.getAllByTestId('quote-status')[index]).toHaveTextContent(QuoteStatus[status])
       })
     })
 
@@ -293,6 +301,59 @@ describe('[components] - QuotesTable', () => {
       })
 
       await user.click(screen.getByRole('button', { name: 'delete' }))
+    })
+
+    it('should redirect to quote details page when users click on edit button', async () => {
+      renderWithQueryClient(
+        <Common
+          quoteCollection={quotesMock}
+          filters={{
+            expirationDate: '',
+            createDate: '',
+            status: '',
+            name: '',
+            number: '',
+          }}
+          setQuotesSearchParam={setQuotesSearchParamMock}
+        />
+      )
+      // await waitFor(() => {
+      const editQuote = screen.getAllByTestId('edit-quote')
+
+      user.click(editQuote[0])
+      // })
+
+      await waitFor(() => {
+        expect(mockRouter).toMatchObject({
+          asPath: `/my-account/quote/${quotesMock.items?.[0]?.id}`,
+          pathname: `/my-account/quote/${quotesMock.items?.[0]?.id}`,
+          query: {},
+        })
+      })
+    })
+
+    it('should open a email quote dialog when users click on email button', async () => {
+      renderWithQueryClient(
+        <Common
+          quoteCollection={quotesMock}
+          filters={{
+            expirationDate: '',
+            createDate: '',
+            status: '',
+            name: '',
+            number: '',
+          }}
+          setQuotesSearchParam={setQuotesSearchParamMock}
+        />
+      )
+
+      const emailQuoteButton = screen.getAllByTestId('email-quote')
+
+      user.click(emailQuoteButton[0])
+
+      await waitFor(() => {
+        expect(screen.getByTestId('email-quote-dialog-mock')).toBeVisible()
+      })
     })
   })
 

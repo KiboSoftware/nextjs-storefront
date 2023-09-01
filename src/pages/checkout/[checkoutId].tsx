@@ -54,9 +54,11 @@ const CheckoutPage: NextPage<CheckoutPageProps> = (props) => {
   const { t } = useTranslation('common')
   const steps = [t('details'), t('shipping'), t('payment'), t('review')]
   const { checkout, isMultiShipEnabled, ...rest } = props
+  const quoteCheckout = !isMultiShipEnabled ? (checkout as CrOrder) : null
+  const quoteId = quoteCheckout?.originalQuoteId
   return (
     <>
-      <CheckoutStepProvider steps={steps}>
+      <CheckoutStepProvider steps={steps} initialActiveStep={quoteId ? 2 : 0}>
         {isMultiShipEnabled ? (
           <MultiShipCheckoutTemplate
             {...rest}

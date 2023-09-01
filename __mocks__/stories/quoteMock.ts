@@ -10,6 +10,7 @@ export const quoteMock = {
       tenantId: 17828,
       feeTotal: 0,
       shippingTotal: 0,
+      hasDraft: true,
       number: 3,
       submittedDate: null,
       expirationDate: null,

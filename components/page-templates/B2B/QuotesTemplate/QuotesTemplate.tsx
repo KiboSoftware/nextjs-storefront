@@ -45,7 +45,7 @@ const QuotesTemplate = (props: QuotesTemplateProps) => {
       })
 
       if (createQuoteResponse?.id) {
-        router.push(`/my-account/quote/${createQuoteResponse.id}`)
+        router.push(`/my-account/quote/${createQuoteResponse.id}?mode=create`)
       }
       return null
     } catch (err) {
@@ -62,18 +62,20 @@ const QuotesTemplate = (props: QuotesTemplateProps) => {
           onBackClick={onBackClick}
         />
 
-        <Grid item xs={12}>
-          <Box width={'100%'}>
-            <Button
-              variant="contained"
-              color="inherit"
-              onClick={handleCreateNewTemplate}
-              {...(!mdScreen && { fullWidth: true })}
-            >
-              {t('create-a-quote')}
-            </Button>
-          </Box>
-        </Grid>
+        {user?.roleName !== B2BRoles.NON_PURCHASER && (
+          <Grid item xs={12}>
+            <Box width={'100%'}>
+              <Button
+                variant="contained"
+                color="inherit"
+                onClick={handleCreateNewTemplate}
+                {...(!mdScreen && { fullWidth: true })}
+              >
+                {t('create-a-quote')}
+              </Button>
+            </Box>
+          </Grid>
+        )}
         <Grid item xs={12}>
           <QuotesTable
             setQuotesSearchParam={setQuotesSearchParam}

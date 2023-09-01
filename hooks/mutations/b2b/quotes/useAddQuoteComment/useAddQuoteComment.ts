@@ -1,5 +1,5 @@
 /**
- * @module useDeleteQuote
+ * @module useAddQuoteComment
  */
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 

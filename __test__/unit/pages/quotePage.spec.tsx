@@ -1,19 +1,20 @@
 import '@testing-library/jest-dom'
 import { render, screen } from '@testing-library/react'
 
-import { quoteMock } from '@/__mocks__/stories'
+import { customerB2BUserForPage0Mock, quoteMock } from '@/__mocks__/stories'
 import { RQNotificationContextProvider } from '@/context'
 import * as operations from '@/lib/api/operations'
 import QuotePage, { getServerSideProps } from '@/src/pages/my-account/quote/[quoteId]'
 
-import { Quote } from '@/lib/gql/types'
+import { B2BUserCollection, Quote } from '@/lib/gql/types'
 
 const mockOperations = operations as {
   getQuote(quoteId: string, draft: boolean, req: any, res: any): Promise<Quote>
+  getB2BUsers(req: any, res: any): Promise<B2BUserCollection>
 }
 
 const context = {
-  params: {
+  query: {
     quoteId: 'quote-id',
   },
   req: {
@@ -28,6 +29,7 @@ const context = {
 jest.mock('@/lib/api/operations', () => ({
   __esModule: true,
   getQuote: jest.fn(),
+  getB2BUsers: jest.fn(),
 }))
 
 jest.mock('next-i18next/serverSideTranslations', () => ({
@@ -42,10 +44,10 @@ jest.mock('next-i18next/serverSideTranslations', () => ({
   }),
 }))
 
-const CreateNewQuoteTemplate = () => <div data-testid="create-new-quote-template-mock" />
+const QuoteDetailsTemplate = () => <div data-testid="quote-details-template-mock" />
 jest.mock(
-  '@/components/page-templates/B2B/CreateNewQuoteTemplate/CreateNewQuoteTemplate.tsx',
-  () => () => CreateNewQuoteTemplate()
+  '@/components/page-templates/B2B/QuoteDetailsTemplate/QuoteDetailsTemplate.tsx',
+  () => () => QuoteDetailsTemplate()
 )
 
 jest.mock('@/lib/api/util/getUserClaimsFromRequest.ts', () => jest.fn(() => null))
@@ -76,12 +78,17 @@ jest.mock('next/config', () => {
 describe('[page] Quote Page', () => {
   it('should run getServerSideProps method', async () => {
     const mockQuote = { quoteId: 'quote-id' }
+    const mockB2BUsers = customerB2BUserForPage0Mock
     mockOperations.getQuote = jest.fn().mockImplementationOnce(async () => mockQuote)
+    mockOperations.getB2BUsers = jest.fn().mockImplementation(async () => mockB2BUsers)
     const response = await getServerSideProps(context as any)
     expect(response).toStrictEqual({
       props: {
         quote: mockQuote,
         quoteId: 'quote-id',
+        currentB2BUser: customerB2BUserForPage0Mock,
+        b2bUsers: customerB2BUserForPage0Mock,
+        mode: '',
         _nextI18Next: {
           initialI18nStore: { 'mock-locale': [{}], en: [{}] },
           initialLocale: 'mock-locale',
@@ -91,10 +98,13 @@ describe('[page] Quote Page', () => {
     })
   })
 
-  it('should render the create new quote template', () => {
+  it('should render the quote details template', () => {
     const props = {
       quoteId: 'quote-id',
       quote: quoteMock?.items?.[0] as Quote,
+      mode: '',
+      currentB2BUser: customerB2BUserForPage0Mock,
+      b2bUsers: customerB2BUserForPage0Mock,
     }
     render(
       <RQNotificationContextProvider>
@@ -102,7 +112,7 @@ describe('[page] Quote Page', () => {
       </RQNotificationContextProvider>
     )
 
-    const createNewQuote = screen.getByTestId('create-new-quote-template-mock')
+    const createNewQuote = screen.getByTestId('quote-details-template-mock')
     expect(createNewQuote).toBeVisible()
   })
 })

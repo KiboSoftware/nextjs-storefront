@@ -9,7 +9,7 @@ import mockRouter from 'next-router-mock'
 
 import * as stories from './QuickOrderTemplate.stories'
 import { server } from '@/__mocks__/msw/server'
-import { cartMock, newCartItem } from '@/__mocks__/stories'
+import { cartMock, newCartItem, quoteMock } from '@/__mocks__/stories'
 import { renderWithQueryClient } from '@/__test__/utils'
 import { DialogRoot, ModalContextProvider } from '@/context'
 
@@ -262,6 +262,22 @@ describe('[components] QuickOrderTemplate', () => {
         expect(mockRouter).toMatchObject({
           asPath: '/checkout/137a94b6402be000013718d80000678b',
           pathname: '/checkout/137a94b6402be000013718d80000678b',
+          query: {},
+        })
+      })
+    })
+
+    it('should initiate a quote when users click on initiate quote button', async () => {
+      renderWithQueryClient(<Common {...Common.args} />)
+
+      const initiateQuoteButton = screen.getByRole('button', { name: /initiate-quote/i })
+
+      user.click(initiateQuoteButton)
+
+      await waitFor(() => {
+        expect(mockRouter).toMatchObject({
+          asPath: `/my-account/quote/${quoteMock?.items?.[0].id}?mode=create`,
+          pathname: `/my-account/quote/${quoteMock?.items?.[0].id}`,
           query: {},
         })
       })

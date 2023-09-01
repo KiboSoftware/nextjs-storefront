@@ -31,3 +31,4 @@ export { default as getB2BAccountHierarchyQuery } from './b2b/get-b2b-account-hi
 export { default as getCustomerB2BAccountUsersQuery } from './b2b/get-customer-b2b-users'
 export { default as getQuotes } from './b2b/get-quotes'
 export { default as getQuoteByIDQuery } from './quotes/get-quote-by-id'
+export { default as getQuoteShippingMethodsQuery } from './quotes/get-quote-shipping-rates'

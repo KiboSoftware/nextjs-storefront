@@ -201,10 +201,18 @@ export enum AccountType {
   B2B = 'B2B',
 }
 
-export const QuoteStatus = {
+export const QuoteStatus: { [key: string]: string } = {
   Pending: 'Pending',
   InReview: 'In Review',
   ReadyForCheckout: 'Ready For Checkout',
   Completed: 'Completed',
   Expired: 'Expired',
+}
+
+export const StatusColorCode: any = {
+  Pending: 'disabled',
+  InReview: 'warning',
+  ReadyForCheckout: 'info',
+  Completed: 'success',
+  Expired: 'error',
 }

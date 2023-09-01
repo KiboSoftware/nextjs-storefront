@@ -6,6 +6,7 @@ import {
   IconButton,
   SxProps,
   Theme,
+  Typography,
   useMediaQuery,
   useTheme,
 } from '@mui/material'
@@ -25,6 +26,9 @@ interface CartItemProps {
   maxQuantity: number | undefined
   actions?: Array<string>
   fulfillmentOptions: FulfillmentOption[]
+  mode?: string
+  isQuote?: boolean
+  status?: string
   onQuantityUpdate: (cartItemId: string, quantity: number) => void
   onCartItemDelete: (cartItemId: string) => void
   onCartItemActionSelection: () => void
@@ -96,6 +100,9 @@ const CartItem = (props: CartItemProps) => {
     maxQuantity,
     actions,
     fulfillmentOptions,
+    mode,
+    status,
+    isQuote = false,
     onQuantityUpdate,
     onCartItemDelete,
     onCartItemActionSelection,
@@ -152,14 +159,20 @@ const CartItem = (props: CartItemProps) => {
                   />
                 </Box>
                 <Box sx={{ py: '0.5rem' }}>
-                  <QuantitySelector
-                    quantity={cartItemQuantity}
-                    label={t('qty')}
-                    maxQuantity={maxQuantity}
-                    onIncrease={() => handleQuantityUpdate(cartItemQuantity + 1)}
-                    onDecrease={() => handleQuantityUpdate(cartItemQuantity - 1)}
-                    onQuantityUpdate={(q) => handleQuantityUpdate(q)}
-                  />
+                  {status?.toLowerCase() === 'inreview' || (!mode && isQuote) ? (
+                    <Typography>
+                      {t('qty')}:{cartItemQuantity}
+                    </Typography>
+                  ) : (
+                    <QuantitySelector
+                      quantity={cartItemQuantity}
+                      label={t('qty')}
+                      maxQuantity={maxQuantity}
+                      onIncrease={() => handleQuantityUpdate(cartItemQuantity + 1)}
+                      onDecrease={() => handleQuantityUpdate(cartItemQuantity - 1)}
+                      onQuantityUpdate={(q) => handleQuantityUpdate(q)}
+                    />
+                  )}
                 </Box>
               </ProductItem>
 
@@ -176,15 +189,22 @@ const CartItem = (props: CartItemProps) => {
             />
 
             <Box sx={{ ...styles.subContainer }}>
-              <FulfillmentOptions
-                title={t('fulfillment-options')}
-                fulfillmentOptions={fulfillmentOptions}
-                selected={cartItem?.fulfillmentMethod || ''}
-                onFulfillmentOptionChange={(fulfillmentMethod: string) =>
-                  handleFulfillmentOptionChange(fulfillmentMethod, cartItem?.id as string)
-                }
-                onStoreSetOrUpdate={() => handleProductPickupLocation(cartItem?.id as string)} // change store: Open storelocator modal. Should not change global store.
-              />
+              {status?.toLowerCase() === 'inreview' || (!mode && isQuote) ? (
+                <Typography>
+                  {t('fulfillment-options')} {cartItem?.fulfillmentMethod} -{' '}
+                  {cartItem?.fulfillmentLocationCode}
+                </Typography>
+              ) : (
+                <FulfillmentOptions
+                  title={t('fulfillment-options')}
+                  fulfillmentOptions={fulfillmentOptions}
+                  selected={cartItem?.fulfillmentMethod || ''}
+                  onFulfillmentOptionChange={(fulfillmentMethod: string) =>
+                    handleFulfillmentOptionChange(fulfillmentMethod, cartItem?.id as string)
+                  }
+                  onStoreSetOrUpdate={() => handleProductPickupLocation(cartItem?.id as string)} // change store: Open storelocator modal. Should not change global store.
+                />
+              )}
             </Box>
           </Box>
 
@@ -196,14 +216,17 @@ const CartItem = (props: CartItemProps) => {
                 onMenuItemSelection={() => handleActionSelection()}
               />
             </Box> */}
-            <IconButton
-              sx={{ p: 0.5 }}
-              aria-label="item-delete"
-              name="item-delete"
-              onClick={() => handleDelete(cartItem?.id as string)}
-            >
-              <Delete />
-            </IconButton>
+            {status?.toLowerCase() !== 'inreview' &&
+              (mode === 'create' || mode === 'edit' || !isQuote) && (
+                <IconButton
+                  sx={{ p: 0.5 }}
+                  aria-label="item-delete"
+                  name="item-delete"
+                  onClick={() => handleDelete(cartItem?.id as string)}
+                >
+                  <Delete />
+                </IconButton>
+              )}
           </Box>
         </Box>
       </Card>

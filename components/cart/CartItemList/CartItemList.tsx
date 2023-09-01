@@ -13,6 +13,9 @@ interface CartItemListProps {
   cartItems: Maybe<CrCartItem>[] | Maybe<CrOrderItem>[]
   fulfillmentLocations: Location[]
   purchaseLocation: Location
+  status?: string
+  mode?: string
+  isQuote?: boolean
   onCartItemQuantityUpdate: (cartItemId: string, quantity: number) => void
   onCartItemDelete: (cartItemId: string) => void
   onCartItemActionSelection: () => void
@@ -25,6 +28,9 @@ const CartItemList = (props: CartItemListProps) => {
     cartItems,
     fulfillmentLocations = [],
     purchaseLocation,
+    status,
+    mode,
+    isQuote,
     onCartItemQuantityUpdate,
     onCartItemDelete,
     onCartItemActionSelection,
@@ -62,6 +68,9 @@ const CartItemList = (props: CartItemListProps) => {
             cartItem={item}
             key={item?.id}
             maxQuantity={undefined}
+            status={status}
+            mode={mode}
+            isQuote={isQuote}
             onQuantityUpdate={handleQuantityUpdate}
             onCartItemDelete={handleCartItemDelete}
             onCartItemActionSelection={handleCartItemActionSelection}
