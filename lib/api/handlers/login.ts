@@ -20,8 +20,6 @@ export default async function loginHandler(req: NextApiRequest, res: NextApiResp
     const account = response?.data?.account
     const userId = response?.data?.account?.customerAccount?.userId
 
-    console.log('account', response?.data?.account)
-
     const cookieValue = {
       accessToken: account?.accessToken,
       accessTokenExpiration: account?.accessTokenExpiration,

@@ -115,8 +115,12 @@ const QuoteHistory = (props: QuoteHistoryProps) => {
 
   return (
     <>
-      {auditHistory?.map((record) => (
-        <QuoteHistoryItem key={record.id} record={record} userIdAndEmails={userIdAndEmails} />
+      {auditHistory?.map((record, index) => (
+        <QuoteHistoryItem
+          key={(record?.auditInfo?.createBy as string) + index}
+          record={record}
+          userIdAndEmails={userIdAndEmails}
+        />
       ))}
     </>
   )

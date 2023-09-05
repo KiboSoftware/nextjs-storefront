@@ -13,7 +13,7 @@ import * as stories from './QuotesTable.stories'
 import { server } from '@/__mocks__/msw/server'
 import { quotesMock } from '@/__mocks__/stories/quotesMock'
 import { renderWithQueryClient } from '@/__test__/utils'
-import { DialogRoot, ModalContextProvider } from '@/context'
+import { AuthContext, DialogRoot, ModalContextProvider } from '@/context'
 import { useGetQuotes } from '@/hooks'
 import { QuoteStatus } from '@/lib/constants'
 import { quoteGetters } from '@/lib/getters'
@@ -33,6 +33,18 @@ jest.mock('@mui/material', () => ({
   useMediaQuery: jest.fn(),
 }))
 
+const userContextValues = (isAuthenticated: boolean, userId: number) => ({
+  isAuthenticated: isAuthenticated,
+  user: {
+    id: userId,
+    roleName: 'Admin',
+  },
+  login: jest.fn(),
+  createAccount: jest.fn(),
+  setAuthError: jest.fn(),
+  authError: '',
+  logout: jest.fn(),
+})
 const setQuotesSearchParamMock = jest.fn()
 
 const EmailQuoteDialogMock = () => <div data-testid="email-quote-dialog-mock" />
@@ -264,7 +276,12 @@ describe('[components] - QuotesTable', () => {
       })
 
       return (
-        <Common setQuotesSearchParam={setQuotesSearchParamMock} quoteCollection={quoteCollection} />
+        <AuthContext.Provider value={userContextValues(true, 1111)}>
+          <Common
+            setQuotesSearchParam={setQuotesSearchParamMock}
+            quoteCollection={quoteCollection}
+          />
+        </AuthContext.Provider>
       )
     }
 
@@ -305,17 +322,19 @@ describe('[components] - QuotesTable', () => {
 
     it('should redirect to quote details page when users click on edit button', async () => {
       renderWithQueryClient(
-        <Common
-          quoteCollection={quotesMock}
-          filters={{
-            expirationDate: '',
-            createDate: '',
-            status: '',
-            name: '',
-            number: '',
-          }}
-          setQuotesSearchParam={setQuotesSearchParamMock}
-        />
+        <AuthContext.Provider value={userContextValues(true, 1111)}>
+          <Common
+            quoteCollection={quotesMock}
+            filters={{
+              expirationDate: '',
+              createDate: '',
+              status: '',
+              name: '',
+              number: '',
+            }}
+            setQuotesSearchParam={setQuotesSearchParamMock}
+          />
+        </AuthContext.Provider>
       )
       // await waitFor(() => {
       const editQuote = screen.getAllByTestId('edit-quote')
@@ -334,17 +353,19 @@ describe('[components] - QuotesTable', () => {
 
     it('should open a email quote dialog when users click on email button', async () => {
       renderWithQueryClient(
-        <Common
-          quoteCollection={quotesMock}
-          filters={{
-            expirationDate: '',
-            createDate: '',
-            status: '',
-            name: '',
-            number: '',
-          }}
-          setQuotesSearchParam={setQuotesSearchParamMock}
-        />
+        <AuthContext.Provider value={userContextValues(true, 1111)}>
+          <Common
+            quoteCollection={quotesMock}
+            filters={{
+              expirationDate: '',
+              createDate: '',
+              status: '',
+              name: '',
+              number: '',
+            }}
+            setQuotesSearchParam={setQuotesSearchParamMock}
+          />
+        </AuthContext.Provider>
       )
 
       const emailQuoteButton = screen.getAllByTestId('email-quote')

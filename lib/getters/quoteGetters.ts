@@ -102,7 +102,7 @@ const getQuoteShippingMethodCode = (quote: Quote): string =>
 const getEmailAddressAndDate = (userId: string, date: string, userIdAndEmailAddress: any) => {
   const email = userIdAndEmailAddress?.[userId] || 'Seller'
   const dateWithSlash = format(new Date(date), DateFormat.DATE_FORMAT_WITH_SLASH) || 'seller-date'
-  return `${email} - ${dateWithSlash}`
+  return `${email} (${dateWithSlash})`
 }
 
 const getQuoteCreatedBy = (firstName: string, lastName: string) => {

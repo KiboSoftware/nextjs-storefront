@@ -1,10 +1,12 @@
 import React, { useState } from 'react'
 
 import { Timeline, TimelineContent, TimelineItem } from '@mui/lab'
-import { Box, Button, Typography } from '@mui/material'
+import { Box, Button, Grid, Typography } from '@mui/material'
 import { useTranslation } from 'next-i18next'
 
+import AccessWrapper from '../AccessWrapper/AccessWrapper'
 import { KiboTextBox } from '@/components/common'
+import { QuoteStatus } from '@/lib/constants'
 import { quoteGetters } from '@/lib/getters'
 
 import { QuoteComment } from '@/lib/gql/types'
@@ -15,11 +17,12 @@ interface QuotesCommentThreadProps {
   mode?: string
   status?: string
   userIdAndEmails?: any
+  showLeft?: boolean
   onAddComment: (comment: string) => void
 }
 
 const QuotesCommentThread = (props: QuotesCommentThreadProps) => {
-  const { comments, userId, mode, status, userIdAndEmails, onAddComment } = props
+  const { comments, userId, mode, status, userIdAndEmails, showLeft = false, onAddComment } = props
   const { t } = useTranslation('common')
 
   const [comment, setComment] = useState<string>('')
@@ -38,25 +41,26 @@ const QuotesCommentThread = (props: QuotesCommentThreadProps) => {
       {comments?.length === 0 ? (
         <Typography variant="body2">{t('no-comments-added')}</Typography>
       ) : (
-        <Timeline>
+        <Timeline sx={{ padding: 0 }}>
           {comments?.map((comment) => (
             <Box key={comment?.id}>
-              <TimelineItem position={comment.auditInfo?.createBy === userId ? 'right' : 'left'}>
+              <TimelineItem
+                position={!showLeft && comment.auditInfo?.createBy === userId ? 'right' : 'left'}
+              >
                 <TimelineContent
-                  sx={{ textAlign: comment.auditInfo?.createBy === userId ? 'right' : 'left' }}
+                  sx={{
+                    textAlign:
+                      !showLeft && comment.auditInfo?.createBy === userId ? 'right' : 'left',
+                  }}
                 >
-                  {quoteGetters.getEmailAddressAndDate(
-                    comment.auditInfo?.createBy as string,
-                    comment.auditInfo?.createDate as string,
-                    userIdAndEmails
-                  )}
-                </TimelineContent>
-              </TimelineItem>
-              <TimelineItem position={comment.auditInfo?.createBy === userId ? 'right' : 'left'}>
-                <TimelineContent
-                  sx={{ textAlign: comment.auditInfo?.createBy === userId ? 'right' : 'left' }}
-                >
-                  {comment.text}
+                  <Typography variant="body2" fontWeight={'bold'} gutterBottom>
+                    {quoteGetters.getEmailAddressAndDate(
+                      comment.auditInfo?.createBy as string,
+                      comment.auditInfo?.createDate as string,
+                      userIdAndEmails
+                    )}
+                  </Typography>
+                  <Typography variant="body2">{comment.text}</Typography>
                 </TimelineContent>
               </TimelineItem>
             </Box>
@@ -64,8 +68,8 @@ const QuotesCommentThread = (props: QuotesCommentThreadProps) => {
         </Timeline>
       )}
 
-      {mode && status?.toLowerCase() !== 'inreview' && (
-        <Box display="flex" alignItems="center" gap={2}>
+      <AccessWrapper name="AddComment" quoteMode={mode} quoteStatus={QuoteStatus[status as string]}>
+        <Grid item xs={12} md={6} display="flex" alignItems="center" gap={2}>
           <Box flex={1}>
             <KiboTextBox
               value={comment}
@@ -76,8 +80,8 @@ const QuotesCommentThread = (props: QuotesCommentThreadProps) => {
           <Button variant="contained" color="inherit" onClick={() => handleAddComment(comment)}>
             {t('add-comment')}
           </Button>
-        </Box>
-      )}
+        </Grid>
+      </AccessWrapper>
     </Box>
   )
 }

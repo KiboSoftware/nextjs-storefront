@@ -28,6 +28,7 @@ import { useRouter } from 'next/router'
 import { useTranslation } from 'next-i18next'
 
 import { QuotesTableStyles } from './QuotesTable.styles'
+import AccessWrapper from '../AccessWrapper/AccessWrapper'
 import { KiboPagination, KiboSelect, Price, SearchBar } from '@/components/common'
 import { ConfirmationDialog, EmailQuoteDialog, QuotesFilterDialog } from '@/components/dialogs'
 import { useModalContext } from '@/context'
@@ -341,7 +342,7 @@ const QuotesTable = (props: QuotesTableProps) => {
                         {showActionButtons && (
                           <TableCell component="td" scope="row" align="right">
                             <Box display={'flex'} justifyContent={'flex-end'}>
-                              {accessHandler.canEdit(status) && (
+                              <AccessWrapper name="EditQuote" quoteStatus={QuoteStatus[status]}>
                                 <IconButton
                                   size="small"
                                   data-testid="edit-quote"
@@ -349,8 +350,8 @@ const QuotesTable = (props: QuotesTableProps) => {
                                 >
                                   <Edit fontSize="small" />
                                 </IconButton>
-                              )}
-                              {accessHandler.canEmail(status) && (
+                              </AccessWrapper>
+                              <AccessWrapper name="EmailQuote" quoteStatus={QuoteStatus[status]}>
                                 <IconButton
                                   size="small"
                                   data-testid="email-quote"
@@ -358,15 +359,16 @@ const QuotesTable = (props: QuotesTableProps) => {
                                 >
                                   <Mail fontSize="small" />
                                 </IconButton>
-                              )}
-
-                              <IconButton
-                                size="small"
-                                data-testid="delete-quote"
-                                onClick={(e) => handleDeleteQuote(e, quoteId, false)}
-                              >
-                                <Delete fontSize="small" />
-                              </IconButton>
+                              </AccessWrapper>
+                              <AccessWrapper name="DeleteQuote">
+                                <IconButton
+                                  size="small"
+                                  data-testid="delete-quote"
+                                  onClick={(e) => handleDeleteQuote(e, quoteId, false)}
+                                >
+                                  <Delete fontSize="small" />
+                                </IconButton>
+                              </AccessWrapper>
                             </Box>
                           </TableCell>
                         )}
@@ -405,19 +407,27 @@ const QuotesTable = (props: QuotesTableProps) => {
             horizontal: 'right',
           }}
         >
-          {accessHandler.canEdit(anchorEl?.quote?.status as string) && (
+          <AccessWrapper
+            name="EditQuote"
+            quoteStatus={QuoteStatus[anchorEl?.quote?.status as string]}
+          >
             <MenuItem onClick={(e) => handleEditQuote(e, anchorEl?.quote?.id as string)}>
               <Typography variant="body2">{t('edit-quote')}</Typography>
             </MenuItem>
-          )}
-          {accessHandler.canEmail(anchorEl?.quote?.status as string) && (
+          </AccessWrapper>
+          <AccessWrapper
+            name="EmailQuote"
+            quoteStatus={QuoteStatus[anchorEl?.quote?.status as string]}
+          >
             <MenuItem onClick={(e) => handleEmailQuote(e, anchorEl?.quote?.id as string)}>
               <Typography variant="body2">{t('email-quote')}</Typography>
             </MenuItem>
-          )}
-          <MenuItem onClick={(e) => handleDeleteQuote(e, anchorEl?.quote?.id as string, false)}>
-            <Typography variant="body2">{t('delete-quote')}</Typography>
-          </MenuItem>
+          </AccessWrapper>
+          <AccessWrapper name="DeleteQuote">
+            <MenuItem onClick={(e) => handleDeleteQuote(e, anchorEl?.quote?.id as string, false)}>
+              <Typography variant="body2">{t('delete-quote')}</Typography>
+            </MenuItem>
+          </AccessWrapper>
         </Menu>
       </TableContainer>
       <Box pt={2}>

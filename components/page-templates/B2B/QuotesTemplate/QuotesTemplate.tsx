@@ -5,6 +5,7 @@ import { useRouter } from 'next/router'
 import { useTranslation } from 'next-i18next'
 
 import { QuotesTable } from '@/components/b2b'
+import AccessWrapper from '@/components/b2b/AccessWrapper/AccessWrapper'
 import MobileB2BLayout from '@/components/layout/MobileB2BLayout/MobileB2BLayout'
 import { useAuthContext } from '@/context'
 import { useCreateQuote } from '@/hooks'
@@ -62,7 +63,7 @@ const QuotesTemplate = (props: QuotesTemplateProps) => {
           onBackClick={onBackClick}
         />
 
-        {user?.roleName !== B2BRoles.NON_PURCHASER && (
+        <AccessWrapper name="CreateQuoteButton">
           <Grid item xs={12}>
             <Box width={'100%'}>
               <Button
@@ -75,7 +76,7 @@ const QuotesTemplate = (props: QuotesTemplateProps) => {
               </Button>
             </Box>
           </Grid>
-        )}
+        </AccessWrapper>
         <Grid item xs={12}>
           <QuotesTable
             setQuotesSearchParam={setQuotesSearchParam}
