@@ -42,7 +42,6 @@ const StyledDialog = styled(Dialog, {
   '& .MuiDialogContent-root': {
     padding: 0,
     paddingBlock: '1rem',
-    // overflowY: 'unset',
   },
   '& .MuiDialogActions-root': {
     padding: 0,
@@ -66,12 +65,6 @@ const StyledDialog = styled(Dialog, {
     },
   }),
 }))
-
-// const StyledDialogTitle = styled(DialogTitle)(() => ({
-//   margin: 0,
-//   padding: 0,
-//   paddingBlock: '1rem',
-// }))
 
 const StyledIconButton = styled(IconButton)(() => ({
   position: 'absolute',
