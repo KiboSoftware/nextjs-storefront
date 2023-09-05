@@ -37,8 +37,6 @@ const AddressFormDialog = (props: AddressFormDialogProps) => {
     <KiboDialog
       showCloseButton
       Title={formTitle}
-      showContentTopDivider={true}
-      showContentBottomDivider={false}
       Actions={''}
       Content={
         <>

@@ -97,8 +97,6 @@ const StoreLocatorDialog = (props: StoreLocatorProps) => {
         onStoreByCurrentLocation={handleSearchByCurrentLocation}
       />
     ),
-    showContentTopDivider: true,
-    showContentBottomDivider: true,
     Actions: (
       <Box
         sx={{

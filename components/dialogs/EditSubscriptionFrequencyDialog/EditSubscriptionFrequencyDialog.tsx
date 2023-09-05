@@ -70,8 +70,6 @@ const EditSubscriptionFrequencyDialog = (props: EditSubscriptionFrequencyDialogP
     <KiboDialog
       Title={t('edit-subscription-frequency')}
       showCloseButton
-      showContentTopDivider={true}
-      showContentBottomDivider={true}
       Actions={Actions}
       Content={
         <KiboSelect

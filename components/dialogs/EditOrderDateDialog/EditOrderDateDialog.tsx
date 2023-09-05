@@ -67,8 +67,6 @@ const EditOrderDateDialog = (props: EditOrderDateDialogProps) => {
     <KiboDialog
       Title={t('select-next-order-date')}
       showCloseButton
-      showContentTopDivider={true}
-      showContentBottomDivider={true}
       Actions={Actions}
       Content={
         <LocalizationProvider dateAdapter={AdapterDayjs}>

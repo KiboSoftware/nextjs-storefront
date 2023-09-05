@@ -54,8 +54,6 @@ const ConfirmationDialog = (props: ConfirmationDialogProps) => {
     ),
     isDialogCentered: true,
     customMaxWidth: '34.19rem',
-    showContentTopDivider: false,
-    showContentBottomDivider: false,
     onClose: closeModal,
   }
 
