@@ -25,6 +25,7 @@ import {
   useUpdateCustomerB2bAccountMutation,
   useUpdateCustomerB2bUserMutation,
 } from '@/hooks'
+import { B2BRoles } from '@/lib/constants'
 import { userGetters } from '@/lib/getters'
 import {
   buildAccountHierarchy,
@@ -73,6 +74,7 @@ const AccountHierarchyTemplate = () => {
     hierarchy: undefined,
   })
 
+  const currentUserRole: string = userGetters.getRole(currentB2bUser?.items?.[0] as B2BUser)
   // Add this to achieve Mobile Layout
   const breadcrumbList = [
     { key: 'accountHierarchy', backText: t('my-account'), redirectURL: '/my-account' },
@@ -271,6 +273,7 @@ const AccountHierarchyTemplate = () => {
                 color="inherit"
                 onClick={handleAddChildAccount}
                 disableElevation
+                disabled={currentUserRole !== B2BRoles.ADMIN}
                 id="formOpenButton"
                 startIcon={<AddCircleOutline />}
                 {...(!mdScreen && { fullWidth: true })}
@@ -281,7 +284,7 @@ const AccountHierarchyTemplate = () => {
           </Grid>
           <Grid item xs={12}>
             <AccountHierarchyTree
-              role={userGetters.getRole(currentB2bUser?.items?.[0] as B2BUser)}
+              role={currentUserRole}
               customerAccount={user}
               accounts={accountHierarchy.accounts}
               hierarchy={accountHierarchy.hierarchy}
