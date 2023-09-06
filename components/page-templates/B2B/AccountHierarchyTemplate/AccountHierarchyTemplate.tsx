@@ -5,7 +5,7 @@ import { Box, Button, Grid, useMediaQuery, useTheme } from '@mui/material'
 import { useRouter } from 'next/router'
 import { useTranslation } from 'next-i18next'
 
-import { AccountHierarchyTree, QuotesTable, UserTable } from '@/components/b2b'
+import { AccessWrapper, AccountHierarchyTree, QuotesTable, UserTable } from '@/components/b2b'
 import {
   AccountHierarchyFormDialog,
   AccountHierarchyChangeParentDialog,
@@ -25,7 +25,6 @@ import {
   useUpdateCustomerB2bAccountMutation,
   useUpdateCustomerB2bUserMutation,
 } from '@/hooks'
-import { B2BRoles } from '@/lib/constants'
 import { userGetters } from '@/lib/getters'
 import {
   buildAccountHierarchy,
@@ -266,22 +265,23 @@ const AccountHierarchyTemplate = (props: AccountHierarchyTemplateProps) => {
 
       {activeComponent === 'accountHierarchy' && (
         <>
-          <Grid item xs={12}>
-            <Box width={'100%'}>
-              <Button
-                variant="contained"
-                color="inherit"
-                onClick={handleAddChildAccount}
-                disableElevation
-                disabled={currentUserRole !== B2BRoles.ADMIN}
-                id="formOpenButton"
-                startIcon={<AddCircleOutline />}
-                {...(!mdScreen && { fullWidth: true })}
-              >
-                {t('add-child-account')}
-              </Button>
-            </Box>
-          </Grid>
+          <AccessWrapper name="AddChildAccount" b2BUserRole={currentUserRole}>
+            <Grid item xs={12}>
+              <Box width={'100%'}>
+                <Button
+                  variant="contained"
+                  color="inherit"
+                  onClick={handleAddChildAccount}
+                  disableElevation
+                  id="formOpenButton"
+                  startIcon={<AddCircleOutline />}
+                  {...(!mdScreen && { fullWidth: true })}
+                >
+                  {t('add-child-account')}
+                </Button>
+              </Box>
+            </Grid>
+          </AccessWrapper>
           <Grid item xs={12}>
             <AccountHierarchyTree
               role={currentUserRole}

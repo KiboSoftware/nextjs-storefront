@@ -244,4 +244,26 @@ describe('AccessWrapper Component', () => {
       expect(screen.queryByRole('button', { name: 'EmailQuote' })).not.toBeInTheDocument()
     })
   })
+
+  it('should render AddChildAccountButton with Admin role', () => {
+    render(
+      <AccessWrapper name="AddChildAccount">
+        <button>AddChildAccount</button>
+      </AccessWrapper>
+    )
+
+    // Assert that the child component is rendered
+    expect(screen.getByRole('button', { name: 'AddChildAccount' })).toBeInTheDocument()
+  })
+
+  it('should not render AddChildAccountButton with Purchaser or Nonpurchaser role', () => {
+    render(
+      <AccessWrapper name="AddChildAccount" b2BUserRole={B2BRoles.PURCHASER}>
+        <button>AddChildAccount</button>
+      </AccessWrapper>
+    )
+
+    // Assert that the child component is not rendered
+    expect(screen.queryByRole('button', { name: 'AddChildAccount' })).not.toBeInTheDocument()
+  })
 })
