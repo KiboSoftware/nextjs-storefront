@@ -26,6 +26,7 @@ export default async function loginHandler(req: NextApiRequest, res: NextApiResp
       refreshToken: account?.refreshToken,
       refreshTokenExpiration: account?.refreshTokenExpiration,
       userId: userId,
+      accountId: account?.customerAccount?.id,
     }
     const encodedValue = Buffer.from(JSON.stringify(cookieValue)).toString('base64')
     // set cookie

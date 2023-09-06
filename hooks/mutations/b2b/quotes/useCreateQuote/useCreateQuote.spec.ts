@@ -5,7 +5,7 @@ import { quoteMock } from '@/__mocks__/stories'
 import { createQueryClientWrapper } from '@/__test__/utils/renderWithQueryClient'
 
 describe('[hooks] useCreateQuote', () => {
-  it('should return quote data based on id', async () => {
+  it('should create quote based on customerAccountId', async () => {
     const { result } = renderHook(() => useCreateQuote(), {
       wrapper: createQueryClientWrapper(),
     })

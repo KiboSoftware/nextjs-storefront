@@ -1,3 +1,5 @@
+// import { accountHierarchyNodeRecursive } from '@/lib/gql/fragments'
+
 const getB2BAccountHierarchyQuery = /* GraphQL */ `
   query getB2BAccountHierarchy($accountId: Int!) {
     getB2BAccountHierarchy(accountId: $accountId) {

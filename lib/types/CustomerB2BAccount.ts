@@ -1,5 +1,3 @@
-import { Item } from 'react-nestable'
-
 import { B2BAccount } from '../gql/types'
 
 export interface AccountHierarchyNode {
@@ -9,7 +7,7 @@ export interface AccountHierarchyNode {
 
 export interface B2BAccountHierarchyResult {
   accounts: B2BAccount[]
-  hierarchy: AccountHierarchyNode
+  hierarchy: HierarchyTree[]
 }
 
 export interface AddChildAccountProps {
@@ -46,8 +44,7 @@ export interface HierarchyNode {
   children?: HierarchyNode[]
 }
 
-export interface NestableOnChangeArgs {
-  dragItem: Item
-  items: Item[]
-  targetPath: number[]
+export interface HierarchyTree extends HierarchyNode {
+  collapsed?: boolean
+  parentId?: number
 }

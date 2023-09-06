@@ -35,11 +35,16 @@ const getB2BAccountHierarchy = async (accountId: number): Promise<B2BAccountHier
  * @returns 'response?.getB2BAccountHierarchy', which contains list of accounts.
  */
 
-export const useGetB2BAccountHierarchy = (accountId: number): AccountHierarchyResultType => {
+export const useGetB2BAccountHierarchy = (
+  accountId: number,
+  initialData?: B2BAccountHierarchyResult
+): AccountHierarchyResultType => {
   const { isLoading, isSuccess, isError, data } = useQuery({
     queryKey: accountHierarchyKeys.accountHierarchy(accountId),
     queryFn: () => getB2BAccountHierarchy(accountId),
     enabled: !!accountId,
+    placeholderData: (previousData) => previousData ?? undefined,
+    initialData,
   })
 
   return {

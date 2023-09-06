@@ -27,4 +27,6 @@ export const Common = Template.bind({})
 Common.args = {
   comments: quoteMock.comments,
   userId: quoteMock.userId as string,
+  mode: 'edit',
+  status: 'Pending',
 }

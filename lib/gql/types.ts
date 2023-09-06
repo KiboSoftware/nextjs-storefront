@@ -11986,6 +11986,12 @@ export type QuoteInput = {
   webSessionId?: InputMaybe<Scalars['String']>
 }
 
+export type QuoteAdjustmentInput = {
+  adjustment?: InputMaybe<Scalars['Float']>
+  shippingAdjustment?: InputMaybe<Scalars['Float']>
+  handlingAdjustment?: InputMaybe<Scalars['Float']>
+}
+
 export type RateRequestAttributeInput = {
   attributeDefinitionId?: InputMaybe<Scalars['Int']>
   fullyQualifiedName?: InputMaybe<Scalars['String']>

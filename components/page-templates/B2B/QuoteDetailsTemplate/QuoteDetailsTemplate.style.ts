@@ -1,4 +1,6 @@
-export const createNewQuoteTemplateStyles = {
+import { grey } from '@/styles/theme'
+
+export const quoteDetailsTemplateStyles = {
   wrapIcon: {
     display: 'flex',
     alignItems: 'center',
@@ -24,5 +26,24 @@ export const createNewQuoteTemplateStyles = {
   noCartItems: {
     fontStyle: 'italic',
     color: 'grey.600',
+  },
+  quoteDetailsHeading: {
+    display: 'flex',
+    justifyContent: 'space-between',
+  },
+  quoteDetails: {
+    display: { md: 'flex', xs: 'block' },
+  },
+  gridPaddingTop: {
+    paddingTop: { xs: 0, md: '24px' },
+  },
+  viewFullCommentThreadAndHistoryButton: {
+    '&:hover': {
+      backgroundColor: 'transparent',
+    },
+  },
+  viewFullCommentThreadAndHistoryLink: {
+    color: 'grey.900',
+    textDecorationColor: `${grey[900]}`,
   },
 }

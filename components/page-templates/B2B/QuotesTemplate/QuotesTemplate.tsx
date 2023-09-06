@@ -5,6 +5,7 @@ import { useRouter } from 'next/router'
 import { useTranslation } from 'next-i18next'
 
 import { QuotesTable } from '@/components/b2b'
+import AccessWrapper from '@/components/b2b/AccessWrapper/AccessWrapper'
 import MobileB2BLayout from '@/components/layout/MobileB2BLayout/MobileB2BLayout'
 import { useAuthContext } from '@/context'
 import { useCreateQuote } from '@/hooks'
@@ -45,7 +46,7 @@ const QuotesTemplate = (props: QuotesTemplateProps) => {
       })
 
       if (createQuoteResponse?.id) {
-        router.push(`/my-account/quote/${createQuoteResponse.id}`)
+        router.push(`/my-account/quote/${createQuoteResponse.id}?mode=create`)
       }
       return null
     } catch (err) {
@@ -62,18 +63,20 @@ const QuotesTemplate = (props: QuotesTemplateProps) => {
           onBackClick={onBackClick}
         />
 
-        <Grid item xs={12}>
-          <Box width={'100%'}>
-            <Button
-              variant="contained"
-              color="inherit"
-              onClick={handleCreateNewTemplate}
-              {...(!mdScreen && { fullWidth: true })}
-            >
-              {t('create-a-quote')}
-            </Button>
-          </Box>
-        </Grid>
+        <AccessWrapper name="CreateQuoteButton">
+          <Grid item xs={12}>
+            <Box width={'100%'}>
+              <Button
+                variant="contained"
+                color="inherit"
+                onClick={handleCreateNewTemplate}
+                {...(!mdScreen && { fullWidth: true })}
+              >
+                {t('create-a-quote')}
+              </Button>
+            </Box>
+          </Grid>
+        </AccessWrapper>
         <Grid item xs={12}>
           <QuotesTable
             setQuotesSearchParam={setQuotesSearchParam}

@@ -32,6 +32,8 @@ Common.args = {
   handlingTaxTotal: 1,
   handlingSubTotal: 16,
   handlingAdjustment: 3,
+  mode: 'edit',
+  status: 'Pending',
 
   dutyTotal: 10,
 }

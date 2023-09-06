@@ -1,10 +1,12 @@
 import { format } from 'date-fns'
 
-import { DateFormat } from '../constants'
+import { DateFormat, FulfillmentOptions } from '../constants'
 import {
   AuditRecord,
   AuditRecordChange,
   AuditRecordChangeField,
+  CrContact,
+  CrOrderItem,
   Quote,
   QuoteCollection,
 } from '../gql/types'
@@ -78,6 +80,45 @@ const getQuotesPaginationDetails = (collection: QuoteCollection) => {
   }
 }
 
+const getQuoteShippingContact = (quote: Quote): CrContact =>
+  quote?.fulfillmentInfo?.fulfillmentContact as CrContact
+
+const getItemsByFulfillment = (quote: Quote, fulfillmentMethod: string): CrOrderItem[] => {
+  return (
+    (quote?.items?.filter(
+      (lineItem) => lineItem?.fulfillmentMethod === fulfillmentMethod
+    ) as CrOrderItem[]) || []
+  )
+}
+const getQuotePickupItems = (quote: Quote): CrOrderItem[] => {
+  return getItemsByFulfillment(quote, FulfillmentOptions.PICKUP)
+}
+const getQuoteShipItems = (quote: Quote): CrOrderItem[] =>
+  getItemsByFulfillment(quote, FulfillmentOptions.SHIP)
+
+const getQuoteShippingMethodCode = (quote: Quote): string =>
+  quote?.fulfillmentInfo?.shippingMethodCode || ''
+
+const getEmailAddressAndDate = (userId: string, date: string, userIdAndEmailAddress: any) => {
+  const email = userIdAndEmailAddress?.[userId] || 'Seller'
+  const dateWithSlash = format(new Date(date), DateFormat.DATE_FORMAT_WITH_SLASH) || 'seller-date'
+  return `${email} (${dateWithSlash})`
+}
+
+const getQuoteCreatedBy = (firstName: string, lastName: string) => {
+  return firstName || lastName ? `${firstName} ${lastName}` : '-'
+}
+
+const getSaveAndExitDisabled = (quoteName: string, fulfillmentInfo: any, pickupItems: any) => {
+  return (
+    quoteName &&
+    ((fulfillmentInfo?.fulfillmentContact?.address &&
+      fulfillmentInfo?.shippingMethodCode &&
+      fulfillmentInfo?.shippingMethodName) ||
+      pickupItems.length)
+  )
+}
+
 export const quoteGetters = {
   getQuotes,
   getNumber,
@@ -92,4 +133,11 @@ export const quoteGetters = {
   getQuoteId,
   getQuotesPaginationDetails,
   getRecordType,
+  getQuoteShippingContact,
+  getQuotePickupItems,
+  getQuoteShipItems,
+  getQuoteShippingMethodCode,
+  getEmailAddressAndDate,
+  getQuoteCreatedBy,
+  getSaveAndExitDisabled,
 }

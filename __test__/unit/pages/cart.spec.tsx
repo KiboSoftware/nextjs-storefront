@@ -15,6 +15,8 @@ jest.mock('@/lib/api/util', () => ({
   }),
 }))
 
+jest.mock('@/lib/api/util/getUserClaimsFromRequest.ts', () => jest.fn(() => null))
+
 jest.mock('next-i18next/serverSideTranslations', () => ({
   serverSideTranslations: jest.fn(() => {
     return Promise.resolve({
@@ -29,8 +31,6 @@ jest.mock('next-i18next/serverSideTranslations', () => ({
 
 const CartTemplate = () => <div data-testid="cart-template-mock" />
 jest.mock('@/components/page-templates/CartTemplate/CartTemplate.tsx', () => () => CartTemplate())
-
-jest.mock('@/lib/api/util/getUserClaimsFromRequest.ts', () => jest.fn(() => null))
 
 jest.mock('next/config', () => {
   return () => ({

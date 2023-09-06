@@ -24,6 +24,9 @@ interface OrderSummaryEditableProps {
 
   dutyTotal: number
 
+  mode?: string
+  status?: string
+
   // use Type QuoteAdjustmentInput once in production
   onSave: (param: {
     adjustment: number
@@ -50,6 +53,8 @@ const OrderSummaryEditable = (props: OrderSummaryEditableProps) => {
     handlingTaxTotal,
 
     dutyTotal,
+    mode,
+    status,
     onSave,
   } = props
   const { t } = useTranslation('common')
@@ -77,39 +82,41 @@ const OrderSummaryEditable = (props: OrderSummaryEditableProps) => {
 
   return (
     <List
-      sx={{ width: '100%', maxWidth: 860 }}
+      sx={{ width: '100%', maxWidth: 860, float: 'right' }}
       component="nav"
       aria-labelledby="order-summary-editable"
     >
       <ListItem
         disableGutters
         secondaryAction={
-          <Box display="flex" gap={2}>
-            {isEdit ? (
-              <>
+          mode && status?.toLowerCase() !== 'inreview' ? (
+            <Box display="flex" gap={2}>
+              {isEdit ? (
+                <>
+                  <Button
+                    variant="contained"
+                    color="secondary"
+                    size="small"
+                    onClick={handleEditButtonClick}
+                  >
+                    {t('cancel')}
+                  </Button>
+                  <Button variant="contained" color="primary" size="small" onClick={handleSave}>
+                    {t('save')}
+                  </Button>
+                </>
+              ) : (
                 <Button
                   variant="contained"
                   color="secondary"
                   size="small"
                   onClick={handleEditButtonClick}
                 >
-                  {t('cancel')}
+                  {t('edit')}
                 </Button>
-                <Button variant="contained" color="primary" size="small" onClick={handleSave}>
-                  {t('save')}
-                </Button>
-              </>
-            ) : (
-              <Button
-                variant="contained"
-                color="secondary"
-                size="small"
-                onClick={handleEditButtonClick}
-              >
-                {t('edit')}
-              </Button>
-            )}
-          </Box>
+              )}
+            </Box>
+          ) : null
         }
       >
         <ListItemText

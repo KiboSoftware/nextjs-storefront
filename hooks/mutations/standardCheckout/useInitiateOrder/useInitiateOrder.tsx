@@ -6,12 +6,12 @@ import { useMutation } from '@tanstack/react-query'
 import { makeGraphQLClient } from '@/lib/gql/client'
 import { getOrCreateCheckoutFromCartMutation } from '@/lib/gql/queries'
 
-const getOrCreateCheckout = async (cartId?: string | null) => {
+const getOrCreateCheckout = async ({ cartId, quoteId }: { cartId?: string; quoteId?: string }) => {
   const client = makeGraphQLClient()
 
   const response = await client.request({
     document: getOrCreateCheckoutFromCartMutation,
-    variables: { cartId },
+    variables: cartId ? { cartId } : { quoteId },
   })
 
   return response?.checkout

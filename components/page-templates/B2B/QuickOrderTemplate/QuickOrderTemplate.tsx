@@ -21,6 +21,7 @@ import {
   useDeleteCartItem,
   useInitiateOrder,
   useInitiateCheckout,
+  useCreateQuoteFromCart,
 } from '@/hooks'
 import { FulfillmentOptions as FulfillmentOptionsConstant } from '@/lib/constants'
 import { cartGetters, orderGetters, productGetters } from '@/lib/getters'
@@ -53,6 +54,7 @@ const QuickOrderTemplate = (props: QuickOrderTemplateProps) => {
   const { deleteCartItem } = useDeleteCartItem()
   const { updateCartCoupon } = useUpdateCartCoupon()
   const { deleteCartCoupon } = useDeleteCartCoupon()
+  const { createQuoteFromCart } = useCreateQuoteFromCart()
 
   const { data: purchaseLocation } = useGetPurchaseLocation()
 
@@ -123,7 +125,7 @@ const QuickOrderTemplate = (props: QuickOrderTemplateProps) => {
     try {
       const initiateOrderResponse = isMultiShipEnabled
         ? await initiateCheckout.mutateAsync(cart?.id)
-        : await initiateOrder.mutateAsync(cart?.id)
+        : await initiateOrder.mutateAsync({ cartId: cart?.id as string })
 
       if (initiateOrderResponse?.id) {
         router.push(`/checkout/${initiateOrderResponse.id}`)
@@ -131,6 +133,20 @@ const QuickOrderTemplate = (props: QuickOrderTemplateProps) => {
     } catch (err) {
       console.error(err)
       setShowLoadingButton(false)
+    }
+  }
+
+  const handleInitiateQuote = async () => {
+    try {
+      const response = await createQuoteFromCart.mutateAsync({
+        cartId: cart?.id as string,
+        updateMode: 'ApplyToDraft',
+      })
+      if (response?.id) {
+        router.push(`/my-account/quote/${response.id}?mode=create`)
+      }
+    } catch (e) {
+      console.error(e)
     }
   }
 
@@ -163,7 +179,7 @@ const QuickOrderTemplate = (props: QuickOrderTemplateProps) => {
           {mdScreen ? (
             <Stack direction="row" gap={2}>
               <Stack direction="column" gap={2}>
-                <LoadingButton variant="contained" color="secondary">
+                <LoadingButton variant="contained" color="secondary" onClick={handleInitiateQuote}>
                   {t('initiate-quote')}
                 </LoadingButton>
               </Stack>

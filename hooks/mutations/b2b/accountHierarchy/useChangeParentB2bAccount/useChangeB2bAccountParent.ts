@@ -4,10 +4,10 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 
 import { makeGraphQLClient } from '@/lib/gql/client'
-
-import { MutationChangeB2bAccountParentArgs } from '@/lib/gql/types'
 import { changeB2bAccountParentMutation } from '@/lib/gql/mutations'
 import { accountHierarchyKeys } from '@/lib/react-query/queryKeys'
+
+import { MutationChangeB2bAccountParentArgs } from '@/lib/gql/types'
 
 const client = makeGraphQLClient()
 
@@ -36,12 +36,13 @@ const changeB2bAccountParent = async ({
  * @returns 'response?.data?.changeB2bAccountParent' which contains object of account added
  */
 
-export const useChangeB2bAccountParentMutation = () => {
+export const useChangeB2bAccountParentMutation = (id: number) => {
   const queryClient = useQueryClient()
   return {
     changeB2bAccountParent: useMutation({
       mutationFn: changeB2bAccountParent,
-      onSuccess: () => queryClient.invalidateQueries({ queryKey: accountHierarchyKeys.all }),
+      onSuccess: () =>
+        queryClient.invalidateQueries({ queryKey: accountHierarchyKeys.accountHierarchy(id) }),
     }),
   }
 }

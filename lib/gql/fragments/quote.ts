@@ -1,3 +1,5 @@
+import { quoteAuditInfoFragment } from './b2b/quote-audit-info'
+
 export const quoteFragment = `
 fragment quoteFragment on Quote {
         id
@@ -5,17 +7,34 @@ fragment quoteFragment on Quote {
         siteId
         tenantId
         number
+        hasDraft
         submittedDate 
         expirationDate
+        email
+        itemTotal
         total
+        shippingTotal
         status 
         subTotal        
         shippingSubTotal
+        handlingTotal
         handlingSubTotal
         itemTaxTotal
         shippingTaxTotal
         handlingTaxTotal
         dutyTotal
+        handlingAdjustment {
+            amount
+            description
+        }
+        shippingAdjustment  {
+            amount
+            description
+        }
+        adjustment {
+            amount
+            description
+        }
         items {
             id
             quantity
@@ -64,6 +83,9 @@ fragment quoteFragment on Quote {
             createBy
         }
         auditHistory {
+            auditInfo {
+            ...quoteAuditInfoFragment
+            }
             changes {
                 type
                 path
@@ -105,10 +127,14 @@ fragment quoteFragment on Quote {
                     postalOrZipCode
                     addressType 
                     isValidated
+                    countryCode
                 }
             }
+            shippingMethodCode
+            shippingMethodName
         }
         userId
         customerAccountId
   }
+  ${quoteAuditInfoFragment}
 `

@@ -5,15 +5,17 @@ import { useMutation, useQueryClient } from '@tanstack/react-query'
 
 import { makeGraphQLClient } from '@/lib/gql/client'
 import { deleteQuoteMutation } from '@/lib/gql/mutations'
-import { b2bQuotesKeys } from '@/lib/react-query/queryKeys'
+import { b2bQuotesKeys, quoteKeys } from '@/lib/react-query/queryKeys'
 
 const client = makeGraphQLClient()
 
-const deleteB2BQuote = async (quoteId: string) => {
+const deleteB2BQuote = async (props: { quoteId: string; draft: boolean }) => {
+  const { quoteId, draft } = props
   const response = await client.request({
     document: deleteQuoteMutation,
     variables: {
       quoteId,
+      draft,
     },
   })
 
@@ -34,12 +36,17 @@ const deleteB2BQuote = async (quoteId: string) => {
  * @returns 'response?.deleteQuote' which is a boolean
  */
 
-export const useDeleteQuote = () => {
+export const useDeleteQuote = ({ draft }: { draft: boolean }) => {
   const queryClient = useQueryClient()
   return {
     deleteQuote: useMutation({
       mutationFn: deleteB2BQuote,
-      onSuccess: () => queryClient.invalidateQueries({ queryKey: b2bQuotesKeys.quotesParams({}) }),
+      onSuccess: () => {
+        queryClient.invalidateQueries({ queryKey: b2bQuotesKeys.quotesParams({}) })
+        if (draft) {
+          queryClient.invalidateQueries({ queryKey: quoteKeys.all })
+        }
+      },
     }),
   }
 }

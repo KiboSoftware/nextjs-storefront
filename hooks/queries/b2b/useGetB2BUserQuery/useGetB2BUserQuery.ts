@@ -49,10 +49,12 @@ export const useGetB2BUserQueries = ({
   pageSize = 16,
   startIndex = 0,
   q,
-}: QueryB2BUserArgs): B2BUserResultType => {
+  initialB2BUsers,
+}: any): B2BUserResultType => {
   const { isLoading, isSuccess, isError, error, data } = useQuery({
     queryKey: customerB2BUserKeys.search(accountId, startIndex, pageSize, q, filter),
     queryFn: () => loadCustomerB2BUsers({ accountId, filter, pageSize, startIndex, q }),
+    initialData: initialB2BUsers,
     enabled: !!accountId,
     placeholderData: (previousData) => previousData ?? undefined,
   })

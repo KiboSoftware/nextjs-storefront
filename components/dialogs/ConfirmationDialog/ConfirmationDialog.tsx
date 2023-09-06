@@ -10,6 +10,8 @@ interface ConfirmationDialogProps {
   title?: string
   contentText: string
   primaryButtonText: string
+  showContentTopDivider: boolean
+  showContentBottomDivider: boolean
   onConfirm: () => void
 }
 
@@ -23,7 +25,14 @@ const ConfirmationDialogContent = ({ contentText }: { contentText: string }) => 
 
 // Component
 const ConfirmationDialog = (props: ConfirmationDialogProps) => {
-  const { title, contentText, primaryButtonText, onConfirm } = props
+  const {
+    title,
+    contentText,
+    primaryButtonText,
+    showContentTopDivider = false,
+    showContentBottomDivider = false,
+    onConfirm,
+  } = props
   const { t } = useTranslation('common')
   const { closeModal } = useModalContext()
 
@@ -56,8 +65,8 @@ const ConfirmationDialog = (props: ConfirmationDialogProps) => {
     ),
     isDialogCentered: true,
     customMaxWidth: '34.19rem',
-    showContentTopDivider: false,
-    showContentBottomDivider: false,
+    showContentTopDivider,
+    showContentBottomDivider,
     onClose: closeModal,
   }
 
