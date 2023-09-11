@@ -5,7 +5,7 @@ import { Box, Button, Grid, useMediaQuery, useTheme } from '@mui/material'
 import { useRouter } from 'next/router'
 import { useTranslation } from 'next-i18next'
 
-import { AccountHierarchyTree, QuotesTable, UserTable } from '@/components/b2b'
+import { AccessWrapper, AccountHierarchyTree, QuotesTable, UserTable } from '@/components/b2b'
 import {
   AccountHierarchyFormDialog,
   AccountHierarchyChangeParentDialog,
@@ -73,6 +73,7 @@ const AccountHierarchyTemplate = (props: AccountHierarchyTemplateProps) => {
     b2BAccountHierarchy as B2BAccountHierarchyResult
   )
 
+  const currentUserRole: string = userGetters.getRole(currentB2bUser?.items?.[0] as B2BUser)
   // Add this to achieve Mobile Layout
   const breadcrumbList = [
     { key: 'accountHierarchy', backText: t('my-account'), redirectURL: '/my-account' },
@@ -264,24 +265,26 @@ const AccountHierarchyTemplate = (props: AccountHierarchyTemplateProps) => {
 
       {activeComponent === 'accountHierarchy' && (
         <>
-          <Grid item xs={12}>
-            <Box width={'100%'}>
-              <Button
-                variant="contained"
-                color="inherit"
-                onClick={handleAddChildAccount}
-                disableElevation
-                id="formOpenButton"
-                startIcon={<AddCircleOutline />}
-                {...(!mdScreen && { fullWidth: true })}
-              >
-                {t('add-child-account')}
-              </Button>
-            </Box>
-          </Grid>
+          <AccessWrapper name="AddChildAccount" b2BUserRole={currentUserRole}>
+            <Grid item xs={12}>
+              <Box width={'100%'}>
+                <Button
+                  variant="contained"
+                  color="inherit"
+                  onClick={handleAddChildAccount}
+                  disableElevation
+                  id="formOpenButton"
+                  startIcon={<AddCircleOutline />}
+                  {...(!mdScreen && { fullWidth: true })}
+                >
+                  {t('add-child-account')}
+                </Button>
+              </Box>
+            </Grid>
+          </AccessWrapper>
           <Grid item xs={12}>
             <AccountHierarchyTree
-              role={userGetters.getRole(currentB2bUser?.items?.[0] as B2BUser)}
+              role={currentUserRole}
               customerAccount={user as CustomerAccount}
               accounts={accountHierarchy.accounts}
               hierarchy={accountHierarchy.hierarchy}

@@ -114,10 +114,4 @@ describe('[components] AccountHierarchyTreeLabel', () => {
       })
     })
   })
-
-  it('should not render actions in Non Purchaser View', async () => {
-    renderWithQueryClient(<NonPurchaser {...props} />)
-
-    expect(screen.queryByTestId('account-hierarchy-actions-mock')).not.toBeInTheDocument()
-  })
 })

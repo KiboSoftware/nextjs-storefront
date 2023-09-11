@@ -27,6 +27,9 @@ const createMatchMedia = (width: number) => (query: string) => ({
   dispatchEvent: jest.fn(),
 })
 
+const AccessWrapperMock = () => <button data-testid="add-child-account">add-child-account</button>
+jest.mock('@/components/b2b/AccessWrapper/AccessWrapper', () => () => AccessWrapperMock())
+
 const AccountHierarchyFormMock = ({ onClose }: { onClose: () => void }) => (
   <div data-testid="account-hierarchy-form-mock">
     <button data-testid="cancel-account-mock-button" onClick={onClose}>

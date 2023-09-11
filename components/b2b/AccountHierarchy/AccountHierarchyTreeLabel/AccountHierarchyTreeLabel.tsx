@@ -3,7 +3,6 @@ import React from 'react'
 import { ListItemIcon, ListItemText } from '@mui/material'
 
 import { AccountHierarchyActions } from '@/components/b2b'
-import { B2BRoles } from '@/lib/constants'
 import { AddChildAccountProps, EditChildAccountProps } from '@/lib/types'
 
 import { B2BAccount, B2BUser, CustomerAccount } from '@/lib/gql/types'
@@ -73,17 +72,15 @@ const AccountHierarchyTreeLabel = (props: AccountHierarchyTreeLabelProps) => {
         sx={{ pl: 1 }}
       />
       <ListItemIcon sx={{ ml: 'auto' }}>
-        {role !== B2BRoles.NON_PURCHASER ? (
-          <AccountHierarchyActions
-            role={role}
-            mdScreen={mdScreen}
-            onBuyersClick={onBuyersClick}
-            onQuotesClick={onQuotesClick}
-            onAdd={onAddAccountClick}
-            onView={onViewAccountClick}
-            onEdit={onEditAccountClick}
-          />
-        ) : null}
+        <AccountHierarchyActions
+          role={role}
+          mdScreen={mdScreen}
+          onBuyersClick={onBuyersClick}
+          onQuotesClick={onQuotesClick}
+          onAdd={onAddAccountClick}
+          onView={onViewAccountClick}
+          onEdit={onEditAccountClick}
+        />
       </ListItemIcon>
     </>
   )

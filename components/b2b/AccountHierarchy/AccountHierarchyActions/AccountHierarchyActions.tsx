@@ -6,8 +6,9 @@ import VisibilityIcon from '@mui/icons-material/Visibility'
 import { Box, IconButton, Typography } from '@mui/material'
 import { useTranslation } from 'next-i18next'
 
+import { AccessWrapper } from '@/components/b2b'
 import { CartItemActionsMobile } from '@/components/cart'
-import { AccountActions, AllAccountActions, B2BRoles } from '@/lib/constants'
+import { AccountActions, AllAccountActions } from '@/lib/constants'
 
 interface AccountHierarchyActionsProps {
   role?: string
@@ -38,8 +39,6 @@ const AccountHierarchyActions = (props: AccountHierarchyActionsProps) => {
     }
   }
 
-  if (role === B2BRoles.NON_PURCHASER) return null
-
   return mdScreen ? (
     <Box
       data-testid="account-actions"
@@ -48,21 +47,23 @@ const AccountHierarchyActions = (props: AccountHierarchyActionsProps) => {
       alignItems={'center'}
       onClick={(e) => e.stopPropagation()}
     >
-      <Typography
-        variant="caption"
-        sx={{ textDecoration: 'underline', cursor: 'pointer' }}
-        onClick={onBuyersClick}
-      >
-        {t('buyers')}
-      </Typography>
-      <Typography
-        variant="caption"
-        sx={{ textDecoration: 'underline', cursor: 'pointer' }}
-        onClick={onQuotesClick}
-      >
-        {t('quotes')}
-      </Typography>
-      {role === B2BRoles.ADMIN && (
+      <AccessWrapper name="ViewAccountHierarchyBuyersAndQuotes" b2BUserRole={role}>
+        <Typography
+          variant="caption"
+          sx={{ textDecoration: 'underline', cursor: 'pointer' }}
+          onClick={onBuyersClick}
+        >
+          {t('buyers')}
+        </Typography>
+        <Typography
+          variant="caption"
+          sx={{ textDecoration: 'underline', cursor: 'pointer' }}
+          onClick={onQuotesClick}
+        >
+          {t('quotes')}
+        </Typography>
+      </AccessWrapper>
+      <AccessWrapper name="ViewAddEditAccountInHierarchy" b2BUserRole={role}>
         <Box display={'flex'} gap={2}>
           <IconButton
             size="small"
@@ -92,7 +93,7 @@ const AccountHierarchyActions = (props: AccountHierarchyActionsProps) => {
             <EditIcon />
           </IconButton>
         </Box>
-      )}
+      </AccessWrapper>
     </Box>
   ) : (
     <CartItemActionsMobile
