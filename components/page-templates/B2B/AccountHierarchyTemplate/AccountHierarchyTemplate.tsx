@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 
 import AddCircleOutline from '@mui/icons-material/AddCircleOutline'
-import { Box, Button, Grid, useMediaQuery, useTheme } from '@mui/material'
+import { Box, Button, Grid, NoSsr, Typography, useMediaQuery, useTheme } from '@mui/material'
 import { useRouter } from 'next/router'
 import { useTranslation } from 'next-i18next'
 
@@ -27,17 +27,19 @@ import {
 } from '@/hooks'
 import { userGetters } from '@/lib/getters'
 import {
+  actions,
   buildAccountHierarchy,
   buildCreateCustomerB2bAccountParams,
   buildUpdateCustomerB2bAccountParams,
   buildUpdateCustomerB2bUserParams,
+  filterAccountsByDisableSorting,
+  hasPermission,
   parseFilterParamToObject,
 } from '@/lib/helpers'
 import {
   AddChildAccountProps,
   B2BAccountHierarchyResult,
   CreateCustomerB2bAccountParams,
-  EditChildAccountProps,
   HierarchyTree,
 } from '@/lib/types'
 
@@ -56,6 +58,12 @@ const AccountHierarchyTemplate = (props: AccountHierarchyTemplateProps) => {
   const { showModal, closeModal } = useModalContext()
   const mdScreen = useMediaQuery(theme.breakpoints.up('md'))
 
+  // filtering the sortable accounts
+  const filteredAccounts = filterAccountsByDisableSorting(
+    initialData?.hierarchy as HierarchyTree[],
+    initialData?.accounts as B2BAccount[]
+  )
+
   const { b2BAccountHierarchy } = useGetB2BAccountHierarchy(user?.id as number, initialData)
   const { createCustomerB2bAccount } = useCreateCustomerB2bAccountMutation()
   const { updateCustomerB2bAccount } = useUpdateCustomerB2bAccountMutation()
@@ -72,6 +80,24 @@ const AccountHierarchyTemplate = (props: AccountHierarchyTemplateProps) => {
   const [accountHierarchy, setAccountHierarchy] = useState<B2BAccountHierarchyResult>(
     b2BAccountHierarchy as B2BAccountHierarchyResult
   )
+
+  const getParentAccounts = (currentAccount?: B2BAccount) => {
+    if (!currentAccount && !filteredAccounts.length) {
+      return [
+        {
+          companyOrOrganization: user?.companyOrOrganization,
+          id: user?.id,
+        },
+      ]
+    }
+
+    return filteredAccounts.filter(
+      (account) =>
+        account.id !== currentAccount?.parentAccountId &&
+        account.id !== currentAccount?.id &&
+        account
+    )
+  }
 
   // Add this to achieve Mobile Layout
   const breadcrumbList = [
@@ -99,13 +125,17 @@ const AccountHierarchyTemplate = (props: AccountHierarchyTemplateProps) => {
   }
 
   const handleAddAccountFormSubmit = async (formValues: CreateCustomerB2bAccountParams) => {
-    const variables = buildCreateCustomerB2bAccountParams({
-      ...formValues,
-    })
-    const createCustomerB2BAccount = await createCustomerB2bAccount.mutateAsync({
-      ...variables,
-    })
-    if (createCustomerB2BAccount) closeModal()
+    try {
+      const variables = buildCreateCustomerB2bAccountParams({
+        ...formValues,
+      })
+      const createCustomerB2BAccount = await createCustomerB2bAccount.mutateAsync({
+        ...variables,
+      })
+      if (createCustomerB2BAccount) closeModal()
+    } catch (e) {
+      console.error(e)
+    }
   }
 
   const handleEditAccountFormSubmit = async (
@@ -130,8 +160,12 @@ const AccountHierarchyTemplate = (props: AccountHierarchyTemplateProps) => {
   }
 
   const handleB2bAccountParentChange = async (accountId: number, parentAccountId: number) => {
-    await changeB2bAccountParent.mutateAsync({ accountId, parentAccountId })
-    closeModal()
+    try {
+      await changeB2bAccountParent.mutateAsync({ accountId, parentAccountId })
+      closeModal()
+    } catch (e) {
+      console.error(e)
+    }
   }
 
   const handleAddAccount = ({ isAddingAccountToChild, accounts }: AddChildAccountProps) => {
@@ -148,11 +182,11 @@ const AccountHierarchyTemplate = (props: AccountHierarchyTemplateProps) => {
     })
   }
 
-  const handleEditAccount = ({ accounts, b2BAccount }: EditChildAccountProps) => {
+  const handleEditAccount = (b2BAccount: B2BAccount) => {
     showModal({
       Component: AccountHierarchyFormDialog,
       props: {
-        accounts,
+        accounts: getParentAccounts(b2BAccount),
         b2BAccount,
         formTitle: t('edit-child-account'),
         primaryButtonText: t('update-account'),
@@ -163,15 +197,17 @@ const AccountHierarchyTemplate = (props: AccountHierarchyTemplateProps) => {
     })
   }
 
-  const handleChangeParent = ({ accounts, b2BAccount }: EditChildAccountProps) => {
+  const handleChangeParent = (b2BAccount: B2BAccount) => {
     showModal({
       Component: AccountHierarchyChangeParentDialog,
       props: {
-        accounts,
-        b2BAccount,
+        accounts: getParentAccounts(b2BAccount),
+        parentAccount: filteredAccounts?.find(
+          (account: B2BAccount) => account.id === b2BAccount?.parentAccountId
+        ),
         formTitle: t('edit-child-account'),
-        onSave: (accountId: number, parentAccountId: number) =>
-          handleB2bAccountParentChange(accountId, parentAccountId),
+        onSave: (parentAccountId: number) =>
+          handleB2bAccountParentChange(b2BAccount.id, parentAccountId),
         onClose: () => closeModal(),
       },
     })
@@ -204,7 +240,7 @@ const AccountHierarchyTemplate = (props: AccountHierarchyTemplateProps) => {
     showModal({
       Component: AccountHierarchyFormDialog,
       props: {
-        accounts: accountHierarchy.accounts,
+        accounts: getParentAccounts(),
         isAddingAccountToChild: false,
         primaryButtonText: t('create-account'),
         title: t('confirmation'),
@@ -243,12 +279,19 @@ const AccountHierarchyTemplate = (props: AccountHierarchyTemplateProps) => {
 
   useEffect(() => {
     if (!b2BAccountHierarchy) return
-    const hierarchy = buildAccountHierarchy(b2BAccountHierarchy?.accounts) as HierarchyTree[]
-    setAccountHierarchy({
-      accounts: b2BAccountHierarchy?.accounts,
-      hierarchy,
-    })
-  }, [b2BAccountHierarchy, currentB2bUser])
+
+    const hierarchy = buildAccountHierarchy(
+      b2BAccountHierarchy?.accounts,
+      user?.id as number
+    ) as HierarchyTree[]
+
+    if (hierarchy) {
+      setAccountHierarchy({
+        accounts: b2BAccountHierarchy?.accounts,
+        hierarchy,
+      })
+    }
+  }, [b2BAccountHierarchy, user?.id])
 
   return (
     <Grid container gap={3}>
@@ -266,34 +309,45 @@ const AccountHierarchyTemplate = (props: AccountHierarchyTemplateProps) => {
         <>
           <Grid item xs={12}>
             <Box width={'100%'}>
-              <Button
-                variant="contained"
-                color="inherit"
-                onClick={handleAddChildAccount}
-                disableElevation
-                id="formOpenButton"
-                startIcon={<AddCircleOutline />}
-                {...(!mdScreen && { fullWidth: true })}
-              >
-                {t('add-child-account')}
-              </Button>
+              <NoSsr>
+                <Button
+                  variant="contained"
+                  color="inherit"
+                  onClick={handleAddChildAccount}
+                  disableElevation
+                  id="formOpenButton"
+                  startIcon={<AddCircleOutline />}
+                  disabled={!hasPermission(actions.CREATE_ACCOUNT)}
+                  {...(!mdScreen && { fullWidth: true })}
+                >
+                  {t('add-child-account')}
+                </Button>
+              </NoSsr>
             </Box>
           </Grid>
           <Grid item xs={12}>
-            <AccountHierarchyTree
-              role={userGetters.getRole(currentB2bUser?.items?.[0] as B2BUser)}
-              customerAccount={user as CustomerAccount}
-              accounts={accountHierarchy.accounts}
-              hierarchy={accountHierarchy.hierarchy}
-              handleViewAccount={handleViewAccount}
-              handleAddAccount={handleAddAccount}
-              handleEditAccount={handleEditAccount}
-              handleChangeParent={handleChangeParent}
-              handleSwapAccount={handleSwapAccount}
-              handleBuyersBtnClick={handleBuyersBtnClick}
-              handleQuotesBtnClick={handleQuotesBtnClick}
-              setAccountHierarchy={setAccountHierarchy}
-            />
+            {initialData?.accounts?.length === 0 ? (
+              <Box>
+                <Typography variant="body2">{t('no-hierarchy-found')}</Typography>
+              </Box>
+            ) : (
+              <NoSsr>
+                <AccountHierarchyTree
+                  role={userGetters.getRole(currentB2bUser?.items?.[0] as B2BUser)}
+                  customerAccount={user as CustomerAccount}
+                  accounts={accountHierarchy?.accounts}
+                  hierarchy={accountHierarchy?.hierarchy}
+                  handleViewAccount={handleViewAccount}
+                  handleAddAccount={handleAddAccount}
+                  handleEditAccount={handleEditAccount}
+                  handleChangeParent={handleChangeParent}
+                  handleSwapAccount={handleSwapAccount}
+                  handleBuyersBtnClick={handleBuyersBtnClick}
+                  handleQuotesBtnClick={handleQuotesBtnClick}
+                  setAccountHierarchy={setAccountHierarchy}
+                />
+              </NoSsr>
+            )}
           </Grid>
         </>
       )}

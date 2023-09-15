@@ -28,7 +28,6 @@ import { useRouter } from 'next/router'
 import { useTranslation } from 'next-i18next'
 
 import { QuotesTableStyles } from './QuotesTable.styles'
-import AccessWrapper from '../AccessWrapper/AccessWrapper'
 import { KiboPagination, KiboSelect, Price, SearchBar } from '@/components/common'
 import { ConfirmationDialog, EmailQuoteDialog, QuotesFilterDialog } from '@/components/dialogs'
 import { useModalContext } from '@/context'
@@ -146,6 +145,7 @@ const QuotesTable = (props: QuotesTableProps) => {
   const open = Boolean(anchorEl.element)
 
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>, quote: Quote | null) => {
+    event.stopPropagation()
     setAnchorEl({
       element: event.currentTarget,
       quote,
@@ -342,33 +342,34 @@ const QuotesTable = (props: QuotesTableProps) => {
                         {showActionButtons && (
                           <TableCell component="td" scope="row" align="right">
                             <Box display={'flex'} justifyContent={'flex-end'}>
-                              <AccessWrapper name="EditQuote" quoteStatus={QuoteStatus[status]}>
-                                <IconButton
-                                  size="small"
-                                  data-testid="edit-quote"
-                                  onClick={(e) => handleEditQuote(e, quoteId)}
-                                >
-                                  <Edit fontSize="small" />
-                                </IconButton>
-                              </AccessWrapper>
-                              <AccessWrapper name="EmailQuote" quoteStatus={QuoteStatus[status]}>
-                                <IconButton
-                                  size="small"
-                                  data-testid="email-quote"
-                                  onClick={(e) => handleEmailQuote(e, quoteId)}
-                                >
-                                  <Mail fontSize="small" />
-                                </IconButton>
-                              </AccessWrapper>
-                              <AccessWrapper name="DeleteQuote">
-                                <IconButton
-                                  size="small"
-                                  data-testid="delete-quote"
-                                  onClick={(e) => handleDeleteQuote(e, quoteId, false)}
-                                >
-                                  <Delete fontSize="small" />
-                                </IconButton>
-                              </AccessWrapper>
+                              <IconButton
+                                size="small"
+                                data-testid="edit-quote"
+                                onClick={(e) => handleEditQuote(e, quoteId)}
+                              >
+                                <Edit fontSize="small" />
+                              </IconButton>
+                              <IconButton
+                                size="small"
+                                data-testid="email-quote"
+                                disabled={
+                                  !(
+                                    QuoteStatus[status] === QuoteStatus.ReadyForCheckout ||
+                                    QuoteStatus[status] === QuoteStatus.InReview ||
+                                    QuoteStatus[status] === QuoteStatus.Expired
+                                  )
+                                }
+                                onClick={(e) => handleEmailQuote(e, quoteId)}
+                              >
+                                <Mail fontSize="small" />
+                              </IconButton>
+                              <IconButton
+                                size="small"
+                                data-testid="delete-quote"
+                                onClick={(e) => handleDeleteQuote(e, quoteId, false)}
+                              >
+                                <Delete fontSize="small" />
+                              </IconButton>
                             </Box>
                           </TableCell>
                         )}
@@ -407,27 +408,19 @@ const QuotesTable = (props: QuotesTableProps) => {
             horizontal: 'right',
           }}
         >
-          <AccessWrapper
-            name="EditQuote"
-            quoteStatus={QuoteStatus[anchorEl?.quote?.status as string]}
-          >
-            <MenuItem onClick={(e) => handleEditQuote(e, anchorEl?.quote?.id as string)}>
-              <Typography variant="body2">{t('edit-quote')}</Typography>
-            </MenuItem>
-          </AccessWrapper>
-          <AccessWrapper
-            name="EmailQuote"
-            quoteStatus={QuoteStatus[anchorEl?.quote?.status as string]}
-          >
+          <MenuItem onClick={(e) => handleEditQuote(e, anchorEl?.quote?.id as string)}>
+            <Typography variant="body2">{t('edit-quote')}</Typography>
+          </MenuItem>
+          {(QuoteStatus[anchorEl?.quote?.status as string] === QuoteStatus.InReview ||
+            QuoteStatus[anchorEl?.quote?.status as string] === QuoteStatus.ReadyForCheckout ||
+            QuoteStatus[anchorEl?.quote?.status as string] === QuoteStatus.Expired) && (
             <MenuItem onClick={(e) => handleEmailQuote(e, anchorEl?.quote?.id as string)}>
               <Typography variant="body2">{t('email-quote')}</Typography>
             </MenuItem>
-          </AccessWrapper>
-          <AccessWrapper name="DeleteQuote">
-            <MenuItem onClick={(e) => handleDeleteQuote(e, anchorEl?.quote?.id as string, false)}>
-              <Typography variant="body2">{t('delete-quote')}</Typography>
-            </MenuItem>
-          </AccessWrapper>
+          )}
+          <MenuItem onClick={(e) => handleDeleteQuote(e, anchorEl?.quote?.id as string, false)}>
+            <Typography variant="body2">{t('delete-quote')}</Typography>
+          </MenuItem>
         </Menu>
       </TableContainer>
       <Box pt={2}>

@@ -39,7 +39,7 @@ const getWishlists = async (params?: PageProps): Promise<UseWishlistResponseData
     variables: params ? params : {},
   })
 
-  return params ? response.wishlists : response?.wishlists?.items[0] || []
+  return params ? response?.wishlists : response?.wishlists?.items[0] || []
 }
 
 /**
@@ -71,7 +71,10 @@ export const useGetWishlist = (params?: PageProps): UseWishlistResponse => {
       ? wishlistKeys.page({ ...params, startIndex: params.startIndex + params.pageSize })
       : wishlistKeys.all,
     queryFn: () =>
-      params && getWishlists({ ...params, startIndex: params.startIndex + params.pageSize }),
+      getWishlists({
+        ...(params as PageProps),
+        startIndex: params ? params?.startIndex + params?.pageSize : 0,
+      }),
   })
 
   return { data, isPending, isSuccess, isFetching, isLoading, refetch }

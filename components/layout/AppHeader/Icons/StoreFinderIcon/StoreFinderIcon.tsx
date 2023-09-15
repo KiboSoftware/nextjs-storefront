@@ -10,7 +10,7 @@ import { storeLocationGetters } from '@/lib/getters'
 import { setPurchaseLocationCookie } from '@/lib/helpers'
 import type { IconProps, LocationCustom } from '@/lib/types'
 
-const StoreFinderIcon = ({ size }: IconProps) => {
+const StoreFinderIcon = ({ size, isElementVisible }: IconProps) => {
   const { toggleStoreLocator } = useHeaderContext()
 
   const { data: location } = useGetPurchaseLocation()
@@ -55,6 +55,7 @@ const StoreFinderIcon = ({ size }: IconProps) => {
       icon={FmdGoodIcon}
       iconFontSize={size}
       onClick={handleClick}
+      isElementVisible={isElementVisible}
     />
   )
 }

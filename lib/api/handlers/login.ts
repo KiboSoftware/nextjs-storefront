@@ -2,6 +2,7 @@ import getConfig from 'next/config'
 
 import { fetcher, getAdditionalHeader } from '../util'
 import getUserClaimsFromRequest from '../util/getUserClaimsFromRequest'
+import { fromBitVectorSetArray } from '@/lib/helpers'
 
 import type { NextApiRequest, NextApiResponse } from 'next'
 
@@ -19,7 +20,12 @@ export default async function loginHandler(req: NextApiRequest, res: NextApiResp
     // set HTTP cookie
     const account = response?.data?.account
     const userId = response?.data?.account?.customerAccount?.userId
-
+    const jwtAccessToken = response?.data?.account?.jwtAccessToken
+    const decoded = JSON.parse(
+      Buffer.from(jwtAccessToken?.split('.')[1], 'base64').toString('ascii')
+    )
+    const bv = decoded['https://www.kibocommerce.com/user_claims'].bv
+    const behaviors = fromBitVectorSetArray(bv)
     const cookieValue = {
       accessToken: account?.accessToken,
       accessTokenExpiration: account?.accessTokenExpiration,
@@ -41,6 +47,7 @@ export default async function loginHandler(req: NextApiRequest, res: NextApiResp
       data: {
         account: {
           customerAccount: response?.data?.account?.customerAccount,
+          behaviors,
         },
       },
     }

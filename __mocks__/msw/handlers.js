@@ -296,6 +296,14 @@ export const cartHandlers = [
     )
   }),
 
+  graphql.mutation('addItemsToCurrentCart', (_req, res, ctx) => {
+    return res(
+      ctx.data({
+        addItemsToCurrentCart: true,
+      })
+    )
+  }),
+
   graphql.mutation('updateCartItemQuantity', (_req, res, ctx) => {
     return res(
       ctx.data({

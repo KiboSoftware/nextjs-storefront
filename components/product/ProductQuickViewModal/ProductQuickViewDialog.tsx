@@ -9,11 +9,15 @@ import { useModalContext } from '@/context/ModalContext'
 import { useProductCardActions } from '@/hooks'
 import type { ProductCustom } from '@/lib/types'
 
+import { CrWishlist, Product } from '@/lib/gql/types'
+
 interface ProductQuickViewDialogProps {
   product: ProductCustom
   isQuickViewModal?: boolean
   dialogProps?: any
   quoteDetails?: any
+  listData?: any
+  onUpdateListData: (param: CrWishlist) => void
 }
 
 const ProductQuickViewDialogFooter = (props: any) => {
@@ -25,11 +29,12 @@ const ProductQuickViewDialogFooter = (props: any) => {
     onClose,
     isValidateAddToCart,
     isValidateAddToWishlist,
-    currentProduct,
     addToCartPayload,
     quoteDetails,
+    listData,
+    onUpdateListData,
   } = props
-  const { handleAddToCart, handleWishList, handleAddToQuote } = useProductCardActions()
+  const { handleAddToCart, handleAddToList, handleAddToQuote } = useProductCardActions()
   const mdScreen = useMediaQuery((theme: Theme) => theme.breakpoints.up('md'))
 
   const handleAddProductToCart = () => {
@@ -37,8 +42,13 @@ const ProductQuickViewDialogFooter = (props: any) => {
     onClose()
   }
 
-  const handleAddProductToList = () => {
-    handleWishList(currentProduct)
+  const handleAddProductToList = async () => {
+    handleAddToList({
+      listData,
+      product: addToCartPayload?.product as Product,
+      onUpdateListData,
+    })
+    onClose()
   }
 
   const handleAddProductToQuote = () => {
@@ -95,7 +105,7 @@ const ProductQuickViewDialogFooter = (props: any) => {
 }
 
 const ProductQuickViewDialog = (props: ProductQuickViewDialogProps) => {
-  const { product, isQuickViewModal, dialogProps, quoteDetails } = props
+  const { product, isQuickViewModal, dialogProps, quoteDetails, listData, onUpdateListData } = props
   const {
     title,
     cancel,
@@ -142,6 +152,8 @@ const ProductQuickViewDialog = (props: ProductQuickViewDialogProps) => {
             addToCartPayload={addToCartPayload}
             currentProduct={currentProduct}
             quoteDetails={quoteDetails}
+            listData={listData}
+            onUpdateListData={onUpdateListData}
           />
         )
       }

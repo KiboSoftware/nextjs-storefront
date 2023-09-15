@@ -6,6 +6,7 @@ import EditIcon from '@mui/icons-material/Edit'
 import {
   Box,
   IconButton,
+  NoSsr,
   Table,
   TableBody,
   TableCell,
@@ -20,6 +21,7 @@ import UserForm from '../UserForm/UserForm'
 import { UserFormDialog } from '@/components/dialogs'
 import { useModalContext } from '@/context'
 import { userGetters } from '@/lib/getters'
+import { actions, hasPermission } from '@/lib/helpers'
 import { B2BUserInput } from '@/lib/types'
 
 import { B2BUser } from '@/lib/gql/types'
@@ -92,7 +94,7 @@ const UserTable = (props: UserTableProps) => {
           )}
           <TableCell>{t('role')}</TableCell>
           {mdScreen && <TableCell>{t('status')}</TableCell>}
-          <TableCell></TableCell>
+          <NoSsr>{hasPermission(actions.EDIT_USERS) && <TableCell></TableCell>}</NoSsr>
         </TableRow>
       </TableHead>
       <TableBody>
@@ -136,26 +138,30 @@ const UserTable = (props: UserTableProps) => {
                   </Box>
                 </TableCell>
               )}
-              <TableCell sx={{ flex: 1 }}>
-                {showActionButtons && (
-                  <Box sx={{ display: 'flex', justifyContent: 'end', alignItems: 'center' }}>
-                    <IconButton
-                      aria-label="item-edit"
-                      name="item-edit"
-                      onClick={() => onEditUserButtonClick(b2bUser)}
-                    >
-                      <EditIcon />
-                    </IconButton>
-                    <IconButton
-                      aria-label="item-delete"
-                      name="item-delete"
-                      onClick={() => onDelete?.(b2bUser?.userId as string)}
-                    >
-                      <DeleteIcon />
-                    </IconButton>
-                  </Box>
+              <NoSsr>
+                {hasPermission(actions.EDIT_USERS) && (
+                  <TableCell sx={{ flex: 1 }}>
+                    {showActionButtons && (
+                      <Box sx={{ display: 'flex', justifyContent: 'end', alignItems: 'center' }}>
+                        <IconButton
+                          aria-label="item-edit"
+                          name="item-edit"
+                          onClick={() => onEditUserButtonClick(b2bUser)}
+                        >
+                          <EditIcon />
+                        </IconButton>
+                        <IconButton
+                          aria-label="item-delete"
+                          name="item-delete"
+                          onClick={() => onDelete?.(b2bUser?.userId as string)}
+                        >
+                          <DeleteIcon />
+                        </IconButton>
+                      </Box>
+                    )}
+                  </TableCell>
                 )}
-              </TableCell>
+              </NoSsr>
             </TableRow>
           )
         )}

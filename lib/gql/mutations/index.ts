@@ -80,3 +80,4 @@ export { default as updateQuoteCommentsMutation } from './b2b/quotes/update-quot
 export { default as updateQuoteFulfillmentInfo } from './b2b/quotes/update-quote-fulfillment-info'
 export { default as updateQuoteAdjustmentsMutation } from './b2b/quotes/update-quote-adjustments'
 export { default as createQuoteFromCartMutation } from './b2b/quotes/create-quote-from-cart'
+export { default as addItemsToCurrentCartMutation } from './cart/add-items-to-current-cart'

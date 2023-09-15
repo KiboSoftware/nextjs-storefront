@@ -4,7 +4,7 @@
 import { useQuery } from '@tanstack/react-query'
 
 import { makeGraphQLClient } from '@/lib/gql/client'
-import { getCurrentUser } from '@/lib/gql/mutations/user/getUser'
+import { getCurrentUser } from '@/lib/gql/queries'
 import { loginKeys } from '@/lib/react-query/queryKeys'
 
 import type { CustomerAccount } from '@/lib/gql/types'

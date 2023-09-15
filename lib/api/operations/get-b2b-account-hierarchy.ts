@@ -3,8 +3,10 @@ import getConfig from 'next/config'
 
 import { fetcher, getAdditionalHeader, getUserClaimsFromRequest } from '@/lib/api/util'
 import { getB2BAccountHierarchyQuery as query } from '@/lib/gql/queries'
-import { decodeParseCookieValue } from '@/lib/helpers'
-import { B2BAccountHierarchyResult } from '@/lib/types'
+import { buildAccountHierarchy, decodeParseCookieValue } from '@/lib/helpers'
+import { B2BAccountHierarchyResult, HierarchyTree } from '@/lib/types'
+
+import { B2BAccount } from '@/lib/gql/types'
 
 export default async function getB2BAccountHierarchy(
   req: NextApiRequest,
@@ -29,5 +31,17 @@ export default async function getB2BAccountHierarchy(
   const headers = getAdditionalHeader(req)
   const response = await fetcher({ query, variables }, { userClaims, headers })
 
-  return response.data?.getB2BAccountHierarchy
+  const hierarchyResponse = response.data?.getB2BAccountHierarchy
+
+  const hierarchy = hierarchyResponse?.accounts
+    ? (buildAccountHierarchy(
+        hierarchyResponse?.accounts as B2BAccount[],
+        authTicket?.accountId
+      ) as HierarchyTree[])
+    : []
+
+  return {
+    accounts: hierarchyResponse?.accounts || [],
+    hierarchy,
+  }
 }

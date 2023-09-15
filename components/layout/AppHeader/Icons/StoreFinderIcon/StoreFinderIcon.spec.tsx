@@ -11,7 +11,7 @@ const setup = () => {
   renderWithQueryClient(
     <ModalContextProvider>
       <DialogRoot />
-      <StoreFinderIcon size="large" />
+      <StoreFinderIcon size="large" isElementVisible={true} />
     </ModalContextProvider>
   )
 }

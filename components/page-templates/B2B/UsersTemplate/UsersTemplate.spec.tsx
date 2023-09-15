@@ -24,6 +24,9 @@ interface UserFormDialogProps {
 
 // Mock
 const onCloseMock = jest.fn()
+jest.mock('@/lib/helpers/hasPermission', () => ({
+  hasPermission: jest.fn().mockImplementation(() => true),
+}))
 
 const createMatchMedia = (width: number) => (query: string) => ({
   matches: mediaQuery.match(query, { width }),

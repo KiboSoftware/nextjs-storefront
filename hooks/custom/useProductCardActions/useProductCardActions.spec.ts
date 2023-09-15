@@ -30,6 +30,9 @@ jest.mock('@/hooks', () => ({
   useCreateQuoteItem: jest.fn(() => ({
     createQuoteItem: { mutateAsync: createQuoteItemMutateAsyncMock, isPending: false },
   })),
+  useUpdateWishlistMutation: jest.fn(() => ({
+    updateWishlist: jest.fn(),
+  })),
 }))
 
 describe('useProductCardActions', () => {
@@ -83,7 +86,7 @@ describe('useProductCardActions', () => {
     const dialogProps = { dialogProp1: 'value1' }
 
     act(() => {
-      result.current.openProductQuickViewModal(product, dialogProps)
+      result.current.openProductQuickViewModal({ product, dialogProps })
     })
 
     expect(showModal).toHaveBeenCalledWith({

@@ -9,7 +9,7 @@ interface AccountIconProps extends IconProps {
   onAccountIconClick: () => void
 }
 
-const AccountIcon = ({ size, onAccountIconClick }: AccountIconProps) => {
+const AccountIcon = ({ size, isElementVisible, onAccountIconClick }: AccountIconProps) => {
   const { isAuthenticated, user } = useAuthContext()
   const { t } = useTranslation('common')
 
@@ -19,6 +19,7 @@ const AccountIcon = ({ size, onAccountIconClick }: AccountIconProps) => {
       subtitle={isAuthenticated ? t('go-to-my-account') : t('log-in')}
       icon={AccountCircleIcon}
       iconFontSize={size}
+      isElementVisible={isElementVisible}
       onClick={onAccountIconClick}
     />
   )

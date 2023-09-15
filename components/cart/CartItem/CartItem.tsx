@@ -15,6 +15,7 @@ import { useTranslation } from 'next-i18next'
 
 import { CartItemActions, CartItemActionsMobile } from '@/components/cart'
 import { FulfillmentOptions, Price, ProductItem, QuantitySelector } from '@/components/common'
+import { QuoteStatus } from '@/lib/constants'
 import { cartGetters, productGetters } from '@/lib/getters'
 import { uiHelpers } from '@/lib/helpers'
 import type { FulfillmentOption } from '@/lib/types'
@@ -159,7 +160,10 @@ const CartItem = (props: CartItemProps) => {
                   />
                 </Box>
                 <Box sx={{ py: '0.5rem' }}>
-                  {status?.toLowerCase() === 'inreview' || (!mode && isQuote) ? (
+                  {QuoteStatus[status as string] === QuoteStatus.InReview ||
+                  QuoteStatus[status as string] === QuoteStatus.Completed ||
+                  QuoteStatus[status as string] === QuoteStatus.Expired ||
+                  (!mode && isQuote) ? (
                     <Typography>
                       {t('qty')}:{cartItemQuantity}
                     </Typography>
@@ -189,7 +193,10 @@ const CartItem = (props: CartItemProps) => {
             />
 
             <Box sx={{ ...styles.subContainer }}>
-              {status?.toLowerCase() === 'inreview' || (!mode && isQuote) ? (
+              {QuoteStatus[status as string] === QuoteStatus.InReview ||
+              QuoteStatus[status as string] === QuoteStatus.Completed ||
+              QuoteStatus[status as string] === QuoteStatus.Expired ||
+              (!mode && isQuote) ? (
                 <Typography>
                   {t('fulfillment-options')} {cartItem?.fulfillmentMethod} -{' '}
                   {cartItem?.fulfillmentLocationCode}
@@ -216,7 +223,9 @@ const CartItem = (props: CartItemProps) => {
                 onMenuItemSelection={() => handleActionSelection()}
               />
             </Box> */}
-            {status?.toLowerCase() !== 'inreview' &&
+            {QuoteStatus[status as string] !== QuoteStatus.InReview &&
+              QuoteStatus[status as string] !== QuoteStatus.Completed &&
+              QuoteStatus[status as string] !== QuoteStatus.Expired &&
               (mode === 'create' || mode === 'edit' || !isQuote) && (
                 <IconButton
                   sx={{ p: 0.5 }}

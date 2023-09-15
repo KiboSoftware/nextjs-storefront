@@ -21,15 +21,10 @@ import { ListTable, EditList } from '@/components/b2b'
 import { styles } from '@/components/b2b/Lists/ViewLists/ViewLists.style'
 import { ConfirmationDialog } from '@/components/dialogs'
 import { useAuthContext, useModalContext, useSnackbarContext } from '@/context'
-import {
-  PageProps,
-  useCreateWishlist,
-  useGetWishlist,
-  useDeleteWishlist,
-  useAddCartItem,
-} from '@/hooks'
+import { PageProps, useCreateWishlist, useGetWishlist, useDeleteWishlist } from '@/hooks'
+import { useAddItemsToCurrentCart } from '@/hooks/mutations/cart/useAddItemsToCurrentCart/useAddItemsToCurrentCart'
 
-import { CrWishlist, Maybe, ProductOption, WishlistCollection } from '@/lib/gql/types'
+import { CrWishlist, CrWishlistItem, Maybe, WishlistCollection } from '@/lib/gql/types'
 
 export interface ViewListsProps {
   onEditFormToggle: () => void
@@ -41,7 +36,6 @@ const ViewLists = (props: ViewListsProps) => {
   const { publicRuntimeConfig } = getConfig()
   const { createWishlist } = useCreateWishlist()
   const { deleteWishlist } = useDeleteWishlist()
-  const { addToCart } = useAddCartItem()
   const { showSnackbar } = useSnackbarContext()
   const { showModal } = useModalContext()
 
@@ -65,6 +59,7 @@ const ViewLists = (props: ViewListsProps) => {
   const response = useGetWishlist(paginationState)
   const wishlistsResponse = response.data as WishlistCollection
   const { isPending } = response
+  const { addItemsToCurrentCart } = useAddItemsToCurrentCart()
 
   // copy list function
   const createListName = (name: string) => {
@@ -123,31 +118,17 @@ const ViewLists = (props: ViewListsProps) => {
   const handleAddListToCart = async (id: string) => {
     const list = wishlistsResponse?.items?.find((item) => item?.id === id)
     setIsLoading(true)
-    const promises: any[] = []
     try {
-      list?.items?.forEach((item) => {
-        promises.push(
-          addToCart.mutateAsync({
-            product: {
-              productCode: item?.product?.productCode as string,
-              options: item?.product?.options as ProductOption[],
-            },
-            quantity: item?.quantity as number,
-          })
-        )
+      const response = await addItemsToCurrentCart.mutateAsync({
+        items: list?.items as CrWishlistItem[],
       })
-      await Promise.all(promises)
-      showSnackbar(t('list-added-to-cart'), 'success')
+      if (response) showSnackbar(t('list-added-to-cart'), 'success')
       setIsLoading(false)
-    } catch (e: any) {
-      setIsLoading(false)
+    } catch (e) {
+      console.log(e)
     }
 
     setIsLoading(false)
-  }
-
-  const handleInitiateQuote = (id: string) => {
-    console.log('Work In Progress', id)
   }
 
   // handle filter for current user list
@@ -182,6 +163,7 @@ const ViewLists = (props: ViewListsProps) => {
         onUpdateListData={(res: CrWishlist) => {
           setListData(res)
         }}
+        onHandleAddListToCart={handleAddListToCart}
       />
     )
   }
@@ -225,7 +207,6 @@ const ViewLists = (props: ViewListsProps) => {
               onDeleteList={handleDeleteList}
               onEditList={handleEditList}
               onAddListToCart={handleAddListToCart}
-              onInitiateQuote={handleInitiateQuote}
             />
             <Pagination
               count={wishlistsResponse ? wishlistsResponse.pageCount : 1}

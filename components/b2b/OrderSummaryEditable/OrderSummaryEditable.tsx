@@ -5,6 +5,7 @@ import { useTranslation } from 'next-i18next'
 
 import { OrderSummarySection } from '@/components/b2b'
 import { Price } from '@/components/common'
+import { QuoteStatus } from '@/lib/constants'
 
 interface OrderSummaryEditableProps {
   itemTotal: number
@@ -89,7 +90,10 @@ const OrderSummaryEditable = (props: OrderSummaryEditableProps) => {
       <ListItem
         disableGutters
         secondaryAction={
-          mode && status?.toLowerCase() !== 'inreview' ? (
+          mode &&
+          QuoteStatus[status as string] !== QuoteStatus.InReview &&
+          QuoteStatus[status as string] !== QuoteStatus.Completed &&
+          QuoteStatus[status as string] !== QuoteStatus.Expired && (
             <Box display="flex" gap={2}>
               {isEdit ? (
                 <>
@@ -116,7 +120,7 @@ const OrderSummaryEditable = (props: OrderSummaryEditableProps) => {
                 </Button>
               )}
             </Box>
-          ) : null
+          )
         }
       >
         <ListItemText

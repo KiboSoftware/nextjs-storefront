@@ -28,7 +28,6 @@ const Template: ComponentStory<typeof AccountHierarchyTreeLabel> = (args) => (
 export const Admin = Template.bind({})
 Admin.args = {
   currentAccount: b2BAccountHierarchyResult.accounts[0],
-  accounts: b2BAccountHierarchyResult?.accounts,
   customerAccount: mockUser,
   role: B2BRoles.ADMIN,
   mdScreen: true,
@@ -37,7 +36,6 @@ Admin.args = {
 export const Purchaser = Template.bind({})
 Purchaser.args = {
   currentAccount: b2BAccountHierarchyResult.accounts[0],
-  accounts: b2BAccountHierarchyResult?.accounts,
   customerAccount: mockUser,
   role: B2BRoles.PURCHASER,
   mdScreen: true,
@@ -46,7 +44,6 @@ Purchaser.args = {
 export const NonPurchaser = Template.bind({})
 NonPurchaser.args = {
   currentAccount: b2BAccountHierarchyResult.accounts[0],
-  accounts: b2BAccountHierarchyResult?.accounts,
   customerAccount: mockUser,
   role: B2BRoles.NON_PURCHASER,
   mdScreen: true,

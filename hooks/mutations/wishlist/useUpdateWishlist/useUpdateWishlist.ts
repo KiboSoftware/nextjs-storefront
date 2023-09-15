@@ -41,7 +41,6 @@ const updateWishlist = async (props: UpdateWishlistProps): Promise<UpdateWishlis
 const updateWishlistItemQuantity = async (
   params: UpdateWishlistItemQuantityProps
 ): Promise<UpdateWishlistItemData> => {
-  console.log(updateWishlistItemQuantityMutation, params)
   const client = makeGraphQLClient()
   const response = await client.request({
     document: updateWishlistItemQuantityMutation,

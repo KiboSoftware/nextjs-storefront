@@ -21,6 +21,9 @@ import { renderWithQueryClient } from '@/__test__/utils'
 import { DialogRoot, ModalContextProvider } from '@/context'
 import { useGetQuoteByID } from '@/hooks/queries/quotes/useGetQuoteById/useGetQuoteById'
 
+jest.mock('@/lib/helpers/hasPermission', () => ({
+  hasPermission: jest.fn().mockImplementation(() => true),
+}))
 import { CrOrderItem, Quote } from '@/lib/gql/types'
 const {
   Common,

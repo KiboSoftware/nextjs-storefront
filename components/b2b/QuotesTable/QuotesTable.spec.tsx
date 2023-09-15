@@ -370,7 +370,7 @@ describe('[components] - QuotesTable', () => {
 
       const emailQuoteButton = screen.getAllByTestId('email-quote')
 
-      user.click(emailQuoteButton[0])
+      user.click(emailQuoteButton[2])
 
       await waitFor(() => {
         expect(screen.getByTestId('email-quote-dialog-mock')).toBeVisible()

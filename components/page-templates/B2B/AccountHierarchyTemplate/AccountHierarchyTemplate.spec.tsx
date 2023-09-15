@@ -47,7 +47,9 @@ jest.mock('@/components/b2b/User/UserTable/UserTable', () => () => UserTableMock
 
 const QuotesTableMock = () => <div data-testid="quotes-table-mock"></div>
 jest.mock('@/components/b2b/QuotesTable/QuotesTable', () => () => QuotesTableMock())
-
+jest.mock('@/lib/helpers/hasPermission', () => ({
+  hasPermission: jest.fn().mockImplementation(() => true),
+}))
 jest.mock('@/components/b2b/AccountHierarchy/AccountHierarchyTree/AccountHierarchyTree', () => ({
   __esModule: true,
   default: ({
@@ -124,6 +126,7 @@ describe('[component] - AccountHierarchyTemplate', () => {
     const { user } = setup()
 
     const handleViewAccountButton = screen.getByText('handleViewAccount')
+
     await user.click(handleViewAccountButton)
 
     await waitFor(() => {

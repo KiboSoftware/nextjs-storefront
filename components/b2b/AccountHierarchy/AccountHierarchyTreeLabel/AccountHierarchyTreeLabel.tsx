@@ -1,31 +1,31 @@
 import React from 'react'
 
-import { ListItemIcon, ListItemText } from '@mui/material'
+import { ListItemIcon, ListItemText, Typography } from '@mui/material'
 
 import { AccountHierarchyActions } from '@/components/b2b'
 import { B2BRoles } from '@/lib/constants'
-import { AddChildAccountProps, EditChildAccountProps } from '@/lib/types'
+import { AddChildAccountProps } from '@/lib/types'
 
 import { B2BAccount, B2BUser, CustomerAccount } from '@/lib/gql/types'
 
 interface AccountHierarchyTreeLabelProps {
+  disableSorting?: boolean
   currentAccount: B2BAccount
-  accounts: B2BAccount[]
   customerAccount: CustomerAccount | undefined
   role: string
   mdScreen?: boolean
   handleViewAccount: (item: B2BAccount) => void
   handleAddAccount: ({ isAddingAccountToChild, accounts }: AddChildAccountProps) => void
-  handleEditAccount: ({ accounts }: EditChildAccountProps) => void
-  handleChangeParent: ({ accounts }: EditChildAccountProps) => void
+  handleEditAccount: (b2BAccount: B2BAccount) => void
+  handleChangeParent: (b2BAccount: B2BAccount) => void
   handleBuyersBtnClick: (b2BUsers: B2BUser[]) => void
   handleQuotesBtnClick: (id: number) => void
 }
 
 const AccountHierarchyTreeLabel = (props: AccountHierarchyTreeLabelProps) => {
   const {
+    disableSorting,
     currentAccount,
-    accounts,
     customerAccount,
     role,
     mdScreen,
@@ -49,15 +49,9 @@ const AccountHierarchyTreeLabel = (props: AccountHierarchyTreeLabelProps) => {
 
   const onEditAccountClick = () => {
     if (customerAccount?.id === currentAccount.id) {
-      handleEditAccount({
-        accounts,
-        b2BAccount: currentAccount,
-      })
+      handleEditAccount(currentAccount)
     } else {
-      handleChangeParent({
-        accounts,
-        b2BAccount: currentAccount,
-      })
+      handleChangeParent(currentAccount)
     }
   }
 
@@ -65,15 +59,24 @@ const AccountHierarchyTreeLabel = (props: AccountHierarchyTreeLabelProps) => {
 
   const onQuotesClick = () => handleQuotesBtnClick(currentAccount.id)
 
+  const companyTextColor =
+    customerAccount?.id === currentAccount.id
+      ? 'primary'
+      : disableSorting
+      ? 'text.disabled'
+      : 'text.primary'
+
   return (
     <>
       <ListItemText
         data-testid="tree-label"
-        primary={currentAccount?.companyOrOrganization}
+        primary={
+          <Typography color={companyTextColor}>{currentAccount?.companyOrOrganization}</Typography>
+        }
         sx={{ pl: 1 }}
       />
       <ListItemIcon sx={{ ml: 'auto' }}>
-        {role !== B2BRoles.NON_PURCHASER ? (
+        {role !== B2BRoles.NON_PURCHASER && !disableSorting ? (
           <AccountHierarchyActions
             role={role}
             mdScreen={mdScreen}

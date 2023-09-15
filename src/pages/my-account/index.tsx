@@ -4,37 +4,55 @@ import { ReCaptchaProvider } from 'next-recaptcha-v3'
 
 import { B2BTemplate, MyAccountTemplate } from '@/components/page-templates'
 import { useAuthContext } from '@/context'
+import { getCurrentUser } from '@/lib/api/operations'
 import { AccountType } from '@/lib/constants'
-import { decodeParseCookieValue } from '@/lib/helpers'
 
-import type { GetServerSideProps, GetServerSidePropsContext, NextPage } from 'next'
+import type {
+  GetServerSideProps,
+  GetServerSidePropsContext,
+  NextApiRequest,
+  NextApiResponse,
+  NextPage,
+} from 'next'
+
+interface MyAccountPageProps {
+  isAuthenticated?: boolean
+  customerAccount?: any
+}
 
 export const getServerSideProps: GetServerSideProps = async (
   context: GetServerSidePropsContext
 ) => {
-  const { locale, req } = context
+  const { locale, req, res } = context
 
-  const { publicRuntimeConfig } = getConfig()
-  const authCookieName = publicRuntimeConfig.userCookieKey.toLowerCase()
-  const cookies = req?.cookies
-  const authTicket = decodeParseCookieValue(cookies[authCookieName])
+  const response = await getCurrentUser(req as NextApiRequest, res as NextApiResponse)
 
   return {
     props: {
-      isAuthenticated: !!authTicket,
+      isAuthenticated: Boolean(response?.customerAccount?.id),
+      customerAccount: response?.customerAccount,
       ...(await serverSideTranslations(locale as string, ['common'])),
     },
   }
 }
 
-const MyAccountPage: NextPage = (props: any) => {
-  const { isAuthenticated: serverSideIsAuthenticated } = props
-  const { user: customerAccount } = useAuthContext()
+const MyAccountPage: NextPage<MyAccountPageProps> = (props) => {
+  const { isAuthenticated: serverSideIsAuthenticated, customerAccount: customerAccountFromServer } =
+    props
+
+  const { user: customerAccountFromClient } = useAuthContext()
+
+  const customerAccount = {
+    ...customerAccountFromServer,
+    ...customerAccountFromClient,
+  }
+
   const { publicRuntimeConfig } = getConfig()
   const { reCaptchaKey } = publicRuntimeConfig.recaptcha
 
-  if (!serverSideIsAuthenticated && !customerAccount) return null
+  if (!serverSideIsAuthenticated && !Object.keys(customerAccount).length) return null
   const isB2BUser = customerAccount?.accountType?.toLowerCase() === AccountType.B2B.toLowerCase()
+
   const template = isB2BUser ? (
     <B2BTemplate user={customerAccount} />
   ) : (

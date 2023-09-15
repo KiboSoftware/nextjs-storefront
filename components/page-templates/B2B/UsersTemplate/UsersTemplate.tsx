@@ -11,6 +11,7 @@ import {
   Button,
   CircularProgress,
   Grid,
+  NoSsr,
   Pagination,
   Theme,
   Typography,
@@ -37,10 +38,12 @@ import {
   useUpdateCustomerB2bUserMutation,
 } from '@/hooks'
 import {
+  actions,
   buildB2bUserRoleParams,
   buildCreateCustomerB2bUserParams,
   buildUpdateCustomerB2bUserParams,
   getPerPageItemText,
+  hasPermission,
 } from '@/lib/helpers'
 import { B2BUserInput, CustomerB2BUserRole } from '@/lib/types/CustomerB2BUser'
 
@@ -138,12 +141,16 @@ const UsersTemplate = () => {
     })
 
   const handleAddUser = async (formValues: B2BUserInput) => {
-    const variables = buildCreateCustomerB2bUserParams({ user, values: formValues })
-    const createUserResponse = await createCustomerB2bUser.mutateAsync({
-      ...variables,
-    })
-    if (createUserResponse?.userId) {
-      addRoleToB2bUser(createUserResponse, formValues)
+    try {
+      const variables = buildCreateCustomerB2bUserParams({ user, values: formValues })
+      const createUserResponse = await createCustomerB2bUser.mutateAsync({
+        ...variables,
+      })
+      if (createUserResponse?.userId) {
+        addRoleToB2bUser(createUserResponse, formValues)
+      }
+    } catch (e) {
+      console.error(e)
     }
   }
 
@@ -217,29 +224,33 @@ const UsersTemplate = () => {
           </BackButtonLink>
           <Typography variant={mdScreen ? 'h1' : 'h2'}>{t('users')}</Typography>
         </Box>
-        <Grid container>
-          <Grid item xs={12} md={12}>
-            <Button
-              variant="contained"
-              color="inherit"
-              disabled={isUserFormOpen}
-              onClick={handleAddUserButtonClick}
-              disableElevation
-              id="formOpenButton"
-              startIcon={<AddCircleOutlineIcon />}
-              sx={{ width: { xs: '100%', md: 118 } }}
-            >
-              {t('add-user')}
-            </Button>
-            {isUserFormOpen && (
-              <UserForm
-                isEditMode={false}
-                onSave={handleAddUser}
-                onClose={() => setIsUserFormOpen(false)}
-              />
-            )}
-          </Grid>
-        </Grid>
+        <NoSsr>
+          {hasPermission(actions.CREATE_ACCOUNT) && (
+            <Grid container>
+              <Grid item xs={12} md={12}>
+                <Button
+                  variant="contained"
+                  color="inherit"
+                  disabled={isUserFormOpen}
+                  onClick={handleAddUserButtonClick}
+                  disableElevation
+                  id="formOpenButton"
+                  startIcon={<AddCircleOutlineIcon />}
+                  sx={{ width: { xs: '100%', md: 118 } }}
+                >
+                  {t('add-user')}
+                </Button>
+                {isUserFormOpen && (
+                  <UserForm
+                    isEditMode={false}
+                    onSave={handleAddUser}
+                    onClose={() => setIsUserFormOpen(false)}
+                  />
+                )}
+              </Grid>
+            </Grid>
+          )}
+        </NoSsr>
       </Grid>
       <Grid item>
         <SearchBoxContainer>

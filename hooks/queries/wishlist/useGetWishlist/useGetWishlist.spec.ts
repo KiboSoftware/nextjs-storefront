@@ -11,7 +11,6 @@ describe('[hooks] useGetWishlist', () => {
     })
 
     await waitFor(() => {
-      console.log(result)
       expect(result.current.data).toStrictEqual(wishlistMock?.items[0])
     })
   })

@@ -153,7 +153,7 @@ const ProductListingTemplate = (props: ProductListingTemplateProps) => {
       isLoading: isLoading,
       isATCLoading,
       onAddOrRemoveWishlistItem: () => handleWishList(product as ProductCustom),
-      onClickQuickViewModal: () => openProductQuickViewModal(product as ProductCustom),
+      onClickQuickViewModal: () => openProductQuickViewModal({ product: product as ProductCustom }),
       onClickAddToCart: (payload: any) => handleAddToCart(payload),
     }
   }

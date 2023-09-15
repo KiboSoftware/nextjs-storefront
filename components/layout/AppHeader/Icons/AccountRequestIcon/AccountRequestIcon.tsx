@@ -1,5 +1,7 @@
+import { Fragment } from 'react'
+
 import PersonAddIcon from '@mui/icons-material/PersonAdd'
-import { Button, IconProps, Typography } from '@mui/material'
+import { Button, IconProps, Tooltip, Typography } from '@mui/material'
 
 import { AccountRequestStyles } from './AccountRequestIcon.styles'
 
@@ -8,17 +10,33 @@ interface AccountRequestIconProps {
   buttonText: string
   onClick?: () => void
   isMobileView?: boolean
+  isElementVisible?: boolean
 }
 
 const AccountRequestIcon = (props: AccountRequestIconProps) => {
   const {
     iconProps: { fontSize },
     buttonText,
+    isElementVisible,
     isMobileView = false,
     onClick,
   } = props
 
-  return (
+  return !isElementVisible ? (
+    <Tooltip
+      title={
+        <Fragment>
+          <Typography variant="body2">{buttonText}</Typography>
+        </Fragment>
+      }
+    >
+      <Button sx={AccountRequestStyles.button} onClick={onClick}>
+        {!isMobileView && (
+          <PersonAddIcon sx={{ color: 'grey.900', marginRight: 1 }} fontSize={fontSize} />
+        )}
+      </Button>
+    </Tooltip>
+  ) : (
     <Button sx={AccountRequestStyles.button} onClick={onClick}>
       {!isMobileView && (
         <PersonAddIcon sx={{ color: 'grey.900', marginRight: 1 }} fontSize={fontSize} />

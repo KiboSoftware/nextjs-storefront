@@ -93,10 +93,7 @@ describe('[components] AccountHierarchyTreeLabel', () => {
     await user.click(accountEditButton)
 
     await waitFor(() => {
-      expect(handleChangeParentMock).toHaveBeenCalledWith({
-        accounts: Admin.args?.accounts,
-        b2BAccount: Admin.args?.currentAccount,
-      })
+      expect(handleChangeParentMock).toHaveBeenCalledWith(Admin.args?.currentAccount)
     })
   })
 
@@ -108,10 +105,7 @@ describe('[components] AccountHierarchyTreeLabel', () => {
     await user.click(accountEditButton)
 
     await waitFor(() => {
-      expect(handleEditAccountMock).toHaveBeenCalledWith({
-        accounts: Admin.args?.accounts,
-        b2BAccount: Admin.args?.currentAccount,
-      })
+      expect(handleEditAccountMock).toHaveBeenCalledWith(Admin.args?.currentAccount)
     })
   })
 

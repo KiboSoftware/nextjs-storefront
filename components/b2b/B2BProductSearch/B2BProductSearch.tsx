@@ -39,7 +39,6 @@ const B2BProductSearch = (props: B2BProductSearchProps) => {
 
   const handleSearch = (_: string, userEnteredValue: string) => setSearchTerm(userEnteredValue)
   const handleProductClick = async (event: any, value: any) => {
-    console.log(value)
     if (value) {
       onAddProduct(value)
     }

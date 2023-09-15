@@ -113,6 +113,7 @@ const HamburgerMenu = (props: HamburgerMenuProps) => {
                   iconFontSize="large"
                   showTitleInMobile={true}
                   onClick={onAccountIconClick}
+                  isElementVisible={true}
                 />
               </Box>
             </CategoryNestedNavigation>

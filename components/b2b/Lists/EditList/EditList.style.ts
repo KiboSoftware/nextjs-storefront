@@ -22,6 +22,15 @@ const style = {
     border: `1px solid ${grey[400]}`,
     borderRadius: ' 4px',
   },
+  addAllItemsToCartButton: {
+    '&:hover': {
+      backgroundColor: 'transparent',
+    },
+  },
+  addAllItemsToCartLink: {
+    color: 'grey.900',
+    textDecorationColor: `${grey[900]}`,
+  },
 }
 
 export default style

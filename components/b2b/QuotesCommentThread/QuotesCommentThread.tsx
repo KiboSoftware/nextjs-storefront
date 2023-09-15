@@ -4,7 +4,6 @@ import { Timeline, TimelineContent, TimelineItem } from '@mui/lab'
 import { Box, Button, Grid, Typography } from '@mui/material'
 import { useTranslation } from 'next-i18next'
 
-import AccessWrapper from '../AccessWrapper/AccessWrapper'
 import { KiboTextBox } from '@/components/common'
 import { QuoteStatus } from '@/lib/constants'
 import { quoteGetters } from '@/lib/getters'
@@ -68,20 +67,23 @@ const QuotesCommentThread = (props: QuotesCommentThreadProps) => {
         </Timeline>
       )}
 
-      <AccessWrapper name="AddComment" quoteMode={mode} quoteStatus={QuoteStatus[status as string]}>
-        <Grid item xs={12} md={6} display="flex" alignItems="center" gap={2}>
-          <Box flex={1}>
-            <KiboTextBox
-              value={comment}
-              placeholder={t('type-something')}
-              onChange={handleComment}
-            />
-          </Box>
-          <Button variant="contained" color="inherit" onClick={() => handleAddComment(comment)}>
-            {t('add-comment')}
-          </Button>
-        </Grid>
-      </AccessWrapper>
+      {mode &&
+        QuoteStatus[status as string] !== QuoteStatus.InReview &&
+        QuoteStatus[status as string] !== QuoteStatus.Completed &&
+        QuoteStatus[status as string] !== QuoteStatus.Expired && (
+          <Grid item xs={12} md={6} display="flex" alignItems="center" gap={2}>
+            <Box flex={1}>
+              <KiboTextBox
+                value={comment}
+                placeholder={t('type-something')}
+                onChange={handleComment}
+              />
+            </Box>
+            <Button variant="contained" color="inherit" onClick={() => handleAddComment(comment)}>
+              {t('add-comment')}
+            </Button>
+          </Grid>
+        )}
     </Box>
   )
 }

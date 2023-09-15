@@ -77,7 +77,7 @@ const WishlistTemplate = () => {
                     }
                     onClickAddToCart={handleAddToCart}
                     onClickQuickViewModal={() =>
-                      openProductQuickViewModal(item?.product as ProductCustom)
+                      openProductQuickViewModal({ product: item?.product as ProductCustom })
                     }
                   />
                 </Box>

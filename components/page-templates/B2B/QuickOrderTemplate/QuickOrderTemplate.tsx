@@ -75,7 +75,7 @@ const QuickOrderTemplate = (props: QuickOrderTemplateProps) => {
         addItemToCart: t('add-item-to-cart'),
         isB2B: true,
       }
-      openProductQuickViewModal(product, dialogProps)
+      openProductQuickViewModal({ product, dialogProps })
     } else {
       const payload = {
         product: {
@@ -169,36 +169,39 @@ const QuickOrderTemplate = (props: QuickOrderTemplateProps) => {
           </Stack>
         </Grid>
         {mdScreen && (
-          <Grid item xs={12} sm={6}>
-            <Box>
-              <Typography variant="h1">{t('quick-order')}</Typography>
-            </Box>
+          <Grid item xs={12} sm={12} display={'flex'} justifyContent={'space-between'}>
+            <Typography variant="h1">{t('quick-order')}</Typography>
+            <Stack display={'flex'} justifyContent={'flex-end'}>
+              {mdScreen ? (
+                <Stack direction="row" gap={2}>
+                  <Stack direction="column" gap={2}>
+                    <LoadingButton
+                      variant="contained"
+                      color="secondary"
+                      onClick={handleInitiateQuote}
+                      disabled={!cartItemCount || showLoadingButton}
+                    >
+                      {t('initiate-quote')}
+                    </LoadingButton>
+                  </Stack>
+                  <Stack direction="column" gap={2}>
+                    <LoadingButton
+                      variant="contained"
+                      color="primary"
+                      name="goToCart"
+                      fullWidth
+                      onClick={handleGotoCheckout}
+                      loading={showLoadingButton}
+                      disabled={!cartItemCount || showLoadingButton}
+                    >
+                      {t('checkout')}
+                    </LoadingButton>
+                  </Stack>
+                </Stack>
+              ) : null}
+            </Stack>
           </Grid>
         )}
-        <Grid item sm={6} display={'flex'} justifyContent={'flex-end'}>
-          {mdScreen ? (
-            <Stack direction="row" gap={2}>
-              <Stack direction="column" gap={2}>
-                <LoadingButton variant="contained" color="secondary" onClick={handleInitiateQuote}>
-                  {t('initiate-quote')}
-                </LoadingButton>
-              </Stack>
-              <Stack direction="column" gap={2}>
-                <LoadingButton
-                  variant="contained"
-                  color="primary"
-                  name="goToCart"
-                  fullWidth
-                  onClick={handleGotoCheckout}
-                  loading={showLoadingButton}
-                  disabled={!cartItemCount || showLoadingButton}
-                >
-                  {t('checkout')}
-                </LoadingButton>
-              </Stack>
-            </Stack>
-          ) : null}
-        </Grid>
         <Grid item xs={12} md={4}>
           <B2BProductSearch onAddProduct={handleAddProduct} />
         </Grid>
@@ -216,6 +219,26 @@ const QuickOrderTemplate = (props: QuickOrderTemplateProps) => {
               />
             ) : (
               <Stack spacing={2}>
+                <Stack sx={quickOrderTemplateStyles.promoCode}>
+                  <Box sx={quickOrderTemplateStyles.promoCodeBadge}>
+                    <PromoCodeBadge
+                      onApplyCouponCode={handleApplyCouponCode}
+                      onRemoveCouponCode={handleRemoveCouponCode}
+                      promoError={!!promoError}
+                      helpText={promoError}
+                      couponLabel="Coupon"
+                      promoList={cart?.couponCodes as string[]}
+                    />
+                  </Box>
+                  <KeyValueDisplay
+                    option={{
+                      name: t('order-total'),
+                      value: `${t('currency', { val: cartTotal })} `,
+                    }}
+                    variant="body1"
+                    sx={quickOrderTemplateStyles.orderTotal}
+                  />
+                </Stack>
                 <Typography variant="h2">{t('cart')}</Typography>
                 {cartItems.length > 0 ? (
                   <CartItemList
@@ -248,28 +271,30 @@ const QuickOrderTemplate = (props: QuickOrderTemplateProps) => {
             ) : null}
           </Stack>
         </Grid>
-        <Grid item xs={12}>
-          <Stack sx={quickOrderTemplateStyles.promoCode}>
-            <Box sx={quickOrderTemplateStyles.promoCodeBadge}>
-              <PromoCodeBadge
-                onApplyCouponCode={handleApplyCouponCode}
-                onRemoveCouponCode={handleRemoveCouponCode}
-                promoError={!!promoError}
-                helpText={promoError}
-                couponLabel="Coupon"
-                promoList={cart?.couponCodes as string[]}
+        {mdScreen && (
+          <Grid item xs={12}>
+            <Stack sx={quickOrderTemplateStyles.promoCode}>
+              <Box sx={quickOrderTemplateStyles.promoCodeBadge}>
+                <PromoCodeBadge
+                  onApplyCouponCode={handleApplyCouponCode}
+                  onRemoveCouponCode={handleRemoveCouponCode}
+                  promoError={!!promoError}
+                  helpText={promoError}
+                  couponLabel="Coupon"
+                  promoList={cart?.couponCodes as string[]}
+                />
+              </Box>
+              <KeyValueDisplay
+                option={{
+                  name: t('order-total'),
+                  value: `${t('currency', { val: cartTotal })} `,
+                }}
+                variant="body1"
+                sx={quickOrderTemplateStyles.orderTotal}
               />
-            </Box>
-            <KeyValueDisplay
-              option={{
-                name: t('order-total'),
-                value: `${t('currency', { val: cartTotal })} `,
-              }}
-              variant="body1"
-              sx={quickOrderTemplateStyles.orderTotal}
-            />
-          </Stack>
-        </Grid>
+            </Stack>
+          </Grid>
+        )}
       </Grid>
     </>
   )

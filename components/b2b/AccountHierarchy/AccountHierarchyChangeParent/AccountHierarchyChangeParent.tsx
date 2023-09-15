@@ -14,8 +14,8 @@ import { B2BAccount } from '@/lib/gql/types'
 
 interface AccountHierarchyChangeParentProps {
   accounts: B2BAccount[]
-  b2BAccount: B2BAccount
-  onSave: (accountId: number, parentAccountId: number) => void
+  parentAccount: B2BAccount
+  onSave: (parentAccountId: number) => void
   onClose: () => void
 }
 
@@ -27,7 +27,7 @@ const useAccountHierarchySchema = () => {
 }
 
 const AccountHierarchyChangeParent = (props: AccountHierarchyChangeParentProps) => {
-  const { accounts, b2BAccount, onSave, onClose } = props
+  const { accounts, parentAccount, onSave, onClose } = props
 
   const [isLoading, setLoading] = useState<boolean>(false)
   const [selectedParentAccount, setSelectedParentAccount] = useState<B2BAccount>()
@@ -62,7 +62,7 @@ const AccountHierarchyChangeParent = (props: AccountHierarchyChangeParentProps) 
   const onSubmit = () => {
     if (isLoading || !selectedParentAccount) return
     setLoading(true)
-    onSave(b2BAccount.id, selectedParentAccount.id)
+    onSave(selectedParentAccount.id)
   }
 
   const handleParentAccountChange = (name: string, value: string) => {
@@ -77,7 +77,7 @@ const AccountHierarchyChangeParent = (props: AccountHierarchyChangeParentProps) 
     <form data-testid="account-hierarchy-form" onSubmit={handleSubmit(onSubmit)}>
       <Box sx={{ marginBottom: 3 }}>
         <InputLabel shrink>{t('current-parent-account')}</InputLabel>
-        <Typography>{b2BAccount?.companyOrOrganization}</Typography>
+        <Typography>{parentAccount?.companyOrOrganization}</Typography>
       </Box>
 
       <FormControl sx={{ width: '100%' }}>

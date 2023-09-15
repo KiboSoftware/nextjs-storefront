@@ -23,6 +23,7 @@ Cart.args = {
   icon: ShoppingCart,
   badgeContent: 1,
   subtitle: 'Cart',
+  isElementVisible: true,
 }
 
 export const MyAccount = Template.bind({})
@@ -31,6 +32,7 @@ MyAccount.args = {
   icon: AccountCircle,
   title: 'My Account',
   subtitle: 'Login',
+  isElementVisible: true,
 }
 
 export const Location = Template.bind({})
@@ -39,4 +41,5 @@ Location.args = {
   icon: LocationOn,
   title: 'Find A Store',
   subtitle: 'View All',
+  isElementVisible: true,
 }

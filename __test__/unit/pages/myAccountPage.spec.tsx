@@ -1,6 +1,7 @@
 import '@testing-library/jest-dom'
 import { render, screen } from '@testing-library/react'
 
+import { userMock } from '@/__mocks__/stories'
 import { createQueryClientWrapper } from '@/__test__/utils'
 import { AuthContext } from '@/context'
 import MyAccountPage, { getServerSideProps } from '@/pages/my-account/index'
@@ -15,6 +16,10 @@ interface MyAccountPage {
 }
 jest.mock('@/lib/helpers/cookieHelper', () => ({
   decodeParseCookieValue: jest.fn(() => 'kibo_at'),
+}))
+
+jest.mock('@/lib/api/operations', () => ({
+  getCurrentUser: jest.fn(() => userMock),
 }))
 
 const mockNextI18Next = {
@@ -60,6 +65,7 @@ describe('[page] MyAccount Page', () => {
       props: {
         isAuthenticated: mockIsAuthenticated,
         _nextI18Next: mockNextI18Next,
+        customerAccount: userMock.customerAccount,
       },
     })
   })
@@ -82,11 +88,11 @@ describe('[page] MyAccount Page', () => {
 
   it('should not render MyAccountTemplate if not authenticated', () => {
     mockIsAuthenticated = false
-    MyAccountPage.defaultProps = { isAuthenticated: mockIsAuthenticated }
+    MyAccountPage.defaultProps = { isAuthenticated: mockIsAuthenticated, customerAccount: null }
     jest.mock('@/context/AuthContext', () => ({
       useAuthContext: () => ({ user: null }),
     }))
-    render(<MyAccountPage />, {
+    render(<MyAccountPage isAuthenticated={false} customerAccount={null} />, {
       wrapper: createQueryClientWrapper(),
     })
 

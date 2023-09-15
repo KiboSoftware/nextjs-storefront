@@ -16,6 +16,10 @@ const onDeleteMock = jest.fn()
 const onSaveMock = jest.fn()
 const onViewMock = jest.fn()
 
+jest.mock('@/lib/helpers/hasPermission', () => ({
+  hasPermission: jest.fn().mockImplementation(() => true),
+}))
+
 jest.mock('@/components/b2b/User/UserForm/UserForm', () => ({
   __esModule: true,
   default: ({

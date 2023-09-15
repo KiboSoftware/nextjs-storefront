@@ -7,15 +7,15 @@ import { B2BAccount } from '@/lib/gql/types'
 
 interface AccountHierarchyChangeParentDialogProps {
   accounts: B2BAccount[]
-  b2BAccount: B2BAccount
+  parentAccount: B2BAccount
   formTitle?: string
-  onSave: (accountId: number, parentAccountId: number) => void
+  onSave: (parentAccountId: number) => void
   onClose: () => void
 }
 
 const AccountHierarchyChangeParentDialog = (props: AccountHierarchyChangeParentDialogProps) => {
   const { t } = useTranslation('common')
-  const { accounts, b2BAccount, formTitle = t('edit-child-account'), onSave, onClose } = props
+  const { accounts, parentAccount, formTitle = t('edit-child-account'), onSave, onClose } = props
 
   return (
     <KiboDialog
@@ -27,7 +27,7 @@ const AccountHierarchyChangeParentDialog = (props: AccountHierarchyChangeParentD
       Content={
         <AccountHierarchyChangeParent
           accounts={accounts}
-          b2BAccount={b2BAccount}
+          parentAccount={parentAccount}
           onSave={onSave}
           onClose={onClose}
         />

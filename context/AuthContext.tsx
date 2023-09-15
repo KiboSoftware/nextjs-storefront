@@ -1,6 +1,7 @@
 import { ReactNode, createContext, useState, useContext, useEffect } from 'react'
 
 import { useQueryClient } from '@tanstack/react-query'
+import { deleteCookie } from 'cookies-next'
 import { useRouter } from 'next/router'
 
 import { useSnackbarContext } from './RQNotificationContext/RQNotificationContext'
@@ -53,6 +54,9 @@ export const AuthContextProvider = ({ children }: AuthContextProviderProps) => {
   const { mutate } = useLogin()
   const { mutate: logOutUser } = useLogout(() => {
     setUser(undefined)
+    deleteCookie('behaviors', {
+      path: '/',
+    })
     router.push('/')
     queryClient.removeQueries({ queryKey: cartKeys.all })
     queryClient.removeQueries({ queryKey: loginKeys.user })
@@ -78,12 +82,12 @@ export const AuthContextProvider = ({ children }: AuthContextProviderProps) => {
 
     const { roleId, roleName } = roles
     const userWithRole = { ...user, roleId, roleName } as CustomerAccountWithRole
-
     setUser(userWithRole)
   }, [userAccount])
 
   const handleOnSuccess = (account: any, onSuccessCallBack?: () => void) => {
     if (account?.customerAccount) {
+      document.cookie = `behaviors=${account?.behaviors}; path=/`
       setUser(account?.customerAccount)
     }
 
@@ -107,12 +111,11 @@ export const AuthContextProvider = ({ children }: AuthContextProviderProps) => {
         },
         password: params?.password,
       }
-      const account = await registerUserAccount.mutateAsync(createAccountAndLoginMutationVars)
-      if (account.userId) {
-        handleOnSuccess(account, onSuccessCallBack)
-        return account
-      }
-      return null
+      registerUserAccount.mutate(createAccountAndLoginMutationVars, {
+        onSuccess: (account: any) => {
+          handleOnSuccess(account, onSuccessCallBack)
+        },
+      })
     } catch (err: any) {
       showSnackbar('Registration Failed', 'error')
     }

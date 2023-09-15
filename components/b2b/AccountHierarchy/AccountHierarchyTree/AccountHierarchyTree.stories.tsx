@@ -18,7 +18,7 @@ const Template: ComponentStory<typeof AccountHierarchyTree> = (args) => (
   <AccountHierarchyTree
     {...args}
     accounts={b2BAccountHierarchyResult.accounts as []}
-    hierarchy={buildAccountHierarchy(b2BAccountHierarchyResult.accounts) as HierarchyTree[]}
+    hierarchy={buildAccountHierarchy(b2BAccountHierarchyResult.accounts, 123) as HierarchyTree[]}
   />
 )
 

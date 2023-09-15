@@ -50,6 +50,7 @@ interface KiboHeaderProps {
 interface HeaderActionAreaProps {
   isHeaderSmall: boolean
   categoriesTree: Maybe<PrCategory>[]
+  isElementVisible?: boolean
   setIsBackdropOpen: Dispatch<SetStateAction<boolean>>
   onAccountIconClick: () => void
   onAccountRequestClick: () => void
@@ -155,6 +156,7 @@ const HeaderActionArea = (props: HeaderActionAreaProps) => {
   const {
     isHeaderSmall,
     categoriesTree,
+    isElementVisible,
     setIsBackdropOpen,
     onAccountIconClick,
     onAccountRequestClick,
@@ -217,17 +219,22 @@ const HeaderActionArea = (props: HeaderActionAreaProps) => {
               onClick={() => toggleSearchBar(true)}
             />
           )}
-          <StoreFinderIcon size={isHeaderSmall ? 'medium' : 'large'} />
+          <StoreFinderIcon
+            size={isHeaderSmall ? 'medium' : 'large'}
+            isElementVisible={isElementVisible}
+          />
           <AccountIcon
             size={isHeaderSmall ? 'medium' : 'large'}
+            isElementVisible={isElementVisible}
             onAccountIconClick={onAccountIconClick}
           />
           <AccountRequestIcon
             onClick={onAccountRequestClick}
+            isElementVisible={isElementVisible}
             iconProps={{ fontSize: isHeaderSmall ? 'medium' : 'large' }}
             buttonText={t('b2b-account-request')}
           />
-          <CartIcon size={isHeaderSmall ? 'medium' : 'large'} />
+          <CartIcon size={isHeaderSmall ? 'medium' : 'large'} isElementVisible={isElementVisible} />
         </Box>
       </Container>
     </Box>
@@ -309,6 +316,7 @@ const KiboHeader = (props: KiboHeaderProps) => {
         setIsBackdropOpen={setIsBackdropOpen}
         onAccountIconClick={handleAccountIconClick}
         onAccountRequestClick={handleB2BAccountRequestClick}
+        isElementVisible={isElementVisible}
       />
     )
   }
@@ -365,6 +373,7 @@ const KiboHeader = (props: KiboHeaderProps) => {
             iconProps={{ fontSize: 'medium' }}
             buttonText={t('b2b-account-request')}
             isMobileView={true}
+            isElementVisible={true}
           />
         }
       />

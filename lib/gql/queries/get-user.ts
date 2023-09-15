@@ -1,4 +1,4 @@
-export const getCurrentUser = /* GraphQL */ `
+const getCurrentUser = /* GraphQL */ `
   query getUser {
     customerAccount: getCurrentAccount {
       id
@@ -14,3 +14,5 @@ export const getCurrentUser = /* GraphQL */ `
     }
   }
 `
+
+export default getCurrentUser

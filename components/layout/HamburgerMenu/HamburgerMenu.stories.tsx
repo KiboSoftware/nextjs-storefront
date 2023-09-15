@@ -47,6 +47,7 @@ Common.args = {
       iconProps={{ fontSize: 'medium' }}
       isMobileView={true}
       buttonText="B2B Account Request"
+      isElementVisible={true}
     />
   ),
 }

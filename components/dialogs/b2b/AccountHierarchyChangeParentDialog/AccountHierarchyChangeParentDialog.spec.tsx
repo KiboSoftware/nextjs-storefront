@@ -38,7 +38,7 @@ describe('[components]  AccountHierarchyChangeParentDialog Dialog', () => {
       <Common
         {...Common.args}
         accounts={b2BAccountHierarchyResult.accounts}
-        b2BAccount={b2BAccountHierarchyResult?.accounts?.[1]}
+        parentAccount={b2BAccountHierarchyResult?.accounts?.[1]}
         onSave={onSaveMock}
         onClose={onCloseMock}
       />,

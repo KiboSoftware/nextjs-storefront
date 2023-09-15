@@ -12,7 +12,7 @@ import TableRow from '@mui/material/TableRow'
 import { useTranslation } from 'next-i18next'
 
 import { FulfillmentOptions, Price, ProductItem, QuantitySelector } from '@/components/common'
-import { FulfillmentOptions as FulfillmentOptionsConstant } from '@/lib/constants'
+import { FulfillmentOptions as FulfillmentOptionsConstant, QuoteStatus } from '@/lib/constants'
 import { cartGetters, productGetters } from '@/lib/getters'
 import { uiHelpers } from '@/lib/helpers'
 import { FulfillmentOption } from '@/lib/types'
@@ -122,7 +122,10 @@ export default function B2BProductDetailsTable(props: B2BProductDetailsTableProp
                 />
               </TableCell>
               <TableCell>
-                {status?.toLowerCase() === 'inreview' || (!mode && isQuote) ? (
+                {QuoteStatus[status as string] === QuoteStatus.InReview ||
+                QuoteStatus[status as string] === QuoteStatus.Completed ||
+                QuoteStatus[status as string] === QuoteStatus.Expired ||
+                (!mode && isQuote) ? (
                   <Typography>
                     {item.fulfillmentMethod} - {item.fulfillmentLocationCode}
                   </Typography>
@@ -138,7 +141,10 @@ export default function B2BProductDetailsTable(props: B2BProductDetailsTableProp
                 )}
               </TableCell>
               <TableCell>
-                {status?.toLowerCase() === 'inreview' || (!mode && isQuote) ? (
+                {QuoteStatus[status as string] === QuoteStatus.InReview ||
+                QuoteStatus[status as string] === QuoteStatus.Completed ||
+                QuoteStatus[status as string] === QuoteStatus.Expired ||
+                (!mode && isQuote) ? (
                   <Typography>{item.quantity}</Typography>
                 ) : (
                   <QuantitySelector
@@ -183,7 +189,9 @@ export default function B2BProductDetailsTable(props: B2BProductDetailsTableProp
                 />
               </TableCell>
               <TableCell>
-                {status?.toLowerCase() !== 'inreview' &&
+                {QuoteStatus[status as string] !== QuoteStatus.InReview &&
+                  QuoteStatus[status as string] !== QuoteStatus.Completed &&
+                  QuoteStatus[status as string] !== QuoteStatus.Expired &&
                   (mode === 'create' || mode === 'edit' || !isQuote) && (
                     <IconButton
                       sx={{ p: 0.5 }}

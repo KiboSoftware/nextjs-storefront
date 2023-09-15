@@ -14,6 +14,7 @@ const setup = () => {
     <AccountRequestIcon
       iconProps={{ fontSize: 'large' }}
       buttonText="B2B Account Request"
+      isElementVisible={true}
       onClick={handleAccountRequestIconClickMock}
     />
   )

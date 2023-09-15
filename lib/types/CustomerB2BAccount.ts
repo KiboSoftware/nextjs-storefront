@@ -47,4 +47,5 @@ export interface HierarchyNode {
 export interface HierarchyTree extends HierarchyNode {
   collapsed?: boolean
   parentId?: number
+  disableSorting?: boolean
 }

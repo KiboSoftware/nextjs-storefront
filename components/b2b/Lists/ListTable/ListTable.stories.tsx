@@ -15,7 +15,6 @@ export default {
     onCopyList: { action: 'onCopyList' },
     onDeleteList: { action: 'onDeleteList' },
     onAddListToCart: { action: 'onAddToListCart' },
-    onInitiateQuote: { action: 'onInitiateQuote' },
   },
 } as ComponentMeta<typeof ListTable>
 

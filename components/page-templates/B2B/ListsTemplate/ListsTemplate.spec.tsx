@@ -51,6 +51,7 @@ jest.mock(
             onEditFormToggle: onEditFormToggle,
             listData: {},
             onUpdateListData: () => console.log('updateList'),
+            onHandleAddListToCart: () => console.log('addListToCart'),
           })
         : ListTableMock({ onEditFormToggle: onEditFormToggle })
 )

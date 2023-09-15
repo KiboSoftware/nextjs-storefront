@@ -1,5 +1,3 @@
-// Figma: https://www.figma.com/file/bKJuIwUx6VXmubHZo4rCBq/B2B?type=design&node-id=13-139&mode=design&t=jgLpcUITQZiMxaTj-0
-
 import React from 'react'
 
 import AccountCircle from '@mui/icons-material/AccountCircle'
@@ -180,7 +178,7 @@ const B2BTemplate = (props: B2BTemplateProps) => {
             variant={mdScreen ? 'h1' : 'h2'}
             sx={{ paddingLeft: { md: '0.5rem', xs: 0 } }}
           >
-            {t('KiboUSA')}
+            {user?.companyOrOrganization}
           </Typography>
         </Box>
         <Box

@@ -21,6 +21,7 @@ import { grey } from '@mui/material/colors'
 import { useTranslation } from 'next-i18next'
 
 import { styles } from '@/components/b2b/Lists/ListTable/ListTable.style'
+import { useGetB2BUsersEmailAndId } from '@/hooks'
 import formatDate from '@/lib/helpers/formatDate'
 
 import { CrWishlist, Maybe } from '@/lib/gql/types'
@@ -31,7 +32,6 @@ interface ListTableProps {
   onCopyList: (param: string) => void
   onEditList: (param: string) => void
   onAddListToCart: (param: string) => void
-  onInitiateQuote: (param: string) => void
   isLoading: boolean
 }
 
@@ -40,18 +40,16 @@ interface ListTableMobileOptions {
   onCopyList: (param: string) => void
   onEditList: (param: string) => void
   onAddListToCart: (param: string) => void
-  onInitiateQuote: (param: string) => void
   itemId: string
 }
 
 const ListTableMobileOptions = (props: ListTableMobileOptions) => {
-  const { onDeleteList, onCopyList, onEditList, onAddListToCart, onInitiateQuote, itemId } = props
+  const { onDeleteList, onCopyList, onEditList, onAddListToCart, itemId } = props
   const [anchorEl, setAnchorEL] = useState<HTMLElement | null>(null)
   const { t } = useTranslation('common')
   const options = [
     { name: t('edit'), onClick: onEditList },
     { name: t('add-list-items-to-cart'), onClick: onAddListToCart },
-    { name: t('initiate-quote'), onClick: onInitiateQuote },
     { name: t('duplicate'), onClick: onCopyList },
     { name: t('delete'), onClick: onDeleteList },
   ]
@@ -92,19 +90,12 @@ const ListTableMobileOptions = (props: ListTableMobileOptions) => {
 }
 
 const ListTable = (props: ListTableProps) => {
-  const {
-    rows,
-    onDeleteList,
-    onCopyList,
-    onEditList,
-    onAddListToCart,
-    onInitiateQuote,
-    isLoading,
-  } = props
+  const { rows, onDeleteList, onCopyList, onEditList, onAddListToCart, isLoading } = props
 
   const { t } = useTranslation('common')
   const theme = useTheme()
   const mdScreen = useMediaQuery(theme.breakpoints.up('md'))
+  const userIdAndEmail = useGetB2BUsersEmailAndId()
 
   return (
     <TableContainer
@@ -137,7 +128,7 @@ const ListTable = (props: ListTableProps) => {
                       {item?.name}
                       <br />
                       <Typography style={{ margin: '5px 0', color: grey[400] }}>
-                        {item?.auditInfo?.createBy}
+                        {userIdAndEmail[item?.auditInfo?.createBy as string]}
                       </Typography>
                     </Box>
                   )}
@@ -147,20 +138,12 @@ const ListTable = (props: ListTableProps) => {
                 </TableCell>
                 {mdScreen && (
                   <TableCell sx={{ ...styles.tableCellStyles, width: '20%' }}>
-                    {item?.auditInfo?.createBy}
+                    {userIdAndEmail[item?.auditInfo?.createBy as string]}
                   </TableCell>
                 )}
                 <TableCell sx={{ ...styles.tableCellStyles, width: mdScreen ? '25%' : '10%' }}>
                   {mdScreen ? (
                     <Box sx={{ justifyContent: 'flex-end', display: 'flex' }}>
-                      <Button
-                        variant="text"
-                        color="inherit"
-                        data-testid="initiateQuoteBtn"
-                        onClick={() => onInitiateQuote(item?.id as string)}
-                      >
-                        {t('initiate-quote')}
-                      </Button>
                       <Button
                         variant="text"
                         color="inherit"
@@ -198,7 +181,6 @@ const ListTable = (props: ListTableProps) => {
                         onCopyList={onCopyList}
                         onEditList={onEditList}
                         onAddListToCart={onAddListToCart}
-                        onInitiateQuote={onInitiateQuote}
                         itemId={item?.id as string}
                       />
                     </>

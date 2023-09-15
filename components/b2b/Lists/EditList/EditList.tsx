@@ -10,6 +10,8 @@ import {
   useMediaQuery,
   useTheme,
   FormControl,
+  Stack,
+  Link,
 } from '@mui/material'
 import { useTranslation } from 'next-i18next'
 import { Maybe } from 'yup/lib/types'
@@ -17,7 +19,9 @@ import { Maybe } from 'yup/lib/types'
 import { B2BProductSearch, ListItem } from '@/components/b2b'
 import styles from '@/components/b2b/Lists/EditList/EditList.style'
 import { KiboTextBox } from '@/components/common'
-import { useUpdateWishlistMutation } from '@/hooks'
+import { useProductCardActions, useUpdateWishlistMutation } from '@/hooks'
+import { productGetters } from '@/lib/getters'
+import { ProductCustom } from '@/lib/types'
 
 import { CrWishlist, CrWishlistInput, CrWishlistItem, Product } from '@/lib/gql/types'
 
@@ -25,6 +29,7 @@ export interface EditListProps {
   onEditFormToggle: () => void
   listData: CrWishlist | undefined
   onUpdateListData: (param: CrWishlist) => void
+  onHandleAddListToCart: (param: string) => void
 }
 
 interface EditListState {
@@ -36,7 +41,7 @@ interface EditListState {
 }
 
 const EditList = (props: EditListProps) => {
-  const { onEditFormToggle, listData, onUpdateListData } = props
+  const { onEditFormToggle, listData, onUpdateListData, onHandleAddListToCart } = props
 
   const [editListState, setEditListState] = useState<EditListState>({
     productCode: '',
@@ -49,7 +54,7 @@ const EditList = (props: EditListProps) => {
   const mdScreen = useMediaQuery<boolean>(theme.breakpoints.up('md'))
   const { t } = useTranslation('common')
   const { updateWishlist } = useUpdateWishlistMutation()
-
+  const { openProductQuickViewModal, handleAddToList } = useProductCardActions()
   const handleSaveWishlist = async () => {
     if (listData) listData.name = editListState.name
     const payload = {
@@ -88,22 +93,26 @@ const EditList = (props: EditListProps) => {
   }
 
   const handleAddProduct = async (product?: Product) => {
-    const items = listData?.items
-    const item = items?.find(
-      (i: Maybe<CrWishlistItem>) => i?.product?.productCode === product?.productCode
-    )
-    if (item) {
-      item.quantity += 1
+    if (productGetters.isVariationProduct(product as Product)) {
+      const dialogProps = {
+        title: t('product-configuration-options'),
+        cancel: t('cancel'),
+        addItemToList: t('add-item-to-list'),
+        isB2B: true,
+      }
+      openProductQuickViewModal({
+        product: product as ProductCustom,
+        dialogProps,
+        listData,
+        onUpdateListData,
+      })
     } else {
-      items?.push({ product: { productCode: product?.productCode }, quantity: 1 })
+      handleAddToList({
+        listData,
+        product: product as Product,
+        onUpdateListData,
+      })
     }
-    if (listData) listData.items = items
-    const payload = {
-      wishlistId: listData?.id as string,
-      wishlistInput: listData as CrWishlistInput,
-    }
-    const response = await updateWishlist.mutateAsync(payload)
-    onUpdateListData(response.updateWishlist)
   }
 
   return (
@@ -195,10 +204,20 @@ const EditList = (props: EditListProps) => {
           </Grid>
         </Grid>
       </Box>
+      <Box>
+        <Stack direction="row" sx={{ justifyContent: 'space-between', alignItems: 'baseline' }}>
+          <Typography variant="h3" fontWeight={'bold'}>
+            {t('list-items')}
+          </Typography>
+          <Button
+            onClick={() => onHandleAddListToCart(listData?.id as string)}
+            sx={{ ...styles.addAllItemsToCartButton }}
+          >
+            <Link sx={{ ...styles.addAllItemsToCartLink }}>{t('add-all-items-to-cart')}</Link>
+          </Button>
+        </Stack>
+      </Box>
 
-      <Typography variant="h3" fontWeight={'bold'}>
-        {t('list-items')}
-      </Typography>
       {listData?.items?.length === 0 ? (
         <Typography variant="body2" color="GrayText" marginTop="20px">
           {t('no-item-in-list-text')}

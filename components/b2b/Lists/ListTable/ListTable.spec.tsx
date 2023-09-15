@@ -24,7 +24,6 @@ const onEditMock = jest.fn()
 const onCopyMock = jest.fn()
 const onDeleteMock = jest.fn()
 const onAddListToCartMock = jest.fn()
-const onInitiateQuoteMock = jest.fn()
 
 function setup() {
   const user = userEvent.setup()
@@ -35,7 +34,6 @@ function setup() {
       onEditList={onEditMock}
       onDeleteList={onDeleteMock}
       onAddListToCart={onAddListToCartMock}
-      onInitiateQuote={onInitiateQuoteMock}
     />
   )
   return { user }
@@ -50,14 +48,12 @@ describe('[component] - ListTable', () => {
     const editBtns = screen.getAllByTestId('editBtn')
     const deleteBtns = screen.getAllByTestId('deleteBtn')
     const copyBtns = screen.getAllByTestId('copyBtn')
-    const initiateQuoteBtns = screen.getAllByTestId('initiateQuoteBtn')
     const addToCartBtns = screen.getAllByTestId('addToCartBtn')
     expect(table).toBeVisible()
     tableRows.forEach((row) => expect(row).toBeVisible())
     editBtns.forEach((btn) => expect(btn).toBeVisible())
     deleteBtns.forEach((btn) => expect(btn).toBeVisible())
     copyBtns.forEach((btn) => expect(btn).toBeVisible())
-    initiateQuoteBtns.forEach((btn) => expect(btn).toBeVisible())
     addToCartBtns.forEach((btn) => expect(btn).toBeVisible())
   })
 
@@ -120,18 +116,6 @@ describe('[component] - ListTable', () => {
     })
   })
 
-  it('should call callback function when user clicks on Initiate Quote button', async () => {
-    window.matchMedia = createMatchMedia(1024)
-    const { user } = setup()
-    const initateQuotetBtns = screen.getAllByText(/initiate-quote/i)
-    initateQuotetBtns.forEach((btn) => {
-      user.click(btn)
-    })
-    await waitFor(() => {
-      expect(onInitiateQuoteMock).toBeCalledTimes(initateQuotetBtns.length)
-    })
-  })
-
   it('should open menu on mobile when user clicks on the list table menu', async () => {
     window.matchMedia = createMatchMedia(500)
     const { user } = setup()
@@ -158,7 +142,6 @@ describe('[component] - ListTable', () => {
     const duplicateBtn = within(menus[0]).getByText(/duplicate/i)
     const deleteBtn = within(menus[0]).getByText(/delete/i)
     const addToCartBtn = within(menus[0]).getByText(/add-list-items-to-cart/i)
-    const initiateQuoteBtn = within(menus[0]).getByText(/initiate-quote/i)
 
     fireEvent.click(editBtn)
     expect(onEditMock).toBeCalled()
@@ -171,8 +154,5 @@ describe('[component] - ListTable', () => {
 
     fireEvent.click(addToCartBtn)
     expect(onAddListToCartMock).toBeCalled()
-
-    fireEvent.click(initiateQuoteBtn)
-    expect(onInitiateQuoteMock).toBeCalled()
   })
 })
