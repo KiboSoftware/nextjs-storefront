@@ -9,9 +9,11 @@ import { B2BProductSearch, ListItem } from '@/components/b2b'
 import styles from '@/components/b2b/Lists/CreateList/CreateList.style'
 import { KiboTextBox } from '@/components/common'
 import { useAuthContext } from '@/context'
-import { useCreateWishlist } from '@/hooks'
+import { useCreateWishlist, useProductCardActions } from '@/hooks'
+import { productGetters } from '@/lib/getters'
+import { ProductCustom } from '@/lib/types'
 
-import { CrProductPrice, CrWishlistItem, Product } from '@/lib/gql/types'
+import { CrProductOption, CrProductPrice, CrWishlistItem, Product } from '@/lib/gql/types'
 
 export interface CreateListProps {
   onCreateFormToggle: (param: boolean) => void
@@ -35,6 +37,7 @@ const CreateList = (props: CreateListProps) => {
     items: [],
   })
   const [productList, setProductList] = useState<CrWishlistItem[]>([])
+  const { openProductQuickViewModal } = useProductCardActions()
 
   const theme = useTheme()
   const mdScreen = useMediaQuery<boolean>(theme.breakpoints.up('md'))
@@ -43,6 +46,42 @@ const CreateList = (props: CreateListProps) => {
   const { user } = useAuthContext()
   const { createWishlist } = useCreateWishlist()
 
+  const onUpdateListData = (product: any) => {
+    const { items } = listState
+    const item = {
+      product: {
+        productCode: product?.productCode as string,
+        variationProductCode: product?.variationProductCode as string,
+        options: product?.options as CrProductOption[],
+        isPackagedStandAlone: product?.isPackagedStandAlone,
+        price: product?.currentProduct?.price,
+        imageUrl: productGetters.getCoverImage(product?.currentProduct),
+        name: productGetters.getName(product?.currentProduct),
+        description: productGetters.getDescription(product?.currentProduct),
+      },
+      quantity: 1,
+    }
+    items.push(item)
+
+    // converting product to CrWishlistItem
+    const crWishlistProduct: CrWishlistItem = {
+      quantity: 1,
+      product: {
+        productCode: product?.productCode,
+        variationProductCode: product?.variationProductCode,
+        options: product?.options as CrProductOption[],
+        isPackagedStandAlone: product?.isPackagedStandAlone,
+        price: product?.currentProduct?.price,
+        imageUrl: productGetters.getCoverImage(product?.currentProduct),
+        name: productGetters.getName(product?.currentProduct),
+        description: productGetters.getDescription(product?.currentProduct),
+      },
+    }
+
+    setListState((currentState) => ({ ...currentState, items: items }))
+    // setting state to show the products below
+    setProductList((currentVal) => [...currentVal, crWishlistProduct])
+  }
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault()
     try {
@@ -60,33 +99,61 @@ const CreateList = (props: CreateListProps) => {
 
   const handleAddProduct = (product?: Product) => {
     // setting state for creation of list in backend
-    const { items } = listState
-    const item = {
-      product: {
-        productCode: product?.productCode as string,
-      },
-      quantity: 1,
-    }
-    items.push(item)
+    if (productGetters.isVariationProduct(product as Product)) {
+      const dialogProps = {
+        title: t('product-configuration-options'),
+        cancel: t('cancel'),
+        addItemToList: t('add-item-to-list'),
+        isB2B: true,
+        listMode: 'create',
+      }
+      openProductQuickViewModal({
+        product: product as ProductCustom,
+        dialogProps,
+        onUpdateListData,
+      })
+    } else {
+      const { items } = listState
+      const item = {
+        product: {
+          productCode: product?.productCode as string,
+          variationProductCode: product?.variationProductCode as string,
+          options: product?.options as CrProductOption[],
+          isPackagedStandAlone: product?.isPackagedStandAlone,
+          price: product?.price as CrProductPrice,
+          imageUrl:
+            (product?.content?.productImages?.length as number) > 0
+              ? (product?.content?.productImages?.[0]?.imageUrl as string)
+              : '',
+          name: product?.content?.productName as string,
+          description: product?.content?.productFullDescription as string,
+        },
+        quantity: 1,
+      }
+      items.push(item)
 
-    // converting product to CrWishlistItem
-    const crWishlistProduct: CrWishlistItem = {
-      quantity: 1,
-      product: {
-        productCode: product?.productCode,
-        price: product?.price as CrProductPrice,
-        imageUrl:
-          (product?.content?.productImages?.length as number) > 0
-            ? (product?.content?.productImages?.[0]?.imageUrl as string)
-            : '',
-        name: product?.content?.productName as string,
-        description: product?.content?.productFullDescription as string,
-      },
-    }
+      // converting product to CrWishlistItem
+      const crWishlistProduct: CrWishlistItem = {
+        quantity: 1,
+        product: {
+          productCode: product?.productCode,
+          variationProductCode: product?.variationProductCode,
+          options: product?.options as CrProductOption[],
+          isPackagedStandAlone: product?.isPackagedStandAlone,
+          price: product?.price as CrProductPrice,
+          imageUrl:
+            (product?.content?.productImages?.length as number) > 0
+              ? (product?.content?.productImages?.[0]?.imageUrl as string)
+              : '',
+          name: product?.content?.productName as string,
+          description: product?.content?.productFullDescription as string,
+        },
+      }
 
-    setListState((currentState) => ({ ...currentState, items: items }))
-    // setting state to show the products below
-    setProductList((currentVal) => [...currentVal, crWishlistProduct])
+      setListState((currentState) => ({ ...currentState, items: items }))
+      // setting state to show the products below
+      setProductList((currentVal) => [...currentVal, crWishlistProduct])
+    }
   }
 
   const handleListNameChange = (e: string, userEnteredValue: string) => {

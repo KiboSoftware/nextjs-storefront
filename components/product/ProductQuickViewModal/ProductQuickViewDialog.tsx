@@ -33,6 +33,7 @@ const ProductQuickViewDialogFooter = (props: any) => {
     quoteDetails,
     listData,
     onUpdateListData,
+    listMode,
   } = props
   const { handleAddToCart, handleAddToList, handleAddToQuote } = useProductCardActions()
   const mdScreen = useMediaQuery((theme: Theme) => theme.breakpoints.up('md'))
@@ -43,11 +44,13 @@ const ProductQuickViewDialogFooter = (props: any) => {
   }
 
   const handleAddProductToList = async () => {
-    handleAddToList({
-      listData,
-      product: addToCartPayload?.product as Product,
-      onUpdateListData,
-    })
+    listMode === 'create'
+      ? onUpdateListData(addToCartPayload?.product)
+      : handleAddToList({
+          listData,
+          product: addToCartPayload?.product as Product,
+          onUpdateListData,
+        })
     onClose()
   }
 
@@ -113,6 +116,7 @@ const ProductQuickViewDialog = (props: ProductQuickViewDialogProps) => {
     addItemToList,
     addItemToQuote,
     isB2B = false,
+    listMode,
   } = dialogProps || {} //isB2B to showDialog
   const { closeModal } = useModalContext()
   const [currentProduct, setCurrentProduct] = React.useState<any>(null)
@@ -154,6 +158,7 @@ const ProductQuickViewDialog = (props: ProductQuickViewDialogProps) => {
             quoteDetails={quoteDetails}
             listData={listData}
             onUpdateListData={onUpdateListData}
+            listMode={listMode}
           />
         )
       }

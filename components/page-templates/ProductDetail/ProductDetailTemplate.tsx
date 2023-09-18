@@ -215,6 +215,7 @@ const ProductDetailTemplate = (props: ProductDetailTemplateProps) => {
       fulfillmentMethod,
       options: updatedShopperEnteredValues,
       purchaseLocationCode: selectedFulfillmentOption?.location?.code as string,
+      currentProduct,
     },
     quantity,
     ...(purchaseType === PurchaseTypes.SUBSCRIPTION && {

@@ -388,4 +388,5 @@ export const productGetters = {
   getProductCharacteristics,
   getCoverImageAlt,
   getSeoFriendlyUrl,
+  getDescription,
 }

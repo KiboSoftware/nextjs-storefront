@@ -19,7 +19,7 @@ import { Maybe } from 'yup/lib/types'
 import { B2BProductSearch, ListItem } from '@/components/b2b'
 import styles from '@/components/b2b/Lists/EditList/EditList.style'
 import { KiboTextBox } from '@/components/common'
-import { useProductCardActions, useUpdateWishlistMutation } from '@/hooks'
+import { useProductCardActions, useUpdateWishlistItemMutation } from '@/hooks'
 import { productGetters } from '@/lib/getters'
 import { ProductCustom } from '@/lib/types'
 
@@ -53,8 +53,14 @@ const EditList = (props: EditListProps) => {
   const theme = useTheme()
   const mdScreen = useMediaQuery<boolean>(theme.breakpoints.up('md'))
   const { t } = useTranslation('common')
-  const { updateWishlist } = useUpdateWishlistMutation()
+  const { updateWishlist } = useUpdateWishlistItemMutation()
   const { openProductQuickViewModal, handleAddToList } = useProductCardActions()
+
+  const handleAddListToCart = async (id: string) => {
+    await handleSaveWishlist()
+    onHandleAddListToCart(id)
+  }
+
   const handleSaveWishlist = async () => {
     if (listData) listData.name = editListState.name
     const payload = {
@@ -210,7 +216,7 @@ const EditList = (props: EditListProps) => {
             {t('list-items')}
           </Typography>
           <Button
-            onClick={() => onHandleAddListToCart(listData?.id as string)}
+            onClick={() => handleAddListToCart(listData?.id as string)}
             sx={{ ...styles.addAllItemsToCartButton }}
           >
             <Link sx={{ ...styles.addAllItemsToCartLink }}>{t('add-all-items-to-cart')}</Link>

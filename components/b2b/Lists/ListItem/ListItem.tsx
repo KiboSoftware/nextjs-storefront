@@ -37,21 +37,11 @@ const ListItem = (props: ListItemProps) => {
   const theme = useTheme()
   const { t } = useTranslation('common')
   const mdScreen = useMediaQuery<boolean>(theme.breakpoints.up('md'))
-  const [quantityState, setQuantityState] = useState(item.quantity)
+  const [itemQuantity, setItemQuantity] = useState(item.quantity || 1)
 
-  function handleChangeQuantity(e: number) {
-    setQuantityState(e)
-    onChangeQuantity(item.id ? item.id : (product?.productCode as string), e)
-  }
-
-  const handleQuantityIncrease = () => {
-    setQuantityState(quantityState + 1)
-    onChangeQuantity(item.id ? item.id : (product?.productCode as string), quantityState)
-  }
-
-  const handleQuantityDecrease = () => {
-    setQuantityState(quantityState - 1)
-    onChangeQuantity(item.id ? item.id : (product?.productCode as string), quantityState)
+  const handleQuantityUpdate = (quantity: number) => {
+    setItemQuantity(quantity)
+    onChangeQuantity(item.id ? item.id : (product?.productCode as string), quantity)
   }
 
   function openEditModal() {
@@ -117,10 +107,10 @@ const ListItem = (props: ListItemProps) => {
                 name: t('qty'),
                 value: (
                   <QuantitySelector
-                    quantity={quantityState}
-                    onIncrease={handleQuantityIncrease}
-                    onDecrease={handleQuantityDecrease}
-                    onQuantityUpdate={handleChangeQuantity}
+                    quantity={itemQuantity}
+                    onIncrease={() => handleQuantityUpdate(itemQuantity + 1)}
+                    onDecrease={() => handleQuantityUpdate(itemQuantity - 1)}
+                    onQuantityUpdate={(q) => handleQuantityUpdate(q)}
                   />
                 ),
               }}

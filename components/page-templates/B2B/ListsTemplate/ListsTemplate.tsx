@@ -8,8 +8,8 @@ import { Grid, Button, useMediaQuery, useTheme, IconButton, Typography, Box } fr
 import { useRouter } from 'next/router'
 import { useTranslation } from 'next-i18next'
 
+import { styles } from './ListsTemplate.styles'
 import { CreateList, ViewLists } from '@/components/b2b'
-import { styles } from '@/components/page-templates/B2B/ListsTemplate/ListsTemplate.styles'
 
 const ListsTemplate = () => {
   const [state, setState] = useState({

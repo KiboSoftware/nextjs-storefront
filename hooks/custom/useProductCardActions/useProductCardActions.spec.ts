@@ -30,7 +30,7 @@ jest.mock('@/hooks', () => ({
   useCreateQuoteItem: jest.fn(() => ({
     createQuoteItem: { mutateAsync: createQuoteItemMutateAsyncMock, isPending: false },
   })),
-  useUpdateWishlistMutation: jest.fn(() => ({
+  useUpdateWishlistItemMutation: jest.fn(() => ({
     updateWishlist: jest.fn(),
   })),
 }))

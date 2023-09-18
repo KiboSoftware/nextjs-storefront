@@ -1,5 +1,5 @@
 /**
- * @module useUpdateWishlistMutation
+ * @module useUpdateWishlistItemMutation
  */
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 
@@ -63,7 +63,7 @@ const updateWishlistItemQuantity = async (
  * @returns 'response?.createWishlistItem', which contains wishlist items for current user
  */
 
-export const useUpdateWishlistMutation = () => {
+export const useUpdateWishlistItemMutation = () => {
   const queryClient = useQueryClient()
 
   return {

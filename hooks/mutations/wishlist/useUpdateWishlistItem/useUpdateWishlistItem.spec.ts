@@ -1,16 +1,16 @@
 import { renderHook, waitFor } from '@testing-library/react'
 
-import { useUpdateWishlistMutation } from './useUpdateWishlist'
+import { useUpdateWishlistItemMutation } from './useUpdateWishlistItem'
 import { wishlistMock } from '@/__mocks__/stories/wishlistMock'
 import { createQueryClientWrapper } from '@/__test__/utils/renderWithQueryClient'
 
 const mockWishlist = wishlistMock.items[0]
 
-describe('[hooks] useUpdateWishlistMutation', () => {
+describe('[hooks] useUpdateWishlistItemMutation', () => {
   const { id, name, customerAccountId } = mockWishlist
 
   it('should update wishlist', async () => {
-    const { result } = renderHook(() => useUpdateWishlistMutation(), {
+    const { result } = renderHook(() => useUpdateWishlistItemMutation(), {
       wrapper: createQueryClientWrapper(),
     })
 
@@ -34,7 +34,7 @@ describe('[hooks] useUpdateWishlistMutation', () => {
   })
 
   it('should update wishlistItem', async () => {
-    const { result } = renderHook(() => useUpdateWishlistMutation(), {
+    const { result } = renderHook(() => useUpdateWishlistItemMutation(), {
       wrapper: createQueryClientWrapper(),
     })
 
