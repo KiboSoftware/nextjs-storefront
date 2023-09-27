@@ -32,13 +32,13 @@ const Content = (props: CartContentProps) => {
     <Box sx={{ width: '100%' }} data-testid="content-component">
       <Box>
         <ProductItem
-          image={cartItem.product?.imageUrl || ''}
-          name={cartItem.product?.name || ''}
-          options={cartItem.product?.options as Array<CrProductOption>}
-          price={(cartItem.product?.price?.price || 0).toString()}
+          image={cartItem?.product?.imageUrl || ''}
+          name={cartItem?.product?.name || ''}
+          options={cartItem?.product?.options as Array<CrProductOption>}
+          price={(cartItem?.product?.price?.price || 0).toString()}
           salePrice={
-            (cartItem.product?.price?.salePrice &&
-              (cartItem.product?.price?.salePrice).toString()) ||
+            (cartItem?.product?.price?.salePrice &&
+              (cartItem?.product?.price?.salePrice).toString()) ||
             undefined
           }
           subscriptionFrequency={subscriptionDetails as string}

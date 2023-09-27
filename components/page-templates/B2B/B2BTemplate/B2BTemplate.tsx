@@ -116,7 +116,7 @@ const B2BTemplate = (props: B2BTemplateProps) => {
       id: 'account-information-accordion',
       controls: 'account-information-content',
       header: t('account-information'),
-      component: <MyProfile user={user as CustomerAccount} />,
+      component: <MyProfile user={user as CustomerAccount} isB2BTemplate />,
       path: null,
     },
     {

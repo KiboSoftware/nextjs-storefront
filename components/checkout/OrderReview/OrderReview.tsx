@@ -111,6 +111,7 @@ const OrderReview = (props: OrderReviewProps) => {
     billingDetails,
     paymentMethods,
     purchaseOrderPaymentMethods,
+    shipItems,
   } = orderGetters.getCheckoutDetails(checkout as CrOrder) // TODO: change orderGetters type and remove checkoutGetters.getCheckoutDetails
 
   const { email: userName } = personalDetails
@@ -183,44 +184,46 @@ const OrderReview = (props: OrderReviewProps) => {
             </Box>
           </OrderInfoHeader>
 
-          <OrderInfoHeader
-            headerName={t('shipping-details')}
-            dataStep={t('shipping')}
-            handleEditAction={handleEditAction}
-          >
-            {!isMultiShipEnabled && (
-              <AddressCard
-                {...shippingPersonalDetails}
-                address1={shippingAddress?.address1 as string}
-                address2={shippingAddress?.address2 as string}
-                cityOrTown={shippingAddress?.cityOrTown as string}
-                stateOrProvince={shippingAddress?.stateOrProvince as string}
-                postalOrZipCode={shippingAddress?.postalOrZipCode as string}
-              />
-            )}
-
-            {isMultiShipEnabled &&
-              multiShippingAddressesList &&
-              multiShippingAddressesList.length > 0 && (
-                <Box sx={{ flexWrap: 'wrap', flexDirection: 'column', marginBottom: '0rem' }}>
-                  {multiShippingAddressesList?.map((multiAddress: CustomerContact) => {
-                    return (
-                      <Box key={multiAddress?.id}>
-                        <AddressCard
-                          firstName={multiAddress?.firstName as string}
-                          lastNameOrSurname={multiAddress?.lastNameOrSurname as string}
-                          address1={multiAddress?.address?.address1 as string}
-                          address2={multiAddress?.address?.address2 as string}
-                          cityOrTown={multiAddress?.address?.cityOrTown as string}
-                          stateOrProvince={multiAddress?.address?.stateOrProvince as string}
-                          postalOrZipCode={multiAddress?.address?.postalOrZipCode as string}
-                        />
-                      </Box>
-                    )
-                  })}
-                </Box>
+          {(shipItems?.length > 0 || multiShippingAddressesList?.length > 0) && (
+            <OrderInfoHeader
+              headerName={t('shipping-details')}
+              dataStep={t('shipping')}
+              handleEditAction={handleEditAction}
+            >
+              {!isMultiShipEnabled && (
+                <AddressCard
+                  {...shippingPersonalDetails}
+                  address1={shippingAddress?.address1 as string}
+                  address2={shippingAddress?.address2 as string}
+                  cityOrTown={shippingAddress?.cityOrTown as string}
+                  stateOrProvince={shippingAddress?.stateOrProvince as string}
+                  postalOrZipCode={shippingAddress?.postalOrZipCode as string}
+                />
               )}
-          </OrderInfoHeader>
+
+              {isMultiShipEnabled &&
+                multiShippingAddressesList &&
+                multiShippingAddressesList.length > 0 && (
+                  <Box sx={{ flexWrap: 'wrap', flexDirection: 'column', marginBottom: '0rem' }}>
+                    {multiShippingAddressesList?.map((multiAddress: CustomerContact) => {
+                      return (
+                        <Box key={multiAddress?.id}>
+                          <AddressCard
+                            firstName={multiAddress?.firstName as string}
+                            lastNameOrSurname={multiAddress?.lastNameOrSurname as string}
+                            address1={multiAddress?.address?.address1 as string}
+                            address2={multiAddress?.address?.address2 as string}
+                            cityOrTown={multiAddress?.address?.cityOrTown as string}
+                            stateOrProvince={multiAddress?.address?.stateOrProvince as string}
+                            postalOrZipCode={multiAddress?.address?.postalOrZipCode as string}
+                          />
+                        </Box>
+                      )
+                    })}
+                  </Box>
+                )}
+            </OrderInfoHeader>
+          )}
 
           <OrderInfoHeader
             headerName={t('billing-address')}

@@ -1,9 +1,11 @@
 import '@testing-library/jest-dom'
 import { composeStories } from '@storybook/testing-react'
-import { fireEvent, render, screen, within } from '@testing-library/react'
+import { fireEvent, render, screen, waitFor, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 
 import * as stories from './UserTable.stories' // import all stories from the stories file
+import { renderWithQueryClient } from '@/__test__/utils'
+import { ModalContextProvider } from '@/context'
 import { B2BUserInput } from '@/lib/types'
 
 import { B2BUser } from '@/lib/gql/types'
@@ -118,15 +120,21 @@ describe('[component] User Table', () => {
   })
 
   it('should show user form when user clicks on Edit icon', async () => {
-    render(<Table {...Table.args} onSave={onSaveMock} />)
+    renderWithQueryClient(
+      <ModalContextProvider>
+        <Table {...Table.args} onSave={onSaveMock} />
+      </ModalContextProvider>
+    )
 
     const rows = await screen.findAllByRole('row')
     const editIconInRowOne = within(rows[1]).getByTestId('EditIcon')
 
     await user.click(editIconInRowOne)
 
-    const userForm = within(rows[1]).getByTestId('user-form-mock')
-    expect(userForm).toBeVisible()
+    const userForm = screen.getByTestId('user-form-mock')
+    await waitFor(() => {
+      expect(userForm).toBeVisible()
+    })
 
     const saveButton = within(userForm).getByRole('button', { name: 'onSave' })
     expect(saveButton).toBeVisible()
@@ -162,7 +170,7 @@ describe('[component] User Table', () => {
 
     await user.click(editIconInRowOne)
 
-    const userForm = within(rows[1]).getByTestId('user-form-mock')
+    const userForm = screen.getByTestId('user-form-mock')
     expect(userForm).toBeVisible()
 
     const cancelButton = within(userForm).getByTestId('cancel-user-mock-button')

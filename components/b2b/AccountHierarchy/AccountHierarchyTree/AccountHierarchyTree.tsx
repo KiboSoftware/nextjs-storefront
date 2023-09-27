@@ -12,13 +12,12 @@ import { useTranslation } from 'next-i18next'
 
 import { AccountHierarchyStyles } from './AccountHierarchyTree.styles'
 import { AccountHierarchyTreeLabel } from '@/components/b2b'
-import { B2BRoles } from '@/lib/constants'
+import { actions, hasPermission } from '@/lib/helpers'
 import { AddChildAccountProps, B2BAccountHierarchyResult, HierarchyTree } from '@/lib/types'
 
 import { B2BAccount, B2BUser, CustomerAccount } from '@/lib/gql/types'
 
 interface AccountHierarchyTreeProps {
-  role: string
   accounts: B2BAccount[]
   customerAccount: CustomerAccount
   hierarchy: HierarchyTree[]
@@ -36,7 +35,6 @@ export default function AccountHierarchyTree(props: AccountHierarchyTreeProps) {
   const {
     accounts,
     hierarchy,
-    role,
     customerAccount,
     handleViewAccount,
     handleAddAccount,
@@ -107,7 +105,7 @@ export default function AccountHierarchyTree(props: AccountHierarchyTreeProps) {
       <NoSsr>
         <SortableTree
           items={(hierarchy as TreeItems<HierarchyTree>) || []}
-          disableSorting={role !== B2BRoles.ADMIN}
+          disableSorting={!hasPermission(actions.EDIT_ACCOUNT)}
           onItemsChanged={(items, reason) => {
             if (reason.type === 'dropped') {
               if (!reason.droppedToParent?.disableSorting) {
@@ -135,13 +133,13 @@ export default function AccountHierarchyTree(props: AccountHierarchyTreeProps) {
             return (
               <SimpleTreeItemWrapper
                 {...props}
+                disableCollapseOnItemClick
                 disableSorting={props.item.disableSorting}
                 disableInteraction={props.item.disableSorting}
                 ref={ref}
               >
                 <AccountHierarchyTreeLabel
                   disableSorting={props.item.disableSorting}
-                  role={role}
                   mdScreen={mdScreen}
                   currentAccount={currentAccount}
                   customerAccount={customerAccount}

@@ -90,8 +90,8 @@ export default function B2BProductDetailsTable(props: B2BProductDetailsTableProp
   }
 
   return (
-    <TableContainer component={Paper} sx={{ maxHeight: '50vh' }}>
-      <Table sx={{ minWidth: 650 }} aria-label="quick order table" size="medium">
+    <TableContainer component={Paper}>
+      <Table stickyHeader sx={{ minWidth: 650 }} aria-label="quick order table">
         {!items.length ? <caption>{t('search-to-add-products')}</caption> : null}
         <TableHead>
           <TableRow

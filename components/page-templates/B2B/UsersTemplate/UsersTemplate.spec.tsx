@@ -7,20 +7,10 @@ import { fireEvent, render, screen } from '@testing-library/react'
 import mediaQuery from 'css-mediaquery'
 
 import * as stories from './UsersTemplate.stories' // import all stories from the stories file
-import { createQueryClientWrapper } from '@/__test__/utils'
+import { createQueryClientWrapper, renderWithQueryClient } from '@/__test__/utils'
 import { ModalContextProvider } from '@/context'
 
-import { B2BUser } from '@/lib/gql/types'
 const { Common } = composeStories(stories)
-
-interface UserFormDialogProps {
-  isEditMode: boolean
-  isUserFormInDialog?: boolean
-  formTitle?: string
-  b2BUser?: B2BUser
-  onSave: (data: B2BUser) => void
-  onClose: () => void
-}
 
 // Mock
 const onCloseMock = jest.fn()
@@ -75,27 +65,6 @@ jest.mock(
 const UserTableMock = () => <div data-testid="user-table-mock"></div>
 jest.mock('../../../b2b/User/UserTable/UserTable', () => () => UserTableMock())
 
-jest.mock('@/components/dialogs', () => ({
-  __esModule: true,
-  UserFormDialog: (props: UserFormDialogProps) => {
-    const params = {
-      firstName: 'Karan',
-      lastName: 'Thappar',
-      emailAddress: 'karan@gmail.com',
-      userName: 'karan@gmail.com',
-      role: 'Admin',
-      isActive: true,
-    }
-
-    return (
-      <div>
-        <h1>user-form-dialog</h1>
-        <button onClick={() => props.onSave(params)}>Confirm</button>
-      </div>
-    )
-  },
-}))
-
 describe('[component] - UsersTemplate', () => {
   it('should render component', async () => {
     jest.mock('@/hooks', () => ({
@@ -127,7 +96,11 @@ describe('[component] - UsersTemplate', () => {
   })
 
   it('should open user form when add user button clicked in desktop view', async () => {
-    render(<Common />)
+    renderWithQueryClient(
+      <ModalContextProvider>
+        <Common />
+      </ModalContextProvider>
+    )
 
     const addUserButton = screen.getByText('add-user')
     fireEvent.click(addUserButton)

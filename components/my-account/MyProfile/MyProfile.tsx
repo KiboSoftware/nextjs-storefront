@@ -6,11 +6,16 @@ import { Box, Stack, Typography } from '@mui/material'
 import { useTranslation } from 'next-i18next'
 
 import { ProfileDetailsForm } from '@/components/my-account'
-import { useUpdateCustomerProfile, useChangePassword } from '@/hooks'
+import {
+  useUpdateCustomerProfile,
+  useChangePassword,
+  useUpdateCustomerB2bUserMutation,
+} from '@/hooks'
 import { userGetters } from '@/lib/getters'
+import { buildUpdateCustomerB2bUserParams } from '@/lib/helpers'
 import { UpdateProfileDataParam, PasswordTypes } from '@/lib/types'
 
-import { CustomerAccount } from '@/lib/gql/types'
+import { B2BUser, CustomerAccount } from '@/lib/gql/types'
 
 enum ProfileSections {
   Name = 1,
@@ -19,10 +24,11 @@ enum ProfileSections {
 }
 interface MyProfileProps {
   user: CustomerAccount
+  isB2BTemplate?: boolean
 }
 
 const MyProfile = (props: MyProfileProps) => {
-  const { user } = props
+  const { user, isB2BTemplate } = props
   const { t } = useTranslation('common')
   const { updateUserData } = useUpdateCustomerProfile()
   const { changePassword } = useChangePassword()
@@ -72,6 +78,30 @@ const MyProfile = (props: MyProfileProps) => {
     setCurrentEditableField(null)
   }
 
+  const { updateCustomerB2bUser } = useUpdateCustomerB2bUserMutation()
+
+  const handleUpdateB2BProfileData = async (profileFormData: UpdateProfileDataParam) => {
+    const variables = buildUpdateCustomerB2bUserParams({
+      user,
+      b2BUser: user as B2BUser,
+      values: {
+        ...profileFormData,
+        firstName: profileFormData.firstName || firstName,
+        lastName: profileFormData.lastName || lastName,
+        emailAddress: profileFormData.emailAddress || emailAddress,
+      },
+    })
+    try {
+      await updateCustomerB2bUser.mutateAsync({
+        ...variables,
+      })
+    } catch (err) {
+      console.log(err)
+    }
+
+    setCurrentEditableField(null)
+  }
+
   const handleUpdateUserPassword = async (updatedPassword: PasswordTypes) => {
     try {
       await changePassword.mutateAsync({
@@ -97,7 +127,9 @@ const MyProfile = (props: MyProfileProps) => {
         firstName={firstName}
         lastName={lastName}
         emailAddress={emailAddress}
-        onSaveProfileData={handleUpdateProfileData}
+        onSaveProfileData={(data) =>
+          isB2BTemplate ? handleUpdateB2BProfileData(data) : handleUpdateProfileData(data)
+        }
         onCancel={() => setCurrentEditableField(null)}
       />
     )

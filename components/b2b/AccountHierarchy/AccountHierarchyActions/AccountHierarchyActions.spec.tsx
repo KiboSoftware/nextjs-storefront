@@ -4,7 +4,6 @@ import userEvent from '@testing-library/user-event'
 
 import * as stories from './AccountHierarchyActions.stories'
 import { renderWithQueryClient } from '@/__test__/utils'
-import { B2BRoles } from '@/lib/constants'
 
 const user = userEvent.setup()
 
@@ -100,7 +99,7 @@ describe('[components] AccountHierarchyActions', () => {
 
   it("should render Add, Edit, Buyers and Quotes buttons when role is 'Admin'", async () => {
     // eslint-disable-next-line jsx-a11y/aria-role
-    renderWithQueryClient(<Common role={B2BRoles.ADMIN} mdScreen={true} />)
+    renderWithQueryClient(<Common mdScreen={true} />)
 
     const accountAddButton = screen.getByRole('button', { name: 'item-add' })
     expect(accountAddButton).toBeVisible()
@@ -117,29 +116,12 @@ describe('[components] AccountHierarchyActions', () => {
 
   it("should render Buyer and Quotes buttons when role is 'Purchaser'", async () => {
     // eslint-disable-next-line jsx-a11y/aria-role
-    renderWithQueryClient(<Common role={B2BRoles.PURCHASER} mdScreen={true} />)
+    renderWithQueryClient(<Common mdScreen={true} />)
 
     const buyerButton = screen.getByText('buyers')
     expect(buyerButton).toBeVisible()
 
     const quoteButton = screen.getByText('quotes')
     expect(quoteButton).toBeVisible()
-  })
-
-  it("should not render any action buttons when role is 'Non-Purchaser'", async () => {
-    // eslint-disable-next-line jsx-a11y/aria-role
-    renderWithQueryClient(<Common role={B2BRoles.NON_PURCHASER} mdScreen={true} />)
-
-    const accountAddButton = screen.queryByRole('button', { name: 'item-add' })
-    expect(accountAddButton).not.toBeInTheDocument()
-
-    const accountEditButton = screen.queryByRole('button', { name: 'item-edit' })
-    expect(accountEditButton).not.toBeInTheDocument()
-
-    const buyerButton = screen.queryByText('buyers')
-    expect(buyerButton).not.toBeInTheDocument()
-
-    const quoteButton = screen.queryByText('quotes')
-    expect(quoteButton).not.toBeInTheDocument()
   })
 })

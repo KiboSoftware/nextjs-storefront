@@ -37,6 +37,7 @@ export interface B2BUserResultType {
 export interface CreateCustomerB2bUserParams {
   user: CustomerAccount | undefined
   values: B2BUserInput
+  roles: CustomerB2BUserRole[]
 }
 
 export interface UpdateCustomerB2bUserParams {

@@ -67,6 +67,7 @@ interface ProductDetailTemplateProps {
   isQuickViewModal?: boolean
   children?: any
   isB2B?: boolean
+  addItemToList?: string
   getCurrentProduct?: (
     addToCartPayload: any,
     currentProduct: ProductCustom,
@@ -102,6 +103,7 @@ const ProductDetailTemplate = (props: ProductDetailTemplateProps) => {
     isQuickViewModal = false,
     children,
     isB2B = false,
+    addItemToList,
     getCurrentProduct,
   } = props
   const { t } = useTranslation('common')
@@ -476,7 +478,7 @@ const ProductDetailTemplate = (props: ProductDetailTemplateProps) => {
               })}
             </KiboSelect>
           )}
-          {purchaseType === PurchaseTypes.ONETIMEPURCHASE && (
+          {!addItemToList && purchaseType === PurchaseTypes.ONETIMEPURCHASE && (
             <FulfillmentOptions
               title={t('fulfillment-options')}
               fulfillmentOptions={fulfillmentOptions}

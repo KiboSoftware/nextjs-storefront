@@ -6,7 +6,6 @@ import { Box, Grid, Stack, Typography, useMediaQuery, useTheme } from '@mui/mate
 import { MobileB2BLayoutStyles } from './MobileB2BLayout.styles'
 
 interface MobileB2BLayoutProps {
-  // Define your props here
   headerText: string
   backText: string
   onBackClick: () => void
@@ -14,7 +13,6 @@ interface MobileB2BLayoutProps {
 
 const MobileB2BLayout = (props: MobileB2BLayoutProps) => {
   const { headerText, backText, onBackClick } = props
-  // Your component logic here
 
   const theme = useTheme()
   const mdScreen = useMediaQuery(theme.breakpoints.up('md'))

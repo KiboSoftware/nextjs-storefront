@@ -24,6 +24,10 @@ import {
   CustomerPurchaseOrderAccount,
 } from '@/lib/gql/types'
 
+jest.mock('@/lib/helpers/hasPermission', () => ({
+  hasPermission: jest.fn().mockImplementation(() => true),
+}))
+
 jest.mock('../CardDetailsForm/CardDetailsForm', () => ({
   __esModule: true,
   default: ({
@@ -195,7 +199,7 @@ const userContextValues = (isAuthenticated: boolean, userId: number) => ({
 const { publicRuntimeConfig } = getConfig()
 
 const TestComponent = (param: any) => {
-  const { stepStatus, setStepStatusSubmit } = useCheckoutStepContext()
+  const { activeStep, setStepStatusSubmit } = useCheckoutStepContext()
 
   const handleSubmit = () => {
     setStepStatusSubmit()
@@ -203,6 +207,7 @@ const TestComponent = (param: any) => {
 
   return (
     <>
+      <div data-testid="activeStep">{activeStep}</div>
       <PaymentStep
         checkout={param?.checkout || Common.args?.checkout}
         cardCollection={param?.cardCollection || Common.args?.cardCollection}
@@ -463,7 +468,7 @@ describe('[components] PaymentStep', () => {
         await user.click(screen.getByRole('button', { name: 'Review Order' }))
 
         await waitFor(() => {
-          expect(onAddPaymentMock).toBeCalled()
+          expect(screen.getByTestId('activeStep')).toHaveTextContent('3')
         })
       })
     })

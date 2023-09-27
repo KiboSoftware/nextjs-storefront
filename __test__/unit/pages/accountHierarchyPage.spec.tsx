@@ -1,7 +1,7 @@
 import '@testing-library/jest-dom'
 import { render, screen } from '@testing-library/react'
 
-import { b2BAccountHierarchyResult } from '@/__mocks__/stories'
+import { b2BAccountHierarchyResult, userMock } from '@/__mocks__/stories'
 import { createQueryClientWrapper } from '@/__test__/utils'
 import { buildAccountHierarchy } from '@/lib/helpers'
 import AccountHierarchyPage, { getServerSideProps } from '@/pages/my-account/b2b/account-hierarchy'
@@ -15,6 +15,7 @@ jest.mock('@/lib/api/operations', () => ({
       hierarchy,
     })
   ),
+  getCurrentUser: jest.fn(() => userMock),
 }))
 
 jest.mock('next-i18next/serverSideTranslations', () => ({
@@ -60,6 +61,7 @@ describe('[page] Account Hierarchy Page', () => {
           accounts: b2BAccountHierarchyResult.accounts,
           hierarchy,
         },
+        customerAccount: userMock.customerAccount,
         _nextI18Next: mockNextI18Next,
       },
     })

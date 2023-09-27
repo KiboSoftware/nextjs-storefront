@@ -3,7 +3,6 @@ import React from 'react'
 import { ListItemIcon, ListItemText, Typography } from '@mui/material'
 
 import { AccountHierarchyActions } from '@/components/b2b'
-import { B2BRoles } from '@/lib/constants'
 import { AddChildAccountProps } from '@/lib/types'
 
 import { B2BAccount, B2BUser, CustomerAccount } from '@/lib/gql/types'
@@ -12,7 +11,6 @@ interface AccountHierarchyTreeLabelProps {
   disableSorting?: boolean
   currentAccount: B2BAccount
   customerAccount: CustomerAccount | undefined
-  role: string
   mdScreen?: boolean
   handleViewAccount: (item: B2BAccount) => void
   handleAddAccount: ({ isAddingAccountToChild, accounts }: AddChildAccountProps) => void
@@ -27,7 +25,6 @@ const AccountHierarchyTreeLabel = (props: AccountHierarchyTreeLabelProps) => {
     disableSorting,
     currentAccount,
     customerAccount,
-    role,
     mdScreen,
     handleViewAccount,
     handleAddAccount,
@@ -76,9 +73,8 @@ const AccountHierarchyTreeLabel = (props: AccountHierarchyTreeLabelProps) => {
         sx={{ pl: 1 }}
       />
       <ListItemIcon sx={{ ml: 'auto' }}>
-        {role !== B2BRoles.NON_PURCHASER && !disableSorting ? (
+        {!disableSorting ? (
           <AccountHierarchyActions
-            role={role}
             mdScreen={mdScreen}
             onBuyersClick={onBuyersClick}
             onQuotesClick={onQuotesClick}

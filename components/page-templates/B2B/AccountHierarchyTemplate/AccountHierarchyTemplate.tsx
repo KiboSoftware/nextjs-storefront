@@ -14,18 +14,16 @@ import {
   ViewUserDetailDialog,
 } from '@/components/dialogs'
 import { MobileB2BLayout } from '@/components/layout'
-import { useAuthContext, useModalContext } from '@/context'
+import { useModalContext } from '@/context'
 import {
   useB2BQuote,
   useChangeB2bAccountParentMutation,
   useCreateCustomerB2bAccountMutation,
   useGetB2BAccountHierarchy,
-  useGetB2BUserQueries,
   useGetQuotes,
   useUpdateCustomerB2bAccountMutation,
   useUpdateCustomerB2bUserMutation,
 } from '@/hooks'
-import { userGetters } from '@/lib/getters'
 import {
   actions,
   buildAccountHierarchy,
@@ -47,13 +45,13 @@ import { B2BAccount, B2BUser, CustomerAccount } from '@/lib/gql/types'
 
 interface AccountHierarchyTemplateProps {
   initialData?: B2BAccountHierarchyResult
+  user?: CustomerAccount
 }
 
 const AccountHierarchyTemplate = (props: AccountHierarchyTemplateProps) => {
-  const { initialData } = props
+  const { initialData, user } = props
   const theme = useTheme()
   const router = useRouter()
-  const { user } = useAuthContext()
   const { t } = useTranslation('common')
   const { showModal, closeModal } = useModalContext()
   const mdScreen = useMediaQuery(theme.breakpoints.up('md'))
@@ -69,13 +67,6 @@ const AccountHierarchyTemplate = (props: AccountHierarchyTemplateProps) => {
   const { updateCustomerB2bAccount } = useUpdateCustomerB2bAccountMutation()
   const { updateCustomerB2bUser } = useUpdateCustomerB2bUserMutation()
   const { changeB2bAccountParent } = useChangeB2bAccountParentMutation(user?.id as number)
-  const { data: currentB2bUser } = useGetB2BUserQueries({
-    accountId: user?.id as number,
-    filter: '',
-    pageSize: 5,
-    startIndex: 0,
-    q: user?.userName as string,
-  })
 
   const [accountHierarchy, setAccountHierarchy] = useState<B2BAccountHierarchyResult>(
     b2BAccountHierarchy as B2BAccountHierarchyResult
@@ -95,7 +86,7 @@ const AccountHierarchyTemplate = (props: AccountHierarchyTemplateProps) => {
       (account) =>
         account.id !== currentAccount?.parentAccountId &&
         account.id !== currentAccount?.id &&
-        account
+        account.parentAccountId !== currentAccount?.id
     )
   }
 
@@ -126,9 +117,12 @@ const AccountHierarchyTemplate = (props: AccountHierarchyTemplateProps) => {
 
   const handleAddAccountFormSubmit = async (formValues: CreateCustomerB2bAccountParams) => {
     try {
-      const variables = buildCreateCustomerB2bAccountParams({
-        ...formValues,
-      })
+      const variables = buildCreateCustomerB2bAccountParams(
+        {
+          ...formValues,
+        },
+        true
+      )
       const createCustomerB2BAccount = await createCustomerB2bAccount.mutateAsync({
         ...variables,
       })
@@ -333,7 +327,6 @@ const AccountHierarchyTemplate = (props: AccountHierarchyTemplateProps) => {
             ) : (
               <NoSsr>
                 <AccountHierarchyTree
-                  role={userGetters.getRole(currentB2bUser?.items?.[0] as B2BUser)}
                   customerAccount={user as CustomerAccount}
                   accounts={accountHierarchy?.accounts}
                   hierarchy={accountHierarchy?.hierarchy}

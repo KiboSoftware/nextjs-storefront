@@ -53,10 +53,6 @@ const UserTable = (props: UserTableProps) => {
   const [editUserId, setEditUserId] = useState<string | undefined>(undefined)
 
   const onEditUserButtonClick = (b2BUser: B2BUser) => {
-    if (mdScreen) {
-      setEditUserId(b2BUser.userId as string)
-      return
-    }
     showModal({
       Component: UserFormDialog,
       props: {

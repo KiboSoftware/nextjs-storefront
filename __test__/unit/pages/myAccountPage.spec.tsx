@@ -72,7 +72,6 @@ describe('[page] MyAccount Page', () => {
 
   it('should render the MyAccount page template', () => {
     mockIsAuthenticated = true
-    MyAccountPage.defaultProps = { isAuthenticated: mockIsAuthenticated }
     jest.mock('@/context/AuthContext', () => ({
       useAuthContext: () => ({ user: mockCustomerAccount }),
     }))
@@ -88,11 +87,10 @@ describe('[page] MyAccount Page', () => {
 
   it('should not render MyAccountTemplate if not authenticated', () => {
     mockIsAuthenticated = false
-    MyAccountPage.defaultProps = { isAuthenticated: mockIsAuthenticated, customerAccount: null }
     jest.mock('@/context/AuthContext', () => ({
       useAuthContext: () => ({ user: null }),
     }))
-    render(<MyAccountPage isAuthenticated={false} customerAccount={null} />, {
+    render(<MyAccountPage customerAccount={null} />, {
       wrapper: createQueryClientWrapper(),
     })
 
@@ -101,9 +99,6 @@ describe('[page] MyAccount Page', () => {
   })
 
   it('renders B2BTemplate when isB2bTemplate is true', () => {
-    const props = { isAuthenticated: true }
-    MyAccountPage.defaultProps = props
-
     const values = {
       isAuthenticated: true,
       user: {

@@ -29,12 +29,10 @@ const QuotesTemplate = (props: QuotesTemplateProps) => {
   const mdScreen = useMediaQuery(theme.breakpoints.up('md'))
 
   const breadcrumbList = [{ key: 'quotes', backText: t('my-account'), redirectURL: '/my-account' }]
-  const [activeComponent, setActiveComponent] = useState('quotes')
-  const activeBreadCrumb = breadcrumbList.filter((item) => item.key === activeComponent)[0]
+  const activeBreadCrumb = breadcrumbList.filter((item) => item.key === 'quotes')[0]
 
   const onBackClick = () => {
     router.push(activeBreadCrumb.redirectURL)
-    setActiveComponent('accountHierarchy')
   }
 
   const handleCreateNewTemplate = async () => {

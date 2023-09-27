@@ -16,7 +16,6 @@ import type {
 } from 'next'
 
 interface MyAccountPageProps {
-  isAuthenticated?: boolean
   customerAccount?: any
 }
 
@@ -29,7 +28,6 @@ export const getServerSideProps: GetServerSideProps = async (
 
   return {
     props: {
-      isAuthenticated: Boolean(response?.customerAccount?.id),
       customerAccount: response?.customerAccount,
       ...(await serverSideTranslations(locale as string, ['common'])),
     },
@@ -37,8 +35,9 @@ export const getServerSideProps: GetServerSideProps = async (
 }
 
 const MyAccountPage: NextPage<MyAccountPageProps> = (props) => {
-  const { isAuthenticated: serverSideIsAuthenticated, customerAccount: customerAccountFromServer } =
-    props
+  const { customerAccount: customerAccountFromServer } = props
+
+  const serverSideIsAuthenticated = Boolean(customerAccountFromServer?.id)
 
   const { user: customerAccountFromClient } = useAuthContext()
 
@@ -51,6 +50,7 @@ const MyAccountPage: NextPage<MyAccountPageProps> = (props) => {
   const { reCaptchaKey } = publicRuntimeConfig.recaptcha
 
   if (!serverSideIsAuthenticated && !Object.keys(customerAccount).length) return null
+
   const isB2BUser = customerAccount?.accountType?.toLowerCase() === AccountType.B2B.toLowerCase()
 
   const template = isB2BUser ? (

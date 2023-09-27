@@ -252,7 +252,9 @@ const StandardShippingStep = (props: ShippingProps) => {
   }, [stepStatus])
 
   useEffect(() => {
-    selectedShippingAddressId && checkoutShippingMethodCode && shouldShowAddAddressButton
+    // eslint-disable-next-line @typescript-eslint/no-extra-semi
+    ;(selectedShippingAddressId && checkoutShippingMethodCode && shouldShowAddAddressButton) ||
+    (!shipItems.length && pickupItems.length)
       ? setStepStatusValid()
       : setStepStatusIncomplete()
     // eslint-disable-next-line react-hooks/exhaustive-deps

@@ -3,7 +3,6 @@ import React from 'react'
 import { ComponentStory, ComponentMeta } from '@storybook/react'
 
 import AccountHierarchyActions from './AccountHierarchyActions'
-import { B2BRoles } from '@/lib/constants'
 
 // Common
 export default {
@@ -24,6 +23,5 @@ const Template: ComponentStory<typeof AccountHierarchyActions> = (args) => (
 
 export const Common = Template.bind({})
 Common.args = {
-  role: B2BRoles.ADMIN,
   mdScreen: true,
 }

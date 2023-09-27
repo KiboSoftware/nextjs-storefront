@@ -28,8 +28,10 @@ import { usePaymentTypes, useValidateCustomerAddress } from '@/hooks'
 import { CurrencyCode, PaymentType, PaymentWorkflow } from '@/lib/constants'
 import { addressGetters, cardGetters, orderGetters, userGetters } from '@/lib/getters'
 import {
+  actions,
   buildCardPaymentActionForCheckoutParams,
   buildPurchaseOrderPaymentActionForCheckoutParams,
+  hasPermission,
   tokenizeCreditCardPayment,
   validateGoogleReCaptcha,
 } from '@/lib/helpers'
@@ -160,7 +162,10 @@ const PaymentStep = (props: PaymentStepProps) => {
   const newPaymentTypes = paymentTypes
     .map((paymentType: any) =>
       paymentType.id === 'CreditCard' ||
-      (paymentType.id === 'PurchaseOrder' && user?.id && customerPurchaseOrderAccount?.isEnabled)
+      (hasPermission(actions.VIEW_PO) &&
+        paymentType.id === 'PurchaseOrder' &&
+        user?.id &&
+        customerPurchaseOrderAccount?.isEnabled)
         ? paymentType
         : null
     )
@@ -675,7 +680,7 @@ const PaymentStep = (props: PaymentStepProps) => {
     const responseForAdd =
       selectedPaymentTypeRadio && (await paymentMethodSelection[selectedPaymentTypeRadio]())
 
-    if (checkout?.id) {
+    if (checkout?.id && responseForAdd?.paymentActionToBeAdded) {
       await onAddPayment(checkout.id, responseForAdd?.paymentActionToBeAdded)
       setStepStatusComplete()
       setStepNext()
@@ -943,17 +948,21 @@ const PaymentStep = (props: PaymentStepProps) => {
                         <StyledHeadings variant="h2" sx={{ paddingTop: '3.125rem' }}>
                           {t('billing-address')}
                         </StyledHeadings>
-                        {!isMultiShipEnabled && (
-                          <FormControlLabel
-                            sx={{
-                              width: '100%',
-                              paddingLeft: '0.5rem',
-                            }}
-                            control={<Checkbox name={`${t('billing-address-same-as-shipping')}`} />}
-                            label={`${t('billing-address-same-as-shipping')}`}
-                            onChange={(_, value) => handleSameAsShippingAddressCheckbox(value)}
-                          />
-                        )}
+                        {!isMultiShipEnabled &&
+                          (checkout as CrOrder)?.fulfillmentInfo?.shippingMethodCode &&
+                          (checkout as CrOrder)?.fulfillmentInfo?.shippingMethodName && (
+                            <FormControlLabel
+                              sx={{
+                                width: '100%',
+                                paddingLeft: '0.5rem',
+                              }}
+                              control={
+                                <Checkbox name={`${t('billing-address-same-as-shipping')}`} />
+                              }
+                              label={`${t('billing-address-same-as-shipping')}`}
+                              onChange={(_, value) => handleSameAsShippingAddressCheckbox(value)}
+                            />
+                          )}
                         <AddressForm
                           key={selectedPaymentTypeRadio}
                           contact={billingFormAddress.contact}

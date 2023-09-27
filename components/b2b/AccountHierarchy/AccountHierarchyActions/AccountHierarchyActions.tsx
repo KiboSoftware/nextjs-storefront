@@ -7,11 +7,10 @@ import { Box, IconButton, NoSsr, Typography } from '@mui/material'
 import { useTranslation } from 'next-i18next'
 
 import { CartItemActionsMobile } from '@/components/cart'
-import { AccountActions, AllAccountActions, B2BRoles } from '@/lib/constants'
+import { AllAccountActions } from '@/lib/constants'
 import { actions, hasPermission } from '@/lib/helpers'
 
 interface AccountHierarchyActionsProps {
-  role?: string
   mdScreen?: boolean
   onBuyersClick: () => void
   onQuotesClick: () => void
@@ -21,7 +20,7 @@ interface AccountHierarchyActionsProps {
 }
 
 const AccountHierarchyActions = (props: AccountHierarchyActionsProps) => {
-  const { role, mdScreen, onAdd, onView, onEdit, onBuyersClick, onQuotesClick } = props
+  const { mdScreen, onAdd, onView, onEdit, onBuyersClick, onQuotesClick } = props
   const { t } = useTranslation('common')
 
   const onMenuItemSelection = (option: string) => {
@@ -38,8 +37,25 @@ const AccountHierarchyActions = (props: AccountHierarchyActionsProps) => {
       selectedAction()
     }
   }
-
-  if (role === B2BRoles.NON_PURCHASER) return null
+  const actionsList = () => {
+    const permissionArray = []
+    if (hasPermission(actions.VIEW_USERS)) {
+      permissionArray.push(AllAccountActions.VIEW_BUYER_ACCOUNT)
+    }
+    if (hasPermission(actions.VIEW_CHILD_ACCOUNT_QUOTES)) {
+      permissionArray.push(AllAccountActions.VIEW_QUOTES)
+    }
+    if (hasPermission(actions.CREATE_ACCOUNT)) {
+      permissionArray.push(AllAccountActions.ADD_ACCOUNT)
+    }
+    if (hasPermission(actions.EDIT_ACCOUNT)) {
+      permissionArray.push(AllAccountActions.EDIT_ACCOUNT)
+    }
+    if (hasPermission(actions.VIEW_ACCOUNT)) {
+      permissionArray.push(AllAccountActions.VIEW_ACCOUNT)
+    }
+    return permissionArray
+  }
 
   return mdScreen ? (
     <Box
@@ -87,26 +103,26 @@ const AccountHierarchyActions = (props: AccountHierarchyActionsProps) => {
         </NoSsr>
         <NoSsr>
           {hasPermission(actions.CREATE_ACCOUNT) && (
-            <>
-              <IconButton
-                size="small"
-                sx={{ p: 0.5 }}
-                aria-label="item-add"
-                name="item-add"
-                onClick={onAdd}
-              >
-                <AddCircleIcon />
-              </IconButton>
-              <IconButton
-                size="small"
-                sx={{ p: 0.5 }}
-                aria-label="item-edit"
-                name="item-edit"
-                onClick={onEdit}
-              >
-                <EditIcon />
-              </IconButton>
-            </>
+            <IconButton
+              size="small"
+              sx={{ p: 0.5 }}
+              aria-label="item-add"
+              name="item-add"
+              onClick={onAdd}
+            >
+              <AddCircleIcon />
+            </IconButton>
+          )}
+          {hasPermission(actions.EDIT_ACCOUNT) && (
+            <IconButton
+              size="small"
+              sx={{ p: 0.5 }}
+              aria-label="item-edit"
+              name="item-edit"
+              onClick={onEdit}
+            >
+              <EditIcon />
+            </IconButton>
           )}
         </NoSsr>
       </Box>
@@ -114,7 +130,7 @@ const AccountHierarchyActions = (props: AccountHierarchyActionsProps) => {
   ) : (
     <CartItemActionsMobile
       data-testid="mobile-account-actions"
-      actions={AccountActions[role as string]}
+      actions={actionsList()}
       width="15.5rem"
       onMenuItemSelection={onMenuItemSelection}
     />

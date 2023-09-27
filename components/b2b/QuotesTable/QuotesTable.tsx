@@ -97,15 +97,6 @@ const mobileColumns = [
   },
 ]
 
-const accessHandler = {
-  canEdit: (status: string) => status === 'Pending' || status === 'ReadyForCheckout',
-  canEmail: (status: string) =>
-    status === 'Pending' ||
-    status === 'InReview' ||
-    status === 'ReadyForCheckout' ||
-    status === 'Expired',
-}
-
 const QuotesTable = (props: QuotesTableProps) => {
   const {
     quoteCollection,
@@ -264,11 +255,7 @@ const QuotesTable = (props: QuotesTableProps) => {
         </Box>
       </Box>
       <TableContainer component={Paper}>
-        <Table
-          sx={{ maxWidth: '100%', whiteSpace: 'nowrap' }}
-          aria-label="quick order table"
-          size="small"
-        >
+        <Table sx={{ maxWidth: '100%' }} aria-label="quick order table">
           <TableHead>
             <TableRow
               sx={{

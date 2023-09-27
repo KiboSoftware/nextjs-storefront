@@ -4,7 +4,7 @@ import { yupResolver } from '@hookform/resolvers/yup'
 import CheckIcon from '@mui/icons-material/Check'
 import ClearIcon from '@mui/icons-material/Clear'
 import { LoadingButton } from '@mui/lab'
-import { Box, Grid, useMediaQuery, useTheme } from '@mui/material'
+import { Box, Grid, Stack, useMediaQuery, useTheme } from '@mui/material'
 import getConfig from 'next/config'
 import { useTranslation } from 'next-i18next'
 import { useForm, Controller } from 'react-hook-form'
@@ -224,12 +224,12 @@ const UserForm = (props: UserFormProps) => {
             md={isUserFormInDialog ? 12 : isDesktopEditView ? 1.1 : 1.4}
             sx={{ paddingLeft: '0 !important', paddingTop: { xs: '15px !important' } }}
           >
-            <Box
+            <Stack
+              gap={1}
               sx={{
-                display: 'flex',
-                flexDirection: { xs: 'column-reverse', md: 'row' },
-                justifyContent: 'space-between',
-                marginTop: { xs: 0, md: 6 },
+                width: { xs: '100%' },
+                flexDirection: { xs: 'column', md: 'row' },
+                justifyContent: 'end',
               }}
             >
               <LoadingButton
@@ -255,7 +255,7 @@ const UserForm = (props: UserFormProps) => {
                   (isDesktopView && t('add-user')) ||
                   t('save')}
               </LoadingButton>
-            </Box>
+            </Stack>
           </Grid>
         </Grid>
       </form>

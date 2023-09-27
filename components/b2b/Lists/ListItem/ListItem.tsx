@@ -44,7 +44,7 @@ const ListItem = (props: ListItemProps) => {
     onChangeQuantity(item.id ? item.id : (product?.productCode as string), quantity)
   }
 
-  function openEditModal() {
+  function openViewDetailsModal() {
     showModal({
       Component: ProductViewDialog,
       props: {
@@ -153,14 +153,14 @@ const ListItem = (props: ListItemProps) => {
         </Grid>
         <Grid item xs={2} flexDirection="row" alignItems={mdScreen ? 'center' : 'flex-start'}>
           <Button
-            onClick={openEditModal}
+            onClick={openViewDetailsModal}
             startIcon={<EditIcon />}
             data-testid="product-modal-btn"
             color="inherit"
             sx={{ minWidth: '20px', padding: '0px', marginRight: mdScreen ? '10px' : 0 }}
             disableTouchRipple
           >
-            {mdScreen ? t('edit-item') : ''}
+            {mdScreen ? t('view-details') : ''}
           </Button>
           <Button
             color="inherit"

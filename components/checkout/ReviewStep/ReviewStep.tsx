@@ -160,7 +160,7 @@ const ReviewStep = (props: ReviewStepProps) => {
           password: formData.password,
         })
 
-        if (account.userId) {
+        if (account?.customerAccount.userId) {
           updateUserOrder.mutateAsync(checkout.id as string)
         }
       }
@@ -303,7 +303,7 @@ const ReviewStep = (props: ReviewStepProps) => {
               data-testid="termsConditions"
               size="medium"
               color="primary"
-              value={isAgreeWithTermsAndConditions}
+              checked={isAgreeWithTermsAndConditions}
               onChange={handleAgreeTermsConditions}
             />
           }

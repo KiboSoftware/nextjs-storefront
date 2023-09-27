@@ -167,6 +167,7 @@ const ProductQuickViewDialog = (props: ProductQuickViewDialogProps) => {
           product={product}
           isQuickViewModal={isQuickViewModal}
           isB2B={isB2B}
+          addItemToList={addItemToList}
           getCurrentProduct={handleCurrentProduct}
         />
       }

@@ -5,7 +5,6 @@ import userEvent from '@testing-library/user-event'
 
 import * as stories from './AccountHierarchyTree.stories'
 import { b2BAccountHierarchyResult, hierarchyTreeMock } from '@/__mocks__/stories'
-import { B2BRoles } from '@/lib/constants'
 
 const user = userEvent.setup()
 const { Admin } = composeStories(stories)
@@ -23,7 +22,7 @@ jest.mock(
 
 describe('[components] AccountHierarchyTree', () => {
   it('should render the tree label for the admin role', async () => {
-    render(<Admin accounts={accounts} hierarchy={hierarchyTreeMock} role={B2BRoles.ADMIN} />)
+    render(<Admin accounts={accounts} hierarchy={hierarchyTreeMock} />)
 
     const treeLabels = screen.getAllByTestId('account-hierarchy-tree-label-mock')
 
@@ -42,7 +41,7 @@ describe('[components] AccountHierarchyTree', () => {
   })
 
   it('should not render account actions buttons for non-admin roles', () => {
-    render(<Admin accounts={accounts} hierarchy={hierarchyTreeMock} role={B2BRoles.PURCHASER} />)
+    render(<Admin accounts={accounts} hierarchy={hierarchyTreeMock} />)
 
     // Find the account actions buttons (should not be rendered)
     const accountActionButtons = screen.queryAllByRole('button', { name: 'item-add' })
@@ -58,7 +57,6 @@ describe('[components] AccountHierarchyTree', () => {
       <Admin
         accounts={accounts}
         hierarchy={hierarchyTreeMock}
-        role={B2BRoles.ADMIN}
         setAccountHierarchy={setAccountHierarchyMock}
       />
     )

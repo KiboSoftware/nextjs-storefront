@@ -120,7 +120,11 @@ const UsersTemplate = () => {
         onConfirm: () => {
           const accountId = user?.id
           const queryVars = { accountId, userId: id }
-          removeCustomerB2bUser.mutateAsync({ ...queryVars })
+          try {
+            removeCustomerB2bUser.mutate({ ...queryVars })
+          } catch (e) {
+            console.error(e)
+          }
         },
       },
     })
@@ -140,9 +144,24 @@ const UsersTemplate = () => {
       startIndex: (data?.pageSize ?? 0) * (page - 1),
     })
 
+  const addRoleToB2bUser = async (b2BUser: B2BUser, formValues: any) => {
+    const addRoleToCustomerB2bAccountVariables = buildB2bUserRoleParams({
+      user,
+      b2BUser: b2BUser,
+      values: formValues,
+      roles: userRoles,
+    })
+    await addRoleToCustomerB2bAccount.mutateAsync({
+      ...addRoleToCustomerB2bAccountVariables,
+    })
+  }
   const handleAddUser = async (formValues: B2BUserInput) => {
     try {
-      const variables = buildCreateCustomerB2bUserParams({ user, values: formValues })
+      const variables = buildCreateCustomerB2bUserParams({
+        user,
+        values: formValues,
+        roles: userRoles,
+      })
       const createUserResponse = await createCustomerB2bUser.mutateAsync({
         ...variables,
       })
@@ -166,52 +185,44 @@ const UsersTemplate = () => {
       previousRoles.length &&
       formValues.role !== previousRoles[0]?.roleName
     ) {
-      await deleteB2bAccountUserRole.mutateAsync(
-        buildB2bUserRoleParams({
-          user,
-          b2BUser,
-          values: {
-            ...formValues,
-            role: previousRoles[0]?.roleName,
-          },
-          roles: userRoles,
-        })
-      )
+      try {
+        await deleteB2bAccountUserRole.mutateAsync(
+          buildB2bUserRoleParams({
+            user,
+            b2BUser,
+            values: {
+              ...formValues,
+              role: previousRoles[0]?.roleName,
+            },
+            roles: userRoles,
+          })
+        )
+      } catch (e) {
+        console.error(e)
+      }
     }
     addRoleToB2bUser(updateUserResponse, formValues)
   }
 
-  const addRoleToB2bUser = async (b2BUser: B2BUser, formValues: any) => {
-    const addRoleToCustomerB2bAccountVariables = buildB2bUserRoleParams({
-      user,
-      b2BUser: b2BUser,
-      values: formValues,
-      roles: userRoles,
-    })
-    await addRoleToCustomerB2bAccount.mutateAsync({
-      ...addRoleToCustomerB2bAccountVariables,
-    })
-  }
-
   const handleAddUserButtonClick = () => {
-    if (mdScreen) {
-      setIsUserFormOpen(true)
-    } else {
-      showModal({
-        Component: UserFormDialog,
-        props: {
-          isEditMode: false,
-          isUserFormInDialog: true,
-          formTitle: t('add-new-user'),
-          b2BUser: undefined,
-          onSave: (b2BUserInput: B2BUserInput) => handleAddUser(b2BUserInput),
-          onClose: () => {
-            setIsUserFormOpen(false)
-            closeModal()
-          },
+    // if (mdScreen) {
+    //   setIsUserFormOpen(true)
+    // } else {
+    showModal({
+      Component: UserFormDialog,
+      props: {
+        isEditMode: false,
+        isUserFormInDialog: true,
+        formTitle: t('add-new-user'),
+        b2BUser: undefined,
+        onSave: (b2BUserInput: B2BUserInput) => handleAddUser(b2BUserInput),
+        onClose: () => {
+          setIsUserFormOpen(false)
+          closeModal()
         },
-      })
-    }
+      },
+    })
+    // }
   }
 
   return (
@@ -240,13 +251,6 @@ const UsersTemplate = () => {
                 >
                   {t('add-user')}
                 </Button>
-                {isUserFormOpen && (
-                  <UserForm
-                    isEditMode={false}
-                    onSave={handleAddUser}
-                    onClose={() => setIsUserFormOpen(false)}
-                  />
-                )}
               </Grid>
             </Grid>
           )}

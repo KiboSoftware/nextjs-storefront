@@ -65,7 +65,7 @@ const ViewLists = (props: ViewListsProps) => {
   const createListName = (name: string) => {
     let listName = name + ' - copy'
     while (
-      wishlistsResponse.items &&
+      wishlistsResponse?.items &&
       wishlistsResponse?.items.find((item: Maybe<CrWishlist>) => item?.name == listName)
     ) {
       listName += ' - copy'
@@ -196,7 +196,7 @@ const ViewLists = (props: ViewListsProps) => {
             </FormControl>
           </>
         )}
-        {wishlistsResponse.items?.length === 0 ? (
+        {wishlistsResponse?.items?.length === 0 ? (
           <Typography>{t('no-list-found')}</Typography>
         ) : (
           <>

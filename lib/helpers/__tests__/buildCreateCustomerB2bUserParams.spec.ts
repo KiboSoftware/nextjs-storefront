@@ -11,14 +11,24 @@ describe('[helpers] buildCreateCustomerB2bUserInput function', () => {
       lastName: 'Agrawal',
       emailAddress: 'kushagra.agarwal@gmail.com',
       userName: 'kushagra.agarwal@gmail.com',
-      localeCode: 'en-IN',
+      localeCode: 'en-US',
+      role: 'Admin',
     }
-
-    expect(buildCreateCustomerB2bUserParams({ user, values })).toStrictEqual({
+    const roles = [
+      { roleName: 'Admin', roleId: 1 },
+      { roleName: 'Purchaser', roleId: 2 },
+      { roleName: 'Nonpurchaser', roleId: 3 },
+    ]
+    expect(buildCreateCustomerB2bUserParams({ user, values, roles })).toStrictEqual({
       accountId: 1001,
       b2BUserAndAuthInfoInput: {
         b2BUser: {
-          ...values,
+          firstName: 'Kushagra',
+          lastName: 'Agrawal',
+          emailAddress: 'kushagra.agarwal@gmail.com',
+          userName: 'kushagra.agarwal@gmail.com',
+          localeCode: 'en-US',
+          roles: [{ roleId: 1 }],
         },
       },
     })

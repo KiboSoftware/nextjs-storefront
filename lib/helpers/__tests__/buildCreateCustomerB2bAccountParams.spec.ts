@@ -17,6 +17,8 @@ describe('[helpers] buildCreateCustomerB2bUserInput function', () => {
 
     expect(buildCreateCustomerB2bAccountParams(values)).toStrictEqual({
       b2BAccountInput: {
+        accountType: 'B2B',
+        approvalStatus: 'PendingApproval',
         id: 0,
         parentAccountId: values.parentAccount.id,
         companyOrOrganization: values.companyOrOrganization,
@@ -27,7 +29,7 @@ describe('[helpers] buildCreateCustomerB2bUserInput function', () => {
             lastName: values.lastName,
             emailAddress: values.emailAddress,
             userName: values.emailAddress,
-            localeCode: 'en-IN',
+            localeCode: 'en-US',
           },
         ],
       },
