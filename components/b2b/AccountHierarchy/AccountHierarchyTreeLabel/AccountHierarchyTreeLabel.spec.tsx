@@ -6,7 +6,7 @@ import * as stories from './AccountHierarchyTreeLabel.stories'
 import { b2BAccountHierarchyResult, userResponseMock } from '@/__mocks__/stories'
 import { renderWithQueryClient } from '@/__test__/utils'
 
-const { Admin, NonPurchaser } = composeStories(stories)
+const { Common } = composeStories(stories)
 
 const handleAddAccountMock = jest.fn()
 const handleEditAccountMock = jest.fn()
@@ -45,18 +45,14 @@ const props = {
 }
 
 describe('[components] AccountHierarchyTreeLabel', () => {
-  it('should render component', async () => {
-    renderWithQueryClient(<Admin {...props} />)
+  it('should render component and all action buttons', async () => {
+    renderWithQueryClient(<Common {...props} />)
 
     const treeLabel = screen.getByTestId('tree-label')
     expect(treeLabel).toBeVisible()
 
     const companyOrOrganization = screen.getByText(companyOrOrganizationName)
     expect(companyOrOrganization).toBeVisible()
-  })
-
-  it('should render all action buttons in Admin View', async () => {
-    renderWithQueryClient(<Admin {...props} />)
 
     const listItemIcon = screen.getByTestId('account-hierarchy-actions-mock')
     expect(listItemIcon).toBeVisible()
@@ -66,46 +62,53 @@ describe('[components] AccountHierarchyTreeLabel', () => {
     await user.click(accountAddButton)
     expect(handleAddAccountMock).toHaveBeenCalledWith({
       isAddingAccountToChild: true,
-      accounts: [Admin.args?.currentAccount],
+      accounts: [Common.args?.currentAccount],
     })
 
     const buyerButton = screen.getByRole('button', { name: 'Buyers' })
     expect(buyerButton).toBeVisible()
     await user.click(buyerButton)
-    expect(handleBuyersBtnClickMock).toHaveBeenCalledWith(Admin.args?.currentAccount?.users)
+    expect(handleBuyersBtnClickMock).toHaveBeenCalledWith(Common.args?.currentAccount?.id)
 
     const quoteButton = screen.getByRole('button', { name: 'Quotes' })
     expect(quoteButton).toBeVisible()
     await user.click(quoteButton)
-    expect(handleQuotesBtnClickMock).toHaveBeenCalledWith(Admin.args?.currentAccount?.id)
+    expect(handleQuotesBtnClickMock).toHaveBeenCalledWith(Common.args?.currentAccount?.id)
 
     const accountViewButton = screen.getByRole('button', { name: 'View' })
     expect(accountViewButton).toBeVisible()
     await user.click(accountViewButton)
-    expect(handleViewAccountMock).toHaveBeenCalledWith(Admin.args?.currentAccount)
+    expect(handleViewAccountMock).toHaveBeenCalledWith(Common.args?.currentAccount)
+  })
+
+  it('should not render action buttons if disableSorting is true', () => {
+    renderWithQueryClient(<Common {...props} disableSorting />)
+
+    const listItemIcon = screen.queryByTestId('account-hierarchy-actions-mock')
+    expect(listItemIcon).not.toBeInTheDocument()
   })
 
   it("Update the parent account when the user's account differs, triggered by clicking 'Edit Account'", async () => {
-    renderWithQueryClient(<Admin {...props} />)
+    renderWithQueryClient(<Common {...props} />)
 
     const accountEditButton = screen.getByRole('button', { name: 'Edit' })
     expect(accountEditButton).toBeVisible()
     await user.click(accountEditButton)
 
     await waitFor(() => {
-      expect(handleChangeParentMock).toHaveBeenCalledWith(Admin.args?.currentAccount)
+      expect(handleChangeParentMock).toHaveBeenCalledWith(Common.args?.currentAccount)
     })
   })
 
   it("should handle Edit Account button click when user's account is same as the current account", async () => {
-    renderWithQueryClient(<Admin customerAccount={{ ...userResponseMock, id: 1174 }} {...props} />)
+    renderWithQueryClient(<Common customerAccount={{ ...userResponseMock, id: 1174 }} {...props} />)
 
     const accountEditButton = screen.getByRole('button', { name: 'Edit' })
     expect(accountEditButton).toBeVisible()
     await user.click(accountEditButton)
 
     await waitFor(() => {
-      expect(handleEditAccountMock).toHaveBeenCalledWith(Admin.args?.currentAccount)
+      expect(handleEditAccountMock).toHaveBeenCalledWith(Common.args?.currentAccount)
     })
   })
 })

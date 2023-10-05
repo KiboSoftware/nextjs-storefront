@@ -67,7 +67,7 @@ jest.mock('@/components/b2b/AccountHierarchy/AccountHierarchyTree/AccountHierarc
       <button onClick={handleEditAccount}>handleEditAccount</button>
       <button onClick={handleChangeParent}>handleChangeParent</button>
       <button onClick={handleSwapAccount}>handleSwapAccount</button>
-      <button onClick={handleBuyersBtnClick}>handleBuyersBtnClick</button>
+      <button onClick={() => handleBuyersBtnClick(1)}>handleBuyersBtnClick</button>
       <button onClick={handleQuotesBtnClick}>handleQuotesBtnClick</button>
     </div>
   ),

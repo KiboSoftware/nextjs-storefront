@@ -25,7 +25,7 @@ export interface KiboDialogProps {
   Content: ReactNode
   Actions?: ReactNode
   isDialogCentered?: boolean
-  customMaxWidth: string
+  customMaxWidth?: string
   showContentTopDivider?: boolean
   showContentBottomDivider?: boolean
   onClose: () => void

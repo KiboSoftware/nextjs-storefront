@@ -11,12 +11,16 @@ import {
   Typography,
 } from '@mui/material'
 import { grey } from '@mui/material/colors'
-import Image from 'next/image'
+import Link from 'next/link'
 import { useTranslation } from 'next-i18next'
 
-import { KeyValueDisplay, KiboDialog } from '@/components/common'
+import { KeyValueDisplay, KiboDialog, KiboImage } from '@/components/common'
+import { ProductOptionList } from '@/components/product'
+import { productGetters } from '@/lib/getters'
+import { uiHelpers } from '@/lib/helpers'
+import DefaultImage from '@/public/product_placeholder.svg'
 
-import { CrWishlistItem } from '@/lib/gql/types'
+import { CrProductOption, CrWishlistItem } from '@/lib/gql/types'
 
 export interface ProductViewDialogProps {
   item: CrWishlistItem
@@ -33,19 +37,33 @@ const ProductView = (props: ProductViewProps) => {
 
   const { t } = useTranslation('common')
 
+  const { getProductLink } = uiHelpers()
+
   return (
     <>
-      <Container sx={{ padding: '70px' }} data-testid="product-modal">
+      <Container sx={{ padding: '5%' }} data-testid="product-modal">
         <Grid container>
           <Grid item sm={3}>
-            {product?.imageUrl ? (
-              <Image
-                src={`https:${product.imageUrl}`}
-                alt={product?.name as string}
-                width={70}
-                height={70}
-              />
-            ) : null}
+            <Box
+              display={'flex'}
+              justifyContent={'center'}
+              alignItems={'center'}
+              position={'relative'}
+              minWidth={'80px'}
+              sx={{ aspectRatio: 1 }}
+            >
+              <Link href={getProductLink(product?.productCode as string) || ''} passHref>
+                <KiboImage
+                  src={
+                    productGetters.handleProtocolRelativeUrl(product?.imageUrl as string) ||
+                    DefaultImage
+                  }
+                  alt={product?.name as string}
+                  width={80}
+                  height={80}
+                />
+              </Link>
+            </Box>
           </Grid>
           <Grid item sm={9}>
             <Typography variant="h3" sx={{ fontWeight: 'bold' }}>
@@ -53,7 +71,7 @@ const ProductView = (props: ProductViewProps) => {
             </Typography>
             <Box>
               <Typography data-testid="productCode">
-                {t('product-code')}: {product?.productCode}
+                {t('product-code')}: {product?.variationProductCode || product?.productCode}
               </Typography>
               <Typography>
                 {item.subtotal && (
@@ -77,30 +95,36 @@ const ProductView = (props: ProductViewProps) => {
                   variant="body2"
                 />
               </Box>
+
+              {product?.options?.length && (
+                <ProductOptionList options={productGetters.getOptions(product)} />
+              )}
             </Box>
-            <Box>
-              <Accordion
-                disabled={false}
-                sx={{
-                  border: 'none',
-                  borderBottom: `1px solid  ${grey[500]}`,
-                  boxShadow: 'none',
-                  borderRadius: '0px',
-                }}
-              >
-                <AccordionSummary
-                  expandIcon={<ExpandMore />}
-                  aria-controls="panel1a-content"
-                  id="panel1a-header"
-                  sx={{ padding: '0px' }}
+            {product?.description && (
+              <Box>
+                <Accordion
+                  disabled={false}
+                  sx={{
+                    border: 'none',
+                    borderBottom: `1px solid  ${grey[500]}`,
+                    boxShadow: 'none',
+                    borderRadius: '0px',
+                  }}
                 >
-                  <Typography>{'description'}</Typography>
-                </AccordionSummary>
-                <AccordionDetails>
-                  <Typography>{product?.description}</Typography>
-                </AccordionDetails>
-              </Accordion>
-            </Box>
+                  <AccordionSummary
+                    expandIcon={<ExpandMore />}
+                    aria-controls="panel1a-content"
+                    id="panel1a-header"
+                    sx={{ padding: '0px' }}
+                  >
+                    <Typography>{'description'}</Typography>
+                  </AccordionSummary>
+                  <AccordionDetails>
+                    <Typography>{product?.description}</Typography>
+                  </AccordionDetails>
+                </Accordion>
+              </Box>
+            )}
           </Grid>
         </Grid>
       </Container>
@@ -125,7 +149,6 @@ const ProductViewDialog = (props: ProductViewDialogProps) => {
           <ProductView item={props.item} />
         </Box>
       }
-      customMaxWidth="800px"
     />
   )
 }

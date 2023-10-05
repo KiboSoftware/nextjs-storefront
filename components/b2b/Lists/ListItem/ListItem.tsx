@@ -4,12 +4,15 @@ import DeleteIcon from '@mui/icons-material/Delete'
 import EditIcon from '@mui/icons-material/Edit'
 import { Box, Button, Grid, Typography, useMediaQuery, useTheme } from '@mui/material'
 import { grey } from '@mui/material/colors'
-import Image from 'next/image'
+import Link from 'next/link'
 import { useTranslation } from 'next-i18next'
 
 import { ProductViewDialog } from '@/components/b2b'
-import { QuantitySelector, KeyValueDisplay } from '@/components/common'
+import { QuantitySelector, KeyValueDisplay, KiboImage } from '@/components/common'
 import { useModalContext } from '@/context'
+import { productGetters } from '@/lib/getters'
+import { uiHelpers } from '@/lib/helpers'
+import DefaultImage from '@/public/product_placeholder.svg'
 
 import { CrWishlistItem } from '@/lib/gql/types'
 
@@ -39,6 +42,8 @@ const ListItem = (props: ListItemProps) => {
   const mdScreen = useMediaQuery<boolean>(theme.breakpoints.up('md'))
   const [itemQuantity, setItemQuantity] = useState(item.quantity || 1)
 
+  const { getProductLink } = uiHelpers()
+
   const handleQuantityUpdate = (quantity: number) => {
     setItemQuantity(quantity)
     onChangeQuantity(item.id ? item.id : (product?.productCode as string), quantity)
@@ -58,14 +63,26 @@ const ListItem = (props: ListItemProps) => {
     <>
       <Grid container sx={{ borderBottom: `1px solid ${grey[300]}`, padding: '10px 0' }}>
         <Grid item xs={mdScreen ? 2 : 3}>
-          {product?.imageUrl ? (
-            <Image
-              src={`https:${product.imageUrl}`}
-              alt={product?.name as string}
-              width={70}
-              height={70}
-            />
-          ) : null}
+          <Box
+            display={'flex'}
+            justifyContent={'center'}
+            alignItems={'center'}
+            position={'relative'}
+            minWidth={'80px'}
+            sx={{ aspectRatio: 1 }}
+          >
+            <Link href={getProductLink(product?.productCode as string) || ''} passHref>
+              <KiboImage
+                src={
+                  productGetters.handleProtocolRelativeUrl(product?.imageUrl as string) ||
+                  DefaultImage
+                }
+                alt={product?.name as string}
+                width={80}
+                height={80}
+              />
+            </Link>
+          </Box>
         </Grid>
         <Grid item xs={mdScreen ? 8 : 7}>
           <Typography
@@ -121,7 +138,7 @@ const ListItem = (props: ListItemProps) => {
             <KeyValueDisplay
               option={{
                 name: t('product-code'),
-                value: product?.productCode,
+                value: product?.variationProductCode || product?.productCode,
               }}
               variant="subtitle2"
             />
@@ -154,7 +171,6 @@ const ListItem = (props: ListItemProps) => {
         <Grid item xs={2} flexDirection="row" alignItems={mdScreen ? 'center' : 'flex-start'}>
           <Button
             onClick={openViewDetailsModal}
-            startIcon={<EditIcon />}
             data-testid="product-modal-btn"
             color="inherit"
             sx={{ minWidth: '20px', padding: '0px', marginRight: mdScreen ? '10px' : 0 }}

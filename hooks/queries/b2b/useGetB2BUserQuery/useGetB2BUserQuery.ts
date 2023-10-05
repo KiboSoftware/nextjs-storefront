@@ -8,7 +8,7 @@ import { getCustomerB2BAccountUsersQuery } from '@/lib/gql/queries'
 import { customerB2BUserKeys } from '@/lib/react-query/queryKeys'
 import { B2BUserResultType, QueryB2BUserArgs } from '@/lib/types/CustomerB2BUser'
 
-import type { B2BUserCollection, QueryB2bAccountUsersArgs } from '@/lib/gql/types'
+import type { B2BUser, B2BUserCollection, QueryB2bAccountUsersArgs } from '@/lib/gql/types'
 
 /**
  * @hidden
@@ -22,10 +22,11 @@ const loadCustomerB2BUsers = async ({
   pageSize,
   startIndex,
   q,
+  sortBy,
 }: QueryB2bAccountUsersArgs): Promise<B2BUserCollection> => {
   const response = await client.request({
     document: getCustomerB2BAccountUsersQuery,
-    variables: { b2bAccountId: accountId, filter, pageSize, startIndex, q },
+    variables: { b2bAccountId: accountId, filter, pageSize, startIndex, q, sortBy },
   })
 
   return response?.b2bAccountUsers
@@ -49,11 +50,19 @@ export const useGetB2BUserQueries = ({
   pageSize = 16,
   startIndex = 0,
   q,
+  sortBy = '',
   initialB2BUsers,
-}: any): B2BUserResultType => {
+}: QueryB2bAccountUsersArgs & { initialB2BUsers?: B2BUserCollection }): B2BUserResultType => {
   const { isLoading, isSuccess, isError, error, data } = useQuery({
-    queryKey: customerB2BUserKeys.search(accountId, startIndex, pageSize, q, filter),
-    queryFn: () => loadCustomerB2BUsers({ accountId, filter, pageSize, startIndex, q }),
+    queryKey: customerB2BUserKeys.search(
+      accountId,
+      startIndex as number,
+      pageSize as number,
+      q as string,
+      filter as string,
+      sortBy as string
+    ),
+    queryFn: () => loadCustomerB2BUsers({ accountId, filter, pageSize, startIndex, q, sortBy }),
     initialData: initialB2BUsers,
     enabled: !!accountId,
     placeholderData: (previousData) => previousData ?? undefined,

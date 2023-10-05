@@ -119,7 +119,9 @@ const StoreLocatorDialog = (props: StoreLocatorProps) => {
         <Button
           sx={{ width: '100%' }}
           variant="contained"
-          disabled={showProductAndInventory && locationInventory?.length === 0}
+          disabled={
+            !selectedStore.code || (showProductAndInventory && locationInventory?.length === 0)
+          }
           onClick={() => {
             handleSetStore(selectedStore)
             closeModal()

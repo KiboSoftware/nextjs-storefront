@@ -27,7 +27,7 @@ const ViewAccountDetails = (props: ViewAccountDetailsProps) => {
         {t('parent-account')}
       </Typography>
       <Typography component="p" sx={{ marginTop: 1 }}>
-        {b2BAccount?.rootAccountId}
+        {b2BAccount?.parentAccountId}
       </Typography>
 
       <Typography component="h2" sx={{ ...ViewAccountStyles.heading }}>

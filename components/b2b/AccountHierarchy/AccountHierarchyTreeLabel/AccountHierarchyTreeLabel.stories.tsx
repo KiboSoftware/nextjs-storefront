@@ -24,22 +24,8 @@ const Template: ComponentStory<typeof AccountHierarchyTreeLabel> = (args) => (
   <AccountHierarchyTreeLabel {...args} />
 )
 
-export const Admin = Template.bind({})
-Admin.args = {
-  currentAccount: b2BAccountHierarchyResult.accounts[0],
-  customerAccount: mockUser,
-  mdScreen: true,
-}
-
-export const Purchaser = Template.bind({})
-Purchaser.args = {
-  currentAccount: b2BAccountHierarchyResult.accounts[0],
-  customerAccount: mockUser,
-  mdScreen: true,
-}
-
-export const NonPurchaser = Template.bind({})
-NonPurchaser.args = {
+export const Common = Template.bind({})
+Common.args = {
   currentAccount: b2BAccountHierarchyResult.accounts[0],
   customerAccount: mockUser,
   mdScreen: true,

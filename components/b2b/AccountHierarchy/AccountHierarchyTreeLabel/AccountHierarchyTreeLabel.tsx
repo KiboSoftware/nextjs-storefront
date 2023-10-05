@@ -16,7 +16,7 @@ interface AccountHierarchyTreeLabelProps {
   handleAddAccount: ({ isAddingAccountToChild, accounts }: AddChildAccountProps) => void
   handleEditAccount: (b2BAccount: B2BAccount) => void
   handleChangeParent: (b2BAccount: B2BAccount) => void
-  handleBuyersBtnClick: (b2BUsers: B2BUser[]) => void
+  handleBuyersBtnClick: (id: number) => void
   handleQuotesBtnClick: (id: number) => void
 }
 
@@ -52,7 +52,7 @@ const AccountHierarchyTreeLabel = (props: AccountHierarchyTreeLabelProps) => {
     }
   }
 
-  const onBuyersClick = () => handleBuyersBtnClick(currentAccount.users as B2BUser[])
+  const onBuyersClick = () => handleBuyersBtnClick(currentAccount.id)
 
   const onQuotesClick = () => handleQuotesBtnClick(currentAccount.id)
 

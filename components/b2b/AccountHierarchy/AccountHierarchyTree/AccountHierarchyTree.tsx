@@ -26,7 +26,7 @@ interface AccountHierarchyTreeProps {
   handleEditAccount: (b2BAccount: B2BAccount) => void
   handleChangeParent: (b2BAccount: B2BAccount) => void
   handleSwapAccount: (accountId: number, parentAccountId: number) => void
-  handleBuyersBtnClick: (b2BUsers: B2BUser[]) => void
+  handleBuyersBtnClick: (id: number) => void
   handleQuotesBtnClick: (id: number) => void
   setAccountHierarchy: (items: B2BAccountHierarchyResult) => void
 }

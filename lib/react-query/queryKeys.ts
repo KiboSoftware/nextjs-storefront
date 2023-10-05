@@ -51,8 +51,10 @@ export const customerB2BUserKeys = {
     index: number,
     pageSize: number,
     searchTerm: string | undefined,
-    filter: string
-  ) => [...customerB2BUserKeys.all, accountId, index, pageSize, searchTerm, filter] as const,
+    filter: string,
+    sortBy: string
+  ) =>
+    [...customerB2BUserKeys.all, accountId, index, pageSize, searchTerm, filter, sortBy] as const,
 }
 
 export const accountHierarchyKeys = {

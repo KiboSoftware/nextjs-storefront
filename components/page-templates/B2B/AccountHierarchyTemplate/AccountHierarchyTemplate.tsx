@@ -20,6 +20,7 @@ import {
   useChangeB2bAccountParentMutation,
   useCreateCustomerB2bAccountMutation,
   useGetB2BAccountHierarchy,
+  useGetB2BUserQueries,
   useGetQuotes,
   useUpdateCustomerB2bAccountMutation,
   useUpdateCustomerB2bUserMutation,
@@ -55,6 +56,14 @@ const AccountHierarchyTemplate = (props: AccountHierarchyTemplateProps) => {
   const { t } = useTranslation('common')
   const { showModal, closeModal } = useModalContext()
   const mdScreen = useMediaQuery(theme.breakpoints.up('md'))
+
+  const [selectedAccountId, setSelectedAccountId] = useState<number>()
+
+  const { data: b2bUsers } = useGetB2BUserQueries({
+    accountId: selectedAccountId as number,
+    filter: 'isRemoved eq false',
+    sortBy: 'createDate asc',
+  })
 
   // filtering the sortable accounts
   const filteredAccounts = filterAccountsByDisableSorting(
@@ -106,8 +115,6 @@ const AccountHierarchyTemplate = (props: AccountHierarchyTemplateProps) => {
   ]
   const [activeComponent, setActiveComponent] = useState('accountHierarchy')
   const activeBreadCrumb = breadcrumbList.filter((item) => item.key === activeComponent)[0]
-
-  const [b2bUsers, setB2bUsers] = useState<B2BUser[]>([])
 
   // Add this to achieve Mobile Layout
   const onBackClick = () => {
@@ -255,8 +262,8 @@ const AccountHierarchyTemplate = (props: AccountHierarchyTemplateProps) => {
     })
   }
 
-  const handleBuyersBtnClick = (users: B2BUser[]) => {
-    setB2bUsers(users)
+  const handleBuyersBtnClick = (id: number) => {
+    setSelectedAccountId(id)
     setActiveComponent('buyers')
   }
 
@@ -358,7 +365,7 @@ const AccountHierarchyTemplate = (props: AccountHierarchyTemplateProps) => {
       {activeComponent === 'buyers' && (
         <UserTable
           mdScreen={mdScreen}
-          b2bUsers={b2bUsers}
+          b2bUsers={b2bUsers?.items as B2BUser[]}
           onView={handleViewAccountUser}
           showActionButtons={false}
         />
