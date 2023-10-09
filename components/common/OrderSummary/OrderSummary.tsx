@@ -39,6 +39,7 @@ const OrderSummary = (props: OrderSummaryProps) => {
     total,
     nameLabel,
     promoComponent,
+    isShippingTaxIncluded,
   } = props
 
   const orderPriceProps: OrderPriceProps = {
@@ -52,6 +53,7 @@ const OrderSummary = (props: OrderSummaryProps) => {
     tax,
     total,
     promoComponent,
+    isShippingTaxIncluded,
   }
   return (
     <Card sx={{ bgcolor: 'grey.100' }}>
