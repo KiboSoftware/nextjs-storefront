@@ -116,8 +116,7 @@ const StandardShippingStep = (props: ShippingProps) => {
       addressType: AddressType.SHIPPING,
     })
 
-    await createCustomerAddress.mutateAsync(params)
-    setIsAddressSavedToAccount(false)
+    return createCustomerAddress.mutateAsync(params)
   }
 
   const handleSaveAddressToCheckout = async ({ contact }: { contact: CrContact }) => {
@@ -126,11 +125,16 @@ const StandardShippingStep = (props: ShippingProps) => {
         addressValidationRequestInput: { address: contact?.address as CuAddress },
       })
       if (isAddressSavedToAccount) {
-        await handleSaveAddressToAccount(contact)
+        const customerSavedAddress = await handleSaveAddressToAccount(contact)
+        const { accountId: _, types: __, ...customerContact } = customerSavedAddress
+        await updateOrderShippingInfo.mutateAsync({ checkout, contact: customerContact })
+        setSelectedShippingAddressId(customerSavedAddress?.id as number)
+      } else {
+        await updateOrderShippingInfo.mutateAsync({ checkout, contact })
+        setSelectedShippingAddressId((contact?.id as number) || DefaultId.ADDRESSID)
       }
-      await updateOrderShippingInfo.mutateAsync({ checkout, contact })
+      setIsAddressSavedToAccount(false)
       setCheckoutId(checkout?.id)
-      setSelectedShippingAddressId((contact?.id as number) || DefaultId.ADDRESSID)
       setShouldShowAddAddressButton(true)
       setValidateForm(false)
       setIsNewAddressAdded(true)
