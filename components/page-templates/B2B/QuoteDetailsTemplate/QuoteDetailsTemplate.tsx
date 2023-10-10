@@ -303,15 +303,25 @@ const QuoteDetailsTemplate = (props: QuoteDetailsTemplateProps) => {
         addressValidationRequestInput: { address: contact?.address as CuAddress },
       })
       if (isAddressSavedToAccount) {
-        await handleSaveAddressToAccount(contact)
+        const customerSavedAddress = await handleSaveAddressToAccount(contact)
+        const { accountId: _, types: __, ...customerContact } = customerSavedAddress
+        await updateQuoteFulfillmentInfo.mutateAsync({
+          quote,
+          quoteId,
+          contact: { ...customerContact, id: customerContact.id },
+          updateMode,
+        })
+        setSelectedShippingAddressId(customerSavedAddress?.id as number)
+      } else {
+        await updateQuoteFulfillmentInfo.mutateAsync({
+          quote,
+          quoteId,
+          contact: { ...contact, id: contact.id || DefaultId.ADDRESSID },
+          updateMode,
+        })
+        setSelectedShippingAddressId((contact?.id as number) || DefaultId.ADDRESSID)
       }
-      await updateQuoteFulfillmentInfo.mutateAsync({
-        quote,
-        quoteId,
-        contact: { ...contact, id: contact.id || DefaultId.ADDRESSID },
-        updateMode,
-      })
-      setSelectedShippingAddressId((contact?.id as number) || DefaultId.ADDRESSID)
+      setIsAddressSavedToAccount(false)
       setShouldShowAddAddressButton(true)
       setValidateForm(false)
       setIsNewAddressAdded(true)
@@ -388,8 +398,7 @@ const QuoteDetailsTemplate = (props: QuoteDetailsTemplateProps) => {
       addressType: AddressType.SHIPPING,
     })
 
-    await createCustomerAddress.mutateAsync(params)
-    setIsAddressSavedToAccount(false)
+    return await createCustomerAddress.mutateAsync(params)
   }
 
   const handleUpdateQuoteAdjustments = async (adjustmentValue: {
