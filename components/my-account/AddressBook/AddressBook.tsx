@@ -139,6 +139,7 @@ const AddressBook = (props: AddressBookProps) => {
   const [isAddressModified, setIsAddressModified] = useState<boolean>(false)
   const [validateForm, setValidateForm] = useState<boolean>(false)
   const [isDefaultAddress, setIsDefaultAddress] = useState<boolean>(false)
+  const [saveAsShippingBillingCheckbox, setSaveAsShippingBillingCheckbox] = useState<boolean>(false)
   const [editAddress, setEditAddress] = useState<CustomerContact>()
   const [addressType, setAddressType] = useState<string>(AddressType.SHIPPING)
 
@@ -236,6 +237,16 @@ const AddressBook = (props: AddressBookProps) => {
         setIsAddressModified(false)
       } else {
         await createCustomerAddress.mutateAsync(params)
+        if (saveAsShippingBillingCheckbox) {
+          const addressParam = buildAddressParams({
+            accountId: user?.id,
+            address,
+            isDefaultAddress,
+            addressType:
+              addressType === AddressType.SHIPPING ? AddressType.BILLING : AddressType.SHIPPING,
+          })
+          await createCustomerAddress.mutateAsync(addressParam)
+        }
         setIsAddressModified(false)
       }
 
@@ -452,7 +463,40 @@ const AddressBook = (props: AddressBookProps) => {
               }
             />
           )}
-          <Stack pl={1} gap={2} sx={{ width: { xs: '100%', md: '50%', maxWidth: '26.313rem' } }}>
+
+          <Box>
+            {!editAddress && (
+              <FormControlLabel
+                label={
+                  addressType === AddressType.SHIPPING
+                    ? t('save-as-billing-address')
+                    : t('save-as-shipping-address')
+                }
+                control={
+                  <Checkbox
+                    sx={{ marginLeft: '0.5rem' }}
+                    inputProps={{
+                      'aria-label':
+                        addressType === AddressType.SHIPPING
+                          ? t('save-as-billing-address')
+                          : t('save-as-shipping-address'),
+                    }}
+                    checked={saveAsShippingBillingCheckbox}
+                    onChange={() =>
+                      setSaveAsShippingBillingCheckbox(!saveAsShippingBillingCheckbox)
+                    }
+                  />
+                }
+              />
+            )}
+          </Box>
+
+          <Stack
+            pl={1}
+            pt={1}
+            gap={2}
+            sx={{ width: { xs: '100%', md: '50%', maxWidth: '26.313rem' } }}
+          >
             <Button variant="contained" color="secondary" onClick={handleCancelUpdateAddress}>
               {t('cancel')}
             </Button>

@@ -83,6 +83,7 @@
   "item-quantity_one": "{{count}} item",
   "item-quantity_other": "{{count}} items",
   "order-summary": "Order Summary",
+  "cart-summary": "Cart Summary",
   "subtotal": "Subtotal",
   "shipping": "Shipping",
   "total-price": "Total Price",
@@ -346,5 +347,8 @@
   "added-to-wishlist": "Added to wishlist",
   "removed-from-wishlist": "Removed from wishlist",
   "save-address-to-account": "Save this address to your account",
-  "no-payment-details-found": "No payment details found!"
+  "no-payment-details-found": "No payment details found!",
+  "shipping-tax-at-checkout": "Shipping charges and Tax to be calculated at checkout",
+  "save-as-billing-address": "Save as billing address",
+  "save-as-shipping-address": "Save as shipping address"
 }
