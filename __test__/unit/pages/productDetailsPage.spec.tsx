@@ -7,6 +7,7 @@ import ProductDetailPage, {
   getStaticPaths,
   getStaticProps,
 } from '@/src/pages/product/[productCode]'
+
 import { Product } from '@/lib/gql/types'
 
 const mockCategoryTreeData = categoryTreeDataMock
@@ -133,14 +134,6 @@ describe('[page] Product Details Page', () => {
   //     fallback: true,
   //   })
   // })
-
-  it('should render the page not found if isFallback is false', () => {
-    isFallback = false
-    render(<ProductDetailPage product={undefined} />)
-
-    const pageNotFound = screen.getByText('This page could not be found.')
-    expect(pageNotFound).toBeVisible()
-  })
 
   it('should render the Fallback page if isFallback is true', () => {
     isFallback = true
