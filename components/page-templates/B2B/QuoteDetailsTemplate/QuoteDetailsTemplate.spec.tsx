@@ -19,7 +19,7 @@ import {
 } from '@/__mocks__/stories'
 import { renderWithQueryClient } from '@/__test__/utils'
 import { DialogRoot, ModalContextProvider } from '@/context'
-import { useGetQuoteByID } from '@/hooks/queries/quotes/useGetQuoteById/useGetQuoteById'
+import { useGetQuoteByID } from '@/hooks/queries/b2b/quotes/useGetQuoteById/useGetQuoteById'
 
 jest.mock('@/lib/helpers/hasPermission', () => ({
   hasPermission: jest.fn().mockImplementation(() => true),
@@ -268,8 +268,8 @@ describe('[components] QuoteDetailsTemplate', () => {
 
       await waitFor(() => {
         expect(mockRouter).toMatchObject({
-          asPath: `/my-account/quote/${quoteMock?.items?.[0]?.id}?mode=edit`,
-          pathname: `/my-account/quote/${quoteMock?.items?.[0]?.id}`,
+          asPath: `/my-account/b2b/quote/${quoteMock?.items?.[0]?.id}?mode=edit`,
+          pathname: `/my-account/b2b/quote/${quoteMock?.items?.[0]?.id}`,
           query: {},
         })
       })

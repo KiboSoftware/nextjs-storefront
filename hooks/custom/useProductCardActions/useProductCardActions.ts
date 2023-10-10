@@ -100,7 +100,14 @@ export const useProductCardActions = () => {
     const items = listData?.items
     items?.push({
       product: {
-        options: product?.options as CrProductOption[],
+        options: product?.options?.map((option: any) => {
+          const selected = option?.values?.find((value: any) => value?.isSelected)
+          return {
+            name: option?.attributeDetail?.name,
+            value: selected?.value || selected?.stringValue || selected?.shopperEnteredValue,
+            attributeFQN: option?.attributeFQN,
+          }
+        }) as CrProductOption[],
         productCode: productGetters.getProductId(product),
         variationProductCode: productGetters.getVariationProductCode(product),
         isPackagedStandAlone: product?.isPackagedStandAlone,

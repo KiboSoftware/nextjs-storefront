@@ -18,6 +18,8 @@ import { useTranslation } from 'next-i18next'
 import { OrderSummarySectionStyles } from './OrderSummarySection.styles'
 import { KiboRadio, KiboSelect, KiboTextBox, Price } from '@/components/common'
 
+import { CrAppliedDiscount } from '@/lib/gql/types'
+
 interface OrderSummarySectionProps {
   title: string
   total: number
@@ -26,6 +28,8 @@ interface OrderSummarySectionProps {
   taxTotal: number
   isEdit?: boolean
   adjustmentValue: number
+  discounts?: CrAppliedDiscount[]
+
   setAdjustmentValue: (val: number) => void
 }
 
@@ -42,6 +46,7 @@ const OrderSummarySection = (props: OrderSummarySectionProps) => {
     taxTotal,
     isEdit,
     adjustmentValue,
+    discounts,
     setAdjustmentValue,
   } = props
   const { t } = useTranslation('common')
@@ -236,6 +241,37 @@ const OrderSummarySection = (props: OrderSummarySectionProps) => {
               }
             />
           </ListItem>
+
+          {discounts && discounts?.length > 0 && (
+            <ListItem sx={OrderSummarySectionStyles.detailedSummaryContainer}>
+              <ListItemText primary={<Typography variant="body2">{t('discounts')}</Typography>} />
+            </ListItem>
+          )}
+
+          {discounts?.map((discount) => {
+            return (
+              <ListItem
+                key={discount?.discount?.name}
+                slotProps={{
+                  root: {
+                    'aria-label': 'discounts',
+                  },
+                }}
+                sx={OrderSummarySectionStyles.detailedSummaryContainer}
+                secondaryAction={
+                  <Price
+                    fontWeight="normal"
+                    variant="body2"
+                    price={t('currency', { val: discount?.impact?.toString() })}
+                  />
+                }
+              >
+                <ListItemText
+                  primary={<Typography variant="body2">{discount?.discount?.name}</Typography>}
+                />
+              </ListItem>
+            )
+          })}
 
           <ListItem
             slotProps={{

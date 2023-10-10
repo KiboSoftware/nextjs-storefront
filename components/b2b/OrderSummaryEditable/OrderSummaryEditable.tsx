@@ -7,6 +7,8 @@ import { OrderSummarySection } from '@/components/b2b'
 import { Price } from '@/components/common'
 import { QuoteStatus } from '@/lib/constants'
 
+import { CrAppliedDiscount, CrShippingDiscount } from '@/lib/gql/types'
+
 interface OrderSummaryEditableProps {
   itemTotal: number
   itemTaxTotal: number
@@ -27,7 +29,10 @@ interface OrderSummaryEditableProps {
 
   mode?: string
   status?: string
-
+  total: number
+  shippingDiscounts: CrShippingDiscount[]
+  handlingDiscounts: CrAppliedDiscount[]
+  orderDiscounts: CrAppliedDiscount[]
   // use Type QuoteAdjustmentInput once in production
   onSave: (param: {
     adjustment: number
@@ -47,6 +52,9 @@ const OrderSummaryEditable = (props: OrderSummaryEditableProps) => {
     shippingSubTotal,
     shippingAdjustment,
     shippingTaxTotal,
+    shippingDiscounts,
+    handlingDiscounts,
+    orderDiscounts,
 
     handlingTotal,
     handlingSubTotal,
@@ -56,6 +64,7 @@ const OrderSummaryEditable = (props: OrderSummaryEditableProps) => {
     dutyTotal,
     mode,
     status,
+    total,
     onSave,
   } = props
   const { t } = useTranslation('common')
@@ -139,6 +148,7 @@ const OrderSummaryEditable = (props: OrderSummaryEditableProps) => {
         taxTotal={itemTaxTotal}
         isEdit={isEdit}
         adjustmentValue={adjustmentValue.adjustment}
+        discounts={orderDiscounts}
         setAdjustmentValue={(val) => handleAdjustmentValue(val, 'adjustment')}
       />
       <OrderSummarySection
@@ -149,6 +159,12 @@ const OrderSummaryEditable = (props: OrderSummaryEditableProps) => {
         taxTotal={shippingTaxTotal}
         isEdit={isEdit}
         adjustmentValue={adjustmentValue.shippingAdjustment}
+        discounts={shippingDiscounts?.map((shippingDiscount) => {
+          return {
+            discount: shippingDiscount?.discount?.discount,
+            impact: shippingDiscount?.discount?.impact ?? 0,
+          }
+        })}
         setAdjustmentValue={(val) => handleAdjustmentValue(val, 'shippingAdjustment')}
       />
       <OrderSummarySection
@@ -159,6 +175,7 @@ const OrderSummaryEditable = (props: OrderSummaryEditableProps) => {
         taxTotal={handlingTaxTotal}
         isEdit={isEdit}
         adjustmentValue={adjustmentValue.handlingAdjustment}
+        discounts={handlingDiscounts}
         setAdjustmentValue={(val) => handleAdjustmentValue(val, 'handlingAdjustment')}
       />
       <ListItem
@@ -178,6 +195,31 @@ const OrderSummaryEditable = (props: OrderSummaryEditableProps) => {
       >
         <ListItemIcon sx={{ minWidth: 30 }} />
         <ListItemText primary={<Typography variant="body2">{t('duty-total')}</Typography>} />
+      </ListItem>
+      <ListItem
+        slotProps={{
+          root: {
+            'aria-label': 'quote-total',
+          },
+        }}
+        sx={{ paddingLeft: 0 }}
+        secondaryAction={
+          <Price
+            fontWeight="normal"
+            variant="body2"
+            color="primary"
+            price={t('currency', { val: total?.toString() })}
+          />
+        }
+      >
+        <ListItemIcon sx={{ minWidth: 30 }} />
+        <ListItemText
+          primary={
+            <Typography variant="body2" color="primary">
+              {t('quote-total')}
+            </Typography>
+          }
+        />
       </ListItem>
     </List>
   )

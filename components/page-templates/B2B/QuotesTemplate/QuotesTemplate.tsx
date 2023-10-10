@@ -42,7 +42,7 @@ const QuotesTemplate = (props: QuotesTemplateProps) => {
       })
 
       if (createQuoteResponse?.id) {
-        router.push(`/my-account/quote/${createQuoteResponse.id}?mode=create`)
+        router.push(`/my-account/b2b/quote/${createQuoteResponse.id}?mode=create`)
       }
       return null
     } catch (err) {
@@ -51,37 +51,35 @@ const QuotesTemplate = (props: QuotesTemplateProps) => {
   }
 
   return (
-    <>
-      <Grid container gap={3}>
-        <MobileB2BLayout
-          headerText={t('quotes')}
-          backText={activeBreadCrumb?.backText}
-          onBackClick={onBackClick}
-        />
+    <Grid container gap={3}>
+      <MobileB2BLayout
+        headerText={t('quotes')}
+        backText={activeBreadCrumb?.backText}
+        onBackClick={onBackClick}
+      />
 
-        <Grid item xs={12}>
-          <Box width={'100%'}>
-            <Button
-              variant="contained"
-              color="inherit"
-              onClick={handleCreateNewTemplate}
-              {...(!mdScreen && { fullWidth: true })}
-            >
-              {t('create-a-quote')}
-            </Button>
-          </Box>
-        </Grid>
-        <Grid item xs={12}>
-          <QuotesTable
-            setQuotesSearchParam={setQuotesSearchParam}
-            quoteCollection={quoteCollection}
-            sortingValues={sortingValues}
-            filters={filters}
-            showActionButtons={true}
-          />
-        </Grid>
+      <Grid item xs={12}>
+        <Box width={'100%'}>
+          <Button
+            variant="contained"
+            color="inherit"
+            onClick={handleCreateNewTemplate}
+            {...(!mdScreen && { fullWidth: true })}
+          >
+            {t('create-a-quote')}
+          </Button>
+        </Box>
       </Grid>
-    </>
+      <Grid item xs={12}>
+        <QuotesTable
+          setQuotesSearchParam={setQuotesSearchParam}
+          quoteCollection={quoteCollection}
+          sortingValues={sortingValues}
+          filters={filters}
+          showActionButtons={true}
+        />
+      </Grid>
+    </Grid>
   )
 }
 

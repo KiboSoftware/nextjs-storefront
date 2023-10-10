@@ -3,11 +3,10 @@ import { screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import getConfig from 'next/config'
 
+import { userMock } from '@/__mocks__/stories'
 import { quotesMock } from '@/__mocks__/stories/quotesMock'
 import { renderWithQueryClient } from '@/__test__/utils'
 import QuotesPage, { getServerSideProps } from '@/pages/my-account/b2b/quotes/index'
-
-import { Quote } from '@/lib/gql/types'
 
 jest.mock('next-i18next/serverSideTranslations', () => ({
   serverSideTranslations: jest.fn(() => {
@@ -41,6 +40,7 @@ jest.mock('@/components/page-templates/B2B/QuotesTemplate/QuotesTemplate.tsx', (
 
 jest.mock('@/lib/api/operations', () => ({
   getQuotes: () => ['quotesMock'],
+  getCurrentUser: jest.fn(() => userMock),
 }))
 
 const user = userEvent.setup()
@@ -57,6 +57,7 @@ describe('[page] B2B Quotes Page', () => {
     expect(response).toStrictEqual({
       props: {
         quotes: ['quotesMock'],
+        customerAccount: userMock?.customerAccount,
         _nextI18Next: {
           initialI18nStore: { 'mock-locale': [{}], en: [{}] },
           initialLocale: 'mock-locale',
@@ -72,7 +73,9 @@ describe('[page] B2B Quotes Page', () => {
       selected: 'number desc',
     }
 
-    renderWithQueryClient(<QuotesPage quotes={quotesMock} />)
+    renderWithQueryClient(
+      <QuotesPage quotes={quotesMock} customerAccount={userMock.customerAccount} />
+    )
 
     const QuotesTemplate = screen.getByTestId('QuotesTemplate-mock')
 
@@ -85,7 +88,7 @@ describe('[page] B2B Quotes Page', () => {
         number: '',
         expirationDate: '',
         status: '',
-        others: '',
+        others: `customerAccountId eq ${userMock.customerAccount.id}`,
       })
     )
 

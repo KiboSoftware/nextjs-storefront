@@ -109,14 +109,35 @@ const getQuoteCreatedBy = (firstName: string, lastName: string) => {
   return firstName || lastName ? `${firstName} ${lastName}` : '-'
 }
 
-const getSaveAndExitDisabled = (quoteName: string, fulfillmentInfo: any, pickupItems: any) => {
-  return (
-    quoteName &&
-    ((fulfillmentInfo?.fulfillmentContact?.address &&
-      fulfillmentInfo?.shippingMethodCode &&
-      fulfillmentInfo?.shippingMethodName) ||
-      pickupItems.length)
-  )
+const getSaveAndExitEnabled = (
+  quoteName: string,
+  fulfillmentInfo: any,
+  shiptItems: any,
+  pickupItems: any
+) => {
+  if (!quoteName) {
+    return false
+  }
+
+  const hasFulfillmentInfo =
+    fulfillmentInfo &&
+    fulfillmentInfo.fulfillmentContact?.address &&
+    fulfillmentInfo.shippingMethodCode &&
+    fulfillmentInfo.shippingMethodName
+
+  if (shiptItems.length && pickupItems.length) {
+    return hasFulfillmentInfo
+  }
+
+  if (!pickupItems.length && shiptItems.length) {
+    return hasFulfillmentInfo
+  }
+
+  if (!shiptItems.length && pickupItems.length) {
+    return true
+  }
+
+  return false
 }
 
 export const quoteGetters = {
@@ -139,5 +160,5 @@ export const quoteGetters = {
   getQuoteShippingMethodCode,
   getEmailAddressAndDate,
   getQuoteCreatedBy,
-  getSaveAndExitDisabled,
+  getSaveAndExitEnabled,
 }

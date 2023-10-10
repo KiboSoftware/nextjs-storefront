@@ -56,7 +56,7 @@ export * from './queries/b2b/quotes/useGetQuotes/useGetQuotes'
 export * from './queries/b2b/useGetCustomerPurchaseOrderAccount/useGetCustomerPurchaseOrderAccount'
 
 export * from './queries/b2b/quotes/useGetQuoteShippingMethods/useGetQuoteShippingMethods'
-export * from './queries/quotes/useGetQuoteById/useGetQuoteById'
+export * from './queries/b2b/quotes/useGetQuoteById/useGetQuoteById'
 
 // Custom hooks
 export * from './custom/useDebounce/useDebounce'

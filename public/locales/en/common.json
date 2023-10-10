@@ -482,6 +482,8 @@
   "titleSubtotal": "{{title}} Subtotal",
   "adjustment-text": "{{selectValue}} {{title}} Subtotal",
   "titleTax": "{{title}} Tax",
+  "discounts": "Discounts",
+  "quote-total": "Quote Total",
   "view-details": "View Details",
   "remove": "Remove",
   "no-item-in-list-text": "Use product search to start adding products to this list",
@@ -503,11 +505,12 @@
   "view-full-comment-thread": "View Full Comment Thread",
   "view-full-history": "View Full History",
   "address": "Address",
-  "no-shipping-details-found": "No Shipping Details Found",
+  "no-shipping-information-selected": "No Shipping Information Selected",
   "add-all-items-to-cart": "Add All Items to Cart",
   "not-authorized-shipping-information": "You are not authorized to view Shipping Information",
   "not-authorized-payment-information": "You are not authorized to view Payment Information",
   "no-hierarchy-found": "No Hierarchy Found",
   "must-be-at-least-8-characters": "Must be at least 8 characters",
-  "standard-shipping": "Standard Shipping"
+  "standard-shipping": "Standard Shipping",
+  "quote-name-saved": "Quote Name saved successfully!"
 }

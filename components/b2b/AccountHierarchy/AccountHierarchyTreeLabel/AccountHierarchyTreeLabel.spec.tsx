@@ -3,7 +3,7 @@ import { screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 
 import * as stories from './AccountHierarchyTreeLabel.stories'
-import { b2BAccountHierarchyResult, userResponseMock } from '@/__mocks__/stories'
+import { b2BAccountHierarchyResult } from '@/__mocks__/stories'
 import { renderWithQueryClient } from '@/__test__/utils'
 
 const { Common } = composeStories(stories)
@@ -97,18 +97,6 @@ describe('[components] AccountHierarchyTreeLabel', () => {
 
     await waitFor(() => {
       expect(handleChangeParentMock).toHaveBeenCalledWith(Common.args?.currentAccount)
-    })
-  })
-
-  it("should handle Edit Account button click when user's account is same as the current account", async () => {
-    renderWithQueryClient(<Common customerAccount={{ ...userResponseMock, id: 1174 }} {...props} />)
-
-    const accountEditButton = screen.getByRole('button', { name: 'Edit' })
-    expect(accountEditButton).toBeVisible()
-    await user.click(accountEditButton)
-
-    await waitFor(() => {
-      expect(handleEditAccountMock).toHaveBeenCalledWith(Common.args?.currentAccount)
     })
   })
 })

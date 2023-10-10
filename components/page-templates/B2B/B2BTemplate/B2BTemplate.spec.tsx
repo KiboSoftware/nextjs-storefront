@@ -69,7 +69,7 @@ describe('[component] - MyAccountTemplate', () => {
     const accountInformation = screen.getByText(/account-information/i)
     const accountHierarchy = screen.getByText(/account-hierarchy/i)
     const users = screen.getByText(/users/i)
-    const shippingInformation = screen.getByText(/shipping-information/i)
+    const addressBook = screen.getByText(/address-book/i)
     const paymentInformation = screen.getAllByText(/payment-information/)[0]
     const customAttributes = screen.getAllByText(/custom-attributes/i)[0]
     const quickOrder = screen.getByText(/quick-order/i)
@@ -83,7 +83,7 @@ describe('[component] - MyAccountTemplate', () => {
     expect(accountInformation).toBeInTheDocument()
     expect(accountHierarchy).toBeInTheDocument()
     expect(users).toBeInTheDocument()
-    expect(shippingInformation).toBeInTheDocument()
+    expect(addressBook).toBeInTheDocument()
     expect(paymentInformation).toBeInTheDocument()
     expect(customAttributes).toBeInTheDocument()
     expect(quickOrder).toBeInTheDocument()

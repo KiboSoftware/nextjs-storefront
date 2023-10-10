@@ -106,6 +106,7 @@ export default function AccountHierarchyTree(props: AccountHierarchyTreeProps) {
         <SortableTree
           items={(hierarchy as TreeItems<HierarchyTree>) || []}
           disableSorting={!hasPermission(actions.EDIT_ACCOUNT)}
+          canRootHaveChildren={false}
           onItemsChanged={(items, reason) => {
             if (reason.type === 'dropped') {
               if (!reason.droppedToParent?.disableSorting) {

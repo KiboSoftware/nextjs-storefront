@@ -31,7 +31,7 @@ type GenericProduct = Product | ProductCustom | CrProduct
 
 const getName = (product: GenericProduct): string => {
   if ('name' in product) {
-    return product.name as string
+    return product?.name as string
   }
 
   if ('content' in product) {

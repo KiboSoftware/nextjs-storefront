@@ -134,9 +134,9 @@ const B2BTemplate = (props: B2BTemplateProps) => {
       path: '/my-account/b2b/users',
     },
     {
-      id: 'shipping-information-accordion',
-      controls: 'shipping-information-content',
-      header: t('shipping-information'),
+      id: 'address-book-accordion',
+      controls: 'address-book-content',
+      header: t('address-book'),
       component: <AddressBook user={user as CustomerAccount} contacts={contacts} />,
     },
     {

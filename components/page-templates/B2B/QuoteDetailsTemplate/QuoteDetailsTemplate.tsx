@@ -40,7 +40,7 @@ import {
   QuoteCommentThreadDialog,
   QuotesHistoryDialog,
 } from '@/components/dialogs'
-import { useAuthContext, useModalContext } from '@/context'
+import { useAuthContext, useModalContext, useSnackbarContext } from '@/context'
 import {
   useGetPurchaseLocation,
   useGetStoreLocations,
@@ -57,6 +57,8 @@ import {
   useUpdateQuote,
   useAddQuoteComment,
   useGetB2BUsersEmailAndId,
+  useUpdateOrderPersonalInfo,
+  PersonalInfo,
 } from '@/hooks'
 import { useQuoteActions } from '@/hooks/custom/useQuoteActions/useQuoteActions'
 import {
@@ -73,8 +75,11 @@ import { Address } from '@/lib/types'
 
 import {
   AuditRecord,
+  CrAppliedDiscount,
   CrContact,
+  CrOrderInput,
   CrOrderItem,
+  CrShippingDiscount,
   CuAddress,
   CustomerContact,
   Location,
@@ -101,7 +106,6 @@ const QuoteDetailsTemplate = (props: QuoteDetailsTemplateProps) => {
   const draft = true
   const mdScreen = useMediaQuery((theme: Theme) => theme.breakpoints.up('md'))
   const { user, isAuthenticated } = useAuthContext()
-  const roleName = user?.roleName
 
   const accountName = user?.companyOrOrganization ?? '-'
   const { number, quoteId, status, createdDate, expirationDate } =
@@ -131,6 +135,7 @@ const QuoteDetailsTemplate = (props: QuoteDetailsTemplateProps) => {
   const { data: locations } = useGetStoreLocations({ filter: locationCodes })
   const fulfillmentLocations = locations && Object.keys(locations).length ? locations : []
 
+  const { showSnackbar } = useSnackbarContext()
   const { deleteQuoteItem } = useDeleteQuoteItem()
   const { updateQuote } = useUpdateQuote()
   const { addComment } = useAddQuoteComment()
@@ -167,7 +172,7 @@ const QuoteDetailsTemplate = (props: QuoteDetailsTemplateProps) => {
   const shipItems = quoteGetters.getQuoteShipItems(quote)
   const pickupItems = quoteGetters.getQuotePickupItems(quote)
   const selectedShippingMethodCode = quoteGetters.getQuoteShippingMethodCode(quote)
-  const [selectedShippingAddressId, setSelectedShippingAddressId] = useState<number>(
+  const [selectedShippingAddressId, setSelectedShippingAddressId] = useState<number | null>(
     quoteShippingContact?.id as number
   )
   const { updateQuoteFulfillmentInfo } = useUpdateQuoteFulfillmentInfo()
@@ -179,12 +184,14 @@ const QuoteDetailsTemplate = (props: QuoteDetailsTemplateProps) => {
     draft,
     enabled: !!shouldFetchShippingMethods,
   })
+  const { updateOrderPersonalInfo } = useUpdateOrderPersonalInfo()
 
   const shippingAddressRef = useRef<HTMLDivElement>(null)
 
-  const isSaveAndExitDisabled = quoteGetters.getSaveAndExitDisabled(
+  const isSaveAndExitEnabled = quoteGetters.getSaveAndExitEnabled(
     quote?.name as string,
     quote?.fulfillmentInfo,
+    shipItems,
     pickupItems
   )
 
@@ -265,7 +272,12 @@ const QuoteDetailsTemplate = (props: QuoteDetailsTemplateProps) => {
 
   const handleSaveQuoteName = async (formData: any) => {
     const { name } = formData
-    await updateQuote.mutateAsync({ quoteId, name, updateMode })
+    try {
+      const response = await updateQuote.mutateAsync({ quoteId, name, updateMode })
+      if (response) showSnackbar(t('quote-name-saved'), 'success')
+    } catch (error) {
+      console.error(error)
+    }
   }
 
   const handleSubmitForApproval = async () => {
@@ -279,7 +291,7 @@ const QuoteDetailsTemplate = (props: QuoteDetailsTemplateProps) => {
               updateMode: 'ApplyAndCommit',
               name: quote?.name as string,
             })
-            if (updateQuote.isSuccess) router.push('/my-account/b2b/quotes')
+            router.push('/my-account/b2b/quotes')
           },
           title: t('submit-quote-title'),
           contentText: t('submit-quote-confirmation'),
@@ -294,7 +306,7 @@ const QuoteDetailsTemplate = (props: QuoteDetailsTemplateProps) => {
   }
 
   const handleEditQuote = (quoteId: string) => {
-    router.push(`/my-account/quote/${quoteId}?mode=edit`)
+    router.push(`/my-account/b2b/quote/${quoteId}?mode=edit`)
   }
 
   const handleSaveAddressToQuote = async ({ contact }: { contact: CrContact }) => {
@@ -475,6 +487,9 @@ const QuoteDetailsTemplate = (props: QuoteDetailsTemplateProps) => {
         props: {
           onConfirm: () => {
             deleteQuote.mutate({ quoteId, draft })
+            if (selectedShippingAddressId) {
+              setSelectedShippingAddressId(null)
+            }
           },
           title: t('clear-changes'),
           contentText: t('clear-quote-changes-confirmation'),
@@ -495,6 +510,11 @@ const QuoteDetailsTemplate = (props: QuoteDetailsTemplateProps) => {
       })
 
       if (initiateOrderResponse?.id) {
+        const personalInfo: PersonalInfo = {
+          checkout: initiateOrderResponse as CrOrderInput,
+          email: user?.emailAddress as string,
+        }
+        await updateOrderPersonalInfo.mutateAsync(personalInfo)
         router.push(`/checkout/${initiateOrderResponse.id}`)
       }
     } catch (err) {
@@ -589,7 +609,8 @@ const QuoteDetailsTemplate = (props: QuoteDetailsTemplateProps) => {
                       QuoteStatus[status] === QuoteStatus.InReview ||
                       QuoteStatus[status] === QuoteStatus.Completed ||
                       QuoteStatus[status] === QuoteStatus.Expired ||
-                      !Boolean(quoteNameField.name)
+                      !Boolean(quoteNameField.name) ||
+                      quote?.name === quoteNameField.name
                     }
                     onClick={handleSubmit(handleSaveQuoteName)}
                   >
@@ -604,7 +625,7 @@ const QuoteDetailsTemplate = (props: QuoteDetailsTemplateProps) => {
                         QuoteStatus[status] === QuoteStatus.InReview ||
                         QuoteStatus[status] === QuoteStatus.Completed ||
                         QuoteStatus[status] === QuoteStatus.Expired ||
-                        !isSaveAndExitDisabled ||
+                        !isSaveAndExitEnabled ||
                         !quote?.hasDraft
                       }
                       onClick={handleSubmitForApproval}
@@ -793,8 +814,12 @@ const QuoteDetailsTemplate = (props: QuoteDetailsTemplateProps) => {
                 shippingTotal={quote?.shippingTotal}
                 subTotal={quote?.subTotal}
                 onSave={handleUpdateQuoteAdjustments}
+                shippingDiscounts={quote?.shippingDiscounts as CrShippingDiscount[]}
+                handlingDiscounts={quote?.handlingDiscounts as CrAppliedDiscount[]}
+                orderDiscounts={quote?.orderDiscounts as CrAppliedDiscount[]}
                 mode={mode}
                 status={status}
+                total={quote?.total}
               />
             </Box>
             <Divider />
@@ -1031,7 +1056,7 @@ const QuoteDetailsTemplate = (props: QuoteDetailsTemplateProps) => {
                       )}
                       {!quote?.fulfillmentInfo?.fulfillmentContact &&
                         !quote?.fulfillmentInfo?.shippingMethodName && (
-                          <Typography pb={1}>{t('no-shipping-details-found')}</Typography>
+                          <Typography pb={1}>{t('no-shipping-information-selected')}</Typography>
                         )}
                     </Stack>
                   )}
@@ -1131,7 +1156,7 @@ const QuoteDetailsTemplate = (props: QuoteDetailsTemplateProps) => {
                       QuoteStatus[status] === QuoteStatus.InReview ||
                       QuoteStatus[status] === QuoteStatus.Completed ||
                       QuoteStatus[status] === QuoteStatus.Expired ||
-                      !isSaveAndExitDisabled ||
+                      !isSaveAndExitEnabled ||
                       !quote?.hasDraft
                     }
                     onClick={handleSubmitForApproval}

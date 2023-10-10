@@ -344,8 +344,8 @@ describe('[components] - QuotesTable', () => {
 
       await waitFor(() => {
         expect(mockRouter).toMatchObject({
-          asPath: `/my-account/quote/${quotesMock.items?.[0]?.id}`,
-          pathname: `/my-account/quote/${quotesMock.items?.[0]?.id}`,
+          asPath: `/my-account/b2b/quote/${quotesMock.items?.[0]?.id}`,
+          pathname: `/my-account/b2b/quote/${quotesMock.items?.[0]?.id}`,
           query: {},
         })
       })

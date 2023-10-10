@@ -33,6 +33,7 @@ const ProductQuickViewDialogFooter = (props: any) => {
     quoteDetails,
     listData,
     onUpdateListData,
+    currentProduct,
     listMode,
   } = props
   const { handleAddToCart, handleAddToList, handleAddToQuote } = useProductCardActions()
@@ -45,10 +46,10 @@ const ProductQuickViewDialogFooter = (props: any) => {
 
   const handleAddProductToList = async () => {
     listMode === 'create'
-      ? onUpdateListData(addToCartPayload?.product)
+      ? onUpdateListData(currentProduct)
       : handleAddToList({
           listData,
-          product: addToCartPayload?.product as Product,
+          product: currentProduct as Product,
           onUpdateListData,
         })
     onClose()
@@ -56,7 +57,16 @@ const ProductQuickViewDialogFooter = (props: any) => {
 
   const handleAddProductToQuote = () => {
     const { quoteId, updateMode } = quoteDetails
-    handleAddToQuote(quoteId, updateMode, addToCartPayload?.product, addToCartPayload?.quantity)
+    handleAddToQuote(
+      quoteId,
+      updateMode,
+      {
+        ...currentProduct,
+        fulfillmentMethod: addToCartPayload?.product?.fulfillmentMethod,
+        purchaseLocationCode: addToCartPayload?.product?.purchaseLocationCode,
+      },
+      addToCartPayload?.quantity
+    )
     onClose()
   }
 
@@ -168,6 +178,10 @@ const ProductQuickViewDialog = (props: ProductQuickViewDialogProps) => {
           isQuickViewModal={isQuickViewModal}
           isB2B={isB2B}
           addItemToList={addItemToList}
+          addItemToQuote={addItemToQuote}
+          quoteDetails={quoteDetails}
+          title={title}
+          cancel={cancel}
           getCurrentProduct={handleCurrentProduct}
         />
       }

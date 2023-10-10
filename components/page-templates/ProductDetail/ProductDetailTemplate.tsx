@@ -68,6 +68,10 @@ interface ProductDetailTemplateProps {
   children?: any
   isB2B?: boolean
   addItemToList?: string
+  addItemToQuote?: string
+  title?: string
+  cancel?: string
+  quoteDetails?: any
   getCurrentProduct?: (
     addToCartPayload: any,
     currentProduct: ProductCustom,
@@ -104,6 +108,9 @@ const ProductDetailTemplate = (props: ProductDetailTemplateProps) => {
     children,
     isB2B = false,
     addItemToList,
+    addItemToQuote,
+    cancel,
+    quoteDetails,
     getCurrentProduct,
   } = props
   const { t } = useTranslation('common')
@@ -272,15 +279,32 @@ const ProductDetailTemplate = (props: ProductDetailTemplateProps) => {
         isQuickViewModal: isQuickViewModal,
         isNested: isQuickViewModal,
         NestedDialog: isQuickViewModal ? ProductQuickViewDialog : null,
-        nestedDialogProps: { product: currentProduct, isQuickViewModal: true },
-        onNestedDialogClose: () => {
-          showModal({
-            Component: ProductQuickViewDialog,
-            props: {
-              product: currentProduct,
-              isQuickViewModal: true,
+        nestedDialogProps: {
+          product: currentProduct,
+          isQuickViewModal: true,
+          dialogProps: {
+            title: props.title,
+            cancel,
+            addItemToList: addItemToList,
+            addItemToQuote: addItemToQuote,
+            isB2B,
+          },
+          quoteDetails,
+        },
+        onNestedDialogClose: {
+          Component: ProductQuickViewDialog,
+          props: {
+            product: currentProduct,
+            isQuickViewModal: true,
+            dialogProps: {
+              title: props.title,
+              cancel,
+              addItemToList: addItemToList,
+              addItemToQuote: addItemToQuote,
+              isB2B,
             },
-          })
+            quoteDetails,
+          },
         },
         handleSetStore: async (selectedStore: LocationCustom) => {
           setSelectedFulfillmentOption({
@@ -489,19 +513,21 @@ const ProductDetailTemplate = (props: ProductDetailTemplateProps) => {
           )}
         </Box>
 
-        <Box pt={2} display="flex" sx={{ justifyContent: 'space-between' }}>
-          <Typography fontWeight="600" variant="body2">
-            {selectedFulfillmentOption?.method && `${quantityLeft} ${t('item-left')}`}
-          </Typography>
-          <MuiLink
-            color="inherit"
-            variant="body2"
-            sx={{ cursor: 'pointer' }}
-            onClick={() => handleProductPickupLocation(t('check-nearby-store'))}
-          >
-            {t('nearby-stores')}
-          </MuiLink>
-        </Box>
+        {!addItemToList && (
+          <Box pt={2} display="flex" sx={{ justifyContent: 'space-between' }}>
+            <Typography fontWeight="600" variant="body2">
+              {selectedFulfillmentOption?.method && `${quantityLeft} ${t('item-left')}`}
+            </Typography>
+            <MuiLink
+              color="inherit"
+              variant="body2"
+              sx={{ cursor: 'pointer' }}
+              onClick={() => handleProductPickupLocation(t('check-nearby-store'))}
+            >
+              {t('nearby-stores')}
+            </MuiLink>
+          </Box>
+        )}
         {!isB2B && (
           <Box paddingY={1} display="flex" flexDirection={'column'} gap={2}>
             <LoadingButton

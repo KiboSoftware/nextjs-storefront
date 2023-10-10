@@ -4,11 +4,17 @@ import getConfig from 'next/config'
 
 import { QueryQuotesArgs, QuoteCollection } from '@/lib/gql/types'
 
-export const useB2BQuote = (initialData?: QuoteCollection) => {
+export const useB2BQuote = ({
+  accountId,
+  quotes: initialData,
+}: {
+  accountId?: number
+  quotes?: QuoteCollection
+}) => {
   const { publicRuntimeConfig } = getConfig()
 
   const [quotesSearchParam, setQuotesSearchParam] = useState<QueryQuotesArgs>({
-    filter: '',
+    filter: `customerAccountId eq ${accountId}`,
     pageSize: initialData?.pageSize || 5,
     sortBy: 'number desc',
     startIndex: initialData?.startIndex || 0,

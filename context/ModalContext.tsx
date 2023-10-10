@@ -22,6 +22,7 @@ const ModalContext = createContext({
     isNested: false,
     NestedDialog: null,
     nestedDialogProps: {},
+    onNestedDialogClose: {},
   },
 } as ModalContextType)
 
@@ -34,6 +35,7 @@ export const ModalContextProvider = ({ children }: ModalContextProviderProps) =>
       isNested: false,
       NestedDialog: null,
       nestedDialogProps: {},
+      onNestedDialogClose: {},
     },
   })
 
@@ -45,9 +47,9 @@ export const ModalContextProvider = ({ children }: ModalContextProviderProps) =>
 
   const closeModal = () => {
     setModalState({
-      Component: modalState?.props?.NestedDialog || null,
+      Component: modalState?.props?.onNestedDialogClose?.Component || null,
       props: {
-        ...modalState.props,
+        ...modalState?.props?.onNestedDialogClose?.props,
         isNested: false,
         NestedDialog: null,
       },

@@ -152,7 +152,7 @@ const QuotesTable = (props: QuotesTableProps) => {
 
   const handleEditQuote = (e: SyntheticEvent<Element, Event>, quoteId: string) => {
     e.stopPropagation()
-    router.push(`/my-account/quote/${quoteId}`)
+    router.push(`/my-account/b2b/quote/${quoteId}`)
     handleClose()
   }
 
@@ -290,7 +290,7 @@ const QuotesTable = (props: QuotesTableProps) => {
                       borderLeftColor: getStatusColorCode(status),
                       cursor: 'pointer',
                     }}
-                    onClick={() => router.push(`/my-account/quote/${quoteId}`)}
+                    onClick={() => router.push(`/my-account/b2b/quote/${quoteId}`)}
                   >
                     <TableCell component="td" scope="row">
                       <Typography variant="body2" data-testid={`quote-number`}>

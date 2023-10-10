@@ -8,12 +8,16 @@ import type { Quote } from '@/lib/gql/types'
 
 const { serverRuntimeConfig } = getConfig()
 
-export default async function getQuotes(req: NextApiRequest, res: NextApiResponse): Promise<Quote> {
+export default async function getQuotes(
+  req: NextApiRequest,
+  res: NextApiResponse,
+  customerAccountId?: number
+): Promise<Quote> {
   const variables = {
     startIndex: 0,
     pageSize: parseInt(serverRuntimeConfig.B2BQuotes.pageSize) || 5,
     sortBy: 'number desc',
-    filter: '',
+    filter: `customerAccountId eq ${customerAccountId}`,
     q: '',
   }
 

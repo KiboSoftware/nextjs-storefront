@@ -35,6 +35,45 @@ fragment quoteFragment on Quote {
             amount
             description
         }
+        orderDiscounts {
+            impact
+            discount {
+                id
+                name
+                itemIds
+            }
+            couponCode 
+            excluded
+        }
+        itemLevelProductDiscountTotal
+        orderLevelProductDiscountTotal
+        itemLevelShippingDiscountTotal
+        orderLevelShippingDiscountTotal 
+        shippingDiscounts {
+            methodCode
+            discount {
+                impact
+                discount{
+                    id
+                    name
+                    itemIds
+                }
+                couponCode
+                excluded
+            }
+        }
+        itemLevelHandlingDiscountTotal
+        orderLevelHandlingDiscountTotal 
+        handlingDiscounts {
+            impact
+            discount {
+                id
+                name
+                itemIds
+            }
+            couponCode 
+            excluded
+        }
         items {
             id
             quantity
@@ -47,7 +86,8 @@ fragment quoteFragment on Quote {
             discountTotal
             discountedTotal
             total            
-            shippingTotal        
+            shippingTotal 
+            subtotal       
             dutyAmount
             product {
                 productCode

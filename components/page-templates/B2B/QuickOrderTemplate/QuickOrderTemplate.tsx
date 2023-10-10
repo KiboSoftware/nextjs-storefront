@@ -143,7 +143,7 @@ const QuickOrderTemplate = (props: QuickOrderTemplateProps) => {
         updateMode: 'ApplyToDraft',
       })
       if (response?.id) {
-        router.push(`/my-account/quote/${response.id}?mode=create`)
+        router.push(`/my-account/b2b/quote/${response.id}?mode=create`)
       }
     } catch (e) {
       console.error(e)
@@ -151,152 +151,150 @@ const QuickOrderTemplate = (props: QuickOrderTemplateProps) => {
   }
 
   return (
-    <>
-      <Grid container spacing={3}>
-        <Grid item xs={12}>
-          <Stack sx={quickOrderTemplateStyles.wrapIcon} direction="row" gap={2}>
-            <Box sx={{ display: 'flex' }} onClick={onAccountTitleClick}>
-              <ArrowBackIos fontSize="inherit" sx={quickOrderTemplateStyles.wrapIcon} />
-              {mdScreen && <Typography variant="body2">{t('my-account')}</Typography>}
+    <Grid container spacing={3}>
+      <Grid item xs={12}>
+        <Stack sx={quickOrderTemplateStyles.wrapIcon} direction="row" gap={2}>
+          <Box sx={{ display: 'flex' }} onClick={onAccountTitleClick}>
+            <ArrowBackIos fontSize="inherit" sx={quickOrderTemplateStyles.wrapIcon} />
+            {mdScreen && <Typography variant="body2">{t('my-account')}</Typography>}
+          </Box>
+          {!mdScreen && (
+            <Box sx={quickOrderTemplateStyles.quickOrderTextBox}>
+              <Typography variant="h2" sx={quickOrderTemplateStyles.quickOrderText}>
+                {t('quick-order')}
+              </Typography>
             </Box>
-            {!mdScreen && (
-              <Box sx={quickOrderTemplateStyles.quickOrderTextBox}>
-                <Typography variant="h2" sx={quickOrderTemplateStyles.quickOrderText}>
-                  {t('quick-order')}
-                </Typography>
-              </Box>
-            )}
-          </Stack>
-        </Grid>
-        {mdScreen && (
-          <Grid item xs={12} sm={12} display={'flex'} justifyContent={'space-between'}>
-            <Typography variant="h1">{t('quick-order')}</Typography>
-            <Stack display={'flex'} justifyContent={'flex-end'}>
-              {mdScreen ? (
-                <Stack direction="row" gap={2}>
-                  <Stack direction="column" gap={2}>
-                    <LoadingButton
-                      variant="contained"
-                      color="secondary"
-                      onClick={handleInitiateQuote}
-                      disabled={!cartItemCount || showLoadingButton}
-                    >
-                      {t('initiate-quote')}
-                    </LoadingButton>
-                  </Stack>
-                  <Stack direction="column" gap={2}>
-                    <LoadingButton
-                      variant="contained"
-                      color="primary"
-                      name="goToCart"
-                      fullWidth
-                      onClick={handleGotoCheckout}
-                      loading={showLoadingButton}
-                      disabled={!cartItemCount || showLoadingButton}
-                    >
-                      {t('checkout')}
-                    </LoadingButton>
-                  </Stack>
-                </Stack>
-              ) : null}
-            </Stack>
-          </Grid>
-        )}
-        <Grid item xs={12} md={4}>
-          <B2BProductSearch onAddProduct={handleAddProduct} />
-        </Grid>
-        <Grid item xs={12}>
-          <Stack gap={3}>
+          )}
+        </Stack>
+      </Grid>
+      {mdScreen && (
+        <Grid item xs={12} sm={12} display={'flex'} justifyContent={'space-between'}>
+          <Typography variant="h1">{t('quick-order')}</Typography>
+          <Stack display={'flex'} justifyContent={'flex-end'}>
             {mdScreen ? (
-              <B2BProductDetailsTable
-                items={cartItems as CrCartItem[]}
-                fulfillmentLocations={fulfillmentLocations}
-                purchaseLocation={purchaseLocation}
-                onFulfillmentOptionChange={onFulfillmentOptionChange}
-                onQuantityUpdate={handleQuantityUpdate}
-                onStoreSetOrUpdate={handleProductPickupLocation}
-                onItemDelete={handleDeleteItem}
-              />
-            ) : (
-              <Stack spacing={2}>
-                <Stack sx={quickOrderTemplateStyles.promoCode}>
-                  <Box sx={quickOrderTemplateStyles.promoCodeBadge}>
-                    <PromoCodeBadge
-                      onApplyCouponCode={handleApplyCouponCode}
-                      onRemoveCouponCode={handleRemoveCouponCode}
-                      promoError={!!promoError}
-                      helpText={promoError}
-                      couponLabel="Coupon"
-                      promoList={cart?.couponCodes as string[]}
-                    />
-                  </Box>
-                  <KeyValueDisplay
-                    option={{
-                      name: t('order-total'),
-                      value: `${t('currency', { val: cartTotal })} `,
-                    }}
-                    variant="body1"
-                    sx={quickOrderTemplateStyles.orderTotal}
-                  />
+              <Stack direction="row" gap={2}>
+                <Stack direction="column" gap={2}>
+                  <LoadingButton
+                    variant="contained"
+                    color="secondary"
+                    onClick={handleInitiateQuote}
+                    disabled={!cartItemCount || showLoadingButton}
+                  >
+                    {t('initiate-quote')}
+                  </LoadingButton>
                 </Stack>
-                <Typography variant="h2">{t('cart')}</Typography>
-                {cartItems.length > 0 ? (
-                  <CartItemList
-                    cartItems={cartItems}
-                    fulfillmentLocations={fulfillmentLocations as Location[]}
-                    purchaseLocation={purchaseLocation}
-                    onCartItemDelete={handleDeleteItem}
-                    onCartItemQuantityUpdate={handleQuantityUpdate}
-                    onFulfillmentOptionChange={onFulfillmentOptionChange}
-                    onProductPickupLocation={handleProductPickupLocation}
-                    onCartItemActionSelection={() => null}
-                  />
-                ) : (
-                  <Typography variant="body1" sx={quickOrderTemplateStyles.noCartItems}>
-                    {t('search-to-add-products')}
-                  </Typography>
-                )}
-              </Stack>
-            )}
-
-            {!mdScreen && cartItems.length ? (
-              <Stack spacing={2}>
-                <LoadingButton variant="contained" color="primary" onClick={handleGotoCheckout}>
-                  {t('checkout')}
-                </LoadingButton>
-                <LoadingButton variant="contained" color="secondary">
-                  {t('initiate-quote')}
-                </LoadingButton>
+                <Stack direction="column" gap={2}>
+                  <LoadingButton
+                    variant="contained"
+                    color="primary"
+                    name="goToCart"
+                    fullWidth
+                    onClick={handleGotoCheckout}
+                    loading={showLoadingButton}
+                    disabled={!cartItemCount || showLoadingButton}
+                  >
+                    {t('checkout')}
+                  </LoadingButton>
+                </Stack>
               </Stack>
             ) : null}
           </Stack>
         </Grid>
-        {mdScreen && (
-          <Grid item xs={12}>
-            <Stack sx={quickOrderTemplateStyles.promoCode}>
-              <Box sx={quickOrderTemplateStyles.promoCodeBadge}>
-                <PromoCodeBadge
-                  onApplyCouponCode={handleApplyCouponCode}
-                  onRemoveCouponCode={handleRemoveCouponCode}
-                  promoError={!!promoError}
-                  helpText={promoError}
-                  couponLabel="Coupon"
-                  promoList={cart?.couponCodes as string[]}
-                />
-              </Box>
-              <KeyValueDisplay
-                option={{
-                  name: t('order-total'),
-                  value: `${t('currency', { val: cartTotal })} `,
-                }}
-                variant="body1"
-                sx={quickOrderTemplateStyles.orderTotal}
-              />
-            </Stack>
-          </Grid>
-        )}
+      )}
+      <Grid item xs={12} md={4}>
+        <B2BProductSearch onAddProduct={handleAddProduct} />
       </Grid>
-    </>
+      <Grid item xs={12}>
+        <Stack gap={3}>
+          {mdScreen ? (
+            <B2BProductDetailsTable
+              items={cartItems as CrCartItem[]}
+              fulfillmentLocations={fulfillmentLocations}
+              purchaseLocation={purchaseLocation}
+              onFulfillmentOptionChange={onFulfillmentOptionChange}
+              onQuantityUpdate={handleQuantityUpdate}
+              onStoreSetOrUpdate={handleProductPickupLocation}
+              onItemDelete={handleDeleteItem}
+            />
+          ) : (
+            <Stack spacing={2}>
+              <Stack sx={quickOrderTemplateStyles.promoCode}>
+                <Box sx={quickOrderTemplateStyles.promoCodeBadge}>
+                  <PromoCodeBadge
+                    onApplyCouponCode={handleApplyCouponCode}
+                    onRemoveCouponCode={handleRemoveCouponCode}
+                    promoError={!!promoError}
+                    helpText={promoError}
+                    couponLabel="Coupon"
+                    promoList={cart?.couponCodes as string[]}
+                  />
+                </Box>
+                <KeyValueDisplay
+                  option={{
+                    name: t('order-total'),
+                    value: `${t('currency', { val: cartTotal })} `,
+                  }}
+                  variant="body1"
+                  sx={quickOrderTemplateStyles.orderTotal}
+                />
+              </Stack>
+              <Typography variant="h2">{t('cart')}</Typography>
+              {cartItems.length > 0 ? (
+                <CartItemList
+                  cartItems={cartItems}
+                  fulfillmentLocations={fulfillmentLocations as Location[]}
+                  purchaseLocation={purchaseLocation}
+                  onCartItemDelete={handleDeleteItem}
+                  onCartItemQuantityUpdate={handleQuantityUpdate}
+                  onFulfillmentOptionChange={onFulfillmentOptionChange}
+                  onProductPickupLocation={handleProductPickupLocation}
+                  onCartItemActionSelection={() => null}
+                />
+              ) : (
+                <Typography variant="body1" sx={quickOrderTemplateStyles.noCartItems}>
+                  {t('search-to-add-products')}
+                </Typography>
+              )}
+            </Stack>
+          )}
+
+          {!mdScreen && cartItems.length ? (
+            <Stack spacing={2}>
+              <LoadingButton variant="contained" color="primary" onClick={handleGotoCheckout}>
+                {t('checkout')}
+              </LoadingButton>
+              <LoadingButton variant="contained" color="secondary">
+                {t('initiate-quote')}
+              </LoadingButton>
+            </Stack>
+          ) : null}
+        </Stack>
+      </Grid>
+      {mdScreen && (
+        <Grid item xs={12}>
+          <Stack sx={quickOrderTemplateStyles.promoCode}>
+            <Box sx={quickOrderTemplateStyles.promoCodeBadge}>
+              <PromoCodeBadge
+                onApplyCouponCode={handleApplyCouponCode}
+                onRemoveCouponCode={handleRemoveCouponCode}
+                promoError={!!promoError}
+                helpText={promoError}
+                couponLabel="Coupon"
+                promoList={cart?.couponCodes as string[]}
+              />
+            </Box>
+            <KeyValueDisplay
+              option={{
+                name: t('order-total'),
+                value: `${t('currency', { val: cartTotal })} `,
+              }}
+              variant="body1"
+              sx={quickOrderTemplateStyles.orderTotal}
+            />
+          </Stack>
+        </Grid>
+      )}
+    </Grid>
   )
 }
 

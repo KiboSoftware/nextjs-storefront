@@ -184,6 +184,7 @@ const AccountHierarchyTemplate = (props: AccountHierarchyTemplateProps) => {
   }
 
   const handleEditAccount = (b2BAccount: B2BAccount) => {
+    console.log('handle edit account', b2BAccount)
     showModal({
       Component: AccountHierarchyFormDialog,
       props: {
@@ -199,6 +200,7 @@ const AccountHierarchyTemplate = (props: AccountHierarchyTemplateProps) => {
   }
 
   const handleChangeParent = (b2BAccount: B2BAccount) => {
+    console.log('hanlde change parent', b2BAccount)
     showModal({
       Component: AccountHierarchyChangeParentDialog,
       props: {
@@ -267,7 +269,9 @@ const AccountHierarchyTemplate = (props: AccountHierarchyTemplateProps) => {
     setActiveComponent('buyers')
   }
 
-  const { quotesSearchParam, sortingValues, handleQuotesSearchParam } = useB2BQuote()
+  const { quotesSearchParam, sortingValues, handleQuotesSearchParam } = useB2BQuote({
+    accountId: user?.id,
+  })
 
   const { data: quoteCollection } = useGetQuotes(quotesSearchParam)
 

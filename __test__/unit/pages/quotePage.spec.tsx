@@ -4,7 +4,7 @@ import { render, screen } from '@testing-library/react'
 import { customerB2BUserForPage0Mock, quoteMock } from '@/__mocks__/stories'
 import { RQNotificationContextProvider } from '@/context'
 import * as operations from '@/lib/api/operations'
-import QuotePage, { getServerSideProps } from '@/src/pages/my-account/quote/[quoteId]'
+import QuotePage, { getServerSideProps } from '@/src/pages/my-account/b2b/quote/[quoteId]'
 
 import { B2BUserCollection, Quote } from '@/lib/gql/types'
 

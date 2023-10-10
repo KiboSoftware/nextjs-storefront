@@ -11,7 +11,14 @@ export const buildCreateQuoteItemParams = (
     updateMode,
     orderItemInput: {
       product: {
-        options: product?.options,
+        options: product?.options?.map((option: any) => {
+          const selected = option?.values?.find((value: any) => value?.isSelected)
+          return {
+            name: option?.attributeDetail?.name,
+            value: selected?.value || selected?.stringValue || selected?.shopperEnteredValue,
+            attributeFQN: option?.attributeFQN,
+          }
+        }),
         productCode: product?.productCode || '',
         variationProductCode: product?.variationProductCode || '',
       },
