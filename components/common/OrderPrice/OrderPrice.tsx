@@ -2,18 +2,24 @@ import React, { ReactNode } from 'react'
 
 import Info from '@mui/icons-material/Info'
 import { Typography, Box, Divider } from '@mui/material'
+import { useTranslation } from 'next-i18next'
 
 import { Price } from '@/components/common'
 export interface OrderPriceProps {
   subTotalLabel: string
-  shippingTotalLabel: string
-  taxLabel: string
-  totalLabel: string
   subTotal: string
-  discountedSubtotal?: string
-  shippingTotal: string
-  tax: string
+
+  shippingTotalLabel?: string
+  shippingTotal?: string
+
+  taxLabel?: string
+  tax?: string
+
+  totalLabel: string
   total: string
+
+  discountedSubtotal?: string
+  isShippingTaxIncluded?: boolean
   promoComponent?: ReactNode
 }
 
@@ -37,7 +43,10 @@ const OrderPrice = (props: OrderPriceProps) => {
     tax,
     total,
     promoComponent,
+    isShippingTaxIncluded = true,
   } = props
+
+  const { t } = useTranslation('common')
 
   return (
     <Box sx={{ width: '100%' }} data-testid={'order-price-component'}>
@@ -53,18 +62,30 @@ const OrderPrice = (props: OrderPriceProps) => {
             salePrice={discountedSubtotal}
           />
         </Box>
-        <Box sx={{ ...styles.priceRow }}>
-          <Typography sx={{ ...styles.priceLabel }} variant="body1">
-            {shippingTotalLabel}
-          </Typography>
-          <Price variant="body1" fontWeight="bold" price={shippingTotal} />
-        </Box>
-        <Box sx={{ ...styles.priceRow }}>
-          <Typography sx={{ ...styles.priceLabel }} variant="body1">
-            {taxLabel} <Info sx={{ ...styles.infoIcon }} />
-          </Typography>
-          <Price variant="body1" fontWeight="bold" price={tax} />
-        </Box>
+        {shippingTotalLabel && (
+          <Box sx={{ ...styles.priceRow }}>
+            <Typography sx={{ ...styles.priceLabel }} variant="body1">
+              {shippingTotalLabel}
+            </Typography>
+            <Price variant="body1" fontWeight="bold" price={shippingTotal} />
+          </Box>
+        )}
+        {taxLabel && (
+          <Box sx={{ ...styles.priceRow }}>
+            <Typography sx={{ ...styles.priceLabel }} variant="body1">
+              {taxLabel} <Info sx={{ ...styles.infoIcon }} />
+            </Typography>
+            <Price variant="body1" fontWeight="bold" price={tax} />
+          </Box>
+        )}
+        {!isShippingTaxIncluded && (
+          <Box sx={{ ...styles.priceRow }}>
+            <Typography sx={{ ...styles.priceLabel }} variant="body2">
+              {t('shipping-tax-at-checkout')}
+            </Typography>
+            <Price variant="body1" fontWeight="bold" price={tax} />
+          </Box>
+        )}
       </Box>
       <Divider sx={{ margin: '0 0.438rem' }} />
       {promoComponent && <Box>{promoComponent}</Box>}

@@ -94,6 +94,7 @@ function HeroItem(props: ItemProps) {
           display: 'flex',
           flexDirection: 'column',
           justifyContent: { xs: 'end', md: 'center' },
+          alignItems: 'center',
         }}
       >
         <KiboImage

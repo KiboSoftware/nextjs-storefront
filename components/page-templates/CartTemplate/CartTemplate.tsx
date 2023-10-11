@@ -115,19 +115,16 @@ const CartTemplate = (props: CartTemplateProps) => {
   }
 
   const orderSummaryArgs = {
-    nameLabel: t('order-summary'),
+    nameLabel: t('cart-summary'),
     subTotalLabel: `${t('subtotal')} (${t('item-quantity', { count: cartItemCount })})`,
-    shippingTotalLabel: t('shipping'),
-    taxLabel: t('estimated-tax'),
     totalLabel: t('estimated-order-total'),
     subTotal: t('currency', { val: cartSubTotal }),
     discountedSubtotal:
       cartDiscountedSubTotal && cartDiscountedSubTotal !== cartSubTotal
         ? t('currency', { val: cartDiscountedSubTotal })
         : '',
-    shippingTotal: cartShippingTotal ? t('currency', { val: cartShippingTotal }) : t('free'),
-    tax: t('currency', { val: cartTaxTotal }),
     total: t('currency', { val: cartTotal }),
+    isShippingTaxIncluded: false,
     promoComponent: (
       <PromoCodeBadge
         onApplyCouponCode={handleApplyPromoCode}

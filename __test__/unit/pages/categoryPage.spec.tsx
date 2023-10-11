@@ -4,7 +4,7 @@ import { NextApiRequest } from 'next'
 
 import { categoryTreeDataMock, productSearchResultMock } from '@/__mocks__/stories'
 import { createQueryClientWrapper } from '@/__test__/utils'
-import CategoryPage, { getStaticProps } from '@/src/pages/category/[...categorySlug]'
+import CategoryPage, { getStaticProps } from '@/src/pages/category/[categoryCode]'
 
 import { PrCategory } from '@/lib/gql/types'
 
@@ -101,12 +101,12 @@ const categoryTypeProps = {
   categoriesTree: mockCategoryTreeData.categoriesTree.items as PrCategory[],
   category: mockCategoryTreeByCode?.[0],
   categoryCode: '40',
-  seoFriendlyUrl: 'womens',
-  metaInformation: {
-    canonical: '/category/womens/40',
-    metaTagDescription: 'metaTagDescription',
-    metaTagKeywords: 'metaTagKeywords',
-    metaTagTitle: 'metaTagTitle',
+  metaData: {
+    canonicalUrl: null,
+    description: 'metaTagDescription',
+    keywords: 'metaTagKeywords',
+    robots: null,
+    title: 'metaTagTitle',
   },
   _nextI18Next: {
     initialI18nStore: { 'mock-locale': [{}], en: [{}] },
