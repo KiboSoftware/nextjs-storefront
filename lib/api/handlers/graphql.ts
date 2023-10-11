@@ -10,10 +10,14 @@ export default async function graphQLHandler(req: NextApiRequest, res: NextApiRe
 
     const userClaims = await getUserClaimsFromRequest(req, res)
     const response = await fetcher({ query, variables }, { userClaims, headers })
+    if (response?.errors) {
+      throw {
+        message: response?.errors[0]?.extensions?.response?.body?.message,
+        code: response?.errors[0].extensions.response.status,
+      }
+    }
     res.status(200).json(response)
-  } catch (error) {
-    console.error(error)
-    const message = 'An unexpected error ocurred'
-    res.status(500).json({ data: null, errors: [{ message }] })
+  } catch (error: any) {
+    res.status(error?.code).json({ message: error?.message })
   }
 }

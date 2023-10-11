@@ -76,6 +76,13 @@ describe('[page] Search Page', () => {
     expect(response).toStrictEqual({
       props: {
         results: mockProductSearchData,
+        metaData: {
+          canonicalUrl: null,
+          description: null,
+          keywords: null,
+          robots: 'noindex,nofollow',
+          title: 'Search Results',
+        },
         _nextI18Next: {
           initialI18nStore: { 'mock-locale': [{}], en: [{}] },
           initialLocale: 'mock-locale',

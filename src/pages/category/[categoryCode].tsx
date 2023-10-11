@@ -2,7 +2,6 @@ import { useEffect, useRef, useState } from 'react'
 
 import getConfig from 'next/config'
 import ErrorPage from 'next/error'
-import Head from 'next/head'
 import { useRouter } from 'next/router'
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
 
@@ -10,8 +9,8 @@ import { ProductListingTemplate } from '@/components/page-templates'
 import { useGetSearchedProducts } from '@/hooks'
 import { getCategoryTree, productSearch } from '@/lib/api/operations'
 import { productSearchGetters, facetGetters } from '@/lib/getters'
-import { categoryTreeSearchByCode } from '@/lib/helpers'
-import type { CategorySearchParams } from '@/lib/types'
+import { categoryTreeSearchByCode, buildCategoryPath } from '@/lib/helpers'
+import type { CategorySearchParams, MetaData, PageWithMetaData } from '@/lib/types'
 
 import type {
   PrCategory,
@@ -21,84 +20,77 @@ import type {
   FacetValue,
   Maybe,
 } from '@/lib/gql/types'
-import type { NextPage } from 'next'
+import type {
+  GetStaticPathsResult,
+  GetStaticPropsContext,
+  GetStaticPropsResult,
+  NextPage,
+} from 'next'
 
-interface CategoryPageType {
+interface CategoryPageType extends PageWithMetaData {
   results: ProductSearchResult
   categoriesTree?: PrCategory[]
   seoFriendlyUrl?: string
   categoryCode?: string
-  metaInformation?: {
-    metaTagTitle: string
-    metaTagDescription: string
-    metaTagKeywords: string
-    canonical: string
-  }
   category: { categories: PrCategory[] }
 }
-
-const walk = (category: Maybe<PrCategory>, categoryCodes: any[] = []) => {
-  if (category?.isDisplayed) {
-    categoryCodes.push({
-      categoryCode: category.categoryCode,
-      slug: category.content?.slug as string,
-    })
+function getMetaData(category: PrCategory): MetaData {
+  return {
+    title: category?.content?.metaTagTitle || null,
+    description: category?.content?.metaTagDescription || null,
+    keywords: category?.content?.metaTagKeywords || null,
+    canonicalUrl: null,
+    robots: null,
   }
-  const { childrenCategories = [] } = category as PrCategory
-  if (childrenCategories) {
-    for (const child of childrenCategories) {
-      walk(child, categoryCodes)
-    }
-  }
-  return categoryCodes
 }
-
-export async function getStaticPaths() {
-  const categoriesTree = await getCategoryTree()
-
-  const getAllCategoryCodes = (categoryTree: any) => categoryTree.flatMap((c: any) => walk(c))
-  const paths = getAllCategoryCodes(categoriesTree).map((each: any) => {
-    const urlSegment = each.slug
-    const categoryCode = each.categoryCode
-    if (urlSegment) {
-      return `/category/${urlSegment}/${categoryCode}`
+export async function getStaticPaths(): Promise<GetStaticPathsResult> {
+  const categoriesTree = (await getCategoryTree()) || []
+  const getCategoryPaths = (category: Maybe<PrCategory>, categoryPaths: any[] = []) => {
+    if (category?.isDisplayed) {
+      categoryPaths.push(buildCategoryPath(category))
     }
-    return `/category/${categoryCode}`
-  })
+    const { childrenCategories = [] } = category as PrCategory
+    if (childrenCategories) {
+      for (const child of childrenCategories) {
+        getCategoryPaths(child, categoryPaths)
+      }
+    }
+    return categoryPaths
+  }
+  const { serverRuntimeConfig } = getConfig()
+  const { staticPathsMaxSize } = serverRuntimeConfig?.pageConfig?.productListing || {}
+  const maxPathsToGenerate = parseInt(staticPathsMaxSize)
+  let paths = categoriesTree.flatMap((c: PrCategory) => getCategoryPaths(c, []))
+  if (maxPathsToGenerate && paths.length > maxPathsToGenerate) {
+    paths = paths.slice(0, maxPathsToGenerate)
+  }
   return { paths, fallback: true }
 }
 
-export const getStaticProps: any = async (context: any) => {
-  const { locale, params, req } = context
-  const { serverRuntimeConfig } = getConfig()
-  const { categorySlug } = params
-  if (!categorySlug?.length || categorySlug?.length > 2) {
+export async function getStaticProps(
+  context: GetStaticPropsContext
+): Promise<GetStaticPropsResult<CategoryPageType>> {
+  const { locale, params } = context
+  const { publicRuntimeConfig } = getConfig()
+  const { categoryCode } = params as { categoryCode: string }
+  const categoriesTree = await getCategoryTree()
+  const category = await categoryTreeSearchByCode({ categoryCode }, categoriesTree)
+  if (!category) {
     return { notFound: true }
   }
-  const [_, categoryCode] =
-    categorySlug?.length === 2 ? categorySlug : [null, categorySlug?.[0] || null]
-
-  const response = await productSearch(
-    {
-      ...params,
-      pageSize: parseInt(serverRuntimeConfig.pageSize),
-      categoryCode,
-    } as unknown as CategorySearchParams,
-    req
-  )
-
-  const categoriesTree = await getCategoryTree(req)
-
-  const categories = await categoryTreeSearchByCode({ categoryCode }, categoriesTree)
-
+  const pageSize = publicRuntimeConfig.productListing.pageSize
+  const response = await productSearch({
+    pageSize,
+    categoryCode,
+    ...params,
+  } as unknown as CategorySearchParams)
   return {
     props: {
       results: response?.data?.products || [],
       categoriesTree,
-      category: categories,
+      category: { categories: [category] },
       categoryCode,
-      seoFriendlyUrl: categories?.seoFriendlyUrl,
-      metaInformation: categories?.metaInformation,
+      metaData: getMetaData(category),
       ...(await serverSideTranslations(locale as string, ['common'])),
     } as CategoryPageType,
     revalidate: 60,
@@ -107,32 +99,17 @@ export const getStaticProps: any = async (context: any) => {
 
 const CategoryPage: NextPage<CategoryPageType> = (props) => {
   const router = useRouter()
-  const previousQueryRef = useRef(router.query)
-
-  const slugArray = router?.query?.categorySlug ? router.query?.categorySlug : []
-  const slug = slugArray[0]
-  const code = slugArray?.length === 1 ? slugArray[0] : slugArray[1]
-
-  if (slugArray.length > 1 && props.seoFriendlyUrl !== slug) {
-    const correctPath = router.asPath.replace(`/${slug}/`, `/${props.seoFriendlyUrl}/`)
-    router.replace(router.asPath, correctPath)
-  }
   const { publicRuntimeConfig } = getConfig()
-  const currentUrl = publicRuntimeConfig?.currentUrl
+  const code = props.categoryCode
   const [searchParams, setSearchParams] = useState<CategorySearchParams>({
     categoryCode: props.categoryCode,
   } as unknown as CategorySearchParams)
 
   useEffect(() => {
-    const hasQueryChanged =
-      JSON.stringify(router.query) !== JSON.stringify(previousQueryRef.current)
-    const hasCategoryChanged = code !== searchParams.categoryCode
-    if (hasQueryChanged || hasCategoryChanged) {
-      setSearchParams({
-        categoryCode: code,
-        ...router.query,
-      } as unknown as CategorySearchParams)
-    }
+    setSearchParams({
+      categoryCode: code,
+      ...router.query,
+    } as unknown as CategorySearchParams)
   }, [router.query, code])
 
   const {
@@ -142,10 +119,7 @@ const CategoryPage: NextPage<CategoryPageType> = (props) => {
   } = useGetSearchedProducts(
     {
       ...searchParams,
-      pageSize:
-        searchParams.pageSize ??
-        publicRuntimeConfig.productListing.pageSize ??
-        publicRuntimeConfig.productListing.pageSize[0],
+      pageSize: searchParams.pageSize || publicRuntimeConfig.productListing.pageSize,
     },
     props.results
   )
@@ -225,12 +199,6 @@ const CategoryPage: NextPage<CategoryPageType> = (props) => {
 
   return (
     <>
-      <Head>
-        <meta name="title" content={props?.metaInformation?.metaTagTitle} />
-        <meta name="description" content={props?.metaInformation?.metaTagDescription} />
-        <meta name="keywords" content={props?.metaInformation?.metaTagKeywords} />
-        <link rel="canonical" href={`https://${currentUrl}${props?.metaInformation?.canonical}`} />
-      </Head>
       <ProductListingTemplate
         productListingHeader={categoryPageHeading as string}
         categoryFacet={categoryFacet}

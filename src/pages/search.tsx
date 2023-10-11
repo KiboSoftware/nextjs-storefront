@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react'
 
 import getConfig from 'next/config'
-import Head from 'next/head'
 import { useRouter } from 'next/router'
 import { useTranslation } from 'next-i18next'
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
@@ -10,13 +9,23 @@ import { ProductListingTemplate } from '@/components/page-templates'
 import { useGetSearchedProducts } from '@/hooks'
 import { productSearch } from '@/lib/api/operations'
 import { facetGetters, productSearchGetters } from '@/lib/getters'
-import type { CategorySearchParams } from '@/lib/types'
+import type { CategorySearchParams, MetaData, PageWithMetaData } from '@/lib/types'
 
 import type { Facet, FacetValue, Product, ProductSearchResult } from '@/lib/gql/types'
 import type { NextPage, GetServerSidePropsContext, GetServerSideProps, NextApiRequest } from 'next'
 
-interface SearchPageType {
+interface SearchPageType extends PageWithMetaData {
   results: ProductSearchResult
+}
+
+function getMetaData(): MetaData {
+  return {
+    title: 'Search Results',
+    description: null,
+    keywords: null,
+    canonicalUrl: null,
+    robots: 'noindex,nofollow',
+  }
 }
 const { publicRuntimeConfig } = getConfig()
 
@@ -24,16 +33,18 @@ export const getServerSideProps: GetServerSideProps = async (
   context: GetServerSidePropsContext
 ) => {
   const response = await productSearch(
-    context.query as unknown as CategorySearchParams,
+    {
+      pageSize: publicRuntimeConfig.productListing.pageSize,
+      ...context.query,
+    } as CategorySearchParams,
     context.req as NextApiRequest
   )
   const { locale, res } = context
 
-  res.setHeader('Cache-Control', 'public, s-maxage=10, stale-while-revalidate=59')
-
   return {
     props: {
       results: response?.data?.products || [],
+      metaData: getMetaData(),
       ...(await serverSideTranslations(locale as string, ['common'])),
     },
   }
@@ -49,7 +60,7 @@ const SearchPage: NextPage<SearchPageType> = (props) => {
   const { data: searchPageResults, isFetching } = useGetSearchedProducts(
     {
       ...searchParams,
-      pageSize: searchParams.pageSize ?? publicRuntimeConfig.productListing.pageSize[0],
+      pageSize: searchParams.pageSize || publicRuntimeConfig.productListing.pageSize,
     },
     props.results
   )
@@ -103,9 +114,6 @@ const SearchPage: NextPage<SearchPageType> = (props) => {
   }, [router.query])
   return (
     <>
-      <Head>
-        <meta name="robots" content="noindex,nofollow" />
-      </Head>
       <ProductListingTemplate
         productListingHeader={searchPageHeading as string}
         categoryFacet={categoryFacet}

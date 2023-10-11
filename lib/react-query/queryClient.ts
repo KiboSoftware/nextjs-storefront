@@ -10,16 +10,8 @@ const getErrorMessage = (code: string, message: string) => {
 }
 
 const queryClientHandler = (error: any, showSnackbar: any) => {
-  const code = error?.response?.errors
-    ? error?.response?.errors[0]?.extensions?.response?.body?.errorCode
-    : null
-  const message = error?.response?.errors
-    ? error?.response?.errors[0]?.extensions?.response?.body?.message
-    : null
-
   const status = 'error'
-
-  showSnackbar(getErrorMessage(code, message), status)
+  showSnackbar(getErrorMessage(error?.response?.code, error?.response?.message), status)
 }
 
 export const generateQueryClient = (showSnackbar?: any): QueryClient => {
