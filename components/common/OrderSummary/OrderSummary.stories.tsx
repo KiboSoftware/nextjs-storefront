@@ -58,10 +58,12 @@ Checkout.args = {
   shippingTotalLabel: 'Standard Shipping',
   taxLabel: 'Tax',
   totalLabel: 'Order Total',
-  subTotal: '$219.99',
-  shippingTotal: 'Free',
-  tax: '$13.73',
-  total: '$233.72',
+  orderPriceDetails: {
+    subTotal: 299.19,
+    shippingTotal: 0,
+    taxTotal: 13.79,
+    total: 233.72,
+  },
   checkoutLabel: 'Go to Checkout',
   backLabel: 'Go Back',
 }
@@ -73,10 +75,12 @@ Shipping.args = {
   shippingTotalLabel: 'Standard Shipping',
   taxLabel: 'Tax',
   totalLabel: 'Order Total',
-  subTotal: '$219.99',
-  shippingTotal: '$1',
-  tax: '$13.73',
-  total: '$234.72',
+  orderPriceDetails: {
+    subTotal: 299.19,
+    shippingTotal: 0,
+    taxTotal: 13.79,
+    total: 233.72,
+  },
   shippingLabel: 'Go to Shipping',
 }
 

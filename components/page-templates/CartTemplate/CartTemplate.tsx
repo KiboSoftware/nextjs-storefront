@@ -61,11 +61,7 @@ const CartTemplate = (props: CartTemplateProps) => {
 
   const cartItemCount = cartGetters.getCartItemCount(cart)
   const cartItems = cartGetters.getCartItems(cart)
-  const cartSubTotal = orderGetters.getSubtotal(cart)
-  const cartDiscountedSubTotal = orderGetters.getDiscountedSubtotal(cart)
-  const cartShippingTotal = orderGetters.getShippingTotal(cart)
-  const cartTaxTotal = orderGetters.getTaxTotal(cart)
-  const cartTotal = orderGetters.getTotal(cart)
+
   const locationCodes = orderGetters.getFulfillmentLocationCodes(cartItems as CrCartItem[])
 
   const { data: locations } = useGetStoreLocations({ filter: locationCodes })
@@ -178,12 +174,7 @@ const CartTemplate = (props: CartTemplateProps) => {
     nameLabel: t('cart-summary'),
     subTotalLabel: `${t('subtotal')} (${t('item-quantity', { count: cartItemCount })})`,
     totalLabel: t('estimated-order-total'),
-    subTotal: t('currency', { val: cartSubTotal }),
-    discountedSubtotal:
-      cartDiscountedSubTotal && cartDiscountedSubTotal !== cartSubTotal
-        ? t('currency', { val: cartDiscountedSubTotal })
-        : '',
-    total: t('currency', { val: cartTotal }),
+    orderPriceDetails: cart,
     isShippingTaxIncluded: false,
     promoComponent: (
       <PromoCodeBadge
