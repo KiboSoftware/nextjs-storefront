@@ -84,6 +84,7 @@
   "item-quantity_one": "{{count}} item",
   "item-quantity_other": "{{count}} items",
   "order-summary": "Order Summary",
+  "cart-summary": "Cart Summary",
   "subtotal": "Subtotal",
   "shipping": "Shipping",
   "total-price": "Total Price",
@@ -512,5 +513,8 @@
   "no-hierarchy-found": "No Hierarchy Found",
   "must-be-at-least-8-characters": "Must be at least 8 characters",
   "standard-shipping": "Standard Shipping",
-  "quote-name-saved": "Quote Name saved successfully!"
+  "quote-name-saved": "Quote Name saved successfully!",
+  "shipping-tax-at-checkout": "Shipping charges and Tax to be calculated at checkout",
+  "save-as-billing-address": "Save as billing address",
+  "save-as-shipping-address": "Save as shipping address"
 }

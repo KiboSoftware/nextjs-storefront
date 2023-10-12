@@ -63,6 +63,13 @@ describe('[page] Cart Page', () => {
       props: {
         isMultiShipEnabled: true,
         cart: cartMock?.currentCart,
+        metaData: {
+          canonicalUrl: null,
+          description: null,
+          keywords: null,
+          robots: 'noindex,nofollow',
+          title: 'Cart',
+        },
         _nextI18Next: {
           initialI18nStore: { 'mock-locale': [{}], en: [{}] },
           initialLocale: 'mock-locale',
