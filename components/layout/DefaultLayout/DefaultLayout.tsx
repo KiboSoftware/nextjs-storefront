@@ -53,7 +53,7 @@ const DefaultLayout = ({ pageProps, children }: { pageProps: any; children: Reac
           <AuthContextProvider>
             <HeaderContextProvider>
               <GlobalFetchingIndicator />
-              <Stack height="100%">
+              <Stack>
                 <KiboHeader
                   navLinks={[
                     {

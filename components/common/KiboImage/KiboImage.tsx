@@ -7,6 +7,7 @@ import DefaultImage from '@/public/product_placeholder.svg'
 
 interface KiboImageProps extends ImageProps {
   errorimage?: ImageData | SvgIconComponent
+  objectFit?: 'fill' | 'contain' | 'cover' | 'none' | 'scale-down'
 }
 
 const errorImage = { image: DefaultImage }
@@ -23,7 +24,12 @@ const onImageError = (
 const KiboImage = (props: KiboImageProps) => {
   errorImage.image = props.errorimage
   return (
-    <Image {...props} alt={props.alt} onError={onImageError} style={{ objectFit: 'contain' }} />
+    <Image
+      {...props}
+      alt={props.alt}
+      onError={onImageError}
+      style={{ objectFit: props.objectFit ?? 'contain' }}
+    />
   )
 }
 

@@ -1,5 +1,4 @@
 import getConfig from 'next/config'
-import Head from 'next/head'
 import { useRouter } from 'next/router'
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
 
@@ -34,14 +33,7 @@ export const getServerSideProps: GetServerSideProps = async (
 const QuickOrderPage: NextPage = (props: any) => {
   const router = useRouter()
   const handleAccountTitleClick = () => router.push('/my-account')
-  return (
-    <>
-      <Head>
-        <meta name="robots" content="noindex,nofollow" />
-      </Head>
-      <QuickOrderTemplate {...props} onAccountTitleClick={handleAccountTitleClick} />
-    </>
-  )
+  return <QuickOrderTemplate {...props} onAccountTitleClick={handleAccountTitleClick} />
 }
 
 export default QuickOrderPage

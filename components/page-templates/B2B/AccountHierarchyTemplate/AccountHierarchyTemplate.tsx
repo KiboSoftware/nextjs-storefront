@@ -90,13 +90,20 @@ const AccountHierarchyTemplate = (props: AccountHierarchyTemplateProps) => {
         },
       ]
     }
-
-    return filteredAccounts.filter(
-      (account) =>
+    const excludedParentAccounts: number[] = []
+    return filteredAccounts.filter((account) => {
+      if (
         account.id !== currentAccount?.parentAccountId &&
         account.id !== currentAccount?.id &&
-        account.parentAccountId !== currentAccount?.id
-    )
+        account.parentAccountId !== currentAccount?.id &&
+        !excludedParentAccounts.includes(account.parentAccountId as number)
+      ) {
+        return account
+      } else {
+        if (account.id === currentAccount?.parentAccountId) return
+        excludedParentAccounts.push(account.id)
+      }
+    })
   }
 
   // Add this to achieve Mobile Layout
@@ -184,7 +191,6 @@ const AccountHierarchyTemplate = (props: AccountHierarchyTemplateProps) => {
   }
 
   const handleEditAccount = (b2BAccount: B2BAccount) => {
-    console.log('handle edit account', b2BAccount)
     showModal({
       Component: AccountHierarchyFormDialog,
       props: {
@@ -200,7 +206,6 @@ const AccountHierarchyTemplate = (props: AccountHierarchyTemplateProps) => {
   }
 
   const handleChangeParent = (b2BAccount: B2BAccount) => {
-    console.log('hanlde change parent', b2BAccount)
     showModal({
       Component: AccountHierarchyChangeParentDialog,
       props: {

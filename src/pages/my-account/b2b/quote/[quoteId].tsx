@@ -1,4 +1,3 @@
-import Head from 'next/head'
 import { useRouter } from 'next/router'
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
 
@@ -53,18 +52,13 @@ const QuotePage: NextPage<QuotePageProps> = (props) => {
   }
 
   return (
-    <>
-      <Head>
-        <meta name="robots" content="noindex,nofollow" />
-      </Head>
-      <QuoteDetailsTemplate
-        quote={quoteResult as Quote}
-        mode={mode}
-        currentB2BUser={currentB2BUser}
-        initialB2BUsers={b2bUsers}
-        onAccountTitleClick={handleGoToQuotes}
-      />
-    </>
+    <QuoteDetailsTemplate
+      quote={quoteResult as Quote}
+      mode={mode}
+      currentB2BUser={currentB2BUser}
+      initialB2BUsers={b2bUsers}
+      onAccountTitleClick={handleGoToQuotes}
+    />
   )
 }
 
