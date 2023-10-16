@@ -56,7 +56,7 @@ const CheckoutUITemplate = <T extends CrOrder | Checkout>(props: CheckoutUITempl
     taxLabel: t('tax'),
     totalLabel: t('order-total'),
     handlingLabel: t('additional-handling'),
-    orderPriceDetails: checkout,
+    orderDetails: checkout,
 
     checkoutLabel: t('go-to-checkout'),
     shippingLabel: t('go-to-shipping'),

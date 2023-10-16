@@ -58,7 +58,7 @@ Checkout.args = {
   shippingTotalLabel: 'Standard Shipping',
   taxLabel: 'Tax',
   totalLabel: 'Order Total',
-  orderPriceDetails: {
+  orderDetails: {
     subTotal: 299.19,
     shippingTotal: 0,
     taxTotal: 13.79,
@@ -75,7 +75,7 @@ Shipping.args = {
   shippingTotalLabel: 'Standard Shipping',
   taxLabel: 'Tax',
   totalLabel: 'Order Total',
-  orderPriceDetails: {
+  orderDetails: {
     subTotal: 299.19,
     shippingTotal: 0,
     taxTotal: 13.79,

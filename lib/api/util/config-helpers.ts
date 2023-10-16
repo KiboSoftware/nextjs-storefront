@@ -17,5 +17,10 @@ export const getApiConfig = () => {
 
 export const isShopperAuthExpired = (userAuthTicket: UserAuthTicket) => {
   const { accessTokenExpiration } = userAuthTicket
+  console.log('accessTokenExpiration', accessTokenExpiration)
+  console.log(
+    'new Date(accessTokenExpiration).getTime() < Date.now()',
+    new Date(accessTokenExpiration).getTime() < Date.now()
+  )
   return new Date(accessTokenExpiration).getTime() < Date.now()
 }

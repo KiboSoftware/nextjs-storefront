@@ -182,7 +182,7 @@ const ReviewStep = (props: ReviewStepProps) => {
     shippingTotalLabel: t('shipping'),
     taxLabel: t('estimated-tax'),
     totalLabel: t('total'),
-    orderPriceDetails: {
+    orderDetails: {
       ...orderSummaryProps,
     },
   }

@@ -174,7 +174,7 @@ const CartTemplate = (props: CartTemplateProps) => {
     nameLabel: t('cart-summary'),
     subTotalLabel: `${t('subtotal')} (${t('item-quantity', { count: cartItemCount })})`,
     totalLabel: t('estimated-order-total'),
-    orderPriceDetails: cart,
+    orderDetails: cart,
     isShippingTaxIncluded: false,
     promoComponent: (
       <PromoCodeBadge

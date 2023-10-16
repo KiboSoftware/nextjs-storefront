@@ -21,7 +21,7 @@ const Content = (props: CartContentProps) => {
     shippingTotalLabel: t('standard-shipping'),
     taxLabel: t('estimated-tax'),
     totalLabel: t('total'),
-    orderPriceDetails: {
+    orderDetails: {
       subtotal,
       shippingTotal,
       tax: itemTaxTotal,

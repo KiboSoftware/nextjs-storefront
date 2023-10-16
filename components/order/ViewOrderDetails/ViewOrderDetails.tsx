@@ -85,7 +85,7 @@ const ViewOrderDetails = (props: ViewOrderDetailsProps) => {
     totalLabel: t('total-price'),
     handlingLabel: t('additional-handling'),
 
-    orderPriceDetails: order,
+    orderDetails: order,
   }
 
   const handleGoBackToOrderHistory = () => onGoBackToOrderHistory && onGoBackToOrderHistory()

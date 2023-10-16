@@ -24,15 +24,15 @@ describe('[components] OrderPrice', () => {
     render(<Common {...Common.args} />)
 
     expect(screen.getByText(Common.args?.handlingLabel as string)).toBeVisible()
-    expect(screen.getByText(Common.args?.orderPriceDetails?.handlingTotal as number)).toBeVisible()
+    expect(screen.getByText(Common.args?.orderDetails?.handlingTotal as number)).toBeVisible()
     expect(screen.getByText(Common.args?.shippingTotalLabel as string)).toBeVisible()
-    expect(screen.getByText(Common.args?.orderPriceDetails?.shippingTotal as number)).toBeVisible()
+    expect(screen.getByText(Common.args?.orderDetails?.shippingTotal as number)).toBeVisible()
     expect(screen.getByText(Common.args?.taxLabel as string)).toBeVisible()
     expect(
-      screen.getByText((Common.args?.orderPriceDetails as CrOrder)?.taxTotal as number)
+      screen.getByText((Common.args?.orderDetails as CrOrder)?.taxTotal as number)
     ).toBeVisible()
     expect(screen.getByText(Common.args?.totalLabel as string)).toBeVisible()
-    expect(screen.getByText(Common.args?.orderPriceDetails?.total as number)).toBeVisible()
+    expect(screen.getByText(Common.args?.orderDetails?.total as number)).toBeVisible()
   })
   it('should show promoCodeBadge component when supplied', async () => {
     render(<WithPromoCode {...WithPromoCode.args} />)

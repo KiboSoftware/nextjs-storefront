@@ -40,7 +40,7 @@ const OrderConfirmation = ({ order }: { order: CrOrder }) => {
     taxLabel: t('estimated-tax'),
     totalLabel: t('total-price'),
     handlingLabel: t('additional-handling'),
-    orderPriceDetails: order,
+    orderDetails: order,
   }
 
   const handlePrint = useReactToPrint({

@@ -7,7 +7,7 @@ import { useTranslation } from 'next-i18next'
 import { Price } from '@/components/common'
 import { checkoutGetters, orderGetters } from '@/lib/getters'
 
-import { Checkout, CrCart, CrOrder } from '@/lib/gql/types'
+import type { Checkout, CrCart, CrOrder } from '@/lib/gql/types'
 
 export interface OrderPriceProps<T extends CrCart | CrOrder | Checkout> {
   subTotalLabel: string
@@ -15,7 +15,7 @@ export interface OrderPriceProps<T extends CrCart | CrOrder | Checkout> {
   taxLabel?: string
   totalLabel: string
   handlingLabel?: string
-  orderPriceDetails: T
+  orderDetails: T
   isShippingTaxIncluded?: boolean
   promoComponent?: ReactNode
 }
@@ -38,17 +38,17 @@ const OrderPrice = <T extends CrCart | CrOrder | Checkout>(props: OrderPriceProp
 
     promoComponent,
     isShippingTaxIncluded = true,
-    orderPriceDetails,
+    orderDetails,
   } = props
 
-  const subTotal = orderGetters.getSubtotal(orderPriceDetails)
+  const subTotal = orderGetters.getSubtotal(orderDetails)
   const discountedSubtotal =
-    orderGetters.getDiscountedSubtotal(orderPriceDetails as CrOrder | CrCart) ||
-    checkoutGetters.getDiscountedSubtotal(orderPriceDetails as Checkout)
+    orderGetters.getDiscountedSubtotal(orderDetails as CrOrder | CrCart) ||
+    checkoutGetters.getDiscountedSubtotal(orderDetails as Checkout)
 
-  const shippingSubTotal = orderGetters.getShippingSubTotal(orderPriceDetails)
+  const shippingSubTotal = orderGetters.getShippingSubTotal(orderDetails)
 
-  const shippingDiscounts = (orderPriceDetails as CrOrder)?.shippingDiscounts?.map((discount) => {
+  const shippingDiscounts = (orderDetails as CrOrder)?.shippingDiscounts?.map((discount) => {
     return {
       id: discount?.discount?.discount?.id,
       name: discount?.discount?.discount?.name,
@@ -57,12 +57,12 @@ const OrderPrice = <T extends CrCart | CrOrder | Checkout>(props: OrderPriceProp
   })
 
   const taxTotal =
-    orderGetters.getTaxTotal(orderPriceDetails as CrOrder) ??
-    checkoutGetters.getTaxTotal(orderPriceDetails as Checkout)
+    orderGetters.getTaxTotal(orderDetails as CrOrder) ??
+    checkoutGetters.getTaxTotal(orderDetails as Checkout)
 
-  const handlingTotal = orderGetters.getHandlingTotal(orderPriceDetails)
+  const handlingTotal = orderGetters.getHandlingTotal(orderDetails)
 
-  const total = orderGetters.getTotal(orderPriceDetails)
+  const total = orderGetters.getTotal(orderDetails)
 
   const { t } = useTranslation('common')
 
@@ -84,7 +84,7 @@ const OrderPrice = <T extends CrCart | CrOrder | Checkout>(props: OrderPriceProp
             }
           />
         </Box>
-        {shippingTotalLabel && (
+        {shippingTotalLabel && isShippingTaxIncluded && (
           <Box sx={{ ...styles.priceRow }}>
             <Typography sx={{ ...styles.priceLabel }} variant="body1">
               {shippingTotalLabel}
@@ -97,6 +97,7 @@ const OrderPrice = <T extends CrCart | CrOrder | Checkout>(props: OrderPriceProp
           </Box>
         )}
         {shippingDiscounts?.length &&
+          isShippingTaxIncluded &&
           shippingDiscounts?.map((discount) => (
             <Box key={discount?.id} sx={{ ...styles.priceRow }}>
               <Typography sx={{ ...styles.priceLabel }} variant="body1">
@@ -110,7 +111,7 @@ const OrderPrice = <T extends CrCart | CrOrder | Checkout>(props: OrderPriceProp
             </Box>
           ))}
 
-        {handlingLabel && (
+        {handlingLabel && isShippingTaxIncluded && (
           <Box sx={{ ...styles.priceRow }}>
             <Typography sx={{ ...styles.priceLabel }} variant="body1">
               {handlingLabel}
@@ -123,7 +124,7 @@ const OrderPrice = <T extends CrCart | CrOrder | Checkout>(props: OrderPriceProp
           </Box>
         )}
 
-        {taxLabel && (
+        {taxLabel && isShippingTaxIncluded && (
           <Box sx={{ ...styles.priceRow }}>
             <Typography sx={{ ...styles.priceLabel }} variant="body1">
               {taxLabel} <Info sx={{ ...styles.infoIcon }} />
