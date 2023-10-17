@@ -17,8 +17,6 @@ const ProductQuickViewDialog = (props: ProductQuickViewDialogProps) => {
   return (
     <KiboDialog
       showCloseButton
-      showContentTopDivider={false}
-      showContentBottomDivider={false}
       Actions={''}
       Content={<ProductDetailTemplate product={product} isQuickViewModal={isQuickViewModal} />}
       customMaxWidth="80rem"

@@ -54,8 +54,6 @@ const OrderReturnItemsDialog = (props: OrderReturnItemsDialogProps) => {
         <ReturnItemList items={orderItems} showCheckbox={false} />
       </Stack>
     ),
-    showContentTopDivider: true,
-    showContentBottomDivider: false,
     customMaxWidth: '32.375rem',
     onClose: () => closeModal(),
   }

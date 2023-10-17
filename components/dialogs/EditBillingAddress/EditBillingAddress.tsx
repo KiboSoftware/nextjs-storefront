@@ -23,8 +23,6 @@ const EditBillingAddress = (props: EditBillingAddressProps) => {
     <KiboDialog
       showCloseButton
       Title={t('edit-billing-information')}
-      showContentTopDivider={true}
-      showContentBottomDivider={false}
       Actions={''}
       Content={
         <PaymentMethod

@@ -11,6 +11,7 @@ import {
   Theme,
   Typography,
   useMediaQuery,
+  Box,
 } from '@mui/material'
 import { Container } from '@mui/system'
 
@@ -20,13 +21,12 @@ import theme from '@/styles/theme'
 export interface KiboDialogProps {
   isOpen?: boolean
   Title?: ReactNode
+  isAlignTitleCenter?: boolean
   showCloseButton?: boolean
   Content: ReactNode
   Actions?: ReactNode
   isDialogCentered?: boolean
   customMaxWidth: string
-  showContentTopDivider?: boolean
-  showContentBottomDivider?: boolean
   onClose: () => void
 }
 
@@ -42,7 +42,6 @@ const StyledDialog = styled(Dialog, {
   '& .MuiDialogContent-root': {
     padding: 0,
     paddingBlock: '1rem',
-    overflowY: 'unset',
   },
   '& .MuiDialogActions-root': {
     padding: 0,
@@ -67,12 +66,6 @@ const StyledDialog = styled(Dialog, {
   }),
 }))
 
-const StyledDialogTitle = styled(DialogTitle)(() => ({
-  margin: 0,
-  padding: 0,
-  paddingBlock: '1rem',
-}))
-
 const StyledIconButton = styled(IconButton)(() => ({
   position: 'absolute',
   right: '0.625rem',
@@ -89,12 +82,11 @@ const KiboDialog = (props: KiboDialogProps) => {
   const {
     isOpen = true,
     Title,
+    isAlignTitleCenter = false,
     showCloseButton = true,
     Content,
     Actions,
     customMaxWidth = '',
-    showContentTopDivider = true,
-    showContentBottomDivider = true,
     onClose,
   } = props
 
@@ -108,25 +100,35 @@ const KiboDialog = (props: KiboDialogProps) => {
       customMaxWidth={customMaxWidth}
       isDialogCentered={mdScreen ? true : false}
       data-test-id="kibo-dialog"
+      sx={{
+        margin: 0,
+      }}
     >
-      <Container maxWidth={'xl'}>
-        <StyledDialogTitle id="kibo-dialog-title">
-          {Title && (
-            <Typography color="text.secendary" variant="h3" fontWeight={'bold'} component="span">
-              {Title}
-            </Typography>
-          )}
-          {showCloseButton && (
+      <DialogTitle
+        id="kibo-dialog-title"
+        sx={{
+          textAlign: isAlignTitleCenter ? 'center' : 'left',
+        }}
+      >
+        <Typography variant="h3" fontWeight={'bold'} component="span">
+          {Title}
+        </Typography>
+        {showCloseButton && (
+          <Box paddingY={Title ? 0 : 1}>
             <StyledIconButton aria-label="close" onClick={onClose}>
               <StyledClose />
             </StyledIconButton>
-          )}
-        </StyledDialogTitle>
-        {showContentTopDivider && <FullWidthDivider />}
-        <DialogContent>{Content}</DialogContent>
-        {showContentBottomDivider && <FullWidthDivider />}
-        {Actions != '' ? <DialogActions>{Actions}</DialogActions> : ''}
-      </Container>
+          </Box>
+        )}
+      </DialogTitle>
+      <DialogContent dividers>
+        <Container maxWidth={'lg'}>{Content}</Container>
+      </DialogContent>
+      {Actions ? (
+        <DialogActions>
+          <Container maxWidth={'lg'}>{Actions}</Container>
+        </DialogActions>
+      ) : null}
     </StyledDialog>
   )
 }
