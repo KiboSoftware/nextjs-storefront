@@ -49,6 +49,6 @@ export const buildProductSearchParams = ({
     facetHierValue,
     facetTemplate,
     facetValueFilter,
-    filter,
+    filter: searchFilter,
   }
 }
