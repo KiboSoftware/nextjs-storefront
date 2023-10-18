@@ -28,7 +28,18 @@ export const buildProductSearchParams = ({
     facet = 'categoryCode'
   }
 
+  let searchFilter = ''
+  if (categoryCode) {
+    let categoryFilter = `categoryCode eq ${categoryCode}`
+    if (filter?.length > 0) {
+      searchFilter = `(${categoryFilter}) and (${filter})`
+    } else {
+      searchFilter = categoryFilter
+    }
+  }
+
   const facetValueFilter = getFacetValueFilter(categoryCode, filters)
+
   return {
     query: search,
     startIndex: Number(startIndex),
