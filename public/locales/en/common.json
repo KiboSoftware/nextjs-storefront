@@ -203,6 +203,7 @@
   "country-code": "Country",
   "phone-number-home": "Phone number",
   "this-field-is-required": "This field is required",
+  "enter-valid-zip-code": "Please provide valid zip code",
   "ending": "Ending:",
   "exp": "Exp:",
   "apartment": "APT. ",

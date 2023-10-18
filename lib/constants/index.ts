@@ -162,3 +162,8 @@ export enum ProductAvailabilityStatus {
   BACKORDER = 'Backorder',
   OUTOFSTOCK = 'Out of Stock',
 }
+
+export const CountryCode = {
+  US: 'US',
+  CA: 'CA',
+}
