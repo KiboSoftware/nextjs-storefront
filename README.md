@@ -63,7 +63,7 @@ The following data is required to configure the storefront to communicate with y
 - `authHost` - Kibo Commerce Authentication Host Server. It is used to request an access token from Kibo Commerce OAuth 2.0 service. Production and Production sandbox, use `home.mozu.com`
 - `clientId` - Unique Application (Client) ID of your Application
 - `sharedSecret` - Secret API key used to authenticate application. Viewable from your [Kibo eCommerce Dev Center](https://mozu.com/login)
-- `pciHost` - use `payments-sb-mozu.com`
+- `pciHost` - use `payments-sb.mozu.com` for sandbox or `pmts.mozu.com` for production tenant
 
 Visit [Kibo documentation](https://docs.kibocommerce.com/help) for more details on API authentication
 
