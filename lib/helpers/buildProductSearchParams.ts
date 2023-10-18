@@ -30,7 +30,7 @@ export const buildProductSearchParams = ({
 
   let searchFilter = ''
   if (categoryCode) {
-    const categoryFilter = `categoryCode eq ${categoryCode}`
+    const categoryFilter = `categoryCode req ${categoryCode}`
     if (filter?.length > 0) {
       searchFilter = `(${categoryFilter}) and (${filter})`
     } else {
