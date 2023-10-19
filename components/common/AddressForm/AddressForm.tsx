@@ -43,7 +43,7 @@ export const useFormSchema = () => {
       }),
       postalOrZipCode: yup.string().when('countryCode', {
         is: CountryCode.US || CountryCode.CA,
-        then: yup.string().required(t('this-field-is-required')).min(5, t('enter-valid-zip-code')),
+        then: yup.string().required(t('this-field-is-required')).min(4, t('enter-valid-zip-code')),
       }),
       countryCode: yup.string().required(t('this-field-is-required')),
     }),

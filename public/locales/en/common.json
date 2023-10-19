@@ -350,6 +350,5 @@
   "save-address-to-account": "Save this address to your account",
   "no-payment-details-found": "No payment details found!",
   "shipping-tax-at-checkout": "Shipping charges and Tax to be calculated at checkout",
-  "save-as-billing-address": "Save as billing address",
-  "save-as-shipping-address": "Save as shipping address"
+  "shipping-billing-addresses-are-same": "Shipping and Billing Addresses are same"
 }
