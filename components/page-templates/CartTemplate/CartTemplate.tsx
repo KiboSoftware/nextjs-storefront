@@ -17,7 +17,7 @@ import { useTranslation } from 'next-i18next'
 
 import { CartItemList } from '@/components/cart'
 import { PromoCodeBadge, OrderSummary } from '@/components/common'
-import { StoreLocatorDialog } from '@/components/dialogs'
+import { ConfirmationDialog, StoreLocatorDialog } from '@/components/dialogs'
 import { useModalContext } from '@/context'
 import {
   useGetCart,
@@ -25,6 +25,7 @@ import {
   useGetStoreLocations,
   useGetPurchaseLocation,
   useUpdateCartItemQuantity,
+  useDeleteCurrentCart,
   useDeleteCartItem,
   useUpdateCartItem,
   useUpdateCartCoupon,
@@ -53,6 +54,7 @@ const CartTemplate = (props: CartTemplateProps) => {
   const { initiateOrder } = useInitiateOrder()
   const { initiateCheckout } = useInitiateCheckout()
   const { updateCartItemQuantity } = useUpdateCartItemQuantity()
+  const { deleteCurrentCart } = useDeleteCurrentCart()
   const { deleteCartItem } = useDeleteCartItem()
   const { updateCartItem } = useUpdateCartItem()
   const { showModal, closeModal } = useModalContext()
@@ -198,6 +200,25 @@ const CartTemplate = (props: CartTemplateProps) => {
     router.back()
   }
 
+  const openClearCartConfirmation = () => {
+    showModal({
+      Component: ConfirmationDialog,
+      props: {
+        onConfirm: handleDeleteCurrentCart,
+        contentText: t('clear-cart-confirmation-text'),
+        primaryButtonText: t('delete'),
+      },
+    })
+  }
+
+  const handleDeleteCurrentCart = async () => {
+    try {
+      await deleteCurrentCart.mutateAsync()
+    } catch (err) {
+      console.error(err)
+    }
+  }
+
   return (
     <Grid container>
       {/* Header section */}
@@ -258,6 +279,16 @@ const CartTemplate = (props: CartTemplateProps) => {
                 >
                   {t('go-to-checkout')}
                 </LoadingButton>
+                <Button
+                  variant="contained"
+                  color="secondary"
+                  name="clearCart"
+                  fullWidth
+                  onClick={openClearCartConfirmation}
+                  disabled={!cartItemCount}
+                >
+                  {t('clear-cart')}
+                </Button>
               </Stack>
             </OrderSummary>
           </Grid>
