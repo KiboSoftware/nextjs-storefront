@@ -316,6 +316,14 @@ export const cartHandlers = [
       })
     )
   }),
+
+  graphql.mutation('deleteCurrentCart', (_req, res, ctx) => {
+    return res(
+      ctx.data({
+        deleteCurrentCart: true,
+      })
+    )
+  }),
 ]
 
 export const storeHandlers = [
