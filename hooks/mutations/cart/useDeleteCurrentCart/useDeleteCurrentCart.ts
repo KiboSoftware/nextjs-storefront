@@ -14,7 +14,7 @@ const deleteCurrentCart = async () => {
     document: deleteCurrentCartMutation,
   })
 
-  return response?.deleteCartMutation
+  return response?.deleteCurrentCart
 }
 
 /**
