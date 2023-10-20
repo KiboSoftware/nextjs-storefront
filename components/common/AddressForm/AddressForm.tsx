@@ -11,6 +11,7 @@ import { useForm, Controller } from 'react-hook-form'
 import * as yup from 'yup'
 
 import { KiboSelect, KiboTextBox } from '@/components/common'
+import { CountryCode } from '@/lib/constants'
 import type { Address, ContactForm } from '@/lib/types'
 
 interface AddressFormProps {
@@ -27,24 +28,30 @@ interface AddressFormProps {
   onDefaultPaymentChange?: (value: boolean) => void
 }
 
-const schema = yup.object().shape({
-  firstName: yup.string().required('This field is required'),
-  lastNameOrSurname: yup.string().required('This field is required'),
-  address: yup.object().shape({
-    address1: yup.string().required('This field is required'),
-    address2: yup.string().nullable(true).notRequired(),
-    cityOrTown: yup.string().required('This field is required'),
-    stateOrProvince: yup.string().required('This field is required'),
-    postalOrZipCode: yup
-      .string()
-      .required('This field is required')
-      .matches(/^\d{5}(?:-\d{4})?$/, 'Please provide valid zip code'),
-    countryCode: yup.string().required('This field is required'),
-  }),
-  phoneNumbers: yup.object().shape({
-    home: yup.string().required('This field is required'),
-  }),
-})
+export const useFormSchema = () => {
+  const { t } = useTranslation('common')
+  return yup.object().shape({
+    firstName: yup.string().required(t('this-field-is-required')),
+    lastNameOrSurname: yup.string().required(t('this-field-is-required')),
+    address: yup.object().shape({
+      address1: yup.string().required(t('this-field-is-required')),
+      address2: yup.string().nullable(true).notRequired(),
+      cityOrTown: yup.string().required(t('this-field-is-required')),
+      stateOrProvince: yup.string().when('countryCode', {
+        is: CountryCode.US || CountryCode.CA,
+        then: yup.string().required(t('this-field-is-required')),
+      }),
+      postalOrZipCode: yup.string().when('countryCode', {
+        is: CountryCode.US || CountryCode.CA,
+        then: yup.string().required(t('this-field-is-required')).min(4, t('enter-valid-zip-code')),
+      }),
+      countryCode: yup.string().required(t('this-field-is-required')),
+    }),
+    phoneNumbers: yup.object().shape({
+      home: yup.string().required(t('this-field-is-required')),
+    }),
+  })
+}
 
 // Component
 const AddressForm = (props: AddressFormProps) => {
@@ -64,6 +71,7 @@ const AddressForm = (props: AddressFormProps) => {
     onDefaultPaymentChange,
   } = props
 
+  const addressSchema = useFormSchema()
   // Define Variables and States
   const {
     control,
@@ -74,7 +82,7 @@ const AddressForm = (props: AddressFormProps) => {
     mode: 'onBlur',
     reValidateMode: 'onBlur',
     defaultValues: contact ? contact : undefined,
-    resolver: yupResolver(schema),
+    resolver: yupResolver(addressSchema),
     shouldFocusError: true,
   })
 

@@ -43,13 +43,17 @@ const AddressCard = (props: AddressProps) => {
         <Typography variant={variant}>{address1}</Typography>
         <Typography variant={variant}>{address2}</Typography>
         <Box display="flex">
-          <Typography variant={variant} sx={{ '&::after': { content: "','", pr: 0.5 } }}>
-            {cityOrTown}
-          </Typography>
-          <Typography variant={variant} sx={{ '&::after': { content: "', '", pr: 0.5 } }}>
-            {stateOrProvince}
-          </Typography>
-          <Typography variant={variant}>{postalOrZipCode}</Typography>
+          <Typography variant={variant}>{cityOrTown}</Typography>
+          {stateOrProvince && (
+            <Typography variant={variant} sx={{ '&::before': { content: "','", pr: 0.5 } }}>
+              {stateOrProvince}
+            </Typography>
+          )}
+          {postalOrZipCode && (
+            <Typography variant={variant} sx={{ '&::before': { content: "','", pr: 0.5 } }}>
+              {postalOrZipCode}
+            </Typography>
+          )}
         </Box>
       </Box>
     </>
