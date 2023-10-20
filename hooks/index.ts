@@ -179,3 +179,5 @@ export * from './mutations/b2b/quotes/useUpdateQuoteAdjustments/useUpdateQuoteAd
 export * from './mutations/b2b/quotes/useCreateQuoteFromCart/useCreateQuoteFromCart'
 export * from './mutations/b2b/quotes/useUpdateQuote/useUpdateQuote'
 export * from './mutations/b2b/quotes/useAddQuoteComment/useAddQuoteComment'
+export * from './mutations/b2b/quotes/useUpdateQuoteCoupon/useUpdateQuoteCoupon'
+export * from './mutations/b2b/quotes/useDeleteQuoteCoupon/useDeleteQuoteCoupon'

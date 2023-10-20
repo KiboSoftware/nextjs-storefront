@@ -81,3 +81,5 @@ export { default as updateQuoteFulfillmentInfo } from './b2b/quotes/update-quote
 export { default as updateQuoteAdjustmentsMutation } from './b2b/quotes/update-quote-adjustments'
 export { default as createQuoteFromCartMutation } from './b2b/quotes/create-quote-from-cart'
 export { default as addItemsToCurrentCartMutation } from './cart/add-items-to-current-cart'
+export { default as updateQuoteCouponMutation } from './b2b/quotes/update-quote-coupon'
+export { default as deleteQuoteCouponMutation } from './b2b/quotes/delete-quote-coupon'

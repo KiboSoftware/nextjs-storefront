@@ -262,7 +262,8 @@ const OrderSummarySection = (props: OrderSummarySectionProps) => {
                   <Price
                     fontWeight="normal"
                     variant="body2"
-                    price={t('currency', { val: discount?.impact?.toString() })}
+                    color="error.main"
+                    price={t('currency', { val: `-${discount?.impact?.toString()}` })}
                   />
                 }
               >

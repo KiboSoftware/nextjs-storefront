@@ -89,6 +89,7 @@ const MyProfile = (props: MyProfileProps) => {
         firstName: profileFormData.firstName || firstName,
         lastName: profileFormData.lastName || lastName,
         emailAddress: profileFormData.emailAddress || emailAddress,
+        isActive: true,
       },
     })
     try {

@@ -59,6 +59,8 @@ import {
   useGetB2BUsersEmailAndId,
   useUpdateOrderPersonalInfo,
   PersonalInfo,
+  useUpdateQuoteCoupon,
+  useDeleteQuoteCoupon,
 } from '@/hooks'
 import { useQuoteActions } from '@/hooks/custom/useQuoteActions/useQuoteActions'
 import {
@@ -66,6 +68,7 @@ import {
   DefaultId,
   FulfillmentOptions as FulfillmentOptionsConstant,
   QuoteStatus,
+  QuoteUpdateMode,
   StatusColorCode,
 } from '@/lib/constants'
 import { orderGetters, productGetters, quoteGetters, userGetters } from '@/lib/getters'
@@ -102,10 +105,11 @@ const QuoteDetailsTemplate = (props: QuoteDetailsTemplateProps) => {
   const { quote, mode, initialB2BUsers, currentB2BUser, onAccountTitleClick } = props
   const { showModal } = useModalContext()
   const { t } = useTranslation('common')
-  const updateMode = 'ApplyToDraft'
+  const updateMode = QuoteUpdateMode.ApplyToDraft
   const draft = true
   const mdScreen = useMediaQuery((theme: Theme) => theme.breakpoints.up('md'))
   const { user, isAuthenticated } = useAuthContext()
+  const [promoError, setPromoError] = useState<string>('')
 
   const accountName = user?.companyOrOrganization ?? '-'
   const { number, quoteId, status, createdDate, expirationDate } =
@@ -156,6 +160,8 @@ const QuoteDetailsTemplate = (props: QuoteDetailsTemplateProps) => {
   const { createCustomerAddress } = useCreateCustomerAddress()
   const { validateCustomerAddress } = useValidateCustomerAddress()
   const { updateQuoteAdjustments } = useUpdateQuoteAdjustments()
+  const { updateQuoteCoupon } = useUpdateQuoteCoupon()
+  const { deleteQuoteCoupon } = useDeleteQuoteCoupon()
 
   const addItemToQuote = async (
     quoteId: string,
@@ -290,7 +296,7 @@ const QuoteDetailsTemplate = (props: QuoteDetailsTemplateProps) => {
           onConfirm: () => {
             updateQuote.mutate({
               quoteId,
-              updateMode: 'ApplyAndCommit',
+              updateMode: QuoteUpdateMode.ApplyAndCommit,
               name: quote?.name as string,
             })
             router.push('/my-account/b2b/quotes')
@@ -502,6 +508,33 @@ const QuoteDetailsTemplate = (props: QuoteDetailsTemplateProps) => {
       })
     } catch (e) {
       console.error(e)
+    }
+  }
+  const handleApplyCouponCode = async (couponCode: string) => {
+    try {
+      setPromoError('')
+      const response = await updateQuoteCoupon.mutateAsync({
+        quoteId,
+        couponCode,
+        updateMode,
+      })
+      if (response?.invalidCoupons?.length) {
+        setPromoError(response?.invalidCoupons[0]?.reason)
+      }
+    } catch (err) {
+      console.error(err)
+    }
+  }
+
+  const handleRemoveCouponCode = async (couponCode: string) => {
+    try {
+      await deleteQuoteCoupon.mutateAsync({
+        quoteId,
+        couponCode,
+        updateMode,
+      })
+    } catch (err) {
+      console.error(err)
     }
   }
 
@@ -815,13 +848,17 @@ const QuoteDetailsTemplate = (props: QuoteDetailsTemplateProps) => {
                 shippingTaxTotal={quote?.shippingTaxTotal}
                 shippingTotal={quote?.shippingTotal}
                 subTotal={quote?.subTotal}
-                onSave={handleUpdateQuoteAdjustments}
                 shippingDiscounts={quote?.shippingDiscounts as CrShippingDiscount[]}
                 handlingDiscounts={quote?.handlingDiscounts as CrAppliedDiscount[]}
                 orderDiscounts={quote?.orderDiscounts as CrAppliedDiscount[]}
+                promoList={quote?.couponCodes as string[]}
                 mode={mode}
                 status={status}
                 total={quote?.total}
+                promoError={promoError}
+                onSave={handleUpdateQuoteAdjustments}
+                onApplyCouponCode={handleApplyCouponCode}
+                onRemoveCouponCode={handleRemoveCouponCode}
               />
             </Box>
             <Divider />

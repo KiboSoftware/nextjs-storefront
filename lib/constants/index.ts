@@ -193,3 +193,8 @@ export const StatusColorCode: any = {
   Completed: 'success',
   Expired: 'error',
 }
+
+export const QuoteUpdateMode = {
+  ApplyToDraft: 'ApplyToDraft',
+  ApplyAndCommit: 'ApplyAndCommit',
+}

@@ -626,6 +626,16 @@ export const b2bHandlers = [
   graphql.mutation('updateQuoteAdjustments', (_req, res, ctx) => {
     return res(ctx.data({ updateQuoteAdjustments: quoteMock?.items?.[0] }))
   }),
+
+  //useUpdateQuoteCoupon
+  graphql.mutation('updateQuoteCoupon', (_req, res, ctx) => {
+    return res(ctx.data({ updateQuoteCoupon: quoteMock?.items?.[0] }))
+  }),
+
+  //useDeleteQuoteCoupon
+  graphql.mutation('deleteQuoteCoupon', (_req, res, ctx) => {
+    return res(ctx.data({ deleteQuoteCoupon: quoteMock?.items?.[0] }))
+  }),
 ]
 
 export const handlers = [

@@ -31,6 +31,8 @@ const {
   QuoteDetailsTemplateDesktop,
   QuoteDetailsTemplateViewModeDesktop,
   QuoteDetailsTemplateReadyForCheckoutDesktop,
+  QuoteDetailsTemplateViewModeMobile,
+  QuoteDetailsTemplateShipToHomeDesktop,
 } = composeStories(stories)
 
 const user = userEvent.setup()
@@ -134,6 +136,8 @@ jest.mock(
   () => () => QuotesHistoryDialogMock()
 )
 
+const AddressFormMock = () => <div data-testid="address-card-mock" />
+jest.mock('@/components/common/AddressForm/AddressForm', () => () => AddressFormMock())
 const TestComponent = () => {
   const { data: quoteResult } = useGetQuoteByID({
     quoteId: 'test-quote-id',
@@ -236,7 +240,8 @@ describe('[components] QuoteDetailsTemplate', () => {
           <DialogRoot />
         </ModalContextProvider>
       )
-
+      const quoteName = Common?.args?.quote?.name || ''
+      expect(screen.getByText(quoteName)).toBeVisible()
       expect(screen.queryByTestId('b2b-product-details-table-component')).toBeVisible()
 
       user.click(screen.getByTestId('add-configurable-product-button'))
@@ -266,6 +271,38 @@ describe('[components] QuoteDetailsTemplate', () => {
       const editButton = screen.getByRole('button', { name: 'edit-quote' })
       user.click(editButton)
 
+      await waitFor(() => {
+        expect(mockRouter).toMatchObject({
+          asPath: `/my-account/b2b/quote/${quoteMock?.items?.[0]?.id}?mode=edit`,
+          pathname: `/my-account/b2b/quote/${quoteMock?.items?.[0]?.id}`,
+          query: {},
+        })
+      })
+    })
+
+    it('should open address from when users click on add new address button', async () => {
+      renderWithQueryClient(
+        <QuoteDetailsTemplateShipToHomeDesktop {...QuoteDetailsTemplateShipToHomeDesktop.args} />
+      )
+      const addNewAddress = screen.getByRole('button', { name: 'add-new-address' })
+      user.click(addNewAddress)
+
+      expect(addNewAddress).toBeVisible()
+      await waitFor(() => {
+        expect(screen.getByTestId('address-card-mock')).toBeVisible()
+      })
+    })
+
+    it('should open a quote details page in edit mode when user clicks on edit button', async () => {
+      renderWithQueryClient(
+        <QuoteDetailsTemplateViewModeMobile {...QuoteDetailsTemplateViewModeMobile.args} />
+      )
+      const editButton = screen.getByRole('button', { name: 'edit-quote' })
+      user.click(editButton)
+
+      expect(
+        screen.getByText(QuoteDetailsTemplateViewModeMobile?.args?.quote?.name || '')
+      ).toBeVisible()
       await waitFor(() => {
         expect(mockRouter).toMatchObject({
           asPath: `/my-account/b2b/quote/${quoteMock?.items?.[0]?.id}?mode=edit`,
@@ -356,6 +393,66 @@ describe('[components] QuoteDetailsTemplate', () => {
 
       await waitFor(() => {
         expect(screen.getByText('Quote Name')).toBeVisible()
+      })
+    })
+
+    it('should apply coupon when user enters valid coupon code', async () => {
+      renderWithQueryClient(<Common {...Common.args} />)
+
+      const couponCount = quoteMock?.items?.[0]?.couponCodes?.length as number
+
+      await waitFor(() => {
+        expect(screen.queryAllByTestId('applied-coupon')).toHaveLength(couponCount)
+      })
+      console.log('server before')
+
+      server.use(
+        graphql.query('getQuoteByID', (_req, res, ctx) => {
+          return res(
+            ctx.data({
+              quote: {
+                ...quoteMock?.items?.[0],
+                couponCodes: [quoteMock?.items?.[0]?.couponCodes?.[0], 'test-coupon'],
+              },
+            })
+          )
+        })
+      )
+      console.log('server after')
+
+      await user.click(screen.getByTestId('apply-promo-button'))
+
+      await waitFor(() => {
+        expect(screen.queryAllByTestId('applied-coupon')).toHaveLength(couponCount)
+      })
+    })
+
+    it('should remove coupon when user removes it', async () => {
+      renderWithQueryClient(<Common {...Common.args} />)
+
+      const couponCount = quoteMock?.items?.[0]?.couponCodes?.length as number
+
+      await waitFor(() => {
+        expect(screen.queryAllByTestId('applied-coupon')).toHaveLength(couponCount)
+      })
+
+      server.use(
+        graphql.query('getQuoteByID', (_req, res, ctx) => {
+          return res(
+            ctx.data({
+              quote: {
+                ...quoteMock?.items?.[0],
+                couponCodes: [quoteMock?.items?.[0]?.couponCodes?.[0]],
+              },
+            })
+          )
+        })
+      )
+
+      user.click(screen.getByTestId('remove-promo-button'))
+
+      await waitFor(() => {
+        expect(screen.queryAllByTestId('applied-coupon')).toHaveLength(couponCount)
       })
     })
   })

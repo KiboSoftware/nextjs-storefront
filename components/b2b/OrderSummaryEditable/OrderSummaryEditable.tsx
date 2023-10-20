@@ -4,7 +4,7 @@ import { Box, Button, List, ListItem, ListItemIcon, ListItemText, Typography } f
 import { useTranslation } from 'next-i18next'
 
 import { OrderSummarySection } from '@/components/b2b'
-import { Price } from '@/components/common'
+import { Price, PromoCodeBadge } from '@/components/common'
 import { QuoteStatus } from '@/lib/constants'
 
 import { CrAppliedDiscount, CrShippingDiscount } from '@/lib/gql/types'
@@ -33,12 +33,16 @@ interface OrderSummaryEditableProps {
   shippingDiscounts: CrShippingDiscount[]
   handlingDiscounts: CrAppliedDiscount[]
   orderDiscounts: CrAppliedDiscount[]
+  promoList?: string[]
+  promoError?: string
   // use Type QuoteAdjustmentInput once in production
   onSave: (param: {
     adjustment: number
     shippingAdjustment: number
     handlingAdjustment: number
   }) => void
+  onApplyCouponCode: (code: string) => void
+  onRemoveCouponCode: (code: string) => void
 }
 
 const OrderSummaryEditable = (props: OrderSummaryEditableProps) => {
@@ -65,7 +69,11 @@ const OrderSummaryEditable = (props: OrderSummaryEditableProps) => {
     mode,
     status,
     total,
+    promoList,
+    promoError,
     onSave,
+    onApplyCouponCode,
+    onRemoveCouponCode,
   } = props
   const { t } = useTranslation('common')
 
@@ -196,6 +204,15 @@ const OrderSummaryEditable = (props: OrderSummaryEditableProps) => {
         <ListItemIcon sx={{ minWidth: 30 }} />
         <ListItemText primary={<Typography variant="body2">{t('duty-total')}</Typography>} />
       </ListItem>
+      {mode ? (
+        <PromoCodeBadge
+          onApplyCouponCode={onApplyCouponCode}
+          onRemoveCouponCode={onRemoveCouponCode}
+          promoError={!!promoError}
+          helpText={promoError}
+          promoList={promoList as string[]}
+        />
+      ) : null}
       <ListItem
         slotProps={{
           root: {

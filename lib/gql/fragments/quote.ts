@@ -14,6 +14,7 @@ fragment quoteFragment on Quote {
         itemTotal
         total
         shippingTotal
+        couponCodes
         status 
         subTotal        
         shippingSubTotal

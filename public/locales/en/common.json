@@ -483,7 +483,7 @@
   "titleSubtotal": "{{title}} Subtotal",
   "adjustment-text": "{{selectValue}} {{title}} Subtotal",
   "titleTax": "{{title}} Tax",
-  "discounts": "Discounts",
+  "discounts": "Discounts:",
   "quote-total": "Quote Total",
   "view-details": "View Details",
   "remove": "Remove",

@@ -43,6 +43,17 @@ QuoteDetailsTemplateMobile.parameters = {
   },
 }
 
+export const QuoteDetailsTemplateViewModeMobile = Template.bind({})
+QuoteDetailsTemplateViewModeMobile.args = {
+  quote: { ...(quoteMock?.items?.[0] as Quote), name: 'quote name' },
+  mode: '',
+}
+QuoteDetailsTemplateViewModeMobile.parameters = {
+  viewport: {
+    defaultViewport: 'iphone12promax',
+  },
+}
+
 export const QuoteDetailsTemplateViewModeDesktop = Template.bind({})
 QuoteDetailsTemplateViewModeDesktop.args = {
   quote: quoteMock?.items?.[0] as Quote,
@@ -52,6 +63,12 @@ QuoteDetailsTemplateViewModeDesktop.args = {
 export const QuoteDetailsTemplateReadyForCheckoutDesktop = Template.bind({})
 QuoteDetailsTemplateReadyForCheckoutDesktop.args = {
   quote: { ...(quoteMock?.items?.[0] as Quote), status: 'ReadyForCheckout', hasDraft: false },
+  mode: 'edit',
+}
+
+export const QuoteDetailsTemplateShipToHomeDesktop = Template.bind({})
+QuoteDetailsTemplateShipToHomeDesktop.args = {
+  quote: { ...(quoteMock?.items?.[2] as Quote) },
   mode: 'edit',
 }
 
