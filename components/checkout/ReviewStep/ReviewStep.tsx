@@ -180,11 +180,9 @@ const ReviewStep = (props: ReviewStepProps) => {
   const orderPriceProps = {
     subTotalLabel: t('subtotal'),
     shippingTotalLabel: t('shipping'),
-    taxLabel: t('estimated-tax'),
+    handlingLabel: t('handling'),
     totalLabel: t('total'),
-    orderDetails: {
-      ...orderSummaryProps,
-    },
+    orderDetails: checkout,
   }
 
   return (

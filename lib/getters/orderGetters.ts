@@ -35,11 +35,29 @@ const getTotal = (order: CrOrder | CrCart | Checkout): number => order?.total as
 const getShippingSubTotal = (order: CrOrder | CrCart | Checkout) => order?.shippingSubTotal || 0
 
 const getShippingTotal = (order: CrOrder | CrCart) => order?.shippingTotal || 0
+const getShippingTaxTotal = (order: CrOrder | CrCart | Checkout) => order?.shippingTaxTotal || 0
+const getShippingDiscounts = (order: CrOrder) =>
+  order?.shippingDiscounts?.map((discount) => {
+    return {
+      id: discount?.discount?.discount?.id,
+      name: discount?.discount?.discount?.name,
+      impact: (discount?.discount?.impact as number) * -1,
+    }
+  })
 
 const getHandlingTotal = (order: CrOrder | CrCart | Checkout) => order?.handlingTotal || 0
 
 const getHandlingSubTotal = (order: CrOrder | CrCart | Checkout) => order?.handlingSubTotal || 0
 
+const getHandlingTaxTotal = (order: CrOrder | CrCart | Checkout) => order?.handlingTaxTotal || 0
+const getHandlingDiscounts = (order: CrOrder) =>
+  order?.handlingDiscounts?.map((discount) => {
+    return {
+      id: discount?.discount?.id,
+      name: discount?.discount?.name,
+      impact: (discount?.impact as number) * -1,
+    }
+  })
 const getTaxTotal = (order: CrOrder | CrCart) => order?.taxTotal as number
 
 const getSubtotal = (order: CrOrder | CrCart | Checkout): number =>
@@ -50,6 +68,18 @@ const getDiscountedSubtotal = (order: CrOrder | CrCart): number => {
     return order?.discountedSubtotal
   else return 0
 }
+
+const getDiscountTotal = (order: CrOrder | CrCart): number => {
+  return order?.discountTotal || 0
+}
+const getOrderDiscounts = (order: CrOrder) =>
+  order?.orderDiscounts?.map((discount) => {
+    return {
+      id: discount?.discount?.id,
+      name: discount?.discount?.name,
+      impact: (discount?.impact as number) * -1,
+    }
+  })
 
 const getItemsByFulfillment = (order: CrOrder, fulfillmentMethod: string): CrOrderItem[] => {
   return (
@@ -312,9 +342,12 @@ export const orderGetters = {
   getTotal,
   getShippingTotal,
   getShippingSubTotal,
+  getShippingTaxTotal,
   getTaxTotal,
   getSubtotal,
   getDiscountedSubtotal,
+  getDiscountTotal,
+  getOrderDiscounts,
   getPickupItems,
   getShipItems,
   getCartItemId,
@@ -331,4 +364,7 @@ export const orderGetters = {
   getFinalOrderPayment,
   getHandlingTotal,
   getHandlingSubTotal,
+  getHandlingTaxTotal,
+  getHandlingDiscounts,
+  getShippingDiscounts,
 }

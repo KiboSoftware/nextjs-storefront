@@ -33,7 +33,6 @@ const OrderSummary = <T extends CrCart | CrOrder | Checkout>(props: OrderSummary
     nameLabel,
     subTotalLabel,
     shippingTotalLabel,
-    taxLabel,
     totalLabel,
     orderDetails,
     handlingLabel,
@@ -45,7 +44,6 @@ const OrderSummary = <T extends CrCart | CrOrder | Checkout>(props: OrderSummary
   const orderPriceProps: OrderPriceProps<T> = {
     subTotalLabel,
     shippingTotalLabel,
-    taxLabel,
     totalLabel,
     handlingLabel,
 

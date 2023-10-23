@@ -21,7 +21,6 @@ Common.args = {
   subTotalLabel: 'Cart Subtotal (6 items)',
   shippingTotalLabel: 'Standard Shipping',
   handlingLabel: 'Additional Handling',
-  taxLabel: 'Estimated Tax',
   totalLabel: 'Total',
   orderDetails: {
     subTotal: 299.19,

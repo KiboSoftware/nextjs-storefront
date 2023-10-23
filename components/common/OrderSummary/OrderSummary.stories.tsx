@@ -56,7 +56,6 @@ Checkout.args = {
   nameLabel: 'Order Summary',
   subTotalLabel: 'Cart Subtotal of (3 items)',
   shippingTotalLabel: 'Standard Shipping',
-  taxLabel: 'Tax',
   totalLabel: 'Order Total',
   orderDetails: {
     subTotal: 299.19,
@@ -73,7 +72,6 @@ Shipping.args = {
   nameLabel: 'Order Summary',
   subTotalLabel: 'Cart Subtotal of (3 items)',
   shippingTotalLabel: 'Standard Shipping',
-  taxLabel: 'Tax',
   totalLabel: 'Order Total',
   orderDetails: {
     subTotal: 299.19,

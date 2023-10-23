@@ -352,5 +352,9 @@
   "shipping-tax-at-checkout": "Shipping charges and Tax to be calculated at checkout",
   "shipping-billing-addresses-are-same": "Shipping and Billing Addresses are same",
   "clear-cart": "Clear Cart",
-  "clear-cart-confirmation-text": "Are you sure you want to clear the cart?"
+  "clear-cart-confirmation-text": "Are you sure you want to clear the cart?",
+  "standard-shipping": "Standard Shipping",
+  "additional-handling": "Additional Handling",
+  "handling": "Handling",
+  "discount": "Discount"
 }

@@ -1,9 +1,9 @@
 import React, { ReactNode } from 'react'
 
-import Info from '@mui/icons-material/Info'
 import { Typography, Box, Divider } from '@mui/material'
 import { useTranslation } from 'next-i18next'
 
+import OrderPriceCollapsible from '../OrderPriceCollapsible/OrderPriceCollapsible'
 import { Price } from '@/components/common'
 import { checkoutGetters, orderGetters } from '@/lib/getters'
 
@@ -12,7 +12,6 @@ import type { Checkout, CrCart, CrOrder } from '@/lib/gql/types'
 export interface OrderPriceProps<T extends CrCart | CrOrder | Checkout> {
   subTotalLabel: string
   shippingTotalLabel?: string
-  taxLabel?: string
   totalLabel: string
   handlingLabel?: string
   orderDetails: T
@@ -21,18 +20,15 @@ export interface OrderPriceProps<T extends CrCart | CrOrder | Checkout> {
 }
 
 const styles = {
-  priceSection: { padding: '0 0.438rem' },
   priceRow: { display: 'flex', padding: '0.563rem 0' },
   priceLabel: { flex: '50%', color: 'text.primary', fontSize: '1rem' },
   priceTotalRow: { display: 'flex', padding: '1.188rem 0.438rem 0.25rem 0.438rem' },
-  infoIcon: { width: '0.688rem', height: '0.688rem' },
 }
 
 const OrderPrice = <T extends CrCart | CrOrder | Checkout>(props: OrderPriceProps<T>) => {
   const {
     subTotalLabel,
     shippingTotalLabel,
-    taxLabel,
     totalLabel,
     handlingLabel,
 
@@ -41,106 +37,85 @@ const OrderPrice = <T extends CrCart | CrOrder | Checkout>(props: OrderPriceProp
     orderDetails,
   } = props
 
+  const total = orderGetters.getTotal(orderDetails)
   const subTotal = orderGetters.getSubtotal(orderDetails)
-  const discountedSubtotal =
-    orderGetters.getDiscountedSubtotal(orderDetails as CrOrder | CrCart) ||
-    checkoutGetters.getDiscountedSubtotal(orderDetails as Checkout)
-
-  const shippingSubTotal = orderGetters.getShippingSubTotal(orderDetails)
-
-  const shippingDiscounts = (orderDetails as CrOrder)?.shippingDiscounts?.map((discount) => {
-    return {
-      id: discount?.discount?.discount?.id,
-      name: discount?.discount?.discount?.name,
-      impact: (discount?.discount?.impact as number) * -1,
-    }
-  })
-
   const taxTotal =
     orderGetters.getTaxTotal(orderDetails as CrOrder) ??
     checkoutGetters.getTaxTotal(orderDetails as Checkout)
+  const discountedSubtotal =
+    orderGetters.getDiscountedSubtotal(orderDetails as CrOrder | CrCart) ||
+    checkoutGetters.getDiscountedSubtotal(orderDetails as Checkout)
+  const discountTotal = orderGetters.getDiscountTotal(orderDetails as CrOrder)
+  const orderDiscounts = orderGetters.getOrderDiscounts(orderDetails as CrOrder)
+
+  const shippingTotal = orderGetters.getShippingTotal(orderDetails as CrOrder)
+  const shippingSubTotal = orderGetters.getShippingSubTotal(orderDetails)
+  const shippingTaxTotal = orderGetters.getShippingTaxTotal(orderDetails)
+  const shippingDiscounts = orderGetters.getShippingDiscounts(orderDetails as CrOrder)
 
   const handlingTotal = orderGetters.getHandlingTotal(orderDetails)
-
-  const total = orderGetters.getTotal(orderDetails)
+  const handlingSubTotal = orderGetters.getHandlingSubTotal(orderDetails)
+  const handlingTaxTotal = orderGetters.getHandlingTaxTotal(orderDetails)
+  const handlingDiscounts = orderGetters.getHandlingDiscounts(orderDetails as CrOrder)
 
   const { t } = useTranslation('common')
 
   return (
     <Box sx={{ width: '100%' }} data-testid={'order-price-component'}>
-      <Box sx={{ ...styles.priceSection }}>
-        <Box sx={{ ...styles.priceRow }}>
-          <Typography sx={{ ...styles.priceLabel }} variant="body1">
-            {subTotalLabel}
-          </Typography>
-          <Price
-            variant="body1"
-            fontWeight="bold"
-            price={t('currency', { val: subTotal })}
-            salePrice={
-              discountedSubtotal > 0 && discountedSubtotal !== subTotal
-                ? t('currency', { val: discountedSubtotal })
-                : ''
-            }
-          />
-        </Box>
-        {shippingTotalLabel && isShippingTaxIncluded && (
-          <Box sx={{ ...styles.priceRow }}>
-            <Typography sx={{ ...styles.priceLabel }} variant="body1">
-              {shippingTotalLabel}
-            </Typography>
-            <Price
-              variant="body1"
-              fontWeight="bold"
-              price={t('currency', { val: shippingSubTotal })}
+      <>
+        {isShippingTaxIncluded && (
+          <>
+            <OrderPriceCollapsible
+              title={subTotalLabel as string}
+              total={total}
+              subTotal={subTotal}
+              taxTotal={taxTotal}
+              discountTotal={discountTotal}
+              discountedSubtotal={discountedSubtotal}
+              discounts={orderDiscounts}
             />
-          </Box>
+            <OrderPriceCollapsible
+              title={shippingTotalLabel as string}
+              total={shippingTotal}
+              subTotal={shippingSubTotal}
+              taxTotal={shippingTaxTotal}
+              discounts={shippingDiscounts}
+            />
+            <OrderPriceCollapsible
+              title={handlingLabel as string}
+              total={handlingTotal}
+              subTotal={handlingSubTotal}
+              taxTotal={handlingTaxTotal}
+              discounts={handlingDiscounts}
+            />
+          </>
         )}
-        {shippingDiscounts?.length &&
-          isShippingTaxIncluded &&
-          shippingDiscounts?.map((discount) => (
-            <Box key={discount?.id} sx={{ ...styles.priceRow }}>
+
+        {!isShippingTaxIncluded && (
+          <>
+            <Box sx={{ ...styles.priceRow }}>
               <Typography sx={{ ...styles.priceLabel }} variant="body1">
-                {discount.name}
+                {subTotalLabel}
               </Typography>
               <Price
                 variant="body1"
                 fontWeight="bold"
-                price={t('currency', { val: discount.impact })}
+                price={t('currency', { val: subTotal })}
+                salePrice={
+                  discountedSubtotal > 0 && discountedSubtotal !== subTotal
+                    ? t('currency', { val: discountedSubtotal })
+                    : ''
+                }
               />
             </Box>
-          ))}
-
-        {handlingLabel && isShippingTaxIncluded && (
-          <Box sx={{ ...styles.priceRow }}>
-            <Typography sx={{ ...styles.priceLabel }} variant="body1">
-              {handlingLabel}
-            </Typography>
-            <Price
-              variant="body1"
-              fontWeight="bold"
-              price={t('currency', { val: handlingTotal })}
-            />
-          </Box>
+            <Box sx={{ ...styles.priceRow }}>
+              <Typography sx={{ ...styles.priceLabel }} variant="body2">
+                {t('shipping-tax-at-checkout')}
+              </Typography>
+            </Box>
+          </>
         )}
-
-        {taxLabel && isShippingTaxIncluded && (
-          <Box sx={{ ...styles.priceRow }}>
-            <Typography sx={{ ...styles.priceLabel }} variant="body1">
-              {taxLabel} <Info sx={{ ...styles.infoIcon }} />
-            </Typography>
-            <Price variant="body1" fontWeight="bold" price={t('currency', { val: taxTotal })} />
-          </Box>
-        )}
-
-        {!isShippingTaxIncluded && (
-          <Box sx={{ ...styles.priceRow }}>
-            <Typography sx={{ ...styles.priceLabel }} variant="body2">
-              {t('shipping-tax-at-checkout')}
-            </Typography>
-          </Box>
-        )}
-      </Box>
+      </>
       <Divider sx={{ margin: '0 0.438rem' }} />
 
       {promoComponent && <Box>{promoComponent}</Box>}
