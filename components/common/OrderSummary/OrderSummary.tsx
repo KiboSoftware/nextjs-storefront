@@ -6,7 +6,9 @@ import { Card, Typography, Box, CardContent, Divider } from '@mui/material'
 import { OrderPriceProps } from '../OrderPrice/OrderPrice'
 import { OrderPrice } from '@/components/common'
 
-interface OrderSummaryProps extends OrderPriceProps {
+import type { Checkout, CrCart, CrOrder } from '@/lib/gql/types'
+
+interface OrderSummaryProps<T extends CrCart | CrOrder | Checkout> extends OrderPriceProps<T> {
   nameLabel: string
   backLabel?: string
   checkoutLabel?: string
@@ -26,34 +28,28 @@ const styles = {
   },
 }
 
-const OrderSummary = (props: OrderSummaryProps) => {
+const OrderSummary = <T extends CrCart | CrOrder | Checkout>(props: OrderSummaryProps<T>) => {
   const {
+    nameLabel,
     subTotalLabel,
     shippingTotalLabel,
-    taxLabel,
     totalLabel,
-    subTotal,
-    discountedSubtotal,
-    shippingTotal,
-    tax,
-    total,
-    nameLabel,
-    promoComponent,
+    orderDetails,
+    handlingLabel,
+
     isShippingTaxIncluded,
+    promoComponent,
   } = props
 
-  const orderPriceProps: OrderPriceProps = {
+  const orderPriceProps: OrderPriceProps<T> = {
     subTotalLabel,
     shippingTotalLabel,
-    taxLabel,
-    totalLabel: totalLabel,
-    subTotal,
-    discountedSubtotal,
-    shippingTotal,
-    tax,
-    total,
+    totalLabel,
+    handlingLabel,
+
     promoComponent,
     isShippingTaxIncluded,
+    orderDetails,
   }
   return (
     <Card sx={{ bgcolor: 'grey.100' }}>

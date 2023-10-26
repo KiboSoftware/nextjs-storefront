@@ -27,17 +27,58 @@ import type {
 } from '@/lib/gql/types'
 
 const getCheckoutItemCount = (order: CrOrder) => order?.items?.length
+
 const getEmail = (order: CrOrder) => order?.email
+
 const getTotal = (order: CrOrder | CrCart | Checkout): number => order?.total as number
+
+const getShippingSubTotal = (order: CrOrder | CrCart | Checkout) => order?.shippingSubTotal || 0
+
 const getShippingTotal = (order: CrOrder | CrCart) => order?.shippingTotal || 0
-const getTaxTotal = (order: CrOrder | CrCart) => order?.taxTotal || 0
-const getSubtotal = (order: CrOrder | CrCart): number => order?.subtotal as number
+const getShippingTaxTotal = (order: CrOrder | CrCart | Checkout) => order?.shippingTaxTotal || 0
+const getShippingDiscounts = (order: CrOrder) =>
+  order?.shippingDiscounts?.map((discount) => {
+    return {
+      id: discount?.discount?.discount?.id,
+      name: discount?.discount?.discount?.name,
+      impact: (discount?.discount?.impact as number) * -1,
+    }
+  })
+
+const getHandlingTotal = (order: CrOrder | CrCart | Checkout) => order?.handlingTotal || 0
+
+const getHandlingSubTotal = (order: CrOrder | CrCart | Checkout) => order?.handlingSubTotal || 0
+
+const getHandlingTaxTotal = (order: CrOrder | CrCart | Checkout) => order?.handlingTaxTotal || 0
+const getHandlingDiscounts = (order: CrOrder) =>
+  order?.handlingDiscounts?.map((discount) => {
+    return {
+      id: discount?.discount?.id,
+      name: discount?.discount?.name,
+      impact: (discount?.impact as number) * -1,
+    }
+  })
+const getTaxTotal = (order: CrOrder | CrCart) => order?.taxTotal as number
+
+const getSubtotal = (order: CrOrder | CrCart | Checkout): number =>
+  ((order as Checkout)?.subTotal as number) || ((order as CrOrder | CrCart)?.subtotal as number)
 
 const getDiscountedSubtotal = (order: CrOrder | CrCart): number => {
   if (order?.discountedSubtotal && order?.discountedSubtotal != order?.subtotal)
     return order?.discountedSubtotal
   else return 0
 }
+
+const getOrderDiscounts = (order: CrOrder) =>
+  order?.orderDiscounts?.map((discount) => {
+    return {
+      id: discount?.discount?.id,
+      name: discount?.discount?.name,
+      impact: (discount?.impact as number) * -1,
+    }
+  })
+const getLineItemSubtotal = (order: CrOrder | CrCart) =>
+  order?.lineItemSubtotalWithOrderAdjustments as number
 
 const getItemsByFulfillment = (order: CrOrder, fulfillmentMethod: string): CrOrderItem[] => {
   return (
@@ -299,9 +340,12 @@ export const orderGetters = {
   getEmail,
   getTotal,
   getShippingTotal,
+  getShippingSubTotal,
+  getShippingTaxTotal,
   getTaxTotal,
   getSubtotal,
   getDiscountedSubtotal,
+  getOrderDiscounts,
   getPickupItems,
   getShipItems,
   getCartItemId,
@@ -316,4 +360,10 @@ export const orderGetters = {
   getPaymentMethods,
   getOrderStatus,
   getFinalOrderPayment,
+  getHandlingTotal,
+  getHandlingSubTotal,
+  getHandlingTaxTotal,
+  getHandlingDiscounts,
+  getShippingDiscounts,
+  getLineItemSubtotal,
 }

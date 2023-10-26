@@ -33,18 +33,14 @@ const OrderConfirmation = ({ order }: { order: CrOrder }) => {
     },
   ]
 
-  const discountedSubtotal = orderGetters.getDiscountedSubtotal(order)
   const orderSummeryArgs = {
     nameLabel: t('order-summary'),
     subTotalLabel: `${t('subtotal')} (${t('item-quantity', { count: order.items?.length })})`,
     shippingTotalLabel: t('shipping'),
     taxLabel: t('estimated-tax'),
     totalLabel: t('total-price'),
-    subTotal: t('currency', { val: orderGetters.getSubtotal(order) }),
-    discountedSubtotal: discountedSubtotal > 0 ? t('currency', { val: discountedSubtotal }) : '',
-    shippingTotal: t('currency', { val: orderGetters.getShippingTotal(order) || 0 }),
-    tax: t('currency', { val: orderGetters.getTaxTotal(order) }),
-    total: t('currency', { val: orderTotal }),
+    handlingLabel: t('additional-handling'),
+    orderDetails: order,
   }
 
   const handlePrint = useReactToPrint({

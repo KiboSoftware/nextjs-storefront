@@ -177,19 +177,12 @@ const ReviewStep = (props: ReviewStepProps) => {
   const onInvalidForm = () => console.log('Invalid Form')
   const handleComplete = () => handleSubmit(onValid, onInvalidForm)()
 
-  const orderPriceProps: OrderPriceProps = {
+  const orderPriceProps = {
     subTotalLabel: t('subtotal'),
     shippingTotalLabel: t('shipping'),
-    taxLabel: t('estimated-tax'),
+    handlingLabel: t('handling'),
     totalLabel: t('total'),
-    subTotal: t('currency', { val: subTotal }),
-    discountedSubtotal:
-      discountedSubtotal > 0 && discountedSubtotal !== subTotal
-        ? t('currency', { val: discountedSubtotal })
-        : '',
-    shippingTotal: t('currency', { val: shippingTotal || 0 }),
-    tax: t('currency', { val: taxTotal }),
-    total: t('currency', { val: total }),
+    orderDetails: checkout,
   }
 
   return (
