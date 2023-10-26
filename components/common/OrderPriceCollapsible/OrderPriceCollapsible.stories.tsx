@@ -2,35 +2,36 @@ import React from 'react'
 
 import { ComponentStory, ComponentMeta } from '@storybook/react'
 
-import OrderPrice from './OrderPriceCollapsible'
+import OrderPriceCollapsible from './OrderPriceCollapsible'
 
 export default {
-  title: 'Common/OrderPrice',
-  component: OrderPrice,
-} as ComponentMeta<typeof OrderPrice>
+  title: 'Common/OrderPriceCollapsible',
+  component: OrderPriceCollapsible,
+} as ComponentMeta<typeof OrderPriceCollapsible>
 
-const Template: ComponentStory<typeof OrderPrice> = ({ ...args }) => <OrderPrice {...args} />
+const Template: ComponentStory<typeof OrderPriceCollapsible> = ({ ...args }) => (
+  <OrderPriceCollapsible {...args} />
+)
 
 // Common
 export const Common = Template.bind({})
 
 Common.args = {
-  title: 'Cart Subtotal (6 items)',
-  subTotal: 299.19,
-  total: 312.98,
-  taxTotal: 13.79,
+  title: 'Cart Subtotal (2 items)',
+  total: 240,
+  subTotal: 400,
+  taxTotal: 20.46,
 }
-export const withShippingDiscounts = Template.bind({})
+export const WithDiscounts = Template.bind({})
 
-withShippingDiscounts.args = {
+WithDiscounts.args = {
   ...Common.args,
+  discountedSubtotal: 340,
   discounts: [
     {
-      impact: 30,
-      discount: {
-        name: 'Test Discount',
-        id: 1234,
-      },
+      id: 8,
+      name: '30% OFF order level',
+      impact: -100,
     },
   ],
 }
