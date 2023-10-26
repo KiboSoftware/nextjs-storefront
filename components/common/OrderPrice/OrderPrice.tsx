@@ -45,8 +45,8 @@ const OrderPrice = <T extends CrCart | CrOrder | Checkout>(props: OrderPriceProp
   const discountedSubtotal =
     orderGetters.getDiscountedSubtotal(orderDetails as CrOrder | CrCart) ||
     checkoutGetters.getDiscountedSubtotal(orderDetails as Checkout)
-  const discountTotal = orderGetters.getDiscountTotal(orderDetails as CrOrder)
   const orderDiscounts = orderGetters.getOrderDiscounts(orderDetails as CrOrder)
+  const lineItemSubtotal = orderGetters.getLineItemSubtotal(orderDetails as CrOrder)
 
   const shippingTotal = orderGetters.getShippingTotal(orderDetails as CrOrder)
   const shippingSubTotal = orderGetters.getShippingSubTotal(orderDetails)
@@ -67,10 +67,9 @@ const OrderPrice = <T extends CrCart | CrOrder | Checkout>(props: OrderPriceProp
           <>
             <OrderPriceCollapsible
               title={subTotalLabel as string}
-              total={total}
+              total={lineItemSubtotal}
               subTotal={subTotal}
               taxTotal={taxTotal}
-              discountTotal={discountTotal}
               discountedSubtotal={discountedSubtotal}
               discounts={orderDiscounts}
             />

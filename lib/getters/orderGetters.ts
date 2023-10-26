@@ -69,9 +69,6 @@ const getDiscountedSubtotal = (order: CrOrder | CrCart): number => {
   else return 0
 }
 
-const getDiscountTotal = (order: CrOrder | CrCart): number => {
-  return order?.discountTotal || 0
-}
 const getOrderDiscounts = (order: CrOrder) =>
   order?.orderDiscounts?.map((discount) => {
     return {
@@ -80,6 +77,8 @@ const getOrderDiscounts = (order: CrOrder) =>
       impact: (discount?.impact as number) * -1,
     }
   })
+const getLineItemSubtotal = (order: CrOrder | CrCart) =>
+  order?.lineItemSubtotalWithOrderAdjustments as number
 
 const getItemsByFulfillment = (order: CrOrder, fulfillmentMethod: string): CrOrderItem[] => {
   return (
@@ -346,7 +345,6 @@ export const orderGetters = {
   getTaxTotal,
   getSubtotal,
   getDiscountedSubtotal,
-  getDiscountTotal,
   getOrderDiscounts,
   getPickupItems,
   getShipItems,
@@ -367,4 +365,5 @@ export const orderGetters = {
   getHandlingTaxTotal,
   getHandlingDiscounts,
   getShippingDiscounts,
+  getLineItemSubtotal,
 }

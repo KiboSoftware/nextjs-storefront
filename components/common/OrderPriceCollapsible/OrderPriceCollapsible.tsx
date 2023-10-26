@@ -21,7 +21,6 @@ interface OrderPriceCollapsibleProps {
   total: number
   subTotal: number
   taxTotal: number
-  discountTotal?: number
   discountedSubtotal?: number
   discounts?: any[]
 }
@@ -36,7 +35,7 @@ const styles = {
 }
 
 const OrderPriceCollapsible = (props: OrderPriceCollapsibleProps) => {
-  const { title, total, subTotal, taxTotal, discountTotal, discountedSubtotal, discounts } = props
+  const { title, total, subTotal, taxTotal, discountedSubtotal, discounts } = props
 
   const { t } = useTranslation('common')
 
@@ -51,16 +50,7 @@ const OrderPriceCollapsible = (props: OrderPriceCollapsibleProps) => {
         <ListItem
           sx={{ padding: 0 }}
           secondaryAction={
-            <Price
-              variant="body1"
-              fontWeight="bold"
-              price={t('currency', { val: subTotal })}
-              salePrice={
-                discountedSubtotal && discountedSubtotal !== subTotal
-                  ? t('currency', { val: discountedSubtotal })
-                  : ''
-              }
-            />
+            <Price variant="body1" fontWeight="bold" price={t('currency', { val: total })} />
           }
         >
           <ListItemIcon sx={{ minWidth: 30 }}>
@@ -89,7 +79,9 @@ const OrderPriceCollapsible = (props: OrderPriceCollapsibleProps) => {
               <Price
                 fontWeight="normal"
                 variant="body2"
-                price={t('currency', { val: subTotal?.toString() })}
+                price={t('currency', {
+                  val: discountedSubtotal ? discountedSubtotal?.toString() : subTotal?.toString(),
+                })}
               />
             }
           >
@@ -98,28 +90,10 @@ const OrderPriceCollapsible = (props: OrderPriceCollapsibleProps) => {
             />
           </ListItem>
 
-          {(discountTotal || (discounts && discounts?.length > 0)) && (
+          {discounts && discounts?.length > 0 && (
             <ListItem sx={{ ...styles.detailedSummaryContainer }}>
               <ListItemText primary={<Typography variant="body2">{t('discounts')}:</Typography>} />
             </ListItem>
-          )}
-          {discountTotal && (
-            <ListItem
-              slotProps={{
-                root: {
-                  'aria-label': 'subTotal',
-                },
-              }}
-              sx={{ ...styles.detailedSummaryContainer }}
-              secondaryAction={
-                <Price
-                  fontWeight="normal"
-                  variant="body2"
-                  color={grey[600]}
-                  price={t('currency', { val: -discountTotal?.toString() })}
-                />
-              }
-            ></ListItem>
           )}
           {discounts?.map((discount) => {
             return (
@@ -135,7 +109,7 @@ const OrderPriceCollapsible = (props: OrderPriceCollapsibleProps) => {
                   <Price
                     fontWeight="normal"
                     variant="body2"
-                    color={grey[600]}
+                    color="error.main"
                     price={t('currency', { val: discount?.impact?.toString() })}
                   />
                 }

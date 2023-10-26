@@ -57,6 +57,16 @@ export const baseCheckoutFragment = /* GraphQL */ `
     handlingSubTotal
     handlingTotal
     handlingTaxTotal
+    handlingDiscounts {
+      impact
+      discount {
+        id
+        name
+        itemIds
+      }
+      couponCode
+      excluded
+    }
     total
     shippingDiscounts {
       methodCode
@@ -77,6 +87,7 @@ export const baseCheckoutFragment = /* GraphQL */ `
     discountedSubtotal
     discountedTotal
     subtotal
+    lineItemSubtotalWithOrderAdjustments
     taxTotal
     orderNumber
     couponCodes
