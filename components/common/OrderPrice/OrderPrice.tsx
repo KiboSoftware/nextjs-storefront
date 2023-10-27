@@ -20,9 +20,9 @@ export interface OrderPriceProps<T extends CrCart | CrOrder | Checkout> {
 }
 
 const styles = {
-  priceRow: { display: 'flex', padding: '0.563rem 0' },
+  priceRow: { display: 'flex', py: 1 },
   priceLabel: { flex: '50%', color: 'text.primary', fontSize: '1rem' },
-  priceTotalRow: { display: 'flex', padding: '1.188rem 0.438rem 0.25rem 0.438rem' },
+  priceTotalRow: { display: 'flex', py: 1, pr: 1 },
 }
 
 const OrderPrice = <T extends CrCart | CrOrder | Checkout>(props: OrderPriceProps<T>) => {
@@ -39,9 +39,7 @@ const OrderPrice = <T extends CrCart | CrOrder | Checkout>(props: OrderPriceProp
 
   const total = orderGetters.getTotal(orderDetails)
   const subTotal = orderGetters.getSubtotal(orderDetails)
-  const taxTotal =
-    orderGetters.getTaxTotal(orderDetails as CrOrder) ??
-    checkoutGetters.getTaxTotal(orderDetails as Checkout)
+  const itemTaxTotal = orderGetters.getItemTaxTotal(orderDetails as CrOrder)
   const discountedSubtotal =
     orderGetters.getDiscountedSubtotal(orderDetails as CrOrder | CrCart) ||
     checkoutGetters.getDiscountedSubtotal(orderDetails as Checkout)
@@ -69,7 +67,7 @@ const OrderPrice = <T extends CrCart | CrOrder | Checkout>(props: OrderPriceProp
               title={subTotalLabel as string}
               total={lineItemSubtotal}
               subTotal={subTotal}
-              taxTotal={taxTotal}
+              taxTotal={itemTaxTotal}
               discountedSubtotal={discountedSubtotal}
               discounts={orderDiscounts}
             />
