@@ -62,6 +62,7 @@ const ReviewProductItemsWithAddresses = (props: ReviewProductItemsWithAddressesP
                 price={productGetters.getPrice(product).regular?.toString()}
                 salePrice={productGetters.getPrice(product).special?.toString()}
                 expectedDeliveryDate={expectedDeliveryDate}
+                discounts={item?.productDiscount}
                 data-testid="product-item-multi-ship"
               ></ProductItem>
             </Stack>

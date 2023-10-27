@@ -179,6 +179,7 @@ const ProductQuickViewDialog = (props: ProductQuickViewDialogProps) => {
           isB2B={isB2B}
           addItemToList={addItemToList}
           addItemToQuote={addItemToQuote}
+          addItemToCart={addItemToCart}
           quoteDetails={quoteDetails}
           title={title}
           cancel={cancel}

@@ -22,6 +22,8 @@ export const cartItemDetails = /* GraphQL */ `
         hasMultipleTargetProducts
       }
     }
+    discountTotal
+    discountedTotal
     subtotal
     total
     product {

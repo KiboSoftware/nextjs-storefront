@@ -79,6 +79,7 @@ const ProductGroup = ({ items }: { items: Maybe<CrOrderItem>[] }) => {
             options={productGetters.getOptions(product)}
             price={productGetters.getPrice(product).regular?.toString()}
             salePrice={productGetters.getPrice(product).special?.toString()}
+            discounts={item?.productDiscounts}
             data-testid="product-item-address"
           />
         )

@@ -140,6 +140,7 @@ const CartItem = (props: CartItemProps) => {
                 options={productGetters.getOptions(cartItem?.product as CrProduct)}
                 link={getProductLink(cartItem?.product?.productCode as string)}
                 subscriptionFrequency={subscriptionDetails as string}
+                discounts={cartItem?.productDiscounts}
               >
                 <Box>
                   <Price

@@ -10,10 +10,11 @@ interface KeyValueDisplayProps {
   align?: 'right' | 'left'
   direction?: 'row' | 'column'
   sx?: SxProps<Theme>
+  color?: string
 }
 
 const KeyValueDisplay = (prop: KeyValueDisplayProps) => {
-  const { option, variant = 'body2', fontWeight, direction = 'row', sx } = prop
+  const { option, variant = 'body2', fontWeight, direction = 'row', sx, color } = prop
 
   return (
     <Box
@@ -35,7 +36,12 @@ const KeyValueDisplay = (prop: KeyValueDisplayProps) => {
         {option?.name}
       </Typography>
       {typeof option?.value === 'string' ? (
-        <Typography variant={variant} fontWeight={fontWeight || 'normal'} component="span">
+        <Typography
+          variant={variant}
+          fontWeight={fontWeight ?? 'normal'}
+          component="span"
+          color={color}
+        >
           {option?.value}
         </Typography>
       ) : (

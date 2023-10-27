@@ -67,6 +67,10 @@ export default function B2BProductDetailsTable(props: B2BProductDetailsTableProp
         headerName: t('price-header'),
       },
       {
+        field: 'discount-header',
+        headerName: t('discount-header'),
+      },
+      {
         field: 'item-total-header',
         headerName: t('item-total-header'),
       },
@@ -119,6 +123,7 @@ export default function B2BProductDetailsTable(props: B2BProductDetailsTableProp
                   productCode={productGetters.getProductId(item.product as CrProduct)}
                   options={productGetters.getOptions(item.product as CrProduct)}
                   link={getProductLink(item.product?.productCode as string)}
+                  discounts={item?.productDiscounts}
                 />
               </TableCell>
               <TableCell>
@@ -170,6 +175,15 @@ export default function B2BProductDetailsTable(props: B2BProductDetailsTableProp
                         })
                       : undefined
                   }
+                />
+              </TableCell>
+              <TableCell>
+                <Price
+                  variant="body2"
+                  fontWeight="bold"
+                  price={t('currency', {
+                    val: item?.discountTotal,
+                  })}
                 />
               </TableCell>
               <TableCell>

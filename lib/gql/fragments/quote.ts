@@ -15,6 +15,11 @@ fragment quoteFragment on Quote {
         total
         shippingTotal
         couponCodes
+        invalidCoupons {
+            couponCode
+            reasonCode
+            reason
+        }
         status 
         subTotal        
         shippingSubTotal
@@ -80,6 +85,18 @@ fragment quoteFragment on Quote {
             quantity
             fulfillmentMethod 
             fulfillmentLocationCode
+            productDiscounts {
+                discountQuantity
+                productQuantity
+                impactPerUnit
+                impact
+                excluded
+                discount {
+                    id
+                    name
+                    hasMultipleTargetProducts
+                }
+            }
             unitPrice {
             listAmount
             saleAmount

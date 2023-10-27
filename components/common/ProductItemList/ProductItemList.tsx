@@ -71,6 +71,7 @@ const ProductItemList = (props: ProductItemListProps) => {
               onStoreLocatorClick={onClickChangeStore}
               data-testid="product-item"
               width={width}
+              discounts={item?.productDiscounts}
             ></ProductItem>
             {showAddress && item?.fulfillmentLocationCode && (
               <AddressCard {...storePickupAddress(item?.fulfillmentLocationCode)} />

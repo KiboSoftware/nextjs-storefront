@@ -42,6 +42,7 @@ const Content = (props: CartContentProps) => {
             undefined
           }
           subscriptionFrequency={subscriptionDetails as string}
+          discounts={cartItem?.productDiscounts}
         />
       </Box>
       <Divider />

@@ -96,7 +96,7 @@ describe('[components] - QuickOrderTable', () => {
     expect(productItems.length).toBe(count)
     expect(fulfillmentOptions.length).toBe(count)
     expect(quantitySelectors.length).toBe(count)
-    expect(prices.length).toBe((count as number) * 2)
+    expect(prices.length).toBe((count as number) * 3)
   })
 
   it('should call onQuantityUpdate when item quantity is changed', () => {

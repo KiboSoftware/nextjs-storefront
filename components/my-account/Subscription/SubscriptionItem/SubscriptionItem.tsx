@@ -403,6 +403,7 @@ const SubscriptionItem = (props: SubscriptionItemProps) => {
                     name={productGetters.getName(subscribedProductItem?.product as CrProduct)}
                     options={productGetters.getOptions(subscribedProductItem?.product as CrProduct)}
                     link={getProductLink(subscribedProductItem?.product?.productCode as string)}
+                    discounts={subscribedProductItem?.productDiscounts}
                   />
                 ))}
             </Stack>

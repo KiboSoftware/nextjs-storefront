@@ -856,6 +856,7 @@ const QuoteDetailsTemplate = (props: QuoteDetailsTemplateProps) => {
                 status={status}
                 total={quote?.total}
                 promoError={promoError}
+                itemLevelProductDiscountTotal={quote?.itemLevelProductDiscountTotal}
                 onSave={handleUpdateQuoteAdjustments}
                 onApplyCouponCode={handleApplyCouponCode}
                 onRemoveCouponCode={handleRemoveCouponCode}

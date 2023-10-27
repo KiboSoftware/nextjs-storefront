@@ -24,6 +24,7 @@ interface OrderSummaryEditableProps {
   handlingTaxTotal: number
   handlingSubTotal: number
   handlingAdjustment: number
+  itemLevelProductDiscountTotal: number
 
   dutyTotal: number
 
@@ -66,6 +67,7 @@ const OrderSummaryEditable = (props: OrderSummaryEditableProps) => {
     handlingTaxTotal,
 
     dutyTotal,
+    itemLevelProductDiscountTotal,
     mode,
     status,
     total,
@@ -151,7 +153,7 @@ const OrderSummaryEditable = (props: OrderSummaryEditableProps) => {
       <OrderSummarySection
         title="Item"
         total={itemTotal}
-        subTotal={subTotal}
+        subTotal={subTotal - itemLevelProductDiscountTotal}
         adjustment={adjustment}
         taxTotal={itemTaxTotal}
         isEdit={isEdit}
@@ -204,15 +206,16 @@ const OrderSummaryEditable = (props: OrderSummaryEditableProps) => {
         <ListItemIcon sx={{ minWidth: 30 }} />
         <ListItemText primary={<Typography variant="body2">{t('duty-total')}</Typography>} />
       </ListItem>
-      {mode ? (
-        <PromoCodeBadge
-          onApplyCouponCode={onApplyCouponCode}
-          onRemoveCouponCode={onRemoveCouponCode}
-          promoError={!!promoError}
-          helpText={promoError}
-          promoList={promoList as string[]}
-        />
-      ) : null}
+
+      <PromoCodeBadge
+        onApplyCouponCode={onApplyCouponCode}
+        onRemoveCouponCode={onRemoveCouponCode}
+        promoError={!!promoError}
+        helpText={promoError}
+        promoList={promoList as string[]}
+        isEdit={!!mode}
+      />
+
       <ListItem
         slotProps={{
           root: {

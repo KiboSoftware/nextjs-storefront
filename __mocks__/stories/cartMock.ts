@@ -27,6 +27,7 @@ export const cartResponse: CrCart = {
       productDiscounts: [],
       subtotal: 175,
       total: 175,
+      discountTotal: 20,
       product: {
         productCode: 'backpack99',
         fulfillmentTypesSupported: ['DirectShip', 'InStorePickup'],
@@ -202,6 +203,7 @@ export const cartResponse: CrCart = {
       productDiscounts: [],
       subtotal: 100,
       total: 100,
+      discountTotal: 30,
       product: {
         productCode: 'BackP_024',
         fulfillmentTypesSupported: ['DirectShip', 'InStorePickup'],

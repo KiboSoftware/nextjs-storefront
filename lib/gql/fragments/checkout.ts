@@ -36,6 +36,18 @@ export const checkoutLineItemFragment = /* GraphQL */ `
     subtotal
     discountTotal
     quantity
+    productDiscounts {
+      discountQuantity
+      productQuantity
+      impactPerUnit
+      impact
+      excluded
+      discount {
+        id
+        name
+        hasMultipleTargetProducts
+      }
+    }
     product {
       ...checkoutItemProductFragment
     }

@@ -159,15 +159,16 @@ const ListItem = (props: ListItemProps) => {
                 variant="body1"
               />
             )}
-
-            <KeyValueDisplay
-              option={{
-                name: t('list-item'),
-                value: `$${product?.price?.price}`,
-              }}
-              sx={{ fontStyle: 'italic', display: 'inline', fontSize: '12px' }}
-              variant="body2"
-            />
+            {item?.productDiscounts?.map((discount) => (
+              <KeyValueDisplay
+                key={`${discount?.discount?.name}`}
+                color="error.main"
+                option={{
+                  name: `${discount?.discount?.name}:`,
+                  value: `-${t('currency', { val: discount?.impact })} `,
+                }}
+              />
+            ))}
           </Box>
         )}
       </Grid>

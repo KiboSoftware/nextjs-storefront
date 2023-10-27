@@ -242,12 +242,6 @@ const OrderSummarySection = (props: OrderSummarySectionProps) => {
             />
           </ListItem>
 
-          {discounts && discounts?.length > 0 && (
-            <ListItem sx={OrderSummarySectionStyles.detailedSummaryContainer}>
-              <ListItemText primary={<Typography variant="body2">{t('discounts')}</Typography>} />
-            </ListItem>
-          )}
-
           {discounts?.map((discount) => {
             return (
               <ListItem

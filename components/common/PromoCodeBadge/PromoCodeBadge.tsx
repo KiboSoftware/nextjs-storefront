@@ -15,6 +15,7 @@ export interface PromoCodeBadgeProps {
   promoError?: boolean
   helpText?: string
   couponLabel?: string
+  isEdit?: boolean
 }
 const styles = {
   boxStyle: {
@@ -33,8 +34,15 @@ const styles = {
 
 const PromoCodeBadge = (props: PromoCodeBadgeProps) => {
   const { t } = useTranslation('common')
-  const { onApplyCouponCode, onRemoveCouponCode, promoList, promoError, helpText, couponLabel } =
-    props
+  const {
+    onApplyCouponCode,
+    onRemoveCouponCode,
+    promoList,
+    promoError,
+    helpText,
+    couponLabel,
+    isEdit = true,
+  } = props
   const [promo, setPromo] = useState<string>('')
   const [errorMessage, setErrorMessage] = useState<string | undefined>(helpText as string)
 
@@ -62,40 +70,44 @@ const PromoCodeBadge = (props: PromoCodeBadgeProps) => {
 
   return (
     <>
-      <Stack direction="row">
-        <KiboTextBox
-          name="promocode"
-          label={couponLabel}
-          value={promo}
-          placeholder={t('promo-code')}
-          sx={styles.textBoxStyle}
-          onChange={(_name, value) => setPromo(value)}
-          error={!!errorMessage}
-          helperText={errorMessage}
-          data-testid="promo-input"
-        />
-        <Button
-          disabled={promo?.length > 0 ? false : true}
-          onClick={handleApplyCouponCode}
-          sx={styles.buttonStyle}
-          variant="contained"
-          data-testid="promo-button"
-        >
-          {t('apply')}
-        </Button>
-      </Stack>
+      {isEdit && (
+        <Stack direction="row">
+          <KiboTextBox
+            name="promocode"
+            label={couponLabel}
+            value={promo}
+            placeholder={t('promo-code')}
+            sx={styles.textBoxStyle}
+            onChange={(_name, value) => setPromo(value)}
+            error={!!errorMessage}
+            helperText={errorMessage}
+            data-testid="promo-input"
+          />
+          <Button
+            disabled={promo?.length > 0 ? false : true}
+            onClick={handleApplyCouponCode}
+            sx={styles.buttonStyle}
+            variant="contained"
+            data-testid="promo-button"
+          >
+            {t('apply')}
+          </Button>
+        </Stack>
+      )}
       {promoList?.map((coupon: string) => (
         <Box key={coupon} data-testid="applied-coupon" component="div" sx={styles.boxStyle}>
           <Stack direction="row" spacing={0.5} alignItems="center">
             <Typography sx={{ textAlign: 'left' }}>{coupon}</Typography>
-            <CloseIcon
-              aria-label="remove-promo-code"
-              sx={{
-                cursor: 'pointer',
-                fontSize: '1rem',
-              }}
-              onClick={() => handleRemoveCouponCode(coupon)}
-            />
+            {isEdit && (
+              <CloseIcon
+                aria-label="remove-promo-code"
+                sx={{
+                  cursor: 'pointer',
+                  fontSize: '1rem',
+                }}
+                onClick={() => handleRemoveCouponCode(coupon)}
+              />
+            )}
           </Stack>
         </Box>
       ))}

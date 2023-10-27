@@ -69,6 +69,7 @@ interface ProductDetailTemplateProps {
   isB2B?: boolean
   addItemToList?: string
   addItemToQuote?: string
+  addItemToCart?: string
   title?: string
   cancel?: string
   quoteDetails?: any
@@ -109,6 +110,7 @@ const ProductDetailTemplate = (props: ProductDetailTemplateProps) => {
     isB2B = false,
     addItemToList,
     addItemToQuote,
+    addItemToCart,
     cancel,
     quoteDetails,
     getCurrentProduct,
@@ -287,6 +289,7 @@ const ProductDetailTemplate = (props: ProductDetailTemplateProps) => {
             cancel,
             addItemToList: addItemToList,
             addItemToQuote: addItemToQuote,
+            addItemToCart,
             isB2B,
           },
           quoteDetails,
@@ -301,6 +304,7 @@ const ProductDetailTemplate = (props: ProductDetailTemplateProps) => {
               cancel,
               addItemToList: addItemToList,
               addItemToQuote: addItemToQuote,
+              addItemToCart,
               isB2B,
             },
             quoteDetails,

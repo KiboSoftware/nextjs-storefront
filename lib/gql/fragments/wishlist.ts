@@ -4,6 +4,18 @@ fragment wishlistItem on CrWishlistItem {
     quantity
     total
     subtotal
+    productDiscounts {
+      discountQuantity
+      productQuantity
+      impactPerUnit
+      impact
+      excluded
+      discount {
+        id
+        name
+        hasMultipleTargetProducts
+      }
+    }
     product {
         productCode
         name

@@ -104,6 +104,7 @@ const ProductItemWithAddressList = (props: ProductItemWithAddressListProps) => {
                 options={productGetters.getOptions(product) || []}
                 price={productGetters.getPrice(product).regular?.toString()}
                 salePrice={productGetters.getPrice(product).special?.toString()}
+                discounts={item?.productDiscounts}
                 data-testid="product-item-address"
               />
             </Box>

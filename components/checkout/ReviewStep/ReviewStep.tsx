@@ -258,6 +258,7 @@ const ReviewStep = (props: ReviewStepProps) => {
                       price={productGetters.getPrice(product).regular?.toString()}
                       salePrice={productGetters.getPrice(product).special?.toString()}
                       expectedDeliveryDate={item?.expectedDeliveryDate}
+                      discounts={item?.productDiscounts}
                     />
                   </Stack>
                 </>

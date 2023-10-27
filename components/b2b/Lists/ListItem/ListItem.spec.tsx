@@ -68,7 +68,6 @@ describe('[component] - ListItem', () => {
     setup()
     expect(screen.getByText(lineItem.product.name)).toBeVisible()
     expect(screen.getByText(/total/i)).toBeVisible()
-    expect(screen.getByText(/list-item/i)).toBeVisible()
     expect(screen.getByText(/qty/i)).toBeVisible()
     expect(screen.getByText(lineItem.product.productCode)).toBeVisible()
     expect(screen.getByTestId('quantity-selector')).toBeVisible()
