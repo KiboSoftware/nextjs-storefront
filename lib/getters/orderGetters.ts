@@ -368,6 +368,5 @@ export const orderGetters = {
   getHandlingDiscounts,
   getLineItemSubtotal,
   getShippingDiscounts,
-  getLineItemSubtotal,
   getItemTaxTotal,
 }
