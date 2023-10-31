@@ -98,8 +98,8 @@ const Price = (props: PriceProps) => {
           price={price}
           salePrice={salePrice}
           variant={variant}
-          fontWeight={fontWeight}
           color={color}
+          fontWeight={fontWeight}
         />
       )}
     </Box>

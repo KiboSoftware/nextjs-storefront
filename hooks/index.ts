@@ -95,6 +95,7 @@ export * from './mutations/card/delete/useDeleteCustomerCard'
 
 // Cart
 export * from './mutations/cart/useAddCartItem/useAddCartItem'
+export * from './mutations/cart/useDeleteCurrentCart/useDeleteCurrentCart'
 export * from './mutations/cart/useDeleteCartItem/useDeleteCartItem'
 export * from './mutations/cart/useUpdateCartItem/useUpdateCartItem'
 export * from './mutations/cart/useUpdateCartItemQuantity/useUpdateCartItemQuantity'

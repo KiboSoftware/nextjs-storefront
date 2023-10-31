@@ -49,34 +49,15 @@ const CheckoutUITemplate = <T extends CrOrder | Checkout>(props: CheckoutUITempl
   const handleBack = () => setStepBack()
   const handleSubmit = useCallback(() => setStepStatusSubmit(), [])
 
-  const subTotal = (checkout as CrOrder)?.subtotal || (checkout as Checkout)?.subTotal
-  const shippingTotal = orderGetters.getShippingTotal(checkout as CrOrder)
-
-  const discountedSubtotal =
-    orderGetters.getDiscountedSubtotal(checkout as CrOrder) ||
-    checkoutGetters.getDiscountedSubtotal(checkout as Checkout)
-  const taxTotal =
-    orderGetters.getTaxTotal(checkout as CrOrder) ||
-    checkoutGetters.getTaxTotal(checkout as Checkout)
-  const total = orderGetters.getTotal(checkout)
-
   const orderSummaryArgs = {
     nameLabel: t('order-summary'),
     subTotalLabel: `Cart Subtotal of (${checkout?.items?.length} items)`,
     shippingTotalLabel: t('standard-shipping'),
     taxLabel: t('tax'),
     totalLabel: t('order-total'),
-    subTotal: t('currency', { val: subTotal }),
+    handlingLabel: t('additional-handling'),
+    orderDetails: checkout,
 
-    discountedSubtotal:
-      discountedSubtotal > 0 && discountedSubtotal !== subTotal
-        ? t('currency', { val: discountedSubtotal })
-        : '',
-    shippingTotal: t('currency', {
-      val: shippingTotal,
-    }),
-    tax: t('currency', { val: taxTotal || 0 }),
-    total: t('currency', { val: total }),
     checkoutLabel: t('go-to-checkout'),
     shippingLabel: t('go-to-shipping'),
     backLabel: t('go-back'),

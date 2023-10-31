@@ -433,25 +433,49 @@ const AddressBook = (props: AddressBookProps) => {
       </NoSsr>
       {isAddressModified && (
         <Box pb={'1.813rem'}>
-          <Grid item xs={12} md={6} pl={1} pb={2.5} pr={6.5}>
-            <KiboSelect
-              name="address-type"
-              sx={{ typography: 'body2', width: '100%' }}
-              value={addressType}
-              onChange={(_name, value) => setAddressType(value)}
-            >
-              {Object.values(AddressType).map((addressTypeValue: string) => (
-                <MenuItem
-                  sx={{ typography: 'body2' }}
-                  key={addressTypeValue}
-                  value={addressTypeValue}
+          <Box m={1}>
+            <Grid container rowSpacing={1} columnSpacing={{ md: 3 }}>
+              <Grid item xs={12} md={6} pb={2}>
+                <KiboSelect
+                  name="address-type"
+                  sx={{ typography: 'body2', width: '100%' }}
+                  value={addressType}
+                  onChange={(_name, value) => setAddressType(value)}
                 >
-                  {addressTypeValue}
-                </MenuItem>
-              ))}
-            </KiboSelect>
-          </Grid>
-
+                  {Object.values(AddressType).map((addressTypeValue: string) => (
+                    <MenuItem
+                      sx={{ typography: 'body2' }}
+                      key={addressTypeValue}
+                      value={addressTypeValue}
+                    >
+                      {addressTypeValue}
+                    </MenuItem>
+                  ))}
+                </KiboSelect>
+              </Grid>
+              <Grid item xs={12} md={6} pb={2}>
+                <Box>
+                  {!editAddress && (
+                    <FormControlLabel
+                      label={t('shipping-billing-addresses-are-same')}
+                      control={
+                        <Checkbox
+                          sx={{ marginLeft: '0.5rem' }}
+                          inputProps={{
+                            'aria-label': t('shipping-billing-addresses-are-same'),
+                          }}
+                          checked={saveAsShippingBillingCheckbox}
+                          onChange={() =>
+                            setSaveAsShippingBillingCheckbox(!saveAsShippingBillingCheckbox)
+                          }
+                        />
+                      }
+                    />
+                  )}
+                </Box>
+              </Grid>
+            </Grid>
+          </Box>
           <AddressForm
             saveAddressLabel={''}
             setAutoFocus={true}
@@ -479,33 +503,6 @@ const AddressBook = (props: AddressBookProps) => {
               }
             />
           )}
-
-          <Box>
-            {!editAddress && (
-              <FormControlLabel
-                label={
-                  addressType === AddressType.SHIPPING
-                    ? t('save-as-billing-address')
-                    : t('save-as-shipping-address')
-                }
-                control={
-                  <Checkbox
-                    sx={{ marginLeft: '0.5rem' }}
-                    inputProps={{
-                      'aria-label':
-                        addressType === AddressType.SHIPPING
-                          ? t('save-as-billing-address')
-                          : t('save-as-shipping-address'),
-                    }}
-                    checked={saveAsShippingBillingCheckbox}
-                    onChange={() =>
-                      setSaveAsShippingBillingCheckbox(!saveAsShippingBillingCheckbox)
-                    }
-                  />
-                }
-              />
-            )}
-          </Box>
 
           <Stack
             pl={1}

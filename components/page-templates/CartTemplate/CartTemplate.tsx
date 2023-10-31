@@ -17,11 +17,15 @@ import { useTranslation } from 'next-i18next'
 
 import { CartItemList } from '@/components/cart'
 import { PromoCodeBadge, OrderSummary } from '@/components/common'
+import { ConfirmationDialog, StoreLocatorDialog } from '@/components/dialogs'
+import { useModalContext } from '@/context'
 import {
   useGetCart,
   useInitiateOrder,
   useGetStoreLocations,
   useGetPurchaseLocation,
+  useUpdateCartItemQuantity,
+  useDeleteCurrentCart,
   useDeleteCartItem,
   useUpdateCartCoupon,
   useDeleteCartCoupon,
@@ -47,15 +51,14 @@ const CartTemplate = (props: CartTemplateProps) => {
   const router = useRouter()
   const { initiateOrder } = useInitiateOrder()
   const { initiateCheckout } = useInitiateCheckout()
+  const { updateCartItemQuantity } = useUpdateCartItemQuantity()
+  const { deleteCurrentCart } = useDeleteCurrentCart()
   const { deleteCartItem } = useDeleteCartItem()
+  const { showModal, closeModal } = useModalContext()
 
   const cartItemCount = cartGetters.getCartItemCount(cart)
   const cartItems = cartGetters.getCartItems(cart)
-  const cartSubTotal = orderGetters.getSubtotal(cart)
-  const cartDiscountedSubTotal = orderGetters.getDiscountedSubtotal(cart)
-  const cartShippingTotal = orderGetters.getShippingTotal(cart)
-  const cartTaxTotal = orderGetters.getTaxTotal(cart)
-  const cartTotal = orderGetters.getTotal(cart)
+
   const locationCodes = orderGetters.getFulfillmentLocationCodes(cartItems as CrCartItem[])
 
   const { data: locations } = useGetStoreLocations({ filter: locationCodes })
@@ -118,12 +121,7 @@ const CartTemplate = (props: CartTemplateProps) => {
     nameLabel: t('cart-summary'),
     subTotalLabel: `${t('subtotal')} (${t('item-quantity', { count: cartItemCount })})`,
     totalLabel: t('estimated-order-total'),
-    subTotal: t('currency', { val: cartSubTotal }),
-    discountedSubtotal:
-      cartDiscountedSubTotal && cartDiscountedSubTotal !== cartSubTotal
-        ? t('currency', { val: cartDiscountedSubTotal })
-        : '',
-    total: t('currency', { val: cartTotal }),
+    orderDetails: cart,
     isShippingTaxIncluded: false,
     promoComponent: (
       <PromoCodeBadge
@@ -145,6 +143,25 @@ const CartTemplate = (props: CartTemplateProps) => {
       cartItems: cartItems as CrCartItem[],
       purchaseLocation,
     })
+
+  const openClearCartConfirmation = () => {
+    showModal({
+      Component: ConfirmationDialog,
+      props: {
+        onConfirm: handleDeleteCurrentCart,
+        contentText: t('clear-cart-confirmation-text'),
+        primaryButtonText: t('delete'),
+      },
+    })
+  }
+
+  const handleDeleteCurrentCart = async () => {
+    try {
+      await deleteCurrentCart.mutateAsync()
+    } catch (err) {
+      console.error(err)
+    }
+  }
 
   return (
     <Grid container>
@@ -206,6 +223,16 @@ const CartTemplate = (props: CartTemplateProps) => {
                 >
                   {t('go-to-checkout')}
                 </LoadingButton>
+                <Button
+                  variant="contained"
+                  color="secondary"
+                  name="clearCart"
+                  fullWidth
+                  onClick={openClearCartConfirmation}
+                  disabled={!cartItemCount}
+                >
+                  {t('clear-cart')}
+                </Button>
               </Stack>
             </OrderSummary>
           </Grid>

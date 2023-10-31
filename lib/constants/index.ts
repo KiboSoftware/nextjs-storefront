@@ -198,3 +198,8 @@ export const QuoteUpdateMode = {
   ApplyToDraft: 'ApplyToDraft',
   ApplyAndCommit: 'ApplyAndCommit',
 }
+
+export const CountryCode = {
+  US: 'US',
+  CA: 'CA',
+}

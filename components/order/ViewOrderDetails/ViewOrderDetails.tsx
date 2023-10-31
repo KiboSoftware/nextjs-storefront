@@ -88,13 +88,9 @@ const ViewOrderDetails = (props: ViewOrderDetailsProps) => {
     shippingTotalLabel: t('shipping'),
     taxLabel: t('estimated-tax'),
     totalLabel: t('total-price'),
-    subTotal: t('currency', { val: orderGetters.getSubtotal(order) }),
-    discountedSubtotal: t('currency', { val: orderGetters.getDiscountedSubtotal(order) }),
-    shippingTotal: orderGetters.getShippingTotal(order)
-      ? t('currency', { val: orderGetters.getShippingTotal(order) })
-      : t('free'),
-    tax: t('currency', { val: orderGetters.getTaxTotal(order) }),
-    total: t('currency', { val: orderTotal }),
+    handlingLabel: t('additional-handling'),
+
+    orderDetails: order,
   }
 
   const handleGoBackToOrderHistory = () => onGoBackToOrderHistory && onGoBackToOrderHistory()
