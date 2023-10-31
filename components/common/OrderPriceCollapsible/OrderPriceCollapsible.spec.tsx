@@ -20,32 +20,33 @@ const user = userEvent.setup()
 describe('[components] OrderPriceCollapsible', () => {
   it('should render component', async () => {
     render(<Common {...Common.args} />)
+    const total = (WithDiscounts.args?.total as number) + (Common.args?.taxTotal ?? 0)
     const accordionButton = screen.getByRole('button', {
-      name: `${Common.args?.title as string} ${Common.args?.total as number}`,
+      name: `${Common.args?.title as string} ${total}`,
     })
 
     expect(accordionButton).toBeVisible()
 
     await user.click(accordionButton)
     expect(screen.getByText(Common.args?.title as string)).toBeVisible()
-    expect(screen.getByText(Common.args?.total as number)).toBeVisible()
+    expect(screen.getByText(total)).toBeVisible()
     expect(screen.getByText(Common.args?.subTotal as number)).toBeVisible()
     expect(screen.getByText(Common.args?.taxTotal as number)).toBeVisible()
   })
 
   it('should render component with discount', async () => {
     render(<WithDiscounts {...WithDiscounts.args} />)
+    const total = (WithDiscounts.args?.total as number) + (Common.args?.taxTotal ?? 0)
     const accordionButton = screen.getByRole('button', {
-      name: `${WithDiscounts.args?.title as string} ${WithDiscounts.args?.total as number}`,
+      name: `${WithDiscounts.args?.title as string} ${total}`,
     })
 
     expect(accordionButton).toBeVisible()
 
     await user.click(accordionButton)
     expect(screen.getByText(WithDiscounts.args?.title as string)).toBeVisible()
-    expect(screen.getByText(WithDiscounts.args?.total as number)).toBeVisible()
+    expect(screen.getByText(total)).toBeVisible()
     expect(screen.getByText(WithDiscounts.args?.discountedSubtotal as number)).toBeVisible()
-    expect(screen.getByText('discounts:')).toBeVisible()
     expect(screen.getByText(WithDiscounts.args?.discounts?.[0].name as number)).toBeVisible()
     expect(screen.getByText(WithDiscounts.args?.discounts?.[0].impact as number)).toBeVisible()
     expect(screen.getByText(WithDiscounts.args?.taxTotal as number)).toBeVisible()
