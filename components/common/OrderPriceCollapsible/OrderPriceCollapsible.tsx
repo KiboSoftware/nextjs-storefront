@@ -32,6 +32,11 @@ const styles = {
     py: 0.25,
     width: { xs: '100%', md: '100%' },
   },
+  priceContainer: {
+    '& .MuiListItemSecondaryAction-root': {
+      right: '0.5rem',
+    },
+  },
 }
 
 const OrderPriceCollapsible = (props: OrderPriceCollapsibleProps) => {
@@ -45,12 +50,16 @@ const OrderPriceCollapsible = (props: OrderPriceCollapsibleProps) => {
   }
 
   return (
-    <Box>
+    <Box sx={{ ...styles.priceContainer }}>
       <ListItemButton sx={{ paddingInline: 0 }} onClick={handleClick}>
         <ListItem
           sx={{ padding: 0 }}
           secondaryAction={
-            <Price variant="body1" fontWeight="bold" price={t('currency', { val: total })} />
+            <Price
+              variant="body1"
+              fontWeight="bold"
+              price={t('currency', { val: total + taxTotal })}
+            />
           }
         >
           <ListItemIcon sx={{ minWidth: 30 }}>
@@ -89,12 +98,6 @@ const OrderPriceCollapsible = (props: OrderPriceCollapsibleProps) => {
               primary={<Typography variant="body2">{t('subtotal', { title })}</Typography>}
             />
           </ListItem>
-
-          {discounts && discounts?.length > 0 && (
-            <ListItem sx={{ ...styles.detailedSummaryContainer }}>
-              <ListItemText primary={<Typography variant="body2">{t('discounts')}:</Typography>} />
-            </ListItem>
-          )}
           {discounts?.map((discount) => {
             return (
               <ListItem
