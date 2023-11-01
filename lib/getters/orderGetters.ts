@@ -80,6 +80,8 @@ const getOrderDiscounts = (order: CrOrder) =>
 const getLineItemSubtotal = (order: CrOrder | CrCart) =>
   order?.lineItemSubtotalWithOrderAdjustments as number
 
+const getItemTaxTotal = (order: CrOrder | CrCart) => order?.itemTaxTotal as number
+
 const getItemsByFulfillment = (order: CrOrder, fulfillmentMethod: string): CrOrderItem[] => {
   return (
     (order?.items?.filter(
@@ -394,6 +396,7 @@ export const orderGetters = {
   getHandlingSubTotal,
   getHandlingTaxTotal,
   getHandlingDiscounts,
-  getShippingDiscounts,
   getLineItemSubtotal,
+  getShippingDiscounts,
+  getItemTaxTotal,
 }

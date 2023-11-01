@@ -100,6 +100,7 @@ export const baseCheckoutFragment = /* GraphQL */ `
     discountedTotal
     subtotal
     lineItemSubtotalWithOrderAdjustments
+    itemTaxTotal
     taxTotal
     orderNumber
     couponCodes
