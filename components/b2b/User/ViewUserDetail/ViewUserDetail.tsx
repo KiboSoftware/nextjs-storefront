@@ -15,8 +15,6 @@ const ViewUserDetail = (props: ViewUserDetailProps) => {
   const { t } = useTranslation('common')
   const { b2BUser } = props
 
-  console.log(b2BUser)
-
   return (
     <Box>
       <Typography component="h2" sx={{ color: theme.palette.grey[600] }}>

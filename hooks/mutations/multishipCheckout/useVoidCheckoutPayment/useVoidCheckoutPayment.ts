@@ -24,8 +24,6 @@ const updateCheckoutPayment = async (props: UpdateCheckoutPaymentActionInput) =>
     variables: props,
   })
 
-  console.log(response)
-
   return response?.updateCheckoutPaymentAction
 }
 

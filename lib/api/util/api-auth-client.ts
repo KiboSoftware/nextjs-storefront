@@ -9,7 +9,6 @@ const authTicketMemCache = {
   // eslint-disable-next-line require-await
   getAuthTicket: async () => authTicket,
   setAuthTicket: (newAuthTicket: AppAuthTicket) => {
-    console.log(`set auth`)
     authTicket = newAuthTicket
   },
 }

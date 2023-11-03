@@ -17,7 +17,6 @@ export default async function Captcha(req: NextApiRequest, res: NextApiResponse)
 
       const reCaptchaData = await reCaptchaRes.json()
 
-      console.log(reCaptchaData, 'Response from Google reCaptcha verification API')
       if (reCaptchaData?.score > reCaptchaThreshold) {
         res.status(200).json({
           status: 'success',
