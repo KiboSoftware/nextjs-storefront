@@ -204,7 +204,6 @@ describe('[components] QuoteDetailsTemplate', () => {
       const quoteSummary = screen.getByText(/quote-summary/i)
 
       const clearChangesButton = screen.getByRole('button', { name: 'clear-changes' })
-      const saveAndExitButton = screen.getByRole('button', { name: 'save-quote' })
       const submitForApprovalButton = screen.getByRole('button', { name: 'submit-for-approval' })
       const printQuoteButton = screen.getByRole('button', { name: 'print-quote' })
       const b2bProductComponent = screen.getByTestId('b2b-product-search-component')
@@ -214,7 +213,6 @@ describe('[components] QuoteDetailsTemplate', () => {
       expect(quoteDetails).toBeVisible()
       expect(quoteSummary).toBeVisible()
       expect(clearChangesButton).toBeVisible()
-      expect(saveAndExitButton).toBeVisible()
       expect(submitForApprovalButton).toBeVisible()
       expect(printQuoteButton).toBeVisible()
       expect(b2bProductComponent).toBeVisible()
@@ -382,8 +380,9 @@ describe('[components] QuoteDetailsTemplate', () => {
 
       await user.type(quoteNameTextBox, 'Quote Name')
 
-      const saveQuote = screen.getByRole('button', { name: /save-quote/i })
-      user.click(saveQuote)
+      const saveQuoteName = screen.getByTestId('save-quote-name')
+      const cancelQuoteName = screen.getByTestId('cancel-quote-name')
+      user.click(saveQuoteName)
 
       server.use(
         graphql.query('getQuoteByID', (_req, res, ctx) => {
@@ -391,6 +390,9 @@ describe('[components] QuoteDetailsTemplate', () => {
         })
       )
 
+      await waitFor(() => {
+        expect(cancelQuoteName).toBeVisible()
+      })
       await waitFor(() => {
         expect(screen.getByText('Quote Name')).toBeVisible()
       })
@@ -404,7 +406,6 @@ describe('[components] QuoteDetailsTemplate', () => {
       await waitFor(() => {
         expect(screen.queryAllByTestId('applied-coupon')).toHaveLength(couponCount)
       })
-      console.log('server before')
 
       server.use(
         graphql.query('getQuoteByID', (_req, res, ctx) => {
@@ -418,7 +419,6 @@ describe('[components] QuoteDetailsTemplate', () => {
           )
         })
       )
-      console.log('server after')
 
       await user.click(screen.getByTestId('apply-promo-button'))
 

@@ -3,6 +3,8 @@ import React, { useCallback, useEffect, useState, useRef } from 'react'
 import { yupResolver } from '@hookform/resolvers/yup'
 import { FiberManualRecord } from '@mui/icons-material'
 import ArrowBackIos from '@mui/icons-material/ArrowBackIos'
+import Close from '@mui/icons-material/Close'
+import Done from '@mui/icons-material/Done'
 import { LoadingButton } from '@mui/lab'
 import {
   Stack,
@@ -18,6 +20,7 @@ import {
   Link,
   Divider,
   NoSsr,
+  IconButton,
 } from '@mui/material'
 import { useRouter } from 'next/router'
 import { useTranslation } from 'next-i18next'
@@ -569,6 +572,15 @@ const QuoteDetailsTemplate = (props: QuoteDetailsTemplateProps) => {
   useEffect(() => {
     setQuoteNameInputValue(quote?.name ? quote?.name : '')
   }, [JSON.stringify(quote?.name)])
+
+  const isQuoteNameEditable = !Boolean(
+    QuoteStatus[status] === QuoteStatus.InReview ||
+      QuoteStatus[status] === QuoteStatus.Completed ||
+      QuoteStatus[status] === QuoteStatus.Expired ||
+      !Boolean(quoteNameField.name) ||
+      quote?.name === quoteNameInputValue
+  )
+
   return (
     <>
       <Grid container spacing={2}>
@@ -637,19 +649,8 @@ const QuoteDetailsTemplate = (props: QuoteDetailsTemplateProps) => {
                       {t('edit-quote')}
                     </LoadingButton>
                   )}
-                  <LoadingButton
-                    variant="contained"
-                    color="inherit"
-                    disabled={
-                      QuoteStatus[status] === QuoteStatus.InReview ||
-                      QuoteStatus[status] === QuoteStatus.Completed ||
-                      QuoteStatus[status] === QuoteStatus.Expired ||
-                      !Boolean(quoteNameField.name) ||
-                      quote?.name === quoteNameInputValue
-                    }
-                    onClick={handleSubmit(handleSaveQuoteName)}
-                  >
-                    {t('save-quote')}
+                  <LoadingButton variant="contained" color="secondary">
+                    {t('print-quote')}
                   </LoadingButton>
                   {(QuoteStatus[quote?.status as string] !== QuoteStatus.ReadyForCheckout ||
                     mode === 'edit') && (
@@ -699,37 +700,82 @@ const QuoteDetailsTemplate = (props: QuoteDetailsTemplateProps) => {
           <Typography variant="h2" mb={2}>
             {t('quote-details')}
           </Typography>
-          <LoadingButton variant="contained" color="secondary">
-            {t('print-quote')}
-          </LoadingButton>
         </Grid>
-        <Grid item xs={12} md={5} style={{ paddingTop: !mdScreen ? '1rem' : '24px' }}>
-          <Controller
-            name="name"
-            control={control}
-            render={({ field }) => (
-              <KiboTextBox
-                {...field}
-                value={quoteNameInputValue || ''}
-                label={t('quote-name')}
-                placeholder={t('enter-quote-name')}
-                autoComplete="off"
-                ref={null}
-                onChange={(_name: string, value = '') => {
-                  setQuoteNameInputValue(value)
-                  field.onChange(value)
-                }}
-                onBlur={field.onBlur}
-                required
-                disabled={
-                  QuoteStatus[status] === QuoteStatus.InReview ||
-                  QuoteStatus[status] === QuoteStatus.Completed ||
-                  QuoteStatus[status] === QuoteStatus.Expired
-                }
+
+        {(mode === 'edit' || mode === 'create') && (
+          <>
+            <Grid
+              item
+              xs={isQuoteNameEditable ? 10 : 12}
+              md={5}
+              style={{ paddingTop: !mdScreen ? '1rem' : '24px' }}
+            >
+              <Controller
+                name="name"
+                control={control}
+                render={({ field }) => (
+                  <Box display={'flex'} alignItems={'center'} gap={1}>
+                    <KiboTextBox
+                      {...field}
+                      value={quoteNameInputValue || ''}
+                      label={t('quote-name')}
+                      placeholder={t('enter-quote-name')}
+                      autoComplete="off"
+                      ref={null}
+                      onChange={(_name: string, value = '') => {
+                        setQuoteNameInputValue(value)
+                        field.onChange(value)
+                      }}
+                      onBlur={field.onBlur}
+                      required
+                      disabled={
+                        QuoteStatus[status] === QuoteStatus.InReview ||
+                        QuoteStatus[status] === QuoteStatus.Completed ||
+                        QuoteStatus[status] === QuoteStatus.Expired
+                      }
+                    />
+                  </Box>
+                )}
               />
+            </Grid>
+
+            {isQuoteNameEditable && (
+              <Grid item xs={2} md={5} display={'flex'} alignItems={'center'}>
+                <Box display={'flex'} gap={1} pt={1}>
+                  <Button
+                    variant="contained"
+                    sx={{ p: 0.5 }}
+                    aria-label="item-view"
+                    name="item-view"
+                    data-testid="save-quote-name"
+                    disabled={
+                      QuoteStatus[status] === QuoteStatus.InReview ||
+                      QuoteStatus[status] === QuoteStatus.Completed ||
+                      QuoteStatus[status] === QuoteStatus.Expired ||
+                      !Boolean(quoteNameField.name) ||
+                      quote?.name === quoteNameInputValue
+                    }
+                    onClick={handleSubmit(handleSaveQuoteName)}
+                  >
+                    <Done />
+                  </Button>
+                  <Button
+                    variant="contained"
+                    color="secondary"
+                    sx={{ p: 0.5 }}
+                    aria-label="item-view"
+                    name="item-view"
+                    data-testid="cancel-quote-name"
+                    onClick={() => setQuoteNameInputValue(quote?.name as string)}
+                  >
+                    <Close />
+                  </Button>
+                </Box>
+              </Grid>
             )}
-          />
-        </Grid>
+          </>
+        )}
+
         <Grid
           item
           xs={12}

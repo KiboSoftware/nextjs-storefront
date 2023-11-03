@@ -79,10 +79,8 @@ module.exports = {
     },
     B2BQuotes: {
       sortOptions: [
-        { value: 'First Created', id: 'created asc' },
-        { value: 'Last Created', id: 'created desc' },
-        { value: 'Quote name: A-Z', id: 'name asc' },
-        { value: 'Quote name: Z-A', id: 'name desc' },
+        { value: 'Expiry Date Asc', id: 'expirationDate asc' },
+        { value: 'Expiry Date Desc', id: 'expirationDate desc' },
         { value: 'Quote number: Low-High', id: 'number asc' },
         { value: 'Quote number: High-Low', id: 'number desc' },
       ],
