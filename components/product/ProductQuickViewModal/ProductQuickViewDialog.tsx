@@ -17,6 +17,7 @@ interface ProductQuickViewDialogProps {
   dialogProps?: any
   quoteDetails?: any
   listData?: any
+  shouldFetchShippingMethods?: boolean
   onUpdateListData: (param: CrWishlist) => void
 }
 
@@ -35,8 +36,11 @@ const ProductQuickViewDialogFooter = (props: any) => {
     onUpdateListData,
     currentProduct,
     listMode,
+    shouldFetchShippingMethods,
   } = props
-  const { handleAddToCart, handleAddToList, handleAddToQuote } = useProductCardActions()
+  const { handleAddToCart, handleAddToList, handleAddToQuote } = useProductCardActions(
+    shouldFetchShippingMethods
+  )
   const mdScreen = useMediaQuery((theme: Theme) => theme.breakpoints.up('md'))
 
   const handleAddProductToCart = () => {
@@ -118,7 +122,15 @@ const ProductQuickViewDialogFooter = (props: any) => {
 }
 
 const ProductQuickViewDialog = (props: ProductQuickViewDialogProps) => {
-  const { product, isQuickViewModal, dialogProps, quoteDetails, listData, onUpdateListData } = props
+  const {
+    product,
+    isQuickViewModal,
+    dialogProps,
+    quoteDetails,
+    listData,
+    shouldFetchShippingMethods = false,
+    onUpdateListData,
+  } = props
   const {
     title,
     cancel,
@@ -169,6 +181,7 @@ const ProductQuickViewDialog = (props: ProductQuickViewDialogProps) => {
             listData={listData}
             onUpdateListData={onUpdateListData}
             listMode={listMode}
+            shouldFetchShippingMethods={shouldFetchShippingMethods}
           />
         )
       }
@@ -184,6 +197,7 @@ const ProductQuickViewDialog = (props: ProductQuickViewDialogProps) => {
           title={title}
           cancel={cancel}
           getCurrentProduct={handleCurrentProduct}
+          shouldFetchShippingMethods={shouldFetchShippingMethods}
         />
       }
       customMaxWidth="80rem"

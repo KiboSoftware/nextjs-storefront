@@ -6,7 +6,8 @@ import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { makeGraphQLClient } from '@/lib/gql/client'
 import createQuoteItemMutation from '@/lib/gql/mutations/b2b/quotes/create-quote-item'
 import { buildCreateQuoteItemParams } from '@/lib/helpers'
-import { quoteKeys } from '@/lib/react-query/queryKeys'
+import { quoteKeys, quoteShippingMethodKeys } from '@/lib/react-query/queryKeys'
+import type { ShouldFetchShippingMethods } from '@/lib/types'
 
 import { Quote } from '@/lib/gql/types'
 
@@ -47,13 +48,16 @@ const createQuoteItem = async (props: CreateQuoteItemProps): Promise<Quote> => {
  *
  * @returns 'response?.createQuoteItem' which contains object of product items added to quote and it's quantity
  */
-export const useCreateQuoteItem = () => {
+export const useCreateQuoteItem = ({ shouldFetchShippingMethods }: ShouldFetchShippingMethods) => {
   const queryClient = useQueryClient()
   return {
     createQuoteItem: useMutation({
       mutationFn: createQuoteItem,
       onSuccess: () => {
         queryClient.invalidateQueries({ queryKey: quoteKeys.all })
+        if (shouldFetchShippingMethods) {
+          queryClient.invalidateQueries({ queryKey: quoteShippingMethodKeys.all })
+        }
       },
     }),
   }

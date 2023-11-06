@@ -12,11 +12,11 @@ import { ProductCustom, WishlistProductInput } from '@/lib/types'
 
 import { CrProductOption, CrWishlist, CrWishlistInput, Product } from '@/lib/gql/types'
 
-export const useProductCardActions = () => {
+export const useProductCardActions = (shouldFetchShippingMethods?: boolean) => {
   const { showModal } = useModalContext()
   const { addToCart } = useAddCartItem()
   const { addOrRemoveWishlistItem, checkProductInWishlist } = useWishlist()
-  const { createQuoteItem } = useCreateQuoteItem()
+  const { createQuoteItem } = useCreateQuoteItem({ shouldFetchShippingMethods })
   const { updateWishlist } = useUpdateWishlistItemMutation()
 
   const handleAddToCart = async (payload: any, showConfirmationModal = true) => {
@@ -59,12 +59,14 @@ export const useProductCardActions = () => {
     dialogProps,
     quoteDetails,
     listData,
+    shouldFetchShippingMethods,
     onUpdateListData,
   }: {
     product: ProductCustom
     dialogProps?: any
     quoteDetails?: any
     listData?: any
+    shouldFetchShippingMethods?: boolean
     onUpdateListData?: (param: CrWishlist) => void
   }) => {
     showModal({
@@ -75,6 +77,7 @@ export const useProductCardActions = () => {
         dialogProps,
         quoteDetails,
         listData,
+        shouldFetchShippingMethods,
         onUpdateListData,
       },
     })

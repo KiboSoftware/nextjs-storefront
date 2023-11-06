@@ -26,7 +26,7 @@ describe('[components] OrderPrice', () => {
     expect(screen.getByText(Common.args?.handlingLabel as string)).toBeVisible()
     expect(screen.getByText(Common.args?.orderDetails?.handlingTotal as number)).toBeVisible()
     expect(screen.getByText(Common.args?.shippingTotalLabel as string)).toBeVisible()
-    expect(screen.getByText(Common.args?.orderDetails?.shippingTotal as number)).toBeVisible()
+    expect(screen.getAllByText(Common.args?.orderDetails?.shippingTotal as number)[0]).toBeVisible()
     expect(screen.getByText(Common.args?.totalLabel as string)).toBeVisible()
     expect(screen.getByText(Common.args?.orderDetails?.total as number)).toBeVisible()
   })

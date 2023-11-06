@@ -8,9 +8,12 @@ import { Quote } from '@/lib/gql/types'
 
 describe('[hooks] useUpdateQuoteFulfillmentInfo', () => {
   it('should update quote fulfillment info based on contact, shippingMethodsName and code', async () => {
-    const { result } = renderHook(() => useUpdateQuoteFulfillmentInfo(), {
-      wrapper: createQueryClientWrapper(),
-    })
+    const { result } = renderHook(
+      () => useUpdateQuoteFulfillmentInfo({ shouldFetchShippingMethods: false }),
+      {
+        wrapper: createQueryClientWrapper(),
+      }
+    )
 
     result.current.updateQuoteFulfillmentInfo.mutateAsync({
       quoteId: 'quote-id',

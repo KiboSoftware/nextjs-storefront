@@ -9,7 +9,8 @@ import {
   buildUpdateQuoteFulfillmentInfoParams,
   UpdateQuoteFulfillmentInfoParams,
 } from '@/lib/helpers'
-import { quoteKeys } from '@/lib/react-query/queryKeys'
+import { quoteKeys, quoteShippingMethodKeys } from '@/lib/react-query/queryKeys'
+import type { ShouldFetchShippingMethods } from '@/lib/types'
 
 import type { CrFulfillmentInfoInput, Quote } from '@/lib/gql/types'
 
@@ -39,16 +40,18 @@ const updateQuoteFulfillment = async (params: UpdateQuoteFulfillmentInfoParams):
  *
  * <b>updateOrderFulfillmentInfo(orderId: String!, updateMode: String, version: String, fulfillmentInfoInput: FulfillmentInfoInput): FulfillmentInfo</b>
  *
- * Description : Updates user shipping(fulfillment) info at checkout
+ * Description : Updates user shipping(fulfillment) info at quote
  *
- * Parameters passed to function updateShippingInfo(params: CheckoutShippingParams) => expects object of type ' ShippingInfo' containing  orderId and fulfillmentInfoInput
+ * Parameters passed to function updateQuoteFulfillment(params: UpdateQuoteFulfillmentInfoParams) => expects object of type ' ShippingInfo' containing  orderId and fulfillmentInfoInput
  *
  * On success, calls invalidateQueries on quoteKeys and fetches the updated result.
  *
  * @returns 'response?.updateQuoteFulfillmentInfo', which contains updated shipping quote information
  */
 
-export const useUpdateQuoteFulfillmentInfo = () => {
+export const useUpdateQuoteFulfillmentInfo = ({
+  shouldFetchShippingMethods,
+}: ShouldFetchShippingMethods) => {
   const queryClient = useQueryClient()
 
   return {
@@ -56,6 +59,9 @@ export const useUpdateQuoteFulfillmentInfo = () => {
       mutationFn: updateQuoteFulfillment,
       onSuccess: () => {
         queryClient.invalidateQueries({ queryKey: quoteKeys.all })
+        if (shouldFetchShippingMethods) {
+          queryClient.invalidateQueries({ queryKey: quoteShippingMethodKeys.all })
+        }
       },
     }),
   }

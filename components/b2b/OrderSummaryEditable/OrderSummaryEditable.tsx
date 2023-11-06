@@ -197,7 +197,7 @@ const OrderSummaryEditable = (props: OrderSummaryEditableProps) => {
         sx={{ paddingLeft: 0 }}
         secondaryAction={
           <Price
-            fontWeight="normal"
+            fontWeight="bold"
             variant="body2"
             price={t('currency', { val: dutyTotal?.toString() })}
           />
@@ -225,7 +225,7 @@ const OrderSummaryEditable = (props: OrderSummaryEditableProps) => {
         sx={{ paddingLeft: 0 }}
         secondaryAction={
           <Price
-            fontWeight="normal"
+            fontWeight="bold"
             variant="body2"
             color="primary"
             price={t('currency', { val: total?.toString() })}

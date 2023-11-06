@@ -116,7 +116,7 @@ const MultiShipCheckoutTemplate = (props: MultiShipCheckoutProps) => {
         couponCode,
       })
       if (response?.invalidCoupons?.length) {
-        setPromoError(response?.invalidCoupons[0]?.reason)
+        setPromoError(`<strong>${couponCode}</strong> ${response?.invalidCoupons[0]?.reason}`)
       }
     } catch (err) {
       console.error(err)

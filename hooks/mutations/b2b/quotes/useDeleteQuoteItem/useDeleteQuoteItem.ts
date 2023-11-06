@@ -5,7 +5,8 @@ import { useMutation, useQueryClient } from '@tanstack/react-query'
 
 import { makeGraphQLClient } from '@/lib/gql/client'
 import { deleteQuoteItemMutation } from '@/lib/gql/mutations'
-import { quoteKeys } from '@/lib/react-query/queryKeys'
+import { quoteKeys, quoteShippingMethodKeys } from '@/lib/react-query/queryKeys'
+import type { ShouldFetchShippingMethods } from '@/lib/types'
 
 interface DeleteQuoteItemParams {
   quoteId: string
@@ -42,7 +43,7 @@ const deleteQuoteItem = async (params: DeleteQuoteItemParams): Promise<boolean> 
  *
  * @returns 'response?.deleteQuoteItemMutation' returns 'true' if product is deleted
  */
-export const useDeleteQuoteItem = () => {
+export const useDeleteQuoteItem = ({ shouldFetchShippingMethods }: ShouldFetchShippingMethods) => {
   const queryClient = useQueryClient()
   return {
     deleteQuoteItem: useMutation({
@@ -63,6 +64,9 @@ export const useDeleteQuoteItem = () => {
       onSettled: (_data, error, _, context) => {
         if (error) queryClient.setQueryData(quoteKeys.all, context?.previousQuote)
         queryClient.invalidateQueries({ queryKey: quoteKeys.all })
+        if (shouldFetchShippingMethods) {
+          queryClient.invalidateQueries({ queryKey: quoteShippingMethodKeys.all })
+        }
       },
     }),
   }

@@ -119,7 +119,7 @@ const OrderSummarySection = (props: OrderSummarySectionProps) => {
           sx={{ padding: 0 }}
           secondaryAction={
             <Price
-              fontWeight="normal"
+              fontWeight="bold"
               variant="body2"
               price={t('currency', { val: total?.toString() })}
             />

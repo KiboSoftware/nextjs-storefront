@@ -6,7 +6,8 @@ import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { makeGraphQLClient } from '@/lib/gql/client'
 import { updateQuoteItemFulfillmentMutation } from '@/lib/gql/mutations'
 import { buildUpdateQuoteItemFulfillmentParams } from '@/lib/helpers'
-import { quoteKeys } from '@/lib/react-query/queryKeys'
+import { quoteKeys, quoteShippingMethodKeys } from '@/lib/react-query/queryKeys'
+import type { ShouldFetchShippingMethods } from '@/lib/types'
 
 import { Quote } from '@/lib/gql/types'
 
@@ -61,13 +62,18 @@ const updateQuoteItemFulfillment = async (
  *
  * @returns 'response?.updateQuoteItemFulfillment' which contains object of product items added to quote and it's quantity
  */
-export const useUpdateQuoteItemFulfillment = () => {
+export const useUpdateQuoteItemFulfillment = ({
+  shouldFetchShippingMethods,
+}: ShouldFetchShippingMethods) => {
   const queryClient = useQueryClient()
   return {
     updateQuoteItemFulfillment: useMutation({
       mutationFn: updateQuoteItemFulfillment,
       onSuccess: () => {
         queryClient.invalidateQueries({ queryKey: quoteKeys.all })
+        if (shouldFetchShippingMethods) {
+          queryClient.invalidateQueries({ queryKey: quoteShippingMethodKeys.all })
+        }
       },
     }),
   }

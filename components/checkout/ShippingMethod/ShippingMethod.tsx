@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useRef } from 'react'
 
 import { Typography, Box, MenuItem, Divider } from '@mui/material'
 import { useTranslation } from 'next-i18next'
@@ -22,8 +22,7 @@ export type ShipItemListProps = {
   shipItems: Maybe<CrOrderItem>[]
   handlingAmount?: number
   orderShipmentMethods?: Maybe<CrShippingRate>[]
-  selectedShippingMethod?: string
-  setSelectedShippingMethod: (shippingMethod: string) => void
+  selectedShippingMethodCode?: string
   onShippingMethodChange?: (value: string, name?: string) => void
 }
 export type PickupItemListProps = {
@@ -40,17 +39,11 @@ const styles = {
   },
 }
 const ShipItemList = (shipProps: ShipItemListProps) => {
-  const {
-    orderShipmentMethods,
-    shipItems,
-    selectedShippingMethod,
-    onShippingMethodChange,
-    setSelectedShippingMethod,
-  } = shipProps
+  const { orderShipmentMethods, shipItems, selectedShippingMethodCode, onShippingMethodChange } =
+    shipProps
   const { t } = useTranslation('common')
 
   const handleShippingMethodChange = (name: string, value: string) => {
-    setSelectedShippingMethod(value)
     onShippingMethodChange && onShippingMethodChange(value, name)
   }
   return (
@@ -63,7 +56,7 @@ const ShipItemList = (shipProps: ShipItemListProps) => {
           name="shippingMethodCode"
           onChange={handleShippingMethodChange}
           placeholder="Select Shipping Option"
-          value={selectedShippingMethod}
+          value={selectedShippingMethodCode ?? ''}
         >
           {orderShipmentMethods?.map((item) => {
             return (
@@ -135,7 +128,6 @@ const ShippingMethod = (props: ShippingMethodProps) => {
 
   const { t } = useTranslation('common')
   const shippingMethodRef = useRef()
-  const [selectedShippingMethod, setSelectedShippingMethod] = useState(selectedShippingMethodCode)
 
   useEffect(() => {
     shippingMethodRef.current &&
@@ -157,8 +149,7 @@ const ShippingMethod = (props: ShippingMethodProps) => {
         <ShipItemList
           {...(onShippingMethodChange && { onShippingMethodChange })}
           {...(orderShipmentMethods && { orderShipmentMethods })}
-          {...(selectedShippingMethod && { selectedShippingMethod })}
-          setSelectedShippingMethod={setSelectedShippingMethod}
+          selectedShippingMethodCode={selectedShippingMethodCode}
           shipItems={shipItems}
         />
       ) : null}

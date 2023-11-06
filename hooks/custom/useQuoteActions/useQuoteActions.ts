@@ -11,6 +11,7 @@ interface UseQuoteActionsProps {
   updateMode: string
   quoteItems: CrOrderItem[]
   purchaseLocation: Location
+  shouldFetchShippingMethods?: boolean
 }
 
 export const useQuoteActions = ({
@@ -18,10 +19,13 @@ export const useQuoteActions = ({
   updateMode,
   quoteItems,
   purchaseLocation,
+  shouldFetchShippingMethods = false,
 }: UseQuoteActionsProps) => {
   const { showModal, closeModal } = useModalContext()
-  const { updateQuoteItemFulfillment } = useUpdateQuoteItemFulfillment()
-  const { updateQuoteItemQuantity } = useUpdateQuoteItemQuantity()
+  const { updateQuoteItemFulfillment } = useUpdateQuoteItemFulfillment({
+    shouldFetchShippingMethods,
+  })
+  const { updateQuoteItemQuantity } = useUpdateQuoteItemQuantity({ shouldFetchShippingMethods })
 
   const handleProductPickupLocation = (quoteItemId: string) => {
     showModal({
@@ -71,7 +75,12 @@ export const useQuoteActions = ({
 
   const handleQuantityUpdate = async (quoteItemId: string, quantity: number) => {
     try {
-      await updateQuoteItemQuantity.mutateAsync({ quoteId, quoteItemId, updateMode, quantity })
+      await updateQuoteItemQuantity.mutateAsync({
+        quoteId,
+        quoteItemId,
+        updateMode,
+        quantity,
+      })
     } catch (err) {
       console.error(err)
     }

@@ -78,9 +78,41 @@ export const baseOrderFragment = /* GraphQL */ `
     id
     email
     total
+    handlingAmount
+    handlingSubTotal
+    handlingTotal
+    handlingTaxTotal
+    handlingDiscounts {
+      impact
+      discount {
+        id
+        name
+        itemIds
+      }
+      couponCode
+      excluded
+    }
+    shippingDiscounts {
+      methodCode
+      discount {
+        impact
+        couponCode
+        excluded
+        discount {
+          id
+          name
+        }
+      }
+    }
     shippingTotal
+    shippingTaxTotal
+    shippingSubTotal
     discountTotal
+    discountedSubtotal
+    discountedTotal
     subtotal
+    lineItemSubtotalWithOrderAdjustments
+    itemTaxTotal
     taxTotal
     orderNumber
     submittedDate

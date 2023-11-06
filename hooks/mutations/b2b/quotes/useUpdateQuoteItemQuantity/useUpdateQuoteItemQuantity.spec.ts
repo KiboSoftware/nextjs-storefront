@@ -6,9 +6,12 @@ import { createQueryClientWrapper } from '@/__test__/utils/renderWithQueryClient
 
 describe('[hooks] useUpdateQuoteItemQuantity', () => {
   it('should update quote item quantity', async () => {
-    const { result } = renderHook(() => useUpdateQuoteItemQuantity(), {
-      wrapper: createQueryClientWrapper(),
-    })
+    const { result } = renderHook(
+      () => useUpdateQuoteItemQuantity({ shouldFetchShippingMethods: true }),
+      {
+        wrapper: createQueryClientWrapper(),
+      }
+    )
 
     result.current.updateQuoteItemQuantity.mutateAsync({
       quantity: 1,

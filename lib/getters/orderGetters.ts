@@ -30,7 +30,7 @@ const getCheckoutItemCount = (order: CrOrder) => order?.items?.length
 
 const getEmail = (order: CrOrder) => order?.email
 
-const getTotal = (order: CrOrder | CrCart | Checkout): number => order?.total as number
+const getTotal = (order: CrOrder | CrCart | Checkout): number => (order?.total as number) || 0
 
 const getShippingSubTotal = (order: CrOrder | CrCart | Checkout) => order?.shippingSubTotal || 0
 
@@ -58,10 +58,12 @@ const getHandlingDiscounts = (order: CrOrder) =>
       impact: (discount?.impact as number) * -1,
     }
   })
-const getTaxTotal = (order: CrOrder | CrCart) => order?.taxTotal as number
+const getTaxTotal = (order: CrOrder | CrCart) => (order?.taxTotal as number) || 0
 
 const getSubtotal = (order: CrOrder | CrCart | Checkout): number =>
-  ((order as Checkout)?.subTotal as number) || ((order as CrOrder | CrCart)?.subtotal as number)
+  ((order as Checkout)?.subTotal as number) ||
+  ((order as CrOrder | CrCart)?.subtotal as number) ||
+  0
 
 const getDiscountedSubtotal = (order: CrOrder | CrCart): number => {
   if (order?.discountedSubtotal && order?.discountedSubtotal != order?.subtotal)
@@ -78,9 +80,9 @@ const getOrderDiscounts = (order: CrOrder) =>
     }
   })
 const getLineItemSubtotal = (order: CrOrder | CrCart) =>
-  order?.lineItemSubtotalWithOrderAdjustments as number
+  (order?.lineItemSubtotalWithOrderAdjustments as number) || 0
 
-const getItemTaxTotal = (order: CrOrder | CrCart) => order?.itemTaxTotal as number
+const getItemTaxTotal = (order: CrOrder | CrCart) => (order?.itemTaxTotal as number) || 0
 
 const getItemsByFulfillment = (order: CrOrder, fulfillmentMethod: string): CrOrderItem[] => {
   return (

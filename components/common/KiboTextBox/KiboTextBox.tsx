@@ -8,7 +8,7 @@ export interface KiboTextBoxProps {
   value?: string | null | React.ReactNode
   required?: boolean
   error?: boolean
-  helperText?: string
+  helperText?: any
   placeholder?: string
   icon?: React.ReactNode
   onChange?: (name: string, value: string) => void
@@ -106,9 +106,11 @@ const KiboTextBox = (props: KiboTextBoxProps) => {
         {...rest}
       />
 
-      <FormHelperText id="helper-text" error aria-errormessage={helperText}>
-        {error ? helperText : ' '}
-      </FormHelperText>
+      <FormHelperText
+        id="helper-text"
+        aria-errormessage={helperText}
+        dangerouslySetInnerHTML={{ __html: helperText || '&nbsp;' }}
+      />
     </FormControl>
   )
 }

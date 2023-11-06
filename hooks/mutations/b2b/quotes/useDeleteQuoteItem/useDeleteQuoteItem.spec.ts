@@ -5,7 +5,7 @@ import { createQueryClientWrapper } from '@/__test__/utils/renderWithQueryClient
 
 describe('[hooks] useDeleteQuoteItem', () => {
   it('should use useDeleteQuoteItem when deleteCartItem', async () => {
-    const { result } = renderHook(() => useDeleteQuoteItem(), {
+    const { result } = renderHook(() => useDeleteQuoteItem({ shouldFetchShippingMethods: true }), {
       wrapper: createQueryClientWrapper(),
     })
 

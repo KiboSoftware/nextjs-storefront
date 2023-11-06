@@ -73,6 +73,7 @@ interface ProductDetailTemplateProps {
   title?: string
   cancel?: string
   quoteDetails?: any
+  shouldFetchShippingMethods?: boolean
   getCurrentProduct?: (
     addToCartPayload: any,
     currentProduct: ProductCustom,
@@ -113,6 +114,7 @@ const ProductDetailTemplate = (props: ProductDetailTemplateProps) => {
     addItemToCart,
     cancel,
     quoteDetails,
+    shouldFetchShippingMethods,
     getCurrentProduct,
   } = props
   const { t } = useTranslation('common')
@@ -283,6 +285,7 @@ const ProductDetailTemplate = (props: ProductDetailTemplateProps) => {
         NestedDialog: isQuickViewModal ? ProductQuickViewDialog : null,
         nestedDialogProps: {
           product: currentProduct,
+          shouldFetchShippingMethods,
           isQuickViewModal: true,
           dialogProps: {
             title: props.title,
@@ -299,6 +302,7 @@ const ProductDetailTemplate = (props: ProductDetailTemplateProps) => {
           props: {
             product: currentProduct,
             isQuickViewModal: true,
+            shouldFetchShippingMethods,
             dialogProps: {
               title: props.title,
               cancel,

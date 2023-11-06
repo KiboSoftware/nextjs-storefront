@@ -112,7 +112,7 @@ describe('useProductCardActions', () => {
 
   it('should handle adding to quote', async () => {
     const { result } = renderHook(() => useProductCardActions())
-    const { createQuoteItem } = useCreateQuoteItem()
+    const { createQuoteItem } = useCreateQuoteItem({ shouldFetchShippingMethods: false })
 
     const quoteId = '123'
     const updateMode = 'update'
