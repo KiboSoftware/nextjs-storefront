@@ -20,13 +20,14 @@ import {
   Link,
   Divider,
   NoSsr,
-  IconButton,
 } from '@mui/material'
 import { useRouter } from 'next/router'
 import { useTranslation } from 'next-i18next'
 import { Controller, useForm } from 'react-hook-form'
+import { useReactToPrint } from 'react-to-print'
 import * as yup from 'yup'
 
+import QuoteDetailsPrintTemplate from './QuoteDetailsPrintTemplate'
 import { quoteDetailsTemplateStyles } from './QuoteDetailsTemplate.style'
 import {
   B2BProductDetailsTable,
@@ -107,6 +108,22 @@ const schema = yup.object().shape({
 
 const QuoteDetailsTemplate = (props: QuoteDetailsTemplateProps) => {
   const { quote, mode, initialB2BUsers, currentB2BUser, onAccountTitleClick } = props
+
+  const componentRef = useRef(null)
+
+  const handlePrint = useReactToPrint({
+    content: () => componentRef.current,
+    onBeforeGetContent: () => {
+      document.getElementById('printable-quote-details')?.style.setProperty('display', 'block')
+    },
+    onAfterPrint: () => {
+      document.getElementById('printable-quote-details')?.style.setProperty('display', 'none')
+    },
+    onPrintError: () => {
+      document.getElementById('printable-quote-details')?.style.setProperty('display', 'none')
+    },
+    pageStyle: `margin: 1rem`,
+  })
   const { showModal } = useModalContext()
   const { t } = useTranslation('common')
   const updateMode = QuoteUpdateMode.ApplyToDraft
@@ -699,7 +716,7 @@ const QuoteDetailsTemplate = (props: QuoteDetailsTemplateProps) => {
                       {t('edit-quote')}
                     </LoadingButton>
                   )}
-                  <LoadingButton variant="contained" color="secondary">
+                  <LoadingButton variant="contained" color="secondary" onClick={handlePrint}>
                     {t('print-quote')}
                   </LoadingButton>
                   {(QuoteStatus[quote?.status as string] !== QuoteStatus.ReadyForCheckout ||
@@ -881,6 +898,7 @@ const QuoteDetailsTemplate = (props: QuoteDetailsTemplateProps) => {
           <Divider />
         </Grid>
 
+        {/* Product search section */}
         <Grid item xs={12} md={6}>
           <Typography variant="h2" mb={2}>
             {t('quote-summary')}
@@ -891,6 +909,8 @@ const QuoteDetailsTemplate = (props: QuoteDetailsTemplateProps) => {
               <B2BProductSearch onAddProduct={handleAddProduct} />
             )}
         </Grid>
+
+        {/* Product details table section */}
         <Grid item xs={12} sx={{ ...quoteDetailsTemplateStyles.gridPaddingTop }}>
           <Stack gap={3}>
             {mdScreen ? (
@@ -1357,6 +1377,11 @@ const QuoteDetailsTemplate = (props: QuoteDetailsTemplateProps) => {
           </Stack>
         </Grid>
       </Grid>
+
+      {/* Print Template */}
+      <Box pt={3} id="printable-quote-details" display={'none'} ref={componentRef}>
+        <QuoteDetailsPrintTemplate quote={quote} accountName={accountName} createdBy={createdBy} />
+      </Box>
     </>
   )
 }

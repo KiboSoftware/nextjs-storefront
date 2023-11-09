@@ -98,6 +98,11 @@ jest.mock('@/components/cart/CartItemList/CartItemList', () => ({
   ),
 }))
 
+jest.mock('@/components/page-templates/B2B/QuoteDetailsTemplate/QuoteDetailsPrintTemplate', () => ({
+  __esModule: true,
+  default: () => <div data-testid="QuoteDetailsPrintTemplate"></div>,
+}))
+
 jest.mock('@/components/b2b/B2BProductSearch/B2BProductSearch', () => ({
   __esModule: true,
   default: ({ onAddProduct }: any) => (
