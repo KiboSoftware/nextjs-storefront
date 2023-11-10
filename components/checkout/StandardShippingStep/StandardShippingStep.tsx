@@ -11,6 +11,7 @@ import {
   Checkbox,
   NoSsr,
 } from '@mui/material'
+import getConfig from 'next/config'
 import { useTranslation } from 'next-i18next'
 
 import { ShippingMethod } from '@/components/checkout'
@@ -47,6 +48,9 @@ const StandardShippingStep = (props: ShippingProps) => {
   // Use this to submit the form with reCaptcha: Don't delete this code
   // const { executeRecaptcha } = useReCaptcha()
   // const { showSnackbar } = useSnackbarContext()
+  const { publicRuntimeConfig } = getConfig()
+  const allowInvalidAddresses = publicRuntimeConfig.allowInvalidAddresses
+
   const { user } = useAuthContext()
   const checkoutShippingContact = orderGetters.getShippingContact(checkout)
   const checkoutShippingMethodCode = orderGetters.getShippingMethodCode(checkout)
@@ -130,9 +134,12 @@ const StandardShippingStep = (props: ShippingProps) => {
 
   const handleSaveAddressToCheckout = async ({ contact }: { contact: CrContact }) => {
     try {
-      await validateCustomerAddress.mutateAsync({
-        addressValidationRequestInput: { address: contact?.address as CuAddress },
-      })
+      if (!allowInvalidAddresses) {
+        await validateCustomerAddress.mutateAsync({
+          addressValidationRequestInput: { address: contact?.address as CuAddress },
+        })
+      }
+
       if (isAddressSavedToAccount) {
         const customerSavedAddress = await handleSaveAddressToAccount(contact)
         const { accountId: _, types: __, ...customerContact } = customerSavedAddress

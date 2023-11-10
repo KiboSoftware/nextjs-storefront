@@ -19,7 +19,7 @@ export const buildCardPaymentActionForCheckoutParams = (
   isBillingAddressAsShipping: boolean
 ): PaymentActionInput => {
   const billingInfo: CrBillingInfo = {
-    billingContact: { ...billingAddress, email: billingAddress?.email ?? checkout?.email },
+    billingContact: { ...billingAddress, email: billingAddress?.email || checkout?.email },
     card: {
       isCardInfoSaved: creditCardData.isCardInfoSaved || false,
       paymentOrCardType: creditCardData.cardType,

@@ -19,26 +19,34 @@ const getUserClaimsFromRequest = async (
   if (req.headers['x-vol-exclude-user-claims']) {
     return
   }
-  const cookies = req?.cookies
-  let authTicket = decodeParseCookieValue(cookies[authCookieName])
+  try {
+    const cookies = req?.cookies
+    let authTicket = decodeParseCookieValue(cookies[authCookieName])
 
-  if (authTicket && isShopperAuthExpired(authTicket) === false) {
+    if (authTicket && isShopperAuthExpired(authTicket) === false) {
+      return authTicket.accessToken
+    }
+
+    const accountId = authTicket?.accountId
+    // shopper is anonymous
+    // else logged in user ticket needs to be refreshed
+    if (!authTicket) {
+      authTicket = await shopperAuthClient.anonymousAuth()
+    } else {
+      const response = await shopperAuthClient.refreshUserAuth(authTicket)
+      if (response.accessToken) {
+        authTicket = response
+      }
+    }
+    res.setHeader(
+      'Set-Cookie',
+      authCookieName + '=' + prepareSetCookieValue({ ...authTicket, accountId }) + ';path=/'
+    )
+
     return authTicket.accessToken
+  } catch (err) {
+    console.error(err)
   }
-  const accountId = authTicket?.accountId
-
-  // shopper is anonymous
-  // else logged in user ticket needs to be refreshed
-  if (!authTicket) {
-    authTicket = await shopperAuthClient.anonymousAuth()
-  } else {
-    authTicket = await shopperAuthClient.refreshUserAuth(authTicket)
-  }
-  res.setHeader(
-    'Set-Cookie',
-    authCookieName + '=' + prepareSetCookieValue({ ...authTicket, accountId }) + ';path=/'
-  )
-
-  return authTicket.accessToken
+  return
 }
 export default getUserClaimsFromRequest

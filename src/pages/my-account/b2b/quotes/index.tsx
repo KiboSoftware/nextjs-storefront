@@ -21,7 +21,7 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
   const quotes = await getQuotes(
     req as NextApiRequest,
     res as NextApiResponse,
-    response?.currentAccount?.id
+    response?.customerAccount?.id
   )
 
   return {

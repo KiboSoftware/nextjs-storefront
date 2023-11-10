@@ -141,6 +141,8 @@ const AddressBook = (props: AddressBookProps) => {
   const shippingAddressPageSize = publicRuntimeConfig.shippingAddressPageSize
   const billingAddressPageSize = publicRuntimeConfig.billingAddressPageSize
   const reCaptchaKey = publicRuntimeConfig.recaptcha.reCaptchaKey
+  const allowInvalidAddresses = publicRuntimeConfig.allowInvalidAddresses
+
   const [isAddressModified, setIsAddressModified] = useState<boolean>(false)
   const [validateForm, setValidateForm] = useState<boolean>(false)
   const [isDefaultAddress, setIsDefaultAddress] = useState<boolean>(false)
@@ -234,9 +236,12 @@ const AddressBook = (props: AddressBookProps) => {
     })
 
     try {
-      await validateCustomerAddress.mutateAsync({
-        addressValidationRequestInput: { address: address?.contact?.address as CuAddress },
-      })
+      if (!allowInvalidAddresses) {
+        await validateCustomerAddress.mutateAsync({
+          addressValidationRequestInput: { address: address?.contact?.address as CuAddress },
+        })
+      }
+
       if (address?.contact?.id) {
         await updateCustomerAddress.mutateAsync(params as UpdateCustomerAccountContactDetailsParams)
         setIsAddressModified(false)

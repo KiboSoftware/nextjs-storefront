@@ -21,6 +21,7 @@ import {
   Divider,
   NoSsr,
 } from '@mui/material'
+import getConfig from 'next/config'
 import { useRouter } from 'next/router'
 import { useTranslation } from 'next-i18next'
 import { Controller, useForm } from 'react-hook-form'
@@ -94,6 +95,7 @@ import {
   Quote,
   QuoteComment,
 } from '@/lib/gql/types'
+
 export interface QuoteDetailsTemplateProps {
   quote: Quote
   mode?: string
@@ -108,6 +110,8 @@ const schema = yup.object().shape({
 
 const QuoteDetailsTemplate = (props: QuoteDetailsTemplateProps) => {
   const { quote, mode, initialB2BUsers, currentB2BUser, onAccountTitleClick } = props
+  const { publicRuntimeConfig } = getConfig()
+  const allowInvalidAddresses = publicRuntimeConfig.allowInvalidAddresses
 
   const componentRef = useRef(null)
 
@@ -124,6 +128,7 @@ const QuoteDetailsTemplate = (props: QuoteDetailsTemplateProps) => {
     },
     pageStyle: `margin: 1rem`,
   })
+
   const { showModal } = useModalContext()
   const { t } = useTranslation('common')
   const updateMode = QuoteUpdateMode.ApplyToDraft
@@ -373,9 +378,12 @@ const QuoteDetailsTemplate = (props: QuoteDetailsTemplateProps) => {
 
   const handleSaveAddressToQuote = async ({ contact }: { contact: CrContact }) => {
     try {
-      await validateCustomerAddress.mutateAsync({
-        addressValidationRequestInput: { address: contact?.address as CuAddress },
-      })
+      if (!allowInvalidAddresses) {
+        await validateCustomerAddress.mutateAsync({
+          addressValidationRequestInput: { address: contact?.address as CuAddress },
+        })
+      }
+
       if (isAddressSavedToAccount) {
         const customerSavedAddress = await handleSaveAddressToAccount(contact)
         const { accountId: _, types: __, ...customerContact } = customerSavedAddress
