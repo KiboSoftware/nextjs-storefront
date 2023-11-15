@@ -1,6 +1,7 @@
 import { NextApiRequest, NextApiResponse } from 'next'
 import getConfig from 'next/config'
 
+import { getSellerTenantInfo } from '../util/seller'
 import { fetcher, getAdditionalHeader, getUserClaimsFromRequest } from '@/lib/api/util'
 import { getUserAddressesQuery as query } from '@/lib/gql/queries'
 import { decodeParseCookieValue } from '@/lib/helpers'
@@ -27,7 +28,11 @@ export default async function getCustomerAddresses(
   const userClaims = await getUserClaimsFromRequest(req, res)
 
   const headers = getAdditionalHeader(req)
-  const response = await fetcher({ query, variables }, { userClaims, headers })
+  const response = await fetcher(
+    { query, variables },
+    { userClaims, headers },
+    getSellerTenantInfo(req)
+  )
 
   return response.data?.customerAccountContacts
 }

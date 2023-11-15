@@ -2,6 +2,7 @@ import { NextApiRequest, NextApiResponse } from 'next'
 
 import { getAdditionalHeader } from '../util'
 import getUserClaimsFromRequest from '../util/getUserClaimsFromRequest'
+import { getSellerTenantInfo } from '../util/seller'
 import { fetcher } from '@/lib/api/util'
 import { getCurrentUser as getCurrentUserQuery } from '@/lib/gql/queries'
 
@@ -12,7 +13,8 @@ export default async function getCurrentUser(req: NextApiRequest, res: NextApiRe
 
   const response = await fetcher(
     { query: getCurrentUserQuery, variables: {} },
-    { userClaims, headers }
+    { userClaims, headers },
+    getSellerTenantInfo(req)
   )
   return response?.data
 }

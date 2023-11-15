@@ -1,6 +1,7 @@
 import { NextApiRequest, NextApiResponse } from 'next'
 import getConfig from 'next/config'
 
+import { getSellerTenantInfo } from '../util/seller'
 import { fetcher, getAdditionalHeader, getUserClaimsFromRequest } from '@/lib/api/util'
 import { getCustomerB2BAccountUsersQuery as query } from '@/lib/gql/queries'
 import { decodeParseCookieValue } from '@/lib/helpers'
@@ -30,7 +31,11 @@ export default async function getB2BUsers(
   const userClaims = await getUserClaimsFromRequest(req, res)
 
   const headers = getAdditionalHeader(req)
-  const response = await fetcher({ query, variables }, { userClaims, headers })
+  const response = await fetcher(
+    { query, variables },
+    { userClaims, headers },
+    getSellerTenantInfo(req)
+  )
 
   return response.data?.b2bAccountUsers
 }

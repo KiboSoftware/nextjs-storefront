@@ -1,4 +1,5 @@
 import { fetcher, getAdditionalHeader, getUserClaimsFromRequest } from '../util'
+import { getSellerTenantInfo } from '../util/seller'
 
 import type { NextApiRequest, NextApiResponse } from 'next'
 
@@ -7,9 +8,10 @@ export default async function graphQLHandler(req: NextApiRequest, res: NextApiRe
     const { query, variables } = req.body
 
     const headers = getAdditionalHeader(req)
-
     const userClaims = await getUserClaimsFromRequest(req, res)
-    const response = await fetcher({ query, variables }, { userClaims, headers })
+
+    const sellerTenantInfo = getSellerTenantInfo(req)
+    const response = await fetcher({ query, variables }, { userClaims, headers }, sellerTenantInfo)
     if (response?.errors) {
       throw {
         message: response?.errors[0]?.extensions?.response?.body?.message,

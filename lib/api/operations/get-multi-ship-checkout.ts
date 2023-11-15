@@ -2,6 +2,7 @@ import { NextApiRequest, NextApiResponse } from 'next'
 
 import { getAdditionalHeader } from '../util'
 import getUserClaimsFromRequest from '../util/getUserClaimsFromRequest'
+import { getSellerTenantInfo } from '../util/seller'
 import { fetcher } from '@/lib/api/util'
 import { getMultiShipCheckoutQuery as query } from '@/lib/gql/queries'
 
@@ -20,7 +21,11 @@ export default async function getMultiShipCheckout(
 
   const headers = req ? getAdditionalHeader(req) : {}
 
-  const response = await fetcher({ query, variables }, { userClaims, headers })
+  const response = await fetcher(
+    { query, variables },
+    { userClaims, headers },
+    getSellerTenantInfo(req)
+  )
 
   return response.data?.checkout
 }

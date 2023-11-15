@@ -5,6 +5,7 @@ const addProtocolToHost = (hostname: string | undefined) =>
   hostname && !hostname.match(protocolRegx) ? `https://${hostname}` : hostname
 
 export const getGraphqlUrl = () => `${addProtocolToHost(process.env.KIBO_API_HOST)}/graphql`
+export const getProxyGraphqlUrl = () => `${addProtocolToHost(process.env.KIBO_PROXY)}/graphql`
 
 export const getApiConfig = () => {
   return {
