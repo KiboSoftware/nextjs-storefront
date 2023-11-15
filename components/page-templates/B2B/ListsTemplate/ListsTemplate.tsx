@@ -10,6 +10,9 @@ import { useTranslation } from 'next-i18next'
 
 import { styles } from './ListsTemplate.styles'
 import { CreateList, ViewLists } from '@/components/b2b'
+import { useAddItemsToCurrentCart } from '@/hooks/mutations/cart/useAddItemsToCurrentCart/useAddItemsToCurrentCart'
+
+import { CrWishlistItem } from '@/lib/gql/types'
 
 const ListsTemplate = () => {
   const [state, setState] = useState({
@@ -22,12 +25,24 @@ const ListsTemplate = () => {
   const mdScreen = useMediaQuery<boolean>(theme.breakpoints.up('md'))
   const smScreen = useMediaQuery<boolean>(theme.breakpoints.up('sm'))
   const { t } = useTranslation('common')
+  const { addItemsToCurrentCart } = useAddItemsToCurrentCart()
 
   const handleEditFormToggle = () =>
     setState((prevState) => ({ ...prevState, isEditFormOpen: !state.isEditFormOpen }))
 
   const handleCreateFormToggle = () =>
     setState((prevState) => ({ ...prevState, isCreateFormOpen: !state.isCreateFormOpen }))
+
+  const handleAddListToCart = async (items: CrWishlistItem[]) => {
+    try {
+      const response = await addItemsToCurrentCart.mutateAsync({
+        items,
+      })
+      return response
+    } catch (e) {
+      console.error(e)
+    }
+  }
 
   const showCreateButton = !(state.isEditFormOpen || state.isCreateFormOpen)
 
@@ -37,6 +52,7 @@ const ListsTemplate = () => {
         <Grid item xs={12}>
           <CreateList
             onCreateFormToggle={(val: boolean) => setState({ ...state, isCreateFormOpen: val })}
+            onAddListToCart={handleAddListToCart}
           />
         </Grid>
       </Grid>
@@ -101,7 +117,11 @@ const ListsTemplate = () => {
           )}
         </Box>
 
-        <ViewLists onEditFormToggle={handleEditFormToggle} isEditFormOpen={state.isEditFormOpen} />
+        <ViewLists
+          onEditFormToggle={handleEditFormToggle}
+          isEditFormOpen={state.isEditFormOpen}
+          onAddListToCart={handleAddListToCart}
+        />
       </Grid>
     </Grid>
   )

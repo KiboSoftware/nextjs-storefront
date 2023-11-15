@@ -360,6 +360,10 @@ export const wishlistHandlers = [
   graphql.query('wishlists', (_req, res, ctx) => {
     return res(ctx.data({ wishlists: wishlistMock }))
   }),
+  // useGetCustomerWishlist
+  graphql.query('customerWishlist', (_req, res, ctx) => {
+    return res(ctx.data({ customerWishlist: wishlistMock?.items?.[0] }))
+  }),
 
   graphql.mutation('createWishlist', (_req, res, ctx) => {
     const { customerAccountId, id, name } = wishlistMock?.items[0]

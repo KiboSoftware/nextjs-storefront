@@ -36,6 +36,15 @@ const style = {
     flexDirection: 'column',
     justifyContent: 'flex-end',
   },
+  addAllItemsToCartButton: {
+    '&:hover': {
+      backgroundColor: 'transparent',
+    },
+  },
+  addAllItemsToCartLink: {
+    color: 'grey.900',
+    textDecorationColor: `${grey[900]}`,
+  },
 }
 
 export default style

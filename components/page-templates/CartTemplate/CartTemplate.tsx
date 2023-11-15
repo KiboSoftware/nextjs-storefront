@@ -25,12 +25,12 @@ import {
   useGetStoreLocations,
   useGetPurchaseLocation,
   useUpdateCartItemQuantity,
-  useDeleteCurrentCart,
   useDeleteCartItem,
   useUpdateCartCoupon,
   useDeleteCartCoupon,
   useInitiateCheckout,
   useCartActions,
+  useProductCardActions,
 } from '@/hooks'
 import { orderGetters, cartGetters } from '@/lib/getters'
 
@@ -52,7 +52,6 @@ const CartTemplate = (props: CartTemplateProps) => {
   const { initiateOrder } = useInitiateOrder()
   const { initiateCheckout } = useInitiateCheckout()
   const { updateCartItemQuantity } = useUpdateCartItemQuantity()
-  const { deleteCurrentCart } = useDeleteCurrentCart()
   const { deleteCartItem } = useDeleteCartItem()
   const { showModal, closeModal } = useModalContext()
 
@@ -67,6 +66,7 @@ const CartTemplate = (props: CartTemplateProps) => {
   const { deleteCartCoupon } = useDeleteCartCoupon()
   const [promoError, setPromoError] = useState<string>('')
   const [showLoadingButton, setShowLoadingButton] = useState<boolean>(false)
+  const { handleDeleteCurrentCart } = useProductCardActions()
 
   const handleApplyPromoCode = async (couponCode: string) => {
     try {
@@ -153,14 +153,6 @@ const CartTemplate = (props: CartTemplateProps) => {
         primaryButtonText: t('delete'),
       },
     })
-  }
-
-  const handleDeleteCurrentCart = async () => {
-    try {
-      await deleteCurrentCart.mutateAsync()
-    } catch (err) {
-      console.error(err)
-    }
   }
 
   return (

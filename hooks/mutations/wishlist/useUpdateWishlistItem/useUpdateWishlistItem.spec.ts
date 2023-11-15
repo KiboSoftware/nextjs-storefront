@@ -34,7 +34,7 @@ describe('[hooks] useUpdateWishlistItemMutation', () => {
   })
 
   it('should update wishlistItem', async () => {
-    const { result } = renderHook(() => useUpdateWishlistItemMutation(), {
+    const { result } = renderHook(() => useUpdateWishlistItemMutation({ isCreateList: true }), {
       wrapper: createQueryClientWrapper(),
     })
 

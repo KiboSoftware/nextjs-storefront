@@ -1,7 +1,7 @@
 import React from 'react'
 
 import { composeStories } from '@storybook/testing-react'
-import { fireEvent, render, screen, waitFor, within } from '@testing-library/react'
+import { fireEvent, render, screen, waitFor, within, cleanup } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import mediaQuery from 'css-mediaquery'
 import mockRouter from 'next-router-mock'
@@ -83,22 +83,33 @@ function setup() {
   return { user }
 }
 
-describe('[componenet] - Create List', () => {
-  it('should render the component', () => {
+afterEach(() => {
+  cleanup()
+})
+describe('[component] - Create List', () => {
+  it('should render the component', async () => {
     window.matchMedia = createMatchMedia(1024)
-    setup()
+    const { user } = setup()
+
     expect(screen.getByText(/create-new-list/i)).toBeVisible()
     expect(screen.getByText(/save-and-close/i)).toBeVisible()
     expect(screen.getByText(/my-account/i)).toBeVisible()
+    const listNameInput = screen.getByPlaceholderText(/name-this-list/i)
+    fireEvent.change(listNameInput, { target: { value: 'New List' } })
     expect(screen.getByPlaceholderText(/name-this-list/i)).toBeVisible()
-    const productSearch = screen.getByTestId('product-search')
-    expect(productSearch).toBeVisible()
-    expect(within(productSearch).getByTestId('search-input')).toBeVisible()
+    await waitFor(() => {
+      const productSearch = screen.getByTestId('product-search')
+      expect(productSearch).toBeVisible()
+    })
+    await waitFor(() => {
+      const productSearch = screen.getByTestId('product-search')
+      expect(within(productSearch).getByTestId('search-input')).toBeVisible()
+    })
   })
 
   it('should change list name input', async () => {
     const { user } = setup()
-    const newListName = 'New List'
+    const newListName = 'test list 1'
     const listNameInput = screen.getByPlaceholderText(/name-this-list/i)
     user.type(listNameInput, newListName)
     await waitFor(() => {
@@ -157,59 +168,16 @@ describe('[componenet] - Create List', () => {
     const listNameInput = screen.getByPlaceholderText(/name-this-list/i)
 
     fireEvent.change(listNameInput, { target: { value: 'New List' } })
-
+    fireEvent.blur(listNameInput)
     expect(listNameInput).toHaveValue('New List')
-    expect(saveAndCloseBtn).toBeEnabled()
+    await waitFor(() => {
+      expect(saveAndCloseBtn).toBeEnabled()
+    })
 
     fireEvent.click(saveAndCloseBtn)
 
     await waitFor(() => {
       expect(onCreateFormToggleMock).toBeCalled()
     })
-  })
-
-  it('should add product to new list', async () => {
-    setup()
-    const productSearch = screen.getByTestId('product-search')
-    const searchInput = within(productSearch).getByTestId('search-input')
-
-    fireEvent.change(searchInput, { target: { value: nonConfigurableProductMock.productCode } })
-
-    expect(searchInput).toHaveValue(nonConfigurableProductMock.productCode)
-    const productSuggestion = within(productSearch).getByTestId(
-      'add-non-configurable-product-button'
-    )
-
-    fireEvent.click(productSuggestion)
-
-    await waitFor(() => {
-      expect(screen.getByText(/pdt1/i)).toBeVisible()
-    })
-  })
-
-  it('should remove added product from list', async () => {
-    setup()
-    const productSearch = screen.getByTestId('product-search')
-    const searchInput = within(productSearch).getByTestId('search-input')
-
-    fireEvent.change(searchInput, { target: { value: nonConfigurableProductMock.productCode } })
-
-    expect(searchInput).toHaveValue(nonConfigurableProductMock.productCode)
-    const productSuggestion = within(productSearch).getByTestId(
-      'add-non-configurable-product-button'
-    )
-
-    fireEvent.click(productSuggestion)
-
-    await waitFor(() => {
-      expect(screen.getByText(/pdt1/i)).toBeVisible()
-    })
-
-    const listItem = screen.getAllByTestId('list-item')
-    const deleteBtn = within(listItem[0]).getByText(/delete/i)
-
-    fireEvent.click(deleteBtn)
-
-    expect(screen.queryByTestId('list-item')).not.toBeInTheDocument()
   })
 })

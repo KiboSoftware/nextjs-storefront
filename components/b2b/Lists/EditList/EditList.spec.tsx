@@ -15,6 +15,7 @@ const { listData } = stories
 
 const onEditFormToggleMock = jest.fn()
 const onUpdateListDataMock = jest.fn()
+const onHandleAddListToCartMock = jest.fn()
 
 const nonConfigurableProductMock: Product = {
   productCode: 'pdt1',
@@ -85,12 +86,13 @@ function setup() {
       {...Common.args}
       onEditFormToggle={onEditFormToggleMock}
       onUpdateListData={onUpdateListDataMock}
+      onHandleAddListToCart={onHandleAddListToCartMock}
     />
   )
   return { user }
 }
 
-describe('[componenet] - Edit list', () => {
+describe('[component] - Edit list', () => {
   it('should render the component', () => {
     setup()
     expect(screen.getByText(listData.name)).toBeVisible()
@@ -220,6 +222,24 @@ describe('[componenet] - Edit list', () => {
 
     await waitFor(() => {
       expect(screen.getByText(/pdt1/i)).toBeVisible()
+    })
+  })
+
+  it('should add all items present in list to cart when users click on add all items to cart link', async () => {
+    const { user } = setup()
+    const addAllItemsToCartLink = screen.getByText(/add-all-items-to-cart/i)
+    user.click(addAllItemsToCartLink)
+    await waitFor(() => {
+      expect(onHandleAddListToCartMock).toBeCalled()
+    })
+  })
+
+  it('should reset the cart add all items present in list to cart when users click on empty cart and add all items to cart link', async () => {
+    const { user } = setup()
+    const emptyCartAndAddAllItemsToCartLink = screen.getByText(/empty-cart-add-list-to-cart/i)
+    user.click(emptyCartAndAddAllItemsToCartLink)
+    await waitFor(() => {
+      expect(onHandleAddListToCartMock).toBeCalled()
     })
   })
 })

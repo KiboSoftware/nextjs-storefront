@@ -3,7 +3,6 @@ import React, { useState } from 'react'
 import { ContentCopy, Delete, Edit, MoreVert } from '@mui/icons-material'
 import {
   Box,
-  Button,
   IconButton,
   Menu,
   MenuItem,
@@ -13,6 +12,7 @@ import {
   TableContainer,
   TableHead,
   TableRow,
+  Tooltip,
   Typography,
   useMediaQuery,
   useTheme,
@@ -21,6 +21,7 @@ import { grey } from '@mui/material/colors'
 import { useTranslation } from 'next-i18next'
 
 import { styles } from '@/components/b2b/Lists/ListTable/ListTable.style'
+import { ResetATC, AddToCart } from '@/components/icons'
 import { useGetB2BUsersEmailAndId } from '@/hooks'
 import formatDate from '@/lib/helpers/formatDate'
 
@@ -32,6 +33,7 @@ interface ListTableProps {
   onCopyList: (param: string) => void
   onEditList: (param: string) => void
   onAddListToCart: (param: string) => void
+  onEmptyCartAndAddListToCart: (param: string) => void
   isLoading: boolean
 }
 
@@ -40,15 +42,24 @@ interface ListTableMobileOptions {
   onCopyList: (param: string) => void
   onEditList: (param: string) => void
   onAddListToCart: (param: string) => void
+  onEmptyCartAndAddListToCart: (param: string) => void
   itemId: string
 }
 
 const ListTableMobileOptions = (props: ListTableMobileOptions) => {
-  const { onDeleteList, onCopyList, onEditList, onAddListToCart, itemId } = props
+  const {
+    onDeleteList,
+    onCopyList,
+    onEditList,
+    onAddListToCart,
+    onEmptyCartAndAddListToCart,
+    itemId,
+  } = props
   const [anchorEl, setAnchorEL] = useState<HTMLElement | null>(null)
   const { t } = useTranslation('common')
   const options = [
     { name: t('edit'), onClick: onEditList },
+    { name: t('empty-cart-add-list-to-cart'), onClick: onEmptyCartAndAddListToCart },
     { name: t('add-list-items-to-cart'), onClick: onAddListToCart },
     { name: t('duplicate'), onClick: onCopyList },
     { name: t('delete'), onClick: onDeleteList },
@@ -90,7 +101,15 @@ const ListTableMobileOptions = (props: ListTableMobileOptions) => {
 }
 
 const ListTable = (props: ListTableProps) => {
-  const { rows, onDeleteList, onCopyList, onEditList, onAddListToCart, isLoading } = props
+  const {
+    rows,
+    onDeleteList,
+    onCopyList,
+    onEditList,
+    onAddListToCart,
+    onEmptyCartAndAddListToCart,
+    isLoading,
+  } = props
 
   const { t } = useTranslation('common')
   const theme = useTheme()
@@ -144,14 +163,30 @@ const ListTable = (props: ListTableProps) => {
                 <TableCell sx={{ ...styles.tableCellStyles, width: mdScreen ? '25%' : '10%' }}>
                   {mdScreen ? (
                     <Box sx={{ justifyContent: 'flex-end', display: 'flex' }}>
-                      <Button
-                        variant="text"
-                        color="inherit"
-                        data-testid="addToCartBtn"
-                        onClick={() => onAddListToCart(item?.id as string)}
+                      <Tooltip
+                        title={
+                          <Typography variant="body2">
+                            {t('empty-cart-add-list-to-cart')}
+                          </Typography>
+                        }
                       >
-                        {t('add-to-cart')}
-                      </Button>
+                        <IconButton
+                          data-testid="resetAndAddToCartBtn"
+                          onClick={() => onEmptyCartAndAddListToCart(item?.id as string)}
+                        >
+                          <ResetATC />
+                        </IconButton>
+                      </Tooltip>
+                      <Tooltip title={<Typography variant="body2">{t('add-to-cart')}</Typography>}>
+                        <IconButton
+                          color="inherit"
+                          onClick={() => onAddListToCart(item?.id as string)}
+                          data-testid="addToCartBtn"
+                        >
+                          <AddToCart />
+                        </IconButton>
+                      </Tooltip>
+
                       <IconButton
                         color="inherit"
                         onClick={() => onEditList(item?.id as string)}
@@ -181,6 +216,7 @@ const ListTable = (props: ListTableProps) => {
                         onCopyList={onCopyList}
                         onEditList={onEditList}
                         onAddListToCart={onAddListToCart}
+                        onEmptyCartAndAddListToCart={onEmptyCartAndAddListToCart}
                         itemId={item?.id as string}
                       />
                     </>

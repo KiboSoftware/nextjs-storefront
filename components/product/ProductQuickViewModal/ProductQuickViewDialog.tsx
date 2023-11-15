@@ -18,7 +18,7 @@ interface ProductQuickViewDialogProps {
   quoteDetails?: any
   listData?: any
   shouldFetchShippingMethods?: boolean
-  onUpdateListData: (param: CrWishlist) => void
+  onUpdateListData: (param: CrWishlist, addToCartPayload: any) => void
 }
 
 const ProductQuickViewDialogFooter = (props: any) => {
@@ -50,7 +50,7 @@ const ProductQuickViewDialogFooter = (props: any) => {
 
   const handleAddProductToList = async () => {
     listMode === 'create'
-      ? onUpdateListData(currentProduct)
+      ? onUpdateListData(currentProduct, addToCartPayload)
       : handleAddToList({
           listData,
           product: currentProduct as Product,

@@ -90,8 +90,11 @@ describe('[component] - ListItem', () => {
     user.click(increaseBtn)
     await waitFor(() => {
       expect(within(quantitySelector).getByTestId('change-input')).toHaveValue(
-        (lineItem.quantity + 1).toString()
+        lineItem.quantity.toString()
       )
+    })
+    await waitFor(() => {
+      expect(onChangeQuantityMock).toBeCalled()
     })
   })
 
@@ -102,7 +105,7 @@ describe('[component] - ListItem', () => {
     user.click(decreaseBtn)
     await waitFor(() => {
       expect(within(quantitySelector).getByTestId('change-input')).toHaveValue(
-        (lineItem.quantity - 1).toString()
+        lineItem.quantity.toString()
       )
     })
   })

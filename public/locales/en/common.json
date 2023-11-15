@@ -522,5 +522,8 @@
   "product-details": "Product details",
   "additional-handling": "Additional Handling",
   "handling": "Handling",
-  "unit-price": "Unit Price"
+  "unit-price": "Unit Price",
+  "discounts": "Discounts",
+  "empty-cart-add-list-to-cart": "Empty Cart and Add List to Cart",
+  "add-list-name-to-search-products": "Add list name to Search/View products in list"
 }
