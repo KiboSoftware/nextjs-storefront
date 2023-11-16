@@ -4,12 +4,13 @@ import type { MutationCreateWishlistItemArgs } from '@/lib/gql/types'
 
 export const buildAddToWishlistItemParams = (
   product: WishlistProductInput,
-  wishlistId: string
+  wishlistId: string,
+  quantity?: number
 ): MutationCreateWishlistItemArgs => {
   return {
     wishlistId: wishlistId,
     wishlistItemInput: {
-      quantity: 1,
+      quantity: quantity ? quantity : 1,
       product: {
         options: product?.options?.map((option: any) => {
           const selected = option?.values?.find((value: any) => value?.isSelected)

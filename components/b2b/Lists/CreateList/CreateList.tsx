@@ -73,6 +73,7 @@ const CreateList = (props: CreateListProps) => {
       customerAccountId: user?.id as number,
       product,
       currentWishlist: newListState,
+      quantity: payload.quantity,
     })
   }
   const handleEmptyCartAndAddListToCart = async () => {
