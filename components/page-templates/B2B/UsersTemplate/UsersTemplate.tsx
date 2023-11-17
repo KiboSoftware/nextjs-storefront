@@ -102,6 +102,7 @@ const UsersTemplate = () => {
     pageSize: paginationState.pageSize,
     startIndex: paginationState.startIndex,
     q: useDebounce(paginationState.searchTerm, debounceTimeout),
+    isB2BUser: true,
   })
 
   const { removeCustomerB2bUser } = useRemoveCustomerB2bUserMutation()

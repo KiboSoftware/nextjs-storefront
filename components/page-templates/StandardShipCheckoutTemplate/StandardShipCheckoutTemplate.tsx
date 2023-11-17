@@ -20,6 +20,7 @@ import {
   useGetCards,
   useGetCustomerPurchaseOrderAccount,
 } from '@/hooks'
+import { AccountType } from '@/lib/constants'
 import { orderGetters } from '@/lib/getters'
 import type { PersonalDetails } from '@/lib/types'
 
@@ -48,8 +49,11 @@ const StandardShipCheckoutTemplate = (props: StandardShipCheckoutProps) => {
   const { isAuthenticated, user } = useAuthContext()
   const { data: addressCollection } = useGetCustomerAddresses(user?.id as number)
   const { data: cardCollection } = useGetCards(user?.id as number)
+  const isB2BUser = user?.accountType?.toLowerCase() === AccountType.B2B.toLowerCase()
+
   const { data: customerPurchaseOrderAccount } = useGetCustomerPurchaseOrderAccount(
-    user?.id as number
+    user?.id as number,
+    isB2BUser
   )
 
   const { updateOrderCoupon } = useUpdateOrderCoupon()

@@ -6,7 +6,7 @@ import { createQueryClientWrapper } from '@/__test__/utils/renderWithQueryClient
 
 describe('[hooks] useGetCustomerPurchaseOrderAccount', () => {
   it('should return customer purchase order account data', async () => {
-    const { result } = renderHook(() => useGetCustomerPurchaseOrderAccount(1012), {
+    const { result } = renderHook(() => useGetCustomerPurchaseOrderAccount(1012, true), {
       wrapper: createQueryClientWrapper(),
     })
 

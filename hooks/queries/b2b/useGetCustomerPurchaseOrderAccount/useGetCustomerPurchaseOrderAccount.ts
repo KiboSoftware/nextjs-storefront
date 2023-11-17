@@ -48,12 +48,13 @@ const loadCustomerCustomerPurchaseOrderAccount = async (
  */
 
 export const useGetCustomerPurchaseOrderAccount = (
-  accountId: number
+  accountId: number,
+  isB2BUser: boolean
 ): UseCustomerPurchaseOrderAccountResponse => {
   const { data, isLoading, isSuccess } = useQuery({
     queryKey: customerPurchaseOrderAccountKeys?.purchaseOrderAccountById(accountId),
     queryFn: () => loadCustomerCustomerPurchaseOrderAccount(accountId),
-    enabled: !!accountId,
+    enabled: !!(accountId && isB2BUser),
     refetchOnWindowFocus: false,
   })
 
