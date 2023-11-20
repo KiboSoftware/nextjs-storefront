@@ -108,6 +108,24 @@ describe('[component] - ListItem', () => {
         lineItem.quantity.toString()
       )
     })
+    await waitFor(() => {
+      expect(onChangeQuantityMock).toBeCalled()
+    })
+  })
+
+  it('should update item quantity', async () => {
+    const { user } = setup()
+    const quantitySelector = screen.getByTestId('quantity-selector')
+    const quantityUpdateInput = within(quantitySelector).getByTestId('change-input')
+    user.type(quantityUpdateInput, '3')
+    await waitFor(() => {
+      expect(within(quantitySelector).getByTestId('change-input')).toHaveValue(
+        lineItem.quantity.toString()
+      )
+    })
+    await waitFor(() => {
+      expect(onChangeQuantityMock).toBeCalled()
+    })
   })
 
   it('should open ProductView dialog', async () => {
