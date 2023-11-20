@@ -41,7 +41,7 @@ jest.mock('@/components/common/QuantitySelector/QuantitySelector', () => ({
       </button>
       <input value={quantity} data-testid="change-input" onChange={onQuantityUpdate as any} />
       <button onClick={onIncrease} data-testid="increase-button">
-        Decrease
+        Increase
       </button>
     </div>
   ),
