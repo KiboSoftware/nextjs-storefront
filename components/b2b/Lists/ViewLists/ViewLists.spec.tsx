@@ -141,17 +141,7 @@ describe('[componenet] - ViewLists', () => {
     const rows = await within(listTable).findAllByTestId('wishlist')
     const copyBtn = within(rows[0]).getByTestId('copy-list-btn')
 
-    user.click(copyBtn)
-
-    server.use(
-      graphql.mutation('createWishlist', (_req, res, ctx) => {
-        return res.once(
-          ctx.data({
-            copiedList,
-          })
-        )
-      })
-    )
+    await user.click(copyBtn)
   })
 
   it('should open dialog when click on delete list button', async () => {
