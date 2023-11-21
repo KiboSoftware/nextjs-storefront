@@ -192,4 +192,11 @@ describe('[component] - ListsTemplate Mobile', () => {
       })
     })
   })
+
+  it('should add list to cart', async () => {
+    renderWithQueryClient(<ListsTemplateMobile {...ListsTemplateMobile.args} />)
+    const addListToCartBtn = screen.getByTestId('onAddListToCart-button')
+
+    await user.click(addListToCartBtn)
+  })
 })
