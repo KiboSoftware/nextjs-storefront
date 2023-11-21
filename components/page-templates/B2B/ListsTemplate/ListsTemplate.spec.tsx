@@ -51,15 +51,25 @@ const EditListMock = ({ onEditFormToggle, listData, onUpdateListData }: EditList
 jest.mock(
   '@/components/b2b/Lists/ViewLists/ViewLists',
   () =>
-    ({ onEditFormToggle, isEditFormOpen }: ViewListsProps) =>
-      isEditFormOpen
-        ? EditListMock({
-            onEditFormToggle: onEditFormToggle,
-            listData: {},
-            onUpdateListData: () => console.log('updateList'),
-            onHandleAddListToCart: () => console.log('addListToCart'),
-          })
-        : ListTableMock({ onEditFormToggle: onEditFormToggle })
+    function viewList({ onEditFormToggle, isEditFormOpen, onAddListToCart }: ViewListsProps) {
+      return (
+        <>
+          {isEditFormOpen
+            ? EditListMock({
+                onEditFormToggle: onEditFormToggle,
+                listData: {},
+                onUpdateListData: () => console.log('updateList'),
+                onHandleAddListToCart: () => console.log('addListToCart'),
+              })
+            : ListTableMock({ onEditFormToggle: onEditFormToggle })}
+
+          <button
+            data-testid="onAddListToCart-button"
+            onClick={() => onAddListToCart(['item1', 'item2'])}
+          ></button>
+        </>
+      )
+    }
 )
 
 jest.mock('@/components/b2b/Lists/CreateList/CreateList', () => ({
@@ -168,5 +178,18 @@ describe('[component] - ListsTemplate Mobile', () => {
     fireEvent.click(editToggleBtnEditList)
 
     expect(viewLists).toBeVisible()
+  })
+
+  it('should redirect to my-account if clicked on my-account button', async () => {
+    renderWithQueryClient(<ListsTemplateMobile {...ListsTemplateMobile.args} />)
+    const myAccountBtn = screen.getByTestId('my-account-button')
+    expect(myAccountBtn).toBeVisible()
+    await user.click(myAccountBtn)
+    await waitFor(() => {
+      expect(mockRouter).toMatchObject({
+        asPath: '/my-account',
+        pathname: '/my-account',
+      })
+    })
   })
 })
