@@ -155,3 +155,8 @@ export const customerWishlistKeys = {
   all: ['customerWishlist'] as const,
   detail: (id: string) => [...customerWishlistKeys.all, id] as const,
 }
+
+export const b2bContactsKeys = {
+  all: ['b2bContacts'],
+  quotesParams: (params: any) => [...b2bQuotesKeys.all, params] as const,
+}

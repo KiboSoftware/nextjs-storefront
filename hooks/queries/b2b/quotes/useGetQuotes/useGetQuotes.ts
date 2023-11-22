@@ -31,7 +31,7 @@ const fetchQuotes = async (param: QueryQuotesArgs): Promise<QuoteCollection> => 
  *
  * Description : Fetches the B2B Quotes list based on startIndex, pageSize, sortBy, filter, q and qLimit.
  *
- * Parameters passed to function fetchQuotes({startIndex, pageSize, sortBy, filter, q , qLimit}: QueryB2bAccountUsersArgs) => expects object of type QueryQuotesArgs containing startIndex, pageSize, sortBy, filter, q and qLimit.
+ * Parameters passed to function fetchQuotes({startIndex, pageSize, sortBy, filter, q , qLimit}: QueryQuotesArgs) => expects object of type QueryQuotesArgs containing startIndex, pageSize, sortBy, filter, q and qLimit.
  *
  * @returns 'response?.quotes', which contains list of Quotes.
  */

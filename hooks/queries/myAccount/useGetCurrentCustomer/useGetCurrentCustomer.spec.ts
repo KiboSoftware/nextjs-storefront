@@ -6,7 +6,7 @@ import { createQueryClientWrapper } from '@/__test__/utils/renderWithQueryClient
 
 describe('[hooks] useUser', () => {
   it('should return current user when user is logged in', async () => {
-    const { result } = renderHook(() => useGetCurrentCustomer(), {
+    const { result } = renderHook(() => useGetCurrentCustomer({}), {
       wrapper: createQueryClientWrapper(),
     })
 

@@ -58,6 +58,7 @@ export * from './queries/b2b/useGetCustomerPurchaseOrderAccount/useGetCustomerPu
 
 export * from './queries/b2b/quotes/useGetQuoteShippingMethods/useGetQuoteShippingMethods'
 export * from './queries/b2b/quotes/useGetQuoteById/useGetQuoteById'
+export * from './queries/b2b/useGetB2BContacts/useGetB2BContacts'
 
 // Custom hooks
 export * from './custom/useDebounce/useDebounce'
@@ -72,6 +73,8 @@ export * from './custom/useCardContactActions/useCardContactActions'
 export * from './custom/useCartActions/useCartActions'
 export * from './custom/useB2BQuote/useB2BQuote'
 export * from './custom/useGetB2BUsersEmailAndId/useGetB2BUsersEmailAndId'
+export * from './queries/b2b/useGetCustomerPurchaseOrderAccount/useGetCustomerPurchaseOrderAccount'
+export * from './custom/useHandleB2BContacts/useHandleB2BContacts'
 
 // Mutations
 
