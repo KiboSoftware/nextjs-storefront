@@ -1,13 +1,14 @@
 import React from 'react'
 
 import { composeStories } from '@storybook/testing-react'
-import { fireEvent, render, screen, waitFor, within, cleanup } from '@testing-library/react'
+import { fireEvent, render, screen, waitFor, within, cleanup, act } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import mediaQuery from 'css-mediaquery'
 import mockRouter from 'next-router-mock'
 
 import * as stories from './CreateList.stories'
 import { B2BProductSearchProps } from '@/components/b2b/B2BProductSearch/B2BProductSearch'
+import { AuthContext, ModalContextProvider } from '@/context'
 
 import { Product } from '@/lib/gql/types'
 
@@ -24,6 +25,15 @@ const nonConfigurableProductMock: Product = {
   personalizationScore: 0,
   score: 0,
   updateDate: undefined,
+}
+
+const configurableProductMock = {
+  ...nonConfigurableProductMock,
+  options: [
+    {
+      isRequired: true,
+    },
+  ],
 }
 
 const createMatchMedia = (width: number) => (query: string) => ({
@@ -46,6 +56,13 @@ jest.mock('@/components/b2b/B2BProductSearch/B2BProductSearch', () => ({
         <button
           data-testid="add-non-configurable-product-button"
           onClick={() => onAddProduct(nonConfigurableProductMock)}
+        >
+          Add Non Configurable Product
+        </button>
+
+        <button
+          data-testid="add-configurable-product-button"
+          onClick={() => onAddProduct(configurableProductMock)}
         >
           Add Configurable Product
         </button>
@@ -79,7 +96,23 @@ const onCreateFormToggleMock = jest.fn()
 
 function setup() {
   const user = userEvent.setup()
-  render(<Common {...Common.args} onCreateFormToggle={onCreateFormToggleMock} />)
+  const userContextValues = {
+    isAuthenticated: true,
+    user: {
+      id: 1075,
+    },
+    login: jest.fn(),
+    createAccount: jest.fn(),
+    logout: jest.fn(),
+  }
+
+  render(
+    <AuthContext.Provider value={userContextValues}>
+      <ModalContextProvider>
+        <Common {...Common.args} onCreateFormToggle={onCreateFormToggleMock} />
+      </ModalContextProvider>
+    </AuthContext.Provider>
+  )
   return { user }
 }
 
@@ -107,13 +140,39 @@ describe('[component] - Create List', () => {
     })
   })
 
-  it('should change list name input', async () => {
+  it('should handle creating list ', async () => {
     const { user } = setup()
     const newListName = 'test list 1'
     const listNameInput = screen.getByPlaceholderText(/name-this-list/i)
     user.type(listNameInput, newListName)
     await waitFor(() => {
       expect(listNameInput).toHaveValue(newListName)
+    })
+
+    user.tab()
+
+    await waitFor(() => {
+      expect(screen.getByRole('button', { name: /save-and-close/i })).toBeEnabled()
+    })
+
+    const emptyCartAndAddListToCart = screen.getByText('empty-cart-add-list-to-cart')
+
+    user.click(screen.getByTestId('add-non-configurable-product-button'))
+
+    user.click(screen.getByTestId('add-configurable-product-button'))
+
+    await waitFor(() => {
+      expect(screen.getByText('product-configuration-options')).toBeVisible()
+    })
+
+    await waitFor(() => {
+      expect(emptyCartAndAddListToCart).toBeVisible()
+    })
+
+    user.click(emptyCartAndAddListToCart)
+
+    await waitFor(() => {
+      expect(onCreateFormToggleMock).toBeCalledWith(false)
     })
   })
 
