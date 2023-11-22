@@ -30,6 +30,16 @@ const nonConfigurableProductMock: Product = {
   updateDate: undefined,
 }
 
+const configurableProductMock: Product = {
+  ...nonConfigurableProductMock,
+  productCode: 'pdt2',
+  options: [
+    {
+      isRequired: true,
+    },
+  ],
+}
+
 jest.mock('@/components/b2b/Lists/ListItem/ListItem', () => ({
   __esModule: true,
   default: ({ item, onChangeQuantity, onDeleteItem }: any) => {
@@ -60,6 +70,13 @@ jest.mock('@/components/b2b/B2BProductSearch/B2BProductSearch', () => ({
         <button
           data-testid="add-non-configurable-product-button"
           onClick={() => onAddProduct(nonConfigurableProductMock)}
+        >
+          Add Non Configurable Product
+        </button>
+
+        <button
+          data-testid="add-configurable-product-button"
+          onClick={() => onAddProduct(configurableProductMock)}
         >
           Add Configurable Product
         </button>
@@ -208,7 +225,7 @@ describe('[component] - Edit list', () => {
     })
   })
 
-  it('should add product to list', async () => {
+  it('should add non configurable product to list', async () => {
     setup()
     const b2bSearch = screen.getByTestId('product-search')
     const b2bSearchInput = within(b2bSearch).getByTestId('search-input')
@@ -222,6 +239,23 @@ describe('[component] - Edit list', () => {
 
     await waitFor(() => {
       expect(screen.getByText(/pdt1/i)).toBeVisible()
+    })
+  })
+
+  it('should handle configurable product', async () => {
+    setup()
+    const b2bSearch = screen.getByTestId('product-search')
+    const b2bSearchInput = within(b2bSearch).getByTestId('search-input')
+
+    fireEvent.change(b2bSearchInput, { target: { value: configurableProductMock.productCode } })
+
+    expect(b2bSearchInput).toHaveValue(configurableProductMock.productCode)
+    const productSuggestion = within(b2bSearch).getByTestId('add-configurable-product-button')
+
+    fireEvent.click(productSuggestion)
+
+    await waitFor(() => {
+      expect(screen.getByText(/product-configuration-options/i)).toBeVisible()
     })
   })
 

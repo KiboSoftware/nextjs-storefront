@@ -76,7 +76,7 @@ const CreateList = (props: CreateListProps) => {
       quantity: payload.quantity,
     })
   }
-  const handleEmptyCartAndAddListToCart = async () => {
+  const handleEmptyCartAndAddListToCart = () => {
     handleDeleteCurrentCart()
     handleAddListToCart()
   }
@@ -248,7 +248,7 @@ const CreateList = (props: CreateListProps) => {
             {newListState?.items?.length > 0 && (
               <Stack direction="row">
                 <Button
-                  onClick={() => handleEmptyCartAndAddListToCart()}
+                  onClick={handleEmptyCartAndAddListToCart}
                   sx={{ ...styles.addAllItemsToCartButton }}
                 >
                   <Link sx={{ ...styles.addAllItemsToCartLink }}>

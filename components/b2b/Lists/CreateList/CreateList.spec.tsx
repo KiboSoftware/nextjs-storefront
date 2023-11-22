@@ -155,8 +155,6 @@ describe('[component] - Create List', () => {
       expect(screen.getByRole('button', { name: /save-and-close/i })).toBeEnabled()
     })
 
-    const emptyCartAndAddListToCart = screen.getByText('empty-cart-add-list-to-cart')
-
     user.click(screen.getByTestId('add-non-configurable-product-button'))
 
     user.click(screen.getByTestId('add-configurable-product-button'))
@@ -164,6 +162,8 @@ describe('[component] - Create List', () => {
     await waitFor(() => {
       expect(screen.getByText('product-configuration-options')).toBeVisible()
     })
+
+    const emptyCartAndAddListToCart = screen.getByText('empty-cart-add-list-to-cart')
 
     await waitFor(() => {
       expect(emptyCartAndAddListToCart).toBeVisible()
