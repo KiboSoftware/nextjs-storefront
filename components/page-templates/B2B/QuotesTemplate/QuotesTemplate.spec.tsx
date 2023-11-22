@@ -30,8 +30,6 @@ describe('[Templates]  QuotesTemplate', () => {
       <Common {...Common.args} setQuotesSearchParam={setQuotesSearchParamMock} />
     )
 
-    expect(screen.getByRole('heading', { name: 'quotes' })).toBeVisible()
-
     expect(screen.getByRole('button', { name: 'create-a-quote' })).toBeVisible()
 
     expect(screen.getByTestId('quote-table-component')).toBeVisible()

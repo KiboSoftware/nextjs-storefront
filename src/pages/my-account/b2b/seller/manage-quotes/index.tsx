@@ -9,12 +9,11 @@ import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
 import AccountsTable from '@/components/b2b/seller/AccountsTable/AccountsTable'
 import { MobileB2BLayout } from '@/components/layout'
 import { QuotesTemplate } from '@/components/page-templates'
-import { useAuthContext } from '@/context'
 import { useB2BQuote, useGetB2BContacts, useGetQuotes, useHandleB2BContacts } from '@/hooks'
-import { getCurrentUser, getQuotes, getB2BContacts } from '@/lib/api/operations'
+import { getQuotes, getB2BContacts } from '@/lib/api/operations'
 import { decodeParseCookieValue, parseFilterParamToObject } from '@/lib/helpers'
 
-import { B2BAccountCollection, QuoteCollection } from '@/lib/gql/types'
+import { QuoteCollection } from '@/lib/gql/types'
 
 interface ManageQuotesPageProps {
   quotes: QuoteCollection
@@ -36,9 +35,11 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
   const quotes =
     (await getQuotes(req as NextApiRequest, res as NextApiResponse, salesRepUserId)) || []
 
-  const b2bContactsResponse = await getB2BContacts(req as NextApiRequest, res as NextApiResponse)
-
-  console.log('accounts', b2bContactsResponse)
+  const b2bContactsResponse = await getB2BContacts(
+    req as NextApiRequest,
+    res as NextApiResponse,
+    salesRepUserId
+  )
 
   return {
     props: {
