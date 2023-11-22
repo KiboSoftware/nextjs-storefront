@@ -109,8 +109,7 @@ const MyProfile = (props: MyProfileProps) => {
         accountId: id,
         passwordInfoInput: {
           oldPassword: updatedPassword.oldPassword as string,
-          newPassword: updatedPassword.newPassword as string,
-          externalPassword: updatedPassword.newPassword as string,
+          newPassword: updatedPassword.newPassword as string
         },
       })
     } catch (err) {
