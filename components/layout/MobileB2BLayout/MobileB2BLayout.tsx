@@ -19,7 +19,7 @@ const MobileB2BLayout = (props: MobileB2BLayoutProps) => {
 
   return (
     <>
-      <Grid item xs={12} sx={{ pb: { xs: 3, md: 0 } }}>
+      <Grid item xs={12} sx={{ pb: { xs: 3, md: 2 } }}>
         <Stack direction="row" gap={2}>
           <Box
             sx={{ display: 'flex', cursor: 'pointer', alignItems: 'center' }}

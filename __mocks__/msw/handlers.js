@@ -23,6 +23,7 @@ import { configuredProductMock } from '../stories/configuredProductMock'
 import { createCustomerAccountCardMock } from '../stories/createCustomerAccountCardMock'
 import { createOrderPaymentActionMock } from '../stories/createOrderPaymentActionMock'
 import { customerAccountCardsMock } from '../stories/customerAccountCardsMock'
+import { getB2BContactsMock } from '../stories/getB2BContactsMock'
 import { locationCollectionMock } from '../stories/locationCollectionMock'
 import { orderCollection } from '../stories/orderCollection'
 import { orderCouponMock } from '../stories/orderMock'
@@ -498,6 +499,10 @@ export const subscriptionHandlers = [
 ]
 
 export const b2bHandlers = [
+  graphql.query('getB2BContacts', (_req, res, ctx) => {
+    return res(ctx.data({ getB2BContacts: getB2BContactsMock }))
+  }),
+
   // useGetB2BUserQuery
   graphql.query('b2bAccountUsers', (_req, res, ctx) => {
     return res(ctx.data({ b2bAccountUsers: customerB2BUserForPage0Mock }))

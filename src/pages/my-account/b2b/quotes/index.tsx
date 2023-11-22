@@ -1,6 +1,9 @@
 import { GetServerSidePropsContext, NextApiRequest, NextApiResponse, NextPage } from 'next'
+import { useRouter } from 'next/router'
+import { useTranslation } from 'next-i18next'
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
 
+import { MobileB2BLayout } from '@/components/layout'
 import { QuotesTemplate } from '@/components/page-templates'
 import { useAuthContext } from '@/context'
 import { useB2BQuote, useGetQuotes } from '@/hooks'
@@ -48,13 +51,30 @@ const QuotesPage: NextPage<QuotesPageProps> = (props) => {
 
   const { data: quoteCollection } = useGetQuotes(quotesSearchParam, quotes)
 
+  // navigation
+  const router = useRouter()
+  const { t } = useTranslation('common')
+  const breadcrumbList = [{ key: 'quotes', backText: t('my-account'), redirectURL: '/my-account' }]
+  const activeBreadCrumb = breadcrumbList.filter((item) => item.key === 'quotes')[0]
+
+  const onBackClick = () => {
+    router.push(activeBreadCrumb.redirectURL)
+  }
+
   return (
-    <QuotesTemplate
-      quoteCollection={quoteCollection as QuoteCollection}
-      sortingValues={sortingValues}
-      filters={parseFilterParamToObject(quotesSearchParam.filter as string)}
-      setQuotesSearchParam={handleQuotesSearchParam}
-    />
+    <>
+      <MobileB2BLayout
+        headerText={t('quotes')}
+        backText={activeBreadCrumb?.backText}
+        onBackClick={onBackClick}
+      />
+      <QuotesTemplate
+        quoteCollection={quoteCollection as QuoteCollection}
+        sortingValues={sortingValues}
+        filters={parseFilterParamToObject(quotesSearchParam.filter as string)}
+        setQuotesSearchParam={handleQuotesSearchParam}
+      />
+    </>
   )
 }
 

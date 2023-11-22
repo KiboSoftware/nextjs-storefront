@@ -76,6 +76,19 @@ const getFormattedAddress = (contact?: GenericContact) => {
 const getFullName = (contact?: GenericContact) =>
   `${getFirstName(contact)} ${getLastNameOrSurname(contact)}`
 
+const getB2BContactDetails = (contact: any) => {
+  return {
+    id: contact?.id,
+    accountName: contact?.accountName,
+    email: contact?.email,
+    address: contact?.address?.address1 + contact.address?.address2,
+    city: contact?.address?.cityOrTown,
+    state: contact?.address?.stateOrProvince,
+    zipCode: contact?.address?.postalOrZipCode,
+    country: contact?.address?.countryCode,
+  }
+}
+
 export const addressGetters = {
   getAddress,
   getAddress1,
@@ -95,4 +108,5 @@ export const addressGetters = {
   getContactId,
   getFormattedAddress,
   getFullName,
+  getB2BContactDetails,
 }

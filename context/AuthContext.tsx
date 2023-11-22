@@ -147,7 +147,9 @@ export const AuthContextProvider = ({ children }: AuthContextProviderProps) => {
     }
   }
 
-  const { data: customerAccount } = useGetCurrentCustomer()
+  const { data: customerAccount } = useGetCurrentCustomer({
+    enabled: !router.pathname.includes('/seller/'),
+  })
 
   const values = {
     isAuthenticated,

@@ -5,7 +5,7 @@ import CssBaseline from '@mui/material/CssBaseline'
 import { ThemeProvider } from '@mui/material/styles'
 import { HydrationBoundary } from '@tanstack/react-query'
 import creditCardType from 'credit-card-type'
-import Router from 'next/router'
+import Router, { useRouter } from 'next/router'
 
 import { GlobalFetchingIndicator } from '@/components/common'
 import { Footer, KiboHeader } from '@/components/layout'
@@ -27,6 +27,8 @@ creditCardType.updateCard('american-express', {
 })
 
 const DefaultLayout = ({ pageProps, children }: { pageProps: any; children: ReactElement }) => {
+  const router = useRouter()
+
   useEffect(() => {
     const handleRouteChange = (url: any) => {
       const isMyAccountPage = url.includes('/my-account')
@@ -45,6 +47,9 @@ const DefaultLayout = ({ pageProps, children }: { pageProps: any; children: Reac
       Router.events.off('routeChangeComplete', handleRouteChange)
     }
   }, [])
+
+  const isSeller = router.pathname.includes('/seller/')
+
   return (
     <HydrationBoundary state={pageProps.dehydratedState}>
       <ThemeProvider theme={theme}>
@@ -54,26 +59,28 @@ const DefaultLayout = ({ pageProps, children }: { pageProps: any; children: Reac
             <HeaderContextProvider>
               <GlobalFetchingIndicator />
               <Stack>
-                <KiboHeader
-                  navLinks={[
-                    {
-                      link: '/order-status',
-                      text: 'order-status',
-                    },
-                    {
-                      link: '/wishlist',
-                      text: 'wishlist',
-                    },
-                  ]}
-                  categoriesTree={pageProps.categoriesTree || []}
-                  isSticky={true}
-                />
+                {!isSeller && (
+                  <KiboHeader
+                    navLinks={[
+                      {
+                        link: '/order-status',
+                        text: 'order-status',
+                      },
+                      {
+                        link: '/wishlist',
+                        text: 'wishlist',
+                      },
+                    ]}
+                    categoriesTree={pageProps.categoriesTree || []}
+                    isSticky={true}
+                  />
+                )}
                 <DialogRoot />
                 <SnackbarRoot />
                 <Container maxWidth={'xl'} sx={{ py: 2, flex: '1 0 auto' }}>
                   {children}
                 </Container>
-                <Footer content={pageProps.footer} />
+                {!isSeller && <Footer content={pageProps.footer} />}
               </Stack>
             </HeaderContextProvider>
           </AuthContextProvider>
