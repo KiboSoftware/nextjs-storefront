@@ -6,6 +6,7 @@ export const useGetB2BUsersEmailAndId = (initialB2BUsers?: any) => {
 
   const { data: b2bUserData } = useGetB2BUserQueries({
     accountId: user?.id as number,
+    isB2BUser: true,
     initialB2BUsers,
   })
   const userIdToEmail: { [userId: string]: string } = {}

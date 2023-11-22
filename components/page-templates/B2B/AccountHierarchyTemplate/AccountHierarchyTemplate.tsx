@@ -63,6 +63,7 @@ const AccountHierarchyTemplate = (props: AccountHierarchyTemplateProps) => {
     accountId: selectedAccountId as number,
     filter: 'isRemoved eq false',
     sortBy: 'createDate asc',
+    isB2BUser: true,
   })
 
   // filtering the sortable accounts

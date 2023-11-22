@@ -51,8 +51,12 @@ export const useGetB2BUserQueries = ({
   startIndex = 0,
   q,
   sortBy = '',
+  isB2BUser,
   initialB2BUsers,
-}: QueryB2bAccountUsersArgs & { initialB2BUsers?: B2BUserCollection }): B2BUserResultType => {
+}: QueryB2bAccountUsersArgs & {
+  isB2BUser: boolean
+  initialB2BUsers?: B2BUserCollection
+}): B2BUserResultType => {
   const { isLoading, isSuccess, isError, error, data } = useQuery({
     queryKey: customerB2BUserKeys.search(
       accountId,
@@ -64,7 +68,7 @@ export const useGetB2BUserQueries = ({
     ),
     queryFn: () => loadCustomerB2BUsers({ accountId, filter, pageSize, startIndex, q, sortBy }),
     initialData: initialB2BUsers,
-    enabled: !!accountId,
+    enabled: !!(accountId && isB2BUser),
     placeholderData: (previousData) => previousData ?? undefined,
   })
 

@@ -14,6 +14,7 @@ import {
   useGetCurrentCustomer,
   useGetB2BUserQueries,
 } from '@/hooks'
+import { AccountType } from '@/lib/constants'
 import { cartKeys, loginKeys, wishlistKeys } from '@/lib/react-query/queryKeys'
 
 import type { CustomerAccount } from '@/lib/gql/types'
@@ -65,9 +66,12 @@ export const AuthContextProvider = ({ children }: AuthContextProviderProps) => {
 
   const queryClient = useQueryClient()
 
+  const isB2BUser = user?.accountType?.toLowerCase() === AccountType.B2B.toLowerCase()
+
   const { data: userAccount } = useGetB2BUserQueries({
     accountId: user?.id as number,
     filter: `userId eq ${user?.userId}`,
+    isB2BUser: isB2BUser,
   })
 
   useEffect(() => {

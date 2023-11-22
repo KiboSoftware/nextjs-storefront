@@ -11,6 +11,7 @@ describe('[hooks] useGetB2BUserQuery', () => {
         useGetB2BUserQueries({
           accountId: 1001,
           q: '',
+          isB2BUser: true,
         }),
       {
         wrapper: createQueryClientWrapper(),

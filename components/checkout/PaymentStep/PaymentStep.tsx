@@ -772,7 +772,7 @@ const PaymentStep = (props: PaymentStepProps) => {
                   label={paymentType.name}
                 />
                 {paymentType.id === selectedPaymentTypeRadio ? (
-                  <Box sx={{ maxWidth: '100%', mb: 1 }}>
+                  <Box sx={{ maxWidth: '100%', mb: 1, pl: 4 }}>
                     {shouldShowPreviouslySavedCards ? (
                       <Stack gap={2} width="100%" data-testid="saved-payment-methods">
                         {cardOptions?.length ? (
