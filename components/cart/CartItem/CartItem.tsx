@@ -142,6 +142,17 @@ const CartItem = (props: CartItemProps) => {
                 subscriptionFrequency={subscriptionDetails as string}
                 discounts={cartItem?.productDiscounts}
               >
+                {subscriptionDetails && (
+                  <Box pb={1}>
+                    <ProductOption
+                      option={{
+                        name: t('subscription-frequency'),
+                        value: subscriptionDetails,
+                      }}
+                    />
+                  </Box>
+                )}
+
                 <Box>
                   <Price
                     variant="body2"
