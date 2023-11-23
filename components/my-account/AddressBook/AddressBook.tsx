@@ -29,7 +29,7 @@ import {
   useDeleteCustomerAddress,
   useValidateCustomerAddress,
 } from '@/hooks'
-import { AddressType } from '@/lib/constants'
+import { AddressType, CountryCode } from '@/lib/constants'
 import { userGetters } from '@/lib/getters'
 import { actions, buildAddressParams, hasPermission, validateGoogleReCaptcha } from '@/lib/helpers'
 import type { Address, ContactForm, DeleteAddressParams } from '@/lib/types'
@@ -236,7 +236,7 @@ const AddressBook = (props: AddressBookProps) => {
     })
 
     try {
-      if (!allowInvalidAddresses) {
+      if (!allowInvalidAddresses && address?.contact?.address?.countryCode === CountryCode.US) {
         await validateCustomerAddress.mutateAsync({
           addressValidationRequestInput: { address: address?.contact?.address as CuAddress },
         })

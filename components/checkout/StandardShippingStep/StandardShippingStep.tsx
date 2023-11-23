@@ -23,7 +23,7 @@ import {
   useValidateCustomerAddress,
   useCreateCustomerAddress,
 } from '@/hooks'
-import { DefaultId, AddressType } from '@/lib/constants'
+import { DefaultId, AddressType, CountryCode } from '@/lib/constants'
 import { orderGetters, userGetters } from '@/lib/getters'
 import { actions, buildAddressParams, hasPermission } from '@/lib/helpers'
 import { Address } from '@/lib/types'
@@ -134,7 +134,7 @@ const StandardShippingStep = (props: ShippingProps) => {
 
   const handleSaveAddressToCheckout = async ({ contact }: { contact: CrContact }) => {
     try {
-      if (!allowInvalidAddresses) {
+      if (!allowInvalidAddresses && contact?.address?.countryCode === CountryCode.US) {
         await validateCustomerAddress.mutateAsync({
           addressValidationRequestInput: { address: contact?.address as CuAddress },
         })

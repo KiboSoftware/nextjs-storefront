@@ -25,7 +25,7 @@ import { CardDetailsForm, PurchaseOrderForm } from '@/components/checkout'
 import { AddressForm, KiboTextBox, KiboRadio, PaymentBillingCard } from '@/components/common'
 import { useCheckoutStepContext, STEP_STATUS, useAuthContext, useSnackbarContext } from '@/context'
 import { usePaymentTypes, useValidateCustomerAddress } from '@/hooks'
-import { CurrencyCode, PaymentType, PaymentWorkflow } from '@/lib/constants'
+import { CountryCode, CurrencyCode, PaymentType, PaymentWorkflow } from '@/lib/constants'
 import { addressGetters, cardGetters, orderGetters, userGetters } from '@/lib/getters'
 import {
   actions,
@@ -488,7 +488,7 @@ const PaymentStep = (props: PaymentStepProps) => {
 
   const handleValidateBillingAddress = async (address: CuAddress) => {
     try {
-      if (!allowInvalidAddresses) {
+      if (!allowInvalidAddresses && address?.countryCode === CountryCode.US) {
         await validateCustomerAddress.mutateAsync({
           addressValidationRequestInput: {
             address,
