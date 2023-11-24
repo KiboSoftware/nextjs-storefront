@@ -26,9 +26,9 @@ describe('useHandleB2BContacts', () => {
 
     await waitFor(() => {
       expect(result.current.b2bContactsSearchParam).toEqual({
-        filter: '',
+        filter: 'salesrep.userid eq 1',
         pageSize: initialData?.pageSize,
-        sortBy: '',
+        sortBy: 'email asc',
         startIndex: initialData?.startIndex,
         q: '',
       })

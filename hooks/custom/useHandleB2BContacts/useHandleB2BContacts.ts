@@ -16,7 +16,7 @@ export const useHandleB2BContacts = ({
   }
 }) => {
   const [b2bContactsSearchParam, setB2BContactsSearchParam] = useState<QueryQuotesArgs>({
-    filter: `salesrep.userid eq '${salesRepUserId}'`,
+    filter: `salesrep.userid eq ${salesRepUserId}`,
     pageSize: initialData?.pageSize || 5,
     sortBy: 'email asc',
     startIndex: initialData?.startIndex || 0,
